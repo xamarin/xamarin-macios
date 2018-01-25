@@ -1906,22 +1906,24 @@ function oninitialload ()
 										}
 									} else if (log.Description == "NUnit results" || log.Description == "XML log") {
 										try {
-											var doc = new System.Xml.XmlDocument ();
-											doc.LoadWithoutNetworkAccess (log.FullPath);
-											var failures = doc.SelectNodes ("//test-case[@result='Error' or @result='Failure']").Cast<System.Xml.XmlNode> ().ToArray ();
-											if (failures.Length > 0) {
-												writer.WriteLine ("<div style='padding-left: 15px;'>");
-												foreach (var failure in failures) {
-													var test_name = failure.Attributes ["name"]?.Value;
-													var message = failure.SelectSingleNode ("failure/message")?.InnerText;
-													writer.Write (System.Web.HttpUtility.HtmlEncode (test_name));
-													if (!string.IsNullOrEmpty (message)) {
-														writer.Write (": ");
-														writer.Write (System.Web.HttpUtility.HtmlEncode (message));
+											if (File.Exists (log.FullPath) && new FileInfo (log.FullPath).Length > 0) {
+												var doc = new System.Xml.XmlDocument ();
+												doc.LoadWithoutNetworkAccess (log.FullPath);
+												var failures = doc.SelectNodes ("//test-case[@result='Error' or @result='Failure']").Cast<System.Xml.XmlNode> ().ToArray ();
+												if (failures.Length > 0) {
+													writer.WriteLine ("<div style='padding-left: 15px;'>");
+													foreach (var failure in failures) {
+														var test_name = failure.Attributes ["name"]?.Value;
+														var message = failure.SelectSingleNode ("failure/message")?.InnerText;
+														writer.Write (System.Web.HttpUtility.HtmlEncode (test_name));
+														if (!string.IsNullOrEmpty (message)) {
+															writer.Write (": ");
+															writer.Write (System.Web.HttpUtility.HtmlEncode (message));
+														}
+														writer.WriteLine ("<br />");
 													}
-													writer.WriteLine ("<br />");
+													writer.WriteLine ("</div>");
 												}
-												writer.WriteLine ("</div>");
 											}
 										} catch (Exception ex) {
 											writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {System.Web.HttpUtility.HtmlEncode (ex.Message)}</span><br />");
