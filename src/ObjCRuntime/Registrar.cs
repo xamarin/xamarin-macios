@@ -2292,11 +2292,6 @@ namespace XamCore.Registrar {
 				lock (this.types) {
 					foreach (TType type in types) {
 						//Trace (" Checking {0}", GetTypeFullName (type));
-						if (HasModelAttribute (type)) {
-							Trace ("{0} is a model: not registering it", GetTypeFullName (type));
-							continue;
-						}
-
 						RegisterTypeUnsafe (type, ref exceptions);
 					}
 				}
