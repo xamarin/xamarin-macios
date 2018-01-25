@@ -2779,6 +2779,7 @@ function oninitialload ()
 						var xml = Logs.CreateFile ($"test-{Platform}-{Timestamp}.xml", "NUnit results");
 						proc.StartInfo.Arguments = $"-result={StringUtils.Quote (xml)}";
 					}
+					proc.StartInfo.EnvironmentVariables ["MONO_DEBUG"] = "no-gdb-backtrace";
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
 					var log = Logs.Create ($"execute-{Platform}-{Timestamp}.txt", "Execution log");
 					log.WriteLine ("{0} {1}", proc.StartInfo.FileName, proc.StartInfo.Arguments);
@@ -2788,10 +2789,11 @@ function oninitialload ()
 						var snapshot = new CrashReportSnapshot () { Device = false, Harness = Harness, Log = log, Logs = Logs, LogDirectory = LogDirectory };
 						await snapshot.StartCaptureAsync ();
 
+						ProcessExecutionResult result = null;
 						try {
 							var timeout = TimeSpan.FromMinutes (20);
 
-							var result = await proc.RunAsync (log, true, timeout);
+							result = await proc.RunAsync (log, true, timeout);
 							if (result.TimedOut) {
 								FailureMessage = $"Execution timed out after {timeout.TotalSeconds} seconds.";
 								log.WriteLine (FailureMessage);
@@ -2804,7 +2806,7 @@ function oninitialload ()
 								log.WriteLine (FailureMessage);
 							}
 						} finally {
-							await snapshot.EndCaptureAsync (TimeSpan.FromSeconds (Succeeded ? 0 : 5));
+							await snapshot.EndCaptureAsync (TimeSpan.FromSeconds (Succeeded ? 0 : (result?.ExitCode > 1 ? 120 : 5)));
 						}
 					}
 					Jenkins.MainLog.WriteLine ("Executed {0} ({1})", TestName, Mode);
