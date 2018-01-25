@@ -6,13 +6,13 @@
 //
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.UIKit;
-using XamCore.Twitter;
-using XamCore.Accounts;
+using Foundation;
+using ObjCRuntime;
+using UIKit;
+using Twitter;
+using Accounts;
 
-namespace XamCore.Twitter {
+namespace Twitter {
 
 	delegate void TWRequestHandler (NSData responseData, NSHttpUrlResponse urlResponse, NSError error);
 

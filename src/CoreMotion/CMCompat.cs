@@ -5,7 +5,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace XamCore.CoreMotion {
+namespace CoreMotion {
 
 	public partial class CMSensorRecorder {
 

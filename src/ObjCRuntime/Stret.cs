@@ -30,9 +30,9 @@ using System.Reflection;
 #endif
 using System.Runtime.InteropServices;
 
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.ObjCRuntime
+namespace ObjCRuntime
 {
 	class Stret
 	{

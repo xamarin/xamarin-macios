@@ -25,7 +25,7 @@
 
 using System;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	public class ObjCException : Exception {
 		NSException native_exc;
 

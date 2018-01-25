@@ -27,12 +27,12 @@
 
 using System;
 
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreVideo;
+using Foundation;
+using CoreFoundation;
+using ObjCRuntime;
+using CoreVideo;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 
 	// Convenience enum for native strings - AVVideoSettings.h
 	public enum AVVideoCodec : int

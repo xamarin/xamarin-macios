@@ -31,12 +31,12 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
 // http://clang.llvm.org/docs/Block-ABI-Apple.html
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 
 	[StructLayout (LayoutKind.Sequential)]
 #if !XAMCORE_2_0

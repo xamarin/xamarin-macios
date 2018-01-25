@@ -9,13 +9,13 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.Registrar;
-using XamCore.UIKit;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
+using Registrar;
+using UIKit;
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 
 	public static partial class Runtime {
 #if !COREBUILD

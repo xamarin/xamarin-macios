@@ -9,9 +9,9 @@
 
 #if XAMCORE_2_0
 using System;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.Vision {
+namespace Vision {
 	public static partial class VNBarcodeSymbologyExtensions {
 		public static NSString [] GetConstants (this VNBarcodeSymbology [] self)
 		{

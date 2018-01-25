@@ -9,12 +9,12 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
 using Vector2 = global::OpenTK.Vector2;
 
 #if XAMCORE_2_0 || !MONOMAC
-namespace XamCore.SpriteKit
+namespace SpriteKit
 {
 	public partial class SKWarpGeometryGrid
 	{

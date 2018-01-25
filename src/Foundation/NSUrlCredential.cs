@@ -5,10 +5,10 @@ using System.Reflection;
 using System.Collections;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.Security;
+using ObjCRuntime;
+using Security;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	public partial class NSUrlCredential {
 #if !XAMCORE_2_0

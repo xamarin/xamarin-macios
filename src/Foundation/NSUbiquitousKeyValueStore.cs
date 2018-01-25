@@ -25,9 +25,9 @@ using System.Reflection;
 using System.Collections;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	public partial class NSUbiquitousKeyValueStore {
 		public NSObject this [NSString key] {

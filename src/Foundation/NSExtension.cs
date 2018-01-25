@@ -5,10 +5,10 @@
 using System;
 
 #if !MONOMAC
-using XamCore.UIKit;
+using UIKit;
 #endif
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	// not static in case Apple decide to introduce their own type
 	public partial class NSExtension {

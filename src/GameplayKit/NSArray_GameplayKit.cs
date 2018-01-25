@@ -9,10 +9,10 @@
 
 #if XAMCORE_2_0 || !MONOMAC
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.GameplayKit {
+namespace GameplayKit {
 	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
 	public static class NSArray_GameplayKit {
 

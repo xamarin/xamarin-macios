@@ -11,7 +11,7 @@
 using System;
 using System.Diagnostics;
 
-namespace XamCore.ObjCRuntime
+namespace ObjCRuntime
 {
 	[AttributeUsage (AttributeTargets.Enum)]
 	public sealed class NativeAttribute : Attribute

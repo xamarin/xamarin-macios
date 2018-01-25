@@ -32,13 +32,13 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 #if IOS && !COREBUILD && XAMCORE_2_0
-using XamCore.Contacts;
-using XamCore.Intents;
+using Contacts;
+using Intents;
 #endif
 
-namespace XamCore.CoreLocation {
+namespace CoreLocation {
 
 	// CLLocationDegrees -> double -> CLLocation.h
 

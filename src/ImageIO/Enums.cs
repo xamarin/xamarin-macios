@@ -8,9 +8,9 @@
 //
 
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.ImageIO {
+namespace ImageIO {
 
 	// untyped enum -> CGImageMetadata.h
 	// note: not used in any API

@@ -4,7 +4,7 @@
 
 using System;
 
-namespace XamCore.MapKit {
+namespace MapKit {
 
 	public partial class MKCircle {
 

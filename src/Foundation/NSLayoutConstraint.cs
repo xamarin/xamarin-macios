@@ -10,19 +10,19 @@
 #if !WATCH
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
 #if MONOMAC
-using View = XamCore.AppKit.NSView;
+using View = AppKit.NSView;
 #else
-using View = XamCore.UIKit.UIView;
+using View = UIKit.UIView;
 #endif
 
 #if MONOMAC
-namespace XamCore.AppKit
+namespace AppKit
 #else
-namespace XamCore.UIKit
+namespace UIKit
 #endif
 {
 	public partial class NSLayoutConstraint {

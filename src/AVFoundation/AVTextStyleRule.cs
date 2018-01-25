@@ -1,6 +1,6 @@
 using System;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 
 	public partial class AVTextStyleRule {
 #if !XAMCORE_3_0

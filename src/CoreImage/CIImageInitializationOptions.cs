@@ -27,12 +27,12 @@
 
 using System;
 
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
+using Foundation;
+using CoreFoundation;
+using ObjCRuntime;
+using CoreGraphics;
 
-namespace XamCore.CoreImage {
+namespace CoreImage {
 
 	public partial class CIImageInitializationOptions
 	{

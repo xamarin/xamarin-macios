@@ -13,41 +13,41 @@ using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using XamCore.Foundation; 
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
+using Foundation; 
+using ObjCRuntime;
+using CoreGraphics;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	public partial class UICollectionViewLayoutAttributes : NSObject {
 		[CompilerGenerated]
 		public static T CreateForCell<T> (NSIndexPath indexPath) where T : UICollectionViewLayoutAttributes
 		{
-			global::XamCore.UIKit.UIApplication.EnsureUIThread ();
+			global::UIKit.UIApplication.EnsureUIThread ();
 			if (indexPath == null)
 				throw new ArgumentNullException ("indexPath");
-			return (T) Runtime.GetNSObject (XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (Class.GetHandle (typeof (T)), Selector.GetHandle ("layoutAttributesForCellWithIndexPath:"), indexPath.Handle));
+			return (T) Runtime.GetNSObject (ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (Class.GetHandle (typeof (T)), Selector.GetHandle ("layoutAttributesForCellWithIndexPath:"), indexPath.Handle));
 		}
 
 		[CompilerGenerated]
 		public static T CreateForDecorationView<T> (NSString kind, NSIndexPath indexPath) where T: UICollectionViewLayoutAttributes
 		{
-			global::XamCore.UIKit.UIApplication.EnsureUIThread ();
+			global::UIKit.UIApplication.EnsureUIThread ();
 			if (kind == null)
 				throw new ArgumentNullException ("kind");
 			if (indexPath == null)
 				throw new ArgumentNullException ("indexPath");
-			return (T) Runtime.GetNSObject (XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr (Class.GetHandle (typeof (T)), Selector.GetHandle ("layoutAttributesForDecorationViewOfKind:withIndexPath:"), kind.Handle, indexPath.Handle));
+			return (T) Runtime.GetNSObject (ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr (Class.GetHandle (typeof (T)), Selector.GetHandle ("layoutAttributesForDecorationViewOfKind:withIndexPath:"), kind.Handle, indexPath.Handle));
 		}
 		
 		[CompilerGenerated]
 		public static T CreateForSupplementaryView<T> (NSString kind, NSIndexPath indexPath) where T: UICollectionViewLayoutAttributes
 		{
-			global::XamCore.UIKit.UIApplication.EnsureUIThread ();
+			global::UIKit.UIApplication.EnsureUIThread ();
 			if (kind == null)
 				throw new ArgumentNullException ("kind");
 			if (indexPath == null)
 				throw new ArgumentNullException ("indexPath");
-			return (T) Runtime.GetNSObject (XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr (Class.GetHandle (typeof (T)), Selector.GetHandle ("layoutAttributesForSupplementaryViewOfKind:withIndexPath:"), kind.Handle, indexPath.Handle));
+			return (T) Runtime.GetNSObject (ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr (Class.GetHandle (typeof (T)), Selector.GetHandle ("layoutAttributesForSupplementaryViewOfKind:withIndexPath:"), kind.Handle, indexPath.Handle));
 		}
 		
 		static NSString GetKindForSection (UICollectionElementKindSection section)

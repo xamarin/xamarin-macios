@@ -8,12 +8,12 @@
 
 using System;
 
-using XamCore.AddressBook;
-using XamCore.Foundation;
-using XamCore.UIKit;
-using XamCore.ObjCRuntime;
+using AddressBook;
+using Foundation;
+using UIKit;
+using ObjCRuntime;
 
-namespace XamCore.AddressBookUI {
+namespace AddressBookUI {
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	public class ABPeoplePickerSelectPersonEventArgs : EventArgs {
 

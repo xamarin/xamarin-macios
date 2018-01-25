@@ -32,19 +32,19 @@
 using System;
 using System.Diagnostics;
 using System.ComponentModel;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
-using XamCore.CoreImage;
-using XamCore.CoreAnimation;
-using XamCore.CoreData;
-using XamCore.OpenGL;
-using XamCore.CoreVideo;
-using XamCore.CloudKit;
+using Foundation;
+using ObjCRuntime;
+using CoreGraphics;
+using CoreImage;
+using CoreAnimation;
+using CoreData;
+using OpenGL;
+using CoreVideo;
+using CloudKit;
 
 using CGGlyph = System.UInt16;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 	//[BaseType (typeof (NSObject))]
 	//interface CIImage {
 	//	[Export ("drawInRect:fromRect:operation:fraction:")]
@@ -256,11 +256,11 @@ namespace XamCore.AppKit {
 		double Duration { get; set; }
 
 		[Mac (10, 7), Export ("completionHandler", ArgumentSemantic.Copy)]
-		NSAction CompletionHandler { get; set; }
+		Action CompletionHandler { get; set; }
 
 		[Static]
 		[Mac (10, 7), Export ("runAnimationGroup:completionHandler:")]
-		void RunAnimation (Action<NSAnimationContext> changes, [NullAllowed] NSAction completionHandler);
+		void RunAnimation (Action<NSAnimationContext> changes, [NullAllowed] Action completionHandler);
 
 		[Mac (10, 7), Export ("timingFunction", ArgumentSemantic.Strong)]
 		CAMediaTimingFunction TimingFunction { get; set; }
@@ -5339,19 +5339,19 @@ namespace XamCore.AppKit {
 		bool HasUndoManager { get; set; }
 
 		[Mac (10, 7), Export ("performActivityWithSynchronousWaiting:usingBlock:")]
-		void PerformActivity (bool waitSynchronously, NSAction activityCompletionHandler);
+		void PerformActivity (bool waitSynchronously, Action activityCompletionHandler);
 
 		[Mac (10, 7), Export ("continueActivityUsingBlock:")]
-		void ContinueActivity (NSAction resume);
+		void ContinueActivity (Action resume);
 
 		[Mac (10, 7), Export ("continueAsynchronousWorkOnMainThreadUsingBlock:")]
-		void ContinueAsynchronousWorkOnMainThread (NSAction work);
+		void ContinueAsynchronousWorkOnMainThread (Action work);
 
 		[Mac (10, 7), Export ("performSynchronousFileAccessUsingBlock:")]
-		void PerformSynchronousFileAccess (NSAction fileAccessCallback);
+		void PerformSynchronousFileAccess (Action fileAccessCallback);
 
 		[Mac (10, 7), Export ("performAsynchronousFileAccessUsingBlock:")]
-		void PerformAsynchronousFileAccess (NSAction ioCode);
+		void PerformAsynchronousFileAccess (Action ioCode);
 
 		[Mac (10, 7), Export ("isEntireFileLoaded")]
 		bool IsEntireFileLoaded { get; }
@@ -9446,19 +9446,19 @@ namespace XamCore.AppKit {
 		CGSize StringSize (NSDictionary attributes);
 
 		[Wrap ("This.StringSize (attributes == null ? null : attributes.Dictionary)")]
-		CGSize StringSize (XamCore.AppKit.NSStringAttributes attributes);
+		CGSize StringSize (AppKit.NSStringAttributes attributes);
 
 		[Export ("drawAtPoint:withAttributes:")]
 		void DrawAtPoint (CGPoint point, NSDictionary attributes);
 
 		[Wrap ("This.DrawAtPoint (point, attributes == null ? null : attributes.Dictionary)")]
-		void DrawAtPoint (CGPoint point, XamCore.AppKit.NSStringAttributes attributes);
+		void DrawAtPoint (CGPoint point, AppKit.NSStringAttributes attributes);
 
 		[Export ("drawInRect:withAttributes:")]
 		void DrawInRect (CGRect rect, NSDictionary attributes);
 
 		[Wrap ("This.DrawInRect (rect, attributes == null ? null : attributes.Dictionary)")]
-		void DrawInRect (CGRect rect, XamCore.AppKit.NSStringAttributes attributes);
+		void DrawInRect (CGRect rect, AppKit.NSStringAttributes attributes);
 	}
 
 	[Category, BaseType (typeof (NSAttributedString))]

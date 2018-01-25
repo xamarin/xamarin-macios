@@ -9,14 +9,14 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
+using ObjCRuntime;
+using CoreFoundation;
+using Foundation;
 
 using MidiEndpointRef = System.Int32;
 using MidiUniqueID = System.Int32;
 
-namespace XamCore.CoreMidi {
+namespace CoreMidi {
 	public enum MidiTransformType : ushort {
 		None = 0,
 		FilterOut = 1,

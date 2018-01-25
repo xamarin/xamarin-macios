@@ -6,11 +6,11 @@
 //
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 using System.Runtime.InteropServices;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 	public partial class NSGradient : NSObject
 	{
 		static IntPtr selInitWithColorsAtLocationsColorSpace = Selector.GetHandle ("initWithColors:atLocations:colorSpace:");
@@ -85,9 +85,9 @@ namespace XamCore.AppKit {
 			
 			IntPtr locations = new IntPtr (locationPtr);
 			if (IsDirectBinding) {
-				Handle = XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr_IntPtr (this.Handle, selInitWithColorsAtLocationsColorSpace, nsa_colorArray.Handle, locations, colorSpace.Handle);
+				Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr_IntPtr (this.Handle, selInitWithColorsAtLocationsColorSpace, nsa_colorArray.Handle, locations, colorSpace.Handle);
 			} else {
-				Handle = XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper_IntPtr_IntPtr_IntPtr (this.SuperHandle, selInitWithColorsAtLocationsColorSpace, nsa_colorArray.Handle, locations, colorSpace.Handle);
+				Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper_IntPtr_IntPtr_IntPtr (this.SuperHandle, selInitWithColorsAtLocationsColorSpace, nsa_colorArray.Handle, locations, colorSpace.Handle);
 			}
 			nsa_colorArray.Dispose ();
 		}

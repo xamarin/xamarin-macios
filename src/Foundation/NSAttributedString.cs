@@ -26,13 +26,13 @@
 //
 
 using System;
-using XamCore.CoreText;
-using XamCore.ObjCRuntime;
+using CoreText;
+using ObjCRuntime;
 #if !MONOMAC
-using XamCore.UIKit;
+using UIKit;
 #endif
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	public partial class NSAttributedString {
 
 		public string Value {

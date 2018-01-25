@@ -9,16 +9,16 @@
 
 #if !WATCH
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.UIKit;
-using XamCore.CoreGraphics;
+using Foundation;
+using ObjCRuntime;
+using UIKit;
+using CoreGraphics;
 
 using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 
 	// helper enum - not part of Apple API
 	public enum UIAccessibilityPostNotification
@@ -31,7 +31,7 @@ namespace XamCore.UIKit {
 
 	// NSInteger -> UIAccessibilityZoom.h
 	[Native]
-	public enum UIAccessibilityZoomType : nint {
+	public enum UIAccessibilityZoomType : long {
 		InsertionPoint,
 	}
 
@@ -134,13 +134,13 @@ namespace XamCore.UIKit {
 		{
 			switch (notification)
 			{
-			case XamCore.UIKit.UIAccessibilityPostNotification.Announcement:
+			case UIKit.UIAccessibilityPostNotification.Announcement:
 				return UIView.AnnouncementNotification;
-			case XamCore.UIKit.UIAccessibilityPostNotification.LayoutChanged:
+			case UIKit.UIAccessibilityPostNotification.LayoutChanged:
 				return UIView.LayoutChangedNotification;
-			case XamCore.UIKit.UIAccessibilityPostNotification.PageScrolled:
+			case UIKit.UIAccessibilityPostNotification.PageScrolled:
 				return UIView.PageScrolledNotification;
-			case XamCore.UIKit.UIAccessibilityPostNotification.ScreenChanged:
+			case UIKit.UIAccessibilityPostNotification.ScreenChanged:
 				return UIView.ScreenChangedNotification;
 			default:
 				throw new ArgumentOutOfRangeException (string.Format ("Unknown UIAccessibilityPostNotification: {0}", notification.ToString ()));

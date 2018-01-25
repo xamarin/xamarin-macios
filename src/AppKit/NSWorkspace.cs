@@ -1,7 +1,7 @@
 using System;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 
 	public partial class NSWorkspace {
 

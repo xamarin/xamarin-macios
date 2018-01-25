@@ -9,9 +9,9 @@
 
 #if !WATCH
 
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	public partial class UIPageViewController {
 		public UIPageViewController (UIPageViewControllerTransitionStyle style, UIPageViewControllerNavigationOrientation navigationOrientation, UIPageViewControllerSpineLocation spineLocation) : this (style, navigationOrientation, NSDictionary.FromObjectsAndKeys (new object [] { spineLocation }, new object [] { OptionSpineLocationKey }))
 		{

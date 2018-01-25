@@ -4,17 +4,17 @@
 // Copyright 2012-2014 Xamarin Inc. All rights reserved.
 //
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.ExternalAccessory {
+namespace ExternalAccessory {
 
 	[NoMac]
 	[TV (10,0)]
 	[iOS (8,0)]
 	[Native]
 	[Flags]
-	public enum EAWiFiUnconfiguredAccessoryProperties : nuint {
+	public enum EAWiFiUnconfiguredAccessoryProperties : ulong {
 		SupportsAirPlay  = (1 << 0),
 		SupportsAirPrint = (1 << 1),
 		SupportsHomeKit  = (1 << 2), // iOS 8 beta 5
@@ -24,7 +24,7 @@ namespace XamCore.ExternalAccessory {
 	[TV (10,0)]
 	[iOS (8,0)]
 	[Native]
-	public enum EAWiFiUnconfiguredAccessoryBrowserState : nint {
+	public enum EAWiFiUnconfiguredAccessoryBrowserState : long {
 		WiFiUnavailable = 0,
 		Stopped,
 		Searching,
@@ -36,7 +36,7 @@ namespace XamCore.ExternalAccessory {
 	[TV (10,0)]
 	[iOS (8,0)]
 	[Native]
-	public enum EAWiFiUnconfiguredAccessoryConfigurationStatus : nint {
+	public enum EAWiFiUnconfiguredAccessoryConfigurationStatus : long {
 		Success,
 		UserCancelledConfiguration,
 		Failed,
@@ -48,7 +48,7 @@ namespace XamCore.ExternalAccessory {
 	[Mac (10, 13)]
 	[Native]
 	[ErrorDomain ("EABluetoothAccessoryPickerErrorDomain")]
-	public enum EABluetoothAccessoryPickerError : nint {
+	public enum EABluetoothAccessoryPickerError : long {
 		AlreadyConnected,
 		NotFound,
 		Cancelled,

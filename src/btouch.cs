@@ -34,8 +34,8 @@ using System.Diagnostics;
 using System.Text;
 using Mono.Options;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 using Xamarin.Utils;
 
 class BindingTouch {
@@ -423,7 +423,9 @@ class BindingTouch {
 			var cargs = new StringBuilder ();
 
 			if (CurrentPlatform == PlatformName.MacOSX) {
-				if (!string.IsNullOrEmpty (net_sdk) && net_sdk != "mobile")
+				// HACK
+				bool isCSC = compiler.Contains ("/Library/Frameworks/Mono.framework/Versions/Current/bin/csc");
+				if (!isCSC && !string.IsNullOrEmpty (net_sdk) && net_sdk != "mobile")
 					cargs.Append ("-sdk:").Append (net_sdk).Append (' ');
 			} else {
 				if (!string.IsNullOrEmpty (net_sdk))

@@ -27,10 +27,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.CoreImage {
+namespace CoreImage {
 	public partial class CIVector {
 		nfloat this [nint index] {
 			get {
@@ -48,9 +48,9 @@ namespace XamCore.CoreImage {
 		public unsafe CIVector (nfloat [] values, nint count) : base (NSObjectFlag.Empty)
 		{
 			if (values == null)
-				throw new ArgumentNullException (@nameof (values));
+				throw new ArgumentNullException (nameof (values));
 			if (count > values.Length)
-				throw new ArgumentOutOfRangeException (@nameof (count));
+				throw new ArgumentOutOfRangeException (nameof (count));
 
 			fixed (nfloat *ptr = values) {
 				var handle = IntPtr.Zero;

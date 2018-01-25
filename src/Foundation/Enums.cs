@@ -1,6 +1,6 @@
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	// Utility enum, ObjC uses NSString
 	[NoMac]
@@ -119,7 +119,7 @@ namespace XamCore.Foundation {
 
 	[NoWatch, NoTV, NoMac, iOS (11, 0)]
 	[Native]
-	public enum NSUrlSessionMultipathServiceType : nint {
+	public enum NSUrlSessionMultipathServiceType : long {
 		None = 0,
 		Handover = 1,
 		Interactive = 2,

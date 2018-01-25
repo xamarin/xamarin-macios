@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
-using XamCore.CoreGraphics;
-namespace XamCore.Foundation {
+using CoreGraphics;
+namespace Foundation {
 	public class NSDictionary {}
 }
 

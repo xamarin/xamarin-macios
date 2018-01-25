@@ -28,10 +28,10 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
+using Foundation;
+using CoreGraphics;
 
-namespace XamCore.CoreAnimation {
+namespace CoreAnimation {
 	public unsafe partial class CAMediaTimingFunction {
 
 #if !XAMCORE_2_0

@@ -9,7 +9,7 @@
 
 using System;
 
-namespace XamCore.SceneKit
+namespace SceneKit
 {
 	public partial class SCNPhysicsTest {
 		public SCNPhysicsSearchMode SearchMode {

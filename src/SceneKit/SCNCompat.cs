@@ -2,17 +2,17 @@
 
 using System;
 using System.Threading.Tasks;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
 #if WATCH
-using AnimationType = global::XamCore.SceneKit.ISCNAnimationProtocol;
+using AnimationType = global::SceneKit.ISCNAnimationProtocol;
 #else
-using XamCore.CoreAnimation;
-using AnimationType = global::XamCore.CoreAnimation.CAAnimation;
+using CoreAnimation;
+using AnimationType = global::CoreAnimation.CAAnimation;
 #endif
 
-namespace XamCore.SceneKit {
+namespace SceneKit {
 
 #if !XAMCORE_3_0
 	partial class SCNAction {
@@ -72,7 +72,7 @@ namespace XamCore.SceneKit {
 		[iOS (9, 0)]
 		[Mac (10, 11, 0, PlatformArchitecture.Arch64)]
 		[Obsolete ("Use 'SCNSceneRenderer_Extensions.PresentSceneAsync' instead.")]
-		public unsafe virtual Task PresentSceneAsync (SCNScene scene, global::XamCore.SpriteKit.SKTransition transition, SCNNode pointOfView)
+		public unsafe virtual Task PresentSceneAsync (SCNScene scene, global::SpriteKit.SKTransition transition, SCNNode pointOfView)
 		{
 			return SCNSceneRenderer_Extensions.PresentSceneAsync (this, scene, transition, pointOfView);
 		}

@@ -9,7 +9,7 @@
 
 using System;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 #if !XAMCORE_3_0
 	public partial class NSOperation {

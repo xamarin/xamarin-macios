@@ -49,8 +49,8 @@ using Mono.Tuner;
 using MonoMac.Tuner;
 using Xamarin.Utils;
 using Xamarin.Linker;
-using XamCore.Registrar;
-using XamCore.ObjCRuntime;
+using Registrar;
+using ObjCRuntime;
 
 namespace Xamarin.Bundler {
 	public enum RegistrarMode {

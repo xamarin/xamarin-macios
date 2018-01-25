@@ -5,14 +5,14 @@
 //
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
 // Both CFHttpStream and CFHTTPMessage are in CFNetwork.framework, no idea why they ended up in CoreServices when they were bound.
 #if XAMCORE_4_0
-namespace XamCore.CFNetwork {
+namespace CFNetwork {
 #else
-namespace XamCore.CoreServices {
+namespace CoreServices {
 #endif
 
 	[Partial]

@@ -2,9 +2,9 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 	public partial class Selector {
 #if !XAMCORE_2_0
 		public static IntPtr Init = Selector.GetHandle ("init");

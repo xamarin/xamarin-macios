@@ -2,13 +2,13 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 #if IOS
-using XamCore.iAd;
+using iAd;
 #endif
 
-namespace XamCore.MediaPlayer {
+namespace MediaPlayer {
 
 #if IOS
 	public partial class MPMoviePlayerController {

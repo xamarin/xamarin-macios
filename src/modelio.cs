@@ -9,13 +9,13 @@
 using System;
 using System.ComponentModel;
 
-using XamCore.AudioUnit;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreAnimation;
-using XamCore.CoreGraphics;
-using XamCore.SceneKit;
+using AudioUnit;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
+using CoreAnimation;
+using CoreGraphics;
+using SceneKit;
 using Vector2i = global::OpenTK.Vector2i;
 using Vector2d = global::OpenTK.Vector2d;
 using Vector2 = global::OpenTK.Vector2;
@@ -43,25 +43,25 @@ using NMatrix4 = global::OpenTK.NMatrix4;
 using NMatrix4d = global::OpenTK.NMatrix4d;
 using MathHelper = global::OpenTK.MathHelper;
 #if MONOMAC
-using XamCore.AppKit;
-using AUViewControllerBase = XamCore.AppKit.NSViewController;
+using AppKit;
+using AUViewControllerBase = AppKit.NSViewController;
 #else
-using XamCore.UIKit;
-using AUViewControllerBase = XamCore.UIKit.UIViewController;
+using UIKit;
+using AUViewControllerBase = UIKit.UIViewController;
 #endif
 
-namespace XamCore.ModelIO {
+namespace ModelIO {
 
 	[iOS (11,0), Mac(10,13, onlyOn64 : true), TV (11,0)]
 	[Native]
-	enum MDLAnimatedValueInterpolation : nuint {
+	enum MDLAnimatedValueInterpolation : ulong {
 		Constant,
 		Linear,
 	}
 
 	[iOS (11,0), Mac(10,13, onlyOn64 : true), TV (11,0)]
 	[Native]
-	enum MDLTransformOpRotationOrder : nuint {
+	enum MDLTransformOpRotationOrder : ulong {
 		Xyz = 1,
 		Xzy,
 		Yxz,
@@ -72,7 +72,7 @@ namespace XamCore.ModelIO {
 
 	[iOS (11,0), Mac(10,13, onlyOn64 : true), TV (11,0)]
 	[Native]
-	enum MDLDataPrecision : nuint {
+	enum MDLDataPrecision : ulong {
 		Undefined,
 		Float,
 		Double,

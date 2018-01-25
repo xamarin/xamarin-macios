@@ -9,13 +9,13 @@
 // Copyright 2011-2013 Xamarin Inc.
 //
 #if XAMCORE_2_0 || !MONOMAC
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
-using XamCore.CoreLocation;
+using CoreFoundation;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
+using CoreLocation;
 #if !MONOMAC
-using XamCore.UIKit;
+using UIKit;
 #endif
 #if !TVOS && XAMCORE_2_0
 using Contacts;
@@ -23,18 +23,18 @@ using Contacts;
 using System;
 
 #if MONOMAC
-using UIImage=XamCore.AppKit.NSImage;
-using UIView=XamCore.AppKit.NSView;
-using UIEdgeInsets=XamCore.AppKit.NSEdgeInsets;
-using UIColor=XamCore.AppKit.NSColor;
+using UIImage=AppKit.NSImage;
+using UIView=AppKit.NSView;
+using UIEdgeInsets=AppKit.NSEdgeInsets;
+using UIColor=AppKit.NSColor;
 #endif
 #if WATCH
 // helper for [NoWatch]
-using MKMapView=XamCore.Foundation.NSObject;
-using MKAnnotationView=XamCore.Foundation.NSObject;
+using MKMapView=Foundation.NSObject;
+using MKAnnotationView=Foundation.NSObject;
 #endif
 
-namespace XamCore.MapKit {
+namespace MapKit {
 
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -843,7 +843,7 @@ namespace XamCore.MapKit {
 
 #if IOS
 	// This requires the AddressBook framework, which afaict isn't bound on Mac, tvOS and watchOS yet
-	[StrongDictionary ("global::XamCore.AddressBook.ABPersonAddressKey")]
+	[StrongDictionary ("global::AddressBook.ABPersonAddressKey")]
 	interface MKPlacemarkAddress {
 		[Export ("City")]
 		string City { get; set; }

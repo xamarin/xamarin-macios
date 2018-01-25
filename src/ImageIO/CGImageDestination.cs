@@ -28,12 +28,12 @@ using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using CoreGraphics;
 
-namespace XamCore.ImageIO {
+namespace ImageIO {
 
 #if !XAMCORE_2_0
 	public partial class CGImageDestinationOptions {

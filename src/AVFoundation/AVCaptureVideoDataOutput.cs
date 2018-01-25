@@ -27,12 +27,12 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
-using XamCore.CoreVideo;
+using Foundation;
+using ObjCRuntime;
+using CoreFoundation;
+using CoreVideo;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 
 #if !XAMCORE_2_0
 	// Wrong binding (PixelFormat is CoreVideo), keeping just to be compatible

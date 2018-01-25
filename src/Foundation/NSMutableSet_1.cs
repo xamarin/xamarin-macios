@@ -30,9 +30,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	[Register ("NSMutableSet", SkipRegistration = true)]
 	public sealed partial class NSMutableSet<TKey> : NSMutableSet, IEnumerable<TKey>
 		where TKey : class, INativeObject

@@ -8,11 +8,11 @@
 //
 using System;
 using System.Runtime.InteropServices;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using CoreFoundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.CoreVideo {
+namespace CoreVideo {
 
 	[Watch (4,0)]
 	public partial class CVPixelBuffer : CVImageBuffer {

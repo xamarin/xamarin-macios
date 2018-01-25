@@ -8,18 +8,18 @@
 //
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.UIKit;
+using Foundation;
+using ObjCRuntime;
+using UIKit;
 
-namespace XamCore.VideoSubscriberAccount {
+namespace VideoSubscriberAccount {
 
 	[Native]
 	[iOS (10, 0)]
 	[TV (10, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[ErrorDomain ("VSErrorDomain")]
-	public enum VSErrorCode : nint {
+	public enum VSErrorCode : long {
 		AccessNotGranted = 0,
 		UnsupportedProvider = 1,
 		UserCancelled = 2,
@@ -32,7 +32,7 @@ namespace XamCore.VideoSubscriberAccount {
 	[iOS (10, 0)]
 	[TV (10, 0)]
 	[Unavailable (PlatformName.WatchOS)]
-	public enum VSAccountAccessStatus : nint {
+	public enum VSAccountAccessStatus : long {
 		NotDetermined = 0,
 		Restricted = 1,
 		Denied = 2,
@@ -242,7 +242,7 @@ namespace XamCore.VideoSubscriberAccount {
 
 	[TV (11,0)][iOS (11,0)]
 	[Native]
-	public enum VSSubscriptionAccessLevel : nint {
+	public enum VSSubscriptionAccessLevel : long {
 		Unknown,
 		FreeWithAccount,
 		Paid,

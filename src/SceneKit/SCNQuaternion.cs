@@ -41,7 +41,7 @@ using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Xml.Serialization;
 
-namespace XamCore.SceneKit
+namespace SceneKit
 {
     /// <summary>
     /// Represents a Quaternion.

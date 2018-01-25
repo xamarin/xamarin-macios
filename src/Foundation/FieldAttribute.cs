@@ -28,7 +28,7 @@
 //
 using System;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	[AttributeUsage (AttributeTargets.Property | AttributeTargets.Field)]
 #if XAMCORE_2_0
 	sealed

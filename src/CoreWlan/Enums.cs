@@ -1,13 +1,13 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
 
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using ObjCRuntime;
 using System;
 
-namespace XamCore.CoreWlan {
+namespace CoreWlan {
 	[Native]
-	public enum CWStatus : nint {
+	public enum CWStatus : long {
 		Ok = 0,
 		EAPOL = 1,
 		InvalidParameter = -3900,
@@ -45,7 +45,7 @@ namespace XamCore.CoreWlan {
 	}
 
 	[Native]
-	public enum CWPhyMode : nuint_compat_int {
+	public enum CWPhyMode : ulong {
 		None = 0,
 		A = 1,
 		B = 2,
@@ -55,7 +55,7 @@ namespace XamCore.CoreWlan {
 	}
 
 	[Native]
-	public enum CWInterfaceMode : nuint_compat_int {
+	public enum CWInterfaceMode : ulong {
 		None = 0,
 		Station = 1,
 		Ibss = 2,
@@ -63,7 +63,7 @@ namespace XamCore.CoreWlan {
 	}
 
 	[Native]
-	public enum CWSecurity : nuint_compat_int {
+	public enum CWSecurity : ulong {
 		None = 0,
 		WEP = 1,
 		WPAPersonal = 2,
@@ -79,14 +79,14 @@ namespace XamCore.CoreWlan {
 	}
 
 	[Native]
-	public enum CWIbssModeSecurity : nuint_compat_int {
+	public enum CWIbssModeSecurity : ulong {
 		None = 0,
 		WEP40 = 1,
 		WEP104 = 2,
 	}
 
 	[Native]
-	public enum CWChannelWidth : nuint_compat_int {
+	public enum CWChannelWidth : ulong {
 		Unknown = 0,
 		TwentyMHz = 1,
 		FourtyMHz = 2,
@@ -95,14 +95,14 @@ namespace XamCore.CoreWlan {
 	}
 
 	[Native]
-	public enum CWChannelBand : nuint_compat_int {
+	public enum CWChannelBand : ulong {
 		Unknown = 0,
 		TwoGHz = 1,
 		FiveGHz = 2,
 	}
 
 	[Native]
-	public enum CWCipherKeyFlags : nuint_compat_int {
+	public enum CWCipherKeyFlags : ulong {
 		None = 0,
 		Unicast = 1 << 1,
 		Multicast = 1 << 2,
@@ -111,14 +111,14 @@ namespace XamCore.CoreWlan {
 	}
 
 	[Native]
-	public enum CWKeychainDomain : nuint_compat_int {
+	public enum CWKeychainDomain : ulong {
 		None = 0,
 		User = 1,
 		System = 2,
 	}
 
 	[Native]
-	public enum CWEventType : nint {
+	public enum CWEventType : long {
 		None = 0,
 		PowerDidChange = 1,
 		SsidDidChange = 2,

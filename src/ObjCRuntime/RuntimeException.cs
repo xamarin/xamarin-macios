@@ -5,8 +5,6 @@ using System.Collections.Generic;
 
 #if XAMCORE_2_0
 namespace ObjCRuntime {
-#else
-namespace XamCore {
 #endif
 
 	public class RuntimeException : Exception {
@@ -45,4 +43,6 @@ namespace XamCore {
 		}
 		*/
 	}
+#if XAMCORE_2_0
 }
+#endif

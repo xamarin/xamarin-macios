@@ -10,24 +10,24 @@
 #if XAMCORE_2_0 // The IntentsUI framework relies on Intents which is only available in Unified
 
 using System;
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
-using XamCore.Intents;
-using XamCore.ObjCRuntime;
-using XamCore.UIKit;
+using CoreGraphics;
+using Foundation;
+using Intents;
+using ObjCRuntime;
+using UIKit;
 
-namespace XamCore.IntentsUI {
+namespace IntentsUI {
 
 	[iOS (10, 0)]
 	[Native]
-	public enum INUIHostedViewContext : nuint {
+	public enum INUIHostedViewContext : ulong {
 		SiriSnippet,
 		MapsCard
 	}
 
 	[iOS (11,0)]
 	[Native]
-	public enum INUIInteractiveBehavior : nuint {
+	public enum INUIInteractiveBehavior : ulong {
 		None,
 		NextView,
 		Launch,

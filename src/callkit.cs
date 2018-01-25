@@ -8,17 +8,17 @@
 //
 
 using System;
-using XamCore.AVFoundation;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using AVFoundation;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
 
 #if XAMCORE_2_0
-namespace XamCore.CallKit {
+namespace CallKit {
 
 	[iOS (10, 0)]
 	[Native]
-	public enum CXCallDirectoryEnabledStatus : nint {
+	public enum CXCallDirectoryEnabledStatus : long {
 		Unknown = 0,
 		Disabled = 1,
 		Enabled = 2
@@ -27,14 +27,14 @@ namespace XamCore.CallKit {
 	[iOS (10, 0)]
 	[ErrorDomain ("CXErrorDomain")]
 	[Native]
-	public enum CXErrorCode : nint {
+	public enum CXErrorCode : long {
 		Unknown = 0
 	}
 
 	[iOS (10, 0)]
 	[ErrorDomain ("CXErrorDomainIncomingCall")]
 	[Native]
-	public enum CXErrorCodeIncomingCallError : nint {
+	public enum CXErrorCodeIncomingCallError : long {
 		Unknown = 0,
 		Unentitled = 1,
 		CallUuidAlreadyExists = 2,
@@ -45,7 +45,7 @@ namespace XamCore.CallKit {
 	[iOS (10, 0)]
 	[ErrorDomain ("CXErrorDomainRequestTransaction")]
 	[Native]
-	public enum CXErrorCodeRequestTransactionError : nint {
+	public enum CXErrorCodeRequestTransactionError : long {
 		Unknown = 0,
 		Unentitled = 1,
 		UnknownCallProvider = 2,
@@ -59,7 +59,7 @@ namespace XamCore.CallKit {
 	[iOS (10, 0)]
 	[ErrorDomain ("CXErrorDomainCallDirectoryManager")]
 	[Native]
-	public enum CXErrorCodeCallDirectoryManagerError : nint {
+	public enum CXErrorCodeCallDirectoryManagerError : long {
 		Unknown = 0,
 		NoExtensionFound = 1,
 		LoadingInterrupted = 2,
@@ -74,7 +74,7 @@ namespace XamCore.CallKit {
 
 	[iOS (10, 0)]
 	[Native]
-	public enum CXPlayDtmfCallActionType : nint {
+	public enum CXPlayDtmfCallActionType : long {
 		SingleTone = 1,
 		SoftPause = 2,
 		HardPause = 3
@@ -82,7 +82,7 @@ namespace XamCore.CallKit {
 
 	[iOS (10, 0)]
 	[Native]
-	public enum CXCallEndedReason : nint {
+	public enum CXCallEndedReason : long {
 		Failed = 1,
 		RemoteEnded = 2,
 		Unanswered = 3,
@@ -92,7 +92,7 @@ namespace XamCore.CallKit {
 
 	[iOS (10, 0)]
 	[Native]
-	public enum CXHandleType : nint {
+	public enum CXHandleType : long {
 		Generic = 1,
 		PhoneNumber = 2,
 		EmailAddress = 3

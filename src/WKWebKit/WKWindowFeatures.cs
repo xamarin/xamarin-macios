@@ -9,9 +9,9 @@
 
 using System;
 
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.WebKit
+namespace WebKit
 {
 #if XAMCORE_2_0 || !MONOMAC
 	public partial class WKWindowFeatures

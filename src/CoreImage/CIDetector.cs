@@ -26,9 +26,9 @@
 //
 
 using System;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.CoreImage {
+namespace CoreImage {
 
 	// convenience enum for CIDetectorAccuracy[High|Low] internal fields in CIDetector (coreimage.cs)
 	public enum FaceDetectorAccuracy

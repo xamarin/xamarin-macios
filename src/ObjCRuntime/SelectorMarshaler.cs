@@ -26,9 +26,9 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 	public class SelectorMarshaler : ICustomMarshaler {
 		static SelectorMarshaler marshaler;
 

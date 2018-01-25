@@ -9,11 +9,11 @@
 
 #if XAMCORE_2_0 && MONOMAC
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.Security;
+using Foundation;
+using ObjCRuntime;
+using Security;
 
-namespace XamCore.NetworkExtension {
+namespace NetworkExtension {
 	public partial class NEVpnManager {
 
 		[Mac (10,11)]
