@@ -419,7 +419,7 @@ namespace XamCore.CoreImage {
 		NSData GetJpegRepresentation (CIImage image, CGColorSpace colorSpace, CIImageRepresentationOptions options);
 #endif
 
-		[iOS (11,0)][TV (11,0)][Mac (10,13)]
+		[iOS (11,0)][TV (11,0)][Mac (10,13,4)]
 		[Export ("HEIFRepresentationOfImage:format:colorSpace:options:")]
 		[return: NullAllowed]
 		NSData GetHeifRepresentation (CIImage image, CIFormat format, CGColorSpace colorSpace, NSDictionary options);
@@ -463,7 +463,7 @@ namespace XamCore.CoreImage {
 		bool WriteJpegRepresentation (CIImage image, NSUrl url, CGColorSpace colorSpace, CIImageRepresentationOptions options, [NullAllowed] out NSError error);
 #endif
 
-		[iOS (11,0)][TV (11,0)][Mac (10,13)]
+		[iOS (11,0)][TV (11,0)][Mac (10,13,4)]
 		[Export ("writeHEIFRepresentationOfImage:toURL:format:colorSpace:options:error:")]
 		bool WriteHeifRepresentation (CIImage image, NSUrl url, CIFormat format, CGColorSpace colorSpace, NSDictionary options, [NullAllowed] out NSError error);
 
