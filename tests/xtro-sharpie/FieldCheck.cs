@@ -59,8 +59,7 @@ namespace Extrospection {
 
 				var name = ca.ConstructorArguments [0].Value as string;
 
-				MemberReference mr;
-				if (!fields.TryGetValue (name, out mr))
+				if (!fields.TryGetValue (name, out var mr))
 					fields.Add (name, p as MemberReference);
 				else {
 					// not critical and quite noisy with current API profile
@@ -79,18 +78,13 @@ namespace Extrospection {
 			if (!decl.IsAvailable ())
 				return;
 
-			var framework = GetDeclaringHeaderFile (decl);
-
-			switch (framework) {
-			case "ruby":
+			var framework = Helpers.GetFramework (decl);
+			if (framework == null)
 				return;
-			}
 
 			var name = decl.ToString ();
-			MemberReference mr;
-			if (!fields.TryGetValue (name, out mr)) {
-				Console.WriteLine ("!missing-field! {0} not bound", name);
-				return;
+			if (!fields.TryGetValue (name, out var mr)) {
+				Log.On (framework).Add ($"!missing-field! {name} not bound");
 			} else
 				fields.Remove (name);
 		}
@@ -98,8 +92,10 @@ namespace Extrospection {
 		public override void End ()
 		{
 			// at this stage anything else we have is not something we could find in Apple's headers
-			foreach (var extra in fields.Keys) {
-				Console.WriteLine ("!unknown-field! {0} bound", extra);
+			foreach (var kvp in fields) {
+				var extra = kvp.Key;
+				var framework = Helpers.GetFramework (kvp.Value);
+				Log.On (framework).Add ($"!unknown-field! {extra} bound");
 			}
 		}
 	}

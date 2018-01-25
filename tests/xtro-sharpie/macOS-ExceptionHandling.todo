@@ -1,0 +1,10 @@
+!missing-field! NSStackTraceKey not bound
+!missing-field! NSUncaughtRuntimeErrorException not bound
+!missing-field! NSUncaughtSystemExceptionException not bound
+!missing-pinvoke! NSExceptionHandlerResume is not bound
+!missing-selector! NSExceptionHandler::setDelegate: not bound
+!missing-selector! NSExceptionHandler::setExceptionHandlingMask: not bound
+!missing-selector! NSExceptionHandler::setExceptionHangingMask: not bound
+!missing-selector! NSObject::exceptionHandler:shouldHandleException:mask: not bound
+!missing-selector! NSObject::exceptionHandler:shouldLogException:mask: not bound
+!missing-type! NSExceptionHandler not bound

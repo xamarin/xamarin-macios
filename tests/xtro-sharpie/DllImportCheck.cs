@@ -18,7 +18,7 @@ using Mono.Cecil;
 using Clang.Ast;
 
 namespace Extrospection {
-	
+
 	// track all [DllImport]
 	class DllImportCheck : BaseVisitor {
 
@@ -54,10 +54,7 @@ namespace Extrospection {
 			if (name [0] == '_')
 				return;
 
-			var framework = GetDeclaringHeaderFile (decl);
-			// exclude non-framework code (e.g. all unix headers)
-			// FIXME: we only process the headers in Frameworks, not all the UNIX headers
-			// that still miss a few things (like objc runtime) but nothing that *requires* binding
+			var framework = Helpers.GetFramework (decl);
 			if (framework == null)
 				return;
 
@@ -65,30 +62,9 @@ namespace Extrospection {
 			if (!decl.IsAvailable ())
 				return;
 			
-			MethodDefinition md;
-			if (!dllimports.TryGetValue (name, out md)) {
-
-				// FIXME: we ignore some frameworks we have not bound (too many entries for our data files)
-				// we do this late because, in some cases like vImage, we do bind a few API
-				switch (framework) {
-				// Accelerate and friends
-				case "vImage":
-				case "vecLib":
-					return;
-				// security
-				case "GSS":
-					return;
-				// exposed in OpenTK-1.dll
-				case "OpenAL":
-				case "OpenGLES":
-					return;
-				case "ruby":
-				case "Tcl":
-				case "OpenGL":
-					return;
-				}
+			if (!dllimports.ContainsKey (name)) {
 				// if we find functions without matching DllImport then we report them
-				Console.WriteLine ("!missing-pinvoke! {0} is not bound", name);
+				Log.On (framework).Add ($"!missing-pinvoke! {name} is not bound");
 				return;
 			}
 
@@ -99,8 +75,10 @@ namespace Extrospection {
 		{
 			// at this stage anything else we have is not something we could find in Apple's headers
 			// e.g. a typo in the name
-			foreach (var extra in dllimports.Keys) {
-				Console.WriteLine ("!unknown-pinvoke! {0} bound", extra);
+			foreach (var kvp in dllimports) {
+				var extra = kvp.Key;
+				var framework = Helpers.GetFramework (kvp.Value);
+				Log.On (framework).Add ($"!unknown-pinvoke! {extra} bound");
 			}
 		}
 	}

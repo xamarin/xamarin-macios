@@ -1,0 +1,81 @@
+## lack of availabilty macros on NSItemProvder.PreferredPresentationStyle - intro says they are not available
+!missing-selector! NSItemProvider::preferredPresentationStyle not bound
+!missing-selector! NSItemProvider::setPreferredPresentationStyle: not bound
+## and that also means the (enum/returned) type is unused
+!missing-enum! UIPreferredPresentationStyle not bound
+
+## Added on UIAccessibility
+!missing-selector! NSObject::accessibilityHeaderElements not bound
+!missing-selector! NSObject::setAccessibilityHeaderElements: not bound
+
+## Intent not yet available on tvOS
+!missing-protocol-member! UIApplicationDelegate::application:handleIntent:completionHandler: not found
+
+## Headers says it is available but none of its members or implementor class are available
+!missing-protocol! UIPreviewInteractionDelegate not bound
+
+## enums only exposed from properties marked with UIKIT_CLASS_AVAILABLE_IOS_ONLY(10_0)
+!missing-enum! UIImpactFeedbackStyle not bound
+!missing-enum! UINotificationFeedbackType not bound
+
+## Marked as not in tvOS in Xcode 8.2 beta 1 but it's a breaking change and it's fixed only in XAMCORE_4_0
+!unknown-native-enum! UICloudSharingPermissionOptions bound
+
+## headers are unclear (added in iOS9.1) but Apple web documentation does not show those members
+## and several only make sense for the stylus touches
+!missing-selector! UITouch::altitudeAngle not bound
+!missing-selector! UITouch::azimuthAngleInView: not bound
+!missing-selector! UITouch::azimuthUnitVectorInView: not bound
+!missing-selector! UITouch::estimatedProperties not bound
+!missing-selector! UITouch::estimatedPropertiesExpectingUpdates not bound
+!missing-selector! UITouch::estimationUpdateIndex not bound
+!missing-selector! UITouch::preciseLocationInView: not bound
+!missing-selector! UITouch::precisePreviousLocationInView: not bound
+
+## the signature use UILexicon which is not part of tvOS
+!missing-selector! UIInputViewController::requestSupplementaryLexiconWithCompletion: not bound
+
+## the UIActivityItemSource protocol is not marked as unavailable but all it's members use UIActivityViewController which is not allowed on tvOS
+!missing-protocol! UIActivityItemSource not bound
+
+## confusing header wrt categories, defined in: UIAdaptivePresentations (UIViewController)
+## UIPopoverPresentationController, the returned type, is not available in tvOS
+!missing-selector! UIViewController::popoverPresentationController not bound
+
+## property not decorated as unavailable but UIPinchGestureRecognizer, the returned type, is not available in tvOS
+!missing-selector! UIScrollView::pinchGestureRecognizer not bound
+
+## Apple renamed NSLineBreakMode from UILineBreakMode and we kept the old name
+!unknown-native-enum! UILineBreakMode bound
+
+## Apple renamed NSTextAlignment from NSTextAlignment and we kept the old name
+!unknown-native-enum! UITextAlignment bound
+
+## Ignore what the header files say, the NSItemProviderReading methods are not actually implemented on TV or Watch
+!missing-protocol-conformance! NSAttributedString should conform to NSItemProviderReading (defined in 'UINSItemProvider' category)
+!missing-protocol-conformance! NSAttributedString should conform to NSItemProviderWriting (defined in 'UINSItemProvider' category)
+!missing-protocol-conformance! UIColor should conform to NSItemProviderReading (defined in 'UINSItemProvider' category)
+!missing-protocol-conformance! UIColor should conform to NSItemProviderWriting (defined in 'UINSItemProvider' category)
+!missing-protocol-conformance! UIImage should conform to NSItemProviderReading (defined in 'NSItemProvider' category)
+!missing-protocol-conformance! UIImage should conform to NSItemProviderWriting (defined in 'NSItemProvider' category)
+
+## https://github.com/xamarin/xamarin-macios/issues/3213 should be fixed before conformance to 'UIStateRestoring' is restored.
+!missing-protocol-conformance! UIViewController should conform to UIStateRestoring (defined in 'UIStateRestoration' category)
+
+### moved from tvOS-UIKit.todo
+!missing-designated-initializer! NSLayoutManager::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSShadow::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UIBarButtonItem::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UIBarItem::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UICollectionViewLayout::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UICubicTimingParameters::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UIImageAsset::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UIKeyCommand::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UIMotionEffect::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UITabBarItem::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UITraitCollection::init is missing an [DesignatedInitializer] attribute
+
+### fixed in master
+!missing-designated-initializer! UIBezierPath::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UISpringTimingParameters::init is missing an [DesignatedInitializer] attribute
+!missing-protocol-conformance! UIViewController should conform to NSExtensionRequestHandling (defined in 'NSExtensionAdditions' category)

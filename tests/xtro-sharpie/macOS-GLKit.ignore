@@ -1,0 +1,3 @@
+### moved from macOS-GLKit.todo
+!missing-selector! GLKTextureLoader::initWithShareContext: not bound
+!unknown-field! GLKTextureLoaderGrayscaleAsAlpha bound

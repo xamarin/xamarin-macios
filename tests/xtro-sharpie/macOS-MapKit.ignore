@@ -1,0 +1,10 @@
+!missing-field! MKAnnotationCalloutInfoDidChangeNotification not bound
+!missing-protocol-conformance! MKUserLocation should conform to MKAnnotation
+!missing-protocol-member! MKOverlay::coordinate not found
+!missing-selector! NSValue::MKCoordinateSpanValue not bound
+!missing-selector! NSValue::MKCoordinateValue not bound
+!unknown-native-enum! MKFeatureVisibility bound
+!unknown-native-enum! MKUserTrackingMode bound
+
+### moved from macOS-MapKit.todo
+!missing-protocol-conformance! MKMapItem should conform to NSSecureCoding (defined in 'MKMapItemSerialization' category)

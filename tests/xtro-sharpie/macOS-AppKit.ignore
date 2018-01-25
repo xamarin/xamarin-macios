@@ -1,0 +1,1304 @@
+## https://bugzilla.xamarin.com/show_bug.cgi?id=30717 
+!duplicate-register! _NSDatePickerCellDelegate exists as both AppKit.NSDatePickerCell/_NSDatePickerCellDelegate and AppKit.NSDatePicker/_NSDatePickerCellDelegate
+
+## Proxy class for NSGraphicsContext internal to AppKit
+!unknown-type! NSPrintPreviewGraphicsContext bound
+
+## 32-bit only, and marked correctly in binding
+!unknown-type! NSMenuView bound
+
+## In header as old style unnamaed enum
+!unknown-native-enum! NSModalResponse bound
+!unknown-native-enum! NSWindowLevel bound
+
+## Defined in NSObject(NSDraggingSourceDeprecated)
+!extra-protocol-member! unexpected selector NSDraggingSource::draggingSourceOperationMaskForLocal: found
+!extra-protocol-member! unexpected selector NSDraggingSource::draggedImage:beganAt: found
+!extra-protocol-member! unexpected selector NSDraggingSource::draggedImage:endedAt:operation: found
+!extra-protocol-member! unexpected selector NSDraggingSource::draggedImage:movedTo: found
+!extra-protocol-member! unexpected selector NSDraggingSource::ignoreModifierKeysWhileDragging found
+!extra-protocol-member! unexpected selector NSDraggingSource::draggedImage:endedAt:deposited: found
+
+## Defined in NSObject(NSDraggingSourceDeprecated)
+!extra-protocol-member! unexpected selector NSDraggingSource::namesOfPromisedFilesDroppedAtDestination: found
+
+## Defined in NSObject(NSSavePanelDelegateDeprecated)
+!extra-protocol-member! unexpected selector NSOpenSavePanelDelegate::panel:compareFilename:with:caseSensitive: found
+!extra-protocol-member! unexpected selector NSOpenSavePanelDelegate::panel:directoryDidChange: found
+!extra-protocol-member! unexpected selector NSOpenSavePanelDelegate::panel:isValidFilename: found
+!extra-protocol-member! unexpected selector NSOpenSavePanelDelegate::panel:shouldShowFilename: found
+
+## Defined in NSObject (NSDeprecatedTextStorageDelegate)
+!extra-protocol-member! unexpected selector NSTextStorageDelegate::textStorageDidProcessEditing: found
+!extra-protocol-member! unexpected selector NSTextStorageDelegate::textStorageWillProcessEditing: found
+!missing-selector! NSObject::textStorageDidProcessEditing: not bound
+!missing-selector! NSObject::textStorageWillProcessEditing: not bound
+
+## Used in sandbox for NSOpen/Save panel but never should have been bound. #if !XAMCORE_3_0'ed
+!unknown-type! NSRemoteOpenPanel bound
+!unknown-type! NSRemoteSavePanel bound
+
+## Defined in NSControlTextEditingDelegate - NSTextFieldDelegate <NSControlTextEditingDelegate>
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:didFailToFormatString:errorDescription: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:didFailToValidatePartialString:errorDescription: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:isValidObject: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:textShouldBeginEditing: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:textShouldEndEditing: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:textView:completions:forPartialWordRange:indexOfSelectedItem: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:textView:doCommandBySelector: found
+
+# From header - This method is invoked when the user begins editing text in a control such as a text field or a form field. 
+# The control posts a NSControlTextDidBeginEditingNotification notification, and if the control’s delegate implements this method,
+# it is automatically registered to receive the notification.
+!extra-protocol-member! unexpected selector NSRuleEditorDelegate::controlTextDidBeginEditing: found
+!extra-protocol-member! unexpected selector NSRuleEditorDelegate::controlTextDidChange: found
+!extra-protocol-member! unexpected selector NSRuleEditorDelegate::controlTextDidEndEditing: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::controlTextDidBeginEditing: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::controlTextDidChange: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::controlTextDidEndEditing: found
+
+
+## unsorted
+
+!extra-enum-native! NSEventSubtype
+!extra-protocol-member! unexpected selector NSApplicationDelegate::orderFrontStandardAboutPanel: found
+!extra-protocol-member! unexpected selector NSApplicationDelegate::orderFrontStandardAboutPanelWithOptions: found
+!extra-protocol-member! unexpected selector NSApplicationDelegate::readSelectionFromPasteboard: found
+!extra-protocol-member! unexpected selector NSApplicationDelegate::registerServicesMenuSendTypes:returnTypes: found
+!extra-protocol-member! unexpected selector NSApplicationDelegate::writeSelectionToPasteboard:types: found
+!extra-protocol-member! unexpected selector NSGestureRecognizerDelegate::xamarinselector:removed: found
+!extra-protocol-member! unexpected selector NSPasteboardReading::xamarinselector:removed: found
+!incorrect-protocol-member! +NSPasteboardReading::readableTypesForPasteboard: is REQUIRED and should be abstract
+!incorrect-protocol-member! +NSWindowRestoration::restoreWindowWithIdentifier:state:completionHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! NSAccessibility::accessibilityChildrenInNavigationOrder is REQUIRED and should be abstract
+!incorrect-protocol-member! NSAccessibility::accessibilityCustomActions is REQUIRED and should be abstract
+!incorrect-protocol-member! NSAccessibility::accessibilityCustomRotors is REQUIRED and should be abstract
+!incorrect-protocol-member! NSAccessibility::isAccessibilityRequired is REQUIRED and should be abstract
+!incorrect-protocol-member! NSAccessibility::setAccessibilityChildrenInNavigationOrder: is REQUIRED and should be abstract
+!incorrect-protocol-member! NSAccessibility::setAccessibilityCustomActions: is REQUIRED and should be abstract
+!incorrect-protocol-member! NSAccessibility::setAccessibilityCustomRotors: is REQUIRED and should be abstract
+!incorrect-protocol-member! NSAccessibility::setAccessibilityRequired: is REQUIRED and should be abstract
+!incorrect-protocol-member! NSAppearanceCustomization::appearance is REQUIRED and should be abstract
+!incorrect-protocol-member! NSAppearanceCustomization::effectiveAppearance is REQUIRED and should be abstract
+!incorrect-protocol-member! NSAppearanceCustomization::setAppearance: is REQUIRED and should be abstract
+!incorrect-protocol-member! NSDockTilePlugIn::dockMenu is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! NSDraggingInfo::animatesToDestination is REQUIRED and should be abstract
+!incorrect-protocol-member! NSDraggingInfo::draggedImage is REQUIRED and should be abstract
+!incorrect-protocol-member! NSDraggingInfo::draggedImageLocation is REQUIRED and should be abstract
+!incorrect-protocol-member! NSDraggingInfo::draggingDestinationWindow is REQUIRED and should be abstract
+!incorrect-protocol-member! NSDraggingInfo::draggingFormation is REQUIRED and should be abstract
+!incorrect-protocol-member! NSDraggingInfo::draggingLocation is REQUIRED and should be abstract
+!incorrect-protocol-member! NSDraggingInfo::draggingPasteboard is REQUIRED and should be abstract
+!incorrect-protocol-member! NSDraggingInfo::draggingSequenceNumber is REQUIRED and should be abstract
+!incorrect-protocol-member! NSDraggingInfo::draggingSource is REQUIRED and should be abstract
+!incorrect-protocol-member! NSDraggingInfo::draggingSourceOperationMask is REQUIRED and should be abstract
+!incorrect-protocol-member! NSDraggingInfo::enumerateDraggingItemsWithOptions:forView:classes:searchOptions:usingBlock: is REQUIRED and should be abstract
+!incorrect-protocol-member! NSDraggingInfo::namesOfPromisedFilesDroppedAtDestination: is REQUIRED and should be abstract
+!incorrect-protocol-member! NSDraggingInfo::numberOfValidItemsForDrop is REQUIRED and should be abstract
+!incorrect-protocol-member! NSDraggingInfo::resetSpringLoading is REQUIRED and should be abstract
+!incorrect-protocol-member! NSDraggingInfo::setAnimatesToDestination: is REQUIRED and should be abstract
+!incorrect-protocol-member! NSDraggingInfo::setDraggingFormation: is REQUIRED and should be abstract
+!incorrect-protocol-member! NSDraggingInfo::setNumberOfValidItemsForDrop: is REQUIRED and should be abstract
+!incorrect-protocol-member! NSDraggingInfo::slideDraggedImageTo: is REQUIRED and should be abstract
+!incorrect-protocol-member! NSDraggingInfo::springLoadingHighlight is REQUIRED and should be abstract
+!incorrect-protocol-member! NSFilePromiseProviderDelegate::filePromiseProvider:writePromiseToURL:completionHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! NSMenuDelegate::menu:willHighlightItem: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! NSPasteboardItemDataProvider::pasteboardFinishedWithDataProvider: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! NSPasteboardWriting::pasteboardPropertyListForType: is REQUIRED and should be abstract
+!incorrect-protocol-member! NSPasteboardWriting::writableTypesForPasteboard: is REQUIRED and should be abstract
+!incorrect-protocol-member! NSPrintPanelAccessorizing::keyPathsForValuesAffectingPreview is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! NSRuleEditorDelegate::ruleEditor:predicatePartsForCriterion:withDisplayValue:inRow: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! NSRuleEditorDelegate::ruleEditorRowsDidChange: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! NSTextFinderClient::allowsMultipleSelection is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! NSTextFinderClient::contentViewAtIndex:effectiveCharacterRange: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! NSTextFinderClient::didReplaceCharacters is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! NSTextFinderClient::drawCharactersInRange:forContentView: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! NSTextFinderClient::firstSelectedRange is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! NSTextFinderClient::isEditable is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! NSTextFinderClient::isSelectable is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! NSTextFinderClient::rectsForCharacterRange: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! NSTextFinderClient::replaceCharactersInRange:withString: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! NSTextFinderClient::scrollRangeToVisible: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! NSTextFinderClient::selectedRanges is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! NSTextFinderClient::setSelectedRanges: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! NSTextFinderClient::shouldReplaceCharactersInRanges:withStrings: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! NSTextFinderClient::string is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! NSTextFinderClient::stringAtIndex:effectiveRange:endsWithSearchBoundary: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! NSTextFinderClient::stringLength is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! NSTextFinderClient::visibleCharacterRanges is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! NSTextInputClient::attributedSubstringForProposedRange:actualRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! NSTextInputClient::characterIndexForPoint: is REQUIRED and should be abstract
+!incorrect-protocol-member! NSTextInputClient::firstRectForCharacterRange:actualRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! NSTextInputClient::hasMarkedText is REQUIRED and should be abstract
+!incorrect-protocol-member! NSTextInputClient::insertText:replacementRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! NSTextInputClient::markedRange is REQUIRED and should be abstract
+!incorrect-protocol-member! NSTextInputClient::selectedRange is REQUIRED and should be abstract
+!incorrect-protocol-member! NSTextInputClient::setMarkedText:selectedRange:replacementRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! NSTextInputClient::unmarkText is REQUIRED and should be abstract
+!incorrect-protocol-member! NSTextInputClient::validAttributesForMarkedText is REQUIRED and should be abstract
+!incorrect-protocol-member! NSUserInterfaceItemIdentification::identifier is REQUIRED and should be abstract
+!incorrect-protocol-member! NSUserInterfaceItemIdentification::setIdentifier: is REQUIRED and should be abstract
+!missing-enum! NSAutoresizingMaskOptions not bound
+!missing-enum! NSBackingStoreType not bound
+!missing-enum! NSCellHitResult not bound
+!missing-enum! NSColorPanelOptions not bound
+!missing-enum! NSEventModifierFlags not bound
+!missing-enum! NSFindPanelAction not bound
+!missing-enum! NSFindPanelSubstringMatchType not bound
+!missing-enum! NSFontAction not bound
+!missing-enum! NSFontDescriptorSymbolicTraits not bound
+!missing-enum! NSMediaLibrary not bound
+!missing-enum! NSMenuProperties not bound
+!missing-enum! NSMultibyteGlyphPacking not bound
+!missing-enum! NSPaperOrientation not bound
+!missing-enum! NSPDFPanelOptions not bound
+!missing-enum! NSSplitViewItemCollapseBehavior not bound
+!missing-enum! NSTableColumnResizingOptions not bound
+!missing-enum! NSTableViewAnimationOptions not bound
+!missing-enum! NSTableViewGridLineStyle not bound
+!missing-enum! NSWindowStyleMask not bound
+!missing-enum! NSWritingDirectionFormatType not bound
+!missing-enum-native! NSSpellingState
+!missing-field! NSAbortModalException not bound
+!missing-field! NSAbortPrintingException not bound
+!missing-field! NSAccessibilityAscendingSortDirectionValue not bound
+!missing-field! NSAccessibilityCenterTabStopMarkerTypeValue not bound
+!missing-field! NSAccessibilityCentimetersUnitValue not bound
+!missing-field! NSAccessibilityDecimalTabStopMarkerTypeValue not bound
+!missing-field! NSAccessibilityDescendingSortDirectionValue not bound
+!missing-field! NSAccessibilityErrorCodeExceptionInfo not bound
+!missing-field! NSAccessibilityException not bound
+!missing-field! NSAccessibilityFirstLineIndentMarkerTypeValue not bound
+!missing-field! NSAccessibilityHeadIndentMarkerTypeValue not bound
+!missing-field! NSAccessibilityHorizontalOrientationValue not bound
+!missing-field! NSAccessibilityInchesUnitValue not bound
+!missing-field! NSAccessibilityLeftTabStopMarkerTypeValue not bound
+!missing-field! NSAccessibilityMenuRole not bound
+!missing-field! NSAccessibilityOrientationAttribute not bound
+!missing-field! NSAccessibilityPicasUnitValue not bound
+!missing-field! NSAccessibilityPointsUnitValue not bound
+!missing-field! NSAccessibilityRightTabStopMarkerTypeValue not bound
+!missing-field! NSAccessibilitySortButtonRole not bound
+!missing-field! NSAccessibilityTailIndentMarkerTypeValue not bound
+!missing-field! NSAccessibilityUnknownMarkerTypeValue not bound
+!missing-field! NSAccessibilityUnknownOrientationValue not bound
+!missing-field! NSAccessibilityUnknownSortDirectionValue not bound
+!missing-field! NSAccessibilityUnknownUnitValue not bound
+!missing-field! NSAccessibilityVerticalOrientationValue not bound
+!missing-field! NSAlignmentBinding not bound
+!missing-field! NSAllowsEditingMultipleValuesSelectionBindingOption not bound
+!missing-field! NSAllowsNullArgumentBindingOption not bound
+!missing-field! NSAllRomanInputSourcesLocaleIdentifier not bound
+!missing-field! NSAlternateImageBinding not bound
+!missing-field! NSAlternateTitleBinding not bound
+!missing-field! NSAlwaysPresentsApplicationModalAlertsBindingOption not bound
+!missing-field! NSAnimateBinding not bound
+!missing-field! NSAnimationDelayBinding not bound
+!missing-field! NSApp not bound
+!missing-field! NSAppKitIgnoredException not bound
+!missing-field! NSAppKitVersionNumber not bound
+!missing-field! NSAppKitVirtualMemoryException not bound
+!missing-field! NSApplicationDidChangeOcclusionStateNotification not bound
+!missing-field! NSApplicationFileType not bound
+!missing-field! NSArgumentBinding not bound
+!missing-field! NSAttributedStringBinding not bound
+!missing-field! NSAuthorDocumentAttribute not bound
+!missing-field! NSBackgroundColorDocumentAttribute not bound
+!missing-field! NSBadBitmapParametersException not bound
+!missing-field! NSBadComparisonException not bound
+!missing-field! NSBadRTFColorTableException not bound
+!missing-field! NSBadRTFDirectiveException not bound
+!missing-field! NSBadRTFFontTableException not bound
+!missing-field! NSBadRTFStyleSheetException not bound
+!missing-field! NSBlack not bound
+!missing-field! NSBottomMarginDocumentAttribute not bound
+!missing-field! NSBrowserIllegalDelegateException not bound
+!missing-field! NSCategoryDocumentAttribute not bound
+!missing-field! NSCharacterEncodingDocumentAttribute not bound
+!missing-field! NSCocoaVersionDocumentAttribute not bound
+!missing-field! NSColorListDidChangeNotification not bound
+!missing-field! NSColorListIOException not bound
+!missing-field! NSColorListNotEditableException not bound
+!missing-field! NSCommentDocumentAttribute not bound
+!missing-field! NSCompanyDocumentAttribute not bound
+!missing-field! NSConditionallySetsEditableBindingOption not bound
+!missing-field! NSConditionallySetsEnabledBindingOption not bound
+!missing-field! NSConditionallySetsHiddenBindingOption not bound
+!missing-field! NSContentArrayBinding not bound
+!missing-field! NSContentArrayForMultipleSelectionBinding not bound
+!missing-field! NSContentBinding not bound
+!missing-field! NSContentDictionaryBinding not bound
+!missing-field! NSContentHeightBinding not bound
+!missing-field! NSContentObjectBinding not bound
+!missing-field! NSContentObjectsBinding not bound
+!missing-field! NSContentPlacementTagBindingOption not bound
+!missing-field! NSContentSetBinding not bound
+!missing-field! NSContentValuesBinding not bound
+!missing-field! NSContentWidthBinding not bound
+!missing-field! NSContinuouslyUpdatesValueBindingOption not bound
+!missing-field! NSConvertedDocumentAttribute not bound
+!missing-field! NSCopyrightDocumentAttribute not bound
+!missing-field! NSCreatesSortDescriptorBindingOption not bound
+!missing-field! NSCreationTimeDocumentAttribute not bound
+!missing-field! NSCriticalValueBinding not bound
+!missing-field! NSDarkGray not bound
+!missing-field! NSDataBinding not bound
+!missing-field! NSDefaultTabIntervalDocumentAttribute not bound
+!missing-field! NSDefinitionPresentationTypeDictionaryApplication not bound
+!missing-field! NSDefinitionPresentationTypeKey not bound
+!missing-field! NSDefinitionPresentationTypeOverlay not bound
+!missing-field! NSDeletesObjectsOnRemoveBindingsOption not bound
+!missing-field! NSDeviceBitsPerSample not bound
+!missing-field! NSDeviceColorSpaceName not bound
+!missing-field! NSDeviceIsPrinter not bound
+!missing-field! NSDeviceIsScreen not bound
+!missing-field! NSDeviceResolution not bound
+!missing-field! NSDeviceSize not bound
+!missing-field! NSDirectoryFileType not bound
+!missing-field! NSDisplayNameBindingOption not bound
+!missing-field! NSDisplayPatternBindingOption not bound
+!missing-field! NSDisplayPatternTitleBinding not bound
+!missing-field! NSDisplayPatternValueBinding not bound
+!missing-field! NSDocumentEditedBinding not bound
+!missing-field! NSDocumentTypeDocumentAttribute not bound
+!missing-field! NSDoubleClickArgumentBinding not bound
+!missing-field! NSDoubleClickTargetBinding not bound
+!missing-field! NSDraggingException not bound
+!missing-field! NSEditableBinding not bound
+!missing-field! NSEditorDocumentAttribute not bound
+!missing-field! NSEnabledBinding not bound
+!missing-field! NSExcludedElementsDocumentAttribute not bound
+!missing-field! NSExcludedKeysBinding not bound
+!missing-field! NSFilesystemFileType not bound
+!missing-field! NSFileTypeDocumentAttribute not bound
+!missing-field! NSFilterPredicateBinding not bound
+!missing-field! NSFindPanelCaseInsensitiveSearch not bound
+!missing-field! NSFindPanelSearchOptionsPboardType not bound
+!missing-field! NSFindPanelSubstringMatch not bound
+!missing-field! NSFontBinding not bound
+!missing-field! NSFontBoldBinding not bound
+!missing-field! NSFontColorAttribute not bound
+!missing-field! NSFontFamilyNameBinding not bound
+!missing-field! NSFontIdentityMatrix not bound
+!missing-field! NSFontItalicBinding not bound
+!missing-field! NSFontNameBinding not bound
+!missing-field! NSFontSizeBinding not bound
+!missing-field! NSFontUnavailableException not bound
+!missing-field! NSGraphicsContextDestinationAttributeName not bound
+!missing-field! NSGraphicsContextPDFFormat not bound
+!missing-field! NSGraphicsContextPSFormat not bound
+!missing-field! NSGraphicsContextRepresentationFormatAttributeName not bound
+!missing-field! NSHandlesContentAsCompoundValueBindingOption not bound
+!missing-field! NSHeaderTitleBinding not bound
+!missing-field! NSHiddenBinding not bound
+!missing-field! NSHyphenationFactorDocumentAttribute not bound
+!missing-field! NSIllegalSelectorException not bound
+!missing-field! NSImageBinding not bound
+!missing-field! NSImageCacheException not bound
+!missing-field! NSImageNameAdvanced not bound
+!missing-field! NSImageNameBonjour not bound
+!missing-field! NSImageNameColorPanel not bound
+!missing-field! NSImageNameColumnViewTemplate not bound
+!missing-field! NSImageNameComputer not bound
+!missing-field! NSImageNameDotMac not bound
+!missing-field! NSImageNameEveryone not bound
+!missing-field! NSImageNameFlowViewTemplate not bound
+!missing-field! NSImageNameFolderBurnable not bound
+!missing-field! NSImageNameFolderSmart not bound
+!missing-field! NSImageNameFontPanel not bound
+!missing-field! NSImageNameGoBackTemplate not bound
+!missing-field! NSImageNameGoForwardTemplate not bound
+!missing-field! NSImageNameIconViewTemplate not bound
+!missing-field! NSImageNameInfo not bound
+!missing-field! NSImageNameListViewTemplate not bound
+!missing-field! NSImageNameMultipleDocuments not bound
+!missing-field! NSImageNameNetwork not bound
+!missing-field! NSImageNamePreferencesGeneral not bound
+!missing-field! NSImageNameUser not bound
+!missing-field! NSImageNameUserAccounts not bound
+!missing-field! NSImageNameUserGroup not bound
+!missing-field! NSIncludedKeysBinding not bound
+!missing-field! NSInitialKeyBinding not bound
+!missing-field! NSInitialValueBinding not bound
+!missing-field! NSInkTextPboardType not bound
+!missing-field! NSInsertsNullPlaceholderBindingOption not bound
+!missing-field! NSInterfaceStyleDefault not bound
+!missing-field! NSInvokesSeparatelyWithArrayObjectsBindingOption not bound
+!missing-field! NSIsIndeterminateBinding not bound
+!missing-field! NSKeywordsDocumentAttribute not bound
+!missing-field! NSLabelBinding not bound
+!missing-field! NSLeftMarginDocumentAttribute not bound
+!missing-field! NSLightGray not bound
+!missing-field! NSLocalizedKeyDictionaryBinding not bound
+!missing-field! NSManagedObjectContextBinding not bound
+!missing-field! NSManagerDocumentAttribute not bound
+!missing-field! NSMaximumRecentsBinding not bound
+!missing-field! NSMaxValueBinding not bound
+!missing-field! NSMaxWidthBinding not bound
+!missing-field! NSMinValueBinding not bound
+!missing-field! NSMinWidthBinding not bound
+!missing-field! NSMixedStateImageBinding not bound
+!missing-field! NSModificationTimeDocumentAttribute not bound
+!missing-field! NSMultipleValuesMarker not bound
+!missing-field! NSMultipleValuesPlaceholderBindingOption not bound
+!missing-field! NSNibLoadingException not bound
+!missing-field! NSNibOwner not bound
+!missing-field! NSNibTopLevelObjects not bound
+!missing-field! NSNoSelectionMarker not bound
+!missing-field! NSNoSelectionPlaceholderBindingOption not bound
+!missing-field! NSNotApplicableMarker not bound
+!missing-field! NSNotApplicablePlaceholderBindingOption not bound
+!missing-field! NSNullPlaceholderBindingOption not bound
+!missing-field! NSObservedKeyPathKey not bound
+!missing-field! NSObservedObjectKey not bound
+!missing-field! NSOffStateImageBinding not bound
+!missing-field! NSOnStateImageBinding not bound
+!missing-field! NSOptionsKey not bound
+!missing-field! NSOutlineViewDisclosureButtonKey not bound
+!missing-field! NSOutlineViewShowHideButtonKey not bound
+!missing-field! NSPaperSizeDocumentAttribute not bound
+!missing-field! NSPasteboardCommunicationException not bound
+!missing-field! NSPasteboardURLReadingContentsConformToTypesKey not bound
+!missing-field! NSPasteboardURLReadingFileURLsOnlyKey not bound
+!missing-field! NSPlainFileType not bound
+!missing-field! NSPositioningRectBinding not bound
+!missing-field! NSPPDIncludeNotFoundException not bound
+!missing-field! NSPPDIncludeStackOverflowException not bound
+!missing-field! NSPPDIncludeStackUnderflowException not bound
+!missing-field! NSPPDParseException not bound
+!missing-field! NSPredicateBinding not bound
+!missing-field! NSPredicateFormatBindingOption not bound
+!missing-field! NSPrefixSpacesDocumentAttribute not bound
+!missing-field! NSPrintAllPages not bound
+!missing-field! NSPrintAllPresetsJobStyleHint not bound
+!missing-field! NSPrintBottomMargin not bound
+!missing-field! NSPrintCancelJob not bound
+!missing-field! NSPrintCopies not bound
+!missing-field! NSPrintDetailedErrorReporting not bound
+!missing-field! NSPrintFaxNumber not bound
+!missing-field! NSPrintFirstPage not bound
+!missing-field! NSPrintFormName not bound
+!missing-field! NSPrintHeaderAndFooter not bound
+!missing-field! NSPrintHorizontallyCentered not bound
+!missing-field! NSPrintHorizontalPagination not bound
+!missing-field! NSPrintingCommunicationException not bound
+!missing-field! NSPrintJobDisposition not bound
+!missing-field! NSPrintJobFeatures not bound
+!missing-field! NSPrintJobSavingFileNameExtensionHidden not bound
+!missing-field! NSPrintJobSavingURL not bound
+!missing-field! NSPrintLastPage not bound
+!missing-field! NSPrintLeftMargin not bound
+!missing-field! NSPrintManualFeed not bound
+!missing-field! NSPrintMustCollate not bound
+!missing-field! NSPrintNoPresetsJobStyleHint not bound
+!missing-field! NSPrintOperationExistsException not bound
+!missing-field! NSPrintOrientation not bound
+!missing-field! NSPrintPackageException not bound
+!missing-field! NSPrintPagesAcross not bound
+!missing-field! NSPrintPagesDown not bound
+!missing-field! NSPrintPagesPerSheet not bound
+!missing-field! NSPrintPanelAccessorySummaryItemDescriptionKey not bound
+!missing-field! NSPrintPanelAccessorySummaryItemNameKey not bound
+!missing-field! NSPrintPaperFeed not bound
+!missing-field! NSPrintPaperName not bound
+!missing-field! NSPrintPaperSize not bound
+!missing-field! NSPrintPhotoJobStyleHint not bound
+!missing-field! NSPrintPreviewJob not bound
+!missing-field! NSPrintPrinter not bound
+!missing-field! NSPrintPrinterName not bound
+!missing-field! NSPrintReversePageOrder not bound
+!missing-field! NSPrintRightMargin not bound
+!missing-field! NSPrintSaveJob not bound
+!missing-field! NSPrintSavePath not bound
+!missing-field! NSPrintScalingFactor not bound
+!missing-field! NSPrintSelectionOnly not bound
+!missing-field! NSPrintSpoolJob not bound
+!missing-field! NSPrintTime not bound
+!missing-field! NSPrintTopMargin not bound
+!missing-field! NSPrintVerticallyCentered not bound
+!missing-field! NSPrintVerticalPagination not bound
+!missing-field! NSRaisesForNotApplicableKeysBindingOption not bound
+!missing-field! NSReadOnlyDocumentAttribute not bound
+!missing-field! NSRecentSearchesBinding not bound
+!missing-field! NSRepresentedFilenameBinding not bound
+!missing-field! NSRightMarginDocumentAttribute not bound
+!missing-field! NSRowHeightBinding not bound
+!missing-field! NSRTFPropertyStackOverflowException not bound
+!missing-field! NSRuleEditorPredicateComparisonModifier not bound
+!missing-field! NSRuleEditorPredicateCompoundType not bound
+!missing-field! NSRuleEditorPredicateCustomSelector not bound
+!missing-field! NSRuleEditorPredicateLeftExpression not bound
+!missing-field! NSRuleEditorPredicateOperatorType not bound
+!missing-field! NSRuleEditorPredicateOptions not bound
+!missing-field! NSRuleEditorPredicateRightExpression not bound
+!missing-field! NSScrollViewWillStartLiveScrollNotification not bound
+!missing-field! NSSelectedIdentifierBinding not bound
+!missing-field! NSSelectedIndexBinding not bound
+!missing-field! NSSelectedLabelBinding not bound
+!missing-field! NSSelectedObjectBinding not bound
+!missing-field! NSSelectedObjectsBinding not bound
+!missing-field! NSSelectedTagBinding not bound
+!missing-field! NSSelectedValueBinding not bound
+!missing-field! NSSelectedValuesBinding not bound
+!missing-field! NSSelectionIndexesBinding not bound
+!missing-field! NSSelectionIndexPathsBinding not bound
+!missing-field! NSSelectorNameBindingOption not bound
+!missing-field! NSSelectsAllWhenSettingContentBindingOption not bound
+!missing-field! NSSharingServiceNamePostOnLinkedIn not bound
+!missing-field! NSSharingServiceNamePostOnTencentWeibo not bound
+!missing-field! NSSharingServiceNameUseAsFacebookProfileImage not bound
+!missing-field! NSSharingServiceNameUseAsLinkedInProfileImage not bound
+!missing-field! NSShellCommandFileType not bound
+!missing-field! NSSortDescriptorsBinding not bound
+!missing-field! NSSoundPboardType not bound
+!missing-field! NSSpeechCharacterModeProperty not bound
+!missing-field! NSSpeechCommandDelimiterProperty not bound
+!missing-field! NSSpeechCommandPrefix not bound
+!missing-field! NSSpeechCommandSuffix not bound
+!missing-field! NSSpeechCurrentVoiceProperty not bound
+!missing-field! NSSpeechDictionaryAbbreviations not bound
+!missing-field! NSSpeechDictionaryEntryPhonemes not bound
+!missing-field! NSSpeechDictionaryEntrySpelling not bound
+!missing-field! NSSpeechDictionaryLocaleIdentifier not bound
+!missing-field! NSSpeechDictionaryModificationDate not bound
+!missing-field! NSSpeechDictionaryPronunciations not bound
+!missing-field! NSSpeechErrorCount not bound
+!missing-field! NSSpeechErrorNewestCharacterOffset not bound
+!missing-field! NSSpeechErrorNewestCode not bound
+!missing-field! NSSpeechErrorOldestCharacterOffset not bound
+!missing-field! NSSpeechErrorOldestCode not bound
+!missing-field! NSSpeechErrorsProperty not bound
+!missing-field! NSSpeechInputModeProperty not bound
+!missing-field! NSSpeechModeLiteral not bound
+!missing-field! NSSpeechModeNormal not bound
+!missing-field! NSSpeechModePhoneme not bound
+!missing-field! NSSpeechModeText not bound
+!missing-field! NSSpeechNumberModeProperty not bound
+!missing-field! NSSpeechOutputToFileURLProperty not bound
+!missing-field! NSSpeechPhonemeInfoExample not bound
+!missing-field! NSSpeechPhonemeInfoHiliteEnd not bound
+!missing-field! NSSpeechPhonemeInfoHiliteStart not bound
+!missing-field! NSSpeechPhonemeInfoOpcode not bound
+!missing-field! NSSpeechPhonemeInfoSymbol not bound
+!missing-field! NSSpeechPhonemeSymbolsProperty not bound
+!missing-field! NSSpeechPitchBaseProperty not bound
+!missing-field! NSSpeechPitchModProperty not bound
+!missing-field! NSSpeechRateProperty not bound
+!missing-field! NSSpeechRecentSyncProperty not bound
+!missing-field! NSSpeechResetProperty not bound
+!missing-field! NSSpeechStatusNumberOfCharactersLeft not bound
+!missing-field! NSSpeechStatusOutputBusy not bound
+!missing-field! NSSpeechStatusOutputPaused not bound
+!missing-field! NSSpeechStatusPhonemeCode not bound
+!missing-field! NSSpeechStatusProperty not bound
+!missing-field! NSSpeechSynthesizerInfoIdentifier not bound
+!missing-field! NSSpeechSynthesizerInfoProperty not bound
+!missing-field! NSSpeechSynthesizerInfoVersion not bound
+!missing-field! NSSpeechVolumeProperty not bound
+!missing-field! NSSpellCheckerDidChangeAutomaticDashSubstitutionNotification not bound
+!missing-field! NSSpellCheckerDidChangeAutomaticQuoteSubstitutionNotification not bound
+!missing-field! NSSubjectDocumentAttribute not bound
+!missing-field! NSTabColumnTerminatorsAttributeName not bound
+!missing-field! NSTargetBinding not bound
+!missing-field! NSTextColorBinding not bound
+!missing-field! NSTextEffectLetterpressStyle not bound
+!missing-field! NSTextEncodingNameDocumentAttribute not bound
+!missing-field! NSTextFinderCaseInsensitiveKey not bound
+!missing-field! NSTextFinderMatchingTypeKey not bound
+!missing-field! NSTextLineTooLongException not bound
+!missing-field! NSTextNoSelectionException not bound
+!missing-field! NSTextReadException not bound
+!missing-field! NSTextWriteException not bound
+!missing-field! NSTIFFException not bound
+!missing-field! NSTitleBinding not bound
+!missing-field! NSTitleDocumentAttribute not bound
+!missing-field! NSToolTipBinding not bound
+!missing-field! NSTopMarginDocumentAttribute not bound
+!missing-field! NSTransparentBinding not bound
+!missing-field! NSTypedStreamVersionException not bound
+!missing-field! NSTypeIdentifierAddressText not bound
+!missing-field! NSTypeIdentifierDateText not bound
+!missing-field! NSTypeIdentifierPhoneNumberText not bound
+!missing-field! NSTypeIdentifierTransitInformationText not bound
+!missing-field! NSUnderlineStrikethroughMask not bound
+!missing-field! NSUserActivityDocumentURLKey not bound
+!missing-field! NSUsesScreenFontsDocumentAttribute not bound
+!missing-field! NSValidatesImmediatelyBindingOption not bound
+!missing-field! NSValueBinding not bound
+!missing-field! NSValuePathBinding not bound
+!missing-field! NSValueTransformerBindingOption not bound
+!missing-field! NSValueTransformerNameBindingOption not bound
+!missing-field! NSValueURLBinding not bound
+!missing-field! NSViewModeDocumentAttribute not bound
+!missing-field! NSViewNoInstrinsicMetric not bound
+!missing-field! NSViewSizeDocumentAttribute not bound
+!missing-field! NSViewZoomDocumentAttribute not bound
+!missing-field! NSVisibleBinding not bound
+!missing-field! NSVoiceAge not bound
+!missing-field! NSVoiceDemoText not bound
+!missing-field! NSVoiceGender not bound
+!missing-field! NSVoiceGenderFemale not bound
+!missing-field! NSVoiceGenderMale not bound
+!missing-field! NSVoiceGenderNeuter not bound
+!missing-field! NSVoiceIdentifier not bound
+!missing-field! NSVoiceIndividuallySpokenCharacters not bound
+!missing-field! NSVoiceLanguage not bound
+!missing-field! NSVoiceLocaleIdentifier not bound
+!missing-field! NSVoiceName not bound
+!missing-field! NSVoiceSupportedCharacters not bound
+!missing-field! NSWarningValueBinding not bound
+!missing-field! NSWhite not bound
+!missing-field! NSWidthBinding not bound
+!missing-field! NSWindowDidChangeOcclusionStateNotification not bound
+!missing-field! NSWindowServerCommunicationException not bound
+!missing-field! NSWordTablesReadException not bound
+!missing-field! NSWordTablesWriteException not bound
+!missing-field! NSWorkspaceCompressOperation not bound
+!missing-field! NSWorkspaceDecompressOperation not bound
+!missing-field! NSWorkspaceDecryptOperation not bound
+!missing-field! NSWorkspaceDesktopImageAllowClippingKey not bound
+!missing-field! NSWorkspaceDesktopImageFillColorKey not bound
+!missing-field! NSWorkspaceDesktopImageScalingKey not bound
+!missing-field! NSWorkspaceEncryptOperation not bound
+!missing-pinvoke! NSAccessibilityRaiseBadArgumentException is not bound
+!missing-pinvoke! NSApplicationLoad is not bound
+!missing-pinvoke! NSBeginAlertSheet is not bound
+!missing-pinvoke! NSBeginCriticalAlertSheet is not bound
+!missing-pinvoke! NSBeginInformationalAlertSheet is not bound
+!missing-pinvoke! NSConvertGlyphsToPackedGlyphs is not bound
+!missing-pinvoke! NSCopyBits is not bound
+!missing-pinvoke! NSCountWindows is not bound
+!missing-pinvoke! NSCountWindowsForContext is not bound
+!missing-pinvoke! NSCreateFileContentsPboardType is not bound
+!missing-pinvoke! NSCreateFilenamePboardType is not bound
+!missing-pinvoke! NSDottedFrameRect is not bound
+!missing-pinvoke! NSDrawBitmap is not bound
+!missing-pinvoke! NSDrawButton is not bound
+!missing-pinvoke! NSDrawColorTiledRects is not bound
+!missing-pinvoke! NSEraseRect is not bound
+!missing-pinvoke! NSGetAlertPanel is not bound
+!missing-pinvoke! NSGetCriticalAlertPanel is not bound
+!missing-pinvoke! NSGetFileType is not bound
+!missing-pinvoke! NSGetFileTypes is not bound
+!missing-pinvoke! NSGetInformationalAlertPanel is not bound
+!missing-pinvoke! NSGetWindowServerMemory is not bound
+!missing-pinvoke! NSHighlightRect is not bound
+!missing-pinvoke! NSInterfaceStyleForKey is not bound
+!missing-pinvoke! NSIsControllerMarker is not bound
+!missing-pinvoke! NSOpenGLGetOption is not bound
+!missing-pinvoke! NSOpenGLGetVersion is not bound
+!missing-pinvoke! NSOpenGLSetOption is not bound
+!missing-pinvoke! NSPerformService is not bound
+!missing-pinvoke! NSReadPixel is not bound
+!missing-pinvoke! NSRectClipList is not bound
+!missing-pinvoke! NSRectFillListUsingOperation is not bound
+!missing-pinvoke! NSRectFillListWithColors is not bound
+!missing-pinvoke! NSRectFillListWithColorsUsingOperation is not bound
+!missing-pinvoke! NSRectFillListWithGrays is not bound
+!missing-pinvoke! NSRegisterServicesProvider is not bound
+!missing-pinvoke! NSReleaseAlertPanel is not bound
+!missing-pinvoke! NSRunAlertPanel is not bound
+!missing-pinvoke! NSRunAlertPanelRelativeToWindow is not bound
+!missing-pinvoke! NSRunCriticalAlertPanel is not bound
+!missing-pinvoke! NSRunCriticalAlertPanelRelativeToWindow is not bound
+!missing-pinvoke! NSRunInformationalAlertPanel is not bound
+!missing-pinvoke! NSRunInformationalAlertPanelRelativeToWindow is not bound
+!missing-pinvoke! NSSetShowsServicesMenuItem is not bound
+!missing-pinvoke! NSShowsServicesMenuItem is not bound
+!missing-pinvoke! NSUnregisterServicesProvider is not bound
+!missing-pinvoke! NSUpdateDynamicServices is not bound
+!missing-pinvoke! NSWindowList is not bound
+!missing-pinvoke! NSWindowListForContext is not bound
+!missing-protocol! NSAccessibilityCheckBox not bound
+!missing-protocol! NSAccessibilityList not bound
+!missing-protocol! NSAccessibilityOutline not bound
+!missing-protocol! NSAnimatablePropertyContainer not bound
+!missing-protocol! NSChangeSpelling not bound
+!missing-protocol! NSColorPickingCustom not bound
+!missing-protocol! NSColorPickingDefault not bound
+!missing-protocol! NSGlyphStorage not bound
+!missing-protocol! NSIgnoreMisspelledWords not bound
+!missing-protocol! NSInputServerMouseTracker not bound
+!missing-protocol! NSInputServiceProvider not bound
+!missing-protocol! NSTextAttachmentCell not bound
+!missing-protocol! NSTextInput not bound
+!missing-protocol! NSTextLayoutOrientationProvider not bound
+!missing-protocol! NSTokenFieldCellDelegate not bound
+!missing-protocol! NSUserInterfaceItemSearching not bound
+!missing-protocol-conformance! NSApplication should conform to NSUserInterfaceValidations
+!missing-protocol-conformance! NSButton should conform to NSUserInterfaceValidations
+!missing-protocol-conformance! NSCollectionViewItem should conform to NSCollectionViewElement
+!missing-protocol-conformance! NSColorPicker should conform to NSColorPickingDefault
+!missing-protocol-conformance! NSDocument should conform to NSFilePresenter
+!missing-protocol-conformance! NSDocument should conform to NSUserInterfaceValidations
+!missing-protocol-conformance! NSDocumentController should conform to NSUserInterfaceValidations
+!missing-protocol-conformance! NSFontAssetRequest should conform to NSProgressReporting
+!missing-protocol-conformance! NSLayoutConstraint should conform to NSAnimatablePropertyContainer
+!missing-protocol-conformance! NSMatrix should conform to NSUserInterfaceValidations
+!missing-protocol-conformance! NSMenu should conform to NSAccessibilityElement
+!missing-protocol-conformance! NSMenuItem should conform to NSAccessibilityElement
+!missing-protocol-conformance! NSMenuItem should conform to NSValidatedUserInterfaceItem
+!missing-protocol-conformance! NSOpenGLContext should conform to NSLocking
+!missing-protocol-conformance! NSOutlineView should conform to NSAccessibilityOutline
+!missing-protocol-conformance! NSPageController should conform to NSAnimatablePropertyContainer
+!missing-protocol-conformance! NSPathCell should conform to NSOpenSavePanelDelegate
+!missing-protocol-conformance! NSSplitViewItem should conform to NSAnimatablePropertyContainer
+!missing-protocol-conformance! NSTableView should conform to NSTextViewDelegate
+!missing-protocol-conformance! NSTableView should conform to NSUserInterfaceValidations
+!missing-protocol-conformance! NSText should conform to NSChangeSpelling
+!missing-protocol-conformance! NSText should conform to NSIgnoreMisspelledWords
+!missing-protocol-conformance! NSTextAttachment should conform to NSTextAttachmentContainer
+!missing-protocol-conformance! NSTextAttachmentCell should conform to NSTextAttachmentCell
+!missing-protocol-conformance! NSTextContainer should conform to NSTextLayoutOrientationProvider
+!missing-protocol-conformance! NSTextField should conform to NSUserInterfaceValidations
+!missing-protocol-conformance! NSTextView should conform to NSTextInput
+!missing-protocol-conformance! NSTextView should conform to NSTextLayoutOrientationProvider
+!missing-protocol-conformance! NSTextView should conform to NSUserInterfaceValidations
+!missing-protocol-conformance! NSTitlebarAccessoryViewController should conform to NSAnimatablePropertyContainer
+!missing-protocol-conformance! NSToolbarItem should conform to NSValidatedUserInterfaceItem
+!missing-protocol-conformance! NSView should conform to NSAnimatablePropertyContainer
+!missing-protocol-conformance! NSWindow should conform to NSAnimatablePropertyContainer
+!missing-protocol-conformance! NSWindow should conform to NSUserInterfaceValidations
+!missing-protocol-member! NSApplicationDelegate::applicationDidChangeOcclusionState: not found
+!missing-protocol-member! NSBrowserDelegate::browser:draggingImageForRowsWithIndexes:inColumn:withEvent:offset: not found
+!missing-protocol-member! NSCollectionViewDelegate::collectionView:draggingImageForItemsAtIndexes:withEvent:offset: not found
+!missing-protocol-member! NSDraggingDestination::updateDraggingItemsForDrag: not found
+!missing-protocol-member! NSDraggingSource::draggingSession:endedAtPoint:operation: not found
+!missing-protocol-member! NSDraggingSource::draggingSession:movedToPoint: not found
+!missing-protocol-member! NSDraggingSource::draggingSession:sourceOperationMaskForDraggingContext: not found
+!missing-protocol-member! NSDraggingSource::draggingSession:willBeginAtPoint: not found
+!missing-protocol-member! NSDraggingSource::ignoreModifierKeysForDraggingSession: not found
+!missing-protocol-member! NSLayoutManagerDelegate::layoutManager:shouldSetLineFragmentRect:lineFragmentUsedRect:baselineOffset:inTextContainer:forGlyphRange: not found
+!missing-protocol-member! NSPopoverDelegate::popoverShouldDetach: not found
+!missing-protocol-member! NSTextInputClient::doCommandBySelector: not found
+!missing-protocol-member! NSTextViewDelegate::textView:clickedOnCell:inRect: not found
+!missing-protocol-member! NSTextViewDelegate::textView:clickedOnLink: not found
+!missing-protocol-member! NSTextViewDelegate::textView:doubleClickedOnCell:inRect: not found
+!missing-protocol-member! NSTextViewDelegate::textView:draggedCell:inRect:event:atIndex: not found
+!missing-protocol-member! NSTextViewDelegate::textView:URLForContentsOfTextAttachment:atIndex: not found
+!missing-protocol-member! NSTextViewDelegate::textView:willShowSharingServicePicker:forItems: not found
+!missing-protocol-member! NSWindowDelegate::customWindowsToEnterFullScreenForWindow:onScreen: not found
+!missing-protocol-member! NSWindowDelegate::window:startCustomAnimationToEnterFullScreenOnScreen:withDuration: not found
+!missing-protocol-member! NSWindowDelegate::windowDidChangeOcclusionState: not found
+!missing-selector! +NSAttributedString::textTypes not bound
+!missing-selector! +NSAttributedString::textUnfilteredTypes not bound
+!missing-selector! +NSBitmapImageRep::getTIFFCompressionTypes:count: not bound
+!missing-selector! +NSBitmapImageRep::representationOfImageRepsInArray:usingType:properties: not bound
+!missing-selector! +NSBundle::loadNibFile:externalNameTable:withZone: not bound
+!missing-selector! +NSFont::fontWithName:matrix: not bound
+!missing-selector! +NSImageRep::registeredImageRepClasses not bound
+!missing-selector! +NSInputManager::cycleToNextInputLanguage: not bound
+!missing-selector! +NSInputManager::cycleToNextInputServerInLanguage: not bound
+!missing-selector! +NSMediaLibraryBrowserController::sharedMediaLibraryBrowserController not bound
+!missing-selector! +NSMenu::setMenuZone: not bound
+!missing-selector! +NSObject::exposeBinding: not bound
+!missing-selector! +NSPasteboard::pasteboardByFilteringData:ofType: not bound
+!missing-selector! +NSPasteboard::pasteboardByFilteringFile: not bound
+!missing-selector! +NSPasteboard::pasteboardByFilteringTypesInPasteboard: not bound
+!missing-selector! +NSPasteboard::typesFilterableTo: not bound
+!missing-selector! +NSPDFImageRep::imageRepWithData: not bound
+!missing-selector! +NSPICTImageRep::imageRepWithData: not bound
+!missing-selector! +NSPrinter::printerWithName:domain:includeUnavailable: not bound
+!missing-selector! +NSPrintInfo::setDefaultPrinter: not bound
+!missing-selector! +NSPrintInfo::sizeForPaperName: not bound
+!missing-selector! +NSScrollView::rulerViewClass not bound
+!missing-selector! +NSScrollView::setRulerViewClass: not bound
+!missing-selector! +NSSet::setWithCollectionViewIndexPath: not bound
+!missing-selector! +NSSet::setWithCollectionViewIndexPaths: not bound
+!missing-selector! +NSTokenFieldCell::defaultCompletionDelay not bound
+!missing-selector! +NSTokenFieldCell::defaultTokenizingCharacterSet not bound
+!missing-selector! NSApplication::activateContextHelpMode: not bound
+!missing-selector! NSApplication::application:printFiles: not bound
+!missing-selector! NSApplication::beginModalSessionForWindow:relativeToWindow: not bound
+!missing-selector! NSApplication::orderedDocuments not bound
+!missing-selector! NSApplication::orderedWindows not bound
+!missing-selector! NSApplication::registerUserInterfaceItemSearchHandler: not bound
+!missing-selector! NSApplication::runModalForWindow:relativeToWindow: not bound
+!missing-selector! NSApplication::runPageLayout: not bound
+!missing-selector! NSApplication::searchString:inUserInterfaceItemString:searchRange:foundRange: not bound
+!missing-selector! NSApplication::showHelp: not bound
+!missing-selector! NSApplication::unregisterUserInterfaceItemSearchHandler: not bound
+!missing-selector! NSATSTypesetter::attributedString not bound
+!missing-selector! NSATSTypesetter::bidiProcessingEnabled not bound
+!missing-selector! NSATSTypesetter::boundingBoxForControlGlyphAtIndex:forTextContainer:proposedLineFragment:glyphPosition:characterIndex: not bound
+!missing-selector! NSATSTypesetter::currentTextContainer not bound
+!missing-selector! NSATSTypesetter::getGlyphsInRange:glyphs:characterIndexes:glyphInscriptions:elasticBits: not bound
+!missing-selector! NSATSTypesetter::getLineFragmentRect:usedRect:forParagraphSeparatorGlyphRange:atProposedOrigin: not bound
+!missing-selector! NSATSTypesetter::hyphenationFactor not bound
+!missing-selector! NSATSTypesetter::hyphenationFactorForGlyphAtIndex: not bound
+!missing-selector! NSATSTypesetter::hyphenCharacterForGlyphAtIndex: not bound
+!missing-selector! NSATSTypesetter::layoutManager not bound
+!missing-selector! NSATSTypesetter::layoutParagraphAtPoint: not bound
+!missing-selector! NSATSTypesetter::lineFragmentPadding not bound
+!missing-selector! NSATSTypesetter::lineFragmentRectForProposedRect:remainingRect: not bound
+!missing-selector! NSATSTypesetter::lineSpacingAfterGlyphAtIndex:withProposedLineFragmentRect: not bound
+!missing-selector! NSATSTypesetter::paragraphGlyphRange not bound
+!missing-selector! NSATSTypesetter::paragraphSeparatorGlyphRange not bound
+!missing-selector! NSATSTypesetter::paragraphSpacingAfterGlyphAtIndex:withProposedLineFragmentRect: not bound
+!missing-selector! NSATSTypesetter::paragraphSpacingBeforeGlyphAtIndex:withProposedLineFragmentRect: not bound
+!missing-selector! NSATSTypesetter::setAttributedString: not bound
+!missing-selector! NSATSTypesetter::setBidiProcessingEnabled: not bound
+!missing-selector! NSATSTypesetter::setHardInvalidation:forGlyphRange: not bound
+!missing-selector! NSATSTypesetter::setHyphenationFactor: not bound
+!missing-selector! NSATSTypesetter::setLineFragmentPadding: not bound
+!missing-selector! NSATSTypesetter::setParagraphGlyphRange:separatorGlyphRange: not bound
+!missing-selector! NSATSTypesetter::setTypesetterBehavior: not bound
+!missing-selector! NSATSTypesetter::setUsesFontLeading: not bound
+!missing-selector! NSATSTypesetter::shouldBreakLineByHyphenatingBeforeCharacterAtIndex: not bound
+!missing-selector! NSATSTypesetter::shouldBreakLineByWordBeforeCharacterAtIndex: not bound
+!missing-selector! NSATSTypesetter::substituteFontForFont: not bound
+!missing-selector! NSATSTypesetter::textTabForGlyphLocation:writingDirection:maxLocation: not bound
+!missing-selector! NSATSTypesetter::typesetterBehavior not bound
+!missing-selector! NSATSTypesetter::usesFontLeading not bound
+!missing-selector! NSATSTypesetter::willSetLineFragmentRect:forGlyphRange:usedRect:baselineOffset: not bound
+!missing-selector! NSBezierPath::setCachesBezierPath: not bound
+!missing-selector! NSBitmapImageRep::getPixel:atX:y: not bound
+!missing-selector! NSBitmapImageRep::setPixel:atX:y: not bound
+!missing-selector! NSBitmapImageRep::setProperty:withValue: not bound
+!missing-selector! NSBitmapImageRep::valueForProperty: not bound
+!missing-selector! NSBrowser::displayColumn: not bound
+!missing-selector! NSBrowser::draggingImageForRowsWithIndexes:inColumn:withEvent:offset: not bound
+!missing-selector! NSBrowser::scrollViaScroller: not bound
+!missing-selector! NSBrowser::setAcceptsArrowKeys: not bound
+!missing-selector! NSBundle::loadNibFile:externalNameTable:withZone: not bound
+!missing-selector! NSButtonCell::gradientType not bound
+!missing-selector! NSButtonCell::setTitleWithMnemonic: not bound
+!missing-selector! NSCell::setEntryType: not bound
+!missing-selector! NSCell::setFloatingPointFormat:left:right: not bound
+!missing-selector! NSCell::setRefusesFirstResponder: not bound
+!missing-selector! NSCollectionView::draggingImageForItemsAtIndexes:withEvent:offset: not bound
+!missing-selector! NSColorSpace::initWithColorSyncProfile: not bound
+!missing-selector! NSComboBox::delegate not bound
+!missing-selector! NSComboBox::setDelegate: not bound
+!missing-selector! NSControl::expansionFrameWithFrame: not bound
+!missing-selector! NSControl::setFloatingPointFormat:left:right: not bound
+!missing-selector! NSDocument::dataRepresentationOfType: not bound
+!missing-selector! NSDocument::fileAttributesToWriteToFile:ofType:saveOperation: not bound
+!missing-selector! NSDocument::fileWrapperRepresentationOfType: not bound
+!missing-selector! NSDocument::handleCloseScriptCommand: not bound
+!missing-selector! NSDocument::handlePrintScriptCommand: not bound
+!missing-selector! NSDocument::handleSaveScriptCommand: not bound
+!missing-selector! NSDocument::initWithContentsOfFile:ofType: not bound
+!missing-selector! NSDocument::initWithContentsOfURL:ofType: not bound
+!missing-selector! NSDocument::lastComponentOfFileName not bound
+!missing-selector! NSDocument::loadDataRepresentation:ofType: not bound
+!missing-selector! NSDocument::loadFileWrapperRepresentation:ofType: not bound
+!missing-selector! NSDocument::objectSpecifier not bound
+!missing-selector! NSDocument::printShowingPrintPanel: not bound
+!missing-selector! NSDocument::readFromFile:ofType: not bound
+!missing-selector! NSDocument::readFromURL:ofType: not bound
+!missing-selector! NSDocument::revertToSavedFromFile:ofType: not bound
+!missing-selector! NSDocument::revertToSavedFromURL:ofType: not bound
+!missing-selector! NSDocument::runModalPageLayoutWithPrintInfo: not bound
+!missing-selector! NSDocument::saveToFile:saveOperation:delegate:didSaveSelector:contextInfo: not bound
+!missing-selector! NSDocument::setFileName: not bound
+!missing-selector! NSDocument::setLastComponentOfFileName: not bound
+!missing-selector! NSDocument::writeToFile:ofType: not bound
+!missing-selector! NSDocument::writeToFile:ofType:originalFile:saveOperation: not bound
+!missing-selector! NSDocument::writeToURL:ofType: not bound
+!missing-selector! NSDocument::writeWithBackupToFile:ofType:saveOperation: not bound
+!missing-selector! NSDocumentController::documentForFileName: not bound
+!missing-selector! NSDocumentController::fileExtensionsFromType: not bound
+!missing-selector! NSDocumentController::makeDocumentWithContentsOfFile:ofType: not bound
+!missing-selector! NSDocumentController::makeDocumentWithContentsOfURL:ofType: not bound
+!missing-selector! NSDocumentController::makeUntitledDocumentOfType: not bound
+!missing-selector! NSDocumentController::openDocumentWithContentsOfFile:display: not bound
+!missing-selector! NSDocumentController::openDocumentWithContentsOfURL:display: not bound
+!missing-selector! NSDocumentController::openUntitledDocumentOfType:display: not bound
+!missing-selector! NSDocumentController::setShouldCreateUI: not bound
+!missing-selector! NSDocumentController::typeFromFileExtension: not bound
+!missing-selector! NSDraggingItem::imageComponentsProvider not bound
+!missing-selector! NSEvent::pressureBehavior not bound
+!missing-selector! NSFont::getAdvancements:forGlyphs:count: not bound
+!missing-selector! NSFont::getAdvancements:forPackedGlyphs:length: not bound
+!missing-selector! NSFont::getBoundingRects:forGlyphs:count: not bound
+!missing-selector! NSFont::matrix not bound
+!missing-selector! NSFontPanel::setWorksWhenModal: not bound
+!missing-selector! NSFontPanel::worksWhenModal not bound
+!missing-selector! NSGradient::initWithColors:atLocations:colorSpace: not bound
+!missing-selector! NSGradient::initWithColorsAndLocations: not bound
+!missing-selector! NSGraphicsContext::setFocusStack: not bound
+!missing-selector! NSImage::compositeToPoint:fromRect:operation: not bound
+!missing-selector! NSImage::compositeToPoint:fromRect:operation:fraction: not bound
+!missing-selector! NSImage::compositeToPoint:operation: not bound
+!missing-selector! NSImage::compositeToPoint:operation:fraction: not bound
+!missing-selector! NSImage::dissolveToPoint:fraction: not bound
+!missing-selector! NSImage::dissolveToPoint:fromRect:fraction: not bound
+!missing-selector! NSImage::initByReferencingURL: not bound
+!missing-selector! NSImage::initWithIconRef: not bound
+!missing-selector! NSImage::lockFocusOnRepresentation: not bound
+!missing-selector! NSImage::setCacheDepthMatchesImageDepth: not bound
+!missing-selector! NSImage::setCachedSeparately: not bound
+!missing-selector! NSImage::setDataRetained: not bound
+!missing-selector! NSImage::setScalesWhenResized: not bound
+!missing-selector! NSInputManager::handleMouseEvent: not bound
+!missing-selector! NSInputManager::initWithName:host: not bound
+!missing-selector! NSInputManager::markedTextAbandoned: not bound
+!missing-selector! NSInputManager::markedTextSelectionChanged:client: not bound
+!missing-selector! NSInputServer::initWithDelegate:name: not bound
+!missing-selector! NSLayoutManager::boundsRectForTextBlock:atIndex:effectiveRange: not bound
+!missing-selector! NSLayoutManager::drawStrikethroughForGlyphRange:strikethroughType:baselineOffset:lineFragmentRect:lineFragmentGlyphRange:containerOrigin: not bound
+!missing-selector! NSLayoutManager::drawUnderlineForGlyphRange:underlineType:baselineOffset:lineFragmentRect:lineFragmentGlyphRange:containerOrigin: not bound
+!missing-selector! NSLayoutManager::fillBackgroundRectArray:count:forCharacterRange:color: not bound
+!missing-selector! NSLayoutManager::firstTextView not bound
+!missing-selector! NSLayoutManager::getGlyphs:range: not bound
+!missing-selector! NSLayoutManager::getGlyphsInRange:glyphs:characterIndexes:glyphInscriptions:elasticBits: not bound
+!missing-selector! NSLayoutManager::getGlyphsInRange:glyphs:characterIndexes:glyphInscriptions:elasticBits:bidiLevels: not bound
+!missing-selector! NSLayoutManager::insertGlyphs:length:forStartingGlyphAtIndex:characterIndex: not bound
+!missing-selector! NSLayoutManager::invalidateGlyphsForCharacterRange:changeInLength:actualCharacterRange: not bound
+!missing-selector! NSLayoutManager::invalidateLayoutForCharacterRange:actualCharacterRange: not bound
+!missing-selector! NSLayoutManager::invalidateLayoutForCharacterRange:isSoft:actualCharacterRange: not bound
+!missing-selector! NSLayoutManager::layoutManagerOwnsFirstResponderInWindow: not bound
+!missing-selector! NSLayoutManager::layoutRectForTextBlock:atIndex:effectiveRange: not bound
+!missing-selector! NSLayoutManager::lineFragmentRectForGlyphAtIndex:effectiveRange: not bound
+!missing-selector! NSLayoutManager::lineFragmentRectForGlyphAtIndex:effectiveRange:withoutAdditionalLayout: not bound
+!missing-selector! NSLayoutManager::lineFragmentUsedRectForGlyphAtIndex:effectiveRange: not bound
+!missing-selector! NSLayoutManager::lineFragmentUsedRectForGlyphAtIndex:effectiveRange:withoutAdditionalLayout: not bound
+!missing-selector! NSLayoutManager::rectArrayForCharacterRange:withinSelectedCharacterRange:inTextContainer:rectCount: not bound
+!missing-selector! NSLayoutManager::rulerAccessoryViewForTextView:paragraphStyle:ruler:enabled: not bound
+!missing-selector! NSLayoutManager::rulerMarkersForTextView:paragraphStyle:ruler: not bound
+!missing-selector! NSLayoutManager::setLocations:startingGlyphIndexes:count:forGlyphRange: not bound
+!missing-selector! NSLayoutManager::showAttachmentCell:inRect:characterIndex: not bound
+!missing-selector! NSLayoutManager::showCGGlyphs:positions:count:font:matrix:attributes:inContext: not bound
+!missing-selector! NSLayoutManager::showPackedGlyphs:length:glyphRange:atPoint:font:color:printingAdjustment: not bound
+!missing-selector! NSLayoutManager::strikethroughGlyphRange:strikethroughType:lineFragmentRect:lineFragmentGlyphRange:containerOrigin: not bound
+!missing-selector! NSLayoutManager::temporaryAttribute:atCharacterIndex:effectiveRange: not bound
+!missing-selector! NSLayoutManager::temporaryAttribute:atCharacterIndex:longestEffectiveRange:inRange: not bound
+!missing-selector! NSLayoutManager::temporaryAttributesAtCharacterIndex:effectiveRange: not bound
+!missing-selector! NSLayoutManager::temporaryAttributesAtCharacterIndex:longestEffectiveRange:inRange: not bound
+!missing-selector! NSLayoutManager::textContainerForGlyphAtIndex:effectiveRange: not bound
+!missing-selector! NSLayoutManager::textContainerForGlyphAtIndex:effectiveRange:withoutAdditionalLayout: not bound
+!missing-selector! NSLayoutManager::textViewForBeginningOfSelection not bound
+!missing-selector! NSLayoutManager::underlineGlyphRange:underlineType:lineFragmentRect:lineFragmentGlyphRange:containerOrigin: not bound
+!missing-selector! NSMatrix::sortUsingFunction:context: not bound
+!missing-selector! NSMediaLibraryBrowserController::frame not bound
+!missing-selector! NSMediaLibraryBrowserController::isVisible not bound
+!missing-selector! NSMediaLibraryBrowserController::mediaLibraries not bound
+!missing-selector! NSMediaLibraryBrowserController::setFrame: not bound
+!missing-selector! NSMediaLibraryBrowserController::setMediaLibraries: not bound
+!missing-selector! NSMediaLibraryBrowserController::setVisible: not bound
+!missing-selector! NSMediaLibraryBrowserController::togglePanel: not bound
+!missing-selector! NSMenu::locationForSubmenu: not bound
+!missing-selector! NSMenu::setContextMenuRepresentation: not bound
+!missing-selector! NSMenu::setMenuRepresentation: not bound
+!missing-selector! NSMenu::setTearOffMenuRepresentation: not bound
+!missing-selector! NSMenu::submenuAction: not bound
+!missing-selector! NSMenuItem::setMnemonicLocation: not bound
+!missing-selector! NSMenuItemCell::setTag: not bound
+!missing-selector! NSMovie::initWithMovie: not bound
+!missing-selector! NSMutableAttributedString::fixAttributesInRange: not bound
+!missing-selector! NSMutableFontCollection::exclusionDescriptors not bound
+!missing-selector! NSMutableFontCollection::queryDescriptors not bound
+!missing-selector! NSMutableParagraphStyle::textBlocks not bound
+!missing-selector! NSMutableParagraphStyle::textLists not bound
+!missing-selector! NSNib::instantiateNibWithOwner:topLevelObjects: not bound
+!missing-selector! NSObject::accessibilityActionDescription: not bound
+!missing-selector! NSObject::accessibilityArrayAttributeCount: not bound
+!missing-selector! NSObject::accessibilityArrayAttributeValues:index:maxCount: not bound
+!missing-selector! NSObject::accessibilityAttributeValue: not bound
+!missing-selector! NSObject::accessibilityAttributeValue:forParameter: not bound
+!missing-selector! NSObject::accessibilityFocusedUIElement not bound
+!missing-selector! NSObject::accessibilityHitTest: not bound
+!missing-selector! NSObject::accessibilityIndexOfChild: not bound
+!missing-selector! NSObject::accessibilityIsAttributeSettable: not bound
+!missing-selector! NSObject::accessibilityNotifiesWhenDestroyed not bound
+!missing-selector! NSObject::accessibilityPerformAction: not bound
+!missing-selector! NSObject::accessibilitySetOverrideValue:forAttribute: not bound
+!missing-selector! NSObject::accessibilitySetValue:forAttribute: not bound
+!missing-selector! NSObject::application:delegateHandlesKey: not bound
+!missing-selector! NSObject::changeColor: not bound
+!missing-selector! NSObject::changeFont: not bound
+!missing-selector! NSObject::commitEditingAndReturnError: not bound
+!missing-selector! NSObject::controlTextDidBeginEditing: not bound
+!missing-selector! NSObject::controlTextDidChange: not bound
+!missing-selector! NSObject::controlTextDidEndEditing: not bound
+!missing-selector! NSObject::draggedImage:beganAt: not bound
+!missing-selector! NSObject::draggedImage:endedAt:deposited: not bound
+!missing-selector! NSObject::draggedImage:endedAt:operation: not bound
+!missing-selector! NSObject::draggedImage:movedTo: not bound
+!missing-selector! NSObject::draggingSourceOperationMaskForLocal: not bound
+!missing-selector! NSObject::fontManager:willIncludeFont: not bound
+!missing-selector! NSObject::layer:shouldInheritContentsScale:fromWindow: not bound
+!missing-selector! NSObject::namesOfPromisedFilesDroppedAtDestination: not bound
+!missing-selector! NSObject::objectDidBeginEditing: not bound
+!missing-selector! NSObject::panel:compareFilename:with:caseSensitive: not bound
+!missing-selector! NSObject::panel:directoryDidChange: not bound
+!missing-selector! NSObject::panel:isValidFilename: not bound
+!missing-selector! NSObject::panel:shouldShowFilename: not bound
+!missing-selector! NSObject::pasteboard:provideDataForType: not bound
+!missing-selector! NSObject::pasteboardChangedOwner: not bound
+!missing-selector! NSObject::tableView:writeRows:toPasteboard: not bound
+!missing-selector! NSObject::validateMenuItem: not bound
+!missing-selector! NSObject::validateToolbarItem: not bound
+!missing-selector! NSObject::view:stringForToolTip:point:userData: not bound
+!missing-selector! NSObjectController::fetchWithRequest:merge:error: not bound
+!missing-selector! NSObjectController::managedObjectContext not bound
+!missing-selector! NSObjectController::setManagedObjectContext: not bound
+!missing-selector! NSOpenGLContext::initWithCGLContextObj: not bound
+!missing-selector! NSOpenGLPixelBuffer::initWithCGLPBufferObj: not bound
+!missing-selector! NSOpenGLPixelFormat::initWithAttributes: not bound
+!missing-selector! NSOpenGLPixelFormat::initWithCGLPixelFormatObj: not bound
+!missing-selector! NSOpenGLPixelFormat::setAttributes: not bound
+!missing-selector! NSOpenPanel::canDownloadUbiquitousContents not bound
+!missing-selector! NSOpenPanel::canResolveUbiquitousConflicts not bound
+!missing-selector! NSOpenPanel::isAccessoryViewDisclosed not bound
+!missing-selector! NSOpenPanel::setAccessoryViewDisclosed: not bound
+!missing-selector! NSOpenPanel::setCanDownloadUbiquitousContents: not bound
+!missing-selector! NSOpenPanel::setCanResolveUbiquitousConflicts: not bound
+!missing-selector! NSPageLayout::setAccessoryView: not bound
+!missing-selector! NSPasteboard::readFileContentsType:toFile: not bound
+!missing-selector! NSPasteboard::writeFileContents: not bound
+!missing-selector! NSPasteboard::writeFileWrapper: not bound
+!missing-selector! NSPDFInfo::attributes not bound
+!missing-selector! NSPDFInfo::isFileExtensionHidden not bound
+!missing-selector! NSPDFInfo::orientation not bound
+!missing-selector! NSPDFInfo::paperSize not bound
+!missing-selector! NSPDFInfo::setFileExtensionHidden: not bound
+!missing-selector! NSPDFInfo::setOrientation: not bound
+!missing-selector! NSPDFInfo::setPaperSize: not bound
+!missing-selector! NSPDFInfo::setTagNames: not bound
+!missing-selector! NSPDFInfo::setURL: not bound
+!missing-selector! NSPDFInfo::tagNames not bound
+!missing-selector! NSPDFInfo::URL not bound
+!missing-selector! NSPDFPanel::accessoryController not bound
+!missing-selector! NSPDFPanel::beginSheetWithPDFInfo:modalForWindow:completionHandler: not bound
+!missing-selector! NSPDFPanel::defaultFileName not bound
+!missing-selector! NSPDFPanel::options not bound
+!missing-selector! NSPDFPanel::setAccessoryController: not bound
+!missing-selector! NSPDFPanel::setDefaultFileName: not bound
+!missing-selector! NSPDFPanel::setOptions: not bound
+!missing-selector! NSPersistentDocument::configurePersistentStoreCoordinatorForURL:ofType:error: not bound
+!missing-selector! NSPersistentDocument::configurePersistentStoreCoordinatorForURL:ofType:modelConfiguration:storeOptions:error: not bound
+!missing-selector! NSPersistentDocument::managedObjectContext not bound
+!missing-selector! NSPersistentDocument::managedObjectModel not bound
+!missing-selector! NSPersistentDocument::persistentStoreTypeForFileType: not bound
+!missing-selector! NSPersistentDocument::readFromURL:ofType:error: not bound
+!missing-selector! NSPersistentDocument::revertToContentsOfURL:ofType:error: not bound
+!missing-selector! NSPersistentDocument::setManagedObjectContext: not bound
+!missing-selector! NSPersistentDocument::writeToURL:ofType:forSaveOperation:originalContentsURL:error: not bound
+!missing-selector! NSPICTImageRep::boundingBox not bound
+!missing-selector! NSPICTImageRep::initWithData: not bound
+!missing-selector! NSPICTImageRep::PICTRepresentation not bound
+!missing-selector! NSPrinter::imageRectForPaper: not bound
+!missing-selector! NSPrinter::isFontAvailable: not bound
+!missing-selector! NSPrintInfo::takeSettingsFromPDFInfo: not bound
+!missing-selector! NSPrintOperation::PDFPanel not bound
+!missing-selector! NSPrintOperation::setAccessoryView: not bound
+!missing-selector! NSPrintOperation::setJobStyleHint: not bound
+!missing-selector! NSPrintOperation::setPDFPanel: not bound
+!missing-selector! NSPrintOperation::setShowPanels: not bound
+!missing-selector! NSPrintPanel::setAccessoryView: not bound
+!missing-selector! NSProgressIndicator::animate: not bound
+!missing-selector! NSProgressIndicator::setAnimationDelay: not bound
+!missing-selector! NSResponder::cancelOperation: not bound
+!missing-selector! NSResponder::capitalizeWord: not bound
+!missing-selector! NSResponder::centerSelectionInVisibleArea: not bound
+!missing-selector! NSResponder::changeCaseOfLetter: not bound
+!missing-selector! NSResponder::complete: not bound
+!missing-selector! NSResponder::deleteBackward: not bound
+!missing-selector! NSResponder::deleteBackwardByDecomposingPreviousCharacter: not bound
+!missing-selector! NSResponder::deleteForward: not bound
+!missing-selector! NSResponder::deleteToBeginningOfLine: not bound
+!missing-selector! NSResponder::deleteToBeginningOfParagraph: not bound
+!missing-selector! NSResponder::deleteToEndOfLine: not bound
+!missing-selector! NSResponder::deleteToEndOfParagraph: not bound
+!missing-selector! NSResponder::deleteToMark: not bound
+!missing-selector! NSResponder::deleteWordBackward: not bound
+!missing-selector! NSResponder::deleteWordForward: not bound
+!missing-selector! NSResponder::doCommandBySelector: not bound
+!missing-selector! NSResponder::indent: not bound
+!missing-selector! NSResponder::insertBacktab: not bound
+!missing-selector! NSResponder::insertContainerBreak: not bound
+!missing-selector! NSResponder::insertDoubleQuoteIgnoringSubstitution: not bound
+!missing-selector! NSResponder::insertLineBreak: not bound
+!missing-selector! NSResponder::insertNewline: not bound
+!missing-selector! NSResponder::insertNewlineIgnoringFieldEditor: not bound
+!missing-selector! NSResponder::insertParagraphSeparator: not bound
+!missing-selector! NSResponder::insertSingleQuoteIgnoringSubstitution: not bound
+!missing-selector! NSResponder::insertTab: not bound
+!missing-selector! NSResponder::insertTabIgnoringFieldEditor: not bound
+!missing-selector! NSResponder::insertText: not bound
+!missing-selector! NSResponder::lowercaseWord: not bound
+!missing-selector! NSResponder::makeBaseWritingDirectionLeftToRight: not bound
+!missing-selector! NSResponder::makeBaseWritingDirectionNatural: not bound
+!missing-selector! NSResponder::makeBaseWritingDirectionRightToLeft: not bound
+!missing-selector! NSResponder::makeTextWritingDirectionLeftToRight: not bound
+!missing-selector! NSResponder::makeTextWritingDirectionNatural: not bound
+!missing-selector! NSResponder::makeTextWritingDirectionRightToLeft: not bound
+!missing-selector! NSResponder::moveBackward: not bound
+!missing-selector! NSResponder::moveBackwardAndModifySelection: not bound
+!missing-selector! NSResponder::moveDown: not bound
+!missing-selector! NSResponder::moveDownAndModifySelection: not bound
+!missing-selector! NSResponder::moveForward: not bound
+!missing-selector! NSResponder::moveForwardAndModifySelection: not bound
+!missing-selector! NSResponder::moveLeft: not bound
+!missing-selector! NSResponder::moveLeftAndModifySelection: not bound
+!missing-selector! NSResponder::moveParagraphBackwardAndModifySelection: not bound
+!missing-selector! NSResponder::moveParagraphForwardAndModifySelection: not bound
+!missing-selector! NSResponder::moveRight: not bound
+!missing-selector! NSResponder::moveRightAndModifySelection: not bound
+!missing-selector! NSResponder::moveToBeginningOfDocument: not bound
+!missing-selector! NSResponder::moveToBeginningOfDocumentAndModifySelection: not bound
+!missing-selector! NSResponder::moveToBeginningOfLine: not bound
+!missing-selector! NSResponder::moveToBeginningOfLineAndModifySelection: not bound
+!missing-selector! NSResponder::moveToBeginningOfParagraph: not bound
+!missing-selector! NSResponder::moveToBeginningOfParagraphAndModifySelection: not bound
+!missing-selector! NSResponder::moveToEndOfDocument: not bound
+!missing-selector! NSResponder::moveToEndOfDocumentAndModifySelection: not bound
+!missing-selector! NSResponder::moveToEndOfLine: not bound
+!missing-selector! NSResponder::moveToEndOfLineAndModifySelection: not bound
+!missing-selector! NSResponder::moveToEndOfParagraph: not bound
+!missing-selector! NSResponder::moveToEndOfParagraphAndModifySelection: not bound
+!missing-selector! NSResponder::moveToLeftEndOfLine: not bound
+!missing-selector! NSResponder::moveToLeftEndOfLineAndModifySelection: not bound
+!missing-selector! NSResponder::moveToRightEndOfLine: not bound
+!missing-selector! NSResponder::moveToRightEndOfLineAndModifySelection: not bound
+!missing-selector! NSResponder::moveUp: not bound
+!missing-selector! NSResponder::moveUpAndModifySelection: not bound
+!missing-selector! NSResponder::moveWordBackward: not bound
+!missing-selector! NSResponder::moveWordBackwardAndModifySelection: not bound
+!missing-selector! NSResponder::moveWordForward: not bound
+!missing-selector! NSResponder::moveWordForwardAndModifySelection: not bound
+!missing-selector! NSResponder::moveWordLeft: not bound
+!missing-selector! NSResponder::moveWordLeftAndModifySelection: not bound
+!missing-selector! NSResponder::moveWordRight: not bound
+!missing-selector! NSResponder::moveWordRightAndModifySelection: not bound
+!missing-selector! NSResponder::pageDown: not bound
+!missing-selector! NSResponder::pageDownAndModifySelection: not bound
+!missing-selector! NSResponder::pageUp: not bound
+!missing-selector! NSResponder::pageUpAndModifySelection: not bound
+!missing-selector! NSResponder::performMnemonic: not bound
+!missing-selector! NSResponder::presentError:modalForWindow:delegate:didPresentSelector:contextInfo: not bound
+!missing-selector! NSResponder::scrollLineDown: not bound
+!missing-selector! NSResponder::scrollLineUp: not bound
+!missing-selector! NSResponder::scrollPageDown: not bound
+!missing-selector! NSResponder::scrollPageUp: not bound
+!missing-selector! NSResponder::scrollToBeginningOfDocument: not bound
+!missing-selector! NSResponder::scrollToEndOfDocument: not bound
+!missing-selector! NSResponder::selectAll: not bound
+!missing-selector! NSResponder::selectLine: not bound
+!missing-selector! NSResponder::selectParagraph: not bound
+!missing-selector! NSResponder::selectToMark: not bound
+!missing-selector! NSResponder::selectWord: not bound
+!missing-selector! NSResponder::setInterfaceStyle: not bound
+!missing-selector! NSResponder::setMark: not bound
+!missing-selector! NSResponder::swapWithMark: not bound
+!missing-selector! NSResponder::transpose: not bound
+!missing-selector! NSResponder::transposeWords: not bound
+!missing-selector! NSResponder::undoManager not bound
+!missing-selector! NSResponder::uppercaseWord: not bound
+!missing-selector! NSResponder::yank: not bound
+!missing-selector! NSSavePanel::selectText: not bound
+!missing-selector! NSScreen::maximumExtendedDynamicRangeColorComponentValue not bound
+!missing-selector! NSScroller::setFloatValue:knobProportion: not bound
+!missing-selector! NSScrollView::addFloatingSubview:forAxis: not bound
+!missing-selector! NSSegmentedCell::interiorBackgroundStyleForSegment: not bound
+!missing-selector! NSSegmentedControl::indexOfSelectedItem not bound
+!missing-selector! NSSet::enumerateIndexPathsWithOptions:usingBlock: not bound
+!missing-selector! NSSpellChecker::forgetWord: not bound
+!missing-selector! NSSpellChecker::guessesForWord: not bound
+!missing-selector! NSSplitView::setIsPaneSplitter: not bound
+!missing-selector! NSSplitViewItem::collapseBehavior not bound
+!missing-selector! NSSplitViewItem::setCollapseBehavior: not bound
+!missing-selector! NSString::boundingRectWithSize:options:attributes: not bound
+!missing-selector! NSString::drawWithRect:options:attributes: not bound
+!missing-selector! NSTableColumn::setResizable: not bound
+!missing-selector! NSTableView::columnsInRect: not bound
+!missing-selector! NSTableView::dragImageForRows:event:dragImageOffset: not bound
+!missing-selector! NSTableView::selectColumn:byExtendingSelection: not bound
+!missing-selector! NSTableView::selectRow:byExtendingSelection: not bound
+!missing-selector! NSTableView::setAutoresizesAllColumnsToFit: not bound
+!missing-selector! NSTableView::setDrawsGrid: not bound
+!missing-selector! NSTextContainer::initWithContainerSize: not bound
+!missing-selector! NSTextContainer::initWithSize: not bound
+!missing-selector! NSTextContainer::lineFragmentRectForProposedRect:sweepDirection:movementDirection:remainingRect: not bound
+!missing-selector! NSTextField::setAutomaticTextCompletionEnabled: not bound
+!missing-selector! NSTextField::setTitleWithMnemonic: not bound
+!missing-selector! NSTextFinder::client not bound
+!missing-selector! NSTextFinder::findBarContainer not bound
+!missing-selector! NSTextFinder::incrementalSearchingShouldDimContentView not bound
+!missing-selector! NSTextFinder::setIncrementalSearchingShouldDimContentView: not bound
+!missing-selector! NSTextStorage::attributeRuns not bound
+!missing-selector! NSTextStorage::characters not bound
+!missing-selector! NSTextStorage::font not bound
+!missing-selector! NSTextStorage::foregroundColor not bound
+!missing-selector! NSTextStorage::paragraphs not bound
+!missing-selector! NSTextStorage::setAttributeRuns: not bound
+!missing-selector! NSTextStorage::setCharacters: not bound
+!missing-selector! NSTextStorage::setFont: not bound
+!missing-selector! NSTextStorage::setForegroundColor: not bound
+!missing-selector! NSTextStorage::setParagraphs: not bound
+!missing-selector! NSTextStorage::setWords: not bound
+!missing-selector! NSTextStorage::words not bound
+!missing-selector! NSTextView::dragImageForSelectionWithEvent:origin: not bound
+!missing-selector! NSTextView::dragSelectionWithEvent:offset:slideBack: not bound
+!missing-selector! NSTextView::toggleBaseWritingDirection: not bound
+!missing-selector! NSTokenFieldCell::completionDelay not bound
+!missing-selector! NSTokenFieldCell::delegate not bound
+!missing-selector! NSTokenFieldCell::setCompletionDelay: not bound
+!missing-selector! NSTokenFieldCell::setDelegate: not bound
+!missing-selector! NSTokenFieldCell::setTokenizingCharacterSet: not bound
+!missing-selector! NSTokenFieldCell::setTokenStyle: not bound
+!missing-selector! NSTokenFieldCell::tokenizingCharacterSet not bound
+!missing-selector! NSTokenFieldCell::tokenStyle not bound
+!missing-selector! NSToolbar::fullScreenAccessoryView not bound
+!missing-selector! NSToolbar::fullScreenAccessoryViewMaxHeight not bound
+!missing-selector! NSToolbar::fullScreenAccessoryViewMinHeight not bound
+!missing-selector! NSToolbar::setFullScreenAccessoryView: not bound
+!missing-selector! NSToolbar::setFullScreenAccessoryViewMaxHeight: not bound
+!missing-selector! NSToolbar::setFullScreenAccessoryViewMinHeight: not bound
+!missing-selector! NSTouchBar::itemIdentifiers not bound
+!missing-selector! NSTreeController::selectedObjects not bound
+!missing-selector! NSTreeNode::mutableChildNodes not bound
+!missing-selector! NSView::enclosingMenuItem not bound
+!missing-selector! NSView::getRectsBeingDrawn:count: not bound
+!missing-selector! NSView::getRectsExposedDuringLiveResize:count: not bound
+!missing-selector! NSView::reflectScrolledClipView: not bound
+!missing-selector! NSView::rulerView:didAddMarker: not bound
+!missing-selector! NSView::rulerView:didMoveMarker: not bound
+!missing-selector! NSView::rulerView:didRemoveMarker: not bound
+!missing-selector! NSView::rulerView:handleMouseDown: not bound
+!missing-selector! NSView::rulerView:shouldAddMarker: not bound
+!missing-selector! NSView::rulerView:shouldMoveMarker: not bound
+!missing-selector! NSView::rulerView:shouldRemoveMarker: not bound
+!missing-selector! NSView::rulerView:willAddMarker:atLocation: not bound
+!missing-selector! NSView::rulerView:willMoveMarker:toLocation: not bound
+!missing-selector! NSView::rulerView:willSetClientView: not bound
+!missing-selector! NSView::scrollClipView:toPoint: not bound
+!missing-selector! NSView::setWantsExtendedDynamicRangeOpenGLSurface: not bound
+!missing-selector! NSView::showDefinitionForAttributedString:atPoint: not bound
+!missing-selector! NSView::showDefinitionForAttributedString:range:options:baselineOriginProvider: not bound
+!missing-selector! NSView::sortSubviewsUsingFunction:context: not bound
+!missing-selector! NSView::wantsExtendedDynamicRangeOpenGLSurface not bound
+!missing-selector! NSWindow::anchorAttributeForOrientation: not bound
+!missing-selector! NSWindow::dragImage:at:offset:event:pasteboard:source:slideBack: not bound
+!missing-selector! NSWindow::drawers not bound
+!missing-selector! NSWindow::handleCloseScriptCommand: not bound
+!missing-selector! NSWindow::handlePrintScriptCommand: not bound
+!missing-selector! NSWindow::handleSaveScriptCommand: not bound
+!missing-selector! NSWindow::hasCloseBox not bound
+!missing-selector! NSWindow::hasTitleBar not bound
+!missing-selector! NSWindow::initWithWindowRef: not bound
+!missing-selector! NSWindow::isFloatingPanel not bound
+!missing-selector! NSWindow::isMiniaturizable not bound
+!missing-selector! NSWindow::isModalPanel not bound
+!missing-selector! NSWindow::isResizable not bound
+!missing-selector! NSWindow::isZoomable not bound
+!missing-selector! NSWindow::orderedIndex not bound
+!missing-selector! NSWindow::setOrderedIndex: not bound
+!missing-selector! NSWindow::setTitlebarAccessoryViewControllers: not bound
+!missing-selector! NSWindowController::initWithWindowNibPath:owner: not bound
+!missing-selector! NSWorkspace::openTempFile: not bound
+!missing-selector! NSWorkspace::slideImage:from:to: not bound
+!missing-type! NSInputManager not bound
+!missing-type! NSInputServer not bound
+!missing-type! NSMediaLibraryBrowserController not bound
+!missing-type! NSMovie not bound
+!missing-type! NSPDFInfo not bound
+!missing-type! NSPDFPanel not bound
+!missing-type! NSPersistentDocument not bound
+!missing-type! NSPICTImageRep not bound
+!missing-type! NSTokenFieldCell not bound
+!unknown-field! item bound
+!unknown-field! MenuItem bound
+!unknown-field! NSAlternativeString bound
+!unknown-field! NSFieldEditor bound
+!unknown-field! NSMenuItemIndex bound
+!unknown-field! NSNewColumn bound
+!unknown-field! NSNewNotifyingTextView bound
+!unknown-field! NSObject bound
+!unknown-field! NSOldColumn bound
+!unknown-field! NSOldNotifyingTextView bound
+!unknown-field! NSOldSelectedCharacterRange bound
+!unknown-field! NSOldWidth bound
+!unknown-field! NSOperationNumber bound
+!unknown-field! NSTableColumn bound
+!unknown-field! NSTextMovement bound
+!unknown-native-enum! NSAlertButtonReturn bound
+!unknown-native-enum! NSAlertType bound
+!unknown-native-enum! NSApplicationLayoutDirection bound
+!unknown-native-enum! NSBackingStore bound
+!unknown-native-enum! NSCellHit bound
+!unknown-native-enum! NSCellStateValue bound
+!unknown-native-enum! NSColorPanelFlags bound
+!unknown-native-enum! NSComposite bound
+!unknown-native-enum! NSEventModifierMask bound
+!unknown-native-enum! NSEventMouseSubtype bound
+!unknown-native-enum! NSFontPanelMode bound
+!unknown-native-enum! NSFunctionKey bound
+!unknown-native-enum! NSGlyphStorageOptions bound
+!unknown-native-enum! NSImageScale bound
+!unknown-native-enum! NSKey bound
+!unknown-native-enum! NSMenuProperty bound
+!unknown-native-enum! NSPanelButtonType bound
+!unknown-native-enum! NSRunResponse bound
+!unknown-native-enum! NSSystemDefinedEvents bound
+!unknown-native-enum! NSTableColumnResizing bound
+!unknown-native-enum! NSTableViewAnimation bound
+!unknown-native-enum! NSTableViewGridStyle bound
+!unknown-native-enum! NSTextStorageEditedFlags bound
+!unknown-native-enum! NSType bound
+!unknown-native-enum! NSViewResizingMask bound
+!unknown-native-enum! NSWindowStyle bound
+!wrong-enum-size! NSEventSubtype managed 8 vs native 2
+!wrong-enum-size! NSSpellingState managed 4 vs native 8
+
+## NSGlyphStorage protocol not bound
+!missing-protocol-conformance! NSLayoutManager should conform to NSGlyphStorage (defined in 'NSGlyphGeneration' category)
+
+### moved from macOS-AppKit.todo
+!missing-designated-initializer! NSAppearance::initWithAppearanceNamed:bundle: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSButtonCell::initImageCell: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSButtonCell::initTextCell: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSCell::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSCell::initImageCell: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSCell::initTextCell: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSControl::initWithFrame: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSController::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSCursor::initWithImage:hotSpot: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSDatePickerCell::initTextCell: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSDocument::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSDocumentController::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSFilePromiseProvider::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSFormCell::initTextCell: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSGestureRecognizer::initWithTarget:action: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSImage::initWithSize: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSImageRep::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSLayoutManager::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSMenu::initWithTitle: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSMenuItem::initWithTitle:action:keyEquivalent: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSMenuItemCell::initTextCell: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSObjectController::initWithContent: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSPopover::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSPressureConfiguration::initWithPressureBehavior: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSResponder::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSRulerMarker::initWithRulerView:markerLocation:image:imageOrigin: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSRulerView::initWithScrollView:orientation: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSScrollView::initWithFrame: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSScrubberLayout::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSScrubberSelectionStyle::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSSearchFieldCell::initTextCell: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSShadow::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSSharingService::initWithTitle:image:alternateImage:handler: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSSharingServicePicker::initWithItems: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSStoryboardSegue::initWithIdentifier:source:destination: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSTableColumn::initWithIdentifier: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSTableView::initWithFrame: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSText::initWithFrame: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSTextBlock::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSTextFieldCell::initTextCell: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSTextFinder::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSTextTableBlock::initWithTable:startingRow:rowSpan:startingColumn:columnSpan: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSTextView::initWithFrame:textContainer: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSToolbar::initWithIdentifier: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSToolbarItem::initWithItemIdentifier: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSTouchBar::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSUserDefaultsController::initWithDefaults:initialValues: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSUserInterfaceCompressionOptions::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSView::initWithFrame: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSViewController::initWithNibName:bundle: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSWindow::initWithContentRect:styleMask:backing:defer: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSWindowController::initWithWindow: is missing an [DesignatedInitializer] attribute
+
+## likely fixed in master (but not in xcode9.2)
+!missing-selector! NSGestureRecognizer::setState: not bound

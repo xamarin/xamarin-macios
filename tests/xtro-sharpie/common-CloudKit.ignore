@@ -1,0 +1,6 @@
+## default init does not work, there's no init in base types, so it's a defacto designated initializer
+!extra-designated-initializer! CKMarkNotificationsReadOperation::initWithNotificationIDsToMarkRead: is incorrectly decorated with an [DesignatedInitializer] attribute
+
+## we offer a better managed API using another selector
+!missing-selector! CKRecord::objectForKeyedSubscript: not bound
+!missing-selector! CKRecord::setObject:forKeyedSubscript: not bound

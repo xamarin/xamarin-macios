@@ -1,0 +1,2 @@
+## untyped enum, we took the prefix from values in ABPerson.h
+!unknown-native-enum! ABAddressBookError bound

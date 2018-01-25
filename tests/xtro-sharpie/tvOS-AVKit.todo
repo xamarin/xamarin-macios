@@ -1,0 +1,4 @@
+!missing-field! AVDisplayManagerModeSwitchEndNotification not bound
+!missing-field! AVDisplayManagerModeSwitchSettingsChangedNotification not bound
+!missing-field! AVDisplayManagerModeSwitchStartNotification not bound
+!missing-selector! AVDisplayManager::isDisplayCriteriaMatchingEnabled not bound

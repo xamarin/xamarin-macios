@@ -9,7 +9,7 @@ namespace Extrospection {
 
 	class EnumCheck : BaseVisitor {
 
-		Dictionary<string,TypeDefinition> enums = new Dictionary<string, TypeDefinition> ();
+		Dictionary<string,TypeDefinition> enums = new Dictionary<string, TypeDefinition> (StringComparer.InvariantCultureIgnoreCase);
 
 		public override void VisitManagedType (TypeDefinition type)
 		{
@@ -18,14 +18,19 @@ namespace Extrospection {
 				return;
 			
 			var name = type.Name;
-			TypeDefinition td;
 			// e.g. WatchKit.WKErrorCode and WebKit.WKErrorCode :-(
-			if (!enums.TryGetValue (name, out td))
+			if (!enums.TryGetValue (name, out var td))
 				enums.Add (name, type);
-			else if (td.Namespace.StartsWith ("OpenTK.", StringComparison.Ordinal)) {
-				// OpenTK duplicate a lots of enums between it's versions
-			} else {
-				Console.WriteLine ("!duplicate-type-name! {0} enum exists as both {1} and {2}", name, type.FullName, td.FullName);
+			else {
+				var (t1, t2) = Helpers.Sort (type, td);
+				if (t1.Namespace.StartsWith ("OpenTK.", StringComparison.Ordinal)) {
+					// OpenTK duplicate a lots of enums between it's versions
+				} else if (t1.IsNotPublic && String.IsNullOrEmpty (t1.Namespace)) {
+					// ignore special, non exposed types
+				} else {
+					var framework = Helpers.GetFramework (t1);
+					Log.On (framework).Add ($"!duplicate-type-name! {name} enum exists as both {t1.FullName} and {t2.FullName}");
+				}
 			}
 		}
 
@@ -44,10 +49,13 @@ namespace Extrospection {
 			if (!decl.IsAvailable ())
 				return;
 
+			var framework = Helpers.GetFramework (decl);
+			if (framework == null)
+				return;
+			
 			var mname = Helpers.GetManagedName (name);
-			TypeDefinition type;
-			if (!enums.TryGetValue (mname, out type)) {
-				Console.WriteLine ("!missing-enum! {0} not bound", name);
+			if (!enums.TryGetValue (mname, out var type)) {
+				Log.On (framework).Add ($"!missing-enum! {name} not bound");
 				return;
 			} else
 				enums.Remove (mname);
@@ -102,10 +110,10 @@ namespace Extrospection {
 			// check correct [Native] decoration
 			if (native) {
 				if (!IsNative (type))
-					Console.WriteLine ("!missing-enum-native! {0}", name);
+					Log.On (framework).Add ($"!missing-enum-native! {name}");
 			} else {
 				if (IsNative (type))
-					Console.WriteLine ("!extra-enum-native! {0}", name);
+					Log.On (framework).Add ($"!extra-enum-native! {name}");
 			}
 
 			int managed_size = 4;
@@ -129,7 +137,7 @@ namespace Extrospection {
 				throw new NotImplementedException ();
 			}
 			if (native_size != managed_size)
-				Console.WriteLine ("!wrong-enum-size! {0} managed {1} vs native {2}", name, managed_size, native_size);
+				Log.On (framework).Add ($"!wrong-enum-size! {name} managed {managed_size} vs native {native_size}");
 		}
 
 		static bool IsNative (TypeDefinition type)
@@ -162,8 +170,11 @@ namespace Extrospection {
 			// report any [Native] decorated enum for which we could not find a match in the header files
 			// e.g. a typo in the name
 			foreach (var extra in enums) {
-				if (IsNative (extra.Value))
-					Console.WriteLine ("!unknown-native-enum! {0} bound", extra.Key);
+				var t = extra.Value;
+				if (!IsNative (t))
+					continue;
+				var framework = Helpers.GetFramework (t);
+				Log.On (framework).Add ($"!unknown-native-enum! {extra.Key} bound");
 			}
 		}
 	}

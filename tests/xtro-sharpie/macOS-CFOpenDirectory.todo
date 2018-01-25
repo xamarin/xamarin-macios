@@ -1,0 +1,464 @@
+!missing-enum! ODFrameworkErrors not bound
+!missing-field! kODAttributeTypeAccessControlEntry not bound
+!missing-field! kODAttributeTypeAddressLine1 not bound
+!missing-field! kODAttributeTypeAddressLine2 not bound
+!missing-field! kODAttributeTypeAddressLine3 not bound
+!missing-field! kODAttributeTypeAdminLimits not bound
+!missing-field! kODAttributeTypeAdvertisedServices not bound
+!missing-field! kODAttributeTypeAlias not bound
+!missing-field! kODAttributeTypeAllAttributes not bound
+!missing-field! kODAttributeTypeAllTypes not bound
+!missing-field! kODAttributeTypeAltSecurityIdentities not bound
+!missing-field! kODAttributeTypeAreaCode not bound
+!missing-field! kODAttributeTypeAttrListRefCount not bound
+!missing-field! kODAttributeTypeAttrListRefs not bound
+!missing-field! kODAttributeTypeAttrListValueRefCount not bound
+!missing-field! kODAttributeTypeAttrListValueRefs not bound
+!missing-field! kODAttributeTypeAuthCredential not bound
+!missing-field! kODAttributeTypeAuthenticationAuthority not bound
+!missing-field! kODAttributeTypeAuthenticationHint not bound
+!missing-field! kODAttributeTypeAuthMethod not bound
+!missing-field! kODAttributeTypeAuthorityRevocationList not bound
+!missing-field! kODAttributeTypeAutomaticSearchPath not bound
+!missing-field! kODAttributeTypeAutomountInformation not bound
+!missing-field! kODAttributeTypeBirthday not bound
+!missing-field! kODAttributeTypeBootParams not bound
+!missing-field! kODAttributeTypeBuilding not bound
+!missing-field! kODAttributeTypeBuildVersion not bound
+!missing-field! kODAttributeTypeCACertificate not bound
+!missing-field! kODAttributeTypeCapacity not bound
+!missing-field! kODAttributeTypeCertificateRevocationList not bound
+!missing-field! kODAttributeTypeCity not bound
+!missing-field! kODAttributeTypeComment not bound
+!missing-field! kODAttributeTypeCompany not bound
+!missing-field! kODAttributeTypeComputers not bound
+!missing-field! kODAttributeTypeConfigAvailable not bound
+!missing-field! kODAttributeTypeConfigFile not bound
+!missing-field! kODAttributeTypeContactGUID not bound
+!missing-field! kODAttributeTypeContactPerson not bound
+!missing-field! kODAttributeTypeCopyTimestamp not bound
+!missing-field! kODAttributeTypeCoreFWVersion not bound
+!missing-field! kODAttributeTypeCountry not bound
+!missing-field! kODAttributeTypeCreationTimestamp not bound
+!missing-field! kODAttributeTypeCrossCertificatePair not bound
+!missing-field! kODAttributeTypeCustomSearchPath not bound
+!missing-field! kODAttributeTypeDataStamp not bound
+!missing-field! kODAttributeTypeDateRecordCreated not bound
+!missing-field! kODAttributeTypeDepartment not bound
+!missing-field! kODAttributeTypeDirRefCount not bound
+!missing-field! kODAttributeTypeDirRefs not bound
+!missing-field! kODAttributeTypeDNSDomain not bound
+!missing-field! kODAttributeTypeDNSName not bound
+!missing-field! kODAttributeTypeDNSNameServer not bound
+!missing-field! kODAttributeTypeEMailAddress not bound
+!missing-field! kODAttributeTypeEMailContacts not bound
+!missing-field! kODAttributeTypeENetAddress not bound
+!missing-field! kODAttributeTypeExpire not bound
+!missing-field! kODAttributeTypeFaxNumber not bound
+!missing-field! kODAttributeTypeFirstName not bound
+!missing-field! kODAttributeTypeFullName not bound
+!missing-field! kODAttributeTypeFunctionalState not bound
+!missing-field! kODAttributeTypeFWVersion not bound
+!missing-field! kODAttributeTypeGroup not bound
+!missing-field! kODAttributeTypeGroupMembers not bound
+!missing-field! kODAttributeTypeGroupMembership not bound
+!missing-field! kODAttributeTypeGroupServices not bound
+!missing-field! kODAttributeTypeGUID not bound
+!missing-field! kODAttributeTypeHardwareUUID not bound
+!missing-field! kODAttributeTypeHomeDirectory not bound
+!missing-field! kODAttributeTypeHomeDirectoryQuota not bound
+!missing-field! kODAttributeTypeHomeDirectorySoftQuota not bound
+!missing-field! kODAttributeTypeHomeLocOwner not bound
+!missing-field! kODAttributeTypeHomePhoneNumber not bound
+!missing-field! kODAttributeTypeHTML not bound
+!missing-field! kODAttributeTypeIMHandle not bound
+!missing-field! kODAttributeTypeInternetAlias not bound
+!missing-field! kODAttributeTypeIPAddress not bound
+!missing-field! kODAttributeTypeIPAddressAndENetAddress not bound
+!missing-field! kODAttributeTypeIPv6Address not bound
+!missing-field! kODAttributeTypeJobTitle not bound
+!missing-field! kODAttributeTypeJPEGPhoto not bound
+!missing-field! kODAttributeTypeKDCAuthKey not bound
+!missing-field! kODAttributeTypeKDCConfigData not bound
+!missing-field! kODAttributeTypeKerberosRealm not bound
+!missing-field! kODAttributeTypeKerberosServices not bound
+!missing-field! kODAttributeTypeKeywords not bound
+!missing-field! kODAttributeTypeLastName not bound
+!missing-field! kODAttributeTypeLDAPReadReplicas not bound
+!missing-field! kODAttributeTypeLDAPSearchBaseSuffix not bound
+!missing-field! kODAttributeTypeLDAPWriteReplicas not bound
+!missing-field! kODAttributeTypeLocaleRelay not bound
+!missing-field! kODAttributeTypeLocaleSubnets not bound
+!missing-field! kODAttributeTypeLocalOnlySearchPath not bound
+!missing-field! kODAttributeTypeLocation not bound
+!missing-field! kODAttributeTypeMailAttribute not bound
+!missing-field! kODAttributeTypeMapCoordinates not bound
+!missing-field! kODAttributeTypeMapGUID not bound
+!missing-field! kODAttributeTypeMapURI not bound
+!missing-field! kODAttributeTypeMCXFlags not bound
+!missing-field! kODAttributeTypeMCXSettings not bound
+!missing-field! kODAttributeTypeMetaAmbiguousName not bound
+!missing-field! kODAttributeTypeMetaAugmentedAttributes not bound
+!missing-field! kODAttributeTypeMetaAutomountMap not bound
+!missing-field! kODAttributeTypeMetaNodeLocation not bound
+!missing-field! kODAttributeTypeMetaRecordName not bound
+!missing-field! kODAttributeTypeMiddleName not bound
+!missing-field! kODAttributeTypeMIME not bound
+!missing-field! kODAttributeTypeMobileNumber not bound
+!missing-field! kODAttributeTypeModificationTimestamp not bound
+!missing-field! kODAttributeTypeNamePrefix not bound
+!missing-field! kODAttributeTypeNameSuffix not bound
+!missing-field! kODAttributeTypeNativeOnly not bound
+!missing-field! kODAttributeTypeNestedGroups not bound
+!missing-field! kODAttributeTypeNetGroups not bound
+!missing-field! kODAttributeTypeNetGroupTriplet not bound
+!missing-field! kODAttributeTypeNetworkInterfaces not bound
+!missing-field! kODAttributeTypeNetworkNumber not bound
+!missing-field! kODAttributeTypeNFSHomeDirectory not bound
+!missing-field! kODAttributeTypeNickName not bound
+!missing-field! kODAttributeTypeNodeOptions not bound
+!missing-field! kODAttributeTypeNodePath not bound
+!missing-field! kODAttributeTypeNodeRefCount not bound
+!missing-field! kODAttributeTypeNodeRefs not bound
+!missing-field! kODAttributeTypeNodeSASLRealm not bound
+!missing-field! kODAttributeTypeNote not bound
+!missing-field! kODAttributeTypeNTDomainComputerAccount not bound
+!missing-field! kODAttributeTypeNumTableList not bound
+!missing-field! kODAttributeTypeOperatingSystem not bound
+!missing-field! kODAttributeTypeOperatingSystemVersion not bound
+!missing-field! kODAttributeTypeOrganizationInfo not bound
+!missing-field! kODAttributeTypeOrganizationName not bound
+!missing-field! kODAttributeTypeOriginalHomeDirectory not bound
+!missing-field! kODAttributeTypeOriginalNFSHomeDirectory not bound
+!missing-field! kODAttributeTypeOriginalNodeName not bound
+!missing-field! kODAttributeTypeOwner not bound
+!missing-field! kODAttributeTypeOwnerGUID not bound
+!missing-field! kODAttributeTypePagerNumber not bound
+!missing-field! kODAttributeTypeParentLocales not bound
+!missing-field! kODAttributeTypePassword not bound
+!missing-field! kODAttributeTypePasswordPlus not bound
+!missing-field! kODAttributeTypePasswordPolicyOptions not bound
+!missing-field! kODAttributeTypePasswordServerList not bound
+!missing-field! kODAttributeTypePasswordServerLocation not bound
+!missing-field! kODAttributeTypePGPPublicKey not bound
+!missing-field! kODAttributeTypePhoneContacts not bound
+!missing-field! kODAttributeTypePhoneNumber not bound
+!missing-field! kODAttributeTypePicture not bound
+!missing-field! kODAttributeTypePIDValue not bound
+!missing-field! kODAttributeTypePluginIndex not bound
+!missing-field! kODAttributeTypePlugInInfo not bound
+!missing-field! kODAttributeTypePort not bound
+!missing-field! kODAttributeTypePostalAddress not bound
+!missing-field! kODAttributeTypePostalAddressContacts not bound
+!missing-field! kODAttributeTypePostalCode not bound
+!missing-field! kODAttributeTypePresetUserIsAdmin not bound
+!missing-field! kODAttributeTypePrimaryComputerGUID not bound
+!missing-field! kODAttributeTypePrimaryComputerList not bound
+!missing-field! kODAttributeTypePrimaryGroupID not bound
+!missing-field! kODAttributeTypePrimaryLocale not bound
+!missing-field! kODAttributeTypePrimaryNTDomain not bound
+!missing-field! kODAttributeTypePrinter1284DeviceID not bound
+!missing-field! kODAttributeTypePrinterLPRHost not bound
+!missing-field! kODAttributeTypePrinterLPRQueue not bound
+!missing-field! kODAttributeTypePrinterMakeAndModel not bound
+!missing-field! kODAttributeTypePrinterType not bound
+!missing-field! kODAttributeTypePrinterURI not bound
+!missing-field! kODAttributeTypePrinterXRISupported not bound
+!missing-field! kODAttributeTypePrintServiceInfoText not bound
+!missing-field! kODAttributeTypePrintServiceInfoXML not bound
+!missing-field! kODAttributeTypePrintServiceUserData not bound
+!missing-field! kODAttributeTypeProcessName not bound
+!missing-field! kODAttributeTypeProfiles not bound
+!missing-field! kODAttributeTypeProfilesTimestamp not bound
+!missing-field! kODAttributeTypeProtocolNumber not bound
+!missing-field! kODAttributeTypeProtocols not bound
+!missing-field! kODAttributeTypePwdAgingPolicy not bound
+!missing-field! kODAttributeTypeReadOnlyNode not bound
+!missing-field! kODAttributeTypeRealUserID not bound
+!missing-field! kODAttributeTypeRecordName not bound
+!missing-field! kODAttributeTypeRecordType not bound
+!missing-field! kODAttributeTypeRecRefCount not bound
+!missing-field! kODAttributeTypeRecRefs not bound
+!missing-field! kODAttributeTypeRelationships not bound
+!missing-field! kODAttributeTypeRelativeDNPrefix not bound
+!missing-field! kODAttributeTypeResourceInfo not bound
+!missing-field! kODAttributeTypeResourceType not bound
+!missing-field! kODAttributeTypeRPCNumber not bound
+!missing-field! kODAttributeTypeSchema not bound
+!missing-field! kODAttributeTypeSearchPath not bound
+!missing-field! kODAttributeTypeSearchPolicy not bound
+!missing-field! kODAttributeTypeServicesLocator not bound
+!missing-field! kODAttributeTypeServiceType not bound
+!missing-field! kODAttributeTypeSetupAdvertising not bound
+!missing-field! kODAttributeTypeSetupAutoRegister not bound
+!missing-field! kODAttributeTypeSetupLocation not bound
+!missing-field! kODAttributeTypeSetupOccupation not bound
+!missing-field! kODAttributeTypeSMBAcctFlags not bound
+!missing-field! kODAttributeTypeSMBGroupRID not bound
+!missing-field! kODAttributeTypeSMBHome not bound
+!missing-field! kODAttributeTypeSMBHomeDrive not bound
+!missing-field! kODAttributeTypeSMBKickoffTime not bound
+!missing-field! kODAttributeTypeSMBLogoffTime not bound
+!missing-field! kODAttributeTypeSMBLogonTime not bound
+!missing-field! kODAttributeTypeSMBPrimaryGroupSID not bound
+!missing-field! kODAttributeTypeSMBProfilePath not bound
+!missing-field! kODAttributeTypeSMBPWDLastSet not bound
+!missing-field! kODAttributeTypeSMBRID not bound
+!missing-field! kODAttributeTypeSMBScriptPath not bound
+!missing-field! kODAttributeTypeSMBSID not bound
+!missing-field! kODAttributeTypeSMBUserWorkstations not bound
+!missing-field! kODAttributeTypeStandardOnly not bound
+!missing-field! kODAttributeTypeState not bound
+!missing-field! kODAttributeTypeStreet not bound
+!missing-field! kODAttributeTypeSubNodes not bound
+!missing-field! kODAttributeTypeTimePackage not bound
+!missing-field! kODAttributeTypeTimeToLive not bound
+!missing-field! kODAttributeTypeTotalRefCount not bound
+!missing-field! kODAttributeTypeTotalSize not bound
+!missing-field! kODAttributeTypeTrustInformation not bound
+!missing-field! kODAttributeTypeUniqueID not bound
+!missing-field! kODAttributeTypeURL not bound
+!missing-field! kODAttributeTypeUserCertificate not bound
+!missing-field! kODAttributeTypeUserPKCS12Data not bound
+!missing-field! kODAttributeTypeUserShell not bound
+!missing-field! kODAttributeTypeUserSMIMECertificate not bound
+!missing-field! kODAttributeTypeVersion not bound
+!missing-field! kODAttributeTypeVFSDumpFreq not bound
+!missing-field! kODAttributeTypeVFSLinkDir not bound
+!missing-field! kODAttributeTypeVFSOpts not bound
+!missing-field! kODAttributeTypeVFSPassNo not bound
+!missing-field! kODAttributeTypeVFSType not bound
+!missing-field! kODAttributeTypeWeblogURI not bound
+!missing-field! kODAttributeTypeXMLPlist not bound
+!missing-field! kODAuthenticationType2WayRandom not bound
+!missing-field! kODAuthenticationType2WayRandomChangePasswd not bound
+!missing-field! kODAuthenticationTypeAPOP not bound
+!missing-field! kODAuthenticationTypeChangePasswd not bound
+!missing-field! kODAuthenticationTypeClearText not bound
+!missing-field! kODAuthenticationTypeClearTextReadOnly not bound
+!missing-field! kODAuthenticationTypeCRAM_MD5 not bound
+!missing-field! kODAuthenticationTypeCrypt not bound
+!missing-field! kODAuthenticationTypeDeleteUser not bound
+!missing-field! kODAuthenticationTypeDIGEST_MD5 not bound
+!missing-field! kODAuthenticationTypeGetEffectivePolicy not bound
+!missing-field! kODAuthenticationTypeGetGlobalPolicy not bound
+!missing-field! kODAuthenticationTypeGetKerberosPrincipal not bound
+!missing-field! kODAuthenticationTypeGetPolicy not bound
+!missing-field! kODAuthenticationTypeGetUserData not bound
+!missing-field! kODAuthenticationTypeGetUserName not bound
+!missing-field! kODAuthenticationTypeKerberosTickets not bound
+!missing-field! kODAuthenticationTypeMPPEMasterKeys not bound
+!missing-field! kODAuthenticationTypeMSCHAP2 not bound
+!missing-field! kODAuthenticationTypeNewUser not bound
+!missing-field! kODAuthenticationTypeNewUserWithPolicy not bound
+!missing-field! kODAuthenticationTypeNodeNativeClearTextOK not bound
+!missing-field! kODAuthenticationTypeNodeNativeNoClearText not bound
+!missing-field! kODAuthenticationTypeNTLMv2 not bound
+!missing-field! kODAuthenticationTypeNTLMv2WithSessionKey not bound
+!missing-field! kODAuthenticationTypeReadSecureHash not bound
+!missing-field! kODAuthenticationTypeSecureHash not bound
+!missing-field! kODAuthenticationTypeSetCertificateHashAsCurrent not bound
+!missing-field! kODAuthenticationTypeSetGlobalPolicy not bound
+!missing-field! kODAuthenticationTypeSetLMHash not bound
+!missing-field! kODAuthenticationTypeSetNTHash not bound
+!missing-field! kODAuthenticationTypeSetPassword not bound
+!missing-field! kODAuthenticationTypeSetPasswordAsCurrent not bound
+!missing-field! kODAuthenticationTypeSetPolicy not bound
+!missing-field! kODAuthenticationTypeSetPolicyAsCurrent not bound
+!missing-field! kODAuthenticationTypeSetUserData not bound
+!missing-field! kODAuthenticationTypeSetUserName not bound
+!missing-field! kODAuthenticationTypeSetWorkstationPassword not bound
+!missing-field! kODAuthenticationTypeSMB_LM_Key not bound
+!missing-field! kODAuthenticationTypeSMB_NT_Key not bound
+!missing-field! kODAuthenticationTypeSMB_NT_UserSessionKey not bound
+!missing-field! kODAuthenticationTypeSMB_NT_WithUserSessionKey not bound
+!missing-field! kODAuthenticationTypeSMBNTv2UserSessionKey not bound
+!missing-field! kODAuthenticationTypeSMBWorkstationCredentialSessionKey not bound
+!missing-field! kODAuthenticationTypeWithAuthorizationRef not bound
+!missing-field! kODAuthenticationTypeWriteSecureHash not bound
+!missing-field! kODErrorDomainFramework not bound
+!missing-field! kODModuleConfigOptionConnectionIdleDisconnect not bound
+!missing-field! kODModuleConfigOptionConnectionSetupTimeout not bound
+!missing-field! kODModuleConfigOptionManInTheMiddle not bound
+!missing-field! kODModuleConfigOptionPacketEncryption not bound
+!missing-field! kODModuleConfigOptionPacketSigning not bound
+!missing-field! kODModuleConfigOptionQueryTimeout not bound
+!missing-field! kODNodeOptionsQuerySkippedSubnode not bound
+!missing-field! kODPolicyAttributeCreationTime not bound
+!missing-field! kODPolicyAttributeCurrentDate not bound
+!missing-field! kODPolicyAttributeCurrentDayOfWeek not bound
+!missing-field! kODPolicyAttributeCurrentTime not bound
+!missing-field! kODPolicyAttributeCurrentTimeOfDay not bound
+!missing-field! kODPolicyAttributeDaysUntilExpiration not bound
+!missing-field! kODPolicyAttributeEnableAtTimeOfDay not bound
+!missing-field! kODPolicyAttributeEnableOnDate not bound
+!missing-field! kODPolicyAttributeEnableOnDayOfWeek not bound
+!missing-field! kODPolicyAttributeExpiresAtTimeOfDay not bound
+!missing-field! kODPolicyAttributeExpiresEveryNDays not bound
+!missing-field! kODPolicyAttributeExpiresOnDate not bound
+!missing-field! kODPolicyAttributeExpiresOnDayOfWeek not bound
+!missing-field! kODPolicyAttributeFailedAuthentications not bound
+!missing-field! kODPolicyAttributeLastAuthenticationTime not bound
+!missing-field! kODPolicyAttributeLastFailedAuthenticationTime not bound
+!missing-field! kODPolicyAttributeLastPasswordChangeTime not bound
+!missing-field! kODPolicyAttributeMaximumFailedAuthentications not bound
+!missing-field! kODPolicyAttributeNewPasswordRequiredTime not bound
+!missing-field! kODPolicyAttributePassword not bound
+!missing-field! kODPolicyAttributePasswordHashes not bound
+!missing-field! kODPolicyAttributePasswordHistory not bound
+!missing-field! kODPolicyAttributePasswordHistoryDepth not bound
+!missing-field! kODPolicyAttributeRecordName not bound
+!missing-field! kODPolicyAttributeRecordType not bound
+!missing-field! kODPolicyCategoryAuthentication not bound
+!missing-field! kODPolicyCategoryPasswordChange not bound
+!missing-field! kODPolicyCategoryPasswordContent not bound
+!missing-field! kODPolicyKeyContent not bound
+!missing-field! kODPolicyKeyContentDescription not bound
+!missing-field! kODPolicyKeyEvaluationDetails not bound
+!missing-field! kODPolicyKeyIdentifier not bound
+!missing-field! kODPolicyKeyParameters not bound
+!missing-field! kODPolicyKeyPolicySatisfied not bound
+!missing-field! kODPolicyTypeAccountExpiresOnDate not bound
+!missing-field! kODPolicyTypeAccountMaximumFailedLogins not bound
+!missing-field! kODPolicyTypeAccountMaximumMinutesOfNonUse not bound
+!missing-field! kODPolicyTypeAccountMaximumMinutesUntilDisabled not bound
+!missing-field! kODPolicyTypeAccountMinutesUntilFailedLoginReset not bound
+!missing-field! kODPolicyTypePasswordCannotBeAccountName not bound
+!missing-field! kODPolicyTypePasswordChangeRequired not bound
+!missing-field! kODPolicyTypePasswordHistory not bound
+!missing-field! kODPolicyTypePasswordMaximumAgeInMinutes not bound
+!missing-field! kODPolicyTypePasswordMaximumNumberOfCharacters not bound
+!missing-field! kODPolicyTypePasswordMinimumNumberOfCharacters not bound
+!missing-field! kODPolicyTypePasswordRequiresAlpha not bound
+!missing-field! kODPolicyTypePasswordRequiresMixedCase not bound
+!missing-field! kODPolicyTypePasswordRequiresNumeric not bound
+!missing-field! kODPolicyTypePasswordRequiresSymbol not bound
+!missing-field! kODPolicyTypePasswordSelfModification not bound
+!missing-field! kODRecordTypeAFPServer not bound
+!missing-field! kODRecordTypeAliases not bound
+!missing-field! kODRecordTypeAttributeTypes not bound
+!missing-field! kODRecordTypeAugments not bound
+!missing-field! kODRecordTypeAutomount not bound
+!missing-field! kODRecordTypeAutomountMap not bound
+!missing-field! kODRecordTypeAutoServerSetup not bound
+!missing-field! kODRecordTypeBootp not bound
+!missing-field! kODRecordTypeCertificateAuthorities not bound
+!missing-field! kODRecordTypeComputerGroups not bound
+!missing-field! kODRecordTypeComputerLists not bound
+!missing-field! kODRecordTypeComputers not bound
+!missing-field! kODRecordTypeConfiguration not bound
+!missing-field! kODRecordTypeEthernets not bound
+!missing-field! kODRecordTypeFileMakerServers not bound
+!missing-field! kODRecordTypeFTPServer not bound
+!missing-field! kODRecordTypeGroups not bound
+!missing-field! kODRecordTypeHosts not bound
+!missing-field! kODRecordTypeHostServices not bound
+!missing-field! kODRecordTypeLDAPServer not bound
+!missing-field! kODRecordTypeLocations not bound
+!missing-field! kODRecordTypeMounts not bound
+!missing-field! kODRecordTypeNetDomains not bound
+!missing-field! kODRecordTypeNetGroups not bound
+!missing-field! kODRecordTypeNetworks not bound
+!missing-field! kODRecordTypeNFS not bound
+!missing-field! kODRecordTypePeople not bound
+!missing-field! kODRecordTypePresetComputerGroups not bound
+!missing-field! kODRecordTypePresetComputerLists not bound
+!missing-field! kODRecordTypePresetComputers not bound
+!missing-field! kODRecordTypePresetGroups not bound
+!missing-field! kODRecordTypePresetUsers not bound
+!missing-field! kODRecordTypePrinters not bound
+!missing-field! kODRecordTypePrintService not bound
+!missing-field! kODRecordTypePrintServiceUser not bound
+!missing-field! kODRecordTypeProtocols not bound
+!missing-field! kODRecordTypeQTSServer not bound
+!missing-field! kODRecordTypeQueryInformation not bound
+!missing-field! kODRecordTypeRecordTypes not bound
+!missing-field! kODRecordTypeResources not bound
+!missing-field! kODRecordTypeRPC not bound
+!missing-field! kODRecordTypeServer not bound
+!missing-field! kODRecordTypeServices not bound
+!missing-field! kODRecordTypeSharePoints not bound
+!missing-field! kODRecordTypeSMBServer not bound
+!missing-field! kODRecordTypeUsers not bound
+!missing-field! kODRecordTypeWebServer not bound
+!missing-field! kODSessionDefault not bound
+!missing-field! kODSessionProxyAddress not bound
+!missing-field! kODSessionProxyPassword not bound
+!missing-field! kODSessionProxyPort not bound
+!missing-field! kODSessionProxyUsername not bound
+!missing-pinvoke! ODContextGetTypeID is not bound
+!missing-pinvoke! ODNodeAddAccountPolicy is not bound
+!missing-pinvoke! ODNodeCopyAccountPolicies is not bound
+!missing-pinvoke! ODNodeCopyDetails is not bound
+!missing-pinvoke! ODNodeCopyPolicies is not bound
+!missing-pinvoke! ODNodeCopyRecord is not bound
+!missing-pinvoke! ODNodeCopySubnodeNames is not bound
+!missing-pinvoke! ODNodeCopySupportedAttributes is not bound
+!missing-pinvoke! ODNodeCopySupportedPolicies is not bound
+!missing-pinvoke! ODNodeCopySupportedRecordTypes is not bound
+!missing-pinvoke! ODNodeCopyUnreachableSubnodeNames is not bound
+!missing-pinvoke! ODNodeCreateCopy is not bound
+!missing-pinvoke! ODNodeCreateRecord is not bound
+!missing-pinvoke! ODNodeCreateWithName is not bound
+!missing-pinvoke! ODNodeCreateWithNodeType is not bound
+!missing-pinvoke! ODNodeCustomCall is not bound
+!missing-pinvoke! ODNodeCustomFunction is not bound
+!missing-pinvoke! ODNodeGetName is not bound
+!missing-pinvoke! ODNodeGetTypeID is not bound
+!missing-pinvoke! ODNodePasswordContentCheck is not bound
+!missing-pinvoke! ODNodeRemoveAccountPolicy is not bound
+!missing-pinvoke! ODNodeRemovePolicy is not bound
+!missing-pinvoke! ODNodeSetAccountPolicies is not bound
+!missing-pinvoke! ODNodeSetCredentials is not bound
+!missing-pinvoke! ODNodeSetCredentialsExtended is not bound
+!missing-pinvoke! ODNodeSetCredentialsUsingKerberosCache is not bound
+!missing-pinvoke! ODNodeSetPolicies is not bound
+!missing-pinvoke! ODNodeSetPolicy is not bound
+!missing-pinvoke! ODQueryCopyResults is not bound
+!missing-pinvoke! ODQueryCreateWithNode is not bound
+!missing-pinvoke! ODQueryCreateWithNodeType is not bound
+!missing-pinvoke! ODQueryGetTypeID is not bound
+!missing-pinvoke! ODQueryScheduleWithRunLoop is not bound
+!missing-pinvoke! ODQuerySetCallback is not bound
+!missing-pinvoke! ODQuerySetDispatchQueue is not bound
+!missing-pinvoke! ODQuerySynchronize is not bound
+!missing-pinvoke! ODQueryUnscheduleFromRunLoop is not bound
+!missing-pinvoke! ODRecordAddAccountPolicy is not bound
+!missing-pinvoke! ODRecordAddMember is not bound
+!missing-pinvoke! ODRecordAddValue is not bound
+!missing-pinvoke! ODRecordAuthenticationAllowed is not bound
+!missing-pinvoke! ODRecordChangePassword is not bound
+!missing-pinvoke! ODRecordContainsMember is not bound
+!missing-pinvoke! ODRecordCopyAccountPolicies is not bound
+!missing-pinvoke! ODRecordCopyDetails is not bound
+!missing-pinvoke! ODRecordCopyEffectivePolicies is not bound
+!missing-pinvoke! ODRecordCopyPasswordPolicy is not bound
+!missing-pinvoke! ODRecordCopyPolicies is not bound
+!missing-pinvoke! ODRecordCopySupportedPolicies is not bound
+!missing-pinvoke! ODRecordCopyValues is not bound
+!missing-pinvoke! ODRecordDelete is not bound
+!missing-pinvoke! ODRecordGetRecordName is not bound
+!missing-pinvoke! ODRecordGetRecordType is not bound
+!missing-pinvoke! ODRecordGetTypeID is not bound
+!missing-pinvoke! ODRecordPasswordChangeAllowed is not bound
+!missing-pinvoke! ODRecordRemoveAccountPolicy is not bound
+!missing-pinvoke! ODRecordRemoveMember is not bound
+!missing-pinvoke! ODRecordRemovePolicy is not bound
+!missing-pinvoke! ODRecordRemoveValue is not bound
+!missing-pinvoke! ODRecordSecondsUntilAuthenticationsExpire is not bound
+!missing-pinvoke! ODRecordSecondsUntilPasswordExpires is not bound
+!missing-pinvoke! ODRecordSetAccountPolicies is not bound
+!missing-pinvoke! ODRecordSetNodeCredentials is not bound
+!missing-pinvoke! ODRecordSetNodeCredentialsExtended is not bound
+!missing-pinvoke! ODRecordSetNodeCredentialsUsingKerberosCache is not bound
+!missing-pinvoke! ODRecordSetPolicies is not bound
+!missing-pinvoke! ODRecordSetPolicy is not bound
+!missing-pinvoke! ODRecordSetValue is not bound
+!missing-pinvoke! ODRecordSynchronize is not bound
+!missing-pinvoke! ODRecordVerifyPassword is not bound
+!missing-pinvoke! ODRecordVerifyPasswordExtended is not bound
+!missing-pinvoke! ODRecordWillAuthenticationsExpire is not bound
+!missing-pinvoke! ODRecordWillPasswordExpire is not bound
+!missing-pinvoke! ODSessionCopyNodeNames is not bound
+!missing-pinvoke! ODSessionCreate is not bound
+!missing-pinvoke! ODSessionGetTypeID is not bound

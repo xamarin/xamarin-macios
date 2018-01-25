@@ -1,0 +1,11 @@
+!missing-designated-initializer! PKAddPaymentPassRequest::init is missing an [DesignatedInitializer] attribute
+!missing-selector! +PKTransitPassProperties::passPropertiesForPass: not bound
+!missing-selector! PKSuicaPassProperties::isBalanceAllowedForCommute not bound
+!missing-selector! PKSuicaPassProperties::isLowBalanceGateNotificationEnabled not bound
+!missing-selector! PKTransitPassProperties::expirationDate not bound
+!missing-selector! PKTransitPassProperties::isBlacklisted not bound
+!missing-selector! PKTransitPassProperties::isInStation not bound
+!missing-selector! PKTransitPassProperties::transitBalance not bound
+!missing-selector! PKTransitPassProperties::transitBalanceCurrencyCode not bound
+!missing-type! PKTransitPassProperties not bound
+!wrong-base-type! PKSuicaPassProperties expected PKTransitPassProperties actual NSObject

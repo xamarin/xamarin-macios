@@ -1,0 +1,2 @@
+## only used on tvOS but exposed in iOS 10 SDK
+!missing-enum! RPPreviewViewControllerMode not bound

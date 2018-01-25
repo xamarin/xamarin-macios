@@ -1,0 +1,34 @@
+# Deprecated in iOS 9.0 (so watch 2.0) with an alternative (NSWritingDirectionFormatType in UIKit)
+# better not expose the deprecated enum since it's not available in tvOS either
+!missing-enum! NSTextWritingDirection not bound
+
+## deprecated in 9.0 but still visible (for watchOS) from `NSDeprecatedKitAdditions (NSAttributedString)`
+## not part of tvOS and we provide the replacement selector with the same managed API
+!missing-selector! NSAttributedString::initWithFileURL:options:documentAttributes:error: not bound
+
+## UITraitCollection is not available on watchOS
+!missing-selector! +UIColor::colorNamed:inBundle:compatibleWithTraitCollection: not bound
+
+## lack of availabilty macros on NSItemProvder.PreferredPresentationStyle - intro says they are not available
+!missing-selector! NSItemProvider::preferredPresentationStyle not bound
+!missing-selector! NSItemProvider::setPreferredPresentationStyle: not bound
+## and that also means the (enum/returned) type is unused
+!missing-enum! UIPreferredPresentationStyle not bound
+
+## Apple renamed NSLineBreakMode from UILineBreakMode and we kept the old name
+!unknown-native-enum! UILineBreakMode bound
+
+## Apple renamed NSTextAlignment from NSTextAlignment and we kept the old name
+!unknown-native-enum! UITextAlignment bound
+
+## Ignore what the header files say, the NSItemProviderReading methods are not actually implemented on TV or Watch
+!missing-protocol-conformance! NSAttributedString should conform to NSItemProviderReading (defined in 'UINSItemProvider' category)
+!missing-protocol-conformance! NSAttributedString should conform to NSItemProviderWriting (defined in 'UINSItemProvider' category)
+!missing-protocol-conformance! UIColor should conform to NSItemProviderReading (defined in 'UINSItemProvider' category)
+!missing-protocol-conformance! UIColor should conform to NSItemProviderWriting (defined in 'UINSItemProvider' category)
+!missing-protocol-conformance! UIImage should conform to NSItemProviderReading (defined in 'NSItemProvider' category)
+!missing-protocol-conformance! UIImage should conform to NSItemProviderWriting (defined in 'NSItemProvider' category)
+
+### moved from watchOS-UIKit.todo
+!missing-designated-initializer! UIBezierPath::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UILocalNotification::init is missing an [DesignatedInitializer] attribute

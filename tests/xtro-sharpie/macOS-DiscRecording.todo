@@ -1,0 +1,797 @@
+!missing-field! DRAbstractFile not bound
+!missing-field! DRAccessDate not bound
+!missing-field! DRAllFilesystems not bound
+!missing-field! DRApplicationIdentifier not bound
+!missing-field! DRAttributeModificationDate not bound
+!missing-field! DRAudioFourChannelKey not bound
+!missing-field! DRAudioPreEmphasisKey not bound
+!missing-field! DRBackupDate not bound
+!missing-field! DRBibliographicFile not bound
+!missing-field! DRBlockSize not bound
+!missing-field! DRBlockSizeKey not bound
+!missing-field! DRBlockTypeKey not bound
+!missing-field! DRBurnAppendableKey not bound
+!missing-field! DRBurnCompletionActionEject not bound
+!missing-field! DRBurnCompletionActionKey not bound
+!missing-field! DRBurnCompletionActionMount not bound
+!missing-field! DRBurnDoubleLayerL0DataZoneBlocksKey not bound
+!missing-field! DRBurnFailureActionEject not bound
+!missing-field! DRBurnFailureActionKey not bound
+!missing-field! DRBurnFailureActionNone not bound
+!missing-field! DRBurnOverwriteDiscKey not bound
+!missing-field! DRBurnRequestedSpeedKey not bound
+!missing-field! DRBurnStatusChangedNotification not bound
+!missing-field! DRBurnStrategyBDDAO not bound
+!missing-field! DRBurnStrategyCDSAO not bound
+!missing-field! DRBurnStrategyCDTAO not bound
+!missing-field! DRBurnStrategyDVDDAO not bound
+!missing-field! DRBurnStrategyIsRequiredKey not bound
+!missing-field! DRBurnStrategyKey not bound
+!missing-field! DRBurnTestingKey not bound
+!missing-field! DRBurnUnderrunProtectionKey not bound
+!missing-field! DRBurnVerifyDiscKey not bound
+!missing-field! DRCDTextArrangerKey not bound
+!missing-field! DRCDTextCharacterCodeKey not bound
+!missing-field! DRCDTextClosedKey not bound
+!missing-field! DRCDTextComposerKey not bound
+!missing-field! DRCDTextCopyrightAssertedForNamesKey not bound
+!missing-field! DRCDTextCopyrightAssertedForSpecialMessagesKey not bound
+!missing-field! DRCDTextCopyrightAssertedForTitlesKey not bound
+!missing-field! DRCDTextDiscIdentKey not bound
+!missing-field! DRCDTextGenreCodeKey not bound
+!missing-field! DRCDTextGenreKey not bound
+!missing-field! DRCDTextKey not bound
+!missing-field! DRCDTextLanguageKey not bound
+!missing-field! DRCDTextMCNISRCKey not bound
+!missing-field! DRCDTextNSStringEncodingKey not bound
+!missing-field! DRCDTextPerformerKey not bound
+!missing-field! DRCDTextSizeKey not bound
+!missing-field! DRCDTextSongwriterKey not bound
+!missing-field! DRCDTextSpecialMessageKey not bound
+!missing-field! DRCDTextTitleKey not bound
+!missing-field! DRCDTextTOC2Key not bound
+!missing-field! DRCDTextTOCKey not bound
+!missing-field! DRContentModificationDate not bound
+!missing-field! DRCopyrightFile not bound
+!missing-field! DRCreationDate not bound
+!missing-field! DRDataFormKey not bound
+!missing-field! DRDataPreparer not bound
+!missing-field! DRDefaultDate not bound
+!missing-field! DRDeviceAppearedNotification not bound
+!missing-field! DRDeviceBurnSpeedBD1x not bound
+!missing-field! DRDeviceBurnSpeedCD1x not bound
+!missing-field! DRDeviceBurnSpeedDVD1x not bound
+!missing-field! DRDeviceBurnSpeedHDDVD1x not bound
+!missing-field! DRDeviceBurnSpeedMax not bound
+!missing-field! DRDeviceBurnSpeedsKey not bound
+!missing-field! DRDeviceCanTestWriteCDKey not bound
+!missing-field! DRDeviceCanTestWriteDVDKey not bound
+!missing-field! DRDeviceCanUnderrunProtectCDKey not bound
+!missing-field! DRDeviceCanUnderrunProtectDVDKey not bound
+!missing-field! DRDeviceCanWriteBDKey not bound
+!missing-field! DRDeviceCanWriteBDREKey not bound
+!missing-field! DRDeviceCanWriteBDRKey not bound
+!missing-field! DRDeviceCanWriteCDKey not bound
+!missing-field! DRDeviceCanWriteCDRawKey not bound
+!missing-field! DRDeviceCanWriteCDRKey not bound
+!missing-field! DRDeviceCanWriteCDRWKey not bound
+!missing-field! DRDeviceCanWriteCDSAOKey not bound
+!missing-field! DRDeviceCanWriteCDTAOKey not bound
+!missing-field! DRDeviceCanWriteCDTextKey not bound
+!missing-field! DRDeviceCanWriteDVDDAOKey not bound
+!missing-field! DRDeviceCanWriteDVDKey not bound
+!missing-field! DRDeviceCanWriteDVDPlusRDoubleLayerKey not bound
+!missing-field! DRDeviceCanWriteDVDPlusRKey not bound
+!missing-field! DRDeviceCanWriteDVDPlusRWDoubleLayerKey not bound
+!missing-field! DRDeviceCanWriteDVDPlusRWKey not bound
+!missing-field! DRDeviceCanWriteDVDRAMKey not bound
+!missing-field! DRDeviceCanWriteDVDRDualLayerKey not bound
+!missing-field! DRDeviceCanWriteDVDRKey not bound
+!missing-field! DRDeviceCanWriteDVDRWDualLayerKey not bound
+!missing-field! DRDeviceCanWriteDVDRWKey not bound
+!missing-field! DRDeviceCanWriteHDDVDKey not bound
+!missing-field! DRDeviceCanWriteHDDVDRAMKey not bound
+!missing-field! DRDeviceCanWriteHDDVDRDualLayerKey not bound
+!missing-field! DRDeviceCanWriteHDDVDRKey not bound
+!missing-field! DRDeviceCanWriteHDDVDRWDualLayerKey not bound
+!missing-field! DRDeviceCanWriteHDDVDRWKey not bound
+!missing-field! DRDeviceCanWriteIndexPointsKey not bound
+!missing-field! DRDeviceCanWriteISRCKey not bound
+!missing-field! DRDeviceCanWriteKey not bound
+!missing-field! DRDeviceCurrentWriteSpeedKey not bound
+!missing-field! DRDeviceDisappearedNotification not bound
+!missing-field! DRDeviceFirmwareRevisionKey not bound
+!missing-field! DRDeviceIORegistryEntryPathKey not bound
+!missing-field! DRDeviceIsBusyKey not bound
+!missing-field! DRDeviceIsTrayOpenKey not bound
+!missing-field! DRDeviceLoadingMechanismCanEjectKey not bound
+!missing-field! DRDeviceLoadingMechanismCanInjectKey not bound
+!missing-field! DRDeviceLoadingMechanismCanOpenKey not bound
+!missing-field! DRDeviceMaximumWriteSpeedKey not bound
+!missing-field! DRDeviceMediaBlocksFreeKey not bound
+!missing-field! DRDeviceMediaBlocksOverwritableKey not bound
+!missing-field! DRDeviceMediaBlocksUsedKey not bound
+!missing-field! DRDeviceMediaBSDNameKey not bound
+!missing-field! DRDeviceMediaClassBD not bound
+!missing-field! DRDeviceMediaClassCD not bound
+!missing-field! DRDeviceMediaClassDVD not bound
+!missing-field! DRDeviceMediaClassHDDVD not bound
+!missing-field! DRDeviceMediaClassKey not bound
+!missing-field! DRDeviceMediaClassUnknown not bound
+!missing-field! DRDeviceMediaDoubleLayerL0DataZoneBlocksKey not bound
+!missing-field! DRDeviceMediaFreeSpaceKey not bound
+!missing-field! DRDeviceMediaInfoKey not bound
+!missing-field! DRDeviceMediaIsAppendableKey not bound
+!missing-field! DRDeviceMediaIsBlankKey not bound
+!missing-field! DRDeviceMediaIsErasableKey not bound
+!missing-field! DRDeviceMediaIsOverwritableKey not bound
+!missing-field! DRDeviceMediaIsReservedKey not bound
+!missing-field! DRDeviceMediaOverwritableSpaceKey not bound
+!missing-field! DRDeviceMediaSessionCountKey not bound
+!missing-field! DRDeviceMediaStateInTransition not bound
+!missing-field! DRDeviceMediaStateKey not bound
+!missing-field! DRDeviceMediaStateMediaPresent not bound
+!missing-field! DRDeviceMediaStateNone not bound
+!missing-field! DRDeviceMediaTrackCountKey not bound
+!missing-field! DRDeviceMediaTypeBDR not bound
+!missing-field! DRDeviceMediaTypeBDRE not bound
+!missing-field! DRDeviceMediaTypeBDROM not bound
+!missing-field! DRDeviceMediaTypeCDR not bound
+!missing-field! DRDeviceMediaTypeCDROM not bound
+!missing-field! DRDeviceMediaTypeCDRW not bound
+!missing-field! DRDeviceMediaTypeDVDPlusR not bound
+!missing-field! DRDeviceMediaTypeDVDPlusRDoubleLayer not bound
+!missing-field! DRDeviceMediaTypeDVDPlusRW not bound
+!missing-field! DRDeviceMediaTypeDVDPlusRWDoubleLayer not bound
+!missing-field! DRDeviceMediaTypeDVDR not bound
+!missing-field! DRDeviceMediaTypeDVDRAM not bound
+!missing-field! DRDeviceMediaTypeDVDRDualLayer not bound
+!missing-field! DRDeviceMediaTypeDVDROM not bound
+!missing-field! DRDeviceMediaTypeDVDRW not bound
+!missing-field! DRDeviceMediaTypeDVDRWDualLayer not bound
+!missing-field! DRDeviceMediaTypeHDDVDR not bound
+!missing-field! DRDeviceMediaTypeHDDVDRAM not bound
+!missing-field! DRDeviceMediaTypeHDDVDRDualLayer not bound
+!missing-field! DRDeviceMediaTypeHDDVDROM not bound
+!missing-field! DRDeviceMediaTypeHDDVDRW not bound
+!missing-field! DRDeviceMediaTypeHDDVDRWDualLayer not bound
+!missing-field! DRDeviceMediaTypeKey not bound
+!missing-field! DRDeviceMediaTypeUnknown not bound
+!missing-field! DRDeviceMediaUsedSpaceKey not bound
+!missing-field! DRDevicePhysicalInterconnectATAPI not bound
+!missing-field! DRDevicePhysicalInterconnectFibreChannel not bound
+!missing-field! DRDevicePhysicalInterconnectFireWire not bound
+!missing-field! DRDevicePhysicalInterconnectKey not bound
+!missing-field! DRDevicePhysicalInterconnectLocationExternal not bound
+!missing-field! DRDevicePhysicalInterconnectLocationInternal not bound
+!missing-field! DRDevicePhysicalInterconnectLocationKey not bound
+!missing-field! DRDevicePhysicalInterconnectLocationUnknown not bound
+!missing-field! DRDevicePhysicalInterconnectSCSI not bound
+!missing-field! DRDevicePhysicalInterconnectUSB not bound
+!missing-field! DRDeviceProductNameKey not bound
+!missing-field! DRDeviceStatusChangedNotification not bound
+!missing-field! DRDeviceSupportLevelAppleShipping not bound
+!missing-field! DRDeviceSupportLevelAppleSupported not bound
+!missing-field! DRDeviceSupportLevelKey not bound
+!missing-field! DRDeviceSupportLevelNone not bound
+!missing-field! DRDeviceSupportLevelUnsupported not bound
+!missing-field! DRDeviceSupportLevelVendorSupported not bound
+!missing-field! DRDeviceTrackInfoKey not bound
+!missing-field! DRDeviceTrackRefsKey not bound
+!missing-field! DRDeviceVendorNameKey not bound
+!missing-field! DRDeviceWriteBufferSizeKey not bound
+!missing-field! DRDeviceWriteCapabilitiesKey not bound
+!missing-field! DRDVDCopyrightInfoKey not bound
+!missing-field! DRDVDTimestampKey not bound
+!missing-field! DREffectiveDate not bound
+!missing-field! DREraseStatusChangedNotification not bound
+!missing-field! DREraseTypeComplete not bound
+!missing-field! DREraseTypeKey not bound
+!missing-field! DREraseTypeQuick not bound
+!missing-field! DRErrorStatusAdditionalSenseStringKey not bound
+!missing-field! DRErrorStatusErrorInfoStringKey not bound
+!missing-field! DRErrorStatusErrorKey not bound
+!missing-field! DRErrorStatusErrorStringKey not bound
+!missing-field! DRErrorStatusKey not bound
+!missing-field! DRErrorStatusSenseCodeStringKey not bound
+!missing-field! DRErrorStatusSenseKey not bound
+!missing-field! DRExpirationDate not bound
+!missing-field! DRFreeBlocksKey not bound
+!missing-field! DRHFSPlus not bound
+!missing-field! DRHFSPlusCatalogNodeID not bound
+!missing-field! DRHFSPlusTextEncodingHint not bound
+!missing-field! DRIndexPointsKey not bound
+!missing-field! DRInvisible not bound
+!missing-field! DRISO9660 not bound
+!missing-field! DRISO9660LevelOne not bound
+!missing-field! DRISO9660LevelTwo not bound
+!missing-field! DRISO9660VersionNumber not bound
+!missing-field! DRISOLevel not bound
+!missing-field! DRISOMacExtensions not bound
+!missing-field! DRISORockRidgeExtensions not bound
+!missing-field! DRJoliet not bound
+!missing-field! DRLinkTypeFinderAlias not bound
+!missing-field! DRLinkTypeHardLink not bound
+!missing-field! DRLinkTypeSymbolicLink not bound
+!missing-field! DRMacExtendedFinderFlags not bound
+!missing-field! DRMacFileCreator not bound
+!missing-field! DRMacFileType not bound
+!missing-field! DRMacFinderFlags not bound
+!missing-field! DRMacFinderHideExtension not bound
+!missing-field! DRMacIconLocation not bound
+!missing-field! DRMacScrollPosition not bound
+!missing-field! DRMacWindowBounds not bound
+!missing-field! DRMacWindowView not bound
+!missing-field! DRMaxBurnSpeedKey not bound
+!missing-field! DRMediaCatalogNumberKey not bound
+!missing-field! DRNextWritableAddressKey not bound
+!missing-field! DRPosixFileMode not bound
+!missing-field! DRPosixGID not bound
+!missing-field! DRPosixUID not bound
+!missing-field! DRPreGapIsRequiredKey not bound
+!missing-field! DRPreGapLengthKey not bound
+!missing-field! DRPublisher not bound
+!missing-field! DRRecordingDate not bound
+!missing-field! DRSCMSCopyrightFree not bound
+!missing-field! DRSCMSCopyrightProtectedCopy not bound
+!missing-field! DRSCMSCopyrightProtectedOriginal not bound
+!missing-field! DRSerialCopyManagementStateKey not bound
+!missing-field! DRSessionFormatKey not bound
+!missing-field! DRSessionNumberKey not bound
+!missing-field! DRStatusCurrentSessionKey not bound
+!missing-field! DRStatusCurrentSpeedKey not bound
+!missing-field! DRStatusCurrentTrackKey not bound
+!missing-field! DRStatusEraseTypeKey not bound
+!missing-field! DRStatusPercentCompleteKey not bound
+!missing-field! DRStatusProgressCurrentKPS not bound
+!missing-field! DRStatusProgressCurrentXFactor not bound
+!missing-field! DRStatusProgressInfoKey not bound
+!missing-field! DRStatusStateDone not bound
+!missing-field! DRStatusStateErasing not bound
+!missing-field! DRStatusStateFailed not bound
+!missing-field! DRStatusStateFinishing not bound
+!missing-field! DRStatusStateKey not bound
+!missing-field! DRStatusStateNone not bound
+!missing-field! DRStatusStatePreparing not bound
+!missing-field! DRStatusStateSessionClose not bound
+!missing-field! DRStatusStateSessionOpen not bound
+!missing-field! DRStatusStateTrackClose not bound
+!missing-field! DRStatusStateTrackOpen not bound
+!missing-field! DRStatusStateTrackWrite not bound
+!missing-field! DRStatusStateVerifying not bound
+!missing-field! DRStatusTotalSessionsKey not bound
+!missing-field! DRStatusTotalTracksKey not bound
+!missing-field! DRSubchannelDataFormKey not bound
+!missing-field! DRSubchannelDataFormNone not bound
+!missing-field! DRSubchannelDataFormPack not bound
+!missing-field! DRSubchannelDataFormRaw not bound
+!missing-field! DRSuppressMacSpecificFiles not bound
+!missing-field! DRSynchronousBehaviorKey not bound
+!missing-field! DRSystemIdentifier not bound
+!missing-field! DRTrackIsEmptyKey not bound
+!missing-field! DRTrackISRCKey not bound
+!missing-field! DRTrackLengthKey not bound
+!missing-field! DRTrackModeKey not bound
+!missing-field! DRTrackNumberKey not bound
+!missing-field! DRTrackPacketSizeKey not bound
+!missing-field! DRTrackPacketTypeFixed not bound
+!missing-field! DRTrackPacketTypeKey not bound
+!missing-field! DRTrackPacketTypeVariable not bound
+!missing-field! DRTrackStartAddressKey not bound
+!missing-field! DRTrackTypeClosed not bound
+!missing-field! DRTrackTypeIncomplete not bound
+!missing-field! DRTrackTypeInvisible not bound
+!missing-field! DRTrackTypeKey not bound
+!missing-field! DRTrackTypeReserved not bound
+!missing-field! DRUDF not bound
+!missing-field! DRUDFApplicationIdentifierSuffix not bound
+!missing-field! DRUDFExtendedFilePermissions not bound
+!missing-field! DRUDFInterchangeLevel not bound
+!missing-field! DRUDFMaxInterchangeLevel not bound
+!missing-field! DRUDFMaxVolumeSequenceNumber not bound
+!missing-field! DRUDFPrimaryVolumeDescriptorNumber not bound
+!missing-field! DRUDFRealTimeFile not bound
+!missing-field! DRUDFVersion102 not bound
+!missing-field! DRUDFVersion150 not bound
+!missing-field! DRUDFVolumeSequenceNumber not bound
+!missing-field! DRUDFVolumeSetIdentifier not bound
+!missing-field! DRUDFVolumeSetImplementationUse not bound
+!missing-field! DRUDFVolumeSetTimestamp not bound
+!missing-field! DRUDFWriteVersion not bound
+!missing-field! DRVerificationTypeChecksum not bound
+!missing-field! DRVerificationTypeKey not bound
+!missing-field! DRVerificationTypeNone not bound
+!missing-field! DRVerificationTypeProduceAgain not bound
+!missing-field! DRVerificationTypeReceiveData not bound
+!missing-field! DRVolumeCheckedDate not bound
+!missing-field! DRVolumeCreationDate not bound
+!missing-field! DRVolumeEffectiveDate not bound
+!missing-field! DRVolumeExpirationDate not bound
+!missing-field! DRVolumeModificationDate not bound
+!missing-field! DRVolumeSet not bound
+!missing-field! kDRAbstractFile not bound
+!missing-field! kDRAccessDate not bound
+!missing-field! kDRAllFilesystems not bound
+!missing-field! kDRApplicationIdentifier not bound
+!missing-field! kDRAttributeModificationDate not bound
+!missing-field! kDRAudioFourChannelKey not bound
+!missing-field! kDRAudioPreEmphasisKey not bound
+!missing-field! kDRBackupDate not bound
+!missing-field! kDRBibliographicFile not bound
+!missing-field! kDRBlockSize not bound
+!missing-field! kDRBlockSizeKey not bound
+!missing-field! kDRBlockTypeKey not bound
+!missing-field! kDRBufferZone1DataKey not bound
+!missing-field! kDRBurnAppendableKey not bound
+!missing-field! kDRBurnCompletionActionEject not bound
+!missing-field! kDRBurnCompletionActionKey not bound
+!missing-field! kDRBurnCompletionActionMount not bound
+!missing-field! kDRBurnDoubleLayerL0DataZoneBlocksKey not bound
+!missing-field! kDRBurnFailureActionEject not bound
+!missing-field! kDRBurnFailureActionKey not bound
+!missing-field! kDRBurnFailureActionNone not bound
+!missing-field! kDRBurnKey not bound
+!missing-field! kDRBurnOverwriteDiscKey not bound
+!missing-field! kDRBurnRequestedSpeedKey not bound
+!missing-field! kDRBurnStatusChangedNotification not bound
+!missing-field! kDRBurnStrategyBDDAO not bound
+!missing-field! kDRBurnStrategyCDSAO not bound
+!missing-field! kDRBurnStrategyCDTAO not bound
+!missing-field! kDRBurnStrategyDVDDAO not bound
+!missing-field! kDRBurnStrategyIsRequiredKey not bound
+!missing-field! kDRBurnStrategyKey not bound
+!missing-field! kDRBurnTestingKey not bound
+!missing-field! kDRBurnUnderrunProtectionKey not bound
+!missing-field! kDRBurnVerifyDiscKey not bound
+!missing-field! kDRCDTextArrangerKey not bound
+!missing-field! kDRCDTextCFStringEncodingKey not bound
+!missing-field! kDRCDTextCharacterCodeKey not bound
+!missing-field! kDRCDTextClosedKey not bound
+!missing-field! kDRCDTextComposerKey not bound
+!missing-field! kDRCDTextCopyrightAssertedForNamesKey not bound
+!missing-field! kDRCDTextCopyrightAssertedForSpecialMessagesKey not bound
+!missing-field! kDRCDTextCopyrightAssertedForTitlesKey not bound
+!missing-field! kDRCDTextDiscIdentKey not bound
+!missing-field! kDRCDTextGenreCodeKey not bound
+!missing-field! kDRCDTextGenreKey not bound
+!missing-field! kDRCDTextKey not bound
+!missing-field! kDRCDTextLanguageKey not bound
+!missing-field! kDRCDTextMCNISRCKey not bound
+!missing-field! kDRCDTextPerformerKey not bound
+!missing-field! kDRCDTextSizeKey not bound
+!missing-field! kDRCDTextSongwriterKey not bound
+!missing-field! kDRCDTextSpecialMessageKey not bound
+!missing-field! kDRCDTextTitleKey not bound
+!missing-field! kDRCDTextTOC2Key not bound
+!missing-field! kDRCDTextTOCKey not bound
+!missing-field! kDRContentModificationDate not bound
+!missing-field! kDRCopyrightFile not bound
+!missing-field! kDRCreationDate not bound
+!missing-field! kDRDataFormKey not bound
+!missing-field! kDRDataPreparer not bound
+!missing-field! kDRDefaultDate not bound
+!missing-field! kDRDeviceAppearedNotification not bound
+!missing-field! kDRDeviceBurnSpeedBD1x not bound
+!missing-field! kDRDeviceBurnSpeedCD1x not bound
+!missing-field! kDRDeviceBurnSpeedDVD1x not bound
+!missing-field! kDRDeviceBurnSpeedHDDVD1x not bound
+!missing-field! kDRDeviceBurnSpeedMax not bound
+!missing-field! kDRDeviceBurnSpeedsKey not bound
+!missing-field! kDRDeviceCanTestWriteCDKey not bound
+!missing-field! kDRDeviceCanTestWriteDVDKey not bound
+!missing-field! kDRDeviceCanUnderrunProtectCDKey not bound
+!missing-field! kDRDeviceCanUnderrunProtectDVDKey not bound
+!missing-field! kDRDeviceCanWriteBDKey not bound
+!missing-field! kDRDeviceCanWriteBDREKey not bound
+!missing-field! kDRDeviceCanWriteBDRKey not bound
+!missing-field! kDRDeviceCanWriteCDKey not bound
+!missing-field! kDRDeviceCanWriteCDRawKey not bound
+!missing-field! kDRDeviceCanWriteCDRKey not bound
+!missing-field! kDRDeviceCanWriteCDRWKey not bound
+!missing-field! kDRDeviceCanWriteCDSAOKey not bound
+!missing-field! kDRDeviceCanWriteCDTAOKey not bound
+!missing-field! kDRDeviceCanWriteCDTextKey not bound
+!missing-field! kDRDeviceCanWriteDVDDAOKey not bound
+!missing-field! kDRDeviceCanWriteDVDKey not bound
+!missing-field! kDRDeviceCanWriteDVDPlusRDoubleLayerKey not bound
+!missing-field! kDRDeviceCanWriteDVDPlusRKey not bound
+!missing-field! kDRDeviceCanWriteDVDPlusRWDoubleLayerKey not bound
+!missing-field! kDRDeviceCanWriteDVDPlusRWKey not bound
+!missing-field! kDRDeviceCanWriteDVDRAMKey not bound
+!missing-field! kDRDeviceCanWriteDVDRDualLayerKey not bound
+!missing-field! kDRDeviceCanWriteDVDRKey not bound
+!missing-field! kDRDeviceCanWriteDVDRWDualLayerKey not bound
+!missing-field! kDRDeviceCanWriteDVDRWKey not bound
+!missing-field! kDRDeviceCanWriteHDDVDKey not bound
+!missing-field! kDRDeviceCanWriteHDDVDRAMKey not bound
+!missing-field! kDRDeviceCanWriteHDDVDRDualLayerKey not bound
+!missing-field! kDRDeviceCanWriteHDDVDRKey not bound
+!missing-field! kDRDeviceCanWriteHDDVDRWDualLayerKey not bound
+!missing-field! kDRDeviceCanWriteHDDVDRWKey not bound
+!missing-field! kDRDeviceCanWriteIndexPointsKey not bound
+!missing-field! kDRDeviceCanWriteISRCKey not bound
+!missing-field! kDRDeviceCanWriteKey not bound
+!missing-field! kDRDeviceCurrentWriteSpeedKey not bound
+!missing-field! kDRDeviceDisappearedNotification not bound
+!missing-field! kDRDeviceFirmwareRevisionKey not bound
+!missing-field! kDRDeviceIORegistryEntryPathKey not bound
+!missing-field! kDRDeviceIsBusyKey not bound
+!missing-field! kDRDeviceIsTrayOpenKey not bound
+!missing-field! kDRDeviceLoadingMechanismCanEjectKey not bound
+!missing-field! kDRDeviceLoadingMechanismCanInjectKey not bound
+!missing-field! kDRDeviceLoadingMechanismCanOpenKey not bound
+!missing-field! kDRDeviceMaximumWriteSpeedKey not bound
+!missing-field! kDRDeviceMediaBlocksFreeKey not bound
+!missing-field! kDRDeviceMediaBlocksOverwritableKey not bound
+!missing-field! kDRDeviceMediaBlocksUsedKey not bound
+!missing-field! kDRDeviceMediaBSDNameKey not bound
+!missing-field! kDRDeviceMediaClassBD not bound
+!missing-field! kDRDeviceMediaClassCD not bound
+!missing-field! kDRDeviceMediaClassDVD not bound
+!missing-field! kDRDeviceMediaClassHDDVD not bound
+!missing-field! kDRDeviceMediaClassKey not bound
+!missing-field! kDRDeviceMediaClassUnknown not bound
+!missing-field! kDRDeviceMediaDoubleLayerL0DataZoneBlocksKey not bound
+!missing-field! kDRDeviceMediaInfoKey not bound
+!missing-field! kDRDeviceMediaIsAppendableKey not bound
+!missing-field! kDRDeviceMediaIsBlankKey not bound
+!missing-field! kDRDeviceMediaIsErasableKey not bound
+!missing-field! kDRDeviceMediaIsOverwritableKey not bound
+!missing-field! kDRDeviceMediaIsReservedKey not bound
+!missing-field! kDRDeviceMediaSessionCountKey not bound
+!missing-field! kDRDeviceMediaStateInTransition not bound
+!missing-field! kDRDeviceMediaStateKey not bound
+!missing-field! kDRDeviceMediaStateMediaPresent not bound
+!missing-field! kDRDeviceMediaStateNone not bound
+!missing-field! kDRDeviceMediaTrackCountKey not bound
+!missing-field! kDRDeviceMediaTypeBDR not bound
+!missing-field! kDRDeviceMediaTypeBDRE not bound
+!missing-field! kDRDeviceMediaTypeBDROM not bound
+!missing-field! kDRDeviceMediaTypeCDR not bound
+!missing-field! kDRDeviceMediaTypeCDROM not bound
+!missing-field! kDRDeviceMediaTypeCDRW not bound
+!missing-field! kDRDeviceMediaTypeDVDPlusR not bound
+!missing-field! kDRDeviceMediaTypeDVDPlusRDoubleLayer not bound
+!missing-field! kDRDeviceMediaTypeDVDPlusRW not bound
+!missing-field! kDRDeviceMediaTypeDVDPlusRWDoubleLayer not bound
+!missing-field! kDRDeviceMediaTypeDVDR not bound
+!missing-field! kDRDeviceMediaTypeDVDRAM not bound
+!missing-field! kDRDeviceMediaTypeDVDRDualLayer not bound
+!missing-field! kDRDeviceMediaTypeDVDROM not bound
+!missing-field! kDRDeviceMediaTypeDVDRW not bound
+!missing-field! kDRDeviceMediaTypeDVDRWDualLayer not bound
+!missing-field! kDRDeviceMediaTypeHDDVDR not bound
+!missing-field! kDRDeviceMediaTypeHDDVDRAM not bound
+!missing-field! kDRDeviceMediaTypeHDDVDRDualLayer not bound
+!missing-field! kDRDeviceMediaTypeHDDVDROM not bound
+!missing-field! kDRDeviceMediaTypeHDDVDRW not bound
+!missing-field! kDRDeviceMediaTypeHDDVDRWDualLayer not bound
+!missing-field! kDRDeviceMediaTypeKey not bound
+!missing-field! kDRDeviceMediaTypeUnknown not bound
+!missing-field! kDRDevicePhysicalInterconnectATAPI not bound
+!missing-field! kDRDevicePhysicalInterconnectFibreChannel not bound
+!missing-field! kDRDevicePhysicalInterconnectFireWire not bound
+!missing-field! kDRDevicePhysicalInterconnectKey not bound
+!missing-field! kDRDevicePhysicalInterconnectLocationExternal not bound
+!missing-field! kDRDevicePhysicalInterconnectLocationInternal not bound
+!missing-field! kDRDevicePhysicalInterconnectLocationKey not bound
+!missing-field! kDRDevicePhysicalInterconnectLocationUnknown not bound
+!missing-field! kDRDevicePhysicalInterconnectSCSI not bound
+!missing-field! kDRDevicePhysicalInterconnectUSB not bound
+!missing-field! kDRDeviceProductNameKey not bound
+!missing-field! kDRDeviceStatusChangedNotification not bound
+!missing-field! kDRDeviceSupportLevelAppleShipping not bound
+!missing-field! kDRDeviceSupportLevelAppleSupported not bound
+!missing-field! kDRDeviceSupportLevelKey not bound
+!missing-field! kDRDeviceSupportLevelNone not bound
+!missing-field! kDRDeviceSupportLevelUnsupported not bound
+!missing-field! kDRDeviceSupportLevelVendorSupported not bound
+!missing-field! kDRDeviceTrackInfoKey not bound
+!missing-field! kDRDeviceTrackRefsKey not bound
+!missing-field! kDRDeviceVendorNameKey not bound
+!missing-field! kDRDeviceWriteBufferSizeKey not bound
+!missing-field! kDRDeviceWriteCapabilitiesKey not bound
+!missing-field! kDRDVDCopyrightInfoKey not bound
+!missing-field! kDRDVDTimestampKey not bound
+!missing-field! kDREffectiveDate not bound
+!missing-field! kDREraseStatusChangedNotification not bound
+!missing-field! kDREraseTypeComplete not bound
+!missing-field! kDREraseTypeKey not bound
+!missing-field! kDREraseTypeQuick not bound
+!missing-field! kDRErrorStatusAdditionalSenseStringKey not bound
+!missing-field! kDRErrorStatusErrorInfoStringKey not bound
+!missing-field! kDRErrorStatusErrorKey not bound
+!missing-field! kDRErrorStatusErrorStringKey not bound
+!missing-field! kDRErrorStatusKey not bound
+!missing-field! kDRErrorStatusSenseCodeStringKey not bound
+!missing-field! kDRErrorStatusSenseKey not bound
+!missing-field! kDRExpirationDate not bound
+!missing-field! kDRFreeBlocksKey not bound
+!missing-field! kDRHFSPlus not bound
+!missing-field! kDRHFSPlusCatalogNodeID not bound
+!missing-field! kDRHFSPlusTextEncodingHint not bound
+!missing-field! kDRIndexPointsKey not bound
+!missing-field! kDRInvisible not bound
+!missing-field! kDRISO9660 not bound
+!missing-field! kDRISO9660LevelOne not bound
+!missing-field! kDRISO9660LevelTwo not bound
+!missing-field! kDRISO9660VersionNumber not bound
+!missing-field! kDRISOLevel not bound
+!missing-field! kDRISOMacExtensions not bound
+!missing-field! kDRISORockRidgeExtensions not bound
+!missing-field! kDRJoliet not bound
+!missing-field! kDRMacExtendedFinderFlags not bound
+!missing-field! kDRMacFileCreator not bound
+!missing-field! kDRMacFileType not bound
+!missing-field! kDRMacFinderFlags not bound
+!missing-field! kDRMacFinderHideExtension not bound
+!missing-field! kDRMacIconLocation not bound
+!missing-field! kDRMacScrollPosition not bound
+!missing-field! kDRMacWindowBounds not bound
+!missing-field! kDRMacWindowView not bound
+!missing-field! kDRMaxBurnSpeedKey not bound
+!missing-field! kDRMediaCatalogNumberKey not bound
+!missing-field! kDRNextWritableAddressKey not bound
+!missing-field! kDRPosixFileMode not bound
+!missing-field! kDRPosixGID not bound
+!missing-field! kDRPosixUID not bound
+!missing-field! kDRPreGapIsRequiredKey not bound
+!missing-field! kDRPreGapLengthKey not bound
+!missing-field! kDRPublisher not bound
+!missing-field! kDRRecordingDate not bound
+!missing-field! kDRRefConCFTypeCallbacks not bound
+!missing-field! kDRSCMSCopyrightFree not bound
+!missing-field! kDRSCMSCopyrightProtectedCopy not bound
+!missing-field! kDRSCMSCopyrightProtectedOriginal not bound
+!missing-field! kDRSerialCopyManagementStateKey not bound
+!missing-field! kDRSessionFormatKey not bound
+!missing-field! kDRSessionNumberKey not bound
+!missing-field! kDRStatusCurrentSessionKey not bound
+!missing-field! kDRStatusCurrentSpeedKey not bound
+!missing-field! kDRStatusCurrentTrackKey not bound
+!missing-field! kDRStatusEraseTypeKey not bound
+!missing-field! kDRStatusPercentCompleteKey not bound
+!missing-field! kDRStatusProgressCurrentKPS not bound
+!missing-field! kDRStatusProgressCurrentXFactor not bound
+!missing-field! kDRStatusProgressInfoKey not bound
+!missing-field! kDRStatusStateDone not bound
+!missing-field! kDRStatusStateErasing not bound
+!missing-field! kDRStatusStateFailed not bound
+!missing-field! kDRStatusStateFinishing not bound
+!missing-field! kDRStatusStateKey not bound
+!missing-field! kDRStatusStateNone not bound
+!missing-field! kDRStatusStatePreparing not bound
+!missing-field! kDRStatusStateSessionClose not bound
+!missing-field! kDRStatusStateSessionOpen not bound
+!missing-field! kDRStatusStateTrackClose not bound
+!missing-field! kDRStatusStateTrackOpen not bound
+!missing-field! kDRStatusStateTrackWrite not bound
+!missing-field! kDRStatusStateVerifying not bound
+!missing-field! kDRStatusTotalSessionsKey not bound
+!missing-field! kDRStatusTotalTracksKey not bound
+!missing-field! kDRSubchannelDataFormKey not bound
+!missing-field! kDRSubchannelDataFormNone not bound
+!missing-field! kDRSubchannelDataFormPack not bound
+!missing-field! kDRSubchannelDataFormRaw not bound
+!missing-field! kDRSuppressMacSpecificFiles not bound
+!missing-field! kDRSynchronousBehaviorKey not bound
+!missing-field! kDRSystemIdentifier not bound
+!missing-field! kDRTrackIsEmptyKey not bound
+!missing-field! kDRTrackISRCKey not bound
+!missing-field! kDRTrackLengthKey not bound
+!missing-field! kDRTrackModeKey not bound
+!missing-field! kDRTrackNumberKey not bound
+!missing-field! kDRTrackPacketSizeKey not bound
+!missing-field! kDRTrackPacketTypeFixed not bound
+!missing-field! kDRTrackPacketTypeKey not bound
+!missing-field! kDRTrackPacketTypeVariable not bound
+!missing-field! kDRTrackStartAddressKey not bound
+!missing-field! kDRTrackTypeClosed not bound
+!missing-field! kDRTrackTypeIncomplete not bound
+!missing-field! kDRTrackTypeInvisible not bound
+!missing-field! kDRTrackTypeKey not bound
+!missing-field! kDRTrackTypeReserved not bound
+!missing-field! kDRUDF not bound
+!missing-field! kDRUDFApplicationIdentifierSuffix not bound
+!missing-field! kDRUDFExtendedFilePermissions not bound
+!missing-field! kDRUDFInterchangeLevel not bound
+!missing-field! kDRUDFMaxInterchangeLevel not bound
+!missing-field! kDRUDFMaxVolumeSequenceNumber not bound
+!missing-field! kDRUDFPrimaryVolumeDescriptorNumber not bound
+!missing-field! kDRUDFRealTimeFile not bound
+!missing-field! kDRUDFVersion102 not bound
+!missing-field! kDRUDFVersion150 not bound
+!missing-field! kDRUDFVolumeSequenceNumber not bound
+!missing-field! kDRUDFVolumeSetIdentifier not bound
+!missing-field! kDRUDFVolumeSetImplementationUse not bound
+!missing-field! kDRUDFVolumeSetTimestamp not bound
+!missing-field! kDRUDFWriteVersion not bound
+!missing-field! kDRVerificationTypeChecksum not bound
+!missing-field! kDRVerificationTypeKey not bound
+!missing-field! kDRVerificationTypeNone not bound
+!missing-field! kDRVerificationTypeProduceAgain not bound
+!missing-field! kDRVerificationTypeReceiveData not bound
+!missing-field! kDRVolumeCheckedDate not bound
+!missing-field! kDRVolumeCreationDate not bound
+!missing-field! kDRVolumeEffectiveDate not bound
+!missing-field! kDRVolumeExpirationDate not bound
+!missing-field! kDRVolumeModificationDate not bound
+!missing-field! kDRVolumeSet not bound
+!missing-pinvoke! DRAudioTrackCreate is not bound
+!missing-pinvoke! DRAudioTrackCreateWithURL is not bound
+!missing-pinvoke! DRBurnAbort is not bound
+!missing-pinvoke! DRBurnCopyStatus is not bound
+!missing-pinvoke! DRBurnCreate is not bound
+!missing-pinvoke! DRBurnGetDevice is not bound
+!missing-pinvoke! DRBurnGetProperties is not bound
+!missing-pinvoke! DRBurnGetTypeID is not bound
+!missing-pinvoke! DRBurnSetProperties is not bound
+!missing-pinvoke! DRBurnWriteLayout is not bound
+!missing-pinvoke! DRCDTextBlockCreate is not bound
+!missing-pinvoke! DRCDTextBlockCreateArrayFromPackList is not bound
+!missing-pinvoke! DRCDTextBlockFlatten is not bound
+!missing-pinvoke! DRCDTextBlockGetProperties is not bound
+!missing-pinvoke! DRCDTextBlockGetTrackDictionaries is not bound
+!missing-pinvoke! DRCDTextBlockGetTypeID is not bound
+!missing-pinvoke! DRCDTextBlockGetValue is not bound
+!missing-pinvoke! DRCDTextBlockSetProperties is not bound
+!missing-pinvoke! DRCDTextBlockSetTrackDictionaries is not bound
+!missing-pinvoke! DRCDTextBlockSetValue is not bound
+!missing-pinvoke! DRCopyDeviceArray is not bound
+!missing-pinvoke! DRCopyLocalizedStringForAdditionalSense is not bound
+!missing-pinvoke! DRCopyLocalizedStringForDiscRecordingError is not bound
+!missing-pinvoke! DRCopyLocalizedStringForSenseCode is not bound
+!missing-pinvoke! DRCopyLocalizedStringForValue is not bound
+!missing-pinvoke! DRDeviceAcquireExclusiveAccess is not bound
+!missing-pinvoke! DRDeviceAcquireMediaReservation is not bound
+!missing-pinvoke! DRDeviceCloseTray is not bound
+!missing-pinvoke! DRDeviceCopyDeviceForBSDName is not bound
+!missing-pinvoke! DRDeviceCopyDeviceForIORegistryEntryPath is not bound
+!missing-pinvoke! DRDeviceCopyInfo is not bound
+!missing-pinvoke! DRDeviceCopyStatus is not bound
+!missing-pinvoke! DRDeviceEjectMedia is not bound
+!missing-pinvoke! DRDeviceGetTypeID is not bound
+!missing-pinvoke! DRDeviceIsValid is not bound
+!missing-pinvoke! DRDeviceKPSForXFactor is not bound
+!missing-pinvoke! DRDeviceOpenTray is not bound
+!missing-pinvoke! DRDeviceReleaseExclusiveAccess is not bound
+!missing-pinvoke! DRDeviceReleaseMediaReservation is not bound
+!missing-pinvoke! DRDeviceXFactorForKPS is not bound
+!missing-pinvoke! DREraseCopyStatus is not bound
+!missing-pinvoke! DREraseCreate is not bound
+!missing-pinvoke! DREraseGetDevice is not bound
+!missing-pinvoke! DREraseGetProperties is not bound
+!missing-pinvoke! DREraseGetTypeID is not bound
+!missing-pinvoke! DREraseSetProperties is not bound
+!missing-pinvoke! DREraseStart is not bound
+!missing-pinvoke! DRFileCreateReal is not bound
+!missing-pinvoke! DRFileCreateRealWithURL is not bound
+!missing-pinvoke! DRFileCreateVirtualLink is not bound
+!missing-pinvoke! DRFileCreateVirtualWithCallback is not bound
+!missing-pinvoke! DRFileCreateVirtualWithData is not bound
+!missing-pinvoke! DRFileGetTypeID is not bound
+!missing-pinvoke! DRFilesystemTrackCreate is not bound
+!missing-pinvoke! DRFilesystemTrackEstimateOverhead is not bound
+!missing-pinvoke! DRFolderAddChild is not bound
+!missing-pinvoke! DRFolderConvertRealToVirtual is not bound
+!missing-pinvoke! DRFolderCopyChildren is not bound
+!missing-pinvoke! DRFolderCountChildren is not bound
+!missing-pinvoke! DRFolderCreateReal is not bound
+!missing-pinvoke! DRFolderCreateRealWithURL is not bound
+!missing-pinvoke! DRFolderCreateVirtual is not bound
+!missing-pinvoke! DRFolderGetTypeID is not bound
+!missing-pinvoke! DRFolderRemoveChild is not bound
+!missing-pinvoke! DRFSObjectCopyBaseName is not bound
+!missing-pinvoke! DRFSObjectCopyFilesystemProperties is not bound
+!missing-pinvoke! DRFSObjectCopyFilesystemProperty is not bound
+!missing-pinvoke! DRFSObjectCopyMangledName is not bound
+!missing-pinvoke! DRFSObjectCopyMangledNames is not bound
+!missing-pinvoke! DRFSObjectCopyRealURL is not bound
+!missing-pinvoke! DRFSObjectCopySpecificName is not bound
+!missing-pinvoke! DRFSObjectCopySpecificNames is not bound
+!missing-pinvoke! DRFSObjectGetFilesystemMask is not bound
+!missing-pinvoke! DRFSObjectGetParent is not bound
+!missing-pinvoke! DRFSObjectGetRealFSRef is not bound
+!missing-pinvoke! DRFSObjectIsVirtual is not bound
+!missing-pinvoke! DRFSObjectSetBaseName is not bound
+!missing-pinvoke! DRFSObjectSetFilesystemMask is not bound
+!missing-pinvoke! DRFSObjectSetFilesystemProperties is not bound
+!missing-pinvoke! DRFSObjectSetFilesystemProperty is not bound
+!missing-pinvoke! DRFSObjectSetSpecificName is not bound
+!missing-pinvoke! DRFSObjectSetSpecificNames is not bound
+!missing-pinvoke! DRGetRefCon is not bound
+!missing-pinvoke! DRGetVersion is not bound
+!missing-pinvoke! DRNotificationCenterAddObserver is not bound
+!missing-pinvoke! DRNotificationCenterCreate is not bound
+!missing-pinvoke! DRNotificationCenterCreateRunLoopSource is not bound
+!missing-pinvoke! DRNotificationCenterGetTypeID is not bound
+!missing-pinvoke! DRNotificationCenterRemoveObserver is not bound
+!missing-pinvoke! DRSetRefCon is not bound
+!missing-pinvoke! DRTrackCreate is not bound
+!missing-pinvoke! DRTrackEstimateLength is not bound
+!missing-pinvoke! DRTrackGetProperties is not bound
+!missing-pinvoke! DRTrackGetTypeID is not bound
+!missing-pinvoke! DRTrackSetProperties is not bound
+!missing-pinvoke! DRTrackSpeedTest is not bound
+!missing-protocol! DRFileDataProduction not bound
+!missing-protocol! DRTrackDataProduction not bound
+!missing-selector! +DRBurn::burnForDevice: not bound
+!missing-selector! +DRBurn::layoutForImageFile: not bound
+!missing-selector! +DRCDTextBlock::arrayOfCDTextBlocksFromPacks: not bound
+!missing-selector! +DRCDTextBlock::cdTextBlockWithLanguage:encoding: not bound
+!missing-selector! +DRDevice::deviceForBSDName: not bound
+!missing-selector! +DRDevice::deviceForIORegistryEntryPath: not bound
+!missing-selector! +DRErase::eraseForDevice: not bound
+!missing-selector! +DRFile::fileWithPath: not bound
+!missing-selector! +DRFile::finderAliasPointingTo:inFilesystem: not bound
+!missing-selector! +DRFile::hardLinkPointingTo:inFilesystem: not bound
+!missing-selector! +DRFile::symLinkPointingTo:inFilesystem: not bound
+!missing-selector! +DRFile::virtualFileWithName:data: not bound
+!missing-selector! +DRFile::virtualFileWithName:dataProducer: not bound
+!missing-selector! +DRFolder::folderWithPath: not bound
+!missing-selector! +DRFolder::virtualFolderWithName: not bound
+!missing-selector! +DRMSF::msfWithFrames: not bound
+!missing-selector! +DRMSF::msfWithString: not bound
+!missing-selector! +DRTrack::trackForAudioFile: not bound
+!missing-selector! +DRTrack::trackForAudioOfLength:producer: not bound
+!missing-selector! +DRTrack::trackForRootFolder: not bound
+!missing-selector! DRBurn::initWithDevice: not bound
+!missing-selector! DRBurn::setAppendable: not bound
+!missing-selector! DRBurn::setCompletionAction: not bound
+!missing-selector! DRBurn::setProperties: not bound
+!missing-selector! DRBurn::setRequestedBurnSpeed: not bound
+!missing-selector! DRBurn::setVerifyDisc: not bound
+!missing-selector! DRBurn::writeLayout: not bound
+!missing-selector! DRCDTextBlock::initWithLanguage:encoding: not bound
+!missing-selector! DRCDTextBlock::objectForKey:ofTrack: not bound
+!missing-selector! DRCDTextBlock::setObject:forKey:ofTrack: not bound
+!missing-selector! DRCDTextBlock::setProperties: not bound
+!missing-selector! DRCDTextBlock::setTrackDictionaries: not bound
+!missing-selector! DRDevice::isEqualToDevice: not bound
+!missing-selector! DRErase::initWithDevice: not bound
+!missing-selector! DRErase::setEraseType: not bound
+!missing-selector! DRErase::setProperties: not bound
+!missing-selector! DRFile::initWithLinkType:pointingTo:inFilesystem: not bound
+!missing-selector! DRFile::initWithName:data: not bound
+!missing-selector! DRFile::initWithName:dataProducer: not bound
+!missing-selector! DRFile::initWithPath: not bound
+!missing-selector! DRFolder::addChild: not bound
+!missing-selector! DRFolder::initWithName: not bound
+!missing-selector! DRFolder::initWithPath: not bound
+!missing-selector! DRFolder::removeChild: not bound
+!missing-selector! DRFSObject::mangledNameForFilesystem: not bound
+!missing-selector! DRFSObject::propertiesForFilesystem:mergeWithOtherFilesystems: not bound
+!missing-selector! DRFSObject::propertyForKey:inFilesystem:mergeWithOtherFilesystems: not bound
+!missing-selector! DRFSObject::setBaseName: not bound
+!missing-selector! DRFSObject::setExplicitFilesystemMask: not bound
+!missing-selector! DRFSObject::setProperties:inFilesystem: not bound
+!missing-selector! DRFSObject::setProperty:forKey:inFilesystem: not bound
+!missing-selector! DRFSObject::setSpecificName:forFilesystem: not bound
+!missing-selector! DRFSObject::setSpecificNames: not bound
+!missing-selector! DRFSObject::specificNameForFilesystem: not bound
+!missing-selector! DRMSF::descriptionWithFormat: not bound
+!missing-selector! DRMSF::initWithFrames: not bound
+!missing-selector! DRMSF::initWithString: not bound
+!missing-selector! DRMSF::isEqualToMSF: not bound
+!missing-selector! DRMSF::msfByAdding: not bound
+!missing-selector! DRMSF::msfBySubtracting: not bound
+!missing-selector! DRMSFFormatter::initWithFormat: not bound
+!missing-selector! DRMSFFormatter::setFormat: not bound
+!missing-selector! DRNotificationCenter::addObserver:selector:name:object: not bound
+!missing-selector! DRNotificationCenter::removeObserver:name:object: not bound
+!missing-selector! DRTrack::initWithProducer: not bound
+!missing-selector! DRTrack::setPreGap: not bound
+!missing-selector! DRTrack::setProperties: not bound
+!missing-selector! DRTrack::testProductionSpeedForInterval: not bound
+!missing-selector! DRTrack::testProductionSpeedForLength: not bound
+!missing-type! DRBurn not bound
+!missing-type! DRCDTextBlock not bound
+!missing-type! DRDevice not bound
+!missing-type! DRErase not bound
+!missing-type! DRFile not bound
+!missing-type! DRFolder not bound
+!missing-type! DRFSObject not bound
+!missing-type! DRMSF not bound
+!missing-type! DRMSFFormatter not bound
+!missing-type! DRNotificationCenter not bound
+!missing-type! DRTrack not bound

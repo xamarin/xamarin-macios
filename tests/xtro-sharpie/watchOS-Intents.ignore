@@ -1,0 +1,18 @@
+## Deprecated so not exposing it into Xamarin.Watch.dll
+##!missing-selector! INRequestRideIntent::initWithPickupLocation:dropOffLocation:rideOptionName:partySize:paymentMethod: not bound
+!missing-selector! INRideDriver::initWithPersonHandle:nameComponents:displayName:image:rating:phoneNumber: not bound
+
+## False positive the class INBookRestaurantReservationIntentResponse is not available on watchOS
+!missing-enum! INBookRestaurantReservationIntentCode not bound
+
+## Bound with no availability information, removing them is a breaking change
+## but I am not sure if they should be in WatchOS since they are from last year
+## and seems that intro did not complain, also there are others INCar* that are
+## explicitly available in WatchOS
+!unknown-type! INCarAirCirculationModeResolutionResult bound
+!unknown-type! INCarAudioSourceResolutionResult bound
+!unknown-type! INCarDefrosterResolutionResult bound
+!unknown-type! INCarSeatResolutionResult bound
+!unknown-type! INRadioTypeResolutionResult bound
+!unknown-type! INRelativeReferenceResolutionResult bound
+!unknown-type! INRelativeSettingResolutionResult bound

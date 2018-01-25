@@ -1,0 +1,8 @@
+# note: framework not available on watchOS
+
+## we do not expose internal framework versions
+!missing-field! VNVisionVersionNumber not bound
+
+## called indirectly (there's a required native layer for them)
+!missing-pinvoke! VNImagePointForFaceLandmarkPoint is not bound
+!missing-pinvoke! VNNormalizedFaceBoundingBoxPointForLandmarkPoint is not bound

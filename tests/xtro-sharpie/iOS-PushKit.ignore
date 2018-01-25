@@ -1,0 +1,2 @@
+## was @required but now @optional (a replacement was added in Xcode9) - still a breaking change to remove the abstract
+!incorrect-protocol-member! PKPushRegistryDelegate::pushRegistry:didReceiveIncomingPushWithPayload:forType: is OPTIONAL and should NOT be abstract

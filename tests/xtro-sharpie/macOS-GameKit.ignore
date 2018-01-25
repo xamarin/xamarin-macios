@@ -1,0 +1,53 @@
+## fixed in XAMCORE_3_0 - API break
+
+!incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindPlayers: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! GKTurnBasedEventHandlerDelegate::handleTurnEventForMatch:didBecomeActive: is REQUIRED and should be abstract
+!incorrect-protocol-member! GKTurnBasedMatchmakerViewControllerDelegate::turnBasedMatchmakerViewController:didFindMatch: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! GKTurnBasedMatchmakerViewControllerDelegate::turnBasedMatchmakerViewController:playerQuitForMatch: is OPTIONAL and should NOT be abstract
+
+# Used to remove hard to kill delegate API until XAMCORE_4_0
+!extra-protocol-member! unexpected selector GKMatchDelegate::xamarin:selector:removed: found
+
+### moved from macOS-GameKit.todo
+!extra-protocol-member! unexpected selector GKTurnBasedEventListener::player:didRequestMatchWithPlayers: found
+!missing-field! GKVoiceChatServiceErrorDomain not bound
+!missing-protocol! GKChallengeEventHandlerDelegate not bound
+!missing-protocol! GKChallengesViewControllerDelegate not bound
+!missing-protocol! GKSessionDelegate not bound
+!missing-protocol! GKViewController not bound
+!missing-protocol! GKVoiceChatClient not bound
+!missing-protocol-conformance! GKFriendRequestComposeViewController should conform to GKViewController
+!missing-protocol-conformance! GKGameCenterViewController should conform to GKViewController
+!missing-protocol-conformance! GKMatchmakerViewController should conform to GKViewController
+!missing-protocol-conformance! GKTurnBasedMatchmakerViewController should conform to GKViewController
+!missing-selector! GKAchievementDescription::groupIdentifier not bound
+!missing-selector! GKAchievementDescription::isReplayable not bound
+!missing-selector! GKChallengeEventHandler::delegate not bound
+!missing-selector! GKChallengeEventHandler::setDelegate: not bound
+!missing-selector! GKChallengesViewController::challengeDelegate not bound
+!missing-selector! GKChallengesViewController::setChallengeDelegate: not bound
+!missing-selector! GKLeaderboardSet::loadImageWithCompletionHandler: not bound
+!missing-selector! GKSession::acceptConnectionFromPeer:error: not bound
+!missing-selector! GKSession::cancelConnectToPeer: not bound
+!missing-selector! GKSession::connectToPeer:withTimeout: not bound
+!missing-selector! GKSession::delegate not bound
+!missing-selector! GKSession::denyConnectionFromPeer: not bound
+!missing-selector! GKSession::disconnectPeerFromAllPeers: not bound
+!missing-selector! GKSession::disconnectTimeout not bound
+!missing-selector! GKSession::displayName not bound
+!missing-selector! GKSession::displayNameForPeer: not bound
+!missing-selector! GKSession::initWithSessionID:displayName:sessionMode: not bound
+!missing-selector! GKSession::isAvailable not bound
+!missing-selector! GKSession::peerID not bound
+!missing-selector! GKSession::peersWithConnectionState: not bound
+!missing-selector! GKSession::sendData:toPeers:withDataMode:error: not bound
+!missing-selector! GKSession::sendDataToAllPeers:withDataMode:error: not bound
+!missing-selector! GKSession::sessionID not bound
+!missing-selector! GKSession::sessionMode not bound
+!missing-selector! GKSession::setAvailable: not bound
+!missing-selector! GKSession::setDataReceiveHandler:withContext: not bound
+!missing-selector! GKSession::setDelegate: not bound
+!missing-selector! GKSession::setDisconnectTimeout: not bound
+!missing-type! GKChallengeEventHandler not bound
+!missing-type! GKChallengesViewController not bound
+!missing-type! GKSession not bound

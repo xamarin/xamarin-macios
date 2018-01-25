@@ -1,0 +1,173 @@
+!missing-enum! CFHostInfoType not bound
+!missing-enum! CFNetDiagnosticStatusValues not bound
+!missing-enum! CFNetServiceBrowserFlags not bound
+!missing-enum! CFNetServiceMonitorType not bound
+!missing-enum! CFNetServiceRegisterFlags not bound
+!missing-enum! CFNetServicesError not bound
+!missing-enum! CFStreamErrorHTTP not bound
+!missing-enum! CFStreamErrorHTTPAuthentication not bound
+!missing-field! kCFDNSServiceFailureKey not bound
+!missing-field! kCFErrorDomainWinSock not bound
+!missing-field! kCFFTPResourceGroup not bound
+!missing-field! kCFFTPResourceLink not bound
+!missing-field! kCFFTPResourceModDate not bound
+!missing-field! kCFFTPResourceMode not bound
+!missing-field! kCFFTPResourceName not bound
+!missing-field! kCFFTPResourceOwner not bound
+!missing-field! kCFFTPResourceSize not bound
+!missing-field! kCFFTPResourceType not bound
+!missing-field! kCFFTPStatusCodeKey not bound
+!missing-field! kCFGetAddrInfoFailureKey not bound
+!missing-field! kCFHTTPAuthenticationSchemeKerberos not bound
+!missing-field! kCFHTTPAuthenticationSchemeNegotiate2 not bound
+!missing-field! kCFHTTPAuthenticationSchemeXMobileMeAuthToken not bound
+!missing-field! kCFNetworkProxiesHTTPEnable not bound
+!missing-field! kCFNetworkProxiesHTTPPort not bound
+!missing-field! kCFNetworkProxiesHTTPProxy not bound
+!missing-field! kCFNetworkProxiesProxyAutoConfigEnable not bound
+!missing-field! kCFNetworkProxiesProxyAutoConfigJavaScript not bound
+!missing-field! kCFNetworkProxiesProxyAutoConfigURLString not bound
+!missing-field! kCFProxyAutoConfigurationHTTPResponseKey not bound
+!missing-field! kCFProxyAutoConfigurationJavaScriptKey not bound
+!missing-field! kCFProxyAutoConfigurationURLKey not bound
+!missing-field! kCFProxyHostNameKey not bound
+!missing-field! kCFProxyPasswordKey not bound
+!missing-field! kCFProxyPortNumberKey not bound
+!missing-field! kCFProxyTypeAutoConfigurationJavaScript not bound
+!missing-field! kCFProxyTypeAutoConfigurationURL not bound
+!missing-field! kCFProxyTypeFTP not bound
+!missing-field! kCFProxyTypeHTTP not bound
+!missing-field! kCFProxyTypeHTTPS not bound
+!missing-field! kCFProxyTypeKey not bound
+!missing-field! kCFProxyTypeNone not bound
+!missing-field! kCFProxyTypeSOCKS not bound
+!missing-field! kCFProxyUsernameKey not bound
+!missing-field! kCFSOCKSNegotiationMethodKey not bound
+!missing-field! kCFSOCKSStatusCodeKey not bound
+!missing-field! kCFSOCKSVersionKey not bound
+!missing-field! kCFStreamErrorDomainFTP not bound
+!missing-field! kCFStreamErrorDomainHTTP not bound
+!missing-field! kCFStreamErrorDomainMach not bound
+!missing-field! kCFStreamErrorDomainNetDB not bound
+!missing-field! kCFStreamErrorDomainNetServices not bound
+!missing-field! kCFStreamErrorDomainSOCKS not bound
+!missing-field! kCFStreamErrorDomainSSL not bound
+!missing-field! kCFStreamErrorDomainSystemConfiguration not bound
+!missing-field! kCFStreamErrorDomainWinSock not bound
+!missing-field! kCFStreamNetworkServiceType not bound
+!missing-field! kCFStreamNetworkServiceTypeBackground not bound
+!missing-field! kCFStreamNetworkServiceTypeCallSignaling not bound
+!missing-field! kCFStreamNetworkServiceTypeVideo not bound
+!missing-field! kCFStreamNetworkServiceTypeVoice not bound
+!missing-field! kCFStreamNetworkServiceTypeVoIP not bound
+!missing-field! kCFStreamPropertyConnectionIsCellular not bound
+!missing-field! kCFStreamPropertyFTPAttemptPersistentConnection not bound
+!missing-field! kCFStreamPropertyFTPFetchResourceInfo not bound
+!missing-field! kCFStreamPropertyFTPFileTransferOffset not bound
+!missing-field! kCFStreamPropertyFTPPassword not bound
+!missing-field! kCFStreamPropertyFTPProxy not bound
+!missing-field! kCFStreamPropertyFTPProxyHost not bound
+!missing-field! kCFStreamPropertyFTPProxyPassword not bound
+!missing-field! kCFStreamPropertyFTPProxyPort not bound
+!missing-field! kCFStreamPropertyFTPProxyUser not bound
+!missing-field! kCFStreamPropertyFTPResourceSize not bound
+!missing-field! kCFStreamPropertyFTPUsePassiveMode not bound
+!missing-field! kCFStreamPropertyFTPUserName not bound
+!missing-field! kCFStreamPropertyHTTPProxyHost not bound
+!missing-field! kCFStreamPropertyHTTPProxyPort not bound
+!missing-field! kCFStreamPropertyHTTPSProxyHost not bound
+!missing-field! kCFStreamPropertyHTTPSProxyPort not bound
+!missing-field! kCFStreamPropertyNoCellular not bound
+!missing-field! kCFStreamPropertyProxyLocalBypass not bound
+!missing-field! kCFStreamPropertyShouldCloseNativeSocket not bound
+!missing-field! kCFStreamPropertySocketExtendedBackgroundIdleMode not bound
+!missing-field! kCFStreamPropertySocketRemoteHost not bound
+!missing-field! kCFStreamPropertySocketRemoteNetService not bound
+!missing-field! kCFStreamPropertySocketSecurityLevel not bound
+!missing-field! kCFStreamPropertySOCKSPassword not bound
+!missing-field! kCFStreamPropertySOCKSProxy not bound
+!missing-field! kCFStreamPropertySOCKSProxyHost not bound
+!missing-field! kCFStreamPropertySOCKSProxyPort not bound
+!missing-field! kCFStreamPropertySOCKSUser not bound
+!missing-field! kCFStreamPropertySOCKSVersion not bound
+!missing-field! kCFStreamPropertySSLContext not bound
+!missing-field! kCFStreamPropertySSLPeerTrust not bound
+!missing-field! kCFStreamPropertySSLSettings not bound
+!missing-field! kCFStreamSocketSecurityLevelNegotiatedSSL not bound
+!missing-field! kCFStreamSocketSecurityLevelNone not bound
+!missing-field! kCFStreamSocketSecurityLevelSSLv2 not bound
+!missing-field! kCFStreamSocketSecurityLevelSSLv3 not bound
+!missing-field! kCFStreamSocketSecurityLevelTLSv1 not bound
+!missing-field! kCFStreamSocketSOCKSVersion4 not bound
+!missing-field! kCFStreamSocketSOCKSVersion5 not bound
+!missing-field! kCFStreamSSLCertificates not bound
+!missing-field! kCFStreamSSLIsServer not bound
+!missing-field! kCFStreamSSLLevel not bound
+!missing-field! kCFStreamSSLPeerName not bound
+!missing-field! kCFStreamSSLValidatesCertificateChain not bound
+!missing-field! kCFURLErrorFailingURLErrorKey not bound
+!missing-field! kCFURLErrorFailingURLStringErrorKey not bound
+!missing-pinvoke! CFFTPCreateParsedResourceListing is not bound
+!missing-pinvoke! CFHostCancelInfoResolution is not bound
+!missing-pinvoke! CFHostCreateCopy is not bound
+!missing-pinvoke! CFHostGetAddressing is not bound
+!missing-pinvoke! CFHostGetNames is not bound
+!missing-pinvoke! CFHostGetReachability is not bound
+!missing-pinvoke! CFHostGetTypeID is not bound
+!missing-pinvoke! CFHostScheduleWithRunLoop is not bound
+!missing-pinvoke! CFHostSetClient is not bound
+!missing-pinvoke! CFHostStartInfoResolution is not bound
+!missing-pinvoke! CFHostUnscheduleFromRunLoop is not bound
+!missing-pinvoke! CFHTTPAuthenticationCopyDomains is not bound
+!missing-pinvoke! CFHTTPAuthenticationCopyRealm is not bound
+!missing-pinvoke! CFHTTPMessageCopyBody is not bound
+!missing-pinvoke! CFHTTPMessageCopyHeaderFieldValue is not bound
+!missing-pinvoke! CFHTTPMessageCopyRequestMethod is not bound
+!missing-pinvoke! CFHTTPMessageCopyRequestURL is not bound
+!missing-pinvoke! CFHTTPMessageCopySerializedMessage is not bound
+!missing-pinvoke! CFHTTPMessageCreateCopy is not bound
+!missing-pinvoke! CFHTTPMessageCreateResponse is not bound
+!missing-pinvoke! CFNetDiagnosticCopyNetworkStatusPassively is not bound
+!missing-pinvoke! CFNetDiagnosticCreateWithStreams is not bound
+!missing-pinvoke! CFNetDiagnosticCreateWithURL is not bound
+!missing-pinvoke! CFNetDiagnosticDiagnoseProblemInteractively is not bound
+!missing-pinvoke! CFNetDiagnosticSetName is not bound
+!missing-pinvoke! CFNetServiceBrowserCreate is not bound
+!missing-pinvoke! CFNetServiceBrowserGetTypeID is not bound
+!missing-pinvoke! CFNetServiceBrowserInvalidate is not bound
+!missing-pinvoke! CFNetServiceBrowserScheduleWithRunLoop is not bound
+!missing-pinvoke! CFNetServiceBrowserSearchForDomains is not bound
+!missing-pinvoke! CFNetServiceBrowserSearchForServices is not bound
+!missing-pinvoke! CFNetServiceBrowserStopSearch is not bound
+!missing-pinvoke! CFNetServiceBrowserUnscheduleFromRunLoop is not bound
+!missing-pinvoke! CFNetServiceCancel is not bound
+!missing-pinvoke! CFNetServiceCreate is not bound
+!missing-pinvoke! CFNetServiceCreateCopy is not bound
+!missing-pinvoke! CFNetServiceCreateDictionaryWithTXTData is not bound
+!missing-pinvoke! CFNetServiceCreateTXTDataWithDictionary is not bound
+!missing-pinvoke! CFNetServiceGetAddressing is not bound
+!missing-pinvoke! CFNetServiceGetDomain is not bound
+!missing-pinvoke! CFNetServiceGetName is not bound
+!missing-pinvoke! CFNetServiceGetPortNumber is not bound
+!missing-pinvoke! CFNetServiceGetTargetHost is not bound
+!missing-pinvoke! CFNetServiceGetTXTData is not bound
+!missing-pinvoke! CFNetServiceGetType is not bound
+!missing-pinvoke! CFNetServiceGetTypeID is not bound
+!missing-pinvoke! CFNetServiceMonitorCreate is not bound
+!missing-pinvoke! CFNetServiceMonitorGetTypeID is not bound
+!missing-pinvoke! CFNetServiceMonitorInvalidate is not bound
+!missing-pinvoke! CFNetServiceMonitorScheduleWithRunLoop is not bound
+!missing-pinvoke! CFNetServiceMonitorStart is not bound
+!missing-pinvoke! CFNetServiceMonitorStop is not bound
+!missing-pinvoke! CFNetServiceMonitorUnscheduleFromRunLoop is not bound
+!missing-pinvoke! CFNetServiceRegisterWithOptions is not bound
+!missing-pinvoke! CFNetServiceResolveWithTimeout is not bound
+!missing-pinvoke! CFNetServiceScheduleWithRunLoop is not bound
+!missing-pinvoke! CFNetServiceSetClient is not bound
+!missing-pinvoke! CFNetServiceSetTXTData is not bound
+!missing-pinvoke! CFNetServiceUnscheduleFromRunLoop is not bound
+!missing-pinvoke! CFNetworkExecuteProxyAutoConfigurationScript is not bound
+!missing-pinvoke! CFNetworkExecuteProxyAutoConfigurationURL is not bound
+!missing-pinvoke! CFReadStreamCreateWithFTPURL is not bound
+!missing-pinvoke! CFStreamCreatePairWithSocketToNetService is not bound
+!missing-pinvoke! CFWriteStreamCreateWithFTPURL is not bound

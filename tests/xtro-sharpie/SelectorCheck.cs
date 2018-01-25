@@ -82,6 +82,10 @@ namespace Extrospection {
 			if (!decl.IsAvailable () || !(decl.DeclContext as Decl).IsAvailable ())
 				return;
 
+			var framework = Helpers.GetFramework (decl);
+			if (framework == null)
+				return;
+
 			string selector = decl.GetSelector ();
 			if (String.IsNullOrEmpty (selector))
 				return;
@@ -101,7 +105,7 @@ namespace Extrospection {
 				}
 			}
 			if (!found)
-				Console.WriteLine ("!missing-selector! {0} not bound", name);
+				Log.On (framework).Add ($"!missing-selector! {name} not bound");
 		}
 
 		static string GetCategoryBase (ObjCCategoryDecl category)

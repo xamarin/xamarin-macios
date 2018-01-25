@@ -1,0 +1,2 @@
+### moved from tvOS-MetalPerformanceShaders.todo
+!wrong-base-type! MPSImageLanczosScale expected MPSImageScale actual MPSUnaryImageKernel

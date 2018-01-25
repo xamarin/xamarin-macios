@@ -1,0 +1,5 @@
+## No enum to attach the domain with.
+!missing-field! MSStickersErrorDomain not bound
+
+### moved from iOS-Messages.todo
+!missing-designated-initializer! MSMessage::init is missing an [DesignatedInitializer] attribute
