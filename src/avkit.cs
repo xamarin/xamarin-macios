@@ -559,11 +559,30 @@ namespace XamCore.AVKit {
 	[DisableDefaultCtor]
 	interface AVDisplayManager {
 
+		[TV (11,3)]
+		[Field ("AVDisplayManagerModeSwitchStartNotification")]
+		[Notification]
+		NSString ModeSwitchStartNotification { get; }
+
+		[TV (11,3)]
+		[Field ("AVDisplayManagerModeSwitchEndNotification")]
+		[Notification]
+		NSString ModeSwitchEndNotification { get; }
+
+		[TV (11,3)]
+		[Field ("AVDisplayManagerModeSwitchSettingsChangedNotification")]
+		[Notification]
+		NSString ModeSwitchSettingsChangedNotification { get; }
+
 		[NullAllowed, Export ("preferredDisplayCriteria", ArgumentSemantic.Copy)]
 		AVDisplayCriteria PreferredDisplayCriteria { get; set; }
 
 		[Export ("displayModeSwitchInProgress")]
 		bool DisplayModeSwitchInProgress { [Bind ("isDisplayModeSwitchInProgress")] get; }
+
+		[TV (11,3)]
+		[Export ("displayCriteriaMatchingEnabled")]
+		bool DisplayCriteriaMatchingEnabled { [Bind ("isDisplayCriteriaMatchingEnabled")] get; }
 	}
 
 	[TV (11,2), NoiOS, NoMac, NoWatch]
