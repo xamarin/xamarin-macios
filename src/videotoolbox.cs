@@ -625,6 +625,14 @@ namespace XamCore.VideoToolbox {
 
 		[Field ("kVTDecompressionPropertyKey_PixelTransferProperties")]
 		NSString PixelTransferProperties { get; }
+
+		[Mac (10, 13)]
+		[Field ("kVTVideoDecoderSpecification_RequiredDecoderGPURegistryID")]
+		NSString RequiredDecoderGPURegistryID { get; }
+
+		[Mac (10, 13)]
+		[Field ("kVTVideoDecoderSpecification_PreferredDecoderGPURegistryID")]
+		NSString PreferredDecoderGPURegistryID { get; }
 	}
 
 	[Mac (10,8), iOS (8,0), TV (10,2)]
