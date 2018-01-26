@@ -1232,7 +1232,7 @@ namespace XamCore.ImageIO {
 
 		[Mac (10, 13, 4)][iOS (11, 3)]
 		[Field ("kCGImagePropertyIPTCExtLinkedEncodedRightsExprLangID")]
-		NSString IPTCExtLinkedEncodedRightsExprLangID { get; }
+		NSString IPTCExtLinkedEncodedRightsExprLangId { get; }
 
 		[Mac (10, 13, 4)][iOS (11, 3)]
 		[Field ("kCGImagePropertyIPTCExtLocationCreated")]
