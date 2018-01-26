@@ -76,6 +76,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		}
 
 		[Test]
+		[Ignore ("Crash on simulator using xcode 9.3 beta 1")]
 		public void Constructors ()
 		{
 			Assert.Throws<Exception> (() => new CGContextPDF ((CGDataConsumer) null), "null CGDataConsumer");
