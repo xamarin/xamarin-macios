@@ -984,8 +984,33 @@ namespace XamCore.PassKit {
 		string Value { get; }
 	}
 
+	[Watch (4,3), iOS (11,3)]
+	[BaseType (typeof (NSObject))]
+	interface PKTransitPassProperties {
+
+		[Static]
+		[Export ("passPropertiesForPass:")]
+		[return: NullAllowed]
+		PKTransitPassProperties GetPassProperties (PKPass pass);
+
+		[Export ("transitBalance", ArgumentSemantic.Copy)]
+		NSDecimalNumber TransitBalance { get; }
+
+		[Export ("transitBalanceCurrencyCode")]
+		string TransitBalanceCurrencyCode { get; }
+
+		[Export ("inStation")]
+		bool InStation { [Bind ("isInStation")] get; }
+
+		[Export ("blacklisted")]
+		bool Blacklisted { [Bind ("isBlacklisted")] get; }
+
+		[NullAllowed, Export ("expirationDate", ArgumentSemantic.Copy)]
+		NSDate ExpirationDate { get; }
+	}
+
 	[Watch (3,1), iOS (10,1)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (PKTransitPassProperties))]
 	interface PKSuicaPassProperties
 	{
 		[Static]
@@ -1004,6 +1029,14 @@ namespace XamCore.PassKit {
 
 		[Export ("inShinkansenStation")]
 		bool InShinkansenStation { [Bind ("isInShinkansenStation")] get; }
+
+		[Watch (4,3), iOS (11,3)]
+		[Export ("balanceAllowedForCommute")]
+		bool BalanceAllowedForCommute { [Bind ("isBalanceAllowedForCommute")] get; }
+
+		[Watch (4,3), iOS (11,3)]
+		[Export ("lowBalanceGateNotificationEnabled")]
+		bool LowBalanceGateNotificationEnabled { [Bind ("isLowBalanceGateNotificationEnabled")] get; }
 
 		[Export ("greenCarTicketUsed")]
 		bool GreenCarTicketUsed { [Bind ("isGreenCarTicketUsed")] get; }
