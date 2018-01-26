@@ -17,6 +17,7 @@ using XamCore.CoreGraphics;
 using XamCore.CoreMedia;
 using XamCore.CoreVideo;
 using XamCore.Foundation;
+using XamCore.ImageIO;
 using XamCore.ObjCRuntime;
 using XamCore.Metal;
 using XamCore.SpriteKit;
@@ -47,6 +48,8 @@ namespace XamCore.ARKit {
 		Initializing,
 		ExcessiveMotion,
 		InsufficientFeatures,
+		[iOS (11,3)]
+		Relocalizing,
 	}
 
 	[iOS (11,0)]
@@ -70,6 +73,8 @@ namespace XamCore.ARKit {
 		EstimatedHorizontalPlane = 1 << 1,
 		ExistingPlane = 1 << 3,
 		ExistingPlaneUsingExtent = 1 << 4,
+		[iOS (11,3)]
+		ExistingPlaneUsingGeometry = (1 << 5),
 	}
 
 	[iOS (11,0)]
@@ -77,6 +82,8 @@ namespace XamCore.ARKit {
 	[Native]
 	public enum ARPlaneAnchorAlignment : nint {
 		Horizontal,
+		[iOS (11,3)]
+		Vertical,
 	}
 
 	[iOS (11,0)]
@@ -104,6 +111,8 @@ namespace XamCore.ARKit {
 	public enum ARPlaneDetection : nuint {
 		None = 0,
 		Horizontal = 1 << 0,
+		[iOS (11,3)]
+		Vertical = 1 << 1,
 	}
 
 	[iOS (11,0)]
@@ -278,6 +287,55 @@ namespace XamCore.ARKit {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 			get;
 		}
+
+		[iOS (11,3)]
+		[Export ("geometry", ArgumentSemantic.Strong)]
+		ARPlaneGeometry Geometry { get; }
+	}
+
+	[iOS (11,3)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface ARPlaneGeometry : NSSecureCoding {
+		[Export ("vertexCount")]
+		nuint VertexCount { get; }
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Export ("vertices")]
+		IntPtr GetRawVertices ();
+
+		[Export ("textureCoordinateCount")]
+		nuint TextureCoordinateCount { get; }
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Export ("textureCoordinates")]
+		IntPtr GetRawTextureCoordinates ();
+
+		[Export ("triangleCount")]
+		nuint TriangleCount { get; }
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Export ("triangleIndices")]
+		IntPtr GetRawTriangleIndices ();
+
+		[Export ("boundaryVertexCount")]
+		nuint BoundaryVertexCount { get; }
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Export ("boundaryVertices")]
+		IntPtr GetRawBoundaryVertices ();
+	}
+
+	[iOS (11,3)]
+	[BaseType (typeof(SCNGeometry))]
+	interface ARSCNPlaneGeometry {
+		[Static]
+		[Export ("planeGeometryWithDevice:")]
+		[return: NullAllowed]
+		ARSCNPlaneGeometry CreatePlaneGeometry (IMTLDevice device);
+
+		[Export ("updateFromPlaneGeometry:")]
+		void Update (ARPlaneGeometry planeGeometry);
 	}
 
 	[iOS (11,0)]
@@ -296,6 +354,38 @@ namespace XamCore.ARKit {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Protected, Export ("identifiers")]
 		IntPtr GetRawIdentifiers ();
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (11,3)]
+	[BaseType (typeof(NSObject))]
+	interface ARReferenceImage : NSCopying, NSSecureCoding {
+		[NullAllowed, Export ("name")]
+		string Name { get; set; }
+
+		[Export ("physicalSize")]
+		CGSize PhysicalSize { get; }
+
+		[Export ("initWithCGImage:orientation:physicalWidth:")]
+		IntPtr Constructor (CGImage image, CGImagePropertyOrientation orientation, nfloat physicalWidth);
+
+		[Export ("initWithPixelBuffer:orientation:physicalWidth:")]
+		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, nfloat physicalWidth);
+
+		[Static]
+		[Export ("referenceImagesInGroupNamed:bundle:")]
+		[return: NullAllowed]
+		NSSet<ARReferenceImage> GetReferenceImagesInGroup (string name, [NullAllowed] NSBundle bundle);
+	}
+
+	[iOS (11,3)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface ARVideoFormat : NSCopying {
+		[Export ("imageResolution")]
+		CGSize ImageResolution { get; }
+
+		[Export ("framesPerSecond")]
+		nint FramesPerSecond { get; }
 	}
 
 	[iOS (11,0)]
@@ -429,6 +519,11 @@ namespace XamCore.ARKit {
 
 		[Export ("removeAnchor:")]
 		void RemoveAnchor (ARAnchor anchor);
+
+		[iOS (11,3)]
+		[Export ("setWorldOrigin:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		void SetWorldOrigin (Matrix4 relativeTransform);
 	}
 
 	[iOS (11,0)]
@@ -447,6 +542,10 @@ namespace XamCore.ARKit {
 
 		[Export ("sessionInterruptionEnded:")]
 		void InterruptionEnded (ARSession session);
+
+		[iOS (11,3)]
+		[Export ("sessionShouldAttemptRelocalization:")]
+		bool ShouldAttemptRelocalization (ARSession session);
 
 		[Export ("session:didOutputAudioSampleBuffer:")]
 		void DidOutputAudioSampleBuffer (ARSession session, CMSampleBuffer audioSampleBuffer);
@@ -484,6 +583,15 @@ namespace XamCore.ARKit {
 		[Export ("isSupported")]
 		bool IsSupported { get; }
 
+		[iOS (11,3)]
+		[Static]
+		[Export ("supportedVideoFormats", ArgumentSemantic.Strong)]
+		ARVideoFormat[] SupportedVideoFormats { get; }
+
+		[iOS (11,3)]
+		[Export ("videoFormat", ArgumentSemantic.Strong)]
+		ARVideoFormat VideoFormat { get; set; }
+
 		[Export ("worldAlignment", ArgumentSemantic.Assign)]
 		ARWorldAlignment WorldAlignment { get; set; }
 
@@ -499,14 +607,26 @@ namespace XamCore.ARKit {
 	[BaseType (typeof (ARConfiguration))]
 	interface ARWorldTrackingConfiguration {
 
+		[iOS (11,3)]
+		[Export ("autoFocusEnabled")]
+		bool AutoFocusEnabled { [Bind ("isAutoFocusEnabled")] get; set; }
+
 		[Export ("planeDetection", ArgumentSemantic.Assign)]
 		ARPlaneDetection PlaneDetection { get; set; }
+
+		[iOS (11,3)]
+		[NullAllowed, Export ("detectionImages", ArgumentSemantic.Copy)]
+		NSSet<ARReferenceImage> DetectionImages { get; set; }
 	}
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(ARConfiguration))]
-	interface AROrientationTrackingConfiguration {}
+	interface AROrientationTrackingConfiguration {
+		[iOS (11,3)]
+		[Export ("autoFocusEnabled")]
+		bool AutoFocusEnabled { [Bind ("isAutoFocusEnabled")] get; set; }
+	}
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
@@ -871,6 +991,13 @@ namespace XamCore.ARKit {
 
 		[Export ("updateFromFaceGeometry:")]
 		void Update (ARFaceGeometry faceGeometry);
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (11,3)]
+	[BaseType (typeof(ARAnchor))]
+	interface ARImageAnchor {
+		[Export ("referenceImage", ArgumentSemantic.Strong)]
+		ARReferenceImage ReferenceImage { get; }
 	}
 
 	[iOS (11,0)]

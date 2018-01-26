@@ -7,3 +7,7 @@
 ## not available in this branch
 ## !wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARFaceGeometry::GetRawTextureCoordinates(): simd type: vector_float2
 ## !wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARFaceGeometry::GetRawVertices(): simd type: vector_float3
+
+!wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARPlaneGeometry::GetRawBoundaryVertices(): simd type: vector_float3
+!wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARPlaneGeometry::GetRawTextureCoordinates(): simd type: vector_float2
+!wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARPlaneGeometry::GetRawVertices(): simd type: vector_float3
