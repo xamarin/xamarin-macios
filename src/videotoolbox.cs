@@ -625,14 +625,6 @@ namespace XamCore.VideoToolbox {
 
 		[Field ("kVTDecompressionPropertyKey_PixelTransferProperties")]
 		NSString PixelTransferProperties { get; }
-
-		[Mac (10, 13)][NoiOS][NoTV]
-		[Field ("kVTVideoDecoderSpecification_RequiredDecoderGPURegistryID")]
-		NSString RequiredDecoderGpuRegistryId { get; }
-
-		[Mac (10, 13)][NoiOS][NoTV]
-		[Field ("kVTVideoDecoderSpecification_PreferredDecoderGPURegistryID")]
-		NSString PreferredDecoderGpuRegistryId { get; }
 	}
 
 	[Mac (10,8), iOS (8,0), TV (10,2)]
@@ -716,6 +708,14 @@ namespace XamCore.VideoToolbox {
 
 		[Export ("RequireHardwareAcceleratedVideoDecoder")]
 		bool RequireHardwareAcceleratedVideoDecoder { get; set; }
+
+		[Mac (10, 13)][NoiOS][NoTV]
+		[Export ("RequiredDecoderGpuRegistryId")]
+		NSNumber RequiredDecoderGpuRegistryId { get; }
+
+		[Mac (10, 13)][NoiOS][NoTV]
+		[Export ("PreferredDecoderGpuRegistryId")]
+		NSNumber PreferredDecoderGpuRegistryId { get; }
 	}
 
 	[Mac (10,9), iOS (8,0), TV (10,2)]
@@ -726,6 +726,14 @@ namespace XamCore.VideoToolbox {
 
 		[Field ("kVTVideoDecoderSpecification_RequireHardwareAcceleratedVideoDecoder")]
 		NSString RequireHardwareAcceleratedVideoDecoder { get; }
+
+		[Mac (10, 13)][NoiOS][NoTV]
+		[Field ("kVTVideoDecoderSpecification_RequiredDecoderGPURegistryID")]
+		NSString RequiredDecoderGpuRegistryId { get; }
+
+		[Mac (10, 13)][NoiOS][NoTV]
+		[Field ("kVTVideoDecoderSpecification_PreferredDecoderGPURegistryID")]
+		NSString PreferredDecoderGpuRegistryId { get; }
 	}
 
 	[Mac (10,8), iOS (8,0), TV (10,2)]
