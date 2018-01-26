@@ -1,2 +1,0 @@
-!missing-protocol-conformance! INSpatialEventTrigger should conform to NSSecureCoding
-!missing-protocol-conformance! INSpeakableString should conform to NSSecureCoding

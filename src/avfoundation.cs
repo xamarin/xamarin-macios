@@ -10316,6 +10316,12 @@ namespace XamCore.AVFoundation {
 		[Field ("AVPlayerAvailableHDRModesDidChangeNotification")]
 		[Notification]
 		NSString AvailableHdrModesDidChangeNotification { get; }
+
+		// From AVPlayer (AVPlayerVideoDecoderGPUSupport) Category
+
+		[NoWatch, NoTV, NoiOS, Mac (10,13,4)]
+		[Export ("preferredVideoDecoderGPURegistryID")]
+		ulong PreferredVideoDecoderGpuRegistryId { get; set; }
 	}
 
 	[NoWatch]
@@ -12251,6 +12257,7 @@ namespace XamCore.AVFoundation {
 
 	[NoWatch, iOS (9,0), Mac (10,10)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // for binary compatibility this is added in AVCompat.cs w/[Obsolete]
 	interface AVAudioUnitComponentManager {
 		
 		[Export ("tagNames")]
