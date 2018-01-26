@@ -402,9 +402,9 @@ namespace XamCore.ObjCRuntime {
 			return ObjectWrapper.Convert (CreateBlockProxy ((MethodInfo) ObjectWrapper.Convert (method), block));
 		}
 			
-		static IntPtr CreateDelegateProxy (IntPtr method, IntPtr @delegate)
+		static IntPtr CreateDelegateProxy (IntPtr method, IntPtr @delegate, IntPtr signature)
 		{
-			return BlockLiteral.GetBlockForDelegate ((MethodInfo) ObjectWrapper.Convert (method), ObjectWrapper.Convert (@delegate));
+			return BlockLiteral.GetBlockForDelegate ((MethodInfo) ObjectWrapper.Convert (method), ObjectWrapper.Convert (@delegate), Marshal.PtrToStringAuto (signature));
 		}
 
 		static unsafe Assembly GetEntryAssembly ()

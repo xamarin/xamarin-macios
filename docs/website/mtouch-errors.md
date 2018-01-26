@@ -1300,6 +1300,13 @@ See https://msdn.microsoft.com/en-us/library/x0w2664k.aspx for more information 
 
 The `[BindingImpl]` attribute on the mentioned member is invalid. The expected format is `[BindingImpl (BindingImplOptions.ValueA | BindingImplOptions.ValueB)]`.
 
+### <a name="MT2106"/>MT2106: Could not optimize the call to BlockLiteral.SetupBlock[Unsafe] in * at offset * because *.
+
+The linker reports this warning when it can't optimize a call to BlockLiteral.SetupBlock or Block.SetupBlockUnsafe.
+
+The message will point to the method that calls BlockLiteral.SetupBlock[Unsafe], and
+it may also give clues as to why the call couldn't be optimized.
+
 # MT3xxx: AOT error messages
 
 <!--
@@ -1649,6 +1656,15 @@ with a test case and we'll evaluate it.
 
 [1]: https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS
 [2]: https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS&component=General&bug_severity=enhancement
+
+### <a name="MT4173"/>MT4173: The registrar can't compute the block signature for the delegate of type {delegate-type} in the method {method} because *.
+
+This is a warning indicating that the registrar couldn't inject the block
+signature of the specified method into the generated registrar code, because
+the registrar couldn't compute it.
+
+This means that the block signature has to be computed at runtime, which is
+somewhat slower.
 
 # MT5xxx: GCC and toolchain error messages
 

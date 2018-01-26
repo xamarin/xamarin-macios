@@ -2077,10 +2077,10 @@ xamarin_get_delegate_for_block_parameter (MonoMethod *method, int par, void *nat
 }
 
 id
-xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate, guint32 *exception_gchandle)
+xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate, const char *signature, guint32 *exception_gchandle)
 {
 	// COOP: accesses managed memory: unsafe mode.
-	return delegates.create_delegate_proxy ((MonoObject *) mono_method_get_object (mono_domain_get (), method, NULL), delegate, exception_gchandle);
+	return delegates.create_delegate_proxy ((MonoObject *) mono_method_get_object (mono_domain_get (), method, NULL), delegate, signature, exception_gchandle);
 }
 
 void

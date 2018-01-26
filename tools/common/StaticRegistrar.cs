@@ -868,6 +868,13 @@ namespace XamCore.Registrar {
 
 		protected override TypeReference GetElementType (TypeReference type)
 		{
+			var ts = type as TypeSpecification;
+			if (ts != null) {
+				// TypeSpecification.GetElementType calls GetElementType on the element type, thus unwinding multiple element types (which we don't want).
+				// By fetching the ElementType property we only unwind one level.
+				// This matches what the dynamic registrar (System.Reflection) does.
+				return ts.ElementType;
+			}
 			return type.GetElementType ();
 		}
 
@@ -3511,7 +3518,20 @@ namespace XamCore.Registrar {
 						setup_return.AppendLine ("mono_free (str);");
 						setup_return.AppendLine ("res = nsstr;");
 					} else if (IsDelegate (type.Resolve ())) {
-						setup_return.AppendLine ("res = xamarin_get_block_for_delegate (managed_method, retval, &exception_gchandle);");
+						var signature = "NULL";
+						if (App.Optimizations.OptimizeBlockLiteralSetupBlock == true) {
+							if (type.Is ("System", "Delegate") || type.Is ("System", "MulticastDelegate")) {
+								ErrorHelper.Show (ErrorHelper.CreateWarning (App, 4173, method.Method, $"The registrar can't compute the block signature for the delegate of type {type.FullName} in the method {descriptiveMethodName} because {type.FullName} doesn't have a specific signature."));
+							} else {
+								var delegateMethod = type.Resolve ().GetMethods ().FirstOrDefault ((v) => v.Name == "Invoke");
+								if (delegateMethod == null) {
+									ErrorHelper.Show (ErrorHelper.CreateWarning (App, 4173, method.Method, $"The registrar can't compute the block signature for the delegate of type {type.FullName} in the method {descriptiveMethodName} because it couldn't find the Invoke method of the delegate type."));
+								} else {
+									signature = "\"" + ComputeSignature (method.DeclaringType.Type, null, method, isBlockSignature: true) + "\"";
+								}
+							}
+						}
+						setup_return.AppendLine ("res = xamarin_get_block_for_delegate (managed_method, retval, {0}, &exception_gchandle);", signature);
 						setup_return.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 					} else {
 						throw ErrorHelper.CreateError (4104, 

@@ -225,6 +225,13 @@ Mixed-mode assemblies can not be processed by the linker.
 
 See https://msdn.microsoft.com/en-us/library/x0w2664k.aspx for more information on mixed-mode assemblies.
 
+### <a name="MM2106"/>MM2106: Could not optimize the call to BlockLiteral.SetupBlock[Unsafe] in * at offset * because *.
+
+The linker reports this warning when it can't optimize a call to BlockLiteral.SetupBlock or Block.SetupBlockUnsafe.
+
+The message will point to the method that calls BlockLiteral.SetupBlock[Unsafe], and
+it may also give clues as to why the call couldn't be optimized.
+
 # MM3xxx: AOT
 
 ## MM30xx: AOT (general) errors
@@ -251,6 +258,15 @@ See https://msdn.microsoft.com/en-us/library/x0w2664k.aspx for more information 
 ## MM41xx: registrar
 
 ### <a name="MM4134">MM4134: Your application is using the '{0}' framework, which isn't included in the MacOS SDK you're using to build your app (this framework was introduced in OSX {2}, while you're building with the MacOS {1} SDK.) This configuration is not supported with the static registrar (pass --registrar:dynamic as an additional mmp argument in your project's Mac Build option to select). Alternatively select a newer SDK in your app's Mac Build options.
+
+### <a name="MT4173"/>MT4173: The registrar can't compute the block signature for the delegate of type {delegate-type} in the method {method} because *.
+
+This is a warning indicating that the registrar couldn't inject the block
+signature of the specified method into the generated registrar code, because
+the registrar couldn't compute it.
+
+This means that the block signature has to be computed at runtime, which is
+somewhat slower.
 
 # MM5xxx: GCC and toolchain
 

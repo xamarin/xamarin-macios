@@ -83,7 +83,37 @@ namespace XamCore.ObjCRuntime {
 		[DllImport ("__Internal")]
 		static extern IntPtr xamarin_get_block_descriptor ();
 
-		unsafe void SetupBlock (Delegate trampoline, Delegate userDelegate, bool safe)
+		void SetupBlock (Delegate trampoline, Delegate userDelegate, bool safe)
+		{
+			// We need to get the signature of the target method, so that we can compute
+			// the ObjC signature correctly (the generated method that's actually
+			// invoked by native code does not have enough type information to compute
+			// the correct signature).
+			// This attribute might not exist for third-party libraries created
+			// with earlier versions of Xamarin.iOS, so make sure to cope with
+			// the attribute not being available.
+
+			// This logic is mirrored in CoreOptimizeGeneratedCode.ProcessSetupBlock and must be
+			// updated if anything changes here.
+			var userDelegateType = trampoline.GetType ().GetCustomAttribute<UserDelegateTypeAttribute> ()?.UserDelegateType;
+			bool blockSignature;
+			MethodInfo userMethod;
+			if (userDelegateType != null) {
+				userMethod = userDelegateType.GetMethod ("Invoke");
+				blockSignature = true;
+			} else {
+				userMethod = trampoline.Method;
+				blockSignature = false;
+			}
+
+			var signature = Runtime.ComputeSignature (userMethod, blockSignature);
+			SetupBlockImpl (trampoline, userDelegate, safe, signature);
+		}
+
+		// This method is not to be called manually by user code.
+		// This is enforced by making it private. If the SetupBlock optimization is enabled,
+		// the linker will make it public so that it's callable from optimized user code.
+		unsafe void SetupBlockImpl (Delegate trampoline, Delegate userDelegate, bool safe, string signature)
 		{
 			isa = block_class;
 			invoke = Marshal.GetFunctionPointerForDelegate (trampoline);
@@ -99,30 +129,11 @@ namespace XamCore.ObjCRuntime {
 
 			/* FIXME: support stret blocks */
 
-			// We need to get the signature of the target method, so that we can compute
-			// the ObjC signature correctly (the generated method that's actually
-			// invoked by native code does not have enough type information to compute
-			// the correct signature).
-			// This attribute might not exist for third-party libraries created
-			// with earlier versions of Xamarin.iOS, so make sure to cope with
-			// the attribute not being available.
-			var userDelegateType = trampoline.GetType ().GetCustomAttribute<UserDelegateTypeAttribute> ()?.UserDelegateType;
-			bool blockSignature;
-			MethodInfo userMethod;
-			if (userDelegateType != null) {
-				userMethod = userDelegateType.GetMethod ("Invoke");
-				blockSignature = true;
-			} else {
-				userMethod = trampoline.Method;
-				blockSignature = false;
-			}
-
 			// we allocate one big block of memory, the first part is the BlockDescriptor, 
 			// the second part is the signature string (no need to allocate a second time
 			// for the signature if we can avoid it). One descriptor is allocated for every 
 			// Block; this is potentially something the static registrar can fix, since it
 			// should know every possible trampoline signature.
-			var signature = Runtime.ComputeSignature (userMethod, blockSignature);
 			var bytes = System.Text.Encoding.UTF8.GetBytes (signature);
 			var desclen = sizeof (XamarinBlockDescriptor) + bytes.Length + 1 /* null character */;
 			var descptr = Marshal.AllocHGlobal (desclen);
@@ -228,7 +239,7 @@ namespace XamCore.ObjCRuntime {
 			return descriptor->copy_helper == ((BlockDescriptor *) literal->block_descriptor)->copy_helper;
 		}
 
-		internal static IntPtr GetBlockForDelegate (MethodInfo minfo, object @delegate)
+		internal static IntPtr GetBlockForDelegate (MethodInfo minfo, object @delegate, string signature)
 		{
 			if (@delegate == null)
 				return IntPtr.Zero;
@@ -263,7 +274,11 @@ namespace XamCore.ObjCRuntime {
 			// call _Block_copy, which will create a heap-allocated block
 			// with the proper reference count.
 			BlockLiteral block = new BlockLiteral ();
-			block.SetupBlock ((Delegate) handlerDelegate, (Delegate) @delegate);
+			if (signature == null) {
+				block.SetupBlock ((Delegate) handlerDelegate, (Delegate) @delegate);
+			} else {
+				block.SetupBlockImpl ((Delegate) handlerDelegate, (Delegate) @delegate, true, signature);
+			}
 			var rv = _Block_copy (ref block);
 			block.CleanupBlock ();
 			return rv;
