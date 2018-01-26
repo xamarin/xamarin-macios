@@ -1,6 +1,3 @@
-!missing-protocol-conformance! ARAnchor should conform to NSSecureCoding
-!missing-protocol-conformance! ARFaceGeometry should conform to NSSecureCoding
-!missing-protocol-conformance! ARPointCloud should conform to NSSecureCoding
 !missing-protocol-member! ARSessionObserver::sessionShouldAttemptRelocalization: not found
 !missing-selector! +ARConfiguration::supportedVideoFormats not bound
 !missing-selector! +ARReferenceImage::referenceImagesInGroupNamed:bundle: not bound
