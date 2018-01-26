@@ -904,7 +904,7 @@ namespace XamCore.ImageIO {
 		
 		[Mac (10, 9)][iOS (11,0)]
 		[Field ("kCGImagePropertyOpenEXRDictionary")]
-		NSString OpenEXRDictionary { get; }
+		NSString OpenExrDictionary { get; }
 
 		[Mac (10, 13, 4)][iOS (11, 3)]
 		[Field ("kCGImagePropertyIPTCExtAboutCvTerm")]
@@ -956,11 +956,11 @@ namespace XamCore.ImageIO {
 
 		[Mac (10, 13, 4)][iOS (11, 3)]
 		[Field ("kCGImagePropertyIPTCExtArtworkCreatorID")]
-		NSString IPTCExtArtworkCreatorID { get; }
+		NSString IPTCExtArtworkCreatorId { get; }
 
 		[Mac (10, 13, 4)][iOS (11, 3)]
 		[Field ("kCGImagePropertyIPTCExtArtworkCopyrightOwnerID")]
-		NSString IPTCExtArtworkCopyrightOwnerID { get; }
+		NSString IPTCExtArtworkCopyrightOwnerId { get; }
 
 		[Mac (10, 13, 4)][iOS (11, 3)]
 		[Field ("kCGImagePropertyIPTCExtArtworkCopyrightOwnerName")]
@@ -968,7 +968,7 @@ namespace XamCore.ImageIO {
 
 		[Mac (10, 13, 4)][iOS (11, 3)]
 		[Field ("kCGImagePropertyIPTCExtArtworkLicensorID")]
-		NSString IPTCExtArtworkLicensorID { get; }
+		NSString IPTCExtArtworkLicensorId { get; }
 
 		[Mac (10, 13, 4)][iOS (11, 3)]
 		[Field ("kCGImagePropertyIPTCExtArtworkLicensorName")]
@@ -1108,7 +1108,7 @@ namespace XamCore.ImageIO {
 
 		[Mac (10, 13, 4)][iOS (11, 3)]
 		[Field ("kCGImagePropertyIPTCExtDigitalImageGUID")]
-		NSString IPTCExtDigitalImageGUID { get; }
+		NSString IPTCExtDigitalImageGuid { get; }
 
 		[Mac (10, 13, 4)][iOS (11, 3)]
 		[Field ("kCGImagePropertyIPTCExtDigitalSourceFileType")]
@@ -1148,7 +1148,7 @@ namespace XamCore.ImageIO {
 
 		[Mac (10, 13, 4)][iOS (11, 3)]
 		[Field ("kCGImagePropertyIPTCExtEmbeddedEncodedRightsExprLangID")]
-		NSString IPTCExtEmbeddedEncodedRightsExprLangID { get; }
+		NSString IPTCExtEmbeddedEncodedRightsExprLangId { get; }
 
 		[Mac (10, 13, 4)][iOS (11, 3)]
 		[Field ("kCGImagePropertyIPTCExtEpisode")]
@@ -1252,7 +1252,7 @@ namespace XamCore.ImageIO {
 
 		[Mac (10, 13, 4)][iOS (11, 3)]
 		[Field ("kCGImagePropertyIPTCExtLocationGPSAltitude")]
-		NSString IPTCExtLocationGPSAltitude { get; }
+		NSString IPTCExtLocationGpsAltitude { get; }
 
 		[Mac (10, 13, 4)][iOS (11, 3)]
 		[Field ("kCGImagePropertyIPTCExtLocationGPSLatitude")]
@@ -1628,7 +1628,7 @@ namespace XamCore.ImageIO {
 
 		[Mac (10, 9)][iOS (11, 3)]
 		[Field ("kCGImagePropertyOpenEXRAspectRatio")]
-		NSString OpenEXRAspectRatio { get; }
+		NSString OpenExrAspectRatio { get; }
 	}
 
 	[Since (7,0), MountainLion]
