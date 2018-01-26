@@ -1937,8 +1937,8 @@ namespace XamCore.Registrar {
 				goto default;
 			case "GameKit":
 #if !MONOMAC
-				if (IsSimulator && App.Platform == Xamarin.Utils.ApplePlatform.WatchOS)
-					return; // No headers provided for watchOS/simulator.
+				if (IsSimulator && App.Platform == Xamarin.Utils.ApplePlatform.WatchOS && App.SdkVersion < new Version (3, 2))
+					return; // No headers provided for watchOS/simulator until watchOS 3.2.
 #endif
 				goto default;
 			case "WatchKit":
