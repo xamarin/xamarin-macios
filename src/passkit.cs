@@ -986,6 +986,7 @@ namespace XamCore.PassKit {
 
 	[Watch (4,3), iOS (11,3)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface PKTransitPassProperties {
 
 		[Static]
@@ -1010,6 +1011,9 @@ namespace XamCore.PassKit {
 	}
 
 	[Watch (3,1), iOS (10,1)]
+#if XAMCORE_4_0
+	[DisableDefaultCtor] // hint: getter only props and a factory method.
+#endif
 	[BaseType (typeof (PKTransitPassProperties))]
 	interface PKSuicaPassProperties
 	{
