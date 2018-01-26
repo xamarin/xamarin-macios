@@ -43,6 +43,7 @@ namespace Xamarin.Linker {
 			case "LinkWithAttribute":
 			case "DesignatedInitializerAttribute":
 			case "RequiresSuperAttribute":
+			case "BindingImplAttribute":
 				return attr_type.Namespace == Namespaces.ObjCRuntime;
 			default:
 				return base.IsRemovedAttribute (attribute);
@@ -59,6 +60,9 @@ namespace Xamarin.Linker {
 				case "DeprecatedAttribute":
 				case "IntroducedAttribute":
 					LinkContext.StoreCustomAttribute (provider, attribute, "Availability");
+					break;
+				case "BindingImplAttribute":
+					LinkContext.StoreCustomAttribute (provider, attribute);
 					break;
 				}
 			}

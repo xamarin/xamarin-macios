@@ -671,7 +671,6 @@ public class NamespaceManager
 
 		ImplicitNamespaces = new HashSet<string> ();
 		ImplicitNamespaces.Add ("System");
-		ImplicitNamespaces.Add ("System.Runtime.CompilerServices");
 		ImplicitNamespaces.Add ("System.Runtime.InteropServices");
 		ImplicitNamespaces.Add ("System.Diagnostics");
 		ImplicitNamespaces.Add ("System.ComponentModel");
@@ -2353,6 +2352,7 @@ public partial class Generator : IMemberGatherer {
 						case "CompilerGeneratedAttribute":
 						case "ManualAttribute":
 						case "MarshalDirectiveAttribute":
+						case "BindingImplAttribute":
 							continue;
 						default:
 							throw new BindingException (1007, true, "Unknown attribute {0} on {1}.{2}", attr.GetType (), mi.DeclaringType, mi.Name);
@@ -2474,7 +2474,7 @@ public partial class Generator : IMemberGatherer {
 		Header (sw);
 		print ("namespace {0} {{", ns.CoreObjCRuntime); indent++;
 		print ("");
-		print ("[CompilerGenerated]");
+		print_generated_code ();
 		print ("static partial class Trampolines {"); indent++;
 
 		print ("");
@@ -2653,7 +2653,7 @@ public partial class Generator : IMemberGatherer {
 		
 		Header (sw);
 		print ("namespace {0} {{", ns.CoreObjCRuntime); indent++;
-		print ("[CompilerGenerated]");
+		print_generated_code ();
 		print ("static partial class Libraries {"); indent++;
 		foreach (var library_info in libraries.OrderBy (v => v.Key, StringComparer.Ordinal)) {
 			var library_name = library_info.Key;
@@ -2913,7 +2913,7 @@ public partial class Generator : IMemberGatherer {
 					print ("static IntPtr {0};", kn);
 					print ("");
 					// linker will remove the attributes (but it's useful for testing)
-					print ("[CompilerGenerated]");
+					print_generated_code ();
 					print ("{0} {1}{2} {3} {{",
 					       is_internal ? "internal" : "public",
 					       propertyType,
@@ -3039,7 +3039,7 @@ public partial class Generator : IMemberGatherer {
 	{
 		for (int i=0; i < tabs; i++)
 			sw.Write ('\t');
-		sw.WriteLine ("[CompilerGenerated]");
+		sw.WriteLine ("[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]");
 	}
 
 	static void WriteIsDirectBindingCondition (StreamWriter sw, ref int tabs, bool? is_direct_binding, string is_direct_binding_value, Func<string> trueCode, Func<string> falseCode)
@@ -4595,7 +4595,7 @@ public partial class Generator : IMemberGatherer {
 			if (!is_model && DoesPropertyNeedBackingField (pi) && !is_interface_impl && !minfo.is_static && !DoesPropertyNeedDirtyCheck (pi, export)) {
 				var_name = string.Format ("__mt_{0}_var{1}", pi.Name, minfo.is_static ? "_static" : "");
 
-				print ("[CompilerGenerated]");
+				print_generated_code ();
 
 				if (minfo.is_thread_static)
 					print ("[ThreadStatic]");
@@ -5961,7 +5961,7 @@ public partial class Generator : IMemberGatherer {
 					var selectorField = SelectorField (ea, true);
 					if (!InlineSelectors) {
 						selectorField = selectorField.Substring (0, selectorField.Length - 6 /* Handle */);
-						print ("[CompilerGenerated]");
+						print_generated_code ();
 						print ("const string {0} = \"{1}\";", selectorField, ea);
 						print ("static readonly IntPtr {0} = Selector.GetHandle (\"{1}\");", SelectorField (ea), ea);
 					}
@@ -5975,7 +5975,7 @@ public partial class Generator : IMemberGatherer {
 					objc_type_name = FormatCategoryClassName (bta);
 				
 				if (!is_model) {
-					print ("[CompilerGenerated]");
+					print_generated_code ();
 					print ("static readonly IntPtr class_ptr = Class.GetHandle (\"{0}\");\n", objc_type_name);
 				}
 			}
@@ -6226,7 +6226,7 @@ public partial class Generator : IMemberGatherer {
 
 					// Value types we dont cache for now, to avoid Nullable<T>
 					if (!field_pi.PropertyType.IsValueType || smartEnumTypeName != null) {
-						print ("[CompilerGenerated]");
+						print_generated_code ();
 						PrintPreserveAttribute (field_pi);
 						print ("static {0} _{1};", fieldTypeName, field_pi.Name);
 					}
@@ -6753,7 +6753,7 @@ public partial class Generator : IMemberGatherer {
 			if (!is_static_class){
 				var disposeAttr = AttributeManager.GetCustomAttributes<DisposeAttribute> (type);
 				if (disposeAttr.Length > 0 || instance_fields_to_clear_on_dispose.Count > 0){
-					print ("[CompilerGenerated]");
+					print_generated_code ();
 					print ("protected override void Dispose (bool disposing)");
 					print ("{");
 					indent++;

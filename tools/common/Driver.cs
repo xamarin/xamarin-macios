@@ -166,6 +166,8 @@ namespace Xamarin.Bundler {
 			get { return verbose; }
 		}
 
+		public const bool IsXAMCORE_4_0 = false;
+
 #if MONOMAC
 #pragma warning disable 0414
 		static string userTargetFramework = TargetFramework.Default.ToString ();

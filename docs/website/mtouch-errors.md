@@ -1296,6 +1296,10 @@ Mixed-mode assemblies can not be processed by the linker.
 
 See https://msdn.microsoft.com/en-us/library/x0w2664k.aspx for more information on mixed-mode assemblies.
 
+### <a name="MT2105"/>MT2105: The [BindingImpl] attribute on the member * is invalid: *
+
+The `[BindingImpl]` attribute on the mentioned member is invalid. The expected format is `[BindingImpl (BindingImplOptions.ValueA | BindingImplOptions.ValueB)]`.
+
 # MT3xxx: AOT error messages
 
 <!--

@@ -341,6 +341,9 @@
     <Compile Include="..\..\src\ObjCRuntime\PlatformAvailability2.cs">
       <Link>external\PlatformAvailability2.cs</Link>
     </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\BindingImplAttribute.cs">
+      <Link>external\BindingImplAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\common\PInvokeWrapperGenerator.cs">
       <Link>external\PInvokeWrapperGenerator.cs</Link>
     </Compile>
