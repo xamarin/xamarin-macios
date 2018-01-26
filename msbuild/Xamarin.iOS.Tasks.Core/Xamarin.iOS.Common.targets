@@ -1747,11 +1747,13 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	</Target>
 
 	<!-- Note: Always codesign *.dylibs even for Simulator builds. We use $(_CanOutputAppBundle) because dylibs can exist in app extensions as well. -->
-	<Target Name="_CodesignNativeLibraries" Condition="'$(_CanOutputAppBundle)' == 'true' And '$(_CodeSigningKey)' != ''" DependsOnTargets="_DetectSigningIdentity;_CompileToNative">
+	<Target Name="_CodesignNativeLibraries" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_DetectSigningIdentity;_CompileToNative">
 
 		<PropertyGroup>
 			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
 			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(MtouchDebug)' == 'true'">True</_CodesignDisableTimestamp>
+			<_LibraryCodeSigningKey>$(_CodeSigningKey)</_LibraryCodeSigningKey>
+			<_LibraryCodeSigningKey Condition="'$(_LibraryCodeSigningKey)' == ''">-</_LibraryCodeSigningKey>
 		</PropertyGroup>
 
 		<CodesignNativeLibraries
@@ -1764,18 +1766,20 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			CodesignAllocate="$(_CodesignAllocate)"
 			DisableTimestamp="$(_CodesignDisableTimestamp)"
 			Keychain="$(CodesignKeychain)"
-			SigningKey="$(_CodeSigningKey)"
+			SigningKey="$(_LibraryCodeSigningKey)"
 			ExtraArgs="$(CodesignExtraArgs)"
 			>
 		</CodesignNativeLibraries>
 	</Target>
 
-	<Target Name="_CodesignFrameworks" Condition="'$(_CanOutputAppBundle)' == 'true' And '$(_CodeSigningKey)' != '' And '@(_Frameworks)' != ''" DependsOnTargets="_DetectSigningIdentity;_CollectFrameworks"
+	<Target Name="_CodesignFrameworks" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_Frameworks)' != ''" DependsOnTargets="_DetectSigningIdentity;_CollectFrameworks"
 		Inputs="%(_Frameworks.Identity)" Outputs="$(DeviceSpecificIntermediateOutputPath)codesign\%(_Frameworks.Filename)%(_Frameworks.Extension)">
 
 		<PropertyGroup>
 			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
 			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(MtouchDebug)' == 'true'">True</_CodesignDisableTimestamp>
+			<_FrameworkCodeSigningKey>$(_CodeSigningKey)</_FrameworkCodeSigningKey>
+			<_FrameworkCodeSigningKey Condition="'$(_FrameworkCodeSigningKey)' == ''">-</_FrameworkCodeSigningKey>
 		</PropertyGroup>
 
 		<Codesign
@@ -1787,7 +1791,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			DisableTimestamp="$(_CodesignDisableTimestamp)"
 			Keychain="$(CodesignKeychain)"
 			Resources="@(_Frameworks)"
-			SigningKey="$(_CodeSigningKey)"
+			SigningKey="$(_FrameworkCodeSigningKey)"
 			ExtraArgs="$(CodesignExtraArgs)"
 			>
 		</Codesign>
@@ -1810,14 +1814,14 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</ReadItemsFromFile>
 	</Target>
 
-	<Target Name="_CodesignAppExtensions" Condition="('$(_CanOutputAppBundle)' == 'true' And '$(_CodeSigningKey)' != '') And '@(_AppExtensionCodesignProperties)' != ''"
+	<Target Name="_CodesignAppExtensions" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_AppExtensionCodesignProperties)' != ''"
 		DependsOnTargets="_DetectSigningIdentity;_ReadAppExtensionCodesignProperties"
 		Inputs="$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)\%(_AppExtensionCodesignProperties.NativeExecutable);%(_AppExtensionCodesignProperties.CodesignAppExtensionInputs)"
 		Outputs="$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)\_CodeSignature\CodeResources">
 
 		<CodesignNativeLibraries
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
+			Condition="'$(IsMacEnabled)' == 'true' And '%(_AppExtensionCodesignProperties.LibrarySigningKey)' != ''"
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
 			AppBundleDir="$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)"
@@ -1825,14 +1829,14 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			CodesignAllocate="%(_AppExtensionCodesignProperties.CodesignAllocate)"
 			DisableTimestamp="%(_AppExtensionCodesignProperties.DisableTimestamp)"
 			Keychain="%(_AppExtensionCodesignProperties.Keychain)"
-			SigningKey="%(_AppExtensionCodesignProperties.SigningKey)"
+			SigningKey="%(_AppExtensionCodesignProperties.LibrarySigningKey)"
 			ExtraArgs="%(_AppExtensionCodesignProperties.ExtraArgs)"
 			>
 		</CodesignNativeLibraries>
 
 		<Codesign
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
+			Condition="'$(IsMacEnabled)' == 'true' And '%(_AppExtensionCodesignProperties.SigningKey)' != ''"
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
 			CodesignAllocate="%(_AppExtensionCodesignProperties.CodesignAllocate)"
@@ -1848,12 +1852,12 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<Touch
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And ('$(_CanOutputAppBundle)' == 'true' And '$(_CodeSigningKey)' != '') And Exists ('$(AppBundleDir)\..\%(_AppExtensionCodesignProperties.Identity).dSYM\Contents\Info.plist')"
+			Condition="'$(IsMacEnabled)' == 'true' And ('$(_CanOutputAppBundle)' == 'true' And '%(_AppExtensionCodesignProperties.SigningKey)' != '') And Exists ('$(AppBundleDir)\..\%(_AppExtensionCodesignProperties.Identity).dSYM\Contents\Info.plist')"
 			Files="$(AppBundleDir)\..\%(_AppExtensionCodesignProperties.Identity).dSYM\Contents\Info.plist"
 		/>
 	</Target>
 
-	<Target Name="_PrepareCodesignAppExtension" Condition="('$(_CanOutputAppBundle)' == 'true' And '$(_CodeSigningKey)' != '') And '$(IsAppExtension)' == 'true' And '@(_ResolvedAppBundleExtensions)' == ''">
+	<Target Name="_PrepareCodesignAppExtension" Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppExtension)' == 'true' And '@(_ResolvedAppBundleExtensions)' == ''">
 		<!-- For App Extensions, we delay running codesign until it has been copied into the main app bundle... -->
 		<PropertyGroup>
 			<_CompiledEntitlementsFullPath></_CompiledEntitlementsFullPath>
@@ -1885,6 +1889,9 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(MtouchDebug)' == 'true'">True</_CodesignDisableTimestamp>
 
 			<_CodesignAppExtensionInputs>@(_AppExtensionBundleFiles);$(_EntitlementsFullPath)</_CodesignAppExtensionInputs>
+
+			<_LibrarySigningKey>$(_CodeSigningKey)</_LibrarySigningKey>
+			<_LibrarySigningKey Condition="'$(_LibrarySigningKey)' == ''">-</_LibrarySigningKey>
 		</PropertyGroup>
 
 		<ItemGroup>
@@ -1898,6 +1905,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 				<Entitlements>$(_CompiledEntitlementsFullPath)</Entitlements>
 				<ResourceRules>$(_ResourceRulesFullPath)</ResourceRules>
 				<Keychain>$(CodesignKeychain)</Keychain>
+				<LibrarySigningKey>$(_LibrarySigningKey)</LibrarySigningKey>
 				<SigningKey>$(_CodeSigningKey)</SigningKey>
 				<ExtraArgs>$(CodesignExtraArgs)</ExtraArgs>
 			</_AppExtensionCodesignProperties>
