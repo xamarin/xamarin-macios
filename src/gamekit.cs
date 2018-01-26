@@ -2365,6 +2365,32 @@ namespace XamCore.GameKit {
 		[Static]
 		[Export ("removeEventListener:")]
 		void RemoveEventListener (IGKGameSessionEventListener listener);
+
+		// From GKGameSession (GKGameSessionEventListenerPrivate)
+
+		[Static]
+		[Export ("postSession:didAddPlayer:")]
+		void DidAddPlayer (GKGameSession session, GKCloudPlayer player);
+
+		[Static]
+		[Export ("postSession:didRemovePlayer:")]
+		void DidRemovePlayer (GKGameSession session, GKCloudPlayer player);
+
+		[Static]
+		[Export ("postSession:player:didChangeConnectionState:")]
+		void DidChangeConnectionState (GKGameSession session, GKCloudPlayer player, GKConnectionState newState);
+
+		[Static]
+		[Export ("postSession:player:didSaveData:")]
+		void DidSaveData (GKGameSession session, GKCloudPlayer player, NSData data);
+
+		[Static]
+		[Export ("postSession:didReceiveData:fromPlayer:")]
+		void DidReceiveData (GKGameSession session, NSData data, GKCloudPlayer player);
+
+		[Static]
+		[Export ("postSession:didReceiveMessage:withData:fromPlayer:")]
+		void DidReceiveMessage (GKGameSession session, string message, NSData data, GKCloudPlayer player);
 	}
 
 	interface IGKGameSessionEventListener {}

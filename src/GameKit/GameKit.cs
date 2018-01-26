@@ -286,4 +286,11 @@ namespace XamCore.GameKit {
 		UnableToConnect = 4,
 		NoAnswer = 5,
 	}
+
+	[Native]
+	public enum GKAuthenticationType : nuint {
+		WithoutUI = 0,
+		GreenBuddyUI = 1,
+		AuthKitInvocation = 2,
+	}
 }

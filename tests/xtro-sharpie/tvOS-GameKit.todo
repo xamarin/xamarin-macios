@@ -1,7 +1,0 @@
-!missing-enum! GKAuthenticationType not bound
-!missing-selector! +GKGameSession::postSession:didAddPlayer: not bound
-!missing-selector! +GKGameSession::postSession:didReceiveData:fromPlayer: not bound
-!missing-selector! +GKGameSession::postSession:didReceiveMessage:withData:fromPlayer: not bound
-!missing-selector! +GKGameSession::postSession:didRemovePlayer: not bound
-!missing-selector! +GKGameSession::postSession:player:didChangeConnectionState: not bound
-!missing-selector! +GKGameSession::postSession:player:didSaveData: not bound
