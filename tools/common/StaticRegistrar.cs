@@ -2529,6 +2529,14 @@ namespace XamCore.Registrar {
 				if (@class.Methods == null && isPlatformType && !@class.IsProtocol && !@class.IsCategory)
 					continue;
 
+#if MMP
+				switch (@class.ExportedName) {
+				case "AVCaptureDataOutputSynchronizer":
+				case "AVCaptureDataOutputSynchronizerDelegate":
+					continue; // We've accidentally added bindings for these two classes which are not available in macOS.
+				}
+#endif
+
 				CheckNamespace (@class, exceptions);
 				if (@class.BaseType != null)
 					CheckNamespace (@class.BaseType, exceptions);
