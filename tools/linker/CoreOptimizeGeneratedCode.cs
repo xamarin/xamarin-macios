@@ -75,13 +75,15 @@ namespace Xamarin.Linker {
 			// if the assembly does not refer to [CompilerGeneratedAttribute] then there's not much we can do
 			HasOptimizableCode = false;
 			foreach (TypeReference tr in assembly.MainModule.GetTypeReferences ()) {
-				if (tr.Is ("System.Runtime.CompilerServices", "CompilerGeneratedAttribute")) {
+				if (tr.Is (Namespaces.ObjCRuntime, "BindingImplAttribute")) {
+					HasOptimizableCode = true;
+					break;
+				}
+
+				if (!Driver.IsXAMCORE_4_0 && tr.Is ("System.Runtime.CompilerServices", "CompilerGeneratedAttribute")) {
 #if DEBUG
 					Console.WriteLine ("Assembly {0} : processing", assembly);
 #endif
-					HasOptimizableCode = true;
-					break;
-				} else if (tr.Is (Namespaces.ObjCRuntime, "BindingImplAttribute")) {
 					HasOptimizableCode = true;
 					break;
 				}
@@ -540,10 +542,10 @@ namespace Xamarin.Linker {
 			if (!method.HasBody)
 				return;
 
-			if (method.IsGeneratedCode (LinkContext) && (IsExtensionType || IsExport (method))) {
-				// We optimize methods that have the [GeneratedCodeAttribute] and is either an extension type or an exported method
-			} else if (method.IsBindingImplOptimizableCode (LinkContext)) {
+			if (method.IsBindingImplOptimizableCode (LinkContext)) {
 				// We optimize all methods that have the [BindingImpl (BindingImplAttributes.Optimizable)] attribute.
+			} else if (!Driver.IsXAMCORE_4_0 && (method.IsGeneratedCode (LinkContext) && (IsExtensionType || IsExport (method)))) {
+				// We optimize methods that have the [GeneratedCodeAttribute] and is either an extension type or an exported method
 			} else {
 				// but it would be too risky to apply on user-generated code
 				return;

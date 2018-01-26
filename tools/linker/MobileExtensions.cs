@@ -129,7 +129,13 @@ namespace Xamarin.Linker {
 
 		public static bool IsOptimizableCode (this MethodDefinition self, DerivedLinkContext link_context)
 		{
-			return IsGeneratedCode (self, link_context) || IsBindingImplOptimizableCode (self, link_context);
+			if (IsBindingImplOptimizableCode (self, link_context))
+				return true;
+
+			if (!Driver.IsXAMCORE_4_0 && IsGeneratedCode (self, link_context))
+				return true;
+
+			return false;
 		}
 	}
 }
