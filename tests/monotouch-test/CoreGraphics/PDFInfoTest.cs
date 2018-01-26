@@ -11,6 +11,7 @@ using System;
 using System.Drawing;
 #if XAMCORE_2_0
 using Foundation;
+using ObjCRuntime;
 #if MONOMAC
 using AppKit;
 #else
@@ -20,6 +21,7 @@ using CoreGraphics;
 #else
 using MonoTouch.CoreGraphics;
 using MonoTouch.Foundation;
+using MonoTouch.ObjCRuntime;
 using MonoTouch.UIKit;
 #endif
 
@@ -59,9 +61,10 @@ namespace MonoTouchFixtures.CoreGraphics {
 
 #if !MONOMAC // Not on mac
 		[Test]
-		[Ignore ("Fails with Xcode 9.3 beta 1 on devices")]
 		public void ToDictionary ()
 		{
+			if (TestRuntime.CheckXcodeVersion (9,3))
+				Assert.Ignore ("Crash (at least on devices) with iOS 11.3 beta 1");
 			// Bug #8879
 			var info = GetInfo ();
 			UIGraphics.BeginPDFContext("file", RectangleF.Empty, info); 
