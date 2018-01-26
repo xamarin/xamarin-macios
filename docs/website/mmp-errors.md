@@ -118,6 +118,14 @@ This warning won't affect the application being built, however you might not be 
 
 Please report this issue to the publisher of the assembly package (e.g. nuget author) so this can be fixed in their future releases.
 
+### <a name="MM0130"/>MM0130: No root assemblies found. You should provide at least one root assembly.
+
+When running --runregistrar, at least one root assembly should be provided.
+
+### <a name="MM0131"/>MM0131: Product assembly '{0}' not found in assembly list: '{1}'
+
+When running --runregistrar, the assembly list should include the product assembly, Xamarin.Mac, XamMac.
+
 ### <a name="MM0132/>MM0132: Unknown optimization: *. Valid values are: *
 
 The specified optimization was not recognized.
@@ -125,6 +133,9 @@ The specified optimization was not recognized.
 The accepted format is `[+|-]optimization-name`, where `optimization-name` is one of the values listed in the error message.
 
 See [Build optimizations](https://developer.xamarin.com/guides/cross-platform/macios/build-optimizations) for a complete description of each optimization.
+
+### <a name="MM0133"/>MM0133: Found more than 1 assembly matching '{0}' choosing first: '{1}'
+
 
 # MM1xxx: file copy / symlinks (project related)
 

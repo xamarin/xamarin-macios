@@ -639,6 +639,13 @@ This warning won't affect the application being built, however you might not be 
 
 Please report this issue to the publisher of the assembly package (e.g. nuget author) so this can be fixed in their future releases.
 
+### <a name="MT0130"/>MT0130: No root assemblies found. You should provide at least one root assembly.
+When running --runregistrar, at least one root assembly should be provided.
+
+### <a name="MT0131"/>MT0131: Product assembly '{0}' not found in assembly list: '{1}'
+
+When running --runregistrar, the assembly list should include the product assembly, Xamarin.iOS, Xamarin.WatchOS, Xamarin.TVOS.
+
 ### <a name="MT0132/>MT0132: Unknown optimization: *. Valid values are: *
 
 The specified optimization was not recognized.
@@ -646,6 +653,10 @@ The specified optimization was not recognized.
 The accepted format is `[+|-]optimization-name`, where `optimization-name` is one of the values listed in the error message.
 
 See [Build optimizations](https://developer.xamarin.com/guides/cross-platform/macios/build-optimization/) for a complete description of each optimization.
+
+### <a name="MT0133"/>MT0133: Found more than 1 assembly matching '{0}' choosing first: '{1}'
+
+When using --recursive-directories, only 1 assembly should match
 
 # MT1xxx: Project related error messages
 
