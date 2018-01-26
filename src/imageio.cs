@@ -901,6 +901,734 @@ namespace XamCore.ImageIO {
 		[Mac (10, 13), iOS (11,0), TV (11,0), Watch (4,0)]
 		[Field ("kCGImagePropertyFileContentsDictionary")]
 		NSString FileContentsDictionary { get; }
+		
+		[Mac (10, 9)][iOS (11,0)]
+		[Field ("kCGImagePropertyOpenEXRDictionary")]
+		NSString OpenEXRDictionary { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtAboutCvTerm")]
+		NSString IPTCExtAboutCvTerm { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtAboutCvTermCvId")]
+		NSString IPTCExtAboutCvTermCvId { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtAboutCvTermId")]
+		NSString IPTCExtAboutCvTermId { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtAboutCvTermName")]
+		NSString IPTCExtAboutCvTermName { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtAboutCvTermRefinedAbout")]
+		NSString IPTCExtAboutCvTermRefinedAbout { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtAddlModelInfo")]
+		NSString IPTCExtAddlModelInfo { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtArtworkOrObject")]
+		NSString IPTCExtArtworkOrObject { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtArtworkCircaDateCreated")]
+		NSString IPTCExtArtworkCircaDateCreated { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtArtworkContentDescription")]
+		NSString IPTCExtArtworkContentDescription { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtArtworkContributionDescription")]
+		NSString IPTCExtArtworkContributionDescription { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtArtworkCopyrightNotice")]
+		NSString IPTCExtArtworkCopyrightNotice { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtArtworkCreator")]
+		NSString IPTCExtArtworkCreator { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtArtworkCreatorID")]
+		NSString IPTCExtArtworkCreatorID { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtArtworkCopyrightOwnerID")]
+		NSString IPTCExtArtworkCopyrightOwnerID { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtArtworkCopyrightOwnerName")]
+		NSString IPTCExtArtworkCopyrightOwnerName { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtArtworkLicensorID")]
+		NSString IPTCExtArtworkLicensorID { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtArtworkLicensorName")]
+		NSString IPTCExtArtworkLicensorName { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtArtworkDateCreated")]
+		NSString IPTCExtArtworkDateCreated { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtArtworkPhysicalDescription")]
+		NSString IPTCExtArtworkPhysicalDescription { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtArtworkSource")]
+		NSString IPTCExtArtworkSource { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtArtworkSourceInventoryNo")]
+		NSString IPTCExtArtworkSourceInventoryNo { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtArtworkSourceInvURL")]
+		NSString IPTCExtArtworkSourceInvURL { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtArtworkStylePeriod")]
+		NSString IPTCExtArtworkStylePeriod { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtArtworkTitle")]
+		NSString IPTCExtArtworkTitle { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtAudioBitrate")]
+		NSString IPTCExtAudioBitrate { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtAudioBitrateMode")]
+		NSString IPTCExtAudioBitrateMode { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtAudioChannelCount")]
+		NSString IPTCExtAudioChannelCount { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtCircaDateCreated")]
+		NSString IPTCExtCircaDateCreated { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtContainerFormat")]
+		NSString IPTCExtContainerFormat { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtContainerFormatIdentifier")]
+		NSString IPTCExtContainerFormatIdentifier { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtContainerFormatName")]
+		NSString IPTCExtContainerFormatName { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtContributor")]
+		NSString IPTCExtContributor { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtContributorIdentifier")]
+		NSString IPTCExtContributorIdentifier { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtContributorName")]
+		NSString IPTCExtContributorName { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtContributorRole")]
+		NSString IPTCExtContributorRole { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtCopyrightYear")]
+		NSString IPTCExtCopyrightYear { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtCreator")]
+		NSString IPTCExtCreator { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtCreatorIdentifier")]
+		NSString IPTCExtCreatorIdentifier { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtCreatorName")]
+		NSString IPTCExtCreatorName { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtCreatorRole")]
+		NSString IPTCExtCreatorRole { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtControlledVocabularyTerm")]
+		NSString IPTCExtControlledVocabularyTerm { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtDataOnScreen")]
+		NSString IPTCExtDataOnScreen { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtDataOnScreenRegion")]
+		NSString IPTCExtDataOnScreenRegion { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtDataOnScreenRegionD")]
+		NSString IPTCExtDataOnScreenRegionD { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtDataOnScreenRegionH")]
+		NSString IPTCExtDataOnScreenRegionH { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtDataOnScreenRegionText")]
+		NSString IPTCExtDataOnScreenRegionText { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtDataOnScreenRegionUnit")]
+		NSString IPTCExtDataOnScreenRegionUnit { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtDataOnScreenRegionW")]
+		NSString IPTCExtDataOnScreenRegionW { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtDataOnScreenRegionX")]
+		NSString IPTCExtDataOnScreenRegionX { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtDataOnScreenRegionY")]
+		NSString IPTCExtDataOnScreenRegionY { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtDigitalImageGUID")]
+		NSString IPTCExtDigitalImageGUID { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtDigitalSourceFileType")]
+		NSString IPTCExtDigitalSourceFileType { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtDigitalSourceType")]
+		NSString IPTCExtDigitalSourceType { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtDopesheet")]
+		NSString IPTCExtDopesheet { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtDopesheetLink")]
+		NSString IPTCExtDopesheetLink { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtDopesheetLinkLink")]
+		NSString IPTCExtDopesheetLinkLink { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtDopesheetLinkLinkQualifier")]
+		NSString IPTCExtDopesheetLinkLinkQualifier { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtEmbdEncRightsExpr")]
+		NSString IPTCExtEmbdEncRightsExpr { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtEmbeddedEncodedRightsExpr")]
+		NSString IPTCExtEmbeddedEncodedRightsExpr { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtEmbeddedEncodedRightsExprType")]
+		NSString IPTCExtEmbeddedEncodedRightsExprType { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtEmbeddedEncodedRightsExprLangID")]
+		NSString IPTCExtEmbeddedEncodedRightsExprLangID { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtEpisode")]
+		NSString IPTCExtEpisode { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtEpisodeIdentifier")]
+		NSString IPTCExtEpisodeIdentifier { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtEpisodeName")]
+		NSString IPTCExtEpisodeName { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtEpisodeNumber")]
+		NSString IPTCExtEpisodeNumber { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtEvent")]
+		NSString IPTCExtEvent { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtShownEvent")]
+		NSString IPTCExtShownEvent { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtShownEventIdentifier")]
+		NSString IPTCExtShownEventIdentifier { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtShownEventName")]
+		NSString IPTCExtShownEventName { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtExternalMetadataLink")]
+		NSString IPTCExtExternalMetadataLink { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtFeedIdentifier")]
+		NSString IPTCExtFeedIdentifier { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtGenre")]
+		NSString IPTCExtGenre { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtGenreCvId")]
+		NSString IPTCExtGenreCvId { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtGenreCvTermId")]
+		NSString IPTCExtGenreCvTermId { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtGenreCvTermName")]
+		NSString IPTCExtGenreCvTermName { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtGenreCvTermRefinedAbout")]
+		NSString IPTCExtGenreCvTermRefinedAbout { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtHeadline")]
+		NSString IPTCExtHeadline { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtIPTCLastEdited")]
+		NSString IPTCExtIPTCLastEdited { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtLinkedEncRightsExpr")]
+		NSString IPTCExtLinkedEncRightsExpr { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtLinkedEncodedRightsExpr")]
+		NSString IPTCExtLinkedEncodedRightsExpr { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtLinkedEncodedRightsExprType")]
+		NSString IPTCExtLinkedEncodedRightsExprType { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtLinkedEncodedRightsExprLangID")]
+		NSString IPTCExtLinkedEncodedRightsExprLangID { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtLocationCreated")]
+		NSString IPTCExtLocationCreated { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtLocationCity")]
+		NSString IPTCExtLocationCity { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtLocationCountryCode")]
+		NSString IPTCExtLocationCountryCode { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtLocationCountryName")]
+		NSString IPTCExtLocationCountryName { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtLocationGPSAltitude")]
+		NSString IPTCExtLocationGPSAltitude { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtLocationGPSLatitude")]
+		NSString IPTCExtLocationGPSLatitude { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtLocationGPSLongitude")]
+		NSString IPTCExtLocationGPSLongitude { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtLocationIdentifier")]
+		NSString IPTCExtLocationIdentifier { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtLocationLocationId")]
+		NSString IPTCExtLocationLocationId { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtLocationLocationName")]
+		NSString IPTCExtLocationLocationName { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtLocationProvinceState")]
+		NSString IPTCExtLocationProvinceState { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtLocationSublocation")]
+		NSString IPTCExtLocationSublocation { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtLocationWorldRegion")]
+		NSString IPTCExtLocationWorldRegion { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtLocationShown")]
+		NSString IPTCExtLocationShown { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtMaxAvailHeight")]
+		NSString IPTCExtMaxAvailHeight { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtMaxAvailWidth")]
+		NSString IPTCExtMaxAvailWidth { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtModelAge")]
+		NSString IPTCExtModelAge { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtOrganisationInImageCode")]
+		NSString IPTCExtOrganisationInImageCode { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtOrganisationInImageName")]
+		NSString IPTCExtOrganisationInImageName { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtPersonHeard")]
+		NSString IPTCExtPersonHeard { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtPersonHeardIdentifier")]
+		NSString IPTCExtPersonHeardIdentifier { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtPersonHeardName")]
+		NSString IPTCExtPersonHeardName { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtPersonInImage")]
+		NSString IPTCExtPersonInImage { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtPersonInImageWDetails")]
+		NSString IPTCExtPersonInImageWDetails { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtPersonInImageCharacteristic")]
+		NSString IPTCExtPersonInImageCharacteristic { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtPersonInImageCvTermCvId")]
+		NSString IPTCExtPersonInImageCvTermCvId { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtPersonInImageCvTermId")]
+		NSString IPTCExtPersonInImageCvTermId { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtPersonInImageCvTermName")]
+		NSString IPTCExtPersonInImageCvTermName { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtPersonInImageCvTermRefinedAbout")]
+		NSString IPTCExtPersonInImageCvTermRefinedAbout { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtPersonInImageDescription")]
+		NSString IPTCExtPersonInImageDescription { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtPersonInImageId")]
+		NSString IPTCExtPersonInImageId { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtPersonInImageName")]
+		NSString IPTCExtPersonInImageName { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtProductInImage")]
+		NSString IPTCExtProductInImage { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtProductInImageDescription")]
+		NSString IPTCExtProductInImageDescription { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtProductInImageGTIN")]
+		NSString IPTCExtProductInImageGTIN { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtProductInImageName")]
+		NSString IPTCExtProductInImageName { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtPublicationEvent")]
+		NSString IPTCExtPublicationEvent { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtPublicationEventDate")]
+		NSString IPTCExtPublicationEventDate { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtPublicationEventIdentifier")]
+		NSString IPTCExtPublicationEventIdentifier { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtPublicationEventName")]
+		NSString IPTCExtPublicationEventName { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtRating")]
+		NSString IPTCExtRating { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtRatingRatingRegion")]
+		NSString IPTCExtRatingRatingRegion { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtRatingRegionCity")]
+		NSString IPTCExtRatingRegionCity { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtRatingRegionCountryCode")]
+		NSString IPTCExtRatingRegionCountryCode { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtRatingRegionCountryName")]
+		NSString IPTCExtRatingRegionCountryName { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtRatingRegionGPSAltitude")]
+		NSString IPTCExtRatingRegionGPSAltitude { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtRatingRegionGPSLatitude")]
+		NSString IPTCExtRatingRegionGPSLatitude { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtRatingRegionGPSLongitude")]
+		NSString IPTCExtRatingRegionGPSLongitude { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtRatingRegionIdentifier")]
+		NSString IPTCExtRatingRegionIdentifier { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtRatingRegionLocationId")]
+		NSString IPTCExtRatingRegionLocationId { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtRatingRegionLocationName")]
+		NSString IPTCExtRatingRegionLocationName { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtRatingRegionProvinceState")]
+		NSString IPTCExtRatingRegionProvinceState { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtRatingRegionSublocation")]
+		NSString IPTCExtRatingRegionSublocation { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtRatingRegionWorldRegion")]
+		NSString IPTCExtRatingRegionWorldRegion { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtRatingScaleMaxValue")]
+		NSString IPTCExtRatingScaleMaxValue { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtRatingScaleMinValue")]
+		NSString IPTCExtRatingScaleMinValue { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtRatingSourceLink")]
+		NSString IPTCExtRatingSourceLink { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtRatingValue")]
+		NSString IPTCExtRatingValue { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtRatingValueLogoLink")]
+		NSString IPTCExtRatingValueLogoLink { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtRegistryID")]
+		NSString IPTCExtRegistryID { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtRegistryEntryRole")]
+		NSString IPTCExtRegistryEntryRole { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtRegistryItemID")]
+		NSString IPTCExtRegistryItemID { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtRegistryOrganisationID")]
+		NSString IPTCExtRegistryOrganisationID { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtReleaseReady")]
+		NSString IPTCExtReleaseReady { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtSeason")]
+		NSString IPTCExtSeason { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtSeasonIdentifier")]
+		NSString IPTCExtSeasonIdentifier { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtSeasonName")]
+		NSString IPTCExtSeasonName { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtSeasonNumber")]
+		NSString IPTCExtSeasonNumber { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtSeries")]
+		NSString IPTCExtSeries { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtSeriesIdentifier")]
+		NSString IPTCExtSeriesIdentifier { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtSeriesName")]
+		NSString IPTCExtSeriesName { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtStorylineIdentifier")]
+		NSString IPTCExtStorylineIdentifier { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtStreamReady")]
+		NSString IPTCExtStreamReady { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtStylePeriod")]
+		NSString IPTCExtStylePeriod { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtSupplyChainSource")]
+		NSString IPTCExtSupplyChainSource { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtSupplyChainSourceIdentifier")]
+		NSString IPTCExtSupplyChainSourceIdentifier { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtSupplyChainSourceName")]
+		NSString IPTCExtSupplyChainSourceName { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtTemporalCoverage")]
+		NSString IPTCExtTemporalCoverage { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtTemporalCoverageFrom")]
+		NSString IPTCExtTemporalCoverageFrom { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtTemporalCoverageTo")]
+		NSString IPTCExtTemporalCoverageTo { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtTranscript")]
+		NSString IPTCExtTranscript { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtTranscriptLink")]
+		NSString IPTCExtTranscriptLink { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtTranscriptLinkLink")]
+		NSString IPTCExtTranscriptLinkLink { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtTranscriptLinkLinkQualifier")]
+		NSString IPTCExtTranscriptLinkLinkQualifier { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtVideoBitrate")]
+		NSString IPTCExtVideoBitrate { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtVideoBitrateMode")]
+		NSString IPTCExtVideoBitrateMode { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtVideoDisplayAspectRatio")]
+		NSString IPTCExtVideoDisplayAspectRatio { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtVideoEncodingProfile")]
+		NSString IPTCExtVideoEncodingProfile { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtVideoShotType")]
+		NSString IPTCExtVideoShotType { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtVideoShotTypeIdentifier")]
+		NSString IPTCExtVideoShotTypeIdentifier { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtVideoShotTypeName")]
+		NSString IPTCExtVideoShotTypeName { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtVideoStreamsCount")]
+		NSString IPTCExtVideoStreamsCount { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtVisualColor")]
+		NSString IPTCExtVisualColor { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtWorkflowTag")]
+		NSString IPTCExtWorkflowTag { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtWorkflowTagCvId")]
+		NSString IPTCExtWorkflowTagCvId { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtWorkflowTagCvTermId")]
+		NSString IPTCExtWorkflowTagCvTermId { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtWorkflowTagCvTermName")]
+		NSString IPTCExtWorkflowTagCvTermName { get; }
+
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImagePropertyIPTCExtWorkflowTagCvTermRefinedAbout")]
+		NSString IPTCExtWorkflowTagCvTermRefinedAbout { get; }
+
+		[Mac (10, 9)][iOS (11, 3)]
+		[Field ("kCGImagePropertyOpenEXRAspectRatio")]
+		NSString OpenEXRAspectRatio { get; }
 	}
 
 	[Since (7,0), MountainLion]
@@ -924,6 +1652,9 @@ namespace XamCore.ImageIO {
 		NSString XMPBasic { get; }
 		[Field ("kCGImageMetadataNamespaceXMPRights")]
 		NSString XMPRights { get; }
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImageMetadataNamespaceIPTCExtension")]
+		NSString IPTCExtension { get; }
 	}
 
 	[Since (7,0), MountainLion]
@@ -947,6 +1678,9 @@ namespace XamCore.ImageIO {
 		NSString XMPBasic { get; }
 		[Field ("kCGImageMetadataPrefixXMPRights")]
 		NSString XMPRights { get; }
+		[Mac (10, 13, 4)][iOS (11, 3)]
+		[Field ("kCGImageMetadataPrefixIPTCExtension")]
+		NSString IPTCExtension { get; }
 	}
 
 	[Since (7,0), MountainLion]
