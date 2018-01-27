@@ -1263,7 +1263,6 @@
 !missing-pinvoke! SecCodeCopyStaticCode is not bound
 !missing-pinvoke! SecCodeGetTypeID is not bound
 !missing-pinvoke! SecCodeMapMemory is not bound
-!missing-pinvoke! SecCopyErrorMessageString is not bound
 !missing-pinvoke! SecDecodeTransformCreate is not bound
 !missing-pinvoke! SecDecryptTransformCreate is not bound
 !missing-pinvoke! SecDecryptTransformGetTypeID is not bound
