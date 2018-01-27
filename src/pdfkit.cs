@@ -528,7 +528,7 @@ namespace XamCore.PdfKit {
 		[Export ("initWithURL:")]
 		IntPtr Constructor (NSUrl url);
 
-		[Export ("URL")]
+		[Export ("URL"), NullAllowed]
 		NSUrl Url { get; set; }
 	}
 
