@@ -95,7 +95,7 @@ namespace XamCore.Security {
 		SSLMissingExtension                     = -9861,
 		SSLBadCertificateStatusResponse         = -9862,
 		SSLCertificateRequired                  = -9863,
-		SSLUnknownPSKIdentity                   = -9864,
+		SSLUnknownPskIdentity                   = -9864,
 		SSLUnrecognizedName                     = -9865,
 	}
 

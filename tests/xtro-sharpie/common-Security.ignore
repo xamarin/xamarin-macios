@@ -15,6 +15,3 @@
 
 ## untyped enum in Security.framework/Headers/SecPolicy.h but the API use CFOptionFlags
 !unknown-native-enum! SecRevocation bound
-
-## Not bound before, my take is that enums are more descriptive
-!missing-pinvoke! SecCopyErrorMessageString is not bound

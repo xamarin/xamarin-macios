@@ -1264,6 +1264,7 @@ SECURITY_SOURCES = \
 	Security/SecIdentity.cs \
 	Security/SecPolicy.cs \
 	Security/SecSharedCredential.cs \
+	Security/SecStatusCodeExtensions.cs \
 	Security/SecTrust.cs \
 	Security/SslConnection.cs \
 	Security/SslContext.cs \
