@@ -367,6 +367,7 @@ namespace Introspection
 			"Propogate",
 			"Psec",
 			"Psm", // Protocol/Service Multiplexer
+			"Psk",
 			"Pvrtc", // MTLBlitOption - PowerVR Texture Compression
 			"Quaterniond",
 			"Quadding",
