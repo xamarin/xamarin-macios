@@ -247,7 +247,7 @@ namespace XamCore.SafariServices {
 		[Export ("messageReceivedFromContainingAppWithName:userInfo:")]
 		void MessageReceivedFromContainingApp (string messageName, [NullAllowed] NSDictionary<NSString, NSObject> userInfo);
 
-		[Mac (10,13,4)]
+		[Mac (10,13,4, onlyOn64: true)]
 		[Export ("additionalRequestHeadersForURL:completionHandler:")]
 		void AdditionalRequestHeaders (NSUrl url, Action<NSDictionary<NSString, NSString>> completionHandler);
 	}
