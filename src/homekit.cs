@@ -603,8 +603,9 @@ namespace XamCore.HomeKit {
 		void AddAndSetupAccessories (Action<NSError> completion);
 
 		[NoWatch, NoTV, iOS (11,3)]
+		[Async]
 		[Export ("addAndSetupAccessoriesWithPayload:completionHandler:")]
-		void AddAndSetupAccessories (HMAccessorySetupPayload payload, Action<NSArray, NSError> completion);
+		void AddAndSetupAccessories (HMAccessorySetupPayload payload, Action<HMAccessory[], NSError> completion);
 
 		// HMHome(HMRoom)
 
