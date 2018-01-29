@@ -543,6 +543,14 @@ namespace XamCore.Security {
 		[iOS (11,0), Mac (10,13), TV (11,0), Watch (4,0)]
 		[Field ("kSecAttrPersistentReference")]
 		IntPtr PersistentReference { get; }
+
+		[iOS (2,0), Mac (10,8), TV (9,0), Watch (2,0)]
+		[Field ("kSecPrivateKeyAttrs")]
+		IntPtr PrivateKeyAttributes { get; }
+
+		[iOS (2,0), Mac (10,8), TV (9,0), Watch (2,0)]
+		[Field ("kSecPublicKeyAttrs")]
+		IntPtr PublicKeyAttributes { get; }
 	}
 
 	[Static][Internal]
