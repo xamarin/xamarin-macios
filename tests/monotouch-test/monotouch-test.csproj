@@ -707,6 +707,7 @@
     <Compile Include="StoreKit\SKCloudServiceSetupOptionsTest.cs" />
     <Compile Include="ARKit\ARPlaneGeometryTest.cs" />
     <Compile Include="Security\SecStatusCodeTest.cs" />
+    <Compile Include="ARKit\ARFaceGeometryTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>

@@ -74,7 +74,7 @@ namespace XamCore.ARKit {
 		ExistingPlane = 1 << 3,
 		ExistingPlaneUsingExtent = 1 << 4,
 		[iOS (11,3)]
-		ExistingPlaneUsingGeometry = (1 << 5),
+		ExistingPlaneUsingGeometry = 1 << 5,
 	}
 
 	[iOS (11,0)]
@@ -328,6 +328,7 @@ namespace XamCore.ARKit {
 
 	[iOS (11,3)]
 	[BaseType (typeof(SCNGeometry))]
+	[DisableDefaultCtor]
 	interface ARSCNPlaneGeometry {
 		[Static]
 		[Export ("planeGeometryWithDevice:")]
@@ -356,8 +357,10 @@ namespace XamCore.ARKit {
 		IntPtr GetRawIdentifiers ();
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (11,3)]
+	[iOS (11,3)]
+	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface ARReferenceImage : NSCopying, NSSecureCoding {
 		[NullAllowed, Export ("name")]
 		string Name { get; set; }
@@ -925,7 +928,14 @@ namespace XamCore.ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(ARAnchor))]
+	[DisableDefaultCtor]
 	interface ARFaceAnchor : ARTrackable {
+#if !XAMCORE_4_0
+		[Obsolete ("Constructor marked as unavailable.")]
+		[Export ("init")]
+		IntPtr Constructor ();
+#endif
+
 		[Export ("geometry")]
 		ARFaceGeometry Geometry { get; }
 
@@ -976,32 +986,40 @@ namespace XamCore.ARKit {
 	[BaseType (typeof(SCNGeometry))]
 	[DisableDefaultCtor]
 	interface ARSCNFaceGeometry {
+#if !XAMCORE_4_0
 		[Obsolete ("Use the 'Create' static constructor instead.")]
+		[Static]
+		[Wrap ("Create (device)")]
+		[return: NullAllowed]
+		ARSCNFaceGeometry CreateFaceGeometry (IMTLDevice device);
+#endif
+
 		[Static]
 		[Export ("faceGeometryWithDevice:")]
 		[return: NullAllowed]
-		ARSCNFaceGeometry CreateFaceGeometry (IMTLDevice device);
-
-		[Static]
-		[Wrap ("CreateFaceGeometry (device)")]
 		ARSCNFaceGeometry Create (IMTLDevice device);
 
+#if !XAMCORE_4_0
 		[Obsolete ("Use the 'Create' static constructor instead.")]
+		[Static]
+		[Wrap ("Create (device, fillMesh)")]
+		[return: NullAllowed]
+		ARSCNFaceGeometry CreateFaceGeometry (IMTLDevice device, bool fillMesh);
+#endif
+
 		[Static]
 		[Export ("faceGeometryWithDevice:fillMesh:")]
 		[return: NullAllowed]
-		ARSCNFaceGeometry CreateFaceGeometry (IMTLDevice device, bool fillMesh);
-
-		[Static]
-		[Wrap ("CreateFaceGeometry (device, fillMesh)")]
 		ARSCNFaceGeometry Create (IMTLDevice device, bool fillMesh);
 
 		[Export ("updateFromFaceGeometry:")]
 		void Update (ARFaceGeometry faceGeometry);
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (11,3)]
+	[iOS (11,3)]
+	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(ARAnchor))]
+	[DisableDefaultCtor]
 	interface ARImageAnchor {
 		[Export ("referenceImage", ArgumentSemantic.Strong)]
 		ARReferenceImage ReferenceImage { get; }
