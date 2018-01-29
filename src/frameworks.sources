@@ -154,6 +154,8 @@ APPKIT_SOURCES = \
 # ARKit
 
 ARKIT_SOURCES = \
+	ARKit/ARCompat.cs \
+	ARKit/ARFaceGeometry.cs \
 	ARKit/ARPointCloud.cs \
 
 # AssetsLibrary
