@@ -332,7 +332,7 @@ namespace XamCore.ARKit {
 		[Static]
 		[Export ("planeGeometryWithDevice:")]
 		[return: NullAllowed]
-		ARSCNPlaneGeometry CreatePlaneGeometry (IMTLDevice device);
+		ARSCNPlaneGeometry Create (IMTLDevice device);
 
 		[Export ("updateFromPlaneGeometry:")]
 		void Update (ARPlaneGeometry planeGeometry);
@@ -976,15 +976,25 @@ namespace XamCore.ARKit {
 	[BaseType (typeof(SCNGeometry))]
 	[DisableDefaultCtor]
 	interface ARSCNFaceGeometry {
+		[Obsolete ("Use the 'Create' static constructor instead.")]
 		[Static]
 		[Export ("faceGeometryWithDevice:")]
 		[return: NullAllowed]
 		ARSCNFaceGeometry CreateFaceGeometry (IMTLDevice device);
 
 		[Static]
+		[Wrap ("CreateFaceGeometry (device)")]
+		ARSCNFaceGeometry Create (IMTLDevice device);
+
+		[Obsolete ("Use the 'Create' static constructor instead.")]
+		[Static]
 		[Export ("faceGeometryWithDevice:fillMesh:")]
 		[return: NullAllowed]
 		ARSCNFaceGeometry CreateFaceGeometry (IMTLDevice device, bool fillMesh);
+
+		[Static]
+		[Wrap ("CreateFaceGeometry (device, fillMesh)")]
+		ARSCNFaceGeometry Create (IMTLDevice device, bool fillMesh);
 
 		[Export ("updateFromFaceGeometry:")]
 		void Update (ARFaceGeometry faceGeometry);
