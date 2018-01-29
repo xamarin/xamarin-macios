@@ -12719,7 +12719,6 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSObject))]
 	interface NSExtensionRequestHandling {
 		[Abstract]
-		[Mac (10,10, onlyOn64 : true)] 
 		// @required - (void)beginRequestWithExtensionContext:(NSExtensionContext *)context;
 		[Export ("beginRequestWithExtensionContext:")]
 		void BeginRequestWithExtensionContext (NSExtensionContext context);
