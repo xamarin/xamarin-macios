@@ -1,4 +1,4 @@
-// 
+﻿// 
 // Items.cs: Implements the KeyChain query access APIs
 //
 // We use strong types and a helper SecQuery class to simplify the
@@ -361,8 +361,8 @@ namespace XamCore.Security {
 				pathBytes?.Length ?? 0,
 				pathBytes,
 				port,
-				SecProtocolKeys.FromSecProtocol (protocolType),
-				KeysAuthenticationType.FromSecAuthenticationType (authenticationType),
+				SecProtocolKey.FromSecProtocol (protocolType),
+				SecAuthenticationTypeKey.FromSecAuthenticationType (authenticationType),
 				password?.Length ?? 0,
 				password,
 				IntPtr.Zero);
@@ -414,8 +414,8 @@ namespace XamCore.Security {
 					pathBytes?.Length ?? 0,
 					pathBytes,
 					port,
-					SecProtocolKeys.FromSecProtocol(protocolType),
-					KeysAuthenticationType.FromSecAuthenticationType(authenticationType),
+					SecProtocolKey.FromSecProtocol(protocolType),
+					SecAuthenticationTypeKey.FromSecAuthenticationType(authenticationType),
 					out passwordLength,
 					out passwordPtr,
 					IntPtr.Zero);
@@ -773,11 +773,11 @@ namespace XamCore.Security {
 		//
 		public SecAccessible Accessible {
 			get {
-				return KeysAccessible.ToSecAccessible (Fetch (SecAttributeKey.Accessible));
+				return SecAccessibleKey.ToSecAccessible (Fetch (SecAttributeKey.Accessible));
 			}
 			
 			set {
-				SetValue (KeysAccessible.FromSecAccessible (value), SecAttributeKey.Accessible);
+				SetValue (SecAccessibleKey.FromSecAccessible (value), SecAttributeKey.Accessible);
 			}
 		}
 
@@ -1031,11 +1031,11 @@ namespace XamCore.Security {
 
 		public SecProtocol Protocol {
 			get {
-				return SecProtocolKeys.ToSecProtocol (Fetch (SecAttributeKey.Protocol));
+				return SecProtocolKey.ToSecProtocol (Fetch (SecAttributeKey.Protocol));
 			}
 			
 			set {
-				SetValue (SecProtocolKeys.FromSecProtocol (value), SecAttributeKey.Protocol);
+				SetValue (SecProtocolKey.FromSecProtocol (value), SecAttributeKey.Protocol);
 			}
 		}
 
@@ -1044,11 +1044,11 @@ namespace XamCore.Security {
 				var at = Fetch (SecAttributeKey.AuthenticationType);
 				if (at == IntPtr.Zero)
 					return SecAuthenticationType.Default;
-				return KeysAuthenticationType.ToSecAuthenticationType (at);
+				return SecAuthenticationTypeKey.ToSecAuthenticationType (at);
 			}
 			
 			set {
-				SetValue (KeysAuthenticationType.FromSecAuthenticationType (value),
+				SetValue (SecAuthenticationTypeKey.FromSecAuthenticationType (value),
 							     SecAttributeKey.AuthenticationType);
 			}
 		}
@@ -1505,7 +1505,7 @@ namespace XamCore.Security {
 		}
 	}
 	
-	internal static partial class KeysAccessible {
+	internal static partial class SecAccessibleKey {
 		public static IntPtr FromSecAccessible (SecAccessible accessible)
 		{
 			switch (accessible){
@@ -1552,7 +1552,7 @@ namespace XamCore.Security {
 		}
 	}
 	
-	internal static partial class SecProtocolKeys {
+	internal static partial class SecProtocolKey {
 		public static IntPtr FromSecProtocol (SecProtocol protocol)
 		{
 			switch (protocol){
@@ -1661,7 +1661,7 @@ namespace XamCore.Security {
 		}
 	}
 	
-	internal static partial class KeysAuthenticationType {
+	internal static partial class SecAuthenticationTypeKey {
 		public static SecAuthenticationType ToSecAuthenticationType (IntPtr handle)
 		{
 			if (handle == IntPtr.Zero)

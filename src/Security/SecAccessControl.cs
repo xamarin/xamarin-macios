@@ -1,4 +1,4 @@
-// 
+﻿// 
 // SecAccessControl.cs: Implements the managed SecAccessControl representation
 //
 // Authors: 
@@ -62,7 +62,7 @@ namespace XamCore.Security {
 #if !COREBUILD
 				if (handle == IntPtr.Zero) {
 					IntPtr error;
-					handle = SecAccessControlCreateWithFlags (IntPtr.Zero, KeysAccessible.FromSecAccessible (Accessible), (nint)(int)Flags, out error);
+					handle = SecAccessControlCreateWithFlags (IntPtr.Zero, SecAccessibleKey.FromSecAccessible (Accessible), (nint)(int)Flags, out error);
 				}
 #endif
 				return handle;
