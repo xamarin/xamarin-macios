@@ -641,8 +641,8 @@ namespace xharness
 				Ignored = !IncludeMacBindingProject || !IncludeMac,
 			};
 			Tasks.Add (runMacBindingProject);
-			
-			var runXtroTests = new MakeTask {
+
+			var buildXtroTests = new MakeTask {
 				Jenkins = this,
 				Platform = TestPlatform.All,
 				TestName = "Xtro",
@@ -650,7 +650,14 @@ namespace xharness
 				WorkingDirectory = Path.Combine (Harness.RootDirectory, "xtro-sharpie"),
 				Ignored = !IncludeXtro,
 			};
-			Tasks.Add (runXtroTests);
+			var runXtroReporter = new RunXtroTask (buildXtroTests) {
+				Jenkins = this,
+				Platform = TestPlatform.Mac,
+				TestName = buildXtroTests.TestName,
+				Ignored = buildXtroTests.Ignored,
+				WorkingDirectory = buildXtroTests.WorkingDirectory,
+			};
+			Tasks.Add (runXtroReporter);
 
 			Tasks.AddRange (CreateRunDeviceTasks ());
 		}
@@ -2613,6 +2620,64 @@ function oninitialload ()
 		}
 	}
 
+	class RunXtroTask : MacExecuteTask {
+
+		public string WorkingDirectory;
+
+		public RunXtroTask (BuildToolTask build_task) : base (build_task)
+		{
+		}
+
+		protected override async Task RunTestAsync ()
+		{
+			var projectDir = System.IO.Path.GetDirectoryName (ProjectFile);
+			var name = System.IO.Path.GetFileName (projectDir);
+
+			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
+				using (var proc = new Process ()) {
+					proc.StartInfo.FileName = "/Library/Frameworks/Mono.framework/Commands/mono";
+					var reporter = System.IO.Path.Combine (WorkingDirectory, "xtro-report/bin/Debug/xtro-report.exe");
+					var results = System.IO.Path.GetFullPath (System.IO.Path.Combine (Jenkins.LogDirectory, "..", "xtro"));
+					proc.StartInfo.Arguments = $"--debug {reporter} {WorkingDirectory} {results}";
+
+					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
+					var log = Logs.CreateStream (LogDirectory, $"execute-xtro-{Timestamp}.txt", "Execution log");
+					log.WriteLine ("{0} {1}", proc.StartInfo.FileName, proc.StartInfo.Arguments);
+					if (!Harness.DryRun) {
+						ExecutionResult = TestExecutingResult.Running;
+
+						var snapshot = new CrashReportSnapshot () { Device = false, Harness = Harness, Log = log, Logs = Logs, LogDirectory = LogDirectory };
+						await snapshot.StartCaptureAsync ();
+
+						try {
+							var timeout = TimeSpan.FromMinutes (20);
+
+							var result = await proc.RunAsync (log, true, timeout);
+							if (result.TimedOut) {
+								FailureMessage = $"Execution timed out after {timeout.TotalSeconds} seconds.";
+								log.WriteLine (FailureMessage);
+								ExecutionResult = TestExecutingResult.TimedOut;
+							} else if (result.Succeeded) {
+								ExecutionResult = TestExecutingResult.Succeeded;
+							} else {
+								ExecutionResult = TestExecutingResult.Failed;
+								FailureMessage = result.ExitCode != 1 ? $"Test run crashed (exit code: {result.ExitCode})." : "Test run failed.";
+								log.WriteLine (FailureMessage);
+							}
+						} finally {
+							await snapshot.EndCaptureAsync (TimeSpan.FromSeconds (Succeeded ? 0 : 5));
+						}
+					}
+					Jenkins.MainLog.WriteLine ("Executed {0} ({1})", TestName, Mode);
+
+					var output = Logs.CreateStream (LogDirectory, $"Report-{Timestamp}.html", "HTML Report");
+					var report = System.IO.Path.GetFullPath (System.IO.Path.Combine (results, "index.html"));
+					output.WriteLine ($"<html><head><meta http-equiv=\"refresh\" content=\"0; url={report}\" /></head></html>");
+				}
+			}
+		}
+	}
+
 	abstract class RunTestTask : TestTask
 	{
 		public readonly BuildToolTask BuildTask;
@@ -2689,7 +2754,9 @@ function oninitialload ()
 		}
 
 		protected abstract Task RunTestAsync ();
-		protected virtual void VerifyRun () { }
+		// VerifyRun is called in ExecuteAsync to verify that the task can be executed/run.
+		// Typically used to fail tasks that don't have an available device.
+		public virtual void VerifyRun () { }
 
 		public override void Reset ()
 		{
@@ -2763,7 +2830,7 @@ function oninitialload ()
 			set { throw new NotImplementedException (); }
 		}
 
-		protected override void VerifyRun ()
+		public override void VerifyRun ()
 		{
 			base.VerifyRun ();
 
@@ -3073,6 +3140,9 @@ function oninitialload ()
 
 		protected override async Task ExecuteAsync ()
 		{
+			foreach (var task in Tasks)
+				task.VerifyRun ();
+			
 			// First build everything. This is required for the run simulator
 			// task to properly configure the simulator.
 			build_timer.Start ();

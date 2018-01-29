@@ -216,6 +216,7 @@ namespace Introspection {
 					return true;
 				// iOS 11.3
 				case "PKSuicaPassProperties": // Conformance not in headers
+				case "PKTransitPassProperties": // Conformance not in headers
 					return true;
 				// Header shows implementing NSSecureCoding, but supportsSecureCoding returns false.  Radar #34800025
 				case "HKSeriesBuilder":
@@ -368,6 +369,7 @@ namespace Introspection {
 					return true;
 				// iOS 11.3
 				case "PKSuicaPassProperties": // Conformance not in headers
+				case "PKTransitPassProperties": // Conformance not in headers
 					return true;
 				// Header shows implementing NSSecureCoding, but supportsSecureCoding returns false.  Radar #34800025
 				case "HKSeriesBuilder":
@@ -469,6 +471,7 @@ namespace Introspection {
 					return true;
 				// iOS 11.3
 				case "PKSuicaPassProperties": // Conformance not in headers
+				case "PKTransitPassProperties": // Conformance not in headers
 				case "WKPreferences": // Conformance not in headers
 					return true;
 #if __WATCHOS__

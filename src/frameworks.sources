@@ -154,6 +154,8 @@ APPKIT_SOURCES = \
 # ARKit
 
 ARKIT_SOURCES = \
+	ARKit/ARCompat.cs \
+	ARKit/ARFaceGeometry.cs \
 	ARKit/ARPlaneGeometry.cs \
 	ARKit/ARPointCloud.cs \
 
@@ -1265,6 +1267,7 @@ SECURITY_SOURCES = \
 	Security/SecIdentity.cs \
 	Security/SecPolicy.cs \
 	Security/SecSharedCredential.cs \
+	Security/SecStatusCodeExtensions.cs \
 	Security/SecTrust.cs \
 	Security/SslConnection.cs \
 	Security/SslContext.cs \

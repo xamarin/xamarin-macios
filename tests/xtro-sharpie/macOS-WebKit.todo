@@ -1,5 +1,3 @@
-!missing-field! WKWebsiteDataTypeFetchCache not bound
-!missing-field! WKWebsiteDataTypeServiceWorkerRegistrations not bound
 !missing-protocol-conformance! WebView should conform to NSUserInterfaceValidations (defined in 'WebIBActions' category)
 !missing-protocol-conformance! WKWebView should conform to NSUserInterfaceValidations (defined in 'WKIBActions' category)
-!missing-selector! WKOpenPanelParameters::allowsDirectories not bound
+
