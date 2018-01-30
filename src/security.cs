@@ -1,4 +1,4 @@
-﻿//
+//
 // security.cs: Definitions for Security
 //
 // Authors: 

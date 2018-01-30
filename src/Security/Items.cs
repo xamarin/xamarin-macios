@@ -1,4 +1,4 @@
-﻿// 
+// 
 // Items.cs: Implements the KeyChain query access APIs
 //
 // We use strong types and a helper SecQuery class to simplify the
