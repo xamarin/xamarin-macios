@@ -377,6 +377,7 @@ namespace Introspection
 			"Reinvitation",
 			"Reinvite",
 			"Rel",
+			"Relocalization",
 			"Reprandial",
 			"Replayable",
 			"Requestwith",
