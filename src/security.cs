@@ -8,6 +8,7 @@
 //
 
 using System;
+using System.ComponentModel;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 
