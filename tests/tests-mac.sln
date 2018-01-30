@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xammac_tests", "xammac_test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GuiUnit_NET_4_5", "..\external\guiunit\src\framework\GuiUnit_NET_4_5.csproj", "{D12F0F7B-8DE3-43EC-BA49-41052D065A9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dont link-mac-unified", "linker-mac\dont link\dont link-mac-unified.csproj", "{78831857-A261-8EE0-A5F6-33D2628DE5D0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dont link-mac-unified", "linker\mac\dont link\dont link-mac-unified.csproj", "{78831857-A261-8EE0-A5F6-33D2628DE5D0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "apitest-unified", "apitest\apitest-unified.csproj", "{EF5231F6-E06A-BC8A-9B5C-181E2AC5EBBC}"
 EndProject
@@ -29,17 +29,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "apitest-unifiedXM45", "apit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "apitest-unifiedXM45-32", "apitest\apitest-unifiedXM45-32.csproj", "{C74FC111-C78B-3723-456C-FBCA7CDA5147}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dont link-mac", "linker-mac\dont link\dont link-mac.csproj", "{FD385098-B3FD-4331-92BF-CC1F918E3334}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dont link-mac", "linker\mac\dont link\dont link-mac.csproj", "{FD385098-B3FD-4331-92BF-CC1F918E3334}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dont link-mac-unified-32", "linker-mac\dont link\dont link-mac-unified-32.csproj", "{E70715C3-299F-6FD5-E1C1-21949351D4B8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dont link-mac-unified-32", "linker\mac\dont link\dont link-mac-unified-32.csproj", "{E70715C3-299F-6FD5-E1C1-21949351D4B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dont link-mac-unifiedXM45", "linker-mac\dont link\dont link-mac-unifiedXM45.csproj", "{A99E2CFD-3D03-D274-8E2C-036F0B00132F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dont link-mac-unifiedXM45", "linker\mac\dont link\dont link-mac-unifiedXM45.csproj", "{A99E2CFD-3D03-D274-8E2C-036F0B00132F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dont link-mac-unifiedXM45-32", "linker-mac\dont link\dont link-mac-unifiedXM45-32.csproj", "{50CD2B87-A83C-1A43-A4B0-EA349E7082A5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dont link-mac-unifiedXM45-32", "linker\mac\dont link\dont link-mac-unifiedXM45-32.csproj", "{50CD2B87-A83C-1A43-A4B0-EA349E7082A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link all-mac", "linker-mac\link all\link all-mac.csproj", "{4C943B12-C5AF-4CD4-B583-B4011D13CAAB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link all-mac", "linker\mac\link all\link all-mac.csproj", "{4C943B12-C5AF-4CD4-B583-B4011D13CAAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link sdk-mac", "linker-mac\link sdk\link sdk-mac.csproj", "{F5FF0F5E-0C30-4719-A2B1-5DAE33D1E579}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link sdk-mac", "linker\mac\link sdk\link sdk-mac.csproj", "{F5FF0F5E-0C30-4719-A2B1-5DAE33D1E579}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
