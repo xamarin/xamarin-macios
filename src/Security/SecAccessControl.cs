@@ -1,4 +1,4 @@
-﻿// 
+﻿//
 // SecAccessControl.cs: Implements the managed SecAccessControl representation
 //
 // Authors: 
