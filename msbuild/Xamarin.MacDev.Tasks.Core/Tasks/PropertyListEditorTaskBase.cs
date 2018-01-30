@@ -73,7 +73,7 @@ namespace Xamarin.MacDev.Tasks
 				return true;
 			case "real":
 				if (text != null && !double.TryParse (text, NumberStyles.Float, CultureInfo.InvariantCulture, out real)) {
-					Log.MTError (7045, "Unrecognized Real Format");
+					Log.LogError (7045, null, "Unrecognized Real Format");
 					return false;
 				}
 
@@ -81,7 +81,7 @@ namespace Xamarin.MacDev.Tasks
 				return true;
 			case "integer":
 				if (text != null && !int.TryParse (text, NumberStyles.Integer, CultureInfo.InvariantCulture, out integer)) {
-					Log.MTError (7045, "Unrecognized Integer Format");
+					Log.LogError (7045, null, "Unrecognized Integer Format");
 					return false;
 				}
 
@@ -89,7 +89,7 @@ namespace Xamarin.MacDev.Tasks
 				return true;
 			case "date":
 				if (text != null && !DateTime.TryParse (text, CultureInfo.InvariantCulture, DateTimeStyles.None, out date)) {
-					Log.MTError (7045, "Unrecognized Date Format");
+					Log.LogError (7045, null, "Unrecognized Date Format");
 					return false;
 				}
 
@@ -102,7 +102,7 @@ namespace Xamarin.MacDev.Tasks
 					value = new PData (new byte[0]);
 				return true;
 			default:
-				Log.MTError (7045, $"Unrecognized Type: {type}");
+				Log.LogError (7045, null, $"Unrecognized Type: {type}");
 				value = null;
 				return false;
 			}
@@ -132,7 +132,7 @@ namespace Xamarin.MacDev.Tasks
 			int i = 0;
 
 			if (path.Length == 0) {
-				Log.MTError (7046, $"Add: Entry, \"{Entry}\", Incorrectly Specified");
+				Log.LogError (7046, null, $"Add: Entry, \"{Entry}\", Incorrectly Specified");
 				return false;
 			}
 
@@ -142,7 +142,7 @@ namespace Xamarin.MacDev.Tasks
 
 				if (array != null) {
 					if (!int.TryParse (path[i], out index) || index < 0 || index >= array.Count) {
-						Log.MTError (7047, $"Add: Entry, \"{Entry}\", Contains Invalid Array Index");
+						Log.LogError (7047, null, $"Add: Entry, \"{Entry}\", Contains Invalid Array Index");
 						return false;
 					}
 
@@ -151,7 +151,7 @@ namespace Xamarin.MacDev.Tasks
 					if (!dict.TryGetValue (path[i], out current))
 						dict[path[i]] = current = new PDictionary ();
 				} else {
-					Log.MTError (7046, $"Add: Entry, \"{Entry}\", Incorrectly Specified");
+					Log.LogError (7046, null, $"Add: Entry, \"{Entry}\", Incorrectly Specified");
 					return false;
 				}
 
@@ -165,7 +165,7 @@ namespace Xamarin.MacDev.Tasks
 				if (path[i].Length == 0) {
 					index = array.Count;
 				} else if (!int.TryParse (path[i], out index) || index < 0) {
-					Log.MTError (7047, $"Add: Entry, \"{Entry}\", Contains Invalid Array Index");
+					Log.LogError (7047, null, $"Add: Entry, \"{Entry}\", Contains Invalid Array Index");
 					return false;
 				}
 
@@ -178,7 +178,7 @@ namespace Xamarin.MacDev.Tasks
 					array.Add (value);
 			} else if (dict != null) {
 				if (dict.ContainsKey (path[i])) {
-					Log.MTError (7048, $"Add: \"{Entry}\" Entry Already Exists");
+					Log.LogError (7048, null, $"Add: \"{Entry}\" Entry Already Exists");
 					return false;
 				}
 
@@ -187,7 +187,7 @@ namespace Xamarin.MacDev.Tasks
 
 				dict[path[i]] = value;
 			} else {
-				Log.MTError (7049, $"Add: Can't Add Entry, \"{Entry}\", to Parent");
+				Log.LogError (7049, null, $"Add: Can't Add Entry, \"{Entry}\", to Parent");
 				return false;
 			}
 
@@ -207,7 +207,7 @@ namespace Xamarin.MacDev.Tasks
 				case "date": plist = new PDate (DateTime.Now); break;
 				case "data": plist = new PData (new byte[1]); break;
 				default:
-					Log.MTError (7045, $"Unrecognized Type: {Type}");
+					Log.LogError (7045, null, $"Unrecognized Type: {Type}");
 					return false;
 				}
 			} else {
@@ -227,7 +227,7 @@ namespace Xamarin.MacDev.Tasks
 			int i = 0;
 
 			if (path.Length == 0) {
-				Log.MTError (7050, $"Delete: Can't Delete Entry, \"{Entry}\", from Parent");
+				Log.LogError (7050, null, $"Delete: Can't Delete Entry, \"{Entry}\", from Parent");
 				return false;
 			}
 
@@ -237,23 +237,23 @@ namespace Xamarin.MacDev.Tasks
 
 				if (array != null) {
 					if (!int.TryParse (path[i], out index) || index < 0) {
-						Log.MTError (7051, $"Delete: Entry, \"{Entry}\", Contains Invalid Array Index");
+						Log.LogError (7051, null, $"Delete: Entry, \"{Entry}\", Contains Invalid Array Index");
 						return false;
 					}
 
 					if (index >= array.Count) {
-						Log.MTError (7052, $"Delete: Entry, \"{Entry}\", Does Not Exist");
+						Log.LogError (7052, null, $"Delete: Entry, \"{Entry}\", Does Not Exist");
 						return false;
 					}
 
 					current = array[index];
 				} else if (dict != null) {
 					if (!dict.TryGetValue (path[i], out current)) {
-						Log.MTError (7052, $"Delete: Entry, \"{Entry}\", Does Not Exist");
+						Log.LogError (7052, null, $"Delete: Entry, \"{Entry}\", Does Not Exist");
 						return false;
 					}
 				} else {
-					Log.MTError (7052, $"Delete: Entry, \"{Entry}\", Does Not Exist");
+					Log.LogError (7052, null, $"Delete: Entry, \"{Entry}\", Does Not Exist");
 					return false;
 				}
 
@@ -276,7 +276,7 @@ namespace Xamarin.MacDev.Tasks
 			int i = 0;
 
 			if (path.Length == 0) {
-				Log.MTError (7053, $"Import: Entry, \"{Entry}\", Incorrectly Specified");
+				Log.LogError (7053, null, $"Import: Entry, \"{Entry}\", Incorrectly Specified");
 				return false;
 			}
 
@@ -286,7 +286,7 @@ namespace Xamarin.MacDev.Tasks
 
 				if (array != null) {
 					if (!int.TryParse (path[i], out index) || index < 0 || index >= array.Count) {
-						Log.MTError (7054, $"Import: Entry, \"{Entry}\", Contains Invalid Array Index");
+						Log.LogError (7054, null, $"Import: Entry, \"{Entry}\", Contains Invalid Array Index");
 						return false;
 					}
 
@@ -295,7 +295,7 @@ namespace Xamarin.MacDev.Tasks
 					if (!dict.TryGetValue (path[i], out current))
 						dict[path[i]] = current = new PDictionary ();
 				} else {
-					Log.MTError (7053, $"Import: Entry, \"{Entry}\", Incorrectly Specified");
+					Log.LogError (7053, null, $"Import: Entry, \"{Entry}\", Incorrectly Specified");
 					return false;
 				}
 
@@ -309,14 +309,14 @@ namespace Xamarin.MacDev.Tasks
 				if (path[i].Length == 0) {
 					index = array.Count;
 				} else if (!int.TryParse (path[i], out index) || index < 0) {
-					Log.MTError (7054, $"Import: Entry, \"{Entry}\", Contains Invalid Array Index");
+					Log.LogError (7054, null, $"Import: Entry, \"{Entry}\", Contains Invalid Array Index");
 					return false;
 				}
 
 				try {
 					value = new PData (File.ReadAllBytes (Value));
 				} catch {
-					Log.MTError (7055, $"Import: Error Reading File: {Value}", Value);
+					Log.LogError (7055, null, $"Import: Error Reading File: {Value}", Value);
 					return false;
 				}
 
@@ -328,13 +328,13 @@ namespace Xamarin.MacDev.Tasks
 				try {
 					value = new PData (File.ReadAllBytes (Value));
 				} catch {
-					Log.MTError (7055, $"Import: Error Reading File: {Value}", Value);
+					Log.LogError (7055, null, $"Import: Error Reading File: {Value}", Value);
 					return false;
 				}
 
 				dict[path[i]] = value;
 			} else {
-				Log.MTError (7056, $"Import: Can't Add Entry, \"{Entry}\", to Parent");
+				Log.LogError (7056, null, $"Import: Can't Add Entry, \"{Entry}\", to Parent");
 				return false;
 			}
 
@@ -346,7 +346,7 @@ namespace Xamarin.MacDev.Tasks
 			switch (plist.Type) {
 			case PObjectType.Dictionary:
 				if (value.Type == PObjectType.Array) {
-					Log.MTError (7057, "Merge: Can't Add array Entries to dict");
+					Log.LogError (7057, PropertyList, "Merge: Can't Add array Entries to dict");
 					return false;
 				}
 
@@ -380,7 +380,7 @@ namespace Xamarin.MacDev.Tasks
 				}
 				break;
 			default:
-				Log.MTError (7058, "Merge: Specified Entry Must Be a Container");
+				Log.LogError (7058, PropertyList, "Merge: Specified Entry Must Be a Container");
 				return false;
 			}
 
@@ -404,23 +404,23 @@ namespace Xamarin.MacDev.Tasks
 
 					if (array != null) {
 						if (!int.TryParse (path[i], out index) || index < 0) {
-							Log.MTError (7059, $"Merge: Entry, \"{Entry}\", Contains Invalid Array Index");
+							Log.LogError (7059, PropertyList, $"Merge: Entry, \"{Entry}\", Contains Invalid Array Index");
 							return false;
 						}
 
 						if (index >= array.Count) {
-							Log.MTError (7060, $"Merge: Entry, \"{Entry}\", Does Not Exist");
+							Log.LogError (7060, PropertyList, $"Merge: Entry, \"{Entry}\", Does Not Exist");
 							return false;
 						}
 
 						current = array[index];
 					} else if (dict != null) {
 						if (!dict.TryGetValue (path[i], out current)) {
-							Log.MTError (7060, $"Merge: Entry, \"{Entry}\", Does Not Exist");
+							Log.LogError (7060, PropertyList, $"Merge: Entry, \"{Entry}\", Does Not Exist");
 							return false;
 						}
 					} else {
-						Log.MTError (7060, $"Merge: Entry, \"{Entry}\", Does Not Exist");
+						Log.LogError (7060, PropertyList, $"Merge: Entry, \"{Entry}\", Does Not Exist");
 						return false;
 					}
 
@@ -434,12 +434,12 @@ namespace Xamarin.MacDev.Tasks
 				if (array != null) {
 					if (i > 0 || path[i].Length > 0) {
 						if (!int.TryParse (path[i], out index) || index < 0) {
-							Log.MTError (7059, $"Merge: Entry, \"{Entry}\", Contains Invalid Array Index");
+							Log.LogError (7059, PropertyList, $"Merge: Entry, \"{Entry}\", Contains Invalid Array Index");
 							return false;
 						}
 
 						if (index >= array.Count) {
-							Log.MTError (7060, $"Merge: Entry, \"{Entry}\", Does Not Exist");
+							Log.LogError (7060, PropertyList, $"Merge: Entry, \"{Entry}\", Does Not Exist");
 							return false;
 						}
 
@@ -451,7 +451,7 @@ namespace Xamarin.MacDev.Tasks
 					try {
 						value = PObject.FromFile (Value);
 					} catch {
-						Log.MTError (7061, $"Merge: Error Reading File: {Value}", Value);
+						Log.LogError (7061, PropertyList, $"Merge: Error Reading File: {Value}", Value);
 						return false;
 					}
 
@@ -461,7 +461,7 @@ namespace Xamarin.MacDev.Tasks
 				if (dict != null) {
 					if (i > 0 || path[i].Length > 0) {
 						if (!dict.TryGetValue (path[i], out root)) {
-							Log.MTError (7060, $"Merge: Entry, \"{Entry}\", Does Not Exist");
+							Log.LogError (7060, PropertyList, $"Merge: Entry, \"{Entry}\", Does Not Exist");
 							return false;
 						}
 					} else {
@@ -471,14 +471,14 @@ namespace Xamarin.MacDev.Tasks
 					try {
 						value = PObject.FromFile (Value);
 					} catch {
-						Log.MTError (7061, $"Merge: Error Reading File: {Value}", Value);
+						Log.LogError (7061, PropertyList, $"Merge: Error Reading File: {Value}", Value);
 						return false;
 					}
 
 					return Merge (root, value);
 				}
 
-				Log.MTError (7060, $"Merge: Entry, \"{Entry}\", Does Not Exist");
+				Log.LogError (7060, PropertyList, $"Merge: Entry, \"{Entry}\", Does Not Exist");
 				return false;
 			} else {
 				PObject value;
@@ -486,7 +486,7 @@ namespace Xamarin.MacDev.Tasks
 				try {
 					value = PObject.FromFile (Value);
 				} catch {
-					Log.MTError (7061, $"Merge: Error Reading File: {Value}", Value);
+					Log.LogError (7061, PropertyList, $"Merge: Error Reading File: {Value}", Value);
 					return false;
 				}
 
@@ -505,7 +505,7 @@ namespace Xamarin.MacDev.Tasks
 			int i = 0;
 
 			if (path.Length == 0) {
-				Log.MTError (7062, $"Set: Entry, \"{Entry}\", Incorrectly Specified");
+				Log.LogError (7062, PropertyList, $"Set: Entry, \"{Entry}\", Incorrectly Specified");
 				return false;
 			}
 
@@ -515,23 +515,23 @@ namespace Xamarin.MacDev.Tasks
 
 				if (array != null) {
 					if (!int.TryParse (path[i], out index) || index < 0) {
-						Log.MTError (7063, $"Set: Entry, \"{Entry}\", Contains Invalid Array Index");
+						Log.LogError (7063, PropertyList, $"Set: Entry, \"{Entry}\", Contains Invalid Array Index");
 						return false;
 					}
 
 					if (index >= array.Count) {
-						Log.MTError (7064, $"Set: Entry, \"{Entry}\", Does Not Exist");
+						Log.LogError (7064, PropertyList, $"Set: Entry, \"{Entry}\", Does Not Exist");
 						return false;
 					}
 
 					current = array[index];
 				} else if (dict != null) {
 					if (!dict.TryGetValue (path[i], out current)) {
-						Log.MTError (7064, $"Set: Entry, \"{Entry}\", Does Not Exist");
+						Log.LogError (7064, PropertyList, $"Set: Entry, \"{Entry}\", Does Not Exist");
 						return false;
 					}
 				} else {
-					Log.MTError (7064, $"Set: Entry, \"{Entry}\", Does Not Exist");
+					Log.LogError (7064, PropertyList, $"Set: Entry, \"{Entry}\", Does Not Exist");
 					return false;
 				}
 
@@ -543,12 +543,12 @@ namespace Xamarin.MacDev.Tasks
 
 			if (array != null) {
 				if (!int.TryParse (path[i], out index) || index < 0) {
-					Log.MTError (7063, $"Set: Entry, \"{Entry}\", Contains Invalid Array Index");
+					Log.LogError (7063, PropertyList, $"Set: Entry, \"{Entry}\", Contains Invalid Array Index");
 					return false;
 				}
 
 				if (index >= array.Count) {
-					Log.MTError (7064, $"Set: Entry, \"{Entry}\", Does Not Exist");
+					Log.LogError (7064, PropertyList, $"Set: Entry, \"{Entry}\", Does Not Exist");
 					return false;
 				}
 
@@ -558,7 +558,7 @@ namespace Xamarin.MacDev.Tasks
 				array[index] = value;
 			} else if (dict != null) {
 				if (!dict.TryGetValue (path[i], out value)) {
-					Log.MTError (7064, $"Set: Entry, \"{Entry}\", Does Not Exist");
+					Log.LogError (7064, PropertyList, $"Set: Entry, \"{Entry}\", Does Not Exist");
 					return false;
 				}
 
@@ -570,7 +570,7 @@ namespace Xamarin.MacDev.Tasks
 
 				dict[path[i]] = value;
 			} else {
-				Log.MTError (7064, $"Set: Entry, \"{Entry}\", Does Not Exist");
+				Log.LogError (7064, PropertyList, $"Set: Entry, \"{Entry}\", Does Not Exist");
 				return false;
 			}
 
@@ -584,7 +584,7 @@ namespace Xamarin.MacDev.Tasks
 			bool binary;
 
 			if (!Enum.TryParse (Action, out action)) {
-				Log.MTError (7065, $"Unknown PropertyList editor action: {Action}");
+				Log.LogError (7065, null, $"Unknown PropertyList editor action: {Action}");
 				return false;
 			}
 
@@ -592,7 +592,7 @@ namespace Xamarin.MacDev.Tasks
 				try {
 					plist = PObject.FromFile (PropertyList, out binary);
 				} catch (Exception ex) {
-					Log.MTError (7066, $"Error loading '{PropertyList}': {ex.Message}", PropertyList);
+					Log.LogError (7066, PropertyList, $"Error loading '{PropertyList}': {ex.Message}", PropertyList);
 					return false;
 				}
 			} else {
@@ -630,7 +630,7 @@ namespace Xamarin.MacDev.Tasks
 						File.WriteAllText (PropertyList, plist.ToXml ());
 					}
 				} catch (Exception ex) {
-					Log.MTError (7067, $"Error saving '{PropertyList}': {ex.Message}", PropertyList);
+					Log.LogError (7067, PropertyList, $"Error saving '{PropertyList}': {ex.Message}", PropertyList);
 				}
 			}
 
