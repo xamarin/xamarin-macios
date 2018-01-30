@@ -347,19 +347,22 @@ namespace XamCore.Security {
 		[Field ("kSecAttrAccessible")]
 		IntPtr Accessible { get; }
 
-		[iOS (8,0), Mac (10,10)]
+		[iOS (8,0), Mac(10,10)]
 		[Field ("kSecAttrAccessControl")]
 		IntPtr AccessControl { get; }
 
-		[iOS (7,0), Mac (10,9)]
+		[iOS (7,0)]
+		[Mac (10,9)]
 		[Field ("kSecAttrSynchronizableAny")]
 		IntPtr SynchronizableAny { get; }
 
-		[iOS (7,0), Mac (10,9)]
+		[iOS (7,0)]
+		[Mac (10,9)]
 		[Field ("kSecAttrSynchronizable")]
 		IntPtr Synchronizable { get; }
 
-		[iOS (9,0), Mac (10, 11)]
+		[iOS (9,0)]
+		[Mac (10,11)]
 		[Field ("kSecAttrSyncViewHint")]
 		IntPtr SyncViewHint { get; }
 
@@ -490,20 +493,25 @@ namespace XamCore.Security {
 		[Field ("kSecAttrCanUnwrap")]
 		IntPtr CanUnwrap { get; }
 
-		[iOS (9,0), Mac (10,12)]
+		[iOS (9,0)]
+		[Mac (10,12)]
 		[Field ("kSecAttrTokenID")]
 		IntPtr TokenID { get; }
 
-		[iOS (9,0), Mac (10,12,1)]
+		[iOS (9,0)]
+		[Mac (10,12)]
 		[Field ("kSecAttrTokenIDSecureEnclave")]
 		IntPtr SecureEnclave { get; }
 
-		[iOS (10,0), Mac (10,12), TV (10,0), Watch (3,0)]
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[Watch (3,0)]
+		[TV (10,0)]
 		[Field ("kSecAttrAccessGroupToken")]
 		IntPtr AccessGroupToken { get; }
 
 		// note: kSecAttrPersistentReference (beta 1) is a typo that was not removed
-		[iOS (11,0), Mac (10,13), TV (11,0), Watch (4,0)]
+		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
 		[Field ("kSecAttrPersistentReference")]
 		IntPtr PersistentReference { get; }
 
