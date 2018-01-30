@@ -72,8 +72,7 @@ extern "C" {
  *
  *	  If the executable can't be found, a dialog will show an error and the app will exit.
  *
- * 7a) [If not embedding Mono] Parse the system Mono's config file ($monodir/etc/mono/config).
- *     It is not an error to not find this file.
+ * 7a) [If not embedding Mono] Don't parse any config files, leave it to the Mono runtime to load the defaults.
  *
  * 7b) [If embedding Mono] Parse $appdir/Contents/MonoBundle/machine.config and $appdir/Contents/MonoBundle/config
  *     (It is not an error to not find these files, but the app will most likely not work)

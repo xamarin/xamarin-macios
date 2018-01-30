@@ -1906,22 +1906,24 @@ function oninitialload ()
 										}
 									} else if (log.Description == "NUnit results" || log.Description == "XML log") {
 										try {
-											var doc = new System.Xml.XmlDocument ();
-											doc.LoadWithoutNetworkAccess (log.FullPath);
-											var failures = doc.SelectNodes ("//test-case[@result='Error' or @result='Failure']").Cast<System.Xml.XmlNode> ().ToArray ();
-											if (failures.Length > 0) {
-												writer.WriteLine ("<div style='padding-left: 15px;'>");
-												foreach (var failure in failures) {
-													var test_name = failure.Attributes ["name"]?.Value;
-													var message = failure.SelectSingleNode ("failure/message")?.InnerText;
-													writer.Write (System.Web.HttpUtility.HtmlEncode (test_name));
-													if (!string.IsNullOrEmpty (message)) {
-														writer.Write (": ");
-														writer.Write (System.Web.HttpUtility.HtmlEncode (message));
+											if (File.Exists (log.FullPath) && new FileInfo (log.FullPath).Length > 0) {
+												var doc = new System.Xml.XmlDocument ();
+												doc.LoadWithoutNetworkAccess (log.FullPath);
+												var failures = doc.SelectNodes ("//test-case[@result='Error' or @result='Failure']").Cast<System.Xml.XmlNode> ().ToArray ();
+												if (failures.Length > 0) {
+													writer.WriteLine ("<div style='padding-left: 15px;'>");
+													foreach (var failure in failures) {
+														var test_name = failure.Attributes ["name"]?.Value;
+														var message = failure.SelectSingleNode ("failure/message")?.InnerText;
+														writer.Write (System.Web.HttpUtility.HtmlEncode (test_name));
+														if (!string.IsNullOrEmpty (message)) {
+															writer.Write (": ");
+															writer.Write (System.Web.HttpUtility.HtmlEncode (message));
+														}
+														writer.WriteLine ("<br />");
 													}
-													writer.WriteLine ("<br />");
+													writer.WriteLine ("</div>");
 												}
-												writer.WriteLine ("</div>");
 											}
 										} catch (Exception ex) {
 											writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {System.Web.HttpUtility.HtmlEncode (ex.Message)}</span><br />");
@@ -2779,8 +2781,10 @@ function oninitialload ()
 						var xml = Logs.CreateFile ($"test-{Platform}-{Timestamp}.xml", "NUnit results");
 						proc.StartInfo.Arguments = $"-result={StringUtils.Quote (xml)}";
 					}
+					proc.StartInfo.EnvironmentVariables ["MONO_DEBUG"] = "no-gdb-backtrace";
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
 					var log = Logs.Create ($"execute-{Platform}-{Timestamp}.txt", "Execution log");
+					log.Timestamp = true;
 					log.WriteLine ("{0} {1}", proc.StartInfo.FileName, proc.StartInfo.Arguments);
 					if (!Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;
@@ -2788,10 +2792,11 @@ function oninitialload ()
 						var snapshot = new CrashReportSnapshot () { Device = false, Harness = Harness, Log = log, Logs = Logs, LogDirectory = LogDirectory };
 						await snapshot.StartCaptureAsync ();
 
+						ProcessExecutionResult result = null;
 						try {
 							var timeout = TimeSpan.FromMinutes (20);
 
-							var result = await proc.RunAsync (log, true, timeout);
+							result = await proc.RunAsync (log, true, timeout);
 							if (result.TimedOut) {
 								FailureMessage = $"Execution timed out after {timeout.TotalSeconds} seconds.";
 								log.WriteLine (FailureMessage);
@@ -2804,7 +2809,7 @@ function oninitialload ()
 								log.WriteLine (FailureMessage);
 							}
 						} finally {
-							await snapshot.EndCaptureAsync (TimeSpan.FromSeconds (Succeeded ? 0 : 5));
+							await snapshot.EndCaptureAsync (TimeSpan.FromSeconds (Succeeded ? 0 : (result?.ExitCode > 1 ? 120 : 5)));
 						}
 					}
 					Jenkins.MainLog.WriteLine ("Executed {0} ({1})", TestName, Mode);

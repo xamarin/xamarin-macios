@@ -8,12 +8,14 @@ all: xamarin-analysis-doc
 	cp binding_objc_libs.md $(WEBSITE_DOCS)/guides/cross-platform/macios/binding/objective-c-libraries/index.md
 	cp binding_types_reference_guide.md $(WEBSITE_DOCS)/guides/cross-platform/macios/binding/binding-types-reference/index.md
 	cp xamarin-ios-analysis.md $(WEBSITE_DOCS)/guides/ios/troubleshooting/xamarin-ios-analysis/index.md
+	cp optimizations.md $(WEBSITE_DOCS)/guides/cross-platform/macios/build-optimizations/index.md
 
 diff:
 	-diff -u $(WEBSITE_DOCS)/guides/ios/troubleshooting/mtouch-errors/index.md mtouch-errors.md
 	-diff -u $(WEBSITE_DOCS)/guides/cross-platform/macios/binding/objective-c-libraries/index.md binding_objc_libs.md
 	-diff -u $(WEBSITE_DOCS)/guides/cross-platform/macios/binding/binding-types-reference/index.md binding_types_reference_guide.md
 	-diff -u $(WEBSITE_DOCS)/guides/ios/troubleshooting/xamarin-ios-analysis/index.md xamarin-ios-analysis.md
+	-diff -u $(WEBSITE_DOCS)/guides/cross-platform/macios/build-optimizations/index.md optimizations.md
 
 xamarin-analysis-doc:
 	msbuild xamarin-analysis-doc-tool/xamarin-analysis-doc.sln

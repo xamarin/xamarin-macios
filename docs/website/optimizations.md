@@ -1,11 +1,15 @@
 ---
 id: 84B67E31-B217-443D-89E5-CFE1923CB14E
-title: Xamarin.iOS and Xamarin.Mac optimizations
+title: Build optimizations
 dateupdated: 2018-01-18
 ---
 
-Optimizations
-=============
+[//]: # (The original file resides under https://github.com/xamarin/xamarin-macios/tree/master/docs/website/)
+[//]: # (This allows all contributors (including external) to submit, using a PR, updates to the documentation that match the tools changes)
+[//]: # (Modifications outside of xamarin-macios/master will be lost on future updates)
+
+Build optimizations
+===================
 
 This document explains the various optimizations that are applied at build time for Xamarin.iOS and Xamarin.Mac apps.
 

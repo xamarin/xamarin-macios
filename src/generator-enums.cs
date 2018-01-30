@@ -101,7 +101,7 @@ public partial class Generator {
 			print ("");
 			// the *Extensions has the same version requirement as the enum itself
 			PrintPlatformAttributes (type);
-			print ("[CompilerGenerated]");
+			print_generated_code ();
 			print ("static public partial class {0}Extensions {{", type.Name);
 			indent++;
 

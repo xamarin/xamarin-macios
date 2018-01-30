@@ -12712,20 +12712,8 @@ namespace Foundation
 		bool IsValidForFormat (NSObject plist, NSPropertyListFormat format);
 	}
 
-#if XAMCORE_2_0 || !MONOMAC
 	interface INSExtensionRequestHandling { }
 
-	[iOS (8,0)][Mac (10,10)] // Not defined in 32-bit
-	[Protocol, Model]
-	[BaseType (typeof (NSObject))]
-	interface NSExtensionRequestHandling {
-		[Abstract]
-		[Mac (10,10, onlyOn64 : true)] 
-		// @required - (void)beginRequestWithExtensionContext:(NSExtensionContext *)context;
-		[Export ("beginRequestWithExtensionContext:")]
-		void BeginRequestWithExtensionContext (NSExtensionContext context);
-	}
-#else
 	[iOS (8,0)][Mac (10,10, onlyOn64:true)] // Not defined in 32-bit
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -12735,7 +12723,6 @@ namespace Foundation
 		[Export ("beginRequestWithExtensionContext:")]
 		void BeginRequestWithExtensionContext (NSExtensionContext context);
 	}
-#endif
 
 	[Protocol]
 	interface NSLocking {

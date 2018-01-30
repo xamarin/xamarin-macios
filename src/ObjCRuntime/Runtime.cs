@@ -573,16 +573,6 @@ namespace ObjCRuntime {
 			return ObjectWrapper.Convert (new Selector (sel));
 		}
 
-		static IntPtr GetClassHandle (IntPtr klass)
-		{
-			return ((Class) ObjectWrapper.Convert (klass)).Handle;
-		}
-
-		static IntPtr GetSelectorHandle (IntPtr sel)
-		{
-			return ((Selector) ObjectWrapper.Convert (sel)).Handle;
-		}
-
 		static void GetMethodForSelector (IntPtr cls, IntPtr sel, bool is_static, IntPtr desc)
 		{
 			// This is called by the old registrar code.

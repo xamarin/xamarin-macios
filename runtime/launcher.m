@@ -368,7 +368,9 @@ update_environment (xamarin_initialize_data *data)
 		setenv ("MONO_DEBUG", "no-gdb-backtrace", 0);
 	}
 
+#ifndef DYNAMIC_MONO_RUNTIME
 	setenv ("MONO_CFG_DIR", [monobundle_dir UTF8String], 0);
+#endif
 }
 
 static void
@@ -488,21 +490,16 @@ app_initialize (xamarin_initialize_data *data)
 		xamarin_entry_assembly_path = strdup ([dllPath UTF8String]);
 	}
 
-	// 7a) [If not embedding] Parse the system Mono's config file ($monodir/etc/mono/config).
+	// 7a) [If not embedding] Don't parse any config files, leave it to the Mono runtime to load the defaults.
 	// 7b) [If embedding] Parse $appdir/Contents/MonoBundle/machine.config and $appdir/Contents/MonoBundle/config
 	if (!mkbundle) {
 		NSString *config_path = nil;
 		NSString *machine_config_path = nil;
 		NSError *error = nil;
 		
-#ifdef DYNAMIC_MONO_RUNTIME
-		config_path = [[NSString stringWithUTF8String: mono_runtime_prefix] stringByAppendingPathComponent: @"/etc/mono/config"];
-#else
+#ifndef DYNAMIC_MONO_RUNTIME
 		config_path = [[NSString stringWithUTF8String: xamarin_get_bundle_path ()] stringByAppendingPathComponent: @"config"];
 		machine_config_path = [[NSString stringWithUTF8String: xamarin_get_bundle_path ()] stringByAppendingPathComponent: @"machine.config"];
-#endif
-
-#ifndef DYNAMIC_MONO_RUNTIME
 		mono_set_dirs (xamarin_get_bundle_path (), xamarin_get_bundle_path ());
 #else
 		mono_set_dirs (NULL, NULL);

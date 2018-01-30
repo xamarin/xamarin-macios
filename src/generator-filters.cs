@@ -45,7 +45,7 @@ public partial class Generator {
 		if (!is_abstract) {
 			v = GetVisibility (filter.DefaultCtorVisibility);
 			if (v.Length > 0) {
-				print ("[CompilerGenerated]");
+				print_generated_code ();
 				print ("{0}{1} () : base (\"{2}\")", v, type.Name, native_name);
 				PrintEmptyBody ();
 			}
@@ -61,18 +61,18 @@ public partial class Generator {
 				intptrctor_visibility = MethodAttributes.Public;
 			}
 		}
-		print ("[CompilerGenerated]");
+		print_generated_code ();
 		print ("{0}{1} (IntPtr handle) : base (handle)", GetVisibility (intptrctor_visibility), type_name);
 		PrintEmptyBody ();
 
 		// NSObjectFlag constructor - always present (needed to implement NSCoder for subclasses)
-		print ("[CompilerGenerated]");
+		print_generated_code ();
 		print ("[EditorBrowsable (EditorBrowsableState.Advanced)]");
 		print ("protected {0} (NSObjectFlag t) : base (t)", type_name);
 		PrintEmptyBody ();
 
 		// NSCoder constructor - all filters conforms to NSCoding
-		print ("[CompilerGenerated]");
+		print_generated_code ();
 		print ("[EditorBrowsable (EditorBrowsableState.Advanced)]");
 		print ("[Export (\"initWithCoder:\")]");
 		print ("public {0} (NSCoder coder) : base (NSObjectFlag.Empty)", type_name);
@@ -99,7 +99,7 @@ public partial class Generator {
 		if (is_abstract && (v.Length == 0))
 			v = "protected ";
 		if (v.Length > 0) {
-			print ("[CompilerGenerated]");
+			print_generated_code ();
 			print ("{0} {1} (string name) : base (CreateFilter (name))", v, type_name);
 			PrintEmptyBody ();
 		}
@@ -110,7 +110,7 @@ public partial class Generator {
 				continue;
 			
 			print ("");
-			print ("[CompilerGenerated]");
+			print_generated_code ();
 			var ptype = p.PropertyType.Name;
 			// keep C# names as they are reserved keywords (e.g. Boolean also exists in OpenGL for Mac)
 			switch (ptype) {

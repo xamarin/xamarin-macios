@@ -92,6 +92,14 @@ namespace AVFoundation {
 		}
 	}
 
+	partial class AVAudioUnitComponentManager {
+
+		[Obsolete ("Please use the static 'SharedInstance' property as this type is not meant to be created.")]
+		public AVAudioUnitComponentManager ()
+		{
+		}
+	}
+
 #if !MONOMAC
 	partial class AVSampleBufferAudioRenderer
 	{

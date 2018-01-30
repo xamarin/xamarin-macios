@@ -19642,7 +19642,7 @@ namespace AppKit {
 		void EndEditingFor ([NullAllowed] NSObject anObject);
 	
 		[Export ("constrainFrameRect:toScreen:")]
-		CGRect ConstrainFrameRect (CGRect frameRect, NSScreen screen);
+		CGRect ConstrainFrameRect (CGRect frameRect, [NullAllowed] NSScreen screen);
 	
 		[Export ("setFrame:display:")]
 		void SetFrame (CGRect frameRect, bool display);

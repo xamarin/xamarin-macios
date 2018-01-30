@@ -56,11 +56,6 @@ namespace Xamarin.MacDev.Tasks
 			log.LogMessage (TaskPropertyImportance, "  {0}: {1}", propertyName, value);
 		}
 
-		public static void LogTaskName (this TaskLoggingHelper log, string taskName)
-		{
-			log.LogMessage (TaskPropertyImportance, "{0} Task", taskName);
-		}
-
 		/// <summary>
 		/// Creates an MSBuild error following our MTErrors convention.</summary>
 		/// <remarks>

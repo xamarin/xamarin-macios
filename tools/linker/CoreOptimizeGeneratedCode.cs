@@ -22,7 +22,7 @@ namespace Xamarin.Linker {
 		protected override string Name { get; } = "Binding Optimizer";
 		protected override int ErrorCode { get; } = 2020;
 
-		protected bool HasGeneratedCode { get; private set; }
+		protected bool HasOptimizableCode { get; private set; }
 		protected bool IsExtensionType { get; private set; }
 
 		protected LinkerOptions Options { get; set; }
@@ -73,19 +73,24 @@ namespace Xamarin.Linker {
 			}
 			
 			// if the assembly does not refer to [CompilerGeneratedAttribute] then there's not much we can do
-			HasGeneratedCode = false;
+			HasOptimizableCode = false;
 			foreach (TypeReference tr in assembly.MainModule.GetTypeReferences ()) {
-				if (tr.Is ("System.Runtime.CompilerServices", "CompilerGeneratedAttribute")) {
+				if (tr.Is (Namespaces.ObjCRuntime, "BindingImplAttribute")) {
+					HasOptimizableCode = true;
+					break;
+				}
+
+				if (!Driver.IsXAMCORE_4_0 && tr.Is ("System.Runtime.CompilerServices", "CompilerGeneratedAttribute")) {
 #if DEBUG
 					Console.WriteLine ("Assembly {0} : processing", assembly);
 #endif
-					HasGeneratedCode = true;
+					HasOptimizableCode = true;
 					break;
 				}
 			}
 #if DEBUG
-			if (!HasGeneratedCode)
-				Console.WriteLine ("Assembly {0} : no [CompilerGeneratedAttribute] present (applying basic optimizations)", assembly);
+			if (!HasOptimizableCode)
+				Console.WriteLine ("Assembly {0} : no [CompilerGeneratedAttribute] nor [BindingImplAttribute] present (applying basic optimizations)", assembly);
 #endif
 			// we always apply the step
 			return true;
@@ -93,7 +98,7 @@ namespace Xamarin.Linker {
 
 		protected override void Process (TypeDefinition type)
 		{
-			if (!HasGeneratedCode)
+			if (!HasOptimizableCode)
 				return;
 
 			isdirectbinding_constant = type.IsNSObject (LinkContext) ? type.GetIsDirectBindingConstant (LinkContext) : null;
@@ -537,7 +542,9 @@ namespace Xamarin.Linker {
 			if (!method.HasBody)
 				return;
 
-			if (method.IsGeneratedCode (LinkContext) && (IsExtensionType || IsExport (method))) {
+			if (method.IsBindingImplOptimizableCode (LinkContext)) {
+				// We optimize all methods that have the [BindingImpl (BindingImplAttributes.Optimizable)] attribute.
+			} else if (!Driver.IsXAMCORE_4_0 && (method.IsGeneratedCode (LinkContext) && (IsExtensionType || IsExport (method)))) {
 				// We optimize methods that have the [GeneratedCodeAttribute] and is either an extension type or an exported method
 			} else {
 				// but it would be too risky to apply on user-generated code

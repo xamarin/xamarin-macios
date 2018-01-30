@@ -2,11 +2,19 @@ using System;
 using System.Collections.Generic;
 using Mono.Cecil;
 
+using Xamarin.Tuner;
+
 namespace Xamarin.Linker {
 
 	// this can be used (directly) with Xamarin.Mac and as the base of Xamarin.iOS step
 	public class CoreRemoveAttributes : MobileRemoveAttributes {
 		
+		protected DerivedLinkContext LinkContext {
+			get {
+				return (DerivedLinkContext) base.context;
+			}
+		}
+
 		protected override bool IsRemovedAttribute (CustomAttribute attribute)
 		{
 			// note: this also avoid calling FullName (which allocates a string)
@@ -35,6 +43,7 @@ namespace Xamarin.Linker {
 			case "LinkWithAttribute":
 			case "DesignatedInitializerAttribute":
 			case "RequiresSuperAttribute":
+			case "BindingImplAttribute":
 				return attr_type.Namespace == Namespaces.ObjCRuntime;
 			default:
 				return base.IsRemovedAttribute (attribute);
@@ -50,22 +59,10 @@ namespace Xamarin.Linker {
 				case "AvailabilityBaseAttribute":
 				case "DeprecatedAttribute":
 				case "IntroducedAttribute":
-					var dict = context.Annotations.GetCustomAnnotations ("Availability");
-					List<Tuple<CustomAttribute,TypeReference>> attribs;
-					object attribObjects;
-					if (!dict.TryGetValue (provider, out attribObjects)) {
-						attribs = new List<Tuple<CustomAttribute, TypeReference>> ();
-						dict [provider] = attribs;
-					} else {
-						attribs = (List<Tuple<CustomAttribute, TypeReference>>) attribObjects;
-					}
-					// Make sure the attribute is resolved, since after removing the attribute
-					// it won't be able to do it. The 'CustomAttribute.Resolve' method is private, but fetching
-					// any property will cause it to be called.
-					// We also need to store the constructor's DeclaringType separately, because it may
-					// be nulled out from the constructor by the linker if the attribute type itself is linked away.
-					var dummy = attribute.HasConstructorArguments;
-					attribs.Add (new Tuple<CustomAttribute, TypeReference> (attribute, attribute.Constructor.DeclaringType));
+					LinkContext.StoreCustomAttribute (provider, attribute, "Availability");
+					break;
+				case "BindingImplAttribute":
+					LinkContext.StoreCustomAttribute (provider, attribute);
 					break;
 				}
 			}

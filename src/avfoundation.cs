@@ -3124,6 +3124,9 @@ namespace AVFoundation {
 	interface IAVCaptureDataOutputSynchronizerDelegate {}
 	
 	[NoWatch, NoTV, iOS (11,0)]
+#if XAMCORE_4_0
+	[NoMac]
+#endif
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface AVCaptureDataOutputSynchronizerDelegate
@@ -3134,6 +3137,9 @@ namespace AVFoundation {
 	}
 
 	[NoWatch, NoTV, iOS (11,0)]
+#if XAMCORE_4_0
+	[NoMac]
+#endif
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface AVCaptureDataOutputSynchronizer
@@ -12206,6 +12212,7 @@ namespace AVFoundation {
 
 	[NoWatch, iOS (9,0), Mac (10,10)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // for binary compatibility this is added in AVCompat.cs w/[Obsolete]
 	interface AVAudioUnitComponentManager {
 		
 		[Export ("tagNames")]

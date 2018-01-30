@@ -639,11 +639,24 @@ This warning won't affect the application being built, however you might not be 
 
 Please report this issue to the publisher of the assembly package (e.g. nuget author) so this can be fixed in their future releases.
 
+### <a name="MT0130"/>MT0130: No root assemblies found. You should provide at least one root assembly.
+When running --runregistrar, at least one root assembly should be provided.
+
+### <a name="MT0131"/>MT0131: Product assembly '{0}' not found in assembly list: '{1}'
+
+When running --runregistrar, the assembly list should include the product assembly, Xamarin.iOS, Xamarin.WatchOS, Xamarin.TVOS.
+
 ### <a name="MT0132/>MT0132: Unknown optimization: *. Valid values are: *
 
 The specified optimization was not recognized.
 
 The accepted format is `[+|-]optimization-name`, where `optimization-name` is one of the values listed in the error message.
+
+See [Build optimizations](https://developer.xamarin.com/guides/cross-platform/macios/build-optimization/) for a complete description of each optimization.
+
+### <a name="MT0133"/>MT0133: Found more than 1 assembly matching '{0}' choosing first: '{1}'
+
+When using --recursive-directories, only 1 assembly should match
 
 # MT1xxx: Project related error messages
 
@@ -1277,11 +1290,15 @@ An unexpected error occured when processing an assembly.
 
 The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
-### <a name="MT2104"/>MM2104: Unable to link assembly '{0}' as it is mixed-mode.
+### <a name="MT2104"/>MT2104: Unable to link assembly '{0}' as it is mixed-mode.
 
 Mixed-mode assemblies can not be processed by the linker.
 
 See https://msdn.microsoft.com/en-us/library/x0w2664k.aspx for more information on mixed-mode assemblies.
+
+### <a name="MT2105"/>MT2105: The [BindingImpl] attribute on the member * is invalid: *
+
+The `[BindingImpl]` attribute on the mentioned member is invalid. The expected format is `[BindingImpl (BindingImplOptions.ValueA | BindingImplOptions.ValueB)]`.
 
 # MT3xxx: AOT error messages
 

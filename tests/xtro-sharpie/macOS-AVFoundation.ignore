@@ -14,6 +14,9 @@
 !missing-selector! AVCaptureConnection::setVideoMaxFrameDuration: not bound
 !missing-selector! AVCaptureConnection::videoMaxFrameDuration not bound
 
+# Incorrectly bound, fixed for XAMCORE_4_0
+!unknown-protocol! AVCaptureDataOutputSynchronizerDelegate bound
+!unknown-type! AVCaptureDataOutputSynchronizer bound
 
 ## unsorted
 
@@ -43,8 +46,6 @@
 !unknown-native-enum! AVCaptureOutputDataDroppedReason bound
 !unknown-native-enum! AVCaptureVideoStabilizationMode bound
 !unknown-native-enum! AVSpeechBoundary bound
-!unknown-protocol! AVCaptureDataOutputSynchronizerDelegate bound
-!unknown-type! AVCaptureDataOutputSynchronizer bound
 !unknown-type! AVCaptureSynchronizedData bound
 !unknown-type! AVCaptureSynchronizedDataCollection bound
 !unknown-type! AVPersistableContentKeyRequest bound

@@ -24,7 +24,6 @@ namespace MonoTouch.Tuner {
 	public class MonoTouchTypeMapStep : TypeMapStep {
 		HashSet<TypeDefinition> cached_isnsobject = new HashSet<TypeDefinition> ();
 		Dictionary<TypeDefinition, bool?> isdirectbinding_value = new Dictionary<TypeDefinition, bool?> ();
-		HashSet<MethodDefinition> generated_code = new HashSet<MethodDefinition> ();
 
 		DerivedLinkContext LinkContext {
 			get {
@@ -38,22 +37,12 @@ namespace MonoTouch.Tuner {
 
 			LinkContext.CachedIsNSObject = cached_isnsobject;
 			LinkContext.IsDirectBindingValue = isdirectbinding_value;
-			LinkContext.GeneratedCode = generated_code;
 		}
 
 		protected override void MapType (TypeDefinition type)
 		{
 			base.MapType (type);
 
-			// we'll remove [GeneratedCode] in RemoveAttribute but we need this information later
-			// when processing Dispose methods in MonoTouchMarkStep
-			if (type.HasMethods) {
-				foreach (MethodDefinition m in type.Methods) {
-					if (m.IsGeneratedCode (LinkContext))
-						generated_code.Add (m);
-				}
-			}
-			
 			// additional checks for NSObject to check if the type is a *generated* bindings
 			// bonus: we cache, for every type, whether or not it inherits from NSObject (very useful later)
 			if (!IsNSObject (type))
