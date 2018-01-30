@@ -343,199 +343,158 @@ namespace XamCore.Security {
 	[Static]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
 	interface SecAttributeKey {
-		[iOS (4,0), Mac (10,9), TV (9,0), Watch (2,0)]
+		[Mac (10,9)]
 		[Field ("kSecAttrAccessible")]
 		IntPtr Accessible { get; }
 
-		[iOS (8,0), Mac (10,10), TV (9,0), Watch (2,0)]
+		[iOS (8,0), Mac (10,10)]
 		[Field ("kSecAttrAccessControl")]
 		IntPtr AccessControl { get; }
 
-		[iOS (7,0), Mac (10,9), TV (9,0), Watch (2,0)]
+		[iOS (7,0), Mac (10,9)]
 		[Field ("kSecAttrSynchronizableAny")]
 		IntPtr SynchronizableAny { get; }
 
-		[iOS (7,0), Mac (10,9), TV (9,0), Watch (2,0)]
+		[iOS (7,0), Mac (10,9)]
 		[Field ("kSecAttrSynchronizable")]
 		IntPtr Synchronizable { get; }
 
-		[iOS (9,0), Mac (10, 12, 4), TV (9,0), Watch(2,0)]
+		[iOS (9,0), Mac (10, 11)]
 		[Field ("kSecAttrSyncViewHint")]
 		IntPtr SyncViewHint { get; }
 
-		[iOS (3,0), Mac (10,9), TV (9,0), Watch (2,0)]
+		[Mac (10,9)]
 		[Field ("kSecAttrAccessGroup")]
 		IntPtr AccessGroup { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrCreationDate")]
 		IntPtr CreationDate { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrModificationDate")]
 		IntPtr ModificationDate { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrDescription")]
 		IntPtr Description { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrComment")]
 		IntPtr Comment { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrCreator")]
 		IntPtr Creator { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrType")]
 		IntPtr Type { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrLabel")]
 		IntPtr Label { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrIsInvisible")]
 		IntPtr IsInvisible { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrIsNegative")]
 		IntPtr IsNegative { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrAccount")]
 		IntPtr Account { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrService")]
 		IntPtr Service { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrGeneric")]
 		IntPtr Generic { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrSecurityDomain")]
 		IntPtr SecurityDomain { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrServer")]
 		IntPtr Server { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrProtocol")]
 		IntPtr Protocol { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrAuthenticationType")]
 		IntPtr AuthenticationType { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrPort")]
 		IntPtr Port { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrPath")]
 		IntPtr Path { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrSubject")]
 		IntPtr Subject { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrIssuer")]
 		IntPtr Issuer { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrSerialNumber")]
 		IntPtr SerialNumber { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrSubjectKeyID")]
 		IntPtr SubjectKeyID { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrPublicKeyHash")]
 		IntPtr PublicKeyHash { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrCertificateType")]
 		IntPtr CertificateType { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrCertificateEncoding")]
 		IntPtr CertificateEncoding { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrKeyClass")]
 		IntPtr KeyClass { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrApplicationLabel")]
 		IntPtr ApplicationLabel { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrIsPermanent")]
 		IntPtr IsPermanent { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrIsSensitive")]
 		IntPtr IsSensitive { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrIsExtractable")]
 		IntPtr IsExtractable { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrApplicationTag")]
 		IntPtr ApplicationTag { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrKeyType")]
 		IntPtr KeyType { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrKeySizeInBits")]
 		IntPtr KeySizeInBits { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrEffectiveKeySize")]
 		IntPtr EffectiveKeySize { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrCanEncrypt")]
 		IntPtr CanEncrypt { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrCanDecrypt")]
 		IntPtr CanDecrypt { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrCanDerive")]
 		IntPtr CanDerive { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrCanSign")]
 		IntPtr CanSign { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrCanVerify")]
 		IntPtr CanVerify { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrCanWrap")]
 		IntPtr CanWrap { get; }
 
-		[iOS (2,0), Mac (10,6), TV (9,0), Watch (2,0)]
 		[Field ("kSecAttrCanUnwrap")]
 		IntPtr CanUnwrap { get; }
 
-		[iOS (9,0), Mac (10,12), TV (9,0), Watch (2,0)]
+		[iOS (9,0), Mac (10,12)]
 		[Field ("kSecAttrTokenID")]
 		IntPtr TokenID { get; }
 
-		[iOS (9,0), Mac (10,12,1), TV (9,0), Watch (2,0)]
+		[iOS (9,0), Mac (10,12,1)]
 		[Field ("kSecAttrTokenIDSecureEnclave")]
 		IntPtr SecureEnclave { get; }
 
@@ -548,11 +507,11 @@ namespace XamCore.Security {
 		[Field ("kSecAttrPersistentReference")]
 		IntPtr PersistentReference { get; }
 
-		[iOS (2,0), Mac (10,8), TV (9,0), Watch (2,0)]
+		[Mac (10,8)]
 		[Field ("kSecPrivateKeyAttrs")]
 		IntPtr PrivateKeyAttributes { get; }
 
-		[iOS (2,0), Mac (10,8), TV (9,0), Watch (2,0)]
+		[Mac (10,8)]
 		[Field ("kSecPublicKeyAttrs")]
 		IntPtr PublicKeyAttributes { get; }
 	}
