@@ -88,7 +88,6 @@ namespace Xamarin.iOS.Tasks
 
 		public override bool Execute ()
 		{
-			var name = typeof (LoggingExtensions).Assembly.FullName;
 			AppleSdkSettings.Init ();
 			IPhoneSdks.Reload ();
 
