@@ -182,8 +182,7 @@ namespace XamCore.Security {
 		Symmetric = 2,
 	}
 
-	[Static]
-	[EditorBrowsable (EditorBrowsableState.Advanced)]
+	[Static][Internal]
 	interface SecAuthenticationTypeKey {
 		[Field ("kSecAttrAuthenticationTypeNTLM")]
 		IntPtr NTLM { get; }
@@ -210,8 +209,7 @@ namespace XamCore.Security {
 		IntPtr Default { get; }
 	}
 
-	[Static]
-	[EditorBrowsable (EditorBrowsableState.Advanced)]
+	[Static][Internal]
 	interface SecProtocolKey {
 		[Field ("kSecAttrProtocolFTP")]
 		IntPtr FTP { get; }
@@ -307,8 +305,7 @@ namespace XamCore.Security {
 		IntPtr POP3S { get; }
 	}
 
-	[Static]
-	[EditorBrowsable (EditorBrowsableState.Advanced)]
+	[Static][Internal]
 	interface SecAccessibleKey {
 		[Mac (10,9)]
 		[Field ("kSecAttrAccessibleWhenUnlocked")]
