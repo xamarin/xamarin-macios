@@ -35,7 +35,7 @@ LINKER_SOURCES = \
 	$(MONOLINKER)/Linker/TypePreserve.cs			\
 	$(MONOLINKER)/Linker/XApiReader.cs				\
 	$(MONOLINKER)/Linker/Tracer.cs		\
-	$(MONOLINKER)/Linker/TypeReferenceExtensions.cs		\
+	$(MONOLINKER)/Linker/MarkingHelpers.cs		\
 	$(MONOLINKER)/Linker.Steps/BaseStep.cs			\
 	$(MONOLINKER)/Linker.Steps/BlacklistStep.cs		\
 	$(MONOLINKER)/Linker.Steps/CleanStep.cs			\

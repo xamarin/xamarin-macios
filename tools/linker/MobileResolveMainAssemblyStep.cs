@@ -32,7 +32,7 @@ namespace Xamarin.Linker.Steps {
 			Context.Resolver.CacheAssembly (assembly);
 			Context.SafeReadSymbols (assembly);
 
-			Annotations.Push (assembly);
+			Context.Tracer.Push (assembly);
 
 			var is_product_assembly = Mono.Tuner.Profile.IsProductAssembly (assembly);
 			foreach (var t in assembly.MainModule.Types) {
@@ -53,7 +53,7 @@ namespace Xamarin.Linker.Steps {
 				// should bring everything else that's required
 			}
 
-			Annotations.Pop ();
+			Context.Tracer.Pop ();
 		}
 	}
 }
