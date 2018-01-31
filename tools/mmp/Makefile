@@ -35,6 +35,8 @@ linker_sources = \
 	$(LINKER_DIR)/Linker/XApiReader.cs				\
 	$(LINKER_DIR)/Linker/IXApiVisitor.cs			\
 	$(LINKER_DIR)/Linker/MethodReferenceExtensions.cs		\
+	$(LINKER_DIR)/Linker/MarkingHelpers.cs		\
+	$(LINKER_DIR)/Linker/Tracer.cs		\
 	$(LINKER_DIR)/Linker/TypeReferenceExtensions.cs		\
 	$(LINKER_DIR)/Linker.Steps/BaseStep.cs			\
 	$(LINKER_DIR)/Linker.Steps/LoadReferencesStep.cs		\
