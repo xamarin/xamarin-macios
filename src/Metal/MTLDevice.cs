@@ -64,6 +64,7 @@ namespace XamCore.Metal {
 		unsafe static extern IntPtr MTLCopyAllDevicesWithObserver (ref IntPtr observer, void* handler);
 
 		[Mac (10, 13, onlyOn64: true), NoiOS, NoWatch, NoTV]
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static IMTLDevice [] GetAllDevices (ref NSObject observer, MTLDeviceNotificationHandler handler)
 		{
 			if (observer == null)
