@@ -67,7 +67,7 @@ namespace Linker.Shared {
 	[TestFixture]
 	// we want the test to be availble if we use the linker
 	[Preserve (AllMembers = true)]
-	public class OptimizeGeneratedCodeTest {
+	public class OptimizeGeneratedCodeTest : BaseOptimizeGeneratedCodeTest {
 		
 		// tests related to IL re-writting inside OptimizeGeneratedCodeSubStep
 		

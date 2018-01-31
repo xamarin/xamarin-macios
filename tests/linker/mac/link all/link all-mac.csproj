@@ -65,10 +65,12 @@
     <Compile Include="..\..\..\common\mac\Mac.cs">
       <Link>Mac.cs</Link>
     </Compile>
+    <Compile Include="..\..\BaseOptimizeGeneratedCodeTest.cs" />
     <Compile Include="LinkAllTest.cs" />
     <Compile Include="..\..\..\common\PlatformInfo.cs">
       <Link>PlatformInfo.cs</Link>
     </Compile>
+    <Compile Include="OptimizeGeneratedCodeTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\external\guiunit\src\framework\GuiUnit_xammac_mobile.csproj">

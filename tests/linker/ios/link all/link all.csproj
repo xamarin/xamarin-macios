@@ -168,6 +168,7 @@
     <Compile Include="AttributeTest.cs" />
     <Compile Include="InterfacesTest.cs" />
     <Compile Include="DataContractTest.cs" />
+    <Compile Include="..\..\BaseOptimizeGeneratedCodeTest.cs" />
     <Compile Include="..\link sdk\OptimizeGeneratedCodeTest.cs">
       <Link>OptimizeGeneratedCodeTest.cs</Link>
     </Compile>

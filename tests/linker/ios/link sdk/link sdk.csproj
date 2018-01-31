@@ -159,6 +159,7 @@
     <Compile Include="LinkSdkRegressionTest.cs" />
     <Compile Include="Bug1820Test.cs" />
     <Compile Include="Bug2096Test.cs" />
+    <Compile Include="..\..\BaseOptimizeGeneratedCodeTest.cs" />
     <Compile Include="OptimizeGeneratedCodeTest.cs" />
     <Compile Include="AotBugs.cs" />
     <Compile Include="CryptoTest.cs" />
