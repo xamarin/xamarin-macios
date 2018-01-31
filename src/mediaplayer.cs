@@ -1172,7 +1172,13 @@ namespace XamCore.MediaPlayer {
 	[NoMac]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface MPMusicPlayerController : MPMediaPlayback {
+
+		[Export ("init")]
+		[Deprecated (PlatformName.iOS, 11,3)]
+		IntPtr Constructor ();
+
 		[Static, Export ("applicationMusicPlayer")]
 		MPMusicPlayerController ApplicationMusicPlayer { get; }
 
@@ -2043,8 +2049,14 @@ namespace XamCore.MediaPlayer {
 	[NoMac]
 	[NoTV]
 	[iOS (10,1)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
-	interface MPMusicPlayerQueueDescriptor : NSSecureCoding {}
+	interface MPMusicPlayerQueueDescriptor : NSSecureCoding {
+
+		[Export ("init")]
+		[Deprecated (PlatformName.iOS, 11,3)]
+		IntPtr Constructor ();
+	}
 
 	[NoMac]
 	[NoTV]
