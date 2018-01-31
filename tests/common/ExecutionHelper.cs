@@ -290,21 +290,23 @@ namespace Xamarin.Tests
 			Assert.Fail (string.Format ("The warning '{0}{1:0000}: {2}' was not found in the output:\n{3}", prefix, number, messagePattern, string.Join ("\n", details.ToArray ())));
 		}
 
-		public void AssertWarning (int number, string message)
+		public void AssertWarning (int number, string message, string filename = null, int? linenumber = null)
 		{
-			AssertWarning (MessagePrefix, number, message);
+			AssertWarning (MessagePrefix, number, message, filename, linenumber);
 		}
 
-		public void AssertWarning (string prefix, int number, string message)
+		public void AssertWarning (string prefix, int number, string message, string filename = null, int? linenumber = null)
 		{
 			if (!messages.Any ((msg) => msg.Prefix == prefix && msg.Number == number))
 				Assert.Fail (string.Format ("The warning '{0}{1:0000}' was not found in the output.", prefix, number));
 
-			if (messages.Any ((msg) => msg.Message == message))
-				return;
+			var matches = messages.Where ((msg) => msg.Message == message);
+			if (!matches.Any ()) {
+				var details = messages.Where ((msg) => msg.Prefix == prefix && msg.Number == number && msg.Message != message).Select ((msg) => string.Format ("\tMessage #{2} did not match:\n\t\tactual:   '{0}'\n\t\texpected: '{1}'", msg.Message, message, messages.IndexOf (msg) + 1));
+				Assert.Fail (string.Format ("The warning '{0}{1:0000}: {2}' was not found in the output:\n{3}", prefix, number, message, string.Join ("\n", details.ToArray ())));
+			}
 
-			var details = messages.Where ((msg) => msg.Prefix == prefix && msg.Number == number && msg.Message != message).Select ((msg) => string.Format ("\tMessage #{2} did not match:\n\t\tactual:   '{0}'\n\t\texpected: '{1}'", msg.Message, message, messages.IndexOf (msg) + 1));
-			Assert.Fail (string.Format ("The warning '{0}{1:0000}: {2}' was not found in the output:\n{3}", prefix, number, message, string.Join ("\n", details.ToArray ())));
+			AssertFilename (prefix, number, message, matches, filename, linenumber);
 		}
 
 		public void AssertNoWarnings ()
