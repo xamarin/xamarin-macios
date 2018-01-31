@@ -26,6 +26,7 @@
     <MtouchExtraArgs>-v -v -disable-thread-check -xml=${ProjectDir}/extra-linker-defs.xml</MtouchExtraArgs>
     <MtouchArch>i386, x86_64</MtouchArch>
     <MtouchLink>SdkOnly</MtouchLink>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>none</DebugType>
@@ -36,6 +37,7 @@
     <MtouchExtraArgs>-v -v -xml=${ProjectDir}/extra-linker-defs.xml</MtouchExtraArgs>
     <MtouchArch>i386, x86_64</MtouchArch>
     <DefineConstants>DO_NOT_REMOVE;;$(DefineConstants)</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
     <DebugSymbols>True</DebugSymbols>
@@ -50,6 +52,7 @@
     <MtouchExtraArgs>-v -v -xml=${ProjectDir}/extra-linker-defs.xml "--dlsym:-link sdk" -gcc_flags="-UhoItsB0rken"</MtouchExtraArgs>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug32|iPhone' ">
     <DebugSymbols>True</DebugSymbols>
@@ -64,6 +67,7 @@
     <MtouchExtraArgs>-v -v -xml=${ProjectDir}/extra-linker-defs.xml "--dlsym:-link sdk" -gcc_flags="-UhoItsB0rken"</MtouchExtraArgs>
     <MtouchArch>ARMv7</MtouchArch>
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug64|iPhone' ">
     <DebugSymbols>True</DebugSymbols>
@@ -78,6 +82,7 @@
     <MtouchExtraArgs>-v -v -xml=${ProjectDir}/extra-linker-defs.xml "--dlsym:-link sdk" -gcc_flags="-UhoItsB0rken"</MtouchExtraArgs>
     <MtouchArch>ARM64</MtouchArch>
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
@@ -90,6 +95,7 @@
     <MtouchUseLlvm>True</MtouchUseLlvm>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
     <DefineConstants>DO_NOT_REMOVE;XAMARIN_APPLETLS;;$(DefineConstants)</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release32|iPhone' ">
     <DebugType>none</DebugType>
@@ -102,6 +108,7 @@
     <MtouchUseLlvm>True</MtouchUseLlvm>
     <MtouchArch>ARMv7</MtouchArch>
     <DefineConstants>DO_NOT_REMOVE;XAMARIN_APPLETLS;;$(DefineConstants)</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release64|iPhone' ">
     <DebugType>none</DebugType>
@@ -114,6 +121,7 @@
     <MtouchUseLlvm>True</MtouchUseLlvm>
     <MtouchArch>ARM64</MtouchArch>
     <DefineConstants>DO_NOT_REMOVE;XAMARIN_APPLETLS;;$(DefineConstants)</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-bitcode|iPhone' ">
     <DebugType>none</DebugType>
@@ -126,6 +134,7 @@
     <MtouchUseLlvm>true</MtouchUseLlvm>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
     <DefineConstants>DO_NOT_REMOVE;XAMARIN_APPLETLS;;$(DefineConstants)</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -197,6 +206,10 @@
     <ProjectReference Include="..\..\..\BundledResources\BundledResources.csproj">
       <Project>{FE6EDEE9-ADF6-4F42-BCF2-B68C0A44EC3D}</Project>
       <Name>BundledResources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\bindings-test\bindings-test.csproj">
+      <Project>{D6667423-EDD8-4B50-9D98-1AC5D8A8A4EA}</Project>
+      <Name>bindings-test</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
