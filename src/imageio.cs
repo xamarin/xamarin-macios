@@ -902,7 +902,7 @@ namespace XamCore.ImageIO {
 		[Field ("kCGImagePropertyFileContentsDictionary")]
 		NSString FileContentsDictionary { get; }
 		
-		[Mac (10, 9)][iOS (11,0)]
+		[Mac (10, 9)][iOS (11,0)][NoTV]
 		[Field ("kCGImagePropertyOpenEXRDictionary")]
 		NSString OpenExrDictionary { get; }
 
@@ -1626,7 +1626,7 @@ namespace XamCore.ImageIO {
 		[Field ("kCGImagePropertyIPTCExtWorkflowTagCvTermRefinedAbout")]
 		NSString IPTCExtWorkflowTagCvTermRefinedAbout { get; }
 
-		[Mac (10, 9)][iOS (11, 3)]
+		[Mac (10, 9)][iOS (11, 3)][NoTV]
 		[Field ("kCGImagePropertyOpenEXRAspectRatio")]
 		NSString OpenExrAspectRatio { get; }
 	}
