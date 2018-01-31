@@ -10398,13 +10398,13 @@ namespace XamCore.Foundation
 
 		[TV (9,2)]
 		[iOS (6,0)]
-		[Mac (10, 9)]
+		[Mac (10, 9, onlyOn64 : true)]
 		[Export ("MKCoordinateValue")]
 		XamCore.CoreLocation.CLLocationCoordinate2D CoordinateValue { get; }
 
 		[TV (9,2)]
 		[iOS (6,0)]
-		[Mac (10, 9)]
+		[Mac (10, 9, onlyOn64 : true)]
 		[Export ("MKCoordinateSpanValue")]
 		XamCore.MapKit.MKCoordinateSpan CoordinateSpanValue { get; }
 
