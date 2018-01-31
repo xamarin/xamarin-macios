@@ -3379,7 +3379,7 @@ namespace XamCore.Registrar {
 							setup_call_stack.AppendLine ("}");
 						}
 					} else {
-						throw ErrorHelper.CreateError (4105,
+						throw ErrorHelper.CreateError (App, 4105, method.Method,
 						                              "The registrar cannot marshal the parameter of type `{0}` in signature for method `{1}`.",
 						                              type.FullName, descriptiveMethodName);
 					}

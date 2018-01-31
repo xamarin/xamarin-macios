@@ -319,6 +319,11 @@ namespace Xamarin.Tests
 				     string.Join ("\n\t", errors.Select ((v) => v.ToString ())));
 		}
 
+		public void AssertExecuteFailure (string message = null)
+		{
+			Assert.AreEqual (1, Execute (), message);
+		}
+
 		public abstract void CreateTemporaryApp (Profile profile, string appName = "testApp", string code = null, string extraArg = "", string extraCode = null, string usings = null, bool use_csc = false);
 
 		public static string CompileTestAppExecutable (string targetDirectory, string code = null, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp", string extraCode = null, string usings = null, bool use_csc = false)
