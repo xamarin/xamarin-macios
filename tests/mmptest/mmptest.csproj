@@ -83,6 +83,13 @@
     <Compile Include="..\common\ExecutionHelper.cs">
       <Link>src\ExecutionHelper.cs</Link>
     </Compile>
+    <Compile Include="..\common\Profile.cs">
+      <Link>Profile.cs</Link>
+    </Compile>
+    <Compile Include="src\MmpTool.cs" />
+    <Compile Include="..\common\BundlerTool.cs">
+      <Link>BundlerTool.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
