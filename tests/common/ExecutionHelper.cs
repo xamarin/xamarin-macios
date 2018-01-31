@@ -43,7 +43,9 @@ namespace Xamarin.Tests
 
 		public Dictionary<string, string> EnvironmentVariables { get; set; }
 		public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds (60);
+#pragma warning disable 0649 // Field 'X' is never assigned to, and will always have its default value Y
 		public string WorkingDirectory;
+#pragma warning restore 0649
 
 		public IEnumerable<ToolMessage> Messages { get { return messages; } }
 		public List<string> OutputLines {
