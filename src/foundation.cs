@@ -73,6 +73,18 @@ using AEKeyword = System.UInt32;
 using OSType = System.UInt32;
 // typedef double NSTimeInterval;
 using NSTimeInterval = System.Double;
+
+// dummy usings to make code compile without having the actual types available (for [NoMac] to work)
+using NSDirectionalEdgeInsets = Foundation.NSObject;
+using UIEdgeInsets = Foundation.NSObject;
+using UIOffset = Foundation.NSObject;
+#endif
+
+#if WATCH
+// dummy usings to make code compile without having the actual types available (for [NoWatch] to work)
+using CMTime = Foundation.NSObject;
+using CMTimeMapping = Foundation.NSObject;
+using CMTimeRange = Foundation.NSObject;
 #endif
 
 // This little gem comes from a btouch bug that wrote the NSFilePresenterReacquirer delegate to the wrong
@@ -10276,23 +10288,34 @@ namespace XamCore.Foundation
 		[Export ("rangeValue")]
 		NSRange RangeValue { get; }
 
-#if MONOMAC
-		[Static, Export ("valueWithCMTime:"), Mac (10, 7)]
+		[Mac (10, 7)]
+		[NoWatch]
+		[Static, Export ("valueWithCMTime:")]
 		NSValue FromCMTime (CMTime time);
-		
-		[Export ("CMTimeValue"), Mac (10, 7)]
+
+		[Mac (10, 7)]
+		[NoWatch]
+		[Export ("CMTimeValue")]
 		CMTime CMTimeValue { get; }
-		
-		[Static, Export ("valueWithCMTimeMapping:"), Mac (10, 7)]
+
+		[Mac (10, 7)]
+		[NoWatch]
+		[Static, Export ("valueWithCMTimeMapping:")]
 		NSValue FromCMTimeMapping (CMTimeMapping timeMapping);
-		
-		[Export ("CMTimeMappingValue"), Mac (10, 7)]
+
+		[Mac (10, 7)]
+		[NoWatch]
+		[Export ("CMTimeMappingValue")]
 		CMTimeMapping CMTimeMappingValue { get; }
-		
-		[Static, Export ("valueWithCMTimeRange:"), Mac (10, 7)]
+
+		[Mac (10, 7)]
+		[NoWatch]
+		[Static, Export ("valueWithCMTimeRange:")]
 		NSValue FromCMTimeRange (CMTimeRange timeRange);
-		
-		[Export ("CMTimeRangeValue"), Mac (10, 7)]
+
+		[Mac (10, 7)]
+		[NoWatch]
+		[Export ("CMTimeRangeValue")]
 		CMTimeRange CMTimeRangeValue { get; }
 
 		[Export ("valueWithRect:"), Static]
@@ -10313,114 +10336,77 @@ namespace XamCore.Foundation
 		[Export ("pointValue")]
 		CGPoint CGPointValue { get; }
 
-#if XAMCORE_2_0
-		[Mac (10,9, onlyOn64 : true)] // The header doesn't say, but the rest of the API from the same file (MKGeometry.h) was introduced in 10.9
-		[Static, Export ("valueWithMKCoordinate:")]
-		NSValue FromMKCoordinate (XamCore.CoreLocation.CLLocationCoordinate2D coordinate);
-
-		[Mac (10,9, onlyOn64 : true)] // The header doesn't say, but the rest of the API from the same file (MKGeometry.h) was introduced in 10.9
-		[Static, Export ("valueWithMKCoordinateSpan:")]
-		NSValue FromMKCoordinateSpan (XamCore.MapKit.MKCoordinateSpan coordinateSpan);
-#endif
-#else
-#if !WATCH
-		[Static, Export ("valueWithCMTime:")]
-		NSValue FromCMTime (CMTime time);
-		
-		[Export ("CMTimeValue")]
-		CMTime CMTimeValue { get; }
-		
-		[Static, Export ("valueWithCMTimeMapping:")]
-		NSValue FromCMTimeMapping (CMTimeMapping timeMapping);
-		
-		[Export ("CMTimeMappingValue")]
-		CMTimeMapping CMTimeMappingValue { get; }
-		
-		[Static, Export ("valueWithCMTimeRange:")]
-		NSValue FromCMTimeRange (CMTimeRange timeRange);
-		
-		[Export ("CMTimeRangeValue")]
-		CMTimeRange CMTimeRangeValue { get; }
-#endif
-		
+		[NoMac]
 		[Export ("CGAffineTransformValue")]
 		XamCore.CoreGraphics.CGAffineTransform CGAffineTransformValue { get; }
 		
+		[NoMac]
 		[Export ("UIEdgeInsetsValue")]
-		UIKit.UIEdgeInsets UIEdgeInsetsValue { get; }
+		UIEdgeInsets UIEdgeInsetsValue { get; }
 
+		[NoMac]
 		[Watch (4,0), TV (11,0), iOS (11,0)]
 		[Export ("directionalEdgeInsetsValue")]
 		NSDirectionalEdgeInsets DirectionalEdgeInsetsValue { get; }
 
+		[NoMac]
 		[Export ("valueWithCGAffineTransform:")][Static]
 		NSValue FromCGAffineTransform (XamCore.CoreGraphics.CGAffineTransform tran);
 
+		[NoMac]
 		[Export ("valueWithUIEdgeInsets:")][Static]
-		NSValue FromUIEdgeInsets (UIKit.UIEdgeInsets insets);
+		NSValue FromUIEdgeInsets (UIEdgeInsets insets);
 
 		[Watch (4,0), TV (11,0), iOS (11,0)]
+		[NoMac]
 		[Static]
 		[Export ("valueWithDirectionalEdgeInsets:")]
 		NSValue FromDirectionalEdgeInsets (NSDirectionalEdgeInsets insets);
 
 		[Export ("valueWithUIOffset:")][Static]
-		NSValue FromUIOffset (UIKit.UIOffset insets);
+		[NoMac]
+		NSValue FromUIOffset (UIOffset insets);
 
 		[Export ("UIOffsetValue")]
+		[NoMac]
 		UIOffset UIOffsetValue { get; }
-
-		[Export ("valueWithCGRect:")][Static]
-		NSValue FromCGRect (CGRect rect);
-
-		[Export ("CGRectValue")]
-		CGRect CGRectValue { get; }
-
-		[Export ("valueWithCGSize:")][Static]
-		NSValue FromCGSize (CGSize size);
-
-		[Export ("CGSizeValue")]
-		CGSize CGSizeValue { get; }
-
-		[Export ("CGPointValue")]
-		CGPoint CGPointValue { get; }
-		
-		[Export ("valueWithCGPoint:")][Static]
-		NSValue FromCGPoint (CGPoint point);
-
 		// from UIGeometry.h - those are in iOS8 only (even if the header is silent about them)
 		// and not in OSX 10.10
 
 		[iOS (8,0)]
 		[Export ("CGVectorValue")]
+		[NoMac]
 		CGVector CGVectorValue { get; }
 
 		[iOS (8,0)]
 		[Static, Export ("valueWithCGVector:")]
+		[NoMac]
 		NSValue FromCGVector (CGVector vector);
 
 		// Maybe we should include this inside mapkit.cs instead (it's a partial interface, so that's trivial)?
-
 		[TV (9,2)]
 		[iOS (6,0)]
+		[Mac (10,9, onlyOn64 : true)] // The header doesn't say, but the rest of the API from the same file (MKGeometry.h) was introduced in 10.9
 		[Static, Export ("valueWithMKCoordinate:")]
 		NSValue FromMKCoordinate (XamCore.CoreLocation.CLLocationCoordinate2D coordinate);
 
 		[TV (9,2)]
 		[iOS (6,0)]
+		[Mac (10,9, onlyOn64 : true)] // The header doesn't say, but the rest of the API from the same file (MKGeometry.h) was introduced in 10.9
 		[Static, Export ("valueWithMKCoordinateSpan:")]
 		NSValue FromMKCoordinateSpan (XamCore.MapKit.MKCoordinateSpan coordinateSpan);
 
 		[TV (9,2)]
 		[iOS (6,0)]
+		[Mac (10, 9)]
 		[Export ("MKCoordinateValue")]
 		XamCore.CoreLocation.CLLocationCoordinate2D CoordinateValue { get; }
 
 		[TV (9,2)]
 		[iOS (6,0)]
+		[Mac (10, 9)]
 		[Export ("MKCoordinateSpanValue")]
 		XamCore.MapKit.MKCoordinateSpan CoordinateSpanValue { get; }
-#endif
 
 #if !WATCH
 		[Export ("valueWithCATransform3D:")][Static]
