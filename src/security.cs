@@ -337,6 +337,77 @@ namespace XamCore.Security {
 		IntPtr WhenPasscodeSetThisDeviceOnly { get; }
 	}
 
+	[StrongDictionary ("SecAttributeKeys")]
+	interface SecPublicPrivateKeyAttrs {
+		string Label { get; set; }
+
+		bool IsPermanent { get; set; }
+
+		NSData ApplicationTag { get; set; }
+
+		int EffectiveKeySize { get; set; }
+
+#if MONOMAC
+		[Advice ("On macOS when passed to 'GenerateKeyPair', 'false' seems to be the only valid value. Otherwise 'UnsupportedKeyUsageMask' is returned.")]
+#endif
+		bool CanEncrypt { get; set; }
+
+#if MONOMAC
+		[Advice ("On macOS when passed to 'GenerateKeyPair', 'false' seems to be the only valid value. Otherwise 'UnsupportedKeyUsageMask' is returned.")]
+#endif
+		bool CanDecrypt { get; set; }
+
+		bool CanDerive { get; set; }
+
+#if MONOMAC
+		[Advice ("On macOS when passed to 'GenerateKeyPair', 'false' seems to be the only valid value. Otherwise 'UnsupportedKeyUsageMask' is returned.")]
+#endif
+		bool CanSign { get; set; }
+
+#if MONOMAC
+		[Advice ("On macOS when passed to 'GenerateKeyPair', 'false' seems to be the only valid value. Otherwise 'UnsupportedKeyUsageMask' is returned.")]
+#endif
+		bool CanVerify { get; set; }
+
+#if MONOMAC
+		[Advice ("On macOS when passed to 'GenerateKeyPair', 'false' seems to be the only valid value. Otherwise 'UnsupportedKeyUsageMask' is returned.")]
+#endif
+		bool CanUnwrap { get; set; }
+	}
+
+	[Static][Internal]
+	interface SecAttributeKeys {
+		[Field ("kSecAttrLabel")]
+		NSString LabelKey { get; }
+
+		[Field ("kSecAttrIsPermanent")]
+		NSString IsPermanentKey { get; }
+
+		[Field ("kSecAttrApplicationTag")]
+		NSString ApplicationTagKey { get; }
+
+		[Field ("kSecAttrEffectiveKeySize")]
+		NSString EffectiveKeySizeKey { get; }
+
+		[Field ("kSecAttrCanEncrypt")]
+		NSString CanEncryptKey { get; }
+
+		[Field ("kSecAttrCanDecrypt")]
+		NSString CanDecryptKey { get; }
+
+		[Field ("kSecAttrCanDerive")]
+		NSString CanDeriveKey { get; }
+
+		[Field ("kSecAttrCanSign")]
+		NSString CanSignKey { get; }
+
+		[Field ("kSecAttrCanVerify")]
+		NSString CanVerifyKey { get; }
+
+		[Field ("kSecAttrCanUnwrap")]
+		NSString CanUnwrapKey { get; }
+	}
+
 	[Static][Internal]
 	interface SecAttributeKey {
 		[Mac (10,9)]
@@ -382,9 +453,6 @@ namespace XamCore.Security {
 
 		[Field ("kSecAttrType")]
 		IntPtr Type { get; }
-
-		[Field ("kSecAttrLabel")]
-		IntPtr Label { get; }
 
 		[Field ("kSecAttrIsInvisible")]
 		IntPtr IsInvisible { get; }
@@ -446,17 +514,11 @@ namespace XamCore.Security {
 		[Field ("kSecAttrApplicationLabel")]
 		IntPtr ApplicationLabel { get; }
 
-		[Field ("kSecAttrIsPermanent")]
-		IntPtr IsPermanent { get; }
-
 		[Field ("kSecAttrIsSensitive")]
 		IntPtr IsSensitive { get; }
 
 		[Field ("kSecAttrIsExtractable")]
 		IntPtr IsExtractable { get; }
-
-		[Field ("kSecAttrApplicationTag")]
-		IntPtr ApplicationTag { get; }
 
 		[Field ("kSecAttrKeyType")]
 		IntPtr KeyType { get; }
@@ -464,29 +526,8 @@ namespace XamCore.Security {
 		[Field ("kSecAttrKeySizeInBits")]
 		IntPtr KeySizeInBits { get; }
 
-		[Field ("kSecAttrEffectiveKeySize")]
-		IntPtr EffectiveKeySize { get; }
-
-		[Field ("kSecAttrCanEncrypt")]
-		IntPtr CanEncrypt { get; }
-
-		[Field ("kSecAttrCanDecrypt")]
-		IntPtr CanDecrypt { get; }
-
-		[Field ("kSecAttrCanDerive")]
-		IntPtr CanDerive { get; }
-
-		[Field ("kSecAttrCanSign")]
-		IntPtr CanSign { get; }
-
-		[Field ("kSecAttrCanVerify")]
-		IntPtr CanVerify { get; }
-
 		[Field ("kSecAttrCanWrap")]
 		IntPtr CanWrap { get; }
-
-		[Field ("kSecAttrCanUnwrap")]
-		IntPtr CanUnwrap { get; }
 
 		[iOS (9,0)]
 		[Mac (10,12)]
@@ -509,6 +550,14 @@ namespace XamCore.Security {
 		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
 		[Field ("kSecAttrPersistentReference")]
 		IntPtr PersistentReference { get; }
+
+		[Mac (10,8)]
+		[Field ("kSecPrivateKeyAttrs")]
+		IntPtr PrivateKeyAttrs { get; }
+
+		[Mac (10,8)]
+		[Field ("kSecPublicKeyAttrs")]
+		IntPtr PublicKeyAttrs { get; }
 	}
 
 	[Static][Internal]

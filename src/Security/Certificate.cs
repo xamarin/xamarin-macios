@@ -543,6 +543,38 @@ namespace XamCore.Security {
 				publicKey = privateKey = null;
 			return res;
 		}
+
+#if MONOMAC
+		public static SecStatusCode GenerateKeyPair (SecKeyType type, int keySizeInBits, SecPublicPrivateKeyAttrs publicPrivateKeyAttrs, out SecKey publicKey, out SecKey privateKey)
+		{
+			if (type == SecKeyType.Invalid)
+				throw new ArgumentException ("invalid 'SecKeyType'", nameof (type));
+
+			NSMutableDictionary dic;
+			if (publicPrivateKeyAttrs != null)
+				dic = new NSMutableDictionary (publicPrivateKeyAttrs.GetDictionary ());
+			else
+				dic = new NSMutableDictionary ();
+			dic.LowlevelSetObject (type.GetConstant (), SecAttributeKey.Type);
+			dic.LowlevelSetObject (new NSNumber (keySizeInBits), SecAttributeKey.KeySizeInBits);
+			return GenerateKeyPair (dic, out publicKey, out privateKey);
+		}
+#else
+		public static SecStatusCode GenerateKeyPair (SecKeyType type, int keySizeInBits, SecPublicPrivateKeyAttrs publicKeyAttrs, SecPublicPrivateKeyAttrs privateKeyAttrs, out SecKey publicKey, out SecKey privateKey)
+		{
+			if (type == SecKeyType.Invalid)
+				throw new ArgumentException ("invalid 'SecKeyType'", nameof (type));
+
+			var dic = new NSMutableDictionary ();
+			dic.LowlevelSetObject (type.GetConstant (), SecAttributeKey.Type);
+			dic.LowlevelSetObject (new NSNumber (keySizeInBits), SecAttributeKey.KeySizeInBits);
+			if (publicKeyAttrs != null)
+				dic.LowlevelSetObject (publicKeyAttrs.GetDictionary (), SecAttributeKey.PublicKeyAttrs);
+			if (privateKeyAttrs != null)
+				dic.LowlevelSetObject (privateKeyAttrs.GetDictionary (), SecAttributeKey.PrivateKeyAttrs);
+			return GenerateKeyPair (dic, out publicKey, out privateKey);
+		}
+#endif
 			
 		[DllImport (Constants.SecurityLibrary)]
 		extern static /* size_t */ nint SecKeyGetBlockSize (IntPtr handle);

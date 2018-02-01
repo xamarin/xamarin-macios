@@ -585,5 +585,42 @@ namespace MonoTouchFixtures.Security {
 				}
 			}
 		}
+
+		[Test]
+		public void GenerateKeyPairTest ()
+		{
+			NSError error;
+			SecKey private_key;
+			SecKey public_key;
+			var att = new SecPublicPrivateKeyAttrs ();
+			att.Label = "NotDefault";
+			att.IsPermanent = true;
+			att.ApplicationTag = new NSData ();
+			att.EffectiveKeySize = 1024;
+			att.CanEncrypt = false;
+			att.CanDecrypt = false;
+			att.CanDerive = false;
+			att.CanSign = false;
+			att.CanVerify = false;
+			att.CanUnwrap = false;
+
+#if MONOMAC
+			Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, 1024, att, out public_key, out private_key), Is.EqualTo (SecStatusCode.Success), "Mac - GenerateKeyPair");
+			Assert.Throws<ArgumentException> (() => { SecKey.GenerateKeyPair (SecKeyType.Invalid, -1, null, out _, out _);  }, "Mac - GenerateKeyPair - Invalid");
+			Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, -1, null, out _, out _), Is.EqualTo (SecStatusCode.Param), "Mac - GenerateKeyPair - Param issue, invalid RSA key size");
+			Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, 1024, null, out _, out _), Is.EqualTo (SecStatusCode.Success), "Mac - GenerateKeyPair - Null optional params, success");
+#else
+			Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, 1024, att, att, out public_key, out private_key), Is.EqualTo (SecStatusCode.Success), "iOS - GenerateKeyPair");
+			Assert.Throws<ArgumentException> (() => { SecKey.GenerateKeyPair (SecKeyType.Invalid, -1, null, null, out _, out _);  }, "iOS - GenerateKeyPair - Invalid");
+			Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, -1, null, null, out _, out _), Is.EqualTo (SecStatusCode.Param), "iOS - GenerateKeyPair - Param issue, invalid RSA key size");
+			Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, 1024, null, null, out _, out _), Is.EqualTo (SecStatusCode.Success), "iOS - GenerateKeyPair - Null optional params, success");
+#endif
+			using (var attrs = public_key.GetAttributes ()) {
+				Assert.That (attrs.Count, Is.GreaterThan (0), "public/GetAttributes");
+			}
+			using (var attrs = private_key.GetAttributes ()) {
+				Assert.That (attrs.Count, Is.GreaterThan (0), "private/GetAttributes");
+			}
+		}
 	}
 }
