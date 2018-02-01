@@ -3931,11 +3931,12 @@ public partial class Generator : IMemberGatherer {
 					var et = pi.ParameterType.GetElementType ();
 					var nullable = TypeManager.GetUnderlyingNullableType (et);
 					if (nullable != null) {
-						convs.Append ("var converted = IntPtr.Zero;");
-						convs.Append ("if (value.HasValue) {");
-						convs.Append ("\tvar v = value.Value;");
-						convs.Append ("\tconverted = new IntPtr (&v);");
-						convs.Append ("}");
+						convs.Append ("var converted = IntPtr.Zero;\n");
+						convs.Append ($"var v = default ({FormatType (mi.DeclaringType, nullable)});\n");
+						convs.Append ("if (value.HasValue) {\n");
+						convs.Append ("\tv = value.Value;\n");
+						convs.Append ("\tconverted = new IntPtr (&v);\n");
+						convs.Append ("}\n");
 					}
 				}
 			}

@@ -17,6 +17,7 @@ namespace xharness
 		public bool IsExecutableProject;
 		public bool IsNUnitProject;
 		public bool GenerateVariations = true;
+		public string [] Configurations;
 
 		public TestProject ()
 		{
@@ -159,7 +160,6 @@ namespace xharness
 		public bool GenerateFull => TargetFrameworkFlavor == MacFlavors.All || TargetFrameworkFlavor == MacFlavors.Full;
 
 		public string Platform = "x86";
-		public string [] Configurations;
 
 		public MacTestProject () : base ()
 		{

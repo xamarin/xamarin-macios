@@ -186,8 +186,10 @@ namespace xharness
 
 		IEnumerable<T> CreateTestVariations<T> (IEnumerable<T> tests, Func<XBuildTask, T, T> creator) where T: RunTestTask
 		{
-			foreach (var task in tests)
-				task.Variation = "Debug";
+			foreach (var task in tests) {
+				if (string.IsNullOrEmpty (task.Variation))
+					task.Variation = "Debug";
+			}
 
 			var rv = new List<T> (tests);
 			foreach (var task in tests.ToArray ()) {
@@ -248,17 +250,28 @@ namespace xharness
 					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsTvOSProject (), TestPlatform.tvOS, ignored || !IncludetvOS));
 				if (!project.SkipwatchOSVariation)
 					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsWatchOSProject (), TestPlatform.watchOS, ignored || !IncludewatchOS));
-				foreach (var pair in ps) {
-					var derived = new XBuildTask () {
-						Jenkins = this,
-						ProjectConfiguration = "Debug",
-						ProjectPlatform = "iPhoneSimulator",
-						Platform = pair.Item2,
-						Ignored = pair.Item3,
-						TestName = project.Name,
-					};
-					derived.CloneTestProject (pair.Item1);
-					runSimulatorTasks.AddRange (CreateRunSimulatorTaskAsync (derived));
+				
+				var configurations = project.Configurations;
+				if (configurations == null)
+					configurations = new string [] { "Debug" };
+				foreach (var config in configurations) {
+					foreach (var pair in ps) {
+						var derived = new XBuildTask () {
+							Jenkins = this,
+							ProjectConfiguration = config,
+							ProjectPlatform = "iPhoneSimulator",
+							Platform = pair.Item2,
+							Ignored = pair.Item3,
+							TestName = project.Name,
+						};
+						derived.CloneTestProject (pair.Item1);
+						var simTasks = CreateRunSimulatorTaskAsync (derived);
+						runSimulatorTasks.AddRange (simTasks);
+						if (configurations.Length > 1) {
+							foreach (var task in simTasks)
+								task.Variation = config;
+						}
+					}
 				}
 			}
 
@@ -3259,6 +3272,7 @@ function oninitialload ()
 				Target = AppRunnerTarget,
 				LogDirectory = LogDirectory,
 				MainLog = Logs.Create ($"run-{Device.UDID}-{Timestamp}.log", "Run log"),
+				Configuration = ProjectConfiguration,
 			};
 			runner.Simulators = Simulators;
 			runner.Initialize ();

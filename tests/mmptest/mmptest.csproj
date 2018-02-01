@@ -76,9 +76,6 @@
     <Compile Include="..\mtouch\Cache.cs">
       <Link>Cache.cs</Link>
     </Compile>
-    <Compile Include="..\..\tools\common\StringUtils.cs">
-      <Link>StringUtils.cs</Link>
-    </Compile>
     <Compile Include="src\NetStandardTests.cs" />
     <Compile Include="..\common\ProductTests.cs">
       <Link>ProductTests.cs</Link>
