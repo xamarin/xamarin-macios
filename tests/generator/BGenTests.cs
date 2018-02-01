@@ -17,45 +17,45 @@ namespace GeneratorTests
 	public class BGenTests
 	{
 		[Test]
-		[TestCase (Profile.macClassic)]
-		[TestCase (Profile.macFull)]
-		[TestCase (Profile.macModern)]
+		[TestCase (Profile.macOSClassic)]
+		[TestCase (Profile.macOSFull)]
+		[TestCase (Profile.macOSMobile)]
 		public void BMac_Smoke (Profile profile)
 		{
 			BuildFile (profile, "bmac_smoke.cs");
 		}
 
 		[Test]
-		[TestCase (Profile.macClassic)]
-		[TestCase (Profile.macFull)]
-		[TestCase (Profile.macModern)]
+		[TestCase (Profile.macOSClassic)]
+		[TestCase (Profile.macOSFull)]
+		[TestCase (Profile.macOSMobile)]
 		public void BMac_With_Hyphen_In_Name (Profile profile)
 		{
 			BuildFile (profile, "bmac-with-hyphen-in-name.cs");
 		}
 
 		[Test]
-		[TestCase (Profile.macClassic)]
-		[TestCase (Profile.macFull)]
-		[TestCase (Profile.macModern)]
+		[TestCase (Profile.macOSClassic)]
+		[TestCase (Profile.macOSFull)]
+		[TestCase (Profile.macOSMobile)]
 		public void PropertyRedefinitionMac (Profile profile)
 		{
 			BuildFile (profile, "property-redefination-mac.cs");
 		}
 
 		[Test]
-		[TestCase (Profile.macClassic)]
-		[TestCase (Profile.macFull)]
-		[TestCase (Profile.macModern)]
+		[TestCase (Profile.macOSClassic)]
+		[TestCase (Profile.macOSFull)]
+		[TestCase (Profile.macOSMobile)]
 		public void NSApplicationPublicEnsureMethods (Profile profile)
 		{
 			BuildFile (profile, "NSApplicationPublicEnsureMethods.cs");
 		}
 
 		[Test]
-		[TestCase (Profile.macClassic)]
-		[TestCase (Profile.macFull)]
-		[TestCase (Profile.macModern)]
+		[TestCase (Profile.macOSClassic)]
+		[TestCase (Profile.macOSFull)]
+		[TestCase (Profile.macOSMobile)]
 		public void ProtocolDuplicateAbstract (Profile profile)
 		{
 			BuildFile (profile, "protocol-duplicate-abstract.cs");
@@ -156,9 +156,9 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		[TestCase (Profile.macClassic)]
-		[TestCase (Profile.macFull)]
-		[TestCase (Profile.macModern)]
+		[TestCase (Profile.macOSClassic)]
+		[TestCase (Profile.macOSFull)]
+		[TestCase (Profile.macOSMobile)]
 		public void Bug31788 (Profile profile)
 		{
 			var bgen = new BGenTool ();

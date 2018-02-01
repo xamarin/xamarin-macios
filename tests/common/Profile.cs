@@ -7,6 +7,7 @@ namespace Xamarin.Tests
 		iOS,
 		tvOS,
 		watchOS,
+		macOSClassic,
 		macOSMobile,
 		macOSFull,
 		macOSSystem,
