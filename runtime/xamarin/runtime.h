@@ -65,6 +65,7 @@ typedef struct __attribute__((packed)) {
 	uint8_t assembly_index:7; /* 0-based index into the '__xamarin_registration_assemblies' array. Max 127 (registered) assemblies before a full token reference has to be used */
 	uint32_t token:24; /* RID of the corresponding metadata token. The exact type of metadata token depends on the context where the token reference is used. */
 } MTTokenReference;
+static const uint32_t INVALID_TOKEN_REF = 0xFFFFFFFF;
 
 typedef struct __attribute__((packed)) {
 	void *handle;
@@ -154,6 +155,7 @@ char *			xamarin_strdup_printf (const char *msg, ...);
 void *			xamarin_calloc (size_t size);
 void			xamarin_free (void *ptr);
 MonoMethod *	xamarin_get_reflection_method_method (MonoReflectionMethod *method);
+MonoMethod *	xamarin_get_managed_method_for_token (guint32 token_ref, guint32 *exception_gchandle);
 void			xamarin_framework_peer_lock ();
 void			xamarin_framework_peer_unlock ();
 bool			xamarin_file_exists (const char *path);
