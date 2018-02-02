@@ -13,18 +13,6 @@ using Xamarin.Utils;
 
 namespace Xamarin.Tests
 {
-	public enum Profile
-	{
-		None,
-		iOS,
-		tvOS,
-		watchOS,
-		macClassic,
-		macModern,
-		macFull,
-		macSystem,
-	}
-
 	class BGenTool : Tool
 	{
 		AssemblyDefinition assembly;
@@ -40,9 +28,9 @@ namespace Xamarin.Tests
 		public string WarnAsError; // Set to empty string to pass /warnaserror, set to non-empty string to pass /warnaserror:<nonemptystring>
 		public string NoWarn; // Set to empty string to pass /nowarn, set to non-empty string to pass /nowarn:<nonemptystring>
 
-		protected override string ToolPath { get { return Profile == Profile.macClassic ? Configuration.BGenClassicPath : Configuration.BGenPath; } }
+		protected override string ToolPath { get { return Profile == Profile.macOSClassic ? Configuration.BGenClassicPath : Configuration.BGenPath; } }
 		protected override string MessagePrefix { get { return "BI"; } }
-		protected override string MessageToolName { get { return Profile == Profile.macClassic ? "bgen-classic" : "bgen"; } }
+		protected override string MessageToolName { get { return Profile == Profile.macOSClassic ? "bgen-classic" : "bgen"; } }
 
 		public BGenTool ()
 		{
@@ -81,16 +69,16 @@ namespace Xamarin.Tests
 			case Profile.watchOS:
 				targetFramework = "Xamarin.WatchOS,v1.0";
 				break;
-			case Profile.macClassic:
+			case Profile.macOSClassic:
 				targetFramework = "XamMac,v1.0";
 				break;
-			case Profile.macFull:
+			case Profile.macOSFull:
 				targetFramework = "Xamarin.Mac,Version=v4.5,Profile=Full";
 				break;
-			case Profile.macModern:
+			case Profile.macOSMobile:
 				targetFramework = "Xamarin.Mac,Version=v2.0,Profile=Mobile";
 				break;
-			case Profile.macSystem:
+			case Profile.macOSSystem:
 				targetFramework = "Xamarin.Mac,Version=v4.5,Profile=System";
 				break;
 			default:
@@ -282,11 +270,11 @@ namespace Xamarin.Tests
 		public static string [] GetDefaultDefines (Profile profile)
 		{
 			switch (profile) {
-			case Profile.macFull:
-			case Profile.macModern:
-			case Profile.macSystem:
+			case Profile.macOSFull:
+			case Profile.macOSMobile:
+			case Profile.macOSSystem:
 				return new string [] { "MONOMAC", "XAMCORE_2_0" };
-			case Profile.macClassic:
+			case Profile.macOSClassic:
 				return new string [] { "MONOMAC" };
 			case Profile.iOS:
 				return new string [] { "IOS", "XAMCORE_2_0" };
