@@ -162,6 +162,14 @@ namespace ObjCRuntime {
 
 		internal static unsafe InitializationOptions* options;
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public static bool DynamicRegistrationSupported {
+			get {
+				// The linker may turn calls to this property into a constant
+				return true;
+			}
+		}
+
 		internal static bool Initialized {
 			get { return initialized; }
 		}
@@ -234,7 +242,8 @@ namespace ObjCRuntime {
 
 			NSObjectClass = NSObject.Initialize ();
 
-			Registrar = new DynamicRegistrar ();
+			if (DynamicRegistrationSupported)
+				Registrar = new DynamicRegistrar ();
 			RegisterDelegates (options);
 			Class.Initialize (options);
 			InitializePlatform (options);
@@ -538,6 +547,8 @@ namespace ObjCRuntime {
 			if (a == null)
 				throw new ArgumentNullException ("a");
 
+			if (!DynamicRegistrationSupported)
+				throw ErrorHelper.CreateError (8026, "Runtime.RegisterAssembly is not supported when the dynamic registrar has been linked away.");
 #if MONOMAC
 			var attributes = a.GetCustomAttributes (typeof (RequiredFrameworkAttribute), false);
 
@@ -1409,6 +1420,9 @@ namespace ObjCRuntime {
 
 			if (export == null)
 				throw new ArgumentNullException ("export");
+
+			if (!DynamicRegistrationSupported)
+				throw ErrorHelper.CreateError (8026, "Runtime.ConnectMethod is not supported when the dynamic registrar has been linked away.");
 
 			Registrar.RegisterMethod (type, method, export);
 		}

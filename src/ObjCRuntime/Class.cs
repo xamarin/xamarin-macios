@@ -36,6 +36,9 @@ namespace ObjCRuntime {
 			if (map == null)
 				return;
 
+			if (!Runtime.DynamicRegistrationSupported)
+				return; // Only the dynamic registrar needs the list of registered assemblies.
+			
 			for (int i = 0; i < map->assembly_count; i++) {
 				var ptr = Marshal.ReadIntPtr (map->assembly, i * IntPtr.Size);
 				Runtime.Registrar.SetAssemblyRegistered (Marshal.PtrToStringAuto (ptr));
@@ -116,6 +119,8 @@ namespace ObjCRuntime {
 			}
 
 			if (@class == IntPtr.Zero) {
+				if (!Runtime.DynamicRegistrationSupported)
+					throw ErrorHelper.CreateError (8026, $"Can't register the class {type.FullName} when the dynamic registrar has been linked away.");
 				@class = Register (type);
 				lock (type_to_class)
 					type_to_class [type] = @class;
