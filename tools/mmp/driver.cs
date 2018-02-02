@@ -53,6 +53,13 @@ using XamCore.Registrar;
 using XamCore.ObjCRuntime;
 
 namespace Xamarin.Bundler {
+	// Should we strip the bitness from libraries copied in
+	public enum NativeStripMode {
+		Default,
+		Strip,
+		Skip,
+	}
+		
 	public enum RegistrarMode {
 		Default,
 		Dynamic,
@@ -82,6 +89,7 @@ namespace Xamarin.Bundler {
 		static string app_name;
 		static bool generate_plist;
 		public static RegistrarMode Registrar { get; private set; } = RegistrarMode.Default;
+		public static NativeStripMode NativeStrip { get; private set; } = NativeStripMode.Default; 
 		public static List<string> RecursiveSearchDirectories { get; } = new List<string> ();
 		static bool no_executable;
 		static bool embed_mono = true;
@@ -366,6 +374,22 @@ namespace Xamarin.Bundler {
 						aotOptions = new AOTOptions (v);
 					}
 				},
+				{ "native-strip=", "Strip native libraries copied into bundle of their unnecessary architectures. Defaults to true in Release and False in debug. (default, strip, skip)", v => {
+					switch (v) {
+					case "default":
+						NativeStrip = NativeStripMode.Default;
+						break;
+					case "strip":
+						NativeStrip = NativeStripMode.Strip;
+						break;
+					case "skip":
+						NativeStrip = NativeStripMode.Skip;
+						break;
+					default:
+						ErrorHelper.Error (26, $"Could not parse the command line argument '-native-strip:{v}'");
+						break;
+					}
+				}},
 			};
 
 			AddSharedOptions (App, os);
@@ -494,6 +518,9 @@ namespace Xamarin.Bundler {
 						"Xamarin.Mac Unified API against a full .NET framework does not support linking SDK or All assemblies. Pass either the `-nolink` or `-linkplatform` flag.");
 				}
 			}
+
+			if (NativeStrip == NativeStripMode.Default)
+				NativeStrip = EnableDebug ? NativeStripMode.Skip : NativeStripMode.Strip;
 
 			ValidateXcode ();
 
@@ -1624,7 +1651,7 @@ namespace Xamarin.Bundler {
 			if (ignored_assemblies.Contains (library))
 				return;
 
-			// If we're as passed in framework, ignore
+			// If we're passed in a framework, ignore
 			if (App.Frameworks.Contains (library))
 				return;
 
@@ -1685,8 +1712,19 @@ namespace Xamarin.Bundler {
 				// install_name_tool gets angry if you copy in a read only native library
 				CopyFileAndRemoveReadOnly (real_src, dest);
 			}
-
+			
 			bool isStaticLib = real_src.EndsWith (".a", StringComparison.Ordinal);
+			bool isDynamicLib = real_src.EndsWith (".dylib", StringComparison.Ordinal);
+
+			if (isDynamicLib && NativeStrip == NativeStripMode.Strip) {
+				string archToRemove = arch == "i386" ? "x86_64" : "i386";
+				int ret = XcodeRun ("lipo", $"{dest} -remove {archToRemove} -output {dest}");
+				if (ret != 0)
+					throw new MonoMacException (5310, true, "lipo failed with an error code '{0}'. Check build log for details.", ret);
+				if (name != "MonoPosixHelper")
+					ErrorHelper.Warning (1501, $"{name} was stripped of architecture {archToRemove} to comply with App Store restrictions. This could break exisiting codesigning signatures. Consider stripping the library with lipo or disabling with --native-strip=skip");
+			}
+
 			if (native_references.Contains (real_src)) {
 				if (!isStaticLib) {
 					int ret = XcodeRun ("install_name_tool -id", string.Format ("{0} {1}", StringUtils.Quote("@executable_path/../" + BundleName + "/" + name), StringUtils.Quote(dest)));

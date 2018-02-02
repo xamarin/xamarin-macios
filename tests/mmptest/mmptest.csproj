@@ -90,6 +90,7 @@
     <Compile Include="..\common\BundlerTool.cs">
       <Link>BundlerTool.cs</Link>
     </Compile>
+    <Compile Include="src\CodeStrippingTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
