@@ -577,6 +577,7 @@ namespace Introspection
 			"Fourty",
 			"Grammarl",
 			"Greeking",
+			"Gtin",
 			"Hsb",
 			"Hsba",
 			"Ibss",
