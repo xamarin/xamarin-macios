@@ -86,7 +86,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Runtime.MarshalObjectiveCException -= ObjExceptionHandler;
 		}
 
-		// Simulator/desktop only
+		// Simulator/desktop only (except for watchOS, where it works everywhere)
 		[Test]
 		public void ObjCException ()
 		{
@@ -95,9 +95,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Assert.Ignore ("This test requires wrapper functions, which are not enabled for monotouch-test on device.");
 #endif
 
-#if !DEBUG && !__WATCHOS__ && !__MACOS__
-			if (Runtime.Arch != Arch.DEVICE)
-				Assert.Ignore ("This test only works in debug mode in the simulator.");
+#if !DEBUG && !__WATCHOS__
+			Assert.Ignore ("This test only works in debug mode in the simulator.");
 #endif
 			InstallHandlers ();
 
@@ -132,7 +131,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-		// Simulator/desktop only test
+		// Simulator/desktop only test (except for watchOS, where it works everywhere)
 		[Test]
 		public void ManagedExceptionPassthrough ()
 		{
@@ -143,9 +142,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Assert.Ignore ("This test requires wrapper functions, which are not enabled for monotouch-test on device.");
 #endif
 
-#if !DEBUG && !__WATCHOS__ && !__MACOS__
-			if (Runtime.Arch != Arch.DEVICE)
-				Assert.Ignore ("This test only works in debug mode in the simulator.");
+#if !DEBUG && !__WATCHOS__
+			Assert.Ignore ("This test only works in debug mode in the simulator.");
 #endif
 			var hasDebugger = global::System.Diagnostics.Debugger.IsAttached;
 
