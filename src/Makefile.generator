@@ -11,7 +11,7 @@ GENERATOR_SOURCES =                                             \
 	$(TOP)/src/ObjCRuntime/Stret.cs                    \
 	$(TOP)/tools/common/TargetFramework.cs             \
 	$(TOP)/tools/common/StringUtils.cs				   \
-	build/generator-frameworks.g.cs                    \
+	$(BUILD_DIR)/generator-frameworks.g.cs                    \
 	$(MONO_PATH)/mcs/class/Mono.Options/Mono.Options/Options.cs \
 
 GENERATOR_DEFINES = -d:BGENERATOR -d:NET_4_0
@@ -51,8 +51,8 @@ GENERATOR_ATTRIBUTE_SOURCES = \
 
 IKVM_REFLECTION_FLAGS = -d:NO_AUTHENTICODE,STATIC,NO_SYMBOL_WRITER
 
-build/common/bgen.exe: $(GENERATOR_SOURCES) $(IKVM_REFLECTION_SOURCES) $(GENERATOR_ATTRIBUTE_SOURCES) Makefile.generator
-	$(Q) mkdir -p build/common
+$(BUILD_DIR)/common/bgen.exe: $(GENERATOR_SOURCES) $(IKVM_REFLECTION_SOURCES) $(GENERATOR_ATTRIBUTE_SOURCES) Makefile.generator
+	$(Q) mkdir -p $(BUILD_DIR)/common
 	$(Q_GEN) $(SYSTEM_CSC) -debug:portable -out:$@ $(IKVM_REFLECTION_FLAGS) $(GENERATOR_DEFINES) $(IKVM_REFLECTION_SOURCES) $(GENERATOR_ATTRIBUTE_SOURCES) $(GENERATOR_SOURCES)
 
 # The command-line arguments in the csproj are currently kept up-to-date manually
@@ -76,7 +76,7 @@ PROJECT_FILES += generator.csproj
 # Common
 #
 
-build/generator-frameworks.g.cs: frameworks.sources Makefile.generator generate-frameworks.csharp
+$(BUILD_DIR)/generator-frameworks.g.cs: frameworks.sources Makefile.generator generate-frameworks.csharp
 	@mkdir -p $(dir $@)
 	@./generate-frameworks.csharp '$(IOS_FRAMEWORKS)' '$(MAC_FRAMEWORKS)' '$(WATCHOS_FRAMEWORKS)' '$(TVOS_FRAMEWORKS)' > $@
 
@@ -115,7 +115,7 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/%.dll: $(IOS_BUILD_DIR)/native/%.dll 
 	$(Q) install -m 0755 $< $@
 	$(Q) install -m 0644 $<.mdb $@.mdb
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/bgen.exe: build/common/bgen.exe | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/bgen.exe: $(BUILD_DIR)/common/bgen.exe | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen
 	$(Q) install -m 0755 $< $@
 	$(Q) install -m 0644 $< $(@:.exe=.pdb)
 
@@ -212,7 +212,7 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/%.dll: $(MAC_BUILD_DIR)/%.dl
 	$(Q) install -m 0755 $< $@
 	$(Q) install -m 0644 $<.mdb $@.mdb
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/%.exe: build/common/bgen.exe | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/%.exe: $(BUILD_DIR)/common/bgen.exe | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen
 	$(Q) install -m 0755 $< $@
 	$(Q) install -m 0644 $< $(@:.exe=.pdb)
 
