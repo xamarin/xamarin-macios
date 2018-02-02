@@ -80,16 +80,16 @@ static class C {
 		new BindAsData { Managed = "NSStreamStatus", Native = "NSStreamStatus", ManagedNewExpression = "NSStreamStatus.Closed", Map = ".UInt64Value", ToNSNumberCastExpression = "(ulong) ", FromNSNumberCastExpression = "(NSStreamStatus) " },
 	};
 	static BindAsData[] bindas_nsvalue = new [] {
-		new BindAsData { Managed = "CGAffineTransform", Native = "CGAffineTransform", ManagedNewExpression = "new CGAffineTransform (1, 2, 3, 4, 5, 6)", Map = ".CGAffineTransformValue", MapFrom = "FromCGAffineTransform" },
+		new BindAsData { Managed = "CGAffineTransform", Native = "CGAffineTransform", ManagedCondition = "!__MACOS__", ManagedNewExpression = "new CGAffineTransform (1, 2, 3, 4, 5, 6)", Map = ".CGAffineTransformValue", MapFrom = "FromCGAffineTransform" },
 		new BindAsData { Managed = "NSRange", Native = "NSRange", ManagedNewExpression = "new NSRange (7, 8)", Map = ".RangeValue", MapFrom = "FromRange" },
-		new BindAsData { Managed = "CGVector", Native = "CGVector", ManagedNewExpression = "new CGVector (9, 10)", Map = ".CGVectorValue", MapFrom = "FromCGVector" },
+		new BindAsData { Managed = "CGVector", Native = "CGVector", ManagedCondition = "!__MACOS__", ManagedNewExpression = "new CGVector (9, 10)", Map = ".CGVectorValue", MapFrom = "FromCGVector" },
 		new BindAsData { Managed = "SCNMatrix4", Native = "SCNMatrix4", ManagedNewExpression = "SCNMatrix4.Identity", Map = ".SCNMatrix4Value", MapFrom = "FromSCNMatrix4" },
 		new BindAsData { Managed = "CLLocationCoordinate2D", Native = "CLLocationCoordinate2D", ManagedNewExpression = "new CLLocationCoordinate2D (11, 12)", Map = ".CoordinateValue", MapFrom = "FromMKCoordinate" },
 		new BindAsData { Managed = "SCNVector3", Native = "SCNVector3", ManagedNewExpression = "new SCNVector3 (13, 14, 15)", Map = ".Vector3Value", MapFrom = "FromVector" },
 		new BindAsData { Managed = "SCNVector4", Native = "SCNVector4", ManagedNewExpression = "new SCNVector4 (16, 17, 18, 19)", Map = ".Vector4Value", MapFrom = "FromVector" },
-		new BindAsData { Managed = "CGPoint", Native = "CGPoint", ManagedCondition = "XAMCORE_2_0", ManagedNewExpression = "new CGPoint (19, 20)", Map = ".CGPointValue", MapFrom = "FromCGPoint" },
-		new BindAsData { Managed = "CGSize", Native = "CGSize", ManagedCondition = "XAMCORE_2_0", ManagedNewExpression = "new CGSize (21, 22)", Map = ".CGSizeValue", MapFrom = "FromCGSize" },
-		new BindAsData { Managed = "CGRect", Native = "CGRect", ManagedCondition = "XAMCORE_2_0", ManagedNewExpression = "new CGRect (23, 24, 25, 26)", Map = ".CGRectValue", MapFrom = "FromCGRect" },
+		new BindAsData { Managed = "CGPoint", Native = "CGPoint", ManagedCondition = "XAMCORE_2_0 && !__MACOS__", ManagedNewExpression = "new CGPoint (19, 20)", Map = ".CGPointValue", MapFrom = "FromCGPoint" },
+		new BindAsData { Managed = "CGSize", Native = "CGSize", ManagedCondition = "XAMCORE_2_0 && !__MACOS__", ManagedNewExpression = "new CGSize (21, 22)", Map = ".CGSizeValue", MapFrom = "FromCGSize" },
+		new BindAsData { Managed = "CGRect", Native = "CGRect", ManagedCondition = "XAMCORE_2_0 && !__MACOS__", ManagedNewExpression = "new CGRect (23, 24, 25, 26)", Map = ".CGRectValue", MapFrom = "FromCGRect" },
 		new BindAsData { Managed = "UIEdgeInsets", Native = "UIEdgeInsets", ManagedCondition = "HAVE_UIKIT", ManagedNewExpression = "new UIEdgeInsets (27, 28, 29, 30)", Map = ".UIEdgeInsetsValue", MapFrom = "FromUIEdgeInsets" },
 		new BindAsData { Managed = "UIOffset", Native = "UIOffset", ManagedCondition = "HAVE_UIKIT", ManagedNewExpression = "new UIOffset (31, 32)", Map = ".UIOffsetValue", MapFrom = "FromUIOffset" },
 		new BindAsData { Managed = "MKCoordinateSpan", Native = "MKCoordinateSpan", ManagedCondition = "HAVE_MAPKIT", ManagedNewExpression = "new MKCoordinateSpan (33, 34)", Map = ".CoordinateSpanValue", MapFrom = "FromMKCoordinateSpan" },
@@ -324,6 +324,10 @@ static class C {
 	static void WriteFrameworkDefines (StringBuilder w)
 	{
 		w.AppendLine (@"
+#if __UNIFIED__
+#define XAMCORE_2_0
+#endif
+
 #if __IOS__ || __MACOS__ || __TVOS__
 #define HAVE_COREANIMATION
 #endif
@@ -790,7 +794,11 @@ using Security;
 using UIKit;
 #endif
 using MonoTouchException=ObjCRuntime.RuntimeException;
+#if __MACOS__
+using NativeException=Foundation.ObjCException;
+#else
 using NativeException=Foundation.MonoTouchException;
+#endif
 #else
 using MonoTouch;
 using MonoTouch.Foundation;
@@ -1454,7 +1462,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 	static void WriteTrampolineTests ()
 	{
 		var w = new StringBuilder ();
-
+		WriteFrameworkDefines (w);
 		w.AppendLine (@"
 using System;
 using System.Runtime.InteropServices;

@@ -75,6 +75,10 @@
       <Project>{EACFD119-769E-4E6C-89B7-A6CE3757C431}</Project>
       <Name>GuiUnit_xammac_mobile</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\bindings-test\bindings-test-mac.csproj">
+      <Project>{20BEA313-7E2D-4209-93C0-E4D99C72695A}</Project>
+      <Name>bindings-test-mac</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
 </Project>
