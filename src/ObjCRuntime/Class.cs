@@ -289,7 +289,7 @@ namespace ObjCRuntime {
 		{
 			// sizeof (MTFullTokenReference) = IntPtr.Size + 4 + 4
 			var entry = Runtime.options->RegistrationMap->full_token_references + (IntPtr.Size + 8) * (int) (token_reference >> 1);
-			var assembly_name = Marshal.PtrToStringAuto (Marshal.ReadIntPtr (entry));
+			var assembly_name = Marshal.ReadIntPtr (entry);
 			var module_token = (uint) Marshal.ReadInt32 (entry + IntPtr.Size);
 			var token = (uint) Marshal.ReadInt32 (entry + IntPtr.Size + 4);
 
@@ -316,7 +316,7 @@ namespace ObjCRuntime {
 			Console.WriteLine ($"ResolveTokenReference (0x{token_reference:X}) assembly index: {assembly_index} token: 0x{token:X}.");
 #endif
 
-			var assembly_name = Marshal.PtrToStringAuto (Marshal.ReadIntPtr (map->assembly, (int) assembly_index * IntPtr.Size));
+			var assembly_name = Marshal.ReadIntPtr (map->assembly, (int) assembly_index * IntPtr.Size);
 			var assembly = ResolveAssembly (assembly_name);
 			var module = ResolveModule (assembly, 0x1);
 
@@ -360,11 +360,11 @@ namespace ObjCRuntime {
 			throw ErrorHelper.CreateError (8020, $"Could not find the module with MetadataToken 0x{token:X} in the assembly {assembly}.");
 		}
 
-		static Assembly ResolveAssembly (string assembly_name)
+		static Assembly ResolveAssembly (IntPtr assembly_name)
 		{
 			// Find the assembly. We've already loaded all the assemblies that contain registered types, so just look at those assemblies.
 			foreach (var asm in AppDomain.CurrentDomain.GetAssemblies ()) {
-				if (assembly_name != asm.GetName ().Name)
+				if (!Runtime.StringEquals (assembly_name, asm.GetName ().Name))
 					continue;
 
 #if LOG_TYPELOAD
