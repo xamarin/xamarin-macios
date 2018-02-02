@@ -992,7 +992,7 @@ namespace XamCore.ImageIO {
 
 		[Mac (10, 13, 4)][iOS (11, 3)]
 		[Field ("kCGImagePropertyIPTCExtArtworkSourceInvURL")]
-		NSString IPTCExtArtworkSourceInvURL { get; }
+		NSString IPTCExtArtworkSourceInvUrl { get; }
 
 		[Mac (10, 13, 4)][iOS (11, 3)]
 		[Field ("kCGImagePropertyIPTCExtArtworkStylePeriod")]
@@ -1256,11 +1256,11 @@ namespace XamCore.ImageIO {
 
 		[Mac (10, 13, 4)][iOS (11, 3)]
 		[Field ("kCGImagePropertyIPTCExtLocationGPSLatitude")]
-		NSString IPTCExtLocationGPSLatitude { get; }
+		NSString IPTCExtLocationGpsLatitude { get; }
 
 		[Mac (10, 13, 4)][iOS (11, 3)]
 		[Field ("kCGImagePropertyIPTCExtLocationGPSLongitude")]
-		NSString IPTCExtLocationGPSLongitude { get; }
+		NSString IPTCExtLocationGpsLongitude { get; }
 
 		[Mac (10, 13, 4)][iOS (11, 3)]
 		[Field ("kCGImagePropertyIPTCExtLocationIdentifier")]
@@ -1372,7 +1372,7 @@ namespace XamCore.ImageIO {
 
 		[Mac (10, 13, 4)][iOS (11, 3)]
 		[Field ("kCGImagePropertyIPTCExtProductInImageGTIN")]
-		NSString IPTCExtProductInImageGTIN { get; }
+		NSString IPTCExtProductInImageGtin { get; }
 
 		[Mac (10, 13, 4)][iOS (11, 3)]
 		[Field ("kCGImagePropertyIPTCExtProductInImageName")]
@@ -1416,15 +1416,15 @@ namespace XamCore.ImageIO {
 
 		[Mac (10, 13, 4)][iOS (11, 3)]
 		[Field ("kCGImagePropertyIPTCExtRatingRegionGPSAltitude")]
-		NSString IPTCExtRatingRegionGPSAltitude { get; }
+		NSString IPTCExtRatingRegionGpsAltitude { get; }
 
 		[Mac (10, 13, 4)][iOS (11, 3)]
 		[Field ("kCGImagePropertyIPTCExtRatingRegionGPSLatitude")]
-		NSString IPTCExtRatingRegionGPSLatitude { get; }
+		NSString IPTCExtRatingRegionGpsLatitude { get; }
 
 		[Mac (10, 13, 4)][iOS (11, 3)]
 		[Field ("kCGImagePropertyIPTCExtRatingRegionGPSLongitude")]
-		NSString IPTCExtRatingRegionGPSLongitude { get; }
+		NSString IPTCExtRatingRegionGpsLongitude { get; }
 
 		[Mac (10, 13, 4)][iOS (11, 3)]
 		[Field ("kCGImagePropertyIPTCExtRatingRegionIdentifier")]
@@ -1472,7 +1472,7 @@ namespace XamCore.ImageIO {
 
 		[Mac (10, 13, 4)][iOS (11, 3)]
 		[Field ("kCGImagePropertyIPTCExtRegistryID")]
-		NSString IPTCExtRegistryID { get; }
+		NSString IPTCExtRegistryId { get; }
 
 		[Mac (10, 13, 4)][iOS (11, 3)]
 		[Field ("kCGImagePropertyIPTCExtRegistryEntryRole")]
@@ -1480,11 +1480,11 @@ namespace XamCore.ImageIO {
 
 		[Mac (10, 13, 4)][iOS (11, 3)]
 		[Field ("kCGImagePropertyIPTCExtRegistryItemID")]
-		NSString IPTCExtRegistryItemID { get; }
+		NSString IPTCExtRegistryItemId { get; }
 
 		[Mac (10, 13, 4)][iOS (11, 3)]
 		[Field ("kCGImagePropertyIPTCExtRegistryOrganisationID")]
-		NSString IPTCExtRegistryOrganisationID { get; }
+		NSString IPTCExtRegistryOrganisationId { get; }
 
 		[Mac (10, 13, 4)][iOS (11, 3)]
 		[Field ("kCGImagePropertyIPTCExtReleaseReady")]
