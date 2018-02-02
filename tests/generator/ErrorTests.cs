@@ -536,6 +536,49 @@ namespace BI1062Tests {
 		}
 
 		[Test]
+		public void BI1063_NoDoubleWrapTest ()
+		{
+			var bgen = new BGenTool {
+				Profile = Profile.iOS,
+				ProcessEnums = true
+			};
+			bgen.CreateTemporaryBinding (@"
+using System;
+using Foundation;
+
+namespace BI1063Tests {
+
+	enum PersonRelationship {
+		[Field (null)]
+		None,
+
+		[Field (""INPersonRelationshipFather"", ""__Internal"")]
+		Father,
+
+		[Field (""INPersonRelationshipMother"", ""__Internal"")]
+		Mother
+	}
+
+	[BaseType (typeof (NSObject))]
+	interface Wrappers {
+
+		// SmartEnum -- Normal Wrap getter Property
+
+		[Export (""presenceType"")]
+		NSString _PresenceType { get; }
+
+		[Wrap (""PersonRelationshipExtensions.GetValue (_PresenceType)"")]
+		PersonRelationship PresenceType {
+			[Wrap (""PersonRelationshipExtensions.GetValue (_PresenceType)"")]
+			get;
+		}
+	}
+}");
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1063, "The 'WrapAttribute' can only be used either at property level or at getter/setter level in a given time. Property: 'BI1063Tests.Wrappers.PresenceType'");
+		}
+
+		[Test]
 		[TestCase (Profile.iOS)]
 		[TestCase (Profile.macOSFull)]
 		[TestCase (Profile.macOSMobile)]
