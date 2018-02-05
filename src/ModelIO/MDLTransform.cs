@@ -2,7 +2,7 @@
 using System;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 
-namespace XamCore.ModelIO {
+namespace ModelIO {
 	public partial class MDLTransform {
 #if !XAMCORE_4_0
 		// Inlined from the MDLTransformComponent protocol.

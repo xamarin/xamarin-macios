@@ -11,9 +11,9 @@
 #if !XAMCORE_2_0 && !MONOMAC
 
 using System;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.MapKit
+namespace MapKit
 {
 	public partial class MKMapView {
 		public void AddAnnotation (MKAnnotation annotation)

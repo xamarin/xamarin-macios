@@ -5,11 +5,11 @@
 using System;
 using System.ComponentModel;
 using OpenTK;
-using XamCore.CoreMedia;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreMedia;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 
 #if !XAMCORE_2_0
 	partial class AVAssetResourceLoadingDataRequest {

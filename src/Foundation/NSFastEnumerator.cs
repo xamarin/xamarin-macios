@@ -12,9 +12,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	internal class NSFastEnumerator {
 		[DllImport (Messaging.LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
 		public extern static nuint objc_msgSend (IntPtr receiver, IntPtr selector, ref NSFastEnumerationState arg1, IntPtr[] arg2, nuint arg3);

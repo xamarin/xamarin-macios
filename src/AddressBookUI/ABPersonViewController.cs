@@ -8,11 +8,11 @@
 
 using System;
 
-using XamCore.AddressBook;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using AddressBook;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.AddressBookUI {
+namespace AddressBookUI {
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	public class ABPersonViewPerformDefaultActionEventArgs : EventArgs {
 		public ABPersonViewPerformDefaultActionEventArgs (ABPerson person, ABPersonProperty property, int? identifier)

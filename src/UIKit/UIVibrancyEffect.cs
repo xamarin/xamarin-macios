@@ -2,13 +2,13 @@
 #if IOS || TVOS
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
+using Foundation;
 #if IOS
-using XamCore.NotificationCenter;
+using NotificationCenter;
 #endif
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 
 	public partial class UIVibrancyEffect {
 

@@ -28,11 +28,11 @@
 
 using System;
 
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using ObjCRuntime;
 
-namespace XamCore.Accounts {
+namespace Accounts {
 
 	// XI specific, not part of ObjC (NSString mapping)
 	public enum ACFacebookAudience

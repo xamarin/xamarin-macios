@@ -24,13 +24,13 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
-using XamCore.CoreImage;
-using XamCore.CoreAnimation;
+using Foundation;
+using ObjCRuntime;
+using CoreGraphics;
+using CoreImage;
+using CoreAnimation;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 	public partial class NSOpenGLPixelFormat {
 		static IntPtr selInitWithAttributes = Selector.GetHandle ("initWithAttributes:");
 
@@ -45,9 +45,9 @@ namespace XamCore.AppKit {
 
 				fixed (NSOpenGLPixelFormatAttribute* pArray = copy){
 					if (IsDirectBinding) {
-						Handle = XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, selInitWithAttributes, new IntPtr((void*)pArray ));
+						Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, selInitWithAttributes, new IntPtr((void*)pArray ));
 					} else {
-						Handle = XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper_IntPtr (this.SuperHandle, selInitWithAttributes, new IntPtr((void*)pArray));
+						Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper_IntPtr (this.SuperHandle, selInitWithAttributes, new IntPtr((void*)pArray));
 					}
 				}
 				
@@ -66,9 +66,9 @@ namespace XamCore.AppKit {
 
 				fixed (uint* pArray = copy) {
 					if (IsDirectBinding) {
-						InitializeHandle (XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, selInitWithAttributes, new IntPtr ((void*)pArray)));
+						InitializeHandle (ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, selInitWithAttributes, new IntPtr ((void*)pArray)));
 					} else {
-						InitializeHandle (XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper_IntPtr (this.SuperHandle, selInitWithAttributes, new IntPtr ((void*)pArray)));
+						InitializeHandle (ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper_IntPtr (this.SuperHandle, selInitWithAttributes, new IntPtr ((void*)pArray)));
 					}
 				}
 
@@ -165,9 +165,9 @@ namespace XamCore.AppKit {
 
 				fixed (NSOpenGLPixelFormatAttribute* pArray = copy){
 					if (IsDirectBinding) {
-						Handle = XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, selInitWithAttributes, new IntPtr((void*)pArray ));
+						Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, selInitWithAttributes, new IntPtr((void*)pArray ));
 					} else {
-						Handle = XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper_IntPtr (this.SuperHandle, selInitWithAttributes, new IntPtr((void*)pArray));
+						Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper_IntPtr (this.SuperHandle, selInitWithAttributes, new IntPtr((void*)pArray));
 					}
 				}
 				

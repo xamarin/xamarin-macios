@@ -9,12 +9,12 @@
 
 #if !WATCH
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreVideo;
-using XamCore.ImageIO;
+using Foundation;
+using ObjCRuntime;
+using CoreVideo;
+using ImageIO;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 	public partial class AVDepthData {
 
 		public static AVDepthData Create (CGImageAuxiliaryDataInfo dataInfo, out NSError error)

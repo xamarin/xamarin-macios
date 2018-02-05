@@ -11,7 +11,7 @@
 
 using System;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	public partial class DraggingEventArgs : EventArgs {
 		public readonly	static DraggingEventArgs True, False;
 		

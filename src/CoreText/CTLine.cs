@@ -29,15 +29,15 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using CoreGraphics;
 
-namespace XamCore.CoreText {
+namespace CoreText {
 
 	// defined as uint32_t - /System/Library/Frameworks/CoreText.framework/Headers/CTLine.h
-	public enum CTLineTruncation : uint_compat_int {
+	public enum CTLineTruncation : uint {
 		Start = 0,
 		End = 1,
 		Middle = 2
@@ -46,7 +46,7 @@ namespace XamCore.CoreText {
 	// defined as CFOptionFlags (unsigned long [long] = nuint) - /System/Library/Frameworks/CoreText.framework/Headers/CTLine.h
 	[Native]
 	[Flags]
-	public enum CTLineBoundsOptions : nuint_compat_int {
+	public enum CTLineBoundsOptions : ulong {
 		ExcludeTypographicLeading  = 1 << 0,
 		ExcludeTypographicShifts   = 1 << 1,
 		UseHangingPunctuation      = 1 << 2,

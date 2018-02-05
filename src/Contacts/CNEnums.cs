@@ -8,17 +8,17 @@
 //
 
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
 #if XAMCORE_2_0 // The Contacts framework uses generics heavily, which is only supported in Unified (for now at least)
 
-namespace XamCore.Contacts {
+namespace Contacts {
 
 	// NSInteger -> CNContact.h
 	[iOS (9,0), Mac (10,11)]
 	[Native]
-	public enum CNContactType : nint {
+	public enum CNContactType : long {
 		Person,
 		Organization
 	}
@@ -26,7 +26,7 @@ namespace XamCore.Contacts {
 	// NSInteger -> CNContact.h
 	[iOS (9,0), Mac (10,11)]
 	[Native]
-	public enum CNContactSortOrder : nint {
+	public enum CNContactSortOrder : long {
 		None,
 		UserDefault,
 		GivenName,
@@ -36,7 +36,7 @@ namespace XamCore.Contacts {
 	// NSInteger -> CNContactFormatter.h
 	[iOS (9,0), Mac (10,11)]
 	[Native]
-	public enum CNContactFormatterStyle : nint {
+	public enum CNContactFormatterStyle : long {
 		FullName,
 		PhoneticFullName
 	}
@@ -44,7 +44,7 @@ namespace XamCore.Contacts {
 	// NSInteger -> CNContactFormatter.h
 	[iOS (9,0), Mac (10,11)]
 	[Native]
-	public enum CNContactDisplayNameOrder : nint {
+	public enum CNContactDisplayNameOrder : long {
 		UserDefault,
 		GivenNameFirst,
 		FamilyNameFirst
@@ -53,14 +53,14 @@ namespace XamCore.Contacts {
 	// NSInteger -> CNContactStore.h
 	[iOS (9,0), Mac (10,11)]
 	[Native]
-	public enum CNEntityType : nint {
+	public enum CNEntityType : long {
 		Contacts
 	}
 
 	// NSInteger -> CNContactStore.h
 	[iOS (9,0), Mac (10,11)]
 	[Native]
-	public enum CNAuthorizationStatus : nint {
+	public enum CNAuthorizationStatus : long {
 		NotDetermined = 0,
 		Restricted,
 		Denied,
@@ -70,7 +70,7 @@ namespace XamCore.Contacts {
 	// NSInteger -> CNContainer.h
 	[iOS (9,0), Mac (10,11)]
 	[Native]
-	public enum CNContainerType : nint {
+	public enum CNContainerType : long {
 		Unassigned = 0,
 		Local,
 		Exchange,
@@ -81,7 +81,7 @@ namespace XamCore.Contacts {
 	[iOS (9,0), Mac (10,11)]
 	[Native]
 	[ErrorDomain ("CNErrorDomain")]
-	public enum CNErrorCode : nint {
+	public enum CNErrorCode : long {
 		CommunicationError = 1,
 		DataAccessError = 2,
 		AuthorizationDenied = 100,
@@ -106,7 +106,7 @@ namespace XamCore.Contacts {
 	// NSInteger -> CNPostalAddressFormatter.h
 	[iOS (9,0), Mac (10,11)]
 	[Native]
-	public enum CNPostalAddressFormatterStyle : nint {
+	public enum CNPostalAddressFormatterStyle : long {
 		MailingAddress,
 	}
 }

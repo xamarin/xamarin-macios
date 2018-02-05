@@ -1,4 +1,4 @@
-namespace XamCore.WebKit {
+namespace WebKit {
 	
 	public partial class DomCssRuleList {
 		public DomCssRule this [int index] {

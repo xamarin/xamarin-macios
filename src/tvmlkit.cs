@@ -1,16 +1,16 @@
 // Copyright 2015 Xamarin Inc.
 
 using System;
-using XamCore.Foundation;
-using XamCore.JavaScriptCore;
-using XamCore.ObjCRuntime;
-using XamCore.UIKit;
+using Foundation;
+using JavaScriptCore;
+using ObjCRuntime;
+using UIKit;
 
-namespace XamCore.TVMLKit {
+namespace TVMLKit {
 
 	[TV (9,0)]
 	[Native]
-	public enum TVColorType : nint {
+	public enum TVColorType : long {
 		None,
 		Plain,
 		LinearGradientTopToBottom,
@@ -19,7 +19,7 @@ namespace XamCore.TVMLKit {
 
 	[TV (9,0)]
 	[Native]
-	public enum TVElementAlignment : nint {
+	public enum TVElementAlignment : long {
 		Undefined,
 		Left,
 		Center,
@@ -32,7 +32,7 @@ namespace XamCore.TVMLKit {
 
 	[TV (9,0)]
 	[Native]
-	public enum TVElementContentAlignment : nint {
+	public enum TVElementContentAlignment : long {
 		Undefined,
 		Top,
 		Center,
@@ -41,7 +41,7 @@ namespace XamCore.TVMLKit {
 
 	[TV (9,0)]
 	[Native]
-	public enum TVElementPosition : nint {
+	public enum TVElementPosition : long {
 		Undefined,
 		Center,
 		Top,
@@ -70,7 +70,7 @@ namespace XamCore.TVMLKit {
 
 	[TV (9,0)]
 	[Native]
-	public enum TVElementEventType : nint {
+	public enum TVElementEventType : long {
 		Play = 1,
 		Select,
 		HoldSelect,
@@ -80,7 +80,7 @@ namespace XamCore.TVMLKit {
 
 	[TV (9,0)]
 	[Native]
-	public enum TVElementUpdateType : nint {
+	public enum TVElementUpdateType : long {
 		None,
 		Subtree,
 		Children,
@@ -91,14 +91,14 @@ namespace XamCore.TVMLKit {
 
 	[TV (9,0)]
 	[Native]
-	public enum TVElementResettableProperty : nint {
+	public enum TVElementResettableProperty : long {
 		UpdateType,
 		AutoHighlightIdentifier
 	}
 
 	[TV (9,0)]
 	[Native]
-	public enum TVImageType : nint {
+	public enum TVImageType : long {
 		Image,
 		Fullscreen,
 		Decoration,
@@ -108,7 +108,7 @@ namespace XamCore.TVMLKit {
 	[TV (9,0)]
 	[Native]
 	[ErrorDomain ("TVMLKitErrorDomain")]
-	public enum TVMLKitError : nint {
+	public enum TVMLKitError : long {
 		Unknown = 1,
 		InternetUnavailable,
 		FailedToLaunch,
@@ -117,7 +117,7 @@ namespace XamCore.TVMLKit {
 
 	[TV (9,0)]
 	[Native]
-	public enum TVViewElementStyleType : nint {
+	public enum TVViewElementStyleType : long {
 		Integer = 1,
 		Double,
 		Point,
@@ -130,7 +130,7 @@ namespace XamCore.TVMLKit {
 
 	[TV (9,0)]
 	[Native]
-	public enum TVTextElementStyle : nint {
+	public enum TVTextElementStyle : long {
 		None,
 		Title,
 		Subtitle,

@@ -29,11 +29,11 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
+using Foundation;
+using ObjCRuntime;
+using CoreGraphics;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 	public partial class NSBezierPath {
 
 		public unsafe void GetLineDash (out nfloat [] pattern, out nfloat phase)

@@ -27,9 +27,9 @@
 using System;
 using System.Collections.Generic;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	[Register ("NSMutableArray", SkipRegistration = true)]
 	public sealed partial class NSMutableArray<TValue> : NSMutableArray, IEnumerable<TValue>

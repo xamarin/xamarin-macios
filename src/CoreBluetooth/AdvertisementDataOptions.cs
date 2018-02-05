@@ -27,11 +27,11 @@
 
 using System;
 
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using ObjCRuntime;
 
-namespace XamCore.CoreBluetooth {
+namespace CoreBluetooth {
 
 	//
 	// It's intentionally not called AdvertisementDataOptions because different options

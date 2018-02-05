@@ -30,11 +30,11 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using ObjCRuntime;
 
-namespace XamCore.AudioToolbox {
+namespace AudioToolbox {
 
 	enum SystemSoundId : uint { // UInt32 SystemSoundID
 		Vibrate = 0x00000FFF,

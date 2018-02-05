@@ -21,13 +21,13 @@ using ProductException=Xamarin.Bundler.MonoTouchException;
 using ProductException=Xamarin.Bundler.MonoMacException;
 #endif
 
-using XamCore.Registrar;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Registrar;
+using Foundation;
+using ObjCRuntime;
 using Mono.Cecil;
 using Mono.Tuner;
 
-namespace XamCore.Registrar {
+namespace Registrar {
 	/*
 	 * This class will automatically detect lines starting/ending with curly braces,
 	 * and indent/unindent accordingly.
@@ -1361,19 +1361,19 @@ namespace XamCore.Registrar {
 #if MTOUCH
 			switch (App.Platform) {
 			case Xamarin.Utils.ApplePlatform.iOS:
-				currentPlatform = global::XamCore.ObjCRuntime.PlatformName.iOS;
+				currentPlatform = global::ObjCRuntime.PlatformName.iOS;
 				break;
 			case Xamarin.Utils.ApplePlatform.TVOS:
-				currentPlatform = global::XamCore.ObjCRuntime.PlatformName.TvOS;
+				currentPlatform = global::ObjCRuntime.PlatformName.TvOS;
 				break;
 			case Xamarin.Utils.ApplePlatform.WatchOS:
-				currentPlatform = global::XamCore.ObjCRuntime.PlatformName.WatchOS;
+				currentPlatform = global::ObjCRuntime.PlatformName.WatchOS;
 				break;
 			default:
 				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", App.Platform);
 			}
 #else
-			currentPlatform = global::XamCore.ObjCRuntime.PlatformName.MacOSX;
+			currentPlatform = global::ObjCRuntime.PlatformName.MacOSX;
 #endif
 
 			foreach (var ca in attributes) {

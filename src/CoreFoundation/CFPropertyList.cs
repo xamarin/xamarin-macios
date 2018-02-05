@@ -9,10 +9,10 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.CoreFoundation
+namespace CoreFoundation
 {
 	// This is currently incomplete and thus marked internal;
 	// it is only used by CFPreferences, and I'm not necessarily

@@ -12,22 +12,22 @@
 
 using System;
 using System.Collections;
-using XamCore.Foundation; 
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
+using Foundation; 
+using ObjCRuntime;
+using CoreGraphics;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	public partial class UIScreen {
 
 #if !XAMCORE_2_0
 		[Obsolete ("Use CreateDisplayLink instead")]
-		XamCore.CoreAnimation.CADisplayLink DisplayLink (NSObject target, Selector sel)
+		CoreAnimation.CADisplayLink DisplayLink (NSObject target, Selector sel)
 		{
 			return CreateDisplayLink (target, sel);
 		}
 #endif
 		
-		public XamCore.CoreAnimation.CADisplayLink CreateDisplayLink (NSAction action)
+		public CoreAnimation.CADisplayLink CreateDisplayLink (Action action)
 		{
 			if (action == null)
 				throw new ArgumentNullException ("action");

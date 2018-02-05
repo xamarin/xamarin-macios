@@ -24,9 +24,9 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 	public partial class Selector : IEquatable<Selector>, INativeObject {
 		internal const string Alloc = "alloc";
 		internal const string Class = "class";

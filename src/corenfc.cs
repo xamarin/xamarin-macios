@@ -10,11 +10,11 @@
 #if XAMCORE_2_0
 
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
+using ObjCRuntime;
+using CoreFoundation;
+using Foundation;
 
-namespace XamCore.CoreNFC {
+namespace CoreNFC {
 	// Note on Availability:
 	// This framework says it is available on tvOS but
 	// nothing else but NFCReaderError is available on it in beta 1
@@ -25,7 +25,7 @@ namespace XamCore.CoreNFC {
 	[iOS (11,0)]
 	[ErrorDomain ("NFCErrorDomain")]
 	[Native]
-	public enum NFCReaderError : nint {
+	public enum NFCReaderError : long {
 		UnsupportedFeature = 1,
 		SecurityViolation,
 		ReaderTransceiveErrorTagConnectionLost = 100,
@@ -42,7 +42,7 @@ namespace XamCore.CoreNFC {
 	//[iOS (11,0), NoTV, NoWatch, NoMac]
 	[iOS (11,0)]
 	[Native]
-	public enum NFCTagType : nuint {
+	public enum NFCTagType : ulong {
 		Iso15693 = 1,
 	}
 

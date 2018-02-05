@@ -8,9 +8,9 @@
 
 using System;
 
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.WebKit {
+namespace WebKit {
 
 	// Convenience enum.
 	public enum WebActionMouseButton

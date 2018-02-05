@@ -10,10 +10,10 @@
 #if IOS
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.CoreSpotlight {
+namespace CoreSpotlight {
 
 	[iOS (9,0)]
 	public enum CSFileProtection {

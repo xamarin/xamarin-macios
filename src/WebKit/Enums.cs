@@ -1,8 +1,8 @@
 using System;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.WebKit {
+namespace WebKit {
 
 	public enum DomCssRuleType : ushort {
 		Unknown = 0,
@@ -58,7 +58,7 @@ namespace XamCore.WebKit {
 	}
 
 	[Native]
-	public enum WebCacheModel : nuint_compat_int {
+	public enum WebCacheModel : ulong {
 		DocumentViewer, DocumentBrowser, PrimaryWebBrowser
 	}
 
@@ -67,7 +67,7 @@ namespace XamCore.WebKit {
 	}
 
 	[Flags]
-	public enum WebDragSourceAction : nuint {
+	public enum WebDragSourceAction : ulong {
 		None = 0,
 		DHTML = 1,
 		Image = 2, 
@@ -81,7 +81,7 @@ namespace XamCore.WebKit {
 	}
 
 	[Flags]
-	public enum WebDragDestinationAction : nuint {
+	public enum WebDragDestinationAction : ulong {
 		None = 0,
 		DHTML = 1,
 		Image = 2, 
@@ -95,10 +95,10 @@ namespace XamCore.WebKit {
 	}
 
 #if !XAMCORE_4_0
-	public enum WebNavigationType : uint_compat_int {
+	public enum WebNavigationType : uint {
 #else
 	[Native]
-	public enum WebNavigationType : nint {
+	public enum WebNavigationType : long {
 #endif
 		LinkClicked, FormSubmitted, BackForward, Reload, FormResubmitted, Other
 	}

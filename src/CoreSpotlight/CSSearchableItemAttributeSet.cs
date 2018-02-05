@@ -3,10 +3,10 @@
 #if IOS || MONOMAC
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.CoreSpotlight {
+namespace CoreSpotlight {
 
 	public partial class CSSearchableItemAttributeSet {
 

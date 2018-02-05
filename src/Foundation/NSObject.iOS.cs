@@ -7,10 +7,10 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 
-using XamCore.UIKit;
-using XamCore.ObjCRuntime;
+using UIKit;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	public partial class NSObject : INativeObject
 #if !COREBUILD
 	, IDisposable
@@ -40,14 +40,14 @@ namespace XamCore.Foundation {
 			handle = Messaging.IntPtr_objc_msgSend (handle, Selector.GetHandle ("init"));
 		}
 
-		public static void InvokeInBackground (NSAction action)
+		public static void InvokeInBackground (Action action)
 		{
 			// using the parameterized Thread.Start to avoid capturing
 			// the 'action' parameter (it'll needlessly create an extra
 			// object).
 			new System.Threading.Thread ((v) =>
 			{
-				((NSAction) v) ();
+				((Action) v) ();
 			})
 			{
 				IsBackground = true,

@@ -12,10 +12,10 @@ using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.Metal {
+namespace Metal {
 #if MONOMAC
 	[Advice ("The 'NSString' argument will match a property of 'MTLDeviceNotificationHandler'.")]
 	public delegate void MTLDeviceNotificationHandler (IMTLDevice device, NSString notifyName);
@@ -97,7 +97,7 @@ namespace XamCore.Metal {
 			var descriptor = (BlockLiteral*) block;
 			var del = (MTLDeviceNotificationHandler) (descriptor->Target);
 			if (del != null)
-				del ((IMTLDevice) Runtime.GetNSObject (device), (XamCore.Foundation.NSString) Runtime.GetNSObject (notifyName));
+				del ((IMTLDevice) Runtime.GetNSObject (device), (Foundation.NSString) Runtime.GetNSObject (notifyName));
 		}
 
 		[Mac (10, 13, onlyOn64: true), NoiOS, NoWatch, NoTV]

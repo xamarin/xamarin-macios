@@ -5,7 +5,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 
 	[AttributeUsage (AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Constructor | AttributeTargets.Field | AttributeTargets.Class, AllowMultiple = false)]
 	public class BindingImplAttribute : Attribute

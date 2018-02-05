@@ -1,6 +1,6 @@
 using System;
 
-namespace XamCore.SceneKit
+namespace SceneKit
 {
 	public partial class SCNSceneLoadingOptions {
 		public SCNAnimationImportPolicy AnimationImportPolicy {

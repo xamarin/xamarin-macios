@@ -28,24 +28,24 @@
 //
 using System;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.ImageKit {
+namespace ImageKit {
 
 	[Native]
-	public enum IKCameraDeviceViewDisplayMode : nint {
+	public enum IKCameraDeviceViewDisplayMode : long {
 		Table = 0,
 		Icon  = 1
 	};
 	
 	[Native]
-	public enum IKCameraDeviceViewTransferMode : nint {
+	public enum IKCameraDeviceViewTransferMode : long {
 		File   = 0,
 		Memory = 1
 	};
 	
 	[Native]
-	public enum IKDeviceBrowserViewDisplayMode : nint {
+	public enum IKDeviceBrowserViewDisplayMode : long {
 		Table   = 0,
 		Outline = 1,
 		Icon    = 2
@@ -60,7 +60,7 @@ namespace XamCore.ImageKit {
 	
 	[Flags]
 	[Native]
-	public enum IKCellsStyle : nuint {
+	public enum IKCellsStyle : ulong {
 		None      = 0,
 		Shadowed  = 1 << 0,
 		Outlined  = 1 << 1,
@@ -70,7 +70,7 @@ namespace XamCore.ImageKit {
 
 	//used as a value for the IKImageBrowserGroupStyleKey in the NSDictionary that defines a group in IKImageBrowserView
 	[Native]
-	public enum IKGroupStyle : nint {
+	public enum IKGroupStyle : long {
 		Bezel      = 0,
 		Disclosure = 1
 	};
@@ -82,19 +82,19 @@ namespace XamCore.ImageKit {
 	};
 	
 	[Native]
-	public enum IKScannerDeviceViewTransferMode : nint {
+	public enum IKScannerDeviceViewTransferMode : long {
 		File   = 0,
 		Memory = 1
 	};
 	
 	[Native]
-	public enum IKScannerDeviceViewDisplayMode : nint {
+	public enum IKScannerDeviceViewDisplayMode : long {
 		Simple   = 0,
 		Advanced = 1
 	};
 
 	[Flags]
-	public enum IKFilterBrowserPanelStyleMask : uint_compat_int {
+	public enum IKFilterBrowserPanelStyleMask : uint {
 		Normal   = 0,
 		Textured = 1 << 8
 		// Other NSWindow Style Mask bit settings do not apply to this panel

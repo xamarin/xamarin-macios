@@ -8,7 +8,7 @@
 
 using System;
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 	[AttributeUsage (AttributeTargets.Class)]
 	public class CategoryAttribute : Attribute {
 		public CategoryAttribute (Type type)

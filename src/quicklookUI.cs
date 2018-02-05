@@ -1,12 +1,12 @@
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
-using XamCore.AppKit;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
+using AppKit;
 
 using System;
 using System.ComponentModel;
 
-namespace XamCore.QuickLookUI {
+namespace QuickLookUI {
 	[BaseType (typeof (NSObject))]
 	[Protocol, Model]
 	interface QLPreviewPanelDataSource {

@@ -29,21 +29,11 @@
       <Variable name="XamarinMacFrameworkRoot" value="%XamarinMacFrameworkRoot%" />
     </EnvironmentVariables>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(RunConfiguration)' == 'ios-classic' ">
-    <StartAction>Project</StartAction>
-    <StartArguments>%IOS_CLASSIC_ARGS%</StartArguments>
-    <StartWorkingDirectory>%WORKING_DIR%</StartWorkingDirectory>
-    <EnvironmentVariables>
-      <Variable name="PMCS_PROFILE" value="%IOS_CLASSIC_PMCS_PROFILE%" />
-      <Variable name="MD_MTOUCH_SDK_ROOT" value="%MD_MTOUCH_SDK_ROOT%" />
-    </EnvironmentVariables>
-  </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'ios-unified' ">
     <StartAction>Project</StartAction>
     <StartArguments>%IOS_UNIFIED_ARGS%</StartArguments>
     <StartWorkingDirectory>%WORKING_DIR%</StartWorkingDirectory>
     <EnvironmentVariables>
-      <Variable name="PMCS_PROFILE" value="%IOS_UNIFIED_PMCS_PROFILE%" />
       <Variable name="MD_MTOUCH_SDK_ROOT" value="%MD_MTOUCH_SDK_ROOT%" />
     </EnvironmentVariables>
   </PropertyGroup>
@@ -52,7 +42,6 @@
     <StartArguments>%TVOS_ARGS%</StartArguments>
     <StartWorkingDirectory>%WORKING_DIR%</StartWorkingDirectory>
     <EnvironmentVariables>
-      <Variable name="PMCS_PROFILE" value="%TVOS_PMCS_PROFILE%" />
       <Variable name="MD_MTOUCH_SDK_ROOT" value="%MD_MTOUCH_SDK_ROOT%" />
     </EnvironmentVariables>
   </PropertyGroup>
@@ -61,17 +50,7 @@
     <StartArguments>%WATCHOS_ARGS%</StartArguments>
     <StartWorkingDirectory>%WORKING_DIR%</StartWorkingDirectory>
     <EnvironmentVariables>
-      <Variable name="PMCS_PROFILE" value="%WATCHOS_PMCS_PROFILE%" />
       <Variable name="MD_MTOUCH_SDK_ROOT" value="%MD_MTOUCH_SDK_ROOT%" />
-    </EnvironmentVariables>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(RunConfiguration)' == 'mac-classic' ">
-    <StartAction>Project</StartAction>
-    <StartArguments>%MAC_CLASSIC_ARGS%</StartArguments>
-    <StartWorkingDirectory>%WORKING_DIR%</StartWorkingDirectory>
-    <EnvironmentVariables>
-      <Variable name="PMCS_PROFILE" value="%MAC_CLASSIC_PMCS_PROFILE%" />
-      <Variable name="XamarinMacFrameworkRoot" value="%XamarinMacFrameworkRoot%" />
     </EnvironmentVariables>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'mac-mobile' ">
@@ -79,7 +58,6 @@
     <StartArguments>%MAC_MOBILE_ARGS%</StartArguments>
     <StartWorkingDirectory>%WORKING_DIR%</StartWorkingDirectory>
     <EnvironmentVariables>
-      <Variable name="PMCS_PROFILE" value="%MAC_MOBILE_PMCS_PROFILE%" />
       <Variable name="XamarinMacFrameworkRoot" value="%XamarinMacFrameworkRoot%" />
     </EnvironmentVariables>
   </PropertyGroup>
@@ -88,7 +66,6 @@
     <StartArguments>%MAC_FULL_ARGS%</StartArguments>
     <StartWorkingDirectory>%WORKING_DIR%</StartWorkingDirectory>
     <EnvironmentVariables>
-      <Variable name="PMCS_PROFILE" value="%MAC_FULL_PMCS_PROFILE%" />
       <Variable name="XamarinMacFrameworkRoot" value="%XamarinMacFrameworkRoot%" />
     </EnvironmentVariables>
   </PropertyGroup>

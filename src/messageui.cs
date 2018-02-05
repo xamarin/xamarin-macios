@@ -9,13 +9,13 @@
 //
 
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.Messages;
-using XamCore.UIKit;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using Messages;
+using UIKit;
 
-namespace XamCore.MessageUI {
+namespace MessageUI {
 
 	[BaseType (typeof (UINavigationController))]
 	interface MFMailComposeViewController : UIAppearance {

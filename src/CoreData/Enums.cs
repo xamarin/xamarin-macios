@@ -22,13 +22,13 @@
 
 using System;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.CoreData {
+namespace CoreData {
 
 	// NUInteger -> NSEntityMapping.h
 	[Native]
-	public enum NSEntityMappingType : nuint {
+	public enum NSEntityMappingType : ulong {
 		Undefined = 0x00,
 		Custom = 0x01,
 		Add = 0x02,
@@ -39,7 +39,7 @@ namespace XamCore.CoreData {
 
 	// NUInteger -> NSAttributeDescription.h
 	[Native]
-	public enum NSAttributeType : nuint {
+	public enum NSAttributeType : ulong {
 		Undefined = 0,
 		Integer16 = 100,
 		Integer32 = 200,
@@ -62,7 +62,7 @@ namespace XamCore.CoreData {
 	// NUInteger -> NSFetchRequest.h
 	[Flags]
 	[Native]
-	public enum NSFetchRequestResultType : nuint {
+	public enum NSFetchRequestResultType : ulong {
 		ManagedObject = 0x00,
 		ManagedObjectID = 0x01,
 		DictionaryResultType = 0x02,
@@ -72,7 +72,7 @@ namespace XamCore.CoreData {
 #if !XAMCORE_2_0
 	// NUInteger -> NSKeyValueObserving.h in Foundation.framework (and it already exists there)
 	[Native]
-	public enum NSKeyValueSetMutationKind : nuint {
+	public enum NSKeyValueSetMutationKind : ulong {
 		Union = 1,
 		Minus = 2,
 		Intersect = 3,
@@ -82,7 +82,7 @@ namespace XamCore.CoreData {
 
 	// NUInteger -> NSRelationshipDescription.h
 	[Native]
-	public enum NSDeleteRule : nuint {
+	public enum NSDeleteRule : ulong {
 		NoAction,
 		Nullify,
 		Cascade,
@@ -91,7 +91,7 @@ namespace XamCore.CoreData {
 
 	// NUInteger -> NSPersistentStoreRequest.h
 	[Native]
-	public enum NSPersistentStoreRequestType : nuint_compat_int {
+	public enum NSPersistentStoreRequestType : ulong {
 		Fetch = 1,
 		Save,
 		BatchUpdate = 6,
@@ -100,19 +100,19 @@ namespace XamCore.CoreData {
 
 	// NUInteger -> NSManagedObjectContext.h
 	[Native]
-	public enum NSManagedObjectContextConcurrencyType : nuint_compat_int {
+	public enum NSManagedObjectContextConcurrencyType : ulong {
 		Confinement, PrivateQueue, MainQueue
 	}
 
 	// NUInteger -> NSManagedObjectContext.h
 	[Native]
-	public enum NSMergePolicyType : nuint_compat_int {
+	public enum NSMergePolicyType : ulong {
 		Error, PropertyStoreTrump, PropertyObjectTrump, Overwrite, RollbackMerge
 	}
 
 	// NUInteger -> NSFetchedResultsController.h
 	[Native]
-	public enum NSFetchedResultsChangeType : nuint_compat_int {
+	public enum NSFetchedResultsChangeType : ulong {
 		Insert = 1,
 		Delete = 2,
 		Move = 3,
@@ -120,7 +120,7 @@ namespace XamCore.CoreData {
 	}
 
 	[Native]
-	public enum NSBatchUpdateRequestResultType : nuint {
+	public enum NSBatchUpdateRequestResultType : ulong {
 		StatusOnly = 0,
 		UpdatedObjectIDs = 1,
 		UpdatedObjectsCount = 2
@@ -128,14 +128,14 @@ namespace XamCore.CoreData {
 
 	[iOS (9,0), Mac (10,11)]
 	[Native]
-	public enum NSBatchDeleteRequestResultType : nuint {
+	public enum NSBatchDeleteRequestResultType : ulong {
 		StatusOnly = 0,
 		ObjectIDs = 1,
 		Count = 2
 	}
 
 	[Native]
-	public enum ValidationErrorType : nuint {
+	public enum ValidationErrorType : ulong {
 		ManagedObjectValidation = 1550,
 		MultipleErrors = 1560,
 		MissingMandatoryProperty = 1570,
@@ -155,7 +155,7 @@ namespace XamCore.CoreData {
 	}
 
 	[Native]
-	public enum ObjectGraphManagementErrorType : nuint {
+	public enum ObjectGraphManagementErrorType : ulong {
 		ManagedObjectContextLocking = 132000,
 		PersistentStoreCoordinatorLocking = 132010,
 		ManagedObjectReferentialIntegrity = 133000,
@@ -164,7 +164,7 @@ namespace XamCore.CoreData {
 	}
 
 	[Native]
-	public enum PersistentStoreErrorType : nuint {
+	public enum PersistentStoreErrorType : ulong {
 		InvalidType = 134000,
 		TypeMismatch = 134010,
 		IncompatibleSchema = 134020,
@@ -194,7 +194,7 @@ namespace XamCore.CoreData {
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[Native]
-	public enum NSFetchIndexElementType : nuint
+	public enum NSFetchIndexElementType : ulong
 	{
 		Binary,
 		RTree
@@ -202,7 +202,7 @@ namespace XamCore.CoreData {
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[Native]
-	public enum NSPersistentHistoryChangeType : nint
+	public enum NSPersistentHistoryChangeType : long
 	{
 		Insert,
 		Update,
@@ -211,7 +211,7 @@ namespace XamCore.CoreData {
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[Native]
-	public enum NSPersistentHistoryResultType : nint
+	public enum NSPersistentHistoryResultType : long
 	{
 		StatusOnly = 0,
 		ObjectIds = 1,

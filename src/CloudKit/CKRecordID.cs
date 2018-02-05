@@ -1,6 +1,6 @@
 using System;
 
-namespace XamCore.CloudKit {
+namespace CloudKit {
 
 	public partial class CKRecordID {
 #if !XAMCORE_3_0

@@ -27,9 +27,9 @@ using System;
 
 #if MONOMAC
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	internal enum NSAttributedStringDataType {
 		RTF,
 		RTFD,
@@ -54,7 +54,7 @@ namespace XamCore.Foundation {
 
 	// NSTask.h:typedef NS_ENUM(NSInteger, NSTaskTerminationReason)
 	[Native]
-	public enum NSTaskTerminationReason : nint {
+	public enum NSTaskTerminationReason : long {
 		Exit = 1,
 		UncaughtSignal = 2
 	}
@@ -96,7 +96,7 @@ namespace XamCore.Foundation {
 
 	// Added from NSUserNotification.h
 	[Native]
-	public enum NSUserNotificationActivationType : nint {
+	public enum NSUserNotificationActivationType : long {
 		None = 0,
 		ContentsClicked = 1,
 		ActionButtonClicked = 2,
@@ -106,7 +106,7 @@ namespace XamCore.Foundation {
 
 	[Mac (10,11)]
 	[Native][Flags]
-	public enum NSAppleEventSendOptions : nuint
+	public enum NSAppleEventSendOptions : ulong
 	{
 		NoReply = 0x00000001, // kAENoReply,
 		QueueReply = 0x00000002, // kAEQueueReply,

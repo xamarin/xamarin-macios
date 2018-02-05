@@ -12,7 +12,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	public partial class UIDynamicAnimator :
 	IEnumerable<UIDynamicBehavior>
 	{

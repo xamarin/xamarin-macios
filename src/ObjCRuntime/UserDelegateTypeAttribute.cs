@@ -31,7 +31,7 @@ using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 
 	// This attribute is emitted by the generator and used at runtime.
 	// It's not supposed to be used by manually written code.

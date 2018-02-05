@@ -2,10 +2,10 @@
 
 using System;
 
-using XamCore.ObjCRuntime;
-using XamCore.Security;
+using ObjCRuntime;
+using Security;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	public partial class NSUrlProtectionSpace {
 

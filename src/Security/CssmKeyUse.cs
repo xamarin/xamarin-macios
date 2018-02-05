@@ -28,7 +28,7 @@
 
 using System;
 
-namespace XamCore.Security {
+namespace Security {
 
 	// typedef uint32 CSSM_KEYUSE;
 	// Security.framework/Versions/A/Headers/cssmtype.h (OSX only)

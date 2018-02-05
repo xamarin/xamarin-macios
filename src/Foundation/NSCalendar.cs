@@ -27,15 +27,15 @@
 //
 //
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
+using ObjCRuntime;
+using CoreFoundation;
+using Foundation;
+using CoreGraphics;
 #if !WATCH
-using XamCore.CoreMedia;
+using CoreMedia;
 #endif
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	public enum NSCalendarType {
 		Gregorian, Buddhist, Chinese, Hebrew, Islamic, IslamicCivil, Japanese, [Obsolete] RepublicOfChina, Persian, Indian, ISO8601,
 		Coptic, EthiopicAmeteAlem, EthiopicAmeteMihret,

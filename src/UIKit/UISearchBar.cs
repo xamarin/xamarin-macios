@@ -12,12 +12,12 @@
 using System;
 
 #if XAMCORE_3_0
-using TextAttributes = XamCore.UIKit.UIStringAttributes;
+using TextAttributes = UIKit.UIStringAttributes;
 #else
-using TextAttributes = XamCore.UIKit.UITextAttributes;
+using TextAttributes = UIKit.UITextAttributes;
 #endif
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	public partial class UISearchBar {
 		public void SetScopeBarButtonTitle (TextAttributes attributes, UIControlState state)
 		{

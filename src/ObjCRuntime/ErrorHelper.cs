@@ -30,15 +30,13 @@ using ProductException=MonoMac.RuntimeException;
 #if !MTOUCH && !MMP
 #if XAMCORE_2_0
 using ObjCRuntime;
-#else
-using XamCore;
 #endif
 #endif
 
 #if MMP || MMP_TEST || MTOUCH
 namespace Xamarin.Bundler {
 #else
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 #endif
 	static class ErrorHelper {
 		public enum WarningLevel

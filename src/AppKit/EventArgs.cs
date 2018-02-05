@@ -27,9 +27,9 @@
 // NSString keys to an enum value for better API. An 'Unknown' value
 // exists on these enums for when a key cannot be mapped.
 
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.AppKit
+namespace AppKit
 {
 	public enum NSFontCollectionAction
 	{

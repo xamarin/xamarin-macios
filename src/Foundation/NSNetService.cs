@@ -25,7 +25,7 @@
 
 using System;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	public unsafe partial class NSNetService {
 

@@ -4,11 +4,11 @@
 
 using System;
 using System.Reflection;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.UIKit;
+using Foundation;
+using ObjCRuntime;
+using UIKit;
 
-namespace XamCore.WatchKit {
+namespace WatchKit {
 
 #if !COREBUILD
 	public partial class WKInterfaceController {

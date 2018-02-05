@@ -10,9 +10,9 @@
 
 using System;
 using System.Text;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.CoreBluetooth {
+namespace CoreBluetooth {
 
 	public partial class CBUUID : IEquatable<CBUUID> {
 

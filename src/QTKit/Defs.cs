@@ -24,9 +24,9 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.QTKit {
+namespace QTKit {
 	
 	[Deprecated (PlatformName.MacOSX, 10, 9)]
 	[StructLayout (LayoutKind.Sequential)]

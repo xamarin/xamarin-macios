@@ -16,7 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Xamarin.Utils;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
 namespace Xamarin.Bundler {
 	public partial class Driver {

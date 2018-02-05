@@ -26,10 +26,10 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 	public partial class NSApplication : NSResponder {
 		public static bool CheckForIllegalCrossThreadCalls = true;
 		public static bool CheckForEventAndDelegateMismatches = true;

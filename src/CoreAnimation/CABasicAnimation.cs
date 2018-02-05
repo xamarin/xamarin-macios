@@ -1,13 +1,13 @@
 using System;
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 #if MONOMAC
-using XamCore.AppKit;
+using AppKit;
 #endif
-using XamCore.CoreGraphics;
+using CoreGraphics;
 
-namespace XamCore.CoreAnimation {
+namespace CoreAnimation {
 	public partial class CABasicAnimation {
 		public T GetFromAs <T> () where T : class, INativeObject
 		{

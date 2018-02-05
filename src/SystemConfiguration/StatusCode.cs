@@ -10,9 +10,9 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.SystemConfiguration {
+namespace SystemConfiguration {
 
 	// untyped enum -> SystemConfiguration.framework/Headers/SystemConfiguration.h
 	[ErrorDomain ("kCFErrorDomainSystemConfiguration")]

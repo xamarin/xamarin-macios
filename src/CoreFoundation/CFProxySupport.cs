@@ -30,10 +30,10 @@
 using System;
 using System.Net;
 using System.Runtime.InteropServices;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.CoreFoundation {
+namespace CoreFoundation {
 	// Utility enum for string constants in ObjC
 	public enum CFProxyType {
 		None,

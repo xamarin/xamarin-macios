@@ -7,9 +7,9 @@
 
 using System;
 
-using XamCore.AppKit;
+using AppKit;
 
-namespace XamCore.Foundation
+namespace Foundation
 {
 	public enum NSAppleEventDescriptorType {
 		Record,

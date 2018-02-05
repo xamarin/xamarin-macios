@@ -2,16 +2,16 @@
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreAnimation;
-using XamCore.CoreLocation;
-using XamCore.MapKit;
-using XamCore.UIKit;
-using XamCore.CoreGraphics;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
+using CoreAnimation;
+using CoreLocation;
+using MapKit;
+using UIKit;
+using CoreGraphics;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	public partial class UISearchDisplayController {
 		public UITableViewSource SearchResultsSource {
 			get {

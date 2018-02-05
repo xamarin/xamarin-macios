@@ -8,12 +8,12 @@
 //
 
 using System;
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreGraphics;
+using Foundation;
+using ObjCRuntime;
 
 #if XAMCORE_2_0
-namespace XamCore.PdfKit {
+namespace PdfKit {
 	public partial class PdfAnnotation {
 
 		[Mac (10,12)]
