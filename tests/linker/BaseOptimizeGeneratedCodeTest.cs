@@ -35,7 +35,7 @@ namespace Linker.Shared
 			var action = new Action (() => counter++);
 			Custom (action);
 			CustomWithAttribute (action);
-			Assert.AreEqual (1, counter, "Counter");
+			Assert.AreEqual (2, counter, "Counter");
 		}
 
 		delegate void CustomDelegate (IntPtr block);
