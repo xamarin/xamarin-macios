@@ -2481,7 +2481,7 @@ namespace Registrar {
 
 				skip.Clear ();
 
-				if (!@class.IsProtocol && !@class.IsModel && !@class.IsCategory) {
+				if (!@class.IsProtocol && !@class.IsCategory) {
 					if (!isPlatformType)
 						customTypeCount++;
 					
@@ -2527,9 +2527,6 @@ namespace Registrar {
 					continue;
 
 				if (@class.Methods == null && isPlatformType && !@class.IsProtocol && !@class.IsCategory)
-					continue;
-
-				if (@class.IsModel)
 					continue;
 
 				CheckNamespace (@class, exceptions);
@@ -2691,6 +2688,14 @@ namespace Registrar {
 				iface.WriteLine ();
 
 				if (!is_protocol && !@class.IsWrapper) {
+					var hasClangDiagnostic = @class.IsModel;
+					if (hasClangDiagnostic)
+						sb.WriteLine ("#pragma clang diagnostic push");
+					if (@class.IsModel) {
+						sb.WriteLine ("#pragma clang diagnostic ignored \"-Wprotocol\"");
+						sb.WriteLine ("#pragma clang diagnostic ignored \"-Wobjc-protocol-property-synthesis\"");
+						sb.WriteLine ("#pragma clang diagnostic ignored \"-Wobjc-property-implementation\"");
+					}
 					if (@class.IsCategory) {
 						sb.WriteLine ("@implementation {0} ({1})", EncodeNonAsciiCharacters (@class.BaseType.ExportedName), @class.CategoryName);
 					} else {
@@ -2717,6 +2722,8 @@ namespace Registrar {
 					}
 					sb.Unindent ();
 					sb.WriteLine ("@end");
+					if (hasClangDiagnostic)
+						sb.AppendLine ("#pragma clang diagnostic pop");
 				}
 				sb.WriteLine ();
 			}
