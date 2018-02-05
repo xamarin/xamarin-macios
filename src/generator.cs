@@ -598,7 +598,7 @@ public class MemberInformation
 
 			// Wrap can only be used either at property level or getter/setter level at a given time.
 			if (wrap_method != null && has_inner_wrap_attribute)
-				throw new BindingException (1063, true, $"The 'WrapAttribute' can only be used either at property level or at getter/setter level in a given time. Property: '{pi.DeclaringType}.{pi.Name}'");
+				throw new BindingException (1063, true, $"The 'WrapAttribute' can only be used at the property or at getter/setter level at a given time. Property: '{pi.DeclaringType}.{pi.Name}'");
 		}
 	}
 
@@ -4685,7 +4685,7 @@ public partial class Generator : IMemberGatherer {
 			print ("}\n");
 			return;			
 		} else if (minfo.has_inner_wrap_attribute) {
-			// If propperty getter or setter has its own WrapAttribute we let the user do whatever their heart desires
+			// If property getter or setter has its own WrapAttribute we let the user do whatever their heart desires
 			if (pi.CanRead) {
 				PrintAttributes (pi, platform: true);
 				PrintAttributes (pi.GetGetMethod (), platform: true, preserve: true, advice: true);
@@ -4707,7 +4707,7 @@ public partial class Generator : IMemberGatherer {
 				indent++;
 
 				if (not_implemented_attr != null)
-					print ($"throw new NotImplementedException (@\"{not_implemented_attr?.Message}\");");
+					print ("throw new NotImplementedException ({0});", not_implemented_attr.Message == null ? "" : $@"""{not_implemented_attr.Message}""");
 				else
 					print ($"{minfo.wpmi.WrapSetter};");
 
