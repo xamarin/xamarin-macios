@@ -25,7 +25,7 @@ using NUnit.Framework;
 namespace Linker.Shared
 {
 	[Preserve (AllMembers = true)]
-	public class BaseOptimizeGeneratedCodeTest
+	public abstract class BaseOptimizeGeneratedCodeTest
 	{
 		[Test]
 		public void SetupBlock_CustomDelegate ()
