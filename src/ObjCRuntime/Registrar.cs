@@ -2371,6 +2371,12 @@ namespace XamCore.Registrar {
 						signature.Append (ToSignature (type, member, ref success));
 					}
 					if (!success) {
+						if (mi != null) {
+							// The input 'parameters' might be closed generic types, and thus might not correspond exactly with the source code.
+							// By fetching the parameters from the method again, we attempt to report the parameter type as close as possible
+							// to the source code.
+							parameters = GetParameters (mi);
+						}
 						throw CreateException (4136, mi, "The registrar cannot marshal the parameter type '{0}' of the parameter '{1}' in the method '{2}.{3}'",
 							GetTypeFullName (parameters [i]), GetParameterName (mi, i), GetTypeFullName (declaring_type), GetDescriptiveMethodName (mi));
 					}
