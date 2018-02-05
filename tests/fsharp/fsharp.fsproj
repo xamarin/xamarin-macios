@@ -40,6 +40,7 @@
     <MtouchArch>ARMv7, ARM64</MtouchArch>
     <GenerateTailCalls>true</GenerateTailCalls>
     <MtouchLink>None</MtouchLink>
+    <MtouchUseLlvm>True</MtouchUseLlvm>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release32|iPhone' ">
     <Optimize>true</Optimize>
@@ -52,6 +53,7 @@
     <MtouchArch>ARMv7</MtouchArch>
     <GenerateTailCalls>true</GenerateTailCalls>
     <MtouchLink>None</MtouchLink>
+    <MtouchUseLlvm>True</MtouchUseLlvm>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release64|iPhone' ">
     <Optimize>true</Optimize>
@@ -64,6 +66,7 @@
     <MtouchArch>ARM64</MtouchArch>
     <GenerateTailCalls>true</GenerateTailCalls>
     <MtouchLink>None</MtouchLink>
+    <MtouchUseLlvm>True</MtouchUseLlvm>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-bitcode|iPhone' ">
     <Optimize>true</Optimize>

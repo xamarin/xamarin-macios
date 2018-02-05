@@ -76,15 +76,19 @@
     <Compile Include="..\mtouch\Cache.cs">
       <Link>Cache.cs</Link>
     </Compile>
-    <Compile Include="..\..\tools\common\StringUtils.cs">
-      <Link>StringUtils.cs</Link>
-    </Compile>
     <Compile Include="src\NetStandardTests.cs" />
     <Compile Include="..\common\ProductTests.cs">
       <Link>ProductTests.cs</Link>
     </Compile>
     <Compile Include="..\common\ExecutionHelper.cs">
       <Link>src\ExecutionHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\common\Profile.cs">
+      <Link>Profile.cs</Link>
+    </Compile>
+    <Compile Include="src\MmpTool.cs" />
+    <Compile Include="..\common\BundlerTool.cs">
+      <Link>BundlerTool.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

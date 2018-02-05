@@ -37,9 +37,7 @@ using MatrixFloat2x2 = global::OpenTK.NMatrix2;
 using MatrixFloat3x3 = global::OpenTK.NMatrix3;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 using VectorFloat3 = global::OpenTK.NVector3;
-#if !TEST_BINDINGS_UNAVAILABLE
 using Bindings.Test;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.ModelIO {
@@ -196,16 +194,12 @@ namespace MonoTouchFixtures.ModelIO {
 				
 			using (var obj = new MDLMaterialProperty ("name", MDLMaterialSemantic.AmbientOcclusion, M4)) {
 				Asserts.AreEqual (M4, obj.Matrix4x4, "7 Matrix4x4");
-#if !TEST_BINDINGS_UNAVAILABLE
 				Asserts.AreEqual (CFunctions.GetMatrixFloat4x4 (obj, "matrix4x4"), obj.MatrixFloat4x4, "7b MatrixFloat4x4");
-#endif
 				Asserts.AreEqual (MatrixFloat4x4.Transpose ((MatrixFloat4x4) M4), obj.MatrixFloat4x4, "7c MatrixFloat4x4");
 			}
 
 			using (var obj = new MDLMaterialProperty ("name", MDLMaterialSemantic.AmbientOcclusion, M4x4)) {
-#if !TEST_BINDINGS_UNAVAILABLE
 				Asserts.AreEqual (CFunctions.GetMatrixFloat4x4 (obj, "matrix4x4"), obj.MatrixFloat4x4, "7' MatrixFloat4x4");
-#endif
 				Asserts.AreEqual (M4x4, obj.MatrixFloat4x4, "7'b MatrixFloat4x4");
 			}
 

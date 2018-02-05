@@ -13,6 +13,9 @@ using Xamarin.Tests;
 
 using NUnit.Framework;
 
+using MTouchLinker = Xamarin.Tests.LinkerOption;
+using MTouchRegistrar = Xamarin.Tests.RegistrarOption;
+
 namespace Xamarin.Tests {
 	static class TestTarget {
 		public static string ToolPath { 
@@ -29,7 +32,6 @@ namespace Xamarin
 	public enum Config { Debug, Release }
 	public enum PackageMdb { Default, WithMdb, WoutMdb }
 	public enum MSym { Default, WithMSym, WoutMSym }
-	public enum Profile { iOS, tvOS, watchOS }
 
 	[TestFixture]
 	public class MTouch
@@ -1759,16 +1761,7 @@ public class TestApp {
 
 		public static string GetBaseLibrary (Profile profile)
 		{
-			switch (profile) {
-			case Profile.iOS:
-				return Configuration.XamarinIOSDll;
-			case Profile.tvOS:
-				return Configuration.XamarinTVOSDll;
-			case Profile.watchOS:
-				return Configuration.XamarinWatchOSDll;
-			default:
-				throw new NotImplementedException ();
-			}
+			return Configuration.GetBaseLibrary (profile);
 		}
 
 		public static string GetCompiler (Profile profile, StringBuilder args, bool use_csc = false)
@@ -1797,16 +1790,7 @@ public class TestApp {
 
 		public static string GetTargetFramework (Profile profile)
 		{
-			switch (profile) {
-			case Profile.iOS:
-				return "Xamarin.iOS,v1.0";
-			case Profile.tvOS:
-				return "Xamarin.TVOS,v1.0";
-			case Profile.watchOS:
-				return "Xamarin.WatchOS,v1.0";
-			default:
-				throw new NotImplementedException ();
-			}
+			return Configuration.GetTargetFramework (profile);
 		}
 
 		public static string GetDeviceArchitecture (Profile profile)
@@ -1886,16 +1870,7 @@ public class TestApp {
 
 		public static string GetSdkVersion (Profile profile)
 		{
-			switch (profile) {
-			case Profile.iOS:
-				return Configuration.sdk_version;
-			case Profile.tvOS:
-				return Configuration.tvos_sdk_version;
-			case Profile.watchOS:
-				return Configuration.watchos_sdk_version;
-			default:
-				throw new NotImplementedException ();
-			}
+			return Configuration.GetSdkVersion (profile);
 		}
 
 		[Test]
@@ -3843,41 +3818,17 @@ public class Dummy {
 
 		public static string CompileTestAppExecutable (string targetDirectory, string code = null, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp", string extraCode = null, string usings = null, bool use_csc = false)
 		{
-			if (code == null)
-				code = "public class TestApp { static void Main () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
-			if (usings != null)
-				code = usings + "\n" + code;
-			if (extraCode != null)
-				code += extraCode;
-
-			return CompileTestAppCode ("exe", targetDirectory, code, extraArg, profile, appName, use_csc);
+			return BundlerTool.CompileTestAppExecutable (targetDirectory, code, extraArg, profile, appName, extraCode, usings, use_csc);
 		}
 
 		public static string CompileTestAppLibrary (string targetDirectory, string code, string extraArg = null, Profile profile = Profile.iOS, string appName = "testApp")
 		{
-			return CompileTestAppCode ("library", targetDirectory, code, extraArg, profile, appName);
+			return BundlerTool.CompileTestAppLibrary (targetDirectory, code, extraArg, profile, appName);
 		}
 
 		public static string CompileTestAppCode (string target, string targetDirectory, string code, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp", bool use_csc = false)
 		{
-			var ext = target == "exe" ? "exe" : "dll";
-			var cs = Path.Combine (targetDirectory, "testApp.cs");
-			var assembly = Path.Combine (targetDirectory, appName + "." + ext);
-			var root_library = GetBaseLibrary (profile);
-
-			File.WriteAllText (cs, code);
-
-			string output;
-			StringBuilder args = new StringBuilder ();
-			string fileName = GetCompiler (profile, args, use_csc);
-			args.AppendFormat ($" /noconfig /t:{target} /nologo /out:{StringUtils.Quote (assembly)} /r:{StringUtils.Quote (root_library)} {StringUtils.Quote (cs)} {extraArg}");
-			if (ExecutionHelper.Execute (fileName, args.ToString (), out output) != 0) {
-				Console.WriteLine ("{0} {1}", fileName, args);
-				Console.WriteLine (output);
-				throw new Exception (output);
-			}
-
-			return assembly;
+			return BundlerTool.CompileTestAppCode (target, targetDirectory, code, extraArg, profile, appName, use_csc);
 		}
 
 		static string CreateBindingLibrary (string targetDirectory, string nativeCode, string bindingCode, string linkWith = null, string extraCode = "", string name = "binding", string[] references = null, string arch = "armv7")

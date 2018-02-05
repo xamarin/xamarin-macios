@@ -26,9 +26,7 @@ using MatrixFloat3x3 = global::OpenTK.NMatrix3;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 using VectorFloat3 = global::OpenTK.NVector3;
 
-#if !MONOMAC
 using Bindings.Test;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.GamePlayKit
@@ -66,14 +64,10 @@ namespace MonoTouchFixtures.GamePlayKit
 				Asserts.AreEqual (mat, obj.Rotation, "Rotation after setter");
 				var transposed3x3 = MatrixFloat3x3.Transpose ((MatrixFloat3x3) mat);
 				Asserts.AreEqual (transposed3x3, obj.Rotation3x3, "Rotation3x3 after setter");
-#if !MONOMAC
 				Asserts.AreEqual (transposed3x3, CFunctions.GetMatrixFloat3x3 (obj, "rotation"), "Rotation3x3 after setter native");
-#endif
 				obj.Rotation3x3 = mat3x3;
 				Asserts.AreEqual (mat3x3, obj.Rotation3x3, "Rotation3x3 after setter 3x3");
-#if !MONOMAC
 				Asserts.AreEqual (mat3x3, CFunctions.GetMatrixFloat3x3 (obj, "rotation"), "Rotation3x3 after setter native 3x3");
-#endif
 			}
 		}
 	}

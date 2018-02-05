@@ -11,7 +11,7 @@ using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-#if XAMCORE_2_0
+#if __UNIFIED__
 using Foundation;
 using ObjCRuntime;
 #elif __IOS__

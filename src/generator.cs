@@ -2559,6 +2559,7 @@ public partial class Generator : IMemberGatherer {
 			print ("{0} invoker;", ti.DelegateName);
 			print ("");
 			print ("[Preserve (Conditional=true)]");
+			print_generated_code ();
 			print ("public unsafe {0} (BlockLiteral *block)", ti.NativeInvokerName);
 			print ("{"); indent++;
 			print ("blockPtr = _Block_copy ((IntPtr) block);", ns.CoreObjCRuntime);
@@ -2566,12 +2567,14 @@ public partial class Generator : IMemberGatherer {
 			indent--; print ("}");
 			print ("");
 			print ("[Preserve (Conditional=true)]");
+			print_generated_code ();
 			print ("~{0} ()", ti.NativeInvokerName);
 			print ("{"); indent++;
 			print ("_Block_release (blockPtr);", ns.CoreObjCRuntime);
 			indent--; print ("}");
 			print ("");
 			print ("[Preserve (Conditional=true)]");
+			print_generated_code ();
 			print ("public unsafe static {0} Create (IntPtr block)\n{{", ti.UserDelegate); indent++;
 			print ("if (block == IntPtr.Zero)"); indent++;
 			print ("return null;"); indent--;
@@ -2586,6 +2589,7 @@ public partial class Generator : IMemberGatherer {
 			var string_pars = new StringBuilder ();
 			MakeSignatureFromParameterInfo (false, string_pars, mi, declaringType: null, parameters: parameters);
 			print ("[Preserve (Conditional=true)]");
+			print_generated_code ();
 			print ("unsafe {0} Invoke ({1})", FormatType (null, mi.ReturnType), string_pars.ToString ());
 			print ("{"); indent++;
 			string cast_a = "", cast_b = "";

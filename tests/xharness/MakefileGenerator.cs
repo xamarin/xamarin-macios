@@ -179,10 +179,11 @@ namespace xharness
 				}
 				writer.WriteLine ("# Env Variables to use local not system XM");
 				writer.WriteLine ();
+				writer.WriteLine ("MD_APPLE_SDK_ROOT_EVALUATED:=$(shell dirname `dirname $(XCODE_DEVELOPER_ROOT)`)");
 
 				var enviromentalVariables = new Dictionary<string,string> () { { "XBUILD_FRAMEWORK_FOLDERS_PATH", "$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks"},
 					{ "MSBuildExtensionsPath", "$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild"},
-					{ "MD_APPLE_SDK_ROOT", "$(shell dirname `dirname $(XCODE_DEVELOPER_ROOT)`)"}
+					{ "MD_APPLE_SDK_ROOT", "$(MD_APPLE_SDK_ROOT_EVALUATED)"}
 				};
 
 				foreach (var key in enviromentalVariables) {

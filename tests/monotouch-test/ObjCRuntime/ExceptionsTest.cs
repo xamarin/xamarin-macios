@@ -9,8 +9,8 @@ using Foundation;
 using ObjCRuntime;
 #if !MONOMAC
 using UIKit;
-using Bindings.Test;
 #endif
+using Bindings.Test;
 #else
 using MonoTouch;
 using MonoTouch.Foundation;
@@ -19,6 +19,12 @@ using MonoTouch.UIKit;
 #endif
 
 using NUnit.Framework;
+
+#if __MACOS__
+using ObjCException = Foundation.ObjCException;
+#else
+using ObjCException = Foundation.MonoTouchException;
+#endif
 
 namespace MonoTouchFixtures.ObjCRuntime {
 	
@@ -80,29 +86,28 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Runtime.MarshalObjectiveCException -= ObjExceptionHandler;
 		}
 
-#if !MONOMAC // Simulator only
+		// Simulator/desktop only (except for watchOS, where it works everywhere)
 		[Test]
 		public void ObjCException ()
 		{
-#if !__WATCHOS__
+#if !__WATCHOS__ && !__MACOS__
 			if (Runtime.Arch == Arch.DEVICE)
 				Assert.Ignore ("This test requires wrapper functions, which are not enabled for monotouch-test on device.");
 #endif
 
 #if !DEBUG && !__WATCHOS__
-			if (Runtime.Arch != Arch.DEVICE)
-				Assert.Ignore ("This test only works in debug mode in the simulator.");
+			Assert.Ignore ("This test only works in debug mode in the simulator.");
 #endif
 			InstallHandlers ();
 
 			try {
 				using (var e = new ObjCExceptionTest ()) {
-					MonoTouchException thrownException = null;
+					ObjCException thrownException = null;
 					try {
 						objcTargetMode = MarshalObjectiveCExceptionMode.ThrowManagedException;
 						e.ThrowObjCException ();
 						Assert.Fail ("managed exception not thrown");
-					} catch (MonoTouchException ex) {
+					} catch (ObjCException ex) {
 						thrownException = ex;
 					}
 					Assert.AreEqual ("exception was thrown", thrownException.Reason, "objc reason");
@@ -116,9 +121,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				UninstallHandlers ();
 			}
 		}
-#endif
 
-#if !MONOMAC // ObjCExceptionTest is from the iOS only Bindings.Test
 		class ManagedExceptionTest : ObjCExceptionTest {
 			public Exception Exception;
 			public override void ThrowManagedException ()
@@ -127,22 +130,20 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				throw Exception;
 			}
 		}
-#endif
 
-#if !MONOMAC // Simulator only test, mac doesn't have simulator.
+		// Simulator/desktop only test (except for watchOS, where it works everywhere)
 		[Test]
 		public void ManagedExceptionPassthrough ()
 		{
 			Exception thrownException = null;
 
-#if !__WATCHOS__
+#if !__WATCHOS__ && !__MACOS__
 			if (Runtime.Arch == Arch.DEVICE)
 				Assert.Ignore ("This test requires wrapper functions, which are not enabled for monotouch-test on device.");
 #endif
 
 #if !DEBUG && !__WATCHOS__
-			if (Runtime.Arch != Arch.DEVICE)
-				Assert.Ignore ("This test only works in debug mode in the simulator.");
+			Assert.Ignore ("This test only works in debug mode in the simulator.");
 #endif
 			var hasDebugger = global::System.Diagnostics.Debugger.IsAttached;
 
@@ -189,9 +190,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 						Assert.AreSame (e.Exception, thrownException, "exception");
 					} else {
 						Assert.AreNotSame (e.Exception, thrownException, "exception");
-						Assert.AreSame (typeof (MonoTouchException), thrownException.GetType (), "2 thrown type");
-						Assert.AreEqual ("Caught exception", ((MonoTouchException) thrownException).Name, "2 thrown name");
-						Assert.AreEqual ("exception was rethrown", ((MonoTouchException) thrownException).Reason, "2 thrown reason");
+						Assert.AreSame (typeof (ObjCException), thrownException.GetType (), "2 thrown type");
+						Assert.AreEqual ("Caught exception", ((ObjCException) thrownException).Name, "2 thrown name");
+						Assert.AreEqual ("exception was rethrown", ((ObjCException) thrownException).Reason, "2 thrown reason");
 					}
 					if (hasDebugger) {
 						Assert.AreEqual (0, objcEventArgs.Count, "2 objc exception");
@@ -224,6 +225,5 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				UninstallHandlers ();      
 			}
 		}
-#endif
 	}
 }
