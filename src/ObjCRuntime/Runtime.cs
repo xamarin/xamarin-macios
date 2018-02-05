@@ -92,6 +92,7 @@ namespace XamCore.ObjCRuntime {
 			public IntPtr set_gchandle_tramp;
 		}
 
+		[Flags]
 		internal enum InitializationFlags : int {
 			/* unused               = 0x01 */
 			/* unused				= 0x02,*/
