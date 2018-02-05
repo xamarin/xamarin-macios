@@ -164,8 +164,7 @@ public class ListSourceFiles {
 						Console.WriteLine($"\t{p}");
 				}
 				srcs.UnionWith(assemblySrcs);
-			}
-			catch (Exception) {
+			} catch (Exception) {
 				Console.WriteLine ("Error processing: {0}", pdbFile);
 				throw;
 			}
@@ -185,8 +184,7 @@ public class ListSourceFiles {
 						Console.WriteLine($"\t{p}");
 				}
 				srcs.UnionWith (assemblySrcs);
-			}
-			catch (Exception) {
+			} catch (Exception) {
 				Console.WriteLine ("Error processing: {0}", mdbFile);
 				throw;
 			}
