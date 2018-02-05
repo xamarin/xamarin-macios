@@ -2481,7 +2481,7 @@ namespace XamCore.Registrar {
 
 				skip.Clear ();
 
-				if (!@class.IsProtocol && !@class.IsModel && !@class.IsCategory) {
+				if (!@class.IsProtocol && !@class.IsCategory) {
 					if (!isPlatformType)
 						customTypeCount++;
 					
