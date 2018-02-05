@@ -2554,6 +2554,17 @@ xamarin_find_assembly_directory (const char *assembly_name)
 	return entry ? entry->location : NULL;
 }
 
+MonoMethod *
+xamarin_get_managed_method_for_token (guint32 token_ref, guint32 *exception_gchandle)
+{
+	MonoReflectionMethod *reflection_method;
+
+	reflection_method = xamarin_get_method_from_token (token_ref, exception_gchandle);
+	if (*exception_gchandle != 0) return NULL;
+
+	return xamarin_get_reflection_method_method (reflection_method);
+}
+
 /*
  * Object unregistration:
  *
