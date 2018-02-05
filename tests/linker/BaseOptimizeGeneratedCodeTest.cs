@@ -27,6 +27,7 @@ namespace Linker.Shared
 	[Preserve (AllMembers = true)]
 	public abstract class BaseOptimizeGeneratedCodeTest
 	{
+#if LINKALL
 		[Test]
 		public void SetupBlock_CustomDelegate ()
 		{
@@ -490,5 +491,6 @@ namespace Linker.Shared
 			GC.KeepAlive (dummy208); GC.KeepAlive (dummy218); GC.KeepAlive (dummy228); GC.KeepAlive (dummy238); GC.KeepAlive (dummy248); GC.KeepAlive (dummy258); GC.KeepAlive (dummy268); GC.KeepAlive (dummy278); GC.KeepAlive (dummy288); GC.KeepAlive (dummy298);
 			GC.KeepAlive (dummy209); GC.KeepAlive (dummy219); GC.KeepAlive (dummy229); GC.KeepAlive (dummy239); GC.KeepAlive (dummy249); GC.KeepAlive (dummy259); GC.KeepAlive (dummy269); GC.KeepAlive (dummy279); GC.KeepAlive (dummy289); GC.KeepAlive (dummy299);
 		}
+#endif // LINKALL
 	}
 }

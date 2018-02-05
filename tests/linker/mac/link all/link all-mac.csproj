@@ -17,7 +17,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\$(Platform)\Debug</OutputPath>
-    <DefineConstants>__UNIFIED__;__MACOS__;DEBUG</DefineConstants>
+    <DefineConstants>__UNIFIED__;__MACOS__;DEBUG;LINKALL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <EnableCodeSigning>false</EnableCodeSigning>
@@ -38,7 +38,7 @@
     <DebugType></DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\$(Platform)\Release</OutputPath>
-    <DefineConstants>__UNIFIED__;__MACOS__</DefineConstants>
+    <DefineConstants>__UNIFIED__;__MACOS__;LINKALL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <EnableCodeSigning>false</EnableCodeSigning>
