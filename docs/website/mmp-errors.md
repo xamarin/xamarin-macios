@@ -232,6 +232,10 @@ The linker reports this warning when it can't optimize a call to BlockLiteral.Se
 The message will point to the method that calls BlockLiteral.SetupBlock[Unsafe], and
 it may also give clues as to why the call couldn't be optimized.
 
+Please file an [issue](https://github.com/xamarin/xamarin-macios/issues/new)
+along with a complete build log so that we can investigate what went wrong and
+possibly enable more scenarios in the future.
+
 # MM3xxx: AOT
 
 ## MM30xx: AOT (general) errors
@@ -267,6 +271,18 @@ the registrar couldn't compute it.
 
 This means that the block signature has to be computed at runtime, which is
 somewhat slower.
+
+There are currently two possible reasons for this warning:
+
+1. The type of the managed delegate is either a `System.Delegate` or
+   `System.MulticastDelegate`. These types don't represent a specific signature,
+   which means the registrar can't compute the corresponding native signature
+   either. In this case the fix is to use a specific delegate type for the
+   block (alternatively the warning can be ignored by adding `--nowarn:4173`
+   as an additional mmp argument in the project's Mac Build options).
+2. The registrar can't find the `Invoke` method of the delegate. This
+   shouldn't happen, so please file an [issue](https://github.com/xamarin/xamarin-macios/issues/new)
+   with a test project so that we can fix it.
 
 # MM5xxx: GCC and toolchain
 
