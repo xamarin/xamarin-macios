@@ -22,7 +22,7 @@ namespace Xamarin.ApiTest
 		[TestCase (Profile.tvOS)]
 #else
 		[TestCase (Profile.macOSMobile)]
-		[TestCase (Profile.macOSMobile)]
+		[TestCase (Profile.macOSFull)]
 #endif
 		public void AlwaysOptimizable (Profile profile)
 		{
