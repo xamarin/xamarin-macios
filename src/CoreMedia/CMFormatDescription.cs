@@ -14,19 +14,19 @@ using System;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
-using XamCore.ObjCRuntime;
-using XamCore.CoreVideo;
-using XamCore.AudioToolbox;
+using Foundation;
+using CoreFoundation;
+using CoreGraphics;
+using ObjCRuntime;
+using CoreVideo;
+using AudioToolbox;
 
 #if !XAMCORE_2_0
 using System.Drawing;
 using CMVideoDimensions = System.Drawing.Size;
 #endif
 
-namespace XamCore.CoreMedia {
+namespace CoreMedia {
 
 	// untyped enum (uses as OSStatus) -> CMFormatDescription.h
 	public enum CMFormatDescriptionError : int {
@@ -36,7 +36,6 @@ namespace XamCore.CoreMedia {
 		ValueNotAvailable   = -12718,
 	}
 
-	[iOS (4,0)]
 	public class CMFormatDescription : INativeObject, IDisposable {
 		internal IntPtr handle;
 
@@ -361,7 +360,6 @@ namespace XamCore.CoreMedia {
 #endif
 	}
 
-	[iOS (4,0)]
 	public class CMAudioFormatDescription : CMFormatDescription {
 		
 		internal CMAudioFormatDescription (IntPtr handle)
@@ -377,7 +375,6 @@ namespace XamCore.CoreMedia {
 		// TODO: Move more audio specific methods here
 	}
 
-	[iOS (4,0)]
 	public partial class CMVideoFormatDescription : CMFormatDescription {
 		
 		internal CMVideoFormatDescription (IntPtr handle)

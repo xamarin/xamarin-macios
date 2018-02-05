@@ -3,11 +3,11 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.CoreFoundation;
-using XamCore.CoreMedia;
-using XamCore.ObjCRuntime;
+using CoreFoundation;
+using CoreMedia;
+using ObjCRuntime;
 
-namespace XamCore.MediaToolbox {
+namespace MediaToolbox {
 
 	static public class MTFormatNames {
 

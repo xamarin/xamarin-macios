@@ -10,10 +10,10 @@
 #if XAMCORE_2_0
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.Vision {
+namespace Vision {
 	public partial class VNRequest {
 
 		public virtual T [] GetResults<T> () where T : VNObservation

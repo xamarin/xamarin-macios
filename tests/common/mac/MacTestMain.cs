@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-#if XAMCORE_2_0
+#if XAMCORE_2_0 || __UNIFIED__
 using AppKit;
 using Foundation;
 #else

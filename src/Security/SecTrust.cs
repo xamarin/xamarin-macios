@@ -13,11 +13,11 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
+using ObjCRuntime;
+using CoreFoundation;
+using Foundation;
 
-namespace XamCore.Security {
+namespace Security {
 
 	delegate void SecTrustCallback (IntPtr trustRef, SecTrustResult trustResult);
 

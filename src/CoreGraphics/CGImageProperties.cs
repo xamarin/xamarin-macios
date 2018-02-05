@@ -27,17 +27,17 @@
 
 using System;
 
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using ObjCRuntime;
 #if !WATCH
-using XamCore.CoreImage;
+using CoreImage;
 #endif
 #if !COREBUILD
-using Keys = XamCore.ImageIO.CGImageProperties;
+using Keys = ImageIO.CGImageProperties;
 #endif
 
-namespace XamCore.CoreGraphics {
+namespace CoreGraphics {
 
 	// convenience enum mapped to kCGImagePropertyColorModelXXX fields (see imageio.cs)
 	public enum CGImageColorModel {
@@ -545,7 +545,6 @@ namespace XamCore.CoreGraphics {
 		{
 		}
 
-		[iOS (5,0)]
 		public string Author {
 			get {
 				return GetStringValue (Keys.PNGAuthor);
@@ -555,7 +554,6 @@ namespace XamCore.CoreGraphics {
 			}
 		}
 
-		[iOS (5,0)]
 		public string Description {
 			get {
 				return GetStringValue (Keys.PNGDescription);
@@ -574,7 +572,6 @@ namespace XamCore.CoreGraphics {
 			}
 		}
 
-		[iOS (5,0)]
 		public string Software {
 			get {
 				return GetStringValue (Keys.PNGSoftware);
@@ -602,7 +599,6 @@ namespace XamCore.CoreGraphics {
 			}
 		}
 
-		[iOS (5,0)]
 		public string Title {
 			get {
 				return GetStringValue (Keys.PNGTitle);

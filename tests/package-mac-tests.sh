@@ -9,9 +9,9 @@ mkdir -p $DIR
 
 make build-mac
 
-for app in */bin/x86/*/*.app; do
-	mkdir -p $DIR/tests/$app
-	cp -R $app $DIR/tests/$app/..
+for app in */bin/x86/*/*.app linker/mac/*/bin/x86/*/*.app; do
+	mkdir -p "$DIR/tests/$app"
+	cp -R "$app" "$DIR/tests/$app/.."
 done
 
 cp -p Makefile-mac.inc $DIR/tests

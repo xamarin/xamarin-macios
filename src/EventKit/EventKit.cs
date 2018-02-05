@@ -9,11 +9,11 @@
 
 #if XAMCORE_2_0 || !MONOMAC
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 using System;
 
-namespace XamCore.EventKit {
+namespace EventKit {
 
 #if !XAMCORE_4_0
 

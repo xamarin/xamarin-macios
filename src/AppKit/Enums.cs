@@ -22,32 +22,32 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 
 	[Native]
-	public enum NSRunResponse : nint {
+	public enum NSRunResponse : long {
 		Stopped = -1000,
 		Aborted = -1001,
 		Continues = -1002
 	}
 
 	[Native]
-	public enum NSApplicationActivationOptions : nuint_compat_int {
+	public enum NSApplicationActivationOptions : ulong {
 		Default = 0,
 		ActivateAllWindows = 1,
 		ActivateIgnoringOtherWindows = 2
 	}
 
 	[Native]
-	public enum NSApplicationActivationPolicy : nint {
+	public enum NSApplicationActivationPolicy : long {
 		Regular, Accessory, Prohibited
 	}
 	
 	[Flags]
 	[Native]
-	public enum NSApplicationPresentationOptions : nuint_compat_int {
+	public enum NSApplicationPresentationOptions : ulong {
 		Default                    = 0,
 		AutoHideDock               = (1 <<  0),
 		HideDock                   = (1 <<  1),
@@ -67,43 +67,43 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	public enum NSApplicationDelegateReply : nuint_compat_int {
+	public enum NSApplicationDelegateReply : ulong {
 		Success,
 		Cancel,
 		Failure
 	}
 
 	[Native]
-	public enum NSRequestUserAttentionType : nuint_compat_int {
+	public enum NSRequestUserAttentionType : ulong {
 		CriticalRequest = 0,
 		InformationalRequest = 10
 	}
 
 	[Native]
-	public enum NSApplicationTerminateReply : nuint_compat_int {
+	public enum NSApplicationTerminateReply : ulong {
 		Cancel, Now, Later
 	}
 
 	[Native]
-	public enum NSApplicationPrintReply : nuint_compat_int {
+	public enum NSApplicationPrintReply : ulong {
 		Cancelled, Success, Failure, ReplyLater
 	}
 
 #if !XAMCORE_4_0
 	[Native]
-	public enum NSApplicationLayoutDirection : nint {
+	public enum NSApplicationLayoutDirection : long {
 		LeftToRight = 0,
 		RightToLeft = 1
 	}
 #endif
 
 	[Native]
-	public enum NSImageInterpolation : nuint_compat_int {
+	public enum NSImageInterpolation : ulong {
 		Default, None, Low, Medium, High
 	}
 
 	[Native]
-	public enum NSComposite : nuint_compat_int {
+	public enum NSComposite : ulong {
 		Clear,
 		Copy,
 		SourceOver,
@@ -116,7 +116,6 @@ namespace XamCore.AppKit {
 		DestinationAtop,
 		XOR,
 		PlusDarker,
-		[Mac (10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use NSCompositeSourceOver instead.")]
 		Highlight,
 		PlusLighter,
@@ -138,33 +137,31 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	public enum NSBackingStore : nuint_compat_int {
-		[Mac (10, 0)]
+	public enum NSBackingStore : ulong {
 		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'Buffered' instead.")]
 		Retained, 
-		[Mac (10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'Buffered' instead.")]
 		Nonretained, 
 		Buffered,
 	}
 
 	[Native]
-	public enum NSWindowOrderingMode : nint {
+	public enum NSWindowOrderingMode : long {
 		Below = -1, Out, Above,
 	}
 
 	[Native]
-	public enum NSFocusRingPlacement : nuint_compat_int {
+	public enum NSFocusRingPlacement : ulong {
 		RingOnly, RingBelow, RingAbove,
 	}
 
 	[Native]
-	public enum NSFocusRingType : nuint_compat_int {
+	public enum NSFocusRingType : ulong {
 		Default, None, Exterior
 	}
 	
 	[Native]
-	public enum NSColorRenderingIntent : nint {
+	public enum NSColorRenderingIntent : long {
 		Default,
 		AbsoluteColorimetric,
 		RelativeColorimetric,
@@ -174,18 +171,18 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	public enum NSRectEdge : nuint_compat_int {
+	public enum NSRectEdge : ulong {
 		MinXEdge, MinYEdge, MaxXEdge, MaxYEdge
 	}
 
 	[Native]
-	public enum NSUserInterfaceLayoutDirection : nint {
+	public enum NSUserInterfaceLayoutDirection : long {
 		LeftToRight, RightToLeft
 	}
 
 #region NSColorSpace
 	[Native]
-	public enum NSColorSpaceModel : nint {
+	public enum NSColorSpaceModel : long {
 		Unknown = -1,
 		Gray,
 		RGB,
@@ -202,7 +199,7 @@ namespace XamCore.AppKit {
 	[Flags]
 	[Native]
 	[Obsolete ("Use NSFileWrapperReadingOptions in Foundation instead.")]
-	public enum NSFileWrapperReadingOptions : nuint_compat_int {
+	public enum NSFileWrapperReadingOptions : ulong {
 		Immediate = 1, WithoutMapping = 2
 	}
 #endif
@@ -210,12 +207,12 @@ namespace XamCore.AppKit {
 	
 #region NSParagraphStyle
 	[Native]
-	public enum NSTextTabType : nuint_compat_int {
+	public enum NSTextTabType : ulong {
 		Left, Right, Center, Decimal
 	}
 
 	[Native]
-	public enum NSLineBreakMode : nuint_compat_int {
+	public enum NSLineBreakMode : ulong {
 		ByWordWrapping,
 		CharWrapping,
 		Clipping,
@@ -230,9 +227,8 @@ namespace XamCore.AppKit {
 
 #if !XAMCORE_4_0
 	[Native]
-	[Mac (10, 0)]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use formatters instead.")]
-	public enum NSType : nuint_compat_int {
+	public enum NSType : ulong {
 	    Any			= 0,
 	    Int			= 1,
 	    PositiveInt		= 2,
@@ -244,14 +240,14 @@ namespace XamCore.AppKit {
 #endif
 	
 	[Native]
-	public enum NSCellType : nuint_compat_int {
+	public enum NSCellType : ulong {
 	    Null,
 	    Text,
 	    Image
 	}
 	
 	[Native]
-	public enum NSCellAttribute : nuint_compat_int {
+	public enum NSCellAttribute : ulong {
 		CellDisabled,
 		CellState,
 		PushInCell,
@@ -272,7 +268,7 @@ namespace XamCore.AppKit {
 	}
 	
 	[Native]
-	public enum NSCellImagePosition : nuint_compat_int {
+	public enum NSCellImagePosition : ulong {
 		NoImage,
 		ImageOnly,
 		ImageLeft,
@@ -287,7 +283,7 @@ namespace XamCore.AppKit {
 	}
 	
 	[Native]
-	public enum NSImageScale : nuint_compat_int {
+	public enum NSImageScale : ulong {
 		ProportionallyDown = 0,
 		AxesIndependently,     
 		None,                 
@@ -295,7 +291,7 @@ namespace XamCore.AppKit {
 	}
 	
 	[Native]
-	public enum NSCellStateValue : nint {
+	public enum NSCellStateValue : long {
 		Mixed = -1,
 		Off,
 		On
@@ -304,9 +300,9 @@ namespace XamCore.AppKit {
 	[Flags]
 	[Native]
 #if XAMCORE_2_0
-	public enum NSCellStyleMask : nuint_compat_int {
+	public enum NSCellStyleMask : ulong {
 #else
-	public enum NSCellMask : nuint_compat_int {
+	public enum NSCellMask : ulong {
 #endif
 		NoCell = 0,
 		ContentsCell = 1 << 0,
@@ -317,7 +313,7 @@ namespace XamCore.AppKit {
 
 	[Flags]
 	[Native]
-	public enum NSCellHit : nuint_compat_int {
+	public enum NSCellHit : ulong {
 		None,
 		ContentArea = 1,
 		EditableTextArea = 2,
@@ -325,7 +321,7 @@ namespace XamCore.AppKit {
 	}
 	
 	[Native]
-	public enum NSControlTint : nuint {
+	public enum NSControlTint : ulong {
 		Default  = 0,	// system 'default'
 		Blue     = 1,
 		Graphite = 6,
@@ -333,14 +329,14 @@ namespace XamCore.AppKit {
 	}
 	
 	[Native]
-	public enum NSControlSize : nuint_compat_int {
+	public enum NSControlSize : ulong {
 		Regular, 
 		Small,
 		Mini
 	}
 
 	[Native]
-	public enum NSBackgroundStyle : nint {
+	public enum NSBackgroundStyle : long {
 		Light, Dark, Raised, Lowered
 	}
 #endregion
@@ -348,7 +344,7 @@ namespace XamCore.AppKit {
 #region NSImage
 	
 	[Native]
-	public enum NSImageLoadStatus : nuint_compat_int {
+	public enum NSImageLoadStatus : ulong {
 	    		Completed,
 	    		Cancelled,
 	    		InvalidData,
@@ -357,7 +353,7 @@ namespace XamCore.AppKit {
 	}
 	
 	[Native]
-	public enum NSImageCacheMode : nuint_compat_int {
+	public enum NSImageCacheMode : ulong {
 		Default, 
 		Always,  
 		BySize,  
@@ -366,7 +362,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,10)]
 	[Native]
-	public enum NSImageResizingMode : nint {
+	public enum NSImageResizingMode : long {
 		Stretch,
 		Tile
 	}
@@ -375,13 +371,13 @@ namespace XamCore.AppKit {
 	
 #region NSAlert
 	[Native]
-	public enum NSAlertStyle : nuint_compat_int {
+	public enum NSAlertStyle : ulong {
 		Warning, Informational, Critical
 	}
 
 	[Mac (10,9)]
 	[Native]
-	public enum NSModalResponse : nint {
+	public enum NSModalResponse : long {
 		OK = 1,
 		Cancel = 0,
 		Stop = -1000,
@@ -392,7 +388,7 @@ namespace XamCore.AppKit {
 
 #region NSEvent
 	[Native]
-	public enum NSEventType : nuint_compat_int {
+	public enum NSEventType : ulong {
 		LeftMouseDown = 1,            
 		LeftMouseUp = 2,
 		RightMouseDown = 3,
@@ -467,12 +463,12 @@ namespace XamCore.AppKit {
 		SmartMagnify          = 1UL << (int)NSEventType.SmartMagnify,
 		Pressure              = 1UL << (int)NSEventType.Pressure, // 10.10.3, 64-bit-only
 		DirectTouch           = 1UL << (int)NSEventType.DirectTouch, // 10.10
-		AnyEvent              = unchecked ((nuint)UInt64.MaxValue)
+		AnyEvent              = unchecked ((ulong)UInt64.MaxValue)
 	}
 
 	[Flags]
 	[Native]
-	public enum NSEventModifierMask : nuint {
+	public enum NSEventModifierMask : ulong {
 		AlphaShiftKeyMask         = 1 << 16,
 		ShiftKeyMask              = 1 << 17,
 		ControlKeyMask            = 1 << 18,
@@ -485,23 +481,23 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	public enum NSPointingDeviceType : nuint_compat_int {
+	public enum NSPointingDeviceType : ulong {
 		Unknown, Pen, Cursor, Eraser
 	}
 
 	[Flags]
 	[Native]
 #if XAMCORE_2_0
-	public enum NSEventButtonMask : nuint_compat_int {
+	public enum NSEventButtonMask : ulong {
 #else
-	public enum NSPointingDeviceMask : nuint_compat_int {
+	public enum NSPointingDeviceMask : ulong {
 #endif
 		Pen = 1, PenLower = 2, PenUpper = 4
 	}
 
 #if !XAMCORE_4_0
 	[Native]
-	public enum NSKey : nuint_compat_int {
+	public enum NSKey : ulong {
 #else
 	public enum NSKey : int
 #endif
@@ -700,7 +696,7 @@ namespace XamCore.AppKit {
 
 #if !XAMCORE_4_0
 	[Native]
-	public enum NSFunctionKey : nuint_compat_int {
+	public enum NSFunctionKey : ulong {
 #else
 	public enum NSFunctionKey : int {
 #endif
@@ -780,7 +776,7 @@ namespace XamCore.AppKit {
 
 #if !XAMCORE_4_0
 	[Native]
-	public enum NSEventSubtype : nuint_compat_int {
+	public enum NSEventSubtype : ulong {
 #else
 	public enum NSEventSubtype : short {
 #endif
@@ -794,7 +790,7 @@ namespace XamCore.AppKit {
 
 #if !XAMCORE_4_0
 	[Native]
-	public enum NSSystemDefinedEvents : nuint_compat_int {
+	public enum NSSystemDefinedEvents : ulong {
 #else
 	public enum NSSystemDefinedEvents : short {
 #endif
@@ -803,7 +799,7 @@ namespace XamCore.AppKit {
 
 #if !XAMCORE_4_0
 	[Native]
-	public enum NSEventMouseSubtype : nuint_compat_int {
+	public enum NSEventMouseSubtype : ulong {
 #else
 	public enum NSEventMouseSubtype : short {
 #endif
@@ -821,7 +817,7 @@ namespace XamCore.AppKit {
 #region NSView
 	[Flags]
 	[Native]
-	public enum NSViewResizingMask : nuint_compat_int {
+	public enum NSViewResizingMask : ulong {
 		NotSizable		=  0,
 		MinXMargin		=  1,
 		WidthSizable		=  2,
@@ -832,22 +828,22 @@ namespace XamCore.AppKit {
 	}
 	
 	[Native]
-	public enum NSBorderType : nuint_compat_int {
+	public enum NSBorderType : ulong {
 		NoBorder, LineBorder, BezelBorder, GrooveBorder
 	}
 
 	[Native]
-	public enum NSTextFieldBezelStyle : nuint_compat_int {
+	public enum NSTextFieldBezelStyle : ulong {
 		Square, Rounded
 	}
 	
 	[Native]
-	public enum NSViewLayerContentsRedrawPolicy : nint {
+	public enum NSViewLayerContentsRedrawPolicy : long {
 		Never, OnSetNeedsDisplay, DuringViewResize, BeforeViewResize
 	}
 
 	[Native]
-	public enum NSViewLayerContentsPlacement : nint {
+	public enum NSViewLayerContentsPlacement : long {
 		ScaleAxesIndependently,
 		ScaleProportionallyToFit,
 		ScaleProportionallyToFill,
@@ -868,7 +864,7 @@ namespace XamCore.AppKit {
 	[Flags]
 #if !XAMCORE_4_0
 	[Native]
-	public enum NSWindowStyle : nuint_compat_int {
+	public enum NSWindowStyle : ulong {
 #else
 	public enum NSWindowStyle : int {
 #endif
@@ -889,18 +885,18 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	public enum NSWindowSharingType : nuint_compat_int {
+	public enum NSWindowSharingType : ulong {
 		None, ReadOnly, ReadWrite
 	}
 
 	[Native]
-	public enum NSWindowBackingLocation : nuint_compat_int {
+	public enum NSWindowBackingLocation : ulong {
 		Default, VideoMemory, MainMemory,
 	}
 
 	[Flags]
 	[Native]
-	public enum NSWindowCollectionBehavior : nuint_compat_int {
+	public enum NSWindowCollectionBehavior : ulong {
 		Default = 0,
 		CanJoinAllSpaces = 1 << 0,
 		MoveToActiveSpace = 1 << 1,
@@ -919,7 +915,7 @@ namespace XamCore.AppKit {
 	[Flags]
 #if !XAMCORE_4_0
 	[Native]
-	public enum NSWindowNumberListOptions : nuint_compat_int {
+	public enum NSWindowNumberListOptions : ulong {
 #else
 	public enum NSWindowNumberListOptions : int {
 #endif
@@ -928,14 +924,14 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	public enum NSSelectionDirection : nuint_compat_int {
+	public enum NSSelectionDirection : ulong {
 		Direct = 0,
 		Next,
 		Previous
 	}
 
 	[Native]
-	public enum NSWindowButton : nuint_compat_int {
+	public enum NSWindowButton : ulong {
 		CloseButton, MiniaturizeButton, ZoomButton, ToolbarButton, DocumentIconButton, DocumentVersionsButton = 6, 
 		[Deprecated (PlatformName.MacOSX, 10, 12, message : "The standard window button for FullScreenButton is always null; use ZoomButton instead.")]
 		FullScreenButton
@@ -943,7 +939,7 @@ namespace XamCore.AppKit {
 
 	[Flags]
 	[Native]
-	public enum NSTouchPhase : nuint_compat_int {
+	public enum NSTouchPhase : ulong {
 		Began           = 1 << 0,
 		Moved           = 1 << 1,
 		Stationary      = 1 << 2,
@@ -951,13 +947,13 @@ namespace XamCore.AppKit {
 		Cancelled       = 1 << 4,
 		
 		Touching        = Began | Moved | Stationary,
-		Any             = unchecked ((nuint_compat_int)UInt64.MaxValue)
+		Any             = unchecked ((ulong)UInt64.MaxValue)
 	}
 #endregion
 #region NSAnimation
 	
 	[Native]
-	public enum NSAnimationCurve : nuint_compat_int {
+	public enum NSAnimationCurve : ulong {
 		EaseInOut,
 		EaseIn,
 		EaseOut,
@@ -965,7 +961,7 @@ namespace XamCore.AppKit {
 	};
 	
 	[Native]
-	public enum NSAnimationBlockingMode : nuint_compat_int {
+	public enum NSAnimationBlockingMode : ulong {
 		Blocking,
 		Nonblocking,
 		NonblockingThreaded
@@ -975,7 +971,7 @@ namespace XamCore.AppKit {
 #region NSBox
 	
 	[Native]
-	public enum NSTitlePosition : nuint_compat_int {
+	public enum NSTitlePosition : ulong {
 		NoTitle,
 		AboveTop,
 		AtTop,
@@ -986,7 +982,7 @@ namespace XamCore.AppKit {
 	};
 
 	[Native]
-	public enum NSBoxType : nuint_compat_int {
+	public enum NSBoxType : ulong {
 		NSBoxPrimary,
 		NSBoxSecondary,
 		NSBoxSeparator,
@@ -997,7 +993,7 @@ namespace XamCore.AppKit {
 
 #region NSButtonCell
 	[Native]
-	public enum NSButtonType : nuint_compat_int {
+	public enum NSButtonType : ulong {
 		MomentaryLightButton,
 		PushOnPushOff,
 		Toggle,
@@ -1011,7 +1007,7 @@ namespace XamCore.AppKit {
 	}
 	
 	[Native]
-	public enum NSBezelStyle : nuint_compat_int {
+	public enum NSBezelStyle : ulong {
 		Rounded = 1,
 		RegularSquare,
 		ThickSquare,
@@ -1031,7 +1027,7 @@ namespace XamCore.AppKit {
 
 	[Native]
 	[Deprecated (PlatformName.MacOSX, 10, 12, message : "The GradientType property is unused, and setting it has no effect.")]
-	public enum NSGradientType : nuint_compat_int {
+	public enum NSGradientType : ulong {
 		None,
 		ConcaveWeak,
 		ConcaveStrong,
@@ -1050,7 +1046,7 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	public enum NSCompositingOperation : nuint_compat_int {
+	public enum NSCompositingOperation : ulong {
 		Clear,
 		Copy,
 		SourceOver,
@@ -1099,7 +1095,7 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	public enum NSAnimationEffect : nuint_compat_int {
+	public enum NSAnimationEffect : ulong {
 		DissapearingItemDefault = 0,
 		EffectPoof = 10
 	}
@@ -1107,26 +1103,26 @@ namespace XamCore.AppKit {
 	
 #region NSMatrix
 	[Native]
-	public enum NSMatrixMode : nuint_compat_int {
+	public enum NSMatrixMode : ulong {
 		Radio, Highlight, List, Track
 	}
 #endregion
 
 #region NSBrowser
 	[Native]
-	public enum NSBrowserColumnResizingType : nuint_compat_int {
+	public enum NSBrowserColumnResizingType : ulong {
 		None, Auto, User
 	}
 
 	[Native]
-	public enum NSBrowserDropOperation : nuint_compat_int {
+	public enum NSBrowserDropOperation : ulong {
 		On, Above
 	}
 #endregion
 
 #region NSColorPanel
 	[Native]
-	public enum NSColorPanelMode : nint {
+	public enum NSColorPanelMode : long {
 		None = -1,
 		Gray = 0,
 		RGB,
@@ -1141,7 +1137,7 @@ namespace XamCore.AppKit {
 
 	[Flags]
 	[Native]
-	public enum NSColorPanelFlags : nuint_compat_int {
+	public enum NSColorPanelFlags : ulong {
 		Gray			= 0x00000001,
 		RGB				= 0x00000002,
 		CMYK			= 0x00000004,
@@ -1158,13 +1154,13 @@ namespace XamCore.AppKit {
 #region NSDocument
 
 	[Native]
-	public enum NSDocumentChangeType : nuint_compat_int  {
+	public enum NSDocumentChangeType : ulong  {
 		Done, Undone, Cleared, ReadOtherContents, Autosaved, Redone,
 		Discardable = 256 /* New in Lion */
 	}
 
 	[Native]
-	public enum NSSaveOperationType : nuint_compat_int  {
+	public enum NSSaveOperationType : ulong  {
 		Save, SaveAs, SaveTo,
 		Autosave = 3,	/* Deprecated name in Lion */
 		Elsewhere = 3,	/* New Lion name */
@@ -1177,29 +1173,29 @@ namespace XamCore.AppKit {
 #region NSBezelPath
 	
 	[Native]
-	public enum NSLineCapStyle : nuint_compat_int {
+	public enum NSLineCapStyle : ulong {
 		Butt, Round, Square
 	}
 	
 	[Native]
-	public enum NSLineJoinStyle : nuint_compat_int {
+	public enum NSLineJoinStyle : ulong {
 		Miter, Round, Bevel
 	}
 	
 	[Native]
-	public enum NSWindingRule : nuint_compat_int {
+	public enum NSWindingRule : ulong {
 		NonZero, EvenOdd
 	}
 	
 	[Native]
-	public enum NSBezierPathElement : nuint_compat_int {
+	public enum NSBezierPathElement : ulong {
 		MoveTo, LineTo, CurveTo, ClosePath
 	}
 #endregion
 
 #region NSRulerView
 	[Native]
-	public enum NSRulerOrientation : nuint_compat_int {
+	public enum NSRulerOrientation : ulong {
 		Horizontal, Vertical
 	}
 #endregion
@@ -1207,7 +1203,7 @@ namespace XamCore.AppKit {
 #region NSGestureRecognizer
 	[Mac (10,10)]
 	[Native]
-	public enum NSGestureRecognizerState : nint {
+	public enum NSGestureRecognizerState : long {
 		Possible,
 		Began,
 		Changed,
@@ -1220,7 +1216,7 @@ namespace XamCore.AppKit {
 
 #region NSStackLayout
 	[Native]
-	public enum NSUserInterfaceLayoutOrientation : nint {
+	public enum NSUserInterfaceLayoutOrientation : long {
 		Horizontal = 0,
 		Vertical = 1
 	}
@@ -1237,7 +1233,7 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	public enum NSStackViewGravity : nint {
+	public enum NSStackViewGravity : long {
 		Top = 1,
 		Leading = 1,
 		Center = 2,
@@ -1248,7 +1244,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,11)]
 	[Native]
-	public enum NSStackViewDistribution : nint
+	public enum NSStackViewDistribution : long
 	{
 		GravityAreas = -1,
 		Fill = 0,
@@ -1260,7 +1256,7 @@ namespace XamCore.AppKit {
 
 	[Flags]
 	[Native]
-	public enum NSDragOperation : nuint {
+	public enum NSDragOperation : ulong {
 		None,
 		Copy = 1,
 		Link = 2,
@@ -1273,7 +1269,7 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	public enum NSTextAlignment : nuint_compat_int {
+	public enum NSTextAlignment : ulong {
 		Left = 0,
 		Right = 1, 
 		Center = 2,
@@ -1283,7 +1279,7 @@ namespace XamCore.AppKit {
 
 	[Flags]
 	[Native]
-	public enum NSWritingDirection : nint {
+	public enum NSWritingDirection : long {
 		Natural = -1, LeftToRight, RightToLeft,
 		Embedding = 0,
 		Override = 2,
@@ -1291,7 +1287,7 @@ namespace XamCore.AppKit {
 
 #if !XAMCORE_4_0
 	[Native]
-	public enum NSTextMovement : nint {
+	public enum NSTextMovement : long {
 #else
 	public enum NSTextMovement : int {
 #endif
@@ -1308,7 +1304,7 @@ namespace XamCore.AppKit {
 	
 	[Flags]
 	[Native]
-	public enum NSMenuProperty : nuint_compat_int {
+	public enum NSMenuProperty : ulong {
 		Title = 1 << 0,
 		AttributedTitle = 1 << 1,
 		KeyEquivalent = 1 << 2,
@@ -1318,13 +1314,13 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	public enum NSFontRenderingMode : nuint_compat_int {
+	public enum NSFontRenderingMode : ulong {
 		Default, Antialiased, IntegerAdvancements, AntialiasedIntegerAdvancements
 	}
 
 	[Flags]
 	[Native]
-	public enum NSPasteboardReadingOptions : nuint_compat_int {
+	public enum NSPasteboardReadingOptions : ulong {
 		AsData = 0,
 		AsString = 1,
 		AsPropertyList = 2,
@@ -1332,7 +1328,7 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	public enum NSUnderlineStyle : nint {
+	public enum NSUnderlineStyle : long {
 		None                = 0x00,
 		Single              = 0x01,
 		Thick               = 0x02,
@@ -1355,19 +1351,19 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	public enum NSSelectionAffinity : nuint_compat_int {
+	public enum NSSelectionAffinity : ulong {
 		Upstream, Downstream
 	}
 
 	[Native]
-	public enum NSSelectionGranularity : nuint_compat_int {
+	public enum NSSelectionGranularity : ulong {
 		Character, Word, Paragraph
 	}
 
 #region NSTrackingArea
 	[Flags]
 	[Native]
-	public enum NSTrackingAreaOptions : nuint_compat_int {
+	public enum NSTrackingAreaOptions : ulong {
 		MouseEnteredAndExited     = 0x01,
 		MouseMoved                = 0x02,
 		CursorUpdate 		  = 0x04,
@@ -1382,7 +1378,7 @@ namespace XamCore.AppKit {
 #endregion
 
 	[Native]
-	public enum NSLineSweepDirection : nuint_compat_int {
+	public enum NSLineSweepDirection : ulong {
 		NSLineSweepLeft,
 		NSLineSweepRight,
 		NSLineSweepDown,
@@ -1390,12 +1386,12 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	public enum NSLineMovementDirection : nuint_compat_int {
+	public enum NSLineMovementDirection : ulong {
 		None, Left, Right, Down, Up
 	}
 
 	[Native]
-	public enum  NSTiffCompression : nuint_compat_int {
+	public enum  NSTiffCompression : ulong {
 		None = 1,
 		CcittFax3 = 3,
 		CcittFax4 = 4,
@@ -1411,7 +1407,7 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	public enum NSBitmapImageFileType : nuint_compat_int {
+	public enum NSBitmapImageFileType : ulong {
 		Tiff,
 		Bmp,
 		Gif,
@@ -1421,7 +1417,7 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	public enum NSImageRepLoadStatus : nint {
+	public enum NSImageRepLoadStatus : long {
 		UnknownType     = -1,
 		ReadingHeader   = -2,
 		WillNeedAllData = -3,
@@ -1432,7 +1428,7 @@ namespace XamCore.AppKit {
 
 	[Flags]
 	[Native]
-	public enum NSBitmapFormat : nuint_compat_int {
+	public enum NSBitmapFormat : ulong {
 		AlphaFirst = 1,
 		AlphaNonpremultiplied = 2,
 		FloatingPointSamples = 4,
@@ -1444,12 +1440,12 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	public enum NSPrintingOrientation : nuint_compat_int {
+	public enum NSPrintingOrientation : ulong {
 		Portrait, Landscape
 	}
 	
 	[Native]
-	public enum NSPrintingPaginationMode : nuint_compat_int {
+	public enum NSPrintingPaginationMode : ulong {
 		Auto, Fit, Clip
 	}
 
@@ -1457,7 +1453,7 @@ namespace XamCore.AppKit {
 #if !XAMCORE_4_0
 	[Native]
 	[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'NSGlyphProperty' instead.")]
-	public enum NSGlyphStorageOptions : nuint_compat_int {
+	public enum NSGlyphStorageOptions : ulong {
 #else
 	public enum NSGlyphStorageOptions : int
 #endif
@@ -1470,7 +1466,7 @@ namespace XamCore.AppKit {
 	[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use NSTextStorageEditActions instead.")]
 	[Flags]
 	[Native]
-	public enum NSTextStorageEditedFlags : nuint_compat_int {
+	public enum NSTextStorageEditedFlags : ulong {
 		EditedAttributed = 1,
 		EditedCharacters = 2
 	}
@@ -1479,39 +1475,39 @@ namespace XamCore.AppKit {
 	[Mac (10,11)]
 	[Native]
 	[Flags]
-	public enum NSTextStorageEditActions : nuint
+	public enum NSTextStorageEditActions : ulong
 	{
 		Attributes = (1 << 0),
 		Characters = (1 << 1)
 	}
 
 	[Native]
-	public enum NSPrinterTableStatus : nuint_compat_int {
+	public enum NSPrinterTableStatus : ulong {
 		Ok, NotFound, Error
 	}
 
 	[Native]
-	public enum NSScrollArrowPosition : nuint_compat_int {
+	public enum NSScrollArrowPosition : ulong {
 		MaxEnd, MinEnd, DefaultSetting, None
 	}
 
 	[Native]
-	public enum NSUsableScrollerParts : nuint_compat_int {
+	public enum NSUsableScrollerParts : ulong {
 		NoScroller, OnlyArrows, All
 	}
 
 	[Native]
-	public enum NSScrollerPart : nuint_compat_int {
+	public enum NSScrollerPart : ulong {
 		None, DecrementPage, Knob, IncrementPage, DecrementLine, IncrementLine, KnobSlot
 	}
 
 	[Native]
-	public enum NSScrollerArrow : nuint_compat_int {
+	public enum NSScrollerArrow : ulong {
 		IncrementArrow, DecrementArrow
 	}
 
 	[Native]
-	public enum NSPrintingPageOrder : nint {
+	public enum NSPrintingPageOrder : long {
 		Descending = -1,
 		Special,
 		Ascending,
@@ -1520,7 +1516,7 @@ namespace XamCore.AppKit {
 
 	[Flags]
 	[Native]
-	public enum NSPrintPanelOptions : nint {
+	public enum NSPrintPanelOptions : long {
 		ShowsCopies = 1,
 		ShowsPageRange = 2,
 		ShowsPaperSize = 4,
@@ -1532,33 +1528,33 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	public enum NSTextBlockValueType : nuint_compat_int {
+	public enum NSTextBlockValueType : ulong {
 		Absolute, Percentage
 	}
 
 	[Native]
-	public enum NSTextBlockDimension : nuint_compat_int {
+	public enum NSTextBlockDimension : ulong {
 		Width, MinimumWidth, MaximumWidth, Height, MinimumHeight, MaximumHeight
 	}
 	
 	[Native]
-	public enum NSTextBlockLayer : nint {
+	public enum NSTextBlockLayer : long {
 		Padding = -1, Border, Margin
 	}
 
 	[Native]
-	public enum NSTextBlockVerticalAlignment : nuint_compat_int {
+	public enum NSTextBlockVerticalAlignment : ulong {
 		Top, Middle, Bottom, Baseline
 	}
 
 	[Native]
-	public enum NSTextTableLayoutAlgorithm : nuint_compat_int {
+	public enum NSTextTableLayoutAlgorithm : ulong {
 		Automatic, Fixed
 	}
 
 	[Flags]
 	[Native]
-	public enum NSTextListOptions : nuint_compat_int {
+	public enum NSTextListOptions : ulong {
 		PrependEnclosingMarker = 1
 	}
 
@@ -1592,7 +1588,7 @@ namespace XamCore.AppKit {
 
 	[Flags]
 	[Native]
-	public enum NSFontTraitMask : nuint_compat_int {
+	public enum NSFontTraitMask : ulong {
 		Italic = 1,
 		Bold = 2,
 		Unbold = 4,
@@ -1609,26 +1605,25 @@ namespace XamCore.AppKit {
 	
 	[Flags]
 	[Native]
-	public enum NSPasteboardWritingOptions : nuint_compat_int	 {
+	public enum NSPasteboardWritingOptions : ulong	 {
 		WritingPromised = 1 << 9
 	}
 
 
 	[Native]
-	public enum NSToolbarDisplayMode : nuint_compat_int {
+	public enum NSToolbarDisplayMode : ulong {
 		Default, IconAndLabel, Icon, Label
 	}
 
 	[Native]
-	public enum NSToolbarSizeMode : nuint_compat_int {
+	public enum NSToolbarSizeMode : ulong {
 		Default, Regular, Small
 	}
 
-	[Mac (10, 0)]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use NSAlertButtonReturn instead.")]
 #if !XAMCORE_4_0
 	[Native]
-	public enum NSAlertType : nint {
+	public enum NSAlertType : long {
 #else
 	public enum NSAlertType : int {
 #endif
@@ -1639,16 +1634,15 @@ namespace XamCore.AppKit {
 	}
 
 #if !XAMCORE_4_0
-	[Mac (10, 0)]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use NSModalResponse instead.")]
 	[Native]
-	public enum NSPanelButtonType : nint {
+	public enum NSPanelButtonType : long {
 		Cancel, Ok
 	}
 #endif
 
 	[Native]
-	public enum NSTableViewColumnAutoresizingStyle : nuint_compat_int {
+	public enum NSTableViewColumnAutoresizingStyle : ulong {
 		None = 0,
 		Uniform,
 		Sequential,
@@ -1658,28 +1652,28 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	public enum NSTableViewSelectionHighlightStyle : nint {
+	public enum NSTableViewSelectionHighlightStyle : long {
 		None = -1,
 		Regular = 0,
 		SourceList = 1
 	}
 
 	[Native]
-	public enum NSTableViewDraggingDestinationFeedbackStyle : nint {
+	public enum NSTableViewDraggingDestinationFeedbackStyle : long {
 		None = -1,
 		Regular = 0,
 		SourceList = 1
 	}
 
 	[Native]
-	public enum NSTableViewDropOperation : nuint_compat_int {
+	public enum NSTableViewDropOperation : ulong {
 		On,
 		Above
 	}
 
 	[Flags]
 	[Native]
-	public enum NSTableColumnResizing : nint {
+	public enum NSTableColumnResizing : long {
 		None = -1,
 		Autoresizing = ( 1 << 0 ),
 		UserResizingMask = ( 1 << 1 )
@@ -1687,7 +1681,7 @@ namespace XamCore.AppKit {
 
 	[Flags]
 	[Native]
-	public enum NSTableViewGridStyle : nuint_compat_int {
+	public enum NSTableViewGridStyle : ulong {
 		None = 0,
 		SolidVerticalLine   = 1 << 0,
 		SolidHorizontalLine = 1 << 1,
@@ -1696,14 +1690,14 @@ namespace XamCore.AppKit {
 
 	[Flags]
 	[Native]
-	public enum NSGradientDrawingOptions : nuint_compat_int {
+	public enum NSGradientDrawingOptions : ulong {
 		None = 0,
 		BeforeStartingLocation =   (1 << 0),
 		AfterEndingLocation =    (1 << 1)
 	}
 	
 	[Native]
-	public enum NSImageAlignment : nuint_compat_int {
+	public enum NSImageAlignment : ulong {
 		Center = 0,
 		Top,
 		TopLeft,
@@ -1716,7 +1710,7 @@ namespace XamCore.AppKit {
 	}
 	
 	[Native]
-	public enum NSImageFrameStyle : nuint_compat_int {
+	public enum NSImageFrameStyle : ulong {
 		None = 0,
 		Photo,
 		GrayBezel,
@@ -1725,14 +1719,14 @@ namespace XamCore.AppKit {
 	}
 	
 	[Native]
-	public enum NSSpeechBoundary : nuint_compat_int {
+	public enum NSSpeechBoundary : ulong {
 		Immediate =  0,
 		hWord,
 		Sentence
 	}
 
 	[Native]
-	public enum NSSplitViewDividerStyle : nint {
+	public enum NSSplitViewDividerStyle : long {
 		Thick = 1,
 		Thin = 2,
 		PaneSplitter = 3
@@ -1740,7 +1734,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,11)]
 	[Native]
-	public enum NSSplitViewItemBehavior : nint
+	public enum NSSplitViewItemBehavior : long
 	{
 		Default,
 		Sidebar,
@@ -1748,7 +1742,7 @@ namespace XamCore.AppKit {
 	}
 	
 	[Native]
-	public enum NSImageScaling : nuint_compat_int {
+	public enum NSImageScaling : ulong {
 		ProportionallyDown = 0,
 		AxesIndependently,
 		None,
@@ -1756,7 +1750,7 @@ namespace XamCore.AppKit {
 	}
 	
 	[Native]
-	public enum NSSegmentStyle : nint {
+	public enum NSSegmentStyle : long {
 		Automatic = 0,
 		Rounded = 1,
 		TexturedRounded = 2,
@@ -1768,7 +1762,7 @@ namespace XamCore.AppKit {
 	}
 	
 	[Native]
-	public enum NSSegmentSwitchTracking : nuint_compat_int {
+	public enum NSSegmentSwitchTracking : ulong {
 		SelectOne = 0,
 		SelectAny = 1,
 		Momentary = 2,
@@ -1776,7 +1770,7 @@ namespace XamCore.AppKit {
 	}
 	
 	[Native]
-	public enum NSTickMarkPosition : nuint_compat_int {
+	public enum NSTickMarkPosition : ulong {
 		Below,
 		Above,
 		Left,
@@ -1786,13 +1780,13 @@ namespace XamCore.AppKit {
 	}
 	
 	[Native]
-	public enum NSSliderType : nuint_compat_int {
+	public enum NSSliderType : ulong {
 		Linear   = 0,
 		Circular = 1
 	}
 	
 	[Native]
-	public enum NSTokenStyle : nuint_compat_int {
+	public enum NSTokenStyle : ulong {
 		Default,
 		PlainText,
 		Rounded
@@ -1800,7 +1794,7 @@ namespace XamCore.AppKit {
 
 	[Flags]
 	[Native]
-	public enum NSWorkspaceLaunchOptions : nuint_compat_int {
+	public enum NSWorkspaceLaunchOptions : ulong {
 		Print = 2,
 		InhibitingBackgroundOnly = 0x80,
 		WithoutAddingToRecents = 0x100,
@@ -1816,22 +1810,20 @@ namespace XamCore.AppKit {
 
 	[Flags]
 	[Native]
-	public enum NSWorkspaceIconCreationOptions : nuint_compat_int {
+	public enum NSWorkspaceIconCreationOptions : ulong {
 		NSExcludeQuickDrawElements   = 1 << 1,
 		NSExclude10_4Elements       = 1 << 2
 	}
 
 	[Native]
-	public enum NSPathStyle : nint {
+	public enum NSPathStyle : long {
 #if XAMCORE_2_0
 		Standard,
-		[Mac (10, 5)]
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		NavigationBar,
 		PopUp
 #else
 		NSPathStyleStandard,
-		[Mac (10, 5)]
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		NSPathStyleNavigationBar,
 		NSPathStylePopUp
@@ -1839,7 +1831,7 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	public enum NSTabViewType : nuint_compat_int {
+	public enum NSTabViewType : ulong {
 		NSTopTabsBezelBorder,
 		NSLeftTabsBezelBorder,
 		NSBottomTabsBezelBorder,
@@ -1850,12 +1842,12 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	public enum NSTabState : nuint_compat_int {
+	public enum NSTabState : ulong {
 		Selected, Background, Pressed
 	}
 
 	[Native]
-	public enum NSTabViewControllerTabStyle : nint {
+	public enum NSTabViewControllerTabStyle : long {
 		SegmentedControlOnTop = 0,
 		SegmentedControlOnBottom,
 		Toolbar,
@@ -1863,24 +1855,24 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	public enum NSLevelIndicatorStyle : nuint_compat_int {
+	public enum NSLevelIndicatorStyle : ulong {
 		Relevancy, ContinuousCapacity, DiscreteCapacity, RatingLevel
 	}
 
 	[Flags]
 	[Native]
-	public enum NSFontCollectionOptions : nint {
+	public enum NSFontCollectionOptions : long {
 		ApplicationOnlyMask = 1
 	}
 
 	[Native]
-	public enum NSCollectionViewDropOperation : nint {
+	public enum NSCollectionViewDropOperation : long {
 		On = 0, Before = 1
 	}
 
 	[Mac (10,11)]
 	[Native]
-	public enum NSCollectionViewItemHighlightState : nint
+	public enum NSCollectionViewItemHighlightState : long
 	{
 		None = 0,
 		ForSelection = 1,
@@ -1891,7 +1883,7 @@ namespace XamCore.AppKit {
 	[Mac (10,11)] // Not marked 10.11 in the headers, but doesn't exist in the 10.10 headers
 	[Native]
 	[Flags]
-	public enum NSCollectionViewScrollPosition : nuint
+	public enum NSCollectionViewScrollPosition : ulong
 	{
 		None = 0,
 		Top = 1 << 0,
@@ -1908,7 +1900,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,11)]
 	[Native]
-	public enum NSCollectionElementCategory : nint
+	public enum NSCollectionElementCategory : long
 	{
 		Item,
 		SupplementaryView,
@@ -1918,7 +1910,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,11)]
 	[Native]
-	public enum NSCollectionUpdateAction : nint
+	public enum NSCollectionUpdateAction : long
 	{
 		Insert,
 		Delete,
@@ -1929,27 +1921,27 @@ namespace XamCore.AppKit {
 
 	[Mac (10,11)]
 	[Native]
-	public enum NSCollectionViewScrollDirection : nint
+	public enum NSCollectionViewScrollDirection : long
 	{
 		Vertical,
 		Horizontal
 	}
 
 	[Native]
-	public enum NSDatePickerStyle : nuint_compat_int {
+	public enum NSDatePickerStyle : ulong {
 		TextFieldAndStepper,
 		ClockAndCalendar,
 		TextField
 	}
 
 	[Native]
-	public enum NSDatePickerMode : nuint_compat_int {
+	public enum NSDatePickerMode : ulong {
 		Single, Range
 	}
 
 	[Flags]
 	[Native]
-	public enum NSDatePickerElementFlags : nuint_compat_int {
+	public enum NSDatePickerElementFlags : ulong {
 		HourMinute = 0xc,
 		HourMinuteSecond = 0xe,
 		TimeZone = 0x10,
@@ -1960,7 +1952,7 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	public enum NSOpenGLContextParameter : nuint_compat_int {
+	public enum NSOpenGLContextParameter : ulong {
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		SwapRectangle = 200,
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
@@ -1990,7 +1982,7 @@ namespace XamCore.AppKit {
 		BelowWindow = -1
 	}
 
-	public enum NSOpenGLPixelFormatAttribute : uint_compat_int { // uint32_t NSOpenGLPixelFormatAttribute
+	public enum NSOpenGLPixelFormatAttribute : uint { // uint32_t NSOpenGLPixelFormatAttribute
 		AllRenderers       =   1,
 		DoubleBuffer       =   5,
 		[Mac (10, 7)] TripleBuffer = 3,
@@ -2007,10 +1999,8 @@ namespace XamCore.AppKit {
 		AccumSize          =  14,
 		MinimumPolicy      =  51,
 		MaximumPolicy      =  52,
-		[Mac (10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		OffScreen          =  53,
-		[Mac (10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 6)]
 		FullScreen         =  54,
 		SampleBuffers      =  55,
@@ -2021,24 +2011,19 @@ namespace XamCore.AppKit {
 		Supersample        =  60,
 		SampleAlpha        =  61,
 		RendererID         =  70,
-		[Mac (10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		SingleRenderer     =  71,
 		NoRecovery         =  72,
 		Accelerated        =  73,
 		ClosestPolicy      =  74,
 		BackingStore       =  76,
-		[Mac (10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		Window             =  80,
-		[Mac (10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		Compliant          =  83,
 		ScreenMask         =  84,
-		[Mac (10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		PixelBuffer        =  90,
-		[Mac (10, 3)]
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		RemotePixelBuffer  =  91,
 		AllowOfflineRenderers = 96,
@@ -2058,7 +2043,7 @@ namespace XamCore.AppKit {
 
 #if XAMCORE_4_0
 	[Native]
-	public enum NSOpenGLProfile : nint {
+	public enum NSOpenGLProfile : long {
 #else
 	public enum NSOpenGLProfile : int {
 #endif
@@ -2069,7 +2054,7 @@ namespace XamCore.AppKit {
 	
 #if !XAMCORE_4_0
 	[Native]
-	public enum NSAlertButtonReturn : nint {
+	public enum NSAlertButtonReturn : long {
 #else
 	public enum NSAlertButtonReturn : int {
 #endif
@@ -2078,7 +2063,7 @@ namespace XamCore.AppKit {
 		Third = 1002,
 	}
 
-	public enum NSOpenGLGlobalOption : uint_compat_int {
+	public enum NSOpenGLGlobalOption : uint {
 		FormatCacheSize = 501,
 		ClearFormatCache = 502,
 		RetainRenderers = 503,
@@ -2087,19 +2072,19 @@ namespace XamCore.AppKit {
 		ResetLibrary = 504
 	}
 
-	public enum NSGLTextureTarget : uint_compat_int {
+	public enum NSGLTextureTarget : uint {
 		T2D = 0x0de1,
 		CubeMap = 0x8513,
 		RectangleExt = 0x84F5,
 	}
 
-	public enum NSGLFormat : uint_compat_int {
+	public enum NSGLFormat : uint {
 		RGB = 0x1907,
 		RGBA = 0x1908,
 		DepthComponent = 0x1902,
 	}
 	
-	public enum NSGLTextureCubeMap : uint_compat_int {
+	public enum NSGLTextureCubeMap : uint {
 		None = 0,
 		PositiveX = 0x8515,
 		PositiveY = 0x8517,
@@ -2109,14 +2094,14 @@ namespace XamCore.AppKit {
 		NegativeZ = 0x851A
 	}
 
-	public enum NSGLColorBuffer : uint_compat_int {
+	public enum NSGLColorBuffer : uint {
 		Front = 0x0404,
 		Back = 0x0405,
 		Aux0 = 0x0409
 	}
 
 	[Native]
-	public enum NSProgressIndicatorThickness : nuint_compat_int {
+	public enum NSProgressIndicatorThickness : ulong {
 		Small = 10,
 		Regular = 14,
 		Aqua = 12,
@@ -2124,12 +2109,12 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	public enum NSProgressIndicatorStyle : nuint_compat_int {
+	public enum NSProgressIndicatorStyle : ulong {
 		Bar, Spinning
 	}
 
 	[Native]
-	public enum NSPopUpArrowPosition : nuint_compat_int {
+	public enum NSPopUpArrowPosition : ulong {
 		None,
 		Center,
 		Bottom
@@ -2144,7 +2129,7 @@ namespace XamCore.AppKit {
 	// These constants specify the possible states of a drawer.
 	[Native]
 	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSSplitViewController' instead.")]
-	public enum NSDrawerState : nuint_compat_int {
+	public enum NSDrawerState : ulong {
 		Closed = 0,
 		Opening = 1,
 		Open = 2,
@@ -2152,7 +2137,7 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	public enum NSWindowLevel : nint {
+	public enum NSWindowLevel : long {
 		Normal = 0,
 		Dock = 20,
 		Floating = 3,
@@ -2166,13 +2151,13 @@ namespace XamCore.AppKit {
 	}
 	
 	[Native]
-	public enum NSRuleEditorRowType : nuint_compat_int {
+	public enum NSRuleEditorRowType : ulong {
 		Simple = 0,
 		Compound
 	}
    
 	[Native]
-	public enum NSRuleEditorNestingMode : nuint_compat_int {
+	public enum NSRuleEditorNestingMode : ulong {
 		Single,
 		List,
 		Compound,
@@ -2181,12 +2166,12 @@ namespace XamCore.AppKit {
 
 	[Native]
 	[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'NSGlyphProperty' instead.")]
-	public enum NSGlyphInscription : nuint_compat_int {
+	public enum NSGlyphInscription : ulong {
 		Base, Below, Above, Overstrike, OverBelow
 	}
 
 	[Native]
-	public enum NSTypesetterBehavior : nint {
+	public enum NSTypesetterBehavior : long {
 		Latest = -1,
 		Original = 0,
 		Specific_10_2_WithCompatibility = 1,
@@ -2198,7 +2183,7 @@ namespace XamCore.AppKit {
 
 	[Flags]
 	[Native]
-	public enum NSRemoteNotificationType : nuint_compat_int {
+	public enum NSRemoteNotificationType : ulong {
 		None = 0,
 		Badge = 1 << 0,
 		Sound = 1 << 1,
@@ -2206,27 +2191,27 @@ namespace XamCore.AppKit {
 	}
 	
 	[Native]
-	public enum NSScrollViewFindBarPosition : nint {
+	public enum NSScrollViewFindBarPosition : long {
 		AboveHorizontalRuler = 0,
 		AboveContent,
 		BelowContent
 	}
 	
 	[Native]
-	public enum NSScrollerStyle : nint {
+	public enum NSScrollerStyle : long {
    		Legacy = 0,
 		Overlay
 	}
 	
 	[Native]
-	public enum  NSScrollElasticity : nint {
+	public enum  NSScrollElasticity : long {
 		Automatic = 0,
    		None,
 		Allowed
 	}
 	
 	[Native]
-	public enum  NSScrollerKnobStyle : nint {
+	public enum  NSScrollerKnobStyle : long {
 		Default  = 0,
 		Dark     = 1,
 		Light    = 2
@@ -2234,7 +2219,7 @@ namespace XamCore.AppKit {
 
 	[Flags]
 	[Native]
-	public enum NSEventPhase : nuint_compat_int {
+	public enum NSEventPhase : ulong {
 		None,
 		Began = 1,
 		Stationary = 2,
@@ -2246,25 +2231,25 @@ namespace XamCore.AppKit {
 
 	[Flags]
 	[Native]
-	public enum NSEventSwipeTrackingOptions : nuint_compat_int {
+	public enum NSEventSwipeTrackingOptions : ulong {
 		LockDirection = 1,
 		ClampGestureAmount = 2
 	}
 
 	[Native]
-	public enum NSEventGestureAxis : nint {
+	public enum NSEventGestureAxis : long {
 		None, Horizontal, Vertical
 	}
 
 	[Native]
-	public enum NSLayoutRelation : nint {
+	public enum NSLayoutRelation : long {
 		LessThanOrEqual = -1,
 		Equal = 0,
 		GreaterThanOrEqual = 1
 	}
 
 	[Native]
-	public enum NSLayoutAttribute : nint {
+	public enum NSLayoutAttribute : long {
 		NoAttribute = 0,
 		Left = 1,
 		Right,
@@ -2283,7 +2268,7 @@ namespace XamCore.AppKit {
 
 	[Flags]
 	[Native]
-	public enum NSLayoutFormatOptions : nuint_compat_int {
+	public enum NSLayoutFormatOptions : ulong {
 		None = 0,
 
 		AlignAllLeft = (1 << (int)NSLayoutAttribute.Left),
@@ -2309,7 +2294,7 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	public enum NSLayoutConstraintOrientation : nint {
+	public enum NSLayoutConstraintOrientation : long {
 		Horizontal, Vertical
 	}
 
@@ -2324,17 +2309,17 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	public enum NSPopoverAppearance : nint {
+	public enum NSPopoverAppearance : long {
 		Minimal, HUD
 	}
 
 	[Native]
-	public enum NSPopoverBehavior : nint {
+	public enum NSPopoverBehavior : long {
 		ApplicationDefined, Transient, Semitransient
 	}
 
 	[Native]
-	public enum NSTableViewRowSizeStyle : nint {
+	public enum NSTableViewRowSizeStyle : long {
 		Default = -1,
 		Custom = 0,
 		Small, Medium, Large
@@ -2342,7 +2327,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,11)]
 	[Native]
-	public enum NSTableRowActionEdge : nint
+	public enum NSTableRowActionEdge : long
 	{
 		Leading,
 		Trailing
@@ -2350,7 +2335,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,11)]
 	[Native]
-	public enum NSTableViewRowActionStyle : nint
+	public enum NSTableViewRowActionStyle : long
 	{
 		Regular,
 		Destructive
@@ -2358,36 +2343,36 @@ namespace XamCore.AppKit {
 
 	[Flags]
 	[Native]
-	public enum NSTableViewAnimation : nuint_compat_int {
+	public enum NSTableViewAnimation : ulong {
 		None, Fade = 1, Gap = 2,
 		SlideUp = 0x10, SlideDown = 0x20, SlideLeft = 0x30, SlideRight = 0x40
 	}
 
 	[Flags]
 	[Native]
-	public enum NSDraggingItemEnumerationOptions : nuint_compat_int {
+	public enum NSDraggingItemEnumerationOptions : ulong {
 		Concurrent = 1 << 0,
 		ClearNonenumeratedImages = 1 << 16
 	}
 
 	[Native]
-	public enum NSDraggingFormation : nint {
+	public enum NSDraggingFormation : long {
 		Default, None, Pile, List, Stack
 	}
 
 	[Native]
-	public enum NSDraggingContext : nint {
+	public enum NSDraggingContext : long {
 		OutsideApplication, WithinApplication
 	}
 
 	[Native]
-	public enum NSWindowAnimationBehavior : nint {
+	public enum NSWindowAnimationBehavior : long {
 		Default = 0, None = 2, DocumentWindow, UtilityWindow, AlertPanel
 	}
 
 	[Mac (10, 7)]
 	[Native]
-	public enum NSTextFinderAction : nint {
+	public enum NSTextFinderAction : long {
 		ShowFindInterface = 1,
 		NextMatch = 2,
 		PreviousMatch = 3,
@@ -2406,7 +2391,7 @@ namespace XamCore.AppKit {
 	[Flags]
 #if !XAMCORE_4_0
 	[Native]
-	public enum NSFontPanelMode : nuint_compat_int {
+	public enum NSFontPanelMode : ulong {
 #else
 	public enum NSFontPanelMode : int {
 #endif
@@ -2420,19 +2405,19 @@ namespace XamCore.AppKit {
 		ShadowEffectMask = 1<<12,
 		AllEffectsMask = 0XFFF00,
 		StandardMask = 0xFFFF,
-		AllModesMask = unchecked ((nuint_compat_int)UInt32.MaxValue)
+		AllModesMask = unchecked ((ulong)UInt32.MaxValue)
 	}
 
 	[Flags]
 	[Native]
-	public enum NSFontCollectionVisibility : nuint_compat_int {
+	public enum NSFontCollectionVisibility : ulong {
 		Process = 1 << 0,
 		User = 1 << 1,
 		Computer = 1 << 2,
 	}
 
 	[Native]
-	public enum NSSharingContentScope : nint {
+	public enum NSSharingContentScope : long {
 		Item,
 		Partial,
 		Full
@@ -2460,7 +2445,7 @@ namespace XamCore.AppKit {
 
 	[Flags]
 	[Native]
-	public enum NSTypesetterControlCharacterAction : nuint_compat_int {
+	public enum NSTypesetterControlCharacterAction : ulong {
 		ZeroAdvancement = 1 << 0,
 		Whitespace = 1 << 1,
 		HorizontalTab = 1 << 2,
@@ -2470,14 +2455,14 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	public enum NSPageControllerTransitionStyle : nint {
+	public enum NSPageControllerTransitionStyle : long {
 		StackHistory,
 		StackBook,
 		HorizontalStrip
 	}
 
 	[Native]
-	public enum NSWindowTitleVisibility : nint {
+	public enum NSWindowTitleVisibility : long {
 		Visible = 0,
 		Hidden = 1,
 		HiddenWhenActive = 2
@@ -2485,7 +2470,7 @@ namespace XamCore.AppKit {
 
 	[Flags]
 	[Native]
-	public enum NSViewControllerTransitionOptions : nuint {
+	public enum NSViewControllerTransitionOptions : ulong {
 		None = 0x0,
 		Crossfade = 0x1,
 		SlideUp = 0x10,
@@ -2499,13 +2484,13 @@ namespace XamCore.AppKit {
 
 	[Flags]
 	[Native]
-	public enum NSApplicationOcclusionState  : nuint {
+	public enum NSApplicationOcclusionState  : ulong {
 		Visible = 1 << 1
 	}
 
 	[Flags]
 	[Native]
-	public enum NSWindowOcclusionState  : nuint {
+	public enum NSWindowOcclusionState  : ulong {
 		Visible = 1 << 1
 	}
 
@@ -2513,7 +2498,7 @@ namespace XamCore.AppKit {
 	
 #region NSVisualEffectView
 	[Native]
-	public enum NSVisualEffectMaterial : nint {
+	public enum NSVisualEffectMaterial : long {
 		AppearanceBased,
 		Light,
 		Dark,
@@ -2532,13 +2517,13 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	public enum NSVisualEffectBlendingMode : nint {
+	public enum NSVisualEffectBlendingMode : long {
 		BehindWindow,
 		WithinWindow
 	}
 
 	[Native]
-	public enum NSVisualEffectState : nint {
+	public enum NSVisualEffectState : long {
 		FollowsWindowActiveState,
 		Active,
 		Inactive
@@ -2547,7 +2532,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,10,3)]
 	[Native]
-	public enum NSPressureBehavior : nint
+	public enum NSPressureBehavior : long
 	{
 		Unknown = -1,
 		PrimaryDefault = 0,
@@ -2560,7 +2545,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,11)]
 	[Native]
-	public enum NSHapticFeedbackPattern : nint
+	public enum NSHapticFeedbackPattern : long
 	{
 		Generic = 0,
 		Alignment,
@@ -2569,7 +2554,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,11)]
 	[Native]
-	public enum NSHapticFeedbackPerformanceTime : nuint
+	public enum NSHapticFeedbackPerformanceTime : ulong
 	{
 		Default = 0,
 		Now,
@@ -2578,7 +2563,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,11)]
 	[Native]
-	public enum NSSpringLoadingHighlight : nint
+	public enum NSSpringLoadingHighlight : long
 	{
 		None = 0,
 		Standard,
@@ -2588,7 +2573,7 @@ namespace XamCore.AppKit {
 	[Flags]
 	[Mac (10,11)]
 	[Native]
-	public enum NSSpringLoadingOptions : nuint
+	public enum NSSpringLoadingOptions : ulong
 	{
 		Disabled = 0,
 		Enabled = 1 << 0,
@@ -2598,7 +2583,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,11)]
 	[Native]
-	public enum NSGlyphProperty : nint
+	public enum NSGlyphProperty : long
 	{
 		Null = (1 << 0),
 		ControlCharacter = (1 << 1),
@@ -2609,7 +2594,7 @@ namespace XamCore.AppKit {
 	[Flags]
 	[Mac (10,11)]
 	[Native]
-	public enum NSControlCharacterAction : nint
+	public enum NSControlCharacterAction : long
 	{
 		ZeroAdvancement = (1 << 0),
 		Whitespace = (1 << 1),
@@ -2622,13 +2607,13 @@ namespace XamCore.AppKit {
 	[Flags]
 	[Mac (10,12)]
 	[Native]
-	public enum NSWindowListOptions : nint {
+	public enum NSWindowListOptions : long {
 		OrderedFrontToBack = (1 << 0)
 	}
 
 	[Mac (10,12)]
 	[Native]
-	public enum NSStatusItemBehavior : nuint
+	public enum NSStatusItemBehavior : ulong
 	{
 		RemovalAllowed = (1 << 1),
 		TerminationOnRemoval = (1 << 2)
@@ -2636,7 +2621,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,12)]
 	[Native]
-	public enum NSWindowTabbingMode : nint
+	public enum NSWindowTabbingMode : long
 	{
 		Automatic,
 		Preferred,
@@ -2645,7 +2630,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,12)]
 	[Native]
-	public enum NSWindowUserTabbingPreference : nint
+	public enum NSWindowUserTabbingPreference : long
 	{
 		Manual,
 		Always,
@@ -2655,7 +2640,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10, 12)]
 	[Native]
-	public enum NSGridCellPlacement : nint
+	public enum NSGridCellPlacement : long
 	{
 		Inherited = 0,
 		None,
@@ -2669,7 +2654,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10, 12)]
 	[Native]
-	public enum NSGridRowAlignment : nint
+	public enum NSGridRowAlignment : long
 	{
 		Inherited = 0,
 		None,
@@ -2679,7 +2664,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10, 12)]
 	[Native]
-	public enum NSImageLayoutDirection : nint
+	public enum NSImageLayoutDirection : long
 	{
 		Unspecified = -1,
 		LeftToRight = 2,
@@ -2688,7 +2673,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10, 12)]
 	[Native][Flags]
-	public enum NSCloudKitSharingServiceOptions : nuint
+	public enum NSCloudKitSharingServiceOptions : ulong
 	{
 		Standard = 0,
 		AllowPublic = 1 << 0,
@@ -2699,7 +2684,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10, 12)]
 	[Native]
-	public enum NSDisplayGamut : nint
+	public enum NSDisplayGamut : long
 	{
 		Srgb = 1,
 		P3,
@@ -2707,7 +2692,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10, 12)]
 	[Native]
-	public enum NSTabPosition : nuint
+	public enum NSTabPosition : ulong
 	{
 		None = 0,
 		Top,
@@ -2718,7 +2703,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10, 12)]
 	[Native]
-	public enum NSTabViewBorderType : nuint
+	public enum NSTabViewBorderType : ulong
 	{
 		None = 0,
 		Line,
@@ -2727,7 +2712,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10, 12)]
 	[Native]
-	public enum NSPasteboardContentsOptions : nuint
+	public enum NSPasteboardContentsOptions : ulong
 	{
 		CurrentHostOnly = 1,
 	}
@@ -2735,7 +2720,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,12,2)]
 	[Native]
-	public enum NSTouchType : nint
+	public enum NSTouchType : long
 	{
 		Direct,
 		Indirect
@@ -2744,7 +2729,7 @@ namespace XamCore.AppKit {
 	[Mac (10,12,2)]
 	[Native]
 	[Flags]
-	public enum NSTouchTypeMask : nuint
+	public enum NSTouchTypeMask : ulong
 	{
 		Direct = (1 << (int)NSTouchType.Direct),
 		Indirect = (1 << (int)NSTouchType.Indirect)
@@ -2752,7 +2737,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,12,2)]
 	[Native]
-	public enum NSScrubberMode : nint
+	public enum NSScrubberMode : long
 	{
 		Fixed = 0,
 		Free
@@ -2760,7 +2745,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,12,2)]
 	[Native]
-	public enum NSScrubberAlignment : nint
+	public enum NSScrubberAlignment : long
 	{
 		None = 0,
 		Leading,
@@ -2777,7 +2762,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,13)]
 	[Native]
-	public enum NSAccessibilityAnnotationPosition : nint {
+	public enum NSAccessibilityAnnotationPosition : long {
 		FullRange,
 		Start,
 		End,
@@ -2785,14 +2770,14 @@ namespace XamCore.AppKit {
 
 	[Mac (10,13)]
 	[Native]
-	public enum NSAccessibilityCustomRotorSearchDirection : nint {
+	public enum NSAccessibilityCustomRotorSearchDirection : long {
 		Previous,
 		Next,
 	}
 
 	[Mac (10,13)]
 	[Native]
-	public enum NSAccessibilityCustomRotorType : nint {
+	public enum NSAccessibilityCustomRotorType : long {
 		Custom = 0,
 		Any = 1,
 		Annotation,
@@ -2818,7 +2803,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10, 13)]
 	[Native]
-	public enum NSColorType : nint {
+	public enum NSColorType : long {
 		ComponentBased,
 		Pattern,
 		Catalog,
@@ -2827,14 +2812,14 @@ namespace XamCore.AppKit {
 	[Mac (10,13)]
 	[Native]
 	[Flags]
-	public enum NSFontAssetRequestOptions : nuint {
+	public enum NSFontAssetRequestOptions : ulong {
 		UsesStandardUI = 1 << 0,
 	}
 
 	[Mac (10,13)]
 	[Native]
 	[Flags]
-	public enum NSFontPanelModeMask : nuint {
+	public enum NSFontPanelModeMask : ulong {
 		Face = 1 << 0,
 		Size = 1 << 1,
 		Collection = 1 << 2,
@@ -2843,14 +2828,14 @@ namespace XamCore.AppKit {
 		TextColorEffect = 1 << 10,
 		DocumentColorEffect = 1 << 11,
 		ShadowEffect = 1 << 12,
-		AllEffects = (nuint)0XFFF00,
-		StandardModes = (nuint)0XFFFF,
-		AllModes = (nuint)0XFFFFFFFF,
+		AllEffects = (ulong)0XFFF00,
+		StandardModes = (ulong)0XFFFF,
+		AllModes = (ulong)0XFFFFFFFF,
 	}
 
 	[Mac (10,13)]
 	[Native]
-	public enum NSLevelIndicatorPlaceholderVisibility : nint {
+	public enum NSLevelIndicatorPlaceholderVisibility : long {
 		Automatic = 0,
 		Always = 1,
 		WhileEditing = 2,
@@ -2858,7 +2843,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,13)]
 	[Native]
-	public enum NSSegmentDistribution : nint {
+	public enum NSSegmentDistribution : long {
 		Fit = 0,
 		Fill,
 		FillEqually,

@@ -1,7 +1,7 @@
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	public enum  NSUserDefaultsType {
 		UserName,
@@ -9,7 +9,6 @@ namespace XamCore.Foundation {
 	}
 
 	public partial class NSUserDefaults {
-		[iOS (2, 0)]
 		[Deprecated (PlatformName.iOS, 7, 0)]
 		[Mac (10, 9)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]

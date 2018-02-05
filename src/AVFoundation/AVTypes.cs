@@ -21,7 +21,7 @@ using MonoTouch.ObjCRuntime;
 #endif
 #endif
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVAudio3DVectorOrientation {
@@ -259,7 +259,7 @@ namespace XamCore.AVFoundation {
 		[DllImport (Constants.AVFoundationLibrary)]
 		static extern /* CGRect */ RectangleF AVMakeRectWithAspectRatioInsideRect (/* CGSize */ SizeF aspectRatio, /* CGRect */ RectangleF boundingRect);
 
-		[Mac (10,7)][iOS (4,0)]
+		[Mac (10,7)]
 		public static RectangleF WithAspectRatio (this RectangleF self, SizeF aspectRatio)
 		{
 			return AVMakeRectWithAspectRatioInsideRect (aspectRatio, self);

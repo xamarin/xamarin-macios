@@ -1,10 +1,10 @@
 // Copyright 2011, 2012 Xamarin Inc
 using System.Runtime.InteropServices;
 using System;
-using XamCore.Foundation;
+using Foundation;
 
 #if !XAMCORE_2_0
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 
 	[StructLayout (LayoutKind.Sequential)]
 	public unsafe struct NSStringStruct {

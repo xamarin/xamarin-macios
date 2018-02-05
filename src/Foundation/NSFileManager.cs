@@ -26,10 +26,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 //
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 using System;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	// This is a convenience enum around a set of native strings.
 	public enum NSFileType {

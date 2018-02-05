@@ -3,12 +3,11 @@
 //
 #if XAMCORE_2_0 || !MONOMAC
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.Accounts {
+namespace Accounts {
 	
-	[iOS (5,0)]
 	[Mac (10,8, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface ACAccount : NSSecureCoding {
@@ -48,7 +47,6 @@ namespace XamCore.Accounts {
 #endif
 	}
 
-	[iOS (5,0)]
 	[Mac (10,8, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface ACAccountCredential : NSSecureCoding {
@@ -69,7 +67,6 @@ namespace XamCore.Accounts {
 	delegate void ACAccountStoreRemoveCompletionHandler (bool success, NSError error);
 	delegate void ACRequestCompletionHandler (bool granted, NSError error);
 	
-	[iOS (5,0)]
 	[Mac (10,8, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface ACAccountStore {
@@ -120,7 +117,6 @@ namespace XamCore.Accounts {
 		void RemoveAccount (ACAccount account, ACAccountStoreRemoveCompletionHandler completionHandler);
 	}
 
-	[iOS (5,0)]
 	[Mac (10,8, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface ACAccountType : NSSecureCoding {

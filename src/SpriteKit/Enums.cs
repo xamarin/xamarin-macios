@@ -6,13 +6,13 @@
 //
 // Copyright 2013-2014 Xamarin Inc
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.SpriteKit {
+namespace SpriteKit {
 
 	// NSInteger -> SKKeyframeSequence.h
 	[Native]
-	public enum SKInterpolationMode : nint {
+	public enum SKInterpolationMode : long {
 		Linear = 1,
 		Spline = 2,
 		Step = 3
@@ -20,14 +20,14 @@ namespace XamCore.SpriteKit {
 
 	// NSInteger -> SKKeyframeSequence.h
 	[Native]
-	public enum SKRepeatMode : nint {
+	public enum SKRepeatMode : long {
 		Clamp = 1,
 		Loop = 2
 	}
 
 	// NSInteger -> SKAction.h
 	[Native]
-	public enum SKActionTimingMode : nint {
+	public enum SKActionTimingMode : long {
 		Linear = 0,
 		EaseIn = 1,
 		EaseOut = 2,
@@ -36,7 +36,7 @@ namespace XamCore.SpriteKit {
 
 	// NSInteger -> SKLabelNode.h
 	[Native]
-	public enum SKLabelVerticalAlignmentMode : nint {
+	public enum SKLabelVerticalAlignmentMode : long {
 		Baseline = 0,
 		Center = 1,
 		Top = 2,
@@ -45,7 +45,7 @@ namespace XamCore.SpriteKit {
 
 	// NSInteger -> SKLabelNode.h
 	[Native]
-	public enum SKLabelHorizontalAlignmentMode : nint {
+	public enum SKLabelHorizontalAlignmentMode : long {
 		Center = 0,
 		Left = 1,
 		Right = 2
@@ -53,7 +53,7 @@ namespace XamCore.SpriteKit {
 
 	// NSInteger -> SKNode.h
 	[Native]
-	public enum SKBlendMode : nint {
+	public enum SKBlendMode : long {
 		Alpha = 0,
 		Add = 1,
 		Subtract = 2,
@@ -65,7 +65,7 @@ namespace XamCore.SpriteKit {
 
 	// NSInteger -> SKScene.h
 	[Native]
-	public enum SKSceneScaleMode : nint {
+	public enum SKSceneScaleMode : long {
 		Fill = 0,
 		AspectFill = 1,
 		AspectFit = 2,
@@ -74,14 +74,14 @@ namespace XamCore.SpriteKit {
 
 	// NSInteger -> SKTexture.h
 	[Native]
-	public enum SKTextureFilteringMode : nint {
+	public enum SKTextureFilteringMode : long {
 		Nearest = 0,
 		Linear = 1
 	}
 
 	// NSInteger -> SKTransition.h
 	[Native]
-	public enum SKTransitionDirection : nint {
+	public enum SKTransitionDirection : long {
 		Up = 0,
 		Down = 1,
 		Right = 2,
@@ -89,7 +89,7 @@ namespace XamCore.SpriteKit {
 	}
 
 	[Native]
-	public enum SKUniformType : nint {
+	public enum SKUniformType : long {
 		None,
 		Float,
 		FloatVector2,
@@ -102,7 +102,7 @@ namespace XamCore.SpriteKit {
 	}
 
 	[Native]
-	public enum SKParticleRenderOrder : nuint {
+	public enum SKParticleRenderOrder : ulong {
 		OldestLast,
 		OldestFirst,
 		DontCare,
@@ -110,7 +110,7 @@ namespace XamCore.SpriteKit {
 
 	[iOS (9,0)][Mac (10,11)]
 	[Native]
-	public enum SKAttributeType : nint
+	public enum SKAttributeType : long
 	{
 		None = 0,
 		Float = 1,
@@ -125,7 +125,7 @@ namespace XamCore.SpriteKit {
 
 	[iOS (10,0)][Mac (10,12)]
 	[Native]
-	public enum SKTileDefinitionRotation : nuint
+	public enum SKTileDefinitionRotation : ulong
 	{
 		Angle0 = 0,
 		Angle90,
@@ -135,7 +135,7 @@ namespace XamCore.SpriteKit {
 
 	[iOS (10,0)][Mac (10,12)]
 	[Native]
-	public enum SKTileSetType : nuint
+	public enum SKTileSetType : ulong
 	{
 		Grid,
 		Isometric,
@@ -145,7 +145,7 @@ namespace XamCore.SpriteKit {
 
 	[iOS (10,0)][Mac (10,12)]
 	[Native]
-	public enum SKTileAdjacencyMask : nuint
+	public enum SKTileAdjacencyMask : ulong
 	{
 		Up = 1 << 0,
 		UpperRight = 1 << 1,
@@ -188,7 +188,7 @@ namespace XamCore.SpriteKit {
 	[NoMac]
 	[TV (11,0), iOS (11,0)]
 	[Native]
-	public enum SKNodeFocusBehavior : nint {
+	public enum SKNodeFocusBehavior : long {
 		None = 0,
 		Occluding,
 		Focusable,

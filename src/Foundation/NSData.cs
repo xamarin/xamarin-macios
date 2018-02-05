@@ -27,13 +27,13 @@
 //
 //
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	public partial class NSData : IEnumerable, IEnumerable<byte> {
 		
 		// some API, like SecItemCopyMatching, returns a retained NSData
@@ -72,9 +72,7 @@ namespace XamCore.Foundation {
 		
 		public static NSData FromString (string s)
 		{
-			if (s == null)
-				throw new ArgumentNullException ("s");
-			return new NSString (s).Encode (NSStringEncoding.UTF8);
+			return FromString (s, NSStringEncoding.UTF8);
 		}
 
 		public static NSData FromArray (byte [] buffer)
@@ -214,12 +212,13 @@ namespace XamCore.Foundation {
 		
 		public static NSData FromString (string s, NSStringEncoding encoding)
 		{
-			return new NSString (s).Encode (encoding);
+			using (var ns = new NSString (s))
+				return ns.Encode (encoding);
 		}
 
 		public static implicit operator NSData (string s)
 		{
-			return new NSString (s).Encode (NSStringEncoding.UTF8);
+			return FromString (s, NSStringEncoding.UTF8);
 		}
 
 		public NSString ToString (NSStringEncoding encoding)

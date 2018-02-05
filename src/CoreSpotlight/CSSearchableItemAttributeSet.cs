@@ -1,12 +1,12 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 
-#if IOS
+#if IOS || MONOMAC
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.CoreSpotlight {
+namespace CoreSpotlight {
 
 	public partial class CSSearchableItemAttributeSet {
 
@@ -20,7 +20,7 @@ namespace XamCore.CoreSpotlight {
 		}
 
 		// Manually deal with these properties until we get BindAs working
-		[iOS (11,0), NoTV, Mac (10, 11)]
+		[iOS (11,0)]
 		public bool? IsUserCreated { 
 			get {
 				return _IsUserCreated?.BoolValue;
@@ -29,7 +29,7 @@ namespace XamCore.CoreSpotlight {
 			}
 		}
 
-		[iOS (11, 0), NoTV, Mac (10, 11)]
+		[iOS (11,0)]
 		public bool? IsUserOwned {
 			get {
 				return _IsUserOwned?.BoolValue;
@@ -38,7 +38,7 @@ namespace XamCore.CoreSpotlight {
 			}
 		}
 
-		[iOS (11, 0), NoTV, Mac (10, 11)]
+		[iOS (11,0)]
 		public bool? IsUserCurated { 
 			get {
 				return _IsUserCurated?.BoolValue;

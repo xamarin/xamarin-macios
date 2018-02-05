@@ -32,14 +32,14 @@ using System.IO;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
+using ObjCRuntime;
+using CoreFoundation;
+using Foundation;
 
 using OSStatus = System.Int32;
 using AudioFileStreamID = System.IntPtr;
 
-namespace XamCore.AudioToolbox {
+namespace AudioToolbox {
 
 	[Flags]
 	public enum AudioFileStreamPropertyFlag { // UInt32 in AudioFileStream_PropertyListenerProc

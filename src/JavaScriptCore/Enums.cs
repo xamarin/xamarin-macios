@@ -8,7 +8,7 @@
 
 using System;
 
-namespace XamCore.JavaScriptCore {
+namespace JavaScriptCore {
 #if !MONOMAC || XAMCORE_2_0
 	// untyped enum -> JSValueRef.h
 	public enum JSType {

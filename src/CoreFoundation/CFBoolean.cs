@@ -29,10 +29,10 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.CoreFoundation {
+namespace CoreFoundation {
 
 	// CFNumber.h
 	class CFBoolean : INativeObject, IDisposable {

@@ -31,15 +31,15 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
+using CoreFoundation;
+using ObjCRuntime;
 
-namespace XamCore.CoreFoundation {
+namespace CoreFoundation {
 
 	[Flags]
 	[Native]
 	// defined as CFOptionFlags (unsigned long [long] = nuint) - System/Library/Frameworks/CoreFoundation.framework/Headers/CFSocket.h
-	public enum CFSocketCallBackType : nuint_compat_int {
+	public enum CFSocketCallBackType : ulong {
 		NoCallBack = 0,
 		ReadCallBack = 1,
 		AcceptCallBack = 2,
@@ -50,7 +50,7 @@ namespace XamCore.CoreFoundation {
 
 	// defined as CFIndex (long [long] = nint) - System/Library/Frameworks/CoreFoundation.framework/Headers/CFSocket.h
 	[Native]
-	public enum CFSocketError : nint {
+	public enum CFSocketError : long {
 		Success = 0,
 		Error = -1,
 		Timeout = -2

@@ -32,16 +32,16 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using CoreGraphics;
 
 #if !MONOMAC
-using XamCore.UIKit;
+using UIKit;
 #endif
 
-namespace XamCore.CoreText {
+namespace CoreText {
 
 #region CFAttributedStringRef AttributeKey Prototypes
 	// defined as int32_t - System/Library/Frameworks/CoreText.framework/Headers/CTStringAttributes.h

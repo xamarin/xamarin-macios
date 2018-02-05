@@ -30,12 +30,12 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using CoreGraphics;
 
-namespace XamCore.CoreText {
+namespace CoreText {
 
 #region Paragraph Style Values
 
@@ -81,9 +81,7 @@ namespace XamCore.CoreText {
 		LineHeightMultiple      = 7,
 		MaximumLineHeight       = 8,
 		MinimumLineHeight       = 9,
-		[iOS (3, 2)]
 		[Deprecated (PlatformName.iOS, 6, 0, message : "Please use MaximumLineSpacing")]
-		[Mac (10, 5)]
 		[Deprecated (PlatformName.MacOSX, 10, 8, message : "Please use MaximumLineSpacing")]
 		LineSpacing             = 10,
 		ParagraphSpacing        = 11,

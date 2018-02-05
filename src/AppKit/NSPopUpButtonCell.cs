@@ -1,6 +1,6 @@
 using System;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 	public partial class NSPopUpButtonCell {
 		public NSMenuItem this [nint idx] {
 			get {

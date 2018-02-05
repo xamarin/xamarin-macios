@@ -30,7 +30,7 @@
 
 using System;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	[AttributeUsage (
 		AttributeTargets.Assembly

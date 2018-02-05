@@ -17,7 +17,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\x86\Debug</OutputPath>
-    <DefineConstants>__UNIFIED__;DEBUG;MONOMAC;XAMCORE_2_0;TEST_BINDINGS_UNAVAILABLE</DefineConstants>
+    <DefineConstants>__UNIFIED__;DEBUG;MONOMAC;XAMCORE_2_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <EnableCodeSigning>false</EnableCodeSigning>
@@ -38,7 +38,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <OutputPath>bin\x86\Release</OutputPath>
-    <DefineConstants>__UNIFIED__;MONOMAC;XAMCORE_2_0;TEST_BINDINGS_UNAVAILABLE</DefineConstants>
+    <DefineConstants>__UNIFIED__;MONOMAC;XAMCORE_2_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <EnableCodeSigning>false</EnableCodeSigning>
@@ -68,14 +68,14 @@
     <Compile Include="..\common\mac\MacTestMain.cs">
       <Link>MacTestMain.cs</Link>
     </Compile>
-    <Compile Include="..\api-shared\ObjCRuntime\Registrar.cs">
-      <Link>Registrar.cs</Link>
-    </Compile>
-    <Compile Include="..\monotouch-test\ObjCRuntime\RegistrarTest.cs">
-      <Link>ObjCRuntime\RegistrarTest.cs</Link>
+    <Compile Include="..\common\ExecutionHelper.cs">
+      <Link>ExecutionHelper.cs</Link>
     </Compile>
     <Compile Include="..\api-shared\ObjCRuntime\RegistrarTest.cs">
       <Link>api-shared\ObjCRuntime\RegistrarTest.cs</Link>
+    </Compile>
+    <Compile Include="..\api-shared\CoreFoundation\CFNotificationCenterTest.cs">
+      <Link>CoreFoundation\CFNotificationCenterTest.cs</Link>
     </Compile>
     <Compile Include="..\EmbeddedResources\ResourcesTest.cs">
       <Link>EmbeddedResources\ResourcesTest.cs</Link>
@@ -88,21 +88,11 @@
     <Compile Include="..\..\tools\common\StringUtils.cs">
       <Link>StringUtils.cs</Link>
     </Compile>
-    <Compile Include="..\monotouch-test\**\*.cs" Exclude="..\monotouch-test\obj\**;..\monotouch-test\ObjCRuntime\TrampolineTest.generated.cs;..\monotouch-test\ObjCRuntime\RegistrarTest.generated.cs">
+    <Compile Include="..\monotouch-test\**\*.cs" Exclude="..\monotouch-test\obj\**">
       <Link>%(RecursiveDir)%(Filename).cs</Link>
     </Compile>
-    <Compile Include="..\monotouch-test\MetalPerformanceShaders\KernelTest.cs">
-      <Link>MetalPerformanceShaders\KernelTest.cs</Link>
-    </Compile>
-    <Compile Include="..\monotouch-test\MetalPerformanceShaders\MPSImageHistogramEqualizationTest.cs">
-      <Link>MetalPerformanceShaders\MPSImageHistogramEqualizationTest.cs</Link>
-    </Compile>
-    <Compile Include="..\monotouch-test\MetalPerformanceShaders\MPSImageHistogramSpecificationTest.cs">
-      <Link>MetalPerformanceShaders\MPSImageHistogramSpecificationTest.cs</Link>
-    </Compile>
-    <Compile Include="..\monotouch-test\MetalPerformanceShaders\MPSImageHistogramTest.cs">
-      <Link>MetalPerformanceShaders\MPSImageHistogramTest.cs</Link>
-    </Compile>
+    <Compile Include="..\..\tests\test-libraries\TrampolineTest.generated.cs" />
+    <Compile Include="..\..\tests\test-libraries\RegistrarTest.generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -173,17 +163,39 @@
   <ItemGroup>
     <Folder Include="EmbeddedResources\" />
     <Folder Include="System.ServiceModel\" />
+	<Folder Include="..\monotouch-test\BundleResourceResources\Base.lproj\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\guiunit\src\framework\GuiUnit_xammac_mobile.csproj">
       <Project>{EACFD119-769E-4E6C-89B7-A6CE3757C431}</Project>
       <Name>GuiUnit_xammac_mobile</Name>
     </ProjectReference>
+    <ProjectReference Include="..\bindings-test\bindings-test-mac.csproj">
+      <Project>{20BEA313-7E2D-4209-93C0-E4D99C72695A}</Project>
+      <Name>bindings-test-mac</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="..\monotouch-test\CoreImage\xamarinmonkey.heic">
       <Link>CoreImage\xamarinmonkey.heic</Link>
     </BundleResource>
+	<BundleResource Include="..\monotouch-test\Resources\Base.lproj\Localizable.strings" >
+      <Link>Base.lproj\Localizable.strings</Link>
+    </BundleResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
+  <PropertyGroup>
+    <TestLibrariesDirectory>..\..\tests\test-libraries</TestLibrariesDirectory>
+  </PropertyGroup>
+  <ItemGroup>
+    <GeneratedTestInput Include="..\..\tests\test-libraries\*.m" />
+    <GeneratedTestInput Include="..\..\tests\test-libraries\*.h" />
+    <GeneratedTestInput Include="..\..\tests\test-libraries\*.cs" />
+    <GeneratedTestInput Include="..\..\tests\test-libraries\Makefile" />
+    <GeneratedTestOutput Include="..\..\tests\test-libraries\TrampolineTest.generated.cs" />
+    <GeneratedTestOutput Include="..\..\tests\test-libraries\RegistrarTest.generated.cs" />
+  </ItemGroup>
+  <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)">
+    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
+  </Target>
 </Project>

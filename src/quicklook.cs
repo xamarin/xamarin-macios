@@ -27,20 +27,19 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
 #if MONOMAC
-using XamCore.AppKit;
+using AppKit;
 #else
-using XamCore.UIKit;
+using UIKit;
 #endif
 using System;
 using System.ComponentModel;
 
-namespace XamCore.QuickLook {
+namespace QuickLook {
 #if !MONOMAC
-	[iOS (4,0)]
 	[BaseType (typeof (UIViewController), Delegates = new string [] { "WeakDelegate" }, Events=new Type [] { typeof (QLPreviewControllerDelegate)})]
 	interface QLPreviewController {
 		[Export ("initWithNibName:bundle:")]
@@ -79,7 +78,6 @@ namespace XamCore.QuickLook {
 		void RefreshCurrentPreviewItem ();
 	}
 
-	[iOS (4,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -94,7 +92,6 @@ namespace XamCore.QuickLook {
 		QLPreviewItem GetPreviewItem (QLPreviewController controller, nint index);
 	}
 
-	[iOS (4,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -111,11 +108,9 @@ namespace XamCore.QuickLook {
 #if !MONOMAC
 		// UIView and UIImage do not exists in MonoMac
 		
-		[iOS (4,2)]
 		[Export ("previewController:frameForPreviewItem:inSourceView:"), DelegateName ("QLFrame"), DefaultValue (typeof (CGRect))]
 		CGRect FrameForPreviewItem (QLPreviewController controller, [Protocolize] QLPreviewItem item, ref UIView view);
 		
-		[iOS (4,2)]
 		[Export ("previewController:transitionImageForPreviewItem:contentRect:"), DelegateName ("QLTransition"), DefaultValue (null)]
 		UIImage TransitionImageForPreviewItem (QLPreviewController controller, [Protocolize] QLPreviewItem item, CGRect contentRect);
 
@@ -128,7 +123,6 @@ namespace XamCore.QuickLook {
 
 	interface IQLPreviewItem {}
 
-	[iOS (4,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]

@@ -11,7 +11,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace XamCore.SceneKit
+namespace SceneKit
 {
 	public partial class SCNScene : IEnumerable<SCNNode>
 	{

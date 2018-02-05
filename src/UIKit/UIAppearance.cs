@@ -12,10 +12,10 @@
 using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	public partial class UIAppearance {
 #if !XAMCORE_2_0
 		public readonly static IntPtr SelectorAppearance = Selector.GetHandle ("appearance");

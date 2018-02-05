@@ -10,12 +10,12 @@
 #if XAMCORE_2_0 || !MONOMAC
 using System;
 using System.Runtime.InteropServices;
-using XamCore.CoreGraphics;
-using XamCore.CoreLocation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreGraphics;
+using CoreLocation;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.MapKit {
+namespace MapKit {
 
 #if !WATCH
 	// MKTileOverlay.h
@@ -78,7 +78,6 @@ namespace XamCore.MapKit {
 
 	// MKGeometry.h
 	[StructLayout (LayoutKind.Sequential)]
-	[iOS (4,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	public struct MKMapPoint {
 		public double X, Y;
@@ -131,7 +130,6 @@ namespace XamCore.MapKit {
 
 	// MKGeometry.h
 	[StructLayout (LayoutKind.Sequential)]
-	[iOS (4,0)]
 	public struct MKMapSize {
 		public double Width, Height;
 		
@@ -180,7 +178,6 @@ namespace XamCore.MapKit {
 
 	// MKGeometry.h
 	[StructLayout (LayoutKind.Sequential)]
-	[iOS (4,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	public struct MKMapRect {
 		[TV (9,2)]

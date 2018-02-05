@@ -23,7 +23,7 @@
 //
 using System;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	public struct NSRange {
 		public nint Location;
 		public nint Length;

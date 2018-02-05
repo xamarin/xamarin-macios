@@ -303,6 +303,23 @@ namespace MonoTouchFixtures.Foundation {
 		}
 
 		[Test]
+		public void FromString ()
+		{
+			Assert.Throws<ArgumentNullException> (() => NSData.FromString (null), "1-null");
+			var d = NSData.FromString (String.Empty);
+			Assert.That (d.Length, Is.EqualTo (0), "1-empty");
+
+			Assert.Throws<ArgumentNullException> (() => NSData.FromString (null, NSStringEncoding.Unicode), "2-null");
+			d = NSData.FromString (String.Empty, NSStringEncoding.Unicode);
+			Assert.That (d.Length, Is.EqualTo (2), "2-empty"); // 0xfffe unicode header
+
+			// not sure it was a good choice to throw here (but breaking it would be worse)
+			Assert.Throws<ArgumentNullException> (() => d = ((NSData) (string) null), "as-null");
+			d = (NSData) String.Empty;
+			Assert.That (d.Length, Is.EqualTo (0), "as-empty");
+		}
+
+		[Test]
 		public void Base64String ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
@@ -330,7 +347,7 @@ namespace MonoTouchFixtures.Foundation {
 			using (var ms = new MemoryStream (data))
 			using (var d = NSData.FromStream (ms)) {
 				// This cannot be converted to an UTF8 string and ToString should not throw
-				// so we go back to showing the result of the `descruption` selector
+				// so we go back to showing the result of the `description` selector
 				Assert.That (d.ToString (), Is.EqualTo (d.Description), "ToString");
 			}
 		}

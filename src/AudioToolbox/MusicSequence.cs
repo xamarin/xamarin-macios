@@ -7,25 +7,25 @@
 // Copyright 2012-2014 Xamarin Inc.
 //
 
-#if IOS || TVOS
+#if !WATCH
 
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 #if !COREBUILD
-using XamCore.CoreAnimation;
+using CoreAnimation;
 #if !TVOS
-using XamCore.CoreMidi;
+using CoreMidi;
 #endif
-using XamCore.AudioUnit;
+using AudioUnit;
 #endif
 
 using MidiEndpointRef = System.Int32;
 
-namespace XamCore.AudioToolbox {
+namespace AudioToolbox {
 
 #if !COREBUILD
 	public delegate void MusicSequenceUserCallback (MusicTrack track, double inEventTime, MusicEventUserData inEventData, double inStartSliceBeat, double inEndSliceBeat);

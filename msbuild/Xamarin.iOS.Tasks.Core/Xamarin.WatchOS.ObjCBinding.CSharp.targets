@@ -16,7 +16,7 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<UsingTask TaskName="Xamarin.iOS.Tasks.BTouch" AssemblyFile="$(MSBuildThisFileDirectory)..\iOS\Xamarin.iOS.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.Zip" AssemblyFile="$(MSBuildThisFileDirectory)..\iOS\Xamarin.MacDev.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.Zip" AssemblyFile="$(MSBuildThisFileDirectory)..\iOS\Xamarin.iOS.Tasks.dll" />
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>

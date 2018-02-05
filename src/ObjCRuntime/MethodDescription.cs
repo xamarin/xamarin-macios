@@ -2,7 +2,7 @@ using System;
 using System.Reflection;
 
 #if !XAMCORE_2_0
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 	public struct MethodDescription {
 		public MethodBase method;
 		public ArgumentSemantic semantic;

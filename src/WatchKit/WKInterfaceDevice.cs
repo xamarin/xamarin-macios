@@ -2,11 +2,11 @@
 
 using System;
 using System.Collections.Generic;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.UIKit;
+using Foundation;
+using ObjCRuntime;
+using UIKit;
 
-namespace XamCore.WatchKit {
+namespace WatchKit {
 
 	public partial class WKInterfaceDevice {
 

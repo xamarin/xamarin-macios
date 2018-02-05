@@ -166,7 +166,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 			if (exception_gchandle != 0)
 				goto exception_handling;
 			if (desc->bindas [i + 1].original_type != NULL) {
-				arg_ptrs [i + mofs] = xamarin_generate_conversion_to_managed ((id) arg, mono_reflection_type_get_type (desc->bindas [i + 1].original_type), p, method, &exception_gchandle, (void **) &free_list);
+				arg_ptrs [i + mofs] = xamarin_generate_conversion_to_managed ((id) arg, mono_reflection_type_get_type (desc->bindas [i + 1].original_type), p, method, &exception_gchandle, INVALID_TOKEN_REF, (void **) &free_list);
 				if (exception_gchandle != 0)
 					goto exception_handling;
 				ofs++;

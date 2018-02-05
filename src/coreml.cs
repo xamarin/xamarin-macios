@@ -10,23 +10,23 @@
 #if XAMCORE_2_0
 
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
-using XamCore.CoreVideo;
-using XamCore.Foundation;
+using ObjCRuntime;
+using CoreFoundation;
+using CoreVideo;
+using Foundation;
 
 #if !WATCH
-using XamCore.Metal;
+using Metal;
 #else
-using IMTLCommandBuffer = global::XamCore.Foundation.NSObject; // Won't be used just to make compilation happy.
-using IMTLTexture = global::XamCore.Foundation.NSObject; // Won't be used just to make compilation happy.
+using IMTLCommandBuffer = global::Foundation.NSObject; // Won't be used just to make compilation happy.
+using IMTLTexture = global::Foundation.NSObject; // Won't be used just to make compilation happy.
 #endif
 
-namespace XamCore.CoreML {
+namespace CoreML {
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[Native]
-	public enum MLFeatureType : nint {
+	public enum MLFeatureType : long {
 		Invalid = 0,
 		Int64 = 1,
 		Double = 2,
@@ -39,7 +39,7 @@ namespace XamCore.CoreML {
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[ErrorDomain ("MLModelErrorDomain")]
 	[Native]
-	public enum MLModelError : nint {
+	public enum MLModelError : long {
 		Generic = 0,
 		FeatureType = 1,
 		IO = 3,
@@ -49,7 +49,7 @@ namespace XamCore.CoreML {
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[Native]
-	public enum MLMultiArrayDataType : nint {
+	public enum MLMultiArrayDataType : long {
 		Double = 65536 | 64,
 		Float32 = 65536 | 32,
 		Int32 = 131072 | 32,

@@ -1,9 +1,9 @@
 using System;
 
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
+using Foundation;
+using CoreFoundation;
 
-namespace XamCore.CoreBluetooth {
+namespace CoreBluetooth {
 
 	// The init ctor is invalid, but to present a nicer API (the delegate is optional/
 	// hidden if events are desired) we fake it and provide a null delegate. This

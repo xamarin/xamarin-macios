@@ -23,7 +23,7 @@
 
 using System;
 
-namespace XamCore.WebKit {
+namespace WebKit {
 
 	public class DomEventArgs : EventArgs {
 		public DomEventArgs (DomEvent evt)

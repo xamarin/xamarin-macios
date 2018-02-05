@@ -27,7 +27,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	public partial class NSUrlRequest {
 		public override string ToString ()
 		{

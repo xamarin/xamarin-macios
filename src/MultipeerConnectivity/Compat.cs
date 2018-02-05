@@ -9,7 +9,7 @@
 #if XAMCORE_2_0 || !MONOMAC // MultipeerConnectivity is 64-bit only on OS X
 using System;
 
-namespace XamCore.MultipeerConnectivity {
+namespace MultipeerConnectivity {
 
 #if !XAMCORE_3_0
 	public partial class MCPeerID {

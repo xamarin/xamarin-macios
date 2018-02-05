@@ -11,11 +11,11 @@
 
 using System;
 using System.Collections;
-using XamCore.Foundation; 
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
+using Foundation; 
+using ObjCRuntime;
+using CoreGraphics;
 
-namespace XamCore.MediaPlayer {
+namespace MediaPlayer {
 	public partial class MPMediaItemArtwork {
 #if !XAMCORE_3_0
 		[Obsolete ("Use the (UIImage) constructor instead, iOS9 does not allow creating an empty instance.")]

@@ -81,6 +81,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <MtouchExtraArgs>--nostrip --nosymbolstrip: --aot-options=-O=float32</MtouchExtraArgs>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
+    <MtouchUseLlvm>True</MtouchUseLlvm>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release32|iPhone' ">
     <Optimize>true</Optimize>
@@ -91,6 +92,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <MtouchExtraArgs>--nostrip --nosymbolstrip: --aot-options=-O=float32</MtouchExtraArgs>
     <MtouchArch>ARMv7</MtouchArch>
+    <MtouchUseLlvm>True</MtouchUseLlvm>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release64|iPhone' ">
     <Optimize>true</Optimize>
@@ -101,6 +103,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <MtouchExtraArgs>--nostrip --nosymbolstrip: --aot-options=-O=float32</MtouchExtraArgs>
     <MtouchArch>ARM64</MtouchArch>
+    <MtouchUseLlvm>True</MtouchUseLlvm>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-bitcode|iPhone' ">
     <Optimize>true</Optimize>

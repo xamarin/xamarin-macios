@@ -30,28 +30,27 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
+using ObjCRuntime;
+using CoreFoundation;
+using CoreGraphics;
+using Foundation;
 
 using CGGlyph = System.UInt16;
 
-namespace XamCore.CoreText {
+namespace CoreText {
 
 	// defined as uint32_t - /System/Library/Frameworks/CoreText.framework/Headers/CTFontManager.h
-	public enum CTFontManagerScope : uint_compat_int {
+	public enum CTFontManagerScope : uint {
 		None = 0, Process = 1, User = 2, Session = 3
 	}
 
 	// defined as uint32_t - /System/Library/Frameworks/CoreText.framework/Headers/CTFontManager.h
-	public enum CTFontManagerAutoActivation : uint_compat_int {
+	public enum CTFontManagerAutoActivation : uint {
 		Default = 0, Disabled = 1, Enabled = 2,
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "It's now treated as 'Default'.")]
 		PromptUser = 3,
 	}
 
-	[iOS (4,1)]
 	public partial class CTFontManager {
 
 #if MONOMAC
@@ -169,12 +168,10 @@ namespace XamCore.CoreText {
 			}
 		}
 
-		[Mac (10,6)]
 		[iOS (7,0)]
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern /* CFArrayRef */ IntPtr CTFontManagerCreateFontDescriptorsFromURL (/* CFURLRef */ IntPtr fileURL);
 
-		[Mac (10,6)]
 		[iOS (7,0)]
 		public static CTFontDescriptor[] GetFonts (NSUrl url)
 		{

@@ -9,10 +9,10 @@
 //
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	public partial class NSUndoManager {
 		public virtual void SetActionName (string actionName) {
 			SetActionname (actionName);

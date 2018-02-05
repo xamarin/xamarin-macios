@@ -1,16 +1,16 @@
 using System;
 using System.ComponentModel;
-using XamCore.CoreGraphics;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using CoreGraphics;
+using ObjCRuntime;
+using Foundation;
 
 #if !MONOMAC
-using XamCore.UIKit;
+using UIKit;
 #else
-using XamCore.AppKit;
+using AppKit;
 #endif
 
-namespace XamCore.NotificationCenter {
+namespace NotificationCenter {
 #if XAMCORE_2_0 || !MONOMAC
 	[iOS (8,0)][Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
@@ -43,7 +43,13 @@ namespace XamCore.NotificationCenter {
 
 #if MONOMAC
 		[Export ("widgetAllowsEditing")]
-		bool WidgetAllowsEditing { get; set; }
+		bool WidgetAllowsEditing {
+			get;
+#if !XAMCORE_4_0
+			[NotImplemented]
+			set;
+#endif
+		}
 
 		[Export ("widgetDidBeginEditing")]
 		void WidgetDidBeginEditing ();

@@ -8,10 +8,10 @@
 //
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.SpriteKit {
+namespace SpriteKit {
 #if !XAMCORE_3_0 && !MONOMAC
 	public partial class SKFieldNode  {
 		

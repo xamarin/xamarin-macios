@@ -8,12 +8,12 @@
 //
 
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 #if !COREBUILD
-using XamCore.CoreGraphics;
+using CoreGraphics;
 #endif
 
-namespace XamCore.UIKit {
+namespace UIKit {
 
 	public partial class UIColor {
 

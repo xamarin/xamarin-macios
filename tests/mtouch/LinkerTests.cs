@@ -3,6 +3,8 @@ using System.IO;
 
 using NUnit.Framework;
 
+using MTouchLinker = Xamarin.Tests.LinkerOption;
+
 namespace Xamarin.Linker
 {
 	[TestFixture]

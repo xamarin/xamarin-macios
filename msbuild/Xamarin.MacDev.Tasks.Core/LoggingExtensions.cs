@@ -6,6 +6,21 @@ namespace Xamarin.MacDev.Tasks
 	public static class LoggingExtensions
 	{
 		const MessageImportance TaskPropertyImportance = MessageImportance.Normal;
+		static readonly string ErrorPrefix;
+
+		static LoggingExtensions ()
+		{
+			var name = typeof (LoggingExtensions).Assembly.GetName ();
+
+			switch (name.Name) {
+			case "Xamarin.Mac.Tasks":
+				ErrorPrefix = "MM";
+				break;
+			default:
+				ErrorPrefix = "MT";
+				break;
+			}
+		}
 
 		public static void LogTaskProperty (this TaskLoggingHelper log, string propertyName, ITaskItem[] items)
 		{
@@ -56,21 +71,21 @@ namespace Xamarin.MacDev.Tasks
 			log.LogMessage (TaskPropertyImportance, "  {0}: {1}", propertyName, value);
 		}
 
-		public static void LogTaskName (this TaskLoggingHelper log, string taskName)
-		{
-			log.LogMessage (TaskPropertyImportance, "{0} Task", taskName);
-		}
-
 		/// <summary>
 		/// Creates an MSBuild error following our MTErrors convention.</summary>
 		/// <remarks>
 		/// For every new error we need to update "docs/website/mtouch-errors.md" and "tools/mtouch/error.cs".</remarks>
 		/// <param name="errorCode">In the 7xxx range for MSBuild error.</param>
 		/// <param name="message">The error's message to be displayed in the error pad.</param>
-		/// <param name="filePath">Path to the known guilty file or MSBuild by default so we display something nice in the error pad.</param>
-		public static void MTError (this TaskLoggingHelper log, int errorCode, string message, string filePath = "MSBuild")
+		/// <param name="fileName">Path to the known guilty file or null.</param>
+		public static void LogError (this TaskLoggingHelper log, int errorCode, string fileName, string message, params object[] args)
 		{
-			log.LogError (null, $"MT{errorCode}", null, filePath, 0, 0, 0, 0, message);
+			log.LogError (null, $"{ErrorPrefix}{errorCode}", null, fileName ?? "MSBuild", 0, 0, 0, 0, message, args);
+		}
+
+		public static void LogWarning (this TaskLoggingHelper log, int errorCode, string fileName, string message, params object[] args)
+		{
+			log.LogWarning (null, $"{ErrorPrefix}{errorCode}", null, fileName ?? "MSBuild", 0, 0, 0, 0, message, args);
 		}
 	}
 }

@@ -1,15 +1,15 @@
-﻿using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using System;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.Photos
+namespace Photos
 {
 	// NSInteger -> PHImageManager.h
 	[iOS (8,0)]
 	[TV (10,0)]
 	[Mac (10,12, onlyOn64 : true)]
 	[Native]
-	public enum PHImageContentMode : nint {
+	public enum PHImageContentMode : long {
 		AspectFit = 0,
 		AspectFill = 1,
 		Default = AspectFit
@@ -20,7 +20,7 @@ namespace XamCore.Photos
 	[TV (10,0)]
 	[Mac (10,13, onlyOn64 : true)]
 	[Native]
-	public enum PHImageRequestOptionsVersion : nint {
+	public enum PHImageRequestOptionsVersion : long {
 		Current = 0,
 		Unadjusted,
 		Original
@@ -31,7 +31,7 @@ namespace XamCore.Photos
 	[TV (10,0)]
 	[Mac (10,13, onlyOn64 : true)]
 	[Native]
-	public enum PHImageRequestOptionsDeliveryMode : nint {
+	public enum PHImageRequestOptionsDeliveryMode : long {
 		Opportunistic = 0,
 		HighQualityFormat = 1,
 		FastFormat = 2
@@ -42,7 +42,7 @@ namespace XamCore.Photos
 	[TV (10,0)]
 	[Mac (10,13, onlyOn64 : true)]
 	[Native]
-	public enum PHImageRequestOptionsResizeMode : nint {
+	public enum PHImageRequestOptionsResizeMode : long {
 		None = 0,
 		Fast,
 		Exact
@@ -53,7 +53,7 @@ namespace XamCore.Photos
 	[TV (10,0)]
 	[NoMac]
 	[Native]
-	public enum PHVideoRequestOptionsVersion : nint {
+	public enum PHVideoRequestOptionsVersion : long {
 		Current = 0,
 		Original
 	}
@@ -63,7 +63,7 @@ namespace XamCore.Photos
 	[TV (10,0)]
 	[NoMac]
 	[Native]
-	public enum PHVideoRequestOptionsDeliveryMode : nint {
+	public enum PHVideoRequestOptionsDeliveryMode : long {
 		Automatic = 0,
 		HighQualityFormat = 1,
 		MediumQualityFormat = 2,
@@ -75,7 +75,7 @@ namespace XamCore.Photos
 	[TV (10,0)]
 	[Mac (10,12, onlyOn64 : true)]
 	[Native]
-	public enum PHCollectionListType : nint {
+	public enum PHCollectionListType : long {
 		MomentList  = 1,
 		Folder      = 2,
 		SmartFolder = 3
@@ -85,7 +85,7 @@ namespace XamCore.Photos
 	[TV (10,0)]
 	[Mac (10,12, onlyOn64 : true)]
 	[Native]
-	public enum PHCollectionListSubtype : nint {
+	public enum PHCollectionListSubtype : long {
 		MomentListCluster = 1,
 		MomentListYear = 2,
 
@@ -113,7 +113,7 @@ namespace XamCore.Photos
 	[TV (10,0)]
 	[Mac (10,12, onlyOn64 : true)]
 	[Native]
-	public enum PHCollectionEditOperation : nint {
+	public enum PHCollectionEditOperation : long {
 		None             = 0,
 		DeleteContent    = 1,
 		RemoveContent    = 2,
@@ -129,7 +129,7 @@ namespace XamCore.Photos
 	[TV (10,0)]
 	[Mac (10,12, onlyOn64 : true)]
 	[Native]
-	public enum PHAssetCollectionType : nint {
+	public enum PHAssetCollectionType : long {
 		Album      = 1,
 		SmartAlbum = 2,
 		Moment     = 3
@@ -140,7 +140,7 @@ namespace XamCore.Photos
 	[TV (10,0)]
 	[Mac (10,12, onlyOn64 : true)]
 	[Native]
-	public enum PHAssetCollectionSubtype : nint {
+	public enum PHAssetCollectionSubtype : long {
 		AlbumRegular         = 2,
 		AlbumSyncedEvent     = 3,
 		AlbumSyncedFaces     = 4,
@@ -183,7 +183,7 @@ namespace XamCore.Photos
 	[TV (10,0)]
 	[Mac (10,12, onlyOn64 : true)]
 	[Native]
-	public enum PHAssetEditOperation : nint {
+	public enum PHAssetEditOperation : long {
 		None       = 0,
 		Delete     = 1,
 		Content    = 2,
@@ -195,7 +195,7 @@ namespace XamCore.Photos
 	[TV (10,0)]
 	[Mac (10,12, onlyOn64 : true)]
 	[Native]
-	public enum PHAssetMediaType : nint {
+	public enum PHAssetMediaType : long {
 		Unknown = 0,
 		Image   = 1,
 		Video   = 2,
@@ -208,7 +208,7 @@ namespace XamCore.Photos
 	[Mac (10,12, onlyOn64 : true)]
 	[Native]
 	[Flags]
-	public enum PHAssetMediaSubtype : nuint {
+	public enum PHAssetMediaSubtype : ulong {
 		None               = 0,
 		PhotoPanorama      = (1 << 0),
 		PhotoHDR           = (1 << 1),
@@ -228,7 +228,7 @@ namespace XamCore.Photos
 	[Mac (10,12, onlyOn64 : true)]
 	[Native]
 	[Flags]
-	public enum PHAssetBurstSelectionType : nuint {
+	public enum PHAssetBurstSelectionType : ulong {
 		None     = 0,
 		AutoPick = (1 << 0),
 		UserPick = (1 << 1)
@@ -238,7 +238,7 @@ namespace XamCore.Photos
 	[TV (10,0)]
 	[Mac (10,13, onlyOn64 : true)]
 	[Native]
-	public enum PHAuthorizationStatus : nint {
+	public enum PHAuthorizationStatus : long {
 		NotDetermined, Restricted, Denied, Authorized
 	}
 
@@ -246,7 +246,7 @@ namespace XamCore.Photos
 	[Mac (10,12, onlyOn64 : true)]
 	[TV (10,0)]
 	[Native]
-	public enum PHAssetResourceType : nint
+	public enum PHAssetResourceType : long
 	{
 		Photo = 1,
 		Video = 2,
@@ -263,7 +263,7 @@ namespace XamCore.Photos
 	[TV (10,0)]
 	[Mac (10,12, onlyOn64 : true)]
 	[Native]
-	public enum PHAssetSourceType : nuint
+	public enum PHAssetSourceType : ulong
 	{
 		None = 0,
 		UserLibrary = (1 << 0),
@@ -275,7 +275,7 @@ namespace XamCore.Photos
 	[TV (10,0)]
 	[Mac (10,12, onlyOn64 : true)]
 	[Native]
-	public enum PHLivePhotoFrameType : nint {
+	public enum PHLivePhotoFrameType : long {
 		Photo,
 		Video
 	}
@@ -283,7 +283,7 @@ namespace XamCore.Photos
 	[TV (11,0), iOS (11,0)]
 	[Mac (10,13, onlyOn64 : true)]
 	[Native]
-	public enum PHAssetPlaybackStyle : nint {
+	public enum PHAssetPlaybackStyle : long {
 		Unsupported = 0,
 		Image = 1,
 		ImageAnimated = 2,
@@ -295,7 +295,7 @@ namespace XamCore.Photos
 	[Mac (10,13, onlyOn64 : true)]
 	[NoiOS][NoTV]
 	[Native]
-	public enum PHProjectTextElementType : nint {
+	public enum PHProjectTextElementType : long {
 		Body = 0,
 		Title,
 		Subtitle,
@@ -304,7 +304,7 @@ namespace XamCore.Photos
 	[Mac (10,13, onlyOn64 : true)]
 	[NoiOS][NoTV]
 	[Native]
-	public enum PHProjectCreationSource : nint {
+	public enum PHProjectCreationSource : long {
 		Undefined = 0,
 		UserSelection = 1,
 		Album = 2,
@@ -322,10 +322,19 @@ namespace XamCore.Photos
 	[Mac (10,13, onlyOn64 : true)]
 	[NoiOS][NoTV]
 	[Native]
-	public enum PHProjectSectionType : nint {
+	public enum PHProjectSectionType : long {
 		Undefined = 0,
 		Cover = 1,
 		Content = 2,
 		Auxiliary = 3,
+	}
+
+	[Mac (10,12, onlyOn64 : true)]
+	[NoiOS][NoTV]
+	[Native]
+	[ErrorDomain ("PHLivePhotoEditingErrorDomain")]
+	public enum PHLivePhotoEditingError : long {
+		Unknown,
+		Aborted,
 	}
 }

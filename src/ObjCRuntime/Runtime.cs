@@ -14,11 +14,11 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-using XamCore.Foundation;
-using XamCore.Registrar;
+using Foundation;
+using Registrar;
 
 #if MONOMAC
-using XamCore.AppKit;
+using AppKit;
 #endif
 
 #if !COREBUILD && (XAMARIN_APPLETLS || XAMARIN_NO_TLS)
@@ -27,7 +27,7 @@ using Mono.Security.Interface;
 #endif
 #endif
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 	
 	public partial class Runtime {
 #if !COREBUILD
@@ -92,6 +92,7 @@ namespace XamCore.ObjCRuntime {
 			public IntPtr set_gchandle_tramp;
 		}
 
+		[Flags]
 		internal enum InitializationFlags : int {
 			/* unused               = 0x01 */
 			/* unused				= 0x02,*/
@@ -571,16 +572,6 @@ namespace XamCore.ObjCRuntime {
 		static IntPtr GetSelector (IntPtr sel)
 		{
 			return ObjectWrapper.Convert (new Selector (sel));
-		}
-
-		static IntPtr GetClassHandle (IntPtr klass)
-		{
-			return ((Class) ObjectWrapper.Convert (klass)).Handle;
-		}
-
-		static IntPtr GetSelectorHandle (IntPtr sel)
-		{
-			return ((Selector) ObjectWrapper.Convert (sel)).Handle;
 		}
 
 		static void GetMethodForSelector (IntPtr cls, IntPtr sel, bool is_static, IntPtr desc)
@@ -1316,9 +1307,9 @@ namespace XamCore.ObjCRuntime {
 				return null;
 
 			// need to look up the type from the ProtocolAttribute.
-			var a = type.GetCustomAttributes (typeof (XamCore.Foundation.ProtocolAttribute), false);
+			var a = type.GetCustomAttributes (typeof (Foundation.ProtocolAttribute), false);
 
-			var attr = (XamCore.Foundation.ProtocolAttribute) (a.Length > 0 ? a [0] : null);
+			var attr = (Foundation.ProtocolAttribute) (a.Length > 0 ? a [0] : null);
 			if (attr == null || attr.WrapperType == null)
 				throw ErrorHelper.CreateError (4125, "The registrar found an invalid interface '{0}': " +
 					"The interface must have a Protocol attribute specifying its wrapper type.",

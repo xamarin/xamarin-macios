@@ -28,7 +28,7 @@
 
 using System;
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 	public class CompileFlagsAttribute : Attribute {
 		public CompileFlagsAttribute (string flags)
 		{

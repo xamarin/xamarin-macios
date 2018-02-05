@@ -29,11 +29,11 @@
 
 using System;
 
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using ObjCRuntime;
 
-namespace XamCore.StoreKit {
+namespace StoreKit {
 
 	[iOS (6,0)]
 	public class StoreProductParameters : DictionaryContainer

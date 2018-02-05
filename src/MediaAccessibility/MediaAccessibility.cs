@@ -9,24 +9,24 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
-using XamCore.CoreText;
-using XamCore.Foundation;
+using ObjCRuntime;
+using CoreFoundation;
+using CoreGraphics;
+using CoreText;
+using Foundation;
 
-namespace XamCore.MediaAccessibility {
+namespace MediaAccessibility {
 
 	[Native]
 	[iOS (7,0)][Mac (10,9)]
-	public enum MACaptionAppearanceDomain : nint {
+	public enum MACaptionAppearanceDomain : long {
 		Default = 0,
 		User = 1
 	}
 
 	[Native]
 	[iOS (7,0)][Mac (10,9)]
-	public enum MACaptionAppearanceDisplayType : nint {
+	public enum MACaptionAppearanceDisplayType : long {
 		ForcedOnly = 0,
 		Automatic = 1,
 		AlwaysOn = 2
@@ -34,14 +34,14 @@ namespace XamCore.MediaAccessibility {
 
 	[Native]
 	[iOS (7,0)][Mac (10,9)]
-	public enum MACaptionAppearanceBehavior : nint {
+	public enum MACaptionAppearanceBehavior : long {
 		UseValue = 0,
 		UseContentIfAvailable = 1
 	}
 
 	[Native]
 	[iOS (7,0)][Mac (10,9)]
-	public enum MACaptionAppearanceFontStyle : nint {
+	public enum MACaptionAppearanceFontStyle : long {
 		Default = 0,
 		MonospacedWithSerif = 1,
 		ProportionalWithSerif = 2,
@@ -54,7 +54,7 @@ namespace XamCore.MediaAccessibility {
 
 	[Native]
 	[iOS (7,0)][Mac (10,9)]
-	public enum MACaptionAppearanceTextEdgeStyle : nint {
+	public enum MACaptionAppearanceTextEdgeStyle : long {
 		Undefined = 0,
 		None = 1,
 		Raised = 2,

@@ -1,6 +1,6 @@
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.WebKit {
+namespace WebKit {
 	
 	public partial class WebFrame {
 		public void LoadHtmlString (string htmlString, NSUrl baseUrl)

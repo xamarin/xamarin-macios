@@ -13,9 +13,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	[Register ("NSMutableOrderedSet", SkipRegistration = true)]
 	public sealed partial class NSMutableOrderedSet<TKey> : NSMutableOrderedSet, IEnumerable<TKey>
 		where TKey : class, INativeObject {

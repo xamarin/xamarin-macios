@@ -1,22 +1,22 @@
-using XamCore.CoreGraphics;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using CoreGraphics;
+using ObjCRuntime;
+using Foundation;
 #if !MONOMAC
-using XamCore.UIKit;
+using UIKit;
 // ease compilation for [NoiOS] and [NoTV] decorated members
-using NSView = XamCore.Foundation.NSObject;
-using PHLivePhotoViewContentMode = XamCore.Foundation.NSObject;
+using NSView = Foundation.NSObject;
+using PHLivePhotoViewContentMode = Foundation.NSObject;
 #else
-using XamCore.AppKit;
-using UIImage = XamCore.AppKit.NSImage;
+using AppKit;
+using UIImage = AppKit.NSImage;
 // ease compilation for [NoMac] decorated members
-using UIGestureRecognizer = XamCore.Foundation.NSObject;
-using PHLivePhotoBadgeOptions = XamCore.Foundation.NSObject;
+using UIGestureRecognizer = Foundation.NSObject;
+using PHLivePhotoBadgeOptions = Foundation.NSObject;
 #endif
-using XamCore.Photos;
+using Photos;
 using System;
 
-namespace XamCore.PhotosUI {
+namespace PhotosUI {
 	[NoTV]
 	[iOS (8, 0)]
 	[Mac (10, 13, onlyOn64: true)]

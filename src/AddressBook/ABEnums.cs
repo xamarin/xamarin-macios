@@ -29,22 +29,22 @@
 
 using System;
 
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using ObjCRuntime;
 
-namespace XamCore.AddressBook {
+namespace AddressBook {
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Native]
 	[ErrorDomain ("ABAddressBookErrorDomain")]
-	public enum ABAddressBookError : nint {
+	public enum ABAddressBookError : long {
 		OperationNotPermittedByStore = 0,
 		OperationNotPermittedByUserError
 	}
 
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Native]
-	public enum ABAuthorizationStatus : nint {
+	public enum ABAuthorizationStatus : long {
 		NotDetermined = 0,
 		Restricted,
 		Denied,

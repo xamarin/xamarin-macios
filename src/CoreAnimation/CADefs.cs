@@ -32,11 +32,11 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
 
-namespace XamCore.CoreAnimation {
+namespace CoreAnimation {
 
 	partial class CAAnimation {
 		[DllImport(Constants.QuartzLibrary, EntryPoint="CACurrentMediaTime")]

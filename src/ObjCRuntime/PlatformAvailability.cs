@@ -23,13 +23,13 @@ using System.Runtime.InteropServices;
 
 #if !COREBUILD
 #if MONOMAC
-using XamCore.Foundation;
+using Foundation;
 #else
-using XamCore.UIKit;
+using UIKit;
 #endif
 #endif
 
-namespace XamCore.ObjCRuntime
+namespace ObjCRuntime
 {
 	// iOS versions are stored in the lower 4 bytes an Mac versions in
 	// the higher 4 bytes. Each 4 byte version has the format AAJJNNSS

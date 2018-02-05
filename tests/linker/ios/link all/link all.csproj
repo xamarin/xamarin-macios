@@ -1,0 +1,212 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{370CC763-EDC3-41DA-A21A-D4C82CABEFE4}</ProjectGuid>
+    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>linkall</RootNamespace>
+    <AssemblyName>link all</AssemblyName>
+    <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
+    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-unified</IntermediateOutputPath>
+    <DefineConstants>XAMCORE_2_0</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\iPhoneSimulator\$(Configuration)-unified</OutputPath>
+    <DefineConstants>DEBUG;LINKALL;;$(DefineConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <MtouchDebug>True</MtouchDebug>
+    <MtouchLink>Full</MtouchLink>
+    <MtouchI18n>mideast,other</MtouchI18n>
+    <MtouchExtraArgs>--registrar=static --optimize=all</MtouchExtraArgs>
+    <MtouchArch>i386, x86_64</MtouchArch>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\iPhoneSimulator\$(Configuration)-unified</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <MtouchLink>Full</MtouchLink>
+    <MtouchI18n>mideast,other</MtouchI18n>
+    <MtouchArch>i386, x86_64</MtouchArch>
+    <DefineConstants>LINKALL;;$(DefineConstants)</DefineConstants>
+    <MtouchExtraArgs>--optimize=all</MtouchExtraArgs>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
+    <DefineConstants>DEBUG;LINKALL;;$(DefineConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchDebug>True</MtouchDebug>
+    <MtouchLink>Full</MtouchLink>
+    <MtouchI18n>mideast,other</MtouchI18n>
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
+    <MtouchExtraArgs>-gcc_flags="-UhoItsB0rken" --optimize=all</MtouchExtraArgs>
+    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug32|iPhone' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
+    <DefineConstants>DEBUG;LINKALL;;$(DefineConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchDebug>True</MtouchDebug>
+    <MtouchLink>Full</MtouchLink>
+    <MtouchI18n>mideast,other</MtouchI18n>
+    <MtouchArch>ARMv7</MtouchArch>
+    <MtouchExtraArgs>-gcc_flags="-UhoItsB0rken" --optimize=all</MtouchExtraArgs>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug64|iPhone' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
+    <DefineConstants>DEBUG;LINKALL;;$(DefineConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchDebug>True</MtouchDebug>
+    <MtouchLink>Full</MtouchLink>
+    <MtouchI18n>mideast,other</MtouchI18n>
+    <MtouchArch>ARM64</MtouchArch>
+    <MtouchExtraArgs>-gcc_flags="-UhoItsB0rken" --optimize=all</MtouchExtraArgs>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchLink>Full</MtouchLink>
+    <MtouchI18n>mideast,other</MtouchI18n>
+    <MtouchUseLlvm>True</MtouchUseLlvm>
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
+    <MtouchExtraArgs>--optimize=all</MtouchExtraArgs>
+    <DefineConstants>LINKALL;;$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release32|iPhone' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchLink>Full</MtouchLink>
+    <MtouchI18n>mideast,other</MtouchI18n>
+    <MtouchUseLlvm>True</MtouchUseLlvm>
+    <MtouchArch>ARMv7</MtouchArch>
+    <MtouchExtraArgs>--optimize=all</MtouchExtraArgs>
+    <DefineConstants>LINKALL;;$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release64|iPhone' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchLink>Full</MtouchLink>
+    <MtouchI18n>mideast,other</MtouchI18n>
+    <MtouchUseLlvm>True</MtouchUseLlvm>
+    <MtouchArch>ARM64</MtouchArch>
+    <MtouchExtraArgs>--optimize=all</MtouchExtraArgs>
+    <DefineConstants>LINKALL;;$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-bitcode|iPhone' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\iPhone\$(Configuration)-bitcode-unified</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchLink>Full</MtouchLink>
+    <MtouchI18n>mideast,other</MtouchI18n>
+    <MtouchUseLlvm>true</MtouchUseLlvm>
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
+    <MtouchExtraArgs>--bitcode:full --optimize=all</MtouchExtraArgs>
+    <DefineConstants>LINKALL;;$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Xamarin.iOS" />
+    <Reference Include="MonoTouch.NUnitLite" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="OpenTK-1.0" />
+    <Reference Include="System.ComponentModel.Composition" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info.plist">
+      <LogicalName>Info.plist</LogicalName>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Main.cs" />
+    <Compile Include="AppDelegate.cs" />
+    <Compile Include="LinkAllTest.cs" />
+    <Compile Include="ClassLayoutTest.cs" />
+    <Compile Include="StructLayoutTest.cs" />
+    <Compile Include="XmlSerializationTest.cs" />
+    <Compile Include="AttributeTest.cs" />
+    <Compile Include="InterfacesTest.cs" />
+    <Compile Include="DataContractTest.cs" />
+    <Compile Include="..\link sdk\OptimizeGeneratedCodeTest.cs">
+      <Link>OptimizeGeneratedCodeTest.cs</Link>
+    </Compile>
+    <Compile Include="InternalsTest.cs" />
+    <Compile Include="LinqExpressionTest.cs" />
+    <Compile Include="CalendarTest.cs" />
+    <Compile Include="PreserveTest.cs" />
+    <Compile Include="MEFTests.cs" />
+    <Compile Include="SealerTest.cs" />
+    <Compile Include="..\link sdk\ReflectionTest.cs">
+      <Link>ReflectionTest.cs</Link>
+    </Compile>
+    <Compile Include="SerializationTest.cs" />
+    <Compile Include="ILReader.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterfaceDefinition Include="LaunchScreen.storyboard" Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" />
+  </ItemGroup>
+  <ItemGroup>
+    <ImageAsset Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="Assets.xcassets\AppIcons.appiconset\Contents.json" />
+    <ImageAsset Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="Assets.xcassets\AppIcons.appiconset\Icon-app-60%403x.png" />
+    <ImageAsset Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="Assets.xcassets\AppIcons.appiconset\icon-app-57.png" />
+    <ImageAsset Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="Assets.xcassets\AppIcons.appiconset\icon-app-57%402x.png" />
+    <ImageAsset Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="Assets.xcassets\AppIcons.appiconset\icon-app-60%402x.png" />
+    <ImageAsset Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="Assets.xcassets\AppIcons.appiconset\icon-app-72.png" />
+    <ImageAsset Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="Assets.xcassets\AppIcons.appiconset\icon-app-72%402x.png" />
+    <ImageAsset Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="Assets.xcassets\AppIcons.appiconset\icon-app-76.png" />
+    <ImageAsset Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="Assets.xcassets\AppIcons.appiconset\icon-app-76%402x.png" />
+    <ImageAsset Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="Assets.xcassets\AppIcons.appiconset\icon-app-83.5%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BundledResources\BundledResources.csproj">
+      <Project>{FE6EDEE9-ADF6-4F42-BCF2-B68C0A44EC3D}</Project>
+      <Name>BundledResources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\bindings-test\bindings-test.csproj">
+      <Project>{D6667423-EDD8-4B50-9D98-1AC5D8A8A4EA}</Project>
+      <Name>bindings-test</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
+</Project>

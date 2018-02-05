@@ -3,9 +3,9 @@
 //
 using System;
 using System.Runtime.InteropServices;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.CoreFoundation {
+namespace CoreFoundation {
 	public class CFType {
 		[DllImport (Constants.CoreFoundationLibrary, EntryPoint="CFGetTypeID")]
 		public static extern nint GetTypeID (IntPtr typeRef);

@@ -48,9 +48,7 @@ using NativeException=MonoTouch.Foundation.MonoTouchException;
 #endif
 using OpenTK;
 using NUnit.Framework;
-#if !MONOMAC
 using Bindings.Test;
-#endif
 
 #if XAMCORE_2_0
 using RectangleF = CoreGraphics.CGRect;
@@ -2298,7 +2296,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-#if !MONOMAC // ObjCRegistrarTest is from Bindings.Tests, which is not currently implemented on mac
 		[Test]
 		public void BlockReturnTest ()
 		{
@@ -2325,7 +2322,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				}
 			}
 		}
-#endif
 
 		[Test]
 		public void PropertySetters ()
@@ -2351,7 +2347,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			public string B { get; set; }
 		}
 
-#if !MONOMAC // CtorChaining1 and CtorChaining2 are from Bindings.Test, which is iOS only atm
 		[Test]
 		public void ConstructorChaining ()
 		{
@@ -2372,7 +2367,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			{
 			}
 		}
-#endif
 
 		[DllImport ("/usr/lib/libobjc.dylib")]
 		static extern IntPtr class_getInstanceMethod (IntPtr cls, IntPtr sel);
@@ -2477,7 +2471,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-#if !MONOMAC // ObjCRegistrarTest is from Bindings.Tests, which is not currently implemented on mac
 		class NullOutParameters : ObjCRegistrarTest
 		{
 			public override void V (out NSObject n1, out NSString n2)
@@ -2493,7 +2486,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			using (var obj = new NullOutParameters ())
 				obj.Invoke_V_null_out ();
 		}
-#endif
 	}
 
 #if !__WATCHOS__

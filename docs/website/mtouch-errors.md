@@ -65,7 +65,7 @@ More than one root assembly was passed to mtouch, while there can be only one ro
 
 ### <a name="MT0009"/>MT0009: Error while loading assemblies: *.
 
-An error occurred while loading the assemblies the root assembly references. More information may be provided in the build output.
+An error occurred while loading the assemblies from the root assembly references. More information may be provided in the build output.
 
 ### <a name="MT0010"/>MT0010: Could not parse the command line arguments: *.
 
@@ -308,7 +308,7 @@ The minimum deployment target is the one specified in the error message; please 
 
 If updating the deployment target is not possible, then please use an older version of Xamarin.iOS.
 
-### <a name="MT0074"/>MT0074: Xamarin.iOS * does not support a minimum deployment target of * (the maximum is *). Please select an older deployment target in your project's Info.plist or upgrade to a newer version of Xamarin.iOS.
+### <a name="MT0074"/>MT0074: Xamarin.iOS * does not support a deployment target of * (the maximum is *). Please select an older deployment target in your project's Info.plist or upgrade to a newer version of Xamarin.iOS.
 
 Xamarin.iOS does not support setting the minimum deployment target to a higher version than the version this particular version of Xamarin.iOS was built for.
 
@@ -628,6 +628,35 @@ For further information see bug #[52727](https://bugzilla.xamarin.com/show_bug.c
 A failure occurred when touching a file (which is done to ensure partial builds are done correctly).
 
 This warning can most likely be ignored; in case of any problems file a bug (https://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS)) and it will be investigated.
+
+### <a name="MT0129"/>MT0129: Debugging symbol file for '*' does not match the assembly and is ignored.
+
+The debugging symbols, either a .pdb (portable pdb only) or a .mdb file, for the specified assembly could not be loaded.
+
+This generally means the assembly is newer or older than the symbols. Since they do not match they cannot be used and the symbols are ignored.
+
+This warning won't affect the application being built, however you might not be able to debug it entirely (in particular the code from specified assembly). Also exceptions, stack traces and crash reports might be missing some information.
+
+Please report this issue to the publisher of the assembly package (e.g. nuget author) so this can be fixed in their future releases.
+
+### <a name="MT0130"/>MT0130: No root assemblies found. You should provide at least one root assembly.
+When running --runregistrar, at least one root assembly should be provided.
+
+### <a name="MT0131"/>MT0131: Product assembly '{0}' not found in assembly list: '{1}'
+
+When running --runregistrar, the assembly list should include the product assembly, Xamarin.iOS, Xamarin.WatchOS, Xamarin.TVOS.
+
+### <a name="MT0132/>MT0132: Unknown optimization: *. Valid values are: *
+
+The specified optimization was not recognized.
+
+The accepted format is `[+|-]optimization-name`, where `optimization-name` is one of the values listed in the error message.
+
+See [Build optimizations](https://developer.xamarin.com/guides/cross-platform/macios/build-optimization/) for a complete description of each optimization.
+
+### <a name="MT0133"/>MT0133: Found more than 1 assembly matching '{0}' choosing first: '{1}'
+
+When using --recursive-directories, only 1 assembly should match
 
 # MT1xxx: Project related error messages
 
@@ -1261,11 +1290,15 @@ An unexpected error occured when processing an assembly.
 
 The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
-### <a name="MT2104"/>MM2104: Unable to link assembly '{0}' as it is mixed-mode.
+### <a name="MT2104"/>MT2104: Unable to link assembly '{0}' as it is mixed-mode.
 
 Mixed-mode assemblies can not be processed by the linker.
 
 See https://msdn.microsoft.com/en-us/library/x0w2664k.aspx for more information on mixed-mode assemblies.
+
+### <a name="MT2105"/>MT2105: The [BindingImpl] attribute on the member * is invalid: *
+
+The `[BindingImpl]` attribute on the mentioned member is invalid. The expected format is `[BindingImpl (BindingImplOptions.ValueA | BindingImplOptions.ValueB)]`.
 
 # MT3xxx: AOT error messages
 

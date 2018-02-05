@@ -115,6 +115,9 @@
       <Link>TestRuntime.cs</Link>
     </Compile>
     <Compile Include="MacApiTypoTest.cs" />
+    <Compile Include="..\ApiAvailabilityTest.cs">
+      <Link>ApiAvailabilityTest.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\external\guiunit\src\framework\GuiUnit_NET_4_5.csproj">

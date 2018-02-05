@@ -29,10 +29,10 @@
 using System;
 using System.Collections.Generic;
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.AppKit
+namespace AppKit
 {
 	[Register ("__MonoMac_NSAlertDidEndDispatcher")]
 	internal class NSAlertDidEndDispatcher : NSObject
@@ -70,7 +70,7 @@ namespace XamCore.AppKit
 			BeginSheet (window, null, null, IntPtr.Zero);
 		}
 
-		public void BeginSheet (NSWindow window, NSAction onEnded)
+		public void BeginSheet (NSWindow window, Action onEnded)
 		{
 			BeginSheetForResponse (window, r => {
 				if (onEnded != null)

@@ -27,14 +27,14 @@ using System.Collections;
 using System.Runtime.InteropServices;
 
 #if !COREBUILD
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
+using CoreFoundation;
+using CoreGraphics;
 #endif
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	[Native]
-	public enum NSStringEncoding : nuint {
+	public enum NSStringEncoding : ulong {
 		ASCIIStringEncoding = 1,
 		NEXTSTEP = 2,
 		JapaneseEUC = 3,
@@ -60,7 +60,7 @@ namespace XamCore.Foundation {
 	};
 	
 	[Native]
-	public enum NSStringCompareOptions : nuint {
+	public enum NSStringCompareOptions : ulong {
 		CaseInsensitiveSearch = 1,
 		LiteralSearch = 2,
 		BackwardsSearch = 4,
@@ -283,7 +283,7 @@ namespace XamCore.Foundation {
 
 #if !MONOMAC && !XAMCORE_2_0
 		[Advice ("Use the version with a `ref float actualFontSize`")]
-		public CGSize DrawString (CGPoint point, nfloat width, XamCore.UIKit.UIFont font, nfloat minFontSize, nfloat actualFontSize, XamCore.UIKit.UILineBreakMode breakMode, XamCore.UIKit.UIBaselineAdjustment adjustment)
+		public CGSize DrawString (CGPoint point, nfloat width, UIKit.UIFont font, nfloat minFontSize, nfloat actualFontSize, UIKit.UILineBreakMode breakMode, UIKit.UIBaselineAdjustment adjustment)
 		{
 			nfloat temp = actualFontSize;
 			return DrawString (point, width, font, minFontSize, ref temp, breakMode, adjustment);

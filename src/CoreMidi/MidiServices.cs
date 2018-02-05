@@ -38,9 +38,9 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
+using ObjCRuntime;
+using CoreFoundation;
+using Foundation;
 
 using MidiObjectRef = System.Int32;
 using MidiClientRef = System.Int32;
@@ -49,7 +49,7 @@ using MidiPortRef = System.Int32;
 using MidiEndpointRef = System.Int32;
 using MidiEntityRef = System.Int32;
 
-namespace XamCore.CoreMidi {
+namespace CoreMidi {
 
 	// anonymous enum - MIDIServices.h
 	public enum MidiError : int {
@@ -74,7 +74,7 @@ namespace XamCore.CoreMidi {
 #if !MONOMAC || !XAMCORE_4_0
 	// NSUInteger -> MIDINetworkSession.h
 	[Native]
-	public enum MidiNetworkConnectionPolicy : nuint_compat_int {
+	public enum MidiNetworkConnectionPolicy : ulong {
 		NoOne, HostsInContactsList, Anyone
 	}
 #endif

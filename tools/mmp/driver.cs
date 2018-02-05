@@ -49,8 +49,8 @@ using Mono.Tuner;
 using MonoMac.Tuner;
 using Xamarin.Utils;
 using Xamarin.Linker;
-using XamCore.Registrar;
-using XamCore.ObjCRuntime;
+using Registrar;
+using ObjCRuntime;
 
 namespace Xamarin.Bundler {
 	public enum RegistrarMode {
@@ -82,10 +82,10 @@ namespace Xamarin.Bundler {
 		static string app_name;
 		static bool generate_plist;
 		public static RegistrarMode Registrar { get; private set; } = RegistrarMode.Default;
+		public static List<string> RecursiveSearchDirectories { get; } = new List<string> ();
 		static bool no_executable;
 		static bool embed_mono = true;
 		static bool? profiling = false;
-		static bool? thread_check = null;
 		static string link_flags = null;
 		static LinkerOptions linker_options;
 		static bool? disable_lldb_attach = null;
@@ -286,8 +286,8 @@ namespace Xamarin.Bundler {
 				{ "arch=", "Specify the architecture ('i386' or 'x86_64') of the native runtime (default to 'i386')", v => { arch = v; arch_set = true; } },
 				{ "profile=", "(Obsoleted in favor of --target-framework) Specify the .NET profile to use (defaults to '" + Xamarin.Utils.TargetFramework.Default + "')", v => SetTargetFramework (v) },
 				{ "target-framework=", "Specify the .NET target framework to use (defaults to '" + Xamarin.Utils.TargetFramework.Default + "')", v => SetTargetFramework (v) },
-				{ "force-thread-check", "Keep UI thread checks inside (even release) builds", v => { thread_check = true; }},
-				{ "disable-thread-check", "Remove UI thread checks inside (even debug) builds", v => { thread_check = false; }},
+				{ "force-thread-check", "Keep UI thread checks inside (even release) builds [DEPRECATED, use --linker-optimize=-remove-uithread-checks instead]", v => { App.Optimizations.RemoveUIThreadChecks = false; }, true},
+				{ "disable-thread-check", "Remove UI thread checks inside (even debug) builds [DEPRECATED, use --linker-optimize=remove-uithread-checks instead]", v => { App.Optimizations.RemoveUIThreadChecks = true; }, true},
 				{ "registrar:", "Specify the registrar to use (dynamic [default], static, partial)", v => {
 						switch (v) {
 						case "static":
@@ -309,6 +309,10 @@ namespace Xamarin.Bundler {
 						default:
 							throw new MonoMacException (20, true, "The valid options for '{0}' are '{1}'.", "--registrar", "dynamic, static, partial, or default");
 						}
+					}
+				},
+				{ "recursive-directories:", "Specify extra recursive search directories to use when probing assemblies", v => {
+						RecursiveSearchDirectories.AddRange (v.Split (Path.PathSeparator));
 					}
 				},
 				{ "sdk=", "Specifies the SDK version to compile against (version, for example \"10.9\")",
@@ -809,10 +813,6 @@ namespace Xamarin.Bundler {
 						native_libs.Add (nr, null);
 				}
 
-				// warn if we ask to remove thread checks but the linker is not enabled
-				if (App.LinkMode == LinkMode.None && thread_check.HasValue && !thread_check.Value)
-					ErrorHelper.Warning (2003, "Option '{0}' will be ignored since linking is disabled", "-disable-thread-check");
-				
 				var linked_native_libs = Link ();
 				foreach (var kvp in linked_native_libs) {
 					List<MethodDefinition> methods;
@@ -1210,6 +1210,8 @@ namespace Xamarin.Bundler {
 			libdir = libdirb.ToString ().Replace (Environment.NewLine, String.Empty);
 
 			var libmain = embed_mono ? "libxammac" : "libxammac-system";
+			if (IsClassic)
+				libmain += "-classic";
 			var libxammac = Path.Combine (GetXamMacPrefix (), "lib", libmain + (App.EnableDebug ? "-debug" : "") + ".a");
 
 			if (!File.Exists (libxammac))
@@ -1457,9 +1459,6 @@ namespace Xamarin.Bundler {
 				TargetFramework = TargetFramework,
 				Architecture = arch,
 				RuntimeOptions = App.RuntimeOptions,
-				// by default we keep the code to ensure we're executing on the UI thread (for UI code) for debug builds
-				// but this can be overridden to either (a) remove it from debug builds or (b) keep it in release builds
-				EnsureUIThread = thread_check.HasValue ? thread_check.Value : App.EnableDebug,
 				MarshalNativeExceptionsState = !App.RequiresPInvokeWrappers ? null : new PInvokeWrapperGenerator ()
 				{
 					App = App,
@@ -1912,7 +1911,7 @@ namespace Xamarin.Bundler {
 			if (AssemblySwapInfo.AssemblyNeedsSwappedOut (path))
 				path = AssemblySwapInfo.GetSwappedAssemblyPath (path);
 
-			var assembly = BuildTarget.Resolver.AddAssembly (path);
+			var assembly = BuildTarget.Resolver.Load (path);
 			if (assembly == null)
 				ErrorHelper.Warning (1501, "Can not resolve reference: {0}", path);
 			return assembly;
@@ -1921,7 +1920,7 @@ namespace Xamarin.Bundler {
 		static AssemblyDefinition AddAssemblyReferenceToResolver (string reference)
 		{
 			if (AssemblySwapInfo.ReferencedNeedsSwappedOut (reference))
-				return BuildTarget.Resolver.AddAssembly (AssemblySwapInfo.GetSwappedReference (reference));
+				return BuildTarget.Resolver.Load (AssemblySwapInfo.GetSwappedReference (reference));
 
 			return BuildTarget.Resolver.Resolve (reference);
 		}

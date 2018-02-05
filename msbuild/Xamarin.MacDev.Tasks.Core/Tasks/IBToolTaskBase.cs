@@ -49,7 +49,7 @@ namespace Xamarin.MacDev.Tasks
 			get { return AppleSdkSettings.XcodeVersion.Major > 7 || (AppleSdkSettings.XcodeVersion.Major == 7 && AppleSdkSettings.XcodeVersion.Minor >= 2); }
 		}
 
-		protected override void AppendCommandLineArguments (IDictionary<string, string> environment, ProcessArgumentBuilder args, ITaskItem[] items)
+		protected override void AppendCommandLineArguments (IDictionary<string, string> environment, CommandLineArgumentBuilder args, ITaskItem[] items)
 		{
 			environment.Add ("IBSC_MINIMUM_COMPATIBILITY_VERSION", minimumDeploymentTarget);
 			environment.Add ("IBC_MINIMUM_COMPATIBILITY_VERSION", minimumDeploymentTarget);

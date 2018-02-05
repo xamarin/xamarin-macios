@@ -33,6 +33,8 @@ BCL_TEST_SUITES=mscorlib \
 	System.IO.Compression.FileSystem \
 	Mono.CSharp \
 	System.Security \
+	System.ServiceModel \
+	System.IdentityModel \
 
 ALL_TEST_SUITES=$(TEST_SUITES) $(BCL_TEST_SUITES)
 EXEC_UNIT_SERVER=XCODE_DEVELOPER_ROOT=$(XCODE_DEVELOPER_ROOT) MONOTOUCH_ROOT=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX) $(SYSTEM_MONO) --debug $(UNIT_SERVER)
@@ -314,10 +316,7 @@ wrench-mac-introspection:
 	@echo Not here anymore
 
 wrench-mac-xammac_tests:
-	@# This entire target can be removed when merging to master.
-	$(Q) $(MAKE) run-mac-xammac_tests
-	$(Q) $(MAKE) clean-mac-xammac_tests
-	git clean -xfdq
+	@echo Not here anymore
 else
 wrench-mac-%:
 	@echo "Mac tests have been disabled [$@]"
@@ -355,8 +354,7 @@ wrench-jenkins: xharness/xharness.exe
 	$(Q) if test -e $@-failed.stamp; then EC=`cat $@-failed.stamp`; rm -f $@-failed.stamp; exit $$EC; fi
 
 wrench-xtro:
-	git clean -xfdq
-	make -C xtro-sharpie wrench
+	@echo Not here anymore
 
 jenkins: xharness/xharness.exe
 	$(Q) $(SYSTEM_MONO) --debug $< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT)

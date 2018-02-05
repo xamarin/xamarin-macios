@@ -1,11 +1,11 @@
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.StoreKit {
+namespace StoreKit {
 
 	// typedef NSInteger SKPaymentTransactionState;
 	// StoreKit.framework/Headers/SKPaymentTransaction.h
 	[Native]
-	public enum SKPaymentTransactionState : nint {
+	public enum SKPaymentTransactionState : long {
 		Purchasing,
 		Purchased,
 		Failed,  
@@ -18,7 +18,7 @@ namespace XamCore.StoreKit {
 	// StoreKit.framework/Headers/SKError.h
 	[Native]
 	[ErrorDomain ("SKErrorDomain")]
-	public enum SKError : nint {
+	public enum SKError : long {
 		Unknown,
 		ClientInvalid,
 		PaymentCancelled,
@@ -35,14 +35,14 @@ namespace XamCore.StoreKit {
 	// typedef NSInteger SKDownloadState;
 	// StoreKit.framework/Headers/SKDownload.h 
 	[Native]
-	public enum SKDownloadState : nint {
+	public enum SKDownloadState : long {
 		Waiting, Active, Paused, Finished, Failed, Cancelled
 	}
 
 #if !MONOMAC || !XAMCORE_4_0
 	[iOS (9,3)]
 	[Native]
-	public enum SKCloudServiceAuthorizationStatus : nint {
+	public enum SKCloudServiceAuthorizationStatus : long {
 		NotDetermined,
 		Denied,
 		Restricted,
@@ -51,7 +51,7 @@ namespace XamCore.StoreKit {
 
 	[iOS (9,3)]
 	[Native]
-	public enum SKCloudServiceCapability : nuint {
+	public enum SKCloudServiceCapability : ulong {
 		None = 0,
 		MusicCatalogPlayback = 1 << 0,
 		[NoTV, iOS (10,1)]
@@ -61,7 +61,7 @@ namespace XamCore.StoreKit {
 
 	[iOS (11,0)][TV (11,0)][NoMac]
 	[Native]
-	public enum SKProductStorePromotionVisibility : nint {
+	public enum SKProductStorePromotionVisibility : long {
 		Default,
 		Show,
 		Hide,
@@ -69,7 +69,7 @@ namespace XamCore.StoreKit {
 #endif
 	[iOS (11,2), TV (11,2), Mac (10,13,2)]
 	[Native]
-	public enum SKProductPeriodUnit : nuint {
+	public enum SKProductPeriodUnit : ulong {
 		Day,
 		Week,
 		Month,
@@ -78,7 +78,7 @@ namespace XamCore.StoreKit {
 
 	[iOS (11,2), TV (11,2), Mac (10,13,2)]
 	[Native]
-	public enum SKProductDiscountPaymentMode : nuint {
+	public enum SKProductDiscountPaymentMode : ulong {
 		PayAsYouGo,
 		PayUpFront,
 		FreeTrial,

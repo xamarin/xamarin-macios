@@ -9,7 +9,7 @@ using Mono.Cecil.Cil;
 
 using Xamarin.Utils;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
 #if MONOTOUCH
 using PlatformException = Xamarin.Bundler.MonoTouchException;
@@ -43,6 +43,7 @@ namespace Xamarin.Bundler {
 		public bool DeadStrip = true;
 		public bool EnableDebug;
 		internal RuntimeOptions RuntimeOptions;
+		public Optimizations Optimizations = new Optimizations ();
 		public RegistrarMode Registrar = RegistrarMode.Default;
 		public RegistrarOptions RegistrarOptions = RegistrarOptions.Default;
 		public SymbolMode SymbolMode;
@@ -400,6 +401,13 @@ namespace Xamarin.Bundler {
 				throw ErrorHelper.CreateError (91, "This version of {0} requires the {1} {2} SDK (shipped with Xcode {3}). Either upgrade Xcode to get the required header files or {4} (to try to avoid the new APIs).", ProductName, PlatformName, SdkVersions.GetVersion (Platform), SdkVersions.Xcode, Error91LinkerSuggestion);
 			}
 
+			if (DeploymentTarget != null) {
+				if (DeploymentTarget < Xamarin.SdkVersions.GetMinVersion (Platform))
+					throw new PlatformException (73, true, "{4} {0} does not support a deployment target of {1} for {3} (the minimum is {2}). Please select a newer deployment target in your project's Info.plist.", Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetMinVersion (Platform), PlatformName, ProductName);
+				if (DeploymentTarget > Xamarin.SdkVersions.GetVersion (Platform))
+					throw new PlatformException (74, true, "{4} {0} does not support a deployment target of {1} for {3} (the maximum is {2}). Please select an older deployment target in your project's Info.plist or upgrade to a newer version of {4}.", Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetVersion (Platform), PlatformName, ProductName);
+			}
+
 			if (Platform == ApplePlatform.WatchOS && EnableCoopGC.HasValue && !EnableCoopGC.Value)
 				throw ErrorHelper.CreateError (88, "The GC must be in cooperative mode for watchOS apps. Please remove the --coop:false argument to mtouch.");
 
@@ -459,6 +467,8 @@ namespace Xamarin.Bundler {
 				ErrorHelper.Warning (115, "It is recommended to reference dynamic symbols using code (--dynamic-symbol-mode=code) when bitcode is enabled.");
 			}
 #endif
+
+			Optimizations.Initialize (this);
 		}
 
 		public void RunRegistrar ()
@@ -467,16 +477,19 @@ namespace Xamarin.Bundler {
 			if (Registrar != RegistrarMode.Static)
 				throw new PlatformException (67, "Invalid registrar: {0}", Registrar); // this is only called during our own build
 
-			if (RootAssemblies.Count != 1)
-				throw ErrorHelper.CreateError (8, "You should provide one root assembly only, found {0} assemblies: '{1}'", RootAssemblies.Count, string.Join ("', '", RootAssemblies.ToArray ()));
+			if (RootAssemblies.Count < 1)
+				throw ErrorHelper.CreateError (130, "No root assemblies found. You should provide at least one root assembly.");
 
 			var registrar_m = RegistrarOutputLibrary;
 			var RootAssembly = RootAssemblies [0];
-			var resolvedAssemblies = new List<AssemblyDefinition> ();
+			var resolvedAssemblies = new Dictionary<string, AssemblyDefinition> ();
 			var resolver = new PlatformResolver () {
 				FrameworkDirectory = Driver.GetPlatformFrameworkDirectory (this),
 				RootDirectory = Path.GetDirectoryName (RootAssembly),
 			};
+#if MMP
+			resolver.RecursiveSearchDirectories.AddRange (Driver.RecursiveSearchDirectories);
+#endif
 
 			if (Platform == ApplePlatform.iOS || Platform == ApplePlatform.MacOSX) {
 				if (Is32Build) {
@@ -488,21 +501,48 @@ namespace Xamarin.Bundler {
 
 			var ps = new ReaderParameters ();
 			ps.AssemblyResolver = resolver;
-			resolvedAssemblies.Add (ps.AssemblyResolver.Resolve (AssemblyNameReference.Parse ("mscorlib"), new ReaderParameters ()));
+			resolvedAssemblies.Add ("mscorlib", ps.AssemblyResolver.Resolve (AssemblyNameReference.Parse ("mscorlib"), new ReaderParameters ()));
 
-			var rootName = Path.GetFileNameWithoutExtension (RootAssembly);
-			if (rootName != Driver.GetProductAssembly (this))
-				throw ErrorHelper.CreateError (66, "Invalid build registrar assembly: {0}", RootAssembly);
+			var productAssembly = Driver.GetProductAssembly (this);
+			bool foundProductAssembly = false;
+			foreach (var asm in RootAssemblies) {
+				var rootName = Path.GetFileNameWithoutExtension (asm);
+				if (rootName == productAssembly)
+					foundProductAssembly = true;
+				
+				try {
+					AssemblyDefinition lastAssembly = ps.AssemblyResolver.Resolve (AssemblyNameReference.Parse (rootName), new ReaderParameters ());
+					if (lastAssembly == null) {
+						ErrorHelper.CreateWarning (7, "The root assembly '{0}' does not exist", rootName);
+						continue;
+					}
+					
+					if (resolvedAssemblies.TryGetValue (rootName, out var previousAssembly)) {
+						if (lastAssembly.MainModule.RuntimeVersion != previousAssembly.MainModule.RuntimeVersion) {
+							Driver.Log (2, "Attemping to load an assembly another time {0} (previous {1})", lastAssembly.FullName, previousAssembly.FullName);
+						}
+						continue;
+					}
+					
+					resolvedAssemblies.Add (rootName, lastAssembly);
+					Driver.Log (3, "Loaded {0}", lastAssembly.MainModule.FileName);
+				} catch (Exception ex) {
+					ErrorHelper.Warning (9, ex, "Error while loading assemblies: {0}: {1}", rootName, ex.Message);
+					continue;
+				}
+			}
 
-			resolvedAssemblies.Add (ps.AssemblyResolver.Resolve (AssemblyNameReference.Parse (rootName), new ReaderParameters ()));
-			Driver.Log (3, "Loaded {0}", resolvedAssemblies [resolvedAssemblies.Count - 1].MainModule.FileName);
+			if (!foundProductAssembly)
+				throw ErrorHelper.CreateError (131, "Product assembly '{0}' not found in assembly list: '{1}'", productAssembly, string.Join ("', '", RootAssemblies.ToArray ()));
 
 #if MONOTOUCH
 			BuildTarget = BuildTarget.Simulator;
 #endif
-
-			var registrar = new XamCore.Registrar.StaticRegistrar (this);
-			registrar.GenerateSingleAssembly (resolvedAssemblies, Path.ChangeExtension (registrar_m, "h"), registrar_m, Path.GetFileNameWithoutExtension (RootAssembly));
+			var registrar = new Registrar.StaticRegistrar (this);
+			if (RootAssemblies.Count == 1)
+				registrar.GenerateSingleAssembly (resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m, Path.GetFileNameWithoutExtension (RootAssembly));
+			else
+				registrar.Generate (resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m);
 		}
 	}
 }

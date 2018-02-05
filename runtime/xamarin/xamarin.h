@@ -12,6 +12,7 @@
 #include "main.h"
 #include "mono-runtime.h"
 #include "runtime.h"
+#include "runtime-generated.h"
 #include "trampolines.h"
 
 #endif /* __XAMARIN_H__ */

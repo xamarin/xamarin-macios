@@ -7,15 +7,15 @@
 // Copyright 2010, Novell, Inc.
 // Copyright 2014 Xamarin Inc. All rights reserved.
 //
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
-using XamCore.CoreLocation;
-using XamCore.UIKit;
-using XamCore.EventKit;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
+using CoreLocation;
+using UIKit;
+using EventKit;
 using System;
 
-namespace XamCore.EventKitUI {
+namespace EventKitUI {
 	[BaseType (typeof (UIViewController), Delegates = new string [] { "WeakDelegate"}, Events=new Type [] {typeof (EKEventViewDelegate)})]
 	interface EKEventViewController {
 		[Export ("initWithNibName:bundle:")]
@@ -32,17 +32,14 @@ namespace XamCore.EventKitUI {
 		[Export ("allowsCalendarPreview")]
 		bool AllowsCalendarPreview { get; set;  }
 
-		[iOS (4,2)]
 		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 		
-		[iOS (4,2)]
 		[Wrap ("WeakDelegate")]
 		[Protocolize]
 		EKEventViewDelegate Delegate { get; set;  }
 	}
 
-	[iOS (4,2)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -92,7 +89,6 @@ namespace XamCore.EventKitUI {
 		EKCalendar GetDefaultCalendarForNewEvents (EKEventEditViewController controller);
 	}
 
-	[iOS (5,0)]
 	[BaseType (typeof (UIViewController),
 		   Delegates = new string [] { "WeakDelegate" },
 		   Events=new Type [] {typeof (EKCalendarChooserDelegate)})]
@@ -133,7 +129,6 @@ namespace XamCore.EventKitUI {
 		NSSet SelectedCalendars { get; set;  }
 	}
 
-	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]

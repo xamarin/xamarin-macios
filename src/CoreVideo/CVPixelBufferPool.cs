@@ -9,15 +9,14 @@
 //
 using System;
 using System.Runtime.InteropServices;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using CoreFoundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.CoreVideo {
+namespace CoreVideo {
 
 	// CVPixelBufferPool.h
 	[Watch (4,0)]
-	[iOS (4,0)]
 	public partial class CVPixelBufferPool : INativeObject
 #if !COREBUILD
 		, IDisposable

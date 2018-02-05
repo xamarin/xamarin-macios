@@ -27,14 +27,13 @@
 //
 using System;
 using System.Runtime.InteropServices;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using CoreFoundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.CoreVideo {
+namespace CoreVideo {
 
 	[Watch (4,0)]
-	[iOS (4,0)]
 	public static class CVPixelFormatDescription {
 #if !COREBUILD
 		public static readonly NSString NameKey;

@@ -9,9 +9,9 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 	public partial class Protocol : INativeObject {
 #if !COREBUILD
 		IntPtr handle;

@@ -2,7 +2,7 @@
 
 using System;
 
-namespace XamCore.CoreData {
+namespace CoreData {
 
 #if !XAMCORE_2_0
 	public partial class NSPersistentStoreCoordinator {

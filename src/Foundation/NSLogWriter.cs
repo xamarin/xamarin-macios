@@ -12,7 +12,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	// this is created, by reflection, when using Console (static ctor)
 	// the linker will include this type is Console is used anywhere in the app

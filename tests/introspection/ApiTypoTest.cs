@@ -238,6 +238,7 @@ namespace Introspection
 			"Imap",
 			"Imaps",
 			"Img",
+			"Impl", // BindingImplAttribute
 			"Indoorrun",
 			"Indoorcycle",
 			"Inklist",

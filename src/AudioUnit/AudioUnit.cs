@@ -34,12 +34,12 @@ using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
 using System.Threading;
-using XamCore.AudioToolbox;
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
+using AudioToolbox;
+using ObjCRuntime;
+using CoreFoundation;
+using Foundation;
 
-namespace XamCore.AudioUnit
+namespace AudioUnit
 {
 	public enum AudioUnitStatus { // Implictly cast to OSType
 		NoError = 0,
@@ -400,7 +400,7 @@ namespace XamCore.AudioUnit
 		public EventValuesStruct EventValues;
 	}
 
-	public class AudioUnit : IDisposable, XamCore.ObjCRuntime.INativeObject
+	public class AudioUnit : IDisposable, ObjCRuntime.INativeObject
 	{
 		internal IntPtr handle;
 		public IntPtr Handle {
@@ -481,7 +481,7 @@ namespace XamCore.AudioUnit
 #if !XAMCORE_2_0
 		[Obsolete]
 		// callback funtion should be static method and be attatched a MonoPInvokeCallback attribute.        
-		[XamCore.MonoPInvokeCallback(typeof(AURenderCallback))]
+		[MonoPInvokeCallback (typeof (AURenderCallback))]
 		static int renderCallback(IntPtr inRefCon, ref AudioUnitRenderActionFlags _ioActionFlags,
 					  ref AudioTimeStamp _inTimeStamp,
 					  int _inBusNumber,
@@ -509,7 +509,7 @@ namespace XamCore.AudioUnit
 
 #if !XAMCORE_3_0
 		[Obsolete ("Use 'SetFormat' instead as it has the ability of returning a status code.")]
-		public void SetAudioFormat(XamCore.AudioToolbox.AudioStreamBasicDescription audioFormat, AudioUnitScopeType scope, uint audioUnitElement = 0)
+		public void SetAudioFormat(AudioToolbox.AudioStreamBasicDescription audioFormat, AudioUnitScopeType scope, uint audioUnitElement = 0)
 		{
 			var err = AudioUnitSetProperty(handle,
 						       AudioUnitPropertyIDType.StreamFormat,
@@ -522,7 +522,7 @@ namespace XamCore.AudioUnit
 		}
 #endif
 
-		public AudioUnitStatus SetFormat(XamCore.AudioToolbox.AudioStreamBasicDescription audioFormat, AudioUnitScopeType scope, uint audioUnitElement = 0)
+		public AudioUnitStatus SetFormat(AudioToolbox.AudioStreamBasicDescription audioFormat, AudioUnitScopeType scope, uint audioUnitElement = 0)
 		{
 			return (AudioUnitStatus) AudioUnitSetProperty(handle,
 						       AudioUnitPropertyIDType.StreamFormat,
@@ -727,7 +727,6 @@ namespace XamCore.AudioUnit
 			return AudioUnitSetProperty (handle, AudioUnitPropertyIDType.SampleRate, scope, 0, ref sampleRate, sizeof (double));
 		}
 
-		[iOS (5,0)]
 		public AudioUnitStatus MusicDeviceMIDIEvent (uint status, uint data1, uint data2, uint offsetSampleFrame = 0)
 		{
 			return MusicDeviceMIDIEvent (handle, status, data1, data2, offsetSampleFrame);
@@ -837,9 +836,9 @@ namespace XamCore.AudioUnit
 		static extern IntPtr AudioOutputUnitGetHostIcon (IntPtr /* AudioUnit */ au, float /* float */ desiredPointSize);
 
 		[iOS (7,0)]
-		public XamCore.UIKit.UIImage GetHostIcon (float desiredPointSize)
+		public UIKit.UIImage GetHostIcon (float desiredPointSize)
 		{
-			return new XamCore.UIKit.UIImage (AudioOutputUnitGetHostIcon (handle, desiredPointSize));
+			return new UIKit.UIImage (AudioOutputUnitGetHostIcon (handle, desiredPointSize));
 		}
 #endif
 
@@ -1273,14 +1272,11 @@ namespace XamCore.AudioUnit
 		Nickname = 54,
 		OfflineRender = 37,
 		[iOS (8, 0)]
-		[Mac (10, 3)]
 		ParameterIDName = 34,
 		[iOS (8, 0)]
-		[Mac (10, 3)]
 		ParameterStringFromValue = 33,
 		ParameterClumpName = 35,
 		[iOS (8, 0)]
-		[Mac (10, 3)]
 		ParameterValueFromString = 38,
 		ContextName = 25,
 		PresentationLatency = 40,
@@ -1382,13 +1378,10 @@ namespace XamCore.AudioUnit
 		ReverbRoomType = 10,
 		UsesInternalReverb = 1005,
 		SpatializationAlgorithm = 3000,
-		[iOS (3, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		DistanceParams = 3010,
-		[iOS (3, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		AttenuationCurve = 3013,
-		[iOS (3, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		RenderingFlags = 3003,
 
@@ -1660,7 +1653,6 @@ namespace XamCore.AudioUnit
 	[iOS (8, 0)]
 	public enum SpatialMixerRenderingFlags {
 		InterAuralDelay = (1 << 0),
-		[iOS (3, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		DistanceAttenuation = (1 << 2),
 	}
@@ -1713,14 +1705,14 @@ namespace XamCore.AudioUnit
 	}
 
 	[Native]
-	public enum AudioUnitBusType : nint
+	public enum AudioUnitBusType : long
 	{
 		Input = 1,
 		Output = 2
 	}
 
 	[Native]
-	public enum AUHostTransportStateFlags : nuint
+	public enum AUHostTransportStateFlags : ulong
 	{
 		Changed = 1,
 		Moving = 2,
@@ -1930,7 +1922,7 @@ namespace XamCore.AudioUnit
 	}
 
 	[Native]
-	public enum AUAudioUnitBusType : nint
+	public enum AUAudioUnitBusType : long
 	{
 		Input = 1,
 		Output = 2

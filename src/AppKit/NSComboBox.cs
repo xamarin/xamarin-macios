@@ -1,8 +1,8 @@
-﻿using System;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
+using System;
+using Foundation;
+using CoreGraphics;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 
 	public partial class NSComboBox {
 		[Obsolete ("Use GetItemObject instead.")]

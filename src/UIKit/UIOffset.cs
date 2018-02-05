@@ -9,13 +9,12 @@
 //
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 
 	// UIGeometry.h
-	[iOS (5,0)]
 	public struct UIOffset {
 
 		// API match for UIOffsetZero field/constant

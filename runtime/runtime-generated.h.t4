@@ -1,0 +1,35 @@
+// vim: set filetype=c :
+//
+// delegates.h:
+//
+// Authors:
+//   Rolf Bjarne Kvinge <rolf@xamarin.com>
+//
+// Copyright 2018 Microsoft Inc.
+//
+
+/* Functions calling into ObjCRuntime.Runtime */
+
+<#@ include file="delegates.t4" #>
+
+#ifndef __RUNTIME_GENERATED_H__
+#define __RUNTIME_GENERATED_H__
+
+#include "xamarin.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+<# foreach (var d in delegates) {
+#>
+<#= d.CReturnType #>
+<#= d.EntryPoint #> (<#= d.CArgumentSignature #>);
+
+<# } #>
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
+
+#endif /* __RUNTIME_GENERATED_H__ */

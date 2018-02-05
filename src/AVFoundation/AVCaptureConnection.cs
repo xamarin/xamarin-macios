@@ -30,10 +30,10 @@
 #if !TVOS && !WATCH
 
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 	public partial class AVCaptureConnection {
 
 		[Deprecated (PlatformName.iOS, 7, 0)]

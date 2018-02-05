@@ -17,7 +17,7 @@ using Xamarin.Linker;
 
 using Xamarin.Utils;
 
-using XamCore.Registrar;
+using Registrar;
 
 namespace Xamarin.Bundler
 {
@@ -481,11 +481,7 @@ namespace Xamarin.Bundler
 				LinkAway = App.LinkAway,
 				ExtraDefinitions = App.Definitions,
 				Device = App.IsDeviceBuild,
-				// by default we keep the code to ensure we're executing on the UI thread (for UI code) for debug builds
-				// but this can be overridden to either (a) remove it from debug builds or (b) keep it in release builds
-				EnsureUIThread = App.ThreadCheck.HasValue ? App.ThreadCheck.Value : App.EnableDebug,
 				DebugBuild = App.EnableDebug,
-				Arch = Is64Build ? 8 : 4,
 				IsDualBuild = App.IsDualBuild,
 				DumpDependencies = App.LinkerDumpDependencies,
 				RuntimeOptions = App.RuntimeOptions,

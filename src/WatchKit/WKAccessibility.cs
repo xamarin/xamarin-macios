@@ -1,11 +1,11 @@
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
 #if WATCH
 
-namespace XamCore.WatchKit {
+namespace WatchKit {
 
 	public partial class WKAccessibility {
 

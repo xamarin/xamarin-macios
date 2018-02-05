@@ -17,45 +17,45 @@ namespace GeneratorTests
 	public class BGenTests
 	{
 		[Test]
-		[TestCase (Profile.macClassic)]
-		[TestCase (Profile.macFull)]
-		[TestCase (Profile.macModern)]
+		[TestCase (Profile.macOSClassic)]
+		[TestCase (Profile.macOSFull)]
+		[TestCase (Profile.macOSMobile)]
 		public void BMac_Smoke (Profile profile)
 		{
 			BuildFile (profile, "bmac_smoke.cs");
 		}
 
 		[Test]
-		[TestCase (Profile.macClassic)]
-		[TestCase (Profile.macFull)]
-		[TestCase (Profile.macModern)]
+		[TestCase (Profile.macOSClassic)]
+		[TestCase (Profile.macOSFull)]
+		[TestCase (Profile.macOSMobile)]
 		public void BMac_With_Hyphen_In_Name (Profile profile)
 		{
 			BuildFile (profile, "bmac-with-hyphen-in-name.cs");
 		}
 
 		[Test]
-		[TestCase (Profile.macClassic)]
-		[TestCase (Profile.macFull)]
-		[TestCase (Profile.macModern)]
+		[TestCase (Profile.macOSClassic)]
+		[TestCase (Profile.macOSFull)]
+		[TestCase (Profile.macOSMobile)]
 		public void PropertyRedefinitionMac (Profile profile)
 		{
 			BuildFile (profile, "property-redefination-mac.cs");
 		}
 
 		[Test]
-		[TestCase (Profile.macClassic)]
-		[TestCase (Profile.macFull)]
-		[TestCase (Profile.macModern)]
+		[TestCase (Profile.macOSClassic)]
+		[TestCase (Profile.macOSFull)]
+		[TestCase (Profile.macOSMobile)]
 		public void NSApplicationPublicEnsureMethods (Profile profile)
 		{
 			BuildFile (profile, "NSApplicationPublicEnsureMethods.cs");
 		}
 
 		[Test]
-		[TestCase (Profile.macClassic)]
-		[TestCase (Profile.macFull)]
-		[TestCase (Profile.macModern)]
+		[TestCase (Profile.macOSClassic)]
+		[TestCase (Profile.macOSFull)]
+		[TestCase (Profile.macOSMobile)]
 		public void ProtocolDuplicateAbstract (Profile profile)
 		{
 			BuildFile (profile, "protocol-duplicate-abstract.cs");
@@ -156,10 +156,13 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		public void Bug31788 ()
+		[TestCase (Profile.macOSClassic)]
+		[TestCase (Profile.macOSFull)]
+		[TestCase (Profile.macOSMobile)]
+		public void Bug31788 (Profile profile)
 		{
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.macClassic;
+			bgen.Profile = profile;
 			bgen.Defines = BGenTool.GetDefaultDefines (bgen.Profile);
 			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "bug31788.cs")));
 			bgen.AssertExecute ("build");
@@ -515,6 +518,9 @@ namespace GeneratorTests
 			Assert.That (callsMethod (sConstructor, "IntPtr_objc_msgSend"), "S: objc_msgSend");
 			Assert.That (!callsMethod (sConstructor, "IntPtr_objc_msgSendSuper"), "S: objc_msgSendSuper");
 		}
+
+		[Test]
+		public void Bug57531 () => BuildFile (Profile.iOS, "bug57531.cs");
 
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{

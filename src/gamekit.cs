@@ -13,16 +13,16 @@
 #pragma warning disable 618
 
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
 #if MONOMAC
-using XamCore.AppKit;
+using AppKit;
 #else
-using XamCore.UIKit;
+using UIKit;
 #endif
 
-namespace XamCore.GameKit {
+namespace GameKit {
 
 #if !XAMCORE_2_0
 	delegate void GKNotificationHandler ([NullAllowed] NSError error);
@@ -82,7 +82,7 @@ namespace XamCore.GameKit {
 	[NoWatch]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
-	[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_7_0, Message = "Use 'MCBrowserViewController' from the 'MultipeerConnectivity' framework instead.")]
+	[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'MCBrowserViewController' from the 'MultipeerConnectivity' framework instead.")]
 	interface GKPeerPickerController {
 		[Export ("connectionTypesMask", ArgumentSemantic.Assign)]
 		GKPeerPickerConnectionType ConnectionTypesMask { get; set; }
@@ -136,7 +136,7 @@ namespace XamCore.GameKit {
 	[NoWatch] // deprecated in 2.0 (but framework not added before 3.0)
 	[NoTV]
 	[BaseType (typeof (NSObject))]
-	[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_7_0, Message = "Use 'GKVoiceChat' instead.")]
+	[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'GKVoiceChat' instead.")]
 	interface GKVoiceChatService {
 
 		[Export ("defaultVoiceChatService")][Static]
@@ -218,7 +218,6 @@ namespace XamCore.GameKit {
 	[NoTV]
 	[NoWatch] // deprecated in 2.0 (but framework not added before 3.0)
 	[BaseType (typeof (NSObject))]
-	[iOS (3, 0)]
 	[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'MultipeerConnectivity.MCSession' instead.")]
 	[Mac (10, 8)]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'MultipeerConnectivity.MCSession' instead.")]
@@ -310,7 +309,7 @@ namespace XamCore.GameKit {
 #endif
 
 	[Watch (3,0)]
-	[iOS (4,2), Mac (10, 8)]
+	[Mac (10, 8)]
 	[BaseType (typeof (NSObject))]
 	interface GKLeaderboard {
 		[Export ("timeScope", ArgumentSemantic.Assign)]
@@ -364,7 +363,6 @@ namespace XamCore.GameKit {
 		[NoTV]
 		[NoWatch] // deprecated in 2.0 (but framework not added before 3.0)
 		[Static]
-		[iOS (5,0)]
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'SetDefaultLeaderboard' on 'GKLocalPlayer' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'SetDefaultLeaderboard' on 'GKLocalPlayer' instead.")]
 		[Export ("setDefaultLeaderboard:withCompletionHandler:")]
@@ -464,7 +462,6 @@ namespace XamCore.GameKit {
 	}
 
 	[Watch (3,0)]
-	[iOS (4,2)]
 	[BaseType (typeof (GKBasePlayer))]
 	// note: NSSecureCoding conformity is undocumented - but since it's a runtime check (on ObjC) we still need it
 	interface GKPlayer : NSSecureCoding {
@@ -491,7 +488,6 @@ namespace XamCore.GameKit {
 		NSString DidChangeNotificationNameNotification { get; }
 
 		[NoWatch]
-		[iOS (5,0)]
 		[Export ("loadPhotoForSize:withCompletionHandler:")]
 		[Async]
 		void LoadPhoto (GKPhotoSize size, [NullAllowed] GKPlayerPhotoLoaded onCompleted);
@@ -515,7 +511,6 @@ namespace XamCore.GameKit {
 	}
 
 	[Watch (3,0)]
-	[iOS (4,1)]
 	[BaseType (typeof (NSObject))]
 	interface GKScore : NSSecureCoding {
 		[NoWatch]
@@ -571,7 +566,6 @@ namespace XamCore.GameKit {
 
 		[NoWatch]
 		[NoTV]
-		[iOS (4, 1)]
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'LeaderboardIdentifier' instead.")]
 		[Mac (10, 8)]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'LeaderboardIdentifier' instead.")]
@@ -586,7 +580,6 @@ namespace XamCore.GameKit {
 
 		[NoWatch]
 		[NoTV]
-		[iOS (4, 1)]
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'ReportScores' instead.")]
 		[Mac (10, 8)]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'ReportScores' instead.")]
@@ -598,11 +591,9 @@ namespace XamCore.GameKit {
 		void ReportScore ([NullAllowed] GKNotificationHandler errorHandler);
 #endif
 
-		[iOS (5,0)]
 		[Export ("context", ArgumentSemantic.Assign)]
 		ulong Context { get; set; }
 
-		[iOS (5,0)]
 		[Export ("shouldSetDefaultLeaderboard", ArgumentSemantic.Assign)]
 		bool ShouldSetDefaultLeaderboard { get; set; }
 
@@ -654,7 +645,6 @@ namespace XamCore.GameKit {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (4,2)]
 	[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'GKGameCenterViewController' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'GKGameCenterViewController' instead.")]
 	[BaseType (typeof (NSObject))]
@@ -670,7 +660,6 @@ namespace XamCore.GameKit {
 	}
 
 	[NoTV][NoWatch]
-	[iOS (4, 2)]
 	[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'GKGameCenterViewController' instead.")]
 	[Mac (10, 8)]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'GKGameCenterViewController' instead.")]
@@ -705,10 +694,13 @@ namespace XamCore.GameKit {
 	}
 
 	[Watch (3,0)]
-	[iOS (4,2)]
 	[Mac (10, 8)]
 	[BaseType (typeof (GKPlayer))]
-	interface GKLocalPlayer {
+	interface GKLocalPlayer
+#if !TVOS && !WATCH
+	: GKSavedGameListener
+#endif
+	{
 		[Export ("authenticated")]
 		bool Authenticated { [Bind ("isAuthenticated")] get;  }
 
@@ -879,7 +871,6 @@ namespace XamCore.GameKit {
 	}
 
 	[NoWatch]
-	[iOS (4,2)]
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(GKMatchDelegate)})]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: -[__NSCFDictionary setObject:forKey:]: attempt to insert nil value (key: 1500388194)
 	// <quote>Your application never directly allocates GKMatch objects.</quote> http://developer.apple.com/library/ios/#documentation/GameKit/Reference/GKMatch_Ref/Reference/Reference.html
@@ -945,7 +936,6 @@ namespace XamCore.GameKit {
 	}
 
 	[NoWatch]
-	[iOS (4,2)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -987,7 +977,6 @@ namespace XamCore.GameKit {
 		[NoTV]
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'ShouldReinviteDisconnectedPlayer' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'ShouldReinviteDisconnectedPlayer' instead.")]
-		[iOS (5,0)]
 		[Export ("match:shouldReinvitePlayer:"), DelegateName ("GKMatchReinvitation"), DefaultValue (true)]
 		bool ShouldReinvitePlayer (GKMatch match, string playerId);
 
@@ -995,7 +984,7 @@ namespace XamCore.GameKit {
 		[Export ("match:didReceiveData:fromRemotePlayer:"), EventArgs ("GKMatchReceivedDataFromRemotePlayer")]
 		void DataReceivedFromPlayer (GKMatch match, NSData data, GKPlayer player);
 
-		[iOS (4,1), Mac (10,8)] //Yes, the header file says it was available in 4.1 and 10.8...
+		[Mac (10,8)] //Yes, the header file says it was available in 4.1 and 10.8...
 		[Export ("match:player:didChangeConnectionState:"), EventArgs ("GKMatchConnectionChanged")]
 		void StateChangedForPlayer (GKMatch match, GKPlayer player, GKPlayerConnectionState state);
 
@@ -1011,7 +1000,6 @@ namespace XamCore.GameKit {
 	}
 
 	[NoWatch]
-	[iOS (4,2)]
 	[BaseType (typeof (NSObject))]
 	interface GKVoiceChat {
 		[Export ("name", ArgumentSemantic.Copy)]
@@ -1053,7 +1041,6 @@ namespace XamCore.GameKit {
 		void SetPlayerVoiceChatStateChangeHandler (Action<GKPlayer,GKVoiceChatPlayerState> handler);
 
 		[NoTV]
-		[iOS (5,0)]
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'Players' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'Players' instead.")]
 		[Export ("playerIDs")]
@@ -1237,7 +1224,6 @@ namespace XamCore.GameKit {
 	[Mac (10,8)]
 #else
 	[BaseType (typeof (UINavigationController), Delegates=new string [] { "WeakMatchmakerDelegate" }, Events=new Type [] {typeof(GKMatchmakerViewControllerDelegate)})]
-	[iOS (4,2)]
 #endif
 	// iOS 6 -> Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: <GKMatchmakerViewController: 0x16101160>: must use one of the designated initializers
 	[DisableDefaultCtor]
@@ -1269,19 +1255,16 @@ namespace XamCore.GameKit {
 #endif
 
 		[NoTV]
-		[iOS (5, 0)]
 		[Deprecated (PlatformName.iOS, 7, 0)]
 		[Mac (10, 8)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("defaultInvitationMessage", ArgumentSemantic.Copy)]
 		string DefaultInvitationMessage { get; set;  }
 
-		[iOS (5,0)]
 		[Export ("addPlayersToMatch:")]
 		void AddPlayersToMatch (GKMatch match);
 
 		[NoTV]
-		[iOS (5,0)]
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'SetHostedPlayerConnected (GKPlayer,bool)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'SetHostedPlayerConnected (GKPlayer,bool)' instead.")]
 		[Export ("setHostedPlayer:connected:")]
@@ -1295,7 +1278,6 @@ namespace XamCore.GameKit {
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[Model]
-	[iOS (4,2)]
 	[Protocol]
 	interface GKMatchmakerViewControllerDelegate {
 		[Abstract]
@@ -1329,7 +1311,6 @@ namespace XamCore.GameKit {
 		void DidFindHostedPlayers (GKMatchmakerViewController viewController, GKPlayer [] playerIDs);
 
 		[NoTV]
-		[iOS (5,0)]
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'HostedPlayerDidAccept' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'HostedPlayerDidAccept' instead.")]
 		[Export ("matchmakerViewController:didReceiveAcceptFromHostedPlayer:"), EventArgs ("GKPlayer")]
@@ -1341,7 +1322,7 @@ namespace XamCore.GameKit {
 	}
 
 	[BaseType (typeof (NSObject))]
-	[iOS (4,2)][Mac (10, 8)]
+	[Mac (10, 8)]
 	[Watch (3,0)]
 	interface GKAchievement : NSSecureCoding {
 		[NoTV]
@@ -1401,7 +1382,6 @@ namespace XamCore.GameKit {
 		void ReportAchievement ([NullAllowed] GKNotificationHandler completionHandler);
 #endif
 
-		[iOS (5,0)]
 		[Export ("showsCompletionBanner", ArgumentSemantic.Assign)]
 		bool ShowsCompletionBanner { get; set;  }
 
@@ -1492,7 +1472,7 @@ namespace XamCore.GameKit {
 	}
 
 	[BaseType (typeof (NSObject))]
-	[iOS (4,2)][Mac (10, 8)]
+	[Mac (10, 8)]
 	[Watch (3,0)]
 	interface GKAchievementDescription : NSSecureCoding {
 		[Export ("identifier", ArgumentSemantic.Copy)]
@@ -1563,7 +1543,6 @@ namespace XamCore.GameKit {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (4, 1)]
 	[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'GKGameCenterViewController' instead.")]
 	[Mac (10, 8)]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'GKGameCenterViewController' instead.")]
@@ -1580,7 +1559,6 @@ namespace XamCore.GameKit {
 	}
 
 	[NoTV][NoWatch]
-	[iOS (4, 1)]
 	[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'GKGameCenterViewController' instead.")]
 	[Mac (10, 8)]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'GKGameCenterViewController' instead.")]
@@ -1629,7 +1607,6 @@ namespace XamCore.GameKit {
 	interface GKFriendRequestComposeViewController 
 #else
 	[NoTV]
-	[iOS (4,2)]
 	[Deprecated (PlatformName.iOS, 10, 0)]
 	[BaseType (typeof (UINavigationController), Events=new Type [] { typeof (GKFriendRequestComposeViewControllerDelegate)}, Delegates=new string[] {"WeakComposeViewDelegate"})]
 	interface GKFriendRequestComposeViewController : UIAppearance
@@ -1680,12 +1657,11 @@ namespace XamCore.GameKit {
 	}
 
 	[NoWatch]
-	[iOS (5,0)]
 	[BaseType(typeof(NSObject))]
 	partial interface GKNotificationBanner {
 		[Static, Export ("showBannerWithTitle:message:completionHandler:")]
 		[Async]
-		void Show ([NullAllowed] string title, [NullAllowed] string message, [NullAllowed] NSAction onCompleted);
+		void Show ([NullAllowed] string title, [NullAllowed] string message, [NullAllowed] Action onCompleted);
 
 		[iOS (6,0)][Mac (10,8)]
 		[Export ("showBannerWithTitle:message:duration:completionHandler:"), Static]
@@ -1693,7 +1669,6 @@ namespace XamCore.GameKit {
 		void Show ([NullAllowed] string title, [NullAllowed] string message, double durationSeconds, [NullAllowed] Action completionHandler);
 	}
 
-	[iOS (5,0)]
 	[Watch (3,0)]
 	[BaseType (typeof (NSObject))]
 	interface GKTurnBasedParticipant {
@@ -1725,7 +1700,6 @@ namespace XamCore.GameKit {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	[iOS (5, 0)]
 	[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'GKLocalPlayer.RegisterListener' with an object that implements 'IGKTurnBasedEventListener'.")]
 	[Mac (10, 8)]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'GKLocalPlayer.RegisterListener' with an object that implements 'IGKTurnBasedEventListener'.")]
@@ -1741,13 +1715,11 @@ namespace XamCore.GameKit {
 		[Abstract]
 #endif
 		[Export ("handleInviteFromGameCenter:")]
-		[iOS (5, 0)]
 		[Deprecated (PlatformName.iOS, 7, 0)]
 		[Mac (10, 8)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		void HandleInviteFromGameCenter (NSString [] playersToInvite);
 
-		[iOS (5, 0)]
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'HandleTurnEvent' instead.")]
 		[Mac (10, 8)]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use 'HandleTurnEvent' instead.")]
@@ -1774,7 +1746,6 @@ namespace XamCore.GameKit {
 	}
 
 	[NoTV]
-	[iOS (5, 0)]
 	[Deprecated (PlatformName.iOS, 7, 0, message : "Use GKLocalPlayer.RegisterListener with an object that implements IGKTurnBasedEventListener.")]
 	[Mac (10, 8)]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use GKLocalPlayer.RegisterListener with an object that implements IGKTurnBasedEventListener.")]
@@ -1793,16 +1764,12 @@ namespace XamCore.GameKit {
 		GKTurnBasedEventHandler SharedTurnBasedEventHandler { get; }
 	}
 
-	[iOS (5,0)]
 	delegate void GKTurnBasedMatchRequest (GKTurnBasedMatch match, NSError error);
 
-	[iOS (5,0)]
 	delegate void GKTurnBasedMatchesRequest (GKTurnBasedMatch [] matches, NSError error);
 
-	[iOS (5,0)]
 	delegate void GKTurnBasedMatchData (NSData matchData, NSError error);
 
-	[iOS (5,0)]
 	[Watch (3,0)]
 	[BaseType (typeof (NSObject))]
 	interface GKTurnBasedMatch {
@@ -1989,7 +1956,6 @@ namespace XamCore.GameKit {
 	[BaseType (typeof (NSViewController))]
 	interface GKTurnBasedMatchmakerViewController
 #else
-	[iOS (5,0)]
 	[BaseType (typeof (UINavigationController))]
 	interface GKTurnBasedMatchmakerViewController : UIAppearance
 #endif
@@ -2009,7 +1975,6 @@ namespace XamCore.GameKit {
 	}
 
 	[NoWatch]
-	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]

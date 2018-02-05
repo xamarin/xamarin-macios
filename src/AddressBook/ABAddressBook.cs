@@ -34,11 +34,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using ObjCRuntime;
 
-namespace XamCore.AddressBook {
+namespace AddressBook {
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	public class ExternalChangeEventArgs : EventArgs {
 		public ExternalChangeEventArgs (ABAddressBook addressBook, NSDictionary info)
@@ -231,7 +231,7 @@ namespace XamCore.AddressBook {
 			var descriptor = (BlockLiteral *) block;
 			var del = (Action<bool, NSError>) (descriptor->Target);
 			if (del != null)
-				del (success, error == IntPtr.Zero ? null : (XamCore.Foundation.NSError) Runtime.GetNSObject (error));
+				del (success, error == IntPtr.Zero ? null : (Foundation.NSError) Runtime.GetNSObject (error));
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
@@ -310,7 +310,6 @@ namespace XamCore.AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABAddressBookCopyArrayOfAllPeopleInSource (IntPtr addressBook, IntPtr source);
 
-		[iOS (4,0)]
 		public ABPerson [] GetPeople (ABRecord source)
 		{
 			if (source == null)
@@ -323,7 +322,6 @@ namespace XamCore.AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABAddressBookCopyArrayOfAllPeopleInSourceWithSortOrdering (IntPtr addressBook, IntPtr source, ABPersonSortBy sortOrdering);
 
-		[iOS (4,0)]
 		public ABPerson [] GetPeople (ABRecord source, ABPersonSortBy sortOrdering)
 		{
 			if (source == null)
@@ -354,7 +352,6 @@ namespace XamCore.AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABAddressBookCopyArrayOfAllGroupsInSource (IntPtr addressBook, IntPtr source);
 
-		[iOS (4,0)]
 		public ABGroup[] GetGroups (ABRecord source)
 		{
 			if (source == null)

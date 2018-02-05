@@ -12,13 +12,13 @@ using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
 
-#if XAMCORE_2_0
+#if XAMCORE_2_0 || __UNIFIED__
 using ObjCRuntime;
 using Foundation;
-#if !MONOMAC
+#if !(MONOMAC || __MACOS__)
 using UIKit;
 #endif
-#elif MONOMAC
+#elif MONOMAC || __MACOS__
 using MonoMac.ObjCRuntime;
 using MonoMac.Foundation;
 #else
@@ -41,7 +41,7 @@ namespace Xamarin.Tests
 #elif __WATCHOS__
 			name = WatchKit.WKInterfaceDevice.CurrentDevice.SystemName;
 			version = WatchKit.WKInterfaceDevice.CurrentDevice.SystemVersion;
-#elif MONOMAC
+#elif MONOMAC || __MACOS__
 			using (var plist = NSDictionary.FromFile ("/System/Library/CoreServices/SystemVersion.plist")) {
 				name = (NSString)plist ["ProductName"];
 				version = (NSString)plist ["ProductVersion"];

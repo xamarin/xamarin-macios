@@ -31,11 +31,11 @@ using System.Drawing;
 using System.Globalization;
 using System.Runtime.InteropServices;
 #if XAMCORE_2_0
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 #endif
 
-namespace XamCore.CoreGraphics
+namespace CoreGraphics
 {
 <#
 	Func<string, string> ucfirst = s => Char.ToUpper (s [0]) + s.Substring (1);

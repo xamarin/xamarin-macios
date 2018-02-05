@@ -22,9 +22,7 @@ using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 using VectorFloat3 = global::OpenTK.NVector3;
 
 using NUnit.Framework;
-#if !TEST_BINDINGS_UNAVAILABLE
 using Bindings.Test;
-#endif
 
 namespace MonoTouchFixtures.SpriteKit
 {
@@ -161,62 +159,44 @@ namespace MonoTouchFixtures.SpriteKit
 
 			using (var obj = new SKUniform ("name", M2)) {
 				Asserts.AreEqual (M2, obj.FloatMatrix2Value, "8 FloatMatrix2Value");
-#if !TEST_BINDINGS_UNAVAILABLE
 				Asserts.AreEqual (M2, MatrixFloat2x2.Transpose (CFunctions.GetMatrixFloat2x2 (obj, "matrixFloat2x2Value")), "8b FloatMatrix2Value");
-#endif
 			}
 
 			using (var obj = new SKUniform ("name", M3)) {
 				Asserts.AreEqual (M3, obj.FloatMatrix3Value, "9 FloatMatrix3Value");
-#if !TEST_BINDINGS_UNAVAILABLE
 				Asserts.AreEqual (M3, MatrixFloat3x3.Transpose (CFunctions.GetMatrixFloat3x3 (obj, "matrixFloat3x3Value")), "9b FloatMatrix3Value");
-#endif
 			}
 
 			using (var obj = new SKUniform ("name", M4)) {
 				Asserts.AreEqual (M4, obj.FloatMatrix4Value, "10 FloatMatrix4Value");
-#if !TEST_BINDINGS_UNAVAILABLE
 				Asserts.AreEqual (M4, MatrixFloat4x4.Transpose (CFunctions.GetMatrixFloat4x4 (obj, "matrixFloat4x4Value")), "10b FloatMatrix4Value");
-#endif
 			}
 
 			using (var obj = new SKUniform ("name", M2x2)) {
 				Asserts.AreEqual (M2x2, obj.MatrixFloat2x2Value, "11 MatrixFloat2x2Value");
-#if !TEST_BINDINGS_UNAVAILABLE
 				Asserts.AreEqual (M2x2, CFunctions.GetMatrixFloat2x2 (obj, "matrixFloat2x2Value"), "11b MatrixFloat2x2Value");
-#endif
 				var tmp2 = new MatrixFloat2x2 (9, 8, 7, 6);
 				obj.MatrixFloat2x2Value = tmp2;
 				Asserts.AreEqual (tmp2, obj.MatrixFloat2x2Value, "11 MatrixFloat2x2Value second");
-#if !TEST_BINDINGS_UNAVAILABLE
 				Asserts.AreEqual (tmp2, CFunctions.GetMatrixFloat2x2 (obj, "matrixFloat2x2Value"), "11b MatrixFloat2x2Value second");
-#endif
 			}
 
 			using (var obj = new SKUniform ("name", M3x3)) {
 				Asserts.AreEqual (M3x3, obj.MatrixFloat3x3Value, "12 MatrixFloat3x3Value");
-#if !TEST_BINDINGS_UNAVAILABLE
 				Asserts.AreEqual (M3x3, CFunctions.GetMatrixFloat3x3 (obj, "matrixFloat3x3Value"), "12b MatrixFloat3x3Value");
-#endif
 				var tmp3 = new MatrixFloat3x3 (9, 8, 7, 6, 5, 4, 3, 2, 1);
 				obj.MatrixFloat3x3Value = tmp3;
 				Asserts.AreEqual (tmp3, obj.MatrixFloat3x3Value, "12 MatrixFloat3x3Value second");
-#if !TEST_BINDINGS_UNAVAILABLE
 				Asserts.AreEqual (tmp3, CFunctions.GetMatrixFloat3x3 (obj, "matrixFloat3x3Value"), "12b MatrixFloat3x3Value second");
-#endif
 			}
 
 			using (var obj = new SKUniform ("name", M4x4)) {
 				Asserts.AreEqual (M4x4, obj.MatrixFloat4x4Value, "13  MatrixFloat4x4Value");
-#if !TEST_BINDINGS_UNAVAILABLE
 				Asserts.AreEqual (M4x4, CFunctions.GetMatrixFloat4x4 (obj, "matrixFloat4x4Value"), "13b FloatMatrix4Value");
-#endif
 				var tmp4 = new MatrixFloat4x4 (9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6);
 				obj.MatrixFloat4x4Value = tmp4;
 				Asserts.AreEqual (tmp4, obj.MatrixFloat4x4Value, "13 MatrixFloat4x4Value second");
-#if !TEST_BINDINGS_UNAVAILABLE
 				Asserts.AreEqual (tmp4, CFunctions.GetMatrixFloat4x4 (obj, "matrixFloat4x4Value"), "13b MatrixFloat4x4Value second");
-#endif
 			}
 		}
 
@@ -229,41 +209,29 @@ namespace MonoTouchFixtures.SpriteKit
 
 			using (var obj = SKUniform.Create ("name", M2x2)) {
 				Asserts.AreEqual (M2x2, obj.MatrixFloat2x2Value, "11 MatrixFloat2x2Value");
-#if !TEST_BINDINGS_UNAVAILABLE
 				Asserts.AreEqual (M2x2, CFunctions.GetMatrixFloat2x2 (obj, "matrixFloat2x2Value"), "11b MatrixFloat2x2Value");
-#endif
 				var tmp2 = new MatrixFloat2x2 (9, 8, 7, 6);
 				obj.MatrixFloat2x2Value = tmp2;
 				Asserts.AreEqual (tmp2, obj.MatrixFloat2x2Value, "11 MatrixFloat2x2Value second");
-#if !TEST_BINDINGS_UNAVAILABLE
 				Asserts.AreEqual (tmp2, CFunctions.GetMatrixFloat2x2 (obj, "matrixFloat2x2Value"), "11b MatrixFloat2x2Value second");
-#endif
 			}
 
 			using (var obj = SKUniform.Create ("name", M3x3)) {
 				Asserts.AreEqual (M3x3, obj.MatrixFloat3x3Value, "12 MatrixFloat3x3Value");
-#if !TEST_BINDINGS_UNAVAILABLE
 				Asserts.AreEqual (M3x3, CFunctions.GetMatrixFloat3x3 (obj, "matrixFloat3x3Value"), "12b MatrixFloat3x3Value");
-#endif
 				var tmp3 = new MatrixFloat3x3 (9, 8, 7, 6, 5, 4, 3, 2, 1);
 				obj.MatrixFloat3x3Value = tmp3;
 				Asserts.AreEqual (tmp3, obj.MatrixFloat3x3Value, "12 MatrixFloat3x3Value second");
-#if !TEST_BINDINGS_UNAVAILABLE
 				Asserts.AreEqual (tmp3, CFunctions.GetMatrixFloat3x3 (obj, "matrixFloat3x3Value"), "12b MatrixFloat3x3Value second");
-#endif
 			}
 
 			using (var obj = SKUniform.Create ("name", M4x4)) {
 				Asserts.AreEqual (M4x4, obj.MatrixFloat4x4Value, "13  MatrixFloat4x4Value");
-#if !TEST_BINDINGS_UNAVAILABLE
 				Asserts.AreEqual (M4x4, CFunctions.GetMatrixFloat4x4 (obj, "matrixFloat4x4Value"), "13b FloatMatrix4Value");
-#endif
 				var tmp4 = new MatrixFloat4x4 (9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6);
 				obj.MatrixFloat4x4Value = tmp4;
 				Asserts.AreEqual (tmp4, obj.MatrixFloat4x4Value, "13 MatrixFloat4x4Value second");
-#if !TEST_BINDINGS_UNAVAILABLE
 				Asserts.AreEqual (tmp4, CFunctions.GetMatrixFloat4x4 (obj, "matrixFloat4x4Value"), "13b MatrixFloat4x4Value second");
-#endif
 			}
 		}
 	}

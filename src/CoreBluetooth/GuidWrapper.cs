@@ -9,11 +9,11 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
 
-namespace XamCore.CoreBluetooth {
+namespace CoreBluetooth {
 
 	internal static class CFUUID {
 
@@ -59,7 +59,6 @@ namespace XamCore.CoreBluetooth {
 		}
 
 #if !TVOS && !WATCH
-		[iOS (5, 0)]
 		[Deprecated (PlatformName.iOS, 7, 0)]
 		[Obsoleted (PlatformName.iOS, 9, 0, message : "Use 'RetrievePeripheralsWithIdentifiers' instead.")]
 		public void RetrievePeripherals (CBUUID [] peripheralUuids)

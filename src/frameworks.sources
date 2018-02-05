@@ -230,6 +230,7 @@ AVFOUNDATION_CORE_SOURCES = \
 	AVFoundation/AVTypes.cs \
 
 AVFOUNDATION_SOURCES = \
+	AVFoundation/AVAssetDownloadStorageManagementPolicy.cs \
 	AVFoundation/AVAssetDownloadTask.cs \
 	AVFoundation/AVAssetDownloadUrlSession.cs \
 	AVFoundation/AVAssetImageGenerator.cs \
@@ -261,6 +262,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVMetadataObject.cs \
 	AVFoundation/AVOutputSettingsAssistant.cs \
 	AVFoundation/AVPlayer.cs \
+	AVFoundation/AVPlayerItem.cs \
 	AVFoundation/AVPlayerItemVideoOutput.cs \
 	AVFoundation/AVPlayerLayer.cs \
 	AVFoundation/AVPlayerViewController.cs \
@@ -966,6 +968,7 @@ MEDIATOOLBOX_CORE_SOURCES = \
 
 MEDIATOOLBOX_SOURCES = \
 	MediaToolbox/MTFormatNames.cs \
+	MediaToolbox/MTProfessionalVideoWorkflow.cs \
 
 # MessageUI
 
@@ -1006,7 +1009,7 @@ METALPERFORMANCESHADERS_CORE_SOURCES = \
 	MetalPerformanceShaders/MPSKernel.cs \
 
 METALPERFORMANCESHADERS_SOURCES = \
-	MetalPerformanceShaders/MPSImageLanczosScale.cs \
+	MetalPerformanceShaders/MPSImageScale.cs \
 	MetalPerformanceShaders/MPSCnnConvolutionDescriptor.cs \
 	MetalPerformanceShaders/MPSCnnNeuron.cs \
 	MetalPerformanceShaders/MPSCnnKernel.cs \
@@ -1556,6 +1559,7 @@ SHARED_SOURCES = \
 	ObjCRuntime/BackingField.cs \
 	ObjCRuntime/BaseWrapper.cs \
 	ObjCRuntime/BlockProxyAttribute.cs \
+	ObjCRuntime/BindingImplAttribute.cs \
 	ObjCRuntime/CategoryAttribute.cs \
 	ObjCRuntime/Class.mac.cs \
 	ObjCRuntime/CompileFlagsAttribute.cs \
@@ -1573,6 +1577,7 @@ SHARED_SOURCES = \
 	ObjCRuntime/Registrar.cs \
 	ObjCRuntime/ReleaseAttribute.cs \
 	ObjCRuntime/RequiredFrameworkAttribute.cs \
+	ObjCRuntime/RequiresSuperAttribute.cs \
 	ObjCRuntime/Runtime.cs \
 	ObjCRuntime/Runtime.iOS.cs \
 	ObjCRuntime/Runtime.mac.cs \
@@ -1629,6 +1634,7 @@ MAC_FRAMEWORKS =            \
 	CoreMedia               \
 	CoreMidi                \
 	CoreServices            \
+	CoreSpotlight           \
 	CoreText                \
 	CoreWlan                \
 	EventKit                \

@@ -31,9 +31,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	public partial class NSOrderedSet : IEnumerable<NSObject> {
 		internal const string selSetWithArray = "orderedSetWithArray:";
@@ -65,7 +65,7 @@ namespace XamCore.Foundation {
 		public static NSOrderedSet MakeNSOrderedSet<T> (T [] values) where T : NSObject
 		{
 			NSArray a = NSArray.FromNSObjects (values);
-			return (NSOrderedSet) Runtime.GetNSObject (XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (class_ptr, Selector.GetHandle (selSetWithArray), a.Handle));
+			return (NSOrderedSet) Runtime.GetNSObject (ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (class_ptr, Selector.GetHandle (selSetWithArray), a.Handle));
 		}
 
 		public IEnumerator<NSObject> GetEnumerator ()

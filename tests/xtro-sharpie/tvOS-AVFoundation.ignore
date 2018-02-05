@@ -5,7 +5,5 @@
 ## it's still exposed by AVContentKeySessionDelegate which is available in tvos 10.2
 !unknown-type! AVPersistableContentKeyRequest bound
 
-
-## unsorted
-
-!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withFlags: not found
+## https://github.com/xamarin/xamarin-macios/issues/3213 should be fixed before conformance to 'AVQueuedSampleBufferRendering' is restored.
+!missing-protocol-conformance! AVSampleBufferDisplayLayer should conform to AVQueuedSampleBufferRendering (defined in 'AVSampleBufferDisplayLayerQueueManagement' category)

@@ -17,6 +17,7 @@ namespace xharness
 		public bool IsExecutableProject;
 		public bool IsNUnitProject;
 		public bool GenerateVariations = true;
+		public string [] Configurations;
 
 		public TestProject ()
 		{
@@ -98,9 +99,9 @@ namespace xharness
 			return rv;
 		}
 
-		internal async Task CreateCopyAsync (TestTask test)
+		internal async Task CreateCopyAsync (TestTask test = null)
 		{
-			var directory = Xamarin.Cache.CreateTemporaryDirectory (test.TestName);
+			var directory = Xamarin.Cache.CreateTemporaryDirectory (test?.TestName ?? System.IO.Path.GetFileNameWithoutExtension (Path));
 			Directory.CreateDirectory (directory);
 			var original_path = Path;
 			Path = System.IO.Path.Combine (directory, System.IO.Path.GetFileName (Path));
@@ -159,7 +160,6 @@ namespace xharness
 		public bool GenerateFull => TargetFrameworkFlavor == MacFlavors.All || TargetFrameworkFlavor == MacFlavors.Full;
 
 		public string Platform = "x86";
-		public string [] Configurations;
 
 		public MacTestProject () : base ()
 		{

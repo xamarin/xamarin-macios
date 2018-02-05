@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 using NUnit.Framework;
 
@@ -272,6 +273,18 @@ namespace Xamarin.Tests
 			}
 		}
 
+		public static string XamarinMacMobileDll {
+			get {
+				return Path.Combine (SdkRootXM, "lib", "mono", "Xamarin.Mac", "Xamarin.Mac.dll");
+			}
+		}
+
+		public static string XamarinMacFullDll {
+			get {
+				return Path.Combine (SdkRootXM, "lib", "mono", "4.5", "Xamarin.Mac.dll");
+			}
+		}
+
 		public static string SdkBinDir {
 			get {
 #if MONOMAC
@@ -352,6 +365,12 @@ namespace Xamarin.Tests
 			}
 		}
 
+		public static string BGenClassicPath {
+			get {
+				return Path.Combine (BinDirXM, "bgen-classic");
+			}
+		}
+
 		public static string MmpPath {
 			get {
 				return Path.Combine (BinDirXM, "mmp");
@@ -370,6 +389,72 @@ namespace Xamarin.Tests
 				if (!string.IsNullOrEmpty (env))
 					return env;
 				return Path.Combine (BinDirXI, "mlaunch");
+			}
+		}
+
+		public static string GetBaseLibrary (Profile profile)
+		{
+			switch (profile) {
+			case Profile.iOS:
+				return XamarinIOSDll;
+			case Profile.tvOS:
+				return XamarinTVOSDll;
+			case Profile.watchOS:
+				return XamarinWatchOSDll;
+			case Profile.macOSMobile:
+				return XamarinMacMobileDll;
+			case Profile.macOSFull:
+				return XamarinMacFullDll;
+			default:
+				throw new NotImplementedException ();
+			}
+		}
+
+		public static string GetTargetFramework (Profile profile)
+		{
+			switch (profile) {
+			case Profile.iOS:
+				return "Xamarin.iOS,v1.0";
+			case Profile.tvOS:
+				return "Xamarin.TVOS,v1.0";
+			case Profile.watchOS:
+				return "Xamarin.WatchOS,v1.0";
+			case Profile.macOSMobile:
+				return "Xamarin.Mac,Version=v2.0,Profile=Mobile";
+			case Profile.macOSFull:
+				return "Xamarin.Mac,Version=v4.5,Profile=Full";
+			case Profile.macOSSystem:
+				return "Xamarin.Mac,Version=v4.5,Profile=System";
+			default:
+				throw new NotImplementedException ();
+			}
+		}
+
+		public static string GetSdkVersion (Profile profile)
+		{
+			switch (profile) {
+			case Profile.iOS:
+				return Configuration.sdk_version;
+			case Profile.tvOS:
+				return Configuration.tvos_sdk_version;
+			case Profile.watchOS:
+				return Configuration.watchos_sdk_version;
+			case Profile.macOSFull:
+			case Profile.macOSMobile:
+			case Profile.macOSSystem:
+				return Configuration.macos_sdk_version;
+			default:
+				throw new NotImplementedException ();
+			}
+		}
+
+		public static string GetCompiler (Profile profile, StringBuilder args, bool use_csc = false)
+		{
+			args.Append (" -lib:").Append (Path.GetDirectoryName (GetBaseLibrary (profile))).Append (' ');
+			if (use_csc) {
+				return "/Library/Frameworks/Mono.framework/Commands/csc";
+			} else {
+				return "/Library/Frameworks/Mono.framework/Commands/mcs";
 			}
 		}
 	}

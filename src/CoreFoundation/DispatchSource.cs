@@ -11,13 +11,13 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.IO;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 using dispatch_source_type_t=System.IntPtr;
 using dispatch_source_t=System.IntPtr;
 using dispatch_queue_t=System.IntPtr;
 
-namespace XamCore.CoreFoundation {
+namespace CoreFoundation {
 
 	[Flags]
 	public enum MemoryPressureFlags { 

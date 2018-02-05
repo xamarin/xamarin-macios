@@ -30,23 +30,19 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.CoreLocation {
+namespace CoreLocation {
 
 	// NSInteger -> CLError.h
 	[Native]
-	public enum CLError : nint {
+	public enum CLError : long {
 		LocationUnknown  = 0,
 		Denied,              
 		Network,             
 		HeadingFailure,
-
-		[iOS (4,0)]
 		RegionMonitoringDenied,
-		[iOS (4,0)]
 		RegionMonitoringFailure,
-		[iOS (4,0)]
 		RegionMonitoringSetupDelayed,
 		
 		// ios5 osx10.8
@@ -71,7 +67,7 @@ namespace XamCore.CoreLocation {
 	}
 
 	// untyped enum -> CLLocationManager.h
-	public enum CLDeviceOrientation : uint_compat_int {
+	public enum CLDeviceOrientation : uint {
 		Unknown,
 		Portrait,
 		PortraitUpsideDown,
@@ -82,7 +78,7 @@ namespace XamCore.CoreLocation {
 	} 
 
 	// untyped enum -> CLLocationManager.h
-	public enum CLAuthorizationStatus : uint_compat_int {
+	public enum CLAuthorizationStatus : uint {
 		NotDetermined = 0,
 		Restricted,
 		Denied,
@@ -95,7 +91,7 @@ namespace XamCore.CoreLocation {
 
 	// NSInteger -> CLLocationManager.h
 	[Native]
-	public enum CLActivityType : nint {
+	public enum CLActivityType : long {
 		Other = 1,
 		AutomotiveNavigation,
  		Fitness,

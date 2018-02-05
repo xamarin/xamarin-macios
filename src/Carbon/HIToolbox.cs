@@ -22,12 +22,12 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using CoreGraphics;
 
-namespace XamCore.Carbon {
+namespace Carbon {
 
 	// Carbon.framework/Versions/A/Frameworks/HIToolbox.framework/Headers/MacApplication.h: typedef UInt32 SystemUIMode;
 	public enum SystemUIMode : uint

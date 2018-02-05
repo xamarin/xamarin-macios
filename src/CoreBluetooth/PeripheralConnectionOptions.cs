@@ -27,11 +27,11 @@
 
 using System;
 
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using ObjCRuntime;
 
-namespace XamCore.CoreBluetooth {
+namespace CoreBluetooth {
 
 	[Watch (4,0)]
 	public class PeripheralConnectionOptions : DictionaryContainer
@@ -100,7 +100,6 @@ namespace XamCore.CoreBluetooth {
 #endif
 
 #if !XAMCORE_2_0
-		[iOS (5,0)]
 		[Obsolete ("Use 'NotifyOnDisconnection' property instead.")]
 		public bool NotifyOnDisconnectionKey {
 			set {
@@ -109,7 +108,6 @@ namespace XamCore.CoreBluetooth {
 		}
 #endif
 
-		[iOS (5,0)]
 		public bool? NotifyOnDisconnection {
 			get {
 				return GetBoolValue (CBCentralManager.OptionNotifyOnDisconnectionKey);

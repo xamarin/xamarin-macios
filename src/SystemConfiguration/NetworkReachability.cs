@@ -11,13 +11,13 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
+using ObjCRuntime;
+using CoreFoundation;
+using Foundation;
 using System.Net;
 using System.Net.Sockets;
 
-namespace XamCore.SystemConfiguration {
+namespace SystemConfiguration {
 
 	// SCNetworkReachabilityFlags -> uint32_t -> SCNetworkReachability.h
 	[Flags]

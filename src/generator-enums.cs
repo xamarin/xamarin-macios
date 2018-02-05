@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using IKVM.Reflection;
 using Type = IKVM.Reflection.Type;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 using System.IO;
 
 public partial class Generator {
@@ -101,7 +101,7 @@ public partial class Generator {
 			print ("");
 			// the *Extensions has the same version requirement as the enum itself
 			PrintPlatformAttributes (type);
-			print ("[CompilerGenerated]");
+			print_generated_code ();
 			print ("static public partial class {0}Extensions {{", type.Name);
 			indent++;
 

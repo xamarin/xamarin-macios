@@ -26,11 +26,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreVideo;
+using Foundation;
+using ObjCRuntime;
+using CoreVideo;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 	public partial class AVAssetReaderVideoCompositionOutput {
 #if !XAMCORE_2_0
 		[Advice ("Use overload with PixelBufferAttributes")]

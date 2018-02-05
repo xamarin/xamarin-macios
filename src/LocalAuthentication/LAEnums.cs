@@ -1,13 +1,13 @@
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.LocalAuthentication {
+namespace LocalAuthentication {
 
 	[iOS (8,0)]
 	[Mac (10, 10)]
 	[Native]
-	public enum LAPolicy : nint {
+	public enum LAPolicy : long {
 		[Mac (10,12,2)]
 		DeviceOwnerAuthenticationWithBiometrics = 1,
 		DeviceOwnerAuthentication = 2
@@ -17,7 +17,7 @@ namespace XamCore.LocalAuthentication {
 	[Mac (10, 10)]
 	[Native]
 	[ErrorDomain ("LAErrorDomain")]
-	public enum LAStatus : nint {
+	public enum LAStatus : long {
 		Success = 0,
 		/// Authentication was not successful, because user failed to provide valid credentials.
 		AuthenticationFailed = -1,
@@ -54,14 +54,14 @@ namespace XamCore.LocalAuthentication {
 
 	[iOS (9,0), Mac (10,11), Watch (3,0), TV (11,0)]
 	[Native]
-	public enum LACredentialType : nint {
+	public enum LACredentialType : long {
 		ApplicationPassword = 0
 	}
 
 	[iOS (9,0)]
 	[Mac (10,11)]
 	[Native]
-	public enum LAAccessControlOperation : nint {
+	public enum LAAccessControlOperation : long {
 		CreateItem,
 		UseItem,
 		CreateKey,

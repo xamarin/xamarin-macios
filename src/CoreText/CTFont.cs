@@ -31,19 +31,19 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
+using ObjCRuntime;
+using CoreFoundation;
+using CoreGraphics;
+using Foundation;
 
 using CGGlyph = System.UInt16;
 
-namespace XamCore.CoreText {
+namespace CoreText {
 
 	[Flags]
 	[Native]
 	// defined as CFOptionFlags (unsigned long [long] = nuint) - /System/Library/Frameworks/CoreText.framework/Headers/CTFont.h
-	public enum CTFontOptions : nuint_compat_int {
+	public enum CTFontOptions : ulong {
 		Default = 0,
 		PreventAutoActivation = 1 << 0,
 		PreferSystemFont      = 1 << 2,
@@ -2068,7 +2068,6 @@ namespace XamCore.CoreText {
 			[In] CGGlyph [] glyphs, [In] CGPoint [] positions, nint count,
 			/* CGContextRef __nonnull */ IntPtr context);
 
-		[iOS(4,2)]
 		public void DrawGlyphs (CGContext context, CGGlyph [] glyphs, CGPoint [] positions)
 		{
 			if (context == null)
@@ -2086,7 +2085,6 @@ namespace XamCore.CoreText {
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern nint CTFontGetLigatureCaretPositions (IntPtr handle, CGGlyph glyph, [Out] nfloat [] positions, nint max);
 
-		[iOS(4,2)]
 		public nint GetLigatureCaretPositions (CGGlyph glyph, nfloat [] positions)
 		{
 			if (positions == null)
