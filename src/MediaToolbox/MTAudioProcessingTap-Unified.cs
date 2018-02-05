@@ -36,13 +36,13 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
-using XamCore.AudioToolbox;
-using XamCore.CoreMedia;
+using Foundation;
+using CoreFoundation;
+using ObjCRuntime;
+using AudioToolbox;
+using CoreMedia;
 
-namespace XamCore.MediaToolbox
+namespace MediaToolbox
 {
 	[iOS (6,0)][Mac (10,9)]
 	public class MTAudioProcessingTap : INativeObject

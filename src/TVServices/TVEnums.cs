@@ -2,15 +2,15 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreGraphics;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.TVServices {
+namespace TVServices {
 
 	[TV (9,0)]
 	[Native]
-	public enum TVContentItemImageShape : nint {
+	public enum TVContentItemImageShape : long {
 		None = 0,
 		Poster,
 		Square,
@@ -22,7 +22,7 @@ namespace XamCore.TVServices {
 
 	[TV (9,0)]
 	[Native]
-	public enum TVTopShelfContentStyle : nint {
+	public enum TVTopShelfContentStyle : long {
 		Inset = 1,
 		Sectioned = 2
 	}
@@ -30,7 +30,7 @@ namespace XamCore.TVServices {
 	[TV (11,0)]
 	[Native]
 	[Flags]
-	public enum TVContentItemImageTrait : nuint {
+	public enum TVContentItemImageTrait : ulong {
 		UserInterfaceStyleLight = (1 << 8),
 		UserInterfaceStyleDark = (2 << 8),
 		ScreenScale1x = (1 << 12),

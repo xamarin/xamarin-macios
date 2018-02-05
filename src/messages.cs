@@ -8,18 +8,18 @@
 //
 
 using System;
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.UIKit;
+using CoreFoundation;
+using CoreGraphics;
+using Foundation;
+using ObjCRuntime;
+using UIKit;
 
 #if !MONOMAC
-namespace XamCore.Messages {
+namespace Messages {
 
 	[iOS (10,0)]
 	[Native]
-	public enum MSMessagesAppPresentationStyle : nuint
+	public enum MSMessagesAppPresentationStyle : ulong
 	{
 		Compact,
 		Expanded,
@@ -28,7 +28,7 @@ namespace XamCore.Messages {
 
 	[iOS (10,0)]
 	[Native]
-	public enum MSStickerSize : nint
+	public enum MSStickerSize : long
 	{
 		Small,
 		Regular,
@@ -37,7 +37,7 @@ namespace XamCore.Messages {
 
 	[Native]
 	[ErrorDomain ("MSMessagesErrorDomain")]
-	public enum MSMessageErrorCode : nint
+	public enum MSMessageErrorCode : long
 	{
 		Unknown = -1,
 		FileNotFound = 1,

@@ -29,10 +29,10 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.CoreGraphics {
+namespace CoreGraphics {
 
 	// untyped enum -> CGPath.h
 	public enum CGLineJoin {
@@ -58,7 +58,7 @@ namespace XamCore.CoreGraphics {
 	}
 	
 	// untyped enum -> CGContext.h
-	public enum CGTextDrawingMode : uint_compat_int {
+	public enum CGTextDrawingMode : uint {
 		Fill,
 		Stroke,
 		FillStroke,

@@ -22,7 +22,7 @@
 //
 using System;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	public class ModelNotImplementedException : Exception {
 		public ModelNotImplementedException () {}
 	}

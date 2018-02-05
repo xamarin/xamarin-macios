@@ -27,10 +27,10 @@
 //
 using System;
 using System.Runtime.InteropServices;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
+using CoreFoundation;
+using ObjCRuntime;
 
-namespace XamCore.CoreVideo {
+namespace CoreVideo {
 
 	// uint32_t -> CVBuffer.h
 	[Watch (4,0)]
@@ -46,7 +46,7 @@ namespace XamCore.CoreVideo {
 #else
 	// before iOS10 beta 2 this was an untyped enum -> CVPixelBuffer.h
 	// note: used as a CVOptionFlags uint64_t (CVBase.h) in the API
-	public enum CVPixelBufferLock : uint_compat_int {
+	public enum CVPixelBufferLock : uint {
 #endif
 		None = 0x00000000,
 		ReadOnly = 0x00000001,
@@ -163,13 +163,13 @@ namespace XamCore.CoreVideo {
 
 	[Flags]
 	[Watch (4,0)]
-	public enum CVSMPTETimeFlags : uint_compat_int {
+	public enum CVSMPTETimeFlags : uint {
 		Valid     = (1 << 0),
 		Running   = (1 << 1)
 	}
 
 	[Watch (4,0)]
-	public enum CVSMPTETimeType : uint_compat_int {
+	public enum CVSMPTETimeType : uint {
 		Type24        = 0,
 		Type25        = 1,
 		Type30Drop    = 2,

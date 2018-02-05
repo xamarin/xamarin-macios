@@ -11,29 +11,29 @@
 
 using System;
 using System.ComponentModel;
-using XamCore.AVFoundation;
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
-using XamCore.CoreMedia;
-using XamCore.CoreVideo;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.Metal;
-using XamCore.SpriteKit;
-using XamCore.SceneKit;
-using XamCore.UIKit;
+using AVFoundation;
+using CoreFoundation;
+using CoreGraphics;
+using CoreMedia;
+using CoreVideo;
+using Foundation;
+using ObjCRuntime;
+using Metal;
+using SpriteKit;
+using SceneKit;
+using UIKit;
 
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.NVector3;
 using Matrix3 = global::OpenTK.NMatrix3;
 using Matrix4 = global::OpenTK.NMatrix4;
 
-namespace XamCore.ARKit {
+namespace ARKit {
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[Native]
-	public enum ARTrackingState : nint {
+	public enum ARTrackingState : long {
 		NotAvailable,
 		Limited,
 		Normal,
@@ -42,7 +42,7 @@ namespace XamCore.ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[Native]
-	public enum ARTrackingStateReason : nint {
+	public enum ARTrackingStateReason : long {
 		None,
 		Initializing,
 		ExcessiveMotion,
@@ -53,7 +53,7 @@ namespace XamCore.ARKit {
 	[NoWatch, NoTV, NoMac]
 	[ErrorDomain ("ARErrorDomain")]
 	[Native]
-	public enum ARErrorCode : nint {
+	public enum ARErrorCode : long {
 		UnsupportedConfiguration = 100,
 		SensorUnavailable = 101,
 		SensorFailed = 102,
@@ -65,7 +65,7 @@ namespace XamCore.ARKit {
 	[NoWatch, NoTV, NoMac]
 	[Flags]
 	[Native]
-	public enum ARHitTestResultType : nuint {
+	public enum ARHitTestResultType : ulong {
 		FeaturePoint = 1 << 0,
 		EstimatedHorizontalPlane = 1 << 1,
 		ExistingPlane = 1 << 3,
@@ -75,7 +75,7 @@ namespace XamCore.ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[Native]
-	public enum ARPlaneAnchorAlignment : nint {
+	public enum ARPlaneAnchorAlignment : long {
 		Horizontal,
 	}
 
@@ -83,7 +83,7 @@ namespace XamCore.ARKit {
 	[NoWatch, NoTV, NoMac]
 	[Flags]
 	[Native]
-	public enum ARSessionRunOptions : nuint {
+	public enum ARSessionRunOptions : ulong {
 		ResetTracking = 1 << 0,
 		RemoveExistingAnchors = 1 << 1,
 	}
@@ -91,7 +91,7 @@ namespace XamCore.ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[Native]
-	public enum ARWorldAlignment : nint {
+	public enum ARWorldAlignment : long {
 		Gravity,
 		GravityAndHeading,
 		Camera,
@@ -101,7 +101,7 @@ namespace XamCore.ARKit {
 	[NoWatch, NoTV, NoMac]
 	[Flags]
 	[Native]
-	public enum ARPlaneDetection : nuint {
+	public enum ARPlaneDetection : ulong {
 		None = 0,
 		Horizontal = 1 << 0,
 	}

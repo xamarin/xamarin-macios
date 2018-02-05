@@ -8,15 +8,15 @@
 // Copyright 2009, Novell, Inc.
 // Copyright 2011-2014, Xamarin Inc.
 //
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
-using XamCore.CoreLocation;
-using XamCore.UIKit;
-using XamCore.MediaPlayer;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
+using CoreLocation;
+using UIKit;
+using MediaPlayer;
 using System;
 
-namespace XamCore.AssetsLibrary {
+namespace AssetsLibrary {
 
 	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
 	interface ALAssetLibraryChangedEventArgs {

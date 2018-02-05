@@ -8,16 +8,16 @@
 // Copyright 2009, Novell, Inc.
 // Copyright 2012 Xamarin Inc.
 //
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.StoreKit;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using StoreKit;
 #if !MONOMAC
-using XamCore.UIKit;
+using UIKit;
 #endif
 using System;
 
-namespace XamCore.StoreKit {
+namespace StoreKit {
 
 	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]

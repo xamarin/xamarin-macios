@@ -1,10 +1,10 @@
 using System;
 using System.Text;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 using System.Runtime.InteropServices;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 	public partial class NSColor {
 
 		public static NSColor FromRgb (nfloat red, nfloat green, nfloat blue)

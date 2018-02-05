@@ -29,11 +29,11 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.CoreText {
+namespace CoreText {
 
 	public static class CTFontTraitKey {
 		public static readonly NSString Symbolic;

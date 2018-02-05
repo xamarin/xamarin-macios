@@ -14,11 +14,11 @@ using System;
 using System.Collections;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using XamCore.Foundation; 
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
+using Foundation; 
+using ObjCRuntime;
+using CoreGraphics;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	public partial class UIView : IEnumerable {
 
 		public void Add (UIView view)
@@ -66,7 +66,7 @@ namespace XamCore.UIKit {
 			static _UIViewStaticCallback shared;
 			public const string start = "start";
 			public const string end = "end";
-			public event NSAction WillStart, WillEnd;
+			public event Action WillStart, WillEnd;
 
 			public _UIViewStaticCallback ()
 			{
@@ -100,7 +100,7 @@ namespace XamCore.UIKit {
 			}
 		}
 		
-		public static event NSAction AnimationWillStart {
+		public static event Action AnimationWillStart {
 			add {
 				_UIViewStaticCallback.Prepare ().WillStart += value;
 			}
@@ -109,7 +109,7 @@ namespace XamCore.UIKit {
 			}
 		}
 
-		public static event NSAction AnimationWillEnd {
+		public static event Action AnimationWillEnd {
 			add {
 				_UIViewStaticCallback.Prepare ().WillEnd += value;
 			}
@@ -119,7 +119,7 @@ namespace XamCore.UIKit {
 		}
 
 		[Advice ("Use the *Notify method that has 'UICompletionHandler completion' parameter, the 'bool' will tell you if the operation finished.")]
-		public static void Animate (double duration, NSAction animation, NSAction completion)
+		public static void Animate (double duration, Action animation, Action completion)
 		{
 			// animation null check will be done in AnimateNotify
 			AnimateNotify (duration, animation, (x) => { 
@@ -129,7 +129,7 @@ namespace XamCore.UIKit {
 		}
 
 		[Advice ("Use the *Notify method that has 'UICompletionHandler completion' parameter, the 'bool' will tell you if the operation finished.")]
-		public static void Animate (double duration, double delay, UIViewAnimationOptions options, NSAction animation, NSAction completion)
+		public static void Animate (double duration, double delay, UIViewAnimationOptions options, Action animation, Action completion)
 		{
 			// animation null check will be done in AnimateNotify
 			AnimateNotify (duration, delay, options, animation, (x) => {
@@ -139,7 +139,7 @@ namespace XamCore.UIKit {
 		}
 
 		[Advice ("Use the *Notify method that has 'UICompletionHandler completion' parameter, the 'bool' will tell you if the operation finished.")]
-		public static void Transition (UIView fromView, UIView toView, double duration, UIViewAnimationOptions options, NSAction completion)
+		public static void Transition (UIView fromView, UIView toView, double duration, UIViewAnimationOptions options, Action completion)
 		{
 			TransitionNotify (fromView, toView, duration, options, (x) => {
 				if (completion != null)
@@ -148,7 +148,7 @@ namespace XamCore.UIKit {
 		}
 
 		[Advice ("Use the *Notify method that has 'UICompletionHandler completion' parameter, the 'bool' will tell you if the operation finished.")]
-		public static void Transition (UIView withView, double duration, UIViewAnimationOptions options, NSAction animation, NSAction completion)
+		public static void Transition (UIView withView, double duration, UIViewAnimationOptions options, Action animation, Action completion)
 		{
 			// animation null check will be done in AnimateNotify
 			TransitionNotify (withView, duration, options, animation, (x) => {
@@ -159,7 +159,7 @@ namespace XamCore.UIKit {
 
 #if !XAMCORE_2_0
 		[Advice ("Use the version with a 'ref float actualFontSize'.")]
-		public CGSize DrawString (string str, CGPoint point, nfloat width, XamCore.UIKit.UIFont font, nfloat minFontSize, nfloat actualFontSize, XamCore.UIKit.UILineBreakMode breakMode, XamCore.UIKit.UIBaselineAdjustment adjustment)
+		public CGSize DrawString (string str, CGPoint point, nfloat width, UIKit.UIFont font, nfloat minFontSize, nfloat actualFontSize, UIKit.UILineBreakMode breakMode, UIKit.UIBaselineAdjustment adjustment)
 		{
 			nfloat temp = actualFontSize;
 			return DrawString (str, point, width, font, minFontSize, ref temp, breakMode, adjustment);
@@ -172,7 +172,7 @@ namespace XamCore.UIKit {
 		}
 #endif
 
-		public static Task<bool> AnimateAsync (double duration, NSAction animation)
+		public static Task<bool> AnimateAsync (double duration, Action animation)
 		{
 			return AnimateNotifyAsync (duration, animation);
 		}

@@ -1,7 +1,7 @@
-﻿using System;
-using XamCore.PrintCore;
+using System;
+using PrintCore;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 	public partial class NSPrintInfo {
 		public PMPrintSession GetPrintSession ()
 		{

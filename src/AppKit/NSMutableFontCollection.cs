@@ -10,7 +10,7 @@
 using System;
 
 
-namespace XamCore.AppKit
+namespace AppKit
 {
 #if !XAMCORE_4_0
 	public partial class NSMutableFontCollection

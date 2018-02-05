@@ -4,11 +4,11 @@
 
 #if !WATCH
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 using System;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 
 	public partial class UIBarButtonItem {
 		static Selector actionSel = new Selector ("InvokeAction:");

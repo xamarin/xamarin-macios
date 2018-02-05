@@ -10,10 +10,10 @@
 //
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using CoreGraphics;
+using ObjCRuntime;
 using Vector2i = global::OpenTK.Vector2i;
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
@@ -25,7 +25,7 @@ using Matrix4 = global::OpenTK.Matrix4;
 using Quaternion = global::OpenTK.Quaternion;
 using MathHelper = global::OpenTK.MathHelper;
 
-namespace XamCore.ModelIO {
+namespace ModelIO {
 
 	partial class MDLMesh {
 

@@ -10,11 +10,11 @@
 //
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
-using XamCore.Metal;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using CoreGraphics;
+using Metal;
+using ObjCRuntime;
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
 using Vector4 = global::OpenTK.Vector4;
@@ -26,9 +26,9 @@ using Matrix4 = global::OpenTK.Matrix4;
 using Quaternion = global::OpenTK.Quaternion;
 using MathHelper = global::OpenTK.MathHelper;
 
-namespace XamCore.ModelIO {
+namespace ModelIO {
 	[Native]
-	public enum MDLVertexFormat : nuint {
+	public enum MDLVertexFormat : ulong {
 		Invalid = 0,
 
 		PackedBits           =  0x1000,
@@ -126,7 +126,7 @@ namespace XamCore.ModelIO {
 #endif
 
 	[Native]
-	public enum MDLMeshBufferType : nuint
+	public enum MDLMeshBufferType : ulong
 	{
 		Vertex = 1,
 		Index = 2
@@ -146,7 +146,7 @@ namespace XamCore.ModelIO {
 	}
 
 	[Native]
-	public enum MDLGeometryType : nint
+	public enum MDLGeometryType : long
 	{
 		Points = 0,
 		Lines,
@@ -157,7 +157,7 @@ namespace XamCore.ModelIO {
 	}
 	
 	[Native]
-	public enum MDLIndexBitDepth : nuint {
+	public enum MDLIndexBitDepth : ulong {
 		Invalid,
 		UInt8 = 8,
 		UInt16 = 16,
@@ -165,7 +165,7 @@ namespace XamCore.ModelIO {
 	}
 
 	[Native]
-	public enum MDLMaterialSemantic : nuint {
+	public enum MDLMaterialSemantic : ulong {
 		BaseColor = 0,
 		Subsurface,
 		Metallic,
@@ -195,7 +195,7 @@ namespace XamCore.ModelIO {
 	}
 
 	[Native]
-	public enum MDLMaterialPropertyType : nuint {
+	public enum MDLMaterialPropertyType : ulong {
 		None,
 		String,
 		Url,
@@ -209,24 +209,24 @@ namespace XamCore.ModelIO {
 	}
 
 	[Native]
-	public enum MDLMaterialTextureWrapMode : nuint {
+	public enum MDLMaterialTextureWrapMode : ulong {
 		Clamp, Repeat, Mirror
 	}
 
 	[Native]
-	public enum MDLMaterialTextureFilterMode : nuint {
+	public enum MDLMaterialTextureFilterMode : ulong {
 		Nearest,
 		Linear
 	}
 
 	[Native]
-	public enum MDLMaterialMipMapFilterMode : nuint {
+	public enum MDLMaterialMipMapFilterMode : ulong {
 		Nearest,
 		Linear
 	}
 
 	[Native]
-	public enum MDLTextureChannelEncoding : nint {
+	public enum MDLTextureChannelEncoding : long {
 		UInt8 = 1,
 		UInt16 = 2,
 		UInt24 = 3,
@@ -237,7 +237,7 @@ namespace XamCore.ModelIO {
 	}
 
 	[Native]
-	public enum MDLLightType : nuint
+	public enum MDLLightType : ulong
 	{
 		Unknown = 0,
 		Ambient,
@@ -287,14 +287,14 @@ namespace XamCore.ModelIO {
 	}
 
 	[Native]
-	public enum MDLCameraProjection : nuint
+	public enum MDLCameraProjection : ulong
 	{
 		Perspective = 0,
 		Orthographic = 1,
 	}
 
 	[Native]
-	public enum MDLMaterialFace : nuint
+	public enum MDLMaterialFace : ulong
 	{
 		Front = 0,
 		Back,
@@ -302,7 +302,7 @@ namespace XamCore.ModelIO {
 	}
 
 	[Native]
-	public enum MDLProbePlacement : nint
+	public enum MDLProbePlacement : long
 	{
 		UniformGrid = 0,
 		IrradianceDistribution,

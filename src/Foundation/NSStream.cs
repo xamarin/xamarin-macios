@@ -29,19 +29,19 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
-using XamCore.CoreFoundation;
+using CoreFoundation;
 using System.Net;
 using System.Net.Sockets;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 #if !WATCH
 #if XAMCORE_4_0
-using XamCore.CFNetwork;
+using CFNetwork;
 #else
-using XamCore.CoreServices;
+using CoreServices;
 #endif
 #endif
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	public enum NSStreamSocketSecurityLevel {
 		None, SslV2, SslV3, TlsV1, NegotiatedSsl, Unknown
 	}

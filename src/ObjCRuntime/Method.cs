@@ -2,7 +2,7 @@ using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 	internal static class Method {
 #if !COREBUILD
 		#if !XAMCORE_2_0

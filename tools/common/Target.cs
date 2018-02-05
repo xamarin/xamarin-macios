@@ -18,8 +18,8 @@ using Mono.Linker;
 using Xamarin.Linker;
 
 using Xamarin.Utils;
-using XamCore.Registrar;
-using XamCore.ObjCRuntime;
+using Registrar;
+using ObjCRuntime;
 
 #if MONOTOUCH
 using MonoTouch;

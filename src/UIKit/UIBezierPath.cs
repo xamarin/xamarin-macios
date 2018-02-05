@@ -9,10 +9,10 @@
 
 using System;
 using System.Collections;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	public partial class UIBezierPath {
 
 		// from AppKit/NSBezierPath.cs

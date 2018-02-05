@@ -8,17 +8,17 @@
 //
 
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.CoreSpotlight {
+namespace CoreSpotlight {
 	// NSInteger -> CNContact.h
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0), Mac (10,11)]
 	[Mac (10,13, onlyOn64: true)]
 	[Native]
 	[ErrorDomain ("CSIndexErrorDomain")]
-	public enum CSIndexErrorCode : nint {
+	public enum CSIndexErrorCode : long {
 		UnknownError =	-1,
 		IndexUnavailableError = -1000,
 		InvalidItemError = -1001,
@@ -32,7 +32,7 @@ namespace XamCore.CoreSpotlight {
 	[Mac (10,13, onlyOn64: true)]
 	[ErrorDomain ("CSSearchQueryErrorDomain")]
 	[Native]
-	public enum CSSearchQueryErrorCode : nint {
+	public enum CSSearchQueryErrorCode : long {
 		Unknown = -2000,
 		IndexUnreachable = -2001,
 		InvalidQuery = -2002,

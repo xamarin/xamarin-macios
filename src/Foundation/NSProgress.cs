@@ -1,9 +1,9 @@
-﻿#if !COREBUILD && XAMCORE_2_0
+#if !COREBUILD && XAMCORE_2_0
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	public partial class NSProgress {
 		//Manual bindings until BindAs support is merged
 		public nint? EstimatedTimeRemaining {

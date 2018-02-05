@@ -7,21 +7,21 @@
 // Copyright 2011-2015 Xamarin Inc.
 //
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.EventKitUI {
+namespace EventKitUI {
 
 	// untyped enum -> EKCalendarChooser.h
 	// iOS 9 promoted this to an NSInteger - which breaks compatibility
 	[Native]
-	public enum EKCalendarChooserSelectionStyle : nint {
+	public enum EKCalendarChooserSelectionStyle : long {
 		Single, Multiple
 	}
 	
 	// untyped enum -> EKCalendarChooser.h
 	// iOS 9 promoted this to an NSInteger - which breaks compatibility
 	[Native]
-	public enum EKCalendarChooserDisplayStyle : nint {
+	public enum EKCalendarChooserDisplayStyle : long {
 		AllCalendars, WritableCalendarsOnly
 	}
 
@@ -30,14 +30,14 @@ namespace XamCore.EventKitUI {
 	// untyped enum -> EKEventViewController.h
 	// iOS 9 promoted this to an NSInteger - which breaks compatibility
 	[Native]
-	public enum EKEventViewAction : nint {
+	public enum EKEventViewAction : long {
 		Done, Responded, Deleted
 	}
 
 	// untyped enum -> EKEventEditViewController.h
 	// iOS 9 promoted this to an NSInteger - which breaks compatibility
 	[Native]
-	public enum EKEventEditViewAction : nint {
+	public enum EKEventEditViewAction : long {
 		Canceled, Saved, Deleted
 	}
 #endif

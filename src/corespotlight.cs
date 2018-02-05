@@ -9,10 +9,10 @@
 
 using System;
 using System.ComponentModel;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.CoreSpotlight {
+namespace CoreSpotlight {
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]

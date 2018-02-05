@@ -29,10 +29,10 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.CoreText {
+namespace CoreText {
 
 	// Utility enum for constant strings in ObjC
 	public enum CTFontNameKey {

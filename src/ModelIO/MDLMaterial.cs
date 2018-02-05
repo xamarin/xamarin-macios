@@ -1,5 +1,5 @@
 #if XAMCORE_2_0 || !MONOMAC
-namespace XamCore.ModelIO {
+namespace ModelIO {
 	public partial class MDLAsset {
 		public MDLMaterialProperty this [nuint index] {
 			get {

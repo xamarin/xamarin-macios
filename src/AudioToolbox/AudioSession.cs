@@ -33,14 +33,14 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using CoreFoundation;
+using ObjCRuntime;
+using Foundation;
 using System.Threading;
 
 using OSStatus = System.Int32;
 
-namespace XamCore.AudioToolbox {
+namespace AudioToolbox {
 // This API has been deprecated in iOS 7 and everyone should be using AVAudioSession now
 // also AudioSession has been removed from TVOS already and AVAudioSession has been around since iOS 3.0
 #if !XAMCORE_3_0

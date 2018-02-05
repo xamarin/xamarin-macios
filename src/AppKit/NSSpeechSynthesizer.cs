@@ -23,7 +23,7 @@
 
 using System;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 	
 	public partial class NSSpeechSynthesizer {
 		

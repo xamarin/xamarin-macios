@@ -1,7 +1,7 @@
-﻿#if XAMCORE_2_0 && !COREBUILD
+#if XAMCORE_2_0 && !COREBUILD
 using System;
 
-namespace XamCore.Metal {
+namespace Metal {
 	public partial class MTLRenderPassDescriptor {
 		public unsafe void SetSamplePositions (MTLSamplePosition [] positions)
 		{

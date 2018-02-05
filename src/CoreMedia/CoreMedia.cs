@@ -9,10 +9,10 @@
 //
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.CoreMedia {
+namespace CoreMedia {
 
 	// FourCharCode -> CMFormatDescription.h
 	public enum CMMediaType : uint
@@ -75,7 +75,7 @@ namespace XamCore.CoreMedia {
 	}
 
 	// uint32_t -> CMTime.h
-	public enum CMTimeRoundingMethod : uint_compat_int
+	public enum CMTimeRoundingMethod : uint
 	{
 		RoundHalfAwayFromZero = 1,
 		RoundTowardZero = 2,
@@ -226,7 +226,7 @@ namespace XamCore.CoreMedia {
 	}
 
 	// FourCharCode -> CMFormatDescription.h
-	public enum CMVideoCodecType : uint_compat_int
+	public enum CMVideoCodecType : uint
 	{
 		YUV422YpCbCr8    = 0x32767579,
 		Animation        = 0x726c6520,

@@ -9,9 +9,9 @@
 
 #if XAMCORE_2_0 && IOS
 using System;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.Intents {
+namespace Intents {
 	public enum INPriceRangeOption {
 		Maximum,
 		Minimum

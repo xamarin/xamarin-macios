@@ -31,10 +31,10 @@
 #if !TVOS && !WATCH
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 	public partial class AVCaptureDeviceInput {
 #if !XAMCORE_2_0
 		[Obsolete ("Use 'FromDevice (AVCaptureDevice, out NSError)' instead.")]

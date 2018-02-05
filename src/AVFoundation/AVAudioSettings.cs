@@ -27,12 +27,12 @@
 
 using System;
 
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
-using XamCore.AudioToolbox;
+using Foundation;
+using CoreFoundation;
+using ObjCRuntime;
+using AudioToolbox;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 
 	// Should be called AVAudioSetting but AVAudioSetting has been already used by keys class
 	[iOS (6,0)]

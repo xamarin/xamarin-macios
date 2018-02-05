@@ -10,8 +10,8 @@
 #if XAMCORE_2_0 || !MONOMAC
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
 using Vector2 = global::OpenTK.Vector2;
 using Vector2d = global::OpenTK.Vector2d;
@@ -28,7 +28,7 @@ using Quaterniond = global::OpenTK.Quaterniond;
 // we are implementing something similar to what swift is doing here
 // https://github.com/apple/swift/blob/cbdf0ff1e7bfbd192c33d64c9c7d31fbb11f712c/stdlib/public/SDK/ModelIO/ModelIO.swift
 
-namespace XamCore.ModelIO {
+namespace ModelIO {
 	public partial class MDLAnimatedValue {
 
 		public double [] KeyTimes {

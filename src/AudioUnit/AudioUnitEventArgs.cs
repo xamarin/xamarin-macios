@@ -30,9 +30,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using XamCore.AudioToolbox;
+using AudioToolbox;
 
-namespace XamCore.AudioUnit
+namespace AudioUnit
 {
 #if !XAMCORE_2_0
     [Obsolete]

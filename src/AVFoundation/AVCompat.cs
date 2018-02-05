@@ -5,11 +5,11 @@
 using System;
 using System.ComponentModel;
 using OpenTK;
-using XamCore.CoreMedia;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreMedia;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 #if MONOMAC && XAMCORE_2_0 && !XAMCORE_4_0
 	[Obsolete ("This API is not available on this platform.")]
 	public partial class AVCaptureDataOutputSynchronizer : NSObject

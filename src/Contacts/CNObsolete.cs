@@ -5,10 +5,10 @@
 #if XAMCORE_2_0 && !XAMCORE_3_0
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.Contacts {
+namespace Contacts {
 
 	public static partial class CNGroup_PredicatesExtension {
 

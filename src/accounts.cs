@@ -3,10 +3,10 @@
 //
 #if XAMCORE_2_0 || !MONOMAC
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.Accounts {
+namespace Accounts {
 	
 	[Mac (10,8, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]

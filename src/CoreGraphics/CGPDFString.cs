@@ -30,10 +30,10 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
+using ObjCRuntime;
+using CoreFoundation;
 
-namespace XamCore.CoreGraphics {
+namespace CoreGraphics {
 	
 	// internal helper class only - we avoid exposing it to users
 	static class CGPDFString {

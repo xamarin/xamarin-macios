@@ -1,8 +1,8 @@
-using XamCore.CoreGraphics;
-using XamCore.CoreLocation;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.UIKit;
+using CoreGraphics;
+using CoreLocation;
+using ObjCRuntime;
+using Foundation;
+using UIKit;
 using System;
 using System.ComponentModel;
 
@@ -10,7 +10,7 @@ using System.ComponentModel;
 interface UIView {}
 #endif
 
-namespace XamCore.HomeKit {
+namespace HomeKit {
 
 	[TV (10,0)]
 	[iOS (8,0)]

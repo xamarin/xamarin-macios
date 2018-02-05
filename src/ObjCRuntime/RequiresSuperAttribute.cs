@@ -7,9 +7,9 @@
 // Copyright 2017 Xamarin Inc.
 
 using System;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 
 	// https://clang.llvm.org/docs/AttributeReference.html#objc-requires-super-clang-objc-requires-super
 	[AttributeUsage (AttributeTargets.Method, AllowMultiple = false)]

@@ -35,23 +35,23 @@ using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 #if XAMCORE_4_0
-using XamCore.CFNetwork;
+using CFNetwork;
 #elif !WATCH
-using XamCore.CoreServices;
+using CoreServices;
 #endif
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
 #if XAMCORE_2_0
 using CFIndex = System.nint;
 #endif
 
-namespace XamCore.CoreFoundation {
+namespace CoreFoundation {
 
 	// CFOptionFlags
 	[Flags]
 	[Native] // System/Library/Frameworks/Foundation.framework/Headers/NSStream.h
-	public enum CFStreamEventType : nuint_compat_int {
+	public enum CFStreamEventType : ulong {
 		None = 0,
 		OpenCompleted = 1,
 		HasBytesAvailable = 2,
@@ -141,7 +141,7 @@ namespace XamCore.CoreFoundation {
 
 	// CFIndex
 	[Native] // System/Library/Frameworks/CoreFoundation.framework/Headers/CFStream.h
-	public enum CFStreamStatus : nint {
+	public enum CFStreamStatus : long {
 		NotOpen = 0,
 		Opening,
 		Open,

@@ -22,7 +22,7 @@
 //
 using System;
 using System.Runtime.InteropServices;
-namespace XamCore.AppKit {
+namespace AppKit {
 	[StructLayout (LayoutKind.Sequential)]
 	public struct NSEdgeInsets {
 		public nfloat Top, Left, Bottom, Right;

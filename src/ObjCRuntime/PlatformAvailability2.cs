@@ -7,9 +7,6 @@
 // introduced originally for XAMCORE_2_0 where the Platform enum
 // cannot cleanly scale to other platforms (e.g. WatchOS).
 //
-// The pmcs preprocessor translates all legacy availability
-// attributes into these new ones for all builds.
-//
 // Used by unit tests to automatically skip selectors not available
 // on the host platform and can be used by tooling (IDE) to hide
 // APIs not available on the target platform.
@@ -22,7 +19,7 @@
 using System;
 using System.Text;
 
-namespace XamCore.ObjCRuntime
+namespace ObjCRuntime
 {
 	[Flags]
 	public enum PlatformArchitecture : byte

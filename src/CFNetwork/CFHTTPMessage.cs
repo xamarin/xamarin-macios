@@ -12,15 +12,15 @@ using System;
 using System.Net;
 using System.Security.Authentication;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using ObjCRuntime;
 
 // CFHTTPMessage is in CFNetwork.framework, no idea why it ended up in CoreServices when it was bound.
 #if XAMCORE_4_0
-namespace XamCore.CFNetwork {
+namespace CFNetwork {
 #else
-namespace XamCore.CoreServices {
+namespace CoreServices {
 #endif
 
 	public partial class CFHTTPMessage : CFType, INativeObject, IDisposable {

@@ -1,8 +1,8 @@
 #if XAMCORE_2_0 || !MONOMAC
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.MapKit {
+namespace MapKit {
 
 	// .net does not allow float-based enumerations
 	[TV (11,0)][NoWatch][iOS (11,0)][Mac (10,13, onlyOn64: true)]

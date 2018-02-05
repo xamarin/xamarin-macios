@@ -28,7 +28,7 @@
 
 using System;
 
-namespace XamCore.Security {
+namespace Security {
 
 	// this is only available on OSX (not iOS)
 	// typedef FourCharCode 	SecItemClass;

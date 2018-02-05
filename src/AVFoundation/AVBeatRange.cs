@@ -24,10 +24,10 @@
 //
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 
 	[iOS (9,0), Mac (10,11)]
 	[StructLayout (LayoutKind.Sequential)]

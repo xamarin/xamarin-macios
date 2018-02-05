@@ -11,12 +11,12 @@ using System;
 using System.Runtime.InteropServices;
 using System.Collections;
 
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreText;
+using CoreGraphics;
+using Foundation;
+using ObjCRuntime;
+using CoreText;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	public class UIFontFeature : INativeObject {
 		static NSObject [] keys = new NSObject [] { UIFontDescriptor.UIFontFeatureTypeIdentifierKey, UIFontDescriptor.UIFontFeatureSelectorIdentifierKey };
 		
