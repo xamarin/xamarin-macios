@@ -2322,7 +2322,7 @@ public class TestApp {
 			case "dont link":
 			case "link sdk":
 			case "link all":
-				subdir = "/linker-ios";
+				subdir = "/linker/ios";
 				break;
 			case "monotouch-test":
 				break;

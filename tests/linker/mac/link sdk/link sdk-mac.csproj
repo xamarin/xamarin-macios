@@ -61,19 +61,19 @@
     <None Include="Info.plist" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\common\mac\MacTestMain.cs">
+    <Compile Include="..\..\..\common\mac\MacTestMain.cs">
       <Link>MacTestMain.cs</Link>
     </Compile>
-    <Compile Include="..\..\common\mac\Mac.cs">
+    <Compile Include="..\..\..\common\mac\Mac.cs">
       <Link>Mac.cs</Link>
     </Compile>
     <Compile Include="LinkSdkTest.cs" />
-    <Compile Include="..\..\common\PlatformInfo.cs">
+    <Compile Include="..\..\..\common\PlatformInfo.cs">
       <Link>PlatformInfo.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\external\guiunit\src\framework\GuiUnit_xammac_mobile.csproj">
+    <ProjectReference Include="..\..\..\..\external\guiunit\src\framework\GuiUnit_xammac_mobile.csproj">
       <Project>{EACFD119-769E-4E6C-89B7-A6CE3757C431}</Project>
       <Name>GuiUnit_xammac_mobile</Name>
     </ProjectReference>
