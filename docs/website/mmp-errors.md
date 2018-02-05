@@ -259,7 +259,7 @@ it may also give clues as to why the call couldn't be optimized.
 
 ### <a name="MM4134">MM4134: Your application is using the '{0}' framework, which isn't included in the MacOS SDK you're using to build your app (this framework was introduced in OSX {2}, while you're building with the MacOS {1} SDK.) This configuration is not supported with the static registrar (pass --registrar:dynamic as an additional mmp argument in your project's Mac Build option to select). Alternatively select a newer SDK in your app's Mac Build options.
 
-### <a name="MT4173"/>MT4173: The registrar can't compute the block signature for the delegate of type {delegate-type} in the method {method} because *.
+### <a name="MM4173"/>MM4173: The registrar can't compute the block signature for the delegate of type {delegate-type} in the method {method} because *.
 
 This is a warning indicating that the registrar couldn't inject the block
 signature of the specified method into the generated registrar code, because
