@@ -60,6 +60,7 @@
 	#define x_get_matrix_float4x3 object_x_get_matrix_float4x3
 	#define x_get_matrix_float3x3 object_x_get_matrix_float3x3
 	#define x_get_matrix_float2x2 object_x_get_matrix_float2x2
+	#define x_call_block          object_x_call_block
 #elif PREFIX == 2
 	#define theUltimateAnswer ar_theUltimateAnswer
 	#define useZLib           ar_useZLib
@@ -121,6 +122,7 @@
 	#define x_get_matrix_float4x3 ar_x_get_matrix_float4x3
 	#define x_get_matrix_float3x3 ar_x_get_matrix_float3x3
 	#define x_get_matrix_float2x2 ar_x_get_matrix_float2x2
+	#define x_call_block          ar_x_call_block
 #else
 // keep original names
 #endif
