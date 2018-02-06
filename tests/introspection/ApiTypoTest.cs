@@ -221,6 +221,7 @@ namespace Introspection
 			"Gpu",	// acronym for Graphics Processing Unit
 			"Grbg", // acronym for Green-Red-Blue-Green
 			"Greeking",
+			"Gtin",
 			"Hardlink",
 			"Hdmi",
 			"Hdr",
@@ -577,7 +578,6 @@ namespace Introspection
 			"Fourty",
 			"Grammarl",
 			"Greeking",
-			"Gtin",
 			"Hsb",
 			"Hsba",
 			"Ibss",
