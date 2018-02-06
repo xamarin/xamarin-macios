@@ -575,7 +575,7 @@ namespace BI1063Tests {
 	}
 }");
 			bgen.AssertExecuteError ("build");
-			bgen.AssertError (1063, "The 'WrapAttribute' can only be used either at property level or at getter/setter level in a given time. Property: 'BI1063Tests.Wrappers.PresenceType'");
+			bgen.AssertError (1063, "The 'WrapAttribute' can only be used at the property or at getter/setter level at a given time. Property: 'BI1063Tests.Wrappers.PresenceType'");
 		}
 
 		[Test]
