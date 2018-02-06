@@ -2314,10 +2314,9 @@ namespace Registrar {
 
 		public string ComputeSignature (TType DeclaringType, TMethod Method, ObjCMember member = null, bool isCategoryInstance = false, bool isBlockSignature = false)
 		{
-			var success = true;
-			var signature = new StringBuilder ();
 			bool is_ctor;
 			var method = member as ObjCMethod;
+			TType return_type = null;
 
 			if (Method != null) {
 				is_ctor = IsConstructor (Method);
@@ -2325,16 +2324,8 @@ namespace Registrar {
 				is_ctor = method.IsConstructor;
 			}
 
-			if (is_ctor) {
-				signature.Append ('@');
-			} else {
-				var ReturnType = Method != null ? GetReturnType (Method) : method.NativeReturnType;
-				signature.Append (ToSignature (ReturnType, member, ref success));
-				if (!success)
-					throw CreateException (4104, Method ?? method.Method, "The registrar cannot marshal the return value of type `{0}` in the method `{1}.{2}`.", GetTypeFullName (ReturnType), GetTypeFullName (DeclaringType), GetDescriptiveMethodName (Method ?? method.Method));
-			}
-
-			signature.Append (isBlockSignature ? "@?" : "@:");
+			if (!is_ctor)
+				return_type = Method != null ? GetReturnType (Method) : method.NativeReturnType;
 
 			TType[] parameters;
 			if (Method != null) {
@@ -2343,6 +2334,26 @@ namespace Registrar {
 				parameters = method.NativeParameters;
 			}
 
+			return ComputeSignature (DeclaringType, is_ctor, return_type, parameters, Method, member, isCategoryInstance, isBlockSignature);
+		}
+
+		public string ComputeSignature (TType declaring_type, bool is_ctor, TType return_type, TType [] parameters, TMethod mi = null, ObjCMember member = null, bool isCategoryInstance = false, bool isBlockSignature = false)
+		{
+			var success = true;
+			var signature = new StringBuilder ();
+			if (mi == null)
+				mi = (member as ObjCMethod)?.Method;
+			
+			if (is_ctor) {
+				signature.Append ('@');
+			} else {
+				signature.Append (ToSignature (return_type, member, ref success));
+				if (!success)
+					throw CreateException (4104, mi, "The registrar cannot marshal the return value of type `{0}` in the method `{1}.{2}`.", GetTypeFullName (return_type), GetTypeFullName (declaring_type), GetDescriptiveMethodName (mi));
+			}
+
+			signature.Append (isBlockSignature ? "@?" : "@:");
+
 			if (parameters != null) {
 				for (int i = 0; i < parameters.Length; i++) {
 					if (i == 0 && isCategoryInstance)
@@ -2350,14 +2361,24 @@ namespace Registrar {
 					var type = parameters [i];
 					if (IsByRef (type)) {
 						signature.Append ("^");
-						signature.Append (ToSignature (GetElementType (type), member, ref success));
+						var elementType = GetElementType (type);
+						if (IsNullable (elementType)) {
+							signature.Append (ToSignature (GetNullableType (elementType), member, ref success));
+						} else {
+							signature.Append (ToSignature (elementType, member, ref success));
+						}
 					} else {
 						signature.Append (ToSignature (type, member, ref success));
 					}
 					if (!success) {
-						var mi = Method ?? method.Method;
+						if (mi != null) {
+							// The input 'parameters' might be closed generic types, and thus might not correspond exactly with the source code.
+							// By fetching the parameters from the method again, we attempt to report the parameter type as close as possible
+							// to the source code.
+							parameters = GetParameters (mi);
+						}
 						throw CreateException (4136, mi, "The registrar cannot marshal the parameter type '{0}' of the parameter '{1}' in the method '{2}.{3}'",
-							GetTypeFullName (GetParameters (mi) [i]), GetParameterName (mi, i), GetTypeFullName (DeclaringType), GetDescriptiveMethodName (mi));
+							GetTypeFullName (parameters [i]), GetParameterName (mi, i), GetTypeFullName (declaring_type), GetDescriptiveMethodName (mi));
 					}
 				}
 			}

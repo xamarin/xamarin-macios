@@ -426,13 +426,30 @@ public interface IMemberGatherer {
 	IEnumerable<MethodInfo> GetTypeContractMethods (Type source);
 }
 
+class WrapPropMemberInformation
+{
+	public bool HasWrapOnGetter { get => WrapGetter != null; }
+	public bool HasWrapOnSetter { get => WrapSetter != null; }
+	public string WrapGetter { get; private set; }
+	public string WrapSetter { get; private set; }
+
+	public WrapPropMemberInformation (PropertyInfo pi)
+	{
+		WrapGetter = AttributeManager.GetCustomAttribute<WrapAttribute> (pi?.GetMethod)?.MethodName;
+		WrapSetter = AttributeManager.GetCustomAttribute<WrapAttribute> (pi?.SetMethod)?.MethodName;
+	}
+}
+
+
 public class MemberInformation
 {
 	public readonly MemberInfo mi;
 	public readonly Type type;
 	public readonly Type category_extension_type;
+	internal readonly WrapPropMemberInformation wpmi;
 	public readonly bool is_abstract, is_protected, is_internal, is_unified_internal, is_override, is_new, is_sealed, is_static, is_thread_static, is_autorelease, is_wrapper, is_forced;
 	public readonly bool is_type_sealed, ignore_category_static_warnings, is_basewrapper_protocol_method;
+	public readonly bool has_inner_wrap_attribute;
 	public readonly Generator.ThreadCheck threadCheck;
 	public bool is_unsafe, is_virtual_method, is_export, is_category_extension, is_variadic, is_interface_impl, is_extension_method, is_appearance, is_model, is_ctor;
 	public bool is_return_release;
@@ -572,6 +589,17 @@ public class MemberInformation
 			is_virtual_method = false;
 		else
 			is_virtual_method = !is_static;
+
+		// Properties can have WrapAttribute on getter/setter so we need to check for this
+		// but only if no Export is already found on property level.
+		if (export is null) {
+			wpmi = new WrapPropMemberInformation (pi);
+			has_inner_wrap_attribute = wpmi.HasWrapOnGetter || wpmi.HasWrapOnSetter;
+
+			// Wrap can only be used either at property level or getter/setter level at a given time.
+			if (wrap_method != null && has_inner_wrap_attribute)
+				throw new BindingException (1063, true, $"The 'WrapAttribute' can only be used at the property or at getter/setter level at a given time. Property: '{pi.DeclaringType}.{pi.Name}'");
+		}
 	}
 
 	public string GetVisibility ()
@@ -2264,7 +2292,10 @@ public partial class Generator : IMemberGatherer {
 
 					if (AttributeManager.HasAttribute<CoreImageFilterPropertyAttribute> (pi))
 						continue;
-					
+
+					if (AttributeManager.HasAttribute<WrapAttribute> (pi.GetGetMethod ()) || AttributeManager.HasAttribute<WrapAttribute> (pi.GetSetMethod ()))
+						continue;
+
 					throw new BindingException (1018, true, "No [Export] attribute on property {0}.{1}", t.FullName, pi.Name);
 				}
 				if (AttributeManager.HasAttribute<StaticAttribute> (pi))
@@ -4653,6 +4684,39 @@ public partial class Generator : IMemberGatherer {
 			indent--;
 			print ("}\n");
 			return;			
+		} else if (minfo.has_inner_wrap_attribute) {
+			// If property getter or setter has its own WrapAttribute we let the user do whatever their heart desires
+			if (pi.CanRead) {
+				PrintAttributes (pi, platform: true);
+				PrintAttributes (pi.GetGetMethod (), platform: true, preserve: true, advice: true);
+				print ("get {");
+				indent++;
+
+				print ($"return {minfo.wpmi.WrapGetter};");
+
+				indent--;
+				print ("}");
+			}
+			if (pi.CanWrite) {
+				var setter = pi.GetSetMethod ();
+				var not_implemented_attr = AttributeManager.GetCustomAttribute<NotImplementedAttribute> (setter);
+
+				PrintAttributes (pi, platform: true);
+				PrintAttributes (setter, platform: true, preserve: true, advice: true, notImplemented: true);
+				print ("set {");
+				indent++;
+
+				if (not_implemented_attr != null)
+					print ("throw new NotImplementedException ({0});", not_implemented_attr.Message == null ? "" : $@"""{not_implemented_attr.Message}""");
+				else
+					print ($"{minfo.wpmi.WrapSetter};");
+
+				indent--;
+				print ("}");
+			}
+			indent--;
+			print ("}\n");
+			return;
 		}
 
 		if (pi.CanRead){

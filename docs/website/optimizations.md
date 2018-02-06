@@ -304,3 +304,47 @@ methods with the `[BindingImpl (BindingImplOptions.Optimizable)]` attribute.
 It is always enabled by default (when the linker is enabled).
 
 The default behavior can be overridden by passing `--optimize=[+|-]dead-code-elimination` to mtouch/mmp.
+
+Optimize calls to BlockLiteral.SetupBlock
+-----------------------------------------
+
+The Xamarin.iOS/Mac runtime needs to know the block signature when creating an
+Objective-C block for a managed delegate. This might be a fairly expensive
+operation. This optimization will calculate the block signature at build time,
+and modify the IL to call a `SetupBlock` method that takes the signature as an
+argument instead. Doing this avoids the need for calculating the signature at
+runtime.
+
+Benchmarks show that this speeds up calling a block by a factor of 10 to 15.
+
+It will transform the following [code](https://github.com/xamarin/xamarin-macios/blob/018f7153441d9d7e0f58e2046f39eeb46f1ff480/src/UIKit/UIAccessibility.cs#L198-L211):
+
+```csharp
+public static void RequestGuidedAccessSession (bool enable, Action<bool> completionHandler)
+{
+	// ...
+	block_handler.SetupBlock (callback, completionHandler);
+	// ...
+}
+```
+
+into:
+
+```csharp
+public static void RequestGuidedAccessSession (bool enable, Action<bool> completionHandler)
+{
+	// ...
+	block_handler.SetupBlockImpl (callback, completionHandler, true, "v@?B");
+	// ...
+}
+```
+
+This optimization requires the linker to be enabled, and is only applied to
+methods with the `[BindingImpl (BindingImplOptions.Optimizable)]` attribute.
+
+It is enabled by default when using the static registrar (in Xamarin.iOS the
+static registrar is enabled by default for device builds, and in Xamarin.Mac
+the static registrar is enabled by default for release builds).
+
+The default behavior can be overridden by passing `--optimize=[+|-]blockliteral-setupblock` to mtouch/mmp.
+

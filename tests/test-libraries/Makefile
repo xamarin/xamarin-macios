@@ -55,7 +55,7 @@ clean-$(1):
 	rm -Rf .libs/$(1)
 
 CLEAN_TARGETS += clean-$(1)
-EXTRA_DEPENDENCIES = libtest.h $(GENERATED_FILES)
+EXTRA_DEPENDENCIES = libtest.h $(GENERATED_FILES) rename.h
 
 .libs/$(1)/libtest-object.%.o: export EXTRA_DEFINES=-DPREFIX=1
 .libs/$(1)/libtest-ar.%.o: export EXTRA_DEFINES=-DPREFIX=2

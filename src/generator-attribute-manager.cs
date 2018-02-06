@@ -283,6 +283,8 @@ public static class AttributeManager
 
 	public static T GetCustomAttribute<T> (ICustomAttributeProvider provider) where T : System.Attribute
 	{
+		if (provider is null)
+			return null;
 		var rv = GetCustomAttributes<T> (provider);
 		if (rv == null || rv.Length == 0)
 			return null;

@@ -251,6 +251,7 @@ namespace CoreText {
  		}
 		
 		[iOS (9,0)][Mac (10,11)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateCaretOffsets (CaretEdgeEnumerator enumerator)
 		{
 			if (enumerator == null)

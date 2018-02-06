@@ -196,6 +196,7 @@ namespace UIKit {
 		extern unsafe static void UIAccessibilityRequestGuidedAccessSession (/* BOOL */ bool enable, /* void(^completionHandler)(BOOL didSucceed) */ void * completionHandler);
 
 		[iOS (7,0)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void RequestGuidedAccessSession (bool enable, Action<bool> completionHandler)
 		{
 			unsafe {

@@ -17,6 +17,11 @@ void useZLib ()
 	printf ("ZLib version: %s\n", zlibVersion ());
 }
 
+void x_call_block (x_block_callback block)
+{
+	block ();
+}
+
 typedef matrix_float2x2 (*func_x_get_matrix_float2x2_msgSend) (id self, SEL sel);
 void
 x_get_matrix_float2x2 (id self, const char *sel,
