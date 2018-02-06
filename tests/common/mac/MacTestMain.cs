@@ -38,7 +38,7 @@ namespace Xamarin.Mac.Tests
 				args.Add ($"-test={testName}");
 
 #if ADD_BCL_EXCLUSIONS
-			args.Add ("-exclude=MacNotWorking,MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingInterpreter");
+			args.Add ("-exclude=MacNotWorking,MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingLinqInterpreter");
 #endif
 
 			// Skip arguments added by VSfM/macOS when running from the IDE
