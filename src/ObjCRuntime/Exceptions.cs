@@ -7,9 +7,9 @@
 // Copyright 2016 Xamarin Inc.
 
 using System;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 	public delegate void MarshalObjectiveCExceptionHandler (object sender, MarshalObjectiveCExceptionEventArgs args);
 
 	public class MarshalObjectiveCExceptionEventArgs {

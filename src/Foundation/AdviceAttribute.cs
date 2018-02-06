@@ -29,7 +29,7 @@
 
 using System;
 
-namespace XamCore.Foundation
+namespace Foundation
 {
 	[AttributeUsage (AttributeTargets.Class | AttributeTargets.Struct |
 		AttributeTargets.Enum | AttributeTargets.Constructor |
@@ -37,7 +37,7 @@ namespace XamCore.Foundation
 		AttributeTargets.Field | AttributeTargets.Event |
 		AttributeTargets.Interface | AttributeTargets.Delegate,
 		Inherited=false)]
-	public sealed class AdviceAttribute : Attribute
+	public class AdviceAttribute : Attribute
 	{
 		public AdviceAttribute (string message)
 		{

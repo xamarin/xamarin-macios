@@ -2,10 +2,17 @@
 
 using System;
 using System.Threading.Tasks;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.SceneKit {
+#if WATCH
+using AnimationType = global::SceneKit.ISCNAnimationProtocol;
+#else
+using CoreAnimation;
+using AnimationType = global::CoreAnimation.CAAnimation;
+#endif
+
+namespace SceneKit {
 
 #if !XAMCORE_3_0
 	partial class SCNAction {
@@ -65,11 +72,43 @@ namespace XamCore.SceneKit {
 		[iOS (9, 0)]
 		[Mac (10, 11, 0, PlatformArchitecture.Arch64)]
 		[Obsolete ("Use 'SCNSceneRenderer_Extensions.PresentSceneAsync' instead.")]
-		public unsafe virtual Task PresentSceneAsync (SCNScene scene, global::XamCore.SpriteKit.SKTransition transition, SCNNode pointOfView)
+		public unsafe virtual Task PresentSceneAsync (SCNScene scene, global::SpriteKit.SKTransition transition, SCNNode pointOfView)
 		{
 			return SCNSceneRenderer_Extensions.PresentSceneAsync (this, scene, transition, pointOfView);
 		}
 	}
 #endif
+#endif
+
+
+#if !XAMCORE_4_0
+	[Mac (10,9), iOS (8,0), Watch (4,0)]
+	public delegate void SCNAnimationEventHandler (AnimationType animation, NSObject animatedObject, bool playingBackward);
+
+	public partial class SCNAnimationEvent : NSObject
+	{
+		public static SCNAnimationEvent Create (nfloat keyTime, SCNAnimationEventHandler eventHandler)
+		{
+			var handler = new Action<IntPtr, NSObject, bool> ((animationPtr, animatedObject, playingBackward) => {
+				var animation = Runtime.GetINativeObject<AnimationType> (animationPtr, true);
+				eventHandler (animation, animatedObject, playingBackward);
+			});
+			return Create (keyTime, handler);
+		}
+	}
+#endif
+
+#if !WATCH && !XAMCORE_4_0
+	[iOS (11,0)]
+	[TV (11,0)]
+	[Mac (10,13,0, PlatformArchitecture.Arch64)]
+	static public partial class SCNAnimatableExtensions {
+		static public void AddAnimation (this ISCNAnimatable self, SCNAnimation animation, string key)
+		{
+			using (var ca = CAAnimation.FromSCNAnimation (animation))
+			using (var st = key != null ? new NSString (key) : null)
+				self.AddAnimation (ca, st);
+		}
+	}
 #endif
 }

@@ -35,11 +35,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.AddressBook {
+namespace AddressBook {
 	static class ABGroupProperty {
 
 		public static int Name {get; private set;}
@@ -78,7 +78,6 @@ namespace XamCore.AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABGroupCreateInSource (IntPtr source);
 
-		[iOS (4,0)]
 		public ABGroup (ABRecord source)
 			: base (IntPtr.Zero, true)
 		{
@@ -107,7 +106,6 @@ namespace XamCore.AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABGroupCopySource (IntPtr group);
 
-		[iOS (4,0)]
 		public ABRecord Source {
 			get {
 				var h = ABGroupCopySource (Handle);

@@ -25,7 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 	
 	public partial class NSScreen {
 		

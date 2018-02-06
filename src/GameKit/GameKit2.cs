@@ -9,11 +9,11 @@
 //
 
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
 
-namespace XamCore.GameKit {
+namespace GameKit {
 #if !MONOMAC && !TVOS && !WATCH
 	public class GKDataReceivedEventArgs : EventArgs {
 		public GKDataReceivedEventArgs (NSData data, string peer, GKSession session)
@@ -357,7 +357,6 @@ namespace XamCore.GameKit {
 
 #if !XAMCORE_2_0
 	public partial class GKScore {
-		[iOS (4, 1)]
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'LeaderboardIdentifier' instead.")]
 		[Mac (10, 8)]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'LeaderboardIdentifier' instead.")]

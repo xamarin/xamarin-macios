@@ -27,6 +27,18 @@ multiple run configurations (`ios-classic`, `ios-unified`, `tvos`, `watchos`,
 `mac-classic`, `mac-unified`, `mac-full`), each configured to execute the
 generator with the options for the corresponding profile.
 
+### Generator diff
+
+Two special `make` targets can be used to compare the generated code (.g.cs files) changes between two branches.  
+This is **required** when making changes to the generator.
+
+1. Checkout the clean base branch (e.g master's HEAD) the feature (target) branch is based on.
+2. Do `make generator-reference` in `xamarin-macios/src`.
+3. Checkout the feature branch that requires the diff.
+4. Do `make generator-diff`.
+
+*Tip: do `git diff | pbcopy` in `xamarin-ios/src/generator-reference` and paste that anywhere ([gist](https://gist.github.com) for instance).*
+
 Conditional compilation
 =======================
 
@@ -45,25 +57,29 @@ To build core for only one platform, use the platform unique variables `IOS`, `M
 
 ## Core Assemblies ##
 
-Currently 3 variations of the core Xamarin.iOS assembly and 5 variations of
+Currently 2 variations of the core Xamarin.iOS assembly and 4 variations of
 the core Xamarin.Mac assembly are produced:
 
 ### Xamarin.iOS ###
 
-* A 32-bit Classic assembly (uses `System.Int32` in place of `NSInteger`, etc.)
 * A 32-bit Unified assembly (uses `System.nint` in place of `NSInteger`, etc.)
 * A 64-bit Unified assembly (same as 32-bit Unified)
 
 ### Xamarin.Mac ###
 
-* A 32-bit Classic assembly (uses `System.Int32` in place of `NSInteger`, etc.)
 * A 32-bit Unified assembly (uses `System.nint` in place of `NSInteger`, etc.)
 * A 64-bit Unified assembly (same as 32-bit Unified)
 * A 32-bit Full assembly (uses `System.nint` in place of `NSInteger`, and references the v4.5 BCL)
 * A 64-bit Full assembly (same as 32-bit Full)
 
-The Classic assembly will exist in order to not break customer code. Customers
-can choose to continue using this assembly, but we will encourage customers to
+## Classic Assemblies ###
+
+The 32-bit Classic assemblies for iOS and Mac are no longer built and are now
+copied from the [macios-binaries](https://github.com/xamarin/macios-binaries)
+module. 
+
+The Classic assembly are copied in, tested, and shipped in order to not break customer code. 
+Customers can choose to continue using this assembly, but we will encourage customers to
 move to our Unified assemblies.
 
 The Unified assemblies provides many improvements and support for 64-bit
@@ -95,16 +111,6 @@ In the Classic assembly, the `System.Drawing` types are backed by the 32-bit
 `System.Single` type. In the Unified assemblies, the `CoreGraphics` types
 are backed by 32/64-bit `System.nfloat` type.
 
-When binding APIs, it is important to use the *new* types (`nint`, `CGRect`,
-etc), *even though they do not exist in the Classic assembly*.
-
-Before compilation, all source code is preprocessed by `pmcs`, an internal
-tool for performing C#-aware preprocessing.
-
-For the Classic assembly, instances of the new types are translated to the
-legacy types. For the Unified assemblies, these types are not translated,
-and the native types are included in the build.
-
 #### Enums ####
 
 Enums are handled specially. Most native enums are backed by `NSInteger` or
@@ -119,11 +125,6 @@ API is identical between the 32/64-bit assemblies but also hints to the code
 generator that Objective-C runtime calls should first cast the enum to a
 `System.nint` or `System.nuint`.
 
-However, this also presents a problem of keeping the enum 32-bit on the
-Classic assemblies. Therefore, enums should actually be backed in source
-code `nuint_compat_int`. This will be preprocessed to `int` on the Classic
-assembly and `ulong` on the 32/64-bit assemblies.
-
 **Native Enum Definition**
 
 ```c
@@ -137,7 +138,7 @@ typedef NS_ENUM(NSUInteger, NSTableViewDropOperation) {
 
 ```csharp
 [Native]
-public enum NSTableViewDropOperation : nuint_compat_int {
+public enum NSTableViewDropOperation : nuint {
 	DropOn,
 	DropAbove
 }
@@ -169,17 +170,6 @@ public partial class Fooable {
 	}
 }
 ```
-
-### pmcs ###
-
-`pmcs` is a wrapper around a regular `mcs` invocation. In addition to any
-regular arguments passed to `mcs`, `pmcs` accepts instructions on how to
-translate some tokens from one value to another. This is used to translate
-instances of native types in source code to legacy types for the 32-bit
-Classic assembly.
-
-`pmcs` lives in the `xamarin-macios` repository and is used for both Xamarin.Mac
-and Xamarin.iOS. [Explore pmcs documentation](https://github.com/xamarin/xamarin-macios/blob/master/tools/pmcs/README.md).
 
 ### `#define` ###
 

@@ -29,11 +29,11 @@
 
 using System;
 
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using ObjCRuntime;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 
 	public class AVUrlAssetOptions : DictionaryContainer
 	{
@@ -57,7 +57,6 @@ namespace XamCore.AVFoundation {
 			}
 		}
 
-		[iOS (5,0)]
 		public AVAssetReferenceRestrictions? ReferenceRestrictions {
 			set {
 				SetNumberValue (AVUrlAsset.ReferenceRestrictionsKey, (nuint?) (ulong?) value);

@@ -20,10 +20,10 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-using XamCore.Foundation;
+using Foundation;
 using System;
 
-namespace XamCore.QTKit {
+namespace QTKit {
 
 	public partial class QTCaptureDevice {
 		public static QTCaptureDevice [] GetInputDevices (QTMediaType mediaType)

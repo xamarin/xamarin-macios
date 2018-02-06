@@ -32,23 +32,23 @@
 using System;
 using System.Diagnostics;
 #if MONOMAC
-using XamCore.AppKit;
-using XamCore.CoreVideo;
-using XamCore.OpenGL;
+using AppKit;
+using CoreVideo;
+using OpenGL;
 #else
-using XamCore.OpenGLES;
-using XamCore.UIKit;
+using OpenGLES;
+using UIKit;
 #endif
-using XamCore.Foundation;
-using XamCore.CoreImage;
-using XamCore.CoreGraphics;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreImage;
+using CoreGraphics;
+using ObjCRuntime;
 #if XAMCORE_2_0 || !MONOMAC
-using XamCore.Metal;
+using Metal;
 #endif
-using XamCore.SceneKit; // For SCNAnimationEvent
+using SceneKit; // For SCNAnimationEvent
 
-namespace XamCore.CoreAnimation {
+namespace CoreAnimation {
 
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -443,19 +443,15 @@ namespace XamCore.CoreAnimation {
 		[Protocolize]
 		CALayerDelegate Delegate { get; set; }
 
-		[iOS (3,2)]
 		[Export ("shadowColor")]
 		CGColor ShadowColor { get; set; }
 
-		[iOS (3,2)]
 		[Export ("shadowOffset")]
 		CGSize ShadowOffset { get; set; }
 
-		[iOS (3,2)]
 		[Export ("shadowOpacity")]
 		float ShadowOpacity { get; set; } /* float, not CGFloat */
 
-		[iOS (3,2)]
 		[Export ("shadowRadius")]
 		nfloat ShadowRadius { get; set; }
 
@@ -558,16 +554,13 @@ namespace XamCore.CoreAnimation {
 		void AddConstraint (CAConstraint c);
 #endif
 
-		[iOS (3,2)]
 		[Export ("shouldRasterize")]
 		bool ShouldRasterize { get; set; }
 
 		[NullAllowed]
-		[iOS (3,2)]
 		[Export ("shadowPath")]
 		CGPath ShadowPath { get; set; }
 
-		[iOS (3,2)]
 		[Export ("rasterizationScale")]
 		nfloat RasterizationScale { get; set; }
 
@@ -771,11 +764,9 @@ namespace XamCore.CoreAnimation {
 		[Export ("strokeColor")] [NullAllowed]
 		CGColor StrokeColor { get; set; }
 
-		[iOS (4,2)]
 		[Export ("strokeStart")]
 		nfloat StrokeStart { get; set; }
 
-		[iOS (4,2)]
 		[Export ("strokeEnd")]
 		nfloat StrokeEnd { get; set; }
 
@@ -844,7 +835,6 @@ namespace XamCore.CoreAnimation {
 		Natural,
 	}
 
-	[iOS (3,2)]
 	[BaseType (typeof (CALayer))]
 	interface CATextLayer {
 		[Export ("layer"), New, Static]
@@ -984,7 +974,11 @@ namespace XamCore.CoreAnimation {
 		void RunAction (string eventKey, NSObject obj, [NullAllowed] NSDictionary arguments);
 	}
 	
-	[BaseType (typeof (NSObject), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] { typeof (CAAnimationDelegate)})]
+	[BaseType (typeof (NSObject)
+#if XAMCORE_4_0
+		, Delegates = new string [] {"WeakDelegate"}, Events = new Type [] { typeof (CAAnimationDelegate) }
+#endif
+	)]
 	interface CAAnimation : CAAction, CAMediaTiming, NSSecureCoding, NSMutableCopying, SCNAnimationProtocol {
 		[Export ("animation"), Static]
 		CAAnimation CreateAnimation ();
@@ -997,8 +991,11 @@ namespace XamCore.CoreAnimation {
 		[Export ("timingFunction", ArgumentSemantic.Strong)]
 		CAMediaTimingFunction TimingFunction { get; set; }
 	
+#if XAMCORE_4_0
+		// before that we need to be wrap this manually to avoid the BI1110 error
 		[Wrap ("WeakDelegate")]
-		CAAnimationDelegate Delegate { get; set; }
+		ICAAnimationDelegate Delegate { get; set; }
+#endif
 	
 		[Export ("delegate", ArgumentSemantic.Strong)][NullAllowed]
 		NSObject WeakDelegate { get; set; }
@@ -1013,7 +1010,6 @@ namespace XamCore.CoreAnimation {
 		void DidChangeValueForKey (string key);
 
 		[Export ("shouldArchiveValueForKey:")]
-		[iOS (4,0)]
 		bool ShouldArchiveValueForKey ([NullAllowed] string key);
 
 		[Field ("kCATransitionFade")]
@@ -1097,11 +1093,19 @@ namespace XamCore.CoreAnimation {
 		#endregion
 	}
 
-	// Adding [Protocol] breaks when building with older SDKs (see bug #43825)
-	//[Protocol] // since iOS10
+	interface ICAAnimationDelegate {}
+
 	[BaseType (typeof (NSObject))]
-	[Model]
+#if IOS || TVOS
+	[Protocol (FormalSince = "10.0")]
+#elif MONOMAC
+	[Protocol (FormalSince = "10.12")]
+#elif WATCH
+	[Protocol (FormalSince = "3.0"]
+#else
 	[Synthetic]
+#endif
+	[Model]
 	interface CAAnimationDelegate {
 		[Export ("animationDidStart:")]
 		void AnimationStarted ([NullAllowed] CAAnimation anim);
@@ -1333,9 +1337,8 @@ namespace XamCore.CoreAnimation {
 		[Export ("setValue:forKey:")]
 		void SetValueForKey ([NullAllowed] NSObject anObject, NSString key);
 
-		[iOS (4,0)]
 		[Static, Export ("completionBlock"), NullAllowed]
-		NSAction CompletionBlock { get; set; }
+		Action CompletionBlock { get; set; }
 
 		[Field ("kCATransactionAnimationDuration")]
 		NSString AnimationDurationKey { get; }
@@ -1491,7 +1494,6 @@ namespace XamCore.CoreAnimation {
 	}
 #endif
 
-	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 	interface CAEmitterCell : CAMediaTiming, NSSecureCoding {
 		[NullAllowed] // by default this property is null
@@ -1621,7 +1623,6 @@ namespace XamCore.CoreAnimation {
 		nfloat ContentsScale { get; set; }
 	}
 
-	[iOS (5,0)]
 	[BaseType (typeof (CALayer))]
 	interface CAEmitterLayer {
 		[Export ("layer"), New, Static]

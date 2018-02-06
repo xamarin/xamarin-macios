@@ -8,16 +8,16 @@
 // Copyright 2009, Novell, Inc.
 // Copyright 2012 Xamarin Inc.
 //
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.StoreKit;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using StoreKit;
 #if !MONOMAC
-using XamCore.UIKit;
+using UIKit;
 #endif
 using System;
 
-namespace XamCore.StoreKit {
+namespace StoreKit {
 
 	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]
@@ -80,7 +80,7 @@ namespace XamCore.StoreKit {
 #if !MONOMAC
 		[Static]
 		[Export ("paymentWithProductIdentifier:")]
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_5_0, Message = "Use 'FromProduct (SKProduct)'' after fetching the list of available products from 'SKProductRequest' instead.")]
+		[Availability (Deprecated = Platform.iOS_5_0, Message = "Use 'FromProduct (SKProduct)'' after fetching the list of available products from 'SKProductRequest' instead.")]
 		SKPayment CreateFrom (string identifier);
 #endif
 
@@ -112,7 +112,7 @@ namespace XamCore.StoreKit {
 
 		[Static]
 		[Export ("paymentWithProductIdentifier:")]
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_5_0, Message = "Use 'PaymentWithProduct (SKProduct)' after fetching the list of available products from 'SKProductRequest' instead.")]
+		[Availability (Deprecated = Platform.iOS_5_0, Message = "Use 'PaymentWithProduct (SKProduct)' after fetching the list of available products from 'SKProductRequest' instead.")]
 		SKMutablePayment PaymentWithProduct (string identifier);
 
 		[NullAllowed] // by default this property is null
@@ -288,7 +288,7 @@ namespace XamCore.StoreKit {
 		string TransactionIdentifier { get; }
 
 #if !MONOMAC
-		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_7_0, Message = "Use 'NSBundle.AppStoreReceiptUrl' instead.")]
+		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'NSBundle.AppStoreReceiptUrl' instead.")]
 		[Export ("transactionReceipt")]
 		NSData TransactionReceipt { get; }
 #endif

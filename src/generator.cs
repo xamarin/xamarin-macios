@@ -50,8 +50,8 @@ using Type = IKVM.Reflection.Type;
 using System.Text;
 using System.ComponentModel;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
 public static class GeneratorExtensions
 {
@@ -426,13 +426,30 @@ public interface IMemberGatherer {
 	IEnumerable<MethodInfo> GetTypeContractMethods (Type source);
 }
 
+class WrapPropMemberInformation
+{
+	public bool HasWrapOnGetter { get => WrapGetter != null; }
+	public bool HasWrapOnSetter { get => WrapSetter != null; }
+	public string WrapGetter { get; private set; }
+	public string WrapSetter { get; private set; }
+
+	public WrapPropMemberInformation (PropertyInfo pi)
+	{
+		WrapGetter = AttributeManager.GetCustomAttribute<WrapAttribute> (pi?.GetMethod)?.MethodName;
+		WrapSetter = AttributeManager.GetCustomAttribute<WrapAttribute> (pi?.SetMethod)?.MethodName;
+	}
+}
+
+
 public class MemberInformation
 {
 	public readonly MemberInfo mi;
 	public readonly Type type;
 	public readonly Type category_extension_type;
+	internal readonly WrapPropMemberInformation wpmi;
 	public readonly bool is_abstract, is_protected, is_internal, is_unified_internal, is_override, is_new, is_sealed, is_static, is_thread_static, is_autorelease, is_wrapper, is_forced;
 	public readonly bool is_type_sealed, ignore_category_static_warnings, is_basewrapper_protocol_method;
+	public readonly bool has_inner_wrap_attribute;
 	public readonly Generator.ThreadCheck threadCheck;
 	public bool is_unsafe, is_virtual_method, is_export, is_category_extension, is_variadic, is_interface_impl, is_extension_method, is_appearance, is_model, is_ctor;
 	public bool is_return_release;
@@ -572,6 +589,17 @@ public class MemberInformation
 			is_virtual_method = false;
 		else
 			is_virtual_method = !is_static;
+
+		// Properties can have WrapAttribute on getter/setter so we need to check for this
+		// but only if no Export is already found on property level.
+		if (export is null) {
+			wpmi = new WrapPropMemberInformation (pi);
+			has_inner_wrap_attribute = wpmi.HasWrapOnGetter || wpmi.HasWrapOnSetter;
+
+			// Wrap can only be used either at property level or getter/setter level at a given time.
+			if (wrap_method != null && has_inner_wrap_attribute)
+				throw new BindingException (1063, true, $"The 'WrapAttribute' can only be used at the property or at getter/setter level at a given time. Property: '{pi.DeclaringType}.{pi.Name}'");
+		}
 	}
 
 	public string GetVisibility ()
@@ -671,7 +699,6 @@ public class NamespaceManager
 
 		ImplicitNamespaces = new HashSet<string> ();
 		ImplicitNamespaces.Add ("System");
-		ImplicitNamespaces.Add ("System.Runtime.CompilerServices");
 		ImplicitNamespaces.Add ("System.Runtime.InteropServices");
 		ImplicitNamespaces.Add ("System.Diagnostics");
 		ImplicitNamespaces.Add ("System.ComponentModel");
@@ -2149,7 +2176,7 @@ public partial class Generator : IMemberGatherer {
 		marshal_types.Add (new MarshalType (TypeManager.Selector, create: "Selector.FromHandle ("));
 		marshal_types.Add (new MarshalType (TypeManager.BlockLiteral, "BlockLiteral", "{0}", "THIS_IS_BROKEN"));
 		if (TypeManager.MusicSequence != null)
-			marshal_types.Add (new MarshalType (TypeManager.MusicSequence, create: "global::XamCore.AudioToolbox.MusicSequence.Lookup ("));
+			marshal_types.Add (new MarshalType (TypeManager.MusicSequence, create: "global::AudioToolbox.MusicSequence.Lookup ("));
 		marshal_types.Add (TypeManager.CGColor);
 		marshal_types.Add (TypeManager.CGPath);
 		marshal_types.Add (TypeManager.CGGradient);
@@ -2265,7 +2292,10 @@ public partial class Generator : IMemberGatherer {
 
 					if (AttributeManager.HasAttribute<CoreImageFilterPropertyAttribute> (pi))
 						continue;
-					
+
+					if (AttributeManager.HasAttribute<WrapAttribute> (pi.GetGetMethod ()) || AttributeManager.HasAttribute<WrapAttribute> (pi.GetSetMethod ()))
+						continue;
+
 					throw new BindingException (1018, true, "No [Export] attribute on property {0}.{1}", t.FullName, pi.Name);
 				}
 				if (AttributeManager.HasAttribute<StaticAttribute> (pi))
@@ -2345,12 +2375,15 @@ public partial class Generator : IMemberGatherer {
 						continue;
 					else if (attr is AvailabilityBaseAttribute)
 						continue;
+					else if (attr is RequiresSuperAttribute)
+						continue;
 					else {
 						switch (attr.GetType ().Name) {
 						case "PreserveAttribute":
 						case "CompilerGeneratedAttribute":
 						case "ManualAttribute":
 						case "MarshalDirectiveAttribute":
+						case "BindingImplAttribute":
 							continue;
 						default:
 							throw new BindingException (1007, true, "Unknown attribute {0} on {1}.{2}", attr.GetType (), mi.DeclaringType, mi.Name);
@@ -2472,7 +2505,7 @@ public partial class Generator : IMemberGatherer {
 		Header (sw);
 		print ("namespace {0} {{", ns.CoreObjCRuntime); indent++;
 		print ("");
-		print ("[CompilerGenerated]");
+		print_generated_code ();
 		print ("static partial class Trampolines {"); indent++;
 
 		print ("");
@@ -2557,6 +2590,7 @@ public partial class Generator : IMemberGatherer {
 			print ("{0} invoker;", ti.DelegateName);
 			print ("");
 			print ("[Preserve (Conditional=true)]");
+			print_generated_code ();
 			print ("public unsafe {0} (BlockLiteral *block)", ti.NativeInvokerName);
 			print ("{"); indent++;
 			print ("blockPtr = _Block_copy ((IntPtr) block);", ns.CoreObjCRuntime);
@@ -2564,12 +2598,14 @@ public partial class Generator : IMemberGatherer {
 			indent--; print ("}");
 			print ("");
 			print ("[Preserve (Conditional=true)]");
+			print_generated_code ();
 			print ("~{0} ()", ti.NativeInvokerName);
 			print ("{"); indent++;
 			print ("_Block_release (blockPtr);", ns.CoreObjCRuntime);
 			indent--; print ("}");
 			print ("");
 			print ("[Preserve (Conditional=true)]");
+			print_generated_code ();
 			print ("public unsafe static {0} Create (IntPtr block)\n{{", ti.UserDelegate); indent++;
 			print ("if (block == IntPtr.Zero)"); indent++;
 			print ("return null;"); indent--;
@@ -2584,6 +2620,7 @@ public partial class Generator : IMemberGatherer {
 			var string_pars = new StringBuilder ();
 			MakeSignatureFromParameterInfo (false, string_pars, mi, declaringType: null, parameters: parameters);
 			print ("[Preserve (Conditional=true)]");
+			print_generated_code ();
 			print ("unsafe {0} Invoke ({1})", FormatType (null, mi.ReturnType), string_pars.ToString ());
 			print ("{"); indent++;
 			string cast_a = "", cast_b = "";
@@ -2651,7 +2688,7 @@ public partial class Generator : IMemberGatherer {
 		
 		Header (sw);
 		print ("namespace {0} {{", ns.CoreObjCRuntime); indent++;
-		print ("[CompilerGenerated]");
+		print_generated_code ();
 		print ("static partial class Libraries {"); indent++;
 		foreach (var library_info in libraries.OrderBy (v => v.Key, StringComparer.Ordinal)) {
 			var library_name = library_info.Key;
@@ -2911,7 +2948,7 @@ public partial class Generator : IMemberGatherer {
 					print ("static IntPtr {0};", kn);
 					print ("");
 					// linker will remove the attributes (but it's useful for testing)
-					print ("[CompilerGenerated]");
+					print_generated_code ();
 					print ("{0} {1}{2} {3} {{",
 					       is_internal ? "internal" : "public",
 					       propertyType,
@@ -3037,7 +3074,7 @@ public partial class Generator : IMemberGatherer {
 	{
 		for (int i=0; i < tabs; i++)
 			sw.Write ('\t');
-		sw.WriteLine ("[CompilerGenerated]");
+		sw.WriteLine ("[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]");
 	}
 
 	static void WriteIsDirectBindingCondition (StreamWriter sw, ref int tabs, bool? is_direct_binding, string is_direct_binding_value, Func<string> trueCode, Func<string> falseCode)
@@ -3361,7 +3398,7 @@ public partial class Generator : IMemberGatherer {
 		string name = minfo.is_ctor ? GetGeneratedTypeName (mi.DeclaringType) : is_async ? GetAsyncName (mi) : mi.Name;
 
 		// Some codepaths already write preservation info
-		PrintAttributes (minfo.mi, preserve:!alreadyPreserved, advice:true, bindAs:true);
+		PrintAttributes (minfo.mi, preserve:!alreadyPreserved, advice:true, bindAs:true, requiresSuper: true);
 
 		if (!minfo.is_ctor && !is_async){
 			var prefix = "";
@@ -3929,11 +3966,12 @@ public partial class Generator : IMemberGatherer {
 					var et = pi.ParameterType.GetElementType ();
 					var nullable = TypeManager.GetUnderlyingNullableType (et);
 					if (nullable != null) {
-						convs.Append ("var converted = IntPtr.Zero;");
-						convs.Append ("if (value.HasValue) {");
-						convs.Append ("\tvar v = value.Value;");
-						convs.Append ("\tconverted = new IntPtr (&v);");
-						convs.Append ("}");
+						convs.Append ("var converted = IntPtr.Zero;\n");
+						convs.Append ($"var v = default ({FormatType (mi.DeclaringType, nullable)});\n");
+						convs.Append ("if (value.HasValue) {\n");
+						convs.Append ("\tv = value.Value;\n");
+						convs.Append ("\tconverted = new IntPtr (&v);\n");
+						convs.Append ("}\n");
 					}
 				}
 			}
@@ -4593,7 +4631,7 @@ public partial class Generator : IMemberGatherer {
 			if (!is_model && DoesPropertyNeedBackingField (pi) && !is_interface_impl && !minfo.is_static && !DoesPropertyNeedDirtyCheck (pi, export)) {
 				var_name = string.Format ("__mt_{0}_var{1}", pi.Name, minfo.is_static ? "_static" : "");
 
-				print ("[CompilerGenerated]");
+				print_generated_code ();
 
 				if (minfo.is_thread_static)
 					print ("[ThreadStatic]");
@@ -4646,6 +4684,39 @@ public partial class Generator : IMemberGatherer {
 			indent--;
 			print ("}\n");
 			return;			
+		} else if (minfo.has_inner_wrap_attribute) {
+			// If property getter or setter has its own WrapAttribute we let the user do whatever their heart desires
+			if (pi.CanRead) {
+				PrintAttributes (pi, platform: true);
+				PrintAttributes (pi.GetGetMethod (), platform: true, preserve: true, advice: true);
+				print ("get {");
+				indent++;
+
+				print ($"return {minfo.wpmi.WrapGetter};");
+
+				indent--;
+				print ("}");
+			}
+			if (pi.CanWrite) {
+				var setter = pi.GetSetMethod ();
+				var not_implemented_attr = AttributeManager.GetCustomAttribute<NotImplementedAttribute> (setter);
+
+				PrintAttributes (pi, platform: true);
+				PrintAttributes (setter, platform: true, preserve: true, advice: true, notImplemented: true);
+				print ("set {");
+				indent++;
+
+				if (not_implemented_attr != null)
+					print ("throw new NotImplementedException ({0});", not_implemented_attr.Message == null ? "" : $@"""{not_implemented_attr.Message}""");
+				else
+					print ($"{minfo.wpmi.WrapSetter};");
+
+				indent--;
+				print ("}");
+			}
+			indent--;
+			print ("}\n");
+			return;
 		}
 
 		if (pi.CanRead){
@@ -4924,7 +4995,7 @@ public partial class Generator : IMemberGatherer {
 			GetInvokeParamList (minfo.async_initial_params, false),
 			minfo.async_initial_params.Length > 0 ? ", " : "",
 			GetInvokeParamList (minfo.async_completion_params),
-			minfo.is_extension_method ? "This." : string.Empty,
+			minfo.is_extension_method || minfo.is_category_extension ? "This." : string.Empty,
 			is_void || ignoreResult ? string.Empty : minfo.GetUniqueParamName ("result") + " = ",
 			is_void || ignoreResult ? string.Empty : (asyncKind == AsyncMethodKind.WithResultOutParameter ? string.Empty : "var ")
 		);
@@ -5639,6 +5710,15 @@ public partial class Generator : IMemberGatherer {
 		print ($"[Advice ({Quote (p.Message)})]");
 	}
 
+	public void PrintRequiresSuperAttribute (ICustomAttributeProvider mi)
+	{
+		var p = AttributeManager.GetCustomAttribute<RequiresSuperAttribute> (mi);
+		if (p == null)
+			return;
+
+		print ("[RequiresSuper]");
+	}
+
 	public void PrintNotImplementedAttribute (ICustomAttributeProvider mi)
 	{
 		var p = AttributeManager.GetCustomAttribute<NotImplementedAttribute> (mi);
@@ -5671,7 +5751,7 @@ public partial class Generator : IMemberGatherer {
 			print (attribstr);
 	}
 
-	public void PrintAttributes (ICustomAttributeProvider mi, bool platform = false, bool preserve = false, bool advice = false, bool notImplemented = false, bool bindAs = false)
+	public void PrintAttributes (ICustomAttributeProvider mi, bool platform = false, bool preserve = false, bool advice = false, bool notImplemented = false, bool bindAs = false, bool requiresSuper = false)
 	{
 		if (platform)
 			PrintPlatformAttributes (mi as MemberInfo);
@@ -5683,6 +5763,8 @@ public partial class Generator : IMemberGatherer {
 			PrintNotImplementedAttribute (mi);
 		if (bindAs)
 			PrintBindAsAttribute (mi);
+		if (requiresSuper)
+			PrintRequiresSuperAttribute (mi);
 	}
 
 	public void ComputeLibraryName (FieldAttribute fieldAttr, Type type, string propertyName, out string library_name, out string library_path)
@@ -5948,7 +6030,7 @@ public partial class Generator : IMemberGatherer {
 					var selectorField = SelectorField (ea, true);
 					if (!InlineSelectors) {
 						selectorField = selectorField.Substring (0, selectorField.Length - 6 /* Handle */);
-						print ("[CompilerGenerated]");
+						print_generated_code ();
 						print ("const string {0} = \"{1}\";", selectorField, ea);
 						print ("static readonly IntPtr {0} = Selector.GetHandle (\"{1}\");", SelectorField (ea), ea);
 					}
@@ -5962,7 +6044,7 @@ public partial class Generator : IMemberGatherer {
 					objc_type_name = FormatCategoryClassName (bta);
 				
 				if (!is_model) {
-					print ("[CompilerGenerated]");
+					print_generated_code ();
 					print ("static readonly IntPtr class_ptr = Class.GetHandle (\"{0}\");\n", objc_type_name);
 				}
 			}
@@ -6213,7 +6295,7 @@ public partial class Generator : IMemberGatherer {
 
 					// Value types we dont cache for now, to avoid Nullable<T>
 					if (!field_pi.PropertyType.IsValueType || smartEnumTypeName != null) {
-						print ("[CompilerGenerated]");
+						print_generated_code ();
 						PrintPreserveAttribute (field_pi);
 						print ("static {0} _{1};", fieldTypeName, field_pi.Name);
 					}
@@ -6740,7 +6822,7 @@ public partial class Generator : IMemberGatherer {
 			if (!is_static_class){
 				var disposeAttr = AttributeManager.GetCustomAttributes<DisposeAttribute> (type);
 				if (disposeAttr.Length > 0 || instance_fields_to_clear_on_dispose.Count > 0){
-					print ("[CompilerGenerated]");
+					print_generated_code ();
 					print ("protected override void Dispose (bool disposing)");
 					print ("{");
 					indent++;

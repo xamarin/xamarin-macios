@@ -23,11 +23,11 @@
 
 using System;
 
-using XamCore.AppKit;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using AppKit;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.MediaLibrary {
+namespace MediaLibrary {
 	[Static]
 	[Mac (10,9, onlyOn64 : true)]
 	interface MediaLibraryTypeIdentifierKey {
@@ -199,6 +199,10 @@ namespace XamCore.MediaLibrary {
 		[Mac (10,10,3, onlyOn64 : true)]
 		[Field ("MLPhotosAllPhotosAlbumTypeIdentifier")]
 		NSString PhotosAllPhotosAlbumTypeIdentifier { get; }
+
+		[Mac (10,12,1, onlyOn64 : true)]
+		[Field ("MLPhotosDepthEffectGroupTypeIdentifier")]
+		NSString PhotosDepthEffectGroupTypeIdentifier { get; }
 
 		[Field ("MLiPhotoRootGroupTypeIdentifier")]
 		NSString IPhotoRootGroupTypeIdentifier { get; }

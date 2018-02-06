@@ -21,13 +21,13 @@ using ProductException=Xamarin.Bundler.MonoTouchException;
 using ProductException=Xamarin.Bundler.MonoMacException;
 #endif
 
-using XamCore.Registrar;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Registrar;
+using Foundation;
+using ObjCRuntime;
 using Mono.Cecil;
 using Mono.Tuner;
 
-namespace XamCore.Registrar {
+namespace Registrar {
 	/*
 	 * This class will automatically detect lines starting/ending with curly braces,
 	 * and indent/unindent accordingly.
@@ -204,8 +204,9 @@ namespace XamCore.Registrar {
 		}
 	}
 
-	static class SharedStatic {
-		public static bool IsPlatformType (this TypeReference type, string @namespace, string name)
+	class StaticRegistrar : Registrar
+	{
+		public static bool IsPlatformType (TypeReference type, string @namespace, string name)
 		{
 			if (Registrar.IsDualBuild) {
 				return type.Is (@namespace, name);
@@ -396,7 +397,7 @@ namespace XamCore.Registrar {
 					if (impl.Name != ifaceMethod.Name)
 						continue;
 
-					if (!SharedStatic.MethodMatch (impl, ifaceMethod))
+					if (!MethodMatch (impl, ifaceMethod))
 						continue;
 
 					List<MethodDefinition> list;
@@ -514,9 +515,7 @@ namespace XamCore.Registrar {
 
 			return tr.Is (Registrar.ObjCRuntime, Registrar.StringConstants.INativeObject);
 		}
-	}
 
-	class StaticRegistrar : Registrar{
 		public Target Target { get; private set; }
 		public bool IsSingleAssembly { get { return !string.IsNullOrEmpty (single_assembly); } }
 
@@ -528,7 +527,7 @@ namespace XamCore.Registrar {
 		readonly Version MacOSTenTwelveVersion = new Version (10,12);
 #endif
 
-		public Mono.Linker.LinkContext LinkContext {
+		public Xamarin.Tuner.DerivedLinkContext LinkContext {
 			get {
 				return Target?.LinkContext;
 			}
@@ -537,7 +536,7 @@ namespace XamCore.Registrar {
 		Dictionary<IMetadataTokenProvider, object> AvailabilityAnnotations {
 			get {
 				if (availability_annotations == null)
-					availability_annotations = LinkContext?.Annotations?.GetCustomAnnotations ("Availability");
+					availability_annotations = LinkContext?.GetAllCustomAttributes ("Availability");
 				return availability_annotations;
 			}
 		}
@@ -660,13 +659,13 @@ namespace XamCore.Registrar {
 		{
 			CustomAttribute attrib;
 			method = GetBaseMethodInTypeHierarchy (method);
-			return SharedStatic.TryGetAttributeImpl (method.MethodReturnType, ObjCRuntime, StringConstants.ReleaseAttribute, out attrib);
+			return TryGetAttributeImpl (method.MethodReturnType, ObjCRuntime, StringConstants.ReleaseAttribute, out attrib);
 		}
 
 		protected override bool HasThisAttribute (MethodDefinition method)
 		{
 			CustomAttribute attrib;
-			return SharedStatic.TryGetAttributeImpl (method, "System.Runtime.CompilerServices", "ExtensionAttribute", out attrib);
+			return TryGetAttributeImpl (method, "System.Runtime.CompilerServices", "ExtensionAttribute", out attrib);
 		}
 
 #if MTOUCH
@@ -689,7 +688,9 @@ namespace XamCore.Registrar {
 			get {
 				if (IsSingleAssembly)
 					return App.Is64Build;
-				return Target.Is64Build;
+				
+				// Target can be null when mmp is run for multiple assemblies
+				return Target != null ? Target.Is64Build : App.Is64Build;
 			}
 		}
 
@@ -867,6 +868,13 @@ namespace XamCore.Registrar {
 
 		protected override TypeReference GetElementType (TypeReference type)
 		{
+			var ts = type as TypeSpecification;
+			if (ts != null) {
+				// TypeSpecification.GetElementType calls GetElementType on the element type, thus unwinding multiple element types (which we don't want).
+				// By fetching the ElementType property we only unwind one level.
+				// This matches what the dynamic registrar (System.Reflection) does.
+				return ts.ElementType;
+			}
 			return type.GetElementType ();
 		}
 
@@ -930,7 +938,7 @@ namespace XamCore.Registrar {
 		protected override bool IsDelegate (TypeReference tr)
 		{
 			var type = tr.Resolve ();
-			return SharedStatic.IsDelegate (type);
+			return IsDelegate (type);
 		}
 
 		protected override bool IsValueType (TypeReference type)
@@ -941,7 +949,7 @@ namespace XamCore.Registrar {
 
 		bool IsNativeEnum (TypeDefinition td)
 		{
-			return IsDualBuild && SharedStatic.HasAttribute (td, ObjCRuntime, StringConstants.NativeAttribute);
+			return IsDualBuild && HasAttribute (td, ObjCRuntime, StringConstants.NativeAttribute);
 		}
 
 		protected override bool IsNullable (TypeReference type)
@@ -1014,7 +1022,7 @@ namespace XamCore.Registrar {
 			if (a == null ^ b == null)
 				return false;
 			
-			return SharedStatic.TypeMatch (a, b);
+			return TypeMatch (a, b);
 		}
 
 		protected override bool VerifyIsConstrainedToNSObject (TypeReference type, out TypeReference constrained_type)
@@ -1081,7 +1089,7 @@ namespace XamCore.Registrar {
 
 		protected override bool IsINativeObject (TypeReference tr)
 		{
-			return SharedStatic.IsNativeObject (tr);
+			return IsNativeObject (tr);
 		}
 
 		protected override TypeReference GetBaseType (TypeReference tr)
@@ -1110,7 +1118,7 @@ namespace XamCore.Registrar {
 		protected override TypeReference GetEnumUnderlyingType (TypeReference tr)
 		{
 			var type = tr.Resolve ();
-			return SharedStatic.GetEnumUnderlyingType (type);
+			return GetEnumUnderlyingType (type);
 		}
 
 		protected override TypeReference[] GetParameters (MethodDefinition method)
@@ -1150,7 +1158,7 @@ namespace XamCore.Registrar {
 		protected override bool TryGetAttribute (TypeReference type, string attributeNamespace, string attributeType, out object attribute)
 		{
 			CustomAttribute attrib;
-			bool res = SharedStatic.TryGetAttributeImpl (type.Resolve (), attributeNamespace, attributeType, out attrib);
+			bool res = TryGetAttributeImpl (type.Resolve (), attributeNamespace, attributeType, out attrib);
 			attribute = attrib;
 			return res;
 		}
@@ -1160,7 +1168,7 @@ namespace XamCore.Registrar {
 			CustomAttribute attrib;
 			RegisterAttribute rv = null;
 
-			if (!SharedStatic.TryGetAttributeImpl (type.Resolve (), Foundation, StringConstants.RegisterAttribute, out attrib))
+			if (!TryGetAttributeImpl (type.Resolve (), Foundation, StringConstants.RegisterAttribute, out attrib))
 				return null;
 
 			if (!attrib.HasConstructorArguments) {
@@ -1207,7 +1215,7 @@ namespace XamCore.Registrar {
 			CustomAttribute attrib;
 			string name = null;
 
-			if (!SharedStatic.TryGetAttributeImpl (type.Resolve (), ObjCRuntime, StringConstants.CategoryAttribute, out attrib))
+			if (!TryGetAttributeImpl (type.Resolve (), ObjCRuntime, StringConstants.CategoryAttribute, out attrib))
 				return null;
 
 			if (!attrib.HasConstructorArguments)
@@ -1245,7 +1253,7 @@ namespace XamCore.Registrar {
 		{
 			CustomAttribute attrib;
 
-			if (!SharedStatic.TryGetAttributeImpl (type.Resolve (), Foundation, StringConstants.ProtocolAttribute, out attrib))
+			if (!TryGetAttributeImpl (type.Resolve (), Foundation, StringConstants.ProtocolAttribute, out attrib))
 				return null;
 
 			if (!attrib.HasProperties)
@@ -1354,35 +1362,29 @@ namespace XamCore.Registrar {
 			}
 		}
 
-		void CollectAvailabilityAttributes (IEnumerable<CustomAttribute> attributes, ref List<AvailabilityBaseAttribute> list)
-		{
-			CollectAvailabilityAttributes (attributes.Select ((v) => new Tuple<CustomAttribute, TypeReference> (v, v.Constructor.DeclaringType)), ref list);
-		}
-
-		void CollectAvailabilityAttributes (IEnumerable<Tuple<CustomAttribute, TypeReference>> attributes, ref List<AvailabilityBaseAttribute> list)
+		void CollectAvailabilityAttributes (IEnumerable<ICustomAttribute> attributes, ref List<AvailabilityBaseAttribute> list)
 		{
 			PlatformName currentPlatform;
 #if MTOUCH
 			switch (App.Platform) {
 			case Xamarin.Utils.ApplePlatform.iOS:
-				currentPlatform = global::XamCore.ObjCRuntime.PlatformName.iOS;
+				currentPlatform = global::ObjCRuntime.PlatformName.iOS;
 				break;
 			case Xamarin.Utils.ApplePlatform.TVOS:
-				currentPlatform = global::XamCore.ObjCRuntime.PlatformName.TvOS;
+				currentPlatform = global::ObjCRuntime.PlatformName.TvOS;
 				break;
 			case Xamarin.Utils.ApplePlatform.WatchOS:
-				currentPlatform = global::XamCore.ObjCRuntime.PlatformName.WatchOS;
+				currentPlatform = global::ObjCRuntime.PlatformName.WatchOS;
 				break;
 			default:
 				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", App.Platform);
 			}
 #else
-			currentPlatform = global::XamCore.ObjCRuntime.PlatformName.MacOSX;
+			currentPlatform = global::ObjCRuntime.PlatformName.MacOSX;
 #endif
 
-			foreach (var tuple in attributes) {
-				var ca = tuple.Item1;
-				var caType = tuple.Item2;
+			foreach (var ca in attributes) {
+				var caType = ca.AttributeType;
 				if (caType.Namespace != ObjCRuntime)
 					continue;
 				
@@ -1511,7 +1513,7 @@ namespace XamCore.Registrar {
 			if (AvailabilityAnnotations != null) {
 				object attribObjects;
 				if (AvailabilityAnnotations.TryGetValue (td, out attribObjects))
-					CollectAvailabilityAttributes ((List<Tuple<CustomAttribute, TypeReference>>) attribObjects, ref rv);
+					CollectAvailabilityAttributes ((IEnumerable<ICustomAttribute>) attribObjects, ref rv);
 			}
 
 			return rv;
@@ -1524,14 +1526,14 @@ namespace XamCore.Registrar {
 
 		protected override Dictionary<MethodDefinition, List<MethodDefinition>> PrepareMethodMapping (TypeReference type)
 		{
-			return SharedStatic.PrepareInterfaceMethodMapping (type);
+			return PrepareInterfaceMethodMapping (type);
 		}
 
 		protected override TypeReference GetProtocolAttributeWrapperType (TypeReference type)
 		{
 			CustomAttribute attrib;
 
-			if (!SharedStatic.TryGetAttributeImpl (type.Resolve (), Foundation, StringConstants.ProtocolAttribute, out attrib))
+			if (!TryGetAttributeImpl (type.Resolve (), Foundation, StringConstants.ProtocolAttribute, out attrib))
 				return null;
 
 			if (attrib.HasProperties) {
@@ -1553,7 +1555,7 @@ namespace XamCore.Registrar {
 
 			property = GetBasePropertyInTypeHierarchy (property);
 
-			if (!SharedStatic.TryGetAttributeImpl (property, ObjCRuntime, "BindAsAttribute", out attrib))
+			if (!TryGetAttributeImpl (property, ObjCRuntime, "BindAsAttribute", out attrib))
 				return null;
 
 			return CreateBindAsAttribute (attrib, property);
@@ -1568,7 +1570,7 @@ namespace XamCore.Registrar {
 
 			method = GetBaseMethodInTypeHierarchy (method);
 
-			if (!SharedStatic.TryGetAttributeImpl (parameter_index == -1 ? (ICustomAttributeProvider) method.MethodReturnType : method.Parameters [parameter_index], ObjCRuntime, "BindAsAttribute", out attrib))
+			if (!TryGetAttributeImpl (parameter_index == -1 ? (ICustomAttributeProvider) method.MethodReturnType : method.Parameters [parameter_index], ObjCRuntime, "BindAsAttribute", out attrib))
 				return null;
 
 			return CreateBindAsAttribute (attrib, method);
@@ -1612,7 +1614,7 @@ namespace XamCore.Registrar {
 		{
 			CustomAttribute attrib;
 
-			if (!SharedStatic.TryGetAttributeImpl (property, Foundation, StringConstants.ConnectAttribute, out attrib))
+			if (!TryGetAttributeImpl (property, Foundation, StringConstants.ConnectAttribute, out attrib))
 				return null;
 
 			if (!attrib.HasConstructorArguments)
@@ -1711,7 +1713,7 @@ namespace XamCore.Registrar {
 			if (candidate.GetMethod != null) {
 				if (property.GetMethod == null)
 					return false;
-				if (!SharedStatic.MethodMatch (candidate.GetMethod, property.GetMethod))
+				if (!MethodMatch (candidate.GetMethod, property.GetMethod))
 					return false;
 			} else if (property.GetMethod != null) {
 				return false;
@@ -1720,7 +1722,7 @@ namespace XamCore.Registrar {
 			if (candidate.SetMethod != null) {
 				if (property.SetMethod == null)
 					return false;
-				if (!SharedStatic.MethodMatch (candidate.SetMethod, property.SetMethod))
+				if (!MethodMatch (candidate.SetMethod, property.SetMethod))
 					return false;
 			} else if (property.SetMethod != null) {
 				return false;
@@ -1752,7 +1754,7 @@ namespace XamCore.Registrar {
 				return null;
 			
 			foreach (MethodDefinition candidate in type.Methods)
-				if (SharedStatic.MethodMatch (candidate, method))
+				if (MethodMatch (candidate, method))
 					return candidate;
 			
 			return null;
@@ -1942,8 +1944,8 @@ namespace XamCore.Registrar {
 				goto default;
 			case "GameKit":
 #if !MONOMAC
-				if (IsSimulator && App.Platform == Xamarin.Utils.ApplePlatform.WatchOS)
-					return; // No headers provided for watchOS/simulator.
+				if (IsSimulator && App.Platform == Xamarin.Utils.ApplePlatform.WatchOS && App.SdkVersion < new Version (3, 2))
+					return; // No headers provided for watchOS/simulator until watchOS 3.2.
 #endif
 				goto default;
 			case "WatchKit":
@@ -1955,11 +1957,10 @@ namespace XamCore.Registrar {
 				header.WriteLine ("#import <WatchKit/WatchKit.h>");
 				namespaces.Add ("UIKit");
 				return;
-			case "CoreNFC":
 			case "DeviceCheck":
 #if !MONOMAC
 				if (IsSimulator)
-					return; // No headers provided for simulator, which makes sense since there is no NFC on it.
+					return; // No headers provided for simulator
 #endif
 				goto default;
 			case "QTKit":
@@ -2205,8 +2206,8 @@ namespace XamCore.Registrar {
 						return GetExportedTypeName (td) + " *";
 					}
 				} else if (td.IsEnum) {
-					if (IsDualBuild && SharedStatic.HasAttribute (td, ObjCRuntime, StringConstants.NativeAttribute)) {
-						switch (SharedStatic.GetEnumUnderlyingType (td).FullName) {
+					if (IsDualBuild && HasAttribute (td, ObjCRuntime, StringConstants.NativeAttribute)) {
+						switch (GetEnumUnderlyingType (td).FullName) {
 						case "System.Int64":
 							return "NSInteger";
 						case "System.UInt64":
@@ -2217,7 +2218,7 @@ namespace XamCore.Registrar {
 						}
 					}
 
-					return ToObjCParameterType (SharedStatic.GetEnumUnderlyingType (td), descriptiveMethodName, exceptions, inMethod);
+					return ToObjCParameterType (GetEnumUnderlyingType (td), descriptiveMethodName, exceptions, inMethod);
 				} else if (td.IsValueType) {
 					if (IsPlatformType (td)) {
 						CheckNamespace (td, exceptions);
@@ -2225,7 +2226,7 @@ namespace XamCore.Registrar {
 					}
 					return CheckStructure (td, descriptiveMethodName, inMethod);
 				} else {
-					return SharedStatic.ToObjCType (td);
+					return ToObjCType (td);
 				}
 			}
 		}
@@ -2487,7 +2488,7 @@ namespace XamCore.Registrar {
 
 				skip.Clear ();
 
-				if (!@class.IsProtocol && !@class.IsModel && !@class.IsCategory) {
+				if (!@class.IsProtocol && !@class.IsCategory) {
 					if (!isPlatformType)
 						customTypeCount++;
 					
@@ -2533,9 +2534,6 @@ namespace XamCore.Registrar {
 					continue;
 
 				if (@class.Methods == null && isPlatformType && !@class.IsProtocol && !@class.IsCategory)
-					continue;
-
-				if (@class.IsModel)
 					continue;
 
 				CheckNamespace (@class, exceptions);
@@ -2697,6 +2695,14 @@ namespace XamCore.Registrar {
 				iface.WriteLine ();
 
 				if (!is_protocol && !@class.IsWrapper) {
+					var hasClangDiagnostic = @class.IsModel;
+					if (hasClangDiagnostic)
+						sb.WriteLine ("#pragma clang diagnostic push");
+					if (@class.IsModel) {
+						sb.WriteLine ("#pragma clang diagnostic ignored \"-Wprotocol\"");
+						sb.WriteLine ("#pragma clang diagnostic ignored \"-Wobjc-protocol-property-synthesis\"");
+						sb.WriteLine ("#pragma clang diagnostic ignored \"-Wobjc-property-implementation\"");
+					}
 					if (@class.IsCategory) {
 						sb.WriteLine ("@implementation {0} ({1})", EncodeNonAsciiCharacters (@class.BaseType.ExportedName), @class.CategoryName);
 					} else {
@@ -2723,6 +2729,8 @@ namespace XamCore.Registrar {
 					}
 					sb.Unindent ();
 					sb.WriteLine ("@end");
+					if (hasClangDiagnostic)
+						sb.AppendLine ("#pragma clang diagnostic pop");
 				}
 				sb.WriteLine ();
 			}
@@ -3065,8 +3073,8 @@ namespace XamCore.Registrar {
 					original_objctype = ToObjCParameterType (type, descriptiveMethodName, exceptions,  method.Method);
 					objctype = ToObjCParameterType (type, descriptiveMethodName, exceptions, method.Method) + "*";
 				} else if (td.IsEnum) {
-					type = SharedStatic.GetEnumUnderlyingType (td);
-					isNativeEnum = IsDualBuild && SharedStatic.HasAttribute (td, ObjCRuntime, StringConstants.NativeAttribute);
+					type = GetEnumUnderlyingType (td);
+					isNativeEnum = IsDualBuild && HasAttribute (td, ObjCRuntime, StringConstants.NativeAttribute);
 					td = type.Resolve ();
 				}
 
@@ -3202,7 +3210,7 @@ namespace XamCore.Registrar {
 						if (elementType.FullName == "System.String") {
 							setup_call_stack.AppendLine ("NSString *sv = (NSString *) [arr objectAtIndex: j];", i);
 							setup_call_stack.AppendLine ("mono_array_set (marr, MonoString *, j, mono_string_new (mono_domain_get (), [sv UTF8String]));", i);
-						} else if (IsNSObject (elementType) || (elementType.Namespace == "System" && elementType.Name == "Object") || (isNativeObject = SharedStatic.IsNativeObject (elementType))) {
+						} else if (IsNSObject (elementType) || (elementType.Namespace == "System" && elementType.Name == "Object") || (isNativeObject = IsNativeObject (elementType))) {
 							setup_call_stack.AppendLine ("NSObject *nobj = [arr objectAtIndex: j];");
 							setup_call_stack.AppendLine ("MonoObject *mobj{0} = NULL;", i);
 							setup_call_stack.AppendLine ("if (nobj) {");
@@ -3297,14 +3305,14 @@ namespace XamCore.Registrar {
 							setup_call_stack.AppendLine ("}");
 							setup_call_stack.AppendLine ("arg_ptrs [{0}] = mobj{0};", i);
 
-							if (SharedStatic.HasAttribute (paramBase, ObjCRuntime, StringConstants.TransientAttribute)) {
+							if (HasAttribute (paramBase, ObjCRuntime, StringConstants.TransientAttribute)) {
 								copyback.AppendLine ("if (created{0}) {{", i);
 								copyback.AppendLine ("xamarin_dispose (mobj{0}, &exception_gchandle);", i);
 								copyback.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 								copyback.AppendLine ("}");
 							}
 						}
-					} else if (SharedStatic.IsNativeObject (td)) {
+					} else if (IsNativeObject (td)) {
 						TypeDefinition nativeObjType = td;
 
 						if (td.IsInterface) {
@@ -3378,7 +3386,7 @@ namespace XamCore.Registrar {
 							setup_call_stack.AppendLine ("}");
 						}
 					} else {
-						throw ErrorHelper.CreateError (4105,
+						throw ErrorHelper.CreateError (App, 4105, method.Method,
 						                              "The registrar cannot marshal the parameter of type `{0}` in signature for method `{1}`.",
 						                              type.FullName, descriptiveMethodName);
 					}
@@ -3491,13 +3499,13 @@ namespace XamCore.Registrar {
 							setup_return.AppendLine ("[retobj autorelease];");
 						setup_return.AppendLine ("mt_dummy_use (retval);");
 						setup_return.AppendLine ("res = retobj;");
-					} else if (type.IsPlatformType ("ObjCRuntime", "Selector")) {
-						setup_return.AppendLine ("res = xamarin_get_selector_handle (retval, &exception_gchandle);");
+					} else if (IsPlatformType (type, "ObjCRuntime", "Selector")) {
+						setup_return.AppendLine ("res = (SEL) xamarin_get_handle_for_inativeobject (retval, &exception_gchandle);");
 						setup_return.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
-					} else if (type.IsPlatformType ("ObjCRuntime", "Class")) {
-						setup_return.AppendLine ("res = xamarin_get_class_handle (retval, &exception_gchandle);");
+					} else if (IsPlatformType (type, "ObjCRuntime", "Class")) {
+						setup_return.AppendLine ("res = (Class) xamarin_get_handle_for_inativeobject (retval, &exception_gchandle);");
 						setup_return.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
-					} else if (SharedStatic.IsNativeObject (type)) {
+					} else if (IsNativeObject (type)) {
 						setup_return.AppendLine ("{0} retobj;", rettype);
 						setup_return.AppendLine ("retobj = xamarin_get_handle_for_inativeobject ((MonoObject *) retval, &exception_gchandle);");
 						setup_return.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
@@ -3516,8 +3524,21 @@ namespace XamCore.Registrar {
 							setup_return.AppendLine ("[nsstr autorelease];");
 						setup_return.AppendLine ("mono_free (str);");
 						setup_return.AppendLine ("res = nsstr;");
-					} else if (SharedStatic.IsDelegate (type.Resolve ())) {
-						setup_return.AppendLine ("res = xamarin_get_block_for_delegate (managed_method, retval, &exception_gchandle);");
+					} else if (IsDelegate (type.Resolve ())) {
+						var signature = "NULL";
+						if (App.Optimizations.OptimizeBlockLiteralSetupBlock == true) {
+							if (type.Is ("System", "Delegate") || type.Is ("System", "MulticastDelegate")) {
+								ErrorHelper.Show (ErrorHelper.CreateWarning (App, 4173, method.Method, $"The registrar can't compute the block signature for the delegate of type {type.FullName} in the method {descriptiveMethodName} because {type.FullName} doesn't have a specific signature."));
+							} else {
+								var delegateMethod = type.Resolve ().GetMethods ().FirstOrDefault ((v) => v.Name == "Invoke");
+								if (delegateMethod == null) {
+									ErrorHelper.Show (ErrorHelper.CreateWarning (App, 4173, method.Method, $"The registrar can't compute the block signature for the delegate of type {type.FullName} in the method {descriptiveMethodName} because it couldn't find the Invoke method of the delegate type."));
+								} else {
+									signature = "\"" + ComputeSignature (method.DeclaringType.Type, null, method, isBlockSignature: true) + "\"";
+								}
+							}
+						}
+						setup_return.AppendLine ("res = xamarin_get_block_for_delegate (managed_method, retval, {0}, &exception_gchandle);", signature);
 						setup_return.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 					} else {
 						throw ErrorHelper.CreateError (4104, 
@@ -3893,17 +3914,28 @@ namespace XamCore.Registrar {
 
 			string func;
 			string nativeTypeName;
+			string token = "0";
 			if (underlyingNativeType.Is (Foundation, "NSNumber")) {
 				func = GetNSNumberToManagedFunc (underlyingManagedType, inputType, outputType, descriptiveMethodName, out nativeTypeName);
 			} else if (underlyingNativeType.Is (Foundation, "NSValue")) {
 				func = GetNSValueToManagedFunc (underlyingManagedType, inputType, outputType, descriptiveMethodName, out nativeTypeName);
 			} else if (underlyingNativeType.Is (Foundation, "NSString")) {
 				func = GetNSStringToSmartEnumFunc (underlyingManagedType, inputType, outputType, descriptiveMethodName, managedClassExpression, out nativeTypeName);
+				MethodDefinition getConstantMethod, getValueMethod;
+				if (!IsSmartEnum (underlyingManagedType, out getConstantMethod, out getValueMethod)) {
+					// method linked away!? this should already be verified
+					ErrorHelper.Show (ErrorHelper.CreateWarning (99, $"Internal error: the smart enum {underlyingManagedType.FullName} doesn't seem to be a smart enum after all. Please file a bug report with a test case (https://bugzilla.xamarin.com)."));
+					token = "INVALID_TOKEN_REF";
+				} else {
+					token = $"0x{CreateTokenReference (getValueMethod, TokenType.Method):X} /* {getValueMethod.FullName} */";
+				}
 			} else {
 				throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
 			}
 			if (isManagedArray) {
-				sb.AppendLine ($"{outputName} = xamarin_convert_nsarray_to_managed_with_func ({inputName}, {classVariableName}, (xamarin_id_to_managed_func) {func}, &exception_gchandle);");
+				sb.AppendLine ($"xamarin_id_to_managed_func {inputName}_conv_func = (xamarin_id_to_managed_func) {func};");
+				sb.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
+				sb.AppendLine ($"{outputName} = xamarin_convert_nsarray_to_managed_with_func ({inputName}, {classVariableName}, {inputName}_conv_func, {token}, &exception_gchandle);");
 				sb.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 			} else {
 				var tmpName = $"{inputName}_conv_tmp";
@@ -3911,11 +3943,11 @@ namespace XamCore.Registrar {
 				if (isManagedNullable) {
 					var tmpName2 = $"{inputName}_conv_ptr";
 					body_setup.AppendLine ($"void *{tmpName2} = NULL;");
-					sb.AppendLine ($"{tmpName2} = {func} ({inputName}, &{tmpName}, {classVariableName}, &exception_gchandle);");
+					sb.AppendLine ($"{tmpName2} = {func} ({inputName}, &{tmpName}, {classVariableName}, {token}, &exception_gchandle);");
 					sb.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 					sb.AppendLine ($"{outputName} = mono_value_box (mono_domain_get (), {classVariableName}, {tmpName2});");
 				} else {
-					sb.AppendLine ($"{outputName} = {func} ({inputName}, &{tmpName}, {classVariableName}, &exception_gchandle);");
+					sb.AppendLine ($"{outputName} = {func} ({inputName}, &{tmpName}, {classVariableName}, {token}, &exception_gchandle);");
 					sb.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 				}
 			}
@@ -3968,20 +4000,29 @@ namespace XamCore.Registrar {
 				sb.AppendLine ($"if ({inputName}) {{");
 
 			string func;
+			string token = "0";
 			if (underlyingNativeType.Is (Foundation, "NSNumber")) {
 				func = GetManagedToNSNumberFunc (underlyingManagedType, inputType, outputType, descriptiveMethodName);
 			} else if (underlyingNativeType.Is (Foundation, "NSValue")) {
 				func = GetManagedToNSValueFunc (underlyingManagedType, inputType, outputType, descriptiveMethodName);
 			} else if (underlyingNativeType.Is (Foundation, "NSString")) {
 				func = GetSmartEnumToNSStringFunc (underlyingManagedType, inputType, outputType, descriptiveMethodName, classVariableName);
+				MethodDefinition getConstantMethod, getValueMethod;
+				if (!IsSmartEnum (underlyingManagedType, out getConstantMethod, out getValueMethod)) {
+					// method linked away!? this should already be verified
+					ErrorHelper.Show (ErrorHelper.CreateWarning (99, $"Internal error: the smart enum {underlyingManagedType.FullName} doesn't seem to be a smart enum after all. Please file a bug report with a test case (https://bugzilla.xamarin.com)."));
+					token = "INVALID_TOKEN_REF";
+				} else {
+					token = $"0x{CreateTokenReference (getConstantMethod, TokenType.Method):X} /* {getConstantMethod.FullName} */";
+				}
 			} else {
 				throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
 			}
 
 			if (isManagedArray) {
-				sb.AppendLine ($"{outputName} = xamarin_convert_managed_to_nsarray_with_func ((MonoArray *) {inputName}, (xamarin_managed_to_id_func) {func}, &exception_gchandle);");
+				sb.AppendLine ($"{outputName} = xamarin_convert_managed_to_nsarray_with_func ((MonoArray *) {inputName}, (xamarin_managed_to_id_func) {func}, {token}, &exception_gchandle);");
 			} else {
-				sb.AppendLine ($"{outputName} = {func} ({inputName}, &exception_gchandle);");
+				sb.AppendLine ($"{outputName} = {func} ({inputName}, {token}, &exception_gchandle);");
 			}
 			sb.AppendLine ($"if (exception_gchandle != 0) goto exception_handling;");
 

@@ -29,10 +29,10 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.CoreGraphics {
+namespace CoreGraphics {
 
 	// untyped enum -> CGPath.h
 	public enum CGLineJoin {
@@ -58,7 +58,7 @@ namespace XamCore.CoreGraphics {
 	}
 	
 	// untyped enum -> CGContext.h
-	public enum CGTextDrawingMode : uint_compat_int {
+	public enum CGTextDrawingMode : uint {
 		Fill,
 		Stroke,
 		FillStroke,
@@ -1294,7 +1294,6 @@ namespace XamCore.CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGPathRef */ IntPtr CGContextCopyPath (/* CGContextRef */ IntPtr context);
 
-		[iOS (4,0)]
 		public CGPath CopyPath ()
 		{
 			var r = CGContextCopyPath (handle);
@@ -1304,7 +1303,6 @@ namespace XamCore.CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextSetAllowsFontSmoothing (/* CGContextRef */ IntPtr context, bool shouldSubpixelPositionFonts);
 
-		[iOS (4,0)]
 		public void SetAllowsFontSmoothing (bool allows)
 		{
 			CGContextSetAllowsFontSmoothing (handle, allows);
@@ -1313,7 +1311,6 @@ namespace XamCore.CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextSetAllowsFontSubpixelPositioning (/* CGContextRef */ IntPtr context, bool allowsFontSubpixelPositioning);
 
-		[iOS (4,0)]
 		public void SetAllowsSubpixelPositioning (bool allows)
 		{
 			CGContextSetAllowsFontSubpixelPositioning (handle, allows);
@@ -1322,7 +1319,6 @@ namespace XamCore.CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextSetAllowsFontSubpixelQuantization (/* CGContextRef */ IntPtr context, bool shouldSubpixelQuantizeFonts);
 
-		[iOS (4,0)]
 		public void SetAllowsFontSubpixelQuantization (bool allows)
 		{
 			CGContextSetAllowsFontSubpixelQuantization (handle, allows);
@@ -1331,7 +1327,6 @@ namespace XamCore.CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextSetShouldSubpixelPositionFonts (/* CGContextRef */ IntPtr context, bool shouldSubpixelPositionFonts);
 
-		[iOS (4,0)]
 		public void SetShouldSubpixelPositionFonts (bool shouldSubpixelPositionFonts)
 		{
 			CGContextSetShouldSubpixelPositionFonts (handle, shouldSubpixelPositionFonts);
@@ -1340,7 +1335,6 @@ namespace XamCore.CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGContextSetShouldSubpixelQuantizeFonts (/* CGContextRef */ IntPtr context, bool shouldSubpixelQuantizeFonts);
 
-		[iOS (4,0)]
 		public void ShouldSubpixelQuantizeFonts (bool shouldSubpixelQuantizeFonts)
 		{
 			CGContextSetShouldSubpixelQuantizeFonts (handle, shouldSubpixelQuantizeFonts);

@@ -8,15 +8,15 @@
 //
 //
 
-#if IOS || TVOS
+#if !WATCH
 
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.AudioToolbox {
+namespace AudioToolbox {
 
 	// untyped enum (used as an OSStatus in the API) -> MusicPlayer.h
 	public enum MusicPlayerStatus {

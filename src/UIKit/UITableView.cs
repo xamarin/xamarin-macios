@@ -2,18 +2,18 @@
 #if !WATCH // no header
 using System;
 using System.Runtime.InteropServices;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreAnimation;
-using XamCore.CoreLocation;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
+using CoreAnimation;
+using CoreLocation;
 #if IOS
-using XamCore.MapKit;
+using MapKit;
 #endif
-using XamCore.UIKit;
-using XamCore.CoreGraphics;
+using UIKit;
+using CoreGraphics;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	public partial class UITableView {
 		public UITableViewSource Source {
 			get {

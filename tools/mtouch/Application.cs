@@ -111,8 +111,7 @@ namespace Xamarin.Bundler {
 		public string SymbolList;
 		public bool ManagedStrip = true;
 		public List<string> NoSymbolStrip = new List<string> ();
-		
-		public bool? ThreadCheck;
+
 		public DlsymOptions DlsymOptions;
 		public List<Tuple<string, bool>> DlsymAssemblies;
 		public bool? UseMonoFramework;
@@ -1252,13 +1251,8 @@ namespace Xamarin.Bundler {
 				DeploymentTarget = new Version (9, 0);
 #endif
 
-			if (DeploymentTarget == null) {
+			if (DeploymentTarget == null)
 				DeploymentTarget = Xamarin.SdkVersions.GetVersion (Platform);
-			} else if (DeploymentTarget < Xamarin.SdkVersions.GetMinVersion (Platform)) {
-				throw new MonoTouchException (73, true, "Xamarin.iOS {0} does not support a deployment target of {1} for {3} (the minimum is {2}). Please select a newer deployment target in your project's Info.plist.", Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetMinVersion (Platform), PlatformName);
-			} else if (DeploymentTarget > Xamarin.SdkVersions.GetVersion (Platform)) {
-				throw new MonoTouchException (74, true, "Xamarin.iOS {0} does not support a deployment target of {1} for {3} (the maximum is {2}). Please select an older deployment target in your project's Info.plist or upgrade to a newer version of Xamarin.iOS.", Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetVersion (Platform), PlatformName);
-			}
 
 			if (Platform == ApplePlatform.iOS && (HasDynamicLibraries || HasFrameworks) && DeploymentTarget.Major < 8) {
 				ErrorHelper.Warning (78, "Incremental builds are enabled with a deployment target < 8.0 (currently {0}). This is not supported (the resulting application will not launch on iOS 9), so the deployment target will be set to 8.0.", DeploymentTarget);

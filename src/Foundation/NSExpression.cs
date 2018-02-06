@@ -3,9 +3,9 @@
 //       tests for those was not possible. The properties for these two types have been deduced from the other types yet bugs are possible and an objc excection will be thrown.
 using System;
 using System.Runtime.InteropServices;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	public partial class NSExpression {
 

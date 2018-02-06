@@ -10,12 +10,12 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
 using dispatch_queue_t = System.IntPtr;
 
-namespace XamCore.CoreFoundation {
+namespace CoreFoundation {
 
 	// untyped enum from CFMessagePort.h
 	// used as a return value of type SInt32 (always 4 bytes)

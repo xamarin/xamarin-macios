@@ -8,12 +8,12 @@
 //
 #if XAMCORE_2_0 || !MONOMAC
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 using Vector2 = global::OpenTK.Vector2;
 using System.Runtime.InteropServices;
 
-namespace XamCore.GameplayKit {
+namespace GameplayKit {
 	public partial class GKPolygonObstacle {
 
 		public static GKPolygonObstacle FromPoints (Vector2 [] points)

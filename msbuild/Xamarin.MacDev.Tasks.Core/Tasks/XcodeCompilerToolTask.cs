@@ -98,7 +98,7 @@ namespace Xamarin.MacDev.Tasks
 			yield break;
 		}
 
-		protected abstract void AppendCommandLineArguments (IDictionary<string, string> environment, ProcessArgumentBuilder args, ITaskItem[] items);
+		protected abstract void AppendCommandLineArguments (IDictionary<string, string> environment, CommandLineArgumentBuilder args, ITaskItem[] items);
 
 		string GetFullPathToTool ()
 		{
@@ -127,7 +127,7 @@ namespace Xamarin.MacDev.Tasks
 		protected int Compile (ITaskItem[] items, string output, ITaskItem manifest)
 		{
 			var environment = new Dictionary<string, string> ();
-			var args = new ProcessArgumentBuilder ();
+			var args = new CommandLineArgumentBuilder ();
 
 			if (!string.IsNullOrEmpty (SdkBinPath))
 				environment.Add ("PATH", SdkBinPath);

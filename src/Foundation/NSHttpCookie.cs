@@ -19,11 +19,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 // Copyright 2011, 2012 Xamarin Inc
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 using System;
 using System.Net;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	public partial class NSHttpCookie {
 
 #if !XAMCORE_2_0

@@ -27,29 +27,28 @@
 using System;
 using System.ComponentModel;
 using System.Reflection;
-using XamCore.AVFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
-using XamCore.CoreImage;
-using XamCore.CoreVideo;
-using XamCore.ImageIO;
-using XamCore.IOSurface;
+using AVFoundation;
+using Foundation;
+using ObjCRuntime;
+using CoreGraphics;
+using CoreImage;
+using CoreVideo;
+using ImageIO;
+using IOSurface;
 #if !MONOMAC || XAMCORE_2_0
-using XamCore.Metal;
+using Metal;
 #endif
 #if !MONOMAC
-using XamCore.OpenGLES;
-using XamCore.UIKit;
+using OpenGLES;
+using UIKit;
 #else
-using XamCore.AppKit;
-using XamCore.ImageKit;
+using AppKit;
+using ImageKit;
 #endif
 
-namespace XamCore.CoreImage {
+namespace CoreImage {
 
 	[BaseType (typeof (NSObject))]
-	[iOS (5,0)]
 	[DisableDefaultCtor]
 	interface CIColor : NSSecureCoding, NSCopying {
 		[Static]
@@ -202,7 +201,6 @@ namespace XamCore.CoreImage {
 	}
 
 	[BaseType (typeof (NSObject))]
-	[iOS (5,0)]
 	[DisableDefaultCtor]
 	interface CIContext {
 		// When we bind OpenGL add these:
@@ -286,9 +284,7 @@ namespace XamCore.CoreImage {
 		void Render (CIImage image, IMTLTexture texture, [NullAllowed] IMTLCommandBuffer commandBuffer, CGRect bounds, [NullAllowed] CGColorSpace colorSpace);
 #endif
 
-		[iOS (5, 0)]
 		[Deprecated (PlatformName.iOS, 6, 0, message : "Use 'DrawImage (image, CGRect, CGRect)' instead.")]
-		[Mac (10, 4)]
 		[Deprecated (PlatformName.MacOSX, 10, 8, message : "Use 'DrawImage (image, CGRect, CGRect)' instead.")]
 		[Export ("drawImage:atPoint:fromRect:")]
 		void DrawImage (CIImage image, CGPoint atPoint, CGRect fromRect);
@@ -403,92 +399,75 @@ namespace XamCore.CoreImage {
 		[return: NullAllowed]
 		NSData GetTiffRepresentation (CIImage image, CIFormat format, CGColorSpace colorSpace, NSDictionary options);
 
-#if false // [Wrap] does not support [Category] extension methods - https://bugzilla.xamarin.com/show_bug.cgi?id=59294
 		[iOS (10,0)][Mac (10,12)]
-		[Wrap ("GetTiffRepresentation (image, format, colorSpace, options?.Dictionary)")]
+		[Wrap ("GetTiffRepresentation (This, image, format, colorSpace, options?.Dictionary)")]
 		[return: NullAllowed]
 		NSData GetTiffRepresentation (CIImage image, CIFormat format, CGColorSpace colorSpace, CIImageRepresentationOptions options);
-#endif
 
 		[iOS (10,0)][Mac (10,12)]
 		[Export ("JPEGRepresentationOfImage:colorSpace:options:")]
 		[return: NullAllowed]
 		NSData GetJpegRepresentation (CIImage image, CGColorSpace colorSpace, NSDictionary options);
 
-#if false // [Wrap] does not support [Category] extension methods - https://bugzilla.xamarin.com/show_bug.cgi?id=59294
 		[iOS (10,0)][Mac (10,12)]
-		[Wrap ("GetJpegRepresentation (image, format, colorSpace, options?.Dictionary)")]
+		[Wrap ("GetJpegRepresentation (This, image, colorSpace, options?.Dictionary)")]
 		[return: NullAllowed]
 		NSData GetJpegRepresentation (CIImage image, CGColorSpace colorSpace, CIImageRepresentationOptions options);
-#endif
 
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
 		[Export ("HEIFRepresentationOfImage:format:colorSpace:options:")]
 		[return: NullAllowed]
 		NSData GetHeifRepresentation (CIImage image, CIFormat format, CGColorSpace colorSpace, NSDictionary options);
 
-#if false // [Wrap] does not support [Category] extension methods - https://bugzilla.xamarin.com/show_bug.cgi?id=59294
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
-		[Wrap ("GetHeifRepresentation (image, format, colorSpace, options?.Dictionary)")]
+		[Wrap ("GetHeifRepresentation (This, image, format, colorSpace, options?.Dictionary)")]
 		[return: NullAllowed]
 		NSData GetHeifRepresentation (CIImage image, CIFormat format, CGColorSpace colorSpace, CIImageRepresentationOptions options);
-#endif
 
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
 		[Export ("PNGRepresentationOfImage:format:colorSpace:options:")]
 		[return: NullAllowed]
 		NSData GetPngRepresentation (CIImage image, CIFormat format, CGColorSpace colorSpace, NSDictionary options);
 
-#if false // [Wrap] does not support [Category] extension methods - https://bugzilla.xamarin.com/show_bug.cgi?id=59294
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
-		[Wrap ("GetPngRepresentation (image, format, colorSpace, options?.Dictionary)")]
+		[Wrap ("GetPngRepresentation (This, image, format, colorSpace, options?.Dictionary)")]
 		[return: NullAllowed]
 		NSData GetPngRepresentation (CIImage image, CIFormat format, CGColorSpace colorSpace, CIImageRepresentationOptions options);
-#endif
 
 		[iOS (10,0)][Mac (10,12)]
 		[Export ("writeTIFFRepresentationOfImage:toURL:format:colorSpace:options:error:")]
 		bool WriteTiffRepresentation (CIImage image, NSUrl url, CIFormat format, CGColorSpace colorSpace, NSDictionary options, out NSError error);
 
-#if false // [Wrap] does not support [Category] extension methods - https://bugzilla.xamarin.com/show_bug.cgi?id=59294
 		[iOS (10,0)][Mac (10,12)]
-		[Wrap ("WriteTiffRepresentation (image, url, format, colorSpace, options?.Dictionary, out error)")]
+		[Wrap ("WriteTiffRepresentation (This, image, url, format, colorSpace, options?.Dictionary, out error)")]
 		bool WriteTiffRepresentation (CIImage image, NSUrl url, CIFormat format, CGColorSpace colorSpace, CIImageRepresentationOptions options, out NSError error);
-#endif
 
 		[iOS (10,0)][Mac (10,12)]
 		[Export ("writeJPEGRepresentationOfImage:toURL:colorSpace:options:error:")]
 		bool WriteJpegRepresentation (CIImage image, NSUrl url, CGColorSpace colorSpace, NSDictionary options, [NullAllowed] out NSError error);
 
-#if false // [Wrap] does not support [Category] extension methods - https://bugzilla.xamarin.com/show_bug.cgi?id=59294
 		[iOS (10,0)][Mac (10,12)]
-		[Wrap ("WriteJpegRepresentation (image, url, format, colorSpace, options?.Dictionary, out error)")]
+		[Wrap ("WriteJpegRepresentation (This, image, url, colorSpace, options?.Dictionary, out error)")]
 		bool WriteJpegRepresentation (CIImage image, NSUrl url, CGColorSpace colorSpace, CIImageRepresentationOptions options, [NullAllowed] out NSError error);
-#endif
 
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
 		[Export ("writeHEIFRepresentationOfImage:toURL:format:colorSpace:options:error:")]
 		bool WriteHeifRepresentation (CIImage image, NSUrl url, CIFormat format, CGColorSpace colorSpace, NSDictionary options, [NullAllowed] out NSError error);
 
-#if false // [Wrap] does not support [Category] extension methods - https://bugzilla.xamarin.com/show_bug.cgi?id=59294
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
-		[Wrap ("WriteHeifRepresentation (image, url, format, colorSpace, options?.Dictionary, out error)")]
+		[Wrap ("WriteHeifRepresentation (This, image, url, format, colorSpace, options?.Dictionary, out error)")]
 		bool WriteHeifRepresentation (CIImage image, NSUrl url, CIFormat format, CGColorSpace colorSpace, CIImageRepresentationOptions options, [NullAllowed] out NSError error);
-#endif
 
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
 		[Export ("writePNGRepresentationOfImage:toURL:format:colorSpace:options:error:")]
 		bool WritePngRepresentation (CIImage image, NSUrl url, CIFormat format, CGColorSpace colorSpace, NSDictionary options, [NullAllowed] out NSError error);
 
-#if false // [Wrap] does not support [Category] extension methods - https://bugzilla.xamarin.com/show_bug.cgi?id=59294
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
-		[Wrap ("WritePngRepresentation (image, url, format, colorSpace, options?.Dictionary, out error)")]
+		[Wrap ("WritePngRepresentation (This, image, url, format, colorSpace, options?.Dictionary, out error)")]
 		bool WritePngRepresentation (CIImage image, NSUrl url, CIFormat format, CGColorSpace colorSpace, CIImageRepresentationOptions options, [NullAllowed] out NSError error);
-#endif
 	}
 
 	[BaseType (typeof (NSObject))]
-	[iOS (5,0)]
 	[DisableDefaultCtor] //  In iOS8 they expose custom filters, we expose a protected one in CIFilter.cs
 	interface CIFilter : NSSecureCoding, NSCopying {
 		[Export ("inputKeys")]
@@ -548,7 +527,6 @@ namespace XamCore.CoreImage {
 		NSUrl FilterLocalizedReferenceDocumentation (string filterName);
 
 #if MONOMAC && !XAMCORE_4_0
-		[Mac(10,4)]
 		[Static]
 		[Export ("registerFilterName:constructor:classAttributes:")]
 		void RegisterFilterName (string name, NSObject constructorObject, NSDictionary classAttributes);
@@ -834,14 +812,12 @@ namespace XamCore.CoreImage {
 		NSSet ActiveKeys { get; }
 	}
 
-	[iOS (5,0)]
 	[Static]
 	interface CIFilterOutputKey {
 		[Field ("kCIOutputImageKey", "+CoreImage")]
 		NSString Image  { get; }
 	}
 	
-	[iOS (5,0)]
 	[Static]
 	interface CIFilterInputKey {
 		[Field ("kCIInputBackgroundImageKey", "+CoreImage")]
@@ -955,7 +931,6 @@ namespace XamCore.CoreImage {
 		NSString DisparityImage { get; }
 	}
 		
-	[iOS (5,0)]
 	[Static]
 	interface CIFilterAttributes {
 		[Field ("kCIAttributeFilterName", "+CoreImage")]
@@ -1071,7 +1046,6 @@ namespace XamCore.CoreImage {
 		NSString Available_iOS { get; }
 	}
 
-	[iOS (5,0)]
 	[Static]
 	interface CIFilterCategory {
 		[Field ("kCICategoryDistortionEffect", "+CoreImage")]
@@ -1323,7 +1297,6 @@ namespace XamCore.CoreImage {
 	}
 	
 	[BaseType (typeof (NSObject))]
-	[iOS (5,0)]
 	[DisableDefaultCtor]
 	interface CIImage : NSSecureCoding, NSCopying {
 		[Static]
@@ -1397,7 +1370,6 @@ namespace XamCore.CoreImage {
 #if MONOMAC && !XAMCORE_4_0
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
-		[Mac(10,4)]
 		[Export ("imageWithCVImageBuffer:options:")]
 		CIImage FromImageBuffer (CVImageBuffer imageBuffer, [NullAllowed] NSDictionary dict);
 #else
@@ -1534,7 +1506,6 @@ namespace XamCore.CoreImage {
 		IntPtr Constructor (CVImageBuffer imageBuffer);
 
 #if MONOMAC && !XAMCORE_4_0
-		[Mac(10,4)]
 		[Export ("initWithCVImageBuffer:options:")]
 		IntPtr Constructor (CVImageBuffer imageBuffer, [NullAllowed] NSDictionary dict);
 #else
@@ -1596,11 +1567,9 @@ namespace XamCore.CoreImage {
 		[Export ("extent")]
 		CGRect Extent { get; }
 
-		[iOS (5,0)]
 		[Export ("properties"), Internal]
 		NSDictionary WeakProperties { get; }
 
-		[iOS (5,0)]
 		[Wrap ("WeakProperties")]
 		CoreGraphics.CGImageProperties Properties { get; }
 
@@ -1625,11 +1594,9 @@ namespace XamCore.CoreImage {
 		int FormatRGBAf { get; } /* CIFormat = int */
 
 		[Field ("kCIFormatBGRA8")]
-		[iOS (5,0)]
 		int FormatBGRA8 { get; } /* CIFormat = int */
 
 		[Field ("kCIFormatRGBA8")]
-		[iOS (5,0)]
 		int FormatRGBA8 { get; } /* CIFormat = int */
 
 		[Field ("kCIFormatABGR8")]
@@ -1718,15 +1685,12 @@ namespace XamCore.CoreImage {
 
 #if !MONOMAC
 		// UIKit extensions
-		[iOS (5,0)]
 		[Export ("initWithImage:")]
 		IntPtr Constructor (UIImage image);
 
-		[iOS (5,0)]
 		[Export ("initWithImage:options:")]
 		IntPtr Constructor (UIImage image, [NullAllowed] NSDictionary options);
 
-		[iOS (5,0)]
 		[Wrap ("this (image, options == null ? null : options.Dictionary)")]
 		IntPtr Constructor (UIImage image, [NullAllowed] CIImageInitializationOptions options);
 #endif
@@ -2201,7 +2165,6 @@ namespace XamCore.CoreImage {
 	}
 
 	[BaseType (typeof (NSObject))]
-	[iOS (5,0)]
 	[DisableDefaultCtor]
 	interface CIVector : NSSecureCoding, NSCopying {
 		[Static, Internal, Export ("vectorWithValues:count:")]
@@ -2242,17 +2205,14 @@ namespace XamCore.CoreImage {
 		CIVector FromString (string representation);
 
 		[Mac (10,9)]
-		[iOS (5,0)]
 		[Export ("initWithCGPoint:")]
 		IntPtr Constructor (CGPoint p);
 
 		[Mac (10,9)]
-		[iOS (5,0)]
 		[Export ("initWithCGRect:")]
 		IntPtr Constructor (CGRect r);
 
 		[Mac (10,9)]
-		[iOS (5,0)]
 		[Export ("initWithCGAffineTransform:")]
 		IntPtr Constructor (CGAffineTransform r);
 		
@@ -2308,7 +2268,6 @@ namespace XamCore.CoreImage {
 	}
 
 	[BaseType (typeof (NSObject))]
-	[iOS (5,0)]
 	[DisableDefaultCtor]
 	interface CIDetector {
 		[Static, Export ("detectorOfType:context:options:"), Internal]
@@ -2390,7 +2349,6 @@ namespace XamCore.CoreImage {
 	}
 	
 	[BaseType (typeof (NSObject))]
-	[iOS (5,0)]
 	[DisableDefaultCtor]
 	interface CIFeature {
 		[Export ("type", ArgumentSemantic.Retain)]
@@ -2416,7 +2374,6 @@ namespace XamCore.CoreImage {
 	}
 
 	[BaseType (typeof (CIFeature))]
-	[iOS (5,0)]
 	[DisableDefaultCtor]
 	interface CIFaceFeature {
 		[Export ("hasLeftEyePosition", ArgumentSemantic.Assign)]

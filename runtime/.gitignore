@@ -5,6 +5,7 @@ Delegates.generated.cs
 delegates.h
 mono-runtime.m
 xamarin/mono-runtime.h
+xamarin/runtime-generated.h
 app-main.m
 watchextension-main.m
 tvextension-main.m

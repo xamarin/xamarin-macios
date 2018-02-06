@@ -26,15 +26,14 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using CoreGraphics;
 using System;
 
-namespace XamCore.ImageIO {
+namespace ImageIO {
 
-	[iOS (4,0)]
 	[Static]
 	// Bad name should end with Keys
 	interface CGImageProperties {
@@ -515,19 +514,19 @@ namespace XamCore.ImageIO {
 		NSString PNGsRGBIntent { get; }
 		[Field ("kCGImagePropertyPNGChromaticities")]
 		NSString PNGChromaticities { get; }
-		[iOS (5,0)][Field ("kCGImagePropertyPNGAuthor")]
+		[Field ("kCGImagePropertyPNGAuthor")]
 		NSString PNGAuthor { get; }
-		[iOS (5,0)][Field ("kCGImagePropertyPNGCopyright")]
+		[Field ("kCGImagePropertyPNGCopyright")]
 		NSString PNGCopyright { get; }
-		[iOS (5,0)][Field ("kCGImagePropertyPNGCreationTime")]
+		[Field ("kCGImagePropertyPNGCreationTime")]
 		NSString PNGCreationTime { get; }
-		[iOS (5,0)][Field ("kCGImagePropertyPNGDescription")]
+		[Field ("kCGImagePropertyPNGDescription")]
 		NSString PNGDescription { get; }
-		[iOS (5,0)][Field ("kCGImagePropertyPNGModificationTime")]
+		[Field ("kCGImagePropertyPNGModificationTime")]
 		NSString PNGModificationTime { get; }
-		[iOS (5,0)][Field ("kCGImagePropertyPNGSoftware")]
+		[Field ("kCGImagePropertyPNGSoftware")]
 		NSString PNGSoftware { get; }
-		[iOS (5,0)][Field ("kCGImagePropertyPNGTitle")]
+		[Field ("kCGImagePropertyPNGTitle")]
 		NSString PNGTitle { get; }
 
 		[iOS (9,0)][Mac (10,11)]
@@ -605,121 +604,121 @@ namespace XamCore.ImageIO {
 		[Field ("kCGImagePropertyDNGLensInfo")]
 		NSString DNGLensInfo { get; }
 
-		[iOS (10,0)][Mac (12,0)]
+		[iOS (10,0)][Mac (10,12)]
 		[Watch (3,0)]
 		[TV (10,0)]
 		[Field ("kCGImagePropertyDNGBlackLevel")]
 		NSString DNGBlackLevel { get; }
 
-		[iOS (10,0)][Mac (12,0)]
+		[iOS (10,0)][Mac (10,12)]
 		[Watch (3,0)]
 		[TV (10,0)]
 		[Field ("kCGImagePropertyDNGWhiteLevel")]
 		NSString DNGWhiteLevel { get; }
 
-		[iOS (10,0)][Mac (12,0)]
+		[iOS (10,0)][Mac (10,12)]
 		[Watch (3,0)]
 		[TV (10,0)]
 		[Field ("kCGImagePropertyDNGCalibrationIlluminant1")]
 		NSString DNGCalibrationIlluminant1 { get; }
 
-		[iOS (10,0)][Mac (12,0)]
+		[iOS (10,0)][Mac (10,12)]
 		[Watch (3,0)]
 		[TV (10,0)]
 		[Field ("kCGImagePropertyDNGCalibrationIlluminant2")]
 		NSString DNGCalibrationIlluminant2 { get; }
 
-		[iOS (10,0)][Mac (12,0)]
+		[iOS (10,0)][Mac (10,12)]
 		[Watch (3,0)]
 		[TV (10,0)]
 		[Field ("kCGImagePropertyDNGColorMatrix1")]
 		NSString DNGColorMatrix1 { get; }
 
-		[iOS (10,0)][Mac (12,0)]
+		[iOS (10,0)][Mac (10,12)]
 		[Watch (3,0)]
 		[TV (10,0)]
 		[Field ("kCGImagePropertyDNGColorMatrix2")]
 		NSString DNGColorMatrix2 { get; }
 
-		[iOS (10,0)][Mac (12,0)]
+		[iOS (10,0)][Mac (10,12)]
 		[Watch (3,0)]
 		[TV (10,0)]
 		[Field ("kCGImagePropertyDNGCameraCalibration1")]
 		NSString DNGCameraCalibration1 { get; }
 
-		[iOS (10,0)][Mac (12,0)]
+		[iOS (10,0)][Mac (10,12)]
 		[Watch (3,0)]
 		[TV (10,0)]
 		[Field ("kCGImagePropertyDNGCameraCalibration2")]
 		NSString DNGCameraCalibration2 { get; }
 
-		[iOS (10,0)][Mac (12,0)]
+		[iOS (10,0)][Mac (10,12)]
 		[Watch (3,0)]
 		[TV (10,0)]
 		[Field ("kCGImagePropertyDNGAsShotNeutral")]
 		NSString DNGAsShotNeutral { get; }
 
-		[iOS (10,0)][Mac (12,0)]
+		[iOS (10,0)][Mac (10,12)]
 		[Watch (3,0)]
 		[TV (10,0)]
 		[Field ("kCGImagePropertyDNGAsShotWhiteXY")]
 		NSString DNGAsShotWhiteXY { get; }
 
-		[iOS (10,0)][Mac (12,0)]
+		[iOS (10,0)][Mac (10,12)]
 		[Watch (3,0)]
 		[TV (10,0)]
 		[Field ("kCGImagePropertyDNGBaselineExposure")]
 		NSString DNGBaselineExposure { get; }
 
-		[iOS (10,0)][Mac (12,0)]
+		[iOS (10,0)][Mac (10,12)]
 		[Watch (3,0)]
 		[TV (10,0)]
 		[Field ("kCGImagePropertyDNGBaselineNoise")]
 		NSString DNGBaselineNoise { get; }
 
-		[iOS (10,0)][Mac (12,0)]
+		[iOS (10,0)][Mac (10,12)]
 		[Watch (3,0)]
 		[TV (10,0)]
 		[Field ("kCGImagePropertyDNGBaselineSharpness")]
 		NSString DNGBaselineSharpness { get; }
 
-		[iOS (10,0)][Mac (12,0)]
+		[iOS (10,0)][Mac (10,12)]
 		[Watch (3,0)]
 		[TV (10,0)]
 		[Field ("kCGImagePropertyDNGPrivateData")]
 		NSString DNGPrivateData { get; }
 
-		[iOS (10,0)][Mac (12,0)]
+		[iOS (10,0)][Mac (10,12)]
 		[Watch (3,0)]
 		[TV (10,0)]
 		[Field ("kCGImagePropertyDNGCameraCalibrationSignature")]
 		NSString DNGCameraCalibrationSignature { get; }
 
-		[iOS (10,0)][Mac (12,0)]
+		[iOS (10,0)][Mac (10,12)]
 		[Watch (3,0)]
 		[TV (10,0)]
 		[Field ("kCGImagePropertyDNGProfileCalibrationSignature")]
 		NSString DNGProfileCalibrationSignature { get; }
 
-		[iOS (10,0)][Mac (12,0)]
+		[iOS (10,0)][Mac (10,12)]
 		[Watch (3,0)]
 		[TV (10,0)]
 		[Field ("kCGImagePropertyDNGNoiseProfile")]
 		NSString DNGNoiseProfile { get; }
 
-		[iOS (10,0)][Mac (12,0)]
+		[iOS (10,0)][Mac (10,12)]
 		[Watch (3,0)]
 		[TV (10,0)]
 		[Field ("kCGImagePropertyDNGWarpRectilinear")]
 		NSString DNGWarpRectilinear { get; }
 
-		[iOS (10,0)][Mac (12,0)]
+		[iOS (10,0)][Mac (10,12)]
 		[Watch (3,0)]
 		[TV (10,0)]
 		[Field ("kCGImagePropertyDNGWarpFisheye")]
 		NSString DNGWarpFisheye { get; }
 
-		[iOS (10,0)][Mac (12,0)]
+		[iOS (10,0)][Mac (10,12)]
 		[Watch (3,0)]
 		[TV (10,0)]
 		[Field ("kCGImagePropertyDNGFixVignetteRadial")]

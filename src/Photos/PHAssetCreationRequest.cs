@@ -9,9 +9,9 @@
 #if !MONOMAC
 
 using System;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.Photos {
+namespace Photos {
 
 	partial class PHAssetCreationRequest {
 		public bool SupportsAssetResourceTypes (params PHAssetResourceType [] resourceTypes)

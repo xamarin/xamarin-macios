@@ -31,11 +31,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.AudioToolbox;
-using XamCore.Foundation;
+using ObjCRuntime;
+using AudioToolbox;
+using Foundation;
 
-namespace XamCore.AudioUnit
+namespace AudioUnit
 {
     public static class AudioUnitUtils
     {
@@ -48,7 +48,7 @@ namespace XamCore.AudioUnit
             // setting AudioStreamBasicDescription
             int AudioUnitSampleTypeSize = 		
 #if !MONOMAC
-            (XamCore.ObjCRuntime.Runtime.Arch == XamCore.ObjCRuntime.Arch.SIMULATOR) ? sizeof(float) : sizeof(int);
+            (ObjCRuntime.Runtime.Arch == ObjCRuntime.Arch.SIMULATOR) ? sizeof(float) : sizeof(int);
 #else
 		sizeof (float);
 #endif

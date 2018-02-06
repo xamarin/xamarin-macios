@@ -7,7 +7,7 @@ namespace Xamarin.Mac.Tasks
 	{
 		protected override string GenerateCommandLineCommands ()
 		{
-			var args = new ProcessArgumentBuilder ();
+			var args = new CommandLineArgumentBuilder ();
 
 			args.Add ("--verify");
 			args.Add ("-vvvv");

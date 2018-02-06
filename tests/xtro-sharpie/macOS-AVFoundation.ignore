@@ -14,7 +14,6 @@
 !missing-selector! AVCaptureConnection::setVideoMaxFrameDuration: not bound
 !missing-selector! AVCaptureConnection::videoMaxFrameDuration not bound
 
-
 ## unsorted
 
 !missing-selector! +AVMetadataItem::metadataItemsFromArray:filteredByMetadataItemFilter: not bound
@@ -24,15 +23,10 @@
 !missing-selector! AVMetadataGroup::uniqueID not bound
 !missing-selector! AVMutableMovieTrack::replaceFormatDescription:withFormatDescription: not bound
 !missing-selector! AVPlayerItem::addMediaDataCollector: not bound
-!missing-selector! AVPlayerItem::contentAuthorizationRequestStatus not bound
-!missing-selector! AVPlayerItem::isApplicationAuthorizedForPlayback not bound
-!missing-selector! AVPlayerItem::isAuthorizationRequiredForPlayback not bound
 !missing-selector! AVPlayerItem::mediaDataCollectors not bound
 !missing-selector! AVPlayerItem::removeMediaDataCollector: not bound
 !unknown-native-enum! AVAudioSessionCategoryOptions bound
 !unknown-native-enum! AVAudioSessionErrorCode bound
-!unknown-native-enum! AVAudioSessionFlags bound
-!unknown-native-enum! AVAudioSessionInterruptionFlags bound
 !unknown-native-enum! AVAudioSessionInterruptionOptions bound
 !unknown-native-enum! AVAudioSessionInterruptionType bound
 !unknown-native-enum! AVAudioSessionPortOverride bound
@@ -48,8 +42,9 @@
 !unknown-native-enum! AVCaptureOutputDataDroppedReason bound
 !unknown-native-enum! AVCaptureVideoStabilizationMode bound
 !unknown-native-enum! AVSpeechBoundary bound
-!unknown-protocol! AVCaptureDataOutputSynchronizerDelegate bound
-!unknown-type! AVCaptureDataOutputSynchronizer bound
 !unknown-type! AVCaptureSynchronizedData bound
 !unknown-type! AVCaptureSynchronizedDataCollection bound
 !unknown-type! AVPersistableContentKeyRequest bound
+
+## https://github.com/xamarin/xamarin-macios/issues/3213 should be fixed before conformance to 'AVQueuedSampleBufferRendering' is restored.
+!missing-protocol-conformance! AVSampleBufferDisplayLayer should conform to AVQueuedSampleBufferRendering (defined in 'AVSampleBufferDisplayLayerQueueManagement' category)

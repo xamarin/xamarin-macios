@@ -87,7 +87,7 @@ namespace Xamarin.MacDev.Tasks
 
 		protected override string GenerateCommandLineCommands ()
 		{
-			var args = new ProcessArgumentBuilder ();
+			var args = new CommandLineArgumentBuilder ();
 
 			args.Add ("--compress");
 			args.AddQuoted (InputScene);

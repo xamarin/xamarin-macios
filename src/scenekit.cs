@@ -29,10 +29,10 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 
-using XamCore.AVFoundation;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using AVFoundation;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
 
 using NMatrix4 = global::OpenTK.NMatrix4;
 using NVector3 = global::OpenTK.NVector3;
@@ -40,45 +40,51 @@ using Vector4 = global::OpenTK.Vector4;
 using Quaternion = global::OpenTK.Quaternion;
 
 #if !WATCH
-using XamCore.CoreAnimation;
-using XamCore.CoreImage;
+using CoreAnimation;
+using CoreImage;
 #endif
 
-using XamCore.CoreGraphics;
-using XamCore.SpriteKit;
+#if WATCH || XAMCORE_4_0
+using AnimationType = global::SceneKit.ISCNAnimationProtocol;
+#else
+using AnimationType = global::CoreAnimation.CAAnimation;
+#endif
+
+using CoreGraphics;
+using SpriteKit;
 // MonoMac (classic) does not support those 64bits only frameworks
 #if (XAMCORE_2_0 || !MONOMAC) && !WATCH
-using XamCore.ModelIO;
-using XamCore.Metal;
-using XamCore.GameplayKit;
+using ModelIO;
+using Metal;
+using GameplayKit;
 #endif
 
 #if MONOMAC
-using XamCore.AppKit;
+using AppKit;
 using OpenTK;
 
-using GLContext = global::XamCore.OpenGL.CGLContext;
+using GLContext = global::OpenGL.CGLContext;
 #else
-using XamCore.UIKit;
+using UIKit;
 
 #if WATCH
-using GLContext = global::XamCore.Foundation.NSObject; // won't be used -> [NoWatch] but must compile
-using NSView = global::XamCore.Foundation.NSObject; // won't be used -> [NoWatch] but must compile
-using SCNGeometryTessellator = global::XamCore.Foundation.NSObject; // won't be used -> [NoWatch] but must compile
+using GLContext = global::Foundation.NSObject; // won't be used -> [NoWatch] but must compile
+using NSView = global::Foundation.NSObject; // won't be used -> [NoWatch] but must compile
+using SCNGeometryTessellator = global::Foundation.NSObject; // won't be used -> [NoWatch] but must compile
 #else
-using XamCore.OpenGLES;
+using OpenGLES;
 
-using GLContext = global::XamCore.OpenGLES.EAGLContext;
-using NSView = global::XamCore.UIKit.UIView;
+using GLContext = global::OpenGLES.EAGLContext;
+using NSView = global::UIKit.UIView;
 #endif
 
-using NSColor = global::XamCore.UIKit.UIColor;
-using NSFont = global::XamCore.UIKit.UIFont;
-using NSImage = global::XamCore.UIKit.UIImage;
-using NSBezierPath = global::XamCore.UIKit.UIBezierPath;
+using NSColor = global::UIKit.UIColor;
+using NSFont = global::UIKit.UIFont;
+using NSImage = global::UIKit.UIImage;
+using NSBezierPath = global::UIKit.UIBezierPath;
 #endif
 
-namespace XamCore.SceneKit {
+namespace SceneKit {
 
 #if WATCH
 	// stubs to limit the number of preprocessor directives in the source file
@@ -119,7 +125,11 @@ namespace XamCore.SceneKit {
 #endif
 		[NoWatch]
 		[Export ("addAnimation:forKey:")]
+#if !XAMCORE_4_0
 		void AddAnimation (CAAnimation animation, [NullAllowed] NSString key);
+#else
+		void AddAnimation (ISCNAnimationProtocol scnAnimation, [NullAllowed] string key);
+#endif
 
 #if XAMCORE_2_0
 #if XAMCORE_4_0
@@ -3203,7 +3213,7 @@ namespace XamCore.SceneKit {
 
 		[Static]
 		[Export ("setCompletionBlock:")]
-		void SetCompletionBlock ([NullAllowed] NSAction completion);
+		void SetCompletionBlock ([NullAllowed] Action completion);
 
 		[Export ("valueForKey:")]
 		NSObject ValueForKey (NSString key);
@@ -3362,13 +3372,9 @@ namespace XamCore.SceneKit {
 		bool RendersContinuously { get; set; }
 	}
 
-#if WATCH || XAMCORE_4_0
-	[Watch (4,0)]
-	[Mac (10,9), iOS (8,0)]
-	delegate void SCNAnimationEventHandler (ISCNAnimationProtocol animation, NSObject animatedObject, bool playingBackward);
-#else
-	[Mac (10,9), iOS (8,0)]
-	delegate void SCNAnimationEventHandler (CAAnimation animation, NSObject animatedObject, bool playingBackward);
+#if XAMCORE_4_0
+	[Mac (10,9), iOS (8,0), Watch (4,0)]
+	delegate void SCNAnimationEventHandler (AnimationType animation, NSObject animatedObject, bool playingBackward);
 #endif
 
 	[Watch (4,0)]
@@ -3376,8 +3382,15 @@ namespace XamCore.SceneKit {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SCNAnimationEvent {
+
+#if XAMCORE_4_0
 		[Static, Export ("animationEventWithKeyTime:block:")]
 		SCNAnimationEvent Create (nfloat keyTime, SCNAnimationEventHandler eventHandler);
+#else
+		[Internal]
+		[Static, Export ("animationEventWithKeyTime:block:")]
+		SCNAnimationEvent Create (nfloat keyTime, Action<IntPtr, NSObject, bool> handler);
+#endif
 	}
 
 	[Watch (3,0)]
@@ -3494,7 +3507,6 @@ namespace XamCore.SceneKit {
 		[Watch (4, 0), TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
 		[Export ("incremental")]
 		bool Incremental { [Bind ("isIncremental")] get; set; }
-		
 	}
 
 	[Watch (3,0)]

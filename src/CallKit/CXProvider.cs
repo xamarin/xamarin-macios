@@ -8,11 +8,11 @@
 //
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
 #if XAMCORE_2_0
-namespace XamCore.CallKit {
+namespace CallKit {
 	public partial class CXProvider {
 
 		public CXCallAction [] GetPendingCallActions<T> (NSUuid callUuid)

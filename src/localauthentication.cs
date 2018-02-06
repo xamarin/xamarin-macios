@@ -1,13 +1,13 @@
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.Security;
+using ObjCRuntime;
+using Foundation;
+using Security;
 
-namespace XamCore.LocalAuthentication {
+namespace LocalAuthentication {
 
 	[Mac (10,13,2)][iOS (11,0)]
 	[Native]
-	public enum LABiometryType : nint {
+	public enum LABiometryType : long {
 		None,
 		TouchId,
 		[NoMac]

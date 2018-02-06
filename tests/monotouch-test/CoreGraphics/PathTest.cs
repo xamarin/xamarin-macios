@@ -275,8 +275,9 @@ namespace MonoTouchFixtures.CoreGraphics {
 				using (var copy = p1.Copy ())
 				{
 					var newRetainCount = CFGetRetainCount (copy.Handle);
-					Assert.AreNotEqual (count, newRetainCount, $"Count is {newRetainCount} and was {count}");
-					Assert.IsTrue (count < newRetainCount);
+					Assert.AreEqual (count, newRetainCount, "Ref count should not have changed.");
+					Assert.AreEqual (1, count, "Original count.");
+					Assert.AreEqual (1, newRetainCount, "New count");
 				}
 			}
 		}

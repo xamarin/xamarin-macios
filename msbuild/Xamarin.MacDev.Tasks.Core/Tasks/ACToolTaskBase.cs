@@ -83,7 +83,7 @@ namespace Xamarin.MacDev.Tasks
 			return id.Value == "com.apple.message-payload-provider";
 		}
 
-		protected override void AppendCommandLineArguments (IDictionary<string, string> environment, ProcessArgumentBuilder args, ITaskItem[] items)
+		protected override void AppendCommandLineArguments (IDictionary<string, string> environment, CommandLineArgumentBuilder args, ITaskItem[] items)
 		{
 			string minimumDeploymentTarget;
 

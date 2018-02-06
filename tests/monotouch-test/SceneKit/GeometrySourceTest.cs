@@ -43,11 +43,9 @@ namespace MonoTouchFixtures.SceneKit {
 		{
 			if (!TestRuntime.CheckXcodeVersion (7, 0))
 				Assert.Ignore ("Requires iOS 9.0 or macOS 10.11");
-#if !MONOMAC
-			if (Runtime.Arch != Arch.DEVICE)
-				Assert.Inconclusive ("Metal tests only works on device so far");
-#endif
-			
+
+			TestRuntime.AssertDevice ();
+
 			var device = MTLDevice.SystemDefault;
 			if (device == null)
 				Assert.Inconclusive ("Device does not support Metal");

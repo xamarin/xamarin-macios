@@ -2,7 +2,7 @@
 
 using System;
 
-namespace XamCore.Photos {
+namespace Photos {
 
 	public partial class PHAssetChangeRequest {
 

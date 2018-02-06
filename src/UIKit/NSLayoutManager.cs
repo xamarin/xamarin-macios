@@ -16,11 +16,11 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Collections;
 
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreGraphics;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	partial class NSLayoutManager {
 		public unsafe nuint GetGlyphs (
 			NSRange glyphRange, 

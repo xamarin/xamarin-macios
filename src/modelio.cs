@@ -9,13 +9,13 @@
 using System;
 using System.ComponentModel;
 
-using XamCore.AudioUnit;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreAnimation;
-using XamCore.CoreGraphics;
-using XamCore.SceneKit;
+using AudioUnit;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
+using CoreAnimation;
+using CoreGraphics;
+using SceneKit;
 using Vector2i = global::OpenTK.Vector2i;
 using Vector2d = global::OpenTK.Vector2d;
 using Vector2 = global::OpenTK.Vector2;
@@ -43,25 +43,25 @@ using NMatrix4 = global::OpenTK.NMatrix4;
 using NMatrix4d = global::OpenTK.NMatrix4d;
 using MathHelper = global::OpenTK.MathHelper;
 #if MONOMAC
-using XamCore.AppKit;
-using AUViewControllerBase = XamCore.AppKit.NSViewController;
+using AppKit;
+using AUViewControllerBase = AppKit.NSViewController;
 #else
-using XamCore.UIKit;
-using AUViewControllerBase = XamCore.UIKit.UIViewController;
+using UIKit;
+using AUViewControllerBase = UIKit.UIViewController;
 #endif
 
-namespace XamCore.ModelIO {
+namespace ModelIO {
 
 	[iOS (11,0), Mac(10,13, onlyOn64 : true), TV (11,0)]
 	[Native]
-	enum MDLAnimatedValueInterpolation : nuint {
+	enum MDLAnimatedValueInterpolation : ulong {
 		Constant,
 		Linear,
 	}
 
 	[iOS (11,0), Mac(10,13, onlyOn64 : true), TV (11,0)]
 	[Native]
-	enum MDLTransformOpRotationOrder : nuint {
+	enum MDLTransformOpRotationOrder : ulong {
 		Xyz = 1,
 		Xzy,
 		Yxz,
@@ -72,7 +72,7 @@ namespace XamCore.ModelIO {
 
 	[iOS (11,0), Mac(10,13, onlyOn64 : true), TV (11,0)]
 	[Native]
-	enum MDLDataPrecision : nuint {
+	enum MDLDataPrecision : ulong {
 		Undefined,
 		Float,
 		Double,
@@ -957,7 +957,7 @@ namespace XamCore.ModelIO {
 		MDLMesh CreateCylindroid (float height, Vector2 radii, nuint radialSegments, nuint verticalSegments, MDLGeometryType geometryType, bool inwardNormals, [NullAllowed] IMDLMeshBufferAllocator allocator);
 
 		[Static]
-		[iOS (10,2), Mac (12,1,1), TV (10,1)]
+		[iOS (10,2), Mac (10,12,2), TV (10,1)]
 		[Export ("newCapsuleWithHeight:radii:radialSegments:verticalSegments:hemisphereSegments:geometryType:inwardNormals:allocator:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		MDLMesh CreateCapsule (float height, Vector2 radii, nuint radialSegments, nuint verticalSegments, nuint hemisphereSegments, MDLGeometryType geometryType, bool inwardNormals, [NullAllowed] IMDLMeshBufferAllocator allocator);
@@ -972,7 +972,7 @@ namespace XamCore.ModelIO {
 		MDLMesh CreateIcosahedron (float radius, bool inwardNormals, [NullAllowed] IMDLMeshBufferAllocator allocator);
 
 		[Static]
-		[iOS (10,2), Mac (12,1,1), TV (10,1)]
+		[iOS (10,2), Mac (10,12,2), TV (10,1)]
 		[Export ("newIcosahedronWithRadius:inwardNormals:geometryType:allocator:")]
 		MDLMesh CreateIcosahedron (float radius, bool inwardNormals, MDLGeometryType geometryType, [NullAllowed] IMDLMeshBufferAllocator allocator);
 
@@ -1146,7 +1146,7 @@ namespace XamCore.ModelIO {
 		IntPtr Constructor (float smoothness, [NullAllowed] string name, Vector2i textureDimensions, int channelCount, MDLTextureChannelEncoding channelEncoding, bool grayscale);
 
 		[Internal]
-		[iOS (10,2), Mac (12,1,1)]
+		[iOS (10,2), Mac (10,12,2)]
 		[Export ("initCellularNoiseWithFrequency:name:textureDimensions:channelEncoding:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		IntPtr InitCellularNoiseWithFrequency (float frequency, [NullAllowed] string name, Vector2i textureDimensions, MDLTextureChannelEncoding channelEncoding);
@@ -1215,7 +1215,7 @@ namespace XamCore.ModelIO {
 		[Export ("objectAtPath:")]
 		MDLObject GetObject (string path);
 
-		[iOS (10,2), Mac (12,1,1), TV (10,1)]
+		[iOS (10,2), Mac (10,12,2), TV (10,1)]
 		[Export ("enumerateChildObjectsOfClass:root:usingBlock:stopPointer:")]
 		void EnumerateChildObjects (Class objectClass, MDLObject root, MDLObjectHandler handler, ref bool stop);
 
@@ -1614,7 +1614,7 @@ namespace XamCore.ModelIO {
 		[NullAllowed, Export ("topology", ArgumentSemantic.Retain)]
 		MDLSubmeshTopology Topology {
 			get;
-			[iOS (10,2), Mac (12,1,1), TV (10,1)]
+			[iOS (10,2), Mac (10,12,2), TV (10,1)]
 			set;
 		}
 

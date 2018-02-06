@@ -14,11 +14,11 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.Security {
+namespace Security {
 	[Mac (10,8)] // SSLCreateContext is 10.8, only constructor
 	public class SslContext : INativeObject, IDisposable {
 

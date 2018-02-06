@@ -8,12 +8,12 @@
 // Copyright 2012-2014 Xamarin Inc
 //
 using System.Runtime.InteropServices;
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreGraphics;
+using Foundation;
+using ObjCRuntime;
 using System;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 
 	public static class UIGraphics {
 		[DllImport (Constants.UIKitLibrary)]
@@ -44,7 +44,6 @@ namespace XamCore.UIKit {
 		public extern static void BeginImageContext (CGSize size);
 
 		[DllImport (Constants.UIKitLibrary, EntryPoint="UIGraphicsBeginImageContextWithOptions")]
-		[iOS (4,0)]
 		public extern static void BeginImageContextWithOptions (CGSize size, bool opaque, nfloat scale);
 	
 		[DllImport (Constants.UIKitLibrary)]

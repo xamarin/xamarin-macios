@@ -23,7 +23,7 @@
 //
 using System;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 #if XAMCORE_2_0
 	[AttributeUsage (AttributeTargets.Class)]

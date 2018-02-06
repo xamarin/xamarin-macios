@@ -28,17 +28,17 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
-using XamCore.Foundation;
+using Foundation;
 using System.Runtime.InteropServices;
-using XamCore.CoreGraphics;
-using XamCore.ObjCRuntime;
+using CoreGraphics;
+using ObjCRuntime;
 
-namespace XamCore.CoreAnimation {
+namespace CoreAnimation {
 
 	// untyped enum -> CALayer.h
 	// note: edgeAntialiasingMask is an `unsigned int` @property
 	[Flags]
-	public enum CAEdgeAntialiasingMask : uint_compat_int {
+	public enum CAEdgeAntialiasingMask : uint {
 		LeftEdge      = 1 << 0,
 		RightEdge     = 1 << 1,
 		BottomEdge    = 1 << 2,
@@ -51,7 +51,7 @@ namespace XamCore.CoreAnimation {
 	[NoWatch] // headers not updated
 	[iOS (11,0)][TV (11,0)][Mac (10,13)]
 	[Native][Flags]
-	public enum CACornerMask : nuint {
+	public enum CACornerMask : ulong {
 		MinXMinYCorner = 1 << 0,
 		MaxXMinYCorner = 1 << 1,
 		MinXMaxYCorner = 1 << 2,
@@ -62,7 +62,7 @@ namespace XamCore.CoreAnimation {
 	// untyped enum -> CALayer.h (only on OSX headers)
 	// note: autoresizingMask is an `unsigned int` @property
 	[Flags]
-	public enum CAAutoresizingMask : uint_compat_int {
+	public enum CAAutoresizingMask : uint {
 		NotSizable   = 0,
 		MinXMargin   = 1 << 0,
 		WidthSizable = 1 << 1,

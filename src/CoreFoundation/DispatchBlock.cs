@@ -10,10 +10,10 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.CoreFoundation {
+namespace CoreFoundation {
 #if !COREBUILD
 	internal class DispatchBlock {
 
@@ -21,6 +21,7 @@ namespace XamCore.CoreFoundation {
 		// You must invoke ->CleanupBlock after you have transferred ownership to
 		// the unmanaged code to release the resources allocated on the managed side
 		//
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static unsafe void Invoke (Action codeToRun, Action<IntPtr> invoker)
 		{
 			BlockLiteral *block_ptr;

@@ -9,9 +9,9 @@
 
 #if XAMCORE_2_0 && !MONOMAC
 using System;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.NetworkExtension {
+namespace NetworkExtension {
 	public partial class NEHotspotEapSettings {
 
 		public NEHotspotConfigurationEapType [] SupportedEapTypes {

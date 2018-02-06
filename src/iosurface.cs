@@ -8,11 +8,11 @@
 //
 
 using System;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.IOSurface {
+namespace IOSurface {
 
 	[Static]
 	[Internal]

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using IKVM.Reflection;
 using Type = IKVM.Reflection.Type;
-using PlatformName = XamCore.ObjCRuntime.PlatformName;
+using PlatformName = ObjCRuntime.PlatformName;
 
 public static class AttributeManager
 {
@@ -36,9 +36,7 @@ public static class AttributeManager
 			var prefix = BindingTouch.NamespacePlatformPrefix;
 			var n = type.FullName;
 			if (!string.IsNullOrEmpty (prefix) && type.Namespace.StartsWith (prefix, System.StringComparison.Ordinal)) {
-				n = "XamCore." + n.Substring (prefix.Length + 1);
-			} else {
-				n = "XamCore." + n;
+				n = n.Substring (prefix.Length + 1);
 			}
 			rv = typeof (TypeManager).Assembly.GetType (n);
 		} else {
@@ -64,6 +62,7 @@ public static class AttributeManager
 			rv = TypeManager.BindingAssembly.GetType (type.FullName);
 			if (rv == null) {
 				string fullname;
+				// HACK ??
 				if (type.Namespace?.StartsWith ("XamCore.", System.StringComparison.Ordinal) == true) {
 					var prefix = BindingTouch.NamespacePlatformPrefix;
 					if (!string.IsNullOrEmpty (prefix)) {
@@ -284,6 +283,8 @@ public static class AttributeManager
 
 	public static T GetCustomAttribute<T> (ICustomAttributeProvider provider) where T : System.Attribute
 	{
+		if (provider is null)
+			return null;
 		var rv = GetCustomAttributes<T> (provider);
 		if (rv == null || rv.Length == 0)
 			return null;
@@ -507,13 +508,13 @@ public static class AttributeConversionManager
 
 static class AttributeFactory
 {
-	public static System.Type PlatformEnum = typeof (TypeManager).Assembly.GetType ("XamCore.ObjCRuntime.PlatformName");
-	public static System.Type PlatformArch = typeof (TypeManager).Assembly.GetType ("XamCore.ObjCRuntime.PlatformArchitecture");
+	public static System.Type PlatformEnum = typeof (TypeManager).Assembly.GetType ("ObjCRuntime.PlatformName");
+	public static System.Type PlatformArch = typeof (TypeManager).Assembly.GetType ("ObjCRuntime.PlatformArchitecture");
 
-	public static System.Type IntroducedAttributeType = typeof (TypeManager).Assembly.GetType ("XamCore.ObjCRuntime.IntroducedAttribute");
-	public static System.Type UnavailableAttributeType = typeof (TypeManager).Assembly.GetType ("XamCore.ObjCRuntime.UnavailableAttribute");
-	public static System.Type ObsoletedAttributeType = typeof (TypeManager).Assembly.GetType ("XamCore.ObjCRuntime.ObsoletedAttribute");
-	public static System.Type DeprecatedAttributeType = typeof (TypeManager).Assembly.GetType ("XamCore.ObjCRuntime.DeprecatedAttribute");
+	public static System.Type IntroducedAttributeType = typeof (TypeManager).Assembly.GetType ("ObjCRuntime.IntroducedAttribute");
+	public static System.Type UnavailableAttributeType = typeof (TypeManager).Assembly.GetType ("ObjCRuntime.UnavailableAttribute");
+	public static System.Type ObsoletedAttributeType = typeof (TypeManager).Assembly.GetType ("ObjCRuntime.ObsoletedAttribute");
+	public static System.Type DeprecatedAttributeType = typeof (TypeManager).Assembly.GetType ("ObjCRuntime.DeprecatedAttribute");
 
 	public static System.Attribute CreateNewAttribute (System.Type attribType, System.Type [] ctorTypes, object [] ctorValues)
 	{

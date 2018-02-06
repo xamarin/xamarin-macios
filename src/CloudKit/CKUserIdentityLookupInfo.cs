@@ -1,10 +1,10 @@
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace XamCore.CloudKit
+namespace CloudKit
 {
 #if XAMCORE_2_0
 

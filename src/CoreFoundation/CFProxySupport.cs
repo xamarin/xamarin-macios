@@ -30,10 +30,10 @@
 using System;
 using System.Net;
 using System.Runtime.InteropServices;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.CoreFoundation {
+namespace CoreFoundation {
 	// Utility enum for string constants in ObjC
 	public enum CFProxyType {
 		None,
@@ -254,7 +254,7 @@ namespace XamCore.CoreFoundation {
 		}
 #endif
 		
-		[iOS (4,0)][Mac (10,7)]
+		[Mac (10,7)]
 		public NSString AutoConfigurationJavaScript {
 			get {
 				if (AutoConfigurationJavaScriptKey == null)

@@ -27,15 +27,15 @@
 // imagekit.cs: Bindings for the Image Kit API
 //
 using System;
-using XamCore.AppKit;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreImage;
-//using XamCore.ImageCaptureCore;
-using XamCore.CoreGraphics;
-using XamCore.CoreAnimation;
+using AppKit;
+using Foundation;
+using ObjCRuntime;
+using CoreImage;
+//using ImageCaptureCore;
+using CoreGraphics;
+using CoreAnimation;
 
-namespace XamCore.ImageKit {
+namespace ImageKit {
 
 	[BaseType (typeof (NSView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (IKCameraDeviceViewDelegate)})]
 	interface IKCameraDeviceView {
@@ -499,7 +499,7 @@ namespace XamCore.ImageKit {
 
 	[BaseType (typeof (NSObject))]
 	[Model]
-	[Protocol]
+	[Protocol (IsInformal = true)]
 	interface IKImageBrowserDataSource {
 		[Abstract]
 		[Export ("numberOfItemsInImageBrowser:")]
@@ -550,7 +550,7 @@ namespace XamCore.ImageKit {
 
 	[BaseType (typeof (NSObject))]
 	[Model]
-	[Protocol]
+	[Protocol (IsInformal = true)]
 	interface IKImageBrowserItem {
 		[Abstract]
 		[Export ("imageUID")]

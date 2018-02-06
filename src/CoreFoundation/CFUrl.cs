@@ -30,14 +30,14 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.CoreFoundation {
+namespace CoreFoundation {
 
 	// CFURLPathStyle -> CFIndex -> CFURL.h
 	[Native]
-	public enum CFUrlPathStyle : nint {
+	public enum CFUrlPathStyle : long {
 		POSIX = 0,
 		HFS = 1,
 		Windows = 2

@@ -9,13 +9,13 @@
 //
 
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.Messages;
-using XamCore.UIKit;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using Messages;
+using UIKit;
 
-namespace XamCore.MessageUI {
+namespace MessageUI {
 
 	[BaseType (typeof (UINavigationController))]
 	interface MFMailComposeViewController : UIAppearance {
@@ -69,7 +69,6 @@ namespace XamCore.MessageUI {
 		bool TextMessageAvailability { get; }
 	}
 	
-	[iOS (4,0)]
 	[BaseType (typeof (UINavigationController))]
 	interface MFMessageComposeViewController : UIAppearance {
 		[Export ("messageComposeDelegate", ArgumentSemantic.Assign), NullAllowed]
@@ -125,12 +124,10 @@ namespace XamCore.MessageUI {
 		[Export ("disableUserAttachments")]
 		void DisableUserAttachments ();
 
-		[iOS (5,0)]
 		[Field ("MFMessageComposeViewControllerTextMessageAvailabilityDidChangeNotification")]
 		[Notification (typeof (MFMessageAvailabilityChangedEventArgs))]
 		NSString TextMessageAvailabilityDidChangeNotification { get; }
 
-		[iOS (5,0)]
 		[Field ("MFMessageComposeViewControllerTextMessageAvailabilityKey")]
 		NSString TextMessageAvailabilityKey { get; }
 

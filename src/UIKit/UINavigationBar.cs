@@ -10,13 +10,13 @@
 #if IOS
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreAnimation;
-using XamCore.CoreGraphics;
-using XamCore.MediaPlayer;
+using Foundation;
+using ObjCRuntime;
+using CoreAnimation;
+using CoreGraphics;
+using MediaPlayer;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	public partial class UINavigationBar {
 
 #if !XAMCORE_2_0

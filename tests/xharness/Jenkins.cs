@@ -147,107 +147,53 @@ namespace xharness
 			return true;
 		}
 
-		IEnumerable<TestTask> CreateRunDeviceTasks ()
+		class TestData
 		{
-			var rv = new List<RunDeviceTask> ();
+			public string Variation;
+			public string MTouchExtraArgs;
+			public bool Debug;
+			public bool Profiling;
+		}
 
-			foreach (var project in Harness.IOSTestProjects) {
-				bool ignored = !IncludeDevice;
-				if (!IsIncluded (project))
-					ignored = true;
+		IEnumerable<TestData> GetTestData (RunTestTask test)
+		{
+			// This function returns additional test configurations (in addition to the default one) for the specific test
 
-				if (!project.SkipiOSVariation) {
-					var build64 = new XBuildTask {
-						Jenkins = this,
-						TestProject = project,
-						ProjectConfiguration = "Debug64",
-						ProjectPlatform = "iPhone",
-						Platform = TestPlatform.iOS_Unified64,
-						TestName = project.Name,
-					};
-					rv.Add (new RunDeviceTask (build64, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports64Bit)) { Ignored = ignored || !IncludeiOS });
-
-					var build32 = new XBuildTask {
-						Jenkins = this,
-						TestProject = project,
-						ProjectConfiguration = "Debug32",
-						ProjectPlatform = "iPhone",
-						Platform = TestPlatform.iOS_Unified32,
-						TestName = project.Name,
-					};
-					rv.Add (new RunDeviceTask (build32, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports32Bit)) { Ignored = ignored || !IncludeiOS });
-
-					var todayProject = project.AsTodayExtensionProject ();
-					var buildToday = new XBuildTask {
-						Jenkins = this,
-						TestProject = todayProject,
-						ProjectConfiguration = "Debug64",
-						ProjectPlatform = "iPhone",
-						Platform = TestPlatform.iOS_TodayExtension64,
-						TestName = project.Name,
-					};
-					rv.Add (new RunDeviceTask (buildToday, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports64Bit)) { Ignored = ignored || !IncludeiOSExtensions });
-				}
-
-				if (!project.SkiptvOSVariation) {
-					var tvOSProject = project.AsTvOSProject ();
-					var buildTV = new XBuildTask {
-						Jenkins = this,
-						TestProject = tvOSProject,
-						ProjectConfiguration = "Debug",
-						ProjectPlatform = "iPhone",
-						Platform = TestPlatform.tvOS,
-						TestName = project.Name,
-					};
-					rv.Add (new RunDeviceTask (buildTV, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.tvOS)) { Ignored = ignored || !IncludetvOS });
-				}
-
-				if (!project.SkipwatchOSVariation) {
-					var watchOSProject = project.AsWatchOSProject ();
-					var buildWatch = new XBuildTask {
-						Jenkins = this,
-						TestProject = watchOSProject,
-						ProjectConfiguration = "Debug",
-						ProjectPlatform = "iPhone",
-						Platform = TestPlatform.watchOS,
-						TestName = project.Name,
-					};
-					rv.Add (new RunDeviceTask (buildWatch, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.watchOS)) { Ignored = ignored || !IncludewatchOS });
-				}
-			}
-
-			var assembly_build_targets = new []
-			{
+			switch (test.ProjectPlatform) {
+			case "iPhone":
 				/* we don't add --assembly-build-target=@all=staticobject because that's the default in all our test projects */
-				new { Variation = "AssemblyBuildTarget: dylib (debug)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary", Debug = true, Profiling = false },
-				new { Variation = "AssemblyBuildTarget: SDK framework (debug)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = false },
+				yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary", Debug = true, Profiling = false };
+				yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = false };
 
-				new { Variation = "AssemblyBuildTarget: dylib (debug, profiling)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary", Debug = true, Profiling = true },
-				new { Variation = "AssemblyBuildTarget: SDK framework (debug, profiling)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = true },
+				yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug, profiling)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary", Debug = true, Profiling = true };
+				yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug, profiling)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = true };
 
-				new { Variation = "Release", MTouchExtraArgs = "", Debug = false, Profiling = false }, 
-				new { Variation = "AssemblyBuildTarget: SDK framework (release)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = false, Profiling = false },
+				yield return new TestData { Variation = "Release", MTouchExtraArgs = "", Debug = false, Profiling = false };
+				yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (release)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = false, Profiling = false };
+				break;
+			case "iPhoneSimulator":
+				switch (test.TestName) {
+				case "monotouch-test":
+					// The default is to run monotouch-test with the dynamic registrar (in the simulator), so that's already covered
+					yield return new TestData { Variation = "Debug (static registrar)", MTouchExtraArgs = "--registrar:static", Debug = true, Profiling = false };
+					break;
+				}
+				break;
+			default:
+				throw new NotImplementedException (test.ProjectPlatform);
+			}
+		}
 
-			};
-
-			// Don't build in the original project directory
-			// We can build multiple projects in parallel, and if some of those
-			// projects have the same project dependencies, then we may end up
-			// building the same (dependent) project simultaneously (and they can
-			// stomp on eachother). This is done asynchronously to speed to the initial test load.
-			// FIXME: we should really do this for simulator builds as well.
-			foreach (var device_test in rv.ToArray ()) {
-				var clone = device_test.TestProject.Clone ();
-				device_test.BuildTask.InitialTask = clone.CreateCopyAsync (device_test);
-				device_test.BuildTask.TestProject = clone;
-				device_test.TestProject = clone;
+		IEnumerable<T> CreateTestVariations<T> (IEnumerable<T> tests, Func<XBuildTask, T, T> creator) where T: RunTestTask
+		{
+			foreach (var task in tests) {
+				if (string.IsNullOrEmpty (task.Variation))
+					task.Variation = "Debug";
 			}
 
-			foreach (var task in rv)
-				task.Variation = "Debug";
-
-			foreach (var task in rv.ToArray ()) {
-				foreach (var test_data in assembly_build_targets) {
+			var rv = new List<T> (tests);
+			foreach (var task in tests.ToArray ()) {
+				foreach (var test_data in GetTestData (task)) {
 					var variation = test_data.Variation;
 					var mtouch_extra_args = test_data.MTouchExtraArgs;
 					var configuration = test_data.Debug ? task.ProjectConfiguration : task.ProjectConfiguration.Replace ("Debug", "Release");
@@ -255,8 +201,7 @@ namespace xharness
 					var profiling = test_data.Profiling;
 
 					var clone = task.TestProject.Clone ();
-					var clone_task = Task.Run (async () =>
-					{
+					var clone_task = Task.Run (async () => {
 						await task.BuildTask.InitialTask; // this is the project cloning above
 						await clone.CreateCopyAsync (task);
 						if (!string.IsNullOrEmpty (mtouch_extra_args))
@@ -267,8 +212,7 @@ namespace xharness
 						clone.Xml.Save (clone.Path);
 					});
 
-					var build = new XBuildTask
-					{
+					var build = new XBuildTask {
 						Jenkins = this,
 						TestProject = clone,
 						ProjectConfiguration = configuration,
@@ -277,11 +221,143 @@ namespace xharness
 						InitialTask = clone_task,
 						TestName = clone.Name,
 					};
-					rv.Add (new RunDeviceTask (build, task.Candidates) { Variation = variation, Ignored = task.Ignored });
+					T newVariation = creator (build, task);
+					newVariation.Variation = variation;
+					newVariation.Ignored = task.Ignored;
+					rv.Add (newVariation);
 				}
 			}
 
 			return rv;
+		}
+
+		IEnumerable<TestTask> CreateRunSimulatorTasks ()
+		{
+			var runSimulatorTasks = new List<RunSimulatorTask> ();
+
+			foreach (var project in Harness.IOSTestProjects) {
+				if (!project.IsExecutableProject)
+					continue;
+
+				bool ignored = !IncludeSimulator;
+				if (!IsIncluded (project))
+					ignored = true;
+
+				var ps = new List<Tuple<TestProject, TestPlatform, bool>> ();
+				if (!project.SkipiOSVariation)
+					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_Unified, ignored || !IncludeiOS));
+				if (!project.SkiptvOSVariation)
+					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsTvOSProject (), TestPlatform.tvOS, ignored || !IncludetvOS));
+				if (!project.SkipwatchOSVariation)
+					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsWatchOSProject (), TestPlatform.watchOS, ignored || !IncludewatchOS));
+				
+				var configurations = project.Configurations;
+				if (configurations == null)
+					configurations = new string [] { "Debug" };
+				foreach (var config in configurations) {
+					foreach (var pair in ps) {
+						var derived = new XBuildTask () {
+							Jenkins = this,
+							ProjectConfiguration = config,
+							ProjectPlatform = "iPhoneSimulator",
+							Platform = pair.Item2,
+							Ignored = pair.Item3,
+							TestName = project.Name,
+						};
+						derived.CloneTestProject (pair.Item1);
+						var simTasks = CreateRunSimulatorTaskAsync (derived);
+						runSimulatorTasks.AddRange (simTasks);
+						if (configurations.Length > 1) {
+							foreach (var task in simTasks)
+								task.Variation = config;
+						}
+					}
+				}
+			}
+
+			var testVariations = CreateTestVariations (runSimulatorTasks, (buildTask, test) => new RunSimulatorTask (buildTask, test.Candidates)).ToList ();
+
+			foreach (var taskGroup in testVariations.GroupBy ((RunSimulatorTask task) => task.Platform)) {
+				yield return new AggregatedRunSimulatorTask (taskGroup) {
+					Jenkins = this,
+					TestName = $"Tests for {taskGroup.Key}",
+				};
+			}
+		}
+
+		IEnumerable<TestTask> CreateRunDeviceTasks ()
+		{
+			var rv = new List<RunDeviceTask> ();
+
+			foreach (var project in Harness.IOSTestProjects) {
+				if (!project.IsExecutableProject)
+					continue;
+				
+				bool ignored = !IncludeDevice;
+				if (!IsIncluded (project))
+					ignored = true;
+
+				if (!project.SkipiOSVariation) {
+					var build64 = new XBuildTask {
+						Jenkins = this,
+						ProjectConfiguration = "Debug64",
+						ProjectPlatform = "iPhone",
+						Platform = TestPlatform.iOS_Unified64,
+						TestName = project.Name,
+					};
+					build64.CloneTestProject (project);
+					rv.Add (new RunDeviceTask (build64, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports64Bit)) { Ignored = ignored || !IncludeiOS });
+
+					var build32 = new XBuildTask {
+						Jenkins = this,
+						ProjectConfiguration = "Debug32",
+						ProjectPlatform = "iPhone",
+						Platform = TestPlatform.iOS_Unified32,
+						TestName = project.Name,
+					};
+					build32.CloneTestProject (project);
+					rv.Add (new RunDeviceTask (build32, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports32Bit)) { Ignored = ignored || !IncludeiOS });
+
+					var todayProject = project.AsTodayExtensionProject ();
+					var buildToday = new XBuildTask {
+						Jenkins = this,
+						ProjectConfiguration = "Debug64",
+						ProjectPlatform = "iPhone",
+						Platform = TestPlatform.iOS_TodayExtension64,
+						TestName = project.Name,
+					};
+					buildToday.CloneTestProject (todayProject);
+					rv.Add (new RunDeviceTask (buildToday, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports64Bit)) { Ignored = ignored || !IncludeiOSExtensions });
+				}
+
+				if (!project.SkiptvOSVariation) {
+					var tvOSProject = project.AsTvOSProject ();
+					var buildTV = new XBuildTask {
+						Jenkins = this,
+						ProjectConfiguration = "Debug",
+						ProjectPlatform = "iPhone",
+						Platform = TestPlatform.tvOS,
+						TestName = project.Name,
+					};
+					buildTV.CloneTestProject (tvOSProject);
+					rv.Add (new RunDeviceTask (buildTV, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.tvOS)) { Ignored = ignored || !IncludetvOS });
+				}
+
+				if (!project.SkipwatchOSVariation) {
+					var watchOSProject = project.AsWatchOSProject ();
+					var buildWatch = new XBuildTask {
+						Jenkins = this,
+						ProjectConfiguration = "Debug",
+						ProjectPlatform = "iPhone",
+						Platform = TestPlatform.watchOS,
+						TestName = project.Name,
+					};
+					buildWatch.CloneTestProject (watchOSProject);
+					rv.Add (new RunDeviceTask (buildWatch, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.watchOS)) { Ignored = ignored || !IncludewatchOS });
+				}
+			}
+
+			return CreateTestVariations (rv, (buildTask, test) => new RunDeviceTask (buildTask, test.Candidates));
 		}
 
 		static string AddSuffixToPath (string path, string suffix)
@@ -345,6 +421,7 @@ namespace xharness
 				"src/ObjCRuntime/Registrar.cs",
 				"external/mono",
 				"external/llvm",
+				"msbuild",
 			};
 			var mmp_prefixes = new string [] {
 				"tests/mmptest",
@@ -354,6 +431,7 @@ namespace xharness
 				"tools/linker",
 				"src/ObjCRuntime/Registrar.cs",
 				"external/mono",
+				"msbuild",
 			};
 			var bcl_prefixes = new string [] {
 				"tests/bcl-test",
@@ -459,43 +537,7 @@ namespace xharness
 
 			await LoadSimulatorsAndDevicesAsync ();
 
-			var runSimulatorTasks = new List<RunSimulatorTask> ();
-
-			foreach (var project in Harness.IOSTestProjects) {
-				bool ignored = false;
-				if (!IncludeSimulator)
-					ignored = true;
-
-				if (!IsIncluded (project))
-					ignored = true;
-
-				var ps = new List<Tuple<TestProject, TestPlatform, bool>> ();
-				if (!project.SkipiOSVariation)
-					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_Unified, ignored || !IncludeiOS));
-				if (!project.SkiptvOSVariation)
-					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsTvOSProject (), TestPlatform.tvOS, ignored || !IncludetvOS));
-				if (!project.SkipwatchOSVariation)
-					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsWatchOSProject (), TestPlatform.watchOS, ignored || !IncludewatchOS));
-				foreach (var pair in ps) {
-					var derived = new XBuildTask () {
-						Jenkins = this,
-						TestProject = pair.Item1,
-						ProjectConfiguration = "Debug",
-						ProjectPlatform = "iPhoneSimulator",
-						Platform = pair.Item2,
-						Ignored = pair.Item3,
-						TestName = project.Name,
-					};
-					runSimulatorTasks.AddRange (CreateRunSimulatorTaskAsync (derived));
-				}
-			}
-
-			foreach (var taskGroup in runSimulatorTasks.GroupBy ((RunSimulatorTask task) => task.Platform)) {
-				Tasks.Add (new AggregatedRunSimulatorTask (taskGroup) {
-					Jenkins = this,
-					TestName = $"Tests for {taskGroup.Key}",
-				});
-			}
+			Tasks.AddRange (CreateRunSimulatorTasks ());
 
 			var buildiOSMSBuild = new XBuildTask ()
 			{
@@ -504,6 +546,7 @@ namespace xharness
 				SpecifyPlatform = false,
 				SpecifyConfiguration = false,
 				Platform = TestPlatform.iOS,
+				UseMSBuild = true,
 			};
 			var nunitExecutioniOSMSBuild = new NUnitExecuteTask (buildiOSMSBuild)
 			{
@@ -526,6 +569,7 @@ namespace xharness
 				SpecifyConfiguration = false,
 				Platform = TestPlatform.iOS,
 			};
+			buildInstallSources.SolutionPath = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "tools", "install-source", "install-source.sln")); // this is required for nuget restore to be executed
 			var nunitExecutionInstallSource = new NUnitExecuteTask (buildInstallSources)
 			{
 				TestLibrary = Path.Combine (Harness.RootDirectory, "..", "tools", "install-source", "InstallSourcesTests", "bin", "Release", "InstallSourcesTests.dll"),
@@ -1073,9 +1117,13 @@ namespace xharness
 
 		string GetTestColor (IEnumerable<TestTask> tests)
 		{
-			if (tests.All ((v) => v.Succeeded))
-				return "green";
-			else if (tests.Any ((v) => v.Crashed))
+			if (!tests.Any ())
+				return "black";
+
+			var first = tests.First ();
+			if (tests.All ((v) => v.ExecutionResult == first.ExecutionResult))
+				return GetTestColor (first);
+			if (tests.Any ((v) => v.Crashed))
 				return "maroon";
 			else if (tests.Any ((v) => v.TimedOut))
 				return "purple";
@@ -1083,10 +1131,6 @@ namespace xharness
 				return "darkred";
 			else if (tests.Any ((v) => v.Failed))
 				return "red";
-			else if (tests.All ((v) => v.Building))
-				return "darkblue";
-			else if (tests.All ((v) => v.InProgress))
-				return "blue";
 			else if (tests.Any ((v) => v.NotStarted))
 				return "black";
 			else if (tests.Any ((v) => v.Ignored))
@@ -1875,22 +1919,24 @@ function oninitialload ()
 										}
 									} else if (log.Description == "NUnit results" || log.Description == "XML log") {
 										try {
-											var doc = new System.Xml.XmlDocument ();
-											doc.LoadWithoutNetworkAccess (log.FullPath);
-											var failures = doc.SelectNodes ("//test-case[@result='Error' or @result='Failure']").Cast<System.Xml.XmlNode> ().ToArray ();
-											if (failures.Length > 0) {
-												writer.WriteLine ("<div style='padding-left: 15px;'>");
-												foreach (var failure in failures) {
-													var test_name = failure.Attributes ["name"]?.Value;
-													var message = failure.SelectSingleNode ("failure/message")?.InnerText;
-													writer.Write (System.Web.HttpUtility.HtmlEncode (test_name));
-													if (!string.IsNullOrEmpty (message)) {
-														writer.Write (": ");
-														writer.Write (System.Web.HttpUtility.HtmlEncode (message));
+											if (File.Exists (log.FullPath) && new FileInfo (log.FullPath).Length > 0) {
+												var doc = new System.Xml.XmlDocument ();
+												doc.LoadWithoutNetworkAccess (log.FullPath);
+												var failures = doc.SelectNodes ("//test-case[@result='Error' or @result='Failure']").Cast<System.Xml.XmlNode> ().ToArray ();
+												if (failures.Length > 0) {
+													writer.WriteLine ("<div style='padding-left: 15px;'>");
+													foreach (var failure in failures) {
+														var test_name = failure.Attributes ["name"]?.Value;
+														var message = failure.SelectSingleNode ("failure/message")?.InnerText;
+														writer.Write (System.Web.HttpUtility.HtmlEncode (test_name));
+														if (!string.IsNullOrEmpty (message)) {
+															writer.Write (": ");
+															writer.Write (System.Web.HttpUtility.HtmlEncode (message));
+														}
+														writer.WriteLine ("<br />");
 													}
-													writer.WriteLine ("<br />");
+													writer.WriteLine ("</div>");
 												}
-												writer.WriteLine ("</div>");
 											}
 										} catch (Exception ex) {
 											writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {System.Web.HttpUtility.HtmlEncode (ex.Message)}</span><br />");
@@ -1958,6 +2004,19 @@ function oninitialload ()
 		public Dictionary<string, string> Environment = new Dictionary<string, string> ();
 
 		public Task InitialTask; // a task that's executed before this task's ExecuteAsync method.
+
+		public void CloneTestProject (TestProject project)
+		{
+			// Don't build in the original project directory
+			// We can build multiple projects in parallel, and if some of those
+			// projects have the same project dependencies, then we may end up
+			// building the same (dependent) project simultaneously (and they can
+			// stomp on eachother).
+			// So we clone the project file to a separate directory and build there instead.
+			// This is done asynchronously to speed to the initial test load.
+			TestProject = project.Clone ();
+			InitialTask = TestProject.CreateCopyAsync ();
+		}
 
 		protected Stopwatch duration = new Stopwatch ();
 		public TimeSpan Duration { 
@@ -2444,6 +2503,8 @@ function oninitialload ()
 
 	class XBuildTask : BuildProjectTask
 	{
+		public bool UseMSBuild;
+
 		protected override async Task ExecuteAsync ()
 		{
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
@@ -2452,7 +2513,7 @@ function oninitialload ()
 				await RestoreNugetsAsync (log, resource);
 
 				using (var xbuild = new Process ()) {
-					xbuild.StartInfo.FileName = "xbuild";
+					xbuild.StartInfo.FileName = UseMSBuild ? "msbuild" : "xbuild";
 					var args = new StringBuilder ();
 					args.Append ("/verbosity:diagnostic ");
 					if (SpecifyPlatform)
@@ -2462,6 +2523,8 @@ function oninitialload ()
 					args.Append (StringUtils.Quote (ProjectFile));
 					xbuild.StartInfo.Arguments = args.ToString ();
 					SetEnvironmentVariables (xbuild);
+					if (UseMSBuild)
+						xbuild.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = null;
 					LogProcessExecution (log, xbuild, "Building {0} ({1})", TestName, Mode);
 					if (!Harness.DryRun) {
 						var timeout = TimeSpan.FromMinutes (15);
@@ -2731,8 +2794,10 @@ function oninitialload ()
 						var xml = Logs.CreateFile ($"test-{Platform}-{Timestamp}.xml", "NUnit results");
 						proc.StartInfo.Arguments = $"-result={StringUtils.Quote (xml)}";
 					}
+					proc.StartInfo.EnvironmentVariables ["MONO_DEBUG"] = "no-gdb-backtrace";
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
 					var log = Logs.Create ($"execute-{Platform}-{Timestamp}.txt", "Execution log");
+					log.Timestamp = true;
 					log.WriteLine ("{0} {1}", proc.StartInfo.FileName, proc.StartInfo.Arguments);
 					if (!Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;
@@ -2740,10 +2805,11 @@ function oninitialload ()
 						var snapshot = new CrashReportSnapshot () { Device = false, Harness = Harness, Log = log, Logs = Logs, LogDirectory = LogDirectory };
 						await snapshot.StartCaptureAsync ();
 
+						ProcessExecutionResult result = null;
 						try {
 							var timeout = TimeSpan.FromMinutes (20);
 
-							var result = await proc.RunAsync (log, true, timeout);
+							result = await proc.RunAsync (log, true, timeout);
 							if (result.TimedOut) {
 								FailureMessage = $"Execution timed out after {timeout.TotalSeconds} seconds.";
 								log.WriteLine (FailureMessage);
@@ -2756,7 +2822,7 @@ function oninitialload ()
 								log.WriteLine (FailureMessage);
 							}
 						} finally {
-							await snapshot.EndCaptureAsync (TimeSpan.FromSeconds (Succeeded ? 0 : 5));
+							await snapshot.EndCaptureAsync (TimeSpan.FromSeconds (Succeeded ? 0 : (result?.ExitCode > 1 ? 120 : 5)));
 						}
 					}
 					Jenkins.MainLog.WriteLine ("Executed {0} ({1})", TestName, Mode);
@@ -3206,6 +3272,7 @@ function oninitialload ()
 				Target = AppRunnerTarget,
 				LogDirectory = LogDirectory,
 				MainLog = Logs.Create ($"run-{Device.UDID}-{Timestamp}.log", "Run log"),
+				Configuration = ProjectConfiguration,
 			};
 			runner.Simulators = Simulators;
 			runner.Initialize ();

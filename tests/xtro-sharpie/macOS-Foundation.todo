@@ -13,3 +13,12 @@
 !missing-designated-initializer! NSString::init is missing an [DesignatedInitializer] attribute
 !missing-designated-initializer! NSThread::init is missing an [DesignatedInitializer] attribute
 !missing-designated-initializer! NSUUID::init is missing an [DesignatedInitializer] attribute
+
+!missing-designated-initializer! NSAffineTransform::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSAppleScript::initWithContentsOfURL:error: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSAppleScript::initWithSource: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSPortMessage::initWithSendPort:receivePort:components: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSScriptCommand::initWithCommandDescription: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSScriptCommandDescription::initWithSuiteName:commandName:dictionary: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSTask::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSUserNotification::init is missing an [DesignatedInitializer] attribute

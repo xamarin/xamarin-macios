@@ -681,6 +681,12 @@ namespace Introspection {
 
 			case "UIPasteConfigurationSupporting": // types do not conform to protocol but protocol methods work on those types (base type tests in monotouch-test)
 				return true; // Skip everything because 'UIResponder' implements 'UIPasteConfigurationSupporting' and that's 130+ types
+
+#if !__WATCHOS__
+			// Undocumented conformance (members were inlinded in 'UIViewController' before so all subtypes should conform)
+			case "UIStateRestoring":
+				return type.Name == "UIViewController" || type.IsSubclassOf (typeof (UIViewController));
+#endif
 			}
 			return base.Skip (type, protocolName);
 		}

@@ -8,7 +8,7 @@
 //
 using System.Runtime.InteropServices;
 
-namespace XamCore.CoreMotion {
+namespace CoreMotion {
 
 	// CMMagnetometer.h
 	[StructLayout (LayoutKind.Sequential)]

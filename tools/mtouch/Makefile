@@ -107,6 +107,7 @@ MTOUCH_SOURCES = \
 	$(COMMON_SOURCES)	\
 	$(LINKER_SOURCES)	\
 	$(TOP)/src/ObjCRuntime/ArgumentSemantic.cs	\
+	$(TOP)/src/ObjCRuntime/BindingImplAttribute.cs	\
 	$(TOP)/src/ObjCRuntime/LinkWithAttribute.cs	\
 	$(TOP)/src/ObjCRuntime/NativeAttribute.cs	\
 	$(TOP)/src/ObjCRuntime/PlatformAvailability2.cs	\
@@ -136,9 +137,11 @@ MTOUCH_SOURCES = \
 	BuildTasks.mtouch.cs \
 	$(TOP)/tools/common/Application.cs \
 	$(TOP)/tools/common/Assembly.cs \
+	$(TOP)/tools/common/CoreResolver.cs \
 	$(TOP)/tools/common/DerivedLinkContext.cs \
 	$(TOP)/tools/common/Target.cs \
 	$(TOP)/tools/common/CompilerFlags.cs \
+	$(TOP)/tools/common/Optimizations.cs \
 	$(TOP)/src/Foundation/ExportAttribute.cs \
 	$(TOP)/src/Foundation/ConnectAttribute.cs \
 	$(XAMARIN_MACDEV_PATH)/Xamarin.MacDev/PListObject.cs \
@@ -174,6 +177,16 @@ UNREFERENCED_SYMBOLS = 							\
 	_xamarin_get_block_descriptor				\
 	_xamarin_get_locale_country_code			\
 	_xamarin_log								\
+	_xamarin_localized_string_format			\
+	_xamarin_localized_string_format_1			\
+	_xamarin_localized_string_format_2			\
+	_xamarin_localized_string_format_3			\
+	_xamarin_localized_string_format_4			\
+	_xamarin_localized_string_format_5			\
+	_xamarin_localized_string_format_6			\
+	_xamarin_localized_string_format_7			\
+	_xamarin_localized_string_format_8			\
+	_xamarin_localized_string_format_9			\
 	_xamarin_start_wwan							\
 	_xamarin_timezone_get_data					\
 	_xamarin_timezone_get_names					\
@@ -181,6 +194,8 @@ UNREFERENCED_SYMBOLS = 							\
 	_xamarin_IntPtr_objc_msgSendSuper_IntPtr	\
 	_xamarin_release_managed_ref				\
 	_xamarin_create_managed_ref					\
+	_xamarin_CGPoint__VNNormalizedFaceBoundingBoxPointForLandmarkPoint_Vector2_CGRect_nuint_nuint_string \
+	_xamarin_CGPoint__VNImagePointForFaceLandmarkPoint_Vector2_CGRect_nuint_nuint_string \
 	_CloseZStream								\
 	_CreateZStream								\
 	_Flush										\

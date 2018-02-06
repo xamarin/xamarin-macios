@@ -46,7 +46,8 @@
 
 		new XDelegate ("id", "IntPtr", "xamarin_create_delegate_proxy",
 			"MonoObject *", "IntPtr", "method",
-			"MonoObject *", "IntPtr", "block"
+			"MonoObject *", "IntPtr", "block",
+			"const char *", "IntPtr", "signature"
 		) { WrappedManagedFunction = "CreateDelegateProxy" },
 
 		new XDelegate ("void", "void", "xamarin_register_entry_assembly",
@@ -60,14 +61,6 @@
 		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_selector",
 			"SEL", "IntPtr", "ptr"
 		) { WrappedManagedFunction = "GetSelector" },
-
-		new XDelegate ("Class", "IntPtr", "xamarin_get_class_handle",
-			"MonoObject *", "IntPtr", "obj"
-		) { WrappedManagedFunction = "GetClassHandle" },
-
-		new XDelegate ("SEL", "IntPtr", "xamarin_get_selector_handle",
-			"MonoObject *", "IntPtr", "obj"
-		) { WrappedManagedFunction = "GetSelectorHandle" },
 
 		new XDelegate ("void", "void", "xamarin_get_method_for_selector",
 			"Class", "IntPtr", "cls",

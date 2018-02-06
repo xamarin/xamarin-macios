@@ -7,15 +7,14 @@
 // Copyright 2010, Novell, Inc.
 // Copyright 2013-2015 Xamarin Inc.
 //
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
-using XamCore.CoreLocation;
-using XamCore.UIKit;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
+using CoreLocation;
+using UIKit;
 using System;
 
-namespace XamCore.CoreMotion {
-	[iOS (4,0)]
+namespace CoreMotion {
 	[BaseType (typeof (CMLogItem))]
 	[DisableDefaultCtor] // will crash, see Extra.cs for compatibility stubs
 	interface CMAccelerometerData : NSSecureCoding {
@@ -34,7 +33,6 @@ namespace XamCore.CoreMotion {
 		NSDate StartDate { get; }
 	}
 
-	[iOS (4,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // will crash, see Extra.cs for compatibility stubs
 	interface CMLogItem : NSSecureCoding, NSCopying {
@@ -47,7 +45,6 @@ namespace XamCore.CoreMotion {
 	delegate void CMDeviceMotionHandler (CMDeviceMotion motion, NSError error);
 
 	[BaseType (typeof (NSObject))]
-	[iOS (4,0)]
 	interface CMMotionManager {
 		[Export ("accelerometerAvailable")]
 		bool AccelerometerAvailable { [Bind ("isAccelerometerAvailable")] get;  }
@@ -112,57 +109,44 @@ namespace XamCore.CoreMotion {
 		[Export ("stopDeviceMotionUpdates")]
 		void StopDeviceMotionUpdates ();
 
-		[iOS (5,0)]
 		[Export ("magnetometerUpdateInterval")]
 		double MagnetometerUpdateInterval { get; set; }
 
-		[iOS (5,0)]
 		[Export ("magnetometerAvailable")]
 		bool MagnetometerAvailable { [Bind ("isMagnetometerAvailable")] get; }
 
-		[iOS (5,0)]
 		[Export ("magnetometerActive")]
 		bool MagnetometerActive { [Bind ("isMagnetometerActive")] get; }
 
-		[iOS (5,0)]
 		[Export ("magnetometerData")]
 		CMMagnetometerData MagnetometerData { get; }
 
-		[iOS (5,0)]
 		[Export ("startMagnetometerUpdates")]
 		void StartMagnetometerUpdates ();
 
-		[iOS (5,0)]
 		[Export ("startMagnetometerUpdatesToQueue:withHandler:")]
 		void StartMagnetometerUpdates (NSOperationQueue queue, CMMagnetometerHandler handler);
 
-		[iOS (5,0)]
 		[Export ("stopMagnetometerUpdates")]
 		void StopMagnetometerUpdates ();
 
-		[iOS (5,0)]
 		[Export ("availableAttitudeReferenceFrames"), Static]
 		CMAttitudeReferenceFrame AvailableAttitudeReferenceFrames { get; }
 
-		[iOS (5,0)]
 		[Export ("attitudeReferenceFrame")]
 		CMAttitudeReferenceFrame AttitudeReferenceFrame { get; }
 
-		[iOS (5,0)]
 		[Export ("startDeviceMotionUpdatesUsingReferenceFrame:")]
 		void StartDeviceMotionUpdates (CMAttitudeReferenceFrame referenceFrame);
 
-		[iOS (5,0)]
 		[Export ("startDeviceMotionUpdatesUsingReferenceFrame:toQueue:withHandler:")]
 		void StartDeviceMotionUpdates (CMAttitudeReferenceFrame referenceFrame, NSOperationQueue queue, CMDeviceMotionHandler handler);
 
-		[iOS (5,0)]
 		[Export ("showsDeviceMovementDisplay")]
 		bool ShowsDeviceMovementDisplay { get; set; }
 	}
 
 	[BaseType (typeof (NSObject))]
-	[iOS (4,0)]
 	//<quote>You access CMAttitude objects through the attitude property of each CMDeviceMotion objects passed to an application.</quote>
 	[DisableDefaultCtor] // will crash, see Extra.cs for compatibility stubs
 	interface CMAttitude : NSSecureCoding, NSCopying {
@@ -186,7 +170,6 @@ namespace XamCore.CoreMotion {
 	}
 
 	[BaseType (typeof (CMLogItem))]
-	[iOS (4,0)]
 	[DisableDefaultCtor] // will crash, see Extra.cs for compatibility stubs
 	interface CMDeviceMotion : NSSecureCoding {
 		[Export ("rotationRate")]
@@ -201,7 +184,6 @@ namespace XamCore.CoreMotion {
 		[Export ("attitude")]
 		CMAttitude Attitude { get; }
 
-		[iOS (5,0)]
 		[Export ("magneticField")]
 		CMCalibratedMagneticField MagneticField { get; }
 
@@ -211,7 +193,6 @@ namespace XamCore.CoreMotion {
 	}
 
 	[BaseType (typeof (CMLogItem))]
-	[iOS (4,0)]
 	[DisableDefaultCtor] // will crash, see Extra.cs for compatibility stubs
 	interface CMGyroData : NSSecureCoding {
 		[Export ("rotationRate")]
@@ -219,14 +200,12 @@ namespace XamCore.CoreMotion {
 	}
 
 	[BaseType (typeof (CMLogItem))]
-	[iOS (5,0)]
 	[DisableDefaultCtor] // will crash, see Extra.cs for compatibility stubs
 	interface CMMagnetometerData : NSSecureCoding {
 		[Export ("magneticField")]
 		CMMagneticField MagneticField { get; }
 	}
 
-	[iOS (5,0)]
 	delegate void CMMagnetometerHandler (CMMagnetometerData magnetometerData, NSError error);
 
 	[NoWatch]
@@ -444,7 +423,7 @@ namespace XamCore.CoreMotion {
 
 	[Watch (4,0), iOS (11,0)]
 	[Native]
-	public enum CMAuthorizationStatus : nint {
+	public enum CMAuthorizationStatus : long {
 		NotDetermined = 0,
 		Restricted,
 		Denied,
@@ -489,7 +468,7 @@ namespace XamCore.CoreMotion {
 
 	[Watch (3,0)][NoTV][iOS (10,0)]
 	[Native]
-	public enum CMPedometerEventType : nint {
+	public enum CMPedometerEventType : long {
 		Pause,
 		Resume
 	}

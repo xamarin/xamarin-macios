@@ -1,14 +1,12 @@
-﻿#if !__TVOS__ && !__WATCHOS__ && !MONOMAC
+﻿#if !__TVOS__ && !__WATCHOS__
 
 using System;
 using System.Reflection;
 #if XAMCORE_2_0
 using Foundation;
-using UIKit;
 using ObjCRuntime;
 using Photos;
 using CoreGraphics;
-using AssetsLibrary;
 using RectangleF = CoreGraphics.CGRect;
 using SizeF = CoreGraphics.CGSize;
 using PointF = CoreGraphics.CGPoint;
@@ -47,15 +45,22 @@ namespace MonoTouchFixtures.Photos {
 
 		delegate IntPtr DPHLivePhotoFrameProcessingBlock2 (IntPtr block, IntPtr frame, ref IntPtr error);
 
+#if !MONOMAC
+		// on macOS `initWithLivePhotoEditingInput:` returns `nil` and we throw
 		[Test]
-		public unsafe void FrameProcessingBlock2 ()
+#endif
+		public void Linker ()
 		{
 			using (var cei = new PHContentEditingInput ())
 			using (var lpec = new PHLivePhotoEditingContext (cei)) {
 				// not much but it means the linker cannot remove it
 				Assert.Null (lpec.FrameProcessor2, "FrameProcessor2");
 			}
+		}
 
+		[Test]
+		public unsafe void FrameProcessingBlock2 ()
+		{
 			var t = typeof (NSObject).Assembly.GetType ("ObjCRuntime.Trampolines/SDPHLivePhotoFrameProcessingBlock2");
 			Assert.NotNull (t, "SDPHLivePhotoFrameProcessingBlock2");
 

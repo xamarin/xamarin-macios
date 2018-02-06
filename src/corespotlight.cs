@@ -9,13 +9,14 @@
 
 using System;
 using System.ComponentModel;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.CoreSpotlight {
-#if !MONOMAC
+namespace CoreSpotlight {
+
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
+	[Mac (10,13, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	interface CSIndexExtensionRequestHandler : NSExtensionRequestHandling, CSSearchableIndexDelegate {
 
@@ -23,6 +24,7 @@ namespace XamCore.CoreSpotlight {
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
+	[Mac (10,13, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	interface CSPerson : NSSecureCoding, NSCopying {
 
@@ -46,6 +48,7 @@ namespace XamCore.CoreSpotlight {
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
+	[Mac (10,13, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	interface CSSearchableIndex {
 
@@ -89,6 +92,7 @@ namespace XamCore.CoreSpotlight {
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
+	[Mac (10,13, onlyOn64: true)]
 	[Category]
 	[BaseType (typeof (CSSearchableIndex))]
 	interface CSSearchableIndex_CSOptionalBatchingExtension {
@@ -107,6 +111,7 @@ namespace XamCore.CoreSpotlight {
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
+	[Mac (10,13, onlyOn64: true)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface CSSearchableIndexDelegate {
@@ -138,6 +143,7 @@ namespace XamCore.CoreSpotlight {
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
+	[Mac (10,13, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	interface CSSearchableItem : NSSecureCoding, NSCopying {
 
@@ -175,6 +181,7 @@ namespace XamCore.CoreSpotlight {
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
+	[Mac (10,13, onlyOn64: true)]
 	[BaseType (typeof (NSString))]
 	// hack: it seems that generator.cs can't track NSCoding correctly ? maybe because the type is named NSString2 at that time
 	interface CSLocalizedString : NSCoding {
@@ -188,6 +195,7 @@ namespace XamCore.CoreSpotlight {
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
+	[Mac (10,13, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: You must call -[CSCustomAttributeKey initWithKeyName...]
 	interface CSCustomAttributeKey : NSCopying, NSSecureCoding {
@@ -216,6 +224,7 @@ namespace XamCore.CoreSpotlight {
 	}
 
 	[iOS (9,0)]
+	[Mac (10,13, onlyOn64: true)]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
 	[Static]
 	interface CSMailboxKey {
@@ -241,6 +250,7 @@ namespace XamCore.CoreSpotlight {
 
 	[NoTV]
 	[iOS (9,0)]
+	[Mac (10,13, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	interface CSSearchableItemAttributeSet : NSCopying, NSSecureCoding {
 
@@ -1027,6 +1037,7 @@ namespace XamCore.CoreSpotlight {
 	}
 
 	[NoTV][iOS (10,0)]
+	[Mac (10,13, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CSSearchQuery {
@@ -1054,6 +1065,5 @@ namespace XamCore.CoreSpotlight {
 		[Export ("cancel")]
 		void Cancel ();
 	}
-#endif
 }
 

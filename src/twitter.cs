@@ -6,13 +6,13 @@
 //
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.UIKit;
-using XamCore.Twitter;
-using XamCore.Accounts;
+using Foundation;
+using ObjCRuntime;
+using UIKit;
+using Twitter;
+using Accounts;
 
-namespace XamCore.Twitter {
+namespace Twitter {
 
 	delegate void TWRequestHandler (NSData responseData, NSHttpUrlResponse urlResponse, NSError error);
 
@@ -20,7 +20,7 @@ namespace XamCore.Twitter {
 	delegate void TWTweetComposeHandler (TWTweetComposeViewControllerResult result);
 #endif
 	
-	[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_6_0, Message = "Use the 'Social' framework.")]
+	[Availability (Deprecated = Platform.iOS_6_0, Message = "Use the 'Social' framework.")]
 	[BaseType (typeof (NSObject))]
 	interface TWRequest {
 		[NullAllowed] // by default this property is null
@@ -50,7 +50,7 @@ namespace XamCore.Twitter {
 		void PerformRequest (TWRequestHandler handler);
 	}
 
-	[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_6_0, Message = "Use the 'Social' framework.")]
+	[Availability (Deprecated = Platform.iOS_6_0, Message = "Use the 'Social' framework.")]
 	[BaseType (typeof (UIViewController))]
 	interface TWTweetComposeViewController {
 		[Export ("initWithNibName:bundle:")]

@@ -30,6 +30,10 @@ The easiest way to get exact version information is to use the **Xamarin Studio*
 
 ### <a name="MM0008">MM0008: You should provide one root assembly only, found {0} assemblies: '{1}'
 
+### <a name="MM0009"/>MM0009: Error while loading assemblies: *.
+
+An error occurred while loading the assemblies from the root assembly references. More information may be provided in the build output.
+
 ### <a name="MM0010">MM0010: Could not parse the command line arguments: {0}
 
 <!-- 0013 is unused -->
@@ -66,6 +70,18 @@ The easiest way to get exact version information is to use the **Xamarin Studio*
 
 This usually indicates a bug in Xamarin.Mac; please file a bug report at [https://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=Xamarin.Mac) with a test case.
 
+### <a name="MM0073"/>MM0073: Xamarin.Mac * does not support a deployment target of * (the minimum is *). Please select a newer deployment target in your project's Info.plist.
+
+The minimum deployment target is the one specified in the error message; please select a newer deployment target in the project's Info.plist.
+
+If updating the deployment target is not possible, then please use an older version of Xamarin.Mac.
+
+### <a name="MM0074"/>MM0074: Xamarin.Mac * does not support a deployment target of * (the maximum is *). Please select an older deployment target in your project's Info.plist or upgrade to a newer version of Xamarin.Mac.
+
+Xamarin.Mac does not support setting the minimum deployment target to a higher version than the version this particular version of Xamarin.Mac was built for.
+
+Please select an older minimum deployment target in the project's Info.plist, or upgrade to a newer version of Xamarin.Mac.
+
 ### <a name="MM0079">MM0079: Internal Error - No executable was copied into the app bundle. Please contact 'support@xamarin.com'
 
 ### <a name="MM0080">MM0080: Disabling NewRefCount, --new-refcount:false, is deprecated.
@@ -91,6 +107,35 @@ A last-straw solution would be to use an older version of Xamarin.Mac, one that 
 ### <a name="MM0099">MM0099: Internal error {0}. Please file a bug report with a test case (http://bugzilla.xamarin.com).
 
 ### <a name="MM0114">MM0114: Hybrid AOT compilation requires all assemblies to be AOT compiled.
+
+### <a name="MM0129"/>MM0129: Debugging symbol file for '*' does not match the assembly and is ignored.
+
+The debugging symbols, either a .pdb (portable pdb only) or a .mdb file, for the specified assembly could not be loaded.
+
+This generally means the assembly is newer or older than the symbols. Since they do not match they cannot be used and the symbols are ignored.
+
+This warning won't affect the application being built, however you might not be able to debug it entirely (in particular the code from specified assembly). Also exceptions, stack traces and crash reports might be missing some information.
+
+Please report this issue to the publisher of the assembly package (e.g. nuget author) so this can be fixed in their future releases.
+
+### <a name="MM0130"/>MM0130: No root assemblies found. You should provide at least one root assembly.
+
+When running --runregistrar, at least one root assembly should be provided.
+
+### <a name="MM0131"/>MM0131: Product assembly '{0}' not found in assembly list: '{1}'
+
+When running --runregistrar, the assembly list should include the product assembly, Xamarin.Mac, XamMac.
+
+### <a name="MM0132/>MM0132: Unknown optimization: *. Valid values are: *
+
+The specified optimization was not recognized.
+
+The accepted format is `[+|-]optimization-name`, where `optimization-name` is one of the values listed in the error message.
+
+See [Build optimizations](https://developer.xamarin.com/guides/cross-platform/macios/build-optimizations) for a complete description of each optimization.
+
+### <a name="MM0133"/>MM0133: Found more than 1 assembly matching '{0}' choosing first: '{1}'
+
 
 # MM1xxx: file copy / symlinks (project related)
 
@@ -180,6 +225,17 @@ Mixed-mode assemblies can not be processed by the linker.
 
 See https://msdn.microsoft.com/en-us/library/x0w2664k.aspx for more information on mixed-mode assemblies.
 
+### <a name="MM2106"/>MM2106: Could not optimize the call to BlockLiteral.SetupBlock[Unsafe] in * at offset * because *.
+
+The linker reports this warning when it can't optimize a call to BlockLiteral.SetupBlock or Block.SetupBlockUnsafe.
+
+The message will point to the method that calls BlockLiteral.SetupBlock[Unsafe], and
+it may also give clues as to why the call couldn't be optimized.
+
+Please file an [issue](https://github.com/xamarin/xamarin-macios/issues/new)
+along with a complete build log so that we can investigate what went wrong and
+possibly enable more scenarios in the future.
+
 # MM3xxx: AOT
 
 ## MM30xx: AOT (general) errors
@@ -206,6 +262,27 @@ See https://msdn.microsoft.com/en-us/library/x0w2664k.aspx for more information 
 ## MM41xx: registrar
 
 ### <a name="MM4134">MM4134: Your application is using the '{0}' framework, which isn't included in the MacOS SDK you're using to build your app (this framework was introduced in OSX {2}, while you're building with the MacOS {1} SDK.) This configuration is not supported with the static registrar (pass --registrar:dynamic as an additional mmp argument in your project's Mac Build option to select). Alternatively select a newer SDK in your app's Mac Build options.
+
+### <a name="MM4173"/>MM4173: The registrar can't compute the block signature for the delegate of type {delegate-type} in the method {method} because *.
+
+This is a warning indicating that the registrar couldn't inject the block
+signature of the specified method into the generated registrar code, because
+the registrar couldn't compute it.
+
+This means that the block signature has to be computed at runtime, which is
+somewhat slower.
+
+There are currently two possible reasons for this warning:
+
+1. The type of the managed delegate is either a `System.Delegate` or
+   `System.MulticastDelegate`. These types don't represent a specific signature,
+   which means the registrar can't compute the corresponding native signature
+   either. In this case the fix is to use a specific delegate type for the
+   block (alternatively the warning can be ignored by adding `--nowarn:4173`
+   as an additional mmp argument in the project's Mac Build options).
+2. The registrar can't find the `Invoke` method of the delegate. This
+   shouldn't happen, so please file an [issue](https://github.com/xamarin/xamarin-macios/issues/new)
+   with a test project so that we can fix it.
 
 # MM5xxx: GCC and toolchain
 

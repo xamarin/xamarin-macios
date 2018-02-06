@@ -8,15 +8,15 @@
 //
 
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.WatchConnectivity {
+namespace WatchConnectivity {
 
 	// NSInteger -> WCError.h
 	[iOS (9,0)]
 	[Native]
-	public enum WCErrorCode : nint {
+	public enum WCErrorCode : long {
 		GenericError = 7001,
 		SessionNotSupported = 7002,
 		SessionMissingDelegate = 7003,
@@ -39,7 +39,7 @@ namespace XamCore.WatchConnectivity {
 
 	[Watch (2,2)][iOS (9,3)]
 	[Native]
-	public enum WCSessionActivationState : nint {
+	public enum WCSessionActivationState : long {
 		NotActivated = 0,
 		Inactive = 1,
 		Activated = 2

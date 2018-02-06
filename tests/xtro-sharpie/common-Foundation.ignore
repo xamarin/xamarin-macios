@@ -38,8 +38,18 @@
 ## not recommanded, noted as it _may_ be deprecated in 10.6
 !missing-type! NSMessagePort not bound
 
+## native long is same size as int (.net long is long long)
+!missing-selector! NSNumber::initWithLong: not bound
+!missing-selector! NSNumber::initWithUnsignedLong: not bound
+
 # fixed in XAMCORE_3_0 - API break
 !incorrect-protocol-member! NSProgressReporting::progress is REQUIRED and should be abstract
+
+## should not have been [Native] it's 32bits only values -> XAMCORE_4_0
+!unknown-native-enum! NSBundleExecutableArchitecture bound
+
+## enum was [re]named to NSCalendarOptions - excluding from XAMCORE_4_0
+!unknown-native-enum! NSDateComponentsWrappingBehavior bound
 
 ## collections - many are special
 !missing-type! NSCountedSet not bound
@@ -640,8 +650,6 @@
 !missing-selector! NSMutableURLRequest::HTTPShouldUsePipelining not bound
 !missing-selector! NSMutableURLRequest::setHTTPShouldUsePipelining: not bound
 !missing-selector! NSNotification::initWithName:object:userInfo: not bound
-!missing-selector! NSNumber::initWithLong: not bound
-!missing-selector! NSNumber::initWithUnsignedLong: not bound
 !missing-selector! NSNumberFormatter::formattingContext not bound
 !missing-selector! NSNumberFormatter::getObjectValue:forString:range:error: not bound
 !missing-selector! NSNumberFormatter::setFormattingContext: not bound
@@ -866,7 +874,6 @@
 !missing-type! NSXPCConnection not bound
 !missing-type! NSXPCInterface not bound
 !missing-type! NSXPCListener not bound
-!unknown-native-enum! NSDateComponentsWrappingBehavior bound
 !unknown-native-enum! NSLigatureType bound
 !unknown-native-enum! NSMachPortRights bound
 !unknown-native-enum! NSNetServicesStatus bound
@@ -877,3 +884,6 @@
 !unknown-native-enum! NSUbiquitousKeyValueStoreChangeReason bound
 !unknown-protocol! NSObject bound
 !unknown-type! NSObject bound
+
+## Used 'INSFastEnumeration' placeholer (just so we can start flagging things)
+!missing-protocol-conformance! NSDictionary should conform to NSFastEnumeration (defined in 'NSGenericFastEnumeraiton' category)

@@ -43,7 +43,9 @@ namespace Xamarin.Tests
 
 		public Dictionary<string, string> EnvironmentVariables { get; set; }
 		public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds (60);
+#pragma warning disable 0649 // Field 'X' is never assigned to, and will always have its default value Y
 		public string WorkingDirectory;
+#pragma warning restore 0649
 
 		public IEnumerable<ToolMessage> Messages { get { return messages; } }
 		public List<string> OutputLines {
@@ -53,6 +55,12 @@ namespace Xamarin.Tests
 					output_lines.AddRange (output.ToString ().Split ('\n'));
 				}
 				return output_lines;
+			}
+		}
+
+		public StringBuilder Output {
+			get {
+				return output;
 			}
 		}
 
@@ -86,7 +94,21 @@ namespace Xamarin.Tests
 			return rv;
 		}
 
-		void ParseMessages ()
+		bool IndexOfAny (string line, out int start, out int end, params string [] values)
+		{
+			foreach (var value in values) {
+				start = line.IndexOf (value);
+				if (start >= 0) {
+					end = start + value.Length;
+					return true;
+				}
+			}
+			start = -1;
+			end = -1;
+			return false;
+		}
+
+		public void ParseMessages ()
 		{
 			messages.Clear ();
 
@@ -94,15 +116,13 @@ namespace Xamarin.Tests
 				var line = l;
 				var msg = new ToolMessage ();
 				var origin = string.Empty;
-				if (line.Contains (": error ")) {
+				if (IndexOfAny (line, out var idxError, out var endError, ": error ", ":  error ")) {
 					msg.IsError = true;
-					var idx = line.IndexOf (": error ", StringComparison.Ordinal);
-					origin = line.Substring (0, idx);
-					line = line.Substring (idx + ": error ".Length);
-				} else if (line.Contains (": warning ")) {
-					var idx = line.IndexOf (": warning ", StringComparison.Ordinal);
-					origin = line.Substring (0, idx);
-					line = line.Substring (idx + ": warning ".Length);
+					origin = line.Substring (0, idxError);
+					line = line.Substring (endError);
+				} else if (IndexOfAny (line, out var idxWarning, out var endWarning, ": warning ", ":  warning ")) {
+					origin = line.Substring (0, idxWarning);
+					line = line.Substring (endWarning);
 				} else if (line.StartsWith ("error ", StringComparison.Ordinal)) {
 					msg.IsError = true;
 					line = line.Substring (6);
@@ -173,6 +193,11 @@ namespace Xamarin.Tests
 					return true;
 			}
 			return false;
+		}
+
+		public void AssertWarningCount (int count, string message = "warnings")
+		{
+			Assert.AreEqual (count, WarningCount, message);
 		}
 
 		public void AssertErrorCount (int count, string message = "errors")
@@ -265,21 +290,23 @@ namespace Xamarin.Tests
 			Assert.Fail (string.Format ("The warning '{0}{1:0000}: {2}' was not found in the output:\n{3}", prefix, number, messagePattern, string.Join ("\n", details.ToArray ())));
 		}
 
-		public void AssertWarning (int number, string message)
+		public void AssertWarning (int number, string message, string filename = null, int? linenumber = null)
 		{
-			AssertWarning (MessagePrefix, number, message);
+			AssertWarning (MessagePrefix, number, message, filename, linenumber);
 		}
 
-		public void AssertWarning (string prefix, int number, string message)
+		public void AssertWarning (string prefix, int number, string message, string filename = null, int? linenumber = null)
 		{
 			if (!messages.Any ((msg) => msg.Prefix == prefix && msg.Number == number))
 				Assert.Fail (string.Format ("The warning '{0}{1:0000}' was not found in the output.", prefix, number));
 
-			if (messages.Any ((msg) => msg.Message == message))
-				return;
+			var matches = messages.Where ((msg) => msg.Message == message);
+			if (!matches.Any ()) {
+				var details = messages.Where ((msg) => msg.Prefix == prefix && msg.Number == number && msg.Message != message).Select ((msg) => string.Format ("\tMessage #{2} did not match:\n\t\tactual:   '{0}'\n\t\texpected: '{1}'", msg.Message, message, messages.IndexOf (msg) + 1));
+				Assert.Fail (string.Format ("The warning '{0}{1:0000}: {2}' was not found in the output:\n{3}", prefix, number, message, string.Join ("\n", details.ToArray ())));
+			}
 
-			var details = messages.Where ((msg) => msg.Prefix == prefix && msg.Number == number && msg.Message != message).Select ((msg) => string.Format ("\tMessage #{2} did not match:\n\t\tactual:   '{0}'\n\t\texpected: '{1}'", msg.Message, message, messages.IndexOf (msg) + 1));
-			Assert.Fail (string.Format ("The warning '{0}{1:0000}: {2}' was not found in the output:\n{3}", prefix, number, message, string.Join ("\n", details.ToArray ())));
+			AssertFilename (prefix, number, message, matches, filename, linenumber);
 		}
 
 		public void AssertNoWarnings ()

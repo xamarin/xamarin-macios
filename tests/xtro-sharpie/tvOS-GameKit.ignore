@@ -7,7 +7,11 @@
 ## all members are not available so the protocol is empty
 ## however this is confusing because some protocols have no members (so it can't just be ignored)
 !missing-protocol! GKFriendRequestComposeViewControllerDelegate not bound
+## 36619511 Is GKSavedGameListener available on tvOS? (https://trello.com/c/9q0MT7SY)
 !missing-protocol! GKSavedGameListener not bound
+
+## GKSavedGameListener is not available on tvOS (see missing-protocol above)
+!missing-protocol-conformance! GKLocalPlayer should conform to GKSavedGameListener (defined in 'GKSavedGame' category)
 
 ## GKSession is not in the tvOS API but the GKSessionDelegate is not marked
 ## looks like mistakes as the API is not used anywhere else

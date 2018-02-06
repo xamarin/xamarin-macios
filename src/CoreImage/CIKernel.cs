@@ -8,11 +8,11 @@
 //
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
+using Foundation;
+using ObjCRuntime;
+using CoreGraphics;
 
-namespace XamCore.CoreImage {
+namespace CoreImage {
 	
 	// This Api is also available on iOS 9 according to headers but depends on CIFilter.Apply methods 
 	// which are only available on Mac. Filled a radar:22524785 and Apple replied that setROISelector: 

@@ -26,11 +26,11 @@
 // scriptingbridge.cs: Bindings for the ScriptingBridge.Framework API
 //
 using System;
-using XamCore.AppKit;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using AppKit;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.ScriptingBridge {
+namespace ScriptingBridge {
 	
 	
 	[BaseType (typeof (NSObject))]
@@ -51,7 +51,6 @@ namespace XamCore.ScriptingBridge {
 	}
 
 #pragma warning disable 0618 // SBElement can only access children elements via NSMutableArray base type
-	[Mac (10,5)]
 	[BaseType (typeof (NSMutableArray))]
 	[DisableDefaultCtor] // *** -[SBElementArray init]: should never be used.
 	interface SBElementArray {

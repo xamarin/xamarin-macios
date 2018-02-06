@@ -18,6 +18,7 @@ SHIPPED_HEADERS +=         \
 	xamarin/main.h         \
 	xamarin/trampolines.h  \
 	xamarin/runtime.h      \
+	xamarin/runtime-generated.h \
 
 SHARED_SOURCES += mono-runtime.m bindings.m bindings-generated.m shared.m runtime.m trampolines.m trampolines-invoke.m xamarin-support.m nsstring-localization.m trampolines-varargs.m
 SHARED_I386_SOURCES += trampolines-i386.m trampolines-i386-asm.s trampolines-i386-objc_msgSend.s trampolines-i386-objc_msgSendSuper.s trampolines-i386-objc_msgSend_stret.s trampolines-i386-objc_msgSendSuper_stret.s
@@ -29,6 +30,9 @@ SHARED_FILES = $(SHARED_SOURCES) $(SHARED_HEADERS) $(SHARED_I386_SOURCES) $(SHAR
 EXTRA_DEPENDENCIES = $(SHARED_HEADERS)
 
 xamarin/mono-runtime.h: mono-runtime.h.t4 exports.t4
+	$(Q_GEN) $(TT) $< -o $@
+
+xamarin/runtime-generated.h: runtime-generated.h.t4 delegates.t4
 	$(Q_GEN) $(TT) $< -o $@
 
 mono-runtime.m: mono-runtime.m.t4 exports.t4
@@ -407,10 +411,14 @@ MAC_LIBS =                   \
 	libextension.a			 \
 	libxammac.a              \
 	libxammac-debug.a        \
+	libxammac-classic.a      \
+	libxammac-classic-debug.a\
 	libxammac.dylib          \
 	libxammac-debug.dylib    \
 	libxammac-system.a       \
 	libxammac-system-debug.a \
+	libxammac-system-classic.a       \
+	libxammac-system-classic-debug.a \
 
 #
 # XamMacLauncher: -DDYNAMIC_MONO_RUNTIME -DSYSTEM_LAUNCHER 
@@ -504,8 +512,13 @@ $(foreach arch,$(MAC_ARCHITECTURES),.libs/mac/extension-main.$(arch).o): EXTRA_D
 .libs/mac/libxammac-system.a: .libs/mac/libxammac-system.i386.a .libs/mac/libxammac-system.x86_64.a
 	$(call Q_2,LIPO,  [mac]) xcrun lipo -create $^ -o $@
 
-.libs/mac/XamMacLauncher: $(MAC_SOURCES) $(SHARED_HEADERS) | .libs/mac
-	$(call Q_2,CC,    [mac]) $(MAC_CLANG) $(MAC_LDFLAGS) $(MAC_OBJC_CFLAGS) $(MAC_CFLAGS) -DDYNAMIC_MONO_RUNTIME -DSYSTEM_LAUNCHER -arch i386 -o $@ $(filter %.c %.m %.mm,$(MAC_SOURCES)) -x assembler-with-cpp $(filter %.s,$(MAC_SOURCES))
+.libs/mac/XamMacLauncher: $(MACIOS_BINARIES_PATH)/XamMacLauncher | .libs/mac
+	$(Q) cp $< $@
+
+.libs/mac/libxammac-%.a: $(MACIOS_BINARIES_PATH)/libxammac-%.a | .libs/mac
+	$(Q) cp $< $@
+
+.SECONDARY: .libs/mac/libxammac-classic.a .libs/mac/libxammac-system-classic.a .libs/mac/libxammac-classic-debug.a .libs/mac/libxammac-system-classic-debug.a
 
 RUNTIME_MAC_TARGETS_DIRS +=                                    \
 	.libs/mac                                                  \

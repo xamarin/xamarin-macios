@@ -8,13 +8,13 @@
 
 using System;
 
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
-using XamCore.AudioToolbox;
+using Foundation;
+using CoreFoundation;
+using ObjCRuntime;
+using AudioToolbox;
 
 #if !MONOMAC
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 	public partial class AVAudioSessionPortDescription {
 #if !XAMCORE_3_0
 		[Obsolete ("Use 'DataSourceDescriptions' instead.")]

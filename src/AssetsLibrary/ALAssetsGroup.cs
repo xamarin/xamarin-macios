@@ -7,14 +7,14 @@
 // Copyright 2009, Novell, Inc.
 // Copyright 2011, Xamarin, Inc.
 //
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
-using XamCore.CoreLocation;
-using XamCore.UIKit;
-using XamCore.MediaPlayer;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
+using CoreLocation;
+using UIKit;
+using MediaPlayer;
 
-namespace XamCore.AssetsLibrary {
+namespace AssetsLibrary {
 
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Photos' API instead.")]
 	public partial class ALAssetsGroup {
@@ -40,7 +40,6 @@ namespace XamCore.AssetsLibrary {
 			}
 		}
 
-		[iOS (5,0)]
 		public NSUrl PropertyUrl {
 			get {
 				return (NSUrl) ValueForProperty (_PropertyUrl);

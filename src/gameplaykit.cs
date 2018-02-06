@@ -9,10 +9,10 @@
 #if XAMCORE_2_0 || !MONOMAC
 using System;
 using System.ComponentModel;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.SpriteKit;
-using XamCore.SceneKit;
+using ObjCRuntime;
+using Foundation;
+using SpriteKit;
+using SceneKit;
 using Vector2 = global::OpenTK.Vector2;
 using Vector2d = global::OpenTK.Vector2d;
 using Vector2i = global::OpenTK.Vector2i;
@@ -22,17 +22,17 @@ using Matrix3 = global::OpenTK.Matrix3;
 using MatrixFloat3x3 = global::OpenTK.NMatrix3;
 
 #if MONOMAC
-using SKColor = XamCore.AppKit.NSColor;
+using SKColor = AppKit.NSColor;
 #else
-using SKColor = XamCore.UIKit.UIColor;
+using SKColor = UIKit.UIColor;
 #endif
 
-namespace XamCore.GameplayKit {
+namespace GameplayKit {
 
 	[Native]
 	[Flags]
 	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
-	public enum GKMeshGraphTriangulationMode : nuint {
+	public enum GKMeshGraphTriangulationMode : ulong {
 		Vertices = 1 << 0,
 		Centers = 1 << 1,
 		EdgeMidpoints = 1 << 2
@@ -40,7 +40,7 @@ namespace XamCore.GameplayKit {
 
 	[Native]
 	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
-	public enum GKRTreeSplitStrategy : nint {
+	public enum GKRTreeSplitStrategy : long {
 		Halve = 0,
 		Linear = 1,
 		Quadratic = 2,
@@ -477,7 +477,7 @@ namespace XamCore.GameplayKit {
 		[Export ("isLossForPlayer:")]
 		bool IsLoss (IGKGameModelPlayer player);
 
-		[NoMac] // not yet
+		[Mac (10,11,2, onlyOn64 : true)]
 		[iOS (9,1)][TV (9,0)]
 		[Export ("unapplyGameModelUpdate:")]
 		void UnapplyGameModelUpdate (IGKGameModelUpdate gameModelUpdate);

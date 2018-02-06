@@ -317,6 +317,9 @@
     <Compile Include="..\common\DerivedLinkContext.cs">
       <Link>external\DerivedLinkContext.cs</Link>
     </Compile>
+    <Compile Include="..\common\Optimizations.cs">
+      <Link>external\Optimizations.cs</Link>
+    </Compile>
     <Compile Include="..\..\src\ObjCRuntime\Registrar.core.cs">
       <Link>external\Registrar.core.cs</Link>
     </Compile>
@@ -338,6 +341,9 @@
     <Compile Include="..\..\src\ObjCRuntime\PlatformAvailability2.cs">
       <Link>external\PlatformAvailability2.cs</Link>
     </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\BindingImplAttribute.cs">
+      <Link>external\BindingImplAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\common\PInvokeWrapperGenerator.cs">
       <Link>external\PInvokeWrapperGenerator.cs</Link>
     </Compile>
@@ -358,6 +364,12 @@
     </Compile>
     <Compile Include="..\common\StringUtils.cs">
       <Link>external\StringUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\common\CoreResolver.cs">
+      <Link>common\CoreResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\master\xamarin-macios\tools\linker\MonoTouch.Tuner\MonoTouchTypeMap.cs">
+      <Link>MonoTouch.Tuner\MonoTouchTypeMap.cs</Link>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

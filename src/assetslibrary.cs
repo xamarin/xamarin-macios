@@ -8,15 +8,15 @@
 // Copyright 2009, Novell, Inc.
 // Copyright 2011-2014, Xamarin Inc.
 //
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
-using XamCore.CoreLocation;
-using XamCore.UIKit;
-using XamCore.MediaPlayer;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
+using CoreLocation;
+using UIKit;
+using MediaPlayer;
 using System;
 
-namespace XamCore.AssetsLibrary {
+namespace AssetsLibrary {
 
 	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
 	interface ALAssetLibraryChangedEventArgs {
@@ -90,7 +90,6 @@ namespace XamCore.AssetsLibrary {
 		[Notification (typeof (ALAssetLibraryChangedEventArgs))]
 		NSString ChangedNotification { get; }
 
-		[iOS (5,0)]
 		[Export ("groupForURL:resultBlock:failureBlock:")]
 #if XAMCORE_2_0
 		void GroupForUrl (NSUrl groupURL, Action<ALAssetsGroup> resultBlock, Action<NSError> failureBlock);
@@ -98,7 +97,6 @@ namespace XamCore.AssetsLibrary {
 		void GroupForUrl (NSUrl groupURL, ALAssetsLibraryGroupResult resultBlock, ALAssetsLibraryAccessFailure failureBlock);
 #endif
 
-		[iOS (5,0)]
 		[Export ("addAssetsGroupAlbumWithName:resultBlock:failureBlock:")]
 #if XAMCORE_2_0
 		void AddAssetsGroupAlbum (string name, Action<ALAssetsGroup> resultBlock, Action<NSError> failureBlock);
@@ -193,19 +191,15 @@ namespace XamCore.AssetsLibrary {
 		[Field ("ALAssetTypeUnknown"), Internal]
 		NSString _TypeUnknown { get; }
 
-		[iOS (5,0)]
 		[Export ("originalAsset")]
 		ALAsset OriginalAsset { get;  }
 
-		[iOS (5,0)]
 		[Export ("editable")]
 		bool Editable { [Bind ("isEditable")] get;  }
 
-		[iOS (5,0)]
 		[Export ("aspectRatioThumbnail")]
 		CGImage AspectRatioThumbnail ();
 
-		[iOS (5,0)]
 		[Export ("writeModifiedImageDataToSavedPhotosAlbum:metadata:completionBlock:")]
 		[Async]
 #if XAMCORE_2_0
@@ -214,7 +208,6 @@ namespace XamCore.AssetsLibrary {
 		void WriteModifiedImageToSavedToPhotosAlbum (NSData imageData, NSDictionary metadata,  [NullAllowed] ALAssetsLibraryWriteCompletionDelegate completionBlock);
 #endif
 
-		[iOS (5,0)]
 		[Export ("writeModifiedVideoAtPathToSavedPhotosAlbum:completionBlock:")]
 		[Async]
 #if XAMCORE_2_0
@@ -223,7 +216,6 @@ namespace XamCore.AssetsLibrary {
 		void WriteModifiedVideoToSavedPhotosAlbum (NSUrl videoPathURL,  [NullAllowed] ALAssetsLibraryWriteCompletionDelegate completionBlock);
 #endif
 
-		[iOS (5,0)]
 		[Export ("setImageData:metadata:completionBlock:")]
 		[Async]
 #if XAMCORE_2_0
@@ -232,7 +224,6 @@ namespace XamCore.AssetsLibrary {
 		void SetImageData (NSData imageData, NSDictionary metadata,  [NullAllowed] ALAssetsLibraryWriteCompletionDelegate completionBlock);
 #endif
 
-		[iOS (5,0)]
 		[Export ("setVideoAtPath:completionBlock:")]
 		[Async]
 #if XAMCORE_2_0
@@ -278,11 +269,9 @@ namespace XamCore.AssetsLibrary {
 		[Export ("scale")]
 		float Scale { get; } /* float, not CGFloat */
 
-		[iOS (5,0)]
 		[Export ("filename")]
 		string Filename { get; }
 		
-		[iOS (5,1)]
 		[Export ("dimensions")]
 		CGSize Dimensions { get; }
 	}
@@ -304,11 +293,9 @@ namespace XamCore.AssetsLibrary {
 	delegate void ALAssetsEnumerator (ALAsset result, nint index, ref bool stop);
 
 #if !XAMCORE_2_0
-	[iOS (5,0)]
 	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
 	delegate void ALAssetsLibraryGroupResult (ALAssetsGroup group);
 
-	[iOS (5,0)]
 	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
 	delegate void ALAssetsLibraryAccessFailure (NSError error);
 #endif
@@ -346,15 +333,12 @@ namespace XamCore.AssetsLibrary {
 		[Field ("ALAssetsGroupPropertyPersistentID"), Internal]
 		NSString _PersistentID { get; }
 
-		[iOS (5,0)]
 		[Export ("editable")]
 		bool Editable { [Bind ("isEditable")] get;  }
 
-		[iOS (5,0)]
 		[Export ("addAsset:")]
 		bool AddAsset (ALAsset asset);
 
-		[iOS (5,0)]
 		[Field ("ALAssetsGroupPropertyURL"), Internal]
 		NSString _PropertyUrl { get; }
 	}

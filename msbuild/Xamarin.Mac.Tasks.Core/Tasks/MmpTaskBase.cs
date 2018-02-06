@@ -1,4 +1,4 @@
-//
+﻿//
 // MmpTask.cs
 //
 // Author:
@@ -98,7 +98,7 @@ namespace Xamarin.Mac.Tasks
 
 		protected override string GenerateCommandLineCommands ()
 		{
-			var args = new ProcessArgumentBuilder ();
+			var args = new CommandLineArgumentBuilder ();
 			bool msym;
 
 			args.Add ("/verbose");
@@ -224,7 +224,7 @@ namespace Xamarin.Mac.Tasks
 		string GetMonoBundleDirName ()
 		{
 			if (!string.IsNullOrEmpty (ExtraArguments)) {
-				var args = ProcessArgumentBuilder.Parse (ExtraArguments);
+				var args = CommandLineArgumentBuilder.Parse (ExtraArguments);
 
 				for (int i = 0; i < args.Length; i++) {
 					string arg;

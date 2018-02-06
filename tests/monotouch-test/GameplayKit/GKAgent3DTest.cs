@@ -8,7 +8,7 @@
 // Copyright 2017 Microsoft Inc. All rights reserved.
 //
 
-#if !__WATCHOS__ && !MONOMAC
+#if !__WATCHOS__
 
 using System;
 using OpenTK;
@@ -65,7 +65,6 @@ namespace MonoTouchFixtures.GamePlayKit
 				var transposed3x3 = MatrixFloat3x3.Transpose ((MatrixFloat3x3) mat);
 				Asserts.AreEqual (transposed3x3, obj.Rotation3x3, "Rotation3x3 after setter");
 				Asserts.AreEqual (transposed3x3, CFunctions.GetMatrixFloat3x3 (obj, "rotation"), "Rotation3x3 after setter native");
-
 				obj.Rotation3x3 = mat3x3;
 				Asserts.AreEqual (mat3x3, obj.Rotation3x3, "Rotation3x3 after setter 3x3");
 				Asserts.AreEqual (mat3x3, CFunctions.GetMatrixFloat3x3 (obj, "rotation"), "Rotation3x3 after setter native 3x3");

@@ -210,6 +210,9 @@
     <Compile Include="..\..\common\TestRuntime.cs">
       <Link>TestRuntime.cs</Link>
     </Compile>
+    <Compile Include="..\ApiAvailabilityTest.cs">
+      <Link>ApiAvailabilityTest.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist">

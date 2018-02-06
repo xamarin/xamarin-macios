@@ -11,16 +11,16 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using ObjCRuntime;
 using OSStatus = System.Int32;
 
 // FIXME64: this will change on 64 bit builds
 //
 using CMItemCount = System.Int32;
 
-namespace XamCore.CoreMedia {
+namespace CoreMedia {
 	
 	public delegate CMTime CMBufferGetTime (INativeObject buffer);
 	public delegate bool   CMBufferGetBool (INativeObject buffer);

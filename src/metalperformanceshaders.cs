@@ -1,12 +1,12 @@
 ﻿#if XAMCORE_2_0 || !MONOMAC
 using System;
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
-using XamCore.Metal;
-using XamCore.ObjCRuntime;
+using CoreGraphics;
+using Foundation;
+using Metal;
+using ObjCRuntime;
 using Vector4 = global::OpenTK.Vector4;
 
-namespace XamCore.MetalPerformanceShaders {
+namespace MetalPerformanceShaders {
 	// MPSImageConvolution.h
 
 	[iOS (9,0)][Mac (10, 13, onlyOn64: true)]
@@ -499,20 +499,9 @@ namespace XamCore.MetalPerformanceShaders {
 	// MPSImageResampling.h
 
 	[iOS (9,0)][Mac (10, 13, onlyOn64: true)]
-	[BaseType (typeof (MPSUnaryImageKernel))]
+	[BaseType (typeof (MPSImageScale))]
 	[DisableDefaultCtor]
 	interface MPSImageLanczosScale {
-		// scaleTransform property should be like:
-		// unsafe MPSScaleTransform* ScaleTransform { get; set; }
-		// which is both ugly and not supported by the generator
-		[Export ("scaleTransform")]
-		[Internal]
-		IntPtr _GetScaleTransform ();
-
-		[Export ("setScaleTransform:")]
-		[Internal]
-		void _SetScaleTransform (IntPtr value);
-
 		// inlining .ctor from base class
 
 		[Export ("initWithDevice:")]
@@ -938,7 +927,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[iOS (10,0)][TV (10,0)][Mac (10, 13, onlyOn64: true)]
 	[Native][Flags]
-	public enum MPSCnnConvolutionFlags : nuint {
+	public enum MPSCnnConvolutionFlags : ulong {
 		None = 0
 	}
 
@@ -1304,7 +1293,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[iOS (10,0)][TV (10,0)][Mac (10, 13, onlyOn64: true)]
 	[Native][Flags]
-	public enum MPSPurgeableState : nuint {
+	public enum MPSPurgeableState : ulong {
 		AllocationDeferred = 0,
 		KeepCurrent = MTLPurgeableState.KeepCurrent,
 		NonVolatile = MTLPurgeableState.NonVolatile,
@@ -1979,8 +1968,16 @@ namespace XamCore.MetalPerformanceShaders {
 		[DesignatedInitializer]
 		IntPtr Constructor (IMTLDevice device);
 
-		[NullAllowed, Export ("scaleTransform", ArgumentSemantic.Assign)]
-		MPSScaleTransform ScaleTransform { get; set; }
+		// scaleTransform property should be like:
+		// unsafe MPSScaleTransform* ScaleTransform { get; set; }
+		// which is both ugly and not supported by the generator
+		[Export ("scaleTransform")]
+		[Internal]
+		IntPtr _GetScaleTransform ();
+
+		[Export ("setScaleTransform:")]
+		[Internal]
+		void _SetScaleTransform (IntPtr value);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]

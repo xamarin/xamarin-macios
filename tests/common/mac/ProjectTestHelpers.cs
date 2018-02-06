@@ -8,10 +8,11 @@ using System.Text.RegularExpressions;
 using NUnit.Framework;
 using System.Reflection;
 using Xamarin.Utils;
+using Xamarin.Tests;
 
 namespace Xamarin.MMP.Tests
 {
-	public struct OutputText
+	public class OutputText
 	{
 		public string BuildOutput { get; private set; }
 		public string RunOutput { get; private set; }
@@ -20,6 +21,25 @@ namespace Xamarin.MMP.Tests
 		{
 			BuildOutput = buildOutput;
 			RunOutput = runOutput;
+		}
+
+		MessageTool messages;
+		internal MessageTool Messages {
+			get {
+				if (messages == null) {
+					messages = new MessageTool ();
+					messages.Output.Append (BuildOutput);
+					messages.ParseMessages ();
+				}
+				return messages;
+			}
+		}
+
+		internal class MessageTool : Tool
+		{
+			protected override string ToolPath => throw new NotImplementedException ();
+
+			protected override string MessagePrefix => "MM";
 		}
 	}
 
@@ -44,6 +64,7 @@ namespace Xamarin.MMP.Tests
 			public string ItemGroup { get; set; } = "";
 			public string SystemMonoVersion { get; set; } = "";
 			public string TargetFrameworkVersion { get; set; } = "";
+			public Dictionary<string, string> PlistReplaceStrings { get; set; } = new Dictionary<string, string>();
 
 			// Binding project specific
 			public string APIDefinitionConfig { get; set; }
@@ -174,7 +195,13 @@ namespace Xamarin.MMP.Tests
 			WriteMainFile (config.TestDecl, config.TestCode, true, config.FSharp, Path.Combine (config.TmpDir, config.FSharp ? "Main.fs" : "Main.cs"));
 
 			string sourceDir = FindSourceDirectory ();
-			File.Copy (Path.Combine (sourceDir, "Info-Unified.plist"), Path.Combine (config.TmpDir, "Info.plist"), true);
+
+			CopyFileWithSubstitutions (Path.Combine (sourceDir, "Info-Unified.plist"), Path.Combine (config.TmpDir, "Info.plist"), text => {
+				foreach (var key in config.PlistReplaceStrings.Keys)
+					text = text.Replace (key, config.PlistReplaceStrings [key]);
+
+				return text;
+			});
 
 			return CopyFileWithSubstitutions (Path.Combine (sourceDir, config.ProjectName), Path.Combine (config.TmpDir, config.ProjectName), text =>
 				{

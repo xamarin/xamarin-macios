@@ -1,7 +1,7 @@
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.MobileCoreServices {
+namespace MobileCoreServices {
 
 	[Partial]
 	interface UTType {
@@ -12,39 +12,30 @@ namespace XamCore.MobileCoreServices {
 		NSString Content { get; }
 		
 		[Field ("kUTTypeCompositeContent", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString CompositeContent { get; }
 		 
 		[Field ("kUTTypeMessage", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString Message { get; }
 		
 		[Field ("kUTTypeContact", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString Contact { get; }
 		
 		[Field ("kUTTypeArchive", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString Archive { get; }
 		
 		[Field ("kUTTypeDiskImage", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString DiskImage { get; }
 		
 		[Field ("kUTTypeData", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString Data { get; }
 		
 		[Field ("kUTTypeDirectory", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString Directory { get; }
 		
 		[Field ("kUTTypeResolvable", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString Resolvable { get; }
 		
 		[Field ("kUTTypeSymLink", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString SymLink { get; }
 		
 		[Field ("kUTTypeExecutable", "+CoreServices")]
@@ -52,15 +43,12 @@ namespace XamCore.MobileCoreServices {
 		NSString Executable { get; }
 		
 		[Field ("kUTTypeMountPoint", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString MountPoint { get; }
 		
 		[Field ("kUTTypeAliasFile", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString AliasFile { get; }
 		
 		[Field ("kUTTypeAliasRecord", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString AliasRecord { get; }
 		
 		[Field ("kUTTypeURLBookmarkData", "+CoreServices")]
@@ -68,31 +56,24 @@ namespace XamCore.MobileCoreServices {
 		NSString URLBookmarkData { get; }
 		
 		[Field ("kUTTypeURL", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString URL { get; }
 		
 		[Field ("kUTTypeFileURL", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString FileURL { get; }
 		
 		[Field ("kUTTypeText", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString Text { get; }
 		
 		[Field ("kUTTypePlainText", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString PlainText { get; }
 		
 		[Field ("kUTTypeUTF8PlainText", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString UTF8PlainText { get; }
 		
 		[Field ("kUTTypeUTF16ExternalPlainText", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString UTF16ExternalPlainText { get; }
 		
 		[Field ("kUTTypeUTF16PlainText", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString UTF16PlainText { get; }
 		
 		[Field ("kUTTypeDelimitedText", "+CoreServices")]
@@ -112,19 +93,15 @@ namespace XamCore.MobileCoreServices {
 		NSString UTF8TabSeparatedText { get; }
 		
 		[Field ("kUTTypeRTF", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString RTF { get; }
 		
 		[Field ("kUTTypeHTML", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString HTML { get; }
 		
 		[Field ("kUTTypeXML", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString XML { get; }
 		
 		[Field ("kUTTypeSourceCode", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString SourceCode { get; }
 		
 		[Field ("kUTTypeAssemblyLanguageSource", "+CoreServices")]
@@ -132,31 +109,24 @@ namespace XamCore.MobileCoreServices {
 		NSString AssemblyLanguageSource { get; }
 		
 		[Field ("kUTTypeCSource", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString CSource { get; }
 		
 		[Field ("kUTTypeObjectiveCSource", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString ObjectiveCSource { get; }
 		
 		[Field ("kUTTypeCPlusPlusSource", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString CPlusPlusSource { get; }
 		
 		[Field ("kUTTypeObjectiveCPlusPlusSource", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString ObjectiveCPlusPlusSource { get; }
 		
 		[Field ("kUTTypeCHeader", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString CHeader { get; }
 		
 		[Field ("kUTTypeCPlusPlusHeader", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString CPlusPlusHeader { get; }
 		
 		[Field ("kUTTypeJavaSource", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString JavaSource { get; }
 		
 		[Field ("kUTTypeScript", "+CoreServices")]
@@ -216,67 +186,51 @@ namespace XamCore.MobileCoreServices {
 		NSString BinaryPropertyList { get; }
 		
 		[Field ("kUTTypePDF", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString PDF { get; }
 		
 		[Field ("kUTTypeRTFD", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString RTFD { get; }
 		
 		[Field ("kUTTypeFlatRTFD", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString FlatRTFD { get; }
 		
 		[Field ("kUTTypeTXNTextAndMultimediaData", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString TXNTextAndMultimediaData { get; }
 		
 		[Field ("kUTTypeWebArchive", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString WebArchive { get; }
 		
 		[Field ("kUTTypeImage", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString Image { get; }
 		
 		[Field ("kUTTypeJPEG", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString JPEG { get; }
 		
 		[Field ("kUTTypeJPEG2000", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString JPEG2000 { get; }
 		
 		[Field ("kUTTypeTIFF", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString TIFF { get; }
 		
 		[Field ("kUTTypePICT", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString PICT { get; }
 		
 		[Field ("kUTTypeGIF", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString GIF { get; }
 		
 		[Field ("kUTTypePNG", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString PNG { get; }
 		
 		[Field ("kUTTypeQuickTimeImage", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString QuickTimeImage { get; }
 		
 		[Field ("kUTTypeAppleICNS", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString AppleICNS { get; }
 		
 		[Field ("kUTTypeBMP", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString BMP { get; }
 		
 		[Field ("kUTTypeICO", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString ICO { get; }
 		
 		[Field ("kUTTypeRawImage", "+CoreServices")]
@@ -288,27 +242,21 @@ namespace XamCore.MobileCoreServices {
 		NSString ScalableVectorGraphics { get; }
 		
 		[Field ("kUTTypeAudiovisualContent", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString AudiovisualContent { get; }
 		
 		[Field ("kUTTypeMovie", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString Movie { get; }
 		
 		[Field ("kUTTypeVideo", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString Video { get; }
 		
 		[Field ("kUTTypeAudio", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString Audio { get; }
 		
 		[Field ("kUTTypeQuickTimeMovie", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString QuickTimeMovie { get; }
 		
 		[Field ("kUTTypeMPEG", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString MPEG { get; }
 		
 		[Field ("kUTTypeMPEG2Video", "+CoreServices")]
@@ -320,19 +268,15 @@ namespace XamCore.MobileCoreServices {
 		NSString MPEG2TransportStream { get; }
 		
 		[Field ("kUTTypeMP3", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString MP3 { get; }
 		
 		[Field ("kUTTypeMPEG4", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString MPEG4 { get; }
 		
 		[Field ("kUTTypeMPEG4Audio", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString MPEG4Audio { get; }
 		
 		[Field ("kUTTypeAppleProtectedMPEG4Audio", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString AppleProtectedMPEG4Audio { get; }
 		
 		[Field ("kUTTypeAppleProtectedMPEG4Video", "+CoreServices")]
@@ -364,19 +308,15 @@ namespace XamCore.MobileCoreServices {
 		NSString M3UPlaylist { get; }
 		
 		[Field ("kUTTypeFolder", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString Folder { get; }
 		
 		[Field ("kUTTypeVolume", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString Volume { get; }
 		
 		[Field ("kUTTypePackage", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString Package { get; }
 		
 		[Field ("kUTTypeBundle", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString Bundle { get; }
 		
 		[Field ("kUTTypePluginBundle", "+CoreServices")]
@@ -396,19 +336,15 @@ namespace XamCore.MobileCoreServices {
 		NSString XPCService { get; }
 		
 		[Field ("kUTTypeFramework", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString Framework { get; }
 		
 		[Field ("kUTTypeApplication", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString Application { get; }
 		
 		[Field ("kUTTypeApplicationBundle", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString ApplicationBundle { get; }
 		
 		[Field ("kUTTypeApplicationFile", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString ApplicationFile { get; }
 		
 		[Field ("kUTTypeUnixExecutable", "+CoreServices")]
@@ -452,11 +388,10 @@ namespace XamCore.MobileCoreServices {
 		NSString Presentation { get; }
 		
 		[Field ("kUTTypeDatabase", "+CoreServices")]
-		[Mac (10,4), iOS(8,0)]
+		[iOS(8,0)]
 		NSString Database { get; }
 		
 		[Field ("kUTTypeVCard", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString VCard { get; }
 		
 		[Field ("kUTTypeToDoItem", "+CoreServices")]
@@ -476,7 +411,6 @@ namespace XamCore.MobileCoreServices {
 		NSString InternetLocation { get; }
 		
 		[Field ("kUTTypeInkText", "+CoreServices")]
-		[Mac (10,4), iOS(3,0)]
 		NSString InkText { get; }
 		
 		[Field ("kUTTypeFont", "+CoreServices")]

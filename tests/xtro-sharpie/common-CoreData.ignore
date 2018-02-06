@@ -1,3 +1,11 @@
+## no generator support for FastEnumeration - https://bugzilla.xamarin.com/show_bug.cgi?id=4391
+
+!missing-protocol-conformance! NSEntityDescription should conform to NSFastEnumeration
+!missing-protocol-conformance! NSManagedObjectModel should conform to NSFastEnumeration
+
+
+## unsorted
+
 !missing-field! NSAffectedObjectsErrorKey not bound
 !missing-field! NSCoreDataVersionNumber not bound
 !missing-field! NSErrorMergePolicy not bound
@@ -15,8 +23,6 @@
 !missing-field! NSPersistentStoreForceDestroyOption not bound
 !missing-field! NSRollbackMergePolicy not bound
 !missing-field! NSSQLiteErrorDomain not bound
-!missing-protocol-conformance! NSEntityDescription should conform to NSFastEnumeration
-!missing-protocol-conformance! NSManagedObjectModel should conform to NSFastEnumeration
 !missing-protocol-conformance! NSPersistentHistoryToken should conform to NSSecureCoding
 !missing-selector! NSAsynchronousFetchRequest::completionBlock not bound
 !unknown-native-enum! MigrationErrorType bound

@@ -2,12 +2,12 @@
 
 #if !COREBUILD
 
-using XamCore.CloudKit;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using CloudKit;
+using ObjCRuntime;
+using Foundation;
 using System;
 
-namespace XamCore.CloudKit {
+namespace CloudKit {
 
 #if !XAMCORE_4_0 && !WATCH
 	public partial class CKOperation {

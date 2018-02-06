@@ -63,8 +63,8 @@ using Mono.Cecil.Cil;
 using Mono.Tuner;
 
 using MonoTouch.Tuner;
-using XamCore.Registrar;
-using XamCore.ObjCRuntime;
+using Registrar;
+using ObjCRuntime;
 
 using Xamarin.Linker;
 using Xamarin.Utils;
@@ -1129,8 +1129,8 @@ namespace Xamarin.Bundler
 			{ "pie:", "Enable (default) or disable PIE (Position Independent Executable).", v => { app.EnablePie = ParseBool (v, "pie"); }},
 			{ "compiler=", "Specify the Objective-C compiler to use (valid values are gcc, g++, clang, clang++ or the full path to a GCC-compatible compiler).", v => { app.Compiler = v; }},
 			{ "fastdev", "Build an app that supports fastdev (this app will only work when launched using Xamarin Studio)", v => { app.AddAssemblyBuildTarget ("@all=dynamiclibrary"); }},
-			{ "force-thread-check", "Keep UI thread checks inside (even release) builds", v => { app.ThreadCheck = true; }},
-			{ "disable-thread-check", "Remove UI thread checks inside (even debug) builds", v => { app.ThreadCheck = false; }},
+			{ "force-thread-check", "Keep UI thread checks inside (even release) builds [DEPRECATED, use --linker-optimize=-remove-uithread-checks instead]", v => { app.Optimizations.RemoveUIThreadChecks = false; }, true},
+			{ "disable-thread-check", "Remove UI thread checks inside (even debug) builds [DEPRECATED, use --linker-optimize=remove-uithread-checks instead]", v => { app.Optimizations.RemoveUIThreadChecks = true; }, true},
 			{ "debug:", "Generate debug code in Mono for the specified assembly (set to 'all' to generate debug code for all assemblies, the default is to generate debug code for user assemblies only)",
 				v => {
 					app.EnableDebug = true;
@@ -1347,11 +1347,6 @@ namespace Xamarin.Bundler
 
 			if (action == Action.None)
 				throw new MonoTouchException (52, true, "No command specified.");
-
-			// warn if we ask to remove thread checks but the linker is not enabled
-			if (app.LinkMode == LinkMode.None && app.ThreadCheck.HasValue && !app.ThreadCheck.Value) {
-				ErrorHelper.Show (new MonoTouchException (2003, false, "Option '{0}' will be ignored since linking is disabled", "-disable-thread-check"));
-			}
 
 			if (app.SdkVersion < new Version (6, 0) && app.IsArchEnabled (Abi.ARMv7s))
 				throw new MonoTouchException (14, true, "The iOS {0} SDK does not support building applications targeting {1}", app.SdkVersion, "ARMv7s");

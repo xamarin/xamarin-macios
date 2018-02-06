@@ -7,12 +7,12 @@
 //
 // Copyright 2011-2013 Xamarin Inc
 //
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 using System;
-using XamCore.CoreFoundation;
+using CoreFoundation;
 
-namespace XamCore.CoreBluetooth {
+namespace CoreBluetooth {
 
 	[Watch (4,0)]
 	[iOS (8,0)]
@@ -46,7 +46,6 @@ namespace XamCore.CoreBluetooth {
 	}
 
 	[Watch (4,0)]
-	[iOS (5,0)]
 	[Mac (10, 7)]
 	[BaseType (typeof (CBManager), Delegates=new[] {"WeakDelegate"}, Events = new[] { typeof (CBCentralManagerDelegate)})]
 	[DisableDefaultCtor] // crash (at dispose time) on OSX
@@ -85,7 +84,7 @@ namespace XamCore.CoreBluetooth {
 		[NoWatch]
 		[Mac (10, 7, onlyOn64: true)] // Was removed from 32-bit in 10.13 unannounced
 		[Export ("retrieveConnectedPeripherals")]
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_9_0, Message = "Use 'RetrievePeripheralsWithIdentifiers' instead.")]
+		[Availability (Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_9_0, Message = "Use 'RetrievePeripheralsWithIdentifiers' instead.")]
 		void RetrieveConnectedPeripherals ();
 
 		[Export ("scanForPeripheralsWithServices:options:"), Internal]
@@ -277,7 +276,6 @@ namespace XamCore.CoreBluetooth {
 	}
 
 	[Watch (4,0)]
-	[iOS (5,0)]
 	[Static]
 	interface CBAdvertisement {
 		[Field ("CBAdvertisementDataServiceUUIDsKey")]
@@ -310,7 +308,6 @@ namespace XamCore.CoreBluetooth {
 	}
 
 	[Watch (4,0)]
-	[iOS (5,0)]
 	[BaseType (typeof (CBAttribute))]
 	[DisableDefaultCtor] // crash (at dispose time) on OSX
 	interface CBCharacteristic {
@@ -386,7 +383,6 @@ namespace XamCore.CoreBluetooth {
 	}
 
 	[Watch (4,0)]
-	[iOS (5,0)]
 	[BaseType (typeof (CBAttribute))]
 	[DisableDefaultCtor] // crash (at dispose time) on OSX
 	interface CBDescriptor {
@@ -413,7 +409,6 @@ namespace XamCore.CoreBluetooth {
 	}
 
 	[Watch (4,0)]
-	[iOS (5,0)]
 	[BaseType (typeof (CBPeer), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof (CBPeripheralDelegate)})]
 	[DisableDefaultCtor] // crash (at dispose time) on OSX
 	interface CBPeripheral : NSCopying {
@@ -569,7 +564,6 @@ namespace XamCore.CoreBluetooth {
 	}
 
 	[Watch (4,0)]
-	[iOS (5,0)]
 	[BaseType (typeof (CBAttribute))]
 	[DisableDefaultCtor] // crash (at dispose time) on OSX
 	interface CBService {
@@ -622,7 +616,6 @@ namespace XamCore.CoreBluetooth {
 	}
 
 	[Watch (4,0)]
-	[iOS (5,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crash (at dispose time) on OSX
 	interface CBUUID : NSCopying {
@@ -638,7 +631,7 @@ namespace XamCore.CoreBluetooth {
 		[Export ("UUIDWithData:")]
 		CBUUID FromData (NSData theData);
 
-		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_9_0)]
+		[Availability (Deprecated = Platform.iOS_9_0)]
 		[NoWatch]
 		[Static]
 		[Export ("UUIDWithCFUUID:")]

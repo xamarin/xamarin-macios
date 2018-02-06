@@ -34,8 +34,8 @@ using System.Diagnostics;
 using System.Text;
 using Mono.Options;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 using Xamarin.Utils;
 
 class BindingTouch {

@@ -7,18 +7,17 @@
 // Copyright 2010, Novell, Inc.
 // Copyright 2011-2014 Xamarin Inc. All rights reserved.
 //
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
-using XamCore.UIKit;
-using XamCore.MediaPlayer;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
+using UIKit;
+using MediaPlayer;
 using System;
 using System.ComponentModel;
-using XamCore.AVKit;
+using AVKit;
 
-namespace XamCore.iAd {
+namespace iAd {
 
-	[iOS (4,0)]
 	[Deprecated (PlatformName.iOS, 10, 0)]
 	[BaseType (typeof (UIView), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] {typeof (ADBannerViewDelegate)})]
 	interface ADBannerView {
@@ -50,7 +49,7 @@ namespace XamCore.iAd {
 		[Export ("bannerViewActionInProgress")]
 		bool BannerViewActionInProgress { [Bind ("isBannerViewActionInProgress")] get;  }
 
-		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_6_0)]
+		[Availability (Deprecated = Platform.iOS_6_0)]
 		[NullAllowed] // by default this property is null
 		[Export ("requiredContentSizeIdentifiers", ArgumentSemantic.Copy)]
 		NSSet RequiredContentSizeIdentifiers { get; set;  }
@@ -58,35 +57,34 @@ namespace XamCore.iAd {
 		[Export ("cancelBannerViewAction")]
 		void CancelBannerViewAction ();
 
-		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_6_0)]
+		[Availability (Deprecated = Platform.iOS_6_0)]
 		[NullAllowed] // by default this property is null
 		[Export ("currentContentSizeIdentifier", ArgumentSemantic.Copy)]
 		string CurrentContentSizeIdentifier { get; set; }
 
-		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_6_0)]
+		[Availability (Deprecated = Platform.iOS_6_0)]
 		[Static, Export ("sizeFromBannerContentSizeIdentifier:")]
 		CGSize SizeFromContentSizeIdentifier (string sizeIdentifier);
 
 #if !XAMCORE_3_0
-		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_4_2)]
+		[Availability (Deprecated = Platform.iOS_4_2)]
 		[Field ("ADBannerContentSizeIdentifier320x50")]
 		NSString SizeIdentifier320x50 { get; }
 
-		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_4_2)]
+		[Availability (Deprecated = Platform.iOS_4_2)]
 		[Field ("ADBannerContentSizeIdentifier480x32")]
 		NSString SizeIdentifier480x32 { get; }
 #endif
 
-		[Availability (Introduced = Platform.iOS_4_2, Deprecated = Platform.iOS_6_0)]
+		[Availability (Deprecated = Platform.iOS_6_0)]
 		[Field ("ADBannerContentSizeIdentifierLandscape")]
 		NSString SizeIdentifierLandscape { get; }
 
-		[Availability (Introduced = Platform.iOS_4_2, Deprecated = Platform.iOS_6_0)]
+		[Availability (Deprecated = Platform.iOS_6_0)]
 		[Field ("ADBannerContentSizeIdentifierPortrait")]
 		NSString SizeIdentifierPortrait { get; }
 	}
 
-	[iOS (4,0)]
 	[Deprecated (PlatformName.iOS, 10, 0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -104,7 +102,6 @@ namespace XamCore.iAd {
 		[Export ("bannerViewActionDidFinish:")]
 		void ActionFinished (ADBannerView banner);
 
-		[iOS (5,0)]
 		[Export ("bannerViewWillLoadAd:"), EventArgs ("EventArgs", true, true)]
 		void WillLoad (ADBannerView bannerView);
 	}
@@ -132,7 +129,7 @@ namespace XamCore.iAd {
 		bool PresentInView (UIView containerView);
 
 		[Export ("presentFromViewController:")]
-		[Availability (Introduced = Platform.iOS_4_3, Deprecated = Platform.iOS_7_0, Message = "Use extension method 'UIViewController.RequestInterstitialAdPresentation' instead.")]
+		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use extension method 'UIViewController.RequestInterstitialAdPresentation' instead.")]
 		void PresentFromViewController (UIViewController viewController);
 	}
 
@@ -167,7 +164,6 @@ namespace XamCore.iAd {
 		[Export ("interstitialAdActionDidFinish:")]
 		void ActionFinished (ADInterstitialAd interstitialAd);
 
-		[iOS (5,0)]
 		[Export ("interstitialAdWillLoad:"), EventArgs ("EventArgs", true, true)]
 		void WillLoad (ADInterstitialAd interstitialAd);
 	}

@@ -1,13 +1,5 @@
 !missing-selector! +NSURLConnection::sendSynchronousRequest:returningResponse:error: not bound
 !missing-selector! NSFileProviderService::getFileProviderConnectionWithCompletionHandler: not bound
 
-## should not have been [Native] it's 32bits only values -> XAMCORE_4_0
-!unknown-native-enum! NSBundleExecutableArchitecture bound
-
-## from libsystem_kernel.dylib for iOS 5.0.1 (new API added after that)
-!unknown-pinvoke! getxattr bound
-!unknown-pinvoke! removexattr bound
-!unknown-pinvoke! setxattr bound
-
 ## does not exists in iOS as a type - but some API refers to it (messy)
 !unknown-type! NSPortMessage bound

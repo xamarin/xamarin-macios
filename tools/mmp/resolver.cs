@@ -21,87 +21,33 @@
  * THE SOFTWARE.
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Security.Cryptography;
 
 using Mono.Cecil;
-using Mono.Cecil.Cil;
 
 namespace Xamarin.Bundler {
-	public partial class MonoMacResolver : IAssemblyResolver {
+	public partial class MonoMacResolver : CoreResolver {
 		public static bool IsClassic { get { return Driver.IsClassic; } }
 		public static bool IsUnified { get { return Driver.IsUnified; } }
 
-		public string FrameworkDirectory { get; set; }
-		public string RootDirectory { get; set; }
-		public string ArchDirectory { get; set; }
+		public List<string> RecursiveSearchDirectories { get; } = new List<string> ();
 
 		public List <string> CommandLineAssemblies { get; set; }
 		public List<Exception> Exceptions = new List<Exception> ();
 
-		Dictionary<string, AssemblyDefinition> cache;
-
-		public MonoMacResolver ()
-		{
-			cache = new Dictionary<string, AssemblyDefinition> ();
-		}
-
-		public IDictionary<string, AssemblyDefinition> ResolverCache { get { return cache; } }
-
-		public IDictionary ToResolverCache ()
-		{
-			var resolver_cache = new Hashtable ();
-			foreach (var pair in cache)
-				resolver_cache.Add (pair.Key, pair.Value);
-
-			return resolver_cache;
-		}
-
-		public AssemblyDefinition AddAssembly (string fileName)
-		{
-			if (!File.Exists (fileName))
-				return null;
-
-			AssemblyDefinition assembly;
-			var name = Path.GetFileNameWithoutExtension (fileName);
-			if (cache.TryGetValue (name, out assembly))
-				return assembly;
-
-			assembly = AssemblyDefinition.ReadAssembly (fileName, new ReaderParameters 
-				{
-					AssemblyResolver = this,
-					InMemory = new FileInfo (fileName).Length < 1024 * 1024 * 100, // 100 MB
-					ReadSymbols = true,
-					SymbolReaderProvider = new DefaultSymbolReaderProvider (throwIfNoSymbol: false) 
-				});
-			cache.Add (name, assembly);
-			return assembly;
-		}
 
 		public AssemblyDefinition GetAssembly (string fileName)
 		{
 			return Resolve (Path.GetFileNameWithoutExtension (fileName));
 		}
 
-		public AssemblyDefinition Resolve (string fullName, ReaderParameters parameters)
-		{
-			return Resolve (AssemblyNameReference.Parse (fullName), parameters);
-		}
-
 		public AssemblyDefinition Resolve (string fullName)
 		{
-			return Resolve (fullName, new ReaderParameters { AssemblyResolver = this });
+			return Resolve (AssemblyNameReference.Parse (fullName), new ReaderParameters { AssemblyResolver = this });
 		}
 
-		public AssemblyDefinition Resolve (AssemblyNameReference reference)
-		{
-			return Resolve (reference, new ReaderParameters { AssemblyResolver = this });
-		}
-
-		public AssemblyDefinition Resolve (AssemblyNameReference reference, ReaderParameters parameters)
+		public override AssemblyDefinition Resolve (AssemblyNameReference reference, ReaderParameters parameters)
 		{
 			var name = reference.Name;
 
@@ -115,7 +61,7 @@ namespace Xamarin.Bundler {
 						return false;
 					return String.Compare (name, Path.GetFileNameWithoutExtension (t), StringComparison.Ordinal) == 0;
 				});
-				assembly = String.IsNullOrEmpty (cmdasm) ? null : AddAssembly (cmdasm);
+				assembly = String.IsNullOrEmpty (cmdasm) ? null : Load (cmdasm);
 				if (assembly != null)
 					return assembly;
 			}
@@ -137,37 +83,17 @@ namespace Xamarin.Bundler {
 					return assembly;
 			}
 
-			assembly = SearchDirectory (name, RootDirectory);
+			assembly = SearchDirectory (name, RootDirectory, ".exe");
 			if (assembly != null)
 				return assembly;
 
-			return null;
-		}
-
-		AssemblyDefinition SearchDirectory (string name, string directory)
-		{
-			var file = DirectoryGetFile (directory, name + ".dll");
-			if (file.Length > 0)
-				return AddAssembly (file);
-
-			file = DirectoryGetFile (directory, name + ".exe");
-			if (file.Length > 0)
-				return AddAssembly (file);
+			foreach (var directory in RecursiveSearchDirectories) {
+				assembly = SearchDirectory (name, directory, recursive: true);
+				if (assembly != null)
+					return assembly;
+			}
 
 			return null;
-		}
-
-		static string DirectoryGetFile (string directory, string file)
-		{
-			var files = Directory.GetFiles (directory, file);
-			if (files != null && files.Length > 0)
-				return files [0];
-
-			return "";
-		}
-
-		public void Dispose ()
-		{
 		}
 	}
 }

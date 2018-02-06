@@ -3,13 +3,12 @@
 #if !WATCH
 
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 
 	public partial class UIPopoverController {
 
-		[iOS (5,0)]
 		// cute helper to avoid using `Class` in the public API
 		public virtual Type PopoverBackgroundViewType {
 			get {

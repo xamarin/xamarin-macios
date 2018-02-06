@@ -10,10 +10,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.SpriteKit
+namespace SpriteKit
 {
 #if XAMCORE_2_0 || !MONOMAC
 	public partial class SKNode : IEnumerable, IEnumerable<SKNode>

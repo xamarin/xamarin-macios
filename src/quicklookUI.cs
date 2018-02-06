@@ -1,12 +1,12 @@
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
-using XamCore.AppKit;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
+using AppKit;
 
 using System;
 using System.ComponentModel;
 
-namespace XamCore.QuickLookUI {
+namespace QuickLookUI {
 	[BaseType (typeof (NSObject))]
 	[Protocol, Model]
 	interface QLPreviewPanelDataSource {
@@ -33,7 +33,6 @@ namespace XamCore.QuickLookUI {
 		NSObject TransitionImageForPreviewItem (QLPreviewPanel panel, [Protocolize] QLPreviewItem item, CGRect contentRect);
 	}
 	
-	[Mac (10,6)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface QLPreviewItem {
@@ -61,7 +60,6 @@ namespace XamCore.QuickLookUI {
 		void EndPreviewPanelControl (QLPreviewPanel panel);
 	}
 
-	[Mac (10,6)]
 	[BaseType (typeof (NSPanel))]
 	interface QLPreviewPanel {
 		[Export ("currentController")]

@@ -8,10 +8,10 @@
 //
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.SystemConfiguration {
+namespace SystemConfiguration {
 
 #if !MONOMAC
 	[Static]
