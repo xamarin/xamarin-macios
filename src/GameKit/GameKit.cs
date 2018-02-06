@@ -287,6 +287,7 @@ namespace XamCore.GameKit {
 		NoAnswer = 5,
 	}
 
+	[Mac (10,13,4), TV (11,3), iOS (11,3)]
 	[Native]
 	public enum GKAuthenticationType : nuint {
 		WithoutUI = 0,

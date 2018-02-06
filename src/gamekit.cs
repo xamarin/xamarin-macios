@@ -2368,26 +2368,32 @@ namespace XamCore.GameKit {
 
 		// From GKGameSession (GKGameSessionEventListenerPrivate)
 
+		[Mac (10,13,4), TV (11,3), iOS (11,3)]
 		[Static]
 		[Export ("postSession:didAddPlayer:")]
 		void DidAddPlayer (GKGameSession session, GKCloudPlayer player);
 
+		[Mac (10,13,4), TV (11,3), iOS (11,3)]
 		[Static]
 		[Export ("postSession:didRemovePlayer:")]
 		void DidRemovePlayer (GKGameSession session, GKCloudPlayer player);
 
+		[Mac (10,13,4), TV (11,3), iOS (11,3)]
 		[Static]
 		[Export ("postSession:player:didChangeConnectionState:")]
 		void DidChangeConnectionState (GKGameSession session, GKCloudPlayer player, GKConnectionState newState);
 
+		[Mac (10,13,4), TV (11,3), iOS (11,3)]
 		[Static]
 		[Export ("postSession:player:didSaveData:")]
 		void DidSaveData (GKGameSession session, GKCloudPlayer player, NSData data);
 
+		[Mac (10,13,4), TV (11,3), iOS (11,3)]
 		[Static]
 		[Export ("postSession:didReceiveData:fromPlayer:")]
 		void DidReceiveData (GKGameSession session, NSData data, GKCloudPlayer player);
 
+		[Mac (10,13,4), TV (11,3), iOS (11,3)]
 		[Static]
 		[Export ("postSession:didReceiveMessage:withData:fromPlayer:")]
 		void DidReceiveMessage (GKGameSession session, string message, NSData data, GKCloudPlayer player);
