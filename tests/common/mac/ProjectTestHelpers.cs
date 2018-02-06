@@ -94,7 +94,7 @@ namespace Xamarin.MMP.Tests
 		{
 			string output = RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mono", new StringBuilder ("--version"), "FindMonoVersion");
 
-			Regex versionRegex = new Regex("compiler version \\d.\\d.\\d", RegexOptions.IgnoreCase);
+			Regex versionRegex = new Regex("compiler version \\d+.\\d+.\\d+(.\\d+)?", RegexOptions.IgnoreCase);
 			return new Version (versionRegex.Match (output).Value.Split (' ')[2]);
 		}
 
