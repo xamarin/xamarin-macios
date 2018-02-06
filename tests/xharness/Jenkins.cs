@@ -365,6 +365,7 @@ namespace xharness
 			var xtro_prefixes = new string [] {
 				"tests/xtro-sharpie",
 				"src",
+				"Make.config",
 			};
 
 			SetEnabled (files, mtouch_prefixes, "mtouch", ref IncludeMtouch);
