@@ -173,7 +173,7 @@ ASSETSLIBRARY_SOURCES = \
 
 AUDIOTOOLBOX_CORE_SOURCES = \
 	AudioToolbox/AudioType.cs \
-	AudioToolBox/MusicSequence.cs \
+	AudioToolbox/MusicSequence.cs \
 	AudioToolbox/AudioBuffers.cs \
 
 AUDIOTOOLBOX_SOURCES = \
