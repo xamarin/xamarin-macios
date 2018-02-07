@@ -603,7 +603,7 @@ namespace xharness
 						build.Platform = TestPlatform.Mac;
 					}
 					build.Jenkins = this;
-					build.TestProject = project;
+					build.CloneTestProject (project);
 					build.SolutionPath = project.SolutionPath;
 					build.ProjectConfiguration = config;
 					build.ProjectPlatform = project.Platform;

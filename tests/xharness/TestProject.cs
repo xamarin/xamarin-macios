@@ -83,13 +83,12 @@ namespace xharness
 
 		public virtual TestProject Clone ()
 		{
-			return new TestProject ()
-			{
-				Path = Path,
-				IsExecutableProject = IsExecutableProject,
-				GenerateVariations = GenerateVariations,
-				Name = Name,
-			};
+			TestProject rv = (TestProject) Activator.CreateInstance (GetType ());
+			rv.Path = Path;
+			rv.IsExecutableProject = IsExecutableProject;
+			rv.GenerateVariations = GenerateVariations;
+			rv.Name = Name;
+			return rv;
 		}
 
 		internal async Task<TestProject> CreateCloneAsync (TestTask test)
@@ -168,6 +167,15 @@ namespace xharness
 		public MacTestProject (string path, bool isExecutableProject = true, bool generateVariations = true, MacFlavors targetFrameworkFlavor = MacFlavors.All) : base (path, isExecutableProject, generateVariations)
 		{
 			TargetFrameworkFlavor = targetFrameworkFlavor;
+		}
+
+		public override TestProject Clone()
+		{
+			var rv = (MacTestProject) base.Clone ();
+			rv.TargetFrameworkFlavor = TargetFrameworkFlavor;
+			rv.BCLInfo = BCLInfo;
+			rv.Platform = Platform;
+			return rv;
 		}
 	}
 }
