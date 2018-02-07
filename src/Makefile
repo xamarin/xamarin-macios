@@ -162,7 +162,7 @@ $(IOS_BUILD_DIR)/$(1)/$(3): $$(IOS_SOURCES) $(IOS_BUILD_DIR)/$(4)/generated_sour
 
 $(IOS_BUILD_DIR)/$(1)/$(3).mdb: $(IOS_BUILD_DIR)/$(1)/$(3)
 	@touch $(IOS_BUILD_DIR)/$(1)/$(3).mdb
-	chmod 0644 $(IOS_BUILD_DIR)/$(1)/$(3).mdb
+	$(Q) chmod 0644 $(IOS_BUILD_DIR)/$(1)/$(3).mdb
 
 $(IOS_BUILD_DIR)/$(1)/$(3).pdb: $(IOS_BUILD_DIR)/$(1)/$(3).dll
 
