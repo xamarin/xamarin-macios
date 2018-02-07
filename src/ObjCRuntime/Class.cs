@@ -126,11 +126,6 @@ namespace ObjCRuntime {
 			return Runtime.Registrar.Register (type);
 		}
 
-		internal static void Register (Type type, ref List<Exception> exceptions)
-		{
-			Runtime.Registrar.Register (type, ref exceptions);
-		}
-
 		internal unsafe static Type FindType (IntPtr @class, out bool is_custom_type)
 		{
 			var map = Runtime.options->RegistrationMap;
