@@ -77,7 +77,7 @@ struct MTRegistrationMap;
 struct MTRegistrationMap {
 	const char **assembly;
 	MTClassMap *map;
-	MTFullTokenReference *full_token_references;
+	const MTFullTokenReference *full_token_references;
 	int assembly_count;
 	int map_count;
 	int custom_type_count;
