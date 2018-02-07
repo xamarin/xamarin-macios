@@ -2405,6 +2405,20 @@ namespace Registrar {
 			}
 		}
 
+		class SkippedType
+		{
+			public TypeReference Skipped;
+			public ObjCType Actual;
+			public uint SkippedTokenReference;
+		}
+		List<SkippedType> skipped_types = new List<SkippedType> ();
+		protected override void OnSkipType (TypeReference type, ObjCType registered_type)
+		{
+			base.OnSkipType (type, registered_type);
+
+			skipped_types.Add (new SkippedType { Skipped = type, Actual = registered_type } );
+		}
+
 		void Specialize (AutoIndentStringBuilder sb)
 		{
 			List<Exception> exceptions = new List<Exception> ();
@@ -2412,6 +2426,8 @@ namespace Registrar {
 
 			var map = new AutoIndentStringBuilder (1);
 			var map_init = new AutoIndentStringBuilder ();
+			var map_dict = new Dictionary<ObjCType, int> (); // maps ObjCType to its index in the map
+			var map_entries = 0;
 
 			var i = 0;
 			
@@ -2493,10 +2509,11 @@ namespace Registrar {
 						customTypeCount++;
 					
 					CheckNamespace (@class, exceptions);
-					map.AppendLine ("{{ NULL, 0x{1:X} /* '{0}' => '{2}' */ }},", 
+					map.AppendLine ("{{ NULL, 0x{1:X} /* #{3} '{0}' => '{2}' */ }},", 
 									@class.ExportedName,
 									CreateTokenReference (@class.Type, TokenType.TypeDef), 
-									GetAssemblyQualifiedName (@class.Type));
+									GetAssemblyQualifiedName (@class.Type), map_entries);
+					map_dict [@class] = map_entries++;
 
 					bool use_dynamic;
 
@@ -2739,6 +2756,22 @@ namespace Registrar {
 			map.AppendLine ("};");
 			map.AppendLine ();
 
+			if (skipped_types.Count > 0) {
+				map.AppendLine ("static const MTManagedClassMap __xamarin_skipped_map [] = {");
+				foreach (var skipped in skipped_types)
+					skipped.SkippedTokenReference = CreateTokenReference (skipped.Skipped, TokenType.TypeDef);
+
+				foreach (var skipped in skipped_types.OrderBy ((v) => v.SkippedTokenReference)) {
+					if (map_dict.TryGetValue (skipped.Actual, out var index)) {
+						map.AppendLine ("{{ 0x{0:X}, {1} /* '{2}' => '{3}' */ }},", skipped.SkippedTokenReference, map_dict [skipped.Actual], skipped.Skipped.FullName, skipped.Actual.Type.FullName);
+					} else {
+						Console.WriteLine ($"WTF? SKipped: {skipped.Skipped.FullName} Actual: {skipped.Actual.Type.FullName}");
+					}
+				}
+				map.AppendLine ("};");
+				map.AppendLine ();
+			}
+
 			map.AppendLine ("static const char *__xamarin_registration_assemblies []= {");
 			int count = 0;
 			foreach (var assembly in registered_assemblies) {
@@ -2762,10 +2795,12 @@ namespace Registrar {
 			map.AppendLine ("__xamarin_registration_assemblies,");
 			map.AppendLine ("__xamarin_class_map,");
 			map.AppendLine ("__xamarin_token_references,");
+			map.AppendLine (skipped_types.Count == 0 ? "NULL," : "__xamarin_skipped_map,");
 			map.AppendLine ("{0},", count);
 			map.AppendLine ("{0},", i);
 			map.AppendLine ("{0},", customTypeCount);
-			map.AppendLine ("{0}", full_token_reference_count);
+			map.AppendLine ("{0},", full_token_reference_count);
+			map.AppendLine ("{0}", skipped_types.Count);
 			map.AppendLine ("};");
 
 
@@ -4059,7 +4094,17 @@ namespace Registrar {
 			return rv;
 		}
 
+		Dictionary<Tuple<MemberReference, TokenType>, uint> token_ref_cache = new Dictionary<Tuple<MemberReference, TokenType>, uint> ();
 		uint CreateTokenReference (MemberReference member, TokenType implied_type)
+		{
+			var key = new Tuple<MemberReference, TokenType> (member, implied_type);
+			uint rv;
+			if (!token_ref_cache.TryGetValue (key, out rv))
+				token_ref_cache [key] = rv = CreateTokenReference2 (member, implied_type);
+			return rv;
+		}
+
+		uint CreateTokenReference2 (MemberReference member, TokenType implied_type)
 		{
 			var token = member.MetadataToken;
 
