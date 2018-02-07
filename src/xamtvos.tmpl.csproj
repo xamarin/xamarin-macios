@@ -8,16 +8,17 @@
     <ProjectGuid>{072C1DD1-7566-4387-B9EC-466891558ACC}</ProjectGuid>
     <ProjectTypeGuids>{06FA79CB-D6CD-4721-BB4B-1BD202089C55};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
-    <RootNamespace>xamtvos</RootNamespace>
-    <AssemblyName>xamtvos</AssemblyName>
+    <RootNamespace></RootNamespace>
+    <AssemblyName>Xamarin.TVOS</AssemblyName>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\product.snk</AssemblyOriginatorKeyFile>
+    <IntermediateOutputPath>build\IDE\obj\tvOS\$(Configuration)</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
+    <OutputPath>build\IDE\bin\tvOS\Debug</OutputPath>
     <DefineConstants>MONOTOUCH;IPHONE;TVOS;XAMCORE_2_0;XAMCORE_3_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -29,7 +30,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Release</OutputPath>
+    <OutputPath>build\IDE\bin\tvOS\Release</OutputPath>
     <DefineConstants>MONOTOUCH;TVOS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -38,14 +39,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
   </ItemGroup>
-  <PropertyGroup>
-    <CscToolExe>$(MSBuildProjectDirectory)\custom-make.sh</CscToolExe>
-  </PropertyGroup>
   <ItemGroup>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="build\tvos\tvos\**\*.cs">
+      <Link>build\tvos\tvos\%(RecursiveDir)%(Filename).cs</Link>
+    </Compile>
     <!--%FILES%-->
     <!--%APIS%-->
   </ItemGroup>
