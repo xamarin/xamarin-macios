@@ -473,7 +473,7 @@ $(MAC_BUILD_DIR)/Constants.cs: Constants.mac.cs.in Makefile $(TOP)/Make.config.i
 		$< > $@
 
 xammac.csproj: xammac.tmpl.csproj Makefile $(wildcard $(TOP)/src/*.sources)
-	@sed -e 's*<!--%FILES%-->*$(foreach file,$(MAC_SOURCES),<Compile Include="$(file)"/>)*' -e 's*<!--%APIS%-->*$(foreach file,$(MAC_APIS),<None Include="$(file)"/>)*' $< | xmllint --format - > $@
+	@sed -e 's*<!--%FILES%-->*$(foreach file,$(MAC_SOURCES) $(SHARED_SYSTEM_DRAWING_SOURCES),<Compile Include="$(file)"/>)*' -e 's*<!--%APIS%-->*$(foreach file,$(MAC_APIS),<None Include="$(file)"/>)*' $< | xmllint --format - > $@
 
 PROJECT_FILES += xammac.csproj
 
