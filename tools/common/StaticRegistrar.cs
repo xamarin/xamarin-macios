@@ -2765,7 +2765,7 @@ namespace Registrar {
 					if (map_dict.TryGetValue (skipped.Actual, out var index)) {
 						map.AppendLine ("{{ 0x{0:X}, {1} /* '{2}' => '{3}' */ }},", skipped.SkippedTokenReference, map_dict [skipped.Actual], skipped.Skipped.FullName, skipped.Actual.Type.FullName);
 					} else {
-						Console.WriteLine ($"WTF? SKipped: {skipped.Skipped.FullName} Actual: {skipped.Actual.Type.FullName}");
+						throw ErrorHelper.CreateError (99, $"Internal error: could not find the native type for {skipped.Skipped.FullName} (failed to find {skipped.Actual.Type.FullName}). Please file a bug report with a test case (https://bugzilla.xamarin.com).");
 					}
 				}
 				map.AppendLine ("};");
