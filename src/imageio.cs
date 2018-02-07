@@ -1238,7 +1238,7 @@ namespace XamCore.ImageIO {
 		[Field ("kCGImagePropertyIPTCExtLocationCreated")]
 		NSString IPTCExtLocationCreated { get; }
 
-		
+		[Mac (10, 13, 4)][iOS (11, 3)][TV (11,3)][Watch (4,3)]
 		[Field ("kCGImagePropertyIPTCExtLocationCity")]
 		NSString IPTCExtLocationCity { get; }
 
