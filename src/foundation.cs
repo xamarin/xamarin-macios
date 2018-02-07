@@ -10318,22 +10318,49 @@ namespace Foundation
 		[Export ("CMTimeRangeValue")]
 		CMTimeRange CMTimeRangeValue { get; }
 
-		[Export ("valueWithRect:"), Static]
+#if MONOMAC
+		[Export ("valueWithRect:")]
+#else
+		[Export ("valueWithCGRect:")]
+#endif
+		[Static]
 		NSValue FromCGRect (CGRect rect);
 
-		[Export ("valueWithSize:")][Static]
+#if MONOMAC
+		[Export ("valueWithSize:")]
+#else
+		[Export ("valueWithCGSize:")]
+#endif
+		[Static]
 		NSValue FromCGSize (CGSize size);
 
-		[Export ("valueWithPoint:")][Static]
+#if MONOMAC
+		[Export ("valueWithPoint:")]
+#else
+		[Export ("valueWithCGPoint:")]
+#endif
+		[Static]
 		NSValue FromCGPoint (CGPoint point);
 
+#if MONOMAC
 		[Export ("rectValue")]
+#else
+		[Export ("CGRectValue")]
+#endif
 		CGRect CGRectValue { get; }
 
+#if MONOMAC
 		[Export ("sizeValue")]
+#else
+		[Export ("CGSizeValue")]
+#endif
 		CGSize CGSizeValue { get; }
 
+#if MONOMAC
 		[Export ("pointValue")]
+#else
+		[Export ("CGPointValue")]
+#endif
 		CGPoint CGPointValue { get; }
 
 		[NoMac]
