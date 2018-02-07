@@ -2916,6 +2916,10 @@ namespace SceneKit {
 		[Abstract]
 #endif
 #if XAMCORE_2_0 || !MONOMAC
+		// It seems swift has this property listed as an optional[0] and an Apple sample[1] sets this to null
+		// [0]: https://developer.apple.com/documentation/scenekit/scnscenerenderer/1524051-overlayskscene
+		// [1]: https://github.com/xamarin/xamarin-macios/issues/3392
+		[NullAllowed]
 		[Mac (10,10)]
 		[Export ("overlaySKScene", ArgumentSemantic.Retain)]
 		SKScene OverlayScene { get; set; }
