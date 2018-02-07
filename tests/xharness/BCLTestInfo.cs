@@ -46,7 +46,7 @@ namespace xharness
 
 		protected void Process (string test_sources, IEnumerable<string> test_files, string condition, StringBuilder [] sb, int split_count)
 		{
-			test_files = test_files.Where (v => !string.IsNullOrEmpty (v) && !v.StartsWith ("#", StringComparison.Ordinal));
+			test_files = test_files.Where ((v) => !string.IsNullOrEmpty (v) && !v.StartsWith ("#", StringComparison.Ordinal));
 
 			// Split the directories of the test files into 'split_count' number of chunks
 			var files_path = Path.GetDirectoryName (test_sources).Replace ("/", "\\");
