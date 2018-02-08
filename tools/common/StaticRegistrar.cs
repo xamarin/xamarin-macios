@@ -1385,16 +1385,25 @@ namespace Registrar {
 
 			foreach (var ca in attributes) {
 				var caType = ca.AttributeType;
-				if (caType.Namespace != ObjCRuntime)
+				if (caType.Namespace != ObjCRuntime && !string.IsNullOrEmpty (caType.Namespace))
 					continue;
 				
 				AvailabilityKind kind;
-				PlatformName platformName;
-				PlatformArchitecture architecture;
+				PlatformName platformName = global::ObjCRuntime.PlatformName.None;
+				PlatformArchitecture architecture = PlatformArchitecture.All;
 				string message = null;
 				int majorVersion = 0, minorVersion = 0, subminorVersion = 0;
+				bool shorthand = false;
 
 				switch (caType.Name) {
+				case "MacAttribute":
+					shorthand = true;
+					platformName = global::ObjCRuntime.PlatformName.MacOSX;
+					goto case "IntroducedAttribute";
+				case "iOSAttribute":
+					shorthand = true;
+					platformName = global::ObjCRuntime.PlatformName.iOS;
+					goto case "IntroducedAttribute";
 				case "IntroducedAttribute":
 					kind = AvailabilityKind.Introduced;
 					break;
@@ -1412,10 +1421,45 @@ namespace Registrar {
 				}
 
 				switch (ca.ConstructorArguments.Count) {
+				case 2:
+					if (!shorthand)
+						throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://bugzilla.xamarin.com", caType.Name, ca.ConstructorArguments.Count);
+					majorVersion = (byte) ca.ConstructorArguments [0].Value;
+					minorVersion = (byte) ca.ConstructorArguments [1].Value;
+					break;
 				case 3:
-					platformName = (PlatformName) ca.ConstructorArguments [0].Value;
-					architecture = (PlatformArchitecture) ca.ConstructorArguments [1].Value;
-					message = (string) ca.ConstructorArguments [2].Value;
+					if (!shorthand) {
+						platformName = (PlatformName) ca.ConstructorArguments [0].Value;
+						architecture = (PlatformArchitecture) ca.ConstructorArguments [1].Value;
+						message = (string) ca.ConstructorArguments [2].Value;
+					} else {
+						majorVersion = (byte) ca.ConstructorArguments [0].Value;
+						minorVersion = (byte) ca.ConstructorArguments [1].Value;
+						if (ca.ConstructorArguments [2].Type.Name == "Boolean") {
+							var onlyOn64 = (bool) ca.ConstructorArguments [2].Value;
+							architecture = onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All;
+						} else if (ca.ConstructorArguments [2].Type.Name == "Byte") {
+							minorVersion = (byte) ca.ConstructorArguments [2].Value;
+						} else {
+							throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://bugzilla.xamarin.com", caType.Name, ca.ConstructorArguments.Count);
+						}
+					}
+					break;
+				case 4:
+					if (!shorthand)
+						throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://bugzilla.xamarin.com", caType.Name, ca.ConstructorArguments.Count);
+
+					majorVersion = (byte) ca.ConstructorArguments [0].Value;
+					minorVersion = (byte) ca.ConstructorArguments [1].Value;
+					minorVersion = (byte) ca.ConstructorArguments [2].Value;
+					if (ca.ConstructorArguments [3].Type.Name == "Boolean") {
+						var onlyOn64 = (bool) ca.ConstructorArguments [3].Value;
+						architecture = onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All;
+					} else if (ca.ConstructorArguments [3].Type.Name == "PlatformArchitecture") {
+						architecture = (PlatformArchitecture) (byte) ca.ConstructorArguments [3].Value;
+					} else {
+						throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://bugzilla.xamarin.com", caType.Name, ca.ConstructorArguments.Count);
+					}
 					break;
 				case 5:
 					platformName = (PlatformName) ca.ConstructorArguments [0].Value;
@@ -1442,18 +1486,22 @@ namespace Registrar {
 				AvailabilityBaseAttribute rv;
 				switch (kind) {
 				case AvailabilityKind.Introduced:
-					switch (ca.ConstructorArguments.Count) {
-					case 3:
-						rv = new IntroducedAttribute (platformName, architecture, message);
-						break;
-					case 5:
-						rv = new IntroducedAttribute (platformName, majorVersion, minorVersion, architecture, message);
-						break;
-					case 6:
+					if (shorthand) {
 						rv = new IntroducedAttribute (platformName, majorVersion, minorVersion, subminorVersion, architecture, message);
-						break;
-					default:
-						throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at http://bugzilla.xamarin.com", caType.Name, ca.ConstructorArguments.Count);
+					} else {
+						switch (ca.ConstructorArguments.Count) {
+						case 3:
+							rv = new IntroducedAttribute (platformName, architecture, message);
+							break;
+						case 5:
+							rv = new IntroducedAttribute (platformName, majorVersion, minorVersion, architecture, message);
+							break;
+						case 6:
+							rv = new IntroducedAttribute (platformName, majorVersion, minorVersion, subminorVersion, architecture, message);
+							break;
+						default:
+							throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at http://bugzilla.xamarin.com", caType.Name, ca.ConstructorArguments.Count);
+						}
 					}
 					break;
 				case AvailabilityKind.Deprecated:
@@ -2416,8 +2464,24 @@ namespace Registrar {
 		{
 			base.OnSkipType (type, registered_type);
 
+#if MONOMAC
+			if (!Is64Bits && IsOnly64Bits (type))
+				return; 
+#endif
+
 			skipped_types.Add (new SkippedType { Skipped = type, Actual = registered_type } );
 		}
+
+#if MONOMAC
+		bool IsOnly64Bits (TypeReference type)
+		{
+			var attributes = GetAvailabilityAttributes (type); // Can return null list
+			if (attributes == null)
+				return false;
+
+			return attributes.Any (x => x.Architecture == PlatformArchitecture.Arch64);
+		}
+#endif
 
 		void Specialize (AutoIndentStringBuilder sb)
 		{
@@ -2450,12 +2514,8 @@ namespace Registrar {
 					continue; // Metal isn't supported in the simulator.
 #else
 				// Don't register 64-bit only API on 32-bit XM
-				if (!Is64Bits)
-				{
-					var attributes = GetAvailabilityAttributes (@class.Type); // Can return null list
-					if (attributes != null && attributes.Any (x => x.Architecture == PlatformArchitecture.Arch64))
-						continue;
-				}
+				if (!Is64Bits && IsOnly64Bits (@class.Type))
+					continue;
 
 				if (IsQTKitType (@class) && App.SdkVersion >= MacOSTenTwelveVersion)
 					continue; // QTKit header was removed in 10.12 SDK
