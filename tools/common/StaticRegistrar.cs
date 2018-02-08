@@ -1385,16 +1385,25 @@ namespace Registrar {
 
 			foreach (var ca in attributes) {
 				var caType = ca.AttributeType;
-				if (caType.Namespace != ObjCRuntime)
+				if (caType.Namespace != ObjCRuntime && !string.IsNullOrEmpty (caType.Namespace))
 					continue;
 				
 				AvailabilityKind kind;
-				PlatformName platformName;
-				PlatformArchitecture architecture;
+				PlatformName platformName = global::ObjCRuntime.PlatformName.None;
+				PlatformArchitecture architecture = PlatformArchitecture.All;
 				string message = null;
 				int majorVersion = 0, minorVersion = 0, subminorVersion = 0;
+				bool shorthand = false;
 
 				switch (caType.Name) {
+				case "MacAttribute":
+					shorthand = true;
+					platformName = global::ObjCRuntime.PlatformName.MacOSX;
+					goto case "IntroducedAttribute";
+				case "iOSAttribute":
+					shorthand = true;
+					platformName = global::ObjCRuntime.PlatformName.iOS;
+					goto case "IntroducedAttribute";
 				case "IntroducedAttribute":
 					kind = AvailabilityKind.Introduced;
 					break;
@@ -1412,10 +1421,45 @@ namespace Registrar {
 				}
 
 				switch (ca.ConstructorArguments.Count) {
+				case 2:
+					if (!shorthand)
+						throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://bugzilla.xamarin.com", caType.Name, ca.ConstructorArguments.Count);
+					majorVersion = (byte) ca.ConstructorArguments [0].Value;
+					minorVersion = (byte) ca.ConstructorArguments [1].Value;
+					break;
 				case 3:
-					platformName = (PlatformName) ca.ConstructorArguments [0].Value;
-					architecture = (PlatformArchitecture) ca.ConstructorArguments [1].Value;
-					message = (string) ca.ConstructorArguments [2].Value;
+					if (!shorthand) {
+						platformName = (PlatformName) ca.ConstructorArguments [0].Value;
+						architecture = (PlatformArchitecture) ca.ConstructorArguments [1].Value;
+						message = (string) ca.ConstructorArguments [2].Value;
+					} else {
+						majorVersion = (byte) ca.ConstructorArguments [0].Value;
+						minorVersion = (byte) ca.ConstructorArguments [1].Value;
+						if (ca.ConstructorArguments [2].Type.Name == "Boolean") {
+							var onlyOn64 = (bool) ca.ConstructorArguments [2].Value;
+							architecture = onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All;
+						} else if (ca.ConstructorArguments [2].Type.Name == "Byte") {
+							minorVersion = (byte) ca.ConstructorArguments [2].Value;
+						} else {
+							throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://bugzilla.xamarin.com", caType.Name, ca.ConstructorArguments.Count);
+						}
+					}
+					break;
+				case 4:
+					if (!shorthand)
+						throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://bugzilla.xamarin.com", caType.Name, ca.ConstructorArguments.Count);
+
+					majorVersion = (byte) ca.ConstructorArguments [0].Value;
+					minorVersion = (byte) ca.ConstructorArguments [1].Value;
+					minorVersion = (byte) ca.ConstructorArguments [2].Value;
+					if (ca.ConstructorArguments [3].Type.Name == "Boolean") {
+						var onlyOn64 = (bool) ca.ConstructorArguments [3].Value;
+						architecture = onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All;
+					} else if (ca.ConstructorArguments [3].Type.Name == "PlatformArchitecture") {
+						architecture = (PlatformArchitecture) (byte) ca.ConstructorArguments [3].Value;
+					} else {
+						throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://bugzilla.xamarin.com", caType.Name, ca.ConstructorArguments.Count);
+					}
 					break;
 				case 5:
 					platformName = (PlatformName) ca.ConstructorArguments [0].Value;
@@ -1442,18 +1486,22 @@ namespace Registrar {
 				AvailabilityBaseAttribute rv;
 				switch (kind) {
 				case AvailabilityKind.Introduced:
-					switch (ca.ConstructorArguments.Count) {
-					case 3:
-						rv = new IntroducedAttribute (platformName, architecture, message);
-						break;
-					case 5:
-						rv = new IntroducedAttribute (platformName, majorVersion, minorVersion, architecture, message);
-						break;
-					case 6:
+					if (shorthand) {
 						rv = new IntroducedAttribute (platformName, majorVersion, minorVersion, subminorVersion, architecture, message);
-						break;
-					default:
-						throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at http://bugzilla.xamarin.com", caType.Name, ca.ConstructorArguments.Count);
+					} else {
+						switch (ca.ConstructorArguments.Count) {
+						case 3:
+							rv = new IntroducedAttribute (platformName, architecture, message);
+							break;
+						case 5:
+							rv = new IntroducedAttribute (platformName, majorVersion, minorVersion, architecture, message);
+							break;
+						case 6:
+							rv = new IntroducedAttribute (platformName, majorVersion, minorVersion, subminorVersion, architecture, message);
+							break;
+						default:
+							throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at http://bugzilla.xamarin.com", caType.Name, ca.ConstructorArguments.Count);
+						}
 					}
 					break;
 				case AvailabilityKind.Deprecated:
@@ -2405,6 +2453,36 @@ namespace Registrar {
 			}
 		}
 
+		class SkippedType
+		{
+			public TypeReference Skipped;
+			public ObjCType Actual;
+			public uint SkippedTokenReference;
+		}
+		List<SkippedType> skipped_types = new List<SkippedType> ();
+		protected override void OnSkipType (TypeReference type, ObjCType registered_type)
+		{
+			base.OnSkipType (type, registered_type);
+
+#if MONOMAC
+			if (!Is64Bits && IsOnly64Bits (type))
+				return; 
+#endif
+
+			skipped_types.Add (new SkippedType { Skipped = type, Actual = registered_type } );
+		}
+
+#if MONOMAC
+		bool IsOnly64Bits (TypeReference type)
+		{
+			var attributes = GetAvailabilityAttributes (type); // Can return null list
+			if (attributes == null)
+				return false;
+
+			return attributes.Any (x => x.Architecture == PlatformArchitecture.Arch64);
+		}
+#endif
+
 		void Specialize (AutoIndentStringBuilder sb)
 		{
 			List<Exception> exceptions = new List<Exception> ();
@@ -2412,6 +2490,8 @@ namespace Registrar {
 
 			var map = new AutoIndentStringBuilder (1);
 			var map_init = new AutoIndentStringBuilder ();
+			var map_dict = new Dictionary<ObjCType, int> (); // maps ObjCType to its index in the map
+			var map_entries = 0;
 
 			var i = 0;
 			
@@ -2434,12 +2514,8 @@ namespace Registrar {
 					continue; // Metal isn't supported in the simulator.
 #else
 				// Don't register 64-bit only API on 32-bit XM
-				if (!Is64Bits)
-				{
-					var attributes = GetAvailabilityAttributes (@class.Type); // Can return null list
-					if (attributes != null && attributes.Any (x => x.Architecture == PlatformArchitecture.Arch64))
-						continue;
-				}
+				if (!Is64Bits && IsOnly64Bits (@class.Type))
+					continue;
 
 				if (IsQTKitType (@class) && App.SdkVersion >= MacOSTenTwelveVersion)
 					continue; // QTKit header was removed in 10.12 SDK
@@ -2493,10 +2569,11 @@ namespace Registrar {
 						customTypeCount++;
 					
 					CheckNamespace (@class, exceptions);
-					map.AppendLine ("{{ NULL, 0x{1:X} /* '{0}' => '{2}' */ }},", 
+					map.AppendLine ("{{ NULL, 0x{1:X} /* #{3} '{0}' => '{2}' */ }},", 
 									@class.ExportedName,
 									CreateTokenReference (@class.Type, TokenType.TypeDef), 
-									GetAssemblyQualifiedName (@class.Type));
+									GetAssemblyQualifiedName (@class.Type), map_entries);
+					map_dict [@class] = map_entries++;
 
 					bool use_dynamic;
 
@@ -2739,6 +2816,22 @@ namespace Registrar {
 			map.AppendLine ("};");
 			map.AppendLine ();
 
+			if (skipped_types.Count > 0) {
+				map.AppendLine ("static const MTManagedClassMap __xamarin_skipped_map [] = {");
+				foreach (var skipped in skipped_types)
+					skipped.SkippedTokenReference = CreateTokenReference (skipped.Skipped, TokenType.TypeDef);
+
+				foreach (var skipped in skipped_types.OrderBy ((v) => v.SkippedTokenReference)) {
+					if (map_dict.TryGetValue (skipped.Actual, out var index)) {
+						map.AppendLine ("{{ 0x{0:X}, {1} /* '{2}' => '{3}' */ }},", skipped.SkippedTokenReference, map_dict [skipped.Actual], skipped.Skipped.FullName, skipped.Actual.Type.FullName);
+					} else {
+						throw ErrorHelper.CreateError (99, $"Internal error: could not find the native type for {skipped.Skipped.FullName} (failed to find {skipped.Actual.Type.FullName}). Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+					}
+				}
+				map.AppendLine ("};");
+				map.AppendLine ();
+			}
+
 			map.AppendLine ("static const char *__xamarin_registration_assemblies []= {");
 			int count = 0;
 			foreach (var assembly in registered_assemblies) {
@@ -2762,10 +2855,12 @@ namespace Registrar {
 			map.AppendLine ("__xamarin_registration_assemblies,");
 			map.AppendLine ("__xamarin_class_map,");
 			map.AppendLine ("__xamarin_token_references,");
+			map.AppendLine (skipped_types.Count == 0 ? "NULL," : "__xamarin_skipped_map,");
 			map.AppendLine ("{0},", count);
 			map.AppendLine ("{0},", i);
 			map.AppendLine ("{0},", customTypeCount);
-			map.AppendLine ("{0}", full_token_reference_count);
+			map.AppendLine ("{0},", full_token_reference_count);
+			map.AppendLine ("{0}", skipped_types.Count);
 			map.AppendLine ("};");
 
 
@@ -4059,7 +4154,17 @@ namespace Registrar {
 			return rv;
 		}
 
+		Dictionary<Tuple<MemberReference, TokenType>, uint> token_ref_cache = new Dictionary<Tuple<MemberReference, TokenType>, uint> ();
 		uint CreateTokenReference (MemberReference member, TokenType implied_type)
+		{
+			var key = new Tuple<MemberReference, TokenType> (member, implied_type);
+			uint rv;
+			if (!token_ref_cache.TryGetValue (key, out rv))
+				token_ref_cache [key] = rv = CreateTokenReference2 (member, implied_type);
+			return rv;
+		}
+
+		uint CreateTokenReference2 (MemberReference member, TokenType implied_type)
 		{
 			var token = member.MetadataToken;
 
