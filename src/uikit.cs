@@ -7137,12 +7137,20 @@ namespace UIKit {
 		CGSize Size { get; }
 
 		// Thread-safe in iOS 9 or later according to docs.
+#if IOS
+		// tvOS started with 9.0 code base (and watchOS 2.0 came later)
+		[Advice ("This API is thread-safe only on 9.0 and later.")]
+#endif
 		[ThreadSafe]
 		[Static] [Export ("imageNamed:")][Autorelease]
 		UIImage FromBundle (string name);
 
 #if !WATCH
 		// Thread-safe in iOS 9 or later according to docs.
+#if IOS
+		// tvOS started with 9.0 code base (and watchOS 2.0 came later)
+		[Advice ("This API is thread-safe only on 9.0 and later.")]
+#endif
 		[ThreadSafe]
 		[iOS (8,0)]
 		[Static, Export ("imageNamed:inBundle:compatibleWithTraitCollection:")]
