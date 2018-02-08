@@ -598,12 +598,13 @@ namespace xharness
 					if (project.GenerateVariations) {
 						build = new MdtoolTask ();
 						build.Platform = TestPlatform.Mac_Classic;
+						build.TestProject = project;
 					} else {
 						build = new XBuildTask ();
 						build.Platform = TestPlatform.Mac;
+						build.CloneTestProject (project);
 					}
 					build.Jenkins = this;
-					build.CloneTestProject (project);
 					build.SolutionPath = project.SolutionPath;
 					build.ProjectConfiguration = config;
 					build.ProjectPlatform = project.Platform;
@@ -633,11 +634,11 @@ namespace xharness
 					Tasks.Add (exec);
 
 					if (project.GenerateVariations) {
-						Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_Unified, "-unified", ignored));
-						Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_Unified32, "-unified-32", ignored));
+						Tasks.Add (CloneExecuteTask (exec, project, TestPlatform.Mac_Unified, "-unified", ignored));
+						Tasks.Add (CloneExecuteTask (exec, project, TestPlatform.Mac_Unified32, "-unified-32", ignored));
 						if (project.GenerateFull) {
-							Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_UnifiedXM45, "-unifiedXM45", ignored));
-							Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_UnifiedXM45_32, "-unifiedXM45-32", ignored));
+							Tasks.Add (CloneExecuteTask (exec, project, TestPlatform.Mac_UnifiedXM45, "-unifiedXM45", ignored));
+							Tasks.Add (CloneExecuteTask (exec, project, TestPlatform.Mac_UnifiedXM45_32, "-unifiedXM45-32", ignored));
 						}
 					}
 				}
@@ -731,18 +732,19 @@ namespace xharness
 			Tasks.AddRange (CreateRunDeviceTasks ());
 		}
 
-		RunTestTask CloneExecuteTask (RunTestTask task, TestPlatform platform, string suffix, bool ignore)
+		RunTestTask CloneExecuteTask (RunTestTask task, TestProject original_project, TestPlatform platform, string suffix, bool ignore)
 		{
 			var build = new XBuildTask ()
 			{
 				Platform = platform,
 				Jenkins = task.Jenkins,
-				TestProject = new TestProject (Path.ChangeExtension (AddSuffixToPath (task.ProjectFile, suffix), "csproj")),
 				ProjectConfiguration = task.ProjectConfiguration,
 				ProjectPlatform = task.ProjectPlatform,
 				SpecifyPlatform = task.BuildTask.SpecifyPlatform,
 				SpecifyConfiguration = task.BuildTask.SpecifyConfiguration,
 			};
+			var tp = new TestProject (Path.ChangeExtension (AddSuffixToPath (original_project.Path, suffix), "csproj"));
+			build.CloneTestProject (tp);
 
 			var macExec = task as MacExecuteTask;
 			if (macExec != null) {
