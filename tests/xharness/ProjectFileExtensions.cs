@@ -748,6 +748,7 @@ namespace xharness
 				new string [] { "ObjcBindingCoreSource", "Include" },
 				new string [] { "ObjcBindingNativeLibrary", "Include" },
 				new string [] { "ObjcBindingNativeFramework", "Include" },
+				new string [] { "Import", "Project" },
 			};
 			var nodes_with_variables = new string []
 			{
@@ -756,6 +757,10 @@ namespace xharness
 			Func<string, string> convert = (input) =>
 			{
 				if (input [0] == '/')
+					return input; // This is already a full path.
+				if (input.StartsWith ("$(MSBuildExtensionsPath)", StringComparison.Ordinal))
+					return input; // This is already a full path.
+				if (input.StartsWith ("$(MSBuildBinPath)", StringComparison.Ordinal))
 					return input; // This is already a full path.
 				input = input.Replace ('\\', '/'); // make unix-style
 				input = System.IO.Path.GetFullPath (System.IO.Path.Combine (dir, input));
