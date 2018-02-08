@@ -722,6 +722,7 @@ namespace XamCore.StoreKit {
 
 	[iOS (11,3), TV (11,3), NoMac]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface SKAdNetwork {
 
 		[Static]
