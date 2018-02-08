@@ -2088,7 +2088,7 @@ namespace XamCore.AppKit {
 	}
 	
 	[BaseType (typeof (NSControl))]
-	interface NSButton : NSAccessibilityButton {
+	interface NSButton : NSAccessibilityButton, NSUserInterfaceCompression {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frameRect);
 
@@ -2218,6 +2218,18 @@ namespace XamCore.AppKit {
 		[Mac (10, 12, 2)]
 		[NullAllowed, Export ("bezelColor", ArgumentSemantic.Copy)]
 		NSColor BezelColor { get; set; }
+
+		[Mac (10,13)]
+		[Export ("compressWithPrioritizedCompressionOptions:")]
+		new void Compress (NSUserInterfaceCompressionOptions [] prioritizedOptions);
+
+		[Mac (10,13)]
+		[Export ("minimumSizeWithPrioritizedCompressionOptions:")]
+		new CGSize GetMinimumSize (NSUserInterfaceCompressionOptions[] prioritizedOptions);
+
+		[Mac (10,13)]
+		[Export ("activeCompressionOptions", ArgumentSemantic.Copy)]
+		new NSUserInterfaceCompressionOptions ActiveCompressionOptions { get; }
 	}
 	
 	[BaseType (typeof (NSImageRep))]
@@ -13385,6 +13397,18 @@ namespace XamCore.AppKit {
 		[Mac (10, 13)]
 		[Export ("segmentDistribution", ArgumentSemantic.Assign)]
 		NSSegmentDistribution SegmentDistribution { get; set; }
+
+		[Mac (10,13)]
+		[Export ("compressWithPrioritizedCompressionOptions:")]
+		new void Compress (NSUserInterfaceCompressionOptions [] prioritizedOptions);
+
+		[Mac (10,13)]
+		[Export ("minimumSizeWithPrioritizedCompressionOptions:")]
+		new CGSize GetMinimumSize (NSUserInterfaceCompressionOptions [] prioritizedOptions);
+
+		[Mac (10,13)]
+		[Export ("activeCompressionOptions", ArgumentSemantic.Copy)]
+		new NSUserInterfaceCompressionOptions ActiveCompressionOptions { get; }
 	}
 	
 	[BaseType (typeof (NSActionCell))]
@@ -13693,6 +13717,10 @@ namespace XamCore.AppKit {
 
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
+
+		[Mac (10,13)]
+		[Export ("view")]
+		INSUserInterfaceCompression View { get; }
 	}
 	
 	[BaseType (typeof (NSObject))]
@@ -26014,6 +26042,8 @@ namespace XamCore.AppKit {
 		[Export ("standardOptions", ArgumentSemantic.Copy)]
 		NSUserInterfaceCompressionOptions StandardOptions { get; }
 	}
+
+	interface INSUserInterfaceCompression { }
 
 	[Mac (10, 13)]
 	[Protocol]

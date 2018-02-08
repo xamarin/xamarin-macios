@@ -1,5 +1,0 @@
-!missing-protocol-conformance! NSButton should conform to NSUserInterfaceCompression
-!missing-selector! NSButton::activeCompressionOptions not bound
-!missing-selector! NSButton::compressWithPrioritizedCompressionOptions: not bound
-!missing-selector! NSButton::minimumSizeWithPrioritizedCompressionOptions: not bound
-!missing-selector! NSSliderTouchBarItem::view not bound
