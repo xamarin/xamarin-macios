@@ -2218,18 +2218,6 @@ namespace XamCore.AppKit {
 		[Mac (10, 12, 2)]
 		[NullAllowed, Export ("bezelColor", ArgumentSemantic.Copy)]
 		NSColor BezelColor { get; set; }
-
-		[Mac (10,13)]
-		[Export ("compressWithPrioritizedCompressionOptions:")]
-		new void Compress (NSUserInterfaceCompressionOptions [] prioritizedOptions);
-
-		[Mac (10,13)]
-		[Export ("minimumSizeWithPrioritizedCompressionOptions:")]
-		new CGSize GetMinimumSize (NSUserInterfaceCompressionOptions[] prioritizedOptions);
-
-		[Mac (10,13)]
-		[Export ("activeCompressionOptions", ArgumentSemantic.Copy)]
-		new NSUserInterfaceCompressionOptions ActiveCompressionOptions { get; }
 	}
 	
 	[BaseType (typeof (NSImageRep))]
@@ -13397,18 +13385,6 @@ namespace XamCore.AppKit {
 		[Mac (10, 13)]
 		[Export ("segmentDistribution", ArgumentSemantic.Assign)]
 		NSSegmentDistribution SegmentDistribution { get; set; }
-
-		[Mac (10,13)]
-		[Export ("compressWithPrioritizedCompressionOptions:")]
-		new void Compress (NSUserInterfaceCompressionOptions [] prioritizedOptions);
-
-		[Mac (10,13)]
-		[Export ("minimumSizeWithPrioritizedCompressionOptions:")]
-		new CGSize GetMinimumSize (NSUserInterfaceCompressionOptions [] prioritizedOptions);
-
-		[Mac (10,13)]
-		[Export ("activeCompressionOptions", ArgumentSemantic.Copy)]
-		new NSUserInterfaceCompressionOptions ActiveCompressionOptions { get; }
 	}
 	
 	[BaseType (typeof (NSActionCell))]
