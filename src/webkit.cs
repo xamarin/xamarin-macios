@@ -2430,7 +2430,7 @@ namespace XamCore.WebKit {
 			   "WeakUIDelegate",
 			   "WeakPolicyDelegate" }
 		   )]
-	partial interface WebView {
+	partial interface WebView : NSUserInterfaceValidations {
 		[Static]
 		[Export ("canShowMIMEType:")]
 		bool CanShowMimeType (string MimeType);
