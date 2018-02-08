@@ -130,6 +130,9 @@ namespace Foundation
 		[Export ("objectAtIndex:")]
 		IntPtr ValueAt (nuint idx);
 
+		[Export ("testMe")]
+		void TestMe ();
+
 		[Static]
 		[Internal]
 		[Export ("arrayWithObjects:count:")]
