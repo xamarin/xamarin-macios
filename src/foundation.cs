@@ -8421,6 +8421,11 @@ namespace Foundation
 		void PrepareForInterfaceBuilder ();
 
 		[NoWatch]
+#if MONOMAC
+		// comes from NSNibAwaking category and does not requires calling super
+#else
+		[RequiresSuper] // comes from UINibLoadingAdditions category - which is decorated
+#endif
 		[Export ("awakeFromNib")]
 		void AwakeFromNib ();
 	}

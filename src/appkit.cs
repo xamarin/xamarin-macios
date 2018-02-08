@@ -15568,6 +15568,7 @@ namespace AppKit {
 		bool NeedsLayout { get; set; }
 
 		[Mac (10, 7), Export ("updateConstraints")]
+		[RequiresSuper]
 		void UpdateConstraints ();
 
 		[Mac (10, 7), Export ("updateConstraintsForSubtreeIfNeeded")]

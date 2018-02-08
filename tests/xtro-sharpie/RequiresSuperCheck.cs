@@ -38,11 +38,23 @@ namespace Extrospection {
 				methods.Add (key, method);
 		}
 
+		public override void VisitObjCCategoryDecl (ObjCCategoryDecl decl, VisitKind visitKind)
+		{
+			if (visitKind != VisitKind.Enter)
+				return;
+			foreach (var d in decl.Methods)
+				Visit (d);
+		}
+
 		public override void VisitObjCMethodDecl (ObjCMethodDecl decl, VisitKind visitKind)
 		{
 			if (visitKind != VisitKind.Enter)
 				return;
+			Visit (decl);
+		}
 
+		void Visit (ObjCMethodDecl decl)
+		{
 			// don't process methods (or types) that are unavailable for the current platform
 			if (!decl.IsAvailable () || !(decl.DeclContext as Decl).IsAvailable ())
 				return;

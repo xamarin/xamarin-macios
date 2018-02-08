@@ -156,7 +156,11 @@ namespace Extrospection {
 			var sb = new StringBuilder ();
 			if (self.IsClassMethod)
 				sb.Append ('+');
-			sb.Append ((self.DeclContext as NamedDecl).Name);
+			if (self.DeclContext is ObjCCategoryDecl category) {
+				sb.Append (category.ClassInterface.Name);
+			} else {
+				sb.Append ((self.DeclContext as NamedDecl).Name);
+			}
 			sb.Append ("::");
 			var sel = self.Selector.ToString ();
 			sb.Append (string.IsNullOrEmpty (sel) ? self.Name : sel);
@@ -332,6 +336,7 @@ namespace Extrospection {
 				return "Foundation";
 			case "MPSCore":
 			case "MPSImage":
+			case "MPSMatrix":
 			case "MPSNeuralNetwork":
 				return "MetalPerformanceShaders";
 			case "QuartzCore":

@@ -13340,6 +13340,7 @@ namespace UIKit {
 		
 		[iOS (6,0)]
 		[Export ("updateConstraints")]
+		[RequiresSuper]
 		void UpdateConstraints ();
 
 		[iOS (6,0)]
@@ -14167,12 +14168,12 @@ namespace UIKit {
 
 		[iOS (11,0), TV (11,0)]
 		[Export ("viewLayoutMarginsDidChange")]
-		[Advice ("You must call the base method when overriding.")] // [RequiresSuper]
+		[RequiresSuper]
 		void ViewLayoutMarginsDidChange ();
 
 		[iOS (11,0), TV (11,0)]
 		[Export ("viewSafeAreaInsetsDidChange")]
-		[Advice ("You must call the base method when overriding.")] // [RequiresSuper]
+		[RequiresSuper]
 		void ViewSafeAreaInsetsDidChange ();
 
 		[NoWatch, NoTV]

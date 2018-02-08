@@ -4,3 +4,6 @@
 ## we offer a better managed API using another selector
 !missing-selector! CKRecord::objectForKeyedSubscript: not bound
 !missing-selector! CKRecord::setObject:forKeyedSubscript: not bound
+
+## auto-generated attribute (but deprecated API where Apple removed it)
+!extra-designated-initializer! CKSubscription::initWithCoder: is incorrectly decorated with an [DesignatedInitializer] attribute
