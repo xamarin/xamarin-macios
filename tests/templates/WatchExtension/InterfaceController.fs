@@ -35,7 +35,7 @@ type InterfaceController (handle: IntPtr) =
 
     member this.LoadTests () =
         runner <- new WatchOSRunner ()
-        let ce = new CategoryExpression ("MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingInterpreter")
+        let ce = new CategoryExpression ("MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingLinqInterpreter")
         runner.Filter <- new NotFilter (ce.Filter)
         let tp = this.GetType ()
         runner.Add (tp.Assembly)

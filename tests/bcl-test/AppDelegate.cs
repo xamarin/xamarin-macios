@@ -48,7 +48,7 @@ namespace BCL.Tests
 			// create a new window instance based on the screen size
 			window = new UIWindow (UIScreen.MainScreen.Bounds);
 			runner = new TouchRunner (window);
-			runner.Filter = new NotFilter (new CategoryExpression ("MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingInterpreter").Filter);
+			runner.Filter = new NotFilter (new CategoryExpression ("MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingLinqInterpreter").Filter);
 
 			// register every tests included in the main application/assembly
 			runner.Add (System.Reflection.Assembly.GetExecutingAssembly ());
