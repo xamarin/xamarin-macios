@@ -6,7 +6,7 @@ using System.Text;
 using Mono.Cecil;
 
 using Xamarin.Bundler;
-using XamCore.Registrar;
+using Registrar;
 
 namespace Xamarin.Bundler
 {

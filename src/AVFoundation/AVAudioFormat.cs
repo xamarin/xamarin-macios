@@ -4,13 +4,13 @@
 // Authors:
 //   Miguel de Icaza (miguel@xamarin.com)
 //
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 	public partial class AVAudioFormat {
 		public override bool Equals (object  obj)
 		{

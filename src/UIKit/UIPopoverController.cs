@@ -3,9 +3,9 @@
 #if !WATCH
 
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 
 	public partial class UIPopoverController {
 

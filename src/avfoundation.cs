@@ -32,30 +32,30 @@
 using System.ComponentModel;
 
 #if !WATCH
-using XamCore.AudioUnit;
-using XamCore.AVKit;
-using XamCore.CoreAnimation;
-using XamCore.CoreImage;
-using XamCore.CoreMedia;
-using XamCore.MediaToolbox;
+using AudioUnit;
+using AVKit;
+using CoreAnimation;
+using CoreImage;
+using CoreMedia;
+using MediaToolbox;
 #else
 // hack: ease compilation without extra defines
-using CIBarcodeDescriptor = XamCore.Foundation.NSObject;
+using CIBarcodeDescriptor = Foundation.NSObject;
 #endif
-using XamCore.AudioToolbox;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
-using XamCore.CoreVideo;
-using XamCore.ImageIO;
+using AudioToolbox;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using CoreGraphics;
+using CoreVideo;
+using ImageIO;
 using System;
 
 using OpenTK;
 #if MONOMAC
-using XamCore.AppKit;
+using AppKit;
 #else
-using XamCore.UIKit;
+using UIKit;
 #endif
 
 #if !XAMCORE_2_0
@@ -65,15 +65,15 @@ using CMVideoDimensions = System.Drawing.Size;
 
 #if WATCH
 // hack for unexisting structs exposed as [Field]
-using CMTime = XamCore.Foundation.NSString;
-using AVCaptureWhiteBalanceGains = XamCore.Foundation.NSString;
+using CMTime = Foundation.NSString;
+using AVCaptureWhiteBalanceGains = Foundation.NSString;
 // stubs to ease compilation using [NoWatch]
-namespace XamCore.AudioUnit {
+namespace AudioUnit {
 	interface AudioUnit {}
 }
 #endif
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 
 #if WATCH
 	// stubs to ease compilation using [NoWatch]
@@ -1357,7 +1357,7 @@ namespace XamCore.AVFoundation {
 
 		[NoWatch]
 		[Export ("audioUnit"), NullAllowed]
-		global::XamCore.AudioUnit.AudioUnit AudioUnit { get; }
+		global::AudioUnit.AudioUnit AudioUnit { get; }
 	}
 
 	[Watch (3,0)]
@@ -2397,7 +2397,7 @@ namespace XamCore.AVFoundation {
 #endif
 
 		[Export ("audioUnit")]
-		global::XamCore.AudioUnit.AudioUnit AudioUnit { get; }
+		global::AudioUnit.AudioUnit AudioUnit { get; }
 
 		[Export ("name")]
 		string Name { get; }
@@ -2919,7 +2919,7 @@ namespace XamCore.AVFoundation {
 
 		[Export ("loadValuesAsynchronouslyForKeys:completionHandler:")]
 		[Async ("LoadValuesTaskAsync")]
-		void LoadValuesAsynchronously (string [] keys, NSAction handler);
+		void LoadValuesAsynchronously (string [] keys, Action handler);
 
 		[iOS (6, 0)]
 		[Mac (10,8)]
@@ -3124,9 +3124,7 @@ namespace XamCore.AVFoundation {
 	interface IAVCaptureDataOutputSynchronizerDelegate {}
 	
 	[NoWatch, NoTV, iOS (11,0)]
-#if XAMCORE_4_0
 	[NoMac]
-#endif
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface AVCaptureDataOutputSynchronizerDelegate
@@ -3137,9 +3135,7 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch, NoTV, iOS (11,0)]
-#if XAMCORE_4_0
 	[NoMac]
-#endif
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface AVCaptureDataOutputSynchronizer
@@ -3920,7 +3916,7 @@ namespace XamCore.AVFoundation {
 		[iOS (6,0)]
 		[Export ("finishWritingWithCompletionHandler:")]
 		[Async]
-		void FinishWriting (NSAction completionHandler);
+		void FinishWriting (Action completionHandler);
 
 		[Export ("movieTimeScale")]
 		int /* CMTimeScale = int32_t */ MovieTimeScale { get; set; }
@@ -4024,7 +4020,7 @@ namespace XamCore.AVFoundation {
 		IntPtr Constructor (string mediaType, [NullAllowed] AVVideoSettingsCompressed outputSettings);
 
 		[Export ("requestMediaDataWhenReadyOnQueue:usingBlock:")]
-		void RequestMediaData (DispatchQueue queue, NSAction action);
+		void RequestMediaData (DispatchQueue queue, Action action);
 
 		[Export ("appendSampleBuffer:")]
 		bool AppendSampleBuffer (CMSampleBuffer sampleBuffer);
@@ -6415,7 +6411,7 @@ namespace XamCore.AVFoundation {
 
 		[Export ("loadValuesAsynchronouslyForKeys:completionHandler:")]
 		[Async ("LoadValuesTaskAsync")]
-		void LoadValuesAsynchronously (string [] keys, [NullAllowed] NSAction handler);
+		void LoadValuesAsynchronously (string [] keys, [NullAllowed] Action handler);
 
 		[iOS (6,0)]
 		[Static, Export ("metadataItemsFromArray:filteredAndSortedAccordingToPreferredLanguages:")]
@@ -8694,7 +8690,7 @@ namespace XamCore.AVFoundation {
 
 		// 5.0 APIs
 #if XAMCORE_4_0
-		[BindAs (typeof (XamCore.CoreVideo.CVPixelFormatType []))]
+		[BindAs (typeof (CoreVideo.CVPixelFormatType []))]
 #endif
 		[Export ("availableVideoCVPixelFormatTypes")]
 		NSNumber [] AvailableVideoCVPixelFormatTypes { get;  }
@@ -10103,7 +10099,7 @@ namespace XamCore.AVFoundation {
 #endif
 
 		[Export ("addBoundaryTimeObserverForTimes:queue:usingBlock:")]
-		NSObject AddBoundaryTimeObserver (NSValue [] times, [NullAllowed] DispatchQueue queue, NSAction handler);
+		NSObject AddBoundaryTimeObserver (NSValue [] times, [NullAllowed] DispatchQueue queue, Action handler);
 
 		[Export ("removeTimeObserver:")]
 		void RemoveTimeObserver (NSObject observer);
@@ -11379,7 +11375,7 @@ namespace XamCore.AVFoundation {
 #endif
 		[Abstract]
 		[Export ("loadValuesAsynchronouslyForKeys:completionHandler:")]
-		void LoadValuesAsynchronously (string [] keys, [NullAllowed] NSAction handler);
+		void LoadValuesAsynchronously (string [] keys, [NullAllowed] Action handler);
 	}
 
 	[NoWatch]
@@ -12180,7 +12176,7 @@ namespace XamCore.AVFoundation {
 
 		[Mac (10,11)]
 		[NullAllowed, Export ("icon")]
-		global::XamCore.AppKit.NSImage Icon { get; }
+		global::AppKit.NSImage Icon { get; }
 
 		[Export ("passesAUVal")]
 		bool PassesAUVal { get; }
@@ -12212,6 +12208,7 @@ namespace XamCore.AVFoundation {
 
 	[NoWatch, iOS (9,0), Mac (10,10)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // for binary compatibility this is added in AVCompat.cs w/[Obsolete]
 	interface AVAudioUnitComponentManager {
 		
 		[Export ("tagNames")]

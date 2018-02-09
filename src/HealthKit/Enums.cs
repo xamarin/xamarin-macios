@@ -1,15 +1,15 @@
-﻿using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using CoreFoundation;
+using ObjCRuntime;
+using Foundation;
 using System;
 
-namespace XamCore.HealthKit
+namespace HealthKit
 {
 	// NSInteger -> HKDefines.h
 	[Watch (2,0)]
 	[iOS (8,0)]
 	[Native]
-	public enum HKUpdateFrequency : nint {
+	public enum HKUpdateFrequency : long {
 		Immediate = 1,
 		Hourly,
 		Daily,
@@ -20,7 +20,7 @@ namespace XamCore.HealthKit
 	[Watch (2,0)]
 	[iOS (8,0)]
 	[Native]
-	public enum HKAuthorizationStatus : nint {
+	public enum HKAuthorizationStatus : long {
 		NotDetermined = 0,
 		SharingDenied,
 		SharingAuthorized
@@ -30,7 +30,7 @@ namespace XamCore.HealthKit
 	[Watch (2,0)]
 	[iOS (8,0)]
 	[Native]
-	public enum HKBiologicalSex : nint {
+	public enum HKBiologicalSex : long {
 		NotSet = 0,
 		Female,
 		Male,
@@ -42,7 +42,7 @@ namespace XamCore.HealthKit
 	[Watch (2,0)]
 	[iOS (8,0)]
 	[Native]
-	public enum HKBloodType : nint {
+	public enum HKBloodType : long {
 		NotSet = 0,
 		APositive,
 		ANegative,
@@ -58,7 +58,7 @@ namespace XamCore.HealthKit
 	[Watch (2,0)]
 	[iOS (8,0)]
 	[Native]
-	public enum HKBodyTemperatureSensorLocation : nint {
+	public enum HKBodyTemperatureSensorLocation : long {
 		Other = 0,
 		Armpit,
 		Body,
@@ -77,7 +77,7 @@ namespace XamCore.HealthKit
 	[Watch (2,0)]
 	[iOS (8,0)]
 	[Native]
-	public enum HKHeartRateSensorLocation : nint {
+	public enum HKHeartRateSensorLocation : long {
 		Other = 0,
 		Chest,
 		Wrist,
@@ -91,7 +91,7 @@ namespace XamCore.HealthKit
 	[Watch (2,0)]
 	[iOS (8,0)]
 	[Native]
-	public enum HKQuantityAggregationStyle : nint {
+	public enum HKQuantityAggregationStyle : long {
 		Cumulative = 0,
 		Discrete
 	}
@@ -100,7 +100,7 @@ namespace XamCore.HealthKit
 	[Watch (2,0)]
 	[iOS (8,0)]
 	[Native]
-	public enum HKCategoryValueSleepAnalysis : nint {
+	public enum HKCategoryValueSleepAnalysis : long {
 		InBed,
 		Asleep,
 		[Watch (3,0), iOS (10,0)]
@@ -112,7 +112,7 @@ namespace XamCore.HealthKit
 	[iOS (8,0)]
 	[Native]
 	[Flags]
-	public enum HKQueryOptions : nuint {
+	public enum HKQueryOptions : ulong {
 		None               = 0,
 		StrictStartDate    = 1 << 0,
 		StrictEndDate      = 1 << 1
@@ -123,7 +123,7 @@ namespace XamCore.HealthKit
 	[iOS (8,0)]
 	[Native]
 	[Flags]
-	public enum HKStatisticsOptions : nuint {
+	public enum HKStatisticsOptions : ulong {
 		None              	  = 0,
 		SeparateBySource          = 1 << 0,
 		DiscreteAverage           = 1 << 1,
@@ -136,7 +136,7 @@ namespace XamCore.HealthKit
 	[Watch (2,0)]
 	[iOS (8,0)]
 	[Native]
-	public enum HKMetricPrefix : nint {
+	public enum HKMetricPrefix : long {
 		None = 0,
 		Pico,
 		Nano,
@@ -290,7 +290,7 @@ namespace XamCore.HealthKit
 	[Native]
 	[Watch (2,0)]
 	[iOS (8,0)]
-	public enum HKWorkoutActivityType : nuint {
+	public enum HKWorkoutActivityType : ulong {
 		AmericanFootball = 1,
 		Archery,
 		AustralianFootball,
@@ -393,7 +393,7 @@ namespace XamCore.HealthKit
 	[Native]
 	[Watch (2,0)]
 	[iOS (8,0)]
-	public enum HKWorkoutEventType : nint {
+	public enum HKWorkoutEventType : long {
 		Pause = 1,
 		Resume,
 		[iOS (10,0), Watch (3,0)]
@@ -413,14 +413,14 @@ namespace XamCore.HealthKit
 	[Watch (2,0)]
 	[iOS (9,0)]
 	[Native]
-	public enum HKCategoryValue : nint {
+	public enum HKCategoryValue : long {
 		NotApplicable = 0
 	}
 
 	[Watch (2,0)]
 	[iOS (9,0)]
 	[Native]
-	public enum HKCategoryValueCervicalMucusQuality : nint {
+	public enum HKCategoryValueCervicalMucusQuality : long {
 		NotApplicable = 0,
 		Dry = 1,
 		Sticky,
@@ -432,7 +432,7 @@ namespace XamCore.HealthKit
 	[Watch (2,0)]
 	[iOS (9,0)]
 	[Native]
-	public enum HKCategoryValueMenstrualFlow : nint {
+	public enum HKCategoryValueMenstrualFlow : long {
 		NotApplicable = 0,
 		Unspecified = 1,
 		Light,
@@ -443,7 +443,7 @@ namespace XamCore.HealthKit
 	[Watch (2,0)]
 	[iOS (9,0)]
 	[Native]
-	public enum HKCategoryValueOvulationTestResult : nint {
+	public enum HKCategoryValueOvulationTestResult : long {
 		NotApplicable = 0,
 		Negative = 1,
 		Positive,
@@ -453,7 +453,7 @@ namespace XamCore.HealthKit
 	[Watch (2,0)]
 	[iOS (9,0)]
 	[Native]
-	public enum HKCategoryValueAppleStandHour : nint {
+	public enum HKCategoryValueAppleStandHour : long {
 		Stood = 0,
 		Idle
 	}
@@ -461,7 +461,7 @@ namespace XamCore.HealthKit
 	[Watch (2,0)]
 	[iOS (9,0)]
 	[Native]
-	public enum HKFitzpatrickSkinType : nint {
+	public enum HKFitzpatrickSkinType : long {
 		NotSet = 0,
 		I,
 		II,
@@ -473,7 +473,7 @@ namespace XamCore.HealthKit
 
 	[Watch (3,0), iOS (10,0)]
 	[Native]
-	public enum HKWheelchairUse : nint {
+	public enum HKWheelchairUse : long {
 		NotSet = 0,
 		No,
 		Yes,
@@ -481,7 +481,7 @@ namespace XamCore.HealthKit
 
 	[Watch (3,0), iOS (10,0)]
 	[Native]
-	public enum HKWeatherCondition : nint {
+	public enum HKWeatherCondition : long {
 		None = 0,
 		Clear,
 		Fair,
@@ -514,7 +514,7 @@ namespace XamCore.HealthKit
 
 	[Watch (3,0), iOS (10,0)]
 	[Native]
-	public enum HKWorkoutSwimmingLocationType : nint {
+	public enum HKWorkoutSwimmingLocationType : long {
 		Unknown = 0,
 		Pool,
 		OpenWater,
@@ -522,7 +522,7 @@ namespace XamCore.HealthKit
 
 	[Watch (3,0), iOS (10,0)]
 	[Native]
-	public enum HKSwimmingStrokeStyle : nint {
+	public enum HKSwimmingStrokeStyle : long {
 		Unknown = 0,
 		Mixed,
 		Freestyle,
@@ -533,21 +533,21 @@ namespace XamCore.HealthKit
 
 	[Watch (4, 0), iOS (11, 0)]
 	[Native]
-	public enum HKInsulinDeliveryReason : nint {
+	public enum HKInsulinDeliveryReason : long {
 		Asal = 1,
 		Olus,
 	}
 
 	[Watch (4, 0), iOS (11, 0)]
 	[Native]
-	public enum HKBloodGlucoseMealTime : nint {
+	public enum HKBloodGlucoseMealTime : long {
 		Reprandial = 1,
 		Ostprandial,
 	}
 
 	[Watch (4, 0), iOS (11, 0)]
 	[Native]
-	public enum HKVO2MaxTestType : nint {
+	public enum HKVO2MaxTestType : long {
 		MaxExercise = 1,
 		PredictionSubMaxExercise,
 		PredictionNonExercise,

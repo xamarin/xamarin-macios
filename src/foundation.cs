@@ -31,35 +31,35 @@
 //
 //
 #define DOUBLE_BLOCKS
-using XamCore.ObjCRuntime;
-using XamCore.CloudKit;
-using XamCore.CoreData;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
+using ObjCRuntime;
+using CloudKit;
+using CoreData;
+using CoreFoundation;
+using Foundation;
+using CoreGraphics;
 #if IOS
-using XamCore.QuickLook;
+using QuickLook;
 #endif
 #if !TVOS
-using XamCore.Contacts;
+using Contacts;
 #endif
 #if !WATCH
-using XamCore.CoreAnimation;
-using XamCore.CoreMedia;
-using XamCore.CoreSpotlight;
+using CoreAnimation;
+using CoreMedia;
+using CoreSpotlight;
 #endif
-using XamCore.SceneKit;
-using XamCore.Security;
+using SceneKit;
+using Security;
 #if IOS && XAMCORE_2_0
-using XamCore.FileProvider;
+using FileProvider;
 #endif
 
 #if MONOMAC
-using XamCore.AppKit;
-using XamCore.QuickLookUI;
+using AppKit;
+using QuickLookUI;
 #else
-using XamCore.CoreLocation;
-using XamCore.UIKit;
+using CoreLocation;
+using UIKit;
 #endif
 
 using System;
@@ -73,6 +73,18 @@ using AEKeyword = System.UInt32;
 using OSType = System.UInt32;
 // typedef double NSTimeInterval;
 using NSTimeInterval = System.Double;
+
+// dummy usings to make code compile without having the actual types available (for [NoMac] to work)
+using NSDirectionalEdgeInsets = Foundation.NSObject;
+using UIEdgeInsets = Foundation.NSObject;
+using UIOffset = Foundation.NSObject;
+#endif
+
+#if WATCH
+// dummy usings to make code compile without having the actual types available (for [NoWatch] to work)
+using CMTime = Foundation.NSObject;
+using CMTimeMapping = Foundation.NSObject;
+using CMTimeRange = Foundation.NSObject;
 #endif
 
 // This little gem comes from a btouch bug that wrote the NSFilePresenterReacquirer delegate to the wrong
@@ -80,14 +92,14 @@ using NSTimeInterval = System.Double;
 // to not break backwards compatibility (once the btouch bug was fixed), we need to make sure the delegate
 // stays in UIKit for Xamarin.iOS/Classic (the delegate was always in the right namespace for Xamarin.Mac).
 #if XAMCORE_2_0 || MONOMAC
-namespace XamCore.Foundation {
+namespace Foundation {
 #else
-namespace XamCore.UIKit {
+namespace UIKit {
 #endif
 	delegate void NSFilePresenterReacquirer ([BlockCallback] Action reacquirer);
 }
 
-namespace XamCore.Foundation
+namespace Foundation
 {
 #if XAMCORE_2_0
 	delegate NSComparisonResult NSComparator (NSObject obj1, NSObject obj2);
@@ -6329,7 +6341,7 @@ namespace XamCore.Foundation
 #if IOS
 		// Extension from iOS5, NewsstandKit
 		[Export ("newsstandAssetDownload", ArgumentSemantic.Weak)]
-		XamCore.NewsstandKit.NKAssetDownload NewsstandAssetDownload { get; }
+		NewsstandKit.NKAssetDownload NewsstandAssetDownload { get; }
 #endif
 	}
 
@@ -6630,11 +6642,11 @@ namespace XamCore.Foundation
 	
 		[Export ("resetWithCompletionHandler:")]
 		[Async]
-		void Reset (NSAction completionHandler);
+		void Reset (Action completionHandler);
 	
 		[Export ("flushWithCompletionHandler:")]
 		[Async]
-		void Flush (NSAction completionHandler);
+		void Flush (Action completionHandler);
 	
 #if !XAMCORE_3_0
 		// broken version that we must keep for XAMCORE_2_0 binary compatibility
@@ -8409,6 +8421,11 @@ namespace XamCore.Foundation
 		void PrepareForInterfaceBuilder ();
 
 		[NoWatch]
+#if MONOMAC
+		// comes from NSNibAwaking category and does not requires calling super
+#else
+		[RequiresSuper] // comes from UINibLoadingAdditions category - which is decorated
+#endif
 		[Export ("awakeFromNib")]
 		void AwakeFromNib ();
 	}
@@ -8583,10 +8600,10 @@ namespace XamCore.Foundation
 	interface NSBlockOperation {
 		[Static]
 		[Export ("blockOperationWithBlock:")]
-		NSBlockOperation Create (/* non null */ NSAction method);
+		NSBlockOperation Create (/* non null */ Action method);
 
 		[Export ("addExecutionBlock:")]
-		void AddExecutionBlock (/* non null */ NSAction method);
+		void AddExecutionBlock (/* non null */ Action method);
 
 		[Export ("executionBlocks")]
 		NSObject [] ExecutionBlocks { get; }
@@ -8601,7 +8618,7 @@ namespace XamCore.Foundation
 		void AddOperations ([NullAllowed] NSOperation [] operations, bool waitUntilFinished);
 
 		[Export ("addOperationWithBlock:")][PostGet ("Operations")]
-		void AddOperation (/* non null */ NSAction operation);
+		void AddOperation (/* non null */ Action operation);
 
 		[Export ("operations")]
 		NSOperation [] Operations { get; }
@@ -10276,158 +10293,159 @@ namespace XamCore.Foundation
 		[Export ("rangeValue")]
 		NSRange RangeValue { get; }
 
-#if MONOMAC
-		[Static, Export ("valueWithCMTime:"), Mac (10, 7)]
-		NSValue FromCMTime (CMTime time);
-		
-		[Export ("CMTimeValue"), Mac (10, 7)]
-		CMTime CMTimeValue { get; }
-		
-		[Static, Export ("valueWithCMTimeMapping:"), Mac (10, 7)]
-		NSValue FromCMTimeMapping (CMTimeMapping timeMapping);
-		
-		[Export ("CMTimeMappingValue"), Mac (10, 7)]
-		CMTimeMapping CMTimeMappingValue { get; }
-		
-		[Static, Export ("valueWithCMTimeRange:"), Mac (10, 7)]
-		NSValue FromCMTimeRange (CMTimeRange timeRange);
-		
-		[Export ("CMTimeRangeValue"), Mac (10, 7)]
-		CMTimeRange CMTimeRangeValue { get; }
-
-		[Export ("valueWithRect:"), Static]
-		NSValue FromCGRect (CGRect rect);
-
-		[Export ("valueWithSize:")][Static]
-		NSValue FromCGSize (CGSize size);
-
-		[Export ("valueWithPoint:")][Static]
-		NSValue FromCGPoint (CGPoint point);
-
-		[Export ("rectValue")]
-		CGRect CGRectValue { get; }
-
-		[Export ("sizeValue")]
-		CGSize CGSizeValue { get; }
-
-		[Export ("pointValue")]
-		CGPoint CGPointValue { get; }
-
-#if XAMCORE_2_0
-		[Mac (10,9, onlyOn64 : true)] // The header doesn't say, but the rest of the API from the same file (MKGeometry.h) was introduced in 10.9
-		[Static, Export ("valueWithMKCoordinate:")]
-		NSValue FromMKCoordinate (XamCore.CoreLocation.CLLocationCoordinate2D coordinate);
-
-		[Mac (10,9, onlyOn64 : true)] // The header doesn't say, but the rest of the API from the same file (MKGeometry.h) was introduced in 10.9
-		[Static, Export ("valueWithMKCoordinateSpan:")]
-		NSValue FromMKCoordinateSpan (XamCore.MapKit.MKCoordinateSpan coordinateSpan);
-#endif
-#else
-#if !WATCH
+		[Mac (10, 7)]
+		[NoWatch]
 		[Static, Export ("valueWithCMTime:")]
 		NSValue FromCMTime (CMTime time);
-		
+
+		[Mac (10, 7)]
+		[NoWatch]
 		[Export ("CMTimeValue")]
 		CMTime CMTimeValue { get; }
-		
+
+		[Mac (10, 7)]
+		[NoWatch]
 		[Static, Export ("valueWithCMTimeMapping:")]
 		NSValue FromCMTimeMapping (CMTimeMapping timeMapping);
-		
+
+		[Mac (10, 7)]
+		[NoWatch]
 		[Export ("CMTimeMappingValue")]
 		CMTimeMapping CMTimeMappingValue { get; }
-		
+
+		[Mac (10, 7)]
+		[NoWatch]
 		[Static, Export ("valueWithCMTimeRange:")]
 		NSValue FromCMTimeRange (CMTimeRange timeRange);
-		
+
+		[Mac (10, 7)]
+		[NoWatch]
 		[Export ("CMTimeRangeValue")]
 		CMTimeRange CMTimeRangeValue { get; }
-#endif
-		
-		[Export ("CGAffineTransformValue")]
-		XamCore.CoreGraphics.CGAffineTransform CGAffineTransformValue { get; }
-		
-		[Export ("UIEdgeInsetsValue")]
-		UIKit.UIEdgeInsets UIEdgeInsetsValue { get; }
 
+#if MONOMAC
+		[Export ("valueWithRect:")]
+#else
+		[Export ("valueWithCGRect:")]
+#endif
+		[Static]
+		NSValue FromCGRect (CGRect rect);
+
+#if MONOMAC
+		[Export ("valueWithSize:")]
+#else
+		[Export ("valueWithCGSize:")]
+#endif
+		[Static]
+		NSValue FromCGSize (CGSize size);
+
+#if MONOMAC
+		[Export ("valueWithPoint:")]
+#else
+		[Export ("valueWithCGPoint:")]
+#endif
+		[Static]
+		NSValue FromCGPoint (CGPoint point);
+
+#if MONOMAC
+		[Export ("rectValue")]
+#else
+		[Export ("CGRectValue")]
+#endif
+		CGRect CGRectValue { get; }
+
+#if MONOMAC
+		[Export ("sizeValue")]
+#else
+		[Export ("CGSizeValue")]
+#endif
+		CGSize CGSizeValue { get; }
+
+#if MONOMAC
+		[Export ("pointValue")]
+#else
+		[Export ("CGPointValue")]
+#endif
+		CGPoint CGPointValue { get; }
+
+		[NoMac]
+		[Export ("CGAffineTransformValue")]
+		CoreGraphics.CGAffineTransform CGAffineTransformValue { get; }
+		
+		[NoMac]
+		[Export ("UIEdgeInsetsValue")]
+		UIEdgeInsets UIEdgeInsetsValue { get; }
+
+		[NoMac]
 		[Watch (4,0), TV (11,0), iOS (11,0)]
 		[Export ("directionalEdgeInsetsValue")]
 		NSDirectionalEdgeInsets DirectionalEdgeInsetsValue { get; }
 
+		[NoMac]
 		[Export ("valueWithCGAffineTransform:")][Static]
-		NSValue FromCGAffineTransform (XamCore.CoreGraphics.CGAffineTransform tran);
+		NSValue FromCGAffineTransform (CoreGraphics.CGAffineTransform tran);
 
+		[NoMac]
 		[Export ("valueWithUIEdgeInsets:")][Static]
-		NSValue FromUIEdgeInsets (UIKit.UIEdgeInsets insets);
+		NSValue FromUIEdgeInsets (UIEdgeInsets insets);
 
 		[Watch (4,0), TV (11,0), iOS (11,0)]
+		[NoMac]
 		[Static]
 		[Export ("valueWithDirectionalEdgeInsets:")]
 		NSValue FromDirectionalEdgeInsets (NSDirectionalEdgeInsets insets);
 
 		[Export ("valueWithUIOffset:")][Static]
-		NSValue FromUIOffset (UIKit.UIOffset insets);
+		[NoMac]
+		NSValue FromUIOffset (UIOffset insets);
 
 		[Export ("UIOffsetValue")]
+		[NoMac]
 		UIOffset UIOffsetValue { get; }
-
-		[Export ("valueWithCGRect:")][Static]
-		NSValue FromCGRect (CGRect rect);
-
-		[Export ("CGRectValue")]
-		CGRect CGRectValue { get; }
-
-		[Export ("valueWithCGSize:")][Static]
-		NSValue FromCGSize (CGSize size);
-
-		[Export ("CGSizeValue")]
-		CGSize CGSizeValue { get; }
-
-		[Export ("CGPointValue")]
-		CGPoint CGPointValue { get; }
-		
-		[Export ("valueWithCGPoint:")][Static]
-		NSValue FromCGPoint (CGPoint point);
-
 		// from UIGeometry.h - those are in iOS8 only (even if the header is silent about them)
 		// and not in OSX 10.10
 
 		[iOS (8,0)]
 		[Export ("CGVectorValue")]
+		[NoMac]
 		CGVector CGVectorValue { get; }
 
 		[iOS (8,0)]
 		[Static, Export ("valueWithCGVector:")]
+		[NoMac]
 		NSValue FromCGVector (CGVector vector);
 
 		// Maybe we should include this inside mapkit.cs instead (it's a partial interface, so that's trivial)?
-
 		[TV (9,2)]
 		[iOS (6,0)]
+		[Mac (10,9, onlyOn64 : true)] // The header doesn't say, but the rest of the API from the same file (MKGeometry.h) was introduced in 10.9
 		[Static, Export ("valueWithMKCoordinate:")]
-		NSValue FromMKCoordinate (XamCore.CoreLocation.CLLocationCoordinate2D coordinate);
+		NSValue FromMKCoordinate (CoreLocation.CLLocationCoordinate2D coordinate);
 
 		[TV (9,2)]
 		[iOS (6,0)]
+		[Mac (10,9, onlyOn64 : true)] // The header doesn't say, but the rest of the API from the same file (MKGeometry.h) was introduced in 10.9
 		[Static, Export ("valueWithMKCoordinateSpan:")]
-		NSValue FromMKCoordinateSpan (XamCore.MapKit.MKCoordinateSpan coordinateSpan);
+		NSValue FromMKCoordinateSpan (MapKit.MKCoordinateSpan coordinateSpan);
 
 		[TV (9,2)]
 		[iOS (6,0)]
+		[Mac (10, 9, onlyOn64 : true)]
 		[Export ("MKCoordinateValue")]
-		XamCore.CoreLocation.CLLocationCoordinate2D CoordinateValue { get; }
+		CoreLocation.CLLocationCoordinate2D CoordinateValue { get; }
 
 		[TV (9,2)]
 		[iOS (6,0)]
+		[Mac (10, 9, onlyOn64 : true)]
 		[Export ("MKCoordinateSpanValue")]
-		XamCore.MapKit.MKCoordinateSpan CoordinateSpanValue { get; }
-#endif
+		MapKit.MKCoordinateSpan CoordinateSpanValue { get; }
 
 #if !WATCH
 		[Export ("valueWithCATransform3D:")][Static]
-		NSValue FromCATransform3D (XamCore.CoreAnimation.CATransform3D transform);
+		NSValue FromCATransform3D (CoreAnimation.CATransform3D transform);
 
 		[Export ("CATransform3DValue")]
-		XamCore.CoreAnimation.CATransform3D CATransform3DValue { get; }
+		CoreAnimation.CATransform3D CATransform3DValue { get; }
 #endif
 
 		#region SceneKit Additions
@@ -11282,7 +11300,7 @@ namespace XamCore.Foundation
 
 		[iOS (7,0), Mac (10, 9)]
 		[Export ("performActivityWithOptions:reason:usingBlock:")]
-		void PerformActivity (NSActivityOptions options, string reason, NSAction runCode);
+		void PerformActivity (NSActivityOptions options, string reason, Action runCode);
 
 		[Mac (10,10)]
 		[iOS (8,0)]
@@ -11409,14 +11427,14 @@ namespace XamCore.Foundation
 		bool Paused { [Bind ("isPaused")] get; }
 	
 		[Export ("setCancellationHandler:")]
-		void SetCancellationHandler (NSAction handler);
+		void SetCancellationHandler (Action handler);
 	
 		[Export ("setPausingHandler:")]
-		void SetPauseHandler (NSAction handler);
+		void SetPauseHandler (Action handler);
 
 		[iOS (9,0), Mac (10,11)]
 		[Export ("setResumingHandler:")]
-		void SetResumingHandler (NSAction handler);
+		void SetResumingHandler (Action handler);
 	
 		[Export ("setUserInfoObject:forKey:")]
 		void SetUserInfo ([NullAllowed] NSObject obj, NSString key);
@@ -11637,7 +11655,7 @@ namespace XamCore.Foundation
 		void CoordinateWriteWrite (NSUrl writingURL, NSFileCoordinatorWritingOptions writingOptions, NSUrl writingURL2, NSFileCoordinatorWritingOptions writingOptions2, out NSError error, /* non null */ NSFileCoordinatorWorkerRW writeWriteWorker);
 
 		[Export ("prepareForReadingItemsAtURLs:options:writingItemsAtURLs:options:error:byAccessor:")]
-		void CoordinateBatc (NSUrl [] readingURLs, NSFileCoordinatorReadingOptions readingOptions, NSUrl [] writingURLs, NSFileCoordinatorWritingOptions writingOptions, out NSError error, /* non null */ NSAction batchHandler);
+		void CoordinateBatc (NSUrl [] readingURLs, NSFileCoordinatorReadingOptions readingOptions, NSUrl [] writingURLs, NSFileCoordinatorWritingOptions writingOptions, out NSError error, /* non null */ Action batchHandler);
 
 		[iOS (8,0)][Mac (10,10)]
 		[Export ("coordinateAccessWithIntents:queue:byAccessor:")]
@@ -12712,20 +12730,8 @@ namespace XamCore.Foundation
 		bool IsValidForFormat (NSObject plist, NSPropertyListFormat format);
 	}
 
-#if XAMCORE_2_0 || !MONOMAC
 	interface INSExtensionRequestHandling { }
 
-	[iOS (8,0)][Mac (10,10)] // Not defined in 32-bit
-	[Protocol, Model]
-	[BaseType (typeof (NSObject))]
-	interface NSExtensionRequestHandling {
-		[Abstract]
-		[Mac (10,10, onlyOn64 : true)] 
-		// @required - (void)beginRequestWithExtensionContext:(NSExtensionContext *)context;
-		[Export ("beginRequestWithExtensionContext:")]
-		void BeginRequestWithExtensionContext (NSExtensionContext context);
-	}
-#else
 	[iOS (8,0)][Mac (10,10, onlyOn64:true)] // Not defined in 32-bit
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -12735,7 +12741,6 @@ namespace XamCore.Foundation
 		[Export ("beginRequestWithExtensionContext:")]
 		void BeginRequestWithExtensionContext (NSExtensionContext context);
 	}
-#endif
 
 	[Protocol]
 	interface NSLocking {

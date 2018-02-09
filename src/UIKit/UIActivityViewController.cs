@@ -2,7 +2,7 @@
 
 using System;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 
 	public partial class UIActivityViewController {
 		[Obsolete ("iOS 9 does not allow creating an empty instance.")]

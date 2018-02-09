@@ -11,7 +11,7 @@ using System;
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.NVector3;
 
-namespace XamCore.ARKit {
+namespace ARKit {
 
 #if !XAMCORE_4_0 && IOS
 	public partial class ARFaceGeometry {

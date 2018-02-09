@@ -24,8 +24,6 @@ using System;
 
 #if XAMCORE_2_0
 namespace ObjCRuntime {
-#else
-namespace XamCore {
 #endif
 
 	[AttributeUsage (AttributeTargets.Method)]
@@ -37,5 +35,7 @@ namespace XamCore {
 
 		public Type DelegateType { get; set; }
 	}
+#if XAMCORE_2_0
 }
+#endif
 

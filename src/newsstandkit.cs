@@ -6,10 +6,10 @@
 // Author:
 //  Miguel de Icaza
 //
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.NewsstandKit {
+namespace NewsstandKit {
 
 	[BaseType (typeof (NSObject))]
 	// <quote>You create an NKAssetDownload instance using the NKIssue method addAssetWithRequest:</quote> -> http://developer.apple.com/library/ios/#documentation/StoreKit/Reference/NKAssetDownload_Class/NKAssetDownload/NKAssetDownload.html

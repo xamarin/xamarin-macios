@@ -26,10 +26,10 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
+using Foundation;
+using CoreGraphics;
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 #if !XAMCORE_2_0 || COREBUILD
 	public
 #endif

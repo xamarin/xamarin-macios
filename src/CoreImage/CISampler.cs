@@ -26,12 +26,12 @@
 //
 
 using System;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreGraphics;
+using CoreFoundation;
+using ObjCRuntime;
 
-namespace XamCore.CoreImage {
+namespace CoreImage {
 
 	// convenience enum on kCISamplerWrap[Black|Clamp] fields -> CISampler.h (headers hidden under QuartzCore.framework)
 	public enum CIWrapMode {

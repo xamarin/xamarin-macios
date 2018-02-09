@@ -9,25 +9,25 @@
 // Copyright 2009, Novell, Inc.
 // Copyright 2011, 2013, 2015 Xamarin Inc.
 //
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CloudKit;
-using XamCore.CoreGraphics;
-using XamCore.CoreLocation;
+using ObjCRuntime;
+using Foundation;
+using CloudKit;
+using CoreGraphics;
+using CoreLocation;
 #if !MONOMAC
-using XamCore.UIKit;
+using UIKit;
 #endif
 #if XAMCORE_2_0 && !TVOS
-using XamCore.Contacts;
+using Contacts;
 #endif
 using System;
 
-namespace XamCore.CoreLocation {
+namespace CoreLocation {
 
 	[NoTV][NoWatch]
 	[iOS (7,0)]
 	[Native] // NSInteger -> CLRegion.h
-	public enum CLRegionState : nint {
+	public enum CLRegionState : long {
 		Unknown,
 		Inside,
 		Outside
@@ -36,7 +36,7 @@ namespace XamCore.CoreLocation {
 	[NoTV][NoWatch]
 	[iOS (7,0)]
 	[Native] // NSInteger -> CLRegion.h
-	public enum CLProximity : nint {
+	public enum CLProximity : long {
 		Unknown,
 		Immediate,
 		Near,

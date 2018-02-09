@@ -173,7 +173,7 @@ ASSETSLIBRARY_SOURCES = \
 
 AUDIOTOOLBOX_CORE_SOURCES = \
 	AudioToolbox/AudioType.cs \
-	AudioToolBox/MusicSequence.cs \
+	AudioToolbox/MusicSequence.cs \
 	AudioToolbox/AudioBuffers.cs \
 
 AUDIOTOOLBOX_SOURCES = \
@@ -1524,8 +1524,8 @@ SHARED_API_SOURCES = \
 
 SHARED_CORE_SOURCES = \
 	MonoPInvokeCallbackAttribute.cs \
-	build/common/NativeTypes/Drawing.cs \
-	build/common/NativeTypes/Primitives.cs \
+	$(BUILD_DIR)/common/NativeTypes/Drawing.cs \
+	$(BUILD_DIR)/common/NativeTypes/Primitives.cs \
 	ObjCRuntime/AlphaAttribute.cs \
 	ObjCRuntime/ArgumentSemantic.cs \
 	ObjCRuntime/BindAsAttribute.cs \

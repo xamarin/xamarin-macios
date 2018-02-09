@@ -28,12 +28,12 @@
 #if XAMCORE_2_0 || !MONOMAC
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using CoreGraphics;
+using ObjCRuntime;
 
-namespace XamCore.GLKit {
+namespace GLKit {
 	public partial class GLKTextureLoader {
 		public static GLKTextureInfo CubeMapFromFiles (string [] files, NSDictionary textureOperations, out NSError error)
 		{

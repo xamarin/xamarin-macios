@@ -2077,10 +2077,10 @@ xamarin_get_delegate_for_block_parameter (MonoMethod *method, int par, void *nat
 }
 
 id
-xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate, guint32 *exception_gchandle)
+xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate, const char *signature, guint32 *exception_gchandle)
 {
 	// COOP: accesses managed memory: unsafe mode.
-	return delegates.create_delegate_proxy ((MonoObject *) mono_method_get_object (mono_domain_get (), method, NULL), delegate, exception_gchandle);
+	return delegates.create_delegate_proxy ((MonoObject *) mono_method_get_object (mono_domain_get (), method, NULL), delegate, signature, exception_gchandle);
 }
 
 void
@@ -2552,6 +2552,17 @@ xamarin_find_assembly_directory (const char *assembly_name)
 	entry = (struct AssemblyLocation *) bsearch (assembly_name, options.AssemblyLocations->locations, options.AssemblyLocations->length, sizeof (struct AssemblyLocation), compare_assembly_location);
 
 	return entry ? entry->location : NULL;
+}
+
+MonoMethod *
+xamarin_get_managed_method_for_token (guint32 token_ref, guint32 *exception_gchandle)
+{
+	MonoReflectionMethod *reflection_method;
+
+	reflection_method = xamarin_get_method_from_token (token_ref, exception_gchandle);
+	if (*exception_gchandle != 0) return NULL;
+
+	return xamarin_get_reflection_method_method (reflection_method);
 }
 
 /*

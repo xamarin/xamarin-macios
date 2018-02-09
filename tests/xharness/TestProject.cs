@@ -17,6 +17,7 @@ namespace xharness
 		public bool IsExecutableProject;
 		public bool IsNUnitProject;
 		public bool GenerateVariations = true;
+		public string [] Configurations;
 
 		public TestProject ()
 		{
@@ -82,13 +83,12 @@ namespace xharness
 
 		public virtual TestProject Clone ()
 		{
-			return new TestProject ()
-			{
-				Path = Path,
-				IsExecutableProject = IsExecutableProject,
-				GenerateVariations = GenerateVariations,
-				Name = Name,
-			};
+			TestProject rv = (TestProject) Activator.CreateInstance (GetType ());
+			rv.Path = Path;
+			rv.IsExecutableProject = IsExecutableProject;
+			rv.GenerateVariations = GenerateVariations;
+			rv.Name = Name;
+			return rv;
 		}
 
 		internal async Task<TestProject> CreateCloneAsync (TestTask test)
@@ -110,6 +110,13 @@ namespace xharness
 			XmlDocument doc;
 			doc = new XmlDocument ();
 			doc.LoadWithoutNetworkAccess (original_path);
+			if (System.IO.Path.GetFileName (original_path).Contains ("GuiUnit_NET")) {
+				// The GuiUnit project files writes stuff outside their project directory using relative paths,
+				// but override that so that we don't end up with multiple cloned projects writing stuff to
+				// the same location.
+				doc.SetOutputPath ("bin\\$(Configuration)");
+				doc.SetNode ("DocumentationFile", "bin\\$(Configuration)\\nunitlite.xml");
+			}
 			doc.ResolveAllPaths (original_path);
 
 			foreach (var pr in doc.GetProjectReferences ()) {
@@ -159,7 +166,6 @@ namespace xharness
 		public bool GenerateFull => TargetFrameworkFlavor == MacFlavors.All || TargetFrameworkFlavor == MacFlavors.Full;
 
 		public string Platform = "x86";
-		public string [] Configurations;
 
 		public MacTestProject () : base ()
 		{
@@ -168,6 +174,15 @@ namespace xharness
 		public MacTestProject (string path, bool isExecutableProject = true, bool generateVariations = true, MacFlavors targetFrameworkFlavor = MacFlavors.All) : base (path, isExecutableProject, generateVariations)
 		{
 			TargetFrameworkFlavor = targetFrameworkFlavor;
+		}
+
+		public override TestProject Clone()
+		{
+			var rv = (MacTestProject) base.Clone ();
+			rv.TargetFrameworkFlavor = TargetFrameworkFlavor;
+			rv.BCLInfo = BCLInfo;
+			rv.Platform = Platform;
+			return rv;
 		}
 	}
 }

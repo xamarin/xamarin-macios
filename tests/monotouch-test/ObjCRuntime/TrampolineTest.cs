@@ -43,8 +43,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 	public class TrampolineTest {
 		public static readonly nfloat pi = 3.14159f;
 #if MONOMAC
-		public static bool IsSim64 { get { return false; } }
-		public static bool IsSim32 { get { return false; } }
+		public static bool IsSim64 { get { return IntPtr.Size == 8; } }
+		public static bool IsSim32 { get { return IntPtr.Size == 4; } }
 		public static bool IsArm64 { get { return false; } }
 		public static bool IsArm32 { get { return false; } }
 #else

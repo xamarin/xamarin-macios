@@ -9,9 +9,9 @@
 
 using System;
 using System.Threading.Tasks;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.VideoSubscriberAccount {
+namespace VideoSubscriberAccount {
 	public partial class VSAccountManager {
 
 		public void CheckAccessStatus (VSAccountManagerAccessOptions accessOptions, Action<VSAccountAccessStatus, NSError> completionHandler)

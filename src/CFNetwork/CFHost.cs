@@ -10,15 +10,15 @@
 using System;
 using System.Net;
 using System.Runtime.InteropServices;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
 
 // CFHost is in CFNetwork.framework, no idea why it ended up in CoreServices when it was bound.
 #if XAMCORE_4_0
-namespace XamCore.CFNetwork {
+namespace CFNetwork {
 #else
-namespace XamCore.CoreServices {
+namespace CoreServices {
 #endif
 
 	// used by CFStream.cs (only?)

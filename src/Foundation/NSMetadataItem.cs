@@ -7,9 +7,9 @@
 //   Miguel de Icaza
 //
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	public partial class NSMetadataItem {
 
 		bool GetBool (NSString key)

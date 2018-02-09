@@ -5,7 +5,7 @@ using System.Linq;
 using Mono.Cecil;
 using Mono.Tuner;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 using Xamarin.Bundler;
 using Xamarin.Tuner;
 

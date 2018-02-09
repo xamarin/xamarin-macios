@@ -11,13 +11,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{2BFA13F8
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "introspection-ios", "tests\introspection\iOS\introspection-ios.csproj", "{208744BD-504E-47D7-9A98-1CF02454A6DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link all", "tests\linker-ios\link all\link all.csproj", "{370CC763-EDC3-41DA-A21A-D4C82CABEFE4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link all", "tests\linker\ios\link all\link all.csproj", "{370CC763-EDC3-41DA-A21A-D4C82CABEFE4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bindings-test", "tests\bindings-test\bindings-test.csproj", "{D6667423-EDD8-4B50-9D98-1AC5D8A8A4EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link sdk", "tests\linker-ios\link sdk\link sdk.csproj", "{C47F8F72-A7CA-4149-AA7D-BC4814803EF3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link sdk", "tests\linker\ios\link sdk\link sdk.csproj", "{C47F8F72-A7CA-4149-AA7D-BC4814803EF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dont link", "tests\linker-ios\dont link\dont link.csproj", "{839212D5-C25B-4284-AA96-59C3872B8184}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dont link", "tests\linker\ios\dont link\dont link.csproj", "{839212D5-C25B-4284-AA96-59C3872B8184}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mtouch", "tests\mtouch\mtouch.csproj", "{9A1177F5-16E6-45DE-AA69-DC9924EC39B8}"
 EndProject

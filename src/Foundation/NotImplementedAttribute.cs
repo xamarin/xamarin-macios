@@ -9,7 +9,7 @@
 
 using System;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	//
 	// This is designed to be applied to setter methods in
 	// a base class `Foo' when a `MutableFoo' exists.

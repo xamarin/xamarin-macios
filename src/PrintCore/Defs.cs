@@ -10,13 +10,13 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.IO;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
 using PMObject=System.IntPtr;
 using OSStatus=System.Int32;
 
-namespace XamCore.PrintCore {
+namespace PrintCore {
 
 	public enum PMStatusCode {
 		Ok = 0,

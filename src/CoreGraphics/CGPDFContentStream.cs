@@ -8,11 +8,11 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
+using Foundation;
+using ObjCRuntime;
+using CoreFoundation;
 
-namespace XamCore.CoreGraphics {
+namespace CoreGraphics {
 
 	// CGPDFContentStream.h
 	public class CGPDFContentStream : INativeObject, IDisposable {

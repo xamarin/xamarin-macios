@@ -1,4 +1,4 @@
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 	public enum ArgumentSemantic : int {
 		None = -1,
 		Assign = 0,

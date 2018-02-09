@@ -36,7 +36,7 @@ namespace Xamarin.iOS.Tasks
 			var name = Path.GetFileNameWithoutExtension (path);
 			var info = Path.Combine (path, "Info.plist");
 			if (!File.Exists (info)) {
-				Log.MTError (7003, $"The App Extension '{name}' does not contain an Info.plist.");
+				Log.LogError (7003, path, $"The App Extension '{name}' does not contain an Info.plist.");
 				return;
 			}
 
@@ -44,7 +44,7 @@ namespace Xamarin.iOS.Tasks
 
 			var bundleIdentifier = plist.GetCFBundleIdentifier ();
 			if (string.IsNullOrEmpty (bundleIdentifier)) {
-				Log.MTError (7004, $"The App Extension '{name}' does not specify a CFBundleIdentifier.");
+				Log.LogError (7004, info, $"The App Extension '{name}' does not specify a CFBundleIdentifier.");
 				return;
 			}
 
@@ -54,17 +54,17 @@ namespace Xamarin.iOS.Tasks
 
 			var executable = plist.GetCFBundleExecutable ();
 			if (string.IsNullOrEmpty (executable))
-				Log.MTError (7005, $"The App Extension '{name}' does not specify a CFBundleExecutable.");
+				Log.LogError (7005, info, $"The App Extension '{name}' does not specify a CFBundleExecutable.");
 
 			if (!bundleIdentifier.StartsWith (mainBundleIdentifier + ".", StringComparison.Ordinal))
-				Log.MTError (7006, $"The App Extension '{name}' has an invalid CFBundleIdentifier ({bundleIdentifier}), it does not begin with the main app bundle's CFBundleIdentifier ({mainBundleIdentifier}).");
+				Log.LogError (7006, info, $"The App Extension '{name}' has an invalid CFBundleIdentifier ({bundleIdentifier}), it does not begin with the main app bundle's CFBundleIdentifier ({mainBundleIdentifier}).");
 
 			if (bundleIdentifier.EndsWith (".key", StringComparison.Ordinal))
-				Log.MTError (7007, $"The App Extension '{name}' has a CFBundleIdentifier ({bundleIdentifier}) that ends with the illegal suffix \".key\".");
+				Log.LogError (7007, info, $"The App Extension '{name}' has a CFBundleIdentifier ({bundleIdentifier}) that ends with the illegal suffix \".key\".");
 
 			var shortVersionString = plist.GetCFBundleShortVersionString ();
 			if (string.IsNullOrEmpty (shortVersionString))
-				Log.MTError (7008, $"The App Extension '{name}' does not specify a CFBundleShortVersionString.");
+				Log.LogError (7008, info, $"The App Extension '{name}' does not specify a CFBundleShortVersionString.");
 
 			if (shortVersionString != mainShortVersionString)
 				Log.LogWarning ("The App Extension '{0}' has a CFBundleShortVersionString ({1}) that does not match the main app bundle's CFBundleShortVersionString ({2})", name, shortVersionString, mainShortVersionString);
@@ -78,14 +78,14 @@ namespace Xamarin.iOS.Tasks
 
 			var extension = plist.Get<PDictionary> ("NSExtension");
 			if (extension == null) {
-				Log.MTError (7009, $"The App Extension '{name}' has an invalid Info.plist: it does not contain an NSExtension dictionary.");
+				Log.LogError (7009, info, $"The App Extension '{name}' has an invalid Info.plist: it does not contain an NSExtension dictionary.");
 				return;
 			}
 
 			var extensionPointIdentifier = extension.GetString ("NSExtensionPointIdentifier").Value;
 
 			if (string.IsNullOrEmpty (extensionPointIdentifier)) {
-				Log.MTError (7010, $"The App Extension '{name}' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionPointIdentifier value.");
+				Log.LogError (7010, info, $"The App Extension '{name}' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionPointIdentifier value.");
 				return;
 			}
 
@@ -118,16 +118,16 @@ namespace Xamarin.iOS.Tasks
 				var attributes = extension.Get<PDictionary> ("NSExtensionAttributes");
 
 				if (attributes == null) {
-					Log.MTError (7011, $"The WatchKit Extension '{name}' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionAttributes dictionary.");
+					Log.LogError (7011, info, $"The WatchKit Extension '{name}' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionAttributes dictionary.");
 					return;
 				}
 
 				var wkAppBundleIdentifier = attributes.GetString ("WKAppBundleIdentifier").Value;
 				var apps = Directory.GetDirectories (path, "*.app");
 				if (apps.Length == 0) {
-					Log.MTError (7012, $"The WatchKit Extension '{name}' does not contain any watch apps.");
+					Log.LogError (7012, info, $"The WatchKit Extension '{name}' does not contain any watch apps.");
 				} else if (apps.Length > 1) {
-					Log.MTError (7012, $"The WatchKit Extension '{name}' contain more than one watch apps.");
+					Log.LogError (7012, info, $"The WatchKit Extension '{name}' contain more than one watch apps.");
 				} else {
 					PObject requiredDeviceCapabilities;
 
@@ -139,15 +139,15 @@ namespace Xamarin.iOS.Tasks
 							PBoolean watchCompanion;
 
 							if (!requiredDeviceCapabilitiesDictionary.TryGetValue ("watch-companion", out watchCompanion) || !watchCompanion.Value)
-								Log.MTError (7013, $"The WatchKit Extension '{name}' has an invalid Info.plist: the UIRequiredDeviceCapabilities dictionary must contain the 'watch-companion' capability with a value of 'true'.");
+								Log.LogError (7013, info, $"The WatchKit Extension '{name}' has an invalid Info.plist: the UIRequiredDeviceCapabilities dictionary must contain the 'watch-companion' capability with a value of 'true'.");
 						} else if (requiredDeviceCapabilitiesArray != null) {
 							if (!requiredDeviceCapabilitiesArray.OfType<PString> ().Any (x => x.Value == "watch-companion"))
-								Log.MTError (7013, $"The WatchKit Extension '{name}' has an invalid Info.plist: the UIRequiredDeviceCapabilities array must contain the 'watch-companion' capability.");
+								Log.LogError (7013, info, $"The WatchKit Extension '{name}' has an invalid Info.plist: the UIRequiredDeviceCapabilities array must contain the 'watch-companion' capability.");
 						} else {
-							Log.MTError (7013, $"The WatchKit Extension '{name}' has an invalid Info.plist: the UIRequiredDeviceCapabilities key must be present and contain the 'watch-companion' capability.");
+							Log.LogError (7013, info, $"The WatchKit Extension '{name}' has an invalid Info.plist: the UIRequiredDeviceCapabilities key must be present and contain the 'watch-companion' capability.");
 						}
 					} else {
-						Log.MTError (7013, $"The WatchKit Extension '{name}' has an invalid Info.plist: the UIRequiredDeviceCapabilities key must be present and contain the 'watch-companion' capability.");
+						Log.LogError (7013, info, $"The WatchKit Extension '{name}' has an invalid Info.plist: the UIRequiredDeviceCapabilities key must be present and contain the 'watch-companion' capability.");
 					}
 
 					ValidateWatchOS1App (apps[0], name, mainBundleIdentifier, wkAppBundleIdentifier);
@@ -164,19 +164,19 @@ namespace Xamarin.iOS.Tasks
 			var name = Path.GetFileNameWithoutExtension (path);
 			var info = Path.Combine (path, "Info.plist");
 			if (!File.Exists (info)) {
-				Log.MTError (7014, $"The Watch App '{name}' does not contain an Info.plist.");
+				Log.LogError (7014, path, $"The Watch App '{name}' does not contain an Info.plist.");
 				return;
 			}
 
 			var plist = PDictionary.FromFile (info);
 			var bundleIdentifier = plist.GetCFBundleIdentifier ();
 			if (string.IsNullOrEmpty (bundleIdentifier)) {
-				Log.MTError (7015, $"The Watch App '{name}' does not specify a CFBundleIdentifier.");
+				Log.LogError (7015, info, $"The Watch App '{name}' does not specify a CFBundleIdentifier.");
 				return;
 			}
 
 			if (!bundleIdentifier.StartsWith (mainBundleIdentifier + ".", StringComparison.Ordinal))
-				Log.MTError (7016, $"The Watch App '{name}' has an invalid CFBundleIdentifier ({bundleIdentifier}), it does not begin with the main app bundle's CFBundleIdentifier ({mainBundleIdentifier}).");
+				Log.LogError (7016, info, $"The Watch App '{name}' has an invalid CFBundleIdentifier ({bundleIdentifier}), it does not begin with the main app bundle's CFBundleIdentifier ({mainBundleIdentifier}).");
 
 			var shortVersionString = plist.GetCFBundleShortVersionString ();
 			if (string.IsNullOrEmpty (shortVersionString))
@@ -194,26 +194,26 @@ namespace Xamarin.iOS.Tasks
 
 			var watchDeviceFamily = plist.GetUIDeviceFamily ();
 			if (watchDeviceFamily != IPhoneDeviceType.Watch)
-				Log.MTError (7017, $"The Watch App '{name}' does not have a valid UIDeviceFamily value. Expected 'Watch (4)' but found '{watchDeviceFamily.ToString ()} ({(int)watchDeviceFamily})'.");
+				Log.LogError (7017, info, $"The Watch App '{name}' does not have a valid UIDeviceFamily value. Expected 'Watch (4)' but found '{watchDeviceFamily.ToString ()} ({(int)watchDeviceFamily})'.");
 
 			var watchExecutable = plist.GetCFBundleExecutable ();
 			if (string.IsNullOrEmpty (watchExecutable))
-				Log.MTError (7018, $"The Watch App '{name}' does not specify a CFBundleExecutable");
+				Log.LogError (7018, info, $"The Watch App '{name}' does not specify a CFBundleExecutable");
 
 			var wkCompanionAppBundleIdentifier = plist.GetString ("WKCompanionAppBundleIdentifier").Value;
 			if (wkCompanionAppBundleIdentifier != mainBundleIdentifier)
-				Log.MTError (7019, $"The Watch App '{name}' has an invalid WKCompanionAppBundleIdentifier value ('{wkCompanionAppBundleIdentifier}'), it does not match the main app bundle's CFBundleIdentifier ('{mainBundleIdentifier}').");
+				Log.LogError (7019, info, $"The Watch App '{name}' has an invalid WKCompanionAppBundleIdentifier value ('{wkCompanionAppBundleIdentifier}'), it does not match the main app bundle's CFBundleIdentifier ('{mainBundleIdentifier}').");
 
 			PBoolean watchKitApp;
 			if (!plist.TryGetValue ("WKWatchKitApp", out watchKitApp) || !watchKitApp.Value)
-				Log.MTError (7020, $"The Watch App '{name}' has an invalid Info.plist: the WKWatchKitApp key must be present and have a value of 'true'.");
+				Log.LogError (7020, info, $"The Watch App '{name}' has an invalid Info.plist: the WKWatchKitApp key must be present and have a value of 'true'.");
 
 			if (plist.ContainsKey ("LSRequiresIPhoneOS"))
-				Log.MTError (7021, $"The Watch App '{name}' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.");
+				Log.LogError (7021, info, $"The Watch App '{name}' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.");
 
 			var pluginsDir = Path.Combine (path, "PlugIns");
 			if (!Directory.Exists (pluginsDir)) {
-				Log.MTError (7022, $"The Watch App '{name}' does not contain any Watch Extensions.");
+				Log.LogError (7022, path, $"The Watch App '{name}' does not contain any Watch Extensions.");
 				return;
 			}
 
@@ -224,7 +224,7 @@ namespace Xamarin.iOS.Tasks
 			}
 
 			if (count == 0)
-				Log.MTError (7022, $"The Watch App '{name}' does not contain a Watch Extension.");
+				Log.LogError (7022, pluginsDir, $"The Watch App '{name}' does not contain a Watch Extension.");
 		}
 
 		void ValidateWatchExtension (string path, string watchAppBundleIdentifier, string mainShortVersionString, string mainVersion)
@@ -232,7 +232,7 @@ namespace Xamarin.iOS.Tasks
 			var name = Path.GetFileNameWithoutExtension (path);
 			var info = Path.Combine (path, "Info.plist");
 			if (!File.Exists (info)) {
-				Log.MTError (7023, $"The Watch Extension '{name}' does not contain an Info.plist.");
+				Log.LogError (7023, path, $"The Watch Extension '{name}' does not contain an Info.plist.");
 				return;
 			}
 
@@ -240,7 +240,7 @@ namespace Xamarin.iOS.Tasks
 
 			var bundleIdentifier = plist.GetCFBundleIdentifier ();
 			if (string.IsNullOrEmpty (bundleIdentifier)) {
-				Log.MTError (7024, $"The Watch Extension '{name}' does not specify a CFBundleIdentifier.");
+				Log.LogError (7024, info, $"The Watch Extension '{name}' does not specify a CFBundleIdentifier.");
 				return;
 			}
 
@@ -250,13 +250,13 @@ namespace Xamarin.iOS.Tasks
 
 			var executable = plist.GetCFBundleExecutable ();
 			if (string.IsNullOrEmpty (executable))
-				Log.MTError (7025, $"The Watch Extension '{name}' does not specify a CFBundleExecutable.");
+				Log.LogError (7025, info, $"The Watch Extension '{name}' does not specify a CFBundleExecutable.");
 
 			if (!bundleIdentifier.StartsWith (watchAppBundleIdentifier + ".", StringComparison.Ordinal))
-				Log.MTError (7026, $"The Watch Extension '{name}' has an invalid CFBundleIdentifier ({bundleIdentifier}), it does not begin with the main app bundle's CFBundleIdentifier ({watchAppBundleIdentifier}).");
+				Log.LogError (7026, info, $"The Watch Extension '{name}' has an invalid CFBundleIdentifier ({bundleIdentifier}), it does not begin with the main app bundle's CFBundleIdentifier ({watchAppBundleIdentifier}).");
 
 			if (bundleIdentifier.EndsWith (".key", StringComparison.Ordinal))
-				Log.MTError (7027, $"The Watch Extension '{name}' has a CFBundleIdentifier ({bundleIdentifier}) that ends with the illegal suffix \".key\".");
+				Log.LogError (7027, info, $"The Watch Extension '{name}' has a CFBundleIdentifier ({bundleIdentifier}) that ends with the illegal suffix \".key\".");
 
 			var shortVersionString = plist.GetCFBundleShortVersionString ();
 			if (string.IsNullOrEmpty (shortVersionString))
@@ -274,30 +274,30 @@ namespace Xamarin.iOS.Tasks
 
 			var extension = plist.Get<PDictionary> ("NSExtension");
 			if (extension == null) {
-				Log.MTError (7028, $"The Watch Extension '{name}' has an invalid Info.plist: it does not contain an NSExtension dictionary.");
+				Log.LogError (7028, info, $"The Watch Extension '{name}' has an invalid Info.plist: it does not contain an NSExtension dictionary.");
 				return;
 			}
 
 			var extensionPointIdentifier = extension.Get<PString> ("NSExtensionPointIdentifier");
 			if (extensionPointIdentifier != null) {
 				if (extensionPointIdentifier.Value != "com.apple.watchkit")
-					Log.MTError (7029, $"The Watch Extension '{name}' has an invalid Info.plist: the NSExtensionPointIdentifier must be \"com.apple.watchkit\".");
+					Log.LogError (7029, info, $"The Watch Extension '{name}' has an invalid Info.plist: the NSExtensionPointIdentifier must be \"com.apple.watchkit\".");
 			} else {
-				Log.MTError (7029, $"The Watch Extension '{name}' has an invalid Info.plist: the NSExtension dictionary must contain an NSExtensionPointIdentifier.");
+				Log.LogError (7029, info, $"The Watch Extension '{name}' has an invalid Info.plist: the NSExtension dictionary must contain an NSExtensionPointIdentifier.");
 			}
 
 			PDictionary attributes;
 			if (!extension.TryGetValue ("NSExtensionAttributes", out attributes)) {
-				Log.MTError (7030, $"The Watch Extension '{name}' has an invalid Info.plist: the NSExtension dictionary must contain NSExtensionAttributes.");
+				Log.LogError (7030, info, $"The Watch Extension '{name}' has an invalid Info.plist: the NSExtension dictionary must contain NSExtensionAttributes.");
 				return;
 			}
 
 			var appBundleIdentifier = attributes.Get<PString> ("WKAppBundleIdentifier");
 			if (appBundleIdentifier != null) {
 				if (appBundleIdentifier.Value != watchAppBundleIdentifier)
-					Log.MTError (7031, $"The Watch Extension '{name}' has an invalid WKAppBundleIdentifier value ('{appBundleIdentifier.Value}'), it does not match the parent Watch App bundle's CFBundleIdentifier ('{watchAppBundleIdentifier}').");
+					Log.LogError (7031, info, $"The Watch Extension '{name}' has an invalid WKAppBundleIdentifier value ('{appBundleIdentifier.Value}'), it does not match the parent Watch App bundle's CFBundleIdentifier ('{watchAppBundleIdentifier}').");
 			} else {
-				Log.MTError (7031, $"The Watch Extension '{name}' has an invalid Info.plist: the NSExtensionAttributes dictionary must contain a WKAppBundleIdentifier.");
+				Log.LogError (7031, info, $"The Watch Extension '{name}' has an invalid Info.plist: the NSExtensionAttributes dictionary must contain a WKAppBundleIdentifier.");
 			}
 
 			PObject requiredDeviceCapabilities;
@@ -310,10 +310,10 @@ namespace Xamarin.iOS.Tasks
 					PBoolean watchCompanion;
 
 					if (requiredDeviceCapabilitiesDictionary.TryGetValue ("watch-companion", out watchCompanion))
-						Log.MTError (7032, $"The WatchKit Extension '{name}' has an invalid Info.plist: the UIRequiredDeviceCapabilities dictionary should not contain the 'watch-companion' capability.");
+						Log.LogError (7032, info, $"The WatchKit Extension '{name}' has an invalid Info.plist: the UIRequiredDeviceCapabilities dictionary should not contain the 'watch-companion' capability.");
 				} else if (requiredDeviceCapabilitiesArray != null) {
 					if (requiredDeviceCapabilitiesArray.OfType<PString> ().Any (x => x.Value == "watch-companion"))
-						Log.MTError (7032, $"The WatchKit Extension '{name}' has an invalid Info.plist: the UIRequiredDeviceCapabilities array should not contain the 'watch-companion' capability.");
+						Log.LogError (7032, info, $"The WatchKit Extension '{name}' has an invalid Info.plist: the UIRequiredDeviceCapabilities array should not contain the 'watch-companion' capability.");
 				}
 			}
 		}
@@ -323,14 +323,14 @@ namespace Xamarin.iOS.Tasks
 			var name = Path.GetFileNameWithoutExtension (path);
 			var info = Path.Combine (path, "Info.plist");
 			if (!File.Exists (info)) {
-				Log.MTError (7033, $"The Watch App '{name}' does not contain an Info.plist.");
+				Log.LogError (7033, path, $"The Watch App '{name}' does not contain an Info.plist.");
 				return;
 			}
 
 			var plist = PDictionary.FromFile (info);
 			var bundleIdentifier = plist.GetCFBundleIdentifier ();
 			if (string.IsNullOrEmpty (bundleIdentifier)) {
-				Log.MTError (7034, $"The Watch App '{name}' does not specify a CFBundleIdentifier.");
+				Log.LogError (7034, info, $"The Watch App '{name}' does not specify a CFBundleIdentifier.");
 				return;
 			}
 
@@ -346,32 +346,32 @@ namespace Xamarin.iOS.Tasks
 			}
 
 			if (deviceFamily != expectedDeviceFamily)
-				Log.MTError (7035, $"The Watch App '{name}' does not have a valid UIDeviceFamily value. Expected '{expectedDeviceFamilyString}' but found '{deviceFamily.ToString ()} ({(int)deviceFamily})'.");
+				Log.LogError (7035, info, $"The Watch App '{name}' does not have a valid UIDeviceFamily value. Expected '{expectedDeviceFamilyString}' but found '{deviceFamily.ToString ()} ({(int)deviceFamily})'.");
 
 			var executable = plist.GetCFBundleExecutable ();
 			if (string.IsNullOrEmpty (executable))
-				Log.MTError (7036, $"The Watch App '{name}' does not specify a CFBundleExecutable.");
+				Log.LogError (7036, info, $"The Watch App '{name}' does not specify a CFBundleExecutable.");
 
 			if (bundleIdentifier != wkAppBundleIdentifier)
-				Log.MTError (7037, $"The WatchKit Extension '{extensionName}' has an invalid WKAppBundleIdentifier value ('{wkAppBundleIdentifier}'), it does not match the Watch App's CFBundleIdentifier ('{bundleIdentifier}').");
+				Log.LogError (7037, info, $"The WatchKit Extension '{extensionName}' has an invalid WKAppBundleIdentifier value ('{wkAppBundleIdentifier}'), it does not match the Watch App's CFBundleIdentifier ('{bundleIdentifier}').");
 
 			var companionAppBundleIdentifier = plist.Get<PString> ("WKCompanionAppBundleIdentifier");
 			if (companionAppBundleIdentifier != null) {
 				if (companionAppBundleIdentifier.Value != mainBundleIdentifier)
-					Log.MTError (7038, $"The Watch App '{name}' has an invalid WKCompanionAppBundleIdentifier value ('{companionAppBundleIdentifier.Value}'), it does not match the main app bundle's CFBundleIdentifier ('{mainBundleIdentifier}').");
+					Log.LogError (7038, info, $"The Watch App '{name}' has an invalid WKCompanionAppBundleIdentifier value ('{companionAppBundleIdentifier.Value}'), it does not match the main app bundle's CFBundleIdentifier ('{mainBundleIdentifier}').");
 			} else {
-				Log.MTError (7038, $"The Watch App '{name}' has an invalid Info.plist: the WKCompanionAppBundleIdentifier must exist and must match the main app bundle's CFBundleIdentifier.");
+				Log.LogError (7038, info, $"The Watch App '{name}' has an invalid Info.plist: the WKCompanionAppBundleIdentifier must exist and must match the main app bundle's CFBundleIdentifier.");
 			}
 
 			if (plist.ContainsKey ("LSRequiresIPhoneOS"))
-				Log.MTError (7039, $"The Watch App '{name}' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.");
+				Log.LogError (7039, info, $"The Watch App '{name}' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.");
 		}
 
 		public override bool Execute ()
 		{
 			var mainInfoPath = Path.Combine (AppBundlePath, "Info.plist");
 			if (!File.Exists (mainInfoPath)) {
-				Log.MTError (7040, $"The app bundle {AppBundlePath} does not contain an Info.plist.");
+				Log.LogError (7040, AppBundlePath, $"The app bundle {AppBundlePath} does not contain an Info.plist.");
 				return false;
 			}
 
@@ -379,18 +379,18 @@ namespace Xamarin.iOS.Tasks
 
 			var bundleIdentifier = plist.GetCFBundleIdentifier ();
 			if (string.IsNullOrEmpty (bundleIdentifier)) {
-				Log.MTError (7041, $"{mainInfoPath} does not specify a CFBundleIdentifier.");
+				Log.LogError (7041, mainInfoPath, $"{mainInfoPath} does not specify a CFBundleIdentifier.");
 				return false;
 			}
 
 			var executable = plist.GetCFBundleExecutable ();
 			if (string.IsNullOrEmpty (executable))
-				Log.MTError (7042, $"{mainInfoPath} does not specify a CFBundleExecutable.");
+				Log.LogError (7042, mainInfoPath, $"{mainInfoPath} does not specify a CFBundleExecutable.");
 
 			var supportedPlatforms = plist.GetArray (ManifestKeys.CFBundleSupportedPlatforms);
 			var platform = string.Empty;
 			if (supportedPlatforms == null || supportedPlatforms.Count == 0) {
-				Log.MTError (7043, $"{mainInfoPath} does not specify a CFBundleSupportedPlatforms.");
+				Log.LogError (7043, mainInfoPath, $"{mainInfoPath} does not specify a CFBundleSupportedPlatforms.");
 			} else {
 				platform = (PString) supportedPlatforms[0];
 			}
@@ -421,11 +421,11 @@ namespace Xamarin.iOS.Tasks
 
 			if (validFamilies != null) {
 				if (validFamilies.Length == 0) {
-					Log.MTError (7044, $"{mainInfoPath} does not specify a UIDeviceFamily.");
+					Log.LogError (7044, mainInfoPath, $"{mainInfoPath} does not specify a UIDeviceFamily.");
 				} else {
 					foreach (var family in deviceFamilies) {
 						if (Array.IndexOf (validFamilies, family) == -1) {
-							Log.MTError (7044, $"{mainInfoPath} is invalid: the UIDeviceFamily key must contain a value for '{family}'.");
+							Log.LogError (7044, mainInfoPath, $"{mainInfoPath} is invalid: the UIDeviceFamily key must contain a value for '{family}'.");
 						}
 					}
 				}

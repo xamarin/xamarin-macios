@@ -1,6 +1,6 @@
 using System;
 
-namespace XamCore.HealthKit {
+namespace HealthKit {
 
 #if !XAMCORE_3_0
 	public partial class HKStatisticsCollectionQuery {

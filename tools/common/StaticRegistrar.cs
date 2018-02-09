@@ -21,13 +21,13 @@ using ProductException=Xamarin.Bundler.MonoTouchException;
 using ProductException=Xamarin.Bundler.MonoMacException;
 #endif
 
-using XamCore.Registrar;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Registrar;
+using Foundation;
+using ObjCRuntime;
 using Mono.Cecil;
 using Mono.Tuner;
 
-namespace XamCore.Registrar {
+namespace Registrar {
 	/*
 	 * This class will automatically detect lines starting/ending with curly braces,
 	 * and indent/unindent accordingly.
@@ -868,6 +868,13 @@ namespace XamCore.Registrar {
 
 		protected override TypeReference GetElementType (TypeReference type)
 		{
+			var ts = type as TypeSpecification;
+			if (ts != null) {
+				// TypeSpecification.GetElementType calls GetElementType on the element type, thus unwinding multiple element types (which we don't want).
+				// By fetching the ElementType property we only unwind one level.
+				// This matches what the dynamic registrar (System.Reflection) does.
+				return ts.ElementType;
+			}
 			return type.GetElementType ();
 		}
 
@@ -1361,33 +1368,42 @@ namespace XamCore.Registrar {
 #if MTOUCH
 			switch (App.Platform) {
 			case Xamarin.Utils.ApplePlatform.iOS:
-				currentPlatform = global::XamCore.ObjCRuntime.PlatformName.iOS;
+				currentPlatform = global::ObjCRuntime.PlatformName.iOS;
 				break;
 			case Xamarin.Utils.ApplePlatform.TVOS:
-				currentPlatform = global::XamCore.ObjCRuntime.PlatformName.TvOS;
+				currentPlatform = global::ObjCRuntime.PlatformName.TvOS;
 				break;
 			case Xamarin.Utils.ApplePlatform.WatchOS:
-				currentPlatform = global::XamCore.ObjCRuntime.PlatformName.WatchOS;
+				currentPlatform = global::ObjCRuntime.PlatformName.WatchOS;
 				break;
 			default:
 				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", App.Platform);
 			}
 #else
-			currentPlatform = global::XamCore.ObjCRuntime.PlatformName.MacOSX;
+			currentPlatform = global::ObjCRuntime.PlatformName.MacOSX;
 #endif
 
 			foreach (var ca in attributes) {
 				var caType = ca.AttributeType;
-				if (caType.Namespace != ObjCRuntime)
+				if (caType.Namespace != ObjCRuntime && !string.IsNullOrEmpty (caType.Namespace))
 					continue;
 				
 				AvailabilityKind kind;
-				PlatformName platformName;
-				PlatformArchitecture architecture;
+				PlatformName platformName = global::ObjCRuntime.PlatformName.None;
+				PlatformArchitecture architecture = PlatformArchitecture.All;
 				string message = null;
 				int majorVersion = 0, minorVersion = 0, subminorVersion = 0;
+				bool shorthand = false;
 
 				switch (caType.Name) {
+				case "MacAttribute":
+					shorthand = true;
+					platformName = global::ObjCRuntime.PlatformName.MacOSX;
+					goto case "IntroducedAttribute";
+				case "iOSAttribute":
+					shorthand = true;
+					platformName = global::ObjCRuntime.PlatformName.iOS;
+					goto case "IntroducedAttribute";
 				case "IntroducedAttribute":
 					kind = AvailabilityKind.Introduced;
 					break;
@@ -1405,10 +1421,45 @@ namespace XamCore.Registrar {
 				}
 
 				switch (ca.ConstructorArguments.Count) {
+				case 2:
+					if (!shorthand)
+						throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://bugzilla.xamarin.com", caType.Name, ca.ConstructorArguments.Count);
+					majorVersion = (byte) ca.ConstructorArguments [0].Value;
+					minorVersion = (byte) ca.ConstructorArguments [1].Value;
+					break;
 				case 3:
-					platformName = (PlatformName) ca.ConstructorArguments [0].Value;
-					architecture = (PlatformArchitecture) ca.ConstructorArguments [1].Value;
-					message = (string) ca.ConstructorArguments [2].Value;
+					if (!shorthand) {
+						platformName = (PlatformName) ca.ConstructorArguments [0].Value;
+						architecture = (PlatformArchitecture) ca.ConstructorArguments [1].Value;
+						message = (string) ca.ConstructorArguments [2].Value;
+					} else {
+						majorVersion = (byte) ca.ConstructorArguments [0].Value;
+						minorVersion = (byte) ca.ConstructorArguments [1].Value;
+						if (ca.ConstructorArguments [2].Type.Name == "Boolean") {
+							var onlyOn64 = (bool) ca.ConstructorArguments [2].Value;
+							architecture = onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All;
+						} else if (ca.ConstructorArguments [2].Type.Name == "Byte") {
+							minorVersion = (byte) ca.ConstructorArguments [2].Value;
+						} else {
+							throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://bugzilla.xamarin.com", caType.Name, ca.ConstructorArguments.Count);
+						}
+					}
+					break;
+				case 4:
+					if (!shorthand)
+						throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://bugzilla.xamarin.com", caType.Name, ca.ConstructorArguments.Count);
+
+					majorVersion = (byte) ca.ConstructorArguments [0].Value;
+					minorVersion = (byte) ca.ConstructorArguments [1].Value;
+					minorVersion = (byte) ca.ConstructorArguments [2].Value;
+					if (ca.ConstructorArguments [3].Type.Name == "Boolean") {
+						var onlyOn64 = (bool) ca.ConstructorArguments [3].Value;
+						architecture = onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All;
+					} else if (ca.ConstructorArguments [3].Type.Name == "PlatformArchitecture") {
+						architecture = (PlatformArchitecture) (byte) ca.ConstructorArguments [3].Value;
+					} else {
+						throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://bugzilla.xamarin.com", caType.Name, ca.ConstructorArguments.Count);
+					}
 					break;
 				case 5:
 					platformName = (PlatformName) ca.ConstructorArguments [0].Value;
@@ -1435,18 +1486,22 @@ namespace XamCore.Registrar {
 				AvailabilityBaseAttribute rv;
 				switch (kind) {
 				case AvailabilityKind.Introduced:
-					switch (ca.ConstructorArguments.Count) {
-					case 3:
-						rv = new IntroducedAttribute (platformName, architecture, message);
-						break;
-					case 5:
-						rv = new IntroducedAttribute (platformName, majorVersion, minorVersion, architecture, message);
-						break;
-					case 6:
+					if (shorthand) {
 						rv = new IntroducedAttribute (platformName, majorVersion, minorVersion, subminorVersion, architecture, message);
-						break;
-					default:
-						throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at http://bugzilla.xamarin.com", caType.Name, ca.ConstructorArguments.Count);
+					} else {
+						switch (ca.ConstructorArguments.Count) {
+						case 3:
+							rv = new IntroducedAttribute (platformName, architecture, message);
+							break;
+						case 5:
+							rv = new IntroducedAttribute (platformName, majorVersion, minorVersion, architecture, message);
+							break;
+						case 6:
+							rv = new IntroducedAttribute (platformName, majorVersion, minorVersion, subminorVersion, architecture, message);
+							break;
+						default:
+							throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at http://bugzilla.xamarin.com", caType.Name, ca.ConstructorArguments.Count);
+						}
 					}
 					break;
 				case AvailabilityKind.Deprecated:
@@ -1937,8 +1992,8 @@ namespace XamCore.Registrar {
 				goto default;
 			case "GameKit":
 #if !MONOMAC
-				if (IsSimulator && App.Platform == Xamarin.Utils.ApplePlatform.WatchOS)
-					return; // No headers provided for watchOS/simulator.
+				if (IsSimulator && App.Platform == Xamarin.Utils.ApplePlatform.WatchOS && App.SdkVersion < new Version (3, 2))
+					return; // No headers provided for watchOS/simulator until watchOS 3.2.
 #endif
 				goto default;
 			case "WatchKit":
@@ -1950,11 +2005,10 @@ namespace XamCore.Registrar {
 				header.WriteLine ("#import <WatchKit/WatchKit.h>");
 				namespaces.Add ("UIKit");
 				return;
-			case "CoreNFC":
 			case "DeviceCheck":
 #if !MONOMAC
 				if (IsSimulator)
-					return; // No headers provided for simulator, which makes sense since there is no NFC on it.
+					return; // No headers provided for simulator
 #endif
 				goto default;
 			case "QTKit":
@@ -2399,6 +2453,36 @@ namespace XamCore.Registrar {
 			}
 		}
 
+		class SkippedType
+		{
+			public TypeReference Skipped;
+			public ObjCType Actual;
+			public uint SkippedTokenReference;
+		}
+		List<SkippedType> skipped_types = new List<SkippedType> ();
+		protected override void OnSkipType (TypeReference type, ObjCType registered_type)
+		{
+			base.OnSkipType (type, registered_type);
+
+#if MONOMAC
+			if (!Is64Bits && IsOnly64Bits (type))
+				return; 
+#endif
+
+			skipped_types.Add (new SkippedType { Skipped = type, Actual = registered_type } );
+		}
+
+#if MONOMAC
+		bool IsOnly64Bits (TypeReference type)
+		{
+			var attributes = GetAvailabilityAttributes (type); // Can return null list
+			if (attributes == null)
+				return false;
+
+			return attributes.Any (x => x.Architecture == PlatformArchitecture.Arch64);
+		}
+#endif
+
 		void Specialize (AutoIndentStringBuilder sb)
 		{
 			List<Exception> exceptions = new List<Exception> ();
@@ -2406,6 +2490,8 @@ namespace XamCore.Registrar {
 
 			var map = new AutoIndentStringBuilder (1);
 			var map_init = new AutoIndentStringBuilder ();
+			var map_dict = new Dictionary<ObjCType, int> (); // maps ObjCType to its index in the map
+			var map_entries = 0;
 
 			var i = 0;
 			
@@ -2428,12 +2514,8 @@ namespace XamCore.Registrar {
 					continue; // Metal isn't supported in the simulator.
 #else
 				// Don't register 64-bit only API on 32-bit XM
-				if (!Is64Bits)
-				{
-					var attributes = GetAvailabilityAttributes (@class.Type); // Can return null list
-					if (attributes != null && attributes.Any (x => x.Architecture == PlatformArchitecture.Arch64))
-						continue;
-				}
+				if (!Is64Bits && IsOnly64Bits (@class.Type))
+					continue;
 
 				if (IsQTKitType (@class) && App.SdkVersion >= MacOSTenTwelveVersion)
 					continue; // QTKit header was removed in 10.12 SDK
@@ -2482,15 +2564,16 @@ namespace XamCore.Registrar {
 
 				skip.Clear ();
 
-				if (!@class.IsProtocol && !@class.IsModel && !@class.IsCategory) {
+				if (!@class.IsProtocol && !@class.IsCategory) {
 					if (!isPlatformType)
 						customTypeCount++;
 					
 					CheckNamespace (@class, exceptions);
-					map.AppendLine ("{{ NULL, 0x{1:X} /* '{0}' => '{2}' */ }},", 
+					map.AppendLine ("{{ NULL, 0x{1:X} /* #{3} '{0}' => '{2}' */ }},", 
 									@class.ExportedName,
 									CreateTokenReference (@class.Type, TokenType.TypeDef), 
-									GetAssemblyQualifiedName (@class.Type));
+									GetAssemblyQualifiedName (@class.Type), map_entries);
+					map_dict [@class] = map_entries++;
 
 					bool use_dynamic;
 
@@ -2528,9 +2611,6 @@ namespace XamCore.Registrar {
 					continue;
 
 				if (@class.Methods == null && isPlatformType && !@class.IsProtocol && !@class.IsCategory)
-					continue;
-
-				if (@class.IsModel)
 					continue;
 
 				CheckNamespace (@class, exceptions);
@@ -2692,6 +2772,14 @@ namespace XamCore.Registrar {
 				iface.WriteLine ();
 
 				if (!is_protocol && !@class.IsWrapper) {
+					var hasClangDiagnostic = @class.IsModel;
+					if (hasClangDiagnostic)
+						sb.WriteLine ("#pragma clang diagnostic push");
+					if (@class.IsModel) {
+						sb.WriteLine ("#pragma clang diagnostic ignored \"-Wprotocol\"");
+						sb.WriteLine ("#pragma clang diagnostic ignored \"-Wobjc-protocol-property-synthesis\"");
+						sb.WriteLine ("#pragma clang diagnostic ignored \"-Wobjc-property-implementation\"");
+					}
 					if (@class.IsCategory) {
 						sb.WriteLine ("@implementation {0} ({1})", EncodeNonAsciiCharacters (@class.BaseType.ExportedName), @class.CategoryName);
 					} else {
@@ -2718,6 +2806,8 @@ namespace XamCore.Registrar {
 					}
 					sb.Unindent ();
 					sb.WriteLine ("@end");
+					if (hasClangDiagnostic)
+						sb.AppendLine ("#pragma clang diagnostic pop");
 				}
 				sb.WriteLine ();
 			}
@@ -2725,6 +2815,22 @@ namespace XamCore.Registrar {
 			map.AppendLine ("{ NULL, 0 },");
 			map.AppendLine ("};");
 			map.AppendLine ();
+
+			if (skipped_types.Count > 0) {
+				map.AppendLine ("static const MTManagedClassMap __xamarin_skipped_map [] = {");
+				foreach (var skipped in skipped_types)
+					skipped.SkippedTokenReference = CreateTokenReference (skipped.Skipped, TokenType.TypeDef);
+
+				foreach (var skipped in skipped_types.OrderBy ((v) => v.SkippedTokenReference)) {
+					if (map_dict.TryGetValue (skipped.Actual, out var index)) {
+						map.AppendLine ("{{ 0x{0:X}, {1} /* '{2}' => '{3}' */ }},", skipped.SkippedTokenReference, map_dict [skipped.Actual], skipped.Skipped.FullName, skipped.Actual.Type.FullName);
+					} else {
+						throw ErrorHelper.CreateError (99, $"Internal error: could not find the native type for {skipped.Skipped.FullName} (failed to find {skipped.Actual.Type.FullName}). Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+					}
+				}
+				map.AppendLine ("};");
+				map.AppendLine ();
+			}
 
 			map.AppendLine ("static const char *__xamarin_registration_assemblies []= {");
 			int count = 0;
@@ -2749,10 +2855,12 @@ namespace XamCore.Registrar {
 			map.AppendLine ("__xamarin_registration_assemblies,");
 			map.AppendLine ("__xamarin_class_map,");
 			map.AppendLine ("__xamarin_token_references,");
+			map.AppendLine (skipped_types.Count == 0 ? "NULL," : "__xamarin_skipped_map,");
 			map.AppendLine ("{0},", count);
 			map.AppendLine ("{0},", i);
 			map.AppendLine ("{0},", customTypeCount);
-			map.AppendLine ("{0}", full_token_reference_count);
+			map.AppendLine ("{0},", full_token_reference_count);
+			map.AppendLine ("{0}", skipped_types.Count);
 			map.AppendLine ("};");
 
 
@@ -3373,7 +3481,7 @@ namespace XamCore.Registrar {
 							setup_call_stack.AppendLine ("}");
 						}
 					} else {
-						throw ErrorHelper.CreateError (4105,
+						throw ErrorHelper.CreateError (App, 4105, method.Method,
 						                              "The registrar cannot marshal the parameter of type `{0}` in signature for method `{1}`.",
 						                              type.FullName, descriptiveMethodName);
 					}
@@ -3512,7 +3620,20 @@ namespace XamCore.Registrar {
 						setup_return.AppendLine ("mono_free (str);");
 						setup_return.AppendLine ("res = nsstr;");
 					} else if (IsDelegate (type.Resolve ())) {
-						setup_return.AppendLine ("res = xamarin_get_block_for_delegate (managed_method, retval, &exception_gchandle);");
+						var signature = "NULL";
+						if (App.Optimizations.OptimizeBlockLiteralSetupBlock == true) {
+							if (type.Is ("System", "Delegate") || type.Is ("System", "MulticastDelegate")) {
+								ErrorHelper.Show (ErrorHelper.CreateWarning (App, 4173, method.Method, $"The registrar can't compute the block signature for the delegate of type {type.FullName} in the method {descriptiveMethodName} because {type.FullName} doesn't have a specific signature."));
+							} else {
+								var delegateMethod = type.Resolve ().GetMethods ().FirstOrDefault ((v) => v.Name == "Invoke");
+								if (delegateMethod == null) {
+									ErrorHelper.Show (ErrorHelper.CreateWarning (App, 4173, method.Method, $"The registrar can't compute the block signature for the delegate of type {type.FullName} in the method {descriptiveMethodName} because it couldn't find the Invoke method of the delegate type."));
+								} else {
+									signature = "\"" + ComputeSignature (method.DeclaringType.Type, null, method, isBlockSignature: true) + "\"";
+								}
+							}
+						}
+						setup_return.AppendLine ("res = xamarin_get_block_for_delegate (managed_method, retval, {0}, &exception_gchandle);", signature);
 						setup_return.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 					} else {
 						throw ErrorHelper.CreateError (4104, 
@@ -3888,17 +4009,28 @@ namespace XamCore.Registrar {
 
 			string func;
 			string nativeTypeName;
+			string token = "0";
 			if (underlyingNativeType.Is (Foundation, "NSNumber")) {
 				func = GetNSNumberToManagedFunc (underlyingManagedType, inputType, outputType, descriptiveMethodName, out nativeTypeName);
 			} else if (underlyingNativeType.Is (Foundation, "NSValue")) {
 				func = GetNSValueToManagedFunc (underlyingManagedType, inputType, outputType, descriptiveMethodName, out nativeTypeName);
 			} else if (underlyingNativeType.Is (Foundation, "NSString")) {
 				func = GetNSStringToSmartEnumFunc (underlyingManagedType, inputType, outputType, descriptiveMethodName, managedClassExpression, out nativeTypeName);
+				MethodDefinition getConstantMethod, getValueMethod;
+				if (!IsSmartEnum (underlyingManagedType, out getConstantMethod, out getValueMethod)) {
+					// method linked away!? this should already be verified
+					ErrorHelper.Show (ErrorHelper.CreateWarning (99, $"Internal error: the smart enum {underlyingManagedType.FullName} doesn't seem to be a smart enum after all. Please file a bug report with a test case (https://bugzilla.xamarin.com)."));
+					token = "INVALID_TOKEN_REF";
+				} else {
+					token = $"0x{CreateTokenReference (getValueMethod, TokenType.Method):X} /* {getValueMethod.FullName} */";
+				}
 			} else {
 				throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
 			}
 			if (isManagedArray) {
-				sb.AppendLine ($"{outputName} = xamarin_convert_nsarray_to_managed_with_func ({inputName}, {classVariableName}, (xamarin_id_to_managed_func) {func}, &exception_gchandle);");
+				sb.AppendLine ($"xamarin_id_to_managed_func {inputName}_conv_func = (xamarin_id_to_managed_func) {func};");
+				sb.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
+				sb.AppendLine ($"{outputName} = xamarin_convert_nsarray_to_managed_with_func ({inputName}, {classVariableName}, {inputName}_conv_func, {token}, &exception_gchandle);");
 				sb.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 			} else {
 				var tmpName = $"{inputName}_conv_tmp";
@@ -3906,11 +4038,11 @@ namespace XamCore.Registrar {
 				if (isManagedNullable) {
 					var tmpName2 = $"{inputName}_conv_ptr";
 					body_setup.AppendLine ($"void *{tmpName2} = NULL;");
-					sb.AppendLine ($"{tmpName2} = {func} ({inputName}, &{tmpName}, {classVariableName}, &exception_gchandle);");
+					sb.AppendLine ($"{tmpName2} = {func} ({inputName}, &{tmpName}, {classVariableName}, {token}, &exception_gchandle);");
 					sb.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 					sb.AppendLine ($"{outputName} = mono_value_box (mono_domain_get (), {classVariableName}, {tmpName2});");
 				} else {
-					sb.AppendLine ($"{outputName} = {func} ({inputName}, &{tmpName}, {classVariableName}, &exception_gchandle);");
+					sb.AppendLine ($"{outputName} = {func} ({inputName}, &{tmpName}, {classVariableName}, {token}, &exception_gchandle);");
 					sb.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 				}
 			}
@@ -3963,20 +4095,29 @@ namespace XamCore.Registrar {
 				sb.AppendLine ($"if ({inputName}) {{");
 
 			string func;
+			string token = "0";
 			if (underlyingNativeType.Is (Foundation, "NSNumber")) {
 				func = GetManagedToNSNumberFunc (underlyingManagedType, inputType, outputType, descriptiveMethodName);
 			} else if (underlyingNativeType.Is (Foundation, "NSValue")) {
 				func = GetManagedToNSValueFunc (underlyingManagedType, inputType, outputType, descriptiveMethodName);
 			} else if (underlyingNativeType.Is (Foundation, "NSString")) {
 				func = GetSmartEnumToNSStringFunc (underlyingManagedType, inputType, outputType, descriptiveMethodName, classVariableName);
+				MethodDefinition getConstantMethod, getValueMethod;
+				if (!IsSmartEnum (underlyingManagedType, out getConstantMethod, out getValueMethod)) {
+					// method linked away!? this should already be verified
+					ErrorHelper.Show (ErrorHelper.CreateWarning (99, $"Internal error: the smart enum {underlyingManagedType.FullName} doesn't seem to be a smart enum after all. Please file a bug report with a test case (https://bugzilla.xamarin.com)."));
+					token = "INVALID_TOKEN_REF";
+				} else {
+					token = $"0x{CreateTokenReference (getConstantMethod, TokenType.Method):X} /* {getConstantMethod.FullName} */";
+				}
 			} else {
 				throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
 			}
 
 			if (isManagedArray) {
-				sb.AppendLine ($"{outputName} = xamarin_convert_managed_to_nsarray_with_func ((MonoArray *) {inputName}, (xamarin_managed_to_id_func) {func}, &exception_gchandle);");
+				sb.AppendLine ($"{outputName} = xamarin_convert_managed_to_nsarray_with_func ((MonoArray *) {inputName}, (xamarin_managed_to_id_func) {func}, {token}, &exception_gchandle);");
 			} else {
-				sb.AppendLine ($"{outputName} = {func} ({inputName}, &exception_gchandle);");
+				sb.AppendLine ($"{outputName} = {func} ({inputName}, {token}, &exception_gchandle);");
 			}
 			sb.AppendLine ($"if (exception_gchandle != 0) goto exception_handling;");
 
@@ -4013,7 +4154,17 @@ namespace XamCore.Registrar {
 			return rv;
 		}
 
+		Dictionary<Tuple<MemberReference, TokenType>, uint> token_ref_cache = new Dictionary<Tuple<MemberReference, TokenType>, uint> ();
 		uint CreateTokenReference (MemberReference member, TokenType implied_type)
+		{
+			var key = new Tuple<MemberReference, TokenType> (member, implied_type);
+			uint rv;
+			if (!token_ref_cache.TryGetValue (key, out rv))
+				token_ref_cache [key] = rv = CreateTokenReference2 (member, implied_type);
+			return rv;
+		}
+
+		uint CreateTokenReference2 (MemberReference member, TokenType implied_type)
 		{
 			var token = member.MetadataToken;
 

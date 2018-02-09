@@ -23,11 +23,11 @@
 
 using System;
 
-using XamCore.AppKit;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using AppKit;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.MediaLibrary {
+namespace MediaLibrary {
 	[Static]
 	[Mac (10,9, onlyOn64 : true)]
 	interface MediaLibraryTypeIdentifierKey {

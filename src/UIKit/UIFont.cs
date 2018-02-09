@@ -10,10 +10,10 @@
 //
 
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	public partial class UIFont {
 #if !XAMCORE_2_0
 		[Obsolete ("This constructor does not return a valid, default, instance", true)]

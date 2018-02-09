@@ -1,9 +1,9 @@
 using System;
 using System.Globalization;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 
 #if WATCH
 	internal

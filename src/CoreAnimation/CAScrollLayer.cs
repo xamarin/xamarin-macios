@@ -1,10 +1,10 @@
 using System;
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
+using Foundation;
+using ObjCRuntime;
+using CoreGraphics;
 
-namespace XamCore.CoreAnimation {
+namespace CoreAnimation {
 
 	partial class CAScrollLayer {
 

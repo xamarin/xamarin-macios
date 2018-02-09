@@ -10,8 +10,8 @@ using Foundation;
 #if !MONOMAC
 using UIKit;
 using NativeException = Foundation.MonoTouchException;
-using Bindings.Test;
 #endif
+using Bindings.Test;
 using ObjCRuntime;
 #if !__TVOS__
 using MapKit;

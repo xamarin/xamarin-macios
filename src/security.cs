@@ -8,11 +8,10 @@
 //
 
 using System;
-using System.ComponentModel;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.Security {
+namespace Security {
 
 	[Static]
 	[iOS (7,0)]

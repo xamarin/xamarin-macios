@@ -6,7 +6,11 @@ using System.Drawing;
 #if __UNIFIED__
 using ObjCRuntime;
 using Foundation;
+#if __MACOS__
+using AppKit;
+#else
 using UIKit;
+#endif
 #else
 using MonoTouch.ObjCRuntime;
 using MonoTouch.Foundation;

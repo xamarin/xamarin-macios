@@ -8,10 +8,10 @@
 //
 
 using System;
-using XamCore.CoreGraphics;
-using XamCore.CoreFoundation;
+using CoreGraphics;
+using CoreFoundation;
 
-namespace XamCore.SpriteKit {
+namespace SpriteKit {
 #if XAMCORE_2_0 || !MONOMAC
 	public partial class SKAction {
 

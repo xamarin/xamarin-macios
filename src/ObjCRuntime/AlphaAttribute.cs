@@ -6,7 +6,7 @@
 
 using System;
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 	public class AlphaAttribute : Attribute {
 		public AlphaAttribute () {}
 	}

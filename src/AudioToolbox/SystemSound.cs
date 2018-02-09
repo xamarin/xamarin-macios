@@ -30,11 +30,11 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using ObjCRuntime;
 
-namespace XamCore.AudioToolbox {
+namespace AudioToolbox {
 
 	enum SystemSoundId : uint { // UInt32 SystemSoundID
 		Vibrate = 0x00000FFF,
@@ -192,6 +192,7 @@ namespace XamCore.AudioToolbox {
 		}
 
 		[iOS (9,0)][Mac (10,11)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void PlayAlertSound (Action onCompletion)
 		{
 			if (onCompletion == null)
@@ -224,6 +225,7 @@ namespace XamCore.AudioToolbox {
 		}
 
 		[iOS (9,0)][Mac (10,11)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void PlaySystemSound (Action onCompletion)
 		{
 			if (onCompletion == null)

@@ -11,13 +11,13 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.CoreGraphics;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using CoreGraphics;
+using ObjCRuntime;
+using Foundation;
 
 using Vector2 = global::OpenTK.Vector2;
 
-namespace XamCore.Vision {
+namespace Vision {
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	public static partial class VNUtils {
 	

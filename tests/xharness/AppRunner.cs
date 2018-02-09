@@ -152,7 +152,7 @@ namespace xharness
 			string [] deviceClasses;
 			switch (mode) {
 			case "ios":
-				deviceClasses = new string [] { "iPhone", "iPad" };
+				deviceClasses = new string [] { "iPhone", "iPad", "iPod" };
 				break;
 			case "watchos":
 				deviceClasses = new string [] { "Watch" };

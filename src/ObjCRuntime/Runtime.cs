@@ -14,11 +14,11 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-using XamCore.Foundation;
-using XamCore.Registrar;
+using Foundation;
+using Registrar;
 
 #if MONOMAC
-using XamCore.AppKit;
+using AppKit;
 #endif
 
 #if !COREBUILD && (XAMARIN_APPLETLS || XAMARIN_NO_TLS)
@@ -27,7 +27,7 @@ using Mono.Security.Interface;
 #endif
 #endif
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 	
 	public partial class Runtime {
 #if !COREBUILD
@@ -55,16 +55,25 @@ namespace XamCore.ObjCRuntime {
 			public IntPtr assembly;
 			public MTClassMap *map;
 			public IntPtr full_token_references; /* array of MTFullTokenReference */
+			public MTManagedClassMap* skipped_map;
 			public int assembly_count;
 			public int map_count;
 			public int custom_type_count;
 			public int full_token_reference_count;
+			public int skipped_map_count;
 		}
 
 		[StructLayout (LayoutKind.Sequential, Pack = 1)]
 		internal struct MTClassMap {
 			public IntPtr handle;
 			public uint type_reference;
+		}
+
+		[StructLayout (LayoutKind.Sequential, Pack = 1)]
+		internal struct MTManagedClassMap
+		{
+			public uint skipped_reference; // implied token type: TypeDef
+			public uint index; // index into MTRegistrationMap.map
 		}
 
 		/* Keep Delegates, Trampolines and InitializationOptions in sync with monotouch-glue.m */
@@ -92,6 +101,7 @@ namespace XamCore.ObjCRuntime {
 			public IntPtr set_gchandle_tramp;
 		}
 
+		[Flags]
 		internal enum InitializationFlags : int {
 			/* unused               = 0x01 */
 			/* unused				= 0x02,*/
@@ -402,9 +412,9 @@ namespace XamCore.ObjCRuntime {
 			return ObjectWrapper.Convert (CreateBlockProxy ((MethodInfo) ObjectWrapper.Convert (method), block));
 		}
 			
-		static IntPtr CreateDelegateProxy (IntPtr method, IntPtr @delegate)
+		static IntPtr CreateDelegateProxy (IntPtr method, IntPtr @delegate, IntPtr signature)
 		{
-			return BlockLiteral.GetBlockForDelegate ((MethodInfo) ObjectWrapper.Convert (method), ObjectWrapper.Convert (@delegate));
+			return BlockLiteral.GetBlockForDelegate ((MethodInfo) ObjectWrapper.Convert (method), ObjectWrapper.Convert (@delegate), Marshal.PtrToStringAuto (signature));
 		}
 
 		static unsafe Assembly GetEntryAssembly ()
@@ -571,16 +581,6 @@ namespace XamCore.ObjCRuntime {
 		static IntPtr GetSelector (IntPtr sel)
 		{
 			return ObjectWrapper.Convert (new Selector (sel));
-		}
-
-		static IntPtr GetClassHandle (IntPtr klass)
-		{
-			return ((Class) ObjectWrapper.Convert (klass)).Handle;
-		}
-
-		static IntPtr GetSelectorHandle (IntPtr sel)
-		{
-			return ((Selector) ObjectWrapper.Convert (sel)).Handle;
 		}
 
 		static void GetMethodForSelector (IntPtr cls, IntPtr sel, bool is_static, IntPtr desc)
@@ -1316,9 +1316,9 @@ namespace XamCore.ObjCRuntime {
 				return null;
 
 			// need to look up the type from the ProtocolAttribute.
-			var a = type.GetCustomAttributes (typeof (XamCore.Foundation.ProtocolAttribute), false);
+			var a = type.GetCustomAttributes (typeof (Foundation.ProtocolAttribute), false);
 
-			var attr = (XamCore.Foundation.ProtocolAttribute) (a.Length > 0 ? a [0] : null);
+			var attr = (Foundation.ProtocolAttribute) (a.Length > 0 ? a [0] : null);
 			if (attr == null || attr.WrapperType == null)
 				throw ErrorHelper.CreateError (4125, "The registrar found an invalid interface '{0}': " +
 					"The interface must have a Protocol attribute specifying its wrapper type.",
@@ -1426,6 +1426,28 @@ namespace XamCore.ObjCRuntime {
 
 		[DllImport (Constants.libSystemLibrary)]
 		unsafe extern internal static void memcpy (byte * target, byte * source, nint n);
+
+		// This function will try to compare a native UTF8 string to a managed string without creating a temporary managed string for the native UTF8 string.
+		// Currently this only works if the UTF8 string only contains single-byte characters.
+		// If any multi-byte characters are found, the native utf8 string is converted to a managed string, and then normal managed comparison is done.
+		internal static bool StringEquals (IntPtr utf8, string str)
+		{
+			// The vast majority of strings we compare fall within the single-byte UTF8 range, so optimize for this
+			unsafe {
+				byte* c = (byte*) utf8;
+				for (int i = 0; i < str.Length; i++) {
+					byte b = c [i];
+					if (b > 0x7F) {
+						// This string is a multibyte UTF8 string, so go the slow route and convert it to a managed string before comparison
+						return string.Equals (Marshal.PtrToStringUTF8 (utf8), str);
+					}
+					if (b != (short) str [i])
+						return false;
+				}
+				return c [str.Length] == 0;
+			}
+		}
+
 	}
 		
 	internal class IntPtrEqualityComparer : IEqualityComparer<IntPtr>

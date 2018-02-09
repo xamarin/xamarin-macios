@@ -33,9 +33,9 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		[TestCase (Profile.macFull)]
-		[TestCase (Profile.macModern)]
-		[TestCase (Profile.macClassic)]
+		[TestCase (Profile.macOSFull)]
+		[TestCase (Profile.macOSMobile)]
+		[TestCase (Profile.macOSClassic)]
 		public void BI1037 (Profile profile)
 		{
 			var bgen = new BGenTool ();
@@ -47,9 +47,9 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		[TestCase (Profile.macFull)]
-		[TestCase (Profile.macModern)]
-		[TestCase (Profile.macClassic)]
+		[TestCase (Profile.macOSFull)]
+		[TestCase (Profile.macOSMobile)]
+		[TestCase (Profile.macOSClassic)]
 		public void BI1038 (Profile profile)
 		{
 			var bgen = new BGenTool ();
@@ -61,9 +61,9 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		[TestCase (Profile.macFull)]
-		[TestCase (Profile.macModern)]
-		[TestCase (Profile.macClassic)]
+		[TestCase (Profile.macOSFull)]
+		[TestCase (Profile.macOSMobile)]
+		[TestCase (Profile.macOSClassic)]
 		public void BI1039 (Profile profile)
 		{
 			var bgen = new BGenTool ();
@@ -75,9 +75,9 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		[TestCase (Profile.macFull)]
-		[TestCase (Profile.macModern)]
-		[TestCase (Profile.macClassic)]
+		[TestCase (Profile.macOSFull)]
+		[TestCase (Profile.macOSMobile)]
+		[TestCase (Profile.macOSClassic)]
 		public void BI1040 (Profile profile)
 		{
 			var bgen = new BGenTool ();
@@ -89,9 +89,9 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		[TestCase (Profile.macFull)]
-		[TestCase (Profile.macModern)]
-		[TestCase (Profile.macClassic)]
+		[TestCase (Profile.macOSFull)]
+		[TestCase (Profile.macOSMobile)]
+		[TestCase (Profile.macOSClassic)]
 		public void BI1041 (Profile profile)
 		{
 			var bgen = new BGenTool ();
@@ -536,9 +536,52 @@ namespace BI1062Tests {
 		}
 
 		[Test]
+		public void BI1063_NoDoubleWrapTest ()
+		{
+			var bgen = new BGenTool {
+				Profile = Profile.iOS,
+				ProcessEnums = true
+			};
+			bgen.CreateTemporaryBinding (@"
+using System;
+using Foundation;
+
+namespace BI1063Tests {
+
+	enum PersonRelationship {
+		[Field (null)]
+		None,
+
+		[Field (""INPersonRelationshipFather"", ""__Internal"")]
+		Father,
+
+		[Field (""INPersonRelationshipMother"", ""__Internal"")]
+		Mother
+	}
+
+	[BaseType (typeof (NSObject))]
+	interface Wrappers {
+
+		// SmartEnum -- Normal Wrap getter Property
+
+		[Export (""presenceType"")]
+		NSString _PresenceType { get; }
+
+		[Wrap (""PersonRelationshipExtensions.GetValue (_PresenceType)"")]
+		PersonRelationship PresenceType {
+			[Wrap (""PersonRelationshipExtensions.GetValue (_PresenceType)"")]
+			get;
+		}
+	}
+}");
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1063, "The 'WrapAttribute' can only be used at the property or at getter/setter level at a given time. Property: 'BI1063Tests.Wrappers.PresenceType'");
+		}
+
+		[Test]
 		[TestCase (Profile.iOS)]
-		[TestCase (Profile.macFull)]
-		[TestCase (Profile.macModern)]
+		[TestCase (Profile.macOSFull)]
+		[TestCase (Profile.macOSMobile)]
 		public void WarnAsError (Profile profile)
 		{
 			const string message = "The member 'SomeMethod' is decorated with [Static] and its container class warnaserrorTests.FooObject_Extensions is decorated with [Category] this leads to hard to use code. Please inline SomeMethod into warnaserrorTests.FooObject class.";
@@ -588,8 +631,8 @@ namespace BI1062Tests {
 
 		[Test]
 		[TestCase (Profile.iOS)]
-		[TestCase (Profile.macFull)]
-		[TestCase (Profile.macModern)]
+		[TestCase (Profile.macOSFull)]
+		[TestCase (Profile.macOSMobile)]
 		public void NoWarn (Profile profile)
 		{
 			const string message = "The member 'SomeMethod' is decorated with [Static] and its container class nowarnTests.FooObject_Extensions is decorated with [Category] this leads to hard to use code. Please inline SomeMethod into nowarnTests.FooObject class.";

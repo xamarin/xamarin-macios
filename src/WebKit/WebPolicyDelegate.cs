@@ -21,10 +21,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.WebKit {
+namespace WebKit {
 
 	public partial class WebPolicyDelegate {
 		static IntPtr selUse = Selector.GetHandle ("use");
@@ -36,7 +36,7 @@ namespace XamCore.WebKit {
 			if (decisionToken == null)
 				throw new ArgumentNullException ("token");
 			
-			XamCore.ObjCRuntime.Messaging.void_objc_msgSend (decisionToken.Handle, selUse);
+			ObjCRuntime.Messaging.void_objc_msgSend (decisionToken.Handle, selUse);
 		}
 		
 		public static void DecideDownload (NSObject decisionToken)
@@ -44,7 +44,7 @@ namespace XamCore.WebKit {
 			if (decisionToken == null)
 				throw new ArgumentNullException ("decisionToken");
 			
-			XamCore.ObjCRuntime.Messaging.void_objc_msgSend (decisionToken.Handle, selDownload);
+			ObjCRuntime.Messaging.void_objc_msgSend (decisionToken.Handle, selDownload);
 		}
 		
 		public static void DecideIgnore (NSObject decisionToken)
@@ -52,7 +52,7 @@ namespace XamCore.WebKit {
 			if (decisionToken == null)
 				throw new ArgumentNullException ("decisionToken");
 			
-			XamCore.ObjCRuntime.Messaging.void_objc_msgSend (decisionToken.Handle, selIgnore);
+			ObjCRuntime.Messaging.void_objc_msgSend (decisionToken.Handle, selIgnore);
 		}
 		
 	}

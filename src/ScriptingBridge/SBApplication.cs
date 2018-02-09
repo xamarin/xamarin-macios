@@ -1,10 +1,10 @@
 using System;
 using System.Reflection;
-using XamCore.AppKit;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using AppKit;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.ScriptingBridge {
+namespace ScriptingBridge {
 	public partial class SBApplication
 	{
 		// We want to instance up a version of your derived class, not SBApplication

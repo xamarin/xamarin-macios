@@ -27,26 +27,26 @@
 using System;
 using System.ComponentModel;
 using System.Reflection;
-using XamCore.AVFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
-using XamCore.CoreImage;
-using XamCore.CoreVideo;
-using XamCore.ImageIO;
-using XamCore.IOSurface;
+using AVFoundation;
+using Foundation;
+using ObjCRuntime;
+using CoreGraphics;
+using CoreImage;
+using CoreVideo;
+using ImageIO;
+using IOSurface;
 #if !MONOMAC || XAMCORE_2_0
-using XamCore.Metal;
+using Metal;
 #endif
 #if !MONOMAC
-using XamCore.OpenGLES;
-using XamCore.UIKit;
+using OpenGLES;
+using UIKit;
 #else
-using XamCore.AppKit;
-using XamCore.ImageKit;
+using AppKit;
+using ImageKit;
 #endif
 
-namespace XamCore.CoreImage {
+namespace CoreImage {
 
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]

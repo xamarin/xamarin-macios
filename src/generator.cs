@@ -50,8 +50,8 @@ using Type = IKVM.Reflection.Type;
 using System.Text;
 using System.ComponentModel;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
 public static class GeneratorExtensions
 {
@@ -426,13 +426,30 @@ public interface IMemberGatherer {
 	IEnumerable<MethodInfo> GetTypeContractMethods (Type source);
 }
 
+class WrapPropMemberInformation
+{
+	public bool HasWrapOnGetter { get => WrapGetter != null; }
+	public bool HasWrapOnSetter { get => WrapSetter != null; }
+	public string WrapGetter { get; private set; }
+	public string WrapSetter { get; private set; }
+
+	public WrapPropMemberInformation (PropertyInfo pi)
+	{
+		WrapGetter = AttributeManager.GetCustomAttribute<WrapAttribute> (pi?.GetMethod)?.MethodName;
+		WrapSetter = AttributeManager.GetCustomAttribute<WrapAttribute> (pi?.SetMethod)?.MethodName;
+	}
+}
+
+
 public class MemberInformation
 {
 	public readonly MemberInfo mi;
 	public readonly Type type;
 	public readonly Type category_extension_type;
+	internal readonly WrapPropMemberInformation wpmi;
 	public readonly bool is_abstract, is_protected, is_internal, is_unified_internal, is_override, is_new, is_sealed, is_static, is_thread_static, is_autorelease, is_wrapper, is_forced;
 	public readonly bool is_type_sealed, ignore_category_static_warnings, is_basewrapper_protocol_method;
+	public readonly bool has_inner_wrap_attribute;
 	public readonly Generator.ThreadCheck threadCheck;
 	public bool is_unsafe, is_virtual_method, is_export, is_category_extension, is_variadic, is_interface_impl, is_extension_method, is_appearance, is_model, is_ctor;
 	public bool is_return_release;
@@ -572,6 +589,17 @@ public class MemberInformation
 			is_virtual_method = false;
 		else
 			is_virtual_method = !is_static;
+
+		// Properties can have WrapAttribute on getter/setter so we need to check for this
+		// but only if no Export is already found on property level.
+		if (export is null) {
+			wpmi = new WrapPropMemberInformation (pi);
+			has_inner_wrap_attribute = wpmi.HasWrapOnGetter || wpmi.HasWrapOnSetter;
+
+			// Wrap can only be used either at property level or getter/setter level at a given time.
+			if (wrap_method != null && has_inner_wrap_attribute)
+				throw new BindingException (1063, true, $"The 'WrapAttribute' can only be used at the property or at getter/setter level at a given time. Property: '{pi.DeclaringType}.{pi.Name}'");
+		}
 	}
 
 	public string GetVisibility ()
@@ -2148,7 +2176,7 @@ public partial class Generator : IMemberGatherer {
 		marshal_types.Add (new MarshalType (TypeManager.Selector, create: "Selector.FromHandle ("));
 		marshal_types.Add (new MarshalType (TypeManager.BlockLiteral, "BlockLiteral", "{0}", "THIS_IS_BROKEN"));
 		if (TypeManager.MusicSequence != null)
-			marshal_types.Add (new MarshalType (TypeManager.MusicSequence, create: "global::XamCore.AudioToolbox.MusicSequence.Lookup ("));
+			marshal_types.Add (new MarshalType (TypeManager.MusicSequence, create: "global::AudioToolbox.MusicSequence.Lookup ("));
 		marshal_types.Add (TypeManager.CGColor);
 		marshal_types.Add (TypeManager.CGPath);
 		marshal_types.Add (TypeManager.CGGradient);
@@ -2264,7 +2292,10 @@ public partial class Generator : IMemberGatherer {
 
 					if (AttributeManager.HasAttribute<CoreImageFilterPropertyAttribute> (pi))
 						continue;
-					
+
+					if (AttributeManager.HasAttribute<WrapAttribute> (pi.GetGetMethod ()) || AttributeManager.HasAttribute<WrapAttribute> (pi.GetSetMethod ()))
+						continue;
+
 					throw new BindingException (1018, true, "No [Export] attribute on property {0}.{1}", t.FullName, pi.Name);
 				}
 				if (AttributeManager.HasAttribute<StaticAttribute> (pi))
@@ -2559,6 +2590,7 @@ public partial class Generator : IMemberGatherer {
 			print ("{0} invoker;", ti.DelegateName);
 			print ("");
 			print ("[Preserve (Conditional=true)]");
+			print_generated_code ();
 			print ("public unsafe {0} (BlockLiteral *block)", ti.NativeInvokerName);
 			print ("{"); indent++;
 			print ("blockPtr = _Block_copy ((IntPtr) block);", ns.CoreObjCRuntime);
@@ -2566,12 +2598,14 @@ public partial class Generator : IMemberGatherer {
 			indent--; print ("}");
 			print ("");
 			print ("[Preserve (Conditional=true)]");
+			print_generated_code ();
 			print ("~{0} ()", ti.NativeInvokerName);
 			print ("{"); indent++;
 			print ("_Block_release (blockPtr);", ns.CoreObjCRuntime);
 			indent--; print ("}");
 			print ("");
 			print ("[Preserve (Conditional=true)]");
+			print_generated_code ();
 			print ("public unsafe static {0} Create (IntPtr block)\n{{", ti.UserDelegate); indent++;
 			print ("if (block == IntPtr.Zero)"); indent++;
 			print ("return null;"); indent--;
@@ -2586,6 +2620,7 @@ public partial class Generator : IMemberGatherer {
 			var string_pars = new StringBuilder ();
 			MakeSignatureFromParameterInfo (false, string_pars, mi, declaringType: null, parameters: parameters);
 			print ("[Preserve (Conditional=true)]");
+			print_generated_code ();
 			print ("unsafe {0} Invoke ({1})", FormatType (null, mi.ReturnType), string_pars.ToString ());
 			print ("{"); indent++;
 			string cast_a = "", cast_b = "";
@@ -3931,11 +3966,12 @@ public partial class Generator : IMemberGatherer {
 					var et = pi.ParameterType.GetElementType ();
 					var nullable = TypeManager.GetUnderlyingNullableType (et);
 					if (nullable != null) {
-						convs.Append ("var converted = IntPtr.Zero;");
-						convs.Append ("if (value.HasValue) {");
-						convs.Append ("\tvar v = value.Value;");
-						convs.Append ("\tconverted = new IntPtr (&v);");
-						convs.Append ("}");
+						convs.Append ("var converted = IntPtr.Zero;\n");
+						convs.Append ($"var v = default ({FormatType (mi.DeclaringType, nullable)});\n");
+						convs.Append ("if (value.HasValue) {\n");
+						convs.Append ("\tv = value.Value;\n");
+						convs.Append ("\tconverted = new IntPtr (&v);\n");
+						convs.Append ("}\n");
 					}
 				}
 			}
@@ -4648,6 +4684,39 @@ public partial class Generator : IMemberGatherer {
 			indent--;
 			print ("}\n");
 			return;			
+		} else if (minfo.has_inner_wrap_attribute) {
+			// If property getter or setter has its own WrapAttribute we let the user do whatever their heart desires
+			if (pi.CanRead) {
+				PrintAttributes (pi, platform: true);
+				PrintAttributes (pi.GetGetMethod (), platform: true, preserve: true, advice: true);
+				print ("get {");
+				indent++;
+
+				print ($"return {minfo.wpmi.WrapGetter};");
+
+				indent--;
+				print ("}");
+			}
+			if (pi.CanWrite) {
+				var setter = pi.GetSetMethod ();
+				var not_implemented_attr = AttributeManager.GetCustomAttribute<NotImplementedAttribute> (setter);
+
+				PrintAttributes (pi, platform: true);
+				PrintAttributes (setter, platform: true, preserve: true, advice: true, notImplemented: true);
+				print ("set {");
+				indent++;
+
+				if (not_implemented_attr != null)
+					print ("throw new NotImplementedException ({0});", not_implemented_attr.Message == null ? "" : $@"""{not_implemented_attr.Message}""");
+				else
+					print ($"{minfo.wpmi.WrapSetter};");
+
+				indent--;
+				print ("}");
+			}
+			indent--;
+			print ("}\n");
+			return;
 		}
 
 		if (pi.CanRead){

@@ -8,13 +8,13 @@
 // Copyright 2011, 2015 Xamarin Inc.
 //
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 #if !WATCH && !MONOMAC
-using XamCore.CoreSpotlight;
+using CoreSpotlight;
 #endif
 
-namespace XamCore.CoreData
+namespace CoreData
 {
 	[StrongDictionary ("UserInfoKeys")]
 	interface UserInfo {
@@ -57,7 +57,7 @@ namespace XamCore.CoreData
 	[Deprecated (PlatformName.iOS, 10, 0, message : "Please see the release notes and Core Data documentation.")]
 	[Mac (10, 9)]
 	[Deprecated (PlatformName.MacOSX, 10, 12, message : "Please see the release notes and Core Data documentation.")]
-	public enum NSPersistentStoreUbiquitousTransitionType : nuint_compat_int {
+	public enum NSPersistentStoreUbiquitousTransitionType : ulong {
 		AccountAdded = 1,
 		AccountRemoved,
 		ContentRemoved,
@@ -65,7 +65,7 @@ namespace XamCore.CoreData
 	}
 
 	[Native]
-	public enum NSSnapshotEventType : nuint_compat_int {
+	public enum NSSnapshotEventType : ulong {
 		UndoInsertion = 1 << 1,
 		UndoDeletion = 1 << 2,
 		UndoUpdate = 1 << 3,
@@ -1047,10 +1047,10 @@ namespace XamCore.CoreData
 		IntPtr Constructor (NSManagedObjectContextConcurrencyType ct);
 
 		[Export ("performBlock:")]
-		void Perform (/* non null */ NSAction action);
+		void Perform (/* non null */ Action action);
 
 		[Export ("performBlockAndWait:")]
-		void PerformAndWait (/* non null */ NSAction action);
+		void PerformAndWait (/* non null */ Action action);
 
 		[Export ("userInfo", ArgumentSemantic.Strong)]
 		NSMutableDictionary UserInfo { get; }

@@ -24,10 +24,10 @@
 //
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVPixelAspectRatio {

@@ -33,10 +33,10 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 
-using XamCore.Foundation;
-using XamCore.AVFoundation;
+using Foundation;
+using AVFoundation;
 
-namespace XamCore.ReplayKit {
+namespace ReplayKit {
 	public partial class RPBroadcastConfiguration {
 		public AVVideoCodecSettings VideoCompressionProperties {
 			get {

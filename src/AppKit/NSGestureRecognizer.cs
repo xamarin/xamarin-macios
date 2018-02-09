@@ -8,10 +8,10 @@
 //
 using System;
 using System.Collections;
-using XamCore.Foundation; 
-using XamCore.ObjCRuntime;
+using Foundation; 
+using ObjCRuntime;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 	public partial class NSGestureRecognizer {
 		object recognizers;
 		static Selector tsel = new Selector ("target");
@@ -21,7 +21,7 @@ namespace XamCore.AppKit {
 		public static Selector ParametrizedSelector = new Selector ("target:");
 #endif
 
-		public NSGestureRecognizer (NSAction action) : this (tsel, new ParameterlessDispatch (action))
+		public NSGestureRecognizer (Action action) : this (tsel, new ParameterlessDispatch (action))
 		{
 		}
 
@@ -46,9 +46,9 @@ namespace XamCore.AppKit {
 		[Register ("__NSGestureRecognizerParameterlessToken")]
 		[Preserve (Conditional = true)]
 		public class ParameterlessDispatch : Token {
-			NSAction action;
+			Action action;
 
-			internal ParameterlessDispatch (NSAction action)
+			internal ParameterlessDispatch (Action action)
 			{
 				this.action = action;
 			}
@@ -81,7 +81,7 @@ namespace XamCore.AppKit {
 	}
 
 	public partial class NSClickGestureRecognizer : NSGestureRecognizer {
-		public NSClickGestureRecognizer (NSAction action) : base (action) {}
+		public NSClickGestureRecognizer (Action action) : base (action) {}
 		public NSClickGestureRecognizer (Action<NSClickGestureRecognizer> action) : base (NSGestureRecognizer.ParametrizedSelector, new Callback (action)) {}
 
 		[Register ("__NSClickGestureRecognizer")]
@@ -104,7 +104,7 @@ namespace XamCore.AppKit {
 	}
 
 	public partial class NSMagnificationGestureRecognizer : NSGestureRecognizer {
-		public NSMagnificationGestureRecognizer (NSAction action) : base (action) {}
+		public NSMagnificationGestureRecognizer (Action action) : base (action) {}
 		public NSMagnificationGestureRecognizer (Action<NSMagnificationGestureRecognizer> action) : base (NSGestureRecognizer.ParametrizedSelector, new Callback (action)) {}
 
 		[Register ("__NSMagnificationGestureRecognizer")]
@@ -127,7 +127,7 @@ namespace XamCore.AppKit {
 	}
 
 	public partial class NSPanGestureRecognizer : NSGestureRecognizer {
-		public NSPanGestureRecognizer (NSAction action) : base (action) {}
+		public NSPanGestureRecognizer (Action action) : base (action) {}
 		public NSPanGestureRecognizer (Action<NSPanGestureRecognizer> action) : base (NSGestureRecognizer.ParametrizedSelector, new Callback (action)) {}
 
 		[Register ("__NSPanGestureRecognizer")]
@@ -150,7 +150,7 @@ namespace XamCore.AppKit {
 	}
 
 	public partial class NSPressGestureRecognizer : NSGestureRecognizer {
-		public NSPressGestureRecognizer (NSAction action) : base (action) {}
+		public NSPressGestureRecognizer (Action action) : base (action) {}
 		public NSPressGestureRecognizer (Action<NSPressGestureRecognizer> action) : base (NSGestureRecognizer.ParametrizedSelector, new Callback (action)) {}
 
 		[Register ("__NSPressGestureRecognizer")]
@@ -173,7 +173,7 @@ namespace XamCore.AppKit {
 	}
 
 	public partial class NSRotationGestureRecognizer : NSGestureRecognizer {
-		public NSRotationGestureRecognizer (NSAction action) : base (action) {}
+		public NSRotationGestureRecognizer (Action action) : base (action) {}
 		public NSRotationGestureRecognizer (Action<NSRotationGestureRecognizer> action) : base (NSGestureRecognizer.ParametrizedSelector, new Callback (action)) {}
 
 		[Register ("__NSRotationGestureRecognizer")]

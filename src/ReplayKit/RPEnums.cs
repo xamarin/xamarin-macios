@@ -5,17 +5,17 @@
 //
 
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.UIKit;
+using ObjCRuntime;
+using Foundation;
+using UIKit;
 
-namespace XamCore.ReplayKit {
+namespace ReplayKit {
 
 	[iOS (9,0)]
 	[TV (10,0)]
 	[Native]
 	[ErrorDomain ("RPRecordingErrorDomain")]
-	public enum RPRecordingError : nint {
+	public enum RPRecordingError : long {
 		None = 0,
 		Unknown = -5800,
 		UserDeclined = -5801,
@@ -46,7 +46,7 @@ namespace XamCore.ReplayKit {
 	[NoiOS]
 	[TV (10,0)]
 	[Native]
-	public enum RPPreviewViewControllerMode : nint {
+	public enum RPPreviewViewControllerMode : long {
 		Preview,
 		Share
 	}
@@ -54,7 +54,7 @@ namespace XamCore.ReplayKit {
 	[Native]
 	[iOS (10,0)]
 	[TV (10,0)]
-	public enum RPSampleBufferType : nint {
+	public enum RPSampleBufferType : long {
 		Video = 1,
 		AudioApp,
 		AudioMic
@@ -63,7 +63,7 @@ namespace XamCore.ReplayKit {
 	[Native]
 	[iOS (11,0)]
 	[NoTV]
-	public enum RPCameraPosition : nint {
+	public enum RPCameraPosition : long {
 		Front = 1,
 		Back,
 	}

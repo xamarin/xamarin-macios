@@ -3,10 +3,10 @@
 #if IOS
 
 using System;
-using XamCore.CoreGraphics;
-using XamCore.ObjCRuntime;
+using CoreGraphics;
+using ObjCRuntime;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 
 	public partial class UIPopoverPresentationController {
 

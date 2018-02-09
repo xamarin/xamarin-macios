@@ -8,10 +8,10 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.ObjCRuntime;
-using XamCore.UIKit;
+using ObjCRuntime;
+using UIKit;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	public unsafe partial class NSFileManager {
 		
 		public static NSError SetSkipBackupAttribute (string filename, bool skipBackup)

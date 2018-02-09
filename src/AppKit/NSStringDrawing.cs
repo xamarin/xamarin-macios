@@ -1,9 +1,9 @@
 using System;
-using XamCore.AppKit;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
+using AppKit;
+using Foundation;
+using CoreGraphics;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 	// Manual bindings, easier than make the generator support extension methods on non-NSObject-derived types (string in this case).
 	public unsafe static partial class NSStringDrawing  {
 		public static void DrawAtPoint (this string This, CGPoint point, NSDictionary attributes)

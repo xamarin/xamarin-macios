@@ -7,10 +7,10 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.OpenGLES {
+namespace OpenGLES {
 	public static class EAGLDrawableProperty {
 		public static readonly NSString ColorFormat;
 		public static readonly NSString RetainedBacking;

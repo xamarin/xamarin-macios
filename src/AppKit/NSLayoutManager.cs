@@ -1,10 +1,10 @@
 // Copyright 2015 Xamarin, Inc.
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 	partial class NSLayoutManager {
 #if !XAMCORE_2_0
 		public uint GlyphAtIndex (nint glyphIndex, ref bool isValidIndex)

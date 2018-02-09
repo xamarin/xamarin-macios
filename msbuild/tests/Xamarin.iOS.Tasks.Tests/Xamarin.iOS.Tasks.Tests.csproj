@@ -100,6 +100,9 @@
       <Link>StringUtils.cs</Link>
     </Compile>
     <Compile Include="ProjectsTests\Bug60536.cs" />
+    <Compile Include="..\..\..\tests\common\Profile.cs">
+      <Link>Profile.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

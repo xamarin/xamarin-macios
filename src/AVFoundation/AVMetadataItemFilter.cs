@@ -23,13 +23,13 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 
 	public partial class AVMetadataItemFilter {
 #if !XAMCORE_2_0
@@ -40,9 +40,9 @@ namespace XamCore.AVFoundation {
 		public AVMetadataItemFilter () : base (NSObjectFlag.Empty)
 		{
 			if (IsDirectBinding) {
-				Handle = XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSend (this.Handle, Selector.GetHandle ("init"));
+				Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSend (this.Handle, Selector.GetHandle ("init"));
 			} else {
-				Handle = XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper (this.SuperHandle, Selector.GetHandle ("init"));
+				Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper (this.SuperHandle, Selector.GetHandle ("init"));
 			}
 		}
 #endif

@@ -31,12 +31,12 @@
 
 using System;
 #if !MONOMAC
-using XamCore.UIKit;
+using UIKit;
 #endif
 
-using XamCore.CoreText;
+using CoreText;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	public partial class NSMutableAttributedString {
 

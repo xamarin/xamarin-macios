@@ -35,11 +35,11 @@
 #if !MONOMAC
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.UIKit;
+using Foundation;
+using ObjCRuntime;
+using UIKit;
 
-namespace XamCore.GameKit {
+namespace GameKit {
 	public partial class GKScore {
 
 		// Before iOS7 `initWithCategory:` must be used (it's the only way to create GKScore)

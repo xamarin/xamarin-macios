@@ -22,9 +22,9 @@
 //
 
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.CoreImage {
+namespace CoreImage {
 
 	// convenience enum for values used with kCGImagePropertyOrientation (key) as NSNumber
 	// values are part of the header file (CGImageProperties.h) as comments (not constants or fields)
@@ -78,7 +78,7 @@ namespace XamCore.CoreImage {
 	[Mac (10,13)]
 	[TV (11,0)]
 	[Native]
-	public enum CIQRCodeErrorCorrectionLevel : nint {
+	public enum CIQRCodeErrorCorrectionLevel : long {
 		L = 76,
 		M = 77,
 		Q = 81,
@@ -89,7 +89,7 @@ namespace XamCore.CoreImage {
 	[Mac (10,13)]
 	[TV (11,0)]
 	[Native]
-	public enum CIDataMatrixCodeEccVersion : nint {
+	public enum CIDataMatrixCodeEccVersion : long {
 		V000 = 0,
 		V050 = 50,
 		V080 = 80,
@@ -102,7 +102,7 @@ namespace XamCore.CoreImage {
 	[Mac (10,13)]
 	[TV (11,0)]
 	[Native]
-	public enum CIRenderDestinationAlphaMode : nuint {
+	public enum CIRenderDestinationAlphaMode : ulong {
 		None = 0,
 		Premultiplied = 1,
 		Unpremultiplied = 2,

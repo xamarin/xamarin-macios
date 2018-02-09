@@ -10,23 +10,23 @@
 //
 
 #if !WATCH && !MONOMAC
-using XamCore.AddressBook;
+using AddressBook;
 #endif
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
-using XamCore.CoreLocation;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
+using CoreLocation;
 #if XAMCORE_2_0
-using XamCore.MapKit;
+using MapKit;
 #endif
 using System;
 #if MONOMAC
-using XamCore.AppKit;
+using AppKit;
 #else
-using XamCore.UIKit;
+using UIKit;
 #endif
 
-namespace XamCore.EventKit {
+namespace EventKit {
 
 	[Mac (10,8, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]

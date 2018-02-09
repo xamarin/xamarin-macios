@@ -16,7 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Xamarin.Utils;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
 namespace Xamarin.Bundler {
 	public partial class Driver {
@@ -138,6 +138,7 @@ namespace Xamarin.Bundler {
 #if MONOTOUCH
 					"    inline-runtime-arch: By default always enabled (requires the linker). Inlines calls to ObjCRuntime.Runtime.Arch to load a constant value. Makes the app smaller, and slightly faster at runtime.\n" +
 #endif
+					"    blockliteral-setupblock: By default enabled when using the static registrar. Optimizes calls to BlockLiteral.SetupBlock to avoid having to calculate the block signature at runtime.\n" +
 					"    inline-intptr-size: By default enabled for builds that target a single architecture (requires the linker). Inlines calls to IntPtr.Size to load a constant value. Makes the app smaller, and slightly faster at runtime.\n",
 					(v) => {
 						app.Optimizations.Parse (v);

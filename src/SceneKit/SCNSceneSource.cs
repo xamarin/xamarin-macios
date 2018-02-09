@@ -10,10 +10,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.SceneKit
+namespace SceneKit
 {
 	public partial class SCNSceneSource {
 

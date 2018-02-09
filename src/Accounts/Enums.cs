@@ -1,7 +1,7 @@
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Accounts {
+namespace Accounts {
 
 	// untyped enum -> ACError.h
 	[ErrorDomain ("ACErrorDomain")]
@@ -41,7 +41,7 @@ namespace XamCore.Accounts {
 
 	// NSInteger -> ACAccountStore.h
 	[Native]
-	public enum ACAccountCredentialRenewResult : nint {
+	public enum ACAccountCredentialRenewResult : long {
 		Renewed, Rejected, Failed
 	}
 }

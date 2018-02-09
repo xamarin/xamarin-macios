@@ -9,7 +9,7 @@ using Mono.Cecil.Cil;
 
 using Xamarin.Utils;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
 #if MONOTOUCH
 using PlatformException = Xamarin.Bundler.MonoTouchException;
@@ -538,7 +538,7 @@ namespace Xamarin.Bundler {
 #if MONOTOUCH
 			BuildTarget = BuildTarget.Simulator;
 #endif
-			var registrar = new XamCore.Registrar.StaticRegistrar (this);
+			var registrar = new Registrar.StaticRegistrar (this);
 			if (RootAssemblies.Count == 1)
 				registrar.GenerateSingleAssembly (resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m, Path.GetFileNameWithoutExtension (RootAssembly));
 			else

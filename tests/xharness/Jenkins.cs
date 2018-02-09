@@ -186,8 +186,10 @@ namespace xharness
 
 		IEnumerable<T> CreateTestVariations<T> (IEnumerable<T> tests, Func<XBuildTask, T, T> creator) where T: RunTestTask
 		{
-			foreach (var task in tests)
-				task.Variation = "Debug";
+			foreach (var task in tests) {
+				if (string.IsNullOrEmpty (task.Variation))
+					task.Variation = "Debug";
+			}
 
 			var rv = new List<T> (tests);
 			foreach (var task in tests.ToArray ()) {
@@ -248,17 +250,28 @@ namespace xharness
 					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsTvOSProject (), TestPlatform.tvOS, ignored || !IncludetvOS));
 				if (!project.SkipwatchOSVariation)
 					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsWatchOSProject (), TestPlatform.watchOS, ignored || !IncludewatchOS));
-				foreach (var pair in ps) {
-					var derived = new XBuildTask () {
-						Jenkins = this,
-						ProjectConfiguration = "Debug",
-						ProjectPlatform = "iPhoneSimulator",
-						Platform = pair.Item2,
-						Ignored = pair.Item3,
-						TestName = project.Name,
-					};
-					derived.CloneTestProject (pair.Item1);
-					runSimulatorTasks.AddRange (CreateRunSimulatorTaskAsync (derived));
+				
+				var configurations = project.Configurations;
+				if (configurations == null)
+					configurations = new string [] { "Debug" };
+				foreach (var config in configurations) {
+					foreach (var pair in ps) {
+						var derived = new XBuildTask () {
+							Jenkins = this,
+							ProjectConfiguration = config,
+							ProjectPlatform = "iPhoneSimulator",
+							Platform = pair.Item2,
+							Ignored = pair.Item3,
+							TestName = project.Name,
+						};
+						derived.CloneTestProject (pair.Item1);
+						var simTasks = CreateRunSimulatorTaskAsync (derived);
+						runSimulatorTasks.AddRange (simTasks);
+						if (configurations.Length > 1) {
+							foreach (var task in simTasks)
+								task.Variation = config;
+						}
+					}
 				}
 			}
 
@@ -585,12 +598,13 @@ namespace xharness
 					if (project.GenerateVariations) {
 						build = new MdtoolTask ();
 						build.Platform = TestPlatform.Mac_Classic;
+						build.TestProject = project;
 					} else {
 						build = new XBuildTask ();
 						build.Platform = TestPlatform.Mac;
+						build.CloneTestProject (project);
 					}
 					build.Jenkins = this;
-					build.TestProject = project;
 					build.SolutionPath = project.SolutionPath;
 					build.ProjectConfiguration = config;
 					build.ProjectPlatform = project.Platform;
@@ -620,11 +634,11 @@ namespace xharness
 					Tasks.Add (exec);
 
 					if (project.GenerateVariations) {
-						Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_Unified, "-unified", ignored));
-						Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_Unified32, "-unified-32", ignored));
+						Tasks.Add (CloneExecuteTask (exec, project, TestPlatform.Mac_Unified, "-unified", ignored));
+						Tasks.Add (CloneExecuteTask (exec, project, TestPlatform.Mac_Unified32, "-unified-32", ignored));
 						if (project.GenerateFull) {
-							Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_UnifiedXM45, "-unifiedXM45", ignored));
-							Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_UnifiedXM45_32, "-unifiedXM45-32", ignored));
+							Tasks.Add (CloneExecuteTask (exec, project, TestPlatform.Mac_UnifiedXM45, "-unifiedXM45", ignored));
+							Tasks.Add (CloneExecuteTask (exec, project, TestPlatform.Mac_UnifiedXM45_32, "-unifiedXM45-32", ignored));
 						}
 					}
 				}
@@ -718,18 +732,19 @@ namespace xharness
 			Tasks.AddRange (CreateRunDeviceTasks ());
 		}
 
-		RunTestTask CloneExecuteTask (RunTestTask task, TestPlatform platform, string suffix, bool ignore)
+		RunTestTask CloneExecuteTask (RunTestTask task, TestProject original_project, TestPlatform platform, string suffix, bool ignore)
 		{
 			var build = new XBuildTask ()
 			{
 				Platform = platform,
 				Jenkins = task.Jenkins,
-				TestProject = new TestProject (Path.ChangeExtension (AddSuffixToPath (task.ProjectFile, suffix), "csproj")),
 				ProjectConfiguration = task.ProjectConfiguration,
 				ProjectPlatform = task.ProjectPlatform,
 				SpecifyPlatform = task.BuildTask.SpecifyPlatform,
 				SpecifyConfiguration = task.BuildTask.SpecifyConfiguration,
 			};
+			var tp = new TestProject (Path.ChangeExtension (AddSuffixToPath (original_project.Path, suffix), "csproj"));
+			build.CloneTestProject (tp);
 
 			var macExec = task as MacExecuteTask;
 			if (macExec != null) {
@@ -2781,8 +2796,10 @@ function oninitialload ()
 						var xml = Logs.CreateFile ($"test-{Platform}-{Timestamp}.xml", "NUnit results");
 						proc.StartInfo.Arguments = $"-result={StringUtils.Quote (xml)}";
 					}
+					proc.StartInfo.EnvironmentVariables ["MONO_DEBUG"] = "no-gdb-backtrace";
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
 					var log = Logs.Create ($"execute-{Platform}-{Timestamp}.txt", "Execution log");
+					log.Timestamp = true;
 					log.WriteLine ("{0} {1}", proc.StartInfo.FileName, proc.StartInfo.Arguments);
 					if (!Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;
@@ -2790,10 +2807,11 @@ function oninitialload ()
 						var snapshot = new CrashReportSnapshot () { Device = false, Harness = Harness, Log = log, Logs = Logs, LogDirectory = LogDirectory };
 						await snapshot.StartCaptureAsync ();
 
+						ProcessExecutionResult result = null;
 						try {
 							var timeout = TimeSpan.FromMinutes (20);
 
-							var result = await proc.RunAsync (log, true, timeout);
+							result = await proc.RunAsync (log, true, timeout);
 							if (result.TimedOut) {
 								FailureMessage = $"Execution timed out after {timeout.TotalSeconds} seconds.";
 								log.WriteLine (FailureMessage);
@@ -2806,7 +2824,7 @@ function oninitialload ()
 								log.WriteLine (FailureMessage);
 							}
 						} finally {
-							await snapshot.EndCaptureAsync (TimeSpan.FromSeconds (Succeeded ? 0 : 5));
+							await snapshot.EndCaptureAsync (TimeSpan.FromSeconds (Succeeded ? 0 : (result?.ExitCode > 1 ? 120 : 5)));
 						}
 					}
 					Jenkins.MainLog.WriteLine ("Executed {0} ({1})", TestName, Mode);
@@ -3256,6 +3274,7 @@ function oninitialload ()
 				Target = AppRunnerTarget,
 				LogDirectory = LogDirectory,
 				MainLog = Logs.Create ($"run-{Device.UDID}-{Timestamp}.log", "Run log"),
+				Configuration = ProjectConfiguration,
 			};
 			runner.Simulators = Simulators;
 			runner.Initialize ();

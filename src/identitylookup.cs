@@ -9,14 +9,14 @@
 
 #if XAMCORE_2_0
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.IdentityLookup {
+namespace IdentityLookup {
 
 	[iOS (11,0)]
 	[Native]
-	public enum ILMessageFilterAction : nint {
+	public enum ILMessageFilterAction : long {
 		None = 0,
 		Allow = 1,
 		Filter = 2,
@@ -25,7 +25,7 @@ namespace XamCore.IdentityLookup {
 	[iOS (11,0)]
 	[ErrorDomain ("ILMessageFilterErrorDomain")]
 	[Native]
-	public enum ILMessageFilterError : nint {
+	public enum ILMessageFilterError : long {
 		System = 1,
 		InvalidNetworkUrl = 2,
 		NetworkUrlUnauthorized = 3,
