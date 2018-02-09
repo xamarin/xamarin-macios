@@ -343,6 +343,7 @@ namespace XamCore.ImageKit {
 		NSString PlaceHolderLayer { get; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'NSCollectionView' instead.")]
 	[BaseType (typeof (NSView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (IKImageBrowserDelegate)})]
 	interface IKImageBrowserView {
 		//@category IKImageBrowserView (IKMainMethods)
