@@ -184,7 +184,7 @@ namespace XamCore.Security {
 	}
 
 	[Static][Internal]
-	interface SecAuthenticationTypeKey {
+	interface KeysAuthenticationType {
 		[Field ("kSecAttrAuthenticationTypeNTLM")]
 		IntPtr NTLM { get; }
 
@@ -211,7 +211,7 @@ namespace XamCore.Security {
 	}
 
 	[Static][Internal]
-	interface SecProtocolKey {
+	interface SecProtocolKeys {
 		[Field ("kSecAttrProtocolFTP")]
 		IntPtr FTP { get; }
 
@@ -307,7 +307,7 @@ namespace XamCore.Security {
 	}
 
 	[Static][Internal]
-	interface SecAccessibleKey {
+	interface KeysAccessible {
 		[Mac (10,9)]
 		[Field ("kSecAttrAccessibleWhenUnlocked")]
 		IntPtr WhenUnlocked { get; }
@@ -338,8 +338,7 @@ namespace XamCore.Security {
 		IntPtr WhenPasscodeSetThisDeviceOnly { get; }
 	}
 
-	[Static]
-	[EditorBrowsable (EditorBrowsableState.Advanced)]
+	[Static][Internal]
 	interface SecAttributeKey {
 		[Mac (10,9)]
 		[Field ("kSecAttrAccessible")]
