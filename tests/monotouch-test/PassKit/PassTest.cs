@@ -38,7 +38,7 @@ namespace MonoTouchFixtures.PassKit {
 				Assert.NotNull (pass.Icon, "Icon");
 #endif
 				Assert.Null (pass.LocalizedDescription, "LocalizedDescription");
-				Assert.That (pass.LocalizedName, Is.EqualTo ("Coupon"), "LocalizedName");
+				Assert.That (string.IsNullOrEmpty (pass.LocalizedName), Is.False, "LocalizedName");
 				Assert.Null (pass.OrganizationName, "OrganizationName");
 				Assert.Null (pass.PassTypeIdentifier, "PassTypeIdentifier");
 				Assert.Null (pass.PassUrl, "PassUrl");
@@ -71,8 +71,8 @@ namespace MonoTouchFixtures.PassKit {
 #endif
 
 				// need to ensure it's english locale
-				Assert.That (pass.LocalizedDescription, Is.EqualTo ("Skyport Boarding Pass"), "LocalizedDescription");
-				Assert.That (pass.LocalizedName, Is.EqualTo ("Boarding Pass"), "LocalizedName");
+				Assert.That (string.IsNullOrEmpty (pass.LocalizedDescription), Is.False, "LocalizedName");
+				Assert.That (string.IsNullOrEmpty (pass.LocalizedName), Is.False, "LocalizedName");
 
 				Assert.That (pass.OrganizationName, Is.EqualTo ("Skyport Airways"), "OrganizationName");
 				Assert.That (pass.PassTypeIdentifier, Is.EqualTo ("pass.com.apple.devpubs.example"), "PassTypeIdentifier");
