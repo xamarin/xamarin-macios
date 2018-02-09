@@ -419,6 +419,31 @@ namespace XamCore.StoreKit {
 		void LoadProduct (StoreProductParameters parameters, [NullAllowed] Action<bool,NSError> callback);
 	}
 
+	[iOS (6,0), NoMac]
+	[StrongDictionary ("SKStoreProductParameterKey")]
+	interface StoreProductParameters {
+
+		[iOS (11,3), TV (11,3)]
+		[Export ("AdNetworkAttributionSignature")]
+		string AdNetworkAttributionSignature { get; set; }
+
+		[iOS (11,3), TV (11,3)]
+		[Export ("AdNetworkCampaignIdentifier")]
+		uint AdNetworkCampaignIdentifier { get; set; }
+
+		[iOS (11,3), TV (11,3)]
+		[Export ("AdNetworkIdentifier")]
+		string AdNetworkIdentifier { get; set; }
+
+		[iOS (11,3), TV (11,3)]
+		[Export ("AdNetworkNonce")]
+		NSUuid AdNetworkNonce { get; set; }
+
+		[iOS (11,3), TV (11,3)]
+		[Export ("AdNetworkTimestamp")]
+		uint AdNetworkTimestamp { get; set; }
+	}
+
 	[Since (6,0)]
 	[Static]
 	interface SKStoreProductParameterKey
@@ -446,6 +471,26 @@ namespace XamCore.StoreKit {
 		[TV (9,2)]
 		[Field ("SKStoreProductParameterAdvertisingPartnerToken")]
 		NSString AdvertisingPartnerToken { get; }
+
+		[iOS (11,3), TV (11,3), NoMac]
+		[Field ("SKStoreProductParameterAdNetworkAttributionSignature")]
+		NSString AdNetworkAttributionSignature { get; }
+
+		[iOS (11,3), TV (11,3), NoMac]
+		[Field ("SKStoreProductParameterAdNetworkCampaignIdentifier")]
+		NSString AdNetworkCampaignIdentifier { get; }
+
+		[iOS (11,3), TV (11,3), NoMac]
+		[Field ("SKStoreProductParameterAdNetworkIdentifier")]
+		NSString AdNetworkIdentifier { get; }
+
+		[iOS (11,3), TV (11,3), NoMac]
+		[Field ("SKStoreProductParameterAdNetworkNonce")]
+		NSString AdNetworkNonce { get; }
+
+		[iOS (11,3), TV (11,3), NoMac]
+		[Field ("SKStoreProductParameterAdNetworkTimestamp")]
+		NSString AdNetworkTimestamp { get; }
 	}
 
 	[NoTV]
@@ -673,5 +718,15 @@ namespace XamCore.StoreKit {
 
 		[Export ("paymentMode")]
 		SKProductDiscountPaymentMode PaymentMode { get; }
+	}
+
+	[iOS (11,3), TV (11,3), NoMac]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SKAdNetwork {
+
+		[Static]
+		[Export ("registerAppForAdNetworkAttribution")]
+		void RegisterAppForAdNetworkAttribution ();
 	}
 }

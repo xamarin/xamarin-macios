@@ -1,6 +1,0 @@
-!missing-field! SKStoreProductParameterAdNetworkAttributionSignature not bound
-!missing-field! SKStoreProductParameterAdNetworkCampaignIdentifier not bound
-!missing-field! SKStoreProductParameterAdNetworkIdentifier not bound
-!missing-field! SKStoreProductParameterAdNetworkNonce not bound
-!missing-field! SKStoreProductParameterAdNetworkTimestamp not bound
-!missing-type! SKAdNetwork not bound
