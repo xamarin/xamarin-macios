@@ -32,8 +32,8 @@ function show_help ()
 
 ORIGINAL_ARGS=("$@")
 while ! test -z $1; do
-    case $1 in
-    	--help|-?|-h)
+	case $1 in
+		--help|-?|-h)
 			show_help
 			exit 0
 			;;
@@ -61,7 +61,7 @@ while ! test -z $1; do
 			echo "Unknown argument: $1"
 			exit 1
 			;;
-    esac
+	esac
 done
 
 if test -z $BASE_HASH; then
