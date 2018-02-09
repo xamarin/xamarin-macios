@@ -50,7 +50,10 @@ xamarin_timezone_get_data (const char *name, int *size)
 		tz = [[[NSTimeZone alloc] initWithName:n] autorelease];
 		[n release];
 	} else {
-		tz = [NSTimeZone localTimeZone];
+		/* according to the documentation, `localTimeZone` always points to the
+		 * current time zone (therefore acts as a proxy object), but
+		 * `defaultTimeZone` gives us rather a copy of the current time zone. */
+		tz = [NSTimeZone defaultTimeZone];
 	}
 	NSData *data = [tz data];
 	*size = [data length];
