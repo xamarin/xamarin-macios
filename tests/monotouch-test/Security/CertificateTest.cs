@@ -610,7 +610,8 @@ namespace MonoTouchFixtures.Security {
 			Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, -1, null, out _, out _), Is.EqualTo (SecStatusCode.Param), "Mac - GenerateKeyPair - Param issue, invalid RSA key size");
 			Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, 1024, null, out _, out _), Is.EqualTo (SecStatusCode.Success), "Mac - GenerateKeyPair - Null optional params, success");
 #else
-			Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, 1024, att, att, out public_key, out private_key), Is.EqualTo (SecStatusCode.Success), "iOS - GenerateKeyPair");
+			Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, 1024, att, out public_key, out private_key), Is.EqualTo (SecStatusCode.Success), "iOS - GenerateKeyPair - Shared API");
+			Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, 1024, att, att, out public_key, out private_key), Is.EqualTo (SecStatusCode.Success), "iOS - GenerateKeyPair - iOS Only API");
 			Assert.Throws<ArgumentException> (() => { SecKey.GenerateKeyPair (SecKeyType.Invalid, -1, null, null, out _, out _);  }, "iOS - GenerateKeyPair - Invalid");
 			Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, -1, null, null, out _, out _), Is.EqualTo (SecStatusCode.Param), "iOS - GenerateKeyPair - Param issue, invalid RSA key size");
 			Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, 1024, null, null, out _, out _), Is.EqualTo (SecStatusCode.Success), "iOS - GenerateKeyPair - Null optional params, success");

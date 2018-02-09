@@ -97,6 +97,7 @@ namespace Introspection
 			"Ats",	// App Transport Security
 			"Attrib",
 			"Attributevalue",
+			"Attrs", // Attributes (used by Apple for keys)
 			"Audiofile",
 			"Automapping",
 			"Automounted",
