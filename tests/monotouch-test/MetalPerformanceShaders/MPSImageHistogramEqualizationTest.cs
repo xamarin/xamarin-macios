@@ -33,7 +33,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders
 
 			device = MTLDevice.SystemDefault;
 			// some older hardware won't have a default
-			if (device == null)
+			if (device == null || !MPSKernel.Supports (device))
 				Assert.Inconclusive ("Metal is not supported");
 		}
 
@@ -42,6 +42,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders
 		{
 			MPSImageHistogramInfo info = new MPSImageHistogramInfo ();
 			info.NumberOfHistogramEntries = 256;
+
 			using (var obj = new MPSImageHistogramEqualization (MTLDevice.SystemDefault, ref info)) {
 				var rv = obj.HistogramInfo;
 				Asserts.AreEqual (info, rv, "HistogramForAlpha");
