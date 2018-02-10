@@ -4,10 +4,10 @@ BASE_HASH=
 COMP_HASH=HEAD
 WORKING_DIR=
 
-WHITE=$(tput setaf 7)
-BLUE=$(tput setaf 6)
-RED=$(tput setaf 9)
-CLEAR=$(tput sgr0)
+WHITE=$(tput setaf 7 2>/dev/null || true)
+BLUE=$(tput setaf 6 2>/dev/null || true)
+RED=$(tput setaf 9 2>/dev/null || true)
+CLEAR=$(tput sgr0 2>/dev/null || true)
 
 # Clone files on High Sierra, instead of copying them. Much faster.
 
