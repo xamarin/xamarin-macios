@@ -135,6 +135,7 @@ namespace Registrar {
 			public TType Type;
 			public ObjCType BaseType;
 			public ObjCType [] Protocols;
+			public string [] AdoptedProtocols;
 			public bool IsModel;
 			// if this type represents an ObjC protocol (!= has the protocol attribute, since that can be applied to all kinds of things).
 			public bool IsProtocol;
@@ -1028,6 +1029,7 @@ namespace Registrar {
 		protected abstract TType GetProtocolAttributeWrapperType (TType type); // Return null if no attribute is found. Do not consider base types.
 		protected abstract BindAsAttribute GetBindAsAttribute (TMethod method, int parameter_index); // If parameter_index = -1 then get the attribute for the return type. Return null if no attribute is found. Must consider base method.
 		protected abstract BindAsAttribute GetBindAsAttribute (TProperty property);
+		protected abstract IList<AdoptsAttribute> GetAdoptsAttributes (TType type);
 		public abstract TType GetNullableType (TType type); // For T? returns T. For T returns null.
 		protected abstract bool HasReleaseAttribute (TMethod method); // Returns true of the method's return type/value has a [Release] attribute.
 		protected abstract bool IsINativeObject (TType type);
@@ -1640,6 +1642,17 @@ namespace Registrar {
 			return protocolList.ToArray ();
 		}
 
+		string [] GetAdoptedProtocols (ObjCType type)
+		{
+			var attribs = GetAdoptsAttributes (type.Type);
+			if (attribs == null || attribs.Count == 0)
+				return null;
+			var rv = new string [attribs.Count];
+			for (var i = 0; i < attribs.Count; i++)
+				rv [i] = attribs [i].ProtocolType;
+			return rv;
+		}
+
 		ObjCType RegisterCategory (TType type, CategoryAttribute attrib, ref List<Exception> exceptions)
 		{
 			if (IsINativeObject (type)) {
@@ -1823,6 +1836,7 @@ namespace Registrar {
 			};
 			objcType.VerifyRegisterAttribute (ref exceptions);
 			objcType.Protocols = GetProtocols (objcType, ref exceptions);
+			objcType.AdoptedProtocols = GetAdoptedProtocols (objcType);
 			objcType.BaseType = isProtocol ? null : (baseObjCType ?? objcType);
 			objcType.IsWrapper = (isProtocol && !isInformalProtocol) ? (GetProtocolAttributeWrapperType (objcType.Type) != null) : (objcType.RegisterAttribute != null && objcType.RegisterAttribute.IsWrapper);
 

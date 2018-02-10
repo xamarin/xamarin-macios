@@ -1602,6 +1602,28 @@ namespace Registrar {
 			return null;
 		}
 
+		protected override IList<AdoptsAttribute> GetAdoptsAttributes (TypeReference type)
+		{
+			var attributes = GetCustomAttributes (type.Resolve (), ObjCRuntime, "AdoptsAttribute");
+			if (attributes == null || !attributes.Any ())
+				return null;
+			
+			var rv = new List<AdoptsAttribute> ();
+			foreach (var ca in attributes) {
+				var attrib = new AdoptsAttribute ();
+				switch (ca.ConstructorArguments.Count) {
+				case 1:
+					attrib.ProtocolType = (string) ca.ConstructorArguments [0].Value;
+					break;
+				default:
+					throw ErrorHelper.CreateError (4124, "Invalid AdoptsAttribute found on '{0}': expected 1 constructor arguments, got {1}. Please file a bug report at https://bugzilla.xamarin.com", type.FullName, 1, ca.ConstructorArguments.Count);
+				}
+				rv.Add (attrib);
+			}
+
+			return rv;
+		}
+
 		protected override BindAsAttribute GetBindAsAttribute (PropertyDefinition property)
 		{
 			if (property == null)
@@ -2650,6 +2672,15 @@ namespace Registrar {
 							any_protocols = true;
 							iface.Append (tp.Protocols [p].ProtocolName);
 							CheckNamespace (tp.Protocols [p], exceptions);
+						}
+					}
+					if (App.Optimizations.RegisterProtocols == true && tp.AdoptedProtocols != null) {
+						for (int p = 0; p < tp.AdoptedProtocols.Length; p++) {
+							if (tp.AdoptedProtocols [p] == "UIAppearance")
+								continue; // This is not a real protocol
+							iface.Append (any_protocols ? ", " : "<");
+							any_protocols = true;
+							iface.Append (tp.AdoptedProtocols [p]);
 						}
 					}
 					tp = tp.BaseType;
@@ -4496,5 +4527,10 @@ namespace Registrar {
 		public string Name { get; set; }
 		public bool IsWrapper { get; set; }
 		public bool SkipRegistration { get; set; }
+	}
+
+	class AdoptsAttribute : Attribute
+	{
+		public string ProtocolType { get; set; }
 	}
 }

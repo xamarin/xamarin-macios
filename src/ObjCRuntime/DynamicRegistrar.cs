@@ -378,6 +378,11 @@ namespace Registrar {
 			return attr == null ? null : attr.WrapperType;
 		}
 
+		protected override IList<AdoptsAttribute> GetAdoptsAttributes (Type type)
+		{
+			return (AdoptsAttribute[]) type.GetCustomAttributes (typeof (AdoptsAttribute), false);
+		}
+
 		protected override string GetAssemblyName (Assembly assembly)
 		{
 			return assembly.GetName ().Name;
