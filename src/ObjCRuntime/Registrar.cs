@@ -143,6 +143,8 @@ namespace Registrar {
 			public bool IsGeneric;
 #if !MTOUCH && !MMP
 			public IntPtr Handle;
+#else
+			public TType ProtocolWrapperType;
 #endif
 
 			public Dictionary<string, ObjCField> Fields;
@@ -1838,6 +1840,9 @@ namespace Registrar {
 			objcType.Protocols = GetProtocols (objcType, ref exceptions);
 			objcType.AdoptedProtocols = GetAdoptedProtocols (objcType);
 			objcType.BaseType = isProtocol ? null : (baseObjCType ?? objcType);
+#if MMP || MTOUCH
+			objcType.ProtocolWrapperType = (isProtocol && !isInformalProtocol) ? GetProtocolAttributeWrapperType (objcType.Type) : null;
+#endif
 			objcType.IsWrapper = (isProtocol && !isInformalProtocol) ? (GetProtocolAttributeWrapperType (objcType.Type) != null) : (objcType.RegisterAttribute != null && objcType.RegisterAttribute.IsWrapper);
 
 			if (!objcType.IsWrapper && objcType.BaseType != null)

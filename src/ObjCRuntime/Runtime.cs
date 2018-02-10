@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 using Foundation;
@@ -51,16 +52,20 @@ namespace ObjCRuntime {
 
 		internal static DynamicRegistrar Registrar;
 
+		const uint INVALID_TOKEN_REF = 0xFFFFFFFF;
+
 		internal unsafe struct MTRegistrationMap {
 			public IntPtr assembly;
 			public MTClassMap *map;
 			public IntPtr full_token_references; /* array of MTFullTokenReference */
 			public MTManagedClassMap* skipped_map;
+			public MTProtocolWrapperMap* protocol_wrapper_map;
 			public int assembly_count;
 			public int map_count;
 			public int custom_type_count;
 			public int full_token_reference_count;
 			public int skipped_map_count;
+			public int protocol_wrapper_count;
 		}
 
 		[StructLayout (LayoutKind.Sequential, Pack = 1)]
@@ -74,6 +79,12 @@ namespace ObjCRuntime {
 		{
 			public uint skipped_reference; // implied token type: TypeDef
 			public uint index; // index into MTRegistrationMap.map
+		}
+
+		[StructLayout (LayoutKind.Sequential, Pack = 1)]
+		internal struct MTProtocolWrapperMap {
+			public uint protocol_token;
+			public uint wrapper_token;
 		}
 
 		/* Keep Delegates, Trampolines and InitializationOptions in sync with monotouch-glue.m */
@@ -1315,6 +1326,17 @@ namespace ObjCRuntime {
 			if (type == null || !type.IsInterface)
 				return null;
 
+			// Check if the static registrar knows about this protocol
+			unsafe {
+				var map = options->RegistrationMap;
+				if (map != null) {
+					var token = Class.GetTokenReference (type);
+					var wrapper_token = xamarin_find_protocol_wrapper_type (token);
+					if (wrapper_token != INVALID_TOKEN_REF)
+						return (Type) Class.ResolveTokenReference (wrapper_token, 0x02000000 /* TypeDef */);
+				}
+			}
+
 			// need to look up the type from the ProtocolAttribute.
 			var a = type.GetCustomAttributes (typeof (Foundation.ProtocolAttribute), false);
 
@@ -1325,6 +1347,9 @@ namespace ObjCRuntime {
 					type.FullName);
 			return attr.WrapperType;
 		}
+
+		[DllImport ("__Internal")]
+		extern static uint xamarin_find_protocol_wrapper_type (uint token_ref);
 
 		public static IntPtr GetProtocol (string protocol)
 		{

@@ -1282,7 +1282,7 @@ namespace Registrar {
 					rv.Name = (string) prop.Argument.Value;
 					break;
 				case "WrapperType":
-					rv.WrapperType = (TypeDefinition) prop.Argument.Value;
+					rv.WrapperType = ((TypeReference) prop.Argument.Value).Resolve ();
 					break;
 				case "IsInformal":
 					rv.IsInformal = (bool) prop.Argument.Value;
@@ -2510,6 +2510,7 @@ namespace Registrar {
 			var map_init = new AutoIndentStringBuilder ();
 			var map_dict = new Dictionary<ObjCType, int> (); // maps ObjCType to its index in the map
 			var map_entries = 0;
+			var protocol_wrapper_map = new Dictionary<uint, Tuple<ObjCType, uint>> ();
 
 			var i = 0;
 			
@@ -2582,11 +2583,13 @@ namespace Registrar {
 
 				skip.Clear ();
 
+				uint token_ref = uint.MaxValue;
 				if (!@class.IsProtocol && !@class.IsCategory) {
 					if (!isPlatformType)
 						customTypeCount++;
 					
 					CheckNamespace (@class, exceptions);
+					token_ref = CreateTokenReference (@class.Type, TokenType.TypeDef);
 					map.AppendLine ("{{ NULL, 0x{1:X} /* #{3} '{0}' => '{2}' */ }},", 
 									@class.ExportedName,
 									CreateTokenReference (@class.Type, TokenType.TypeDef), 
@@ -2625,6 +2628,12 @@ namespace Registrar {
 					map_init.AppendLine ("__xamarin_class_map [{1}].handle = {0};", get_class, i++);
 				}
 
+
+				if (@class.IsProtocol && @class.ProtocolWrapperType != null) {
+					if (token_ref == uint.MaxValue)
+						token_ref = CreateTokenReference (@class.Type, TokenType.TypeDef);
+					protocol_wrapper_map.Add (token_ref, new Tuple<ObjCType, uint> (@class, CreateTokenReference (@class.ProtocolWrapperType, TokenType.TypeDef)));
+				}
 				if (@class.IsWrapper && isPlatformType)
 					continue;
 
@@ -2880,16 +2889,28 @@ namespace Registrar {
 				map.AppendLine ();
 			}
 
+			if (protocol_wrapper_map.Count > 0) {
+				var ordered = protocol_wrapper_map.OrderBy ((v) => v.Key);
+				map.AppendLine ("static const MTProtocolWrapperMap __xamarin_protocol_wrapper_map [] = {");
+				foreach (var p in ordered) {
+					map.AppendLine ("{{ 0x{0:X} /* {1} */, 0x{2:X} /* {3} */ }},", p.Key, p.Value.Item1.Name, p.Value.Item2, p.Value.Item1.ProtocolWrapperType.Name);
+				}
+				map.AppendLine ("};");
+				map.AppendLine ();
+			}
+
 			map.AppendLine ("static struct MTRegistrationMap __xamarin_registration_map = {");
 			map.AppendLine ("__xamarin_registration_assemblies,");
 			map.AppendLine ("__xamarin_class_map,");
 			map.AppendLine (full_token_reference_count == 0 ? "NULL," : "__xamarin_token_references,");
 			map.AppendLine (skipped_types.Count == 0 ? "NULL," : "__xamarin_skipped_map,");
+			map.AppendLine (protocol_wrapper_map.Count == 0 ? "NULL," : "__xamarin_protocol_wrapper_map,");
 			map.AppendLine ("{0},", count);
 			map.AppendLine ("{0},", i);
 			map.AppendLine ("{0},", customTypeCount);
 			map.AppendLine ("{0},", full_token_reference_count);
-			map.AppendLine ("{0}", skipped_types.Count);
+			map.AppendLine ("{0},", skipped_types.Count);
+			map.AppendLine ("{0}", protocol_wrapper_map.Count);
 			map.AppendLine ("};");
 
 

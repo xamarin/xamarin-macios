@@ -1213,6 +1213,28 @@ print_callback (const char *string, mono_bool is_stdout)
 	PRINT ("%s", string);
 }
 
+static int
+xamarin_compare_ints (const void *a, const void *b)
+{
+	uint32_t x = *(uint32_t *) a;
+	uint32_t y = *(uint32_t *) b;
+	return x < y ? -1 : (x == y ? 0 : 1);
+}
+
+uint32_t
+xamarin_find_protocol_wrapper_type (uint32_t token_ref)
+{
+	if (options.RegistrationData == NULL || options.RegistrationData->protocol_wrappers == NULL)
+		return INVALID_TOKEN_REF;
+
+	void* ptr = bsearch (&token_ref, options.RegistrationData->protocol_wrappers, options.RegistrationData->protocol_wrapper_count, sizeof (MTProtocolWrapperMap), xamarin_compare_ints);
+	if (ptr == NULL)
+		return INVALID_TOKEN_REF;
+
+	MTProtocolWrapperMap *entry = (MTProtocolWrapperMap *) ptr;
+	return entry->wrapper_token;
+}
+
 void
 xamarin_initialize_embedded ()
 {

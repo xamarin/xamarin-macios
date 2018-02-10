@@ -77,6 +77,11 @@ typedef struct __attribute__((packed)) {
 	uint32_t /* index into MTRegistrationMap->map */ index;
 } MTManagedClassMap;
 
+typedef struct __attribute__((packed)) {
+	uint32_t protocol_token;
+	uint32_t wrapper_token;
+} MTProtocolWrapperMap;
+
 struct MTRegistrationMap;
 
 struct MTRegistrationMap {
@@ -93,11 +98,13 @@ struct MTRegistrationMap {
 	// ObjC class, but this is not a constant known at compile time, which
 	// means it can't be stored in read-only memory).
 	const MTManagedClassMap *skipped_map;
+	const MTProtocolWrapperMap *protocol_wrappers; // array of MTProtocolWrapperMap, sorted ascending by protocol_token
 	int assembly_count;
 	int map_count;
 	int custom_type_count;
 	int full_token_reference_count;
 	int skipped_map_count;
+	int protocol_wrapper_count;
 };
 
 typedef struct {
@@ -181,6 +188,7 @@ void			xamarin_ftnptr_exception_handler (guint32 gchandle);
 void			xamarin_create_classes ();
 const char *	xamarin_skip_encoding_flags (const char *encoding);
 void			xamarin_add_registration_map (struct MTRegistrationMap *map);
+uint32_t		xamarin_find_protocol_wrapper_type (uint32_t token_ref);
 
 bool			xamarin_has_managed_ref (id self);
 bool			xamarin_has_managed_ref_safe (id self);

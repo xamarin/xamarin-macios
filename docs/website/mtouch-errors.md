@@ -2377,3 +2377,6 @@ This indicates a bug in Xamarin.iOS. Please file a bug at [http://bugzilla.xamar
 
 This indicates a bug in Xamarin.iOS. Please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
 
+### <a name="MT8025"/>MT8025: Failed to compute the token reference for the type '{type.AssemblyQualifiedName}' because {reasons}
+
+This indicates a bug in Xamarin.iOS. Please file a bug at [https://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
