@@ -16,6 +16,7 @@ namespace Xamarin.Bundler
 			"", // dummy value to make indices match up between XM and XI
 #endif
 			"blockliteral-setupblock",
+			"register-protocols",
 		};
 
 		bool? [] values;
@@ -45,6 +46,10 @@ namespace Xamarin.Bundler
 		public bool? OptimizeBlockLiteralSetupBlock {
 			get { return values [5]; }
 			set { values [5] = value; }
+		}
+		public bool? RegisterProtocols {
+			get { return values [6]; }
+			set { values [6] = value; }
 		}
 
 		public Optimizations ()
@@ -96,6 +101,17 @@ namespace Xamarin.Bundler
 			// We try to optimize calls to BlockLiteral.SetupBlock if the static registrar is enabled
 			if (!OptimizeBlockLiteralSetupBlock.HasValue)
 				OptimizeBlockLiteralSetupBlock = app.Registrar == RegistrarMode.Static;
+
+			// We will register protocols if the static registrar is enabled
+			if (!RegisterProtocols.HasValue) {
+#if MONOTOUCH
+				RegisterProtocols = app.Registrar == RegistrarMode.Static;
+#else
+				RegisterProtocols = false;
+#endif
+			} else if (app.Registrar != RegistrarMode.Static && RegisterProtocols == true) {
+				RegisterProtocols = false; // we've already shown a warning for this.
+			}
 
 			if (Driver.Verbosity > 3)
 				Driver.Log (4, "Enabled optimizations: {0}", string.Join (", ", values.Select ((v, idx) => v == true ? opt_names [idx] : string.Empty).Where ((v) => !string.IsNullOrEmpty (v))));
