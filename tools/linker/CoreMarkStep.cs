@@ -9,6 +9,8 @@ using Mono.Cecil.Cil;
 using Mono.Linker;
 using Mono.Tuner;
 
+using Registrar;
+
 namespace Xamarin.Linker.Steps {
 
 	// Generated backend fields inside <product>.dll are also removed if only used (i.e. set to null)
@@ -18,6 +20,10 @@ namespace Xamarin.Linker.Steps {
 		readonly List<MethodDefinition> dispose_methods = new List<MethodDefinition> ();
 
 		protected string ProductAssembly { get; private set; }
+
+		bool RegisterProtocols {
+			get { return LinkContext.App.Optimizations.RegisterProtocols == true; }
+		}
 
 		public override void Process (LinkContext context)
 		{
@@ -148,7 +154,17 @@ namespace Xamarin.Linker.Steps {
 		protected override TypeDefinition MarkType (TypeReference reference)
 		{
 			try {
-				return base.MarkType (reference);
+				var td = base.MarkType (reference);
+
+				// We're removing the Protocol attribute, which points to its wrapper type.
+				// But we need the wrapper type if the protocol interface is marked, so manually mark it.
+				if (td != null && td.IsInterface) {
+					var proto = LinkContext.StaticRegistrar.GetProtocolAttribute (td);
+					if (proto?.WrapperType != null)
+						MarkType (proto.WrapperType);
+				}
+
+				return td;
 			} catch (Exception e) {
 				// we need a way to know where (not just what) went wrong (e.g. debugging symbols being incorrect)
 				e.Data ["TypeReference"] = reference.ToString ();
@@ -212,9 +228,49 @@ namespace Xamarin.Linker.Steps {
 			var method = base.MarkMethod (reference);
 			if (method == null)
 				return null;
+			
+			var t = method.DeclaringType;
+
+			// We have special processing that prevents protocol interfaces from being marked if they're
+			// only used by being implemented by a class, but the linker will not mark interfaces if a method implemented by an interface
+			// is marked: this means we need special processing to preserve a protocol interface whose methods have been implemented.
+			if (RegisterProtocols && t.HasInterfaces && method.IsVirtual) {
+				foreach (var r in t.Interfaces) {
+					var i = r.InterfaceType.Resolve ();
+					if (i == null)
+						continue;
+					if (Annotations.IsMarked (i))
+						continue;
+					if (!i.HasCustomAttribute (Namespaces.Foundation, "ProtocolAttribute"))
+						continue;
+
+					var isProtocolImplementation = false;
+					// Are there any explicit overrides?
+					foreach (var @override in method.Overrides) {
+						if (!i.Methods.Contains (@override.Resolve ()))
+							continue;
+						isProtocolImplementation = true;
+						break;
+					}
+					if (!isProtocolImplementation) {
+						// Are there any implicit overrides (identical name and signature)?
+						foreach (var imethod in i.Methods) {
+							if (!StaticRegistrar.MethodMatch (imethod, method))
+								continue;
+							isProtocolImplementation = true;
+							break;
+						}
+						
+					}
+					if (isProtocolImplementation) {
+						MarkType (r.InterfaceType);
+						Bundler.Driver.Log (9, "Marking {0} because the method {1} implements one of its methods.", r.InterfaceType, method.FullName);
+					}
+				}
+			}
+
 			// special processing to find [BlockProxy] attributes in _Extensions types
 			// ref: https://bugzilla.xamarin.com/show_bug.cgi?id=23540
-			var t = method.DeclaringType;
 			if (method.HasCustomAttributes && t.HasInterfaces) {
 				string selector = null;
 				foreach (var r in t.Interfaces) {
@@ -277,6 +333,38 @@ namespace Xamarin.Linker.Steps {
 				}
 			}
 			return method;
+		}
+
+		protected override void MarkInterfaceImplementation (TypeDefinition type, InterfaceImplementation iface)
+		{
+			if (RegisterProtocols) {
+				// If we're registering protocols, we can remove interfaces that represent protocols.
+				// The linker will automatically mark interfaces a class implements, but we have to
+				// override the linker behavior for interfaces that represent protocols for those 
+				// interfaces to be removed.
+				var mark = false;
+				var interfaceType = iface.InterfaceType.Resolve ();
+
+				var isProtocol = type.IsNSObject (LinkContext) && interfaceType.HasCustomAttribute (LinkContext, Namespaces.Foundation, "ProtocolAttribute");
+
+				if (IgnoreScope (type.Scope)) {
+					// We're not linking the current assembly, which means the interface should be marked.
+					mark = true;
+				} else if (!isProtocol) {
+					// We only skip interfaces that represent protocols.
+					mark = true;
+				}
+
+				if (!mark) {
+					if (isProtocol)
+						LinkContext.StoreProtocolMethods (interfaceType);
+
+					return;
+				}
+			}
+
+
+			base.MarkInterfaceImplementation (type, iface);
 		}
 	}
 }

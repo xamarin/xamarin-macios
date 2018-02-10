@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 using Mono.Cecil;
 using Mono.Linker;
@@ -24,6 +25,15 @@ namespace Xamarin.Tuner
 		//   null = don't know, must check at runtime (can't inline)
 		//   true/false = corresponding constant value
 		Dictionary<TypeDefinition, bool?> isdirectbinding_value;
+
+		// Store interfaces the linker has linked away so that the static registrar can access them.
+		public Dictionary<TypeDefinition, List<TypeDefinition>> ProtocolImplementations { get; private set; } = new Dictionary<TypeDefinition, List<TypeDefinition>> ();
+
+		public Application App {
+			get {
+				return Target.App;
+			}
+		}
 
 		public HashSet<TypeDefinition> CachedIsNSObject {
 			get { return cached_isnsobject; }
@@ -107,6 +117,23 @@ namespace Xamarin.Tuner
 		public void StoreCustomAttribute (ICustomAttributeProvider provider, CustomAttribute attribute)
 		{
 			StoreCustomAttribute (provider, attribute, attribute.AttributeType.Name);
+		}
+
+		public void StoreProtocolMethods (TypeDefinition type)
+		{
+			var attribs = Annotations.GetCustomAnnotations ("ProtocolMethods");
+			object value;
+			if (!attribs.TryGetValue (type, out value))
+				attribs [type] = type.Methods.ToArray (); // Make a copy of the collection, since the linker may remove methods from it.
+		}
+
+		public IList<MethodDefinition> GetProtocolMethods (TypeDefinition type)
+		{
+			var attribs = Annotations.GetCustomAnnotations ("ProtocolMethods");
+			object value;
+			if (attribs.TryGetValue (type, out value))
+				return (MethodDefinition []) value;
+			return null;
 		}
 
 		class AttributeStorage : ICustomAttribute

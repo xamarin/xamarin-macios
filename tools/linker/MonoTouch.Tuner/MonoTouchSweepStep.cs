@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Mono.Cecil;
 using Mono.Tuner;
 using Xamarin.Linker;
+using Xamarin.Tuner;
 
 namespace MonoTouch.Tuner {
 	
@@ -13,6 +14,12 @@ namespace MonoTouch.Tuner {
 		public MonoTouchSweepStep (LinkerOptions options)
 			: base (options.LinkSymbols)
 		{
+		}
+
+		protected DerivedLinkContext LinkContext {
+			get {
+				return (DerivedLinkContext) base.Context;
+			}
 		}
 
 		protected override void SweepAssembly (AssemblyDefinition assembly)
@@ -49,6 +56,16 @@ namespace MonoTouch.Tuner {
 				if (!need_ivt)
 					attributes.RemoveAt (i--);
 			}
+		}
+
+		protected override void InterfaceRemoved (TypeDefinition type, InterfaceImplementation iface)
+		{
+			base.InterfaceRemoved (type, iface);
+
+			// The static registrar needs access to the interfaces for protocols, so keep them around.
+			if (!LinkContext.ProtocolImplementations.TryGetValue (type, out var list))
+				LinkContext.ProtocolImplementations [type] = list = new List<TypeDefinition> ();
+			list.Add (iface.InterfaceType.Resolve ());
 		}
 	}
 }

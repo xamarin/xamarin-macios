@@ -333,6 +333,12 @@ namespace Registrar {
 
 			iface_methods = new List<MethodDefinition> ();
 			foreach (var iface in ifaces) {
+				var storedMethods = LinkContext?.GetProtocolMethods (iface.Resolve ());
+				if (storedMethods?.Count > 0) {
+					foreach (var imethod in storedMethods)
+						if (!iface_methods.Contains (imethod))
+							iface_methods.Add (imethod);
+				}
 				if (!iface.HasMethods)
 					continue;
 
@@ -466,6 +472,21 @@ namespace Registrar {
 			return false;
 		}
 
+		static TypeDefinition ResolveType (TypeReference tr)
+		{
+			// The static registrar might sometimes deal with types that have been linked away
+			// It's not always possible to call .Resolve () on types that have been linked away,
+			// it might result in a NotSupportedException, so here we manually replicate some
+			// resolution logic to try to avoid those NotSupportedExceptions.
+			// The static registrar calls .Resolve () in a lot of places; we'll only call
+			// this method if there's an actual need.
+			if (tr is ArrayType arrayType) {
+				return arrayType.ElementType.Resolve ();
+			} else {
+				return tr.Resolve ();
+			}
+		}
+
 		public static bool IsNativeObject (TypeReference tr)
 		{
 			var gp = tr as GenericParameter;
@@ -479,7 +500,8 @@ namespace Registrar {
 				return false;
 			}
 
-			var type = tr.Resolve ();
+			var type = ResolveType (tr);
+
 			while (type != null) {
 				if (type.HasInterfaces) {
 					foreach (var iface in type.Interfaces)
@@ -1027,6 +1049,20 @@ namespace Registrar {
 			return rv;
 		}
 
+		protected override TypeReference [] GetLinkedAwayInterfaces (TypeReference type)
+		{
+			if (LinkContext == null)
+				return null;
+			
+			if (LinkContext.ProtocolImplementations.TryGetValue (type.Resolve (), out var linkedAwayInterfaces) != true)
+				return null;
+
+			if (linkedAwayInterfaces.Count == 0)
+				return null;
+
+			return linkedAwayInterfaces.ToArray ();
+		}
+
 		protected override TypeReference GetGenericTypeDefinition (TypeReference type)
 		{
 			var git = type as GenericInstanceType;
@@ -1124,7 +1160,7 @@ namespace Registrar {
 				}
 				return null;
 			}
-			var type = tr.Resolve ();
+			var type = ResolveType (tr);
 			if (type.BaseType == null)
 				return null;
 
@@ -1267,7 +1303,7 @@ namespace Registrar {
 			return CreateExportAttribute (GetBasePropertyInTypeHierarchy (property) ?? property);
 		}
 
-		protected override ProtocolAttribute GetProtocolAttribute (TypeReference type)
+		public override ProtocolAttribute GetProtocolAttribute (TypeReference type)
 		{
 			if (!TryGetAttribute (type.Resolve (), Foundation, StringConstants.ProtocolAttribute, out var attrib))
 				return null;
@@ -1868,6 +1904,11 @@ namespace Registrar {
 			} else {
 				return type.Namespace.StartsWith (CompatNamespace + ".", StringComparison.Ordinal);
 			}
+		}
+
+		static bool IsLinkedAway (TypeReference tr)
+		{
+			return tr.Module == null;
 		}
 
 		void CheckNamespace (ObjCType objctype,  List<Exception> exceptions)
@@ -2680,7 +2721,9 @@ namespace Registrar {
 							iface.Append (any_protocols ? ", " : "<");
 							any_protocols = true;
 							iface.Append (tp.Protocols [p].ProtocolName);
-							CheckNamespace (tp.Protocols [p], exceptions);
+							var proto = tp.Protocols [p].Type;
+							if (!IsLinkedAway (proto))
+								CheckNamespace (proto, exceptions);
 						}
 					}
 					if (App.Optimizations.RegisterProtocols == true && tp.AdoptedProtocols != null) {
