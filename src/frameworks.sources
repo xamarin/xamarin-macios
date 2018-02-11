@@ -1542,6 +1542,7 @@ SHARED_CORE_SOURCES = \
 	ObjCRuntime/PlatformAvailabilityShadow.cs \
 	ObjCRuntime/Protocol.cs \
 	ObjCRuntime/Registrar.core.cs \
+	ObjCRuntime/RequiresSuperAttribute.cs \
 	ObjCRuntime/Selector.cs \
 	Simd/MatrixDouble4x4.cs \
 	Simd/MatrixFloat2x2.cs \
@@ -1577,7 +1578,6 @@ SHARED_SOURCES = \
 	ObjCRuntime/Registrar.cs \
 	ObjCRuntime/ReleaseAttribute.cs \
 	ObjCRuntime/RequiredFrameworkAttribute.cs \
-	ObjCRuntime/RequiresSuperAttribute.cs \
 	ObjCRuntime/Runtime.cs \
 	ObjCRuntime/Runtime.iOS.cs \
 	ObjCRuntime/Runtime.mac.cs \
