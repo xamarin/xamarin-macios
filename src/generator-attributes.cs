@@ -684,6 +684,20 @@ public class DesignatedInitializerAttribute : Attribute {
 }
 
 //
+// Apple this attribute to ObjC types where the default `init` selector 
+// is decorated with `NS_DESIGNATED_INITIALIZER`
+//
+// The generator will produce a `[DesignatedInitializer]` when generating the
+// default constructor when `[DesignatedDefaultCtor]` is present on the type
+//
+[AttributeUsage (AttributeTargets.Interface)]
+public class DesignatedDefaultCtorAttribute : Attribute {
+	public DesignatedDefaultCtorAttribute ()
+	{
+	}
+}
+
+//
 // Apply this attribute to a method that you want an async version of a callback method.
 //
 // Use the ResultType or ResultTypeName attribute to describe any composite value to be by the Task object.
