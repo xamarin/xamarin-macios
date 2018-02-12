@@ -85,14 +85,22 @@ cd "$WORKING_DIR"
 cd $ROOT_DIR
 ROOT_DIR=$(pwd)
 
+# Only show colors locally. The normal "has-controlling-terminal" doesn't work, because
+# we always capture the output to indent it (thus the git processes never have a controlling
+# terminal)
+if test -z $BUILD_REVISION; then
+	GIT_COLOR=--color=always
+	GIT_COLOR_P="-c color.status=always"
+fi
+
 if [ -n "$(git status --porcelain --ignore-submodule)" ]; then
 	echo "${RED}Working directory isn't clean:${CLEAR}"
-	git -c color.status=always status --ignore-submodule | sed 's/^/    /'
+	git $GIT_COLOR_P status --ignore-submodule | sed 's/^/    /'
 	exit 1
 fi
 
 echo "Comparing the changes between $WHITE$BASE_HASH$CLEAR and $WHITE$COMP_HASH$CLEAR:"
-git log $BASE_HASH..$COMP_HASH --oneline --color=always | sed 's/^/    /'
+git log $BASE_HASH..$COMP_HASH --oneline $GIT_COLOR | sed 's/^/    /'
 
 # Resolve any treeish hash value (for instance HEAD^4) to the unique (MD5) hash
 COMP_HASH=$(git log -1 --pretty=%H $COMP_HASH)
