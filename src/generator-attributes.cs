@@ -856,8 +856,3 @@ public class DefaultEnumValueAttribute : Attribute {
 	{
 	}
 }
-
-// Hint that overriding the member requires a call to the base type
-[AttributeUsage (AttributeTargets.Method | AttributeTargets.Constructor, AllowMultiple=false)]
-public class RequiresSuperAttribute : Attribute {
-}

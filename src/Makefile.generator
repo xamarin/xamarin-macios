@@ -48,6 +48,7 @@ GENERATOR_ATTRIBUTE_SOURCES = \
 	$(TOP)/src/ObjCRuntime/PlatformAvailability2.cs \
 	$(TOP)/src/ObjCRuntime/PlatformAvailabilityShadow.cs \
 	$(TOP)/src/ObjCRuntime/Registrar.core.cs \
+	$(TOP)/src/ObjCRuntime/RequiresSuperAttribute.cs \
 
 IKVM_REFLECTION_FLAGS = -d:NO_AUTHENTICODE,STATIC,NO_SYMBOL_WRITER
 
