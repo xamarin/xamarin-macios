@@ -442,8 +442,8 @@ namespace xharness
 			var btouch_prefixes = new string [] {
 				"src/btouch.cs",
 				"src/generator.cs",
-				"src/generator-enums.cs",
-				"src/generator-filters.cs",
+				"src/generator-",
+				"src/Makefile.generator",
 				"tests/generator",
 				"tests/common",
 			};
