@@ -19,37 +19,50 @@ namespace Xamarin.Bundler
 			"register-protocols",
 		};
 
+		enum Opt
+		{
+			RemoveUIThreadChecks,
+			DeadCodeElimination,
+			InlineIsDirectBinding,
+			InlineIntPtrSize,
+			InlineRuntimeArch,
+			BlockLiteralSetupBlock,
+			RegisterProtocols,
+			InlineDynamicRegistrationSupported,
+			RemoveDynamicRegistrar,
+		}
+
 		bool? [] values;
 
 		public bool? RemoveUIThreadChecks {
-			get { return values [0]; }
-			set { values [0] = value; }
+			get { return values [(int) Opt.RemoveUIThreadChecks]; }
+			set { values [(int) Opt.RemoveUIThreadChecks] = value; }
 		}
 		public bool? DeadCodeElimination {
-			get { return values [1]; }
-			set { values [1] = value; }
+			get { return values [(int) Opt.DeadCodeElimination]; }
+			set { values [(int) Opt.DeadCodeElimination] = value; }
 		}
 		public bool? InlineIsDirectBinding {
-			get { return values [2]; }
-			set { values [2] = value; }
+			get { return values [(int) Opt.InlineIsDirectBinding]; }
+			set { values [(int) Opt.InlineIsDirectBinding] = value; }
 		}
 		public bool? InlineIntPtrSize {
-			get { return values [3]; }
-			set { values [3] = value; }
+			get { return values [(int) Opt.InlineIntPtrSize]; }
+			set { values [(int) Opt.InlineIntPtrSize] = value; }
 		}
 #if MONOTOUCH
 		public bool? InlineRuntimeArch {
-			get { return values [4]; }
-			set { values [4] = value; }
+			get { return values [(int) Opt.InlineRuntimeArch]; }
+			set { values [(int) Opt.InlineRuntimeArch] = value; }
 		}
 #endif
 		public bool? OptimizeBlockLiteralSetupBlock {
-			get { return values [5]; }
-			set { values [5] = value; }
+			get { return values [(int) Opt.BlockLiteralSetupBlock]; }
+			set { values [(int) Opt.BlockLiteralSetupBlock] = value; }
 		}
 		public bool? RegisterProtocols {
-			get { return values [6]; }
-			set { values [6] = value; }
+			get { return values [(int) Opt.RegisterProtocols]; }
+			set { values [(int) Opt.RegisterProtocols] = value; }
 		}
 
 		public Optimizations ()
@@ -63,8 +76,8 @@ namespace Xamarin.Bundler
 			for (int i = 0; i < values.Length; i++) {
 				if (!values [i].HasValue)
 					continue;
-				switch (i) {
-				case 6:
+				switch ((Opt) i) {
+				case Opt.RegisterProtocols:
 					if (app.Registrar != RegistrarMode.Static) {
 						ErrorHelper.Warning (2003, $"Option '--optimize={(values [i].Value ? "" : "-")}{opt_names [i]}' will be ignored since the static registrar is not enabled");
 						values [i] = false;
