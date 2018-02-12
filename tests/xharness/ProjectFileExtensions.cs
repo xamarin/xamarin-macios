@@ -749,6 +749,14 @@ namespace xharness
 				new string [] { "ObjcBindingNativeLibrary", "Include" },
 				new string [] { "ObjcBindingNativeFramework", "Include" },
 				new string [] { "Import", "Project" },
+				new string [] { "FilesToCopy", "Include" },
+				new string [] { "FilesToCopyFoo", "Include" },
+				new string [] { "FilesToCopyFooBar", "Include" },
+				new string [] { "FilesToCopyEncryptedXml", "Include" },
+				new string [] { "FilesToCopyCryptographyPkcs", "Include" },
+				new string [] { "FilesToCopyResources", "Include" },
+				new string [] { "FilesToCopyXMLFiles", "Include" },
+				new string [] { "FilesToCopyChannels", "Include" },
 			};
 			var nodes_with_variables = new string []
 			{
