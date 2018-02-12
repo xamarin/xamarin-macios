@@ -268,6 +268,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void TestAction ()
 		{
+			if (!Runtime.DynamicRegistrationSupported)
+				Assert.Ignore ("This test requires the dynamic registrar to be available.");
+
 			using (var obj = new RegistrarTestClass ()) {
 				var sel = new Selector ("testAction:");
 				var block = new BlockLiteral ();
@@ -1812,6 +1815,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void CustomAppDelegatePerformFetchTest ()
 		{
+			if (!Runtime.DynamicRegistrationSupported)
+				Assert.Ignore ("This test requires the dynamic registrar to be available.");
+
 			using (var obj = new CustomApplicationDelegate ()) {
 				BlockLiteral block = new BlockLiteral ();
 				var performed = false;
@@ -2567,9 +2573,13 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			var block = new BlockLiteral ();
 			var tramp = new DActionArity1V1 (SDActionArity1V1.Invoke);
 			Action<NSObject> del = (v) => { };
-			block.SetupBlock (tramp, del);
-			Assert.AreEqual ("v@:^v^v", GetBlockSignature (block), "a");
-			block.CleanupBlock ();
+			if (Runtime.DynamicRegistrationSupported) {
+				block.SetupBlock (tramp, del);
+				Assert.AreEqual ("v@:^v^v", GetBlockSignature (block), "a");
+				block.CleanupBlock ();
+			} else {
+				Assert.Throws<RuntimeException> (() => block.SetupBlock (tramp, del));
+			}
 		}
 
 		[Test]
@@ -2578,9 +2588,15 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			var block = new BlockLiteral ();
 			var tramp = new DActionArity1V2 (SDActionArity1V2.Invoke);
 			Action<NSObject> del = (v) => { };
-			block.SetupBlock (tramp, del);
-			Assert.AreEqual ("v@?@", GetBlockSignature (block), "a");
-			block.CleanupBlock ();
+			if (Runtime.DynamicRegistrationSupported) {
+				block.SetupBlock (tramp, del);
+				Assert.AreEqual ("v@?@", GetBlockSignature (block), "a");
+				block.CleanupBlock ();
+			} else {
+				// The linker is able to rewrite calls to BlockLiteral.SetupBlock to BlockLiteral.SetupBlockImpl (which works without the dynamic registrar),
+				// but that will only happen if the code is linked, and monotouch-test is only SdkLinked. Thus this code will throw an exception
+				Assert.Throws<RuntimeException> (() => block.SetupBlock (tramp, del));
+			}
 		}
 	}
 
