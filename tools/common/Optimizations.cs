@@ -17,6 +17,8 @@ namespace Xamarin.Bundler
 #endif
 			"blockliteral-setupblock",
 			"register-protocols",
+			"inline-dynamic-registration-supported",
+			"remove-dynamic-registrar",
 		};
 
 		enum Opt
@@ -64,6 +66,15 @@ namespace Xamarin.Bundler
 			get { return values [(int) Opt.RegisterProtocols]; }
 			set { values [(int) Opt.RegisterProtocols] = value; }
 		}
+		public bool? InlineDynamicRegistrationSupported {
+			get { return values [(int) Opt.InlineDynamicRegistrationSupported]; }
+			set { values [(int) Opt.InlineDynamicRegistrationSupported] = value; }
+		}
+
+		public bool? RemoveDynamicRegistrar {
+			get { return values [(int) Opt.RemoveDynamicRegistrar]; }
+			set { values [(int) Opt.RemoveDynamicRegistrar] = value; }
+		}
 
 		public Optimizations ()
 		{
@@ -78,6 +89,7 @@ namespace Xamarin.Bundler
 					continue;
 				switch ((Opt) i) {
 				case Opt.RegisterProtocols:
+				case Opt.RemoveDynamicRegistrar:
 					if (app.Registrar != RegistrarMode.Static) {
 						ErrorHelper.Warning (2003, $"Option '--optimize={(values [i].Value ? "" : "-")}{opt_names [i]}' will be ignored since the static registrar is not enabled");
 						values [i] = false;
@@ -141,6 +153,28 @@ namespace Xamarin.Bundler
 #endif
 			} else if (app.Registrar != RegistrarMode.Static && RegisterProtocols == true) {
 				RegisterProtocols = false; // we've already shown a warning for this.
+			}
+
+			// By default we always inline calls to Runtime.DynamicRegistrationSupported
+			if (!InlineDynamicRegistrationSupported.HasValue)
+				InlineDynamicRegistrationSupported = true;
+
+			if (!RemoveDynamicRegistrar.HasValue) {
+				if (InlineDynamicRegistrationSupported != true) {
+					// Can't remove the dynamic registrar unless also inlining Runtime.DynamicRegistrationSupported
+					RemoveDynamicRegistrar = false;
+				} else if (app.Registrar != RegistrarMode.Static || app.LinkMode == LinkMode.None) {
+					// Both the linker and the static registrar are also required
+					RemoveDynamicRegistrar = false;
+				} else {
+#if MONOTOUCH
+					// We don't have enough information yet to determine if we can remove the dynamic
+					// registrar or not, so let the value stay unset until we do know (when running the linker).
+#else
+					// By default disabled for XM apps
+					RemoveDynamicRegistrar = false;
+#endif
+				}
 			}
 
 			if (Driver.Verbosity > 3)

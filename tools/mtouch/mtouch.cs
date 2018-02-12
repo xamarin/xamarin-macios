@@ -669,6 +669,7 @@ namespace Xamarin.Bundler
 						sw.WriteLine ("\tsetenv (\"MONO_GC_PARAMS\", \"{0}\", 1);", app.MonoGCParams);
 					foreach (var kvp in app.EnvironmentVariables)
 						sw.WriteLine ("\tsetenv (\"{0}\", \"{1}\", 1);", kvp.Key.Replace ("\"", "\\\""), kvp.Value.Replace ("\"", "\\\""));
+					sw.WriteLine ("\txamarin_supports_dynamic_registration = {0};", app.DynamicRegistrationSupported ? "TRUE" : "FALSE");
 					sw.WriteLine ("}");
 					sw.WriteLine ();
 					sw.Write ("int ");

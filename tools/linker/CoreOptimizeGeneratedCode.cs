@@ -551,6 +551,15 @@ namespace Xamarin.Linker {
 				return;
 			}
 
+			if (!LinkContext.App.DynamicRegistrationSupported && method.Name == "get_DynamicRegistrationSupported" && method.DeclaringType.Is (Namespaces.ObjCRuntime, "Runtime")) {
+				// Rewrite to return 'false'
+				var instr = method.Body.Instructions;
+				instr.Clear ();
+				instr.Add (Instruction.Create (OpCodes.Ldc_I4_0));
+				instr.Add (Instruction.Create (OpCodes.Ret));
+				return; // nothing else to do here.
+			}
+
 			var instructions = method.Body.Instructions;
 			for (int i = 0; i < instructions.Count; i++) {
 				var ins = instructions [i];
@@ -580,6 +589,9 @@ namespace Xamarin.Linker {
 				break;
 			case "get_IsDirectBinding":
 				ProcessIsDirectBinding (caller, ins);
+				break;
+			case "get_DynamicRegistrationSupported":
+				ProcessIsDynamicSupported (caller, ins);
 				break;
 			case "SetupBlock":
 			case "SetupBlockUnsafe":
@@ -667,6 +679,26 @@ namespace Xamarin.Linker {
 			Nop (ins.Previous);
 			// call System.Boolean Foundation.NSObject::get_IsDirectBinding()
 			ins.OpCode = isdirectbinding_constant.Value ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0;
+			ins.Operand = null;
+		}
+
+		void ProcessIsDynamicSupported (MethodDefinition caller, Instruction ins)
+		{
+			const string operation = "inline Runtime.DynamicRegistrationSupported";
+
+			if (Optimizations.InlineDynamicRegistrationSupported != true)
+				return;
+
+			// Verify we're checking the right Runtime.IsDynamicSupported call
+			var mr = ins.Operand as MethodReference;
+			if (!mr.DeclaringType.Is (Namespaces.ObjCRuntime, "Runtime"))
+				return;
+
+			if (!ValidateInstruction (caller, ins, operation, Code.Call))
+				return;
+
+			// We're fine, inline the Runtime.IsDynamicSupported condition
+			ins.OpCode = LinkContext.App.DynamicRegistrationSupported ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0;
 			ins.Operand = null;
 		}
 

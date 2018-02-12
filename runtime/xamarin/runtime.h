@@ -18,6 +18,7 @@
 
 #include "main.h"
 #include "mono-runtime.h"
+#include "runtime-generated.h"
 
 #ifdef __cplusplus
 extern "C" {
