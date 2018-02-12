@@ -145,6 +145,7 @@ rm -Rf $OUTPUT_DIR
 # We will build in src/ setting DESTDIR to these destination directories, but the
 # build in src/ depends on a few files installed from builds/, so copy those files
 # from the normal destination directories.
+echo "${BLUE}Preparing temporary output directory...${CLEAR}"
 mkdir -p $OUTPUT_DIR/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono
 mkdir -p $OUTPUT_DIR/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/mono
 
@@ -161,8 +162,12 @@ done
 
 touch $OUTPUT_DIR/stamp
 
-echo "Current branch: ${WHITE}$CURRENT_BRANCH${CLEAR} ($(git log -1 --pretty=%h))"
-echo "${BLUE}Checking out ${WHITE}$BASE_HASH${CLEAR}...${CLEAR}"
+if test -z $CURRENT_BRANCH; then
+	echo "${BLUE}Current hash: ${WHITE}$(git log -1 --pretty="%h: %s")${BLUE} (detached)${CLEAR}"
+else
+	echo "${BLUE}Current branch: ${WHITE}$CURRENT_BRANCH${BLUE} (${WHITE}$(git log -1 --pretty="%h: %s")${BLUE})${CLEAR}"
+fi
+echo "${BLUE}Checking out ${WHITE}$(git log -1 --pretty="%h: %s" $BASE_HASH)${CLEAR}...${CLEAR}"
 git checkout --quiet --force --detach "$BASE_HASH"
 
 echo "${BLUE}Building src/...${CLEAR}"
