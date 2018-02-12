@@ -680,7 +680,11 @@ namespace XamCore.GameKit {
 	[Since (4,2)]
 	[MountainLion]
 	[BaseType (typeof (GKPlayer))]
-	interface GKLocalPlayer {
+	interface GKLocalPlayer
+#if !TVOS && !WATCH // from GKSavedGame category
+		: GKSavedGameListener
+#endif
+	{
 		[Export ("authenticated")]
 		bool Authenticated { [Bind ("isAuthenticated")] get;  }
 

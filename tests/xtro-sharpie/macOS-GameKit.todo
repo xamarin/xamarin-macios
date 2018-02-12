@@ -1,1 +1,0 @@
-!missing-protocol-conformance! GKLocalPlayer should conform to GKSavedGameListener (defined in 'GKSavedGame' category)
