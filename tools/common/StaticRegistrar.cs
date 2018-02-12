@@ -2846,15 +2846,17 @@ namespace Registrar {
 			map.AppendLine ("};");
 			map.AppendLine ();
 
-			map.AppendLine ("static struct MTFullTokenReference __xamarin_token_references [] = {");
-			map.AppendLine (full_token_references);
-			map.AppendLine ("};");
-			map.AppendLine ();
+			if (full_token_reference_count > 0) {
+				map.AppendLine ("static const struct MTFullTokenReference __xamarin_token_references [] = {");
+				map.AppendLine (full_token_references);
+				map.AppendLine ("};");
+				map.AppendLine ();
+			}
 
 			map.AppendLine ("static struct MTRegistrationMap __xamarin_registration_map = {");
 			map.AppendLine ("__xamarin_registration_assemblies,");
 			map.AppendLine ("__xamarin_class_map,");
-			map.AppendLine ("__xamarin_token_references,");
+			map.AppendLine (full_token_reference_count == 0 ? "NULL," : "__xamarin_token_references,");
 			map.AppendLine (skipped_types.Count == 0 ? "NULL," : "__xamarin_skipped_map,");
 			map.AppendLine ("{0},", count);
 			map.AppendLine ("{0},", i);
