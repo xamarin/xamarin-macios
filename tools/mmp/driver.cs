@@ -690,14 +690,9 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		static void Pack (IList<string> unprocessed)
+		public static void SelectRegistrar ()
 		{
-			string fx_dir = null;
-			string root_assembly = null;
-			var native_libs = new Dictionary<string, List<MethodDefinition>> ();
-
-			if (Registrar == RegistrarMode.Default)
-			{
+			if (Registrar == RegistrarMode.Default) {
 				if (!App.EnableDebug)
 					Registrar = RegistrarMode.Static;
 				else if (IsUnified && App.LinkMode == LinkMode.None && embed_mono && App.IsDefaultMarshalManagedExceptionMode && File.Exists (PartialStaticLibrary))
@@ -706,7 +701,14 @@ namespace Xamarin.Bundler {
 					Registrar = RegistrarMode.Dynamic;
 				Log (1, $"Defaulting registrar to '{Registrar}'");
 			}
-			
+		}
+
+		static void Pack (IList<string> unprocessed)
+		{
+			string fx_dir = null;
+			string root_assembly = null;
+			var native_libs = new Dictionary<string, List<MethodDefinition>> ();
+
 			if (no_executable) {
 				if (unprocessed.Count != 0) {
 					var exceptions = new List<Exception> ();
