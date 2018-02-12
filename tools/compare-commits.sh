@@ -13,7 +13,7 @@ CLEAR=$(tput sgr0 2>/dev/null || true)
 
 CP="cp"
 OSVERSION=${OSTYPE:6}
-if [[ $OSVERSION -lt 17 ]]; then
+if [[ $OSVERSION -ge 17 ]]; then
 	CP="cp -c"
 fi
 
