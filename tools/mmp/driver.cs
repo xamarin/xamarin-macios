@@ -1476,7 +1476,6 @@ namespace Xamarin.Bundler {
 
 			Mono.Linker.LinkContext context;
 			MonoMac.Tuner.Linker.Process (options, out context, out resolved_assemblies);
-			BuildTarget.LinkContext = (context as MonoMacLinkContext);
 
 			// Idealy, this would be handled by Linker.Process above. However in the non-linking case
 			// we do not run MobileMarkStep which generates the pinvoke list. Hack around this for now

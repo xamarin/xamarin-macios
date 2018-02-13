@@ -83,6 +83,7 @@ namespace MonoMac.Tuner {
 			context = CreateLinkContext (options, pipeline);
 			context.Resolver.AddSearchDirectory (options.OutputDirectory);
 			context.KeepTypeForwarderOnlyAssemblies = (Profile.Current is XamarinMacProfile);
+			options.Target.LinkContext = (context as MonoMacLinkContext);
 
 			try {
 				pipeline.Process (context);
