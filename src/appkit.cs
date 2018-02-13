@@ -8201,6 +8201,7 @@ namespace AppKit {
 		//NSFetchRequest DefaultFetchRequest { get; }
 	}
 
+	[ThreadSafe]
 	[BaseType (typeof (NSObject))]
 	interface NSOpenGLPixelFormat : NSCoding {
 		[Export ("initWithData:")]
@@ -8220,6 +8221,7 @@ namespace AppKit {
 		CGLPixelFormat CGLPixelFormat { get; }
 	}
 
+	[ThreadSafe]
 	[Availability (Deprecated = Platform.Mac_10_7)]
 	[BaseType (typeof (NSObject))]
 	interface NSOpenGLPixelBuffer {
@@ -8249,6 +8251,7 @@ namespace AppKit {
 		int TextureMaxMipMapLevel { get; } /* GLint = int32_t */
 	}
 
+	[ThreadSafe] // single thread - but not restricted to the main thread
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // warns with "invalid context" at runtime
 	interface NSOpenGLContext {
