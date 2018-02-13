@@ -27,6 +27,41 @@ namespace Xamarin
 #else
 		[TestCase (Profile.iOS)]
 #endif
+		public void RegisterProtocolOptimization (Profile profile)
+		{
+			using (var bundler = new BundlerTool ()) {
+				bundler.Profile = profile;
+				bundler.CreateTemporaryCacheDirectory ();
+				bundler.CreateTemporaryApp (profile);
+				bundler.Linker = LinkerOption.LinkAll;
+				bundler.Registrar = RegistrarOption.Static;
+				bundler.Optimize = new string [] { "register-protocols" };
+				bundler.AssertExecute ();
+				bundler.AssertWarningCount (0);
+
+				AssemblyDefinition ad = AssemblyDefinition.ReadAssembly (bundler.GetPlatformAssemblyInApp ());
+				var failures = new List<string> ();
+				foreach (var attrib in ad.MainModule.GetCustomAttributes ()) {
+					switch (attrib.AttributeType.Name) {
+					case "ProtocolAttribute":
+					case "ProtocolMemberAttribute":
+					case "AdoptsAttribute":
+						// Unfortunately the CustomAttribute doesn't know its owner, so we can't show that in the test failure message :(
+						failures.Add ($"Found an unexpected attribute: {attrib.AttributeType.FullName}");
+						break;
+					}
+				}
+				Assert.That (failures, Is.Empty, "all these attributes should have been linked away");
+			}
+		}
+
+
+		[Test]
+#if __MACOS__
+		[TestCase (Profile.macOSMobile)]
+#else
+		[TestCase (Profile.iOS)]
+#endif
 		public void MX2106 (Profile profile)
 		{
 			using (var bundler = new BundlerTool ()) {

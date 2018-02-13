@@ -63,5 +63,10 @@ namespace Xamarin
 			Directory.CreateDirectory (app);
 			RootAssembly = CompileTestAppExecutable (OutputPath, code, extraArg, profile, appName, extraCode, usings, use_csc);
 		}
+
+		public override string GetAppAssembliesDirectory()
+		{
+			return Path.Combine (OutputPath, ApplicationName + ".app", "Contents", "MonoBundle");
+		}
 	}
 }
