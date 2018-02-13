@@ -183,24 +183,19 @@ define IOS_LIBS_template
 IOS_VARIANTS_TARGETS += $(addprefix $(IOS_BUILD_DIR)/$(1)/,$(4) $(5))
 
 # MonoTouch.Dialog-1
-$(IOS_BUILD_DIR)/$(1)/$(4): $$(IOS_SOURCES) $(IOS_BUILD_DIR)/$(1)/$(3) $$(MONOTOUCH_DIALOG_SOURCES) $(PRODUCT_KEY_PATH) $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll
-	$$(call Q_PROF_CSC,ios/$(1)) $$(IOS_CSC) -out:$$@ -target:library -debug:portable -optimize -publicsign \
+$(IOS_BUILD_DIR)/$(1)%$(4) $(IOS_BUILD_DIR)/$(1)%$(4:.dll=.pdb): $$(IOS_SOURCES) $(IOS_BUILD_DIR)/$(1)/$(3) $$(MONOTOUCH_DIALOG_SOURCES) $(PRODUCT_KEY_PATH) $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll
+	$$(call Q_PROF_CSC,ios/$(1)) $$(IOS_CSC) -out:$$(basename $$@).dll -target:library -debug:portable -optimize -publicsign \
 		-keyfile:$(PRODUCT_KEY_PATH) -r:$(IOS_BUILD_DIR)/$(1)/$(3) $(6) -r:$(MONOTOUCH_MONO_PATH)/System.Core.dll -r:$(MONOTOUCH_MONO_PATH)/System.dll -r:$(MONOTOUCH_MONO_PATH)/System.Json.dll \
 		-nowarn:219,618,114,414,1635,3021,$$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		$$(MONOTOUCH_DIALOG_SOURCES) $$(MONOTOUCH_DIALOG_RESOURCES)
 
-$(IOS_BUILD_DIR)/$(1)/$(4:.dll=.pdb): $(IOS_BUILD_DIR)/$(1)/$(4)
-
-
 # MonoTouch.NUnitLite
-$(IOS_BUILD_DIR)/$(1)/$(5): $$(IOS_TOUCHUNIT_SOURCES) $(IOS_BUILD_DIR)/$(1)/$(4) $(PRODUCT_KEY_PATH) $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll
-	$$(call Q_PROF_CSC,ios/$(1)) $$(IOS_CSC) -out:$$@ -target:library -debug:portable -optimize -publicsign \
+$(IOS_BUILD_DIR)/$(1)%$(5) $(IOS_BUILD_DIR)/$(1)%$(5:.dll=.pdb): $$(IOS_TOUCHUNIT_SOURCES) $(IOS_BUILD_DIR)/$(1)/$(4) $(PRODUCT_KEY_PATH) $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll
+	$$(call Q_PROF_CSC,ios/$(1)) $$(IOS_CSC) -out:$$(basename $$@).dll -target:library -debug:portable -optimize -publicsign \
 		-keyfile:$(PRODUCT_KEY_PATH) -r:$(IOS_BUILD_DIR)/$(1)/$(3) $(6) -r:$(IOS_BUILD_DIR)/$(1)/$(4) -r:$(MONOTOUCH_MONO_PATH)/System.dll -r:$(MONOTOUCH_MONO_PATH)/System.Xml.dll \
 		-nowarn:3006,612,649,414,1635 \
 		-define:NUNITLITE,CLR_4_0,NET_4_5,__MOBILE__ $$(IOS_DEFINES) \
 		$$(IOS_TOUCHUNIT_SOURCES)
-
-$(IOS_BUILD_DIR)/$(1)/$(5:.dll=.pdb): $(IOS_BUILD_DIR)/$(1)/$(5)
 
 # System.Drawing
 # not installed or shipped yet - must be compiled manually using "make System.Drawing.dll"
