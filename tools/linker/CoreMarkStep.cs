@@ -241,7 +241,7 @@ namespace Xamarin.Linker.Steps {
 						continue;
 					if (Annotations.IsMarked (i))
 						continue;
-					if (!i.HasCustomAttribute (Namespaces.Foundation, "ProtocolAttribute"))
+					if (!LinkContext.StaticRegistrar.HasAttribute (i, Namespaces.Foundation, "ProtocolAttribute"))
 						continue;
 
 					var isProtocolImplementation = false;
