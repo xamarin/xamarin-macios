@@ -81,7 +81,7 @@ namespace Xamarin.Bundler {
 		static string output_dir;
 		static string app_name;
 		static bool generate_plist;
-		public static RegistrarMode Registrar { get; private set; } = RegistrarMode.Default;
+		public static RegistrarMode Registrar { get { return App.Registrar; } private set { App.Registrar = value; } }
 		public static List<string> RecursiveSearchDirectories { get; } = new List<string> ();
 		static bool no_executable;
 		static bool embed_mono = true;
