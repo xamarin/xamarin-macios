@@ -2512,6 +2512,12 @@ namespace Registrar {
 			}
 		}
 
+		class ProtocolInfo
+		{
+			public uint TokenReference;
+			public ObjCType Protocol;
+		}
+
 		class SkippedType
 		{
 			public TypeReference Skipped;
@@ -2552,9 +2558,19 @@ namespace Registrar {
 			var map_dict = new Dictionary<ObjCType, int> (); // maps ObjCType to its index in the map
 			var map_entries = 0;
 			var protocol_wrapper_map = new Dictionary<uint, Tuple<ObjCType, uint>> ();
+			var protocols = new List<ProtocolInfo> ();
 
 			var i = 0;
 			
+			bool needs_protocol_map = false;
+			// Check if we need the protocol map.
+			// We don't need it if the linker removed the method ObjCRuntime.Runtime.GetProtocolForType,
+			// or if we're not registering protocols.
+			if (App.Optimizations.RegisterProtocols == true) {
+				var asm = input_assemblies.FirstOrDefault ((v) => v.Name.Name == PlatformAssembly);
+				needs_protocol_map = asm?.MainModule.GetType (!IsDualBuild ? (CompatNamespace + ".ObjCRuntime") : "ObjCRuntime", "Runtime")?.Methods.Any ((v) => v.Name == "GetProtocolForType") == true;
+			}
+
 			map.AppendLine ("static MTClassMap __xamarin_class_map [] = {");
 			if (string.IsNullOrEmpty (single_assembly)) {
 				map_init.AppendLine ("void xamarin_create_classes () {");
@@ -2674,6 +2690,10 @@ namespace Registrar {
 					if (token_ref == uint.MaxValue)
 						token_ref = CreateTokenReference (@class.Type, TokenType.TypeDef);
 					protocol_wrapper_map.Add (token_ref, new Tuple<ObjCType, uint> (@class, CreateTokenReference (@class.ProtocolWrapperType, TokenType.TypeDef)));
+					if (needs_protocol_map) {
+						protocols.Add (new ProtocolInfo { TokenReference = token_ref, Protocol = @class });
+						CheckNamespace (@class, exceptions);
+					}
 				}
 				if (@class.IsWrapper && isPlatformType)
 					continue;
@@ -2941,19 +2961,35 @@ namespace Registrar {
 				map.AppendLine ("};");
 				map.AppendLine ();
 			}
-
+			if (needs_protocol_map && protocols.Count > 0) {
+				var ordered = protocols.OrderBy ((v) => v.TokenReference);
+				map.AppendLine ("static const uint32_t __xamarin_protocol_tokens [] = {");
+				foreach (var p in ordered)
+					map.AppendLine ("0x{0:X}, /* {1} */", p.TokenReference, p.Protocol.Type.FullName);
+				map.AppendLine ("};");
+				map.AppendLine ("static const Protocol* __xamarin_protocols [] = {");
+				foreach (var p in ordered)
+					map.AppendLine ("@protocol ({0}), /* {1} */", p.Protocol.ProtocolName, p.Protocol.Type.FullName);
+				map.AppendLine ("};");
+			}
 			map.AppendLine ("static struct MTRegistrationMap __xamarin_registration_map = {");
 			map.AppendLine ("__xamarin_registration_assemblies,");
 			map.AppendLine ("__xamarin_class_map,");
 			map.AppendLine (full_token_reference_count == 0 ? "NULL," : "__xamarin_token_references,");
 			map.AppendLine (skipped_types.Count == 0 ? "NULL," : "__xamarin_skipped_map,");
 			map.AppendLine (protocol_wrapper_map.Count == 0 ? "NULL," : "__xamarin_protocol_wrapper_map,");
+			if (needs_protocol_map && protocols.Count > 0) {
+				map.AppendLine ("{ __xamarin_protocol_tokens, __xamarin_protocols },");
+			} else {
+				map.AppendLine ("{ NULL, NULL },");
+			}
 			map.AppendLine ("{0},", count);
 			map.AppendLine ("{0},", i);
 			map.AppendLine ("{0},", customTypeCount);
 			map.AppendLine ("{0},", full_token_reference_count);
 			map.AppendLine ("{0},", skipped_types.Count);
-			map.AppendLine ("{0}", protocol_wrapper_map.Count);
+			map.AppendLine ("{0},", protocol_wrapper_map.Count);
+			map.AppendLine ("{0}", needs_protocol_map ? protocols.Count : 0);
 			map.AppendLine ("};");
 
 

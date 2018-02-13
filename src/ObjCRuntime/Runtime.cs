@@ -60,12 +60,14 @@ namespace ObjCRuntime {
 			public IntPtr full_token_references; /* array of MTFullTokenReference */
 			public MTManagedClassMap* skipped_map;
 			public MTProtocolWrapperMap* protocol_wrapper_map;
+			public MTProtocolMap protocol_map;
 			public int assembly_count;
 			public int map_count;
 			public int custom_type_count;
 			public int full_token_reference_count;
 			public int skipped_map_count;
 			public int protocol_wrapper_count;
+			public int protocol_count;
 		}
 
 		[StructLayout (LayoutKind.Sequential, Pack = 1)]
@@ -85,6 +87,12 @@ namespace ObjCRuntime {
 		internal struct MTProtocolWrapperMap {
 			public uint protocol_token;
 			public uint wrapper_token;
+		}
+
+		[StructLayout (LayoutKind.Sequential, Pack = 1)]
+		internal unsafe struct MTProtocolMap {
+			public uint* protocol_tokens;
+			public IntPtr* protocols;
 		}
 
 		/* Keep Delegates, Trampolines and InitializationOptions in sync with monotouch-glue.m */
@@ -1354,6 +1362,32 @@ namespace ObjCRuntime {
 		public static IntPtr GetProtocol (string protocol)
 		{
 			return Protocol.objc_getProtocol (protocol);
+		}
+
+		internal static IntPtr GetProtocolForType (Type type)
+		{
+			// Check if the static registrar knows about this protocol
+			unsafe {
+				var map = options->RegistrationMap;
+				if (map != null && map->protocol_count > 0) {
+					var token = Class.GetTokenReference (type);
+					var tokens = map->protocol_map.protocol_tokens;
+					for (int i = 0; i < map->protocol_count; i++) {
+						if (tokens [i] == token)
+							return map->protocol_map.protocols [i];
+					}
+				}
+			}
+
+			if (type.IsInterface) {
+				foreach (var pa in type.GetCustomAttributes<ProtocolAttribute> (false)) {
+					var handle = Protocol.objc_getProtocol (pa.Name);
+					if (handle != IntPtr.Zero)
+						return handle;
+				}
+			}
+
+			throw new ArgumentException (string.Format ("'{0}' is an unknown protocol", type.FullName));
 		}
 
 		public static void ConnectMethod (Type type, MethodInfo method, Selector selector)

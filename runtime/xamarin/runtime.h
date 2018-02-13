@@ -82,6 +82,11 @@ typedef struct __attribute__((packed)) {
 	uint32_t wrapper_token;
 } MTProtocolWrapperMap;
 
+typedef struct __attribute__((packed)) {
+	const uint32_t *protocol_tokens; // an array of token references to managed interfaces that represent protocols
+	const Protocol **protocols; // the corresponding native protocols
+} MTProtocolMap;
+
 struct MTRegistrationMap;
 
 struct MTRegistrationMap {
@@ -99,12 +104,14 @@ struct MTRegistrationMap {
 	// means it can't be stored in read-only memory).
 	const MTManagedClassMap *skipped_map;
 	const MTProtocolWrapperMap *protocol_wrappers; // array of MTProtocolWrapperMap, sorted ascending by protocol_token
+	const MTProtocolMap protocols;
 	int assembly_count;
 	int map_count;
 	int custom_type_count;
 	int full_token_reference_count;
 	int skipped_map_count;
 	int protocol_wrapper_count;
+	int protocol_count;
 };
 
 typedef struct {
