@@ -1628,13 +1628,21 @@ namespace Registrar {
 			if (interfaces == null || interfaces.Length == 0)
 				return null;
 
+			var ifaceList = new List<TType> (interfaces);
 			var protocolList = new List<ObjCType> (interfaces.Length);
-			for (int i = 0; i < interfaces.Length; i++) {
-				if (interfaces [i] == null)
+			for (int i = 0; i < ifaceList.Count; i++) {
+				if (ifaceList [i] == null)
 					continue;
-				var baseP = RegisterTypeUnsafe (interfaces [i], ref exceptions);
-				if (baseP != null && !baseP.IsInformalProtocol)
-					protocolList.Add (baseP);
+				var baseP = RegisterTypeUnsafe (ifaceList [i], ref exceptions);
+				if (baseP != null) {
+					if (baseP.IsInformalProtocol) {
+						var ifaces = GetInterfacesImpl (baseP);
+						if (ifaces != null)
+							ifaceList.AddRange (ifaces);
+					} else {
+						protocolList.Add (baseP);
+					}
+				}
 			}
 			if (protocolList.Count == 0)
 				return null;
