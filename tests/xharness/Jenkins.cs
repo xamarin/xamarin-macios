@@ -151,8 +151,11 @@ namespace xharness
 		{
 			public string Variation;
 			public string MTouchExtraArgs;
+			public string MonoBundlingExtraArgs; // mmp
 			public bool Debug;
 			public bool Profiling;
+			public string LinkMode;
+			public string Defines;
 		}
 
 		IEnumerable<TestData> GetTestData (RunTestTask test)
@@ -179,6 +182,15 @@ namespace xharness
 					break;
 				}
 				break;
+			case "AnyCPU":
+			case "x86":
+				switch (test.TestName) {
+				case "xammac tests":
+					if (test.ProjectConfiguration == "Release")
+						yield return new TestData { Variation = "Release (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all", Debug = false, LinkMode = "Full", Defines = "LINKALL" };
+					break;
+				}
+				break;
 			default:
 				throw new NotImplementedException (test.ProjectPlatform);
 			}
@@ -196,9 +208,12 @@ namespace xharness
 				foreach (var test_data in GetTestData (task)) {
 					var variation = test_data.Variation;
 					var mtouch_extra_args = test_data.MTouchExtraArgs;
+					var bundling_extra_args = test_data.MonoBundlingExtraArgs;
 					var configuration = test_data.Debug ? task.ProjectConfiguration : task.ProjectConfiguration.Replace ("Debug", "Release");
 					var debug = test_data.Debug;
 					var profiling = test_data.Profiling;
+					var link_mode = test_data.LinkMode;
+					var defines = test_data.Defines;
 
 					var clone = task.TestProject.Clone ();
 					var clone_task = Task.Run (async () => {
@@ -206,8 +221,26 @@ namespace xharness
 						await clone.CreateCopyAsync (task);
 						if (!string.IsNullOrEmpty (mtouch_extra_args))
 							clone.Xml.AddExtraMtouchArgs (mtouch_extra_args, task.ProjectPlatform, configuration);
-						clone.Xml.SetNode ("MTouchProfiling", profiling ? "True" : "False", task.ProjectPlatform, configuration);
-						if (!debug)
+						if (!string.IsNullOrEmpty (bundling_extra_args))
+							clone.Xml.AddMonoBundlingExtraArgs (bundling_extra_args, task.ProjectPlatform, configuration);
+						if (!string.IsNullOrEmpty (link_mode))
+							clone.Xml.SetNode ("LinkMode", link_mode, task.ProjectPlatform, configuration);
+						if (!string.IsNullOrEmpty (defines))
+							clone.Xml.AddAdditionalDefines (defines, task.ProjectPlatform, configuration);
+						var isMac = false;
+						switch (task.Platform) {
+						case TestPlatform.Mac:
+						case TestPlatform.Mac_Classic:
+						case TestPlatform.Mac_Unified:
+						case TestPlatform.Mac_Unified32:
+						case TestPlatform.Mac_UnifiedXM45:
+						case TestPlatform.Mac_UnifiedXM45_32:
+							isMac = true;
+							break;
+						}
+						clone.Xml.SetNode (isMac ? "Profiling" : "MTouchProfiling", profiling ? "True" : "False", task.ProjectPlatform, configuration);
+
+						if (!debug && !isMac)
 							clone.Xml.SetMtouchUseLlvm (true, task.ProjectPlatform, configuration);
 						clone.Xml.Save (clone.Path);
 					});
@@ -611,6 +644,7 @@ namespace xharness
 					build.SpecifyPlatform = false;
 					build.SpecifyConfiguration = build.ProjectConfiguration != "Debug";
 					RunTestTask exec;
+					IEnumerable<RunTestTask> execs;
 					if (project.IsNUnitProject) {
 						var dll = Path.Combine (Path.GetDirectoryName (build.TestProject.Path), project.Xml.GetOutputAssemblyPath (build.ProjectPlatform, build.ProjectConfiguration).Replace ('\\', '/'));
 						exec = new NUnitExecuteTask (build) {
@@ -622,6 +656,7 @@ namespace xharness
 							TestName = project.Name,
 							Timeout = TimeSpan.FromMinutes (120),
 						};
+						execs = new [] { exec };
 					} else {
 						exec = new MacExecuteTask (build) {
 							Ignored = ignored || !IncludeClassicMac,
@@ -629,16 +664,19 @@ namespace xharness
 							TestName = project.Name,
 							IsUnitTest = true,
 						};
+						execs = CreateTestVariations (new [] { exec }, (buildTask, test) => new MacExecuteTask (buildTask));
 					}
 					exec.Variation = configurations.Length > 1 ? config : project.TargetFrameworkFlavor.ToString ();
-					Tasks.Add (exec);
 
-					if (project.GenerateVariations) {
-						Tasks.Add (CloneExecuteTask (exec, project, TestPlatform.Mac_Unified, "-unified", ignored));
-						Tasks.Add (CloneExecuteTask (exec, project, TestPlatform.Mac_Unified32, "-unified-32", ignored));
-						if (project.GenerateFull) {
-							Tasks.Add (CloneExecuteTask (exec, project, TestPlatform.Mac_UnifiedXM45, "-unifiedXM45", ignored));
-							Tasks.Add (CloneExecuteTask (exec, project, TestPlatform.Mac_UnifiedXM45_32, "-unifiedXM45-32", ignored));
+					Tasks.AddRange (execs);
+					foreach (var e in execs) {
+						if (project.GenerateVariations) {
+							Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_Unified, "-unified", ignored));
+							Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_Unified32, "-unified-32", ignored));
+							if (project.GenerateFull) {
+								Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_UnifiedXM45, "-unifiedXM45", ignored));
+								Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_UnifiedXM45_32, "-unifiedXM45-32", ignored));
+							}
 						}
 					}
 				}
