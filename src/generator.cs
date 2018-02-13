@@ -5906,8 +5906,10 @@ public partial class Generator : IMemberGatherer {
 				if (!is_partial)
 					class_mod = "static ";
 			} else {
-				if (is_protocol)
-					print ("[Protocol({0})]", !string.IsNullOrEmpty (protocol.Name) ? $"Name = \"{protocol.Name}\"" : string.Empty);
+				if (is_protocol) {
+					var pName = !string.IsNullOrEmpty (protocol.Name) ? $"Name = \"{protocol.Name}\"" : string.Empty;
+					print ("[Protocol({0}{1}{2})]", pName, (!string.IsNullOrEmpty (pName) && protocol.IsInformal) ? ", " : string.Empty, protocol.IsInformal ? "IsInformal = true" : string.Empty);
+				}
 				core_image_filter = AttributeManager.HasAttribute<CoreImageFilterAttribute> (type);
 				if (!type.IsEnum && !core_image_filter) {
 					if (is_model || AttributeManager.HasAttribute<SyntheticAttribute> (type)) {
