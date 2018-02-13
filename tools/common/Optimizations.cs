@@ -68,6 +68,7 @@ namespace Xamarin.Bundler
 					if (app.Registrar != RegistrarMode.Static) {
 						ErrorHelper.Warning (2003, $"Option '--optimize={(values [i].Value ? "" : "-")}{opt_names [i]}' will be ignored since the static registrar is not enabled");
 						values [i] = false;
+						continue;
 					}
 					goto default; // also requires the linker
 				default:
