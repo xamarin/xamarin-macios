@@ -64,7 +64,12 @@ namespace Xamarin.Bundler {
 		public bool EnableSGenConc;
 		public MarshalObjectiveCExceptionMode MarshalObjectiveCExceptions;
 		public MarshalManagedExceptionMode MarshalManagedExceptions;
-		public bool IsDefaultMarshalManagedExceptionMode;
+
+		bool is_default_marshal_managed_exception_mode;
+		public bool IsDefaultMarshalManagedExceptionMode {
+			get { return is_default_marshal_managed_exception_mode || MarshalManagedExceptions == MarshalManagedExceptionMode.Default; }
+			set { is_default_marshal_managed_exception_mode = value; }
+		}
 		public List<string> RootAssemblies = new List<string> ();
 		public List<Application> SharedCodeApps = new List<Application> (); // List of appexes we're sharing code with.
 		public string RegistrarOutputLibrary;

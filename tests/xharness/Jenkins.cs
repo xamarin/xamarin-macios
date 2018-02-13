@@ -612,7 +612,7 @@ namespace xharness
 					build.SpecifyConfiguration = build.ProjectConfiguration != "Debug";
 					RunTestTask exec;
 					if (project.IsNUnitProject) {
-						var dll = Path.Combine (Path.GetDirectoryName (project.Path), project.Xml.GetOutputAssemblyPath (build.ProjectPlatform, build.ProjectConfiguration).Replace ('\\', '/'));
+						var dll = Path.Combine (Path.GetDirectoryName (build.TestProject.Path), project.Xml.GetOutputAssemblyPath (build.ProjectPlatform, build.ProjectConfiguration).Replace ('\\', '/'));
 						exec = new NUnitExecuteTask (build) {
 							Ignored = ignored || !IncludeClassicMac,
 							TestLibrary = dll,

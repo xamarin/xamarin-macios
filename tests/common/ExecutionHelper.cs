@@ -197,7 +197,8 @@ namespace Xamarin.Tests
 
 		public void AssertWarningCount (int count, string message = "warnings")
 		{
-			Assert.AreEqual (count, WarningCount, message);
+			if (count != WarningCount)
+				Assert.Fail ($"{message}\nExpected: {count}\nBut was: {WarningCount}\nWarnings:\n\t{string.Join ("\n\t", this.Messages.Where ((v) => v.IsWarning).Select ((v) => v.ToString ()))}");
 		}
 
 		public void AssertErrorCount (int count, string message = "errors")
