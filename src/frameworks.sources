@@ -658,6 +658,7 @@ FOUNDATION_CORE_SOURCES = \
 	Foundation/NSAttributedString.iOS.cs \
 	Foundation/EnumDesktop.cs \
 	Foundation/NSObject.mac.cs \
+	Foundation/NSDateComponents.cs \
 
 FOUNDATION_SOURCES = \
 	Foundation/Additions.cs \
