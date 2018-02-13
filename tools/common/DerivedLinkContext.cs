@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -28,6 +29,11 @@ namespace Xamarin.Tuner
 
 		// Store interfaces the linker has linked away so that the static registrar can access them.
 		public Dictionary<TypeDefinition, List<TypeDefinition>> ProtocolImplementations { get; private set; } = new Dictionary<TypeDefinition, List<TypeDefinition>> ();
+		// Store types the linker has linked away so that the static registrar can access them.
+		Dictionary<string, LinkedAwayTypeReference> LinkedAwayTypes = new Dictionary<string, LinkedAwayTypeReference> ();
+		// The linked away TypeDefinitions lacks some information (it can't even find itself in the LinkedAwayTypes dictionary)
+		// so we need a second dictionary
+		Dictionary<TypeDefinition, LinkedAwayTypeReference> LinkedAwayTypeMap = new Dictionary<TypeDefinition, LinkedAwayTypeReference> ();
 
 		public Application App {
 			get {
@@ -136,6 +142,50 @@ namespace Xamarin.Tuner
 			return null;
 		}
 
+		public void AddLinkedAwayType (TypeDefinition td)
+		{
+			var latr = new LinkedAwayTypeReference (td);
+			LinkedAwayTypes.Add (td.Module.Assembly.Name.Name + ": " + td.FullName, new LinkedAwayTypeReference (td));
+			LinkedAwayTypeMap.Add (td, latr);
+		}
+
+		// Returns a TypeDefinition for a type that was linked away.
+		// The Module property is null for the returned TypeDefinition (unfortunately TypeDefinition is
+		// sealed, so I can't provide a custom TypeDefinition subclass), so we need to return
+		// the module as an out parameter instead.
+		public TypeDefinition GetLinkedAwayType (TypeReference tr, out ModuleDefinition module)
+		{
+			module = null;
+
+			if (tr is TypeDefinition td) {
+				// We might get called again for a TypeDefinition we already returned,
+				// in which case tr.Scope will be null, so we can't use the code below.
+				// Instead look in our second dictionary, of TypeDefinition -> LinkedAwayTypeReference
+				// to find the module.
+				if (LinkedAwayTypeMap.TryGetValue (td, out var latd))
+					module = latd.Module;
+				return td;
+			}
+
+			var name = tr.Scope.Name;
+			switch (tr.Scope.MetadataScopeType) {
+			case MetadataScopeType.ModuleDefinition:
+				var md = (ModuleDefinition) tr.Scope;
+				name = md.Assembly.Name.Name;
+				break;
+			default:
+				name = tr.Scope.Name;
+				break;
+			}
+
+			if (LinkedAwayTypes.TryGetValue (name + ": " + tr.FullName, out var latr)) {
+				module = latr.Module;
+				return latr.Resolve ();
+			}
+
+			return null;
+		}
+
 		class AttributeStorage : ICustomAttribute
 		{
 			public CustomAttribute Attribute;
@@ -148,6 +198,40 @@ namespace Xamarin.Tuner
 			public Collection<CustomAttributeNamedArgument> Fields => Attribute.Fields;
 			public Collection<CustomAttributeNamedArgument> Properties => Attribute.Properties;
 			public Collection<CustomAttributeArgument> ConstructorArguments => Attribute.ConstructorArguments;
+		}
+
+		class LinkedAwayTypeReference : TypeReference
+		{
+			// When a type is linked away, its Module and Scope properties
+			// return null.
+			// This class keeps those values around.
+			TypeDefinition type;
+			ModuleDefinition module;
+			IMetadataScope scope;
+
+			public LinkedAwayTypeReference (TypeDefinition type)
+				: base (type.Namespace, type.Name)
+			{
+				this.type = type;
+				this.module = type.Module;
+				this.scope = type.Scope;
+			}
+
+			public override TypeDefinition Resolve ()
+			{
+				return type;
+			}
+
+			public override ModuleDefinition Module {
+				get {
+					return module;
+				}
+			}
+
+			public override IMetadataScope Scope {
+				get { return scope; }
+				set { scope = value; }
+			}
 		}
 	}
 }

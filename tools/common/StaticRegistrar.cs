@@ -406,7 +406,7 @@ namespace Registrar {
 			return null;
 		}
 
-		public static string ToObjCType (TypeReference type)
+		public string ToObjCType (TypeReference type)
 		{
 			var definition = type as TypeDefinition;
 			if (definition != null)
@@ -422,7 +422,7 @@ namespace Registrar {
 			return "void *";
 		}
 
-		public static string ToObjCType (TypeDefinition type)
+		public string ToObjCType (TypeDefinition type)
 		{
 			switch (type.FullName) {
 			case "System.IntPtr": return "void *";
@@ -472,22 +472,25 @@ namespace Registrar {
 			return false;
 		}
 
-		static TypeDefinition ResolveType (TypeReference tr)
+		TypeDefinition ResolveType (TypeReference tr)
 		{
 			// The static registrar might sometimes deal with types that have been linked away
 			// It's not always possible to call .Resolve () on types that have been linked away,
-			// it might result in a NotSupportedException, so here we manually replicate some
-			// resolution logic to try to avoid those NotSupportedExceptions.
+			// it might result in a NotSupportedException, or just a null value, so here we
+			// manually replicate some resolution logic to try to avoid those NotSupportedExceptions.
 			// The static registrar calls .Resolve () in a lot of places; we'll only call
 			// this method if there's an actual need.
 			if (tr is ArrayType arrayType) {
 				return arrayType.ElementType.Resolve ();
 			} else {
-				return tr.Resolve ();
+				var td = tr.Resolve ();
+				if (td == null)
+					td = LinkContext?.GetLinkedAwayType (tr, out _);
+				return td;
 			}
 		}
 
-		public static bool IsNativeObject (TypeReference tr)
+		public bool IsNativeObject (TypeReference tr)
 		{
 			var gp = tr as GenericParameter;
 			if (gp != null) {
@@ -1895,7 +1898,18 @@ namespace Registrar {
 			if (type.IsNested)
 				return false;
 
-			var aname = type.Module.Assembly.Name.Name;
+			string aname;
+			if (type.Module == null) {
+				// This type was probably linked away
+				if (LinkContext.GetLinkedAwayType (type, out var module) != null) {
+					aname = module.Assembly.Name.Name;
+				} else {
+					aname = string.Empty;
+				}
+			} else {
+				aname = type.Module.Assembly.Name.Name;
+			}
+
 			if (aname != PlatformAssembly)
 				return false;
 				
@@ -2210,7 +2224,7 @@ namespace Registrar {
 
 		string ToObjCParameterType (TypeReference type, string descriptiveMethodName, List<Exception> exceptions, MemberReference inMethod)
 		{
-			TypeDefinition td = type.Resolve ();
+			TypeDefinition td = ResolveType (type);
 			var reftype = type as ByReferenceType;
 			ArrayType arrtype = type as ArrayType;
 			GenericParameter gp = type as GenericParameter;

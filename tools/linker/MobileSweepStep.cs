@@ -72,5 +72,13 @@ namespace Xamarin.Linker {
 				LinkContext.ProtocolImplementations [type] = list = new List<TypeDefinition> ();
 			list.Add (iface.InterfaceType.Resolve ());
 		}
+
+		protected override void ElementRemoved (IMetadataTokenProvider element)
+		{
+			base.ElementRemoved (element);
+
+			if (element is TypeDefinition td)
+				LinkContext.AddLinkedAwayType (td);
+		}
 	}
 }
