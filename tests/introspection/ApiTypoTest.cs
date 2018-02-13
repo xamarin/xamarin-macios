@@ -102,6 +102,7 @@ namespace Introspection
 			"Automounted",
 			"Autoredirect",
 			"Autospace",
+			"Autostarts",
 			"Avci", // file type
 			"Aliasable",
 			"Arcball",
