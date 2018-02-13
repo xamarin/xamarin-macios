@@ -1,3 +1,3 @@
 TOP=..
-SUBDIRS=mmp mtouch install-source
+SUBDIRS=mmp mtouch install-source mlaunch
 include $(TOP)/Make.config
