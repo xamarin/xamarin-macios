@@ -94,8 +94,14 @@ namespace Xamarin.Bundler
 #endif
 
 			// We try to optimize calls to BlockLiteral.SetupBlock if the static registrar is enabled
-			if (!OptimizeBlockLiteralSetupBlock.HasValue)
+			if (!OptimizeBlockLiteralSetupBlock.HasValue) {
+#if MONOMAC
+				// Restrict to Unified, since XamMac.dll doesn't have the new managed block API (SetupBlockImpl) to make the block optimization work.
+				OptimizeBlockLiteralSetupBlock = app.Registrar == RegistrarMode.Static && Driver.IsUnified;
+#else
 				OptimizeBlockLiteralSetupBlock = app.Registrar == RegistrarMode.Static;
+#endif
+			}
 
 			if (Driver.Verbosity > 3)
 				Driver.Log (4, "Enabled optimizations: {0}", string.Join (", ", values.Select ((v, idx) => v == true ? opt_names [idx] : string.Empty).Where ((v) => !string.IsNullOrEmpty (v))));
