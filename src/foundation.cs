@@ -8194,6 +8194,18 @@ namespace Foundation
 
 	}
 
+	delegate bool EnumerateLinguisticTagsEnumerator (NSString tag, NSRange tokenRange, NSRange sentenceRange, ref bool stop);
+
+	[Category]
+	[BaseType (typeof(NSString))]
+	interface NSLinguisticAnalysis {
+		[Export ("linguisticTagsInRange:scheme:options:orthography:tokenRanges:")]
+		string[] GetLinguisticTags (NSRange range, string scheme, NSLinguisticTaggerOptions options, [NullAllowed] NSOrthography orthography, [NullAllowed] out NSValue[] tokenRanges);
+
+		[Export ("enumerateLinguisticTagsInRange:scheme:options:orthography:usingBlock:")]
+		void EnumerateLinguisticTags (NSRange range, string scheme, NSLinguisticTaggerOptions options, [NullAllowed] NSOrthography orthography, EnumerateLinguisticTagsEnumerator handler);
+	}
+
 	//
 	// We expose NSString versions of these methods because it could
 	// avoid an extra lookup in cases where there is a large volume of
