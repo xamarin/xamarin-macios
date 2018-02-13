@@ -1653,13 +1653,33 @@ namespace Registrar {
 			}
 
 			// The interface might have been linked away.
-			var linkedAwayInterfaces = GetLinkedAwayInterfaces (type.Type);
-			if (linkedAwayInterfaces?.Length > 0) {
+			var linkedAwayInterfaces = new List<TType> ();
+			var laifaces = GetLinkedAwayInterfaces (type.Type);
+			var baseType = type.BaseType;
+
+			if (laifaces != null)
+				linkedAwayInterfaces.AddRange (laifaces);
+
+			while (baseType?.IsModel == true) {
+				laifaces = GetLinkedAwayInterfaces (baseType.Type);
+				if (laifaces != null)
+					linkedAwayInterfaces.AddRange (laifaces);
+				baseType = baseType.BaseType;
+			}
+			if (linkedAwayInterfaces.Count > 0) {
 				if (protocolList == null)
 					protocolList = new List<ObjCType> ();
-				foreach (var iface in linkedAwayInterfaces) {
-					if (!HasProtocolAttribute (iface))
+				for (int i = 0; i < linkedAwayInterfaces.Count; i++) {
+					var iface = linkedAwayInterfaces [i];
+					var proto = GetProtocolAttribute (iface);
+					if (proto == null)
 						continue;
+					if (proto.IsInformal) {
+						laifaces = GetLinkedAwayInterfaces (iface);
+						if (laifaces != null)
+							linkedAwayInterfaces.AddRange (laifaces);
+						continue;
+					}
 					// We can't register this interface (because it's been linked away),
 					// but we still need to return information about it.
 					// So create an ObjCType with just the required information,
@@ -1876,9 +1896,9 @@ namespace Registrar {
 				IsGeneric = isGenericType,
 			};
 			objcType.VerifyRegisterAttribute (ref exceptions);
-			objcType.Protocols = GetProtocols (objcType, ref exceptions);
 			objcType.AdoptedProtocols = GetAdoptedProtocols (objcType);
 			objcType.BaseType = isProtocol ? null : (baseObjCType ?? objcType);
+			objcType.Protocols = GetProtocols (objcType, ref exceptions);
 #if MMP || MTOUCH
 			objcType.ProtocolWrapperType = (isProtocol && !isInformalProtocol) ? GetProtocolAttributeWrapperType (objcType.Type) : null;
 #endif
