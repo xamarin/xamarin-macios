@@ -1,10 +1,12 @@
 // Copyright 2012-2013, 2015 Xamarin Inc. All rights reserved.
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using Mono.Cecil;
 using Mono.Linker;
 using Mono.Linker.Steps;
+
+using Xamarin.Tuner;
 
 namespace Xamarin.Linker {
 
@@ -16,6 +18,12 @@ namespace Xamarin.Linker {
 		public MobileSweepStep (bool sweepSymbols)
 			: base (sweepSymbols)
 		{
+		}
+
+		protected DerivedLinkContext LinkContext {
+			get {
+				return (DerivedLinkContext) base.Context;
+			}
 		}
 
 		public AssemblyAction CurrentAction { get; private set; }
@@ -53,6 +61,16 @@ namespace Xamarin.Linker {
 			// reference: https://bugzilla.xamarin.com/show_bug.cgi?id=35372
 			if (main.HasModuleReferences && (CurrentAction == AssemblyAction.Link))
 				SweepCollection (main.ModuleReferences);
+		}
+
+		protected override void InterfaceRemoved (TypeDefinition type, InterfaceImplementation iface)
+		{
+			base.InterfaceRemoved (type, iface);
+
+			// The static registrar needs access to the interfaces for protocols, so keep them around.
+			if (!LinkContext.ProtocolImplementations.TryGetValue (type, out var list))
+				LinkContext.ProtocolImplementations [type] = list = new List<TypeDefinition> ();
+			list.Add (iface.InterfaceType.Resolve ());
 		}
 	}
 }
