@@ -40,7 +40,7 @@ namespace MonoTouchFixtures.ObjCRuntime
 				Assert.AreNotEqual (IntPtr.Zero, new Protocol (d.Type).Handle, $"{d.Name} type");
 				Assert.AreNotEqual (IntPtr.Zero, new Protocol (d.Name).Handle, $"{d.Name} string");
 				Assert.AreEqual (d.Name, new Protocol (d.Name).Name, $"{d.Name} name");
-				Assert.AreEqual (d.Name, new Protocol (typeof (INSObjectProtocol)).Name, $"{d.Name} type name");
+				Assert.AreEqual (d.Name, new Protocol (d.Type).Name, $"{d.Name} type name");
 				Assert.AreEqual (d.Name, new Protocol (new Protocol (d.Name).Handle).Name, $"{d.Name} IntPtr name");
 				Assert.AreEqual (d.Name, new Protocol (Protocol.GetHandle (d.Name)).Name, $"{d.Name} GetHandle name");
 			}
