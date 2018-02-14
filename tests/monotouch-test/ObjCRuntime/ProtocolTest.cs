@@ -32,7 +32,7 @@ namespace MonoTouchFixtures.ObjCRuntime
 			var data = new [] {
 				new { Type = typeof (INSObjectProtocol), Name = "NSObject" }, // protocol name doesn't match at all
 				new { Type = typeof (INSUrlSessionDownloadDelegate), Name = "NSURLSessionDownloadDelegate" }, // different casing in native
-				new { Type = typeof (global::HomeKit.IHMHomeDelegate), Name = "HMHomeDelegate" }, // protocol name is the same in native and managed
+				new { Type = typeof (global::CloudKit.ICKRecordValue), Name = "CKRecordValue" }, // protocol name is the same in native and managed
 			};
 
 			foreach (var d in data) {
