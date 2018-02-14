@@ -82,6 +82,21 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
+		[Test]
+		public void RegistrarRemoval ()
+		{
+			// define set by xharness when creating test variations.
+			// It's not safe to remove the dynamic registrar in monotouch-test (by design; some of the tested API makes it unsafe, and the linker correcty detects this),
+			// so the dynamic registrar will only be removed if manually requested.
+#if OPTIMIZEALL
+			var shouldBeRemoved = true;
+#else
+			var shouldBeRemoved = false;
+#endif
+			Assert.AreEqual (shouldBeRemoved, typeof (NSObject).Assembly.GetType ("Registrar.Registrar") == null, "Registrar removal");
+			Assert.AreEqual (shouldBeRemoved, typeof (NSObject).Assembly.GetType ("Registrar.DynamicRegistrar") == null, "DynamicRegistrar removal");
+		}
+
 #if !MONOMAC
 		[Test]
 		public void TestProperties ()
