@@ -13,7 +13,7 @@ using Xamarin.Tests;
 namespace Xamarin.ApiTest
 {
 	[TestFixture]
-	public class BlockLiteral
+	public class ApiTest
 	{
 		[Test]
 #if MONOTOUCH
@@ -26,7 +26,11 @@ namespace Xamarin.ApiTest
 #endif
 		public void AlwaysOptimizable (Profile profile)
 		{
-			// This test ensures that all methods that call BlockLiteral.SetupBlock[Impl] have an [BindingImpl (BindingImplOptions.Optimizable)] attribute.
+			// This test ensures that all methods that call optimizable methods have an [BindingImpl (BindingImplOptions.Optimizable)] attribute.
+			// Current optimizable methods:
+			// * BlockLiteral.SetupBlock
+			// * BlockLiteral.SetupBlockImpl
+			// * Runtime.get_DynamicRegistrationSupported
 
 			var dll = Configuration.GetBaseLibrary (profile);
 			var asm = AssemblyDefinition.ReadAssembly (dll);
@@ -34,51 +38,71 @@ namespace Xamarin.ApiTest
 			var failures = new List<string> ();
 
 			foreach (var type in asm.MainModule.GetTypes ()) {
-				if (type.Name == "BlockLiteral")
-					continue;
-
 				foreach (var method in type.Methods) {
 					if (!method.HasBody)
 						continue;
-					var callsSetupBlock = false;
+					var mustBeOptimizable = false;
+					MethodReference mr = null;
 					foreach (var instr in method.Body.Instructions) {
-						var mr = instr.Operand as MethodReference;
+						mr = instr.Operand as MethodReference;
 						if (mr == null)
 							continue;
-						if (mr.DeclaringType.Name != "BlockLiteral")
-							continue;
-						if (mr.Name != "SetupBlock" && mr.Name != "SetupBlockUnsafe")
-							continue;
-						callsSetupBlock = true;
-						break;
-					}
-					if (!callsSetupBlock)
-						continue;
-
-					// This method calls BlockLiteral.SetupBlock. Ensure it has a [BindingImpl (BindingImplOptions.Optimizable)] attribute.
-					var isOptimizable = IsOptimizable (method);
-					if (!isOptimizable && (method.IsGetter || method.IsSetter)) {
-						var property = method.DeclaringType.Properties.FirstOrDefault ((v) => v.GetMethod == method || v.SetMethod == method);
-						isOptimizable = IsOptimizable (property);
-					}
-					foreach (var ca in method.CustomAttributes) {
-						if (ca.AttributeType.Name != "BindingImplAttribute")
-							continue;
-						var value = (int) ca.ConstructorArguments [0].Value;
-						if ((value & 0x2) == 0x2) { // BindingImplOptions.Optimizable = 2
-							isOptimizable = true;
+						switch (mr.DeclaringType.Name) {
+						case "BlockLiteral":
+							if (type == mr.DeclaringType)
+								continue; // Calls within BlockLiteral without the optimizable attribute is allowed 
+							
+							switch (mr.Name) {
+							case "SetupBlock":
+							case "SetupBlockUnsafe":
+								mustBeOptimizable = true;
+								break;
+							}
+							break;
+						case "Runtime":
+							switch (mr.Name) {
+							case "get_DynamicRegistrationSupported":
+								mustBeOptimizable = true;
+								break;
+							}
 							break;
 						}
+						if (mustBeOptimizable)
+							break;
 					}
+					if (!mustBeOptimizable)
+						continue;
+
+					// Ensure it has a [BindingImpl (BindingImplOptions.Optimizable)] attribute.
+					var isOptimizable = IsOptimizable (method);
 					if (!isOptimizable)
-						failures.Add ($"The method {method.FullName} calls BlockLiteral.SetupBlock[Unsafe], but it does not have a [BindingImpl (BindingImplOptions.Optimizable)] attribute.");
+						failures.Add ($"The method {method.FullName} calls {mr.FullName}, but it does not have a [BindingImpl (BindingImplOptions.Optimizable)] attribute.");
 				}
 			}
 
-			CollectionAssert.IsEmpty (failures, "All methods calling SetupBlock[Unsafe] must be optimizable");
+			if (failures.Count > 0)
+				Assert.Fail ($"All methods calling optimizable API must be optimizable\n\t{string.Join ("\n\t", failures)}");
 		}
 
-		bool IsOptimizable (ICustomAttributeProvider provider)
+		bool IsOptimizable (MethodDefinition method)
+		{
+			var isOptimizable = IsOptimizableProvider (method);
+			if (!isOptimizable && (method.IsGetter || method.IsSetter)) {
+				var property = method.DeclaringType.Properties.FirstOrDefault ((v) => v.GetMethod == method || v.SetMethod == method);
+				if (IsOptimizableProvider (property))
+					return true;
+			}
+			foreach (var ca in method.CustomAttributes) {
+				if (ca.AttributeType.Name != "BindingImplAttribute")
+					continue;
+				var value = (int) ca.ConstructorArguments [0].Value;
+				if ((value & 0x2) == 0x2) // BindingImplOptions.Optimizable = 2
+					return true;
+			}
+			return false;
+		}
+
+		bool IsOptimizableProvider (ICustomAttributeProvider provider)
 		{
 			foreach (var ca in provider.CustomAttributes) {
 				if (ca.AttributeType.Name != "BindingImplAttribute")
