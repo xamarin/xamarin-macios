@@ -373,7 +373,10 @@ This optimization requires both the linker and the static registrar to be
 enabled.
 
 On Xamarin.iOS this optimization is enabled by default when both the linker
-and the static registrar are enabled. On Xamarin.Mac this optimization is
-never enabled by default.
+and the static registrar are enabled.
+
+On Xamarin.Mac this optimization is never enabled by default, because
+Xamarin.Mac supports loading assemblies dynamically, and those assemblies
+might not have been known at build time (and thus not optimized).
 
 The default behavior can be overridden by passing `--optimize=-register-protocols` to mtouch/mmp.

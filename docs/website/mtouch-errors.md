@@ -2380,3 +2380,7 @@ This indicates a bug in Xamarin.iOS. Please file a bug at [http://bugzilla.xamar
 ### <a name="MT8025"/>MT8025: Failed to compute the token reference for the type '{type.AssemblyQualifiedName}' because {reasons}
 
 This indicates a bug in Xamarin.iOS. Please file a bug at [https://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
+
+A potential workaround would be to disable the `register-protocols`
+optimization, by passing `--optimize:-register-protocols` as an additional
+mtouch argument in the project's iOS Build options.
