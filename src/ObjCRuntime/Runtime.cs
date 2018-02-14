@@ -1380,7 +1380,8 @@ namespace ObjCRuntime {
 			}
 
 			if (type.IsInterface) {
-				foreach (var pa in type.GetCustomAttributes<ProtocolAttribute> (false)) {
+				var pa = type.GetCustomAttribute<ProtocolAttribute> (false);
+				if (pa != null) {
 					var handle = Protocol.objc_getProtocol (pa.Name);
 					if (handle != IntPtr.Zero)
 						return handle;
