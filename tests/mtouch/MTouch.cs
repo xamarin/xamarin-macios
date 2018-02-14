@@ -1646,13 +1646,14 @@ public class TestApp {
 		[Test]
 		[TestCase ("all")]
 		[TestCase ("-all")]
-		[TestCase ("remove-uithread-checks,dead-code-elimination,inline-isdirectbinding,inline-intptr-size,inline-runtime-arch")]
+		[TestCase ("remove-uithread-checks,dead-code-elimination,inline-isdirectbinding,inline-intptr-size,inline-runtime-arch,register-protocols")]
 		public void Optimizations (string opt)
 		{
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.CreateTemporaryApp ();
 				mtouch.CreateTemporaryCacheDirectory ();
 				mtouch.Linker = MTouchLinker.LinkSdk;
+				mtouch.Registrar = MTouchRegistrar.Static;
 				mtouch.Optimize = new string [] { opt };
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
 				mtouch.AssertNoWarnings ();
