@@ -77,9 +77,6 @@
     <Compile Include="..\linker\MonoTouch.Tuner\RemoveCode.cs">
       <Link>MonoTouch.Tuner\RemoveCode.cs</Link>
     </Compile>
-    <Compile Include="..\linker\MonoTouch.Tuner\MonoTouchTypeMap.cs">
-      <Link>MonoTouch.Tuner\MonoTouchTypeMap.cs</Link>
-    </Compile>
     <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker\XApiReader.cs">
       <Link>Mono.Linker\XApiReader.cs</Link>
     </Compile>
@@ -262,6 +259,9 @@
     </Compile>
     <Compile Include="..\linker\CoreSweepStep.cs">
       <Link>Xamarin.Linker\CoreSweepStep.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\CoreTypeMapStep.cs">
+      <Link>Xamarin.Linker\CoreTypeMapStep.cs</Link>
     </Compile>
     <Compile Include="..\common\Driver.cs">
       <Link>external\Driver.cs</Link>

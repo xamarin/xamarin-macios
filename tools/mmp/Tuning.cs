@@ -158,7 +158,7 @@ namespace MonoMac.Tuner {
 			pipeline.AppendStep (new ProcessExportedFields ());
 
 			if (options.LinkMode != LinkMode.None) {
-				pipeline.AppendStep (new MonoTouchTypeMapStep ());
+				pipeline.AppendStep (new CoreTypeMapStep ());
 
 				var subdispatcher = new SubStepDispatcher {
 					new ApplyPreserveAttribute (),

@@ -190,7 +190,7 @@ namespace MonoTouch.Tuner {
 			pipeline.AppendStep (new ProcessExportedFields ());
 
 			if (options.LinkMode != LinkMode.None) {
-				pipeline.AppendStep (new MonoTouchTypeMapStep ());
+				pipeline.AppendStep (new CoreTypeMapStep ());
 
 				pipeline.AppendStep (GetSubSteps (options));
 

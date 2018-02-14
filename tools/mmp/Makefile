@@ -86,6 +86,7 @@ tuner_sources = \
 	$(TOP)/tools/linker/CoreHttpMessageHandler.cs		\
 	$(TOP)/tools/linker/CoreRemoveSecurity.cs		\
 	$(TOP)/tools/linker/CoreSweepStep.cs		\
+	$(TOP)/tools/linker/CoreTypeMapStep.cs		\
 	$(TOP)/tools/linker/ObjCExtensions.cs			\
 	$(TOP)/tools/linker/MarkNSObjects.cs			\
 	$(TOP)/tools/linker/MobileExtensions.cs		\
@@ -98,7 +99,6 @@ tuner_sources = \
 	$(TOP)/tools/linker/RemoveUserResourcesSubStep.cs \
 	../linker/MonoTouch.Tuner/Extensions.cs	\
 	../linker/MonoTouch.Tuner/ListExportedSymbols.cs	\
-	../linker/MonoTouch.Tuner/MonoTouchTypeMap.cs		\
 	../linker/MonoTouch.Tuner/ProcessExportedFields.cs	\
 	../linker/MonoTouch.Tuner/PreserveSmartEnumConversionsSubStep.cs		\
 	../../src/build/mac/Constants.cs
