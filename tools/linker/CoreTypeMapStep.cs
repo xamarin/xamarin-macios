@@ -1,5 +1,5 @@
 //
-// MonoTouchTypeMapStep.cs
+// CoreTypeMapStep.cs
 //
 // Authors:
 //	Sebastien Pouliot  <sebastien@xamarin.com>
@@ -21,7 +21,8 @@ using Xamarin.Tuner;
 
 namespace MonoTouch.Tuner {
 
-	public class MonoTouchTypeMapStep : TypeMapStep {
+	// This class is shared between Xamarin.Mac and Xamarin.iOS
+	public class CoreTypeMapStep : TypeMapStep {
 		HashSet<TypeDefinition> cached_isnsobject = new HashSet<TypeDefinition> ();
 		Dictionary<TypeDefinition, bool?> isdirectbinding_value = new Dictionary<TypeDefinition, bool?> ();
 

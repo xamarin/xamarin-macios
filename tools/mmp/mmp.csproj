@@ -254,6 +254,9 @@
     <Compile Include="..\linker\CoreSweepStep.cs">
       <Link>Xamarin.Linker\CoreSweepStep.cs</Link>
     </Compile>
+    <Compile Include="..\linker\CoreTypeMapStep.cs">
+      <Link>Xamarin.Linker\CoreTypeMapStep.cs</Link>
+    </Compile>
     <Compile Include="..\linker\MobileProfile.cs">
       <Link>Xamarin.Linker\MobileProfile.cs</Link>
     </Compile>
@@ -370,9 +373,6 @@
     </Compile>
     <Compile Include="..\common\CoreResolver.cs">
       <Link>common\CoreResolver.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\..\master\xamarin-macios\tools\linker\MonoTouch.Tuner\MonoTouchTypeMap.cs">
-      <Link>MonoTouch.Tuner\MonoTouchTypeMap.cs</Link>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
