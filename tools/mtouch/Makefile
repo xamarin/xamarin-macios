@@ -82,6 +82,7 @@ LINKER_SOURCES = \
 	$(TOP)/tools/linker/CorePreserveCode.cs		\
 	$(TOP)/tools/linker/CoreRemoveAttributes.cs		\
 	$(TOP)/tools/linker/CoreRemoveSecurity.cs		\
+	$(TOP)/tools/linker/CoreSweepStep.cs		\
 	$(TOP)/tools/linker/ExceptionalSubStep.cs		\
 	$(TOP)/tools/linker/MarkNSObjects.cs			\
 	$(TOP)/tools/linker/MobileExtensions.cs		\

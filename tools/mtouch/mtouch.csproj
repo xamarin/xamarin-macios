@@ -260,6 +260,9 @@
     <Compile Include="..\linker\MobileResolveMainAssemblyStep.cs">
       <Link>Xamarin.Linker\MobileResolveMainAssemblyStep.cs</Link>
     </Compile>
+    <Compile Include="..\linker\CoreSweepStep.cs">
+      <Link>Xamarin.Linker\CoreSweepStep.cs</Link>
+    </Compile>
     <Compile Include="..\common\Driver.cs">
       <Link>external\Driver.cs</Link>
     </Compile>

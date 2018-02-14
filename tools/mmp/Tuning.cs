@@ -179,7 +179,7 @@ namespace MonoMac.Tuner {
 
 				pipeline.AppendStep (new MonoMacMarkStep ());
 				pipeline.AppendStep (new MacRemoveResources (options));
-				pipeline.AppendStep (new MobileSweepStep (options.LinkSymbols));
+				pipeline.AppendStep (new CoreSweepStep (options.LinkSymbols));
 				pipeline.AppendStep (new CleanStep ());
 
 				pipeline.AppendStep (new MonoMacNamespaces ());

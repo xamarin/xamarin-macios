@@ -20,12 +20,6 @@ namespace Xamarin.Linker {
 		{
 		}
 
-		protected DerivedLinkContext LinkContext {
-			get {
-				return (DerivedLinkContext) base.Context;
-			}
-		}
-
 		public AssemblyAction CurrentAction { get; private set; }
 
 		protected override void Process ()
@@ -61,24 +55,6 @@ namespace Xamarin.Linker {
 			// reference: https://bugzilla.xamarin.com/show_bug.cgi?id=35372
 			if (main.HasModuleReferences && (CurrentAction == AssemblyAction.Link))
 				SweepCollection (main.ModuleReferences);
-		}
-
-		protected override void InterfaceRemoved (TypeDefinition type, InterfaceImplementation iface)
-		{
-			base.InterfaceRemoved (type, iface);
-
-			// The static registrar needs access to the interfaces for protocols, so keep them around.
-			if (!LinkContext.ProtocolImplementations.TryGetValue (type, out var list))
-				LinkContext.ProtocolImplementations [type] = list = new List<TypeDefinition> ();
-			list.Add (iface.InterfaceType.Resolve ());
-		}
-
-		protected override void ElementRemoved (IMetadataTokenProvider element)
-		{
-			base.ElementRemoved (element);
-
-			if (element is TypeDefinition td)
-				LinkContext.AddLinkedAwayType (td);
 		}
 	}
 }
