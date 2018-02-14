@@ -367,3 +367,11 @@ See the [equivalent mtouch warning](mtouch-errors.md#MT5218).
 <!-- 8016 used by mtouch -->
 
 ### <a name="MM8017">MM8017: The Boehm garbage collector is not supported. Please use SGen instead.
+
+### <a name="MM8025"/>MM8025: Failed to compute the token reference for the type '{type.AssemblyQualifiedName}' because {reasons}
+
+This indicates a bug in Xamarin.Mac. Please file a bug at [https://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=Xamarin.Mac).
+
+A potential workaround would be to disable the `register-protocols`
+optimization, by passing `--optimize:-register-protocols` as an additional mmp
+argument in the project's Mac Build options.

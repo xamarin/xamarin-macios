@@ -376,6 +376,66 @@ namespace ObjCRuntime {
 			throw ErrorHelper.CreateError (8019, $"Could not find the assembly {assembly_name} in the loaded assemblies.");
 		}
 
+		internal unsafe static uint GetTokenReference (Type type)
+		{
+			if (type.IsGenericType)
+				type = type.GetGenericTypeDefinition ();
+
+			var asm_name = type.Module.Assembly.GetName ().Name;
+
+			// First check if there's a full token reference to this type
+			var token = GetFullTokenReference (asm_name, type.Module.MetadataToken, type.MetadataToken);
+			if (token != uint.MaxValue)
+				return token;
+
+			// If type.Module.MetadataToken != 1, then the token must be a full token, which is not the case because we've already checked, so throw an exception.
+			if (type.Module.MetadataToken != 1)
+				throw ErrorHelper.CreateError (8025, $"Failed to compute the token reference for the type '{type.AssemblyQualifiedName}' because its module's metadata token is {type.Module.MetadataToken} when expected 1.");
+			
+			var map = Runtime.options->RegistrationMap;
+
+			// Find the assembly index in our list of registered assemblies.
+			int assembly_index = -1;
+			for (int i = 0; i < map->assembly_count; i++) {
+				var name_ptr = Marshal.ReadIntPtr (map->assembly, (int) i * IntPtr.Size);
+				if (Runtime.StringEquals (name_ptr, asm_name)) {
+					assembly_index = i;
+					break;
+				}
+			}
+			// If the assembly isn't registered, then the token must be a full token (which it isn't, because we've already checked).
+			if (assembly_index == -1)
+				throw ErrorHelper.CreateError (8025, $"Failed to compute the token reference for the type '{type.AssemblyQualifiedName}' because the assembly couldn't be found in the list of registered assemblies.");
+
+			if (assembly_index > 127)
+				throw ErrorHelper.CreateError (8025, $"Failed to compute the token reference for the type '{type.AssemblyQualifiedName}' because the assembly index {assembly_index} is not valid (must be <= 127).");
+
+			return (uint) ((type.MetadataToken << 8) + (assembly_index << 1));
+			
+		}
+
+		// Look for the specified metadata token in the table of full token references.
+		static unsafe uint GetFullTokenReference (string assembly_name, int module_token, int metadata_token)
+		{
+			var map = Runtime.options->RegistrationMap;
+			for (int i = 0; i < map->full_token_reference_count; i++) {
+				var ptr = map->full_token_references + (i * IntPtr.Size + 8);
+				var asm_ptr = Marshal.ReadIntPtr (ptr);
+				var token = Marshal.ReadInt32 (ptr + IntPtr.Size + 4);
+				if (token != metadata_token)
+					continue;
+				var mod_token = Marshal.ReadInt32 (ptr + IntPtr.Size);
+				if (mod_token != module_token)
+					continue;
+				if (!Runtime.StringEquals (asm_ptr, assembly_name))
+					continue;
+
+				return (uint) i;
+			}
+
+			return uint.MaxValue;
+		}
+
 		/*
 		Type must have been previously registered.
 		*/

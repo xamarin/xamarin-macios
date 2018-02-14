@@ -348,3 +348,35 @@ the static registrar is enabled by default for release builds).
 
 The default behavior can be overridden by passing `--optimize=[+|-]blockliteral-setupblock` to mtouch/mmp.
 
+Optimize support for protocols
+------------------------------
+
+The Xamarin.iOS/Mac runtime needs information about how managed types
+implements Objective-C protocols. This information is stored in interfaces
+(and attributes on these interfaces), which is not a very efficient format,
+nor is it linker-friendly.
+
+One example is that these interfaces store information about all protocol
+members in a `[ProtocolMember]` attribute, which among other things contain
+references to the parameter types of those members. This means that simply
+implementing such an interface will make the linker preserve all types used in
+that interface, even for optional members the app never calls or implements.
+
+This optimization will make the static registrar store any required
+information in an efficient format that uses little memory that's easy and
+quick to find at runtime.
+
+It will also teach the linker that it does not necessarily need to preserve
+these interfaces, nor any of the related attributes.
+
+This optimization requires both the linker and the static registrar to be
+enabled.
+
+On Xamarin.iOS this optimization is enabled by default when both the linker
+and the static registrar are enabled.
+
+On Xamarin.Mac this optimization is never enabled by default, because
+Xamarin.Mac supports loading assemblies dynamically, and those assemblies
+might not have been known at build time (and thus not optimized).
+
+The default behavior can be overridden by passing `--optimize=-register-protocols` to mtouch/mmp.

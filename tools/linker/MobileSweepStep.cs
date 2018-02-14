@@ -1,10 +1,12 @@
 // Copyright 2012-2013, 2015 Xamarin Inc. All rights reserved.
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using Mono.Cecil;
 using Mono.Linker;
 using Mono.Linker.Steps;
+
+using Xamarin.Tuner;
 
 namespace Xamarin.Linker {
 

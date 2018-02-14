@@ -16,6 +16,7 @@ namespace Xamarin.Bundler
 			"", // dummy value to make indices match up between XM and XI
 #endif
 			"blockliteral-setupblock",
+			"register-protocols",
 		};
 
 		bool? [] values;
@@ -46,6 +47,10 @@ namespace Xamarin.Bundler
 			get { return values [5]; }
 			set { values [5] = value; }
 		}
+		public bool? RegisterProtocols {
+			get { return values [6]; }
+			set { values [6] = value; }
+		}
 
 		public Optimizations ()
 		{
@@ -54,14 +59,25 @@ namespace Xamarin.Bundler
 
 		public void Initialize (Application app)
 		{
-			// warn if the user asked to optimize something when the linker is not enabled
-			if (app.LinkMode == LinkMode.None) {
-				for (int i = 0; i < values.Length; i++) {
-					if (!values [i].HasValue)
+			// warn if the user asked to optimize something when the optimization can't be applied
+			for (int i = 0; i < values.Length; i++) {
+				if (!values [i].HasValue)
+					continue;
+				switch (i) {
+				case 6:
+					if (app.Registrar != RegistrarMode.Static) {
+						ErrorHelper.Warning (2003, $"Option '--optimize={(values [i].Value ? "" : "-")}{opt_names [i]}' will be ignored since the static registrar is not enabled");
+						values [i] = false;
 						continue;
-					ErrorHelper.Warning (2003, $"Option '--optimize={(values [i].Value ? "" : "-")}{opt_names [i]}' will be ignored since linking is disabled");
+					}
+					goto default; // also requires the linker
+				default:
+					if (app.LinkMode == LinkMode.None) {
+						ErrorHelper.Warning (2003, $"Option '--optimize={(values [i].Value ? "" : "-")}{opt_names [i]}' will be ignored since linking is disabled");
+						values [i] = false;
+					}
+					break;
 				}
-				return;
 			}
 
 			// by default we keep the code to ensure we're executing on the UI thread (for UI code) for debug builds
@@ -101,6 +117,17 @@ namespace Xamarin.Bundler
 #else
 				OptimizeBlockLiteralSetupBlock = app.Registrar == RegistrarMode.Static;
 #endif
+			}
+
+			// We will register protocols if the static registrar is enabled
+			if (!RegisterProtocols.HasValue) {
+#if MONOTOUCH
+				RegisterProtocols = app.Registrar == RegistrarMode.Static;
+#else
+				RegisterProtocols = false;
+#endif
+			} else if (app.Registrar != RegistrarMode.Static && RegisterProtocols == true) {
+				RegisterProtocols = false; // we've already shown a warning for this.
 			}
 
 			if (Driver.Verbosity > 3)

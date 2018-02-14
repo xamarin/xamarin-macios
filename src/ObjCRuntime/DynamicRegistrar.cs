@@ -311,7 +311,7 @@ namespace Registrar {
 			return SharedDynamic.GetOneAttribute<RegisterAttribute> (type);
 		}
 
-		protected override ProtocolAttribute GetProtocolAttribute (Type type)
+		public override ProtocolAttribute GetProtocolAttribute (Type type)
 		{
 			return SharedDynamic.GetOneAttribute<ProtocolAttribute> (type);
 		}
@@ -376,6 +376,11 @@ namespace Registrar {
 		{
 			var attr = SharedDynamic.GetOneAttribute<ProtocolAttribute> (type);
 			return attr == null ? null : attr.WrapperType;
+		}
+
+		protected override IList<AdoptsAttribute> GetAdoptsAttributes (Type type)
+		{
+			return (AdoptsAttribute[]) type.GetCustomAttributes (typeof (AdoptsAttribute), false);
 		}
 
 		protected override string GetAssemblyName (Assembly assembly)

@@ -714,5 +714,10 @@ public partial class NotificationController : WKUserNotificationInterfaceControl
 		protected override string MessagePrefix {
 			get { return "MT"; }
 		}
+
+		public override string GetAppAssembliesDirectory ()
+		{
+			return AppPath;
+		}
 	}
 }
