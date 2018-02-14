@@ -3124,9 +3124,7 @@ namespace AVFoundation {
 	interface IAVCaptureDataOutputSynchronizerDelegate {}
 	
 	[NoWatch, NoTV, iOS (11,0)]
-#if XAMCORE_4_0
 	[NoMac]
-#endif
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface AVCaptureDataOutputSynchronizerDelegate
@@ -3137,9 +3135,7 @@ namespace AVFoundation {
 	}
 
 	[NoWatch, NoTV, iOS (11,0)]
-#if XAMCORE_4_0
 	[NoMac]
-#endif
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface AVCaptureDataOutputSynchronizer

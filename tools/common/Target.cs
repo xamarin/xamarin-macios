@@ -59,6 +59,7 @@ namespace Xamarin.Bundler {
 		public Target (Application app)
 		{
 			this.App = app;
+			this.StaticRegistrar = new StaticRegistrar (this);
 		}
 
 		public void ExtractNativeLinkInfo (List<Exception> exceptions)

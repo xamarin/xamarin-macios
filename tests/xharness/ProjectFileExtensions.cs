@@ -324,9 +324,19 @@ namespace xharness
 
 		public static void AddExtraMtouchArgs (this XmlDocument csproj, string value, string platform, string configuration)
 		{
-			var mtouchExtraArgs = csproj.SelectNodes ("//*[local-name() = 'MtouchExtraArgs']");
+			AddToNode (csproj, "MTouchExtraArgs", value, platform, configuration);
+		}
+
+		public static void AddMonoBundlingExtraArgs (this XmlDocument csproj, string value, string platform, string configuration)
+		{
+			AddToNode (csproj, "MonoBundlingExtraArgs", value, platform, configuration);
+		}
+
+		public static void AddToNode (this XmlDocument csproj, string node, string value, string platform, string configuration)
+		{
+			var nodes = csproj.SelectNodes ($"//*[local-name() = '{node}']");
 			var found = false;
-			foreach (XmlNode mea in mtouchExtraArgs) {
+			foreach (XmlNode mea in nodes) {
 				if (!IsNodeApplicable (mea, platform, configuration))
 					continue;
 
@@ -337,18 +347,17 @@ namespace xharness
 			if (found)
 				return;
 
-			// Not all projects have a MtouchExtraArgs node, so create one of none was found.
+			// The project might not have this node, so create one of none was found.
 			var propertyGroups = csproj.SelectNodes ("//*[local-name() = 'PropertyGroup' and @Condition]");
 			foreach (XmlNode pg in propertyGroups) {
 				if (!EvaluateCondition (pg, platform, configuration))
 					continue;
 
-				var mea = csproj.CreateElement ("MtouchExtraArgs", MSBuild_Namespace);
+				var mea = csproj.CreateElement (node, MSBuild_Namespace);
 				mea.InnerText = value;
 				pg.AppendChild (mea);
 			}
 		}
-
 		public static string GetExtraMtouchArgs (this XmlDocument csproj, string platform, string configuration)
 		{
 			var mtouchExtraArgs = csproj.SelectNodes ("//*[local-name() = 'MtouchExtraArgs']");
@@ -748,6 +757,15 @@ namespace xharness
 				new string [] { "ObjcBindingCoreSource", "Include" },
 				new string [] { "ObjcBindingNativeLibrary", "Include" },
 				new string [] { "ObjcBindingNativeFramework", "Include" },
+				new string [] { "Import", "Project" },
+				new string [] { "FilesToCopy", "Include" },
+				new string [] { "FilesToCopyFoo", "Include" },
+				new string [] { "FilesToCopyFooBar", "Include" },
+				new string [] { "FilesToCopyEncryptedXml", "Include" },
+				new string [] { "FilesToCopyCryptographyPkcs", "Include" },
+				new string [] { "FilesToCopyResources", "Include" },
+				new string [] { "FilesToCopyXMLFiles", "Include" },
+				new string [] { "FilesToCopyChannels", "Include" },
 			};
 			var nodes_with_variables = new string []
 			{
@@ -756,6 +774,10 @@ namespace xharness
 			Func<string, string> convert = (input) =>
 			{
 				if (input [0] == '/')
+					return input; // This is already a full path.
+				if (input.StartsWith ("$(MSBuildExtensionsPath)", StringComparison.Ordinal))
+					return input; // This is already a full path.
+				if (input.StartsWith ("$(MSBuildBinPath)", StringComparison.Ordinal))
 					return input; // This is already a full path.
 				input = input.Replace ('\\', '/'); // make unix-style
 				input = System.IO.Path.GetFullPath (System.IO.Path.Combine (dir, input));

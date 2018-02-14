@@ -67,7 +67,7 @@ namespace Linker.Shared {
 	[TestFixture]
 	// we want the test to be availble if we use the linker
 	[Preserve (AllMembers = true)]
-	public class OptimizeGeneratedCodeTest {
+	public class OptimizeGeneratedCodeTest : BaseOptimizeGeneratedCodeTest {
 		
 		// tests related to IL re-writting inside OptimizeGeneratedCodeSubStep
 		
@@ -202,12 +202,16 @@ namespace Linker.Shared {
 			case 4:
 				Size4Test ();
 				Size4Test_Optimizable ();
+				Assert.Throws<NUnit.Framework.Internal.NUnitException> (Size8Test, "Size8Test");
+				Assert.Throws<NUnit.Framework.Internal.NUnitException> (Size8Test_Optimizable, "Size8Test_Optimizable");
 				passingMethods = S4methods;
 				failingMethods = S8methods;
 				break;
 			case 8:
 				Size8Test ();
 				Size8Test_Optimizable ();
+				Assert.Throws<NUnit.Framework.Internal.NUnitException> (Size4Test, "Size4Test");
+				Assert.Throws<NUnit.Framework.Internal.NUnitException> (Size4Test_Optimizable, "Size4Test_Optimizable");
 				passingMethods = S8methods;
 				failingMethods = S4methods;
 				break;
@@ -226,6 +230,9 @@ namespace Linker.Shared {
 				passingInstructions = passingInstructions.Where ((v) => v.OpCode.Name != "nop");
 				Assert.AreEqual (1, passingInstructions.Count (), "empty body");
 			}
+#else
+			// Verify that the failing methods are not completely empty (even excluding nop instructions and the final ret instruction).
+			// This can only be executed in debug mode, because in release mode the IL will be stripped away and the methods will be empty.
 			foreach (var failingMethod in failingMethods) {
 				IEnumerable<ILInstruction> failingInstructions = new ILReader (failingMethod);
 				failingInstructions = failingInstructions.Where ((v) => v.OpCode.Name != "nop");

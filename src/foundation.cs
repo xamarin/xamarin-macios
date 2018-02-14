@@ -123,6 +123,7 @@ namespace Foundation
 	interface NSArray<TValue> : NSArray {}
 
 	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
 	interface NSArray : NSSecureCoding, NSMutableCopying, INSFastEnumeration, CKRecordValue {
 		[Export ("count")]
 		nuint Count { get; }
@@ -3315,6 +3316,7 @@ namespace Foundation
 	// Apple has now surfaced it on a few methods.   So we need to take the Obsolete
 	// out, and we will have to fully support it.
 	[BaseType (typeof (NSArray))]
+	[DesignatedDefaultCtor]
 	interface NSMutableArray {
 		[DesignatedInitializer]
 		[Export ("initWithCapacity:")]
@@ -3516,6 +3518,7 @@ namespace Foundation
 	}
 
 	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
 	interface NSDate : NSSecureCoding, NSCopying, CKRecordValue {
 		[Export ("timeIntervalSinceReferenceDate")]
 		double SecondsSinceReferenceDate { get; }
@@ -3563,6 +3566,7 @@ namespace Foundation
 	}
 	
 	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
 	interface NSDictionary : NSSecureCoding, NSMutableCopying, NSFetchRequestResult, INSFastEnumeration {
 		[Export ("dictionaryWithContentsOfFile:")]
 		[Static]
@@ -4625,6 +4629,7 @@ namespace Foundation
 	}
 
 	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
 	interface NSSet : NSSecureCoding, NSMutableCopying {
 		[Export ("set")][Static]
 		NSSet CreateSet ();
@@ -4987,6 +4992,7 @@ namespace Foundation
 
 	[iOS (6,0)]
 	[BaseType (typeof (NSObject), Name="NSUUID")]
+	[DesignatedDefaultCtor]
 	interface NSUuid : NSSecureCoding, NSCopying {
 		[Export ("initWithUUIDString:")]
 		IntPtr Constructor (string str);
@@ -7422,6 +7428,7 @@ namespace Foundation
 	}
 
 	[BaseType (typeof (NSDictionary))]
+	[DesignatedDefaultCtor]
 	interface NSMutableDictionary {
 		[Export ("dictionaryWithContentsOfFile:")]
 		[Static]
@@ -7489,6 +7496,7 @@ namespace Foundation
 	}
 
 	[BaseType (typeof (NSSet))]
+	[DesignatedDefaultCtor]
 	interface NSMutableSet {
 		[Export ("initWithArray:")]
 		IntPtr Constructor (NSArray other);
@@ -7754,6 +7762,7 @@ namespace Foundation
 	}
 
 	[BaseType (typeof (NSObject)), Bind ("NSString")]
+	[DesignatedDefaultCtor]
 	interface NSString2 : NSSecureCoding, NSMutableCopying, CKRecordValue
 	#if MONOMAC
 		, NSPasteboardReading, NSPasteboardWriting // Documented that it implements NSPasteboard protocols even if header doesn't show it
@@ -8421,6 +8430,11 @@ namespace Foundation
 		void PrepareForInterfaceBuilder ();
 
 		[NoWatch]
+#if MONOMAC
+		// comes from NSNibAwaking category and does not requires calling super
+#else
+		[RequiresSuper] // comes from UINibLoadingAdditions category - which is decorated
+#endif
 		[Export ("awakeFromNib")]
 		void AwakeFromNib ();
 	}
@@ -8661,6 +8675,7 @@ namespace Foundation
 #endif
 
 	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
 	interface NSOrderedSet : NSSecureCoding, NSMutableCopying {
 		[Export ("initWithObject:")]
 		IntPtr Constructor (NSObject start);
@@ -8755,6 +8770,7 @@ namespace Foundation
 #endif
 
 	[BaseType (typeof (NSOrderedSet))]
+	[DesignatedDefaultCtor]
 	interface NSMutableOrderedSet {
 		[Export ("initWithObject:")]
 		IntPtr Constructor (NSObject start);
@@ -8923,6 +8939,7 @@ namespace Foundation
 	[BaseType (typeof (NSStream))]
 	[DisableDefaultCtor] // crash when used
 	interface NSOutputStream {
+		[DesignatedInitializer]
 		[Export ("initToMemory")]
 		IntPtr Constructor ();
 
@@ -9558,6 +9575,7 @@ namespace Foundation
 
 	[iOS (8,0)][Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
 	partial interface NSItemProvider : NSCopying {
 		[DesignatedInitializer]
 		[Export ("initWithItem:typeIdentifier:")]
@@ -10318,22 +10336,49 @@ namespace Foundation
 		[Export ("CMTimeRangeValue")]
 		CMTimeRange CMTimeRangeValue { get; }
 
-		[Export ("valueWithRect:"), Static]
+#if MONOMAC
+		[Export ("valueWithRect:")]
+#else
+		[Export ("valueWithCGRect:")]
+#endif
+		[Static]
 		NSValue FromCGRect (CGRect rect);
 
-		[Export ("valueWithSize:")][Static]
+#if MONOMAC
+		[Export ("valueWithSize:")]
+#else
+		[Export ("valueWithCGSize:")]
+#endif
+		[Static]
 		NSValue FromCGSize (CGSize size);
 
-		[Export ("valueWithPoint:")][Static]
+#if MONOMAC
+		[Export ("valueWithPoint:")]
+#else
+		[Export ("valueWithCGPoint:")]
+#endif
+		[Static]
 		NSValue FromCGPoint (CGPoint point);
 
+#if MONOMAC
 		[Export ("rectValue")]
+#else
+		[Export ("CGRectValue")]
+#endif
 		CGRect CGRectValue { get; }
 
+#if MONOMAC
 		[Export ("sizeValue")]
+#else
+		[Export ("CGSizeValue")]
+#endif
 		CGSize CGSizeValue { get; }
 
+#if MONOMAC
 		[Export ("pointValue")]
+#else
+		[Export ("CGPointValue")]
+#endif
 		CGPoint CGPointValue { get; }
 
 		[NoMac]
@@ -11013,6 +11058,7 @@ namespace Foundation
 	}
 
 	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
 	interface NSThread {
 		[Static, Export ("currentThread", ArgumentSemantic.Strong)]
 		NSThread Current { get; }
@@ -11138,6 +11184,7 @@ namespace Foundation
 	[BaseType (typeof (NSObject))]
 	interface NSPortMessage {
 #if MONOMAC
+		[DesignatedInitializer]
 		[Export ("initWithSendPort:receivePort:components:")]
 		IntPtr Constructor (NSPort sendPort, NSPort recvPort, NSArray components);
 
@@ -13302,6 +13349,7 @@ namespace Foundation
 	partial interface NSScriptCommand : NSCoding {
 
 		[Internal]
+		[DesignatedInitializer]
 		[Export ("initWithCommandDescription:")]
 		IntPtr Constructor (NSScriptCommandDescription cmdDescription);
 
@@ -13342,6 +13390,7 @@ namespace Foundation
 	partial interface NSScriptCommandDescription : NSCoding {
 
 		[Internal]
+		[DesignatedInitializer]
 		[Export ("initWithSuiteName:commandName:dictionary:")]
 		IntPtr Constructor (NSString suiteName, NSString commandName, NSDictionary commandDeclaration);
 
@@ -13390,6 +13439,7 @@ namespace Foundation
 	}
 
 	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
 	interface NSAffineTransform : NSSecureCoding, NSCopying {
 		[Export ("initWithTransform:")]
 		IntPtr Constructor (NSAffineTransform transform);
@@ -13892,6 +13942,7 @@ namespace Foundation
 	}
 
 	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
 	interface NSTask {
 		[Export ("launch")]
 		void Launch ();
@@ -13961,6 +14012,7 @@ namespace Foundation
 
 	[Mac (10, 8)]
 	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
 	interface NSUserNotification : NSCoding, NSCopying {
 		[Export ("title", ArgumentSemantic.Copy)]
 		string Title { get; set; }
@@ -14114,10 +14166,12 @@ namespace Foundation
 	interface NSAppleScript : NSCopying {
 
 		// @required - (instancetype)initWithContentsOfURL:(NSURL *)url error:(NSDictionary **)errorInfo;
+		[DesignatedInitializer]
 		[Export ("initWithContentsOfURL:error:")]
 		IntPtr Constructor (NSUrl url, out NSDictionary errorInfo);
 
 		// @required - (instancetype)initWithSource:(NSString *)source;
+		[DesignatedInitializer]
 		[Export ("initWithSource:")]
 		IntPtr Constructor (string source);
 
@@ -14148,6 +14202,7 @@ namespace Foundation
 
 	[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
 	[BaseType (typeof (NSFormatter), Name = "NSISO8601DateFormatter")]
+	[DesignatedDefaultCtor]
 	interface NSIso8601DateFormatter : NSSecureCoding {
 
 		[Export ("timeZone", ArgumentSemantic.Copy)]

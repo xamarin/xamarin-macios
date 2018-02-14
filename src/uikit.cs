@@ -787,6 +787,7 @@ namespace UIKit {
 
 #if !WATCH
 	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
 	[iOS (6,0)]
 	interface NSShadow : NSCoding, NSCopying {
 		[Export ("shadowOffset", ArgumentSemantic.Assign)]
@@ -986,6 +987,7 @@ namespace UIKit {
 
 	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
 	interface NSLayoutManager : NSCoding {
 		[NullAllowed] // by default this property is null
 		[Export ("textStorage", ArgumentSemantic.Assign)]
@@ -3745,6 +3747,7 @@ namespace UIKit {
 	}
 	
 	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
 	interface UIBarItem : NSCoding, UIAppearance, UIAccessibility, UIAccessibilityIdentification {
 		[Export ("enabled")][Abstract]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
@@ -3790,6 +3793,7 @@ namespace UIKit {
 	}
 	
 	[BaseType (typeof (UIBarItem))]
+	[DesignatedDefaultCtor]
 	interface UIBarButtonItem : NSCoding
 #if IOS
 		, UISpringLoadedInteractionSupporting
@@ -4501,6 +4505,7 @@ namespace UIKit {
 
 	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
 	interface UICollectionViewLayout : NSCoding {
 		[Export ("collectionView")]
 		UICollectionView CollectionView { get;  }
@@ -6415,6 +6420,7 @@ namespace UIKit {
 
 	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
 	interface UIKeyCommand : NSCopying, NSSecureCoding {
 		[NullAllowed, Export ("input")]
 		NSString Input { get; }
@@ -7137,12 +7143,20 @@ namespace UIKit {
 		CGSize Size { get; }
 
 		// Thread-safe in iOS 9 or later according to docs.
+#if IOS
+		// tvOS started with 9.0 code base (and watchOS 2.0 came later)
+		[Advice ("This API is thread-safe only on 9.0 and later.")]
+#endif
 		[ThreadSafe]
 		[Static] [Export ("imageNamed:")][Autorelease]
 		UIImage FromBundle (string name);
 
 #if !WATCH
 		// Thread-safe in iOS 9 or later according to docs.
+#if IOS
+		// tvOS started with 9.0 code base (and watchOS 2.0 came later)
+		[Advice ("This API is thread-safe only on 9.0 and later.")]
+#endif
 		[ThreadSafe]
 		[iOS (8,0)]
 		[Static, Export ("imageNamed:inBundle:compatibleWithTraitCollection:")]
@@ -7394,6 +7408,7 @@ namespace UIKit {
 #if !WATCH
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
 	partial interface UIImageAsset : NSSecureCoding {
 		[Export ("imageWithTraitCollection:")]
 		UIImage FromTraitCollection (UITraitCollection traitCollection);
@@ -11271,6 +11286,7 @@ namespace UIKit {
 	}
 	
 	[BaseType (typeof (UIBarItem))]
+	[DesignatedDefaultCtor]
 	interface UITabBarItem : NSCoding
 #if IOS
 		, UISpringLoadedInteractionSupporting
@@ -13332,6 +13348,7 @@ namespace UIKit {
 		
 		[iOS (6,0)]
 		[Export ("updateConstraints")]
+		[RequiresSuper]
 		void UpdateConstraints ();
 
 		[iOS (6,0)]
@@ -14159,12 +14176,12 @@ namespace UIKit {
 
 		[iOS (11,0), TV (11,0)]
 		[Export ("viewLayoutMarginsDidChange")]
-		[Advice ("You must call the base method when overriding.")] // [RequiresSuper]
+		[RequiresSuper]
 		void ViewLayoutMarginsDidChange ();
 
 		[iOS (11,0), TV (11,0)]
 		[Export ("viewSafeAreaInsetsDidChange")]
-		[Advice ("You must call the base method when overriding.")] // [RequiresSuper]
+		[RequiresSuper]
 		void ViewSafeAreaInsetsDidChange ();
 
 		[NoWatch, NoTV]
@@ -14298,6 +14315,7 @@ namespace UIKit {
 	
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
 	partial interface UITraitCollection : NSCopying, NSSecureCoding {
 		[Export ("userInterfaceIdiom")]
 		UIUserInterfaceIdiom UserInterfaceIdiom { get; }
@@ -15830,6 +15848,7 @@ namespace UIKit {
 
 	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
 	interface UIMotionEffect : NSCoding, NSCopying {
 		[Export ("keyPathsAndRelativeValuesForViewerOffset:")]
 		NSDictionary ComputeKeyPathsAndRelativeValues (UIOffset viewerOffset);
@@ -16267,6 +16286,7 @@ namespace UIKit {
 	[iOS (8,0)]
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UserNotifications.UNNotificationCategory' instead.")]
 	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
 	partial interface UIUserNotificationCategory : NSCopying, NSMutableCopying, NSSecureCoding {
 
 		[Export ("identifier")]
@@ -16296,6 +16316,7 @@ namespace UIKit {
 	[NoTV]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
 	partial interface UIUserNotificationAction : NSCopying, NSMutableCopying, NSSecureCoding {
 
 		[Export ("identifier")]
@@ -16592,6 +16613,7 @@ namespace UIKit {
 
 	[iOS (10,0), TV (10,0)]
 	[BaseType (typeof(NSObject))]
+	[DesignatedDefaultCtor]
 	interface UICubicTimingParameters : UITimingCurveProvider
 	{
 		[Export ("animationCurve")]
@@ -17046,6 +17068,7 @@ namespace UIKit {
 	
 	[NoWatch, NoTV, iOS (11,0)]
 	[BaseType (typeof(NSObject))]
+	[DesignatedDefaultCtor]
 	interface UIDragPreviewParameters : NSCopying
 	{
 		[Export ("initWithTextLineRects:")]
@@ -18062,6 +18085,7 @@ namespace UIKit {
 	[NoWatch, NoTV]
 	[iOS (11,0)]
 	[BaseType (typeof(NSObject))]
+	[DesignatedDefaultCtor]
 	interface UIPasteConfiguration : NSSecureCoding, NSCopying {
 		[Export ("acceptableTypeIdentifiers", ArgumentSemantic.Copy)]
 		string[] AcceptableTypeIdentifiers { get; set; }

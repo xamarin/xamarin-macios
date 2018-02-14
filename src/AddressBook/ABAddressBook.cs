@@ -207,6 +207,7 @@ namespace AddressBook {
 		extern unsafe static void ABAddressBookRequestAccessWithCompletion (IntPtr addressbook, void * completion);
 
 		[iOS (6,0)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void RequestAccess (Action<bool,NSError> onCompleted)
 		{
 			if (onCompleted == null)

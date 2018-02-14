@@ -823,9 +823,9 @@ namespace Xamarin.Bundler {
 
 		void BuildInitialize ()
 		{
+			SelectRegistrar ();
 			Initialize ();
 			ValidateAbi ();
-			SelectRegistrar ();
 			ExtractNativeLinkInfo ();
 			SelectNativeCompiler ();
 		}
@@ -1363,9 +1363,6 @@ namespace Xamarin.Bundler {
 					Registrar = RegistrarMode.Dynamic;
 				}
 			}
-
-			foreach (var target in Targets)
-				target.SelectStaticRegistrar ();
 		}
 
 		// Select all abi from the list matching the specified mask.

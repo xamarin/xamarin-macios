@@ -31,6 +31,8 @@ using ProductException=MonoMac.RuntimeException;
 #if XAMCORE_2_0
 using ObjCRuntime;
 #endif
+#else
+using Mono.Cecil.Cil;
 #endif
 
 #if MMP || MMP_TEST || MTOUCH
@@ -94,20 +96,34 @@ namespace ObjCRuntime {
 		}
 
 #if (MTOUCH || MMP) && !MMP_TEST && !WIN32
-		public static void SetLocation (Application app, ProductException ex, Mono.Cecil.MethodDefinition method)
+		public static void SetLocation (Application app, ProductException ex, Mono.Cecil.MethodDefinition method, Instruction instruction = null)
 		{
 			if (!method.HasBody)
 				return;
 
+			if (instruction == null && method.Body.Instructions.Count == 0)
+				return;
+
+			if (instruction == null)
+				instruction = method.Body.Instructions [0];
 #if MTOUCH
 			app.LoadSymbols ();
 #endif
 
-			if (method.Body.Instructions.Count == 0)
+			if (!method.DebugInformation.HasSequencePoints)
 				return;
 
-			var seq = method.DebugInformation.GetSequencePoint (method.Body.Instructions [0]);
+			// Find the sequence point with the highest offset that is less than or equal to the instruction's offset
+			SequencePoint seq = null;
+			foreach (var pnt in method.DebugInformation.SequencePoints) {
+				if (pnt.Offset > instruction.Offset)
+					continue;
 
+				if (seq != null && seq.Offset >= pnt.Offset)
+					continue;
+
+				seq = pnt;
+			}
 			if (seq == null)
 				return;
 
@@ -117,17 +133,22 @@ namespace ObjCRuntime {
 
 		public static ProductException CreateError (Application app, int code, Mono.Cecil.MemberReference member, string message, params object[] args)
 		{
-			return Create (app, code, true, null, member, message, args);
+			return Create (app, code, true, null, member, null, message, args);
 		}
 
 		public static ProductException CreateError (Application app, int code, Mono.Cecil.MethodDefinition location, string message, params object[] args)
 		{
-			return Create (app, code, true, null, location, message, args);
+			return Create (app, code, true, null, location, null, message, args);
+		}
+
+		public static ProductException CreateError (Application app, int code, Mono.Cecil.MethodDefinition location, Instruction instruction, string message, params object [] args)
+		{
+			return Create (app, code, true, null, location, instruction, message, args);
 		}
 
 		public static ProductException CreateError (Application app, int code, Mono.Cecil.ICustomAttributeProvider provider, string message, params object [] args)
 		{
-			return Create (app, code, true, null, provider, message, args);
+			return Create (app, code, true, null, provider, null, message, args);
 		}
 
 		public static ProductException CreateError (Application app, int code, Exception innerException, Mono.Cecil.MethodDefinition location, string message, params object[] args)
@@ -147,7 +168,12 @@ namespace ObjCRuntime {
 
 		public static ProductException CreateWarning (Application app, int code, Mono.Cecil.MemberReference member, string message, params object [] args)
 		{
-			return Create (app, code, false, null, member, message, args);
+			return Create (app, code, false, null, member, null, message, args);
+		}
+
+		public static ProductException CreateWarning (Application app, int code, Mono.Cecil.MemberReference member, Instruction instruction, string message, params object [] args)
+		{
+			return Create (app, code, false, null, member, instruction, message, args);
 		}
 
 		public static ProductException CreateWarning (Application app, int code, Mono.Cecil.MethodDefinition location, string message, params object[] args)
@@ -165,6 +191,11 @@ namespace ObjCRuntime {
 			return Create (app, code, false, innerException, location, message, args);
 		}
 
+		public static ProductException CreateWarning (Application app, int code, Exception innerException, Mono.Cecil.MethodDefinition location, Instruction instruction, string message, params object [] args)
+		{
+			return Create (app, code, false, innerException, location, instruction, message, args);
+		}
+
 		public static ProductException CreateWarning (Application app, int code, Exception innerException, Mono.Cecil.TypeReference location, string message, params object[] args)
 		{
 			return Create (app, code, false, innerException, location, message, args);
@@ -177,8 +208,16 @@ namespace ObjCRuntime {
 
 		public static ProductException Create (Application app, int code, bool error, Exception innerException, Mono.Cecil.ICustomAttributeProvider provider, string message, params object [] args)
 		{
-			if (provider is Mono.Cecil.MemberReference member)
-				return Create (app, code, error, innerException, member, message, args);
+			return Create (app, code, error, innerException, provider, null, message, args);
+		}
+
+		public static ProductException Create (Application app, int code, bool error, Exception innerException, Mono.Cecil.ICustomAttributeProvider provider, Instruction instruction, string message, params object [] args)
+		{
+			if (provider is Mono.Cecil.MemberReference member) {
+				if (instruction != null)
+					return Create (app, code, error, innerException, member, instruction, message, args);
+				return Create (app, code, error, innerException, member, null, message, args);
+			}
 
 			if (provider is Mono.Cecil.TypeReference type)
 				return Create (app, code, error, innerException, type, message, args);
@@ -186,7 +225,7 @@ namespace ObjCRuntime {
 			return new ProductException (code, error, innerException, message, args);
 		}
 
-		public static ProductException Create (Application app, int code, bool error, Exception innerException, Mono.Cecil.MemberReference member, string message, params object [] args)
+		public static ProductException Create (Application app, int code, bool error, Exception innerException, Mono.Cecil.MemberReference member, Instruction instruction, string message, params object [] args)
 		{
 			Mono.Cecil.MethodReference method = member as Mono.Cecil.MethodReference;
 			if (method == null) {
@@ -197,14 +236,14 @@ namespace ObjCRuntime {
 						method = property.SetMethod;
 				}
 			}
-			return Create (app, code, error, innerException, method == null ? null : method.Resolve (), message, args);
+			return Create (app, code, error, innerException, method == null ? null : method.Resolve (), instruction, message, args);
 		}
 
-		public static ProductException Create (Application app, int code, bool error, Exception innerException, Mono.Cecil.MethodDefinition location, string message, params object [] args)
+		public static ProductException Create (Application app, int code, bool error, Exception innerException, Mono.Cecil.MethodDefinition location, Instruction instruction, string message, params object [] args)
 		{
 			var e = new ProductException (code, error, innerException, message, args);
 			if (location != null)
-				SetLocation (app, e, location);
+				SetLocation (app, e, location, instruction);
 			return e;
 		}
 

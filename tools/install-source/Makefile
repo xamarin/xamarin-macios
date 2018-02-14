@@ -26,11 +26,85 @@ Mono.Cecil.dll: $(MONO_CECIL_DLL)
 	$(Q) cp $<* $(dir $@)
 
 IOS_ASSEMBLIES = \
-	$(wildcard $(MONO_PATH)/mcs/class/lib/monotouch/*.pdb) \
+	$(MONO_PATH)/mcs/class/lib/monotouch/I18N.CJK.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/I18N.MidEast.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/I18N.Other.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/I18N.Rare.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/I18N.West.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/I18N.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/Microsoft.CSharp.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/Mono.CSharp.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/Mono.Data.Sqlite.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/Mono.Data.Tds.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/Mono.Security.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/Mono.Simd.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/System.ComponentModel.Composition.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/System.ComponentModel.DataAnnotations.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/System.Core.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/System.Data.Services.Client.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/System.Data.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/System.IO.Compression.FileSystem.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/System.IO.Compression.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/System.IdentityModel.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/System.Json.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/System.Net.Http.WinHttpHandler.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/System.Net.Http.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/System.Net.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/System.Numerics.Vectors.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/System.Numerics.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/System.Reflection.Context.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/System.Runtime.Serialization.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/System.Security.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/System.ServiceModel.Internals.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/System.ServiceModel.Web.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/System.ServiceModel.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/System.Transactions.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/System.Web.Services.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/System.Xml.Linq.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/System.Xml.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/System.pdb \
+	$(MONO_PATH)/mcs/class/lib/monotouch/mscorlib.pdb \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.iOS.pdb
 
 MAC_ASSEMBLIES = \
-	$(wildcard $(MONO_PATH)/mcs/class/lib/xammac/*.pdb) \
+	$(MONO_PATH)/mcs/class/lib/xammac/I18N.CJK.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/I18N.MidEast.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/I18N.Other.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/I18N.Rare.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/I18N.West.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/I18N.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/Microsoft.CSharp.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/Mono.CSharp.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/Mono.CompilerServices.SymbolWriter.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/Mono.Data.Sqlite.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/Mono.Data.Tds.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/Mono.Security.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/System.ComponentModel.Composition.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/System.ComponentModel.DataAnnotations.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/System.Core.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/System.Data.Services.Client.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/System.Data.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/System.IO.Compression.FileSystem.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/System.IO.Compression.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/System.IdentityModel.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/System.Json.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/System.Net.Http.WinHttpHandler.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/System.Net.Http.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/System.Net.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/System.Numerics.Vectors.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/System.Numerics.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/System.Reflection.Context.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/System.Runtime.Serialization.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/System.Security.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/System.ServiceModel.Internals.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/System.ServiceModel.Web.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/System.ServiceModel.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/System.Transactions.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/System.Web.Services.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/System.Xml.Linq.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/System.Xml.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/System.pdb \
+	$(MONO_PATH)/mcs/class/lib/xammac/mscorlib.pdb \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Xamarin.Mac.pdb
 
 IOS_MDB_FILES = \

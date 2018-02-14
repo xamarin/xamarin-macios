@@ -72,16 +72,46 @@ typedef struct __attribute__((packed)) {
 	uint32_t /* MTTokenReference */ type_reference;
 } MTClassMap;
 
+typedef struct __attribute__((packed)) {
+	uint32_t /* MTTokenReference */ skipped_reference;
+	uint32_t /* index into MTRegistrationMap->map */ index;
+} MTManagedClassMap;
+
+typedef struct __attribute__((packed)) {
+	uint32_t protocol_token;
+	uint32_t wrapper_token;
+} MTProtocolWrapperMap;
+
+typedef struct __attribute__((packed)) {
+	const uint32_t *protocol_tokens; // an array of token references to managed interfaces that represent protocols
+	const Protocol **protocols; // the corresponding native protocols
+} MTProtocolMap;
+
 struct MTRegistrationMap;
 
 struct MTRegistrationMap {
 	const char **assembly;
 	MTClassMap *map;
-	MTFullTokenReference *full_token_references;
+	const MTFullTokenReference *full_token_references;
+	// There are some managed types that are not registered because their ObjC
+	// class is already registered for a different managed type. For instance:
+	// The managed type "Foundation.NSArray<T>"" is not registered, because
+	// its ObjC class would be NSArray, which is already registered to
+	// "Foundation.NSArray". In order to be able to map all managed types to
+	// ObjC types we need to know which other managed type is the main type
+	// for the ObjC type (an alternative would be to map it directly to the
+	// ObjC class, but this is not a constant known at compile time, which
+	// means it can't be stored in read-only memory).
+	const MTManagedClassMap *skipped_map;
+	const MTProtocolWrapperMap *protocol_wrappers; // array of MTProtocolWrapperMap, sorted ascending by protocol_token
+	const MTProtocolMap protocols;
 	int assembly_count;
 	int map_count;
 	int custom_type_count;
 	int full_token_reference_count;
+	int skipped_map_count;
+	int protocol_wrapper_count;
+	int protocol_count;
 };
 
 typedef struct {
@@ -142,7 +172,7 @@ MonoType *		xamarin_get_parameter_type (MonoMethod *managed_method, int index);
 MonoObject *	xamarin_get_nsobject_with_type_for_ptr (id self, bool owns, MonoType* type, guint32 *exception_gchandle);
 MonoObject *	xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *type, int32_t *created, guint32 *exception_gchandle);
 int *			xamarin_get_delegate_for_block_parameter (MonoMethod *method, int par, void *nativeBlock, guint32 *exception_gchandle);
-id              xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate, guint32 *exception_gchandle);
+id              xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate, const char *signature /* NULL allowed, but requires the dynamic registrar at runtime to compute */, guint32 *exception_gchandle);
 id				xamarin_get_nsobject_handle (MonoObject *obj);
 void			xamarin_set_nsobject_handle (MonoObject *obj, id handle);
 uint8_t         xamarin_get_nsobject_flags (MonoObject *obj);
@@ -165,6 +195,7 @@ void			xamarin_ftnptr_exception_handler (guint32 gchandle);
 void			xamarin_create_classes ();
 const char *	xamarin_skip_encoding_flags (const char *encoding);
 void			xamarin_add_registration_map (struct MTRegistrationMap *map);
+uint32_t		xamarin_find_protocol_wrapper_type (uint32_t token_ref);
 
 bool			xamarin_has_managed_ref (id self);
 bool			xamarin_has_managed_ref_safe (id self);

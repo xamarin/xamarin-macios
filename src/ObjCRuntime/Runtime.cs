@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 using Foundation;
@@ -51,20 +52,47 @@ namespace ObjCRuntime {
 
 		internal static DynamicRegistrar Registrar;
 
+		const uint INVALID_TOKEN_REF = 0xFFFFFFFF;
+
 		internal unsafe struct MTRegistrationMap {
 			public IntPtr assembly;
 			public MTClassMap *map;
 			public IntPtr full_token_references; /* array of MTFullTokenReference */
+			public MTManagedClassMap* skipped_map;
+			public MTProtocolWrapperMap* protocol_wrapper_map;
+			public MTProtocolMap protocol_map;
 			public int assembly_count;
 			public int map_count;
 			public int custom_type_count;
 			public int full_token_reference_count;
+			public int skipped_map_count;
+			public int protocol_wrapper_count;
+			public int protocol_count;
 		}
 
 		[StructLayout (LayoutKind.Sequential, Pack = 1)]
 		internal struct MTClassMap {
 			public IntPtr handle;
 			public uint type_reference;
+		}
+
+		[StructLayout (LayoutKind.Sequential, Pack = 1)]
+		internal struct MTManagedClassMap
+		{
+			public uint skipped_reference; // implied token type: TypeDef
+			public uint index; // index into MTRegistrationMap.map
+		}
+
+		[StructLayout (LayoutKind.Sequential, Pack = 1)]
+		internal struct MTProtocolWrapperMap {
+			public uint protocol_token;
+			public uint wrapper_token;
+		}
+
+		[StructLayout (LayoutKind.Sequential, Pack = 1)]
+		internal unsafe struct MTProtocolMap {
+			public uint* protocol_tokens;
+			public IntPtr* protocols;
 		}
 
 		/* Keep Delegates, Trampolines and InitializationOptions in sync with monotouch-glue.m */
@@ -403,9 +431,9 @@ namespace ObjCRuntime {
 			return ObjectWrapper.Convert (CreateBlockProxy ((MethodInfo) ObjectWrapper.Convert (method), block));
 		}
 			
-		static IntPtr CreateDelegateProxy (IntPtr method, IntPtr @delegate)
+		static IntPtr CreateDelegateProxy (IntPtr method, IntPtr @delegate, IntPtr signature)
 		{
-			return BlockLiteral.GetBlockForDelegate ((MethodInfo) ObjectWrapper.Convert (method), ObjectWrapper.Convert (@delegate));
+			return BlockLiteral.GetBlockForDelegate ((MethodInfo) ObjectWrapper.Convert (method), ObjectWrapper.Convert (@delegate), Marshal.PtrToStringAuto (signature));
 		}
 
 		static unsafe Assembly GetEntryAssembly ()
@@ -1306,6 +1334,17 @@ namespace ObjCRuntime {
 			if (type == null || !type.IsInterface)
 				return null;
 
+			// Check if the static registrar knows about this protocol
+			unsafe {
+				var map = options->RegistrationMap;
+				if (map != null) {
+					var token = Class.GetTokenReference (type);
+					var wrapper_token = xamarin_find_protocol_wrapper_type (token);
+					if (wrapper_token != INVALID_TOKEN_REF)
+						return (Type) Class.ResolveTokenReference (wrapper_token, 0x02000000 /* TypeDef */);
+				}
+			}
+
 			// need to look up the type from the ProtocolAttribute.
 			var a = type.GetCustomAttributes (typeof (Foundation.ProtocolAttribute), false);
 
@@ -1317,9 +1356,39 @@ namespace ObjCRuntime {
 			return attr.WrapperType;
 		}
 
+		[DllImport ("__Internal")]
+		extern static uint xamarin_find_protocol_wrapper_type (uint token_ref);
+
 		public static IntPtr GetProtocol (string protocol)
 		{
 			return Protocol.objc_getProtocol (protocol);
+		}
+
+		internal static IntPtr GetProtocolForType (Type type)
+		{
+			// Check if the static registrar knows about this protocol
+			unsafe {
+				var map = options->RegistrationMap;
+				if (map != null && map->protocol_count > 0) {
+					var token = Class.GetTokenReference (type);
+					var tokens = map->protocol_map.protocol_tokens;
+					for (int i = 0; i < map->protocol_count; i++) {
+						if (tokens [i] == token)
+							return map->protocol_map.protocols [i];
+					}
+				}
+			}
+
+			if (type.IsInterface) {
+				var pa = type.GetCustomAttribute<ProtocolAttribute> (false);
+				if (pa != null) {
+					var handle = Protocol.objc_getProtocol (pa.Name);
+					if (handle != IntPtr.Zero)
+						return handle;
+				}
+			}
+
+			throw new ArgumentException (string.Format ("'{0}' is an unknown protocol", type.FullName));
 		}
 
 		public static void ConnectMethod (Type type, MethodInfo method, Selector selector)
@@ -1417,6 +1486,28 @@ namespace ObjCRuntime {
 
 		[DllImport (Constants.libSystemLibrary)]
 		unsafe extern internal static void memcpy (byte * target, byte * source, nint n);
+
+		// This function will try to compare a native UTF8 string to a managed string without creating a temporary managed string for the native UTF8 string.
+		// Currently this only works if the UTF8 string only contains single-byte characters.
+		// If any multi-byte characters are found, the native utf8 string is converted to a managed string, and then normal managed comparison is done.
+		internal static bool StringEquals (IntPtr utf8, string str)
+		{
+			// The vast majority of strings we compare fall within the single-byte UTF8 range, so optimize for this
+			unsafe {
+				byte* c = (byte*) utf8;
+				for (int i = 0; i < str.Length; i++) {
+					byte b = c [i];
+					if (b > 0x7F) {
+						// This string is a multibyte UTF8 string, so go the slow route and convert it to a managed string before comparison
+						return string.Equals (Marshal.PtrToStringUTF8 (utf8), str);
+					}
+					if (b != (short) str [i])
+						return false;
+				}
+				return c [str.Length] == 0;
+			}
+		}
+
 	}
 		
 	internal class IntPtrEqualityComparer : IEqualityComparer<IntPtr>

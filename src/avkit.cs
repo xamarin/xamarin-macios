@@ -327,6 +327,8 @@ namespace AVKit {
 	[Mac (10,9, onlyOn64 : true)]
 	[BaseType (typeof (NSView))]
 	interface AVPlayerView {
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
 
 		[Export ("player")]
 		AVPlayer Player { get; set; }
@@ -386,6 +388,8 @@ namespace AVKit {
 	[Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSView))]
 	interface AVCaptureView {
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
 
 		[Export ("session"), NullAllowed]
 		AVCaptureSession Session { get; }

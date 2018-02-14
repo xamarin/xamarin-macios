@@ -196,6 +196,7 @@ namespace UIKit {
 		extern unsafe static void UIAccessibilityRequestGuidedAccessSession (/* BOOL */ bool enable, /* void(^completionHandler)(BOOL didSucceed) */ void * completionHandler);
 
 		[iOS (7,0)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void RequestGuidedAccessSession (bool enable, Action<bool> completionHandler)
 		{
 			unsafe {
@@ -237,11 +238,21 @@ namespace UIKit {
 		static extern bool UIAccessibilityDarkerSystemColorsEnabled ();
 
 		[iOS (8,0)]
+		public static bool DarkerSystemColorsEnabled {
+			get {
+				return UIAccessibilityDarkerSystemColorsEnabled ();
+			}
+		}
+
+#if !XAMCORE_4_0
+		[iOS (8,0)]
+		[Obsolete ("Use 'DarkerSystemColorsEnabled' instead.")]
 		public static bool DarkerSystemColosEnabled {
 			get {
 				return UIAccessibilityDarkerSystemColorsEnabled ();
 			}
 		}
+#endif
 
 		[iOS (8,0)]
 		[DllImport (Constants.UIKitLibrary)]

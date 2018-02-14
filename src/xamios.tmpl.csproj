@@ -8,17 +8,18 @@
     <ProjectGuid>{E1F334C3-8F77-46C9-A28B-A8E9BAEA9FE5}</ProjectGuid>
     <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
-    <RootNamespace>monotouch</RootNamespace>
-    <AssemblyName>monotouch</AssemblyName>
+    <RootNamespace></RootNamespace>
+    <AssemblyName>Xamarin.iOS</AssemblyName>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\product.snk</AssemblyOriginatorKeyFile>
+    <IntermediateOutputPath>build\IDE\obj\iOS\$(Configuration)</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>IPHONE;IOS;MINIMAL;XAMCORE_2_0</DefineConstants>
+    <OutputPath>build\IDE\bin\iOS\Debug</OutputPath>
+    <DefineConstants>IPHONE;IOS;MINIMAL;XAMCORE_2_0;MONOTOUCH</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -29,7 +30,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Release</OutputPath>
+    <OutputPath>build\IDE\bin\iOS\Release</OutputPath>
+    <DefineConstants>IPHONE;IOS;MINIMAL;XAMCORE_2_0;MONOTOUCH</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -37,14 +39,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
   </ItemGroup>
-  <PropertyGroup>
-    <CscToolExe>$(MSBuildProjectDirectory)\custom-make.sh</CscToolExe>
-  </PropertyGroup>
   <ItemGroup>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="build\ios\native\**\*.cs">
+      <Link>build\ios\native\%(RecursiveDir)%(Filename).cs</Link>
+    </Compile>
     <!--%FILES%-->
     <!--%APIS%-->
   </ItemGroup>

@@ -251,6 +251,9 @@
     <Compile Include="..\linker\CorePreserveCode.cs">
       <Link>Xamarin.Linker\CorePreserveCode.cs</Link>
     </Compile>
+    <Compile Include="..\linker\CoreSweepStep.cs">
+      <Link>Xamarin.Linker\CoreSweepStep.cs</Link>
+    </Compile>
     <Compile Include="..\linker\MobileProfile.cs">
       <Link>Xamarin.Linker\MobileProfile.cs</Link>
     </Compile>

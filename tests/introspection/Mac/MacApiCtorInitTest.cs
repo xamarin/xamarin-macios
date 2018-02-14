@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 #if XAMCORE_2_0
 using Foundation;
@@ -193,6 +194,21 @@ namespace Introspection {
 			}
 
 			return base.Skip (type);
+		}
+
+		protected override bool Match (ConstructorInfo ctor, Type type)
+		{
+			switch (type.FullName) {
+			case "ScriptingBridge.SBElementArray":
+				// Adding a [DesignatedInitializer] on NSMutableArray triggers:
+				// 	[FAIL] ScriptingBridge.SBElementArray should re-expose NSMutableArray::.ctor()
+				// but the default constructor is disable for a good reason, i.e. assert at runtime
+				//	-[SBElementArray init]: should never be used.
+				if (ctor.ToString () == "Void .ctor()")
+					return true;
+				break;
+			}
+			return base.Match (ctor, type);
 		}
 
 		protected override void CheckNSObjectProtocol (NSObject obj)

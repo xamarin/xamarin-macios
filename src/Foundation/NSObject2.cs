@@ -251,7 +251,7 @@ namespace Foundation {
 			while (type != typeof (NSObject) && type != null) {
 				var attrs = type.GetCustomAttributes (typeof(ProtocolAttribute), false);
 				var protocolAttribute = (ProtocolAttribute) (attrs.Length > 0 ? attrs [0] : null);
-				if (protocolAttribute != null) {
+				if (protocolAttribute != null && !protocolAttribute.IsInformal) {
 					string name;
 
 					if (!string.IsNullOrEmpty (protocolAttribute.Name)) {

@@ -135,13 +135,17 @@ namespace Registrar {
 			public TType Type;
 			public ObjCType BaseType;
 			public ObjCType [] Protocols;
+			public string [] AdoptedProtocols;
 			public bool IsModel;
 			// if this type represents an ObjC protocol (!= has the protocol attribute, since that can be applied to all kinds of things).
 			public bool IsProtocol;
+			public bool IsInformalProtocol;
 			public bool IsWrapper;
 			public bool IsGeneric;
 #if !MTOUCH && !MMP
 			public IntPtr Handle;
+#else
+			public TType ProtocolWrapperType;
 #endif
 
 			public Dictionary<string, ObjCField> Fields;
@@ -982,6 +986,7 @@ namespace Registrar {
 		}
 
 		protected virtual void OnRegisterType (ObjCType type) {}
+		protected virtual void OnSkipType (TType type, ObjCType registered_type) { }
 		protected virtual void OnReloadType (ObjCType type) {}
 		protected virtual void OnRegisterProtocol (ObjCType type) {}
 		protected virtual void OnRegisterCategory (ObjCType type, ref List<Exception> exceptions) {}
@@ -996,6 +1001,7 @@ namespace Registrar {
 		protected abstract bool ContainsPlatformReference (TAssembly assembly); // returns true if the assembly is monotouch.dll too.
 		protected abstract TType GetBaseType (TType type); // for generic parameters it returns the first specific class constraint.
 		protected abstract TType[] GetInterfaces (TType type); // may return interfaces from base classes as well. May return null if no interfaces found.
+		protected virtual TType [] GetLinkedAwayInterfaces (TType type) { return null; } // may NOT return interfaces from base classes as well. May return null if no interfaces found.
 		protected abstract TMethod GetBaseMethod (TMethod method);
 		protected abstract TType[] GetParameters (TMethod method);
 		protected abstract string GetParameterName (TMethod method, int parameter_index);
@@ -1020,13 +1026,14 @@ namespace Registrar {
 		public abstract RegisterAttribute GetRegisterAttribute (TType type); // Return null if no attribute is found. Do not consider base types.
 		protected abstract CategoryAttribute GetCategoryAttribute (TType type); // Return null if no attribute is found. Do not consider base types.
 		protected abstract ConnectAttribute GetConnectAttribute (TProperty property); // Return null if no attribute is found. Do not consider inherited properties.
-		protected abstract ProtocolAttribute GetProtocolAttribute (TType type); // Return null if no attribute is found. Do not consider base types.
+		public abstract ProtocolAttribute GetProtocolAttribute (TType type); // Return null if no attribute is found. Do not consider base types.
 		protected abstract IEnumerable<ProtocolMemberAttribute> GetProtocolMemberAttributes (TType type); // Return null if no attributes found. Do not consider base types.
 		protected abstract List<AvailabilityBaseAttribute> GetAvailabilityAttributes (TType obj); // must only return attributes for the current platform.
 		protected abstract Version GetSDKVersion ();
 		protected abstract TType GetProtocolAttributeWrapperType (TType type); // Return null if no attribute is found. Do not consider base types.
 		protected abstract BindAsAttribute GetBindAsAttribute (TMethod method, int parameter_index); // If parameter_index = -1 then get the attribute for the return type. Return null if no attribute is found. Must consider base method.
 		protected abstract BindAsAttribute GetBindAsAttribute (TProperty property);
+		protected abstract IList<AdoptsAttribute> GetAdoptsAttributes (TType type);
 		public abstract TType GetNullableType (TType type); // For T? returns T. For T returns null.
 		protected abstract bool HasReleaseAttribute (TMethod method); // Returns true of the method's return type/value has a [Release] attribute.
 		protected abstract bool IsINativeObject (TType type);
@@ -1592,6 +1599,8 @@ namespace Registrar {
 			// return interfaces from all base classes as well.
 			// We only want the interfaces declared on this type.
 
+			// Additionally it may return interface implementations that were linked away.
+
 			// This function will return arrays with null entries.
 
 			var type = objcType.Type;
@@ -1623,20 +1632,85 @@ namespace Registrar {
 		ObjCType [] GetProtocols (ObjCType type, ref List<Exception> exceptions)
 		{
 			var interfaces = GetInterfacesImpl (type);
-			if (interfaces == null || interfaces.Length == 0)
-				return null;
-
-			var protocolList = new List<ObjCType> (interfaces.Length);
-			for (int i = 0; i < interfaces.Length; i++) {
-				if (interfaces [i] == null)
-					continue;
-				var baseP = RegisterTypeUnsafe (interfaces [i], ref exceptions);
-				if (baseP != null)
-					protocolList.Add (baseP);
+			List<ObjCType> protocolList = null;
+			if (interfaces?.Length > 0) {
+				var ifaceList = new List<TType> (interfaces);
+				protocolList = new List<ObjCType> (interfaces.Length);
+				for (int i = 0; i < ifaceList.Count; i++) {
+					if (ifaceList [i] == null)
+						continue;
+					var baseP = RegisterTypeUnsafe (ifaceList [i], ref exceptions);
+					if (baseP != null) {
+						if (baseP.IsInformalProtocol) {
+							var ifaces = GetInterfacesImpl (baseP);
+							if (ifaces != null)
+								ifaceList.AddRange (ifaces);
+						} else {
+							protocolList.Add (baseP);
+						}
+					}
+				}
 			}
-			if (protocolList.Count == 0)
+
+			// The interface might have been linked away.
+			var linkedAwayInterfaces = new List<TType> ();
+			var laifaces = GetLinkedAwayInterfaces (type.Type);
+			var baseType = type.BaseType;
+
+			if (laifaces != null)
+				linkedAwayInterfaces.AddRange (laifaces);
+
+			while (baseType?.IsModel == true) {
+				laifaces = GetLinkedAwayInterfaces (baseType.Type);
+				if (laifaces != null)
+					linkedAwayInterfaces.AddRange (laifaces);
+				baseType = baseType.BaseType;
+			}
+			if (linkedAwayInterfaces.Count > 0) {
+				if (protocolList == null)
+					protocolList = new List<ObjCType> ();
+				for (int i = 0; i < linkedAwayInterfaces.Count; i++) {
+					var iface = linkedAwayInterfaces [i];
+					var proto = GetProtocolAttribute (iface);
+					if (proto == null)
+						continue;
+					if (proto.IsInformal) {
+						laifaces = GetLinkedAwayInterfaces (iface);
+						if (laifaces != null)
+							linkedAwayInterfaces.AddRange (laifaces);
+						continue;
+					}
+					// We can't register this interface (because it's been linked away),
+					// but we still need to return information about it.
+					// So create an ObjCType with just the required information,
+					// and add that to what we return.
+					var objcType = new ObjCType () {
+						Registrar = this,
+						Type = iface,
+						IsProtocol = true,
+					};
+#if MMP || MTOUCH
+					objcType.ProtocolWrapperType = GetProtocolAttributeWrapperType (objcType.Type);
+					objcType.IsWrapper = objcType.ProtocolWrapperType != null;
+#endif
+
+					protocolList.Add (objcType);
+				}
+			}
+			if (protocolList == null || protocolList.Count == 0)
 				return null;
 			return protocolList.ToArray ();
+		}
+
+		string [] GetAdoptedProtocols (ObjCType type)
+		{
+			var attribs = GetAdoptsAttributes (type.Type);
+			if (attribs == null || attribs.Count == 0)
+				return null;
+			var rv = new string [attribs.Count];
+			for (var i = 0; i < attribs.Count; i++)
+				rv [i] = attribs [i].ProtocolType;
+			return rv;
 		}
 
 		ObjCType RegisterCategory (TType type, CategoryAttribute attrib, ref List<Exception> exceptions)
@@ -1807,8 +1881,10 @@ namespace Registrar {
 			}
 
 			var register_attribute = GetRegisterAttribute (type);
-			if (register_attribute != null && register_attribute.SkipRegistration)
+			if (register_attribute != null && register_attribute.SkipRegistration) {
+				OnSkipType (type, baseObjCType);
 				return baseObjCType;
+			}
 
 			objcType = new ObjCType () {
 				Registrar = this,
@@ -1816,11 +1892,16 @@ namespace Registrar {
 				Type = type,
 				IsModel = HasModelAttribute (type),
 				IsProtocol = isProtocol,
+				IsInformalProtocol = isInformalProtocol,
 				IsGeneric = isGenericType,
 			};
 			objcType.VerifyRegisterAttribute (ref exceptions);
-			objcType.Protocols = GetProtocols (objcType, ref exceptions);
+			objcType.AdoptedProtocols = GetAdoptedProtocols (objcType);
 			objcType.BaseType = isProtocol ? null : (baseObjCType ?? objcType);
+			objcType.Protocols = GetProtocols (objcType, ref exceptions);
+#if MMP || MTOUCH
+			objcType.ProtocolWrapperType = (isProtocol && !isInformalProtocol) ? GetProtocolAttributeWrapperType (objcType.Type) : null;
+#endif
 			objcType.IsWrapper = (isProtocol && !isInformalProtocol) ? (GetProtocolAttributeWrapperType (objcType.Type) != null) : (objcType.RegisterAttribute != null && objcType.RegisterAttribute.IsWrapper);
 
 			if (!objcType.IsWrapper && objcType.BaseType != null)
@@ -2314,10 +2395,9 @@ namespace Registrar {
 
 		public string ComputeSignature (TType DeclaringType, TMethod Method, ObjCMember member = null, bool isCategoryInstance = false, bool isBlockSignature = false)
 		{
-			var success = true;
-			var signature = new StringBuilder ();
 			bool is_ctor;
 			var method = member as ObjCMethod;
+			TType return_type = null;
 
 			if (Method != null) {
 				is_ctor = IsConstructor (Method);
@@ -2325,16 +2405,8 @@ namespace Registrar {
 				is_ctor = method.IsConstructor;
 			}
 
-			if (is_ctor) {
-				signature.Append ('@');
-			} else {
-				var ReturnType = Method != null ? GetReturnType (Method) : method.NativeReturnType;
-				signature.Append (ToSignature (ReturnType, member, ref success));
-				if (!success)
-					throw CreateException (4104, Method ?? method.Method, "The registrar cannot marshal the return value of type `{0}` in the method `{1}.{2}`.", GetTypeFullName (ReturnType), GetTypeFullName (DeclaringType), GetDescriptiveMethodName (Method ?? method.Method));
-			}
-
-			signature.Append (isBlockSignature ? "@?" : "@:");
+			if (!is_ctor)
+				return_type = Method != null ? GetReturnType (Method) : method.NativeReturnType;
 
 			TType[] parameters;
 			if (Method != null) {
@@ -2343,6 +2415,26 @@ namespace Registrar {
 				parameters = method.NativeParameters;
 			}
 
+			return ComputeSignature (DeclaringType, is_ctor, return_type, parameters, Method, member, isCategoryInstance, isBlockSignature);
+		}
+
+		public string ComputeSignature (TType declaring_type, bool is_ctor, TType return_type, TType [] parameters, TMethod mi = null, ObjCMember member = null, bool isCategoryInstance = false, bool isBlockSignature = false)
+		{
+			var success = true;
+			var signature = new StringBuilder ();
+			if (mi == null)
+				mi = (member as ObjCMethod)?.Method;
+			
+			if (is_ctor) {
+				signature.Append ('@');
+			} else {
+				signature.Append (ToSignature (return_type, member, ref success));
+				if (!success)
+					throw CreateException (4104, mi, "The registrar cannot marshal the return value of type `{0}` in the method `{1}.{2}`.", GetTypeFullName (return_type), GetTypeFullName (declaring_type), GetDescriptiveMethodName (mi));
+			}
+
+			signature.Append (isBlockSignature ? "@?" : "@:");
+
 			if (parameters != null) {
 				for (int i = 0; i < parameters.Length; i++) {
 					if (i == 0 && isCategoryInstance)
@@ -2350,14 +2442,24 @@ namespace Registrar {
 					var type = parameters [i];
 					if (IsByRef (type)) {
 						signature.Append ("^");
-						signature.Append (ToSignature (GetElementType (type), member, ref success));
+						var elementType = GetElementType (type);
+						if (IsNullable (elementType)) {
+							signature.Append (ToSignature (GetNullableType (elementType), member, ref success));
+						} else {
+							signature.Append (ToSignature (elementType, member, ref success));
+						}
 					} else {
 						signature.Append (ToSignature (type, member, ref success));
 					}
 					if (!success) {
-						var mi = Method ?? method.Method;
+						if (mi != null) {
+							// The input 'parameters' might be closed generic types, and thus might not correspond exactly with the source code.
+							// By fetching the parameters from the method again, we attempt to report the parameter type as close as possible
+							// to the source code.
+							parameters = GetParameters (mi);
+						}
 						throw CreateException (4136, mi, "The registrar cannot marshal the parameter type '{0}' of the parameter '{1}' in the method '{2}.{3}'",
-							GetTypeFullName (GetParameters (mi) [i]), GetParameterName (mi, i), GetTypeFullName (DeclaringType), GetDescriptiveMethodName (mi));
+							GetTypeFullName (parameters [i]), GetParameterName (mi, i), GetTypeFullName (declaring_type), GetDescriptiveMethodName (mi));
 					}
 				}
 			}

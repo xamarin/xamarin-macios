@@ -872,17 +872,6 @@ namespace Xamarin.Bundler
 			}
 		}
 
-		public void SelectStaticRegistrar ()
-		{
-			switch (App.Registrar) {
-			case RegistrarMode.Static:
-			case RegistrarMode.Dynamic:
-			case RegistrarMode.Default:
-				StaticRegistrar = new StaticRegistrar (this);
-				break;
-			}
-		}
-
 		void AOTCompile ()
 		{
 			if (App.IsSimulatorBuild)
