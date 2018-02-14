@@ -29,23 +29,21 @@ namespace MonoTouchFixtures.ObjCRuntime
 		[Test]
 		public void Ctors ()
 		{
-			Assert.AreNotEqual (IntPtr.Zero, new Protocol (typeof (global::ModelIO.IMDLComponent)).Handle, "IMDLComponent type");
-			Assert.AreNotEqual (IntPtr.Zero, new Protocol (typeof (INSObjectProtocol)).Handle, "NSObject type");
+			var data = new [] {
+				new { Type = typeof (INSObjectProtocol), Name = "NSObject" },
+#if !__WATCHOS__
+				new { Type = typeof (global::ModelIO.IMDLComponent), Name = "MDLComponent" },
+#endif
+			};
 
-			Assert.AreNotEqual (IntPtr.Zero, new Protocol ("MDLComponent").Handle, "MDLComponent string");
-			Assert.AreNotEqual (IntPtr.Zero, new Protocol ("NSObject").Handle, "NSObject string");
-
-			Assert.AreEqual ("MDLComponent", new Protocol ("MDLComponent").Name, "MDLComponent name");
-			Assert.AreEqual ("NSObject", new Protocol ("NSObject").Name, "NSObject name");
-
-			Assert.AreEqual ("MDLComponent", new Protocol (typeof (global::ModelIO.IMDLComponent)).Name, "MDLComponent type name");
-			Assert.AreEqual ("NSObject", new Protocol (typeof (INSObjectProtocol)).Name, "NSObject type name");
-
-			Assert.AreEqual ("MDLComponent", new Protocol (new Protocol ("MDLComponent").Handle).Name, "NSObject IntPtr name");
-			Assert.AreEqual ("NSObject", new Protocol (new Protocol ("NSObject").Handle).Name, "NSObject IntPtr name");
-
-			Assert.AreEqual ("MDLComponent", new Protocol (Protocol.GetHandle ("MDLComponent")).Name, "NSObject GetHandle name");
-			Assert.AreEqual ("NSObject", new Protocol (Protocol.GetHandle ("NSObject")).Name, "NSObject GetHandle name");
+			foreach (var d in data) {
+				Assert.AreNotEqual (IntPtr.Zero, new Protocol (d.Type).Handle, $"{d.Name} type");
+				Assert.AreNotEqual (IntPtr.Zero, new Protocol (d.Name).Handle, $"{d.Name} string");
+				Assert.AreEqual (d.Name, new Protocol (d.Name).Name, $"{d.Name} name");
+				Assert.AreEqual (d.Name, new Protocol (typeof (INSObjectProtocol)).Name, $"{d.Name} type name");
+				Assert.AreEqual (d.Name, new Protocol (new Protocol (d.Name).Handle).Name, $"{d.Name} IntPtr name");
+				Assert.AreEqual (d.Name, new Protocol (Protocol.GetHandle (d.Name)).Name, $"{d.Name} GetHandle name");
+			}
 		}
 	}
 }
