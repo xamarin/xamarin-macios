@@ -50,9 +50,19 @@ namespace Foundation {
 
 		}
 
-		public NSAutoreleasePool (NSObjectFlag t) : base (t) {}
+#if XAMCORE_4_0
+		protected
+#else
+		public
+#endif
+		NSAutoreleasePool (NSObjectFlag t) : base (t) {}
 
-		public NSAutoreleasePool (IntPtr handle) : base (handle) {}
+#if XAMCORE_4_0
+		protected
+#else
+		public
+#endif
+		NSAutoreleasePool (IntPtr handle) : base (handle) {}
 
 #if !XAMCORE_2_0
 		protected override void Dispose (bool disposing) {
