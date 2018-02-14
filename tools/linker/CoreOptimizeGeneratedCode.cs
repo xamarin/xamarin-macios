@@ -212,11 +212,7 @@ namespace Xamarin.Linker {
 				return true; // We've already marked this section of code
 
 			for (int i = start; i < end; i++) {
-				if (instructions [i].OpCode.Code != Code.Nop) {
-					// Not marking nop instructios makes it possible to remove catch clauses if 
-					// the protected region is only nops (or empty).
-					reachable [i] = true;
-				}
+				reachable [i] = true;
 
 				var ins = instructions [i];
 				switch (ins.OpCode.FlowControl) {
@@ -400,21 +396,36 @@ namespace Xamarin.Linker {
 				return;
 
 			// Handle exception handlers specially, they do not follow normal code flow.
+			bool[] reachableExceptionHandlers = null;
 			if (caller.Body.HasExceptionHandlers) {
-				foreach (var eh in caller.Body.ExceptionHandlers) {
+				reachableExceptionHandlers = new bool [caller.Body.ExceptionHandlers.Count];
+				for (var e = 0; e < reachableExceptionHandlers.Length; e++) {
+					var eh = caller.Body.ExceptionHandlers [e];
+
+					// First check if the protected region is reachable
+					var startI = instructions.IndexOf (eh.TryStart);
+					var endI = instructions.IndexOf (eh.TryEnd);
+					for (int i = startI; i < endI; i++) {
+						if (reachable [i]) {
+							reachableExceptionHandlers [e] = true;
+							break;
+						}
+					}
+					// The protected code isn't reachable, none of the handlers will be executed
+					if (!reachableExceptionHandlers [e])
+						continue;
+
 					switch (eh.HandlerType) {
 					case ExceptionHandlerType.Catch:
-						// We don't need catch handlers if the protected region does not have any reachable instructions.
-						var startI = instructions.IndexOf (eh.TryStart);
-						var endI = instructions.IndexOf (eh.TryEnd);
-						var anyReachable = false;
+						// We don't need catch handlers the reachable instructions are all nops
+						var allNops = true;
 						for (int i = startI; i < endI; i++) {
-							if (reachable [i]) {
-								anyReachable = true;
+							if (instructions [i].OpCode.Code != Code.Nop) {
+								allNops = false;
 								break;
 							}
 						}
-						if (anyReachable) {
+						if (!allNops) {
 							if (!MarkInstructions (caller, instructions, reachable, instructions.IndexOf (eh.HandlerStart), instructions.IndexOf (eh.HandlerEnd)))
 								return;
 						}
@@ -504,6 +515,15 @@ namespace Xamarin.Linker {
 			for (int i = 0; i < reachable.Length; i++) {
 				if (!reachable [i])
 					Nop (instructions [i]);
+			}
+
+			// Remove exception handlers
+			if (reachableExceptionHandlers != null) {
+				for (int i = reachableExceptionHandlers.Length - 1; i >= 0; i--) {
+					if (reachableExceptionHandlers [i])
+						continue;
+					caller.Body.ExceptionHandlers.RemoveAt (i);
+				}
 			}
 
 			// Remove unreachable instructions (nops) at the end, because the last instruction can only be ret/throw/backwards branch.
