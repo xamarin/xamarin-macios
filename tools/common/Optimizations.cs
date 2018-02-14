@@ -18,7 +18,11 @@ namespace Xamarin.Bundler
 			"blockliteral-setupblock",
 			"register-protocols",
 			"inline-dynamic-registration-supported",
+#if MONOTOUCH
 			"remove-dynamic-registrar",
+#else
+			"", // dummy value to make indices match up between XM and XI
+#endif
 		};
 
 		enum Opt
