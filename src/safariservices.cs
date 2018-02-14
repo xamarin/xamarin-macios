@@ -331,6 +331,8 @@ namespace SafariServices {
 	[BaseType (typeof(NSViewController))]
 	interface SFSafariExtensionViewController
 	{
+		[Export ("initWithNibName:bundle:")]
+		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
 	}
 
 	[Mac (10,12, onlyOn64: true)]

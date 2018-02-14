@@ -138,6 +138,7 @@ namespace Registrar {
 			public bool IsModel;
 			// if this type represents an ObjC protocol (!= has the protocol attribute, since that can be applied to all kinds of things).
 			public bool IsProtocol;
+			public bool IsInformalProtocol;
 			public bool IsWrapper;
 			public bool IsGeneric;
 #if !MTOUCH && !MMP
@@ -1627,13 +1628,21 @@ namespace Registrar {
 			if (interfaces == null || interfaces.Length == 0)
 				return null;
 
+			var ifaceList = new List<TType> (interfaces);
 			var protocolList = new List<ObjCType> (interfaces.Length);
-			for (int i = 0; i < interfaces.Length; i++) {
-				if (interfaces [i] == null)
+			for (int i = 0; i < ifaceList.Count; i++) {
+				if (ifaceList [i] == null)
 					continue;
-				var baseP = RegisterTypeUnsafe (interfaces [i], ref exceptions);
-				if (baseP != null)
-					protocolList.Add (baseP);
+				var baseP = RegisterTypeUnsafe (ifaceList [i], ref exceptions);
+				if (baseP != null) {
+					if (baseP.IsInformalProtocol) {
+						var ifaces = GetInterfacesImpl (baseP);
+						if (ifaces != null)
+							ifaceList.AddRange (ifaces);
+					} else {
+						protocolList.Add (baseP);
+					}
+				}
 			}
 			if (protocolList.Count == 0)
 				return null;
@@ -1819,6 +1828,7 @@ namespace Registrar {
 				Type = type,
 				IsModel = HasModelAttribute (type),
 				IsProtocol = isProtocol,
+				IsInformalProtocol = isInformalProtocol,
 				IsGeneric = isGenericType,
 			};
 			objcType.VerifyRegisterAttribute (ref exceptions);

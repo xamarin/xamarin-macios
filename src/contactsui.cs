@@ -98,6 +98,9 @@ namespace ContactsUI {
 	[BaseType (typeof(NSViewController))]
 	interface CNContactViewController
 	{
+		[Export ("initWithNibName:bundle:")]
+		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+
 		[Static]
 		[Export ("descriptorForRequiredKeys")]
 		ICNKeyDescriptor DescriptorForRequiredKeys { get; }
