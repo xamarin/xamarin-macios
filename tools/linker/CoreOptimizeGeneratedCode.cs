@@ -758,6 +758,9 @@ namespace Xamarin.Linker {
 			if (!mr.DeclaringType.Is (Namespaces.ObjCRuntime, "BlockLiteral"))
 				return 0;
 
+			if (caller.Name == "GetBlockForDelegate" && caller.DeclaringType.Is ("ObjCRuntime", "BlockLiteral"))
+				return 0; // BlockLiteral.GetBlockForDelegate contains a non-optimizable call to SetupBlock, and this way we don't show any warnings to users about things they can't do anything about.
+
 			string signature = null;
 			try {
 				// We need to figure out the type of the first argument to the call to SetupBlock[Impl].

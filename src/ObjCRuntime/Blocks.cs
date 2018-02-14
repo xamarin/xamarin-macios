@@ -243,6 +243,7 @@ namespace ObjCRuntime {
 			return descriptor->copy_helper == ((BlockDescriptor *) literal->block_descriptor)->copy_helper;
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		internal static IntPtr GetBlockForDelegate (MethodInfo minfo, object @delegate, string signature)
 		{
 			if (@delegate == null)
