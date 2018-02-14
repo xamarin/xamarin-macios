@@ -8478,6 +8478,9 @@ namespace AppKit {
 
 	[BaseType (typeof (NSTableView))]
 	partial interface NSOutlineView {
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
+
 		[Export ("outlineTableColumn"), NullAllowed]
 		NSTableColumn OutlineTableColumn { get; set; }
 
@@ -9615,6 +9618,13 @@ namespace AppKit {
 
 		[Export ("imageFrameStyle")]
 		NSImageFrameStyle ImageFrameStyle { get; set; }
+
+		// Inlined from parent
+		[Export ("initTextCell:")]
+		IntPtr Constructor (string aString);
+	
+		[Export ("initImageCell:")]
+		IntPtr Constructor (NSImage  image);
 	}
 
 	[Static]
@@ -10933,6 +10943,8 @@ namespace AppKit {
 		[Export ("worksWhenModal")]
 		bool WorksWhenModal { get; set; }
 
+		[Export ("initWithContentRect:styleMask:backing:defer:")]
+		IntPtr Constructor (CGRect contentRect, NSWindowStyle aStyle, NSBackingStore bufferingType, bool deferCreation);
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -14218,6 +14230,9 @@ namespace AppKit {
 	[Mac (10,10)]
 	[BaseType (typeof (NSViewController))]
 	interface NSSplitViewController : NSSplitViewDelegate, NSUserInterfaceValidations {
+		[Export ("initWithNibName:bundle:")]
+		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+
 		[Export ("splitView", ArgumentSemantic.Strong)]
 		NSSplitView SplitView { get; set; }
 
@@ -14400,6 +14415,9 @@ namespace AppKit {
 	[Mac (10,9)]
 	[BaseType (typeof (NSView))]
 	interface NSStackView {
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
+
 		[Export ("delegate", ArgumentSemantic.Weak)][NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
@@ -16188,6 +16206,9 @@ namespace AppKit {
 		Events = new [] { typeof (NSPageControllerDelegate) })]
 	partial interface NSPageController : NSAnimatablePropertyContainer {
 
+		[Export ("initWithNibName:bundle:")]
+		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
@@ -16331,6 +16352,9 @@ namespace AppKit {
 	[Mac (10, 7)]
 	[BaseType (typeof (NSView))]
 	interface NSTableRowView : NSAccessibilityRow {
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
+
 		[Export ("selectionHighlightStyle")]
 		NSTableViewSelectionHighlightStyle SelectionHighlightStyle { get; set;  }
 
@@ -16391,6 +16415,9 @@ namespace AppKit {
 	[Mac (10, 7)]
 	[BaseType (typeof (NSView))]
 	partial interface NSTableCellView {
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
+
 		[Export ("backgroundStyle")]
 		NSBackgroundStyle BackgroundStyle {
 			get; set;
@@ -17264,6 +17291,9 @@ namespace AppKit {
 	[Mac (10,10)]
 	[BaseType (typeof (NSViewController))]
 	interface NSTabViewController : NSTabViewDelegate, NSToolbarDelegate {
+		[Export ("initWithNibName:bundle:")]
+		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+
 		[Export ("tabStyle")]
 		NSTabViewControllerTabStyle TabStyle { get; set; }
 
@@ -17589,6 +17619,9 @@ namespace AppKit {
 	interface NSTextAttachmentCell {
 		[Export ("initImageCell:")]
 		IntPtr Constructor (NSImage  image);
+
+		[Export ("initTextCell:")]
+		IntPtr Constructor (string aString);
 
 		[Export ("wantsToTrackMouse")]
 		bool WantsToTrackMouse ();
@@ -20455,6 +20488,9 @@ namespace AppKit {
 	[Mac (10,10)]
 	[BaseType (typeof (NSViewController))]
 	interface NSTitlebarAccessoryViewController : NSAnimationDelegate, NSAnimatablePropertyContainer {
+		[Export ("initWithNibName:bundle:")]
+		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+
 		[Export ("layoutAttribute")]
 		NSLayoutAttribute LayoutAttribute { get; set; }
 
@@ -20481,6 +20517,9 @@ namespace AppKit {
 	[Mac (10,10)]
 	[BaseType (typeof (NSView))]
 	interface NSVisualEffectView {
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
+
 		[Export ("material")]
 		NSVisualEffectMaterial Material { get; set; }
 
@@ -21268,6 +21307,9 @@ namespace AppKit {
    
 	[BaseType (typeof (NSControl), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSRuleEditorDelegate)})]
 	partial interface NSRuleEditor {
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
+
 		[Export ("reloadCriteria")]
 		void ReloadCriteria ();
 
@@ -25638,6 +25680,9 @@ namespace AppKit {
 	[BaseType (typeof(NSView))]
 	interface NSScrubberArrangedView
 	{
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
+
 		[Export ("selected")]
 		bool Selected { [Bind ("isSelected")] get; set; }
 

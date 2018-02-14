@@ -1946,6 +1946,9 @@ namespace WebKit {
 
 	[BaseType (typeof (NSView))]
 	partial interface WebFrameView {
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
+
 		[Export ("webFrame")]
 		WebFrame WebFrame { get; }
 
@@ -2457,6 +2460,9 @@ namespace WebKit {
 
 		[Export ("initWithFrame:frameName:groupName:")]
 		IntPtr Constructor (CGRect frame, [NullAllowed] string frameName, [NullAllowed]string groupName);
+
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frame);
 
 		[Export ("close")]
 		void Close ();
