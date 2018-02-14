@@ -8194,16 +8194,16 @@ namespace Foundation
 
 	}
 
-	delegate bool EnumerateLinguisticTagsEnumerator (NSString tag, NSRange tokenRange, NSRange sentenceRange, ref bool stop);
+	delegate bool NSEnumerateLinguisticTagsEnumerator (NSLinguisticTagScheme tag, NSRange tokenRange, NSRange sentenceRange, ref bool stop);
 
 	[Category]
 	[BaseType (typeof(NSString))]
 	interface NSLinguisticAnalysis {
 		[Export ("linguisticTagsInRange:scheme:options:orthography:tokenRanges:")]
-		string[] GetLinguisticTags (NSRange range, string scheme, NSLinguisticTaggerOptions options, [NullAllowed] NSOrthography orthography, [NullAllowed] out NSValue[] tokenRanges);
+		string[] GetLinguisticTags (NSRange range, NSLinguisticTagScheme scheme, NSLinguisticTaggerOptions options, [NullAllowed] NSOrthography orthography, [NullAllowed] out NSValue[] tokenRanges);
 
 		[Export ("enumerateLinguisticTagsInRange:scheme:options:orthography:usingBlock:")]
-		void EnumerateLinguisticTags (NSRange range, string scheme, NSLinguisticTaggerOptions options, [NullAllowed] NSOrthography orthography, EnumerateLinguisticTagsEnumerator handler);
+		void EnumerateLinguisticTags (NSRange range, NSLinguisticTagScheme scheme, NSLinguisticTaggerOptions options, [NullAllowed] NSOrthography orthography, NSEnumerateLinguisticTagsEnumerator handler);
 	}
 
 	//
