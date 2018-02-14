@@ -909,38 +909,12 @@ namespace Registrar {
 				var nsobj = Runtime.GetNSObject (obj, Runtime.MissingCtorResolution.ThrowConstructor1NotFound, true);
 				mthis = ObjectWrapper.Convert (nsobj);
 				if (res.Method.ContainsGenericParameters) {
-					res.WriteUnmanagedDescription (desc, FindClosedMethod (nsobj.GetType (), res.Method));
+					res.WriteUnmanagedDescription (desc, Runtime.FindClosedMethod (nsobj.GetType (), res.Method));
 					return;
 				}
 			}
 
 			res.WriteUnmanagedDescription (desc);
-		}
-
-		internal static MethodInfo FindClosedMethod (Type closed_type, MethodBase open_method)
-		{
-			// FIXME: I think it should be handled before getting here (but it's safer here for now)
-			if (!open_method.ContainsGenericParameters)
-				return (MethodInfo) open_method;
-
-			// First we need to find the type that declared the open method.
-			Type declaring_closed_type = closed_type;
-			do {
-				if (declaring_closed_type.IsGenericType && declaring_closed_type.GetGenericTypeDefinition () == open_method.DeclaringType) {
-					closed_type = declaring_closed_type;
-					break;
-				}
-				declaring_closed_type = declaring_closed_type.BaseType;
-			} while (declaring_closed_type != null);
-
-			// Find the closed method.
-			foreach (var mi in closed_type.GetMethods (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly)) {
-				if (mi.MetadataToken == open_method.MetadataToken) {
-					return mi;
-				}
-			}
-
-			throw ErrorHelper.CreateError (8003, "Failed to find the closed generic method '{0}' on the type '{1}'.", open_method.Name, closed_type.FullName);
 		}
 
 		public void GetMethodDescription (Type type, IntPtr selector, bool is_static, IntPtr desc)
