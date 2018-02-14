@@ -547,7 +547,7 @@ namespace Security {
 		[Field ("kSecAttrAccessGroupToken")]
 		IntPtr AccessGroupToken { get; }
 
-		// note: kSecAttrPersistentReference (beta 1) is a typo that was not removed
+		// note: 'kSecAttrPersistantReference' with the word "persistent" (correct) written with an 'a', so "persistant" (incorrect) was a typo in Xcode 9 beta 1
 		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
 		[Field ("kSecAttrPersistentReference")]
 		IntPtr PersistentReference { get; }
