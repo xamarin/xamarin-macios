@@ -22,9 +22,9 @@
 //
 using System;
 
-namespace XamCore.OpenGL {
+namespace OpenGL {
 
-	public enum CGLErrorCode : uint_compat_int
+	public enum CGLErrorCode : uint
 	{
 		NoError            = 0,		/* no error */
 		BadAttribute       = 10000,	/* invalid pixel format attribute  */
@@ -48,7 +48,7 @@ namespace XamCore.OpenGL {
 
 	}
 
-	public enum CGLPixelFormatAttribute : uint_compat_int
+	public enum CGLPixelFormatAttribute : uint
 	{
 		AllRenderers = 1,
 		DoubleBuffer = 5,

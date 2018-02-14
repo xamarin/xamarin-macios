@@ -13,14 +13,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using XamCore.Foundation; 
+using Foundation; 
 #if IOS
-using XamCore.iAd;
+using iAd;
 #endif
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
+using ObjCRuntime;
+using CoreGraphics;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	public partial class UIViewController : IEnumerable {
 		
 		// https://bugzilla.xamarin.com/show_bug.cgi?id=3189

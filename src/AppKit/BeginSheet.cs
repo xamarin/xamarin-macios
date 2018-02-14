@@ -26,17 +26,17 @@
 using System;
 using System.Collections;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 	public partial class NSApplication {
 		public void BeginSheet (NSWindow sheet, NSWindow docWindow)
 		{
 			BeginSheet (sheet, docWindow, null, null, IntPtr.Zero);
 		}
 		
-		public void BeginSheet (NSWindow sheet, NSWindow docWindow, NSAction onEnded)
+		public void BeginSheet (NSWindow sheet, NSWindow docWindow, Action onEnded)
 		{
 			var obj = new NSAsyncActionDispatcher (onEnded);
 			BeginSheet (sheet, docWindow, obj, NSActionDispatcher.Selector, IntPtr.Zero);
@@ -49,7 +49,7 @@ namespace XamCore.AppKit {
 			BeginSheet (directory, fileName, fileTypes, modalForWindow, null, null, IntPtr.Zero);
 		}
 		
-		public void BeginSheet (string directory, string fileName, string []fileTypes, NSWindow modalForWindow, NSAction onEnded)
+		public void BeginSheet (string directory, string fileName, string []fileTypes, NSWindow modalForWindow, Action onEnded)
 		{
 			var obj = new NSAsyncActionDispatcher (onEnded);
 			BeginSheet (directory, fileName, fileTypes, modalForWindow, obj, NSActionDispatcher.Selector, IntPtr.Zero);
@@ -62,7 +62,7 @@ namespace XamCore.AppKit {
 			BeginSheet (printInfo, docWindow, null, null, IntPtr.Zero);
 		}
 		
-		public void BeginSheet (NSPrintInfo printInfo, NSWindow docWindow, NSAction onEnded)
+		public void BeginSheet (NSPrintInfo printInfo, NSWindow docWindow, Action onEnded)
 		{
 			var obj = new NSAsyncActionDispatcher (onEnded);
 			BeginSheet (printInfo, docWindow, obj, NSActionDispatcher.Selector, IntPtr.Zero);

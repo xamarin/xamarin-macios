@@ -28,9 +28,9 @@
 //
 using System;
 using System.Runtime.InteropServices;
-using XamCore.CoreFoundation;
+using CoreFoundation;
 
-namespace XamCore.CoreFoundation {
+namespace CoreFoundation {
 
 	class CFDataBuffer : IDisposable {
 		byte[] buffer;

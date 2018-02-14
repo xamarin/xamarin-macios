@@ -3,10 +3,10 @@
 //
 
 using System;
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
+using CoreGraphics;
+using Foundation;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 	public partial class NSView {
 		object __mt_tracking_var;
 

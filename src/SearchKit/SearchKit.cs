@@ -18,16 +18,16 @@
 // TODO: SKIndexGetTermIDForTermString
 //
 using System;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using CoreFoundation;
+using ObjCRuntime;
+using Foundation;
 #if !XAMCORE_2_0
 using MonoMac;
 #endif
 
 using System.Runtime.InteropServices;
 
-namespace XamCore.SearchKit
+namespace SearchKit
 {
 	public enum SKIndexType {
 		Unknown, Inverted, Vector, InvertedVector

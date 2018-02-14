@@ -34,11 +34,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using ObjCRuntime;
 
-namespace XamCore.AddressBook {
+namespace AddressBook {
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	public class ExternalChangeEventArgs : EventArgs {
 		public ExternalChangeEventArgs (ABAddressBook addressBook, NSDictionary info)
@@ -207,6 +207,7 @@ namespace XamCore.AddressBook {
 		extern unsafe static void ABAddressBookRequestAccessWithCompletion (IntPtr addressbook, void * completion);
 
 		[iOS (6,0)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void RequestAccess (Action<bool,NSError> onCompleted)
 		{
 			if (onCompleted == null)
@@ -231,7 +232,7 @@ namespace XamCore.AddressBook {
 			var descriptor = (BlockLiteral *) block;
 			var del = (Action<bool, NSError>) (descriptor->Target);
 			if (del != null)
-				del (success, error == IntPtr.Zero ? null : (XamCore.Foundation.NSError) Runtime.GetNSObject (error));
+				del (success, error == IntPtr.Zero ? null : (Foundation.NSError) Runtime.GetNSObject (error));
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]

@@ -32,19 +32,19 @@
 using System;
 using System.Diagnostics;
 using System.ComponentModel;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
-using XamCore.CoreImage;
-using XamCore.CoreAnimation;
-using XamCore.CoreData;
-using XamCore.OpenGL;
-using XamCore.CoreVideo;
-using XamCore.CloudKit;
+using Foundation;
+using ObjCRuntime;
+using CoreGraphics;
+using CoreImage;
+using CoreAnimation;
+using CoreData;
+using OpenGL;
+using CoreVideo;
+using CloudKit;
 
 using CGGlyph = System.UInt16;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 	//[BaseType (typeof (NSObject))]
 	//interface CIImage {
 	//	[Export ("drawInRect:fromRect:operation:fraction:")]
@@ -256,11 +256,11 @@ namespace XamCore.AppKit {
 		double Duration { get; set; }
 
 		[Mac (10, 7), Export ("completionHandler", ArgumentSemantic.Copy)]
-		NSAction CompletionHandler { get; set; }
+		Action CompletionHandler { get; set; }
 
 		[Static]
 		[Mac (10, 7), Export ("runAnimationGroup:completionHandler:")]
-		void RunAnimation (Action<NSAnimationContext> changes, [NullAllowed] NSAction completionHandler);
+		void RunAnimation (Action<NSAnimationContext> changes, [NullAllowed] Action completionHandler);
 
 		[Mac (10, 7), Export ("timingFunction", ArgumentSemantic.Strong)]
 		CAMediaTimingFunction TimingFunction { get; set; }
@@ -358,6 +358,7 @@ namespace XamCore.AppKit {
 	[Mac (10,9)]
 	[BaseType (typeof (NSObject))]
 	interface NSAppearance : NSCoding {
+		[DesignatedInitializer]
 		[Export ("initWithAppearanceNamed:bundle:")]
 		IntPtr Constructor (string name, [NullAllowed] NSBundle bundle);
 
@@ -1973,9 +1974,11 @@ namespace XamCore.AppKit {
 
 	[BaseType (typeof (NSActionCell))]
 	interface NSButtonCell {
+		[DesignatedInitializer]
 		[Export ("initTextCell:")]
 		IntPtr Constructor (string aString);
 	
+		[DesignatedInitializer]
 		[Export ("initImageCell:")]
 		IntPtr Constructor (NSImage image);
 
@@ -2243,14 +2246,17 @@ namespace XamCore.AppKit {
 		CGRect Rectangle { get; }
 	}
 	
+	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface NSCell : NSUserInterfaceItemIdentification, NSCoding, NSCopying, NSAccessibilityElementProtocol, NSAccessibility, NSObjectAccessibilityExtensions {
 		[Static, Export ("prefersTrackingUntilMouseUp")]
 		bool PrefersTrackingUntilMouseUp { get; }
 	
+		[DesignatedInitializer]
 		[Export ("initTextCell:")]
 		IntPtr Constructor (string aString);
 	
+		[DesignatedInitializer]
 		[Export ("initImageCell:")]
 		IntPtr Constructor (NSImage  image);
 	
@@ -4509,6 +4515,7 @@ namespace XamCore.AppKit {
 
 	[BaseType (typeof (NSView))]
 	partial interface NSControl {
+		[DesignatedInitializer]
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frameRect);
 
@@ -4698,6 +4705,7 @@ namespace XamCore.AppKit {
 		void EndEditing ([NullAllowed] NSText textObj);
 	}
 
+	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface NSController : NSCoding {
 		[Export ("objectDidBeginEditing:")]
@@ -4804,6 +4812,7 @@ namespace XamCore.AppKit {
 		[Export ("IBeamCursorForVerticalLayout")]
 		NSCursor IBeamCursorForVerticalLayout { get; }
 		
+		[DesignatedInitializer]
 		[Export ("initWithImage:hotSpot:")]
 		IntPtr Constructor (NSImage newImage, CGPoint aPoint);
 
@@ -4966,6 +4975,7 @@ namespace XamCore.AppKit {
 
 	[BaseType (typeof (NSActionCell), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] {typeof (NSDatePickerCellDelegate)})]
 	interface NSDatePickerCell {
+		[DesignatedInitializer]
 		[Export ("initTextCell:")]
 		IntPtr Constructor (string aString);
 	
@@ -5111,6 +5121,7 @@ namespace XamCore.AppKit {
 
 	delegate void NSDocumentCompletionHandler (IntPtr nsErrorPointerOrZero);
 	
+	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	partial interface NSDocument {
 		[Export ("initWithType:error:")]
@@ -5339,19 +5350,19 @@ namespace XamCore.AppKit {
 		bool HasUndoManager { get; set; }
 
 		[Mac (10, 7), Export ("performActivityWithSynchronousWaiting:usingBlock:")]
-		void PerformActivity (bool waitSynchronously, NSAction activityCompletionHandler);
+		void PerformActivity (bool waitSynchronously, Action activityCompletionHandler);
 
 		[Mac (10, 7), Export ("continueActivityUsingBlock:")]
-		void ContinueActivity (NSAction resume);
+		void ContinueActivity (Action resume);
 
 		[Mac (10, 7), Export ("continueAsynchronousWorkOnMainThreadUsingBlock:")]
-		void ContinueAsynchronousWorkOnMainThread (NSAction work);
+		void ContinueAsynchronousWorkOnMainThread (Action work);
 
 		[Mac (10, 7), Export ("performSynchronousFileAccessUsingBlock:")]
-		void PerformSynchronousFileAccess (NSAction fileAccessCallback);
+		void PerformSynchronousFileAccess (Action fileAccessCallback);
 
 		[Mac (10, 7), Export ("performAsynchronousFileAccessUsingBlock:")]
-		void PerformAsynchronousFileAccess (NSAction ioCode);
+		void PerformAsynchronousFileAccess (Action ioCode);
 
 		[Mac (10, 7), Export ("isEntireFileLoaded")]
 		bool IsEntireFileLoaded { get; }
@@ -5474,6 +5485,7 @@ namespace XamCore.AppKit {
 
 	delegate void OpenDocumentCompletionHandler (NSDocument document, bool documentWasAlreadyOpen, NSError error);
 
+	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	partial interface NSDocumentController : NSWindowRestoration, NSCoding {
 		[Static, Export ("sharedDocumentController")]
@@ -6729,6 +6741,7 @@ namespace XamCore.AppKit {
 	
 	[BaseType (typeof (NSActionCell))]
 	partial interface NSFormCell {
+		[DesignatedInitializer]
 		[Export ("initTextCell:")]
 		IntPtr Constructor (string aString);
 	
@@ -7445,6 +7458,7 @@ namespace XamCore.AppKit {
 	[Mac (10,10)]
 	[BaseType (typeof (NSObject), Delegates=new string [] {"WeakDelegate"}, Events=new Type[] {typeof (NSGestureRecognizerDelegate)})]
 	interface NSGestureRecognizer : NSCoding {
+		[DesignatedInitializer]
 		[Export ("initWithTarget:action:")]
 		IntPtr Constructor ([NullAllowed] NSObject target, [NullAllowed] Selector action);
 
@@ -7614,6 +7628,7 @@ namespace XamCore.AppKit {
 	[ThreadSafe] // Not documented anywhere, but their Finder extension sample uses it on non-ui thread
 	[Dispose ("__mt_items_var = null;")]
 	partial interface NSMenu : NSCoding, NSCopying, NSAccessibility, NSAccessibilityElement, NSUserInterfaceItemIdentification  {
+		[DesignatedInitializer]
 		[Export ("initWithTitle:")]
 		IntPtr Constructor (string aTitle);
 
@@ -7819,6 +7834,7 @@ namespace XamCore.AppKit {
 		[Export ("separatorItem")]
 		NSMenuItem SeparatorItem { get; }
 
+		[DesignatedInitializer]
 		[Export ("initWithTitle:action:keyEquivalent:")]
 		IntPtr Constructor (string title, [NullAllowed] Selector selectorAction, string charCode);
 
@@ -7920,6 +7936,7 @@ namespace XamCore.AppKit {
 
 	[BaseType (typeof (NSButtonCell))]
 	interface NSMenuItemCell {
+		[DesignatedInitializer]
 		[Export ("initTextCell:")]
 		IntPtr Constructor (string aString);
 	
@@ -8124,6 +8141,7 @@ namespace XamCore.AppKit {
 
 	[BaseType (typeof (NSController))]
 	interface NSObjectController {
+		[DesignatedInitializer]
 		[Export ("initWithContent:")]
 		IntPtr Constructor (NSObject content);
 
@@ -8201,6 +8219,7 @@ namespace XamCore.AppKit {
 		//NSFetchRequest DefaultFetchRequest { get; }
 	}
 
+	[ThreadSafe]
 	[BaseType (typeof (NSObject))]
 	interface NSOpenGLPixelFormat : NSCoding {
 		[Export ("initWithData:")]
@@ -8220,6 +8239,7 @@ namespace XamCore.AppKit {
 		CGLPixelFormat CGLPixelFormat { get; }
 	}
 
+	[ThreadSafe]
 	[Availability (Deprecated = Platform.Mac_10_7)]
 	[BaseType (typeof (NSObject))]
 	interface NSOpenGLPixelBuffer {
@@ -8249,6 +8269,7 @@ namespace XamCore.AppKit {
 		int TextureMaxMipMapLevel { get; } /* GLint = int32_t */
 	}
 
+	[ThreadSafe] // single thread - but not restricted to the main thread
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // warns with "invalid context" at runtime
 	interface NSOpenGLContext {
@@ -8460,6 +8481,9 @@ namespace XamCore.AppKit {
 
 	[BaseType (typeof (NSTableView))]
 	partial interface NSOutlineView {
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
+
 		[Export ("outlineTableColumn"), NullAllowed]
 		NSTableColumn OutlineTableColumn { get; set; }
 
@@ -8775,6 +8799,7 @@ namespace XamCore.AppKit {
 		[Export ("imageNamed:")]
 		NSImage ImageNamed (string name);
 
+		[DesignatedInitializer]
 		[Export ("initWithSize:")]
 		IntPtr Constructor (CGSize aSize);
 
@@ -9446,19 +9471,19 @@ namespace XamCore.AppKit {
 		CGSize StringSize (NSDictionary attributes);
 
 		[Wrap ("This.StringSize (attributes == null ? null : attributes.Dictionary)")]
-		CGSize StringSize (XamCore.AppKit.NSStringAttributes attributes);
+		CGSize StringSize (AppKit.NSStringAttributes attributes);
 
 		[Export ("drawAtPoint:withAttributes:")]
 		void DrawAtPoint (CGPoint point, NSDictionary attributes);
 
 		[Wrap ("This.DrawAtPoint (point, attributes == null ? null : attributes.Dictionary)")]
-		void DrawAtPoint (CGPoint point, XamCore.AppKit.NSStringAttributes attributes);
+		void DrawAtPoint (CGPoint point, AppKit.NSStringAttributes attributes);
 
 		[Export ("drawInRect:withAttributes:")]
 		void DrawInRect (CGRect rect, NSDictionary attributes);
 
 		[Wrap ("This.DrawInRect (rect, attributes == null ? null : attributes.Dictionary)")]
-		void DrawInRect (CGRect rect, XamCore.AppKit.NSStringAttributes attributes);
+		void DrawInRect (CGRect rect, AppKit.NSStringAttributes attributes);
 	}
 
 	[Category, BaseType (typeof (NSAttributedString))]
@@ -9596,6 +9621,13 @@ namespace XamCore.AppKit {
 
 		[Export ("imageFrameStyle")]
 		NSImageFrameStyle ImageFrameStyle { get; set; }
+
+		// Inlined from parent
+		[Export ("initTextCell:")]
+		IntPtr Constructor (string aString);
+	
+		[Export ("initImageCell:")]
+		IntPtr Constructor (NSImage  image);
 	}
 
 	[Static]
@@ -9611,6 +9643,7 @@ namespace XamCore.AppKit {
 		NSString UserInterfaceLayoutDirection { get; }
 	}
 
+	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	partial interface NSImageRep : NSCoding, NSCopying {
 		[Export ("draw")]
@@ -10363,6 +10396,7 @@ namespace XamCore.AppKit {
 	delegate void NSTextLayoutEnumerateLineFragments (CGRect rect, CGRect usedRectangle, NSTextContainer textContainer, NSRange glyphRange, out bool stop);
 	delegate void NSTextLayoutEnumerateEnclosingRects (CGRect rect, out bool stop);
 	
+	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	partial interface NSLayoutManager : NSCoding {
 		[Export ("attributedString")]
@@ -10912,6 +10946,8 @@ namespace XamCore.AppKit {
 		[Export ("worksWhenModal")]
 		bool WorksWhenModal { get; set; }
 
+		[Export ("initWithContentRect:styleMask:backing:defer:")]
+		IntPtr Constructor (CGRect contentRect, NSWindowStyle aStyle, NSBackingStore bufferingType, bool deferCreation);
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -11652,6 +11688,7 @@ namespace XamCore.AppKit {
 		NSUrl Url { get; }
 	}
 
+	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSResponder))]
 	interface NSPopover : NSAppearanceCustomization, NSAccessibilityElementProtocol, NSAccessibility {
 		[Obsolete ("Use 'GetAppearance' and 'SetAppearance' methods instead.")]
@@ -12348,6 +12385,7 @@ namespace XamCore.AppKit {
 		bool UsesThreadedAnimation { get; set; }
 	}
 
+	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	partial interface NSResponder : NSCoding, NSTouchBarProvider {
 		[Export ("tryToPerform:with:")]
@@ -12571,6 +12609,7 @@ namespace XamCore.AppKit {
 
 	[BaseType (typeof (NSObject))]
 	interface NSRulerMarker : NSCoding, NSCopying {
+		[DesignatedInitializer]
 		[Export ("initWithRulerView:markerLocation:image:imageOrigin:")]
 		IntPtr Constructor (NSRulerView ruler, nfloat location, NSImage image, CGPoint imageOrigin);
 
@@ -12621,6 +12660,7 @@ namespace XamCore.AppKit {
 		[Export ("registerUnitWithName:abbreviation:unitToPointsConversionFactor:stepUpCycle:stepDownCycle:")]
 		void RegisterUnit (string unitName, string abbreviation, nfloat conversionFactor, NSNumber [] stepUpCycle, NSNumber [] stepDownCycle);
 
+		[DesignatedInitializer]
 		[Export ("initWithScrollView:orientation:")]
 		IntPtr Constructor (NSScrollView scrollView, NSRulerOrientation orientation);
 
@@ -12982,6 +13022,7 @@ namespace XamCore.AppKit {
 		[Export ("documentVisibleRect")]
 		CGRect DocumentVisibleRect { get; }
 
+		[DesignatedInitializer]
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frameRect);
 
@@ -13211,6 +13252,7 @@ namespace XamCore.AppKit {
 
 	[BaseType (typeof (NSTextFieldCell))]
 	interface NSSearchFieldCell {
+		[DesignatedInitializer]
 		[Export ("initTextCell:")]
 		IntPtr Constructor (string aString);
 
@@ -14191,6 +14233,9 @@ namespace XamCore.AppKit {
 	[Mac (10,10)]
 	[BaseType (typeof (NSViewController))]
 	interface NSSplitViewController : NSSplitViewDelegate, NSUserInterfaceValidations {
+		[Export ("initWithNibName:bundle:")]
+		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+
 		[Export ("splitView", ArgumentSemantic.Strong)]
 		NSSplitView SplitView { get; set; }
 
@@ -14373,6 +14418,9 @@ namespace XamCore.AppKit {
 	[Mac (10,9)]
 	[BaseType (typeof (NSView))]
 	interface NSStackView {
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
+
 		[Export ("delegate", ArgumentSemantic.Weak)][NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
@@ -14595,6 +14643,7 @@ namespace XamCore.AppKit {
 		string AutosaveName { get; set; }
 	}
 
+	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface NSShadow : NSCoding, NSCopying {
 		[Export ("set")]
@@ -14791,6 +14840,7 @@ namespace XamCore.AppKit {
 	[Mac (10,10)]
 	[BaseType (typeof (NSObject))]
 	interface NSStoryboardSegue {
+		[DesignatedInitializer]
 		[Export ("initWithIdentifier:source:destination:")]
 		IntPtr Constructor (string identifier, NSObject sourceController, NSObject destinationController);
 
@@ -14826,6 +14876,7 @@ namespace XamCore.AppKit {
 
 	[BaseType (typeof (NSController))]
 	interface NSUserDefaultsController {
+		[DesignatedInitializer]
 		[Export ("initWithDefaults:initialValues:")]
 		IntPtr Constructor ([NullAllowed] NSUserDefaults defaults, [NullAllowed] NSDictionary initialValues);
 //
@@ -14991,6 +15042,7 @@ namespace XamCore.AppKit {
 		NSView ContentView { get; }
 	}
 
+	[DesignatedDefaultCtor]
 	[Mac (10, 7)]
 	[BaseType (typeof (NSObject))]
 	partial interface NSTextFinder : NSCoding {
@@ -15031,6 +15083,7 @@ namespace XamCore.AppKit {
 	[BaseType (typeof (NSResponder))]
 	[Dispose ("__mt_tracking_var = null;")]
 	partial interface NSView : NSDraggingDestination, NSAnimatablePropertyContainer, NSUserInterfaceItemIdentification, NSAppearanceCustomization, NSAccessibilityElementProtocol, NSAccessibility, NSObjectAccessibilityExtensions {
+		[DesignatedInitializer]
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frameRect);
 
@@ -15568,6 +15621,7 @@ namespace XamCore.AppKit {
 		bool NeedsLayout { get; set; }
 
 		[Mac (10, 7), Export ("updateConstraints")]
+		[RequiresSuper]
 		void UpdateConstraints ();
 
 		[Mac (10, 7), Export ("updateConstraintsForSubtreeIfNeeded")]
@@ -15963,6 +16017,7 @@ namespace XamCore.AppKit {
 	, NSExtensionRequestHandling 
 #endif
 	{
+		[DesignatedInitializer]
 		[Export ("initWithNibName:bundle:")]
 		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
 
@@ -16154,6 +16209,9 @@ namespace XamCore.AppKit {
 		Events = new [] { typeof (NSPageControllerDelegate) })]
 	partial interface NSPageController : NSAnimatablePropertyContainer {
 
+		[Export ("initWithNibName:bundle:")]
+		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
@@ -16239,6 +16297,7 @@ namespace XamCore.AppKit {
 		[Sealed]
 		IntPtr Constructor (string identifier);
 
+		[DesignatedInitializer]
 		[Mac (10, 7), Export ("initWithIdentifier:")]
 		IntPtr Constructor (NSString identifier);
 
@@ -16296,6 +16355,9 @@ namespace XamCore.AppKit {
 	[Mac (10, 7)]
 	[BaseType (typeof (NSView))]
 	interface NSTableRowView : NSAccessibilityRow {
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
+
 		[Export ("selectionHighlightStyle")]
 		NSTableViewSelectionHighlightStyle SelectionHighlightStyle { get; set;  }
 
@@ -16356,6 +16418,9 @@ namespace XamCore.AppKit {
 	[Mac (10, 7)]
 	[BaseType (typeof (NSView))]
 	partial interface NSTableCellView {
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
+
 		[Export ("backgroundStyle")]
 		NSBackgroundStyle BackgroundStyle {
 			get; set;
@@ -16391,6 +16456,7 @@ namespace XamCore.AppKit {
 	
 	[BaseType (typeof (NSControl), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSTableViewDelegate)})]
 	partial interface NSTableView : NSDraggingSource, NSAccessibilityTable {
+		[DesignatedInitializer]
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frameRect);
 
@@ -17228,6 +17294,9 @@ namespace XamCore.AppKit {
 	[Mac (10,10)]
 	[BaseType (typeof (NSViewController))]
 	interface NSTabViewController : NSTabViewDelegate, NSToolbarDelegate {
+		[Export ("initWithNibName:bundle:")]
+		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+
 		[Export ("tabStyle")]
 		NSTabViewControllerTabStyle TabStyle { get; set; }
 
@@ -17366,6 +17435,7 @@ namespace XamCore.AppKit {
 	
 	[BaseType (typeof (NSView), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSTextDelegate)})]
 	partial interface NSText {
+		[DesignatedInitializer]
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frameRect);
 
@@ -17553,6 +17623,9 @@ namespace XamCore.AppKit {
 		[Export ("initImageCell:")]
 		IntPtr Constructor (NSImage  image);
 
+		[Export ("initTextCell:")]
+		IntPtr Constructor (string aString);
+
 		[Export ("wantsToTrackMouse")]
 		bool WantsToTrackMouse ();
 
@@ -17637,6 +17710,7 @@ namespace XamCore.AppKit {
 		CGRect GetAttachmentBounds ([NullAllowed] NSTextContainer textContainer, CGRect lineFrag, CGPoint position, nuint charIndex);
 	}
 
+	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface NSTextBlock : NSCoding, NSCopying {
 		[Export ("setValue:type:forDimension:")]
@@ -17895,6 +17969,7 @@ namespace XamCore.AppKit {
 
 	[BaseType (typeof (NSActionCell))]
 	interface NSTextFieldCell {
+		[DesignatedInitializer]
 		[Export ("initTextCell:")]
 		IntPtr Constructor (string aString);
 	
@@ -18091,6 +18166,7 @@ namespace XamCore.AppKit {
 	[BaseType (typeof (NSTextBlock))]
 	[DisableDefaultCtor]
 	interface NSTextTableBlock {
+		[DesignatedInitializer]
 		[Export ("initWithTable:startingRow:rowSpan:startingColumn:columnSpan:")]
 		IntPtr Constructor (NSTextTable table, nint row, nint rowSpan, nint col, nint colSpan);
 
@@ -18303,6 +18379,7 @@ namespace XamCore.AppKit {
 
 	[BaseType (typeof (NSText), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSTextViewDelegate)})]
 	partial interface NSTextView : NSTextInputClient, NSDraggingSource, NSTextFinderClient, NSAccessibilityNavigableStaticText, NSCandidateListTouchBarItemDelegate, NSTouchBarDelegate {
+		[DesignatedInitializer]
 		[Export ("initWithFrame:textContainer:")]
 		IntPtr Constructor (CGRect frameRect, NSTextContainer container);
 
@@ -19039,6 +19116,7 @@ namespace XamCore.AppKit {
 		[Export ("init")]
 		IntPtr Constructor ();
 #endif
+		[DesignatedInitializer]
 		[Export ("initWithIdentifier:")]
 		IntPtr Constructor (string identifier);
 
@@ -19159,6 +19237,7 @@ namespace XamCore.AppKit {
 
 	[BaseType (typeof (NSObject))]
 	interface NSToolbarItem : NSCopying {
+		[DesignatedInitializer]
 		[Export ("initWithItemIdentifier:")]
 		IntPtr Constructor (string itemIdentifier);
 
@@ -19266,6 +19345,7 @@ namespace XamCore.AppKit {
 		CGPoint GetPreviousLocation ([NullAllowed] NSView view);
 	}
 
+	[DesignatedDefaultCtor]
 	[Mac (10,12,2)]
 	[BaseType (typeof(NSObject), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSTouchBarDelegate)})]
 	interface NSTouchBar : NSCoding
@@ -19593,6 +19673,7 @@ namespace XamCore.AppKit {
 		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }")]
 		IntPtr Constructor ();
 
+		[DesignatedInitializer]
 		[Export ("initWithContentRect:styleMask:backing:defer:")]
 		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }")]
 		IntPtr Constructor (CGRect contentRect, NSWindowStyle aStyle, NSBackingStore bufferingType, bool deferCreation);
@@ -20410,6 +20491,9 @@ namespace XamCore.AppKit {
 	[Mac (10,10)]
 	[BaseType (typeof (NSViewController))]
 	interface NSTitlebarAccessoryViewController : NSAnimationDelegate, NSAnimatablePropertyContainer {
+		[Export ("initWithNibName:bundle:")]
+		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+
 		[Export ("layoutAttribute")]
 		NSLayoutAttribute LayoutAttribute { get; set; }
 
@@ -20436,6 +20520,9 @@ namespace XamCore.AppKit {
 	[Mac (10,10)]
 	[BaseType (typeof (NSView))]
 	interface NSVisualEffectView {
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
+
 		[Export ("material")]
 		NSVisualEffectMaterial Material { get; set; }
 
@@ -20479,6 +20566,7 @@ namespace XamCore.AppKit {
 
 	[BaseType (typeof (NSResponder))]
 	interface NSWindowController : NSCoding, NSSeguePerforming {
+		[DesignatedInitializer]
 		[Export ("initWithWindow:")]
 		IntPtr Constructor (NSWindow  window);
 	
@@ -21212,6 +21300,7 @@ namespace XamCore.AppKit {
 		[Export ("pressureBehavior")]
 		NSPressureBehavior PressureBehavior { get; }
 
+		[DesignatedInitializer]
 		[Export ("initWithPressureBehavior:")]
 		IntPtr Constructor (NSPressureBehavior pressureBehavior);
 
@@ -21221,6 +21310,9 @@ namespace XamCore.AppKit {
    
 	[BaseType (typeof (NSControl), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSRuleEditorDelegate)})]
 	partial interface NSRuleEditor {
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
+
 		[Export ("reloadCriteria")]
 		void ReloadCriteria ();
 
@@ -21398,6 +21490,7 @@ namespace XamCore.AppKit {
 		[Export ("sharingServiceNamed:")][Static]
 		NSSharingService GetSharingService (NSString serviceName);
 		
+		[DesignatedInitializer]
 		[Export ("initWithTitle:image:alternateImage:handler:")]
 		IntPtr Constructor (string title, NSImage image, NSImage alternateImage, NSSharingServiceHandler handler);
 		
@@ -21549,6 +21642,7 @@ namespace XamCore.AppKit {
 		[Protocolize]
 		NSSharingServicePickerDelegate Delegate { get; set; }
 		
+		[DesignatedInitializer]
 		[Export ("initWithItems:")]
 		IntPtr Constructor (NSObject [] items);
 		
@@ -25053,6 +25147,7 @@ namespace XamCore.AppKit {
 	
 	interface INSFilePromiseProviderDelegate {}
 
+	[DesignatedDefaultCtor]
 	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
 	interface NSFilePromiseProvider : NSPasteboardWriting
@@ -25477,6 +25572,7 @@ namespace XamCore.AppKit {
 		void DidCancelInteracting (NSScrubber scrubber);
 	}
 
+	[DesignatedDefaultCtor]
 	[Mac (10,12,2)]
 	[BaseType (typeof(NSObject))]
 	interface NSScrubberSelectionStyle : NSCoding
@@ -25587,6 +25683,9 @@ namespace XamCore.AppKit {
 	[BaseType (typeof(NSView))]
 	interface NSScrubberArrangedView
 	{
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
+
 		[Export ("selected")]
 		bool Selected { [Bind ("isSelected")] get; set; }
 
@@ -25654,6 +25753,7 @@ namespace XamCore.AppKit {
 		NSScrubberLayoutAttributes CreateLayoutAttributes (nint index);
 	}
 
+	[DesignatedDefaultCtor]
 	[Mac (10,12,2)]
 	[BaseType (typeof(NSObject))]
 	interface NSScrubberLayout : NSCoding
@@ -25974,6 +26074,7 @@ namespace XamCore.AppKit {
 		NSFontPanelModeMask GetValidModes (NSFontPanel fontPanel);
 	}
 
+	[DesignatedDefaultCtor]
 	[Mac (10, 13)]
 	[BaseType (typeof(NSObject))]
 	interface NSUserInterfaceCompressionOptions : NSCopying, NSCoding

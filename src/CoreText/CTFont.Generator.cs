@@ -28,12 +28,12 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
+using ObjCRuntime;
+using CoreFoundation;
+using CoreGraphics;
+using Foundation;
 
-namespace XamCore.CoreText {
+namespace CoreText {
 
 	public partial class CTFont : INativeObject, IDisposable {
 		internal IntPtr handle;

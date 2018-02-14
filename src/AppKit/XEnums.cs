@@ -7,13 +7,13 @@
 // Copyright 2012 Xamarin Inc
 
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 
 	[Mac (10, 7)]
 	[Native]
-	public enum NSTextLayoutOrientation : nint {
+	public enum NSTextLayoutOrientation : long {
 		Horizontal,
 		Vertical
 	}
@@ -21,7 +21,7 @@ namespace XamCore.AppKit {
 #if !XAMCORE_2_0
 	[Mac (10, 7), Flags]
 	[Native]
-	public enum NSTableViewAnimationOptions : nuint_compat_int {
+	public enum NSTableViewAnimationOptions : ulong {
 		EffectFade = 0x1,
 		EffectGap = 0x2,
 
@@ -35,14 +35,14 @@ namespace XamCore.AppKit {
 
 	[Mac (10, 7)]
 	[Native]
-	public enum NSPrintRenderingQuality : nint {
+	public enum NSPrintRenderingQuality : long {
 		Best,
 		Responsive
 	}
 
 	[Mac (10, 7)]
 	[Native]
-	public enum NSCorrectionIndicatorType : nint {
+	public enum NSCorrectionIndicatorType : long {
 		Default = 0,
 		Reversion,
 		Guesses
@@ -50,7 +50,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10, 7)]
 	[Native]
-	public enum NSCorrectionResponse : nint {
+	public enum NSCorrectionResponse : long {
 		None,
 		Accepted,
 		Rejected,
@@ -61,7 +61,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10, 7)]
 	[Native]
-	public enum NSTextFinderMatchingType : nint {
+	public enum NSTextFinderMatchingType : long {
 		Contains = 0,
 		StartsWith = 1,
 		FullWord = 2,
@@ -69,7 +69,7 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	public enum NSCharacterCollection : nuint_compat_int {
+	public enum NSCharacterCollection : ulong {
 		/// <summary>Identity mapping (CID == NSGlyph)</summary>
 		IdentityMapping = 0,
 

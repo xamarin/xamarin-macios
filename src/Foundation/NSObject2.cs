@@ -29,18 +29,18 @@ using System.Runtime.InteropServices;
 using System.Drawing;
 #endif
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 #if !COREBUILD
 #if MONOTOUCH
-using XamCore.UIKit;
+using UIKit;
 #if !WATCH
-using XamCore.CoreAnimation;
+using CoreAnimation;
 #endif
 #endif
-using XamCore.CoreGraphics;
+using CoreGraphics;
 #endif
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	public class NSObjectFlag {
 		public static readonly NSObjectFlag Empty;
 		
@@ -251,7 +251,7 @@ namespace XamCore.Foundation {
 			while (type != typeof (NSObject) && type != null) {
 				var attrs = type.GetCustomAttributes (typeof(ProtocolAttribute), false);
 				var protocolAttribute = (ProtocolAttribute) (attrs.Length > 0 ? attrs [0] : null);
-				if (protocolAttribute != null) {
+				if (protocolAttribute != null && !protocolAttribute.IsInformal) {
 					string name;
 
 					if (!string.IsNullOrEmpty (protocolAttribute.Name)) {
@@ -551,7 +551,7 @@ namespace XamCore.Foundation {
 			InvokeOnMainThread (sel, obj, true);
 		}
 		
-		public void BeginInvokeOnMainThread (NSAction action)
+		public void BeginInvokeOnMainThread (Action action)
 		{
 			var d = new NSAsyncActionDispatcher (action);
 #if MONOMAC
@@ -563,7 +563,7 @@ namespace XamCore.Foundation {
 #endif
 		}
 		
-		public void InvokeOnMainThread (NSAction action)
+		public void InvokeOnMainThread (Action action)
 		{
 			using (var d = new NSActionDispatcher (action)) {
 #if MONOMAC
@@ -662,15 +662,15 @@ namespace XamCore.Foundation {
 				throw new ArgumentNullException ("keyPath");
 #if MONOMAC
 			if (IsDirectBinding) {
-				XamCore.ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_IntPtr (this.Handle, selSetValue_ForKeyPath_Handle, handle, keyPath.Handle);
+				ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_IntPtr (this.Handle, selSetValue_ForKeyPath_Handle, handle, keyPath.Handle);
 			} else {
-				XamCore.ObjCRuntime.Messaging.void_objc_msgSendSuper_IntPtr_IntPtr (this.SuperHandle, selSetValue_ForKeyPath_Handle, handle, keyPath.Handle);
+				ObjCRuntime.Messaging.void_objc_msgSendSuper_IntPtr_IntPtr (this.SuperHandle, selSetValue_ForKeyPath_Handle, handle, keyPath.Handle);
 			}
 #else
 			if (IsDirectBinding) {
-				XamCore.ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_IntPtr (this.Handle, Selector.GetHandle ("setValue:forKeyPath:"), handle, keyPath.Handle);
+				ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_IntPtr (this.Handle, Selector.GetHandle ("setValue:forKeyPath:"), handle, keyPath.Handle);
 			} else {
-				XamCore.ObjCRuntime.Messaging.void_objc_msgSendSuper_IntPtr_IntPtr (this.SuperHandle, Selector.GetHandle ("setValue:forKeyPath:"), handle, keyPath.Handle);
+				ObjCRuntime.Messaging.void_objc_msgSendSuper_IntPtr_IntPtr (this.SuperHandle, Selector.GetHandle ("setValue:forKeyPath:"), handle, keyPath.Handle);
 			}
 #endif
 		}
@@ -716,13 +716,13 @@ namespace XamCore.Foundation {
 			return Description ?? base.ToString ();
 		}
 
-		public virtual void Invoke (NSAction action, double delay)
+		public virtual void Invoke (Action action, double delay)
 		{
 			var d = new NSAsyncActionDispatcher (action);
 			d.PerformSelector (NSActionDispatcher.Selector, null, delay);
 		}
 
-		public virtual void Invoke (NSAction action, TimeSpan delay)
+		public virtual void Invoke (Action action, TimeSpan delay)
 		{
 			var d = new NSAsyncActionDispatcher (action);
 			d.PerformSelector (NSActionDispatcher.Selector, null, delay.TotalSeconds);

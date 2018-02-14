@@ -83,6 +83,7 @@ namespace MonoMac.Tuner {
 			context = CreateLinkContext (options, pipeline);
 			context.Resolver.AddSearchDirectory (options.OutputDirectory);
 			context.KeepTypeForwarderOnlyAssemblies = (Profile.Current is XamarinMacProfile);
+			options.Target.LinkContext = (context as MonoMacLinkContext);
 
 			try {
 				pipeline.Process (context);
@@ -178,7 +179,7 @@ namespace MonoMac.Tuner {
 
 				pipeline.AppendStep (new MonoMacMarkStep ());
 				pipeline.AppendStep (new MacRemoveResources (options));
-				pipeline.AppendStep (new MobileSweepStep (options.LinkSymbols));
+				pipeline.AppendStep (new CoreSweepStep (options.LinkSymbols));
 				pipeline.AppendStep (new CleanStep ());
 
 				pipeline.AppendStep (new MonoMacNamespaces ());

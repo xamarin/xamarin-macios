@@ -10,7 +10,7 @@
 #if XAMCORE_2_0
 using System;
 
-namespace XamCore.Vision {
+namespace Vision {
 	public partial class VNDetectBarcodesRequest {
 
 		public VNBarcodeSymbology [] Symbologies {

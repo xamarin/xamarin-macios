@@ -1,12 +1,12 @@
 using System;
 using System.Runtime.InteropServices;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
-using XamCore.CoreAnimation;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
+using CoreGraphics;
+using CoreAnimation;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 	public partial class NSMenu {
 		object __mt_items_var;
 		

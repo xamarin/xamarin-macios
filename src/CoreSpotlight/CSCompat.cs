@@ -4,7 +4,7 @@
 
 using System;
 
-namespace XamCore.CoreSpotlight {
+namespace CoreSpotlight {
 
 	partial class CSCustomAttributeKey {
 

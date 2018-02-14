@@ -41,7 +41,7 @@ namespace MonoTouchFixtures.ServiceModel {
 		[Test]
 		public void ServiceModelShouldCreateCommunicationException ()
 		{
-			var testFolder = "../../../../../../../common/mac/TestProjects/ServiceModel_Test/ServiceModel_Test";
+			var testFolder = Path.Combine (TI.FindRootDirectory (), "../tests/common/mac/TestProjects/ServiceModel_Test/ServiceModel_Test");
 			var testResults = testFolder + "/TestResult.txt";
 			if (File.Exists (testResults))
 				File.Delete (testResults);

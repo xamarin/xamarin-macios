@@ -1213,6 +1213,28 @@ print_callback (const char *string, mono_bool is_stdout)
 	PRINT ("%s", string);
 }
 
+static int
+xamarin_compare_ints (const void *a, const void *b)
+{
+	uint32_t x = *(uint32_t *) a;
+	uint32_t y = *(uint32_t *) b;
+	return x < y ? -1 : (x == y ? 0 : 1);
+}
+
+uint32_t
+xamarin_find_protocol_wrapper_type (uint32_t token_ref)
+{
+	if (options.RegistrationData == NULL || options.RegistrationData->protocol_wrappers == NULL)
+		return INVALID_TOKEN_REF;
+
+	void* ptr = bsearch (&token_ref, options.RegistrationData->protocol_wrappers, options.RegistrationData->protocol_wrapper_count, sizeof (MTProtocolWrapperMap), xamarin_compare_ints);
+	if (ptr == NULL)
+		return INVALID_TOKEN_REF;
+
+	MTProtocolWrapperMap *entry = (MTProtocolWrapperMap *) ptr;
+	return entry->wrapper_token;
+}
+
 void
 xamarin_initialize_embedded ()
 {
@@ -2077,10 +2099,10 @@ xamarin_get_delegate_for_block_parameter (MonoMethod *method, int par, void *nat
 }
 
 id
-xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate, guint32 *exception_gchandle)
+xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate, const char *signature, guint32 *exception_gchandle)
 {
 	// COOP: accesses managed memory: unsafe mode.
-	return delegates.create_delegate_proxy ((MonoObject *) mono_method_get_object (mono_domain_get (), method, NULL), delegate, exception_gchandle);
+	return delegates.create_delegate_proxy ((MonoObject *) mono_method_get_object (mono_domain_get (), method, NULL), delegate, signature, exception_gchandle);
 }
 
 void
@@ -2552,6 +2574,17 @@ xamarin_find_assembly_directory (const char *assembly_name)
 	entry = (struct AssemblyLocation *) bsearch (assembly_name, options.AssemblyLocations->locations, options.AssemblyLocations->length, sizeof (struct AssemblyLocation), compare_assembly_location);
 
 	return entry ? entry->location : NULL;
+}
+
+MonoMethod *
+xamarin_get_managed_method_for_token (guint32 token_ref, guint32 *exception_gchandle)
+{
+	MonoReflectionMethod *reflection_method;
+
+	reflection_method = xamarin_get_method_from_token (token_ref, exception_gchandle);
+	if (*exception_gchandle != 0) return NULL;
+
+	return xamarin_get_reflection_method_method (reflection_method);
 }
 
 /*

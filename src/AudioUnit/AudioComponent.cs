@@ -31,12 +31,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
-using XamCore.ObjCRuntime;
-using XamCore.AudioToolbox;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
+using ObjCRuntime;
+using AudioToolbox;
+using CoreFoundation;
+using Foundation;
 
-namespace XamCore.AudioUnit
+namespace AudioUnit
 {
 
 #if !COREBUILD
@@ -368,9 +368,9 @@ namespace XamCore.AudioUnit
 		static extern IntPtr AudioComponentGetIcon (IntPtr comp, float /* float */ desiredPointSize);
 
 		[iOS (7,0)]
-		public XamCore.UIKit.UIImage GetIcon (float desiredPointSize)
+		public UIKit.UIImage GetIcon (float desiredPointSize)
 		{
-			return new XamCore.UIKit.UIImage (AudioComponentGetIcon (handle, desiredPointSize));
+			return new UIKit.UIImage (AudioComponentGetIcon (handle, desiredPointSize));
 		}
 
 		[iOS (7,0)]
@@ -390,9 +390,9 @@ namespace XamCore.AudioUnit
 		static extern IntPtr AudioComponentGetIcon (IntPtr comp);
 
 		[Mac (10,11)]
-		public XamCore.AppKit.NSImage GetIcon ()
+		public AppKit.NSImage GetIcon ()
 		{
-			return new XamCore.AppKit.NSImage (AudioComponentGetIcon (handle));
+			return new AppKit.NSImage (AudioComponentGetIcon (handle));
 		}
 #endif
 

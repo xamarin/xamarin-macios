@@ -30,14 +30,14 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
 
 using OSStatus = System.Int32;
 using AudioFileID = System.IntPtr;
 
-namespace XamCore.AudioToolbox {
+namespace AudioToolbox {
 
 	// AudioFormatListItem
 	[StructLayout(LayoutKind.Sequential)]
@@ -91,7 +91,7 @@ namespace XamCore.AudioToolbox {
     	public double Maximum;
 	}
 
-	public enum AudioBalanceFadeType : uint_compat_int // UInt32 in AudioBalanceFades
+	public enum AudioBalanceFadeType : uint // UInt32 in AudioBalanceFades
 	{
 		MaxUnityGain = 0,
 		EqualPower = 1
@@ -165,7 +165,7 @@ namespace XamCore.AudioToolbox {
 #endif // !COREBUILD
 	}
 
-	public enum PanningMode : uint_compat_int // UInt32 in AudioPanningInfo
+	public enum PanningMode : uint // UInt32 in AudioPanningInfo
 	{
 		SoundField					= 3,
 		VectorBasedPanning			= 4
@@ -336,7 +336,7 @@ namespace XamCore.AudioToolbox {
 	}
 
 	// Properties are used from various types (most suitable should be used)
-	enum AudioFormatProperty : uint_compat_int // UInt32 AudioFormatPropertyID
+	enum AudioFormatProperty : uint // UInt32 AudioFormatPropertyID
 	{
 		FormatInfo					= 0x666d7469,	// 'fmti'
 		FormatName					= 0x666e616d,	// 'fnam'

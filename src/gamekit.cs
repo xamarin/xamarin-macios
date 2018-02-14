@@ -13,16 +13,16 @@
 #pragma warning disable 618
 
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
 #if MONOMAC
-using XamCore.AppKit;
+using AppKit;
 #else
-using XamCore.UIKit;
+using UIKit;
 #endif
 
-namespace XamCore.GameKit {
+namespace GameKit {
 
 #if !XAMCORE_2_0
 	delegate void GKNotificationHandler ([NullAllowed] NSError error);
@@ -1228,6 +1228,10 @@ namespace XamCore.GameKit {
 	// iOS 6 -> Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: <GKMatchmakerViewController: 0x16101160>: must use one of the designated initializers
 	[DisableDefaultCtor]
 	interface GKMatchmakerViewController {
+		[NoiOS]
+		[Export ("initWithNibName:bundle:")]
+		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+		
 		[Export ("matchmakerDelegate", ArgumentSemantic.Assign)]
 		NSObject WeakMatchmakerDelegate { get; set; }
 		
@@ -1604,14 +1608,15 @@ namespace XamCore.GameKit {
 	[Mac (10,8)]
 	[Deprecated (PlatformName.MacOSX, 10, 12)]
 	[BaseType (typeof (NSViewController), Events=new Type [] { typeof (GKFriendRequestComposeViewControllerDelegate)}, Delegates=new string[] {"WeakComposeViewDelegate"})]
-	interface GKFriendRequestComposeViewController 
+	interface GKFriendRequestComposeViewController {
+		[Export ("initWithNibName:bundle:")]
+		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
 #else
 	[NoTV]
 	[Deprecated (PlatformName.iOS, 10, 0)]
 	[BaseType (typeof (UINavigationController), Events=new Type [] { typeof (GKFriendRequestComposeViewControllerDelegate)}, Delegates=new string[] {"WeakComposeViewDelegate"})]
-	interface GKFriendRequestComposeViewController : UIAppearance
+	interface GKFriendRequestComposeViewController : UIAppearance {
 #endif
-	{
 		[Export ("composeViewDelegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakComposeViewDelegate { get; set; }
 
@@ -1661,7 +1666,7 @@ namespace XamCore.GameKit {
 	partial interface GKNotificationBanner {
 		[Static, Export ("showBannerWithTitle:message:completionHandler:")]
 		[Async]
-		void Show ([NullAllowed] string title, [NullAllowed] string message, [NullAllowed] NSAction onCompleted);
+		void Show ([NullAllowed] string title, [NullAllowed] string message, [NullAllowed] Action onCompleted);
 
 		[iOS (6,0)][Mac (10,8)]
 		[Export ("showBannerWithTitle:message:duration:completionHandler:"), Static]
@@ -1960,6 +1965,10 @@ namespace XamCore.GameKit {
 	interface GKTurnBasedMatchmakerViewController : UIAppearance
 #endif
 		{
+		[NoiOS]
+		[Export ("initWithNibName:bundle:")]
+		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+
 		[Export ("showExistingMatches", ArgumentSemantic.Assign)]
 		bool ShowExistingMatches { get; set;  }
 
@@ -2081,6 +2090,10 @@ namespace XamCore.GameKit {
 	)]
 	interface GKGameCenterViewController
 	{
+		[NoiOS]
+		[Export ("initWithNibName:bundle:")]
+		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+		
 		[Export ("gameCenterDelegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 

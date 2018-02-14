@@ -27,18 +27,21 @@
 // imagekit.cs: Bindings for the Image Kit API
 //
 using System;
-using XamCore.AppKit;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreImage;
-//using XamCore.ImageCaptureCore;
-using XamCore.CoreGraphics;
-using XamCore.CoreAnimation;
+using AppKit;
+using Foundation;
+using ObjCRuntime;
+using CoreImage;
+//using ImageCaptureCore;
+using CoreGraphics;
+using CoreAnimation;
 
-namespace XamCore.ImageKit {
+namespace ImageKit {
 
 	[BaseType (typeof (NSView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (IKCameraDeviceViewDelegate)})]
 	interface IKCameraDeviceView {
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
+
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
@@ -131,6 +134,9 @@ namespace XamCore.ImageKit {
 
 	[BaseType (typeof (NSView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (IKDeviceBrowserViewDelegate)})]
 	interface IKDeviceBrowserView {
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
+
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
@@ -228,6 +234,9 @@ namespace XamCore.ImageKit {
 
 	[BaseType (typeof (NSView))]
 	interface IKFilterBrowserView {
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
+
 		[Export ("setPreviewState:")]
 		void SetPreviewState (bool showPreview);
 
@@ -275,6 +284,9 @@ namespace XamCore.ImageKit {
 
 	[BaseType (typeof (NSView))]
 	interface IKFilterUIView {
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
+
 		[Export ("initWithFrame:filter:")]
 		IntPtr Constructor (CGRect frame, CIFilter filter);
 
@@ -690,6 +702,9 @@ namespace XamCore.ImageKit {
 
 	[BaseType (typeof (NSView))]
 	interface IKImageView {
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
+
 		//There is no protocol for this delegate.  used to respond to messages in the responder chain
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject Delegate { get; set; }
@@ -918,6 +933,9 @@ namespace XamCore.ImageKit {
 
 	[BaseType (typeof (NSView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (IKScannerDeviceViewDelegate)})]
 	interface IKScannerDeviceView {
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
+
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 

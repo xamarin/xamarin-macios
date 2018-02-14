@@ -7,12 +7,12 @@
 // Copyright 2014 Xamarin Inc
 //
 using System;
-using XamCore.Foundation;
-using XamCore.CoreMedia;
-using XamCore.CoreVideo;
-using XamCore.AVFoundation;
+using Foundation;
+using CoreMedia;
+using CoreVideo;
+using AVFoundation;
 
-namespace XamCore.AVKit {
+namespace AVKit {
 #if !MONOMAC
 	partial class AVPlayerViewController {
 		public AVLayerVideoGravity VideoGravity {

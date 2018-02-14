@@ -17,5 +17,10 @@ namespace Xamarin.Bundler {
 			if (DeploymentTarget == null) 
 				DeploymentTarget = new Version (10, 7);
 		}
+
+		void SelectRegistrar ()
+		{
+			Driver.SelectRegistrar ();
+		}
 	}
 }

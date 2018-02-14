@@ -1,21 +1,21 @@
-namespace XamCore.InputMethodKit {
+namespace InputMethodKit {
 
 	[Native]
-	public enum IMKCandidatePanelType : nuint_compat_int /* : NSUInteger */ {
+	public enum IMKCandidatePanelType : ulong /* : NSUInteger */ {
 		SingleColumnScrolling = 1,
 		ScrollingGrid = 2,
 		SingleRowStepping = 3
 	}
 
 	[Native]
-	public enum IMKStyleType : nuint_compat_int /* : NSUInteger */ {
+	public enum IMKStyleType : ulong /* : NSUInteger */ {
 		Main = 0,
 		Annotation = 1,
 		SubList = 2
 	}
 
 	[Native]
-	public enum IMKCandidatesLocationHint : nuint_compat_int /* : NSUInteger */ {
+	public enum IMKCandidatesLocationHint : ulong /* : NSUInteger */ {
 		Above = 1,
 		Below = 2,
 		Left = 3,

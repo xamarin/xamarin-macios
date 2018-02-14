@@ -9,9 +9,9 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 	public partial class Protocol : INativeObject {
 #if !COREBUILD
 		IntPtr handle;
@@ -26,15 +26,7 @@ namespace XamCore.ObjCRuntime {
 
 		public Protocol (Type type)
 		{
-			if (type.IsInterface) {
-				foreach (var pa in type.GetCustomAttributes<ProtocolAttribute> (false)) {
-					handle = objc_getProtocol (pa.Name);
-					if (handle != IntPtr.Zero)
-						return;
-				}
-			}
-			if (handle == IntPtr.Zero)
-				throw new ArgumentException (string.Format ("'{0}' is an unknown protocol", type.FullName));
+			this.handle = Runtime.GetProtocolForType (type);
 		}
 
 		public Protocol (IntPtr handle)

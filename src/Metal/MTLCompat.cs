@@ -1,8 +1,8 @@
 #if XAMCORE_2_0 || !MONOMAC
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Metal {
+namespace Metal {
 
 }
 

@@ -22,10 +22,10 @@
 //
 
 using System;
-using XamCore.Foundation;
-using XamCore.AppKit;
+using Foundation;
+using AppKit;
 
-namespace XamCore.QTKit {
+namespace QTKit {
 
 	// Untyped and anonymous enum in ObjC
 	public enum QTCodecQuality {

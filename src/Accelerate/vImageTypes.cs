@@ -29,7 +29,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
 using Pixel8 = System.Byte;
 using PixelF = System.Single;
@@ -40,7 +40,7 @@ using GammaFunction = System.IntPtr;
 
 using vImagePixelCount = System.nint;
 
-namespace XamCore.Accelerate {
+namespace Accelerate {
 	// vImage_Buffer - vImage_Types.h
 	[StructLayout(LayoutKind.Sequential)]
 	public struct vImageBuffer {
@@ -91,7 +91,7 @@ namespace XamCore.Accelerate {
 
 	// vImage_Error (ssize_t) - vImageTypes.h
 	[Native]
-	public enum vImageError : nint {
+	public enum vImageError : long {
 		NoError                      =    0,
 		RoiLargerThanInputBuffer     =    -21766,
 		InvalidKernelSize            =    -21767,

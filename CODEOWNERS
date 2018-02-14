@@ -20,8 +20,8 @@
 
 /src/AddressBook @dalexsoto
 /src/addressbook.cs @dalexsoto
-/src/AppKit @chamons @timrisi
-/src/appkit.cs @chamons @timrisi
+/src/AppKit @chamons @dalexsoto
+/src/appkit.cs @chamons @dalexsoto
 /src/ARKit @VincentDondain
 /src/arkit.cs @VincentDondain
 /src/AudioToolbox @dalexsoto
@@ -91,8 +91,10 @@
 /src/homekit.cs @VincentDondain
 /src/iad.cs @spouliot
 /src/iAd.framework @spouliot
-/src/ImageIO @spouliot
-/src/imageio.cs @spouliot
+/src/ImageIO @spouliot @chamons
+/src/imageio.cs @spouliot @chamons
+/src/ImageKit @chamons
+/src/imagekit.cs @chamons
 /src/Intents @dalexsoto
 /src/intents.cs @dalexsoto
 /src/IntentsUI @dalexsoto
@@ -139,10 +141,10 @@
 /src/quartzcore.cs @spouliot
 /src/QuickLook @spouliot
 /src/quicklook.cs @spouliot
-/src/ReplayKit @spouliot
-/src/replaykit.cs @spouliot
-/src/SafariServices @timrisi
-/src/safariservices.cs @timrisi
+/src/ReplayKit @dalexsoto @spouliot
+/src/replaykit.cs @dalexsoto @spouliot
+/src/SafariServices @chamons @spouliot
+/src/safariservices.cs @chamons @spouliot
 /src/SceneKit @dalexsoto @VincentDondain
 /src/scenekit.cs @dalexsoto @VincentDondain
 /src/Security @dalexsoto @spouliot
@@ -161,8 +163,8 @@
 /src/usernotificationsui.cs @dalexsoto
 /src/VideoSubscriberAccount @dalexsoto
 /src/videosubscriberaccount.cs @dalexsoto
-/src/VideoToolbox @spouliot
-/src/videotoolbox.cs @spouliot
+/src/VideoToolbox @dalexsoto @spouliot
+/src/videotoolbox.cs @dalexsoto @spouliot
 /src/Vision @dalexsoto
 /src/vision.cs @dalexsoto
 /src/WatchConnectivity @spouliot @rolfbjarne
@@ -182,7 +184,6 @@
 /tools/linker @spouliot
 /tools/mmp @chamons
 /tools/mtouch @spouliot @rolfbjarne
-/tools/pmcs @abock
 
 configure @rolfbjarne
 Make.* @rolfbjarne

@@ -39,9 +39,9 @@
 
 using System;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 
 	static class BackingField
 	{

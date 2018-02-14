@@ -35,9 +35,9 @@
 #if false
 
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.CoreLocation {
+namespace CoreLocation {
 
 	public static class CLLocationDistance
 	{

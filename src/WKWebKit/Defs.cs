@@ -9,14 +9,14 @@
 
 using System;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.WebKit
+namespace WebKit
 {
 	[Mac (10, 10)]
 	[iOS (8, 0)]
 	[Native]
-	public enum WKNavigationType : nint {
+	public enum WKNavigationType : long {
 		LinkActivated,
 		FormSubmitted,
 		BackForward,
@@ -28,7 +28,7 @@ namespace XamCore.WebKit
 	[Mac (10, 10)]
 	[iOS (8, 0)]
 	[Native]
-	public enum WKNavigationActionPolicy : nint {
+	public enum WKNavigationActionPolicy : long {
 		Cancel,
 		Allow
 	}
@@ -36,7 +36,7 @@ namespace XamCore.WebKit
 	[Mac (10, 10)]
 	[iOS (8, 0)]
 	[Native]
-	public enum WKNavigationResponsePolicy : nint {
+	public enum WKNavigationResponsePolicy : long {
 		Cancel,
 		Allow
 	}
@@ -44,7 +44,7 @@ namespace XamCore.WebKit
 	[Mac (10, 10)]
 	[iOS (8, 0)]
 	[Native]
-	public enum WKUserScriptInjectionTime : nint {
+	public enum WKUserScriptInjectionTime : long {
 		AtDocumentStart,
 		AtDocumentEnd
 	}
@@ -53,7 +53,7 @@ namespace XamCore.WebKit
 	[iOS (8, 0)]
 	[Native]
 	[ErrorDomain ("WKErrorDomain")]
-	public enum WKErrorCode : nint {
+	public enum WKErrorCode : long {
 		None,
 		Unknown,
 		WebContentProcessTerminated,
@@ -74,7 +74,7 @@ namespace XamCore.WebKit
 #if !MONOMAC || !XAMCORE_4_0
 	[iOS (8, 0)]
 	[Native]
-	public enum WKSelectionGranularity : nint {
+	public enum WKSelectionGranularity : long {
 		Dynamic, Character
 	}
 #endif
@@ -82,7 +82,7 @@ namespace XamCore.WebKit
 	[iOS (10,0)][NoMac]
 	[Native]
 	[Flags]
-	public enum WKDataDetectorTypes : nuint {
+	public enum WKDataDetectorTypes : ulong {
 		None = 0,
 		PhoneNumber = 1 << 0,
 		Link = 1 << 1,
@@ -102,7 +102,7 @@ namespace XamCore.WebKit
 	[iOS (10,0)][Mac (10,12, onlyOn64: true)]
 	[Native]
 	[Flags]
-	public enum WKAudiovisualMediaTypes : nuint	{
+	public enum WKAudiovisualMediaTypes : ulong	{
 		None = 0,
 		Audio = 1 << 0,
 		Video = 1 << 1,

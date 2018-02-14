@@ -8,17 +8,17 @@
 //
 
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.Contacts;
-using XamCore.CoreGraphics;
+using ObjCRuntime;
+using Foundation;
+using Contacts;
+using CoreGraphics;
 #if MONOMAC
-using XamCore.AppKit;
+using AppKit;
 #else
-using XamCore.UIKit;
+using UIKit;
 #endif
 
-namespace XamCore.ContactsUI {
+namespace ContactsUI {
 
 #if XAMCORE_2_0 // The Contacts framework uses generics heavily, which is only supported in Unified (for now at least)
 #if !MONOMAC
@@ -98,6 +98,9 @@ namespace XamCore.ContactsUI {
 	[BaseType (typeof(NSViewController))]
 	interface CNContactViewController
 	{
+		[Export ("initWithNibName:bundle:")]
+		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+
 		[Static]
 		[Export ("descriptorForRequiredKeys")]
 		ICNKeyDescriptor DescriptorForRequiredKeys { get; }

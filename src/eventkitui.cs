@@ -7,15 +7,15 @@
 // Copyright 2010, Novell, Inc.
 // Copyright 2014 Xamarin Inc. All rights reserved.
 //
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
-using XamCore.CoreLocation;
-using XamCore.UIKit;
-using XamCore.EventKit;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
+using CoreLocation;
+using UIKit;
+using EventKit;
 using System;
 
-namespace XamCore.EventKitUI {
+namespace EventKitUI {
 	[BaseType (typeof (UIViewController), Delegates = new string [] { "WeakDelegate"}, Events=new Type [] {typeof (EKEventViewDelegate)})]
 	interface EKEventViewController {
 		[Export ("initWithNibName:bundle:")]

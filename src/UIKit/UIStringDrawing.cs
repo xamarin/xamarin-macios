@@ -2,12 +2,12 @@
 
 using System;
 
-using XamCore.UIKit;
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using UIKit;
+using CoreGraphics;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	public unsafe static partial class UIStringDrawing  {
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use NSString.DrawString(CGPoint, UIStringAttributes) instead.")]
 		public static CGSize DrawString (this string This, CGPoint point, UIFont font)

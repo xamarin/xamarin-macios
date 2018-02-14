@@ -23,13 +23,13 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
-using XamCore.CoreImage;
-using XamCore.CoreAnimation;
+using Foundation;
+using ObjCRuntime;
+using CoreGraphics;
+using CoreImage;
+using CoreAnimation;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 
 	// Class to access C functions
 	public partial class AppKitFramework {

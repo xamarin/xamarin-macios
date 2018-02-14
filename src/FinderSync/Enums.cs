@@ -1,9 +1,9 @@
-﻿using System;
-using XamCore.ObjCRuntime;
+using System;
+using ObjCRuntime;
 
-namespace XamCore.FinderSync {
+namespace FinderSync {
 	[Native]
-	public enum FIMenuKind : nuint
+	public enum FIMenuKind : ulong
 	{
 		ContextualMenuForItems = 0,
 		ContextualMenuForContainer = 1,

@@ -12,8 +12,8 @@
 #if !TVOS && !MONOMAC
 
 using System;
-using XamCore.Foundation; 
-using XamCore.ObjCRuntime;
+using Foundation; 
+using ObjCRuntime;
 
 #if XAMCORE_2_0
 using xint = System.nuint;
@@ -21,7 +21,7 @@ using xint = System.nuint;
 using xint = System.Int32;
 #endif
 
-namespace XamCore.MediaPlayer {
+namespace MediaPlayer {
 
 	public partial class MPMediaQuery
 	{

@@ -27,7 +27,7 @@ using System.Drawing;
 #endif
 using System.Runtime.InteropServices;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	public partial class NSValue : NSObject {
 #if !COREBUILD
 		public string ObjCType {

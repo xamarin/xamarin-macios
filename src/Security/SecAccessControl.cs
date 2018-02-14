@@ -14,20 +14,20 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
+using ObjCRuntime;
+using CoreFoundation;
+using Foundation;
 
-namespace XamCore.Security {
+namespace Security {
 
 	[Flags]
 	[Native]
 #if XAMCORE_4_0
 	// changed to CFOptionFlags in Xcode 8 SDK
-	public enum SecAccessControlCreateFlags : nuint {
+	public enum SecAccessControlCreateFlags : ulong {
 #else
 	// CFOptionFlags -> SecAccessControl.h
-	public enum SecAccessControlCreateFlags : nint {
+	public enum SecAccessControlCreateFlags : long {
 #endif
 		UserPresence        = 1 << 0,
 

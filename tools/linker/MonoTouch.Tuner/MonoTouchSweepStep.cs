@@ -8,7 +8,7 @@ using Xamarin.Linker;
 
 namespace MonoTouch.Tuner {
 	
-	public class MonoTouchSweepStep : MobileSweepStep {
+	public class MonoTouchSweepStep : CoreSweepStep {
 
 		public MonoTouchSweepStep (LinkerOptions options)
 			: base (options.LinkSymbols)

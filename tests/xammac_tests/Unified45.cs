@@ -11,7 +11,7 @@ namespace MonoTouchFixtures.Net45 {
 		[Test]
 		public void ProtobufShouldSerializeAndDeserialize ()
 		{
-			var testFolder = "../../../../../../../common/mac/TestProjects/Protobuf_Test/Protobuf_Test";
+			var testFolder = Path.Combine (TI.FindRootDirectory (), "../tests/common/mac/TestProjects/Protobuf_Test/Protobuf_Test");
 			var testResults = testFolder + "/TestResult.txt";
 			if (File.Exists (testResults))
 				File.Delete (testResults);
@@ -39,7 +39,7 @@ namespace MonoTouchFixtures.Net45 {
 		[Test]
 		public void Net45ShouldUseImmutableCollection ()
 		{
-			var testFolder = "../../../../../../../common/mac/TestProjects/ImmutableCollection_Test/ImmutableCollection_Test";
+			var testFolder = Path.Combine (TI.FindRootDirectory (), "../tests/common/mac/TestProjects/ImmutableCollection_Test/ImmutableCollection_Test");
 
 			StringBuilder restoreOutput = new StringBuilder ();
 
@@ -56,7 +56,7 @@ namespace MonoTouchFixtures.Net45 {
 		[Test]
 		public void BasicPCLTest ()
 		{
-			var testFolder = "../../../../../../../common/mac/TestProjects/BasicPCLTest/BasicPCLTest";
+			var testFolder = Path.Combine (TI.FindRootDirectory (), "../tests/common/mac/TestProjects/BasicPCLTest/BasicPCLTest");
 			var testResults = testFolder + "/TestResult.txt";
 			if (File.Exists (testResults))
 				File.Delete (testResults);

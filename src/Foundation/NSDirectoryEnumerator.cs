@@ -5,12 +5,12 @@
 //
 // Copyright 2011 - 2014 Xamarin Inc
 //
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 using System;
 using System.Collections.Generic;
 using System.Collections;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	public partial class NSDirectoryEnumerator : IEnumerator<NSString>, IEnumerator<string>, IEnumerator {
 		NSObject current;
 

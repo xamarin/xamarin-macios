@@ -26,10 +26,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.AppKit
+namespace AppKit
 {
 	[Register ("__monomac_internal_ActionDispatcher")]
 	internal class ActionDispatcher : NSObject, INSMenuValidation // INSMenuValidation needed for using the Activated method of NSMenuItems if you want to be able to validate

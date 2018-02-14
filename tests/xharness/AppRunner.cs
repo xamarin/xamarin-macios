@@ -164,7 +164,7 @@ namespace xharness
 				throw new Exception ($"unknown mode: {mode}");
 			}
 
-			var selected = devs.ConnectedDevices.Where ((v) => deviceClasses.Contains (v.DeviceClass));
+			var selected = devs.ConnectedDevices.Where ((v) => deviceClasses.Contains (v.DeviceClass) && v.IsUsableForDebugging != false);
 			Device selected_data;
 			if (selected.Count () == 0) {
 				throw new Exception ($"Could not find any applicable devices with device class(es): {string.Join (", ", deviceClasses)}");

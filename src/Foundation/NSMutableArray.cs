@@ -23,9 +23,9 @@
 using System;
 using System.Collections.Generic;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	public partial class NSMutableArray {
 #if !XAMCORE_2_0

@@ -9,11 +9,11 @@
 #if XAMCORE_2_0 && !WATCH
 using System;
 using System.Runtime.InteropServices;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.CoreVideo {
+namespace CoreVideo {
 	public partial class CVPixelBuffer : CVImageBuffer {
 
 		[iOS (11,0), Mac (10,13, onlyOn64:true), TV (11,0), NoWatch]
@@ -23,7 +23,7 @@ namespace XamCore.CoreVideo {
 		);
 
 		[iOS (11,0), Mac (10,13, onlyOn64:true), TV (11,0), NoWatch]
-		public XamCore.IOSurface.IOSurface GetIOSurface ()
+		public IOSurface.IOSurface GetIOSurface ()
 		{
 			if (Handle == IntPtr.Zero)
 				throw new ObjectDisposedException ("CVPixelBuffer");
@@ -32,7 +32,7 @@ namespace XamCore.CoreVideo {
 			if (ret == IntPtr.Zero)
 				return null;
 
-			return Runtime.GetINativeObject <XamCore.IOSurface.IOSurface> (ret, false);
+			return Runtime.GetINativeObject <IOSurface.IOSurface> (ret, false);
 		}
 
 		[iOS (11,0), Mac (10,13, onlyOn64:true), TV (11,0), NoWatch]
@@ -45,7 +45,7 @@ namespace XamCore.CoreVideo {
 		);
 
 		[iOS (11,0), Mac (10,13, onlyOn64:true), TV (11,0), NoWatch]
-		public static CVPixelBuffer Create (XamCore.IOSurface.IOSurface surface, out CVReturn result, CVPixelBufferAttributes pixelBufferAttributes = null)
+		public static CVPixelBuffer Create (IOSurface.IOSurface surface, out CVReturn result, CVPixelBufferAttributes pixelBufferAttributes = null)
 		{
 			if (surface == null)
 				throw new ArgumentNullException (nameof (surface));
@@ -65,7 +65,7 @@ namespace XamCore.CoreVideo {
 		}
 
 		[iOS (11,0), Mac (10,13, onlyOn64:true), TV (11,0), NoWatch]
-		public static CVPixelBuffer Create (XamCore.IOSurface.IOSurface surface, CVPixelBufferAttributes pixelBufferAttributes = null)
+		public static CVPixelBuffer Create (IOSurface.IOSurface surface, CVPixelBufferAttributes pixelBufferAttributes = null)
 		{
 			CVReturn result;
 			return Create (surface, out result, pixelBufferAttributes);

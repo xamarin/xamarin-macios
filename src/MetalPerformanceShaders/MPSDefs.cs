@@ -2,17 +2,17 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
 using Vector4 = global::OpenTK.Vector4;
 
-namespace XamCore.MetalPerformanceShaders {
+namespace MetalPerformanceShaders {
 
 	[iOS (9,0)][Mac (10, 13, onlyOn64: true)]
 	[Native] // NSUInteger
 	[Flags]	// NS_OPTIONS
-	public enum MPSKernelOptions : nuint {
+	public enum MPSKernelOptions : ulong {
 		None									= 0,
 		SkipApiValidation						= 1 << 0,
 		MPSKernelOptionsAllowReducedPrecision	= 1 << 1,
@@ -21,14 +21,14 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[iOS (9,0)][Mac (10, 13, onlyOn64: true)]
 	[Native] // NSUInteger
-	public enum MPSImageEdgeMode : nuint {
+	public enum MPSImageEdgeMode : ulong {
 		Zero,
 		Clamp = 1
 	}
 
 	[iOS (10,0)][TV (10,0)][Mac (10, 13, onlyOn64: true)]
 	[Native]
-	public enum MPSAlphaType : nuint {
+	public enum MPSAlphaType : ulong {
 		NonPremultiplied = 0,
 		AlphaIsOne = 1,
 		Premultiplied = 2,
@@ -46,7 +46,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[iOS (10,0)][TV (10,0)][Mac (10, 13, onlyOn64: true)]
 	[Native]
-	public enum MPSImageFeatureChannelFormat : nuint {
+	public enum MPSImageFeatureChannelFormat : ulong {
 		Invalid = 0,
 		Unorm8 = 1,
 		Unorm16 = 2,
@@ -126,14 +126,14 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
 	[Native]
-	public enum MPSRnnSequenceDirection : nuint {
+	public enum MPSRnnSequenceDirection : ulong {
 		Forward = 0,
 		Backward,
 	}
 
 	[TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
 	[Native]
-	public enum MPSRnnBidirectionalCombineMode : nuint {
+	public enum MPSRnnBidirectionalCombineMode : ulong {
 		None = 0,
 		Add,
 		Concatenate,
@@ -158,14 +158,14 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
 	[Native]
-	public enum MPSCnnBinaryConvolutionFlags : nuint {
+	public enum MPSCnnBinaryConvolutionFlags : ulong {
 		None = 0,
 		UseBetaScaling = 1 << 0,
 	}
 
 	[TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
 	[Native]
-	public enum MPSCnnBinaryConvolutionType : nuint {
+	public enum MPSCnnBinaryConvolutionType : ulong {
 		BinaryWeights = 0,
 		Xnor,
 		And,
@@ -173,7 +173,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
 	[Native]
-	public enum MPSNNPaddingMethod : nuint {
+	public enum MPSNNPaddingMethod : ulong {
 		AlignCentered = 0,
 		AlignTopLeft = 1,
 		AlignBottomRight = 2,
@@ -193,7 +193,7 @@ namespace XamCore.MetalPerformanceShaders {
 
 	[TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
 	[Native]
-	public enum MPSDataLayout : nuint {
+	public enum MPSDataLayout : ulong {
 		HeightPerWidthPerFeatureChannels = 0,
 		FeatureChannelsPerHeightPerWidth = 1,
 	}

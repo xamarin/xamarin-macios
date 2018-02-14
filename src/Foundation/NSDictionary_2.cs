@@ -28,9 +28,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	[Register ("NSDictionary", SkipRegistration = true)]
 	public sealed partial class NSDictionary<TKey,TValue> : NSDictionary, IDictionary<TKey, TValue> 
 		where TKey : class, INativeObject 

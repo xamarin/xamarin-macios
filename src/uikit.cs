@@ -8,41 +8,41 @@
 // Copyright 2009-2011, Novell, Inc.
 // Copyrigh 2011-2013, Xamarin Inc.
 //
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
-using XamCore.CoreLocation;
-using XamCore.UIKit;
-using XamCore.CloudKit;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
+using CoreLocation;
+using UIKit;
+using CloudKit;
 #if !TVOS
-using XamCore.Contacts;
+using Contacts;
 #endif
 #if !WATCH
-using XamCore.MediaPlayer;
-using XamCore.CoreImage;
-using XamCore.CoreAnimation;
+using MediaPlayer;
+using CoreImage;
+using CoreAnimation;
 #endif
-using XamCore.CoreData;
+using CoreData;
 
 #if XAMCORE_2_0
 #if IOS
-using XamCore.FileProvider;
+using FileProvider;
 #endif // IOS
 #if !TVOS
-using XamCore.Intents;
+using Intents;
 #endif // !TVOS
 #endif // XAMCORE_2_0
 
 using System;
 using System.ComponentModel;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 
 	[NoWatch]
 	[iOS (9,0)]
 	[Native]
 	[Flags]
-	public enum UIFocusHeading : nuint {
+	public enum UIFocusHeading : ulong {
 		None = 0,
 		Up = 1 << 0,
 		Down = 1 << 1,
@@ -55,20 +55,20 @@ namespace XamCore.UIKit {
 	[Native] // NSInteger -> UIApplication.h
 	[NoWatch]
 	[TV (11,0)]
-	public enum UIBackgroundRefreshStatus : nint {
+	public enum UIBackgroundRefreshStatus : long {
 		Restricted, Denied, Available
 	}
 
 	[TV (10,0)][NoWatch]
 	[Native] // NSUInteger -> UIApplication.h
-	public enum UIBackgroundFetchResult : nuint_compat_int {
+	public enum UIBackgroundFetchResult : ulong {
 		NewData, NoData, Failed
 	}
 
 	[NoTV][NoWatch]
 	[iOS (9,0)]
 	[Native]
-	public enum UIApplicationShortcutIconType : nint {
+	public enum UIApplicationShortcutIconType : long {
 		Compose,
 		Play,
 		Pause,
@@ -103,7 +103,7 @@ namespace XamCore.UIKit {
 
 	[NoWatch, NoTV, iOS (10,0)]
 	[Native]
-	public enum UIImpactFeedbackStyle : nint {
+	public enum UIImpactFeedbackStyle : long {
 		Light,
 		Medium,
 		Heavy
@@ -111,7 +111,7 @@ namespace XamCore.UIKit {
 
 	[NoWatch, NoTV, iOS (10,0)]
 	[Native]
-	public enum UINotificationFeedbackType : nint {
+	public enum UINotificationFeedbackType : long {
 		Success,
 		Warning,
 		Error
@@ -393,7 +393,7 @@ namespace XamCore.UIKit {
 		[iOS (11,0)]
 		[Export ("enumeratorForContainerItemIdentifier:error:")]
 		[return: NullAllowed]
-		XamCore.FileProvider.INSFileProviderEnumerator GetEnumerator (string containerItemIdentifier, out NSError error);
+		FileProvider.INSFileProviderEnumerator GetEnumerator (string containerItemIdentifier, out NSError error);
 
 		// From NSFileProviderExtension (NSFileProviderThumbnailing)
 
@@ -787,6 +787,7 @@ namespace XamCore.UIKit {
 
 #if !WATCH
 	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
 	[iOS (6,0)]
 	interface NSShadow : NSCoding, NSCopying {
 		[Export ("shadowOffset", ArgumentSemantic.Assign)]
@@ -986,6 +987,7 @@ namespace XamCore.UIKit {
 
 	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
 	interface NSLayoutManager : NSCoding {
 		[NullAllowed] // by default this property is null
 		[Export ("textStorage", ArgumentSemantic.Assign)]
@@ -2983,7 +2985,7 @@ namespace XamCore.UIKit {
 		[ThreadSafe]
 		[RequiresSuper]
 		[Export ("beginBackgroundTaskWithExpirationHandler:")]
-		nint BeginBackgroundTask ([NullAllowed] NSAction backgroundTimeExpired);
+		nint BeginBackgroundTask ([NullAllowed] Action backgroundTimeExpired);
 
 		[ThreadSafe]
 		[RequiresSuper]
@@ -2993,7 +2995,7 @@ namespace XamCore.UIKit {
 		[NoTV]
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'PushKit' instead.")]
 		[Export ("setKeepAliveTimeout:handler:")]
-		bool SetKeepAliveTimeout (double timeout, [NullAllowed] NSAction handler);
+		bool SetKeepAliveTimeout (double timeout, [NullAllowed] Action handler);
 
 		[NoTV]
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'PushKit' instead.")]
@@ -3143,7 +3145,7 @@ namespace XamCore.UIKit {
 		[iOS (7,0)]
 		[RequiresSuper]
 		[Export ("beginBackgroundTaskWithName:expirationHandler:")]
-		nint BeginBackgroundTask (string taskName, NSAction expirationHandler);
+		nint BeginBackgroundTask (string taskName, Action expirationHandler);
 
 		[TV (11,0)]
 		[iOS (7,0)]
@@ -3648,7 +3650,7 @@ namespace XamCore.UIKit {
 
 		[iOS (7,0)]
 		[Export ("application:handleEventsForBackgroundURLSession:completionHandler:")]
-		void HandleEventsForBackgroundUrl (UIApplication application, string sessionIdentifier, NSAction completionHandler);
+		void HandleEventsForBackgroundUrl (UIApplication application, string sessionIdentifier, Action completionHandler);
 
 		[TV (11,0)]
 		[iOS (7,0)]
@@ -3745,6 +3747,7 @@ namespace XamCore.UIKit {
 	}
 	
 	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
 	interface UIBarItem : NSCoding, UIAppearance, UIAccessibility, UIAccessibilityIdentification {
 		[Export ("enabled")][Abstract]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
@@ -3790,6 +3793,7 @@ namespace XamCore.UIKit {
 	}
 	
 	[BaseType (typeof (UIBarItem))]
+	[DesignatedDefaultCtor]
 	interface UIBarButtonItem : NSCoding
 #if IOS
 		, UISpringLoadedInteractionSupporting
@@ -4111,7 +4115,7 @@ namespace XamCore.UIKit {
 
 		[Export ("performBatchUpdates:completion:")]
 		[Async]
-		void PerformBatchUpdates (NSAction updates, [NullAllowed] UICompletionHandler completed);
+		void PerformBatchUpdates (Action updates, [NullAllowed] UICompletionHandler completed);
 
 		//
 		// 7.0
@@ -4501,6 +4505,7 @@ namespace XamCore.UIKit {
 
 	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
 	interface UICollectionViewLayout : NSCoding {
 		[Export ("collectionView")]
 		UICollectionView CollectionView { get;  }
@@ -5200,7 +5205,7 @@ namespace XamCore.UIKit {
 
 		[Export ("performAsynchronousFileAccessUsingBlock:")]
 		[Async]
-		void PerformAsynchronousFileAccess (/* non null*/ NSAction action);
+		void PerformAsynchronousFileAccess (/* non null*/ Action action);
 
 		[Export ("handleError:userInteractionPermitted:")]
 		void HandleError (NSError error, bool userInteractionPermitted);
@@ -5421,7 +5426,7 @@ namespace XamCore.UIKit {
 
 		[NullAllowed] // by default this property is null
 		[Export ("action", ArgumentSemantic.Copy)]
-		NSAction Action { get; set; }
+		Action Action { get; set; }
 
 		[Export ("addChildBehavior:")]
 		[PostGet ("ChildBehaviors")]
@@ -6415,6 +6420,7 @@ namespace XamCore.UIKit {
 
 	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
 	interface UIKeyCommand : NSCopying, NSSecureCoding {
 		[NullAllowed, Export ("input")]
 		NSString Input { get; }
@@ -7137,12 +7143,20 @@ namespace XamCore.UIKit {
 		CGSize Size { get; }
 
 		// Thread-safe in iOS 9 or later according to docs.
+#if IOS
+		// tvOS started with 9.0 code base (and watchOS 2.0 came later)
+		[Advice ("This API is thread-safe only on 9.0 and later.")]
+#endif
 		[ThreadSafe]
 		[Static] [Export ("imageNamed:")][Autorelease]
 		UIImage FromBundle (string name);
 
 #if !WATCH
 		// Thread-safe in iOS 9 or later according to docs.
+#if IOS
+		// tvOS started with 9.0 code base (and watchOS 2.0 came later)
+		[Advice ("This API is thread-safe only on 9.0 and later.")]
+#endif
 		[ThreadSafe]
 		[iOS (8,0)]
 		[Static, Export ("imageNamed:inBundle:compatibleWithTraitCollection:")]
@@ -7394,6 +7408,7 @@ namespace XamCore.UIKit {
 #if !WATCH
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
 	partial interface UIImageAsset : NSSecureCoding {
 		[Export ("imageWithTraitCollection:")]
 		UIImage FromTraitCollection (UITraitCollection traitCollection);
@@ -11271,6 +11286,7 @@ namespace XamCore.UIKit {
 	}
 	
 	[BaseType (typeof (UIBarItem))]
+	[DesignatedDefaultCtor]
 	interface UITabBarItem : NSCoding
 #if IOS
 		, UISpringLoadedInteractionSupporting
@@ -13172,15 +13188,15 @@ namespace XamCore.UIKit {
 		UIGestureRecognizer[] GestureRecognizers { get; set; }
 
 		[Static, Export ("animateWithDuration:animations:")]
-		void Animate (double duration, /* non null */ NSAction animation);
+		void Animate (double duration, /* non null */ Action animation);
 
 		[Static, Export ("animateWithDuration:animations:completion:")]
 		[Async]
-		void AnimateNotify (double duration, /* non null */ NSAction animation, [NullAllowed] UICompletionHandler completion);
+		void AnimateNotify (double duration, /* non null */ Action animation, [NullAllowed] UICompletionHandler completion);
 		
 		[Static, Export ("animateWithDuration:delay:options:animations:completion:")]
 		[Async]
-		void AnimateNotify (double duration, double delay, UIViewAnimationOptions options, /* non null */ NSAction animation, [NullAllowed] UICompletionHandler completion);
+		void AnimateNotify (double duration, double delay, UIViewAnimationOptions options, /* non null */ Action animation, [NullAllowed] UICompletionHandler completion);
 
 		[Static, Export ("transitionFromView:toView:duration:options:completion:")]
 		[Async]
@@ -13188,7 +13204,7 @@ namespace XamCore.UIKit {
 
 		[Static, Export ("transitionWithView:duration:options:animations:completion:")]
 		[Async]
-		void TransitionNotify (UIView withView, double duration, UIViewAnimationOptions options, [NullAllowed] NSAction animation, [NullAllowed] UICompletionHandler completion);
+		void TransitionNotify (UIView withView, double duration, UIViewAnimationOptions options, [NullAllowed] Action animation, [NullAllowed] UICompletionHandler completion);
 
 		[Export ("contentScaleFactor")]
 		nfloat ContentScaleFactor { get; set; }
@@ -13332,6 +13348,7 @@ namespace XamCore.UIKit {
 		
 		[iOS (6,0)]
 		[Export ("updateConstraints")]
+		[RequiresSuper]
 		void UpdateConstraints ();
 
 		[iOS (6,0)]
@@ -13362,21 +13379,21 @@ namespace XamCore.UIKit {
 
 		[iOS (7,0)]
 		[Static, Export ("performWithoutAnimation:")]
-		void PerformWithoutAnimation (NSAction actionsWithoutAnimation);
+		void PerformWithoutAnimation (Action actionsWithoutAnimation);
 
 		[iOS (7,0)]
 		[Static, Export ("performSystemAnimation:onViews:options:animations:completion:")]
 		[Async]
-		void PerformSystemAnimation (UISystemAnimation animation, UIView [] views, UIViewAnimationOptions options, NSAction parallelAnimations, UICompletionHandler completion);
+		void PerformSystemAnimation (UISystemAnimation animation, UIView [] views, UIViewAnimationOptions options, Action parallelAnimations, UICompletionHandler completion);
 
 		[iOS (7,0)]
 		[Static, Export ("animateKeyframesWithDuration:delay:options:animations:completion:")]
 		[Async]
-		void AnimateKeyframes (double duration, double delay, UIViewKeyframeAnimationOptions options, NSAction animations, UICompletionHandler completion);
+		void AnimateKeyframes (double duration, double delay, UIViewKeyframeAnimationOptions options, Action animations, UICompletionHandler completion);
 
 		[iOS (7,0)]
 		[Static, Export ("addKeyframeWithRelativeStartTime:relativeDuration:animations:")]
-		void AddKeyframeWithRelativeStartTime (double frameStartTime, double frameDuration, NSAction animations);
+		void AddKeyframeWithRelativeStartTime (double frameStartTime, double frameDuration, Action animations);
 
 		[iOS (7,0)]
 		[Export ("addMotionEffect:")]
@@ -13410,7 +13427,7 @@ namespace XamCore.UIKit {
 		[Static]
 		[Export ("animateWithDuration:delay:usingSpringWithDamping:initialSpringVelocity:options:animations:completion:")]
 		[Async]
-		void AnimateNotify (double duration, double delay, nfloat springWithDampingRatio, nfloat initialSpringVelocity, UIViewAnimationOptions options, NSAction animations, [NullAllowed] UICompletionHandler completion);
+		void AnimateNotify (double duration, double delay, nfloat springWithDampingRatio, nfloat initialSpringVelocity, UIViewAnimationOptions options, Action animations, [NullAllowed] UICompletionHandler completion);
 
 
 		[iOS (8,0)]
@@ -13850,11 +13867,11 @@ namespace XamCore.UIKit {
 
 		[Export ("presentViewController:animated:completion:")]
 		[Async]
-		void PresentViewController (UIViewController viewControllerToPresent, bool animated, [NullAllowed] NSAction completionHandler);
+		void PresentViewController (UIViewController viewControllerToPresent, bool animated, [NullAllowed] Action completionHandler);
 
 		[Export ("dismissViewControllerAnimated:completion:")]
 		[Async]
-		void DismissViewController (bool animated, [NullAllowed] NSAction completionHandler);
+		void DismissViewController (bool animated, [NullAllowed] Action completionHandler);
 
 		// UIViewControllerRotation
 		[NoTV]
@@ -13879,7 +13896,7 @@ namespace XamCore.UIKit {
 
 		[Export ("transitionFromViewController:toViewController:duration:options:animations:completion:")]
 		[Async]
-		/*PROTECTED, MUSTCALLBASE*/ void Transition (UIViewController fromViewController, UIViewController toViewController, double duration, UIViewAnimationOptions options, /* non null */ NSAction animations, UICompletionHandler completionHandler);
+		/*PROTECTED, MUSTCALLBASE*/ void Transition (UIViewController fromViewController, UIViewController toViewController, double duration, UIViewAnimationOptions options, /* non null */ Action animations, UICompletionHandler completionHandler);
 
 		[Export ("willMoveToParentViewController:")]
 		void WillMoveToParentViewController ([NullAllowed] UIViewController parent);
@@ -14159,12 +14176,12 @@ namespace XamCore.UIKit {
 
 		[iOS (11,0), TV (11,0)]
 		[Export ("viewLayoutMarginsDidChange")]
-		[Advice ("You must call the base method when overriding.")] // [RequiresSuper]
+		[RequiresSuper]
 		void ViewLayoutMarginsDidChange ();
 
 		[iOS (11,0), TV (11,0)]
 		[Export ("viewSafeAreaInsetsDidChange")]
-		[Advice ("You must call the base method when overriding.")] // [RequiresSuper]
+		[RequiresSuper]
 		void ViewSafeAreaInsetsDidChange ();
 
 		[NoWatch, NoTV]
@@ -14298,6 +14315,7 @@ namespace XamCore.UIKit {
 	
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
 	partial interface UITraitCollection : NSCopying, NSSecureCoding {
 		[Export ("userInterfaceIdiom")]
 		UIUserInterfaceIdiom UserInterfaceIdiom { get; }
@@ -15128,7 +15146,7 @@ namespace XamCore.UIKit {
 		[iOS (6,0)]
 		[Static]
 		[Export ("segueWithIdentifier:source:destination:performHandler:")]
-		UIStoryboardSegue Create ([NullAllowed] string identifier, UIViewController source, UIViewController destination, NSAction performHandler);
+		UIStoryboardSegue Create ([NullAllowed] string identifier, UIViewController source, UIViewController destination, Action performHandler);
 	}
 
 	[iOS (9,0)]
@@ -15830,6 +15848,7 @@ namespace XamCore.UIKit {
 
 	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
 	interface UIMotionEffect : NSCoding, NSCopying {
 		[Export ("keyPathsAndRelativeValuesForViewerOffset:")]
 		NSDictionary ComputeKeyPathsAndRelativeValues (UIOffset viewerOffset);
@@ -16267,6 +16286,7 @@ namespace XamCore.UIKit {
 	[iOS (8,0)]
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UserNotifications.UNNotificationCategory' instead.")]
 	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
 	partial interface UIUserNotificationCategory : NSCopying, NSMutableCopying, NSSecureCoding {
 
 		[Export ("identifier")]
@@ -16296,6 +16316,7 @@ namespace XamCore.UIKit {
 	[NoTV]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
 	partial interface UIUserNotificationAction : NSCopying, NSMutableCopying, NSSecureCoding {
 
 		[Export ("identifier")]
@@ -16592,6 +16613,7 @@ namespace XamCore.UIKit {
 
 	[iOS (10,0), TV (10,0)]
 	[BaseType (typeof(NSObject))]
+	[DesignatedDefaultCtor]
 	interface UICubicTimingParameters : UITimingCurveProvider
 	{
 		[Export ("animationCurve")]
@@ -17046,6 +17068,7 @@ namespace XamCore.UIKit {
 	
 	[NoWatch, NoTV, iOS (11,0)]
 	[BaseType (typeof(NSObject))]
+	[DesignatedDefaultCtor]
 	interface UIDragPreviewParameters : NSCopying
 	{
 		[Export ("initWithTextLineRects:")]
@@ -18062,6 +18085,7 @@ namespace XamCore.UIKit {
 	[NoWatch, NoTV]
 	[iOS (11,0)]
 	[BaseType (typeof(NSObject))]
+	[DesignatedDefaultCtor]
 	interface UIPasteConfiguration : NSSecureCoding, NSCopying {
 		[Export ("acceptableTypeIdentifiers", ArgumentSemantic.Copy)]
 		string[] AcceptableTypeIdentifiers { get; set; }

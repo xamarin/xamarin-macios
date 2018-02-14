@@ -1,13 +1,13 @@
 using System;
-using PlatformArchitecture = XamCore.ObjCRuntime.PlatformArchitecture;
-using PlatformName = XamCore.ObjCRuntime.PlatformName;
+using PlatformArchitecture = ObjCRuntime.PlatformArchitecture;
+using PlatformName = ObjCRuntime.PlatformName;
 
 // These _must_ be in a less nested namespace than the copies they are shadowing in PlatformAvailability.cs
 // Since those are in ObjcRuntime these must be global
 #if COREBUILD
 public
 #endif
-sealed class MacAttribute : XamCore.ObjCRuntime.IntroducedAttribute
+sealed class MacAttribute : ObjCRuntime.IntroducedAttribute
 {
 	public MacAttribute (byte major, byte minor)
 		: base (PlatformName.MacOSX, (int)major, (int)minor)
@@ -45,7 +45,7 @@ sealed class MacAttribute : XamCore.ObjCRuntime.IntroducedAttribute
 #if COREBUILD
 public
 #endif
-sealed class iOSAttribute : XamCore.ObjCRuntime.IntroducedAttribute
+sealed class iOSAttribute : ObjCRuntime.IntroducedAttribute
 {
 	public iOSAttribute (byte major, byte minor)
 		: base (PlatformName.iOS, (int)major, (int)minor)

@@ -34,11 +34,11 @@ using System;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.AddressBook {
+namespace AddressBook {
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	public enum ABPersonSortBy : uint /* uint32_t */ {
 		FirstName = 0,
@@ -82,7 +82,7 @@ namespace XamCore.AddressBook {
 
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Native]
-	public enum ABPersonImageFormat : nint_compat_int {
+	public enum ABPersonImageFormat : long {
 		Thumbnail = 0,
 		OriginalSize = 2
 	}

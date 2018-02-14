@@ -8,19 +8,19 @@
 // Copyright 2011-2015, Xamarin Inc
 //
 using System.ComponentModel;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
-using XamCore.CoreLocation;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using CoreGraphics;
+using CoreLocation;
 #if MONOMAC
-using XamCore.AppKit;
+using AppKit;
 #else
-using XamCore.UIKit;
+using UIKit;
 #endif
 using System;
 
-namespace XamCore.MediaPlayer {
+namespace MediaPlayer {
 #if XAMCORE_2_0 || !MONOMAC
 	[Mac (10,12,2, onlyOn64: true)] // type exists only to expose fields
 	[BaseType (typeof (NSObject))]

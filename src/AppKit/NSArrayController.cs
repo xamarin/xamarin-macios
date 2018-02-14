@@ -23,9 +23,9 @@
 
 using System;
 
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 
 	public partial class NSArrayController {
 
@@ -37,8 +37,8 @@ namespace XamCore.AppKit {
 		}
 
 		// note: if needed override the protected Get|Set methods
-		public nuint_compat_int SelectionIndex { 
-			get { return (nuint_compat_int) GetSelectionIndex (); }
+		public ulong SelectionIndex { 
+			get { return (ulong) GetSelectionIndex (); }
 			// ignore return value (bool)
 			set { SetSelectionIndex ((nuint) value); }
 		}

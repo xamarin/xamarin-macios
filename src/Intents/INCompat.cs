@@ -3,10 +3,10 @@
 #if XAMCORE_2_0 && IOS
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.Intents {
+namespace Intents {
 
 #if !XAMCORE_4_0
 	public partial class INRideDriver {

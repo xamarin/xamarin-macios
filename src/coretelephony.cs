@@ -1,8 +1,8 @@
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 using System;
 
-namespace XamCore.CoreTelephony {
+namespace CoreTelephony {
 	[BaseType (typeof (NSObject))]
 	interface CTCall {
 		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use 'CallKit' instead.")]

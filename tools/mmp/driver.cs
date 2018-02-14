@@ -49,8 +49,8 @@ using Mono.Tuner;
 using MonoMac.Tuner;
 using Xamarin.Utils;
 using Xamarin.Linker;
-using XamCore.Registrar;
-using XamCore.ObjCRuntime;
+using Registrar;
+using ObjCRuntime;
 
 namespace Xamarin.Bundler {
 	public enum RegistrarMode {
@@ -81,7 +81,7 @@ namespace Xamarin.Bundler {
 		static string output_dir;
 		static string app_name;
 		static bool generate_plist;
-		public static RegistrarMode Registrar { get; private set; } = RegistrarMode.Default;
+		public static RegistrarMode Registrar { get { return App.Registrar; } private set { App.Registrar = value; } }
 		public static List<string> RecursiveSearchDirectories { get; } = new List<string> ();
 		static bool no_executable;
 		static bool embed_mono = true;
@@ -690,14 +690,9 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		static void Pack (IList<string> unprocessed)
+		public static void SelectRegistrar ()
 		{
-			string fx_dir = null;
-			string root_assembly = null;
-			var native_libs = new Dictionary<string, List<MethodDefinition>> ();
-
-			if (Registrar == RegistrarMode.Default)
-			{
+			if (Registrar == RegistrarMode.Default) {
 				if (!App.EnableDebug)
 					Registrar = RegistrarMode.Static;
 				else if (IsUnified && App.LinkMode == LinkMode.None && embed_mono && App.IsDefaultMarshalManagedExceptionMode && File.Exists (PartialStaticLibrary))
@@ -706,7 +701,14 @@ namespace Xamarin.Bundler {
 					Registrar = RegistrarMode.Dynamic;
 				Log (1, $"Defaulting registrar to '{Registrar}'");
 			}
-			
+		}
+
+		static void Pack (IList<string> unprocessed)
+		{
+			string fx_dir = null;
+			string root_assembly = null;
+			var native_libs = new Dictionary<string, List<MethodDefinition>> ();
+
 			if (no_executable) {
 				if (unprocessed.Count != 0) {
 					var exceptions = new List<Exception> ();
@@ -1474,7 +1476,6 @@ namespace Xamarin.Bundler {
 
 			Mono.Linker.LinkContext context;
 			MonoMac.Tuner.Linker.Process (options, out context, out resolved_assemblies);
-			BuildTarget.LinkContext = (context as MonoMacLinkContext);
 
 			// Idealy, this would be handled by Linker.Process above. However in the non-linking case
 			// we do not run MobileMarkStep which generates the pinvoke list. Hack around this for now

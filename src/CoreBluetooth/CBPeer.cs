@@ -1,10 +1,10 @@
 #if IOS
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 using System;
-using XamCore.CoreFoundation;
+using CoreFoundation;
 
-namespace XamCore.CoreBluetooth {
+namespace CoreBluetooth {
 	public partial class CBPeer  {
 		[Deprecated (PlatformName.iOS, 7, 0)]
 		[Obsoleted (PlatformName.iOS, 9, 0)]

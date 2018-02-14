@@ -7,9 +7,9 @@
 // Copyright 2016 Xamarin Inc.
 
 using System;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 	/* This enum must always match the identical enum in runtime/xamarin/main.h */
 	public enum MarshalObjectiveCExceptionMode {
 		Default                  = 0,

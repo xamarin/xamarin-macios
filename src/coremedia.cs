@@ -5,10 +5,10 @@
 //
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.CoreMedia {
+namespace CoreMedia {
 
 	[Partial]
 	interface CMMemoryPool {

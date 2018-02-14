@@ -1,6 +1,8 @@
 # usage $(call CheckSubmoduleTemplate (name,MAKEFILE VAR,repo name))
 # usage $(call CheckSubmoduleTemplate (mono,MONO,mono))
 
+THISDIR=$(TOP)/mk
+
 COLOR_GRAY:=$(shell tput setaf 250 2>/dev/null)
 COLOR_GREEN:=$(shell tput setaf 120 2>/dev/null)
 COLOR_RED:=$(shell tput setaf 1 2>/dev/null)
@@ -12,6 +14,7 @@ define CheckSubmoduleTemplate
 
 check-$(1)::
 ifeq ($$(IGNORE_$(2)_VERSION),)
+	@rm -f $(THISDIR)/.stamp-reset-$(1)
 	@if test ! -d $($(2)_PATH); then \
 		if test x$$(RESET_VERSIONS) != "x"; then \
 			make reset-$(1) || exit 1; \
@@ -48,6 +51,7 @@ ifneq ($$(IGNORE_$(2)_VERSION),)
 else
 	@echo "*** git submodule update --init --recursive --force -- $(TOP)/external/$(1)"
 	cd $(abspath $($(2)_PATH)/../..) && git submodule update --init --recursive --force -- ./external/$(1)
+	@touch $(THISDIR)/.stamp-reset-$(1)
 endif
 
 print-$(1)::
@@ -55,7 +59,7 @@ print-$(1)::
 
 .PHONY: check-$(1) reset-$(1) print-$(1)
 
-reset-versions:: reset-$(1)
+reset-versions-impl:: reset-$(1)
 check-versions:: check-$(1)
 print-versions:: print-$(1)
 endef
@@ -96,5 +100,9 @@ check-versions::
 
 all-local:: check-versions
 
-reset:
-	@make check-versions RESET_VERSIONS=1
+reset: RESET_VERSIONS=1
+reset: check-versions
+	$(Q) ! test -f $(THISDIR)/.stamp-reset-maccore || ( echo "$(COLOR_GRAY)Checking again since maccore changed$(COLOR_CLEAR)" && $(MAKE) check-versions RESET_VERSIONS=1 )
+
+reset-versions: reset-versions-impl
+	$(Q) ! test -f $(THISDIR)/.stamp-reset-maccore || ( echo "$(COLOR_GRAY)Checking again since maccore changed$(COLOR_CLEAR)" && $(MAKE) reset-versions-impl )

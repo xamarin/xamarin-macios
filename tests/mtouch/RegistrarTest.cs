@@ -9,6 +9,9 @@ using Xamarin.Tests;
 using Xamarin.Utils;
 using NUnit.Framework;
 
+using MTouchLinker = Xamarin.Tests.LinkerOption;
+using MTouchRegistrar = Xamarin.Tests.RegistrarOption;
+
 namespace Xamarin
 {
 	[TestFixture]
@@ -689,7 +692,14 @@ class X : ReplayKit.RPBroadcastControllerDelegate
 	}
 }
 ";
-			Verify (R.Static, code, true);
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.CreateTemporaryApp (extraCode: code, usings: "using System; using Foundation;", extraArg: "/debug:full");
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.AssertExecute ();
+				mtouch.AssertNoWarnings ();
+			}
 		}
 
 		[Test]
@@ -916,7 +926,14 @@ class H : G {
 }
 ";
 
-			Verify (R.Static, code, true);
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.CreateTemporaryApp (extraCode: code, usings: "using Foundation;", extraArg: "/debug:full");
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.AssertExecute ();
+				mtouch.AssertNoWarnings ();
+			}
 		}
 
 		void Verify (R registrars, string code, bool success, params string [] expected_messages)
@@ -1044,7 +1061,14 @@ class Generic3<T> : NSObject where T: System.IConvertible {}
 ";
 
 			// and the lack of warnings/errors in the new static registrar.
-			Verify (R.Static, code, true);
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.CreateTemporaryApp (extraCode: code, usings: "using Foundation; using UIKit;", extraArg: "/debug:full");
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.AssertExecute ();
+				mtouch.AssertNoWarnings ();
+			}
 		}
 
 		[Test]
@@ -1241,10 +1265,17 @@ class GenericMethodClass : NSObject {
 
 }
 ";
-			Verify (R.Static, str1, false, 
-				".*Test.cs.*: error MT4113: The registrar found a generic method: 'GenericMethodClass.GenericMethod(T)'. Exporting generic methods is not supported, and will lead to random behavior and/or crashes",
-				".*Test.cs.*: error MT4113: The registrar found a generic method: 'GenericMethodClass.Foo(T)'. Exporting generic methods is not supported, and will lead to random behavior and/or crashes"
-				);
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.CreateTemporaryApp (extraCode: str1, usings: "using Foundation;", extraArg: "/debug:full");
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.AssertExecuteFailure ();
+				mtouch.AssertError (4113, "The registrar found a generic method: 'GenericMethodClass.Foo(T)'. Exporting generic methods is not supported, and will lead to random behavior and/or crashes", "testApp.cs", 6);
+				mtouch.AssertError (4113, "The registrar found a generic method: 'GenericMethodClass.GenericMethod(T)'. Exporting generic methods is not supported, and will lead to random behavior and/or crashes", "testApp.cs", 8);
+				mtouch.AssertErrorCount (2);
+				mtouch.AssertNoWarnings ();
+			}
 		}
 
 		[Test]
@@ -1256,7 +1287,14 @@ class GenericMethodClass : NSObject {
 	public virtual void Foo (System.Action<string> func) {}
 }
 ";
-			Verify (R.Static, code, true);
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.CreateTemporaryApp (extraCode: code, usings: "using Foundation;", extraArg: "/debug:full");
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.AssertExecute ();
+				mtouch.AssertNoWarnings ();
+			}
 		}
 
 		[Test]
@@ -1366,7 +1404,14 @@ class CTP4 : CTP3 {
 	public override bool ConformsToProtocol (IntPtr protocol) { return base.ConformsToProtocol (protocol); }
 }
 ";
-			Verify (R.Static, code, true);
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.CreateTemporaryApp (extraCode: code, usings: "using System; using Foundation;");
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.AssertExecute ();
+				mtouch.AssertNoWarnings ();
+			}
 		}
 
 #region Helper functions

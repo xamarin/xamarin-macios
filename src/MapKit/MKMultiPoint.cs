@@ -2,11 +2,11 @@
 #if XAMCORE_2_0 || !MONOMAC
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.CoreLocation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using CoreLocation;
+using ObjCRuntime;
 
-namespace XamCore.MapKit {
+namespace MapKit {
 
 	public partial class MKMultiPoint {
 		public unsafe MKMapPoint [] Points {

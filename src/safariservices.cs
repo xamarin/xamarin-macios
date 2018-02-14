@@ -9,15 +9,15 @@
 
 using System;
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 #if !MONOMAC
-using XamCore.UIKit;
+using UIKit;
 #else
-using XamCore.AppKit;
+using AppKit;
 #endif
 
-namespace XamCore.SafariServices {
+namespace SafariServices {
 	delegate void SFExtensionValidationHandler (bool shouldHide, NSString text);
 
 	[Mac (10,12, onlyOn64: true)][iOS (10,0)]
@@ -331,6 +331,8 @@ namespace XamCore.SafariServices {
 	[BaseType (typeof(NSViewController))]
 	interface SFSafariExtensionViewController
 	{
+		[Export ("initWithNibName:bundle:")]
+		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
 	}
 
 	[Mac (10,12, onlyOn64: true)]

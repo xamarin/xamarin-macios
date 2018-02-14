@@ -8,10 +8,10 @@
 //
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.Security {
+namespace Security {
 
 	[Static]
 	[iOS (7,0)]
@@ -429,10 +429,11 @@ namespace XamCore.Security {
 		IntPtr Synchronizable { get; }
 
 		[iOS (9,0)]
-		[NoMac]
+		[Mac (10,11)]
 		[Field ("kSecAttrSyncViewHint")]
 		IntPtr SyncViewHint { get; }
 
+		[Mac (10,9)]
 		[Field ("kSecAttrAccessGroup")]
 		IntPtr AccessGroup { get; }
 
@@ -535,7 +536,7 @@ namespace XamCore.Security {
 		IntPtr TokenID { get; }
 
 		[iOS (9,0)]
-		[NoMac]
+		[Mac (10,12)]
 		[Field ("kSecAttrTokenIDSecureEnclave")]
 		IntPtr SecureEnclave { get; }
 

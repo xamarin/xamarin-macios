@@ -2,7 +2,7 @@
 
 using System;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 
 	public partial class UIDocumentPickerViewController {
 		[Obsolete ("iOS9 does not allow creating an empty instance")]

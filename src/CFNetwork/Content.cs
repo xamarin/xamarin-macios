@@ -32,9 +32,9 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.CFNetwork {
+namespace CFNetwork {
 
 	class Content : StreamContent {
 		WebResponseStream responseStream;

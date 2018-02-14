@@ -10,10 +10,10 @@
 #if !TVOS && !WATCH
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 	public partial class AVCaptureFileOutput {
 		class recordingProxy : AVCaptureFileOutputRecordingDelegate  {
 			Action<NSObject []> startRecordingFromConnections;

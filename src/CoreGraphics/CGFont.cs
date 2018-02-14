@@ -28,15 +28,15 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
 
 #if !MONOMAC && !WATCH
-using XamCore.CoreText;
+using CoreText;
 #endif
 
-namespace XamCore.CoreGraphics {
+namespace CoreGraphics {
 
 	// CGFont.h
 	public class CGFont : INativeObject

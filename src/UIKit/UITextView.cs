@@ -9,7 +9,7 @@
 
 #if !WATCH
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	public partial class UITextView : IUITextInputTraits {
 	}
 }

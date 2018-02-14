@@ -24,15 +24,15 @@
 //
 
 #if XAMCORE_2_0 && IOS
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreGraphics;
+using Foundation;
+using ObjCRuntime;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 	public partial class AVMetadataMachineReadableCodeObject {
 		public CGPoint[] Corners {
 			get {

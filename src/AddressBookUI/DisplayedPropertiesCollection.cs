@@ -10,11 +10,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-using XamCore.AddressBook;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using AddressBook;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.AddressBookUI {
+namespace AddressBookUI {
 
 	delegate T ABFunc<T> ();
 

@@ -1,9 +1,9 @@
 ﻿#if XAMCORE_2_0 || !MONOMAC
 using System;
-using XamCore.Metal;
-using XamCore.Foundation;
+using Metal;
+using Foundation;
 
-namespace XamCore.MetalPerformanceShaders {
+namespace MetalPerformanceShaders {
 	public partial class MPSCnnBinaryConvolution {
 		public unsafe MPSCnnBinaryConvolution (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, float [] outputBiasTerms, float [] outputScaleTerms, float [] inputBiasTerms, float [] inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags)
 			: base (NSObjectFlag.Empty)

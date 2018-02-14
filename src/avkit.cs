@@ -3,21 +3,21 @@
 //
 // Copyright 2014-2015 Xamarin Inc
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
-using XamCore.CoreImage;
-using XamCore.CoreMedia;
-using XamCore.CoreVideo;
-using XamCore.AVFoundation;
+using Foundation;
+using ObjCRuntime;
+using CoreGraphics;
+using CoreImage;
+using CoreMedia;
+using CoreVideo;
+using AVFoundation;
 #if !MONOMAC
-using XamCore.OpenGLES;
-using XamCore.UIKit;
+using OpenGLES;
+using UIKit;
 #else
-using XamCore.AppKit;
+using AppKit;
 #endif
 
-namespace XamCore.AVKit {
+namespace AVKit {
 #if !MONOMAC
 	[NoTV]
 	[iOS (9,0)]
@@ -327,6 +327,8 @@ namespace XamCore.AVKit {
 	[Mac (10,9, onlyOn64 : true)]
 	[BaseType (typeof (NSView))]
 	interface AVPlayerView {
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
 
 		[Export ("player")]
 		AVPlayer Player { get; set; }
@@ -386,6 +388,8 @@ namespace XamCore.AVKit {
 	[Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSView))]
 	interface AVCaptureView {
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
 
 		[Export ("session"), NullAllowed]
 		AVCaptureSession Session { get; }
@@ -534,7 +538,7 @@ namespace XamCore.AVKit {
 
 	[TV (11,0), NoiOS]
 	[Native]
-	public enum AVRoutePickerViewButtonStyle : nint {
+	public enum AVRoutePickerViewButtonStyle : long {
 		System,
 		Plain,
 		Custom,

@@ -10,10 +10,10 @@
 #if XAMCORE_2_0
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.EventKitUI {
+namespace EventKitUI {
 	public static class EKUIBundle {
 
 		[iOS (11,0)]

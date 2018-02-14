@@ -55,7 +55,7 @@ clean-$(1):
 	rm -Rf .libs/$(1)
 
 CLEAN_TARGETS += clean-$(1)
-EXTRA_DEPENDENCIES = libtest.h $(GENERATED_FILES)
+EXTRA_DEPENDENCIES = libtest.h $(GENERATED_FILES) rename.h
 
 .libs/$(1)/libtest-object.%.o: export EXTRA_DEFINES=-DPREFIX=1
 .libs/$(1)/libtest-ar.%.o: export EXTRA_DEFINES=-DPREFIX=2
@@ -128,6 +128,9 @@ endif
 ifdef INCLUDE_WATCH
 $(eval $(call Template,watchos,WATCHOS,armv7k x86,i386,armv7k,WatchSimulator,WatchOS,-mwatchos-simulator-version-min=2.0,-mwatchos-version-min=2.0 -fembed-bitcode))
 endif
+ifdef INCLUDE_MAC
+$(eval $(call Template,macos,MACOS,x86_64,x86_64,,MacOSX,MacOSX,-mmacosx-version-min=$(MIN_OSX_VERSION_FOR_MAC),-mmacosx-version-min=$(MIN_OSX_VERSION_FOR_MAC)))
+endif
 
 define LibTemplate
 
@@ -146,6 +149,28 @@ $(eval $(call LibTemplate,armv7s+x86,.libs/ios/libtest.armv7s.o,.libs/ios/libtes
 $(eval $(call LibTemplate,arm64+x86_64,.libs/tvos/libtest.arm64.o,.libs/tvos/libtest.x86_64.o,tvos,TVOS))
 
 $(eval $(call LibTemplate,armv7k+x86,.libs/watchos/libtest.armv7k.o,.libs/watchos/libtest.x86.o,watchos,WATCHOS))
+
+# Xamarin.Mac
+
+MAC_CLANG = DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT) $(MAC_CC)
+MAC_OBJC_CFLAGS=-ObjC++ -std=c++0x -fno-exceptions
+MAC_CFLAGS = -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) -Wall -DMONOMAC -g
+MAC_LDFLAGS = -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) -framework AppKit
+
+.libs/macos/libtest.%.o: libtest.m $(EXTRA_DEPENDENCIES) | .libs/macos
+	$(call Q_2,OBJC,  [mac]) $(MAC_CLANG) -arch $* -c $(MAC_OBJC_CFLAGS) $(MAC_CFLAGS) -o $@ $<
+
+.libs/macos/libtest-object.%.o: libtest.m $(EXTRA_DEPENDENCIES) | .libs/macos
+	$(call Q_2,OBJC,  [mac]) $(MAC_CLANG) -arch $* -c $(MAC_OBJC_CFLAGS) $(MAC_CFLAGS) -o $@ $< -DPREFIX=1
+
+.libs/macos/libtest-ar.%.o: libtest.m $(EXTRA_DEPENDENCIES) | .libs/macos
+	$(call Q_2,OBJC,  [mac]) $(MAC_CLANG) -arch $* -c $(MAC_OBJC_CFLAGS) $(MAC_CFLAGS) -o $@ $< -DPREFIX=2
+
+.libs/macos/libtest2.%.o: libtest2.m $(EXTRA_DEPENDENCIES) | .libs/macos
+	$(call Q_2,OBJC,  [mac]) $(MAC_CLANG) -arch $* -c $(MAC_OBJC_CFLAGS) $(MAC_CFLAGS) -o $@ $<
+
+.libs/macos:
+	$(Q) mkdir -p $@
 
 clean-local:: $(CLEAN_TARGETS)
 
