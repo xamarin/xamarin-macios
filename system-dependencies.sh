@@ -650,6 +650,7 @@ function install_objective_sharpie () {
 function check_objective_sharpie () {
 	if ! test -z $IGNORE_SHARPIE; then return; fi
 
+	SHARPIE_URL=$(grep MIN_SHARPIE_URL= Make.config | sed 's/.*=//')
 	MIN_SHARPIE_VERSION=$(grep MIN_SHARPIE_VERSION= Make.config | sed 's/.*=//')
 	MAX_SHARPIE_VERSION=$(grep MAX_SHARPIE_VERSION= Make.config | sed 's/.*=//')
 
@@ -659,9 +660,9 @@ function check_objective_sharpie () {
 			ACTUAL_SHARPIE_VERSION=$(cat /Library/Frameworks/ObjectiveSharpie.framework/Versions/Current/Version)
 		else
 			if test -z $OPTIONAL_SHARPIE; then
-				fail "You must install Objective Sharpie, at least $MIN_SHARPIE_VERSION (no Objective Sharpie found)."
+				fail "You must install Objective Sharpie, at least $MIN_SHARPIE_VERSION (no Objective Sharpie found). You can download it from $SHARPIE_URL"
 			else
-				warn "You do not have Objective Sharpie installed (should be at least $MIN_SHARPIE_VERSION)."
+				warn "You do not have Objective Sharpie installed (should be at least $MIN_SHARPIE_VERSION). You can download it from $SHARPIE_URL"
 			fi
 			return
 		fi
@@ -673,9 +674,9 @@ function check_objective_sharpie () {
 				ACTUAL_SHARPIE_VERSION=$(cat /Library/Frameworks/ObjectiveSharpie.framework/Versions/Current/Version)
 			else
 				if test -z $OPTIONAL_SHARPIE; then
-					fail "You must have at least Objective Sharpie $MIN_SHARPIE_VERSION, found $ACTUAL_SHARPIE_VERSION"
+					fail "You must have at least Objective Sharpie $MIN_SHARPIE_VERSION, found $ACTUAL_SHARPIE_VERSION. You can download it from $SHARPIE_URL"
 				else
-					warn "You do not have have at least Objective Sharpie $MIN_SHARPIE_VERSION (found $ACTUAL_SHARPIE_VERSION)"
+					warn "You do not have have at least Objective Sharpie $MIN_SHARPIE_VERSION (found $ACTUAL_SHARPIE_VERSION). You can download it from $SHARPIE_URL"
 				fi
 				return
 			fi
@@ -687,9 +688,9 @@ function check_objective_sharpie () {
 				ACTUAL_SHARPIE_VERSION=$(cat /Library/Frameworks/ObjectiveSharpie.framework/Versions/Current/Version)
 			else
 				if test -z $OPTIONAL_SHARPIE; then
-					fail "Your Objective Sharpie version is too new, max version is $MAX_SHARPIE_VERSION, found $ACTUAL_SHARPIE_VERSION."
+					fail "Your Objective Sharpie version is too new, max version is $MAX_SHARPIE_VERSION, found $ACTUAL_SHARPIE_VERSION. We recommend you download $SHARPIE_URL"
 				else
-					warn "You do not have have at most Objective Sharpie $MAX_SHARPIE_VERSION (found $ACTUAL_SHARPIE_VERSION)"
+					warn "You do not have have at most Objective Sharpie $MAX_SHARPIE_VERSION (found $ACTUAL_SHARPIE_VERSION). We recommend you download $SHARPIE_URL"
 				fi
 				return
 			fi
