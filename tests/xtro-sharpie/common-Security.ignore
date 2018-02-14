@@ -1,6 +1,3 @@
-!missing-field! kSecAttrPersistantReference not bound
-!missing-field! kSecPrivateKeyAttrs not bound
-!missing-field! kSecPublicKeyAttrs not bound
 !missing-field! kSecRandomDefault not bound
 
 !missing-pinvoke! SecTrustCopyProperties is not bound

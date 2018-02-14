@@ -358,10 +358,11 @@ namespace Security {
 		IntPtr Synchronizable { get; }
 
 		[iOS (9,0)]
-		[NoMac]
+		[Mac (10,11)]
 		[Field ("kSecAttrSyncViewHint")]
 		IntPtr SyncViewHint { get; }
 
+		[Mac (10,9)]
 		[Field ("kSecAttrAccessGroup")]
 		IntPtr AccessGroup { get; }
 
@@ -494,7 +495,7 @@ namespace Security {
 		IntPtr TokenID { get; }
 
 		[iOS (9,0)]
-		[NoMac]
+		[Mac (10,12)]
 		[Field ("kSecAttrTokenIDSecureEnclave")]
 		IntPtr SecureEnclave { get; }
 
@@ -509,6 +510,14 @@ namespace Security {
 		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
 		[Field ("kSecAttrPersistentReference")]
 		IntPtr PersistentReference { get; }
+
+		[Mac (10,8)]
+		[Field ("kSecPrivateKeyAttrs")]
+		IntPtr PrivateKeyAttributes { get; }
+
+		[Mac (10,8)]
+		[Field ("kSecPublicKeyAttrs")]
+		IntPtr PublicKeyAttributes { get; }
 	}
 
 	[Static][Internal]
