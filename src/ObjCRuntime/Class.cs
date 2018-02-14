@@ -102,6 +102,7 @@ namespace ObjCRuntime {
 			return GetClassHandle (type);
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)] // To inline the Runtime.DynamicRegistrationSupported code if possible.
 		static IntPtr GetClassHandle (Type type)
 		{
 			IntPtr @class = IntPtr.Zero;
@@ -149,12 +150,36 @@ namespace ObjCRuntime {
 
 		internal static Type Lookup (IntPtr klass)
 		{
-			return Lookup (klass, true);
+			return LookupClass (klass, true);
 		}
 
 		internal static Type Lookup (IntPtr klass, bool throw_on_error)
 		{
-			return Runtime.Registrar.Lookup (klass, throw_on_error);
+			return LookupClass (klass, throw_on_error);
+		}
+
+		[BindingImpl (BindingImplOptions.Optimizable)] // To inline the Runtime.DynamicRegistrationSupported code if possible.
+		static Type LookupClass (IntPtr klass, bool throw_on_error)
+		{
+			bool is_custom_type;
+			var find_class = klass;
+			do {
+				var tp = FindType (find_class, out is_custom_type);
+				if (tp != null)
+					return tp;
+				if (Runtime.DynamicRegistrationSupported)
+					break; // We can't continue looking up the hierarchy if we have the dynamic registrar, because we might be supposed to register this class.
+				find_class = class_getSuperclass (find_class);
+			} while (find_class != IntPtr.Zero);
+
+			// The linker will remove this condition (and the subsequent method call) if possible
+			if (Runtime.DynamicRegistrationSupported)
+				return Runtime.Registrar.Lookup (klass, throw_on_error);
+
+			if (throw_on_error)
+				throw ErrorHelper.CreateError (8026, $"Can't lookup the Objective-C class 0x{klass.ToString ("x")} ({class_getName (klass)}) when the dynamic registrar has been linked away.");
+
+			return null;
 		}
 
 		internal static IntPtr Register (Type type)
@@ -453,7 +478,15 @@ namespace ObjCRuntime {
 #endif
 		static bool IsCustomType (Type type)
 		{
-			return Runtime.Registrar.IsCustomType (type);
+			bool is_custom_type;
+			var @class = FindClass (type, out is_custom_type);
+			if (@class != IntPtr.Zero)
+				return is_custom_type;
+			
+			if (Runtime.DynamicRegistrationSupported)
+				return Runtime.Registrar.IsCustomType (type);
+
+			throw ErrorHelper.CreateError (8026, $"Can't determine if {type.FullName} is a custom type when the dynamic registrar has been linked away.");
 		}
 
 		[DllImport ("/usr/lib/libobjc.dylib")]
