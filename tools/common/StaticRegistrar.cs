@@ -1776,8 +1776,13 @@ namespace Registrar {
 		// [Export] is not sealed anymore - so we cannot simply compare strings
 		ICustomAttribute GetExportAttribute (ICustomAttributeProvider candidate)
 		{
-			if (TryGetAttribute (candidate, Foundation, StringConstants.ExportAttribute, out var attrib))
-				return attrib;
+			if (!candidate.HasCustomAttributes)
+				return null;
+
+			foreach (CustomAttribute ca in candidate.CustomAttributes) {
+				if (ca.Constructor.DeclaringType.Inherits (Foundation, StringConstants.ExportAttribute))
+					return ca;
+			}
 			return null;
 		}
 		
