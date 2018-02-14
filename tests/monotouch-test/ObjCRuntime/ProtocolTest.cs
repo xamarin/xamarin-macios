@@ -30,10 +30,9 @@ namespace MonoTouchFixtures.ObjCRuntime
 		public void Ctors ()
 		{
 			var data = new [] {
-				new { Type = typeof (INSObjectProtocol), Name = "NSObject" },
-#if !__WATCHOS__
-				new { Type = typeof (global::ModelIO.IMDLComponent), Name = "MDLComponent" },
-#endif
+				new { Type = typeof (INSObjectProtocol), Name = "NSObject" }, // protocol name doesn't match at all
+				new { Type = typeof (INSUrlSessionDownloadDelegate), Name = "NSURLSessionDownloadDelegate" }, // different casing in native
+				new { Type = typeof (global::HomeKit.IHMHomeDelegate), Name = "HMHomeDelegate" }, // protocol name is the same in native and managed
 			};
 
 			foreach (var d in data) {
