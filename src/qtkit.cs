@@ -448,6 +448,9 @@ namespace QTKit
 
 	[BaseType (typeof (NSView), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (QTCaptureViewDelegate)})]
 	interface QTCaptureView {
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
+
 		[Export ("availableVideoPreviewConnections")]
 		QTCaptureConnection [] AvailableVideoPreviewConnections { get; }
 
@@ -771,6 +774,9 @@ namespace QTKit
 
 	[BaseType (typeof (NSView))]
 	interface QTMovieView {
+
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
 
 		[Export ("movie")]
 		QTMovie Movie { get; set; }

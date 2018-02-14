@@ -119,6 +119,9 @@ namespace NotificationCenter {
 	[BaseType (typeof(NSViewController), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NCWidgetListViewDelegate)})]
 	interface NCWidgetListViewController
 	{
+		[Export ("initWithNibName:bundle:")]
+		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+		
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		INCWidgetListViewDelegate Delegate { get; set; }
 
@@ -175,6 +178,9 @@ namespace NotificationCenter {
 	[BaseType (typeof(NSViewController), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NCWidgetSearchViewDelegate)})]
 	interface NCWidgetSearchViewController
 	{
+		[Export ("initWithNibName:bundle:")]
+		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		INCWidgetSearchViewDelegate Delegate { get; set; }
 

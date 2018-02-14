@@ -395,6 +395,16 @@ namespace Introspection {
 				if (ctor.ToString () == "Void .ctor(PKPaymentSummaryItem[])")
 					return true;
 				break;
+			case "NSApplication": // Does not make sense, also it crashes
+			case "NSBitmapImageRep": // exception raised
+			case "NSCachedImageRep": // exception raised
+			case "NSCIImageRep": // exception raised
+			case "NSCustomImageRep": // exception raised
+			case "NSEPSImageRep": // exception raised
+			case "NSPdfImageRep": // exception raised
+				if (ctor.ToString () == "Void .ctor()")
+					return true;
+				break;
 			case "MDLNoiseTexture":
 			case "MDLSkyCubeTexture":
 			case "MDLNormalMapTexture":
