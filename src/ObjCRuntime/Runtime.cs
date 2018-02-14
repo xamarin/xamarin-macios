@@ -656,7 +656,7 @@ namespace ObjCRuntime {
 			if (nsobj == null)
 				throw ErrorHelper.CreateError (8023, $"An instance object is required to construct a closed generic method for the open generic method: {mb.DeclaringType.FullName}.{mb.Name} (token reference: 0x{token_ref:X}). Please file a bug report at http://bugzilla.xamarin.com.");
 
-			return ObjectWrapper.Convert (DynamicRegistrar.FindClosedMethod (nsobj.GetType (), mb));
+			return ObjectWrapper.Convert (FindClosedMethod (nsobj.GetType (), mb));
 		}
 
 		static IntPtr TryGetOrConstructNSObjectWrapped (IntPtr ptr)
@@ -1508,6 +1508,31 @@ namespace ObjCRuntime {
 			}
 		}
 
+		internal static MethodInfo FindClosedMethod (Type closed_type, MethodBase open_method)
+		{
+			// FIXME: I think it should be handled before getting here (but it's safer here for now)
+			if (!open_method.ContainsGenericParameters)
+				return (MethodInfo) open_method;
+
+			// First we need to find the type that declared the open method.
+			Type declaring_closed_type = closed_type;
+			do {
+				if (declaring_closed_type.IsGenericType && declaring_closed_type.GetGenericTypeDefinition () == open_method.DeclaringType) {
+					closed_type = declaring_closed_type;
+					break;
+				}
+				declaring_closed_type = declaring_closed_type.BaseType;
+			} while (declaring_closed_type != null);
+
+			// Find the closed method.
+			foreach (var mi in closed_type.GetMethods (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly)) {
+				if (mi.MetadataToken == open_method.MetadataToken) {
+					return mi;
+				}
+			}
+
+			throw ErrorHelper.CreateError (8003, "Failed to find the closed generic method '{0}' on the type '{1}'.", open_method.Name, closed_type.FullName);
+		}
 	}
 		
 	internal class IntPtrEqualityComparer : IEqualityComparer<IntPtr>
