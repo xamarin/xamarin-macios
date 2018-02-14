@@ -2968,8 +2968,21 @@ namespace Registrar {
 					map.AppendLine ("0x{0:X}, /* {1} */", p.TokenReference, p.Protocol.Type.FullName);
 				map.AppendLine ("};");
 				map.AppendLine ("static const Protocol* __xamarin_protocols [] = {");
-				foreach (var p in ordered)
-					map.AppendLine ("@protocol ({0}), /* {1} */", p.Protocol.ProtocolName, p.Protocol.Type.FullName);
+				foreach (var p in ordered) {
+					bool use_dynamic = false;
+#if MTOUCH
+					switch (p.Protocol.ProtocolName) {
+					case "CAMetalDrawable": // The header isn't available for the simulator.
+						use_dynamic = IsSimulator;
+						break;
+					}
+#endif
+					if (use_dynamic) {
+						map.AppendLine ("objc_getProtocol (\"{0}\"), /* {1} */", p.Protocol.ProtocolName, p.Protocol.Type.FullName);
+					} else {
+						map.AppendLine ("@protocol ({0}), /* {1} */", p.Protocol.ProtocolName, p.Protocol.Type.FullName);
+					}
+				}
 				map.AppendLine ("};");
 			}
 			map.AppendLine ("static struct MTRegistrationMap __xamarin_registration_map = {");
