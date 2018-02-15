@@ -629,5 +629,48 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (attrs.Count, Is.GreaterThan (0), "private/GetAttributes");
 			}
 		}
+
+		[Test]
+		public void CreateRandomKeyWithParametersTests ()
+		{
+#if IOS || TVOS
+			if (!TestRuntime.CheckXcodeVersion (10, 0)) return;
+#endif
+#if MONOMAC
+			if (!TestRuntime.CheckXcodeVersion (10, 12)) return;
+#endif
+#if __WATCHOS__
+			if (!TestRuntime.CheckXcodeVersion (3, 0)) return;
+#endif
+
+			var keyGenerationParameters = new SecKeyGenerationParameters ();
+		        keyGenerationParameters.KeyType = SecKeyType.EC;
+		        keyGenerationParameters.KeySizeInBits = 256;
+	                keyGenerationParameters.IsPermanent = false;
+	                var privateKeyAttributes = new SecPublicPrivateKeyAttrs ();
+			privateKeyAttributes.AccessControl = new SecAccessControl (SecAccessible.WhenUnlockedThisDeviceOnly, SecAccessControlCreateFlags.PrivateKeyUsage | SecAccessControlCreateFlags.UserPresence);
+			privateKeyAttributes.Label = "NotDefault";
+			keyGenerationParameters.PrivateKeyAttrs = privateKeyAttributes;
+
+			NSError error;
+			var privateKey = SecKey.CreateRandomKey (keyGenerationParameters, out error);
+			Assert.That (error, Is.EqualTo (null), "CreateRandomKey");
+			Assert.That (privateKey, Is.Not.EqualTo (null), "CreateRandomKey - key is null");
+			var publicKey = privateKey.GetPublicKey ();
+			Assert.That (publicKey, Is.Not.EqualTo (null));
+
+			Assert.Throws<ArgumentException> (() => { SecKey.CreateRandomKey (null, out _); }, "CreateRandomKey - null argument");
+
+			var keyGenerationParameters = new SecKeyGenerationParameters ();
+			keyGenerationParameters.KeyType = SecKeyType.Invalid;
+			Assert.Throws<ArgumentException> (() => { SecKey.CreateRandomKey (keyGenerationParameters, out _); }, "CreateRandomKey - invalid key type");
+
+			var keyGenerationParameters = new SecKeyGenerationParameters ();
+			keyGenerationParameters.KeyType = SecKeyType.RSA;
+			keyGenerationParameters.KeySizeInBits = -1;
+			Assert.That (SecKey.CreateRandomKey (keyGenerationParameters, out _), Is.EqualTo (SecStatusCode.Param), "CreateRandomKey - Param issue, invalid RSA key size");
+
+			Assert.Throws<ArgumentException> (() => { SecKey.CreateRandomKey (new SecKeyGenerationParameters (), out _); }, "CreateRandomKey - empty parameters");
+		}
 	}
 }

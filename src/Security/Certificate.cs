@@ -795,6 +795,21 @@ namespace Security {
 			}
 		}
 
+		[Watch (3, 0)][TV (10, 0)][Mac (10, 12)][iOS (10, 0)]
+		static public SecKey CreateRandomKey (SecKeyGenerationParameters parameters, out NSError error)
+		{
+			if (parameters == null)
+				throw new ArgumentNullException (nameof (parameters));
+			if (parameters.KeyType == null)
+				throw new ArgumentNullException (nameof (parameters.KeyType));
+			if (parameters.KeyType == SecKeyType.Invalid)
+				throw new ArgumentException (nameof (parameters.KeyType));
+
+			using (var dictionary = parameters.GetDictionary ()) {
+				return CreateRandomKey (dictionary, out error);
+			}
+		}
+
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern IntPtr /* SecKeyRef _Nullable */ SecKeyCreateWithData (IntPtr /* CFDataRef* */ keyData, IntPtr /* CFDictionaryRef* */ attributes, out IntPtr /* CFErrorRef** */ error);
