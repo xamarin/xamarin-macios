@@ -621,12 +621,13 @@ namespace MonoTouchFixtures.Security {
 			att2.CanUnwrap = true;
 			Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, 1024, att, att2, out public_key, out private_key), Is.EqualTo (SecStatusCode.Success), "GenerateKeyPair - iOS Only API");
 #endif
-
-			using (var attrs = public_key.GetAttributes ()) {
-				Assert.That (attrs.Count, Is.GreaterThan (0), "public/GetAttributes");
-			}
-			using (var attrs = private_key.GetAttributes ()) {
-				Assert.That (attrs.Count, Is.GreaterThan (0), "private/GetAttributes");
+			if (TestRuntime.CheckXcodeVersion (8,0)) {
+				using (var attrs = public_key.GetAttributes ()) {
+					Assert.That (attrs.Count, Is.GreaterThan (0), "public/GetAttributes");
+				}
+				using (var attrs = private_key.GetAttributes ()) {
+					Assert.That (attrs.Count, Is.GreaterThan (0), "private/GetAttributes");
+				}
 			}
 		}
 	}
