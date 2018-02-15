@@ -106,10 +106,11 @@ class T {
 			}
 		}
 
-		[Test]
 #if __MACOS__
-		[TestCase (Profile.macOSMobile)]
+		// XM doesn't support removing the dynamic registrar yet.
+		//[TestCase (Profile.macOSMobile)]
 #else
+		[Test]
 		[TestCase (Profile.iOS)]
 #endif
 		public void MX2107 (Profile profile)
