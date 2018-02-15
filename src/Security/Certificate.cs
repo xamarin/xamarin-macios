@@ -562,7 +562,7 @@ namespace Security {
 			else
 				dic = new NSMutableDictionary ();
 			dic.LowlevelSetObject (type.GetConstant (), SecAttributeKey.Type);
-			dic.LowlevelSetObject (new NSNumber (keySizeInBits), SecAttributeKey.KeySizeInBits);
+			dic.LowlevelSetObject (new NSNumber (keySizeInBits), SecKeyGenerationAttributeKeys.KeySizeInBitsKey.Handle);
 			return GenerateKeyPair (dic, out publicKey, out privateKey);
 		}
 #if !MONOMAC
@@ -574,11 +574,11 @@ namespace Security {
 			using (var dic = new NSMutableDictionary ()) {
 				dic.LowlevelSetObject (type.GetConstant (), SecAttributeKey.Type);
 				using (var ksib = new NSNumber (keySizeInBits)) {
-					dic.LowlevelSetObject (ksib, SecAttributeKey.KeySizeInBits);
+					dic.LowlevelSetObject (ksib, SecKeyGenerationAttributeKeys.KeySizeInBitsKey.Handle);
 					if (publicKeyAttrs != null)
-						dic.LowlevelSetObject (publicKeyAttrs.GetDictionary (), SecAttributeKey.PublicKeyAttrs);
+						dic.LowlevelSetObject (publicKeyAttrs.GetDictionary (), SecKeyGenerationAttributeKeys.PublicKeyAttrsKey.Handle);
 					if (privateKeyAttrs != null)
-						dic.LowlevelSetObject (privateKeyAttrs.GetDictionary (), SecAttributeKey.PrivateKeyAttrs);
+						dic.LowlevelSetObject (privateKeyAttrs.GetDictionary (), SecKeyGenerationAttributeKeys.PrivateKeyAttrsKey.Handle);
 					return GenerateKeyPair (dic, out publicKey, out privateKey);
 				}
 			}
@@ -789,8 +789,8 @@ namespace Security {
 		{
 			using (var ks = new NSNumber (keySizeInBits))
 			using (var md = parameters == null ? new NSMutableDictionary () : new NSMutableDictionary (parameters)) {
-				md.LowlevelSetObject (keyType.GetConstant (), SecAttributeKey.KeyType);
-				md.LowlevelSetObject (ks, SecAttributeKey.KeySizeInBits);
+				md.LowlevelSetObject (keyType.GetConstant (), SecKeyGenerationAttributeKeys.KeyTypeKey.Handle);
+				md.LowlevelSetObject (ks, SecKeyGenerationAttributeKeys.KeySizeInBitsKey.Handle);
 				return CreateRandomKey (md, out error);
 			}
 		}
@@ -818,9 +818,9 @@ namespace Security {
 		{
 			using (var ks = new NSNumber (keySizeInBits))
 			using (var md = parameters == null ? new NSMutableDictionary () : new NSMutableDictionary (parameters)) {
-				md.LowlevelSetObject (keyType.GetConstant (), SecAttributeKey.KeyType);
+				md.LowlevelSetObject (keyType.GetConstant (), SecKeyGenerationAttributeKeys.KeyTypeKey.Handle);
 				md.LowlevelSetObject (keyClass.GetConstant (), SecAttributeKey.KeyClass);
-				md.LowlevelSetObject (ks, SecAttributeKey.KeySizeInBits);
+				md.LowlevelSetObject (ks, SecKeyGenerationAttributeKeys.KeySizeInBitsKey.Handle);
 				return Create (keyData, md, out error);
 			}
 		}
