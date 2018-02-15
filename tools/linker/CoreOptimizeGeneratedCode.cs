@@ -222,9 +222,30 @@ namespace Xamarin.Linker {
 					return MarkInstructions (method, instructions, reachable, instructions.IndexOf (br_target), end);
 				case FlowControl.Cond_Branch:
 					// Conditional instruction, we need to check if we can calculate a constant value for the condition
-					var cond_target = (Instruction) ins.Operand;
+					var cond_target = ins.Operand as Instruction;
 					bool? branch = null; // did we get a constant value for the condition, and if so, did we branch or not?
 					var cond_instruction_count = 0; // The number of instructions that compose the condition
+
+					if (ins.OpCode.Code == Code.Switch) {
+						// Treat all branches of the switch statement as reachable.
+						// FIXME: calculate the potential constant branch (currently there are no optimizable methods where the switch condition is constant, so this is not needed for now)
+						var targets = ins.Operand as Instruction [];
+						if (targets == null) {
+							Driver.Log (4, $"Can't optimize {0} because of unknown target of branch instruction {1} {2}", method, ins, ins.Operand);
+							return false;
+						}
+						foreach (var target in targets) {
+							// not constant, continue marking both this code sequence and the branched sequence
+							if (!MarkInstructions (method, instructions, reachable, instructions.IndexOf (target), end))
+								return false;
+						}
+						return MarkInstructions (method, instructions, reachable, instructions.IndexOf (ins.Next), end);
+					}
+
+					if (cond_target == null) {
+						Driver.Log (4, $"Can't optimize {0} because of unknown target of branch instruction {1} {2}", method, ins, ins.Operand);
+						return false;
+					}
 
 					switch (ins.OpCode.Code) {
 					case Code.Brtrue:
