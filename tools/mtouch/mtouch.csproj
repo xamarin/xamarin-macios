@@ -77,95 +77,101 @@
     <Compile Include="..\linker\MonoTouch.Tuner\RemoveCode.cs">
       <Link>MonoTouch.Tuner\RemoveCode.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker\XApiReader.cs">
-      <Link>Mono.Linker\XApiReader.cs</Link>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\XApiReader.cs">
+      <Link>Linker\XApiReader.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker\Annotations.cs">
-      <Link>Mono.Linker\Annotations.cs</Link>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\Annotations.cs">
+      <Link>Linker\Annotations.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker\LinkContext.cs">
-      <Link>Mono.Linker\LinkContext.cs</Link>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\LinkContext.cs">
+      <Link>Linker\LinkContext.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker\Pipeline.cs">
-      <Link>Mono.Linker\Pipeline.cs</Link>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\Pipeline.cs">
+      <Link>Linker\Pipeline.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker\MethodReferenceExtensions.cs">
-      <Link>Mono.Linker\MethodReferenceExtensions.cs</Link>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\MethodReferenceExtensions.cs">
+      <Link>Linker\MethodReferenceExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker\TypeReferenceExtensions.cs">
-      <Link>Mono.Linker\TypeReferenceExtensions.cs</Link>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\MarkingHelpers.cs">
+      <Link>Linker\Linker\MarkingHelpers.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker\AssemblyResolver.cs">
-      <Link>Mono.Linker\AssemblyResolver.cs</Link>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\Tracer.cs">
+      <Link>Linker\Linker\Tracer.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker\IXApiVisitor.cs">
-      <Link>Mono.Linker\IXApiVisitor.cs</Link>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\TypeReferenceExtensions.cs">
+      <Link>Linker\TypeReferenceExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker\ILogger.cs">
-      <Link>Mono.Linker\ILogger.cs</Link>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\AssemblyResolver.cs">
+      <Link>Linker\AssemblyResolver.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker\ConsoleLogger.cs">
-      <Link>Mono.Linker\ConsoleLogger.cs</Link>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\IXApiVisitor.cs">
+      <Link>Linker\IXApiVisitor.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker\I18nAssemblies.cs">
-      <Link>Mono.Linker\I18nAssemblies.cs</Link>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\ILogger.cs">
+      <Link>Linker\ILogger.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker\AssemblyAction.cs">
-      <Link>Mono.Linker\AssemblyAction.cs</Link>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\ConsoleLogger.cs">
+      <Link>Linker\ConsoleLogger.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker\TypePreserve.cs">
-      <Link>Mono.Linker\TypePreserve.cs</Link>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\I18nAssemblies.cs">
+      <Link>Linker\I18nAssemblies.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker\LoadException.cs">
-      <Link>Mono.Linker\LoadException.cs</Link>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\AssemblyAction.cs">
+      <Link>Linker\AssemblyAction.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker\MarkException.cs">
-      <Link>Mono.Linker\MarkException.cs</Link>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\TypePreserve.cs">
+      <Link>Linker\TypePreserve.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker\MethodAction.cs">
-      <Link>Mono.Linker\MethodAction.cs</Link>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\LoadException.cs">
+      <Link>Linker\LoadException.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker.Steps\BaseStep.cs">
-      <Link>Mono.Linker.Steps\BaseStep.cs</Link>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\MarkException.cs">
+      <Link>Linker\MarkException.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker.Steps\BlacklistStep.cs">
-      <Link>Mono.Linker.Steps\BlacklistStep.cs</Link>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\MethodAction.cs">
+      <Link>Linker\MethodAction.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker.Steps\CleanStep.cs">
-      <Link>Mono.Linker.Steps\CleanStep.cs</Link>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker.Steps\BaseStep.cs">
+      <Link>Linker.Steps\BaseStep.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker.Steps\IStep.cs">
-      <Link>Mono.Linker.Steps\IStep.cs</Link>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker.Steps\BlacklistStep.cs">
+      <Link>Linker.Steps\BlacklistStep.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker.Steps\LoadI18nAssemblies.cs">
-      <Link>Mono.Linker.Steps\LoadI18nAssemblies.cs</Link>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker.Steps\CleanStep.cs">
+      <Link>Linker.Steps\CleanStep.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker.Steps\LoadReferencesStep.cs">
-      <Link>Mono.Linker.Steps\LoadReferencesStep.cs</Link>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker.Steps\IStep.cs">
+      <Link>Linker.Steps\IStep.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker.Steps\MarkStep.cs">
-      <Link>Mono.Linker.Steps\MarkStep.cs</Link>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker.Steps\LoadI18nAssemblies.cs">
+      <Link>Linker.Steps\LoadI18nAssemblies.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker.Steps\OutputStep.cs">
-      <Link>Mono.Linker.Steps\OutputStep.cs</Link>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker.Steps\LoadReferencesStep.cs">
+      <Link>Linker.Steps\LoadReferencesStep.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker.Steps\ResolveFromAssemblyStep.cs">
-      <Link>Mono.Linker.Steps\ResolveFromAssemblyStep.cs</Link>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker.Steps\MarkStep.cs">
+      <Link>Linker.Steps\MarkStep.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker.Steps\ResolveFromXApiStep.cs">
-      <Link>Mono.Linker.Steps\ResolveFromXApiStep.cs</Link>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker.Steps\OutputStep.cs">
+      <Link>Linker.Steps\OutputStep.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker.Steps\ResolveFromXmlStep.cs">
-      <Link>Mono.Linker.Steps\ResolveFromXmlStep.cs</Link>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker.Steps\ResolveFromAssemblyStep.cs">
+      <Link>Linker.Steps\ResolveFromAssemblyStep.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker.Steps\ResolveStep.cs">
-      <Link>Mono.Linker.Steps\ResolveStep.cs</Link>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker.Steps\ResolveFromXApiStep.cs">
+      <Link>Linker.Steps\ResolveFromXApiStep.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker.Steps\SweepStep.cs">
-      <Link>Mono.Linker.Steps\SweepStep.cs</Link>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker.Steps\ResolveFromXmlStep.cs">
+      <Link>Linker.Steps\ResolveFromXmlStep.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\external\linker\linker\Mono.Linker.Steps\TypeMapStep.cs">
-      <Link>Mono.Linker.Steps\TypeMapStep.cs</Link>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker.Steps\ResolveStep.cs">
+      <Link>Linker.Steps\ResolveStep.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker.Steps\SweepStep.cs">
+      <Link>Linker.Steps\SweepStep.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker.Steps\TypeMapStep.cs">
+      <Link>Linker.Steps\TypeMapStep.cs</Link>
     </Compile>
     <Compile Include="..\..\external\mono\external\linker\tuner\Mono.Tuner\ApplyPreserveAttributeBase.cs">
       <Link>Mono.Tuner\ApplyPreserveAttributeBase.cs</Link>
@@ -382,8 +388,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Mono.Linker\" />
-    <Folder Include="Mono.Linker.Steps\" />
+    <Folder Include="Linker\" />
+    <Folder Include="Linker.Steps\" />
     <Folder Include="Mono.Tuner\" />
     <Folder Include="MonoTouch.Tuner\" />
     <Folder Include="external\" />
