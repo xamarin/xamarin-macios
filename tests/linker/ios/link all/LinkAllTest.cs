@@ -394,6 +394,7 @@ namespace LinkAll {
 		}
 
 		[Test]
+		[Ignore ("Assumption broken with mono 2017-12")]
 		public void AssemblyReferences_16213 ()
 		{
 			foreach (var assembly in typeof (System.Data.AcceptRejectRule).Assembly.GetReferencedAssemblies ()) {
