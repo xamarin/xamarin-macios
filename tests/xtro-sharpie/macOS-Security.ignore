@@ -624,7 +624,6 @@
 !missing-field! kSecAttrPRFHmacAlgSHA512 not bound
 !missing-field! kSecAttrRounds not bound
 !missing-field! kSecAttrSalt not bound
-!missing-field! kSecAttrSyncViewHint not bound
 !missing-field! kSecBase32Encoding not bound
 !missing-field! kSecBase64Encoding not bound
 !missing-field! kSecCFErrorArchitecture not bound

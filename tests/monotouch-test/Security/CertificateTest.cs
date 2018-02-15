@@ -585,5 +585,49 @@ namespace MonoTouchFixtures.Security {
 				}
 			}
 		}
+
+		[Test]
+		public void GenerateKeyPairTest ()
+		{
+			NSError error;
+			SecKey private_key;
+			SecKey public_key;
+			var att = new SecPublicPrivateKeyAttrs ();
+			att.Label = "NotDefault";
+			att.IsPermanent = true;
+			att.ApplicationTag = new NSData ();
+			att.EffectiveKeySize = 1024;
+			att.CanEncrypt = false;
+			att.CanDecrypt = false;
+			att.CanDerive = false;
+			att.CanSign = false;
+			att.CanVerify = false;
+			att.CanUnwrap = false;
+
+			Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, 1024, att, out public_key, out private_key), Is.EqualTo (SecStatusCode.Success), "GenerateKeyPair");
+			Assert.Throws<ArgumentException> (() => { SecKey.GenerateKeyPair (SecKeyType.Invalid, -1, null, out _, out _); }, "GenerateKeyPair - Invalid");
+			Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, -1, null, out _, out _), Is.EqualTo (SecStatusCode.Param), "GenerateKeyPair - Param issue, invalid RSA key size");
+			Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, 1024, null, out _, out _), Is.EqualTo (SecStatusCode.Success), "GenerateKeyPair - Null optional params, success");
+
+#if IOS
+			var att2 = new SecPublicPrivateKeyAttrs ();
+			att2.IsPermanent = false;
+			att2.EffectiveKeySize = 1024;
+			att2.CanEncrypt = true;
+			att2.CanDecrypt = true;
+			att2.CanDerive = true;
+			att2.CanSign = true;
+			att2.CanVerify = true;
+			att2.CanUnwrap = true;
+			Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, 1024, att, att2, out public_key, out private_key), Is.EqualTo (SecStatusCode.Success), "GenerateKeyPair - iOS Only API");
+#endif
+
+			using (var attrs = public_key.GetAttributes ()) {
+				Assert.That (attrs.Count, Is.GreaterThan (0), "public/GetAttributes");
+			}
+			using (var attrs = private_key.GetAttributes ()) {
+				Assert.That (attrs.Count, Is.GreaterThan (0), "private/GetAttributes");
+			}
+		}
 	}
 }
