@@ -1733,4 +1733,21 @@ namespace Security {
 		{
 		}
 	}
+
+	public partial class SecPublicPrivateKeyAttrs : DictionaryContainer {
+		// For caching, as we can't reverse it easily.
+		SecAccessControl _secAccessControl;
+
+		public SecAccessControl AccessControl {
+			get {
+				return _secAccessControl;
+			}
+			set {
+				if (value == null)
+					throw new ArgumentNullException("value");
+				_secAccessControl = value;
+				SetNativeValue (SecAttributeKeys.AccessControlKey, value);
+			}
+		}
+	}
 }

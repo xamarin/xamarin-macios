@@ -347,8 +347,6 @@ namespace Security {
 
 		int EffectiveKeySize { get; set; }
 
-		NSObject AccessControl { get; set; }
-
 #if MONOMAC
 		[Advice ("On macOS when passed to 'GenerateKeyPair', 'false' seems to be the only valid value. Otherwise 'UnsupportedKeyUsageMask' is returned.")]
 #endif
