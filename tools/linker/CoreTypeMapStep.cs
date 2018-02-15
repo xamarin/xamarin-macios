@@ -160,6 +160,7 @@ namespace MonoTouch.Tuner {
 				// If dynamic registration is not required, and removal of the dynamic registrar hasn't already
 				// been disabled, then we can remove it!
 				LinkContext.App.Optimizations.RemoveDynamicRegistrar = !dynamic_registration_support_required;
+				Driver.Log (4, "Optimization dynamic registrar removal: {0}", LinkContext.App.Optimizations.RemoveDynamicRegistrar.Value ? "enabled" : "disabled");
 			}
 		}
 
