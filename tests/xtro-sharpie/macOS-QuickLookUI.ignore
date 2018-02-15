@@ -1,0 +1,2 @@
+# Fixed in XAMCORE_4_0
+!incorrect-protocol-member! QLPreviewItem::previewItemURL is REQUIRED and should be abstract
