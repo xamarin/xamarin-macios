@@ -126,7 +126,7 @@ namespace Foundation {
 		Aggregate = 3,
 	}
 
-	public enum NSLinguisticTagSchemeType {
+	public enum NSLinguisticTagScheme {
 		[Field ("NSLinguisticTagSchemeTokenType")]
 		Token,
 
@@ -140,16 +140,16 @@ namespace Foundation {
 		NameOrLexicalClass,
 
 		[Field ("NSLinguisticTagSchemeLemma")]
-		SchemeLemma,
+		Lemma,
 
 		[Field ("NSLinguisticTagSchemeLanguage")]
 		Language,
 
 		[Field ("NSLinguisticTagSchemeScript")]
-		SchemeScript,
+		Script,
 	}
 
-	public enum NSLinguisticTagScheme {
+	public enum NSLinguisticTagUnit {
 		[Field ("NSLinguisticTagWord")]
 		Word,
 

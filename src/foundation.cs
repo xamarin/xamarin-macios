@@ -8194,15 +8194,23 @@ namespace Foundation
 
 	}
 
-	delegate bool NSEnumerateLinguisticTagsEnumerator (NSLinguisticTagScheme tag, NSRange tokenRange, NSRange sentenceRange, ref bool stop);
+	delegate bool NSEnumerateLinguisticTagsEnumerator (NSString tag, NSRange tokenRange, NSRange sentenceRange, ref bool stop);
 
 	[Category]
 	[BaseType (typeof(NSString))]
 	interface NSLinguisticAnalysis {
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("linguisticTagsInRange:scheme:options:orthography:tokenRanges:")]
+		string[] GetLinguisticTags (NSRange range, NSString scheme, NSLinguisticTaggerOptions options, [NullAllowed] NSOrthography orthography, [NullAllowed] out NSValue[] tokenRanges);
+
+		[Wrap ("GetLinguisticTags (This, range, scheme.GetConstant (), options, orthography, out tokenRanges)")]
 		string[] GetLinguisticTags (NSRange range, NSLinguisticTagScheme scheme, NSLinguisticTaggerOptions options, [NullAllowed] NSOrthography orthography, [NullAllowed] out NSValue[] tokenRanges);
 
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("enumerateLinguisticTagsInRange:scheme:options:orthography:usingBlock:")]
+		void EnumerateLinguisticTags (NSRange range, NSString scheme, NSLinguisticTaggerOptions options, [NullAllowed] NSOrthography orthography, NSEnumerateLinguisticTagsEnumerator handler);
+
+		[Wrap ("EnumerateLinguisticTags (This, range, scheme.GetConstant (), options, orthography, handler)")]
 		void EnumerateLinguisticTags (NSRange range, NSLinguisticTagScheme scheme, NSLinguisticTaggerOptions options, [NullAllowed] NSOrthography orthography, NSEnumerateLinguisticTagsEnumerator handler);
 	}
 
