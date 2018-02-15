@@ -18,7 +18,10 @@
 extern "C" {
 #endif
 
-<# foreach (var d in delegates) { #>
+<# foreach (var d in delegates) {
+		if (!d.OnlyDynamicUsage)
+			continue;
+#>
 <#= d.CReturnType #>
 <#= d.EntryPoint #> (<#= d.CArgumentSignature #>);
 

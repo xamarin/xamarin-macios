@@ -80,6 +80,7 @@ bool xamarin_is_gc_coop = false;
 enum MarshalObjectiveCExceptionMode xamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionModeDefault;
 enum MarshalManagedExceptionMode xamarin_marshal_managed_exception_mode = MarshalManagedExceptionModeDefault;
 enum XamarinLaunchMode xamarin_launch_mode = XamarinLaunchModeApp;
+bool xamarin_supports_dynamic_registration = true;
 
 /* Callbacks */
 
@@ -951,6 +952,10 @@ static bool
 register_assembly (MonoAssembly *assembly, guint32 *exception_gchandle)
 {
 	// COOP: this is a function executed only at startup, I believe the mode here doesn't matter.
+	if (!xamarin_supports_dynamic_registration) {
+		LOG (PRODUCT ": Skipping assembly registration for %s since it's not needed (dynamic registration is not supported)", mono_assembly_name_get_name (mono_assembly_get_name (assembly)));
+		return true;
+	}
 	xamarin_register_assembly (mono_assembly_get_object (mono_domain_get (), assembly), exception_gchandle);
 	return *exception_gchandle == 0;
 }

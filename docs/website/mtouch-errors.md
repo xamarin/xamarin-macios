@@ -1311,6 +1311,18 @@ Please file an [issue](https://github.com/xamarin/xamarin-macios/issues/new)
 along with a complete build log so that we can investigate what went wrong and
 possibly enable more scenarios in the future.
 
+### <a name="MT2107"/>MT2107: It's not safe to remove the dynamic registrar because {reasons}
+
+The linker reports this warning when the developer requests removal of the
+dynamic registrar (by passing `--optimize:remove-dynamic-registrar` to
+mtouch), but the linker determines that it's not safe to do so.
+
+To remove the warning either remove the optimization argument to mtouch, or pass
+`--nowarn:2107` to ignore it.
+
+By default this option will be automatically enabled whenever it's possible
+and safe to do so.
+
 # MT3xxx: AOT error messages
 
 <!--
@@ -2384,3 +2396,11 @@ This indicates a bug in Xamarin.iOS. Please file a bug at [https://bugzilla.xama
 A potential workaround would be to disable the `register-protocols`
 optimization, by passing `--optimize:-register-protocols` as an additional
 mtouch argument in the project's iOS Build options.
+
+### <a name="MT8026"/>MT8026: * is not supported when the dynamic registrar has been linked away.
+
+This usually indicates a bug in Xamarin.iOS, because the dynamic registrar should not be linked away if it's needed. Please file a bug at [https://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
+
+It's possible to force the linker to keep the dynamic registrar by adding
+`--optimize=-remove-dynamic-registrar` to the additional mtouch arguments in
+the project's iOS Build options.

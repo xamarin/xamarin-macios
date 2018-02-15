@@ -380,3 +380,70 @@ Xamarin.Mac supports loading assemblies dynamically, and those assemblies
 might not have been known at build time (and thus not optimized).
 
 The default behavior can be overridden by passing `--optimize=-register-protocols` to mtouch/mmp.
+
+Remove the dynamic registrar
+----------------------------
+
+Both the Xamarin.iOS and the Xamarin.Mac runtime include support for
+[registering managed types](https://developer.xamarin.com/guides/ios/advanced_topics/registrar/)
+with the Objective-C runtime. It can either be done at build time or at
+runtime (or partially at build time and the rest at runtime), but if it's
+completely done at build time, it means the supporting code for doing it at
+runtime can be removed. This results in a significant decrease in app size, in
+particular for smaller apps such as extensions or watchOS apps.
+
+This optimization requires both the static registrar and the linker to be
+enabled.
+
+The linker will attempt to determine if it's safe to remove the dynamic
+registrar, and if so will try to remove it.
+
+Since Xamarin.Mac supports dynamically loading assemblies at runtime (which
+were not known at build time), it's impossible to determine at build time
+whether this is a safe optimization. This means that this optimization is
+never enabled by default for Xamarin.Mac apps.
+
+The default behavior can be overridden by passing `--optimize=[+|-]remove-dynamic-registrar` to mtouch/mmp.
+
+If the default is overridden to remove the dynamic registrar, the linker will
+emit warnings if it detects that it's not safe (but the dynamic registrar will
+still be removed).
+
+Inline Runtime.DynamicRegistrationSupported
+-------------------------------------------
+
+Inlines the value of Runtime.DynamicRegistrationSupported as determined at
+build time.
+
+If the dynamic registrar is removed (see the "Remove the dynamic registrar"
+optimization), this is a constant 'false' value, otherwise it's a constant
+'true' value.
+
+This optimization will change the following type of code:
+
+```csharp
+if (Runtime.DynamicRegistrationSupported) {
+	Console.WriteLine ("do something");
+} else {
+	throw new Exception ("dynamic registration is not supported");
+}
+```
+
+into the following when the dynamic registrar is removed:
+
+```csharp
+throw new Exception ("dynamic registration is not supported");
+```
+
+into the following when the dynamic registrar is not removed:
+
+```csharp
+Console.WriteLine ("do something");
+```
+
+This optimization requires the linker to be enabled, and is only applied to
+methods with the `[BindingImpl (BindingImplOptions.Optimizable)]` attribute.
+
+It is always enabled by default (when the linker is enabled).
+
+The default behavior can be overridden by passing `--optimize=[+|-]inline-dynamic-registration-supported` to mtouch/mmp.

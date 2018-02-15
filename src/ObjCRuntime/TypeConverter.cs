@@ -16,7 +16,11 @@ namespace ObjCRuntime {
 		 *
 		 * http://developer.apple.com/documentation/DeveloperTools/gcc-4.0.1/gcc/Type-encoding.html
 		 */
+		[BindingImpl (BindingImplOptions.Optimizable)] // To inline the Runtime.DynamicRegistrationSupported code if possible.
 		public static Type ToManaged (string type) {
+			if (!Runtime.DynamicRegistrationSupported) // The call to Runtime.GetAssemblies further below requires the dynamic registrar.
+				throw ErrorHelper.CreateError (8026, "TypeConverter.ToManaged is not supported when the dynamic registrar has been linked away.");
+
 			switch (type[0]) {
 				case '@':
 					return typeof (IntPtr);

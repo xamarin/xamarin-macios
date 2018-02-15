@@ -212,11 +212,7 @@ namespace Xamarin.Linker {
 				return true; // We've already marked this section of code
 
 			for (int i = start; i < end; i++) {
-				if (instructions [i].OpCode.Code != Code.Nop) {
-					// Not marking nop instructios makes it possible to remove catch clauses if 
-					// the protected region is only nops (or empty).
-					reachable [i] = true;
-				}
+				reachable [i] = true;
 
 				var ins = instructions [i];
 				switch (ins.OpCode.FlowControl) {
@@ -226,9 +222,30 @@ namespace Xamarin.Linker {
 					return MarkInstructions (method, instructions, reachable, instructions.IndexOf (br_target), end);
 				case FlowControl.Cond_Branch:
 					// Conditional instruction, we need to check if we can calculate a constant value for the condition
-					var cond_target = (Instruction) ins.Operand;
+					var cond_target = ins.Operand as Instruction;
 					bool? branch = null; // did we get a constant value for the condition, and if so, did we branch or not?
 					var cond_instruction_count = 0; // The number of instructions that compose the condition
+
+					if (ins.OpCode.Code == Code.Switch) {
+						// Treat all branches of the switch statement as reachable.
+						// FIXME: calculate the potential constant branch (currently there are no optimizable methods where the switch condition is constant, so this is not needed for now)
+						var targets = ins.Operand as Instruction [];
+						if (targets == null) {
+							Driver.Log (4, $"Can't optimize {0} because of unknown target of branch instruction {1} {2}", method, ins, ins.Operand);
+							return false;
+						}
+						foreach (var target in targets) {
+							// not constant, continue marking both this code sequence and the branched sequence
+							if (!MarkInstructions (method, instructions, reachable, instructions.IndexOf (target), end))
+								return false;
+						}
+						return MarkInstructions (method, instructions, reachable, instructions.IndexOf (ins.Next), end);
+					}
+
+					if (cond_target == null) {
+						Driver.Log (4, $"Can't optimize {0} because of unknown target of branch instruction {1} {2}", method, ins, ins.Operand);
+						return false;
+					}
 
 					switch (ins.OpCode.Code) {
 					case Code.Brtrue:
@@ -400,21 +417,36 @@ namespace Xamarin.Linker {
 				return;
 
 			// Handle exception handlers specially, they do not follow normal code flow.
+			bool[] reachableExceptionHandlers = null;
 			if (caller.Body.HasExceptionHandlers) {
-				foreach (var eh in caller.Body.ExceptionHandlers) {
+				reachableExceptionHandlers = new bool [caller.Body.ExceptionHandlers.Count];
+				for (var e = 0; e < reachableExceptionHandlers.Length; e++) {
+					var eh = caller.Body.ExceptionHandlers [e];
+
+					// First check if the protected region is reachable
+					var startI = instructions.IndexOf (eh.TryStart);
+					var endI = instructions.IndexOf (eh.TryEnd);
+					for (int i = startI; i < endI; i++) {
+						if (reachable [i]) {
+							reachableExceptionHandlers [e] = true;
+							break;
+						}
+					}
+					// The protected code isn't reachable, none of the handlers will be executed
+					if (!reachableExceptionHandlers [e])
+						continue;
+
 					switch (eh.HandlerType) {
 					case ExceptionHandlerType.Catch:
-						// We don't need catch handlers if the protected region does not have any reachable instructions.
-						var startI = instructions.IndexOf (eh.TryStart);
-						var endI = instructions.IndexOf (eh.TryEnd);
-						var anyReachable = false;
+						// We don't need catch handlers the reachable instructions are all nops
+						var allNops = true;
 						for (int i = startI; i < endI; i++) {
-							if (reachable [i]) {
-								anyReachable = true;
+							if (instructions [i].OpCode.Code != Code.Nop) {
+								allNops = false;
 								break;
 							}
 						}
-						if (anyReachable) {
+						if (!allNops) {
 							if (!MarkInstructions (caller, instructions, reachable, instructions.IndexOf (eh.HandlerStart), instructions.IndexOf (eh.HandlerEnd)))
 								return;
 						}
@@ -506,6 +538,15 @@ namespace Xamarin.Linker {
 					Nop (instructions [i]);
 			}
 
+			// Remove exception handlers
+			if (reachableExceptionHandlers != null) {
+				for (int i = reachableExceptionHandlers.Length - 1; i >= 0; i--) {
+					if (reachableExceptionHandlers [i])
+						continue;
+					caller.Body.ExceptionHandlers.RemoveAt (i);
+				}
+			}
+
 			// Remove unreachable instructions (nops) at the end, because the last instruction can only be ret/throw/backwards branch.
 			for (int i = last_reachable + 1; i < reachable.Length; i++)
 				instructions.RemoveAt (last_reachable + 1);
@@ -551,6 +592,15 @@ namespace Xamarin.Linker {
 				return;
 			}
 
+			if (!LinkContext.App.DynamicRegistrationSupported && method.Name == "get_DynamicRegistrationSupported" && method.DeclaringType.Is (Namespaces.ObjCRuntime, "Runtime")) {
+				// Rewrite to return 'false'
+				var instr = method.Body.Instructions;
+				instr.Clear ();
+				instr.Add (Instruction.Create (OpCodes.Ldc_I4_0));
+				instr.Add (Instruction.Create (OpCodes.Ret));
+				return; // nothing else to do here.
+			}
+
 			var instructions = method.Body.Instructions;
 			for (int i = 0; i < instructions.Count; i++) {
 				var ins = instructions [i];
@@ -580,6 +630,9 @@ namespace Xamarin.Linker {
 				break;
 			case "get_IsDirectBinding":
 				ProcessIsDirectBinding (caller, ins);
+				break;
+			case "get_DynamicRegistrationSupported":
+				ProcessIsDynamicSupported (caller, ins);
 				break;
 			case "SetupBlock":
 			case "SetupBlockUnsafe":
@@ -670,6 +723,26 @@ namespace Xamarin.Linker {
 			ins.Operand = null;
 		}
 
+		void ProcessIsDynamicSupported (MethodDefinition caller, Instruction ins)
+		{
+			const string operation = "inline Runtime.DynamicRegistrationSupported";
+
+			if (Optimizations.InlineDynamicRegistrationSupported != true)
+				return;
+
+			// Verify we're checking the right Runtime.IsDynamicSupported call
+			var mr = ins.Operand as MethodReference;
+			if (!mr.DeclaringType.Is (Namespaces.ObjCRuntime, "Runtime"))
+				return;
+
+			if (!ValidateInstruction (caller, ins, operation, Code.Call))
+				return;
+
+			// We're fine, inline the Runtime.IsDynamicSupported condition
+			ins.OpCode = LinkContext.App.DynamicRegistrationSupported ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0;
+			ins.Operand = null;
+		}
+
 		int ProcessSetupBlock (MethodDefinition caller, Instruction ins)
 		{
 			if (Optimizations.OptimizeBlockLiteralSetupBlock != true)
@@ -684,6 +757,9 @@ namespace Xamarin.Linker {
 			var mr = ins.Operand as MethodReference;
 			if (!mr.DeclaringType.Is (Namespaces.ObjCRuntime, "BlockLiteral"))
 				return 0;
+
+			if (caller.Name == "GetBlockForDelegate" && caller.DeclaringType.Is ("ObjCRuntime", "BlockLiteral"))
+				return 0; // BlockLiteral.GetBlockForDelegate contains a non-optimizable call to SetupBlock, and this way we don't show any warnings to users about things they can't do anything about.
 
 			string signature = null;
 			try {

@@ -176,7 +176,7 @@ namespace xharness
 
 				switch (test.TestName) {
 				case "monotouch-test":
-					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false };
+					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, Defines = "OPTIMIZEALL" };
 					break;
 				}
 				break;
@@ -185,7 +185,7 @@ namespace xharness
 				case "monotouch-test":
 					// The default is to run monotouch-test with the dynamic registrar (in the simulator), so that's already covered
 					yield return new TestData { Variation = "Debug (static registrar)", MTouchExtraArgs = "--registrar:static", Debug = true, Profiling = false };
-					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, LinkMode = "Full" };
+					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, LinkMode = "Full", Defines = "LINKALL;OPTIMIZEALL" };
 					break;
 				}
 				break;
@@ -194,7 +194,7 @@ namespace xharness
 				switch (test.TestName) {
 				case "xammac tests":
 					if (test.ProjectConfiguration == "Release")
-						yield return new TestData { Variation = "Release (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all", Debug = false, LinkMode = "Full", Defines = "LINKALL" };
+						yield return new TestData { Variation = "Release (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all", Debug = false, LinkMode = "Full", Defines = "LINKALL;OPTIMIZEALL" };
 					break;
 				}
 				break;
@@ -226,14 +226,7 @@ namespace xharness
 					var clone_task = Task.Run (async () => {
 						await task.BuildTask.InitialTask; // this is the project cloning above
 						await clone.CreateCopyAsync (task);
-						if (!string.IsNullOrEmpty (mtouch_extra_args))
-							clone.Xml.AddExtraMtouchArgs (mtouch_extra_args, task.ProjectPlatform, configuration);
-						if (!string.IsNullOrEmpty (bundling_extra_args))
-							clone.Xml.AddMonoBundlingExtraArgs (bundling_extra_args, task.ProjectPlatform, configuration);
-						if (!string.IsNullOrEmpty (link_mode))
-							clone.Xml.SetNode ("LinkMode", link_mode, task.ProjectPlatform, configuration);
-						if (!string.IsNullOrEmpty (defines))
-							clone.Xml.AddAdditionalDefines (defines, task.ProjectPlatform, configuration);
+
 						var isMac = false;
 						switch (task.Platform) {
 						case TestPlatform.Mac:
@@ -245,6 +238,15 @@ namespace xharness
 							isMac = true;
 							break;
 						}
+
+						if (!string.IsNullOrEmpty (mtouch_extra_args))
+							clone.Xml.AddExtraMtouchArgs (mtouch_extra_args, task.ProjectPlatform, configuration);
+						if (!string.IsNullOrEmpty (bundling_extra_args))
+							clone.Xml.AddMonoBundlingExtraArgs (bundling_extra_args, task.ProjectPlatform, configuration);
+						if (!string.IsNullOrEmpty (link_mode))
+							clone.Xml.SetNode (isMac ? "LinkMode" : "MtouchLink", link_mode, task.ProjectPlatform, configuration);
+						if (!string.IsNullOrEmpty (defines))
+							clone.Xml.AddAdditionalDefines (defines, task.ProjectPlatform, configuration);
 						clone.Xml.SetNode (isMac ? "Profiling" : "MTouchProfiling", profiling ? "True" : "False", task.ProjectPlatform, configuration);
 
 						if (!debug && !isMac)

@@ -162,6 +162,14 @@ namespace ObjCRuntime {
 
 		internal static unsafe InitializationOptions* options;
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public static bool DynamicRegistrationSupported {
+			get {
+				// The linker may turn calls to this property into a constant
+				return true;
+			}
+		}
+
 		internal static bool Initialized {
 			get { return initialized; }
 		}
@@ -172,6 +180,7 @@ namespace ObjCRuntime {
 #endif
 
 		[Preserve] // called from native - runtime.m.
+		[BindingImpl (BindingImplOptions.Optimizable)] // To inline the Runtime.DynamicRegistrationSupported code if possible.
 		unsafe static void Initialize (InitializationOptions* options)
 		{
 #if PROFILE
@@ -234,7 +243,8 @@ namespace ObjCRuntime {
 
 			NSObjectClass = NSObject.Initialize ();
 
-			Registrar = new DynamicRegistrar ();
+			if (DynamicRegistrationSupported)
+				Registrar = new DynamicRegistrar ();
 			RegisterDelegates (options);
 			Class.Initialize (options);
 			InitializePlatform (options);
@@ -533,11 +543,14 @@ namespace ObjCRuntime {
 			return Registrar.ComputeSignature (method, isBlockSignature);
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void RegisterAssembly (Assembly a)
 		{
 			if (a == null)
 				throw new ArgumentNullException ("a");
 
+			if (!DynamicRegistrationSupported)
+				throw ErrorHelper.CreateError (8026, "Runtime.RegisterAssembly is not supported when the dynamic registrar has been linked away.");
 #if MONOMAC
 			var attributes = a.GetCustomAttributes (typeof (RequiredFrameworkAttribute), false);
 
@@ -1399,6 +1412,7 @@ namespace ObjCRuntime {
 			ConnectMethod (type, method, new ExportAttribute (selector.Name));
 		}
 			
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void ConnectMethod (Type type, MethodInfo method, ExportAttribute export)
 		{
 			if (type == null)
@@ -1409,6 +1423,9 @@ namespace ObjCRuntime {
 
 			if (export == null)
 				throw new ArgumentNullException ("export");
+
+			if (!DynamicRegistrationSupported)
+				throw ErrorHelper.CreateError (8026, "Runtime.ConnectMethod is not supported when the dynamic registrar has been linked away.");
 
 			Registrar.RegisterMethod (type, method, export);
 		}

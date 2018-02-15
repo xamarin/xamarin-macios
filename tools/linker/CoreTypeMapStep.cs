@@ -10,6 +10,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 using Mono.Cecil;
 using Mono.Linker.Steps;
@@ -25,11 +26,127 @@ namespace MonoTouch.Tuner {
 	public class CoreTypeMapStep : TypeMapStep {
 		HashSet<TypeDefinition> cached_isnsobject = new HashSet<TypeDefinition> ();
 		Dictionary<TypeDefinition, bool?> isdirectbinding_value = new Dictionary<TypeDefinition, bool?> ();
+		bool dynamic_registration_support_required;
 
 		DerivedLinkContext LinkContext {
 			get {
 				return (DerivedLinkContext) base.Context;
 			}
+		}
+
+		protected override void ProcessAssembly (AssemblyDefinition assembly)
+		{
+			if (LinkContext.App.Optimizations.RemoveDynamicRegistrar != false)
+				dynamic_registration_support_required |= RequiresDynamicRegistrar (assembly, LinkContext.App.Optimizations.RemoveDynamicRegistrar == true);
+
+			base.ProcessAssembly (assembly);
+		}
+
+		// If certain conditions are met, we can optimize away the code for the dynamic registrar.
+		bool RequiresDynamicRegistrar (AssemblyDefinition assembly, bool warnIfRequired)
+		{
+			// Disable removing the dynamic registrar for XM/Classic to simplify the code a little bit.
+			if (!Driver.IsUnified)
+				return true;
+
+			// We know that the SDK assemblies we ship don't use the methods we're looking for.
+			if (Profile.IsSdkAssembly (assembly))
+				return false;
+
+			// The product assembly itself is safe as long as it's linked
+			if (Profile.IsProductAssembly (assembly))
+				return LinkContext.Annotations.GetAction (assembly) != Mono.Linker.AssemblyAction.Link;
+
+			// Can't touch the forbidden fruit in the product assembly unless there's a reference to it
+			var hasProductReference = false;
+			foreach (var ar in assembly.MainModule.AssemblyReferences) {
+				if (!Profile.IsProductAssembly (ar.Name))
+					continue;
+				hasProductReference = true;
+				break;
+			}
+			if (!hasProductReference)
+				return false;
+
+			// Check if the assembly references any methods that require the dynamic registrar
+			var productAssemblyName = ((MobileProfile) Profile.Current).ProductAssembly;
+			var requires = false;
+			foreach (var mr in assembly.MainModule.GetMemberReferences ()) {
+				if (mr.DeclaringType == null || string.IsNullOrEmpty (mr.DeclaringType.Namespace))
+					continue;
+				
+				var scope = mr.DeclaringType.Scope;
+				var name = string.Empty;
+				switch (scope.MetadataScopeType) {
+				case MetadataScopeType.ModuleDefinition:
+					name = ((ModuleDefinition) scope).Assembly.Name.Name;
+					break;
+				default:
+					name = scope.Name;
+					break;
+				}
+				if (name != productAssemblyName)
+					continue;
+
+				switch (mr.DeclaringType.Namespace) {
+				case "ObjCRuntime":
+					switch (mr.DeclaringType.Name) {
+					case "Runtime":
+						switch (mr.Name) {
+						case "ConnectMethod":
+							// Req 1: Nobody must call Runtime.ConnectMethod.
+							if (warnIfRequired)
+								Show2107 (assembly, mr);
+							requires = true;
+							break;
+						case "RegisterAssembly":
+							// Req 3: Nobody must call Runtime.RegisterAssembly
+							if (warnIfRequired)
+								Show2107 (assembly, mr);
+							requires = true;
+							break;
+						}
+						break;
+					case "BlockLiteral":
+						switch (mr.Name) {
+						case "SetupBlock":
+						case "SetupBlockUnsafe":
+							// Req 2: Nobody must call BlockLiteral.SetupBlock[Unsafe].
+							//
+							// Fortunately the linker is able to rewrite calls to SetupBlock[Unsafe] to call
+							// SetupBlockImpl (which doesn't need the dynamic registrar), which means we only have
+							// to look in assemblies that aren't linked.
+							if (LinkContext.Annotations.GetAction (assembly) == Mono.Linker.AssemblyAction.Link && LinkContext.App.Optimizations.OptimizeBlockLiteralSetupBlock == true)
+								break;
+
+							if (warnIfRequired)
+								Show2107 (assembly, mr);
+
+							requires = true;
+							break;
+						}
+						break;
+					case "TypeConverter":
+						switch (mr.Name) {
+						case "ToManaged":
+							// Req 4: Nobody must call TypeConverter.ToManaged
+							if (warnIfRequired)
+								Show2107 (assembly, mr);
+							requires = true;
+							break;
+						}
+						break;
+					}
+					break;
+				}
+			}
+
+			return requires;
+		}
+
+		void Show2107 (AssemblyDefinition assembly, MemberReference mr)
+		{
+			ErrorHelper.Warning (2107, $"It's not safe to remove the dynamic registrar, because {assembly.Name.Name} references '{mr.DeclaringType.FullName}.{mr.Name} ({string.Join (", ", ((MethodReference) mr).Parameters.Select ((v) => v.ParameterType.FullName))})'.");
 		}
 
 		protected override void EndProcess ()
@@ -38,6 +155,13 @@ namespace MonoTouch.Tuner {
 
 			LinkContext.CachedIsNSObject = cached_isnsobject;
 			LinkContext.IsDirectBindingValue = isdirectbinding_value;
+
+			if (!LinkContext.App.Optimizations.RemoveDynamicRegistrar.HasValue) {
+				// If dynamic registration is not required, and removal of the dynamic registrar hasn't already
+				// been disabled, then we can remove it!
+				LinkContext.App.Optimizations.RemoveDynamicRegistrar = !dynamic_registration_support_required;
+				Driver.Log (4, "Optimization dynamic registrar removal: {0}", LinkContext.App.Optimizations.RemoveDynamicRegistrar.Value ? "enabled" : "disabled");
+			}
 		}
 
 		protected override void MapType (TypeDefinition type)

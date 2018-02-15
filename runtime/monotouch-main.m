@@ -451,9 +451,11 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 			xamarin_process_managed_exception_gchandle (exception_gchandle);
 	}
 
-	xamarin_register_entry_assembly (mono_assembly_get_object (mono_domain_get (), assembly), &exception_gchandle);
-	if (exception_gchandle != 0)
-		xamarin_process_managed_exception_gchandle (exception_gchandle);
+	if (xamarin_supports_dynamic_registration) {
+		xamarin_register_entry_assembly (mono_assembly_get_object (mono_domain_get (), assembly), &exception_gchandle);
+		if (exception_gchandle != 0)
+			xamarin_process_managed_exception_gchandle (exception_gchandle);
+	}
 #endif
 
 	DEBUG_LAUNCH_TIME_PRINT ("\tAssembly register time");

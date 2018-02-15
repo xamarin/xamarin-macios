@@ -82,6 +82,22 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
+		[Test]
+		public void RegistrarRemoval ()
+		{
+			// define set by xharness when creating test variations.
+			// It's not safe to remove the dynamic registrar in monotouch-test (by design; some of the tested API makes it unsafe, and the linker correcty detects this),
+			// so the dynamic registrar will only be removed if manually requested.
+			// Also removal of the dynamic registrar is not supported in XM
+#if OPTIMIZEALL && !__MACOS__
+			var shouldBeRemoved = true;
+#else
+			var shouldBeRemoved = false;
+#endif
+			Assert.AreEqual (shouldBeRemoved, typeof (NSObject).Assembly.GetType ("Registrar.Registrar") == null, "Registrar removal");
+			Assert.AreEqual (shouldBeRemoved, typeof (NSObject).Assembly.GetType ("Registrar.DynamicRegistrar") == null, "DynamicRegistrar removal");
+		}
+
 #if !MONOMAC
 		[Test]
 		public void TestProperties ()
@@ -268,6 +284,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void TestAction ()
 		{
+			if (!Runtime.DynamicRegistrationSupported)
+				Assert.Ignore ("This test requires the dynamic registrar to be available.");
+
 			using (var obj = new RegistrarTestClass ()) {
 				var sel = new Selector ("testAction:");
 				var block = new BlockLiteral ();
@@ -1812,6 +1831,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void CustomAppDelegatePerformFetchTest ()
 		{
+			if (!Runtime.DynamicRegistrationSupported)
+				Assert.Ignore ("This test requires the dynamic registrar to be available.");
+
 			using (var obj = new CustomApplicationDelegate ()) {
 				BlockLiteral block = new BlockLiteral ();
 				var performed = false;
@@ -2567,9 +2589,13 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			var block = new BlockLiteral ();
 			var tramp = new DActionArity1V1 (SDActionArity1V1.Invoke);
 			Action<NSObject> del = (v) => { };
-			block.SetupBlock (tramp, del);
-			Assert.AreEqual ("v@:^v^v", GetBlockSignature (block), "a");
-			block.CleanupBlock ();
+			if (Runtime.DynamicRegistrationSupported) {
+				block.SetupBlock (tramp, del);
+				Assert.AreEqual ("v@:^v^v", GetBlockSignature (block), "a");
+				block.CleanupBlock ();
+			} else {
+				Assert.Throws<RuntimeException> (() => block.SetupBlock (tramp, del));
+			}
 		}
 
 		[Test]
@@ -2578,9 +2604,15 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			var block = new BlockLiteral ();
 			var tramp = new DActionArity1V2 (SDActionArity1V2.Invoke);
 			Action<NSObject> del = (v) => { };
-			block.SetupBlock (tramp, del);
-			Assert.AreEqual ("v@?@", GetBlockSignature (block), "a");
-			block.CleanupBlock ();
+			if (Runtime.DynamicRegistrationSupported) {
+				block.SetupBlock (tramp, del);
+				Assert.AreEqual ("v@?@", GetBlockSignature (block), "a");
+				block.CleanupBlock ();
+			} else {
+				// The linker is able to rewrite calls to BlockLiteral.SetupBlock to BlockLiteral.SetupBlockImpl (which works without the dynamic registrar),
+				// but that will only happen if the code is linked, and monotouch-test is only SdkLinked. Thus this code will throw an exception
+				Assert.Throws<RuntimeException> (() => block.SetupBlock (tramp, del));
+			}
 		}
 	}
 
