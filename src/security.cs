@@ -451,8 +451,6 @@ namespace Security {
 		[Export ("PublicKeyAttrsKey")]
 		SecPublicPrivateKeyAttrs PublicKeyAttrs { get; set; }
 
-		NSNumber TokenID { get; set; }
-
 #if MONOMAC
 		[Advice ("On macOS when passed to 'GenerateKeyPair', 'false' seems to be the only valid value. Otherwise 'UnsupportedKeyUsageMask' is returned.")]
 #endif

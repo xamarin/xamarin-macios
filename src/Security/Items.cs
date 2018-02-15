@@ -1750,4 +1750,15 @@ namespace Security {
 			}
 		}
 	}
+
+	public partial class SecKeyGenerationParameters : DictionaryContainer {
+		public SecTokenID TokenID {
+                        get {
+                                return SecTokenIDExtensions.GetValue (GetNSStringValue (SecKeyGenerationAttributeKeys.TokenIDKey));
+                        }
+                        set {
+                                SetStringValue (SecKeyGenerationAttributeKeys.TokenIDKey, value.GetConstant ());
+                        }
+                }
+	}
 }
