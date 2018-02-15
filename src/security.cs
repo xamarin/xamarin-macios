@@ -445,9 +445,13 @@ namespace Security {
 
 		int KeySizeInBits { get; set; }
 
-		NSDictionary PrivateKeyAttrs { get; set; }
+		[StrongDictionary]
+		[Export ("PrivateKeyAttrsKey")]
+		SecPublicPrivateKeyAttrs PrivateKeyAttrs { get; set; }
 
-		NSDictionary PublicKeyAttrs { get; set; }
+		[StrongDictionary]
+		[Export ("PublicKeyAttrsKey")]
+		SecPublicPrivateKeyAttrs PublicKeyAttrs { get; set; }
 
 		NSNumber TokenID { get; set; }
 
