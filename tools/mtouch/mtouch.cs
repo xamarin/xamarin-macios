@@ -438,7 +438,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.WatchOS:
 				return Path.Combine (cross_prefix, "bin", "armv7k-unknown-darwin-mono-sgen");
 			case ApplePlatform.TVOS:
-				return Path.Combine (cross_prefix, "bin", "aarch64-unknown-darwin-mono-sgen");
+				return Path.Combine (cross_prefix, "bin", "arm64-darwin-mono-sgen");
 			default:
 				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
 			}
