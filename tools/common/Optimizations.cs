@@ -215,8 +215,10 @@ namespace Xamarin.Bundler
 			}
 
 			if (opt == "all") {
-				for (int i = 0; i < values.Length; i++)
-					values [i] = enabled;
+				for (int i = 0; i < values.Length; i++) {
+					if (!string.IsNullOrEmpty (opt_names [i]))
+						values [i] = enabled;
+				}
 			} else {
 				var found = false;
 				for (int i = 0; i < values.Length; i++) {
