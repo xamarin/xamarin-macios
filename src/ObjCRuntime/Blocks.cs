@@ -83,6 +83,7 @@ namespace ObjCRuntime {
 		[DllImport ("__Internal")]
 		static extern IntPtr xamarin_get_block_descriptor ();
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		void SetupBlock (Delegate trampoline, Delegate userDelegate, bool safe)
 		{
 			if (!Runtime.DynamicRegistrationSupported)
