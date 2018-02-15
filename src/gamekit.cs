@@ -20,6 +20,7 @@ using CoreFoundation;
 using AppKit;
 #else
 using UIKit;
+using NSViewController = Foundation.NSObject;
 #endif
 
 namespace GameKit {
@@ -195,25 +196,7 @@ namespace GameKit {
 		[Export ("isVoIPAllowed")]
 		bool IsVoIPAllowed { get; }
 	}
-
-	[NoTV]
-	[NoWatch] // only exposed thru GKSession (not in 3.0)
-	[BaseType (typeof (NSObject))]
-	[Model]
-	[Protocol]
-	interface GKSessionDelegate {
-		[Export ("session:peer:didChangeState:")]
-		void PeerChangedState (GKSession session, string peerID, GKPeerConnectionState state);
-		
-		[Export ("session:didReceiveConnectionRequestFromPeer:")]
-		void PeerConnectionRequest (GKSession session, string peerID);
-		
-		[Export ("session:connectionWithPeerFailed:withError:")]
-		void PeerConnectionFailed (GKSession session, string peerID, NSError error);
-		
-		[Export ("session:didFailWithError:")]
-		void FailedWithError (GKSession session, NSError error);
-	}
+#endif
 
 	[NoTV]
 	[NoWatch] // deprecated in 2.0 (but framework not added before 3.0)
@@ -306,7 +289,6 @@ namespace GameKit {
 		[Export ("peersWithConnectionState:")]
 		string [] PeersWithConnectionState (GKPeerConnectionState state);
 	}
-#endif
 
 	[Watch (3,0)]
 	[Mac (10, 8)]
@@ -1227,7 +1209,11 @@ namespace GameKit {
 #endif
 	// iOS 6 -> Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: <GKMatchmakerViewController: 0x16101160>: must use one of the designated initializers
 	[DisableDefaultCtor]
-	interface GKMatchmakerViewController {
+	interface GKMatchmakerViewController
+#if MONOMAC
+	: GKViewController
+#endif
+	{
 		[NoiOS]
 		[Export ("initWithNibName:bundle:")]
 		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
@@ -1506,6 +1492,14 @@ namespace GameKit {
 		[Export ("loadImageWithCompletionHandler:")]
 		[Async]
 		void LoadImage ([NullAllowed] GKImageLoadedHandler imageLoadedHandler);
+
+		[iOS (6,0), Mac (10,8)]
+		[Export ("groupIdentifier", ArgumentSemantic.Retain)]
+		string GroupIdentifier { get; }
+
+		[iOS (6,0), Mac (10,8)]
+		[Export ("replayable", ArgumentSemantic.Assign)]
+		bool Replayable { [Bind ("isReplayable")] get; }
 		
 #if MONOMAC
 		[Export ("image", ArgumentSemantic.Retain)]
@@ -1534,14 +1528,6 @@ namespace GameKit {
 		[Static]
 		[Export ("placeholderCompletedAchievementImage")]
 		UIImage PlaceholderCompletedAchievementImage { get; }
-
-		[iOS (6,0)]
-		[Export ("groupIdentifier", ArgumentSemantic.Retain)]
-		string GroupIdentifier { get; }
-
-		[iOS (6,0)]
-		[Export ("replayable", ArgumentSemantic.Assign)]
-		bool Replayable { [Bind ("isReplayable")] get; }
 #endif
 	}
 
@@ -1608,7 +1594,7 @@ namespace GameKit {
 	[Mac (10,8)]
 	[Deprecated (PlatformName.MacOSX, 10, 12)]
 	[BaseType (typeof (NSViewController), Events=new Type [] { typeof (GKFriendRequestComposeViewControllerDelegate)}, Delegates=new string[] {"WeakComposeViewDelegate"})]
-	interface GKFriendRequestComposeViewController {
+	interface GKFriendRequestComposeViewController : GKViewController {
 		[Export ("initWithNibName:bundle:")]
 		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
 #else
@@ -1959,7 +1945,7 @@ namespace GameKit {
 #if MONOMAC
 	[Mac (10,8)]
 	[BaseType (typeof (NSViewController))]
-	interface GKTurnBasedMatchmakerViewController
+	interface GKTurnBasedMatchmakerViewController : GKViewController
 #else
 	[BaseType (typeof (UINavigationController))]
 	interface GKTurnBasedMatchmakerViewController : UIAppearance
@@ -2089,6 +2075,9 @@ namespace GameKit {
 		Delegates = new [] { "WeakDelegate" }
 	)]
 	interface GKGameCenterViewController
+#if MONOMAC
+	: GKViewController
+#endif
 	{
 		[NoiOS]
 		[Export ("initWithNibName:bundle:")]
@@ -2139,7 +2128,6 @@ namespace GameKit {
 		void Finished (GKGameCenterViewController controller);
 	}
 
-#if !MONOMAC
 	[NoWatch]
 	[NoTV]
 	[iOS (6, 0)]
@@ -2198,7 +2186,6 @@ namespace GameKit {
 		[Export ("remotePlayerDidCompleteChallenge:")]
 		void RemotePlayerCompletedChallenge (GKChallenge challenge);
 	}
-#endif
 
 	[iOS (7,0), Mac (10,10)]
 	[Watch (3,0)]
@@ -2325,6 +2312,9 @@ namespace GameKit {
 	[Model, Protocol, BaseType (typeof (NSObject))]
 	interface GKTurnBasedEventListener
 	{
+#if XAMCORE_4_0		
+		[NoMac]
+#endif
 		[NoWatch]
 		[NoTV]
 		[Availability (Deprecated = Platform.iOS_8_0, Message = "Use 'DidRequestMatchWithOtherPlayers' instead.")]
@@ -2505,4 +2495,52 @@ namespace GameKit {
 		void DidFinish (GKGameSessionSharingViewController viewController, [NullAllowed] NSError error);
 	}
 #endif
+	interface IGKChallengesViewControllerDelegate { }
+
+	[NoiOS, NoTV, NoWatch, Mac (10,8)]
+	[BaseType (typeof (NSObject))]
+	[Protocol, Model]
+	interface GKChallengesViewControllerDelegate {
+		
+		[Abstract]
+		[Export ("challengesViewControllerDidFinish:")]
+		void DidFinish (GKChallengesViewController viewController);
+	}
+
+	[NoiOS, NoTV, NoWatch, Mac (10,8)]
+	[Deprecated (PlatformName.MacOSX, 10,10)]
+	[BaseType (typeof (NSViewController))]
+	interface GKChallengesViewController : GKViewController {
+
+		[Export ("initWithNibName:bundle:")]
+		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		
+		[NullAllowed, Export ("challengeDelegate", ArgumentSemantic.Assign)]
+		IGKChallengesViewControllerDelegate ChallengeDelegate { get; set; }
+	}
+
+	[NoiOS, NoTV, NoWatch, Mac (10,8)]
+	[Protocol]
+	interface GKViewController
+	{
+	}
+
+	[NoTV]
+	[NoWatch] // only exposed thru GKSession (not in 3.0)
+	[BaseType (typeof (NSObject))]
+	[Model]
+	[Protocol]
+	interface GKSessionDelegate {
+		[Export ("session:peer:didChangeState:")]
+		void PeerChangedState (GKSession session, string peerID, GKPeerConnectionState state);
+		
+		[Export ("session:didReceiveConnectionRequestFromPeer:")]
+		void PeerConnectionRequest (GKSession session, string peerID);
+		
+		[Export ("session:connectionWithPeerFailed:withError:")]
+		void PeerConnectionFailed (GKSession session, string peerID, NSError error);
+		
+		[Export ("session:didFailWithError:")]
+		void FailedWithError (GKSession session, NSError error);
+	}
 }
