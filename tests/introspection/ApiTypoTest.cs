@@ -91,7 +91,7 @@ namespace Introspection
 			"Anglet",
 			"Arraycollation",
 			"Argb",
-			"Asal",
+			"Asal", // Typo, should be 'Basal', fixed in 'HKInsulinDeliveryReason'
 			"Asin",
 			"Atan",
 			"Ats",	// App Transport Security
@@ -337,11 +337,11 @@ namespace Introspection
 			"Ocsp", // Online Certificate Status Protocol
 			"Octree",
 			"Oid",
-			"Olus",
+			"Olus", // Typo, should be 'Bolus', fixed in 'HKInsulinDeliveryReason'
 			"Oneup", // TVElementKeyOneupTemplate
 			"Orthographyrange",
 			"Orth",
-			"Ostprandial",
+			"Ostprandial", // Typo, should be 'Postprandial', fixed in 'HKBloodGlucoseMealTime'
 			"ove",
 			"Paeth", // PNG filter
 			"Parms", // short for Parameters
@@ -380,7 +380,7 @@ namespace Introspection
 			"Reinvitation",
 			"Reinvite",
 			"Rel",
-			"Reprandial",
+			"Reprandial", // Typo, should be 'Preprandial', fixed in 'HKBloodGlucoseMealTime'
 			"Replayable",
 			"Requestwith",
 			"Ridesharing",
