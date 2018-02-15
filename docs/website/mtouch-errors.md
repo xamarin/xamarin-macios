@@ -1315,7 +1315,13 @@ possibly enable more scenarios in the future.
 
 The linker reports this warning when the developer requests removal of the
 dynamic registrar (by passing `--optimize:remove-dynamic-registrar` to
-mmp), but the linker determines that it's not safe to do so.
+mtouch), but the linker determines that it's not safe to do so.
+
+To remove the warning either remove the optimization argument to mtouch, or pass
+`--nowarn:2107` to ignore it.
+
+By default this option will be automatically enabled whenever it's possible
+and safe to do so.
 
 # MT3xxx: AOT error messages
 

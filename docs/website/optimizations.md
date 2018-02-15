@@ -384,9 +384,10 @@ The default behavior can be overridden by passing `--optimize=-register-protocol
 Remove the dynamic registrar
 ----------------------------
 
-Both Xamarin.iOS and Xamarin.Mac include support for [registering managed
-types][1] with the Objective-C runtime. It can either be done at build time or
-at runtime (or partially at build time and the rest at runtime), but if it's
+Both the Xamarin.iOS and the Xamarin.Mac runtime include support for
+[registering managed types](https://developer.xamarin.com/guides/ios/advanced_topics/registrar/)
+with the Objective-C runtime. It can either be done at build time or at
+runtime (or partially at build time and the rest at runtime), but if it's
 completely done at build time, it means the supporting code for doing it at
 runtime can be removed. This results in a significant decrease in app size, in
 particular for smaller apps such as extensions or watchOS apps.
@@ -446,5 +447,3 @@ methods with the `[BindingImpl (BindingImplOptions.Optimizable)]` attribute.
 It is always enabled by default (when the linker is enabled).
 
 The default behavior can be overridden by passing `--optimize=[+|-]inline-dynamic-registration-supported` to mtouch/mmp.
-
-[1]: https://developer.xamarin.com/guides/ios/advanced_topics/registrar/
