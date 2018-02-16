@@ -551,8 +551,7 @@ namespace Security {
 			// iOS (+friends) need to pass the strong dictionary for public and private key attributes to specific keys
 			// instead of merging them with other attributes.
 			return GenerateKeyPair (type, keySizeInBits, publicAndPrivateKeyAttrs, publicAndPrivateKeyAttrs, out publicKey, out privateKey);
-#endif
-
+#else
 			if (type == SecKeyType.Invalid)
 				throw new ArgumentException ("invalid 'SecKeyType'", nameof (type));
 
@@ -564,6 +563,7 @@ namespace Security {
 			dic.LowlevelSetObject (type.GetConstant (), SecAttributeKey.Type);
 			dic.LowlevelSetObject (new NSNumber (keySizeInBits), SecAttributeKey.KeySizeInBits);
 			return GenerateKeyPair (dic, out publicKey, out privateKey);
+#endif
 		}
 #if !MONOMAC
 		public static SecStatusCode GenerateKeyPair (SecKeyType type, int keySizeInBits, SecPublicPrivateKeyAttrs publicKeyAttrs, SecPublicPrivateKeyAttrs privateKeyAttrs, out SecKey publicKey, out SecKey privateKey)
