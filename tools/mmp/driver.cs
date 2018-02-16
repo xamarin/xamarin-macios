@@ -1750,7 +1750,7 @@ namespace Xamarin.Bundler {
 				foreach (string dependency in Xamarin.MachO.GetNativeDependencies (real_src)) {
 					string lib = GetRealPath (dependency);
 					if (!processed.Contains (lib))
-						ProcessNativeLibrary (processed, lib, null216;
+						ProcessNativeLibrary (processed, lib, null);
 				}
 			}
 		}
