@@ -534,28 +534,27 @@ namespace HealthKit
 	[Watch (4, 0), iOS (11, 0)]
 	[Native]
 	public enum HKInsulinDeliveryReason : long {
+		Basal = 1,
+		Bolus,
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'Basal' instead.")]
-		Asal = 1,
+		Asal = Basal,
 		[Obsolete ("Use 'Bolus' instead.")]
-		Olus,
+		Olus = Bolus,
 #endif
-		Basal = Asal,
-		Bolus = Olus,
 	}
 
 	[Watch (4, 0), iOS (11, 0)]
 	[Native]
 	public enum HKBloodGlucoseMealTime : long {
+		Preprandial = 1,
+		Postprandial,
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'Preprandial' instead.")]
-		Reprandial = 1,
+		Reprandial = Preprandial,
 		[Obsolete ("Use 'Postprandial' instead.")]
-		Ostprandial,
+		Ostprandial = Postprandial,
 #endif
-		Preprandial = Reprandial,
-		Postprandial = Ostprandial,
-
 	}
 
 	[Watch (4, 0), iOS (11, 0)]
