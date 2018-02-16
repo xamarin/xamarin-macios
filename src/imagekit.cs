@@ -37,6 +37,43 @@ using CoreAnimation;
 
 namespace ImageKit {
 
+	enum IKToolMode { // Constants introduced in 10.5 and 10.6
+		[Field ("IKToolModeAnnotate")]
+		Annotate,
+
+		[Field ("IKToolModeCrop")]
+		Crop,
+
+		[Field ("IKToolModeMove")]
+		Move,
+
+		[Field ("IKToolModeNone")]
+		None,
+
+		[Field ("IKToolModeRotate")]
+		Rotate,
+
+		[Field ("IKToolModeSelect")]
+		Select,
+
+		[Field ("IKToolModeSelectEllipse")]
+		SelectEllipse,
+
+		[Field ("IKToolModeSelectLasso")]
+		SelectLasso,
+
+		[Field ("IKToolModeSelectRect")]
+		SelectRect,
+	}
+
+	enum IKOverlayType { // Constants introduced in 10.5
+		[Field ("IKOverlayTypeBackground")]
+		Background,
+
+		[Field ("IKOverlayTypeImage")]
+		Image,
+	}
+
 	[BaseType (typeof (NSView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (IKCameraDeviceViewDelegate)})]
 	interface IKCameraDeviceView {
 		[Export ("initWithFrame:")]
@@ -115,6 +152,9 @@ namespace ImageKit {
 
 		[Export ("downloadAllItems:")]
 		void DownloadAllItems (NSObject sender);
+
+		[Export ("mode", ArgumentSemantic.Assign)]
+		IKCameraDeviceViewDisplayMode Mode { get; set; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -295,6 +335,10 @@ namespace ImageKit {
 
 		[Export ("objectController")]
 		NSObjectController ObjectController { get; }
+
+		[Static]
+		[Export ("viewWithFrame:filter:")]
+		IKFilterUIView Create (CGRect frame, CIFilter filter);
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -356,7 +400,7 @@ namespace ImageKit {
 	}
 
 	[BaseType (typeof (NSView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (IKImageBrowserDelegate)})]
-	interface IKImageBrowserView {
+	interface IKImageBrowserView : NSDraggingSource {
 		//@category IKImageBrowserView (IKMainMethods)
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
@@ -990,6 +1034,13 @@ namespace ImageKit {
 
 		[Export ("scannerDeviceView:didEncounterError:"), EventArgs ("IKScannerDeviceViewError")]
 		void DidEncounterError (IKScannerDeviceView scannerDeviceView, NSError error);
+
+		[Export ("scannerDeviceView:didScanToURL:error:"), EventArgs ("IKScannerDeviceViewScanUrl")]
+		void DidScanToUrl (IKScannerDeviceView scannerDeviceView, NSUrl url, NSError error);
+
+		// Needs ImageCaptureCore
+		//[Export ("scannerDeviceView:didScanToBandData:scanInfo:error:"), EventArgs ("IKScannerDeviceViewScanBandData")]
+		//void DidScanToBandData (IKScannerDeviceView scannerDeviceView, ICScannerBandData data, NSDictionary scanInfo, NSError error);
 	}
 
 	[BaseType (typeof (NSObject))]
