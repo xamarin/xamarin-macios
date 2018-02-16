@@ -48,6 +48,75 @@ namespace Xamarin.MMP.Tests
 		}
 	}
 
+	static class FrameworkBuilder
+	{
+		const string PListText = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+<!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
+<plist version=""1.0"">
+<dict>
+	<key>BuildMachineOSBuild</key>
+	<string>16B2657</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>Foo</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.test.Foo</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>Foo</string>
+	<key>CFBundlePackageType</key>
+	<string>FMWK</string>
+	<key>CFBundleShortVersionString</key>
+	<string>6.9</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleSupportedPlatforms</key>
+	<array>
+		<string>MacOSX</string>
+	</array>
+	<key>CFBundleVersion</key>
+	<string>1561.40.100</string>
+	<key>DTCompiler</key>
+	<string>com.apple.compilers.llvm.clang.1_0</string>
+	<key>DTPlatformBuild</key>
+	<string>9Q85j</string>
+	<key>DTPlatformVersion</key>
+	<string>GM</string>
+	<key>DTSDKBuild</key>
+	<string>17E138</string>
+	<key>DTSDKName</key>
+	<string>macosx10.13internal</string>
+	<key>DTXcode</key>
+	<string>0930</string>
+	<key>DTXcodeBuild</key>
+	<string>9Q85j</string>
+</dict>
+</plist>";
+		
+		public static string CreateFatFramework (string tmpDir)
+		{
+			Func<string, string> f = x => Path.Combine (tmpDir, x);
+			File.WriteAllText (f ("foo.c"), "int Answer () { return 42; }");
+			File.WriteAllText (f ("Info.plist"), PListText);
+
+			TI.RunAndAssert ($"clang -m32 -c -o {f ("foo_32.o")} {f ("foo.c")}");
+			TI.RunAndAssert ($"clang -m64 -c -o {f ("foo_64.o")} {f ("foo.c")}");
+			TI.RunAndAssert ($"clang -m32 -dynamiclib -o {f ("foo_32.dylib")} {f ("foo_32.o")}");
+			TI.RunAndAssert ($"clang -m64 -dynamiclib -o {f ("foo_64.dylib")} {f ("foo_64.o")}");
+			TI.RunAndAssert ($"lipo -create {f ("foo_32.dylib")} {f ("foo_64.dylib")} -output {f ("Foo")}");
+			TI.RunAndAssert ($"install_name_tool -id @rpath/Foo.framework/Foo {f ("Foo")}");
+			TI.RunAndAssert ($"mkdir -p {f ("Foo.framework/Versions/A/Resources")}");
+			TI.RunAndAssert ($"cp {f ("Foo")} {f ("Foo.framework/Versions/A/Foo")}");
+			TI.RunAndAssert ($"cp {f ("Info.plist")} {f ("Foo.framework/Versions/A/Resources/")}");
+			TI.RunAndAssert ($"ln -s Versions/A/Foo {f ("Foo.framework/Foo")}");
+			TI.RunAndAssert ($"ln -s Versions/A/Resources  {f ("Foo.framework/Resources")}");
+			TI.RunAndAssert ($"ln -s Versions/A  {f ("Foo.framework/Current")}");
+			return f ("Foo.framework");
+		}
+	}
+
 	// Hide the hacks and provide a nice interface for writting tests that build / run XM projects
 	static class TI 
 	{
@@ -103,6 +172,15 @@ namespace Xamarin.MMP.Tests
 
 			Regex versionRegex = new Regex("compiler version \\d.\\d.\\d", RegexOptions.IgnoreCase);
 			return new Version (versionRegex.Match (output).Value.Split (' ')[2]);
+		}
+
+		public static string RunAndAssert (string exe)
+		{
+			var parts = exe.Split (new char [] { ' ' }, 2);
+			if (parts.Length == 1)
+				return RunAndAssert (exe, "", "Command: " + exe);
+			else
+				return RunAndAssert (parts[0], parts[1], "Command: " + exe);
 		}
 
 		public static string RunAndAssert (string exe, string args, string stepName, bool shouldFail = false, Func<string> getAdditionalFailInfo = null, string[] environment = null)
