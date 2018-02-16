@@ -534,11 +534,13 @@ namespace HealthKit
 	[Watch (4, 0), iOS (11, 0)]
 	[Native]
 	public enum HKInsulinDeliveryReason : long {
+#if !XAMCORE_4_0
 		[Obsolete ("Use 'Basal' instead.")]
 		Asal = 1,
-		Basal = Asal,
 		[Obsolete ("Use 'Bolus' instead.")]
 		Olus,
+#endif
+		Basal = Asal,
 		Bolus = Olus,
 	}
 
