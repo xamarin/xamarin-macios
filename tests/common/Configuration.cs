@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 using NUnit.Framework;
+
+using Xamarin.Utils;
 
 namespace Xamarin.Tests
 {
@@ -94,7 +97,27 @@ namespace Xamarin.Tests
 
 		static void ParseConfigFiles ()
 		{
-			ParseConfigFiles (FindConfigFiles ("test.config"));
+			var test_config = FindConfigFiles ("test.config");
+			if (!test_config.Any ()) {
+				// Run 'make test.config' in the tests/ directory
+				// First find the tests/ directory
+				var dir = TestAssemblyDirectory;
+				string tests_dir = null;
+				while (dir.Length > 1) {
+					var file = Path.Combine (dir, "tests");
+					if (Directory.Exists (file)) {
+						tests_dir = file;
+						break;
+					}
+					dir = Path.GetDirectoryName (dir);
+				}
+				if (tests_dir == null)
+					throw new Exception ($"Could not find the directory 'tests'. Please run 'make' in the tests/ directory.");
+				// Run make
+				ExecutionHelper.Execute ("make", $"-C {StringUtils.Quote (tests_dir)} test.config");
+				test_config = FindConfigFiles ("test.config");
+			}
+			ParseConfigFiles (test_config);
 			ParseConfigFiles (FindConfigFiles ("Make.config.local"));
 			ParseConfigFiles (FindConfigFiles ("Make.config"));
 		}
