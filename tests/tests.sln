@@ -53,11 +53,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mono.Data.Sqlite", "bcl-tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "introspection-ios", "introspection\iOS\introspection-ios.csproj", "{208744BD-504E-47D7-9A98-1CF02454A6DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dont link", "linker-ios\dont link\dont link.csproj", "{839212D5-C25B-4284-AA96-59C3872B8184}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dont link", "linker\ios\dont link\dont link.csproj", "{839212D5-C25B-4284-AA96-59C3872B8184}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link all", "linker-ios\link all\link all.csproj", "{370CC763-EDC3-41DA-A21A-D4C82CABEFE4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link all", "linker\ios\link all\link all.csproj", "{370CC763-EDC3-41DA-A21A-D4C82CABEFE4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link sdk", "linker-ios\link sdk\link sdk.csproj", "{C47F8F72-A7CA-4149-AA7D-BC4814803EF3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link sdk", "linker\ios\link sdk\link sdk.csproj", "{C47F8F72-A7CA-4149-AA7D-BC4814803EF3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoTouch.NUnitLite", "..\src\MonoTouch.NUnitLite.csproj", "{E1F334C3-8F77-46C9-A28B-A8E9BAEA9FE5}"
 EndProject

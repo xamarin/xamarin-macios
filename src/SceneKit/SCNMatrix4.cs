@@ -41,7 +41,7 @@ using pfloat = System.Single;
 #endif
 
 
-namespace XamCore.SceneKit 
+namespace SceneKit 
 {
     /// <summary>
     /// Represents a 4x4 Matrix
@@ -128,7 +128,7 @@ namespace XamCore.SceneKit
         }
 
 #if !WATCH
-		public SCNMatrix4 (XamCore.CoreAnimation.CATransform3D transform)
+		public SCNMatrix4 (CoreAnimation.CATransform3D transform)
 		{
 			Row0 = new SCNVector4 ((pfloat)transform.m11, (pfloat)transform.m12, (pfloat)transform.m13, (pfloat)transform.m14);
 			Row1 = new SCNVector4 ((pfloat)transform.m21, (pfloat)transform.m22, (pfloat)transform.m23, (pfloat)transform.m24);
@@ -1306,9 +1306,9 @@ namespace XamCore.SceneKit
 	// after all, this can be up to 1k of data being moved.
 	
 	// We can do implicit, because our storage is always >= CATransform3D which uses nfloats
-	public static implicit operator XamCore.CoreAnimation.CATransform3D (SCNMatrix4 source)
+	public static implicit operator CoreAnimation.CATransform3D (SCNMatrix4 source)
 	{
-		return new XamCore.CoreAnimation.CATransform3D (){
+		return new CoreAnimation.CATransform3D (){
 			m11 = source.Row0.X,
 			m12 = source.Row0.Y,
 			m13 = source.Row0.Z,

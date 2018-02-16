@@ -23,15 +23,15 @@
 //
 
 using System;
-using XamCore.Foundation;
-using XamCore.AppKit;
-using XamCore.CoreGraphics;
-using XamCore.ObjCRuntime;
+using Foundation;
+using AppKit;
+using CoreGraphics;
+using ObjCRuntime;
 #if XAMCORE_2_0
 using JavaScriptCore;
 #endif
 
-namespace XamCore.WebKit {
+namespace WebKit {
 
 	[BaseType (typeof (WebScriptObject), Name="DOMObject")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMObject init]: should never be used
@@ -1946,6 +1946,9 @@ namespace XamCore.WebKit {
 
 	[BaseType (typeof (NSView))]
 	partial interface WebFrameView {
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
+
 		[Export ("webFrame")]
 		WebFrame WebFrame { get; }
 
@@ -2457,6 +2460,9 @@ namespace XamCore.WebKit {
 
 		[Export ("initWithFrame:frameName:groupName:")]
 		IntPtr Constructor (CGRect frame, [NullAllowed] string frameName, [NullAllowed]string groupName);
+
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frame);
 
 		[Export ("close")]
 		void Close ();

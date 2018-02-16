@@ -8,9 +8,9 @@
 //
 
 using System;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.Contacts {
+namespace Contacts {
 #if XAMCORE_2_0 // The Contacts framework uses generics heavily, which is only supported in Unified (for now at least)
 	// Strong typed Keys to enum
 	public enum CNSocialProfileOption

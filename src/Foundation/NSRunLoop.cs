@@ -22,7 +22,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	
 	public partial class NSRunLoop {
 #if !XAMCORE_2_0

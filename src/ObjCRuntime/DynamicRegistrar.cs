@@ -13,13 +13,13 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 #if !MONOMAC
-using XamCore.UIKit;
+using UIKit;
 #endif
 
-namespace XamCore.Registrar {
+namespace Registrar {
 	// Somewhere to put shared code between the old and the new dynamic registrars.
 	// Putting code in either of those classes will increase the executable size,
 	// since unused code will be pulled in by the linker.
@@ -311,7 +311,7 @@ namespace XamCore.Registrar {
 			return SharedDynamic.GetOneAttribute<RegisterAttribute> (type);
 		}
 
-		protected override ProtocolAttribute GetProtocolAttribute (Type type)
+		public override ProtocolAttribute GetProtocolAttribute (Type type)
 		{
 			return SharedDynamic.GetOneAttribute<ProtocolAttribute> (type);
 		}
@@ -376,6 +376,11 @@ namespace XamCore.Registrar {
 		{
 			var attr = SharedDynamic.GetOneAttribute<ProtocolAttribute> (type);
 			return attr == null ? null : attr.WrapperType;
+		}
+
+		protected override IList<AdoptsAttribute> GetAdoptsAttributes (Type type)
+		{
+			return (AdoptsAttribute[]) type.GetCustomAttributes (typeof (AdoptsAttribute), false);
 		}
 
 		protected override string GetAssemblyName (Assembly assembly)
@@ -904,38 +909,12 @@ namespace XamCore.Registrar {
 				var nsobj = Runtime.GetNSObject (obj, Runtime.MissingCtorResolution.ThrowConstructor1NotFound, true);
 				mthis = ObjectWrapper.Convert (nsobj);
 				if (res.Method.ContainsGenericParameters) {
-					res.WriteUnmanagedDescription (desc, FindClosedMethod (nsobj.GetType (), res.Method));
+					res.WriteUnmanagedDescription (desc, Runtime.FindClosedMethod (nsobj.GetType (), res.Method));
 					return;
 				}
 			}
 
 			res.WriteUnmanagedDescription (desc);
-		}
-
-		internal static MethodInfo FindClosedMethod (Type closed_type, MethodBase open_method)
-		{
-			// FIXME: I think it should be handled before getting here (but it's safer here for now)
-			if (!open_method.ContainsGenericParameters)
-				return (MethodInfo) open_method;
-
-			// First we need to find the type that declared the open method.
-			Type declaring_closed_type = closed_type;
-			do {
-				if (declaring_closed_type.IsGenericType && declaring_closed_type.GetGenericTypeDefinition () == open_method.DeclaringType) {
-					closed_type = declaring_closed_type;
-					break;
-				}
-				declaring_closed_type = declaring_closed_type.BaseType;
-			} while (declaring_closed_type != null);
-
-			// Find the closed method.
-			foreach (var mi in closed_type.GetMethods (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly)) {
-				if (mi.MetadataToken == open_method.MetadataToken) {
-					return mi;
-				}
-			}
-
-			throw ErrorHelper.CreateError (8003, "Failed to find the closed generic method '{0}' on the type '{1}'.", open_method.Name, closed_type.FullName);
 		}
 
 		public void GetMethodDescription (Type type, IntPtr selector, bool is_static, IntPtr desc)

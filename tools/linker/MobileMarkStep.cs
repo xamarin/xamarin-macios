@@ -303,28 +303,34 @@ namespace Xamarin.Linker.Steps {
 				switch (type.Name) {
 				case "TypeDescriptor":
 					// DefaultConverters are created using Activator.CreateInstance
+					// keep in sync with ReflectTypeDescriptionProvider.cs
 					MarkMethods (GetType ("System", "System.ComponentModel.BooleanConverter"));
 					MarkMethods (GetType ("System", "System.ComponentModel.ByteConverter"));
 					MarkMethods (GetType ("System", "System.ComponentModel.SByteConverter"));
-					MarkMethods (GetType ("System", "System.ComponentModel.StringConverter"));
 					MarkMethods (GetType ("System", "System.ComponentModel.CharConverter"));
-					MarkMethods (GetType ("System", "System.ComponentModel.Int16Converter"));
+					MarkMethods (GetType ("System", "System.ComponentModel.DoubleConverter"));
+					MarkMethods (GetType ("System", "System.ComponentModel.StringConverter"));
 					MarkMethods (GetType ("System", "System.ComponentModel.Int32Converter"));
+					MarkMethods (GetType ("System", "System.ComponentModel.Int16Converter"));
 					MarkMethods (GetType ("System", "System.ComponentModel.Int64Converter"));
+					MarkMethods (GetType ("System", "System.ComponentModel.SingleConverter"));
 					MarkMethods (GetType ("System", "System.ComponentModel.UInt16Converter"));
 					MarkMethods (GetType ("System", "System.ComponentModel.UInt32Converter"));
 					MarkMethods (GetType ("System", "System.ComponentModel.UInt64Converter"));
-					MarkMethods (GetType ("System", "System.ComponentModel.SingleConverter"));
-					MarkMethods (GetType ("System", "System.ComponentModel.DoubleConverter"));
-					MarkMethods (GetType ("System", "System.ComponentModel.DecimalConverter"));
 					MarkMethods (GetType ("System", "System.ComponentModel.TypeConverter"));
-					MarkMethods (GetType ("System", "System.ComponentModel.ArrayConverter"));
 					MarkMethods (GetType ("System", "System.ComponentModel.CultureInfoConverter"));
 					MarkMethods (GetType ("System", "System.ComponentModel.DateTimeConverter"));
-					MarkMethods (GetType ("System", "System.ComponentModel.GuidConverter"));
+					MarkMethods (GetType ("System", "System.ComponentModel.DateTimeOffsetConverter"));
+					MarkMethods (GetType ("System", "System.ComponentModel.DecimalConverter"));
 					MarkMethods (GetType ("System", "System.ComponentModel.TimeSpanConverter"));
+					MarkMethods (GetType ("System", "System.ComponentModel.GuidConverter"));
+					MarkMethods (GetType ("System", "System.ComponentModel.ArrayConverter"));
 					MarkMethods (GetType ("System", "System.ComponentModel.CollectionConverter"));
 					MarkMethods (GetType ("System", "System.ComponentModel.EnumConverter"));
+					MarkMethods (GetType ("System", "System.ComponentModel.ReferenceConverter"));
+					MarkMethods (GetType ("System", "System.ComponentModel.NullableConverter"));
+					// special case - it's not in the Hashtable from the above file (but needed)
+					MarkMethods (GetType ("System", "System.ComponentModel.ComponentConverter"));
 					break;
 				}
 				break;

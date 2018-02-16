@@ -5,7 +5,7 @@
 	    <BuildDependsOn>$(BuildDependsOn);CreateNativeLibs</BuildDependsOn>
 	</PropertyGroup>
 
-	<Target Name="CreateNativeLibs" Inputs="../common/mac/SimpleClass.m" Outputs="../mac-binding-project/bin/SimpleClassDylib.dylib;../mac-binding-project/bin/SimpleClassStatic.a;../mac-binding-project/bin/Mobile-static/MobileBinding.dll">
-		<Exec Command="make bin/SimpleClassDylib.dylib bin/SimpleClassStatic.a bin/Mobile-static/MobileBinding.dll" WorkingDirectory="../mac-binding-project/"/>
+	<Target Name="CreateNativeLibs" Inputs="$(MSBuildThisFileDirectory)/../common/mac/SimpleClass.m" Outputs="$(MSBuildThisFileDirectory)/../mac-binding-project/bin/SimpleClassDylib.dylib;$(MSBuildThisFileDirectory)/../mac-binding-project/bin/SimpleClassStatic.a;$(MSBuildThisFileDirectory)/../mac-binding-project/bin/Mobile-static/MobileBinding.dll">
+		<Exec Command="make bin/SimpleClassDylib.dylib bin/SimpleClassStatic.a bin/Mobile-static/MobileBinding.dll" WorkingDirectory="$(MSBuildThisFileDirectory)/../mac-binding-project/"/>
 	</Target>
 </Project>

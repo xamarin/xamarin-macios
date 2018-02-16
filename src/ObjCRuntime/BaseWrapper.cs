@@ -4,10 +4,10 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
+using Foundation;
+using CoreFoundation;
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 
 	public abstract class BaseWrapper : INativeObject, IDisposable {
 

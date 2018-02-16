@@ -27,11 +27,11 @@
 //
 using System;
 using System.Runtime.InteropServices;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using CoreFoundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.CoreVideo {
+namespace CoreVideo {
 
 	// CVBuffer.h
 	[Watch (4,0)]

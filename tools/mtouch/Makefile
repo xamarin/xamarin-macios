@@ -18,36 +18,38 @@ LINKER_RESOURCES = \
 	$(LINKER_DIR)/Descriptors/mscorlib.xml
 
 LINKER_SOURCES = \
-	$(MONOLINKER)/Mono.Linker/Annotations.cs			\
-	$(MONOLINKER)/Mono.Linker/AssemblyAction.cs			\
-	$(MONOLINKER)/Mono.Linker/AssemblyResolver.cs			\
-	$(MONOLINKER)/Mono.Linker/I18nAssemblies.cs			\
-	$(MONOLINKER)/Mono.Linker/IXApiVisitor.cs			\
-	$(MONOLINKER)/Mono.Linker/ILogger.cs				\
-	$(MONOLINKER)/Mono.Linker/ConsoleLogger.cs			\
-	$(MONOLINKER)/Mono.Linker/LinkContext.cs			\
-	$(MONOLINKER)/Mono.Linker/LoadException.cs			\
-	$(MONOLINKER)/Mono.Linker/MarkException.cs			\
-	$(MONOLINKER)/Mono.Linker/MethodAction.cs			\
-	$(MONOLINKER)/Mono.Linker/Pipeline.cs				\
-	$(MONOLINKER)/Mono.Linker/MethodReferenceExtensions.cs		\
-	$(MONOLINKER)/Mono.Linker/TypeReferenceExtensions.cs		\
-	$(MONOLINKER)/Mono.Linker/TypePreserve.cs			\
-	$(MONOLINKER)/Mono.Linker/XApiReader.cs				\
-	$(MONOLINKER)/Mono.Linker.Steps/BaseStep.cs			\
-	$(MONOLINKER)/Mono.Linker.Steps/BlacklistStep.cs		\
-	$(MONOLINKER)/Mono.Linker.Steps/CleanStep.cs			\
-	$(MONOLINKER)/Mono.Linker.Steps/IStep.cs			\
-	$(MONOLINKER)/Mono.Linker.Steps/LoadI18nAssemblies.cs		\
-	$(MONOLINKER)/Mono.Linker.Steps/LoadReferencesStep.cs		\
-	$(MONOLINKER)/Mono.Linker.Steps/MarkStep.cs			\
-	$(MONOLINKER)/Mono.Linker.Steps/OutputStep.cs			\
-	$(MONOLINKER)/Mono.Linker.Steps/ResolveFromAssemblyStep.cs	\
-	$(MONOLINKER)/Mono.Linker.Steps/ResolveFromXApiStep.cs		\
-	$(MONOLINKER)/Mono.Linker.Steps/ResolveFromXmlStep.cs		\
-	$(MONOLINKER)/Mono.Linker.Steps/ResolveStep.cs			\
-	$(MONOLINKER)/Mono.Linker.Steps/SweepStep.cs			\
-	$(MONOLINKER)/Mono.Linker.Steps/TypeMapStep.cs			\
+	$(MONOLINKER)/Linker/Annotations.cs			\
+	$(MONOLINKER)/Linker/AssemblyAction.cs			\
+	$(MONOLINKER)/Linker/AssemblyResolver.cs			\
+	$(MONOLINKER)/Linker/I18nAssemblies.cs			\
+	$(MONOLINKER)/Linker/IXApiVisitor.cs			\
+	$(MONOLINKER)/Linker/ILogger.cs				\
+	$(MONOLINKER)/Linker/ConsoleLogger.cs			\
+	$(MONOLINKER)/Linker/LinkContext.cs			\
+	$(MONOLINKER)/Linker/LoadException.cs			\
+	$(MONOLINKER)/Linker/MarkException.cs			\
+	$(MONOLINKER)/Linker/MethodAction.cs			\
+	$(MONOLINKER)/Linker/Pipeline.cs				\
+	$(MONOLINKER)/Linker/MethodReferenceExtensions.cs		\
+	$(MONOLINKER)/Linker/TypeReferenceExtensions.cs		\
+	$(MONOLINKER)/Linker/TypePreserve.cs			\
+	$(MONOLINKER)/Linker/XApiReader.cs				\
+	$(MONOLINKER)/Linker/Tracer.cs		\
+	$(MONOLINKER)/Linker/MarkingHelpers.cs		\
+	$(MONOLINKER)/Linker.Steps/BaseStep.cs			\
+	$(MONOLINKER)/Linker.Steps/BlacklistStep.cs		\
+	$(MONOLINKER)/Linker.Steps/CleanStep.cs			\
+	$(MONOLINKER)/Linker.Steps/IStep.cs			\
+	$(MONOLINKER)/Linker.Steps/LoadI18nAssemblies.cs		\
+	$(MONOLINKER)/Linker.Steps/LoadReferencesStep.cs		\
+	$(MONOLINKER)/Linker.Steps/MarkStep.cs			\
+	$(MONOLINKER)/Linker.Steps/OutputStep.cs			\
+	$(MONOLINKER)/Linker.Steps/ResolveFromAssemblyStep.cs	\
+	$(MONOLINKER)/Linker.Steps/ResolveFromXApiStep.cs		\
+	$(MONOLINKER)/Linker.Steps/ResolveFromXmlStep.cs		\
+	$(MONOLINKER)/Linker.Steps/ResolveStep.cs			\
+	$(MONOLINKER)/Linker.Steps/SweepStep.cs			\
+	$(MONOLINKER)/Linker.Steps/TypeMapStep.cs			\
 	$(MONO_TUNER)/Mono.Tuner/ApplyPreserveAttributeBase.cs		\
 	$(MONO_TUNER)/Mono.Tuner/CecilRocks.cs				\
 	$(MONO_TUNER)/Mono.Tuner/CustomizeActions.cs			\
@@ -66,7 +68,6 @@ LINKER_SOURCES = \
 	$(LINKER_DIR)/MonoTouch.Tuner/MonoTouchMarkStep.cs		\
 	$(LINKER_DIR)/MonoTouch.Tuner/MonoTouchProfile.cs		\
 	$(LINKER_DIR)/MonoTouch.Tuner/MonoTouchSweepStep.cs		\
-	$(LINKER_DIR)/MonoTouch.Tuner/MonoTouchTypeMap.cs		\
 	$(LINKER_DIR)/MonoTouch.Tuner/OptimizeGeneratedCodeSubStep.cs	\
 	$(LINKER_DIR)/MonoTouch.Tuner/PreserveCode.cs			\
 	$(LINKER_DIR)/MonoTouch.Tuner/ProcessExportedFields.cs	\
@@ -82,6 +83,8 @@ LINKER_SOURCES = \
 	$(TOP)/tools/linker/CorePreserveCode.cs		\
 	$(TOP)/tools/linker/CoreRemoveAttributes.cs		\
 	$(TOP)/tools/linker/CoreRemoveSecurity.cs		\
+	$(TOP)/tools/linker/CoreSweepStep.cs		\
+	$(TOP)/tools/linker/CoreTypeMapStep.cs		\
 	$(TOP)/tools/linker/ExceptionalSubStep.cs		\
 	$(TOP)/tools/linker/MarkNSObjects.cs			\
 	$(TOP)/tools/linker/MobileExtensions.cs		\
@@ -294,7 +297,9 @@ SIMLAUNCHER_FRAMEWORKS =  \
 						\
 	-weak_framework ARKit					\
 	-weak_framework FileProvider			\
-	-weak_framework FileProviderUI
+	-weak_framework FileProviderUI			\
+						\
+	-weak_framework IdentityLookup			\
 
 # note: there _was_ no CoreAudioKit.framework or Metal.framework for the simulator (before recent iOS9 betas)
 # note 2: there's no GameKit, in iOS 9 (beta 3 at least), you're supposed to reference GameCenter instead (looks fixed in beta 4)

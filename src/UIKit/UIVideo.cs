@@ -13,10 +13,10 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Collections;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 
 	[Register ("__MonoTouch_UIVideoStatusDispatcher")]
 	internal class UIVideoStatusDispatcher : NSObject {

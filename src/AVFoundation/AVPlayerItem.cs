@@ -2,10 +2,10 @@
 
 using System;
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 	public partial class AVPlayerItem {
 
 		[TV (11, 0), NoWatch, Mac (10, 13), iOS (11, 0)]

@@ -1,9 +1,9 @@
 using System;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.MediaAccessibility {
+namespace MediaAccessibility {
 
 #if XAMCORE_4_0
 	[Static]

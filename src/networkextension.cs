@@ -1,17 +1,17 @@
 // Copyright 2014-2015 Xamarin Inc. All rights reserved.
 #if XAMCORE_2_0 || !MONOMAC
 using System;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.Security;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
+using Security;
 
-namespace XamCore.NetworkExtension {
+namespace NetworkExtension {
 
 	[ErrorDomain ("NEDNSProxyErrorDomain")]
 	[iOS (11,0), NoMac]
 	[Native]
-	enum NEDnsProxyManagerError : nint {
+	enum NEDnsProxyManagerError : long {
 		Invalid = 1,
 		Disabled = 2,
 		Stale = 3,
@@ -20,7 +20,7 @@ namespace XamCore.NetworkExtension {
 
 	[iOS (11,0), NoMac]
 	[Native]
-	enum NEFilterAction : nint {
+	enum NEFilterAction : long {
 		Invalid = 0,
 		Allow = 1,
 		Drop = 2,
@@ -30,7 +30,7 @@ namespace XamCore.NetworkExtension {
 
 	[iOS (11,0), Mac (10,13, onlyOn64: true)]
 	[Native]
-	enum NEVpnIkev2TlsVersion : nint {
+	enum NEVpnIkev2TlsVersion : long {
 		Default = 0,
 		Tls1_0 = 1,
 		Tls1_1 = 2,
@@ -39,7 +39,7 @@ namespace XamCore.NetworkExtension {
 
 	[iOS (11,0), NoMac]
 	[Native]
-	enum NEHotspotConfigurationEapType : nint {
+	enum NEHotspotConfigurationEapType : long {
 		Tls = 13,
 		Ttls = 21,
 		Peap = 25,
@@ -48,7 +48,7 @@ namespace XamCore.NetworkExtension {
 
 	[iOS (11,0), NoMac]
 	[Native]
-	enum NEHotspotConfigurationTtlsInnerAuthenticationType : nint {
+	enum NEHotspotConfigurationTtlsInnerAuthenticationType : long {
 		Pap = 0,
 		Chap = 1,
 		MSChap = 2,
@@ -58,7 +58,7 @@ namespace XamCore.NetworkExtension {
 
 	[iOS (11,0), NoMac]
 	[Native]
-	enum NEHotspotConfigurationEapTlsVersion : nint {
+	enum NEHotspotConfigurationEapTlsVersion : long {
 		Tls1_0 = 0,
 		Tls1_1 = 1,
 		Tls1_2 = 2,
@@ -66,7 +66,7 @@ namespace XamCore.NetworkExtension {
 
 	[iOS (11,0), NoMac]
 	[Native]
-	public enum NEHotspotConfigurationError : nint {
+	public enum NEHotspotConfigurationError : long {
 		Invalid = 0,
 		InvalidSsid = 1,
 		InvalidWpaPassphrase = 2,

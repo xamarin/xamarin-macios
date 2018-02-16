@@ -8,20 +8,20 @@
 //
 
 using System;
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.UIKit;
-using XamCore.UserNotifications;
+using CoreGraphics;
+using Foundation;
+using ObjCRuntime;
+using UIKit;
+using UserNotifications;
 
-namespace XamCore.UserNotificationsUI {
+namespace UserNotificationsUI {
 
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
 	[Native]
-	public enum UNNotificationContentExtensionMediaPlayPauseButtonType : nuint {
+	public enum UNNotificationContentExtensionMediaPlayPauseButtonType : ulong {
 		None,
 		Default,
 		Overlay
@@ -32,7 +32,7 @@ namespace XamCore.UserNotificationsUI {
 	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
 	[Native]
-	public enum UNNotificationContentExtensionResponseOption : nuint {
+	public enum UNNotificationContentExtensionResponseOption : ulong {
 		DoNotDismiss,
 		Dismiss,
 		DismissAndForwardAction

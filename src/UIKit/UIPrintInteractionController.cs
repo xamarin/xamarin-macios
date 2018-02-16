@@ -1,8 +1,8 @@
 #if !XAMCORE_3_0
 
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	public partial class UIPrintInteractionController : NSObject {
 	}
 }

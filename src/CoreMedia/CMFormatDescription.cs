@@ -14,19 +14,19 @@ using System;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
-using XamCore.ObjCRuntime;
-using XamCore.CoreVideo;
-using XamCore.AudioToolbox;
+using Foundation;
+using CoreFoundation;
+using CoreGraphics;
+using ObjCRuntime;
+using CoreVideo;
+using AudioToolbox;
 
 #if !XAMCORE_2_0
 using System.Drawing;
 using CMVideoDimensions = System.Drawing.Size;
 #endif
 
-namespace XamCore.CoreMedia {
+namespace CoreMedia {
 
 	// untyped enum (uses as OSStatus) -> CMFormatDescription.h
 	public enum CMFormatDescriptionError : int {

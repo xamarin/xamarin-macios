@@ -1,10 +1,10 @@
 using System;
 
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
+using CoreGraphics;
+using Foundation;
 
 #if XAMCORE_2_0
-namespace XamCore.PdfKit {
+namespace PdfKit {
 	partial class PdfBorder {
 		nfloat [] DashPattern {
 			get {

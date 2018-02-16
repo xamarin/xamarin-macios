@@ -10,10 +10,10 @@
 using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.CoreFoundation
+namespace CoreFoundation
 {
 
 #if false

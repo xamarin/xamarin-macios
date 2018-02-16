@@ -1639,20 +1639,21 @@ public class TestApp {
 				mtouch.Linker = MTouchLinker.LinkSdk;
 				mtouch.Optimize = new string [] { "foo" };
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
-				mtouch.AssertWarning (132, "Unknown optimization: 'foo'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, inline-runtime-arch.");
+				mtouch.AssertWarning (132, "Unknown optimization: 'foo'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, inline-runtime-arch, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, remove-dynamic-registrar.");
 			}
 		}
 
 		[Test]
 		[TestCase ("all")]
 		[TestCase ("-all")]
-		[TestCase ("remove-uithread-checks,dead-code-elimination,inline-isdirectbinding,inline-intptr-size,inline-runtime-arch")]
+		[TestCase ("remove-uithread-checks,dead-code-elimination,inline-isdirectbinding,inline-intptr-size,inline-runtime-arch,register-protocols")]
 		public void Optimizations (string opt)
 		{
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.CreateTemporaryApp ();
 				mtouch.CreateTemporaryCacheDirectory ();
 				mtouch.Linker = MTouchLinker.LinkSdk;
+				mtouch.Registrar = MTouchRegistrar.Static;
 				mtouch.Optimize = new string [] { opt };
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
 				mtouch.AssertNoWarnings ();
@@ -2322,7 +2323,7 @@ public class TestApp {
 			case "dont link":
 			case "link sdk":
 			case "link all":
-				subdir = "/linker-ios";
+				subdir = "/linker/ios";
 				break;
 			case "monotouch-test":
 				break;
@@ -3265,7 +3266,11 @@ public partial class NotificationService : UNNotificationServiceExtension
 				mtouch.AssertWarning (2003, "Option '--optimize=inline-isdirectbinding' will be ignored since linking is disabled");
 				mtouch.AssertWarning (2003, "Option '--optimize=inline-intptr-size' will be ignored since linking is disabled");
 				mtouch.AssertWarning (2003, "Option '--optimize=inline-runtime-arch' will be ignored since linking is disabled");
-				mtouch.AssertWarningCount (5);
+				mtouch.AssertWarning (2003, "Option '--optimize=blockliteral-setupblock' will be ignored since linking is disabled");
+				mtouch.AssertWarning (2003, "Option '--optimize=inline-dynamic-registration-supported' will be ignored since linking is disabled");
+				mtouch.AssertWarning (2003, "Option '--optimize=register-protocols' will be ignored since the static registrar is not enabled");
+				mtouch.AssertWarning (2003, "Option '--optimize=remove-dynamic-registrar' will be ignored since the static registrar is not enabled");
+				mtouch.AssertWarningCount (9);
 			}
 
 			using (var mtouch = new MTouchTool ()) {

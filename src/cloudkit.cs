@@ -1,12 +1,12 @@
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreLocation;
+using ObjCRuntime;
+using Foundation;
+using CoreLocation;
 #if !TVOS
-using XamCore.Contacts;
+using Contacts;
 #endif
 
-namespace XamCore.CloudKit {
+namespace CloudKit {
 
 	[Watch (3,0)]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
@@ -1601,7 +1601,6 @@ namespace XamCore.CloudKit {
 
 		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'CKQuerySubscription'.")]
 		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'CKQuerySubscription'.")]
-		[DesignatedInitializer]
 		[Export ("initWithRecordType:predicate:subscriptionID:options:")]
 		IntPtr Constructor (string recordType, NSPredicate predicate, string subscriptionId, CKSubscriptionOptions subscriptionOptions);
 
@@ -1612,7 +1611,6 @@ namespace XamCore.CloudKit {
 
 		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'CKRecordZoneSubscription'.")]
 		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'CKRecordZoneSubscription'.")]
-		[DesignatedInitializer]
 		[Export ("initWithZoneID:subscriptionID:options:")]
 		IntPtr Constructor (CKRecordZoneID zoneId, string subscriptionId, CKSubscriptionOptions subscriptionOptions);
 

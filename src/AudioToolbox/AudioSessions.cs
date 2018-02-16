@@ -29,10 +29,10 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
+using CoreFoundation;
+using ObjCRuntime;
 
-namespace XamCore.AudioToolbox {
+namespace AudioToolbox {
 
 	public enum AudioSessionErrors { // Implictly cast to OSType 
 		None                      = 0,

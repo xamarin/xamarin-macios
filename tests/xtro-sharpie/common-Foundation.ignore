@@ -9,10 +9,6 @@
 ## untyped enums (only values, not type name) NSError.h
 !unknown-native-enum! NSUrlErrorCancelledReason bound
 
-## NSLinguisticAnalysis category over NSString https://bugzilla.xamarin.com/show_bug.cgi?id=35009
-!missing-selector! NSString::linguisticTagsInRange:scheme:options:orthography:tokenRanges: not bound
-!missing-selector! NSString::enumerateLinguisticTagsInRange:scheme:options:orthography:usingBlock: not bound
-
 ## https://bugzilla.xamarin.com/show_bug.cgi?id=35021
 !missing-selector! NSFileWrapper::initWithSerializedRepresentation: not bound
 

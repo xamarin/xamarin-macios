@@ -1,9 +1,9 @@
 // NSSecureCoding support
 
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 #if XAMCORE_4_0
 	static

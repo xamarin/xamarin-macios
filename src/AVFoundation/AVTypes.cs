@@ -21,7 +21,7 @@ using MonoTouch.ObjCRuntime;
 #endif
 #endif
 
-namespace XamCore.AVFoundation {
+namespace AVFoundation {
 
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVAudio3DVectorOrientation {

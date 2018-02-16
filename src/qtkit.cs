@@ -40,15 +40,15 @@
 //		[Field ("QTCaptureDeviceLegacySequenceGrabberAttribute")]
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.AppKit;
-using XamCore.CoreAnimation;
-using XamCore.CoreVideo;
-using XamCore.CoreImage;
-using XamCore.CoreGraphics;
+using Foundation;
+using ObjCRuntime;
+using AppKit;
+using CoreAnimation;
+using CoreVideo;
+using CoreImage;
+using CoreGraphics;
 
-namespace XamCore.QTKit
+namespace QTKit
 {
 	[BaseType (typeof (QTCaptureOutput))]
 	interface QTCaptureAudioPreviewOutput {
@@ -448,6 +448,9 @@ namespace XamCore.QTKit
 
 	[BaseType (typeof (NSView), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (QTCaptureViewDelegate)})]
 	interface QTCaptureView {
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
+
 		[Export ("availableVideoPreviewConnections")]
 		QTCaptureConnection [] AvailableVideoPreviewConnections { get; }
 
@@ -771,6 +774,9 @@ namespace XamCore.QTKit
 
 	[BaseType (typeof (NSView))]
 	interface QTMovieView {
+
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frameRect);
 
 		[Export ("movie")]
 		QTMovie Movie { get; set; }

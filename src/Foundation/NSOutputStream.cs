@@ -1,9 +1,9 @@
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	public partial class NSOutputStream : NSStream {
 		const string selWriteMaxLength = "write:maxLength:";
 

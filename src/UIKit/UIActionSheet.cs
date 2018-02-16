@@ -12,10 +12,10 @@
 
 using System;
 using System.Collections;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	public partial class UIActionSheet : IEnumerable {
 
 #if !XAMCORE_4_0

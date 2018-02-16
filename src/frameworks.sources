@@ -173,7 +173,7 @@ ASSETSLIBRARY_SOURCES = \
 
 AUDIOTOOLBOX_CORE_SOURCES = \
 	AudioToolbox/AudioType.cs \
-	AudioToolBox/MusicSequence.cs \
+	AudioToolbox/MusicSequence.cs \
 	AudioToolbox/AudioBuffers.cs \
 
 AUDIOTOOLBOX_SOURCES = \
@@ -658,6 +658,7 @@ FOUNDATION_CORE_SOURCES = \
 	Foundation/NSAttributedString.iOS.cs \
 	Foundation/EnumDesktop.cs \
 	Foundation/NSObject.mac.cs \
+	Foundation/NSDateComponents.cs \
 
 FOUNDATION_SOURCES = \
 	Foundation/Additions.cs \
@@ -1524,8 +1525,8 @@ SHARED_API_SOURCES = \
 
 SHARED_CORE_SOURCES = \
 	MonoPInvokeCallbackAttribute.cs \
-	build/common/NativeTypes/Drawing.cs \
-	build/common/NativeTypes/Primitives.cs \
+	$(BUILD_DIR)/common/NativeTypes/Drawing.cs \
+	$(BUILD_DIR)/common/NativeTypes/Primitives.cs \
 	ObjCRuntime/AlphaAttribute.cs \
 	ObjCRuntime/ArgumentSemantic.cs \
 	ObjCRuntime/BindAsAttribute.cs \
@@ -1542,6 +1543,7 @@ SHARED_CORE_SOURCES = \
 	ObjCRuntime/PlatformAvailabilityShadow.cs \
 	ObjCRuntime/Protocol.cs \
 	ObjCRuntime/Registrar.core.cs \
+	ObjCRuntime/RequiresSuperAttribute.cs \
 	ObjCRuntime/Selector.cs \
 	Simd/MatrixDouble4x4.cs \
 	Simd/MatrixFloat2x2.cs \
@@ -1577,7 +1579,6 @@ SHARED_SOURCES = \
 	ObjCRuntime/Registrar.cs \
 	ObjCRuntime/ReleaseAttribute.cs \
 	ObjCRuntime/RequiredFrameworkAttribute.cs \
-	ObjCRuntime/RequiresSuperAttribute.cs \
 	ObjCRuntime/Runtime.cs \
 	ObjCRuntime/Runtime.iOS.cs \
 	ObjCRuntime/Runtime.mac.cs \

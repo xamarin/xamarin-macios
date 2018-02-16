@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 #if !XAMCORE_2_0
 	public partial class NSUrlSession {
 

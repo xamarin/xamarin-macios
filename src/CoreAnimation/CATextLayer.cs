@@ -30,16 +30,16 @@
 
 using System;
 
-using XamCore.Foundation; 
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
-using XamCore.CoreFoundation;
-using XamCore.CoreText;
+using Foundation; 
+using ObjCRuntime;
+using CoreGraphics;
+using CoreFoundation;
+using CoreText;
 #if MONOMAC
-using XamCore.AppKit;
+using AppKit;
 #endif
 
-namespace XamCore.CoreAnimation {
+namespace CoreAnimation {
 
 	public partial class CATextLayer {
 

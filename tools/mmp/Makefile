@@ -20,37 +20,39 @@ LINKER_DIR=$(LINKER_TOOLS_PATH)/linker
 TUNER_DIR=$(LINKER_TOOLS_PATH)/tuner
 
 linker_sources = \
-	$(LINKER_DIR)/Mono.Linker/Pipeline.cs				\
-	$(LINKER_DIR)/Mono.Linker/AssemblyResolver.cs			\
-	$(LINKER_DIR)/Mono.Linker/TypePreserve.cs			\
-	$(LINKER_DIR)/Mono.Linker/Annotations.cs			\
-	$(LINKER_DIR)/Mono.Linker/LinkContext.cs			\
-	$(LINKER_DIR)/Mono.Linker/ILogger.cs				\
-	$(LINKER_DIR)/Mono.Linker/ConsoleLogger.cs			\
-	$(LINKER_DIR)/Mono.Linker/LoadException.cs			\
-	$(LINKER_DIR)/Mono.Linker/MarkException.cs			\
-	$(LINKER_DIR)/Mono.Linker/AssemblyAction.cs			\
-	$(LINKER_DIR)/Mono.Linker/I18nAssemblies.cs			\
-	$(LINKER_DIR)/Mono.Linker/MethodAction.cs			\
-	$(LINKER_DIR)/Mono.Linker/XApiReader.cs				\
-	$(LINKER_DIR)/Mono.Linker/IXApiVisitor.cs			\
-	$(LINKER_DIR)/Mono.Linker/MethodReferenceExtensions.cs		\
-	$(LINKER_DIR)/Mono.Linker/TypeReferenceExtensions.cs		\
-	$(LINKER_DIR)/Mono.Linker.Steps/BaseStep.cs			\
-	$(LINKER_DIR)/Mono.Linker.Steps/LoadReferencesStep.cs		\
-	$(LINKER_DIR)/Mono.Linker.Steps/LoadI18nAssemblies.cs		\
-	$(LINKER_DIR)/Mono.Linker.Steps/ResolveFromXmlStep.cs		\
-	$(LINKER_DIR)/Mono.Linker.Steps/SweepStep.cs			\
-	$(LINKER_DIR)/Mono.Linker.Steps/RegenerateGuidStep.cs		\
-	$(LINKER_DIR)/Mono.Linker.Steps/ResolveFromXApiStep.cs		\
-	$(LINKER_DIR)/Mono.Linker.Steps/ResolveFromAssemblyStep.cs	\
-	$(LINKER_DIR)/Mono.Linker.Steps/ResolveStep.cs			\
-	$(LINKER_DIR)/Mono.Linker.Steps/CleanStep.cs			\
-	$(LINKER_DIR)/Mono.Linker.Steps/MarkStep.cs			\
-	$(LINKER_DIR)/Mono.Linker.Steps/BlacklistStep.cs		\
-	$(LINKER_DIR)/Mono.Linker.Steps/OutputStep.cs			\
-	$(LINKER_DIR)/Mono.Linker.Steps/TypeMapStep.cs			\
-	$(LINKER_DIR)/Mono.Linker.Steps/IStep.cs
+	$(LINKER_DIR)/Linker/Pipeline.cs				\
+	$(LINKER_DIR)/Linker/AssemblyResolver.cs			\
+	$(LINKER_DIR)/Linker/TypePreserve.cs			\
+	$(LINKER_DIR)/Linker/Annotations.cs			\
+	$(LINKER_DIR)/Linker/LinkContext.cs			\
+	$(LINKER_DIR)/Linker/ILogger.cs				\
+	$(LINKER_DIR)/Linker/ConsoleLogger.cs			\
+	$(LINKER_DIR)/Linker/LoadException.cs			\
+	$(LINKER_DIR)/Linker/MarkException.cs			\
+	$(LINKER_DIR)/Linker/AssemblyAction.cs			\
+	$(LINKER_DIR)/Linker/I18nAssemblies.cs			\
+	$(LINKER_DIR)/Linker/MethodAction.cs			\
+	$(LINKER_DIR)/Linker/XApiReader.cs				\
+	$(LINKER_DIR)/Linker/IXApiVisitor.cs			\
+	$(LINKER_DIR)/Linker/MethodReferenceExtensions.cs		\
+	$(LINKER_DIR)/Linker/MarkingHelpers.cs		\
+	$(LINKER_DIR)/Linker/Tracer.cs		\
+	$(LINKER_DIR)/Linker/TypeReferenceExtensions.cs		\
+	$(LINKER_DIR)/Linker.Steps/BaseStep.cs			\
+	$(LINKER_DIR)/Linker.Steps/LoadReferencesStep.cs		\
+	$(LINKER_DIR)/Linker.Steps/LoadI18nAssemblies.cs		\
+	$(LINKER_DIR)/Linker.Steps/ResolveFromXmlStep.cs		\
+	$(LINKER_DIR)/Linker.Steps/SweepStep.cs			\
+	$(LINKER_DIR)/Linker.Steps/RegenerateGuidStep.cs		\
+	$(LINKER_DIR)/Linker.Steps/ResolveFromXApiStep.cs		\
+	$(LINKER_DIR)/Linker.Steps/ResolveFromAssemblyStep.cs	\
+	$(LINKER_DIR)/Linker.Steps/ResolveStep.cs			\
+	$(LINKER_DIR)/Linker.Steps/CleanStep.cs			\
+	$(LINKER_DIR)/Linker.Steps/MarkStep.cs			\
+	$(LINKER_DIR)/Linker.Steps/BlacklistStep.cs		\
+	$(LINKER_DIR)/Linker.Steps/OutputStep.cs			\
+	$(LINKER_DIR)/Linker.Steps/TypeMapStep.cs			\
+	$(LINKER_DIR)/Linker.Steps/IStep.cs
 
 tuner_sources = \
 	$(linker_sources)						\
@@ -83,6 +85,8 @@ tuner_sources = \
 	$(TOP)/tools/linker/CoreRemoveAttributes.cs		\
 	$(TOP)/tools/linker/CoreHttpMessageHandler.cs		\
 	$(TOP)/tools/linker/CoreRemoveSecurity.cs		\
+	$(TOP)/tools/linker/CoreSweepStep.cs		\
+	$(TOP)/tools/linker/CoreTypeMapStep.cs		\
 	$(TOP)/tools/linker/ObjCExtensions.cs			\
 	$(TOP)/tools/linker/MarkNSObjects.cs			\
 	$(TOP)/tools/linker/MobileExtensions.cs		\
@@ -95,7 +99,6 @@ tuner_sources = \
 	$(TOP)/tools/linker/RemoveUserResourcesSubStep.cs \
 	../linker/MonoTouch.Tuner/Extensions.cs	\
 	../linker/MonoTouch.Tuner/ListExportedSymbols.cs	\
-	../linker/MonoTouch.Tuner/MonoTouchTypeMap.cs		\
 	../linker/MonoTouch.Tuner/ProcessExportedFields.cs	\
 	../linker/MonoTouch.Tuner/PreserveSmartEnumConversionsSubStep.cs		\
 	../../src/build/mac/Constants.cs

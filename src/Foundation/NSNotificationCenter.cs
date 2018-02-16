@@ -22,12 +22,12 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 //
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 using System;
 using System.Collections.Generic;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	[Register]
 	internal class InternalNSNotificationHandler : NSObject  {

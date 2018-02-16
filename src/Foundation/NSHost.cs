@@ -15,7 +15,7 @@ using System.Net;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace XamCore.Foundation
+namespace Foundation
 {
 	public partial class NSHost : IEquatable<NSHost>, IEnumerable<IPAddress>
 	{

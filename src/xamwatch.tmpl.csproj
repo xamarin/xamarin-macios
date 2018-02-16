@@ -8,17 +8,18 @@
     <ProjectGuid>{B84C539D-971D-4703-8ABC-E1077FDA651C}</ProjectGuid>
     <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
-    <RootNamespace>xamwatch</RootNamespace>
-    <AssemblyName>xamwatch</AssemblyName>
+    <RootNamespace></RootNamespace>
+    <AssemblyName>Xamarin.WatchOS</AssemblyName>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\product.snk</AssemblyOriginatorKeyFile>
+    <IntermediateOutputPath>build\IDE\obj\watchOS\$(Configuration)</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>MONOTOUCH;WATCH</DefineConstants>
+    <OutputPath>build\IDE\bin\watchOS\Debug</OutputPath>
+    <DefineConstants>MONOTOUCH;WATCH;XAMCORE_2_0;XAMCORE_3_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -29,8 +30,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Release</OutputPath>
-    <DefineConstants>MONOTOUCH;WATCH</DefineConstants>
+    <OutputPath>build\IDE\bin\watchOS\Release</OutputPath>
+    <DefineConstants>MONOTOUCH;WATCH;XAMCORE_2_0;XAMCORE_3_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -38,14 +39,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
   </ItemGroup>
-  <PropertyGroup>
-    <CscToolExe>$(MSBuildProjectDirectory)\custom-make.sh</CscToolExe>
-  </PropertyGroup>
   <ItemGroup>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="build\watch\watch\**\*.cs">
+      <Link>build\watch\watch\%(RecursiveDir)%(Filename).cs</Link>
+    </Compile>
     <!--%FILES%-->
     <!--%APIS%-->
   </ItemGroup>

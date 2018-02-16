@@ -8,11 +8,11 @@
 //
 
 using System;
-using XamCore.CoreGraphics;
-using XamCore.ObjCRuntime;
+using CoreGraphics;
+using ObjCRuntime;
 
 #if XAMCORE_2_0 || !MONOMAC
-namespace XamCore.SpriteKit {
+namespace SpriteKit {
 	public partial class SKShapeNode : SKNode {
 
 		[iOS (8, 0)]

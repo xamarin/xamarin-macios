@@ -8,9 +8,9 @@
 
 
 using System;
-using XamCore.CoreGraphics;
+using CoreGraphics;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 
 #if !XAMCORE_2_0
 	public partial class UIPrintFormatter {

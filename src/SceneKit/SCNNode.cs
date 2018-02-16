@@ -12,11 +12,11 @@ using System.Collections;
 using System.Collections.Generic;
 
 #if !WATCH
-using XamCore.CoreAnimation;
+using CoreAnimation;
 #endif
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.SceneKit
+namespace SceneKit
 {
 	public partial class SCNNode : IEnumerable, IEnumerable<SCNNode>
 	{

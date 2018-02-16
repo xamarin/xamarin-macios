@@ -7,14 +7,14 @@
 // Copyright 2010, Novell, Inc.
 // Copyright 2013-2015 Xamarin Inc.
 //
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
-using XamCore.CoreLocation;
-using XamCore.UIKit;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
+using CoreLocation;
+using UIKit;
 using System;
 
-namespace XamCore.CoreMotion {
+namespace CoreMotion {
 	[BaseType (typeof (CMLogItem))]
 	[DisableDefaultCtor] // will crash, see Extra.cs for compatibility stubs
 	interface CMAccelerometerData : NSSecureCoding {
@@ -423,7 +423,7 @@ namespace XamCore.CoreMotion {
 
 	[Watch (4,0), iOS (11,0)]
 	[Native]
-	public enum CMAuthorizationStatus : nint {
+	public enum CMAuthorizationStatus : long {
 		NotDetermined = 0,
 		Restricted,
 		Denied,
@@ -468,7 +468,7 @@ namespace XamCore.CoreMotion {
 
 	[Watch (3,0)][NoTV][iOS (10,0)]
 	[Native]
-	public enum CMPedometerEventType : nint {
+	public enum CMPedometerEventType : long {
 		Pause,
 		Resume
 	}

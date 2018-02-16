@@ -1,13 +1,13 @@
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.HomeKit {
+namespace HomeKit {
 
 	[iOS (8,0)]
 	[TV (10,0)]
 	[Native]
-	public enum HMError : nint {
+	public enum HMError : long {
 		[Watch (4,2), TV (11,2), iOS (11,2)]
 		UnexpectedError                         = -1,
 		AlreadyExists                           = 1,
@@ -820,7 +820,7 @@ namespace XamCore.HomeKit {
 	[iOS (8,0)]
 	[TV (10,0)]
 	[Native]
-	public enum HMCharacteristicValueDoorState : nint {
+	public enum HMCharacteristicValueDoorState : long {
 		Open = 0,
 		Closed,
 		Opening,
@@ -831,7 +831,7 @@ namespace XamCore.HomeKit {
 	[iOS (8,0)]
 	[TV (10,0)]
 	[Native]
-	public enum HMCharacteristicValueHeatingCooling : nint {
+	public enum HMCharacteristicValueHeatingCooling : long {
 		Off = 0,
 		Heat,
 		Cool,
@@ -841,7 +841,7 @@ namespace XamCore.HomeKit {
 	[iOS (8,0)]
 	[TV (10,0)]
 	[Native]
-	public enum HMCharacteristicValueRotationDirection : nint {
+	public enum HMCharacteristicValueRotationDirection : long {
 		Clockwise = 0,
 		CounterClockwise
 	}
@@ -849,7 +849,7 @@ namespace XamCore.HomeKit {
 	[iOS (8,0)]
 	[TV (10,0)]
 	[Native]
-	public enum HMCharacteristicValueTemperatureUnit : nint {
+	public enum HMCharacteristicValueTemperatureUnit : long {
 		Celsius = 0,
 		Fahrenheit
 	}
@@ -857,7 +857,7 @@ namespace XamCore.HomeKit {
 	[iOS (8,0)]
 	[TV (10,0)]
 	[Native]
-	public enum HMCharacteristicValueLockMechanismState : nint {
+	public enum HMCharacteristicValueLockMechanismState : long {
 		Unsecured = 0,
 		Secured,
 		Jammed,
@@ -868,7 +868,7 @@ namespace XamCore.HomeKit {
 	[TV (10,0)]
 	[Native]
 	// in iOS 8.3 this was renamed HMCharacteristicValueLockMechanismLastKnownAction but that would be a breaking change for us
-	public enum HMCharacteristicValueLockMechanism : nint {
+	public enum HMCharacteristicValueLockMechanism : long {
 		LastKnownActionSecuredUsingPhysicalMovementInterior = 0,
 		LastKnownActionUnsecuredUsingPhysicalMovementInterior,
 		LastKnownActionSecuredUsingPhysicalMovementExterior,
@@ -885,7 +885,7 @@ namespace XamCore.HomeKit {
 	[iOS (9,0)]
 	[TV (10,0)]
 	[Native]
-	public enum HMCharacteristicValueAirParticulate : nint {
+	public enum HMCharacteristicValueAirParticulate : long {
 		Size2_5 = 0,
 		Size10
 	}
@@ -893,7 +893,7 @@ namespace XamCore.HomeKit {
 	[iOS (9,0)]
 	[TV (10,0)]
 	[Native]
-	public enum HMCharacteristicValueCurrentSecuritySystemState : nint {
+	public enum HMCharacteristicValueCurrentSecuritySystemState : long {
 		StayArm = 0,
 		AwayArm,
 		NightArm,
@@ -904,7 +904,7 @@ namespace XamCore.HomeKit {
 	[iOS (9,0)]
 	[TV (10,0)]
 	[Native]
-	public enum HMCharacteristicValuePositionState : nint {
+	public enum HMCharacteristicValuePositionState : long {
 		Closing = 0,
 		Opening,
 		Stopped
@@ -913,7 +913,7 @@ namespace XamCore.HomeKit {
 	[iOS (9,0)]
 	[TV (10,0)]
 	[Native]
-	public enum HMCharacteristicValueTargetSecuritySystemState : nint {
+	public enum HMCharacteristicValueTargetSecuritySystemState : long {
 		StayArm = 0,
 		AwayArm,
 		NightArm,
@@ -922,42 +922,42 @@ namespace XamCore.HomeKit {
 
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[Native]
-	public enum HMCharacteristicValueBatteryStatus : nint {
+	public enum HMCharacteristicValueBatteryStatus : long {
 		Normal = 0,
 		Low
 	}
 
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[Native]
-	public enum HMCharacteristicValueJammedStatus : nint {
+	public enum HMCharacteristicValueJammedStatus : long {
 		None = 0,
 		Jammed
 	}
 
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[Native]
-	public enum HMCharacteristicValueTamperedStatus : nint {
+	public enum HMCharacteristicValueTamperedStatus : long {
 		None = 0,
 		Tampered
 	}
 
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[Native]
-	public enum HMCharacteristicValueLeakStatus : nint {
+	public enum HMCharacteristicValueLeakStatus : long {
 		None = 0,
 		Detected
 	}
 
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[Native]
-	public enum HMCharacteristicValueSmokeDetectionStatus : nint {
+	public enum HMCharacteristicValueSmokeDetectionStatus : long {
 		None = 0,
 		Detected
 	}
 
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[Native]
-	public enum HMCharacteristicValueChargingState : nint {
+	public enum HMCharacteristicValueChargingState : long {
 		None = 0,
 		InProgress,
 		[iOS (10,2), Watch (3,1,1), TV (10,1)]
@@ -966,42 +966,42 @@ namespace XamCore.HomeKit {
 
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[Native]
-	public enum HMCharacteristicValueContactState : nint {
+	public enum HMCharacteristicValueContactState : long {
 		Detected = 0,
 		None,
 	}
 
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[Native]
-	public enum HMCharacteristicValueStatusFault : nint {
+	public enum HMCharacteristicValueStatusFault : long {
 		NoFault = 0,
 		GeneralFault
 	}
 
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[Native]
-	public enum HMCharacteristicValueCarbonMonoxideDetectionStatus : nint {
+	public enum HMCharacteristicValueCarbonMonoxideDetectionStatus : long {
 		NotDetected = 0,
 		Detected
 	}
 
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[Native]
-	public enum HMCharacteristicValueCarbonDioxideDetectionStatus : nint {
+	public enum HMCharacteristicValueCarbonDioxideDetectionStatus : long {
 		NotDetected = 0,
 		Detected
 	}
 
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[Native]
-	public enum HMCharacteristicValueOccupancyStatus : nint {
+	public enum HMCharacteristicValueOccupancyStatus : long {
 		NotOccupied = 0,
 		Occupied
 	}
 
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[Native]
-	public enum HMCharacteristicValueSecuritySystemAlarmType : nint {
+	public enum HMCharacteristicValueSecuritySystemAlarmType : long {
 		NoAlarm = 0,
 		Unknown
 	}
@@ -1138,7 +1138,7 @@ namespace XamCore.HomeKit {
 	[iOS (9,0)]
 	[TV (10,0)]
 	[Native]
-	public enum HMCharacteristicValueAirQuality : nint {
+	public enum HMCharacteristicValueAirQuality : long {
 		Unknown = 0,
 		Excellent,
 		Good,
@@ -1150,7 +1150,7 @@ namespace XamCore.HomeKit {
 	[iOS (10,0)]
 	[TV (10,0)]
 	[Native]
-	public enum HMCameraStreamState : nuint
+	public enum HMCameraStreamState : ulong
 	{
 		Starting = 1,
 		Streaming = 2,
@@ -1161,7 +1161,7 @@ namespace XamCore.HomeKit {
 	[iOS (10,0)]
 	[TV (10,0)]
 	[Native]
-	public enum HMCameraAudioStreamSetting : nuint
+	public enum HMCameraAudioStreamSetting : ulong
 	{
 		Muted = 1,
 		IncomingAudioAllowed = 2,
@@ -1171,7 +1171,7 @@ namespace XamCore.HomeKit {
 	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
-	public enum HMCharacteristicValueLockPhysicalControlsState : nint {
+	public enum HMCharacteristicValueLockPhysicalControlsState : long {
 		NotLocked = 0,
 		Locked,
 	}
@@ -1179,7 +1179,7 @@ namespace XamCore.HomeKit {
 	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
-	public enum HMCharacteristicValueCurrentAirPurifierState : nint {
+	public enum HMCharacteristicValueCurrentAirPurifierState : long {
 		Inactive = 0,
 		Idle,
 		Active,
@@ -1188,7 +1188,7 @@ namespace XamCore.HomeKit {
 	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
-	public enum HMCharacteristicValueTargetAirPurifierState : nint {
+	public enum HMCharacteristicValueTargetAirPurifierState : long {
 		Manual = 0,
 		Automatic,
 	}
@@ -1196,7 +1196,7 @@ namespace XamCore.HomeKit {
 	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
-	public enum HMCharacteristicValueCurrentSlatState : nint {
+	public enum HMCharacteristicValueCurrentSlatState : long {
 		Stationary = 0,
 		Jammed,
 		Oscillating,
@@ -1205,7 +1205,7 @@ namespace XamCore.HomeKit {
 	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
-	public enum HMCharacteristicValueSlatType : nint {
+	public enum HMCharacteristicValueSlatType : long {
 		Horizontal = 0,
 		Vertical,
 	}
@@ -1213,7 +1213,7 @@ namespace XamCore.HomeKit {
 	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
-	public enum HMCharacteristicValueFilterChange : nint {
+	public enum HMCharacteristicValueFilterChange : long {
 		NotNeeded = 0,
 		Needed,
 	}
@@ -1221,7 +1221,7 @@ namespace XamCore.HomeKit {
 	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
-	public enum HMCharacteristicValueCurrentFanState : nint {
+	public enum HMCharacteristicValueCurrentFanState : long {
 		Inactive = 0,
 		Idle,
 		Active,
@@ -1230,7 +1230,7 @@ namespace XamCore.HomeKit {
 	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
-	public enum HMCharacteristicValueTargetFanState : nint {
+	public enum HMCharacteristicValueTargetFanState : long {
 		Manual = 0,
 		Automatic,
 	}
@@ -1238,7 +1238,7 @@ namespace XamCore.HomeKit {
 	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
-	public enum HMCharacteristicValueCurrentHeaterCoolerState : nint {
+	public enum HMCharacteristicValueCurrentHeaterCoolerState : long {
 		Inactive = 0,
 		Idle,
 		Heating,
@@ -1248,7 +1248,7 @@ namespace XamCore.HomeKit {
 	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
-	public enum HMCharacteristicValueTargetHeaterCoolerState : nint {
+	public enum HMCharacteristicValueTargetHeaterCoolerState : long {
 		Automatic = 0,
 		Heat,
 		Cool,
@@ -1257,7 +1257,7 @@ namespace XamCore.HomeKit {
 	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
-	public enum HMCharacteristicValueCurrentHumidifierDehumidifierState : nint {
+	public enum HMCharacteristicValueCurrentHumidifierDehumidifierState : long {
 		Inactive = 0,
 		Idle,
 		Humidifying,
@@ -1267,7 +1267,7 @@ namespace XamCore.HomeKit {
 	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
-	public enum HMCharacteristicValueTargetHumidifierDehumidifierState : nint {
+	public enum HMCharacteristicValueTargetHumidifierDehumidifierState : long {
 		Automatic = 0,
 		Humidify,
 		Dehumidify,
@@ -1276,7 +1276,7 @@ namespace XamCore.HomeKit {
 	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
-	public enum HMCharacteristicValueSwingMode : nint {
+	public enum HMCharacteristicValueSwingMode : long {
 		Disabled = 0,
 		Enabled,
 	}
@@ -1284,14 +1284,14 @@ namespace XamCore.HomeKit {
 	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
-	public enum HMCharacteristicValueActivationState : nint {
+	public enum HMCharacteristicValueActivationState : long {
 		Inactive = 0,
 		Active,
 	}
 
 	[Watch (3,2), TV (10,2), iOS (10,3)]
 	[Native]
-	public enum HMCharacteristicValueInputEvent : nint {
+	public enum HMCharacteristicValueInputEvent : long {
 		SinglePress = 0,
 		DoublePress,
 		LongPress,
@@ -1299,14 +1299,14 @@ namespace XamCore.HomeKit {
 
 	[Watch (3,2), TV (10,2), iOS (10,3)]
 	[Native]
-	public enum HMCharacteristicValueLabelNamespace : nint {
+	public enum HMCharacteristicValueLabelNamespace : long {
 		Dot = 0,
 		Numeral,
 	}
 
 	[Watch (4,0), TV (11,0), iOS (11,0)]
 	[Native]
-	public enum HMEventTriggerActivationState : nuint {
+	public enum HMEventTriggerActivationState : ulong {
 		Disabled = 0,
 		DisabledNoHomeHub = 1,
 		DisabledNoCompatibleHomeHub = 2,
@@ -1316,7 +1316,7 @@ namespace XamCore.HomeKit {
 
 	[Watch (4,0), TV (11,0), iOS (11,0)]
 	[Native]
-	public enum HMHomeHubState : nuint {
+	public enum HMHomeHubState : ulong {
 		NotAvailable = 0,
 		Connected,
 		Disconnected,
@@ -1324,7 +1324,7 @@ namespace XamCore.HomeKit {
 
 	[Watch (4,0), TV (11,0), iOS (11,0)]
 	[Native]
-	public enum HMPresenceEventType : nuint {
+	public enum HMPresenceEventType : ulong {
 		EveryEntry = 1,
 		EveryExit = 2,
 		FirstEntry = 3,
@@ -1335,7 +1335,7 @@ namespace XamCore.HomeKit {
 
 	[Watch (4,0), TV (11,0), iOS (11,0)]
 	[Native]
-	public enum HMPresenceEventUserType : nuint {
+	public enum HMPresenceEventUserType : ulong {
 		CurrentUser = 1,
 		HomeUsers = 2,
 		CustomUsers = 3,
@@ -1343,7 +1343,7 @@ namespace XamCore.HomeKit {
 
 	[Watch (4,2), TV (11,2), iOS (11,2)]
 	[Native]
-	public enum HMCharacteristicValueProgramMode : nint {
+	public enum HMCharacteristicValueProgramMode : long {
 		NotScheduled = 0,
 		Scheduled,
 		ScheduleOverriddenToManual,
@@ -1351,14 +1351,14 @@ namespace XamCore.HomeKit {
 
 	[Watch (4,2), TV (11,2), iOS (11,2)]
 	[Native]
-	public enum HMCharacteristicValueUsageState : nint {
+	public enum HMCharacteristicValueUsageState : long {
 		NotInUse = 0,
 		InUse,
 	}
 
 	[Watch (4,2), TV (11,2), iOS (11,2)]
 	[Native]
-	public enum HMCharacteristicValueValveType : nint {
+	public enum HMCharacteristicValueValveType : long {
 		GenericValve = 0,
 		Irrigation,
 		ShowerHead,
@@ -1367,7 +1367,7 @@ namespace XamCore.HomeKit {
 
 	[Watch (4,2), TV (11,2), iOS (11,2)]
 	[Native]
-	public enum HMCharacteristicValueConfigurationState : nint {
+	public enum HMCharacteristicValueConfigurationState : long {
 		NotConfigured = 0,
 		Configured,
 	}

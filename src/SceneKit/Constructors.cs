@@ -9,9 +9,9 @@
 // Copyright 2012 Xamarin Inc
 //
 using System;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.SceneKit {
+namespace SceneKit {
 
 	public partial class SCNText {
 		public static SCNText Create (string str, nfloat extrusionDepth)

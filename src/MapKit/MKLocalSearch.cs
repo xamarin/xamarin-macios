@@ -31,9 +31,9 @@
 using System;
 using System.Threading.Tasks;
 using System.Threading;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.MapKit {
+namespace MapKit {
 	public partial class MKLocalSearch {
 
 		public virtual Task<MKLocalSearchResponse> StartAsync (CancellationToken token)

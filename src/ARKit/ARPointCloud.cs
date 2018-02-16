@@ -13,7 +13,7 @@ using System;
 using System.Runtime.InteropServices;
 using Vector3 = global::OpenTK.NVector3;
 
-namespace XamCore.ARKit {
+namespace ARKit {
 	public partial class ARPointCloud {
 
 		public unsafe Vector3 [] Points {

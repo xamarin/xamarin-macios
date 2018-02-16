@@ -7,15 +7,15 @@
 // Copyright 2013-2014, 2016 Xamarin Inc.
 //
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.SafariServices {
+namespace SafariServices {
 
 	// NSInteger -> SSReadingList.h
 	[NoMac][iOS (7,0)]
 	[Native]
 	[ErrorDomain ("SSReadingListErrorDomain")]
-	public enum SSReadingListError : nint {
+	public enum SSReadingListError : long {
 		UrlSchemeNotAllowed = 1
 	}
 
@@ -24,7 +24,7 @@ namespace XamCore.SafariServices {
 	[Deprecated (PlatformName.iOS, 10,0, message: "Use 'SFErrorCode' enum.")]
 	[Native]
 	[ErrorDomain ("SFContentBlockerErrorDomain")]
-	public enum SFContentBlockerErrorCode : nint {
+	public enum SFContentBlockerErrorCode : long {
 		Ok = 0,
 		NoExtensionFound = 1,
 		NoAttachmentFound = 2,
@@ -34,7 +34,7 @@ namespace XamCore.SafariServices {
 	[iOS (10,0)]
 	[Native]
 	[ErrorDomain ("SFErrorDomain")]
-	public enum SFErrorCode : nint
+	public enum SFErrorCode : long
 	{
 		Ok = 0,
 		NoExtensionFound = 1,
@@ -45,7 +45,7 @@ namespace XamCore.SafariServices {
 	[NoMac]
 	[iOS (11,0)]
 	[Native]
-	public enum SFSafariViewControllerDismissButtonStyle : nint {
+	public enum SFSafariViewControllerDismissButtonStyle : long {
 		Done,
 		Close,
 		Cancel,
@@ -55,14 +55,14 @@ namespace XamCore.SafariServices {
 	[iOS (11,0)]
 	[Native]
 	[ErrorDomain ("SFAuthenticationErrorDomain")]
-	public enum SFAuthenticationError : nint {
+	public enum SFAuthenticationError : long {
 		CanceledLogin = 1,
 	}
 
 	[NoiOS]
 	[Mac (10,12,4, onlyOn64: true)]
 	[Native]
-	public enum SFSafariServicesVersion : nint {
+	public enum SFSafariServicesVersion : long {
 		V10_0,
 		V10_1,
 		[Mac (10,13, onlyOn64: true)]

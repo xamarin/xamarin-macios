@@ -34,10 +34,10 @@
 #if !MONOMAC && !XAMCORE_2_0
 
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.CoreLocation {
+namespace CoreLocation {
 	
 	public partial class CLLocationManagerDelegate
 	{

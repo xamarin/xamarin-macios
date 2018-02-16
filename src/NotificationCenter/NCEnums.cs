@@ -1,18 +1,18 @@
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
-using XamCore.CoreLocation;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
+using CoreLocation;
 
 #if !MONOMAC
-using XamCore.UIKit;
+using UIKit;
 #endif
 
-namespace XamCore.NotificationCenter {
+namespace NotificationCenter {
 
 	[iOS (8,0)][Mac (10,10)]
 	[Native]
-	public enum NCUpdateResult : nuint {
+	public enum NCUpdateResult : ulong {
 		NewData,
 		NoData,
 		Failed
@@ -20,7 +20,7 @@ namespace XamCore.NotificationCenter {
 
 	[iOS (10,0)][NoMac]
 	[Native]
-	public enum NCWidgetDisplayMode : nint {
+	public enum NCWidgetDisplayMode : long {
 		Compact,
 		Expanded
 	}

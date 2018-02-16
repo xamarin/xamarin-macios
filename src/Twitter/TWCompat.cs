@@ -4,7 +4,7 @@
 
 using System;
 
-namespace XamCore.Twitter {
+namespace Twitter {
 
 	public partial class TWTweetComposeViewController {
 

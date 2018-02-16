@@ -8,15 +8,18 @@
 
 using System;
 
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
 using OpenTK;
-#if !MONOMAC
-using XamCore.UIKit;
+#if MONOMAC
+using AppKit;
+using UIViewController = AppKit.NSViewController;
+#else
+using UIKit;
 #endif
 
-namespace XamCore.GameController {
+namespace GameController {
 
 	[iOS (7,0)]
 	[Mac (10,9, onlyOn64: true)]
@@ -271,7 +274,7 @@ namespace XamCore.GameController {
 		[Export ("extendedGamepad", ArgumentSemantic.Retain)]
 		GCExtendedGamepad ExtendedGamepad { get; }
 
-		[NoMac]
+		[Mac (10,12, onlyOn64: true)]
 		[iOS (10,0)]
 		[NullAllowed, Export ("microGamepad", ArgumentSemantic.Retain)]
 		GCMicroGamepad MicroGamepad { get; }
@@ -340,12 +343,12 @@ namespace XamCore.GameController {
 		bool HasAttitudeAndRotationRate { get; }
 	}
 
-	[NoMac]
+	[Mac (10,11, onlyOn64: true)]
 	[iOS (10,0)]
 	[TV (9,0)]
 	delegate void GCMicroGamepadValueChangedHandler (GCMicroGamepad gamepad, GCControllerElement element);
 
-	[NoMac]
+	[Mac (10,11, onlyOn64: true)]
 	[iOS (10,0)]
 	[TV (9,0)]
 	[BaseType (typeof (NSObject))]
@@ -376,7 +379,7 @@ namespace XamCore.GameController {
 		bool AllowsRotation { get; set; }
 	}
 
-	[NoMac]
+	[Mac (10,9, onlyOn64: true)]
 	[iOS (10,0)]
 	[TV (9,0)]
 	[BaseType (typeof (GCMicroGamepad))]
@@ -391,8 +394,7 @@ namespace XamCore.GameController {
 		IntPtr Constructor (GCController controller, NSData data);
 	}
 
-#if !MONOMAC
-	[NoMac]
+	[Mac (10,11, onlyOn64: true)]
 	[iOS (10,0)]
 	[TV (9,0)]
 	[BaseType (typeof (UIViewController))]
@@ -406,5 +408,4 @@ namespace XamCore.GameController {
 		[Export ("controllerUserInteractionEnabled")]
 		bool ControllerUserInteractionEnabled { get; set; }
 	}
-#endif
 }

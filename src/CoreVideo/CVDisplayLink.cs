@@ -28,11 +28,11 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.OpenGL;
+using ObjCRuntime;
+using Foundation;
+using OpenGL;
 
-namespace XamCore.CoreVideo {
+namespace CoreVideo {
 	public class CVDisplayLink : INativeObject, IDisposable {
 		IntPtr handle;
 		GCHandle callbackHandle;

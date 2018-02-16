@@ -97,12 +97,15 @@ namespace Introspection
 			"Ats",	// App Transport Security
 			"Attrib",
 			"Attributevalue",
+			"Attrs", // Attributes (used by Apple for keys)
 			"Audiofile",
 			"Automapping",
 			"Automounted",
 			"Autoredirect",
 			"Autospace",
+			"Autostarts",
 			"Avci", // file type
+			"Avb", // acronym: Audio Video Bridging
 			"Aliasable",
 			"Arcball",
 			"Avg",
@@ -121,6 +124,7 @@ namespace Introspection
 			"Bggr", // acronym for Blue, Green, Green, Red 
 			"Bsln",
 			"Bssid",
+			"Btle", // Bluetooth Low Energy
 			"Bzip",
 			"Cabac",
 			"Caf", // acronym: Core Audio Format

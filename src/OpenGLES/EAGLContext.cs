@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.OpenGLES
+namespace OpenGLES
 {
 	public partial class EAGLContext
 	{

@@ -19,10 +19,10 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-using XamCore.Foundation;
-using XamCore.Registrar;
+using Foundation;
+using Registrar;
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 	public unsafe partial class Runtime {
 		
 <# foreach (var d in delegates) { #>
@@ -68,9 +68,23 @@ namespace XamCore.ObjCRuntime {
 
 <# } #>
 
+		[BindingImpl (BindingImplOptions.Optimizable)] // To inline the Runtime.DynamicRegistrationSupported code if possible.
 		static void RegisterDelegates (InitializationOptions* options)
 		{
-<# foreach (var d in delegates) { #>
+<# foreach (var d in delegates) {
+	if (d.OnlyDynamicUsage) continue; #>
+			options->Delegates-><#= d.SimpleEntryPoint #> = GetFunctionPointer (new <#= d.SimpleEntryPoint #>_delegate (<#= d.SimpleEntryPoint #>));
+<# } #>
+
+			// The linker will remove this condition (and the subsequent method call) if possible
+			if (DynamicRegistrationSupported)
+				RegisterDelegatesDynamic (options);
+		}
+
+		static void RegisterDelegatesDynamic (InitializationOptions* options)
+		{
+<# foreach (var d in delegates) {
+	if (!d.OnlyDynamicUsage) continue; #>
 			options->Delegates-><#= d.SimpleEntryPoint #> = GetFunctionPointer (new <#= d.SimpleEntryPoint #>_delegate (<#= d.SimpleEntryPoint #>));
 <# } #>
 		}

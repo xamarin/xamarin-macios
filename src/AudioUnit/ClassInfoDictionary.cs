@@ -27,12 +27,12 @@
 
 using System;
 
-using XamCore.Foundation;
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreImage;
+using Foundation;
+using CoreFoundation;
+using ObjCRuntime;
+using CoreImage;
 
-namespace XamCore.AudioUnit
+namespace AudioUnit
 {
 	public class ClassInfoDictionary : DictionaryContainer
 	{

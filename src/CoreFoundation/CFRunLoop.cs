@@ -31,14 +31,14 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
 #if XAMCORE_2_0
 using CFIndex = System.nint;
 #endif
 
-namespace XamCore.CoreFoundation {
+namespace CoreFoundation {
 
 	// anonymous and typeless native enum - System/Library/Frameworks/CoreFoundation.framework/Headers/CFRunLoop.h
 	public enum CFRunLoopExitReason : int {

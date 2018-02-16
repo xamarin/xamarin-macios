@@ -14,10 +14,6 @@
 !missing-selector! AVCaptureConnection::setVideoMaxFrameDuration: not bound
 !missing-selector! AVCaptureConnection::videoMaxFrameDuration not bound
 
-# Incorrectly bound, fixed for XAMCORE_4_0
-!unknown-protocol! AVCaptureDataOutputSynchronizerDelegate bound
-!unknown-type! AVCaptureDataOutputSynchronizer bound
-
 ## unsorted
 
 !missing-selector! +AVMetadataItem::metadataItemsFromArray:filteredByMetadataItemFilter: not bound

@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.AudioUnit
+namespace AudioUnit
 {
 #if XAMCORE_2_0 || !MONOMAC
 	[iOS (9,0), Mac(10,11, onlyOn64 : true)]

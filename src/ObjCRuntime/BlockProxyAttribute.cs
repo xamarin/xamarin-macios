@@ -11,10 +11,10 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.ObjCRuntime {
+namespace ObjCRuntime {
 	[AttributeUsage (AttributeTargets.Parameter, AllowMultiple=false)]
 #if XAMCORE_2_0
 	sealed

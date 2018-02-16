@@ -37,7 +37,7 @@ The `xtro-report` tool creates an html report that describe the results, per pla
 
 The bots produce the report on every commit/PR. It can also be produced locally with:
 
-````
+```
 cd tests/xtro-sharpie
 make
 open report/index.html

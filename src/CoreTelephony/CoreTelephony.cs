@@ -1,8 +1,8 @@
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 using System;
 
-namespace XamCore.CoreTelephony {
+namespace CoreTelephony {
 
 	public partial class CTCall {
 #if !COREBUILD
@@ -44,7 +44,7 @@ namespace XamCore.CoreTelephony {
 
 	[iOS (9,0)]
 	[Native]
-	public enum CTCellularDataRestrictedState : nuint {
+	public enum CTCellularDataRestrictedState : ulong {
 		Unknown,
 		Restricted,
 		NotRestricted

@@ -28,10 +28,10 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.OpenGL {
+namespace OpenGL {
 	public class CGLContext : INativeObject, IDisposable {
 		IntPtr handle;
 

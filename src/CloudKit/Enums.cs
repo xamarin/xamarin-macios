@@ -1,16 +1,16 @@
-﻿using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using CoreFoundation;
+using ObjCRuntime;
+using Foundation;
 using System;
 
-namespace XamCore.CloudKit
+namespace CloudKit
 {
 	// NSInteger -> CKContainer.h
 	[Watch (3,0)]
 	[iOS (8,0)]
 	[Mac (10, 10)]
 	[Native]
-	public enum CKAccountStatus : nint {
+	public enum CKAccountStatus : long {
 		CouldNotDetermine = 0,
 		Available = 1,
 		Restricted = 2,
@@ -23,7 +23,7 @@ namespace XamCore.CloudKit
 	[Mac (10, 10)]
 	[Native]
 	[Flags]
-	public enum CKApplicationPermissions : nuint {
+	public enum CKApplicationPermissions : ulong {
 		UserDiscoverability = 1 << 0
 	}
 
@@ -32,7 +32,7 @@ namespace XamCore.CloudKit
 	[iOS (8,0)]
 	[Mac (10, 10)]
 	[Native]
-	public enum CKApplicationPermissionStatus : nint {
+	public enum CKApplicationPermissionStatus : long {
 		InitialState = 0,
 		CouldNotComplete = 1,
 		Denied = 2,
@@ -45,7 +45,7 @@ namespace XamCore.CloudKit
 	[Mac (10, 10)]
 	[Native]
 	[ErrorDomain ("CKErrorDomain")]
-	public enum CKErrorCode : nint {
+	public enum CKErrorCode : long {
 		None,
 		InternalError = 1,
 		PartialFailure = 2,
@@ -88,7 +88,7 @@ namespace XamCore.CloudKit
 	[iOS (8,0)]
 	[Mac (10, 10)]
 	[Native]
-	public enum CKRecordSavePolicy : nint {
+	public enum CKRecordSavePolicy : long {
 		SaveIfServerRecordUnchanged = 0,
 		SaveChangedKeys = 1,
 		SaveAllKeys = 2
@@ -99,7 +99,7 @@ namespace XamCore.CloudKit
 	[iOS (8,0)]
 	[Mac (10, 10)]
 	[Native]
-	public enum CKNotificationType : nint {
+	public enum CKNotificationType : long {
 		Query = 1,
 		RecordZone = 2,
 		ReadNotification = 3,
@@ -111,7 +111,7 @@ namespace XamCore.CloudKit
 	[iOS (8,0)]
 	[Mac (10, 10)]
 	[Native]
-	public enum CKQueryNotificationReason : nint {
+	public enum CKQueryNotificationReason : long {
 		RecordCreated = 1,
 		RecordUpdated,
 		RecordDeleted
@@ -123,7 +123,7 @@ namespace XamCore.CloudKit
 	[Mac (10, 10)]
 	[Flags]
 	[Native]
-	public enum CKRecordZoneCapabilities : nuint {
+	public enum CKRecordZoneCapabilities : ulong {
 		FetchChanges = 1 << 0,
 		Atomic = 1 << 1,
 		[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12)] Sharing = 1 << 2,
@@ -134,7 +134,7 @@ namespace XamCore.CloudKit
 	[iOS (8,0)]
 	[Mac (10, 10)]
 	[Native]
-	public enum CKReferenceAction : nuint {
+	public enum CKReferenceAction : ulong {
 		None = 0,
 		DeleteSelf = 1
 	}
@@ -144,7 +144,7 @@ namespace XamCore.CloudKit
 	[iOS (8,0)]
 	[Mac (10, 10)]
 	[Native]
-	public enum CKSubscriptionType : nint {
+	public enum CKSubscriptionType : long {
 		Query = 1,
 		RecordZone = 2,
 		[iOS (10,0), TV (10,0), Mac (10,12)] Database = 3,
@@ -159,7 +159,7 @@ namespace XamCore.CloudKit
 	[Deprecated (PlatformName.MacOSX, 10, 12, message : "Use 'CKQuerySubscriptionOptions' instead.")]
 	[Flags]
 	[Native]
-	public enum CKSubscriptionOptions : nuint {
+	public enum CKSubscriptionOptions : ulong {
 		FiresOnRecordCreation = 1 << 0,
 		FiresOnRecordUpdate = 1 << 1,
 		FiresOnRecordDeletion = 1 << 2,
@@ -169,7 +169,7 @@ namespace XamCore.CloudKit
 	[Watch (3,0)]
 	[iOS (10,0), Mac (10,12)]
 	[Native]
-	public enum CKDatabaseScope : nint
+	public enum CKDatabaseScope : long
 	{
 		Public = 1,
 		Private,
@@ -179,7 +179,7 @@ namespace XamCore.CloudKit
 	[Watch (3,0)]
 	[iOS (10,0), Mac (10,12)]
 	[Native]
-	public enum CKShareParticipantAcceptanceStatus : nint
+	public enum CKShareParticipantAcceptanceStatus : long
 	{
 		Unknown,
 		Pending,
@@ -190,7 +190,7 @@ namespace XamCore.CloudKit
 	[Watch (3,0)]
 	[iOS (10,0), Mac (10,12)]
 	[Native]
-	public enum CKShareParticipantPermission : nint
+	public enum CKShareParticipantPermission : long
 	{
 		Unknown,
 		None,
@@ -201,7 +201,7 @@ namespace XamCore.CloudKit
 	[Watch (3,0)]
 	[iOS (10,10), Mac (10,12)]
 	[Native]
-	public enum CKShareParticipantType : nint
+	public enum CKShareParticipantType : long
 	{
 		Unknown = 0,
 		Owner = 1,
@@ -212,7 +212,7 @@ namespace XamCore.CloudKit
 	[NoWatch]
 	[iOS (10,0), Mac(10,12)]
 	[Native]
-	public enum CKQuerySubscriptionOptions : nuint
+	public enum CKQuerySubscriptionOptions : ulong
 	{
 		RecordCreation = 1 << 0,
 		RecordUpdate = 1 << 1,
@@ -222,7 +222,7 @@ namespace XamCore.CloudKit
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[Native]
-	public enum CKOperationGroupTransferSize : nint
+	public enum CKOperationGroupTransferSize : long
 	{
 		Unknown,
 		Kilobytes,

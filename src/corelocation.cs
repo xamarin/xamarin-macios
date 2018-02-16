@@ -9,34 +9,37 @@
 // Copyright 2009, Novell, Inc.
 // Copyright 2011, 2013, 2015 Xamarin Inc.
 //
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CloudKit;
-using XamCore.CoreGraphics;
-using XamCore.CoreLocation;
+using ObjCRuntime;
+using Foundation;
+using CloudKit;
+using CoreGraphics;
+using CoreLocation;
 #if !MONOMAC
-using XamCore.UIKit;
+using UIKit;
 #endif
 #if XAMCORE_2_0 && !TVOS
-using XamCore.Contacts;
+using Contacts;
 #endif
 using System;
 
-namespace XamCore.CoreLocation {
+namespace CoreLocation {
 
 	[NoTV][NoWatch]
 	[iOS (7,0)]
 	[Native] // NSInteger -> CLRegion.h
-	public enum CLRegionState : nint {
+	public enum CLRegionState : long {
 		Unknown,
 		Inside,
 		Outside
 	}
 
+#if XAMCORE_4_0 // Unavailable on macOS
+	[NoMac]
+#endif
 	[NoTV][NoWatch]
 	[iOS (7,0)]
 	[Native] // NSInteger -> CLRegion.h
-	public enum CLProximity : nint {
+	public enum CLProximity : long {
 		Unknown,
 		Immediate,
 		Near,
@@ -406,6 +409,9 @@ namespace XamCore.CoreLocation {
 		void UpdatedHeading (CLLocationManager  manager, CLHeading newHeading);
 #endif
 	
+#if XAMCORE_4_0 // Unavailable on macOS
+		[NoMac]
+#endif
 		[NoWatch][NoTV]
 		[Export ("locationManagerShouldDisplayHeadingCalibration:"), DelegateName ("CLLocationManagerEventArgs"), DefaultValue (true)]
 		bool ShouldDisplayHeadingCalibration (CLLocationManager manager);
@@ -460,11 +466,17 @@ namespace XamCore.CoreLocation {
 		[Export ("locationManager:didUpdateLocations:"), EventArgs ("CLLocationsUpdated")]
 		void LocationsUpdated (CLLocationManager manager, CLLocation[] locations);
 
+#if XAMCORE_4_0 // Unavailable on macOS
+		[NoMac]
+#endif
 		[NoWatch][NoTV]
 		[iOS (6,0)]
 		[Export ("locationManagerDidPauseLocationUpdates:"), EventArgs ("")]
 		void LocationUpdatesPaused (CLLocationManager manager);
 
+#if XAMCORE_4_0 // Unavailable on macOS
+		[NoMac]
+#endif
 		[NoWatch][NoTV]
 		[iOS (6,0)]
 		[Export ("locationManagerDidResumeLocationUpdates:"), EventArgs ("")]
@@ -479,8 +491,12 @@ namespace XamCore.CoreLocation {
 	[Static]
 	partial interface CLLocationDistance {
 
-		[iOS (6,0)]
+#if XAMCORE_4_0 // Unavailable on macOS
+		[NoMac]
+#else
 		[Mac (10,9)]
+#endif
+		[iOS (6,0)]
 		[Field ("CLLocationDistanceMax")]
 		double MaxDistance { get; }
 

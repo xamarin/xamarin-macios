@@ -41,7 +41,7 @@ namespace Xamarin
 	{
 #pragma warning disable 649
 		// These map directly to mtouch options
-		MTouchAction? Action; // --sim, --dev, --launchsim, etc
+		public MTouchAction? Action; // --sim, --dev, --launchsim, etc
 		public bool? NoSign;
 		public bool? FastDev;
 		public bool? Dlsym;
@@ -125,7 +125,8 @@ namespace Xamarin
 
 		public void AssertExecuteFailure (MTouchAction action, string message = null)
 		{
-			NUnit.Framework.Assert.AreEqual (1, Execute (action), message);
+			Action = action;
+			NUnit.Framework.Assert.AreEqual (1, Execute (), message);
 		}
 
 		// Assert that none of the files in the app has changed (except 'except' files)
@@ -712,6 +713,11 @@ public partial class NotificationController : WKUserNotificationInterfaceControl
 
 		protected override string MessagePrefix {
 			get { return "MT"; }
+		}
+
+		public override string GetAppAssembliesDirectory ()
+		{
+			return AppPath;
 		}
 	}
 }

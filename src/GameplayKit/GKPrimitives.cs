@@ -11,12 +11,12 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
 
-namespace XamCore.GameplayKit {
+namespace GameplayKit {
 
 	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
 	[StructLayout (LayoutKind.Sequential)]

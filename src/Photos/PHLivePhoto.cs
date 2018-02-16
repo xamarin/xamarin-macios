@@ -1,9 +1,9 @@
 // Copyright 2015 Xamarin Inc
 
 using System;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.Photos {
+namespace Photos {
 
 	public partial class PHLivePhoto {
 

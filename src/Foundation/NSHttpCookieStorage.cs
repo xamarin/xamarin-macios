@@ -1,7 +1,7 @@
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 using System;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	public partial class NSHttpCookieStorage {
 #if !XAMCORE_2_0
 		// sadly they were not readonly

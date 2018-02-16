@@ -305,8 +305,16 @@ public interface UIActionSheetDelegate {
 }
 ```
 
- <a name="DisableDefaultCtorAttribute" />
+ <a name="DesignatedDefaultCtorAttribute" />
 
+## DesignatedDefaultCtorAttribute
+
+When this attribute is applied to the interface definition it will generate
+a `[DesignatedInitializer]` attribute on the default (generated) constructor
+which maps to the `init` selector.
+
+
+ <a name="DisableDefaultCtorAttribute" />
 
 ## DisableDefaultCtorAttribute
 
@@ -1267,6 +1275,15 @@ async methods.   The default is to use the name of the method
 and append the text "Async", you can use this to change this default.
 
 
+## DesignatedInitializerAttribute
+
+When this attribute is applied to a constructor it will generate the same
+`[DesignatedInitializer]` in the final platform assembly. This is to help
+the IDE indicate which constructor should be used in subclasses.
+
+This should map to ObjC/clang use of `__attribute__((objc_designated_initializer))`.
+
+
 ## DisableZeroCopyAttribute
 
 This attribute is applied to string parameters or string properties and
@@ -1900,8 +1917,6 @@ var strongDemo = new Demo ();
 demo.Delegate = new MyDelegate ();
 ```
 
- <a name="Parameter_Attributes" />
-
 Another use of the `Wrap` attribute is to support strongly typed version
 of methods.   For example:
 
@@ -1936,6 +1951,42 @@ interface FooExplorer {
 	void FromUrl (string url);
 }
 ```
+
+`[Wrap]` can also be used directly in property getters and setters,
+this allows to have full control on them and adjust the code the way you need,
+for example using smart enums, consider the following API definition:
+
+```csharp
+// Smart enum.
+enum PersonRelationship {
+        [Field (null)]
+        None,
+
+        [Field ("FMFather", "__Internal")]
+        Father,
+
+        [Field ("FMMother", "__Internal")]
+        Mother
+}
+```
+
+Interface definition:
+
+```
+// Property definition.
+
+    [Export ("presenceType")]
+    NSString _PresenceType { get; set; }
+
+    PersonRelationship PresenceType {
+            [Wrap ("PersonRelationshipExtensions.GetValue (_PresenceType)")]
+            get;
+            [Wrap ("_PresenceType = value.GetConstant ()")]
+            set;
+    }
+```
+
+ <a name="Parameter_Attributes" />
 
 # Parameter Attributes
 

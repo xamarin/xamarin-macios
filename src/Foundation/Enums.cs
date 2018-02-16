@@ -1,6 +1,6 @@
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	// Utility enum, ObjC uses NSString
 	[NoMac]
@@ -119,10 +119,132 @@ namespace XamCore.Foundation {
 
 	[NoWatch, NoTV, NoMac, iOS (11, 0)]
 	[Native]
-	public enum NSUrlSessionMultipathServiceType : nint {
+	public enum NSUrlSessionMultipathServiceType : long {
 		None = 0,
 		Handover = 1,
 		Interactive = 2,
 		Aggregate = 3,
+	}
+
+	public enum NSLinguisticTagScheme {
+		[Field ("NSLinguisticTagSchemeTokenType")]
+		Token,
+
+		[Field ("NSLinguisticTagSchemeLexicalClass")]
+		LexicalClass,
+
+		[Field ("NSLinguisticTagSchemeNameType")]
+		Name,
+
+		[Field ("NSLinguisticTagSchemeNameTypeOrLexicalClass")]
+		NameOrLexicalClass,
+
+		[Field ("NSLinguisticTagSchemeLemma")]
+		Lemma,
+
+		[Field ("NSLinguisticTagSchemeLanguage")]
+		Language,
+
+		[Field ("NSLinguisticTagSchemeScript")]
+		Script,
+	}
+
+#if !XAMCORE_4_0
+	public enum NSLinguisticTagUnit {
+#else
+	public enum NSLinguisticTag {
+#endif
+		[Field ("NSLinguisticTagWord")]
+		Word,
+
+		[Field ("NSLinguisticTagPunctuation")]
+ 		Punctuation,
+
+		[Field ("NSLinguisticTagWhitespace")]
+ 		Whitespace,
+
+		[Field ("NSLinguisticTagOther")]
+ 		Other,
+
+		[Field ("NSLinguisticTagNoun")]
+		Noun,
+
+		[Field ("NSLinguisticTagVerb")]
+		Verb,
+
+		[Field ("NSLinguisticTagAdjective")]
+		Adjective,
+
+		[Field ("NSLinguisticTagAdverb")]
+		Adverb,
+
+		[Field ("NSLinguisticTagPronoun")]
+		Pronoun,
+
+		[Field ("NSLinguisticTagDeterminer")]
+		Determiner,
+
+		[Field ("NSLinguisticTagParticle")]
+		Particle,
+
+		[Field ("NSLinguisticTagPreposition")]
+		Preposition,
+
+		[Field ("NSLinguisticTagNumber")]
+		Number,
+
+		[Field ("NSLinguisticTagConjunction")]
+		Conjunction,
+
+		[Field ("NSLinguisticTagInterjection")]
+		Interjection,
+
+		[Field ("NSLinguisticTagClassifier")]
+		Classifier,
+
+		[Field ("NSLinguisticTagIdiom")]
+		Idiom,
+
+		[Field ("NSLinguisticTagOtherWord")]
+		OtherWord,
+
+		[Field ("NSLinguisticTagSentenceTerminator")]
+		Terminator,
+
+		[Field ("NSLinguisticTagOpenQuote")]
+		OpenQuote,
+
+		[Field ("NSLinguisticTagCloseQuote")]
+		CloseQuote,
+
+		[Field ("NSLinguisticTagOpenParenthesis")]
+		OpenParenthesis,
+
+		[Field ("NSLinguisticTagCloseParenthesis")]
+		CloseParenthesis,
+
+		[Field ("NSLinguisticTagWordJoiner")]
+		WordJoiner,
+
+		[Field ("NSLinguisticTagDash")]
+		Dash,
+
+		[Field ("NSLinguisticTagOtherPunctuation")]
+		OtherPunctuation,
+
+		[Field ("NSLinguisticTagParagraphBreak")]
+		ParagraphBreak,
+
+		[Field ("NSLinguisticTagOtherWhitespace")]
+		OtherWhitespace,
+
+		[Field ("NSLinguisticTagPersonalName")]
+		PersonalName,
+
+		[Field ("NSLinguisticTagOrganizationName")]
+		OrganizationName,
+
+		[Field ("NSLinguisticTagPlaceName")]
+		PlaceName,
 	}
 }

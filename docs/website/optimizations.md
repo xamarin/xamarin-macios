@@ -304,3 +304,146 @@ methods with the `[BindingImpl (BindingImplOptions.Optimizable)]` attribute.
 It is always enabled by default (when the linker is enabled).
 
 The default behavior can be overridden by passing `--optimize=[+|-]dead-code-elimination` to mtouch/mmp.
+
+Optimize calls to BlockLiteral.SetupBlock
+-----------------------------------------
+
+The Xamarin.iOS/Mac runtime needs to know the block signature when creating an
+Objective-C block for a managed delegate. This might be a fairly expensive
+operation. This optimization will calculate the block signature at build time,
+and modify the IL to call a `SetupBlock` method that takes the signature as an
+argument instead. Doing this avoids the need for calculating the signature at
+runtime.
+
+Benchmarks show that this speeds up calling a block by a factor of 10 to 15.
+
+It will transform the following [code](https://github.com/xamarin/xamarin-macios/blob/018f7153441d9d7e0f58e2046f39eeb46f1ff480/src/UIKit/UIAccessibility.cs#L198-L211):
+
+```csharp
+public static void RequestGuidedAccessSession (bool enable, Action<bool> completionHandler)
+{
+	// ...
+	block_handler.SetupBlock (callback, completionHandler);
+	// ...
+}
+```
+
+into:
+
+```csharp
+public static void RequestGuidedAccessSession (bool enable, Action<bool> completionHandler)
+{
+	// ...
+	block_handler.SetupBlockImpl (callback, completionHandler, true, "v@?B");
+	// ...
+}
+```
+
+This optimization requires the linker to be enabled, and is only applied to
+methods with the `[BindingImpl (BindingImplOptions.Optimizable)]` attribute.
+
+It is enabled by default when using the static registrar (in Xamarin.iOS the
+static registrar is enabled by default for device builds, and in Xamarin.Mac
+the static registrar is enabled by default for release builds).
+
+The default behavior can be overridden by passing `--optimize=[+|-]blockliteral-setupblock` to mtouch/mmp.
+
+Optimize support for protocols
+------------------------------
+
+The Xamarin.iOS/Mac runtime needs information about how managed types
+implements Objective-C protocols. This information is stored in interfaces
+(and attributes on these interfaces), which is not a very efficient format,
+nor is it linker-friendly.
+
+One example is that these interfaces store information about all protocol
+members in a `[ProtocolMember]` attribute, which among other things contain
+references to the parameter types of those members. This means that simply
+implementing such an interface will make the linker preserve all types used in
+that interface, even for optional members the app never calls or implements.
+
+This optimization will make the static registrar store any required
+information in an efficient format that uses little memory that's easy and
+quick to find at runtime.
+
+It will also teach the linker that it does not necessarily need to preserve
+these interfaces, nor any of the related attributes.
+
+This optimization requires both the linker and the static registrar to be
+enabled.
+
+On Xamarin.iOS this optimization is enabled by default when both the linker
+and the static registrar are enabled.
+
+On Xamarin.Mac this optimization is never enabled by default, because
+Xamarin.Mac supports loading assemblies dynamically, and those assemblies
+might not have been known at build time (and thus not optimized).
+
+The default behavior can be overridden by passing `--optimize=-register-protocols` to mtouch/mmp.
+
+Remove the dynamic registrar
+----------------------------
+
+Both the Xamarin.iOS and the Xamarin.Mac runtime include support for
+[registering managed types](https://developer.xamarin.com/guides/ios/advanced_topics/registrar/)
+with the Objective-C runtime. It can either be done at build time or at
+runtime (or partially at build time and the rest at runtime), but if it's
+completely done at build time, it means the supporting code for doing it at
+runtime can be removed. This results in a significant decrease in app size, in
+particular for smaller apps such as extensions or watchOS apps.
+
+This optimization requires both the static registrar and the linker to be
+enabled.
+
+The linker will attempt to determine if it's safe to remove the dynamic
+registrar, and if so will try to remove it.
+
+Since Xamarin.Mac supports dynamically loading assemblies at runtime (which
+were not known at build time), it's impossible to determine at build time
+whether this is a safe optimization. This means that this optimization is
+never enabled by default for Xamarin.Mac apps.
+
+The default behavior can be overridden by passing `--optimize=[+|-]remove-dynamic-registrar` to mtouch/mmp.
+
+If the default is overridden to remove the dynamic registrar, the linker will
+emit warnings if it detects that it's not safe (but the dynamic registrar will
+still be removed).
+
+Inline Runtime.DynamicRegistrationSupported
+-------------------------------------------
+
+Inlines the value of Runtime.DynamicRegistrationSupported as determined at
+build time.
+
+If the dynamic registrar is removed (see the "Remove the dynamic registrar"
+optimization), this is a constant 'false' value, otherwise it's a constant
+'true' value.
+
+This optimization will change the following type of code:
+
+```csharp
+if (Runtime.DynamicRegistrationSupported) {
+	Console.WriteLine ("do something");
+} else {
+	throw new Exception ("dynamic registration is not supported");
+}
+```
+
+into the following when the dynamic registrar is removed:
+
+```csharp
+throw new Exception ("dynamic registration is not supported");
+```
+
+into the following when the dynamic registrar is not removed:
+
+```csharp
+Console.WriteLine ("do something");
+```
+
+This optimization requires the linker to be enabled, and is only applied to
+methods with the `[BindingImpl (BindingImplOptions.Optimizable)]` attribute.
+
+It is always enabled by default (when the linker is enabled).
+
+The default behavior can be overridden by passing `--optimize=[+|-]inline-dynamic-registration-supported` to mtouch/mmp.

@@ -20,6 +20,23 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 	[TestFixture]
 	public class KernelTest {
 
+		IMTLDevice device;
+
+		[TestFixtureSetUp]
+		public void Metal ()
+		{
+#if !MONOMAC
+			TestRuntime.AssertXcodeVersion (7, 0);
+#else
+			TestRuntime.AssertXcodeVersion (9, 0);
+#endif
+
+			device = MTLDevice.SystemDefault;
+			// some older hardware won't have a default
+			if (device == null || !MPSKernel.Supports (device))
+				Assert.Inconclusive ("Metal is not supported");
+		}
+
 		[Test]
 		public void RectNoClip ()
 		{

@@ -1,7 +1,7 @@
-﻿using XamCore.CoreText;
-using XamCore.Foundation;
+using CoreText;
+using Foundation;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 	public partial class NSTextStorage {
 		public NSTextStorage (string str, NSDictionary attributes) : base (str, attributes) {
 		}

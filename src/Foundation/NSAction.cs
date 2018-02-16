@@ -24,13 +24,9 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
-
-#if !XAMCORE_2_0
-	public delegate void NSAction ();
-#endif
+namespace Foundation {
 
 #if !COREBUILD
 	// Use this for synchronous operations
@@ -39,9 +35,9 @@ namespace XamCore.Foundation {
 		public const string SelectorName = "xamarinApplySelector";
 		public static readonly Selector Selector = new Selector (SelectorName);
 
-		readonly NSAction action;
+		readonly Action action;
 
-		public NSActionDispatcher (NSAction action)
+		public NSActionDispatcher (Action action)
 		{
 			if (action == null)
 				throw new ArgumentNullException ("action");
@@ -89,7 +85,6 @@ namespace XamCore.Foundation {
 		public const string SelectorName = "xamarinFireSelector:";
 		public static readonly Selector Selector = new Selector (SelectorName);
 
-#if XAMCORE_2_0
 		readonly Action<NSTimer> action;
 
 		public NSTimerActionDispatcher (Action<NSTimer> action)
@@ -107,48 +102,15 @@ namespace XamCore.Foundation {
 		{
 			action (timer);
 		}
-#else
-		readonly NSAction action;
-
-		public NSTimerActionDispatcher (NSAction action)
-		{
-			if (action == null)
-				throw new ArgumentNullException ("action");
-
-			this.action = action;
-			IsDirectBinding = false;
-		}
-
-		[Export (SelectorName)]
-		[Preserve (Conditional = true)]
-		public void Fire (NSTimer timer)
-		{
-			action ();
-		}
-#endif // XAMCORE_2_0
 	}
 
 	// Use this for asynchronous operations
 	[Register ("__MonoMac_NSAsyncActionDispatcher")]
 	internal class NSAsyncActionDispatcher : NSObject {
 		GCHandle gch;
-		NSAction action;
+		Action action;
 
-#if !MONOTOUCH && !XAMCORE_2_0
-		// This ctor is so that the runtime can create a new instance of this class
-		// if ObjC wants to call release on an instance we've already called Dispose on.
-		// Since we detach the handle from the managed instance when Dispose is called,
-		// there is no way we can get the existing managed instance (which has possibly 
-		// been freed anyway) when ObjC calls release (which ends up in NSObject.NativeRelease).
-		[Obsolete ("Do not use, this method is only used internally")]
-		public NSAsyncActionDispatcher (IntPtr handle)
-			: base (handle)
-		{
-			IsDirectBinding = false;
-		}
-#endif
-
-		public NSAsyncActionDispatcher (NSAction action)
+		public NSAsyncActionDispatcher (Action action)
 		{
 			this.action = action;
 			gch = GCHandle.Alloc (this);

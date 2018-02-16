@@ -1,10 +1,10 @@
 // Copyright 2011-2015 Xamarin Inc. All rights reserved.
 using System;
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.Security {
+namespace Security {
 
 	// this is a subset of OSStatus -> SInt32 -> signed int - see CoreFoundation.framework/Headers/CFBase.h
 	// values are defined in Security.framework/Headers/SecBase.h 
@@ -454,7 +454,8 @@ namespace XamCore.Security {
 		Skip
 	}
 
-	[iOS (9,0)][NoMac]
+	[iOS (9,0)]
+	[Mac (10,12)]
 	public enum SecTokenID {
 		None = 0,
 
@@ -464,7 +465,7 @@ namespace XamCore.Security {
 
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 	[Native]
-	public enum SecKeyOperationType : nint {
+	public enum SecKeyOperationType : long {
 		Sign = 0,
 		Verify = 1,
 		Encrypt = 2,

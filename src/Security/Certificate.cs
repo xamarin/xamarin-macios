@@ -35,11 +35,11 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
+using ObjCRuntime;
+using CoreFoundation;
+using Foundation;
 
-namespace XamCore.Security {
+namespace Security {
 
 	public partial class SecCertificate : INativeObject, IDisposable {
 		internal IntPtr handle;
@@ -543,6 +543,47 @@ namespace XamCore.Security {
 				publicKey = privateKey = null;
 			return res;
 		}
+
+		[Advice ("On iOS this method applies the attributes to both public and private key. To apply different attributes to each key, use 'GenerateKeyPair (SecKeyType, int, SecPublicPrivateKeyAttrs, SecPublicPrivateKeyAttrs, out SecKey, out SecKey)' instead.")]
+		public static SecStatusCode GenerateKeyPair (SecKeyType type, int keySizeInBits, SecPublicPrivateKeyAttrs publicAndPrivateKeyAttrs, out SecKey publicKey, out SecKey privateKey)
+		{
+#if !MONOMAC
+			// iOS (+friends) need to pass the strong dictionary for public and private key attributes to specific keys
+			// instead of merging them with other attributes.
+			return GenerateKeyPair (type, keySizeInBits, publicAndPrivateKeyAttrs, publicAndPrivateKeyAttrs, out publicKey, out privateKey);
+#else
+			if (type == SecKeyType.Invalid)
+				throw new ArgumentException ("invalid 'SecKeyType'", nameof (type));
+
+			NSMutableDictionary dic;
+			if (publicAndPrivateKeyAttrs != null)
+				dic = new NSMutableDictionary (publicAndPrivateKeyAttrs.GetDictionary ());
+			else
+				dic = new NSMutableDictionary ();
+			dic.LowlevelSetObject (type.GetConstant (), SecAttributeKey.Type);
+			dic.LowlevelSetObject (new NSNumber (keySizeInBits), SecAttributeKey.KeySizeInBits);
+			return GenerateKeyPair (dic, out publicKey, out privateKey);
+#endif
+		}
+#if !MONOMAC
+		public static SecStatusCode GenerateKeyPair (SecKeyType type, int keySizeInBits, SecPublicPrivateKeyAttrs publicKeyAttrs, SecPublicPrivateKeyAttrs privateKeyAttrs, out SecKey publicKey, out SecKey privateKey)
+		{
+			if (type == SecKeyType.Invalid)
+				throw new ArgumentException ("invalid 'SecKeyType'", nameof (type));
+
+			using (var dic = new NSMutableDictionary ()) {
+				dic.LowlevelSetObject (type.GetConstant (), SecAttributeKey.Type);
+				using (var ksib = new NSNumber (keySizeInBits)) {
+					dic.LowlevelSetObject (ksib, SecAttributeKey.KeySizeInBits);
+					if (publicKeyAttrs != null)
+						dic.LowlevelSetObject (publicKeyAttrs.GetDictionary (), SecAttributeKey.PublicKeyAttrs);
+					if (privateKeyAttrs != null)
+						dic.LowlevelSetObject (privateKeyAttrs.GetDictionary (), SecAttributeKey.PrivateKeyAttrs);
+					return GenerateKeyPair (dic, out publicKey, out privateKey);
+				}
+			}
+		}
+#endif
 			
 		[DllImport (Constants.SecurityLibrary)]
 		extern static /* size_t */ nint SecKeyGetBlockSize (IntPtr handle);

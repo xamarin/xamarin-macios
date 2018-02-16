@@ -11,11 +11,11 @@
 #if IOS
 
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
+using ObjCRuntime;
+using CoreGraphics;
+using Foundation;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	public partial class UIWindow {
 #if !XAMCORE_2_0
 		// we already have a UIWindowLevel static class for the constants

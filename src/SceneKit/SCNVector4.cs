@@ -39,7 +39,7 @@ using pfloat = System.nfloat;
 using pfloat = System.Single;
 #endif
 
-namespace XamCore.SceneKit
+namespace SceneKit
 {
     /// <summary>Represents a 4D vector using four single-precision floating-point numbers.</summary>
     /// <remarks>

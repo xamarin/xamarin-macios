@@ -10,26 +10,26 @@
 #if XAMCORE_2_0 // The Intents framework uses generics which is only supported in Unified
 
 using System;
-using XamCore.CoreGraphics;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
-using XamCore.CoreLocation;
-using XamCore.Contacts;
-using XamCore.EventKit;
+using CoreGraphics;
+using Foundation;
+using ObjCRuntime;
+using CoreLocation;
+using Contacts;
+using EventKit;
 
 #if MONOMAC
-using UIImage = XamCore.Foundation.NSObject;
+using UIImage = Foundation.NSObject;
 #else
-using XamCore.UIKit;
+using UIKit;
 #endif
 
-namespace XamCore.Intents {
+namespace Intents {
 
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Native]
-	public enum INBookRestaurantReservationIntentCode : nint {
+	public enum INBookRestaurantReservationIntentCode : long {
 		Success = 0,
 		Denied,
 		Failure,
@@ -43,7 +43,7 @@ namespace XamCore.Intents {
 	[Watch (3, 2)]
 	[Native]
 	[Flags]
-	public enum INCallCapabilityOptions : nuint {
+	public enum INCallCapabilityOptions : ulong {
 		AudioCall = (1 << 0),
 		VideoCall = (1 << 1)
 	}
@@ -52,7 +52,7 @@ namespace XamCore.Intents {
 	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Native]
-	public enum INCallRecordType : nint {
+	public enum INCallRecordType : long {
 		Unknown = 0,
 		Outgoing,
 		Missed,
@@ -67,7 +67,7 @@ namespace XamCore.Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INCancelWorkoutIntentResponseCode : nint {
+	public enum INCancelWorkoutIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		[Deprecated (PlatformName.iOS, 11, 0, message:"Use 'HandleInApp' instead.")] // yup just iOS
@@ -84,7 +84,7 @@ namespace XamCore.Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INCarAirCirculationMode bound
 	[Native]
-	public enum INCarAirCirculationMode : nint {
+	public enum INCarAirCirculationMode : long {
 		Unknown = 0,
 		FreshAir,
 		RecirculateAir
@@ -93,7 +93,7 @@ namespace XamCore.Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INCarAudioSource bound
 	[Native]
-	public enum INCarAudioSource : nint {
+	public enum INCarAudioSource : long {
 		Unknown = 0,
 		CarPlay,
 		iPod,
@@ -109,7 +109,7 @@ namespace XamCore.Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INCarDefroster bound
 	[Native]
-	public enum INCarDefroster : nint {
+	public enum INCarDefroster : long {
 		Unknown = 0,
 		Front,
 		Rear,
@@ -119,7 +119,7 @@ namespace XamCore.Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INCarSeat bound
 	[Native]
-	public enum INCarSeat : nint {
+	public enum INCarSeat : long {
 		Unknown = 0,
 		Driver,
 		Passenger,
@@ -139,7 +139,7 @@ namespace XamCore.Intents {
 	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Native]
-	public enum INConditionalOperator : nint {
+	public enum INConditionalOperator : long {
 		All = 0,
 		Any,
 		None
@@ -149,7 +149,7 @@ namespace XamCore.Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INEndWorkoutIntentResponseCode : nint {
+	public enum INEndWorkoutIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		[Deprecated (PlatformName.iOS, 11, 0, message:"Use 'HandleInApp' instead.")] // yup just iOS
@@ -166,7 +166,7 @@ namespace XamCore.Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INGetAvailableRestaurantReservationBookingDefaultsIntentResponseCode : nint {
+	public enum INGetAvailableRestaurantReservationBookingDefaultsIntentResponseCode : long {
 		Success,
 		Failure,
 		Unspecified
@@ -175,7 +175,7 @@ namespace XamCore.Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INGetAvailableRestaurantReservationBookingsIntentCode : nint {
+	public enum INGetAvailableRestaurantReservationBookingsIntentCode : long {
 		Success,
 		Failure,
 		FailureRequestUnsatisfiable,
@@ -185,7 +185,7 @@ namespace XamCore.Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INGetRestaurantGuestIntentResponseCode : nint {
+	public enum INGetRestaurantGuestIntentResponseCode : long {
 		Success,
 		Failure
 	}
@@ -194,7 +194,7 @@ namespace XamCore.Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INGetRideStatusIntentResponseCode : nint {
+	public enum INGetRideStatusIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		[Deprecated (PlatformName.iOS, 11, 0)]
@@ -210,7 +210,7 @@ namespace XamCore.Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INGetUserCurrentRestaurantReservationBookingsIntentResponseCode : nint {
+	public enum INGetUserCurrentRestaurantReservationBookingsIntentResponseCode : long {
 		Success,
 		Failure,
 		FailureRequestUnsatisfiable,
@@ -222,7 +222,7 @@ namespace XamCore.Intents {
 	[Watch (3, 2)]
 	[Native]
 	[ErrorDomain ("INIntentErrorDomain")]
-	public enum INIntentErrorCode : nint {
+	public enum INIntentErrorCode : long {
 		InteractionOperationNotSupported = 1900,
 		DonatingInteraction = 1901,
 		DeletingAllInteractions = 1902,
@@ -242,7 +242,7 @@ namespace XamCore.Intents {
 	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Native]
-	public enum INIntentHandlingStatus : nint {
+	public enum INIntentHandlingStatus : long {
 		Unspecified = 0,
 		Ready,
 		InProgress,
@@ -255,7 +255,7 @@ namespace XamCore.Intents {
 	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Native]
-	public enum INInteractionDirection : nint {
+	public enum INInteractionDirection : long {
 		Unspecified = 0,
 		Outgoing,
 		Incoming
@@ -265,7 +265,7 @@ namespace XamCore.Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INListRideOptionsIntentResponseCode : nint {
+	public enum INListRideOptionsIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		[Deprecated (PlatformName.iOS, 11, 0)]
@@ -282,11 +282,15 @@ namespace XamCore.Intents {
 		FailurePreviousRideNeedsFeedback,
 	}
 
-	[iOS (10, 0)]
+#if XAMCORE_4_0 // TODO: Double check this if XAMCORE_4_0 happens, its been 2 years (2018) and still not usable in macOS
+	[NoMac]
+#else
 	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+#endif
+	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[Native]
-	public enum INMessageAttribute : nint {
+	public enum INMessageAttribute : long {
 		Unknown = 0,
 		Read,
 		Unread,
@@ -301,7 +305,7 @@ namespace XamCore.Intents {
 	[Watch (3, 2)]
 	[Native]
 	[Flags]
-	public enum INMessageAttributeOptions : nuint {
+	public enum INMessageAttributeOptions : ulong {
 		Read = (1 << 0),
 		Unread = (1 << 1),
 		Flagged = (1 << 2),
@@ -314,7 +318,7 @@ namespace XamCore.Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INPauseWorkoutIntentResponseCode : nint {
+	public enum INPauseWorkoutIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'HandleInApp' instead.")] // yup just iOS
@@ -332,7 +336,7 @@ namespace XamCore.Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INPaymentMethodType : nint {
+	public enum INPaymentMethodType : long {
 		Unknown = 0,
 		Checking,
 		Savings,
@@ -348,7 +352,7 @@ namespace XamCore.Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INPaymentStatus : nint {
+	public enum INPaymentStatus : long {
 		Unknown = 0,
 		Pending,
 		Completed,
@@ -358,7 +362,7 @@ namespace XamCore.Intents {
 	}
 
 	[Native]
-	public enum INPersonSuggestionType : nint {
+	public enum INPersonSuggestionType : long {
 		SocialProfile = 1,
 		InstantMessageAddress
 	}
@@ -368,7 +372,7 @@ namespace XamCore.Intents {
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INPhotoAttributeOptions bound
 	[Native]
 	[Flags]
-	public enum INPhotoAttributeOptions : nuint {
+	public enum INPhotoAttributeOptions : ulong {
 		Photo = (1 << 0),
 		Video = (1 << 1),
 		Gif = (1 << 2),
@@ -398,7 +402,7 @@ namespace XamCore.Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INRadioType bound
 	[Native]
-	public enum INRadioType : nint {
+	public enum INRadioType : long {
 		Unknown = 0,
 		AM,
 		FM,
@@ -410,7 +414,7 @@ namespace XamCore.Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INRelativeReference : nint {
+	public enum INRelativeReference : long {
 		Unknown = 0,
 		Next,
 		Previous
@@ -419,7 +423,7 @@ namespace XamCore.Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INRelativeSetting : nint {
+	public enum INRelativeSetting : long {
 		Unknown = 0,
 		Lowest,
 		Lower,
@@ -431,7 +435,7 @@ namespace XamCore.Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INRequestPaymentIntentResponseCode : nint {
+	public enum INRequestPaymentIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		InProgress,
@@ -453,7 +457,7 @@ namespace XamCore.Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INRequestRideIntentResponseCode : nint {
+	public enum INRequestRideIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		[Deprecated (PlatformName.iOS, 11, 0)]
@@ -471,7 +475,7 @@ namespace XamCore.Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INRestaurantReservationUserBookingStatus : nuint {
+	public enum INRestaurantReservationUserBookingStatus : ulong {
 		Pending,
 		Confirmed,
 		Denied
@@ -481,7 +485,7 @@ namespace XamCore.Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INResumeWorkoutIntentResponseCode : nint {
+	public enum INResumeWorkoutIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'HandleInApp' instead.")] // yup just iOS
@@ -499,7 +503,7 @@ namespace XamCore.Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INRidePhase : nint {
+	public enum INRidePhase : long {
 		Unknown = 0,
 		Received,
 		Confirmed,
@@ -513,7 +517,7 @@ namespace XamCore.Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Native]
-	public enum INSaveProfileInCarIntentResponseCode : nint {
+	public enum INSaveProfileInCarIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		InProgress,
@@ -526,7 +530,7 @@ namespace XamCore.Intents {
 	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Native]
-	public enum INSearchCallHistoryIntentResponseCode : nint {
+	public enum INSearchCallHistoryIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		ContinueInApp,
@@ -545,7 +549,7 @@ namespace XamCore.Intents {
 	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Native]
-	public enum INSearchForMessagesIntentResponseCode : nint {
+	public enum INSearchForMessagesIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		InProgress,
@@ -561,7 +565,7 @@ namespace XamCore.Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INSearchForPhotosIntentResponseCode : nint {
+	public enum INSearchForPhotosIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		ContinueInApp,
@@ -576,7 +580,7 @@ namespace XamCore.Intents {
 	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Native]
-	public enum INSendMessageIntentResponseCode : nint {
+	public enum INSendMessageIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		InProgress,
@@ -590,7 +594,7 @@ namespace XamCore.Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INSendPaymentIntentResponseCode : nint {
+	public enum INSendPaymentIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		InProgress,
@@ -615,7 +619,7 @@ namespace XamCore.Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Native]
-	public enum INSetAudioSourceInCarIntentResponseCode : nint {
+	public enum INSetAudioSourceInCarIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		InProgress,
@@ -628,7 +632,7 @@ namespace XamCore.Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Native]
-	public enum INSetClimateSettingsInCarIntentResponseCode : nint {
+	public enum INSetClimateSettingsInCarIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		InProgress,
@@ -641,7 +645,7 @@ namespace XamCore.Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Native]
-	public enum INSetDefrosterSettingsInCarIntentResponseCode : nint {
+	public enum INSetDefrosterSettingsInCarIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		InProgress,
@@ -654,7 +658,7 @@ namespace XamCore.Intents {
 	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Native]
-	public enum INSetMessageAttributeIntentResponseCode : nint {
+	public enum INSetMessageAttributeIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		InProgress,
@@ -669,7 +673,7 @@ namespace XamCore.Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Native]
-	public enum INSetProfileInCarIntentResponseCode : nint {
+	public enum INSetProfileInCarIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		InProgress,
@@ -682,7 +686,7 @@ namespace XamCore.Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Native]
-	public enum INSetRadioStationIntentResponseCode : nint {
+	public enum INSetRadioStationIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		InProgress,
@@ -696,7 +700,7 @@ namespace XamCore.Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Native]
-	public enum INSetSeatSettingsInCarIntentResponseCode : nint {
+	public enum INSetSeatSettingsInCarIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		InProgress,
@@ -709,7 +713,7 @@ namespace XamCore.Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INSiriAuthorizationStatus : nint {
+	public enum INSiriAuthorizationStatus : long {
 		NotDetermined = 0,
 		Restricted,
 		Denied,
@@ -720,7 +724,7 @@ namespace XamCore.Intents {
 	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Native]
-	public enum INStartAudioCallIntentResponseCode : nint {
+	public enum INStartAudioCallIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		ContinueInApp,
@@ -742,7 +746,7 @@ namespace XamCore.Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INStartPhotoPlaybackIntentResponseCode : nint {
+	public enum INStartPhotoPlaybackIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		ContinueInApp,
@@ -756,7 +760,7 @@ namespace XamCore.Intents {
 	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Native]
-	public enum INStartVideoCallIntentResponseCode : nint {
+	public enum INStartVideoCallIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		ContinueInApp,
@@ -778,7 +782,7 @@ namespace XamCore.Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INStartWorkoutIntentResponseCode : nint {
+	public enum INStartWorkoutIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		ContinueInApp,
@@ -796,7 +800,7 @@ namespace XamCore.Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Native]
-	public enum INVocabularyStringType : nint {
+	public enum INVocabularyStringType : long {
 		ContactName = 1,
 		ContactGroupName,
 		PhotoTag = 100,
@@ -819,7 +823,7 @@ namespace XamCore.Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INWorkoutGoalUnitType bound
 	[Native]
-	public enum INWorkoutGoalUnitType : nint {
+	public enum INWorkoutGoalUnitType : long {
 		Unknown = 0,
 		Inch,
 		Meter,
@@ -837,7 +841,7 @@ namespace XamCore.Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INWorkoutLocationType bound
 	[Native]
-	public enum INWorkoutLocationType : nint {
+	public enum INWorkoutLocationType : long {
 		Unknown = 0,
 		Outdoor,
 		Indoor
@@ -847,7 +851,7 @@ namespace XamCore.Intents {
 	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[Native]
-	public enum INPersonHandleType : nint {
+	public enum INPersonHandleType : long {
 		Unknown = 0,
 		EmailAddress,
 		PhoneNumber
@@ -857,7 +861,7 @@ namespace XamCore.Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INAccountType : nint {
+	public enum INAccountType : long {
 		Unknown = 0,
 		Checking,
 		Credit,
@@ -872,7 +876,7 @@ namespace XamCore.Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INActivateCarSignalIntentResponseCode : nint {
+	public enum INActivateCarSignalIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		InProgress,
@@ -885,7 +889,7 @@ namespace XamCore.Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INAmountType : nint {
+	public enum INAmountType : long {
 		Unknown = 0,
 		MinimumDue,
 		AmountDue,
@@ -902,7 +906,7 @@ namespace XamCore.Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INBillType : nint {
+	public enum INBillType : long {
 		Unknown = 0,
 		AutoInsurance,
 		Cable,
@@ -933,7 +937,7 @@ namespace XamCore.Intents {
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
 	[Flags]
-	public enum INCarSignalOptions : nuint {
+	public enum INCarSignalOptions : ulong {
 		Audible = (1 << 0),
 		Visible = (1 << 1),
 	}
@@ -942,7 +946,7 @@ namespace XamCore.Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INGetCarLockStatusIntentResponseCode : nint {
+	public enum INGetCarLockStatusIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		InProgress,
@@ -955,7 +959,7 @@ namespace XamCore.Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INGetCarPowerLevelStatusIntentResponseCode : nint {
+	public enum INGetCarPowerLevelStatusIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		InProgress,
@@ -968,7 +972,7 @@ namespace XamCore.Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INPayBillIntentResponseCode : nint {
+	public enum INPayBillIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		InProgress,
@@ -983,7 +987,7 @@ namespace XamCore.Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INSearchForBillsIntentResponseCode : nint {
+	public enum INSearchForBillsIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		InProgress,
@@ -998,7 +1002,7 @@ namespace XamCore.Intents {
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Native]
-	public enum INSetCarLockStatusIntentResponseCode : nint {
+	public enum INSetCarLockStatusIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		InProgress,
@@ -1009,7 +1013,7 @@ namespace XamCore.Intents {
 
 	[Watch (4,0), NoMac, iOS (11,0)]
 	[Native]
-	public enum INAddTasksIntentResponseCode : nint {
+	public enum INAddTasksIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		InProgress,
@@ -1020,7 +1024,7 @@ namespace XamCore.Intents {
 
 	[Watch (4,0), NoMac, iOS (11,0)]
 	[Native]
-	public enum INAppendToNoteIntentResponseCode : nint {
+	public enum INAppendToNoteIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		InProgress,
@@ -1032,7 +1036,7 @@ namespace XamCore.Intents {
 
 	[Watch (4,0), NoMac, iOS (11,0)]
 	[Native]
-	public enum INBalanceType : nint {
+	public enum INBalanceType : long {
 		Unknown = 0,
 		Money,
 		Points,
@@ -1041,7 +1045,7 @@ namespace XamCore.Intents {
 
 	[Watch (3,2), Mac (10,12, onlyOn64:true), iOS (10,0)]
 	[Native]
-	public enum INCallCapability : nint {
+	public enum INCallCapability : long {
 		Unknown = 0,
 		AudioCall,
 		VideoCall,
@@ -1049,7 +1053,7 @@ namespace XamCore.Intents {
 
 	[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
 	[Native]
-	public enum INCallDestinationType : nint {
+	public enum INCallDestinationType : long {
 		Unknown = 0,
 		Normal,
 		Emergency,
@@ -1060,7 +1064,7 @@ namespace XamCore.Intents {
 	[Watch (3,2), Mac (10,12, onlyOn64:true), iOS (10,0)]
 	[Native]
 	[Flags]
-	public enum INCallRecordTypeOptions : nuint {
+	public enum INCallRecordTypeOptions : ulong {
 		Outgoing = (1 << 0),
 		Missed = (1 << 1),
 		Received = (1 << 2),
@@ -1070,7 +1074,7 @@ namespace XamCore.Intents {
 
 	[NoWatch, NoMac, iOS (11,0)]
 	[Native]
-	public enum INCancelRideIntentResponseCode : nint {
+	public enum INCancelRideIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		Success,
@@ -1079,18 +1083,7 @@ namespace XamCore.Intents {
 
 	[Watch (4,0), NoMac, iOS (11,0)]
 	[Native]
-	public enum INCreateNoteIntentResponseCode : nint {
-		Unspecified = 0,
-		Ready,
-		InProgress,
-		Success,
-		Failure,
-		FailureRequiringAppLaunch,
-	}
-
-	[Watch (4,0), NoMac, iOS (11,0)]
-	[Native]
-	public enum INCreateTaskListIntentResponseCode : nint {
+	public enum INCreateNoteIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		InProgress,
@@ -1101,7 +1094,18 @@ namespace XamCore.Intents {
 
 	[Watch (4,0), NoMac, iOS (11,0)]
 	[Native]
-	public enum INDateSearchType : nint {
+	public enum INCreateTaskListIntentResponseCode : long {
+		Unspecified = 0,
+		Ready,
+		InProgress,
+		Success,
+		Failure,
+		FailureRequiringAppLaunch,
+	}
+
+	[Watch (4,0), NoMac, iOS (11,0)]
+	[Native]
+	public enum INDateSearchType : long {
 		Unknown = 0,
 		ByDueDate,
 		ByModifiedDate,
@@ -1110,7 +1114,7 @@ namespace XamCore.Intents {
 
 	[Watch (4,0), NoMac, iOS (11,0)]
 	[Native]
-	public enum INGetVisualCodeIntentResponseCode : nint {
+	public enum INGetVisualCodeIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		ContinueInApp,
@@ -1123,14 +1127,14 @@ namespace XamCore.Intents {
 
 	[Watch (4,0), NoMac, iOS (11,0)]
 	[Native]
-	public enum INLocationSearchType : nint {
+	public enum INLocationSearchType : long {
 		Unknown = 0,
 		ByLocationTrigger,
 	}
 
 	[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
 	[Native]
-	public enum INMessageType : nint {
+	public enum INMessageType : long {
 		Unspecified = 0,
 		Text,
 		Audio,
@@ -1154,7 +1158,7 @@ namespace XamCore.Intents {
 
 	[Watch (4,0), NoMac, iOS (11,0)]
 	[Native]
-	public enum INNoteContentType : nint {
+	public enum INNoteContentType : long {
 		Unknown = 0,
 		Text,
 		Image,
@@ -1162,7 +1166,7 @@ namespace XamCore.Intents {
 
 	[Watch (4,0), NoMac, iOS (11,0)]
 	[Native]
-	public enum INNotebookItemType : nint {
+	public enum INNotebookItemType : long {
 		Unknown = 0,
 		Note,
 		TaskList,
@@ -1171,7 +1175,7 @@ namespace XamCore.Intents {
 
 	[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
 	[Native]
-	public enum INRecurrenceFrequency : nint {
+	public enum INRecurrenceFrequency : long {
 		Unknown = 0,
 		Minute,
 		Hourly,
@@ -1183,7 +1187,7 @@ namespace XamCore.Intents {
 
 	[Watch (4,0), NoMac, iOS (11,0)]
 	[Native]
-	public enum INRequestPaymentCurrencyAmountUnsupportedReason : nint {
+	public enum INRequestPaymentCurrencyAmountUnsupportedReason : long {
 		AmountBelowMinimum = 1,
 		AmountAboveMaximum,
 		CurrencyUnsupported,
@@ -1191,7 +1195,7 @@ namespace XamCore.Intents {
 
 	[Watch (4,0), NoMac, iOS (11,0)]
 	[Native]
-	public enum INRequestPaymentPayerUnsupportedReason : nint {
+	public enum INRequestPaymentPayerUnsupportedReason : long {
 		CredentialsUnverified = 1,
 		NoAccount,
 		[Watch (4,1), iOS (11,1)]
@@ -1200,14 +1204,14 @@ namespace XamCore.Intents {
 
 	[Watch (4,0), NoMac, iOS (11,0)]
 	[Native]
-	public enum INRideFeedbackTypeOptions : nuint {
+	public enum INRideFeedbackTypeOptions : ulong {
 		Rate = (1 << 0),
 		Tip = (1 << 1),
 	}
 
 	[Watch (4,0), NoMac, iOS (11,0)]
 	[Native]
-	public enum INSearchForAccountsIntentResponseCode : nint {
+	public enum INSearchForAccountsIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		InProgress,
@@ -1220,7 +1224,7 @@ namespace XamCore.Intents {
 
 	[Watch (4,0), NoMac, iOS (11,0)]
 	[Native]
-	public enum INSearchForNotebookItemsIntentResponseCode : nint {
+	public enum INSearchForNotebookItemsIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		InProgress,
@@ -1231,7 +1235,7 @@ namespace XamCore.Intents {
 
 	[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
 	[Native]
-	public enum INSendMessageRecipientUnsupportedReason : nint {
+	public enum INSendMessageRecipientUnsupportedReason : long {
 		NoAccount = 1,
 		Offline,
 		MessagingServiceNotEnabledForRecipient,
@@ -1239,7 +1243,7 @@ namespace XamCore.Intents {
 
 	[Watch (4,0), NoMac, iOS (11,0)]
 	[Native]
-	public enum INSendPaymentCurrencyAmountUnsupportedReason : nint {
+	public enum INSendPaymentCurrencyAmountUnsupportedReason : long {
 		AmountBelowMinimum = 1,
 		AmountAboveMaximum,
 		CurrencyUnsupported,
@@ -1247,7 +1251,7 @@ namespace XamCore.Intents {
 
 	[Watch (4,0), NoMac, iOS (11,0)]
 	[Native]
-	public enum INSendPaymentPayeeUnsupportedReason : nint {
+	public enum INSendPaymentPayeeUnsupportedReason : long {
 		CredentialsUnverified = 1,
 		InsufficientFunds,
 		NoAccount,
@@ -1257,7 +1261,7 @@ namespace XamCore.Intents {
 
 	[NoWatch, NoMac, iOS (11,0)]
 	[Native]
-	public enum INSendRideFeedbackIntentResponseCode : nint {
+	public enum INSendRideFeedbackIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		Success,
@@ -1266,7 +1270,7 @@ namespace XamCore.Intents {
 
 	[Watch (4,0), NoMac, iOS (11,0)]
 	[Native]
-	public enum INSetTaskAttributeIntentResponseCode : nint {
+	public enum INSetTaskAttributeIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		InProgress,
@@ -1277,7 +1281,7 @@ namespace XamCore.Intents {
 
 	[Watch (4,0), NoMac, iOS (11,0)]
 	[Native]
-	public enum INSortType : nint {
+	public enum INSortType : long {
 		Unknown = 0,
 		AsIs,
 		ByDate,
@@ -1285,7 +1289,7 @@ namespace XamCore.Intents {
 
 	[Watch (4,0), NoMac, iOS (11,0)]
 	[Native]
-	public enum INSpatialEvent : nint {
+	public enum INSpatialEvent : long {
 		Unknown = 0,
 		Arrive,
 		Depart,
@@ -1293,7 +1297,7 @@ namespace XamCore.Intents {
 
 	[Watch (4,0), NoMac, iOS (11,0)]
 	[Native]
-	public enum INTaskStatus : nint {
+	public enum INTaskStatus : long {
 		Unknown = 0,
 		NotCompleted,
 		Completed,
@@ -1301,7 +1305,7 @@ namespace XamCore.Intents {
 
 	[Watch (4,0), NoMac, iOS (11,0)]
 	[Native]
-	public enum INTaskType : nint {
+	public enum INTaskType : long {
 		Unknown = 0,
 		NotCompletable,
 		Completable,
@@ -1309,7 +1313,7 @@ namespace XamCore.Intents {
 
 	[Watch (4,0), NoMac, iOS (11,0)]
 	[Native]
-	public enum INTransferMoneyIntentResponseCode : nint {
+	public enum INTransferMoneyIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		InProgress,
@@ -1322,7 +1326,7 @@ namespace XamCore.Intents {
 
 	[Watch (4,0), NoMac, iOS (11,0)]
 	[Native]
-	public enum INVisualCodeType : nint {
+	public enum INVisualCodeType : long {
 		Unknown = 0,
 		Contact,
 		RequestPayment,
@@ -1598,11 +1602,14 @@ namespace XamCore.Intents {
 	[Unavailable (PlatformName.WatchOS)]
 	[BaseType (typeof (INIntent))]
 	interface INBookRestaurantReservationIntent : NSCopying {
-
 		[iOS (11,0)]
 		[Export ("initWithRestaurant:bookingDateComponents:partySize:bookingIdentifier:guest:selectedOffer:guestProvidedSpecialRequestText:")]
+#if XAMCORE_4_0
 		IntPtr Constructor (INRestaurant restaurant, NSDateComponents bookingDateComponents, nuint partySize, [NullAllowed] string bookingIdentifier, [NullAllowed] INRestaurantGuest guest, [NullAllowed] INRestaurantOffer selectedOffer, [NullAllowed] string guestProvidedSpecialRequestText);
-
+#else
+		// This is correctly nuint but a bug in PMCS generated incorrect code which has shipped.
+		IntPtr Constructor (INRestaurant restaurant, NSDateComponents bookingDateComponents, ulong partySize, [NullAllowed] string bookingIdentifier, [NullAllowed] INRestaurantGuest guest, [NullAllowed] INRestaurantOffer selectedOffer, [NullAllowed] string guestProvidedSpecialRequestText);
+#endif
 		[Export ("restaurant", ArgumentSemantic.Copy)]
 		INRestaurant Restaurant { get; set; }
 
@@ -2140,8 +2147,12 @@ namespace XamCore.Intents {
 		INDateComponentsRangeResolutionResult Unsupported { get; }
 	}
 
-	[iOS (10, 0)]
+#if XAMCORE_4_0 // TODO: Double check this if XAMCORE_4_0 happens, its been 2 years (2018) and still not usable in macOS
+	[NoMac]
+#else
 	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+#endif
+	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[Protocol]
 	interface INCallsDomainHandling : INStartAudioCallIntentHandling, INSearchCallHistoryIntentHandling
@@ -3074,8 +3085,12 @@ namespace XamCore.Intents {
 		INMessageAttributeOptionsResolutionResult Unsupported { get; }
 	}
 
-	[iOS (10, 0)]
+#if XAMCORE_4_0 // TODO: Double check this if XAMCORE_4_0 happens, its been 2 years (2018) and still not usable in macOS
+	[NoMac]
+#else
 	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+#endif
+	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]

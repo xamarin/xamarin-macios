@@ -1,7 +1,7 @@
 using System;
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.HomeKit {
+namespace HomeKit {
 
 	partial class HMSignificantTimeEvent {
 

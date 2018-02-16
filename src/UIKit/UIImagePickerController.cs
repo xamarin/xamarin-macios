@@ -10,14 +10,14 @@
 
 #if !TVOS && !WATCH // __TVOS_PROHIBITED, doesn't show up in WatchOS headers
 
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
-using XamCore.Photos;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
+using Photos;
 using System;
 using System.Drawing;
 
-namespace XamCore.UIKit {
+namespace UIKit {
 	public partial class UIImagePickerController {
 
 // the newer (4.1 fields) are defined in uikit.cs

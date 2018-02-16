@@ -319,6 +319,11 @@ namespace Xamarin.Tests
 				     string.Join ("\n\t", errors.Select ((v) => v.ToString ())));
 		}
 
+		public void AssertExecuteFailure (string message = null)
+		{
+			Assert.AreEqual (1, Execute (), message);
+		}
+
 		public abstract void CreateTemporaryApp (Profile profile, string appName = "testApp", string code = null, string extraArg = "", string extraCode = null, string usings = null, bool use_csc = false);
 
 		public static string CompileTestAppExecutable (string targetDirectory, string code = null, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp", string extraCode = null, string usings = null, bool use_csc = false)
@@ -358,6 +363,16 @@ namespace Xamarin.Tests
 			}
 
 			return assembly;
+		}
+
+		// The directory where the assemblies are located in the built app
+		public abstract string GetAppAssembliesDirectory ();
+
+		// The path to the platform assembly in the built app.
+		public string GetPlatformAssemblyInApp ()
+		{
+			var asm = Path.GetFileName (Configuration.GetBaseLibrary (Profile));
+			return Path.Combine (GetAppAssembliesDirectory (), asm);
 		}
 	}
 }

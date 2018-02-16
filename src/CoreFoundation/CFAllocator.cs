@@ -29,10 +29,10 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.CoreFoundation {	
+namespace CoreFoundation {	
 
 	// CFBase.h
 	public partial class CFAllocator : INativeObject, IDisposable 
@@ -156,7 +156,7 @@ namespace XamCore.CoreFoundation {
 	// Seems to be some sort of secret values
 	[Flags]
 	[Native]
-	public enum CFAllocatorFlags : nuint_compat_int
+	public enum CFAllocatorFlags : ulong
 	{
 		GCScannedMemory	= 0x200,
 		GCObjectMemory	= 0x400,

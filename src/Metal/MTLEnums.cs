@@ -11,14 +11,14 @@ using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
-using XamCore.Foundation;
-using XamCore.ModelIO;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ModelIO;
+using ObjCRuntime;
 
-namespace XamCore.Metal {
+namespace Metal {
 
 	[Native]
-	public enum MTLBlendFactor : nuint {
+	public enum MTLBlendFactor : ulong {
 		Zero = 0,
 		One = 1,
 		SourceColor = 2,
@@ -37,7 +37,7 @@ namespace XamCore.Metal {
 	}
 
 	[Native]
-	public enum MTLBlendOperation : nuint {
+	public enum MTLBlendOperation : ulong {
 		Add = 0,
 		Subtract = 1,
 		ReverseSubtract = 2,
@@ -47,7 +47,7 @@ namespace XamCore.Metal {
 
 	[Native]
 	[Flags]
-	public enum MTLColorWriteMask : nuint {
+	public enum MTLColorWriteMask : ulong {
 		None = 0,
 		Red   = 0x1 << 3,
 		Green = 0x1 << 2,
@@ -57,7 +57,7 @@ namespace XamCore.Metal {
 	}
 
 	[Native]
-	public enum MTLCommandBufferStatus : nuint {
+	public enum MTLCommandBufferStatus : ulong {
 		NotEnqueued,
 		Enqueued,
 		Committed,
@@ -68,7 +68,7 @@ namespace XamCore.Metal {
 
 	[Native]
 	[ErrorDomain ("MTLCommandBufferErrorDomain")]
-	public enum MTLCommandBufferError : nuint {
+	public enum MTLCommandBufferError : ulong {
 		None = 0,
 		Internal = 1,
 		Timeout = 2,
@@ -84,12 +84,12 @@ namespace XamCore.Metal {
 	}
 
 	[Native]
-	public enum MTLLoadAction : nuint {
+	public enum MTLLoadAction : ulong {
 		DontCare, Load, Clear
 	}
 
 	[Native]
-	public enum MTLStoreAction : nuint {
+	public enum MTLStoreAction : ulong {
 		DontCare, Store, MultisampleResolve,
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
 		StoreAndMultisampleResolve,
@@ -100,7 +100,7 @@ namespace XamCore.Metal {
 	}
 
 	[Native]
-	public enum MTLTextureType : nuint {
+	public enum MTLTextureType : ulong {
 		k1D = 0,
 		k1DArray = 1,
 		k2D = 2,
@@ -114,19 +114,19 @@ namespace XamCore.Metal {
 	}
 
 	[Native]
-	public enum MTLSamplerMinMagFilter : nuint {
+	public enum MTLSamplerMinMagFilter : ulong {
 		Nearest, Linear
 	}
 
 	[Native]
-	public enum MTLSamplerMipFilter : nuint {
+	public enum MTLSamplerMipFilter : ulong {
 		NotMipmapped,
 		Nearest,
 		Linear
 	}
 
 	[Native]
-	public enum MTLSamplerAddressMode : nuint {
+	public enum MTLSamplerAddressMode : ulong {
 		ClampToEdge = 0,
 #if MONOMAC
 		MirrorClampToEdge = 1,
@@ -140,7 +140,7 @@ namespace XamCore.Metal {
 	}
 
 	[Native]
-	public enum MTLVertexFormat : nuint {
+	public enum MTLVertexFormat : ulong {
 		Invalid = 0,
 		
 		UChar2 = 1,
@@ -222,7 +222,7 @@ namespace XamCore.Metal {
 
 	[Mac (10,11)]
 	[Native]
-	public enum MTLPixelFormat : nuint {
+	public enum MTLPixelFormat : ulong {
 		Invalid = 0,
 		A8Unorm = 1,
 		R8Unorm = 10,
@@ -372,7 +372,7 @@ namespace XamCore.Metal {
 	}
 
 	[Native]
-	public enum MTLFunctionType : nuint {
+	public enum MTLFunctionType : ulong {
 		Vertex = 1,
 		Fragment = 2,
 		Kernel = 3
@@ -380,7 +380,7 @@ namespace XamCore.Metal {
 
 	[Native]
 	[ErrorDomain ("MTLLibraryErrorDomain")]
-	public enum MTLLibraryError : nuint {
+	public enum MTLLibraryError : ulong {
 		Unsupported = 1,
 		Internal,
 		CompileFailure,
@@ -393,12 +393,12 @@ namespace XamCore.Metal {
 
 	[Native]
 	[ErrorDomain ("MTLRenderPipelineErrorDomain")]
-	public enum MTLRenderPipelineError : nuint {
+	public enum MTLRenderPipelineError : ulong {
 		Internal = 1, Unsupported, InvalidInput
 	}
 
 	[Native]
-	public enum MTLCompareFunction : nuint {
+	public enum MTLCompareFunction : ulong {
 		Never = 0,
 		Less = 1,
 		Equal = 2,
@@ -411,7 +411,7 @@ namespace XamCore.Metal {
 
 
 	[Native]
-	public enum MTLStencilOperation : nuint {
+	public enum MTLStencilOperation : ulong {
 		Keep = 0,
 		Zero = 1,
 		Replace = 2,
@@ -423,7 +423,7 @@ namespace XamCore.Metal {
 	}
 
 	[Native]
-	public enum MTLPrimitiveType : nuint {
+	public enum MTLPrimitiveType : ulong {
 		Point = 0,
 		Line = 1,
 		LineStrip = 2,
@@ -432,36 +432,36 @@ namespace XamCore.Metal {
 	}
 
 	[Native]
-	public enum MTLIndexType : nuint {
+	public enum MTLIndexType : ulong {
 		UInt16, UInt32
 	} 
 
 	[Native]
-	public enum MTLVisibilityResultMode : nuint {
+	public enum MTLVisibilityResultMode : ulong {
 		Disabled = 0,
 		Boolean = 1,
 		Counting = 2,
 	}
 
 	[Native]
-	public enum MTLCullMode : nuint {
+	public enum MTLCullMode : ulong {
 		None = 0,
 		Front = 1,
 		Back = 2
 	}
 
 	[Native]
-	public enum MTLWinding : nuint {
+	public enum MTLWinding : ulong {
 		Clockwise = 0, CounterClockwise = 1
 	}
 
 	[Native]
-	public enum MTLTriangleFillMode : nuint {
+	public enum MTLTriangleFillMode : ulong {
 		Fill, Lines
 	}
 
 	[Native]
-	public enum MTLPurgeableState : nuint {
+	public enum MTLPurgeableState : ulong {
 		KeepCurrent = 1,
 		NonVolatile = 2,
 		Volatile = 3,
@@ -469,14 +469,14 @@ namespace XamCore.Metal {
 	}
 
 	[Native]
-	public enum MTLCpuCacheMode : nuint {
+	public enum MTLCpuCacheMode : ulong {
 		DefaultCache, WriteCombined
 	}
 
 	[iOS (9,0)][Mac (10,11)]
 	[Native]
 	[Flags]
-	public enum MTLTextureUsage : nuint {
+	public enum MTLTextureUsage : ulong {
 		Unknown         = 0x0000,
 		ShaderRead      = 0x0001,
 		ShaderWrite     = 0x0002,
@@ -488,7 +488,7 @@ namespace XamCore.Metal {
 	[iOS (8,0)][Mac (10,11)]
 	[Native]
 	[Flags]
-	public enum MTLResourceOptions : nuint {
+	public enum MTLResourceOptions : ulong {
 		CpuCacheModeDefault = MTLCpuCacheMode.DefaultCache << 0,
 		CpuCacheModeWriteCombined = MTLCpuCacheMode.WriteCombined << 0,
 		
@@ -509,7 +509,7 @@ namespace XamCore.Metal {
 
 	// MTLVertexDescriptor.h
 	[Native]
-	public enum MTLVertexStepFunction : nuint {
+	public enum MTLVertexStepFunction : ulong {
 		Constant, PerVertex, PerInstance,
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]	
 		PerPatch = 3,
@@ -518,7 +518,7 @@ namespace XamCore.Metal {
 	}
 
 	[Native]
-	public enum MTLDataType : nuint {
+	public enum MTLDataType : ulong {
 		
 		None = 0,
 		
@@ -617,7 +617,7 @@ namespace XamCore.Metal {
 	}
 
 	[Native]
-	public enum MTLArgumentType : nuint {
+	public enum MTLArgumentType : ulong {
 		Buffer = 0,
 		ThreadgroupMemory= 1,
 		Texture = 2,
@@ -628,18 +628,18 @@ namespace XamCore.Metal {
 	}
 
 	[Native]
-	public enum MTLArgumentAccess : nuint {
+	public enum MTLArgumentAccess : ulong {
 		ReadOnly, ReadWrite, WriteOnly
 	}
 
 	[Native]
 	[Flags]
-	public enum MTLPipelineOption : nuint {
+	public enum MTLPipelineOption : ulong {
 		None, ArgumentInfo, BufferTypeInfo
 	}
 
 	[Native]
-	public enum MTLFeatureSet : nuint {
+	public enum MTLFeatureSet : ulong {
 		iOS_GPUFamily1_v1 = 0,
 		iOS_GPUFamily1_v2 = 2,
 		iOS_GPUFamily2_v1 = 1,
@@ -694,7 +694,7 @@ namespace XamCore.Metal {
 
 	[iOS (9,0)][Mac (10,11)]
 	[Native]
-	public enum MTLLanguageVersion : nuint {
+	public enum MTLLanguageVersion : ulong {
 #if !MONOMAC
 		v1_0 = (1 << 16),
 #endif
@@ -707,7 +707,7 @@ namespace XamCore.Metal {
 
 	[iOS (9,0)][Mac (10,11)]
 	[Native]
-	public enum MTLDepthClipMode : nuint {
+	public enum MTLDepthClipMode : ulong {
 		Clip = 0,
 		Clamp = 1
 	}
@@ -715,7 +715,7 @@ namespace XamCore.Metal {
 	[iOS (9,0)][Mac (10,11)]
 	[Native]
 	[Flags]
-	public enum MTLBlitOption : nuint {
+	public enum MTLBlitOption : ulong {
 		None = 0,
 		DepthFromDepthStencil = 1 << 0,
 		StencilFromDepthStencil = 1 << 1,
@@ -726,7 +726,7 @@ namespace XamCore.Metal {
 
 	[iOS (9,0)][Mac (10,11)]
 	[Native]
-	public enum MTLStorageMode : nuint {
+	public enum MTLStorageMode : ulong {
 		Shared = 0,
 #if MONOMAC
 		Managed = 1,
@@ -737,7 +737,7 @@ namespace XamCore.Metal {
 	}
 
 	[Native]
-	public enum MTLMultisampleDepthResolveFilter : nuint{
+	public enum MTLMultisampleDepthResolveFilter : ulong{
 		Sample0, Min, Max
 	}
 
@@ -746,7 +746,7 @@ namespace XamCore.Metal {
 #endif
 	[Mac (10,12)]
 	[Native]
-	public enum MTLSamplerBorderColor : nuint {
+	public enum MTLSamplerBorderColor : ulong {
 		TransparentBlack = 0,
 		OpaqueBlack = 1,
 		OpaqueWhite = 2
@@ -755,7 +755,7 @@ namespace XamCore.Metal {
 	[NoTV]
 	[NoiOS, Mac (10,11)]
 	[Native]
-	public enum MTLPrimitiveTopologyClass : nuint {
+	public enum MTLPrimitiveTopologyClass : ulong {
 		Unspecified = 0,
 		Point = 1,
 		Line = 2,
@@ -764,7 +764,7 @@ namespace XamCore.Metal {
 
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
 	[Native]
-	public enum MTLTessellationPartitionMode : nuint {
+	public enum MTLTessellationPartitionMode : ulong {
 		Pow2 = 0,
 		Integer = 1,
 		FractionalOdd = 2,
@@ -773,13 +773,13 @@ namespace XamCore.Metal {
 
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
 	[Native]
-	public enum MTLTessellationFactorFormat : nuint {
+	public enum MTLTessellationFactorFormat : ulong {
 		Half = 0
 	}
 
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
 	[Native]
-	public enum MTLTessellationControlPointIndexType : nuint {
+	public enum MTLTessellationControlPointIndexType : ulong {
 		None = 0,
 		UInt16 = 1,
 		UInt32 = 2
@@ -787,7 +787,7 @@ namespace XamCore.Metal {
 
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
 	[Native]
-	public enum MTLTessellationFactorStepFunction : nuint {
+	public enum MTLTessellationFactorStepFunction : ulong {
 		Constant = 0,
 		PerPatch = 1,
 		PerInstance = 2,
@@ -796,7 +796,7 @@ namespace XamCore.Metal {
 	
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
 	[Native]
-	public enum MTLPatchType : nuint {
+	public enum MTLPatchType : ulong {
 		None = 0,
 		Triangle = 1,
 		Quad = 2
@@ -804,7 +804,7 @@ namespace XamCore.Metal {
 	
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
 	[Native]
-	public enum MTLAttributeFormat : nuint {
+	public enum MTLAttributeFormat : ulong {
 		Invalid = 0,
 		UChar2 = 1,
 		UChar3 = 2,
@@ -871,7 +871,7 @@ namespace XamCore.Metal {
 	
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
 	[Native]
-	public enum MTLStepFunction : nuint {
+	public enum MTLStepFunction : ulong {
 		Constant = 0,
 		PerVertex = 1,
 		PerInstance = 2,
@@ -885,14 +885,14 @@ namespace XamCore.Metal {
 
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
 	[Native]
-	public enum MTLRenderStages : nuint {
+	public enum MTLRenderStages : ulong {
 		Vertex = (1 << 0),
 		Fragment = (1 << 1)
 	}
 
 	[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
 	[Native, Flags]
-	public enum MTLResourceUsage : nuint
+	public enum MTLResourceUsage : ulong
 	{
 		Read = 1 << 0,
 		Write = 1 << 1,
@@ -901,7 +901,7 @@ namespace XamCore.Metal {
 
 	[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
 	[Native]
-	public enum MTLMutability : nuint
+	public enum MTLMutability : ulong
 	{
 		Default = 0,
 		Mutable = 1,
@@ -910,7 +910,7 @@ namespace XamCore.Metal {
 
 	[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
 	[Native]
-	public enum MTLReadWriteTextureTier : nuint
+	public enum MTLReadWriteTextureTier : ulong
 	{
 		None = 0,
 		One = 1,
@@ -919,7 +919,7 @@ namespace XamCore.Metal {
 
 	[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
 	[Native]
-	public enum MTLArgumentBuffersTier : nuint
+	public enum MTLArgumentBuffersTier : ulong
 	{
 		One = 0,
 		Two = 1,
@@ -927,7 +927,7 @@ namespace XamCore.Metal {
 
 	[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
 	[Native, Flags]
-	public enum MTLStoreActionOptions : nuint
+	public enum MTLStoreActionOptions : ulong
 	{
 		None = 0,
 		CustomSamplePositions = 1 << 0,

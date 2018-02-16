@@ -4,11 +4,11 @@ using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.CoreFoundation;
-using XamCore.Foundation;
+using ObjCRuntime;
+using CoreFoundation;
+using Foundation;
 
-namespace XamCore.Security {
+namespace Security {
 
 	public static partial class SecSharedCredential {
 
@@ -35,6 +35,7 @@ namespace XamCore.Security {
 		} 
 
 		[iOS (8,0)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void AddSharedWebCredential (string domainName, string account, string password, Action<NSError> handler)
 		{
 			if (domainName == null)
@@ -97,6 +98,7 @@ namespace XamCore.Security {
 #endif
 
 		[iOS (8,0)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void RequestSharedWebCredential (string domainName, string account, Action<SecSharedCredentialInfo[], NSError> handler)
 		{
 			Action<NSArray, NSError> onComplete = (NSArray a, NSError e) => {

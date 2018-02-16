@@ -30,9 +30,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 	
 	public partial class NSIndexSet : IEnumerable, IEnumerable<nuint> {
 

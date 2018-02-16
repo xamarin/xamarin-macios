@@ -12,10 +12,10 @@
 using System;
 using System.Runtime.InteropServices;
 
-using XamCore.ObjCRuntime;
-using XamCore.JavaScriptCore;
+using ObjCRuntime;
+using JavaScriptCore;
 
-namespace XamCore.SceneKit
+namespace SceneKit
 {
 	[Mac (10, 10)]
 	[iOS (8, 0)]

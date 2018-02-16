@@ -31,16 +31,16 @@ using System.Linq;
 using System.Runtime.InteropServices;
 
 #if !COREBUILD
-using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.CoreGraphics;
+using CoreFoundation;
+using ObjCRuntime;
+using Foundation;
+using CoreGraphics;
 #if !WATCH
-using XamCore.CoreMedia;
+using CoreMedia;
 #endif // !WATCH
 #endif
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	public abstract class DictionaryContainer
 	{

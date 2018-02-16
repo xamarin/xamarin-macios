@@ -21,10 +21,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
-namespace XamCore.AppKit {
+namespace AppKit {
 
 	public partial class NSBitmapImageRep {
 		static IntPtr selInitForIncrementalLoad = Selector.GetHandle ("initForIncrementalLoad");
@@ -36,9 +36,9 @@ namespace XamCore.AppKit {
 		private NSBitmapImageRep (NSObjectFlag a, NSObjectFlag b) : base (a)
 		{
 			if (IsDirectBinding) {
-				Handle = XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSend (this.Handle, selInitForIncrementalLoad);
+				Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSend (this.Handle, selInitForIncrementalLoad);
 			} else {
-				Handle = XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper (this.SuperHandle, selInitForIncrementalLoad);
+				Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper (this.SuperHandle, selInitForIncrementalLoad);
 			}
 		}
 

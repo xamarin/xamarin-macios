@@ -7,10 +7,10 @@
 // Copyright 2013-2014, 2016 Xamarin Inc
 
 using System;
-using XamCore.ObjCRuntime;
-using XamCore.CoreGraphics;
+using ObjCRuntime;
+using CoreGraphics;
 
-namespace XamCore.SpriteKit {
+namespace SpriteKit {
 
 #if !XAMCORE_3_0 && !MONOMAC
 	public partial class SKAction {

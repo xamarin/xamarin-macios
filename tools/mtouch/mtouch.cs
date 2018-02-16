@@ -63,8 +63,8 @@ using Mono.Cecil.Cil;
 using Mono.Tuner;
 
 using MonoTouch.Tuner;
-using XamCore.Registrar;
-using XamCore.ObjCRuntime;
+using Registrar;
+using ObjCRuntime;
 
 using Xamarin.Linker;
 using Xamarin.Utils;
@@ -438,7 +438,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.WatchOS:
 				return Path.Combine (cross_prefix, "bin", "armv7k-unknown-darwin-mono-sgen");
 			case ApplePlatform.TVOS:
-				return Path.Combine (cross_prefix, "bin", "aarch64-unknown-darwin-mono-sgen");
+				return Path.Combine (cross_prefix, "bin", "arm64-darwin-mono-sgen");
 			default:
 				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
 			}
@@ -669,6 +669,7 @@ namespace Xamarin.Bundler
 						sw.WriteLine ("\tsetenv (\"MONO_GC_PARAMS\", \"{0}\", 1);", app.MonoGCParams);
 					foreach (var kvp in app.EnvironmentVariables)
 						sw.WriteLine ("\tsetenv (\"{0}\", \"{1}\", 1);", kvp.Key.Replace ("\"", "\\\""), kvp.Value.Replace ("\"", "\\\""));
+					sw.WriteLine ("\txamarin_supports_dynamic_registration = {0};", app.DynamicRegistrationSupported ? "TRUE" : "FALSE");
 					sw.WriteLine ("}");
 					sw.WriteLine ();
 					sw.Write ("int ");

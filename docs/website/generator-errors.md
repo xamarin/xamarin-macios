@@ -176,6 +176,8 @@ This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug repo
 
 ### <a name='BI1062'/>BI1062: The member '*' contains ref/out parameters and must not be decorated with [Async].
 
+### <a name='BI1063'/>BI1063: The 'WrapAttribute' can only be used at the property or at getter/setter level at a given time. Property: '*'.
+
 # BI11xx: warnings
 
 <!-- 11xx: warnings -->

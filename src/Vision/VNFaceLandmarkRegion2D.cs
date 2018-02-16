@@ -10,9 +10,9 @@
 #if XAMCORE_2_0
 
 using System;
-using XamCore.CoreGraphics;
+using CoreGraphics;
 
-namespace XamCore.Vision {
+namespace Vision {
 	public partial class VNFaceLandmarkRegion2D {
 
 		public virtual CGPoint [] NormalizedPoints {

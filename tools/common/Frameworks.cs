@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Mono.Cecil;
 
 using Xamarin.Bundler;
-using XamCore.Registrar;
+using Registrar;
 
 public class Framework
 {
@@ -43,7 +43,7 @@ public class Frameworks : Dictionary <string, Framework>
 	public void Add (string @namespace, string framework, Version version)
 	{
 		var fr = new Framework () {
-			Namespace = Driver.IsUnified ? @namespace : XamCore.Registrar.Registrar.CompatNamespace + "." + @namespace,
+			Namespace = Driver.IsUnified ? @namespace : Registrar.Registrar.CompatNamespace + "." + @namespace,
 			Name = framework,
 			Version = version
 		};

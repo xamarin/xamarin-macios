@@ -9,7 +9,7 @@ using Mono.Cecil.Cil;
 
 using Xamarin.Utils;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
 #if MONOTOUCH
 using PlatformException = Xamarin.Bundler.MonoTouchException;
@@ -64,7 +64,12 @@ namespace Xamarin.Bundler {
 		public bool EnableSGenConc;
 		public MarshalObjectiveCExceptionMode MarshalObjectiveCExceptions;
 		public MarshalManagedExceptionMode MarshalManagedExceptions;
-		public bool IsDefaultMarshalManagedExceptionMode;
+
+		bool is_default_marshal_managed_exception_mode;
+		public bool IsDefaultMarshalManagedExceptionMode {
+			get { return is_default_marshal_managed_exception_mode || MarshalManagedExceptions == MarshalManagedExceptionMode.Default; }
+			set { is_default_marshal_managed_exception_mode = value; }
+		}
 		public List<string> RootAssemblies = new List<string> ();
 		public List<Application> SharedCodeApps = new List<Application> (); // List of appexes we're sharing code with.
 		public string RegistrarOutputLibrary;
@@ -78,6 +83,12 @@ namespace Xamarin.Bundler {
 		public Application (string[] arguments)
 		{
 			Cache = new Cache (arguments);
+		}
+
+		public bool DynamicRegistrationSupported {
+			get {
+				return Optimizations.RemoveDynamicRegistrar != true;
+			}
 		}
 
 		// This is just a name for this app to show in log/error messages, etc.
@@ -397,6 +408,8 @@ namespace Xamarin.Bundler {
 
 		public void InitializeCommon ()
 		{
+			SelectRegistrar ();
+
 			if (RequiresXcodeHeaders && SdkVersion < SdkVersions.GetVersion (Platform)) {
 				throw ErrorHelper.CreateError (91, "This version of {0} requires the {1} {2} SDK (shipped with Xcode {3}). Either upgrade Xcode to get the required header files or {4} (to try to avoid the new APIs).", ProductName, PlatformName, SdkVersions.GetVersion (Platform), SdkVersions.Xcode, Error91LinkerSuggestion);
 			}
@@ -538,7 +551,7 @@ namespace Xamarin.Bundler {
 #if MONOTOUCH
 			BuildTarget = BuildTarget.Simulator;
 #endif
-			var registrar = new XamCore.Registrar.StaticRegistrar (this);
+			var registrar = new Registrar.StaticRegistrar (this);
 			if (RootAssemblies.Count == 1)
 				registrar.GenerateSingleAssembly (resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m, Path.GetFileNameWithoutExtension (RootAssembly));
 			else

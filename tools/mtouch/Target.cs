@@ -17,7 +17,7 @@ using Xamarin.Linker;
 
 using Xamarin.Utils;
 
-using XamCore.Registrar;
+using Registrar;
 
 namespace Xamarin.Bundler
 {
@@ -869,17 +869,6 @@ namespace Xamarin.Bundler
 				pinvoke_tasks.Add (abi, pinvoke_task);
 
 				LinkWithTaskOutput (pinvoke_task);
-			}
-		}
-
-		public void SelectStaticRegistrar ()
-		{
-			switch (App.Registrar) {
-			case RegistrarMode.Static:
-			case RegistrarMode.Dynamic:
-			case RegistrarMode.Default:
-				StaticRegistrar = new StaticRegistrar (this);
-				break;
 			}
 		}
 

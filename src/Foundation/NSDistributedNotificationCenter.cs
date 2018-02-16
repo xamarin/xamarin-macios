@@ -10,9 +10,9 @@
 
 using System;
 
-using XamCore.ObjCRuntime;
+using ObjCRuntime;
 
-namespace XamCore.Foundation {
+namespace Foundation {
 
 	[Obsolete ("This is not available in iOS.")]
 	public partial class NSDistributedNotificationCenter {
