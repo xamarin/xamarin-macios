@@ -105,6 +105,7 @@ namespace Introspection
 			"Autospace",
 			"Autostarts",
 			"Avci", // file type
+			"Avb", // acronym: Audio Video Bridging
 			"Aliasable",
 			"Arcball",
 			"Avg",
@@ -123,6 +124,7 @@ namespace Introspection
 			"Bggr", // acronym for Blue, Green, Green, Red 
 			"Bsln",
 			"Bssid",
+			"Btle", // Bluetooth Low Energy
 			"Bzip",
 			"Cabac",
 			"Caf", // acronym: Core Audio Format
