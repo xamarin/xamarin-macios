@@ -91,7 +91,6 @@ namespace Introspection
 			"Anglet",
 			"Arraycollation",
 			"Argb",
-			"Asal", // Typo, should be 'Basal', fixed in 'HKInsulinDeliveryReason'
 			"Asin",
 			"Atan",
 			"Ats",	// App Transport Security
@@ -337,11 +336,9 @@ namespace Introspection
 			"Ocsp", // Online Certificate Status Protocol
 			"Octree",
 			"Oid",
-			"Olus", // Typo, should be 'Bolus', fixed in 'HKInsulinDeliveryReason'
 			"Oneup", // TVElementKeyOneupTemplate
 			"Orthographyrange",
 			"Orth",
-			"Ostprandial", // Typo, should be 'Postprandial', fixed in 'HKBloodGlucoseMealTime'
 			"ove",
 			"Paeth", // PNG filter
 			"Parms", // short for Parameters
@@ -380,7 +377,6 @@ namespace Introspection
 			"Reinvitation",
 			"Reinvite",
 			"Rel",
-			"Reprandial", // Typo, should be 'Preprandial', fixed in 'HKBloodGlucoseMealTime'
 			"Replayable",
 			"Requestwith",
 			"Ridesharing",
@@ -761,13 +757,17 @@ namespace Introspection
 #endif
 #if !XAMCORE_4_0
 			"Actionfrom",
+			"Asal", // Typo, should be 'Basal', fixed in 'HKInsulinDeliveryReason'
 			"Attributefor",
 			"Attributest",
 			"Failwith",
 			"Imageimage",
 			"Musthold",
+			"Olus", // Typo, should be 'Bolus', fixed in 'HKInsulinDeliveryReason'
+			"Ostprandial", // Typo, should be 'Postprandial', fixed in 'HKBloodGlucoseMealTime'
 			"Pathpath",
 			"Rangefor",
+			"Reprandial", // Typo, should be 'Preprandial', fixed in 'HKBloodGlucoseMealTime'
 			"Failwith",
 			"Tearm",
 			"Theevent",

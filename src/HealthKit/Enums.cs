@@ -545,11 +545,13 @@ namespace HealthKit
 	[Watch (4, 0), iOS (11, 0)]
 	[Native]
 	public enum HKBloodGlucoseMealTime : long {
+#if !XAMCORE_4_0
 		[Obsolete ("Use 'Preprandial' instead.")]
 		Reprandial = 1,
-		Preprandial = Reprandial,
 		[Obsolete ("Use 'Postprandial' instead.")]
 		Ostprandial,
+#endif
+		Preprandial = Reprandial,
 		Postprandial = Ostprandial,
 
 	}
