@@ -636,10 +636,10 @@ namespace MonoTouchFixtures.Security {
 			TestRuntime.AssertXcodeVersion (8, 0);
 
 			var keyGenerationParameters = new SecKeyGenerationParameters ();
-		        keyGenerationParameters.KeyType = SecKeyType.EC;
-		        keyGenerationParameters.KeySizeInBits = 256;
-	                keyGenerationParameters.IsPermanent = false;
-	                var privateKeyAttributes = new SecPublicPrivateKeyAttrs ();
+			keyGenerationParameters.KeyType = SecKeyType.EC;
+			keyGenerationParameters.KeySizeInBits = 256;
+			keyGenerationParameters.IsPermanent = false;
+			var privateKeyAttributes = new SecPublicPrivateKeyAttrs ();
 			privateKeyAttributes.AccessControl = new SecAccessControl (SecAccessible.WhenUnlockedThisDeviceOnly, SecAccessControlCreateFlags.PrivateKeyUsage | SecAccessControlCreateFlags.UserPresence);
 			privateKeyAttributes.Label = "NotDefault";
 			keyGenerationParameters.PrivateKeyAttrs = privateKeyAttributes;
