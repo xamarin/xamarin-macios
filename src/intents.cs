@@ -282,8 +282,12 @@ namespace Intents {
 		FailurePreviousRideNeedsFeedback,
 	}
 
-	[iOS (10, 0)]
+#if XAMCORE_4_0 // TODO: Double check this if XAMCORE_4_0 happens, its been 2 years (2018) and still not usable in macOS
+	[NoMac]
+#else
 	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+#endif
+	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[Native]
 	public enum INMessageAttribute : long {
@@ -2143,8 +2147,12 @@ namespace Intents {
 		INDateComponentsRangeResolutionResult Unsupported { get; }
 	}
 
-	[iOS (10, 0)]
+#if XAMCORE_4_0 // TODO: Double check this if XAMCORE_4_0 happens, its been 2 years (2018) and still not usable in macOS
+	[NoMac]
+#else
 	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+#endif
+	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[Protocol]
 	interface INCallsDomainHandling : INStartAudioCallIntentHandling, INSearchCallHistoryIntentHandling
@@ -3077,8 +3085,12 @@ namespace Intents {
 		INMessageAttributeOptionsResolutionResult Unsupported { get; }
 	}
 
-	[iOS (10, 0)]
+#if XAMCORE_4_0 // TODO: Double check this if XAMCORE_4_0 happens, its been 2 years (2018) and still not usable in macOS
+	[NoMac]
+#else
 	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+#endif
+	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
