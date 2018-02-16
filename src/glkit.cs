@@ -44,6 +44,7 @@ using MathHelper = global::OpenTK.MathHelper;
 
 #if MONOMAC
 using pfloat = System.nfloat;
+using AppKit;
 #else
 using OpenGLES;
 using UIKit;
@@ -447,7 +448,10 @@ namespace GLKit {
 		[return: NullAllowed]
 		GLKTextureInfo FromName (string name, nfloat scaleFactor, [NullAllowed] NSBundle bundle, [NullAllowed] NSDictionary<NSString, NSNumber> options, out NSError outError);
 
-#if !MONOMAC
+#if MONOMAC
+		[Export ("initWithShareContext:")]
+		IntPtr Constructor (NSOpenGLContext context);
+#else
 		[Export ("initWithSharegroup:")]
 		IntPtr Constructor (EAGLSharegroup sharegroup);
 #endif
@@ -495,6 +499,9 @@ namespace GLKit {
 		[Field ("GLKTextureLoaderOriginBottomLeft")]
 		NSString OriginBottomLeft { get; }
 		
+#if XAMCORE_4_0 // Unavailable in macOS
+		[NoMac]
+#endif
 		[Field ("GLKTextureLoaderGrayscaleAsAlpha")]
 		NSString GrayscaleAsAlpha { get; }
 
