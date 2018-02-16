@@ -651,13 +651,13 @@ namespace MonoTouchFixtures.Security {
 			var publicKey = privateKey.GetPublicKey ();
 			Assert.That (publicKey, Is.Not.EqualTo (null));
 
-			Assert.Throws<ArgumentException> (() => { SecKey.CreateRandomKey (null, out _); }, "CreateRandomKey - null argument");
+			Assert.Throws<ArgumentException> (() => { SecKey.CreateRandomKey ((SecKeyGenerationParameters) null, out _); }, "CreateRandomKey - null argument");
 
-			var keyGenerationParameters = new SecKeyGenerationParameters ();
+			keyGenerationParameters = new SecKeyGenerationParameters ();
 			keyGenerationParameters.KeyType = SecKeyType.Invalid;
 			Assert.Throws<ArgumentException> (() => { SecKey.CreateRandomKey (keyGenerationParameters, out _); }, "CreateRandomKey - invalid key type");
 
-			var keyGenerationParameters = new SecKeyGenerationParameters ();
+			keyGenerationParameters = new SecKeyGenerationParameters ();
 			keyGenerationParameters.KeyType = SecKeyType.RSA;
 			keyGenerationParameters.KeySizeInBits = -1;
 			Assert.That (SecKey.CreateRandomKey (keyGenerationParameters, out _), Is.EqualTo (SecStatusCode.Param), "CreateRandomKey - Param issue, invalid RSA key size");
