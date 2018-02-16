@@ -1752,6 +1752,21 @@ namespace Security {
 	}
 
 	public partial class SecKeyGenerationParameters : DictionaryContainer {
+		// For caching, as we can't reverse it easily.
+                SecAccessControl _secAccessControl;
+
+                public SecAccessControl AccessControl {
+                        get {
+                                return _secAccessControl;
+                        }
+                        set {
+                                if (value == null)
+                                        throw new ArgumentNullException (nameof (value));
+                                _secAccessControl = value;
+                                SetNativeValue (SecAttributeKeys.AccessControlKey, value);
+                        }
+                }
+
 		public SecTokenID TokenID {
                         get {
                                 return SecTokenIDExtensions.GetValue (GetNSStringValue (SecKeyGenerationAttributeKeys.TokenIDKey));
