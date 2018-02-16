@@ -225,6 +225,16 @@ Mixed-mode assemblies can not be processed by the linker.
 
 See https://msdn.microsoft.com/en-us/library/x0w2664k.aspx for more information on mixed-mode assemblies.
 
+<!-- 2015 used by mtouch -->
+
+### <a name="MM2106"/>MM2106: '{0}' was stripped of architecture '{1}' to comply with App Store restrictions. This could break exisiting codesigning signatures. Consider stripping the library with lipo or disabling with --native-strip=skip");
+
+The App Store now rejects applications which contain libraries and frameworks which contain 32-bit variants. The library was stripped of unused archtectures when copied into the final application bundle.
+
+This is in general safe, and will reduce application size as an added benefit, but may be existing codesigning signatures if it was already signed.
+
+Consider using `lipo` to remove the unnecessary archtectures permanently from the source library. If the application is not being published to the App Store, this removal can be disabled by passing --native-strip=skip as Additional MMP Arguments.
+
 # MM3xxx: AOT
 
 ## MM30xx: AOT (general) errors
@@ -308,6 +318,8 @@ See the [equivalent mtouch warning](mtouch-errors.md#MT5218).
 ### <a name="MM5309">MM5309: Native linking failed with error code 1.  Check build log for details.
 
 ### <a name="MM5310">MM5310: install_name_tool failed with an error code '{0}'. Check build log for details.
+
+### <a name="MM5311">MM5311: lipo failed with an error code '{0}'. Check build log for details.
 
 <!-- MM6xxx: mmp internal tools -->
 <!-- MM7xxx: reserved -->
