@@ -39,13 +39,13 @@ namespace Xamarin.MMP.Tests
 			string buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
 			Assert.AreEqual (debugStrips, DidAnyLipoStrip (buildOutput), "Debug lipo usage did not match expectations");
 			AssertStrip (Path.Combine (test.TmpDir, "bin/Debug/UnifiedExample.app/", libPath), shouldStrip: debugStrips);
-			Assert.AreEqual (shouldWarn && debugStrips, buildOutput.Contains ("MM2106"), "Debug warning did not match expectations");
+			Assert.AreEqual (shouldWarn && debugStrips, buildOutput.Contains ("MM2108"), "Debug warning did not match expectations");
 
 			test.Release = true;
 			buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
 			Assert.AreEqual (releaseStrips, DidAnyLipoStrip (buildOutput), "Release lipo usage did not match expectations");
 			AssertStrip (Path.Combine (test.TmpDir, "bin/Release/UnifiedExample.app/", libPath), shouldStrip: releaseStrips);
-			Assert.AreEqual (shouldWarn && releaseStrips, buildOutput.Contains ("MM2106"), "Release warning did not match expectations");
+			Assert.AreEqual (shouldWarn && releaseStrips, buildOutput.Contains ("MM2108"), "Release warning did not match expectations");
 		}
 
 		[TestCase ("", false, true)]
@@ -93,7 +93,7 @@ namespace Xamarin.MMP.Tests
 
 				string buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
 				Assert.AreEqual (shouldStrip, DidAnyLipoStrip (buildOutput), "lipo usage did not match expectations");
-				Assert.AreEqual (shouldStrip, buildOutput.Contains ("MM2106"), "Warning did not match expectations");
+				Assert.AreEqual (shouldStrip, buildOutput.Contains ("MM2108"), "Warning did not match expectations");
 			});
 		}
 	}
