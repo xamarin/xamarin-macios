@@ -4227,6 +4227,8 @@ namespace Foundation
 
 	delegate void LinguisticTagEnumerator (string tag, NSRange tokenRange, bool stop);
 
+#if !XAMCORE_4_0
+	[Obsolete ("Use 'NSLinguisticTagUnit' enum instead.")]
 	[Static]
 	interface NSLinguisticTag {
 		[Field ("NSLinguisticTagSchemeTokenType")]
@@ -4343,7 +4345,8 @@ namespace Foundation
 		[Field ("NSLinguisticTagOrganizationName")]
 		NSString OrganizationName { get; }
 	}
-	
+#endif
+
 	[BaseType (typeof (NSObject))]
 	// 'init' returns NIL so it's not usable evenif it does not throw an ObjC exception
 	// funnily it was "added" in iOS 7 and header files says "do not invoke; not a valid initializer for this class"
@@ -8199,12 +8202,21 @@ namespace Foundation
 	[Category]
 	[BaseType (typeof(NSString))]
 	interface NSLinguisticAnalysis {
+#if XAMCORE_4_0
+		[return: BindAs (typeof (NSLinguisticTag []))]
+#else
+		[return: BindAs (typeof (NSLinguisticTagUnit []))]
+#endif
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("linguisticTagsInRange:scheme:options:orthography:tokenRanges:")]
-		string[] GetLinguisticTags (NSRange range, NSString scheme, NSLinguisticTaggerOptions options, [NullAllowed] NSOrthography orthography, [NullAllowed] out NSValue[] tokenRanges);
+		NSString[] GetLinguisticTags (NSRange range, NSString scheme, NSLinguisticTaggerOptions options, [NullAllowed] NSOrthography orthography, [NullAllowed] out NSValue[] tokenRanges);
 
 		[Wrap ("GetLinguisticTags (This, range, scheme.GetConstant (), options, orthography, out tokenRanges)")]
-		string[] GetLinguisticTags (NSRange range, NSLinguisticTagScheme scheme, NSLinguisticTaggerOptions options, [NullAllowed] NSOrthography orthography, [NullAllowed] out NSValue[] tokenRanges);
+#if XAMCORE_4_0
+		NSLinguisticTag[] GetLinguisticTags (NSRange range, NSLinguisticTagScheme scheme, NSLinguisticTaggerOptions options, [NullAllowed] NSOrthography orthography, [NullAllowed] out NSValue[] tokenRanges);
+#else
+		NSLinguisticTagUnit[] GetLinguisticTags (NSRange range, NSLinguisticTagScheme scheme, NSLinguisticTaggerOptions options, [NullAllowed] NSOrthography orthography, [NullAllowed] out NSValue[] tokenRanges);
+#endif
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("enumerateLinguisticTagsInRange:scheme:options:orthography:usingBlock:")]

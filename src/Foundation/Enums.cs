@@ -149,7 +149,11 @@ namespace Foundation {
 		Script,
 	}
 
+#if !XAMCORE_4_0
 	public enum NSLinguisticTagUnit {
+#else
+	public enum NSLinguisticTag {
+#endif
 		[Field ("NSLinguisticTagWord")]
 		Word,
 
