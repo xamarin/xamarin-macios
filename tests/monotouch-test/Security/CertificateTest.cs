@@ -633,15 +633,7 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 		public void CreateRandomKeyWithParametersTests ()
 		{
-#if IOS || TVOS
-			if (!TestRuntime.CheckXcodeVersion (10, 0)) return;
-#endif
-#if MONOMAC
-			if (!TestRuntime.CheckXcodeVersion (10, 12)) return;
-#endif
-#if __WATCHOS__
-			if (!TestRuntime.CheckXcodeVersion (3, 0)) return;
-#endif
+			TestRuntime.AssertXcodeVersion (8, 0);
 
 			var keyGenerationParameters = new SecKeyGenerationParameters ();
 		        keyGenerationParameters.KeyType = SecKeyType.EC;
