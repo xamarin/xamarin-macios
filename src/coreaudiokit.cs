@@ -37,7 +37,7 @@ namespace CoreAudioKit {
 	public enum AUGenericViewDisplayFlags : uint {
 		TitleDisplay = 1u << 0,
 		PropertiesDisplay = 1u << 1,
-		ParametersDisplay = 1u << 2
+		ParametersDisplay = 1u << 2,
 	}
 
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
