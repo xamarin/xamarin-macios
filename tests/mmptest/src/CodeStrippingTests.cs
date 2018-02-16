@@ -18,6 +18,21 @@ namespace Xamarin.MMP.Tests
 			return test;
 		}
 
+		public void AssertStrip (string tmpDir, bool release, bool shouldStrip)
+		{
+			string libPath = string.Format ("{0}/bin/{1}/UnifiedExample.app/Contents/MonoBundle/libMonoPosixHelper.dylib", tmpDir, release ? "Release" : "Debug");
+
+			var archsFound = Xamarin.Tests.MachO.GetArchitectures (libPath);
+			if (shouldStrip) {
+				Assert.AreEqual (1, archsFound.Count, "Did not contain one archs");
+				Assert.True (archsFound.Contains ("x86_64"), "Did not contain x86_64");
+			} else {
+				Assert.AreEqual (2, archsFound.Count, "Did not contain two archs");
+				Assert.True (archsFound.Contains ("i386"), "Did not contain i386");
+				Assert.True (archsFound.Contains ("x86_64"), "Did not contain x86_64");
+			}
+		}
+
 		[TestCase ("", false, true)]
 		[TestCase ("default", false, true)]
 		[TestCase ("strip", true, true)]
@@ -26,14 +41,16 @@ namespace Xamarin.MMP.Tests
 		{
 			MMPTests.RunMMPTest (tmpDir =>
 			{
-				 TI.UnifiedTestConfig test = CreateStripTestConfig (nativeStrip, tmpDir);
+				TI.UnifiedTestConfig test = CreateStripTestConfig (nativeStrip, tmpDir);
 
-				 string buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
-				 Assert.AreEqual (debugStrips, didStrip (buildOutput), "Debug lipo usage did not match expectations");
+				string buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
+				Assert.AreEqual (debugStrips, didStrip (buildOutput), "Debug lipo usage did not match expectations");
+				AssertStrip (tmpDir, release: false, shouldStrip: debugStrips);
 
-				 test.Release = true;
-				 buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
-				 Assert.AreEqual (releaseStrips, didStrip (buildOutput), "Release lipo usage did not match expectations");
+				test.Release = true;
+				buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
+				Assert.AreEqual (releaseStrips, didStrip (buildOutput), "Release lipo usage did not match expectations");
+				AssertStrip (tmpDir, release: true, shouldStrip: releaseStrips);
 			 });
 		}
 

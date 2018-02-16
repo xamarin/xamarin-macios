@@ -1712,7 +1712,7 @@ namespace Xamarin.Bundler {
 				// install_name_tool gets angry if you copy in a read only native library
 				CopyFileAndRemoveReadOnly (real_src, dest);
 			}
-			
+
 			bool isStaticLib = real_src.EndsWith (".a", StringComparison.Ordinal);
 			bool isDynamicLib = real_src.EndsWith (".dylib", StringComparison.Ordinal);
 

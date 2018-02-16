@@ -152,8 +152,7 @@ namespace Xamarin.MMP.Tests
 			if (isUnified) {
 				buildArgs.Append (diagnosticMSBuild ? " /verbosity:diagnostic " : " /verbosity:normal ");
 				buildArgs.Append (" /property:XamarinMacFrameworkRoot=" + rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current ");
-			}
-			else {
+			} else {
 				buildArgs.Append (" build ");
 			}
 
