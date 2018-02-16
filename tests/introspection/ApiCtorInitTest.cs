@@ -405,6 +405,11 @@ namespace Introspection {
 				if (ctor.ToString () == "Void .ctor()")
 					return true;
 				break;
+			case "AUPannerView": // Do not make sense without the AudioUnit
+			case "AUGenericView": // Do not make sense without the AudioUnit
+				if (ctor.ToString () == "Void .ctor(CGRect)")
+					return true;
+				break;
 			case "MDLNoiseTexture":
 			case "MDLSkyCubeTexture":
 			case "MDLNormalMapTexture":
