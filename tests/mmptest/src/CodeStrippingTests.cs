@@ -34,16 +34,18 @@ namespace Xamarin.MMP.Tests
 			}
 		}
 
-		void StripTestCore (TI.UnifiedTestConfig test, bool debugStrips, bool releaseStrips, string libPath)
+		void StripTestCore (TI.UnifiedTestConfig test, bool debugStrips, bool releaseStrips, string libPath, bool shouldWarn)
 		{
 			string buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
 			Assert.AreEqual (debugStrips, DidAnyLipoStrip (buildOutput), "Debug lipo usage did not match expectations");
 			AssertStrip (Path.Combine (test.TmpDir, "bin/Debug/UnifiedExample.app/", libPath), shouldStrip: debugStrips);
+			Assert.AreEqual (shouldWarn && debugStrips, buildOutput.Contains ("MM2106"), "Debug warning did not match expectations");
 
 			test.Release = true;
 			buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
 			Assert.AreEqual (releaseStrips, DidAnyLipoStrip (buildOutput), "Release lipo usage did not match expectations");
 			AssertStrip (Path.Combine (test.TmpDir, "bin/Release/UnifiedExample.app/", libPath), shouldStrip: releaseStrips);
+			Assert.AreEqual (shouldWarn && releaseStrips, buildOutput.Contains ("MM2106"), "Release warning did not match expectations");
 		}
 
 		[TestCase ("", false, true)]
@@ -56,7 +58,7 @@ namespace Xamarin.MMP.Tests
 			{
 				TI.UnifiedTestConfig test = CreateStripTestConfig (nativeStrip, tmpDir);
 
-				StripTestCore (test, debugStrips, releaseStrips, "Contents/MonoBundle/libMonoPosixHelper.dylib");
+				StripTestCore (test, debugStrips, releaseStrips, "Contents/MonoBundle/libMonoPosixHelper.dylib", shouldWarn: false);
 			});
 		}
 
@@ -71,7 +73,7 @@ namespace Xamarin.MMP.Tests
 				var frameworkPath = FrameworkBuilder.CreateFatFramework (tmpDir);
 				TI.UnifiedTestConfig test = CreateStripTestConfig (nativeStrip, tmpDir, $"--native-reference={frameworkPath}");
 
-				StripTestCore (test, debugStrips, releaseStrips, "Contents/Frameworks/Foo.framework/Foo");
+				StripTestCore (test, debugStrips, releaseStrips, "Contents/Frameworks/Foo.framework/Foo", shouldWarn: true);
 			});
 		}
 
@@ -91,7 +93,7 @@ namespace Xamarin.MMP.Tests
 
 				string buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
 				Assert.AreEqual (shouldStrip, DidAnyLipoStrip (buildOutput), "lipo usage did not match expectations");
-				Assert.AreEqual (shouldStrip, buildOutput.Contains ("MM1501"), "Warning did not match expectations");
+				Assert.AreEqual (shouldStrip, buildOutput.Contains ("MM2106"), "Warning did not match expectations");
 			});
 		}
 	}
