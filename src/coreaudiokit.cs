@@ -121,7 +121,7 @@ namespace CoreAudioKit {
 	[NoiOS]
 	[Mac (10,13, onlyOn64: true)]
 	[BaseType (typeof (NSWindowController), Name = "CABTLEMIDIWindowController")]
-	interface CABtleMiDiWindowController {
+	interface CABtleMidiWindowController {
 
 		[Export ("initWithWindow:")]
 		IntPtr Constructor ([NullAllowed] NSWindow window);
