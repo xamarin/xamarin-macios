@@ -1192,6 +1192,9 @@ namespace Xamarin.Bundler {
 			CreateDirectoryIfNeeded (frameworks_dir);
 			Application.UpdateDirectory (framework, frameworks_dir);
 			frameworks_copied_to_bundle_dir = true;
+
+			if (NativeStrip == NativeStripMode.Strip)
+				LipoLibrary (framework, Path.Combine (name, Path.Combine (frameworks_dir, name + ".framework", name)));
 		}
 
 		static int Compile ()
@@ -1716,14 +1719,8 @@ namespace Xamarin.Bundler {
 			bool isStaticLib = real_src.EndsWith (".a", StringComparison.Ordinal);
 			bool isDynamicLib = real_src.EndsWith (".dylib", StringComparison.Ordinal);
 
-			if (isDynamicLib && NativeStrip == NativeStripMode.Strip) {
-				string archToRemove = arch == "i386" ? "x86_64" : "i386";
-				int ret = XcodeRun ("lipo", $"{dest} -remove {archToRemove} -output {dest}");
-				if (ret != 0)
-					throw new MonoMacException (5310, true, "lipo failed with an error code '{0}'. Check build log for details.", ret);
-				if (name != "MonoPosixHelper")
-					ErrorHelper.Warning (1501, $"{name} was stripped of architecture {archToRemove} to comply with App Store restrictions. This could break exisiting codesigning signatures. Consider stripping the library with lipo or disabling with --native-strip=skip");
-			}
+			if (isDynamicLib && NativeStrip == NativeStripMode.Strip)
+				LipoLibrary (name, dest);
 
 			if (native_references.Contains (real_src)) {
 				if (!isStaticLib) {
@@ -1752,6 +1749,17 @@ namespace Xamarin.Bundler {
 						ProcessNativeLibrary (processed, lib, null);
 				}
 			}
+		}
+
+		static void LipoLibrary (string name, string dest)
+		{
+			string archToRemove = arch == "i386" ? "x86_64" : "i386";
+
+			int ret = XcodeRun ("lipo", $"{dest} -remove {archToRemove} -output {dest}");
+			if (ret != 0)
+				throw new MonoMacException (5310, true, "lipo failed with an error code '{0}'. Check build log for details.", ret);
+			if (name != "MonoPosixHelper")
+				ErrorHelper.Warning (1501, $"{name} was stripped of architecture {archToRemove} to comply with App Store restrictions. This could break exisiting codesigning signatures. Consider stripping the library with lipo or disabling with --native-strip=skip");
 		}
 
 		static void CreateSymLink (string directory, string real, string link)
