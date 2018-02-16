@@ -33,6 +33,9 @@ namespace CoreLocation {
 		Outside
 	}
 
+#if XAMCORE_4_0 // Unavailable on macOS
+	[NoMac]
+#endif
 	[NoTV][NoWatch]
 	[iOS (7,0)]
 	[Native] // NSInteger -> CLRegion.h
@@ -406,6 +409,9 @@ namespace CoreLocation {
 		void UpdatedHeading (CLLocationManager  manager, CLHeading newHeading);
 #endif
 	
+#if XAMCORE_4_0 // Unavailable on macOS
+		[NoMac]
+#endif
 		[NoWatch][NoTV]
 		[Export ("locationManagerShouldDisplayHeadingCalibration:"), DelegateName ("CLLocationManagerEventArgs"), DefaultValue (true)]
 		bool ShouldDisplayHeadingCalibration (CLLocationManager manager);
@@ -460,11 +466,17 @@ namespace CoreLocation {
 		[Export ("locationManager:didUpdateLocations:"), EventArgs ("CLLocationsUpdated")]
 		void LocationsUpdated (CLLocationManager manager, CLLocation[] locations);
 
+#if XAMCORE_4_0 // Unavailable on macOS
+		[NoMac]
+#endif
 		[NoWatch][NoTV]
 		[iOS (6,0)]
 		[Export ("locationManagerDidPauseLocationUpdates:"), EventArgs ("")]
 		void LocationUpdatesPaused (CLLocationManager manager);
 
+#if XAMCORE_4_0 // Unavailable on macOS
+		[NoMac]
+#endif
 		[NoWatch][NoTV]
 		[iOS (6,0)]
 		[Export ("locationManagerDidResumeLocationUpdates:"), EventArgs ("")]
@@ -479,8 +491,12 @@ namespace CoreLocation {
 	[Static]
 	partial interface CLLocationDistance {
 
-		[iOS (6,0)]
+#if XAMCORE_4_0 // Unavailable on macOS
+		[NoMac]
+#else
 		[Mac (10,9)]
+#endif
+		[iOS (6,0)]
 		[Field ("CLLocationDistanceMax")]
 		double MaxDistance { get; }
 
