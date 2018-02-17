@@ -1814,22 +1814,15 @@ ifdef INCLUDE_DEVICE
 cross:: build-llvm32
 cross64:: build-llvm64
 
-clean-local:: clean-llvm32
+clean-local:: clean-llvm
 endif
 
-build-llvm32: .stamp-build-llvm32
-build-llvm64: .stamp-build-llvm64
+build-llvm32: .stamp-build-llvm
+build-llvm64: .stamp-build-llvm
 
-.stamp-build-llvm32: $(SDK_CONFIG)
+.stamp-build-llvm: $(SDK_CONFIG)
 	$(MAKE) -C $(MONO_PATH)/sdks/builds build-ios-llvm
 	$(Q) touch $@
-
-.stamp-build-llvm64: $(SDK_CONFIG)
-	$(MAKE) -C $(MONO_PATH)/sdks/builds build-ios-llvm
-	$(Q) touch $@
-
-really-build-llvm64: $(SDK_CONFIG)
-	$(MAKE) -C $(MONO_PATH)/sdks/builds build-ios-llvm
 
 clean-llvm: $(SDK_CONFIG)
 	$(MAKE) -C $(MONO_PATH)/sdks/builds clean-ios-llvm
@@ -1837,7 +1830,7 @@ clean-llvm: $(SDK_CONFIG)
 
 .PHONY: install-llvm64 llvm llvm64
 
-install-llvm: .stamp-build-llvm64 install-directories
+install-llvm: .stamp-build-llvm install-directories
 
 LLVM_TARGETS = \
 	$(PREFIX)/LLVM/bin/opt \
@@ -1849,7 +1842,7 @@ $(PREFIX)/LLVM/bin/%: $(MONO_PATH)/sdks/out/ios-llvm64/bin/% | $(PREFIX)/LLVM/bi
 $(PREFIX)/LLVM/bin:
 	$(Q) mkdir -p $@
 
-install-llvm64: .stamp-build-llvm64 $(LLVM_TARGETS)
+install-llvm64: .stamp-build-llvm $(LLVM_TARGETS)
 
 llvm: build-llvm64 install-llvm
 llvm64: install-llvm64
@@ -1883,7 +1876,7 @@ clean-local:: clean-cross32
 endif
 endif
 
-.stamp-build-cross32: $(MONO_DEPENDENCIES) $(SDK_CONFIG)
+.stamp-build-cross32: build-llvm32 $(MONO_DEPENDENCIES) $(SDK_CONFIG)
 	$(MAKE) -C $(MONO_PATH)/sdks/builds package-ios-cross32
 	$(Q) touch $@
 
@@ -1930,7 +1923,7 @@ install-directories:
 	install -d $(IOS_DESTDIR)/$(IPHONEOS_PREFIX)/include
 	install -d $(IOS_DESTDIR)/$(IPHONEOS_PREFIX)/lib
 
-.stamp-build-cross64: $(MONO_DEPENDENCIES) $(SDK_CONFIG)
+.stamp-build-cross64: build-llvm64 $(MONO_DEPENDENCIES) $(SDK_CONFIG)
 	$(MAKE) -C $(MONO_PATH)/sdks/builds package-ios-cross64
 	$(Q) touch $@
 
@@ -1971,7 +1964,7 @@ endif
 .PHONY: cross-watch
 cross-watch: build-cross-watch install-cross-watch
 
-.stamp-build-cross-watch: $(MONO_DEPENDENCIES) $(SDK_CONFIG)
+.stamp-build-cross-watch: build-llvm32 $(MONO_DEPENDENCIES) $(SDK_CONFIG)
 	$(MAKE) -C $(MONO_PATH)/sdks/builds package-ios-crosswatch
 	$(Q) touch $@
 
@@ -1985,7 +1978,7 @@ $(MONO_PATH)/sdks/out/ios-crosswatch/bin/armv7k-unknown-darwin-mono-sgen: .stamp
 $(PREFIX)/bin/armv7k-unknown-darwin-mono-sgen: $(MONO_PATH)/sdks/out/ios-crosswatch/bin/armv7k-unknown-darwin-mono-sgen | $(PREFIX)/bin
 	$(call Q_2,INSTALL ,[CROSS]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $< $@
 
-install-cross-watch: install-llvm32 $(CROSS_WATCH_TARGETS)
+install-cross-watch: $(CROSS_WATCH_TARGETS)
 
 clean-cross-watch: $(SDK_CONFIG)
 	$(MAKE) -C $(MONO_PATH)/sdks/builds clean-ios-crosswatch
