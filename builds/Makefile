@@ -1802,6 +1802,11 @@ install-tvos: $(TVOS_TARGETS)
 # These are compiled using the mono sdk makefiles
 #
 
+SDK_CONFIG=$(MONO_PATH)/sdks/Make.config
+
+$(MONO_PATH)/sdks/Make.config:
+	echo "DISABLE_ANDROID=1" > $@
+
 #
 # We need to compile the cross build against llvm so we need to configure/build that first
 #
@@ -1815,18 +1820,18 @@ endif
 build-llvm32: .stamp-build-llvm32
 build-llvm64: .stamp-build-llvm64
 
-.stamp-build-llvm32:
+.stamp-build-llvm32: $(SDK_CONFIG)
 	$(MAKE) -C $(MONO_PATH)/sdks/builds build-ios-llvm
 	$(Q) touch $@
 
-.stamp-build-llvm64:
+.stamp-build-llvm64: $(SDK_CONFIG)
 	$(MAKE) -C $(MONO_PATH)/sdks/builds build-ios-llvm
 	$(Q) touch $@
 
-really-build-llvm64:
+really-build-llvm64: $(SDK_CONFIG)
 	$(MAKE) -C $(MONO_PATH)/sdks/builds build-ios-llvm
 
-clean-llvm:
+clean-llvm: $(SDK_CONFIG)
 	$(MAKE) -C $(MONO_PATH)/sdks/builds clean-ios-llvm
 	$(RM) .stamp-*-llvm*
 
@@ -1878,7 +1883,7 @@ clean-local:: clean-cross32
 endif
 endif
 
-.stamp-build-cross32: $(MONO_DEPENDENCIES)
+.stamp-build-cross32: $(MONO_DEPENDENCIES) $(SDK_CONFIG)
 	$(MAKE) -C $(MONO_PATH)/sdks/builds package-ios-cross32
 	$(Q) touch $@
 
@@ -1897,7 +1902,7 @@ $(PREFIX)/bin:
 
 install-cross32: install-llvm64 $(CROSS_TARGETS)
 
-clean-cross32:
+clean-cross32: $(SDK_CONFIG)
 	$(MAKE) -C $(MONO_PATH)/sdks/builds clean-ios-cross32
 	-rm -rf .stamp-build-cross32
 
@@ -1925,7 +1930,7 @@ install-directories:
 	install -d $(IOS_DESTDIR)/$(IPHONEOS_PREFIX)/include
 	install -d $(IOS_DESTDIR)/$(IPHONEOS_PREFIX)/lib
 
-.stamp-build-cross64: $(MONO_DEPENDENCIES)
+.stamp-build-cross64: $(MONO_DEPENDENCIES) $(SDK_CONFIG)
 	$(MAKE) -C $(MONO_PATH)/sdks/builds package-ios-cross64
 	$(Q) touch $@
 
@@ -1941,7 +1946,7 @@ $(PREFIX)/bin/arm64-darwin-mono-sgen: $(MONO_PATH)/sdks/out/ios-cross64/bin/aarc
 
 install-cross64: install-llvm64 $(CROSS64_TARGETS)
 
-clean-cross64:
+clean-cross64: $(SDK_CONFIG)
 	$(MAKE) -C $(MONO_PATH)/sdks/builds clean-ios-cross64
 	-rm -rf .stamp-build-cross64
 
@@ -1966,7 +1971,7 @@ endif
 .PHONY: cross-watch
 cross-watch: build-cross-watch install-cross-watch
 
-.stamp-build-cross-watch: $(MONO_DEPENDENCIES)
+.stamp-build-cross-watch: $(MONO_DEPENDENCIES) $(SDK_CONFIG)
 	$(MAKE) -C $(MONO_PATH)/sdks/builds package-ios-crosswatch
 	$(Q) touch $@
 
@@ -1982,6 +1987,6 @@ $(PREFIX)/bin/armv7k-unknown-darwin-mono-sgen: $(MONO_PATH)/sdks/out/ios-crosswa
 
 install-cross-watch: install-llvm32 $(CROSS_WATCH_TARGETS)
 
-clean-cross-watch:
+clean-cross-watch: $(SDK_CONFIG)
 	$(MAKE) -C $(MONO_PATH)/sdks/builds clean-ios-crosswatch
 	-rm -rf .stamp-build-cross-watch
