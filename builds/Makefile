@@ -1792,81 +1792,53 @@ $(BUILD_DESTDIR)/targettv/tmp-lib/Mono: $(BUILD_DESTDIR)/targettv/lib/libmonosge
 
 install-tvos: $(TVOS_TARGETS)
 
-
 #
-# this is the cross aot version of mono.  runs on x86 but the jit/aot spits out arm.
+# Cross compilers
+#
+# This is the cross aot version of mono.  runs on x86 but the jit/aot spits out arm.
 #
 # There are two versions of the cross compiler, a 32 bit version targeting arm, and a 64
 # bit version targeting arm64.
+# These are compiled using the mono sdk makefiles
 #
 
 #
-# we need to compile the cross build against llvm so we need to configure/build that first
+# We need to compile the cross build against llvm so we need to configure/build that first
 #
 ifdef INCLUDE_DEVICE
-cross:: build-llvm
+cross:: build-llvm32
 cross64:: build-llvm64
 
-setup:: setup-llvm setup-llvm64
-clean-local:: clean-llvm clean-llvm64
-
-setup-llvm: .stamp-configure-llvm
-setup-llvm64: .stamp-configure-llvm64
+clean-local:: clean-llvm32
 endif
 
-LLVM_BASE_CONFIGURE_FLAGS=--enable-libcpp --enable-optimized --enable-assertions=no --disable-jit --disable-docs --disable-doxygen
-LLVM_CXXFLAGS=$(CCACHE_CXXFLAGS)
-LLVM_BASE_CONFIGURE_ENVIRONMENT=$(COMMON_ACVARS)
-
-# This is used just for linking with the 32 bit cross compiler
-# FIXME: Avoid building the libs not needed by mono
-.stamp-configure-llvm: $(LLVM_PATH)/configure
-	@mkdir -p llvm/
-	@echo "Configuring llvm"
-	@cd llvm && \
-	$(LLVM_BASE_CONFIGURE_ENVIRONMENT) \
-	$(abspath $(LLVM_PATH)/configure) --prefix=$$PWD/usr --build=i386-apple-darwin10.7  --enable-targets="arm" $(LLVM_BASE_CONFIGURE_FLAGS) --cache-file=../llvm.config.cache CC="$(CCACHE)clang" CXX="$(CCACHE)clang++" CXXFLAGS="$(LLVM_CXXFLAGS)" > $@.log 2>&1 || (echo "Configuring llvm failed:" && cat $@.log | sed "s/^/    /" && exit 1)
-	$(Q) @touch $@
-	@echo Configured llvm
-
-.stamp-configure-llvm64: $(LLVM_PATH)/configure
-	@mkdir -p llvm64/
-	@echo "Configuring llvm64"
-	@cd llvm64 && \
-	$(LLVM_BASE_CONFIGURE_ENVIRONMENT) \
-	$(abspath $(LLVM_PATH)/configure) --prefix=$$PWD/usr --enable-targets="arm arm64" $(LLVM_BASE_CONFIGURE_FLAGS) --cache-file=../llvm64.config.cache CC="$(CCACHE)clang" CXX="$(CCACHE)clang++" CXXFLAGS="-Qunused-arguments" > $@.log 2>&1 || (echo "Configuring llvm64 failed:" && cat $@.log | sed "s/^/    /" && exit 1)
-	$(Q) @touch $@
-	@echo "Configured llvm64"
-
-build-llvm: .stamp-build-llvm
+build-llvm32: .stamp-build-llvm32
 build-llvm64: .stamp-build-llvm64
 
-.stamp-build-llvm: .stamp-configure-llvm $(LLVM_DEPENDENCIES)
-	$(MAKE) -C llvm all install
+.stamp-build-llvm32:
+	$(MAKE) -C $(MONO_PATH)/sdks/builds build-ios-llvm
 	$(Q) touch $@
 
-.stamp-build-llvm64: .stamp-configure-llvm64 $(LLVM_DEPENDENCIES)
-	$(MAKE) -C llvm64 all install
+.stamp-build-llvm64:
+	$(MAKE) -C $(MONO_PATH)/sdks/builds build-ios-llvm
 	$(Q) touch $@
 
 really-build-llvm64:
-	$(MAKE) -C llvm64 all install
-	$(Q) touch .stamp-configure-llvm64
+	$(MAKE) -C $(MONO_PATH)/sdks/builds build-ios-llvm
 
 clean-llvm:
-	-rm -rf llvm .stamp-configure-llvm .stamp-build-llvm llvm.config.cache
-clean-llvm64:
-	-rm -rf llvm64 .stamp-configure-llvm64 .stamp-build-llvm64 llvm64.config.cache
+	$(MAKE) -C $(MONO_PATH)/sdks/builds clean-ios-llvm
+	$(RM) .stamp-*-llvm*
 
 .PHONY: install-llvm64 llvm llvm64
 
-install-llvm: .stamp-build-llvm install-directories
+install-llvm: .stamp-build-llvm64 install-directories
 
 LLVM_TARGETS = \
 	$(PREFIX)/LLVM/bin/opt \
 	$(PREFIX)/LLVM/bin/llc \
 
-$(PREFIX)/LLVM/bin/%: llvm64/usr/bin/% | $(PREFIX)/LLVM/bin
+$(PREFIX)/LLVM/bin/%: $(MONO_PATH)/sdks/out/ios-llvm64/bin/% | $(PREFIX)/LLVM/bin
 	$(call Q_2,INSTALL ,[LLVM64]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $^ $@
 
 $(PREFIX)/LLVM/bin:
@@ -1874,7 +1846,7 @@ $(PREFIX)/LLVM/bin:
 
 install-llvm64: .stamp-build-llvm64 $(LLVM_TARGETS)
 
-llvm: setup-llvm build-llvm install-llvm
+llvm: build-llvm64 install-llvm
 llvm64: install-llvm64
 
 $(MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe: $(wildcard $(MONO_PATH)/tools/offsets-tool/*.cs)
@@ -1885,139 +1857,63 @@ $(WATCH_MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe: $(wildcard $(WAT
 	$(Q) $(MAKE) -C $(dir $@) MonoAotOffsetsDumper.exe
 endif
 
-target7/mono/arch/arm/arm_dpimacros.h: .stamp-configure-target7
-	$(Q) $(MAKE) -C $(dir $@) $(notdir $@)
-
 targetwatch/mono/arch/arm/arm_dpimacros.h: .stamp-configure-targetwatch
 	$(Q) $(MAKE) -C $(dir $@) $(notdir $@)
-
-# template definition for generating AOT cross offsets for an ABI
-# parameters are:
-#  $(1): target ABI
-#  $(2): output directory
-#  $(3): build
-define GenerateCrossOffsets
-$(3)/$(1).h: .stamp-configure-$(3) target7/mono/arch/arm/arm_dpimacros.h targetwatch/mono/arch/arm/arm_dpimacros.h $(4)/tools/offsets-tool/MonoAotOffsetsDumper.exe
-	$(Q) MONO_PATH=$(4)/tools/offsets-tool/CppSharp/osx_32 \
-	$(SYSTEM_MONO32) $(4)/tools/offsets-tool/MonoAotOffsetsDumper.exe --abi $(1) --out $(2) --mono $(abspath $(4)) --maccore $(abspath $(TOP))
-endef
-
-CROSS_BASE_CFLAGS=-DMONOTOUCH $(CROSS_BUILD_CFLAGS) $(CCACHE_CFLAGS)
-CROSS_BASE_CXXFLAGS=-DMONOTOUCH $(CCACHE_CXXFLAGS)
-
-CROSS_BASE_CONFIGURE_FLAGS= \
-			--with-glib=embedded \
-			--enable-minimal=com,remoting \
-			--disable-mcs-build \
-			--enable-llvm \
-			--enable-icall-symbol-map \
-			--disable-nls \
-			--disable-iconv \
-			--disable-libraries	\
-			--disable-boehm \
-			$(XAMARIN_IOS_CONFIGURE_FLAGS)
 
 #
 # 32 bit cross compiler
 #
 
-# mono's configure already adds an -arch i386 flag, and cache doesn't like duplicate -arch flags
-CROSS_CFLAGS=$(CROSS_BASE_CFLAGS) -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
-CROSS_CXXFLAGS=$(CROSS_BASE_CXXFLAGS) -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) -stdlib=libc++
-CROSS_LDFLAGS=-stdlib=libc++ $(COMMON_LDFLAGS)
-
-CROSS_CONFIGURE_FLAGS=$(CROSS_BASE_CONFIGURE_FLAGS)	\
-	--prefix=$(BUILD_DESTDIR)/cross \
-	--build=i386-apple-darwin10 \
-	--cache-file=../cross.config.cache \
-	--target=arm-darwin \
-	--with-cross-offsets=arm-apple-darwin10.h \
-	--with-llvm=../llvm/usr
-
-CROSS_CONFIGURE_ENVIRONMENT = \
-	CFLAGS="$(CROSS_CFLAGS)" \
-	CXXFLAGS="$(CROSS_CXXFLAGS)" \
-	LDFLAGS="$(CROSS_LDFLAGS)" \
-	CC="$(MAC_CC)" \
-	CXX="$(MAC_CXX)" \
-
 ifdef INCLUDE_IOS
 ifdef INCLUDE_DEVICE
-cross:: build-cross install-cross
+cross:: build-cross32 install-cross32
 
-.PHONY: setup-cross build-cross install-cross
+cross32: build-cross32 install-cross32 
 
-setup:: setup-cross
-build:: build-cross
-install-local:: install-cross
-clean-local:: clean-cross
+.PHONY: build-cross32 install-cross32
+
+build:: build-cross32
+install-local:: install-cross32
+clean-local:: clean-cross32
 endif
 endif
 
-setup-cross: .stamp-configure-cross
-
-.stamp-configure-cross: $(MONO_PATH)/configure .stamp-build-llvm
-	$(Q) $(CROSS_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh cross $(abspath $(MONO_PATH)/configure) $(CROSS_CONFIGURE_FLAGS)
-
-$(eval $(call GenerateCrossOffsets,arm-apple-darwin10,$(TOP)/builds/cross/,cross,$(MONO_PATH)))
-
-.stamp-build-cross: .stamp-configure-cross cross/arm-apple-darwin10.h $(MONO_DEPENDENCIES)
-	$(MAKE) -C cross/mono
-	$(MAKE) -C cross/mono install
+.stamp-build-cross32: $(MONO_DEPENDENCIES)
+	$(MAKE) -C $(MONO_PATH)/sdks/builds package-ios-cross32
 	$(Q) touch $@
 
-build-cross: .stamp-build-cross
+build-cross32: .stamp-build-cross32
 
 CROSS_TARGETS = \
 	$(PREFIX)/bin/arm-darwin-mono-sgen  \
 
-$(BUILD_DESTDIR)/cross/bin/arm-darwin-mono-sgen: .stamp-build-cross
+$(MONO_PATH)/sdks/out/ios-cross32/bin/arm-darwin-mono-sgen: .stamp-build-cross32
 
-$(PREFIX)/bin/arm-darwin-mono-sgen: $(BUILD_DESTDIR)/cross/bin/arm-darwin-mono-sgen | $(PREFIX)/bin
+$(PREFIX)/bin/arm-darwin-mono-sgen: $(MONO_PATH)/sdks/out/ios-cross32/bin/arm-darwin-mono-sgen | $(PREFIX)/bin
 	$(call Q_2,INSTALL ,[CROSS]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $< $@
 
 $(PREFIX)/bin:
 	$(Q) mkdir -p $@
 
-install-cross: install-llvm64 $(CROSS_TARGETS)
+install-cross32: install-llvm64 $(CROSS_TARGETS)
 
-clean-cross:
-	-rm -rf cross .stamp-configure-cross cross.config.cache
+clean-cross32:
+	$(MAKE) -C $(MONO_PATH)/sdks/builds clean-ios-cross32
+	-rm -rf .stamp-build-cross32
 
 #
 # 64 bit cross compiler
 #
 
-CROSS64_CFLAGS=$(CROSS_BASE_CFLAGS) -mmacosx-version-min=10.8
-CROSS64_CXXFLAGS=$(CROSS_BASE_CXXFLAGS) -mmacosx-version-min=10.8 -stdlib=libc++
-CROSS64_LDFLAGS=-stdlib=libc++ $(COMMON_LDFLAGS)
-
-CROSS64_CONFIGURE_FLAGS=$(CROSS_BASE_CONFIGURE_FLAGS)	\
-	--prefix=$(BUILD_DESTDIR)/cross64 \
-	--cache-file=../cross64.config.cache \
-	--target=aarch64-darwin \
-	--with-cross-offsets=aarch64-apple-darwin10.h \
-	--with-llvm=../llvm64/usr
-
-CROSS64_CONFIGURE_ENVIRONMENT = \
-	CFLAGS="$(CROSS64_CFLAGS)" \
-	CXXFLAGS="$(CROSS64_CXXFLAGS)" \
-	LDFLAGS="$(CROSS64_LDFLAGS)" \
-	CC="$(MAC_CC)" \
-	CXX="$(MAC_CXX)" \
-
 cross64:: build-cross64 install-cross64
 
 ifdef INCLUDE_IOS
 ifdef INCLUDE_DEVICE
-setup:: setup-cross64
 build:: build-cross64
 install-local:: install-cross64
 clean-local:: clean-cross64
 endif
 endif
-
-setup-cross64: .stamp-configure-cross64
 
 install-directories:
 	install -d $(PREFIX)/bin
@@ -2028,16 +1924,9 @@ install-directories:
 	install -d $(IOS_DESTDIR)/$(IPHONESIMULATOR_PREFIX)/lib
 	install -d $(IOS_DESTDIR)/$(IPHONEOS_PREFIX)/include
 	install -d $(IOS_DESTDIR)/$(IPHONEOS_PREFIX)/lib
-	install -d $(PREFIX)/LLVM/bin
 
-.stamp-configure-cross64: $(MONO_PATH)/configure .stamp-build-llvm64
-	$(Q) $(CROSS64_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh cross64 $(abspath $(MONO_PATH)/configure) $(CROSS64_CONFIGURE_FLAGS)
-
-$(eval $(call GenerateCrossOffsets,aarch64-apple-darwin10,$(TOP)/builds/cross64/,cross64,$(MONO_PATH)))
-
-.stamp-build-cross64: .stamp-configure-cross64 cross64/aarch64-apple-darwin10.h $(MONO_DEPENDENCIES)
-	$(MAKE) -C cross64/mono
-	@$(MAKE) -C cross64/mono install
+.stamp-build-cross64: $(MONO_DEPENDENCIES)
+	$(MAKE) -C $(MONO_PATH)/sdks/builds package-ios-cross64
 	$(Q) touch $@
 
 build-cross64: .stamp-build-cross64
@@ -2045,44 +1934,29 @@ build-cross64: .stamp-build-cross64
 CROSS64_TARGETS = \
 	$(PREFIX)/bin/arm64-darwin-mono-sgen \
 
-$(BUILD_DESTDIR)/cross64/bin/aarch64-darwin-mono-sgen: .stamp-build-cross64
+$(MONO_PATH)/sdks/out/ios-cross64/bin/aarch64-darwin-mono-sgen: .stamp-build-cross64
 
-$(PREFIX)/bin/arm64-darwin-mono-sgen: $(BUILD_DESTDIR)/cross64/bin/aarch64-darwin-mono-sgen | $(PREFIX)/bin
-	$(call Q_2,INSTALL ,[CROSS64]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $< $@
+$(PREFIX)/bin/arm64-darwin-mono-sgen: $(MONO_PATH)/sdks/out/ios-cross64/bin/aarch64-darwin-mono-sgen | $(PREFIX)/bin
+	$(call Q_2,INSTALL ,[CROSS]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $< $@
 
 install-cross64: install-llvm64 $(CROSS64_TARGETS)
 
 clean-cross64:
-	-rm -rf cross64 .stamp-*-cross64 cross64.config.cache
-
+	$(MAKE) -C $(MONO_PATH)/sdks/builds clean-ios-cross64
+	-rm -rf .stamp-build-cross64
 
 #
 # 32 bit watch cross compiler
 #
 
-WATCH_CROSS_CONFIGURE_FLAGS=$(CROSS_BASE_CONFIGURE_FLAGS)	\
-	--prefix=$(BUILD_DESTDIR)/cross-watch \
-	--build=i386-apple-darwin10 \
-	--cache-file=../cross-watch.config.cache \
-	--target=armv7k-unknown-darwin \
-	--with-cooperative-gc=yes \
-	--with-cross-offsets=armv7k-apple-darwin.h \
-	--with-llvm=../llvm/usr
-
-WATCH_CONFIGURE_ENVIRONMENT = \
-	CFLAGS="$(CROSS_CFLAGS)" \
-	CXXFLAGS="$(CROSS_CXXFLAGS)" \
-	LDFLAGS="$(CROSS_LDFLAGS)" \
-	CC="$(MAC_CC)" \
-	CXX="$(MAC_CXX)" \
-
 ifdef INCLUDE_WATCH
 ifdef INCLUDE_DEVICE
 cross:: build-cross-watch install-cross-watch
 
-.PHONY: setup-cross-watch build-cross-watch install-cross-watch
+crosswatch: build-cross-watch install-cross-watch
 
-setup:: setup-cross-watch
+.PHONY: build-cross-watch install-cross-watch
+
 build:: build-cross-watch
 install-local:: install-cross-watch
 clean-local:: clean-cross-watch
@@ -2092,31 +1966,22 @@ endif
 .PHONY: cross-watch
 cross-watch: build-cross-watch install-cross-watch
 
-setup-cross-watch: .stamp-configure-cross-watch
-
-.stamp-configure-cross-watch: $(WATCH_MONO_PATH)/configure .stamp-build-llvm
-	$(Q) $(WATCH_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh cross-watch $(abspath $(WATCH_MONO_PATH)/configure) $(WATCH_CROSS_CONFIGURE_FLAGS)
-
-build-cross: setup-cross
-
-$(eval $(call GenerateCrossOffsets,armv7k-apple-darwin,$(TOP)/builds/cross-watch/,cross-watch,$(WATCH_MONO_PATH)))
-
-.stamp-build-cross-watch: .stamp-configure-cross-watch cross-watch/armv7k-apple-darwin.h $(MONO_DEPENDENCIES)
-	$(MAKE) -C cross-watch/mono
-	$(MAKE) -C cross-watch/mono install
+.stamp-build-cross-watch: $(MONO_DEPENDENCIES)
+	$(MAKE) -C $(MONO_PATH)/sdks/builds package-ios-crosswatch
 	$(Q) touch $@
 
 build-cross-watch: .stamp-build-cross-watch
 
 CROSS_WATCH_TARGETS = \
-	$(PREFIX)/bin/armv7k-unknown-darwin-mono-sgen  \
+	$(PREFIX)/bin/armv7k-unknown-darwin-mono-sgen \
 
-$(BUILD_DESTDIR)/cross-watch/bin/armv7k-unknown-darwin-mono-sgen: .stamp-build-cross-watch
+$(MONO_PATH)/sdks/out/ios-crosswatch/bin/armv7k-unknown-darwin-mono-sgen: .stamp-build-cross-watch
 
-$(PREFIX)/bin/armv7k-unknown-darwin-mono-sgen: $(BUILD_DESTDIR)/cross-watch/bin/armv7k-unknown-darwin-mono-sgen | $(PREFIX)/bin
+$(PREFIX)/bin/armv7k-unknown-darwin-mono-sgen: $(MONO_PATH)/sdks/out/ios-crosswatch/bin/armv7k-unknown-darwin-mono-sgen | $(PREFIX)/bin
 	$(call Q_2,INSTALL ,[CROSS]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $< $@
 
-install-cross-watch: install-llvm $(CROSS_WATCH_TARGETS)
+install-cross-watch: install-llvm32 $(CROSS_WATCH_TARGETS)
 
 clean-cross-watch:
-	-rm -rf cross-watch .stamp-configure-cross-watch cross-watch.config.cache
+	$(MAKE) -C $(MONO_PATH)/sdks/builds clean-ios-crosswatch
+	-rm -rf .stamp-build-cross-watch
