@@ -783,15 +783,15 @@ namespace Xamarin.Bundler
 			//   its GUID).
 			// 
 
-			LinkDirectory = Path.Combine (ArchDirectory, "Link");
+			LinkDirectory = Path.Combine (ArchDirectory, "1-Link");
 			if (!Directory.Exists (LinkDirectory))
 				Directory.CreateDirectory (LinkDirectory);
 
-			PreBuildDirectory = Path.Combine (ArchDirectory, "PreBuild");
+			PreBuildDirectory = Path.Combine (ArchDirectory, "2-PreBuild");
 			if (!Directory.Exists (PreBuildDirectory))
 				Directory.CreateDirectory (PreBuildDirectory);
 			
-			BuildDirectory = Path.Combine (ArchDirectory, "Build");
+			BuildDirectory = Path.Combine (ArchDirectory, "3-Build");
 			if (!Directory.Exists (BuildDirectory))
 				Directory.CreateDirectory (BuildDirectory);
 
