@@ -31,7 +31,12 @@ namespace Xamarin.Linker {
 			// The static registrar needs access to the interfaces for protocols, so keep them around.
 			if (!LinkContext.ProtocolImplementations.TryGetValue (type, out var list))
 				LinkContext.ProtocolImplementations [type] = list = new List<TypeDefinition> ();
-			list.Add (iface.InterfaceType.Resolve ());
+			var it = iface.InterfaceType.Resolve ();
+			if (it == null) {
+				// The interface type might already have been linked away, so go look for it among those types as well
+				it = LinkContext.GetLinkedAwayType (iface.InterfaceType, out _);
+			}
+			list.Add (it);
 		}
 
 		protected override void ElementRemoved (IMetadataTokenProvider element)
