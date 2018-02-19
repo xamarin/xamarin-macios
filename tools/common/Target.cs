@@ -402,7 +402,7 @@ namespace Xamarin.Bundler {
 			sb.AppendLine ("}");
 			sb.AppendLine ();
 
-			Driver.WriteIfDifferent (reference_m, sb.ToString ());
+			Driver.WriteIfDifferent (reference_m, sb.ToString (), true);
 
 #if MTOUCH
 			foreach (var abi in GetArchitectures (AssemblyBuildTarget.StaticObject)) {

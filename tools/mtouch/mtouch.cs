@@ -79,6 +79,8 @@ public enum OutputFormat {
 namespace Xamarin.Bundler
 {
 	partial class Driver {
+		internal const string NAME = "mtouch";
+
 		public static void ShowHelp (OptionSet os)
 		{
 			Console.WriteLine ("mtouch - Mono Compiler for iOS");
@@ -698,7 +700,7 @@ namespace Xamarin.Bundler
 					sw.WriteLine ("}");
 
 				}
-				WriteIfDifferent (main_source, sb.ToString ());
+				WriteIfDifferent (main_source, sb.ToString (), true);
 			} catch (MonoTouchException) {
 				throw;
 			} catch (Exception e) {

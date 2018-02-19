@@ -63,8 +63,8 @@ namespace Xamarin.Bundler
 
 			Registrar.GeneratePInvokeWrappersEnd ();
 
-			Driver.WriteIfDifferent (HeaderPath, hdr.ToString () + "\n" + decls.ToString () + "\n" + ifaces.ToString () + "\n") ;
-			Driver.WriteIfDifferent (SourcePath, mthds.ToString () + "\n" + sb.ToString () + "\n");
+			Driver.WriteIfDifferent (HeaderPath, hdr.ToString () + "\n" + decls.ToString () + "\n" + ifaces.ToString () + "\n", true);
+			Driver.WriteIfDifferent (SourcePath, mthds.ToString () + "\n" + sb.ToString () + "\n", true);
 		}
 
 		public void ProcessMethod (MethodDefinition method)

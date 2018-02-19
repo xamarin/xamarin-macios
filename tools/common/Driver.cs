@@ -305,7 +305,7 @@ namespace Xamarin.Bundler {
 			File.Move (source, target);
 		}
 
-		static void MoveIfDifferent (string path, string tmp)
+		static void MoveIfDifferent (string path, string tmp, bool use_stamp = false)
 		{
 			// Don't read the entire file into memory, it can be quite big in certain cases.
 
@@ -326,10 +326,12 @@ namespace Xamarin.Bundler {
 				FileMove (tmp, path);
 			} else {
 				Log (3, "Target {0} is up-to-date.", path);
+				if (use_stamp)
+					Driver.Touch (path + ".stamp");
 			}
 		}
 
-		public static void WriteIfDifferent (string path, string contents)
+		public static void WriteIfDifferent (string path, string contents, bool use_stamp = false)
 		{
 			var tmp = path + ".tmp";
 
@@ -342,7 +344,7 @@ namespace Xamarin.Bundler {
 				}
 
 				File.WriteAllText (tmp, contents);
-				MoveIfDifferent (path, tmp);
+				MoveIfDifferent (path, tmp, use_stamp);
 			} catch (Exception e) {
 				File.WriteAllText (path, contents);
 				ErrorHelper.Warning (1014, e, "Failed to re-use cached version of '{0}': {1}.", path, e.Message);
@@ -351,7 +353,7 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public static void WriteIfDifferent (string path, byte[] contents)
+		public static void WriteIfDifferent (string path, byte[] contents, bool use_stamp = false)
 		{
 			var tmp = path + ".tmp";
 
@@ -363,7 +365,7 @@ namespace Xamarin.Bundler {
 				}
 
 				File.WriteAllBytes (tmp, contents);
-				MoveIfDifferent (path, tmp);
+				MoveIfDifferent (path, tmp, use_stamp);
 			} catch (Exception e) {
 				File.WriteAllBytes (path, contents);
 				ErrorHelper.Warning (1014, e, "Failed to re-use cached version of '{0}': {1}.", path, e.Message);

@@ -126,7 +126,13 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public static bool IsUptodate (string source, string target, bool check_contents = false)
+		// Checks if the source file has a time stamp later than the target file.
+		//
+		// Optionally check if the contents of the files are different after checking the timestamp.
+		//
+		// If check_stamp is true, the function will use the timestamp of a "target".stamp file
+		// if it's later than the timestamp of the "target" file itself.
+		public static bool IsUptodate (string source, string target, bool check_contents = false, bool check_stamp = true)
 		{
 			if (Driver.Force)
 				return false;
@@ -136,6 +142,14 @@ namespace Xamarin.Bundler {
 			if (!tfi.Exists) {
 				Driver.Log (3, "Target '{0}' does not exist.", target);
 				return false;
+			}
+
+			if (check_stamp) {
+				var tfi_stamp = new FileInfo (target + ".stamp");
+				if (tfi_stamp.Exists && tfi_stamp.LastWriteTimeUtc > tfi.LastWriteTimeUtc) {
+					Driver.Log (3, "Target '{0}' has a stamp file with newer timestamp ({1} > {2}), using the stamp file's timestamp", target, tfi_stamp.LastWriteTimeUtc, tfi.LastWriteTimeUtc);
+					tfi = tfi_stamp;
+				}
 			}
 
 			var sfi = new FileInfo (source);
@@ -323,7 +337,10 @@ namespace Xamarin.Bundler {
 		}
 
 		// Checks if any of the source files have a time stamp later than any of the target files.
-		public static bool IsUptodate (IEnumerable<string> sources, IEnumerable<string> targets)
+		//
+		// If check_stamp is true, the function will use the timestamp of a "target".stamp file
+		// if it's later than the timestamp of the "target" file itself.
+		public static bool IsUptodate (IEnumerable<string> sources, IEnumerable<string> targets, bool check_stamp = true)
 		{
 			if (Driver.Force)
 				return false;
@@ -354,6 +371,14 @@ namespace Xamarin.Bundler {
 				if (!tfi.Exists) {
 					Driver.Log (3, "Target '{0}' does not exist.", t);
 					return false;
+				}
+
+				if (check_stamp) {
+					var tfi_stamp = new FileInfo (t + ".stamp");
+					if (tfi_stamp.Exists && tfi_stamp.LastWriteTimeUtc > tfi.LastWriteTimeUtc) {
+						Driver.Log (3, "Target '{0}' has a stamp file with newer timestamp ({1} > {2}), using the stamp file's timestamp", t, tfi_stamp.LastWriteTimeUtc, tfi.LastWriteTimeUtc);
+						tfi = tfi_stamp;
+					}
 				}
 
 				var lwt = tfi.LastWriteTimeUtc;

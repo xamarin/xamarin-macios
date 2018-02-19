@@ -4564,12 +4564,12 @@ namespace Registrar {
 
 			FlushTrace ();
 
-			Driver.WriteIfDifferent (source_path, methods.ToString ());
+			Driver.WriteIfDifferent (source_path, methods.ToString (), true);
 
 			header.AppendLine ();
 			header.AppendLine (declarations);
 			header.AppendLine (interfaces);
-			Driver.WriteIfDifferent (header_path, header.ToString ());
+			Driver.WriteIfDifferent (header_path, header.ToString (), true);
 
 			header.Dispose ();
 			header = null;
