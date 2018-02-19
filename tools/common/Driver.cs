@@ -446,7 +446,13 @@ namespace Xamarin.Bundler {
 				timestamp = DateTime.Now;
 			foreach (var filename in filenames) {
 				try {
-					new FileInfo (filename).LastWriteTime = timestamp.Value;
+					var fi = new FileInfo (filename);
+					if (!fi.Exists) {
+						using (var fo = fi.OpenWrite ()) {
+							// Create an empty file.
+						}
+					}
+					fi.LastWriteTime = timestamp.Value;
 				} catch (Exception e) {
 					ErrorHelper.Warning (128, "Could not touch the file '{0}': {1}", filename, e.Message);
 				}
