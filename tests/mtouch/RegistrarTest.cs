@@ -1414,6 +1414,43 @@ class CTP4 : CTP3 {
 			}
 		}
 
+		[Test]
+		public void LinkedAwayGenericTypeAsOptionalMemberInProtocol ()
+		{
+			// Normally compilable test code can go into monotouch-test, but in this case it depends on the
+			// generic type (NSSet) being linked away, and since monotouch-test uses NSSet, it's not linked
+			// away, and we don't hit the required condition causing the bug.
+			var code = @"
+	[Protocol (Name = ""ProtocolWithGenericsInOptionalMember"", WrapperType = typeof (ProtocolWithGenericsInOptionalMemberWrapper))]
+	[ProtocolMember (IsRequired = false, IsProperty = false, IsStatic = false, Name = ""ConfigureView"", Selector = ""configureViewForParameters:"", ParameterType = new Type [] { typeof (global::Foundation.NSSet<global::Foundation.NSString>) }, ParameterByRef = new bool [] { false })]
+	public interface IProtocolWithGenericsInOptionalMember : INativeObject, IDisposable
+		{
+		}
+
+		internal sealed class ProtocolWithGenericsInOptionalMemberWrapper : BaseWrapper, IProtocolWithGenericsInOptionalMember
+		{
+			[Preserve (Conditional = true)]
+			public ProtocolWithGenericsInOptionalMemberWrapper (IntPtr handle, bool owns)
+				: base (handle, owns)
+			{
+			}
+		}
+
+		[Preserve]
+		class MyViewController : UIViewController, IProtocolWithGenericsInOptionalMember
+		{
+		}
+";
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.CreateTemporaryApp (extraCode: code, usings: "using System; using Foundation; using ObjCRuntime; using UIKit;");
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.Linker = MTouchLinker.LinkAll;
+				mtouch.AssertExecute ();
+				mtouch.AssertNoWarnings ();
+			}
+		}
+
 #region Helper functions
 		// Creates an app with the specified source as the executable.
 		// Compiles it using smcs, will throw a McsException if it fails.
