@@ -92,6 +92,15 @@ endif
 CCACHE_CFLAGS=-Qunused-arguments
 CCACHE_CXXFLAGS=-Qunused-arguments
 
+#
+# Configuration for the mono sdk makefiles
+#
+SDK_CONFIG=$(MONO_PATH)/sdks/Make.config
+SDK_ARGS=XCODE_DEVELOPER_ROOT=$(XCODE_DEVELOPER_ROOT)
+
+$(MONO_PATH)/sdks/Make.config:
+	echo "DISABLE_ANDROID=1" > $@
+
 ##
 ## Xamarin.Mac
 ##
@@ -1802,10 +1811,15 @@ install-tvos: $(TVOS_TARGETS)
 # These are compiled using the mono sdk makefiles
 #
 
-SDK_CONFIG=$(MONO_PATH)/sdks/Make.config
-
-$(MONO_PATH)/sdks/Make.config:
-	echo "DISABLE_ANDROID=1" > $@
+install-directories:
+	install -d $(PREFIX)/bin
+	install -d $(PREFIX)/share/mono
+	install -d $(PREFIX)/lib/mono/2.1/Facades
+	install -d $(PREFIX)/lib/mono/Xamarin.iOS
+	install -d $(IOS_DESTDIR)/$(IPHONESIMULATOR_PREFIX)/include
+	install -d $(IOS_DESTDIR)/$(IPHONESIMULATOR_PREFIX)/lib
+	install -d $(IOS_DESTDIR)/$(IPHONEOS_PREFIX)/include
+	install -d $(IOS_DESTDIR)/$(IPHONEOS_PREFIX)/lib
 
 #
 # Add explicit targets for building llvm before building the cross compilers, to
@@ -1819,16 +1833,16 @@ build-llvm32: .stamp-build-llvm
 build-llvm64: .stamp-build-llvm
 
 .stamp-build-llvm: $(SDK_CONFIG)
-	$(MAKE) -C $(MONO_PATH)/sdks/builds build-ios-llvm
+	$(MAKE) -C $(MONO_PATH)/sdks/builds build-ios-llvm $(SDK_ARGS)
 	$(Q) touch $@
 
 clean-llvm: $(SDK_CONFIG)
-	$(MAKE) -C $(MONO_PATH)/sdks/builds clean-ios-llvm
+	$(MAKE) -C $(MONO_PATH)/sdks/builds clean-ios-llvm $(SDK_ARGS)
 	$(RM) .stamp-*-llvm*
 
 .PHONY: install-llvm64 llvm llvm64
 
-install-llvm: .stamp-build-llvm install-directories
+install-llvm: install-llvm32 install-llvm64
 
 LLVM_TARGETS = \
 	$(PREFIX)/LLVM/bin/opt \
@@ -1885,7 +1899,7 @@ endif
 endif
 
 .stamp-build-$(1): build-$(2) $(MONO_DEPENDENCIES) $(SDK_CONFIG)
-	$(MAKE) -C $(MONO_PATH)/sdks/builds package-ios-$(1)
+	$(MAKE) -C $(MONO_PATH)/sdks/builds package-ios-$(1) $(SDK_ARGS)
 	$(Q) touch $$@
 
 build-$(1): .stamp-build-$(1)
@@ -1901,7 +1915,7 @@ $(PREFIX)/bin/$(3): $(MONO_PATH)/sdks/out/ios-$(1)/bin/$(4) | $(PREFIX)/bin
 install-$(1): install-$(2) $$(_$(1)_CROSS_TARGETS)
 
 clean-$(1): $(SDK_CONFIG)
-	$(MAKE) -C $(MONO_PATH)/sdks/builds clean-ios-$(1)
+	$(MAKE) -C $(MONO_PATH)/sdks/builds clean-ios-$(1) $(SDK_ARGS)
 	-rm -rf .stamp-build-$(1)
 
 endef
