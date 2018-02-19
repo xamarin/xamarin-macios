@@ -537,17 +537,38 @@ namespace Xamarin.Bundler
 			if (!Driver.Force) {
 				if (File.Exists (cache_path)) {
 					using (var reader = new StreamReader (cache_path)) {
-						string line;
+						string line = null;
+
 						while ((line = reader.ReadLine ()) != null) {
 							var colon = line.IndexOf (':');
 							if (colon == -1)
 								continue;
-							var appex = line.Substring (0, colon);
-							var asm = line.Substring (colon + 1);
-							List<string> asms;
-							if (!cached_output.TryGetValue (appex, out asms))
-								cached_output [appex] = asms = new List<string> ();
-							asms.Add (asm);
+							var key = line.Substring (0, colon);
+							var value = line.Substring (colon + 1);
+							switch (key) {
+							case "RemoveDynamicRegistrar":
+								switch (value) {
+								case "true":
+									App.Optimizations.RemoveDynamicRegistrar = true;
+									break;
+								case "false":
+									App.Optimizations.RemoveDynamicRegistrar = false;
+									break;
+								default:
+									App.Optimizations.RemoveDynamicRegistrar = null;
+									break;
+								}
+								Driver.Log (1, $"Optimization dynamic registrar removal loaded from cached results: {(App.Optimizations.RemoveDynamicRegistrar.HasValue ? (App.Optimizations.RemoveUIThreadChecks.Value ? "enabled" : "disabled") : "not set")}");
+								break;
+							default:
+								// key: app(ex)
+								// value: assembly
+								List<string> asms;
+								if (!cached_output.TryGetValue (key, out asms))
+									cached_output [key] = asms = new List<string> ();
+								asms.Add (value);
+								break;
+							}
 						}
 					}
 
@@ -683,6 +704,8 @@ namespace Xamarin.Bundler
 
 			// Write the input files to the cache
 			using (var writer = new StreamWriter (cache_path, false)) {
+				var opt = App.Optimizations.RemoveDynamicRegistrar;
+				writer.WriteLine ($"RemoveDynamicRegistrar:{(opt.HasValue ? (opt.Value ? "true" : "false") : string.Empty)}");
 				foreach (var target in allTargets) {
 					foreach (var asm in target.Assemblies) {
 						writer.WriteLine ($"{target.App.AppDirectory}:{asm.FullPath}");
