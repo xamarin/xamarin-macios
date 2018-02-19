@@ -127,7 +127,7 @@ namespace MonoTouch.Tuner {
 			}
 
 			// we want to avoid separate mscorlib.dll for 32/64 bits so the arch specific code for n[u]int and nfloat must be preserved in both cases
-			// a single, slightly larger, assenmbly is much smaller thn two (slightly smaller) ones
+			// a single, slightly larger, assembly is much smaller thn two (slightly smaller) ones
 			if (LinkContext.App.IsDualBuild) {
 				switch (method.Name) {
 				case "TryParse":

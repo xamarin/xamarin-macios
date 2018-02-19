@@ -579,7 +579,12 @@ namespace LinkAll {
 		public void NoFatCorlib ()
 		{
 			var corlib = typeof (int).Assembly.Location;
-			Assert.That (corlib, Is.StringEnding ("link all.app/mscorlib.dll"), "shared");
+#if __WATCHOS__
+			var suffix = "link all.appex/mscorlib.dll";
+#else
+			var suffix = "link all.app/mscorlib.dll";
+#endif
+			Assert.That (corlib, Is.StringEnding (suffix), corlib);
 		}
 	}
 
