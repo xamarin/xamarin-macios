@@ -357,7 +357,7 @@ public class B : A {}
 				mtouch.CreateTemporaryCacheDirectory ();
 				mtouch.Verbosity = 4; // This is required to get the debug output we're testing for
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build 1");
-				mtouch.AssertOutputPattern ("Linking .*/testApp.exe into .*/PreBuild using mode 'None'");
+				mtouch.AssertOutputPattern ("Linking .*/testApp.exe into .*/2-PreBuild using mode 'None'");
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build 2");
 				mtouch.AssertOutputPattern ("Cached assemblies reloaded.");
 			}
