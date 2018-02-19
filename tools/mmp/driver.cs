@@ -68,6 +68,7 @@ namespace Xamarin.Bundler {
 	}
 
 	public static partial class Driver {
+		internal const string NAME = "mmp";
 		internal static Application App = new Application (Environment.GetCommandLineArgs ());
 		static Target BuildTarget = new Target (App);
 		static List<string> references = new List<string> ();

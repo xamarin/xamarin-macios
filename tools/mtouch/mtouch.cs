@@ -79,6 +79,8 @@ public enum OutputFormat {
 namespace Xamarin.Bundler
 {
 	partial class Driver {
+		internal const string NAME = "mtouch";
+
 		public static void ShowHelp (OptionSet os)
 		{
 			Console.WriteLine ("mtouch - Mono Compiler for iOS");
@@ -698,7 +700,7 @@ namespace Xamarin.Bundler
 					sw.WriteLine ("}");
 
 				}
-				WriteIfDifferent (main_source, sb.ToString ());
+				WriteIfDifferent (main_source, sb.ToString (), true);
 			} catch (MonoTouchException) {
 				throw;
 			} catch (Exception e) {
@@ -797,24 +799,6 @@ namespace Xamarin.Bundler
 				Symlink (spdb, tpdb);
 
 			return true;
-		}
-
-		public static void Touch (IEnumerable<string> filenames, DateTime? timestamp = null)
-		{
-			if (timestamp == null)
-				timestamp = DateTime.Now;
-			foreach (var filename in filenames) {
-				try {
-					new FileInfo (filename).LastWriteTime = timestamp.Value;
-				} catch (Exception e) {
-					ErrorHelper.Warning (128, "Could not touch the file '{0}': {1}", filename, e.Message);
-				}
-			}
-		}
-
-		public static void Touch (params string [] filenames)
-		{
-			Touch ((IEnumerable<string>) filenames);
 		}
 
 		public static bool CanWeSymlinkTheApplication (Application app)
