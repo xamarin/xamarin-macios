@@ -7,6 +7,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -438,5 +439,24 @@ namespace Xamarin.Bundler {
 				}
 			}
 		}
+
+		public static void Touch (IEnumerable<string> filenames, DateTime? timestamp = null)
+		{
+			if (timestamp == null)
+				timestamp = DateTime.Now;
+			foreach (var filename in filenames) {
+				try {
+					new FileInfo (filename).LastWriteTime = timestamp.Value;
+				} catch (Exception e) {
+					ErrorHelper.Warning (128, "Could not touch the file '{0}': {1}", filename, e.Message);
+				}
+			}
+		}
+
+		public static void Touch (params string [] filenames)
+		{
+			Touch ((IEnumerable<string>) filenames);
+		}
+
 	}
 }

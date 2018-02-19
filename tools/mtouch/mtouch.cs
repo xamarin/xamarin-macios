@@ -799,24 +799,6 @@ namespace Xamarin.Bundler
 			return true;
 		}
 
-		public static void Touch (IEnumerable<string> filenames, DateTime? timestamp = null)
-		{
-			if (timestamp == null)
-				timestamp = DateTime.Now;
-			foreach (var filename in filenames) {
-				try {
-					new FileInfo (filename).LastWriteTime = timestamp.Value;
-				} catch (Exception e) {
-					ErrorHelper.Warning (128, "Could not touch the file '{0}': {1}", filename, e.Message);
-				}
-			}
-		}
-
-		public static void Touch (params string [] filenames)
-		{
-			Touch ((IEnumerable<string>) filenames);
-		}
-
 		public static bool CanWeSymlinkTheApplication (Application app)
 		{
 			if (app.Platform != ApplePlatform.iOS)
