@@ -68,6 +68,14 @@ namespace Xamarin.Bundler
 			}
 		}
 
+		// If this is an app extension, this returns the equivalent (32/64bit) target for the container app.
+		// This may be null (it's possible to build an extension for 32+64bit, and the main app only for 64-bit, for instance.
+		public Target ContainerTarget {
+			get {
+				return App.ContainerApp.Targets.FirstOrDefault ((v) => v.Is32Build == Is32Build);
+			}
+		}
+
 		// This is a list of all the architectures we need to build, which may include any architectures
 		// in any extensions (but not the main app).
 		List<Abi> all_architectures;
