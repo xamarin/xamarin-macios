@@ -103,6 +103,9 @@
     <Compile Include="..\..\..\tests\common\Profile.cs">
       <Link>Profile.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\tests\common\ExecutionHelper.cs">
+      <Link>ExecutionHelper.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
