@@ -519,8 +519,18 @@ namespace AppKit {
 		void EndSheet (NSWindow  sheet, nint returnCode);
 	
 		[Export ("nextEventMatchingMask:untilDate:inMode:dequeue:"), Protected]
+		NSEvent NextEvent (nuint mask, [NullAllowed] NSDate expiration, NSString runLoopMode, bool deqFlag);
+
+#if !XAMCORE_4_0
+		[Obsolete ("Use the 'NextEvent (nuint, NSDate, [NSRunLoopMode|NSString], bool)' overloads instead.")]
+		[Wrap ("NextEvent (mask, expiration, (NSString) mode, deqFlag)", IsVirtual = true), Protected]
 		NSEvent NextEvent (nuint mask, NSDate expiration, string mode, bool deqFlag);
-	
+#endif
+
+		// NSEventMask must be casted to nuint to preserve the NSEventMask.Any special value on 64 bit systems. NSEventMask is not [Native].
+		[Wrap ("NextEvent ((nuint) (ulong) mask, expiration, (NSString) runLoopMode.GetConstant (), deqFlag)")]
+		NSEvent NextEvent (NSEventMask mask, NSDate expiration, NSRunLoopMode runLoopMode, bool deqFlag);
+
 		[Export ("discardEventsMatchingMask:beforeEvent:"), Protected]
 		void DiscardEvents (nuint mask, NSEvent lastEvent);
 	
