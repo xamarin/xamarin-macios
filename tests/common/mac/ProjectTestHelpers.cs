@@ -110,6 +110,25 @@ namespace Xamarin.MMP.Tests
 			TI.RunAndAssert ($"ln -s Versions/A  {f ("Foo.framework/Current")}");
 			return f ("Foo.framework");
 		}
+
+		public static string CreateThinFramework (string tmpDir, bool sixtyFourBits = true)
+		{
+			Func<string, string> f = x => Path.Combine (tmpDir, x);
+			File.WriteAllText (f ("foo.c"), "int Answer () { return 42; }");
+			File.WriteAllText (f ("Info.plist"), PListText);
+
+			string bitnessArg = sixtyFourBits ? "-m64" : "-m32";
+			TI.RunAndAssert ($"clang {bitnessArg} -c -o {f ("foo.o")} {f ("foo.c")}");
+			TI.RunAndAssert ($"clang {bitnessArg} -dynamiclib -o {f ("Foo")} {f ("foo.o")}");
+			TI.RunAndAssert ($"install_name_tool -id @rpath/Foo.framework/Foo {f ("Foo")}");
+			TI.RunAndAssert ($"mkdir -p {f ("Foo.framework/Versions/A/Resources")}");
+			TI.RunAndAssert ($"cp {f ("Foo")} {f ("Foo.framework/Versions/A/Foo")}");
+			TI.RunAndAssert ($"cp {f ("Info.plist")} {f ("Foo.framework/Versions/A/Resources/")}");
+			TI.RunAndAssert ($"ln -s Versions/A/Foo {f ("Foo.framework/Foo")}");
+			TI.RunAndAssert ($"ln -s Versions/A/Resources  {f ("Foo.framework/Resources")}");
+			TI.RunAndAssert ($"ln -s Versions/A  {f ("Foo.framework/Current")}");
+			return f ("Foo.framework");
+		}
 	}
 
 	// Hide the hacks and provide a nice interface for writting tests that build / run XM projects
@@ -361,7 +380,7 @@ namespace Xamarin.MMP.Tests
 		public static string RunGeneratedUnifiedExecutable (UnifiedTestConfig config)
 		{
 			string bundleName = config.AssemblyName != "" ? config.AssemblyName : config.ProjectName.Split ('.')[0];
-			string exePath = Path.Combine (config.TmpDir, "bin/Debug/" + bundleName + ".app/Contents/MacOS/" + bundleName);
+			string exePath = Path.Combine (config.TmpDir, "bin/" + (config.Release ? "Release/" : "Debug/") + bundleName + ".app/Contents/MacOS/" + bundleName);
 			return RunEXEAndVerifyGUID (config.TmpDir, config.guid, exePath);
 		}
 

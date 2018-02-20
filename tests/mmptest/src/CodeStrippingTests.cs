@@ -81,7 +81,7 @@ namespace Xamarin.MMP.Tests
 
 		[TestCase (true, true)]
 		[TestCase (false, false)]
-		public void StripsThirdPartyLibrary_AndWarnsIfSo (bool? strip, bool shouldStrip)
+		public void ExplictStripOption_ThirdPartyLibrary_AndWarnsIfSo (bool? strip, bool shouldStrip)
 		{
 			MMPTests.RunMMPTest (tmpDir =>
 			{
@@ -90,10 +90,58 @@ namespace Xamarin.MMP.Tests
 				File.Copy (originalLocation, newLibraryLocation);
 
 				TI.UnifiedTestConfig test = CreateStripTestConfig (strip, tmpDir, $" --native-reference=\"{newLibraryLocation}\"");
+				test.Release = true;
 
 				string buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
 				Assert.AreEqual (shouldStrip, DidAnyLipoStrip (buildOutput), "lipo usage did not match expectations");
 				Assert.AreEqual (shouldStrip, buildOutput.Contains ("MM2108"), "Warning did not match expectations");
+			});
+		}
+
+		void AssertNoLipoOrWarning (string buildOutput, string context)
+		{
+			Assert.False (DidAnyLipoStrip (buildOutput), "lipo incorrectly run in context: " + context);
+			Assert.False (buildOutput.Contains ("MM2108"), "MM2108 incorrectly given in in context: " + context);
+		}
+
+		[TestCase (false)]
+		[TestCase (true)]
+		public void ThirdPartyLibrary_WithIncorrectBitness_ShouldWarnOnRelease (bool sixtyFourBits)
+		{
+			MMPTests.RunMMPTest (tmpDir =>
+			{
+				var frameworkPath = FrameworkBuilder.CreateThinFramework (tmpDir, sixtyFourBits);
+
+				TI.UnifiedTestConfig test = CreateStripTestConfig (null, tmpDir, $" --native-reference=\"{frameworkPath}\"");
+
+				// Should always skip lipo/warning in Debug
+				string buildOutput = TI.TestUnifiedExecutable(test).BuildOutput;
+				AssertNoLipoOrWarning (buildOutput, "Debug");
+
+				// Should always lipo/warn in Release
+				buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
+				Assert.True (DidAnyLipoStrip (buildOutput), "lipo did not run in release");
+				Assert.True (buildOutput.Contains ("MM2108"), "MM2108 not given in release");
+
+			});
+		}
+
+		[TestCase (false)]
+		[TestCase (true)]
+		public void ThirdPartyLibrary_WithCorrectBitness_ShouldNotStripOrWarn (bool sixtyFourBits)
+		{
+			MMPTests.RunMMPTest (tmpDir =>
+			{
+				var frameworkPath = FrameworkBuilder.CreateThinFramework (tmpDir, sixtyFourBits);
+
+				TI.UnifiedTestConfig test = CreateStripTestConfig (null, tmpDir, $" --native-reference=\"{frameworkPath}\"");
+
+				string buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
+				AssertNoLipoOrWarning (buildOutput, "Debug");
+
+				test.Release = true;
+				buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
+				AssertNoLipoOrWarning (buildOutput, "Release");
 			});
 		}
 	}
