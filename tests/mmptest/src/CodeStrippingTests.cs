@@ -11,12 +11,12 @@ namespace Xamarin.MMP.Tests
 	{
 		Func<string, bool> DidAnyLipoStrip = output => output.SplitLines ().Any (x => x.Contains ("lipo") && x.Contains ("-remove"));
 
-		static TI.UnifiedTestConfig CreateStripTestConfig (string nativeStrip, string tmpDir, string additionalMMPArgs = "")
+		static TI.UnifiedTestConfig CreateStripTestConfig (bool? strip, string tmpDir, string additionalMMPArgs = "")
 		{
 			TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { };
 
-			if (!string.IsNullOrEmpty (nativeStrip))
-				test.CSProjConfig = $"<MonoBundlingExtraArgs>--native-strip={nativeStrip} {additionalMMPArgs}</MonoBundlingExtraArgs>";
+			if (strip.HasValue)
+				test.CSProjConfig = $"<MonoBundlingExtraArgs>--optimize={(strip.Value ? "+" : "-")}trim-architectures {additionalMMPArgs}</MonoBundlingExtraArgs>";
 			else if (!string.IsNullOrEmpty (additionalMMPArgs))
 				test.CSProjConfig = $"<MonoBundlingExtraArgs>{additionalMMPArgs}</MonoBundlingExtraArgs>";
 			
@@ -50,30 +50,28 @@ namespace Xamarin.MMP.Tests
 			Assert.AreEqual (shouldWarn && releaseStrips, buildOutput.Contains ("MM2108"), "Release warning did not match expectations");
 		}
 
-		[TestCase ("", false, true)]
-		[TestCase ("default", false, true)]
-		[TestCase ("strip", true, true)]
-		[TestCase ("skip", false, false)]
-		public void ShouldStripMonoPosixHelper (string nativeStrip, bool debugStrips, bool releaseStrips)
+		[TestCase (null, false, true)]
+		[TestCase (true, true, true)]
+		[TestCase (false, false, false)]
+		public void ShouldStripMonoPosixHelper (bool? strip, bool debugStrips, bool releaseStrips)
 		{
 			MMPTests.RunMMPTest (tmpDir =>
 			{
-				TI.UnifiedTestConfig test = CreateStripTestConfig (nativeStrip, tmpDir);
+				TI.UnifiedTestConfig test = CreateStripTestConfig (strip, tmpDir);
 
 				StripTestCore (test, debugStrips, releaseStrips, "Contents/MonoBundle/libMonoPosixHelper.dylib", shouldWarn: false);
 			});
 		}
 
-		[TestCase ("", false, true)]
-		[TestCase ("default", false, true)]
-		[TestCase ("strip", true, true)]
-		[TestCase ("skip", false, false)]
-		public void ShouldStripUserFramework (string nativeStrip, bool debugStrips, bool releaseStrips)
+		[TestCase (null, false, true)]
+		[TestCase (true, true, true)]
+		[TestCase (false, false, false)]
+		public void ShouldStripUserFramework (bool? strip, bool debugStrips, bool releaseStrips)
 		{
 			MMPTests.RunMMPTest (tmpDir =>
 			{
 				var frameworkPath = FrameworkBuilder.CreateFatFramework (tmpDir);
-				TI.UnifiedTestConfig test = CreateStripTestConfig (nativeStrip, tmpDir, $"--native-reference={frameworkPath}");
+				TI.UnifiedTestConfig test = CreateStripTestConfig (strip, tmpDir, $"--native-reference={frameworkPath}");
 
 				StripTestCore (test, debugStrips, releaseStrips, "Contents/Frameworks/Foo.framework/Foo", shouldWarn: true);
 			});
@@ -81,9 +79,9 @@ namespace Xamarin.MMP.Tests
 
 		const string MonoPosixOffset = "Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/libMonoPosixHelper.dylib";
 
-		[TestCase ("strip", true)]
-		[TestCase ("skip", false)]
-		public void StripsThirdPartyLibrary_AndWarnsIfSo (string nativeStrip, bool shouldStrip)
+		[TestCase (true, true)]
+		[TestCase (false, false)]
+		public void StripsThirdPartyLibrary_AndWarnsIfSo (bool? strip, bool shouldStrip)
 		{
 			MMPTests.RunMMPTest (tmpDir =>
 			{
@@ -91,7 +89,7 @@ namespace Xamarin.MMP.Tests
 				string newLibraryLocation =  Path.Combine (tmpDir, "libTest.dylib");
 				File.Copy (originalLocation, newLibraryLocation);
 
-				TI.UnifiedTestConfig test = CreateStripTestConfig (nativeStrip, tmpDir, $" --native-reference=\"{newLibraryLocation}\"");
+				TI.UnifiedTestConfig test = CreateStripTestConfig (strip, tmpDir, $" --native-reference=\"{newLibraryLocation}\"");
 
 				string buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
 				Assert.AreEqual (shouldStrip, DidAnyLipoStrip (buildOutput), "lipo usage did not match expectations");

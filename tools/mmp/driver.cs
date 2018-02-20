@@ -53,13 +53,6 @@ using Registrar;
 using ObjCRuntime;
 
 namespace Xamarin.Bundler {
-	// Should we strip the bitness from libraries copied in
-	public enum NativeStripMode {
-		Default,
-		Strip,
-		Skip,
-	}
-		
 	public enum RegistrarMode {
 		Default,
 		Dynamic,
@@ -89,7 +82,6 @@ namespace Xamarin.Bundler {
 		static string app_name;
 		static bool generate_plist;
 		public static RegistrarMode Registrar { get { return App.Registrar; } private set { App.Registrar = value; } }
-		public static NativeStripMode NativeStrip { get; private set; } = NativeStripMode.Default; 
 		public static List<string> RecursiveSearchDirectories { get; } = new List<string> ();
 		static bool no_executable;
 		static bool embed_mono = true;
@@ -374,22 +366,6 @@ namespace Xamarin.Bundler {
 						aotOptions = new AOTOptions (v);
 					}
 				},
-				{ "native-strip=", "Strip native libraries copied into bundle of their unnecessary architectures. Defaults to true in Release and False in debug. (default, strip, skip)", v => {
-					switch (v) {
-					case "default":
-						NativeStrip = NativeStripMode.Default;
-						break;
-					case "strip":
-						NativeStrip = NativeStripMode.Strip;
-						break;
-					case "skip":
-						NativeStrip = NativeStripMode.Skip;
-						break;
-					default:
-						ErrorHelper.Error (26, $"Could not parse the command line argument '-native-strip:{v}'");
-						break;
-					}
-				}},
 			};
 
 			AddSharedOptions (App, os);
@@ -518,9 +494,6 @@ namespace Xamarin.Bundler {
 						"Xamarin.Mac Unified API against a full .NET framework does not support linking SDK or All assemblies. Pass either the `-nolink` or `-linkplatform` flag.");
 				}
 			}
-
-			if (NativeStrip == NativeStripMode.Default)
-				NativeStrip = EnableDebug ? NativeStripMode.Skip : NativeStripMode.Strip;
 
 			ValidateXcode ();
 
@@ -1198,7 +1171,7 @@ namespace Xamarin.Bundler {
 			Application.UpdateDirectory (framework, frameworks_dir);
 			frameworks_copied_to_bundle_dir = true;
 
-			if (NativeStrip == NativeStripMode.Strip)
+			if (App.Optimizations.TrimArchitectures == true)
 				LipoLibrary (framework, Path.Combine (name, Path.Combine (frameworks_dir, name + ".framework", name)));
 		}
 
@@ -1723,7 +1696,7 @@ namespace Xamarin.Bundler {
 			bool isStaticLib = real_src.EndsWith (".a", StringComparison.Ordinal);
 			bool isDynamicLib = real_src.EndsWith (".dylib", StringComparison.Ordinal);
 
-			if (isDynamicLib && NativeStrip == NativeStripMode.Strip)
+			if (isDynamicLib && App.Optimizations.TrimArchitectures == true)
 				LipoLibrary (name, dest);
 
 			if (native_references.Contains (real_src)) {
