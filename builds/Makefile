@@ -96,7 +96,9 @@ CCACHE_CXXFLAGS=-Qunused-arguments
 # Configuration for the mono sdk makefiles
 #
 SDK_CONFIG=$(MONO_PATH)/sdks/Make.config
-SDK_ARGS=XCODE_DEVELOPER_ROOT=$(XCODE_DEVELOPER_ROOT)
+SDK_ARGS=XCODE_DIR=$(XCODE_DEVELOPER_ROOT)
+SDK_BUILDDIR = $(MONO_PATH)/sdks/builds
+SDK_DESTDIR = $(MONO_PATH)/sdks/out
 
 $(MONO_PATH)/sdks/Make.config:
 	echo "DISABLE_ANDROID=1" > $@
@@ -778,8 +780,6 @@ verify-signature:
 # Simulator builds
 #
 
-# usage $(call SimulatorBuildTemplate (x86_64,simulator64))
-
 SIM_BIN=$(SIMULATOR_BIN_PATH)
 SIM_ACVARS = \
 	$(COMMON_ACVARS) \
@@ -787,80 +787,55 @@ SIM_ACVARS = \
 	mono_cv_uscore=yes \
 	ac_cv_func_system=no \
 
+#
+# Parameters:
+# $(1): arch
+# $(2): target prefix
+# $(3): mono sdk target prefix
+#
 define SimulatorBuildTemplate
-
-$(eval SIM$(2)_CPPFLAGS=-arch $(1) -O2 -DMONOTOUCH -DHOST_IOS -Wl,-application_extension -mios-simulator-version-min=$(MIN_IOS_SDK_VERSION) -isysroot $(SIMULATOR_SDK))
-$(eval SIM$(2)_CFLAGS=$(SIM$(2)_CPPFLAGS) $(SIMULATOR_BUILD_CFLAGS))
-$(eval SIM$(2)_CXXFLAGS=$(SIM$(2)_CPPFLAGS))
-$(eval SIM$(2)_LDFLAGS=$(COMMON_LDFLAGS))
-$(eval SIM$(2)_CONFIGURE_FLAGS=	--host=$(1)-apple-darwin10 \
-			--cache-file=../$(2).config.cache \
-			--enable-maintainer-mode	\
-			--prefix=$(BUILD_DESTDIR)/$(2) \
-			--with-glib=embedded \
-			--without-ikvm-native \
-			--with-tls=pthread \
-			--enable-minimal=com,remoting,shared_perfcounters \
-			--disable-mcs-build \
-			--disable-nls \
-			--disable-iconv \
-			--disable-boehm \
-			--disable-executables \
-			--disable-visibility-hidden	\
-			$(XAMARIN_IOS_CONFIGURE_FLAGS) \
-			)
-
-$(eval SIM$(2)_CONFIGURE_ENVIRONMENT= \
-	$(SIM_ACVARS) \
-	PATH="$(SIM_BIN):$(PATH)" \
-	CPPFLAGS="$(SIM$(2)_CPPFLAGS)" \
-	CFLAGS="$(SIM$(2)_CFLAGS)" \
-	CXXFLAGS="$(SIM$(2)_CXXFLAGS)" \
-	LDFLAGS="$(SIM$(2)_LDFLAGS)" \
-	CC="$(XCODE_CC)" \
-	CXX="$(XCODE_CXX)")
 
 .PHONY: $(2)
 
 $(2):: build-$(2)
 
-setup:: setup-$(2)
 build:: build-$(2)
 clean-local:: clean-$(2)
 
-setup-$(2): .stamp-configure-$(2)
-
-.stamp-configure-$(2): $(MONO_PATH)/configure
-	$(Q) $(SIM$(2)_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh $(2) $(abspath $(MONO_PATH)/configure) $(SIM$(2)_CONFIGURE_FLAGS)
-
-.stamp-build-$(2): .stamp-configure-$(2) $(MONO_DEPENDENCIES)
-	PATH="$(SIM_BIN):$(PATH)" $(MAKE) -C $(2)/mono all
-	PATH="$(SIM_BIN):$(PATH)" $(MAKE) -C $(2)/support all
-	PATH="$(SIM_BIN):$(PATH)" $(MAKE) -C $(2)/mono install
+# config/eglib-config.h is needed by the builds in runtime/
+.stamp-build-$(2): $(MONO_DEPENDENCIES) $(BUILD_DESTDIR)/$(2)
+	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(3) $(SDK_ARGS)
+	cp -r $(SDK_DESTDIR)/ios-$(3)/lib $(BUILD_DESTDIR)/$(2)
+	cp -r $(SDK_DESTDIR)/ios-$(3)/include $(BUILD_DESTDIR)/$(2)
+	cp $(SDK_BUILDDIR)/ios-$(3)/config.h $(BUILD_DESTDIR)/$(2)/include/mono-2.0
+	cp $(SDK_BUILDDIR)/ios-$(3)/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/$(2)/include/mono-2.0
 	$(Q) touch $$@
 
 build-$(2): .stamp-build-$(2)
 
 clean-$(2):
-	-rm -rf $(2) .stamp-*-$(2) $(2).config.cache
+	-rm -rf $(2) .stamp-*-$(2) $(BUILD_DESTDIR)/$(2)
+	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-$(3) $(SDK_ARGS)
 
-setup-iphonesimulator:: setup-$(2)
 build-iphonesimulator:: build-$(2)
 clean-iphonesimulator:: clean-$(2)
 
 $(eval SIM_TARGET_LIBMONOSGEN:=$(SIM_TARGET_LIBMONOSGEN) $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.a)
 $(eval SIM_TARGET_SHAREDMONOSGEN:=$(SIM_TARGET_SHAREDMONOSGEN) $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.dylib)
 $(eval SIM_TARGET_LIBLOGPROFILER:=$(SIM_TARGET_LIBLOGPROFILER) $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log-static.a)
-$(eval SIM_TARGET_SHAREDLIBLOGPROFILER:=$(SIM_TARGET_SHAREDLIBLOGPROFILER) $(BUILD_DESTDIR)/$(2)/tmp-lib/libmono-profiler-log.0.dylib)
+$(eval SIM_TARGET_SHAREDLIBLOGPROFILER:=$(SIM_TARGET_SHAREDLIBLOGPROFILER) $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log.0.dylib)
 
 $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.a: .stamp-build-$(2)
 $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.dylib: .stamp-build-$(2)
 $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log-static.a: .stamp-build-$(2)
 $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log.0.dylib: .stamp-build-$(2)
 
-$(BUILD_DESTDIR)/$(2)/tmp-lib/libmono-profiler-log.0.dylib: $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log.0.dylib | $(BUILD_DESTDIR)/$(2)/tmp-lib
+$(BUILD_DESTDIR)/$(2)/tmp-lib/libmono-profiler-log.0.dylib: $(SDK_DESTDIR)/ios-$(3)/lib/libmono-profiler-log.0.dylib | $(BUILD_DESTDIR)/$(2)/tmp-lib
 	$(Q) cp $$< $$@
-	$(Q) install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $$@
+	$(Q) install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/$(3)/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $$@
+
+$(BUILD_DESTDIR)/$(2):
+	$$(Q) mkdir -p $$@
 
 $(BUILD_DESTDIR)/$(2)/tmp-lib:
 	$$(Q) mkdir -p $$@
@@ -868,8 +843,8 @@ $(BUILD_DESTDIR)/$(2)/tmp-lib:
 endef
 
 ifdef INCLUDE_IOS
-$(eval $(call SimulatorBuildTemplate,i386,simulator86))
-$(eval $(call SimulatorBuildTemplate,x86_64,simulator64))
+$(eval $(call SimulatorBuildTemplate,i386,simulator86,sim32))
+$(eval $(call SimulatorBuildTemplate,x86_64,simulator64,sim64))
 endif
 
 iphonesimulator:: setup-iphonesimulator build-iphonesimulator install-iphonesimulator
@@ -1833,11 +1808,11 @@ build-llvm32: .stamp-build-llvm
 build-llvm64: .stamp-build-llvm
 
 .stamp-build-llvm: $(SDK_CONFIG)
-	$(MAKE) -C $(MONO_PATH)/sdks/builds build-ios-llvm $(SDK_ARGS)
+	$(MAKE) -C $(SDK_BUILDDIR) build-ios-llvm $(SDK_ARGS)
 	$(Q) touch $@
 
 clean-llvm: $(SDK_CONFIG)
-	$(MAKE) -C $(MONO_PATH)/sdks/builds clean-ios-llvm $(SDK_ARGS)
+	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-llvm $(SDK_ARGS)
 	$(RM) .stamp-*-llvm*
 
 .PHONY: install-llvm64 llvm llvm64
@@ -1848,7 +1823,7 @@ LLVM_TARGETS = \
 	$(PREFIX)/LLVM/bin/opt \
 	$(PREFIX)/LLVM/bin/llc \
 
-$(PREFIX)/LLVM/bin/%: $(MONO_PATH)/sdks/out/ios-llvm64/bin/% | $(PREFIX)/LLVM/bin
+$(PREFIX)/LLVM/bin/%: $(SDK_DESTDIR)/ios-llvm64/bin/% | $(PREFIX)/LLVM/bin
 	$(call Q_2,INSTALL ,[LLVM64]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $^ $@
 
 $(PREFIX)/LLVM/bin:
@@ -1899,7 +1874,7 @@ endif
 endif
 
 .stamp-build-$(1): build-$(2) $(MONO_DEPENDENCIES) $(SDK_CONFIG)
-	$(MAKE) -C $(MONO_PATH)/sdks/builds package-ios-$(1) $(SDK_ARGS)
+	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(1) $(SDK_ARGS)
 	$(Q) touch $$@
 
 build-$(1): .stamp-build-$(1)
@@ -1907,15 +1882,15 @@ build-$(1): .stamp-build-$(1)
 _$(1)_CROSS_TARGETS = \
 	$(PREFIX)/bin/$(3)  \
 
-$(MONO_PATH)/sdks/out/ios-$(1)/bin/$(4): .stamp-build-$(1)
+$(SDK_DESTDIR)/ios-$(1)/bin/$(4): .stamp-build-$(1)
 
-$(PREFIX)/bin/$(3): $(MONO_PATH)/sdks/out/ios-$(1)/bin/$(4) | $(PREFIX)/bin
+$(PREFIX)/bin/$(3): $(SDK_DESTDIR)/ios-$(1)/bin/$(4) | $(PREFIX)/bin
 	$(call Q_2,INSTALL ,[CROSS]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $$< $$@
 
 install-$(1): install-$(2) $$(_$(1)_CROSS_TARGETS)
 
 clean-$(1): $(SDK_CONFIG)
-	$(MAKE) -C $(MONO_PATH)/sdks/builds clean-ios-$(1) $(SDK_ARGS)
+	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-$(1) $(SDK_ARGS)
 	-rm -rf .stamp-build-$(1)
 
 endef

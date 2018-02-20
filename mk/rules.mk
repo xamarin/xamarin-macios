@@ -4,8 +4,8 @@ builds_root=$(TOP)/builds
 # helpful rules to compile things for the various architectures
 
 COMMON_I:= -I. -I$(mono_root) -I$(mono_root)/mono/eglib -I$(mono_root)/mono/metadata 
-SIM32_I := $(COMMON_I) -I$(BUILD_DESTDIR)/simulator86/include/mono-2.0 -I$(builds_root)/simulator86 -I$(builds_root)/simulator86/mono/eglib 
-SIM64_I := $(COMMON_I) -I$(BUILD_DESTDIR)/simulator64/include/mono-2.0 -I$(builds_root)/simulator64 -I$(builds_root)/simulator64/mono/eglib
+SIM32_I := $(COMMON_I) -I$(BUILD_DESTDIR)/simulator86/include/mono-2.0
+SIM64_I := $(COMMON_I) -I$(BUILD_DESTDIR)/simulator64/include/mono-2.0
 DEV7_I  := $(COMMON_I) -I$(BUILD_DESTDIR)/target7/include/mono-2.0  -I$(builds_root)/target7  -I$(builds_root)/target7/mono/eglib 
 DEV7s_I := $(COMMON_I) -I$(BUILD_DESTDIR)/target7s/include/mono-2.0 -I$(builds_root)/target7s -I$(builds_root)/target7s/mono/eglib
 DEV64_I := $(COMMON_I) -I$(BUILD_DESTDIR)/target64/include/mono-2.0 -I$(builds_root)/target64 -I$(builds_root)/target64/mono/eglib
