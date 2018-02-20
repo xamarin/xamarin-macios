@@ -1,6 +1,6 @@
 ifdef ENABLE_XAMARIN
-NEEDED_MACCORE_VERSION := 5a97b45faf02315eb266d3670fd1492e34228f0f
-NEEDED_MACCORE_BRANCH := 2017-12
+NEEDED_MACCORE_VERSION := 4872731c32ece5d78855b12a2cedd75f4d00ac18
+NEEDED_MACCORE_BRANCH := master
 
 MACCORE_DIRECTORY := maccore
 MACCORE_MODULE    := git@github.com:xamarin/maccore.git
@@ -12,6 +12,7 @@ NEEDED_MACCORE_REMOTE := $(MACCORE_REMOTE)
 
 define CheckVersionTemplate
 check-$(1)::
+	@rm -f $(THISDIR)/.stamp-reset-$(1)
 	@if test x$$(IGNORE_$(2)_VERSION) = "x"; then \
 		if test ! -d $($(2)_PATH); then \
 			if test x$$(RESET_VERSIONS) != "x"; then \
@@ -72,13 +73,14 @@ reset-$(1)::
 		echo "*** [$(1)] git reset --hard $(NEEDED_$(2)_VERSION)" && (cd $($(2)_PATH) && git reset --hard $(NEEDED_$(2)_VERSION)); \
 	fi
 	@echo "*** [$(1)] git submodule update --init --recursive" && (cd $($(2)_PATH) && git submodule update --init --recursive)
+	@touch $(THISDIR)/.stamp-reset-$(1)
 
 print-$(1)::
 	@printf "*** %-16s %-45s %s (%s)\n" "$(DIRECTORY_$(2))" "$(MODULE_$(2))" "$(NEEDED_$(2)_VERSION)" "$(NEEDED_$(2)_BRANCH)"
 
 .PHONY: check-$(1) reset-$(1) print-$(1)
 
-reset-versions:: reset-$(1)
+reset-versions-impl:: reset-$(1)
 check-versions:: check-$(1)
 print-versions:: print-$(1)
 

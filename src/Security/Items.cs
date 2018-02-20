@@ -888,11 +888,11 @@ namespace Security {
 
 		public string Label {
 			get {
-				return FetchString (SecAttributeKey.Label);
+				return FetchString (SecAttributeKeys.LabelKey.Handle);
 			}
 
 			set {
-				SetValue (value, SecAttributeKey.Label);
+				SetValue (value, SecAttributeKeys.LabelKey.Handle);
 			}
 		}
 
@@ -1150,11 +1150,11 @@ namespace Security {
 
 		public bool IsPermanent {
 			get {
-				return Fetch (SecAttributeKey.IsPermanent) == CFBoolean.True.Handle;
+				return Fetch (SecAttributeKeys.IsPermanentKey.Handle) == CFBoolean.True.Handle;
 			}
 			
 			set {
-				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKey.IsPermanent);
+				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKeys.IsPermanentKey.Handle);
 			}
 		}
 
@@ -1180,13 +1180,13 @@ namespace Security {
 
 		public NSData ApplicationTag {
 			get {
-				return Fetch<NSData> (SecAttributeKey.ApplicationTag);
+				return Fetch<NSData> (SecAttributeKeys.ApplicationTagKey.Handle);
 			}
 			
 			set {
 				if (value == null)
 					throw new ArgumentNullException ("value");
-				SetValue (value, SecAttributeKey.ApplicationTag);
+				SetValue (value, SecAttributeKeys.ApplicationTagKey.Handle);
 			}
 		}
 
@@ -1219,61 +1219,61 @@ namespace Security {
 
 		public int EffectiveKeySize {
 			get {
-				return FetchInt (SecAttributeKey.EffectiveKeySize);
+				return FetchInt (SecAttributeKeys.EffectiveKeySizeKey.Handle);
 			}
 					
 			set {
-				SetValue (new NSNumber (value), SecAttributeKey.EffectiveKeySize);
+				SetValue (new NSNumber (value), SecAttributeKeys.EffectiveKeySizeKey.Handle);
 			}
 		}
 
 		public bool CanEncrypt {
 			get {
-				return Fetch (SecAttributeKey.CanEncrypt) == CFBoolean.True.Handle;
+				return Fetch (SecAttributeKeys.CanEncryptKey.Handle) == CFBoolean.True.Handle;
 			}
 			
 			set {
-				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKey.CanEncrypt);
+				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKeys.CanEncryptKey.Handle);
 			}
 		}
 
 		public bool CanDecrypt {
 			get {
-				return Fetch (SecAttributeKey.CanDecrypt) == CFBoolean.True.Handle;
+				return Fetch (SecAttributeKeys.CanDecryptKey.Handle) == CFBoolean.True.Handle;
 			}
 			
 			set {
-				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKey.CanDecrypt);
+				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKeys.CanDecryptKey.Handle);
 			}
 		}
 
 		public bool CanDerive {
 			get {
-				return Fetch (SecAttributeKey.CanDerive) == CFBoolean.True.Handle;
+				return Fetch (SecAttributeKeys.CanDeriveKey.Handle) == CFBoolean.True.Handle;
 			}
 			
 			set {
-				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKey.CanDerive);
+				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKeys.CanDeriveKey.Handle);
 			}
 		}
 
 		public bool CanSign {
 			get {
-				return Fetch (SecAttributeKey.CanSign) == CFBoolean.True.Handle;
+				return Fetch (SecAttributeKeys.CanSignKey.Handle) == CFBoolean.True.Handle;
 			}
 			
 			set {
-				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKey.CanSign);
+				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKeys.CanSignKey.Handle);
 			}
 		}
 
 		public bool CanVerify {
 			get {
-				return Fetch (SecAttributeKey.CanVerify) == CFBoolean.True.Handle;
+				return Fetch (SecAttributeKeys.CanVerifyKey.Handle) == CFBoolean.True.Handle;
 			}
 			
 			set {
-				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKey.CanVerify);
+				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKeys.CanVerifyKey.Handle);
 			}
 		}
 
@@ -1289,11 +1289,11 @@ namespace Security {
 
 		public bool CanUnwrap {
 			get {
-				return Fetch (SecAttributeKey.CanUnwrap) == CFBoolean.True.Handle;
+				return Fetch (SecAttributeKeys.CanUnwrapKey.Handle) == CFBoolean.True.Handle;
 			}
 			
 			set {
-				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKey.CanUnwrap);
+				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKeys.CanUnwrapKey.Handle);
 			}
 		}
 

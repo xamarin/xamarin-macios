@@ -61,6 +61,9 @@ namespace MonoTouchFixtures.Photos {
 		[Test]
 		public unsafe void FrameProcessingBlock2 ()
 		{
+			if (!Runtime.DynamicRegistrationSupported)
+				Assert.Ignore ("This test requires support for the dynamic registrar to setup the block");
+
 			var t = typeof (NSObject).Assembly.GetType ("ObjCRuntime.Trampolines/SDPHLivePhotoFrameProcessingBlock2");
 			Assert.NotNull (t, "SDPHLivePhotoFrameProcessingBlock2");
 

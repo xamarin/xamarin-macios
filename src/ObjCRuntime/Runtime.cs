@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 using Foundation;
@@ -51,20 +52,47 @@ namespace ObjCRuntime {
 
 		internal static DynamicRegistrar Registrar;
 
+		const uint INVALID_TOKEN_REF = 0xFFFFFFFF;
+
 		internal unsafe struct MTRegistrationMap {
 			public IntPtr assembly;
 			public MTClassMap *map;
 			public IntPtr full_token_references; /* array of MTFullTokenReference */
+			public MTManagedClassMap* skipped_map;
+			public MTProtocolWrapperMap* protocol_wrapper_map;
+			public MTProtocolMap protocol_map;
 			public int assembly_count;
 			public int map_count;
 			public int custom_type_count;
 			public int full_token_reference_count;
+			public int skipped_map_count;
+			public int protocol_wrapper_count;
+			public int protocol_count;
 		}
 
 		[StructLayout (LayoutKind.Sequential, Pack = 1)]
 		internal struct MTClassMap {
 			public IntPtr handle;
 			public uint type_reference;
+		}
+
+		[StructLayout (LayoutKind.Sequential, Pack = 1)]
+		internal struct MTManagedClassMap
+		{
+			public uint skipped_reference; // implied token type: TypeDef
+			public uint index; // index into MTRegistrationMap.map
+		}
+
+		[StructLayout (LayoutKind.Sequential, Pack = 1)]
+		internal struct MTProtocolWrapperMap {
+			public uint protocol_token;
+			public uint wrapper_token;
+		}
+
+		[StructLayout (LayoutKind.Sequential, Pack = 1)]
+		internal unsafe struct MTProtocolMap {
+			public uint* protocol_tokens;
+			public IntPtr* protocols;
 		}
 
 		/* Keep Delegates, Trampolines and InitializationOptions in sync with monotouch-glue.m */
@@ -134,6 +162,14 @@ namespace ObjCRuntime {
 
 		internal static unsafe InitializationOptions* options;
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public static bool DynamicRegistrationSupported {
+			get {
+				// The linker may turn calls to this property into a constant
+				return true;
+			}
+		}
+
 		internal static bool Initialized {
 			get { return initialized; }
 		}
@@ -144,6 +180,7 @@ namespace ObjCRuntime {
 #endif
 
 		[Preserve] // called from native - runtime.m.
+		[BindingImpl (BindingImplOptions.Optimizable)] // To inline the Runtime.DynamicRegistrationSupported code if possible.
 		unsafe static void Initialize (InitializationOptions* options)
 		{
 #if PROFILE
@@ -206,7 +243,8 @@ namespace ObjCRuntime {
 
 			NSObjectClass = NSObject.Initialize ();
 
-			Registrar = new DynamicRegistrar ();
+			if (DynamicRegistrationSupported)
+				Registrar = new DynamicRegistrar ();
 			RegisterDelegates (options);
 			Class.Initialize (options);
 			InitializePlatform (options);
@@ -505,11 +543,14 @@ namespace ObjCRuntime {
 			return Registrar.ComputeSignature (method, isBlockSignature);
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void RegisterAssembly (Assembly a)
 		{
 			if (a == null)
 				throw new ArgumentNullException ("a");
 
+			if (!DynamicRegistrationSupported)
+				throw ErrorHelper.CreateError (8026, "Runtime.RegisterAssembly is not supported when the dynamic registrar has been linked away.");
 #if MONOMAC
 			var attributes = a.GetCustomAttributes (typeof (RequiredFrameworkAttribute), false);
 
@@ -628,7 +669,7 @@ namespace ObjCRuntime {
 			if (nsobj == null)
 				throw ErrorHelper.CreateError (8023, $"An instance object is required to construct a closed generic method for the open generic method: {mb.DeclaringType.FullName}.{mb.Name} (token reference: 0x{token_ref:X}). Please file a bug report at http://bugzilla.xamarin.com.");
 
-			return ObjectWrapper.Convert (DynamicRegistrar.FindClosedMethod (nsobj.GetType (), mb));
+			return ObjectWrapper.Convert (FindClosedMethod (nsobj.GetType (), mb));
 		}
 
 		static IntPtr TryGetOrConstructNSObjectWrapped (IntPtr ptr)
@@ -1306,6 +1347,17 @@ namespace ObjCRuntime {
 			if (type == null || !type.IsInterface)
 				return null;
 
+			// Check if the static registrar knows about this protocol
+			unsafe {
+				var map = options->RegistrationMap;
+				if (map != null) {
+					var token = Class.GetTokenReference (type);
+					var wrapper_token = xamarin_find_protocol_wrapper_type (token);
+					if (wrapper_token != INVALID_TOKEN_REF)
+						return (Type) Class.ResolveTokenReference (wrapper_token, 0x02000000 /* TypeDef */);
+				}
+			}
+
 			// need to look up the type from the ProtocolAttribute.
 			var a = type.GetCustomAttributes (typeof (Foundation.ProtocolAttribute), false);
 
@@ -1317,9 +1369,39 @@ namespace ObjCRuntime {
 			return attr.WrapperType;
 		}
 
+		[DllImport ("__Internal")]
+		extern static uint xamarin_find_protocol_wrapper_type (uint token_ref);
+
 		public static IntPtr GetProtocol (string protocol)
 		{
 			return Protocol.objc_getProtocol (protocol);
+		}
+
+		internal static IntPtr GetProtocolForType (Type type)
+		{
+			// Check if the static registrar knows about this protocol
+			unsafe {
+				var map = options->RegistrationMap;
+				if (map != null && map->protocol_count > 0) {
+					var token = Class.GetTokenReference (type);
+					var tokens = map->protocol_map.protocol_tokens;
+					for (int i = 0; i < map->protocol_count; i++) {
+						if (tokens [i] == token)
+							return map->protocol_map.protocols [i];
+					}
+				}
+			}
+
+			if (type.IsInterface) {
+				var pa = type.GetCustomAttribute<ProtocolAttribute> (false);
+				if (pa != null) {
+					var handle = Protocol.objc_getProtocol (pa.Name);
+					if (handle != IntPtr.Zero)
+						return handle;
+				}
+			}
+
+			throw new ArgumentException (string.Format ("'{0}' is an unknown protocol", type.FullName));
 		}
 
 		public static void ConnectMethod (Type type, MethodInfo method, Selector selector)
@@ -1330,6 +1412,7 @@ namespace ObjCRuntime {
 			ConnectMethod (type, method, new ExportAttribute (selector.Name));
 		}
 			
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void ConnectMethod (Type type, MethodInfo method, ExportAttribute export)
 		{
 			if (type == null)
@@ -1340,6 +1423,9 @@ namespace ObjCRuntime {
 
 			if (export == null)
 				throw new ArgumentNullException ("export");
+
+			if (!DynamicRegistrationSupported)
+				throw ErrorHelper.CreateError (8026, "Runtime.ConnectMethod is not supported when the dynamic registrar has been linked away.");
 
 			Registrar.RegisterMethod (type, method, export);
 		}
@@ -1417,6 +1503,53 @@ namespace ObjCRuntime {
 
 		[DllImport (Constants.libSystemLibrary)]
 		unsafe extern internal static void memcpy (byte * target, byte * source, nint n);
+
+		// This function will try to compare a native UTF8 string to a managed string without creating a temporary managed string for the native UTF8 string.
+		// Currently this only works if the UTF8 string only contains single-byte characters.
+		// If any multi-byte characters are found, the native utf8 string is converted to a managed string, and then normal managed comparison is done.
+		internal static bool StringEquals (IntPtr utf8, string str)
+		{
+			// The vast majority of strings we compare fall within the single-byte UTF8 range, so optimize for this
+			unsafe {
+				byte* c = (byte*) utf8;
+				for (int i = 0; i < str.Length; i++) {
+					byte b = c [i];
+					if (b > 0x7F) {
+						// This string is a multibyte UTF8 string, so go the slow route and convert it to a managed string before comparison
+						return string.Equals (Marshal.PtrToStringUTF8 (utf8), str);
+					}
+					if (b != (short) str [i])
+						return false;
+				}
+				return c [str.Length] == 0;
+			}
+		}
+
+		internal static MethodInfo FindClosedMethod (Type closed_type, MethodBase open_method)
+		{
+			// FIXME: I think it should be handled before getting here (but it's safer here for now)
+			if (!open_method.ContainsGenericParameters)
+				return (MethodInfo) open_method;
+
+			// First we need to find the type that declared the open method.
+			Type declaring_closed_type = closed_type;
+			do {
+				if (declaring_closed_type.IsGenericType && declaring_closed_type.GetGenericTypeDefinition () == open_method.DeclaringType) {
+					closed_type = declaring_closed_type;
+					break;
+				}
+				declaring_closed_type = declaring_closed_type.BaseType;
+			} while (declaring_closed_type != null);
+
+			// Find the closed method.
+			foreach (var mi in closed_type.GetMethods (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly)) {
+				if (mi.MetadataToken == open_method.MetadataToken) {
+					return mi;
+				}
+			}
+
+			throw ErrorHelper.CreateError (8003, "Failed to find the closed generic method '{0}' on the type '{1}'.", open_method.Name, closed_type.FullName);
+		}
 	}
 		
 	internal class IntPtrEqualityComparer : IEqualityComparer<IntPtr>

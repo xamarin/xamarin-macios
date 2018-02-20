@@ -79,6 +79,8 @@ public enum OutputFormat {
 namespace Xamarin.Bundler
 {
 	partial class Driver {
+		internal const string NAME = "mtouch";
+
 		public static void ShowHelp (OptionSet os)
 		{
 			Console.WriteLine ("mtouch - Mono Compiler for iOS");
@@ -438,7 +440,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.WatchOS:
 				return Path.Combine (cross_prefix, "bin", "armv7k-unknown-darwin-mono-sgen");
 			case ApplePlatform.TVOS:
-				return Path.Combine (cross_prefix, "bin", "aarch64-unknown-darwin-mono-sgen");
+				return Path.Combine (cross_prefix, "bin", "arm64-darwin-mono-sgen");
 			default:
 				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
 			}
@@ -669,6 +671,7 @@ namespace Xamarin.Bundler
 						sw.WriteLine ("\tsetenv (\"MONO_GC_PARAMS\", \"{0}\", 1);", app.MonoGCParams);
 					foreach (var kvp in app.EnvironmentVariables)
 						sw.WriteLine ("\tsetenv (\"{0}\", \"{1}\", 1);", kvp.Key.Replace ("\"", "\\\""), kvp.Value.Replace ("\"", "\\\""));
+					sw.WriteLine ("\txamarin_supports_dynamic_registration = {0};", app.DynamicRegistrationSupported ? "TRUE" : "FALSE");
 					sw.WriteLine ("}");
 					sw.WriteLine ();
 					sw.Write ("int ");
@@ -697,7 +700,7 @@ namespace Xamarin.Bundler
 					sw.WriteLine ("}");
 
 				}
-				WriteIfDifferent (main_source, sb.ToString ());
+				WriteIfDifferent (main_source, sb.ToString (), true);
 			} catch (MonoTouchException) {
 				throw;
 			} catch (Exception e) {
@@ -796,24 +799,6 @@ namespace Xamarin.Bundler
 				Symlink (spdb, tpdb);
 
 			return true;
-		}
-
-		public static void Touch (IEnumerable<string> filenames, DateTime? timestamp = null)
-		{
-			if (timestamp == null)
-				timestamp = DateTime.Now;
-			foreach (var filename in filenames) {
-				try {
-					new FileInfo (filename).LastWriteTime = timestamp.Value;
-				} catch (Exception e) {
-					ErrorHelper.Warning (128, "Could not touch the file '{0}': {1}", filename, e.Message);
-				}
-			}
-		}
-
-		public static void Touch (params string [] filenames)
-		{
-			Touch ((IEnumerable<string>) filenames);
 		}
 
 		public static bool CanWeSymlinkTheApplication (Application app)

@@ -364,5 +364,15 @@ namespace Xamarin.Tests
 
 			return assembly;
 		}
+
+		// The directory where the assemblies are located in the built app
+		public abstract string GetAppAssembliesDirectory ();
+
+		// The path to the platform assembly in the built app.
+		public string GetPlatformAssemblyInApp ()
+		{
+			var asm = Path.GetFileName (Configuration.GetBaseLibrary (Profile));
+			return Path.Combine (GetAppAssembliesDirectory (), asm);
+		}
 	}
 }

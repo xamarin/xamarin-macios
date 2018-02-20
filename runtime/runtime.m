@@ -80,6 +80,7 @@ bool xamarin_is_gc_coop = false;
 enum MarshalObjectiveCExceptionMode xamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionModeDefault;
 enum MarshalManagedExceptionMode xamarin_marshal_managed_exception_mode = MarshalManagedExceptionModeDefault;
 enum XamarinLaunchMode xamarin_launch_mode = XamarinLaunchModeApp;
+bool xamarin_supports_dynamic_registration = true;
 
 /* Callbacks */
 
@@ -951,6 +952,10 @@ static bool
 register_assembly (MonoAssembly *assembly, guint32 *exception_gchandle)
 {
 	// COOP: this is a function executed only at startup, I believe the mode here doesn't matter.
+	if (!xamarin_supports_dynamic_registration) {
+		LOG (PRODUCT ": Skipping assembly registration for %s since it's not needed (dynamic registration is not supported)", mono_assembly_name_get_name (mono_assembly_get_name (assembly)));
+		return true;
+	}
 	xamarin_register_assembly (mono_assembly_get_object (mono_domain_get (), assembly), exception_gchandle);
 	return *exception_gchandle == 0;
 }
@@ -1211,6 +1216,28 @@ print_callback (const char *string, mono_bool is_stdout)
 {
 	// COOP: Not accessing managed memory: any mode
 	PRINT ("%s", string);
+}
+
+static int
+xamarin_compare_ints (const void *a, const void *b)
+{
+	uint32_t x = *(uint32_t *) a;
+	uint32_t y = *(uint32_t *) b;
+	return x < y ? -1 : (x == y ? 0 : 1);
+}
+
+uint32_t
+xamarin_find_protocol_wrapper_type (uint32_t token_ref)
+{
+	if (options.RegistrationData == NULL || options.RegistrationData->protocol_wrappers == NULL)
+		return INVALID_TOKEN_REF;
+
+	void* ptr = bsearch (&token_ref, options.RegistrationData->protocol_wrappers, options.RegistrationData->protocol_wrapper_count, sizeof (MTProtocolWrapperMap), xamarin_compare_ints);
+	if (ptr == NULL)
+		return INVALID_TOKEN_REF;
+
+	MTProtocolWrapperMap *entry = (MTProtocolWrapperMap *) ptr;
+	return entry->wrapper_token;
 }
 
 void

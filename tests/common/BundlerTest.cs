@@ -27,6 +27,41 @@ namespace Xamarin
 #else
 		[TestCase (Profile.iOS)]
 #endif
+		public void RegisterProtocolOptimization (Profile profile)
+		{
+			using (var bundler = new BundlerTool ()) {
+				bundler.Profile = profile;
+				bundler.CreateTemporaryCacheDirectory ();
+				bundler.CreateTemporaryApp (profile);
+				bundler.Linker = LinkerOption.LinkAll;
+				bundler.Registrar = RegistrarOption.Static;
+				bundler.Optimize = new string [] { "register-protocols" };
+				bundler.AssertExecute ();
+				bundler.AssertWarningCount (0);
+
+				AssemblyDefinition ad = AssemblyDefinition.ReadAssembly (bundler.GetPlatformAssemblyInApp ());
+				var failures = new List<string> ();
+				foreach (var attrib in ad.MainModule.GetCustomAttributes ()) {
+					switch (attrib.AttributeType.Name) {
+					case "ProtocolAttribute":
+					case "ProtocolMemberAttribute":
+					case "AdoptsAttribute":
+						// Unfortunately the CustomAttribute doesn't know its owner, so we can't show that in the test failure message :(
+						failures.Add ($"Found an unexpected attribute: {attrib.AttributeType.FullName}");
+						break;
+					}
+				}
+				Assert.That (failures, Is.Empty, "all these attributes should have been linked away");
+			}
+		}
+
+
+		[Test]
+#if __MACOS__
+		[TestCase (Profile.macOSMobile)]
+#else
+		[TestCase (Profile.iOS)]
+#endif
 		public void MX2106 (Profile profile)
 		{
 			using (var bundler = new BundlerTool ()) {
@@ -68,6 +103,63 @@ class T {
 				bundler.AssertWarning (2106, "Could not optimize the call to BlockLiteral.SetupBlock in System.Void T::SetupBlockOptimized_Delegate(System.Action,System.Delegate) because the type of the value passed as the first argument (the trampoline) is System.Delegate, which makes it impossible to compute the block signature.", "testApp.cs", 10);
 				bundler.AssertWarning (2106, "Could not optimize the call to BlockLiteral.SetupBlock in System.Void T::SetupBlockOptimized_MulticastDelegate(System.Action,System.MulticastDelegate) because the type of the value passed as the first argument (the trampoline) is System.MulticastDelegate, which makes it impossible to compute the block signature.", "testApp.cs", 19);
 				bundler.AssertWarningCount (2);
+			}
+		}
+
+#if __MACOS__
+		// XM doesn't support removing the dynamic registrar yet.
+		//[TestCase (Profile.macOSMobile)]
+#else
+		[Test]
+		[TestCase (Profile.iOS)]
+#endif
+		public void MX2107 (Profile profile)
+		{
+			using (var bundler = new BundlerTool ()) {
+				var code = @"
+using System;
+using Foundation;
+using ObjCRuntime;
+class T {
+	static void Main ()
+	{
+		TypeConverter.ToManaged (""@"");
+		Runtime.ConnectMethod (typeof (NSObject), typeof (T).GetMethod (""Main""), new Selector (""sel""));
+		Runtime.ConnectMethod (typeof (NSObject), typeof (T).GetMethod (""Main""), new ExportAttribute (""sel""));
+		Runtime.ConnectMethod (typeof (T).GetMethod (""Main""), new Selector (""sel""));
+		Runtime.RegisterAssembly (null);
+		BlockLiteral bl = default (BlockLiteral);
+		Action action = null;
+		bl.SetupBlock (action, action);
+		bl.SetupBlockUnsafe (action, action);
+	}
+}
+";
+				bundler.Profile = profile;
+				bundler.CreateTemporaryCacheDirectory ();
+				bundler.CreateTemporaryApp (profile, code: code, extraArg: "/debug:full");
+				bundler.Linker = LinkerOption.LinkSdk;
+				bundler.Registrar = RegistrarOption.Static;
+				bundler.Optimize = new string [] { "remove-dynamic-registrar" };
+				bundler.AssertExecute ();
+				bundler.AssertWarning (2107, "It's not safe to remove the dynamic registrar, because testApp references 'ObjCRuntime.TypeConverter.ToManaged (System.String)'.");
+				bundler.AssertWarning (2107, "It's not safe to remove the dynamic registrar, because testApp references 'ObjCRuntime.Runtime.ConnectMethod (System.Type, System.Reflection.MethodInfo, ObjCRuntime.Selector)'.");
+				bundler.AssertWarning (2107, "It's not safe to remove the dynamic registrar, because testApp references 'ObjCRuntime.Runtime.ConnectMethod (System.Type, System.Reflection.MethodInfo, Foundation.ExportAttribute)'.");
+				bundler.AssertWarning (2107, "It's not safe to remove the dynamic registrar, because testApp references 'ObjCRuntime.Runtime.ConnectMethod (System.Reflection.MethodInfo, ObjCRuntime.Selector)'.");
+				bundler.AssertWarning (2107, "It's not safe to remove the dynamic registrar, because testApp references 'ObjCRuntime.Runtime.RegisterAssembly (System.Reflection.Assembly)'.");
+				bundler.AssertWarning (2107, "It's not safe to remove the dynamic registrar, because testApp references 'ObjCRuntime.BlockLiteral.SetupBlock (System.Delegate, System.Delegate)'.");
+				bundler.AssertWarning (2107, "It's not safe to remove the dynamic registrar, because testApp references 'ObjCRuntime.BlockLiteral.SetupBlockUnsafe (System.Delegate, System.Delegate)'.");
+				bundler.AssertWarningCount (7);
+
+				// try again with link all, now the warnings about SetupBlock[Unsafe] should be gone
+				bundler.Linker = LinkerOption.LinkAll;
+				bundler.AssertExecute ();
+				bundler.AssertWarning (2107, "It's not safe to remove the dynamic registrar, because testApp references 'ObjCRuntime.TypeConverter.ToManaged (System.String)'.");
+				bundler.AssertWarning (2107, "It's not safe to remove the dynamic registrar, because testApp references 'ObjCRuntime.Runtime.ConnectMethod (System.Type, System.Reflection.MethodInfo, ObjCRuntime.Selector)'.");
+				bundler.AssertWarning (2107, "It's not safe to remove the dynamic registrar, because testApp references 'ObjCRuntime.Runtime.ConnectMethod (System.Type, System.Reflection.MethodInfo, Foundation.ExportAttribute)'.");
+				bundler.AssertWarning (2107, "It's not safe to remove the dynamic registrar, because testApp references 'ObjCRuntime.Runtime.ConnectMethod (System.Reflection.MethodInfo, ObjCRuntime.Selector)'.");
+				bundler.AssertWarning (2107, "It's not safe to remove the dynamic registrar, because testApp references 'ObjCRuntime.Runtime.RegisterAssembly (System.Reflection.Assembly)'.");
+				bundler.AssertWarningCount (5);
 			}
 		}
 

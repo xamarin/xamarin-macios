@@ -68,7 +68,6 @@ LINKER_SOURCES = \
 	$(LINKER_DIR)/MonoTouch.Tuner/MonoTouchMarkStep.cs		\
 	$(LINKER_DIR)/MonoTouch.Tuner/MonoTouchProfile.cs		\
 	$(LINKER_DIR)/MonoTouch.Tuner/MonoTouchSweepStep.cs		\
-	$(LINKER_DIR)/MonoTouch.Tuner/MonoTouchTypeMap.cs		\
 	$(LINKER_DIR)/MonoTouch.Tuner/OptimizeGeneratedCodeSubStep.cs	\
 	$(LINKER_DIR)/MonoTouch.Tuner/PreserveCode.cs			\
 	$(LINKER_DIR)/MonoTouch.Tuner/ProcessExportedFields.cs	\
@@ -84,6 +83,8 @@ LINKER_SOURCES = \
 	$(TOP)/tools/linker/CorePreserveCode.cs		\
 	$(TOP)/tools/linker/CoreRemoveAttributes.cs		\
 	$(TOP)/tools/linker/CoreRemoveSecurity.cs		\
+	$(TOP)/tools/linker/CoreSweepStep.cs		\
+	$(TOP)/tools/linker/CoreTypeMapStep.cs		\
 	$(TOP)/tools/linker/ExceptionalSubStep.cs		\
 	$(TOP)/tools/linker/MarkNSObjects.cs			\
 	$(TOP)/tools/linker/MobileExtensions.cs		\
@@ -296,7 +297,9 @@ SIMLAUNCHER_FRAMEWORKS =  \
 						\
 	-weak_framework ARKit					\
 	-weak_framework FileProvider			\
-	-weak_framework FileProviderUI
+	-weak_framework FileProviderUI			\
+						\
+	-weak_framework IdentityLookup			\
 
 # note: there _was_ no CoreAudioKit.framework or Metal.framework for the simulator (before recent iOS9 betas)
 # note 2: there's no GameKit, in iOS 9 (beta 3 at least), you're supposed to reference GameCenter instead (looks fixed in beta 4)

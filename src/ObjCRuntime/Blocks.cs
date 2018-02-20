@@ -83,8 +83,12 @@ namespace ObjCRuntime {
 		[DllImport ("__Internal")]
 		static extern IntPtr xamarin_get_block_descriptor ();
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		void SetupBlock (Delegate trampoline, Delegate userDelegate, bool safe)
 		{
+			if (!Runtime.DynamicRegistrationSupported)
+				throw ErrorHelper.CreateError (8026, "BlockLiteral.SetupBlock is not supported when the dynamic registrar has been linked away.");
+
 			// We need to get the signature of the target method, so that we can compute
 			// the ObjC signature correctly (the generated method that's actually
 			// invoked by native code does not have enough type information to compute
@@ -239,6 +243,7 @@ namespace ObjCRuntime {
 			return descriptor->copy_helper == ((BlockDescriptor *) literal->block_descriptor)->copy_helper;
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		internal static IntPtr GetBlockForDelegate (MethodInfo minfo, object @delegate, string signature)
 		{
 			if (@delegate == null)
@@ -275,7 +280,11 @@ namespace ObjCRuntime {
 			// with the proper reference count.
 			BlockLiteral block = new BlockLiteral ();
 			if (signature == null) {
-				block.SetupBlock ((Delegate) handlerDelegate, (Delegate) @delegate);
+				if (Runtime.DynamicRegistrationSupported) {
+					block.SetupBlock ((Delegate) handlerDelegate, (Delegate) @delegate);
+				} else {
+					throw ErrorHelper.CreateError (8026, $"BlockLiteral.GetBlockForDelegate with a null signature is not supported when the dynamic registrar has been linked away (delegate type: {@delegate.GetType ().FullName}).");
+				}
 			} else {
 				block.SetupBlockImpl ((Delegate) handlerDelegate, (Delegate) @delegate, true, signature);
 			}

@@ -64,7 +64,12 @@ namespace Xamarin.Bundler {
 		public bool EnableSGenConc;
 		public MarshalObjectiveCExceptionMode MarshalObjectiveCExceptions;
 		public MarshalManagedExceptionMode MarshalManagedExceptions;
-		public bool IsDefaultMarshalManagedExceptionMode;
+
+		bool is_default_marshal_managed_exception_mode;
+		public bool IsDefaultMarshalManagedExceptionMode {
+			get { return is_default_marshal_managed_exception_mode || MarshalManagedExceptions == MarshalManagedExceptionMode.Default; }
+			set { is_default_marshal_managed_exception_mode = value; }
+		}
 		public List<string> RootAssemblies = new List<string> ();
 		public List<Application> SharedCodeApps = new List<Application> (); // List of appexes we're sharing code with.
 		public string RegistrarOutputLibrary;
@@ -78,6 +83,12 @@ namespace Xamarin.Bundler {
 		public Application (string[] arguments)
 		{
 			Cache = new Cache (arguments);
+		}
+
+		public bool DynamicRegistrationSupported {
+			get {
+				return Optimizations.RemoveDynamicRegistrar != true;
+			}
 		}
 
 		// This is just a name for this app to show in log/error messages, etc.
@@ -115,7 +126,13 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public static bool IsUptodate (string source, string target, bool check_contents = false)
+		// Checks if the source file has a time stamp later than the target file.
+		//
+		// Optionally check if the contents of the files are different after checking the timestamp.
+		//
+		// If check_stamp is true, the function will use the timestamp of a "target".stamp file
+		// if it's later than the timestamp of the "target" file itself.
+		public static bool IsUptodate (string source, string target, bool check_contents = false, bool check_stamp = true)
 		{
 			if (Driver.Force)
 				return false;
@@ -125,6 +142,14 @@ namespace Xamarin.Bundler {
 			if (!tfi.Exists) {
 				Driver.Log (3, "Target '{0}' does not exist.", target);
 				return false;
+			}
+
+			if (check_stamp) {
+				var tfi_stamp = new FileInfo (target + ".stamp");
+				if (tfi_stamp.Exists && tfi_stamp.LastWriteTimeUtc > tfi.LastWriteTimeUtc) {
+					Driver.Log (3, "Target '{0}' has a stamp file with newer timestamp ({1} > {2}), using the stamp file's timestamp", target, tfi_stamp.LastWriteTimeUtc, tfi.LastWriteTimeUtc);
+					tfi = tfi_stamp;
+				}
 			}
 
 			var sfi = new FileInfo (source);
@@ -312,7 +337,10 @@ namespace Xamarin.Bundler {
 		}
 
 		// Checks if any of the source files have a time stamp later than any of the target files.
-		public static bool IsUptodate (IEnumerable<string> sources, IEnumerable<string> targets)
+		//
+		// If check_stamp is true, the function will use the timestamp of a "target".stamp file
+		// if it's later than the timestamp of the "target" file itself.
+		public static bool IsUptodate (IEnumerable<string> sources, IEnumerable<string> targets, bool check_stamp = true)
 		{
 			if (Driver.Force)
 				return false;
@@ -343,6 +371,14 @@ namespace Xamarin.Bundler {
 				if (!tfi.Exists) {
 					Driver.Log (3, "Target '{0}' does not exist.", t);
 					return false;
+				}
+
+				if (check_stamp) {
+					var tfi_stamp = new FileInfo (t + ".stamp");
+					if (tfi_stamp.Exists && tfi_stamp.LastWriteTimeUtc > tfi.LastWriteTimeUtc) {
+						Driver.Log (3, "Target '{0}' has a stamp file with newer timestamp ({1} > {2}), using the stamp file's timestamp", t, tfi_stamp.LastWriteTimeUtc, tfi.LastWriteTimeUtc);
+						tfi = tfi_stamp;
+					}
 				}
 
 				var lwt = tfi.LastWriteTimeUtc;
@@ -397,6 +433,8 @@ namespace Xamarin.Bundler {
 
 		public void InitializeCommon ()
 		{
+			SelectRegistrar ();
+
 			if (RequiresXcodeHeaders && SdkVersion < SdkVersions.GetVersion (Platform)) {
 				throw ErrorHelper.CreateError (91, "This version of {0} requires the {1} {2} SDK (shipped with Xcode {3}). Either upgrade Xcode to get the required header files or {4} (to try to avoid the new APIs).", ProductName, PlatformName, SdkVersions.GetVersion (Platform), SdkVersions.Xcode, Error91LinkerSuggestion);
 			}

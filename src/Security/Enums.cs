@@ -454,7 +454,8 @@ namespace Security {
 		Skip
 	}
 
-	[iOS (9,0)][NoMac]
+	[iOS (9,0)]
+	[Mac (10,12)]
 	public enum SecTokenID {
 		None = 0,
 

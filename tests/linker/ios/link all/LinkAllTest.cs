@@ -394,6 +394,7 @@ namespace LinkAll {
 		}
 
 		[Test]
+		[Ignore ("Assumption broken with mono 2017-12")]
 		public void AssemblyReferences_16213 ()
 		{
 			foreach (var assembly in typeof (System.Data.AcceptRejectRule).Assembly.GetReferencedAssemblies ()) {
@@ -572,6 +573,18 @@ namespace LinkAll {
 			Assert.Null (snfwc, atmb.FullName + ".SetNotificationForWaitCompletion");
 			Assert.Null (oifd,  atmb.FullName + ".ObjectIdForDebugger");
 #endif
+		}
+
+		[Test]
+		public void NoFatCorlib ()
+		{
+			var corlib = typeof (int).Assembly.Location;
+#if __WATCHOS__
+			var suffix = "link all.appex/mscorlib.dll";
+#else
+			var suffix = "link all.app/mscorlib.dll";
+#endif
+			Assert.That (corlib, Is.StringEnding (suffix), corlib);
 		}
 	}
 

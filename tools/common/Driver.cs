@@ -7,6 +7,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -136,10 +137,13 @@ namespace Xamarin.Bundler {
 					"    inline-isdirectbinding: By default disabled, because it may  (requires the linker), because . Tries to inline calls to NSObject.IsDirectBinding to load a constant value. Makes the app smaller, and slightly faster at runtime.\n" +
 #endif
 #if MONOTOUCH
+					"    remove-dynamic-registrar: By default enabled when the static registrar is enabled. Removes the dynamic registrar (makes the app smaller).\n" +
 					"    inline-runtime-arch: By default always enabled (requires the linker). Inlines calls to ObjCRuntime.Runtime.Arch to load a constant value. Makes the app smaller, and slightly faster at runtime.\n" +
 #endif
 					"    blockliteral-setupblock: By default enabled when using the static registrar. Optimizes calls to BlockLiteral.SetupBlock to avoid having to calculate the block signature at runtime.\n" +
-					"    inline-intptr-size: By default enabled for builds that target a single architecture (requires the linker). Inlines calls to IntPtr.Size to load a constant value. Makes the app smaller, and slightly faster at runtime.\n",
+					"    inline-intptr-size: By default enabled for builds that target a single architecture (requires the linker). Inlines calls to IntPtr.Size to load a constant value. Makes the app smaller, and slightly faster at runtime.\n" +
+					"    inline-dynamic-registration-supported: By default always enabled (requires the linker). Optimizes calls to Runtime.DynamicRegistrationSupported to be a constant value. Makes the app smaller, and slightly faster at runtime.\n" +
+					"    register-protocols: Remove unneeded metadata for protocol support. Makes the app smaller and reduces memory requirements.\n",
 					(v) => {
 						app.Optimizations.Parse (v);
 					});
@@ -301,7 +305,7 @@ namespace Xamarin.Bundler {
 			File.Move (source, target);
 		}
 
-		static void MoveIfDifferent (string path, string tmp)
+		static void MoveIfDifferent (string path, string tmp, bool use_stamp = false)
 		{
 			// Don't read the entire file into memory, it can be quite big in certain cases.
 
@@ -322,10 +326,12 @@ namespace Xamarin.Bundler {
 				FileMove (tmp, path);
 			} else {
 				Log (3, "Target {0} is up-to-date.", path);
+				if (use_stamp)
+					Driver.Touch (path + ".stamp");
 			}
 		}
 
-		public static void WriteIfDifferent (string path, string contents)
+		public static void WriteIfDifferent (string path, string contents, bool use_stamp = false)
 		{
 			var tmp = path + ".tmp";
 
@@ -338,7 +344,7 @@ namespace Xamarin.Bundler {
 				}
 
 				File.WriteAllText (tmp, contents);
-				MoveIfDifferent (path, tmp);
+				MoveIfDifferent (path, tmp, use_stamp);
 			} catch (Exception e) {
 				File.WriteAllText (path, contents);
 				ErrorHelper.Warning (1014, e, "Failed to re-use cached version of '{0}': {1}.", path, e.Message);
@@ -347,7 +353,7 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public static void WriteIfDifferent (string path, byte[] contents)
+		public static void WriteIfDifferent (string path, byte[] contents, bool use_stamp = false)
 		{
 			var tmp = path + ".tmp";
 
@@ -359,7 +365,7 @@ namespace Xamarin.Bundler {
 				}
 
 				File.WriteAllBytes (tmp, contents);
-				MoveIfDifferent (path, tmp);
+				MoveIfDifferent (path, tmp, use_stamp);
 			} catch (Exception e) {
 				File.WriteAllBytes (path, contents);
 				ErrorHelper.Warning (1014, e, "Failed to re-use cached version of '{0}': {1}.", path, e.Message);
@@ -435,5 +441,30 @@ namespace Xamarin.Bundler {
 				}
 			}
 		}
+
+		public static void Touch (IEnumerable<string> filenames, DateTime? timestamp = null)
+		{
+			if (timestamp == null)
+				timestamp = DateTime.Now;
+			foreach (var filename in filenames) {
+				try {
+					var fi = new FileInfo (filename);
+					if (!fi.Exists) {
+						using (var fo = fi.OpenWrite ()) {
+							// Create an empty file.
+						}
+					}
+					fi.LastWriteTime = timestamp.Value;
+				} catch (Exception e) {
+					ErrorHelper.Warning (128, "Could not touch the file '{0}': {1}", filename, e.Message);
+				}
+			}
+		}
+
+		public static void Touch (params string [] filenames)
+		{
+			Touch ((IEnumerable<string>) filenames);
+		}
+
 	}
 }

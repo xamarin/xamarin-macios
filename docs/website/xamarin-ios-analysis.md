@@ -1,7 +1,7 @@
 ---
 id: c29b69f5-08e4-4dcc-831e-7fd692ab0886
 title: Xamarin.iOS Analysis Rules
-dateupdated: 2017-12-07
+dateupdated: 2018-02-15
 ---
 
 [//]: # (The original file resides under https://github.com/xamarin/xamarin-macios/tree/master/docs/website/)
@@ -46,4 +46,9 @@ To set it up, go to Project > iOS Build > Linker Behavior.
 
 - **Problem:** We recommend using the native HttpClient handler instead of the managed one for better performance, smaller executable size, and to easily support the newer standards.
 - **Fix:** Double click on your iOS project, go to Build > iOS Build and change the HttpClient implementation to either NSUrlSession (iOS 7+) or CFNetwork to support version preceding iOS 7.
+
+### <a name="XIA0007"/>XIA0007: UseLLVMRule
+
+- **Problem:** For Release|iPhone configuration we recommend enabling the LLVM compiler which generates code that is faster to execute at the expense of build time.
+- **Fix:** Double click on your iOS project, go to Build > iOS Build and for Release|iPhone, check the LLVM optimizing compiler option.
 

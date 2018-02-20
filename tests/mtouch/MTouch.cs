@@ -357,9 +357,24 @@ public class B : A {}
 				mtouch.CreateTemporaryCacheDirectory ();
 				mtouch.Verbosity = 4; // This is required to get the debug output we're testing for
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build 1");
-				mtouch.AssertOutputPattern ("Linking .*/testApp.exe into .*/PreBuild using mode 'None'");
+				mtouch.AssertOutputPattern ("Linking .*/testApp.exe into .*/2-PreBuild using mode 'None'");
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build 2");
 				mtouch.AssertOutputPattern ("Cached assemblies reloaded.");
+			}
+		}
+
+		void DumpFileStats (MTouchTool mtouch)
+		{
+			if (mtouch.Verbosity < 1)
+				return;
+			var directory = mtouch.Cache;
+			var files = Directory.GetFileSystemEntries (directory, "*", SearchOption.AllDirectories).ToList ();
+			files.Sort ((string x, string y) => string.CompareOrdinal (x, y));
+			var max = files.Max ((v) => v.Length);
+
+			var format = "    {0,-" + max + "} {1}";
+			foreach (var file in  files) {
+				Console.WriteLine (format, file, File.GetLastWriteTimeUtc (file).ToString ("HH:mm:ss.fffffff"));
 			}
 		}
 
@@ -397,17 +412,20 @@ public class B : A {}
 					mtouch.DSym = false; // faster test
 					mtouch.MSym = false; // faster test
 					mtouch.NoStrip = true; // faster test
+					//mtouch.Verbosity = 20; // Set the mtouch verbosity to something to print the mtouch output to the terminal. This will also enable additional debug output.
 
 					var timestamp = DateTime.MinValue;
 
 					mtouch.AssertExecute (MTouchAction.BuildDev, "first build");
 					Console.WriteLine ($"{DateTime.Now} **** FIRST BUILD DONE ****");
+					DumpFileStats (mtouch);
 
 					timestamp = DateTime.Now;
 					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
 
 					mtouch.AssertExecute (MTouchAction.BuildDev, "second build");
 					Console.WriteLine ($"{DateTime.Now} **** SECOND BUILD DONE ****");
+					DumpFileStats (mtouch);
 
 					mtouch.AssertNoneModified (timestamp, name);
 					extension.AssertNoneModified (timestamp, name);
@@ -416,6 +434,7 @@ public class B : A {}
 					new FileInfo (extension.RootAssembly).LastWriteTimeUtc = DateTime.UtcNow;
 					mtouch.AssertExecute (MTouchAction.BuildDev, "touch extension executable");
 					Console.WriteLine ($"{DateTime.Now} **** TOUCH EXTENSION EXECUTABLE DONE ****");
+					DumpFileStats (mtouch);
 					mtouch.AssertNoneModified (timestamp, name);
 					extension.AssertNoneModified (timestamp, name);
 
@@ -423,6 +442,7 @@ public class B : A {}
 					new FileInfo (mtouch.RootAssembly).LastWriteTimeUtc = DateTime.UtcNow;
 					mtouch.AssertExecute (MTouchAction.BuildDev, "touch main app executable");
 					Console.WriteLine ($"{DateTime.Now} **** TOUCH MAIN APP EXECUTABLE DONE ****");
+					DumpFileStats (mtouch);
 					mtouch.AssertNoneModified (timestamp, name);
 					extension.AssertNoneModified (timestamp, name);
 
@@ -440,6 +460,7 @@ public class B : A {}
 					extension.CreateTemporaryServiceExtension (extraCode: codeB);
 					mtouch.AssertExecute (MTouchAction.BuildDev, "change extension executable");
 					Console.WriteLine ($"{DateTime.Now} **** CHANGE EXTENSION EXECUTABLE DONE ****");
+					DumpFileStats (mtouch);
 					mtouch.AssertNoneModified (timestamp, name);
 					extension.AssertNoneModified (timestamp, name, "testServiceExtension", "testServiceExtension.aotdata.armv7", "testServiceExtension.aotdata.arm64", "testServiceExtension.dll");
 
@@ -450,6 +471,7 @@ public class B : A {}
 					mtouch.CreateTemporaryApp (extraCode: codeB);
 					mtouch.AssertExecute (MTouchAction.BuildDev, "change app executable");
 					Console.WriteLine ($"{DateTime.Now} **** CHANGE APP EXECUTABLE DONE ****");
+					DumpFileStats (mtouch);
 					mtouch.AssertNoneModified (timestamp, name, "testApp", "testApp.aotdata.armv7", "testApp.aotdata.arm64", "testApp.exe");
 					extension.AssertNoneModified (timestamp, name);
 
@@ -460,6 +482,7 @@ public class B : A {}
 					File.WriteAllText (extension.RootAssembly + ".config", "<configuration></configuration>");
 					mtouch.AssertExecute (MTouchAction.BuildDev, "add config to extension dll");
 					Console.WriteLine ($"{DateTime.Now} **** ADD CONFIG TO EXTENSION DONE ****");
+					DumpFileStats (mtouch);
 					mtouch.AssertNoneModified (timestamp, name);
 					extension.AssertNoneModified (timestamp, name, "testServiceExtension.dll.config", "testServiceExtension", "testServiceExtension.aotdata.armv7", "testServiceExtension.aotdata.arm64");
 					CollectionAssert.Contains (Directory.EnumerateFiles (extension.AppPath, "*", SearchOption.AllDirectories).Select ((v) => Path.GetFileName (v)), "testServiceExtension.dll.config", "extension config added");
@@ -471,18 +494,19 @@ public class B : A {}
 					File.WriteAllText (mtouch.RootAssembly + ".config", "<configuration></configuration>");
 					mtouch.AssertExecute (MTouchAction.BuildDev, "add config to container exe");
 					Console.WriteLine ($"{DateTime.Now} **** ADD CONFIG TO CONTAINER DONE ****");
+					DumpFileStats (mtouch);
 					mtouch.AssertNoneModified (timestamp, name, "testApp.exe.config", "testApp", "testApp.aotdata.armv7", "testApp.aotdata.arm64");
 					extension.AssertNoneModified (timestamp, name);
 					CollectionAssert.Contains (Directory.EnumerateFiles (mtouch.AppPath, "*", SearchOption.AllDirectories).Select ((v) => Path.GetFileName (v)), "testApp.exe.config", "container config added");
 
 					timestamp = DateTime.Now;
 					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
-
 					{
 						// Add a satellite to the extension.
 						var satellite = extension.CreateTemporarySatelliteAssembly ();
 						mtouch.AssertExecute (MTouchAction.BuildDev, "add satellite to extension");
 						Console.WriteLine ($"{DateTime.Now} **** ADD SATELLITE TO EXTENSION DONE ****");
+						DumpFileStats (mtouch);
 						mtouch.AssertNoneModified (timestamp, name, Path.GetFileName (satellite));
 						extension.AssertNoneModified (timestamp, name, Path.GetFileName (satellite));
 						extension.AssertModified (timestamp, name, Path.GetFileName (satellite));
@@ -497,6 +521,7 @@ public class B : A {}
 						var satellite = mtouch.CreateTemporarySatelliteAssembly ();
 						mtouch.AssertExecute (MTouchAction.BuildDev, "add satellite to container");
 						Console.WriteLine ($"{DateTime.Now} **** ADD SATELLITE TO CONTAINER DONE ****");
+						DumpFileStats (mtouch);
 						mtouch.AssertNoneModified (timestamp, name, Path.GetFileName (satellite));
 						extension.AssertNoneModified (timestamp, name, Path.GetFileName (satellite));
 						mtouch.AssertModified (timestamp, name, Path.GetFileName (satellite));
@@ -1639,20 +1664,21 @@ public class TestApp {
 				mtouch.Linker = MTouchLinker.LinkSdk;
 				mtouch.Optimize = new string [] { "foo" };
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
-				mtouch.AssertWarning (132, "Unknown optimization: 'foo'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, inline-runtime-arch, blockliteral-setupblock.");
+				mtouch.AssertWarning (132, "Unknown optimization: 'foo'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, inline-runtime-arch, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, remove-dynamic-registrar.");
 			}
 		}
 
 		[Test]
 		[TestCase ("all")]
 		[TestCase ("-all")]
-		[TestCase ("remove-uithread-checks,dead-code-elimination,inline-isdirectbinding,inline-intptr-size,inline-runtime-arch")]
+		[TestCase ("remove-uithread-checks,dead-code-elimination,inline-isdirectbinding,inline-intptr-size,inline-runtime-arch,register-protocols")]
 		public void Optimizations (string opt)
 		{
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.CreateTemporaryApp ();
 				mtouch.CreateTemporaryCacheDirectory ();
 				mtouch.Linker = MTouchLinker.LinkSdk;
+				mtouch.Registrar = MTouchRegistrar.Static;
 				mtouch.Optimize = new string [] { opt };
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
 				mtouch.AssertNoWarnings ();
@@ -3266,7 +3292,10 @@ public partial class NotificationService : UNNotificationServiceExtension
 				mtouch.AssertWarning (2003, "Option '--optimize=inline-intptr-size' will be ignored since linking is disabled");
 				mtouch.AssertWarning (2003, "Option '--optimize=inline-runtime-arch' will be ignored since linking is disabled");
 				mtouch.AssertWarning (2003, "Option '--optimize=blockliteral-setupblock' will be ignored since linking is disabled");
-				mtouch.AssertWarningCount (6);
+				mtouch.AssertWarning (2003, "Option '--optimize=inline-dynamic-registration-supported' will be ignored since linking is disabled");
+				mtouch.AssertWarning (2003, "Option '--optimize=register-protocols' will be ignored since the static registrar is not enabled");
+				mtouch.AssertWarning (2003, "Option '--optimize=remove-dynamic-registrar' will be ignored since the static registrar is not enabled");
+				mtouch.AssertWarningCount (9);
 			}
 
 			using (var mtouch = new MTouchTool ()) {
