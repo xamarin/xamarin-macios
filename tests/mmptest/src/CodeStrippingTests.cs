@@ -3,6 +3,8 @@ using System.IO;
 using System.Linq;
 using NUnit.Framework;
 
+using Xamarin.Utils;
+
 namespace Xamarin.MMP.Tests
 {
 	public class CodeStrippingTests

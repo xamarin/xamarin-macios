@@ -12,11 +12,6 @@ using Xamarin.Tests;
 
 namespace Xamarin.MMP.Tests
 {
-	static class StringExtensions
-	{
-		internal static string [] SplitLines (this string s) => s.Split (new [] { Environment.NewLine }, StringSplitOptions.None);
-	}
-
 	public class OutputText
 	{
 		public string BuildOutput { get; private set; }
