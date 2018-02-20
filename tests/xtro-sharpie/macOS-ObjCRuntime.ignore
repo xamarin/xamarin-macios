@@ -20,3 +20,4 @@
 
 !unknown-pinvoke! kevent bound
 !unknown-pinvoke! kqueue bound
+!unknown-pinvoke! close bound
