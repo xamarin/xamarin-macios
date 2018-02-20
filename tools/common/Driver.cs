@@ -133,7 +133,7 @@ namespace Xamarin.Bundler {
 #if MONOTOUCH
 					"    inline-isdirectbinding: By default enabled (requires the linker). Tries to inline calls to NSObject.IsDirectBinding to load a constant value. Makes the app smaller, and slightly faster at runtime.\n" +
 #else
-					"    inline-isdirectbinding: By default disabled, because it may  (requires the linker), because . Tries to inline calls to NSObject.IsDirectBinding to load a constant value. Makes the app smaller, and slightly faster at runtime.\n" +
+					"    inline-isdirectbinding: By default disabled, because it may require the linker. Tries to inline calls to NSObject.IsDirectBinding to load a constant value. Makes the app smaller, and slightly faster at runtime.\n" +
 #endif
 #if MONOTOUCH
 					"    remove-dynamic-registrar: By default enabled when the static registrar is enabled. Removes the dynamic registrar (makes the app smaller).\n" +
