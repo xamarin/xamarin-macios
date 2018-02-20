@@ -126,6 +126,27 @@ namespace MonoTouch.Tuner {
 				pending_serialization_constructors.Clear ();
 			}
 
+			// we want to avoid separate mscorlib.dll for 32/64 bits so the arch specific code for n[u]int and nfloat must be preserved in both cases
+			// a single, slightly larger, assembly is much smaller thn two (slightly smaller) ones
+			if (LinkContext.App.IsDualBuild) {
+				switch (method.Name) {
+				case "TryParse":
+					switch (method.DeclaringType.Name) {
+					case "nfloat":
+						MarkNamedMethod (GetType ("mscorlib", "System.Double"), "TryParse");
+						MarkNamedMethod (GetType ("mscorlib", "System.Single"), "TryParse");
+						break;
+					}
+					break;
+				case "Create":
+					// ARCH_32 optimization
+					if (!method.DeclaringType.Is (Namespaces.Foundation, "NSIndexPath"))
+						break;
+					MarkNamedMethod (GetType ("mscorlib", "System.Array"), "ConvertAll");
+					break;
+				}
+			}
+
 			return method;
 		}
 

@@ -574,6 +574,18 @@ namespace LinkAll {
 			Assert.Null (oifd,  atmb.FullName + ".ObjectIdForDebugger");
 #endif
 		}
+
+		[Test]
+		public void NoFatCorlib ()
+		{
+			var corlib = typeof (int).Assembly.Location;
+#if __WATCHOS__
+			var suffix = "link all.appex/mscorlib.dll";
+#else
+			var suffix = "link all.app/mscorlib.dll";
+#endif
+			Assert.That (corlib, Is.StringEnding (suffix), corlib);
+		}
 	}
 
 	[Introduced (PlatformName.MacOSX, 1, 0, PlatformArchitecture.Arch64)]
