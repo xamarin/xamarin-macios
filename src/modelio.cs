@@ -2089,13 +2089,7 @@ namespace ModelIO {
 	}
 
 	[iOS (9,0),Mac(10,11, onlyOn64 : true)]
-	[BaseType (
-#if MONOMAC && !XAMCORE_4_0
-		typeof(NSObject)
-#else
-		typeof(MDLObject)
-#endif
-	)]
+	[BaseType (typeof(MDLObject))]
 	[DisableDefaultCtor]
 	interface MDLVoxelArray
 	{
