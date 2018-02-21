@@ -254,7 +254,7 @@ and safe to do so.
 
 The App Store now rejects applications which contain libraries and frameworks which contain 32-bit variants. The library was stripped of unused archtectures when copied into the final application bundle.
 
-This is in general safe, and will reduce application size as an added benefit, but may break existing codesigning signatures if it was already signed.
+This is in general safe, and will reduce application bundle size as an added benefit. However, any bundled framework that is code signed will have its signature invalidated (and resigned later if the application is signed).
 
 Consider using `lipo` to remove the unnecessary archtectures permanently from the source library. If the application is not being published to the App Store, this removal can be disabled by passing --optimize=-trim-architectures as Additional MMP Arguments.
 
