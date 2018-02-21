@@ -136,6 +136,14 @@ See [Build optimizations](https://developer.xamarin.com/guides/cross-platform/ma
 
 ### <a name="MM0133"/>MM0133: Found more than 1 assembly matching '{0}' choosing first: '{1}'
 
+### <a name="MM0134"/>MM0134: 32-bit applications should be migrated to 64-bit as they will not run beyond High Sierra "without compromises".
+
+Apple has announced that 32-bit macOS will not run on the version of macOS after High Sierra "without compromises" and will not allow macOS App Store submissions.
+
+In addition, macOS 10.13.4 has added a first launch notification for 32-bit applications.
+
+Consider moving your application and any dependencies to Unified 64-bit.
+
 
 # MM1xxx: file copy / symlinks (project related)
 
