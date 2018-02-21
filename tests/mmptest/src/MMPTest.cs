@@ -240,22 +240,22 @@ namespace Xamarin.MMP.Tests
 			});
 		}
 
-        [Test]
-        public void Unified_HelloWorld_ShouldWarnOn32Bit ()
-        {
-            RunMMPTest (tmpDir => {
-                TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
-                    CSProjConfig = "<XamMacArch>i386</XamMacArch>"
-                };
+		[Test]
+		public void Unified_HelloWorld_ShouldWarnOn32Bit ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					CSProjConfig = "<XamMacArch>i386</XamMacArch>"
+				};
 
-                string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
-                Assert.True (buildResults.Contains ("MM0134"), "32-bit Modern did not contain MM0134");
-
-                test.XM45 = true;
-                buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
-                Assert.True (buildResults.Contains ("MM0134"), "32-bit Full did not contain MM0134");
-            });
-        }
+				string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
+				Assert.True (buildResults.Contains ("MM0134"), "32-bit Modern did not contain MM0134");
+	
+				test.XM45 = true;
+				buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
+				Assert.True (buildResults.Contains ("MM0134"), "32-bit Full did not contain MM0134");
+			});
+		}
 
 		[Test]
 		public void Unified_HelloWorld_ShouldHaveNoRegistrarWarnings ()

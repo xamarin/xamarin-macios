@@ -1238,7 +1238,7 @@ namespace Xamarin.Bundler {
 				arch = "x86_64";
 
 			if (arch != "x86_64")
-				ErrorHelper.Warning (134, "32-bit applications should be migrated to 64-bit as they will not run beyond High Sierra \"without compromises\".");
+				ErrorHelper.Warning (134, "32-bit applications should be migrated to 64-bit.");
 
 			try {
 				var args = new StringBuilder ();
