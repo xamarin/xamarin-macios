@@ -324,7 +324,7 @@ namespace xharness
 
 		public static void AddExtraMtouchArgs (this XmlDocument csproj, string value, string platform, string configuration)
 		{
-			AddToNode (csproj, "MTouchExtraArgs", value, platform, configuration);
+			AddToNode (csproj, "MtouchExtraArgs", value, platform, configuration);
 		}
 
 		public static void AddMonoBundlingExtraArgs (this XmlDocument csproj, string value, string platform, string configuration)

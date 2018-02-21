@@ -4510,6 +4510,9 @@ namespace Registrar {
 
 		public void Generate (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path)
 		{
+			if (Target?.CachedLink == true)
+				throw ErrorHelper.CreateError (99, "Internal error: the static registrar should not execute unless the linker also executed (or was disabled). A potential workaround is to pass '-f' as an additional " + Driver.NAME + " argument to force a full build. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+
 			this.input_assemblies = assemblies;
 
 			foreach (var assembly in assemblies) {
@@ -4563,12 +4566,12 @@ namespace Registrar {
 
 			FlushTrace ();
 
-			Driver.WriteIfDifferent (source_path, methods.ToString ());
+			Driver.WriteIfDifferent (source_path, methods.ToString (), true);
 
 			header.AppendLine ();
 			header.AppendLine (declarations);
 			header.AppendLine (interfaces);
-			Driver.WriteIfDifferent (header_path, header.ToString ());
+			Driver.WriteIfDifferent (header_path, header.ToString (), true);
 
 			header.Dispose ();
 			header = null;

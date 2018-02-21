@@ -62,6 +62,12 @@ namespace Xamarin.Bundler {
 			this.StaticRegistrar = new StaticRegistrar (this);
 		}
 
+		public bool CachedLink {
+			get {
+				return cached_link;
+			}
+		}
+
 		public void ExtractNativeLinkInfo (List<Exception> exceptions)
 		{
 			foreach (var a in Assemblies) {
@@ -396,7 +402,7 @@ namespace Xamarin.Bundler {
 			sb.AppendLine ("}");
 			sb.AppendLine ();
 
-			Driver.WriteIfDifferent (reference_m, sb.ToString ());
+			Driver.WriteIfDifferent (reference_m, sb.ToString (), true);
 
 #if MTOUCH
 			foreach (var abi in GetArchitectures (AssemblyBuildTarget.StaticObject)) {

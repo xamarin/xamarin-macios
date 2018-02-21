@@ -591,6 +591,20 @@ namespace LinkAll {
 		{
 			public ProtocolWithGenericsInOptionalMemberWrapper (IntPtr handle, bool owns) : base (handle, owns) { }
 		}
+
+		public void NoFatCorlib ()
+		{
+			var corlib = typeof (int).Assembly.Location;
+			// special location when we build a shared (app and extensions) framework for mono
+			if (corlib.EndsWith ("/Frameworks/Xamarin.Sdk.framework/MonoBundle/mscorlib.dll", StringComparison.Ordinal))
+				Assert.Pass (corlib);
+#if __WATCHOS__
+			var suffix = "link all.appex/mscorlib.dll";
+#else
+			var suffix = "link all.app/mscorlib.dll";
+#endif
+			Assert.That (corlib, Is.StringEnding (suffix), corlib);
+		}
 	}
 
 	[Introduced (PlatformName.MacOSX, 1, 0, PlatformArchitecture.Arch64)]
