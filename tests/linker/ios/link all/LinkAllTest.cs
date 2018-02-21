@@ -579,6 +579,9 @@ namespace LinkAll {
 		public void NoFatCorlib ()
 		{
 			var corlib = typeof (int).Assembly.Location;
+			// special location when we build a shared (app and extensions) framework for mono
+			if (corlib.EndsWith ("/Frameworks/Xamarin.Sdk.framework/MonoBundle/mscorlib.dll", StringComparison.Ordinal))
+				Assert.Pass (corlib);
 #if __WATCHOS__
 			var suffix = "link all.appex/mscorlib.dll";
 #else
