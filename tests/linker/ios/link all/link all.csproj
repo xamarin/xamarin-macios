@@ -39,7 +39,7 @@
     <MtouchI18n>mideast,other</MtouchI18n>
     <MtouchArch>i386, x86_64</MtouchArch>
     <DefineConstants>LINKALL;;$(DefineConstants)</DefineConstants>
-    <MtouchExtraArgs>--optimize=all,-remove-dynamic-registrar</MtouchExtraArgs>
+    <MtouchExtraArgs>--registrar:static --optimize=all,-remove-dynamic-registrar</MtouchExtraArgs>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">

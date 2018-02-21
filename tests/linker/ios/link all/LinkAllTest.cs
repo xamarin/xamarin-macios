@@ -576,6 +576,22 @@ namespace LinkAll {
 		}
 
 		[Test]
+		public void LinkedAwayGenericTypeAsOptionalMemberInProtocol ()
+		{
+			// https://github.com/xamarin/xamarin-macios/issues/3523
+			// This test will fail at build time if it regresses (usually these types of build tests go into monotouch-test, but monotouch-test uses NSSet<T> elsewhere, which this test requires to be linked away).
+			Assert.IsNull (typeof (NSObject).Assembly.GetType (NamespacePrefix + "Foundation.NSSet`1"), "NSSet<T> must be linked away, otherwise this test is useless");
+		}
+
+		[Protocol (Name = "ProtocolWithGenericsInOptionalMember", WrapperType = typeof (ProtocolWithGenericsInOptionalMemberWrapper))]
+		[ProtocolMember (IsRequired = false, IsProperty = false, IsStatic = false, Name = "ConfigureView", Selector = "configureViewForParameters:", ParameterType = new Type [] { typeof (global::Foundation.NSSet<global::Foundation.NSString>) }, ParameterByRef = new bool [] { false })]
+		public interface IProtocolWithGenericsInOptionalMember : INativeObject, IDisposable { }
+
+		internal sealed class ProtocolWithGenericsInOptionalMemberWrapper : BaseWrapper, IProtocolWithGenericsInOptionalMember
+		{
+			public ProtocolWithGenericsInOptionalMemberWrapper (IntPtr handle, bool owns) : base (handle, owns) { }
+		}
+
 		public void NoFatCorlib ()
 		{
 			var corlib = typeof (int).Assembly.Location;
