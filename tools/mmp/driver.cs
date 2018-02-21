@@ -1736,7 +1736,7 @@ namespace Xamarin.Bundler {
 			if (existingArchs.Count () < 2)
 				return;
 
-			int ret = XcodeRun ("lipo", $"{dest} -thin {arch} -output {dest}");
+			int ret = XcodeRun ("lipo", $"{StringUtils.Quote (dest)} -thin {arch} -output {StringUtils.Quote (dest)}");
 			if (ret != 0)
 				throw new MonoMacException (5311, true, "lipo failed with an error code '{0}'. Check build log for details.", ret);
 			if (name != "MonoPosixHelper")

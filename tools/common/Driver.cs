@@ -144,7 +144,7 @@ namespace Xamarin.Bundler {
 					"    inline-dynamic-registration-supported: By default always enabled (requires the linker). Optimizes calls to Runtime.DynamicRegistrationSupported to be a constant value. Makes the app smaller, and slightly faster at runtime.\n" +
 					"    register-protocols: Remove unneeded metadata for protocol support. Makes the app smaller and reduces memory requirements.\n" +
 #if !MONOTOUCH
-					"    trim-architectures: Remove unneeded architectures from bundled native libraries. Makes the app smaller and necessary for macOS App Store submissions.\n",
+					"    trim-architectures: Remove unneeded architectures from bundled native libraries. Makes the app smaller and is required for macOS App Store submissions.\n",
 #else
 					"",
 #endif
