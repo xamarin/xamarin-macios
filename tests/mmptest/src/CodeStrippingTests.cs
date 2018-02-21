@@ -9,7 +9,7 @@ namespace Xamarin.MMP.Tests
 {
 	public class CodeStrippingTests
 	{
-		Func<string, bool> DidAnyLipoStrip = output => output.SplitLines ().Any (x => x.Contains ("lipo") && x.Contains ("-remove"));
+		Func<string, bool> DidAnyLipoStrip = output => output.SplitLines ().Any (x => x.Contains ("lipo") && x.Contains ("-thin"));
 
 		static TI.UnifiedTestConfig CreateStripTestConfig (bool? strip, string tmpDir, string additionalMMPArgs = "")
 		{
@@ -110,7 +110,7 @@ namespace Xamarin.MMP.Tests
 		{
 			MMPTests.RunMMPTest (tmpDir =>
 			{
-				var frameworkPath = FrameworkBuilder.CreateThinFramework (tmpDir, sixtyFourBits);
+				var frameworkPath = FrameworkBuilder.CreateFatFramework (tmpDir);
 
 				TI.UnifiedTestConfig test = CreateStripTestConfig (null, tmpDir, $" --native-reference=\"{frameworkPath}\"");
 
@@ -119,20 +119,19 @@ namespace Xamarin.MMP.Tests
 				AssertNoLipoOrWarning (buildOutput, "Debug");
 
 				// Should always lipo/warn in Release
+				test.Release = true;
 				buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
-				Assert.True (DidAnyLipoStrip (buildOutput), "lipo did not run in release");
-				Assert.True (buildOutput.Contains ("MM2108"), "MM2108 not given in release");
+				Assert.True (DidAnyLipoStrip (buildOutput), $"lipo did not run in release\n{buildOutput}");
+				Assert.True (buildOutput.Contains ("MM2108"), $"MM2108 not given in release\n{buildOutput}");
 
 			});
 		}
 
-		[TestCase (false)]
-		[TestCase (true)]
-		public void ThirdPartyLibrary_WithCorrectBitness_ShouldNotStripOrWarn (bool sixtyFourBits)
+		public void ThirdPartyLibrary_WithCorrectBitness_ShouldNotStripOrWarn ()
 		{
 			MMPTests.RunMMPTest (tmpDir =>
 			{
-				var frameworkPath = FrameworkBuilder.CreateThinFramework (tmpDir, sixtyFourBits);
+				var frameworkPath = FrameworkBuilder.CreateThinFramework (tmpDir);
 
 				TI.UnifiedTestConfig test = CreateStripTestConfig (null, tmpDir, $" --native-reference=\"{frameworkPath}\"");
 

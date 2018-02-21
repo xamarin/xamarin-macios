@@ -250,7 +250,7 @@ To remove the warning either remove the optimization argument to mmp, or pass
 By default this option will be automatically enabled whenever it's possible
 and safe to do so.
 
-### <a name="MM2108"/>MM2108: '{0}' was stripped of architecture '{1}' to comply with App Store restrictions. This could break exisiting codesigning signatures. Consider stripping the library with lipo or disabling with --optimize=-trim-architectures");
+### <a name="MM2108"/>MM2108: '{0}' was stripped of architectures except '{1}' to comply with App Store restrictions. This could break exisiting codesigning signatures. Consider stripping the library with lipo or disabling with --optimize=-trim-architectures");
 
 The App Store now rejects applications which contain libraries and frameworks which contain 32-bit variants. The library was stripped of unused archtectures when copied into the final application bundle.
 

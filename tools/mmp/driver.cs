@@ -1730,13 +1730,17 @@ namespace Xamarin.Bundler {
 
 		static void LipoLibrary (string name, string dest)
 		{
-			string archToRemove = arch == "i386" ? "x86_64" : "i386";
+			var existingArchs = Xamarin.MachO.GetArchitectures (dest);
+			// If we have less than two, it will either match by default or 
+			// we'll fail a link/launch time with a better error so bail
+			if (existingArchs.Count () < 2)
+				return;
 
-			int ret = XcodeRun ("lipo", $"{dest} -remove {archToRemove} -output {dest}");
+			int ret = XcodeRun ("lipo", $"{dest} -thin {arch} -output {dest}");
 			if (ret != 0)
 				throw new MonoMacException (5311, true, "lipo failed with an error code '{0}'. Check build log for details.", ret);
 			if (name != "MonoPosixHelper")
-				ErrorHelper.Warning (2108, $"{name} was stripped of architecture {archToRemove} to comply with App Store restrictions. This could break exisiting codesigning signatures. Consider stripping the library with lipo or disabling with --optimize=-trim-architectures");
+				ErrorHelper.Warning (2108, $"{name} was stripped of architectures except {arch} to comply with App Store restrictions. This could break exisiting codesigning signatures. Consider stripping the library with lipo or disabling with --optimize=-trim-architectures");
 		}
 
 		static void CreateSymLink (string directory, string real, string link)
