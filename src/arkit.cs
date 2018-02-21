@@ -62,6 +62,7 @@ namespace XamCore.ARKit {
 		SensorFailed = 102,
 		CameraUnauthorized = 103,
 		WorldTrackingFailed = 200,
+		InvalidReferenceImage = 300
 	}
 
 	[iOS (11,0)]
