@@ -531,7 +531,7 @@ namespace Registrar {
 
 		public Xamarin.Tuner.DerivedLinkContext LinkContext {
 			get {
-				return Target?.LinkContext;
+				return Target?.GetLinkContext ();
 			}
 		}
 

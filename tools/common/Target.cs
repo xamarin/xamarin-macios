@@ -62,6 +62,18 @@ namespace Xamarin.Bundler {
 			this.StaticRegistrar = new StaticRegistrar (this);
 		}
 
+		// This will find the link context, possibly looking in container targets.
+		public PlatformLinkContext GetLinkContext ()
+		{
+			if (LinkContext != null)
+				return LinkContext;
+#if MTOUCH
+			if (App.IsExtension && App.IsCodeShared)
+				return ContainerTarget.GetLinkContext ();
+#endif
+			return null;
+		}
+
 		public bool CachedLink {
 			get {
 				return cached_link;
