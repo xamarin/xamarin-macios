@@ -106,6 +106,7 @@ namespace XamCore.HomeKit {
 		// iOS 11
 		NoHomeHub = 91,
 		IncompatibleHomeHub = 92, // HMErrorCodeNoCompatibleHomeHub introduced and deprecated on iOS 11. HMErrorCodeIncompatibleHomeHub = HMErrorCodeNoCompatibleHomeHub.
+		IncompatibleAccessory = 93,
 	}
 
 	
