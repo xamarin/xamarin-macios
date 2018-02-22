@@ -83,6 +83,7 @@ namespace MonoTouchFixtures.CoreBluetooth {
 			var e = new AutoResetEvent (false);
 			mgrDelegate = new ManagerDelegate (e);
 			mgr = new CBCentralManager (mgrDelegate, new DispatchQueue ("com.xamarin.tests." + TestContext.CurrentContext.Test.Name));
+			Console.WriteLine ("Created a CBCentralManager: 0x{0}", mgr.Handle.ToString ("x"));
 		}
 
 		[TearDown]
