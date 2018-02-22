@@ -46,6 +46,7 @@ namespace XamCore.VideoToolbox {
 		CouldNotFindTemporalFilter                = -12217,
 		PixelTransferNotPermitted                 = -12218,
 		ColorCorrectionImageRotationFailed        = -12219,
+		VideoDecoderRemoved                       = -17690,
 	}
 
 	// uint32_t -> VTErrors.h
