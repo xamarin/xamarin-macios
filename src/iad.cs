@@ -241,7 +241,7 @@ namespace XamCore.iAd {
 		bool ShouldPresentInterstitialAd ();
 	}
 
-	delegate void ADConversionDetails (NSDate appPurchaseDate, NSDate iAdImpressionDate);
+	delegate void ADConversionDetails ([NullAllowed] NSDate appPurchaseDate, [NullAllowed] NSDate iAdImpressionDate);
 	
 	[Since (7,1)]
 	[BaseType (typeof (NSObject))]
