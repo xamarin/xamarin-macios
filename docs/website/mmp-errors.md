@@ -136,6 +136,16 @@ See [Build optimizations](https://developer.xamarin.com/guides/cross-platform/ma
 
 ### <a name="MM0133"/>MM0133: Found more than 1 assembly matching '{0}' choosing first: '{1}'
 
+### <a name="MM0134"/>MM0134: 32-bit applications should be migrated to 64-bit.
+
+Apple has announced that it will not allow macOS App Store submissions of 32-bit apps (starting January 2018). 
+
+In addition 32-bit applications will not run on the version of macOS after High Sierra "without compromises". 
+
+For more details: https://developer.apple.com/news/?id=06282017a
+
+Consider updating your application and any dependencies to 64-bit.
+
 
 # MM1xxx: file copy / symlinks (project related)
 
