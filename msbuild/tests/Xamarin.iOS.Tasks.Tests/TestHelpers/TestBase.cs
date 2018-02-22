@@ -36,15 +36,15 @@ namespace Xamarin.iOS.Tasks
 			if (TargetFrameworkIdentifier == "Xamarin.WatchOS") {
 				coreFiles.Add ("Xamarin.WatchOS.dll");
 				if (config == "Debug")
-					coreFiles.Add ("Xamarin.WatchOS.dll.mdb");
+					coreFiles.Add ("Xamarin.WatchOS.pdb");
 			} else if (TargetFrameworkIdentifier == "Xamarin.TVOS") {
 				coreFiles.Add ("Xamarin.TVOS.dll");
 				if (config == "Debug")
-					coreFiles.Add ("Xamarin.TVOS.dll.mdb");
+					coreFiles.Add ("Xamarin.TVOS.pdb");
 			} else {
 				coreFiles.Add ("Xamarin.iOS.dll");
 				if (config == "Debug")
-					coreFiles.Add ("Xamarin.iOS.dll.mdb");
+					coreFiles.Add ("Xamarin.iOS.pdb");
 			}
 
 			coreFiles.Add ("mscorlib.dll");
