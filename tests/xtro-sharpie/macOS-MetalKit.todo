@@ -1,3 +1,0 @@
-!missing-selector! MTKTextureLoader::newTexturesWithNames:scaleFactor:displayGamut:bundle:options:completionHandler: not bound
-!missing-selector! MTKTextureLoader::newTextureWithName:scaleFactor:displayGamut:bundle:options:completionHandler: not bound
-!missing-selector! MTKTextureLoader::newTextureWithName:scaleFactor:displayGamut:bundle:options:error: not bound
