@@ -117,5 +117,7 @@ namespace MonoTouch {
 		public const string FileProviderUILibrary = "/System/Library/Frameworks/FileProviderUI.framework/FileProviderUI";
 		public const string IOSurfaceLibrary = "/System/Library/Frameworks/IOSurface.framework/IOSurface";
 		public const string PdfKitLibrary = "/System/Library/Frameworks/PDFKit.framework/PDFKit";
+		// iOS 11.3
+		public const string BusinessChatLibrary = "/System/Library/Frameworks/BusinessChat.framework/BusinessChat";
 	}
 }
