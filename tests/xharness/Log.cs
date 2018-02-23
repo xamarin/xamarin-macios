@@ -144,6 +144,7 @@ namespace xharness
 					if (disposed) {
 						fs.Dispose ();
 					} else {
+						fs.Flush ();
 						writer = fs;
 					}
 				}
