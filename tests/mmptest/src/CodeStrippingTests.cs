@@ -127,6 +127,7 @@ namespace Xamarin.MMP.Tests
 			});
 		}
 
+		[TestCase]
 		public void ThirdPartyLibrary_WithCorrectBitness_ShouldNotStripOrWarn ()
 		{
 			MMPTests.RunMMPTest (tmpDir =>
