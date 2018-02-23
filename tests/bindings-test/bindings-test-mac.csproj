@@ -47,7 +47,7 @@
     <TestLibrariesDirectory>..\..\tests\test-libraries</TestLibrariesDirectory>
   </PropertyGroup>
   <ItemGroup>
-    <ObjcBindingNativeLibrary Include="..\..\tests\test-libraries\.libs\macos\libtest.a">
+    <ObjcBindingNativeLibrary Include="$(TestLibrariesDirectory)\.libs\macos\libtest.a">
       <Link>libtest.a</Link>
     </ObjcBindingNativeLibrary>
   </ItemGroup>
@@ -70,30 +70,21 @@
     <Compile Include="CodeBehind.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\tests\test-libraries\libtest.m">
+    <None Include="$(TestLibrariesDirectory)\libtest.m">
       <Link>libtest.m</Link>
     </None>
-    <None Include="..\..\tests\test-libraries\libtest.h">
+    <None Include="$(TestLibrariesDirectory)\libtest.h">
       <Link>libtest.h</Link>
     </None>
-    <None Include="..\..\tests\test-libraries\libtest.structs.h">
+    <None Include="$(TestLibrariesDirectory)\libtest.structs.h">
       <Link>libtest.structs.h</Link>
     </None>
-    <None Include="..\..\tests\test-libraries\libtest.properties.h">
+    <None Include="$(TestLibrariesDirectory)\libtest.properties.h">
       <Link>libtest.properties.h</Link>
     </None>
-    <None Include="..\..\tests\test-libraries\testgenerator.cs">
+    <None Include="$(TestLibrariesDirectory)\testgenerator.cs">
       <Link>testgenerator.cs</Link>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <GeneratedTestInput Include="..\..\tests\test-libraries\*.m" />
-    <GeneratedTestInput Include="..\..\tests\test-libraries\*.h" />
-    <GeneratedTestInput Include="..\..\tests\test-libraries\*.cs" />
-    <GeneratedTestInput Include="..\..\tests\test-libraries\Makefile" />
-    <GeneratedTestOutput Include="..\..\tests\test-libraries\.libs\macos\libtest.a" />
-    <GeneratedTestOutput Include="ApiDefinition.generated.cs" />
-    <GeneratedTestOutput Include="StructsAndEnums.generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\guiunit\src\framework\GuiUnit_xammac_mobile.csproj">
@@ -101,7 +92,5 @@
       <Name>GuiUnit_xammac_mobile</Name>
     </ProjectReference>
   </ItemGroup>
-  <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)">
-    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
-  </Target>
+  <Import Project="$(TestLibrariesDirectory)\Build.targets" />
 </Project>

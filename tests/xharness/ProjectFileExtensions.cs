@@ -314,12 +314,20 @@ namespace xharness
 			itemGroup.AppendChild (id);
 		}
 
+		static XmlNode FindMainImport (this XmlDocument csproj)
+		{
+			var imports = csproj.SelectNodes ("/*/*[local-name() = 'Import']")
+								.Cast<XmlNode> ()
+								.Where ((v) => v.Attributes ["Project"].Value.Contains ("TestLibrariesDirectory") == false)
+								.ToList ();
+			if (imports.Count != 1)
+				throw new Exception ("More than one main import");
+			return imports [0];
+		}
+
 		public static void SetImport (this XmlDocument csproj, string value)
 		{
-			var imports = csproj.SelectNodes ("/*/*[local-name() = 'Import']");
-			if (imports.Count != 1)
-				throw new Exception ("More than one import");
-			imports [0].Attributes ["Project"].Value = value;
+			FindMainImport (csproj).Attributes ["Project"].Value = value;
 		}
 
 		public static void SetExtraLinkerDefs (this XmlDocument csproj, string value)
@@ -420,10 +428,7 @@ namespace xharness
 
 		public static string GetImport (this XmlDocument csproj)
 		{
-			var imports = csproj.SelectNodes ("/*/*[local-name() = 'Import']");
-			if (imports.Count != 1)
-				throw new Exception ("More than one import");
-			return imports [0].Attributes ["Project"].Value;
+			return FindMainImport (csproj).Attributes ["Project"].Value;
 		}
 
 		public static void FixProjectReferences (this XmlDocument csproj, string suffix, Func<string, bool> fixCallback = null)
@@ -758,10 +763,6 @@ namespace xharness
 				new string [] { "BundleResource", "Include" },
 				new string [] { "EmbeddedResource", "Include" },
 				new string [] { "ImageAsset", "Include" },
-				new string [] { "GeneratedTestInput", "Include" },
-				new string [] { "GeneratedTestOutput", "Include" },
-				new string [] { "TestLibrariesInput", "Include" },
-				new string [] { "TestLibrariesOutput", "Include" },
 				new string [] { "Content", "Include" },
 				new string [] { "ObjcBindingApiDefinition", "Include" },
 				new string [] { "ObjcBindingCoreSource", "Include" },
@@ -788,6 +789,8 @@ namespace xharness
 				if (input.StartsWith ("$(MSBuildExtensionsPath)", StringComparison.Ordinal))
 					return input; // This is already a full path.
 				if (input.StartsWith ("$(MSBuildBinPath)", StringComparison.Ordinal))
+					return input; // This is already a full path.
+				if (input.StartsWith ("$(TestLibrariesDirectory)", StringComparison.Ordinal))
 					return input; // This is already a full path.
 				input = input.Replace ('\\', '/'); // make unix-style
 				input = System.IO.Path.GetFullPath (System.IO.Path.Combine (dir, input));

@@ -165,12 +165,15 @@
     <None Include="app.config" />
     <None Include="EmptyNib.xib" Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" />
   </ItemGroup>
+  <PropertyGroup>
+    <TestLibrariesDirectory>..\..\tests\test-libraries</TestLibrariesDirectory>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="**\*.cs" Exclude="obj\**">
       <Link>%(RecursiveDir)%(Filename).cs</Link>
     </Compile>
-    <Compile Include="..\..\tests\test-libraries\TrampolineTest.generated.cs" />
-    <Compile Include="..\..\tests\test-libraries\RegistrarTest.generated.cs" />
+    <Compile Include="$(TestLibrariesDirectory)\TrampolineTest.generated.cs" />
+    <Compile Include="$(TestLibrariesDirectory)\RegistrarTest.generated.cs" />
     <Compile Include="..\..\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestPoint.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
       <Link>System.Drawing\TestPoint.cs</Link>
     </Compile>
@@ -328,18 +331,5 @@
     <ImageAsset Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="Assets.xcassets\AppIcons.appiconset\icon-app-76%402x.png" />
     <ImageAsset Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="Assets.xcassets\AppIcons.appiconset\icon-app-83.5%402x.png" />
   </ItemGroup>
-  <PropertyGroup>
-    <TestLibrariesDirectory>..\..\tests\test-libraries</TestLibrariesDirectory>
-  </PropertyGroup>
-  <ItemGroup>
-    <GeneratedTestInput Include="..\..\tests\test-libraries\*.m" />
-    <GeneratedTestInput Include="..\..\tests\test-libraries\*.h" />
-    <GeneratedTestInput Include="..\..\tests\test-libraries\*.cs" />
-    <GeneratedTestInput Include="..\..\tests\test-libraries\Makefile" />
-    <GeneratedTestOutput Include="..\..\tests\test-libraries\TrampolineTest.generated.cs" />
-    <GeneratedTestOutput Include="..\..\tests\test-libraries\RegistrarTest.generated.cs" />
-  </ItemGroup>
-  <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)">
-    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
-  </Target>
+  <Import Project="$(TestLibrariesDirectory)\Build.targets" />
 </Project>
