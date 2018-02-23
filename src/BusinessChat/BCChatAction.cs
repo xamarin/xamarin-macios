@@ -6,9 +6,16 @@ using XamCore.Foundation;
 namespace XamCore.BusinessChat {
 	public partial class BCChatAction {
 		public static void OpenTranscript (string businessIdentifier, Dictionary<BCParameterName, string> intentParameters) {
-			var keys = Array.ConvertAll<string, NSString> (new List<string>(intentParameters.Values).ToArray (), v => new NSString (v));
-			var values = Array.ConvertAll<BCParameterName, NSString> (new List<BCParameterName> (intentParameters.Keys).ToArray (), k => k.GetConstant ());
-			OpenTranscript (businessIdentifier, NSDictionary<NSString, NSString>.FromObjectsAndKeys (values, keys));
+			var keys = new NSString [intentParameters.Keys.Count];
+			var values = new NSString [intentParameters.Keys.Count];
+			var index = 0;
+			foreach (var k in intentParameters.Keys) {
+				keys [index] = k.GetConstant ();
+				values [index] = new NSString (intentParameters [k]);
+				index++; 
+			}
+			using (var dict = NSDictionary<NSString, NSString>.FromObjectsAndKeys (values, keys))
+				OpenTranscript (businessIdentifier, dict);
 		}
 	}
 }
