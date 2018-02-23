@@ -1075,8 +1075,8 @@ public class B : A {}
 					apptool.Linker = MTouchLinker.LinkAll;
 					apptool.AssertExecute (MTouchAction.BuildDev, "build app");
 					
-					Assert.IsTrue(Directory.Exists(Path.Combine(apptool.Cache, "Build", "Msym")), "App Msym dir");
-					Assert.IsFalse(Directory.Exists(Path.Combine(exttool.Cache, "Build", "Msym")), "Extenson Msym dir");
+					Assert.IsTrue(Directory.Exists(Path.Combine(apptool.Cache, "3-Build", "Msym")), "App Msym dir");
+					Assert.IsFalse(Directory.Exists(Path.Combine(exttool.Cache, "3-Build", "Msym")), "Extenson Msym dir");
 					exttool.AssertNoWarnings();
 					apptool.AssertNoWarnings();
 				}
@@ -1107,8 +1107,8 @@ public class B : A {}
 					apptool.CustomArguments = new string [] { "--nodevcodeshare" };
 					apptool.AssertExecute (MTouchAction.BuildDev, "build app");
 					
-					Assert.IsTrue(Directory.Exists(Path.Combine(apptool.Cache, "Build", "Msym")), "App Msym dir");
-					Assert.IsTrue(Directory.Exists(Path.Combine(exttool.Cache, "Build", "Msym")), "Extenson Msym dir");
+					Assert.IsTrue(Directory.Exists(Path.Combine(apptool.Cache, "3-Build", "Msym")), "App Msym dir");
+					Assert.IsTrue(Directory.Exists(Path.Combine(exttool.Cache, "3-Build", "Msym")), "Extenson Msym dir");
 					exttool.AssertNoWarnings();
 					apptool.AssertNoWarnings();
 				}
@@ -3690,6 +3690,44 @@ public class HandlerTest
 				}
 			}
 			Assert.That (missingSimlauncherSymbols, Is.Empty, "no missing simlauncher symbols");
+		}
+
+		[Test]
+		public void LinkedAwayTypesInContainerAppLinker ()
+		{
+			var codeApp = "[Foundation.Preserve] public class TestApp1 { static void X () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
+			var codeExt = @"
+public partial class KeyboardViewController : UIKit.UIInputViewController
+{
+	public KeyboardViewController (System.IntPtr handle) : base (handle) { }
+	public override void TextWillChange (UIKit.IUITextInput textInput) { }
+	public override void TextDidChange (UIKit.IUITextInput textInput) { }
+}
+
+[Foundation.Preserve] public class TestApp2 { static void X () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
+
+			using (var extension = new MTouchTool ()) {
+				extension.CreateTemporaryServiceExtension (extraCode: codeExt);
+				extension.CreateTemporaryCacheDirectory ();
+				extension.Abi = "arm64";
+				extension.DSym = false; // faster test
+				extension.MSym = false; // faster test
+				extension.NoStrip = true; // faster test
+				extension.AssertExecute (MTouchAction.BuildDev, "extension build");
+
+				using (var mtouch = new MTouchTool ()) {
+					mtouch.AppExtensions.Add (extension);
+					mtouch.CreateTemporaryApp (extraCode: codeApp);
+					mtouch.CreateTemporaryCacheDirectory ();
+					mtouch.Abi = "arm64";
+					mtouch.DSym = false; // faster test
+					mtouch.MSym = false; // faster test
+					mtouch.NoStrip = true; // faster test
+
+					mtouch.AssertExecute (MTouchAction.BuildDev, "build");
+					mtouch.AssertNoWarnings ();
+				}
+			}
 		}
 
 		public void XamarinSdkAdjustLibs ()

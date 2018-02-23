@@ -482,6 +482,8 @@ namespace Registrar {
 			// this method if there's an actual need.
 			if (tr is ArrayType arrayType) {
 				return arrayType.ElementType.Resolve ();
+			} else if (tr is GenericInstanceType git) {
+				return ResolveType (git.ElementType);
 			} else {
 				var td = tr.Resolve ();
 				if (td == null)
@@ -531,7 +533,7 @@ namespace Registrar {
 
 		public Xamarin.Tuner.DerivedLinkContext LinkContext {
 			get {
-				return Target?.LinkContext;
+				return Target?.GetLinkContext ();
 			}
 		}
 

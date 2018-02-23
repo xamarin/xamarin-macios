@@ -1380,7 +1380,9 @@ namespace Xamarin.Bundler
 						if (!File.Exists (f_path))
 							continue;
 						Action app_action;
-						app.AppExtensions.Add (ParseArguments (File.ReadAllLines (f_path), out app_action));
+						var ext = ParseArguments (File.ReadAllLines (f_path), out app_action);
+						ext.ContainerApp = app;
+						app.AppExtensions.Add (ext);
 						if (app_action != Action.Build)
 							throw ErrorHelper.CreateError (99, "Internal error: Extension build action is '{0}' when it should be 'Build'. Please file a bug report with a test case (http://bugzilla.xamarin.com).", app_action);
 					}

@@ -658,6 +658,8 @@ See [Build optimizations](https://developer.xamarin.com/guides/cross-platform/ma
 
 When using --recursive-directories, only 1 assembly should match
 
+<!-- 0134 used by mmp -->
+
 # MT1xxx: Project related error messages
 
 ### MT10xx: Installer / mtouch
