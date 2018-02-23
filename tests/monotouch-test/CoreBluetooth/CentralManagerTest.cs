@@ -83,13 +83,15 @@ namespace MonoTouchFixtures.CoreBluetooth {
 			var e = new AutoResetEvent (false);
 			mgrDelegate = new ManagerDelegate (e);
 			mgr = new CBCentralManager (mgrDelegate, new DispatchQueue ("com.xamarin.tests." + TestContext.CurrentContext.Test.Name));
-			Console.WriteLine ("Created a CBCentralManager: 0x{0}", mgr.Handle.ToString ("x"));
+			Console.WriteLine ("Created a CBCentralManager: 0x{0} with retainCount: {1}", mgr.Handle.ToString ("x"), mgr.RetainCount);
 		}
 
 		[TearDown]
 		public void TearDown ()
 		{
 			// should dispose the delegate
+			var h = mgr.Handle;
+			Console.WriteLine ("Disposing CBCentralManager: 0x{0} with retainCount: {1}", mgr.Handle.ToString ("x"), mgr.RetainCount);
 			mgr.Dispose ();
 		}
 			
