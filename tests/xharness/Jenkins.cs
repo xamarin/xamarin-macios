@@ -764,6 +764,11 @@ namespace xharness
 				Timeout = TimeSpan.FromMinutes (30),
 				SupportsParallelExecution = false, // Already doing parallel execution by running "make -jX"
 			};
+			run_mmp.CompletedTask = new Task (() =>
+			{
+				foreach (var log in Directory.GetFiles (Path.GetFullPath (run_mmp.WorkingDirectory), "*.log", SearchOption.AllDirectories))
+					run_mmp.Logs.AddFile (log, log.Substring (run_mmp.WorkingDirectory.Length + 1));
+			});
 			run_mmp.Environment.Add ("BUILD_REVISION", "jenkins"); // This will print "@MonkeyWrench: AddFile: <log path>" lines, which we can use to get the log filenames.
 			Tasks.Add (run_mmp);
 
@@ -2089,6 +2094,7 @@ function oninitialload ()
 		public Dictionary<string, string> Environment = new Dictionary<string, string> ();
 
 		public Task InitialTask; // a task that's executed before this task's ExecuteAsync method.
+		public Task CompletedTask; // a task that's executed after this task's ExecuteAsync method.
 
 		public void CloneTestProject (TestProject project)
 		{
@@ -2262,6 +2268,12 @@ function oninitialload ()
 
 				execute_task = ExecuteAsync ();
 				await execute_task;
+
+				if (CompletedTask != null) {
+					if (CompletedTask.Status == TaskStatus.Created)
+						CompletedTask.Start ();
+					await CompletedTask;
+				}
 
 				ExecutionResult = (ExecutionResult & ~TestExecutingResult.StateMask) | TestExecutingResult.Finished;
 				if ((ExecutionResult & ~TestExecutingResult.StateMask) == 0)
