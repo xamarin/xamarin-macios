@@ -110,7 +110,8 @@ namespace xharness
 			XmlDocument doc;
 			doc = new XmlDocument ();
 			doc.LoadWithoutNetworkAccess (original_path);
-			if (System.IO.Path.GetFileName (original_path).Contains ("GuiUnit_NET")) {
+			var original_name = System.IO.Path.GetFileName (original_path);
+			if (original_name.Contains ("GuiUnit_NET") || original_name.Contains ("GuiUnit_xammac_mobile")) {
 				// The GuiUnit project files writes stuff outside their project directory using relative paths,
 				// but override that so that we don't end up with multiple cloned projects writing stuff to
 				// the same location.
