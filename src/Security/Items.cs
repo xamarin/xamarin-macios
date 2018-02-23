@@ -1734,7 +1734,7 @@ namespace Security {
 		}
 	}
 
-	public partial class SecPublicPrivateKeyAttrs : DictionaryContainer {
+	public partial class SecKeyParameters : DictionaryContainer {
 		// For caching, as we can't reverse it easily.
 		SecAccessControl _secAccessControl;
 
@@ -1752,6 +1752,22 @@ namespace Security {
 	}
 
 	public partial class SecKeyGenerationParameters : DictionaryContainer {
+		public SecKeyType KeyType {
+			get {
+				var type = GetNSStringValue (SecKeyGenerationAttributeKeys.KeyTypeKey);
+				if (type == null)
+					return SecKeyType.Invalid;
+				return SecKeyTypeExtensions.GetValue (type);
+			}
+
+			set {
+				var k = value.GetConstant ();
+				if (k == null)
+					throw new ArgumentException ("Unknown value for KeyType.");
+				SetStringValue (SecKeyGenerationAttributeKeys.KeyTypeKey, k);
+			}
+		}
+
 		// For caching, as we can't reverse it easily.
                 SecAccessControl _secAccessControl;
 
@@ -1759,6 +1775,7 @@ namespace Security {
                         get {
                                 return _secAccessControl;
                         }
+
                         set {
                                 if (value == null)
                                         throw new ArgumentNullException (nameof (value));
@@ -1771,6 +1788,7 @@ namespace Security {
                         get {
                                 return SecTokenIDExtensions.GetValue (GetNSStringValue (SecKeyGenerationAttributeKeys.TokenIDKey));
                         }
+
                         set {
                                 SetStringValue (SecKeyGenerationAttributeKeys.TokenIDKey, value.GetConstant ());
                         }

@@ -800,8 +800,6 @@ namespace Security {
 		{
 			if (parameters == null)
 				throw new ArgumentNullException (nameof (parameters));
-			if (parameters.KeyType == null)
-				throw new ArgumentNullException (nameof (parameters.KeyType));
 			if (parameters.KeyType == SecKeyType.Invalid)
 				throw new ArgumentException (nameof (parameters.KeyType));
 

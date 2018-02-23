@@ -437,21 +437,9 @@ namespace Security {
 		NSString CanWrapKey { get; }
 	}
 
-	[StrongDictionary ("SecKeyGenerationAttributeKeys")]
-	interface SecKeyGenerationParameters {
-		SecKeyType KeyType { get; set; }
-
-		int KeySizeInBits { get; set; }
-
-		[StrongDictionary]
-		[Export ("PrivateKeyAttrsKey")]
-		SecPublicPrivateKeyAttrs PrivateKeyAttrs { get; set; }
-
-		[StrongDictionary]
-		[Export ("PublicKeyAttrsKey")]
-		SecPublicPrivateKeyAttrs PublicKeyAttrs { get; set; }
-
-		String Label { get; set; }
+	[StrongDictionary ("SecAttributeKeys")]
+	interface SecKeyParameters {
+		string Label { get; set; }
 
 		bool IsPermanent { get; set; }
 
@@ -460,26 +448,74 @@ namespace Security {
 		int EffectiveKeySize { get; set; }
 
 #if MONOMAC
-                [Advice ("On macOS when passed to 'GenerateKeyPair', 'false' seems to be the only valid value. Otherwise 'UnsupportedKeyUsageMask' is returned.")]
+		[Advice ("On macOS when passed to 'GenerateKeyPair', 'false' seems to be the only valid value. Otherwise 'UnsupportedKeyUsageMask' is returned.")]
 #endif
-                bool CanEncrypt { get; set; }
+		bool CanEncrypt { get; set; }
 
 #if MONOMAC
-                [Advice ("On macOS when passed to 'GenerateKeyPair', 'false' seems to be the only valid value. Otherwise 'UnsupportedKeyUsageMask' is returned.")]
+		[Advice ("On macOS when passed to 'GenerateKeyPair', 'false' seems to be the only valid value. Otherwise 'UnsupportedKeyUsageMask' is returned.")]
 #endif
-                bool CanDecrypt { get; set; }
+		bool CanDecrypt { get; set; }
 
-                bool CanDerive { get; set; }
-
-#if MONOMAC
-                [Advice ("On macOS when passed to 'GenerateKeyPair', 'false' seems to be the only valid value. Otherwise 'UnsupportedKeyUsageMask' is returned.")]
-#endif
-                bool CanSign { get; set; }
+		bool CanDerive { get; set; }
 
 #if MONOMAC
-                [Advice ("On macOS when passed to 'GenerateKeyPair', 'false' seems to be the only valid value. Otherwise 'UnsupportedKeyUsageMask' is returned.")]
+		[Advice ("On macOS when passed to 'GenerateKeyPair', 'false' seems to be the only valid value. Otherwise 'UnsupportedKeyUsageMask' is returned.")]
 #endif
-                bool CanVerify { get; set; }
+		bool CanSign { get; set; }
+
+#if MONOMAC
+		[Advice ("On macOS when passed to 'GenerateKeyPair', 'false' seems to be the only valid value. Otherwise 'UnsupportedKeyUsageMask' is returned.")]
+#endif
+		bool CanVerify { get; set; }
+
+#if MONOMAC
+		[Advice ("On macOS when passed to 'GenerateKeyPair', 'false' seems to be the only valid value. Otherwise 'UnsupportedKeyUsageMask' is returned.")]
+#endif
+		bool CanUnwrap { get; set; }
+	}
+
+	[StrongDictionary ("SecKeyGenerationAttributeKeys")]
+	interface SecKeyGenerationParameters {
+		int KeySizeInBits { get; set; }
+
+		[StrongDictionary]
+		[Export ("PrivateKeyAttrsKey")]
+		SecKeyParameters PrivateKeyAttrs { get; set; }
+
+		[StrongDictionary]
+		[Export ("PublicKeyAttrsKey")]
+		SecKeyParameters PublicKeyAttrs { get; set; }
+
+		string Label { get; set; }
+
+		bool IsPermanent { get; set; }
+
+		NSData ApplicationTag { get; set; }
+
+		int EffectiveKeySize { get; set; }
+
+#if MONOMAC
+		[Advice ("On macOS when passed to 'GenerateKeyPair', 'false' seems to be the only valid value. Otherwise 'UnsupportedKeyUsageMask' is returned.")]
+#endif
+		bool CanEncrypt { get; set; }
+
+#if MONOMAC
+		[Advice ("On macOS when passed to 'GenerateKeyPair', 'false' seems to be the only valid value. Otherwise 'UnsupportedKeyUsageMask' is returned.")]
+#endif
+		bool CanDecrypt { get; set; }
+
+		bool CanDerive { get; set; }
+
+#if MONOMAC
+		[Advice ("On macOS when passed to 'GenerateKeyPair', 'false' seems to be the only valid value. Otherwise 'UnsupportedKeyUsageMask' is returned.")]
+#endif
+		bool CanSign { get; set; }
+
+#if MONOMAC
+		[Advice ("On macOS when passed to 'GenerateKeyPair', 'false' seems to be the only valid value. Otherwise 'UnsupportedKeyUsageMask' is returned.")]
+#endif
+		bool CanVerify { get; set; }
 
 #if MONOMAC
 		[Advice ("On macOS when passed to 'GenerateKeyPair', 'false' seems to be the only valid value. Otherwise 'UnsupportedKeyUsageMask' is returned.")]
@@ -487,9 +523,9 @@ namespace Security {
 		bool CanWrap { get; set; }
 
 #if MONOMAC
-                [Advice ("On macOS when passed to 'GenerateKeyPair', 'false' seems to be the only valid value. Otherwise 'UnsupportedKeyUsageMask' is returned.")]
+		[Advice ("On macOS when passed to 'GenerateKeyPair', 'false' seems to be the only valid value. Otherwise 'UnsupportedKeyUsageMask' is returned.")]
 #endif
-                bool CanUnwrap { get; set; }
+		bool CanUnwrap { get; set; }
 	}
 
 	[Static][Internal]

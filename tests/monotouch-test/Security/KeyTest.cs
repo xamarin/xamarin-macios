@@ -498,7 +498,7 @@ namespace MonoTouchFixtures.Security {
 			keyGenerationParameters.KeyType = SecKeyType.EC;
 			keyGenerationParameters.KeySizeInBits = 256;
 			keyGenerationParameters.IsPermanent = false;
-			var privateKeyAttributes = new SecPublicPrivateKeyAttrs ();
+			var privateKeyAttributes = new SecKeyParameters ();
 			privateKeyAttributes.AccessControl = new SecAccessControl (SecAccessible.WhenUnlockedThisDeviceOnly, SecAccessControlCreateFlags.PrivateKeyUsage | SecAccessControlCreateFlags.UserPresence);
 			privateKeyAttributes.Label = "NotDefault";
 			keyGenerationParameters.PrivateKeyAttrs = privateKeyAttributes;
