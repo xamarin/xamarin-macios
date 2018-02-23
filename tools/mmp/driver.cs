@@ -1882,10 +1882,10 @@ namespace Xamarin.Bundler {
 				if (App.EnableDebug) {
 					var mdbfile = asm + ".mdb";
 					if (File.Exists (mdbfile))
-						File.Copy (mdbfile, Path.Combine (mmp_dir, Path.GetFileName (mdbfile)), true);
+						CopyFileAndRemoveReadOnly (mdbfile, Path.Combine (mmp_dir, Path.GetFileName (mdbfile)));
 					var pdbfile = Path.ChangeExtension (asm, ".pdb");
 					if (File.Exists (pdbfile))
-						File.Copy (pdbfile, Path.Combine (mmp_dir, Path.GetFileName (pdbfile)), true);
+						CopyFileAndRemoveReadOnly (pdbfile, Path.Combine (mmp_dir, Path.GetFileName (pdbfile)));
 				}
 				if (File.Exists (configfile))
 					File.Copy (configfile, Path.Combine (mmp_dir, Path.GetFileName (configfile)), true);
