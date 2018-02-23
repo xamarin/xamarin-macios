@@ -219,11 +219,13 @@ namespace Xamarin.MMP.Tests
 			});
 		}
 
-		[Test]
-		public void Unified_HelloWorld_ShouldHaveNoWarnings ()
+		[TestCase (false)]
+		[TestCase (true)]
+		public void Unified_HelloWorld_ShouldHaveNoWarnings (bool release)
 		{
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir);
+				test.Release = release;
 
 				// Due to https://bugzilla.xamarin.com/show_bug.cgi?id=48311 we can get warnings related to the registrar
 				Func<string, bool> hasLegitWarning = results =>
