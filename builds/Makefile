@@ -102,6 +102,7 @@ SDK_DESTDIR = $(MONO_PATH)/sdks/out
 
 $(MONO_PATH)/sdks/Make.config:
 	echo "DISABLE_ANDROID=1" > $@
+	make -C $(MONO_PATH)/tools/offsets-tool
 
 ##
 ## Xamarin.Mac
