@@ -1211,16 +1211,18 @@ install-tvsimulator: $(TVSIMULATOR_TARGETS)
 PLATFORM_BIN=$(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin
 PLATFORM_SDK=$(DEVICE_SDK)
 
-# usage $(call PlatformBuildTemplate (armv7,target7,<platform suffix>,<configure flags>,<unused>))
+# usage $(call DeviceBuildTemplate (armv7,target7,<platform suffix>,<configure flags>,<unused>))
 
-define PlatformBuildTemplate
+define DeviceBuildTemplate
 
+# $(1) architecture
+# $(2) target prefix
+# $(3) mono sdk target
 # $(4) contains the architecture specific configure flags
-# $(5) is unused
-# $(6) contains min ios version
+# $(5) contains min ios version
 
 # Avoid passing the -arch flag twice in CFLAGS since it disables ccache
-$(eval $(2)_BASE_CPPFLAGS=-DSMALL_CONFIG -DDISABLE_POLICY_EVIDENCE=1 -DDISABLE_PROCESS_HANDLING=1 -D_XOPEN_SOURCE -DMONOTOUCH=1 -DHOST_IOS -DHAVE_LARGE_FILE_SUPPORT=1 -Wl,-application_extension -miphoneos-version-min=$(6) -isysroot $(PLATFORM_SDK))
+$(eval $(2)_BASE_CPPFLAGS=-DSMALL_CONFIG -DDISABLE_POLICY_EVIDENCE=1 -DDISABLE_PROCESS_HANDLING=1 -D_XOPEN_SOURCE -DMONOTOUCH=1 -DHOST_IOS -DHAVE_LARGE_FILE_SUPPORT=1 -Wl,-application_extension -miphoneos-version-min=$(5) -isysroot $(PLATFORM_SDK))
 $(eval $(2)_CPPFLAGS=$($(2)_BASE_CPPFLAGS) -arch $(1))
 $(eval $(2)_CFLAGS=-O2 -gdwarf-2 $($(2)_BASE_CPPFLAGS) $(DEVICE_BUILD_CFLAGS) $(IOS_BITCODE_CFLAGS))
 $(eval $(2)_CXXFLAGS=$($(2)_CPPFLAGS) $(IOS_BITCODE_CXXFLAGS))
@@ -1260,7 +1262,7 @@ $(eval $(2)_ACVARS= mono_cv_uscore=yes \
 		ac_cv_func_getpwuid_r=no)
 
 $(eval $(2)_CONFIGURE_ENVIRONMENT = \
-	PATH="$(PLATFORM$(3)_BIN):$(PATH)" \
+	PATH="$(PLATFORM_BIN):$(PATH)" \
 	CPPFLAGS="$($(2)_CPPFLAGS)" \
 	CFLAGS="$($(2)_CFLAGS)" \
 	CXXFLAGS="$($(2)_CXXFLAGS)" \
@@ -1272,32 +1274,27 @@ $(eval $(2)_CONFIGURE_ENVIRONMENT = \
 
 $(2): build-$(2)
 
-setup:: setup-$(2)
 build:: build-$(2)
 clean-local:: clean-$(2)
 
-setup-$(2): .stamp-configure-$(2)
-
-.stamp-configure-$(2): $(MONO_PATH)/configure
-	$(Q) $($(2)_ACVARS) $($(2)_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh $(2) $(abspath $(MONO_PATH)/configure) $($(2)_CONFIGURE_FLAGS)
-
-.stamp-build-$(2): .stamp-configure-$(2) $(MONO_DEPENDENCIES)
-	PATH="$(PLATFORM_BIN):$(PATH)" $(MAKE) -C $(2)/mono
-	PATH="$(PLATFORM_BIN):$(PATH)" $(MAKE) -C $(2)/mono install
+.stamp-build-$(2): $(SDK_CONFIG) $(MONO_DEPENDENCIES)
+	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(3) $(SDK_ARGS)
+	mkdir -p $(BUILD_DESTDIR)/$(2)
+	cp -r $(SDK_DESTDIR)/ios-$(3)/* $(BUILD_DESTDIR)/$(2)
 	$(Q) touch $$@
 
 build-$(2): .stamp-build-$(2)
 
 clean-$(2):
-	-rm -rf $(2) .stamp-*-$(2) $(2).config.cache
+	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-$(3) $(SDK_ARGS)
+	-rm -rf $(2) .stamp-*-$(2) $(BUILD_DESTDIR)/$(2)
 
-setup-iphoneos:: setup-$(2)
+setup-iphoneos::
 build-iphoneos:: build-$(2)
 clean-iphoneos:: clean-$(2)
 
 build-ios: build-iphoneos
 clean-ios: clean-iphoneos
-setup-ios: setup-iphoneos
 install-ios: install-iphoneos
 
 $(eval TARGET_LIBMONOSGEN:=$(TARGET_LIBMONOSGEN) $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.a)
@@ -1351,15 +1348,15 @@ endif
 
 # Note the spaces in findstring arguments, this is needed to distinguish between armv7 and armv7s for example
 ifneq ($(findstring armv7 , $(DEVICE_RUNTIMES) ),)
-$(eval $(call PlatformBuildTemplate,armv7,target7,,$(ARM_ARCH_CONFIGURE_FLAGS),,$(MIN_IOS_SDK_VERSION)))
+$(eval $(call DeviceBuildTemplate,armv7,target7,target32,$(ARM_ARCH_CONFIGURE_FLAGS),$(MIN_IOS_SDK_VERSION)))
 endif
 
 ifneq ($(findstring armv7s , $(DEVICE_RUNTIMES) ),)
-$(eval $(call PlatformBuildTemplate,armv7s,target7s,,$(ARM_ARCH_CONFIGURE_FLAGS),,$(MIN_IOS_SDK_VERSION)))
+$(eval $(call DeviceBuildTemplate,armv7s,target7s,target32s,$(ARM_ARCH_CONFIGURE_FLAGS),$(MIN_IOS_SDK_VERSION)))
 endif
 
 ifneq ($(findstring arm64 , $(DEVICE_RUNTIMES) ),)
-$(eval $(call PlatformBuildTemplate,arm64,target64,,$(ARM64_ARCH_CONFIGURE_FLAGS),,7.0))
+$(eval $(call DeviceBuildTemplate,arm64,target64,target64,$(ARM64_ARCH_CONFIGURE_FLAGS),7.0))
 endif
 
 ifdef INCLUDE_DEVICE
