@@ -1227,55 +1227,6 @@ define DeviceBuildTemplate
 # $(4) contains the architecture specific configure flags
 # $(5) contains min ios version
 
-# Avoid passing the -arch flag twice in CFLAGS since it disables ccache
-$(eval $(2)_BASE_CPPFLAGS=-DSMALL_CONFIG -DDISABLE_POLICY_EVIDENCE=1 -DDISABLE_PROCESS_HANDLING=1 -D_XOPEN_SOURCE -DMONOTOUCH=1 -DHOST_IOS -DHAVE_LARGE_FILE_SUPPORT=1 -Wl,-application_extension -miphoneos-version-min=$(5) -isysroot $(PLATFORM_SDK))
-$(eval $(2)_CPPFLAGS=$($(2)_BASE_CPPFLAGS) -arch $(1))
-$(eval $(2)_CFLAGS=-O2 -gdwarf-2 $($(2)_BASE_CPPFLAGS) $(DEVICE_BUILD_CFLAGS) $(IOS_BITCODE_CFLAGS))
-$(eval $(2)_CXXFLAGS=$($(2)_CPPFLAGS) $(IOS_BITCODE_CXXFLAGS))
-$(eval $(2)_LDFLAGS=-arch $(1) $(IOS_BITCODE_LDFLAGS) $(COMMON_LDFLAGS))
-$(eval $(2)_CONFIGURE_FLAGS=--build=i386-apple-darwin10 \
-			$(4) \
-			--enable-maintainer-mode	\
-			--cache-file=../$(2).config.cache \
-			--prefix=$(BUILD_DESTDIR)/$(2) \
-			--with-monotouch \
-			--with-lazy-gc-thread-creation=yes \
-			--disable-mcs-build \
-			--enable-minimal=ssa,com,interpreter,jit,reflection_emit_save,reflection_emit,portability,assembly_remapping,attach,verifier,full_messages,appdomains,security,sgen_remset,sgen_marksweep_par,sgen_marksweep_fixed,sgen_marksweep_fixed_par,sgen_copying,logging,remoting,shared_perfcounters \
-			--without-ikvm-native \
-			--with-tls=pthread \
-			--without-sigaltstack \
-			--enable-icall-export \
-			--disable-icall-tables \
-			--disable-executables \
-			--disable-nls \
-			--disable-iconv \
-			--disable-visibility-hidden	\
-			--disable-boehm \
-			--enable-dtrace=no \
-			$(IOS_BITCODE_CONFIGURE_FLAGS) \
-			$(XAMARIN_IOS_CONFIGURE_FLAGS) \
-			)
-
-$(eval $(2)_ACVARS= mono_cv_uscore=yes \
-		mono_cv_sizeof_sunpath=104 \
-		ac_cv_func_posix_getpwuid_r=yes \
-		ac_cv_func_finite=no \
-		ac_cv_c_bigendian=no \
-		ac_cv_header_sys_user_h=no \
-		ac_cv_header_curses_h=no \
-		ac_cv_header_localcharset_h=no \
-		ac_cv_func_getpwuid_r=no)
-
-$(eval $(2)_CONFIGURE_ENVIRONMENT = \
-	PATH="$(PLATFORM_BIN):$(PATH)" \
-	CPPFLAGS="$($(2)_CPPFLAGS)" \
-	CFLAGS="$($(2)_CFLAGS)" \
-	CXXFLAGS="$($(2)_CXXFLAGS)" \
-	LDFLAGS="$($(2)_LDFLAGS)" \
-	CC="$(DEVICE_CC)" \
-	CXX="$(DEVICE_CXX)")
-
 .PHONY: $(2)
 
 $(2): build-$(2)
