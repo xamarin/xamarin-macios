@@ -1848,6 +1848,9 @@ targetwatch/mono/arch/arm/arm_dpimacros.h: .stamp-configure-targetwatch
 $(PREFIX)/bin:
 	$(Q) mkdir -p $@
 
+configure-mono:
+	$(MAKE) -C $(SDK_BUILDDIR) configure-mono
+
 ##
 # Cross compiler template
 #
@@ -1871,7 +1874,7 @@ clean-local:: clean-$(1)
 endif
 endif
 
-.stamp-build-$(1): build-$(2) $(MONO_DEPENDENCIES) $(SDK_CONFIG)
+.stamp-build-$(1): build-$(2) configure-mono $(MONO_DEPENDENCIES) $(SDK_CONFIG)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(1) $(SDK_ARGS)
 	$(Q) touch $$@
 
