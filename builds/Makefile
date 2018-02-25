@@ -102,7 +102,6 @@ SDK_DESTDIR = $(MONO_PATH)/sdks/out
 
 $(MONO_PATH)/sdks/Make.config:
 	echo "DISABLE_ANDROID=1" > $@
-	make -C $(MONO_PATH)/tools/offsets-tool
 
 ##
 ## Xamarin.Mac
@@ -394,6 +393,10 @@ endif
 configure-mono:
 	rm -f $(MONO_PATH)/configure
 	$(MAKE) $(MONO_PATH)/configure
+
+# Dependency used to configure mono before recursively calling sdk makefiles
+dep-configure-mono:
+	$(MAKE) -C $(SDK_BUILDDIR) configure-mono
 
 # FIXME: Needed because of broken MonoDevelop assumptions
 $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/smcs:
@@ -804,7 +807,7 @@ build:: build-$(2)
 clean-local:: clean-$(2)
 
 # config/eglib-config.h is needed by the builds in runtime/
-.stamp-build-$(2): $(MONO_DEPENDENCIES) $(BUILD_DESTDIR)/$(2)
+.stamp-build-$(2): dep-configure-mono $(MONO_DEPENDENCIES) $(BUILD_DESTDIR)/$(2)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(3) $(SDK_ARGS)
 	cp -r $(SDK_DESTDIR)/ios-$(3)/lib $(BUILD_DESTDIR)/$(2)
 	cp -r $(SDK_DESTDIR)/ios-$(3)/include $(BUILD_DESTDIR)/$(2)
@@ -1278,7 +1281,7 @@ $(2): build-$(2)
 build:: build-$(2)
 clean-local:: clean-$(2)
 
-.stamp-build-$(2): $(SDK_CONFIG) $(MONO_DEPENDENCIES)
+.stamp-build-$(2): dep-configure-mono $(SDK_CONFIG) $(MONO_DEPENDENCIES)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(3) $(SDK_ARGS)
 	mkdir -p $(BUILD_DESTDIR)/$(2)
 	cp -r $(SDK_DESTDIR)/ios-$(3)/* $(BUILD_DESTDIR)/$(2)
@@ -1848,8 +1851,9 @@ targetwatch/mono/arch/arm/arm_dpimacros.h: .stamp-configure-targetwatch
 $(PREFIX)/bin:
 	$(Q) mkdir -p $@
 
-configure-mono:
-	$(MAKE) -C $(SDK_BUILDDIR) configure-mono
+# Dependency used to build the offsets tool before recursively calling sdk makefiles
+offsets-tool: dep-configure-mono
+	make -C $(MONO_PATH)/tools/offsets-tool
 
 ##
 # Cross compiler template
@@ -1874,7 +1878,7 @@ clean-local:: clean-$(1)
 endif
 endif
 
-.stamp-build-$(1): build-$(2) configure-mono $(MONO_DEPENDENCIES) $(SDK_CONFIG)
+.stamp-build-$(1): build-$(2) dep-configure-mono offsets-tool $(MONO_DEPENDENCIES) $(SDK_CONFIG)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(1) $(SDK_ARGS)
 	$(Q) touch $$@
 
