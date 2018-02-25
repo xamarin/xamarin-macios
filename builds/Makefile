@@ -994,6 +994,8 @@ setup-watchsimulator: .stamp-configure-watchsimulator
 	$(Q) $(MAKE) -C watchsimulator/mono all
 	$(Q) $(MAKE) -C watchsimulator/support all
 	$(Q) $(MAKE) -C watchsimulator/mono install
+	cp -r watchsimulator/config.h $(BUILD_DESTDIR)/watchsimulator/include/mono-2.0
+	cp -r watchsimulator/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/watchsimulator/include/mono-2.0
 	$(Q) touch $@
 
 build-watchsimulator: .stamp-build-watchsimulator
@@ -1145,6 +1147,8 @@ setup-tvsimulator: .stamp-configure-tvsimulator
 	$(Q) $(MAKE) -C tvsimulator/mono all
 	$(Q) $(MAKE) -C tvsimulator/support all
 	$(Q) $(MAKE) -C tvsimulator/mono install
+	cp -r tvsimulator/config.h $(BUILD_DESTDIR)/tvsimulator/include/mono-2.0
+	cp -r tvsimulator/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/tvsimulator/include/mono-2.0
 	$(Q) touch $@
 
 build-tvsimulator: .stamp-build-tvsimulator
@@ -1203,10 +1207,8 @@ $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/Frameworks/Mono.framework/Info.plist: M
 
 install-tvsimulator: $(TVSIMULATOR_TARGETS)
 
-#
+##
 # Device builds
-#
-
 #
 # We use --build=i386-apple-darwin10 explicitly here so that even though osx defaults to 64 bit,
 # we end up with a sizeof-compatible built (since all current arms are 32b)
@@ -1285,6 +1287,8 @@ clean-local:: clean-$(2)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(3) $(SDK_ARGS)
 	mkdir -p $(BUILD_DESTDIR)/$(2)
 	cp -r $(SDK_DESTDIR)/ios-$(3)/* $(BUILD_DESTDIR)/$(2)
+	cp -r $(SDK_BUILDDIR)/ios-$(3)/config.h $(BUILD_DESTDIR)/$(2)/include/mono-2.0
+	cp -r $(SDK_BUILDDIR)/ios-$(3)/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/$(2)/include/mono-2.0
 	$(Q) touch $$@
 
 build-$(2): .stamp-build-$(2)
@@ -1529,6 +1533,8 @@ setup-targetwatch: .stamp-configure-targetwatch
 .stamp-build-targetwatch: .stamp-configure-targetwatch $(MONO_DEPENDENCIES)
 	$(Q) $(MAKE) -C targetwatch/mono
 	$(Q) $(MAKE) -C targetwatch/mono install
+	cp -r targetwatch/config.h $(BUILD_DESTDIR)/targetwatch/include/mono-2.0
+	cp -r targetwatch/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/targetwatch/include/mono-2.0
 	$(Q) touch $@
 
 build-targetwatch: .stamp-build-targetwatch
@@ -1711,6 +1717,8 @@ setup-targettv: .stamp-configure-targettv
 .stamp-build-targettv: .stamp-configure-targettv $(MONO_DEPENDENCIES)
 	$(Q) $(MAKE) -C targettv/mono
 	$(Q) $(MAKE) -C targettv/mono install
+	cp -r targettv/config.h $(BUILD_DESTDIR)/targettv/include/mono-2.0
+	cp -r targettv/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/targettv/include/mono-2.0
 	$(Q) touch $@
 
 build-targettv: .stamp-build-targettv
