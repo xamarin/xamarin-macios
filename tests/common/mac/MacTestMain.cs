@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
+using Mono.Security.Cryptography;
 #if XAMCORE_2_0 || __UNIFIED__
 using AppKit;
 using Foundation;
@@ -25,6 +27,8 @@ namespace Xamarin.Mac.Tests
 #if !NO_GUI_TESTING
 			NSApplication.Init();
 #endif
+			if (CryptoConfig.CreateFromName ("MD2") == null)
+				CryptoConfig.AddAlgorithm (typeof (MD2Managed), "MD2");
 			RunTests (args);
 		}
 
