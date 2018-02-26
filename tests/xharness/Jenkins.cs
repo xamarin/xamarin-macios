@@ -3402,6 +3402,11 @@ function oninitialload ()
 
 		protected override async Task ExecuteAsync ()
 		{
+			if (Tasks.All ((v) => v.Ignored)) {
+				ExecutionResult = TestExecutingResult.Ignored;
+				return;
+			}
+
 			// First build everything. This is required for the run simulator
 			// task to properly configure the simulator.
 			build_timer.Start ();
