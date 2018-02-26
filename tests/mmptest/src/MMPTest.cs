@@ -829,6 +829,9 @@ namespace Xamarin.MMP.Tests
 					CSProjConfig = $"<MonoBundlingExtraArgs>--optimize={opt}</MonoBundlingExtraArgs>" + 
 						"<LinkMode>Full</LinkMode>",
 				};
+				// register-protocols requires static registrar which is default in Release
+				test.Release = true;
+
 				var rv = TI.TestUnifiedExecutable (test, shouldFail: false);
 				rv.Messages.AssertNoWarnings ();
 				rv.Messages.AssertErrorCount (0);
@@ -846,7 +849,7 @@ namespace Xamarin.MMP.Tests
 						"<LinkMode>Full</LinkMode>",
 				};
 				var rv = TI.TestUnifiedExecutable (test, shouldFail: false);
-				rv.Messages.AssertWarning (132, $"Unknown optimization: '{opt}'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported.");
+				rv.Messages.AssertWarning (132, $"Unknown optimization: '{opt}'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, trim-architectures.");
 				rv.Messages.AssertErrorCount (0);
 			});
 		}
