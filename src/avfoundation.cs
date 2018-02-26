@@ -38,6 +38,9 @@ using XamCore.CoreAnimation;
 using XamCore.CoreImage;
 using XamCore.CoreMedia;
 using XamCore.MediaToolbox;
+#else
+// hack: ease compilation without extra defines
+using CIBarcodeDescriptor = Foundation.NSObject;
 #endif
 using XamCore.AudioToolbox;
 using XamCore.ObjCRuntime;
@@ -904,10 +907,9 @@ namespace XamCore.AVFoundation {
 	[BaseType (typeof (NSObject))]
 	interface AVAudioEngine {
 
-#if !MONOMAC && !WATCH
+		[NoWatch]
 		[Export ("musicSequence"), NullAllowed]
 		MusicSequence MusicSequence { get; set; }
-#endif
 
 		[Export ("outputNode")]
 		AVAudioOutputNode OutputNode { get; }
@@ -1022,7 +1024,13 @@ namespace XamCore.AVFoundation {
 	[NoWatch]
 	[iOS (8,0)][Mac (10,10)]
 	[BaseType (typeof (AVAudioNode))]
+	[DisableDefaultCtor] // designated
 	interface AVAudioEnvironmentNode : AVAudioMixing {
+
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[Export ("nextAvailableInputBus")]
 		nuint NextAvailableInputBus { get; }
 
@@ -1351,7 +1359,13 @@ namespace XamCore.AVFoundation {
 	[Watch (3,0)]
 	[iOS (8,0)][Mac (10,10)]
 	[BaseType (typeof (AVAudioNode))]
+	[DisableDefaultCtor] // designated
 	interface AVAudioMixerNode : AVAudioMixing {
+
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[Export ("outputVolume")]
 		float OutputVolume { get; set; } /* float, not CGFloat */
 
@@ -1549,22 +1563,21 @@ namespace XamCore.AVFoundation {
 		void EndInterruption (AVAudioPlayer player);
 
 		// Deprecated in iOS 6.0 but we have same C# signature
-		[NoTV]
-		[Since (4,0)]
-		[Export ("audioPlayerEndInterruption:withFlags:")]
+		[iOS (6,0)]
+		[Export ("audioPlayerEndInterruption:withOptions:")]
 		void EndInterruption (AVAudioPlayer player, AVAudioSessionInterruptionFlags flags);
-
-		//[Availability (Deprecated = Platform.iOS_8_0)]
-		//[Since (6,0)]
-		//[Export ("audioPlayerEndInterruption:withOptions:")]
-		//void EndInterruption (AVAudioPlayer player, AVAudioSessionInterruptionFlags flags);
 #endif
 	}
 
 	[Watch (3,0)]
 	[iOS (8,0)][Mac (10,10)]
 	[BaseType (typeof (AVAudioNode))]
+	[DisableDefaultCtor] // designated
 	interface AVAudioPlayerNode : AVAudioMixing {
+
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
 
 		[Export ("playing")]
 		bool Playing { [Bind ("isPlaying")] get; }
@@ -3134,6 +3147,7 @@ namespace XamCore.AVFoundation {
 	interface IAVCaptureDataOutputSynchronizerDelegate {}
 	
 	[NoWatch, NoTV, iOS (11,0)]
+	[NoMac]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface AVCaptureDataOutputSynchronizerDelegate
@@ -3144,6 +3158,7 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch, NoTV, iOS (11,0)]
+	[NoMac]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface AVCaptureDataOutputSynchronizer
@@ -4226,11 +4241,7 @@ namespace XamCore.AVFoundation {
 	[BaseType (typeof (AVAsset), Name="AVURLAsset")]
 	// 'init' returns NIL
 	[DisableDefaultCtor]
-	interface AVUrlAsset {
-
-		[TV (10, 2), Mac (10, 12, 4), iOS (10, 3)]
-		[Export ("mayRequireContentKeysForMediaDataProcessing")]
-		bool MayRequireContentKeysForMediaDataProcessing { get; }
+	interface AVUrlAsset : AVContentKeyRecipient {
 
 		[Export ("URL", ArgumentSemantic.Copy)]
 		NSUrl Url { get;  }
@@ -6621,6 +6632,13 @@ namespace XamCore.AVFoundation {
 
 		[Export ("stringValue", ArgumentSemantic.Copy)]
 		string StringValue { get; }
+
+		// @interface AVMetadataMachineReadableCodeDescriptor (AVMetadataMachineReadableCodeObject)
+
+		[iOS (11, 0)]
+		[Export ("descriptor")]
+		[NullAllowed]
+		CIBarcodeDescriptor Descriptor { get; }
 	}
 
 	[NoWatch]
@@ -10316,12 +10334,6 @@ namespace XamCore.AVFoundation {
 		[Field ("AVPlayerAvailableHDRModesDidChangeNotification")]
 		[Notification]
 		NSString AvailableHdrModesDidChangeNotification { get; }
-
-		// From AVPlayer (AVPlayerVideoDecoderGPUSupport) Category
-
-		[NoWatch, NoTV, NoiOS, Mac (10,13,4)]
-		[Export ("preferredVideoDecoderGPURegistryID")]
-		ulong PreferredVideoDecoderGpuRegistryId { get; set; }
 	}
 
 	[NoWatch]
@@ -10755,6 +10767,35 @@ namespace XamCore.AVFoundation {
 		[NullAllowed, Export ("nextContentProposal", ArgumentSemantic.Assign)]
 		AVContentProposal NextContentProposal { get; set; }
 #endif
+
+		[TV (11, 0), NoWatch, Mac (10, 13), iOS (11, 0)]
+		[Internal]
+		[Export ("videoApertureMode")]
+		NSString _VideoApertureMode { get; set; }
+	}
+
+	[NoiOS][NoTV][NoWatch]
+	[Mac (10, 7)]
+	[Category]
+	[BaseType (typeof (AVPlayerItem))]
+	interface AVPlayerItem_AVPlayerItemProtectedContent {
+		[Export ("isAuthorizationRequiredForPlayback")]
+		bool IsAuthorizationRequiredForPlayback ();
+
+		[Export ("isApplicationAuthorizedForPlayback")]
+		bool IsApplicationAuthorizedForPlayback ();
+
+		[Export ("isContentAuthorizedForPlayback")]
+		bool IsContentAuthorizedForPlayback ();
+
+		[Export ("requestContentAuthorizationAsynchronouslyWithTimeoutInterval:completionHandler:")]
+		void RequestContentAuthorizationAsynchronously (/* NSTimeInterval */ double timeoutInterval, Action handler);
+
+		[Export ("cancelContentAuthorizationRequest")]
+		void CancelContentAuthorizationRequest ();
+
+		[Export ("contentAuthorizationRequestStatus")]
+		AVContentAuthorizationStatus GetContentAuthorizationRequestStatus ();
 	}
 
 	[NoWatch]
@@ -10771,6 +10812,11 @@ namespace XamCore.AVFoundation {
 
 		[Export ("suppressesPlayerRendering")]
 		bool SuppressesPlayerRendering { get; set; }
+
+		[NoiOS][NoTV]
+		[Mac (10,8)]
+		[Export ("itemTimeForCVTimeStamp:")]
+		CMTime GetItemTime (CVTimeStamp timestamp);
 	}
 
 	[NoWatch]
@@ -11581,7 +11627,13 @@ namespace XamCore.AVFoundation {
 		bool ReadyForMoreMediaData { [Bind ("isReadyForMoreMediaData")] get; }
 
 		[Export ("enqueueSampleBuffer:")]
+		void Enqueue (CMSampleBuffer sampleBuffer);
+
+#if !XAMCORE_4_0
+		[Wrap ("Enqueue (sampleBuffer)", IsVirtual = true)]
+		[Obsolete ("Use the 'Enqueue' method instead.")]
 		void EnqueueSampleBuffer (CMSampleBuffer sampleBuffer);
+#endif
 
 		[Export ("flush")]
 		void Flush ();
@@ -11590,17 +11642,28 @@ namespace XamCore.AVFoundation {
 		void FlushAndRemoveImage ();
 
 		[Export ("requestMediaDataWhenReadyOnQueue:usingBlock:")]
+		void RequestMediaData (DispatchQueue queue, Action handler);
+
+#if !XAMCORE_4_0
+		[Wrap ("RequestMediaData (queue, enqueuer)", IsVirtual = true)]
+		[Obsolete ("Use the 'RequestMediaData' method instead.")]
 		void RequestMediaDataWhenReadyOnQueue (DispatchQueue queue, Action enqueuer);
+#endif
 
 		[Export ("stopRequestingMediaData")]
 		void StopRequestingMediaData ();
-		
+
+		// TODO: Remove (alongside others) when https://github.com/xamarin/xamarin-macios/issues/3213 is fixed and conformance to 'AVQueuedSampleBufferRendering' is restored.
+		[TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("timebase", ArgumentSemantic.Retain)]
+		CMTimebase Timebase { get; }
+
 		[iOS (8, 0), Mac (10,10)]
 		[Field ("AVSampleBufferDisplayLayerFailedToDecodeNotification")]
 		[Notification]
 		NSString FailedToDecodeNotification { get; }
 
-		[iOS (8, 0), Mac (10,0)]
+		[iOS (8, 0), Mac (10,10)]
 		[Field ("AVSampleBufferDisplayLayerFailedToDecodeNotificationErrorKey")]
 		NSString FailedToDecodeNotificationErrorKey { get; }
 	}
@@ -11802,9 +11865,9 @@ namespace XamCore.AVFoundation {
 	[DisableDefaultCtor]
 	interface AVAssetDownloadStorageManagementPolicy : NSCopying, NSMutableCopying
 	{
-		// Commented until rdar is fixed https://bugreport.apple.com/web/?problemID=34184435 
-		// [Export ("priority")]
-		// AVAssetDownloadedAssetEvictionPriority Priority { get; }
+		[Internal]
+		[Export ("priority")]
+		NSString _Priority { get; [NotImplemented] set; }
 
 		[Export ("expirationDate", ArgumentSemantic.Copy)]
 		NSDate ExpirationDate { get; [NotImplemented] set; }
@@ -11815,9 +11878,9 @@ namespace XamCore.AVFoundation {
 	[DisableDefaultCtor]
 	interface AVMutableAssetDownloadStorageManagementPolicy
 	{
-		// Commented until rdar is fixed https://bugreport.apple.com/web/?problemID=34184435 
-		// [Export ("priority")]
-		// AVAssetDownloadedAssetEvictionPriority Priority { get; set; }
+		[Internal]
+		[Export ("priority")]
+		NSString _Priority { get; set; }
 
 		[Export ("expirationDate", ArgumentSemantic.Copy)]
 		NSDate ExpirationDate { get; set; }

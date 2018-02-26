@@ -1,13 +1,1 @@
-## suspisious as the related types, AVAudioUnitComponent[Manager], are *not* available on watchOS
-!missing-field! AVAudioUnitComponentTagsDidChangeNotification not bound
-
-## all members are marked as not available on watchOS (but not the protocol itself)
-!missing-protocol! AVAudio3DMixing not bound
-
-## it's not exposed in the API offered by watchOS
-!missing-enum! AVAudioSessionRecordPermission not bound
-
-### moved from watchOS-AVFoundation.todo
-!missing-designated-initializer! AVAudioMixerNode::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! AVAudioPlayerNode::init is missing an [DesignatedInitializer] attribute
-!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withOptions: not found
+watchOS-AVFoundation.ignore
