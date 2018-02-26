@@ -10334,6 +10334,10 @@ namespace XamCore.AVFoundation {
 		[Field ("AVPlayerAvailableHDRModesDidChangeNotification")]
 		[Notification]
 		NSString AvailableHdrModesDidChangeNotification { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (10, 13)]
+		[Export ("preferredVideoDecoderGPURegistryID")]
+		ulong PreferredVideoDecoderGPURegistryId { get; set; }
 	}
 
 	[NoWatch]
@@ -10726,7 +10730,7 @@ namespace XamCore.AVFoundation {
 		[Export ("preferredPeakBitRate")]
 		double PreferredPeakBitRate { get; set; }
 
-		[iOS (11, 0), NoMac, NoTV]
+		[iOS (11,0)][TV (11,0)][Mac (10,13)]
 		[Export ("preferredMaximumResolution", ArgumentSemantic.Assign)]
 		CGSize PreferredMaximumResolution { get; set; }
 
