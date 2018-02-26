@@ -34,7 +34,7 @@ If you are interested in fixing issues and contributing directly to the code bas
 
 - Ask a question on [Stack Overflow](https://stackoverflow.com/questions/tagged/xamarin.ios) or the [Xamarin Forums](https://forums.xamarin.com/)
 - [Request a new feature](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions#writing-good-bug-reports-and-feature-requests) on GitHub
-- [Vote](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions#before-submitting-an-issue) [on existing feature requests](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions#before-submitting-an-issue)
+- [Vote on existing feature requests](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions#before-submitting-an-issue)
 - [Submit bugs to GitHub Issues](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions)
 - Discuss development and design on [Gitter](https://gitter.im/xamarin/xamarin-macios) or email [macios-devel@lists.xamarin.com](http://lists.xamarin.com/mailman/listinfo/macios-devel)
 
