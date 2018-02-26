@@ -79,7 +79,7 @@ namespace Xamarin.iOS.Tasks
 					"System.dll",
 					"System.pdb",
 					"Xamarin.iOS.dll",
-					"Xamarin.iOS.dll.mdb",
+					"Xamarin.iOS.pdb",
 					"mscorlib.dll",
 					"mscorlib.pdb",
 					"runtime-options.plist",
