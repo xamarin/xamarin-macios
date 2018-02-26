@@ -38,6 +38,8 @@ If you are interested in fixing issues and contributing directly to the code bas
 - [Submit bugs to GitHub Issues](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions)
 - Discuss development and design on [Gitter](https://gitter.im/xamarin/xamarin-macios) or email [macios-devel@lists.xamarin.com](http://lists.xamarin.com/mailman/listinfo/macios-devel)
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/xamarin/xamarin-macios?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ## License
 
 Copyright (c) .NET Foundation Contributors. All rights reserved.
