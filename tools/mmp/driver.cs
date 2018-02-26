@@ -627,8 +627,12 @@ namespace Xamarin.Bundler {
 		static Version MutateSDKVersionToPointRelease (Version rv)
 		{
 			if (rv.Major == 10 && (rv.Revision == 0 || rv.Revision == -1)) {
+				if (rv.Minor == 13 && XcodeVersion >= new Version (9, 3))
+					return new Version (rv.Major, rv.Minor, 4);
 				if (rv.Minor == 13 && XcodeVersion >= new Version (9, 2))
 					return new Version (rv.Major, rv.Minor, 2);
+				if (rv.Minor == 13 && XcodeVersion >= new Version (9, 1))
+					return new Version (rv.Major, rv.Minor, 1);
 				if (rv.Minor == 12 && XcodeVersion >= new Version (8, 3))
 					return new Version (rv.Major, rv.Minor, 4);
 				if (rv.Minor == 12 && XcodeVersion >= new Version (8, 2))
