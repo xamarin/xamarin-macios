@@ -1769,29 +1769,29 @@ namespace Security {
 		}
 
 		// For caching, as we can't reverse it easily.
-                SecAccessControl _secAccessControl;
+		SecAccessControl _secAccessControl;
 
-                public SecAccessControl AccessControl {
-                        get {
-                                return _secAccessControl;
-                        }
+		public SecAccessControl AccessControl {
+			get {
+				return _secAccessControl;
+			}
 
-                        set {
-                                if (value == null)
-                                        throw new ArgumentNullException (nameof (value));
-                                _secAccessControl = value;
-                                SetNativeValue (SecAttributeKeys.AccessControlKey, value);
-                        }
-                }
+			set {
+				if (value == null)
+					throw new ArgumentNullException (nameof (value));
+				_secAccessControl = value;
+				SetNativeValue (SecAttributeKeys.AccessControlKey, value);
+			}
+		}
 
 		public SecTokenID TokenID {
-                        get {
-                                return SecTokenIDExtensions.GetValue (GetNSStringValue (SecKeyGenerationAttributeKeys.TokenIDKey));
-                        }
+			get {
+				return SecTokenIDExtensions.GetValue (GetNSStringValue (SecKeyGenerationAttributeKeys.TokenIDKey));
+			}
 
-                        set {
-                                SetStringValue (SecKeyGenerationAttributeKeys.TokenIDKey, value.GetConstant ());
-                        }
-                }
+			set {
+				SetStringValue (SecKeyGenerationAttributeKeys.TokenIDKey, value.GetConstant ());
+			}
+		}
 	}
 }
