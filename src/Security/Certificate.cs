@@ -801,7 +801,7 @@ namespace Security {
 			if (parameters == null)
 				throw new ArgumentNullException (nameof (parameters));
 			if (parameters.KeyType == SecKeyType.Invalid)
-				throw new ArgumentException (nameof (parameters.KeyType));
+				throw new ArgumentException ("invalid 'SecKeyType'", nameof (parameters.KeyType));
 
 			using (var dictionary = parameters.GetDictionary ()) {
 				return CreateRandomKey (dictionary, out error);
