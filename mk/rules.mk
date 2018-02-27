@@ -6,15 +6,15 @@ builds_root=$(TOP)/builds
 COMMON_I:= -I. -I$(mono_root) -I$(mono_root)/mono/eglib -I$(mono_root)/mono/metadata 
 SIM32_I := $(COMMON_I) -I$(BUILD_DESTDIR)/simulator86/include/mono-2.0
 SIM64_I := $(COMMON_I) -I$(BUILD_DESTDIR)/simulator64/include/mono-2.0
-DEV7_I  := $(COMMON_I) -I$(BUILD_DESTDIR)/target7/include/mono-2.0  -I$(builds_root)/target7  -I$(builds_root)/target7/mono/eglib 
-DEV7s_I := $(COMMON_I) -I$(BUILD_DESTDIR)/target7s/include/mono-2.0 -I$(builds_root)/target7s -I$(builds_root)/target7s/mono/eglib
-DEV64_I := $(COMMON_I) -I$(BUILD_DESTDIR)/target64/include/mono-2.0 -I$(builds_root)/target64 -I$(builds_root)/target64/mono/eglib
+DEV7_I  := $(COMMON_I) -I$(BUILD_DESTDIR)/target7/include/mono-2.0
+DEV7s_I := $(COMMON_I) -I$(BUILD_DESTDIR)/target7s/include/mono-2.0
+DEV64_I := $(COMMON_I) -I$(BUILD_DESTDIR)/target64/include/mono-2.0
 
-SIMW_I  := $(COMMON_I) -I$(BUILD_DESTDIR)/watchsimulator/include/mono-2.0 -I$(builds_root)/watchsimulator -I$(builds_root)/watchsimulator/mono/eglib
-DEVW_I  := $(COMMON_I) -I$(BUILD_DESTDIR)/targetwatch/include/mono-2.0    -I$(builds_root)/targetwatch    -I$(builds_root)/targetwatch/mono/eglib
+SIMW_I  := $(COMMON_I) -I$(BUILD_DESTDIR)/watchsimulator/include/mono-2.0
+DEVW_I  := $(COMMON_I) -I$(BUILD_DESTDIR)/targetwatch/include/mono-2.0
 
-SIM_TV_I:= $(COMMON_I) -I$(BUILD_DESTDIR)/tvsimulator/include/mono-2.0 -I$(builds_root)/tvsimulator -I$(builds_root)/tvsimulator/mono/eglib
-DEV_TV_I:= $(COMMON_I) -I$(BUILD_DESTDIR)/targettv/include/mono-2.0    -I$(builds_root)/targettv    -I$(builds_root)/targettv/mono/eglib
+SIM_TV_I:= $(COMMON_I) -I$(BUILD_DESTDIR)/tvsimulator/include/mono-2.0
+DEV_TV_I:= $(COMMON_I) -I$(BUILD_DESTDIR)/targettv/include/mono-2.0
 
 define NativeCompilationTemplate
 
