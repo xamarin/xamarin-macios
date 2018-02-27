@@ -1245,7 +1245,7 @@ namespace Xamarin.Bundler {
 				if (App.EnableDebug)
 					args.Append ("-g ");
 				if (App.Embeddinator)
-					args.Append ($"-lc++ -shared -install_name \"@loader_path/../Frameworks/{App.Name}.framework/{App.Name}\" ");
+					args.Append ($"-shared -install_name \"@loader_path/../Frameworks/{App.Name}.framework/{App.Name}\" ");
 				args.Append ("-mmacosx-version-min=").Append (App.DeploymentTarget.ToString ()).Append (' ');
 				args.Append ("-arch ").Append (arch).Append (' ');
 				if (arch == "x86_64")
