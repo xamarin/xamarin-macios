@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
-using Mono.Security.Cryptography;
 #if XAMCORE_2_0 || __UNIFIED__
 using AppKit;
 using Foundation;
@@ -27,8 +26,12 @@ namespace Xamarin.Mac.Tests
 #if !NO_GUI_TESTING
 			NSApplication.Init();
 #endif
+#if MOBILE
+			// there is no machine.config supplied in the modern profile
+			// even if one is provided it would not be linker friendly
 			if (CryptoConfig.CreateFromName ("MD2") == null)
-				CryptoConfig.AddAlgorithm (typeof (MD2Managed), "MD2");
+				CryptoConfig.AddAlgorithm (typeof (Mono.Security.Cryptography.MD2Managed), "MD2");
+#endif
 			RunTests (args);
 		}
 
