@@ -490,7 +490,7 @@ namespace MonoTouchFixtures.Security {
 		}
 
 		[Test]
-		public void CreateRandomKeyWithParametersTests ()
+		public void CreateRandomKeyTest ()
 		{
 			TestRuntime.AssertXcodeVersion (8, 0);
 
@@ -505,23 +505,13 @@ namespace MonoTouchFixtures.Security {
 
 			NSError error;
 			var privateKey = SecKey.CreateRandomKey (keyGenerationParameters, out error);
-			Assert.That (error, Is.EqualTo (null), "CreateRandomKey");
-			Assert.That (privateKey, Is.Not.EqualTo (null), "CreateRandomKey - key is null");
 			var publicKey = privateKey.GetPublicKey ();
-			Assert.That (publicKey, Is.Not.EqualTo (null));
 
-			Assert.Throws<ArgumentException> (() => { SecKey.CreateRandomKey ((SecKeyGenerationParameters) null, out _); }, "CreateRandomKey - null argument");
-
-			keyGenerationParameters = new SecKeyGenerationParameters ();
-			keyGenerationParameters.KeyType = SecKeyType.Invalid;
-			Assert.Throws<ArgumentException> (() => { SecKey.CreateRandomKey (keyGenerationParameters, out _); }, "CreateRandomKey - invalid key type");
-
-			keyGenerationParameters = new SecKeyGenerationParameters ();
-			keyGenerationParameters.KeyType = SecKeyType.RSA;
-			keyGenerationParameters.KeySizeInBits = -1;
-			Assert.That (SecKey.CreateRandomKey (keyGenerationParameters, out _), Is.EqualTo (SecStatusCode.Param), "CreateRandomKey - Param issue, invalid RSA key size");
-
-			Assert.Throws<ArgumentException> (() => { SecKey.CreateRandomKey (new SecKeyGenerationParameters (), out _); }, "CreateRandomKey - empty parameters");
+			Assert.That (error, Is.EqualTo (null), "CreateRandomKey - no error");
+			Assert.That (privateKey, Is.Not.EqualTo (null), "CreateRandomKey - private key is not null");
+			Assert.That (publicKey, Is.Not.EqualTo (null), "CreateRandomKey - public key is not null");
+			Assert.Throws<ArgumentNullException> (() => { SecKey.CreateRandomKey ((SecKeyGenerationParameters) null, out _); }, "CreateRandomKey - null argument");
+			Assert.Throws<ArgumentException> (() => { SecKey.CreateRandomKey (new SecKeyGenerationParameters (), out _); }, "CreateRandomKey - invalid 'SecKeyType', empty 'SecKeyGenerationParameters'");
 		}
 	}
 }
