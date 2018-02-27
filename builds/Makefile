@@ -1058,73 +1058,7 @@ install-watchsimulator: $(WATCHSIMULATOR_TARGETS)
 # TV simulator build
 #
 
-TVSIMULATOR_SDK      = $(SIMULATORTV_SDK)
-TVSIMULATOR_BIN_PATH = $(XCODE_DEVELOPER_ROOT)/Platforms/AppleTVSimulator.platform/Developer/usr/bin
-TVSIMULATOR_CC       = $(IOS_CC)
-TVOS_BIN_PATH        = $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin
-
-TVSIMULATOR_FLAGS =                     \
-	-isysroot $(TVSIMULATOR_SDK)        \
-	-mtvos-simulator-version-min=$(MIN_TVOS_SDK_VERSION)    \
-	-arch x86_64                        \
-	-O2                                 \
-	-gdwarf-2                           \
-	-Wl,-application_extension          \
-	-DMONOTOUCH                         \
-	-DHOST_APPLETVOS                    \
-	-DTARGET_APPLETVOS                  \
-	$(SIMULATOR_BUILD_CFLAGS)
-
-TVSIMULATOR_CPPFLAGS        = $(TVSIMULATOR_FLAGS)
-TVSIMULATOR_CFLAGS          = $(TVSIMULATOR_FLAGS)
-TVSIMULATOR_CXXFLAGS        = $(TVSIMULATOR_FLAGS)
-TVSIMULATOR_LDFLAGS         = $(COMMON_LDFLAGS)
-TVSIMULATOR_CONFIGURE_FLAGS =                         \
-	--host=x86_64-apple-darwin10                      \
-	--disable-boehm                                   \
-	--disable-executables                             \
-	--cache-file=../tvsimulator.config.cache          \
-	--enable-maintainer-mode                          \
-	--prefix=$(BUILD_DESTDIR)/tvsimulator             \
-	--with-glib=embedded                              \
-	--with-cooperative-gc=no                          \
-	--without-ikvm-native                             \
-	--enable-minimal=com,remoting,shared_perfcounters \
-	--disable-mcs-build                               \
-	--disable-nls                                     \
-	--disable-iconv                                   \
-	--with-tls=pthread                                \
-	--disable-visibility-hidden	                      \
-	$(XAMARIN_IOS_CONFIGURE_FLAGS)               \
-
-TVSIMULATOR_ACVARS =  \
-	mono_cv_uscore=yes \
-	ac_cv_func_clock_nanosleep=no \
-	ac_cv_func_system=no \
-	ac_cv_func_pthread_kill=no \
-	ac_cv_func_kill=no \
-	ac_cv_func_sigaction=no \
-	ac_cv_func_fork=no \
-	ac_cv_func_execv=no \
-	ac_cv_func_execve=no \
-	ac_cv_func_execvp=no \
-	ac_cv_func_signal=no \
-	ac_cv_func_futimens=no \
-	ac_cv_func_utimensat=no \
-
-TVSIMULATOR_ENVIRONMENT =                  \
-	$(TVSIMULATOR_ACVARS)                  \
-	PATH="$(TVSIMULATOR_BIN_PATH):$(PATH)" \
-	CC="$(TVSIMULATOR_CC)"                 \
-	CXX="$(TVSIMULATOR_CC)"                \
-	CPPFLAGS="$(TVSIMULATOR_CPPFLAGS)"     \
-	CFLAGS="$(TVSIMULATOR_CFLAGS)"         \
-	CXXFLAGS="$(TVSIMULATOR_CXXFLAGS)"     \
-	LDFLAGS="$(TVSIMULATOR_LDFLAGS)"       \
-	DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)  \
-
 ifdef INCLUDE_TVOS
-setup:: setup-tvsimulator
 build:: build-tvsimulator
 clean-local:: clean-tvsimulator
 install-local:: install-tvsimulator
@@ -1135,26 +1069,20 @@ tvsimulator: build-tvsimulator install-tvsimulator
 .PHONY: tvsimulator
 endif
 
-setup-tvsimulator: .stamp-configure-tvsimulator
-
-# for now we re-use the watch mono
-.stamp-configure-tvsimulator: $(MONO_PATH)/configure
-	$(Q) $(TVSIMULATOR_ENVIRONMENT) ./wrap-configure.sh tvsimulator $(abspath $(MONO_PATH)/configure) $(TVSIMULATOR_CONFIGURE_FLAGS)
-
-.stamp-build-tvsimulator: export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
-.stamp-build-tvsimulator: export PATH:="$(TVSIMULATOR_BIN_PATH):$(PATH)"
-.stamp-build-tvsimulator: .stamp-configure-tvsimulator $(MONO_DEPENDENCIES)
-	$(Q) $(MAKE) -C tvsimulator/mono all
-	$(Q) $(MAKE) -C tvsimulator/support all
-	$(Q) $(MAKE) -C tvsimulator/mono install
-	cp -r tvsimulator/config.h $(BUILD_DESTDIR)/tvsimulator/include/mono-2.0
-	cp -r tvsimulator/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/tvsimulator/include/mono-2.0
+.stamp-build-tvsimulator: dep-configure-mono $(MONO_DEPENDENCIES)
+	$(MAKE) -C $(SDK_BUILDDIR) package-ios-simtv $(SDK_ARGS)
+	mkdir -p $(BUILD_DESTDIR)/tvsimulator
+	cp -r $(SDK_DESTDIR)/ios-simtv/lib $(BUILD_DESTDIR)/tvsimulator
+	cp -r $(SDK_DESTDIR)/ios-simtv/include $(BUILD_DESTDIR)/tvsimulator
+	cp $(SDK_BUILDDIR)/ios-simtv/config.h $(BUILD_DESTDIR)/tvsimulator/include/mono-2.0
+	cp $(SDK_BUILDDIR)/ios-simtv/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/tvsimulator/include/mono-2.0
 	$(Q) touch $@
 
 build-tvsimulator: .stamp-build-tvsimulator
 
 clean-tvsimulator:
 	$(Q) rm -rf tvsimulator .stamp-*-tvsimulator tvsimulator.config.cache
+	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-simtv $(SDK_ARGS)
 
 TVSIMULATOR_LIBMONOSGEN          = $(BUILD_DESTDIR)/tvsimulator/lib/libmonosgen-2.0.a
 TVSIMULATOR_SHAREDMONOSGEN       = $(BUILD_DESTDIR)/tvsimulator/lib/libmonosgen-2.0.dylib
