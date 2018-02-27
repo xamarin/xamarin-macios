@@ -1482,7 +1482,10 @@ install-watchos: $(WATCHOS_TARGETS)
 
 #
 # TV device build
-# 
+#
+
+TVOS_SDK      = $(DEVICETV_SDK)
+TVOS_BIN_PATH = $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin
 
 ifdef INCLUDE_TVOS
 ifdef INCLUDE_DEVICE
