@@ -1556,96 +1556,8 @@ install-watchos: $(WATCHOS_TARGETS)
 # TV device build
 # 
 
-TVOS_SDK      = $(DEVICETV_SDK)
-TVOS_BIN_PATH = $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin
-TVOS_CC       = $(IOS_CC)
-
-TVOS_FLAGS =                     \
-	-isysroot $(TVOS_SDK)        \
-	-mtvos-version-min=$(MIN_TVOS_SDK_VERSION)       \
-	-arch arm64                  \
-	-O2                          \
-	-gdwarf-2                    \
-	-Wl,-application_extension   \
-	-fembed-bitcode       \
-	-fno-gnu-inline-asm          \
-	-DMONOTOUCH=1                \
-	-DHOST_APPLETVOS             \
-	-DTARGET_APPLETVOS           \
-	-DSMALL_CONFIG               \
-	-DDISABLE_PROCESS_HANDLING=1 \
-	-DDISABLE_POLICY_EVIDENCE=1  \
-	-D_XOPEN_SOURCE              \
-	-DHAVE_LARGE_FILE_SUPPORT=1  \
-	$(BITCODE_CFLAGS)			 \
-	$(DEVICE_BUILD_CFLAGS)       \
-
-TVOS_CPPFLAGS        = $(TVOS_FLAGS)
-TVOS_CFLAGS          = $(TVOS_FLAGS) $(DEVICE_BUILD_CFLAGS)
-TVOS_CXXFLAGS        = $(TVOS_FLAGS)
-TVOS_LDFLAGS         = -arch arm64 -Wl,-bitcode_bundle -framework CoreFoundation -lobjc $(BITCODE_LDFLAGS) $(COMMON_LDFLAGS)
-TVOS_CONFIGURE_FLAGS =                           \
-	--build=x86_64-apple-darwin10                \
-	--host=aarch64-apple-darwin10                  \
-	--enable-maintainer-mode                     \
-	--cache-file=../targettv.config.cache        \
-	--prefix=$(BUILD_DESTDIR)/targettv           \
-	--with-cooperative-gc=no                     \
-	--with-monotouch                             \
-	--with-lazy-gc-thread-creation=yes           \
-	--disable-mcs-build                          \
-	--disable-boehm                              \
-	--enable-minimal=ssa,com,interpreter,jit,reflection_emit_save,reflection_emit,portability,assembly_remapping,attach,verifier,full_messages,appdomains,security,sgen_remset,sgen_marksweep_par,sgen_marksweep_fixed,sgen_marksweep_fixed_par,sgen_copying,logging,remoting,shared_perfcounters \
-	--without-ikvm-native                        \
-	--with-tls=pthread                           \
-	--without-sigaltstack                        \
-	--enable-icall-export                        \
-	--disable-icall-tables						 \
-	--disable-executables                        \
-	--disable-nls                                \
-	--disable-iconv                              \
-	--disable-visibility-hidden	                 \
-	--enable-extension-module                    \
-	--enable-dtrace=no                           \
-	$(XAMARIN_IOS_CONFIGURE_FLAGS)               \
-	$(BITCODE_CONFIGURE_FLAGS)					 \
-
-# explicitly disable dtrace, since it requires inline assembly, which is disabled on AppleTV (and mono's configure.ac doesn't know that (yet at least))
-
-TVOS_ACVARS =                       \
-	mono_cv_uscore=yes              \
-	mono_cv_sizeof_sunpath=104      \
-	ac_cv_func_posix_getpwuid_r=yes \
-	ac_cv_func_finite=no            \
-	ac_cv_c_bigendian=no            \
-	ac_cv_header_sys_user_h=no      \
-	ac_cv_header_curses_h=no        \
-	ac_cv_header_localcharset_h=no  \
-	ac_cv_func_getpwuid_r=no        \
-	ac_cv_func_system=no			\
-	ac_cv_func_pthread_kill=no      \
-	ac_cv_func_kill=no              \
-	ac_cv_func_sigaction=no         \
-	ac_cv_func_fork=no              \
-	ac_cv_func_execv=no             \
-	ac_cv_func_execve=no            \
-	ac_cv_func_execvp=no            \
-	ac_cv_func_signal=no
-
-TVOS_ENVIRONMENT =                        \
-	$(TVOS_ACVARS)                     \
-	PATH="$(TVOS_BIN_PATH):$(PATH)"    \
-	CFLAGS="$(TVOS_CFLAGS)"            \
-	CPPFLAGS="$(TVOS_CPPFLAGS)"        \
-	CXXFLAGS="$(TVOS_CXXFLAGS)"        \
-	LDFLAGS="$(TVOS_LDFLAGS)"          \
-	CC="$(TVOS_CC)"                    \
-	CXX="$(TVOS_CC)"                   \
-	DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT) \
-
 ifdef INCLUDE_TVOS
 ifdef INCLUDE_DEVICE
-setup:: setup-targettv
 build:: build-targettv
 clean-local:: clean-targettv
 install-local:: install-tvos
@@ -1658,26 +1570,20 @@ tvos:: targettv
 endif
 endif
 
-setup-targettv: .stamp-configure-targettv
-
-.stamp-configure-targettv: $(MONO_PATH)/configure
-	$(Q) $(TVOS_ENVIRONMENT) ./wrap-configure.sh targettv $(abspath $(MONO_PATH)/configure) $(TVOS_CONFIGURE_FLAGS)
-
-.stamp-build-targettv: export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
-.stamp-build-targettv: export PATH:="$(TVOS_BIN_PATH):$(PATH)"
-.stamp-build-targettv: .stamp-configure-targettv $(MONO_DEPENDENCIES)
-	$(Q) $(MAKE) -C targettv/mono
-	$(Q) $(MAKE) -C targettv/mono install
-	cp -r targettv/config.h $(BUILD_DESTDIR)/targettv/include/mono-2.0
-	cp -r targettv/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/targettv/include/mono-2.0
+.stamp-build-targettv: dep-configure-mono $(SDK_CONFIG) $(MONO_DEPENDENCIES)
+	$(MAKE) -C $(SDK_BUILDDIR) package-ios-targettv $(SDK_ARGS)
+	mkdir -p $(BUILD_DESTDIR)/targettv
+	cp -r $(SDK_DESTDIR)/ios-targettv/* $(BUILD_DESTDIR)/targettv
+	cp -r $(SDK_BUILDDIR)/ios-targettv/config.h $(BUILD_DESTDIR)/targettv/include/mono-2.0
+	cp -r $(SDK_BUILDDIR)/ios-targettv/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/targettv/include/mono-2.0
 	$(Q) touch $@
 
 build-targettv: .stamp-build-targettv
 
 clean-targettv:
-	$(Q) rm -rf targettv .stamp-*-targettv targettv.config.cache
+	$(Q) rm -rf targettv $(BUILD_DESTDIR)/targettv .stamp-*-targettv targettv.config.cache
+	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-targettv $(SDK_ARGS)
 
-setup-tvos: setup-targettv
 build-tvos: build-targettv
 clean-tvos: clean-targettv
 
