@@ -38,6 +38,7 @@ using ObjCRuntime;
 
 namespace ObjCRuntime {
 
+#pragma warning disable 649 //  Field 'XamarinBlockDescriptor.ref_count' is never assigned to, and will always have its default value 0
 	[StructLayout (LayoutKind.Sequential)]
 #if !XAMCORE_2_0
 	public 
@@ -49,6 +50,7 @@ namespace ObjCRuntime {
 		public IntPtr dispose;
 		public IntPtr signature;
 	}
+#pragma warning restore 649
 
 	struct XamarinBlockDescriptor {
 		public BlockDescriptor descriptor;
