@@ -133,5 +133,7 @@ namespace MonoMac {
 		public const string PhotosUILibrary = "/System/Library/Frameworks/PhotosUI.framework/PhotosUI";
 		public const string ExternalAccessoryLibrary = "/System/Library/Frameworks/ExternalAccessory.framework/ExternalAccessory";
 		public const string MetalPerformanceShadersLibrary = "/System/Library/Frameworks/MetalPerformanceShaders.framework/MetalPerformanceShaders";
+		// macOS 10.13.4
+		public const string BusinessChatLibrary = "/System/Library/Frameworks/BusinessChat.framework/BusinessChat";
 	}
 }

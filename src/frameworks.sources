@@ -278,6 +278,14 @@ AVKIT_API_SOURCES = \
 AVKIT_SOURCES = \
 	AVKit/AVPlayerViewController.cs \
 
+# BusinessChat
+
+BUSINESSCHAT_API_SOURCES = \
+	BusinessChat/Enums.cs \
+
+BUSINESSCHAT_SOURCES = \
+	BusinessChat/BCChatAction.cs \
+
 # CallKit
 
 CALLKIT_SOURCES = \
@@ -1628,6 +1636,7 @@ MAC_FRAMEWORKS =            \
 	AudioToolbox            \
 	AudioUnit               \
 	AVKit                   \
+	BusinessChat            \
 	CFNetwork               \
 	CloudKit                \
 	Contacts                \
@@ -1701,6 +1710,7 @@ IOS_FRAMEWORKS =         \
 	AssetsLibrary \
 	AudioToolbox \
 	AudioUnit \
+	BusinessChat \
 	CallKit \
 	CFNetwork \
 	CloudKit \
