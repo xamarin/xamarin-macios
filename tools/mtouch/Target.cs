@@ -1076,6 +1076,7 @@ namespace Xamarin.Bundler
 					if (App.Embeddinator) {
 						link_task.AddDependency (link_with_task_output);
 						link_task.CompilerFlags.AddLinkWith (link_with_task_output.Select ((v) => v.OutputFile));
+						link_task.CompilerFlags.AddOtherFlag ("-lc++");
 						embeddinator_tasks.Add (link_task);
 					}
 
@@ -1367,7 +1368,7 @@ namespace Xamarin.Bundler
 			linker_flags.AddOtherFlag ($"-o {StringUtils.Quote (Executable)}");
 
 			bool need_libcpp = false;
-			if (App.EnableBitCode)
+			if (App.EnableBitCode || App.Embeddinator)
 				need_libcpp = true;
 #if ENABLE_BITCODE_ON_IOS
 			need_libcpp = true;
