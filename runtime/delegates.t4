@@ -47,7 +47,7 @@
 			"int", "int", "exc_handle"
 		) {
 			WrappedManagedFunction = "UnwrapNSException",
-			OnlyDynamicUsage = true,
+			OnlyDynamicUsage = false,
 		},
 
 		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_block_wrapper_creator",
@@ -232,7 +232,7 @@
 			"MonoReflectionType *", "IntPtr", "type"
 		) {
 			WrappedManagedFunction = "TypeGetFullName",
-			OnlyDynamicUsage = true,
+			OnlyDynamicUsage = false,
 		},
 
 		new XDelegate ("char *", "IntPtr", "xamarin_lookup_managed_type_name",

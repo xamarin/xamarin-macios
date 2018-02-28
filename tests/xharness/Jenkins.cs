@@ -16,6 +16,7 @@ namespace xharness
 		bool populating = true;
 
 		public Harness Harness;
+		public bool IncludeAll;
 		public bool IncludeClassicMac = true;
 		public bool IncludeBcl;
 		public bool IncludeMac = true;
@@ -156,6 +157,7 @@ namespace xharness
 			public bool Profiling;
 			public string LinkMode;
 			public string Defines;
+			public bool Ignored;
 		}
 
 		IEnumerable<TestData> GetTestData (RunTestTask test)
@@ -177,6 +179,7 @@ namespace xharness
 				switch (test.TestName) {
 				case "monotouch-test":
 					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, Defines = "OPTIMIZEALL" };
+					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = true, Profiling = false, Defines = "OPTIMIZEALL" };
 					break;
 				}
 				break;
@@ -186,6 +189,7 @@ namespace xharness
 					// The default is to run monotouch-test with the dynamic registrar (in the simulator), so that's already covered
 					yield return new TestData { Variation = "Debug (static registrar)", MTouchExtraArgs = "--registrar:static", Debug = true, Profiling = false };
 					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, LinkMode = "Full", Defines = "LINKALL;OPTIMIZEALL" };
+					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, Profiling = false, LinkMode = "Full", Defines = "LINKALL;OPTIMIZEALL", Ignored = !IncludeAll };
 					break;
 				}
 				break;
@@ -193,8 +197,14 @@ namespace xharness
 			case "x86":
 				switch (test.TestName) {
 				case "xammac tests":
-					if (test.ProjectConfiguration == "Release")
-						yield return new TestData { Variation = "Release (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all", Debug = false, LinkMode = "Full", Defines = "LINKALL;OPTIMIZEALL" };
+					switch (test.ProjectConfiguration) {
+					case "Release":
+						yield return new TestData { Variation = "Release (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all", Debug = false, LinkMode = "Full", Defines = "LINKALL;OPTIMIZEALL"};
+						break;
+					case "Debug":
+						yield return new TestData { Variation = "Release (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, LinkMode = "Full", Defines = "LINKALL;OPTIMIZEALL", Ignored = !IncludeAll };
+						break;
+					}
 					break;
 				}
 				break;
@@ -221,6 +231,7 @@ namespace xharness
 					var profiling = test_data.Profiling;
 					var link_mode = test_data.LinkMode;
 					var defines = test_data.Defines;
+					var ignored = test_data.Ignored;
 
 					var clone = task.TestProject.Clone ();
 					var clone_task = Task.Run (async () => {
@@ -265,7 +276,7 @@ namespace xharness
 					};
 					T newVariation = creator (build, task);
 					newVariation.Variation = variation;
-					newVariation.Ignored = task.Ignored;
+					newVariation.Ignored = task.Ignored || ignored;
 					rv.Add (newVariation);
 				}
 			}
@@ -538,6 +549,7 @@ namespace xharness
 			SetEnabled (labels, "ios-extensions", ref IncludeiOSExtensions);
 			SetEnabled (labels, "ios-device", ref IncludeDevice);
 			SetEnabled (labels, "xtro", ref IncludeXtro);
+			SetEnabled (labels, "all", ref IncludeAll);
 
 			// enabled by default
 			SetEnabled (labels, "ios", ref IncludeiOS);
