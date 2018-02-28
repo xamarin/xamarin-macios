@@ -32,7 +32,7 @@ namespace XamCore.AVFoundation {
 			throw new PlatformNotSupportedException ();
 		}
 
-		public virtual void SetDelegate (IAVCaptureDataOutputSynchronizerDelegate del, global::CoreFoundation.DispatchQueue delegateCallbackQueue)
+		public virtual void SetDelegate (IAVCaptureDataOutputSynchronizerDelegate del, global::XamCore.CoreFoundation.DispatchQueue delegateCallbackQueue)
 		{
 			throw new PlatformNotSupportedException ();
 		}
@@ -49,7 +49,7 @@ namespace XamCore.AVFoundation {
 			}
 		}
 
-		public virtual global::CoreFoundation.DispatchQueue DelegateCallbackQueue {
+		public virtual global::XamCore.CoreFoundation.DispatchQueue DelegateCallbackQueue {
 			get {
 			throw new PlatformNotSupportedException ();
 			}
