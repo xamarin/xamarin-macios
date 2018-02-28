@@ -661,7 +661,7 @@ namespace xharness
 					continue;
 
 				var defines = csproj.CreateElement ("DefineConstants", MSBuild_Namespace);
-				defines.InnerText = value;
+				defines.InnerText = "$(DefineConstants);" + value;
 				xmlnode.AppendChild (defines);
 				return;
 			}
