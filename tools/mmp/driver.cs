@@ -502,6 +502,15 @@ namespace Xamarin.Bundler {
 
 			// InitializeCommon needs SdkVersion set to something valid
 			ValidateSDKVersion ();
+
+			// InitializeCommon needs the current profile
+			if (IsClassic)
+				Profile.Current = new MonoMacProfile ();
+			else if (IsUnifiedFullXamMacFramework || IsUnifiedFullSystemFramework)
+				Profile.Current = new XamarinMacProfile (arch == "x86_64" ? 64 : 32);
+			else
+				Profile.Current = new MacMobileProfile (arch == "x86_64" ? 64 : 32);
+
 			App.InitializeCommon ();
 
 			Log ("Xamarin.Mac {0}{1}", Constants.Version, verbose > 0 ? "." + Constants.Revision : string.Empty);
@@ -744,14 +753,7 @@ namespace Xamarin.Bundler {
 				root_assembly = unprocessed [0];
 				if (!File.Exists (root_assembly))
 					throw new MonoMacException (7, true, "The root assembly '{0}' does not exist", root_assembly);
-
-				if (IsClassic)
-					Profile.Current = new MonoMacProfile ();
-				else if (IsUnifiedFullXamMacFramework || IsUnifiedFullSystemFramework)
-					Profile.Current = new XamarinMacProfile (arch == "x86_64" ? 64 : 32);
-				else
-					Profile.Current = new MacMobileProfile (arch == "x86_64" ? 64 : 32);
-
+				
 				string root_wo_ext = Path.GetFileNameWithoutExtension (root_assembly);
 				if (Profile.IsSdkAssembly (root_wo_ext) || Profile.IsProductAssembly (root_wo_ext))
 					throw new MonoMacException (3, true, "Application name '{0}.exe' conflicts with an SDK or product assembly (.dll) name.", root_wo_ext);

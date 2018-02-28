@@ -18,6 +18,7 @@ namespace Xamarin.Bundler
 			"blockliteral-setupblock",
 			"register-protocols",
 			"inline-dynamic-registration-supported",
+			"static-block-to-delegate-lookup",
 #if MONOTOUCH
 			"remove-dynamic-registrar",
 #else
@@ -35,6 +36,7 @@ namespace Xamarin.Bundler
 			BlockLiteralSetupBlock,
 			RegisterProtocols,
 			InlineDynamicRegistrationSupported,
+			StaticBlockToDelegateLookup,
 			RemoveDynamicRegistrar,
 		}
 
@@ -75,6 +77,10 @@ namespace Xamarin.Bundler
 			set { values [(int) Opt.InlineDynamicRegistrationSupported] = value; }
 		}
 
+		public bool? StaticBlockToDelegateLookup {
+			get { return values [(int) Opt.StaticBlockToDelegateLookup]; }
+			set { values [(int) Opt.StaticBlockToDelegateLookup] = value; }
+		}
 		public bool? RemoveDynamicRegistrar {
 			get { return values [(int) Opt.RemoveDynamicRegistrar]; }
 			set { values [(int) Opt.RemoveDynamicRegistrar] = value; }
@@ -92,6 +98,13 @@ namespace Xamarin.Bundler
 				if (!values [i].HasValue)
 					continue;
 				switch ((Opt) i) {
+				case Opt.StaticBlockToDelegateLookup:
+					if (app.Registrar != RegistrarMode.Static) {
+						ErrorHelper.Warning (2003, $"Option '--optimize={(values [i].Value ? "" : "-")}{opt_names [i]}' will be ignored since the static registrar is not enabled");
+						values [i] = false;
+						continue;
+					}
+					break; // does not require the linker
 				case Opt.RegisterProtocols:
 				case Opt.RemoveDynamicRegistrar:
 					if (app.Registrar != RegistrarMode.Static) {
@@ -163,9 +176,16 @@ namespace Xamarin.Bundler
 			if (!InlineDynamicRegistrationSupported.HasValue)
 				InlineDynamicRegistrationSupported = true;
 
+			// By default always enable static block-to-delegate lookup (it won't make a difference unless the static registrar is used though)
+			if (!StaticBlockToDelegateLookup.HasValue)
+				StaticBlockToDelegateLookup = true;
+
 			if (!RemoveDynamicRegistrar.HasValue) {
 				if (InlineDynamicRegistrationSupported != true) {
 					// Can't remove the dynamic registrar unless also inlining Runtime.DynamicRegistrationSupported
+					RemoveDynamicRegistrar = false;
+				} else if (StaticBlockToDelegateLookup != true) {
+					// Can't remove the dynamic registrar unless also generating static lookup of block-to-delegates in the static registrar.
 					RemoveDynamicRegistrar = false;
 				} else if (app.Registrar != RegistrarMode.Static || app.LinkMode == LinkMode.None) {
 					// Both the linker and the static registrar are also required

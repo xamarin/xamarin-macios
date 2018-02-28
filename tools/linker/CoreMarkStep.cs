@@ -271,67 +271,13 @@ namespace Xamarin.Linker.Steps {
 
 			// special processing to find [BlockProxy] attributes in _Extensions types
 			// ref: https://bugzilla.xamarin.com/show_bug.cgi?id=23540
-			if (method.HasCustomAttributes && t.HasInterfaces) {
-				string selector = null;
-				foreach (var r in t.Interfaces) {
-					var i = r.InterfaceType.Resolve ();
-					if (i == null || !i.HasCustomAttribute (Namespaces.Foundation, "ProtocolAttribute"))
-						continue;
-					if (selector == null) {
-						// delay and don't compute each time
-						foreach (var ca in method.CustomAttributes) {
-							if (!ca.Constructor.DeclaringType.Is (Namespaces.Foundation, "ExportAttribute"))
-								continue;
-							selector = ca.ConstructorArguments [0].Value as string;
-							break;
-						}
-					}
-					string name = null;
-					bool match = false;
-					foreach (var ca in i.CustomAttributes) {
-						if (!ca.Constructor.DeclaringType.Is (Namespaces.Foundation, "ProtocolMemberAttribute"))
-							continue;
-						foreach (var p in ca.Properties) {
-							switch (p.Name) {
-							case "Selector":
-								match = (p.Argument.Value as string == selector);
-								break;
-							case "Name":
-								name = p.Argument.Value as string;
-								break;
-							}
-						}
-						if (match)
-							break;
-					}
-					if (!match || name == null)
-						continue;
-					// _Extensions time...
-					var td = i.Module.GetType (i.Namespace, i.Name.Substring (1) + "_Extensions");
-					if (td != null && td.HasMethods) {
-						foreach (var m in td.Methods) {
-							if (!m.HasParameters || (m.Name != name) || !m.IsOptimizableCode (LinkContext))
-							    continue;
-							bool proxy = false;
-							match = method.Parameters.Count == m.Parameters.Count - 1;
-							if (match) {
-								for (int n = 1; n < m.Parameters.Count; n++) {
-									var p = m.Parameters [n];
-									var pt = p.ParameterType;
-									match &= method.Parameters [n - 1].ParameterType.Is (pt.Namespace, pt.Name);
-									proxy |= p.HasCustomAttribute (Namespaces.ObjCRuntime, "BlockProxyAttribute");
-								}
-							}
-							if (match && proxy) {
-								// one cannot simply mark the `ca.ConstructorArguments [0].Value` type,
-								// e.g. Trampolines.NIDActionArity1V26
-								// as the relation to *_Extensions will be reflected at runtime
-								MarkMethod (m);
-							}
-						}
-					}
-				}
+			if (LinkContext.Target.StaticRegistrar.MapProtocolMember (method, out var extensionMethod)) {
+				// one cannot simply mark the `ca.ConstructorArguments [0].Value` type,
+				// e.g. Trampolines.NIDActionArity1V26
+				// as the relation to *_Extensions will be reflected at runtime
+				MarkMethod (extensionMethod);
 			}
+
 			return method;
 		}
 

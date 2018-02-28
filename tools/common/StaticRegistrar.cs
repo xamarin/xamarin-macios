@@ -14,6 +14,7 @@ using System.Linq;
 using System.Text;
 
 using Xamarin.Bundler;
+using Xamarin.Linker;
 
 #if MTOUCH
 using ProductException=Xamarin.Bundler.MonoTouchException;
@@ -206,6 +207,25 @@ namespace Registrar {
 
 	class StaticRegistrar : Registrar
 	{
+		Dictionary<ICustomAttribute, MethodDefinition> protocol_member_method_map;
+
+		public Dictionary<ICustomAttribute, MethodDefinition> ProtocolMemberMethodMap {
+			get {
+				if (protocol_member_method_map == null) {
+#if MTOUCH
+					if (App.IsExtension && App.IsCodeShared) {
+						protocol_member_method_map = Target.ContainerTarget.StaticRegistrar.ProtocolMemberMethodMap;
+					} else {
+						protocol_member_method_map = new Dictionary<ICustomAttribute, MethodDefinition> ();
+					}
+#else
+					protocol_member_method_map = new Dictionary<ICustomAttribute, MethodDefinition> ();
+#endif
+				}
+				return protocol_member_method_map;
+			}
+		}
+
 		public static bool IsPlatformType (TypeReference type, string @namespace, string name)
 		{
 			if (Registrar.IsDualBuild) {
@@ -1342,6 +1362,24 @@ namespace Registrar {
 			return rv;
 		}
 
+		public BlockProxyAttribute GetBlockProxyAttribute (ParameterDefinition parameter)
+		{
+			if (!TryGetAttribute (parameter, ObjCRuntime, "BlockProxyAttribute", out var attrib))
+				return null;
+
+			var rv = new BlockProxyAttribute ();
+
+			switch (attrib.ConstructorArguments.Count) {
+			case 1:
+				rv.Type = ((TypeReference) attrib.ConstructorArguments [0].Value).Resolve ();
+				break;
+			default:
+				throw ErrorHelper.CreateError (4124, "Invalid BlockProxyAttribute found on '{0}'. Please file a bug report at https://bugzilla.xamarin.com", ((MethodReference) parameter.Method)?.FullName);
+			}
+
+			return rv;
+		}
+
 		protected override string PlatformName {
 			get {
 				return App.PlatformName;
@@ -1354,6 +1392,11 @@ namespace Registrar {
 
 			foreach (var ca in GetCustomAttributes (td, Foundation, StringConstants.ProtocolMemberAttribute)) {
 				var rv = new ProtocolMemberAttribute ();
+
+				MethodDefinition implMethod = null;
+				if (ProtocolMemberMethodMap.TryGetValue (ca, out implMethod) == true)
+					rv.Method = implMethod;
+
 				foreach (var prop in ca.Properties) {
 					switch (prop.Name) {
 					case "IsRequired":
@@ -3636,8 +3679,18 @@ namespace Registrar {
 							                              type.FullName, descriptiveMethodName);
 						} else {
 							// Bug #4858 (also related: #4718)
+							var token = "INVALID_TOKEN_REF";
+							if (App.Optimizations.StaticBlockToDelegateLookup == true) {
+								var creatorMethod = GetBlockWrapperCreator (method, i);
+								if (creatorMethod != null) {
+									token = $"0x{CreateTokenReference (creatorMethod, TokenType.Method):X} /* {creatorMethod.FullName} */ ";
+								} else {
+									ErrorHelper.Show (ErrorHelper.CreateWarning (App, 4174, method.Method, "Unable to locate the block to delegate conversion method for the method {0}'s parameter #{1}.",
+														     method.DescriptiveMethodName, i + 1));
+								}
+							}
 							setup_call_stack.AppendLine ("if (p{0}) {{", i);
-							setup_call_stack.AppendLine ("arg_ptrs [{0}] = (void *) xamarin_get_delegate_for_block_parameter (managed_method, {0}, p{0}, &exception_gchandle);", i);
+							setup_call_stack.AppendLine ("arg_ptrs [{0}] = (void *) xamarin_get_delegate_for_block_parameter (managed_method, {1}, {0}, p{0}, &exception_gchandle);", i, token);
 							setup_call_stack.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 							setup_call_stack.AppendLine ("} else {");
 							setup_call_stack.AppendLine ("arg_ptrs [{0}] = NULL;", i);
@@ -3999,6 +4052,145 @@ namespace Registrar {
 			} else {
 				sb.WriteLine (body);
 			}
+		}
+
+		MethodDefinition GetBlockWrapperCreator (ObjCMethod obj_method, int parameter)
+		{
+			// A mirror of this method is also implemented in Runtime:GetBlockWrapperCreator
+			// If this method is changed, that method will probably have to be updated too (tests!!!)
+			MethodDefinition method = obj_method.Method;
+			MethodDefinition first = method;
+			MethodDefinition last = null;
+			while (method != last) {
+				last = method;
+				var createMethod = GetBlockProxyAttributeMethod (method, parameter) ;
+				if (createMethod != null)
+					return createMethod;
+
+				method = GetBaseMethodInTypeHierarchy (method);
+			}
+
+			// Might be the implementation of an interface method, so find the corresponding
+			// MethodDefinition for the interface, and check for BlockProxy attributes there as well.
+			var map = PrepareMethodMapping (first.DeclaringType);
+			if (map != null && map.TryGetValue (first, out var list)) {
+				if (list.Count != 1)
+					throw Shared.GetMT4127 (first, list);
+				var createMethod = GetBlockProxyAttributeMethod (list [0], parameter);
+				if (createMethod != null)
+					return createMethod;
+			}
+
+			// Might be an implementation of an optional protocol member.
+			if (obj_method.DeclaringType.Protocols != null) {
+				foreach (var proto in obj_method.DeclaringType.Protocols) {
+					foreach (var pMethod in proto.Methods) {
+						if (!pMethod.IsOptional)
+							continue;
+						if (pMethod.Name != method.Name)
+							continue;
+						if (!TypeMatch (pMethod.ReturnType, method.ReturnType))
+							continue;
+						if (pMethod.Parameters.Length != method.Parameters.Count)
+							continue;
+						for (int i = 0; i < pMethod.Parameters.Length; i++)
+							if (!TypeMatch (pMethod.Parameters [i], method.Parameters [i].ParameterType))
+								continue;
+						MethodDefinition extensionMethod = pMethod.Method;
+						if (extensionMethod == null)
+							MapProtocolMember (obj_method.Method, out extensionMethod);
+						var createMethod = GetBlockProxyAttributeMethod (extensionMethod, parameter + 1);
+						if (createMethod != null)
+							return createMethod;
+					}
+				}
+			}
+
+			return null;
+		}
+
+		MethodDefinition GetBlockProxyAttributeMethod (MethodDefinition method, int parameter)
+		{
+			var attrib = GetBlockProxyAttribute (method.Parameters [parameter]);
+			if (attrib == null)
+				return null;
+
+			return attrib.Type.Methods.First ((v) => v.Name == "Create");
+		}
+
+		public bool MapProtocolMember (MethodDefinition method, out MethodDefinition extensionMethod)
+		{
+			// Given 'method', finds out if it's the implementation of an optional protocol method,
+			// and if so, return the corresponding IProtocol_Extensions method.
+			extensionMethod = null;
+
+			if (!method.HasCustomAttributes)
+				return false;
+			
+			var t = method.DeclaringType;
+
+			if (!t.HasInterfaces)
+				return false;
+
+			// special processing to find [BlockProxy] attributes in _Extensions types
+			// ref: https://bugzilla.xamarin.com/show_bug.cgi?id=23540
+			string selector = null;
+			foreach (var r in t.Interfaces) {
+				var i = r.InterfaceType.Resolve ();
+				if (i == null || !HasAttribute (i, Namespaces.Foundation, "ProtocolAttribute"))
+					continue;
+				if (selector == null) {
+					// delay and don't compute each time
+					var ea = CreateExportAttribute (method);
+					selector = ea?.Selector;
+				}
+				string name = null;
+				bool match = false;
+				ICustomAttribute protocolMemberAttribute = null;
+				foreach (var ca in GetCustomAttributes (i, Foundation, StringConstants.ProtocolMemberAttribute)) {
+					foreach (var p in ca.Properties) {
+						switch (p.Name) {
+						case "Selector":
+							match = (p.Argument.Value as string == selector);
+							break;
+						case "Name":
+							name = p.Argument.Value as string;
+							break;
+						}
+					}
+					if (match) {
+						protocolMemberAttribute = ca;
+						break;
+					}
+				}
+				if (!match || name == null)
+					continue;
+				// _Extensions time...
+				var td = i.Module.GetType (i.Namespace, i.Name.Substring (1) + "_Extensions");
+				if (td != null && td.HasMethods) {
+					foreach (var m in td.Methods) {
+						if (!m.HasParameters || (m.Name != name) || !m.IsOptimizableCode (LinkContext))
+							continue;
+						bool proxy = false;
+						match = method.Parameters.Count == m.Parameters.Count - 1;
+						if (match) {
+							for (int n = 1; n < m.Parameters.Count; n++) {
+								var p = m.Parameters [n];
+								var pt = p.ParameterType;
+								match &= method.Parameters [n - 1].ParameterType.Is (pt.Namespace, pt.Name);
+								proxy |= p.HasCustomAttribute (Namespaces.ObjCRuntime, "BlockProxyAttribute");
+							}
+						}
+						if (match && proxy) {
+							ProtocolMemberMethodMap [protocolMemberAttribute] = m;
+							extensionMethod = m;
+							return true;
+						}
+					}
+				}
+			}
+
+			return false;
 		}
 
 		string GetManagedToNSNumberFunc (TypeReference managedType, TypeReference inputType, TypeReference outputType, string descriptiveMethodName)
@@ -4610,6 +4802,11 @@ namespace Registrar {
 		public Version FormalSinceVersion { get; set; }
 	}
 
+	class BlockProxyAttribute : Attribute
+	{
+		public TypeDefinition Type { get; set; }
+	}
+
 	class BindAsAttribute : Attribute
 	{
 		public BindAsAttribute (TypeReference type)
@@ -4638,6 +4835,8 @@ namespace Registrar {
 		public string GetterSelector { get; set; }
 		public string SetterSelector { get; set; }
 		public ArgumentSemantic ArgumentSemantic { get; set; }
+
+		public MethodDefinition Method { get; set; } // not in the API, used to find the original method in the static registrar
 	}
 
 	class CategoryAttribute : Attribute {
