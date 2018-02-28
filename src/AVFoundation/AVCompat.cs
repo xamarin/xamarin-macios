@@ -10,7 +10,7 @@ using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 
 namespace XamCore.AVFoundation {
-#if MONOMAC && XAMCORE_2_0 && !XAMCORE_4_0
+#if MONOMAC &&  !XAMCORE_4_0
 	[Obsolete ("This API is not available on this platform.")]
 	public partial class AVCaptureDataOutputSynchronizer : NSObject
 	{
