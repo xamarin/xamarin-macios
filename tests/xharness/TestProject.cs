@@ -19,6 +19,8 @@ namespace xharness
 		public bool GenerateVariations = true;
 		public string [] Configurations;
 
+		public IEnumerable<TestProject> ProjectReferences;
+
 		public TestProject ()
 		{
 		}
@@ -119,11 +121,14 @@ namespace xharness
 			}
 			doc.ResolveAllPaths (original_path);
 
+			var projectReferences = new List<TestProject> ();
 			foreach (var pr in doc.GetProjectReferences ()) {
 				var tp = new TestProject (pr.Replace ('\\', '/'));
 				await tp.CreateCopyAsync (test);
 				doc.SetProjectReferenceInclude (pr, tp.Path.Replace ('/', '\\'));
+				projectReferences.Add (tp);
 			}
+			this.ProjectReferences = projectReferences;
 
 			doc.Save (Path);
 		}
