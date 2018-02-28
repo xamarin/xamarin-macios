@@ -245,6 +245,16 @@ namespace xharness
 			SetAssemblyReference (csproj, "Xamarin.iOS", value);
 		}
 
+		public static void AddReference (this XmlDocument csproj, string projectName)
+		{
+			var reference = csproj.SelectSingleNode ("/*/*/*[local-name() = 'Reference' and @Include = 'System']");
+			var node = csproj.CreateElement ("Reference", MSBuild_Namespace);
+			var include_attribute = csproj.CreateAttribute ("Include");
+			include_attribute.Value = projectName;
+			node.Attributes.Append (include_attribute);
+			reference.ParentNode.AppendChild (node);
+		}
+
 		public static void SetAssemblyReference (this XmlDocument csproj, string current, string value)
 		{
 			var project = csproj.ChildNodes [1];
