@@ -85,6 +85,7 @@ typedef struct __attribute__((packed)) {
 
 typedef struct __attribute__((packed)) {
 	const uint32_t *protocol_tokens; // an array of token references to managed interfaces that represent protocols
+	// __unsafe_unretained needed to prevent "error: pointer to non-const type 'const Protocol *' with no explicit ownership" in Embeddinator
 	const __unsafe_unretained Protocol **protocols; // the corresponding native protocols
 } MTProtocolMap;
 
