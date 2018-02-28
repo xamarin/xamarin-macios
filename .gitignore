@@ -16,4 +16,4 @@ packages
 ~.pmcs*
 .DS_Store
 jenkins-results
-
+*.raw

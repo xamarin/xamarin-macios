@@ -43,8 +43,6 @@
 !unknown-native-enum! AVCaptureOutputDataDroppedReason bound
 !unknown-native-enum! AVCaptureVideoStabilizationMode bound
 !unknown-native-enum! AVSpeechBoundary bound
-!unknown-protocol! AVCaptureDataOutputSynchronizerDelegate bound
-!unknown-type! AVCaptureDataOutputSynchronizer bound
 !unknown-type! AVCaptureSynchronizedData bound
 !unknown-type! AVCaptureSynchronizedDataCollection bound
 !unknown-type! AVPersistableContentKeyRequest bound
@@ -53,19 +51,5 @@
 !missing-protocol-conformance! AVSampleBufferDisplayLayer should conform to AVQueuedSampleBufferRendering (defined in 'AVSampleBufferDisplayLayerQueueManagement' category)
 
 ### moved from macOS-AVFoundation.todo
-!missing-designated-initializer! AVAudioEnvironmentNode::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! AVAudioMixerNode::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! AVAudioPlayerNode::init is missing an [DesignatedInitializer] attribute
-!missing-protocol-conformance! AVURLAsset should conform to AVContentKeyRecipient (defined in 'AVURLAssetContentKeyEligibility' category)
-!missing-selector! AVAudioEngine::musicSequence not bound
-!missing-selector! AVAudioEngine::setMusicSequence: not bound
-!missing-selector! AVPlayerItem::contentAuthorizationRequestStatus not bound
-!missing-selector! AVPlayerItem::isApplicationAuthorizedForPlayback not bound
-!missing-selector! AVPlayerItem::isAuthorizationRequiredForPlayback not bound
-!missing-selector! AVPlayerItem::isContentAuthorizedForPlayback not bound
 !missing-selector! AVPlayerItem::preferredMaximumResolution not bound
-!missing-selector! AVPlayerItem::requestContentAuthorizationAsynchronouslyWithTimeoutInterval:completionHandler: not bound
 !missing-selector! AVPlayerItem::setPreferredMaximumResolution: not bound
-!missing-selector! AVPlayerItem::setVideoApertureMode: not bound
-!missing-selector! AVPlayerItem::videoApertureMode not bound
-!missing-selector! AVPlayerItemOutput::itemTimeForCVTimeStamp: not bound

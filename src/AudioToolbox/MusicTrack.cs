@@ -11,7 +11,7 @@
 //       MusicTrackNewAUPresetEvent
 //
 
-#if IOS || TVOS
+#if !WATCH
 
 using System;
 using System.Runtime.InteropServices;

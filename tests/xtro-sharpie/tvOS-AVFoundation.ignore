@@ -9,12 +9,6 @@
 !missing-protocol-conformance! AVSampleBufferDisplayLayer should conform to AVQueuedSampleBufferRendering (defined in 'AVSampleBufferDisplayLayerQueueManagement' category)
 
 ### moved from tvOS-AVFoundation.todo
-!missing-designated-initializer! AVAudioEnvironmentNode::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! AVAudioMixerNode::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! AVAudioPlayerNode::init is missing an [DesignatedInitializer] attribute
-!missing-protocol-conformance! AVURLAsset should conform to AVContentKeyRecipient (defined in 'AVURLAssetContentKeyEligibility' category)
 !missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withOptions: not found
 !missing-selector! AVPlayerItem::preferredMaximumResolution not bound
 !missing-selector! AVPlayerItem::setPreferredMaximumResolution: not bound
-!missing-selector! AVPlayerItem::setVideoApertureMode: not bound
-!missing-selector! AVPlayerItem::videoApertureMode not bound

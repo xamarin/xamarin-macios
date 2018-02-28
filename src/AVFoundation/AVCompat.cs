@@ -10,6 +10,85 @@ using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 
 namespace XamCore.AVFoundation {
+#if MONOMAC &&  !XAMCORE_4_0
+	[Obsolete ("This API is not available on this platform.")]
+	public partial class AVCaptureDataOutputSynchronizer : NSObject
+	{
+		public override IntPtr ClassHandle { get { throw new PlatformNotSupportedException (); } }
+
+		protected AVCaptureDataOutputSynchronizer (NSObjectFlag t) : base (t)
+		{
+			throw new PlatformNotSupportedException ();
+		}
+
+		protected internal AVCaptureDataOutputSynchronizer (IntPtr handle) : base (handle)
+		{
+			throw new PlatformNotSupportedException ();
+		}
+
+		public AVCaptureDataOutputSynchronizer (AVCaptureOutput[] dataOutputs)
+			: base (NSObjectFlag.Empty)
+		{
+			throw new PlatformNotSupportedException ();
+		}
+
+		public virtual void SetDelegate (IAVCaptureDataOutputSynchronizerDelegate del, global::XamCore.CoreFoundation.DispatchQueue delegateCallbackQueue)
+		{
+			throw new PlatformNotSupportedException ();
+		}
+
+		public virtual AVCaptureOutput[] DataOutputs {
+			get {
+				throw new PlatformNotSupportedException ();
+			}
+		}
+
+		public IAVCaptureDataOutputSynchronizerDelegate Delegate {
+			get {
+				throw new PlatformNotSupportedException ();
+			}
+		}
+
+		public virtual global::XamCore.CoreFoundation.DispatchQueue DelegateCallbackQueue {
+			get {
+			throw new PlatformNotSupportedException ();
+			}
+		}
+
+		public virtual NSObject WeakDelegate {
+			get {
+				throw new PlatformNotSupportedException ();
+			}
+		}
+	}
+
+	[Obsolete ("This API is not available on this platform.")]
+	public interface IAVCaptureDataOutputSynchronizerDelegate : INativeObject, IDisposable
+	{
+		void DidOutputSynchronizedDataCollection (AVCaptureDataOutputSynchronizer synchronizer, AVCaptureSynchronizedDataCollection synchronizedDataCollection);
+	}
+
+	[Obsolete ("This API is not available on this platform.")]
+	public abstract partial class AVCaptureDataOutputSynchronizerDelegate : NSObject, IAVCaptureDataOutputSynchronizerDelegate
+	{
+		protected AVCaptureDataOutputSynchronizerDelegate () : base (NSObjectFlag.Empty)
+		{
+			throw new PlatformNotSupportedException ();
+		}
+
+		protected AVCaptureDataOutputSynchronizerDelegate (NSObjectFlag t) : base (t)
+		{
+			throw new PlatformNotSupportedException ();
+		}
+
+		protected internal AVCaptureDataOutputSynchronizerDelegate (IntPtr handle) : base (handle)
+		{
+			throw new PlatformNotSupportedException ();
+		}
+
+		public abstract void DidOutputSynchronizedDataCollection (AVCaptureDataOutputSynchronizer synchronizer, AVCaptureSynchronizedDataCollection synchronizedDataCollection);
+	}
+#endif // MONOMAC && !XAMCORE_4_0
 
 #if !XAMCORE_2_0
 	partial class AVAssetResourceLoadingDataRequest {

@@ -8,6 +8,4 @@
 !missing-enum! AVAudioSessionRecordPermission not bound
 
 ### moved from watchOS-AVFoundation.todo
-!missing-designated-initializer! AVAudioMixerNode::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! AVAudioPlayerNode::init is missing an [DesignatedInitializer] attribute
 !missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withOptions: not found
