@@ -482,7 +482,7 @@ namespace XamCore.CoreFoundation {
 			extern static int open (string path, int flags);
 
 			[DllImport (Constants.libcLibrary)]
-			extern static int close (int fd);
+			internal extern static int close (int fd);
 			
 			public VnodeMonitor (string path, VnodeMonitorKind vnodeKind, DispatchQueue queue = null)
 			{
