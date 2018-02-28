@@ -52,6 +52,7 @@ namespace Xamarin.iOS.Tasks
 			Task.IntermediateOutputPath = Path.Combine ("obj", "mtouch-cache");
 			Task.MainAssembly = new TaskItem ("Main.exe");
 			Task.References = new [] { new TaskItem ("a.dll"), new TaskItem ("b.dll"), new TaskItem ("c.dll") };
+			Task.ResponseFilePath = Path.Combine (Path.GetTempPath (), "response-file.rsp");
 			Task.SdkRoot = "/path/to/sdkroot";
 			Task.SdkVersion = "6.1";
 			Task.SymbolsList = Path.Combine (Path.GetTempPath (), "mtouch-symbol-list");
@@ -199,6 +200,27 @@ namespace Xamarin.iOS.Tasks
 
 				Assert.IsTrue (args.Contains (expectedPath));
 			}
+		}
+
+		[Test]
+		public void ResponseFileTest ()
+		{
+			var args = Task.GenerateCommandLineCommands ();
+			Assert.IsTrue (args.Contains ($"@{Task.ResponseFilePath}"), "#@response-file");
+
+			string responseFile = "";
+			// Check that the response file contains all the references
+			try {
+				using (StreamReader sr = new StreamReader (Task.ResponseFilePath))
+					responseFile = sr.ReadToEnd ();
+			} catch (Exception e) {
+				Assert.Fail ($"The file could not be read: {e.Message}");
+			}
+
+			Assert.IsTrue (responseFile.Contains ("-r="), "#-r=");
+			Assert.IsTrue (responseFile.Contains ("a.dll"), "#a.dll");
+			Assert.IsTrue (responseFile.Contains ("b.dll"), "#b.dll");
+			Assert.IsTrue (responseFile.Contains ("c.dll"), "#c.dll");
 		}
 
 		[TestCase("Xamarin.iOS", "Xamarin.iOS")]

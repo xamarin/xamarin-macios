@@ -131,6 +131,9 @@ namespace Xamarin.iOS.Tasks
 		public ITaskItem[] References { get; set; }
 
 		[Required]
+		public string ResponseFilePath { get; set; }
+
+		[Required]
 		public bool SdkIsSimulator { get; set; }
 
 		[Required]
@@ -573,13 +576,30 @@ namespace Xamarin.iOS.Tasks
 				args.AddQuoted (gcc.Arguments.ToString ());
 			}
 
-			foreach (var asm in References) {
-				if (IsFrameworkItem(asm)) {
-					args.AddQuoted ("-r=" + ResolveFrameworkFile(asm.ItemSpec));
-				} else {
-					args.AddQuoted ("-r=" + Path.GetFullPath (asm.ItemSpec));
+			// Generate a response file
+			var responseFile = Path.GetFullPath (ResponseFilePath);
+
+			if (File.Exists (responseFile))
+				File.Delete (responseFile);
+
+			try {
+				using (var fs = File.Create (responseFile)) {
+					using (var writer = new StreamWriter (fs)) {
+						foreach (var asm in References) {
+							if (IsFrameworkItem (asm)) {
+								writer.Write (" -r=" + ResolveFrameworkFile (asm.ItemSpec));
+							} else {
+								writer.Write (" -r=" + Path.GetFullPath (asm.ItemSpec));
+							}
+						}
+					}
 				}
+			} catch (Exception ex) {
+				Log.LogWarning ("Failed to create response file '{0}': {1}", responseFile, ex);
 			}
+
+			// Use the response file
+			args.AddQuoted ($"@{responseFile}");
 
 			foreach (var ext in AppExtensionReferences)
 				args.AddQuoted ("--app-extension=" + Path.GetFullPath (ext.ItemSpec));
