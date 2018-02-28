@@ -903,74 +903,6 @@ install-iphonesimulator:: $(IPHONESIMULATOR_TARGETS)
 # Watch simulator build
 #
 
-WATCHSIMULATOR_SDK      = $(SIMULATORWATCH_SDK)
-WATCHSIMULATOR_BIN_PATH = $(XCODE_DEVELOPER_ROOT)/Platforms/WatchSimulator.platform/Developer/usr/bin
-WATCHSIMULATOR_CC       = $(IOS_CC)
-
-WATCHSIMULATOR_FLAGS =                  \
-	-isysroot $(WATCHSIMULATOR_SDK)    \
-	-mwatchos-simulator-version-min=$(MIN_WATCHOS_SDK_VERSION) \
-	-arch i386                          \
-	-O2                                 \
-	-gdwarf-2                           \
-	-Wl,-application_extension          \
-	-DMONOTOUCH                         \
-	-DHOST_IOS                          \
-	-DHOST_WATCHOS                      \
-	$(SIMULATOR_BUILD_CFLAGS)           \
-
-WATCHSIMULATOR_CPPFLAGS        = $(WATCHSIMULATOR_FLAGS)
-WATCHSIMULATOR_CFLAGS          = $(WATCHSIMULATOR_FLAGS)
-WATCHSIMULATOR_CXXFLAGS        = $(WATCHSIMULATOR_FLAGS)
-WATCHSIMULATOR_LDFLAGS         = $(COMMON_LDFLAGS)
-WATCHSIMULATOR_CONFIGURE_FLAGS =                \
-	--host=i386-apple-darwin10                  \
-	--disable-boehm                             \
-	--disable-executables                       \
-	--cache-file=../watchsimulator.config.cache \
-	--enable-maintainer-mode                    \
-	--prefix=$(BUILD_DESTDIR)/watchsimulator    \
-	--with-glib=embedded                        \
-	--with-cooperative-gc=yes                   \
-	--without-ikvm-native                       \
-	--with-tls=pthread                          \
-	--enable-minimal=com,remoting,shared_perfcounters \
-	--disable-mcs-build                         \
-	--disable-nls                               \
-	--disable-iconv                             \
-	--disable-visibility-hidden	                \
-	$(XAMARIN_IOS_CONFIGURE_FLAGS)         \
-
-# FIXME: remove --with-checked-build=yes when we've stabilized a bit.
-WATCHSIMULATOR_CONFIGURE_FLAGS += \
-	--enable-checked-build=gc                    \
-
-WATCHSIMULATOR_ACVARS =  \
-	mono_cv_uscore=yes \
-	ac_cv_func_clock_nanosleep=no \
-	ac_cv_func_system=no \
-	ac_cv_func_pthread_kill=no \
-	ac_cv_func_kill=no \
-	ac_cv_func_sigaction=no \
-	ac_cv_func_fork=no \
-	ac_cv_func_execv=no \
-	ac_cv_func_execve=no \
-	ac_cv_func_execvp=no \
-	ac_cv_func_signal=no \
-	ac_cv_func_futimens=no \
-	ac_cv_func_utimensat=no \
-
-WATCHSIMULATOR_ENVIRONMENT =                  \
-	$(WATCHSIMULATOR_ACVARS)                         \
-	PATH="$(WATCHSIMULATOR_BIN_PATH):$(PATH)" \
-	CC="$(WATCHSIMULATOR_CC)"                 \
-	CXX="$(WATCHSIMULATOR_CC)"                \
-	CPPFLAGS="$(WATCHSIMULATOR_CPPFLAGS)"     \
-	CFLAGS="$(WATCHSIMULATOR_CFLAGS)"         \
-	CXXFLAGS="$(WATCHSIMULATOR_CXXFLAGS)"     \
-	LDFLAGS="$(WATCHSIMULATOR_LDFLAGS)"       \
-	DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)     \
-
 ifdef INCLUDE_WATCH
 build:: build-watchsimulator
 clean-local:: clean-watchsimulator
@@ -1300,90 +1232,9 @@ install-iphoneos:: $(IPHONEOS_TARGETS)
 
 WATCHOS_SDK      = $(DEVICEWATCH_SDK)
 WATCHOS_BIN_PATH = $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin
-WATCHOS_CC       = $(IOS_CC)
-
-WATCHOS_FLAGS =                  \
-	-isysroot $(WATCHOS_SDK)     \
-	-mwatchos-version-min=$(MIN_WATCHOS_SDK_VERSION)    \
-	-arch armv7k                 \
-	-O2                          \
-	-gdwarf-2                    \
-	-Wl,-application_extension   \
-	-fembed-bitcode              \
-	-fno-gnu-inline-asm          \
-	-DMONOTOUCH=1                \
-	-DHOST_IOS                   \
-	-DHOST_WATCHOS               \
-	-DSMALL_CONFIG               \
-	-DDISABLE_POLICY_EVIDENCE=1  \
-	-DDISABLE_PROCESS_HANDLING=1 \
-	-D_XOPEN_SOURCE              \
-	-DHAVE_LARGE_FILE_SUPPORT=1  \
-	$(DEVICE_BUILD_CFLAGS)       \
-	$(BITCODE_CFLAGS)
-
-WATCHOS_CPPFLAGS        = $(WATCHOS_FLAGS)
-WATCHOS_CFLAGS          = $(WATCHOS_FLAGS)
-WATCHOS_CXXFLAGS        = $(WATCHOS_FLAGS)
-WATCHOS_LDFLAGS         = -arch armv7k -Wl,-bitcode_bundle -framework CoreFoundation -lobjc $(BITCODE_LDFLAGS) $(COMMON_LDFLAGS)
-WATCHOS_CONFIGURE_FLAGS =                        \
-	--build=i386-apple-darwin10                  \
-	--host=armv7k-apple-darwin10                 \
-	--enable-maintainer-mode                     \
-	--cache-file=../targetwatch.config.cache     \
-	--prefix=$(BUILD_DESTDIR)/targetwatch        \
-	--with-cooperative-gc=yes                    \
-	--with-monotouch                             \
-	--with-lazy-gc-thread-creation=yes           \
-	--disable-mcs-build                          \
-	--disable-boehm                              \
-	--enable-minimal=ssa,com,interpreter,jit,reflection_emit_save,reflection_emit,portability,assembly_remapping,attach,verifier,full_messages,appdomains,security,sgen_remset,sgen_marksweep_par,sgen_marksweep_fixed,sgen_marksweep_fixed_par,sgen_copying,logging,remoting,shared_perfcounters \
-	--without-ikvm-native                        \
-	--with-tls=pthread                           \
-	--without-sigaltstack                        \
-	--enable-icall-export                        \
-	--disable-icall-tables                       \
-	--disable-executables                        \
-	--disable-nls                                \
-	--disable-iconv                              \
-	--disable-visibility-hidden	                 \
-	$(XAMARIN_IOS_CONFIGURE_FLAGS)          \
-	$(BITCODE_CONFIGURE_FLAGS)
-
-WATCHOS_ACVARS =                    \
-	mono_cv_uscore=yes              \
-	mono_cv_sizeof_sunpath=104      \
-	ac_cv_func_posix_getpwuid_r=yes \
-	ac_cv_func_finite=no            \
-	ac_cv_c_bigendian=no            \
-	ac_cv_header_sys_user_h=no      \
-	ac_cv_header_curses_h=no        \
-	ac_cv_header_localcharset_h=no  \
-	ac_cv_func_getpwuid_r=no        \
-	ac_cv_func_system=no			\
-	ac_cv_func_pthread_kill=no      \
-	ac_cv_func_kill=no              \
-	ac_cv_func_sigaction=no         \
-	ac_cv_func_fork=no              \
-	ac_cv_func_execv=no             \
-	ac_cv_func_execve=no            \
-	ac_cv_func_execvp=no            \
-	ac_cv_func_signal=no
-
-WATCHOS_ENVIRONMENT =                     \
-	$(WATCHOS_ACVARS)                     \
-	PATH="$(WATCHOS_BIN_PATH):$(PATH)"    \
-	CFLAGS="$(WATCHOS_CFLAGS)"            \
-	CPPFLAGS="$(WATCHOS_CPPFLAGS)"        \
-	CXXFLAGS="$(WATCHOS_CXXFLAGS)"        \
-	LDFLAGS="$(WATCHOS_LDFLAGS)"          \
-	CC="$(WATCHOS_CC)"                    \
-	CXX="$(WATCHOS_CC)"                   \
-	DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT) \
 
 ifdef INCLUDE_WATCH
 ifdef INCLUDE_DEVICE
-setup:: setup-targetwatch
 build:: build-targetwatch
 clean-local:: clean-targetwatch
 install-local:: install-watchos
@@ -1396,24 +1247,19 @@ watchos:: targetwatch
 endif
 endif
 
-setup-targetwatch: .stamp-configure-targetwatch
-
-.stamp-configure-targetwatch: $(WATCH_MONO_PATH)/configure
-	$(Q) $(WATCHOS_ENVIRONMENT) ./wrap-configure.sh targetwatch $(abspath $(WATCH_MONO_PATH)/configure) $(WATCHOS_CONFIGURE_FLAGS)
-
-.stamp-build-targetwatch: export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
-.stamp-build-targetwatch: export PATH:="$(WATCHOS_BIN_PATH):$(PATH)"
-.stamp-build-targetwatch: .stamp-configure-targetwatch $(MONO_DEPENDENCIES)
-	$(Q) $(MAKE) -C targetwatch/mono
-	$(Q) $(MAKE) -C targetwatch/mono install
-	cp -r targetwatch/config.h $(BUILD_DESTDIR)/targetwatch/include/mono-2.0
-	cp -r targetwatch/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/targetwatch/include/mono-2.0
+.stamp-build-targetwatch: dep-configure-mono $(SDK_CONFIG) $(MONO_DEPENDENCIES)
+	$(MAKE) -C $(SDK_BUILDDIR) package-ios-targetwatch $(SDK_ARGS)
+	mkdir -p $(BUILD_DESTDIR)/targetwatch
+	cp -r $(SDK_DESTDIR)/ios-targetwatch/* $(BUILD_DESTDIR)/targetwatch
+	cp -r $(SDK_BUILDDIR)/ios-targetwatch/config.h $(BUILD_DESTDIR)/targetwatch/include/mono-2.0
+	cp -r $(SDK_BUILDDIR)/ios-targetwatch/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/targetwatch/include/mono-2.0
 	$(Q) touch $@
 
 build-targetwatch: .stamp-build-targetwatch
 
 clean-targetwatch:
-	$(Q) rm -rf targetwatch .stamp-*-targetwatch targetwatch.config.cache
+	$(Q) rm -rf $(BUILD_DESTDIR)/targetwatch .stamp-*-targetwatch
+	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-targetwatch $(SDK_ARGS)
 
 setup-watchos: setup-targetwatch
 build-watchos: build-targetwatch
