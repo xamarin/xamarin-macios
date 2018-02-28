@@ -416,7 +416,7 @@ namespace Xamarin.MMP.Tests
 			return new OutputText (buildOutput, runOutput);
 		}
 
-		public static OutputText TestSystemMonoExecutable (UnifiedTestConfig config, bool shouldFail = false, string configuration = null)
+		public static OutputText TestSystemMonoExecutable (UnifiedTestConfig config, bool shouldFail = false)
 		{
 			config.guid = Guid.NewGuid ();
 			var projectName = "SystemMonoExample";
@@ -424,11 +424,11 @@ namespace Xamarin.MMP.Tests
 			config.ProjectName = $"{projectName}.csproj";
 			string csprojTarget = GenerateSystemMonoEXEProject (config);
 
-			string buildOutput = BuildProject (csprojTarget, isUnified: true, diagnosticMSBuild: config.DiagnosticMSBuild, shouldFail: shouldFail);
+			string buildOutput = BuildProject (csprojTarget, isUnified: true, diagnosticMSBuild: config.DiagnosticMSBuild, shouldFail: shouldFail, release: config.Release);
 			if (shouldFail)
 				return new OutputText (buildOutput, "");
 
-			string exePath = Path.Combine (config.TmpDir, "bin", configuration ?? "Debug",  projectName + ".app", "Contents", "MacOS", projectName);
+			string exePath = Path.Combine (config.TmpDir, "bin", config.Release ? "Release" : "Debug",  projectName + ".app", "Contents", "MacOS", projectName);
 			string runOutput = RunEXEAndVerifyGUID (config.TmpDir, config.guid, exePath);
 			return new OutputText (buildOutput, runOutput);
 		}
