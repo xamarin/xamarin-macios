@@ -972,7 +972,6 @@ WATCHSIMULATOR_ENVIRONMENT =                  \
 	DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)     \
 
 ifdef INCLUDE_WATCH
-setup:: setup-watchsimulator
 build:: build-watchsimulator
 clean-local:: clean-watchsimulator
 install-local:: install-watchsimulator
@@ -983,25 +982,20 @@ watchsimulator: build-watchsimulator install-watchsimulator
 .PHONY: watchsimulator
 endif
 
-setup-watchsimulator: .stamp-configure-watchsimulator
-
-.stamp-configure-watchsimulator: $(WATCH_MONO_PATH)/configure
-	$(Q) $(WATCHSIMULATOR_ENVIRONMENT) ./wrap-configure.sh watchsimulator $(abspath $(WATCH_MONO_PATH)/configure) $(WATCHSIMULATOR_CONFIGURE_FLAGS)
-
-.stamp-build-watchsimulator: export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
-.stamp-build-watchsimulator: export PATH:="$(WATCHSIMULATOR_BIN_PATH):$(PATH)"
-.stamp-build-watchsimulator: .stamp-configure-watchsimulator $(MONO_DEPENDENCIES)
-	$(Q) $(MAKE) -C watchsimulator/mono all
-	$(Q) $(MAKE) -C watchsimulator/support all
-	$(Q) $(MAKE) -C watchsimulator/mono install
-	cp -r watchsimulator/config.h $(BUILD_DESTDIR)/watchsimulator/include/mono-2.0
-	cp -r watchsimulator/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/watchsimulator/include/mono-2.0
+.stamp-build-watchsimulator: dep-configure-mono $(MONO_DEPENDENCIES)
+	$(MAKE) -C $(SDK_BUILDDIR) package-ios-simwatch $(SDK_ARGS)
+	mkdir -p $(BUILD_DESTDIR)/watchsimulator
+	cp -r $(SDK_DESTDIR)/ios-simwatch/lib $(BUILD_DESTDIR)/watchsimulator
+	cp -r $(SDK_DESTDIR)/ios-simwatch/include $(BUILD_DESTDIR)/watchsimulator
+	cp $(SDK_BUILDDIR)/ios-simwatch/config.h $(BUILD_DESTDIR)/watchsimulator/include/mono-2.0
+	cp $(SDK_BUILDDIR)/ios-simwatch/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/watchsimulator/include/mono-2.0
 	$(Q) touch $@
 
 build-watchsimulator: .stamp-build-watchsimulator
 
 clean-watchsimulator:
-	$(Q) rm -rf watchsimulator .stamp-*-watchsimulator watchsimulator.config.cache
+	$(Q) rm -rf .stamp-*-watchsimulator install/watchsimulator
+	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-simwatch $(SDK_ARGS)
 
 WATCHSIMULATOR_LIBMONOSGEN          = $(BUILD_DESTDIR)/watchsimulator/lib/libmonosgen-2.0.a
 WATCHSIMULATOR_SHAREDMONOSGEN       = $(BUILD_DESTDIR)/watchsimulator/lib/libmonosgen-2.0.dylib
@@ -1081,7 +1075,7 @@ endif
 build-tvsimulator: .stamp-build-tvsimulator
 
 clean-tvsimulator:
-	$(Q) rm -rf tvsimulator .stamp-*-tvsimulator tvsimulator.config.cache
+	$(Q) rm -rf .stamp-*-tvsimulator install/tvsimulator
 	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-simtv $(SDK_ARGS)
 
 TVSIMULATOR_LIBMONOSGEN          = $(BUILD_DESTDIR)/tvsimulator/lib/libmonosgen-2.0.a
