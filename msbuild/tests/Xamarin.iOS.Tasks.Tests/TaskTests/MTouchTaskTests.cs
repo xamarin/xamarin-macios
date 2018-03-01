@@ -27,9 +27,20 @@ namespace Xamarin.iOS.Tasks
 			AppExtensionReferences = new Microsoft.Build.Framework.ITaskItem[] { };
 		}
 
+		public string ResponseFile = "";
+
 		public new string GenerateCommandLineCommands ()
 		{
-			return base.GenerateCommandLineCommands ();
+			var cl = base.GenerateCommandLineCommands ();
+
+			try {
+				using (StreamReader sr = new StreamReader (ResponseFilePath))
+					ResponseFile = sr.ReadToEnd ();
+			} catch (Exception e) {
+				Console.WriteLine ($"The file could not be read: {e.Message}");
+			}
+
+			return cl;
 		}
 	}
 
@@ -63,24 +74,26 @@ namespace Xamarin.iOS.Tasks
 		public void StandardCommandline ()
 		{
 			var args = Task.GenerateCommandLineCommands ();
-			Assert.IsTrue (args.Contains ("-r=" + Path.GetFullPath ("a.dll")), "#1a");
-			Assert.IsTrue (args.Contains ("-r=" + Path.GetFullPath ("b.dll")), "#1b");
-			Assert.IsTrue (args.Contains ("-r=" + Path.GetFullPath ("c.dll")), "#1c");
-			Assert.IsTrue (args.Contains ("Main.exe"), "#2");
+			Assert.IsTrue (Task.ResponseFile.Contains ("-r=" + Path.GetFullPath ("a.dll")), "#1a");
+			Assert.IsTrue (Task.ResponseFile.Contains ("-r=" + Path.GetFullPath ("b.dll")), "#1b");
+			Assert.IsTrue (Task.ResponseFile.Contains ("-r=" + Path.GetFullPath ("c.dll")), "#1c");
+			Assert.IsTrue (Task.ResponseFile.Contains ("Main.exe"), "#2");
 
-			var expectedSimArg = string.Format (" --sim={0}", Path.GetFullPath (AppBundlePath));
-			Assert.IsTrue (args.Contains (expectedSimArg), "#3");
-			Assert.IsTrue (args.Contains ("--sdk="), "#4");
+			var expectedSimArg = $"--sim={Path.GetFullPath (AppBundlePath)}";
+			Assert.IsTrue (Task.ResponseFile.Contains (expectedSimArg), "#3");
+			Assert.IsTrue (Task.ResponseFile.Contains ("--sdk="), "#4");
 		}
 
 		[Test]
 		public void StandardCommandline_WithExtraArgs ()
 		{
 			Task.Debug = true;
-			Assert.IsTrue (Task.GenerateCommandLineCommands ().Contains ("--debug"), "#1");
+			Task.GenerateCommandLineCommands ();
+			Assert.IsTrue (Task.ResponseFile.Contains ("--debug"), "#1");
 
 			Task.Debug = false;
-			Assert.IsFalse (Task.GenerateCommandLineCommands ().Contains ("--debug"), "#2");
+			Task.GenerateCommandLineCommands ();
+			Assert.IsFalse (Task.ResponseFile.Contains ("--debug"), "#2");
 		}
 
 		[Test]
@@ -90,7 +103,7 @@ namespace Xamarin.iOS.Tasks
 			Task.ExtraArgs = "--customarg";
 
 			var args = Task.GenerateCommandLineCommands ();
-			Assert.IsTrue (args.Contains ("--customarg"), "#1");
+			Assert.IsTrue (Task.ResponseFile.Contains ("--customarg"), "#1");
 		}
 
 		[Test]
@@ -99,7 +112,7 @@ namespace Xamarin.iOS.Tasks
 			var modifiedPListPath = SetPListKey ("MinimumOSVersion", null);
 			Task.AppManifest = new TaskItem (modifiedPListPath); 
 			var args = Task.GenerateCommandLineCommands ();
-			Assert.IsFalse (args.Contains ("--targetver"), "#1");
+			Assert.IsFalse (Task.ResponseFile.Contains ("--targetver"), "#1");
 		}
 
 		[Test]
@@ -108,7 +121,7 @@ namespace Xamarin.iOS.Tasks
 			Task.SdkVersion = "7.5";
 
 			var args = Task.GenerateCommandLineCommands ();
-			Assert.IsTrue (args.Contains ("--sdk=7.5"), "#1");
+			Assert.IsTrue (Task.ResponseFile.Contains ("--sdk=7.5"), "#1");
 		}
 
 		public void MTouchEnableBitcode (string frameworkIdentifier)
@@ -133,7 +146,7 @@ namespace Xamarin.iOS.Tasks
 			MTouchEnableBitcode("Xamarin.WatchOS");
 
 			var args = Task.GenerateCommandLineCommands ();
-			Assert.IsTrue (args.Contains ("--bitcode=full"));
+			Assert.IsTrue (Task.ResponseFile.Contains ("--bitcode=full"));
 		}
 
 		[Test]
@@ -142,7 +155,7 @@ namespace Xamarin.iOS.Tasks
 			MTouchEnableBitcode("Xamarin.TVOS");
 
 			var args = Task.GenerateCommandLineCommands ();
-			Assert.IsTrue (args.Contains ("--bitcode=asmonly"));
+			Assert.IsTrue (Task.ResponseFile.Contains ("--bitcode=asmonly"));
 		}
 
 		[Test]
@@ -151,7 +164,7 @@ namespace Xamarin.iOS.Tasks
 			Task.UseFloat32 = true;
 
 			var args = Task.GenerateCommandLineCommands ();
-			Assert.IsTrue (args.Contains ("--aot-options=-O=float32"));
+			Assert.IsTrue (Task.ResponseFile.Contains ("--aot-options=-O=float32"));
 		}
 
 		[Test]
@@ -160,7 +173,7 @@ namespace Xamarin.iOS.Tasks
 			Task.UseFloat32 = false;
 
 			var args = Task.GenerateCommandLineCommands ();
-			Assert.IsTrue (args.Contains ("--aot-options=-O=-float32"));
+			Assert.IsTrue (Task.ResponseFile.Contains ("--aot-options=-O=-float32"));
 		}
 
 		[Test]
@@ -170,13 +183,13 @@ namespace Xamarin.iOS.Tasks
 				Task.ProjectDir = "path/to";
 				Task.ExtraArgs = "xyz-${ProjectDir}-xyz xxx-${AppBundleDir}-xxx yyy-${TargetPath}-yyy yzy-${TargetDir}-yzy zzz-${TargetName}-zzz zyx-${TargetExt}-zyx";
 				var args = Task.GenerateCommandLineCommands ();
-				Assert.IsFalse (args.Contains ("$"), "#1");
-				Assert.IsTrue (args.Contains ("xyz-path/to-xyz"), "#ProjectDir");
-				Assert.IsTrue (args.Contains ("xxx-../MySingleView/bin/iPhoneSimulator/Debug/MySingleView.app-xxx"), "#AppBundleDir");
-				Assert.IsTrue (args.Contains ("yyy-Main.exe-yyy"), "#TargetPath");
-				Assert.IsTrue (args.Contains ("yzy--yzy"), "#TargetDir");
-				Assert.IsTrue (args.Contains ("zzz-Main.exe-zzz"), "#TargetName");
-				Assert.IsTrue (args.Contains ("zyx-.exe-zyx"), "#TargetExt");
+				Assert.IsFalse (Task.ResponseFile.Contains ("$"), "#1");
+				Assert.IsTrue (Task.ResponseFile.Contains ("xyz-path/to-xyz"), "#ProjectDir");
+				Assert.IsTrue (Task.ResponseFile.Contains ("xxx-../MySingleView/bin/iPhoneSimulator/Debug/MySingleView.app-xxx"), "#AppBundleDir");
+				Assert.IsTrue (Task.ResponseFile.Contains ("yyy-Main.exe-yyy"), "#TargetPath");
+				Assert.IsTrue (Task.ResponseFile.Contains ("yzy--yzy"), "#TargetDir");
+				Assert.IsTrue (Task.ResponseFile.Contains ("zzz-Main.exe-zzz"), "#TargetName");
+				Assert.IsTrue (Task.ResponseFile.Contains ("zyx-.exe-zyx"), "#TargetExt");
 			} finally {
 				Task.ExtraArgs = null;
 			}
@@ -198,7 +211,7 @@ namespace Xamarin.iOS.Tasks
 					// In Windows, the path slashes are escaped.
 					expectedPath = expectedPath.Replace ("\\", "\\\\");
 
-				Assert.IsTrue (args.Contains (expectedPath));
+				Assert.IsTrue (Task.ResponseFile.Contains (expectedPath));
 			}
 		}
 
@@ -207,20 +220,6 @@ namespace Xamarin.iOS.Tasks
 		{
 			var args = Task.GenerateCommandLineCommands ();
 			Assert.IsTrue (args.Contains ($"@{Task.ResponseFilePath}"), "#@response-file");
-
-			string responseFile = "";
-			// Check that the response file contains all the references
-			try {
-				using (StreamReader sr = new StreamReader (Task.ResponseFilePath))
-					responseFile = sr.ReadToEnd ();
-			} catch (Exception e) {
-				Assert.Fail ($"The file could not be read: {e.Message}");
-			}
-
-			Assert.IsTrue (responseFile.Contains ("-r="), "#-r=");
-			Assert.IsTrue (responseFile.Contains ("a.dll"), "#a.dll");
-			Assert.IsTrue (responseFile.Contains ("b.dll"), "#b.dll");
-			Assert.IsTrue (responseFile.Contains ("c.dll"), "#c.dll");
 		}
 
 		[TestCase("Xamarin.iOS", "Xamarin.iOS")]
@@ -240,11 +239,11 @@ namespace Xamarin.iOS.Tasks
 					// In Windows, the path slashes are escaped.
 					expectedPath = expectedPath.Replace ("\\", "\\\\");
 
-				Assert.IsTrue (args.Contains (expectedPath), string.Format(
+				Assert.IsTrue (Task.ResponseFile.Contains (expectedPath), string.Format(
 					@"Failed to resolve facade assembly to the Sdk path.
 	Expected path:{0}
 
-	Actual args:{1}", expectedPath, args));
+	Actual args:{1}", expectedPath, Task.ResponseFile));
 			}
 		}
 
@@ -265,11 +264,11 @@ namespace Xamarin.iOS.Tasks
 					// In Windows, the path slashes are escaped.
 					expectedPath = expectedPath.Replace ("\\", "\\\\");
 
-				Assert.IsTrue (args.Contains (expectedPath), string.Format(
+				Assert.IsTrue (Task.ResponseFile.Contains (expectedPath), string.Format(
 					@"Failed to resolve facade assembly to the Sdk path.
 	Expected path:{0}
 
-	Actual args:{1}", expectedPath, args));
+	Actual args:{1}", expectedPath, Task.ResponseFile));
 			}
 		}
 
@@ -283,7 +282,7 @@ namespace Xamarin.iOS.Tasks
 
 				var args = Task.GenerateCommandLineCommands ();
 
-				Assert.IsTrue (args.Contains ("/usr/foo/System.Collections.dll"));
+				Assert.IsTrue (Task.ResponseFile.Contains ("/usr/foo/System.Collections.dll"));
 			}
 		}
 
