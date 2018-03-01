@@ -894,6 +894,7 @@ namespace xharness
 					populating = false;
 				}).Wait ();
 				GenerateReport ();
+				BuildTestLibraries ();
 				if (!IsServerMode) {
 					foreach (var task in Tasks)
 						tasks.Add (task.RunAsync ());
@@ -910,6 +911,11 @@ namespace xharness
 
 		public bool IsServerMode {
 			get { return Harness.JenkinsConfiguration == "server"; }
+		}
+
+		void BuildTestLibraries ()
+		{
+			ProcessHelper.ExecuteCommandAsync ("make", $"all -j{Environment.ProcessorCount} -C {StringUtils.Quote (Path.Combine (Harness.RootDirectory, "test-libraries"))}", MainLog, TimeSpan.FromMinutes (1)).Wait ();
 		}
 
 		Task RunTestServer ()
