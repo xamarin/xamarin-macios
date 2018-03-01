@@ -815,7 +815,7 @@ clean-local:: clean-$(2)
 build-$(2): .stamp-build-$(2)
 
 clean-$(2):
-	-rm -rf $(2) .stamp-*-$(2) $(BUILD_DESTDIR)/$(2)
+	-rm -rf .stamp-*-$(2) $(BUILD_DESTDIR)/$(2)
 	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-$(3) $(SDK_ARGS)
 
 build-iphonesimulator:: build-$(2)
@@ -923,7 +923,7 @@ endif
 build-watchsimulator: .stamp-build-watchsimulator
 
 clean-watchsimulator:
-	$(Q) rm -rf .stamp-*-watchsimulator install/watchsimulator
+	$(Q) rm -rf .stamp-*-watchsimulator $(BUILD_DESTDIR)/watchsimulator
 	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-simwatch $(SDK_ARGS)
 
 WATCHSIMULATOR_LIBMONOSGEN          = $(BUILD_DESTDIR)/watchsimulator/lib/libmonosgen-2.0.a
@@ -1004,7 +1004,7 @@ endif
 build-tvsimulator: .stamp-build-tvsimulator
 
 clean-tvsimulator:
-	$(Q) rm -rf .stamp-*-tvsimulator install/tvsimulator
+	$(Q) rm -rf .stamp-*-tvsimulator $(BUILD_DESTDIR)/tvsimulator
 	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-simtv $(SDK_ARGS)
 
 TVSIMULATOR_LIBMONOSGEN          = $(BUILD_DESTDIR)/tvsimulator/lib/libmonosgen-2.0.a
@@ -1097,7 +1097,7 @@ build-$(2): .stamp-build-$(2)
 
 clean-$(2):
 	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-$(3) $(SDK_ARGS)
-	-rm -rf $(2) .stamp-*-$(2) $(BUILD_DESTDIR)/$(2)
+	-rm -rf .stamp-*-$(2) $(BUILD_DESTDIR)/$(2)
 
 setup-iphoneos::
 build-iphoneos:: build-$(2)
@@ -1349,7 +1349,7 @@ endif
 build-targettv: .stamp-build-targettv
 
 clean-targettv:
-	$(Q) rm -rf targettv $(BUILD_DESTDIR)/targettv .stamp-*-targettv targettv.config.cache
+	$(Q) rm -rf $(BUILD_DESTDIR)/targettv .stamp-*-targettv
 	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-targettv $(SDK_ARGS)
 
 build-tvos: build-targettv
@@ -1529,7 +1529,7 @@ install-$(1): install-$(2) $$(_$(1)_CROSS_TARGETS)
 
 clean-$(1): $(SDK_CONFIG)
 	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-$(1) $(SDK_ARGS)
-	-rm -rf .stamp-build-$(1)
+	-rm -rf $(SDK_DESTDIR)/$(1) .stamp-build-$(1)
 
 endef
 
