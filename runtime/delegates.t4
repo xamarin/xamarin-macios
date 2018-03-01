@@ -242,14 +242,14 @@
 			OnlyDynamicUsage = false,
 		},
 
-		new XDelegate ("MarshalManagedExceptionMode", "MarshalManagedExceptionMode", "xamarin_on_marshal_managed_exception",
+		new XDelegate ("enum MarshalManagedExceptionMode", "MarshalManagedExceptionMode", "xamarin_on_marshal_managed_exception",
 			"int", "int", "exception"
 		) {
 			WrappedManagedFunction = "OnMarshalManagedException",
 			OnlyDynamicUsage = false,
 		},
 
-		new XDelegate ("MarshalObjectiveCExceptionMode", "MarshalObjectiveCExceptionMode", "xamarin_on_marshal_objectivec_exception",
+		new XDelegate ("enum MarshalObjectiveCExceptionMode", "MarshalObjectiveCExceptionMode", "xamarin_on_marshal_objectivec_exception",
 			"id", "IntPtr", "exception",
 			"bool", "bool", "throwManagedAsDefault"
 		) {
