@@ -43,6 +43,94 @@ namespace Xamarin.MMP.Tests
 		}
 	}
 
+	static class FrameworkBuilder
+	{
+		const string PListText = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+<!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
+<plist version=""1.0"">
+<dict>
+	<key>BuildMachineOSBuild</key>
+	<string>16B2657</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>Foo</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.test.Foo</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>Foo</string>
+	<key>CFBundlePackageType</key>
+	<string>FMWK</string>
+	<key>CFBundleShortVersionString</key>
+	<string>6.9</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleSupportedPlatforms</key>
+	<array>
+		<string>MacOSX</string>
+	</array>
+	<key>CFBundleVersion</key>
+	<string>1561.40.100</string>
+	<key>DTCompiler</key>
+	<string>com.apple.compilers.llvm.clang.1_0</string>
+	<key>DTPlatformBuild</key>
+	<string>9Q85j</string>
+	<key>DTPlatformVersion</key>
+	<string>GM</string>
+	<key>DTSDKBuild</key>
+	<string>17E138</string>
+	<key>DTSDKName</key>
+	<string>macosx10.13internal</string>
+	<key>DTXcode</key>
+	<string>0930</string>
+	<key>DTXcodeBuild</key>
+	<string>9Q85j</string>
+</dict>
+</plist>";
+		
+		public static string CreateFatFramework (string tmpDir)
+		{
+			Func<string, string> f = x => Path.Combine (tmpDir, x);
+			File.WriteAllText (f ("foo.c"), "int Answer () { return 42; }");
+			File.WriteAllText (f ("Info.plist"), PListText);
+
+			TI.RunAndAssert ($"clang -m32 -c -o {f ("foo_32.o")} {f ("foo.c")}");
+			TI.RunAndAssert ($"clang -m64 -c -o {f ("foo_64.o")} {f ("foo.c")}");
+			TI.RunAndAssert ($"clang -m32 -dynamiclib -o {f ("foo_32.dylib")} {f ("foo_32.o")}");
+			TI.RunAndAssert ($"clang -m64 -dynamiclib -o {f ("foo_64.dylib")} {f ("foo_64.o")}");
+			TI.RunAndAssert ($"lipo -create {f ("foo_32.dylib")} {f ("foo_64.dylib")} -output {f ("Foo")}");
+			TI.RunAndAssert ($"install_name_tool -id @rpath/Foo.framework/Foo {f ("Foo")}");
+			TI.RunAndAssert ($"mkdir -p {f ("Foo.framework/Versions/A/Resources")}");
+			TI.RunAndAssert ($"cp {f ("Foo")} {f ("Foo.framework/Versions/A/Foo")}");
+			TI.RunAndAssert ($"cp {f ("Info.plist")} {f ("Foo.framework/Versions/A/Resources/")}");
+			TI.RunAndAssert ($"ln -s Versions/A/Foo {f ("Foo.framework/Foo")}");
+			TI.RunAndAssert ($"ln -s Versions/A/Resources  {f ("Foo.framework/Resources")}");
+			TI.RunAndAssert ($"ln -s Versions/A  {f ("Foo.framework/Current")}");
+			return f ("Foo.framework");
+		}
+
+		public static string CreateThinFramework (string tmpDir, bool sixtyFourBits = true)
+		{
+			Func<string, string> f = x => Path.Combine (tmpDir, x);
+			File.WriteAllText (f ("foo.c"), "int Answer () { return 42; }");
+			File.WriteAllText (f ("Info.plist"), PListText);
+
+			string bitnessArg = sixtyFourBits ? "-m64" : "-m32";
+			TI.RunAndAssert ($"clang {bitnessArg} -c -o {f ("foo.o")} {f ("foo.c")}");
+			TI.RunAndAssert ($"clang {bitnessArg} -dynamiclib -o {f ("Foo")} {f ("foo.o")}");
+			TI.RunAndAssert ($"install_name_tool -id @rpath/Foo.framework/Foo {f ("Foo")}");
+			TI.RunAndAssert ($"mkdir -p {f ("Foo.framework/Versions/A/Resources")}");
+			TI.RunAndAssert ($"cp {f ("Foo")} {f ("Foo.framework/Versions/A/Foo")}");
+			TI.RunAndAssert ($"cp {f ("Info.plist")} {f ("Foo.framework/Versions/A/Resources/")}");
+			TI.RunAndAssert ($"ln -s Versions/A/Foo {f ("Foo.framework/Foo")}");
+			TI.RunAndAssert ($"ln -s Versions/A/Resources  {f ("Foo.framework/Resources")}");
+			TI.RunAndAssert ($"ln -s Versions/A  {f ("Foo.framework/Current")}");
+			return f ("Foo.framework");
+		}
+	}
+
 	// Hide the hacks and provide a nice interface for writting tests that build / run XM projects
 	static class TI 
 	{
@@ -54,6 +142,8 @@ namespace Xamarin.MMP.Tests
 			public bool FSharp { get; set; }
 			public bool XM45 { get; set; }
 			public bool DiagnosticMSBuild { get; set; }
+			public bool Release { get; set; } = false;
+
 			public string ProjectName { get; set; } = "";
 			public string TestCode { get; set; } = "";
 			public string TestDecl { get; set; } = "";
@@ -98,6 +188,15 @@ namespace Xamarin.MMP.Tests
 			return new Version (versionRegex.Match (output).Value.Split (' ')[2]);
 		}
 
+		public static string RunAndAssert (string exe)
+		{
+			var parts = exe.Split (new char [] { ' ' }, 2);
+			if (parts.Length == 1)
+				return RunAndAssert (exe, "", "Command: " + exe);
+			else
+				return RunAndAssert (parts[0], parts[1], "Command: " + exe);
+		}
+
 		public static string RunAndAssert (string exe, string args, string stepName, bool shouldFail = false, Func<string> getAdditionalFailInfo = null, string[] environment = null)
 		{
 			StringBuilder output = new StringBuilder ();
@@ -128,7 +227,7 @@ namespace Xamarin.MMP.Tests
 			RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/" + (useMSBuild ? "msbuild" : "xbuild"), new StringBuilder (csprojTarget + " /t:clean"), "Clean");
 		}
 
-		public static string BuildProject (string csprojTarget, bool isUnified, bool diagnosticMSBuild = false, bool shouldFail = false, bool useMSBuild = false, string configuration = null, string[] environment = null)
+		public static string BuildProject (string csprojTarget, bool isUnified, bool diagnosticMSBuild = false, bool shouldFail = false, bool useMSBuild = false, bool release = false, string[] environment = null)
 		{
 			string rootDirectory = FindRootDirectory ();
 
@@ -146,10 +245,14 @@ namespace Xamarin.MMP.Tests
 				buildArgs.Append (diagnosticMSBuild ? " /verbosity:diagnostic " : " /verbosity:normal ");
 				buildArgs.Append (" /property:XamarinMacFrameworkRoot=" + rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current ");
 
-				if (!string.IsNullOrEmpty (configuration))
-					buildArgs.Append ($" /property:Configuration={configuration} ");
-			} else
+				if (release)
+					buildArgs.Append ("/property:Configuration=Release ");
+				else
+					buildArgs.Append ("/property:Configuration=Debug ");
+
+			} else {
 				buildArgs.Append (" build ");
+			}
 
 			buildArgs.Append (StringUtils.Quote (csprojTarget));
 
@@ -269,20 +372,20 @@ namespace Xamarin.MMP.Tests
 			return GenerateEXEProject (config);
 		}
 
-		public static string GenerateAndBuildUnifiedExecutable (UnifiedTestConfig config, bool shouldFail = false, bool useMSBuild = false, string configuration = null, string[] environment = null)
+		public static string GenerateAndBuildUnifiedExecutable (UnifiedTestConfig config, bool shouldFail = false, bool useMSBuild = false, string[] environment = null)
 		{
 			string csprojTarget = GenerateUnifiedExecutableProject (config);
-			return BuildProject (csprojTarget, isUnified: true, diagnosticMSBuild: config.DiagnosticMSBuild, shouldFail: shouldFail, useMSBuild: useMSBuild, configuration: configuration, environment: environment);
+			return BuildProject (csprojTarget, isUnified: true, diagnosticMSBuild: config.DiagnosticMSBuild, shouldFail: shouldFail, useMSBuild: useMSBuild, release: config.Release, environment: environment);
 		}
 
 		public static string RunGeneratedUnifiedExecutable (UnifiedTestConfig config)
 		{
 			string bundleName = config.AssemblyName != "" ? config.AssemblyName : config.ProjectName.Split ('.')[0];
-			string exePath = Path.Combine (config.TmpDir, "bin/Debug/" + bundleName + ".app/Contents/MacOS/" + bundleName);
+			string exePath = Path.Combine (config.TmpDir, "bin/" + (config.Release ? "Release/" : "Debug/") + bundleName + ".app/Contents/MacOS/" + bundleName);
 			return RunEXEAndVerifyGUID (config.TmpDir, config.guid, exePath);
 		}
 
-		public static OutputText TestUnifiedExecutable (UnifiedTestConfig config, bool shouldFail = false, bool useMSBuild = false, string configuration = null, string[] environment = null)
+		public static OutputText TestUnifiedExecutable (UnifiedTestConfig config, bool shouldFail = false, bool useMSBuild = false, string[] environment = null)
 		{
 			// If we've already generated guid bits for this config, don't tack on a second copy
 			if (config.guid == Guid.Empty)
@@ -291,7 +394,7 @@ namespace Xamarin.MMP.Tests
 				config.TestCode += GenerateOutputCommand (config.TmpDir, config.guid);
 			}
 
-			string buildOutput = GenerateAndBuildUnifiedExecutable (config, shouldFail, useMSBuild, configuration, environment);
+			string buildOutput = GenerateAndBuildUnifiedExecutable (config, shouldFail, useMSBuild, environment);
 			if (shouldFail)
 				return new OutputText (buildOutput, "");
 
@@ -313,7 +416,7 @@ namespace Xamarin.MMP.Tests
 			return new OutputText (buildOutput, runOutput);
 		}
 
-		public static OutputText TestSystemMonoExecutable (UnifiedTestConfig config, bool shouldFail = false, string configuration = null)
+		public static OutputText TestSystemMonoExecutable (UnifiedTestConfig config, bool shouldFail = false)
 		{
 			config.guid = Guid.NewGuid ();
 			var projectName = "SystemMonoExample";
@@ -321,11 +424,11 @@ namespace Xamarin.MMP.Tests
 			config.ProjectName = $"{projectName}.csproj";
 			string csprojTarget = GenerateSystemMonoEXEProject (config);
 
-			string buildOutput = BuildProject (csprojTarget, isUnified: true, diagnosticMSBuild: config.DiagnosticMSBuild, shouldFail: shouldFail, configuration: configuration);
+			string buildOutput = BuildProject (csprojTarget, isUnified: true, diagnosticMSBuild: config.DiagnosticMSBuild, shouldFail: shouldFail, release: config.Release);
 			if (shouldFail)
 				return new OutputText (buildOutput, "");
 
-			string exePath = Path.Combine (config.TmpDir, "bin", configuration ?? "Debug",  projectName + ".app", "Contents", "MacOS", projectName);
+			string exePath = Path.Combine (config.TmpDir, "bin", config.Release ? "Release" : "Debug",  projectName + ".app", "Contents", "MacOS", projectName);
 			string runOutput = RunEXEAndVerifyGUID (config.TmpDir, config.guid, exePath);
 			return new OutputText (buildOutput, runOutput);
 		}

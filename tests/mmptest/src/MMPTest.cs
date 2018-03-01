@@ -219,11 +219,13 @@ namespace Xamarin.MMP.Tests
 			});
 		}
 
-		[Test]
-		public void Unified_HelloWorld_ShouldHaveNoWarnings ()
+		[TestCase (false)]
+		[TestCase (true)]
+		public void Unified_HelloWorld_ShouldHaveNoWarnings (bool release)
 		{
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir);
+				test.Release = release;
 
 				// Due to https://bugzilla.xamarin.com/show_bug.cgi?id=48311 we can get warnings related to the registrar
 				Func<string, bool> hasLegitWarning = results =>
@@ -639,20 +641,22 @@ namespace Xamarin.MMP.Tests
 				{
 					TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { XM45 = xm45 };
 
+					test.Release = true;
 					string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
-					Assert.IsFalse (buildResults.Contains ("Xamarin.Mac.registrar"), "Release build should not use partial static registrar");
+					Assert.IsFalse (buildResults.Contains ("Xamarin.Mac.registrar"), "Release build should not use partial static registrar\n" + buildResults);
 
+					test.Release = false;
 					test.CSProjConfig = "<DebugSymbols>true</DebugSymbols>";
 					buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
-					Assert.IsTrue (buildResults.Contains ("Xamarin.Mac.registrar"), "Debug build should use partial static registrar" );
+					Assert.IsTrue (buildResults.Contains ("Xamarin.Mac.registrar"), "Debug build should use partial static registrar\n" + buildResults );
 
 					test.CSProjConfig = "<DebugSymbols>true</DebugSymbols><MonoBundlingExtraArgs>--registrar=dynamic</MonoBundlingExtraArgs><XamMacArch>x86_64</XamMacArch>";
 					buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
-					Assert.IsFalse (buildResults.Contains ("Xamarin.Mac.registrar"), "registrar=dynamic build should not use partial static registrar");
+					Assert.IsFalse (buildResults.Contains ("Xamarin.Mac.registrar"), "registrar=dynamic build should not use partial static registrar\n" + buildResults);
 
 					test.CSProjConfig = "<DebugSymbols>true</DebugSymbols><MonoBundlingExtraArgs>--registrar=partial</MonoBundlingExtraArgs><XamMacArch>x86_64</XamMacArch>";
 					buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
-					Assert.IsTrue (buildResults.Contains ("Xamarin.Mac.registrar"), "registrar=partial build should use partial static registrar");
+					Assert.IsTrue (buildResults.Contains ("Xamarin.Mac.registrar"), "registrar=partial build should use partial static registrar\n" + buildResults);
 				}
 			});
 		}
@@ -709,14 +713,15 @@ namespace Xamarin.MMP.Tests
 		}
 
 		[Test]
-		[TestCase ("Debug")]
-		[TestCase ("Release")]
-		public void SystemMonoNotEmbedded (string configuration)
+		[TestCase (false)]
+		[TestCase (true)]
+		public void SystemMonoNotEmbedded (bool release)
 		{
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir);
+				test.Release = release;
 				test.CSProjConfig = "<MonoBundlingExtraArgs>--embed-mono=no</MonoBundlingExtraArgs>";
-				TI.TestSystemMonoExecutable (test, configuration: configuration);
+				TI.TestSystemMonoExecutable (test);
 			});
 		}
 
@@ -788,7 +793,7 @@ namespace Xamarin.MMP.Tests
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					CSProjConfig = "<DebugSymbols>True</DebugSymbols>", // This makes the msbuild tasks pass /debug to mmp
 				};
-				TI.TestUnifiedExecutable (test, shouldFail: false, configuration: "Debug", environment: new string [] { "MD_APPLE_SDK_ROOT", Path.GetDirectoryName (Path.GetDirectoryName (oldXcode)) });
+				TI.TestUnifiedExecutable (test, shouldFail: false, environment: new string [] { "MD_APPLE_SDK_ROOT", Path.GetDirectoryName (Path.GetDirectoryName (oldXcode)) });
 			});
 		}
 
@@ -842,6 +847,9 @@ namespace Xamarin.MMP.Tests
 					CSProjConfig = $"<MonoBundlingExtraArgs>--optimize={opt}</MonoBundlingExtraArgs>" + 
 						"<LinkMode>Full</LinkMode>",
 				};
+				// register-protocols requires static registrar which is default in Release
+				test.Release = true;
+
 				var rv = TI.TestUnifiedExecutable (test, shouldFail: false);
 				rv.Messages.AssertNoWarnings ();
 				rv.Messages.AssertErrorCount (0);
@@ -859,7 +867,7 @@ namespace Xamarin.MMP.Tests
 						"<LinkMode>Full</LinkMode>",
 				};
 				var rv = TI.TestUnifiedExecutable (test, shouldFail: false);
-				rv.Messages.AssertWarning (132, $"Unknown optimization: '{opt}'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported.");
+				rv.Messages.AssertWarning (132, $"Unknown optimization: '{opt}'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, trim-architectures.");
 				rv.Messages.AssertErrorCount (0);
 			});
 		}
