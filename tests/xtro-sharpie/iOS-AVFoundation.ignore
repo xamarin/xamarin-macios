@@ -11,19 +11,6 @@
 ## no generator support for NSFastEnumeration / https://bugzilla.xamarin.com/show_bug.cgi?id=4391
 !missing-protocol-conformance! AVCaptureSynchronizedDataCollection should conform to NSFastEnumeration
 
-
-## unsorted
-
-!missing-selector! +AVCapturePhotoBracketSettings::photoBracketSettingsWithRawPixelFormatType:rawFileType:processedFormat:processedFileType:bracketedSettings: not bound
-!missing-selector! AVCapturePhoto::fileDataRepresentationWithReplacementMetadata:replacementEmbeddedThumbnailPhotoFormat:replacementEmbeddedThumbnailPixelBuffer:replacementDepthData: not bound
-!missing-selector! AVCapturePhotoOutput::availableLivePhotoVideoCodecTypes not bound
-!missing-selector! AVCapturePhotoOutput::isCameraCalibrationDataDeliverySupported not bound
-!missing-selector! AVCapturePhotoOutput::isDualCameraDualPhotoDeliveryEnabled not bound
-!missing-selector! AVCapturePhotoOutput::isDualCameraDualPhotoDeliverySupported not bound
-!missing-selector! AVCapturePhotoOutput::setDualCameraDualPhotoDeliveryEnabled: not bound
-!missing-selector! AVCaptureResolvedPhotoSettings::embeddedThumbnailDimensions not bound
-!missing-selector! AVCaptureResolvedPhotoSettings::expectedPhotoCount not bound
-
 ## https://github.com/xamarin/xamarin-macios/issues/3213 should be fixed before conformance to 'AVQueuedSampleBufferRendering' is restored.
 !missing-protocol-conformance! AVSampleBufferDisplayLayer should conform to AVQueuedSampleBufferRendering (defined in 'AVSampleBufferDisplayLayerQueueManagement' category)
 
