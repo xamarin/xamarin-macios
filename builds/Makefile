@@ -382,6 +382,7 @@ else
 BUILDS_MAKEFILE_DEP = Makefile
 endif
 
+# SDK builds need to depend on this since they are executed by recursive make executions
 $(MONO_PATH)/configure: $(MONO_PATH)/configure.ac $(BUILDS_MAKEFILE_DEP)
 	$(Q) ./wrap-autogen.sh $(MONO_PATH) mono $(XAMARIN_AUTOGEN_FLAGS)
 
@@ -393,10 +394,6 @@ endif
 configure-mono:
 	rm -f $(MONO_PATH)/configure
 	$(MAKE) $(MONO_PATH)/configure
-
-# Dependency used to configure mono before recursively calling sdk makefiles
-dep-configure-mono:
-	$(MAKE) -C $(SDK_BUILDDIR) configure-mono
 
 # FIXME: Needed because of broken MonoDevelop assumptions
 $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/smcs:
@@ -807,7 +804,7 @@ build:: build-$(2)
 clean-local:: clean-$(2)
 
 # config/eglib-config.h is needed by the builds in runtime/
-.stamp-build-$(2): dep-configure-mono $(MONO_DEPENDENCIES) $(BUILD_DESTDIR)/$(2)
+.stamp-build-$(2): $(MONO_PATH)/configure $(MONO_DEPENDENCIES) $(BUILD_DESTDIR)/$(2)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(3) $(SDK_ARGS)
 	cp -r $(SDK_DESTDIR)/ios-$(3)/lib $(BUILD_DESTDIR)/$(2)
 	cp -r $(SDK_DESTDIR)/ios-$(3)/include $(BUILD_DESTDIR)/$(2)
@@ -914,7 +911,7 @@ watchsimulator: build-watchsimulator install-watchsimulator
 .PHONY: watchsimulator
 endif
 
-.stamp-build-watchsimulator: dep-configure-mono $(MONO_DEPENDENCIES)
+.stamp-build-watchsimulator: $(MONO_PATH)/configure $(MONO_DEPENDENCIES)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-simwatch $(SDK_ARGS)
 	mkdir -p $(BUILD_DESTDIR)/watchsimulator
 	cp -r $(SDK_DESTDIR)/ios-simwatch/lib $(BUILD_DESTDIR)/watchsimulator
@@ -995,7 +992,7 @@ tvsimulator: build-tvsimulator install-tvsimulator
 .PHONY: tvsimulator
 endif
 
-.stamp-build-tvsimulator: dep-configure-mono $(MONO_DEPENDENCIES)
+.stamp-build-tvsimulator: $(MONO_PATH)/configure $(MONO_DEPENDENCIES)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-simtv $(SDK_ARGS)
 	mkdir -p $(BUILD_DESTDIR)/tvsimulator
 	cp -r $(SDK_DESTDIR)/ios-simtv/lib $(BUILD_DESTDIR)/tvsimulator
@@ -1088,7 +1085,7 @@ $(2): build-$(2)
 build:: build-$(2)
 clean-local:: clean-$(2)
 
-.stamp-build-$(2): dep-configure-mono $(SDK_CONFIG) $(MONO_DEPENDENCIES)
+.stamp-build-$(2): $(MONO_PATH)/configure $(SDK_CONFIG) $(MONO_DEPENDENCIES)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(3) $(SDK_ARGS)
 	mkdir -p $(BUILD_DESTDIR)/$(2)
 	cp -r $(SDK_DESTDIR)/ios-$(3)/* $(BUILD_DESTDIR)/$(2)
@@ -1247,7 +1244,7 @@ watchos:: targetwatch
 endif
 endif
 
-.stamp-build-targetwatch: dep-configure-mono $(SDK_CONFIG) $(MONO_DEPENDENCIES)
+.stamp-build-targetwatch: $(MONO_PATH)/configure $(SDK_CONFIG) $(MONO_DEPENDENCIES)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-targetwatch $(SDK_ARGS)
 	mkdir -p $(BUILD_DESTDIR)/targetwatch
 	cp -r $(SDK_DESTDIR)/ios-targetwatch/* $(BUILD_DESTDIR)/targetwatch
@@ -1341,7 +1338,7 @@ tvos:: targettv
 endif
 endif
 
-.stamp-build-targettv: dep-configure-mono $(SDK_CONFIG) $(MONO_DEPENDENCIES)
+.stamp-build-targettv: $(MONO_PATH)/configure $(SDK_CONFIG) $(MONO_DEPENDENCIES)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-targettv $(SDK_ARGS)
 	mkdir -p $(BUILD_DESTDIR)/targettv
 	cp -r $(SDK_DESTDIR)/ios-targettv/* $(BUILD_DESTDIR)/targettv
@@ -1488,7 +1485,7 @@ $(PREFIX)/bin:
 	$(Q) mkdir -p $@
 
 # Dependency used to build the offsets tool before recursively calling sdk makefiles
-offsets-tool: dep-configure-mono
+offsets-tool: $(MONO_PATH)/configure
 	make -C $(MONO_PATH)/tools/offsets-tool
 
 ##
@@ -1514,7 +1511,7 @@ clean-local:: clean-$(1)
 endif
 endif
 
-.stamp-build-$(1): build-$(2) dep-configure-mono offsets-tool $(MONO_DEPENDENCIES) $(SDK_CONFIG)
+.stamp-build-$(1): build-$(2) $(MONO_PATH)/configure offsets-tool $(MONO_DEPENDENCIES) $(SDK_CONFIG)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(1) $(SDK_ARGS)
 	$(Q) touch $$@
 
