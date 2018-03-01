@@ -8339,7 +8339,6 @@ namespace XamCore.AVFoundation {
 		[Since (5,0)]
 		[Export ("videoMaxFrameDuration")]
 		[Availability (Introduced = Platform.iOS_5_0 | Platform.Mac_10_7, Deprecated = Platform.iOS_7_0 /* Only deprecated on iOS */)]
-		[Mac (10, 7)] 
 		CMTime VideoMaxFrameDuration { get; set;  }
 
 		[Since (5,0)]
@@ -9175,7 +9174,7 @@ namespace XamCore.AVFoundation {
 		[iOS (11,0)]
 		[Static]
 		[Export ("photoBracketSettingsWithRawPixelFormatType:rawFileType:processedFormat:processedFileType:bracketedSettings:")]
-		AVCapturePhotoBracketSettings PhotoBracketSettings (uint rawPixelFormatType, [NullAllowed] string rawFileType, [NullAllowed] NSDictionary<NSString, NSObject> processedFormat, [NullAllowed] string processedFileType, AVCaptureBracketedStillImageSettings[] bracketedSettings);
+		AVCapturePhotoBracketSettings FromPhotoBracketSettings (uint rawPixelFormatType, [NullAllowed] string rawFileType, [NullAllowed] NSDictionary<NSString, NSObject> processedFormat, [NullAllowed] string processedFileType, AVCaptureBracketedStillImageSettings[] bracketedSettings);
 
 		[Static]
 		[Export ("photoBracketSettingsWithRawPixelFormatType:processedFormat:bracketedSettings:")]
@@ -12761,7 +12760,7 @@ namespace XamCore.AVFoundation {
 		[iOS (11,0)]
 		[Export ("fileDataRepresentationWithReplacementMetadata:replacementEmbeddedThumbnailPhotoFormat:replacementEmbeddedThumbnailPixelBuffer:replacementDepthData:")]
 		[return: NullAllowed]
-		NSData FileDataRepresentationWithReplacementMetadata ([NullAllowed] NSDictionary<NSString, NSObject> replacementMetadata, [NullAllowed] NSDictionary<NSString, NSObject> replacementEmbeddedThumbnailPhotoFormat, [NullAllowed] CVPixelBuffer replacementEmbeddedThumbnailPixelBuffer, [NullAllowed] AVDepthData replacementDepthData);
+		NSData GetFileDataRepresentation ([NullAllowed] NSDictionary<NSString, NSObject> replacementMetadata, [NullAllowed] NSDictionary<NSString, NSObject> replacementEmbeddedThumbnailPhotoFormat, [NullAllowed] CVPixelBuffer replacementEmbeddedThumbnailPixelBuffer, [NullAllowed] AVDepthData replacementDepthData);
 
 
 		[iOS (11, 0)]
