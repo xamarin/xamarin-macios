@@ -2000,7 +2000,9 @@ function oninitialload ()
 												var failures = doc.SelectNodes ("//test-case[@result='Error' or @result='Failure']").Cast<System.Xml.XmlNode> ().ToArray ();
 												if (failures.Length > 0) {
 													writer.WriteLine ("<div style='padding-left: 15px;'>");
+													writer.WriteLine ("<ul>");
 													foreach (var failure in failures) {
+														writer.WriteLine ("<li>");
 														var test_name = failure.Attributes ["name"]?.Value;
 														var message = failure.SelectSingleNode ("failure/message")?.InnerText;
 														writer.Write (System.Web.HttpUtility.HtmlEncode (test_name));
@@ -2009,7 +2011,9 @@ function oninitialload ()
 															writer.Write (HtmlFormat (message));
 														}
 														writer.WriteLine ("<br />");
+														writer.WriteLine ("</li>");
 													}
+													writer.WriteLine ("</ul>");
 													writer.WriteLine ("</div>");
 												}
 											}
