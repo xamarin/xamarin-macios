@@ -2000,21 +2000,25 @@ function oninitialload ()
 												var failures = doc.SelectNodes ("//test-case[@result='Error' or @result='Failure']").Cast<System.Xml.XmlNode> ().ToArray ();
 												if (failures.Length > 0) {
 													writer.WriteLine ("<div style='padding-left: 15px;'>");
+													writer.WriteLine ("<ul>");
 													foreach (var failure in failures) {
+														writer.WriteLine ("<li>");
 														var test_name = failure.Attributes ["name"]?.Value;
 														var message = failure.SelectSingleNode ("failure/message")?.InnerText;
 														writer.Write (System.Web.HttpUtility.HtmlEncode (test_name));
 														if (!string.IsNullOrEmpty (message)) {
 															writer.Write (": ");
-															writer.Write (System.Web.HttpUtility.HtmlEncode (message));
+															writer.Write (HtmlFormat (message));
 														}
 														writer.WriteLine ("<br />");
+														writer.WriteLine ("</li>");
 													}
+													writer.WriteLine ("</ul>");
 													writer.WriteLine ("</div>");
 												}
 											}
 										} catch (Exception ex) {
-											writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {System.Web.HttpUtility.HtmlEncode (ex.Message)}</span><br />");
+											writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {HtmlFormat (ex.Message)}</span><br />");
 										}
 									}
 								}
@@ -2034,6 +2038,12 @@ function oninitialload ()
 			}
 		}
 		Dictionary<Log, Tuple<long, object>> log_data = new Dictionary<Log, Tuple<long, object>> ();
+
+		static string HtmlFormat (string value)
+		{
+			var rv = System.Web.HttpUtility.HtmlEncode (value);
+			return rv.Replace ("\t", "&nbsp;&nbsp;&nbsp;&nbsp;").Replace ("\n", "<br/>\n");
+		}
 
 		static string LinkEncode (string path)
 		{
