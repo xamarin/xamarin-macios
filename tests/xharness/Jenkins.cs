@@ -2006,7 +2006,7 @@ function oninitialload ()
 														writer.Write (System.Web.HttpUtility.HtmlEncode (test_name));
 														if (!string.IsNullOrEmpty (message)) {
 															writer.Write (": ");
-															writer.Write (System.Web.HttpUtility.HtmlEncode (message));
+															writer.Write (HtmlFormat (message));
 														}
 														writer.WriteLine ("<br />");
 													}
@@ -2014,7 +2014,7 @@ function oninitialload ()
 												}
 											}
 										} catch (Exception ex) {
-											writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {System.Web.HttpUtility.HtmlEncode (ex.Message)}</span><br />");
+											writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {HtmlFormat (ex.Message)}</span><br />");
 										}
 									}
 								}
@@ -2034,6 +2034,12 @@ function oninitialload ()
 			}
 		}
 		Dictionary<Log, Tuple<long, object>> log_data = new Dictionary<Log, Tuple<long, object>> ();
+
+		static string HtmlFormat (string value)
+		{
+			var rv = System.Web.HttpUtility.HtmlEncode (value);
+			return rv.Replace ("\t", "&nbsp;&nbsp;&nbsp;&nbsp;").Replace ("\n", "<br/>\n");
+		}
 
 		static string LinkEncode (string path)
 		{
