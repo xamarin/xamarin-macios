@@ -2763,8 +2763,7 @@ namespace Registrar {
 							any_protocols = true;
 							iface.Append (tp.Protocols [p].ProtocolName);
 							var proto = tp.Protocols [p].Type;
-							if (!IsLinkedAway (proto))
-								CheckNamespace (proto, exceptions);
+							CheckNamespace (proto, exceptions);
 						}
 					}
 					if (App.Optimizations.RegisterProtocols == true && tp.AdoptedProtocols != null) {
