@@ -1531,6 +1531,26 @@ public class B : A {}
 		}
 
 		[Test]
+		public void MT0113_dynamicregistrarremoval ()
+		{
+			using (var extension = new MTouchTool ()) {
+				extension.CreateTemporaryServiceExtension ();
+				extension.CreateTemporaryCacheDirectory ();
+				extension.Abi = "arm64";
+				extension.Optimize = new string [] { "remove-dynamic-registrar" };
+				extension.AssertExecute (MTouchAction.BuildDev, "build extension");
+				using (var app = new MTouchTool ()) {
+					app.AppExtensions.Add (extension);
+					app.CreateTemporaryApp ();
+					app.CreateTemporaryCacheDirectory ();
+					app.WarnAsError = new int [] { 113 };
+					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
+					app.AssertError (113, "Native code sharing has been disabled for the extension 'testServiceExtension' because the remove-dynamic-registrar optimization differ between the container app (true) and the extension (default).");
+				}
+			}
+		}
+
+		[Test]
 		public void CodeSharingExactContentsDifferentPaths ()
 		{
 			// Test that we allow code sharing when the exact same assembly (based on file content)
