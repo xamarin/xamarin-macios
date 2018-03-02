@@ -37,7 +37,7 @@ namespace Xamarin.iOS.Tasks
 				using (StreamReader sr = new StreamReader (ResponseFilePath))
 					ResponseFile = sr.ReadToEnd ();
 			} catch (Exception e) {
-				Console.WriteLine ($"The file could not be read: {e.Message}");
+				Assert.Fail ($"The file could not be read: {e.Message}");
 			}
 
 			return cl;
@@ -60,9 +60,10 @@ namespace Xamarin.iOS.Tasks
 
 			Task.AppBundleDir = AppBundlePath;
 			Task.AppManifest = new TaskItem (Path.Combine (MonoTouchProjectPath, "Info.plist"));
+			Task.CompiledEntitlements = Path.Combine ("..", "bin", "Resources", "Entitlements.plist");
 			Task.IntermediateOutputPath = Path.Combine ("obj", "mtouch-cache");
 			Task.MainAssembly = new TaskItem ("Main.exe");
-			Task.References = new [] { new TaskItem ("a.dll"), new TaskItem ("b.dll"), new TaskItem ("c.dll") };
+			Task.References = new [] { new TaskItem ("a.dll"), new TaskItem ("b with spaces.dll"), new TaskItem ("c\"quoted\".dll") };
 			Task.ResponseFilePath = Path.Combine (Path.GetTempPath (), "response-file.rsp");
 			Task.SdkRoot = "/path/to/sdkroot";
 			Task.SdkVersion = "6.1";
@@ -74,9 +75,12 @@ namespace Xamarin.iOS.Tasks
 		public void StandardCommandline ()
 		{
 			var args = Task.GenerateCommandLineCommands ();
+			// -r=*/a.dll
 			Assert.IsTrue (Task.ResponseFile.Contains ("-r=" + Path.GetFullPath ("a.dll")), "#1a");
-			Assert.IsTrue (Task.ResponseFile.Contains ("-r=" + Path.GetFullPath ("b.dll")), "#1b");
-			Assert.IsTrue (Task.ResponseFile.Contains ("-r=" + Path.GetFullPath ("c.dll")), "#1c");
+			// "-r=*/b with spaces.dll"
+			Assert.IsTrue (Task.ResponseFile.Contains ("\"-r=" + Path.GetFullPath ("b with spaces.dll") + "\""), "#1b");
+			// "-r=*/c\"quoted\".dll"
+			Assert.IsTrue (Task.ResponseFile.Contains ("\"-r=" + Path.GetFullPath ("c\\\"quoted\\\".dll") + "\""), "#1c");
 			Assert.IsTrue (Task.ResponseFile.Contains ("Main.exe"), "#2");
 
 			var expectedSimArg = $"--sim={Path.GetFullPath (AppBundlePath)}";
@@ -193,6 +197,14 @@ namespace Xamarin.iOS.Tasks
 			} finally {
 				Task.ExtraArgs = null;
 			}
+		}
+
+		[Test]
+		public void BuildEntitlementFlagsTest ()
+		{
+			var args = Task.GenerateCommandLineCommands ();
+			Assert.IsTrue (Task.ResponseFile.Contains ("\"--gcc_flags=-Xlinker -sectcreate -Xlinker __TEXT -Xlinker __entitlements -Xlinker"), "#1");
+			Assert.IsTrue (Task.ResponseFile.Contains ("Entitlements.plist"), "#2");
 		}
 
 		[Test]

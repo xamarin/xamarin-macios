@@ -377,7 +377,7 @@ namespace Xamarin.iOS.Tasks
 			args.AddQuotedLine ((SdkIsSimulator ? "--sim=" : "--dev=") + Path.GetFullPath (AppBundleDir));
 
 			if (AppleSdkSettings.XcodeVersion.Major >= 5 && IPhoneSdks.MonoTouch.Version.CompareTo (new IPhoneSdkVersion (6, 3, 7)) < 0)
-				args.Add ("--compiler=clang");
+				args.AddLine ("--compiler=clang");
 
 			args.AddQuotedLine ($"--executable={ExecutableName}");
 
@@ -572,7 +572,7 @@ namespace Xamarin.iOS.Tasks
 				args.AddLine ("--cxx");
 
 			if (gcc.Arguments.Length > 0)
-				args.AddQuotedLine ($"--gcc_flags {gcc.Arguments.ToString ()}");
+				args.AddQuotedLine ($"--gcc_flags={gcc.Arguments.ToString ()}");
 
 			foreach (var asm in References) {
 				if (IsFrameworkItem(asm)) {
