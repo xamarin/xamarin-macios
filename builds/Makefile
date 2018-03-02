@@ -807,8 +807,8 @@ clean-local:: clean-$(2)
 # config/eglib-config.h is needed by the builds in runtime/
 .stamp-build-$(2): $(MONO_PATH)/configure $(MONO_DEPENDENCIES) $(BUILD_DESTDIR)/$(2)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(3) $(SDK_ARGS)
-	cp -r $(SDK_DESTDIR)/ios-$(3)/lib $(BUILD_DESTDIR)/$(2)
-	cp -r $(SDK_DESTDIR)/ios-$(3)/include $(BUILD_DESTDIR)/$(2)
+	$(Q) cp -r $(SDK_DESTDIR)/ios-$(3)/lib $(BUILD_DESTDIR)/$(2)
+	$(Q) cp -r $(SDK_DESTDIR)/ios-$(3)/include $(BUILD_DESTDIR)/$(2)
 	cp $(SDK_BUILDDIR)/ios-$(3)/config.h $(BUILD_DESTDIR)/$(2)/include/mono-2.0
 	cp $(SDK_BUILDDIR)/ios-$(3)/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/$(2)/include/mono-2.0
 	$(Q) touch $$@
@@ -914,9 +914,9 @@ endif
 
 .stamp-build-watchsimulator: $(MONO_PATH)/configure $(MONO_DEPENDENCIES)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-simwatch $(SDK_ARGS)
-	mkdir -p $(BUILD_DESTDIR)/watchsimulator
-	cp -r $(SDK_DESTDIR)/ios-simwatch/lib $(BUILD_DESTDIR)/watchsimulator
-	cp -r $(SDK_DESTDIR)/ios-simwatch/include $(BUILD_DESTDIR)/watchsimulator
+	$(Q) mkdir -p $(BUILD_DESTDIR)/watchsimulator
+	$(Q) cp -r $(SDK_DESTDIR)/ios-simwatch/lib $(BUILD_DESTDIR)/watchsimulator
+	$(Q) cp -r $(SDK_DESTDIR)/ios-simwatch/include $(BUILD_DESTDIR)/watchsimulator
 	cp $(SDK_BUILDDIR)/ios-simwatch/config.h $(BUILD_DESTDIR)/watchsimulator/include/mono-2.0
 	cp $(SDK_BUILDDIR)/ios-simwatch/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/watchsimulator/include/mono-2.0
 	$(Q) touch $@
@@ -995,9 +995,9 @@ endif
 
 .stamp-build-tvsimulator: $(MONO_PATH)/configure $(MONO_DEPENDENCIES)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-simtv $(SDK_ARGS)
-	mkdir -p $(BUILD_DESTDIR)/tvsimulator
-	cp -r $(SDK_DESTDIR)/ios-simtv/lib $(BUILD_DESTDIR)/tvsimulator
-	cp -r $(SDK_DESTDIR)/ios-simtv/include $(BUILD_DESTDIR)/tvsimulator
+	$(Q) mkdir -p $(BUILD_DESTDIR)/tvsimulator
+	$(Q) cp -r $(SDK_DESTDIR)/ios-simtv/lib $(BUILD_DESTDIR)/tvsimulator
+	$(Q) cp -r $(SDK_DESTDIR)/ios-simtv/include $(BUILD_DESTDIR)/tvsimulator
 	cp $(SDK_BUILDDIR)/ios-simtv/config.h $(BUILD_DESTDIR)/tvsimulator/include/mono-2.0
 	cp $(SDK_BUILDDIR)/ios-simtv/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/tvsimulator/include/mono-2.0
 	$(Q) touch $@
@@ -1088,10 +1088,10 @@ clean-local:: clean-$(2)
 
 .stamp-build-$(2): $(MONO_PATH)/configure $(SDK_CONFIG) $(MONO_DEPENDENCIES)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(3) $(SDK_ARGS)
-	mkdir -p $(BUILD_DESTDIR)/$(2)
-	cp -r $(SDK_DESTDIR)/ios-$(3)/* $(BUILD_DESTDIR)/$(2)
-	cp -r $(SDK_BUILDDIR)/ios-$(3)/config.h $(BUILD_DESTDIR)/$(2)/include/mono-2.0
-	cp -r $(SDK_BUILDDIR)/ios-$(3)/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/$(2)/include/mono-2.0
+	$(Q) mkdir -p $(BUILD_DESTDIR)/$(2)
+	$(Q) cp -r $(SDK_DESTDIR)/ios-$(3)/* $(BUILD_DESTDIR)/$(2)
+	$(Q) cp -r $(SDK_BUILDDIR)/ios-$(3)/config.h $(BUILD_DESTDIR)/$(2)/include/mono-2.0
+	$(Q) cp -r $(SDK_BUILDDIR)/ios-$(3)/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/$(2)/include/mono-2.0
 	$(Q) touch $$@
 
 build-$(2): .stamp-build-$(2)
@@ -1247,10 +1247,10 @@ endif
 
 .stamp-build-targetwatch: $(MONO_PATH)/configure $(SDK_CONFIG) $(MONO_DEPENDENCIES)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-targetwatch $(SDK_ARGS)
-	mkdir -p $(BUILD_DESTDIR)/targetwatch
-	cp -r $(SDK_DESTDIR)/ios-targetwatch/* $(BUILD_DESTDIR)/targetwatch
-	cp -r $(SDK_BUILDDIR)/ios-targetwatch/config.h $(BUILD_DESTDIR)/targetwatch/include/mono-2.0
-	cp -r $(SDK_BUILDDIR)/ios-targetwatch/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/targetwatch/include/mono-2.0
+	$(Q) mkdir -p $(BUILD_DESTDIR)/targetwatch
+	$(Q) cp -r $(SDK_DESTDIR)/ios-targetwatch/* $(BUILD_DESTDIR)/targetwatch
+	$(Q) cp -r $(SDK_BUILDDIR)/ios-targetwatch/config.h $(BUILD_DESTDIR)/targetwatch/include/mono-2.0
+	$(Q) cp -r $(SDK_BUILDDIR)/ios-targetwatch/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/targetwatch/include/mono-2.0
 	$(Q) touch $@
 
 build-targetwatch: .stamp-build-targetwatch
@@ -1341,10 +1341,10 @@ endif
 
 .stamp-build-targettv: $(MONO_PATH)/configure $(SDK_CONFIG) $(MONO_DEPENDENCIES)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-targettv $(SDK_ARGS)
-	mkdir -p $(BUILD_DESTDIR)/targettv
-	cp -r $(SDK_DESTDIR)/ios-targettv/* $(BUILD_DESTDIR)/targettv
-	cp -r $(SDK_BUILDDIR)/ios-targettv/config.h $(BUILD_DESTDIR)/targettv/include/mono-2.0
-	cp -r $(SDK_BUILDDIR)/ios-targettv/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/targettv/include/mono-2.0
+	$(Q) mkdir -p $(BUILD_DESTDIR)/targettv
+	$(Q) cp -r $(SDK_DESTDIR)/ios-targettv/* $(BUILD_DESTDIR)/targettv
+	$(Q) cp -r $(SDK_BUILDDIR)/ios-targettv/config.h $(BUILD_DESTDIR)/targettv/include/mono-2.0
+	$(Q) cp -r $(SDK_BUILDDIR)/ios-targettv/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/targettv/include/mono-2.0
 	$(Q) touch $@
 
 build-targettv: .stamp-build-targettv
@@ -1464,14 +1464,13 @@ $(PREFIX)/LLVM/bin/%: $(SDK_DESTDIR)/ios-llvm64/bin/% | $(PREFIX)/LLVM/bin
 $(PREFIX)/LLVM/bin:
 	$(Q) mkdir -p $@
 
-install-llvm32:
-
+install-llvm32:.stamp-build-llvm $(LLVM_TARGETS)
 install-llvm64: .stamp-build-llvm $(LLVM_TARGETS)
 
 llvm: build-llvm64 install-llvm
 llvm64: install-llvm64
 
-$(MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe: $(wildcard $(MONO_PATH)/tools/offsets-tool/*.cs)
+$(MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe: $(MONO_PATH)/configure $(wildcard $(MONO_PATH)/tools/offsets-tool/*.cs)
 	$(Q) $(MAKE) -C $(dir $@) MonoAotOffsetsDumper.exe
 
 ifneq ($(WATCH_MONO_PATH),$(MONO_PATH))
@@ -1486,8 +1485,7 @@ $(PREFIX)/bin:
 	$(Q) mkdir -p $@
 
 # Dependency used to build the offsets tool before recursively calling sdk makefiles
-offsets-tool: $(MONO_PATH)/configure
-	make -C $(MONO_PATH)/tools/offsets-tool
+offsets-tool: $(MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe
 
 ##
 # Cross compiler template
