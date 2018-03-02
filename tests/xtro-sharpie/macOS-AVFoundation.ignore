@@ -14,18 +14,7 @@
 !missing-selector! AVCaptureConnection::setVideoMaxFrameDuration: not bound
 !missing-selector! AVCaptureConnection::videoMaxFrameDuration not bound
 
-
 ## unsorted
-
-!missing-selector! +AVMetadataItem::metadataItemsFromArray:filteredByMetadataItemFilter: not bound
-!missing-selector! AVAudioPlayer::currentDevice not bound
-!missing-selector! AVAudioPlayer::setCurrentDevice: not bound
-!missing-selector! AVMetadataGroup::classifyingLabel not bound
-!missing-selector! AVMetadataGroup::uniqueID not bound
-!missing-selector! AVMutableMovieTrack::replaceFormatDescription:withFormatDescription: not bound
-!missing-selector! AVPlayerItem::addMediaDataCollector: not bound
-!missing-selector! AVPlayerItem::mediaDataCollectors not bound
-!missing-selector! AVPlayerItem::removeMediaDataCollector: not bound
 !unknown-native-enum! AVAudioSessionCategoryOptions bound
 !unknown-native-enum! AVAudioSessionErrorCode bound
 !unknown-native-enum! AVAudioSessionInterruptionOptions bound
@@ -49,7 +38,3 @@
 
 ## https://github.com/xamarin/xamarin-macios/issues/3213 should be fixed before conformance to 'AVQueuedSampleBufferRendering' is restored.
 !missing-protocol-conformance! AVSampleBufferDisplayLayer should conform to AVQueuedSampleBufferRendering (defined in 'AVSampleBufferDisplayLayerQueueManagement' category)
-
-### moved from macOS-AVFoundation.todo
-!missing-selector! AVPlayerItem::preferredMaximumResolution not bound
-!missing-selector! AVPlayerItem::setPreferredMaximumResolution: not bound
