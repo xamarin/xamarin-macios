@@ -641,6 +641,7 @@ namespace xharness
 				TestName = "Install Sources tests",
 				Mode = "iOS",
 				Timeout = TimeSpan.FromMinutes (60),
+				Ignored = !IncludeMac && !IncludeSimulator,
 			};
 			Tasks.Add (nunitExecutionInstallSource);
 
