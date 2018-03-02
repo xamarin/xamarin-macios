@@ -3034,6 +3034,43 @@ class Test {
 		}
 
 		[Test]
+		public void ExtensionsWithSharedLibrary ()
+		{
+			using (var tool = new MTouchTool ()) {
+				tool.CreateTemporaryApp ();
+				tool.CreateTemporaryCacheDirectory ();
+				tool.Linker = MTouchLinker.LinkSdk;
+
+				var tmpdir = tool.CreateTemporaryDirectory ();
+				var dll = CompileTestAppLibrary (tmpdir, "public class L {}", appName: "commonTestLibrary");
+
+				using (var ext1 = new MTouchTool ()) {
+					ext1.References = new string [] { dll };
+					ext1.CreateTemporaryCacheDirectory ();
+					ext1.CreateTemporaryTodayExtension (extraCode: "class E1 : L {}", extraArg: $"-r:{StringUtils.Quote (dll)}");
+					ext1.Linker = MTouchLinker.LinkSdk;
+					tool.AppExtensions.Add (ext1);
+
+					using (var ext2 = new MTouchTool ()) {
+						ext2.References = new string [] { dll };
+						ext2.CreateTemporaryCacheDirectory ();
+						ext2.CreateTemporaryServiceExtension (extraCode: "class E1 : L {}", extraArg: $"-r:{StringUtils.Quote (dll)}");
+						ext2.Linker = MTouchLinker.LinkSdk;
+						tool.AppExtensions.Add (ext2);
+
+						ext2.AssertExecute (MTouchAction.BuildDev, "ext 2 build");
+						ext1.AssertExecute (MTouchAction.BuildDev, "ext 1 build");
+						tool.AssertExecute (MTouchAction.BuildDev, "main build");
+
+						Assert.That (Path.Combine (ext1.AppPath, Path.GetFileName (dll)), Does.Not.Exist, "ext1 existence");
+						Assert.That (Path.Combine (ext2.AppPath, Path.GetFileName (dll)), Does.Not.Exist, "ext2 existence");
+						Assert.That (Path.Combine (tool.AppPath, Path.GetFileName (dll)), Does.Exist, "existence");
+					}
+				}
+			}
+		}
+
+		[Test]
 		public void LinkWithNoLibrary ()
 		{
 			using (var tool = new MTouchTool ()) {

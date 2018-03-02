@@ -2109,7 +2109,7 @@ namespace Xamarin.Bundler {
 				var size_specific = assemblies.Length > 1 && !Cache.CompareAssemblies (assemblies [0].FullPath, assemblies [1].FullPath, true, true);
 
 				if (IsExtension && !IsWatchExtension) {
-					var codeShared = assemblies.Count ((v) => v.IsCodeShared);
+					var codeShared = assemblies.Count ((v) => v.IsCodeShared || v.BundleInContainerApp);
 					if (codeShared > 0) {
 						if (codeShared != assemblies.Length)
 							throw ErrorHelper.CreateError (99, $"Internal error: all assemblies in a joined build target must have the same code sharing options ({string.Join (", ", assemblies.Select ((v) => v.Identity + "=" + v.IsCodeShared))}). Please file a bug report with a test case (http://bugzilla.xamarin.com).");
