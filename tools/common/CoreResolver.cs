@@ -102,17 +102,17 @@ namespace Xamarin.Bundler {
 			return assembly;
 		}
 
-		protected AssemblyDefinition SearchDirectory (string name, string directory, string extension = ".dll", bool recursive = false)
+		protected AssemblyDefinition SearchDirectory (string name, string directory, string extension = ".dll")
 		{
-			var file = DirectoryGetFile (directory, name + extension, recursive);
+			var file = DirectoryGetFile (directory, name + extension);
 			if (file.Length > 0)
 				return Load (file);
 			return null;
 		}
 
-		static string DirectoryGetFile (string directory, string file, bool recursive)
+		static string DirectoryGetFile (string directory, string file)
 		{
-			var files = Directory.GetFiles (directory, file, recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+			var files = Directory.GetFiles (directory, file);
 			if (files != null && files.Length > 0) {
 				if (files.Length > 1) {
 					ErrorHelper.Warning (133, "Found more than 1 assembly matching '{0}', choosing first:{1}{2}", file, Environment.NewLine, string.Join ("\n", files));

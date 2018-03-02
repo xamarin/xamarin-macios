@@ -526,10 +526,10 @@ namespace Xamarin.Bundler {
 			var resolver = new PlatformResolver () {
 				FrameworkDirectory = Driver.GetPlatformFrameworkDirectory (this),
 				RootDirectory = Path.GetDirectoryName (RootAssembly),
-			};
 #if MMP
-			resolver.RecursiveSearchDirectories.AddRange (Driver.RecursiveSearchDirectories);
+				CommandLineAssemblies = RootAssemblies,
 #endif
+			};
 
 			if (Platform == ApplePlatform.iOS || Platform == ApplePlatform.MacOSX) {
 				if (Is32Build) {
