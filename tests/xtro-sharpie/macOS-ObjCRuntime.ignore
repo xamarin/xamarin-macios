@@ -18,6 +18,6 @@
 !unknown-pinvoke! aslresponse_free bound
 !unknown-pinvoke! aslresponse_next bound
 
+## used in src/Darwin/KernelNotification.cs
 !unknown-pinvoke! kevent bound
 !unknown-pinvoke! kqueue bound
-!unknown-pinvoke! close bound
