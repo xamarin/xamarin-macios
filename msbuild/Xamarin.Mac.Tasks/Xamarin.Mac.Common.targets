@@ -60,42 +60,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
 
-	<PropertyGroup Condition="'$(XamarinMacFrameworkRoot)' == ''">
-		<XamarinMacFrameworkRoot>/Library/Frameworks/Xamarin.Mac.framework/Versions/Current</XamarinMacFrameworkRoot>
-	</PropertyGroup>
-
-	<Choose>
-		<When Condition=" '$(TargetFrameworkIdentifier)' == 'Xamarin.Mac'">
-			<PropertyGroup>
-				<TargetFrameworkName>Modern</TargetFrameworkName>
-				<MacBclPath>$(XamarinMacFrameworkRoot)/lib/mono/Xamarin.Mac</MacBclPath>
-			</PropertyGroup>
-		</When>
-		<When Condition=" '$(TargetFrameworkIdentifier)' != 'Xamarin.Mac' And '$(UseXamMacFullFramework)' == 'true'">
-			<PropertyGroup>
-				<TargetFrameworkName>Full</TargetFrameworkName>
-				<MacBclPath>$(XamarinMacFrameworkRoot)/lib/mono/4.5</MacBclPath>
-			</PropertyGroup>
-		</When>
-		<Otherwise>
-			<PropertyGroup>
-				<TargetFrameworkName>System</TargetFrameworkName>
-				<MacBclPath>$(XamarinMacFrameworkRoot)/lib/mono/4.5</MacBclPath>
-			</PropertyGroup>
-		</Otherwise>
-	</Choose>
-
-	<PropertyGroup Condition="'$(TargetFrameworkName)' == 'Full'">
-		<AssemblySearchPaths>$(XamarinMacFrameworkRoot)/lib/reference/full;$(XamarinMacFrameworkRoot)/lib/mono;$(AssemblySearchPaths)</AssemblySearchPaths>
-		<ImplicitlyExpandNETStandardFacades>False</ImplicitlyExpandNETStandardFacades>
-	</PropertyGroup>
-
-	<!-- Do not resolve from the GAC in Modern or Full unless allow-unsafe-gac-resolution is passed in -->
-	<PropertyGroup Condition="'$(TargetFrameworkName)' != 'System' And !$(MonoBundlingExtraArgs.Contains('--allow-unsafe-gac-resolution'))" >
-		<AssemblySearchPaths>$([System.String]::Copy('$(AssemblySearchPaths)').Replace('{GAC}',''))</AssemblySearchPaths>
-		<AssemblySearchPaths Condition="'$(MSBuildRuntimeVersion)' != ''">$(AssemblySearchPaths.Split(';'))</AssemblySearchPaths>
-	</PropertyGroup>
-
 	<Target Name="FixDesignTimeFacades" AfterTargets="GetReferenceAssemblyPaths" Condition="'$(OS)' != 'Windows_NT'" />
 
 	<!-- Location of Libraries -->
