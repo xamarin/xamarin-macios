@@ -1531,6 +1531,26 @@ public class B : A {}
 		}
 
 		[Test]
+		public void MT0113_dynamicregistrarremoval ()
+		{
+			using (var extension = new MTouchTool ()) {
+				extension.CreateTemporaryServiceExtension ();
+				extension.CreateTemporaryCacheDirectory ();
+				extension.Abi = "arm64";
+				extension.Optimize = new string [] { "remove-dynamic-registrar" };
+				extension.AssertExecute (MTouchAction.BuildDev, "build extension");
+				using (var app = new MTouchTool ()) {
+					app.AppExtensions.Add (extension);
+					app.CreateTemporaryApp ();
+					app.CreateTemporaryCacheDirectory ();
+					app.WarnAsError = new int [] { 113 };
+					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
+					app.AssertError (113, "Native code sharing has been disabled for the extension 'testServiceExtension' because the remove-dynamic-registrar optimization differ between the container app (true) and the extension (default).");
+				}
+			}
+		}
+
+		[Test]
 		public void CodeSharingExactContentsDifferentPaths ()
 		{
 			// Test that we allow code sharing when the exact same assembly (based on file content)
@@ -2301,7 +2321,7 @@ public class TestApp {
 					var mono_framework = Path.Combine (app.AppPath, "Frameworks", "Mono.framework", "Mono");
 					Assert.That (mono_framework, Does.Exist, "mono framework existence");
 					// Verify that mtouch removed armv7s from the framework.
-					Assert.That (GetArchitectures (mono_framework), Is.EquivalentTo (new [] { "armv7", "arm64" }), "mono framework architectures");
+					Assert.That (MachO.GetArchitectures (mono_framework), Is.EquivalentTo (new [] { "armv7", "arm64" }), "mono framework architectures");
 				}
 			}
 		}
@@ -3010,6 +3030,43 @@ class Test {
 				}
 
 				Assert.AreEqual (0, tool.Execute (MTouchAction.BuildDev), "cached build");
+			}
+		}
+
+		[Test]
+		public void ExtensionsWithSharedLibrary ()
+		{
+			using (var tool = new MTouchTool ()) {
+				tool.CreateTemporaryApp ();
+				tool.CreateTemporaryCacheDirectory ();
+				tool.Linker = MTouchLinker.LinkSdk;
+
+				var tmpdir = tool.CreateTemporaryDirectory ();
+				var dll = CompileTestAppLibrary (tmpdir, "public class L {}", appName: "commonTestLibrary");
+
+				using (var ext1 = new MTouchTool ()) {
+					ext1.References = new string [] { dll };
+					ext1.CreateTemporaryCacheDirectory ();
+					ext1.CreateTemporaryTodayExtension (extraCode: "class E1 : L {}", extraArg: $"-r:{StringUtils.Quote (dll)}");
+					ext1.Linker = MTouchLinker.LinkSdk;
+					tool.AppExtensions.Add (ext1);
+
+					using (var ext2 = new MTouchTool ()) {
+						ext2.References = new string [] { dll };
+						ext2.CreateTemporaryCacheDirectory ();
+						ext2.CreateTemporaryServiceExtension (extraCode: "class E1 : L {}", extraArg: $"-r:{StringUtils.Quote (dll)}");
+						ext2.Linker = MTouchLinker.LinkSdk;
+						tool.AppExtensions.Add (ext2);
+
+						ext2.AssertExecute (MTouchAction.BuildDev, "ext 2 build");
+						ext1.AssertExecute (MTouchAction.BuildDev, "ext 1 build");
+						tool.AssertExecute (MTouchAction.BuildDev, "main build");
+
+						Assert.That (Path.Combine (ext1.AppPath, Path.GetFileName (dll)), Does.Not.Exist, "ext1 existence");
+						Assert.That (Path.Combine (ext2.AppPath, Path.GetFileName (dll)), Does.Not.Exist, "ext2 existence");
+						Assert.That (Path.Combine (tool.AppPath, Path.GetFileName (dll)), Does.Exist, "existence");
+					}
+				}
 			}
 		}
 
@@ -4032,7 +4089,7 @@ public class TestApp {
 
 		static void VerifyArchitectures (string file, string message, params string[] expected)
 		{
-			var actual = GetArchitectures (file).ToArray ();
+			var actual = MachO.GetArchitectures (file).ToArray ();
 
 			Array.Sort (expected);
 			Array.Sort (actual);
@@ -4059,74 +4116,6 @@ public class TestApp {
 				text.AppendFormat ("Expected error/warning not shown ({0}):\n\t{1}\n", msg, a);
 			if (text.Length != 0)
 				Assert.Fail (text.ToString ());
-		}
-
-		static List<string> GetArchitectures (string file)
-		{
-			var result = new List<string> ();
-
-			using (var fs = File.OpenRead (file)) {
-				using (var reader = new BinaryReader (fs)) {
-					int magic = reader.ReadInt32 ();
-					switch ((uint) magic) {
-					case 0xCAFEBABE: // little-endian fat binary
-						throw new NotImplementedException ("little endian fat binary");
-					case 0xBEBAFECA:
-						int architectures = System.Net.IPAddress.NetworkToHostOrder (reader.ReadInt32 ());
-						for (int i = 0; i < architectures; i++) {
-							result.Add (GetArch (System.Net.IPAddress.NetworkToHostOrder (reader.ReadInt32 ()), System.Net.IPAddress.NetworkToHostOrder (reader.ReadInt32 ())));
-							// skip to next entry
-							reader.ReadInt32 (); // offset
-							reader.ReadInt32 (); // size
-							reader.ReadInt32 (); // align
-						}
-						break;
-					case 0xFEEDFACE: // little-endian mach-o header
-					case 0xFEEDFACF: // little-endian 64-big mach-o header
-						result.Add (GetArch (reader.ReadInt32 (), reader.ReadInt32 ()));
-						break;
-					case 0xCFFAEDFE:
-					case 0xCEFAEDFE:
-						result.Add (GetArch (System.Net.IPAddress.NetworkToHostOrder (reader.ReadInt32 ()), System.Net.IPAddress.NetworkToHostOrder (reader.ReadInt32 ())));
-						break;
-					default:
-						throw new Exception (string.Format ("File '{0}' is neither a Universal binary nor a Mach-O binary (magic: 0x{1})", file, magic.ToString ("x")));
-					}
-				}
-			}
-
-			return result;
-		}
-
-		static string GetArch (int cputype, int cpusubtype)
-		{
-			const int ABI64 = 0x01000000;
-			const int X86 = 7;
-			const int ARM = 12;
-
-			switch (cputype) {
-			case ARM : // arm
-				switch (cpusubtype) {
-				case 6: return "armv6";
-				case 9: return "armv7";
-				case 11: return "armv7s";
-				default:
-					return "unknown arm variation: " + cpusubtype.ToString ();
-				}
-			case ARM  | ABI64:
-				switch (cpusubtype) {
-				case 0:
-					return "arm64";
-				default:
-					return "unknown arm/64 variation: " + cpusubtype.ToString ();
-				}
-			case X86: // x86
-				return "i386";
-			case X86 | ABI64: // x64
-				return "x86_64";
-			}
-
-			return string.Format ("unknown: {0}/{1}", cputype, cpusubtype);
 		}
 
 		public static void AssertDeviceAvailable ()

@@ -1325,6 +1325,8 @@ To remove the warning either remove the optimization argument to mtouch, or pass
 By default this option will be automatically enabled whenever it's possible
 and safe to do so.
 
+<!-- 2018 used by mmp -->
+
 # MT3xxx: AOT error messages
 
 <!--
@@ -1979,6 +1981,7 @@ An error occurred when signing the application. Please review the build log to s
 <!-- 5308 is used by mmp -->
 <!-- 5309 is used by mmp -->
 <!-- 5310 is used by mmp -->
+<!-- 5311 is used by mmp -->
 
 # MT6xxx: mtouch internal tools error messages
 

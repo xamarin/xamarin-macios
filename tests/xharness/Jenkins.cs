@@ -16,6 +16,7 @@ namespace xharness
 		bool populating = true;
 
 		public Harness Harness;
+		public bool IncludeAll;
 		public bool IncludeClassicMac = true;
 		public bool IncludeBcl;
 		public bool IncludeMac = true;
@@ -156,6 +157,7 @@ namespace xharness
 			public bool Profiling;
 			public string LinkMode;
 			public string Defines;
+			public bool Ignored;
 		}
 
 		IEnumerable<TestData> GetTestData (RunTestTask test)
@@ -177,6 +179,7 @@ namespace xharness
 				switch (test.TestName) {
 				case "monotouch-test":
 					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, Defines = "OPTIMIZEALL" };
+					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = true, Profiling = false, Defines = "OPTIMIZEALL" };
 					break;
 				}
 				break;
@@ -186,6 +189,7 @@ namespace xharness
 					// The default is to run monotouch-test with the dynamic registrar (in the simulator), so that's already covered
 					yield return new TestData { Variation = "Debug (static registrar)", MTouchExtraArgs = "--registrar:static", Debug = true, Profiling = false };
 					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, LinkMode = "Full", Defines = "LINKALL;OPTIMIZEALL" };
+					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, Profiling = false, LinkMode = "Full", Defines = "LINKALL;OPTIMIZEALL", Ignored = !IncludeAll };
 					break;
 				}
 				break;
@@ -193,8 +197,14 @@ namespace xharness
 			case "x86":
 				switch (test.TestName) {
 				case "xammac tests":
-					if (test.ProjectConfiguration == "Release")
-						yield return new TestData { Variation = "Release (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all", Debug = false, LinkMode = "Full", Defines = "LINKALL;OPTIMIZEALL" };
+					switch (test.ProjectConfiguration) {
+					case "Release":
+						yield return new TestData { Variation = "Release (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all", Debug = false, LinkMode = "Full", Defines = "LINKALL;OPTIMIZEALL"};
+						break;
+					case "Debug":
+						yield return new TestData { Variation = "Release (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, LinkMode = "Full", Defines = "LINKALL;OPTIMIZEALL", Ignored = !IncludeAll };
+						break;
+					}
 					break;
 				}
 				break;
@@ -221,6 +231,7 @@ namespace xharness
 					var profiling = test_data.Profiling;
 					var link_mode = test_data.LinkMode;
 					var defines = test_data.Defines;
+					var ignored = test_data.Ignored;
 
 					var clone = task.TestProject.Clone ();
 					var clone_task = Task.Run (async () => {
@@ -245,8 +256,16 @@ namespace xharness
 							clone.Xml.AddMonoBundlingExtraArgs (bundling_extra_args, task.ProjectPlatform, configuration);
 						if (!string.IsNullOrEmpty (link_mode))
 							clone.Xml.SetNode (isMac ? "LinkMode" : "MtouchLink", link_mode, task.ProjectPlatform, configuration);
-						if (!string.IsNullOrEmpty (defines))
+						if (!string.IsNullOrEmpty (defines)) {
 							clone.Xml.AddAdditionalDefines (defines, task.ProjectPlatform, configuration);
+							if (clone.ProjectReferences != null) {
+								foreach (var pr in clone.ProjectReferences) {
+									pr.Xml.AddAdditionalDefines (defines, task.ProjectPlatform, configuration);
+									pr.Xml.Save (pr.Path);
+								}
+							}
+							
+						}
 						clone.Xml.SetNode (isMac ? "Profiling" : "MTouchProfiling", profiling ? "True" : "False", task.ProjectPlatform, configuration);
 
 						if (!debug && !isMac)
@@ -265,7 +284,7 @@ namespace xharness
 					};
 					T newVariation = creator (build, task);
 					newVariation.Variation = variation;
-					newVariation.Ignored = task.Ignored;
+					newVariation.Ignored = task.Ignored || ignored;
 					rv.Add (newVariation);
 				}
 			}
@@ -538,6 +557,7 @@ namespace xharness
 			SetEnabled (labels, "ios-extensions", ref IncludeiOSExtensions);
 			SetEnabled (labels, "ios-device", ref IncludeDevice);
 			SetEnabled (labels, "xtro", ref IncludeXtro);
+			SetEnabled (labels, "all", ref IncludeAll);
 
 			// enabled by default
 			SetEnabled (labels, "ios", ref IncludeiOS);
@@ -738,12 +758,17 @@ namespace xharness
 				Jenkins = this,
 				Platform = TestPlatform.Mac,
 				TestName = "MMP Regression Tests",
-				Target = "all -j" + Environment.ProcessorCount,
+				Target = "all", // -j" + Environment.ProcessorCount,
 				WorkingDirectory = Path.Combine (Harness.RootDirectory, "mmptest", "regression"),
 				Ignored = !IncludeMmpTest || !IncludeMac,
 				Timeout = TimeSpan.FromMinutes (30),
 				SupportsParallelExecution = false, // Already doing parallel execution by running "make -jX"
 			};
+			run_mmp.CompletedTask = new Task (() =>
+			{
+				foreach (var log in Directory.GetFiles (Path.GetFullPath (run_mmp.WorkingDirectory), "*.log", SearchOption.AllDirectories))
+					run_mmp.Logs.AddFile (log, log.Substring (run_mmp.WorkingDirectory.Length + 1));
+			});
 			run_mmp.Environment.Add ("BUILD_REVISION", "jenkins"); // This will print "@MonkeyWrench: AddFile: <log path>" lines, which we can use to get the log filenames.
 			Tasks.Add (run_mmp);
 
@@ -1980,21 +2005,25 @@ function oninitialload ()
 												var failures = doc.SelectNodes ("//test-case[@result='Error' or @result='Failure']").Cast<System.Xml.XmlNode> ().ToArray ();
 												if (failures.Length > 0) {
 													writer.WriteLine ("<div style='padding-left: 15px;'>");
+													writer.WriteLine ("<ul>");
 													foreach (var failure in failures) {
+														writer.WriteLine ("<li>");
 														var test_name = failure.Attributes ["name"]?.Value;
 														var message = failure.SelectSingleNode ("failure/message")?.InnerText;
 														writer.Write (System.Web.HttpUtility.HtmlEncode (test_name));
 														if (!string.IsNullOrEmpty (message)) {
 															writer.Write (": ");
-															writer.Write (System.Web.HttpUtility.HtmlEncode (message));
+															writer.Write (HtmlFormat (message));
 														}
 														writer.WriteLine ("<br />");
+														writer.WriteLine ("</li>");
 													}
+													writer.WriteLine ("</ul>");
 													writer.WriteLine ("</div>");
 												}
 											}
 										} catch (Exception ex) {
-											writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {System.Web.HttpUtility.HtmlEncode (ex.Message)}</span><br />");
+											writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {HtmlFormat (ex.Message)}</span><br />");
 										}
 									}
 								}
@@ -2014,6 +2043,12 @@ function oninitialload ()
 			}
 		}
 		Dictionary<Log, Tuple<long, object>> log_data = new Dictionary<Log, Tuple<long, object>> ();
+
+		static string HtmlFormat (string value)
+		{
+			var rv = System.Web.HttpUtility.HtmlEncode (value);
+			return rv.Replace ("\t", "&nbsp;&nbsp;&nbsp;&nbsp;").Replace ("\n", "<br/>\n");
+		}
 
 		static string LinkEncode (string path)
 		{
@@ -2059,6 +2094,7 @@ function oninitialload ()
 		public Dictionary<string, string> Environment = new Dictionary<string, string> ();
 
 		public Task InitialTask; // a task that's executed before this task's ExecuteAsync method.
+		public Task CompletedTask; // a task that's executed after this task's ExecuteAsync method.
 
 		public void CloneTestProject (TestProject project)
 		{
@@ -2232,6 +2268,12 @@ function oninitialload ()
 
 				execute_task = ExecuteAsync ();
 				await execute_task;
+
+				if (CompletedTask != null) {
+					if (CompletedTask.Status == TaskStatus.Created)
+						CompletedTask.Start ();
+					await CompletedTask;
+				}
 
 				ExecutionResult = (ExecutionResult & ~TestExecutingResult.StateMask) | TestExecutingResult.Finished;
 				if ((ExecutionResult & ~TestExecutingResult.StateMask) == 0)

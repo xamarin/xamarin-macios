@@ -33,6 +33,7 @@ namespace Xamarin.Bundler {
 		public AssemblyBuildTarget BuildTarget;
 		public string BuildTargetName;
 		public bool IsCodeShared;
+		public bool BundleInContainerApp;
 
 		public Dictionary<Abi, AotInfo> AotInfos = new Dictionary<Abi, AotInfo> ();
 

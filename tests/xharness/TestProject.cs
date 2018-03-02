@@ -19,6 +19,8 @@ namespace xharness
 		public bool GenerateVariations = true;
 		public string [] Configurations;
 
+		public IEnumerable<TestProject> ProjectReferences;
+
 		public TestProject ()
 		{
 		}
@@ -110,7 +112,8 @@ namespace xharness
 			XmlDocument doc;
 			doc = new XmlDocument ();
 			doc.LoadWithoutNetworkAccess (original_path);
-			if (System.IO.Path.GetFileName (original_path).Contains ("GuiUnit_NET")) {
+			var original_name = System.IO.Path.GetFileName (original_path);
+			if (original_name.Contains ("GuiUnit_NET") || original_name.Contains ("GuiUnit_xammac_mobile")) {
 				// The GuiUnit project files writes stuff outside their project directory using relative paths,
 				// but override that so that we don't end up with multiple cloned projects writing stuff to
 				// the same location.
@@ -119,11 +122,14 @@ namespace xharness
 			}
 			doc.ResolveAllPaths (original_path);
 
+			var projectReferences = new List<TestProject> ();
 			foreach (var pr in doc.GetProjectReferences ()) {
 				var tp = new TestProject (pr.Replace ('\\', '/'));
 				await tp.CreateCopyAsync (test);
 				doc.SetProjectReferenceInclude (pr, tp.Path.Replace ('/', '\\'));
+				projectReferences.Add (tp);
 			}
+			this.ProjectReferences = projectReferences;
 
 			doc.Save (Path);
 		}
