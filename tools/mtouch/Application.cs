@@ -25,25 +25,6 @@ namespace Xamarin.Bundler {
 		MarkerOnly = 3,
 	}
 
-	[Flags]
-	public enum Abi {
-		None   =   0,
-		i386   =   1,
-		ARMv6  =   2,
-		ARMv7  =   4,
-		ARMv7s =   8,
-		ARM64 =   16,
-		x86_64 =  32,
-		Thumb  =  64,
-		LLVM   = 128,
-		ARMv7k = 256,
-		SimulatorArchMask = i386 | x86_64,
-		DeviceArchMask = ARMv6 | ARMv7 | ARMv7s | ARMv7k | ARM64,
-		ArchMask = SimulatorArchMask | DeviceArchMask,
-		Arch64Mask = x86_64 | ARM64,
-		Arch32Mask = i386 | ARMv6 | ARMv7 | ARMv7s | ARMv7k,
-	}
-
 	public static class AbiExtensions {
 		public static string AsString (this Abi self)
 		{
@@ -973,6 +954,16 @@ namespace Xamarin.Bundler {
 
 				if (BitCodeMode != appex.BitCodeMode) {
 					ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the bitcode options differ between the container app ({appex.BitCodeMode}) and the extension ({BitCodeMode}).");
+					continue;
+				}
+
+				if (Optimizations.RemoveDynamicRegistrar != appex.Optimizations.RemoveDynamicRegistrar) {
+					Func<bool?, string> bool_tostr = (v) => {
+						if (!v.HasValue)
+							return "default";
+						return v.Value ? "true" : "false";
+					};
+					ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the remove-dynamic-registrar optimization differ between the container app ({bool_tostr (appex.Optimizations.RemoveDynamicRegistrar)}) and the extension ({bool_tostr (Optimizations.RemoveDynamicRegistrar)}).");
 					continue;
 				}
 
@@ -2118,7 +2109,7 @@ namespace Xamarin.Bundler {
 				var size_specific = assemblies.Length > 1 && !Cache.CompareAssemblies (assemblies [0].FullPath, assemblies [1].FullPath, true, true);
 
 				if (IsExtension && !IsWatchExtension) {
-					var codeShared = assemblies.Count ((v) => v.IsCodeShared);
+					var codeShared = assemblies.Count ((v) => v.IsCodeShared || v.BundleInContainerApp);
 					if (codeShared > 0) {
 						if (codeShared != assemblies.Length)
 							throw ErrorHelper.CreateError (99, $"Internal error: all assemblies in a joined build target must have the same code sharing options ({string.Join (", ", assemblies.Select ((v) => v.Identity + "=" + v.IsCodeShared))}). Please file a bug report with a test case (http://bugzilla.xamarin.com).");

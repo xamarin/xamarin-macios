@@ -1173,6 +1173,9 @@ namespace Xamarin.Bundler {
 			CreateDirectoryIfNeeded (frameworks_dir);
 			Application.UpdateDirectory (framework, frameworks_dir);
 			frameworks_copied_to_bundle_dir = true;
+
+			if (App.Optimizations.TrimArchitectures == true)
+				LipoLibrary (framework, Path.Combine (name, Path.Combine (frameworks_dir, name + ".framework", name)));
 		}
 
 		static int Compile ()
@@ -1634,7 +1637,7 @@ namespace Xamarin.Bundler {
 			if (ignored_assemblies.Contains (library))
 				return;
 
-			// If we're as passed in framework, ignore
+			// If we're passed in a framework, ignore
 			if (App.Frameworks.Contains (library))
 				return;
 
@@ -1697,6 +1700,11 @@ namespace Xamarin.Bundler {
 			}
 
 			bool isStaticLib = real_src.EndsWith (".a", StringComparison.Ordinal);
+			bool isDynamicLib = real_src.EndsWith (".dylib", StringComparison.Ordinal);
+
+			if (isDynamicLib && App.Optimizations.TrimArchitectures == true)
+				LipoLibrary (name, dest);
+
 			if (native_references.Contains (real_src)) {
 				if (!isStaticLib) {
 					int ret = XcodeRun ("install_name_tool -id", string.Format ("{0} {1}", StringUtils.Quote("@executable_path/../" + BundleName + "/" + name), StringUtils.Quote(dest)));
@@ -1724,6 +1732,21 @@ namespace Xamarin.Bundler {
 						ProcessNativeLibrary (processed, lib, null);
 				}
 			}
+		}
+
+		static void LipoLibrary (string name, string dest)
+		{
+			var existingArchs = Xamarin.MachO.GetArchitectures (dest);
+			// If we have less than two, it will either match by default or 
+			// we'll fail a link/launch time with a better error so bail
+			if (existingArchs.Count () < 2)
+				return;
+
+			int ret = XcodeRun ("lipo", $"{StringUtils.Quote (dest)} -thin {arch} -output {StringUtils.Quote (dest)}");
+			if (ret != 0)
+				throw new MonoMacException (5311, true, "lipo failed with an error code '{0}'. Check build log for details.", ret);
+			if (name != "MonoPosixHelper")
+				ErrorHelper.Warning (2108, $"{name} was stripped of architectures except {arch} to comply with App Store restrictions. This could break exisiting codesigning signatures. Consider stripping the library with lipo or disabling with --optimize=-trim-architectures");
 		}
 
 		static void CreateSymLink (string directory, string real, string link)
@@ -1865,10 +1888,10 @@ namespace Xamarin.Bundler {
 				if (App.EnableDebug) {
 					var mdbfile = asm + ".mdb";
 					if (File.Exists (mdbfile))
-						File.Copy (mdbfile, Path.Combine (mmp_dir, Path.GetFileName (mdbfile)), true);
+						CopyFileAndRemoveReadOnly (mdbfile, Path.Combine (mmp_dir, Path.GetFileName (mdbfile)));
 					var pdbfile = Path.ChangeExtension (asm, ".pdb");
 					if (File.Exists (pdbfile))
-						File.Copy (pdbfile, Path.Combine (mmp_dir, Path.GetFileName (pdbfile)), true);
+						CopyFileAndRemoveReadOnly (pdbfile, Path.Combine (mmp_dir, Path.GetFileName (pdbfile)));
 				}
 				if (File.Exists (configfile))
 					File.Copy (configfile, Path.Combine (mmp_dir, Path.GetFileName (configfile)), true);

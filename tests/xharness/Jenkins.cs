@@ -758,12 +758,17 @@ namespace xharness
 				Jenkins = this,
 				Platform = TestPlatform.Mac,
 				TestName = "MMP Regression Tests",
-				Target = "all -j" + Environment.ProcessorCount,
+				Target = "all", // -j" + Environment.ProcessorCount,
 				WorkingDirectory = Path.Combine (Harness.RootDirectory, "mmptest", "regression"),
 				Ignored = !IncludeMmpTest || !IncludeMac,
 				Timeout = TimeSpan.FromMinutes (30),
 				SupportsParallelExecution = false, // Already doing parallel execution by running "make -jX"
 			};
+			run_mmp.CompletedTask = new Task (() =>
+			{
+				foreach (var log in Directory.GetFiles (Path.GetFullPath (run_mmp.WorkingDirectory), "*.log", SearchOption.AllDirectories))
+					run_mmp.Logs.AddFile (log, log.Substring (run_mmp.WorkingDirectory.Length + 1));
+			});
 			run_mmp.Environment.Add ("BUILD_REVISION", "jenkins"); // This will print "@MonkeyWrench: AddFile: <log path>" lines, which we can use to get the log filenames.
 			Tasks.Add (run_mmp);
 
@@ -2000,21 +2005,25 @@ function oninitialload ()
 												var failures = doc.SelectNodes ("//test-case[@result='Error' or @result='Failure']").Cast<System.Xml.XmlNode> ().ToArray ();
 												if (failures.Length > 0) {
 													writer.WriteLine ("<div style='padding-left: 15px;'>");
+													writer.WriteLine ("<ul>");
 													foreach (var failure in failures) {
+														writer.WriteLine ("<li>");
 														var test_name = failure.Attributes ["name"]?.Value;
 														var message = failure.SelectSingleNode ("failure/message")?.InnerText;
 														writer.Write (System.Web.HttpUtility.HtmlEncode (test_name));
 														if (!string.IsNullOrEmpty (message)) {
 															writer.Write (": ");
-															writer.Write (System.Web.HttpUtility.HtmlEncode (message));
+															writer.Write (HtmlFormat (message));
 														}
 														writer.WriteLine ("<br />");
+														writer.WriteLine ("</li>");
 													}
+													writer.WriteLine ("</ul>");
 													writer.WriteLine ("</div>");
 												}
 											}
 										} catch (Exception ex) {
-											writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {System.Web.HttpUtility.HtmlEncode (ex.Message)}</span><br />");
+											writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {HtmlFormat (ex.Message)}</span><br />");
 										}
 									}
 								}
@@ -2034,6 +2043,12 @@ function oninitialload ()
 			}
 		}
 		Dictionary<Log, Tuple<long, object>> log_data = new Dictionary<Log, Tuple<long, object>> ();
+
+		static string HtmlFormat (string value)
+		{
+			var rv = System.Web.HttpUtility.HtmlEncode (value);
+			return rv.Replace ("\t", "&nbsp;&nbsp;&nbsp;&nbsp;").Replace ("\n", "<br/>\n");
+		}
 
 		static string LinkEncode (string path)
 		{
@@ -2079,6 +2094,7 @@ function oninitialload ()
 		public Dictionary<string, string> Environment = new Dictionary<string, string> ();
 
 		public Task InitialTask; // a task that's executed before this task's ExecuteAsync method.
+		public Task CompletedTask; // a task that's executed after this task's ExecuteAsync method.
 
 		public void CloneTestProject (TestProject project)
 		{
@@ -2252,6 +2268,12 @@ function oninitialload ()
 
 				execute_task = ExecuteAsync ();
 				await execute_task;
+
+				if (CompletedTask != null) {
+					if (CompletedTask.Status == TaskStatus.Created)
+						CompletedTask.Start ();
+					await CompletedTask;
+				}
 
 				ExecutionResult = (ExecutionResult & ~TestExecutingResult.StateMask) | TestExecutingResult.Finished;
 				if ((ExecutionResult & ~TestExecutingResult.StateMask) == 0)

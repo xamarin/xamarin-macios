@@ -11,6 +11,25 @@ using Xamarin.Bundler;
 
 namespace Xamarin
 {
+	[Flags]
+	public enum Abi {
+		None   =   0,
+		i386   =   1,
+		ARMv6  =   2,
+		ARMv7  =   4,
+		ARMv7s =   8,
+		ARM64 =   16,
+		x86_64 =  32,
+		Thumb  =  64,
+		LLVM   = 128,
+		ARMv7k = 256,
+		SimulatorArchMask = i386 | x86_64,
+		DeviceArchMask = ARMv6 | ARMv7 | ARMv7s | ARMv7k | ARM64,
+		ArchMask = SimulatorArchMask | DeviceArchMask,
+		Arch64Mask = x86_64 | ARM64,
+		Arch32Mask = i386 | ARMv6 | ARMv7 | ARMv7s | ARMv7k,
+	}
+
 	public class MachO
 	{
 		/* definitions from: /usr/include/mach-o/loader.h */
@@ -305,7 +324,6 @@ namespace Xamarin
 			return result;
 		}
 
-#if MTOUCH
 		public static List<Abi> GetArchitectures (string file)
 		{
 			var result = new List<Abi> ();
@@ -409,7 +427,6 @@ namespace Xamarin
 			
 			return true;
 		}
-#endif
 	}
 
 	public class StaticLibrary

@@ -24,6 +24,11 @@ namespace Xamarin.Bundler
 #else
 			"", // dummy value to make indices match up between XM and XI
 #endif
+#if MONOTOUCH
+			"", // dummy value to make indices match up between XM and XI
+#else
+			"trim-architectures",
+#endif
 		};
 
 		enum Opt
@@ -38,6 +43,7 @@ namespace Xamarin.Bundler
 			InlineDynamicRegistrationSupported,
 			StaticBlockToDelegateLookup,
 			RemoveDynamicRegistrar,
+			TrimArchitectures,
 		}
 
 		bool? [] values;
@@ -85,6 +91,11 @@ namespace Xamarin.Bundler
 			get { return values [(int) Opt.RemoveDynamicRegistrar]; }
 			set { values [(int) Opt.RemoveDynamicRegistrar] = value; }
 		}
+		
+		public bool? TrimArchitectures {
+			get { return values [(int) Opt.TrimArchitectures]; }
+			set { values [(int) Opt.TrimArchitectures] = value; }
+		}
 
 		public Optimizations ()
 		{
@@ -105,6 +116,8 @@ namespace Xamarin.Bundler
 						continue;
 					}
 					break; // does not require the linker
+				case Opt.TrimArchitectures:
+					break; // Does not require linker
 				case Opt.RegisterProtocols:
 				case Opt.RemoveDynamicRegistrar:
 					if (app.Registrar != RegistrarMode.Static) {
@@ -200,6 +213,12 @@ namespace Xamarin.Bundler
 #endif
 				}
 			}
+
+#if !MONOTOUCH
+			// By default on macOS trim-architectures for Release and not for debug 
+			if (!TrimArchitectures.HasValue)
+				TrimArchitectures = !app.EnableDebug;
+#endif
 
 			if (Driver.Verbosity > 3)
 				Driver.Log (4, "Enabled optimizations: {0}", string.Join (", ", values.Select ((v, idx) => v == true ? opt_names [idx] : string.Empty).Where ((v) => !string.IsNullOrEmpty (v))));
