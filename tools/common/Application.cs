@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
+using Xamarin.Linker;
 using Xamarin.Utils;
 
 using ObjCRuntime;
@@ -433,6 +434,7 @@ namespace Xamarin.Bundler {
 
 		public void InitializeCommon ()
 		{
+			Namespaces.Initialize ();
 			SelectRegistrar ();
 
 			if (RequiresXcodeHeaders && SdkVersion < SdkVersions.GetVersion (Platform)) {

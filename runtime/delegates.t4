@@ -63,7 +63,7 @@
 			"void *", "IntPtr", "block"
 		) {
 			WrappedManagedFunction = "CreateBlockProxy",
-			OnlyDynamicUsage = true,
+			OnlyDynamicUsage = false,
 		},
 
 		new XDelegate ("id", "IntPtr", "xamarin_create_delegate_proxy",

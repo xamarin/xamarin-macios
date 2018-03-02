@@ -2025,9 +2025,6 @@ get_method_block_wrapper_creator (MonoMethod *method, int par, guint32 *exceptio
 	pthread_mutex_lock (&wrapper_hash_lock);
 	MONO_EXIT_GC_SAFE;
 	
-	if (block_wrapper_queue == NULL)
-		block_wrapper_queue = mono_gc_reference_queue_new ((void(*)(void*))_Block_release);
-
 	if (xamarin_wrapper_hash == NULL) {
 		xamarin_wrapper_hash = mono_g_hash_table_new_type (method_and_par_hash, method_and_par_compare, MONO_HASH_VALUE_GC);
 	}
@@ -2071,7 +2068,7 @@ get_method_block_wrapper_creator (MonoMethod *method, int par, guint32 *exceptio
  * Returns: the instantiated delegate.
  */
 int *
-xamarin_get_delegate_for_block_parameter (MonoMethod *method, int par, void *nativeBlock, guint32 *exception_gchandle)
+xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref, int par, void *nativeBlock, guint32 *exception_gchandle)
 {
 	// COOP: accesses managed memory: unsafe mode.
 	MONO_ASSERT_GC_UNSAFE;
@@ -2081,7 +2078,12 @@ xamarin_get_delegate_for_block_parameter (MonoMethod *method, int par, void *nat
 	if (nativeBlock == NULL)
 		return NULL;
 
-	MonoObject *obj = get_method_block_wrapper_creator (method, par, exception_gchandle);
+	MonoObject *obj;
+	if (token_ref != INVALID_TOKEN_REF) {
+		obj = (MonoObject *) xamarin_get_method_from_token (token_ref, exception_gchandle);
+	} else {
+		obj = get_method_block_wrapper_creator (method, par, exception_gchandle);
+	}
 	if (*exception_gchandle != 0)
 		return NULL;
 
@@ -2097,6 +2099,10 @@ xamarin_get_delegate_for_block_parameter (MonoMethod *method, int par, void *nat
 	MONO_ENTER_GC_SAFE;
 	pthread_mutex_lock (&wrapper_hash_lock);
 	MONO_EXIT_GC_SAFE;
+
+	if (block_wrapper_queue == NULL)
+		block_wrapper_queue = mono_gc_reference_queue_new ((void(*)(void*))_Block_release);
+
 	mono_gc_reference_queue_add (block_wrapper_queue, delegate, nativeBlock);
 	pthread_mutex_unlock (&wrapper_hash_lock);
 

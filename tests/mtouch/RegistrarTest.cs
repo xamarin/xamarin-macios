@@ -1293,7 +1293,8 @@ class GenericMethodClass : NSObject {
 				mtouch.Linker = MTouchLinker.DontLink;
 				mtouch.Registrar = MTouchRegistrar.Static;
 				mtouch.AssertExecute ();
-				mtouch.AssertNoWarnings ();
+				mtouch.AssertWarning (4174, "Unable to locate the block to delegate conversion method for the method GenericMethodClass.Foo's parameter #1.", "testApp.cs", 5);
+				mtouch.AssertWarningCount (1);
 			}
 		}
 
