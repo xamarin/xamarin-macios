@@ -113,6 +113,19 @@ It is required to specify a root assembly (typically the main executable) when b
 
 Mtouch does not recognize the command line argument mentioned in the error message.
 
+Sometimes this error happens because of how the argument is formatted in the response file passed to `mtouch`.
+
+Always use the command-line option that takes an equal sign or colon instead of a space.
+
+Do either of these:
+
+	`--foo=something`
+	`--foo:something`
+
+instead of this:
+
+	`--foo something`
+
 ### <a name="MT0019"/>MT0019: Only one --[log|install|kill|launch]dev or --[launch|debug]sim option can be used.
 
 There are several options for mtouch that can't be used simultaneously:
