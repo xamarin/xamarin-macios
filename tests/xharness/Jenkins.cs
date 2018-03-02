@@ -1606,6 +1606,7 @@ function autorefresh()
 					console.log (""Could not find id "" + ar_obj.id + "" in updated page."");
 				}
 			}
+			setTimeout (autorefresh, 1000);
 	    }
 	};
 	xhttp.open(""GET"", window.location.href, true);
@@ -1643,7 +1644,7 @@ function oninitialload ()
 	}
 }");
 				if (IsServerMode)
-					writer.WriteLine ("setInterval (autorefresh, 1000);");
+					writer.WriteLine ("setTimeout (autorefresh, 1000);");
 				writer.WriteLine ("</script>");
 				writer.WriteLine ("</head>");
 				writer.WriteLine ("<body onload='oninitialload ();'>");
