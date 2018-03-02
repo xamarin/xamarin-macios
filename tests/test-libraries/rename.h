@@ -3,6 +3,7 @@
 	#define theUltimateAnswer object_theUltimateAnswer
 	#define useZLib           object_useZLib
 	#define ObjCRegistrarTest object_ObjCRegistrarTest
+	#define ObjCBlockTester   object_ObjCBlockTester
 	#define FakeType2         object_FakeType2
 	#define UltimateMachine   object_UltimateMachine
 	#define FrameworkTest     object_FrameworkTest
@@ -65,6 +66,7 @@
 	#define theUltimateAnswer ar_theUltimateAnswer
 	#define useZLib           ar_useZLib
 	#define ObjCRegistrarTest ar_ObjCRegistrarTest
+	#define ObjCBlockTester   ar_ObjCBlockTester
 	#define FakeType2         ar_FakeType2
 	#define UltimateMachine   ar_UltimateMachine
 	#define FrameworkTest     ar_FrameworkTest

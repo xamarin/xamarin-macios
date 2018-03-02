@@ -2060,7 +2060,11 @@ namespace Registrar {
 							objcType.Add (objcProperty, ref exceptions);
 						}
 					} else {
-						var objcMethod = new ObjCMethod (this, objcType, null) {
+						TMethod method = null;
+#if MTOUCH || MMP
+						method = attrib.Method;
+#endif
+						var objcMethod = new ObjCMethod (this, objcType, method) {
 							Name = attrib.Name,
 							Selector = attrib.Selector,
 							ArgumentSemantic = attrib.ArgumentSemantic,

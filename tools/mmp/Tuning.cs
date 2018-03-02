@@ -74,8 +74,6 @@ namespace MonoMac.Tuner {
 
 		public static void Process (LinkerOptions options, out LinkContext context, out List<string> assemblies)
 		{
-			Namespaces.Initialize ();
-
 			var pipeline = CreatePipeline (options);
 
 			pipeline.PrependStep (new ResolveFromAssemblyStep (options.MainAssembly));
