@@ -65,4 +65,9 @@ namespace Xamarin.Utils {
 			return Version.Parse (v);
 		}
 	}
+
+	static class StringExtensions
+	{
+		public static string [] SplitLines (this string s) => s.Split (new [] { Environment.NewLine }, StringSplitOptions.None);
+	}
 }
