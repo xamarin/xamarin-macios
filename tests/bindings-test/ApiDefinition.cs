@@ -253,6 +253,38 @@ namespace Bindings.Test {
 		[Export ("idAsIntPtr:")]
 		void IdAsIntPtr (IntPtr p1);
 	}
+
+	[Protocol]
+	interface ObjCProtocolBlockTest
+	{
+		[Abstract]
+		[Export ("requiredCallback:")]
+		void RequiredCallback (Action<int> completionHandler);
+
+		[Export ("optionalCallback:")]
+		void OptionalCallback (Action<int> completionHandler);
+	}
+
+	interface IObjCProtocolBlockTest { }
+
+	[BaseType (typeof (NSObject))]
+	interface ObjCBlockTester
+	{
+		[Export ("TestObject", ArgumentSemantic.Retain)]
+		IObjCProtocolBlockTest TestObject { get; set; }
+
+		[Export ("classCallback:")]
+		void ClassCallback (Action<int> completionHandler);
+
+		[Export ("callClassCallback")]
+		void CallClassCallback ();
+
+		[Export ("callRequiredCallback")]
+		void CallRequiredCallback ();
+
+		[Export ("callOptionalCallback")]
+		void CallOptionalCallback ();
+	}
 }
 
 

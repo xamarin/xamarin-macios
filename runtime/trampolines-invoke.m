@@ -224,7 +224,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 						default: {
 							MonoClass *p_klass = mono_class_from_mono_type (p);
 							if (mono_class_is_delegate (p_klass)) {
-								arg_ptrs [i + mofs] = xamarin_get_delegate_for_block_parameter (method, i, arg, &exception_gchandle);
+								arg_ptrs [i + mofs] = xamarin_get_delegate_for_block_parameter (method, INVALID_TOKEN_REF, i, arg, &exception_gchandle);
 								if (exception_gchandle != 0)
 									goto exception_handling;
 							} else if (xamarin_is_class_inativeobject (p_klass)) {
@@ -371,7 +371,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 							LOGZ (" argument %i is NSObject/INativeObject %p: %p\n", i + 1, id_arg, obj);
 							arg_ptrs [i + mofs] = obj;
 						} else if (mono_class_is_delegate (p_klass)) {
-							arg_ptrs [i + mofs] = xamarin_get_delegate_for_block_parameter (method, i, id_arg, &exception_gchandle);
+							arg_ptrs [i + mofs] = xamarin_get_delegate_for_block_parameter (method, INVALID_TOKEN_REF, i, id_arg, &exception_gchandle);
 							if (exception_gchandle != 0)
 								goto exception_handling;
 						} else {

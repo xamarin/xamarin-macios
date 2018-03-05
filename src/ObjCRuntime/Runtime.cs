@@ -783,6 +783,8 @@ namespace ObjCRuntime {
 #endif
 		static MethodInfo GetBlockWrapperCreator (MethodInfo method, int parameter)
 		{
+			// A mirror of this method is also implemented in StaticRegistrar:FindBlockProxyCreatorMethod
+			// If this method is changed, that method will probably have to be updated too (tests!!!)
 			MethodInfo first = method;
 			MethodInfo last = null;
 			Type[] extensionParameters = null;
