@@ -10,7 +10,7 @@ namespace Xamarin.MMP.Tests
 	{
 		static string BindingName (bool full) => full ? "XM45Binding" : "MobileBinding";
 		
-		static void BuildLinkedTestProjects (string tmpDir, bool full = false)
+		static void BuildLinkedTestProjects (string tmpDir, bool full = false, bool removeTFI = false)
 		{
 			string bindingName = BindingName (full);
 			TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
@@ -18,6 +18,9 @@ namespace Xamarin.MMP.Tests
 				ItemGroup = MMPTests.CreateSingleNativeRef (Path.GetFullPath (MMPTests.SimpleDylibPath), "Dynamic"),
 				StructsAndEnumsConfig = "public class UnifiedWithDepNativeRefLibTestClass {}"
 			};
+
+			if (removeTFI)
+				test.CustomProjectReplacement = new Tuple<string, string> (@"<TargetFrameworkVersion>v4.5</TargetFrameworkVersion>", "");
 
 			string projectPath = TI.GenerateBindingLibraryProject (test);
 			TI.BuildProject (projectPath, true);
@@ -45,12 +48,13 @@ namespace Xamarin.MMP.Tests
 			});
 		}
 
-		[TestCase (false)]
-		[TestCase (true)]
-		public void ShouldBuildWithoutErrors_AndLinkCorrectFramework (bool full)
+		[TestCase (false, false)]
+		[TestCase (true, false)]
+		[TestCase (true, true)]
+		public void ShouldBuildWithoutErrors_AndLinkCorrectFramework (bool full, bool removeTFI)
 		{
 			MMPTests.RunMMPTest (tmpDir => {
-				BuildLinkedTestProjects (tmpDir, full);
+				BuildLinkedTestProjects (tmpDir, full, removeTFI);
 
 				string libPath = Path.Combine (tmpDir, $"bin/Debug/{(full ? "XM45Example.app" : "UnifiedExample.app")}/Contents/MonoBundle/{BindingName (full)}.dll");
 				Assert.True (File.Exists (libPath));
