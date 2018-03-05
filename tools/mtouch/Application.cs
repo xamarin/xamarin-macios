@@ -957,6 +957,16 @@ namespace Xamarin.Bundler {
 					continue;
 				}
 
+				if (Optimizations.RemoveDynamicRegistrar != appex.Optimizations.RemoveDynamicRegistrar) {
+					Func<bool?, string> bool_tostr = (v) => {
+						if (!v.HasValue)
+							return "default";
+						return v.Value ? "true" : "false";
+					};
+					ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the remove-dynamic-registrar optimization differ between the container app ({bool_tostr (appex.Optimizations.RemoveDynamicRegistrar)}) and the extension ({bool_tostr (Optimizations.RemoveDynamicRegistrar)}).");
+					continue;
+				}
+
 				bool applicable = true;
 				// The --assembly-build-target arguments must be identical.
 				// We can probably lift this requirement (at least partially) at some point,
