@@ -12608,7 +12608,6 @@
                 </methods>
               </property>
               <property name="EndpointBehaviors" attrib="0" ptype="System.Collections.ObjectModel.KeyedCollection`2[System.Type,System.ServiceModel.Description.IEndpointBehavior]">
-                <attributes />
                 <methods>
                   <method name="get_EndpointBehaviors()" attrib="2182" returntype="System.Collections.ObjectModel.KeyedCollection`2[System.Type,System.ServiceModel.Description.IEndpointBehavior]">
                     <parameters />

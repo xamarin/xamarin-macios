@@ -60,6 +60,7 @@ namespace Xamarin.Tuner
 		public DerivedLinkContext (Pipeline pipeline, AssemblyResolver resolver)
 			: base (pipeline, resolver)
 		{
+			UserAction = AssemblyAction.Link;
 		}
 	}
 }

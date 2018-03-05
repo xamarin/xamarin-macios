@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -41,9 +41,8 @@
     <Reference Include="System.Xml" />
     <Reference Include="Mono.Posix" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
+    <Reference Include="System.Json" />
+    <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj">
@@ -52,9 +51,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <!-- XBuild does not define the MSBuildRuntimeVersion property. -->
-    <Compile Include="MsBuildTasks\MoveTaskBase.cs" Condition="'$(MSBuildRuntimeVersion)' != ''" />
-    <Compile Include="MsBuildTasks\XBuildMoveTaskBase.cs" Condition="'$(MSBuildRuntimeVersion)' == ''" />
+    <!-- Mono has a different implementation of the Move task, so when building on a Mac we need to include XBuildMoveTaskBase.cs -->
+    <Compile Include="MsBuildTasks\MoveTaskBase.cs" Condition="'$(OS)' == 'Windows_NT'" />
+    <Compile Include="MsBuildTasks\XBuildMoveTaskBase.cs" Condition="'$(OS)' != 'Windows_NT'" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MsBuildTasks\CopyBase.cs" />
@@ -70,12 +69,13 @@
     <Compile Include="Tasks\BTouchTaskBase.cs" />
     <Compile Include="Tasks\CodesignTaskBase.cs" />
     <Compile Include="Tasks\CodesignVerifyTaskBase.cs" />
-    <Compile Include="Tasks\CompileAppManifestTaskBase.cs" />
-    <Compile Include="Tasks\ComputeBundleResourceOutputPathsTaskBase.cs" />
     <Compile Include="Tasks\CollectBundleResourcesTaskBase.cs" />
     <Compile Include="Tasks\CollectFrameworksBase.cs" />
+    <Compile Include="Tasks\CompileAppManifestTaskBase.cs" />
     <Compile Include="Tasks\CompileEntitlementsTaskBase.cs" />
     <Compile Include="Tasks\CompileSceneKitAssetsTaskBase.cs" />
+    <Compile Include="Tasks\ComputeBundleResourceOutputPathsTaskBase.cs" />
+    <Compile Include="Tasks\CoreMLCompilerTaskBase.cs" />
     <Compile Include="Tasks\CreateAssetPackManifestTaskBase.cs" />
     <Compile Include="Tasks\CreateEmbeddedResourcesTaskBase.cs" />
     <Compile Include="Tasks\CreateInstallerPackageTaskBase.cs" />
@@ -94,31 +94,28 @@
     <Compile Include="Tasks\PackLibraryResourcesTaskBase.cs" />
     <Compile Include="Tasks\PrepareNativeReferencesTaskBase.cs" />
     <Compile Include="Tasks\PropertyListEditorTaskBase.cs" />
-    <Compile Include="Tasks\ScnToolTaskBase.cs" />
     <Compile Include="Tasks\ReadItemsFromFileBase.cs" />
-    <Compile Include="Tasks\WriteItemsToFileBase.cs" />
+    <Compile Include="Tasks\ScnToolTaskBase.cs" />
     <Compile Include="Tasks\SmartCopyTaskBase.cs" />
     <Compile Include="Tasks\SpotlightIndexerTaskBase.cs" />
     <Compile Include="Tasks\SymbolStripTaskBase.cs" />
     <Compile Include="Tasks\TextureAtlasTaskBase.cs" />
     <Compile Include="Tasks\UnpackLibraryResourcesTaskBase.cs" />
+    <Compile Include="Tasks\WriteItemsToFileBase.cs" />
     <Compile Include="Tasks\XcodeCompilerToolTask.cs" />
     <Compile Include="Tasks\XcodeToolTaskBase.cs" />
     <Compile Include="Tasks\ZipTaskBase.cs" />
     <Compile Include="AssetPackUtils.cs" />
     <Compile Include="BundleResource.cs" />
+    <Compile Include="CommandLineArgumentBuilder.cs" />
     <Compile Include="DataConverter.cs" />
     <Compile Include="LinkTarget.cs" />
     <Compile Include="LoggingExtensions.cs" />
     <Compile Include="NativeReferenceKind.cs" />
     <Compile Include="PathUtils.cs" />
-    <Compile Include="ProcessArgumentBuilder.cs" />
+    <Compile Include="PlatformFramework.cs" />
     <Compile Include="ProcessUtils.cs" />
     <Compile Include="StringParserService.cs" />
-    <Compile Include="PlatformFramework.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

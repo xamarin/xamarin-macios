@@ -989,4 +989,35 @@ namespace XamCore.Security {
 
 		NSData SharedInfo { get; set; }
 	}
+
+#if IOS
+	[iOS (8,0)][NoTV][NoWatch][NoMac]
+	[Internal][Static]
+	interface SecSharedCredentialKeys {
+		[Field ("kSecAttrServer")]
+		NSString ServerKey { get; }
+
+		[Field ("kSecAttrAccount")]
+		NSString AccountKey { get; }
+
+		[Field ("kSecSharedPassword")]
+		NSString PasswordKey { get; }
+
+		[Field ("kSecAttrPort")]
+		NSString PortKey { get; }
+	}
+
+	[iOS (8,0)][NoTV][NoWatch][NoMac]
+	[StrongDictionary ("SecSharedCredentialKeys")]
+	interface SecSharedCredentialInfo {
+
+		string Server { get; set; }
+
+		string Account { get; set; }
+
+		string Password { get; set; }
+
+		int Port { get; set; }
+	}
+#endif
 }

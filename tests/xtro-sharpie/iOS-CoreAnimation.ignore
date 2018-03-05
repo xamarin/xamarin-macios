@@ -1,3 +1,5 @@
-### moved from iOS-CoreAnimation.todo
+!missing-field! CATransform3DIdentity not bound
+!missing-pinvoke! CATransform3DMakeScale is not bound
+!missing-pinvoke! CATransform3DMakeTranslation is not bound
 !missing-protocol! CAAnimationDelegate not bound
-!missing-protocol-conformance! NSNull should conform to CAAction (defined in 'CAActionAdditions' category)
+!missing-selector! CALayer::shouldArchiveValueForKey: not bound

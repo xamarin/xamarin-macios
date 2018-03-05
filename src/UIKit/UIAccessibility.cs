@@ -197,16 +197,21 @@ namespace XamCore.UIKit {
 		// UIAccessibility.h
 		[iOS (7,0)]
 		[DllImport (Constants.UIKitLibrary)]
-		extern static void UIAccessibilityRequestGuidedAccessSession (/* BOOL */ bool enable, /* void(^completionHandler)(BOOL didSucceed) */ Action<bool> completionHandler);
+		extern unsafe static void UIAccessibilityRequestGuidedAccessSession (/* BOOL */ bool enable, /* void(^completionHandler)(BOOL didSucceed) */ void * completionHandler);
 
 		[iOS (7,0)]
 		public static void RequestGuidedAccessSession (bool enable, Action<bool> completionHandler)
 		{
-			callback = completionHandler;
-			if (callback == null)
-				UIAccessibilityRequestGuidedAccessSession (enable, null);
-			else
-				UIAccessibilityRequestGuidedAccessSession (enable, RequestGuidedAccessSessionBridge);
+			unsafe {
+				BlockLiteral *block_ptr_handler;
+				BlockLiteral block_handler;
+				block_handler = new BlockLiteral ();
+				block_ptr_handler = &block_handler;
+				block_handler.SetupBlock (callback, completionHandler);
+
+				UIAccessibilityRequestGuidedAccessSession (enable, (void*) block_ptr_handler);
+				block_ptr_handler->CleanupBlock ();
+			}
 		}
 
 		[iOS (7,0)]
@@ -219,17 +224,17 @@ namespace XamCore.UIKit {
 			return tcs.Task;
 		}
 		
-		static Action<bool> callback;
+		internal delegate void InnerRequestGuidedAccessSession (IntPtr block, bool enable);
+		static readonly InnerRequestGuidedAccessSession callback = TrampolineRequestGuidedAccessSession;
 
-		[MonoPInvokeCallback (typeof (Action<bool>))]
-		static void RequestGuidedAccessSessionBridge (bool didSucceed)
+		[MonoPInvokeCallback (typeof (InnerRequestGuidedAccessSession))]
+		static unsafe void TrampolineRequestGuidedAccessSession (IntPtr block, bool enable)
 		{
-			if (callback != null) {
-				callback (didSucceed);
-				callback = null;
-			}
+			var descriptor = (BlockLiteral *) block;
+			var del = (Action<bool>) (descriptor->Target);
+			if (del != null)
+				del (enable);
 		}
-
 
 		[iOS (8,0)]
 		[DllImport (Constants.UIKitLibrary)]

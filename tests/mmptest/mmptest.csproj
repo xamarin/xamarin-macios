@@ -80,6 +80,9 @@
       <Link>StringUtils.cs</Link>
     </Compile>
     <Compile Include="src\NetStandardTests.cs" />
+    <Compile Include="..\common\ProductTests.cs">
+      <Link>ProductTests.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />

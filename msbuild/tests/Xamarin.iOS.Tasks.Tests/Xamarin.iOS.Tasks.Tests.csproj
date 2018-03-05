@@ -36,32 +36,15 @@
     <Reference Include="Microsoft.Build" />
     <Reference Include="Microsoft.Build.Engine" />
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
-    <Reference Include="Mono.Cecil, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
     <Reference Include="System.Xml" />
     <Reference Include="nunit.framework">
       <HintPath>..\..\..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj">
-      <Project>{CC3D9353-20C4-467A-8522-A9DED6F0C753}</Project>
-      <Name>Xamarin.MacDev</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Xamarin.MacDev.Tasks\Xamarin.MacDev.Tasks.csproj">
-      <Project>{534D7C5A-0E1C-4C58-9E48-21B1A98919EB}</Project>
-      <Name>Xamarin.MacDev.Tasks</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Xamarin.iOS.Tasks.Core\Xamarin.iOS.Tasks.Core.csproj">
-      <Project>{93E12FA0-089C-4BC8-840F-43CFBC7927C7}</Project>
-      <Name>Xamarin.iOS.Tasks.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Xamarin.iOS.Tasks\Xamarin.iOS.Tasks.csproj">
       <Project>{44605724-8002-48E1-895F-7CB068099B6A}</Project>
       <Name>Xamarin.iOS.Tasks</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Xamarin.MacDev.Tasks.Core\Xamarin.MacDev.Tasks.Core.csproj">
-      <Project>{7B095849-6FDB-4BD2-9B59-569D81A1A809}</Project>
-      <Name>Xamarin.MacDev.Tasks.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -112,9 +95,11 @@
     <Compile Include="ProjectsTests\LinkedAssets.cs" />
     <Compile Include="ProjectsTests\CodesignAppBundle.cs" />
     <Compile Include="ProjectsTests\BindingReferences.cs" />
+    <Compile Include="ProjectsTests\CoreMLCompiler.cs" />
     <Compile Include="..\..\..\tools\common\StringUtils.cs">
       <Link>StringUtils.cs</Link>
     </Compile>
+    <Compile Include="ProjectsTests\Bug60536.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

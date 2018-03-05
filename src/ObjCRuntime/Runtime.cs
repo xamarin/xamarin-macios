@@ -25,9 +25,6 @@ using XamCore.AppKit;
 #if !MMP && !MTOUCH && !MTOUCH_TEST
 using Mono.Security.Interface;
 #endif
-#if !XAMARIN_NO_TLS
-using XamCore.Security.Tls;
-#endif
 #endif
 
 namespace XamCore.ObjCRuntime {
@@ -1121,7 +1118,7 @@ namespace XamCore.ObjCRuntime {
 						target_type = typeof(T);
 					else if (target_type.IsSubclassOf (typeof(T))) {
 						// do nothing, this is fine.
-					} else if (bool_objc_msgSend_IntPtr (ptr, Selector.GetHandle ("isKindOfClass:"), Class.GetHandle (typeof (T)))) {
+					} else if (Messaging.bool_objc_msgSend_IntPtr (ptr, Selector.GetHandle ("isKindOfClass:"), Class.GetHandle (typeof (T)))) {
 						// If the instance itself claims it's an instance of the provided (generic argument) type,
 						// then we believe the instance. See bug #20692 for a test case.
 						target_type = typeof(T);
@@ -1146,9 +1143,6 @@ namespace XamCore.ObjCRuntime {
 				obj?.DangerousRelease ();
 			return obj;
 		}
-
-		[DllImport (Messaging.LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		extern static bool bool_objc_msgSend_IntPtr (System.IntPtr receiver, System.IntPtr selector, System.IntPtr arg1);
 
 		//
 		// This method is an ugly hack.
@@ -1191,7 +1185,7 @@ namespace XamCore.ObjCRuntime {
 					// nothing to do
 				} else if (dynamic_type.IsSubclassOf (target_type)) {
 					target_type = dynamic_type;
-				} else if (bool_objc_msgSend_IntPtr (ptr, Selector.GetHandle ("isKindOfClass:"), Class.GetHandle (target_type))) {
+				} else if (Messaging.bool_objc_msgSend_IntPtr (ptr, Selector.GetHandle ("isKindOfClass:"), Class.GetHandle (target_type))) {
 					// nothing to do
 				} else {
 					target_type = dynamic_type;

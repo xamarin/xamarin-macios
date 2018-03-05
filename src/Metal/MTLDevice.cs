@@ -77,7 +77,7 @@ namespace XamCore.Metal {
 				BlockLiteral block_handler;
 				block_handler = new BlockLiteral ();
 				block_ptr_handler = &block_handler;
-				block_handler.SetupBlock (static_notificationHandler, handler);
+				block_handler.SetupBlockUnsafe (static_notificationHandler, handler);
 
 				var rv = MTLCopyAllDevicesWithObserver (ref handle, (void*) block_ptr_handler);
 				var obj = NSArray.ArrayFromHandle<IMTLDevice> (rv);

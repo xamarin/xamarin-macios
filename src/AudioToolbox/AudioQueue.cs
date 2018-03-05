@@ -1477,7 +1477,7 @@ namespace XamCore.AudioToolbox {
 				gch = mygch;
 				return;
 			}
-			gch.Free ();
+			mygch.Free ();
 			throw new AudioQueueException (code);
 		}
 

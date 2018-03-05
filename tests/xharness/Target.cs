@@ -20,7 +20,7 @@ namespace xharness
 		public string ProjectPath { get; protected set; }
 
 		public string ProjectFileExtension { get { return IsFSharp ? "fsproj" : "csproj"; } }
-		public bool IsFSharp { get { return (ProjectPath ?? TemplateProjectPath).EndsWith (".fsproj"); } }
+		public bool IsFSharp { get { return (ProjectPath ?? TemplateProjectPath).EndsWith (".fsproj", StringComparison.Ordinal); } }
 
 		public string TemplateProjectPath { get; set; }
 
@@ -152,12 +152,17 @@ namespace xharness
 			}
 		}
 
-		public void Execute ()
+		protected virtual void CalculateName ()
 		{
-			targetDirectory = Path.GetDirectoryName (TemplateProjectPath);
 			Name = Path.GetFileName (targetDirectory);
 			if (string.Equals (Name, "ios", StringComparison.OrdinalIgnoreCase) || string.Equals (Name, "mac", StringComparison.OrdinalIgnoreCase))
 				Name = Path.GetFileName (Path.GetDirectoryName (targetDirectory));
+		}
+
+		public void Execute ()
+		{
+			targetDirectory = Path.GetDirectoryName(TemplateProjectPath);
+			CalculateName ();
 
 			ProjectPath = Path.Combine (targetDirectory, Path.GetFileNameWithoutExtension (TemplateProjectPath) + ProjectFileSuffix + "." + ProjectFileExtension);
 

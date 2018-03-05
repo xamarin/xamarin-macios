@@ -68,7 +68,7 @@ namespace Xamarin
 				mtouch.SymbolList = Path.Combine (tmpdir, "symbollist.txt");
 				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
 
-				var profiler_symbol = "_mono_profiler_startup_log";
+				var profiler_symbol = "_mono_profiler_init_log";
 
 				var symbols = File.ReadAllLines (mtouch.SymbolList);
 				Assert.That (symbols, Contains.Item (profiler_symbol), profiler_symbol);
@@ -1014,6 +1014,69 @@ public class B : A {}
 			}
 		}
 
+		[Test]
+		public void MT0095_SharedCode ()
+		{
+			using (var exttool = new MTouchTool ()) {
+				exttool.Profile = Profile.iOS;
+				exttool.CreateTemporaryCacheDirectory ();
+				exttool.Linker = MTouchLinker.LinkAll;
+
+				exttool.CreateTemporaryServiceExtension ();
+				exttool.MSym = true;
+				exttool.Debug = false;
+				exttool.AssertExecute (MTouchAction.BuildDev, "build extension");
+
+				using (var apptool = new MTouchTool ()) {
+					apptool.Profile = Profile.iOS;
+					apptool.MSym = true;
+					apptool.Debug = false;
+					apptool.CreateTemporaryCacheDirectory ();
+					apptool.CreateTemporaryApp ();
+					apptool.AppExtensions.Add (exttool);
+					apptool.Linker = MTouchLinker.LinkAll;
+					apptool.AssertExecute (MTouchAction.BuildDev, "build app");
+					
+					Assert.IsTrue(Directory.Exists(Path.Combine(apptool.Cache, "Build", "Msym")), "App Msym dir");
+					Assert.IsFalse(Directory.Exists(Path.Combine(exttool.Cache, "Build", "Msym")), "Extenson Msym dir");
+					exttool.AssertNoWarnings();
+					apptool.AssertNoWarnings();
+				}
+			}
+		}
+		
+		[Test]
+		public void MT0095_NotSharedCode ()
+		{
+			using (var exttool = new MTouchTool ()) {
+				exttool.Profile = Profile.iOS;
+				exttool.CreateTemporaryCacheDirectory ();
+				exttool.Linker = MTouchLinker.LinkAll;
+				exttool.CustomArguments = new string [] { "--nodevcodeshare" };
+				exttool.CreateTemporaryServiceExtension ();
+				exttool.MSym = true;
+				exttool.Debug = false;
+				exttool.AssertExecute (MTouchAction.BuildDev, "build extension");
+
+				using (var apptool = new MTouchTool ()) {
+					apptool.Profile = Profile.iOS;
+					apptool.MSym = true;
+					apptool.Debug = false;
+					apptool.CreateTemporaryCacheDirectory ();
+					apptool.CreateTemporaryApp ();
+					apptool.AppExtensions.Add (exttool);
+					apptool.Linker = MTouchLinker.LinkAll;
+					apptool.CustomArguments = new string [] { "--nodevcodeshare" };
+					apptool.AssertExecute (MTouchAction.BuildDev, "build app");
+					
+					Assert.IsTrue(Directory.Exists(Path.Combine(apptool.Cache, "Build", "Msym")), "App Msym dir");
+					Assert.IsTrue(Directory.Exists(Path.Combine(exttool.Cache, "Build", "Msym")), "Extenson Msym dir");
+					exttool.AssertNoWarnings();
+					apptool.AssertNoWarnings();
+				}
+			}
+		}
+		
 		[Test]
 		public void MT0096 ()
 		{
@@ -3378,6 +3441,17 @@ public class TestApp {
 		}
 
 		[Test]
+		public void ResponseFile ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.ResponseFile = Path.Combine (mtouch.CreateTemporaryDirectory (), "rspfile");
+				File.WriteAllLines (mtouch.ResponseFile, new string [] { "/version" });
+				mtouch.AssertExecute (MTouchAction.None);
+				mtouch.AssertNoWarnings ();
+			}
+		}
+
+		[Test]
 		[TestCase ("CFNetworkHandler", "CFNetworkHandler")]
 		[TestCase ("NSUrlSessionHandler", "NSUrlSessionHandler")]
 		[TestCase ("HttpClientHandler", "HttpClientHandler")]
@@ -3405,6 +3479,101 @@ public class HandlerTest
 ";
 			var csproj_configuration = mtouchHandler == null ? string.Empty : ("<MtouchHttpClientHandler>" + mtouchHandler + "</MtouchHttpClientHandler>");
 			RunUnitTest (Profile.iOS, testCode, csproj_configuration, csproj_references: new string [] { "System.Net.Http" }, clean_simulator: false);
+		}
+
+		[Test]
+		[TestCase (true)]
+		[TestCase (false)]
+		public void NoProductAssemblyReference (bool nofastsim)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				// The .exe contains no reference to Xamarin.iOS.dll, because no API is used from Xamarin.iOS.dll
+				mtouch.CreateTemporaryApp (code: "public class TestApp { static void Main () { System.Console.WriteLine (\"Hello world\"); } }");
+				mtouch.CreateTemporaryCacheDirectory ();
+				if (nofastsim)
+					mtouch.NoFastSim = nofastsim;
+				mtouch.Debug = true; // makes simlauncher possible (when nofastsim is false)
+				mtouch.Linker = MTouchLinker.DontLink; // faster
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build sim");
+				mtouch.AssertErrorPattern (123, "The executable assembly .*/testApp.exe does not reference Xamarin.iOS.dll.");
+				mtouch.AssertErrorCount (1);
+				mtouch.AssertNoWarnings ();
+			}
+		}
+
+		[Test]
+		[TestCase (true, MTouchLinker.DontLink, false)]
+		[TestCase (true, MTouchLinker.LinkAll, true)]
+		[TestCase (true, MTouchLinker.LinkSdk, true)]
+		[TestCase (false, MTouchLinker.DontLink, false)]
+		[TestCase (false, MTouchLinker.LinkAll, true)]
+		[TestCase (false, MTouchLinker.LinkSdk, true)]
+		public void MixedModeAssembliesCanNotBeLinked (bool nofastsim, MTouchLinker linker, bool builds_successfully)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var tmp = mtouch.CreateTemporaryDirectory ();
+				string libraryPath = Path.Combine (Configuration.SourceRoot, "tests", "common", "MixedClassLibrary.dll");
+
+				mtouch.CreateTemporaryApp (code: "public class TestApp { static void Main () { System.Console.WriteLine (typeof (MixedClassLibrary.Class1)); System.Console.WriteLine (typeof (ObjCRuntime.Runtime)); } }",
+										   extraArg: $"-r:Xamarin.iOS.dll -r:{StringUtils.Quote (libraryPath)}");
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.References = new string [] { libraryPath };
+				if (nofastsim)
+					mtouch.NoFastSim = nofastsim;
+				mtouch.Debug = true; // makes simlauncher possible (when nofastsim is false)
+
+				mtouch.Linker = linker;
+
+				if (builds_successfully) {
+					mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build sim");
+					mtouch.AssertErrorPattern (2014, "Unable to link assembly .* as it is mixed-mode.");
+					mtouch.AssertErrorCount (1);
+				}
+				else {
+					mtouch.AssertExecute (MTouchAction.BuildSim, "build sim");
+					mtouch.AssertErrorCount (0);
+				}
+
+				mtouch.AssertNoWarnings ();
+			}
+		}
+
+		[Test]
+		public void XamarinSdkAdjustLibs ()
+		{
+			using (var exttool = new MTouchTool ()) {
+				exttool.Profile = Profile.iOS;
+				exttool.Abi = "arm64";
+				exttool.CreateTemporaryCacheDirectory ();
+				exttool.Debug = false;
+				exttool.MSym = false;
+				exttool.Linker = MTouchLinker.DontLink;
+				exttool.TargetVer = "8.0";
+
+				exttool.CreateTemporaryServiceExtension ();
+				exttool.AssertExecute (MTouchAction.BuildDev, "build extension");
+
+				using (var apptool = new MTouchTool ()) {
+					apptool.Profile = exttool.Profile;
+					apptool.Abi = exttool.Abi;
+					apptool.Debug = exttool.Debug;
+					apptool.MSym = exttool.MSym;
+					apptool.TargetVer = exttool.TargetVer;
+					apptool.CreateTemporaryCacheDirectory ();
+					apptool.CreateTemporaryApp ();
+
+					apptool.AppExtensions.Add (exttool);
+					apptool.Linker = MTouchLinker.DontLink;
+					apptool.AssertExecute (MTouchAction.BuildDev, "build app");
+
+					var sdk = StringUtils.Quote (Path.Combine (apptool.Cache, "arm64", "Xamarin.Sdk"));
+					var shared_libraries = ExecutionHelper.Execute ("otool", $"-L {sdk}", hide_output: true);
+					Asserts.DoesNotContain ("Private", shared_libraries, "Private");
+
+					exttool.AssertNoWarnings();
+					apptool.AssertNoWarnings();
+				}
+			}
 		}
 
 #region Helper functions
@@ -3524,10 +3693,12 @@ public class Dummy {
 			ExecutionHelper.Execute ("mono", $"{StringUtils.Quote (Path.Combine (Configuration.RootPath, "tests", "xharness", "xharness.exe"))} --run {StringUtils.Quote (csprojpath)} --target ios-simulator-64 --sdkroot {Configuration.xcode_root} --logdirectory {StringUtils.Quote (Path.Combine (tmpdir, "log.txt"))} --configuration {configuration}", environmentVariables: environment_variables);
 		}
 
-		public static string CompileTestAppExecutable (string targetDirectory, string code = null, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp", string extraCode = null)
+		public static string CompileTestAppExecutable (string targetDirectory, string code = null, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp", string extraCode = null, string usings = null)
 		{
 			if (code == null)
 				code = "public class TestApp { static void Main () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
+			if (usings != null)
+				code = usings + "\n" + code;
 			if (extraCode != null)
 				code += extraCode;
 

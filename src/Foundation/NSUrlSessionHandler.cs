@@ -64,10 +64,16 @@ namespace Foundation {
 		readonly Dictionary<NSUrlSessionTask, InflightData> inflightRequests;
 		readonly object inflightRequestsLock = new object ();
 
-		public NSUrlSessionHandler ()
+		public NSUrlSessionHandler () : this (NSUrlSessionConfiguration.DefaultSessionConfiguration)
 		{
+		}
+
+		public NSUrlSessionHandler (NSUrlSessionConfiguration configuration)
+		{
+			if (configuration == null)
+				throw new ArgumentNullException (nameof (configuration));
+
 			AllowAutoRedirect = true;
-			var configuration = NSUrlSessionConfiguration.DefaultSessionConfiguration;
 
 			// we cannot do a bitmask but we can set the minimum based on ServicePointManager.SecurityProtocol minimum
 			var sp = ServicePointManager.SecurityProtocol;

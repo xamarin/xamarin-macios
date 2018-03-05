@@ -1,26 +1,17 @@
-# fixed in XAMCORE_4_0 - API break
-!incorrect-protocol-member! MDLObjectContainerComponent::count is REQUIRED and should be abstract
-!incorrect-protocol-member! MDLObjectContainerComponent::objectAtIndexedSubscript: is REQUIRED and should be abstract
-!incorrect-protocol-member! MDLTransformComponent::keyTimes is REQUIRED and should be abstract
-!incorrect-protocol-member! MDLTransformComponent::resetsTransform is REQUIRED and should be abstract
-!incorrect-protocol-member! MDLTransformComponent::setResetsTransform: is REQUIRED and should be abstract
-
-## old @optional methods that became @required (abstract) in existing types (breaking changes)
 !incorrect-protocol-member! MDLMeshBuffer::allocator is REQUIRED and should be abstract
 !incorrect-protocol-member! MDLMeshBuffer::length is REQUIRED and should be abstract
 !incorrect-protocol-member! MDLMeshBuffer::type is REQUIRED and should be abstract
 !incorrect-protocol-member! MDLMeshBuffer::zone is REQUIRED and should be abstract
 !incorrect-protocol-member! MDLMeshBufferZone::allocator is REQUIRED and should be abstract
 !incorrect-protocol-member! MDLMeshBufferZone::capacity is REQUIRED and should be abstract
-
-## we only export the overload that expose an NSError
-!missing-selector! MDLAsset::exportAssetToURL: not bound
-
-## those are just doing the same as the setComponent:forProtocol: and componentConformingToProtocol:
-## objectForKeyedSubscript:'s description is: "Allows shorthand [key] syntax for componentConformingToProtocol:"
-!missing-selector! MDLObject::objectForKeyedSubscript: not bound
-!missing-selector! MDLObject::setObject:forKeyedSubscript: not bound
-
-## no generator support for FastEnumeration - https://bugzilla.xamarin.com/show_bug.cgi?id=4391
+!incorrect-protocol-member! MDLObjectContainerComponent::count is REQUIRED and should be abstract
+!incorrect-protocol-member! MDLObjectContainerComponent::objectAtIndexedSubscript: is REQUIRED and should be abstract
+!incorrect-protocol-member! MDLTransformComponent::keyTimes is REQUIRED and should be abstract
+!incorrect-protocol-member! MDLTransformComponent::resetsTransform is REQUIRED and should be abstract
+!incorrect-protocol-member! MDLTransformComponent::setResetsTransform: is REQUIRED and should be abstract
+!missing-designated-initializer! MDLTexture::init is missing an [DesignatedInitializer] attribute
 !missing-protocol-conformance! MDLAsset should conform to NSFastEnumeration
 !missing-protocol-conformance! MDLMaterial should conform to NSFastEnumeration
+!missing-selector! MDLAsset::exportAssetToURL: not bound
+!missing-selector! MDLObject::objectForKeyedSubscript: not bound
+!missing-selector! MDLObject::setObject:forKeyedSubscript: not bound

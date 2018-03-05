@@ -1,0 +1,317 @@
+# Foundation
+
+# Issues we want to ignore that are common to both iOS and OSX
+
+
+## collections - many are special
+!missing-type! NSCountedSet not bound
+!missing-selector! NSCountedSet::addObject: not bound
+!missing-selector! NSCountedSet::countForObject: not bound
+!missing-selector! NSCountedSet::initWithArray: not bound
+!missing-selector! NSCountedSet::initWithCapacity: not bound
+!missing-selector! NSCountedSet::initWithSet: not bound
+!missing-selector! NSCountedSet::removeObject: not bound
+
+!missing-type! NSHashTable not bound
+!missing-selector! +NSHashTable::hashTableWithOptions: not bound
+!missing-selector! NSHashTable::addObject: not bound
+!missing-selector! NSHashTable::allObjects not bound
+!missing-selector! NSHashTable::anyObject not bound
+!missing-selector! NSHashTable::containsObject: not bound
+!missing-selector! NSHashTable::count not bound
+!missing-selector! NSHashTable::initWithOptions:capacity: not bound
+!missing-selector! NSHashTable::initWithPointerFunctions:capacity: not bound
+!missing-selector! NSHashTable::intersectHashTable: not bound
+!missing-selector! NSHashTable::intersectsHashTable: not bound
+!missing-selector! NSHashTable::isEqualToHashTable: not bound
+!missing-selector! NSHashTable::isSubsetOfHashTable: not bound
+!missing-selector! NSHashTable::member: not bound
+!missing-selector! NSHashTable::minusHashTable: not bound
+!missing-selector! NSHashTable::pointerFunctions not bound
+!missing-selector! NSHashTable::removeObject: not bound
+!missing-selector! NSHashTable::setRepresentation not bound
+!missing-selector! NSHashTable::unionHashTable: not bound
+
+!missing-type! NSMapTable not bound
+!missing-selector! +NSMapTable::mapTableWithKeyOptions:valueOptions: not bound
+!missing-selector! NSMapTable::count not bound
+!missing-selector! NSMapTable::initWithKeyOptions:valueOptions:capacity: not bound
+!missing-selector! NSMapTable::initWithKeyPointerFunctions:valuePointerFunctions:capacity: not bound
+!missing-selector! NSMapTable::keyPointerFunctions not bound
+!missing-selector! NSMapTable::objectForKey: not bound
+!missing-selector! NSMapTable::removeObjectForKey: not bound
+!missing-selector! NSMapTable::setObject:forKey: not bound
+!missing-selector! NSMapTable::valuePointerFunctions not bound
+
+!missing-type! NSPointerArray not bound
+!missing-selector! NSPointerArray::addPointer: not bound
+!missing-selector! NSPointerArray::allObjects not bound
+!missing-selector! NSPointerArray::count not bound
+!missing-selector! NSPointerArray::initWithOptions: not bound
+!missing-selector! NSPointerArray::initWithPointerFunctions: not bound
+!missing-selector! NSPointerArray::insertPointer:atIndex: not bound
+!missing-selector! NSPointerArray::pointerAtIndex: not bound
+!missing-selector! NSPointerArray::pointerFunctions not bound
+!missing-selector! NSPointerArray::removePointerAtIndex: not bound
+!missing-selector! NSPointerArray::replacePointerAtIndex:withPointer: not bound
+!missing-selector! NSPointerArray::setCount: not bound
+
+!missing-type! NSPointerFunctions not bound
+!missing-selector! NSPointerFunctions::acquireFunction not bound
+!missing-selector! NSPointerFunctions::descriptionFunction not bound
+!missing-selector! NSPointerFunctions::hashFunction not bound
+!missing-selector! NSPointerFunctions::initWithOptions: not bound
+!missing-selector! NSPointerFunctions::isEqualFunction not bound
+!missing-selector! NSPointerFunctions::relinquishFunction not bound
+!missing-selector! NSPointerFunctions::setAcquireFunction: not bound
+!missing-selector! NSPointerFunctions::setDescriptionFunction: not bound
+!missing-selector! NSPointerFunctions::setHashFunction: not bound
+!missing-selector! NSPointerFunctions::setIsEqualFunction: not bound
+!missing-selector! NSPointerFunctions::setRelinquishFunction: not bound
+!missing-selector! NSPointerFunctions::setSizeFunction: not bound
+!missing-selector! NSPointerFunctions::setUsesStrongWriteBarrier: not bound
+!missing-selector! NSPointerFunctions::setUsesWeakReadAndWriteBarriers: not bound
+!missing-selector! NSPointerFunctions::sizeFunction not bound
+!missing-selector! NSPointerFunctions::usesStrongWriteBarrier not bound
+!missing-selector! NSPointerFunctions::usesWeakReadAndWriteBarriers not bound
+
+
+# regex
+!missing-type! NSDataDetector not bound
+!missing-selector! NSDataDetector::initWithTypes:error: not bound
+
+!missing-type! NSRegularExpression not bound
+!missing-selector! +NSRegularExpression::regularExpressionWithPattern:options:error: not bound
+!missing-enum! NSRegularExpressionOptions not bound
+
+!missing-type! NSDecimalNumberHandler not bound
+!missing-selector! +NSDecimalNumberHandler::decimalNumberHandlerWithRoundingMode:scale:raiseOnExactness:raiseOnOverflow:raiseOnUnderflow:raiseOnDivideByZero: not bound
+!missing-selector! NSDecimalNumberHandler::initWithRoundingMode:scale:raiseOnExactness:raiseOnOverflow:raiseOnUnderflow:raiseOnDivideByZero: not bound
+!missing-protocol! NSDecimalNumberBehaviors not bound
+
+## stub for CFFileSecurity?
+!missing-type! NSFileSecurity not bound
+
+## related to bound NSOperation
+!missing-type! NSInvocationOperation not bound
+
+## not recommanded, noted as it _may_ be deprecated in 10.6
+!missing-type! NSMessagePort not bound
+
+## string scanning, looks helpful (porting code)
+!missing-type! NSScanner not bound
+!missing-selector! +NSScanner::localizedScannerWithString: not bound
+!missing-selector! +NSScanner::scannerWithString: not bound
+!missing-selector! NSScanner::caseSensitive not bound
+!missing-selector! NSScanner::charactersToBeSkipped not bound
+!missing-selector! NSScanner::initWithString: not bound
+!missing-selector! NSScanner::isAtEnd not bound
+!missing-selector! NSScanner::locale not bound
+!missing-selector! NSScanner::scanCharactersFromSet:intoString: not bound
+!missing-selector! NSScanner::scanDecimal: not bound
+!missing-selector! NSScanner::scanDouble: not bound
+!missing-selector! NSScanner::scanFloat: not bound
+!missing-selector! NSScanner::scanHexDouble: not bound
+!missing-selector! NSScanner::scanHexFloat: not bound
+!missing-selector! NSScanner::scanHexInt: not bound
+!missing-selector! NSScanner::scanHexLongLong: not bound
+!missing-selector! NSScanner::scanInt: not bound
+!missing-selector! NSScanner::scanInteger: not bound
+!missing-selector! NSScanner::scanLocation not bound
+!missing-selector! NSScanner::scanLongLong: not bound
+!missing-selector! NSScanner::scanString:intoString: not bound
+!missing-selector! NSScanner::scanUnsignedLongLong: not bound
+!missing-selector! NSScanner::scanUpToCharactersFromSet:intoString: not bound
+!missing-selector! NSScanner::scanUpToString:intoString: not bound
+!missing-selector! NSScanner::setCaseSensitive: not bound
+!missing-selector! NSScanner::setCharactersToBeSkipped: not bound
+!missing-selector! NSScanner::setLocale: not bound
+!missing-selector! NSScanner::setScanLocation: not bound
+!missing-selector! NSScanner::string not bound
+
+## abstract
+!missing-type! NSValueTransformer not bound
+
+
+## there's a type of the same name (like NSObject, check what Swift did)
+!missing-protocol! AVVideoCompositionInstruction not bound
+
+
+# untyped enums (only values, not type name)
+
+# NSError.h
+!unknown-native-enum! NSUrlErrorCancelledReason bound
+
+
+# fixed in XAMCORE_3_0 - API break
+!incorrect-protocol-member! AVAssetResourceLoaderDelegate::resourceLoader:shouldWaitForLoadingOfRequestedResource: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindHostedPlayers: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindMatch: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindPlayers: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! GKTurnBasedMatchmakerViewControllerDelegate::turnBasedMatchmakerViewController:didFindMatch: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! GKTurnBasedMatchmakerViewControllerDelegate::turnBasedMatchmakerViewController:playerQuitForMatch: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! AVAudioMixing::destinationForMixer:bus: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBlitCommandEncoder::copyFromBuffer:sourceOffset:sourceBytesPerRow:sourceBytesPerImage:sourceSize:toTexture:destinationSlice:destinationLevel:destinationOrigin:options: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBlitCommandEncoder::copyFromTexture:sourceSlice:sourceLevel:sourceOrigin:sourceSize:toBuffer:destinationOffset:destinationBytesPerRow:destinationBytesPerImage:options: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newComputePipelineStateWithDescriptor:options:completionHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newComputePipelineStateWithDescriptor:options:reflection:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::supportsTextureSampleCount: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setDepthClipMode: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setStencilFrontReferenceValue:backReferenceValue: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::newTextureViewWithPixelFormat:textureType:levels:slices: is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::nodesInsideFrustumWithPointOfView: is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::presentScene:withTransition:incomingPointOfView:completionHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::setAudioListener: is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::setDebugOptions: is REQUIRED and should be abstract
+
+!incorrect-protocol-member! NSProgressReporting::progress is REQUIRED and should be abstract
+
+# fixed in XAMCORE_4_0 - API Break
+!incorrect-protocol-member! MTLBlitCommandEncoder::updateFence: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBlitCommandEncoder::waitForFence: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::GPUEndTime is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::GPUStartTime is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::kernelEndTime is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::kernelStartTime is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::popDebugGroup is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::pushDebugGroup: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::dispatchThreads:threadsPerThreadgroup: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::updateFence: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::useHeap: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::useHeaps:count: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::useResource:usage: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::useResources:count:usage: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::waitForFence: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputePipelineState::label is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputePipelineState::staticThreadgroupMemoryLength is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::areProgrammableSamplePositionsSupported is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::areRasterOrderGroupsSupported is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::argumentBuffersSupport is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::currentAllocatedSize is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::getDefaultSamplePositions:count: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::heapBufferSizeAndAlignWithLength:options: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::heapTextureSizeAndAlignWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::isRemovable is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::maxThreadgroupMemoryLength is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::minimumLinearTextureAlignmentForPixelFormat: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newArgumentEncoderWithArguments: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newFence is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newHeapWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newLibraryWithURL:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newTextureWithDescriptor:iosurface:plane: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::readWriteTextureSupport is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::registryID is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLFunction::newArgumentEncoderWithBufferIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLFunction::newArgumentEncoderWithBufferIndex:reflection: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLHeap::currentAllocatedSize is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLParallelRenderCommandEncoder::setColorStoreActionOptions:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLParallelRenderCommandEncoder::setDepthStoreActionOptions: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLParallelRenderCommandEncoder::setStencilStoreActionOptions: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setColorStoreActionOptions:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setDepthStoreActionOptions: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setScissorRects:count: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setStencilStoreActionOptions: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setViewports:count: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::updateFence:afterStages: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::useHeap: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::useHeaps:count: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::useResource:usage: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::useResources:count:usage: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::waitForFence:beforeStages: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLResource::allocatedSize is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLResource::heap is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLResource::isAliasable is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLResource::makeAliasable is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::iosurface is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::iosurfacePlane is REQUIRED and should be abstract
+
+# Protocols we decided not to expose
+!missing-protocol! NSFastEnumeration not bound
+!missing-protocol-conformance! AVCaptureSynchronizedDataCollection should conform to NSFastEnumeration
+!missing-protocol-conformance! NSArray should conform to NSFastEnumeration
+!missing-protocol-conformance! NSDictionary should conform to NSFastEnumeration
+!missing-protocol-conformance! NSEntityDescription should conform to NSFastEnumeration
+!missing-protocol-conformance! NSEnumerator should conform to NSFastEnumeration
+!missing-protocol-conformance! NSManagedObjectModel should conform to NSFastEnumeration
+!missing-protocol-conformance! NSOrderedSet should conform to NSFastEnumeration
+!missing-protocol-conformance! NSSet should conform to NSFastEnumeration
+!missing-protocol-conformance! PHFetchResult should conform to NSFastEnumeration
+!missing-protocol-conformance! CMSensorDataList should conform to NSFastEnumeration
+!missing-protocol-conformance! MDLAsset should conform to NSFastEnumeration
+!missing-protocol-conformance! MDLMaterial should conform to NSFastEnumeration
+!missing-protocol-conformance! GKBehavior should conform to NSFastEnumeration
+!missing-protocol-conformance! GKComponentSystem should conform to NSFastEnumeration
+
+# API we decided not to bind, e.g. better alternative in .NET
+!missing-enum! NSXMLParserExternalEntityResolvingPolicy not bound
+!missing-enum! NSXMLParserError not bound
+!missing-type! NSXMLParser not bound
+!missing-selector! NSXMLParser::abortParsing is not bound
+!missing-selector! NSXMLParser::allowedExternalEntityURLs is not bound
+!missing-selector! NSXMLParser::delegate is not bound
+!missing-selector! NSXMLParser::externalEntityResolvingPolicy is not bound
+!missing-selector! NSXMLParser::initWithContentsOfURL: is not bound
+!missing-selector! NSXMLParser::initWithData: is not bound
+!missing-selector! NSXMLParser::initWithStream: is not bound
+!missing-selector! NSXMLParser::parse is not bound
+!missing-selector! NSXMLParser::parserError is not bound
+!missing-selector! NSXMLParser::setAllowedExternalEntityURLs: is not bound
+!missing-selector! NSXMLParser::setDelegate: is not bound
+!missing-selector! NSXMLParser::setExternalEntityResolvingPolicy: is not bound
+!missing-selector! NSXMLParser::setShouldProcessNamespaces: is not bound
+!missing-selector! NSXMLParser::setShouldReportNamespacePrefixes: is not bound
+!missing-selector! NSXMLParser::setShouldResolveExternalEntities: is not bound
+!missing-selector! NSXMLParser::shouldProcessNamespaces is not bound
+!missing-selector! NSXMLParser::shouldReportNamespacePrefixes is not bound
+!missing-selector! NSXMLParser::shouldResolveExternalEntities is not bound
+!missing-selector! NSXMLParser::allowedExternalEntityURLs not bound
+!missing-selector! NSXMLParser::columnNumber not bound
+!missing-selector! NSXMLParser::delegate not bound
+!missing-selector! NSXMLParser::externalEntityResolvingPolicy not bound
+!missing-selector! NSXMLParser::initWithContentsOfURL: not bound
+!missing-selector! NSXMLParser::initWithData: not bound
+!missing-selector! NSXMLParser::initWithStream: not bound
+!missing-selector! NSXMLParser::lineNumber not bound
+!missing-selector! NSXMLParser::parserError not bound
+!missing-selector! NSXMLParser::publicID not bound
+!missing-selector! NSXMLParser::setAllowedExternalEntityURLs: not bound
+!missing-selector! NSXMLParser::setDelegate: not bound
+!missing-selector! NSXMLParser::setExternalEntityResolvingPolicy: not bound
+!missing-selector! NSXMLParser::setShouldProcessNamespaces: not bound
+!missing-selector! NSXMLParser::setShouldReportNamespacePrefixes: not bound
+!missing-selector! NSXMLParser::setShouldResolveExternalEntities: not bound
+!missing-selector! NSXMLParser::shouldProcessNamespaces not bound
+!missing-selector! NSXMLParser::shouldReportNamespacePrefixes not bound
+!missing-selector! NSXMLParser::shouldResolveExternalEntities not bound
+!missing-selector! NSXMLParser::systemID not bound
+!missing-protocol! NSXMLParserDelegate not bound
+!missing-selector! NSXMLParserDelegate::parser:didEndElement:namespaceURI:qualifiedName: is not bound
+!missing-selector! NSXMLParserDelegate::parser:didEndMappingPrefix: is not bound
+!missing-selector! NSXMLParserDelegate::parser:didStartElement:namespaceURI:qualifiedName:attributes: is not bound
+!missing-selector! NSXMLParserDelegate::parser:didStartMappingPrefix:toURI: is not bound
+!missing-selector! NSXMLParserDelegate::parser:foundAttributeDeclarationWithName:forElement:type:defaultValue: is not bound
+!missing-selector! NSXMLParserDelegate::parser:foundCDATA: is not bound
+!missing-selector! NSXMLParserDelegate::parser:foundCharacters: is not bound
+!missing-selector! NSXMLParserDelegate::parser:foundComment: is not bound
+!missing-selector! NSXMLParserDelegate::parser:foundElementDeclarationWithName:model: is not bound
+!missing-selector! NSXMLParserDelegate::parser:foundExternalEntityDeclarationWithName:publicID:systemID: is not bound
+!missing-selector! NSXMLParserDelegate::parser:foundIgnorableWhitespace: is not bound
+!missing-selector! NSXMLParserDelegate::parser:foundInternalEntityDeclarationWithName:value: is not bound
+!missing-selector! NSXMLParserDelegate::parser:foundNotationDeclarationWithName:publicID:systemID: is not bound
+!missing-selector! NSXMLParserDelegate::parser:foundProcessingInstructionWithTarget:data: is not bound
+!missing-selector! NSXMLParserDelegate::parser:foundUnparsedEntityDeclarationWithName:publicID:systemID:notationName: is not bound
+!missing-selector! NSXMLParserDelegate::parser:parseErrorOccurred: is not bound
+!missing-selector! NSXMLParserDelegate::parser:resolveExternalEntityName:systemID: is not bound
+!missing-selector! NSXMLParserDelegate::parser:validationErrorOccurred: is not bound
+!missing-selector! NSXMLParserDelegate::parserDidEndDocument: is not bound
+!missing-selector! NSXMLParserDelegate::parserDidStartDocument: is not bound
+
+
+# ModelIO
+
+# fixed in XAMCORE_4_0 - API break
+!incorrect-protocol-member! MDLObjectContainerComponent::count is REQUIRED and should be abstract
+!incorrect-protocol-member! MDLObjectContainerComponent::objectAtIndexedSubscript: is REQUIRED and should be abstract
+!incorrect-protocol-member! MDLTransformComponent::keyTimes is REQUIRED and should be abstract
+!incorrect-protocol-member! MDLTransformComponent::resetsTransform is REQUIRED and should be abstract
+!incorrect-protocol-member! MDLTransformComponent::setResetsTransform: is REQUIRED and should be abstract

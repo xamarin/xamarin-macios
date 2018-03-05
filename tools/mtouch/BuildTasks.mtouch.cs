@@ -337,7 +337,7 @@ namespace Xamarin.Bundler
 			// /System/Library/Frameworks/JavaScriptCore.framework/JavaScriptCore
 			// more details in https://bugzilla.xamarin.com/show_bug.cgi?id=31036
 			if (CompilerFlags.WeakFrameworks.Count > 0)
-				Target.AdjustDylibs ();
+				Target.AdjustDylibs (Target.Executable);
 			Driver.Watch ("Native Link", 1);
 		}
 
@@ -349,6 +349,14 @@ namespace Xamarin.Bundler
 
 	public class LinkTask : CompileTask
 	{
+		protected override async Task ExecuteAsync ()
+		{
+			await base.ExecuteAsync ();
+			// we can't trust the native linker to pick the right (non private) framework when an older TargetVersion is used
+			if (CompilerFlags.WeakFrameworks.Count > 0)
+				Target.AdjustDylibs (OutputFile);
+		}
+
 		protected override void CompilationFailed (int exitCode)
 		{
 			throw ErrorHelper.CreateError (5216, "Native linking failed for '{0}'. Please file a bug report at http://bugzilla.xamarin.com", OutputFile);

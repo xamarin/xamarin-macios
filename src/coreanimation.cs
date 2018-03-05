@@ -813,6 +813,37 @@ namespace XamCore.CoreAnimation {
 		CALayer HitTest (CGPoint thePoint);
 	}
 
+	enum CATextLayerTruncationMode {
+		[Field ("kCATruncationNone")]
+		None,
+
+		[Field ("kCATruncationStart")]
+		Start,
+
+		[Field ("kCATruncationMiddle")]
+		Middle,
+
+		[Field ("kCATruncationEnd")]
+		End,
+	}
+
+	enum CATextLayerAlignmentMode {
+		[Field ("kCAAlignmentLeft")]
+		Left,
+
+		[Field ("kCAAlignmentRight")]
+		Right,
+
+		[Field ("kCAAlignmentCenter")]
+		Center,
+
+		[Field ("kCAAlignmentJustified")]
+		Justified,
+
+		[Field ("kCAAlignmentNatural")]
+		Natural,
+	}
+
 	[Since (3,2)]
 	[BaseType (typeof (CALayer))]
 	interface CATextLayer {
@@ -840,38 +871,60 @@ namespace XamCore.CoreAnimation {
 		[Export ("wrapped")]
 		bool Wrapped { [Bind ("isWrapped")] get; set; }
 
+		[Protected]
 		[Export ("truncationMode", ArgumentSemantic.Copy)]
-		string TruncationMode { get; set; }
+		NSString WeakTruncationMode { get; set; }
 
+		[Protected]
 		[Export ("alignmentMode", ArgumentSemantic.Copy)]
-		string AlignmentMode { get; set; }
+		NSString WeakAlignmentMode { get; set; }
 
-		[Field ("kCATruncationNone")]
+#if !XAMCORE_4_0 // Use smart enums instead, CATruncationMode and CATextLayerAlignmentMode.
+		[Obsolete ("Use 'CATextLayerTruncationMode.None.GetConstant ()' instead.")]
+		[Static]
+		[Wrap ("CATextLayerTruncationMode.None.GetConstant ()")]
 		NSString TruncationNone { get; }
 		
-		[Field ("kCATruncationStart")]
+		[Obsolete ("Use 'CATextLayerTruncationMode.Start.GetConstant ()' instead.")]
+		[Static]
+		[Wrap ("CATextLayerTruncationMode.Start.GetConstant ()")]
 		NSString TruncantionStart { get; }
 		
-		[Field ("kCATruncationEnd")]
+		[Obsolete ("Use 'CATextLayerTruncationMode.End.GetConstant ()' instead.")]
+		[Static]
+		[Wrap ("CATextLayerTruncationMode.End.GetConstant ()")]
 		NSString TruncantionEnd { get; }
 		
-		[Field ("kCATruncationMiddle")]
+		[Obsolete ("Use 'CATextLayerTruncationMode.Middle.GetConstant ()' instead.")]
+		[Static]
+		[Wrap ("CATextLayerTruncationMode.Middle.GetConstant ()")]
 		NSString TruncantionMiddle { get; }
 		
-		[Field ("kCAAlignmentNatural")]
+		[Obsolete ("Use 'CATextLayerAlignmentMode.Natural.GetConstant ()' instead.")]
+		[Static]
+		[Wrap ("CATextLayerAlignmentMode.Natural.GetConstant ()")]
 		NSString AlignmentNatural { get; }
 		
-		[Field ("kCAAlignmentLeft")]
+		[Obsolete ("Use 'CATextLayerAlignmentMode.Left.GetConstant ()' instead.")]
+		[Static]
+		[Wrap ("CATextLayerAlignmentMode.Left.GetConstant ()")]
 		NSString AlignmentLeft { get; }
 		
-		[Field ("kCAAlignmentRight")]
+		[Obsolete ("Use 'CATextLayerAlignmentMode.Right.GetConstant ()' instead.")]
+		[Static]
+		[Wrap ("CATextLayerAlignmentMode.Right.GetConstant ()")]
 		NSString AlignmentRight { get; }
 		
-		[Field ("kCAAlignmentCenter")]
+		[Obsolete ("Use 'CATextLayerAlignmentMode.Center.GetConstant ()' instead.")]
+		[Static]
+		[Wrap ("CATextLayerAlignmentMode.Center.GetConstant ()")]
 		NSString AlignmentCenter { get; }
 		
-		[Field ("kCAAlignmentJustified")]
+		[Obsolete ("Use 'CATextLayerAlignmentMode.Justified.GetConstant ()' instead.")]
+		[Static]
+		[Wrap ("CATextLayerAlignmentMode.Justified.GetConstant ()")]
 		NSString AlignmentJustified { get; }
+#endif // !XAMCORE_4_0
 
 		[iOS(9,0)]
 		[Export ("allowsFontSubpixelQuantization")]
@@ -1019,12 +1072,10 @@ namespace XamCore.CoreAnimation {
 
 		#region SceneKitAdditions
 
-#if XAMCORE_2_0
-		[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0), NoWatch]
+		[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0, onlyOn64: true), NoWatch]
 		[Static]
 		[Export ("animationWithSCNAnimation:")]
 		CAAnimation FromSCNAnimation (SCNAnimation animation);
-#endif
 
 		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
 		[Export ("usesSceneTimeBase")]

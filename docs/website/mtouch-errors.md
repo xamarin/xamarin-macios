@@ -576,6 +576,31 @@ earlier iOS version.
 
 <!-- 0119 - 0123: free to use -->
 
+### <a name="MT0123"/>MT0123: The executable assembly * does not reference *.
+
+No reference could be found to the platform assembly (Xamarin.iOS.dll / Xamarin.TVOS.dll / Xamarin.WatchOS.dll) in the executable assembly.
+
+This typically happens where there is no code in the executable project that uses anything from the platform assembly; for instance an empty Main method (and no other code) would show this error:
+
+```csharp
+class Program {
+    void Main (string[] args)
+    {
+    }
+}
+```
+
+Using an API from the platform assembly will solve the error:
+
+```csharp
+class Program {
+    void Main (string[] args)
+    {
+        System.Console.WriteLine (typeof (UIKit.UIWindow));
+    }
+}
+```
+
 ### <a name="MT0124"/>MT0124: Could not set the current language to '{lang}' (according to LANG={LANG}): {exception}
 
 This is a warning, indicating that the current language couldn't be set to the language in the error message.
@@ -597,6 +622,12 @@ Incremental builds have been disabled automatically because this version of Xama
 No action is required, this message is purely informational.
 
 For further information see bug #[52727](https://bugzilla.xamarin.com/show_bug.cgi?id=52727).
+
+### <a name="MT0128"/>MT0128: Could not touch the file '*': *
+
+A failure occurred when touching a file (which is done to ensure partial builds are done correctly).
+
+This warning can most likely be ignored; in case of any problems file a bug (https://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS)) and it will be investigated.
 
 # MT1xxx: Project related error messages
 
@@ -855,6 +886,8 @@ Please check if your device is locked.
 ### <a name="MT1110"/>MT1110: Application failed to launch because of iOS security restrictions. Please ensure the developer is trusted.
 
 If you're deploying an enterprise app or using a free provisioning profile, you might have trust the developer (this is explained <a href="http://stackoverflow.com/a/30726375/183422">here</a>).
+
+### <a name="MT1111"/>MT1111: Application launched successfully, but it's not possible to wait for the app to exit as requested because it's not possible to detect app termination when launching using gdbserver.
 
 ### MT12xx: Simulator
 
@@ -1220,6 +1253,19 @@ The assembly causing the issue is named in the error message. In order to fix th
 Something unexpected occured when trying to mark the method mentioned in the error message.
 
 The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
+
+### <a name="MT2103"/>MT2103: Error processing assembly '\*': *
+
+An unexpected error occured when processing an assembly.
+
+The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
+### <a name="MT2104"/>MM2104: Unable to link assembly '{0}' as it is mixed-mode.
+
+Mixed-mode assemblies can not be processed by the linker.
+
+See https://msdn.microsoft.com/en-us/library/x0w2664k.aspx for more information on mixed-mode assemblies.
 
 # MT3xxx: AOT error messages
 

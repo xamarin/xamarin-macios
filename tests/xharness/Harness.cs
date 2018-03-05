@@ -21,41 +21,6 @@ namespace xharness
 		Jenkins,
 	}
 
-	public class BCLTest
-	{
-		public string Name { get; private set; }
-		public BCLTest (string name) 
-		{
-			Name = name;
-		}
-
-		public virtual void Convert (Harness harness) {
-			var target = new BCLTarget () {
-				Harness = harness,
-				MonoPath = harness.MONO_PATH,
-				TestName = Name,
-				WatchMonoPath = harness.WATCH_MONO_PATH
-			};
-			target.Convert ();
-		}
-	}
-
-	public class MacBCLTest : BCLTest
-	{
-		public MacBCLTest (string name) : base (name)
-		{
-		}
-
-		public override void Convert (Harness harness) {
-			var target = new MacBCLTarget () {
-				Harness = harness,
-				MonoPath = harness.MONO_PATH,
-				TestName = Name,
-			};
-			target.Convert ();
-		}
-	}
-
 	public class Harness
 	{
 		public HarnessAction Action { get; set; }
@@ -63,6 +28,12 @@ namespace xharness
 		public Log HarnessLog { get; set; }
 		public bool UseSystem { get; set; } // if the system XI/XM should be used, or the locally build XI/XM.
 		public HashSet<string> Labels { get; } = new HashSet<string> ();
+
+		public static string Timestamp {
+			get {
+				return $"{DateTime.Now:yyyyMMdd_HHmmss}";
+			}
+		}
 
 		// This is the maccore/tests directory.
 		string root_directory;
@@ -92,9 +63,6 @@ namespace xharness
 
 		public List<iOSTestProject> IOSTestProjects { get; set; } = new List<iOSTestProject> ();
 		public List<MacTestProject> MacTestProjects { get; set; } = new List<MacTestProject> ();
-
-		public List<BCLTest> IOSBclTests { get; set; } = new List<BCLTest> ();
-		public List<MacBCLTest> MacBclTests { get; set; } = new List<MacBCLTest> ();
 
 		// Configure
 		public bool AutoConf { get; set; }
@@ -127,6 +95,9 @@ namespace xharness
 		public string JenkinsConfiguration { get; set; }
 		public Dictionary<string, string> EnvironmentVariables { get; set; } = new Dictionary<string, string> ();
 		public string MarkdownSummaryPath { get; set; }
+		public string PeriodicCommand { get; set; }
+		public string PeriodicCommandArguments { get; set; }
+		public TimeSpan PeriodicCommandInterval { get; set; }
 		// whether tests that require access to system resources (system contacts, photo library, etc) should be executed or not
 		public bool IncludeSystemPermissionTests { get; set; } = true;
 
@@ -280,12 +251,12 @@ namespace xharness
 			foreach (var p in test_suites)
 				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p.ProjectFile + "/" + p.ProjectFile + ".sln"))) { Name = p.Name });
 			
-			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "Mac", "introspection-mac.csproj")), skipXMVariations: true) { Name = "introspection" });
+			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "Mac", "introspection-mac.csproj")), targetFrameworkFlavor: MacFlavors.Modern) { Name = "introspection" });
 
 			var hard_coded_test_suites = new [] {
-				new { ProjectFile = "mmptest", Name = "mmptest", IsNUnit = true, Configurations = (string[]) null },
-				new { ProjectFile = "msbuild-mac", Name = "MSBuild tests", IsNUnit = false, Configurations = (string[]) null },
-				new { ProjectFile = "xammac_tests", Name = "xammac tests", IsNUnit = false, Configurations = new string [] { "Debug", "Release" }},
+				new { ProjectFile = "mmptest", Name = "mmptest", IsNUnit = true, Configurations = (string[]) null, Platform = "x86", },
+				new { ProjectFile = "msbuild-mac", Name = "MSBuild tests", IsNUnit = false, Configurations = (string[]) null, Platform = "x86" },
+				new { ProjectFile = "xammac_tests", Name = "xammac tests", IsNUnit = false, Configurations = new string [] { "Debug", "Release" }, Platform = "AnyCPU" },
 			};
 			foreach (var p in hard_coded_test_suites) {
 				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p.ProjectFile + "/" + p.ProjectFile + ".csproj")), generateVariations: false) {
@@ -293,13 +264,43 @@ namespace xharness
 					IsNUnitProject = p.IsNUnit,
 					SolutionPath = Path.GetFullPath (Path.Combine (RootDirectory, "tests-mac.sln")),
 					Configurations = p.Configurations,
+					Platform = p.Platform,
 				});
 			}
 
-			var bcl_suites = new string[] { "mscorlib", "System", "System.Core", "System.Data", "System.Net.Http", "System.Numerics", "System.Runtime.Serialization", "System.Transactions", "System.Web.Services", "System.Xml", "System.Xml.Linq", "Mono.Security", "System.ComponentModel.DataAnnotations", "System.Json", "System.ServiceModel.Web", "Mono.Data.Sqlite" };
+			var bcl_suites = new string[] {
+				"mscorlib",
+				"System",
+				"System.Core",
+				"System.Data",
+				"System.Net.Http",
+				"System.Numerics",
+				"System.Runtime.Serialization",
+				"System.Transactions", "System.Web.Services",
+				"System.Xml",
+				"System.Xml.Linq",
+				"Mono.Security",
+				"System.ComponentModel.DataAnnotations",
+				"System.Json",
+				"System.ServiceModel.Web",
+				"Mono.Data.Sqlite",
+				"Mono.Data.Tds",
+				"System.IO.Compression",
+				"System.IO.Compression.FileSystem",
+				"Mono.CSharp",
+				"System.Security",
+			};
 			foreach (var p in bcl_suites) {
-				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/" + p + "/" + p + "-Mac.csproj")), generateVariations: false) { Name = p });
-				MacBclTests.Add (new MacBCLTest (p));
+				foreach (var flavor in new MacFlavors [] { MacFlavors.Full, MacFlavors.Modern }) {
+					var bclTestInfo = new MacBCLTestInfo (this, p, flavor);
+					var bclTestProject = new MacTestProject (bclTestInfo.ProjectPath, targetFrameworkFlavor: flavor, generateVariations: false) {
+						Name = p,
+						BCLInfo = bclTestInfo,
+						Platform = "AnyCPU",
+					};
+
+					MacTestProjects.Add (bclTestProject);
+				}
 			}
 		}
 
@@ -309,9 +310,33 @@ namespace xharness
 			var library_projects = new string [] { "BundledResources", "EmbeddedResources", "bindings-test", "bindings-test2", "bindings-framework-test" };
 			var fsharp_test_suites = new string [] { "fsharp" };
 			var fsharp_library_projects = new string [] { "fsharplibrary" };
-			var bcl_suites = new string [] { "mscorlib", "System", "System.Core", "System.Data", "System.Net.Http", "System.Numerics", "System.Runtime.Serialization", "System.Transactions", "System.Web.Services", "System.Xml", "System.Xml.Linq", "Mono.Security", "System.ComponentModel.DataAnnotations", "System.Json", "System.ServiceModel.Web", "Mono.Data.Sqlite" };
+			var bcl_suites = new string [] {
+				"mscorlib",
+				"System",
+				"System.Core",
+				"System.Data",
+				"System.Net.Http",
+				"System.Numerics",
+				"System.Runtime.Serialization",
+				"System.Transactions",
+				"System.Web.Services",
+				"System.Xml",
+				"System.Xml.Linq",
+				"Mono.Security",
+				"System.ComponentModel.DataAnnotations",
+				"System.Json",
+				"System.ServiceModel.Web",
+				"Mono.Data.Sqlite",
+				"Mono.Data.Tds",
+				"System.IO.Compression",
+				"System.IO.Compression.FileSystem",
+				"Mono.CSharp",
+				"System.Security",
+			};
 			var bcl_skip_watchos = new string [] {
 				"Mono.Security",
+				"Mono.Data.Tds",
+				"Mono.CSharp",
 			};
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/mscorlib/mscorlib-0.csproj")), false));
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/mscorlib/mscorlib-1.csproj")), false));
@@ -325,10 +350,11 @@ namespace xharness
 				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj")), false));
 
 			foreach (var p in bcl_suites) {
+				BCLTestInfo bclTestInfo = new BCLTestInfo (this, p);
 				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/" + p + "/" + p + ".csproj"))) {
 					SkipwatchOSVariation = bcl_skip_watchos.Contains (p),
+					BCLInfo = bclTestInfo
 				});
-				IOSBclTests.Add (new BCLTest (p));
 			}
 			
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "iOS", "introspection-ios.csproj"))) { Name = "introspection" });
@@ -398,15 +424,21 @@ namespace xharness
 			var classic_targets = new List<MacClassicTarget> ();
 			var unified_targets = new List<MacUnifiedTarget> ();
 			var hardcoded_unified_targets = new List<MacUnifiedTarget> ();
- 
+
+			Action<MacTarget, string, bool> configureTarget = (MacTarget target, string file, bool isNUnitProject) => {
+				target.TemplateProjectPath = file;
+				target.Harness = this;
+				target.IsNUnitProject = isNUnitProject;
+				target.Execute ();
+			};
+
  			RootDirectory = Path.GetFullPath (RootDirectory).TrimEnd ('/');
  
  			if (AutoConf)
 				AutoConfigureMac ();
 
-			foreach (var proj in MacBclTests) {
-				proj.Convert (this);
-			}
+			foreach (var bclTestInfo in MacTestProjects.Where (x => x.BCLInfo != null).Select (x => x.BCLInfo))
+				bclTestInfo.Convert ();
  
 			foreach (var proj in MacTestProjects.Where ((v) => v.GenerateVariations)) {
 				var file = Path.ChangeExtension (proj.Path, "csproj");
@@ -415,47 +447,33 @@ namespace xharness
 
 				foreach (bool thirtyTwoBit in new bool[] { false, true })
 				{
-					var unifiedMobile = new MacUnifiedTarget (true, thirtyTwoBit)
-					{
-						TemplateProjectPath = file,
-						Harness = this,
-						IsNUnitProject = proj.IsNUnitProject,
-					};
-					unifiedMobile.Execute ();
-					unified_targets.Add (unifiedMobile);
+					if (proj.GenerateModern) {
+						var modern = new MacUnifiedTarget (true, thirtyTwoBit);
+						configureTarget (modern, file, proj.IsNUnitProject);
+						unified_targets.Add (modern);
+					}
 
-					if (!proj.SkipXMVariations) {
-						var unifiedXM45 = new MacUnifiedTarget (false, thirtyTwoBit)
-						{
-							TemplateProjectPath = file,
-							Harness = this,
-						};
-						unifiedXM45.Execute ();
-						unified_targets.Add (unifiedXM45);
+					if (proj.GenerateFull) {
+						var full = new MacUnifiedTarget (false, thirtyTwoBit);
+						configureTarget (full, file, proj.IsNUnitProject);
+						unified_targets.Add (full);
 					}
 				}
- 
-				var classic = new MacClassicTarget () {
- 					TemplateProjectPath = file,
- 					Harness = this,
- 				};
-				classic.Execute ();
+
+				var classic = new MacClassicTarget ();
+				configureTarget (classic, file, false);
 				classic_targets.Add (classic);
 			}
  
-			foreach (var proj in MacTestProjects.Where ((v) => !v.GenerateVariations)) {
+			foreach (var proj in MacTestProjects.Where (v => !v.GenerateVariations)) {
 				var file = proj.Path;
-				var unifiedMobile = new MacUnifiedTarget (true, false, true)
-				{
- 					TemplateProjectPath = file,
- 					Harness = this,
-					IsNUnitProject = proj.IsNUnitProject,
- 				};
-				unifiedMobile.Execute ();
-				hardcoded_unified_targets.Add (unifiedMobile);
+				var unified = new MacUnifiedTarget (proj.GenerateModern, thirtyTwoBit: false, shouldSkipProjectGeneration: true);
+				unified.BCLInfo = proj.BCLInfo;
+				configureTarget (unified, file, proj.IsNUnitProject);
+				hardcoded_unified_targets.Add (unified);
  			}
  
-			MakefileGenerator.CreateMacMakefile (this, classic_targets.Union<MacTarget> (unified_targets).Union (hardcoded_unified_targets) );
+			MakefileGenerator.CreateMacMakefile (this, classic_targets.Union<MacTarget> (unified_targets).Union (hardcoded_unified_targets));
 		}
 
 		void ConfigureIOS ()
@@ -470,9 +488,8 @@ namespace xharness
 			if (AutoConf)
 				AutoConfigureIOS ();
 
-			foreach (var proj in IOSBclTests) {
-				proj.Convert (this);
-			}
+			foreach (var bclTestInfo in IOSTestProjects.Where (x => x.BCLInfo != null).Select (x => x.BCLInfo))
+				bclTestInfo.Convert ();
 
 			foreach (var proj in IOSTestProjects) {
 				var file = proj.Path;
@@ -607,10 +624,11 @@ namespace xharness
 
 		public void LogWrench (string message, params object[] args)
 		{
-			if (!InWrench)
-				return;
+			// Disable this for now, since we're not uploading directly to wrench anymore, but instead using the Html Report.
+			//if (!InWrench)
+			//	return;
 
-			Console.WriteLine (message, args);
+			//Console.WriteLine (message, args);
 		}
 
 		public void LogWrench (string message)
@@ -751,12 +769,12 @@ namespace xharness
 			return ProcessHelper.ExecuteCommandAsync (Path.Combine (XcodeRoot, "Contents", "Developer", "usr", "bin", executable), args, log, timeout: timeout);
 		}
 
-		public async Task ShowSimulatorList (LogStream log)
+		public async Task ShowSimulatorList (Log log)
 		{
 			await ExecuteXcodeCommandAsync ("simctl", "list", log, TimeSpan.FromSeconds (10));
 		}
 
-		public async Task<LogFile> SymbolicateCrashReportAsync (Log log, LogFile report)
+		public async Task<LogFile> SymbolicateCrashReportAsync (Logs logs, Log log, LogFile report)
 		{
 			var symbolicatecrash = Path.Combine (XcodeRoot, "Contents/SharedFrameworks/DTDeviceKitBase.framework/Versions/A/Resources/symbolicatecrash");
 			if (!File.Exists (symbolicatecrash))
@@ -767,7 +785,8 @@ namespace xharness
 				return report;
 			}
 
-			var symbolicated = new LogFile ("Symbolicated crash report", Path.ChangeExtension (report.Path, ".symbolicated.log"));
+			var name = Path.GetFileName (report.Path);
+			var symbolicated = logs.Create (Path.ChangeExtension (name, ".symbolicated.log"), $"Symbolicated crash report: {name}");
 			var environment = new Dictionary<string, string> { { "DEVELOPER_DIR", Path.Combine (XcodeRoot, "Contents", "Developer") } };
 			var rv = await ProcessHelper.ExecuteCommandAsync (symbolicatecrash, StringUtils.Quote (report.Path), symbolicated, TimeSpan.FromMinutes (1), environment);
 			if (rv.Succeeded) {;
@@ -841,16 +860,15 @@ namespace xharness
 					if (!Device) {
 						crash_reports = new List<LogFile> (end_crashes.Count);
 						foreach (var path in end_crashes) {
-							var logPath = Path.Combine (LogDirectory, Path.GetFileName (path));
-							File.Copy (path, logPath, true);
-							crash_reports.Add (Logs.CreateFile ("Crash report: " + Path.GetFileName (path), logPath));
+							Logs.AddFile (path, $"Crash report: {Path.GetFileName (path)}");
 						}
 					} else {
 						// Download crash reports from the device. We put them in the project directory so that they're automatically deleted on wrench
 						// (if we put them in /tmp, they'd never be deleted).
 						var downloaded_crash_reports = new List<LogFile> ();
 						foreach (var file in end_crashes) {
-							var crash_report_target = Logs.CreateFile ("Crash report: " + Path.GetFileName (file), Path.Combine (LogDirectory, Path.GetFileName (file)));
+							var name = Path.GetFileName (file);
+							var crash_report_target = Logs.Create (name, $"Crash report: {name}");
 							var sb = new StringBuilder ();
 							sb.Append (" --download-crash-report=").Append (StringUtils.Quote (file));
 							sb.Append (" --download-crash-report-to=").Append (StringUtils.Quote (crash_report_target.Path));
@@ -860,8 +878,7 @@ namespace xharness
 							var result = await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, sb.ToString (), Log, TimeSpan.FromMinutes (1));
 							if (result.Succeeded) {
 								Log.WriteLine ("Downloaded crash report {0} to {1}", file, crash_report_target.Path);
-								crash_report_target = await Harness.SymbolicateCrashReportAsync (Log, crash_report_target);
-								Logs.Add (crash_report_target);
+								crash_report_target = await Harness.SymbolicateCrashReportAsync (Logs, Log, crash_report_target);
 								downloaded_crash_reports.Add (crash_report_target);
 							} else {
 								Log.WriteLine ("Could not download crash report {0}", file);

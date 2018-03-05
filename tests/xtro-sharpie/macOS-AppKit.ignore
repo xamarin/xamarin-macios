@@ -1,61 +1,8 @@
-## https://bugzilla.xamarin.com/show_bug.cgi?id=30717 
+# https://bugzilla.xamarin.com/show_bug.cgi?id=30717 
 !duplicate-register! _NSDatePickerCellDelegate exists as both AppKit.NSDatePickerCell/_NSDatePickerCellDelegate and AppKit.NSDatePicker/_NSDatePickerCellDelegate
 
-## Proxy class for NSGraphicsContext internal to AppKit
+# Proxy class for NSGraphicsContext internal to AppKit
 !unknown-type! NSPrintPreviewGraphicsContext bound
-
-## 32-bit only, and marked correctly in binding
-!unknown-type! NSMenuView bound
-
-## In header as old style unnamaed enum
-!unknown-native-enum! NSModalResponse bound
-!unknown-native-enum! NSWindowLevel bound
-
-## Defined in NSObject(NSDraggingSourceDeprecated)
-!extra-protocol-member! unexpected selector NSDraggingSource::draggingSourceOperationMaskForLocal: found
-!extra-protocol-member! unexpected selector NSDraggingSource::draggedImage:beganAt: found
-!extra-protocol-member! unexpected selector NSDraggingSource::draggedImage:endedAt:operation: found
-!extra-protocol-member! unexpected selector NSDraggingSource::draggedImage:movedTo: found
-!extra-protocol-member! unexpected selector NSDraggingSource::ignoreModifierKeysWhileDragging found
-!extra-protocol-member! unexpected selector NSDraggingSource::draggedImage:endedAt:deposited: found
-
-## Defined in NSObject(NSDraggingSourceDeprecated)
-!extra-protocol-member! unexpected selector NSDraggingSource::namesOfPromisedFilesDroppedAtDestination: found
-
-## Defined in NSObject(NSSavePanelDelegateDeprecated)
-!extra-protocol-member! unexpected selector NSOpenSavePanelDelegate::panel:compareFilename:with:caseSensitive: found
-!extra-protocol-member! unexpected selector NSOpenSavePanelDelegate::panel:directoryDidChange: found
-!extra-protocol-member! unexpected selector NSOpenSavePanelDelegate::panel:isValidFilename: found
-!extra-protocol-member! unexpected selector NSOpenSavePanelDelegate::panel:shouldShowFilename: found
-
-## Defined in NSObject (NSDeprecatedTextStorageDelegate)
-!extra-protocol-member! unexpected selector NSTextStorageDelegate::textStorageDidProcessEditing: found
-!extra-protocol-member! unexpected selector NSTextStorageDelegate::textStorageWillProcessEditing: found
-!missing-selector! NSObject::textStorageDidProcessEditing: not bound
-!missing-selector! NSObject::textStorageWillProcessEditing: not bound
-
-## Used in sandbox for NSOpen/Save panel but never should have been bound. #if !XAMCORE_3_0'ed
-!unknown-type! NSRemoteOpenPanel bound
-!unknown-type! NSRemoteSavePanel bound
-
-## Defined in NSControlTextEditingDelegate - NSTextFieldDelegate <NSControlTextEditingDelegate>
-!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:didFailToFormatString:errorDescription: found
-!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:didFailToValidatePartialString:errorDescription: found
-!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:isValidObject: found
-!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:textShouldBeginEditing: found
-!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:textShouldEndEditing: found
-!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:textView:completions:forPartialWordRange:indexOfSelectedItem: found
-!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:textView:doCommandBySelector: found
-
-# From header - This method is invoked when the user begins editing text in a control such as a text field or a form field. 
-# The control posts a NSControlTextDidBeginEditingNotification notification, and if the control’s delegate implements this method,
-# it is automatically registered to receive the notification.
-!extra-protocol-member! unexpected selector NSRuleEditorDelegate::controlTextDidBeginEditing: found
-!extra-protocol-member! unexpected selector NSRuleEditorDelegate::controlTextDidChange: found
-!extra-protocol-member! unexpected selector NSRuleEditorDelegate::controlTextDidEndEditing: found
-!extra-protocol-member! unexpected selector NSTextFieldDelegate::controlTextDidBeginEditing: found
-!extra-protocol-member! unexpected selector NSTextFieldDelegate::controlTextDidChange: found
-!extra-protocol-member! unexpected selector NSTextFieldDelegate::controlTextDidEndEditing: found
 
 
 ## unsorted
@@ -66,8 +13,34 @@
 !extra-protocol-member! unexpected selector NSApplicationDelegate::readSelectionFromPasteboard: found
 !extra-protocol-member! unexpected selector NSApplicationDelegate::registerServicesMenuSendTypes:returnTypes: found
 !extra-protocol-member! unexpected selector NSApplicationDelegate::writeSelectionToPasteboard:types: found
+!extra-protocol-member! unexpected selector NSDraggingSource::draggedImage:beganAt: found
+!extra-protocol-member! unexpected selector NSDraggingSource::draggedImage:endedAt:deposited: found
+!extra-protocol-member! unexpected selector NSDraggingSource::draggedImage:endedAt:operation: found
+!extra-protocol-member! unexpected selector NSDraggingSource::draggedImage:movedTo: found
+!extra-protocol-member! unexpected selector NSDraggingSource::draggingSourceOperationMaskForLocal: found
+!extra-protocol-member! unexpected selector NSDraggingSource::ignoreModifierKeysWhileDragging found
+!extra-protocol-member! unexpected selector NSDraggingSource::namesOfPromisedFilesDroppedAtDestination: found
 !extra-protocol-member! unexpected selector NSGestureRecognizerDelegate::xamarinselector:removed: found
+!extra-protocol-member! unexpected selector NSOpenSavePanelDelegate::panel:compareFilename:with:caseSensitive: found
+!extra-protocol-member! unexpected selector NSOpenSavePanelDelegate::panel:directoryDidChange: found
+!extra-protocol-member! unexpected selector NSOpenSavePanelDelegate::panel:isValidFilename: found
+!extra-protocol-member! unexpected selector NSOpenSavePanelDelegate::panel:shouldShowFilename: found
 !extra-protocol-member! unexpected selector NSPasteboardReading::xamarinselector:removed: found
+!extra-protocol-member! unexpected selector NSRuleEditorDelegate::controlTextDidBeginEditing: found
+!extra-protocol-member! unexpected selector NSRuleEditorDelegate::controlTextDidChange: found
+!extra-protocol-member! unexpected selector NSRuleEditorDelegate::controlTextDidEndEditing: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:didFailToFormatString:errorDescription: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:didFailToValidatePartialString:errorDescription: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:isValidObject: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:textShouldBeginEditing: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:textShouldEndEditing: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:textView:completions:forPartialWordRange:indexOfSelectedItem: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:textView:doCommandBySelector: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::controlTextDidBeginEditing: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::controlTextDidChange: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::controlTextDidEndEditing: found
+!extra-protocol-member! unexpected selector NSTextStorageDelegate::textStorageDidProcessEditing: found
+!extra-protocol-member! unexpected selector NSTextStorageDelegate::textStorageWillProcessEditing: found
 !incorrect-protocol-member! +NSPasteboardReading::readableTypesForPasteboard: is REQUIRED and should be abstract
 !incorrect-protocol-member! +NSWindowRestoration::restoreWindowWithIdentifier:state:completionHandler: is REQUIRED and should be abstract
 !incorrect-protocol-member! NSAccessibility::accessibilityChildrenInNavigationOrder is REQUIRED and should be abstract
@@ -138,6 +111,58 @@
 !incorrect-protocol-member! NSTextInputClient::validAttributesForMarkedText is REQUIRED and should be abstract
 !incorrect-protocol-member! NSUserInterfaceItemIdentification::identifier is REQUIRED and should be abstract
 !incorrect-protocol-member! NSUserInterfaceItemIdentification::setIdentifier: is REQUIRED and should be abstract
+!missing-designated-initializer! NSAppearance::initWithAppearanceNamed:bundle: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSButtonCell::initImageCell: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSButtonCell::initTextCell: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSCell::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSCell::initImageCell: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSCell::initTextCell: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSControl::initWithFrame: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSController::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSCursor::initWithImage:hotSpot: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSDatePickerCell::initTextCell: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSDocument::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSDocumentController::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSFilePromiseProvider::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSFormCell::initTextCell: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSGestureRecognizer::initWithTarget:action: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSImage::initWithSize: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSImageRep::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSLayoutManager::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSMenu::initWithTitle: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSMenuItem::initWithTitle:action:keyEquivalent: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSMenuItemCell::initTextCell: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSObjectController::initWithContent: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSPopover::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSPressureConfiguration::initWithPressureBehavior: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSResponder::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSRulerMarker::initWithRulerView:markerLocation:image:imageOrigin: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSRulerView::initWithScrollView:orientation: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSScrollView::initWithFrame: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSScrubberLayout::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSScrubberSelectionStyle::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSSearchFieldCell::initTextCell: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSShadow::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSSharingService::initWithTitle:image:alternateImage:handler: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSSharingServicePicker::initWithItems: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSStoryboardSegue::initWithIdentifier:source:destination: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSTableColumn::initWithIdentifier: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSTableView::initWithFrame: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSText::initWithFrame: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSTextBlock::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSTextFieldCell::initTextCell: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSTextFinder::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSTextTableBlock::initWithTable:startingRow:rowSpan:startingColumn:columnSpan: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSTextView::initWithFrame:textContainer: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSToolbar::initWithIdentifier: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSToolbarItem::initWithItemIdentifier: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSTouchBar::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSUserDefaultsController::initWithDefaults:initialValues: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSUserInterfaceCompressionOptions::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSView::initWithFrame: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSViewController::initWithNibName:bundle: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSWindow::initWithContentRect:styleMask:backing:defer: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSWindowController::initWithWindow: is missing an [DesignatedInitializer] attribute
 !missing-enum! NSAutoresizingMaskOptions not bound
 !missing-enum! NSBackingStoreType not bound
 !missing-enum! NSCellHitResult not bound
@@ -928,6 +953,8 @@
 !missing-selector! NSObject::pasteboard:provideDataForType: not bound
 !missing-selector! NSObject::pasteboardChangedOwner: not bound
 !missing-selector! NSObject::tableView:writeRows:toPasteboard: not bound
+!missing-selector! NSObject::textStorageDidProcessEditing: not bound
+!missing-selector! NSObject::textStorageWillProcessEditing: not bound
 !missing-selector! NSObject::validateMenuItem: not bound
 !missing-selector! NSObject::validateToolbarItem: not bound
 !missing-selector! NSObject::view:stringForToolTip:point:userData: not bound
@@ -1230,6 +1257,7 @@
 !unknown-native-enum! NSImageScale bound
 !unknown-native-enum! NSKey bound
 !unknown-native-enum! NSMenuProperty bound
+!unknown-native-enum! NSModalResponse bound
 !unknown-native-enum! NSPanelButtonType bound
 !unknown-native-enum! NSRunResponse bound
 !unknown-native-enum! NSSystemDefinedEvents bound
@@ -1239,66 +1267,10 @@
 !unknown-native-enum! NSTextStorageEditedFlags bound
 !unknown-native-enum! NSType bound
 !unknown-native-enum! NSViewResizingMask bound
+!unknown-native-enum! NSWindowLevel bound
 !unknown-native-enum! NSWindowStyle bound
+!unknown-type! NSMenuView bound
+!unknown-type! NSRemoteOpenPanel bound
+!unknown-type! NSRemoteSavePanel bound
 !wrong-enum-size! NSEventSubtype managed 8 vs native 2
 !wrong-enum-size! NSSpellingState managed 4 vs native 8
-
-## NSGlyphStorage protocol not bound
-!missing-protocol-conformance! NSLayoutManager should conform to NSGlyphStorage (defined in 'NSGlyphGeneration' category)
-
-### moved from macOS-AppKit.todo
-!missing-designated-initializer! NSAppearance::initWithAppearanceNamed:bundle: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSButtonCell::initImageCell: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSButtonCell::initTextCell: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSCell::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSCell::initImageCell: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSCell::initTextCell: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSControl::initWithFrame: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSController::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSCursor::initWithImage:hotSpot: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSDatePickerCell::initTextCell: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSDocument::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSDocumentController::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSFilePromiseProvider::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSFormCell::initTextCell: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSGestureRecognizer::initWithTarget:action: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSImage::initWithSize: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSImageRep::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSLayoutManager::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSMenu::initWithTitle: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSMenuItem::initWithTitle:action:keyEquivalent: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSMenuItemCell::initTextCell: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSObjectController::initWithContent: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSPopover::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSPressureConfiguration::initWithPressureBehavior: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSResponder::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSRulerMarker::initWithRulerView:markerLocation:image:imageOrigin: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSRulerView::initWithScrollView:orientation: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSScrollView::initWithFrame: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSScrubberLayout::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSScrubberSelectionStyle::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSSearchFieldCell::initTextCell: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSShadow::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSSharingService::initWithTitle:image:alternateImage:handler: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSSharingServicePicker::initWithItems: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSStoryboardSegue::initWithIdentifier:source:destination: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSTableColumn::initWithIdentifier: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSTableView::initWithFrame: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSText::initWithFrame: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSTextBlock::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSTextFieldCell::initTextCell: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSTextFinder::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSTextTableBlock::initWithTable:startingRow:rowSpan:startingColumn:columnSpan: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSTextView::initWithFrame:textContainer: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSToolbar::initWithIdentifier: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSToolbarItem::initWithItemIdentifier: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSTouchBar::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSUserDefaultsController::initWithDefaults:initialValues: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSUserInterfaceCompressionOptions::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSView::initWithFrame: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSViewController::initWithNibName:bundle: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSWindow::initWithContentRect:styleMask:backing:defer: is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! NSWindowController::initWithWindow: is missing an [DesignatedInitializer] attribute
-
-## likely fixed in master (but not in xcode9.2)
-!missing-selector! NSGestureRecognizer::setState: not bound

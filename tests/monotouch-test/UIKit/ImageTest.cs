@@ -1,5 +1,6 @@
 // Copyright 2011, 2013 Xamarin Inc. All rights reserved
 
+#if !MONOMAC
 using System;
 using System.Drawing;
 using System.IO;
@@ -18,9 +19,9 @@ using MonoTouch.UIKit;
 using NUnit.Framework;
 
 #if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
+using RectangleF = CoreGraphics.CGRect;
+using SizeF = CoreGraphics.CGSize;
+using PointF = CoreGraphics.CGPoint;
 #else
 using nfloat=global::System.Single;
 using nint=global::System.Int32;
@@ -28,7 +29,7 @@ using nuint=global::System.UInt32;
 #endif
 
 namespace MonoTouchFixtures.UIKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ImageTest {
@@ -99,7 +100,8 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void FromImage_Null ()
 		{
-			Assert.Throws<ArgumentNullException> (() => UIImage.FromImage ((CGImage)null), "CGImage");
+			Assert.Throws<ArgumentNullException> (() => UIImage.FromImage ((CGImage) null), "CGImage");
 		}
 	}
 }
+#endif

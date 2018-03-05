@@ -7,7 +7,7 @@
 // Copyright 2013 Xamarin Inc. All rights reserved.
 //
 
-#if !__WATCHOS__
+#if !__WATCHOS__ && !MONOMAC
 
 using System;
 using System.IO;
@@ -15,12 +15,16 @@ using System.IO;
 using Foundation;
 using ObjCRuntime;
 using StoreKit;
+#if !MONOMAC
 using UIKit;
+#endif
 #else
 using MonoTouch.Foundation;
 using MonoTouch.ObjCRuntime;
 using MonoTouch.StoreKit;
+#if !MONOMAC
 using MonoTouch.UIKit;
+#endif
 #endif
 using NUnit.Framework;
 
@@ -33,9 +37,10 @@ namespace MonoTouchFixtures.StoreKit {
 		[Test]
 		public void TerminateForInvalidReceipt ()
 		{
+#if !MONOMAC
 			if (!UIDevice.CurrentDevice.CheckSystemVersion (7, 1))
 				Assert.Inconclusive ("requires iOS 7.1+");
-
+#endif
 			// not yet documented - seems to kill the app on purpose ?!? on both sim and devices
 			//SKReceiptRefreshRequest.TerminateForInvalidReceipt ();
 

@@ -1,0 +1,1 @@
+!extra-designated-initializer! EAWiFiUnconfiguredAccessoryBrowser::initWithDelegate:queue: is incorrectly decorated with an [DesignatedInitializer] attribute

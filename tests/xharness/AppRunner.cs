@@ -92,9 +92,14 @@ namespace xharness
 			set { log_directory = value; }
 		}
 
-		Log main_log;
-		public Logs Logs = new Logs ();
+		Logs logs;
+		public Logs Logs {
+			get {
+				return logs ?? (logs = new Logs (LogDirectory));
+			}
+		}
 
+		Log main_log;
 		public Log MainLog {
 			get { return main_log; }
 			set { main_log = value; }
@@ -121,7 +126,7 @@ namespace xharness
 			var sims = new Simulators () {
 				Harness = Harness,
 			};
-			await sims.LoadAsync (Logs.CreateStream (LogDirectory, "simulator-list.log", "Simulator list"));
+			await sims.LoadAsync (Logs.Create ("simulator-list.log", "Simulator list"));
 			simulators = await sims.FindAsync (Target, main_log);
 
 			return simulators != null;
@@ -282,7 +287,25 @@ namespace xharness
 			if (mode == "watchos")
 				args.Append (" --device ios,watchos");
 
-			return await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args.ToString (), main_log, TimeSpan.FromMinutes (mode == "watchos" ? 15 : 3));
+			var timeout = TimeSpan.FromMinutes (3);
+			if (mode == "watchos") {
+				var watchApp = Path.Combine (appPath, "Watch");
+				var info = new DirectoryInfo (watchApp);
+				if (info.Exists) {
+					long watchAppSize = 0;
+					foreach (var file in info.EnumerateFiles ("*", SearchOption.AllDirectories))
+						watchAppSize += file.Length;
+					// transfer speed is ~10MB/minute. Add another 50% just because transfer isn't the only thing happening, and also set it to at least 3 minutes
+					var estimatedTransferTime = watchAppSize / 1024 / 1024 / 10.0;
+					timeout = TimeSpan.FromMinutes (Math.Max (3, estimatedTransferTime * 1.5));
+					main_log.WriteLine ($"Estimated transfer speed to be {estimatedTransferTime} minutes based on the watch app size ({watchAppSize} bytes) and a speed of 10MB/s. Thus setting the install timeout to {timeout.TotalMinutes} minutes (giving it a little extra time).");
+				} else {
+					timeout = TimeSpan.FromMinutes (15);
+					main_log.WriteLine ($"Unable to determine watch app size, install timeout will be {timeout.TotalMinutes} minutes.");
+				}
+			}
+
+			return await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args.ToString (), main_log, timeout);
 		}
 
 		public async Task<ProcessExecutionResult> UninstallAsync ()
@@ -316,7 +339,7 @@ namespace xharness
 				ensure_clean_simulator_state = value;
 			}
 		}
-		public bool TestsSucceeded (LogStream listener_log, bool timed_out, bool crashed)
+		public bool TestsSucceeded (Log listener_log, bool timed_out, bool crashed)
 		{
 			string log;
 			using (var reader = listener_log.GetReader ())
@@ -352,9 +375,9 @@ namespace xharness
 						mainResultNode.Attributes ["name"].Value = Target.AsString ();
 						// store a clean version of the logs, later this will be used by the bots to show results in github/web
 						var path = listener_log.FullPath;
-						path = path.Replace (".log", ".xml");
+						path = Path.ChangeExtension (path, "xml");
 						testsResults.Save (path);
-						Logs.Add (new LogFile ("Test xml", path));
+						Logs.AddFile (path, "Test xml");
 					}
 				} catch (Exception e) {
 					main_log.WriteLine ("Could not parse xml result file: {0}", e);
@@ -413,8 +436,8 @@ namespace xharness
 		public async Task<int> RunAsync ()
 		{
 			CrashReportSnapshot crash_reports;
-			LogStream device_system_log = null;
-			LogStream listener_log = null;
+			Log device_system_log = null;
+			Log listener_log = null;
 			Log run_log = main_log;
 
 			Initialize ();
@@ -478,7 +501,7 @@ namespace xharness
 			args.AppendFormat (" -argument=-app-arg:-transport:{0}", transport);
 			args.AppendFormat (" -setenv=NUNIT_TRANSPORT={0}", transport);
 
-			listener_log = Logs.CreateStream (LogDirectory, string.Format ("test-{0}-{1:yyyyMMdd_HHmmss}.log", mode, DateTime.Now), "Test log");
+			listener_log = Logs.Create ($"test-{mode}-{Harness.Timestamp}.log", "Test log");
 
 			SimpleListener listener;
 			switch (transport) {
@@ -545,6 +568,8 @@ namespace xharness
 				args.Append (isSimulator ? " --launchsim " : " --launchdev ");
 				args.Append (StringUtils.Quote (launchAppPath));
 			}
+			if (!isSimulator)
+				args.Append (" --disable-memory-limits");
 
 			if (isSimulator) {
 				if (!await FindSimulatorAsync ())
@@ -556,10 +581,10 @@ namespace xharness
 						args.Append (" --stdout=").Append (StringUtils.Quote (stderr_tty));
 						args.Append (" --stderr=").Append (StringUtils.Quote (stderr_tty));
 					} else {
-						var stdout_log = Logs.CreateFile ("Standard output", Path.Combine (LogDirectory, "stdout.log"));
-						var stderr_log = Logs.CreateFile ("Standard error", Path.Combine (LogDirectory, "stderr.log"));
-						args.Append (" --stdout=").Append (StringUtils.Quote (stdout_log.FullPath));
-						args.Append (" --stderr=").Append (StringUtils.Quote (stderr_log.FullPath));
+						var stdout_log = Logs.CreateFile ($"stdout-{Harness.Timestamp}.log", "Standard output");
+						var stderr_log = Logs.CreateFile ($"stderr-{Harness.Timestamp}.log", "Standard error");
+						args.Append (" --stdout=").Append (StringUtils.Quote (stdout_log));
+						args.Append (" --stderr=").Append (StringUtils.Quote (stderr_log));
 					}
 				}
 
@@ -569,7 +594,7 @@ namespace xharness
 					main_log.WriteLine ("System log for the '{1}' simulator is: {0}", sim.SystemLog, sim.Name);
 					bool isCompanion = sim != simulator;
 
-					var log = new CaptureLog (sim.SystemLog, entire_file: Harness.Action != HarnessAction.Jenkins)
+					var log = new CaptureLog (Logs, sim.SystemLog, entire_file: Harness.Action != HarnessAction.Jenkins)
 					{
 						Path = Path.Combine (LogDirectory, sim.Name + ".log"),
 						Description = isCompanion ? "System log (companion)" : "System log",
@@ -656,7 +681,7 @@ namespace xharness
 				
 				AddDeviceName (args);
 
-				device_system_log = Logs.CreateStream (LogDirectory, $"device-{device_name}-{DateTime.Now:yyyyMMdd_HHmmss}.log", "Device log");
+				device_system_log = Logs.Create ($"device-{device_name}-{Harness.Timestamp}.log", "Device log");
 				var logdev = new DeviceLogCapturer () {
 					Harness =  Harness,
 					Log = device_system_log,
@@ -668,7 +693,25 @@ namespace xharness
 
 				main_log.WriteLine ("Starting test run");
 
-				var result = await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args.ToString (), main_log, TimeSpan.FromMinutes (Harness.Timeout), cancellation_token: cancellation_source.Token);
+				bool waitedForExit = true;
+				// We need to check for MT1111 (which means that mlaunch won't wait for the app to exit).
+				var callbackLog = new CallbackLog ((line) => {
+					// MT1111: Application launched successfully, but it's not possible to wait for the app to exit as requested because it's not possible to detect app termination when launching using gdbserver
+					waitedForExit &= line?.Contains ("MT1111: ") != true;
+				});
+				var runLog = Log.CreateAggregatedLog (callbackLog, main_log);
+				var timeout = TimeSpan.FromMinutes (Harness.Timeout);
+				var timeoutWatch = Stopwatch.StartNew ();
+				var result = await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args.ToString (), runLog, timeout, cancellation_token: cancellation_source.Token);
+
+				if (!waitedForExit && !result.TimedOut) {
+					// mlaunch couldn't wait for exit for some reason. Let's assume the app exits when the test listener completes.
+					main_log.WriteLine ("Waiting for listener to complete, since mlaunch won't tell.");
+					if (!await listener.CompletionTask.TimeoutAfter (timeout - timeoutWatch.Elapsed)) {
+						result.TimedOut = true;
+					}
+				}
+
 				if (result.TimedOut) {
 					timed_out = true;
 					success = false;
@@ -682,6 +725,7 @@ namespace xharness
 				}
 
 				logdev.StopCapture ();
+				device_system_log.Dispose ();
 
 				// Upload the system log
 				if (File.Exists (device_system_log.FullPath)) {

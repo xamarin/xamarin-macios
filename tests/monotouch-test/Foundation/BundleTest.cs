@@ -128,8 +128,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void Localizations ()
 		{
 			string [] locz = main.Localizations;
-			Assert.That (locz.Length, Is.GreaterThanOrEqualTo (1), "Length");
-			Assert.That (locz, Contains.Item ("en"), "en");
+			Assert.That (locz.Length, Is.GreaterThanOrEqualTo (0), "Length");
 		}
 
 		[Test]

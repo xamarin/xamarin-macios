@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{DB31B844-0297-4D45-A0A1-E6EC18FECB42}</ProjectGuid>
+    <ProjectTypeGuids>{60B24E98-250D-4E81-963D-6570CE7495DD};{BEF8D622-AFAA-44C4-9E86-F360BAAD445C}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>BCL.Tests</RootNamespace>
+    <AssemblyName>Mono.Data.TdsTests</AssemblyName>
+    <NoWarn>168,169,219,414,612,618,649,672</NoWarn>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <UseXamMacFullFramework>true</UseXamMacFullFramework>
+    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-unified</IntermediateOutputPath>
+    <DefineConstants>XAMCORE_2_0;ADD_BCL_EXCLUSIONS</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;INSIDE_CORLIB;LIBC;NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;MONO_DATACONVERTER_STATIC_METHODS;MONOMAC;DISABLE_CAS_USE;NO_GUI_TESTING;$(DefineConstants)</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <CodeSigningKey>Mac Developer</CodeSigningKey>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <CreatePackage>false</CreatePackage>
+    <LinkMode>None</LinkMode>
+    <XamMacArch>x86_64</XamMacArch>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <DefineConstants>DEBUG;INSIDE_CORLIB;LIBC;NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;MONO_DATACONVERTER_STATIC_METHODS;MONOMAC;DISABLE_CAS_USE;NO_GUI_TESTING;$(DefineConstants)</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <LinkMode>None</LinkMode>
+    <CreatePackage>false</CreatePackage>
+    <CodeSigningKey>Mac Developer</CodeSigningKey>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <EnablePackageSigning>false</EnablePackageSigning>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Xamarin.Mac" />
+    <Reference Include="Mono.Data.Tds" />
+    <Reference Include="GuiUnit">
+      <HintPath>..\..\..\external\guiunit\src\framework\obj\Debug\net-4.5\GuiUnit.exe</HintPath>
+    </Reference>
+    <Reference Include="Mono.Posix" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info-mac.plist">
+      <LogicalName>Info.plist</LogicalName>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+   <Compile Include="../../common/mac/MacTestMain.cs">
+      <Link>MacTestMain.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+#FILES#
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
+  <ItemGroup>
+  </ItemGroup>
+</Project>

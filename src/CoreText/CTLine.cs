@@ -260,7 +260,7 @@ namespace XamCore.CoreText {
                                 BlockLiteral block_handler;
                                 block_handler = new BlockLiteral ();
                                 block_ptr_handler = &block_handler;
-                                block_handler.SetupBlock (static_enumerate, enumerator);
+                                block_handler.SetupBlockUnsafe (static_enumerate, enumerator);
 
                                 CTLineEnumerateCaretOffsets (handle, block_ptr_handler);
                                 block_ptr_handler->CleanupBlock ();

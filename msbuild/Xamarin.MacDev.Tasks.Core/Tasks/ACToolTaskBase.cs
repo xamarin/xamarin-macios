@@ -1,13 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Json;
 using System.Linq;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
-
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 using Xamarin.MacDev.Tasks;
 using Xamarin.MacDev;
@@ -84,7 +83,7 @@ namespace Xamarin.MacDev.Tasks
 			return id.Value == "com.apple.message-payload-provider";
 		}
 
-		protected override void AppendCommandLineArguments (IDictionary<string, string> environment, ProcessArgumentBuilder args, ITaskItem[] items)
+		protected override void AppendCommandLineArguments (IDictionary<string, string> environment, CommandLineArgumentBuilder args, ITaskItem[] items)
 		{
 			string minimumDeploymentTarget;
 
@@ -400,27 +399,51 @@ namespace Xamarin.MacDev.Tasks
 					if (string.IsNullOrEmpty (text))
 						continue;
 
-					var json = JsonConvert.DeserializeObject (text) as JObject;
+					JsonObject json;
+					JsonValue value;
 
-					if (json == null)
+					try {
+						json = (JsonObject) JsonValue.Parse (text);
+					} catch (ArgumentException ex) {
+						// ... At line ###, column ###
+						int line = 0, column = 0;
+						int index, endIndex;
+
+						if ((index = ex.Message.IndexOf ("At line ", StringComparison.Ordinal)) != -1) {
+							index += "At line ".Length;
+
+							if ((endIndex = ex.Message.IndexOf (", column ", index, StringComparison.Ordinal)) != -1) {
+								var columnBuf = ex.Message.Substring (endIndex + ", column ".Length);
+								var lineBuf = ex.Message.Substring (index, endIndex - index);
+
+								int.TryParse (columnBuf, out column);
+								int.TryParse (lineBuf, out line);
+							}
+						}
+
+						Log.LogError (null, null, null, items[i].ItemSpec, line, column, line, column, "{0}", ex.Message);
+						return false;
+					} catch (InvalidCastException) {
+						Log.LogError (null, null, null, items[i].ItemSpec, 0, 0, 0, 0, "Invalid json.");
+						return false;
+					}
+
+					if (!json.TryGetValue ("properties", out value) || value.JsonType != JsonType.Object)
 						continue;
 
-					var properties = json.Property ("properties");
+					var properties = (JsonObject) value;
 
-					if (properties == null)
+					if (!properties.TryGetValue ("on-demand-resource-tags", out value) || value.JsonType != JsonType.Array)
 						continue;
 
-					var resourceTags = properties.Value.ToObject<JObject> ().Property ("on-demand-resource-tags");
-
-					if (resourceTags == null || resourceTags.Value.Type != JTokenType.Array)
-						continue;
-
-					var tagArray = resourceTags.Value.ToObject<JArray> ();
+					var resourceTags = (JsonArray) value;
 					var tags = new HashSet<string> ();
 					string hash;
 
-					foreach (var tag in tagArray.Select (token => token.ToObject<string> ()))
-						tags.Add (tag);
+					foreach (var tag in resourceTags) {
+						if (tag.JsonType == JsonType.String)
+							tags.Add ((string) tag);
+					}
 
 					var tagList = tags.ToList ();
 					tagList.Sort ();
@@ -446,7 +469,7 @@ namespace Xamarin.MacDev.Tasks
 
 			if (catalogs.Count == 0) {
 				// There are no (supported?) asset catalogs
-				return true;
+				return !Log.HasLoggedErrors;
 			}
 
 			partialAppManifest = new TaskItem (Path.Combine (intermediate, "partial-info.plist"));

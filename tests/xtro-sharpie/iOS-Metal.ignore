@@ -4,6 +4,7 @@
 
 ## unsorted
 
+!incorrect-protocol-member! MTLComputeCommandEncoder::dispatchThreads:threadsPerThreadgroup: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLComputeCommandEncoder::setImageblockWidth:height: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLComputePipelineState::imageblockMemoryLengthForDimensions: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::newRenderPipelineStateWithTileDescriptor:options:completionHandler: is REQUIRED and should be abstract

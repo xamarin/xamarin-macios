@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+    <OutputPath>.</OutputPath>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
@@ -10,26 +11,27 @@
     <RootNamespace>installsource</RootNamespace>
     <AssemblyName>install-source</AssemblyName>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>.</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Externalconsole>true</Externalconsole>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="Mono.Posix" />
     <Reference Include="Mono.CompilerServices.SymbolWriter" />
+    <Reference Include="Mono.Cecil">
+      <HintPath>Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb">
+      <HintPath>Mono.Cecil.Pdb.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="..\..\external\mono\mcs\class\Mono.Options\Mono.Options\Options.cs">
       <Link>Options.cs</Link>
     </Compile>
+    <Compile Include="IPathMangler.cs" />
+    <Compile Include="MonoPathMangler.cs" />
+    <Compile Include="OpenTKSourceMangler.cs" />
+    <Compile Include="PathManglerFactory.cs" />
+    <Compile Include="XamarinSourcesPathMangler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

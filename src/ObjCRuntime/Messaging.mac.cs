@@ -600,6 +600,9 @@ namespace XamCore.ObjCRuntime {
 		public extern static int int_objc_msgSend_NSRange_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr (IntPtr receiver, IntPtr selector, MonoMac.Foundation.NSRange arg1, IntPtr arg2, IntPtr arg3, IntPtr arg4, IntPtr arg5, IntPtr arg6);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
+		public extern static int int_objc_msgSend_NSRange_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr (IntPtr receiver, IntPtr selector, MonoMac.Foundation.NSRange arg1, IntPtr arg2, IntPtr arg3, IntPtr arg4, IntPtr arg5, IntPtr arg6);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
 		public extern static IntPtr IntPtr_objc_msgSend_IntPtr_nint (IntPtr receiver, IntPtr selector, global::System.IntPtr arg1, nint arg2);
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSendSuper")]
 		public extern static IntPtr IntPtr_objc_msgSendSuper_IntPtr_nint (IntPtr receiver, IntPtr selector, global::System.IntPtr arg1, nint arg2);

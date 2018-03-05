@@ -1,0 +1,7 @@
+!missing-designated-initializer! CKDiscoverUserInfosOperation::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! CKFetchRecordChangesOperation::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! CKFetchRecordsOperation::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! CKFetchRecordZonesOperation::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! CKFetchSubscriptionsOperation::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! CKModifySubscriptionsOperation::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! CKQueryOperation::init is missing an [DesignatedInitializer] attribute

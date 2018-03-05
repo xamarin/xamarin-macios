@@ -7,17 +7,15 @@
 // Copyright 2013 Xamarin Inc.
 //
 
-#if !__TVOS__ && !__WATCHOS__
+#if !__TVOS__ && !__WATCHOS__ && !MONOMAC
 
 using System;
 #if XAMCORE_2_0
 using Foundation;
-using UIKit;
 using ExternalAccessory;
 #else
 using MonoTouch.ExternalAccessory;
 using MonoTouch.Foundation;
-using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 

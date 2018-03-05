@@ -55,5 +55,14 @@ namespace Xamarin.Utils {
 			return builder.ToString ();
 		}
 
+		// Version.Parse requires, minimally, both major and minor parts.
+		// However we want to accept `11` as `11.0`
+		public static Version ParseVersion (string v)
+		{
+			int major;
+			if (int.TryParse (v, out major))
+				return new Version (major, 0);
+			return Version.Parse (v);
+		}
 	}
 }

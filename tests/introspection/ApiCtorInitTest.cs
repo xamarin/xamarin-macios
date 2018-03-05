@@ -58,7 +58,8 @@ namespace Introspection {
 		{
 			if (type.ContainsGenericParameters)
 				return true;
-			
+
+#if !XAMCORE_2_0
 			// skip delegate (and other protocol references)
 			foreach (object ca in type.GetCustomAttributes (false)) {
 				if (ca is ProtocolAttribute)
@@ -66,8 +67,16 @@ namespace Introspection {
 				if (ca is ModelAttribute)
 					return true;
 			}
+#endif
 
 			switch (type.Name) {
+			case "JSExport":
+				// This is interesting: Apple defines a private JSExport class - if you try to define your own in an Objective-C project you get this warning at startup:
+				//     objc[334]: Class JSExport is implemented in both /Applications/Xcode91.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/Library/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/JavaScriptCore.framework/JavaScriptCore (0x112c1e430) and /Users/rolf/Library/Developer/CoreSimulator/Devices/AC5323CF-225F-44D9-AA18-A37B7C28CA68/data/Containers/Bundle/Application/DEF9EAFC-CB5C-454F-97F5-669BBD00A609/jsexporttest.app/jsexporttest (0x105b49df0). One of the two will be used. Which one is undefined.
+				// Due to how we treat models, we'll always look the Objective-C type up at runtime (even with the static registrar),
+				// see that there's an existing JSExport type, and use that one instead of creating a new type.
+				// This is problematic, because Apple's JSExport is completely unusable, and will crash if you try to do anything.
+				return true;
 #if !XAMCORE_2_0
 			case "AVAssetResourceLoader": // We have DisableDefaultCtor in XAMCORE_2_0 but can't change in compat because of backwards compat
 			case "AVAssetResourceLoadingRequest":

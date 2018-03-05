@@ -37,12 +37,13 @@ namespace MonoTouchFixtures.Foundation {
 			var now = DateTime.Now;
 			NSDateComponents comps;
 
-			comps = cal.Components (NSCalendarUnit.Year | NSCalendarUnit.Month | NSCalendarUnit.Day, NSDate.Now);
+			comps = cal.Components (NSCalendarUnit.Year | NSCalendarUnit.Month | NSCalendarUnit.Day, (NSDate) now);
 			Assert.AreEqual (now.Year, comps.Year, "a year");
 			Assert.AreEqual (now.Month, comps.Month, "a month");
 			Assert.AreEqual (now.Day, comps.Day, "a day");
 
-			comps = cal.Components (NSCalendarUnit.Hour, (NSDate) now.AddHours (-1), (NSDate) now, NSDateComponentsWrappingBehavior.None);
+			var dayCompare = now.ToUniversalTime ();
+			comps = cal.Components (NSCalendarUnit.Hour, (NSDate) dayCompare.AddHours (-1), (NSDate) dayCompare, NSDateComponentsWrappingBehavior.None);
 			Assert.AreEqual (1, comps.Hour, "b hour");
 		}
 

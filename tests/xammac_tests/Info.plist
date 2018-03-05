@@ -21,8 +21,6 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>en</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 </dict>

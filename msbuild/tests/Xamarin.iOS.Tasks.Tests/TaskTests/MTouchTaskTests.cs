@@ -62,14 +62,14 @@ namespace Xamarin.iOS.Tasks
 		public void StandardCommandline ()
 		{
 			var args = Task.GenerateCommandLineCommands ();
-			Assert.IsTrue (args.Contains ("-r " + Path.GetFullPath ("a.dll")), "#1a");
-			Assert.IsTrue (args.Contains ("-r " + Path.GetFullPath ("b.dll")), "#1b");
-			Assert.IsTrue (args.Contains ("-r " + Path.GetFullPath ("c.dll")), "#1c");
+			Assert.IsTrue (args.Contains ("-r=" + Path.GetFullPath ("a.dll")), "#1a");
+			Assert.IsTrue (args.Contains ("-r=" + Path.GetFullPath ("b.dll")), "#1b");
+			Assert.IsTrue (args.Contains ("-r=" + Path.GetFullPath ("c.dll")), "#1c");
 			Assert.IsTrue (args.Contains ("Main.exe"), "#2");
 
-			var expectedSimArg = string.Format (" --sim {0}", Path.GetFullPath (AppBundlePath));
+			var expectedSimArg = string.Format (" --sim={0}", Path.GetFullPath (AppBundlePath));
 			Assert.IsTrue (args.Contains (expectedSimArg), "#3");
-			Assert.IsTrue (args.Contains ("--sdk"), "#4");
+			Assert.IsTrue (args.Contains ("--sdk="), "#4");
 		}
 
 		[Test]
@@ -107,7 +107,7 @@ namespace Xamarin.iOS.Tasks
 			Task.SdkVersion = "7.5";
 
 			var args = Task.GenerateCommandLineCommands ();
-			Assert.IsTrue (args.Contains ("--sdk 7.5"), "#1");
+			Assert.IsTrue (args.Contains ("--sdk=7.5"), "#1");
 		}
 
 		public void MTouchEnableBitcode (string frameworkIdentifier)

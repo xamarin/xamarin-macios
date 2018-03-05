@@ -66,9 +66,9 @@ namespace MonoTouchFixtures.ModelIO
 					Assert.IsNull (voxels, "GetVoxels");
 
 					extents = obj.VoxelIndexExtent2;
-					Asserts.AreEqual (-1, extents.MaximumExtent.X, "MaxX");
-					Asserts.AreEqual (-1, extents.MaximumExtent.Y, "MaxY");
-					Asserts.AreEqual (-1, extents.MaximumExtent.Z, "MaxZ");
+					Assert.That (extents.MaximumExtent.X, Is.EqualTo (-1).Or.EqualTo (0), "MaxX");
+					Assert.That (extents.MaximumExtent.Y, Is.EqualTo (-1).Or.EqualTo (0), "MaxY");
+					Assert.That (extents.MaximumExtent.Z, Is.EqualTo (-1).Or.EqualTo (0), "MaxZ");
 					Asserts.AreEqual (0, extents.MaximumExtent.W, "MaxW");
 					Asserts.AreEqual (0, extents.MinimumExtent.X, "MinX");
 					Asserts.AreEqual (0, extents.MinimumExtent.Y, "MinY");

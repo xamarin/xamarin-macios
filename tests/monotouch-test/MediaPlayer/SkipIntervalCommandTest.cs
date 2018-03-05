@@ -13,11 +13,15 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using MediaPlayer;
+#if !MONOMAC
 using UIKit;
+#endif
 #else
 using MonoTouch.Foundation;
 using MonoTouch.MediaPlayer;
+#if !MONOMAC
 using MonoTouch.UIKit;
+#endif
 #endif
 using NUnit.Framework;
 
@@ -35,8 +39,10 @@ namespace MonoTouchFixtures.MediaPlayer {
 				Assert.Ignore ("This test can only be executed once, it modifies global state.");
 			manualBindingDone = true;
 
+#if !MONOMAC
 			if (!UIDevice.CurrentDevice.CheckSystemVersion (7, 1))
 				Assert.Inconclusive ("Requires 7.1+");
+#endif
 
 			MPSkipIntervalCommand skip = MPRemoteCommandCenter.Shared.SkipBackwardCommand;
 

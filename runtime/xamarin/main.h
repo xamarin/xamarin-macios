@@ -68,12 +68,6 @@ extern enum MarshalObjectiveCExceptionMode xamarin_marshal_objectivec_exception_
 extern enum MarshalManagedExceptionMode xamarin_marshal_managed_exception_mode;
 extern enum XamarinLaunchMode xamarin_launch_mode;
 
-#ifdef MONOTOUCH
-extern NSString* xamarin_crashlytics_api_key;
-extern NSTimeInterval xamarin_crashlytics_delay;
-extern int32_t xamarin_console_poll_interval;
-#endif
-
 typedef void (*xamarin_setup_callback) ();
 typedef int (*xamarin_extension_main_callback) (int argc, char** argv);
 

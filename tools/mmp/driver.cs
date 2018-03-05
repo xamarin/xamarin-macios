@@ -81,7 +81,7 @@ namespace Xamarin.Bundler {
 		static string output_dir;
 		static string app_name;
 		static bool generate_plist;
-		static RegistrarMode registrar = RegistrarMode.Default;
+		public static RegistrarMode Registrar { get; private set; } = RegistrarMode.Default;
 		static bool no_executable;
 		static bool embed_mono = true;
 		static bool? profiling = false;
@@ -265,9 +265,9 @@ namespace Xamarin.Bundler {
 				{ "minos=", "Minimum supported version of Mac OS X", 
 					v => {
 						try {
-							App.DeploymentTarget = Version.Parse (v);
+							App.DeploymentTarget = StringUtils.ParseVersion (v);
 						} catch (Exception ex) {
-							ErrorHelper.Error (26, ex, "Could not parse the command line argument '{0}': {1}", "-minos", ex.Message);
+							ErrorHelper.Error (26, ex, $"Could not parse the command line argument '-minos:{v}': {ex.Message}");
 						}
 					}
 				},
@@ -288,36 +288,35 @@ namespace Xamarin.Bundler {
 				{ "target-framework=", "Specify the .NET target framework to use (defaults to '" + Xamarin.Utils.TargetFramework.Default + "')", v => SetTargetFramework (v) },
 				{ "force-thread-check", "Keep UI thread checks inside (even release) builds", v => { thread_check = true; }},
 				{ "disable-thread-check", "Remove UI thread checks inside (even debug) builds", v => { thread_check = false; }},
-				{ "registrar:", "Specify the registrar to use (dynamic [default], IL or static)", v =>
-					{
+				{ "registrar:", "Specify the registrar to use (dynamic [default], static, partial)", v => {
 						switch (v) {
 						case "static":
-							registrar = RegistrarMode.Static;
+							Registrar = RegistrarMode.Static;
 							break;
 						case "dynamic":
-							registrar = RegistrarMode.Dynamic;
+							Registrar = RegistrarMode.Dynamic;
 							break;
 						case "partial":
 						case "partial-static":
-							registrar = RegistrarMode.PartialStatic;
+							Registrar = RegistrarMode.PartialStatic;
 							break;
 						case "il":
-							registrar = RegistrarMode.Dynamic;
+							Registrar = RegistrarMode.Dynamic;
 							break;
 						case "default":
-							registrar = RegistrarMode.Default;
+							Registrar = RegistrarMode.Default;
 							break;
 						default:
-							throw new MonoMacException (20, true, "The valid options for '{0}' are '{1}'.", "--registrar", "il, dynamic, static or default");
+							throw new MonoMacException (20, true, "The valid options for '{0}' are '{1}'.", "--registrar", "dynamic, static, partial, or default");
 						}
-					}, true /* hidden for now */
+					}
 				},
 				{ "sdk=", "Specifies the SDK version to compile against (version, for example \"10.9\")",
 					v => {
 						try {
-							App.SdkVersion = Version.Parse (v);
+							App.SdkVersion = StringUtils.ParseVersion (v);
 						} catch (Exception ex) {
-							ErrorHelper.Error (26, ex, "Could not parse the command line argument '{0}': {1}", "-sdk", ex.Message);
+							ErrorHelper.Error (26, ex, $"Could not parse the command line argument '-sdk:{v}': {ex.Message}");
 						}
 					}
 				},
@@ -358,7 +357,7 @@ namespace Xamarin.Bundler {
 				{ "xamarin-framework-directory=", "The framework directory", v => { xm_framework_dir = v; }, true },
 				{ "xamarin-full-framework", "Used with --target-framework=4.5 to select XM Full Target Framework", v => { IsUnifiedFullXamMacFramework = true; } },
 				{ "xamarin-system-framework", "Used with --target-framework=4.5 to select XM Full Target Framework", v => { IsUnifiedFullSystemFramework = true; } },
-				{ "aot:", "Specify assemblies that should be AOT compiled\n- none - No AOT (default)\n- all - Every assembly in MonoBundle\n- core - Xamarin.Mac, System, mscorlib\n- sdk - Xamarin.Mac.dll and BCL assemblies\n- |hybrid after option enables hybrid AOT which allows IL stripping but is slower (only valid for 'all')\n - Individual files can be included for AOT via +FileName.dll and excluded via -FileName.dll\n\nExamples:\n  --aot:all,-MyAssembly.dll\n  --aot:core|hybrid,+MyOtherAssembly.dll,-mscorlib.dll",
+				{ "aot:", "Specify assemblies that should be AOT compiled\n- none - No AOT (default)\n- all - Every assembly in MonoBundle\n- core - Xamarin.Mac, System, mscorlib\n- sdk - Xamarin.Mac.dll and BCL assemblies\n- |hybrid after option enables hybrid AOT which allows IL stripping but is slower (only valid for 'all')\n - Individual files can be included for AOT via +FileName.dll and excluded via -FileName.dll\n\nExamples:\n  --aot:all,-MyAssembly.dll\n  --aot:core,+MyOtherAssembly.dll,-mscorlib.dll",
 					v => {
 						aotOptions = new AOTOptions (v);
 					}
@@ -367,9 +366,8 @@ namespace Xamarin.Bundler {
 
 			AddSharedOptions (App, os);
 
-			IList<string> unprocessed;
 			try {
-				unprocessed = os.Parse (args);
+				App.RootAssemblies.AddRange (os.Parse (args));
 			}
 			catch (MonoMacException) {
 				throw;
@@ -377,6 +375,8 @@ namespace Xamarin.Bundler {
 			catch (Exception e) {
 				throw new MonoMacException (10, true, "Could not parse the command line arguments: {0}", e.Message);
 			}
+
+			Driver.LogArguments (args);
 
 			if (aotOptions == null) {
 				string forceAotVariable = Environment.GetEnvironmentVariable ("XM_FORCE_AOT");
@@ -494,6 +494,9 @@ namespace Xamarin.Bundler {
 			ValidateXcode ();
 
 			App.Initialize ();
+
+			// InitializeCommon needs SdkVersion set to something valid
+			ValidateSDKVersion ();
 			App.InitializeCommon ();
 
 			Log ("Xamarin.Mac {0}{1}", Constants.Version, verbose > 0 ? "." + Constants.Revision : string.Empty);
@@ -501,16 +504,14 @@ namespace Xamarin.Bundler {
 			if (verbose > 0)
 				Console.WriteLine ("Selected target framework: {0}; API: {1}", targetFramework, IsClassic ? "Classic" : "Unified");
 
-			ValidateSDKVersion ();
 
 			if (action == Action.RunRegistrar) {
-				App.RootAssemblies.AddRange (unprocessed);
 				App.Registrar = RegistrarMode.Static;
 				App.RunRegistrar ();
 				return;
 			}
 			try {
-				Pack (unprocessed);
+				Pack (App.RootAssemblies);
 			} finally {
 				if (App.Cache.IsCacheTemporary) {
 					// If we used a temporary directory we created ourselves for the cache
@@ -536,7 +537,7 @@ namespace Xamarin.Bundler {
 			// Many Xamarin.Mac references are technically valid, so whitelisting risks breaking working project
 			// However, passing in Mobile / Xamarin.Mac folders and resolving full/4.5 or vice versa is 
 			// far from expected. So catch the common cases if we can
-			string reference = references.FirstOrDefault (x => x.EndsWith ("Xamarin.Mac.dll"));
+			string reference = references.FirstOrDefault (x => x.EndsWith ("Xamarin.Mac.dll", StringComparison.Ordinal));
 			if (reference != null) {
 				bool valid = true;
 				if (IsUnifiedMobile)
@@ -695,15 +696,15 @@ namespace Xamarin.Bundler {
 			string root_assembly = null;
 			var native_libs = new Dictionary<string, List<MethodDefinition>> ();
 
-			if (registrar == RegistrarMode.Default)
+			if (Registrar == RegistrarMode.Default)
 			{
 				if (!App.EnableDebug)
-					registrar = RegistrarMode.Static;
+					Registrar = RegistrarMode.Static;
 				else if (IsUnified && App.LinkMode == LinkMode.None && embed_mono && App.IsDefaultMarshalManagedExceptionMode && File.Exists (PartialStaticLibrary))
-					registrar = RegistrarMode.PartialStatic;
+					Registrar = RegistrarMode.PartialStatic;
 				else
-					registrar = RegistrarMode.Dynamic;
-				Log (1, $"Defaulting registrar to '{registrar}'");
+					Registrar = RegistrarMode.Dynamic;
+				Log (1, $"Defaulting registrar to '{Registrar}'");
 			}
 			
 			if (no_executable) {
@@ -803,6 +804,8 @@ namespace Xamarin.Bundler {
 			ExtractNativeLinkInfo ();
 
 			BuildTarget.StaticRegistrar = new StaticRegistrar (BuildTarget);
+
+			BuildTarget.ValidateAssembliesBeforeLink ();
 
 			if (!no_executable) {
 				foreach (var nr in native_references) {
@@ -1096,7 +1099,7 @@ namespace Xamarin.Bundler {
 				sw.WriteLine ("#include <xamarin/xamarin.h>");
 				sw.WriteLine ("#import <AppKit/NSAlert.h>");
 				sw.WriteLine ("#import <Foundation/NSDate.h>"); // 10.7 wants this even if not needed on 10.9
-				if (Driver.registrar == RegistrarMode.PartialStatic)
+				if (Driver.Registrar == RegistrarMode.PartialStatic)
 					sw.WriteLine ("extern \"C\" void xamarin_create_classes_Xamarin_Mac ();");
 				sw.WriteLine ();
 				sw.WriteLine ();
@@ -1116,9 +1119,9 @@ namespace Xamarin.Bundler {
 				sw.WriteLine ();
 
 
-				if (Driver.registrar == RegistrarMode.Static)
+				if (Driver.Registrar == RegistrarMode.Static)
 					sw.WriteLine ("\txamarin_create_classes ();");
-				else if (Driver.registrar == RegistrarMode.PartialStatic)
+				else if (Driver.Registrar == RegistrarMode.PartialStatic)
 					sw.WriteLine ("\txamarin_create_classes_Xamarin_Mac ();");
 
 				if (App.EnableDebug)
@@ -1181,7 +1184,7 @@ namespace Xamarin.Bundler {
 			string mainSource = GenerateMain ();
 			string registrarPath = null;
 
-			if (registrar == RegistrarMode.Static) {
+			if (Registrar == RegistrarMode.Static) {
 				registrarPath = Path.Combine (App.Cache.Location, "registrar.m");
 				var registrarH = Path.Combine (App.Cache.Location, "registrar.h");
 				BuildTarget.StaticRegistrar.Generate (BuildTarget.Resolver.ResolverCache.Values, registrarH, registrarPath);
@@ -1342,11 +1345,11 @@ namespace Xamarin.Bundler {
 
 					if (profiling.HasValue && profiling.Value) {
 						args.Append (StringUtils.Quote (Path.Combine (libdir, "libmono-profiler-log.a"))).Append (' ');
-						args.Append ("-u _mono_profiler_startup_log -lz ");
+						args.Append ("-u _mono_profiler_init_log -lz ");
 					}
 				}
 
-				if (registrar == RegistrarMode.PartialStatic) {
+				if (Registrar == RegistrarMode.PartialStatic) {
 					args.Append (PartialStaticLibrary);
 					args.Append (" -framework Quartz ");
 				}

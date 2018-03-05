@@ -72,14 +72,11 @@ namespace XamCore.Foundation {
 #endif // XAMCORE_2_0
 		{
 #if MONOMAC
-			return new NSData (objc_msgSend (Handle, selDataUsingEncodingAllowHandle, (int) enc, allowLossyConversion));
+			return new NSData (Messaging.IntPtr_objc_msgSend_IntPtr_bool (Handle, selDataUsingEncodingAllowHandle, (IntPtr) (int) enc, allowLossyConversion));
 #else
-			return new NSData (objc_msgSend (Handle, Selector.GetHandle (selDataUsingEncodingAllow), (int) enc, allowLossyConversion));
+			return new NSData (Messaging.IntPtr_objc_msgSend_IntPtr_bool (Handle, Selector.GetHandle (selDataUsingEncodingAllow), (IntPtr) (int) enc, allowLossyConversion));
 #endif
 		}
-
-		[DllImport ("/usr/lib/libobjc.dylib")]
-		static extern IntPtr objc_msgSend (IntPtr handle, IntPtr sel, nint enc, bool lossy);
 
 		public static NSString FromData (NSData data, NSStringEncoding encoding)
 		{

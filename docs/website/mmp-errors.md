@@ -62,12 +62,27 @@ The easiest way to get exact version information is to use the **Xamarin Studio*
 
 ### <a name="MM0068">MM0068: Invalid value for target framework: {0}.
 
+### <a name="MM0071">MM0071: Unknown platform: *. This usually indicates a bug in Xamarin.Mac; please file a bug report at https://bugzilla.xamarin.com with a test case.
+
+This usually indicates a bug in Xamarin.Mac; please file a bug report at [https://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=Xamarin.Mac) with a test case.
+
 ### <a name="MM0079">MM0079: Internal Error - No executable was copied into the app bundle. Please contact 'support@xamarin.com'
 
 ### <a name="MM0080">MM0080: Disabling NewRefCount, --new-refcount:false, is deprecated.
 
 <!-- 0088 used by mtouch -->
 <!-- 0089 used by mtouch -->
+
+### <a name="MM0091"/>MM0091: This version of Xamarin.Mac requires the * SDK (shipped with Xcode *). Either upgrade Xcode to get the required header files or use the dynamic registrar or set the managed linker behaviour to Link Platform or Link Framework SDKs Only (to try to avoid the new APIs).
+
+Xamarin.Mac requires the header files, from the SDK version specified in the error message, to build your application with the static registrar.. The recommended way to fix this error is to upgrade Xcode to get the required SDK, this will include all the required header files. If you have multiple versions of Xcode installed, or want to use an Xcode in a non-default location, make sure to set the correct Xcode location in your IDE's preferences.
+
+One potential, alternative solution, is to enable the managed linker. This will remove unused API including, in most cases, the new API where the header files are missing (or incomplete). However this will not work if your project uses API that was introduced in a newer SDK than the one your Xcode provides.
+
+A second potential, alternative solution, is use the dynamic registrar instead. This will impose a startup cost by dynamically registering types but remove the header file requirement. 
+
+A last-straw solution would be to use an older version of Xamarin.Mac, one that supports the SDK your project requires.
+
 
 ### <a name="MM0097">MM0097: machine.config file '{0}' can not be found.
 
@@ -152,6 +167,18 @@ The easiest way to get exact version information is to use the **Xamarin Studio*
 ### <a name="MM202x"/>MM202x: Binding Optimizer failed processing `...`.
 
 ### <a name="MM2100"/>MM2100: Xamarin.Mac Classic API does not support Platform Linking.
+
+### <a name="MM2103"/>MM2103: Error processing assembly '\*': *
+
+An unexpected error occured when processing an assembly.
+
+The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
+### <a name="MM2104"/>MM2104: Unable to link assembly '{0}' as it is mixed-mode.
+
+Mixed-mode assemblies can not be processed by the linker.
+
+See https://msdn.microsoft.com/en-us/library/x0w2664k.aspx for more information on mixed-mode assemblies.
 
 # MM3xxx: AOT
 

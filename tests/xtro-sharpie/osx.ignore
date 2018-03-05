@@ -7,6 +7,55 @@
 !missing-pinvoke! NSDataFromGCMicroGamepadSnapShotDataV100 is not bound
 
 
+# fixed in XAMCORE_3_0
+
+# Defined in NSObject (NSDeprecatedTextStorageDelegateInterface
+!extra-protocol-member! unexpected selector NSTextStorageDelegate::textStorageDidProcessEditing: found
+!extra-protocol-member! unexpected selector NSTextStorageDelegate::textStorageWillProcessEditing: found
+
+# Defined in NSControlTextEditingDelegate - NSTextFieldDelegate <NSControlTextEditingDelegate>
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:didFailToFormatString:errorDescription: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:didFailToValidatePartialString:errorDescription: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:isValidObject: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:textShouldBeginEditing: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:textShouldEndEditing: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:textView:completions:forPartialWordRange:indexOfSelectedItem: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:textView:doCommandBySelector: found
+
+# From header - This method is invoked when the user begins editing text in a control such as a text field or a form field. 
+# The control posts a NSControlTextDidBeginEditingNotification notification, and if the control’s delegate implements this method,
+# it is automatically registered to receive the notification.
+!extra-protocol-member! unexpected selector NSRuleEditorDelegate::controlTextDidBeginEditing: found
+!extra-protocol-member! unexpected selector NSRuleEditorDelegate::controlTextDidChange: found
+!extra-protocol-member! unexpected selector NSRuleEditorDelegate::controlTextDidEndEditing: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::controlTextDidBeginEditing: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::controlTextDidChange: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::controlTextDidEndEditing: found
+
+# Defined in NSObject(NSDraggingSourceDeprecated)
+!extra-protocol-member! unexpected selector NSDraggingSource::draggingSourceOperationMaskForLocal: found
+!extra-protocol-member! unexpected selector NSDraggingSource::draggedImage:beganAt: found
+!extra-protocol-member! unexpected selector NSDraggingSource::draggedImage:endedAt:operation: found
+!extra-protocol-member! unexpected selector NSDraggingSource::draggedImage:movedTo: found
+!extra-protocol-member! unexpected selector NSDraggingSource::ignoreModifierKeysWhileDragging found
+!extra-protocol-member! unexpected selector NSDraggingSource::draggedImage:endedAt:deposited: found
+
+# Defined in NSObject(NSDraggingSourceDeprecated)
+!extra-protocol-member! unexpected selector NSDraggingSource::namesOfPromisedFilesDroppedAtDestination: found
+
+# Defined in NSObject(NSSavePanelDelegateDeprecated)
+!extra-protocol-member! unexpected selector NSOpenSavePanelDelegate::panel:compareFilename:with:caseSensitive: found
+!extra-protocol-member! unexpected selector NSOpenSavePanelDelegate::panel:directoryDidChange: found
+!extra-protocol-member! unexpected selector NSOpenSavePanelDelegate::panel:isValidFilename: found
+!extra-protocol-member! unexpected selector NSOpenSavePanelDelegate::panel:shouldShowFilename: found
+
+
+# In header as old style unnamaed enum
+!unknown-native-enum! IKCellsStyle bound
+!unknown-native-enum! IKGroupStyle bound
+!unknown-native-enum! NSModalResponse bound
+!unknown-native-enum! NSWindowLevel bound
+
 # In header under different name but close enough, not worth churn even in 4_0
 !unknown-native-enum! NSBackingStore bound
 !unknown-native-enum! NSCellHit bound
@@ -41,3 +90,54 @@
 !unknown-field! NSTextMovement bound
 !unknown-field! item bound
 
+
+
+# Not declared in header for macOS unlike iOS but in Security.framework anyway (via nm)
+!unknown-pinvoke! SecKeyDecrypt bound
+!unknown-pinvoke! SecKeyEncrypt bound
+!unknown-pinvoke! SecKeyRawSign bound
+!unknown-pinvoke! SecKeyRawVerify bound
+
+# Informal Protocol
+!unknown-protocol! IKImageBrowserDataSource bound
+!unknown-protocol! IKImageBrowserItem bound
+
+# 32-bit only, and marked correctly in binding
+!unknown-type! NSMenuView bound
+
+# Only one type currently, which default returns. Currently unneeded unless they extend.
+!missing-selector! +NSDistributedNotificationCenter::notificationCenterForType: not bound
+
+# iOS Only, not available for macOS  - NS_CLASS_AVAILABLE(NA, XXX)
+!missing-protocol! MTLFence not bound
+!missing-protocol! MTLHeap not bound
+!missing-protocol-member! MTLBlitCommandEncoder::updateFence: not found
+!missing-protocol-member! MTLBlitCommandEncoder::waitForFence: not found
+!missing-protocol-member! MTLComputeCommandEncoder::updateFence: not found
+!missing-protocol-member! MTLComputeCommandEncoder::waitForFence: not found
+!missing-protocol-member! MTLDevice::heapBufferSizeAndAlignWithLength:options: not found
+!missing-protocol-member! MTLDevice::heapTextureSizeAndAlignWithDescriptor: not found
+!missing-protocol-member! MTLDevice::newFence not found
+!missing-protocol-member! MTLDevice::newHeapWithDescriptor: not found
+!missing-protocol-member! MTLResource::heap not found
+!missing-protocol-member! MTLResource::isAliasable not found
+!missing-protocol-member! MTLResource::makeAliasable not found
+!missing-type! MTLHeapDescriptor not bound
+!missing-selector! MTLHeapDescriptor::cpuCacheMode not bound
+!missing-selector! MTLHeapDescriptor::setCpuCacheMode: not bound
+!missing-selector! MTLHeapDescriptor::setSize: not bound
+!missing-selector! MTLHeapDescriptor::setStorageMode: not bound
+!missing-selector! MTLHeapDescriptor::size not bound
+!missing-selector! MTLHeapDescriptor::storageMode not bound
+!missing-field! CBCentralManagerOptionRestoreIdentifierKey not bound
+!missing-field! CBConnectPeripheralOptionNotifyOnConnectionKey not bound
+!missing-field! CBConnectPeripheralOptionNotifyOnNotificationKey not bound
+
+# iOS Only - NS_AVAILABLE_IOS
+!missing-protocol-member! MTLRenderCommandEncoder::updateFence:afterStages: not found
+!missing-protocol-member! MTLRenderCommandEncoder::waitForFence:beforeStages: not found
+!missing-protocol-member! MTLBuffer::newTextureWithDescriptor:offset:bytesPerRow: not found
+!missing-selector! MTLRenderPassDepthAttachmentDescriptor::depthResolveFilter not bound
+!missing-selector! MTLRenderPassDepthAttachmentDescriptor::setDepthResolveFilter: not bound
+!missing-selector! MTLSamplerDescriptor::lodAverage not bound
+!missing-selector! MTLSamplerDescriptor::setLodAverage: not bound

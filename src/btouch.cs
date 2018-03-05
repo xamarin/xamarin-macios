@@ -27,19 +27,12 @@
 using System;
 using System.IO;
 using System.Linq;
-#if IKVM
 using IKVM.Reflection;
 using Type = IKVM.Reflection.Type;
-#else
-using System.Reflection;
-#endif
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using Mono.Options;
-#if !MONOMAC && !IKVM
-using System.Runtime.InteropServices;
-#endif
 
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
@@ -58,9 +51,7 @@ class BindingTouch {
 
 	static List<string> libs = new List<string> ();
 
-#if IKVM
 	public static Universe universe;
-#endif
 
 	public static string ToolName {
 		get { return Path.GetFileNameWithoutExtension (System.Reflection.Assembly.GetEntryAssembly ().Location); }
@@ -76,13 +67,6 @@ class BindingTouch {
 	
 	static int Main (string [] args)
 	{
-#if !MONOMAC && !IKVM
-
-		// for monotouch.dll we're using a the iOS specific mscorlib.dll, which re-routes CWL to NSLog
-               // but that's not what we want for tooling, like the binding generator, so we provide our own
-		var sw = new UnexceptionalStreamWriter (Console.OpenStandardOutput ()) { AutoFlush = true };
-		Console.SetOut (sw);
-#endif
 		try {
 			return Main2 (args);
 		} catch (Exception ex) {
@@ -91,7 +75,6 @@ class BindingTouch {
 		}
 	}
 
-#if IKVM
 	static string GetAttributeLibraryPath ()
 	{
 		if (!string.IsNullOrEmpty (attributedll))
@@ -178,7 +161,6 @@ class BindingTouch {
 
 		throw new FileNotFoundException (name);
 	}
-#endif
 
 	static string GetSDKRoot ()
 	{
@@ -328,6 +310,7 @@ class BindingTouch {
 					}
 				}
 			},
+			new Mono.Options.ResponseFileSource (),
 		};
 
 		try {
@@ -448,11 +431,7 @@ class BindingTouch {
 			}
 			cargs.Append ("-debug -unsafe -target:library -nowarn:436").Append (' ');
 			cargs.Append ("-out:").Append (StringUtils.Quote (tmpass)).Append (' ');
-#if IKVM
 			cargs.Append ("-r:").Append (StringUtils.Quote (GetAttributeLibraryPath ())).Append (' ');
-#else
-			cargs.Append ("-r:").Append (Environment.GetCommandLineArgs ()[0]).Append (' ');
-#endif
 			cargs.Append (refs).Append (' ');
 			if (unsafef)
 				cargs.Append ("-unsafe ");
@@ -487,17 +466,11 @@ class BindingTouch {
 				return 1;
 			}
 
-#if IKVM
 			universe = new Universe (UniverseOptions.EnableFunctionPointers | UniverseOptions.ResolveMissingMembers | UniverseOptions.MetadataOnly);
-#endif
 
 			Assembly api;
 			try {
-#if IKVM
 				api = universe.LoadFile (tmpass);
-#else
-				api = Assembly.LoadFrom (tmpass);
-#endif
 			} catch (Exception e) {
 				if (verbose)
 					Console.WriteLine (e);
@@ -508,11 +481,7 @@ class BindingTouch {
 
 			Assembly baselib;
 			try {
-#if IKVM
 				baselib = universe.LoadFile (baselibdll);
-#else
-				baselib = Assembly.LoadFrom (baselibdll);
-#endif
 			} catch (Exception e){
 				if (verbose)
 					Console.WriteLine (e);
@@ -521,19 +490,10 @@ class BindingTouch {
 				return 1;
 			}
 
-#if IKVM
 			Assembly corlib_assembly = universe.LoadFile (LocateAssembly ("mscorlib"));
 			Assembly platform_assembly = baselib;
 			Assembly system_assembly = universe.LoadFile (LocateAssembly ("System"));
 			Assembly binding_assembly = universe.LoadFile (GetAttributeLibraryPath ());
-#else
-			GC.KeepAlive (baselib); // Fixes a compiler warning (unused variable).
-
-			Assembly corlib_assembly = typeof (object).Assembly;
-			Assembly platform_assembly = typeof (XamCore.Foundation.NSObject).Assembly;
-			Assembly system_assembly = typeof (System.ComponentModel.BrowsableAttribute).Assembly;
-			Assembly binding_assembly = typeof (ProtocolizeAttribute).Assembly;
-#endif
 			TypeManager.Initialize (api, corlib_assembly, platform_assembly, system_assembly, binding_assembly);
 
 			foreach (var linkWith in AttributeManager.GetCustomAttributes<LinkWithAttribute> (api)) {
@@ -546,11 +506,7 @@ class BindingTouch {
 			foreach (var r in references) {
 				if (File.Exists (r)) {
 					try {
-#if IKVM
 						universe.LoadFile (r);
-#else
-						Assembly.LoadFrom (r);
-#endif
 					} catch (Exception ex) {
 						ErrorHelper.Show (new BindingException (1104, false, "Could not load the referenced library '{0}': {1}.", r, ex.Message));
 					}
@@ -656,80 +612,3 @@ class BindingTouch {
 		}
 	}
 }
-
-#if !MONOMAC && !IKVM
-internal class UnexceptionalStreamWriter : StreamWriter
-{
-	public UnexceptionalStreamWriter (Stream stream)
-		: base (stream)
-	{
-	}
-
-	public override void Flush ()
-	{
-		try {
-			base.Flush ();
-		} catch (Exception) {
-		}
-	}
-
-	public override void Write (char[] buffer, int index,
-				    int count)
-	{
-		try {
-			base.Write (buffer, index, count);
-		} catch (Exception) {
-			NSLog (new string (buffer, index, count));
-		}
-	}
-
-	public override void Write (char value)
-	{
-		try {
-			base.Write (value);
-		} catch (Exception) {
-			NSLog (value.ToString ());
-		}
-	}
-
-	public override void Write (char[] value)
-	{
-		try {
-			base.Write (value);
-		} catch (Exception) {
-			NSLog (new string (value));
-		}
-	}
-
-	public override void Write (string value)
-	{
-		try {
-			base.Write (value);
-		} catch (Exception) {
-			NSLog (value);
-		}
-	}
-
-	// NSLog support
-
-	[DllImport ("/usr/lib/libobjc.dylib", EntryPoint="objc_msgSend")]
-	extern static IntPtr objc_msgSend (IntPtr receiver, IntPtr selector, [MarshalAs (UnmanagedType.LPWStr)] string arg1, IntPtr arg2);
-
-	[DllImport ("/System/Library/Frameworks/Foundation.framework/Foundation")]
-	extern static void NSLog (IntPtr format, [MarshalAs (UnmanagedType.LPStr)] string s);
-
-	[DllImport ("/usr/lib/libobjc.dylib")]
-	internal static extern IntPtr objc_getClass (string name);
-
-	[DllImport ("/usr/lib/libobjc.dylib", EntryPoint="sel_registerName")]
-	public extern static IntPtr sel_registerName (string name);
-
-	internal static void NSLog (string format, params object[] args)
-	{
-		var val = (args == null || args.Length == 0) ? format : string.Format (format, args);
-		const string str = "%s";
-		var fmt = objc_msgSend (objc_getClass ("NSString"), sel_registerName ("stringWithCharacters:length:"), str, new IntPtr (str.Length));
-		NSLog (fmt, val);
-	}
-}
-#endif // !MONOMAC

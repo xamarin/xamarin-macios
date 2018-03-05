@@ -1,0 +1,9 @@
+!missing-selector! SLComposeServiceViewController::charactersRemaining not bound
+!missing-selector! SLComposeServiceViewController::contentText not bound
+!missing-selector! SLComposeServiceViewController::placeholder not bound
+!missing-selector! SLComposeServiceViewController::setCharactersRemaining: not bound
+!missing-selector! SLComposeServiceViewController::setPlaceholder: not bound
+!missing-selector! SLComposeServiceViewController::textView not bound
+!missing-selector! SLRequest::addMultipartData:withName:type: not bound
+!missing-type! SLComposeServiceViewController not bound
+!unknown-native-enum! SLComposeViewControllerResult bound

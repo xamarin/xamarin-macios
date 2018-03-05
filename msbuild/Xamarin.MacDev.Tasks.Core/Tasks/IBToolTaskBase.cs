@@ -49,7 +49,7 @@ namespace Xamarin.MacDev.Tasks
 			get { return AppleSdkSettings.XcodeVersion.Major > 7 || (AppleSdkSettings.XcodeVersion.Major == 7 && AppleSdkSettings.XcodeVersion.Minor >= 2); }
 		}
 
-		protected override void AppendCommandLineArguments (IDictionary<string, string> environment, ProcessArgumentBuilder args, ITaskItem[] items)
+		protected override void AppendCommandLineArguments (IDictionary<string, string> environment, CommandLineArgumentBuilder args, ITaskItem[] items)
 		{
 			environment.Add ("IBSC_MINIMUM_COMPATIBILITY_VERSION", minimumDeploymentTarget);
 			environment.Add ("IBC_MINIMUM_COMPATIBILITY_VERSION", minimumDeploymentTarget);
@@ -93,9 +93,13 @@ namespace Xamarin.MacDev.Tasks
 
 		static string GetPathWithoutExtension (string path)
 		{
-			int dot = path.LastIndexOf ('.');
+			var fileName = Path.GetFileNameWithoutExtension (path);
+			var dir = Path.GetDirectoryName (path);
 
-			return path.Substring (0, dot);
+			if (string.IsNullOrEmpty (dir))
+				return fileName;
+
+			return Path.Combine (dir, fileName);
 		}
 
 		IEnumerable<ITaskItem> GetCompilationDirectoryOutput (string baseOutputDir, IDictionary<string, IDictionary> mapping)

@@ -34,5 +34,8 @@ namespace Bug53076Test {
 		[Export ("optionalReturnObj:completion:")]
 		bool OptionalReturnMethodObj (int arg1, Action<NSError,NSObject> err);
 	}
+
+	[BaseType (typeof (NSObject))]
+	interface RequiredReturnMethodObjResult {}
 }
 

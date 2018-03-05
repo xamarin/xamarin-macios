@@ -22,7 +22,7 @@
 
 using System;
 using System.Collections.Generic;
-#if IKVM
+#if BGENERATOR
 using IKVM.Reflection;
 using Type = IKVM.Reflection.Type;
 #else

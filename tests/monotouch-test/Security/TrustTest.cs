@@ -76,24 +76,29 @@ namespace MonoTouchFixtures.Security {
 			X509Certificate x = new X509Certificate (CertificateTest.mail_google_com);
 			using (var policy = SecPolicy.CreateSslPolicy (true, "mail.google.com"))
 			using (var trust = new SecTrust (x, policy)) {
-				Assert.That (CFGetRetainCount (trust.Handle), Is.EqualTo ((nint) 1), "RetainCount(trust)");
-				Assert.That (CFGetRetainCount (policy.Handle), Is.EqualTo ((nint) 2), "RetainCount(policy)");
-				// that certificate stopped being valid on September 30th, 2013 so we validate it with a date earlier than that
-				trust.SetVerifyDate (new DateTime (635108745218945450, DateTimeKind.Utc));
-				// the system was able to construct the chain based on the single certificate
-				Assert.That (Evaluate (trust, true), Is.EqualTo (SecTrustResult.RecoverableTrustFailure), "Evaluate");
+				Trust_Leaf_Only (trust, policy);
+			}
+		}
 
-				if (TestRuntime.CheckXcodeVersion (5, 0)) {
-					Assert.True (trust.NetworkFetchAllowed, "NetworkFetchAllowed-1");
-					trust.NetworkFetchAllowed = false;
-					Assert.False (trust.NetworkFetchAllowed, "NetworkFetchAllowed-2");
+		void Trust_Leaf_Only (SecTrust trust, SecPolicy policy)
+		{
+			Assert.That (CFGetRetainCount (trust.Handle), Is.EqualTo ((nint) 1), "RetainCount(trust)");
+			Assert.That (CFGetRetainCount (policy.Handle), Is.EqualTo ((nint) 2), "RetainCount(policy)");
+			// that certificate stopped being valid on September 30th, 2013 so we validate it with a date earlier than that
+			trust.SetVerifyDate (new DateTime (635108745218945450, DateTimeKind.Utc));
+			// the system was able to construct the chain based on the single certificate
+			Assert.That (Evaluate (trust, true), Is.EqualTo (SecTrustResult.RecoverableTrustFailure), "Evaluate");
 
-					trust.SetPolicy (policy);
+			if (TestRuntime.CheckXcodeVersion (5, 0)) {
+				Assert.True (trust.NetworkFetchAllowed, "NetworkFetchAllowed-1");
+				trust.NetworkFetchAllowed = false;
+				Assert.False (trust.NetworkFetchAllowed, "NetworkFetchAllowed-2");
 
-					var policies = trust.GetPolicies ();
-					Assert.That (policies.Length, Is.EqualTo (1), "Policies.Length");
-					Assert.That (policies [0].Handle, Is.EqualTo (policy.Handle), "Handle");
-				}
+				trust.SetPolicy (policy);
+
+				var policies = trust.GetPolicies ();
+				Assert.That (policies.Length, Is.EqualTo (1), "Policies.Length");
+				Assert.That (policies [0].Handle, Is.EqualTo (policy.Handle), "Handle");
 			}
 		}
 
@@ -209,19 +214,24 @@ namespace MonoTouchFixtures.Security {
 			certs.Add (new X509Certificate (CertificateTest.thawte_sgc_ca));
 			using (var policy = SecPolicy.CreateSslPolicy (true, "mail.google.com"))
 			using (var trust = new SecTrust (certs, policy)) {
-				// that certificate stopped being valid on September 30th, 2013 so we validate it with a date earlier than that
-				trust.SetVerifyDate (new DateTime (635108745218945450, DateTimeKind.Utc));
-				// iOS9 is not fully happy with the basic constraints: `SecTrustEvaluate  [root AnchorTrusted BasicContraints]`
-				// so it returns RecoverableTrustFailure and that affects the Count of trust later (it does not add to what we provided)
-				var ios9 = TestRuntime.CheckXcodeVersion (7, 0);
-				var result = Evaluate (trust, ios9);
-				Assert.That (result, Is.EqualTo (ios9 ? SecTrustResult.RecoverableTrustFailure : SecTrustResult.Unspecified), "Evaluate");
-				// Evalute must be called prior to Count (Apple documentation)
-				Assert.That (trust.Count, Is.EqualTo (ios9 ? 2 : 3), "Count");
+				Trust_NoRoot (trust, policy);
+			}
+		}
 
-				using (SecKey pkey = trust.GetPublicKey ()) {
-					Assert.That (CFGetRetainCount (pkey.Handle), Is.GreaterThanOrEqualTo ((nint) 1), "RetainCount(pkey)");
-				}
+		void Trust_NoRoot (SecTrust trust, SecPolicy policy)
+		{
+			// that certificate stopped being valid on September 30th, 2013 so we validate it with a date earlier than that
+			trust.SetVerifyDate (new DateTime (635108745218945450, DateTimeKind.Utc));
+			// iOS9 is not fully happy with the basic constraints: `SecTrustEvaluate  [root AnchorTrusted BasicContraints]`
+			// so it returns RecoverableTrustFailure and that affects the Count of trust later (it does not add to what we provided)
+			var ios9 = TestRuntime.CheckXcodeVersion (7, 0);
+			var result = Evaluate (trust, ios9);
+			Assert.That (result, Is.EqualTo (ios9 ? SecTrustResult.RecoverableTrustFailure : SecTrustResult.Unspecified), "Evaluate");
+			// Evalute must be called prior to Count (Apple documentation)
+			Assert.That (trust.Count, Is.EqualTo (ios9 ? 2 : 3), "Count");
+
+			using (SecKey pkey = trust.GetPublicKey ()) {
+				Assert.That (CFGetRetainCount (pkey.Handle), Is.GreaterThanOrEqualTo ((nint) 1), "RetainCount(pkey)");
 			}
 		}
 
@@ -234,81 +244,67 @@ namespace MonoTouchFixtures.Security {
 			certs.Add (new X509Certificate (CertificateTest.verisign_class3_root));
 			using (var policy = SecPolicy.CreateSslPolicy (true, "mail.google.com"))
 			using (var trust = new SecTrust (certs, policy)) {
-				// that certificate stopped being valid on September 30th, 2013 so we validate it with a date earlier than that
-				trust.SetVerifyDate (new DateTime (635108745218945450, DateTimeKind.Utc));
+				Trust_FullChain (trust, policy, certs);
+			}
+		}
 
-				SecTrustResult trust_result = SecTrustResult.Unspecified;
-				var ios9 = TestRuntime.CheckXcodeVersion (7, 0);
-				var ios10 = TestRuntime.CheckXcodeVersion (8, 0);
-				var ios11 = TestRuntime.CheckXcodeVersion (9, 0);
-				if (ios10)
-					trust_result = SecTrustResult.FatalTrustFailure;
-				// iOS9 is not fully happy with the basic constraints: `SecTrustEvaluate  [root AnchorTrusted BasicContraints]`
-				else if (ios9)
-					trust_result = SecTrustResult.RecoverableTrustFailure;
-				var result = Evaluate (trust, true);
-				Assert.That (result, Is.EqualTo (trust_result), "Evaluate");
+		void Trust_FullChain (SecTrust trust, SecPolicy policy, X509CertificateCollection certs)
+		{
+			// that certificate stopped being valid on September 30th, 2013 so we validate it with a date earlier than that
+			trust.SetVerifyDate (new DateTime (635108745218945450, DateTimeKind.Utc));
 
-				// Evalute must be called prior to Count (Apple documentation)
-				Assert.That (trust.Count, Is.EqualTo (3), "Count");
+			SecTrustResult trust_result = SecTrustResult.Unspecified;
+			var ios9 = TestRuntime.CheckXcodeVersion (7, 0);
+			var ios10 = TestRuntime.CheckXcodeVersion (8, 0);
+			var ios11 = TestRuntime.CheckXcodeVersion (9, 0);
+			if (ios10)
+				trust_result = SecTrustResult.FatalTrustFailure;
+			// iOS9 is not fully happy with the basic constraints: `SecTrustEvaluate  [root AnchorTrusted BasicContraints]`
+			else if (ios9)
+				trust_result = SecTrustResult.RecoverableTrustFailure;
+			var result = Evaluate (trust, true);
+			Assert.That (result, Is.EqualTo (trust_result), "Evaluate");
 
-				using (SecCertificate sc1 = trust [0]) {
-					// seems the leaf gets an extra one
-					Assert.That (CFGetRetainCount (sc1.Handle), Is.GreaterThanOrEqualTo ((nint) 2), "RetainCount(sc1)");
-					Assert.That (sc1.SubjectSummary, Is.EqualTo ("mail.google.com"), "SubjectSummary(sc1)");
-				}
-				using (SecCertificate sc2 = trust [1]) {
-					Assert.That (CFGetRetainCount (sc2.Handle), Is.GreaterThanOrEqualTo ((nint) 2), "RetainCount(sc2)");
-					Assert.That (sc2.SubjectSummary, Is.EqualTo ("Thawte SGC CA"), "SubjectSummary(sc2)");
-				}
-				using (SecCertificate sc3 = trust [2]) {
-					Assert.That (CFGetRetainCount (sc3.Handle), Is.GreaterThanOrEqualTo ((nint) 2), "RetainCount(sc3)");
-					Assert.That (sc3.SubjectSummary, Is.EqualTo ("Class 3 Public Primary Certification Authority"), "SubjectSummary(sc3)");
-				}
+			// Evalute must be called prior to Count (Apple documentation)
+			Assert.That (trust.Count, Is.EqualTo (3), "Count");
 
-				if (TestRuntime.CheckXcodeVersion (5, 0)) {
-					Assert.That (trust.GetTrustResult (), Is.EqualTo (trust_result), "GetTrustResult");
+			using (SecCertificate sc1 = trust [0]) {
+				// seems the leaf gets an extra one
+				Assert.That (CFGetRetainCount (sc1.Handle), Is.GreaterThanOrEqualTo ((nint) 2), "RetainCount(sc1)");
+				Assert.That (sc1.SubjectSummary, Is.EqualTo ("mail.google.com"), "SubjectSummary(sc1)");
+			}
+			using (SecCertificate sc2 = trust [1]) {
+				Assert.That (CFGetRetainCount (sc2.Handle), Is.GreaterThanOrEqualTo ((nint) 2), "RetainCount(sc2)");
+				Assert.That (sc2.SubjectSummary, Is.EqualTo ("Thawte SGC CA"), "SubjectSummary(sc2)");
+			}
+			using (SecCertificate sc3 = trust [2]) {
+				Assert.That (CFGetRetainCount (sc3.Handle), Is.GreaterThanOrEqualTo ((nint) 2), "RetainCount(sc3)");
+				Assert.That (sc3.SubjectSummary, Is.EqualTo ("Class 3 Public Primary Certification Authority"), "SubjectSummary(sc3)");
+			}
 
-					trust.SetAnchorCertificates (certs);
-					Assert.That (trust.GetCustomAnchorCertificates ().Length, Is.EqualTo (certs.Count), "GetCustomAnchorCertificates");
+			if (TestRuntime.CheckXcodeVersion (5, 0)) {
+				Assert.That (trust.GetTrustResult (), Is.EqualTo (trust_result), "GetTrustResult");
 
-					if (ios11)
-						trust_result = SecTrustResult.Unspecified;
-					else
-						trust_result = SecTrustResult.Invalid;
+				trust.SetAnchorCertificates (certs);
+				Assert.That (trust.GetCustomAnchorCertificates ().Length, Is.EqualTo (certs.Count), "GetCustomAnchorCertificates");
 
-					// since we modified the `trust` instance it's result was invalidated (marked as unspecified on iOS 11)
-					Assert.That (trust.GetTrustResult (), Is.EqualTo (trust_result), "GetTrustResult-2");
-				}
+				if (ios11)
+					trust_result = SecTrustResult.Unspecified;
+				else
+					trust_result = SecTrustResult.Invalid;
+
+				// since we modified the `trust` instance it's result was invalidated (marked as unspecified on iOS 11)
+				Assert.That (trust.GetTrustResult (), Is.EqualTo (trust_result), "GetTrustResult-2");
 			}
 		}
 
 		[Test]
 		public void Trust2_Leaf_Only ()
 		{
-			X509Certificate2 x = new X509Certificate2 (CertificateTest.api_imgur_com);
-			using (var policy = SecPolicy.CreateSslPolicy (true, "api.imgur.com"))
+			X509Certificate x = new X509Certificate2 (CertificateTest.mail_google_com);
+			using (var policy = SecPolicy.CreateSslPolicy (true, "mail.google.com"))
 			using (var trust = new SecTrust (x, policy)) {
-				// that certificate stopped being valid on August 3rd, 2013 so we validate it with a date earlier than that
-				trust.SetVerifyDate (new DateTime (635108745218945450, DateTimeKind.Utc));
-				Assert.That (CFGetRetainCount (trust.Handle), Is.EqualTo ((nint) 1), "RetainCount(trust)");
-				Assert.That (CFGetRetainCount (policy.Handle), Is.EqualTo ((nint) 2), "RetainCount(policy)");
-				// the system was able to construct the chain based on the single certificate
-#if __WATCHOS__
-				Assert.That (Evaluate (trust), Is.EqualTo (SecTrustResult.RecoverableTrustFailure), "Evaluate");
-				// Evalute must be called prior to Count (Apple documentation)
-				Assert.That (trust.Count, Is.EqualTo (1), "Count");
-#else
-				Assert.That (Evaluate (trust), Is.EqualTo (SecTrustResult.Unspecified), "Evaluate");
-				// Evalute must be called prior to Count (Apple documentation)
-				Assert.That (trust.Count, Is.EqualTo (3), "Count");
-#endif
-
-				using (NSData data = trust.GetExceptions ()) {
-					Assert.That (CFGetRetainCount (data.Handle), Is.EqualTo ((nint) 1), "RetainCount(data)");
-					Assert.False (trust.SetExceptions (null), "SetExceptions(null)");
-					Assert.True (trust.SetExceptions (data), "SetExceptions");
-				}
+				Trust_Leaf_Only (trust, policy);
 			}
 		}
 
@@ -316,19 +312,11 @@ namespace MonoTouchFixtures.Security {
 		public void Trust2_NoRoot ()
 		{
 			X509Certificate2Collection certs = new X509Certificate2Collection ();
-			certs.Add (new X509Certificate2 (CertificateTest.api_imgur_com));
-			certs.Add (new X509Certificate2 (CertificateTest.geotrust_dv_ssl_ca));
-			using (var policy = SecPolicy.CreateSslPolicy (true, "api.imgur.com"))
+			certs.Add (new X509Certificate2 (CertificateTest.mail_google_com));
+			certs.Add (new X509Certificate2 (CertificateTest.thawte_sgc_ca));
+			using (var policy = SecPolicy.CreateSslPolicy (true, "mail.google.com"))
 			using (var trust = new SecTrust (certs, policy)) {
-				// that certificate stopped being valid on August 3rd, 2013 so we validate it with a date earlier than that
-				trust.SetVerifyDate (new DateTime (635108745218945450, DateTimeKind.Utc));
-				Assert.That (Evaluate (trust), Is.EqualTo (SecTrustResult.Unspecified), "Evaluate");
-				// Evalute must be called prior to Count (Apple documentation)
-				Assert.That (trust.Count, Is.EqualTo (3), "Count");
-
-				using (SecKey pkey = trust.GetPublicKey ()) {
-					Assert.That (CFGetRetainCount (pkey.Handle), Is.GreaterThanOrEqualTo ((nint) 1), "RetainCount(pkey)");
-				}
+				Trust_NoRoot (trust, policy);
 			}
 		}
 
@@ -336,30 +324,12 @@ namespace MonoTouchFixtures.Security {
 		public void Trust2_FullChain ()
 		{
 			X509Certificate2Collection certs = new X509Certificate2Collection ();
-			certs.Add (new X509Certificate2 (CertificateTest.api_imgur_com));
-			certs.Add (new X509Certificate2 (CertificateTest.geotrust_dv_ssl_ca));
-			certs.Add (new X509Certificate2 (CertificateTest.geotrust_global_root));
-			using (var policy = SecPolicy.CreateSslPolicy (true, "api.imgur.com"))
+			certs.Add (new X509Certificate2 (CertificateTest.mail_google_com));
+			certs.Add (new X509Certificate2 (CertificateTest.thawte_sgc_ca));
+			certs.Add (new X509Certificate2 (CertificateTest.verisign_class3_root));
+			using (var policy = SecPolicy.CreateSslPolicy (true, "mail.google.com"))
 			using (var trust = new SecTrust (certs, policy)) {
-				// that certificate stopped being valid on August 3rd, 2013 so we validate it with a date earlier than that
-				trust.SetVerifyDate (new DateTime (635108745218945450, DateTimeKind.Utc));
-				Assert.That (Evaluate (trust), Is.EqualTo (SecTrustResult.Unspecified), "Evaluate");
-				// Evalute must be called prior to Count (Apple documentation)
-				Assert.That (trust.Count, Is.EqualTo (3), "Count");
-
-				using (SecCertificate sc1 = trust [0]) {
-					// seems the leaf gets an extra one
-					Assert.That (CFGetRetainCount (sc1.Handle), Is.GreaterThanOrEqualTo ((nint) 2), "RetainCount(sc1)");
-					Assert.That (sc1.SubjectSummary, Is.EqualTo ("api.imgur.com"), "SubjectSummary(sc1)");
-				}
-				using (SecCertificate sc2 = trust [1]) {
-					Assert.That (CFGetRetainCount (sc2.Handle), Is.GreaterThanOrEqualTo ((nint) 2), "RetainCount(sc2)");
-					Assert.That (sc2.SubjectSummary, Is.EqualTo ("GeoTrust DV SSL CA"), "SubjectSummary(sc2)");
-				}
-				using (SecCertificate sc3 = trust [2]) {
-					Assert.That (CFGetRetainCount (sc3.Handle), Is.GreaterThanOrEqualTo ((nint) 2), "RetainCount(sc3)");
-					Assert.That (sc3.SubjectSummary, Is.EqualTo ("GeoTrust Global CA"), "SubjectSummary(sc3)");
-				}
+				Trust_FullChain (trust, policy, certs);
 			}
 		}
 	}

@@ -1,14 +1,5 @@
-## The signature uses INBooleanResolutionResult which is not available on mac
 !missing-protocol-member! INSearchCallHistoryIntentHandling::resolveUnseenForSearchCallHistory:withCompletion: not found
-
-## unsorted
-
-!unknown-native-enum! INSetMessageAttributeIntentResponseCode bound
-
-### moved from macOS-Intents.todo
-## API_AVAILABLE(macosx(10.12), ios(10.0)); This is supposed to be there according to availability (Last Review: Beta 3)
-!unknown-protocol! INCallsDomainHandling bound
-
-## No availability set on headers, it is possible to be fixed later since makes sense to have in macOS
 !unknown-native-enum! INMessageAttribute bound
+!unknown-native-enum! INSetMessageAttributeIntentResponseCode bound
+!unknown-protocol! INCallsDomainHandling bound
 !unknown-type! INMessageAttributeResolutionResult bound

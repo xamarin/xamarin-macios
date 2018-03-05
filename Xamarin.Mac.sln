@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mono.Cecil.Mdb", "external\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mono.Cecil", "external\mono\external\cecil\Mono.Cecil.csproj", "{D68133BD-1E63-496E-9EDE-4FBDBF77B486}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mono.Linker", "external\linker\linker\Mono.Linker.csproj", "{DD28E2B1-057B-4B4D-A04D-B2EBD9E76E46}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mono.Linker", "external\mono\external\linker\linker\Mono.Linker.csproj", "{DD28E2B1-057B-4B4D-A04D-B2EBD9E76E46}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libxammac", "runtime\libxammac.csproj", "{8A5B637C-E4FF-4145-B887-9347020100F4}"
 EndProject

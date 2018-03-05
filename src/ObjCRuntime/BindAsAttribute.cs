@@ -1,5 +1,5 @@
 using System;
-#if IKVM
+#if BGENERATOR
 using IKVM.Reflection;
 using Type = IKVM.Reflection.Type;
 #endif

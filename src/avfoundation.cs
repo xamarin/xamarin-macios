@@ -4038,7 +4038,7 @@ namespace XamCore.AVFoundation {
 #if XAMCORE_2_0
 		[Internal]
 #endif
-		[Advice ("Use constructor or 'Create' method.")]
+		[Advice ("Use constructor or 'Create' method instead.")]
 		[Static, Export ("assetWriterInputWithMediaType:outputSettings:")]
 		AVAssetWriterInput FromType (string mediaType, [NullAllowed] NSDictionary outputSettings);
 
@@ -4259,7 +4259,7 @@ namespace XamCore.AVFoundation {
 #if XAMCORE_2_0
 		[Internal]
 #endif
-		[Advice ("Use 'Create' or constructor.")]
+		[Advice ("Use constructor or 'Create' method instead.")]
 		[Static, Export ("URLAssetWithURL:options:")]
 		AVUrlAsset FromUrl (NSUrl url, [NullAllowed] NSDictionary options);
 
@@ -8664,7 +8664,7 @@ namespace XamCore.AVFoundation {
 		void SetSessionWithNoConnection (AVCaptureSession session);
 
 #if !XAMCORE_2_0
-		[Advice ("Use LayerVideoGravity")]
+		[Advice ("Use 'LayerVideoGravity' property instead.")]
 		[Export ("videoGravity", ArgumentSemantic.Copy)][Sealed]
 		string VideoGravity { get; set; }
 #endif
@@ -11428,7 +11428,7 @@ namespace XamCore.AVFoundation {
 		AVPlayerLayer FromPlayer ([NullAllowed] AVPlayer player);
 
 #if !XAMCORE_2_0
-		[Advice ("Use LayerVideoGravity")]
+		[Advice ("Use 'LayerVideoGravity' property instead.")]
 		[Export ("videoGravity", ArgumentSemantic.Copy)][Sealed]
 		string VideoGravity { get; set; }
 #endif

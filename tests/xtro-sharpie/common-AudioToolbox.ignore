@@ -1,9 +1,3 @@
-## no generator support for FastEnumeration - https://bugzilla.xamarin.com/show_bug.cgi?id=4391
-!missing-protocol-conformance! AUAudioUnitBusArray should conform to NSFastEnumeration
-
-
-## unsorted
-
 !missing-enum! AudioBytePacketTranslationFlags not bound
 !missing-enum! AudioComponentFlags not bound
 !missing-enum! AudioFilePermissions not bound
@@ -50,6 +44,7 @@
 !missing-pinvoke! MusicTrackNewAUPresetEvent is not bound
 !missing-pinvoke! MusicTrackNewParameterEvent is not bound
 !missing-pinvoke! NewMusicEventIterator is not bound
+!missing-protocol-conformance! AUAudioUnitBusArray should conform to NSFastEnumeration
 !missing-selector! AUAudioUnit::isRunning not bound
 !missing-selector! AUAudioUnit::musicalContextBlock not bound
 !missing-selector! AUAudioUnit::scheduleMIDIEventBlock not bound

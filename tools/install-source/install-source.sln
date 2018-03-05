@@ -1,0 +1,23 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "install-source", "install-source.csproj", "{B24B2169-6243-4F98-B38C-69F03655CF1B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstallSourcesTests", "InstallSourcesTests\InstallSourcesTests.csproj", "{795E0F7E-5C48-4C90-8F66-518359874022}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B24B2169-6243-4F98-B38C-69F03655CF1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B24B2169-6243-4F98-B38C-69F03655CF1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B24B2169-6243-4F98-B38C-69F03655CF1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B24B2169-6243-4F98-B38C-69F03655CF1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{795E0F7E-5C48-4C90-8F66-518359874022}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{795E0F7E-5C48-4C90-8F66-518359874022}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{795E0F7E-5C48-4C90-8F66-518359874022}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{795E0F7E-5C48-4C90-8F66-518359874022}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

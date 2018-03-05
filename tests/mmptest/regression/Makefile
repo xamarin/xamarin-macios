@@ -75,7 +75,7 @@ run run-test run-tests:
 	$(MAKE) build
 	$(MAKE) exec
 
-exec-system-mono-profile exec-embedded-mono-profile: export MONO_ENV_OPTIONS=--profile=log:noalloc,nocalls,output=-output.mlpd
+exec-system-mono-profile exec-embedded-mono-profile: export MONO_ENV_OPTIONS=--profile=log:output=output.mlpd
 
 exec-%:
 	@echo Executing $*... | tee $*/$@.log

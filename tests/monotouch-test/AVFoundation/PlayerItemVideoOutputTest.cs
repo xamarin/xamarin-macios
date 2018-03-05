@@ -14,12 +14,10 @@ using System;
 using AVFoundation;
 using CoreVideo;
 using Foundation;
-using UIKit;
 #else
 using MonoTouch.AVFoundation;
 using MonoTouch.CoreVideo;
 using MonoTouch.Foundation;
-using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 

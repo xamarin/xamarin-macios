@@ -29,6 +29,7 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public string BundleIdentifier { get; set; }
 
+		[Output]
 		[Required]
 		public string CompiledEntitlements { get; set; }
 
@@ -40,6 +41,9 @@ namespace Xamarin.MacDev.Tasks
 		public string ProvisioningProfile { get; set; }
 
 		[Required]
+		public string SdkPlatform { get; set; }
+
+		[Required]
 		public string SdkVersion { get; set; }
 
 		#endregion
@@ -49,8 +53,6 @@ namespace Xamarin.MacDev.Tasks
 		protected abstract string DefaultEntitlementsPath { get; }
 
 		protected abstract HashSet<string> AllowedProvisioningKeys { get; }
-
-		protected abstract MobileProvisionPlatform Platform { get; }
 
 		protected abstract string EntitlementBundlePath { get; }
 
@@ -303,6 +305,7 @@ namespace Xamarin.MacDev.Tasks
 
 		public override bool Execute ()
 		{
+			MobileProvisionPlatform platform;
 			MobileProvision profile;
 			PDictionary template;
 			PDictionary compiled;
@@ -310,14 +313,30 @@ namespace Xamarin.MacDev.Tasks
 			string path;
 			bool save;
 
+			switch (SdkPlatform) {
+			case "AppleTVSimulator":
+			case "AppleTVOS":
+				platform = MobileProvisionPlatform.tvOS;
+				break;
+			case "iPhoneSimulator":
+			case "WatchSimulator":
+			case "iPhoneOS":
+			case "WatchOS":
+				platform = MobileProvisionPlatform.iOS;
+				break;
+			case "MacOSX":
+				platform = MobileProvisionPlatform.MacOS;
+				break;
+			default:
+				Log.LogError ("Unknown SDK platform: {0}", SdkPlatform);
+				return false;
+			}
+
 			if (!string.IsNullOrEmpty (ProvisioningProfile)) {
-				if ((profile = GetMobileProvision (Platform, ProvisioningProfile)) == null) {
+				if ((profile = GetMobileProvision (platform, ProvisioningProfile)) == null) {
 					Log.LogError ("Could not locate the provisioning profile with a Name or UUID of {0}.", ProvisioningProfile);
 					return false;
 				}
-			} else if (Platform == MobileProvisionPlatform.iOS) {
-				Log.LogError ("Provisioning Profiles are REQUIRED for iOS.");
-				return false;
 			} else {
 				profile = null;
 			}

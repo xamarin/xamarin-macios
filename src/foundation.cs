@@ -3600,6 +3600,9 @@ namespace XamCore.Foundation
 		[Export ("initWithDictionary:")]
 		IntPtr Constructor (NSDictionary other);
 
+		[Export ("initWithDictionary:copyItems:")]
+		IntPtr Constructor (NSDictionary other, bool copyItems);
+
 		[Export ("initWithContentsOfFile:")]
 		IntPtr Constructor (string fileName);
 
@@ -7502,6 +7505,9 @@ namespace XamCore.Foundation
 		
 		[Export ("initWithDictionary:")]
 		IntPtr Constructor (NSDictionary other);
+
+		[Export ("initWithDictionary:copyItems:")]
+		IntPtr Constructor (NSDictionary other, bool copyItems);
 
 		[Export ("initWithContentsOfFile:")]
 		IntPtr Constructor (string fileName);

@@ -94,40 +94,6 @@ namespace MonoTouchFixtures.Security {
 		}
 
 		[Test]
-		// We do not want to block for a long period of time if the event is not set.
-		// We are testing the fact that the trampoline works.
-		[Timeout (5000)]
-		public void RequestSharedWebCredentialNullDomain ()
-		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Ignore ("Ignoring RequestSharedWebCredentialNullDomain test: Requires iOS8+");
-
-			Action <string[], NSError> getHandler = (string [] pwds, NSError e) => {
-				waitEvent.Set ();
-			};
-			SecSharedCredential.RequestSharedWebCredential (null, account, getHandler);
-			waitEvent.WaitOne ();
-			Assert.Pass ("Block was correctly executed.");
-		}
-
-		[Test]
-		// We do not want to block for a long period of time if the event is not set.
-		// We are testing the fact that the trampoline works.
-		[Timeout (5000)]
-		public void RequestSharedWebCredentialNullAccount ()
-		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Ignore ("Ignoring RequestSharedWebCredentialNullAccount test: Requires iOS8+");
-
-			Action <string[], NSError> getHandler = (string [] pwds, NSError e) => {
-				waitEvent.Set ();
-			};
-			SecSharedCredential.RequestSharedWebCredential (null, null, getHandler);
-			waitEvent.WaitOne ();
-			Assert.Pass ("Block was correctly executed.");
-		}
-
-		[Test]
 		public void CreateSharedWebCredentialPassword ()
 		{
 			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
