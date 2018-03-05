@@ -1345,7 +1345,8 @@ namespace xharness
 				allTasks.AddRange (allDeviceTasks);
 			}
 
-			var failedTests = allTasks.Where ((v) => v.Failed || v.Skipped);
+			var failedTests = allTasks.Where ((v) => v.Failed);
+			var skippedTests = allTasks.Where ((v) => v.Skipped);
 			var unfinishedTests = allTasks.Where ((v) => !v.Finished);
 			var passedTests = allTasks.Where ((v) => v.Succeeded);
 			var runningTests = allTasks.Where ((v) => v.Running && !v.Waiting);
@@ -1367,7 +1368,8 @@ namespace xharness
 					markdown_summary.Write (string.Join (", ", list));
 					markdown_summary.WriteLine ();
 				} else if (failedTests.Any ()) {
-					markdown_summary.WriteLine ($"{failedTests.Count ()} tests failed, {passedTests.Count ()} tests passed.");
+					var skipped = skippedTests.Any () ? $" and {skippedTests.Count ()} tests skipped" : "";
+					markdown_summary.WriteLine ($"{failedTests.Count ()} tests failed, {passedTests.Count ()} tests passed{skipped}.");
 				} else if (passedTests.Any ()) {
 					markdown_summary.WriteLine ($"# All {passedTests.Count ()} tests passed");
 				} else {
