@@ -510,4 +510,45 @@ static UltimateMachine *shared;
 }
 @end
 
+@implementation ObjCBlockTester
+-(void) classCallback: (void (^)(int32_t magic_number))completionHandler
+{
+	assert (!"THIS FUNCTION SHOULD BE OVERRIDDEN");
+}
+
+-(void) callClassCallback
+{
+	__block bool called = false;
+	[self classCallback: ^(int magic_number)
+	{
+		assert (magic_number == 42);
+		called = true;
+	}];
+	assert (called);
+}
+
+-(void) callRequiredCallback
+{
+	__block bool called = false;
+	[self.TestObject requiredCallback: ^(int magic_number)
+	{
+		assert (magic_number == 42);
+		called = true;
+	}];
+	assert (called);
+}
+
+-(void) callOptionalCallback
+{
+	__block bool called = false;
+	[self.TestObject optionalCallback: ^(int magic_number)
+	{
+		assert (magic_number == 42);
+		called = true;
+	}];
+	assert (called);
+}
+
+@end
+
 #include "libtest.decompile.m"

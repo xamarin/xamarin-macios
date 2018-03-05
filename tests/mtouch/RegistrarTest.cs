@@ -872,6 +872,103 @@ class X : ReplayKit.RPBroadcastControllerDelegate
 		}
 
 		[Test]
+		public void MT4174 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var code = @"
+namespace NS {
+	using System;
+	using Foundation;
+	using ObjCRuntime;
+
+	public class Consumer : NSObject, IProtocolWithOptionalMembers
+	{
+		[Export (""resolveRecipientsForSearchForMessages:withCompletion:"")]
+		public void ResolveRecipients (int arg, Action<bool> completion)
+		{
+			throw new NotImplementedException ();
+		}
+	}
+
+
+	[Protocol (Name = ""INSendMessageIntentHandling"", WrapperType = typeof (ProtocolWithOptionalMembersWrapper))]
+	[ProtocolMember (IsRequired = false, IsProperty = false, IsStatic = false, Name = ""ResolveRecipients"", Selector = ""resolveRecipientsForSendMessage:withCompletion:"", ParameterType = new Type [] { typeof (bool), typeof (global::System.Action<bool>) }, ParameterByRef = new bool [] { false, false })]
+	public interface IProtocolWithOptionalMembers : INativeObject, IDisposable
+	{
+	}
+
+	public static partial class ProtocolWithOptionalMembers_Extensions {
+		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+		public static void ResolveRecipients (this IProtocolWithOptionalMembers This, bool arg, [BlockProxy (typeof (NIDActionArity1V89))]global::System.Action<bool> completion)
+		{
+		}
+	}
+
+	internal sealed class ProtocolWithOptionalMembersWrapper : BaseWrapper, IProtocolWithOptionalMembers {
+		[Preserve (Conditional = true)]
+		public ProtocolWithOptionalMembersWrapper (IntPtr handle, bool owns)
+			: base (handle, owns)
+		{
+		}
+	}
+
+	[UserDelegateType (typeof (global::System.Action<bool>))]
+	internal delegate void DActionArity1V89 (IntPtr block, IntPtr obj);
+
+	static internal class SDActionArity1V89 {
+		static internal readonly DActionArity1V89 Handler = Invoke;
+
+		[MonoPInvokeCallback (typeof (DActionArity1V89))]
+		static void Invoke (IntPtr block, IntPtr obj) {
+			throw new NotImplementedException ();
+		}
+	}
+
+	internal class NIDActionArity1V89 {
+		IntPtr blockPtr;
+		DActionArity1V89 invoker;
+
+		[Preserve (Conditional=true)]
+		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+		public NIDActionArity1V89 (ref BlockLiteral block)
+		{
+			throw new NotImplementedException ();
+		}
+
+		[Preserve (Conditional=true)]
+		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+		~NIDActionArity1V89 ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		[Preserve (Conditional=true)]
+		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+		public static global::System.Action<bool> Create (IntPtr block)
+		{
+			throw new NotImplementedException ();
+		}
+
+		[Preserve (Conditional=true)]
+		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+		void Invoke (bool obj)
+		{
+		}
+	}
+}
+
+";
+				mtouch.Linker = MTouchLinker.DontLink; // faster
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.CreateTemporaryApp (extraCode: code, extraArg: "-debug");
+				mtouch.WarnAsError = new int [] { 4174 };
+				mtouch.AssertExecuteFailure ("build");
+				mtouch.AssertError (4174, "Unable to locate the block to delegate conversion method for the method NS.Consumer.ResolveRecipients's parameter #2.", "testApp.cs", 11);
+				mtouch.AssertErrorCount (1);
+			}
+		}
+
+		[Test]
 		public void NoWarnings ()
 		{
 			using (var mtouch = new MTouchTool ()) {
@@ -1293,7 +1390,8 @@ class GenericMethodClass : NSObject {
 				mtouch.Linker = MTouchLinker.DontLink;
 				mtouch.Registrar = MTouchRegistrar.Static;
 				mtouch.AssertExecute ();
-				mtouch.AssertNoWarnings ();
+				mtouch.AssertWarning (4174, "Unable to locate the block to delegate conversion method for the method GenericMethodClass.Foo's parameter #1.", "testApp.cs", 5);
+				mtouch.AssertWarningCount (1);
 			}
 		}
 
