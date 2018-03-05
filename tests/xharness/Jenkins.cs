@@ -1642,7 +1642,37 @@ function oninitialload ()
 		if (evt != '')
 			autoshowdetailsmessage (evt);
 	}
-}");
+}
+
+function toggleAll (show)
+{
+	var expandable = document.getElementsByClassName ('expander');
+	var counter = 0;
+	var value = show ? '-' : '+';
+	for (var i = 0; i < expandable.length; i++) {
+		var div = expandable [i];
+		if (div.textContent != value)
+			div.textContent = value;
+		counter++;
+	}
+	
+	var togglable = document.getElementsByClassName ('togglable');
+	counter = 0;
+	value = show ? 'block' : 'none';
+	for (var i = 0; i < togglable.length; i++) {
+		var div = togglable [i];
+		if (div.style.display != value) {
+			if (show && div.innerText.trim () == '') {
+				// don't show nothing
+			} else {
+				div.style.display = value;
+			}
+		}
+		counter++;
+	}
+}
+
+");
 				if (IsServerMode)
 					writer.WriteLine ("setTimeout (autorefresh, 1000);");
 				writer.WriteLine ("</script>");
@@ -1691,9 +1721,10 @@ function oninitialload ()
 				}
 				writer.WriteLine ("</span>");
 				writer.WriteLine ("</h2>");
-				if (IsServerMode && allTasks.Count > 0) {
-					writer.WriteLine (@"
-<ul id='nav'>
+				if (allTasks.Count > 0) {
+					writer.WriteLine ($"<ul id='nav'>");
+					if (IsServerMode) {
+						writer.WriteLine (@"
 	<li>Select
 		<ul>
 			<li class=""adminitem""><a href='javascript:sendrequest (""select?all"");'>All tests</a></li>
@@ -1722,19 +1753,26 @@ function oninitialload ()
 			<li class=""adminitem""><a href='javascript:sendrequest (""runselected"");'>All selected tests</a></li>
 			<li class=""adminitem""><a href='javascript:sendrequest (""runfailed"");'>All failed tests</a></li>
 		</ul>
-	</li>
+	</li>");
+					}
+					writer.WriteLine (@"
 	<li>Toggle visibility
 		<ul>
-			<li class=""adminitem""><a href='javascript:toggleVisibility (""toggleable-ignored"");'>Ignored tests</a></li>
+			<li class=""adminitem""><a href='javascript:toggleAll (true);'>Expand all</a></li>
+			<li class=""adminitem""><a href='javascript:toggleAll (false);'>Collapse all</a></li>
+			<li class=""adminitem""><a href='javascript:toggleVisibility (""toggleable-ignored"");'>Hide/Show ignored tests</a></li>
 		</ul>
-	</li>
+	</li>");
+					if (IsServerMode) {
+						writer.WriteLine (@"
 	<li>Reload
 		<ul>
 			<li class=""adminitem""><a href='javascript:sendrequest (""reload-devices"");'>Devices</a></li>
 			<li class=""adminitem""><a href='javascript:sendrequest (""reload-simulators"");'>Simulators</a></li>
 		</ul>
-	</li>
-</ul>");
+	</li>");
+					}
+					writer.WriteLine ("</ul>");
 				}
 
 				writer.WriteLine ("<div id='test-table' style='width: 100%'>");
@@ -1831,7 +1869,7 @@ function oninitialload ()
 						if (IsServerMode)
 							writer.Write ($" <span><a class='runall' href='javascript: runtest (\"{string.Join (",", group.Select ((v) => v.ID.ToString ()))}\");'>Run all</a></span>");
 						writer.WriteLine ("</div>");
-						writer.WriteLine ($"<div id='test_container2_{groupId}' style='display: {defaultDisplay}; margin-left: 20px;'>");
+						writer.WriteLine ($"<div id='test_container2_{groupId}' class='togglable' style='display: {defaultDisplay}; margin-left: 20px;'>");
 					}
 
 					// Test data
@@ -1851,7 +1889,7 @@ function oninitialload ()
 								writer.Write ($" <span><a class='runall' href='javascript: runtest (\"{string.Join (",", modeGroup.Select ((v) => v.ID.ToString ()))}\");'>Run all</a></span>");
 							writer.WriteLine ("</div>");
 
-							writer.WriteLine ($"<div id='test_container2_{modeGroupId}' style='display: {defaultDisplay}; margin-left: 20px;'>");
+							writer.WriteLine ($"<div id='test_container2_{modeGroupId}' class='togglable' style='display: {defaultDisplay}; margin-left: 20px;'>");
 						}
 						foreach (var test in modeGroup.OrderBy ((v) => v.Variation, StringComparer.OrdinalIgnoreCase)) {
 							var runTest = test as RunTestTask;
@@ -1879,7 +1917,7 @@ function oninitialload ()
 							if (IsServerMode && !test.InProgress && !test.Waiting)
 								writer.Write ($" <span><a class='runall' href='javascript:runtest ({test.ID})'>Run</a></span> ");
 							writer.WriteLine ("</div>");
-							writer.WriteLine ($"<div id='logs_{log_id}' class='autorefreshable logs' data-onautorefresh='{log_id}' style='display: {defaultDisplay};'>");
+							writer.WriteLine ($"<div id='logs_{log_id}' class='autorefreshable logs togglable' data-onautorefresh='{log_id}' style='display: {defaultDisplay};'>");
 
 							if (!string.IsNullOrEmpty (test.FailureMessage)) {
 								var msg = System.Web.HttpUtility.HtmlEncode (test.FailureMessage).Replace ("\n", "<br />");
