@@ -1367,7 +1367,7 @@ namespace xharness
 					markdown_summary.Write ($"# Test run in progress: ");
 					markdown_summary.Write (string.Join (", ", list));
 					markdown_summary.WriteLine ();
-				} else if (failedTests.Any ()) {
+				} else if (failedTests.Any () || skippedTests.Any ()) {
 					var skipped = skippedTests.Any () ? $" and {skippedTests.Count ()} tests skipped" : "";
 					markdown_summary.WriteLine ($"{failedTests.Count ()} tests failed, {passedTests.Count ()} tests passed{skipped}.");
 				} else if (passedTests.Any ()) {
