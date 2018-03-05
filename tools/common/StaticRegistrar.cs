@@ -4096,8 +4096,12 @@ namespace Registrar {
 							if (!TypeMatch (pMethod.Parameters [i], method.Parameters [i].ParameterType))
 								continue;
 						MethodDefinition extensionMethod = pMethod.Method;
-						if (extensionMethod == null)
+						if (extensionMethod == null) {
 							MapProtocolMember (obj_method.Method, out extensionMethod);
+							if (extensionMethod == null)
+								return null;
+						}
+													
 						var createMethod = GetBlockProxyAttributeMethod (extensionMethod, parameter + 1);
 						if (createMethod != null)
 							return createMethod;
