@@ -25,26 +25,11 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets" 
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
 
-	<Target Name="FixDesignTimeFacades" AfterTargets="GetReferenceAssemblyPaths" Condition="'$(OS)' != 'Windows_NT'" />
-
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.XM45.xbuild.targets"
-		Condition="'$(UseXamMacFullFramework)' == 'true' And '$(IsXBuild)' == 'true' "/>
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.xbuild.targets"
+		Condition="'$(IsXBuild)' == 'true' "/>
 	
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.msbuild.targets"
 		Condition="'$(IsXBuild)' != 'true' "/>
-
-	<!-- Location of Libraries -->
-	<Target Name="FixTargetFrameworkDirectory" AfterTargets="FixDesignTimeFacades" Condition="('$(OS)' != 'Windows_NT')">
-		<PropertyGroup>
-			<!-- For Modern / Full we overwrite TargetFrameworkDirectory to resolve non XM assemblies from our location only -->
-			<TargetFrameworkDirectory Condition="'$(TargetFrameworkName)' != 'System'">$(MacBclPath);@(DesignTimeFacadeDirectories)</TargetFrameworkDirectory>
-
-			<!-- For system we extend, not overwrite TargetFrameworkDirectory. -->
-			<!-- mscorlib, System, and other BCL libs must come from Mono System to prevent corlib mistmatches. Xamarin.Mac.dll must come from XM/lib/mono/4.5/ -->
-			<!-- If we find cases of other non-XM assemblies being resolved from XM paths, we can look into using CandidateAssemblyFiles but it is msbuild only. -->
-			<TargetFrameworkDirectory Condition="'$(TargetFrameworkName)' == 'System'">$(TargetFrameworkDirectory);$(MacBclPath)</TargetFrameworkDirectory>
-		</PropertyGroup>
-	</Target>
 
 	<!-- Add our own pre-build steps -->
 	<PropertyGroup>
