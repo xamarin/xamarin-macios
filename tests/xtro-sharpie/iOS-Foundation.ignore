@@ -1,13 +1,27 @@
 !missing-selector! +NSURLConnection::sendSynchronousRequest:returningResponse:error: not bound
 !missing-selector! NSFileProviderService::getFileProviderConnectionWithCompletionHandler: not bound
 
-## should not have been [Native] it's 32bits only values -> XAMCORE_4_0
-!unknown-native-enum! NSBundleExecutableArchitecture bound
+## does not exists in iOS as a type - but some API refers to it (messy)
+!unknown-type! NSPortMessage bound
 
-## from libsystem_kernel.dylib for iOS 5.0.1 (new API added after that)
+### moved from iOS-Foundation.todo
+!missing-designated-initializer! NSArray::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSDate::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSDictionary::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSISO8601DateFormatter::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSItemProvider::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSMutableArray::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSMutableDictionary::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSMutableOrderedSet::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSMutableSet::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSOrderedSet::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSOutputStream::initToMemory is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSSet::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSString::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSThread::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSUUID::init is missing an [DesignatedInitializer] attribute
+
+### moved from iOS-Foundation.todo
 !unknown-pinvoke! getxattr bound
 !unknown-pinvoke! removexattr bound
 !unknown-pinvoke! setxattr bound
-
-## does not exists in iOS as a type - but some API refers to it (messy)
-!unknown-type! NSPortMessage bound

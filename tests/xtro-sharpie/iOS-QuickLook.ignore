@@ -1,2 +1,5 @@
 ## fixed for XAMCORE_4_0
 !incorrect-protocol-member! QLPreviewItem::previewItemTitle is OPTIONAL and should NOT be abstract
+
+### moved from iOS-QuickLook.todo
+!missing-protocol-conformance! NSURL should conform to QLPreviewItem (defined in 'QLPreviewConvenienceAdditions' category)

@@ -1,5 +1,3 @@
-!missing-designated-initializer! UILocalNotification::init is missing an [DesignatedInitializer] attribute
-
 # Deprecated in iOS 9.0 (so watch 2.0) with an alternative (NSWritingDirectionFormatType in UIKit)
 # better not expose the deprecated enum since it's not available in tvOS either
 !missing-enum! NSTextWritingDirection not bound
@@ -22,3 +20,15 @@
 
 ## Apple renamed NSTextAlignment from NSTextAlignment and we kept the old name
 !unknown-native-enum! UITextAlignment bound
+
+## Ignore what the header files say, the NSItemProviderReading methods are not actually implemented on TV or Watch
+!missing-protocol-conformance! NSAttributedString should conform to NSItemProviderReading (defined in 'UINSItemProvider' category)
+!missing-protocol-conformance! NSAttributedString should conform to NSItemProviderWriting (defined in 'UINSItemProvider' category)
+!missing-protocol-conformance! UIColor should conform to NSItemProviderReading (defined in 'UINSItemProvider' category)
+!missing-protocol-conformance! UIColor should conform to NSItemProviderWriting (defined in 'UINSItemProvider' category)
+!missing-protocol-conformance! UIImage should conform to NSItemProviderReading (defined in 'NSItemProvider' category)
+!missing-protocol-conformance! UIImage should conform to NSItemProviderWriting (defined in 'NSItemProvider' category)
+
+### moved from watchOS-UIKit.todo
+!missing-designated-initializer! UIBezierPath::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! UILocalNotification::init is missing an [DesignatedInitializer] attribute

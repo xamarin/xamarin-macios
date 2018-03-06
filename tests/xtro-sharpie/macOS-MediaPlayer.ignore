@@ -1,4 +1,9 @@
+## deprecated in iOS 10, not on macOS
+!missing-selector! MPMediaItemArtwork::imageCropRect not bound
+
+
+## unsorted
+
 !missing-enum! MPErrorCode not bound
 !missing-field! MPErrorDomain not bound
-!missing-selector! MPMediaItemArtwork::imageCropRect not bound
 !unknown-type! MPMediaItem bound

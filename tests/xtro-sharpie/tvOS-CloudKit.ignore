@@ -5,3 +5,28 @@
 
 ## deprecated API
 !missing-selector! CKContainer::discoverAllContactUserInfosWithCompletionHandler: not bound
+
+### moved from tvOS-CloudKit.todo
+!missing-designated-initializer! CKAcceptSharesOperation::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! CKDiscoverUserIdentitiesOperation::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! CKDiscoverUserInfosOperation::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! CKFetchDatabaseChangesOperation::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! CKFetchNotificationChangesOperation::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! CKFetchRecordChangesOperation::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! CKFetchRecordsOperation::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! CKFetchRecordZoneChangesOperation::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! CKFetchRecordZonesOperation::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! CKFetchShareMetadataOperation::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! CKFetchShareParticipantsOperation::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! CKFetchSubscriptionsOperation::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! CKFetchWebAuthTokenOperation::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! CKModifySubscriptionsOperation::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! CKQueryOperation::init is missing an [DesignatedInitializer] attribute
+!missing-protocol-conformance! CKAsset should conform to CKRecordValue (defined in 'CKRecordValue' category)
+!missing-protocol-conformance! CKReference should conform to CKRecordValue (defined in 'CKRecordValue' category)
+!missing-protocol-conformance! CLLocation should conform to CKRecordValue (defined in 'CKRecordValue' category)
+!missing-protocol-conformance! NSArray should conform to CKRecordValue (defined in 'CKRecordValue' category)
+!missing-protocol-conformance! NSData should conform to CKRecordValue (defined in 'CKRecordValue' category)
+!missing-protocol-conformance! NSDate should conform to CKRecordValue (defined in 'CKRecordValue' category)
+!missing-protocol-conformance! NSNumber should conform to CKRecordValue (defined in 'CKRecordValue' category)
+!missing-protocol-conformance! NSString should conform to CKRecordValue (defined in 'CKRecordValue' category)

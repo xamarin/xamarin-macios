@@ -1,15 +1,10 @@
-!missing-field! CATransform3DIdentity not bound
 !missing-field! kCARendererColorSpace not bound
-!missing-pinvoke! CATransform3DMakeScale is not bound
-!missing-pinvoke! CATransform3DMakeTranslation is not bound
-!missing-protocol! CAAnimationDelegate not bound
 !missing-protocol! CALayoutManager not bound
 !missing-protocol-conformance! CAConstraintLayoutManager should conform to CALayoutManager
 !missing-selector! +CALayer::layerWithRemoteClientId: not bound
 !missing-selector! +CARenderer::rendererWithCGLContext:options: not bound
 !missing-selector! +CARenderer::rendererWithMTLTexture:options: not bound
 !missing-selector! CAConstraint::offset not bound
-!missing-selector! CALayer::shouldArchiveValueForKey: not bound
 !missing-selector! CAMetalLayer::colorspace not bound
 !missing-selector! CAMetalLayer::setColorspace: not bound
 !missing-selector! CAMetalLayer::setWantsExtendedDynamicRangeContent: not bound
@@ -32,3 +27,7 @@
 !missing-type! CARemoteLayerClient not bound
 !missing-type! CARemoteLayerServer not bound
 !missing-type! CARenderer not bound
+
+### moved from macOS-CoreAnimation.todo
+!missing-protocol! CAAnimationDelegate not bound
+!missing-protocol-conformance! NSNull should conform to CAAction (defined in 'CAActionAdditions' category)

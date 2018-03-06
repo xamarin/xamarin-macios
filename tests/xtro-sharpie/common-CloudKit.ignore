@@ -4,16 +4,3 @@
 ## we offer a better managed API using another selector
 !missing-selector! CKRecord::objectForKeyedSubscript: not bound
 !missing-selector! CKRecord::setObject:forKeyedSubscript: not bound
-
-
-## unsorted
-
-!missing-designated-initializer! CKAcceptSharesOperation::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! CKDiscoverAllUserIdentitiesOperation::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! CKDiscoverUserIdentitiesOperation::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! CKFetchDatabaseChangesOperation::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! CKFetchNotificationChangesOperation::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! CKFetchRecordZoneChangesOperation::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! CKFetchShareMetadataOperation::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! CKFetchShareParticipantsOperation::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! CKFetchWebAuthTokenOperation::init is missing an [DesignatedInitializer] attribute

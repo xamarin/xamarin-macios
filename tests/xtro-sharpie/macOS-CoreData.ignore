@@ -35,3 +35,11 @@
 !missing-selector! NSPersistentStoreCoordinator::importStoreWithIdentifier:fromExternalRecordsDirectory:toURL:options:withType:error: not bound
 !missing-type! NSCoreDataCoreSpotlightDelegate not bound
 !missing-type! NSFetchedResultsController not bound
+
+### moved from macOS-CoreData.todo
+!missing-designated-initializer! NSFetchRequest::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSManagedObjectModel::init is missing an [DesignatedInitializer] attribute
+!missing-protocol-conformance! NSDictionary should conform to NSFetchRequestResult (defined in 'NSFetchedResultSupport' category)
+!missing-protocol-conformance! NSManagedObject should conform to NSFetchRequestResult (defined in 'NSFetchedResultSupport' category)
+!missing-protocol-conformance! NSManagedObjectID should conform to NSFetchRequestResult (defined in 'NSFetchedResultSupport' category)
+!missing-protocol-conformance! NSNumber should conform to NSFetchRequestResult (defined in 'NSFetchedResultSupport' category)

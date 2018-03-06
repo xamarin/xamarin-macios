@@ -1,25 +1,46 @@
+## there's a type of the same name (like NSObject, check what Swift did)
+!missing-protocol! AVVideoCompositionInstruction not bound
+
+## fixed in XAMCORE_3_0 - API break
 !incorrect-protocol-member! AVAssetResourceLoaderDelegate::resourceLoader:shouldWaitForLoadingOfRequestedResource: is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! AVAudioMixing::destinationForMixer:bus: is REQUIRED and should be abstract
-!missing-designated-initializer! AVAudioEnvironmentNode::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! AVAudioMixerNode::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! AVAudioPlayerNode::init is missing an [DesignatedInitializer] attribute
+
+## Used only once in a deprecated API, native use `NSInteger` not a real enum - that's why there's a `[Native]`
+!unknown-native-enum! AVAudioSessionFlags bound
+
+## native use `NSUInteger` not a real enum - that's why there's a `[Native]`
+!unknown-native-enum! AVAudioSessionInterruptionFlags bound
+
+## We only bind "finished" as we cannot use [Bind] here as it would break compatibility with iOS 6.x
+## `isFinished` was only added in iOS 7.0 SDK and cannot be called in earlier versions
+!missing-selector! AVAssetResourceLoadingRequest::isFinished not bound
+
+## it's already defined in the base class, it's fine even if it returns mutable tracks in this case 
+!missing-selector! AVMutableComposition::tracks not bound
+
+## type and protocol are named identically (check the swift name, it's a similar situation to NSObject)
+!missing-protocol-conformance! AVVideoCompositionInstruction should conform to AVVideoCompositionInstruction
+
+## AVAudioPlayer INTERRUPTION NOTIFICATIONS ARE DEPRECATED - Use AVAudioSession instead. 
+
+### deprecated in iOS8
+!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withFlags: not found
+### deprecated in iOS8
+!missing-protocol-member! AVAudioRecorderDelegate::audioRecorderEndInterruption:withOptions: not found
+
+
+## unsorted
+
 !missing-field! AVCoreAnimationBeginTimeAtZero not bound
 !missing-field! AVVideoCodecHEVC not bound
 !missing-field! AVVideoTransferFunction_ITU_R_2100_HLG not bound
 !missing-field! AVVideoTransferFunction_SMPTE_ST_2084_PQ not bound
-!missing-protocol! AVVideoCompositionInstruction not bound
 !missing-protocol-conformance! AVAsset should conform to AVAsynchronousKeyValueLoading
 !missing-protocol-conformance! AVAssetTrack should conform to AVAsynchronousKeyValueLoading
 !missing-protocol-conformance! AVMetadataItem should conform to AVAsynchronousKeyValueLoading
-!missing-protocol-conformance! AVVideoCompositionInstruction should conform to AVVideoCompositionInstruction
-!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withOptions: not found
 !missing-selector! +AVAudioChannelLayout::layoutWithLayout: not bound
 !missing-selector! +AVAudioChannelLayout::layoutWithLayoutTag: not bound
-!missing-selector! AVAssetResourceLoadingRequest::isFinished not bound
 !missing-selector! AVCompositionTrack::segmentForTrackTime: not bound
-!missing-selector! AVMutableComposition::tracks not bound
-!missing-selector! AVPlayerItem::setVideoApertureMode: not bound
-!missing-selector! AVPlayerItem::videoApertureMode not bound
 !missing-selector! AVVideoComposition::sourceTrackIDForFrameTiming not bound
 !missing-selector! NSCoder::decodeCMTimeForKey: not bound
 !missing-selector! NSCoder::decodeCMTimeMappingForKey: not bound

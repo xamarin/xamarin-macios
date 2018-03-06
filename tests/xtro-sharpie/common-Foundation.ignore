@@ -1,3 +1,14 @@
+## https://bugzilla.xamarin.com/show_bug.cgi?id=4391
+!missing-protocol! NSFastEnumeration not bound
+!missing-protocol-conformance! NSArray should conform to NSFastEnumeration
+!missing-protocol-conformance! NSDictionary should conform to NSFastEnumeration
+!missing-protocol-conformance! NSEnumerator should conform to NSFastEnumeration
+!missing-protocol-conformance! NSOrderedSet should conform to NSFastEnumeration
+!missing-protocol-conformance! NSSet should conform to NSFastEnumeration
+
+## untyped enums (only values, not type name) NSError.h
+!unknown-native-enum! NSUrlErrorCancelledReason bound
+
 ## NSLinguisticAnalysis category over NSString https://bugzilla.xamarin.com/show_bug.cgi?id=35009
 !missing-selector! NSString::linguisticTagsInRange:scheme:options:orthography:tokenRanges: not bound
 !missing-selector! NSString::enumerateLinguisticTagsInRange:scheme:options:orthography:usingBlock: not bound
@@ -24,6 +35,152 @@
 !missing-selector! NSProxy::forwardInvocation: not bound
 !missing-selector! NSProxy::methodSignatureForSelector: not bound
 
+## not recommanded, noted as it _may_ be deprecated in 10.6
+!missing-type! NSMessagePort not bound
+
+## native long is same size as int (.net long is long long)
+!missing-selector! NSNumber::initWithLong: not bound
+!missing-selector! NSNumber::initWithUnsignedLong: not bound
+
+# fixed in XAMCORE_3_0 - API break
+!incorrect-protocol-member! NSProgressReporting::progress is REQUIRED and should be abstract
+
+## should not have been [Native] it's 32bits only values -> XAMCORE_4_0
+!unknown-native-enum! NSBundleExecutableArchitecture bound
+
+## enum was [re]named to NSCalendarOptions - excluding from XAMCORE_4_0
+!unknown-native-enum! NSDateComponentsWrappingBehavior bound
+
+## collections - many are special
+!missing-type! NSCountedSet not bound
+!missing-selector! NSCountedSet::addObject: not bound
+!missing-selector! NSCountedSet::countForObject: not bound
+!missing-selector! NSCountedSet::initWithArray: not bound
+!missing-selector! NSCountedSet::initWithCapacity: not bound
+!missing-selector! NSCountedSet::initWithSet: not bound
+!missing-selector! NSCountedSet::removeObject: not bound
+
+!missing-type! NSHashTable not bound
+!missing-selector! +NSHashTable::hashTableWithOptions: not bound
+!missing-selector! NSHashTable::addObject: not bound
+!missing-selector! NSHashTable::allObjects not bound
+!missing-selector! NSHashTable::anyObject not bound
+!missing-selector! NSHashTable::containsObject: not bound
+!missing-selector! NSHashTable::count not bound
+!missing-selector! NSHashTable::initWithOptions:capacity: not bound
+!missing-selector! NSHashTable::initWithPointerFunctions:capacity: not bound
+!missing-selector! NSHashTable::intersectHashTable: not bound
+!missing-selector! NSHashTable::intersectsHashTable: not bound
+!missing-selector! NSHashTable::isEqualToHashTable: not bound
+!missing-selector! NSHashTable::isSubsetOfHashTable: not bound
+!missing-selector! NSHashTable::member: not bound
+!missing-selector! NSHashTable::minusHashTable: not bound
+!missing-selector! NSHashTable::pointerFunctions not bound
+!missing-selector! NSHashTable::removeObject: not bound
+!missing-selector! NSHashTable::setRepresentation not bound
+!missing-selector! NSHashTable::unionHashTable: not bound
+
+!missing-type! NSMapTable not bound
+!missing-selector! +NSMapTable::mapTableWithKeyOptions:valueOptions: not bound
+!missing-selector! NSMapTable::count not bound
+!missing-selector! NSMapTable::initWithKeyOptions:valueOptions:capacity: not bound
+!missing-selector! NSMapTable::initWithKeyPointerFunctions:valuePointerFunctions:capacity: not bound
+!missing-selector! NSMapTable::keyPointerFunctions not bound
+!missing-selector! NSMapTable::objectForKey: not bound
+!missing-selector! NSMapTable::removeObjectForKey: not bound
+!missing-selector! NSMapTable::setObject:forKey: not bound
+!missing-selector! NSMapTable::valuePointerFunctions not bound
+
+!missing-type! NSPointerArray not bound
+!missing-selector! NSPointerArray::addPointer: not bound
+!missing-selector! NSPointerArray::allObjects not bound
+!missing-selector! NSPointerArray::count not bound
+!missing-selector! NSPointerArray::initWithOptions: not bound
+!missing-selector! NSPointerArray::initWithPointerFunctions: not bound
+!missing-selector! NSPointerArray::insertPointer:atIndex: not bound
+!missing-selector! NSPointerArray::pointerAtIndex: not bound
+!missing-selector! NSPointerArray::pointerFunctions not bound
+!missing-selector! NSPointerArray::removePointerAtIndex: not bound
+!missing-selector! NSPointerArray::replacePointerAtIndex:withPointer: not bound
+!missing-selector! NSPointerArray::setCount: not bound
+
+!missing-type! NSPointerFunctions not bound
+!missing-selector! +NSPointerFunctions::pointerFunctionsWithOptions: not bound
+!missing-selector! NSPointerFunctions::acquireFunction not bound
+!missing-selector! NSPointerFunctions::descriptionFunction not bound
+!missing-selector! NSPointerFunctions::hashFunction not bound
+!missing-selector! NSPointerFunctions::initWithOptions: not bound
+!missing-selector! NSPointerFunctions::isEqualFunction not bound
+!missing-selector! NSPointerFunctions::relinquishFunction not bound
+!missing-selector! NSPointerFunctions::setAcquireFunction: not bound
+!missing-selector! NSPointerFunctions::setDescriptionFunction: not bound
+!missing-selector! NSPointerFunctions::setHashFunction: not bound
+!missing-selector! NSPointerFunctions::setIsEqualFunction: not bound
+!missing-selector! NSPointerFunctions::setRelinquishFunction: not bound
+!missing-selector! NSPointerFunctions::setSizeFunction: not bound
+!missing-selector! NSPointerFunctions::setUsesStrongWriteBarrier: not bound
+!missing-selector! NSPointerFunctions::setUsesWeakReadAndWriteBarriers: not bound
+!missing-selector! NSPointerFunctions::sizeFunction not bound
+!missing-selector! NSPointerFunctions::usesStrongWriteBarrier not bound
+!missing-selector! NSPointerFunctions::usesWeakReadAndWriteBarriers not bound
+
+## string scanning, looks helpful (porting code)
+!missing-type! NSScanner not bound
+!missing-selector! +NSScanner::localizedScannerWithString: not bound
+!missing-selector! +NSScanner::scannerWithString: not bound
+!missing-selector! NSScanner::caseSensitive not bound
+!missing-selector! NSScanner::charactersToBeSkipped not bound
+!missing-selector! NSScanner::initWithString: not bound
+!missing-selector! NSScanner::isAtEnd not bound
+!missing-selector! NSScanner::locale not bound
+!missing-selector! NSScanner::scanCharactersFromSet:intoString: not bound
+!missing-selector! NSScanner::scanDecimal: not bound
+!missing-selector! NSScanner::scanDouble: not bound
+!missing-selector! NSScanner::scanFloat: not bound
+!missing-selector! NSScanner::scanHexDouble: not bound
+!missing-selector! NSScanner::scanHexFloat: not bound
+!missing-selector! NSScanner::scanHexInt: not bound
+!missing-selector! NSScanner::scanHexLongLong: not bound
+!missing-selector! NSScanner::scanInt: not bound
+!missing-selector! NSScanner::scanInteger: not bound
+!missing-selector! NSScanner::scanLocation not bound
+!missing-selector! NSScanner::scanLongLong: not bound
+!missing-selector! NSScanner::scanString:intoString: not bound
+!missing-selector! NSScanner::scanUnsignedLongLong: not bound
+!missing-selector! NSScanner::scanUpToCharactersFromSet:intoString: not bound
+!missing-selector! NSScanner::scanUpToString:intoString: not bound
+!missing-selector! NSScanner::setCaseSensitive: not bound
+!missing-selector! NSScanner::setCharactersToBeSkipped: not bound
+!missing-selector! NSScanner::setLocale: not bound
+!missing-selector! NSScanner::setScanLocation: not bound
+!missing-selector! NSScanner::string not bound
+
+# API we decided not to bind, e.g. better alternative in .NET
+!missing-enum! NSXMLParserExternalEntityResolvingPolicy not bound
+!missing-enum! NSXMLParserError not bound
+!missing-type! NSXMLParser not bound
+!missing-selector! NSXMLParser::allowedExternalEntityURLs not bound
+!missing-selector! NSXMLParser::columnNumber not bound
+!missing-selector! NSXMLParser::delegate not bound
+!missing-selector! NSXMLParser::externalEntityResolvingPolicy not bound
+!missing-selector! NSXMLParser::initWithContentsOfURL: not bound
+!missing-selector! NSXMLParser::initWithData: not bound
+!missing-selector! NSXMLParser::initWithStream: not bound
+!missing-selector! NSXMLParser::lineNumber not bound
+!missing-selector! NSXMLParser::parserError not bound
+!missing-selector! NSXMLParser::publicID not bound
+!missing-selector! NSXMLParser::setAllowedExternalEntityURLs: not bound
+!missing-selector! NSXMLParser::setDelegate: not bound
+!missing-selector! NSXMLParser::setExternalEntityResolvingPolicy: not bound
+!missing-selector! NSXMLParser::setShouldProcessNamespaces: not bound
+!missing-selector! NSXMLParser::setShouldReportNamespacePrefixes: not bound
+!missing-selector! NSXMLParser::setShouldResolveExternalEntities: not bound
+!missing-selector! NSXMLParser::shouldProcessNamespaces not bound
+!missing-selector! NSXMLParser::shouldReportNamespacePrefixes not bound
+!missing-selector! NSXMLParser::shouldResolveExternalEntities not bound
+!missing-selector! NSXMLParser::systemID not bound
+!missing-protocol! NSXMLParserDelegate not bound
+
 ## Xamarin (not Apple) type
 !unknown-type! InternalNSNotificationHandler bound
 
@@ -36,7 +193,6 @@
 ## unsorted
 
 !extra-designated-initializer! NSSortDescriptor::initWithCoder: is incorrectly decorated with an [DesignatedInitializer] attribute
-!incorrect-protocol-member! NSProgressReporting::progress is REQUIRED and should be abstract
 !missing-enum! NSBinarySearchingOptions not bound
 !missing-enum! NSMachPortOptions not bound
 !missing-enum! NSNetServicesError not bound
@@ -44,8 +200,6 @@
 !missing-enum! NSSearchPathDomainMask not bound
 !missing-enum! NSStringEncodingConversionOptions not bound
 !missing-enum! NSStringEnumerationOptions not bound
-!missing-enum! NSXMLParserError not bound
-!missing-enum! NSXMLParserExternalEntityResolvingPolicy not bound
 !missing-enum! NSXPCConnectionOptions not bound
 !missing-field! NSAverageKeyValueOperator not bound
 !missing-field! NSBuddhistCalendar not bound
@@ -159,15 +313,8 @@
 !missing-pinvoke! NSZoneMalloc is not bound
 !missing-pinvoke! NSZoneRealloc is not bound
 !missing-protocol! NSDecimalNumberBehaviors not bound
-!missing-protocol! NSFastEnumeration not bound
-!missing-protocol! NSXMLParserDelegate not bound
 !missing-protocol! NSXPCListenerDelegate not bound
 !missing-protocol! NSXPCProxyCreating not bound
-!missing-protocol-conformance! NSArray should conform to NSFastEnumeration
-!missing-protocol-conformance! NSDictionary should conform to NSFastEnumeration
-!missing-protocol-conformance! NSEnumerator should conform to NSFastEnumeration
-!missing-protocol-conformance! NSOrderedSet should conform to NSFastEnumeration
-!missing-protocol-conformance! NSSet should conform to NSFastEnumeration
 !missing-selector! +NSArray::arrayWithArray: not bound
 !missing-selector! +NSArray::arrayWithContentsOfURL: not bound
 !missing-selector! +NSArray::arrayWithObject: not bound
@@ -197,7 +344,6 @@
 !missing-selector! +NSException::raise:format: not bound
 !missing-selector! +NSException::raise:format:arguments: not bound
 !missing-selector! +NSExpression::expressionWithFormat:arguments: not bound
-!missing-selector! +NSHashTable::hashTableWithOptions: not bound
 !missing-selector! +NSInvocation::invocationWithMethodSignature: not bound
 !missing-selector! +NSKeyedArchiver::classNameForClass: not bound
 !missing-selector! +NSKeyedArchiver::setClassName:forClass: not bound
@@ -205,7 +351,6 @@
 !missing-selector! +NSKeyedUnarchiver::setClass:forClassName: not bound
 !missing-selector! +NSLocale::localeIdentifierFromWindowsLocaleCode: not bound
 !missing-selector! +NSLocale::windowsLocaleCodeFromLocaleIdentifier: not bound
-!missing-selector! +NSMapTable::mapTableWithKeyOptions:valueOptions: not bound
 !missing-selector! +NSMutableArray::arrayWithCapacity: not bound
 !missing-selector! +NSMutableDictionary::dictionaryWithCapacity: not bound
 !missing-selector! +NSMutableOrderedSet::orderedSetWithCapacity: not bound
@@ -228,14 +373,11 @@
 !missing-selector! +NSOutputStream::outputStreamWithURL:append: not bound
 !missing-selector! +NSPointerArray::pointerArrayWithOptions: not bound
 !missing-selector! +NSPointerArray::pointerArrayWithPointerFunctions: not bound
-!missing-selector! +NSPointerFunctions::pointerFunctionsWithOptions: not bound
 !missing-selector! +NSPredicate::predicateWithFormat: not bound
 !missing-selector! +NSPredicate::predicateWithFormat:arguments: not bound
 !missing-selector! +NSPropertyListSerialization::dataFromPropertyList:format:errorDescription: not bound
 !missing-selector! +NSPropertyListSerialization::propertyListFromData:mutabilityOption:format:errorDescription: not bound
 !missing-selector! +NSRegularExpression::regularExpressionWithPattern:options:error: not bound
-!missing-selector! +NSScanner::localizedScannerWithString: not bound
-!missing-selector! +NSScanner::scannerWithString: not bound
 !missing-selector! +NSSet::setWithObject: not bound
 !missing-selector! +NSSet::setWithObjects: not bound
 !missing-selector! +NSSet::setWithObjects:count: not bound
@@ -346,12 +488,6 @@
 !missing-selector! NSCoder::encodeValuesOfObjCTypes: not bound
 !missing-selector! NSCoder::setObjectZone: not bound
 !missing-selector! NSCoder::versionForClassName: not bound
-!missing-selector! NSCountedSet::addObject: not bound
-!missing-selector! NSCountedSet::countForObject: not bound
-!missing-selector! NSCountedSet::initWithArray: not bound
-!missing-selector! NSCountedSet::initWithCapacity: not bound
-!missing-selector! NSCountedSet::initWithSet: not bound
-!missing-selector! NSCountedSet::removeObject: not bound
 !missing-selector! NSData::description not bound
 !missing-selector! NSData::getBytes: not bound
 !missing-selector! NSData::initWithBase64Encoding: not bound
@@ -415,23 +551,6 @@
 !missing-selector! NSFileManager::fileSystemRepresentationWithPath: not bound
 !missing-selector! NSFileManager::stringWithFileSystemRepresentation:length: not bound
 !missing-selector! NSFileSecurity::initWithCoder: not bound
-!missing-selector! NSHashTable::addObject: not bound
-!missing-selector! NSHashTable::allObjects not bound
-!missing-selector! NSHashTable::anyObject not bound
-!missing-selector! NSHashTable::containsObject: not bound
-!missing-selector! NSHashTable::count not bound
-!missing-selector! NSHashTable::initWithOptions:capacity: not bound
-!missing-selector! NSHashTable::initWithPointerFunctions:capacity: not bound
-!missing-selector! NSHashTable::intersectHashTable: not bound
-!missing-selector! NSHashTable::intersectsHashTable: not bound
-!missing-selector! NSHashTable::isEqualToHashTable: not bound
-!missing-selector! NSHashTable::isSubsetOfHashTable: not bound
-!missing-selector! NSHashTable::member: not bound
-!missing-selector! NSHashTable::minusHashTable: not bound
-!missing-selector! NSHashTable::pointerFunctions not bound
-!missing-selector! NSHashTable::removeObject: not bound
-!missing-selector! NSHashTable::setRepresentation not bound
-!missing-selector! NSHashTable::unionHashTable: not bound
 !missing-selector! NSIndexPath::initWithIndex: not bound
 !missing-selector! NSIndexPath::initWithIndexes:length: not bound
 !missing-selector! NSIndexSet::containsIndexesInRange: not bound
@@ -495,14 +614,6 @@
 !missing-selector! NSLocale::scriptCode not bound
 !missing-selector! NSLocale::usesMetricSystem not bound
 !missing-selector! NSLocale::variantCode not bound
-!missing-selector! NSMapTable::count not bound
-!missing-selector! NSMapTable::initWithKeyOptions:valueOptions:capacity: not bound
-!missing-selector! NSMapTable::initWithKeyPointerFunctions:valuePointerFunctions:capacity: not bound
-!missing-selector! NSMapTable::keyPointerFunctions not bound
-!missing-selector! NSMapTable::objectForKey: not bound
-!missing-selector! NSMapTable::removeObjectForKey: not bound
-!missing-selector! NSMapTable::setObject:forKey: not bound
-!missing-selector! NSMapTable::valuePointerFunctions not bound
 !missing-selector! NSMutableArray::exchangeObjectAtIndex:withObjectAtIndex: not bound
 !missing-selector! NSMutableArray::initWithContentsOfFile: not bound
 !missing-selector! NSMutableArray::initWithContentsOfURL: not bound
@@ -539,8 +650,6 @@
 !missing-selector! NSMutableURLRequest::HTTPShouldUsePipelining not bound
 !missing-selector! NSMutableURLRequest::setHTTPShouldUsePipelining: not bound
 !missing-selector! NSNotification::initWithName:object:userInfo: not bound
-!missing-selector! NSNumber::initWithLong: not bound
-!missing-selector! NSNumber::initWithUnsignedLong: not bound
 !missing-selector! NSNumberFormatter::formattingContext not bound
 !missing-selector! NSNumberFormatter::getObjectValue:forString:range:error: not bound
 !missing-selector! NSNumberFormatter::setFormattingContext: not bound
@@ -598,34 +707,6 @@
 !missing-selector! NSOutputStream::initToBuffer:capacity: not bound
 !missing-selector! NSOutputStream::initWithURL:append: not bound
 !missing-selector! NSOutputStream::write:maxLength: not bound
-!missing-selector! NSPointerArray::addPointer: not bound
-!missing-selector! NSPointerArray::allObjects not bound
-!missing-selector! NSPointerArray::count not bound
-!missing-selector! NSPointerArray::initWithOptions: not bound
-!missing-selector! NSPointerArray::initWithPointerFunctions: not bound
-!missing-selector! NSPointerArray::insertPointer:atIndex: not bound
-!missing-selector! NSPointerArray::pointerAtIndex: not bound
-!missing-selector! NSPointerArray::pointerFunctions not bound
-!missing-selector! NSPointerArray::removePointerAtIndex: not bound
-!missing-selector! NSPointerArray::replacePointerAtIndex:withPointer: not bound
-!missing-selector! NSPointerArray::setCount: not bound
-!missing-selector! NSPointerFunctions::acquireFunction not bound
-!missing-selector! NSPointerFunctions::descriptionFunction not bound
-!missing-selector! NSPointerFunctions::hashFunction not bound
-!missing-selector! NSPointerFunctions::initWithOptions: not bound
-!missing-selector! NSPointerFunctions::isEqualFunction not bound
-!missing-selector! NSPointerFunctions::relinquishFunction not bound
-!missing-selector! NSPointerFunctions::setAcquireFunction: not bound
-!missing-selector! NSPointerFunctions::setDescriptionFunction: not bound
-!missing-selector! NSPointerFunctions::setHashFunction: not bound
-!missing-selector! NSPointerFunctions::setIsEqualFunction: not bound
-!missing-selector! NSPointerFunctions::setRelinquishFunction: not bound
-!missing-selector! NSPointerFunctions::setSizeFunction: not bound
-!missing-selector! NSPointerFunctions::setUsesStrongWriteBarrier: not bound
-!missing-selector! NSPointerFunctions::setUsesWeakReadAndWriteBarriers: not bound
-!missing-selector! NSPointerFunctions::sizeFunction not bound
-!missing-selector! NSPointerFunctions::usesStrongWriteBarrier not bound
-!missing-selector! NSPointerFunctions::usesWeakReadAndWriteBarriers not bound
 !missing-selector! NSPort::reservedSpaceLength not bound
 !missing-selector! NSProgress::cancellationHandler not bound
 !missing-selector! NSProgress::pausingHandler not bound
@@ -635,32 +716,6 @@
 !missing-selector! NSRunLoop::cancelPerformSelectorsWithTarget: not bound
 !missing-selector! NSRunLoop::performSelector:target:argument:order:modes: not bound
 !missing-selector! NSRunLoop::removePort:forMode: not bound
-!missing-selector! NSScanner::caseSensitive not bound
-!missing-selector! NSScanner::charactersToBeSkipped not bound
-!missing-selector! NSScanner::initWithString: not bound
-!missing-selector! NSScanner::isAtEnd not bound
-!missing-selector! NSScanner::locale not bound
-!missing-selector! NSScanner::scanCharactersFromSet:intoString: not bound
-!missing-selector! NSScanner::scanDecimal: not bound
-!missing-selector! NSScanner::scanDouble: not bound
-!missing-selector! NSScanner::scanFloat: not bound
-!missing-selector! NSScanner::scanHexDouble: not bound
-!missing-selector! NSScanner::scanHexFloat: not bound
-!missing-selector! NSScanner::scanHexInt: not bound
-!missing-selector! NSScanner::scanHexLongLong: not bound
-!missing-selector! NSScanner::scanInt: not bound
-!missing-selector! NSScanner::scanInteger: not bound
-!missing-selector! NSScanner::scanLocation not bound
-!missing-selector! NSScanner::scanLongLong: not bound
-!missing-selector! NSScanner::scanString:intoString: not bound
-!missing-selector! NSScanner::scanUnsignedLongLong: not bound
-!missing-selector! NSScanner::scanUpToCharactersFromSet:intoString: not bound
-!missing-selector! NSScanner::scanUpToString:intoString: not bound
-!missing-selector! NSScanner::setCaseSensitive: not bound
-!missing-selector! NSScanner::setCharactersToBeSkipped: not bound
-!missing-selector! NSScanner::setLocale: not bound
-!missing-selector! NSScanner::setScanLocation: not bound
-!missing-selector! NSScanner::string not bound
 !missing-selector! NSSet::addObserver:forKeyPath:options:context: not bound
 !missing-selector! NSSet::description not bound
 !missing-selector! NSSet::descriptionWithLocale: not bound
@@ -784,26 +839,6 @@
 !missing-selector! NSUUID::initWithUUIDBytes: not bound
 !missing-selector! NSValue::getValue:size: not bound
 !missing-selector! NSValue::initWithBytes:objCType: not bound
-!missing-selector! NSXMLParser::allowedExternalEntityURLs not bound
-!missing-selector! NSXMLParser::columnNumber not bound
-!missing-selector! NSXMLParser::delegate not bound
-!missing-selector! NSXMLParser::externalEntityResolvingPolicy not bound
-!missing-selector! NSXMLParser::initWithContentsOfURL: not bound
-!missing-selector! NSXMLParser::initWithData: not bound
-!missing-selector! NSXMLParser::initWithStream: not bound
-!missing-selector! NSXMLParser::lineNumber not bound
-!missing-selector! NSXMLParser::parserError not bound
-!missing-selector! NSXMLParser::publicID not bound
-!missing-selector! NSXMLParser::setAllowedExternalEntityURLs: not bound
-!missing-selector! NSXMLParser::setDelegate: not bound
-!missing-selector! NSXMLParser::setExternalEntityResolvingPolicy: not bound
-!missing-selector! NSXMLParser::setShouldProcessNamespaces: not bound
-!missing-selector! NSXMLParser::setShouldReportNamespacePrefixes: not bound
-!missing-selector! NSXMLParser::setShouldResolveExternalEntities: not bound
-!missing-selector! NSXMLParser::shouldProcessNamespaces not bound
-!missing-selector! NSXMLParser::shouldReportNamespacePrefixes not bound
-!missing-selector! NSXMLParser::shouldResolveExternalEntities not bound
-!missing-selector! NSXMLParser::systemID not bound
 !missing-selector! NSXPCConnection::auditSessionIdentifier not bound
 !missing-selector! NSXPCConnection::effectiveGroupIdentifier not bound
 !missing-selector! NSXPCConnection::effectiveUserIdentifier not bound
@@ -833,21 +868,12 @@
 !missing-selector! NSXPCListener::delegate not bound
 !missing-selector! NSXPCListener::endpoint not bound
 !missing-selector! NSXPCListener::setDelegate: not bound
-!missing-type! NSCountedSet not bound
 !missing-type! NSDecimalNumberHandler not bound
 !missing-type! NSFileSecurity not bound
-!missing-type! NSHashTable not bound
 !missing-type! NSInvocationOperation not bound
-!missing-type! NSMapTable not bound
-!missing-type! NSMessagePort not bound
-!missing-type! NSPointerArray not bound
-!missing-type! NSPointerFunctions not bound
-!missing-type! NSScanner not bound
-!missing-type! NSXMLParser not bound
 !missing-type! NSXPCConnection not bound
 !missing-type! NSXPCInterface not bound
 !missing-type! NSXPCListener not bound
-!unknown-native-enum! NSDateComponentsWrappingBehavior bound
 !unknown-native-enum! NSLigatureType bound
 !unknown-native-enum! NSMachPortRights bound
 !unknown-native-enum! NSNetServicesStatus bound
@@ -856,6 +882,8 @@
 !unknown-native-enum! NSSearchPathDomain bound
 !unknown-native-enum! NSStringEncoding bound
 !unknown-native-enum! NSUbiquitousKeyValueStoreChangeReason bound
-!unknown-native-enum! NSUrlErrorCancelledReason bound
 !unknown-protocol! NSObject bound
 !unknown-type! NSObject bound
+
+## Used 'INSFastEnumeration' placeholer (just so we can start flagging things)
+!missing-protocol-conformance! NSDictionary should conform to NSFastEnumeration (defined in 'NSGenericFastEnumeraiton' category)
