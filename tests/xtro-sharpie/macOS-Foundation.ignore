@@ -796,6 +796,3 @@
 !missing-designated-initializer! NSScriptCommandDescription::initWithSuiteName:commandName:dictionary: is missing an [DesignatedInitializer] attribute
 !missing-designated-initializer! NSTask::init is missing an [DesignatedInitializer] attribute
 !missing-designated-initializer! NSUserNotification::init is missing an [DesignatedInitializer] attribute
-
-### moved from macOS-Foundation.todo
-!missing-selector! NSDictionary::initWithDictionary:copyItems: not bound

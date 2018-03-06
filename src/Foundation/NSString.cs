@@ -97,9 +97,9 @@ namespace XamCore.Foundation {
 			unsafe {
 				fixed (char *ptrFirstChar = str) {
 	#if MONOMAC
-					handle = IntPtr_objc_msgSend_IntPtr_nint (handle, selInitWithCharactersLengthHandle, (IntPtr) ptrFirstChar, str.Length);
+					handle = Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr (handle, selInitWithCharactersLengthHandle, (IntPtr) ptrFirstChar, (IntPtr) str.Length);
 	#else
-					handle = IntPtr_objc_msgSend_IntPtr_nint (handle, Selector.GetHandle (selInitWithCharactersLength), (IntPtr) ptrFirstChar, str.Length);
+					handle = Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr (handle, Selector.GetHandle (selInitWithCharactersLength), (IntPtr) ptrFirstChar, (IntPtr) str.Length);
 	#endif
 
 					if (autorelease)
@@ -128,9 +128,6 @@ namespace XamCore.Foundation {
 
 			return CreateWithCharacters (handle, str, autorelease);
 		}
-
-		[DllImport ("/usr/lib/libobjc.dylib", EntryPoint="objc_msgSend")]
-		extern static IntPtr IntPtr_objc_msgSend_IntPtr_nint (IntPtr receiver, IntPtr selector, IntPtr arg1, nint arg2);
 
 		public static void ReleaseNative (IntPtr handle)
 		{

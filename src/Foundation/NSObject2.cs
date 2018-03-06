@@ -453,17 +453,17 @@ namespace XamCore.Foundation {
 			if (this.handle == IntPtr.Zero && Class.ThrowOnInitFailure) {
 				if (ClassHandle == IntPtr.Zero)
 					throw new Exception (string.Format ("Could not create an native instance of the type '{0}': the native class hasn't been loaded.\n" +
-						"It is possible to ignore this condition by setting MonoTouch.ObjCRuntime.Class.ThrowOnInitFailure to false.",
+						"It is possible to ignore this condition by setting ObjCRuntime.Class.ThrowOnInitFailure to false.",
 						GetType ().FullName));
 				throw new Exception (string.Format ("Failed to create a instance of the native type '{0}'.\n" +
-					"It is possible to ignore this condition by setting MonoTouch.ObjCRuntime.Class.ThrowOnInitFailure to false.",
+					"It is possible to ignore this condition by setting ObjCRuntime.Class.ThrowOnInitFailure to false.",
 					new Class (ClassHandle).Name));
 			}
 
 			if (handle == IntPtr.Zero && Class.ThrowOnInitFailure) {
 				Handle = IntPtr.Zero; // We'll crash if we don't do this.
 				throw new Exception (string.Format ("Could not initialize an instance of the type '{0}': the native '{1}' method returned nil.\n" +
-				"It is possible to ignore this condition by setting MonoTouch.ObjCRuntime.Class.ThrowOnInitFailure to false.",
+				"It is possible to ignore this condition by setting ObjCRuntime.Class.ThrowOnInitFailure to false.",
 					GetType ().FullName, initSelector));
 			}
 

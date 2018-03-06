@@ -1,4 +1,4 @@
-//
+﻿//
 // MmpTask.cs
 //
 // Author:
@@ -98,7 +98,7 @@ namespace Xamarin.Mac.Tasks
 
 		protected override string GenerateCommandLineCommands ()
 		{
-			var args = new ProcessArgumentBuilder ();
+			var args = new CommandLineArgumentBuilder ();
 			bool msym;
 
 			args.Add ("/verbose");
@@ -196,7 +196,7 @@ namespace Xamarin.Mac.Tasks
 			}
 
 			if (!string.IsNullOrEmpty (ApplicationAssembly.ItemSpec)) {
-				args.AddQuoted (Path.GetFullPath (ApplicationAssembly.ItemSpec));
+				args.AddQuoted ("/root-assembly:" + Path.GetFullPath (ApplicationAssembly.ItemSpec));
 			}
 
 			if (!string.IsNullOrWhiteSpace (ExtraArguments))
@@ -210,14 +210,12 @@ namespace Xamarin.Mac.Tasks
 			if (IsAppExtension)
 				args.AddQuoted ("/extension");
 
-			args.Add ("/sdkroot");
-			args.AddQuoted (SdkRoot);
+			args.AddQuoted ("/sdkroot:" + SdkRoot);
 
 			if (!string.IsNullOrEmpty (IntermediateOutputPath)) {
 				Directory.CreateDirectory (IntermediateOutputPath);
 
-				args.Add ("--cache");
-				args.AddQuoted (Path.GetFullPath (IntermediateOutputPath));
+				args.AddQuoted ("--cache:" + Path.GetFullPath (IntermediateOutputPath));
 			}
 
 			return args.ToString ();
@@ -226,7 +224,7 @@ namespace Xamarin.Mac.Tasks
 		string GetMonoBundleDirName ()
 		{
 			if (!string.IsNullOrEmpty (ExtraArguments)) {
-				var args = ProcessArgumentBuilder.Parse (ExtraArguments);
+				var args = CommandLineArgumentBuilder.Parse (ExtraArguments);
 
 				for (int i = 0; i < args.Length; i++) {
 					string arg;

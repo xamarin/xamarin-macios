@@ -243,7 +243,6 @@ $(BUILD_DESTDIR)/mono-$(2): mono-wrapper.in .stamp-configure-$(2) | $(BUILD_DEST
 	$$(Q) chmod +x $$@
 
 .stamp-build-$(2): .stamp-configure-$(2) $(BUILD_DESTDIR)/mono-$(2) $(MONO_DEPENDENCIES)
-	PATH="$(MONO_PREFIX)/bin:$(PATH)" $(MAKE) -C $(2)/eglib/src
 	PATH="$(MONO_PREFIX)/bin:$(PATH)" $(MAKE) -C $(2)/mono
 	PATH="$(MONO_PREFIX)/bin:$(PATH)" $(MAKE) -C $(2)/mono install
 	PATH="$(MONO_PREFIX)/bin:$(PATH)" $(MAKE) -C $(2)/support
@@ -265,6 +264,10 @@ MAC_DIRECTORIES += \
 
 $$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/%: $$(BUILD_DESTDIR)/bcl/$(2)/% | $$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/Facades
 	$$(Q) install -m 0755 $$< $$@
+
+
+$$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/%.pdb: $$(BUILD_DESTDIR)/mac/$(2)/bcl/%.pdb | $$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/Facades
+	$$(Q) install -m 0644 $$< $$@
 endef
 
 $(eval $(call MacInstallBclTemplate,Xamarin.Mac,xammac))
@@ -500,10 +503,7 @@ WATCHBCL_CONFIGURE_FLAGS=	--build=x86_64-apple-darwin10 \
 			--cache-file=../watchbcl.config.cache \
 			--with-glib=embedded \
 			--enable-minimal=com	\
-			--with-profile2=no \
-			--with-profile4=no \
 			--with-profile4_x=no \
-			--with-profile4_5=no \
 			--with-monotouch=no \
 			--with-monotouch_watch=yes \
 			--with-monotouch_tv=no \
@@ -648,10 +648,6 @@ IOS_BCL_TARGETS +=                                                              
 	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.iOS/repl/$(file).dll)                              \
 	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.iOS/repl/$(file).pdb)                          \
 
-ifndef IKVM
-IOS_BCL_TARGETS += $(PREFIX)/bin/btouch-mono
-endif
-
 WATCH_BCL_TARGETS += \
 	$(foreach file,$(WATCHOS_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/$(file).dll)                                        \
 	$(foreach file,$(filter-out $(NO_MDB_ASSEMBLIES),$(WATCHOS_ASSEMBLIES)),$(PREFIX)/lib/mono/Xamarin.WatchOS/$(file).pdb) \
@@ -660,10 +656,6 @@ WATCH_BCL_TARGETS += \
 	$(foreach file,$(WATCHOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/repl/$(file).dll)                              \
 	$(foreach file,$(WATCHOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/repl/$(file).pdb)                          \
 
-ifndef IKVM
-WATCH_BCL_TARGETS += $(PREFIX)/bin/bwatch-mono
-endif
-
 TVOS_BCL_TARGETS += \
 	$(foreach file,$(TVOS_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/$(file).dll)                                        \
 	$(foreach file,$(filter-out $(NO_MDB_ASSEMBLIES),$(TVOS_ASSEMBLIES)),$(PREFIX)/lib/mono/Xamarin.TVOS/$(file).pdb) \
@@ -671,10 +663,6 @@ TVOS_BCL_TARGETS += \
 	$(foreach file,$(TVOS_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/Facades/$(file).dll)                         \
 	$(foreach file,$(TVOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/repl/$(file).dll)                              \
 	$(foreach file,$(TVOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/repl/$(file).pdb)                          \
-
-ifndef IKVM
-TVOS_BCL_TARGETS += $(PREFIX)/bin/btv-mono
-endif
 
 $(PREFIX)/lib/mono/Xamarin.iOS/repl/%: $(BUILD_DESTDIR)/bcl/monotouch_runtime/% | $(PREFIX)/lib/mono/Xamarin.iOS/repl
 	$(Q) install -m 0755 $< $@
@@ -688,11 +676,6 @@ $(PREFIX)/lib/mono/2.1/repl/%: $(BUILD_DESTDIR)/bcl/monotouch_runtime/% | $(PREF
 $(PREFIX)/lib/mono/2.1/%: $(BUILD_DESTDIR)/bcl/monotouch/% | $(PREFIX)/lib/mono/2.1 $(PREFIX)/lib/mono/2.1/Facades
 	$(Q) install -m 0755 $< $@
 
-ifndef IKVM
-$(PREFIX)/bin/btouch-mono: $(BUILD_DESTDIR)/tools64/bin/mono | $(PREFIX)/bin
-	$(Q) install -s -m 0755 $< $@
-endif
-
 $(PREFIX)/lib/mono/Xamarin.WatchOS/repl/%: $(BUILD_DESTDIR)/bcl/monotouch_watch_runtime/% | $(PREFIX)/lib/mono/Xamarin.WatchOS/repl
 	$(Q) install -m 0755 $< $@
 
@@ -704,18 +687,6 @@ $(PREFIX)/lib/mono/Xamarin.TVOS/repl/%: $(BUILD_DESTDIR)/bcl/monotouch_tv_runtim
 
 $(PREFIX)/lib/mono/Xamarin.TVOS/%: $(BUILD_DESTDIR)/bcl/monotouch_tv/% | $(PREFIX)/lib/mono/Xamarin.TVOS $(PREFIX)/lib/mono/Xamarin.TVOS/Facades
 	$(Q) install -m 0755 $< $@
-
-ifndef IKVM
-$(PREFIX)/bin/btv-mono: $(BUILD_DESTDIR)/tools64/bin/mono | $(PREFIX)/bin
-	$(Q) install -s -m 0755 $< $@
-
-ifeq ($(WATCH_MONO_PATH),$(MONO_PATH))
-$(PREFIX)/bin/bwatch-mono: $(BUILD_DESTDIR)/tools64/bin/mono | $(PREFIX)/bin
-else
-$(PREFIX)/bin/bwatch-mono: $(BUILD_DESTDIR)/watchbcl/bin/mono | $(PREFIX)/bin
-endif
-	$(Q) install -s -m 0755 $< $@
-endif
 
 # copy to temporary directory before signing
 # otherwise we end up re-signing if installing into a different directory.
@@ -854,10 +825,8 @@ setup-$(2): .stamp-configure-$(2)
 	$(Q) $(SIM$(2)_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh $(2) $(abspath $(MONO_PATH)/configure) $(SIM$(2)_CONFIGURE_FLAGS)
 
 .stamp-build-$(2): .stamp-configure-$(2) $(MONO_DEPENDENCIES)
-	PATH="$(SIM_BIN):$(PATH)" $(MAKE) -C $(2)/eglib all
 	PATH="$(SIM_BIN):$(PATH)" $(MAKE) -C $(2)/mono all
 	PATH="$(SIM_BIN):$(PATH)" $(MAKE) -C $(2)/support all
-	PATH="$(SIM_BIN):$(PATH)" $(MAKE) -C $(2)/eglib install
 	PATH="$(SIM_BIN):$(PATH)" $(MAKE) -C $(2)/mono install
 	$(Q) touch $$@
 
@@ -1034,10 +1003,8 @@ setup-watchsimulator: .stamp-configure-watchsimulator
 .stamp-build-watchsimulator: export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
 .stamp-build-watchsimulator: export PATH:="$(WATCHSIMULATOR_BIN_PATH):$(PATH)"
 .stamp-build-watchsimulator: .stamp-configure-watchsimulator $(MONO_DEPENDENCIES)
-	$(Q) $(MAKE) -C watchsimulator/eglib all
 	$(Q) $(MAKE) -C watchsimulator/mono all
 	$(Q) $(MAKE) -C watchsimulator/support all
-	$(Q) $(MAKE) -C watchsimulator/eglib install
 	$(Q) $(MAKE) -C watchsimulator/mono install
 	$(Q) touch $@
 
@@ -1187,10 +1154,8 @@ setup-tvsimulator: .stamp-configure-tvsimulator
 .stamp-build-tvsimulator: export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
 .stamp-build-tvsimulator: export PATH:="$(TVSIMULATOR_BIN_PATH):$(PATH)"
 .stamp-build-tvsimulator: .stamp-configure-tvsimulator $(MONO_DEPENDENCIES)
-	$(Q) $(MAKE) -C tvsimulator/eglib all
 	$(Q) $(MAKE) -C tvsimulator/mono all
 	$(Q) $(MAKE) -C tvsimulator/support all
-	$(Q) $(MAKE) -C tvsimulator/eglib install
 	$(Q) $(MAKE) -C tvsimulator/mono install
 	$(Q) touch $@
 
@@ -1284,7 +1249,7 @@ $(eval $(2)_CONFIGURE_FLAGS=--build=i386-apple-darwin10 \
 			--with-monotouch \
 			--with-lazy-gc-thread-creation=yes \
 			--disable-mcs-build \
-			--enable-minimal=ssa,com,jit,reflection_emit_save,reflection_emit,portability,assembly_remapping,attach,verifier,full_messages,appdomains,security,sgen_remset,sgen_marksweep_par,sgen_marksweep_fixed,sgen_marksweep_fixed_par,sgen_copying,logging,remoting,shared_perfcounters \
+			--enable-minimal=ssa,com,interpreter,jit,reflection_emit_save,reflection_emit,portability,assembly_remapping,attach,verifier,full_messages,appdomains,security,sgen_remset,sgen_marksweep_par,sgen_marksweep_fixed,sgen_marksweep_fixed_par,sgen_copying,logging,remoting,shared_perfcounters \
 			--without-ikvm-native \
 			--with-tls=pthread \
 			--without-sigaltstack \
@@ -1333,9 +1298,7 @@ setup-$(2): .stamp-configure-$(2)
 	$(Q) $($(2)_ACVARS) $($(2)_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh $(2) $(abspath $(MONO_PATH)/configure) $($(2)_CONFIGURE_FLAGS)
 
 .stamp-build-$(2): .stamp-configure-$(2) $(MONO_DEPENDENCIES)
-	PATH="$(PLATFORM_BIN):$(PATH)" $(MAKE) -C $(2)/eglib
 	PATH="$(PLATFORM_BIN):$(PATH)" $(MAKE) -C $(2)/mono
-	PATH="$(PLATFORM_BIN):$(PATH)" $(MAKE) -C $(2)/eglib install
 	PATH="$(PLATFORM_BIN):$(PATH)" $(MAKE) -C $(2)/mono install
 	$(Q) touch $$@
 
@@ -1512,7 +1475,7 @@ WATCHOS_CONFIGURE_FLAGS =                        \
 	--with-lazy-gc-thread-creation=yes           \
 	--disable-mcs-build                          \
 	--disable-boehm                              \
-	--enable-minimal=ssa,com,jit,reflection_emit_save,reflection_emit,portability,assembly_remapping,attach,verifier,full_messages,appdomains,security,sgen_remset,sgen_marksweep_par,sgen_marksweep_fixed,sgen_marksweep_fixed_par,sgen_copying,logging,remoting,shared_perfcounters \
+	--enable-minimal=ssa,com,interpreter,jit,reflection_emit_save,reflection_emit,portability,assembly_remapping,attach,verifier,full_messages,appdomains,security,sgen_remset,sgen_marksweep_par,sgen_marksweep_fixed,sgen_marksweep_fixed_par,sgen_copying,logging,remoting,shared_perfcounters \
 	--without-ikvm-native                        \
 	--with-tls=pthread                           \
 	--without-sigaltstack                        \
@@ -1579,9 +1542,7 @@ setup-targetwatch: .stamp-configure-targetwatch
 .stamp-build-targetwatch: export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
 .stamp-build-targetwatch: export PATH:="$(WATCHOS_BIN_PATH):$(PATH)"
 .stamp-build-targetwatch: .stamp-configure-targetwatch $(MONO_DEPENDENCIES)
-	$(Q) $(MAKE) -C targetwatch/eglib
 	$(Q) $(MAKE) -C targetwatch/mono
-	$(Q) $(MAKE) -C targetwatch/eglib install
 	$(Q) $(MAKE) -C targetwatch/mono install
 	$(Q) touch $@
 
@@ -1692,7 +1653,7 @@ TVOS_CONFIGURE_FLAGS =                           \
 	--with-lazy-gc-thread-creation=yes           \
 	--disable-mcs-build                          \
 	--disable-boehm                              \
-	--enable-minimal=ssa,com,jit,reflection_emit_save,reflection_emit,portability,assembly_remapping,attach,verifier,full_messages,appdomains,security,sgen_remset,sgen_marksweep_par,sgen_marksweep_fixed,sgen_marksweep_fixed_par,sgen_copying,logging,remoting,shared_perfcounters \
+	--enable-minimal=ssa,com,interpreter,jit,reflection_emit_save,reflection_emit,portability,assembly_remapping,attach,verifier,full_messages,appdomains,security,sgen_remset,sgen_marksweep_par,sgen_marksweep_fixed,sgen_marksweep_fixed_par,sgen_copying,logging,remoting,shared_perfcounters \
 	--without-ikvm-native                        \
 	--with-tls=pthread                           \
 	--without-sigaltstack                        \
@@ -1763,9 +1724,7 @@ setup-targettv: .stamp-configure-targettv
 .stamp-build-targettv: export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
 .stamp-build-targettv: export PATH:="$(TVOS_BIN_PATH):$(PATH)"
 .stamp-build-targettv: .stamp-configure-targettv $(MONO_DEPENDENCIES)
-	$(Q) $(MAKE) -C targettv/eglib
 	$(Q) $(MAKE) -C targettv/mono
-	$(Q) $(MAKE) -C targettv/eglib install
 	$(Q) $(MAKE) -C targettv/mono install
 	$(Q) touch $@
 
@@ -2003,7 +1962,6 @@ setup-cross: .stamp-configure-cross
 $(eval $(call GenerateCrossOffsets,arm-apple-darwin10,$(TOP)/builds/cross/,cross,$(MONO_PATH)))
 
 .stamp-build-cross: .stamp-configure-cross cross/arm-apple-darwin10.h $(MONO_DEPENDENCIES)
-	$(MAKE) -C cross/eglib
 	$(MAKE) -C cross/mono
 	$(MAKE) -C cross/mono install
 	$(Q) touch $@
@@ -2078,7 +2036,6 @@ install-directories:
 $(eval $(call GenerateCrossOffsets,aarch64-apple-darwin10,$(TOP)/builds/cross64/,cross64,$(MONO_PATH)))
 
 .stamp-build-cross64: .stamp-configure-cross64 cross64/aarch64-apple-darwin10.h $(MONO_DEPENDENCIES)
-	$(MAKE) -C cross64/eglib
 	$(MAKE) -C cross64/mono
 	@$(MAKE) -C cross64/mono install
 	$(Q) touch $@
@@ -2145,7 +2102,6 @@ build-cross: setup-cross
 $(eval $(call GenerateCrossOffsets,armv7k-apple-darwin,$(TOP)/builds/cross-watch/,cross-watch,$(WATCH_MONO_PATH)))
 
 .stamp-build-cross-watch: .stamp-configure-cross-watch cross-watch/armv7k-apple-darwin.h $(MONO_DEPENDENCIES)
-	$(MAKE) -C cross-watch/eglib
 	$(MAKE) -C cross-watch/mono
 	$(MAKE) -C cross-watch/mono install
 	$(Q) touch $@
@@ -2178,6 +2134,7 @@ TV_CROSS_CONFIGURE_FLAGS=$(CROSS_BASE_CONFIGURE_FLAGS)	\
 	--prefix=$(BUILD_DESTDIR)/crosstv \
 	--cache-file=../crosstv.config.cache \
 	--target=aarch64-unknown-darwin \
+	--with-cross-offsets=aarch64-apple-darwin10.h \
 	--with-llvm=../llvm64/usr
 
 TV_CROSS_CONFIGURE_ENVIRONMENT = \
@@ -2209,7 +2166,6 @@ setup-crosstv: .stamp-configure-crosstv
 $(eval $(call GenerateCrossOffsets,aarch64-apple-darwin10,$(TOP)/builds/crosstv/,crosstv,$(MONO_PATH)))
 
 .stamp-build-crosstv: .stamp-configure-crosstv crosstv/aarch64-apple-darwin10.h $(MONO_DEPENDENCIES)
-	$(MAKE) -C crosstv/eglib
 	$(MAKE) -C crosstv/mono
 	$(MAKE) -C crosstv/mono install
 	$(Q) touch $@

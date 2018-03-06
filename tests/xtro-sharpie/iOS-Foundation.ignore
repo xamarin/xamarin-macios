@@ -22,7 +22,6 @@
 !missing-designated-initializer! NSUUID::init is missing an [DesignatedInitializer] attribute
 
 ### moved from iOS-Foundation.todo
-!missing-selector! NSDictionary::initWithDictionary:copyItems: not bound
 !unknown-pinvoke! getxattr bound
 !unknown-pinvoke! removexattr bound
 !unknown-pinvoke! setxattr bound

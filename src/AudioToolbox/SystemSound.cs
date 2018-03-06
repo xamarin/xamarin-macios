@@ -204,7 +204,7 @@ namespace XamCore.AudioToolbox {
 				BlockLiteral block_handler;
 				block_handler = new BlockLiteral ();
 				block_ptr_handler = &block_handler;
-				block_handler.SetupBlock (static_action, onCompletion);
+				block_handler.SetupBlockUnsafe (static_action, onCompletion);
 
 				AudioServicesPlayAlertSoundWithCompletion (soundId, block_ptr_handler);
 
@@ -235,7 +235,7 @@ namespace XamCore.AudioToolbox {
 				BlockLiteral block_handler;
 				block_handler = new BlockLiteral ();
 				block_ptr_handler = &block_handler;
-				block_handler.SetupBlock (static_action, onCompletion);
+				block_handler.SetupBlockUnsafe (static_action, onCompletion);
 
 				AudioServicesPlaySystemSoundWithCompletion (soundId, block_ptr_handler);
 

@@ -1,3 +1,4 @@
+#if !MONOMAC
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,4 +55,5 @@ partial class TestRuntime
 #if __WATCHOS__
 namespace System.Drawing {}
 namespace OpenTK {}
+#endif
 #endif

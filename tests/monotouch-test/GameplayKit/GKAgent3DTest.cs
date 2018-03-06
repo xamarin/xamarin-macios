@@ -8,7 +8,7 @@
 // Copyright 2017 Microsoft Inc. All rights reserved.
 //
 
-#if !__WATCHOS__
+#if !__WATCHOS__ && !MONOMAC
 
 using System;
 using OpenTK;
@@ -38,8 +38,11 @@ namespace MonoTouchFixtures.GamePlayKit
 		[SetUp]
 		public void Setup ()
 		{
-			if (!TestRuntime.CheckXcodeVersion (7, 0))
-				Assert.Ignore ("Ignoring GameplayKit tests: Requires iOS9+");
+			// Headers and documentation say this was introduced in iOS 9.
+			// My iOS 9.3.5 device doesn't agree:
+			// > dyld: Symbol not found: _OBJC_CLASS_$_GKAgent3D
+			// Apple's iOS 9 -> iOS 10 diff also says this class was introduced in iOS 10.
+			TestRuntime.AssertXcodeVersion (8, 0);
 		}
 
 		[Test]

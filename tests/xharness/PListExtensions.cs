@@ -20,6 +20,19 @@ namespace xharness
 			}
 		}
 
+		public static void LoadXmlWithoutNetworkAccess (this XmlDocument doc, string xml)
+		{
+			using (var fs = new StringReader (xml)) {
+				var settings = new XmlReaderSettings () {
+					XmlResolver = null,
+					DtdProcessing = DtdProcessing.Parse,
+				};
+				using (var reader = XmlReader.Create (fs, settings)) {
+					doc.Load (reader);
+				}
+			}
+		}
+
 		public static void SetMinimumOSVersion (this XmlDocument plist, string value)
 		{
 			SetPListStringValue (plist, "MinimumOSVersion", value);

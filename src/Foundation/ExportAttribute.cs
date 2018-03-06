@@ -30,7 +30,7 @@
 //
 using System;
 using System.Globalization;
-#if IKVM
+#if BGENERATOR
 using IKVM.Reflection;
 using Type = IKVM.Reflection.Type;
 #else

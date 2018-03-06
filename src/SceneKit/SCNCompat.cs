@@ -5,6 +5,12 @@ using System.Threading.Tasks;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 
+#if WATCH
+using AnimationType = global::XamCore.SceneKit.ISCNAnimationProtocol;
+#else
+using AnimationType = global::XamCore.CoreAnimation.CAAnimation;
+#endif
+
 namespace XamCore.SceneKit {
 
 #if !XAMCORE_3_0
@@ -71,5 +77,23 @@ namespace XamCore.SceneKit {
 		}
 	}
 #endif
+#endif
+
+
+#if !XAMCORE_4_0
+	[Mac (10,9), iOS (8,0), Watch (4,0)]
+	public delegate void SCNAnimationEventHandler (AnimationType animation, NSObject animatedObject, bool playingBackward);
+
+	public partial class SCNAnimationEvent : NSObject
+	{
+		public static SCNAnimationEvent Create (nfloat keyTime, SCNAnimationEventHandler eventHandler)
+		{
+			var handler = new Action<IntPtr, NSObject, bool> ((animationPtr, animatedObject, playingBackward) => {
+				var animation = Runtime.GetINativeObject<AnimationType> (animationPtr, true);
+				eventHandler (animation, animatedObject, playingBackward);
+			});
+			return Create (keyTime, handler);
+		}
+	}
 #endif
 }

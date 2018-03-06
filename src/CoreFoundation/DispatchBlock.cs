@@ -28,7 +28,7 @@ namespace XamCore.CoreFoundation {
 			block = new BlockLiteral ();
 			block_ptr = &block;
 
-			block.SetupBlock (Trampolines.SDAction.Handler, codeToRun);
+			block.SetupBlockUnsafe (Trampolines.SDAction.Handler, codeToRun);
 			invoker ((IntPtr) block_ptr);
 			block_ptr->CleanupBlock ();
 		}

@@ -23,11 +23,6 @@ using MonoTouch.ObjCRuntime;
 #if !COREBUILD && (XAMARIN_APPLETLS || XAMARIN_NO_TLS)
 #if !MTOUCH && !MMP && !MMP_TEST
 using Mono.Security.Interface;
-#if XAMARIN_APPLETLS
-using XamCore.Security.Tls;
-#elif XAMARIN_NO_TLS
-using XamCore.Security.NoTls;
-#endif
 #endif
 #endif
 

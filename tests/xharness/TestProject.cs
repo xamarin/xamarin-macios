@@ -120,6 +120,11 @@ namespace xharness
 
 			doc.Save (Path);
 		}
+
+		public override string ToString()
+		{
+			return Name;
+		}
 	}
 
 	public class iOSTestProject : TestProject
@@ -127,6 +132,9 @@ namespace xharness
 		public bool SkipiOSVariation;
 		public bool SkipwatchOSVariation;
 		public bool SkiptvOSVariation;
+
+		// Optional
+		public BCLTestInfo BCLInfo { get; set; }
 
 		public iOSTestProject ()
 		{
@@ -138,18 +146,28 @@ namespace xharness
 		}
 	}
 
+	public enum MacFlavors { All, Modern, Full }
+
 	public class MacTestProject : TestProject
 	{
-		public bool SkipXMVariations;
+		public MacFlavors TargetFrameworkFlavor;
+
+		// Optional
+		public MacBCLTestInfo BCLInfo { get; set; }
+
+		public bool GenerateModern => TargetFrameworkFlavor == MacFlavors.All || TargetFrameworkFlavor == MacFlavors.Modern;
+		public bool GenerateFull => TargetFrameworkFlavor == MacFlavors.All || TargetFrameworkFlavor == MacFlavors.Full;
+
+		public string Platform = "x86";
 		public string [] Configurations;
 
 		public MacTestProject () : base ()
 		{
 		}
 
-		public MacTestProject (string path, bool isExecutableProject = true, bool generateVariations = true, bool skipXMVariations = false) : base (path, isExecutableProject, generateVariations)
+		public MacTestProject (string path, bool isExecutableProject = true, bool generateVariations = true, MacFlavors targetFrameworkFlavor = MacFlavors.All) : base (path, isExecutableProject, generateVariations)
 		{
-			SkipXMVariations = skipXMVariations;
+			TargetFrameworkFlavor = targetFrameworkFlavor;
 		}
 	}
 }

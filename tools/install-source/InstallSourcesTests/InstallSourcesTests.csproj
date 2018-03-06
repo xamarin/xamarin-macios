@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{795E0F7E-5C48-4C90-8F66-518359874022}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>InstallSourcesTests</RootNamespace>
+    <AssemblyName>InstallSourcesTests</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="Mono.CompilerServices.SymbolWriter" />
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>Mono.Cecil.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MonoPathManglerTest.cs" />
+    <Compile Include="XamarinSourcesPathManglerTest.cs" />
+    <Compile Include="OpenTKManglerTest.cs" />
+    <Compile Include="..\IPathMangler.cs">
+      <Link>IPathMangler.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoPathMangler.cs">
+      <Link>MonoPathMangler.cs</Link>
+    </Compile>
+    <Compile Include="..\OpenTKSourceMangler.cs">
+      <Link>OpenTKSourceMangler.cs</Link>
+    </Compile>
+    <Compile Include="..\PathManglerFactory.cs">
+      <Link>PathManglerFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\XamarinSourcesPathMangler.cs">
+      <Link>XamarinSourcesPathMangler.cs</Link>
+    </Compile>
+    <Compile Include="PathManclerFactoryTests.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>

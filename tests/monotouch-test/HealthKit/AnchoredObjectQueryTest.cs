@@ -7,7 +7,7 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
 
-#if !__TVOS__
+#if !__TVOS__ && !MONOMAC
 
 using System;
 

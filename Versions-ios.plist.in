@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>MonoVersion</key>
+	<string>@MONO_VERSION@</string>
 	<key>KnownVersions</key>
 	<dict>
 		<key>iOS</key>
@@ -125,6 +127,7 @@
 		<string>mlaunch-launch-simulator</string>
 		<string>mlaunch-install-progress</string>
 		<string>mlaunch-watchos-complications</string>
+		<string>mlaunch-wireless-devices</string>
 		<string>http-client-handlers</string>
 		<string>mono-symbol-archive</string>
 		<string>sgen-concurrent-gc</string>

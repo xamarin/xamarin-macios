@@ -4,7 +4,7 @@
 // Copyright 2013, 2016 Xamarin Inc. All rights reserved.
 //
 
-#if !__WATCHOS__
+#if !__WATCHOS__ && !MONOMAC
 
 using System;
 using System.Drawing;

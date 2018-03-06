@@ -50,7 +50,7 @@
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DEBUG;;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DEBUG;DEVICE;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>0</WarningLevel>
     <MtouchDebug>True</MtouchDebug>
@@ -67,7 +67,7 @@
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DEBUG;;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DEBUG;DEVICE;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>0</WarningLevel>
     <MtouchDebug>True</MtouchDebug>
@@ -82,7 +82,7 @@
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DEBUG;;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DEBUG;DEVICE;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>0</WarningLevel>
     <MtouchDebug>True</MtouchDebug>
@@ -96,7 +96,7 @@
     <DebugType>none</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>MONOTOUCH;;$(DefineConstants)</DefineConstants>
+    <DefineConstants>MONOTOUCH;DEVICE;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
@@ -110,7 +110,7 @@
     <DebugType>none</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>MONOTOUCH;;$(DefineConstants)</DefineConstants>
+    <DefineConstants>MONOTOUCH;DEVICE;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
@@ -124,7 +124,7 @@
     <DebugType>none</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>MONOTOUCH;;$(DefineConstants)</DefineConstants>
+    <DefineConstants>MONOTOUCH;DEVICE;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
@@ -138,7 +138,7 @@
     <DebugType>none</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>MONOTOUCH;;$(DefineConstants)</DefineConstants>
+    <DefineConstants>MONOTOUCH;DEVICE;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
@@ -166,244 +166,11 @@
     <None Include="EmptyNib.xib" Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Main.cs" />
-    <Compile Include="AppDelegate.cs" />
-    <Compile Include="ObjCRuntime\RuntimeTest.cs" />
-    <Compile Include="MapKit\GeometryTest.cs" />
-    <Compile Include="MapKit\MapRectTest.cs" />
-    <Compile Include="Foundation\NSTimeZoneTest.cs" />
-    <Compile Include="CoreData\AttributeDescriptionTest.cs" />
-    <Compile Include="Security\ImportExportTest.cs" />
-    <Compile Include="Security\KeyChainTest.cs" />
-    <Compile Include="Foundation\StringTest.cs" />
-    <Compile Include="MapKit\OverlayViewTest.cs" />
-    <Compile Include="Foundation\NSDataTest.cs" />
-    <Compile Include="UIKit\ColorTest.cs" />
-    <Compile Include="iAd\BannerViewTest.cs" />
-    <Compile Include="GLKit\KViewTest.cs" />
-    <Compile Include="MediaPlayer\VolumeViewTest.cs" />
-    <Compile Include="MapKit\OverlayPathViewTest.cs" />
-    <Compile Include="MapKit\PolygonViewTest.cs" />
-    <Compile Include="MapKit\PolylineViewTest.cs" />
-    <Compile Include="UIKit\ActionSheetTest.cs" />
-    <Compile Include="UIKit\AlertViewTest.cs" />
-    <Compile Include="UIKit\ControlTest.cs" />
-    <Compile Include="UIKit\NavigationBarTest.cs" />
-    <Compile Include="UIKit\PickerViewTest.cs" />
-    <Compile Include="UIKit\SearchBarTest.cs" />
-    <Compile Include="UIKit\TableViewCellTest.cs" />
-    <Compile Include="UIKit\ToolbarTest.cs" />
-    <Compile Include="UIKit\WindowTest.cs" />
-    <Compile Include="UIKit\ActivityIndicatorViewTest.cs" />
-    <Compile Include="UIKit\LabelTest.cs" />
-    <Compile Include="UIKit\ImageViewTest.cs" />
-    <Compile Include="UIKit\ProgressViewTest.cs" />
-    <Compile Include="UIKit\ScrollViewTest.cs" />
-    <Compile Include="UIKit\TableViewTest.cs" />
-    <Compile Include="UIKit\TextViewTest.cs" />
-    <Compile Include="UIKit\TabBarTest.cs" />
-    <Compile Include="UIKit\WebViewTest.cs" />
-    <Compile Include="UIKit\PopoverBackgroundViewTest.cs" />
-    <Compile Include="UIKit\SegmentedControlTest.cs" />
-    <Compile Include="UIKit\TextFieldTest.cs" />
-    <Compile Include="UIKit\ButtonTest.cs" />
-    <Compile Include="UIKit\DatePickerTest.cs" />
-    <Compile Include="UIKit\PageControlTest.cs" />
-    <Compile Include="UIKit\SliderTest.cs" />
-    <Compile Include="UIKit\SwitchTest.cs" />
-    <Compile Include="UIKit\StepperTest.cs" />
-    <Compile Include="CoreAnimation\LayerTest.cs" />
-    <Compile Include="MapKit\PolygonTest.cs" />
-    <Compile Include="MapKit\PolylineTest.cs" />
-    <Compile Include="Foundation\FileManagerTest.cs" />
-    <Compile Include="UIKit\ViewTest.cs" />
-    <Compile Include="MapKit\ShapeTest.cs" />
-    <Compile Include="UIKit\FontTest.cs" />
-    <Compile Include="UIKit\BarButtonItemTest.cs" />
-    <Compile Include="UIKit\ApplicationTest.cs" />
-    <Compile Include="CoreFoundation\BundleTest.cs" />
-    <Compile Include="CoreFoundation\UrlTest.cs" />
-    <Compile Include="CoreFoundation\StringTest.cs" />
-    <Compile Include="UIKit\PopoverControllerTest.cs" />
-    <Compile Include="AudioToolbox\AudioFileTest.cs" />
-    <Compile Include="AudioToolbox\AudioSessionTest.cs" />
-    <Compile Include="SystemConfiguration\CaptiveNetworkTest.cs" />
-    <Compile Include="CoreGraphics\PDFArrayTest.cs" />
-    <Compile Include="UIKit\ReferenceLibraryViewControllerTest.cs" />
-    <Compile Include="Foundation\ArrayTest.cs" />
-    <Compile Include="EventKit\CalendarTest.cs" />
-    <Compile Include="CoreText\FontDescriptorTest.cs" />
-    <Compile Include="CoreImage\CoreVectorTest.cs" />
-    <Compile Include="ObjCRuntime\ClassTest.cs" />
-    <Compile Include="AddressBook\SourceTest.cs" />
-    <Compile Include="AddressBook\AddressBookTest.cs" />
-    <Compile Include="CoreMedia\CMTimeTests.cs" />
-    <Compile Include="UIKit\UIDocumentTest.cs" />
-    <Compile Include="UIKit\SplitViewControllerTest.cs" />
-    <Compile Include="Foundation\UrlTest.cs" />
-    <Compile Include="UIKit\DictationPhrase.cs" />
-    <Compile Include="CoreFoundation\DispatchTests.cs" />
-    <Compile Include="UIKit\PageViewControllerTest.cs" />
-    <Compile Include="Foundation\LocaleTest.cs" />
-    <Compile Include="CoreAnimation\ShapeLayerTest.cs" />
-    <Compile Include="CoreAnimation\TransactionTest.cs" />
-    <Compile Include="Foundation\CookieTest.cs" />
-    <Compile Include="UIKit\AlertViewDelegateTest.cs" />
-    <Compile Include="ImageIO\CGImageSourceTest.cs" />
-    <Compile Include="ObjCRuntime\DlfcnTest.cs" />
-    <Compile Include="Foundation\ObjectTest.cs" />
-    <Compile Include="Foundation\OperationQueueTest.cs" />
-    <Compile Include="UIKit\ViewControllerTest.cs" />
-    <Compile Include="UIKit\DeviceTest.cs" />
-    <Compile Include="Foundation\CachedUrlResponseTest.cs" />
-    <Compile Include="CoreGraphics\PDFDocumentTest.cs" />
-    <Compile Include="QuickLook\PreviewControllerTest.cs" />
-    <Compile Include="Foundation\UrlProtocolTest.cs" />
-    <Compile Include="GameKit\NotificationBannerTest.cs" />
-    <Compile Include="CoreGraphics\GradientTest.cs" />
-    <Compile Include="Foundation\BundleTest.cs" />
-    <Compile Include="CoreGraphics\ColorSpaceTest.cs" />
-    <Compile Include="CoreText\CTFrameTests.cs" />
-    <Compile Include="CoreFoundation\NetworkTest.cs" />
-    <Compile Include="CoreFoundation\NotificationCenterTest.cs" />
-    <Compile Include="UIKit\ImageTest.cs" />
-    <Compile Include="Foundation\NotificationCenter.cs" />
-    <Compile Include="GLKit\EffectPropertyLightTest.cs" />
-    <Compile Include="GLKit\EffectPropertyMaterialTest.cs" />
-    <Compile Include="GLKit\EffectPropertyTransformTest.cs" />
-    <Compile Include="GLKit\BaseEffectTest.cs" />
-    <Compile Include="GLKit\EffectPropertyFog.cs" />
-    <Compile Include="AudioToolbox\AudioFileStreamTest.cs" />
-    <Compile Include="AVFoundation\AVAssetImageGeneratorTest.cs" />
-    <Compile Include="AVFoundation\AVAudioConverterPrimeInfoTest.cs" />
-    <Compile Include="AVFoundation\AVBeatRangeTest.cs" />
-    <Compile Include="AVFoundation\AVCaptureWhiteBalanceGainsTest.cs" />
-    <Compile Include="AVFoundation\AVCapturePhotoBracketSettingsTest.cs" />
-    <Compile Include="ImageIO\ImagePropertiesTest.cs" />
-    <Compile Include="CoreLocation\LocationTest.cs" />
-    <Compile Include="CoreFoundation\ProxyTest.cs" />
-    <Compile Include="AudioUnit\AudioUnitTest.cs" />
-    <Compile Include="UIKit\SimpleTextPrintFormatterTest.cs" />
-    <Compile Include="PassKit\PassLibraryTest.cs" />
-    <Compile Include="PassKit\PassTest.cs" />
-    <Compile Include="PassKit\AddPassesViewControllerTest.cs" />
-    <Compile Include="CoreBluetooth\CentralManagerTest.cs" />
-    <Compile Include="SystemConfiguration\NetworkReachabilityTest.cs" />
-    <Compile Include="CoreText\StringAttributes.cs" />
-    <Compile Include="EventKit\EventStoreTest.cs" />
-    <Compile Include="EventKit\ReminderTest.cs" />
-    <Compile Include="EventKit\StructuredLocationTest.cs" />
-    <Compile Include="CoreMedia\SampleBufferTest.cs" />
-    <Compile Include="CoreMedia\CMTimebaseTest.cs" />
-    <Compile Include="CoreMedia\CMMemoryPoolTest.cs" />
-    <Compile Include="CoreMedia\CMClockTest.cs" />
-    <Compile Include="CoreMedia\CMFormatDescriptionTest.cs" />
-    <Compile Include="GameKit\SessionTest.cs" />
-    <Compile Include="MediaToolbox\AudioProcessingTapTest.cs" />
-    <Compile Include="UIKit\NibTest.cs" />
-    <Compile Include="AddressBookUI\AddressFormattingTest.cs" />
-    <Compile Include="UIKit\NavigationControllerTest.cs" />
-    <Compile Include="UIKit\NavigationItemTest.cs" />
-    <Compile Include="UIKit\SearchDisplayControllerTest.cs" />
-    <Compile Include="UIKit\TarBarItemTest.cs" />
-    <Compile Include="UIKit\TabBarControllerTest.cs" />
-    <Compile Include="MapKit\CircleViewTest.cs" />
-    <Compile Include="MapKit\MapViewTest.cs" />
-    <Compile Include="MapKit\AnnotationViewTest.cs" />
-    <Compile Include="MapKit\PinAnnotationViewTest.cs" />
-    <Compile Include="MapKit\UserTrackingBarButtonItemTest.cs" />
-    <Compile Include="Foundation\UserDefaultsTest.cs" />
-    <Compile Include="CoreImage\CoreContextTest.cs" />
-    <Compile Include="Foundation\UuidTest.cs" />
-    <Compile Include="Foundation\NSDictionaryTest.cs" />
-    <Compile Include="Foundation\NSSetTest.cs" />
-    <Compile Include="AddressBook\PersonTest.cs" />
-    <Compile Include="AdSupport\IdentifierManagerTest.cs" />
-    <Compile Include="CoreMotion\LogItemTest.cs" />
-    <Compile Include="CoreMotion\AccelerometerDataTest.cs" />
-    <Compile Include="CoreAnimation\MediaTimingFunctionTest.cs" />
-    <Compile Include="Foundation\ThreadTest.cs" />
-    <Compile Include="CoreVideo\PixelBufferPoolTest.cs" />
-    <Compile Include="CoreGraphics\BitmapContextTest.cs" />
-    <Compile Include="MessageUI\MailComposeViewControllerTest.cs" />
-    <Compile Include="CoreImage\ImageTest.cs" />
-    <Compile Include="UIKit\PasteboardTest.cs" />
-    <Compile Include="CoreImage\DetectorTest.cs" />
-    <Compile Include="ImageIO\ImageDestinationTest.cs" />
-    <Compile Include="AudioToolbox\SystemSoundTest.cs" />
-    <Compile Include="AudioToolbox\AudioQueueTest.cs" />
-    <Compile Include="Security\PolicyTest.cs" />
-    <Compile Include="Security\TrustTest.cs" />
-    <Compile Include="Security\CertificateTest.cs" />
-    <Compile Include="CoreData\FetchedResultsControllerTest.cs" />
-    <Compile Include="CoreData\ManagedObjectContextTest.cs" />
-    <Compile Include="Foundation\KeyedUnarchiverTest.cs" />
-    <Compile Include="UIKit\LayoutConstraintTest.cs" />
-    <Compile Include="CoreBluetooth\UuidTest.cs" />
-    <Compile Include="AudioUnit\AUGraphTest.cs" />
-    <Compile Include="AudioUnit\ExtAudioFileTest.cs" />
-    <Compile Include="CoreGraphics\PDFInfoTest.cs" />
-    <Compile Include="AudioToolbox\AudioFileGlobalInfoTest.cs" />
-    <Compile Include="AudioToolbox\AudioChannelLayoutTest.cs" />
-    <Compile Include="AudioToolbox\AudioBalanceFadeTest.cs" />
-    <Compile Include="AudioToolbox\AudioStreamBasicDescriptionTest.cs" />
-    <Compile Include="AudioToolbox\AudioFormatTest.cs" />
-    <Compile Include="CoreFoundation\DispatchGroupTest.cs" />
-    <Compile Include="Foundation\DateTest.cs" />
-    <Compile Include="UIKit\GestureRecognizerTest.cs" />
-    <Compile Include="CoreGraphics\CGImageTest.cs" />
-    <Compile Include="Foundation\NSInputStreamTest.cs" />
-    <Compile Include="MapKit\LocalSearchTest.cs" />
-    <Compile Include="MapKit\LocalSearchRequestTest.cs" />
-    <Compile Include="Foundation\CalendarTest.cs" />
-    <Compile Include="EventKit\AlarmTest.cs" />
-    <Compile Include="CoreGraphics\ContextTest.cs" />
-    <Compile Include="CoreGraphics\DataConsumerTest.cs" />
-    <Compile Include="CoreAnimation\EmitterBehaviorTest.cs" />
-    <Compile Include="CoreGraphics\PathTest.cs" />
-    <Compile Include="AudioToolbox\FourCCTest.cs" />
-    <Compile Include="AudioToolbox\SoundBankTest.cs" />
-    <Compile Include="UIKit\GuidedAccessRestrictionTest.cs" />
-    <Compile Include="AVFoundation\VideoCompositionInstructionTest.cs" />
-    <Compile Include="SpriteKit\PhysicsBodyTest.cs" />
-    <Compile Include="Foundation\UrlSessionConfigurationTest.cs" />
-    <Compile Include="MultipeerConnectivity\SessionTest.cs" />
-    <Compile Include="MultipeerConnectivity\PeerIDTest.cs" />
-    <Compile Include="Security\IdentityTest.cs" />
-    <Compile Include="JavascriptCore\ValueTest.cs" />
-    <Compile Include="UIKit\EdgeInsetsTest.cs" />
-    <Compile Include="CoreVideo\PixelFormatDescriptionTest.cs" />
-    <Compile Include="Foundation\ProtocolAttributeTest.cs" />
-    <Compile Include="UIKit\LayoutManagerTest.cs" />
-    <Compile Include="ImageIO\MutableImageMetadataTest.cs" />
-    <Compile Include="ImageIO\ImageMetadataTest.cs" />
-    <Compile Include="ImageIO\ImageMetadataTagTest.cs" />
-    <Compile Include="UIKit\TextContainerTest.cs" />
-    <Compile Include="GameKit\ScoreTest.cs" />
-    <Compile Include="CoreLocation\BeaconRegionTest.cs" />
-    <Compile Include="Foundation\NumberTest.cs" />
-    <Compile Include="Foundation\NotificationQueueTest.cs" />
-    <Compile Include="Security\KeyTest.cs" />
-    <Compile Include="AVFoundation\AudioPlayerTest.cs" />
-    <Compile Include="AVFoundation\AudioRecorderTest.cs" />
-    <Compile Include="AudioToolbox\AudioFormatAvailabilityTest.cs" />
-    <Compile Include="SafariServices\ReadingListTest.cs" />
-    <Compile Include="SpriteKit\KeyframeSequenceTest.cs" />
-    <Compile Include="SpriteKit\TextureAtlasTest.cs" />
-    <Compile Include="SpriteKit\TextureTest.cs" />
-    <Compile Include="SpriteKit\PhysicsJointFixedTest.cs" />
-    <Compile Include="SpriteKit\PhysicsJointLimitTest.cs" />
-    <Compile Include="ExternalAccessory\AccessoryManagerTest.cs" />
-    <Compile Include="JavascriptCore\ContextTest.cs" />
-    <Compile Include="Foundation\MutableStringTest.cs" />
-    <Compile Include="AVFoundation\QueuePlayerTest.cs" />
-    <Compile Include="MediaAccessibility\CaptionAppearanceTest.cs" />
-    <Compile Include="Foundation\AttributedStringTest.cs" />
-    <Compile Include="Foundation\BlockOperationTest.cs" />
-    <Compile Include="UIKit\TextAttachmentTest.cs" />
-    <Compile Include="UIKit\StringAttributesTest.cs" />
-    <Compile Include="CoreImage\FilterTest.cs" />
-    <Compile Include="iAd\ViewControllerExtensionsTest.cs" />
+    <Compile Include="**\*.cs" Exclude="obj\**">
+      <Link>%(RecursiveDir)%(Filename).cs</Link>
+    </Compile>
+    <Compile Include="..\..\tests\test-libraries\TrampolineTest.generated.cs" />
+    <Compile Include="..\..\tests\test-libraries\RegistrarTest.generated.cs" />
     <Compile Include="..\..\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestPoint.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
       <Link>System.Drawing\TestPoint.cs</Link>
     </Compile>
@@ -422,292 +189,18 @@
     <Compile Include="..\..\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestSizeF.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
       <Link>System.Drawing\TestSizeF.cs</Link>
     </Compile>
-    <Compile Include="Foundation\MutableDataTest.cs" />
-    <Compile Include="Foundation\DateFormatterTest.cs" />
-    <Compile Include="Foundation\UrlCredentialTest.cs" />
-    <Compile Include="Foundation\UrlConnectionTest.cs" />
-    <Compile Include="Foundation\UrlProtectionSpaceTest.cs" />
-    <Compile Include="MapKit\OverlayPathRendererTest.cs" />
-    <Compile Include="GameKit\LeaderboardViewControllerTest.cs" />
-    <Compile Include="Foundation\OutputStreamTest.cs" />
-    <Compile Include="Foundation\FileHandleTest.cs" />
-    <Compile Include="GameKit\LeaderboardTest.cs" />
-    <Compile Include="Foundation\MutableAttributedStringTest.cs" />
-    <Compile Include="CoreAnimation\EmitterCellTest.cs" />
-    <Compile Include="StoreKit\ReceiptRefreshRequestTest.cs" />
-    <Compile Include="UIKit\AccessibilityTest.cs" />
-    <Compile Include="SpriteKit\SpriteNodeTest.cs" />
-    <Compile Include="Foundation\ZoneTest.cs" />
-    <Compile Include="CoreData\ManagedObjectModelTest.cs" />
-    <Compile Include="Security\RecordTest.cs" />
-    <Compile Include="Security\SecSharedCredentialTest.cs" />
-    <Compile Include="UIKit\LocalNotificationTest.cs" />
-    <Compile Include="MediaPlayer\MediaItemTest.cs" />
-    <Compile Include="EventKit\RecurrenceRule.cs" />
-    <Compile Include="Foundation\TimerTest.cs" />
-    <Compile Include="AVFoundation\PlayerItemTest.cs" />
-    <Compile Include="UIKit\PanGestureRecognizerTest.cs" />
-    <Compile Include="SystemConfiguration\StatusCodeErrorTest.cs" />
-    <Compile Include="UIKit\CollectionViewControllerTest.cs" />
-    <Compile Include="UIKit\CollectionViewTransitionLayoutTest.cs" />
-    <Compile Include="CoreData\FetchRequestTest.cs" />
-    <Compile Include="MediaPlayer\RemoteCommandCenterTest.cs" />
-    <Compile Include="MediaPlayer\PlayableContentManagerTest.cs" />
-    <Compile Include="MediaPlayer\SkipIntervalCommandTest.cs" />
-    <Compile Include="Foundation\CoderTest.cs" />
-    <Compile Include="Foundation\DecimalNumberTest.cs" />
-    <Compile Include="UIKit\TableViewControllerTest.cs" />
-    <Compile Include="mono\bug18634.cs" />
-    <Compile Include="Foundation\IndexPathTest.cs" />
-    <Compile Include="CoreGraphics\PDFContextTest.cs" />
-    <Compile Include="AudioToolbox\MusicSequenceTest.cs" />
-    <Compile Include="CoreGraphics\GeometryTest.cs" />
-    <Compile Include="CoreGraphics\AffineTransformTest.cs" />
-    <Compile Include="CoreMedia\EnumTest.cs" />
-    <Compile Include="CoreMedia\BlockBufferTest.cs" />
-    <Compile Include="CoreVideo\CoreVideoEnumsTest.cs" />
-    <Compile Include="CoreServices\HttpMessageTest.cs" />
-    <Compile Include="Security\SecureTransportTest.cs" />
-    <Compile Include="UIKit\AppearanceTest.cs" />
-    <Compile Include="CoreGraphics\PDFContentStreamTest.cs" />
-    <Compile Include="CoreGraphics\PDFOperatorTableTest.cs" />
-    <Compile Include="CoreGraphics\PDFScannerTest.cs" />
-    <Compile Include="CoreGraphics\PDFObjectTest.cs" />
-    <Compile Include="Photos\FetchResultTest.cs" />
-    <Compile Include="Foundation\DecimalTest.cs" />
-    <Compile Include="Foundation\NSCharacterSetTest.cs" />
-    <Compile Include="Foundation\FormatterTests.cs" />
-    <Compile Include="CoreImage\CIKernelTests.cs" />
-    <Compile Include="AVFoundation\UtilitiesTest.cs" />
-    <Compile Include="MobileCoreServices\UTTypeTest.cs" />
-    <Compile Include="AVFoundation\SpeechSynthesisVoiceTest.cs" />
-    <Compile Include="CoreBluetooth\PeerTest.cs" />
-    <Compile Include="PassKit\ObjectTest.cs" />
-    <Compile Include="Foundation\EncodingDetectionOptionsTest.cs" />
-    <Compile Include="Foundation\FileCoordinatorTest.cs" />
-    <Compile Include="Foundation\DictionaryContainerTest.cs" />
-    <Compile Include="ObjCRuntime\Messaging.cs" />
-    <Compile Include="ObjCRuntime\TrampolineTest.cs" />
-    <Compile Include="ObjCRuntime\TrampolineTest.generated.cs" />
-    <Compile Include="ObjCRuntime\RegistrarTest.cs" />
-    <Compile Include="ObjCRuntime\RegistrarTest.generated.cs" />
-    <Compile Include="CoreGraphics\DataProviderTest.cs" />
-    <Compile Include="HealthKit\QuantityTypeIdentifierTest.cs" />
-    <Compile Include="HealthKit\CategoryTypeIdentifierTest.cs" />
-    <Compile Include="SceneKit\NodeTest.cs" />
-    <Compile Include="UIKit\PopoverPresentationControllerTest.cs" />
-    <Compile Include="NetworkExtension\VpnManagerTest.cs" />
-    <Compile Include="NetworkExtension\OnDemandTest.cs" />
-    <Compile Include="MediaPlayer\MediaItemArtworkTest.cs" />
-    <Compile Include="NativeTypesTest.cs" />
-    <Compile Include="AVFoundation\MetadataObjectTest.cs" />
-    <Compile Include="AVFoundation\CaptureMetadataOutputTest.cs" />
-    <Compile Include="Metal\ClearValueTest.cs" />
-    <Compile Include="Metal\MTLBufferLayoutDescriptorTest.cs" />
-    <Compile Include="Metal\MTLFunctionConstantTest.cs" />
-    <Compile Include="Metal\MTLStageInputOutputDescriptorTest.cs" />
-    <Compile Include="Metal\MTLAttributeDescriptorTest.cs" />
-    <Compile Include="Metal\MTLAttributeTest.cs" />
-    <Compile Include="MediaPlayer\MoviePlayerControllerTest.cs" />
-    <Compile Include="AVKit\PlayerViewControllerTest.cs" />
-    <Compile Include="UIKit\VibrancyEffectTest.cs" />
-    <Compile Include="CoreBluetooth\PeripheralScanningOptionsTest.cs" />
-    <Compile Include="CoreVideo\PixelBufferAttributesTest.cs" />
-    <Compile Include="CoreImage\ImageInitializationOptionsTest.cs" />
-    <Compile Include="SceneKit\StructTest.cs" />
-    <Compile Include="JavascriptCore\JSExportTest.cs" />
-    <Compile Include="CoreGraphics\FunctionTest.cs" />
-    <Compile Include="CoreText\FontManagerTest.cs" />
-    <Compile Include="ObjCRuntime\CategoryTest.cs" />
-    <Compile Include="Foundation\NSStreamTest.cs" />
-    <Compile Include="VideoToolbox\VTCompressionSessionTests.cs" />
-    <Compile Include="VideoToolbox\VTDecompressionSessionTests.cs" />
-    <Compile Include="VideoToolbox\VTFrameSiloTests.cs" />
-    <Compile Include="VideoToolbox\VTMultiPassStorageTests.cs" />
-    <Compile Include="VideoToolbox\VTVideoEncoderListTests.cs" />
-    <Compile Include="CoreMedia\CMTimeRangeTests.cs" />
-    <Compile Include="mono\bug26989.cs" />
     <Compile Include="..\api-shared\ObjCRuntime\RegistrarTest.cs">
       <Link>shared\ObjCRuntime\RegistrarTest.cs</Link>
     </Compile>
-    <Compile Include="CoreText\FontTest.cs" />
-    <Compile Include="Foundation\UrlSessionTest.cs" />
-    <Compile Include="mono\Symbols.cs" />
-    <Compile Include="PushKit\PushRegistryTest.cs" />
     <Compile Include="..\api-shared\CoreFoundation\CFNotificationCenterTest.cs">
       <Link>CoreFoundation\CFNotificationCenterTest.cs</Link>
     </Compile>
-    <Compile Include="SpriteKit\FieldNodeTest.cs" />
-    <Compile Include="SpriteKit\SK3DNodeTest.cs" />
-    <Compile Include="SpriteKit\PhysicsWorldTest.cs" />
-    <Compile Include="CoreGraphics\ColorTest.cs" />
-    <Compile Include="Foundation\UrlRequestTest.cs" />
-    <Compile Include="Foundation\UrlSessionTaskTest.cs" />
-    <Compile Include="ModelIO\MDLMaterialProperty.cs" />
-    <Compile Include="ModelIO\MDLTexture.cs" />
-    <Compile Include="Asserts.cs" />
-    <Compile Include="ModelIO\MDLLight.cs" />
-    <Compile Include="ModelIO\MDLMesh.cs" />
-    <Compile Include="ModelIO\MDLTransform.cs" />
-    <Compile Include="ModelIO\MDLVertexAttribute.cs" />
-    <Compile Include="ModelIO\MDLObject.cs" />
-    <Compile Include="CoreText\CTLineTest.cs" />
-    <Compile Include="GameplayKit\GKComponentSystemTests.cs" />
-    <Compile Include="GameplayKit\GKEntityTests.cs" />
-    <Compile Include="GameplayKit\GKGridGraphTests.cs" />
-    <Compile Include="GameplayKit\GKPathTests.cs" />
-    <Compile Include="GameplayKit\GKPolygonObstacleTests.cs" />
-    <Compile Include="GameplayKit\GKStateMachineTests.cs" />
-    <Compile Include="GameplayKit\GKStateTests.cs" />
-    <Compile Include="UIKit\FloatRangeTest.cs" />
-    <Compile Include="MediaAccessibility\AudibleMediaTest.cs" />
-    <Compile Include="Contacts\ContactStoreTest.cs" />
-    <Compile Include="Contacts\ContactTest.cs" />
-    <Compile Include="Contacts\ContactFetchRequestTest.cs" />
-    <Compile Include="Contacts\ContactFormatterTest.cs" />
-    <Compile Include="Contacts\ContactVCardSerializationTest.cs" />
-    <Compile Include="Contacts\MutableContactTest.cs" />
-    <Compile Include="CoreGraphics\FontTest.cs" />
-    <Compile Include="GameController\GamepadSnapshotTest.cs" />
-    <Compile Include="GameController\ExtendedGamepadSnapshotTest.cs" />
-    <Compile Include="Metal\DeviceTest.cs" />
-    <Compile Include="MediaToolbox\FormatNamesTest.cs" />
-    <Compile Include="VideoToolbox\VTUtilitiesTests.cs" />
-    <Compile Include="AVFoundation\AVAssetDownloadUrlSessionTests.cs" />
-    <Compile Include="SceneKit\GeometrySourceTest.cs" />
-    <Compile Include="UIKit\UISearchControllerTest.cs" />
-    <Compile Include="UIKit\UIAlertControllerTest.cs" />
-    <Compile Include="UIKit\UIStackViewTest.cs" />
-    <Compile Include="Foundation\NSMutableArray1Test.cs" />
-    <Compile Include="Foundation\NSMutableDictionary2Test.cs" />
-    <Compile Include="Foundation\NSMutableSet1Test.cs" />
-    <Compile Include="Foundation\NSSet1Test.cs" />
-    <Compile Include="Foundation\NSDictionary2Test.cs" />
-    <Compile Include="Foundation\NSMutableDictionaryTest.cs" />
-    <Compile Include="HealthKit\ErrorTest.cs" />
-    <Compile Include="CoreBluetooth\ErrorTest.cs" />
-    <Compile Include="Foundation\NSLayoutConstraintTest.cs" />
-    <Compile Include="Foundation\NSLocaleTest.cs" />
-    <Compile Include="Foundation\NSStringTest.cs" />
-    <Compile Include="Foundation\NetServiceTest.cs" />
-    <Compile Include="Foundation\NSOrderedSetTest.cs" />
-    <Compile Include="Foundation\NSMutableSetTest.cs" />
-    <Compile Include="Foundation\NSMutableOrderedSetTest.cs" />
-    <Compile Include="ObjCRuntime\ClassTest.classlist.cs" />
-    <Compile Include="Foundation\NSOrderedSet1Test.cs" />
-    <Compile Include="Foundation\NSMutableOrderedSet1Test.cs" />
-    <Compile Include="HealthKit\AnchoredObjectQueryTest.cs" />
-    <Compile Include="HealthKit\ObjectTypeTest.cs" />
-    <Compile Include="Foundation\NSArray1Test.cs" />
-    <Compile Include="ObjCRuntime\BlocksTest.cs" />
-    <Compile Include="MetalPerformanceShaders\KernelTest.cs" />
-    <Compile Include="AudioUnit\AUParameterNodeTest.cs" />
-    <Compile Include="AudioUnit\AUAudioUnitFactoryTest.cs" />
-    <Compile Include="Foundation\UbiquitousKeyValueStoreTest.cs" />
-    <Compile Include="CoreVideo\PixelBufferTest.cs" />
-    <Compile Include="CoreMidi\MidiThruConnectionTests.cs" />
-    <Compile Include="SpriteKit\SKShapeNodeTest.cs" />
-    <Compile Include="CoreData\ExpressionDescriptionTest.cs" />
-    <Compile Include="CoreData\FetchRequestExpressionTest.cs" />
-    <Compile Include="CoreData\PropertyDescriptionTest.cs" />
-    <Compile Include="CoreAudioKit\AUViewController.cs" />
-    <Compile Include="ObjCRuntime\ExceptionsTest.cs" />
-    <Compile Include="Foundation\NSExpressionTest.cs" />
-    <Compile Include="CoreGraphics\RectTest.cs" />
-    <Compile Include="Messages\MSMessageTest.cs" />
     <Compile Include="..\common\TestRuntime.cs">
       <Link>TestRuntime.cs</Link>
     </Compile>
     <Compile Include="..\common\ConditionalCompilation.cs">
       <Link>ConditionalCompilation.cs</Link>
     </Compile>
-    <Compile Include="CoreMidi\MidiEndpointTest.cs" />
-    <Compile Include="MediaPlayer\NowPlayingInfoCenterTest.cs" />
-    <Compile Include="Foundation\UrlSessionTaskMetricsTest.cs" />
-    <Compile Include="Foundation\UrlSessionTaskTransactionMetricsTest.cs" />
-    <Compile Include="SpriteKit\WarpGeometryGridTest.cs" />
-    <Compile Include="SpriteKit\UniformTest.cs" />
-    <Compile Include="CloudKit\CKDiscoverUserInfosOperationTest.cs" />
-    <Compile Include="CloudKit\CKFetchRecordChangesOperationTest.cs" />
-    <Compile Include="CloudKit\CKFetchSubscriptionsOperationTest.cs" />
-    <Compile Include="CloudKit\CKFetchNotificationChangesOperationTest.cs" />
-    <Compile Include="CloudKit\CKFetchRecordZonesOperationTest.cs" />
-    <Compile Include="CloudKit\CKFetchRecordsOperationTest.cs" />
-    <Compile Include="CloudKit\CKMarkNotificationsReadOperationTest.cs" />
-    <Compile Include="CloudKit\CKModifyBadgeOperationTest.cs" />
-    <Compile Include="CloudKit\CKModifyRecordZonesOperationTest.cs" />
-    <Compile Include="CloudKit\CKModifyRecordsOperationTest.cs" />
-    <Compile Include="CloudKit\CKModifySubscriptionsOperationTest.cs" />
-    <Compile Include="CloudKit\CKQueryOperationTest.cs" />
-    <Compile Include="CloudKit\CKUserIdentityLookupInfoTest.cs" />
-    <Compile Include="CoreGraphics\ColorConversionInfoTest.cs" />
-    <Compile Include="Foundation\DimensionTest.cs" />
-    <Compile Include="UIKit\GraphicsRendererTest.cs" />
-    <Compile Include="Intents\INIntentResolutionResultTests.cs" />
-    <Compile Include="MessageUI\MessageComposeViewControllerTest.cs" />
-    <Compile Include="GameplayKit\GKAgent3DTest.cs" />
-    <Compile Include="GameplayKit\GKOctreeTests.cs" />
-    <Compile Include="GameplayKit\GKQuadTreeTests.cs" />
-    <Compile Include="GameplayKit\GKMeshGraphTests.cs" />
-    <Compile Include="GameplayKit\GKNoiseMapTests.cs" />
-    <Compile Include="GameplayKit\GKNoiseTests.cs" />
-    <Compile Include="HealthKit\CdaDocumentSampleTest.cs" />
-    <Compile Include="Metal\HeapDescriptorTest.cs" />
-    <Compile Include="CoreMedia\CMClockOrTimebaseTest.cs" />
-    <Compile Include="AVFoundation\CaptureDeviceTest.cs" />
-    <Compile Include="PassKit\LabeledValueTest.cs" />
-    <Compile Include="System.Net.Http\MessageHandlers.cs" />
-    <Compile Include="AVFoundation\PlayerItemVideoOutputTest.cs" />
-    <Compile Include="Simd\NMatrix4dTest.cs" />
-    <Compile Include="Simd\MatrixFloat2x2Test.cs" />
-    <Compile Include="Simd\MatrixFloat3x3Test.cs" />
-    <Compile Include="Simd\MatrixFloat4x3Test.cs" />
-    <Compile Include="Simd\MatrixFloat4x4Test.cs" />
-    <Compile Include="Simd\NVector3dTest.cs" />
-    <Compile Include="Simd\VectorFloat3Test.cs" />
-    <Compile Include="mono\ConfigTest.cs" />
-    <Compile Include="HttpClient\HttpClientTest.cs" />
-    <Compile Include="OpenGLES\EAGLContext.cs" />
-    <Compile Include="CoreText\CTParagraphStyleTests.cs" />
-    <Compile Include="CoreData\NSQueryGenerationTokenTest.cs" />
-    <Compile Include="EventKit\EKUIBundleTest.cs" />
-    <Compile Include="HomeKit\HMMutableSignificantTimeEventTest.cs" />
-    <Compile Include="HomeKit\HMSignificantTimeEventTest.cs" />
-    <Compile Include="UIKit\UIDragDropSessionExtensionsTest.cs" />
-    <Compile Include="SpriteKit\SKTransformNodeTest.cs" />
-    <Compile Include="Metal\MTLArgumentDescriptorTest.cs" />
-    <Compile Include="Metal\MTLPipelineBufferDescriptorTests.cs" />
-    <Compile Include="Metal\MTLPointerTypeTests.cs" />
-    <Compile Include="Metal\MTLTextureReferenceType.cs" />
-    <Compile Include="PassKit\PKPaymentRequestTest.cs" />
-    <Compile Include="AudioToolbox\AudioComponentTest.cs" />
-    <Compile Include="UIKit\DirectionalEdgeInsetsTest.cs" />
-    <Compile Include="ARKit\ARPointCloudTest.cs" />
-    <Compile Include="MetalPerformanceShaders\MPSImageHistogramTest.cs" />
-    <Compile Include="MetalPerformanceShaders\MPSImageHistogramEqualizationTest.cs" />
-    <Compile Include="MetalPerformanceShaders\MPSImageHistogramSpecificationTest.cs" />
-    <Compile Include="ModelIO\MDLAssetTest.cs" />
-    <Compile Include="ModelIO\MDLVoxelArrayTest.cs" />
-    <Compile Include="CoreML\MLMultiArrayTest.cs" />
-    <Compile Include="ModelIO\MDLTransformComponentTest.cs" />
-    <Compile Include="ModelIO\MDLCameraTest.cs" />
-    <Compile Include="ModelIO\MDLStereoscopicCameraTest.cs" />
-    <Compile Include="UIKit\UISpringLoadedInteractionSupportingTest.cs" />
-    <Compile Include="PdfKit\PdfAnnotationTest.cs" />
-    <Compile Include="FileProvider\NSFileProviderPageTest.cs" />
-    <Compile Include="AVFoundation\AVPlayerLooperTest.cs" />
-    <Compile Include="UIKit\UIPasteConfigurationSupportingTest.cs" />
-    <Compile Include="Metal\MTLTileRenderPipelineDescriptor.cs" />
-    <Compile Include="Metal\MTLTileRenderPipelineColorAttachmentDescriptorTests.cs" />
-    <Compile Include="AVFoundation\AVDepthDataTests.cs" />
-    <Compile Include="UIKit\UIContentSizeCategoryTest.cs" />
-    <Compile Include="ModelIO\MDLAnimatedValueTypesTests.cs" />
-    <Compile Include="CoreVideo\CVImageBufferTests.cs" />
-    <Compile Include="CoreVideo\CVMetalTextureCacheTests.cs" />
-    <Compile Include="StoreKit\SKCloudServiceSetupOptionsTest.cs" />
-    <Compile Include="ARKit\ARPlaneGeometryTest.cs" />
-    <Compile Include="Security\SecStatusCodeTest.cs" />
-    <Compile Include="ARKit\ARFaceGeometryTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
@@ -841,8 +334,8 @@
     <GeneratedTestInput Include="..\..\tests\test-libraries\*.h" />
     <GeneratedTestInput Include="..\..\tests\test-libraries\*.cs" />
     <GeneratedTestInput Include="..\..\tests\test-libraries\Makefile" />
-    <GeneratedTestOutput Include="ObjCRuntime\TrampolineTest.generated.cs" />
-    <GeneratedTestOutput Include="ObjCRuntime\RegistrarTest.generated.cs" />
+    <GeneratedTestOutput Include="..\..\tests\test-libraries\TrampolineTest.generated.cs" />
+    <GeneratedTestOutput Include="..\..\tests\test-libraries\RegistrarTest.generated.cs" />
   </ItemGroup>
   <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)">
     <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />

@@ -360,6 +360,8 @@ namespace XamCore.CoreFoundation {
 			
 			using (var managedData = Runtime.GetNSObject<NSData> (data)) {
 				var result = callback.Invoke (msgid, managedData);
+				// System will release returned CFData
+				result?.DangerousRetain ();
 				return result == null ? IntPtr.Zero : result.Handle;
 			}
 		}

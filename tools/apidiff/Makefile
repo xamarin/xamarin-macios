@@ -84,10 +84,10 @@ diff/ios-to-tvos.html: temp/xi/Xamarin.iOS/Xamarin.iOS.xml temp/xi/Xamarin.TVOS/
 # our api-info and api-html binaries
 
 $(MONO_API_HTML): $(wildcard $(MONO_API_HTML_DIR)/*.*)
-	$(Q_GEN) cd $(MONO_API_HTML_DIR) && $(SYSTEM_XBUILD) mono-api-html.csproj $(XBUILD_VERBOSITY)
+	$(Q_GEN) cd $(MONO_API_HTML_DIR) && $(SYSTEM_MSBUILD) mono-api-html.csproj $(MSBUILD_VERBOSITY)
 
 $(MONO_API_INFO): $(wildcard $(MONO_API_INFO_DIR)/*.*)
-	$(Q_GEN) cd $(MONO_API_INFO_DIR) && $(SYSTEM_XBUILD) mono-api-info.csproj $(XBUILD_VERBOSITY)
+	$(Q_GEN) cd $(MONO_API_INFO_DIR) && $(SYSTEM_MSBUILD) mono-api-info.csproj $(MSBUILD_VERBOSITY)
 
 # create diff files for all the assemblies per platform
 

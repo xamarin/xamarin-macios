@@ -1299,6 +1299,3 @@
 !missing-designated-initializer! NSViewController::initWithNibName:bundle: is missing an [DesignatedInitializer] attribute
 !missing-designated-initializer! NSWindow::initWithContentRect:styleMask:backing:defer: is missing an [DesignatedInitializer] attribute
 !missing-designated-initializer! NSWindowController::initWithWindow: is missing an [DesignatedInitializer] attribute
-
-## likely fixed in master (but not in xcode9.2)
-!missing-selector! NSGestureRecognizer::setState: not bound

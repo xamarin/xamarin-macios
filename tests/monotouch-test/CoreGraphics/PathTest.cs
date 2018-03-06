@@ -9,6 +9,7 @@
 
 using System;
 using System.Drawing;
+using System.Runtime.InteropServices;
 #if XAMCORE_2_0
 using Foundation;
 using CoreGraphics;
@@ -16,6 +17,7 @@ using CoreGraphics;
 using MonoTouch.CoreGraphics;
 using MonoTouch.Foundation;
 #endif
+using ObjCRuntime;
 using NUnit.Framework;
 
 #if XAMCORE_2_0
@@ -33,6 +35,9 @@ namespace MonoTouchFixtures.CoreGraphics {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class PathTest {
+
+		[DllImport (Constants.CoreFoundationLibrary)]
+		extern static nint CFGetRetainCount (IntPtr handle);
 
 		[Test]
 		public void EllipseFromRect ()
@@ -257,6 +262,23 @@ namespace MonoTouchFixtures.CoreGraphics {
 			Assert.Throws<ArgumentException> (() => CGPath.FromRoundedRect (rect, 1, 13.5f), "height");
 			using (var path = CGPath.FromRoundedRect (rect, 1, 1)) {
 				Assert.IsNotNull (path, "path");
+			}
+		}
+
+		[Test]
+		public void IncreaseRetainCountMakeMutable ()
+		{
+			// ensure that we do not crash and that the retain count is changed.
+			using (CGPath p1 = new CGPath ())
+			{
+				var count = CFGetRetainCount (p1.Handle);
+				using (var copy = p1.Copy ())
+				{
+					var newRetainCount = CFGetRetainCount (copy.Handle);
+					Assert.AreEqual (count, newRetainCount, "Ref count should not have changed.");
+					Assert.AreEqual (1, count, "Original count.");
+					Assert.AreEqual (1, newRetainCount, "New count");
+				}
 			}
 		}
 	}

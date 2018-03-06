@@ -18,4 +18,3 @@ public interface FooType<GenType>
 	[Export ("getBar:")]
 	GenType GetBar (string bar);
 }
-

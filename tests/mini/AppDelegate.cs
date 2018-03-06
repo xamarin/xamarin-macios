@@ -17,7 +17,11 @@ namespace mini
 {
 	[TestFixture]
 	class JitTests {
+#if BITCODE
+		static string[] args = new string[] { "--exclude", "!FULLAOT", "--exclude", "!BITCODE", "--verbose" };
+#else
 		static string[] args = new string[] { "--exclude", "!FULLAOT", "--verbose" };
+#endif
 
 		[Test]
 		public static void Basic () {

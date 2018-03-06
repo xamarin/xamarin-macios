@@ -122,6 +122,7 @@ namespace Xamarin
 		public string [] XmlDefinitions;
 		public bool? Profiling;
 		public string SymbolList;
+		public string ResponseFile;
 
 #pragma warning restore 649
 
@@ -502,7 +503,7 @@ namespace Xamarin
 				sb.Append (" --bitcode:").Append (Bitcode.ToString ().ToLower ());
 
 			foreach (var abt in AssemblyBuildTargets)
-				sb.Append (" --assembly-build-target ").Append (StringUtils.Quote (abt));
+				sb.Append (" --assembly-build-target=").Append (StringUtils.Quote (abt));
 
 			if (!string.IsNullOrEmpty (AotArguments))
 				sb.Append (" --aot:").Append (StringUtils.Quote (AotArguments));
@@ -519,6 +520,9 @@ namespace Xamarin
 				foreach (var xd in XmlDefinitions)
 					sb.Append (" --xml:").Append (StringUtils.Quote (xd));
 			}
+
+			if (!string.IsNullOrEmpty (ResponseFile))
+				sb.Append (" @").Append (StringUtils.Quote (ResponseFile));
 
 			return sb.ToString ();
 		}
@@ -645,7 +649,7 @@ namespace Xamarin
 			return MTouch.CompileTestAppLibrary (asm_dir, "class X {}", appName: Path.GetFileNameWithoutExtension (asm_name));
 		}
 
-		public void CreateTemporaryApp (bool hasPlist = false, string appName = "testApp", string code = null, string extraArg = "", string extraCode = null)
+		public void CreateTemporaryApp (bool hasPlist = false, string appName = "testApp", string code = null, string extraArg = "", string extraCode = null, string usings = null)
 		{
 			string testDir;
 			if (RootAssembly == null) {
@@ -657,7 +661,7 @@ namespace Xamarin
 			var app = AppPath ?? Path.Combine (testDir, appName + ".app");
 			Directory.CreateDirectory (app);
 			AppPath = app;
-			RootAssembly = MTouch.CompileTestAppExecutable (testDir, code, extraArg, Profile, appName, extraCode);
+			RootAssembly = MTouch.CompileTestAppExecutable (testDir, code, extraArg, Profile, appName, extraCode, usings);
 
 			if (hasPlist)
 				File.WriteAllText (Path.Combine (app, "Info.plist"), CreatePlist (Profile, appName));

@@ -28,6 +28,3 @@
 !missing-designated-initializer! NSString::init is missing an [DesignatedInitializer] attribute
 !missing-designated-initializer! NSThread::init is missing an [DesignatedInitializer] attribute
 !missing-designated-initializer! NSUUID::init is missing an [DesignatedInitializer] attribute
-
-### moved from tvOS-Foundation.todo
-!missing-selector! NSDictionary::initWithDictionary:copyItems: not bound

@@ -9,7 +9,7 @@ namespace xharness
 {
 	public abstract class SimpleListener : IDisposable
 	{
-		StreamWriter output_writer;
+		Log output_writer;
 		string xml_data;
 
 		TaskCompletionSource<bool> stopped = new TaskCompletionSource<bool> ();
@@ -18,7 +18,7 @@ namespace xharness
 		public IPAddress Address { get; set; }
 		public int Port { get; set; }
 		public Log Log { get; set; }
-		public LogStream TestLog { get; set; }
+		public Log TestLog { get; set; }
 		public bool AutoExit { get; set; }
 		public bool XmlOutput { get; set; }
 
@@ -26,7 +26,7 @@ namespace xharness
 		protected abstract void Start ();
 		protected abstract void Stop ();
 
-		public StreamWriter OutputWriter {
+		public Log OutputWriter {
 			get {
 				return output_writer;
 			}
@@ -38,7 +38,7 @@ namespace xharness
 			connected.Set ();
 
 			if (output_writer == null) {
-				output_writer = TestLog.GetWriter ();
+				output_writer = TestLog;
 				// a few extra bits of data only available from this side
 				var local_data =
 $@"[Local Date/Time:	{DateTime.Now}]
@@ -91,6 +91,12 @@ $@"[Local Date/Time:	{DateTime.Now}]
 		public bool WaitForCompletion (TimeSpan ts)
 		{
 			return stopped.Task.Wait (ts);
+		}
+
+		public Task CompletionTask {
+			get {
+				return stopped.Task;
+			}
 		}
 
 		public void Cancel ()

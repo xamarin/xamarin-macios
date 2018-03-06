@@ -7,6 +7,7 @@
 // Copyright 2013 Xamarin Inc. All rights reserved.
 //
 
+#if !MONOMAC
 using System;
 using System.Drawing;
 #if XAMCORE_2_0
@@ -84,3 +85,4 @@ namespace MonoTouchFixtures.UIKit {
 		}
 	}
 }
+#endif

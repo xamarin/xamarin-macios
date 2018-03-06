@@ -7,7 +7,7 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0 && !__TVOS__ && !__WATCHOS__
+#if XAMCORE_2_0 && !__TVOS__ && !__WATCHOS__ && !MONOMAC
 
 using System;
 using EventKitUI;

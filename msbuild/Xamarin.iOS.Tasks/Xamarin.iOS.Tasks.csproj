@@ -46,7 +46,6 @@
     <Compile Include="Tasks\CreateDebugConfiguration.cs" />
     <Compile Include="Tasks\CreateDebugSettings.cs" />
     <Compile Include="Tasks\CreateEmbeddedResources.cs" />
-    <Compile Include="Tasks\DetectBundleIdentifier.cs" />
     <Compile Include="Tasks\DetectSdkLocations.cs" />
     <Compile Include="Tasks\DetectSigningIdentity.cs" />
     <Compile Include="Tasks\EmbedMobileProvision.cs" />
@@ -75,6 +74,7 @@
     <Compile Include="Tasks\FindWatchOS2AppBundle.cs" />
     <Compile Include="Tasks\DetectDebugNetworkConfiguration.cs" />
     <Compile Include="Tasks\CodesignNativeLibraries.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Xamarin.iOS.Tasks.Core\Xamarin.iOS.Tasks.Core.csproj">
@@ -99,7 +99,11 @@
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="Microsoft.Build.Tasks.v4.0" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\..\packages\ILRepack.2.0.13\build\ILRepack.props" Condition="Exists('..\..\packages\ILRepack.2.0.13\build\ILRepack.props')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -107,4 +111,28 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="ILRepack" AfterTargets="CoreCompile" DependsOnTargets="CoreCompile" Inputs="@(IntermediateAssembly -> '%(FullPath)')" Outputs="$(IntermediateOutputPath)ilrepack.txt" Returns="@(MergedAssemblies)" Condition="Exists(@(IntermediateAssembly -> '%(FullPath)')) And '$(ILRepack)' != 'false'">
+    <GetReferenceAssemblyPaths BypassFrameworkInstallChecks="False" TargetFrameworkMoniker="$(TargetFrameworkMoniker)">
+      <Output TaskParameter="FullFrameworkReferenceAssemblyPaths" PropertyName="FullFrameworkReferenceAssemblyPaths" />
+    </GetReferenceAssemblyPaths>
+    <ItemGroup>
+      <MergedAssemblies Include="@(ReferenceCopyLocalPaths)" Condition="$([System.String]::new('%(FileName)').StartsWith('Xamarin')) And '%(Extension)' == '.dll'" />
+      <MergedAssemblies Include="@(ReferenceCopyLocalPaths)" Condition="$([System.String]::new('%(FileName)').StartsWith('Mono')) And '%(Extension)' == '.dll'" />
+      <ReferenceCopyLocalDirs Include="@(ReferenceCopyLocalPaths -> '%(RootDir)%(Directory)')" />
+      <ReferenceCopyLocalPaths Remove="@(MergedAssemblies)" />
+      <LibDir Include="@(ReferenceCopyLocalDirs -> Distinct())" />
+    </ItemGroup>
+    <PropertyGroup>
+      <ILRepackArgs Condition="'$(AssemblyOriginatorKeyFile)' != ''">/keyfile:"$(AssemblyOriginatorKeyFile)"</ILRepackArgs>
+    </PropertyGroup>
+    <Exec Command="&quot;$(ILRepack)&quot; @(LibDir -> '/lib:&quot;%(Identity).&quot;', ' ') $(ILRepackArgs) /out:&quot;@(IntermediateAssembly -> '%(FullPath)')&quot; &quot;@(IntermediateAssembly -> '%(FullPath)')&quot; @(MergedAssemblies -> '&quot;%(FullPath)&quot;', ' ')" WorkingDirectory="$(MSBuildProjectDirectory)\$(OutputPath)" StandardErrorImportance="high" StandardOutputImportance="low" ConsoleToMSBuild="true" ContinueOnError="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="ILRepackOutput" />
+      <Output TaskParameter="ExitCode" PropertyName="ExitCode" />
+    </Exec>
+    <Touch AlwaysCreate="true" Files="$(IntermediateOutputPath)ilrepack.txt" />
+    <Message Importance="high" Text="$(ILRepackOutput)" Condition="'$(ExitCode)' != '0'" />
+    <Delete Files="$(IntermediateOutputPath)ilrepack.txt" Condition="'$(ExitCode)' != '0'" />
+    <Error Text="$(ILRepackOutput)" Condition="'$(ExitCode)' != '0' And '$(ContinueOnError)' != 'true'" />
+    <Delete Files="@(MergedAssemblies -> '$(MSBuildProjectDirectory)\$(OutputPath)%(Filename)%(Extension)')" Condition="Exists('$(MSBuildProjectDirectory)\$(OutputPath)%(Filename)%(Extension)')" />
+  </Target>
 </Project>

@@ -7,14 +7,28 @@ namespace xharness
 	{
 		public bool Mobile { get; private set; }
 
+		// Optional
+		public MacBCLTestInfo BCLInfo { get; set; }
+		bool IsBCL => BCLInfo != null;
+
 		bool SkipProjectGeneration;
 		bool ThirtyTwoBit;
+		bool SkipSuffix;
 
-		public MacUnifiedTarget (bool mobile, bool thirtyTwoBit, bool shouldSkipProjectGeneration = false) : base ()
+		public MacUnifiedTarget (bool mobile, bool thirtyTwoBit, bool shouldSkipProjectGeneration = false, bool skipSuffix = false) : base ()
 		{
 			Mobile = mobile;
 			ThirtyTwoBit = thirtyTwoBit;
 			SkipProjectGeneration = shouldSkipProjectGeneration;
+			SkipSuffix = skipSuffix;
+		}
+
+		protected override void CalculateName ()
+		{
+			base.CalculateName ();
+
+			if (IsBCL)
+				Name = Name + BCLInfo.FlavorSuffix;
 		}
 
 		public override bool ShouldSkipProjectGeneration
@@ -29,7 +43,15 @@ namespace xharness
 			get {
 				if (SkipProjectGeneration)
 					return "";
-				return "-unified" + (Mobile ? "" : "XM45") + (ThirtyTwoBit ? "-32" : "");
+				string suffix = (Mobile ? "" : "XM45") + (ThirtyTwoBit ? "-32" : "");
+				return "-unified" + (IsBCL ? "" : suffix);
+			}
+		}
+
+		public override string MakefileWhereSuffix {
+			get {
+				string suffix = (Mobile ? "" : "XM45") + (ThirtyTwoBit ? "32" : "");
+				return "unified" + (IsBCL ? "" : suffix);
 			}
 		}
 			
@@ -78,12 +100,6 @@ namespace xharness
 		public override string Platform {
 			get {
 				return "mac";
-			}
-		}
-
-		public override string MakefileWhereSuffix {
-			get {
-				return "unified" + (Mobile ? "" : "XM45") + (ThirtyTwoBit ? "32" : "");
 			}
 		}
 

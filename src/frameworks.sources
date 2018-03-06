@@ -145,6 +145,7 @@ APPKIT_SOURCES = \
 	AppKit/NSSavePanel.cs \
 	AppKit/NSWorkspace.cs \
 	AppKit/NSCollectionView.cs \
+	AppKit/NSCollectionViewDelegate.cs \
 	AppKit/NSTextTableBlock.cs \
 	AppKit/NSMutableFontCollection.cs \
 	AppKit/NSCollectionViewLayout.cs \
@@ -1524,17 +1525,6 @@ WKWEBKIT_SOURCES = \
 	WKWebKit/WKWindowFeatures.cs \
 
 #
-# AppleTls
-#
-
-APPLETLS_SOURCES = \
-	Security/Tls/AppleTlsContext.cs \
-	Security/Tls/AppleTlsProvider.cs \
-	Security/Tls/AppleTlsStream.cs \
-	Security/Tls/AppleCertificateHelper.cs \
-	Security/Tls/OldTlsProvider.cs \
-
-#
 # SHARED_[CORE_]SOURCES: source code needed in core.dll or the platform assembly
 # that's not from any framework.
 #
@@ -1606,8 +1596,7 @@ SHARED_SOURCES = \
 	ObjCRuntime/ThreadSafeAttribute.cs \
 	ObjCRuntime/TransientAttribute.cs \
 	ObjCRuntime/TypeConverter.cs \
-	ObjCRuntime/UserDelegateTypeAttribute.cs \
-	$(APPLETLS_SOURCES)
+	ObjCRuntime/UserDelegateTypeAttribute.cs
 
 #
 # Here we list the frameworks each platform contains.

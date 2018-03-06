@@ -54,7 +54,7 @@ namespace XamCore.Foundation {
 			if (dt.Kind == DateTimeKind.Unspecified)
 				throw new ArgumentException ("DateTimeKind.Unspecified cannot be safely converted");
 
-			return FromTimeIntervalSinceReferenceDate ((dt.ToUniversalTime ().Ticks - NSDATE_TICKS) / TimeSpan.TicksPerSecond);
+			return FromTimeIntervalSinceReferenceDate ((dt.ToUniversalTime ().Ticks - NSDATE_TICKS) / (double) TimeSpan.TicksPerSecond);
 		}
 #else
 		public static implicit operator DateTime (NSDate d)
@@ -72,7 +72,7 @@ namespace XamCore.Foundation {
 
 		public static implicit operator NSDate (DateTime dt)
 		{
-			return FromTimeIntervalSinceReferenceDate ((dt.ToUniversalTime ().Ticks - NSDATE_TICKS) / TimeSpan.TicksPerSecond);
+			return FromTimeIntervalSinceReferenceDate ((dt.ToUniversalTime ().Ticks - NSDATE_TICKS) / (double) TimeSpan.TicksPerSecond);
 		}
 
 		public override string ToString ()

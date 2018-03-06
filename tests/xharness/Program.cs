@@ -67,6 +67,9 @@ namespace xharness
 					}
 				},
 				{ "markdown-summary=", "The path where a summary (in Markdown format) will be written.", (v) => harness.MarkdownSummaryPath = v },
+				{ "periodic-command=", "A command to execute periodically.", (v) => harness.PeriodicCommand = v },
+				{ "periodic-command-arguments=", "Arguments to the command to execute periodically.", (v) => harness.PeriodicCommandArguments = v },
+				{ "periodic-interval=", "An interval (in minutes) between every attempt to execute the periodic command.", (v) => harness.PeriodicCommandInterval = TimeSpan.FromMinutes (double.Parse (v)) },
 				{ "include-system-permission-tests:", "If tests that require system permissions (which could cause the OS to launch dialogs that hangs the test) should be executed or not. Default is to include such tests.", (v) => harness.IncludeSystemPermissionTests = ParseBool (v, "include-system-permission-tests") },
 			};
 

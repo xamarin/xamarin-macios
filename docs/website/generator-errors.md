@@ -70,7 +70,9 @@ This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug repo
 
 ### <a name='BI1013'/>BI1013: Unsupported type for Fields (string), you probably meant NSString
 
-### <a name='BI1014'/>BI1014: Unsupported type for Fields: *
+### <a name='BI1014'/>BI1014: Unsupported type for Fields: * for '*'.
+
+Please go to [[FieldAttribute]](https://developer.xamarin.com/guides/cross-platform/macios/binding/binding-types-reference/#FieldAttribute) documentation to see supported types.
 
 ### <a name='BI1015'/>BI1015: In class * You specified the Events property, but did not bind those to names with Delegates
 
@@ -172,6 +174,8 @@ This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug repo
 
 ### <a name='BI1061'/>BI1061: The attribute '{attribute}' found on '{member}' is not a valid binding attribute. Please remove this attribute.
 
+### <a name='BI1062'/>BI1062: The member '*' contains ref/out parameters and must not be decorated with [Async].
+
 # BI11xx: warnings
 
 <!-- 11xx: warnings -->
@@ -207,6 +211,8 @@ This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug repo
 ### <a name='BI1115'/>BI1115: The parameter '*' in the delegate '*' does not have a [CCallback] or [BlockCallback] attribute. Defaulting to [CCallback].
 
 ### <a name='BI1116'/>BI1116: The parameter '*' in the delegate '*' does not have a [CCallback] or [BlockCallback] attribute. Defaulting to [CCallback]. Declare a custom delegate instead of using System.Action / System.Func and add the attribute on the corresponding parameter.
+
+### <a name='BI1117'/>BI1117: The member '*' is decorated with [Static] and its container class * is decorated with [Category] this leads to hard to use code. Please inline * into * class.
 
 <!-- 2xxx: reserved -->
 <!-- 3xxx: reserved -->

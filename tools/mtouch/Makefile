@@ -23,6 +23,8 @@ LINKER_SOURCES = \
 	$(MONOLINKER)/Mono.Linker/AssemblyResolver.cs			\
 	$(MONOLINKER)/Mono.Linker/I18nAssemblies.cs			\
 	$(MONOLINKER)/Mono.Linker/IXApiVisitor.cs			\
+	$(MONOLINKER)/Mono.Linker/ILogger.cs				\
+	$(MONOLINKER)/Mono.Linker/ConsoleLogger.cs			\
 	$(MONOLINKER)/Mono.Linker/LinkContext.cs			\
 	$(MONOLINKER)/Mono.Linker/LoadException.cs			\
 	$(MONOLINKER)/Mono.Linker/MarkException.cs			\
@@ -296,8 +298,8 @@ simlauncher$(5)$(1): simlauncher.m $(TOP)/runtime/.libs/ios/libxamarin.a $(BUILD
 		-L$(BUILD_DESTDIR)/simulator$(4)/lib/ \
 		-I$(TOP)/runtime \
 		-I$(BUILD_DESTDIR)/simulator$(4)/include/mono-2.0 \
-		-I$(TOP)/builds/simulator$(4)/eglib/src \
-		-I$(MONO_PATH)/eglib/src \
+		-I$(TOP)/builds/simulator$(4)/mono/eglib \
+		-I$(MONO_PATH)/mono/eglib \
 		$(BUILD_DESTDIR)/simulator$(4)/lib/libmono$(3)-2.0.a \
 		$(foreach u,$(UNREFERENCED_SYMBOLS),-u $u)  \
 		$(TOP)/runtime/.libs/ios/libapp.a \
@@ -306,8 +308,8 @@ simlauncher$(5)$(1): simlauncher.m $(TOP)/runtime/.libs/ios/libxamarin.a $(BUILD
 
 endef
 
-$(eval $(call SimlauncherTemplate,-sgen,$(BUILD_DESTDIR)/simulator86/lib/libmono-profiler-log.a -u _mono_profiler_startup -DXAMCORE_2_0 Xamarin.iOS.registrar.ios.a,sgen,86,32))
-$(eval $(call SimlauncherTemplate,-sgen,$(BUILD_DESTDIR)/simulator64/lib/libmono-profiler-log.a -u _mono_profiler_startup -DXAMCORE_2_0 Xamarin.iOS.registrar.ios.a,sgen,64,64))
+$(eval $(call SimlauncherTemplate,-sgen,$(BUILD_DESTDIR)/simulator86/lib/libmono-profiler-log.a -u _mono_profiler_init_log -DXAMCORE_2_0 Xamarin.iOS.registrar.ios.a,sgen,86,32))
+$(eval $(call SimlauncherTemplate,-sgen,$(BUILD_DESTDIR)/simulator64/lib/libmono-profiler-log.a -u _mono_profiler_init_log -DXAMCORE_2_0 Xamarin.iOS.registrar.ios.a,sgen,64,64))
 
 IOS_DEFINES = -d:MONOTOUCH -d:MTOUCH $(APPLETLS_DEFINES)
 
@@ -322,13 +324,6 @@ MTOUCH_COMPILE_ARGS = -unsafe $(IOS_DEFINES) -r:$(MONO_CECIL_DLL) -r:$(MONO_CECI
 bin/Debug/mtouch.exe: $(MTOUCH_COMPILE_DEPS)
 	$(Q) mkdir -p bin/Debug
 	$(Q_CSC) $(SYSTEM_CSC) $(MTOUCH_COMPILE_ARGS) -out:$@ -d:DEV
-
-SdkVersions.cs: SdkVersions.cs.in Makefile $(TOP)/Make.config
-	$(Q_GEN) sed \
-		-e 's/@IOS_SDK_VERSION@/$(IOS_SDK_VERSION)/g' -e 's/@WATCHOS_SDK_VERSION@/$(WATCH_SDK_VERSION)/' -e 's/@TVOS_SDK_VERSION@/$(TVOS_SDK_VERSION)/' -e 's/@OSX_SDK_VERSION@/$(OSX_SDK_VERSION)/' \
-		-e 's/@MIN_IOS_SDK_VERSION@/$(MIN_IOS_SDK_VERSION)/g' -e 's/@MIN_WATCHOS_SDK_VERSION@/$(MIN_WATCHOS_SDK_VERSION)/' -e 's/@MIN_TVOS_SDK_VERSION@/$(MIN_TVOS_SDK_VERSION)/' -e 's/@MIN_OSX_SDK_VERSION@/$(MIN_OSX_SDK_VERSION)/' \
-		-e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' \
-		$< > $@ 
 
 # bin/Makefile/mtouch.exe is what we build from the makefile (and end up releasing)
 bin/Makefile/mtouch.exe: $(MTOUCH_COMPILE_DEPS)
@@ -462,6 +457,7 @@ clean-local::
 	$(SYSTEM_XBUILD) /t:Clean /p:Configuration=$(CECIL_CONFIG) $(CECIL_PATH)/symbols/mdb/Mono.Cecil.Mdb.csproj
 
 include $(TOP)/mk/rules.mk
+include ../common/Make.common
 
 # make will automatically consider files created in chained implicit rules as temporary files, and delete them afterwards
 # marking those files as .SECONDARY will prevent that deletion.

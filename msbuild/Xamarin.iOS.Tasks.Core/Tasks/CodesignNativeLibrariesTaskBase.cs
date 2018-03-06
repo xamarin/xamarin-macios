@@ -75,7 +75,7 @@ namespace Xamarin.iOS.Tasks
 
 		string GenerateCommandLineArguments (string dylib)
 		{
-			var args = new ProcessArgumentBuilder ();
+			var args = new CommandLineArgumentBuilder ();
 
 			args.Add ("-v");
 			args.Add ("--force");

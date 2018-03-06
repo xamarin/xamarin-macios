@@ -28,7 +28,11 @@ namespace MonoTouchFixtures.AudioToolbox {
 		public void GetSetComponentList ()
 		{
 			TestRuntime.AssertXcodeVersion (9, 0);
+#if !MONOMAC
 			var types = new List<AudioTypeOutput> { AudioTypeOutput.Generic, AudioTypeOutput.Remote, AudioTypeOutput.VoiceProcessingIO };
+#else
+			var types = new List<AudioTypeOutput> { AudioTypeOutput.Generic, AudioTypeOutput.Default, AudioTypeOutput.HAL, AudioTypeOutput.System, AudioTypeOutput.VoiceProcessingIO };
+#endif
 			foreach (var t in types) {
 				var resources = new ResourceUsageInfo ();
 				resources.IOKitUserClient = new string[] { "CustomUserClient1" };
@@ -57,7 +61,11 @@ namespace MonoTouchFixtures.AudioToolbox {
 		public void GetSetNullComponentList ()
 		{
 			TestRuntime.AssertXcodeVersion (9, 0);
+#if !MONOMAC
 			var types = new List<AudioTypeOutput> { AudioTypeOutput.Generic, AudioTypeOutput.Remote, AudioTypeOutput.VoiceProcessingIO };
+#else
+			var types = new List<AudioTypeOutput> { AudioTypeOutput.Generic, AudioTypeOutput.Default, AudioTypeOutput.HAL, AudioTypeOutput.System, AudioTypeOutput.VoiceProcessingIO };
+#endif
 			foreach (var t in types) {
 				var resources = new ResourceUsageInfo ();
 				resources.IOKitUserClient = new string[] { "CustomUserClient1" };

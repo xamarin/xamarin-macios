@@ -26,10 +26,16 @@ namespace xharness
 		public IEnumerable<SimDevice> AvailableDevices => available_devices;
 		public IEnumerable<SimDevicePair> AvailableDevicePairs => available_device_pairs;
 
-		public async Task LoadAsync (Log log)
+		public async Task LoadAsync (Log log, bool force = false)
 		{
-			if (loaded)
-				return;
+			if (loaded) {
+				if (!force)
+					return;
+				supported_runtimes.Reset ();
+				supported_device_types.Reset ();
+				available_devices.Reset ();
+				available_device_pairs.Reset ();
+			}
 			loaded = true;
 
 			await Task.Run (async () =>
@@ -497,10 +503,14 @@ namespace xharness
 			}
 		}
 
-		public async Task LoadAsync (Log log, bool extra_data = false, bool removed_locked = false)
+		public async Task LoadAsync (Log log, bool extra_data = false, bool removed_locked = false, bool force = false)
 		{
-			if (loaded)
-				return;
+			if (loaded) {
+				if (!force)
+					return;
+				connected_devices.Reset ();
+			}
+
 			loaded = true;
 
 			await Task.Run (async () =>
@@ -511,7 +521,7 @@ namespace xharness
 						process.StartInfo.FileName = Harness.MlaunchPath;
 						process.StartInfo.Arguments = string.Format ("--sdkroot {0} --listdev={1} {2} --output-format=xml", Harness.XcodeRoot, tmpfile, extra_data ? "--list-extra-data" : string.Empty);
 						log.WriteLine ("Launching {0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
-						var rv = await process.RunAsync (log, false, timeout: TimeSpan.FromSeconds (30));
+						var rv = await process.RunAsync (log, false, timeout: TimeSpan.FromSeconds (120));
 						if (!rv.Succeeded)
 							throw new Exception ("Failed to list devices.");
 						log.WriteLine ("Result:");
@@ -521,6 +531,7 @@ namespace xharness
 						doc.LoadWithoutNetworkAccess (tmpfile);
 
 						foreach (XmlNode dev in doc.SelectNodes ("/MTouch/Device")) {
+							var usable = dev.SelectSingleNode ("IsUsableForDebugging")?.InnerText;
 							Device d = new Device
 							{
 								DeviceIdentifier = dev.SelectSingleNode ("DeviceIdentifier")?.InnerText,
@@ -530,10 +541,18 @@ namespace xharness
 								BuildVersion = dev.SelectSingleNode ("BuildVersion")?.InnerText,
 								ProductVersion = dev.SelectSingleNode ("ProductVersion")?.InnerText,
 								ProductType = dev.SelectSingleNode ("ProductType")?.InnerText,
+								InterfaceType = dev.SelectSingleNode ("InterfaceType")?.InnerText,
+								IsUsableForDebugging = usable == null ? (bool?) null : ((bool?) (usable == "True")),
 							};
 							bool.TryParse (dev.SelectSingleNode ("IsLocked")?.InnerText, out d.IsLocked);
-							if (removed_locked && d.IsLocked)
+							if (removed_locked && d.IsLocked) {
+								log.WriteLine ($"Skipping device {d.Name} ({d.DeviceIdentifier}) because it's locked.");
 								continue;
+							}
+							if (d.IsUsableForDebugging.HasValue && !d.IsUsableForDebugging.Value) {
+								log.WriteLine ($"Skipping device {d.Name} ({d.DeviceIdentifier}) because it's not usable for debugging.");
+								continue;
+							}
 							connected_devices.Add (d);
 						}
 					}
@@ -570,6 +589,7 @@ namespace xharness
 
 	public enum DevicePlatform
 	{
+		Unknown,
 		iOS,
 		tvOS,
 		watchOS,
@@ -584,9 +604,28 @@ namespace xharness
 		public string BuildVersion;
 		public string ProductVersion;
 		public string ProductType;
+		public string InterfaceType;
+		public bool? IsUsableForDebugging;
 		public bool IsLocked;
 
 		public string UDID { get { return DeviceIdentifier; } set { DeviceIdentifier = value; } }
+
+		// Add a speed property that can be used to sort a list of devices according to speed.
+		public int DebugSpeed {
+			get {
+				var itype = InterfaceType?.ToLowerInvariant ();
+				if (itype == "usb")
+					return 0; // fastest
+
+				if (itype == null)
+					return 1; // mlaunch doesn't know - not sure when this can happen, but wifi is quite slow, so maybe this faster
+
+				if (itype == "wifi")
+					return 2; // wifi is quite slow
+
+				return 3; // Anything else is probably slower than wifi (e.g. watch).
+			}
+		}
 
 		public DevicePlatform DevicePlatform {
 			get {
@@ -600,13 +639,28 @@ namespace xharness
 				case "Watch":
 					return DevicePlatform.watchOS;
 				default:
-					throw new NotImplementedException ();
+					return DevicePlatform.Unknown;
 				}
 			}
 		}
 		
 		public bool Supports64Bit {
 			get { return Architecture == Architecture.ARM64; }
+		}
+
+		public bool Supports32Bit {
+			get {
+				switch (DevicePlatform) {
+				case DevicePlatform.iOS:
+					return Version.Parse (ProductVersion).Major < 11;
+				case DevicePlatform.tvOS:
+					return false;
+				case DevicePlatform.watchOS:
+					return true;
+				default:
+					throw new NotImplementedException ();
+				}
+			}
 		}
 
 		public Architecture Architecture {
@@ -724,6 +778,12 @@ namespace xharness
 		void WaitForCompletion ()
 		{
 			completed.Task.Wait ();
+		}
+
+		public void Reset ()
+		{
+			completed = new TaskCompletionSource<bool> ();
+			list.Clear ();
 		}
 
 		public IEnumerator<T> GetEnumerator ()

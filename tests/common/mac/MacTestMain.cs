@@ -25,10 +25,10 @@ namespace Xamarin.Mac.Tests
 #if !NO_GUI_TESTING
 			NSApplication.Init();
 #endif
-			RunTests ();
+			RunTests (args);
 		}
 
-		static void RunTests ()
+		static void RunTests (string [] original_args)
 		{
 			TestRunner.MainLoop = new NSRunLoopIntegration ();
 			List<string> args = new List<string> () { typeof (MainClass).Assembly.Location, "-labels", "-noheader" };
@@ -40,6 +40,11 @@ namespace Xamarin.Mac.Tests
 #if ADD_BCL_EXCLUSIONS
 			args.Add ("-exclude=MacNotWorking,MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingInterpreter");
 #endif
+
+			// Skip arguments added by VSfM/macOS when running from the IDE
+			foreach (var arg in original_args)
+				if (!arg.StartsWith ("-psn_", StringComparison.Ordinal))
+					args.Add (arg);
 
 			TestRunner.Main (args.ToArray ());
 

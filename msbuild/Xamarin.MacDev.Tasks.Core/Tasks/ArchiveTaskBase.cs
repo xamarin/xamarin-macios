@@ -86,7 +86,7 @@ namespace Xamarin.MacDev.Tasks
 
 		protected static int Ditto (string source, string destination)
 		{
-			var args = new ProcessArgumentBuilder ();
+			var args = new CommandLineArgumentBuilder ();
 
 			args.Add ("-rsrc");
 
@@ -100,10 +100,11 @@ namespace Xamarin.MacDev.Tasks
 				CreateNoWindow = true,
 			};
 
-			var process = Process.Start (psi);
-			process.WaitForExit ();
+			using (var process = Process.Start (psi)) {
+				process.WaitForExit ();
 
-			return process.ExitCode;
+				return process.ExitCode;
+			}
 		}
 	}
 }

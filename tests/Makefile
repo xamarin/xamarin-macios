@@ -12,7 +12,28 @@ MTOUCH=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/mtouch
 UNIT_SERVER_DIR=$(TOUCH_UNIT_PATH)/Touch.Server
 UNIT_SERVER=$(UNIT_SERVER_DIR)/bin/Debug/Touch.Server.exe
 TEST_SUITES=monotouch-test link\ sdk link\ all dont\ link framework-test mini
-BCL_TEST_SUITES=mscorlib System System.Core System.Data System.Net.Http System.Numerics System.Runtime.Serialization System.Transactions System.Web.Services System.Xml System.Xml.Linq Mono.Security System.ComponentModel.DataAnnotations System.Json System.ServiceModel.Web Mono.Data.Sqlite
+BCL_TEST_SUITES=mscorlib \
+	System \
+	System.Core \
+	System.Data \
+	System.Net.Http \
+	System.Numerics \
+	System.Runtime.Serialization \
+	System.Transactions \
+	System.Web.Services \
+	System.Xml \
+	System.Xml.Linq \
+	Mono.Security \
+	System.ComponentModel.DataAnnotations \
+	System.Json \
+	System.ServiceModel.Web \
+	Mono.Data.Sqlite \
+	Mono.Data.Tds \
+	System.IO.Compression \
+	System.IO.Compression.FileSystem \
+	Mono.CSharp \
+	System.Security \
+
 ALL_TEST_SUITES=$(TEST_SUITES) $(BCL_TEST_SUITES)
 EXEC_UNIT_SERVER=XCODE_DEVELOPER_ROOT=$(XCODE_DEVELOPER_ROOT) MONOTOUCH_ROOT=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX) $(SYSTEM_MONO) --debug $(UNIT_SERVER)
 
@@ -163,7 +184,7 @@ Makefile-mac.inc: xharness/xharness.exe
 
 -include Makefile-mac.inc
 
-$(TOP)/tools/mtouch/SdkVersions.cs: $(TOP)/tools/mtouch/SdkVersions.cs.in
+$(TOP)/tools/mtouch/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
 	@$(MAKE) -C $(TOP)/tools/mtouch SdkVersions.cs
 
 .stamp-src-project-files:
@@ -171,7 +192,7 @@ $(TOP)/tools/mtouch/SdkVersions.cs: $(TOP)/tools/mtouch/SdkVersions.cs.in
 	@touch $@
 
 xharness/xharness.exe: $(wildcard xharness/*.cs) xharness/xharness.csproj $(TOP)/tools/mtouch/SdkVersions.cs test.config test-system.config .stamp-src-project-files
-	$(Q_GEN) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
+	$(Q_GEN) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
 
 killall:
 	@killall "iPhone Simulator" >/dev/null 2>&1 || true
@@ -184,6 +205,13 @@ test-ios-tasks:
 	cd $(NUNIT_MSBUILD_DIR) && $(SYSTEM_MONO) ../nunit-console.exe ../../../../msbuild/tests/bin/Xamarin.iOS.Tasks.Tests.dll -xml=TestResults_Xamarin.iOS.Tasks.Tests.xml -labels $(TEST_FIXTURE) || touch .failed-stamp
 	@[[ -z "$$BUILD_REPOSITORY" ]] || ( xsltproc $(TOP)/tests/HtmlTransform.xslt $(NUNIT_MSBUILD_DIR)/TestResults_Xamarin.iOS.Tasks.Tests.xml > $(TOP)/tests/index.html && echo "@MonkeyWrench: AddFile: $$PWD/index.html" )
 	@if test -e $(NUNIT_MSBUILD_DIR)/.failed-stamp; then rm $(NUNIT_MSBUILD_DIR)/.failed-stamp; exit 1; fi
+
+test-install-sources:
+	$(SYSTEM_XBUILD) $(TOP)/tools/install-source/InstallSourcesTests/InstallSourcesTests.csproj
+	cd $(NUNIT_MSBUILD_DIR) && $(SYSTEM_MONO) ../nunit-console.exe ../../../../tools/install-source/InstallSourcesTests/bin/Release/InstallSourcesTests.dll -xml=TestResults_InstallSourcesTests.xml -labels $(TEST_FIXTURE) || touch .failed-stamp
+	@[[ -z "$$BUILD_REPOSITORY" ]] || ( xsltproc $(TOP)/tests/HtmlTransform.xslt $(NUNIT_MSBUILD_DIR)/TestResults_InstallSourcesTests.xml > $(TOP)/tests/index.html && echo "@MonkeyWrench: AddFile: $$PWD/index.html" )
+	@if test -e $(NUNIT_MSBUILD_DIR)/.failed-stamp; then rm $(NUNIT_MSBUILD_DIR)/.failed-stamp; exit 1; fi
+
 
 ifdef ENABLE_XAMARIN
 ifdef INCLUDE_IOS
@@ -231,25 +259,22 @@ endif
 #XI
 ifdef INCLUDE_IOS
 wrench-mtouch:
-	cd mtouch && $(MAKE)
-	git clean -xfdq
+	@echo Not here anymore
 
 wrench-btouch:
-	cd generator && $(MAKE) 
-	cd generator && git clean -xfdq
+	@echo Not here anymore
 
 wrench-build-unit-test-dev:
-	$(MAKE) build-dev-bots
-	git clean -xfdq
+	@echo Not here anymore
 
 wrench-sim-linksdk:
-	$(Q) $(MAKE) wrench-sim-link\ sdk
+	@echo Not here anymore
 
 wrench-sim-linkall:
-	$(Q) $(MAKE) wrench-sim-link\ all
+	@echo Not here anymore
 
 wrench-sim-dontlink:
-	$(Q) $(MAKE) wrench-sim-dont\ link
+	@echo Not here anymore
 
 else
 wrench-mtouch wrench-btouch wrench-build-unit-test-dev:
@@ -259,9 +284,7 @@ endif
 ## XM
 ifdef INCLUDE_MAC
 wrench-mac-dontlink:
-	$(Q) $(MAKE) run-mac-dontlink
-	$(Q) $(MAKE) clean-mac-dontlink
-	git clean -xfdq
+	@echo Not here anymore
 
 wrench-mac-mmp:
 	@echo Now part of wrench-mac-mmptest
@@ -276,29 +299,19 @@ wrench-mac-drm:
 	@echo "The DRM tests have all been removed."
 
 wrench-mac-api:
-	$(Q) $(MAKE) run-mac-apitest
-	$(Q) $(MAKE) clean-mac-apitest
-	git clean -xfdq
+	@echo Not here anymore
 
 wrench-mac-mmptest:
-	$(Q) $(MAKE) run-mac-mmptest
-	$(Q) $(MAKE) clean-mac-mmptest
-	$(Q) $(MAKE) -C mmptest/regression
-	git clean -xfdq
+	@echo Not here anymore
 
 wrench-mac-msbuild:
-	$(Q) $(MAKE) run-mac-msbuild
-	$(Q) $(MAKE) clean-mac-msbuild
-	git clean -xfdq
+	@echo Not here anymore
 
 wrench-mac-binding-project:
-	cd mac-binding-project && $(MAKE)
-	cd mac-binding-project && git clean -xfdq
+	@echo Not here anymore
 
 wrench-mac-introspection:
-	$(Q) $(MAKE) run-mac-introspection
-	$(Q) $(MAKE) clean-mac-introspection
-	git clean -xfdq
+	@echo Not here anymore
 
 wrench-mac-xammac_tests:
 	@# This entire target can be removed when merging to master.
@@ -311,13 +324,7 @@ wrench-mac-%:
 endif
 
 wrench-msbuild:
-	$(MAKE) -C $(TOP)/msbuild .stamp-test-xml
-ifdef INCLUDE_IOS
-	$(MAKE) test-ios-tasks
-else
-	@echo "iOS tests have been disabled [$@]"
-endif
-	cd $(TOP)/msbuild && git clean -xfdq
+	@echo Not here anymore
 
 wrench-docs:
 ifdef ENABLE_XAMARIN
@@ -332,31 +339,20 @@ endif
 
 # the wrenchhelper-* targets are generated.
 wrench-sim-%:
-	git clean -xfdq
-ifdef INCLUDE_IOS
-	unset LD_LIBRARY_PATH && script -q /dev/null $(MAKE) "wrenchhelper-$*"
-else
-	@echo "iOS tests have been disabled [$@]"
-endif	
+	@echo Not here anymore
 
 wrench-bcl-sim-%:
-	git clean -xfdq
-ifdef INCLUDE_IOS
-	unset LD_LIBRARY_PATH && script -q /dev/null $(MAKE) "wrenchhelper-$*"
-else
-	@echo "iOS tests have been disabled [$@]"
-endif	
+	@echo Not here anymore
 
 wrench-%:
-	git clean -xfdq
-ifdef INCLUDE_IOS
-	touch "exec-$*.log"
-	echo "@MonkeyWrench: AddFile: $(PWD)/exec-$*.log"
-	unset LD_LIBRARY_PATH && script -q /dev/null $(MAKE) "run-$*"
-	echo "Test succeeded"
-else
-	@echo "iOS tests have been disabled [$@]"
-endif
+	@echo Not here anymore
+
+wrench-jenkins: xharness/xharness.exe
+	$(Q) rm -f $@-failed.stamp
+	$(Q) ulimit -n 4096 && $(SYSTEM_MONO) --debug $< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --label run-all-tests,skip-ios-device-tests --markdown-summary=$(abspath $(CURDIR))/TestSummary.md $(TESTS_PERIODIC_COMMAND) || echo "$$?" > $@-failed.stamp
+	@echo "@MonkeyWrench: SetSummary: <br/>`cat $(abspath $(CURDIR))/TestSummary.md | awk 1 ORS='<br/>'`"
+	@echo "@MonkeyWrench: AddFile: $(abspath $(CURDIR))/TestSummary.md"
+	$(Q) if test -e $@-failed.stamp; then EC=`cat $@-failed.stamp`; rm -f $@-failed.stamp; exit $$EC; fi
 
 wrench-xtro:
 	git clean -xfdq
@@ -373,7 +369,7 @@ runner: xharness/xharness.exe
 # This makefile target will run the device tests using the Xamarin.iOS version
 # installed on the system.
 vsts-device-tests: xharness/xharness.exe
-	$(Q) $(SYSTEM_MONO) --debug $< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --use-system:true --label=skip-mac-tests,skip-ios-simulator-tests,skip-ios-msbuild-tests,skip-system-permission-tests,run-ios-device-tests,run-bcl-tests --markdown-summary=$(CURDIR)/TestSummary.md
+	$(Q) ulimit -n 4096 && $(SYSTEM_MONO) --debug $< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --use-system:true --label=skip-mac-tests,skip-ios-simulator-tests,skip-ios-msbuild-tests,skip-system-permission-tests,run-ios-device-tests,run-bcl-tests --markdown-summary=$(CURDIR)/TestSummary.md $(TESTS_PERIODIC_COMMAND)
 
 ifdef ENABLE_XAMARIN
 wrench-launch-external wrench-report-external:

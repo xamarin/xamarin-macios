@@ -8,7 +8,7 @@
 // Copyright 2017 Microsoft.
 //
 
-#if !__TVOS__ && !__WATCHOS__
+#if !__TVOS__ && !__WATCHOS__ && !MONOMAC
 
 using System;
 #if XAMCORE_2_0

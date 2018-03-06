@@ -716,6 +716,9 @@ namespace XamCore.AppKit {
 		[Lion, Field ("NSApplicationLaunchRemoteNotificationKey")]
 		NSString LaunchRemoteNotificationKey { get; }
 
+		[Lion, Field ("NSApplicationLaunchUserNotificationKey")]
+		NSString LaunchUserNotificationKey { get; }
+
 		[Notification, Field ("NSApplicationDidFinishRestoringWindowsNotification")]
 		NSString DidFinishRestoringWindowsNotification { get; }
 
@@ -3005,9 +3008,15 @@ namespace XamCore.AppKit {
 		[Export ("collectionView:draggingImageForItemsAtIndexPaths:withEvent:offset:")]
 		NSImage GetDraggingImage (NSCollectionView collectionView, NSSet indexPaths, NSEvent theEvent, ref CGPoint dragImageOffset);
 
+#if !XAMCORE_4_0
 		[Mac (10,11)]
 		[Export ("collectionView:validateDrop:proposedIndexPath:dropOperation:")]
-		NSDragOperation ValidateDrop (NSCollectionView collectionView, [Protocolize (4)] NSDraggingInfo draggingInfo, out NSIndexPath proposedDropIndexPath, out NSCollectionViewDropOperation proposedDropOperation);
+		NSDragOperation ValidateDropOperation (NSCollectionView collectionView, [Protocolize (4)] NSDraggingInfo draggingInfo, ref NSIndexPath proposedDropIndexPath, ref NSCollectionViewDropOperation proposedDropOperation);
+#else
+		[Mac (10,11)]
+		[Export ("collectionView:validateDrop:proposedIndexPath:dropOperation:")]
+		NSDragOperation ValidateDrop (NSCollectionView collectionView, INSDraggingInfo draggingInfo, ref NSIndexPath proposedDropIndexPath, ref NSCollectionViewDropOperation proposedDropOperation);
+#endif
 
 		[Mac (10,11)]
 		[Export ("collectionView:acceptDrop:indexPath:dropOperation:")]
@@ -7448,7 +7457,7 @@ namespace XamCore.AppKit {
 		Selector Action { get; set; }
 
 		[Export ("state")]
-		NSGestureRecognizerState State { get; }
+		NSGestureRecognizerState State { get; [Advice ("Only subclasses of 'NSGestureRecognizer' can set this property.")] set; }
 
 		[Export ("delegate", ArgumentSemantic.Weak)]
 		[NullAllowed]
@@ -7483,7 +7492,7 @@ namespace XamCore.AppKit {
 		bool DelaysRotationEvents { get; set; }
 
 		[Export ("locationInView:")]
-		CGPoint LocationInView (NSView view);
+		CGPoint LocationInView ([NullAllowed] NSView view);
 
 		[Export ("reset")]
 		void Reset ();
@@ -20103,6 +20112,7 @@ namespace XamCore.AppKit {
 		void RecalculateKeyViewLoop ();
 	
 		[Export ("toolbar")]
+		[NullAllowed]
 		NSToolbar Toolbar { get; set; }
 	
 		[Export ("toggleToolbarShown:")]
@@ -20703,10 +20713,10 @@ namespace XamCore.AppKit {
 		bool OpenFile (string fullPath);
 		
 		[Export ("openFile:withApplication:"), ThreadSafe]
-		bool OpenFile (string fullPath, string appName);
+		bool OpenFile (string fullPath, [NullAllowed] string appName);
 		
 		[Export ("openFile:withApplication:andDeactivate:"), ThreadSafe]
-		bool OpenFile (string fullPath, string appName, bool deactivate);
+		bool OpenFile (string fullPath, [NullAllowed] string appName, bool deactivate);
 		
 		[Export ("openFile:fromImage:at:inView:"), ThreadSafe]
 		bool OpenFile (string fullPath, NSImage anImage, CGPoint point, NSView aView);
@@ -22296,12 +22306,14 @@ namespace XamCore.AppKit {
 		CGRect RectForSmartMagnificationAtPoint (CGPoint atPoint, CGRect inRect);
 	}
 
+#if !XAMCORE_4_0
 	[Category, BaseType (typeof (NSApplication))]
 	partial interface NSRemoteNotifications_NSApplication {
 
 		[MountainLion, Field ("NSApplicationLaunchUserNotificationKey", "AppKit")]
 		NSString NSApplicationLaunchUserNotificationKey { get; }
 	}
+#endif
 
 	partial interface NSControlTextEditingEventArgs {
 		[Export ("NSFieldEditor")]

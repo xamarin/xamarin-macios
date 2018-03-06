@@ -177,6 +177,20 @@ namespace xharness
 
 		public static void SetIntermediateOutputPath (this XmlDocument csproj, string value)
 		{
+			// Set any existing IntermediateOutputPath
+			var nodes = csproj.SelectNodes ("/*/*/*[local-name() = 'IntermediateOutputPath']");
+			var hasToplevel = false;
+			if (nodes.Count != 0) {
+				foreach (XmlNode n in nodes) {
+					n.InnerText = value;
+					hasToplevel |= n.Attributes ["Condition"] == null;
+				}
+			}
+
+			if (hasToplevel)
+				return;
+			
+			// Make sure there's a top-level version too.
 			var project = csproj.ChildNodes [1];
 			var property_group = project.ChildNodes [0];
 
@@ -188,6 +202,11 @@ namespace xharness
 		public static void SetTargetFrameworkIdentifier (this XmlDocument csproj, string value)
 		{
 			SetTopLevelPropertyGroupValue (csproj, "TargetFrameworkIdentifier", value);
+		}
+
+		public static void SetTargetFrameworkVersion (this XmlDocument csproj, string value)
+		{
+			SetTopLevelPropertyGroupValue (csproj, "TargetFrameworkVersion", value);
 		}
 
 		public static void SetTopLevelPropertyGroupValue (this XmlDocument csproj, string key, string value)
@@ -595,6 +614,40 @@ namespace xharness
 				if (!def.InnerText.Contains ("$(DefineConstants"))
 					def.InnerText = def.InnerText + ";$(DefineConstants)";
 			}
+		}
+
+		public static void AddAdditionalDefines (this XmlDocument csproj, string value, string platform, string configuration)
+		{
+			var projnode = csproj.SelectNodes ("//*[local-name() = 'PropertyGroup' and @Condition]/*[local-name() = 'DefineConstants']");
+			foreach (XmlNode xmlnode in projnode) {
+				var parent = xmlnode.ParentNode;
+				if (parent.Attributes ["Condition"] == null)
+					continue;
+				if (!IsNodeApplicable (parent, platform, configuration))
+					continue;
+				
+				if (string.IsNullOrEmpty (xmlnode.InnerText)) {
+					xmlnode.InnerText = value;
+				} else {
+					xmlnode.InnerText += ";" + value;
+				}
+				return;
+			}
+
+			projnode = csproj.SelectNodes ("//*[local-name() = 'PropertyGroup' and @Condition]");
+			foreach (XmlNode xmlnode in projnode) {
+				if (xmlnode.Attributes ["Condition"] == null)
+					continue;
+				if (!IsNodeApplicable (xmlnode, platform, configuration))
+					continue;
+
+				var defines = csproj.CreateElement ("DefineConstants", MSBuild_Namespace);
+				defines.InnerText = value;
+				xmlnode.AppendChild (defines);
+				return;
+			}
+
+			throw new Exception ("Could not find where to add a new DefineConstants node");
 		}
 
 		public static void SetNode (this XmlDocument csproj, string node, string value)

@@ -97,13 +97,13 @@ partial class TestRuntime
 		NUnit.Framework.Assert.Ignore ("Requires the platform version shipped with Xcode {0}.{1}", major, minor);
 	}
 
-#if !MONOMAC
 	public static void AssertDevice ()
 	{
+#if !MONOMAC
 		if (ObjCRuntime.Runtime.Arch == Arch.SIMULATOR)
 			NUnit.Framework.Assert.Ignore ("This test only runs on device.");
-	}
 #endif
+	}
 
 	// This function checks if the current Xcode version is exactly (neither higher nor lower) the requested one.
 	public static bool CheckExactXcodeVersion (int major, int minor, int beta = 0)
@@ -612,6 +612,12 @@ partial class TestRuntime
 #if !MONOMAC && !__TVOS__ && !__WATCHOS__
 	public static void RequestMediaLibraryPermission (bool assert_granted = false)
 	{
+		if (!CheckXcodeVersion (7, 3)) {
+			if (IgnoreTestThatRequiresSystemPermissions ())
+				NUnit.Framework.Assert.Ignore ("This test might show a dialog to ask for permission to access the media library, but the API to check if a dialog is required (or to request permission) is not available in this OS version.");
+			return;
+		}
+
 		if (MPMediaLibrary.AuthorizationStatus == MPMediaLibraryAuthorizationStatus.NotDetermined) {
 			if (IgnoreTestThatRequiresSystemPermissions ())
 				NUnit.Framework.Assert.Ignore ("This test would show a dialog to ask for permission to access the media library.");

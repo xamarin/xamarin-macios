@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using System.Linq;
+
+using NUnit.Framework;
 using Xamarin.MacDev;
 
 namespace Xamarin.iOS.Tasks
@@ -11,6 +13,7 @@ namespace Xamarin.iOS.Tasks
 			base.ConfigureTask ();
 			Task.DefaultSdkVersion = IPhoneSdks.Native.GetClosestInstalledSdk (IPhoneSdkVersion.V6_1, true).ToString ();
 			Task.TargetFrameworkIdentifier = "Xamarin.iOS";
+			Task.TargetArchitectures = "ARM64";
 		}
 
 		[Test]
@@ -27,6 +30,17 @@ namespace Xamarin.iOS.Tasks
 		{
 			Assert.That (CompiledPlist.ContainsKey (ManifestKeys.CFBundleName), "#1");
 			Assert.AreEqual (CompiledPlist.Get<PString> (ManifestKeys.CFBundleName).Value, displayName, "#2");
+		}
+
+		[Test]
+		public void RequiredDeviceCapabilities ()
+		{
+			PArray array;
+
+			Assert.IsTrue (CompiledPlist.TryGetValue (ManifestKeys.UIRequiredDeviceCapabilities, out array), "#1");
+			Assert.IsTrue (array.OfType<PString> ().Any (x => x.Value == "arm64"), "#2");
+			Assert.IsFalse (array.OfType<PString> ().Any (x => x.Value == "armv6"), "#3");
+			Assert.IsFalse (array.OfType<PString> ().Any (x => x.Value == "armv7"), "#4");
 		}
 	}
 }

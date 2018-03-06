@@ -194,7 +194,7 @@ namespace Xamarin.MacDev.Tasks {
 			cmd.AppendSwitch (GetTargetFrameworkArgument ());
 
 			if (!string.IsNullOrEmpty (ExtraArgs)) {
-				var extraArgs = ProcessArgumentBuilder.Parse (ExtraArgs);
+				var extraArgs = CommandLineArgumentBuilder.Parse (ExtraArgs);
 				var target = OutputAssembly;
 				string projectDir;
 

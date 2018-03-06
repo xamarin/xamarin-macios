@@ -1,5 +1,6 @@
 // Copyright 2011-2012 Xamarin Inc. All rights reserved
 
+#if !MONOMAC
 using System;
 #if !__WATCHOS__
 using System.Drawing;
@@ -14,9 +15,9 @@ using MonoTouch.UIKit;
 using NUnit.Framework;
 
 #if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
+using RectangleF = CoreGraphics.CGRect;
+using SizeF = CoreGraphics.CGSize;
+using PointF = CoreGraphics.CGPoint;
 #else
 using nfloat=global::System.Single;
 using nint=global::System.Int32;
@@ -24,11 +25,11 @@ using nuint=global::System.UInt32;
 #endif
 
 namespace MonoTouchFixtures.UIKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ColorTest {
-		
+
 		[Test]
 		public void ToString_ ()
 		{
@@ -63,12 +64,13 @@ namespace MonoTouchFixtures.UIKit {
 			Assert.That ("UIColor [A=255, R=255, G=255, B=0]",
 				Is.EqualTo (UIColor.Yellow.ToString ()), "Yellow");
 		}
-		
+
 		void RoundtripHSBA (UIColor c, bool supported = true)
 		{
 			try {
 				nfloat h, s, b, a;
-				/*bool result =*/ c.GetHSBA (out h, out s, out b, out a);
+				/*bool result =*/
+				c.GetHSBA (out h, out s, out b, out a);
 				UIColor r = UIColor.FromHSBA (h, s, b, a);
 #if true
 				Assert.That (r.ToString (), Is.EqualTo (c.ToString ()), c.ToString ());
@@ -83,13 +85,12 @@ namespace MonoTouchFixtures.UIKit {
 					Assert.That (a, Is.EqualTo (a2), cs);
 				}
 #endif
-			}
-			catch (Exception) {
+			} catch (Exception) {
 				if (supported)
 					Assert.Fail (c.ToString ());
 			}
 		}
-		
+
 		[Test]
 		public void HSBA ()
 		{
@@ -111,11 +112,11 @@ namespace MonoTouchFixtures.UIKit {
 			RoundtripHSBA (UIColor.Yellow);
 #if !__TVOS__ && !__WATCHOS__
 			RoundtripHSBA (UIColor.DarkTextColor);
-			RoundtripHSBA (UIColor.GroupTableViewBackgroundColor, false);		// unsupported color space
+			RoundtripHSBA (UIColor.GroupTableViewBackgroundColor, false);           // unsupported color space
 			RoundtripHSBA (UIColor.LightTextColor);
-			RoundtripHSBA (UIColor.ScrollViewTexturedBackgroundColor, false);	// unsupported color space
-			RoundtripHSBA (UIColor.UnderPageBackgroundColor, false);			// unsupported color space
-			RoundtripHSBA (UIColor.ViewFlipsideBackgroundColor, false);			// unsupported color space
+			RoundtripHSBA (UIColor.ScrollViewTexturedBackgroundColor, false);       // unsupported color space
+			RoundtripHSBA (UIColor.UnderPageBackgroundColor, false);                        // unsupported color space
+			RoundtripHSBA (UIColor.ViewFlipsideBackgroundColor, false);                     // unsupported color space
 #endif
 #if false
 			for (int r = 0; r < 256; r++) {
@@ -129,7 +130,7 @@ namespace MonoTouchFixtures.UIKit {
 			}
 #endif
 		}
-	
+
 		[Test]
 		public void HSBA_No_Saturation ()
 		{
@@ -144,7 +145,7 @@ namespace MonoTouchFixtures.UIKit {
 			Assert.That (b, Is.EqualTo ((nfloat) 0f), "b");
 			Assert.That (a, Is.EqualTo ((nfloat) 0f), "a");
 		}
-		
+
 		// note: MonoTouch addition - not fully compatible with "getHue:saturation:brightness:alpha:" wrt alpha
 		void RoundtripHSB (UIColor c)
 		{
@@ -153,7 +154,7 @@ namespace MonoTouchFixtures.UIKit {
 			UIColor r = UIColor.FromHSB (h, s, b);
 			Assert.That (r.ToString (), Is.EqualTo (c.ToString ()), c.ToString ());
 		}
-		
+
 		[Test]
 		public void HSB ()
 		{
@@ -189,7 +190,7 @@ namespace MonoTouchFixtures.UIKit {
 			UIColor k = UIColor.FromRGBA (r, g, b, a);
 			Assert.That (k.ToString (), Is.EqualTo (c.ToString ()), c.ToString ());
 		}
-		
+
 		[Test]
 		public void RGBA ()
 		{
@@ -226,7 +227,7 @@ namespace MonoTouchFixtures.UIKit {
 			UIColor k = UIColor.FromRGB (r, g, b);
 			Assert.That (k.ToString (), Is.EqualTo (c.ToString ()), c.ToString ());
 		}
-		
+
 		[Test]
 		public void RGB ()
 		{
@@ -300,11 +301,12 @@ namespace MonoTouchFixtures.UIKit {
 		[TestCase (0.5, 0.7)]
 		public void WAConstructor (double w, double a)
 		{
-			var nw = (nfloat)w;
-			var na = (nfloat)a;
+			var nw = (nfloat) w;
+			var na = (nfloat) a;
 			var c = UIColor.FromWhiteAlpha (nw, na);
 			var r = new UIColor (nw, na);
 			Assert.That (r.ToString (), Is.EqualTo (c.ToString ()), c.ToString ());
 		}
 	}
 }
+#endif

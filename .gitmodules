@@ -5,18 +5,18 @@
 [submodule "external/guiunit"]
     path = external/guiunit
     url = ../../mono/guiunit.git
-[submodule "external/linker"]
-    path = external/linker
-    url = ../../mono/linker.git
-    branch = master
 [submodule "external/llvm"]
     path = external/llvm
     url = ../../mono/llvm.git
-    branch = master
+    branch = d15-6
+[submodule "external/macios-binaries"]
+    path = external/macios-binaries
+    url = ../../xamarin/macios-binaries
+    branch = d15-6
 [submodule "external/mono"]
     path = external/mono
     url = ../../mono/mono.git
-    branch = d15-5-2017-06
+    branch = 2017-10
 [submodule "external/MonoTouch.Dialog"]
     path = external/MonoTouch.Dialog
     url = ../../migueldeicaza/MonoTouch.Dialog.git
@@ -32,4 +32,4 @@
 [submodule "external/Xamarin.MacDev"]
     path = external/Xamarin.MacDev
     url = ../../xamarin/Xamarin.MacDev
-    branch = d15-5
+    branch = d15-6

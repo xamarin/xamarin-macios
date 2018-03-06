@@ -35,6 +35,7 @@ namespace MonoTouchFixtures.ModelIO
 		{
 			TestRuntime.AssertXcodeVersion (8, 2);
 
+#if !MONOMAC
 			if (Runtime.Arch == Arch.SIMULATOR && IntPtr.Size == 4) {
 				// There's a bug in the i386 version of objc_msgSend where it doesn't preserve SIMD arguments
 				// when resizing the cache of method selectors for a type. So here we call all selectors we can
@@ -56,6 +57,7 @@ namespace MonoTouchFixtures.ModelIO
 				using (var obj = new MDLTexture ()) {
 				}
 			}
+#endif
 		}
 
 		[Test]

@@ -46,7 +46,7 @@ $(TVOS_BUILD_DIR)/reference/OpenTK-1.0%dll $(TVOS_BUILD_DIR)/reference/OpenTK-1.
 
 # common targets
 
-%/OpenTK-1.0.dll.config: $(OPENTK_PATH)/Source/OpenTK/OpenTK.dll.config | $(IOS_BUILD_DIR)/reference $(IOS_BUILD_DIR)/compat $(TVOS_BUILD_DIR)/tvos
+%/OpenTK-1.0.dll.config: $(OPENTK_PATH)/Source/OpenTK/OpenTK.dll.config | $(IOS_BUILD_DIR)/reference $(IOS_BUILD_DIR)/compat $(TVOS_BUILD_DIR)/reference
 	$(Q) cp $< $@
 
 # other stuff

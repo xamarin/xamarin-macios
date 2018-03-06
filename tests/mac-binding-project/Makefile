@@ -7,6 +7,9 @@ export MSBuildExtensionsPath=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/Ex
 export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 export XAMMAC_FRAMEWORK_PATH=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 
+# VSfM sets XCODE_DEVELOPER_DIR_PATH, which confuses the command-line tools if it doesn't match xcode-select, so just unset it.
+unexport XCODE_DEVELOPER_DIR_PATH
+
 bin:
 	$(Q) mkdir -p bin
 

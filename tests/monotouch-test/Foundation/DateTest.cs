@@ -66,5 +66,14 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			Assert.IsNotNull (NSDate.Now.DescriptionWithLocale (NSLocale.CurrentLocale), "1");
 		}
+
+		[Test]
+		public void Precision32022 ()
+		{
+			var a = NSDate.Now;
+			var b = a.SecondsSinceReferenceDate - ((NSDate) (DateTime) a).SecondsSinceReferenceDate;
+			// ensure decimals are not truncated - but there's an unavoidable loss of precision
+			Assert.AreEqual (b, 0, 0.00001, "1");
+		}
 	}
 }

@@ -102,11 +102,16 @@ namespace MonoTouch.Tuner {
 			// we need to track who's calling ParameterInfo.Name property getter, if it comes from
 			// user code then it's not possible to remove the parameters from the assemblies metadata
 			if (!parameter_info && (method.Name == "get_Name") && method.DeclaringType.Is ("System.Reflection", "ParameterInfo")) {
-				var a = current_method.DeclaringType.Module.Assembly;
-				if (!Profile.IsSdkAssembly (a) && !Profile.IsProductAssembly (a)) {
-					// see MetadataReducerSubStep for the consumer part of the data
-					Annotations.GetCustomAnnotations ("ParameterInfo").Add (method, current_method);
-					parameter_info = true;
+				if (current_method == null) {
+					// This can happen if ParameterInfo.get_Name is preserved in an xml file
+					Annotations.GetCustomAnnotations ("ParameterInfo").Add (method, null);
+				} else {
+					var a = current_method.DeclaringType.Module.Assembly;
+					if (!Profile.IsSdkAssembly (a) && !Profile.IsProductAssembly (a)) {
+						// see MetadataReducerSubStep for the consumer part of the data
+						Annotations.GetCustomAnnotations ("ParameterInfo").Add (method, current_method);
+						parameter_info = true;
+					}
 				}
 			}
 

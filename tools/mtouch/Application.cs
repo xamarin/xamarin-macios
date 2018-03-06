@@ -82,6 +82,9 @@ namespace Xamarin.Bundler {
 
 	public partial class Application
 	{
+		public const string ProductName = "Xamarin.iOS";
+		public const string Error91LinkerSuggestion = "set the managed linker behaviour to Link Framework SDKs Only";
+
 		public string ExecutableName;
 		public BuildTarget BuildTarget;
 
@@ -148,6 +151,8 @@ namespace Xamarin.Bundler {
 		public bool Is64Build { get { return IsArchEnabled (Abi.Arch64Mask); } } // If we're targetting a 64 bit arch.
 		public bool IsDualBuild { get { return Is32Build && Is64Build; } } // if we're building both a 32 and a 64 bit version.
 		public bool IsLLVM { get { return IsArchEnabled (Abi.LLVM); } }
+
+		bool RequiresXcodeHeaders => LinkMode == LinkMode.None;
 
 		public List<Target> Targets = new List<Target> ();
 
@@ -1334,9 +1339,6 @@ namespace Xamarin.Bundler {
 			if (EnableBitCode && IsSimulatorBuild)
 				throw ErrorHelper.CreateError (84, "Bitcode is not supported in the simulator. Do not pass --bitcode when building for the simulator.");
 
-			if (LinkMode == LinkMode.None && SdkVersion < SdkVersions.GetVersion (Platform))
-				throw ErrorHelper.CreateError (91, "This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only (to try to avoid the new APIs).", PlatformName, SdkVersions.GetVersion (Platform), SdkVersions.Xcode);
-
 			Namespaces.Initialize ();
 
 			if (Embeddinator) {
@@ -1997,6 +1999,9 @@ namespace Xamarin.Bundler {
 		public void BuildMSymDirectory ()
 		{
 			if (!EnableMSym)
+				return;
+
+			if (IsExtension && IsCodeShared) // we already have the data from the app
 				return;
 
 			var target_directory = string.Format ("{0}.mSYM", AppDirectory);

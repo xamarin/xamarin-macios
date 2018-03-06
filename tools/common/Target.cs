@@ -101,6 +101,16 @@ namespace Xamarin.Bundler {
 			return path;
 		}
 
+		public void ValidateAssembliesBeforeLink ()
+		{
+			if (App.LinkMode != LinkMode.None) {
+				foreach (Assembly assembly in Assemblies) {
+					if ((assembly.AssemblyDefinition.MainModule.Attributes & ModuleAttributes.ILOnly) == 0)
+						throw ErrorHelper.CreateError (2014, "Unable to link assembly '{0}' as it is mixed-mode.", assembly.AssemblyDefinition.MainModule.FileName);
+				}
+			}
+		}
+
 		public void ComputeLinkerFlags ()
 		{
 			foreach (var a in Assemblies)
@@ -110,7 +120,6 @@ namespace Xamarin.Bundler {
 		public void GatherFrameworks ()
 		{
 			Assembly asm = null;
-			AssemblyDefinition productAssembly = null;
 
 			foreach (var assembly in Assemblies) {
 				if (assembly.AssemblyDefinition.Name.Name == Driver.GetProductAssembly (App)) {
@@ -119,7 +128,10 @@ namespace Xamarin.Bundler {
 				}
 			}
 
-			productAssembly = asm.AssemblyDefinition;
+			if (asm == null)
+				throw ErrorHelper.CreateError (99, $"Internal error: could not find the product assembly {Driver.GetProductAssembly (App)} in the list of assemblies referenced by the executable. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+
+			AssemblyDefinition productAssembly = asm.AssemblyDefinition;
 
 			// *** make sure any change in the above lists (or new list) are also reflected in 
 			// *** Makefile so simlauncher-sgen does not miss any framework
@@ -244,7 +256,7 @@ namespace Xamarin.Bundler {
 
 #if MONOTOUCH
 				if (App.EnableProfiling && App.LibProfilerLinkMode == AssemblyBuildTarget.StaticObject)
-					dynamic_symbols.AddFunction ("mono_profiler_startup_log");
+					dynamic_symbols.AddFunction ("mono_profiler_init_log");
 #endif
 
 				dynamic_symbols.Save (cache_location);
