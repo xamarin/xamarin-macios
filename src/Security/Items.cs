@@ -813,11 +813,11 @@ namespace Security {
 		[iOS (9,0)]
 		public SecTokenID TokenID {
 			get {
-				return SecTokenIDExtensions.GetValue (Fetch<NSString> (SecAttributeKey.TokenID));
+				return SecTokenIDExtensions.GetValue (Fetch<NSString> (SecKeyGenerationAttributeKeys.TokenIDKey.GetHandle ()));
 			}
 			set {
 				// choose wisely to avoid NSString -> string -> NSString conversion
-				SetValue ((NSObject) value.GetConstant (), SecAttributeKey.TokenID);
+				SetValue ((NSObject) value.GetConstant (), SecKeyGenerationAttributeKeys.TokenIDKey.GetHandle ());
 			}
 		}
 #endif
@@ -993,7 +993,7 @@ namespace Security {
 				if (value == null)
 					throw new ArgumentNullException ("value");
 				_secAccessControl = value;
-				SetValue (value.Handle, SecAttributeKey.AccessControl);
+				SetValue (value.Handle, SecAttributeKeys.AccessControlKey.Handle);
 			}
 		}
 
@@ -1192,7 +1192,7 @@ namespace Security {
 
 		public SecKeyType KeyType {
 			get {
-				var k = Fetch (SecAttributeKey.KeyType);
+				var k = Fetch (SecKeyGenerationAttributeKeys.KeyTypeKey.Handle);
 				if (k == IntPtr.Zero)
 					return SecKeyType.Invalid;
 				using (var s = new NSString (k))
@@ -1203,17 +1203,17 @@ namespace Security {
 				var k = value.GetConstant ();
 				if (k == null)
 					throw new ArgumentException ("Unknown value");
-				SetValue ((NSObject) k, SecAttributeKey.KeyType);
+				SetValue ((NSObject) k, SecKeyGenerationAttributeKeys.KeyTypeKey.Handle);
 			}
 		}
 
 		public int KeySizeInBits {
 			get {
-				return FetchInt (SecAttributeKey.KeySizeInBits);
+				return FetchInt (SecKeyGenerationAttributeKeys.KeySizeInBitsKey.Handle);
 			}
 					
 			set {
-				SetValue (new NSNumber (value), SecAttributeKey.KeySizeInBits);
+				SetValue (new NSNumber (value), SecKeyGenerationAttributeKeys.KeySizeInBitsKey.Handle);
 			}
 		}
 
@@ -1279,11 +1279,11 @@ namespace Security {
 
 		public bool CanWrap {
 			get {
-				return Fetch (SecAttributeKey.CanWrap) == CFBoolean.True.Handle;
+				return Fetch (SecKeyGenerationAttributeKeys.CanWrapKey.Handle) == CFBoolean.True.Handle;
 			}
 			
 			set {
-				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKey.CanWrap);
+				SetValue (CFBoolean.FromBoolean (value).Handle, SecKeyGenerationAttributeKeys.CanWrapKey.Handle);
 			}
 		}
 
@@ -1731,6 +1731,70 @@ namespace Security {
 		
 		public SecurityException (SecStatusCode code) : base (ToMessage (code))
 		{
+		}
+	}
+
+	public partial class SecKeyParameters : DictionaryContainer {
+		// For caching, as we can't reverse it easily.
+		SecAccessControl _secAccessControl;
+
+		[iOS (8, 0), Mac (10, 10)]
+		public SecAccessControl AccessControl {
+			get {
+				return _secAccessControl;
+			}
+			set {
+				if (value == null)
+					throw new ArgumentNullException (nameof (value));
+				_secAccessControl = value;
+				SetNativeValue (SecAttributeKeys.AccessControlKey, value);
+			}
+		}
+	}
+
+	public partial class SecKeyGenerationParameters : DictionaryContainer {
+		public SecKeyType KeyType {
+			get {
+				var type = GetNSStringValue (SecKeyGenerationAttributeKeys.KeyTypeKey);
+				if (type == null)
+					return SecKeyType.Invalid;
+				return SecKeyTypeExtensions.GetValue (type);
+			}
+
+			set {
+				var k = value.GetConstant ();
+				if (k == null)
+					throw new ArgumentException ("Unknown value for KeyType.");
+				SetStringValue (SecKeyGenerationAttributeKeys.KeyTypeKey, k);
+			}
+		}
+
+		// For caching, as we can't reverse it easily.
+		SecAccessControl _secAccessControl;
+
+		[iOS (8, 0), Mac (10, 10)]
+		public SecAccessControl AccessControl {
+			get {
+				return _secAccessControl;
+			}
+
+			set {
+				if (value == null)
+					throw new ArgumentNullException (nameof (value));
+				_secAccessControl = value;
+				SetNativeValue (SecAttributeKeys.AccessControlKey, value);
+			}
+		}
+
+		[iOS (9, 0), Mac (10, 12)]
+		public SecTokenID TokenID {
+			get {
+				return SecTokenIDExtensions.GetValue (GetNSStringValue (SecKeyGenerationAttributeKeys.TokenIDKey));
+			}
+
+			set {
+				SetStringValue (SecKeyGenerationAttributeKeys.TokenIDKey, value.GetConstant ());
+			}
 		}
 	}
 }

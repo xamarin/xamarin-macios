@@ -488,5 +488,30 @@ namespace MonoTouchFixtures.Security {
 				}
 			}
 		}
+
+		[Test]
+		public void CreateRandomKeyTest ()
+		{
+			TestRuntime.AssertXcodeVersion (8, 0);
+
+			var keyGenerationParameters = new SecKeyGenerationParameters ();
+			keyGenerationParameters.KeyType = SecKeyType.EC;
+			keyGenerationParameters.KeySizeInBits = 256;
+			keyGenerationParameters.IsPermanent = false;
+			var privateKeyAttributes = new SecKeyParameters ();
+			privateKeyAttributes.AccessControl = new SecAccessControl (SecAccessible.WhenUnlockedThisDeviceOnly, SecAccessControlCreateFlags.PrivateKeyUsage | SecAccessControlCreateFlags.UserPresence);
+			privateKeyAttributes.Label = "NotDefault";
+			keyGenerationParameters.PrivateKeyAttrs = privateKeyAttributes;
+
+			NSError error;
+			var privateKey = SecKey.CreateRandomKey (keyGenerationParameters, out error);
+			var publicKey = privateKey.GetPublicKey ();
+
+			Assert.That (error, Is.EqualTo (null), "CreateRandomKey - no error");
+			Assert.That (privateKey, Is.Not.EqualTo (null), "CreateRandomKey - private key is not null");
+			Assert.That (publicKey, Is.Not.EqualTo (null), "CreateRandomKey - public key is not null");
+			Assert.Throws<ArgumentNullException> (() => { SecKey.CreateRandomKey ((SecKeyGenerationParameters) null, out _); }, "CreateRandomKey - null argument");
+			Assert.Throws<ArgumentException> (() => { SecKey.CreateRandomKey (new SecKeyGenerationParameters (), out _); }, "CreateRandomKey - invalid 'SecKeyType', empty 'SecKeyGenerationParameters'");
+		}
 	}
 }
