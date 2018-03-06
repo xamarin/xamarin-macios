@@ -813,11 +813,11 @@ namespace Security {
 		[iOS (9,0)]
 		public SecTokenID TokenID {
 			get {
-				return SecTokenIDExtensions.GetValue (Fetch<NSString> (SecKeyGenerationAttributeKeys.TokenIDKey.Handle));
+				return SecTokenIDExtensions.GetValue (Fetch<NSString> (SecKeyGenerationAttributeKeys.TokenIDKey.GetHandle ()));
 			}
 			set {
 				// choose wisely to avoid NSString -> string -> NSString conversion
-				SetValue ((NSObject) value.GetConstant (), SecKeyGenerationAttributeKeys.TokenIDKey.Handle);
+				SetValue ((NSObject) value.GetConstant (), SecKeyGenerationAttributeKeys.TokenIDKey.GetHandle ());
 			}
 		}
 #endif
@@ -1738,6 +1738,7 @@ namespace Security {
 		// For caching, as we can't reverse it easily.
 		SecAccessControl _secAccessControl;
 
+		[iOS (8, 0), Mac (10, 10)]
 		public SecAccessControl AccessControl {
 			get {
 				return _secAccessControl;
@@ -1771,6 +1772,7 @@ namespace Security {
 		// For caching, as we can't reverse it easily.
 		SecAccessControl _secAccessControl;
 
+		[iOS (8, 0), Mac (10, 10)]
 		public SecAccessControl AccessControl {
 			get {
 				return _secAccessControl;
@@ -1784,6 +1786,7 @@ namespace Security {
 			}
 		}
 
+		[iOS (9, 0), Mac (10, 12)]
 		public SecTokenID TokenID {
 			get {
 				return SecTokenIDExtensions.GetValue (GetNSStringValue (SecKeyGenerationAttributeKeys.TokenIDKey));

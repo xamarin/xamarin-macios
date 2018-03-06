@@ -420,16 +420,15 @@ namespace Security {
 		[Field ("kSecAttrKeySizeInBits")]
 		NSString KeySizeInBitsKey { get; }
 
-		[Mac (10,8)]
+		[Mac (10, 8)]
 		[Field ("kSecPrivateKeyAttrs")]
 		NSString PrivateKeyAttrsKey { get; }
 
-		[Mac (10,8)]
+		[Mac (10, 8)]
 		[Field ("kSecPublicKeyAttrs")]
 		NSString PublicKeyAttrsKey { get; }
 
-		[iOS (9,0)]
-		[Mac (10,12)]
+		[iOS (9, 0), Mac (10, 12)]
 		[Field ("kSecAttrTokenID")]
 		NSString TokenIDKey { get; }
 
