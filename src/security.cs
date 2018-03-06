@@ -389,6 +389,10 @@ namespace Security {
 		[Field ("kSecAttrEffectiveKeySize")]
 		NSString EffectiveKeySizeKey { get; }
 
+		[iOS (8, 0), Mac (10, 10)]
+		[Field ("kSecAttrAccessControl")]
+		NSString AccessControlKey { get; }
+
 		[Field ("kSecAttrCanEncrypt")]
 		NSString CanEncryptKey { get; }
 
@@ -409,14 +413,92 @@ namespace Security {
 	}
 
 	[Static][Internal]
+	interface SecKeyGenerationAttributeKeys : SecAttributeKeys {
+		[Field ("kSecAttrKeyType")]
+		NSString KeyTypeKey { get; }
+
+		[Field ("kSecAttrKeySizeInBits")]
+		NSString KeySizeInBitsKey { get; }
+
+		[Mac (10, 8)]
+		[Field ("kSecPrivateKeyAttrs")]
+		NSString PrivateKeyAttrsKey { get; }
+
+		[Mac (10, 8)]
+		[Field ("kSecPublicKeyAttrs")]
+		NSString PublicKeyAttrsKey { get; }
+
+		[iOS (9, 0), Mac (10, 12)]
+		[Field ("kSecAttrTokenID")]
+		NSString TokenIDKey { get; }
+
+		[Field ("kSecAttrCanWrap")]
+		NSString CanWrapKey { get; }
+	}
+
+	[StrongDictionary ("SecAttributeKeys")]
+	interface SecKeyParameters {
+		string Label { get; set; }
+
+		bool IsPermanent { get; set; }
+
+		NSData ApplicationTag { get; set; }
+
+		int EffectiveKeySize { get; set; }
+
+		bool CanEncrypt { get; set; }
+
+		bool CanDecrypt { get; set; }
+
+		bool CanDerive { get; set; }
+
+		bool CanSign { get; set; }
+
+		bool CanVerify { get; set; }
+
+		bool CanUnwrap { get; set; }
+	}
+
+	[StrongDictionary ("SecKeyGenerationAttributeKeys")]
+	interface SecKeyGenerationParameters {
+		int KeySizeInBits { get; set; }
+
+		[StrongDictionary]
+		[Export ("PrivateKeyAttrsKey")]
+		SecKeyParameters PrivateKeyAttrs { get; set; }
+
+		[StrongDictionary]
+		[Export ("PublicKeyAttrsKey")]
+		SecKeyParameters PublicKeyAttrs { get; set; }
+
+		string Label { get; set; }
+
+		bool IsPermanent { get; set; }
+
+		NSData ApplicationTag { get; set; }
+
+		int EffectiveKeySize { get; set; }
+
+		bool CanEncrypt { get; set; }
+
+		bool CanDecrypt { get; set; }
+
+		bool CanDerive { get; set; }
+
+		bool CanSign { get; set; }
+
+		bool CanVerify { get; set; }
+
+		bool CanWrap { get; set; }
+
+		bool CanUnwrap { get; set; }
+	}
+
+	[Static][Internal]
 	interface SecAttributeKey {
 		[Mac (10,9)]
 		[Field ("kSecAttrAccessible")]
 		IntPtr Accessible { get; }
-
-		[iOS (8,0), Mac(10,10)]
-		[Field ("kSecAttrAccessControl")]
-		IntPtr AccessControl { get; }
 
 		[iOS (7,0)]
 		[Mac (10,9)]
@@ -521,20 +603,6 @@ namespace Security {
 		[Field ("kSecAttrIsExtractable")]
 		IntPtr IsExtractable { get; }
 
-		[Field ("kSecAttrKeyType")]
-		IntPtr KeyType { get; }
-
-		[Field ("kSecAttrKeySizeInBits")]
-		IntPtr KeySizeInBits { get; }
-
-		[Field ("kSecAttrCanWrap")]
-		IntPtr CanWrap { get; }
-
-		[iOS (9,0)]
-		[Mac (10,12)]
-		[Field ("kSecAttrTokenID")]
-		IntPtr TokenID { get; }
-
 		[iOS (9,0)]
 		[Mac (10,12)]
 		[Field ("kSecAttrTokenIDSecureEnclave")]
@@ -551,14 +619,6 @@ namespace Security {
 		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
 		[Field ("kSecAttrPersistentReference")]
 		IntPtr PersistentReference { get; }
-
-		[Mac (10,8)]
-		[Field ("kSecPrivateKeyAttrs")]
-		IntPtr PrivateKeyAttrs { get; }
-
-		[Mac (10,8)]
-		[Field ("kSecPublicKeyAttrs")]
-		IntPtr PublicKeyAttrs { get; }
 	}
 
 	[Static][Internal]
