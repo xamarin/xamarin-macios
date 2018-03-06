@@ -85,6 +85,8 @@ namespace XamCore.Contacts {
 		CommunicationError = 1,
 		DataAccessError = 2,
 		AuthorizationDenied = 100,
+		[iOS (11,3), Mac (10,13,3)]
+		NoAccessableWritableContainers = 101,
 		RecordDoesNotExist = 200,
 		InsertedRecordAlreadyExists = 201,
 		ContainmentCycle = 202,
