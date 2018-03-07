@@ -1068,13 +1068,15 @@ namespace LinkSdk {
 		}
 
 #if !__WATCHOS__
+		static Type type_uibutton = typeof (UIButton);
+
 		[Test]
 		public void UIButtonSubclass ()
 		{
 			// ensure the linker keeps the .ctor(UIButtonType) around
 			using (var b = new UIButton (UIButtonType.Custom)) {
 				// https://trello.com/c/Nf2B8mIM/484-remove-debug-code-in-the-linker
-				var m = typeof (UIButton).GetMethod ("VerifyIsUIButton", BindingFlags.Instance | BindingFlags.NonPublic);
+				var m = type_uibutton.GetMethod ("VerifyIsUIButton", BindingFlags.Instance | BindingFlags.NonPublic);
 #if DEBUG
 				// kept in debug builds
 				Assert.NotNull (m, "VerifyIsUIButton");

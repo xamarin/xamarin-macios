@@ -551,13 +551,14 @@ namespace LinkAll {
 			Assert.Null (Type.GetType (fqn), fqn);
 		}
 
+		static Type type_Task = typeof (Task);
+
 		[Test]
 		public void Bug59015 ()
 		{
 			CheckAsyncTaskMethodBuilder (typeof (AsyncTaskMethodBuilder));
 			CheckAsyncTaskMethodBuilder (typeof (AsyncTaskMethodBuilder<int>));
-			var t = typeof (Task);
-			var snfwc = t.GetMethod ("SetNotificationForWaitCompletion", BindingFlags.Instance | BindingFlags.NonPublic);
+			var snfwc = type_Task.GetMethod ("SetNotificationForWaitCompletion", BindingFlags.Instance | BindingFlags.NonPublic);
 #if DEBUG
 			Assert.NotNull (snfwc, "Task.NotifyDebuggerOfWaitCompletion");
 #else
