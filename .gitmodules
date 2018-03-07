@@ -1,35 +1,35 @@
 [submodule "external/fsharp"]
-    path = external/fsharp
-    url = ../../fsharp/fsharp.git
-    branch = master
+	path = external/fsharp
+	url = ../../fsharp/fsharp.git
+	branch = master
 [submodule "external/guiunit"]
-    path = external/guiunit
-    url = ../../mono/guiunit.git
+	path = external/guiunit
+	url = ../../mono/guiunit.git
 [submodule "external/llvm"]
-    path = external/llvm
-    url = ../../mono/llvm.git
-    branch = d15-6
+	path = external/llvm
+	url = ../../mono/llvm.git
+	branch = d15-7
 [submodule "external/macios-binaries"]
-    path = external/macios-binaries
-    url = ../../xamarin/macios-binaries
-    branch = d15-6
+	path = external/macios-binaries
+	url = ../../xamarin/macios-binaries
+	branch = d15-7
 [submodule "external/mono"]
-    path = external/mono
-    url = ../../mono/mono.git
-    branch = 2017-10
+	path = external/mono
+	url = ../../mono/mono.git
+	branch = 2017-12
 [submodule "external/MonoTouch.Dialog"]
-    path = external/MonoTouch.Dialog
-    url = ../../migueldeicaza/MonoTouch.Dialog.git
-    branch = master
+	path = external/MonoTouch.Dialog
+	url = ../../migueldeicaza/MonoTouch.Dialog.git
+	branch = master
 [submodule "external/opentk"]
-    path = external/opentk
-    url = ../../mono/opentk.git
-    branch = master
+	path = external/opentk
+	url = ../../mono/opentk.git
+	branch = master
 [submodule "external/Touch.Unit"]
-    path = external/Touch.Unit
-    url = ../../spouliot/Touch.Unit.git
-    branch = master
+	path = external/Touch.Unit
+	url = ../../spouliot/Touch.Unit.git
+	branch = master
 [submodule "external/Xamarin.MacDev"]
-    path = external/Xamarin.MacDev
-    url = ../../xamarin/Xamarin.MacDev
-    branch = d15-6
+	path = external/Xamarin.MacDev
+	url = ../../xamarin/Xamarin.MacDev
+	branch = d15-7
