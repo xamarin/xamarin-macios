@@ -1367,9 +1367,10 @@ namespace xharness
 					markdown_summary.Write ($"# Test run in progress: ");
 					markdown_summary.Write (string.Join (", ", list));
 					markdown_summary.WriteLine ();
-				} else if (failedTests.Any () || skippedTests.Any ()) {
-					var skipped = skippedTests.Any () ? $" and {skippedTests.Count ()} tests skipped" : "";
-					markdown_summary.WriteLine ($"{failedTests.Count ()} tests failed, {passedTests.Count ()} tests passed{skipped}.");
+				} else if (failedTests.Any ()) {
+					markdown_summary.WriteLine ($"{failedTests.Count ()} tests failed, {skippedTests.Count ()} tests skipped, {passedTests.Count ()} tests passed.");
+				} else if (skippedTests.Any ()) {
+					markdown_summary.WriteLine ($"{skippedTests.Count ()} tests skipped, {passedTests.Count ()} tests passed.");
 				} else if (passedTests.Any ()) {
 					markdown_summary.WriteLine ($"# All {passedTests.Count ()} tests passed");
 				} else {
@@ -1694,7 +1695,7 @@ function toggleAll (show)
 				var headerColor = "black";
 				if (unfinishedTests.Any ()) {
 					; // default
-				} else if (failedTests.Any ()) {
+				} else if (failedTests.Any () || skippedTests.Any ()) {
 					headerColor = "red";
 				} else if (passedTests.Any ()) {
 					headerColor = "green";
@@ -1715,7 +1716,9 @@ function toggleAll (show)
 					writer.Write (string.Join (", ", list));
 					writer.Write (")");
 				} else if (failedTests.Any ()) {
-					writer.Write ($"{failedTests.Count ()} tests failed, {passedTests.Count ()} tests passed.");
+					writer.Write ($"{failedTests.Count ()} tests failed, {skippedTests.Count ()} tests skipped, {passedTests.Count ()} tests passed");
+				} else if (skippedTests.Any ()) {
+					writer.Write ($"{skippedTests.Count ()} tests skipped, {passedTests.Count ()} tests passed");
 				} else if (passedTests.Any ()) {
 					writer.Write ($"All {passedTests.Count ()} tests passed");
 				} else {
