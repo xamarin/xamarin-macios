@@ -6,7 +6,7 @@ open UIKit
 open MonoTouch.UIKit
 #endif
 
-#if !__WATCHOS__
+#if !__WATCHOS__ && !TODAY_EXTENSION
 
 module Main = 
     [<EntryPoint>]
