@@ -64,7 +64,7 @@ namespace xharness
 			csproj.SetImport (IsFSharp ? "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.iOS.AppExtension.FSharp.targets" : "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.iOS.AppExtension.CSharp.targets");
 			csproj.FixInfoPListInclude (suffix);
 			csproj.SetOutputType ("Library");
-			csproj.AddAdditionalDefines ("XAMCORE_2_0;XAMCORE_3_0");
+			csproj.AddAdditionalDefines ("XAMCORE_2_0;XAMCORE_3_0;TODAY_EXTENSION");
 			var ext = IsFSharp ? "fs" : "cs";
 			csproj.AddCompileInclude ("TodayExtensionMain." + ext, Path.Combine (Harness.TodayExtensionTemplate, "TodayExtensionMain." + ext), true);
 			csproj.AddInterfaceDefinition (Path.Combine (Harness.TodayExtensionTemplate, "TodayView.storyboard").Replace ('/', '\\'));
