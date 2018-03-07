@@ -362,7 +362,7 @@ namespace XamCore.ARKit {
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface ARReferenceImage : NSCopying, NSSecureCoding {
+	interface ARReferenceImage : NSCopying {
 		[NullAllowed, Export ("name")]
 		string Name { get; set; }
 

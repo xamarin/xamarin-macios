@@ -217,6 +217,7 @@ namespace Introspection {
 				// iOS 11.3
 				case "PKSuicaPassProperties": // Conformance not in headers
 				case "PKTransitPassProperties": // Conformance not in headers
+				case "ARReferenceImage": // Conformance removed from headers in Xcode 9.3 Beta 4
 					return true;
 				// Header shows implementing NSSecureCoding, but supportsSecureCoding returns false.  Radar #34800025
 				case "HKSeriesBuilder":
@@ -370,6 +371,7 @@ namespace Introspection {
 				// iOS 11.3
 				case "PKSuicaPassProperties": // Conformance not in headers
 				case "PKTransitPassProperties": // Conformance not in headers
+				case "ARReferenceImage": // Conformance removed from headers in Xcode 9.3 Beta 4
 					return true;
 				// Header shows implementing NSSecureCoding, but supportsSecureCoding returns false.  Radar #34800025
 				case "HKSeriesBuilder":
