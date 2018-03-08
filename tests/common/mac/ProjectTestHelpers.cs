@@ -232,12 +232,17 @@ namespace Xamarin.MMP.Tests
 		{
 			string rootDirectory = FindRootDirectory ();
 
+			Environment.SetEnvironmentVariable ("XBUILD_FRAMEWORK_FOLDERS_PATH", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild-frameworks");
+
 			// TODO - This is not enough for MSBuild to really work. We need stuff to have it not use system targets!
 			// These are required to have xbuild use are local build instead of system install
 			if (!useMSBuild) {
-				Environment.SetEnvironmentVariable ("XBUILD_FRAMEWORK_FOLDERS_PATH", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild-frameworks");
 				Environment.SetEnvironmentVariable ("MSBuildExtensionsPath", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild");
 				Environment.SetEnvironmentVariable ("XAMMAC_FRAMEWORK_PATH", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
+			} else {
+				// These might have been set by previous tests 
+				Environment.SetEnvironmentVariable ("MSBuildExtensionsPath", null);
+				Environment.SetEnvironmentVariable ("XAMMAC_FRAMEWORK_PATH", null);
 			}
 
 			// This is to force build to use our mmp and not system mmp
