@@ -10,7 +10,7 @@ namespace Xamarin.MMP.Tests
 	{
 		static string BindingName (bool full) => full ? "XM45Binding" : "MobileBinding";
 		
-		static void BuildLinkedTestProjects (string tmpDir, bool full = false, bool removeTFI = false)
+		static Tuple<string, string> BuildLinkedTestProjects (string tmpDir, bool full = false, bool removeTFI = false)
 		{
 			string bindingName = BindingName (full);
 			TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
@@ -23,7 +23,7 @@ namespace Xamarin.MMP.Tests
 				test.CustomProjectReplacement = new Tuple<string, string> (@"<TargetFrameworkVersion>v4.5</TargetFrameworkVersion>", "");
 
 			string projectPath = TI.GenerateBindingLibraryProject (test);
-			TI.BuildProject (projectPath, true);
+			string bindingBuildLog = TI.BuildProject (projectPath, true);
 
 			string referenceCode = string.Format (@"<Reference Include=""{0}""><HintPath>{1}</HintPath></Reference>", bindingName, Path.Combine (tmpDir, "bin/Debug", bindingName + ".dll"));
 
@@ -32,7 +32,9 @@ namespace Xamarin.MMP.Tests
 				TestCode = "System.Console.WriteLine (typeof (ExampleBinding.UnifiedWithDepNativeRefLibTestClass));",
 				XM45 = full					
 			};
-			TI.TestUnifiedExecutable (test);
+			string appBuildLog = TI.TestUnifiedExecutable (test).BuildOutput;
+
+			return new Tuple<string, string> (bindingBuildLog, appBuildLog);
 		}
 
 		[Test]
@@ -54,7 +56,10 @@ namespace Xamarin.MMP.Tests
 		public void ShouldBuildWithoutErrors_AndLinkCorrectFramework (bool full, bool removeTFI)
 		{
 			MMPTests.RunMMPTest (tmpDir => {
-				BuildLinkedTestProjects (tmpDir, full, removeTFI);
+				var logs = BuildLinkedTestProjects (tmpDir, full, removeTFI);
+
+				Assert.False (logs.Item1.Contains ("mcs"), "Bindings project must not use mcs:\n" + logs.Item1);
+				Assert.True (logs.Item1.Contains ("csc"), "Bindings project must not use csc:\n" + logs.Item1);
 
 				string libPath = Path.Combine (tmpDir, $"bin/Debug/{(full ? "XM45Example.app" : "UnifiedExample.app")}/Contents/MonoBundle/{BindingName (full)}.dll");
 				Assert.True (File.Exists (libPath));
