@@ -1695,8 +1695,10 @@ function toggleAll (show)
 				var headerColor = "black";
 				if (unfinishedTests.Any ()) {
 					; // default
-				} else if (failedTests.Any () || skippedTests.Any ()) {
+				} else if (failedTests.Any ()) {
 					headerColor = "red";
+				} else if (skippedTests.Any ()) {
+					headerColor = "orange";
 				} else if (passedTests.Any ()) {
 					headerColor = "green";
 				} else {
