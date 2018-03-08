@@ -558,7 +558,7 @@ namespace LinkAll {
 		{
 			CheckAsyncTaskMethodBuilder (typeof (AsyncTaskMethodBuilder));
 			CheckAsyncTaskMethodBuilder (typeof (AsyncTaskMethodBuilder<int>));
-			var snfwc = type_Task.GetMethod ("SetNotificationForWaitCompletion", BindingFlags.Instance | BindingFlags.NonPublic);
+			var snfwc = type_Task.GetMethod ("NotifyDebuggerOfWaitCompletion", BindingFlags.Instance | BindingFlags.NonPublic);
 #if DEBUG
 			Assert.NotNull (snfwc, "Task.NotifyDebuggerOfWaitCompletion");
 #else
