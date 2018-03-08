@@ -12,7 +12,7 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 ***********************************************************************************************
 -->
 
-<!-- Unlike Xamarin.Mac.Common.targets, which is not not shared by the ObjC Bindings targets (yet), 
+<!-- Unlike Xamarin.Mac.Common.targets, which is not shared by the ObjC Bindings targets (yet), 
      Xamarin.Mac.Common.props is shared and truely common. -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
