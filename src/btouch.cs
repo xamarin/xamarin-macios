@@ -422,13 +422,14 @@ class BindingTouch {
 			// Keep source files at the end of the command line - csc will create TWO assemblies if any sources preceed the -out parameter
 			var cargs = new StringBuilder ();
 
+			// A bit of a hack
+			bool isCSC = compiler.Contains ("/Library/Frameworks/Mono.framework/Versions/Current/bin/csc") || 
+				     compiler.Contains ("/Library/Frameworks/Mono.framework/Commands/csc");
 			if (CurrentPlatform == PlatformName.MacOSX) {
-				// HACK
-				bool isCSC = compiler.Contains ("/Library/Frameworks/Mono.framework/Versions/Current/bin/csc");
 				if (!isCSC && !string.IsNullOrEmpty (net_sdk) && net_sdk != "mobile")
 					cargs.Append ("-sdk:").Append (net_sdk).Append (' ');
 			} else {
-				if (!string.IsNullOrEmpty (net_sdk))
+				if (!isCSC && !string.IsNullOrEmpty (net_sdk))
 					cargs.Append ("-sdk:").Append (net_sdk).Append (' ');
 			}
 			cargs.Append ("-debug -unsafe -target:library -nowarn:436").Append (' ');
@@ -441,8 +442,11 @@ class BindingTouch {
 			foreach (var def in defines)
 				cargs.Append ("-define:").Append (def).Append (' ');
 			cargs.Append (paths).Append (' ');
-			if (nostdlib)
+			if (nostdlib) {
 				cargs.Append ("-nostdlib ");
+				if (isCSC)
+					cargs.Append ("-noconfig ");
+			}
 			foreach (var qs in api_sources)
 				cargs.Append (qs).Append (' ');
 			foreach (var cs in core_sources)
