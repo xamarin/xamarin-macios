@@ -475,6 +475,9 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	<Target Name="_DetectSigningIdentity" DependsOnTargets="_DetectAppManifest">
 		<PropertyGroup>
 			<_AppBundleName>$(AssemblyName)</_AppBundleName>
+
+			<_RequireProvisioningProfile>False</_RequireProvisioningProfile>
+			<_RequireProvisioningProfile Condition="'$(CodesignEntitlements)' != ''">True</_RequireProvisioningProfile>
 		</PropertyGroup>
 
 		<DetectSigningIdentity
@@ -484,6 +487,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			AppManifest="$(_AppManifest)"
 			Keychain="$(CodesignKeychain)"
 			RequireCodeSigning="$(EnableCodeSigning)"
+			RequireProvisioningProfile="$(_RequireProvisioningProfile)"
 			SdkPlatform="MacOSX"
 			ProvisioningProfile="$(CodeSignProvision)"
 			SigningKey="$(CodeSigningKey)">
