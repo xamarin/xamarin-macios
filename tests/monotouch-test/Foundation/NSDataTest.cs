@@ -143,7 +143,7 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.Ignore ("NSData.FromUrl doesn't seem to work in watchOS");
 			}
 #endif
-			using (var url = new NSUrl ("https://blog.xamarin.com/robots.txt"))
+			using (var url = new NSUrl ("https://www.microsoft.com/robots.txt"))
 			using (var x = NSData.FromUrl (url)) {
 				Assert.That ((x != null) && (x.Length > 0));
 			}
