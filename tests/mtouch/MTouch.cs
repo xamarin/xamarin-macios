@@ -414,11 +414,30 @@ public class B : A {}
 					mtouch.NoStrip = true; // faster test
 					//mtouch.Verbosity = 20; // Set the mtouch verbosity to something to print the mtouch output to the terminal. This will also enable additional debug output.
 
+					System.Action assertSupportsDynamicRegistrar = () => {
+						// Assert that the xamarin_supports_dynamic_registration is identical between the app and the extension.
+						string [] abis;
+						if (string.IsNullOrEmpty (abi)) {
+							abis = new string [] { "armv7" };
+						} else {
+							abis = abi.Split (',').Select ((v) => v.Replace ("+llvm", "")).ToArray ();
+						}
+						foreach (var a in abis) {
+							var ext_main = File.ReadAllText (Path.Combine (extension.Cache, a, "main.m"));
+							var app_main = File.ReadAllText (Path.Combine (mtouch.Cache, a, "main.m"));
+							var ext_str = ext_main.Substring (ext_main.IndexOf ("xamarin_supports_dynamic_registration", StringComparison.Ordinal) + 40, 4);
+							var app_str = app_main.Substring (app_main.IndexOf ("xamarin_supports_dynamic_registration", StringComparison.Ordinal) + 40, 4);
+							Assert.AreEqual (ext_str, app_str, $"Expected dynamic registration support to be identical between app ({app_str}) and extension ({ext_str}).");
+							Assert.That (ext_str, Is.EqualTo ("FALS").Or.EqualTo ("TRUE"), "SDR value");
+						}
+					};
+
 					var timestamp = DateTime.MinValue;
 
 					mtouch.AssertExecute (MTouchAction.BuildDev, "first build");
 					Console.WriteLine ($"{DateTime.Now} **** FIRST BUILD DONE ****");
 					DumpFileStats (mtouch);
+					assertSupportsDynamicRegistrar ();
 
 					timestamp = DateTime.Now;
 					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
@@ -429,6 +448,7 @@ public class B : A {}
 
 					mtouch.AssertNoneModified (timestamp, name);
 					extension.AssertNoneModified (timestamp, name);
+					assertSupportsDynamicRegistrar ();
 
 					// Touch the extension's executable, nothing should change
 					new FileInfo (extension.RootAssembly).LastWriteTimeUtc = DateTime.UtcNow;
@@ -437,6 +457,7 @@ public class B : A {}
 					DumpFileStats (mtouch);
 					mtouch.AssertNoneModified (timestamp, name);
 					extension.AssertNoneModified (timestamp, name);
+					assertSupportsDynamicRegistrar ();
 
 					// Touch the main app's executable, nothing should change
 					new FileInfo (mtouch.RootAssembly).LastWriteTimeUtc = DateTime.UtcNow;
@@ -445,6 +466,7 @@ public class B : A {}
 					DumpFileStats (mtouch);
 					mtouch.AssertNoneModified (timestamp, name);
 					extension.AssertNoneModified (timestamp, name);
+					assertSupportsDynamicRegistrar ();
 
 					// Test that a rebuild (where something changed, in this case the .exe)
 					// actually work. We compile with custom code to make sure it's different
@@ -463,6 +485,7 @@ public class B : A {}
 					DumpFileStats (mtouch);
 					mtouch.AssertNoneModified (timestamp, name);
 					extension.AssertNoneModified (timestamp, name, "testServiceExtension", "testServiceExtension.aotdata.armv7", "testServiceExtension.aotdata.arm64", "testServiceExtension.dll");
+					assertSupportsDynamicRegistrar ();
 
 					timestamp = DateTime.Now;
 					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
@@ -474,6 +497,7 @@ public class B : A {}
 					DumpFileStats (mtouch);
 					mtouch.AssertNoneModified (timestamp, name, "testApp", "testApp.aotdata.armv7", "testApp.aotdata.arm64", "testApp.exe");
 					extension.AssertNoneModified (timestamp, name);
+					assertSupportsDynamicRegistrar ();
 
 					timestamp = DateTime.Now;
 					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
@@ -486,6 +510,7 @@ public class B : A {}
 					mtouch.AssertNoneModified (timestamp, name);
 					extension.AssertNoneModified (timestamp, name, "testServiceExtension.dll.config", "testServiceExtension", "testServiceExtension.aotdata.armv7", "testServiceExtension.aotdata.arm64");
 					CollectionAssert.Contains (Directory.EnumerateFiles (extension.AppPath, "*", SearchOption.AllDirectories).Select ((v) => Path.GetFileName (v)), "testServiceExtension.dll.config", "extension config added");
+					assertSupportsDynamicRegistrar ();
 
 					timestamp = DateTime.Now;
 					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
@@ -498,6 +523,7 @@ public class B : A {}
 					mtouch.AssertNoneModified (timestamp, name, "testApp.exe.config", "testApp", "testApp.aotdata.armv7", "testApp.aotdata.arm64");
 					extension.AssertNoneModified (timestamp, name);
 					CollectionAssert.Contains (Directory.EnumerateFiles (mtouch.AppPath, "*", SearchOption.AllDirectories).Select ((v) => Path.GetFileName (v)), "testApp.exe.config", "container config added");
+					assertSupportsDynamicRegistrar ();
 
 					timestamp = DateTime.Now;
 					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
@@ -511,6 +537,7 @@ public class B : A {}
 						extension.AssertNoneModified (timestamp, name, Path.GetFileName (satellite));
 						extension.AssertModified (timestamp, name, Path.GetFileName (satellite));
 						CollectionAssert.Contains (Directory.EnumerateFiles (extension.AppPath, "*", SearchOption.AllDirectories).Select ((v) => Path.GetFileName (v)), Path.GetFileName (satellite), "extension satellite added");
+						assertSupportsDynamicRegistrar ();
 					}
 
 					timestamp = DateTime.Now;
@@ -526,6 +553,7 @@ public class B : A {}
 						extension.AssertNoneModified (timestamp, name, Path.GetFileName (satellite));
 						mtouch.AssertModified (timestamp, name, Path.GetFileName (satellite));
 						CollectionAssert.Contains (Directory.EnumerateFiles (mtouch.AppPath, "*", SearchOption.AllDirectories).Select ((v) => Path.GetFileName (v)), Path.GetFileName (satellite), "container satellite added");
+						assertSupportsDynamicRegistrar ();
 					}
 				}
 			}
