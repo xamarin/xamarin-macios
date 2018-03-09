@@ -20,14 +20,16 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 	<UsingTask TaskName="Microsoft.Build.Tasks.RemoveDir" AssemblyFile="Xamarin.Mac.Tasks.dll"/>
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.ObjCBinding.Common.props" 
-			Condition="'$(_XamarinCommonPropsHasBeenImported)' != 'true'" />
+			Condition="'$(_XamarinCommonBindingPropsHasBeenImported)' != 'true'" />
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets" 
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
 
-	<PropertyGroup Condition="'$(XamarinMacFrameworkRoot)' == ''">
-		<XamarinMacFrameworkRoot>/Library/Frameworks/Xamarin.Mac.framework/Versions/Current</XamarinMacFrameworkRoot>
-	</PropertyGroup>
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.xbuild.targets"
+		Condition="'$(IsXBuild)' == 'true' "/>
+	
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.msbuild.targets"
+		Condition="'$(IsXBuild)' != 'true' "/>
 
 	<!-- Add our own pre-build steps -->
 	<PropertyGroup>
