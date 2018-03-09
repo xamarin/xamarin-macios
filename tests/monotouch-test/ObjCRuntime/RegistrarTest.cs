@@ -2027,6 +2027,30 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Test]
+		public void BlockCollection ()
+		{
+			Exception ex = null;
+			int initialFreedCount = ObjCBlockTester.FreedBlockCount;
+			var thread = new Thread (() => {
+				try {
+					using (var obj = new Xamarin.BindingTests.RegistrarBindingTest.BlockCallbackTester ()) {
+						for (int i = 0; i < 100; i++)
+							obj.TestFreedBlocks ();
+					}
+				} catch (Exception e) {
+					ex = e;
+				}
+			});
+			thread.Start ();
+			thread.Join ();
+			GC.Collect ();
+			GC.WaitForPendingFinalizers ();
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (1), () => { }, () => ObjCBlockTester.FreedBlockCount > initialFreedCount);
+			Assert.IsNull (ex, "No exceptions");
+			Assert.That (ObjCBlockTester.FreedBlockCount, Is.GreaterThan (initialFreedCount), "freed blocks");
+		}
+
+		[Test]
 		public void TestCtors ()
 		{
 			IntPtr ptr = IntPtr.Zero;
