@@ -1345,7 +1345,8 @@ namespace xharness
 				allTasks.AddRange (allDeviceTasks);
 			}
 
-			var failedTests = allTasks.Where ((v) => v.Failed || v.Skipped);
+			var failedTests = allTasks.Where ((v) => v.Failed);
+			var skippedTests = allTasks.Where ((v) => v.Skipped);
 			var unfinishedTests = allTasks.Where ((v) => !v.Finished);
 			var passedTests = allTasks.Where ((v) => v.Succeeded);
 			var runningTests = allTasks.Where ((v) => v.Running && !v.Waiting);
@@ -1367,7 +1368,9 @@ namespace xharness
 					markdown_summary.Write (string.Join (", ", list));
 					markdown_summary.WriteLine ();
 				} else if (failedTests.Any ()) {
-					markdown_summary.WriteLine ($"{failedTests.Count ()} tests failed, {passedTests.Count ()} tests passed.");
+					markdown_summary.WriteLine ($"{failedTests.Count ()} tests failed, {skippedTests.Count ()} tests skipped, {passedTests.Count ()} tests passed.");
+				} else if (skippedTests.Any ()) {
+					markdown_summary.WriteLine ($"{skippedTests.Count ()} tests skipped, {passedTests.Count ()} tests passed.");
 				} else if (passedTests.Any ()) {
 					markdown_summary.WriteLine ($"# All {passedTests.Count ()} tests passed");
 				} else {
@@ -1694,6 +1697,8 @@ function toggleAll (show)
 					; // default
 				} else if (failedTests.Any ()) {
 					headerColor = "red";
+				} else if (skippedTests.Any ()) {
+					headerColor = "orange";
 				} else if (passedTests.Any ()) {
 					headerColor = "green";
 				} else {
@@ -1713,7 +1718,9 @@ function toggleAll (show)
 					writer.Write (string.Join (", ", list));
 					writer.Write (")");
 				} else if (failedTests.Any ()) {
-					writer.Write ($"{failedTests.Count ()} tests failed, {passedTests.Count ()} tests passed.");
+					writer.Write ($"{failedTests.Count ()} tests failed, {skippedTests.Count ()} tests skipped, {passedTests.Count ()} tests passed");
+				} else if (skippedTests.Any ()) {
+					writer.Write ($"{skippedTests.Count ()} tests skipped, {passedTests.Count ()} tests passed");
 				} else if (passedTests.Any ()) {
 					writer.Write ($"All {passedTests.Count ()} tests passed");
 				} else {

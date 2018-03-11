@@ -19732,7 +19732,7 @@ namespace AppKit {
 		NSWindowStyle StyleMask { get; set; }
 	
 		[Export ("fieldEditor:forObject:")]
-		NSText FieldEditor (bool createFlag, NSObject forObject);
+		NSText FieldEditor (bool createFlag, [NullAllowed] NSObject forObject);
 	
 		[Export ("endEditingFor:")]
 		void EndEditingFor ([NullAllowed] NSObject anObject);

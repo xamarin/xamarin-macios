@@ -566,6 +566,8 @@ namespace Xamarin.Bundler
 									App.Optimizations.RemoveDynamicRegistrar = null;
 									break;
 								}
+								foreach (var t in sharingTargets)
+									t.App.Optimizations.RemoveDynamicRegistrar = App.Optimizations.RemoveDynamicRegistrar;
 								Driver.Log (1, $"Optimization dynamic registrar removal loaded from cached results: {(App.Optimizations.RemoveDynamicRegistrar.HasValue ? (App.Optimizations.RemoveUIThreadChecks.Value ? "enabled" : "disabled") : "not set")}");
 								break;
 							default:
