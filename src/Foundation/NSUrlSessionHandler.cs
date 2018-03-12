@@ -475,6 +475,7 @@ namespace Foundation {
 			public void Add (NSData d)
 			{
 				lock (dataLock) {
+					d.DangerousRetain ();
 					data.Enqueue (d);
 					length += (int)d.Length;
 				}
@@ -538,7 +539,7 @@ namespace Foundation {
 				if (d.Position == d.Length) {
 					lock (dataLock) {
 						// this is the same object, it was done to make the cleanup
-						data.Dequeue ();
+						data.Dequeue ().Dispose ();
 						current?.Dispose ();
 						currentStream?.Dispose ();
 						current = null;
