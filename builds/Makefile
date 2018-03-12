@@ -99,7 +99,7 @@ SDK_CONFIG=$(MONO_PATH)/sdks/Make.config
 SDK_ARGS=XCODE_DIR=$(XCODE_DEVELOPER_ROOT) IOS_VERSION=$(IOS_SDK_VERSION) IOS_VERSION_MIN=$(MIN_IOS_SDK_VERSION) TVOS_VERSION=$(TVOS_SDK_VERSION) TVOS_VERSION_MIN=$(MIN_TVOS_SDK_VERSION) WATCHOS_VERSION=$(WATCH_SDK_VERSION) WATCHOS_VERSION_MIN=$(MIN_WATCHOS_SDK_VERSION)
 
 SDK_BUILDDIR = $(MONO_PATH)/sdks/builds
-SDK_DESTDIR = $(MONO_PATH)/sdks/out
+SDK_DESTDIR = $(abspath $(MONO_PATH)/sdks/out)
 
 $(MONO_PATH)/sdks/Make.config:
 	echo "DISABLE_ANDROID=1" > $@
@@ -825,16 +825,16 @@ clean-iphonesimulator:: clean-$(2)
 $(eval SIM_TARGET_LIBMONOSGEN:=$(SIM_TARGET_LIBMONOSGEN) $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.a)
 $(eval SIM_TARGET_SHAREDMONOSGEN:=$(SIM_TARGET_SHAREDMONOSGEN) $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.dylib)
 $(eval SIM_TARGET_LIBLOGPROFILER:=$(SIM_TARGET_LIBLOGPROFILER) $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log-static.a)
-$(eval SIM_TARGET_SHAREDLIBLOGPROFILER:=$(SIM_TARGET_SHAREDLIBLOGPROFILER) $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log.0.dylib)
+$(eval SIM_TARGET_SHAREDLIBLOGPROFILER:=$(SIM_TARGET_SHAREDLIBLOGPROFILER) $(BUILD_DESTDIR)/$(2)/tmp-lib/libmono-profiler-log.0.dylib)
 
 $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.a: .stamp-build-$(2)
 $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.dylib: .stamp-build-$(2)
 $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log-static.a: .stamp-build-$(2)
 $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log.0.dylib: .stamp-build-$(2)
 
-$(BUILD_DESTDIR)/$(2)/tmp-lib/libmono-profiler-log.0.dylib: $(SDK_DESTDIR)/ios-$(3)/lib/libmono-profiler-log.0.dylib | $(BUILD_DESTDIR)/$(2)/tmp-lib
+$(BUILD_DESTDIR)/$(2)/tmp-lib/libmono-profiler-log.0.dylib: $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log.0.dylib | $(BUILD_DESTDIR)/$(2)/tmp-lib
 	$(Q) cp $$< $$@
-	$(Q) install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/$(3)/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $$@
+	$(Q) install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/ios-$(3)/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $$@
 
 $(BUILD_DESTDIR)/$(2):
 	$$(Q) mkdir -p $$@
@@ -962,7 +962,7 @@ $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-profiler-log.a: $(WA
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-profiler-log.dylib: $(WATCHSIMULATOR_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib
 	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHSIMULATOR_SHAREDLIBLOGPROFILER) -create -output $@
-	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(BUILD_DESTDIR)/watchsimulator/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
+	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/ios-simwatch/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
 	$(Q) dsymutil -t 4 -o $@.dSYM $@
 
 $(WATCHSIMULATOR_DIRECTORIES):
@@ -1043,7 +1043,7 @@ $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-profiler-log.a: $(TVSIM
 
 $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-profiler-log.dylib: $(TVSIMULATOR_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib
 	$(Q) $(TVOS_BIN_PATH)/lipo $(TVSIMULATOR_SHAREDLIBLOGPROFILER) -create -output $@
-	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(BUILD_DESTDIR)/tvsimulator/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
+	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/ios-simtv/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
 	$(Q) dsymutil -t 4 -o $@.dSYM $@
 
 $(TVSIMULATOR_DIRECTORIES):
@@ -1300,7 +1300,7 @@ $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-profiler-log.a: $(WATCHOS_T
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-profiler-log.dylib: $(WATCHOS_TARGET_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
 	$(Q) $(WATCHOS_BIN_PATH)/bitcode_strip $(WATCHOS_TARGET_SHAREDLIBLOGPROFILER) -m -o $@
-	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
+	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/ios-targetwatch/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
 	$(Q) dsymutil -t 4 -o $@.dSYM $@
 
 $(WATCHOS_DIRECTORIES):
@@ -1393,7 +1393,7 @@ $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.a: $(TVOS_TARGET_
 
 $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.dylib: $(TVOS_TARGET_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
 	$(Q) lipo $(TVOS_TARGET_SHAREDLIBLOGPROFILER) -create -output $@
-	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(BUILD_DESTDIR)/targettv/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
+	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/ios-targettv/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
 	$(Q) dsymutil -t 4 -o $@.dSYM $@
 
 $(TVOS_DIRECTORIES):
