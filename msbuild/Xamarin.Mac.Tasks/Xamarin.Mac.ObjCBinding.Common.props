@@ -24,9 +24,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<_XamarinCommonBindingPropsHasBeenImported>true</_XamarinCommonBindingPropsHasBeenImported>
 	</PropertyGroup>
 
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.Common.props"
-			Condition="'$(_XamarinCommonPropsHasBeenImported)' != 'true'" />	
-
 	<PropertyGroup>
 		<BaseLibDllPath>$(MacBclPath)/Xamarin.Mac.dll</BaseLibDllPath>
 		<BTouchToolPath>$(XamarinMacFrameworkRoot)/bin/</BTouchToolPath>

@@ -3,67 +3,132 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace Xamarin.MMP.Tests
 {
 	public class BindingProjectTests
 	{
-		static string BindingName (bool full) => full ? "XM45Binding" : "MobileBinding";
+		static string RemoveCSProj (string s) => s.Remove (s.IndexOf (".csproj", StringComparison.InvariantCulture));
 		
-		static void BuildLinkedTestProjects (string tmpDir, bool full = false, bool removeTFI = false)
+		static Tuple<string, string> BuildLinkedTestProjects (TI.UnifiedTestConfig binding, TI.UnifiedTestConfig project, string tmpDir)
 		{
-			string bindingName = BindingName (full);
-			TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
-				ProjectName = bindingName + ".csproj",
-				ItemGroup = MMPTests.CreateSingleNativeRef (Path.GetFullPath (MMPTests.SimpleDylibPath), "Dynamic"),
-				StructsAndEnumsConfig = "public class UnifiedWithDepNativeRefLibTestClass {}"
-			};
+			binding.ItemGroup = MMPTests.CreateSingleNativeRef (Path.GetFullPath (MMPTests.SimpleDylibPath), "Dynamic");
+			binding.StructsAndEnumsConfig = "public class UnifiedWithDepNativeRefLibTestClass {}";
 
-			if (removeTFI)
-				test.CustomProjectReplacement = new Tuple<string, string> (@"<TargetFrameworkVersion>v4.5</TargetFrameworkVersion>", "");
+			string projectPath = TI.GenerateBindingLibraryProject (binding);
+			string bindingBuildLog = TI.BuildProject (projectPath, true);
 
-			string projectPath = TI.GenerateBindingLibraryProject (test);
-			TI.BuildProject (projectPath, true);
+			string bindingName = RemoveCSProj (binding.ProjectName);
 
-			string referenceCode = string.Format (@"<Reference Include=""{0}""><HintPath>{1}</HintPath></Reference>", bindingName, Path.Combine (tmpDir, "bin/Debug", bindingName + ".dll"));
+			project.References = string.Format (@"<Reference Include=""{0}""><HintPath>{1}</HintPath></Reference>", bindingName, Path.Combine (tmpDir, "bin/Debug", bindingName + ".dll"));
+			project.TestCode = "System.Console.WriteLine (typeof (ExampleBinding.UnifiedWithDepNativeRefLibTestClass));";
 
-			test = new TI.UnifiedTestConfig (tmpDir) {
-				References = referenceCode,
-				TestCode = "System.Console.WriteLine (typeof (ExampleBinding.UnifiedWithDepNativeRefLibTestClass));",
-				XM45 = full					
-			};
-			TI.TestUnifiedExecutable (test);
+			string appBuildLog = TI.TestUnifiedExecutable (project).BuildOutput;
+
+			return new Tuple<string, string> (bindingBuildLog, appBuildLog);
 		}
 
-		[Test]
-		public void ShouldRemovePackagedLibrary_OnceInBundle ()
+		public enum ProjectType { Modern, ModernNoTag, Full }
+
+		Tuple <TI.UnifiedTestConfig, TI.UnifiedTestConfig> GenerateTestProject (ProjectType type, string tmpDir)
+		{
+			TI.UnifiedTestConfig binding = new TI.UnifiedTestConfig (tmpDir);
+			TI.UnifiedTestConfig project = new TI.UnifiedTestConfig (tmpDir);
+			switch (type) {
+			case ProjectType.Modern:
+				binding.ProjectName = "MobileBinding.csproj";
+				project.XM45 = false;
+				break;
+			case ProjectType.ModernNoTag:
+				binding.ProjectName = "BindingProjectWithNoTag.csproj";
+				project.XM45 = false;
+				break;
+			case ProjectType.Full:
+				binding.ProjectName = "XM45Binding.csproj";
+				project.XM45 = true;
+				break;
+			default:
+				throw new NotImplementedException ();
+			}
+			return new Tuple<TI.UnifiedTestConfig, TI.UnifiedTestConfig> (binding, project);
+		}
+
+		[TestCase (ProjectType.Modern)]
+		[TestCase (ProjectType.ModernNoTag)]
+		[TestCase (ProjectType.Full)]
+		public void ShouldRemovePackagedLibrary_OnceInBundle (ProjectType type)
 		{
 			MMPTests.RunMMPTest (tmpDir => {
-				BuildLinkedTestProjects (tmpDir);
+				var projects = GenerateTestProject (type, tmpDir);
+				BuildLinkedTestProjects (projects.Item1, projects.Item2, tmpDir);
 
-				string libPath = Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MonoBundle/MobileBinding.dll");
-				Assert.True (File.Exists (libPath));
+				string bindingName = RemoveCSProj (projects.Item1.ProjectName);
+				string appName = RemoveCSProj (projects.Item2.ProjectName);
+
+				string libPath = Path.Combine (tmpDir, $"bin/Debug/{appName}.app/Contents/MonoBundle/{bindingName}.dll");
+				Assert.True (File.Exists (libPath), $"Did not find expected library: {libPath}");
 				string monoDisResults = TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/monodis", "--presources " + libPath, "monodis");
 				Assert.IsFalse (monoDisResults.Contains ("SimpleClassDylib.dylib"));
 			});
 		}
 
-		[TestCase (false, false)]
-		[TestCase (true, false)]
-		[TestCase (true, true)]
-		public void ShouldBuildWithoutErrors_AndLinkCorrectFramework (bool full, bool removeTFI)
+		[TestCase (ProjectType.Modern)]
+		[TestCase (ProjectType.ModernNoTag)]
+		[TestCase (ProjectType.Full)]
+		public void ShouldBuildWithoutErrors_AndLinkCorrectFramework (ProjectType type)
 		{
+			// TODO - Build and test BindingProjectWithNoTag.csproj which is Modern without tags
+			// TODO - Abstract this into a helper called by multiple tests
 			MMPTests.RunMMPTest (tmpDir => {
-				BuildLinkedTestProjects (tmpDir, full, removeTFI);
+				var projects = GenerateTestProject (type, tmpDir);
+				var logs = BuildLinkedTestProjects (projects.Item1, projects.Item2, tmpDir);
 
-				string libPath = Path.Combine (tmpDir, $"bin/Debug/{(full ? "XM45Example.app" : "UnifiedExample.app")}/Contents/MonoBundle/{BindingName (full)}.dll");
+				var bgenInvocation = logs.Item1.SplitLines ().First (x => x.Contains ("bin/bgen"));
+				var bgenParts = bgenInvocation.Split (new char[] { ' ' });
+				var mscorlib = bgenParts.First (x => x.Contains ("mscorlib.dll"));
+				var system = bgenParts.First (x => x.Contains ("System.dll"));
+
+				switch (type) {
+				case ProjectType.Modern:
+				case ProjectType.ModernNoTag:
+					Assert.True (mscorlib.EndsWith ("lib/mono/Xamarin.Mac/mscorlib.dll", StringComparison.Ordinal), "mscorlib not found in expected Modern location: " + mscorlib);
+					Assert.True (system.EndsWith ("lib/mono/Xamarin.Mac/System.dll", StringComparison.Ordinal), "system not found in expected Modern location: " + system);
+					break;
+				case ProjectType.Full:
+					Assert.True (mscorlib.EndsWith ("lib/mono/4.5/mscorlib.dll", StringComparison.Ordinal), "mscorlib not found in expected Full location: " + mscorlib);
+					Assert.True (system.EndsWith ("lib/mono/4.5/System.dll", StringComparison.Ordinal), "system not found in expected Full location: " + system);
+					break;
+				default:
+					throw new NotImplementedException ();
+				}
+
+				Assert.False (logs.Item1.Contains ("CS1685"), "Binding should not contains CS1685 multiple definition warning:\n" + logs.Item1);
+
+				string bindingName = RemoveCSProj (projects.Item1.ProjectName);
+				string appName = RemoveCSProj (projects.Item2.ProjectName);
+				string libPath = Path.Combine (tmpDir, $"bin/Debug/{appName}.app/Contents/MonoBundle/{bindingName}.dll");
+
 				Assert.True (File.Exists (libPath));
 				string results = TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/monop", "--refs -r:" + libPath, "monop");
 				string mscorlibLine = results.Split (new char[] { '\n' }).First (x => x.Contains ("mscorlib"));
 
-				string expectedVersion = full ? "4.0.0.0" : "2.0.5.0";
+				string expectedVersion = GetExpectedBCLVersion (type);
 				Assert.True (mscorlibLine.Contains (expectedVersion), $"{mscorlibLine} did not contain expected version {expectedVersion}");
 			});
+		}
+
+		static string GetExpectedBCLVersion (ProjectType type)
+		{
+			switch (type) {
+			case ProjectType.Modern:
+			case ProjectType.ModernNoTag:
+				return "2.0.5.0";
+			case ProjectType.Full:
+				return "4.0.0.0";
+			default:
+				throw new NotImplementedException ();
+			}
 		}
 	}
 }

@@ -230,6 +230,9 @@ namespace Xamarin.MMP.Tests
 
 		public static string BuildProject (string csprojTarget, bool isUnified, bool diagnosticMSBuild = false, bool shouldFail = false, bool useMSBuild = false, bool release = false, string[] environment = null)
 		{
+			if (Environment.GetEnvironmentVariable ("XM_FORCE_MSBUILD") != null)
+				useMSBuild = true;
+
 			string rootDirectory = FindRootDirectory ();
 
 			// TODO - This is not enough for MSBuild to really work. We need stuff to have it not use system targets!
