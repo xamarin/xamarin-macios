@@ -284,6 +284,13 @@ namespace Bindings.Test {
 
 		[Export ("callOptionalCallback")]
 		void CallOptionalCallback ();
+
+		[Export ("testFreedBlocks")]
+		void TestFreedBlocks ();
+
+		[Static]
+		[Export ("freedBlockCount")]
+		int FreedBlockCount { get; }
 	}
 }
 

@@ -1,5 +1,6 @@
 #import <Foundation/Foundation.h>
 #include <simd/simd.h>
+#include <libkern/OSAtomic.h>
 
 #include "rename.h"
 
@@ -149,6 +150,14 @@ typedef unsigned int (^RegistrarTestBlock) (unsigned int magic);
 -(void) callClassCallback;
 -(void) callRequiredCallback;
 -(void) callOptionalCallback;
+
+-(void) testFreedBlocks;
++(int) freedBlockCount;
+@end
+
+@interface FreedNotifier : NSObject {
+}
+-(void) dealloc;
 @end
 
 #ifdef __cplusplus
