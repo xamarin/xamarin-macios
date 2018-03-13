@@ -29,7 +29,14 @@ namespace Xamarin.MMP.Tests
 			return new Tuple<string, string> (bindingBuildLog, appBuildLog);
 		}
 
-		public enum ProjectType { Modern, ModernNoTag, Full }
+		// There are a mess of different binding project configurations in the wild
+		public enum ProjectType { 
+			Modern, // The ideal Modern - Sets TargetFrameworkVersion and TargetFrameworkIdentifier correclty
+			ModernNoTag, // Sets neither TargetFrameworkVersion nor TargetFrameworkIdentifier
+			Full, // Sets both TargetFrameworkVersion and UseXamMacFullFramework
+			FullTVF, // Sets just TargetFrameworkVersion to 4.5 or later
+			FullXamMacTag, // Sets just UseXamMacFullFramework
+		}
 
 		Tuple <TI.UnifiedTestConfig, TI.UnifiedTestConfig> GenerateTestProject (ProjectType type, string tmpDir)
 		{
@@ -46,8 +53,22 @@ namespace Xamarin.MMP.Tests
 				break;
 			case ProjectType.Full:
 				binding.ProjectName = "XM45Binding.csproj";
+				binding.CustomProjectReplacement = new Tuple<string, string> (
+				"<TargetFrameworkVersion>v4.5</TargetFrameworkVersion>",
+				"<UseXamMacFullFramework>true</UseXamMacFullFramework><TargetFrameworkVersion>4.5</TargetFrameworkVersion>");
 				project.XM45 = true;
 				break;
+			case ProjectType.FullTVF:
+				binding.ProjectName = "XM45Binding.csproj";
+				project.XM45 = true;
+				break;
+			case ProjectType.FullXamMacTag:
+				binding.ProjectName = "XM45Binding.csproj";
+				binding.CustomProjectReplacement = new Tuple<string, string> (
+					"<TargetFrameworkVersion>v4.5</TargetFrameworkVersion>", 
+					"<UseXamMacFullFramework>true</UseXamMacFullFramework>");
+				project.XM45 = true;
+				break;	
 			default:
 				throw new NotImplementedException ();
 			}
@@ -57,6 +78,8 @@ namespace Xamarin.MMP.Tests
 		[TestCase (ProjectType.Modern)]
 		[TestCase (ProjectType.ModernNoTag)]
 		[TestCase (ProjectType.Full)]
+		[TestCase (ProjectType.FullTVF)]
+		[TestCase (ProjectType.FullXamMacTag)]
 		public void ShouldRemovePackagedLibrary_OnceInBundle (ProjectType type)
 		{
 			MMPTests.RunMMPTest (tmpDir => {
@@ -76,6 +99,8 @@ namespace Xamarin.MMP.Tests
 		[TestCase (ProjectType.Modern)]
 		[TestCase (ProjectType.ModernNoTag)]
 		[TestCase (ProjectType.Full)]
+		[TestCase (ProjectType.FullTVF)]
+		[TestCase (ProjectType.FullXamMacTag)]
 		public void ShouldBuildWithoutErrors_AndLinkCorrectFramework (ProjectType type)
 		{
 			MMPTests.RunMMPTest (tmpDir => {
@@ -94,6 +119,8 @@ namespace Xamarin.MMP.Tests
 					Assert.True (system.EndsWith ("lib/mono/Xamarin.Mac/System.dll", StringComparison.Ordinal), "system not found in expected Modern location: " + system);
 					break;
 				case ProjectType.Full:
+				case ProjectType.FullTVF:
+				case ProjectType.FullXamMacTag:
 					Assert.True (mscorlib.EndsWith ("lib/mono/4.5/mscorlib.dll", StringComparison.Ordinal), "mscorlib not found in expected Full location: " + mscorlib);
 					Assert.True (system.EndsWith ("lib/mono/4.5/System.dll", StringComparison.Ordinal), "system not found in expected Full location: " + system);
 					break;
@@ -123,6 +150,8 @@ namespace Xamarin.MMP.Tests
 			case ProjectType.ModernNoTag:
 				return "2.0.5.0";
 			case ProjectType.Full:
+			case ProjectType.FullTVF:
+			case ProjectType.FullXamMacTag:
 				return "4.0.0.0";
 			default:
 				throw new NotImplementedException ();
