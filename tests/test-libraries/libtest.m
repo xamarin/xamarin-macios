@@ -510,6 +510,8 @@ static UltimateMachine *shared;
 }
 @end
 
+static volatile int freed_blocks = 0;
+
 @implementation ObjCBlockTester
 -(void) classCallback: (void (^)(int32_t magic_number))completionHandler
 {
@@ -549,6 +551,30 @@ static UltimateMachine *shared;
 	assert (called);
 }
 
+-(void) testFreedBlocks
+{
+	FreedNotifier* obj = [[FreedNotifier alloc] init];
+	__block bool success = false;
+	[self classCallback: ^(int magic_number)
+	{
+		assert (magic_number == 42);
+		success = obj != NULL; // this captures the 'obj', and it's only freed when the block is freed.
+	}];
+	assert (success);
+	[obj release];
+}
++(int) freedBlockCount
+{
+	return freed_blocks;
+}
+@end
+
+@implementation FreedNotifier
+-(void) dealloc
+{
+	OSAtomicIncrement32 (&freed_blocks);
+	[super dealloc];
+}
 @end
 
 #include "libtest.decompile.m"
