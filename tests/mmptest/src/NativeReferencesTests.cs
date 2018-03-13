@@ -10,10 +10,10 @@ using System.Reflection;
 namespace Xamarin.MMP.Tests
 {
 	public partial class MMPTests {
-		public const string ItemGroupTemplate = @"<ItemGroup>{0}</ItemGroup>";
-		public const string NativeReferenceTemplate = @"<NativeReference Include=""{0}""><IsCxx>False</IsCxx><Kind>{1}</Kind></NativeReference>";
+		const string ItemGroupTemplate = @"<ItemGroup>{0}</ItemGroup>";
+		const string NativeReferenceTemplate = @"<NativeReference Include=""{0}""><IsCxx>False</IsCxx><Kind>{1}</Kind></NativeReference>";
 
-		public static string SimpleDylibPath {
+		public string SimpleDylibPath {
 			get {
 				string rootDir = TI.FindRootDirectory ();
 				string buildLibPath = Path.Combine (rootDir, "../tests/mac-binding-project/bin/SimpleClassDylib.dylib");
@@ -22,7 +22,7 @@ namespace Xamarin.MMP.Tests
 			}
 		}
 
-		public static string SimpleStaticPath {
+		public string SimpleStaticPath {
 			get {
 				string rootDir = TI.FindRootDirectory ();
 				string buildLibPath = Path.Combine (rootDir, "../tests/mac-binding-project/bin/SimpleClassStatic.a");
@@ -31,7 +31,7 @@ namespace Xamarin.MMP.Tests
 			}
 		}
 
-		public static string MobileStaticBindingPath {
+		public string MobileStaticBindingPath {
 			get {
 				string rootDir = TI.FindRootDirectory ();
 				string buildLibPath = Path.Combine (rootDir, "../tests/mac-binding-project/bin/Mobile-static/MobileBinding.dll");
@@ -40,9 +40,9 @@ namespace Xamarin.MMP.Tests
 			}
 		}
 
-		public static string CreateNativeRefInclude (string path, string kind) => string.Format (NativeReferenceTemplate, path, kind);
-		public static string CreateItemGroup (IEnumerable<string> elements) => string.Format (ItemGroupTemplate, string.Concat (elements));
-		public static string CreateSingleNativeRef (string path, string kind) => CreateItemGroup (CreateNativeRefInclude (path, kind).FromSingleItem ());
+		string CreateNativeRefInclude (string path, string kind) => string.Format (NativeReferenceTemplate, path, kind);
+		string CreateItemGroup (IEnumerable<string> elements) => string.Format (ItemGroupTemplate, string.Concat (elements));
+		string CreateSingleNativeRef (string path, string kind) => CreateItemGroup (CreateNativeRefInclude (path, kind).FromSingleItem ());
 
 		string CreateCopyOfSimpleClassInTestDir (string tmpDir, string fileName = "SimpleClassDylib.dylib")
 		{

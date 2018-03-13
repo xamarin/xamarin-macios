@@ -14,9 +14,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 ***********************************************************************************************
 -->
 
-<!-- Xamarin.Mac.Common.targets currently is not shared with Xamarin.Mac.ObjCBinding targets,
-     so be careful not to add fixes here that should go into Xamarin.Mac.Common.props which is shared -->
-
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ArTool" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Codesign" AssemblyFile="Xamarin.Mac.Tasks.dll" />
@@ -62,6 +59,57 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
+
+	<PropertyGroup Condition="'$(XamarinMacFrameworkRoot)' == ''">
+		<XamarinMacFrameworkRoot>/Library/Frameworks/Xamarin.Mac.framework/Versions/Current</XamarinMacFrameworkRoot>
+	</PropertyGroup>
+
+	<Choose>
+		<When Condition=" '$(TargetFrameworkIdentifier)' == 'Xamarin.Mac'">
+			<PropertyGroup>
+				<TargetFrameworkName>Modern</TargetFrameworkName>
+				<MacBclPath>$(XamarinMacFrameworkRoot)/lib/mono/Xamarin.Mac</MacBclPath>
+			</PropertyGroup>
+		</When>
+		<When Condition=" '$(TargetFrameworkIdentifier)' != 'Xamarin.Mac' And '$(UseXamMacFullFramework)' == 'true'">
+			<PropertyGroup>
+				<TargetFrameworkName>Full</TargetFrameworkName>
+				<MacBclPath>$(XamarinMacFrameworkRoot)/lib/mono/4.5</MacBclPath>
+			</PropertyGroup>
+		</When>
+		<Otherwise>
+			<PropertyGroup>
+				<TargetFrameworkName>System</TargetFrameworkName>
+				<MacBclPath>$(XamarinMacFrameworkRoot)/lib/mono/4.5</MacBclPath>
+			</PropertyGroup>
+		</Otherwise>
+	</Choose>
+
+	<PropertyGroup Condition="'$(TargetFrameworkName)' == 'Full'">
+		<AssemblySearchPaths>$(XamarinMacFrameworkRoot)/lib/reference/full;$(XamarinMacFrameworkRoot)/lib/mono;$(AssemblySearchPaths)</AssemblySearchPaths>
+		<ImplicitlyExpandNETStandardFacades>False</ImplicitlyExpandNETStandardFacades>
+	</PropertyGroup>
+
+	<!-- Do not resolve from the GAC in Modern or Full unless allow-unsafe-gac-resolution is passed in -->
+	<PropertyGroup Condition="'$(TargetFrameworkName)' != 'System' And !$(MonoBundlingExtraArgs.Contains('--allow-unsafe-gac-resolution'))" >
+		<AssemblySearchPaths>$([System.String]::Copy('$(AssemblySearchPaths)').Replace('{GAC}',''))</AssemblySearchPaths>
+		<AssemblySearchPaths Condition="'$(MSBuildRuntimeVersion)' != ''">$(AssemblySearchPaths.Split(';'))</AssemblySearchPaths>
+	</PropertyGroup>
+
+	<Target Name="FixDesignTimeFacades" AfterTargets="GetReferenceAssemblyPaths" Condition="'$(OS)' != 'Windows_NT'" />
+
+	<!-- Location of Libraries -->
+	<Target Name="FixTargetFrameworkDirectory" AfterTargets="FixDesignTimeFacades" Condition="('$(OS)' != 'Windows_NT')">
+		<PropertyGroup>
+			<!-- For Modern / Full we overwrite TargetFrameworkDirectory to resolve non XM assemblies from our location only -->
+			<TargetFrameworkDirectory Condition="'$(TargetFrameworkName)' != 'System'">$(MacBclPath);@(DesignTimeFacadeDirectories)</TargetFrameworkDirectory>
+
+			<!-- For system we extend, not overwrite TargetFrameworkDirectory. -->
+			<!-- mscorlib, System, and other BCL libs must come from Mono System to prevent corlib mistmatches. Xamarin.Mac.dll must come from XM/lib/mono/4.5/ -->
+			<!-- If we find cases of other non-XM assemblies being resolved from XM paths, we can look into using CandidateAssemblyFiles but it is msbuild only. -->
+			<TargetFrameworkDirectory Condition="'$(TargetFrameworkName)' == 'System'">$(TargetFrameworkDirectory);$(MacBclPath)</TargetFrameworkDirectory>
+		</PropertyGroup>
+	</Target>
 
 	<PropertyGroup>
 		<_CanOutputAppBundle>False</_CanOutputAppBundle>
@@ -651,8 +699,8 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		/>
 	</Target>
 
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.xbuild.targets"
-		Condition="'$(IsXBuild)' == 'true' "/>
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.XM45.xbuild.targets"
+		Condition="'$(UseXamMacFullFramework)' == 'true' And '$(IsXBuild)' == 'true' "/>
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.msbuild.targets"
 		Condition="'$(IsXBuild)' != 'true' "/>

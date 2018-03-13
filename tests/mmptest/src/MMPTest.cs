@@ -560,6 +560,32 @@ namespace Xamarin.MMP.Tests
 				}
 			});
 		}	
+				
+		public void UnifiedWithDepNativeRefLib_ShouldHaveItRemoved_OnceInBundle ()
+		{
+			RunMMPTest (tmpDir =>
+			{
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir)
+				{
+					ProjectName = "MobileBinding.csproj",
+					ItemGroup = string.Format (NativeReferenceTemplate, Path.GetFullPath (SimpleDylibPath), "Dynamic"),
+					StructsAndEnumsConfig = "public class UnifiedWithDepNativeRefLibTestClass {}"
+				};
+
+				string projectPath = TI.GenerateBindingLibraryProject (test);
+				TI.BuildProject (projectPath, true);
+
+				string referenceCode = string.Format (@"<Reference Include=""MobileBinding""><HintPath>{0}</HintPath></Reference>", Path.Combine (tmpDir, "bin/Debug", "MobileBinding.dll"));
+
+				test = new TI.UnifiedTestConfig (tmpDir) { References = referenceCode, TestCode = "System.Console.WriteLine (typeof (ExampleBinding.UnifiedWithDepNativeRefLibTestClass));" };
+				TI.TestUnifiedExecutable (test);
+
+				string libPath = Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MonoBundle/MobileBinding.dll");
+				Assert.True (File.Exists (libPath));
+				string monoDisResults = TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/monodis", new StringBuilder ("--presources " + libPath), "monodis");
+				Assert.IsFalse (monoDisResults.Contains ("SimpleClassDylib.dylib"));
+			});
+		}
 
 		public const string BundleResourceTemplate = "<ItemGroup><BundleResource Include=\"{0}\" /></ItemGroup>";
 
