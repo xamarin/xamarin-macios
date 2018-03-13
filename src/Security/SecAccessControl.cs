@@ -36,14 +36,14 @@ namespace XamCore.Security {
 		[Deprecated (PlatformName.MacOSX, 10, 13, 4, "Use 'BiometryAny' instead.")]
 		[Deprecated (PlatformName.TvOS, 11, 3, message: "Use 'BiometryAny' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 3, message: "Use 'BiometryAny' instead.")]
-		TouchIDAny          = 1 << 2,
+		TouchIDAny          = BiometryAny,
 
 		[iOS (9,0)][Mac (10,12,1)]
 		[Deprecated (PlatformName.iOS, 11, 3, message: "Use 'BiometryCurrentSet' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, 4, "Use 'BiometryCurrentSet' instead.")]
 		[Deprecated (PlatformName.TvOS, 11, 3, message: "Use 'BiometryCurrentSet' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 3, message: "Use 'BiometryCurrentSet' instead.")]
-		TouchIDCurrentSet   = 1 << 5,
+		TouchIDCurrentSet   = BiometryCurrentSet,
 
 		[iOS (11, 3), Mac (10, 13, 4), TV (11, 3), Watch (4, 3)]
 		BiometryAny         = 1 << 1,
