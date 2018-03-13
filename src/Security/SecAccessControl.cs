@@ -31,26 +31,18 @@ namespace XamCore.Security {
 #endif
 		UserPresence        = 1 << 0,
 
+		[Advice ("'BiometryAny' is preferred over 'TouchIDAny' since Xcode 9.3. Touch ID and Face ID together are biometric authentication mechanisms.")]
 		[iOS (9,0)][Mac (10,12,1)]
-		[Deprecated (PlatformName.iOS, 11, 3, message: "Use 'BiometryAny' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, 4, "Use 'BiometryAny' instead.")]
-		[Deprecated (PlatformName.TvOS, 11, 3, message: "Use 'BiometryAny' instead.")]
-		[Deprecated (PlatformName.WatchOS, 4, 3, message: "Use 'BiometryAny' instead.")]
 		TouchIDAny          = BiometryAny,
 
+		[Advice ("'BiometryCurrentSet' is preferred over 'TouchIDCurrentSet' since Xcode 9.3. Touch ID and Face ID together are biometric authentication mechanisms.")]
 		[iOS (9,0)][Mac (10,12,1)]
-		[Deprecated (PlatformName.iOS, 11, 3, message: "Use 'BiometryCurrentSet' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, 4, "Use 'BiometryCurrentSet' instead.")]
-		[Deprecated (PlatformName.TvOS, 11, 3, message: "Use 'BiometryCurrentSet' instead.")]
-		[Deprecated (PlatformName.WatchOS, 4, 3, message: "Use 'BiometryCurrentSet' instead.")]
 		TouchIDCurrentSet   = BiometryCurrentSet,
 
-		// Introduced in Xcode 9.3, but value kept from TouchIDAny
-		[iOS (9, 0), Mac (10, 12, 1)]
+		[iOS (9,0), Mac (10,12,1)]
 		BiometryAny         = 1 << 1,
 
-		// Introduced in Xcode 9.3, but value kept from TouchIDCurrentSet
-		[iOS (9, 0), Mac (10, 12, 1)]
+		[iOS (9,0), Mac (10,12,1)]
 		BiometryCurrentSet  = 1 << 3,
 
 		DevicePasscode      = 1 << 4,
