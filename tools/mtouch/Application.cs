@@ -472,6 +472,28 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		public string MonoGCDebug {
+			get {
+				string ret = string.Empty;
+				if (IsFileProviderExtension) {
+					// soft-heap-limit doesn't work
+					// (https://github.com/mono/mono/issues/7597), which means
+					// that we'll only get a major collection when there is
+					// 16MB of major stuff to clean up. This is a problem,
+					// because FileProviderExtensions are killed when memory
+					// usage goes above 15MB. Workaround: disable minor
+					// collections, which makes the GC run a major collection
+					// instead of a minor collection whenever needed. This may
+					// not be an appropriate workaround for extensions with an
+					// UI, because it may cause more pauses. It shouldn't be
+					// much of a problem for extensions without UI though
+					// (such as the file provider extension).
+					ret = "disable-minor";
+				}
+				return ret;
+			}
+		}
+
 		public bool IsDeviceBuild { 
 			get { return BuildTarget == BuildTarget.Device; } 
 		}
@@ -509,6 +531,12 @@ namespace Xamarin.Bundler {
 		public bool IsTodayExtension {
 			get {
 				return ExtensionIdentifier == "com.apple.widget-extension";
+			}
+		}
+
+		public bool IsFileProviderExtension {
+			get {
+				return ExtensionIdentifier == "com.apple.fileprovider-nonui";
 			}
 		}
 
