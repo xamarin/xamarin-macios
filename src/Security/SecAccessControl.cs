@@ -39,9 +39,13 @@ namespace XamCore.Security {
 		[iOS (9,0)][Mac (10,12,1)]
 		TouchIDCurrentSet   = BiometryCurrentSet,
 
+		// Added in iOS 11.3 and macOS 10.13.4 but keeping initial availability attribute because it's using the value
+		// of 'TouchIDAny' which iOS 9 / macOS 10.12.1 will accept.
 		[iOS (9,0), Mac (10,12,1)]
 		BiometryAny         = 1 << 1,
 
+		// Added in iOS 11.3 and macOS 10.13.4 but keeping initial availability attribute because it's using the value
+		// of 'TouchIDCurrentSet' which iOS 9 / macOS 10.12.1 will accept.
 		[iOS (9,0), Mac (10,12,1)]
 		BiometryCurrentSet  = 1 << 3,
 
