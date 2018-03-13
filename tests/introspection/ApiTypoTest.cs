@@ -235,6 +235,7 @@ namespace Introspection
 			"Hvxc", // MPEG4ObjectID
 			"Ies",
 			"Icq",
+			"Ident",
 			"Identd",
 			"Imageblock",
 			"Imagefor",
