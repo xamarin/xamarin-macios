@@ -45,12 +45,12 @@ namespace XamCore.Security {
 		[Deprecated (PlatformName.WatchOS, 4, 3, message: "Use 'BiometryCurrentSet' instead.")]
 		TouchIDCurrentSet   = BiometryCurrentSet,
 
+		// Introduced in Xcode 9.3, but value kept from TouchIDAny
 		[iOS (9, 0), Mac (10, 12, 1)]
-		// Introduced in Xcode 9.3, but values kept from TouchIDAny
 		BiometryAny         = 1 << 1,
 
+		// Introduced in Xcode 9.3, but value kept from TouchIDCurrentSet
 		[iOS (9, 0), Mac (10, 12, 1)]
-		// Introduced in Xcode 9.3, but values kept from TouchIDCurrentSet
 		BiometryCurrentSet  = 1 << 3,
 
 		DevicePasscode      = 1 << 4,
