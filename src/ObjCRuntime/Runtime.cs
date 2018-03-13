@@ -855,7 +855,6 @@ namespace ObjCRuntime {
 #endif
 		static Delegate CreateBlockProxy (MethodInfo method, IntPtr block)
 		{
-			NSObject.DangerousRetain (block);
 			return (Delegate) method.Invoke (null, new object [] { block } );
 		}
 
