@@ -78,8 +78,6 @@ namespace Xamarin.MMP.Tests
 		[TestCase (ProjectType.Full)]
 		public void ShouldBuildWithoutErrors_AndLinkCorrectFramework (ProjectType type)
 		{
-			// TODO - Build and test BindingProjectWithNoTag.csproj which is Modern without tags
-			// TODO - Abstract this into a helper called by multiple tests
 			MMPTests.RunMMPTest (tmpDir => {
 				var projects = GenerateTestProject (type, tmpDir);
 				var logs = BuildLinkedTestProjects (projects.Item1, projects.Item2, tmpDir);
