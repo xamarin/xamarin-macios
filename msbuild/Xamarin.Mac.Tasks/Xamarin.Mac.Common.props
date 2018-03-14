@@ -92,6 +92,9 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 				<TargetFrameworkName>Full</TargetFrameworkName>
 				<MacBclPath>$(XamarinMacFrameworkRoot)/lib/mono/4.5</MacBclPath>
 			</PropertyGroup>
+			<PropertyGroup Condition="'$(ForceNonSystemTargetFramework)' == 'true'"> <!-- Hack -->
+				<AssemblySearchPaths>$(MacBclPath);$(MacBclPath)/Facades</AssemblySearchPaths>
+			</PropertyGroup>
 		</When>
 		<When Condition=" '$(ForceNonSystemTargetFramework)' == 'true'">
 			<Choose>
@@ -108,7 +111,7 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 						<TargetFrameworkName>Full</TargetFrameworkName>
 						<MacBclPath>$(XamarinMacFrameworkRoot)/lib/mono/4.5</MacBclPath>
 						<UseXamMacFullFramework>true</UseXamMacFullFramework>
-						<AssemblySearchPaths>$(MacBclPath);$(MacBclPath)/Facades</AssemblySearchPaths>
+						<AssemblySearchPaths>$(MacBclPath);$(MacBclPath)/Facades</AssemblySearchPaths> <!-- Hack -->
 					</PropertyGroup>
 				</Otherwise>
 			</Choose>
