@@ -26,7 +26,7 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 	
 	<!-- Due to IDE/template bugs, many bindings projects exist in the wild withtout correct TFI/TFV tags.
 	In addition, System is not supported, so treat System as Modern or Full, depending on TFV being set.
-	Microsoft.CSharp.targets gives Microsoft.CSharp.targets / TargetFrameworkIdentifier default values, so we _must_ do this _before_ 
+	Microsoft.CSharp.targets gives TargetFrameworkVersion / TargetFrameworkIdentifier default values, so we _must_ do this _before_ 
 	import Microsoft.CSharp.targets. However, we can't do most of Xamarin.Mac.ObjCBinding.CSharp.props before it. -->
 
 	<Choose>
