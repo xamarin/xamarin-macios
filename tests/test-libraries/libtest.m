@@ -513,6 +513,16 @@ static UltimateMachine *shared;
 static volatile int freed_blocks = 0;
 
 @implementation ObjCBlockTester
+static Class _TestClass = NULL;
+
++ (Class)TestClass {
+	return _TestClass;
+}
+
++ (void)setTestClass:(Class) value {
+	_TestClass = value;
+}
+
 -(void) classCallback: (void (^)(int32_t magic_number))completionHandler
 {
 	assert (!"THIS FUNCTION SHOULD BE OVERRIDDEN");
@@ -540,10 +550,32 @@ static volatile int freed_blocks = 0;
 	assert (called);
 }
 
++(void) callRequiredStaticCallback
+{
+	__block bool called = false;
+	[self.TestClass requiredStaticCallback: ^(int magic_number)
+	{
+		assert (magic_number == 42);
+		called = true;
+	}];
+	assert (called);
+}
+
 -(void) callOptionalCallback
 {
 	__block bool called = false;
 	[self.TestObject optionalCallback: ^(int magic_number)
+	{
+		assert (magic_number == 42);
+		called = true;
+	}];
+	assert (called);
+}
+
++(void) callOptionalStaticCallback
+{
+	__block bool called = false;
+	[self.TestClass optionalStaticCallback: ^(int magic_number)
 	{
 		assert (magic_number == 42);
 		called = true;
