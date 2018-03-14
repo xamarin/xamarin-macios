@@ -12,15 +12,14 @@ using System;
 
 #if XAMCORE_2_0
 using Foundation;
-using UIKit;
+using SpriteKit;
 #else
 using MonoTouch;
 using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using MonoTouch.SpriteKit;
 #endif
 
 using NUnit.Framework;
-
 
 namespace MonoTouchFixtures {
 
@@ -28,6 +27,19 @@ namespace MonoTouchFixtures {
 	[Preserve (AllMembers = true)]
 	public class WeakReferenceTest {
 		const int totalTestObjects = 100;
+
+		[SetUp]
+		public void Setup ()
+		{
+#if __WATCHOS__
+			// watchOS 3.0+
+			//TestRuntime.CheckWatchOSSystemVersion (3, 0);
+			Assert.Ignore ("WeakAttribute is not working on watchOS yet");
+#else
+			// iOS 7.0+ macOS 10.9+ tvOS 9.0+
+			TestRuntime.AssertXcodeVersion (5, 0);
+#endif
+		}
 
 		[Test]
 		public void NoRetainCyclesExpectedTest ()
@@ -56,7 +68,7 @@ namespace MonoTouchFixtures {
 		}
 	}
 
-	class MyParentView : UIView {
+	class MyParentView : SKScene {
 		public static int count;
 
 		~MyParentView () => count--;
@@ -65,12 +77,12 @@ namespace MonoTouchFixtures {
 		{
 			var child = new MyButton (this, useWeak);
 			child.TouchUpInside += Child_TouchUpInside;
-			AddSubview (child);
+			AddChild (child);
 		}
 
 		public void TouchButton ()
 		{
-			((MyButton) Subviews [0]).SendActionForControlEvents (UIControlEvent.TouchUpInside);
+			((MyButton) Children [0]).FireTouch ();
 		}
 
 		void Child_TouchUpInside (object sender, EventArgs e)
@@ -80,7 +92,7 @@ namespace MonoTouchFixtures {
 		}
 	}
 
-	class MyButton : UIButton {
+	class MyButton : SKNode {
 		MyParentView strong;
 		[Weak] MyParentView weak;
 
@@ -91,5 +103,8 @@ namespace MonoTouchFixtures {
 			else
 				strong = parent;
 		}
+
+		public event EventHandler<EventArgs> TouchUpInside;
+		public void FireTouch () => TouchUpInside?.Invoke (this, EventArgs.Empty);
 	}
 }
