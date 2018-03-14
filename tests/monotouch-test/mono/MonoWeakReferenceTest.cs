@@ -3,7 +3,7 @@
 // https://github.com/mono/mono/blob/5bdaef7e5f6479cc4336bb809b419e85ad706dd7/mono/tests/weak-fields.cs
 //
 // Authors:
-//  Zoltan Varga
+//	Zoltan Varga
 //	Alex Soto <alexsoto@microsoft.com>
 //
 //
@@ -31,7 +31,7 @@ namespace MonoTouchFixtures {
 		[Test]
 		public void WeakTest ()
 		{
-			Finalizable.debug = true;
+			//Finalizable.debug = true;
 			var t = new Test ();
 			var thread = new Thread (delegate () {
 				t.Obj = new Finalizable ();
