@@ -92,29 +92,6 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 				<TargetFrameworkName>Full</TargetFrameworkName>
 				<MacBclPath>$(XamarinMacFrameworkRoot)/lib/mono/4.5</MacBclPath>
 			</PropertyGroup>
-			<PropertyGroup Condition="'$(ForceNonSystemTargetFramework)' == 'true'"> <!-- Hack -->
-				<AssemblySearchPaths>$(MacBclPath);$(MacBclPath)/Facades</AssemblySearchPaths>
-			</PropertyGroup>
-		</When>
-		<When Condition=" '$(ForceNonSystemTargetFramework)' == 'true'">
-			<Choose>
-				<When Condition=" '$(TargetFrameworkVersion)' == '2.0' Or '$(TargetFrameworkVersion)' == ''">
-					<PropertyGroup>
-						<TargetFrameworkName>Modern</TargetFrameworkName>
-						<MacBclPath>$(XamarinMacFrameworkRoot)/lib/mono/Xamarin.Mac</MacBclPath>
-						<TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
-						<TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
-					</PropertyGroup>
-				</When>
-				<Otherwise>
-					<PropertyGroup>
-						<TargetFrameworkName>Full</TargetFrameworkName>
-						<MacBclPath>$(XamarinMacFrameworkRoot)/lib/mono/4.5</MacBclPath>
-						<UseXamMacFullFramework>true</UseXamMacFullFramework>
-						<AssemblySearchPaths>$(MacBclPath);$(MacBclPath)/Facades</AssemblySearchPaths> <!-- Hack -->
-					</PropertyGroup>
-				</Otherwise>
-			</Choose>
 		</When>
 		<Otherwise>
 			<PropertyGroup>

@@ -23,10 +23,31 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
+	
+	<!-- Due to IDE/template bugs, many bindings projects exist in the wild withtout correct TFI/TFV tags.
+	In addition, System is not supported, so treat System as Modern or Full, depending on TFV being set.
+	Microsoft.CSharp.targets gives Microsoft.CSharp.targets / TargetFrameworkIdentifier default values, so we _must_ do this _before_ 
+	import Microsoft.CSharp.targets. However, we can't do most of Xamarin.Mac.ObjCBinding.CSharp.props before it. -->
 
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.ObjCBinding.CSharp.props"/>
+	<Choose>
+		<When Condition=" '$(UseXamMacFullFramework)' == '' And ( '$(TargetFrameworkVersion)' == 'v2.0' Or '$(TargetFrameworkVersion)' == '' )">
+			<PropertyGroup>
+				<TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+				<TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
+			</PropertyGroup>
+		</When>
+		<Otherwise>
+			<PropertyGroup>
+				<TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+				<UseXamMacFullFramework>true</UseXamMacFullFramework>
+				<TargetFrameworkIdentifier></TargetFrameworkIdentifier>
+			</PropertyGroup>
+		</Otherwise>
+	</Choose>
 
 	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+	
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.ObjCBinding.CSharp.props"/>
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.ObjCBinding.Common.targets" />
 
