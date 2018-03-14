@@ -13,28 +13,30 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using SpriteKit;
+using ObjCRuntime;
 #else
 using MonoTouch;
 using MonoTouch.Foundation;
 using MonoTouch.SpriteKit;
+using MonoTouch.ObjCRuntime;
 #endif
 
 using NUnit.Framework;
+using System.Threading;
 
 namespace MonoTouchFixtures {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class WeakReferenceTest {
-		const int totalTestObjects = 100;
+	public partial class WeakReferenceTest {
+		const int totalTestObjects = 5000;
 
 		[SetUp]
 		public void Setup ()
 		{
 #if __WATCHOS__
 			// watchOS 3.0+
-			//TestRuntime.CheckWatchOSSystemVersion (3, 0);
-			Assert.Ignore ("WeakAttribute is not working on watchOS yet");
+			TestRuntime.CheckWatchOSSystemVersion (3, 0);
 #else
 			// iOS 7.0+ macOS 10.9+ tvOS 9.0+
 			TestRuntime.AssertXcodeVersion (5, 0);
@@ -44,37 +46,67 @@ namespace MonoTouchFixtures {
 		[Test]
 		public void NoRetainCyclesExpectedTest ()
 		{
-			for (int i = 0; i < totalTestObjects; i++) {
-				var parent = new MyParentView (useWeak: true);
-				parent.TouchButton ();
-			}
+			var thread = new Thread (delegate () {
+				MyParentView.weakcount = 0;
+				for (int i = 0; i < totalTestObjects; i++) {
+					var parent = new MyParentView (useWeak: true);
+					parent.TouchButton ();
+				}
+			});
 
+			thread.Start ();
+			thread.Join ();
+
+			GC.Collect (0);
 			GC.Collect ();
 			GC.WaitForPendingFinalizers ();
-			Assert.That (MyParentView.count, Is.LessThan (totalTestObjects), "No retain cycles expected");
+			GC.WaitForPendingFinalizers ();
+
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), () => { }, () => MyParentView.weakcount < totalTestObjects);
+			Assert.That (MyParentView.weakcount, Is.LessThan (totalTestObjects), "No retain cycles expected");
 		}
 
 		[Test]
 		public void RetainCyclesExpectedTest ()
 		{
+			var cache = new IntPtr [totalTestObjects];
+			MyParentView.noweakcount = 0;
 			for (int i = 0; i < totalTestObjects; i++) {
 				var parent = new MyParentView (useWeak: false);
 				parent.TouchButton ();
+				cache [i] = parent.Handle;
 			}
 
+			GC.Collect (0);
 			GC.Collect ();
 			GC.WaitForPendingFinalizers ();
-			Assert.That (MyParentView.count, Is.EqualTo (totalTestObjects), "Retain cycles expected");
+			Assert.That (MyParentView.noweakcount, Is.EqualTo (totalTestObjects), "Retain cycles expected");
+
+			for (int i = 0; i < totalTestObjects; i++) {
+				using (var parent = Runtime.GetNSObject<MyParentView> (cache[i])) {
+					var child = (MyButton) parent.Children [0];
+					child.RemoveStrongRef ();
+				}
+			}
 		}
 	}
 
 	class MyParentView : SKScene {
-		public static int count;
+		public static int weakcount;
+		public static int noweakcount;
+		bool useWeak;
 
-		~MyParentView () => count--;
+		~MyParentView ()
+		{
+			if (useWeak)
+				weakcount--;
+			else
+				noweakcount--;
+		}
 
 		public MyParentView (bool useWeak)
 		{
+			this.useWeak = useWeak;
 			var child = new MyButton (this, useWeak);
 			child.TouchUpInside += Child_TouchUpInside;
 			AddChild (child);
@@ -87,7 +119,10 @@ namespace MonoTouchFixtures {
 
 		void Child_TouchUpInside (object sender, EventArgs e)
 		{
-			count++;
+			if (useWeak)
+				weakcount++;
+			else
+				noweakcount++;
 			((MyButton) sender).TouchUpInside -= Child_TouchUpInside;
 		}
 	}
@@ -106,5 +141,6 @@ namespace MonoTouchFixtures {
 
 		public event EventHandler<EventArgs> TouchUpInside;
 		public void FireTouch () => TouchUpInside?.Invoke (this, EventArgs.Empty);
+		public void RemoveStrongRef () => strong = null;
 	}
 }
