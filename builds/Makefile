@@ -915,10 +915,10 @@ endif
 .stamp-build-watchsimulator: $(MONO_PATH)/configure $(MONO_DEPENDENCIES)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-simwatch $(SDK_ARGS)
 	$(Q) mkdir -p $(BUILD_DESTDIR)/watchsimulator
-	$(Q) cp -r $(SDK_DESTDIR)/ios-simwatch/lib $(BUILD_DESTDIR)/watchsimulator
-	$(Q) cp -r $(SDK_DESTDIR)/ios-simwatch/include $(BUILD_DESTDIR)/watchsimulator
-	cp $(SDK_BUILDDIR)/ios-simwatch/config.h $(BUILD_DESTDIR)/watchsimulator/include/mono-2.0
-	cp $(SDK_BUILDDIR)/ios-simwatch/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/watchsimulator/include/mono-2.0
+	$(Q) cp -r $(SDK_DESTDIR)/ios-simwatch-release/lib $(BUILD_DESTDIR)/watchsimulator
+	$(Q) cp -r $(SDK_DESTDIR)/ios-simwatch-release/include $(BUILD_DESTDIR)/watchsimulator
+	cp $(SDK_BUILDDIR)/ios-simwatch-release/config.h $(BUILD_DESTDIR)/watchsimulator/include/mono-2.0
+	cp $(SDK_BUILDDIR)/ios-simwatch-release/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/watchsimulator/include/mono-2.0
 	$(Q) touch $@
 
 build-watchsimulator: .stamp-build-watchsimulator
@@ -962,7 +962,7 @@ $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-profiler-log.a: $(WA
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-profiler-log.dylib: $(WATCHSIMULATOR_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib
 	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHSIMULATOR_SHAREDLIBLOGPROFILER) -create -output $@
-	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/ios-simwatch/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
+	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/ios-simwatch-release/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
 	$(Q) dsymutil -t 4 -o $@.dSYM $@
 
 $(WATCHSIMULATOR_DIRECTORIES):
@@ -996,10 +996,10 @@ endif
 .stamp-build-tvsimulator: $(MONO_PATH)/configure $(MONO_DEPENDENCIES)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-simtv $(SDK_ARGS)
 	$(Q) mkdir -p $(BUILD_DESTDIR)/tvsimulator
-	$(Q) cp -r $(SDK_DESTDIR)/ios-simtv/lib $(BUILD_DESTDIR)/tvsimulator
-	$(Q) cp -r $(SDK_DESTDIR)/ios-simtv/include $(BUILD_DESTDIR)/tvsimulator
-	cp $(SDK_BUILDDIR)/ios-simtv/config.h $(BUILD_DESTDIR)/tvsimulator/include/mono-2.0
-	cp $(SDK_BUILDDIR)/ios-simtv/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/tvsimulator/include/mono-2.0
+	$(Q) cp -r $(SDK_DESTDIR)/ios-simtv-release/lib $(BUILD_DESTDIR)/tvsimulator
+	$(Q) cp -r $(SDK_DESTDIR)/ios-simtv-release/include $(BUILD_DESTDIR)/tvsimulator
+	cp $(SDK_BUILDDIR)/ios-simtv-release/config.h $(BUILD_DESTDIR)/tvsimulator/include/mono-2.0
+	cp $(SDK_BUILDDIR)/ios-simtv-release/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/tvsimulator/include/mono-2.0
 	$(Q) touch $@
 
 build-tvsimulator: .stamp-build-tvsimulator
@@ -1043,7 +1043,7 @@ $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-profiler-log.a: $(TVSIM
 
 $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-profiler-log.dylib: $(TVSIMULATOR_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib
 	$(Q) $(TVOS_BIN_PATH)/lipo $(TVSIMULATOR_SHAREDLIBLOGPROFILER) -create -output $@
-	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/ios-simtv/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
+	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/ios-simtv-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
 	$(Q) dsymutil -t 4 -o $@.dSYM $@
 
 $(TVSIMULATOR_DIRECTORIES):
@@ -1089,9 +1089,9 @@ clean-local:: clean-$(2)
 .stamp-build-$(2): $(MONO_PATH)/configure $(SDK_CONFIG) $(MONO_DEPENDENCIES)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(3) $(SDK_ARGS)
 	$(Q) mkdir -p $(BUILD_DESTDIR)/$(2)
-	$(Q) cp -r $(SDK_DESTDIR)/ios-$(3)/* $(BUILD_DESTDIR)/$(2)
-	$(Q) cp -r $(SDK_BUILDDIR)/ios-$(3)/config.h $(BUILD_DESTDIR)/$(2)/include/mono-2.0
-	$(Q) cp -r $(SDK_BUILDDIR)/ios-$(3)/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/$(2)/include/mono-2.0
+	$(Q) cp -r $(SDK_DESTDIR)/ios-$(3)-release/* $(BUILD_DESTDIR)/$(2)
+	$(Q) cp -r $(SDK_BUILDDIR)/ios-$(3)-release/config.h $(BUILD_DESTDIR)/$(2)/include/mono-2.0
+	$(Q) cp -r $(SDK_BUILDDIR)/ios-$(3)-release/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/$(2)/include/mono-2.0
 	$(Q) touch $$@
 
 build-$(2): .stamp-build-$(2)
@@ -1248,9 +1248,9 @@ endif
 .stamp-build-targetwatch: $(MONO_PATH)/configure $(SDK_CONFIG) $(MONO_DEPENDENCIES)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-targetwatch $(SDK_ARGS)
 	$(Q) mkdir -p $(BUILD_DESTDIR)/targetwatch
-	$(Q) cp -r $(SDK_DESTDIR)/ios-targetwatch/* $(BUILD_DESTDIR)/targetwatch
-	$(Q) cp -r $(SDK_BUILDDIR)/ios-targetwatch/config.h $(BUILD_DESTDIR)/targetwatch/include/mono-2.0
-	$(Q) cp -r $(SDK_BUILDDIR)/ios-targetwatch/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/targetwatch/include/mono-2.0
+	$(Q) cp -r $(SDK_DESTDIR)/ios-targetwatch-release/* $(BUILD_DESTDIR)/targetwatch
+	$(Q) cp -r $(SDK_BUILDDIR)/ios-targetwatch-release/config.h $(BUILD_DESTDIR)/targetwatch/include/mono-2.0
+	$(Q) cp -r $(SDK_BUILDDIR)/ios-targetwatch-release/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/targetwatch/include/mono-2.0
 	$(Q) touch $@
 
 build-targetwatch: .stamp-build-targetwatch
@@ -1300,7 +1300,7 @@ $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-profiler-log.a: $(WATCHOS_T
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-profiler-log.dylib: $(WATCHOS_TARGET_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
 	$(Q) $(WATCHOS_BIN_PATH)/bitcode_strip $(WATCHOS_TARGET_SHAREDLIBLOGPROFILER) -m -o $@
-	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/ios-targetwatch/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
+	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/ios-targetwatch-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
 	$(Q) dsymutil -t 4 -o $@.dSYM $@
 
 $(WATCHOS_DIRECTORIES):
@@ -1342,9 +1342,9 @@ endif
 .stamp-build-targettv: $(MONO_PATH)/configure $(SDK_CONFIG) $(MONO_DEPENDENCIES)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-targettv $(SDK_ARGS)
 	$(Q) mkdir -p $(BUILD_DESTDIR)/targettv
-	$(Q) cp -r $(SDK_DESTDIR)/ios-targettv/* $(BUILD_DESTDIR)/targettv
-	$(Q) cp -r $(SDK_BUILDDIR)/ios-targettv/config.h $(BUILD_DESTDIR)/targettv/include/mono-2.0
-	$(Q) cp -r $(SDK_BUILDDIR)/ios-targettv/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/targettv/include/mono-2.0
+	$(Q) cp -r $(SDK_DESTDIR)/ios-targettv-release/* $(BUILD_DESTDIR)/targettv
+	$(Q) cp -r $(SDK_BUILDDIR)/ios-targettv-release/config.h $(BUILD_DESTDIR)/targettv/include/mono-2.0
+	$(Q) cp -r $(SDK_BUILDDIR)/ios-targettv-release/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/targettv/include/mono-2.0
 	$(Q) touch $@
 
 build-targettv: .stamp-build-targettv
@@ -1393,7 +1393,7 @@ $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.a: $(TVOS_TARGET_
 
 $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.dylib: $(TVOS_TARGET_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
 	$(Q) lipo $(TVOS_TARGET_SHAREDLIBLOGPROFILER) -create -output $@
-	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/ios-targettv/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
+	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/ios-targettv-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
 	$(Q) dsymutil -t 4 -o $@.dSYM $@
 
 $(TVOS_DIRECTORIES):
@@ -1521,7 +1521,7 @@ _$(1)_CROSS_TARGETS = \
 
 $(SDK_DESTDIR)/ios-$(1)/bin/$(4): .stamp-build-$(1)
 
-$(PREFIX)/bin/$(3): $(SDK_DESTDIR)/ios-$(1)/bin/$(4) | $(PREFIX)/bin
+$(PREFIX)/bin/$(3): $(SDK_DESTDIR)/ios-$(1)-release/bin/$(4) | $(PREFIX)/bin
 	$(call Q_2,INSTALL ,[CROSS]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $$< $$@
 
 install-$(1): install-$(2) $$(_$(1)_CROSS_TARGETS)
