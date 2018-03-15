@@ -1,4 +1,7 @@
 using System;
+#if !__WATCHOS__
+using System.Drawing;
+#endif
 
 #if __UNIFIED__
 using ObjCRuntime;
@@ -9,9 +12,6 @@ using AppKit;
 using UIKit;
 #endif
 #else
-#if !__WATCHOS__
-using System.Drawing;
-#endif
 using MonoTouch.ObjCRuntime;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -284,6 +284,13 @@ namespace Bindings.Test {
 
 		[Export ("callOptionalCallback")]
 		void CallOptionalCallback ();
+
+		[Export ("testFreedBlocks")]
+		void TestFreedBlocks ();
+
+		[Static]
+		[Export ("freedBlockCount")]
+		int FreedBlockCount { get; }
 	}
 }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 #if __UNIFIED__
 using Foundation;
@@ -63,7 +64,7 @@ namespace Xamarin.BindingTests
 			}
 		}
 
-		class BlockCallbackTester : ObjCBlockTester
+		public class BlockCallbackTester : ObjCBlockTester
 		{
 			public override void ClassCallback (Action<int> completionHandler)
 			{

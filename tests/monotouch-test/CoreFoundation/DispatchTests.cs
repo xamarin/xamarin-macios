@@ -58,7 +58,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void MainQueueDispatch ()
 		{
-#if !DEBUG
+#if !DEBUG || OPTIMIZEALL
 			Assert.Ignore ("UIKitThreadAccessException is not throw, by default, on release builds (removed by the linker)");
 #endif
 			if (RunningOnSnowLeopard)
@@ -207,7 +207,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void EverAfter ()
 		{
-#if !DEBUG
+#if !DEBUG || OPTIMIZEALL
 			Assert.Ignore ("UIKitThreadAccessException is not throw, by default, on release builds (removed by the linker)");
 #endif
 			if (RunningOnSnowLeopard)

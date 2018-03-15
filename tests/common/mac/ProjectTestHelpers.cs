@@ -155,7 +155,6 @@ namespace Xamarin.MMP.Tests
 			public string SystemMonoVersion { get; set; } = "";
 			public string TargetFrameworkVersion { get; set; } = "";
 			public Dictionary<string, string> PlistReplaceStrings { get; set; } = new Dictionary<string, string>();
-			public Tuple<string, string> CustomProjectReplacement { get; set; } = null;
 
 			// Binding project specific
 			public string APIDefinitionConfig { get; set; }
@@ -272,15 +271,12 @@ namespace Xamarin.MMP.Tests
 
 		static string ProjectTextReplacement (UnifiedTestConfig config, string text)
 		{
-			 text = text.Replace ("%CODE%", config.CSProjConfig)
+			return text.Replace ("%CODE%", config.CSProjConfig)
 					   .Replace ("%REFERENCES%", config.References)
 					   .Replace ("%REFERENCES_BEFORE_PLATFORM%", config.ReferencesBeforePlatform)
 					   .Replace ("%NAME%", config.AssemblyName ?? Path.GetFileNameWithoutExtension (config.ProjectName))
 					   .Replace ("%ITEMGROUP%", config.ItemGroup)
 					   .Replace ("%TARGET_FRAMEWORK_VERSION%", config.TargetFrameworkVersion);
-			if (config.CustomProjectReplacement != null)
-				text = text.Replace (config.CustomProjectReplacement.Item1, config.CustomProjectReplacement.Item2);
-			return text;
 		}
 
 		public static string RunEXEAndVerifyGUID (string tmpDir, Guid guid, string path)

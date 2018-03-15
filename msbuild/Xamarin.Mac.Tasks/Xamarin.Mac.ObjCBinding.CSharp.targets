@@ -24,14 +24,18 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
 
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.ObjCBinding.CSharp.props"/>
+	<Import Project="Xamarin.Mac.ObjCBinding.CSharp.props"/>
 
 	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-
 	<Import Project="Xamarin.Mac.ObjCBinding.Common.targets" />
 
 	<PropertyGroup>
-		<_GeneratedSourcesFileList>$(GeneratedSourcesDir)sources.list</_GeneratedSourcesFileList>
+		<IsXBuild Condition="'$(MSBuildRuntimeVersion)' == ''">true</IsXBuild>
+		<IsXBuild Condition="'$(MSBuildRuntimeVersion)' != ''">false</IsXBuild>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<_GeneratedSourcesFileList>$(GeneratedSourcesDir)\sources.list</_GeneratedSourcesFileList>
 
 		<!-- Add our own pre-build steps -->
 		<CompileDependsOn>
@@ -41,6 +45,11 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 			$(CompileDependsOn)
 		</CompileDependsOn>
 	</PropertyGroup>
+
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.XM45.xbuild.targets"
+		Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework' And '$(IsXBuild)' == 'true' "/>
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.msbuild.targets"
+		Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework' And '$(IsXBuild)' == 'false' "/>
 
 	<!-- Override the CoreCompile Target to use btouch -->
 	<Target Name="_GenerateBindings"
@@ -60,9 +69,6 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 		<Message Text="BTouchEmitDebugInformation: $(BTouchEmitDebugInformation)"/>
 
 		<BTouch
-			SessionId="$(BuildSessionId)"
-			OutputPath="$(OutputPath)"
-			ObjectiveCLibraries="@(ObjcBindingNativeLibrary)"
 			AdditionalLibPaths="$(AdditionalLibPaths)"
 			AllowUnsafeBlocks="$(AllowUnsafeBlocks)"
 			ApiDefinitions="@(ObjcBindingApiDefinition)"
