@@ -160,15 +160,6 @@ $(MONO_CECIL_MDB_DLL): $(MONO_CECIL_DLL) $(CECIL_PATH)/symbols/mdb/Mono.Cecil.Md
 
 SIMLAUNCHERS = simlauncher32-sgen simlauncher64-sgen
 
-monotouch-fixes.i386.dylib: monotouch-fixes.c Makefile
-	$(SIMULATOR_CCOMPILE) -DDEBUG -Wl,-headerpad_max_install_names -g -dynamiclib -gdwarf-2 -I$(TOP)/runtime/.libs -L$(TOP)/runtime/.libs $(SIMULATOR86_CFLAGS) monotouch-fixes.c -o $@ -Wall
-
-monotouch-fixes.x86_64.dylib: monotouch-fixes.c Makefile
-	$(SIMULATOR_CCOMPILE) -DDEBUG -Wl,-headerpad_max_install_names -g -dynamiclib -gdwarf-2 -I$(TOP)/runtime/.libs -L$(TOP)/runtime/.libs $(SIMULATOR64_CFLAGS) monotouch-fixes.c -o $@ -Wall
-
-monotouch-fixes.dylib: monotouch-fixes.i386.dylib monotouch-fixes.x86_64.dylib
-	$(Q_LIPO) lipo -create -output $@ $^
-
 UNREFERENCED_SYMBOLS = 							\
 	_xamarin_dyn_objc_msgSend 					\
 	_xamarin_dyn_objc_msgSendSuper 				\
@@ -397,7 +388,6 @@ TARGETS = \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/Mono.Cecil.dll                           \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/Mono.Cecil.Mdb.dll                       \
 	$(foreach launcher,$(SIMLAUNCHERS),$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/$(launcher)) \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/monotouch-fixes.dylib                           \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/usr/lib/Xamarin.iOS.registrar.a         \
 
 ifdef INCLUDE_WATCH
@@ -444,10 +434,6 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/%: % | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/b
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/%: % | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib
 	$(Q) cp $< $@
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/monotouch-fixes.dylib: monotouch-fixes.dylib | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib
-	$(Q) cp $< $@
-	$(Q) install_name_tool -id $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/lib/monotouch-fixes.dylib $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_SIMULATOR_SDK)/usr/lib/%.registrar.a: %.registrar.ios.a | $(IOS_DESTDIR)$(MONOTOUCH_SIMULATOR_SDK)/usr/lib
 	$(Q) cp $< $@
