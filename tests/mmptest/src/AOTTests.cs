@@ -10,7 +10,7 @@ using System.Reflection;
 namespace Xamarin.MMP.Tests
 {
 	[TestFixture]
-	public partial class MMPTests
+	public class AOTTests
 	{
 		void ValidateAOTStatus (string tmpDir, Func<FileInfo, bool> shouldAOT, string buildResults)
 		{ 
@@ -34,7 +34,7 @@ namespace Xamarin.MMP.Tests
 		// AOT unit tests can be found in tools/mmp/tests
 		[Test]
 		public void AOT_SmokeTest () {
-			RunMMPTest (tmpDir => {
+			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					CSProjConfig = AOTTestBaseConfig
 				};
@@ -47,7 +47,7 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void AOT_32Bit_SmokeTest ()
 		{
-			RunMMPTest (tmpDir => {
+			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					CSProjConfig = "<XamMacArch>i386</XamMacArch>" + AOTTestBaseConfig
 				};
@@ -60,7 +60,7 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void HybridAOT_WithManualStrippingOfAllLibs_SmokeTest ()
 		{
-			RunMMPTest (tmpDir => {
+			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					CSProjConfig = AOTTestHybridConfig
 				};
@@ -81,7 +81,7 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void HybridAOT_WithManualStrippingOfJustMainExe ()
 		{
-			RunMMPTest (tmpDir => {
+			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					CSProjConfig = AOTTestHybridConfig
 				};

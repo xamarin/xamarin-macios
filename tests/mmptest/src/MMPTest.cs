@@ -20,7 +20,7 @@ namespace Xamarin.MMP.Tests
 		}
 
 		// TODO - We have multiple tests using this. It doesn't take that long, but is it worth caching?
-		string [] GetUnifiedProjectClangInvocation (string tmpDir, string projectConfig = "")
+		public static string [] GetUnifiedProjectClangInvocation (string tmpDir, string projectConfig = "")
 		{
 			TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = projectConfig };
 			string buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
@@ -568,7 +568,7 @@ namespace Xamarin.MMP.Tests
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir)
 				{
 					ProjectName = "MobileBinding.csproj",
-					ItemGroup = string.Format (NativeReferenceTemplate, Path.GetFullPath (SimpleDylibPath), "Dynamic"),
+					ItemGroup = string.Format (NativeReferenceTests.NativeReferenceTemplate, Path.GetFullPath (NativeReferenceTests.SimpleDylibPath), "Dynamic"),
 					StructsAndEnumsConfig = "public class UnifiedWithDepNativeRefLibTestClass {}"
 				};
 

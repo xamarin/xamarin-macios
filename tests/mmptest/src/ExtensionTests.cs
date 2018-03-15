@@ -10,7 +10,7 @@ using System.Reflection;
 namespace Xamarin.MMP.Tests
 {
 	[TestFixture]
-	public partial class MMPTests 
+	public class ExtensionTests 
 	{
 		[Test]
 		public void TodayExtension_SmokeTest ()
@@ -18,7 +18,7 @@ namespace Xamarin.MMP.Tests
 			if (!PlatformHelpers.CheckSystemVersion (10, 10))
 				return;
 
-			RunMMPTest (tmpDir =>
+			MMPTests.RunMMPTest (tmpDir =>
 			{
 				string testPath = Path.Combine (TI.FindSourceDirectory (), @"Today/TodayExtensionTest.csproj");
 				TI.BuildProject (testPath, isUnified: true);
@@ -31,7 +31,7 @@ namespace Xamarin.MMP.Tests
 			if (!PlatformHelpers.CheckSystemVersion (10, 10))
 				return;
 
-			RunMMPTest (tmpDir =>
+			MMPTests.RunMMPTest (tmpDir =>
 			{
 				string testPath = Path.Combine (TI.FindSourceDirectory (), @"Finder/FinderExtensionTest.csproj");
 				TI.BuildProject (testPath, isUnified: true);
@@ -44,7 +44,7 @@ namespace Xamarin.MMP.Tests
 			if (!PlatformHelpers.CheckSystemVersion (10, 10))
 				return;
 
-			RunMMPTest (tmpDir =>
+			MMPTests.RunMMPTest (tmpDir =>
 			{
 				string testPath = Path.Combine (TI.FindSourceDirectory (), @"Share/ShareExtensionTest.csproj");
 				TI.BuildProject (testPath, isUnified: true);

@@ -11,7 +11,8 @@ using System.Reflection;
 
 namespace Xamarin.MMP.Tests
 {
-	public partial class MMPTests
+	[TestFixture]
+	public class FrameworkLinkTests
 	{
 		const string LinkerEnabledConfig = "<LinkMode>Full</LinkMode>";
 		const string StaticRegistrarConfig = "<MonoBundlingExtraArgs>--registrar=static</MonoBundlingExtraArgs>";
@@ -67,14 +68,14 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void UnifiedWithoutLinking_ShouldHaveManyFrameworkClangLines ()
 		{
-			RunMMPTest (tmpDir => {
+			MMPTests.RunMMPTest (tmpDir => {
 				// By default we -framework in all frameworks we bind.
-				string [] clangParts = GetUnifiedProjectClangInvocation (tmpDir);
+				string [] clangParts = MMPTests.GetUnifiedProjectClangInvocation (tmpDir);
 				AssertUnlinkedFrameworkStatus (clangParts);
 
 #if ENABLE_STATIC_REGISTRAR_TESTS
 				// Even with static registrar
-				clangParts = GetUnifiedProjectClangInvocation (tmpDir, StaticRegistrarConfig);
+				clangParts = MMPTests.GetUnifiedProjectClangInvocation (tmpDir, StaticRegistrarConfig);
 				AssertUnlinkedFrameworkStatus (clangParts);
 #endif
 			});
@@ -95,14 +96,14 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void UnifiedWithLinking_ShouldHaveFewFrameworkClangLines ()
 		{
-			RunMMPTest (tmpDir => {
+			MMPTests.RunMMPTest (tmpDir => {
 				// When we link, we should throw away pretty much everything that isn't AppKit. 
-				string[] clangParts = GetUnifiedProjectClangInvocation (tmpDir, LinkerEnabledConfig);
+				string[] clangParts = MMPTests.GetUnifiedProjectClangInvocation (tmpDir, LinkerEnabledConfig);
 				AssertLinkedFrameworkStatus (clangParts);
 
 #if ENABLE_STATIC_REGISTRAR_TESTS
 				// Even with static registrar
-				clangParts = GetUnifiedProjectClangInvocation (tmpDir, LinkerEnabledConfig + StaticRegistrarConfig);
+				clangParts = MMPTests.GetUnifiedProjectClangInvocation (tmpDir, LinkerEnabledConfig + StaticRegistrarConfig);
 				AssertLinkedFrameworkStatus (clangParts);
 #endif
 			});
@@ -125,7 +126,7 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void ProjectWithLinkToPrivateFramework_ShouldBuild ()
 		{
-			RunMMPTest (tmpDir => {
+			MMPTests.RunMMPTest (tmpDir => {
 
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { TestDecl = @"
 	const string MobileDeviceLibrary = ""/System/Library/PrivateFrameworks/MobileDevice.framework/MobileDevice"";
@@ -140,7 +141,7 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void ProjectWithSubFramework_ShouldBuild ()
 		{
-			RunMMPTest (tmpDir => {
+			MMPTests.RunMMPTest (tmpDir => {
 
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { TestDecl = @"
 	[System.Runtime.InteropServices.DllImport (""/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/LaunchServices"")]
