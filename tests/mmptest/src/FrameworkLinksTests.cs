@@ -1,6 +1,4 @@
-﻿#define ENABLE_STATIC_REGISTRAR_TESTS
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -73,11 +71,9 @@ namespace Xamarin.MMP.Tests
 				string [] clangParts = MMPTests.GetUnifiedProjectClangInvocation (tmpDir);
 				AssertUnlinkedFrameworkStatus (clangParts);
 
-#if ENABLE_STATIC_REGISTRAR_TESTS
 				// Even with static registrar
 				clangParts = MMPTests.GetUnifiedProjectClangInvocation (tmpDir, StaticRegistrarConfig);
 				AssertUnlinkedFrameworkStatus (clangParts);
-#endif
 			});
 		}
 
@@ -101,11 +97,9 @@ namespace Xamarin.MMP.Tests
 				string[] clangParts = MMPTests.GetUnifiedProjectClangInvocation (tmpDir, LinkerEnabledConfig);
 				AssertLinkedFrameworkStatus (clangParts);
 
-#if ENABLE_STATIC_REGISTRAR_TESTS
 				// Even with static registrar
 				clangParts = MMPTests.GetUnifiedProjectClangInvocation (tmpDir, LinkerEnabledConfig + StaticRegistrarConfig);
 				AssertLinkedFrameworkStatus (clangParts);
-#endif
 			});
 		}
 

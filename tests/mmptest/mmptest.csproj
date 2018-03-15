@@ -104,6 +104,7 @@
       <Link>StringUtils.cs</Link>
     </Compile>
     <Compile Include="src\SmokeTests.cs" />
+    <Compile Include="src\RegistrarTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />

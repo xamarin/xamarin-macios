@@ -1,5 +1,3 @@
-#define ENABLE_STATIC_REGISTRAR_TESTS
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -69,58 +67,6 @@ namespace Xamarin.MMP.Tests
 			});
 		}
 
-#if ENABLE_STATIC_REGISTRAR_TESTS
-		[Test]
-#endif
-		public void Unified_Static_RegistrarTest ()
-		{
-			if (!PlatformHelpers.CheckSystemVersion (10, 11))
-				return;
-
-			RunMMPTest (tmpDir => {
-				// First in 64-bit
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<MonoBundlingExtraArgs>--registrar=static</MonoBundlingExtraArgs><XamMacArch>x86_64</XamMacArch>" };
-				// Mobile
-				TI.TestUnifiedExecutable (test);
-				// XM45
-				test.XM45 = true;
-				TI.TestUnifiedExecutable (test);
-
-				// Now 32-bit
-				test.CSProjConfig = "<MonoBundlingExtraArgs>--registrar=static</MonoBundlingExtraArgs><XamMacArch>i386</XamMacArch>";
-				// Mobile
-				TI.TestUnifiedExecutable (test);
-				// XM45
-				test.XM45 = true;
-				TI.TestUnifiedExecutable (test);
-			});
-		}
-
-		[Test]
-		public void Unified_Static_Registrar_With_SpaceTest ()
-		{
-			if (!PlatformHelpers.CheckSystemVersion (10, 11))
-				return;
-
-			RunMMPTest (tmpDir => {
-				// First in 64-bit
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<MonoBundlingExtraArgs>--registrar=static</MonoBundlingExtraArgs><XamMacArch>x86_64</XamMacArch>" };
-				// Mobile
-				TI.TestUnifiedExecutable (test);
-				// XM45
-				test.XM45 = true;
-				TI.TestUnifiedExecutable (test);
-
-				// Now 32-bit
-				test.CSProjConfig = "<MonoBundlingExtraArgs>--registrar=static</MonoBundlingExtraArgs><XamMacArch>i386</XamMacArch>";
-				// Mobile
-				TI.TestUnifiedExecutable (test);
-				// XM45
-				test.XM45 = true;
-				TI.TestUnifiedExecutable (test);
-			}, "test withSpace");
-		}
-
 		[Test]
 		public void XM_45_NotAddingIncorrectDependencies_LicenseTest ()
 		{
@@ -132,7 +78,6 @@ namespace Xamarin.MMP.Tests
 				Assert.IsFalse (Directory.GetFiles (monoBundlePath).Any (x => x.Contains ("FSharp.Core.dll")), "F# was pulled in?");
 			});
 		}
-
 
 		[Test]
 		public void Mobile_NewRefCount_Warns ()
@@ -231,7 +176,6 @@ namespace Xamarin.MMP.Tests
 				Assert.IsTrue (!output.Contains ("Could not register the assembly"), "Unified_HelloWorld_ShouldHaveNoRegistrarWarnings - XM45 had registrar issues: \n" + output);
 			});
 		}
-
 
 		[Test]
 		public void BuildUnifiedMobile_Program_WithNonASCIIName ()
@@ -564,9 +508,7 @@ namespace Xamarin.MMP.Tests
 			});
 		}
 
-#if ENABLE_STATIC_REGISTRAR_TESTS
 		[Test]
-#endif
 		public void UnifiedDebugBuilds_ShouldLinkToPartialStatic_UnlessDisabled ()
 		{
 			RunMMPTest (tmpDir =>
