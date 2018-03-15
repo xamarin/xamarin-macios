@@ -505,6 +505,13 @@ namespace XamCore.Metal {
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,13)]
 		HazardTrackingModeUntracked = 1 << 8,
+
+		[iOS (11,3), TV (11,3),  Mac (10,13)]
+		ReservedPrivateBitsShift = 1 << 16,
+		[iOS (11,3), TV (11,3),  Mac (10,13)]
+		ReservedPrivateBit1  = ReservedPrivateBitsShift >> 1 /* 0x1UL */,
+		[iOS (11,3), TV (11,3),  Mac (10,13)]
+		ReservedPrivateBitsMask = ReservedPrivateBitsShift >> 15 /* 0xfUL */,
 	}
 
 	// MTLVertexDescriptor.h
