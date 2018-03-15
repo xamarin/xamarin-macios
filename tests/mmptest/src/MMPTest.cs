@@ -133,49 +133,6 @@ namespace Xamarin.MMP.Tests
 			});
 		}
 
-		[Test]
-		public void Unified_SmokeTest ()
-		{
-			RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir);
-				// Mobile
-				TI.TestUnifiedExecutable (test);
-				// XM45
-				test.XM45 = true;
-				TI.TestUnifiedExecutable (test);
-			});
-		}
-
-		[Test]
-		public void FSharp_SmokeTest ()
-		{
-			RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { FSharp = true };
-				// Mobile
-				TI.TestUnifiedExecutable (test);
-				// XM45
-				test.XM45 = true;
-				TI.TestUnifiedExecutable (test);
-			});
-		}
-
-		[Test]
-		public void Mobile_SmokeTest_LinkSDK ()
-		{
-			RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<LinkMode>SdkOnly</LinkMode>" };
-				TI.TestUnifiedExecutable (test);
-			});
-		}
-
-		[Test]
-		public void Mobile_SmokeTest_LinkAll ()
-		{
-			RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<LinkMode>Full</LinkMode>" };
-				TI.TestUnifiedExecutable (test);
-			});
-		}
 
 		[Test]
 		public void Mobile_NewRefCount_Warns ()
@@ -275,29 +232,6 @@ namespace Xamarin.MMP.Tests
 			});
 		}
 
-		[Test]
-		public void SystemMono_SmokeTest ()
-		{
-			if (TI.FindMonoVersion () < new Version ("4.3"))
-				return;
-
-			RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir);
-				TI.TestSystemMonoExecutable (test);
-
-				test.SystemMonoVersion = "4.5";
-				TI.TestSystemMonoExecutable (test);
-
-				test.SystemMonoVersion = "4.5.1";
-				TI.TestSystemMonoExecutable (test);
-
-				test.SystemMonoVersion = "4.6";
-				TI.TestSystemMonoExecutable (test);
-
-				test.SystemMonoVersion = "4.6.1";
-				TI.TestSystemMonoExecutable (test);
-			});
-		}
 
 		[Test]
 		public void BuildUnifiedMobile_Program_WithNonASCIIName ()
