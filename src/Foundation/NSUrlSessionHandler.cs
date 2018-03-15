@@ -462,16 +462,6 @@ namespace Foundation {
 				data = new Queue<NSData> ();
 			}
 
-			protected override void Dispose (bool disposing)
-			{
-				lock (dataLock) {
-					foreach (var q in data)
-						q?.Dispose ();
-				}
-
-				base.Dispose (disposing);
-			}
-
 			public void Add (NSData d)
 			{
 				lock (dataLock) {
