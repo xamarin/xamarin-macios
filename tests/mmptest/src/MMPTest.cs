@@ -199,54 +199,6 @@ namespace Xamarin.MMP.Tests
 		}
 
 		[Test]
-		public void BuildUnified45_ShouldNotAllowReferenceToSystemDrawing ()
-		{
-			RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { References = " <Reference Include=\"System.Drawing\" />", TestCode = "System.Drawing.RectangleF f = new System.Drawing.RectangleF ();", XM45 = true};
-				TI.TestUnifiedExecutable (test, shouldFail : true);
-			});
-		}
-
-		[Test]
-		public void BuildUnified45_ShouldAllowReferenceToOpenTK ()
-		{
-			RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { References = " <Reference Include=\"OpenTK\" />", TestCode = "var matrix = new OpenTK.Matrix2 ();", XM45 = true };
-				TI.TestUnifiedExecutable (test);
-			});
-		}
-
-		[Test]
-		public void Dontlink_AllowsUnresolvableReferences ()
-		{
-			var sb = new StringBuilder ();
-			RunMMPTest (tmpDir =>
-			{
-				// build b.dll
-				sb.Clear ();
-				sb.AppendFormat ("-target:library -out:{0}/b.dll {0}/b.cs", tmpDir);
-				File.WriteAllText (Path.Combine (tmpDir, "b.cs"), "public class B { }");
-				TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mcs", sb, "b");
-
-				// build a.dll
-				sb.Clear ();
-				sb.AppendFormat ("-target:library -out:{0}/a.dll {0}/a.cs -r:{0}/b.dll", tmpDir);
-				File.WriteAllText (Path.Combine (tmpDir, "a.cs"), "public class A { public A () { System.Console.WriteLine (typeof (B)); }}");
-				TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mcs", sb, "a");
-
-				File.Delete (Path.Combine (tmpDir, "b.dll"));
-
-				// build project referencing a.dll
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir)
-				{
-					References = string.Format (" <Reference Include=\"a\" > <HintPath>{0}/a.dll</HintPath> </Reference> ", tmpDir),
-					TestCode = "System.Console.WriteLine (typeof (A));",
-				};
-				TI.GenerateAndBuildUnifiedExecutable (test, shouldFail: false);
-			});
-		}
-
-		[Test]
 		public void Dontlink_Allow_ReadonlyAssembly ()
 		{
 			var sb = new StringBuilder ();
@@ -273,35 +225,6 @@ namespace Xamarin.MMP.Tests
 				test.CSProjConfig = "<LinkMode>SdkOnly</LinkMode>";
 				TI.GenerateAndBuildUnifiedExecutable (test, shouldFail: false);
 			});
-		}
-
-		[Test]
-		public void UnsafeGACResolutionOptions_AllowsWindowsBaseResolution ()
-		{
-			RunMMPTest (tmpDir =>
-			{
-				UnsafeGACTestCore (tmpDir, true);
-				UnsafeGACTestCore (tmpDir, false);
-			});
-		}
-
-		static void UnsafeGACTestCore (string tmpDir, bool useFullProfile)
-		{
-			TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir)
-			{
-				XM45 = useFullProfile,
-				TestCode = "System.Console.WriteLine (typeof (System.Windows.DependencyObject));",
-				References = "<Reference Include=\"WindowsBase\" /><Reference Include=\"System.Xaml\" />"
-			};
-
-			TI.TestUnifiedExecutable (test, shouldFail: true);
-
-			// Mobile will fail terribly due to mismatch BCL, no need to see if this works. Just testing that Mobile fails
-			if (useFullProfile)
-			{
-				test.CSProjConfig = "<MonoBundlingExtraArgs>--allow-unsafe-gac-resolution</MonoBundlingExtraArgs>";
-				TI.TestUnifiedExecutable (test, shouldFail: false);
-			}
 		}
 
 		[Test]
