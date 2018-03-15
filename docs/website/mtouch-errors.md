@@ -673,6 +673,15 @@ When using --recursive-directories, only 1 assembly should match
 
 <!-- 0134 used by mmp -->
 
+### <a name="MT0135"/>MT0135: Did not link system framework '{0}' as Xcode SDK '{1}' is too old.
+
+Xamarin.iOS contains API bindings for the listed framework which is newer than the Xcode used. 
+
+They may fail at runtime as we are not linking against the required system framework.
+
+Consider updating to a newer Xcode, or if those APIs are not used, enabling [linking](https://docs.microsoft.com/en-us/xamarin/mac/deploy-test/linker).
+
+
 # MT1xxx: Project related error messages
 
 ### MT10xx: Installer / mtouch

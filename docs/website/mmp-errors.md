@@ -146,6 +146,14 @@ For more details: https://developer.apple.com/news/?id=06282017a
 
 Consider updating your application and any dependencies to 64-bit.
 
+### <a name="MM0135"/>MM0135: Did not link system framework '{0}' as Xcode SDK '{1}' is too old.
+
+Xamarin.Mac contains API bindings for the listed framework which is newer than the Xcode used. 
+
+They may fail at runtime as we are not linking against the required system framework.
+
+Consider updating to a newer Xcode, or if those APIs are not used, enabling [linking](https://docs.microsoft.com/en-us/xamarin/mac/deploy-test/linker).
+
 
 # MM1xxx: file copy / symlinks (project related)
 
