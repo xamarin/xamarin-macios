@@ -1,14 +1,17 @@
 ---
-id: 9F76162B-D622-45DA-996B-2FBF8017E208
-title: Xamarin.iOS errors
-dateupdated: 2017-06-26
+title: "Xamarin.iOS errors"
+ms.topic: article
+ms.prod: xamarin
+ms.assetid: 9F76162B-D622-45DA-996B-2FBF8017E208
+ms.technology: xamarin-ios
+author: bradumbaugh
+ms.author: brumbaug
+ms.date: 03/06/2018
 ---
 
-[//]: # (The original file resides under https://github.com/xamarin/xamarin-macios/tree/master/docs/website/)
-[//]: # (This allows all contributors (including external) to submit, using a PR, updates to the documentation that match the tools changes)
-[//]: # (Modifications outside of xamarin-macios/master will be lost on future updates)
+# Xamarin.iOS errors
 
-# MT0xxx: mtouch error messages
+## MT0xxx: mtouch error messages
 
 E.g. parameters, environment, missing tools.
 
@@ -25,7 +28,7 @@ An unexpected error condition occurred. Please [file a bug report](https://bugzi
 * A minimal test case that reproduce the error; and
 * All version informations
 
-The easiest way to get exact version information is to use the **Xamarin Studio** menu, **About Xamarin Studio** item, **Show Details** button and copy/paste the version informations (you can use the **Copy Information** button).
+The easiest way to get exact version information is to use the **Visual Studio for Mac** menu, **About Visual Studio for Mac** item, **Show Details** button and copy/paste the version informations (you can use the **Copy Information** button).
 
 ### <a name="MT0001"/>MT0001: '-devname' was provided without any device-specific action
 
@@ -94,7 +97,6 @@ This can happen in the following circumstances:
 *  ARMv6 is enabled and Xcode 4.5 or later is installed.
 *  ARMv7s is enabled and Xcode 4.4 or earlier is installed.
 
-
 Please verify that the installed version of Xcode supports the selected architectures.
 
 ### <a name="MT0015"/>MT0015: Invalid ABI: *. Supported ABIs are: i386, x86_64,  armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, arm64 and arm64+llvm.
@@ -124,16 +126,9 @@ There are several options for mtouch that can't be used simultaneously:
 -  --launchdebug
 -  --launchsim
 
-
-
-
 ### <a name="MT0020"/>MT0020 The valid options for '\*' are '\*'.
 
-
-
 ### <a name="MT0021"/>MT0021 Cannot compile using gcc/g++ (--use-gcc) when using the static registrar (this is the default when compiling for device). Either remove the --use-gcc flag or use the dynamic registrar (--registrar:dynamic).
-
-
 
 ### <a name="MT0022"/>MT0022 The options '--unsupported--enable-generics-in-registrar' and '--registrar' are not compatible.
 
@@ -147,23 +142,13 @@ The executable assembly's name and the application's name can't match the name o
 
 ### <a name="MT0024"/>MT0024 Could not find required file '*'.
 
-
-
 ### <a name="MT0025"/>MT0025 No SDK version was provided. Please add `--sdk=X.Y` to specify which iOS SDK should be used to build your application.
-
-
 
 ### <a name="MT0026"/>MT0026 Could not parse the command line argument '*': *
 
-
-
 ### <a name="MT0027"/>MT0027 The options '\*' and '\*' are not compatible.
 
-
-
 ### <a name="MT0028"/>MT0028 Cannot enable PIE (-pie) when targeting iOS 4.1 or earlier. Please disable PIE (-pie:false) or set the deployment target to at least iOS 4.2
-
-
 
 ### <a name="MT0029"/>MT0029: REPL (--enable-repl) is only supported in the simulator (--sim).
 
@@ -336,7 +321,7 @@ Incremental builds are only supported when the deployment target is at least 8.0
 
 This is a warning informing that the current version of Xcode is not the recommended version of Xcode for this version of Xamarin.iOS.
 
-Please upgrade Xcode in order to ensure optimal behavior.
+Please upgrade Xcode to ensure optimal behavior.
 
 ### <a name="MT0080"/>MT0080: Disabling NewRefCount, --new-refcount:false, is deprecated.
 
@@ -478,7 +463,6 @@ Native code sharing is currently not supported if the container app includes I18
 
 Native code sharing requires is not supported for projects that use custom xml definitions for the managed linker.
 
-
 ### <a name="MT0113"/>MT0113: Native code sharing has been disabled for the extension '*' because *.
 
 * because the bitcode options differ between the container app (\*) and the extension (\*).
@@ -572,7 +556,7 @@ earlier iOS version.
 
 ### <a name="MT0117"/>MT0117: Can't launch a 32-bit app on a simulator that only supports 64-bit.
 
-### <a name="MT0118"/>MT0116: Aot files could not be found at the expected directory '{msymdir}'.
+### <a name="MT0118"/>MT0118: Aot files could not be found at the expected directory '{msymdir}'.
 
 <!-- 0119 - 0123: free to use -->
 
@@ -640,6 +624,7 @@ This warning won't affect the application being built, however you might not be 
 Please report this issue to the publisher of the assembly package (e.g. nuget author) so this can be fixed in their future releases.
 
 ### <a name="MT0130"/>MT0130: No root assemblies found. You should provide at least one root assembly.
+
 When running --runregistrar, at least one root assembly should be provided.
 
 ### <a name="MT0131"/>MT0131: Product assembly '{0}' not found in assembly list: '{1}'
@@ -660,7 +645,7 @@ When using --recursive-directories, only 1 assembly should match
 
 <!-- 0134 used by mmp -->
 
-# MT1xxx: Project related error messages
+## MT1xxx: Project related error messages
 
 ### MT10xx: Installer / mtouch
 
@@ -671,35 +656,19 @@ When using --recursive-directories, only 1 assembly should match
 
 ### <a name="MT1001"/>MT1001 Could not find an application at the specified directory
 
-
-
 ### <a name="MT1002"/>MT1002 Could not create symlinks, files were copied
-
-
 
 ### <a name="MT1003"/>MT1003 Could not kill the application '*'. You may have to kill the application manually.
 
-
-
 ### <a name="MT1004"/>MT1004 Could not get the list of installed applications.
-
-
 
 ### <a name="MT1005"/>MT1005 Could not kill the application '\*' on the device '\*': *- You may have to kill the application manually.
 
-
-
 ### <a name="MT1006"/>MT1006 Could not install the application '\*' on the device '\*': *.
-
-
 
 ### <a name="MT1007"/>MT1007 Failed to launch the application '\*' on the device '\*': *. You can still launch the application manually by tapping on it.
 
-
-
 ### <a name="MT1008"/>MT1008: Failed to launch the simulator
-
-
 
 This error is reported if mtouch failed to launch the
   simulator.   This can happen sometimes because there is
@@ -708,7 +677,7 @@ This error is reported if mtouch failed to launch the
 The following command issued on the Unix command line can
   be used to kill stuck simulator processes:
 
-```
+```bash
 $ launchctl list|grep UIKitApplication|awk '{print $3}'|xargs launchctl remove
 ```
 
@@ -718,7 +687,9 @@ This is a known issue in certain versions of Xamarin.iOS.
 
 If this occurs to you, try the following workaround:
 
-    sudo chmod 0644 /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/*/*.mdb
+```bash
+sudo chmod 0644 /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/*/*.mdb
+```
 
 However, since this issue has been resolved in the latest version of
 Xamarin.iOS, please file a new bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS)
@@ -726,23 +697,15 @@ with your full version information and build log output.
 
 ### <a name="MT1010"/>MT1010 Could not load the assembly '*': *
 
-
-
 ### <a name="MT1011"/>MT1011 Could not add missing resource file: '*'
 
-
-
 ### <a name="MT1012"/>MT1012 Failed to list the apps on the device '*': *
-
-
 
 ### <a name="MT1013"/>MT1013 Dependency tracking error: no files to compare. Please file a bug report at http://bugzilla.xamarin.com with a test case.
 
 This indicates a bug in Xamarin.iOS. Please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS) with a test caes.
 
 ### <a name="MT1014"/>MT1014 Failed to re-use cached version of '*': *.
-
-
 
 ### <a name="MT1015"/>MT1015  Failed to create the executable '*': *
 
@@ -767,7 +730,6 @@ This can happen if:
   Possible solutions:
   - Create a new app from a template in Xcode, select the same provisioning profile, and deploy to same device. Sometimes Xcode can automatically refresh provisioning profiles with new devices (in other cases Xcode will ask you what to do).
   -Go to the iOS Dev Center and update the provisioning profile with the new device, then download the updated provisioning profile to your machine.
-
 
 In most cases more information about the failure will be printed to the iOS Device Log, which can help diagnosing the issue.
 
@@ -870,27 +832,15 @@ This error is reported only together with [MT1036](#MT1036). Please see [MT1036]
 
 ### <a name="MT1101"/>MT1101 Could not start app
 
-
-
 ### <a name="MT1102"/>MT1102 Could not attach to the app (to kill it): *
-
-
 
 ### <a name="MT1103"/>MT1103 Could not detach
 
-
-
 ### <a name="MT1104"/>MT1104 Failed to send packet: *
-
-
 
 ### <a name="MT1105"/>MT1105 Unexpected response type
 
-
-
 ### <a name="MT1106"/>MT1106 Could not get list of applications on the device: Request timed out.
-
-
 
 ### <a name="MT1107"/>MT1107: Application failed to launch: *
 
@@ -908,7 +858,6 @@ A few operations from mtouch require the <tt>DeveloperDiskImage.dmg</tt> file to
 This error can happen either because you do not have a
 	DeveloperDiskImage.dmg that matches the device that you have
 	connected.
-
 
 ### <a name="MT1109"/>MT1109: Application failed to launch because the device is locked. Please unlock the device and try again.
 
@@ -967,10 +916,7 @@ Watch simulators can be paired with iOS Simulators using Xcode's Devices UI (men
   MT13xx [LinkWith]
   -->
 
-
 ### <a name="MT1301"/>MT1301 Native library `*` (\*) was ignored since it does not match the current build architecture(s) (\*)
-
-
 
 ### <a name="MT1302"/>MT1302 Could not extract the native library '*' from '+'. Please ensure the native library was properly embedded in the managed assembly (if the assembly was built using a binding project, the native library must be included in the project, and its Build Action must be 'ObjcBindingNativeLibrary').
 
@@ -1140,7 +1086,7 @@ The format of a file can be verified using the `file` command from a terminal:
 
     file -arch all -l /path/to/file
 
-# MT2xxx: Linker error messages
+## MT2xxx: Linker error messages
 
 <!--
  MT2xxx Linker
@@ -1161,22 +1107,13 @@ Parameter name: instruction
 
 It is important to file a bug report for such issues. In most case a workaround can be provided until a proper fix is published. The above information is critical (along with a test case and/or the assembly binairy) to resolve the issue.
 
-
 ### <a name="MT2002"/>MT2002 Can not resolve reference: *
-
-
 
 ### <a name="MT2003"/>MT2003 Option '*' will be ignored since linking is disabled
 
-
-
 ### <a name="MT2004"/>MT2004 Extra linker definitions file '*' could not be located.
 
-
-
 ### <a name="MT2005"/>MT2005 Definitions from '*' could not be parsed.
-
-
 
 ### <a name="MT2006"/>MT2006: Can not load mscorlib.dll from: *. Please reinstall Xamarin.iOS.
 
@@ -1225,7 +1162,7 @@ The root assembly could not be loaded. Please verify that the path in the error 
 
 ### <a name="MT202x"/>MT202x: Binding Optimizer failed processing `...`.
 
-Something unexpected occured when trying to optimize generated binding code. The element causing the issue is named in the error message. In order to fix this issue the assembly named (or containing the type or method named) will need to be provided in a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+Something unexpected occured when trying to optimize generated binding code. The element causing the issue is named in the error message. To fix this issue the assembly named (or containing the type or method named) will need to be provided in a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
 The last digit `x` will be:
 * `0` for an assembly name;
@@ -1234,7 +1171,7 @@ The last digit `x` will be:
 
 ### <a name="MT2030"/>MT2030: Remove User Resources failed processing `...`.
 
-Something unexpected occured when trying to remove user resources. The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+Something unexpected occured when trying to remove user resources. The assembly causing the issue is named in the error message. To fix this issue the assembly will need to be provided in a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
 User resources are files included inside assemblies (as resources) that needs to be extracted, at build time, to create the application bundle. This includes:
 
@@ -1251,40 +1188,37 @@ Something unexpected occured when trying to remove code from BCL shipping with t
 
 ### <a name="MT2060"/>MT2060: Sealer failed processing `...`.
 
-Something unexpected occured when trying to seal types or methods (final) or when devirtualizing some methods. The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+Something unexpected occured when trying to seal types or methods (final) or when devirtualizing some methods. The assembly causing the issue is named in the error message. To fix this issue the assembly will need to be provided in a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
 ### <a name="MT2070"/>MT2070: Metadata Reducer failed processing `...`.
 
-Something unexpected occured when trying to reduce the metadata from the application. The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+Something unexpected occured when trying to reduce the metadata from the application. The assembly causing the issue is named in the error message. To fix this issue the assembly will need to be provided in a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
 ### <a name="MT2080"/>MT2080: MarkNSObjects failed processing `...`.
 
-Something unexpected occured when trying to mark `NSObject` subclasses from the application. The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+Something unexpected occured when trying to mark `NSObject` subclasses from the application. The assembly causing the issue is named in the error message. To fix this issue the assembly will need to be provided in a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
 ### <a name="MT2090"/>MT2090: Inliner failed processing `...`.
 
 Something unexpected occured when trying to inline code from the application. The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
+<!-- MT21xx: more linker errors -->
+
 ### <a name="MT2100"/>MT2100: Smart Enum Conversion Preserver failed processing `...`.
 
 Something unexpected occured when trying to mark the conversion methods for smart enums from the application. The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
-
-<!-- MT21xx: more linker errors -->
-
-<!--- 2100 used by mmp -->
 
 ### <a name="MT2101"/>MT2101: Can't resolve the reference '\*', referenced from the method '\*' in '*'.
 
 An invalid assembly reference was encountered when processing the method mentioned in the error message.
 
-The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+The assembly causing the issue is named in the error message. To fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
 ### <a name="MT2102"/>MT2102: Error processing the method '\*' in the assembly '\*': *
 
 Something unexpected occured when trying to mark the method mentioned in the error message.
 
-The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
-
+The assembly causing the issue is named in the error message. To fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
 ### <a name="MT2103"/>MT2103: Error processing assembly '\*': *
 
@@ -1327,7 +1261,7 @@ and safe to do so.
 
 <!-- 2018 used by mmp -->
 
-# MT3xxx: AOT error messages
+## MT3xxx: AOT error messages
 
 <!--
  MT3xxx AOT
@@ -1344,15 +1278,11 @@ Sometimes it's possible to work around this by disabling incremental builds in t
 
 This error message comes from the AOT compiler.
 
-
-
 ### <a name="MT3003"/>MT3003 Conflicting --debug and --llvm options. Soft-debugging is disabled.
 
 Debugging is not supported when LLVM is enabled. If you need to debug the app, disable LLVM first.
 
 ### <a name="MT3004"/>MT3004 Could not AOT the assembly '*' because it doesn't exist.
-
-
 
 ### <a name="MT3005"/>MT3005 The dependency '\*' of the assembly '\*' was not found. Please review the project's references.
 
@@ -1375,7 +1305,7 @@ Either disable Bitcode support or enable LLVM.
 <!--- 3009 used by mmp -->
 <!--- 3010 used by mmp -->
 
-# MT4xxx: Code generation error messages
+## MT4xxx: Code generation error messages
 
 ### MT40xx: Main
 
@@ -1448,39 +1378,21 @@ This is always a bug in Xamarin.iOS; please file a bug report at [http://bugzill
 
 ### <a name="MT4110"/>MT4110 The registrar cannot marshal the out parameter of type `*` in signature for method `*`.
 
-
-
 ### <a name="MT4111"/>MT4111 The registrar cannot build a signature for type `*` in method `*`.
-
-
 
 ### <a name="MT4112"/>MT4112 The registrar found an invalid type `*`. Registering generic types with Objective-C is not supported, and may lead to random behavior and/or crashes (for backwards compatibility with older versions of Xamarin.iOS it is possible to ignore this error by passing `--unsupported--enable-generics-in-registrar` as an additional mtouch argument in the project's iOS Build options page. See [developer.xamarin.com/guides/ios/advanced_topics/registrar](https://developer.xamarin.com/guides/ios/advanced_topics/registrar) for more information).
 
-
-
 ### <a name="MT4113"/>MT4113 The registrar found a generic method: '\*.\*'. Exporting generic methods is not supported, and will lead to random behavior and/or crashes.
-
-
 
 ### <a name="MT4114"/>MT4114 Unexpected error in the registrar for the method '\*.\*' - Please file a bug report at http://bugzilla.xamarin.com
 
-
-
 ### <a name="MT4116"/>MT4116 Could not register the assembly '*': *
-
-
 
 ### <a name="MT4117"/>MT4117 The registrar found a signature mismatch in the method '*.*' - the selector indicates the method takes * parameters, while the managed method has * parameters.
 
-
-
 ### <a name="MT4118"/>MT4118 Cannot register two managed types ('\*' and '\*') with the same native name ('*').
 
-
-
 ### <a name="MT4119"/>MT4119 Could not register the selector '\*' of the member '\*.*' because the selector is already registered on a different member.
-
-
 
 ### <a name="MT4120"/>MT4120 The registrar found an unknown field type '\*' in field '\*.*'. Please file a bug report at http://bugzilla.xamarin.com
 
@@ -1488,15 +1400,9 @@ This error indicates a bug in Xamarin.iOS. Please file a bug report at [http://b
 
 ### <a name="MT4121"/>MT4121 Cannot use GCC/G++ to compile the generated code from the static registrar when using the Accounts framework (the header files provided by Apple used during the compilation require Clang). Either use Clang (--compiler:clang) or the dynamic registrar (--registrar:dynamic).
 
-
-
 ### <a name="MT4122"/>MT4122 Cannot use the Clang compiler provided in the *.* SDK to compile the generated code from the static registrar when non-ASCII type names ('*') are present in the application. Either use GCC/G++ (--compiler:gcc|g++), the dynamic registrar (--registrar:dynamic) or a newer SDK.
 
-
-
 ### <a name="MT4123"/>MT4123 The type of the variadic parameter in the variadic function '*' must be System.IntPtr.
-
-
 
 ### <a name="MT4124"/>MT4124 Invalid * found on '*'. Please file a bug report at http://bugzilla.xamarin.com
 
@@ -1504,15 +1410,9 @@ This error indicates a bug in Xamarin.iOS. Please file a bug report at [http://b
 
 ### <a name="MT4125"/>MT4125 The registrar found an invalid type '\*' in signature for method '\*': The interface must have a Protocol attribute specifying its wrapper type.
 
-
-
 ### <a name="MT4126"/>MT4126 Cannot register two managed protocols ('\*' and '\*') with the same native name ('*').
 
-
-
 ### <a name="MT4127"/>MT4127 Cannot register more than one interface method for the method '\*' (which is implementing '\*').
-
-
 
 ### <a name="MT4128"/>MT4128  The registrar found an invalid generic parameter type '\*' in the method '\*'. The generic parameter must have an 'NSObject' constraint.
 
@@ -1544,7 +1444,7 @@ This error indicates a bug in Xamarin.iOS. Please file a bug report at [http://b
 
 This occurs when subclassing a framework type, and trying to implement a 'retain', 'release' or 'dealloc' method:
 
-```
+```csharp
 class MyNSObject : NSObject
 {
 	[Export ("retain")]
@@ -1560,7 +1460,7 @@ class MyNSObject : NSObject
 
 It is however possible to override these methods if the class isn't the first subclass of the framework type:
 
-```
+```csharp
 class MyNSObject : NSObject
 {
 }
@@ -1712,8 +1612,7 @@ complicated to get it right when doing it manually.
 
 If this is not the case, please file a bug at [https://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS) with a test case.
 
-
-# MT5xxx: GCC and toolchain error messages
+## MT5xxx: GCC and toolchain error messages
 
 ### MT51xx: Compilation
 
@@ -1724,15 +1623,9 @@ If this is not the case, please file a bug at [https://bugzilla.xamarin.com](htt
 
 ### <a name="MT5101"/>MT5101 Missing '*' compiler. Please install Xcode 'Command-Line Tools' component
 
-
-
 ### <a name="MT5102"/>MT5102 Failed to assemble the file '*'. Please file a bug report at http://bugzilla.xamarin.com
 
-
-
 ### <a name="MT5103"/>MT5103 Failed to compile the file '*'. Please file a bug report at http://bugzilla.xamarin.com
-
-
 
 ### <a name="MT5104"/>MT5104 Could not find neither the '\*' nor the '\*' compiler. Please install Xcode 'Command-Line Tools' component
 
@@ -1781,8 +1674,6 @@ This happens when the native linker cannot find a symbol that is referenced some
 
   - If you can't modify the third-party binding, or you're linking manually with a third-party library, you can set the equivalent flag by passing <code>-cxx</code> to mtouch (this is done by modifying the additional mtouch arguments in the project's iOS Build options page. Remember that this must be done for every project configuration).
 
-
-
 ### <a name="MT5211"/>MT5211: Native linking failed, undefined Objective-C class: \*. The symbol '\*' could not be found in any of the libraries or frameworks linked with your application.
 
 This happens when the native linker cannot find an Objective-C class that is referenced somewhere. There are several reasons this may happen: the same as for [MT5210](#MT5210) and in addition:
@@ -1796,12 +1687,9 @@ This happens when the native linker cannot find an Objective-C class that is ref
               {
               }
 
-
-
 ### <a name="MT5212"/>MT5212: Native linking failed, duplicate symbol: *.
 
 This happens when the native linker encounters duplicated symbols between all the native libraries. Following this error there may be one or more [MT5213](#MT5213) errors with the location for each occurrence of the symbol. Possible reasons for this error:
-
 
 * The same native library is included twice.
 * Two distinct native libraries happen to define the same symbols.
@@ -1825,7 +1713,6 @@ This happens when the native linker encounters duplicated symbols between all th
   - Request that the provider of the native library fix it and provide the updated version.
   - Fix it yourself by removing the extra object files (this only works if the problem is in fact duplicated object files)
 
-
             # Find out if the library is a fat library, and which
             # architectures it contains.
             lipo -info libNative.a
@@ -1847,7 +1734,6 @@ This happens when the native linker encounters duplicated symbols between all th
             # Reassemble the fat library
             lipo *.a -create -output libNative.a
 
-
   - Ask the linker to remove unused code. Xamarin.iOS will do this automatically if all of the following conditions are met:
     - All third-party bindings' `[LinkWith]` attributes have enabled SmartLink:
 
@@ -1855,7 +1741,6 @@ This happens when the native linker encounters duplicated symbols between all th
 
     - No `-gcc_flags` is passed to mtouch (in the additional mtouch arguments field of the project's iOS Build options).
     - It's also possible to ask the linker directly to remove unused code by adding `-gcc_flags -dead_strip` to the additional mtouch arguments in the project's iOS Build options.
-
 
 ### <a name="MT5213"/>MT5213: Duplicate symbol in: * (Location related to previous error)
 
@@ -1865,7 +1750,7 @@ This error is reported only together with [MT5212](#MT5212). Please see [MT5212]
 
 This error is reported when the managed code contains a P/Invoke to a native method that does not exist. For example:
 
-```
+```csharp
 using System.Runtime.InteropServices;
 class MyImports {
    [DllImport ("__Internal")]
@@ -1876,7 +1761,7 @@ class MyImports {
 There are a few possible solutions:
 
   -  Remove the P/Invokes in question from the source code.
-  -  Enable the managed linker for all assemblies (this is done in the project's iOS Build options, by setting "Linker Behavior" to "All assemblies"). This will effectively remove all the P/Invokes you don't use from the app (automatically, instead of manually like the previous point). The downside is that this will make your simulator builds somewhat slower, and it may break your app if it's using reflection - more information about the linker can be found  [here](/guides/ios/advanced_topics/linker/) )
+  -  Enable the managed linker for all assemblies (this is done in the project's iOS Build options, by setting "Linker Behavior" to "All assemblies"). This will effectively remove all the P/Invokes you don't use from the app (automatically, instead of manually like the previous point). The downside is that this will make your simulator builds somewhat slower, and it may break your app if it's using reflection - more information about the linker can be found  [here](~/ios/deploy-test/linker.md) )
   -  Create a second native library which contains the missing native symbols. Note that this is merely a workaround (if you happen to try to call those functions, your app will crash).
 
 ### <a name="MT5215"/>MT5215: References to '*' might require additional -framework=XXX or -lXXX instructions to the native linker
@@ -1967,11 +1852,7 @@ There are two main reasons for this:
 
 ### <a name="MT5301"/>MT5301: Missing 'strip' tool. Please install Xcode 'Command-Line Tools' component
 
-
-
 ### <a name="MT5302"/>MT5302: Missing 'dsymutil' tool. Please install Xcode 'Command-Line Tools' component
-
-
 
 ### <a name="MT5303"/>MT5303: Failed to generate the debug symbols (dSYM directory). Please review the build log.
 
@@ -1982,8 +1863,6 @@ An error occurred when running dsymutil on the final .app directory to create th
 An error occurred when running the 'strip' tool to remove debugging information from the application.
 
 ### <a name="MT5305"/>MT5305: Missing 'lipo' tool. Please install Xcode 'Command-Line Tools' component
-
-
 
 ### <a name="MT5306"/>MT5306: Failed to create the a fat library. Please review the build log.
 
@@ -1996,9 +1875,8 @@ An error occurred when signing the application. Please review the build log to s
 <!-- 5308 is used by mmp -->
 <!-- 5309 is used by mmp -->
 <!-- 5310 is used by mmp -->
-<!-- 5311 is used by mmp -->
 
-# MT6xxx: mtouch internal tools error messages
+## MT6xxx: mtouch internal tools error messages
 
 ### MT600x: Stripper
 
@@ -2017,7 +1895,7 @@ An error occurred when stripping managed code(removing the IL code) from the ass
 
 A security error ocurred while stripping debugging symbols from the application.
 
-# MT7xxx: MSBuild error messages
+## MT7xxx: MSBuild error messages
 
 <!--
  MT7xxx msbuild errors
@@ -2309,8 +2187,7 @@ Where * can be:
 
 *MSBuild task: PropertyListEditorTaskBase*
 
-
-# MT8xxx: Runtime error messages
+## MT8xxx: Runtime error messages
 
 <!--
  MT8xxx runtime
