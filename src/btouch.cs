@@ -46,7 +46,7 @@ class BindingTouch {
 
 	static string baselibdll;
 	static string attributedll;
-	static string compiler;
+	const string compiler = "/Library/Frameworks/Mono.framework/Versions/Current/bin/csc";
 	static string net_sdk;
 
 	static List<string> libs = new List<string> ();
@@ -246,7 +246,7 @@ class BindingTouch {
 			{ "core", "Use this to build product assemblies", v => Generator.BindThirdPartyLibrary = false },
 			{ "r=", "Adds a reference", v => references.Add (v) },
 			{ "lib=", "Adds the directory to the search path for the compiler", v => libs.Add (StringUtils.Quote (v)) },
-			{ "compiler=", "Sets the compiler to use", v => compiler = v },
+			{ "compiler=", "Sets the compiler to use (Obsolete) ", v => { Console.WriteLine ("The --compiler option is obsolete and ignored."); }, true },
 			{ "sdk=", "Sets the .NET SDK to use", v => net_sdk = v },
 			{ "new-style", "Build for Unified (Obsolete).", v => { Console.WriteLine ("The --new-style option is obsolete and ignored."); }, true},
 			{ "d=", "Defines a symbol", v => defines.Add (v) },
@@ -379,9 +379,6 @@ class BindingTouch {
 			throw ErrorHelper.CreateError (1043, "Internal error: unknown target framework '{0}'.", target_framework);
 		}
 
-		if (string.IsNullOrEmpty (compiler))
-			compiler = "/Library/Frameworks/Mono.framework/Commands/mcs";
-
 		if (target_framework == TargetFramework.XamMac_1_0 && !references.Any ((v) => Path.GetFileNameWithoutExtension (v) == "System.Drawing")) {
 			// If we're targeting XM/Classic ensure we have a reference to System.Drawing.dll.
 			references.Add ("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5/System.Drawing.dll");
@@ -422,15 +419,6 @@ class BindingTouch {
 			// Keep source files at the end of the command line - csc will create TWO assemblies if any sources preceed the -out parameter
 			var cargs = new StringBuilder ();
 
-			if (CurrentPlatform == PlatformName.MacOSX) {
-				// HACK
-				bool isCSC = compiler.Contains ("/Library/Frameworks/Mono.framework/Versions/Current/bin/csc");
-				if (!isCSC && !string.IsNullOrEmpty (net_sdk) && net_sdk != "mobile")
-					cargs.Append ("-sdk:").Append (net_sdk).Append (' ');
-			} else {
-				if (!string.IsNullOrEmpty (net_sdk))
-					cargs.Append ("-sdk:").Append (net_sdk).Append (' ');
-			}
 			cargs.Append ("-debug -unsafe -target:library -nowarn:436").Append (' ');
 			cargs.Append ("-out:").Append (StringUtils.Quote (tmpass)).Append (' ');
 			cargs.Append ("-r:").Append (StringUtils.Quote (GetAttributeLibraryPath ())).Append (' ');
@@ -441,8 +429,10 @@ class BindingTouch {
 			foreach (var def in defines)
 				cargs.Append ("-define:").Append (def).Append (' ');
 			cargs.Append (paths).Append (' ');
-			if (nostdlib)
+			if (nostdlib) {
 				cargs.Append ("-nostdlib ");
+				cargs.Append ("-noconfig ");
+			}
 			foreach (var qs in api_sources)
 				cargs.Append (qs).Append (' ');
 			foreach (var cs in core_sources)
