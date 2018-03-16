@@ -126,7 +126,7 @@ When running --runregistrar, at least one root assembly should be provided.
 
 When running --runregistrar, the assembly list should include the product assembly, Xamarin.Mac, XamMac.
 
-### <a name="MM0132/>MM0132: Unknown optimization: *. Valid values are: *
+### <a name="MM0132"/>MM0132: Unknown optimization: *. Valid values are: *
 
 The specified optimization was not recognized.
 

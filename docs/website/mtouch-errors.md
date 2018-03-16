@@ -659,7 +659,7 @@ When running --runregistrar, at least one root assembly should be provided.
 
 When running --runregistrar, the assembly list should include the product assembly, Xamarin.iOS, Xamarin.WatchOS, Xamarin.TVOS.
 
-### <a name="MT0132/>MT0132: Unknown optimization: *. Valid values are: *
+### <a name="MT0132"/>MT0132: Unknown optimization: *. Valid values are: *
 
 The specified optimization was not recognized.
 
