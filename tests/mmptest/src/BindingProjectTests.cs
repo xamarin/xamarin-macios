@@ -13,7 +13,7 @@ namespace Xamarin.MMP.Tests
 		
 		static Tuple<string, string> BuildLinkedTestProjects (TI.UnifiedTestConfig binding, TI.UnifiedTestConfig project, string tmpDir)
 		{
-			binding.ItemGroup = MMPTests.CreateSingleNativeRef (Path.GetFullPath (MMPTests.SimpleDylibPath), "Dynamic");
+			binding.ItemGroup = NativeReferenceTests.CreateSingleNativeRef (Path.GetFullPath (NativeReferenceTests.SimpleDylibPath), "Dynamic");
 			binding.StructsAndEnumsConfig = "public class UnifiedWithDepNativeRefLibTestClass {}";
 
 			string projectPath = TI.GenerateBindingLibraryProject (binding);
