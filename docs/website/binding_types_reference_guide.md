@@ -1,12 +1,15 @@
 ---
-id: C6618E9D-07FA-4C84-D014-10DAC989E48D
-title: Binding Types Reference Guide
-dateupdated: 2017-06-26
+title: "Binding types reference guide"
+ms.topic: article
+ms.prod: xamarin
+ms.assetid: C6618E9D-07FA-4C84-D014-10DAC989E48D
+ms.technology: xamarin-cross-platform
+author: bradumbaugh
+ms.author: brumbaug
+ms.date: 03/06/2018
 ---
 
-[//]: # (The original file resides under https://github.com/xamarin/xamarin-macios/tree/master/docs/website/)
-[//]: # (This allows all contributors (including external) to submit, using a PR, updates to the documentation that match the tools changes)
-[//]: # (Modifications outside of xamarin-macios/master will be lost on future updates)
+# Binding types reference guide
 
 This document describes the list of attributes that you can use to annotate
 your API contract files to drive the binding and the code generated
@@ -15,14 +18,13 @@ Xamarin.iOS and Xamarin.Mac API contracts are written in C# mostly as interface
 definitions that define the way that Objective-C code is surfaced to C#. The
 process involves a mix of interface declarations plus some basic type
 definitions that the API contract might require. For an introduction to binding
-types, see our companion guide [Binding Objective-C Libraries](/guides/cross-platform/macios/binding/objective-c-libraries/).
+types, see our companion guide [Binding Objective-C Libraries](~/cross-platform/macios/binding/objective-c-libraries.md).
 
-
-# Type Definitions
+## Type definitions
 
 Syntax:
 
-```
+```csharp
 [BaseType (typeof (BTYPE))
 interface MyType [: Protocol1, Protocol2] {
      IntPtr Constructor (string foo);
@@ -44,7 +46,7 @@ itself.
 The following shows how the Objective-C declaration for `UITextField` would be
 defined in a Xamarin.iOS contract:
 
-```
+```objc
 @interface UITextField : UIControl <UITextInput> {
 
 }
@@ -52,7 +54,7 @@ defined in a Xamarin.iOS contract:
 
 Would be written like this as a C# API contract:
 
-```
+```csharp
 [BaseType (typeof (UIControl))]
 interface UITextField : UITextInput {
 }
@@ -61,10 +63,8 @@ interface UITextField : UITextInput {
 You can control many other aspects of the code generation by applying other
 attributes to the interface as well as configuring the BaseType attribute.
 
- <a name="Generating_Events" />
 
-
-## Generating Events
+### Generating events
 
 One feature of the Xamarin.iOS and Xamarin.Mac API design is that we map
 Objective-C delegate classes as C# events and callbacks. Users can choose in a
@@ -75,7 +75,7 @@ choosing the C#-style events and properties.
 
 Let us see one example of how to use the Objective-C model:
 
-```
+```csharp
 bool MakeDecision ()
 {
     return true;
@@ -112,7 +112,7 @@ expected to return values.
 
 This is how the C# code for the same feature looks like using lambdas:
 
-```
+```csharp
 void Setup ()
 {
     var scrollview = new UIScrollView (myRect);
@@ -129,7 +129,7 @@ connect multiple copies. The `ShouldScrollToTop` is not an event, it is instead 
 property with the type `UIScrollViewCondition` which has this
 signature:
 
-```
+```csharp
 public delegate bool UIScrollViewCondition (UIScrollView scrollView);
 ```
 
@@ -149,7 +149,7 @@ object) you must provide the name that you would like for the generated
 EventArgs class to be. This is done with the `EventArgs` attribute on the method
 declaration in your Model class. For example:
 
-```
+```csharp
 [BaseType (typeof (UINavigationControllerDelegate))]
 [Model][Protocol]
 public interface UIImagePickerControllerDelegate {
@@ -161,7 +161,7 @@ public interface UIImagePickerControllerDelegate {
 The above declaration will generate a `UIImagePickerImagePickedEventArgs` class that derives from `EventArgs` and packs both parameters, the `UIImage` and
 the `NSDictionary`. The generator produces this:
 
-```
+```csharp
 public partial class UIImagePickerImagePickedEventArgs : EventArgs {
     public UIImagePickerImagePickedEventArgs (UIImage image, NSDictionary editingInfo);
     public UIImage Image { get; set; }
@@ -171,7 +171,7 @@ public partial class UIImagePickerImagePickedEventArgs : EventArgs {
 
 It then exposes the following in the UIImagePickerController class:
 
-```
+```csharp
 public event EventHandler<UIImagePickerImagePickedEventArgs> FinishedPickingImage { add; remove; }
 ```
 
@@ -180,7 +180,7 @@ name for the generated C# delegate (the signature for the method) and also a
 default value to return in case the user does not provide an implementation
 himself. For example, the `ShouldScrollToTop` definition is this:
 
-```
+```csharp
 [BaseType (typeof (NSObject))]
 [Model][Protocol]
 public interface UIScrollViewDelegate {
@@ -199,14 +199,12 @@ directs the generator to return the value of the specified
 parameter in the call or the `NoDefaultValue` parameter that
 instructs the generator that there is no default value.
 
- <a name="BaseTypeAttribute" />
 
-
-## BaseTypeAttribute
+### BaseTypeAttribute
 
 Syntax:
 
-```
+```csharp
 public class BaseTypeAttribute : Attribute {
         public BaseTypeAttribute (Type t);
 
@@ -219,7 +217,7 @@ public class BaseTypeAttribute : Attribute {
 }
 ```
 
-### BaseType.Name
+#### BaseType.Name
 
 You use the `Name` property to control the name that this type will bind to in
 the Objective-C world. This is typically used to give the C# type a name that is
@@ -230,7 +228,7 @@ Example, in the following case we map the Objective-C `NSURLConnection` type to
 `NSUrlConnection`, as the .NET Framework Design Guidelines use "Url" instead of
 "URL":
 
-```
+```csharp
 [BaseType (typeof (NSObject), Name="NSURLConnection")]
 interface NSUrlConnection {
 }
@@ -241,8 +239,7 @@ The specified name is specified is used as the value for the generated
 name is used as the value for the `Register` attribute in the generated
 output.
 
-
-### BaseType.Events and BaseType.Delegates
+#### BaseType.Events and BaseType.Delegates
 
 These properties are used to drive the generation of C#-style Events in the
 generated classes. They are used to link a given class with its Objective-C
@@ -259,7 +256,7 @@ elements and be kept in sync. The `Delegates` array contains one string for each
 weakly-typed delegate that you want to wrap, and the Events array contains one
 type for each type that you want to associate with it.
 
-```
+```csharp
 [BaseType (typeof (NSObject),
            Delegates=new string [] { "WeakDelegate" },
            Events=new Type [] {typeof(UIAccelerometerDelegate)})]
@@ -272,10 +269,8 @@ public interface UIAccelerometerDelegate {
 }
 ```
 
- <a name="BaseType.KeepRefUntil" />
 
-
-### BaseType.KeepRefUntil
+#### BaseType.KeepRefUntil
 
 If you apply this attribute when new instances of this class are created, the
 instance of that object will be kept around until the method referenced by the
@@ -288,7 +283,7 @@ use your code. The value of this property is the name of a method in the
 The following example show how this is used by `UIActionSheet` in
 Xamarin.iOS:
 
-```
+```csharp
 [BaseType (typeof (NSObject), KeepRefUntil="Dismissed")]
 [BaseType (typeof (UIView),
            KeepRefUntil="Dismissed",
@@ -305,8 +300,6 @@ public interface UIActionSheetDelegate {
 }
 ```
 
- <a name="DesignatedDefaultCtorAttribute" />
-
 ## DesignatedDefaultCtorAttribute
 
 When this attribute is applied to the interface definition it will generate
@@ -314,9 +307,7 @@ a `[DesignatedInitializer]` attribute on the default (generated) constructor
 which maps to the `init` selector.
 
 
- <a name="DisableDefaultCtorAttribute" />
-
-## DisableDefaultCtorAttribute
+### DisableDefaultCtorAttribute
 
 When this attribute is applied to the interface definition it will prevent
 the generator from producing the default constructor.
@@ -324,18 +315,16 @@ the generator from producing the default constructor.
 Use this attribute when you need the object to be initialized with one of the
 other constructors in the class.
 
- <a name="PrivateDefaultCtorAttribute" />
 
-
-## PrivateDefaultCtorAttribute
+### PrivateDefaultCtorAttribute
 
 When this attribute is applied to the interface definition it will flag the
 default constructor as private. This means that you can still instantiate object
 of this class internally from your extension file, but it just wont be
 accessible to users of your class.
 
-<a name="CategoryAttribute" />
-## CategoryAttribute
+
+### CategoryAttribute
 
 Use this attribute on a type definition to bind Objective-C
 categories and to expose those as C# extension methods to mirror the
@@ -352,7 +341,7 @@ extension methods.
 
 This is what a category would look like in Objective-C:
 
-```
+```objc
 @interface UIView (MyUIViewExtension)
 -(void) makeBackgroundRed;
 @end
@@ -369,7 +358,7 @@ used to specify the base class to extend, to be the type to extend.
 The following shows how the `UIView` extensions are bound and turned
 into C# extension methods:
 
-```
+```csharp
 [BaseType (typeof (UIView))]
 [Category]
 interface MyUIViewExtension {
@@ -405,7 +394,7 @@ interface FooObject_Extensions {
 }
 ```
 
-This is incorrect because in order to use the `BoolMethod` extension you need an instance of `FooObject` but you are binding an ObjC **static** extension, this is a side effect due to the fact of how C# extension methods are implemented.
+This is incorrect because to use the `BoolMethod` extension you need an instance of `FooObject` but you are binding an ObjC **static** extension, this is a side effect due to the fact of how C# extension methods are implemented.
 
 The only way to use the above definitions is by the following ugly code:
 
@@ -427,8 +416,8 @@ interface FooObject {
 
 We will issue a warning (BI1117) whenever we find a `[Static]` member inside a `[Category]` definition. If you really want to have `[Static]` members inside your `[Category]` definitions you can silence the warning by using `[Category (allowStaticMembers: true)]` or by decorating either your member or `[Category]` interface definition with `[Internal]`.
 
-<a name="StaticAttribute" />
-## StaticAttribute
+
+### StaticAttribute
 
 When this attribute is applied to a class it will just generate a static
 class, one that does not derive from `NSObject` so the `[BaseType]` attribute is
@@ -437,7 +426,7 @@ expose.
 
 For example:
 
-```
+```csharp
 [Static]
 interface CBAdvertisement {
     [Field ("CBAdvertisementDataServiceUUIDsKey")]
@@ -446,16 +435,14 @@ interface CBAdvertisement {
 
 Will generate a C# class with the following API:
 
-```
+```csharp
 public partial class CBAdvertisement  {
     public static NSString DataServiceUUIDsKey { get; }
 }
 ```
 
-<a name="Model_Definitions" />
-# Model Definitions
 
-###Protocol definitions/Model
+## Protocol definitions/Model
 
 Models are typically used by protocol implementation.
 They differ in that the runtime will only register with
@@ -468,8 +455,8 @@ the base method.   Calling that method will throw an
 exception, you are supposed to implement the entire behavior
 on your subclass for any methods you override.
 
-<a name="AbstractAttribute" />
-## AbstractAttribute
+
+### AbstractAttribute
 
 By default, members that are part of a protocol are not mandatory. This
 allows users to create a subclass of the `Model` object by merely deriving from
@@ -484,7 +471,7 @@ be an abstract class.
 
 The following is taken from Xamarin.iOS:
 
-```
+```csharp
 [BaseType (typeof (NSObject))]
 [Model][Protocol]
 public interface UITableViewDataSource {
@@ -494,17 +481,16 @@ public interface UITableViewDataSource {
 }
 ```
 
- <a name="DefaultValueAttribute" />
+<a name="DefaultValueAttribute" />
 
-
-## DefaultValueAttribute
+### DefaultValueAttribute
 
 Specifies the default value to be returned by a model method if the user does
 not provide a method for this particular method in the Model object
 
 Syntax:
 
-```
+```csharp
 public class DefaultValueAttribute : Attribute {
         public DefaultValueAttribute (object o);
         public object Default { get; set; }
@@ -518,7 +504,7 @@ value to a lambda that can respond true or false, the default value return in
 this case would be false, the value that we specified in the `DefaultValue`
 attribute:
 
-```
+```csharp
 [BaseType (typeof (NSObject))]
 [Model][Protocol]
 interface CameraDelegate {
@@ -530,22 +516,21 @@ interface CameraDelegate {
 If the user sets a handler in the imaginary class, then this value would be
 ignored:
 
-```
+```csharp
 var camera = new Camera ();
 camera.ShouldUploadToServer = (camera, action) => return SomeDecision ();
 ```
 
-
-
 See
 also: [NoDefaultValueAttribute](#NoDefaultValueAttribute), [DefaultValueFromArgumentAttribute](#DefaultValueFromArgumentAttribute).
 
+<a name="DefaultValueFromArgumentAttribute" />
 
-## DefaultValueFromArgumentAttribute
+### DefaultValueFromArgumentAttribute
 
 Syntax:
 
-```
+```csharp
 public class DefaultValueFromArgumentAttribute : Attribute {
     public DefaultValueFromArgumentAttribute (string argument);
     public string Argument { get; }
@@ -558,7 +543,7 @@ if the user did not provide his own method or lambda.
 
 Example:
 
-```
+```csharp
 [BaseType (typeof (NSObject))]
 [Model][Protocol]
 public interface NSAnimationDelegate {
@@ -572,17 +557,15 @@ the C# events/properties, and did not set `NSAnimation.ComputeAnimationCurve` to
 method or lambda, the return value would be the value passed in the progress
 parameter.
 
-
-
 See also: [NoDefaultValueAttribute](#NoDefaultValueAttribute), [DefaultValueAttribute](#DefaultValueAttribute)
 
-## IgnoredInDelegateAttribute
+### IgnoredInDelegateAttribute
 
 Sometimes it makes sense not to expose an event or delegate property from a
 Model class into the host class so adding this attribute will instruct the
 generator to avoid the generation of any method decorated with it.
 
-```
+```csharp
 [BaseType (typeof (UINavigationControllerDelegate))]
 [Model][Protocol]
 public interface UIImagePickerControllerDelegate {
@@ -594,15 +577,14 @@ public interface UIImagePickerControllerDelegate {
 }
 ```
 
-
-## DelegateNameAttribute
+### DelegateNameAttribute
 
 This attribute is used in Model methods that return values to set the name of
 the delegate signature to use.
 
 Example:
 
-```
+```csharp
 [BaseType (typeof (NSObject))]
 [Model][Protocol]
 public interface NSAnimationDelegate {
@@ -614,11 +596,11 @@ public interface NSAnimationDelegate {
 With the above definition, the generator will produce the following public
 declaration:
 
-```
+```csharp
 public delegate float NSAnimationProgress (MonoMac.AppKit.NSAnimation animation, float progress);
 ```
 
-## DelegateApiNameAttribute
+### DelegateApiNameAttribute
 
 This attribute is used to allow the generator to change the name of the property generated
 in the host class. Sometimes it is useful when the name of the FooDelegate class method
@@ -630,7 +612,7 @@ class with a better given name.
 
 Example:
 
-```
+```csharp
 [BaseType (typeof (NSObject))]
 [Model][Protocol]
 public interface NSAnimationDelegate {
@@ -642,12 +624,11 @@ public interface NSAnimationDelegate {
 With the above definition, the generator will produce the following public
 declaration in the host class:
 
-```
+```csharp
 public Func<NSAnimation, float, float> ComputeAnimationCurve { get; set; }
 ```
 
-
-## EventArgsAttribute
+### EventArgsAttribute
 
 For events that take more than one parameter (in Objective-C the convention
 is that the first parameter in a delegate class is the instance of the sender
@@ -657,7 +638,7 @@ declaration in your `Model` class.
 
 For example:
 
-```
+```csharp
 [BaseType (typeof (UINavigationControllerDelegate))]
 [Model][Protocol]
 public interface UIImagePickerControllerDelegate {
@@ -669,7 +650,7 @@ public interface UIImagePickerControllerDelegate {
 The above declaration will generate a `UIImagePickerImagePickedEventArgs` class that derives from EventArgs
 and packs both parameters, the `UIImage` and the `NSDictionary`. The generator produces this:
 
-```
+```csharp
 public partial class UIImagePickerImagePickedEventArgs : EventArgs {
     public UIImagePickerImagePickedEventArgs (UIImage image, NSDictionary editingInfo);
     public UIImage Image { get; set; }
@@ -679,12 +660,12 @@ public partial class UIImagePickerImagePickedEventArgs : EventArgs {
 
 It then exposes the following in the UIImagePickerController class:
 
-```
+```csharp
 public event EventHandler<UIImagePickerImagePickedEventArgs> FinishedPickingImage { add; remove; }
 ```
 
-<a name="EventNameAttribute" />
-## EventNameAttribute
+
+### EventNameAttribute
 
 This attribute is used to allow the generator to change the name of an event
 or property generated in the class. Sometimes it is useful when the name of the
@@ -694,7 +675,7 @@ originating class as an event or property.
 For example, the `UIWebView` uses the following bit from the
 `UIWebViewDelegate`:
 
-```
+```csharp
 [Export ("webViewDidFinishLoad:"), EventArgs ("UIWebView"), EventName ("LoadFinished")]
 void LoadingFinished (UIWebView webView);
 ```
@@ -702,15 +683,13 @@ void LoadingFinished (UIWebView webView);
 The above exposes `LoadingFinished` as the method in the `UIWebViewDelegate`, but
 `LoadFinished` as the event to hook up to in a `UIWebView`:
 
-```
+```csharp
 var webView = new UIWebView (...);
 webView.LoadFinished += delegate { Console.WriteLine ("done!"); }
 ```
 
- <a name="ModelAttribute" />
 
-
-## ModelAttribute
+### ModelAttribute
 
 When you apply the `Model` attribute to a type definition in your contract API,
 the runtime will generate special code that will only surface invocations to
@@ -718,12 +697,9 @@ methods in the class if the user has overwritten a method in the class. This
 attribute is typically applied to all APIs that wrap an Objective-C delegate
 class.
 
- <a name="NoDefaultValueAttribute"></a>
+<a name="NoDefaultValueAttribute" />
 
-
-## NoDefaultValueAttribute
-
-
+### NoDefaultValueAttribute
 
 Specifies that the method on the model does not provide a
 default return value.
@@ -732,7 +708,7 @@ This works with the Objective-C runtime by responding
 "false" to the Objective-C runtime request to determine if the
 specified selector is implemented in this class.
 
-```
+```csharp
 [BaseType (typeof (NSObject))]
 [Model][Protocol]
 interface CameraDelegate {
@@ -744,8 +720,7 @@ interface CameraDelegate {
 See also: [DefaultValueAttribute](#DefaultValueAttribute) and
 [DefaultValueAttribute](#DefaultValueAttribute).
 
-
-# Protocols
+## Protocols
 
 The Objective-C protocol concept does not really exist in C#. Protocols are
 similar to C# interfaces but they differ in that not all of the methods and
@@ -755,7 +730,7 @@ it. Instead some of the methods and properties are optional.
 Some protocols are generally used as Model classes, those should be bound
 using the Model attribute.
 
-```
+```csharp
 [BaseType (typeof (NSObject))]
 [Model, Protocol]
 interface MyProtocol {
@@ -776,7 +751,7 @@ that contains the `[Protocol]` attribute will actually generate
 three supporting classes that vastly improve the way that you
 consume protocols:
 
-```
+```csharp
 // Full method implementation, contains all methods
 class MyProtocol : IMyProtocol {
     public void Say (string msg);
@@ -818,7 +793,7 @@ you will need to write skeleton empty interfaces in your API
 definition.   If you want to use the MyProtocol in an API, you
 would need to do this:
 
-```
+```csharp
 [BaseType (typeof (NSObject))]
 [Model, Protocol]
 interface MyProtocol {
@@ -845,12 +820,12 @@ The above is needed because at binding time the `IMyProtocol`
 would not exist, that is why you need to provide an empty
 interface.
 
-## Adopting Protocol Generated Interfaces
+### Adopting protocol-generated interfaces
 
 Whenever you implement one of the interfaces generated for
 the protocols, like this:
 
-```
+```csharp
 class MyDelegate : NSObject, IUITableViewDelegate {
     nint IUITableViewDelegate.GetRowHeight (nint row) {
         return 1;
@@ -861,7 +836,7 @@ class MyDelegate : NSObject, IUITableViewDelegate {
 The implementation for the interface methods automatically gets
 exported with the proper name, so it is equivalent to this:
 
-```
+```csharp
 class MyDelegate : NSObject, IUITableViewDelegate {
     [Export ("getRowHeight:")]
     nint IUITableViewDelegate.GetRowHeight (nint row) {
@@ -873,7 +848,7 @@ class MyDelegate : NSObject, IUITableViewDelegate {
 It does not matter if the interface is implemented
 implicitly or explicitly.
 
-## Protocol Inlining
+### Protocol inlining
 
 While you bind existing Objective-C types that have been declared as adopting
 a protocol, you will want to inline the protocol directly. To do this, merely
@@ -882,7 +857,7 @@ the protocol in the list of base interfaces for your interface.
 
 Example:
 
-```
+```csharp
 interface SpeakProtocol {
     [Export ("say:")]
     void Say (string msg);
@@ -895,18 +870,14 @@ interface Robot : SpeakProtocol {
 }
 ```
 
- <a name="Member_Definitions" />
 
-
-# Member Definitions
+## Member definitions
 
 The attributes in this section are applied to individual members of a type:
 properties and method declarations.
 
- <a name="AlignAttribute" />
 
-
-## AlignAttribute
+### AlignAttribute
 
 Used to specify the alignment value for property return types. Certain
 properties take pointers to addresses that must be aligned at certain boundaries
@@ -917,17 +888,15 @@ use the alignment value. This is typically used with the `OpenTK.Vector4` and
 
 Example:
 
-```
+```csharp
 public interface GLKBaseEffect {
     [Export ("constantColor")]
     Vector4 ConstantColor { [Align (16)] get; set;  }
 }
 ```
 
- <a name="AppearanceAttribute" />
 
-
-## AppearanceAttribute
+### AppearanceAttribute
 
 The `Appearance` attribute is limited to iOS5 where the Appearance manager was
 introduced.
@@ -940,7 +909,7 @@ class, or the instances that match certain criteria.
 
 Example:
 
-```
+```csharp
 public interface UIToolbar {
     [Since (5,0)]
     [Export ("setBackgroundImage:forToolbarPosition:barMetrics:")]
@@ -956,7 +925,7 @@ public interface UIToolbar {
 
 The above would generate the following code in UIToolbar:
 
-```
+```csharp
 public partial class UIToolbar {
     public partial class UIToolbarAppearance : UIView.UIViewAppearance {
         public virtual void SetBackgroundImage (UIImage backgroundImage, UIToolbarPosition position, UIBarMetrics barMetrics);
@@ -967,8 +936,7 @@ public partial class UIToolbar {
 }
 ```
 
-
-## AutoReleaseAttribute (Xamarin.iOS 5.4)
+### AutoReleaseAttribute (Xamarin.iOS 5.4)
 
 Use the `AutoReleaseAttribute` on methods and properties to wrap the method
 invocation to the method in an `NSAutoReleasePool`.
@@ -987,8 +955,7 @@ as your thread did not return control to the main loop. Uf your thread was some
 sort of background downloader that is always alive and waiting for work, the
 images would never be released.
 
-
-## ForcedTypeAttribute
+### ForcedTypeAttribute
 
 The `ForcedTypeAttribute` is used to enforce the creation of a managed type even
 if the returned unmanaged object does not match the type described in the binding
@@ -1004,10 +971,10 @@ It clearly states that it will return an `NSURLSessionDownloadTask` instance, bu
 `NSURLSessionDownloadTask`. Since we are in a type-safe context an `InvalidCastException`
 will happen.
 
-In order to comply with the header description and avoid the `InvalidCastException`, the
+To comply with the header description and avoid the `InvalidCastException`, the
 `ForcedTypeAttribute` is used.
 
-```
+```csharp
 [BaseType (typeof (NSObject), Name="NSURLSession")]
 interface NSUrlSession {
 
@@ -1024,9 +991,7 @@ for **Core Foundation** objects.
 
 The `ForcedTypeAttribute` is only valid on `parameters`, `properties` and `return value`.
 
-
-
-## BindAsAttribute
+### BindAsAttribute
 
 The `BindAsAttribute` allows binding `NSNumber`, `NSValue` and `NSString`(enums) into more accurate C# types. The attribute can be used to create better, more accurate, .NET API over the native API.
 
@@ -1034,7 +999,7 @@ You can decorate methods (on return value), parameters and properties with `Bind
 
 For example:
 
-```
+```csharp
 [return: BindAs (typeof (bool?))]
 [Export ("shouldDrawAt:")]
 NSNumber ShouldDraw ([BindAs (typeof (CGRect))] NSValue rect);
@@ -1042,7 +1007,7 @@ NSNumber ShouldDraw ([BindAs (typeof (CGRect))] NSValue rect);
 
 Would output:
 
-```
+```csharp
 [Export ("shouldDrawAt:")]
 bool? ShouldDraw (CGRect rect) { ... }
 ```
@@ -1055,7 +1020,7 @@ The current supported encapsulation types are:
 * `NSNumber`
 * `NSString`
 
-### NSValue
+#### NSValue
 
 The following C# data types are supported to be encapsulated from/into `NSValue`:
 
@@ -1077,7 +1042,7 @@ The following C# data types are supported to be encapsulated from/into `NSValue`
 * CMTimeMapping
 * CATransform3D
 
-### NSNumber
+#### NSNumber
 
 The following C# data types are supported to be encapsulated from/into `NSNumber`:
 
@@ -1097,11 +1062,11 @@ The following C# data types are supported to be encapsulated from/into `NSNumber
 * nuint
 * Enums
 
-### NSString
+#### NSString
 
 `[BindAs]` works in conjuntion with [enums backed by a NSString constant](#enum-attributes) so you can create better .NET API, for example:
 
-```
+```csharp
 [BindAs (typeof (CAScroll))]
 [Export ("supportedScrollMode")]
 NSString SupportedScrollMode { get; set; }
@@ -1109,18 +1074,18 @@ NSString SupportedScrollMode { get; set; }
 
 Would output:
 
-```
+```csharp
 [Export ("supportedScrollMode")]
 CAScroll SupportedScrollMode { get; set; }
 ```
 
 We will handle the `enum` <-> `NSString` conversion only if the provided enum type to `[BindAs]` is [backed by a NSString constant](#enum-attributes).
 
-### Arrays
+#### Arrays
 
 `[BindAs]` also supports arrays of any of the supported types, you can have the following API definition as an example:
 
-```
+```csharp
 [return: BindAs (typeof (CAScroll []))]
 [Export ("getScrollModesAt:")]
 NSString [] GetScrollModes ([BindAs (typeof (CGRect []))] NSValue [] rects);
@@ -1128,15 +1093,14 @@ NSString [] GetScrollModes ([BindAs (typeof (CGRect []))] NSValue [] rects);
 
 Would output:
 
-```
+```csharp
 [Export ("getScrollModesAt:")]
 CAScroll? [] GetScrollModes (CGRect [] rects) { ... }
 ```
 
 The `rects` parameter will be encapsulated into a `NSArray` that contains an `NSValue` for each `CGRect` and in return you will get an array of `CAScroll?` which has been created using the values of the returned `NSArray` containing `NSStrings`.
 
-
-## BindAttribute
+### BindAttribute
 
 The `Bind` attribute has two uses one when applied to a method or property
 declaration, and another one when applied to the individual getter or setter in
@@ -1151,7 +1115,7 @@ methods.
 
 For example:
 
-```
+```csharp
 public interface UIView {
     [Bind ("drawAtPoint:withFont:")]
     SizeF DrawString ([Target] string str, CGPoint point, UIFont font);
@@ -1168,7 +1132,7 @@ You would use this attribute to inform the generator of this.
 
 For example:
 
-```
+```csharp
 // Default behavior
 [Export ("active")]
 bool Active { get; set; }
@@ -1178,10 +1142,8 @@ bool Active { get; set; }
 bool Visible { [Bind ("isVisible")] get; set; }
 ```
 
- <a name="AsyncAttribute"></a>
 
-
-## AsyncAttribute
+### AsyncAttribute
 
 Only available on Xamarin.iOS 6.3 and newer.
 
@@ -1196,7 +1158,7 @@ takes no parameters, the return value will be a `Task`, if the
 callback takes a parameter, the result will be a
 Task&lt;T&gt;.
 
-```
+```csharp
 [Export ("upload:complete:")]
 [Async]
 void LoadFile (string file, NSAction complete)
@@ -1204,7 +1166,7 @@ void LoadFile (string file, NSAction complete)
 
 The following will generate this async method:
 
-```
+```csharp
 Task LoadFileAsync (string file);
 ```
 
@@ -1213,7 +1175,7 @@ should set the `ResultType` or `ResultTypeName` to specify the
 desired name of the generated type which will hold all the
 properties.
 
-```
+```csharp
 delegate void OnComplete (string [] files, nint byteCount);
 
 [Export ("upload:complete:")]
@@ -1225,7 +1187,7 @@ The following will generate this async method, where
 `FileLoading` contains properties to access both "files" and
 "byteCount":
 
-```
+```csharp
 Task<FileLoading> LoadFile (string file);
 ```
 
@@ -1234,7 +1196,7 @@ the generated `Async` method will check if the value is not
 null, and if that is the case, the generated async method will
 set the task exception.
 
-```
+```csharp
 [Export ("upload:onComplete:")]
 [Async]
 void Upload (string file, Action<string,NSError> onComplete);
@@ -1242,40 +1204,33 @@ void Upload (string file, Action<string,NSError> onComplete);
 
 The above generates the following async method:
 
-```
+```csharp
 Task<string> UploadAsync (string file);
 ```
 
 And on error, the resulting Task will have the exception
 set to an `NSErrorException` that wraps the resulting `NSError`.
 
-### AsyncAttribute.ResultType
-
-
+#### AsyncAttribute.ResultType
 
 Use this property to specify the value for the returning
 `Task` object.   This parameter takes an existing type, thus it
 needs to be defined in one of your core api definitions.
 
-
-### AsyncAttribute.ResultTypeName
+#### AsyncAttribute.ResultTypeName
 
 Use this property to specify the value for the returning
 `Task` object.   This parameter takes the name of your desired
 type name, the generator will produce a series of properties,
 one for each parameter that the callback takes.
 
-
-### AsyncAttribute.MethodName
-
-
+#### AsyncAttribute.MethodName
 
 Use this property to customize the name of the generated
 async methods.   The default is to use the name of the method
 and append the text "Async", you can use this to change this default.
 
-
-## DesignatedInitializerAttribute
+### DesignatedInitializerAttribute
 
 When this attribute is applied to a constructor it will generate the same
 `[DesignatedInitializer]` in the final platform assembly. This is to help
@@ -1283,8 +1238,7 @@ the IDE indicate which constructor should be used in subclasses.
 
 This should map to ObjC/clang use of `__attribute__((objc_designated_initializer))`.
 
-
-## DisableZeroCopyAttribute
+### DisableZeroCopyAttribute
 
 This attribute is applied to string parameters or string properties and
 instructs the code generator to not use the zero-copy string marshaling for
@@ -1304,15 +1258,13 @@ optimization.
 
 The following shows two such properties in Objective-C:
 
-```
+```csharp
 @property(nonatomic,retain) NSString *name;
 @property(nonatomic,assign) NSString *name2;
 ```
 
- <a name="DisposeAttribute" />
 
-
-## DisposeAttribute
+### DisposeAttribute
 
 When you apply the `DisposeAttribute` to a class, you provide a code snippet
 that will be added to the `Dispose()` method implementation of the class.
@@ -1323,17 +1275,15 @@ generated `Dispose` method implementation.
 
 For example:
 
-```
+```csharp
 [BaseType (typeof (NSObject))]
 [Dispose ("if (OpenConnections > 0) CloseAllConnections ();")]
 interface DatabaseConnection {
 }
 ```
 
- <a name="ExportAttribute" />
 
-
-## ExportAttribute
+### ExportAttribute
 
 The `Export` attribute is used to flag a method or property to be exposed to
 the Objective-C runtime. This attribute is shared between the binding tool and
@@ -1344,7 +1294,7 @@ for information on how to alter the behavior of the binding tool).
 
 Syntax:
 
-```
+```csharp
 public enum ArgumentSemantic {
     None, Assign, Copy, Retain.
 }
@@ -1362,15 +1312,11 @@ public class ExportAttribute : Attribute {
 The [selector](http://developer.apple.com/library/ios/#documentation/cocoa/conceptual/objectivec/Chapters/ocSelectors.html) and it represents the underlying Objective-C name
 of the method or property that is being bound.
 
- <a name="ExportAttribute.ArgumentSemantic" />
+
+#### ExportAttribute.ArgumentSemantic
 
 
-### ExportAttribute.ArgumentSemantic
-
- <a name="FieldAttribute" />
-
-
-## FieldAttribute
+### FieldAttribute
 
 This attribute is used to expose a C global variable as a field that is
 loaded on demand and exposed to C# code. Usually this is required to get the
@@ -1380,7 +1326,7 @@ as-is by user code.
 
 Syntax:
 
-```
+```csharp
 public class FieldAttribute : Attribute {
     public FieldAttribute (string symbolName);
     public FieldAttribute (string symbolName, string libraryName);
@@ -1409,11 +1355,12 @@ Properties flagged with the Field attribute can be of the following types:
 * `System.IntPtr`
 * Enums
 
-Setters are not supported for [enums backed by NSString constants](#enum-attributes), but they can be manually bound if needed.
+Setters are not supported for [enums backed by NSString constants](#enum-attributes), 
+but they can be manually bound if needed.
 
 Example:
 
-```
+```csharp
 [Static]
 interface CameraEffects {
      [Field ("kCameraEffectsZoomFactorKey", "CameraLibrary")]
@@ -1421,10 +1368,7 @@ interface CameraEffects {
 }
 ```
 
-
-
-
-## InternalAttribute
+### InternalAttribute
 
 The `Internal` attribute can be applied to methods or properties and it has the
 effect of flagging the generated code with the "internal" C# keyword making the
@@ -1435,12 +1379,12 @@ require some hand-coding.
 
 When you design the binding, you would typically hide the method or property
 using this attribute and provide a different name for the method or property,
-and then on your C# complementary support file, you would add a strongly typed
+and then on your C# complementary support file, you would add a strongly-typed
 wrapper that exposes the underlying functionality.
 
 For example:
 
-```
+```csharp
 [Internal]
 [Export ("setValue:forKey:");
 void _SetValueForKey (NSObject value, NSObject key);
@@ -1452,7 +1396,7 @@ NSObject _GetValueForKey (NSObject key);
 
 Then, in your supporting file, you could have some code like this:
 
-```
+```csharp
 public NSObject this [NSObject idx] {
     get {
         return _GetValueForKey (idx);
@@ -1463,17 +1407,13 @@ public NSObject this [NSObject idx] {
 }
 ```
 
-
-## IsThreadStaticAttribute
+### IsThreadStaticAttribute
 
 This attribute flags the backing field for a property to be annotated with
 the .NET `[ThreadStatic]` attribute. This is useful if the field is a thread
 static variable.
 
- <a name="MarshalNativeExceptions_(Xamarin.iOS_6.0.6)" />
-
-
-## MarshalNativeExceptions (Xamarin.iOS 6.0.6)
+### MarshalNativeExceptions (Xamarin.iOS 6.0.6)
 
 This attribute will make a method support native (ObjectiveC) exceptions.
 Instead of calling `objc_msgSend` directly, the invocation will go through a
@@ -1485,10 +1425,8 @@ if a signature isn't supported when native linking of an app that uses the
 binding fails with a missing monotouch_*_objc_msgSend* symbol), but more can be
 added at request.
 
- <a name="NewAttribute" />
 
-
-## NewAttribute
+### NewAttribute
 
 This attribute is applied to methods and properties to have the generator
 generate the "new" keyword in front of the declaration.
@@ -1496,13 +1434,11 @@ generate the "new" keyword in front of the declaration.
 It is used to avoid compiler warnings when the same method or property name
 is introduced in a subclass that already existed in a base class.
 
- <a name="NotificationAttribute" />
 
-
-## NotificationAttribute
+### NotificationAttribute
 
 You can apply this attribute to fields to have the generator produce a
-strongly typed helper Notifications class.
+strongly-typed helper Notifications class.
 
 This attribute can be used without arguments for notifications that carry no
 payload, or you can specify a `System.Type` that references another interface in
@@ -1514,7 +1450,7 @@ Objective-C dictionary to fetch the value.
 
 For example:
 
-```
+```csharp
 interface MyClass {
     [Notification]
     [Field ("MyClassDidStartNotification")]
@@ -1525,7 +1461,7 @@ interface MyClass {
 The above code will generate a nested class `MyClass.Notifications` with the
 following methods:
 
-```
+```csharp
 public class MyClass {
    [..]
    public Notifications {
@@ -1537,10 +1473,10 @@ public class MyClass {
 
 Users of your code can then easily subscribe to notifications posted
 to the
-[NSDefaultCenter](/api/property/Foundation.NSNotificationCenter.DefaultCenter/)
+[NSDefaultCenter](https://developer.xamarin.com/api/property/Foundation.NSNotificationCenter.DefaultCenter/)
 by using code like this:
 
-```
+```csharp
 var token = MyClass.Notifications.ObserverDidStart ((notification) => {
     Console.WriteLine ("Observed the 'DidStart' event!");
 });
@@ -1548,7 +1484,7 @@ var token = MyClass.Notifications.ObserverDidStart ((notification) => {
 
 Or to set a specific object to observe. If you pass `null` to `objectToObserve` this method will behave just like its other peer.
 
-```
+```csharp
 var token = MyClass.Notifications.ObserverDidStart (objectToObserve, (notification) => {
     Console.WriteLine ("Observed the 'DidStart' event on objectToObserve!");
 });
@@ -1557,16 +1493,15 @@ var token = MyClass.Notifications.ObserverDidStart (objectToObserve, (notificati
 The returned value from `ObserveDidStart` can be used to easily stop receiving
 notifications, like this:
 
-```
+```csharp
 token.Dispose ();
 ```
 
-
-Or you can call [NSNotification.DefaultCenter.RemoveObserver](/api/member/Foundation.NSNotificationCenter.RemoveObserver/p/Foundation.NSObject//)
+Or you can call [NSNotification.DefaultCenter.RemoveObserver](https://developer.xamarin.com/api/member/Foundation.NSNotificationCenter.RemoveObserver/p/Foundation.NSObject//)
 and pass the token. If your notification contains parameters, you
 should specify a helper `EventArgs` interface, like this:
 
-```
+```csharp
 interface MyClass {
     [Notification (typeof (MyScreenChangedEventArgs)]
     [Field ("MyClassScreenChangedNotification")]
@@ -1589,7 +1524,7 @@ interface MyScreenChangedEventArgs {
 
 The above will generate a `MyScreenChangedEventArgs` class with the
 `ScreenX` and `ScreenY` properties that will fetch the data from the
-[NSNotification.UserInfo](/api/property/Foundation.NSNotification.UserInfo/)
+[NSNotification.UserInfo](https://developer.xamarin.com/api/property/Foundation.NSNotification.UserInfo/)
 dictionary using the keys **ScreenXKey** and **ScreenYKey**
 respectively and apply the proper conversions. The `[ProbePresence]`
 attribute is used for the generator to probe if the key is set in the
@@ -1599,7 +1534,7 @@ boolean values).
 
 This allows you to write code like this:
 
-```
+```csharp
 var token = MyClass.NotificationsObserveScreenChanged ((notification) => {
     Console.WriteLine ("The new screen dimensions are {0},{1}", notification.ScreenX, notification.ScreenY);
 });
@@ -1623,7 +1558,7 @@ support this scenario, the attribute can be applied more than once.
 If you are developing a binding, and you want to avoid breaking
 existing user code, you would turn an existing notification from:
 
-```
+```csharp
 interface MyClass {
     [Notification]
     [Field ("MyClassScreenChangedNotification")]
@@ -1633,7 +1568,7 @@ interface MyClass {
 
 Into a version that lists the notification attribute twice, like this:
 
-```
+```csharp
 interface MyClass {
     [Notification]
     [Notification (typeof (MyScreenChangedEventArgs)]
@@ -1642,8 +1577,7 @@ interface MyClass {
 }
 ```
 
-
-## NullAllowedAttribute
+### NullAllowedAttribute
 
 When this is applied to a property it flags the property as allowing the
 value null to be assigned to it. This is only valid for reference types.
@@ -1659,7 +1593,7 @@ assigned is null.
 
 For example:
 
-```
+```csharp
 // In properties
 
 [NullAllowed]
@@ -1669,47 +1603,43 @@ UIImage IconFile { get; set; }
 void SetImage ([NullAllowed] UIImage image, State forState);
 ```
 
-## OverrideAttribute
+<a name="OverrideAttribute"/>
+
+### OverrideAttribute
 
 Use this attribute to instruct the binding generator that the binding for
 this particular method should be flagged with an "override" keyword.
 
- <a name="PreSnippetAttribute" />
 
-
-## PreSnippetAttribute
+### PreSnippetAttribute
 
 You can use this attribute to inject some code to be inserted after the input
 parameters have been validated, but before the code calls into Objective-C
 
 Example:
 
-```
+```csharp
 [Export ("demo")]
 [PreSnippet ("var old = ViewController;")]
 void Demo ();
 ```
 
- <a name="PrologueSnippetAttribute" />
 
-
-## PrologueSnippetAttribute
+### PrologueSnippetAttribute
 
 You can use this attribute to inject some code to be inserted before any of
 the parameters are validated in the generated method.
 
 Example:
 
-```
+```csharp
 [Export ("demo")]
 [Prologue ("Trace.Entry ();")]
 void Demo ();
 ```
 
- <a name="PostGetAttribute" />
 
-
-## PostGetAttribute
+### PostGetAttribute
 
 Instructs the binding generator to invoke the specified property from this
 class to fetch a value from it.
@@ -1724,7 +1654,7 @@ a given binding.
 
 Example:
 
-```
+```csharp
 [BaseType (typeof (NSObject))]
 [Since (4,0)]
 public interface NSOperation {
@@ -1744,26 +1674,22 @@ adding or removing dependencies from the `NSOperation` object, ensuring that we
 have a graph that represents the actual loaded objects, preventing both memory
 leaks as well as memory corruption.
 
- <a name="PostSnippetAttribute" />
 
-
-## PostSnippetAttribute
+### PostSnippetAttribute
 
 You can use this attribute to inject some C# source code to be inserted after
 the code has invoked the underlying Objective-C method
 
 Example:
 
-```
+```csharp
 [Export ("demo")]
 [PostSnippet ("if (old != null) old.DemoComplete ();")]
 void Demo ();
 ```
 
- <a name="ProxyAttribute" />
 
-
-## ProxyAttribute
+### ProxyAttribute
 
 This attribute is applied to return values to flag them as being proxy
 objects. Some Objective-C APIs return proxy objects that can not be
@@ -1771,10 +1697,8 @@ differentiated from user bindings. The effect of this attribute is to flag the
 object as being a `DirectBinding` object. For a scenario in Xamarin.Mac, you can see
 the [discussion on this bug](https://bugzilla.novell.com/show_bug.cgi?id=670844).
 
- <a name="RetainListAttribute" />
 
-
-## RetainListAttribute
+### RetainListAttribute
 
 Instructs the generator to keep a managed reference to the parameter or
 remove an internal reference to the parameter. This is used to keep objects
@@ -1782,7 +1706,7 @@ referenced.
 
 Syntax:
 
-```
+```csharp
 public class RetainListAttribute: Attribute {
      public RetainListAttribute (bool doAdd, string listName);
 }
@@ -1795,10 +1719,7 @@ class to the API.
 
 For an example see [foundation.cs](https://github.com/mono/maccore/blob/master/src/foundation.cs) and [NSNotificationCenter.cs](https://github.com/mono/maccore/blob/master/src/Foundation/NSNotificationCenter.cs)
 
- <a name="ReleaseAttribute_(Xamarin.iOS_6.0)" />
-
-
-## ReleaseAttribute (Xamarin.iOS 6.0)
+### ReleaseAttribute (Xamarin.iOS 6.0)
 
 This can be applied to return types to indicate that the generator should
 call `Release` on the object before returning it. This is only needed when a
@@ -1807,7 +1728,7 @@ is the most common scenario)
 
 Example:
 
-```
+```csharp
 [Export ("getAndRetainObject")]
 [return: Release ()]
 NSObject GetAndRetainObject ();
@@ -1817,29 +1738,23 @@ Additionally this attribute is propagated to the generated code, so that
 the Xamarin.iOS runtime knows it must retain the object upon returning to
 Objective-C from such a function.
 
- <a name="SealedAttribute" />
 
-
-## SealedAttribute
+### SealedAttribute
 
 Instructs the generator to flag the generated method as sealed. If this
 attribute is not specified, the default is to generate a virtual method (either
 a virtual method, an abstract method or an override depending on how other
 attributes are used).
 
- <a name="StaticAttribute" />
 
-
-## StaticAttribute
+### StaticAttribute
 
 When the `Static` attribute is applied to a method or property this generates a
 static method or property. If this attribute is not specified, then the
 generator produces an instance method or property.
 
- <a name="TransientAttribute" />
 
-
-## TransientAttribute
+### TransientAttribute
 
 Use this attribute to flag properties whose values are transient, that is,
 objects that are created temporarily by iOS but are not long lived. When this
@@ -1847,13 +1762,11 @@ attribute is applied to a property, the generator does not create a backing
 field for this property, which means that the managed class does not keep a
 reference to the object.
 
- <a name="WrapAttribute" />
 
-
-## WrapAttribute
+### WrapAttribute
 
 In the design of the Xamarin.iOS/Xamarin.Mac bindings, the `Wrap` attribute is used
-to wrap a weakly typed object with a strongly typed object. This comes into play
+to wrap a weakly-typed object with a strongly-typed object. This comes into play
 mostly with Objective-C "delegate" objects which are typically declared as being
 of type `id` or `NSObject`. The convention used by
 Xamarin.iOS and Xamarin.Mac is to expose those delegates or data sources as being of
@@ -1864,12 +1777,12 @@ exposed. An "id delegate" property from Objective-C would be exposed as an
 But typically the value that is assigned to this delegate is of a strong
 type, so we surface the strong type and apply the `Wrap` attribute, this means
 that users can choose to use weak types if they need some fine-control or if
-they need to resort to low-level tricks, or they can use the strongly typed
+they need to resort to low-level tricks, or they can use the strongly-typed
 property for most of their work.
 
 Example:
 
-```
+```csharp
 [BaseType (typeof (NSObject))]
 interface Demo {
      [Export ("delegate"), NullAllowed]
@@ -1889,7 +1802,7 @@ interface DemoDelegate {
 
 This is how the user would use the weakly-typed version of the Delegate:
 
-```
+```csharp
 // The weak case, user has to roll his own
 class SomeObject : NSObject {
     [Export ("doDemo")]
@@ -1901,26 +1814,26 @@ var demo = new Demo ();
 demo.WeakDelegate = new SomeObject ();
 ```
 
-And this is how the user would use the strongly typed version, notice that
+And this is how the user would use the strongly-typed version, notice that
 the user takes advantage of C#'s type system and is using the override keyword
 to declare his intent and that he does not have to manually decorate the method
 with `Export`, since we did that work in the binding for the user:
 
-```
+```csharp
 // This is the strong case,
 class MyDelegate : DemoDelegate {
    override void Demo DoDemo () {}
 }
 
-
 var strongDemo = new Demo ();
 demo.Delegate = new MyDelegate ();
 ```
 
-Another use of the `Wrap` attribute is to support strongly typed version
+
+Another use of the `Wrap` attribute is to support strongly-typed version
 of methods.   For example:
 
-```
+```csharp
 [BaseType (typeof (NSObject))]
 interface XyzPanel {
     [Export ("playback:withOptions:")]
@@ -1941,7 +1854,7 @@ bool Write (CIImage image, CIImageRepresentationOptions options, out NSError err
 
 The members generated by `[Wrap]` are not `virtual` by default, if you need a `virtual` member you can set to `true` the optional `isVirtual` parameter.
 
-```
+```csharp
 [BaseType (typeof (NSObject))]
 interface FooExplorer {
 	[Export ("fooWithContentsOfURL:")]
@@ -1972,32 +1885,29 @@ enum PersonRelationship {
 
 Interface definition:
 
-```
+```csharp
 // Property definition.
 
-    [Export ("presenceType")]
-    NSString _PresenceType { get; set; }
+[Export ("presenceType")]
+NSString _PresenceType { get; set; }
 
-    PersonRelationship PresenceType {
-            [Wrap ("PersonRelationshipExtensions.GetValue (_PresenceType)")]
-            get;
-            [Wrap ("_PresenceType = value.GetConstant ()")]
-            set;
-    }
+PersonRelationship PresenceType {
+    [Wrap ("PersonRelationshipExtensions.GetValue (_PresenceType)")]
+    get;
+    [Wrap ("_PresenceType = value.GetConstant ()")]
+    set;
+}
 ```
 
- <a name="Parameter_Attributes" />
-
-# Parameter Attributes
+## Parameter attributes
 
 This section describes the attributes that you can apply to the parameters in
 a method definition as well as the `NullAttribute` that applies to a property as a
 whole.
 
+<a name="BlockCallback" />
 
-## BlockCallback
-
-
+### BlockCallback
 
 This attribute is applied to parameter types in C#
 delegate declarations to notify the binder that the parameter
@@ -2007,16 +1917,15 @@ convention and should marshal it in this way.
 This is typically used for callbacks that are defined like
 this in Objective-C:
 
-```
+```csharp
 typedef returnType (^SomeTypeDefinition) (int parameter1, NSString *parameter2);
 ```
 
 See also: [CCallback](#CCallback).
 
+<a name="CCallback" />
 
-## CCallback
-
-
+### CCallback
 
 This attribute is applied to parameter types in C#
 delegate declarations to notify the binder that the parameter
@@ -2030,10 +1939,7 @@ this in Objective-C:
 
 See also: [BlockCallback](#BlockCallback).
 
-
-## Params
-
-
+### Params
 
 You can use the `[Params]` attribute on the last array parameter of
 a method definition to have the generator inject a "params" in
@@ -2053,8 +1959,9 @@ Allows the following code to be written:
 This has the added advantage that it does not require users
 to create an array purely for passing elements.
 
+<a name="plainstring" />
 
-## PlainString
+### PlainString
 
 You can use the `[PlainString]` attribute in front of string parameters to
 instruct the binding generator to pass the string as a C string, instead of
@@ -2066,14 +1973,14 @@ Use `[PlainString]` in those cases.
 
 For example, the following Objective-C declarations:
 
-```
+```csharp
 - (void) setText: (NSString *) theText;
 - (void) logMessage: (char *) message;
 ```
 
 Should be bound like this:
 
-```
+```csharp
 [Export ("setText:")]
 void SetText (string theText);
 
@@ -2081,10 +1988,8 @@ void SetText (string theText);
 void LogMessage ([PlainString] string theText);
 ```
 
- <a name="RetainAttribute" />
 
-
-## RetainAttribute
+### RetainAttribute
 
 Instructs the generator to keep a reference to the specified parameter. The
 generator will provide the backing store for this field or you can specify a
@@ -2098,7 +2003,7 @@ more than one object (for example, for a Stack-like API) you would use the
 
 Syntax:
 
-```
+```csharp
 public class RetainAttribute {
     public RetainAttribute ();
     public RetainAttribute (string wrapName);
@@ -2106,10 +2011,8 @@ public class RetainAttribute {
 }
 ```
 
- <a name="RetainListAttribute" />
 
-
-## RetainListAttribute
+### RetainListAttribute
 
 Instructs the generator to keep a managed reference to the parameter or
 remove an internal reference to the parameter. This is used to keep objects
@@ -2117,7 +2020,7 @@ referenced.
 
 Syntax:
 
-```
+```csharp
 public class RetainListAttribute: Attribute {
      public RetainListAttribute (bool doAdd, string listName);
 }
@@ -2130,12 +2033,8 @@ class to the API.
 
 For an example see [foundation.cs](https://github.com/mono/maccore/blob/master/src/foundation.cs) and [NSNotificationCenter.cs](https://github.com/mono/maccore/blob/master/src/Foundation/NSNotificationCenter.cs)
 
- <a name="TransientAttribute"></a>
 
-
-## TransientAttribute
-
-
+### TransientAttribute
 
 This attribute is applied to parameters and is only used
 when transitioning from Objective-C to C#.  During those
@@ -2167,11 +2066,12 @@ methods on it will throw an exception).
 
 If the object passed was not created, or if there was
 already an outstanding managed representation of the object,
-the forced dispose does not take place. <a name="Global_Attributes" />
+the forced dispose does not take place. 
 
-# Property Attributes
 
-## NotImplementedAttribute
+## Property attributes
+
+### NotImplementedAttribute
 
 This attribute is used to support an Objective-C idiom where a
 property with a getter is introduced in a base class, and a mutable
@@ -2186,7 +2086,7 @@ support the mutable idiom in Objective-C.
 
 Example:
 
-```
+```csharp
 [BaseType (typeof (NSObject))]
 interface MyString {
     [Export ("initWithValue:")]
@@ -2209,7 +2109,9 @@ interface MyMutableString {
 }
 ```
 
-# Enum Attributes
+<a name="enum-attributes"/>
+
+## Enum attributes
 
 Mapping `NSString` constants to enum values is a easy way to create better
 .NET API. It:
@@ -2220,7 +2122,7 @@ Mapping `NSString` constants to enum values is a easy way to create better
 
 Example:
 
-```
+```csharp
 enum NSRunLoopMode {
 
 	[DefaultEnumValue]
@@ -2242,33 +2144,33 @@ available to developers even if they are not part of the API.
 
 Examples:
 
-```
+```csharp
 // using the NSString constant in a different API / framework / 3rd party code
 CallApiRequiringAnNSString (NSRunLoopMode.Default.GetConstant ());
 ```
 
-```
+```csharp
 // converting the constants from a different API / framework / 3rd party code
 var constant = CallApiReturningAnNSString ();
 // back into an enum value
 CallApiWithEnum (NSRunLoopModeExtensions.GetValue (constant));
 ```
 
-## DefaultEnumValueAttribute
+### DefaultEnumValueAttribute
 
 You can decorate **one** enum value with this attribute. This will become the constant
 being returned if the enum value is not known.
 
 From the example above:
 
-```
+```csharp
 var x = (NSRunLoopMode) 99;
 Call (x.GetConstant ()); // NSDefaultRunLoopMode will be used
 ```
 
 If no enum value is decorated then a `NotSupportedException` will be thrown.
 
-## ErrorDomainAttribute
+### ErrorDomainAttribute
 
 Error codes are bound as an enum values. There's generally an error domain for them
 and it's not always easy to find which one applies (or if one even exists).
@@ -2277,7 +2179,7 @@ You can use this attribute to associate the error domain with the enum itself.
 
 Example:
 
-```
+```csharp
 	[Native]
 	[ErrorDomain ("AVKitErrorDomain")]
 	public enum AVKitError : nint {
@@ -2290,8 +2192,7 @@ Example:
 You can then call the extension method `GetDomain` to get the domain constant of
 any error.
 
-
-## FieldAttribute
+### FieldAttribute
 
 This is the same `[Field]` attribute used for constants inside type. It can also
 be used inside enums to map a value with a specific constant.
@@ -2301,23 +2202,21 @@ A `null` value can be used to specify which enum value should be returned if a
 
 From the example above:
 
-```
+```csharp
 var constant = NSRunLoopMode.NewInWatchOS3; // will be null in watchOS 2.x
 Call (NSRunLoopModeExtensions.GetValue (constant)); // will return 1000
 ```
 
 If no `null` value is present then an `ArgumentNullException` will be thrown.
 
-# Global Attributes
+## Global attributes
 
 Global attributes are either applied using the `[assembly:]` attribute modifier
 like the `LinkWithAttribute` or can be used anywhere, like the `Lion` and `Since`
 attributes.
 
- <a name="LinkWithAttribute" />
 
-
-## LinkWithAttribute
+### LinkWithAttribute
 
 This is an assembly-level attribute which allows developers to specify the
 linking flags required to reuse a bound library without forcing the consumer
@@ -2326,7 +2225,7 @@ passed to a library.
 
 Syntax:
 
-```
+```csharp
 // In properties
 [Flags]
 public enum LinkTarget {
@@ -2357,7 +2256,7 @@ public class LinkWithAttribute : Attribute {
 This attribute is applied at the assembly level, for example, this is what
 the [CorePlot bindings](https://github.com/mono/monotouch-bindings/tree/master/CorePlot) use:
 
-```
+```csharp
 [assembly: LinkWith ("libCorePlot-CocoaTouch.a", LinkTarget.ArmV7 | LinkTarget.ArmV7s | LinkTarget.Simulator, Frameworks = "CoreGraphics QuartzCore", ForceLoad = true)]
 ```
 
@@ -2373,10 +2272,8 @@ It's also possible to not provide a `libraryName`, in which case the
 [assembly: LinkWith (LinkerFlags = "-lsqlite3")]
  ```
 
- <a name="LinkWithAttribute_Constructors" />
 
-
-### LinkWithAttribute Constructors
+#### LinkWithAttribute constructors
 
 These constructors allow you to specify the library to link with and embed into
 your resulting assembly, the supported targets that the library supports and any
@@ -2386,7 +2283,7 @@ Note that the LinkTarget argument is inferred by Xamarin.iOS and does not need t
 
 Examples:
 
-```
+```csharp
 // Specify additional linker:
 [assembly: LinkWith (LinkerFlags = "-sqlite3")]
 
@@ -2400,19 +2297,15 @@ Examples:
 [assembly: LinkWith ("libDemo.a", LinkTarget.Thumb | LinkTarget.Simulator, SmartLink = true, ForceLoad = true, IsCxx = true);
 ```
 
- <a name="LinkWithAttribute.ForceLoad" />
 
-
-### LinkWithAttribute.ForceLoad
+#### LinkWithAttribute.ForceLoad
 
 The `ForceLoad` property is used to decide whether or not the `-force_load` link
 flag is used for linking the native library. For now, this should always be
 true.
 
- <a name="LinkWithAttribute.Frameworks" />
 
-
-### LinkWithAttribute.Frameworks
+#### LinkWithAttribute.Frameworks
 
 If the library being bound has a hard requirement on any frameworks (other
 than `Foundation` and `UIKit`), you should set the `Frameworks` property to a string
@@ -2420,19 +2313,15 @@ containing a space-delimited list of the required platform frameworks. For
 example, if you are binding a library that requires `CoreGraphics` and `CoreText`,
 you would set the `Frameworks` property to `"CoreGraphics CoreText"`.
 
- <a name="LinkWithAttribute.IsCxx" />
 
-
-### LinkWithAttribute.IsCxx
+#### LinkWithAttribute.IsCxx
 
 Set this property to true if the resulting executable needs to be compiled
 using a C++ compiler instead of the default, which is a C compiler. Use this if
 the library that you are binding was written in C++.
 
- <a name="LinkWithAttribute.LibraryName" />
 
-
-### LinkWithAttribute.LibraryName
+#### LinkWithAttribute.LibraryName
 
 The name of the unmanaged library to bundle. This is a file with the
 extension ".a" and it can contain object code for multiple platforms (for
@@ -2442,10 +2331,8 @@ Earlier versions of Xamarin.iOS checked the `LinkTarget` property to determine
 the platform your library supported, but this is now auto-detected, and the
 `LinkTarget` property is ignored.
 
- <a name="LinkWithAttribute.LinkerFlags" />
 
-
-### LinkWithAttribute.LinkerFlags
+#### LinkWithAttribute.LinkerFlags
 
 The `LinkerFlags` string provides a way for binding authors to specify any
 additional linker flags needed when linking the native library into the
@@ -2454,34 +2341,26 @@ application.
 For example, if the native library requires libxml2 and zlib, you would set
 the `LinkerFlags` string to `"-lxml2 -lz"`.
 
- <a name="LinkWithAttribute.LinkTarget" />
 
-
-### LinkWithAttribute.LinkTarget
+#### LinkWithAttribute.LinkTarget
 
 Earlier versions of Xamarin.iOS checked the `LinkTarget` property to determine
 the platform your library supported, but this is now auto-detected, and the
 `LinkTarget` property is ignored.
 
-
-
-### LinkWithAttribute.NeedsGccExceptionHandling
+#### LinkWithAttribute.NeedsGccExceptionHandling
 
 Set this property to true if the library that you are linking requires the
 GCC Exception Handling library (gcc_eh)
 
- <a name="LinkWithAttribute.SmartLink" />
 
-
-### LinkWithAttribute.SmartLink
+#### LinkWithAttribute.SmartLink
 
 The `SmartLink` property should be set to true to let Xamarin.iOS determine
 whether `ForceLoad` is required or not.
 
- <a name="LinkWithAttribute.WeakFrameworks" />
 
-
-### LinkWithAttribute.WeakFrameworks
+#### LinkWithAttribute.WeakFrameworks
 
 The `WeakFrameworks` property works the same way as the `Frameworks` property,
 except that at link-time, the `-weak_framework` specifier is passed
@@ -2497,10 +2376,7 @@ Good candidates for weak linking would be `Frameworks` like Accounts,
 `CoreBluetooth`, `CoreImage`, `GLKit`, `NewsstandKit` and `Twitter` since they are only
 available in iOS 5.
 
- <a name="SinceAttribute_(iOS)_and_LionAttribute_(MacOS_X)" />
-
-
-## SinceAttribute (iOS) and LionAttribute (MacOS X)
+### SinceAttribute (iOS) and LionAttribute (macOS)
 
 You use the `Since` Attribute to flag APIs as having being introduced at a
 certain point in time. The attribute should only be used to flag types and
@@ -2509,7 +2385,7 @@ property is not available.
 
 Syntax:
 
-```
+```csharp
 public SinceAttribute : Attribute {
      public SinceAttribute (byte major, byte minor);
      public byte Major, Minor;
@@ -2522,7 +2398,7 @@ device with an older version of the operating system.
 
 Example when applied to a type:
 
-```
+```csharp
 // Type introduced with iOS 4.2
 [Since (4,2)]
 [BaseType (typeof (UIPrintFormatter))]
@@ -2534,7 +2410,7 @@ interface UIViewPrintFormatter {
 
 Example when applied to a new member:
 
-```
+```csharp
 [BaseType (typeof (UIViewController))]
 public interface UITableViewController {
     [Export ("tableView", ArgumentSemantic.Retain)]
@@ -2551,23 +2427,20 @@ used in iOS is that iOS is revised very often, while major OS X releases happen
 rarely and it is easier to remember the operating system by their codename than
 by their version number
 
- <a name="AdviceAttribute" />
 
-
-## AdviceAttribute
+### AdviceAttribute
 
 Use this attribute to give developers a hint about other APIs that
 might be more convenient for them to use.   For example, if you
-provide a strongly typed version of an API, you could use this
-attribute on the weakly typed attribute to direct the developer to the
+provide a strongly-typed version of an API, you could use this
+attribute on the weakly-typed attribute to direct the developer to the
 better API.
 
 The information from this attribute is shown in the documentation
 and tools can be developed to give user suggestions on how to improve
-his code.
 
 
-## RequiresSuperAttribute
+### RequiresSuperAttribute
 
 This is a specialized subclass of the `[Advice]` attribute can be used
 to hint the developer that overriding a method **requires** a call to 
@@ -2576,8 +2449,7 @@ the base (overridden) method.
 This correspond to `clang` [` __attribute__((objc_requires_super))`](https://clang.llvm.org/docs/AttributeReference.html#objc-requires-super-clang-objc-requires-super)
 
 
-<a name="ZeroCopyStringsAttribute" />
-## ZeroCopyStringsAttribute
+### ZeroCopyStringsAttribute
 
 Only available in Xamarin.iOS 5.4 and newer.
 
@@ -2597,7 +2469,7 @@ is invalid upon the function return.
 
 Example:
 
-```
+```csharp
 [ZeroCopyStrings]
 [BaseType (typeof (NSObject))]
 interface MyBinding {
@@ -2619,25 +2491,24 @@ all the types of the assembly:
 
     [assembly:ZeroCopyStrings]
 
-# Strongly Typed Dictionaries
+## Strongly-typed dictionaries
 
 With Xamarin.iOS 8.0 we introduced support for easily creating
-Strongly Typed classes that wrap `NSDictionaries`.
+strongly-typed classes that wrap `NSDictionaries`.
 
 While it has always been possible to use the
-[DictionaryContainer](/api/type/Foundation.DictionaryContainer/)
+[DictionaryContainer](https://developer.xamarin.com/api/type/Foundation.DictionaryContainer/)
 data type together with a manual API, it is now a lot simpler to do
 this.  For more information, see [Surfacing Strong
-Types](/guides/cross-platform/macios/binding/objective-c-libraries/#Surfacing_Strong_Types_for_weak_NSDictionary_parameters).
+Types](~/cross-platform/macios/binding/objective-c-libraries.md#Surfacing_Strong_Types).
 
-<a name="StrongDictionar"/>
 
-## StrongDictionary
+### StrongDictionary
 
 When this attribute is applied to an interface, the generator will
 produce a class with the same name as the interface that derives from
-[DictionaryContainer](/api/type/Foundation.DictionaryContainer/)
-and turns each property defined in the interface into a strongly typed
+[DictionaryContainer](https://developer.xamarin.com/api/type/Foundation.DictionaryContainer/)
+and turns each property defined in the interface into a strongly-typed
 getter and setter for the dictionary.
 
 This automatically generates a class that can be instantiated from an
@@ -2650,7 +2521,7 @@ a member in the specified type for a name with the suffix "Key".
 
 For example:
 
-```
+```csharp
 [StrongDictionary ("MyOptionKeys")]
 interface MyOption {
     string Name { get; set; }
@@ -2679,7 +2550,7 @@ dictionary to retrieve a string.   And will use the
 If you want to use a different key, you can use the export attribute
 on the property, for example:
 
-```
+```csharp
 [StrongDictionary ("MyColoringKeys")]
 interface MyColoringOptions {
     [Export ("TheName")]  // Override the default which would be NameKey
@@ -2701,7 +2572,7 @@ interface MyColoringKeys {
 }
 ```
 
-### Strong Dictionary Types
+#### Strong dictionary types
 
 The following data types are supported in the `StrongDictionary`
 definition:
