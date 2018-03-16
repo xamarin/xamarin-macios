@@ -681,7 +681,7 @@ The recommended way to fix this error is to upgrade Xcode to get the needed SDK.
 
 Alternatively, enable the managed [linker](https://docs.microsoft.com/en-us/xamarin/ios/deploy-test/linker?tabs=vsmac) to remove unused APIs, including (in most cases) the new ones which require the specified library. However, this will not work if your project requires APIs introduced in a newer SDK than the one your Xcode provides.
 
-As a last straw solution, use an older version of Xamarin.iOS that does not require these new SDKs to be present during the build process.
+As a last-straw solution, use an older version of Xamarin.iOS that does not require these new SDKs to be present during the build process.
 
 # MT1xxx: Project related error messages
 
