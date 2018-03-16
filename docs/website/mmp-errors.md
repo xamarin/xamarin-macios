@@ -148,12 +148,13 @@ Consider updating your application and any dependencies to 64-bit.
 
 ### <a name="MM0135"/>MM0135: Did not link system framework '{0}' (referenced by assembly '{1}') because it was introduced in {2} {3}, and we're using the {2} {4} SDK.
 
-Xamarin.Mac contains API bindings for the listed framework which is newer than the Xcode used. 
+To build your application, Xamarin.Mac must link against system libraries, some of which depend upon the SDK version specified in the error message. Since you are using an older version of the SDK, invocations to those APIs may fail at runtime.
 
-They may fail at runtime as we are not linking against the required system framework.
+The recommended way to fix this error is to upgrade Xcode to get the needed SDK. If you have multiple versions of Xcode installed or want to use an Xcode in a non-default location, make sure to set the correct Xcode location in your IDE's preferences.
 
-Consider updating to a newer Xcode, or if those APIs are not used, enabling [linking](https://docs.microsoft.com/en-us/xamarin/mac/deploy-test/linker).
+Alternatively, enable the managed [linker](https://docs.microsoft.com/xamarin/mac/deploy-test/linker) to remove unused APIs, including (in most cases) the new ones which require the specified library. However, this will not work if your project requires APIs introduced in a newer SDK than the one your Xcode provides.
 
+As a last straw solution, use an older version of Xamarin.Mac that does not require these new SDKs to be present during the build process.
 
 # MM1xxx: file copy / symlinks (project related)
 
