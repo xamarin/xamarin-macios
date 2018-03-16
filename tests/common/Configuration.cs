@@ -29,6 +29,7 @@ namespace Xamarin.Tests
 		public static string xcode5_root;
 		public static string xcode6_root;
 		public static string xcode72_root;
+		public static string xcode83_root;
 #if MONOMAC
 		public static string mac_xcode_root;
 #endif
@@ -208,6 +209,7 @@ namespace Xamarin.Tests
 			xcode5_root = GetVariable ("XCODE5_DEVELOPER_ROOT", "/Applications/Xcode511.app/Contents/Developer");
 			xcode6_root = GetVariable ("XCODE6_DEVELOPER_ROOT", "/Applications/Xcode601.app/Contents/Developer");
 			xcode72_root = GetVariable ("XCODE72_DEVELOPER_ROOT", "/Applications/Xcode72.app/Contents/Developer");
+			xcode83_root = GetVariable ("XCODE83_DEVELOPER_ROOT", "/Applications/Xcode83.app/Contents/Developer");
 			include_ios = !string.IsNullOrEmpty (GetVariable ("INCLUDE_IOS", ""));
 			include_mac = !string.IsNullOrEmpty (GetVariable ("INCLUDE_MAC", ""));
 			include_tvos = !string.IsNullOrEmpty (GetVariable ("INCLUDE_TVOS", ""));
