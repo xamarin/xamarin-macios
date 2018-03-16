@@ -104,7 +104,6 @@ tuner_sources = \
 	../../src/build/mac/Constants.cs
 
 linker_resources = \
-	linker/Descriptors/mscorlib.xml
 
 mmp_sources = \
 	$(TOP)/tools/common/cache.cs    \

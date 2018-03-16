@@ -15,7 +15,6 @@ MONOLINKER=$(LINKER_TOOLS_PATH)/linker
 MONO_TUNER=$(LINKER_TOOLS_PATH)/tuner
 
 LINKER_RESOURCES = \
-	$(LINKER_DIR)/Descriptors/mscorlib.xml
 
 LINKER_SOURCES = \
 	$(MONOLINKER)/Linker/Annotations.cs			\

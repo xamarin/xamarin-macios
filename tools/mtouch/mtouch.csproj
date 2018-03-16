@@ -406,12 +406,6 @@
       <Name>Mono.Cecil.Mdb</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="..\linker\Descriptors\mscorlib.xml">
-      <Link>mscorlib.xml</Link>
-      <LogicalName>mscorlib.xml</LogicalName>
-    </EmbeddedResource>
-  </ItemGroup>
   <Target Name="AfterBuild">
     <Exec Command="make mtouch" />
   </Target>
