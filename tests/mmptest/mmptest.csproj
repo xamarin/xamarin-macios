@@ -103,6 +103,9 @@
     <Compile Include="..\..\tools\common\StringUtils.cs">
       <Link>StringUtils.cs</Link>
     </Compile>
+    <Compile Include="src\SmokeTests.cs" />
+    <Compile Include="src\RegistrarTests.cs" />
+    <Compile Include="src\AssemblyReferencesTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
