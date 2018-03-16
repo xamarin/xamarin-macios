@@ -139,17 +139,22 @@ typedef unsigned int (^RegistrarTestBlock) (unsigned int magic);
 @protocol ObjCProtocolBlockTest
 @required
 	-(void) requiredCallback: (void (^)(int32_t magic_number))completionHandler;
+	+(void) requiredStaticCallback: (void (^)(int32_t magic_number))completionHandler;
 @optional
 	-(void) optionalCallback: (void (^)(int32_t magic_number))completionHandler;
+	+(void) optionalStaticCallback: (void (^)(int32_t magic_number))completionHandler;
 @end
 
 @interface ObjCBlockTester : NSObject {
 }
 @property (retain) NSObject<ObjCProtocolBlockTest>* TestObject;
+@property (class, retain) Class TestClass;
 -(void) classCallback: (void (^)(int32_t magic_number))completionHandler;
 -(void) callClassCallback;
 -(void) callRequiredCallback;
++(void) callRequiredStaticCallback;
 -(void) callOptionalCallback;
++(void) callOptionalStaticCallback;
 
 -(void) testFreedBlocks;
 +(int) freedBlockCount;

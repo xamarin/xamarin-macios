@@ -235,6 +235,23 @@ namespace Registrar {
 			}
 		}
 
+		public static bool ParametersMatch (IList<ParameterDefinition> a, TypeReference [] b)
+		{
+			if (a == null && b == null)
+				return true;
+			if (a == null ^ b == null)
+				return false;
+			
+			if (a.Count != b.Length)
+				return false;
+			
+			for (var i = 0; i < b.Length; i++)
+				if (!TypeMatch (a [i].ParameterType, b [i]))
+					return false;
+			
+			return true;
+		}
+
 		public static bool TypeMatch (IModifierType a, IModifierType b)
 		{
 			if (!TypeMatch (a.ModifierType, b.ModifierType))
@@ -1432,6 +1449,15 @@ namespace Registrar {
 							rv.ParameterByRef = new bool[arr.Length];
 							for (int i = 0; i < arr.Length; i++) {
 								rv.ParameterByRef [i] = (bool)arr [i].Value;
+							}
+						}
+						break;
+					case "ParameterBlockProxy":
+						if (prop.Argument.Value != null) {
+							var arr = (CustomAttributeArgument []) prop.Argument.Value;
+							rv.ParameterBlockProxy = new TypeReference [arr.Length];
+							for (int i = 0; i < arr.Length; i++) {
+								rv.ParameterBlockProxy [i] = (TypeReference) arr [i].Value;
 							}
 						}
 						break;
@@ -4082,7 +4108,36 @@ namespace Registrar {
 
 			// Might be an implementation of an optional protocol member.
 			if (obj_method.DeclaringType.Protocols != null) {
+				string selector = null;
+
 				foreach (var proto in obj_method.DeclaringType.Protocols) {
+					// We store the BlockProxy type in the ProtocolMemberAttribute, so check those.
+					// We may run into binding assemblies built with earlier versions of the generator,
+					// which means we can't rely on finding the BlockProxy attribute in the ProtocolMemberAttribute.
+					if (selector == null)
+						selector = obj_method.Selector ?? string.Empty;
+					if (selector != null) {
+						var memberAttributes = GetProtocolMemberAttributes (proto.Type);
+						foreach (var attrib in memberAttributes) {
+							if (attrib.ParameterBlockProxy == null || attrib.ParameterBlockProxy.Length <= parameter || attrib.ParameterBlockProxy [parameter] == null)
+								continue; // no need to check anything if what we want isn't there
+							if (attrib.Selector != selector)
+								continue;
+							if (attrib.IsStatic != method.IsStatic)
+								continue;
+							var attribParameters = new TypeReference [attrib.ParameterType?.Length ?? 0];
+							for (var i = 0; i < attribParameters.Length; i++) {
+								attribParameters [i] = attrib.ParameterType [i];
+								if (attrib.ParameterByRef [i])
+									attribParameters [i] = new ByReferenceType (attribParameters [i]);
+							}
+							if (!ParametersMatch (method.Parameters, attribParameters))
+								continue;
+
+							return attrib.ParameterBlockProxy [parameter].Resolve ().Methods.First ((v) => v.Name == "Create");
+						}
+					}
+
 					foreach (var pMethod in proto.Methods) {
 						if (!pMethod.IsOptional)
 							continue;
@@ -4090,11 +4145,9 @@ namespace Registrar {
 							continue;
 						if (!TypeMatch (pMethod.ReturnType, method.ReturnType))
 							continue;
-						if (pMethod.Parameters.Length != method.Parameters.Count)
+						if (ParametersMatch (method.Parameters, pMethod.Parameters))
 							continue;
-						for (int i = 0; i < pMethod.Parameters.Length; i++)
-							if (!TypeMatch (pMethod.Parameters [i], method.Parameters [i].ParameterType))
-								continue;
+						
 						MethodDefinition extensionMethod = pMethod.Method;
 						if (extensionMethod == null) {
 							MapProtocolMember (obj_method.Method, out extensionMethod);
@@ -4832,6 +4885,7 @@ namespace Registrar {
 		public TypeReference ReturnType { get; set; }
 		public TypeReference[] ParameterType { get; set; }
 		public bool[] ParameterByRef { get; set; }
+		public TypeReference [] ParameterBlockProxy { get; set; }
 		public bool IsVariadic { get; set; }
 
 		public TypeReference PropertyType { get; set; }
