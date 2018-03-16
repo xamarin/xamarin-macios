@@ -130,7 +130,7 @@ namespace Foundation {
 		// Keeps a ref to the source NSData
 		//
 		unsafe class UnmanagedMemoryStreamWithRef : UnmanagedMemoryStream {
-			NSData source;
+			protected NSData source;
 			
 			public UnmanagedMemoryStreamWithRef (NSData source) : base ((byte *)source.Bytes, (long)source.Length)
 			{
@@ -149,19 +149,11 @@ namespace Foundation {
 		// displays an error if the NSMutableData changes while the stream is used
 		//
 		unsafe class UnmanagedMemoryStreamWithMutableRef : UnmanagedMemoryStreamWithRef {
-			NSData source;
 			IntPtr base_address;
 			
 			public UnmanagedMemoryStreamWithMutableRef (NSData source) : base (source)
 			{
 				base_address = source.Bytes;
-				this.source = source;
-			}
-
-			protected override void Dispose (bool disposing)
-			{
-				source = null;
-				base.Dispose (disposing);
 			}
 
 			static void InvalidOperation ()
