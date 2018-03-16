@@ -331,7 +331,7 @@ namespace Xamarin.Bundler {
 		void AddFramework (string file)
 		{
 			if (Driver.GetFrameworks (App).TryGetValue (file, out var framework) && framework.Version > App.SdkVersion)
-				ErrorHelper.Warning (135, "Did not link system framework '{0}' as Xcode SDK '{1}' is too old.", file, App.SdkVersion);
+				ErrorHelper.Warning (135, "Did not link system framework '{0}' (referenced by assembly '{1}') because it was introduced in {2} {3}, and we're using the {2} {4} SDK.", file, FileName, App.PlatformName, framework.Version, App.SdkVersion);
 			else if (Frameworks.Add (file))
 				Driver.Log (3, "Linking with the framework {0} because it's referenced by a module reference in {1}", file, FileName);
 		}

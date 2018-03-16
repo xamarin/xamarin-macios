@@ -673,7 +673,7 @@ When using --recursive-directories, only 1 assembly should match
 
 <!-- 0134 used by mmp -->
 
-### <a name="MT0135"/>MT0135: Did not link system framework '{0}' as Xcode SDK '{1}' is too old.
+### <a name="MT0135"/>MT0135: Did not link system framework '{0}' (referenced by assembly '{1}') because it was introduced in {2} {3}, and we're using the {2} {4} SDK.
 
 Xamarin.iOS contains API bindings for the listed framework which is newer than the Xcode used. 
 
