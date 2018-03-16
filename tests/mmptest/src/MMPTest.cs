@@ -1,5 +1,3 @@
-#define ENABLE_STATIC_REGISTRAR_TESTS
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -20,7 +18,7 @@ namespace Xamarin.MMP.Tests
 		}
 
 		// TODO - We have multiple tests using this. It doesn't take that long, but is it worth caching?
-		string [] GetUnifiedProjectClangInvocation (string tmpDir, string projectConfig = "")
+		public static string [] GetUnifiedProjectClangInvocation (string tmpDir, string projectConfig = "")
 		{
 			TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = projectConfig };
 			string buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
@@ -69,58 +67,6 @@ namespace Xamarin.MMP.Tests
 			});
 		}
 
-#if ENABLE_STATIC_REGISTRAR_TESTS
-		[Test]
-#endif
-		public void Unified_Static_RegistrarTest ()
-		{
-			if (!PlatformHelpers.CheckSystemVersion (10, 11))
-				return;
-
-			RunMMPTest (tmpDir => {
-				// First in 64-bit
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<MonoBundlingExtraArgs>--registrar=static</MonoBundlingExtraArgs><XamMacArch>x86_64</XamMacArch>" };
-				// Mobile
-				TI.TestUnifiedExecutable (test);
-				// XM45
-				test.XM45 = true;
-				TI.TestUnifiedExecutable (test);
-
-				// Now 32-bit
-				test.CSProjConfig = "<MonoBundlingExtraArgs>--registrar=static</MonoBundlingExtraArgs><XamMacArch>i386</XamMacArch>";
-				// Mobile
-				TI.TestUnifiedExecutable (test);
-				// XM45
-				test.XM45 = true;
-				TI.TestUnifiedExecutable (test);
-			});
-		}
-
-		[Test]
-		public void Unified_Static_Registrar_With_SpaceTest ()
-		{
-			if (!PlatformHelpers.CheckSystemVersion (10, 11))
-				return;
-
-			RunMMPTest (tmpDir => {
-				// First in 64-bit
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<MonoBundlingExtraArgs>--registrar=static</MonoBundlingExtraArgs><XamMacArch>x86_64</XamMacArch>" };
-				// Mobile
-				TI.TestUnifiedExecutable (test);
-				// XM45
-				test.XM45 = true;
-				TI.TestUnifiedExecutable (test);
-
-				// Now 32-bit
-				test.CSProjConfig = "<MonoBundlingExtraArgs>--registrar=static</MonoBundlingExtraArgs><XamMacArch>i386</XamMacArch>";
-				// Mobile
-				TI.TestUnifiedExecutable (test);
-				// XM45
-				test.XM45 = true;
-				TI.TestUnifiedExecutable (test);
-			}, "test withSpace");
-		}
-
 		[Test]
 		public void XM_45_NotAddingIncorrectDependencies_LicenseTest ()
 		{
@@ -130,50 +76,6 @@ namespace Xamarin.MMP.Tests
 				// XM 4.5 projects were accidently pulling in every assembly in the 4.5 folder. Assert that isn't happening again.
 				string monoBundlePath = Path.Combine (tmpDir, "bin/Debug/XM45Example.app/Contents/MonoBundle/");
 				Assert.IsFalse (Directory.GetFiles (monoBundlePath).Any (x => x.Contains ("FSharp.Core.dll")), "F# was pulled in?");
-			});
-		}
-
-		[Test]
-		public void Unified_SmokeTest ()
-		{
-			RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir);
-				// Mobile
-				TI.TestUnifiedExecutable (test);
-				// XM45
-				test.XM45 = true;
-				TI.TestUnifiedExecutable (test);
-			});
-		}
-
-		[Test]
-		public void FSharp_SmokeTest ()
-		{
-			RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { FSharp = true };
-				// Mobile
-				TI.TestUnifiedExecutable (test);
-				// XM45
-				test.XM45 = true;
-				TI.TestUnifiedExecutable (test);
-			});
-		}
-
-		[Test]
-		public void Mobile_SmokeTest_LinkSDK ()
-		{
-			RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<LinkMode>SdkOnly</LinkMode>" };
-				TI.TestUnifiedExecutable (test);
-			});
-		}
-
-		[Test]
-		public void Mobile_SmokeTest_LinkAll ()
-		{
-			RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<LinkMode>Full</LinkMode>" };
-				TI.TestUnifiedExecutable (test);
 			});
 		}
 
@@ -276,30 +178,6 @@ namespace Xamarin.MMP.Tests
 		}
 
 		[Test]
-		public void SystemMono_SmokeTest ()
-		{
-			if (TI.FindMonoVersion () < new Version ("4.3"))
-				return;
-
-			RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir);
-				TI.TestSystemMonoExecutable (test);
-
-				test.SystemMonoVersion = "4.5";
-				TI.TestSystemMonoExecutable (test);
-
-				test.SystemMonoVersion = "4.5.1";
-				TI.TestSystemMonoExecutable (test);
-
-				test.SystemMonoVersion = "4.6";
-				TI.TestSystemMonoExecutable (test);
-
-				test.SystemMonoVersion = "4.6.1";
-				TI.TestSystemMonoExecutable (test);
-			});
-		}
-
-		[Test]
 		public void BuildUnifiedMobile_Program_WithNonASCIIName ()
 		{
 			RunMMPTest (tmpDir => {
@@ -317,54 +195,6 @@ namespace Xamarin.MMP.Tests
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { AssemblyName = "Test With Space" };
 				TI.TestUnifiedExecutable (test);
-			});
-		}
-
-		[Test]
-		public void BuildUnified45_ShouldNotAllowReferenceToSystemDrawing ()
-		{
-			RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { References = " <Reference Include=\"System.Drawing\" />", TestCode = "System.Drawing.RectangleF f = new System.Drawing.RectangleF ();", XM45 = true};
-				TI.TestUnifiedExecutable (test, shouldFail : true);
-			});
-		}
-
-		[Test]
-		public void BuildUnified45_ShouldAllowReferenceToOpenTK ()
-		{
-			RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { References = " <Reference Include=\"OpenTK\" />", TestCode = "var matrix = new OpenTK.Matrix2 ();", XM45 = true };
-				TI.TestUnifiedExecutable (test);
-			});
-		}
-
-		[Test]
-		public void Dontlink_AllowsUnresolvableReferences ()
-		{
-			var sb = new StringBuilder ();
-			RunMMPTest (tmpDir =>
-			{
-				// build b.dll
-				sb.Clear ();
-				sb.AppendFormat ("-target:library -out:{0}/b.dll {0}/b.cs", tmpDir);
-				File.WriteAllText (Path.Combine (tmpDir, "b.cs"), "public class B { }");
-				TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mcs", sb, "b");
-
-				// build a.dll
-				sb.Clear ();
-				sb.AppendFormat ("-target:library -out:{0}/a.dll {0}/a.cs -r:{0}/b.dll", tmpDir);
-				File.WriteAllText (Path.Combine (tmpDir, "a.cs"), "public class A { public A () { System.Console.WriteLine (typeof (B)); }}");
-				TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mcs", sb, "a");
-
-				File.Delete (Path.Combine (tmpDir, "b.dll"));
-
-				// build project referencing a.dll
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir)
-				{
-					References = string.Format (" <Reference Include=\"a\" > <HintPath>{0}/a.dll</HintPath> </Reference> ", tmpDir),
-					TestCode = "System.Console.WriteLine (typeof (A));",
-				};
-				TI.GenerateAndBuildUnifiedExecutable (test, shouldFail: false);
 			});
 		}
 
@@ -395,35 +225,6 @@ namespace Xamarin.MMP.Tests
 				test.CSProjConfig = "<LinkMode>SdkOnly</LinkMode>";
 				TI.GenerateAndBuildUnifiedExecutable (test, shouldFail: false);
 			});
-		}
-
-		[Test]
-		public void UnsafeGACResolutionOptions_AllowsWindowsBaseResolution ()
-		{
-			RunMMPTest (tmpDir =>
-			{
-				UnsafeGACTestCore (tmpDir, true);
-				UnsafeGACTestCore (tmpDir, false);
-			});
-		}
-
-		static void UnsafeGACTestCore (string tmpDir, bool useFullProfile)
-		{
-			TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir)
-			{
-				XM45 = useFullProfile,
-				TestCode = "System.Console.WriteLine (typeof (System.Windows.DependencyObject));",
-				References = "<Reference Include=\"WindowsBase\" /><Reference Include=\"System.Xaml\" />"
-			};
-
-			TI.TestUnifiedExecutable (test, shouldFail: true);
-
-			// Mobile will fail terribly due to mismatch BCL, no need to see if this works. Just testing that Mobile fails
-			if (useFullProfile)
-			{
-				test.CSProjConfig = "<MonoBundlingExtraArgs>--allow-unsafe-gac-resolution</MonoBundlingExtraArgs>";
-				TI.TestUnifiedExecutable (test, shouldFail: false);
-			}
 		}
 
 		[Test]
@@ -604,9 +405,7 @@ namespace Xamarin.MMP.Tests
 			});
 		}
 
-#if ENABLE_STATIC_REGISTRAR_TESTS
 		[Test]
-#endif
 		public void UnifiedDebugBuilds_ShouldLinkToPartialStatic_UnlessDisabled ()
 		{
 			RunMMPTest (tmpDir =>
