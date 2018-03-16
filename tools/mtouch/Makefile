@@ -14,8 +14,6 @@ MONO_DIR=$(MONO_PATH)
 MONOLINKER=$(LINKER_TOOLS_PATH)/linker
 MONO_TUNER=$(LINKER_TOOLS_PATH)/tuner
 
-LINKER_RESOURCES = \
-
 LINKER_SOURCES = \
 	$(MONOLINKER)/Linker/Annotations.cs			\
 	$(MONOLINKER)/Linker/AssemblyAction.cs			\
@@ -328,7 +326,7 @@ MTOUCH_DEFINES= -define:ENABLE_BITCODE_ON_IOS
 endif
 
 MTOUCH_COMPILE_DEPS = $(MTOUCH_SOURCES) $(MONO_CECIL_DLL) $(MONO_CECIL_MDB_DLL) Makefile $(LINKER_RESOURCES)
-MTOUCH_COMPILE_ARGS = -unsafe $(IOS_DEFINES) -r:$(MONO_CECIL_DLL) -r:$(MONO_CECIL_MDB_DLL) -r:System.Xml.Linq.dll $(MTOUCH_SOURCES) -nowarn:0436 $(LINKER_RESOURCES:%=-resource:%) $(MTOUCH_DEFINES) -debug:portable -nologo -deterministic
+MTOUCH_COMPILE_ARGS = -unsafe $(IOS_DEFINES) -r:$(MONO_CECIL_DLL) -r:$(MONO_CECIL_MDB_DLL) -r:System.Xml.Linq.dll $(MTOUCH_SOURCES) -nowarn:0436 $(MTOUCH_DEFINES) -debug:portable -nologo -deterministic
 
 # bin/Debug/mtouch.exe is used from mtouch.csproj when debugging
 bin/Debug/mtouch.exe: $(MTOUCH_COMPILE_DEPS)
