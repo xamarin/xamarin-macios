@@ -221,8 +221,6 @@ Consider updating your application and any dependencies to 64-bit.
 
 ### <a name="MM202x"/>MM202x: Binding Optimizer failed processing `...`.
 
-### <a name="MM2100"/>MM2100: Xamarin.Mac Classic API does not support Platform Linking.
-
 ### <a name="MM2103"/>MM2103: Error processing assembly '\*': *
 
 An unexpected error occured when processing an assembly.
@@ -267,6 +265,8 @@ The App Store now rejects applications which contain libraries and frameworks wh
 This is in general safe, and will reduce application bundle size as an added benefit. However, any bundled framework that is code signed will have its signature invalidated (and resigned later if the application is signed).
 
 Consider using `lipo` to remove the unnecessary archtectures permanently from the source library. If the application is not being published to the App Store, this removal can be disabled by passing --optimize=-trim-architectures as Additional MMP Arguments.
+
+### <a name="MM2109"/>MM2109: Xamarin.Mac Classic API does not support Platform Linking.
 
 
 # MM3xxx: AOT
