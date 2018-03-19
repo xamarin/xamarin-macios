@@ -444,7 +444,7 @@ namespace Xamarin.Bundler
 			}
 		}
 
-		public static string GetAotArguments (Application app, string filename, Abi abi, string outputDir, string outputFile, string llvmOutputFile, string dataFile)
+		public static StringBuilder GetAotOptions (Application app, string filename, Abi abi, string outputDir, string outputFile, string llvmOutputFile, string dataFile, bool dedup_dummy)
 		{
 			string fname = Path.GetFileName (filename);
 			StringBuilder args = new StringBuilder ();
@@ -492,6 +492,17 @@ namespace Xamarin.Bundler
 			if (!app.UseDlsym (filename))
 				args.Append ("direct-pinvoke,");
 
+			if (app.EnableDedup) {
+				// In dedup mode, we can either be emitting the
+				// AOT modules that are having methods deduped *out* of them
+				// or we can emit the container/dummy AOT module that has the methods
+				// deduped *into* them.
+				if (dedup_dummy)
+					args.Append (String.Format("dedup-include={0},", fname));
+				else
+					args.Append ("dedup-skip,");
+			}
+
 			if (app.EnableMSym) {
 				var msymdir = StringUtils.Quote (Path.Combine (outputDir, "Msym"));
 				args.Append ($"msym-dir={msymdir},");
@@ -506,8 +517,8 @@ namespace Xamarin.Bundler
 				args.Append (",");
 			if (enable_llvm)
 				args.Append ("llvm-outfile=").Append (StringUtils.Quote (llvmOutputFile));
-			args.Append (" \"").Append (filename).Append ("\"");
-			return args.ToString ();
+
+			return args;
 		}
 
 		public static ProcessStartInfo CreateStartInfo (Application app, string file_name, string arguments, string mono_path, string mono_debug = null)

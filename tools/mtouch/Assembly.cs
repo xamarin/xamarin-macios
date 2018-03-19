@@ -276,7 +276,18 @@ namespace Xamarin.Bundler {
 			aotInfo.AotDataFiles.Add (data);
 
 			var aotCompiler = Driver.GetAotCompiler (App, Target.Is64Build);
-			var aotArgs = Driver.GetAotArguments (App, assembly_path, abi, build_dir, asm_output, llvm_aot_ofile, data);
+			var aotOpts = Driver.GetAotOptions (App, assembly_path, abi, build_dir, asm_output, llvm_aot_ofile, data, IsDedupDummy);
+
+			if (IsDedupDummy) {
+				// Includes this Assembly
+				foreach (var assm in Target.Assemblies)
+					aotOpts.Append (" ").Append (StringUtils.Quote (assm.FullPath));
+			} else {
+					aotOpts.Append (" ").Append (StringUtils.Quote (assembly_path));
+			}
+
+			var aotArgs = aotOpts.ToString ();
+
 			var task = new AOTTask
 			{
 				Assembly = this,

@@ -191,9 +191,25 @@ namespace Xamarin.Bundler
 			}
 		}
 
+		IEnumerable<Assembly> InputAssemblies {
+			get {
+				var accum = new List<Assembly>();
+				accum.Add (Assembly);
+
+				if (Assembly.IsDedupDummy) {
+					// The dedup assembly AOT emits a file with
+					// the name of DedupAssembly so the output
+					// is the same, but the input is now every assembly
+					accum.Union (Assembly.Target.Assemblies);
+				}
+
+				return accum;
+			}
+		}
+
 		public override IEnumerable<string> Inputs {
 			get {
-				yield return Assembly.FullPath;
+				return InputAssemblies.Select ((v) => v.FullPath);
 			}
 		}
 
@@ -201,19 +217,21 @@ namespace Xamarin.Bundler
 			get {
 				if (inputs == null) {
 					inputs = new List<string> ();
-					if (Assembly.HasDependencyMap)
-						inputs.AddRange (Assembly.DependencyMap);
-					inputs.Add (AssemblyName);
-					inputs.Add (Driver.GetAotCompiler (Assembly.App, Assembly.Target.Is64Build));
-					var mdb = Assembly.FullPath + ".mdb";
-					if (File.Exists (mdb))
-						inputs.Add (mdb);
-					var pdb = Path.ChangeExtension (Assembly.FullPath, ".pdb");
-					if (File.Exists (pdb))
-						inputs.Add (pdb);
-					var config = Assembly.FullPath + ".config";
-					if (File.Exists (config))
-						inputs.Add (config);
+					foreach (var asm_dep in InputAssemblies) {
+						if (asm_dep.HasDependencyMap)
+							inputs.AddRange (asm_dep.DependencyMap);
+						inputs.Add (asm_dep.FullPath);
+						inputs.Add (Driver.GetAotCompiler (asm_dep.App, asm_dep.Target.Is64Build));
+						var mdb = asm_dep.FullPath + ".mdb";
+						if (File.Exists (mdb))
+							inputs.Add (mdb);
+						var pdb = Path.ChangeExtension (asm_dep.FullPath, ".pdb");
+						if (File.Exists (pdb))
+							inputs.Add (pdb);
+						var config = asm_dep.FullPath + ".config";
+						if (File.Exists (config))
+							inputs.Add (config);
+					}
 				}
 				return inputs;
 			}

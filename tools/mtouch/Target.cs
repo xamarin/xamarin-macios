@@ -910,6 +910,31 @@ namespace Xamarin.Bundler
 			}
 		}
 
+		void LinkerDependsCollect (Assembly a, CompilerFlags compiler_flags, List <CompileTask> link_dependencies)
+		{
+			compiler_flags.AddFrameworks (a.Frameworks, a.WeakFrameworks);
+			compiler_flags.AddLinkWith (a.LinkWith, a.ForceLoad);
+			compiler_flags.AddOtherFlags (a.LinkerFlags);
+			if (a.HasLinkWithAttributes) {
+				var symbols = GetRequiredSymbols (a);
+				switch (App.SymbolMode) {
+				case SymbolMode.Ignore:
+					break;
+				case SymbolMode.Code:
+					var tasks = GenerateReferencingSource (Path.Combine (App.Cache.Location, Path.GetFileNameWithoutExtension (a.FullPath) + "-unresolved-externals.m"), symbols);
+					foreach (var task in tasks)
+						compiler_flags.AddLinkWith (task.OutputFile);
+					link_dependencies.AddRange (tasks);
+					break;
+				case SymbolMode.Linker:
+					compiler_flags.ReferenceSymbols (symbols);
+					break;
+				default:
+					throw ErrorHelper.CreateError (99, $"Internal error: invalid symbol mode: {App.SymbolMode}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+				}
+			}
+		}
+
 		void AOTCompile ()
 		{
 			if (App.IsSimulatorBuild)
@@ -1022,29 +1047,34 @@ namespace Xamarin.Bundler
 					foreach (var task in link_dependencies)
 						compiler_flags.AddLinkWith (task.OutputFile);
 
+					// Note/FIXME
+					//
+					// assemblies with little a is the assemblies
+					// belonging to this namespace.
+					//
+					// Assemblies with big A is the list of all assemblies
+					// when building. Easy to mix up.
 					foreach (var a in assemblies) {
-						compiler_flags.AddFrameworks (a.Frameworks, a.WeakFrameworks);
-						compiler_flags.AddLinkWith (a.LinkWith, a.ForceLoad);
-						compiler_flags.AddOtherFlags (a.LinkerFlags);
-						if (a.HasLinkWithAttributes) {
-							var symbols = GetRequiredSymbols (a);
-							switch (App.SymbolMode) {
-							case SymbolMode.Ignore:
-								break;
-							case SymbolMode.Code:
-								var tasks = GenerateReferencingSource (Path.Combine (App.Cache.Location, Path.GetFileNameWithoutExtension (a.FullPath) + "-unresolved-externals.m"), symbols);
-								foreach (var task in tasks)
-									compiler_flags.AddLinkWith (task.OutputFile);
-								link_dependencies.AddRange (tasks);
-								break;
-							case SymbolMode.Linker:
-								compiler_flags.ReferenceSymbols (symbols);
-								break;
-							default:
-								throw ErrorHelper.CreateError (99, $"Internal error: invalid symbol mode: {App.SymbolMode}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
-							}
+						if (!a.IsDedupDummy) {
+							LinkerDependsCollect (a, compiler_flags, link_dependencies);
+							continue;
 						}
+
+						// Dedup Edge case
+						// Compiler_flags is a collection of HashSets but it's on us to keep link_dependencies free
+						// of duplicates
+						var tmp_link_deps = new List <CompileTask> ();
+
+						// A dedup module is linked with the flags for dependencies of the assemblies it
+						// dedups. This is necssary because the wrappers for pinvokes and other native references
+						// made in these assemblies will end up in the dedup module.
+						foreach (var dep in Assemblies)
+							if (App.EnableDedup && dep != a)
+								LinkerDependsCollect (dep, compiler_flags, tmp_link_deps);
+
+						link_dependencies.AddRange (tmp_link_deps.Distinct ().ToList ());
 					}
+
 					if (App.Embeddinator) {
 						if (!string.IsNullOrEmpty (App.UserGccFlags))
 							compiler_flags.AddOtherFlag (App.UserGccFlags);
