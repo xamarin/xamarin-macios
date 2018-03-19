@@ -7094,7 +7094,7 @@ namespace AppKit {
 	[DisableDefaultCtor]
 	interface NSGridCell : NSCoding
 	{
-		[Export ("contentView", ArgumentSemantic.Strong)]
+		[Export ("contentView", ArgumentSemantic.Strong), NullAllowed]
 		NSView ContentView { get; set; }
 
 		[Export ("emptyContentView", ArgumentSemantic.Strong)]
