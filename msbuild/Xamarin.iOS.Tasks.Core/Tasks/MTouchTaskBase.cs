@@ -107,6 +107,9 @@ namespace Xamarin.iOS.Tasks
 		public bool EnableSGenConc { get; set; }
 
 		[Required]
+		public bool EnableDedup { get; set; }
+
+		[Required]
 		public bool LinkerDumpDependencies { get; set; }
 
 		[Required]
@@ -396,6 +399,9 @@ namespace Xamarin.iOS.Tasks
 
 			if (EnableSGenConc)
 				args.Add ("--sgen-conc");
+
+			if (EnableDedup)
+				args.Add ("--dedup-aot");
 
 			switch (LinkMode.ToLowerInvariant ()) {
 			case "sdkonly": args.Add ("--linksdkonly"); break;

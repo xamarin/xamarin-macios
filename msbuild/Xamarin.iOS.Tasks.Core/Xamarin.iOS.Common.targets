@@ -822,6 +822,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			UseThumb="$(MtouchUseThumb)"
 			EnableBitcode="$(MtouchEnableBitcode)"
 			EnableSGenConc="$(MtouchEnableSGenConc)"
+			EnableDedup="$(MtouchEnableDedup)"
 			AppExtensionReferences="@(_ResolvedAppExtensionReferences)"
 			ArchiveSymbols="$(MonoSymbolArchive)"
 			Verbosity="$(MtouchVerbosity)"

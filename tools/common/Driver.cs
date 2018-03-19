@@ -50,6 +50,7 @@ namespace Xamarin.Bundler {
 			});
 			options.Add ("coop:", "If the GC should run in cooperative mode.", v => { app.EnableCoopGC = ParseBool (v, "coop"); }, hidden: true);
 			options.Add ("sgen-conc", "Enable the *experimental* concurrent garbage collector.", v => { app.EnableSGenConc = true; });
+			options.Add ("dedup-aot", "Enable the *experimental* deduplicating AOT backend.", v => { app.EnableDedup = true; });
 			options.Add ("marshal-objectivec-exceptions:", "Specify how Objective-C exceptions should be marshalled. Valid values: default, unwindmanagedcode, throwmanagedexception, abort and disable. The default depends on the target platform (on watchOS the default is 'throwmanagedexception', while on all other platforms it's 'disable').", v => {
 				switch (v) {
 				case "default":

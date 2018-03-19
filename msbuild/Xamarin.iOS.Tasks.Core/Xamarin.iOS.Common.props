@@ -52,6 +52,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<MtouchProjectDirectory>$(MSBuildProjectDirectory)</MtouchProjectDirectory>
 		<MtouchEnableSGenConc Condition="'$(MtouchEnableSGenConc)' == ''">False</MtouchEnableSGenConc>
 		<MtouchVerbosity Condition="$(MtouchVerbosity) == ''">2</MtouchVerbosity>
+		<MtouchEnableDedup Condition="'$(MtouchEnableDedup)' == ''">False</MtouchEnableDedup>
 
 		<IsMacEnabled>true</IsMacEnabled>
 		<MtouchTargetsEnabled>$(IsMacEnabled)</MtouchTargetsEnabled>
