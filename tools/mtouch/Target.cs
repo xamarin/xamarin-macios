@@ -622,12 +622,24 @@ namespace Xamarin.Bundler
 					                               $"The linker output contains more than one assemblies named '{group.Key}':\n\t{string.Join ("\n\t", group.Select ((v) => v.MainModule.FileName).ToArray ())}");
 			}
 
+			Assembly dummy = null;
+			if (App.EnableDedup) {
+				foreach (var a in Assemblies) {
+					if (a.IsDedupDummy) {
+						dummy = a;
+						break;
+					}
+				}
+			}
+
 			// Update (add/remove) list of assemblies in each app, since the linker may have both added and removed assemblies.
 			// The logic for updating assemblies when doing code-sharing is not equivalent to when we're not code sharing
 			// (in particular code sharing is not supported when there are xml linker definitions), so we need
 			// to maintain two paths here.
 			if (sharingTargets.Count == 0) {
 				Assemblies.Update (this, output_assemblies);
+				if (dummy != null)
+					Assemblies.Add (dummy);
 			} else {
 				// For added assemblies we have to determine exactly which apps need which assemblies.
 				// Code sharing is only allowed if there are no linker xml definitions, nor any I18N values, which means that
@@ -635,6 +647,10 @@ namespace Xamarin.Bundler
 				foreach (var t in allTargets) {
 					// Find the root assembly
 					// Here we assume that 'AssemblyReference.Name' == 'Assembly.Identity'.
+
+					if (dummy != null)
+						t.Assemblies.Add (dummy);
+
 					var rootAssemblies = new List<Assembly> ();
 					foreach (var root in t.App.RootAssemblies)
 						rootAssemblies.Add (t.Assemblies [Assembly.GetIdentity (root)]);
@@ -802,7 +818,29 @@ namespace Xamarin.Bundler
 
 			ManagedLink ();
 
+			if (App.EnableDedup)
+				GenerateDedup ();
+
 			GatherFrameworks ();
+		}
+
+		public void GenerateDedup ()
+		{
+			var dedupDummyDll = String.Format ("{0}.dll", DedupDummyName);
+			// Make available for the AOT compiler
+			var dllPath = Path.Combine (BuildDirectory, dedupDummyDll);
+
+			// Qualified because of collisions with cecil
+			var aName = new System.Reflection.AssemblyName (DedupDummyName);
+			var ab = AppDomain.CurrentDomain.DefineDynamicAssembly (aName, System.Reflection.Emit.AssemblyBuilderAccess.RunAndSave, BuildDirectory);
+
+			// Make .dll file
+			ab.Save (dedupDummyDll);
+
+			// Add to list
+			var ad = ManifestResolver.Load (dllPath);
+			var asm = new Assembly (this, ad);
+			Assemblies.Add (asm);
 		}
 
 		public void CompilePInvokeWrappers ()

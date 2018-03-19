@@ -34,6 +34,12 @@ namespace Xamarin.Bundler {
 		public string BuildTargetName;
 		public bool IsCodeShared;
 
+		public bool IsDedupDummy {
+			get {
+				return App.EnableDedup && Target.DedupDummyName == Identity;
+			}
+		}
+
 		public Dictionary<Abi, AotInfo> AotInfos = new Dictionary<Abi, AotInfo> ();
 
 		HashSet<string> dependency_map;

@@ -44,6 +44,8 @@ namespace Xamarin.Bundler {
 		public HashSet<string> Frameworks = new HashSet<string> ();
 		public HashSet<string> WeakFrameworks = new HashSet<string> ();
 
+		public const string DedupDummyName = "MonoDeduplicatedCode";
+
 		internal StaticRegistrar StaticRegistrar { get; set; }
 
 		// If we didn't link because the existing (cached) assemblyes are up-to-date.
