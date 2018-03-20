@@ -794,6 +794,7 @@ SIM_ACVARS = \
 # $(1): arch
 # $(2): target prefix
 # $(3): mono sdk target prefix
+# $(4): mono sdk dir name
 #
 define SimulatorBuildTemplate
 
@@ -807,10 +808,10 @@ clean-local:: clean-$(2)
 # config/eglib-config.h is needed by the builds in runtime/
 .stamp-build-$(2): $(MONO_PATH)/configure $(MONO_DEPENDENCIES) $(BUILD_DESTDIR)/$(2)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(3) $(SDK_ARGS)
-	$(Q) cp -r $(SDK_DESTDIR)/ios-$(3)/lib $(BUILD_DESTDIR)/$(2)
-	$(Q) cp -r $(SDK_DESTDIR)/ios-$(3)/include $(BUILD_DESTDIR)/$(2)
-	cp $(SDK_BUILDDIR)/ios-$(3)/config.h $(BUILD_DESTDIR)/$(2)/include/mono-2.0
-	cp $(SDK_BUILDDIR)/ios-$(3)/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/$(2)/include/mono-2.0
+	$(Q) cp -r $(SDK_DESTDIR)/ios-$(4)/lib $(BUILD_DESTDIR)/$(2)
+	$(Q) cp -r $(SDK_DESTDIR)/ios-$(4)/include $(BUILD_DESTDIR)/$(2)
+	cp $(SDK_BUILDDIR)/ios-$(4)/config.h $(BUILD_DESTDIR)/$(2)/include/mono-2.0
+	cp $(SDK_BUILDDIR)/ios-$(4)/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/$(2)/include/mono-2.0
 	$(Q) touch $$@
 
 build-$(2): .stamp-build-$(2)
@@ -834,7 +835,7 @@ $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log.0.dylib: .stamp-build-$(2)
 
 $(BUILD_DESTDIR)/$(2)/tmp-lib/libmono-profiler-log.0.dylib: $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log.0.dylib | $(BUILD_DESTDIR)/$(2)/tmp-lib
 	$(Q) cp $$< $$@
-	$(Q) install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/ios-$(3)/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $$@
+	$(Q) install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/ios-$(4)/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $$@
 
 $(BUILD_DESTDIR)/$(2):
 	$$(Q) mkdir -p $$@
@@ -845,8 +846,8 @@ $(BUILD_DESTDIR)/$(2)/tmp-lib:
 endef
 
 ifdef INCLUDE_IOS
-$(eval $(call SimulatorBuildTemplate,i386,simulator86,sim32))
-$(eval $(call SimulatorBuildTemplate,x86_64,simulator64,sim64))
+$(eval $(call SimulatorBuildTemplate,i386,simulator86,sim32,sim32-release))
+$(eval $(call SimulatorBuildTemplate,x86_64,simulator64,sim64,sim64-release))
 endif
 
 iphonesimulator:: setup-iphonesimulator build-iphonesimulator install-iphonesimulator
