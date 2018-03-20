@@ -16802,7 +16802,7 @@ namespace AppKit {
 
 		[Mac (10,8)]
 		[Export ("registerNib:forIdentifier:")]
-		void RegisterNib (NSNib nib, string identifier);
+		void RegisterNib ([NullAllowed] NSNib nib, string identifier);
 
 		[Mac (10,7)]
 		[Export ("didAddRowView:forRow:")]
