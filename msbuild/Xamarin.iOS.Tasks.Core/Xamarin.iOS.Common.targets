@@ -780,7 +780,9 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		Outputs="$(_NativeExecutable);$(DeviceSpecificOutputPath)mtouch.stamp">
 
 		<ItemGroup>
-			<MTouchReferencePath Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll'" />
+			<!-- Skip the reference assemblies. There is currently no scenario where it is valid to pass them to `mtouch`. They are impossible to AOT. Fixes: https://github.com/xamarin/xamarin-macios/issues/3199 -->
+			<MTouchReferencePath Include="@(ReferencePath)" Condition="!$([System.String]::Copy('%(Directory)').Contains ('/ref/'))" />
+			<MTouchReferenceCopyLocalPath Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll'" />
 		</ItemGroup>
 
 		<MTouch
@@ -810,7 +812,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			OutputPath="$(DeviceSpecificOutputPath)"
 			Profiling="$(MtouchProfiling)"
 			ProjectDir="$(MtouchProjectDirectory)"
-			References="@(ReferencePath);@(MTouchReferencePath)"
+			References="@(MTouchReferencePath);@(MTouchReferenceCopyLocalPath)"
 			ResponseFilePath="$(DeviceSpecificIntermediateOutputPath)response-file.rsp"
 			SdkRoot="$(_SdkDevPath)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
