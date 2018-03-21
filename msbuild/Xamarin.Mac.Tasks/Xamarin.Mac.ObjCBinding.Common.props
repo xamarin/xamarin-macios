@@ -17,11 +17,21 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.props"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.props')"/>
 
-	<!-- This is used to determine whether Xamarin.Mac.Common.targets needs to import 
+	<!-- This is used to determine whether Xamarin.Mac.ObjCBinding.Common.targets needs to import 
          Xamarin.Mac.ObjCBinding.Common.props itself, or whether it has been imported previously,
          e.g. by the project itself. -->
 	<PropertyGroup>
-		<_XamarinCommonPropsHasBeenImported>true</_XamarinCommonPropsHasBeenImported>
+		<_XamarinCommonBindingPropsHasBeenImported>true</_XamarinCommonBindingPropsHasBeenImported>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<BaseLibDllPath>$(MacBclPath)/Xamarin.Mac.dll</BaseLibDllPath>
+		<BTouchToolPath>$(XamarinMacFrameworkRoot)/bin/</BTouchToolPath>
+		<BTouchToolExe Condition="Exists('$(BTouchToolPath)/bgen')">bgen</BTouchToolExe>
+		<BTouchToolExe Condition="!Exists('$(BTouchToolPath)/bgen')">bmac-mobile-mono</BTouchToolExe>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+
+		<DefineConstants>__UNIFIED__;__MACOS__;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
 
 	<!-- When looking for related files to copy, look for Mono debugging files as well -->
