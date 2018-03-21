@@ -379,20 +379,17 @@ namespace Foundation {
 					}
 				}
 
-				if (challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodNTLM) {
-					NSUrlCredential credential;
-					if (sessionHandler.Credentials != null) {
-						var credentialsToUse = sessionHandler.Credentials as NetworkCredential;
-						if (credentialsToUse == null) {
-							var uri = inflight.Request.RequestUri;
-							credentialsToUse = sessionHandler.Credentials.GetCredential (uri, "NTLM");
-						}
-						credential = new NSUrlCredential (credentialsToUse.UserName, credentialsToUse.Password, NSUrlCredentialPersistence.ForSession);
+				if (challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodNTLM && sessionHandler.Credentials != null) {
+					var credentialsToUse = sessionHandler.Credentials as NetworkCredential;
+					if (credentialsToUse == null) {
+						var uri = inflight.Request.RequestUri;
+						credentialsToUse = sessionHandler.Credentials.GetCredential (uri, "NTLM");
 					}
-					completionHandler (NSUrlSessionAuthChallengeDisposition.UseCredential, credential ?? challenge.ProposedCredential);
-					return;
+					NSUrlCredential credential = new NSUrlCredential (credentialsToUse.UserName, credentialsToUse.Password, NSUrlCredentialPersistence.ForSession);
+					completionHandler (NSUrlSessionAuthChallengeDisposition.UseCredential, credential);
+				} else {
+					completionHandler (NSUrlSessionAuthChallengeDisposition.PerformDefaultHandling, challenge.ProposedCredential);
 				}
-				completionHandler (NSUrlSessionAuthChallengeDisposition.PerformDefaultHandling, challenge.ProposedCredential);
 			}
 		}
 
