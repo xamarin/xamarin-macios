@@ -261,8 +261,17 @@ namespace Bindings.Test {
 		[Export ("requiredCallback:")]
 		void RequiredCallback (Action<int> completionHandler);
 
+		[Abstract]
+		[Static]
+		[Export ("requiredStaticCallback:")]
+		void RequiredStaticCallback (Action<int> completionHandler);
+
 		[Export ("optionalCallback:")]
 		void OptionalCallback (Action<int> completionHandler);
+
+		[Static]
+		[Export ("optionalStaticCallback:")]
+		void OptionalStaticCallback (Action<int> completionHandler);
 	}
 
 	interface IObjCProtocolBlockTest { }
@@ -273,6 +282,10 @@ namespace Bindings.Test {
 		[Export ("TestObject", ArgumentSemantic.Retain)]
 		IObjCProtocolBlockTest TestObject { get; set; }
 
+		[Static]
+		[Export ("TestClass")]
+		Class TestClass { get; set; }
+
 		[Export ("classCallback:")]
 		void ClassCallback (Action<int> completionHandler);
 
@@ -282,8 +295,16 @@ namespace Bindings.Test {
 		[Export ("callRequiredCallback")]
 		void CallRequiredCallback ();
 
+		[Static]
+		[Export ("callRequiredStaticCallback")]
+		void CallRequiredStaticCallback ();
+
 		[Export ("callOptionalCallback")]
 		void CallOptionalCallback ();
+
+		[Static]
+		[Export ("callOptionalStaticCallback")]
+		void CallOptionalStaticCallback ();
 
 		[Export ("testFreedBlocks")]
 		void TestFreedBlocks ();

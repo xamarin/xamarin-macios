@@ -7094,7 +7094,7 @@ namespace AppKit {
 	[DisableDefaultCtor]
 	interface NSGridCell : NSCoding
 	{
-		[Export ("contentView", ArgumentSemantic.Strong)]
+		[Export ("contentView", ArgumentSemantic.Strong), NullAllowed]
 		NSView ContentView { get; set; }
 
 		[Export ("emptyContentView", ArgumentSemantic.Strong)]
@@ -16446,7 +16446,7 @@ namespace AppKit {
 			get; set;
 		}
 
-		[Export ("objectValue", ArgumentSemantic.Retain)]
+		[Export ("objectValue", ArgumentSemantic.Retain), NullAllowed]
 		NSObject ObjectValue {
 			get; set;
 		}
@@ -16817,7 +16817,7 @@ namespace AppKit {
 
 		[Mac (10,8)]
 		[Export ("registerNib:forIdentifier:")]
-		void RegisterNib (NSNib nib, string identifier);
+		void RegisterNib ([NullAllowed] NSNib nib, string identifier);
 
 		[Mac (10,7)]
 		[Export ("didAddRowView:forRow:")]

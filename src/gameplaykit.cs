@@ -1482,7 +1482,13 @@ namespace GameplayKit {
 		void RaiseToPower (GKNoise noise);
 
 		[Export ("displaceXWithNoise:yWithNoise:zWithNoise:")]
+		void Displace (GKNoise xDisplacementNoise, GKNoise yDisplacementNoise, GKNoise zDisplacementNoise);
+
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'GKNoise.Displace' instead.")]
+		[Wrap ("Displace (xDisplacementNoise, yDisplacementNoise, zDisplacementNoise)", isVirtual: true)]
 		void DisplaceX (GKNoise xDisplacementNoise, GKNoise yDisplacementNoise, GKNoise zDisplacementNoise);
+#endif
 	}
 
 	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
