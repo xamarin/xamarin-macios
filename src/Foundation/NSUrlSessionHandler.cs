@@ -380,15 +380,16 @@ namespace Foundation {
 				}
 
 				if (challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodNTLM) {
+					NSUrlCredential credential;
 					if (sessionHandler.Credentials != null) {
 						var credentialsToUse = sessionHandler.Credentials as NetworkCredential;
 						if (credentialsToUse == null) {
 							var uri = inflight.Request.RequestUri;
 							credentialsToUse = sessionHandler.Credentials.GetCredential (uri, "NTLM");
 						}
-						var credential = new NSUrlCredential (credentialsToUse.UserName, credentialsToUse.Password, NSUrlCredentialPersistence.ForSession);
-						completionHandler (NSUrlSessionAuthChallengeDisposition.UseCredential, credential);
+						credential = new NSUrlCredential (credentialsToUse.UserName, credentialsToUse.Password, NSUrlCredentialPersistence.ForSession);
 					}
+					completionHandler (NSUrlSessionAuthChallengeDisposition.UseCredential, credential ?? challenge.ProposedCredential);
 					return;
 				}
 				completionHandler (NSUrlSessionAuthChallengeDisposition.PerformDefaultHandling, challenge.ProposedCredential);
