@@ -16431,7 +16431,7 @@ namespace AppKit {
 			get; set;
 		}
 
-		[Export ("objectValue", ArgumentSemantic.Retain)]
+		[Export ("objectValue", ArgumentSemantic.Retain), NullAllowed]
 		NSObject ObjectValue {
 			get; set;
 		}
