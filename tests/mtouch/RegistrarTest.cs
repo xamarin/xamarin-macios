@@ -971,8 +971,20 @@ namespace NS {
 		[Test]
 		public void NoWarnings ()
 		{
+			var code = @"
+	public partial class MyTableViewCell : UITableViewCell {
+		protected MyTableViewCell (IntPtr handle) : base (handle)
+		{
+		}
+
+		public override void AwakeFromNib ()
+		{
+			base.AwakeFromNib ();
+		}
+	}
+";
 			using (var mtouch = new MTouchTool ()) {
-				mtouch.CreateTemporaryApp ();
+				mtouch.CreateTemporaryApp (extraCode: code, usings: "using UIKit; using Foundation; using System;");
 				mtouch.CreateTemporaryCacheDirectory ();
 				mtouch.Registrar = MTouchRegistrar.Static;
 				mtouch.Linker = MTouchLinker.DontLink; // so that as much as possible is registered

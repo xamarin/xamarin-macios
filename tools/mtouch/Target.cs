@@ -1245,6 +1245,10 @@ namespace Xamarin.Bundler
 					// They still use NSPortMessage in other API though, so it can't just be removed from our bindings.
 					registrar_task.CompilerFlags.AddOtherFlag ("-Wno-receiver-forward-class");
 
+					// clang sometimes detects missing [super ...] calls, but clang doesn't know about
+					// calling super through managed code, so ignore those warnings.
+					registrar_task.CompilerFlags.AddOtherFlag ("-Wno-objc-missing-super-calls");
+
 					if (Driver.XcodeVersion >= new Version (9, 0))
 						registrar_task.CompilerFlags.AddOtherFlag ("-Wno-unguarded-availability-new");
 
