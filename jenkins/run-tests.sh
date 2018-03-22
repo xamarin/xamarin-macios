@@ -4,9 +4,9 @@ report_error ()
 {
 	printf "🔥 [Test run failed]($BUILD_URL/Test_Report/) 🔥\\n" >> $WORKSPACE/jenkins/pr-comments.md
 
-	if test -f ../tests/TestSummary.md; then
+	if test -f $WORKSPACE/tests/TestSummary.md; then
 		printf "\\n" >> $WORKSPACE/jenkins/pr-comments.md
-		cat ../tests/TestSummary.md >> $WORKSPACE/jenkins/pr-comments.md
+		cat $WORKSPACE/tests/TestSummary.md >> $WORKSPACE/jenkins/pr-comments.md
 	fi
 }
 trap report_error ERR
