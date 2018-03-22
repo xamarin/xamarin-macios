@@ -6,6 +6,11 @@ report_error ()
 }
 trap report_error ERR
 
+printf "ℹ️ [Build in progress]($BUILD_URL/console) \\n" >> $WORKSPACE/jenkins/pr-comments.md
+ls -la $WORKSPACE/jenkins
+echo "$WORKSPACE/jenkins/pr-comments.md:"
+cat $WORKSPACE/jenkins/pr-comments.md
+
 cd $WORKSPACE
 export BUILD_REVISION=jenkins
 
