@@ -121,6 +121,7 @@ endif
 
 .PHONY: world
 world: check-system
+	exit 1
 	@$(MAKE) reset-versions
 	@$(MAKE) all -j8
 	@$(MAKE) install -j8
