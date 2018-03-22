@@ -2,7 +2,7 @@
 
 report_error ()
 {
-	printf "🔥 [Build failed]($BUILD_URL/console) 🔥\\n" >> pr-comments.md
+	printf "🔥 [Build failed]($BUILD_URL/console) 🔥\\n" >> $WORKSPACE/jenkins/pr-comments.md
 }
 trap report_error ERR
 
@@ -54,4 +54,4 @@ fi
 
 time make world
 
-printf "✅ [Build succeeded]($BUILD_URL/console)\\n" >> pr-comments.md
+printf "✅ [Build succeeded]($BUILD_URL/console)\\n" >> $WORKSPACE/jenkins/pr-comments.md

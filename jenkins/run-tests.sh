@@ -2,11 +2,11 @@
 
 report_error ()
 {
-	printf "🔥 [Test run failed]($BUILD_URL/Test_Report/) 🔥\\n" >> pr-comments.md
+	printf "🔥 [Test run failed]($BUILD_URL/Test_Report/) 🔥\\n" >> $WORKSPACE/jenkins/pr-comments.md
 
 	if test -f ../tests/TestSummary.md; then
-		printf "\\n" >> pr-comments.md
-		cat ../tests/TestSummary.md >> pr-comments.md
+		printf "\\n" >> $WORKSPACE/jenkins/pr-comments.md
+		cat ../tests/TestSummary.md >> $WORKSPACE/jenkins/pr-comments.md
 	fi
 }
 trap report_error ERR
@@ -27,4 +27,4 @@ rm -rf ~/.config/.mono/keypairs/
 # Run tests
 make -C tests jenkins
 
-printf "✅ [Test run succeeded]($BUILD_URL/Test_Report/)\\n" >> pr-comments.md
+printf "✅ [Test run succeeded]($BUILD_URL/Test_Report/)\\n" >> $WORKSPACE/jenkins/pr-comments.md
