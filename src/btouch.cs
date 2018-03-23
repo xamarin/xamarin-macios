@@ -46,7 +46,7 @@ class BindingTouch {
 
 	static string baselibdll;
 	static string attributedll;
-	const string compiler = "/Library/Frameworks/Mono.framework/Versions/Current/bin/csc";
+	static string compiler = "/Library/Frameworks/Mono.framework/Versions/Current/bin/csc";
 	static string net_sdk;
 
 	static List<string> libs = new List<string> ();
@@ -246,7 +246,7 @@ class BindingTouch {
 			{ "core", "Use this to build product assemblies", v => Generator.BindThirdPartyLibrary = false },
 			{ "r=", "Adds a reference", v => references.Add (v) },
 			{ "lib=", "Adds the directory to the search path for the compiler", v => libs.Add (StringUtils.Quote (v)) },
-			{ "compiler=", "Sets the compiler to use (Obsolete) ", v => { Console.WriteLine ("The --compiler option is obsolete and ignored."); }, true },
+			{ "compiler=", "Sets the compiler to use (Obsolete) ", v => compiler = v, true },
 			{ "sdk=", "Sets the .NET SDK to use", v => net_sdk = v },
 			{ "new-style", "Build for Unified (Obsolete).", v => { Console.WriteLine ("The --new-style option is obsolete and ignored."); }, true},
 			{ "d=", "Defines a symbol", v => defines.Add (v) },
