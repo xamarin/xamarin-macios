@@ -26,10 +26,6 @@ namespace Xamarin.MacDev.Tasks {
 
 		public bool AllowUnsafeBlocks { get; set; }
 
-		public string CompilerPath { get; set; }
-
-		public bool NoStdLib { get; set; }
-
 		[Required]
 		public string BaseLibDll { get; set; }
 
@@ -93,22 +89,18 @@ namespace Xamarin.MacDev.Tasks {
 			cmd.AppendSwitch ("/v");
 			#endif
 
-			if (NoStdLib)
-				cmd.AppendSwitch ("/nostdlib");
-			cmd.AppendSwitchIfNotNull ("/compiler:", CompilerPath);
+			cmd.AppendSwitch ("/nostdlib");
 			cmd.AppendSwitchIfNotNull ("/baselib:", BaseLibDll);
 			cmd.AppendSwitchIfNotNull ("/out:", OutputAssembly);
 
-			if (NoStdLib) {
-				string dir;
-				if (!string.IsNullOrEmpty (BaseLibDll))
-					dir = Path.GetDirectoryName (BaseLibDll);
-				else
-					dir = null;
+			string dir;
+			if (!string.IsNullOrEmpty (BaseLibDll))
+				dir = Path.GetDirectoryName (BaseLibDll);
+			else
+				dir = null;
 
-				cmd.AppendSwitchIfNotNull ("/lib:", dir);
-				cmd.AppendSwitchIfNotNull ("/r:", Path.Combine (dir, "mscorlib.dll"));
-			}
+			cmd.AppendSwitchIfNotNull ("/lib:", dir);
+			cmd.AppendSwitchIfNotNull ("/r:", Path.Combine (dir, "mscorlib.dll"));
 
 			if (ProcessEnums)
 				cmd.AppendSwitch ("/process-enums");
