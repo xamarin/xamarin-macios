@@ -1481,7 +1481,7 @@ namespace Xamarin.Bundler {
 				return;
 
 			var p = new Process ();
-			p.StartInfo.UseShellExecute = false;
+			p.StartInfo.UseShellExecute = true;
 			p.StartInfo.RedirectStandardError = true;
 			p.StartInfo.FileName = "mono-symbolicate";
 			p.StartInfo.Arguments = $"store-symbols \"{src}\" \"{dest}\"";
