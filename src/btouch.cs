@@ -340,18 +340,21 @@ class BindingTouch {
 		case "xamarin.ios":
 			CurrentPlatform = PlatformName.iOS;
 			Unified = true;
+			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.iOS/Xamarin.iOS.dll");
 			break;
 		case "xamarin.tvos":
 			CurrentPlatform = PlatformName.TvOS;
 			Unified = true;
+			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll");
 			break;
 		case "xamarin.watchos":
 			CurrentPlatform = PlatformName.WatchOS;
 			Unified = true;
+			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.dll");
 			break;
@@ -365,6 +368,7 @@ class BindingTouch {
 		case "xamarin.mac":
 			CurrentPlatform = PlatformName.MacOSX;
 			Unified = true;
+			nostdlib = true;
 			skipSystemDrawing = target_framework == TargetFramework.Xamarin_Mac_4_5_Full;
 			if (string.IsNullOrEmpty (baselibdll)) {
 				if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
