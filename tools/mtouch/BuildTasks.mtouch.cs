@@ -179,7 +179,7 @@ namespace Xamarin.Bundler
 		public string AssemblyName;
 		public bool AddBitcodeMarkerSection;
 		public string AssemblyPath; // path to the .s file.
-		List<string> inputs;
+		HashSet<string> inputs;
 		public AotInfo AotInfo;
 
 		public override IEnumerable<string> Outputs {
@@ -216,10 +216,11 @@ namespace Xamarin.Bundler
 		public override IEnumerable<string> FileDependencies {
 			get {
 				if (inputs == null) {
-					inputs = new List<string> ();
+					inputs = new HashSet<string> ();
 					foreach (var asm_dep in InputAssemblies) {
 						if (asm_dep.HasDependencyMap)
-							inputs.AddRange (asm_dep.DependencyMap);
+							foreach (var asm_dep_single in asm_dep.DependencyMap)
+								inputs.Add (asm_dep_single);
 						inputs.Add (asm_dep.FullPath);
 						inputs.Add (Driver.GetAotCompiler (asm_dep.App, asm_dep.Target.Is64Build));
 						var mdb = asm_dep.FullPath + ".mdb";
