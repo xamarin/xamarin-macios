@@ -62,9 +62,9 @@ generator.csproj: generator-ikvm.csproj.in Makefile.generator
 		-e 's^<!--%IKVM_FILES%-->^$(foreach file,$(subst /,\\,$(IKVM_REFLECTION_SOURCES)),<Compile Include="$(file)"><Link>ikvm\\$(notdir $(subst \\,/,$(file)))</Link></Compile>)^' \
 		-e 's^<!--%FILES%-->^$(foreach file,$(subst /,\\,$(GENERATOR_SOURCES) $(GENERATOR_ATTRIBUTE_SOURCES)),<Compile Include="$(file)"/>)^' \
 		-e 's^%WORKING_DIR%^$(CURDIR)^' \
-		-e 's^%IOS_UNIFIED_ARGS%^$(IOS_GENERATOR_FLAGS) -core -sourceonly=$(IOS_BUILD_DIR)/native/generated_sources -compiler=$(IOS_MCS) -nostdlib -noconfig -no-mono-path -tmpdir=$(IOS_BUILD_DIR)/native -d:XAMCORE_2_0 -baselib=$(IOS_BUILD_DIR)/native/core.dll -r=$(MONO_PATH)/mcs/class/lib/monotouch/System.dll -ns=ObjCRuntime -native-exception-marshalling --ns=ObjCRuntime $(xi_native_profile) $(IOS_APIS) --target-framework=Xamarin.iOS,v1.0^' \
-		-e 's^%TVOS_ARGS%^-inline-selectors -process-enums -warnaserror:$(TVOS_GENERATOR_WARNASERROR) -core -sourceonly=$(TVOS_BUILD_DIR)/tvos/generated_sources -compiler=$(IOS_MCS) -nostdlib -noconfig -no-mono-path -tmpdir=$(TVOS_BUILD_DIR)/tvos -baselib=$(TVOS_BUILD_DIR)/tvos/core.dll -r=$(MONO_PATH)/mcs/class/lib/monotouch_tv/System.dll -ns=ObjCRuntime -native-exception-marshalling -d:TVOS -d:XAMCORE_2_0 -d:XAMCORE_3_0 --ns:ObjCRuntime $(TVOS_APIS) --target-framework=Xamarin.TVOS,v1.0^' \
-		-e 's^%WATCHOS_ARGS%^-inline-selectors -process-enums -warnaserror:$(WATCH_GENERATOR_WARNASERROR) -core -sourceonly=$(WATCH_BUILD_DIR)/watch/generated_sources -compiler=$(IOS_MCS) -nostdlib -noconfig -no-mono-path -tmpdir=$(WATCH_BUILD_DIR)/watch -baselib=$(WATCH_BUILD_DIR)/watch/core.dll -r=$(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/System.dll -ns=ObjCRuntime -native-exception-marshalling -d:WATCH -d:XAMCORE_2_0 -d:XAMCORE_3_0 --ns:ObjCRuntime $(WATCHOS_APIS) --target-framework=Xamarin.WatchOS,v1.0^' \
+		-e 's^%IOS_UNIFIED_ARGS%^$(IOS_GENERATOR_FLAGS) -core -sourceonly=$(IOS_BUILD_DIR)/native/generated_sources -compiler=$(IOS_CSC) -nostdlib -noconfig -no-mono-path -tmpdir=$(IOS_BUILD_DIR)/native -d:XAMCORE_2_0 -baselib=$(IOS_BUILD_DIR)/native/core.dll -r=$(MONO_PATH)/mcs/class/lib/monotouch/System.dll -ns=ObjCRuntime -native-exception-marshalling --ns=ObjCRuntime $(xi_native_profile) $(IOS_APIS) --target-framework=Xamarin.iOS,v1.0^' \
+		-e 's^%TVOS_ARGS%^-inline-selectors -process-enums -warnaserror:$(TVOS_GENERATOR_WARNASERROR) -core -sourceonly=$(TVOS_BUILD_DIR)/tvos/generated_sources -compiler=$(IOS_CSC) -nostdlib -noconfig -no-mono-path -tmpdir=$(TVOS_BUILD_DIR)/tvos -baselib=$(TVOS_BUILD_DIR)/tvos/core.dll -r=$(MONO_PATH)/mcs/class/lib/monotouch_tv/System.dll -ns=ObjCRuntime -native-exception-marshalling -d:TVOS -d:XAMCORE_2_0 -d:XAMCORE_3_0 --ns:ObjCRuntime $(TVOS_APIS) --target-framework=Xamarin.TVOS,v1.0^' \
+		-e 's^%WATCHOS_ARGS%^-inline-selectors -process-enums -warnaserror:$(WATCH_GENERATOR_WARNASERROR) -core -sourceonly=$(WATCH_BUILD_DIR)/watch/generated_sources -compiler=$(IOS_CSC) -nostdlib -noconfig -no-mono-path -tmpdir=$(WATCH_BUILD_DIR)/watch -baselib=$(WATCH_BUILD_DIR)/watch/core.dll -r=$(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/System.dll -ns=ObjCRuntime -native-exception-marshalling -d:WATCH -d:XAMCORE_2_0 -d:XAMCORE_3_0 --ns:ObjCRuntime $(WATCHOS_APIS) --target-framework=Xamarin.WatchOS,v1.0^' \
 		-e 's^%MAC_FULL_ARGS%^-d:MONOMAC -d:XAMARIN_MAC -d:XAMCORE_2_0 -compiler:$(MAC_BUILD_DIR)/full/pmcs -process-enums -warnaserror:$(MAC_GENERATOR_WARNASERROR) -native-exception-marshalling -core -sourceonly:$(MAC_BUILD_DIR)/full/generated-sources -tmpdir:$(MAC_BUILD_DIR)/full -baselib:$(MAC_BUILD_DIR)/full/core.dll -d:NO_SYSTEM_DRAWING --ns=ObjCRuntime $(xm_full_profile) $(MAC_APIS)^' \
 		-e 's^%MAC_MOBILE_ARGS%^-d:MONOMAC -d:XAMARIN_MAC -d:XAMCORE_2_0 -compiler:$(MAC_BUILD_DIR)/mobile/pmcs -process-enums -warnaserror:$(MAC_GENERATOR_WARNASERROR) -native-exception-marshalling -core -sourceonly:$(MAC_BUILD_DIR)/mobile/generated-sources -tmpdir:$(MAC_BUILD_DIR)/mobile -baselib:$(MAC_BUILD_DIR)/mobile/core.dll -d:NO_SYSTEM_DRAWING --ns=ObjCRuntime $(SHARED_SYSTEM_DRAWING_SOURCES) $(xm_mobile_profile) $(MAC_APIS)^' \
 		-e 's^%MD_MTOUCH_SDK_ROOT%^$(MD_MTOUCH_SDK_ROOT)^' \
@@ -114,7 +114,7 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btouch-native: | $(IOS_DESTDIR)$(MONOTOUCH
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/%.dll: $(IOS_BUILD_DIR)/native/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen
 	$(Q) install -m 0755 $< $@
-	$(Q) install -m 0644 $<.mdb $@.mdb
+	$(Q) install -m 0644 $< $(@:.exe=.pdb)
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/bgen.exe: $(BUILD_DIR)/common/bgen.exe | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen
 	$(Q) install -m 0755 $< $@
@@ -122,11 +122,11 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/bgen.exe: $(BUILD_DIR)/common/bgen.ex
 
 $(IOS_BUILD_DIR)/native/Xamarin.iOS.BindingAttributes.dll: generator-attributes.cs Makefile.generator
 	$(Q) mkdir -p $(dir $@)
-	$(Q_GEN) $(SYSTEM_MCS) -out:$@ -debug generator-attributes.cs -target:library
+	$(Q_GEN) $(SYSTEM_CSC) -out:$@ -debug generator-attributes.cs -target:library
 
 $(IOS_BUILD_DIR)/native/monotouch.BindingAttributes.dll: generator-attributes.cs Makefile.generator
 	$(Q) mkdir -p $(dir $@)
-	$(Q_GEN) $(SYSTEM_MCS) -out:$@ -debug generator-attributes.cs -target:library
+	$(Q_GEN) $(SYSTEM_CSC) -out:$@ -debug generator-attributes.cs -target:library
 
 #
 # Xamarin.Watch (bwatch)
@@ -147,11 +147,11 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/bwatch: Makefile.generator
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/%.dll: $(WATCH_BUILD_DIR)/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen
 	$(Q) install -m 0755 $< $@
-	$(Q) install -m 0644 $<.mdb $@.mdb
+	$(Q) install -m 0644 $< $(@:.exe=.pdb)
 
 $(WATCH_BUILD_DIR)/Xamarin.WatchOS.BindingAttributes.dll: generator-attributes.cs Makefile.generator
 	$(Q) mkdir -p $(dir $@)
-	$(Q_GEN) $(SYSTEM_MCS) -out:$@ -debug generator-attributes.cs -target:library
+	$(Q_GEN) $(SYSTEM_CSC) -out:$@ -debug generator-attributes.cs -target:library
 
 # #
 # # Xamarin.TVOS (btv)
@@ -172,11 +172,11 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btv: Makefile.generator
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/%.dll: $(TVOS_BUILD_DIR)/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen
 	$(Q) install -m 0755 $< $@
-	$(Q) install -m 0644 $<.mdb $@.mdb
+	$(Q) install -m 0644 $< $(@:.exe=.pdb)
 
 $(TVOS_BUILD_DIR)/Xamarin.TVOS.BindingAttributes.dll: generator-attributes.cs Makefile.generator
 	$(Q) mkdir -p $(dir $@)
-	$(Q_GEN) $(SYSTEM_MCS) -out:$@ -debug generator-attributes.cs -target:library
+	$(Q_GEN) $(SYSTEM_CSC) -out:$@ -debug generator-attributes.cs -target:library
 
 #
 # Xamarin.Mac (bmac)
@@ -211,7 +211,7 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bmac: bmac.ikvm | $(MAC_DESTDIR)$
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/%.dll: $(MAC_BUILD_DIR)/%.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen
 	$(Q) install -m 0755 $< $@
-	$(Q) install -m 0644 $<.mdb $@.mdb
+	$(Q) install -m 0644 $< $(@:.exe=.pdb)
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/%.exe: $(BUILD_DIR)/common/bgen.exe | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen
 	$(Q) install -m 0755 $< $@
@@ -224,11 +224,11 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/bgen-classic.exe: $(MACIOS_B
 $(MAC_BUILD_DIR)/XamMac.BindingAttributes.dll: $(MACIOS_BINARIES_PATH)/XamMac.BindingAttributes.dll
 	$(Q) mkdir -p $(dir $@)
 	$(Q) cp $< $@
-	$(Q) cp $<.mdb $@.mdb
+	$(Q) cp $< $(@:.exe=.pdb)
 
 $(MAC_BUILD_DIR)/Xamarin.Mac-%.BindingAttributes.dll: generator-attributes.cs Makefile.generator
 	$(Q) mkdir -p $(dir $@)
-	$(Q_GEN) $(SYSTEM_MCS) -out:$@ -debug generator-attributes.cs -target:library
+	$(Q_GEN) $(SYSTEM_CSC) -out:$@ -debug generator-attributes.cs -target:library
 
 bgen:	\
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bgen                     \

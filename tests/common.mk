@@ -25,14 +25,14 @@ clean-local::
 
 build/%/$(TESTDLL): $(MAC_SOURCES) build/GuiUnit.exe Makefile $(BASE_DLLS)
 	@mkdir -p $(dir $@)
-	$(Q_MCS) $(SYSTEM_MCS) -out:$@ -t:library -debug -d:MONOMAC -d:XAMCORE_2_0 \
+	$(Q_CSC) $(SYSTEM_CSC) -out:$@ -t:library -debug -d:MONOMAC -d:XAMCORE_2_0 \
 		-r:build/GuiUnit.exe \
 		-r:$(TOP)/src/build/mac/$*/Xamarin.Mac.dll \
 		$(MAC_SOURCES)
 
 build/compat/$(TESTDLL): $(MAC_SOURCES) build/GuiUnit.exe Makefile $(BASE_DLLS)
 	@mkdir -p $(dir $@)
-	$(Q_MCS) $(SYSTEM_MCS) -out:$@ -t:library -debug -d:MONOMAC \
+	$(Q_CSC) $(SYSTEM_CSC) -out:$@ -t:library -debug -d:MONOMAC \
 		-r:build/GuiUnit.exe \
 		-r:System.Drawing \
 		-r:$(TOP)/src/build/mac/compat/XamMac.dll \

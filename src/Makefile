@@ -159,7 +159,7 @@ $(IOS_BUILD_DIR)/$(1)/$(3): $$(IOS_SOURCES) $(IOS_BUILD_DIR)/$(4)/generated_sour
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) $$(IOS_DEFINES) \
 		$$(IOS_$(4)_DEFINES) \
 		-nowarn:219,618,114,414,1635,3021,$$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
-		$$(IOS_MCS_FLAGS_XI) \
+		$$(IOS_CSC_FLAGS_XI) \
 		$$(IOS_SOURCES) @$(IOS_BUILD_DIR)/$(4)/generated_sources
 
 $(IOS_BUILD_DIR)/$(1)/$(3:.dll=.pdb): $(IOS_BUILD_DIR)/$(1)/$(3)
@@ -270,7 +270,7 @@ IOS_EXTRA_SYSTEM_NET_HTTP_FILES = \
 
 # build (into custom LIBRARY_SUBDIR)
 $(MONO_PATH)/mcs/class/lib/monotouch/reference/System.Net.Http.dll: $(IOS_EXTRA_SYSTEM_NET_HTTP_FILES) $(MONO_PATH)/mcs/class/lib/monotouch/System.Net.Http.dll $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll
-	$(call Q_PROF_CSC,ios/unified) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/System.Net.Http PROFILE=monotouch LIBRARY_SUBDIR=reference MONOTOUCH_MCS_FLAGS=$(IOS_MCS_FLAGS) EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll) $(IOS_EXTRA_SYSTEM_NET_HTTP_FILES) -D:XAMCORE_2_0 -D:XAMARIN_MODERN -D:SYSTEM_NET_HTTP -D:UNIFIED -D:__UNIFIED__"
+	$(call Q_PROF_CSC,ios/unified) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/System.Net.Http PROFILE=monotouch LIBRARY_SUBDIR=reference MONOTOUCH_CSC_FLAGS=$(IOS_CSC_FLAGS) EXTRA_LIB_CSC_FLAGS="-r:$(abspath $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll) $(IOS_EXTRA_SYSTEM_NET_HTTP_FILES) -D:XAMCORE_2_0 -D:XAMARIN_MODERN -D:SYSTEM_NET_HTTP -D:UNIFIED -D:__UNIFIED__"
 	$(Q) touch $@
 
 $(MONO_PATH)/mcs/class/lib/monotouch/reference/System.Net.Http.pdb: $(MONO_PATH)/mcs/class/lib/monotouch/reference/System.Net.Http.dll
@@ -533,7 +533,7 @@ $(MAC_BUILD_DIR)/$(1)/$(2): $(MAC_BUILD_DIR)/$(3)/generated-sources $(MAC_SOURCE
 		$$(ARGS_$(6)) \
 		-publicsign -keyfile:$(SN_KEY) \
 		-nowarn:3021,1635,612,618,0219,0414,$(MAC_WARNINGS_TO_FIX) \
-		$$(MAC_MCS_FLAGS_XM) \
+		$$(MAC_CSC_FLAGS_XM) \
 		$(4) \
 		@$$< $$(MAC_SOURCES)
 
@@ -857,7 +857,7 @@ WATCH_EXTRA_SYSTEM_NET_HTTP_FILES = \
 
 # build (into custom LIBRARY_SUBDIR)
 $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http.dll: $(WATCH_EXTRA_SYSTEM_NET_HTTP_FILES) $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/System.Net.Http.dll $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll
-	$(call Q_PROF_CSC,watch) $(MAKE) $(if $(V),,-s) -C $(WATCH_MONO_PATH)/mcs/class/System.Net.Http PROFILE=monotouch_watch LIBRARY_SUBDIR=reference MONOTOUCH_MCS_FLAGS=$(IOS_MCS_FLAGS) EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll) $(WATCH_EXTRA_SYSTEM_NET_HTTP_FILES) -D:XAMCORE_2_0 -D:XAMCORE_3_0 -D:XAMARIN_MODERN -D:SYSTEM_NET_HTTP -D:UNIFIED -D:__UNIFIED__"
+	$(call Q_PROF_CSC,watch) $(MAKE) $(if $(V),,-s) -C $(WATCH_MONO_PATH)/mcs/class/System.Net.Http PROFILE=monotouch_watch LIBRARY_SUBDIR=reference MONOTOUCH_CSC_FLAGS=$(IOS_CSC_FLAGS) EXTRA_LIB_CSC_FLAGS="-r:$(abspath $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll) $(WATCH_EXTRA_SYSTEM_NET_HTTP_FILES) -D:XAMCORE_2_0 -D:XAMCORE_3_0 -D:XAMARIN_MODERN -D:SYSTEM_NET_HTTP -D:UNIFIED -D:__UNIFIED__"
 	$(Q) touch $@
 
 $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http.pdb: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http.dll
@@ -1048,7 +1048,7 @@ $(TVOS_BUILD_DIR)/reference/MonoTouch.NUnitLite%dll $(TVOS_BUILD_DIR)/reference/
 		$(TVOS_TOUCHUNIT_SOURCES)
 	@touch $(basename $@).dll $(basename $@).pdb
 
-$(TVOS_BUILD_DIR)/%.dll.mdb: $(TVOS_BUILD_DIR)/%.dll
+$(TVOS_BUILD_DIR)/%.pdb: $(TVOS_BUILD_DIR)/%.dll
 	@touch $@
 
 $(TVOS_BUILD_DIR)/reference/MonoTouch.Dialog-1%dll $(TVOS_BUILD_DIR)/reference/MonoTouch.Dialog-1%pdb: $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll $(TVOS_SOURCES) $(MONOTOUCH_DIALOG_SOURCES) $(PRODUCT_KEY_PATH)
@@ -1088,7 +1088,7 @@ TVOS_EXTRA_SYSTEM_NET_HTTP_FILES = \
 
 # build (into custom LIBRARY_SUBDIR)
 $(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http.dll: $(TVOS_EXTRA_SYSTEM_NET_HTTP_FILES) $(MONO_PATH)/mcs/class/lib/monotouch_tv/System.Net.Http.dll $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll
-	$(call Q_PROF_CSC,tvos) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/System.Net.Http PROFILE=monotouch_tv LIBRARY_SUBDIR=reference MONOTOUCH_MCS_FLAGS=$(IOS_MCS_FLAGS) EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll) $(TVOS_EXTRA_SYSTEM_NET_HTTP_FILES) -D:XAMCORE_2_0 -D:XAMCORE_3_0 -D:XAMARIN_MODERN -D:SYSTEM_NET_HTTP -D:UNIFIED -D:__UNIFIED__"
+	$(call Q_PROF_CSC,tvos) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/System.Net.Http PROFILE=monotouch_tv LIBRARY_SUBDIR=reference MONOTOUCH_CSC_FLAGS=$(IOS_CSC_FLAGS) EXTRA_LIB_CSC_FLAGS="-r:$(abspath $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll) $(TVOS_EXTRA_SYSTEM_NET_HTTP_FILES) -D:XAMCORE_2_0 -D:XAMCORE_3_0 -D:XAMARIN_MODERN -D:SYSTEM_NET_HTTP -D:UNIFIED -D:__UNIFIED__"
 	$(Q) touch $@
 
 $(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http.pdb: $(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http.dll

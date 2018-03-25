@@ -7,7 +7,7 @@ no-mmp: main.m
 	clang -o$@ main.m -framework AppKit -arch i386
 
 no-mmp.exe: Main.cs XamMac.dll libxammac.dylib
-	$(SYSTEM_MCS) Main.cs -out:$@ -r:XamMac.dll
+	$(SYSTEM_CSC) Main.cs -out:$@ -r:XamMac.dll
 
 XamMac.dll: $(TOP)/src/build/mac/compat/XamMac.dll
 	cp $^ $@
