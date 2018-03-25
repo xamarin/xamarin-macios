@@ -4,3 +4,7 @@ links/
 updated-references/
 *api-diff.html
 index.html
+ios-*.md
+tvos-*.md
+watchos-*.md
+macos-*.md

@@ -205,6 +205,7 @@ verify-reference-assemblies-mac: $(APIDIFF_DIR)/temp/native-32/Xamarin.Mac.xml $
 clean-local::
 	rm -rf temp updated-references diff *.exe* api-diff.html
 	rm -rf *.dll*
+	rm -rf ios-*.md tvos-*.md watchos*-.md macos-*.md
 
 DIRS += $(APIDIFF_DIR)/temp $(APIDIFF_DIR)/diff
 
@@ -219,7 +220,10 @@ $(DIRS):
 .SECONDARY: $(foreach file,$(WATCHOS_ASSEMBLIES),$(APIDIFF_DIR)/temp/xi/$(file).xml)
 .SECONDARY: $(foreach file,$(TVOS_ASSEMBLIES),$(APIDIFF_DIR)/temp/xi/$(file).xml)
 
-wrench-api-diff:
+merger.exe: merger.cs
+	$(Q) $(SYSTEM_CSC) -debug $< -out:$@
+
+wrench-api-diff: merger.exe
 	@echo "@MonkeyWrench: AddDirectory: $(CURDIR)/diff/xi/Xamarin.iOS"
 	@echo "@MonkeyWrench: AddDirectory: $(CURDIR)/diff/xi/Xamarin.WatchOS"
 	@echo "@MonkeyWrench: AddDirectory: $(CURDIR)/diff/xi/Xamarin.TVOS"
@@ -245,6 +249,18 @@ endif
 	@echo "@MonkeyWrench: AddFile: $(CURDIR)/api-diff.html"
 	@# remove empty files so they're not uploaded
 	@-find $(CURDIR)/diff -size 0 | xargs rm
+ifdef INCLUDE_MAC
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.Mac $(CURDIR)/diff/xm/Xamarin.Mac/ macos
+endif
+ifdef INCLUDE_IOS
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.iOS $(CURDIR)/diff/xi/Xamarin.iOS/ ios
+ifdef INCLUDE_WATCH
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.WatchOS $(CURDIR)/diff/xi/Xamarin.WatchOS/ watchos
+endif
+ifdef INCLUDE_TVOS
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.TVOS $(CURDIR)/diff/xi/Xamarin.TVOS/ tvos
+endif
+endif
 ifdef INCLUDE_IOS
 	$(MAKE) verify-reference-assemblies-ios -j8
 endif
@@ -256,4 +272,5 @@ jenkins-api-diff:
 	-$(MAKE) wrench-api-diff
 	$(Q) mkdir -p $(JENKINS_RESULTS_DIRECTORY)/api-diff
 	$(Q) cp *.html $(JENKINS_RESULTS_DIRECTORY)/api-diff
+	$(Q) cp *.md $(JENKINS_RESULTS_DIRECTORY)/api-diff
 	$(Q) cp -R diff $(JENKINS_RESULTS_DIRECTORY)/api-diff
