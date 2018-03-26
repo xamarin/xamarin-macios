@@ -47,7 +47,6 @@ class BindingTouch {
 	static string baselibdll;
 	static string attributedll;
 	static string compiler = "/Library/Frameworks/Mono.framework/Versions/Current/bin/csc";
-	static string net_sdk;
 
 	static List<string> libs = new List<string> ();
 
@@ -247,7 +246,7 @@ class BindingTouch {
 			{ "r=", "Adds a reference", v => references.Add (v) },
 			{ "lib=", "Adds the directory to the search path for the compiler", v => libs.Add (StringUtils.Quote (v)) },
 			{ "compiler=", "Sets the compiler to use (Obsolete) ", v => compiler = v, true },
-			{ "sdk=", "Sets the .NET SDK to use", v => net_sdk = v },
+			{ "sdk=", "Sets the .NET SDK to use (Obsolete)", v => {}, true },
 			{ "new-style", "Build for Unified (Obsolete).", v => { Console.WriteLine ("The --new-style option is obsolete and ignored."); }, true},
 			{ "d=", "Defines a symbol", v => defines.Add (v) },
 			{ "api=", "Adds a API definition source file", v => api_sources.Add (StringUtils.Quote (v)) },
@@ -336,6 +335,7 @@ class BindingTouch {
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/2.1/monotouch.dll");
 			Path.Combine (GetSDKRoot (), "bin/smcs");
+			AddAnyMissingSystemReferencesFromSDK ("lib/mono/2.1/", references);
 			break;
 		case "xamarin.ios":
 			CurrentPlatform = PlatformName.iOS;
@@ -343,6 +343,7 @@ class BindingTouch {
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.iOS/Xamarin.iOS.dll");
+			AddAnyMissingSystemReferencesFromSDK ("lib/mono/Xamarin.iOS", references);
 			break;
 		case "xamarin.tvos":
 			CurrentPlatform = PlatformName.TvOS;
@@ -350,6 +351,7 @@ class BindingTouch {
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll");
+			AddAnyMissingSystemReferencesFromSDK ("lib/mono/Xamarin.TVOS", references);
 			break;
 		case "xamarin.watchos":
 			CurrentPlatform = PlatformName.WatchOS;
@@ -357,13 +359,14 @@ class BindingTouch {
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.dll");
+			AddAnyMissingSystemReferencesFromSDK ("lib/mono/Xamarin.WatchOS", references);
 			break;
 		case "xammac":
 			CurrentPlatform = PlatformName.MacOSX;
 			Unified = false;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib", "mono", "XamMac.dll");
-			net_sdk = "4";
+			AddAnyMissingSystemReferences ("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5", references);
 			break;
 		case "xamarin.mac":
 			CurrentPlatform = PlatformName.MacOSX;
@@ -373,11 +376,12 @@ class BindingTouch {
 			if (string.IsNullOrEmpty (baselibdll)) {
 				if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
 					baselibdll = Path.Combine (GetSDKRoot (), "lib", "reference", "mobile", "Xamarin.Mac.dll");
+					AddAnyMissingSystemReferencesFromSDK ("lib/mono/Xamarin.Mac", references);
 				} else {
 					baselibdll = Path.Combine (GetSDKRoot (), "lib", "reference", "full", "Xamarin.Mac.dll");
+					AddAnyMissingSystemReferencesFromSDK ("lib/mono/4.5", references);
 				}
 			}
-			net_sdk = "4";
 			break;
 		default:
 			throw ErrorHelper.CreateError (1043, "Internal error: unknown target framework '{0}'.", target_framework);
@@ -568,8 +572,10 @@ class BindingTouch {
 			cargs.Append ("-r:").Append (StringUtils.Quote (baselibdll)).Append (' ');
 			foreach (var res in resources)
 				cargs.Append (res).Append (' ');
-			if (nostdlib)
+			if (nostdlib) {
 				cargs.Append ("-nostdlib ");
+				cargs.Append ("-noconfig ");
+			}
 			if (!string.IsNullOrEmpty (Path.GetDirectoryName (baselibdll)))
 				cargs.Append ("-lib:").Append (Path.GetDirectoryName (baselibdll)).Append (' ');
 				
@@ -594,6 +600,20 @@ class BindingTouch {
 				Directory.Delete (tmpdir, true);
 		}
 		return 0;
+	}
+	
+	static void AddAnyMissingSystemReferences (string sdk_path, List<string> references)
+	{
+		if (!references.Any ((v) => Path.GetFileNameWithoutExtension (v) == "System"))
+			references.Add (Path.Combine (sdk_path, "System.dll"));
+		if (!references.Any ((v) => Path.GetFileNameWithoutExtension (v) == "mscorlib"))
+			references.Add (Path.Combine (sdk_path, "mscorlib.dll"));
+
+	}
+
+	static void AddAnyMissingSystemReferencesFromSDK (string sdk_offset, List<string> references)
+	{
+		AddAnyMissingSystemReferences (Path.Combine (GetSDKRoot (), sdk_offset), references);
 	}
 
 	static string GetWorkDir ()
