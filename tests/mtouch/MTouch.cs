@@ -4129,24 +4129,6 @@ public class TestApp {
 			Assert.AreEqual (e, a, message);
 		}
 
-		static void VerifyOutput (string msg, string actual, params string[] expected)
-		{
-			var split = actual.Split (new char[] {'\n', '\r'}, StringSplitOptions.RemoveEmptyEntries);
-			var actual_messages = new HashSet<string> (split, new Registrar.PatternEquality ());
-			var exp_messages = new HashSet<string> (expected, new Registrar.PatternEquality ());
-
-			actual_messages.ExceptWith (exp_messages);
-			exp_messages.ExceptWith (split);
-
-			var text = new StringBuilder ();
-			foreach (var a in actual_messages)
-				text.AppendFormat ("Unexpected error/warning ({0}):\n\t{1}\n", msg, a);
-			foreach (var a in exp_messages)
-				text.AppendFormat ("Expected error/warning not shown ({0}):\n\t{1}\n", msg, a);
-			if (text.Length != 0)
-				Assert.Fail (text.ToString ());
-		}
-
 		public static void AssertDeviceAvailable ()
 		{
 			if (!Configuration.include_device)

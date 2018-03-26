@@ -462,7 +462,7 @@ namespace Xamarin.Bundler {
 				throw new MonoMacException (1404, true, "Target framework '{0}' is invalid.", userTargetFramework);
 
 			if (IsClassic && App.LinkMode == LinkMode.Platform)
-				throw new MonoMacException (2100, true, "Xamarin.Mac Classic API does not support Platform Linking.");
+				throw new MonoMacException (2109, true, "Xamarin.Mac Classic API does not support Platform Linking.");
 
 			// sanity check as this should never happen: we start out by not setting any
 			// Unified/Classic properties, and only IsUnifiedMobile if we are are on the

@@ -22,7 +22,7 @@ namespace Xamarin.MMP.Tests
 			}
 		}
 
-		public string SimpleStaticPath {
+		public static string SimpleStaticPath {
 			get {
 				string rootDir = TI.FindRootDirectory ();
 				string buildLibPath = Path.Combine (rootDir, "../tests/mac-binding-project/bin/SimpleClassStatic.a");
@@ -31,7 +31,7 @@ namespace Xamarin.MMP.Tests
 			}
 		}
 
-		public string MobileStaticBindingPath {
+		public static string MobileStaticBindingPath {
 			get {
 				string rootDir = TI.FindRootDirectory ();
 				string buildLibPath = Path.Combine (rootDir, "../tests/mac-binding-project/bin/Mobile-static/MobileBinding.dll");
@@ -40,9 +40,9 @@ namespace Xamarin.MMP.Tests
 			}
 		}
 
-		string CreateNativeRefInclude (string path, string kind) => string.Format (NativeReferenceTemplate, path, kind);
-		string CreateItemGroup (IEnumerable<string> elements) => string.Format (ItemGroupTemplate, string.Concat (elements));
-		string CreateSingleNativeRef (string path, string kind) => CreateItemGroup (CreateNativeRefInclude (path, kind).FromSingleItem ());
+		public static string CreateNativeRefInclude (string path, string kind) => string.Format (NativeReferenceTemplate, path, kind);
+		public static string CreateItemGroup (IEnumerable<string> elements) => string.Format (ItemGroupTemplate, string.Concat (elements));
+		public static string CreateSingleNativeRef (string path, string kind) => CreateItemGroup (CreateNativeRefInclude (path, kind).FromSingleItem ());
 
 		string CreateCopyOfSimpleClassInTestDir (string tmpDir, string fileName = "SimpleClassDylib.dylib")
 		{

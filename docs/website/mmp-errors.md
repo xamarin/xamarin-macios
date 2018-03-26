@@ -146,6 +146,15 @@ For more details: https://developer.apple.com/news/?id=06282017a
 
 Consider updating your application and any dependencies to 64-bit.
 
+### <a name="MM0135"/>MM0135: Did not link system framework '{0}' (referenced by assembly '{1}') because it was introduced in {2} {3}, and we're using the {2} {4} SDK.
+
+To build your application, Xamarin.Mac must link against system libraries, some of which depend upon the SDK version specified in the error message. Since you are using an older version of the SDK, invocations to those APIs may fail at runtime.
+
+The recommended way to fix this error is to upgrade Xcode to get the needed SDK. If you have multiple versions of Xcode installed or want to use an Xcode in a non-default location, make sure to set the correct Xcode location in your IDE's preferences.
+
+Alternatively, enable the managed [linker](https://docs.microsoft.com/xamarin/mac/deploy-test/linker) to remove unused APIs, including (in most cases) the new ones which require the specified library. However, this will not work if your project requires APIs introduced in a newer SDK than the one your Xcode provides.
+
+As a last-straw solution, use an older version of Xamarin.Mac that does not require these new SDKs to be present during the build process.
 
 # MM1xxx: file copy / symlinks (project related)
 
@@ -221,8 +230,6 @@ Consider updating your application and any dependencies to 64-bit.
 
 ### <a name="MM202x"/>MM202x: Binding Optimizer failed processing `...`.
 
-### <a name="MM2100"/>MM2100: Xamarin.Mac Classic API does not support Platform Linking.
-
 ### <a name="MM2103"/>MM2103: Error processing assembly '\*': *
 
 An unexpected error occured when processing an assembly.
@@ -267,6 +274,8 @@ The App Store now rejects applications which contain libraries and frameworks wh
 This is in general safe, and will reduce application bundle size as an added benefit. However, any bundled framework that is code signed will have its signature invalidated (and resigned later if the application is signed).
 
 Consider using `lipo` to remove the unnecessary archtectures permanently from the source library. If the application is not being published to the App Store, this removal can be disabled by passing --optimize=-trim-architectures as Additional MMP Arguments.
+
+### <a name="MM2109"/>MM2109: Xamarin.Mac Classic API does not support Platform Linking.
 
 
 # MM3xxx: AOT

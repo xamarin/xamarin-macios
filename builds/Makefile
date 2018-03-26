@@ -92,6 +92,18 @@ endif
 CCACHE_CFLAGS=-Qunused-arguments
 CCACHE_CXXFLAGS=-Qunused-arguments
 
+#
+# Configuration for the mono sdk makefiles
+#
+SDK_CONFIG=$(MONO_PATH)/sdks/Make.config
+SDK_ARGS=XCODE_DIR=$(XCODE_DEVELOPER_ROOT) IOS_VERSION=$(IOS_SDK_VERSION) IOS_VERSION_MIN=$(MIN_IOS_SDK_VERSION) TVOS_VERSION=$(TVOS_SDK_VERSION) TVOS_VERSION_MIN=$(MIN_TVOS_SDK_VERSION) WATCHOS_VERSION=$(WATCH_SDK_VERSION) WATCHOS_VERSION_MIN=$(MIN_WATCHOS_SDK_VERSION)
+
+SDK_BUILDDIR = $(MONO_PATH)/sdks/builds
+SDK_DESTDIR = $(abspath $(MONO_PATH)/sdks/out)
+
+$(MONO_PATH)/sdks/Make.config:
+	echo "DISABLE_ANDROID=1" > $@
+
 ##
 ## Xamarin.Mac
 ##
@@ -371,6 +383,7 @@ else
 BUILDS_MAKEFILE_DEP = Makefile
 endif
 
+# SDK builds need to depend on this since they are executed by recursive make executions
 $(MONO_PATH)/configure: $(MONO_PATH)/configure.ac $(BUILDS_MAKEFILE_DEP)
 	$(Q) ./wrap-autogen.sh $(MONO_PATH) mono $(XAMARIN_AUTOGEN_FLAGS)
 
@@ -769,8 +782,6 @@ verify-signature:
 # Simulator builds
 #
 
-# usage $(call SimulatorBuildTemplate (x86_64,simulator64))
-
 SIM_BIN=$(SIMULATOR_BIN_PATH)
 SIM_ACVARS = \
 	$(COMMON_ACVARS) \
@@ -778,64 +789,37 @@ SIM_ACVARS = \
 	mono_cv_uscore=yes \
 	ac_cv_func_system=no \
 
+#
+# Parameters:
+# $(1): arch
+# $(2): target prefix
+# $(3): mono sdk target prefix
+# $(4): mono sdk dir name
+#
 define SimulatorBuildTemplate
-
-$(eval SIM$(2)_CPPFLAGS=-arch $(1) -O2 -DMONOTOUCH -DHOST_IOS -Wl,-application_extension -mios-simulator-version-min=$(MIN_IOS_SDK_VERSION) -isysroot $(SIMULATOR_SDK))
-$(eval SIM$(2)_CFLAGS=$(SIM$(2)_CPPFLAGS) $(SIMULATOR_BUILD_CFLAGS))
-$(eval SIM$(2)_CXXFLAGS=$(SIM$(2)_CPPFLAGS))
-$(eval SIM$(2)_LDFLAGS=$(COMMON_LDFLAGS))
-$(eval SIM$(2)_CONFIGURE_FLAGS=	--host=$(1)-apple-darwin10 \
-			--cache-file=../$(2).config.cache \
-			--enable-maintainer-mode	\
-			--prefix=$(BUILD_DESTDIR)/$(2) \
-			--with-glib=embedded \
-			--without-ikvm-native \
-			--with-tls=pthread \
-			--enable-minimal=com,remoting,shared_perfcounters \
-			--disable-mcs-build \
-			--disable-nls \
-			--disable-iconv \
-			--disable-boehm \
-			--disable-executables \
-			--disable-visibility-hidden	\
-			$(XAMARIN_IOS_CONFIGURE_FLAGS) \
-			)
-
-$(eval SIM$(2)_CONFIGURE_ENVIRONMENT= \
-	$(SIM_ACVARS) \
-	PATH="$(SIM_BIN):$(PATH)" \
-	CPPFLAGS="$(SIM$(2)_CPPFLAGS)" \
-	CFLAGS="$(SIM$(2)_CFLAGS)" \
-	CXXFLAGS="$(SIM$(2)_CXXFLAGS)" \
-	LDFLAGS="$(SIM$(2)_LDFLAGS)" \
-	CC="$(XCODE_CC)" \
-	CXX="$(XCODE_CXX)")
 
 .PHONY: $(2)
 
 $(2):: build-$(2)
 
-setup:: setup-$(2)
 build:: build-$(2)
 clean-local:: clean-$(2)
 
-setup-$(2): .stamp-configure-$(2)
-
-.stamp-configure-$(2): $(MONO_PATH)/configure
-	$(Q) $(SIM$(2)_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh $(2) $(abspath $(MONO_PATH)/configure) $(SIM$(2)_CONFIGURE_FLAGS)
-
-.stamp-build-$(2): .stamp-configure-$(2) $(MONO_DEPENDENCIES)
-	PATH="$(SIM_BIN):$(PATH)" $(MAKE) -C $(2)/mono all
-	PATH="$(SIM_BIN):$(PATH)" $(MAKE) -C $(2)/support all
-	PATH="$(SIM_BIN):$(PATH)" $(MAKE) -C $(2)/mono install
+# config/eglib-config.h is needed by the builds in runtime/
+.stamp-build-$(2): $(MONO_PATH)/configure $(MONO_DEPENDENCIES) $(BUILD_DESTDIR)/$(2)
+	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(3) $(SDK_ARGS)
+	$(Q) cp -r $(SDK_DESTDIR)/ios-$(4)/lib $(BUILD_DESTDIR)/$(2)
+	$(Q) cp -r $(SDK_DESTDIR)/ios-$(4)/include $(BUILD_DESTDIR)/$(2)
+	cp $(SDK_BUILDDIR)/ios-$(4)/config.h $(BUILD_DESTDIR)/$(2)/include/mono-2.0
+	cp $(SDK_BUILDDIR)/ios-$(4)/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/$(2)/include/mono-2.0
 	$(Q) touch $$@
 
 build-$(2): .stamp-build-$(2)
 
 clean-$(2):
-	-rm -rf $(2) .stamp-*-$(2) $(2).config.cache
+	-rm -rf .stamp-*-$(2) $(BUILD_DESTDIR)/$(2)
+	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-$(3) $(SDK_ARGS)
 
-setup-iphonesimulator:: setup-$(2)
 build-iphonesimulator:: build-$(2)
 clean-iphonesimulator:: clean-$(2)
 
@@ -851,7 +835,10 @@ $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log.0.dylib: .stamp-build-$(2)
 
 $(BUILD_DESTDIR)/$(2)/tmp-lib/libmono-profiler-log.0.dylib: $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log.0.dylib | $(BUILD_DESTDIR)/$(2)/tmp-lib
 	$(Q) cp $$< $$@
-	$(Q) install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $$@
+	$(Q) install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/ios-$(4)/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $$@
+
+$(BUILD_DESTDIR)/$(2):
+	$$(Q) mkdir -p $$@
 
 $(BUILD_DESTDIR)/$(2)/tmp-lib:
 	$$(Q) mkdir -p $$@
@@ -859,8 +846,8 @@ $(BUILD_DESTDIR)/$(2)/tmp-lib:
 endef
 
 ifdef INCLUDE_IOS
-$(eval $(call SimulatorBuildTemplate,i386,simulator86))
-$(eval $(call SimulatorBuildTemplate,x86_64,simulator64))
+$(eval $(call SimulatorBuildTemplate,i386,simulator86,sim32,sim32-release))
+$(eval $(call SimulatorBuildTemplate,x86_64,simulator64,sim64,sim64-release))
 endif
 
 iphonesimulator:: setup-iphonesimulator build-iphonesimulator install-iphonesimulator
@@ -915,76 +902,7 @@ install-iphonesimulator:: $(IPHONESIMULATOR_TARGETS)
 # Watch simulator build
 #
 
-WATCHSIMULATOR_SDK      = $(SIMULATORWATCH_SDK)
-WATCHSIMULATOR_BIN_PATH = $(XCODE_DEVELOPER_ROOT)/Platforms/WatchSimulator.platform/Developer/usr/bin
-WATCHSIMULATOR_CC       = $(IOS_CC)
-
-WATCHSIMULATOR_FLAGS =                  \
-	-isysroot $(WATCHSIMULATOR_SDK)    \
-	-mwatchos-simulator-version-min=$(MIN_WATCHOS_SDK_VERSION) \
-	-arch i386                          \
-	-O2                                 \
-	-gdwarf-2                           \
-	-Wl,-application_extension          \
-	-DMONOTOUCH                         \
-	-DHOST_IOS                          \
-	-DHOST_WATCHOS                      \
-	$(SIMULATOR_BUILD_CFLAGS)           \
-
-WATCHSIMULATOR_CPPFLAGS        = $(WATCHSIMULATOR_FLAGS)
-WATCHSIMULATOR_CFLAGS          = $(WATCHSIMULATOR_FLAGS)
-WATCHSIMULATOR_CXXFLAGS        = $(WATCHSIMULATOR_FLAGS)
-WATCHSIMULATOR_LDFLAGS         = $(COMMON_LDFLAGS)
-WATCHSIMULATOR_CONFIGURE_FLAGS =                \
-	--host=i386-apple-darwin10                  \
-	--disable-boehm                             \
-	--disable-executables                       \
-	--cache-file=../watchsimulator.config.cache \
-	--enable-maintainer-mode                    \
-	--prefix=$(BUILD_DESTDIR)/watchsimulator    \
-	--with-glib=embedded                        \
-	--with-cooperative-gc=yes                   \
-	--without-ikvm-native                       \
-	--with-tls=pthread                          \
-	--enable-minimal=com,remoting,shared_perfcounters \
-	--disable-mcs-build                         \
-	--disable-nls                               \
-	--disable-iconv                             \
-	--disable-visibility-hidden	                \
-	$(XAMARIN_IOS_CONFIGURE_FLAGS)         \
-
-# FIXME: remove --with-checked-build=yes when we've stabilized a bit.
-WATCHSIMULATOR_CONFIGURE_FLAGS += \
-	--enable-checked-build=gc                    \
-
-WATCHSIMULATOR_ACVARS =  \
-	mono_cv_uscore=yes \
-	ac_cv_func_clock_nanosleep=no \
-	ac_cv_func_system=no \
-	ac_cv_func_pthread_kill=no \
-	ac_cv_func_kill=no \
-	ac_cv_func_sigaction=no \
-	ac_cv_func_fork=no \
-	ac_cv_func_execv=no \
-	ac_cv_func_execve=no \
-	ac_cv_func_execvp=no \
-	ac_cv_func_signal=no \
-	ac_cv_func_futimens=no \
-	ac_cv_func_utimensat=no \
-
-WATCHSIMULATOR_ENVIRONMENT =                  \
-	$(WATCHSIMULATOR_ACVARS)                         \
-	PATH="$(WATCHSIMULATOR_BIN_PATH):$(PATH)" \
-	CC="$(WATCHSIMULATOR_CC)"                 \
-	CXX="$(WATCHSIMULATOR_CC)"                \
-	CPPFLAGS="$(WATCHSIMULATOR_CPPFLAGS)"     \
-	CFLAGS="$(WATCHSIMULATOR_CFLAGS)"         \
-	CXXFLAGS="$(WATCHSIMULATOR_CXXFLAGS)"     \
-	LDFLAGS="$(WATCHSIMULATOR_LDFLAGS)"       \
-	DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)     \
-
 ifdef INCLUDE_WATCH
-setup:: setup-watchsimulator
 build:: build-watchsimulator
 clean-local:: clean-watchsimulator
 install-local:: install-watchsimulator
@@ -995,23 +913,20 @@ watchsimulator: build-watchsimulator install-watchsimulator
 .PHONY: watchsimulator
 endif
 
-setup-watchsimulator: .stamp-configure-watchsimulator
-
-.stamp-configure-watchsimulator: $(WATCH_MONO_PATH)/configure
-	$(Q) $(WATCHSIMULATOR_ENVIRONMENT) ./wrap-configure.sh watchsimulator $(abspath $(WATCH_MONO_PATH)/configure) $(WATCHSIMULATOR_CONFIGURE_FLAGS)
-
-.stamp-build-watchsimulator: export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
-.stamp-build-watchsimulator: export PATH:="$(WATCHSIMULATOR_BIN_PATH):$(PATH)"
-.stamp-build-watchsimulator: .stamp-configure-watchsimulator $(MONO_DEPENDENCIES)
-	$(Q) $(MAKE) -C watchsimulator/mono all
-	$(Q) $(MAKE) -C watchsimulator/support all
-	$(Q) $(MAKE) -C watchsimulator/mono install
+.stamp-build-watchsimulator: $(MONO_PATH)/configure $(MONO_DEPENDENCIES)
+	$(MAKE) -C $(SDK_BUILDDIR) package-ios-simwatch $(SDK_ARGS)
+	$(Q) mkdir -p $(BUILD_DESTDIR)/watchsimulator
+	$(Q) cp -r $(SDK_DESTDIR)/ios-simwatch-release/lib $(BUILD_DESTDIR)/watchsimulator
+	$(Q) cp -r $(SDK_DESTDIR)/ios-simwatch-release/include $(BUILD_DESTDIR)/watchsimulator
+	cp $(SDK_BUILDDIR)/ios-simwatch-release/config.h $(BUILD_DESTDIR)/watchsimulator/include/mono-2.0
+	cp $(SDK_BUILDDIR)/ios-simwatch-release/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/watchsimulator/include/mono-2.0
 	$(Q) touch $@
 
 build-watchsimulator: .stamp-build-watchsimulator
 
 clean-watchsimulator:
-	$(Q) rm -rf watchsimulator .stamp-*-watchsimulator watchsimulator.config.cache
+	$(Q) rm -rf .stamp-*-watchsimulator $(BUILD_DESTDIR)/watchsimulator
+	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-simwatch $(SDK_ARGS)
 
 WATCHSIMULATOR_LIBMONOSGEN          = $(BUILD_DESTDIR)/watchsimulator/lib/libmonosgen-2.0.a
 WATCHSIMULATOR_SHAREDMONOSGEN       = $(BUILD_DESTDIR)/watchsimulator/lib/libmonosgen-2.0.dylib
@@ -1048,7 +963,7 @@ $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-profiler-log.a: $(WA
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-profiler-log.dylib: $(WATCHSIMULATOR_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib
 	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHSIMULATOR_SHAREDLIBLOGPROFILER) -create -output $@
-	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(BUILD_DESTDIR)/watchsimulator/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
+	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/ios-simwatch-release/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
 	$(Q) dsymutil -t 4 -o $@.dSYM $@
 
 $(WATCHSIMULATOR_DIRECTORIES):
@@ -1068,73 +983,7 @@ install-watchsimulator: $(WATCHSIMULATOR_TARGETS)
 # TV simulator build
 #
 
-TVSIMULATOR_SDK      = $(SIMULATORTV_SDK)
-TVSIMULATOR_BIN_PATH = $(XCODE_DEVELOPER_ROOT)/Platforms/AppleTVSimulator.platform/Developer/usr/bin
-TVSIMULATOR_CC       = $(IOS_CC)
-TVOS_BIN_PATH        = $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin
-
-TVSIMULATOR_FLAGS =                     \
-	-isysroot $(TVSIMULATOR_SDK)        \
-	-mtvos-simulator-version-min=$(MIN_TVOS_SDK_VERSION)    \
-	-arch x86_64                        \
-	-O2                                 \
-	-gdwarf-2                           \
-	-Wl,-application_extension          \
-	-DMONOTOUCH                         \
-	-DHOST_APPLETVOS                    \
-	-DTARGET_APPLETVOS                  \
-	$(SIMULATOR_BUILD_CFLAGS)
-
-TVSIMULATOR_CPPFLAGS        = $(TVSIMULATOR_FLAGS)
-TVSIMULATOR_CFLAGS          = $(TVSIMULATOR_FLAGS)
-TVSIMULATOR_CXXFLAGS        = $(TVSIMULATOR_FLAGS)
-TVSIMULATOR_LDFLAGS         = $(COMMON_LDFLAGS)
-TVSIMULATOR_CONFIGURE_FLAGS =                         \
-	--host=x86_64-apple-darwin10                      \
-	--disable-boehm                                   \
-	--disable-executables                             \
-	--cache-file=../tvsimulator.config.cache          \
-	--enable-maintainer-mode                          \
-	--prefix=$(BUILD_DESTDIR)/tvsimulator             \
-	--with-glib=embedded                              \
-	--with-cooperative-gc=no                          \
-	--without-ikvm-native                             \
-	--enable-minimal=com,remoting,shared_perfcounters \
-	--disable-mcs-build                               \
-	--disable-nls                                     \
-	--disable-iconv                                   \
-	--with-tls=pthread                                \
-	--disable-visibility-hidden	                      \
-	$(XAMARIN_IOS_CONFIGURE_FLAGS)               \
-
-TVSIMULATOR_ACVARS =  \
-	mono_cv_uscore=yes \
-	ac_cv_func_clock_nanosleep=no \
-	ac_cv_func_system=no \
-	ac_cv_func_pthread_kill=no \
-	ac_cv_func_kill=no \
-	ac_cv_func_sigaction=no \
-	ac_cv_func_fork=no \
-	ac_cv_func_execv=no \
-	ac_cv_func_execve=no \
-	ac_cv_func_execvp=no \
-	ac_cv_func_signal=no \
-	ac_cv_func_futimens=no \
-	ac_cv_func_utimensat=no \
-
-TVSIMULATOR_ENVIRONMENT =                  \
-	$(TVSIMULATOR_ACVARS)                  \
-	PATH="$(TVSIMULATOR_BIN_PATH):$(PATH)" \
-	CC="$(TVSIMULATOR_CC)"                 \
-	CXX="$(TVSIMULATOR_CC)"                \
-	CPPFLAGS="$(TVSIMULATOR_CPPFLAGS)"     \
-	CFLAGS="$(TVSIMULATOR_CFLAGS)"         \
-	CXXFLAGS="$(TVSIMULATOR_CXXFLAGS)"     \
-	LDFLAGS="$(TVSIMULATOR_LDFLAGS)"       \
-	DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)  \
-
 ifdef INCLUDE_TVOS
-setup:: setup-tvsimulator
 build:: build-tvsimulator
 clean-local:: clean-tvsimulator
 install-local:: install-tvsimulator
@@ -1145,24 +994,20 @@ tvsimulator: build-tvsimulator install-tvsimulator
 .PHONY: tvsimulator
 endif
 
-setup-tvsimulator: .stamp-configure-tvsimulator
-
-# for now we re-use the watch mono
-.stamp-configure-tvsimulator: $(MONO_PATH)/configure
-	$(Q) $(TVSIMULATOR_ENVIRONMENT) ./wrap-configure.sh tvsimulator $(abspath $(MONO_PATH)/configure) $(TVSIMULATOR_CONFIGURE_FLAGS)
-
-.stamp-build-tvsimulator: export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
-.stamp-build-tvsimulator: export PATH:="$(TVSIMULATOR_BIN_PATH):$(PATH)"
-.stamp-build-tvsimulator: .stamp-configure-tvsimulator $(MONO_DEPENDENCIES)
-	$(Q) $(MAKE) -C tvsimulator/mono all
-	$(Q) $(MAKE) -C tvsimulator/support all
-	$(Q) $(MAKE) -C tvsimulator/mono install
+.stamp-build-tvsimulator: $(MONO_PATH)/configure $(MONO_DEPENDENCIES)
+	$(MAKE) -C $(SDK_BUILDDIR) package-ios-simtv $(SDK_ARGS)
+	$(Q) mkdir -p $(BUILD_DESTDIR)/tvsimulator
+	$(Q) cp -r $(SDK_DESTDIR)/ios-simtv-release/lib $(BUILD_DESTDIR)/tvsimulator
+	$(Q) cp -r $(SDK_DESTDIR)/ios-simtv-release/include $(BUILD_DESTDIR)/tvsimulator
+	cp $(SDK_BUILDDIR)/ios-simtv-release/config.h $(BUILD_DESTDIR)/tvsimulator/include/mono-2.0
+	cp $(SDK_BUILDDIR)/ios-simtv-release/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/tvsimulator/include/mono-2.0
 	$(Q) touch $@
 
 build-tvsimulator: .stamp-build-tvsimulator
 
 clean-tvsimulator:
-	$(Q) rm -rf tvsimulator .stamp-*-tvsimulator tvsimulator.config.cache
+	$(Q) rm -rf .stamp-*-tvsimulator $(BUILD_DESTDIR)/tvsimulator
+	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-simtv $(SDK_ARGS)
 
 TVSIMULATOR_LIBMONOSGEN          = $(BUILD_DESTDIR)/tvsimulator/lib/libmonosgen-2.0.a
 TVSIMULATOR_SHAREDMONOSGEN       = $(BUILD_DESTDIR)/tvsimulator/lib/libmonosgen-2.0.dylib
@@ -1199,7 +1044,7 @@ $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-profiler-log.a: $(TVSIM
 
 $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-profiler-log.dylib: $(TVSIMULATOR_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib
 	$(Q) $(TVOS_BIN_PATH)/lipo $(TVSIMULATOR_SHAREDLIBLOGPROFILER) -create -output $@
-	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(BUILD_DESTDIR)/tvsimulator/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
+	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/ios-simtv-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
 	$(Q) dsymutil -t 4 -o $@.dSYM $@
 
 $(TVSIMULATOR_DIRECTORIES):
@@ -1215,10 +1060,8 @@ $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/Frameworks/Mono.framework/Info.plist: M
 
 install-tvsimulator: $(TVSIMULATOR_TARGETS)
 
-#
+##
 # Device builds
-#
-
 #
 # We use --build=i386-apple-darwin10 explicitly here so that even though osx defaults to 64 bit,
 # we end up with a sizeof-compatible built (since all current arms are 32b)
@@ -1227,93 +1070,43 @@ install-tvsimulator: $(TVSIMULATOR_TARGETS)
 PLATFORM_BIN=$(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin
 PLATFORM_SDK=$(DEVICE_SDK)
 
-# usage $(call PlatformBuildTemplate (armv7,target7,<platform suffix>,<configure flags>,<unused>))
+# usage $(call DeviceBuildTemplate (armv7,target7,<platform suffix>,<configure flags>,<unused>))
 
-define PlatformBuildTemplate
+define DeviceBuildTemplate
 
+# $(1) architecture
+# $(2) target prefix
+# $(3) mono sdk target
 # $(4) contains the architecture specific configure flags
-# $(5) is unused
-# $(6) contains min ios version
-
-# Avoid passing the -arch flag twice in CFLAGS since it disables ccache
-$(eval $(2)_BASE_CPPFLAGS=-DSMALL_CONFIG -DDISABLE_POLICY_EVIDENCE=1 -DDISABLE_PROCESS_HANDLING=1 -D_XOPEN_SOURCE -DMONOTOUCH=1 -DHOST_IOS -DHAVE_LARGE_FILE_SUPPORT=1 -Wl,-application_extension -miphoneos-version-min=$(6) -isysroot $(PLATFORM_SDK))
-$(eval $(2)_CPPFLAGS=$($(2)_BASE_CPPFLAGS) -arch $(1))
-$(eval $(2)_CFLAGS=-O2 -gdwarf-2 $($(2)_BASE_CPPFLAGS) $(DEVICE_BUILD_CFLAGS) $(IOS_BITCODE_CFLAGS))
-$(eval $(2)_CXXFLAGS=$($(2)_CPPFLAGS) $(IOS_BITCODE_CXXFLAGS))
-$(eval $(2)_LDFLAGS=-arch $(1) $(IOS_BITCODE_LDFLAGS) $(COMMON_LDFLAGS))
-$(eval $(2)_CONFIGURE_FLAGS=--build=i386-apple-darwin10 \
-			$(4) \
-			--enable-maintainer-mode	\
-			--cache-file=../$(2).config.cache \
-			--prefix=$(BUILD_DESTDIR)/$(2) \
-			--with-monotouch \
-			--with-lazy-gc-thread-creation=yes \
-			--disable-mcs-build \
-			--enable-minimal=ssa,com,interpreter,jit,reflection_emit_save,reflection_emit,portability,assembly_remapping,attach,verifier,full_messages,appdomains,security,sgen_remset,sgen_marksweep_par,sgen_marksweep_fixed,sgen_marksweep_fixed_par,sgen_copying,logging,remoting,shared_perfcounters \
-			--without-ikvm-native \
-			--with-tls=pthread \
-			--without-sigaltstack \
-			--enable-icall-export \
-			--disable-icall-tables \
-			--disable-executables \
-			--disable-nls \
-			--disable-iconv \
-			--disable-visibility-hidden	\
-			--disable-boehm \
-			--enable-dtrace=no \
-			$(IOS_BITCODE_CONFIGURE_FLAGS) \
-			$(XAMARIN_IOS_CONFIGURE_FLAGS) \
-			)
-
-$(eval $(2)_ACVARS= mono_cv_uscore=yes \
-		mono_cv_sizeof_sunpath=104 \
-		ac_cv_func_posix_getpwuid_r=yes \
-		ac_cv_func_finite=no \
-		ac_cv_c_bigendian=no \
-		ac_cv_header_sys_user_h=no \
-		ac_cv_header_curses_h=no \
-		ac_cv_header_localcharset_h=no \
-		ac_cv_func_getpwuid_r=no)
-
-$(eval $(2)_CONFIGURE_ENVIRONMENT = \
-	PATH="$(PLATFORM$(3)_BIN):$(PATH)" \
-	CPPFLAGS="$($(2)_CPPFLAGS)" \
-	CFLAGS="$($(2)_CFLAGS)" \
-	CXXFLAGS="$($(2)_CXXFLAGS)" \
-	LDFLAGS="$($(2)_LDFLAGS)" \
-	CC="$(DEVICE_CC)" \
-	CXX="$(DEVICE_CXX)")
+# $(5) contains min ios version
 
 .PHONY: $(2)
 
 $(2): build-$(2)
 
-setup:: setup-$(2)
 build:: build-$(2)
 clean-local:: clean-$(2)
 
-setup-$(2): .stamp-configure-$(2)
-
-.stamp-configure-$(2): $(MONO_PATH)/configure
-	$(Q) $($(2)_ACVARS) $($(2)_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh $(2) $(abspath $(MONO_PATH)/configure) $($(2)_CONFIGURE_FLAGS)
-
-.stamp-build-$(2): .stamp-configure-$(2) $(MONO_DEPENDENCIES)
-	PATH="$(PLATFORM_BIN):$(PATH)" $(MAKE) -C $(2)/mono
-	PATH="$(PLATFORM_BIN):$(PATH)" $(MAKE) -C $(2)/mono install
+.stamp-build-$(2): $(MONO_PATH)/configure $(SDK_CONFIG) $(MONO_DEPENDENCIES)
+	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(3) $(SDK_ARGS)
+	$(Q) mkdir -p $(BUILD_DESTDIR)/$(2)
+	$(Q) cp -r $(SDK_DESTDIR)/ios-$(3)-release/* $(BUILD_DESTDIR)/$(2)
+	$(Q) cp -r $(SDK_BUILDDIR)/ios-$(3)-release/config.h $(BUILD_DESTDIR)/$(2)/include/mono-2.0
+	$(Q) cp -r $(SDK_BUILDDIR)/ios-$(3)-release/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/$(2)/include/mono-2.0
 	$(Q) touch $$@
 
 build-$(2): .stamp-build-$(2)
 
 clean-$(2):
-	-rm -rf $(2) .stamp-*-$(2) $(2).config.cache
+	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-$(3) $(SDK_ARGS)
+	-rm -rf .stamp-*-$(2) $(BUILD_DESTDIR)/$(2)
 
-setup-iphoneos:: setup-$(2)
+setup-iphoneos::
 build-iphoneos:: build-$(2)
 clean-iphoneos:: clean-$(2)
 
 build-ios: build-iphoneos
 clean-ios: clean-iphoneos
-setup-ios: setup-iphoneos
 install-ios: install-iphoneos
 
 $(eval TARGET_LIBMONOSGEN:=$(TARGET_LIBMONOSGEN) $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.a)
@@ -1367,15 +1160,15 @@ endif
 
 # Note the spaces in findstring arguments, this is needed to distinguish between armv7 and armv7s for example
 ifneq ($(findstring armv7 , $(DEVICE_RUNTIMES) ),)
-$(eval $(call PlatformBuildTemplate,armv7,target7,,$(ARM_ARCH_CONFIGURE_FLAGS),,$(MIN_IOS_SDK_VERSION)))
+$(eval $(call DeviceBuildTemplate,armv7,target7,target32,$(ARM_ARCH_CONFIGURE_FLAGS),$(MIN_IOS_SDK_VERSION)))
 endif
 
 ifneq ($(findstring armv7s , $(DEVICE_RUNTIMES) ),)
-$(eval $(call PlatformBuildTemplate,armv7s,target7s,,$(ARM_ARCH_CONFIGURE_FLAGS),,$(MIN_IOS_SDK_VERSION)))
+$(eval $(call DeviceBuildTemplate,armv7s,target7s,target32s,$(ARM_ARCH_CONFIGURE_FLAGS),$(MIN_IOS_SDK_VERSION)))
 endif
 
 ifneq ($(findstring arm64 , $(DEVICE_RUNTIMES) ),)
-$(eval $(call PlatformBuildTemplate,arm64,target64,,$(ARM64_ARCH_CONFIGURE_FLAGS),,7.0))
+$(eval $(call DeviceBuildTemplate,arm64,target64,target64,$(ARM64_ARCH_CONFIGURE_FLAGS),7.0))
 endif
 
 ifdef INCLUDE_DEVICE
@@ -1438,90 +1231,9 @@ install-iphoneos:: $(IPHONEOS_TARGETS)
 
 WATCHOS_SDK      = $(DEVICEWATCH_SDK)
 WATCHOS_BIN_PATH = $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin
-WATCHOS_CC       = $(IOS_CC)
-
-WATCHOS_FLAGS =                  \
-	-isysroot $(WATCHOS_SDK)     \
-	-mwatchos-version-min=$(MIN_WATCHOS_SDK_VERSION)    \
-	-arch armv7k                 \
-	-O2                          \
-	-gdwarf-2                    \
-	-Wl,-application_extension   \
-	-fembed-bitcode              \
-	-fno-gnu-inline-asm          \
-	-DMONOTOUCH=1                \
-	-DHOST_IOS                   \
-	-DHOST_WATCHOS               \
-	-DSMALL_CONFIG               \
-	-DDISABLE_POLICY_EVIDENCE=1  \
-	-DDISABLE_PROCESS_HANDLING=1 \
-	-D_XOPEN_SOURCE              \
-	-DHAVE_LARGE_FILE_SUPPORT=1  \
-	$(DEVICE_BUILD_CFLAGS)       \
-	$(BITCODE_CFLAGS)
-
-WATCHOS_CPPFLAGS        = $(WATCHOS_FLAGS)
-WATCHOS_CFLAGS          = $(WATCHOS_FLAGS)
-WATCHOS_CXXFLAGS        = $(WATCHOS_FLAGS)
-WATCHOS_LDFLAGS         = -arch armv7k -Wl,-bitcode_bundle -framework CoreFoundation -lobjc $(BITCODE_LDFLAGS) $(COMMON_LDFLAGS)
-WATCHOS_CONFIGURE_FLAGS =                        \
-	--build=i386-apple-darwin10                  \
-	--host=armv7k-apple-darwin10                 \
-	--enable-maintainer-mode                     \
-	--cache-file=../targetwatch.config.cache     \
-	--prefix=$(BUILD_DESTDIR)/targetwatch        \
-	--with-cooperative-gc=yes                    \
-	--with-monotouch                             \
-	--with-lazy-gc-thread-creation=yes           \
-	--disable-mcs-build                          \
-	--disable-boehm                              \
-	--enable-minimal=ssa,com,interpreter,jit,reflection_emit_save,reflection_emit,portability,assembly_remapping,attach,verifier,full_messages,appdomains,security,sgen_remset,sgen_marksweep_par,sgen_marksweep_fixed,sgen_marksweep_fixed_par,sgen_copying,logging,remoting,shared_perfcounters \
-	--without-ikvm-native                        \
-	--with-tls=pthread                           \
-	--without-sigaltstack                        \
-	--enable-icall-export                        \
-	--disable-icall-tables                       \
-	--disable-executables                        \
-	--disable-nls                                \
-	--disable-iconv                              \
-	--disable-visibility-hidden	                 \
-	$(XAMARIN_IOS_CONFIGURE_FLAGS)          \
-	$(BITCODE_CONFIGURE_FLAGS)
-
-WATCHOS_ACVARS =                    \
-	mono_cv_uscore=yes              \
-	mono_cv_sizeof_sunpath=104      \
-	ac_cv_func_posix_getpwuid_r=yes \
-	ac_cv_func_finite=no            \
-	ac_cv_c_bigendian=no            \
-	ac_cv_header_sys_user_h=no      \
-	ac_cv_header_curses_h=no        \
-	ac_cv_header_localcharset_h=no  \
-	ac_cv_func_getpwuid_r=no        \
-	ac_cv_func_system=no			\
-	ac_cv_func_pthread_kill=no      \
-	ac_cv_func_kill=no              \
-	ac_cv_func_sigaction=no         \
-	ac_cv_func_fork=no              \
-	ac_cv_func_execv=no             \
-	ac_cv_func_execve=no            \
-	ac_cv_func_execvp=no            \
-	ac_cv_func_signal=no
-
-WATCHOS_ENVIRONMENT =                     \
-	$(WATCHOS_ACVARS)                     \
-	PATH="$(WATCHOS_BIN_PATH):$(PATH)"    \
-	CFLAGS="$(WATCHOS_CFLAGS)"            \
-	CPPFLAGS="$(WATCHOS_CPPFLAGS)"        \
-	CXXFLAGS="$(WATCHOS_CXXFLAGS)"        \
-	LDFLAGS="$(WATCHOS_LDFLAGS)"          \
-	CC="$(WATCHOS_CC)"                    \
-	CXX="$(WATCHOS_CC)"                   \
-	DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT) \
 
 ifdef INCLUDE_WATCH
 ifdef INCLUDE_DEVICE
-setup:: setup-targetwatch
 build:: build-targetwatch
 clean-local:: clean-targetwatch
 install-local:: install-watchos
@@ -1534,22 +1246,19 @@ watchos:: targetwatch
 endif
 endif
 
-setup-targetwatch: .stamp-configure-targetwatch
-
-.stamp-configure-targetwatch: $(WATCH_MONO_PATH)/configure
-	$(Q) $(WATCHOS_ENVIRONMENT) ./wrap-configure.sh targetwatch $(abspath $(WATCH_MONO_PATH)/configure) $(WATCHOS_CONFIGURE_FLAGS)
-
-.stamp-build-targetwatch: export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
-.stamp-build-targetwatch: export PATH:="$(WATCHOS_BIN_PATH):$(PATH)"
-.stamp-build-targetwatch: .stamp-configure-targetwatch $(MONO_DEPENDENCIES)
-	$(Q) $(MAKE) -C targetwatch/mono
-	$(Q) $(MAKE) -C targetwatch/mono install
+.stamp-build-targetwatch: $(MONO_PATH)/configure $(SDK_CONFIG) $(MONO_DEPENDENCIES)
+	$(MAKE) -C $(SDK_BUILDDIR) package-ios-targetwatch $(SDK_ARGS)
+	$(Q) mkdir -p $(BUILD_DESTDIR)/targetwatch
+	$(Q) cp -r $(SDK_DESTDIR)/ios-targetwatch-release/* $(BUILD_DESTDIR)/targetwatch
+	$(Q) cp -r $(SDK_BUILDDIR)/ios-targetwatch-release/config.h $(BUILD_DESTDIR)/targetwatch/include/mono-2.0
+	$(Q) cp -r $(SDK_BUILDDIR)/ios-targetwatch-release/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/targetwatch/include/mono-2.0
 	$(Q) touch $@
 
 build-targetwatch: .stamp-build-targetwatch
 
 clean-targetwatch:
-	$(Q) rm -rf targetwatch .stamp-*-targetwatch targetwatch.config.cache
+	$(Q) rm -rf $(BUILD_DESTDIR)/targetwatch .stamp-*-targetwatch
+	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-targetwatch $(SDK_ARGS)
 
 setup-watchos: setup-targetwatch
 build-watchos: build-targetwatch
@@ -1592,7 +1301,7 @@ $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-profiler-log.a: $(WATCHOS_T
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-profiler-log.dylib: $(WATCHOS_TARGET_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
 	$(Q) $(WATCHOS_BIN_PATH)/bitcode_strip $(WATCHOS_TARGET_SHAREDLIBLOGPROFILER) -m -o $@
-	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
+	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/ios-targetwatch-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
 	$(Q) dsymutil -t 4 -o $@.dSYM $@
 
 $(WATCHOS_DIRECTORIES):
@@ -1612,98 +1321,13 @@ install-watchos: $(WATCHOS_TARGETS)
 
 #
 # TV device build
-# 
+#
 
 TVOS_SDK      = $(DEVICETV_SDK)
 TVOS_BIN_PATH = $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin
-TVOS_CC       = $(IOS_CC)
-
-TVOS_FLAGS =                     \
-	-isysroot $(TVOS_SDK)        \
-	-mtvos-version-min=$(MIN_TVOS_SDK_VERSION)       \
-	-arch arm64                  \
-	-O2                          \
-	-gdwarf-2                    \
-	-Wl,-application_extension   \
-	-fembed-bitcode       \
-	-fno-gnu-inline-asm          \
-	-DMONOTOUCH=1                \
-	-DHOST_APPLETVOS             \
-	-DTARGET_APPLETVOS           \
-	-DSMALL_CONFIG               \
-	-DDISABLE_PROCESS_HANDLING=1 \
-	-DDISABLE_POLICY_EVIDENCE=1  \
-	-D_XOPEN_SOURCE              \
-	-DHAVE_LARGE_FILE_SUPPORT=1  \
-	$(BITCODE_CFLAGS)			 \
-	$(DEVICE_BUILD_CFLAGS)       \
-
-TVOS_CPPFLAGS        = $(TVOS_FLAGS)
-TVOS_CFLAGS          = $(TVOS_FLAGS) $(DEVICE_BUILD_CFLAGS)
-TVOS_CXXFLAGS        = $(TVOS_FLAGS)
-TVOS_LDFLAGS         = -arch arm64 -Wl,-bitcode_bundle -framework CoreFoundation -lobjc $(BITCODE_LDFLAGS) $(COMMON_LDFLAGS)
-TVOS_CONFIGURE_FLAGS =                           \
-	--build=x86_64-apple-darwin10                \
-	--host=aarch64-apple-darwin10                  \
-	--enable-maintainer-mode                     \
-	--cache-file=../targettv.config.cache        \
-	--prefix=$(BUILD_DESTDIR)/targettv           \
-	--with-cooperative-gc=no                     \
-	--with-monotouch                             \
-	--with-lazy-gc-thread-creation=yes           \
-	--disable-mcs-build                          \
-	--disable-boehm                              \
-	--enable-minimal=ssa,com,interpreter,jit,reflection_emit_save,reflection_emit,portability,assembly_remapping,attach,verifier,full_messages,appdomains,security,sgen_remset,sgen_marksweep_par,sgen_marksweep_fixed,sgen_marksweep_fixed_par,sgen_copying,logging,remoting,shared_perfcounters \
-	--without-ikvm-native                        \
-	--with-tls=pthread                           \
-	--without-sigaltstack                        \
-	--enable-icall-export                        \
-	--disable-icall-tables						 \
-	--disable-executables                        \
-	--disable-nls                                \
-	--disable-iconv                              \
-	--disable-visibility-hidden	                 \
-	--enable-extension-module                    \
-	--enable-dtrace=no                           \
-	$(XAMARIN_IOS_CONFIGURE_FLAGS)               \
-	$(BITCODE_CONFIGURE_FLAGS)					 \
-
-# explicitly disable dtrace, since it requires inline assembly, which is disabled on AppleTV (and mono's configure.ac doesn't know that (yet at least))
-
-TVOS_ACVARS =                       \
-	mono_cv_uscore=yes              \
-	mono_cv_sizeof_sunpath=104      \
-	ac_cv_func_posix_getpwuid_r=yes \
-	ac_cv_func_finite=no            \
-	ac_cv_c_bigendian=no            \
-	ac_cv_header_sys_user_h=no      \
-	ac_cv_header_curses_h=no        \
-	ac_cv_header_localcharset_h=no  \
-	ac_cv_func_getpwuid_r=no        \
-	ac_cv_func_system=no			\
-	ac_cv_func_pthread_kill=no      \
-	ac_cv_func_kill=no              \
-	ac_cv_func_sigaction=no         \
-	ac_cv_func_fork=no              \
-	ac_cv_func_execv=no             \
-	ac_cv_func_execve=no            \
-	ac_cv_func_execvp=no            \
-	ac_cv_func_signal=no
-
-TVOS_ENVIRONMENT =                        \
-	$(TVOS_ACVARS)                     \
-	PATH="$(TVOS_BIN_PATH):$(PATH)"    \
-	CFLAGS="$(TVOS_CFLAGS)"            \
-	CPPFLAGS="$(TVOS_CPPFLAGS)"        \
-	CXXFLAGS="$(TVOS_CXXFLAGS)"        \
-	LDFLAGS="$(TVOS_LDFLAGS)"          \
-	CC="$(TVOS_CC)"                    \
-	CXX="$(TVOS_CC)"                   \
-	DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT) \
 
 ifdef INCLUDE_TVOS
 ifdef INCLUDE_DEVICE
-setup:: setup-targettv
 build:: build-targettv
 clean-local:: clean-targettv
 install-local:: install-tvos
@@ -1716,24 +1340,20 @@ tvos:: targettv
 endif
 endif
 
-setup-targettv: .stamp-configure-targettv
-
-.stamp-configure-targettv: $(MONO_PATH)/configure
-	$(Q) $(TVOS_ENVIRONMENT) ./wrap-configure.sh targettv $(abspath $(MONO_PATH)/configure) $(TVOS_CONFIGURE_FLAGS)
-
-.stamp-build-targettv: export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
-.stamp-build-targettv: export PATH:="$(TVOS_BIN_PATH):$(PATH)"
-.stamp-build-targettv: .stamp-configure-targettv $(MONO_DEPENDENCIES)
-	$(Q) $(MAKE) -C targettv/mono
-	$(Q) $(MAKE) -C targettv/mono install
+.stamp-build-targettv: $(MONO_PATH)/configure $(SDK_CONFIG) $(MONO_DEPENDENCIES)
+	$(MAKE) -C $(SDK_BUILDDIR) package-ios-targettv $(SDK_ARGS)
+	$(Q) mkdir -p $(BUILD_DESTDIR)/targettv
+	$(Q) cp -r $(SDK_DESTDIR)/ios-targettv-release/* $(BUILD_DESTDIR)/targettv
+	$(Q) cp -r $(SDK_BUILDDIR)/ios-targettv-release/config.h $(BUILD_DESTDIR)/targettv/include/mono-2.0
+	$(Q) cp -r $(SDK_BUILDDIR)/ios-targettv-release/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/targettv/include/mono-2.0
 	$(Q) touch $@
 
 build-targettv: .stamp-build-targettv
 
 clean-targettv:
-	$(Q) rm -rf targettv .stamp-*-targettv targettv.config.cache
+	$(Q) rm -rf $(BUILD_DESTDIR)/targettv .stamp-*-targettv
+	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-targettv $(SDK_ARGS)
 
-setup-tvos: setup-targettv
 build-tvos: build-targettv
 clean-tvos: clean-targettv
 
@@ -1774,7 +1394,7 @@ $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.a: $(TVOS_TARGET_
 
 $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.dylib: $(TVOS_TARGET_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
 	$(Q) lipo $(TVOS_TARGET_SHAREDLIBLOGPROFILER) -create -output $@
-	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(BUILD_DESTDIR)/targettv/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
+	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/ios-targettv-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
 	$(Q) dsymutil -t 4 -o $@.dSYM $@
 
 $(TVOS_DIRECTORIES):
@@ -1792,232 +1412,15 @@ $(BUILD_DESTDIR)/targettv/tmp-lib/Mono: $(BUILD_DESTDIR)/targettv/lib/libmonosge
 
 install-tvos: $(TVOS_TARGETS)
 
-
 #
-# this is the cross aot version of mono.  runs on x86 but the jit/aot spits out arm.
+# Cross compilers
+#
+# This is the cross aot version of mono.  runs on x86 but the jit/aot spits out arm.
 #
 # There are two versions of the cross compiler, a 32 bit version targeting arm, and a 64
 # bit version targeting arm64.
+# These are compiled using the mono sdk makefiles
 #
-
-#
-# we need to compile the cross build against llvm so we need to configure/build that first
-#
-ifdef INCLUDE_DEVICE
-cross:: build-llvm
-cross64:: build-llvm64
-
-setup:: setup-llvm setup-llvm64
-clean-local:: clean-llvm clean-llvm64
-
-setup-llvm: .stamp-configure-llvm
-setup-llvm64: .stamp-configure-llvm64
-endif
-
-LLVM_BASE_CONFIGURE_FLAGS=--enable-libcpp --enable-optimized --enable-assertions=no --disable-jit --disable-docs --disable-doxygen
-LLVM_CXXFLAGS=$(CCACHE_CXXFLAGS)
-LLVM_BASE_CONFIGURE_ENVIRONMENT=$(COMMON_ACVARS)
-
-# This is used just for linking with the 32 bit cross compiler
-# FIXME: Avoid building the libs not needed by mono
-.stamp-configure-llvm: $(LLVM_PATH)/configure
-	@mkdir -p llvm/
-	@echo "Configuring llvm"
-	@cd llvm && \
-	$(LLVM_BASE_CONFIGURE_ENVIRONMENT) \
-	$(abspath $(LLVM_PATH)/configure) --prefix=$$PWD/usr --build=i386-apple-darwin10.7  --enable-targets="arm" $(LLVM_BASE_CONFIGURE_FLAGS) --cache-file=../llvm.config.cache CC="$(CCACHE)clang" CXX="$(CCACHE)clang++" CXXFLAGS="$(LLVM_CXXFLAGS)" > $@.log 2>&1 || (echo "Configuring llvm failed:" && cat $@.log | sed "s/^/    /" && exit 1)
-	$(Q) @touch $@
-	@echo Configured llvm
-
-.stamp-configure-llvm64: $(LLVM_PATH)/configure
-	@mkdir -p llvm64/
-	@echo "Configuring llvm64"
-	@cd llvm64 && \
-	$(LLVM_BASE_CONFIGURE_ENVIRONMENT) \
-	$(abspath $(LLVM_PATH)/configure) --prefix=$$PWD/usr --enable-targets="arm arm64" $(LLVM_BASE_CONFIGURE_FLAGS) --cache-file=../llvm64.config.cache CC="$(CCACHE)clang" CXX="$(CCACHE)clang++" CXXFLAGS="-Qunused-arguments" > $@.log 2>&1 || (echo "Configuring llvm64 failed:" && cat $@.log | sed "s/^/    /" && exit 1)
-	$(Q) @touch $@
-	@echo "Configured llvm64"
-
-build-llvm: .stamp-build-llvm
-build-llvm64: .stamp-build-llvm64
-
-.stamp-build-llvm: .stamp-configure-llvm $(LLVM_DEPENDENCIES)
-	$(MAKE) -C llvm all install
-	$(Q) touch $@
-
-.stamp-build-llvm64: .stamp-configure-llvm64 $(LLVM_DEPENDENCIES)
-	$(MAKE) -C llvm64 all install
-	$(Q) touch $@
-
-really-build-llvm64:
-	$(MAKE) -C llvm64 all install
-	$(Q) touch .stamp-configure-llvm64
-
-clean-llvm:
-	-rm -rf llvm .stamp-configure-llvm .stamp-build-llvm llvm.config.cache
-clean-llvm64:
-	-rm -rf llvm64 .stamp-configure-llvm64 .stamp-build-llvm64 llvm64.config.cache
-
-.PHONY: install-llvm64 llvm llvm64
-
-install-llvm: .stamp-build-llvm install-directories
-
-LLVM_TARGETS = \
-	$(PREFIX)/LLVM/bin/opt \
-	$(PREFIX)/LLVM/bin/llc \
-
-$(PREFIX)/LLVM/bin/%: llvm64/usr/bin/% | $(PREFIX)/LLVM/bin
-	$(call Q_2,INSTALL ,[LLVM64]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $^ $@
-
-$(PREFIX)/LLVM/bin:
-	$(Q) mkdir -p $@
-
-install-llvm64: .stamp-build-llvm64 $(LLVM_TARGETS)
-
-llvm: setup-llvm build-llvm install-llvm
-llvm64: install-llvm64
-
-$(MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe: $(wildcard $(MONO_PATH)/tools/offsets-tool/*.cs)
-	$(Q) $(MAKE) -C $(dir $@) MonoAotOffsetsDumper.exe
-
-ifneq ($(WATCH_MONO_PATH),$(MONO_PATH))
-$(WATCH_MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe: $(wildcard $(WATCH_MONO_PATH)/tools/offsets-tool/*.cs)
-	$(Q) $(MAKE) -C $(dir $@) MonoAotOffsetsDumper.exe
-endif
-
-target7/mono/arch/arm/arm_dpimacros.h: .stamp-configure-target7
-	$(Q) $(MAKE) -C $(dir $@) $(notdir $@)
-
-targetwatch/mono/arch/arm/arm_dpimacros.h: .stamp-configure-targetwatch
-	$(Q) $(MAKE) -C $(dir $@) $(notdir $@)
-
-# template definition for generating AOT cross offsets for an ABI
-# parameters are:
-#  $(1): target ABI
-#  $(2): output directory
-#  $(3): build
-define GenerateCrossOffsets
-$(3)/$(1).h: .stamp-configure-$(3) target7/mono/arch/arm/arm_dpimacros.h targetwatch/mono/arch/arm/arm_dpimacros.h $(4)/tools/offsets-tool/MonoAotOffsetsDumper.exe
-	$(Q) MONO_PATH=$(4)/tools/offsets-tool/CppSharp/osx_32 \
-	$(SYSTEM_MONO32) $(4)/tools/offsets-tool/MonoAotOffsetsDumper.exe --abi $(1) --out $(2) --mono $(abspath $(4)) --maccore $(abspath $(TOP))
-endef
-
-CROSS_BASE_CFLAGS=-DMONOTOUCH $(CROSS_BUILD_CFLAGS) $(CCACHE_CFLAGS)
-CROSS_BASE_CXXFLAGS=-DMONOTOUCH $(CCACHE_CXXFLAGS)
-
-CROSS_BASE_CONFIGURE_FLAGS= \
-			--with-glib=embedded \
-			--enable-minimal=com,remoting \
-			--disable-mcs-build \
-			--enable-llvm \
-			--enable-icall-symbol-map \
-			--disable-nls \
-			--disable-iconv \
-			--disable-libraries	\
-			--disable-boehm \
-			$(XAMARIN_IOS_CONFIGURE_FLAGS)
-
-#
-# 32 bit cross compiler
-#
-
-# mono's configure already adds an -arch i386 flag, and cache doesn't like duplicate -arch flags
-CROSS_CFLAGS=$(CROSS_BASE_CFLAGS) -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
-CROSS_CXXFLAGS=$(CROSS_BASE_CXXFLAGS) -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) -stdlib=libc++
-CROSS_LDFLAGS=-stdlib=libc++ $(COMMON_LDFLAGS)
-
-CROSS_CONFIGURE_FLAGS=$(CROSS_BASE_CONFIGURE_FLAGS)	\
-	--prefix=$(BUILD_DESTDIR)/cross \
-	--build=i386-apple-darwin10 \
-	--cache-file=../cross.config.cache \
-	--target=arm-darwin \
-	--with-cross-offsets=arm-apple-darwin10.h \
-	--with-llvm=../llvm/usr
-
-CROSS_CONFIGURE_ENVIRONMENT = \
-	CFLAGS="$(CROSS_CFLAGS)" \
-	CXXFLAGS="$(CROSS_CXXFLAGS)" \
-	LDFLAGS="$(CROSS_LDFLAGS)" \
-	CC="$(MAC_CC)" \
-	CXX="$(MAC_CXX)" \
-
-ifdef INCLUDE_IOS
-ifdef INCLUDE_DEVICE
-cross:: build-cross install-cross
-
-.PHONY: setup-cross build-cross install-cross
-
-setup:: setup-cross
-build:: build-cross
-install-local:: install-cross
-clean-local:: clean-cross
-endif
-endif
-
-setup-cross: .stamp-configure-cross
-
-.stamp-configure-cross: $(MONO_PATH)/configure .stamp-build-llvm
-	$(Q) $(CROSS_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh cross $(abspath $(MONO_PATH)/configure) $(CROSS_CONFIGURE_FLAGS)
-
-$(eval $(call GenerateCrossOffsets,arm-apple-darwin10,$(TOP)/builds/cross/,cross,$(MONO_PATH)))
-
-.stamp-build-cross: .stamp-configure-cross cross/arm-apple-darwin10.h $(MONO_DEPENDENCIES)
-	$(MAKE) -C cross/mono
-	$(MAKE) -C cross/mono install
-	$(Q) touch $@
-
-build-cross: .stamp-build-cross
-
-CROSS_TARGETS = \
-	$(PREFIX)/bin/arm-darwin-mono-sgen  \
-
-$(BUILD_DESTDIR)/cross/bin/arm-darwin-mono-sgen: .stamp-build-cross
-
-$(PREFIX)/bin/arm-darwin-mono-sgen: $(BUILD_DESTDIR)/cross/bin/arm-darwin-mono-sgen | $(PREFIX)/bin
-	$(call Q_2,INSTALL ,[CROSS]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $< $@
-
-$(PREFIX)/bin:
-	$(Q) mkdir -p $@
-
-install-cross: install-llvm64 $(CROSS_TARGETS)
-
-clean-cross:
-	-rm -rf cross .stamp-configure-cross cross.config.cache
-
-#
-# 64 bit cross compiler
-#
-
-CROSS64_CFLAGS=$(CROSS_BASE_CFLAGS) -mmacosx-version-min=10.8
-CROSS64_CXXFLAGS=$(CROSS_BASE_CXXFLAGS) -mmacosx-version-min=10.8 -stdlib=libc++
-CROSS64_LDFLAGS=-stdlib=libc++ $(COMMON_LDFLAGS)
-
-CROSS64_CONFIGURE_FLAGS=$(CROSS_BASE_CONFIGURE_FLAGS)	\
-	--prefix=$(BUILD_DESTDIR)/cross64 \
-	--cache-file=../cross64.config.cache \
-	--target=aarch64-darwin \
-	--with-cross-offsets=aarch64-apple-darwin10.h \
-	--with-llvm=../llvm64/usr
-
-CROSS64_CONFIGURE_ENVIRONMENT = \
-	CFLAGS="$(CROSS64_CFLAGS)" \
-	CXXFLAGS="$(CROSS64_CXXFLAGS)" \
-	LDFLAGS="$(CROSS64_LDFLAGS)" \
-	CC="$(MAC_CC)" \
-	CXX="$(MAC_CXX)" \
-
-cross64:: build-cross64 install-cross64
-
-ifdef INCLUDE_IOS
-ifdef INCLUDE_DEVICE
-setup:: setup-cross64
-build:: build-cross64
-install-local:: install-cross64
-clean-local:: clean-cross64
-endif
-endif
-
-setup-cross64: .stamp-configure-cross64
 
 install-directories:
 	install -d $(PREFIX)/bin
@@ -2028,95 +1431,108 @@ install-directories:
 	install -d $(IOS_DESTDIR)/$(IPHONESIMULATOR_PREFIX)/lib
 	install -d $(IOS_DESTDIR)/$(IPHONEOS_PREFIX)/include
 	install -d $(IOS_DESTDIR)/$(IPHONEOS_PREFIX)/lib
-	install -d $(PREFIX)/LLVM/bin
-
-.stamp-configure-cross64: $(MONO_PATH)/configure .stamp-build-llvm64
-	$(Q) $(CROSS64_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh cross64 $(abspath $(MONO_PATH)/configure) $(CROSS64_CONFIGURE_FLAGS)
-
-$(eval $(call GenerateCrossOffsets,aarch64-apple-darwin10,$(TOP)/builds/cross64/,cross64,$(MONO_PATH)))
-
-.stamp-build-cross64: .stamp-configure-cross64 cross64/aarch64-apple-darwin10.h $(MONO_DEPENDENCIES)
-	$(MAKE) -C cross64/mono
-	@$(MAKE) -C cross64/mono install
-	$(Q) touch $@
-
-build-cross64: .stamp-build-cross64
-
-CROSS64_TARGETS = \
-	$(PREFIX)/bin/arm64-darwin-mono-sgen \
-
-$(BUILD_DESTDIR)/cross64/bin/aarch64-darwin-mono-sgen: .stamp-build-cross64
-
-$(PREFIX)/bin/arm64-darwin-mono-sgen: $(BUILD_DESTDIR)/cross64/bin/aarch64-darwin-mono-sgen | $(PREFIX)/bin
-	$(call Q_2,INSTALL ,[CROSS64]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $< $@
-
-install-cross64: install-llvm64 $(CROSS64_TARGETS)
-
-clean-cross64:
-	-rm -rf cross64 .stamp-*-cross64 cross64.config.cache
-
 
 #
-# 32 bit watch cross compiler
+# Add explicit targets for building llvm before building the cross compilers, to
+# avoid building/downloading it in parallel by the nested make invocations.
 #
-
-WATCH_CROSS_CONFIGURE_FLAGS=$(CROSS_BASE_CONFIGURE_FLAGS)	\
-	--prefix=$(BUILD_DESTDIR)/cross-watch \
-	--build=i386-apple-darwin10 \
-	--cache-file=../cross-watch.config.cache \
-	--target=armv7k-unknown-darwin \
-	--with-cooperative-gc=yes \
-	--with-cross-offsets=armv7k-apple-darwin.h \
-	--with-llvm=../llvm/usr
-
-WATCH_CONFIGURE_ENVIRONMENT = \
-	CFLAGS="$(CROSS_CFLAGS)" \
-	CXXFLAGS="$(CROSS_CXXFLAGS)" \
-	LDFLAGS="$(CROSS_LDFLAGS)" \
-	CC="$(MAC_CC)" \
-	CXX="$(MAC_CXX)" \
-
-ifdef INCLUDE_WATCH
 ifdef INCLUDE_DEVICE
-cross:: build-cross-watch install-cross-watch
-
-.PHONY: setup-cross-watch build-cross-watch install-cross-watch
-
-setup:: setup-cross-watch
-build:: build-cross-watch
-install-local:: install-cross-watch
-clean-local:: clean-cross-watch
-endif
+clean-local:: clean-llvm
 endif
 
-.PHONY: cross-watch
-cross-watch: build-cross-watch install-cross-watch
+build-llvm32: .stamp-build-llvm
+build-llvm64: .stamp-build-llvm
 
-setup-cross-watch: .stamp-configure-cross-watch
-
-.stamp-configure-cross-watch: $(WATCH_MONO_PATH)/configure .stamp-build-llvm
-	$(Q) $(WATCH_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh cross-watch $(abspath $(WATCH_MONO_PATH)/configure) $(WATCH_CROSS_CONFIGURE_FLAGS)
-
-build-cross: setup-cross
-
-$(eval $(call GenerateCrossOffsets,armv7k-apple-darwin,$(TOP)/builds/cross-watch/,cross-watch,$(WATCH_MONO_PATH)))
-
-.stamp-build-cross-watch: .stamp-configure-cross-watch cross-watch/armv7k-apple-darwin.h $(MONO_DEPENDENCIES)
-	$(MAKE) -C cross-watch/mono
-	$(MAKE) -C cross-watch/mono install
+.stamp-build-llvm: $(SDK_CONFIG)
+	$(MAKE) -C $(SDK_BUILDDIR) build-ios-llvm $(SDK_ARGS)
 	$(Q) touch $@
 
-build-cross-watch: .stamp-build-cross-watch
+clean-llvm: $(SDK_CONFIG)
+	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-llvm $(SDK_ARGS)
+	$(RM) .stamp-*-llvm*
 
-CROSS_WATCH_TARGETS = \
-	$(PREFIX)/bin/armv7k-unknown-darwin-mono-sgen  \
+.PHONY: install-llvm64 llvm llvm64
 
-$(BUILD_DESTDIR)/cross-watch/bin/armv7k-unknown-darwin-mono-sgen: .stamp-build-cross-watch
+install-llvm: install-llvm32 install-llvm64
 
-$(PREFIX)/bin/armv7k-unknown-darwin-mono-sgen: $(BUILD_DESTDIR)/cross-watch/bin/armv7k-unknown-darwin-mono-sgen | $(PREFIX)/bin
-	$(call Q_2,INSTALL ,[CROSS]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $< $@
+LLVM_TARGETS = \
+	$(PREFIX)/LLVM/bin/opt \
+	$(PREFIX)/LLVM/bin/llc \
 
-install-cross-watch: install-llvm $(CROSS_WATCH_TARGETS)
+$(PREFIX)/LLVM/bin/%: $(SDK_DESTDIR)/ios-llvm64/bin/% | $(PREFIX)/LLVM/bin
+	$(call Q_2,INSTALL ,[LLVM64]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $^ $@
 
-clean-cross-watch:
-	-rm -rf cross-watch .stamp-configure-cross-watch cross-watch.config.cache
+$(PREFIX)/LLVM/bin:
+	$(Q) mkdir -p $@
+
+install-llvm32:.stamp-build-llvm $(LLVM_TARGETS)
+install-llvm64: .stamp-build-llvm $(LLVM_TARGETS)
+
+llvm: build-llvm64 install-llvm
+llvm64: install-llvm64
+
+$(MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe: $(MONO_PATH)/configure $(wildcard $(MONO_PATH)/tools/offsets-tool/*.cs)
+	$(Q) $(MAKE) -C $(dir $@) MonoAotOffsetsDumper.exe
+
+ifneq ($(WATCH_MONO_PATH),$(MONO_PATH))
+$(WATCH_MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe: $(wildcard $(WATCH_MONO_PATH)/tools/offsets-tool/*.cs)
+	$(Q) $(MAKE) -C $(dir $@) MonoAotOffsetsDumper.exe
+endif
+
+targetwatch/mono/arch/arm/arm_dpimacros.h: .stamp-configure-targetwatch
+	$(Q) $(MAKE) -C $(dir $@) $(notdir $@)
+
+$(PREFIX)/bin:
+	$(Q) mkdir -p $@
+
+# Dependency used to build the offsets tool before recursively calling sdk makefiles
+offsets-tool: $(MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe
+
+##
+# Cross compiler template
+#
+# Parameters:
+#  $(1): target prefix (cross32 etc)
+#  $(2): llvm (llvm32 or llvm64)
+#  $(3): cross compiler executable (arm-darwin-mono-sgen)
+#  $(4): cross compiler executable generated by mono sdk
+##
+define iOSCrossTemplate
+
+ifdef INCLUDE_IOS
+ifdef INCLUDE_DEVICE
+$(1): build-$(1) install-$(1)
+
+.PHONY: build-$(1) install-$(1)
+
+build:: build-$(1)
+install-local:: install-$(1)
+clean-local:: clean-$(1)
+endif
+endif
+
+.stamp-build-$(1): build-$(2) $(MONO_PATH)/configure offsets-tool $(MONO_DEPENDENCIES) $(SDK_CONFIG)
+	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(1) $(SDK_ARGS)
+	$(Q) touch $$@
+
+build-$(1): .stamp-build-$(1)
+
+_$(1)_CROSS_TARGETS = \
+	$(PREFIX)/bin/$(3)  \
+
+$(SDK_DESTDIR)/ios-$(1)/bin/$(4): .stamp-build-$(1)
+
+$(PREFIX)/bin/$(3): $(SDK_DESTDIR)/ios-$(1)-release/bin/$(4) | $(PREFIX)/bin
+	$(call Q_2,INSTALL ,[CROSS]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $$< $$@
+
+install-$(1): install-$(2) $$(_$(1)_CROSS_TARGETS)
+
+clean-$(1): $(SDK_CONFIG)
+	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-$(1) $(SDK_ARGS)
+	-rm -rf $(SDK_DESTDIR)/$(1) .stamp-build-$(1)
+
+endef
+
+$(eval $(call iOSCrossTemplate,cross32,llvm32,arm-darwin-mono-sgen,arm-darwin-mono-sgen))
+$(eval $(call iOSCrossTemplate,cross64,llvm64,arm64-darwin-mono-sgen,aarch64-darwin-mono-sgen))
+$(eval $(call iOSCrossTemplate,crosswatch,llvm32,armv7k-unknown-darwin-mono-sgen,armv7k-unknown-darwin-mono-sgen))
