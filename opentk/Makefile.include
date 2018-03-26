@@ -52,12 +52,12 @@ $(MAC_BUILD_DIR)/net_4_5/OpenTK.dll: $(MAC_OPENTK_SOURCES) $(MAC_BUILD_DIR)/full
 $(MAC_BUILD_DIR)/net_4_5-reference/OpenTK.dll: $(MAC_BUILD_DIR)/net_4_5/OpenTK.dll
 	@mkdir -p $(@D)
 	$(Q) cp $^ $@
-	$(Q) cp $^.pdb $@.pdb
+	$(Q) cp $< $(@:.dll=.pdb)
 
 $(MAC_BUILD_DIR)/%-reference/OpenTK.dll: $(MAC_BUILD_DIR)/%-32/OpenTK.dll
 	@mkdir -p $(@D)
 	$(Q) cp $^ $@
-	$(Q) cp $^.pdb $@.pdb
+	$(Q) cp $< $(@:.dll=.pdb)
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile/OpenTK.dll: $(MAC_BUILD_DIR)/mobile-reference/OpenTK.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile
 	$(Q) install -m 0755 $^ $@
