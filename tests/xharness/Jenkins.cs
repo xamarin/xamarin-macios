@@ -324,6 +324,7 @@ namespace xharness
 							Platform = pair.Item2,
 							Ignored = pair.Item3,
 							TestName = project.Name,
+							UseMSBuild = true,
 						};
 						derived.CloneTestProject (pair.Item1);
 						var simTasks = CreateRunSimulatorTaskAsync (derived);
@@ -365,6 +366,7 @@ namespace xharness
 						ProjectPlatform = "iPhone",
 						Platform = TestPlatform.iOS_Unified64,
 						TestName = project.Name,
+						UseMSBuild = true,
 					};
 					build64.CloneTestProject (project);
 					rv.Add (new RunDeviceTask (build64, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports64Bit)) { Ignored = ignored || !IncludeiOS });
@@ -375,6 +377,7 @@ namespace xharness
 						ProjectPlatform = "iPhone",
 						Platform = TestPlatform.iOS_Unified32,
 						TestName = project.Name,
+						UseMSBuild = true,
 					};
 					build32.CloneTestProject (project);
 					rv.Add (new RunDeviceTask (build32, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports32Bit)) { Ignored = ignored || !IncludeiOS });
@@ -386,6 +389,7 @@ namespace xharness
 						ProjectPlatform = "iPhone",
 						Platform = TestPlatform.iOS_TodayExtension64,
 						TestName = project.Name,
+						UseMSBuild = true,
 					};
 					buildToday.CloneTestProject (todayProject);
 					rv.Add (new RunDeviceTask (buildToday, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports64Bit)) { Ignored = ignored || !IncludeiOSExtensions });
@@ -399,6 +403,7 @@ namespace xharness
 						ProjectPlatform = "iPhone",
 						Platform = TestPlatform.tvOS,
 						TestName = project.Name,
+						UseMSBuild = true,
 					};
 					buildTV.CloneTestProject (tvOSProject);
 					rv.Add (new RunDeviceTask (buildTV, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.tvOS)) { Ignored = ignored || !IncludetvOS });
@@ -412,6 +417,7 @@ namespace xharness
 						ProjectPlatform = "iPhone",
 						Platform = TestPlatform.watchOS,
 						TestName = project.Name,
+						UseMSBuild = true,
 					};
 					buildWatch.CloneTestProject (watchOSProject);
 					rv.Add (new RunDeviceTask (buildWatch, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.watchOS)) { Ignored = ignored || !IncludewatchOS });
@@ -2664,6 +2670,8 @@ function toggleAll (show)
 						args.Append ($"/p:Platform={ProjectPlatform} ");
 					if (SpecifyConfiguration)
 						args.Append ($"/p:Configuration={ProjectConfiguration} ");
+					if (UseMSBuild)
+						args.Append ("/restore ");
 					args.Append (StringUtils.Quote (ProjectFile));
 					xbuild.StartInfo.Arguments = args.ToString ();
 					SetEnvironmentVariables (xbuild);
