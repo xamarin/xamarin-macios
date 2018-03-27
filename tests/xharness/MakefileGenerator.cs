@@ -150,11 +150,11 @@ namespace xharness
 
 						writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Build), "{0}", target.ProjectPath.Replace (" ", "\\ ") + " "  + guiUnitDependency);
 						writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) /Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore tests-mac.sln");
-						writer.WriteLine ("\t$(Q_MSBUILD) $(SYSTEM_MSBUILD) \"/property:Configuration=$(CONFIG)\" /restore $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
+						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)\" /t:Build $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
 						writer.WriteLine ();
 
 						writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Clean), "");
-						writer.WriteLine ("\t$(Q_MSBUILD) $(SYSTEM_MSBUILD) \"/property:Configuration=$(CONFIG)\" /t:Clean $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
+						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)\" /t:Clean $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
 						writer.WriteLine ();
 
 						writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Exec), "");
@@ -308,7 +308,7 @@ namespace xharness
 						writer.WriteLine ();
 					}
 					writer.WriteTarget ("build{0}-sim{3}-{1}", "{2}", make_escaped_suffix, make_escaped_name, target.ProjectPath.Replace (" ", "\\ "), target.MakefileWhereSuffix);
-					writer.WriteLine ("\t$(Q_MSBUILD) $(SYSTEM_MSBUILD) \"/property:Configuration=$(CONFIG)\" \"/property:Platform=iPhoneSimulator\" /restore $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
+					writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)\" \"/property:Platform=iPhoneSimulator\" /t:Build $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
 					writer.WriteLine ();
 
 					// clean sim project target
@@ -318,7 +318,7 @@ namespace xharness
 						writer.WriteLine ();
 					}
 					writer.WriteTarget ("clean{0}-sim{2}-{1}", string.Empty, make_escaped_suffix, make_escaped_name, target.ProjectPath.Replace (" ", "\\ "), target.MakefileWhereSuffix);
-					writer.WriteLine ("\t$(Q_MSBUILD) $(SYSTEM_MSBUILD) \"/property:Configuration=$(CONFIG)\" \"/property:Platform=iPhoneSimulator\" /t:Clean $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
+					writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)\" \"/property:Platform=iPhoneSimulator\" /t:Clean $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
 					writer.WriteLine ();
 
 					// run sim project target
@@ -411,15 +411,15 @@ namespace xharness
 						writer.WriteLine ();
 
 						writer.WriteTarget ("build{0}-dev32-{1}", "{2} xharness/xharness.exe", make_escaped_suffix, make_escaped_name, target.ProjectPath.Replace (" ", "\\ "));
-						writer.WriteLine ("\t$(Q_MSBUILD) $(SYSTEM_MSBUILD) \"/property:Configuration=$(CONFIG)32\" \"/property:Platform=iPhone\" /restore $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
+						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)32\" \"/property:Platform=iPhone\" /t:Build $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
 						writer.WriteLine ();
 
 						writer.WriteTarget ("build{0}-dev64-{1}", "{2} xharness/xharness.exe", make_escaped_suffix, make_escaped_name, target.ProjectPath.Replace (" ", "\\ "));
-						writer.WriteLine ("\t$(Q_MSBUILD) $(SYSTEM_MSBUILD) \"/property:Configuration=$(CONFIG)64\" \"/property:Platform=iPhone\" /restore $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
+						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)64\" \"/property:Platform=iPhone\" /t:Build $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
 						writer.WriteLine ();
 					} else {
 						writer.WriteTarget ("build{0}-dev{3}-{1}", "{2} xharness/xharness.exe", make_escaped_suffix, make_escaped_name, target.ProjectPath.Replace (" ", "\\ "), target.MakefileWhereSuffix);
-						writer.WriteLine ("\t$(Q_MSBUILD) $(SYSTEM_MSBUILD) \"/property:Configuration=$(CONFIG)\" \"/property:Platform=iPhone\" /restore $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
+						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)\" \"/property:Platform=iPhone\" /t:Build $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
 						writer.WriteLine ();
 					}
 
@@ -435,15 +435,15 @@ namespace xharness
 						writer.WriteLine ();
 
 						writer.WriteTarget ("clean{0}-dev32-{1}", string.Empty, make_escaped_suffix, make_escaped_name);
-						writer.WriteLine ("\t$(Q_MSBUILD) $(SYSTEM_MSBUILD) \"/property:Configuration=$(CONFIG)32\" \"/property:Platform=iPhone\" /t:Clean $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
+						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)32\" \"/property:Platform=iPhone\" /t:Clean $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
 						writer.WriteLine ();
 
 						writer.WriteTarget ("clean{0}-dev64-{1}", string.Empty, make_escaped_suffix, make_escaped_name);
-						writer.WriteLine ("\t$(Q_MSBUILD) $(SYSTEM_MSBUILD) \"/property:Configuration=$(CONFIG)64\" \"/property:Platform=iPhone\" /t:Clean $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
+						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)64\" \"/property:Platform=iPhone\" /t:Clean $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
 						writer.WriteLine ();
 					} else {
 						writer.WriteTarget ("clean{0}-dev{2}-{1}", string.Empty, make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-						writer.WriteLine ("\t$(Q_MSBUILD) $(SYSTEM_MSBUILD) \"/property:Configuration=$(CONFIG)\" \"/property:Platform=iPhone\" /t:Clean $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
+						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)\" \"/property:Platform=iPhone\" /t:Clean $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
 						writer.WriteLine ();
 					}
 
