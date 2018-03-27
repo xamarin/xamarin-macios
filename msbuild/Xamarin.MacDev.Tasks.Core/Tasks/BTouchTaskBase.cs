@@ -94,13 +94,11 @@ namespace Xamarin.MacDev.Tasks {
 			cmd.AppendSwitchIfNotNull ("/out:", OutputAssembly);
 
 			string dir;
-			if (!string.IsNullOrEmpty (BaseLibDll))
+			if (!string.IsNullOrEmpty (BaseLibDll)) {
 				dir = Path.GetDirectoryName (BaseLibDll);
-			else
-				dir = null;
-
-			cmd.AppendSwitchIfNotNull ("/lib:", dir);
-			cmd.AppendSwitchIfNotNull ("/r:", Path.Combine (dir, "mscorlib.dll"));
+				cmd.AppendSwitchIfNotNull ("/lib:", dir);
+				cmd.AppendSwitchIfNotNull ("/r:", Path.Combine (dir, "mscorlib.dll"));
+			}
 
 			if (ProcessEnums)
 				cmd.AppendSwitch ("/process-enums");
