@@ -107,6 +107,9 @@ namespace Xamarin.MMP.Tests
 				var projects = GenerateTestProject (type, tmpDir);
 				var logs = BuildLinkedTestProjects (projects.Item1, projects.Item2, tmpDir);
 
+				Assert.False (logs.Item1.Contains ("mcs"), "Bindings project must not use mcs:\n" + logs.Item1);
+				Assert.True (logs.Item1.Contains ("csc"), "Bindings project must use csc:\n" + logs.Item1); 
+
 				var bgenInvocation = logs.Item1.SplitLines ().First (x => x.Contains ("bin/bgen"));
 				var bgenParts = bgenInvocation.Split (new char[] { ' ' });
 				var mscorlib = bgenParts.First (x => x.Contains ("mscorlib.dll"));
