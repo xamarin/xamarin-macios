@@ -635,6 +635,35 @@ namespace xharness
 			}
 		}
 
+		public static void RemoveDefines (this XmlDocument csproj, string defines, string platform, string configuration)
+		{
+			var separator = new char [] { ';' };
+			var defs = defines.Split (separator, StringSplitOptions.RemoveEmptyEntries);
+			var projnode = csproj.SelectNodes ("//*[local-name() = 'PropertyGroup']/*[local-name() = 'DefineConstants']");
+			foreach (XmlNode xmlnode in projnode) {
+				if (string.IsNullOrEmpty (xmlnode.InnerText))
+					continue;
+
+				var parent = xmlnode.ParentNode;
+				if (!IsNodeApplicable (parent, platform, configuration))
+					continue;
+
+				var existing = xmlnode.InnerText.Split (separator, StringSplitOptions.RemoveEmptyEntries);
+				var any = false;
+				foreach (var def in defs) {
+					for (var i = 0; i < existing.Length; i++) {
+						if (existing [i] == def) {
+							existing [i] = null;
+							any = true;
+						}
+					}
+				}
+				if (!any)
+					continue;
+				xmlnode.InnerText = string.Join (separator [0].ToString (), existing.Where ((v) => !string.IsNullOrEmpty (v)));
+			}
+		}
+
 		public static void AddAdditionalDefines (this XmlDocument csproj, string value, string platform, string configuration)
 		{
 			var projnode = csproj.SelectNodes ("//*[local-name() = 'PropertyGroup' and @Condition]/*[local-name() = 'DefineConstants']");

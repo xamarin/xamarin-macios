@@ -157,6 +157,7 @@ namespace xharness
 			public bool Profiling;
 			public string LinkMode;
 			public string Defines;
+			public string Undefines;
 			public bool Ignored;
 		}
 
@@ -231,6 +232,7 @@ namespace xharness
 					var profiling = test_data.Profiling;
 					var link_mode = test_data.LinkMode;
 					var defines = test_data.Defines;
+					var undefines = test_data.Undefines;
 					var ignored = test_data.Ignored;
 
 					var clone = task.TestProject.Clone ();
@@ -264,7 +266,15 @@ namespace xharness
 									pr.Xml.Save (pr.Path);
 								}
 							}
-							
+						}
+						if (!string.IsNullOrEmpty (undefines)) {
+							clone.Xml.RemoveDefines (undefines, task.ProjectPlatform, configuration);
+							if (clone.ProjectReferences != null) {
+								foreach (var pr in clone.ProjectReferences) {
+									pr.Xml.RemoveDefines (undefines, task.ProjectPlatform, configuration);
+									pr.Xml.Save (pr.Path);
+								}
+							}
 						}
 						clone.Xml.SetNode (isMac ? "Profiling" : "MTouchProfiling", profiling ? "True" : "False", task.ProjectPlatform, configuration);
 
