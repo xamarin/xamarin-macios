@@ -474,7 +474,7 @@ build-tools-bcl: build-tools64
 build-tools: build-tools64
 
 .stamp-build-tools64: .stamp-configure-tools64 $(MONO_DEPENDENCIES)
-	$(MAKE) -C tools64 all EXTERNAL_MCS=$(SYSTEM_CSC) EXTERNAL_RUNTIME=$(SYSTEM_MONO) MONOTOUCH_CSC_FLAGS=$(IOS_CSC_FLAGS) XAMMAC_CSC_FLAGS=$(MAC_CSC_FLAGS)
+	$(MAKE) -C tools64 all EXTERNAL_MCS=$(SYSTEM_CSC) EXTERNAL_RUNTIME=$(SYSTEM_MONO) MONOTOUCH_MCS_FLAGS=$(IOS_CSC_FLAGS) XAMMAC_MCS_FLAGS=$(MAC_CSC_FLAGS)
 	# NO_INSTALL is defined in mono/mcs/build/profiles except for net_4_5. If we don't have it, then it attempts to install into a gac, and sometimes fail
 	NO_INSTALL=1 $(MAKE) -C tools64 -j 1 install EXTERNAL_MCS=$(SYSTEM_CSC) EXTERNAL_RUNTIME=$(SYSTEM_MONO)
 	@touch .stamp-build-tools64
