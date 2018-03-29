@@ -122,6 +122,10 @@ namespace Introspection {
 				case "NSMeasurement`1":
 				// iOS 11 / tvOS 11
 				case "VSSubscription":
+				// iOS 11.3 / macOS 10.13.4
+				case "NSEntityMapping":
+				case "NSMappingModel":
+				case "NSPropertyMapping":
 					return true;
 				}
 				break;
@@ -151,6 +155,10 @@ namespace Introspection {
 				// xcode 9
 				case "NSConstraintConflict": // Conformance not in headers
 				case "VSSubscription":
+				// iOS 11.3 / macOS 10.13.4
+				case "NSEntityMapping":
+				case "NSMappingModel":
+				case "NSPropertyMapping":
 					return true;
 				case "MPSImageAllocator": // Header shows NSSecureCoding, but intro gives: MPSImageAllocator conforms to NSSecureCoding but SupportsSecureCoding returned false
 					return true;

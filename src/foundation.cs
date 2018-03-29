@@ -87,6 +87,12 @@ using CMTimeMapping = Foundation.NSObject;
 using CMTimeRange = Foundation.NSObject;
 #endif
 
+#if WATCH
+using CIBarcodeDescriptor = XamCore.Foundation.NSObject;
+#else
+using XamCore.CoreImage;
+#endif
+
 // This little gem comes from a btouch bug that wrote the NSFilePresenterReacquirer delegate to the wrong
 // namespace for a while (it should go into Foundation, but due to the bug it went into UIKit). In order
 // to not break backwards compatibility (once the btouch bug was fixed), we need to make sure the delegate
@@ -5103,6 +5109,12 @@ namespace Foundation
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[NullAllowed, Export ("referrerURL", ArgumentSemantic.Copy)]
 		NSUrl ReferrerUrl { get; set; }
+
+		// From NSUserActivity (CIBarcodeDescriptor)
+
+		[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3), NoWatch]
+		[NullAllowed, Export ("detectedBarcodeDescriptor", ArgumentSemantic.Copy)]
+		CIBarcodeDescriptor DetectedBarcodeDescriptor { get; }
 	}
 
 	[iOS (8,0)][Mac (10,10, onlyOn64 : true)] // same as NSUserActivity

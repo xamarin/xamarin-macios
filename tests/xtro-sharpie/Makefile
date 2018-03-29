@@ -101,3 +101,9 @@ all: classify report
 .stamp-check-sharpie:
 	@$(TOP)/system-dependencies.sh --ignore-all --enforce-sharpie
 	@touch $@
+	
+unclassified2todo:
+	for f in *.unclassified; do \
+		mv -- "$f" "${f%.unclassified}.todo" \
+	done \
+

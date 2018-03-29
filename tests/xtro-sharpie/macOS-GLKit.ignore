@@ -1,2 +1,3 @@
 # Fixed in XAMCORE_4_0
+!missing-selector! GLKTextureLoader::initWithShareContext: not bound
 !unknown-field! GLKTextureLoaderGrayscaleAsAlpha bound

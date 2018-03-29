@@ -9,3 +9,6 @@
 !missing-field! MKAnnotationCalloutInfoDidChangeNotification not bound
 !missing-protocol-conformance! MKUserLocation should conform to MKAnnotation
 !missing-protocol-member! MKOverlay::coordinate not found
+
+### moved from iOS-MapKit.todo
+!missing-protocol-conformance! MKMapItem should conform to NSSecureCoding (defined in 'MKMapItemSerialization' category)

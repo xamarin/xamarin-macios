@@ -1,2 +1,5 @@
 ## deprecated in iOS 11 - and it was not available on iOS before Xcode9 (iOS 11) even if the new headers says otherwise
 !missing-field! SLServiceTypeLinkedIn not bound
+
+### moved from iOS-Social.todo
+!missing-designated-initializer! SLComposeSheetConfigurationItem::init is missing an [DesignatedInitializer] attribute

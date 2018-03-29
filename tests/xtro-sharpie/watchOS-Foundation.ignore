@@ -3,3 +3,20 @@
 
 ## type was not marked as unavailable before Xcode9
 !unknown-type! NSUbiquitousKeyValueStore bound
+
+### moved from watchOS-Foundation.todo
+!missing-designated-initializer! NSArray::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSDate::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSDictionary::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSISO8601DateFormatter::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSItemProvider::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSMutableArray::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSMutableDictionary::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSMutableOrderedSet::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSMutableSet::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSOrderedSet::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSOutputStream::initToMemory is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSSet::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSString::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSThread::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! NSUUID::init is missing an [DesignatedInitializer] attribute

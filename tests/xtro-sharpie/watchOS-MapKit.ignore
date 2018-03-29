@@ -1,0 +1,2 @@
+### moved from watchOS-MapKit.todo
+!missing-protocol-conformance! MKMapItem should conform to NSSecureCoding (defined in 'MKMapItemSerialization' category)
