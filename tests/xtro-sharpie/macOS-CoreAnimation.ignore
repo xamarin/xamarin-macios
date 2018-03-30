@@ -27,7 +27,3 @@
 !missing-type! CARemoteLayerClient not bound
 !missing-type! CARemoteLayerServer not bound
 !missing-type! CARenderer not bound
-
-### moved from macOS-CoreAnimation.todo
-!missing-protocol! CAAnimationDelegate not bound
-!missing-protocol-conformance! NSNull should conform to CAAction (defined in 'CAActionAdditions' category)

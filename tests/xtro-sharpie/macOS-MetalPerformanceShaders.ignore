@@ -481,7 +481,6 @@
 !missing-type! MPSStateResourceList not bound
 !unknown-type! MPSCNNConvolutionState bound
 !unknown-type! MPSCNNConvolutionStateNode bound
-!wrong-base-type! MPSImageLanczosScale expected MPSImageScale actual MPSUnaryImageKernel
 
 ### moved from macOS-MetalPerformanceShaders.unclassified
 !missing-selector! MPSMatrix::initWithDevice:descriptor: not bound

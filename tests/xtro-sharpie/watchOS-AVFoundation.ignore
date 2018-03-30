@@ -6,6 +6,3 @@
 
 ## it's not exposed in the API offered by watchOS
 !missing-enum! AVAudioSessionRecordPermission not bound
-
-### moved from watchOS-AVFoundation.todo
-!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withOptions: not found

@@ -1,5 +1,0 @@
-### moved from macOS-ModelIO.todo
-!wrong-base-type! MDLVoxelArray expected MDLObject actual NSObject
-
-### moved from macOS-ModelIO.todo
-!missing-designated-initializer! MDLTexture::init is missing an [DesignatedInitializer] attribute

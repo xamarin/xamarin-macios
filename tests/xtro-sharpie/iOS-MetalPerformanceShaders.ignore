@@ -1,6 +1,3 @@
-### moved from iOS-MetalPerformanceShaders.todo
-!wrong-base-type! MPSImageLanczosScale expected MPSImageScale actual MPSUnaryImageKernel
-
 # Getting ignored at the moment due to the API is not considered stable but experimental by apple
 # See https://github.com/xamarin/xamarin-macios/issues/3553
 

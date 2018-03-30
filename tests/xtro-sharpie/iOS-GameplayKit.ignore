@@ -1,5 +1,0 @@
-### moved from iOS-GameplayKit.todo
-!missing-designated-initializer! GKEntity::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! GKRandomSource::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! GKRuleSystem::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! GKState::init is missing an [DesignatedInitializer] attribute

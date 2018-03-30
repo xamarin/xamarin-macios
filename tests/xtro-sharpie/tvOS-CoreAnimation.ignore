@@ -1,3 +1,0 @@
-### moved from tvOS-CoreAnimation.todo
-!missing-protocol! CAAnimationDelegate not bound
-!missing-protocol-conformance! NSNull should conform to CAAction (defined in 'CAActionAdditions' category)

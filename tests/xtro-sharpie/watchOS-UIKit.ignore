@@ -28,7 +28,3 @@
 !missing-protocol-conformance! UIColor should conform to NSItemProviderWriting (defined in 'UINSItemProvider' category)
 !missing-protocol-conformance! UIImage should conform to NSItemProviderReading (defined in 'NSItemProvider' category)
 !missing-protocol-conformance! UIImage should conform to NSItemProviderWriting (defined in 'NSItemProvider' category)
-
-### moved from watchOS-UIKit.todo
-!missing-designated-initializer! UIBezierPath::init is missing an [DesignatedInitializer] attribute
-!missing-designated-initializer! UILocalNotification::init is missing an [DesignatedInitializer] attribute
