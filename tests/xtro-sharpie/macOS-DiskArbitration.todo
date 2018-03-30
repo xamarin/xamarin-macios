@@ -1,0 +1,80 @@
+!missing-field! kDADiskDescriptionBusNameKey not bound
+!missing-field! kDADiskDescriptionBusPathKey not bound
+!missing-field! kDADiskDescriptionDeviceGUIDKey not bound
+!missing-field! kDADiskDescriptionDeviceInternalKey not bound
+!missing-field! kDADiskDescriptionDeviceModelKey not bound
+!missing-field! kDADiskDescriptionDevicePathKey not bound
+!missing-field! kDADiskDescriptionDeviceProtocolKey not bound
+!missing-field! kDADiskDescriptionDeviceRevisionKey not bound
+!missing-field! kDADiskDescriptionDeviceUnitKey not bound
+!missing-field! kDADiskDescriptionDeviceVendorKey not bound
+!missing-field! kDADiskDescriptionMatchMediaUnformatted not bound
+!missing-field! kDADiskDescriptionMatchMediaWhole not bound
+!missing-field! kDADiskDescriptionMatchVolumeMountable not bound
+!missing-field! kDADiskDescriptionMatchVolumeUnrecognized not bound
+!missing-field! kDADiskDescriptionMediaBlockSizeKey not bound
+!missing-field! kDADiskDescriptionMediaBSDMajorKey not bound
+!missing-field! kDADiskDescriptionMediaBSDMinorKey not bound
+!missing-field! kDADiskDescriptionMediaBSDNameKey not bound
+!missing-field! kDADiskDescriptionMediaBSDUnitKey not bound
+!missing-field! kDADiskDescriptionMediaContentKey not bound
+!missing-field! kDADiskDescriptionMediaEjectableKey not bound
+!missing-field! kDADiskDescriptionMediaIconKey not bound
+!missing-field! kDADiskDescriptionMediaKindKey not bound
+!missing-field! kDADiskDescriptionMediaLeafKey not bound
+!missing-field! kDADiskDescriptionMediaNameKey not bound
+!missing-field! kDADiskDescriptionMediaPathKey not bound
+!missing-field! kDADiskDescriptionMediaRemovableKey not bound
+!missing-field! kDADiskDescriptionMediaSizeKey not bound
+!missing-field! kDADiskDescriptionMediaTypeKey not bound
+!missing-field! kDADiskDescriptionMediaUUIDKey not bound
+!missing-field! kDADiskDescriptionMediaWholeKey not bound
+!missing-field! kDADiskDescriptionMediaWritableKey not bound
+!missing-field! kDADiskDescriptionVolumeKindKey not bound
+!missing-field! kDADiskDescriptionVolumeMountableKey not bound
+!missing-field! kDADiskDescriptionVolumeNameKey not bound
+!missing-field! kDADiskDescriptionVolumeNetworkKey not bound
+!missing-field! kDADiskDescriptionVolumePathKey not bound
+!missing-field! kDADiskDescriptionVolumeTypeKey not bound
+!missing-field! kDADiskDescriptionVolumeUUIDKey not bound
+!missing-field! kDADiskDescriptionWatchVolumeName not bound
+!missing-field! kDADiskDescriptionWatchVolumePath not bound
+!missing-pinvoke! DAApprovalSessionCreate is not bound
+!missing-pinvoke! DAApprovalSessionGetTypeID is not bound
+!missing-pinvoke! DAApprovalSessionScheduleWithRunLoop is not bound
+!missing-pinvoke! DAApprovalSessionUnscheduleFromRunLoop is not bound
+!missing-pinvoke! DADiskClaim is not bound
+!missing-pinvoke! DADiskCopyDescription is not bound
+!missing-pinvoke! DADiskCopyIOMedia is not bound
+!missing-pinvoke! DADiskCopyWholeDisk is not bound
+!missing-pinvoke! DADiskCreateFromBSDName is not bound
+!missing-pinvoke! DADiskCreateFromIOMedia is not bound
+!missing-pinvoke! DADiskCreateFromVolumePath is not bound
+!missing-pinvoke! DADiskEject is not bound
+!missing-pinvoke! DADiskGetBSDName is not bound
+!missing-pinvoke! DADiskGetOptions is not bound
+!missing-pinvoke! DADiskGetTypeID is not bound
+!missing-pinvoke! DADiskIsClaimed is not bound
+!missing-pinvoke! DADiskMount is not bound
+!missing-pinvoke! DADiskMountWithArguments is not bound
+!missing-pinvoke! DADiskRename is not bound
+!missing-pinvoke! DADiskSetOptions is not bound
+!missing-pinvoke! DADiskUnclaim is not bound
+!missing-pinvoke! DADiskUnmount is not bound
+!missing-pinvoke! DADissenterCreate is not bound
+!missing-pinvoke! DADissenterGetStatus is not bound
+!missing-pinvoke! DADissenterGetStatusString is not bound
+!missing-pinvoke! DARegisterDiskAppearedCallback is not bound
+!missing-pinvoke! DARegisterDiskDescriptionChangedCallback is not bound
+!missing-pinvoke! DARegisterDiskDisappearedCallback is not bound
+!missing-pinvoke! DARegisterDiskEjectApprovalCallback is not bound
+!missing-pinvoke! DARegisterDiskMountApprovalCallback is not bound
+!missing-pinvoke! DARegisterDiskPeekCallback is not bound
+!missing-pinvoke! DARegisterDiskUnmountApprovalCallback is not bound
+!missing-pinvoke! DASessionCreate is not bound
+!missing-pinvoke! DASessionGetTypeID is not bound
+!missing-pinvoke! DASessionScheduleWithRunLoop is not bound
+!missing-pinvoke! DASessionSetDispatchQueue is not bound
+!missing-pinvoke! DASessionUnscheduleFromRunLoop is not bound
+!missing-pinvoke! DAUnregisterApprovalCallback is not bound
+!missing-pinvoke! DAUnregisterCallback is not bound

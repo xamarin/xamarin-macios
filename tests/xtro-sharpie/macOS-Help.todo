@@ -1,0 +1,6 @@
+!missing-pinvoke! AHGotoMainTOC is not bound
+!missing-pinvoke! AHGotoPage is not bound
+!missing-pinvoke! AHLookupAnchor is not bound
+!missing-pinvoke! AHRegisterHelpBook is not bound
+!missing-pinvoke! AHRegisterHelpBookWithURL is not bound
+!missing-pinvoke! AHSearch is not bound

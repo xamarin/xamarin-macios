@@ -2429,11 +2429,7 @@ namespace WebKit {
 			   "WeakUIDelegate",
 			   "WeakPolicyDelegate" }
 		   )]
-	partial interface WebView
-#if MONOMAC
-		: NSUserInterfaceValidations
-#endif
-	{
+	partial interface WebView : NSUserInterfaceValidations {
 		[Static]
 		[Export ("canShowMIMEType:")]
 		bool CanShowMimeType (string MimeType);

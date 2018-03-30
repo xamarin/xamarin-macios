@@ -79,6 +79,7 @@ namespace Introspection
 			"Actionname",
 			"Activitiy",
 			"Addin",
+			"Addl",
 			"Addr",
 			"Adjustmentfor",
 			"Aifc",
@@ -176,6 +177,7 @@ namespace Introspection
 			"Dns",
 			"Dont",
 			"Dop",
+			"Dopesheet",
 			"Downsample",
 			"Downmix", // Sound terminology that means making a stereo mix from a 5.1 surround mix.
 			"Dpa",
@@ -195,9 +197,13 @@ namespace Introspection
 			"Elu",
 			"Emagic",
 			"Emaili",
+			"Embd",
+			"Enc",
 			"Eppc",
 			"Exhange",
 			"Exp",
+			"Expr",
+			"Exr",
 			"Felica", // Japanese contactless RFID smart card system
 			"Femtowatts",
 			"Flipside",
@@ -218,6 +224,7 @@ namespace Introspection
 			"Gpu",	// acronym for Graphics Processing Unit
 			"Grbg", // acronym for Green-Red-Blue-Green
 			"Greeking",
+			"Gtin",
 			"Hardlink",
 			"Hdmi",
 			"Hdr",
@@ -242,6 +249,7 @@ namespace Introspection
 			"Imaps",
 			"Img",
 			"Impl", // BindingImplAttribute
+			"Inv",
 			"Indoorrun",
 			"Indoorcycle",
 			"Inklist",
@@ -339,6 +347,7 @@ namespace Introspection
 			"Octree",
 			"Oid",
 			"Oneup", // TVElementKeyOneupTemplate
+			"Organisation", // kCGImagePropertyIPTCExtRegistryOrganisationID in Xcode9.3-b1
 			"Orthographyrange",
 			"Orth",
 			"ove",
@@ -370,6 +379,7 @@ namespace Introspection
 			"Propogate",
 			"Psec",
 			"Psm", // Protocol/Service Multiplexer
+			"Psk",
 			"Pvrtc", // MTLBlitOption - PowerVR Texture Compression
 			"Quaterniond",
 			"Quadding",
@@ -379,6 +389,8 @@ namespace Introspection
 			"Reinvitation",
 			"Reinvite",
 			"Rel",
+			"Relocalization",
+			"Reprandial",
 			"Replayable",
 			"Requestwith",
 			"Ridesharing",
@@ -428,6 +440,7 @@ namespace Introspection
 			"Subentities",
 			"Subheadline",
 			"Sublocality",
+			"Sublocation",
 			"Submesh",
 			"Submeshes",
 			"Subpixel",

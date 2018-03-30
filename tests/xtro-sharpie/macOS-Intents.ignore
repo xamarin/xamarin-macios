@@ -5,11 +5,11 @@
 
 !unknown-native-enum! INSetMessageAttributeIntentResponseCode bound
 
-## Fixed in XAMCORE_4_0 but with a conditional TODO check in code
-## API_AVAILABLE(macosx(10.12), ios(10.0)); This is supposed to be there according to availability (Last Review: Feb 2018)
-!unknown-protocol! INCallsDomainHandling bound
-
 ## No availability set on headers, it is possible to be fixed later since makes sense to have in macOS.
 ## unfortunately it is not at the moment (Last Review: Feb 2018)
+## API_AVAILABLE(macosx(10.12), ios(10.0)); This is supposed to be there according to availability (Last Review: Beta 3)
+!unknown-protocol! INCallsDomainHandling bound
+
+## No availability set on headers, it is possible to be fixed later since makes sense to have in macOS
 !unknown-native-enum! INMessageAttribute bound
 !unknown-type! INMessageAttributeResolutionResult bound

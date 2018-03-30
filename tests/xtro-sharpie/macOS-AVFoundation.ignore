@@ -15,16 +15,6 @@
 !missing-selector! AVCaptureConnection::videoMaxFrameDuration not bound
 
 ## unsorted
-
-!missing-selector! +AVMetadataItem::metadataItemsFromArray:filteredByMetadataItemFilter: not bound
-!missing-selector! AVAudioPlayer::currentDevice not bound
-!missing-selector! AVAudioPlayer::setCurrentDevice: not bound
-!missing-selector! AVMetadataGroup::classifyingLabel not bound
-!missing-selector! AVMetadataGroup::uniqueID not bound
-!missing-selector! AVMutableMovieTrack::replaceFormatDescription:withFormatDescription: not bound
-!missing-selector! AVPlayerItem::addMediaDataCollector: not bound
-!missing-selector! AVPlayerItem::mediaDataCollectors not bound
-!missing-selector! AVPlayerItem::removeMediaDataCollector: not bound
 !unknown-native-enum! AVAudioSessionCategoryOptions bound
 !unknown-native-enum! AVAudioSessionErrorCode bound
 !unknown-native-enum! AVAudioSessionInterruptionOptions bound

@@ -1,0 +1,33 @@
+!missing-enum! SKDocumentIndexState not bound
+!missing-enum! SKSearchType not bound
+!missing-field! kSKLanguageTypes not bound
+!missing-pinvoke! SKDocumentGetTypeID is not bound
+!missing-pinvoke! SKIndexCopyDocumentIDArrayForTermID is not bound
+!missing-pinvoke! SKIndexCopyDocumentProperties is not bound
+!missing-pinvoke! SKIndexCopyDocumentRefsForDocumentIDs is not bound
+!missing-pinvoke! SKIndexCopyDocumentURLsForDocumentIDs is not bound
+!missing-pinvoke! SKIndexCopyInfoForDocumentIDs is not bound
+!missing-pinvoke! SKIndexCopyTermIDArrayForDocumentID is not bound
+!missing-pinvoke! SKIndexCopyTermStringForTermID is not bound
+!missing-pinvoke! SKIndexDocumentIteratorCopyNext is not bound
+!missing-pinvoke! SKIndexDocumentIteratorCreate is not bound
+!missing-pinvoke! SKIndexDocumentIteratorGetTypeID is not bound
+!missing-pinvoke! SKIndexGetDocumentID is not bound
+!missing-pinvoke! SKIndexGetDocumentState is not bound
+!missing-pinvoke! SKIndexGetDocumentTermCount is not bound
+!missing-pinvoke! SKIndexGetDocumentTermFrequency is not bound
+!missing-pinvoke! SKIndexGetIndexType is not bound
+!missing-pinvoke! SKIndexGetTermDocumentCount is not bound
+!missing-pinvoke! SKIndexGetTermIDForTermString is not bound
+!missing-pinvoke! SKIndexGetTypeID is not bound
+!missing-pinvoke! SKSearchGetTypeID is not bound
+!missing-pinvoke! SKSearchGroupCopyIndexes is not bound
+!missing-pinvoke! SKSearchGroupCreate is not bound
+!missing-pinvoke! SKSearchGroupGetTypeID is not bound
+!missing-pinvoke! SKSearchResultsCopyMatchingTerms is not bound
+!missing-pinvoke! SKSearchResultsCreateWithDocuments is not bound
+!missing-pinvoke! SKSearchResultsCreateWithQuery is not bound
+!missing-pinvoke! SKSearchResultsGetCount is not bound
+!missing-pinvoke! SKSearchResultsGetInfoInRange is not bound
+!missing-pinvoke! SKSearchResultsGetTypeID is not bound
+!missing-pinvoke! SKSummaryGetTypeID is not bound

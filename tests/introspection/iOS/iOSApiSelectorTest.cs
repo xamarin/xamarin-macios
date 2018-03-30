@@ -291,6 +291,16 @@ namespace Introspection {
 					break;
 				}
 				break;
+			case "PKSuicaPassProperties":
+				switch (name) {
+				// Selectors do not respond anymore in Xcode 9.3. Radar https://trello.com/c/B31EMqSg.
+				case "isGreenCarTicketUsed":
+				case "isInShinkansenStation":
+					if (TestRuntime.CheckXcodeVersion (9, 3))
+						return true;
+					break;
+				}
+				break;
 			}
 
 			switch (name) {
@@ -701,6 +711,11 @@ namespace Introspection {
 				case "MPSKernel":
 				case "MPSCnnConvolutionDescriptor":
 					return !TestRuntime.CheckXcodeVersion (9, 0);
+				// Protocol conformance removed in Xcode 9.3
+				case "HKSeriesBuilder":
+					if (TestRuntime.CheckXcodeVersion (9, 3))
+						return true;
+					break;
 #if __TVOS__
 				case "SKAttribute":
 				case "SKAttributeValue":

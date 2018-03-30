@@ -1,0 +1,14 @@
+!missing-enum! interface_event_t not bound
+!missing-enum! operating_modes_t not bound
+!missing-enum! vmnet_return_t not bound
+!missing-field! vmnet_estimated_packets_available_key not bound
+!missing-field! vmnet_interface_id_key not bound
+!missing-field! vmnet_mac_address_key not bound
+!missing-field! vmnet_max_packet_size_key not bound
+!missing-field! vmnet_mtu_key not bound
+!missing-field! vmnet_operation_mode_key not bound
+!missing-pinvoke! vmnet_interface_set_event_callback is not bound
+!missing-pinvoke! vmnet_read is not bound
+!missing-pinvoke! vmnet_start_interface is not bound
+!missing-pinvoke! vmnet_stop_interface is not bound
+!missing-pinvoke! vmnet_write is not bound
