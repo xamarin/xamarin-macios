@@ -18,6 +18,7 @@ using CoreMedia;
 using CoreVideo;
 using Foundation;
 using ObjCRuntime;
+using ImageIO;
 using Metal;
 using SpriteKit;
 using SceneKit;
