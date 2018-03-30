@@ -9,10 +9,10 @@
 
 using System;
 using System.Runtime.InteropServices;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.Security {
+namespace Security {
 	public static class SecStatusCodeExtensions {
 
 		[iOS (11,3), TV (11,3), Watch (4,3)]

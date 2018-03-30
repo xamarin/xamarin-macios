@@ -1,11 +1,11 @@
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
+using ObjCRuntime;
+using Foundation;
 
-namespace XamCore.BusinessChat {
+namespace BusinessChat {
 
 	[Mac (10,13,4, onlyOn64: true), iOS (11,3)]
 	[Native]
-	public enum BCChatButtonStyle : nint {
+	public enum BCChatButtonStyle : long {
 		Light = 0,
 		Dark,
 	}

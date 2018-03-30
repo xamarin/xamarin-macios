@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.NVector3;
 
-namespace XamCore.ARKit {
+namespace ARKit {
 	public partial class ARPlaneGeometry {
 
 		// Using GetXXX methods so it's similar to the ARFaceGeometry methods.

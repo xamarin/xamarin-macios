@@ -288,7 +288,7 @@ namespace GameKit {
 
 	[Mac (10,13,4), TV (11,3), iOS (11,3)]
 	[Native]
-	public enum GKAuthenticationType : nuint {
+	public enum GKAuthenticationType : ulong {
 		WithoutUI = 0,
 		GreenBuddyUI = 1,
 		AuthKitInvocation = 2,

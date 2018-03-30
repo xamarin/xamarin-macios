@@ -88,9 +88,9 @@ using CMTimeRange = Foundation.NSObject;
 #endif
 
 #if WATCH
-using CIBarcodeDescriptor = XamCore.Foundation.NSObject;
+using CIBarcodeDescriptor = Foundation.NSObject;
 #else
-using XamCore.CoreImage;
+using CoreImage;
 #endif
 
 // This little gem comes from a btouch bug that wrote the NSFilePresenterReacquirer delegate to the wrong

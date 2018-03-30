@@ -1,9 +1,9 @@
 #if XAMCORE_2_0
 using System;
 using System.Collections.Generic;
-using XamCore.Foundation;
+using Foundation;
 
-namespace XamCore.BusinessChat {
+namespace BusinessChat {
 	public partial class BCChatAction {
 		public static void OpenTranscript (string businessIdentifier, Dictionary<BCParameterName, string> intentParameters) {
 			var keys = new NSString [intentParameters.Keys.Count];

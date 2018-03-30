@@ -9,16 +9,16 @@
 using System;
 using System.ComponentModel;
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 #if MONOMAC
-using XamCore.AppKit;
-using UIControl = XamCore.AppKit.NSControl;
+using AppKit;
+using UIControl = AppKit.NSControl;
 #else
-using XamCore.UIKit;
+using UIKit;
 #endif
 
-namespace XamCore.BusinessChat {
+namespace BusinessChat {
 
 	[Mac (10,13,4, onlyOn64: true), iOS (11,3)]
 	[BaseType (typeof(UIControl))]
