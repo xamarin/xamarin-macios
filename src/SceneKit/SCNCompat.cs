@@ -97,7 +97,6 @@ namespace SceneKit {
 		}
 	}
 #endif
-<<<<<<< HEAD
 
 #if !WATCH && !XAMCORE_4_0
 	[iOS (11,0)]
@@ -112,6 +111,4 @@ namespace SceneKit {
 		}
 	}
 #endif
-=======
->>>>>>> xcode9.3
 }
