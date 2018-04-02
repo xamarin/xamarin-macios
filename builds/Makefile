@@ -432,7 +432,7 @@ build-tools: build-tools64
 
 .stamp-build-tools64: $(MONO_PATH)/configure $(MONO_DEPENDENCIES)
 	$(MAKE) -C $(SDK_BUILDDIR) package-bcl $(SDK_ARGS)
-	touch .stamp-build-tools64
+	$(Q) touch .stamp-build-tools64
 
 clean-tools64:
 	$(MAKE) -C $(SDK_BUILDDIR) clean-bcl $(SDK_ARGS)
