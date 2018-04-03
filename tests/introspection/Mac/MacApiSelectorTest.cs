@@ -196,6 +196,15 @@ namespace Introspection {
 			case "readingOptionsForType:pasteboard:":
 			case "writingOptionsForType:pasteboard:":
 				return true; // Optional selectors on NSPasteboardReading/NSPasteboardWriting
+			// Xcode 9.4 removed both selectors from MPSCnnBinaryKernel, reported radar https://trello.com/c/7EAM0qk1
+			// but apple says this was intentional.
+			case "kernelHeight":
+			case "kernelWidth":
+				switch (type.Name) {
+				case "MPSCnnBinaryKernel":
+					return true;
+				}
+				break;
 			}
 
 			switch (type.Namespace) {

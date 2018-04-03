@@ -36,19 +36,9 @@ using ObjCRuntime;
 namespace StoreKit {
 
 	[iOS (6,0)]
-	public class StoreProductParameters : DictionaryContainer
+	public partial class StoreProductParameters : DictionaryContainer
 	{
 #if !COREBUILD
-		public StoreProductParameters ()
-			: base (new NSMutableDictionary ())
-		{
-		}
-
-		public StoreProductParameters (NSDictionary dictionary)
-			: base (dictionary)
-		{
-		}
-
 		public StoreProductParameters (int iTunesItemIdentifier)
 			: this ()
 		{

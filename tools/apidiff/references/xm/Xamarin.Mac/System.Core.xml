@@ -210,12 +210,6 @@
               <constructor name=".ctor()" attrib="6276">
                 <parameters />
               </constructor>
-              <constructor name=".ctor(System.IntPtr, System.Runtime.InteropServices.SafeHandle)" attrib="6276">
-                <parameters>
-                  <parameter name="handle" position="0" attrib="0" type="System.IntPtr" />
-                  <parameter name="parentHandle" position="1" attrib="0" type="System.Runtime.InteropServices.SafeHandle" />
-                </parameters>
-              </constructor>
             </constructors>
             <properties>
               <property name="IsInvalid" attrib="0" ptype="System.Boolean">
@@ -242,12 +236,6 @@
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
-              </constructor>
-              <constructor name=".ctor(System.IntPtr, System.Runtime.InteropServices.SafeHandle)" attrib="6278">
-                <parameters>
-                  <parameter name="handle" position="0" attrib="0" type="System.IntPtr" />
-                  <parameter name="parentHandle" position="1" attrib="0" type="System.Runtime.InteropServices.SafeHandle" />
-                </parameters>
               </constructor>
             </constructors>
             <methods>
@@ -17916,24 +17904,6 @@
               </constructor>
             </constructors>
             <properties>
-              <property name="HashAlgorithm" attrib="0" ptype="System.Security.Cryptography.CngAlgorithm">
-                <methods>
-                  <method name="get_HashAlgorithm()" attrib="2182" returntype="System.Security.Cryptography.CngAlgorithm">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
-                    <parameters />
-                  </method>
-                  <method name="set_HashAlgorithm(System.Security.Cryptography.CngAlgorithm)" attrib="2182" returntype="System.Void">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
-                    <parameters>
-                      <parameter name="value" position="0" attrib="0" type="System.Security.Cryptography.CngAlgorithm" />
-                    </parameters>
-                  </method>
-                </methods>
-              </property>
               <property name="Key" attrib="0" ptype="System.Security.Cryptography.CngKey">
                 <methods>
                   <method name="get_Key()" attrib="2182" returntype="System.Security.Cryptography.CngKey">
@@ -17943,57 +17913,9 @@
               </property>
             </properties>
             <methods>
-              <method name="FromXmlString(System.String, System.Security.Cryptography.ECKeyXmlFormat)" attrib="134" returntype="System.Void">
-                <parameters>
-                  <parameter name="xml" position="0" attrib="0" type="System.String" />
-                  <parameter name="format" position="1" attrib="0" type="System.Security.Cryptography.ECKeyXmlFormat" />
-                </parameters>
-              </method>
-              <method name="SignData(System.Byte[])" attrib="134" returntype="System.Byte[]">
-                <parameters>
-                  <parameter name="data" position="0" attrib="0" type="System.Byte[]" />
-                </parameters>
-              </method>
-              <method name="SignData(System.IO.Stream)" attrib="134" returntype="System.Byte[]">
-                <parameters>
-                  <parameter name="data" position="0" attrib="0" type="System.IO.Stream" />
-                </parameters>
-              </method>
-              <method name="SignData(System.Byte[], System.Int32, System.Int32)" attrib="134" returntype="System.Byte[]">
-                <parameters>
-                  <parameter name="data" position="0" attrib="0" type="System.Byte[]" />
-                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
-                  <parameter name="count" position="2" attrib="0" type="System.Int32" />
-                </parameters>
-              </method>
               <method name="SignHash(System.Byte[])" attrib="198" virtual="true" is-override="true" returntype="System.Byte[]">
                 <parameters>
                   <parameter name="hash" position="0" attrib="0" type="System.Byte[]" />
-                </parameters>
-              </method>
-              <method name="ToXmlString(System.Security.Cryptography.ECKeyXmlFormat)" attrib="134" returntype="System.String">
-                <parameters>
-                  <parameter name="format" position="0" attrib="0" type="System.Security.Cryptography.ECKeyXmlFormat" />
-                </parameters>
-              </method>
-              <method name="VerifyData(System.Byte[], System.Byte[])" attrib="134" returntype="System.Boolean">
-                <parameters>
-                  <parameter name="data" position="0" attrib="0" type="System.Byte[]" />
-                  <parameter name="signature" position="1" attrib="0" type="System.Byte[]" />
-                </parameters>
-              </method>
-              <method name="VerifyData(System.IO.Stream, System.Byte[])" attrib="134" returntype="System.Boolean">
-                <parameters>
-                  <parameter name="data" position="0" attrib="0" type="System.IO.Stream" />
-                  <parameter name="signature" position="1" attrib="0" type="System.Byte[]" />
-                </parameters>
-              </method>
-              <method name="VerifyData(System.Byte[], System.Int32, System.Int32, System.Byte[])" attrib="134" returntype="System.Boolean">
-                <parameters>
-                  <parameter name="data" position="0" attrib="0" type="System.Byte[]" />
-                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
-                  <parameter name="count" position="2" attrib="0" type="System.Int32" />
-                  <parameter name="signature" position="3" attrib="0" type="System.Byte[]" />
                 </parameters>
               </method>
               <method name="VerifyHash(System.Byte[], System.Byte[])" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
@@ -18003,16 +17925,6 @@
                 </parameters>
               </method>
             </methods>
-          </class>
-          <class name="ECKeyXmlFormat" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
-            <interfaces>
-              <interface name="System.IComparable" />
-              <interface name="System.IConvertible" />
-              <interface name="System.IFormattable" />
-            </interfaces>
-            <fields>
-              <field name="Rfc4050" attrib="32854" fieldtype="System.Security.Cryptography.ECKeyXmlFormat" value="0" />
-            </fields>
           </class>
           <class name="ECParameters" type="struct" base="System.ValueType" sealed="true" charset="Ansi" layout="Sequential">
             <fields>

@@ -1,0 +1,7 @@
+!missing-selector! +SFAuthorization::authorizationWithFlags:rights:environment: not bound
+!missing-selector! SFAuthorization::initWithFlags:rights:environment: not bound
+!missing-selector! SFAuthorization::obtainWithRight:flags:error: not bound
+!missing-selector! SFAuthorization::obtainWithRights:flags:environment:authorizedRights:error: not bound
+!missing-selector! SFAuthorization::permitWithRight:flags: not bound
+!missing-selector! SFAuthorization::permitWithRights:flags:environment:authorizedRights: not bound
+!missing-type! SFAuthorization not bound
