@@ -413,46 +413,8 @@ $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/smcs:
 #
 # Tools 64bit build.  Builds all the class libs as well.
 #
-TOOLS64_CFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
-TOOLS64_CXXFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
-TOOLS64_LDFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) $(COMMON_LDFLAGS)
-
-TOOLS64_CONFIGURE_FLAGS=	--build=x86_64-apple-darwin10 \
-			--with-monotouch_tv=yes \
-			--prefix=$(BUILD_DESTDIR)/tools64 \
-			--enable-maintainer-mode \
-			--cache-file=../tools64.config.cache \
-			--with-glib=embedded \
-			--enable-minimal=com	\
-			--with-profile4_x=no \
-			--with-monotouch=yes \
-			--with-xammac=yes \
-			--with-mcs-docs=no \
-			--disable-nls \
-			--disable-iconv	\
-			--disable-boehm \
-			$(XAMARIN_IOS_CONFIGURE_FLAGS) \
-
-ifeq ($(WATCH_MONO_PATH),$(MONO_PATH))
-TOOLS64_CONFIGURE_FLAGS += --with-monotouch_watch=yes
-else
-TOOLS64_CONFIGURE_FLAGS += --with-monotouch_watch=no
-endif
-
-TOOLS64_ACVARS = $(COMMON_ACVARS)
-
-TOOLS64_CONFIGURE_ENVIRONMENT = \
-	$(TOOLS64_ACVARS) \
-	CFLAGS="$(TOOLS64_CFLAGS)" \
-	CXXFLAGS="$(TOOLS64_CXXFLAGS)" \
-	LDFLAGS="$(TOOLS64_LDFLAGS)" \
-	DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT) \
-	CC="$(MAC_CC)" \
-	CXX="$(MAC_CXX)" \
-
 tools:: build-tools64 install-tools
 
-setup:: setup-tools64
 build:: build-tools64
 clean-local:: clean-tools64
 
@@ -465,23 +427,16 @@ endif
 install-local:: install-tools-mac
 install-tools:: install-tools-mac
 
-setup-tools64: .stamp-configure-tools64
-
-.stamp-configure-tools64: $(MONO_PATH)/configure
-	$(Q) $(TOOLS64_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh tools64 $(abspath $(MONO_PATH)/configure) $(TOOLS64_CONFIGURE_FLAGS)
-
 build-tools-bcl: build-tools64
 build-tools: build-tools64
 
-.stamp-build-tools64: .stamp-configure-tools64 $(MONO_DEPENDENCIES)
-	$(MAKE) -C tools64 all EXTERNAL_MCS=$(SYSTEM_MCS) EXTERNAL_RUNTIME=$(SYSTEM_MONO) MONOTOUCH_MCS_FLAGS=$(IOS_MCS_FLAGS) XAMMAC_MCS_FLAGS=$(MAC_MCS_FLAGS)
-	# NO_INSTALL is defined in mono/mcs/build/profiles except for net_4_5. If we don't have it, then it attempts to install into a gac, and sometimes fail
-	NO_INSTALL=1 $(MAKE) -C tools64 -j 1 install EXTERNAL_MCS=$(SYSTEM_MCS) EXTERNAL_RUNTIME=$(SYSTEM_MONO)
-	@touch .stamp-build-tools64
+.stamp-build-tools64: $(MONO_PATH)/configure $(MONO_DEPENDENCIES)
+	$(MAKE) -C $(SDK_BUILDDIR) package-bcl $(SDK_ARGS)
+	$(Q) touch .stamp-build-tools64
 
 clean-tools64:
-	rm -rf tools64 .stamp-*-tools64 tools64.config.cache
-	rm -f .stamp-build-tools64
+	$(MAKE) -C $(SDK_BUILDDIR) clean-bcl $(SDK_ARGS)
+	$(RM) .stamp-build-tools64
 
 ifdef INCLUDE_WATCH
 install-local:: install-tools-watch
@@ -491,79 +446,6 @@ ifdef INCLUDE_TVOS
 install-local:: install-tools-tvos
 install-tools:: install-tools-tvos
 endif
-
-#
-# Xamarin.WatchOS BCL assemblies
-#
-# We need to build the WatchOS BCL using the same mono checkout as we're using for the
-# corresponding Mono runtimes, which means we can't use the normal tools64 build
-#
-# Also we can't reuse the existing watchsimulator/targetwatch builds, since their
-# monos don't run (correctly) on desktop OSX.
-#
-# So we build an entire Mono just to build the WatchOS BCL.
-#
-
-WATCHBCL_CFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
-WATCHBCL_CXXFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
-WATCHBCL_LDFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) $(COMMON_LDFLAGS)
-WATCHBCL_ACVARS = $(COMMON_ACVARS)
-
-
-WATCHBCL_CONFIGURE_FLAGS=	--build=x86_64-apple-darwin10 \
-			--prefix=$(BUILD_DESTDIR)/watchbcl \
-			--enable-maintainer-mode \
-			--cache-file=../watchbcl.config.cache \
-			--with-glib=embedded \
-			--enable-minimal=com	\
-			--with-profile4_x=no \
-			--with-monotouch=no \
-			--with-monotouch_watch=yes \
-			--with-monotouch_tv=no \
-			--with-xammac=no \
-			--with-mcs-docs=no \
-			--disable-nls \
-			--disable-iconv	\
-			--disable-boehm \
-			$(XAMARIN_IOS_CONFIGURE_FLAGS)
-
-WATCHBCL_CONFIGURE_ENVIRONMENT = \
-	$(WATCHBCL_ACVARS) \
-	CFLAGS="$(WATCHBCL_CFLAGS)" \
-	CXXFLAGS="$(WATCHBCL_CXXFLAGS)" \
-	LDFLAGS="$(WATCHBCL_LDFLAGS)" \
-	CC="$(MAC_CC)" \
-	CXX="$(MAC_CXX)" \
-
-ifdef INCLUDE_WATCH
-setup:: setup-watchbcl
-build:: build-watchbcl
-clean-local:: clean-watchbcl
-endif
-
-watchbcl: build-watchbcl install-tools-watch
-
-setup-watchbcl: .stamp-configure-watchbcl
-
-ifneq ($(WATCH_MONO_PATH),$(MONO_PATH))
-.stamp-configure-watchbcl: $(WATCH_MONO_PATH)/configure
-	$(Q) $(WATCHBCL_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh watchbcl ../$(WATCH_MONO_PATH)/configure $(WATCHBCL_CONFIGURE_FLAGS)
-endif
-
-build-tools-bcl: build-watchbcl
-build-tools: build-watchbcl
-
-ifeq ($(WATCH_MONO_PATH),$(MONO_PATH))
-.stamp-build-watchbcl: .stamp-build-tools64 $(MONO_DEPENDENCIES)
-else
-.stamp-build-watchbcl: .stamp-configure-watchbcl .stamp-build-tools64 $(MONO_DEPENDENCIES)
-	$(MAKE) -C watchbcl all EXTERNAL_MCS=$(SYSTEM_MCS) EXTERNAL_RUNTIME=$(SYSTEM_MONO)
-	$(MAKE) -C watchbcl install EXTERNAL_MCS=$(SYSTEM_MCS) EXTERNAL_RUNTIME=$(SYSTEM_MONO)
-endif
-	$(Q) touch $@
-
-clean-watchbcl:
-	rm -rf watchbcl .stamp-*-watchbcl watchbcl.config.cache
 
 #
 # Xamarin.iOS/WatchOS/TVOS BCL assemblies
