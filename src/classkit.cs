@@ -15,7 +15,7 @@ using System.Reflection;
 
 namespace XamCore.ClassKit {
 
-	[NoWatch, NoTV, NoMac, iOS (11,3)]
+	[NoWatch, NoTV, NoMac, iOS (11,4)]
 	[Native]
 	enum CLSBinaryValueType : nint {
 		TrueFalse = 0,
@@ -23,7 +23,7 @@ namespace XamCore.ClassKit {
 		YesNo,
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (11,3)]
+	[NoWatch, NoTV, NoMac, iOS (11,4)]
 	[Native]
 	enum CLSContextType : nint {
 		None = 0,
@@ -44,7 +44,7 @@ namespace XamCore.ClassKit {
 		Video,
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (11,3)]
+	[NoWatch, NoTV, NoMac, iOS (11,4)]
 	[Native]
 	[ErrorDomain ("CLSErrorCodeDomain")]
 	public enum CLSErrorCode : nint {
@@ -60,7 +60,7 @@ namespace XamCore.ClassKit {
 		PartialFailure,
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (11,3)]
+	[NoWatch, NoTV, NoMac, iOS (11,4)]
 	enum CLSContextTopic {
 		[Field ("CLSContextTopicMath")]
 		Math,
@@ -80,7 +80,7 @@ namespace XamCore.ClassKit {
 		HealthAndFitness,
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (11,3)]
+	[NoWatch, NoTV, NoMac, iOS (11,4)]
 	[Static]
 	interface CLSErrorUserInfoKeys {
 
@@ -91,7 +91,7 @@ namespace XamCore.ClassKit {
 		NSString UnderlyingErrorsKey { get; }
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (11,3)]
+	[NoWatch, NoTV, NoMac, iOS (11,4)]
 	enum CLSPredicateKeyPaths {
 		[Field ("CLSPredicateKeyPathDateCreated")]
 		DateCreated,
@@ -107,7 +107,7 @@ namespace XamCore.ClassKit {
 		Parent,
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (11,3)]
+	[NoWatch, NoTV, NoMac, iOS (11,4)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CLSObject : NSSecureCoding {
@@ -119,7 +119,7 @@ namespace XamCore.ClassKit {
 		NSDate DateLastModified { get; }
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (11,3)]
+	[NoWatch, NoTV, NoMac, iOS (11,4)]
 	[BaseType (typeof (CLSObject))]
 	[DisableDefaultCtor]
 	interface CLSActivity {
@@ -137,7 +137,7 @@ namespace XamCore.ClassKit {
 		void AddProgressRange (double start, double end);
 
 		[Export ("addAdditionalActivityItem:")]
-		void AddAdditional (CLSActivityItem activityItem);
+		void AddActivityItem (CLSActivityItem activityItem);
 
 		[Export ("additionalActivityItems")]
 		CLSActivityItem [] AdditionalActivityItems { get; }
@@ -154,7 +154,7 @@ namespace XamCore.ClassKit {
 		void Stop ();
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (11,3)]
+	[NoWatch, NoTV, NoMac, iOS (11,4)]
 	[BaseType (typeof (CLSObject))]
 	[DisableDefaultCtor]
 	interface CLSActivityItem {
@@ -166,7 +166,7 @@ namespace XamCore.ClassKit {
 		string Identifier { get; }
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (11,3)]
+	[NoWatch, NoTV, NoMac, iOS (11,4)]
 	[BaseType (typeof (CLSActivityItem))]
 	[DisableDefaultCtor]
 	interface CLSBinaryItem {
@@ -182,7 +182,7 @@ namespace XamCore.ClassKit {
 		IntPtr Constructor (string identifier, string title, CLSBinaryValueType valueType);
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (11,3)]
+	[NoWatch, NoTV, NoMac, iOS (11,4)]
 	[BaseType (typeof (CLSObject))]
 	[DisableDefaultCtor]
 	interface CLSContext {
@@ -190,7 +190,6 @@ namespace XamCore.ClassKit {
 		[Export ("identifier")]
 		string Identifier { get; }
 
-		[NoWatch, NoTV, NoMac, iOS (11,4)]
 		[NullAllowed, Export ("universalLinkURL", ArgumentSemantic.Assign)]
 		NSUrl UniversalLinkUrl { get; set; }
 
@@ -246,7 +245,7 @@ namespace XamCore.ClassKit {
 
 	interface ICLSDataStoreDelegate { }
 
-	[NoWatch, NoTV, NoMac, iOS (11,3)]
+	[NoWatch, NoTV, NoMac, iOS (11,4)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface CLSDataStoreDelegate {
@@ -256,9 +255,7 @@ namespace XamCore.ClassKit {
 		CLSContext CreateContext (string identifier, CLSContext parentContext, string [] parentIdentifierPath);
 	}
 
-	delegate void CLSDataStoreMatchingResults (CLSContext [] contexts, NSError error);
-
-	[NoWatch, NoTV, NoMac, iOS (11,3)]
+	[NoWatch, NoTV, NoMac, iOS (11,4)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CLSDataStore {
@@ -276,8 +273,12 @@ namespace XamCore.ClassKit {
 		[NullAllowed, Export ("runningActivity")]
 		CLSActivity RunningActivity { get; }
 
+		[Wrap ("WeakDelegate"), Protocolize]
+		[NullAllowed]
+		CLSDataStoreDelegate Delegate { get; set; }
+
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
-		ICLSDataStoreDelegate Delegate { get; set; }
+		NSObject WeakDelegate { get; set; }
 
 		[Async]
 		[Export ("saveWithCompletion:")]
@@ -287,17 +288,17 @@ namespace XamCore.ClassKit {
 
 		[Async]
 		[Export ("contextsMatchingPredicate:completion:")]
-		void FindContextsMatching (NSPredicate predicate, CLSDataStoreMatchingResults completion);
+		void FindContextsMatching (NSPredicate predicate, Action<CLSContext [], NSError> completion);
 
 		[Async]
 		[Export ("contextsMatchingIdentifierPath:completion:")]
-		void FindContextsMatching (string [] identifierPath, CLSDataStoreMatchingResults completion);
+		void FindContextsMatching (string [] identifierPath, Action<CLSContext [], NSError> completion);
 
 		[Export ("removeContext:")]
 		void Remove (CLSContext context);
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (11,3)]
+	[NoWatch, NoTV, NoMac, iOS (11,4)]
 	[BaseType (typeof (CLSActivityItem))]
 	[DisableDefaultCtor]
 	interface CLSQuantityItem {
@@ -310,7 +311,7 @@ namespace XamCore.ClassKit {
 		IntPtr Constructor (string identifier, string title);
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (11,3)]
+	[NoWatch, NoTV, NoMac, iOS (11,4)]
 	[BaseType (typeof (CLSActivityItem))]
 	[DisableDefaultCtor]
 	interface CLSScoreItem {
