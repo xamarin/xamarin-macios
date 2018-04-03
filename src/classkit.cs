@@ -92,19 +92,25 @@ namespace XamCore.ClassKit {
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (11,4)]
-	enum CLSPredicateKeyPaths {
+	[Static]
+	interface CLSPredicateKeyPath {
 		[Field ("CLSPredicateKeyPathDateCreated")]
-		DateCreated,
+		NSString DateCreated { get; }
+
 		[Field ("CLSPredicateKeyPathIdentifier")]
-		Identifier,
+		NSString Identifier { get; }
+
 		[Field ("CLSPredicateKeyPathTitle")]
-		Title,
+		NSString Title { get; }
+
 		[Field ("CLSPredicateKeyPathUniversalLinkURL")]
-		UniversalLinkUrl,
+		NSString UniversalLinkUrl { get; }
+
 		[Field ("CLSPredicateKeyPathTopic")]
-		Topic,
+		NSString Topic { get; }
+
 		[Field ("CLSPredicateKeyPathParent")]
-		Parent,
+		NSString Parent { get; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (11,4)]
