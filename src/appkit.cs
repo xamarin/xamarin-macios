@@ -2109,7 +2109,7 @@ namespace AppKit {
 	}
 	
 	[BaseType (typeof (NSControl))]
-	interface NSButton : NSAccessibilityButton {
+	interface NSButton : NSAccessibilityButton, NSUserInterfaceCompression {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frameRect);
 
@@ -13743,6 +13743,10 @@ namespace AppKit {
 
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
+
+		[Mac (10,13)]
+		[Export ("view")]
+		INSUserInterfaceCompression View { get; }
 	}
 	
 	[BaseType (typeof (NSObject))]
@@ -26137,6 +26141,8 @@ namespace AppKit {
 		[Export ("standardOptions", ArgumentSemantic.Copy)]
 		NSUserInterfaceCompressionOptions StandardOptions { get; }
 	}
+
+	interface INSUserInterfaceCompression { }
 
 	[Mac (10, 13)]
 	[Protocol]

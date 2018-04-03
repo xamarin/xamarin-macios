@@ -44,6 +44,11 @@
           <property name="Version" value="1.0.61.0" />
         </properties>
       </attribute>
+      <attribute name="System.Reflection.AssemblyKeyFileAttribute">
+        <properties>
+          <property name="KeyFile" value="../mono.pub" />
+        </properties>
+      </attribute>
       <attribute name="System.Reflection.AssemblyProductAttribute">
         <properties>
           <property name="Product" value="System.Data.SQLite" />

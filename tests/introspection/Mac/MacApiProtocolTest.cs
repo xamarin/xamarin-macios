@@ -78,6 +78,7 @@ namespace Introspection {
 				break;
 			case "NSCopying":
 				switch (type.Name) {
+				case "WKPreferences": // Not declared in header file
 				case "DomNodeFilter": // Not declared in header file
 				case "MKDirectionsRequest": // Not declared in header file
 				case "EKObject": // Not declared in header file

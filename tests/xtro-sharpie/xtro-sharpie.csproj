@@ -33,17 +33,17 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'watchOS' ">
     <StartAction>Project</StartAction>
-    <StartArguments>watchos4.2-armv7.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/32bits/Xamarin.WatchOS.dll</StartArguments>
+    <StartArguments>watchos4.3-armv7.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/32bits/Xamarin.WatchOS.dll</StartArguments>
     <StartWorkingDirectory>.</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'iOS' ">
     <StartAction>Project</StartAction>
-    <StartArguments>iphoneos11.2-arm64.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/64bits/Xamarin.iOS.dll ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/OpenTK-1.0.dll</StartArguments>
+    <StartArguments>iphoneos11.3-arm64.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/64bits/Xamarin.iOS.dll ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/OpenTK-1.0.dll</StartArguments>
     <StartWorkingDirectory>.</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'tvOS' ">
     <StartAction>Project</StartAction>
-    <StartArguments>appletvos11.2-arm64.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/Xamarin.TVOS/OpenTK-1.0.dll</StartArguments>
+    <StartArguments>appletvos11.3-arm64.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/Xamarin.TVOS/OpenTK-1.0.dll</StartArguments>
     <StartWorkingDirectory>.</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'macOS' ">
