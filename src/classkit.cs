@@ -143,7 +143,7 @@ namespace XamCore.ClassKit {
 		void AddProgressRange (double start, double end);
 
 		[Export ("addAdditionalActivityItem:")]
-		void AddActivityItem (CLSActivityItem activityItem);
+		void AddAdditionalActivityItem (CLSActivityItem activityItem);
 
 		[Export ("additionalActivityItems")]
 		CLSActivityItem [] AdditionalActivityItems { get; }
