@@ -3,6 +3,7 @@
 report_error ()
 {
 	printf "🔥 [Failed to compare API and create generator diff]($BUILD_URL/console) 🔥\\n" >> $WORKSPACE/jenkins/pr-comments.md
+	touch $WORKSPACE/jenkins/failure-stamp
 }
 trap report_error ERR
 
