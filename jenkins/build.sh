@@ -1,4 +1,15 @@
 #!/bin/bash -e
+
+report_error ()
+{
+	printf "🔥 [Build failed]($BUILD_URL/console) 🔥\\n" >> $WORKSPACE/jenkins/pr-comments.md
+}
+trap report_error ERR
+
+ls -la $WORKSPACE/jenkins
+echo "$WORKSPACE/jenkins/pr-comments.md:"
+cat $WORKSPACE/jenkins/pr-comments.md
+
 cd $WORKSPACE
 export BUILD_REVISION=jenkins
 
@@ -46,3 +57,5 @@ else
 fi
 
 time make world
+
+printf "✅ [Build succeeded]($BUILD_URL/console)\\n" >> $WORKSPACE/jenkins/pr-comments.md
