@@ -8,6 +8,8 @@ report_error ()
 		printf "\\n" >> $WORKSPACE/jenkins/pr-comments.md
 		cat $WORKSPACE/tests/TestSummary.md >> $WORKSPACE/jenkins/pr-comments.md
 	fi
+
+	touch $WORKSPACE/jenkins/failure-stamp
 }
 trap report_error ERR
 
@@ -28,3 +30,9 @@ rm -rf ~/.config/.mono/keypairs/
 make -C tests jenkins
 
 printf "✅ [Test run succeeded]($BUILD_URL/Test_Report/)\\n" >> $WORKSPACE/jenkins/pr-comments.md
+
+if test -f $WORKSPACE/jenkins/failure-stamp; then
+	echo "Something went wrong:"
+	cat $WORKSPACE/jenkins/pr-comments.md
+	exit 1
+fi
