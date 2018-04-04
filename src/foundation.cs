@@ -5104,11 +5104,11 @@ namespace XamCore.Foundation
 
 		// From NSUserActivity (CLSDeepLinks)
 
-		[NoWatch, NoTV, NoMac, iOS (11,3)]
+		[NoWatch, NoTV, NoMac, iOS (11,4)]
 		[Export ("isClassKitDeepLink")]
 		bool IsClassKitDeepLink { get; }
 
-		[NoWatch, NoTV, NoMac, iOS (11,3)]
+		[NoWatch, NoTV, NoMac, iOS (11,4)]
 		[NullAllowed, Export ("contextIdentifierPath")]
 		string[] ContextIdentifierPath { get; }
 	}
