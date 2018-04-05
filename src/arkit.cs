@@ -72,6 +72,8 @@ namespace ARKit {
 	public enum ARHitTestResultType : ulong {
 		FeaturePoint = 1 << 0,
 		EstimatedHorizontalPlane = 1 << 1,
+		[iOS (11,3)]
+		EstimatedVerticalPlane = 1 << 2,
 		ExistingPlane = 1 << 3,
 		ExistingPlaneUsingExtent = 1 << 4,
 		[iOS (11,3)]
