@@ -52,32 +52,32 @@ $(MAC_BUILD_DIR)/net_4_5/OpenTK.dll: $(MAC_OPENTK_SOURCES) $(MAC_BUILD_DIR)/full
 $(MAC_BUILD_DIR)/net_4_5-reference/OpenTK.dll: $(MAC_BUILD_DIR)/net_4_5/OpenTK.dll
 	@mkdir -p $(@D)
 	$(Q) cp $^ $@
-	$(Q) cp $^.pdb $@.pdb
+	$(Q) cp $(<:.dll=.pdb) $(@:.dll=.pdb)
 
 $(MAC_BUILD_DIR)/%-reference/OpenTK.dll: $(MAC_BUILD_DIR)/%-32/OpenTK.dll
 	@mkdir -p $(@D)
 	$(Q) cp $^ $@
-	$(Q) cp $^.pdb $@.pdb
+	$(Q) cp $(<:.dll=.pdb) $(@:.dll=.pdb)
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile/OpenTK.dll: $(MAC_BUILD_DIR)/mobile-reference/OpenTK.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile
 	$(Q) install -m 0755 $^ $@
-	$(Q) install -m 0644 $< $(@:.dll=.pdb)
+	$(Q) install -m 0644 $(<:.dll=.pdb) $(@:.dll=.pdb)
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/mobile/OpenTK.dll $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/mobile/OpenTK.dll: $(MAC_BUILD_DIR)/mobile-32/OpenTK.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/mobile $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/mobile
 	$(Q) install -m 0755 $^ $@
-	$(Q) install -m 0644 $< $(@:.dll=.pdb)
+	$(Q) install -m 0644 $(<:.dll=.pdb) $(@:.dll=.pdb)
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/full/OpenTK.dll: $(MAC_BUILD_DIR)/full-reference/OpenTK.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/full
 	$(Q) install -m 0755 $^ $@
-	$(Q) install -m 0644 $< $(@:.dll=.pdb)
+	$(Q) install -m 0644 $(<:.dll=.pdb) $(@:.dll=.pdb)
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/net_4_5/OpenTK.dll: $(MAC_BUILD_DIR)/net_4_5-reference/OpenTK.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/net_4_5
 	$(Q) install -m 0755 $^ $@
-	$(Q) install -m 0644 $< $(@:.dll=.pdb)
+	$(Q) install -m 0644 $(<:.dll=.pdb) $(@:.dll=.pdb)
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/full/OpenTK.dll $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/full/OpenTK.dll: $(MAC_BUILD_DIR)/full-32/OpenTK.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/full $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/full
 	$(Q) install -m 0755 $^ $@
-	$(Q) install -m 0644 $< $(@:.dll=.pdb)
+	$(Q) install -m 0644 $(<:.dll=.pdb) $(@:.dll=.pdb)
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/%: | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac
 	$(Q) ln -sF ../../reference/mobile/$* $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/$*
