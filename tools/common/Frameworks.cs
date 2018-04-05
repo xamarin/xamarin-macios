@@ -143,6 +143,8 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "CoreML", "CoreML", 10, 13 },
 					{ "Vision", "Vision", 10, 13 },
 					{ "MetalPerformanceShaders", "MetalPerformanceShaders", 10, 13 },
+
+					{ "BusinessChat", "BusinessChat", 10, 13, 4 },
 				};
 			}
 			return mac_frameworks;
@@ -257,6 +259,8 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "FileProvider", "FileProvider", 11 },
 				{ "FileProviderUI", "FileProviderUI", 11 },
 				{ "PdfKit", "PDFKit", 11 },
+
+				{ "BusinessChat", "BusinessChat", 11, 3 },
 
 				{ "ClassKit", "ClassKit", 11,4 },
 			};
