@@ -52,6 +52,7 @@ using System.ComponentModel;
 
 using ObjCRuntime;
 using Foundation;
+using Xamarin.Utils;
 
 public static class GeneratorExtensions
 {
@@ -5854,6 +5855,13 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
+	static string GetAssemblyName ()
+	{
+		if (BindThirdPartyLibrary)
+			return Path.GetFileNameWithoutExtension (BindingTouch.outfile);
+		return BindingTouch.TargetFramework.Identifier;
+	}
+
 	public void Generate (Type type)
 	{
 		if (!Compat && ZeroCopyStrings) {
@@ -5896,6 +5904,7 @@ public partial class Generator : IMemberGatherer {
 			BaseTypeAttribute bta = ReflectionExtensions.GetBaseTypeAttribute(type);
 			Type base_type = bta != null ?  bta.BaseType : TypeManager.System_Object;
 			string objc_type_name = bta != null ? (bta.Name != null ? bta.Name : TypeName) : TypeName;
+			string register_name = is_model ? StringUtils.SanitizeObjectiveCName (GetAssemblyName () + "__" + type.FullName) : objc_type_name;
 			Header (sw);
 			
 			if (is_protocol) {
@@ -5937,7 +5946,7 @@ public partial class Generator : IMemberGatherer {
 						is_direct_binding = false;
 						is_direct_binding_value = "false";
 					}
-					print ("[Register(\"{0}\", {1})]", objc_type_name, is_direct_binding == false ? "false" : "true");
+					print ("[Register(\"{0}\", {1})]", register_name, is_direct_binding == false ? "false" : "true");
 				}
 				if (is_abstract || need_abstract.ContainsKey (type))
 					class_mod = "abstract ";
