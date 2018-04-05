@@ -526,11 +526,14 @@ namespace GeneratorTests
 		public void Bug57870 () => BuildFile (Profile.iOS, true, true, "bug57870.cs");
 
 		[Test]
-		public void Issue3875 ()
+		[TestCase ("issue3875.cs", "AProtocol")]
+		[TestCase ("issue3875B.cs", "BProtocol")]
+		[TestCase ("issue3875C.cs", "api0__Issue3875_AProtocol")]
+		public void Issue3875 (string file, string modelName)
 		{
-			var bgen = BuildFile (Profile.iOS, "issue3875.cs");
+			var bgen = BuildFile (Profile.iOS, file);
 			var attrib = bgen.ApiAssembly.MainModule.GetType ("Issue3875", "AProtocol").CustomAttributes.Where ((v) => v.AttributeType.Name == "RegisterAttribute").First ();
-			Assert.AreEqual ("api0__Issue3875_AProtocol", attrib.ConstructorArguments [0].Value, "Custom ObjC name");
+			Assert.AreEqual (modelName, attrib.ConstructorArguments [0].Value, "Custom ObjC name");
 		}
 
 		BGenTool BuildFile (Profile profile, params string [] filenames)
