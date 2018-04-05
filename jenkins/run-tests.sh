@@ -1,5 +1,18 @@
 #!/bin/bash -e
 
+report_error ()
+{
+	printf "🔥 [Test run failed]($BUILD_URL/Test_Report/) 🔥\\n" >> $WORKSPACE/jenkins/pr-comments.md
+
+	if test -f $WORKSPACE/tests/TestSummary.md; then
+		printf "\\n" >> $WORKSPACE/jenkins/pr-comments.md
+		cat $WORKSPACE/tests/TestSummary.md >> $WORKSPACE/jenkins/pr-comments.md
+	fi
+
+	touch $WORKSPACE/jenkins/failure-stamp
+}
+trap report_error ERR
+
 export BUILD_REVISION=jenkins
 cd $WORKSPACE
 # Unlock
@@ -15,3 +28,11 @@ rm -rf ~/.config/.mono/keypairs/
 
 # Run tests
 make -C tests jenkins
+
+printf "✅ [Test run succeeded]($BUILD_URL/Test_Report/)\\n" >> $WORKSPACE/jenkins/pr-comments.md
+
+if test -f $WORKSPACE/jenkins/failure-stamp; then
+	echo "Something went wrong:"
+	cat $WORKSPACE/jenkins/pr-comments.md
+	exit 1
+fi

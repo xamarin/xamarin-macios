@@ -160,8 +160,6 @@ for dir in Xamarin.Mac 4.5; do
 	$CP -R "$ROOT_DIR/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/mono/$dir" "$OUTPUT_DIR/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/mono"
 done
 
-touch "$OUTPUT_DIR/stamp"
-
 if test -z "$CURRENT_BRANCH"; then
 	echo "${BLUE}Current hash: ${WHITE}$(git log -1 --pretty="%h: %s")${BLUE} (detached)${CLEAR}"
 else
@@ -169,6 +167,11 @@ else
 fi
 echo "${BLUE}Checking out ${WHITE}$(git log -1 --pretty="%h: %s" "$BASE_HASH")${CLEAR}...${CLEAR}"
 git checkout --quiet --force --detach "$BASE_HASH"
+
+# To ensure that our logic below doesn't modify files it shouldn't, we create a stamp
+# file, and compare the timestamps of all the files that shouldn't be modified to this
+# file's timestamp.
+touch "$OUTPUT_DIR/stamp"
 
 echo "${BLUE}Building src/...${CLEAR}"
 make -C "$ROOT_DIR/src" BUILD_DIR=../tools/comparison/build "IOS_DESTDIR=$OUTPUT_DIR/_ios-build" "MAC_DESTDIR=$OUTPUT_DIR/_mac-build" -j8

@@ -51,6 +51,10 @@ namespace iAd {
 	[ErrorDomain ("ADClientErrorDomain")]
 	public enum ADClientError : long {
 		Unknown = 0,
-		LimitAdTracking = 1
+		LimitAdTracking = 1,
+		[iOS (11,3)]
+		MissingData = 2,
+		[iOS (11,3)]
+		CorruptResponse = 3,
 	}
 }

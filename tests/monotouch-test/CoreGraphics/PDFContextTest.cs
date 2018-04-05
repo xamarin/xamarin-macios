@@ -13,9 +13,11 @@ using System.IO;
 #if XAMCORE_2_0
 using CoreGraphics;
 using Foundation;
+using ObjCRuntime;
 #else
 using MonoTouch.CoreGraphics;
 using MonoTouch.Foundation;
+using MonoTouch.ObjCRuntime;
 #endif
 using NUnit.Framework;
 
@@ -78,6 +80,9 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void Constructors ()
 		{
+			if (TestRuntime.CheckXcodeVersion (9,3))
+				Assert.Ignore ("Crash (at least on simulator) with iOS 11.3 beta 1");
+			
 			Assert.Throws<Exception> (() => new CGContextPDF ((CGDataConsumer) null), "null CGDataConsumer");
 
 			Assert.Throws<Exception> (() => new CGContextPDF ((CGDataConsumer) null, RectangleF.Empty), "null CGDataConsumer, Empty");

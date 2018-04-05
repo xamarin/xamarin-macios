@@ -65,6 +65,8 @@ namespace AudioUnit
 		Unauthorized = -10847,
 		[iOS (11,0), Mac (10,13, onlyOn64: true), TV (11,0), NoWatch]
 		MidiOutputBufferFull = -66753,
+		[iOS (11,3), Mac (10,13,4, onlyOn64: true), TV (11,3), NoWatch]
+		InvalidParameterValue = -66743,
 		[iOS (11,0), Mac (10,13, onlyOn64: true), TV (11,0), NoWatch]
 		ExtensionNotFound = -66744,
 	}

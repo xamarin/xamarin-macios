@@ -694,7 +694,7 @@ namespace AVFoundation {
 	}
 
 	[NoiOS][NoTV][NoWatch]
-	[Mac (10, 7)]
+	[Mac (10,7)]
 	[Native]
 	public enum AVContentAuthorizationStatus : long {
 		Unknown,
