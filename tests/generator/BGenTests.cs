@@ -525,6 +525,9 @@ namespace GeneratorTests
 		[Test]
 		public void Bug57870 () => BuildFile (Profile.iOS, true, true, "bug57870.cs");
 
+		[Test]
+		public void GHIssue3869 () => BuildFile (Profile.iOS, "ghissue3869.cs");
+
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
 			return BuildFile (profile, true, false, filenames);

@@ -4603,7 +4603,9 @@ public partial class Generator : IMemberGatherer {
 				print ("set {");
 				indent++;
 
-				if (minfo.protocolize){
+				var is_protocol_wrapper = UnifiedAPI && IsProtocolInterface (pi.PropertyType, false);
+
+				if (minfo.protocolize || is_protocol_wrapper){
 					print ("var rvalue = value as NSObject;");
 					print ("if (value != null && rvalue == null)");
 					print ("\tthrow new ArgumentException (\"The object passed of type \" + value.GetType () + \" does not derive from NSObject\");");
@@ -4615,7 +4617,7 @@ public partial class Generator : IMemberGatherer {
 					if (IsArrayOfWrappedType (pi.PropertyType))
 						print ("{0} = NSArray.FromNSObjects (value);", wrap);
 					else 
-						print ("{0} = {1}value;", wrap, minfo.protocolize ? "r" : "");
+						print ("{0} = {1}value;", wrap, minfo.protocolize || is_protocol_wrapper ? "r" : "");
 				}
 				indent--;
 				print ("}");
