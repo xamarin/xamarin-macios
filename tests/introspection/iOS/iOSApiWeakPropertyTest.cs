@@ -42,6 +42,9 @@ namespace Introspection {
 			// VNImageOptions is a DictionaryContainer that exposes a Weak* NSDictionary
 			case "VNImageOptions":
 				return property.Name == "WeakProperties";
+			// NSString manually bound as smart enum CLSContextTopic
+			case "CLSContext":
+				return property.Name == "WeakTopic";
 #if !XAMCORE_3_0
 			// #37451 - setter does not exists but we have to keep it for binary compatibility
 			// OTOH we can't give it a selector (private API) even if we suspect Apple is mostly running `strings` on executable
