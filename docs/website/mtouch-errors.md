@@ -926,7 +926,7 @@ If you're deploying an enterprise app or using a free provisioning profile, you 
 A few operations from mtouch require the <tt>DeveloperDiskImage.dmg</tt> file to be present.   This
 	file is part of Xcode and is usually located relative to the
 	SDK that you are using to build against, in
-	the <tt>Xcode.app/Contents/Developer/iPhoneOS.platform/DeviceSupport/VERSION/DeveloperDiskImage.dmg</tt>.
+	the <tt>/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/DeviceSupport/VERSION/DeveloperDiskImage.dmg</tt>.
 
 This error can happen either because you do not have a
 	DeveloperDiskImage.dmg that matches the device that you have
