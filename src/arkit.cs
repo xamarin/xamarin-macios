@@ -18,6 +18,7 @@ using CoreMedia;
 using CoreVideo;
 using Foundation;
 using ObjCRuntime;
+using ImageIO;
 using Metal;
 using SpriteKit;
 using SceneKit;
@@ -47,6 +48,8 @@ namespace ARKit {
 		Initializing,
 		ExcessiveMotion,
 		InsufficientFeatures,
+		[iOS (11,3)]
+		Relocalizing,
 	}
 
 	[iOS (11,0)]
@@ -59,6 +62,7 @@ namespace ARKit {
 		SensorFailed = 102,
 		CameraUnauthorized = 103,
 		WorldTrackingFailed = 200,
+		InvalidReferenceImage = 300
 	}
 
 	[iOS (11,0)]
@@ -68,8 +72,12 @@ namespace ARKit {
 	public enum ARHitTestResultType : ulong {
 		FeaturePoint = 1 << 0,
 		EstimatedHorizontalPlane = 1 << 1,
+		[iOS (11,3)]
+		EstimatedVerticalPlane = 1 << 2,
 		ExistingPlane = 1 << 3,
 		ExistingPlaneUsingExtent = 1 << 4,
+		[iOS (11,3)]
+		ExistingPlaneUsingGeometry = 1 << 5,
 	}
 
 	[iOS (11,0)]
@@ -77,6 +85,8 @@ namespace ARKit {
 	[Native]
 	public enum ARPlaneAnchorAlignment : long {
 		Horizontal,
+		[iOS (11,3)]
+		Vertical,
 	}
 
 	[iOS (11,0)]
@@ -104,13 +114,15 @@ namespace ARKit {
 	public enum ARPlaneDetection : ulong {
 		None = 0,
 		Horizontal = 1 << 0,
+		[iOS (11,3)]
+		Vertical = 1 << 1,
 	}
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface ARAnchor : NSCopying {
+	interface ARAnchor : NSCopying, NSSecureCoding {
 
 		[NullAllowed, Export ("identifier")]
 		NSUuid Identifier { get; }
@@ -278,13 +290,63 @@ namespace ARKit {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 			get;
 		}
+
+		[iOS (11,3)]
+		[Export ("geometry", ArgumentSemantic.Strong)]
+		ARPlaneGeometry Geometry { get; }
+	}
+
+	[iOS (11,3)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface ARPlaneGeometry : NSSecureCoding {
+		[Export ("vertexCount")]
+		nuint VertexCount { get; }
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Export ("vertices")]
+		IntPtr GetRawVertices ();
+
+		[Export ("textureCoordinateCount")]
+		nuint TextureCoordinateCount { get; }
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Export ("textureCoordinates")]
+		IntPtr GetRawTextureCoordinates ();
+
+		[Export ("triangleCount")]
+		nuint TriangleCount { get; }
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Export ("triangleIndices")]
+		IntPtr GetRawTriangleIndices ();
+
+		[Export ("boundaryVertexCount")]
+		nuint BoundaryVertexCount { get; }
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Export ("boundaryVertices")]
+		IntPtr GetRawBoundaryVertices ();
+	}
+
+	[iOS (11,3)]
+	[BaseType (typeof(SCNGeometry))]
+	[DisableDefaultCtor]
+	interface ARSCNPlaneGeometry {
+		[Static]
+		[Export ("planeGeometryWithDevice:")]
+		[return: NullAllowed]
+		ARSCNPlaneGeometry Create (IMTLDevice device);
+
+		[Export ("updateFromPlaneGeometry:")]
+		void Update (ARPlaneGeometry planeGeometry);
 	}
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface ARPointCloud {
+	interface ARPointCloud : NSSecureCoding {
 
 		[Export ("count")]
 		nuint Count { get; }
@@ -296,6 +358,40 @@ namespace ARKit {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Protected, Export ("identifiers")]
 		IntPtr GetRawIdentifiers ();
+	}
+
+	[iOS (11,3)]
+	[NoWatch, NoTV, NoMac]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface ARReferenceImage : NSCopying {
+		[NullAllowed, Export ("name")]
+		string Name { get; set; }
+
+		[Export ("physicalSize")]
+		CGSize PhysicalSize { get; }
+
+		[Export ("initWithCGImage:orientation:physicalWidth:")]
+		IntPtr Constructor (CGImage image, CGImagePropertyOrientation orientation, nfloat physicalWidth);
+
+		[Export ("initWithPixelBuffer:orientation:physicalWidth:")]
+		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, nfloat physicalWidth);
+
+		[Static]
+		[Export ("referenceImagesInGroupNamed:bundle:")]
+		[return: NullAllowed]
+		NSSet<ARReferenceImage> GetReferenceImagesInGroup (string name, [NullAllowed] NSBundle bundle);
+	}
+
+	[iOS (11,3)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface ARVideoFormat : NSCopying {
+		[Export ("imageResolution")]
+		CGSize ImageResolution { get; }
+
+		[Export ("framesPerSecond")]
+		nint FramesPerSecond { get; }
 	}
 
 	[iOS (11,0)]
@@ -429,6 +525,11 @@ namespace ARKit {
 
 		[Export ("removeAnchor:")]
 		void RemoveAnchor (ARAnchor anchor);
+
+		[iOS (11,3)]
+		[Export ("setWorldOrigin:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		void SetWorldOrigin (Matrix4 relativeTransform);
 	}
 
 	[iOS (11,0)]
@@ -447,6 +548,10 @@ namespace ARKit {
 
 		[Export ("sessionInterruptionEnded:")]
 		void InterruptionEnded (ARSession session);
+
+		[iOS (11,3)]
+		[Export ("sessionShouldAttemptRelocalization:")]
+		bool ShouldAttemptRelocalization (ARSession session);
 
 		[Export ("session:didOutputAudioSampleBuffer:")]
 		void DidOutputAudioSampleBuffer (ARSession session, CMSampleBuffer audioSampleBuffer);
@@ -484,6 +589,15 @@ namespace ARKit {
 		[Export ("isSupported")]
 		bool IsSupported { get; }
 
+		[iOS (11,3)]
+		[Static]
+		[Export ("supportedVideoFormats", ArgumentSemantic.Strong)]
+		ARVideoFormat[] SupportedVideoFormats { get; }
+
+		[iOS (11,3)]
+		[Export ("videoFormat", ArgumentSemantic.Strong)]
+		ARVideoFormat VideoFormat { get; set; }
+
 		[Export ("worldAlignment", ArgumentSemantic.Assign)]
 		ARWorldAlignment WorldAlignment { get; set; }
 
@@ -499,14 +613,26 @@ namespace ARKit {
 	[BaseType (typeof (ARConfiguration))]
 	interface ARWorldTrackingConfiguration {
 
+		[iOS (11,3)]
+		[Export ("autoFocusEnabled")]
+		bool AutoFocusEnabled { [Bind ("isAutoFocusEnabled")] get; set; }
+
 		[Export ("planeDetection", ArgumentSemantic.Assign)]
 		ARPlaneDetection PlaneDetection { get; set; }
+
+		[iOS (11,3)]
+		[NullAllowed, Export ("detectionImages", ArgumentSemantic.Copy)]
+		NSSet<ARReferenceImage> DetectionImages { get; set; }
 	}
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(ARConfiguration))]
-	interface AROrientationTrackingConfiguration {}
+	interface AROrientationTrackingConfiguration {
+		[iOS (11,3)]
+		[Export ("autoFocusEnabled")]
+		bool AutoFocusEnabled { [Bind ("isAutoFocusEnabled")] get; set; }
+	}
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
@@ -805,7 +931,14 @@ namespace ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(ARAnchor))]
+	[DisableDefaultCtor]
 	interface ARFaceAnchor : ARTrackable {
+#if !XAMCORE_4_0
+		[Obsolete ("Constructor marked as unavailable.")]
+		[Export ("init")]
+		IntPtr Constructor ();
+#endif
+
 		[Export ("geometry")]
 		ARFaceGeometry Geometry { get; }
 
@@ -821,7 +954,7 @@ namespace ARKit {
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface ARFaceGeometry : NSCopying {
+	interface ARFaceGeometry : NSCopying, NSSecureCoding {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("initWithBlendShapes:")]
 		IntPtr Constructor (NSDictionary blendShapes);
@@ -856,18 +989,43 @@ namespace ARKit {
 	[BaseType (typeof(SCNGeometry))]
 	[DisableDefaultCtor]
 	interface ARSCNFaceGeometry {
+#if !XAMCORE_4_0
+		[Obsolete ("Use the 'Create' static constructor instead.")]
+		[Static]
+		[Wrap ("Create (device)")]
+		[return: NullAllowed]
+		ARSCNFaceGeometry CreateFaceGeometry (IMTLDevice device);
+#endif
+
 		[Static]
 		[Export ("faceGeometryWithDevice:")]
 		[return: NullAllowed]
-		ARSCNFaceGeometry CreateFaceGeometry (IMTLDevice device);
+		ARSCNFaceGeometry Create (IMTLDevice device);
+
+#if !XAMCORE_4_0
+		[Obsolete ("Use the 'Create' static constructor instead.")]
+		[Static]
+		[Wrap ("Create (device, fillMesh)")]
+		[return: NullAllowed]
+		ARSCNFaceGeometry CreateFaceGeometry (IMTLDevice device, bool fillMesh);
+#endif
 
 		[Static]
 		[Export ("faceGeometryWithDevice:fillMesh:")]
 		[return: NullAllowed]
-		ARSCNFaceGeometry CreateFaceGeometry (IMTLDevice device, bool fillMesh);
+		ARSCNFaceGeometry Create (IMTLDevice device, bool fillMesh);
 
 		[Export ("updateFromFaceGeometry:")]
 		void Update (ARFaceGeometry faceGeometry);
+	}
+
+	[iOS (11,3)]
+	[NoWatch, NoTV, NoMac]
+	[BaseType (typeof(ARAnchor))]
+	[DisableDefaultCtor]
+	interface ARImageAnchor {
+		[Export ("referenceImage", ArgumentSemantic.Strong)]
+		ARReferenceImage ReferenceImage { get; }
 	}
 
 	[iOS (11,0)]

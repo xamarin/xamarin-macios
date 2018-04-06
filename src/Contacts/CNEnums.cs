@@ -85,6 +85,7 @@ namespace Contacts {
 		CommunicationError = 1,
 		DataAccessError = 2,
 		AuthorizationDenied = 100,
+		NoAccessibleWritableContainers = 101,
 		RecordDoesNotExist = 200,
 		InsertedRecordAlreadyExists = 201,
 		ContainmentCycle = 202,

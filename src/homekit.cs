@@ -163,6 +163,10 @@ namespace HomeKit {
 		[Watch (3,0), iOS (10,0)]
 		[NullAllowed, Export ("cameraProfiles", ArgumentSemantic.Copy)]
 		HMCameraProfile [] CameraProfiles { get; }
+
+		[Watch (4,3), TV (11,3), iOS (11,3)]
+		[Export ("supportsIdentify")]
+		bool SupportsIdentify { get; }
 	}
 
 	[TV (10,0)]
@@ -597,6 +601,11 @@ namespace HomeKit {
 		[Async]
 		[Export ("addAndSetupAccessoriesWithCompletionHandler:")]
 		void AddAndSetupAccessories (Action<NSError> completion);
+
+		[NoWatch, NoTV, iOS (11,3)]
+		[Async]
+		[Export ("addAndSetupAccessoriesWithPayload:completionHandler:")]
+		void AddAndSetupAccessories (HMAccessorySetupPayload payload, Action<HMAccessory[], NSError> completion);
 
 		// HMHome(HMRoom)
 
@@ -1667,6 +1676,14 @@ namespace HomeKit {
 
 		[NullAllowed, Export ("maxValue", ArgumentSemantic.Strong)]
 		NSNumber Max { get; }
+	}
+
+	[NoWatch, NoTV, iOS (11,3)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface HMAccessorySetupPayload {
+		[Export ("initWithURL:")]
+		IntPtr Constructor (NSUrl setupPayloadUrl);
 	}
 
 	[Watch (4,0), TV (11,0), iOS (11,0)]
