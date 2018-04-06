@@ -1565,6 +1565,7 @@ SHARED_CORE_SOURCES = \
 
 SHARED_SOURCES = \
 	../runtime/Delegates.generated.cs \
+	../tools/common/StringUtils.cs \
 	MonoNativeFunctionWrapperAttribute.cs \
 	NativeTypes/NMath.cs \
 	ObjCRuntime/AdoptsAttribute.cs \
