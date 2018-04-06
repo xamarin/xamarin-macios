@@ -2,7 +2,7 @@ using System;
 using System.Text;
 
 namespace Xamarin.Utils {
-	public class StringUtils {
+	internal class StringUtils {
 		static StringUtils ()
 		{
 			PlatformID pid = Environment.OSVersion.Platform;
@@ -64,10 +64,43 @@ namespace Xamarin.Utils {
 				return new Version (major, 0);
 			return Version.Parse (v);
 		}
+
+		public static string SanitizeObjectiveCName (string name)
+		{
+			StringBuilder sb = null;
+
+			for (int i = 0; i < name.Length; i++) {
+				var ch = name [i];
+				switch (ch) {
+				case '.':
+				case '+':
+				case '/':
+				case '`':
+				case '@':
+				case '<':
+				case '>':
+				case '$':
+				case '-':
+					if (sb == null)
+						sb = new StringBuilder (name, 0, i, name.Length);
+					sb.Append ('_');
+					break;
+				default:
+					if (sb != null)
+						sb.Append (ch);
+					break;
+				}
+			}
+
+			if (sb != null)
+				return sb.ToString ();
+
+			return name;
+		}
 	}
 
 	static class StringExtensions
 	{
-		public static string [] SplitLines (this string s) => s.Split (new [] { Environment.NewLine }, StringSplitOptions.None);
+		internal static string [] SplitLines (this string s) => s.Split (new [] { Environment.NewLine }, StringSplitOptions.None);
 	}
 }

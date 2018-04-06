@@ -22,6 +22,7 @@ using System.Text;
 
 using Foundation;
 using ObjCRuntime;
+using Xamarin.Utils;
 
 #if MTOUCH || MMP
 using TAssembly=Mono.Cecil.AssemblyDefinition;
@@ -389,7 +390,7 @@ namespace Registrar {
 						throw new InvalidOperationException ();
 					var attrib = CategoryAttribute;
 					var name = attrib.Name ?? Registrar.GetTypeFullName (Type);
-					return Registrar.SanitizeName (name);
+					return StringUtils.SanitizeObjectiveCName (name);
 				}
 			}
 
@@ -399,7 +400,7 @@ namespace Registrar {
 						throw new InvalidOperationException ();
 					var attrib = Registrar.GetProtocolAttribute (Type);
 					var name = attrib.Name ?? Registrar.GetTypeFullName (Type);
-					return Registrar.SanitizeName (name);
+					return StringUtils.SanitizeObjectiveCName (name);
 				}
 			}
 
@@ -2484,39 +2485,6 @@ namespace Registrar {
 			throw ErrorHelper.CreateError (4101, "The registrar cannot build a signature for type `{0}`.", GetTypeFullName (type));
 		}
 
-		public static string SanitizeName (string name)
-		{
-			StringBuilder sb = null;
-
-			for (int i = 0; i < name.Length; i++) {
-				var ch = name [i];
-				switch (ch) {
-				case '.':
-				case '+':
-				case '/':
-				case '`':
-				case '@':
-				case '<':
-				case '>':
-				case '$':
-				case '-':
-					if (sb == null)
-						sb = new StringBuilder (name, 0, i, name.Length);
-					sb.Append ('_');
-					break;
-				default:
-					if (sb != null)
-						sb.Append (ch);
-					break;
-				}
-			}
-
-			if (sb != null)
-				return sb.ToString ();
-			
-			return name;
-		}
-
 		public string GetExportedTypeName (TType type, RegisterAttribute register_attribute)
 		{
 			string name = null;
@@ -2527,7 +2495,7 @@ namespace Registrar {
 			}
 			if (name == null)
 				name = GetTypeFullName (type);
-			return SanitizeName (name);
+			return StringUtils.SanitizeObjectiveCName (name);
 		}
 
 		protected string GetExportedTypeName (TType type)
