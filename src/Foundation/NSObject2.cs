@@ -266,7 +266,9 @@ namespace Foundation {
 						}
 					}
 
-					return (Runtime.GetProtocol (name) == protocol);
+					var proto = Runtime.GetProtocol (name);
+					if (proto != IntPtr.Zero && proto == protocol)
+						return true;
 				}
 				type = type.BaseType;
 			}
