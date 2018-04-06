@@ -528,6 +528,7 @@ namespace GeneratorTests
 		[Test]
 		public void GHIssue3869 () => BuildFile (Profile.iOS, "ghissue3869.cs");
 
+		[Test]
 		[TestCase ("issue3875.cs", "AProtocol")]
 		[TestCase ("issue3875B.cs", "BProtocol")]
 		[TestCase ("issue3875C.cs", "api0__Issue3875_AProtocol")]
