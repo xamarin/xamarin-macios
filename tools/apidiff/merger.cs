@@ -34,9 +34,9 @@ class Merger {
 						lookForVersion = false;
 					}
 					if (lookForVersion) {
-						if (line.StartsWith ("-public const string Version = "))
+						if (line.StartsWith ("-public const string Version = ", StringComparison.Ordinal))
 							from = GetVersion (line);
-						if (line.StartsWith ("+public const string Version = "))
+						if (line.StartsWith ("+public const string Version = ", StringComparison.Ordinal))
 							to = GetVersion (line);
 					}
 				} else if (line.StartsWith ("## ")) {
@@ -75,6 +75,9 @@ class Merger {
 			alldiffs = "No changes were found between both versions."; // should not happen for releases (versions change)
 		File.AppendAllText (filename, alldiffs);
 		Console.WriteLine ($"@MonkeyWrench: AddFile: {Path.GetFullPath (filename)}");
+
+		if (File.Exists ("api-diff.html"))
+			File.AppendAllText ("api-diff.html", $"\n<h2><a href=\"{filename}\">{platform} API diff (markdown)</a></h2>");
 	}
 
 	public static int Main (string [] args)

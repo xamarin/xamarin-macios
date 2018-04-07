@@ -15,7 +15,7 @@ APIDIFF_DIR=.
 MONO_API_HTML_DIR = $(MONO_PATH)/mcs/tools/mono-api-html
 MONO_API_INFO_DIR = $(MONO_PATH)/mcs/tools/corcompare
 MONO_API_INFO = $(MONO_API_INFO_DIR)/bin/Debug/mono-api-info.exe
-MONO_API_HTML = $(MONO_API_HTML_DIR)/bin/Debug/mono-api-html.exe
+MONO_API_HTML = $(TOP)/external/macios-binaries/mono-api-html.exe
 
 # I18N are excluded - but otherwise if should be like ../../builds/Makefile + what XI adds
 # in the order to the api-diff.html merged file
@@ -205,7 +205,7 @@ verify-reference-assemblies-mac: $(APIDIFF_DIR)/temp/native-32/Xamarin.Mac.xml $
 clean-local::
 	rm -rf temp updated-references diff *.exe* api-diff.html
 	rm -rf *.dll*
-	rm -rf ios-*.md tvos-*.md watchos*-.md macos-*.md
+	rm -rf ios-*.md tvos-*.md watchos-*.md macos-*.md
 
 DIRS += $(APIDIFF_DIR)/temp $(APIDIFF_DIR)/diff
 
@@ -223,7 +223,22 @@ $(DIRS):
 merger.exe: merger.cs
 	$(Q) $(SYSTEM_CSC) -debug $< -out:$@
 
-wrench-api-diff: merger.exe
+ios-markdown: merger.exe $(foreach file,$(IOS_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).md)
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.iOS $(CURDIR)/diff/xi/Xamarin.iOS/ ios
+
+tvos-markdown: merger.exe $(foreach file,$(TVOS_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).md)
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.TVOS $(CURDIR)/diff/xi/Xamarin.TVOS/ tvos
+
+watchos-markdown: merger.exe $(foreach file,$(WATCHOS_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).md)
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.WatchOS $(CURDIR)/diff/xi/Xamarin.WatchOS/ watchos
+
+macos-markdown: merger.exe $(foreach file,$(MAC_ASSEMBLIES),$(APIDIFF_DIR)/diff/xm/$(file).md)
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.Mac $(CURDIR)/diff/xm/Xamarin.Mac/ macos
+
+$(APIDIFF_DIR)/diff/%.md: $(APIDIFF_DIR)/temp/%.xml $(APIDIFF_DIR)/references/%.xml $(MONO_API_HTML)
+	$(QF_GEN) mono --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) $(APIDIFF_DIR)/references/$*.xml $(APIDIFF_DIR)/temp/$*.xml -i 'INSObjectProtocol' --md $@
+
+wrench-api-diff:
 	@echo "@MonkeyWrench: AddDirectory: $(CURDIR)/diff/xi/Xamarin.iOS"
 	@echo "@MonkeyWrench: AddDirectory: $(CURDIR)/diff/xi/Xamarin.WatchOS"
 	@echo "@MonkeyWrench: AddDirectory: $(CURDIR)/diff/xi/Xamarin.TVOS"
@@ -249,17 +264,17 @@ endif
 	@echo "@MonkeyWrench: AddFile: $(CURDIR)/api-diff.html"
 	@# remove empty files so they're not uploaded
 	@-find $(CURDIR)/diff -size 0 | xargs rm
-ifdef INCLUDE_MAC
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.Mac $(CURDIR)/diff/xm/Xamarin.Mac/ macos
-endif
 ifdef INCLUDE_IOS
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.iOS $(CURDIR)/diff/xi/Xamarin.iOS/ ios
-ifdef INCLUDE_WATCH
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.WatchOS $(CURDIR)/diff/xi/Xamarin.WatchOS/ watchos
-endif
+	make ios-markdown
 ifdef INCLUDE_TVOS
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.TVOS $(CURDIR)/diff/xi/Xamarin.TVOS/ tvos
+	make tvos-markdown
 endif
+ifdef INCLUDE_WATCH
+	make watchos-markdown
+endif
+endif
+ifdef INCLUDE_MAC
+	make macos-markdown
 endif
 ifdef INCLUDE_IOS
 	$(MAKE) verify-reference-assemblies-ios -j8
