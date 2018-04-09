@@ -443,6 +443,9 @@ namespace Xamarin.Bundler {
 			if (EnableLLVMOnlyBitCode)
 				return false;
 
+			if (UseInterpreter)
+				return true;
+
 			switch (Platform) {
 			case ApplePlatform.iOS:
 				return !Profile.IsSdkAssembly (Path.GetFileNameWithoutExtension (assembly));
