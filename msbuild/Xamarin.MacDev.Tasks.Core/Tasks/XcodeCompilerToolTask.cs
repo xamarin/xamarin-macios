@@ -191,6 +191,7 @@ namespace Xamarin.MacDev.Tasks
 						var plist = PDictionary.FromFile (manifest.ItemSpec);
 
 						LogWarningsAndErrors (plist, items[0]);
+					} catch (ArgumentException) {
 					} catch (FormatException) {
 					}
 
