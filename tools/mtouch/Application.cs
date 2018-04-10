@@ -1483,7 +1483,7 @@ namespace Xamarin.Bundler {
 			var p = new Process ();
 			p.StartInfo.UseShellExecute = false;
 			p.StartInfo.RedirectStandardError = true;
-			p.StartInfo.FileName = "mono-symbolicate";
+			p.StartInfo.FileName = "/Library/Frameworks/Mono.framework/Versions/Current/Commands/mono-symbolicate";
 			p.StartInfo.Arguments = $"store-symbols \"{src}\" \"{dest}\"";
 
 			try {

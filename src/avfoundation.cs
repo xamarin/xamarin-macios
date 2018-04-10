@@ -1538,6 +1538,10 @@ namespace AVFoundation {
 		[Watch (4,0)]
 		[Export ("format")]
 		AVAudioFormat Format { get; }
+
+		[NoiOS, Mac (10, 13), NoTV, NoWatch]
+		[NullAllowed, Export ("currentDevice")]
+		string CurrentDevice { get; set; }
 	}
 	
 	[Watch (3,0)]
@@ -6397,11 +6401,9 @@ namespace AVFoundation {
 		[Export ("metadataItemsFromArray:withKey:keySpace:")]
 		AVMetadataItem [] FilterWithKey (AVMetadataItem [] metadataItems, NSObject key, string keySpace);
 
-#if !MONOMAC
-		[iOS (7,0)]
+		[iOS (7,0), Mac (10,9)]
 		[Static, Export ("metadataItemsFromArray:filteredByMetadataItemFilter:")]
 		AVMetadataItem [] FilterWithItemFilter (AVMetadataItem [] metadataItems, AVMetadataItemFilter metadataItemFilter);
-#endif
 
 		[Export ("duration")]
 		CMTime Duration { get; [NotImplemented] set; }
@@ -7042,6 +7044,10 @@ namespace AVFoundation {
 		[Mac (10,12)]
 		[Export ("insertMediaTimeRange:intoTimeRange:")]
 		bool InsertMediaTimeRange (CMTimeRange mediaTimeRange, CMTimeRange trackTimeRange);
+
+		[NoWatch, NoTV, NoiOS, Mac (10,13)]
+		[Export ("replaceFormatDescription:withFormatDescription:")]
+		void ReplaceFormatDescription (CMFormatDescription formatDescription, CMFormatDescription newFormatDescription);
 	}
 
 	[NoWatch]
@@ -9078,6 +9084,11 @@ namespace AVFoundation {
 	[DisableDefaultCtor]
 	interface AVCapturePhotoBracketSettings
 	{
+		[iOS (11,0)]
+		[Static]
+		[Export ("photoBracketSettingsWithRawPixelFormatType:rawFileType:processedFormat:processedFileType:bracketedSettings:")]
+		AVCapturePhotoBracketSettings FromPhotoBracketSettings (uint rawPixelFormatType, [NullAllowed] string rawFileType, [NullAllowed] NSDictionary<NSString, NSObject> processedFormat, [NullAllowed] string processedFileType, AVCaptureBracketedStillImageSettings[] bracketedSettings);
+
 		[Static]
 		[Export ("photoBracketSettingsWithRawPixelFormatType:processedFormat:bracketedSettings:")]
 		AVCapturePhotoBracketSettings FromRawPixelFormatType (uint rawPixelFormatType, [NullAllowed] NSDictionary<NSString, NSObject> format, AVCaptureBracketedStillImageSettings [] bracketedSettings);
@@ -9120,6 +9131,14 @@ namespace AVFoundation {
 		[iOS (10, 2)]
 		[Export ("dualCameraFusionEnabled")]
 		bool DualCameraFusionEnabled { [Bind ("isDualCameraFusionEnabled")] get; }
+
+		[iOS (11, 0)]
+		[Export ("embeddedThumbnailDimensions")]
+		CMVideoDimensions EmbeddedThumbnailDimensions { get; }
+
+		[iOS (11, 0)]
+		[Export ("expectedPhotoCount")]
+		nuint ExpectedPhotoCount { get; }
 	}
 
 #if !MONOMAC
@@ -9285,6 +9304,22 @@ namespace AVFoundation {
 		[iOS (11,0)]
 		[Export ("supportedRawPhotoPixelFormatTypesForFileType:")]
 		NSNumber[] GetSupportedRawPhotoPixelFormatTypesForFileType (string fileType);
+
+		[iOS (11, 0)]
+		[Export ("dualCameraDualPhotoDeliverySupported")]
+		bool DualCameraDualPhotoDeliverySupported { [Bind ("isDualCameraDualPhotoDeliverySupported")] get; }
+
+		[iOS (11, 0)]
+		[Export ("dualCameraDualPhotoDeliveryEnabled")]
+		bool DualCameraDualPhotoDeliveryEnabled { [Bind ("isDualCameraDualPhotoDeliveryEnabled")] get; set; }
+
+		[iOS (11, 0)]
+		[Export ("availableLivePhotoVideoCodecTypes")]
+		string[] AvailableLivePhotoVideoCodecTypes { [return: BindAs (typeof (AVVideoCodecType []))] get; }
+
+		[iOS (11, 0)]
+		[Export ("cameraCalibrationDataDeliverySupported")]
+		bool CameraCalibrationDataDeliverySupported { [Bind ("isCameraCalibrationDataDeliverySupported")] get; }
 	}
 #endif
 	
@@ -10243,6 +10278,12 @@ namespace AVFoundation {
 		[Field ("AVPlayerAvailableHDRModesDidChangeNotification")]
 		[Notification]
 		NSString AvailableHdrModesDidChangeNotification { get; }
+
+		// From AVPlayer (AVPlayerVideoDecoderGPUSupport) Category
+
+		[NoWatch, NoTV, NoiOS, Mac (10,13,4)]
+		[Export ("preferredVideoDecoderGPURegistryID")]
+		ulong PreferredVideoDecoderGpuRegistryId { get; set; }
 	}
 
 	[NoWatch]
@@ -10326,15 +10367,16 @@ namespace AVFoundation {
 		[Export ("items", ArgumentSemantic.Copy)]
 		AVMetadataItem[] Items { get; }
 
-		[iOS (9,3)][NoMac]
+		[iOS (9,3)][Mac (10,11,3)]
 		[TV (9,2)]
 		[NullAllowed, Export ("classifyingLabel")]
 		string ClassifyingLabel { get; }
 
-		[iOS (9,3)][NoMac]
+		[iOS (9,3)]
 		[TV (9,2)]
+		[Mac (10,11,3)]
 		[NullAllowed, Export ("uniqueID")]
-		string UniqueID { get; }		
+		string UniqueID { get; }
 	}
 
 	[NoWatch]
@@ -10642,17 +10684,17 @@ namespace AVFoundation {
 		AVInterstitialTimeRange[] InterstitialTimeRanges { get; set; }
 #endregion
 
-		[iOS (9,3)][NoMac]
+		[iOS (9,3)][Mac (10,11,3)]
 		[TV (9,2)]
 		[Export ("addMediaDataCollector:")]
 		void AddMediaDataCollector (AVPlayerItemMediaDataCollector collector);
 		
-		[iOS (9,3)][NoMac]
+		[iOS (9,3)][Mac (10,11,3)]
 		[TV (9,2)]
 		[Export ("removeMediaDataCollector:")]
 		void RemoveMediaDataCollector (AVPlayerItemMediaDataCollector collector);
 		
-		[iOS (9,3)][NoMac]
+		[iOS (9,3)][Mac (10,11,3)]
 		[TV (9,2)]
 		[Export ("mediaDataCollectors")]
 		AVPlayerItemMediaDataCollector[] MediaDataCollectors { get; }
@@ -12591,5 +12633,24 @@ namespace AVFoundation {
 		[iOS (11, 0), NoMac]
 		[Export ("sequenceCount")]
 		nint SequenceCount { get; }
+
+		// @interface AVCapturePhotoConversions (AVCapturePhoto)
+		[iOS (11, 0)]
+		[NullAllowed, Export ("fileDataRepresentation")]
+		NSData FileDataRepresentation { get; }
+
+		[iOS (11,0)]
+		[Export ("fileDataRepresentationWithReplacementMetadata:replacementEmbeddedThumbnailPhotoFormat:replacementEmbeddedThumbnailPixelBuffer:replacementDepthData:")]
+		[return: NullAllowed]
+		NSData GetFileDataRepresentation ([NullAllowed] NSDictionary<NSString, NSObject> replacementMetadata, [NullAllowed] NSDictionary<NSString, NSObject> replacementEmbeddedThumbnailPhotoFormat, [NullAllowed] CVPixelBuffer replacementEmbeddedThumbnailPixelBuffer, [NullAllowed] AVDepthData replacementDepthData);
+
+
+		[iOS (11, 0)]
+		[NullAllowed, Export ("CGImageRepresentation")]
+		CGImage CGImageRepresentation { get; }
+
+		[iOS (11, 0)]
+		[NullAllowed, Export ("previewCGImageRepresentation")]
+		CGImage PreviewCGImageRepresentation { get; }
 	}
 }

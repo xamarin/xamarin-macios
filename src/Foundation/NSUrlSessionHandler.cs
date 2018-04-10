@@ -379,19 +379,17 @@ namespace Foundation {
 					}
 				}
 
-				if (challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodNTLM) {
-					if (sessionHandler.Credentials != null) {
-						var credentialsToUse = sessionHandler.Credentials as NetworkCredential;
-						if (credentialsToUse == null) {
-							var uri = inflight.Request.RequestUri;
-							credentialsToUse = sessionHandler.Credentials.GetCredential (uri, "NTLM");
-						}
-						var credential = new NSUrlCredential (credentialsToUse.UserName, credentialsToUse.Password, NSUrlCredentialPersistence.ForSession);
-						completionHandler (NSUrlSessionAuthChallengeDisposition.UseCredential, credential);
+				if (challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodNTLM && sessionHandler.Credentials != null) {
+					var credentialsToUse = sessionHandler.Credentials as NetworkCredential;
+					if (credentialsToUse == null) {
+						var uri = inflight.Request.RequestUri;
+						credentialsToUse = sessionHandler.Credentials.GetCredential (uri, "NTLM");
 					}
-					return;
+					NSUrlCredential credential = new NSUrlCredential (credentialsToUse.UserName, credentialsToUse.Password, NSUrlCredentialPersistence.ForSession);
+					completionHandler (NSUrlSessionAuthChallengeDisposition.UseCredential, credential);
+				} else {
+					completionHandler (NSUrlSessionAuthChallengeDisposition.PerformDefaultHandling, challenge.ProposedCredential);
 				}
-				completionHandler (NSUrlSessionAuthChallengeDisposition.PerformDefaultHandling, challenge.ProposedCredential);
 			}
 		}
 
@@ -462,16 +460,6 @@ namespace Foundation {
 				data = new Queue<NSData> ();
 			}
 
-			protected override void Dispose (bool disposing)
-			{
-				lock (dataLock) {
-					foreach (var q in data)
-						q?.Dispose ();
-				}
-
-				base.Dispose (disposing);
-			}
-
 			public void Add (NSData d)
 			{
 				lock (dataLock) {
@@ -539,8 +527,15 @@ namespace Foundation {
 					lock (dataLock) {
 						// this is the same object, it was done to make the cleanup
 						data.Dequeue ();
-						current?.Dispose ();
 						currentStream?.Dispose ();
+						// We cannot use current?.Dispose. The reason is the following one:
+						// In the DidReceiveResponse, if iOS realizes that a buffer can be reused,
+						// because the data is the same, it will do so. Such a situation does happen
+						// between requests, that is, request A and request B will get the same NSData
+						// (buffer) in the delegate. In this case, we cannot dispose the NSData because
+						// it might be that a different request received it and it is present in
+						// its NSUrlSessionDataTaskStream stream. We can only trust the gc to do the job
+						// which is better than copying the data over. 
 						current = null;
 						currentStream = null;
 					}

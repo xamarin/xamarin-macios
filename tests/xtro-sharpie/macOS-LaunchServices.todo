@@ -1,0 +1,81 @@
+!missing-enum! LSHandlerOptions not bound
+!missing-enum! LSItemInfoFlags not bound
+!missing-enum! LSRequestedInfo not bound
+!missing-enum! LSRolesMask not bound
+!missing-field! kLSItemContentType not bound
+!missing-field! kLSItemDisplayKind not bound
+!missing-field! kLSItemDisplayName not bound
+!missing-field! kLSItemExtension not bound
+!missing-field! kLSItemExtensionIsHidden not bound
+!missing-field! kLSItemFileCreator not bound
+!missing-field! kLSItemFileType not bound
+!missing-field! kLSItemIsInvisible not bound
+!missing-field! kLSItemQuarantineProperties not bound
+!missing-field! kLSItemRoleHandlerDisplayName not bound
+!missing-field! kLSQuarantineAgentBundleIdentifierKey not bound
+!missing-field! kLSQuarantineAgentNameKey not bound
+!missing-field! kLSQuarantineDataURLKey not bound
+!missing-field! kLSQuarantineOriginURLKey not bound
+!missing-field! kLSQuarantineTimeStampKey not bound
+!missing-field! kLSQuarantineTypeCalendarEventAttachment not bound
+!missing-field! kLSQuarantineTypeEmailAttachment not bound
+!missing-field! kLSQuarantineTypeInstantMessageAttachment not bound
+!missing-field! kLSQuarantineTypeKey not bound
+!missing-field! kLSQuarantineTypeOtherAttachment not bound
+!missing-field! kLSQuarantineTypeOtherDownload not bound
+!missing-field! kLSQuarantineTypeWebDownload not bound
+!missing-field! kUTTypeLivePhoto not bound
+!missing-pinvoke! AcquireIconRef is not bound
+!missing-pinvoke! CompositeIconRef is not bound
+!missing-pinvoke! GetCustomIconsEnabled is not bound
+!missing-pinvoke! GetIconRef is not bound
+!missing-pinvoke! GetIconRefFromComponent is not bound
+!missing-pinvoke! GetIconRefFromFileInfo is not bound
+!missing-pinvoke! GetIconRefFromFolder is not bound
+!missing-pinvoke! GetIconRefFromIconFamilyPtr is not bound
+!missing-pinvoke! GetIconRefFromTypeInfo is not bound
+!missing-pinvoke! GetIconRefOwners is not bound
+!missing-pinvoke! IsDataAvailableInIconRef is not bound
+!missing-pinvoke! IsIconRefComposite is not bound
+!missing-pinvoke! IsValidIconRef is not bound
+!missing-pinvoke! LSCanRefAcceptItem is not bound
+!missing-pinvoke! LSCopyApplicationForMIMEType is not bound
+!missing-pinvoke! LSCopyDisplayNameForRef is not bound
+!missing-pinvoke! LSCopyDisplayNameForURL is not bound
+!missing-pinvoke! LSCopyItemAttribute is not bound
+!missing-pinvoke! LSCopyItemAttributes is not bound
+!missing-pinvoke! LSCopyItemInfoForRef is not bound
+!missing-pinvoke! LSCopyItemInfoForURL is not bound
+!missing-pinvoke! LSCopyKindStringForMIMEType is not bound
+!missing-pinvoke! LSCopyKindStringForRef is not bound
+!missing-pinvoke! LSCopyKindStringForTypeInfo is not bound
+!missing-pinvoke! LSCopyKindStringForURL is not bound
+!missing-pinvoke! LSFindApplicationForInfo is not bound
+!missing-pinvoke! LSGetApplicationForInfo is not bound
+!missing-pinvoke! LSGetApplicationForItem is not bound
+!missing-pinvoke! LSGetApplicationForURL is not bound
+!missing-pinvoke! LSGetExtensionInfo is not bound
+!missing-pinvoke! LSGetHandlerOptionsForContentType is not bound
+!missing-pinvoke! LSOpenApplication is not bound
+!missing-pinvoke! LSOpenFromRefSpec is not bound
+!missing-pinvoke! LSOpenFromURLSpec is not bound
+!missing-pinvoke! LSOpenFSRef is not bound
+!missing-pinvoke! LSOpenItemsWithRole is not bound
+!missing-pinvoke! LSOpenURLsWithRole is not bound
+!missing-pinvoke! LSRegisterFSRef is not bound
+!missing-pinvoke! LSSetExtensionHiddenForRef is not bound
+!missing-pinvoke! LSSetExtensionHiddenForURL is not bound
+!missing-pinvoke! LSSetHandlerOptionsForContentType is not bound
+!missing-pinvoke! LSSetItemAttribute is not bound
+!missing-pinvoke! OverrideIconRef is not bound
+!missing-pinvoke! ReadIconFromFSRef is not bound
+!missing-pinvoke! RegisterIconRefFromFSRef is not bound
+!missing-pinvoke! RegisterIconRefFromIconFamily is not bound
+!missing-pinvoke! ReleaseIconRef is not bound
+!missing-pinvoke! RemoveIconRefOverride is not bound
+!missing-pinvoke! SetCustomIconsEnabled is not bound
+!missing-pinvoke! UnregisterIconRef is not bound
+!missing-pinvoke! UpdateIconRef is not bound
+!missing-pinvoke! UTCreateStringForOSType is not bound
+!missing-pinvoke! UTGetOSTypeFromString is not bound
+!missing-pinvoke! UTTypeEqual is not bound

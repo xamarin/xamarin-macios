@@ -2094,7 +2094,7 @@ namespace AppKit {
 	}
 	
 	[BaseType (typeof (NSControl))]
-	interface NSButton : NSAccessibilityButton {
+	interface NSButton : NSAccessibilityButton, NSUserInterfaceCompression {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frameRect);
 
@@ -7079,7 +7079,7 @@ namespace AppKit {
 	[DisableDefaultCtor]
 	interface NSGridCell : NSCoding
 	{
-		[Export ("contentView", ArgumentSemantic.Strong)]
+		[Export ("contentView", ArgumentSemantic.Strong), NullAllowed]
 		NSView ContentView { get; set; }
 
 		[Export ("emptyContentView", ArgumentSemantic.Strong)]
@@ -13728,6 +13728,10 @@ namespace AppKit {
 
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
+
+		[Mac (10,13)]
+		[Export ("view")]
+		INSUserInterfaceCompression View { get; }
 	}
 	
 	[BaseType (typeof (NSObject))]
@@ -16431,7 +16435,7 @@ namespace AppKit {
 			get; set;
 		}
 
-		[Export ("objectValue", ArgumentSemantic.Retain)]
+		[Export ("objectValue", ArgumentSemantic.Retain), NullAllowed]
 		NSObject ObjectValue {
 			get; set;
 		}
@@ -16802,7 +16806,7 @@ namespace AppKit {
 
 		[Mac (10,8)]
 		[Export ("registerNib:forIdentifier:")]
-		void RegisterNib (NSNib nib, string identifier);
+		void RegisterNib ([NullAllowed] NSNib nib, string identifier);
 
 		[Mac (10,7)]
 		[Export ("didAddRowView:forRow:")]
@@ -26122,6 +26126,8 @@ namespace AppKit {
 		[Export ("standardOptions", ArgumentSemantic.Copy)]
 		NSUserInterfaceCompressionOptions StandardOptions { get; }
 	}
+
+	interface INSUserInterfaceCompression { }
 
 	[Mac (10, 13)]
 	[Protocol]

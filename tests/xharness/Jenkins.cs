@@ -516,6 +516,7 @@ namespace xharness
 			var xtro_prefixes = new string [] {
 				"tests/xtro-sharpie",
 				"src",
+				"Make.config",
 			};
 
 			SetEnabled (files, mtouch_prefixes, "mtouch", ref IncludeMtouch);
@@ -3052,7 +3053,9 @@ function oninitialload ()
 		}
 
 		protected abstract Task RunTestAsync ();
-		protected virtual void VerifyRun () { }
+		// VerifyRun is called in ExecuteAsync to verify that the task can be executed/run.
+		// Typically used to fail tasks that don't have an available device.
+		public virtual void VerifyRun () { }
 
 		public override void Reset ()
 		{
@@ -3126,7 +3129,7 @@ function oninitialload ()
 			set { throw new NotImplementedException (); }
 		}
 
-		protected override void VerifyRun ()
+		public override void VerifyRun ()
 		{
 			base.VerifyRun ();
 
@@ -3440,6 +3443,9 @@ function oninitialload ()
 
 		protected override async Task ExecuteAsync ()
 		{
+			foreach (var task in Tasks)
+				task.VerifyRun ();
+			
 			// First build everything. This is required for the run simulator
 			// task to properly configure the simulator.
 			build_timer.Start ();
