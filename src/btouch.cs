@@ -43,6 +43,7 @@ class BindingTouch {
 	public static PlatformName CurrentPlatform;
 	public static bool Unified;
 	public static bool skipSystemDrawing;
+	public static string outfile;
 
 	static string baselibdll;
 	static string attributedll;
@@ -51,6 +52,10 @@ class BindingTouch {
 	static List<string> libs = new List<string> ();
 
 	public static Universe universe;
+
+	public static TargetFramework TargetFramework {
+		get { return target_framework.Value; }
+	}
 
 	public static string ToolName {
 		get { return Path.GetFileNameWithoutExtension (System.Reflection.Assembly.GetEntryAssembly ().Location); }
@@ -213,7 +218,6 @@ class BindingTouch {
 		string basedir = null;
 		string tmpdir = null;
 		string ns = null;
-		string outfile = null;
 		bool delete_temp = true, debug = false;
 		bool verbose = false;
 		bool unsafef = true;
