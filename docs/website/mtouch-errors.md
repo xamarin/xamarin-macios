@@ -1,6 +1,6 @@
 ---
 title: "Xamarin.iOS errors"
-ms.topic: article
+ms.topic: troubleshooting
 ms.prod: xamarin
 ms.assetid: 9F76162B-D622-45DA-996B-2FBF8017E208
 ms.technology: xamarin-ios
