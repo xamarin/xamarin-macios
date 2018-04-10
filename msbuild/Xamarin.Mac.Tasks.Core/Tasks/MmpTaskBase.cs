@@ -72,8 +72,8 @@ namespace Xamarin.Mac.Tasks
 		public string I18n { get; set; }
 		public string ExtraArguments { get; set; }
 
-		public string AotScope { get; set; }
-		public bool HybridAotOption { get; set; }
+		public string AotMode { get; set; }
+		public bool HybridAOT { get; set; }
 		public string ExplicitAotAssemblies { get; set; }
 
 		public ITaskItem [] ExplicitReferences { get; set; }
@@ -176,9 +176,9 @@ namespace Xamarin.Mac.Tasks
 				break;
 			}
 
-			if (!string.IsNullOrEmpty (AotScope) && AotScope != "None") {
-				var aot = $"--aot:{AotScope.ToLower ()}";
-				if (HybridAotOption)
+			if (!string.IsNullOrEmpty (AotMode) && AotMode != "None") {
+				var aot = $"--aot:{AotMode.ToLower ()}";
+				if (HybridAOT)
 					aot += "|hybrid";
 
 				if (!string.IsNullOrEmpty (ExplicitAotAssemblies))
