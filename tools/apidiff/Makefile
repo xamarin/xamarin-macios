@@ -15,7 +15,7 @@ APIDIFF_DIR=.
 MONO_API_HTML_DIR = $(MONO_PATH)/mcs/tools/mono-api-html
 MONO_API_INFO_DIR = $(MONO_PATH)/mcs/tools/corcompare
 MONO_API_INFO = $(MONO_API_INFO_DIR)/bin/Debug/mono-api-info.exe
-MONO_API_HTML = $(MONO_API_HTML_DIR)/bin/Debug/mono-api-html.exe
+MONO_API_HTML = $(TOP)/external/macios-binaries/mono-api-html.exe
 
 # I18N are excluded - but otherwise if should be like ../../builds/Makefile + what XI adds
 # in the order to the api-diff.html merged file
@@ -205,6 +205,7 @@ verify-reference-assemblies-mac: $(APIDIFF_DIR)/temp/native-32/Xamarin.Mac.xml $
 clean-local::
 	rm -rf temp updated-references diff *.exe* api-diff.html
 	rm -rf *.dll*
+	rm -rf ios-*.md tvos-*.md watchos-*.md macos-*.md
 
 DIRS += $(APIDIFF_DIR)/temp $(APIDIFF_DIR)/diff
 
@@ -218,6 +219,40 @@ $(DIRS):
 .SECONDARY: $(foreach file,$(MAC_ASSEMBLIES),$(APIDIFF_DIR)/temp/xm/$(file).xml)
 .SECONDARY: $(foreach file,$(WATCHOS_ASSEMBLIES),$(APIDIFF_DIR)/temp/xi/$(file).xml)
 .SECONDARY: $(foreach file,$(TVOS_ASSEMBLIES),$(APIDIFF_DIR)/temp/xi/$(file).xml)
+
+merger.exe: merger.cs
+	$(Q) $(SYSTEM_CSC) -debug $< -out:$@
+
+ifdef INCLUDE_IOS
+ios-markdown: merger.exe $(foreach file,$(IOS_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).md)
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.iOS $(CURDIR)/diff/xi/Xamarin.iOS/ ios
+else
+ios-markdown: ; @true
+endif
+
+ifdef INCLUDE_TVOS
+tvos-markdown: merger.exe $(foreach file,$(TVOS_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).md)
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.TVOS $(CURDIR)/diff/xi/Xamarin.TVOS/ tvos
+else
+tvos-markdown: ; @true
+endif
+
+ifdef INCLUDE_WATCH
+watchos-markdown: merger.exe $(foreach file,$(WATCHOS_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).md)
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.WatchOS $(CURDIR)/diff/xi/Xamarin.WatchOS/ watchos
+else
+watchos-markdown: ; @true
+endif
+
+ifdef INCLUDE_MAC
+macos-markdown: merger.exe $(foreach file,$(MAC_ASSEMBLIES),$(APIDIFF_DIR)/diff/xm/$(file).md)
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.Mac $(CURDIR)/diff/xm/Xamarin.Mac/ macos
+else
+macos-markdown: ; @true
+endif
+
+$(APIDIFF_DIR)/diff/%.md: $(APIDIFF_DIR)/temp/%.xml $(APIDIFF_DIR)/references/%.xml $(MONO_API_HTML)
+	$(QF_GEN) mono --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) $(APIDIFF_DIR)/references/$*.xml $(APIDIFF_DIR)/temp/$*.xml -i 'INSObjectProtocol' --md $@
 
 wrench-api-diff:
 	@echo "@MonkeyWrench: AddDirectory: $(CURDIR)/diff/xi/Xamarin.iOS"
@@ -245,6 +280,7 @@ endif
 	@echo "@MonkeyWrench: AddFile: $(CURDIR)/api-diff.html"
 	@# remove empty files so they're not uploaded
 	@-find $(CURDIR)/diff -size 0 | xargs rm
+	$(MAKE) -j8 ios-markdown tvos-markdown watchos-markdown macos-markdown
 ifdef INCLUDE_IOS
 	$(MAKE) verify-reference-assemblies-ios -j8
 endif
@@ -256,4 +292,5 @@ jenkins-api-diff:
 	-$(MAKE) wrench-api-diff
 	$(Q) mkdir -p $(JENKINS_RESULTS_DIRECTORY)/api-diff
 	$(Q) cp *.html $(JENKINS_RESULTS_DIRECTORY)/api-diff
+	$(Q) cp *.md $(JENKINS_RESULTS_DIRECTORY)/api-diff
 	$(Q) cp -R diff $(JENKINS_RESULTS_DIRECTORY)/api-diff
