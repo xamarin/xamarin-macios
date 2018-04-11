@@ -1166,7 +1166,14 @@ namespace xharness
 								using (var fs = new FileStream (path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
 									int read;
 									response.ContentLength64 = fs.Length;
-									response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
+									switch (Path.GetExtension (path).ToLowerInvariant ()) {
+									case ".html":
+										response.ContentType = System.Net.Mime.MediaTypeNames.Text.Html;
+										break;
+									default:
+										response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
+										break;
+									}
 									while ((read = fs.Read (buffer, 0, buffer.Length)) > 0)
 										response.OutputStream.Write (buffer, 0, read);
 								}
