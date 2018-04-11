@@ -90,6 +90,7 @@ namespace Xamarin.Linker {
 			"System.Linq.Parallel",
 			"System.Linq.Queryable",
 			"System.Linq",
+			"System.Memory",
 			"System.Net.AuthenticationManager",
 			"System.Net.Cache",
 			"System.Net.Http.Rtc",

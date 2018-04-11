@@ -157,6 +157,7 @@ APPKIT_SOURCES = \
 ARKIT_SOURCES = \
 	ARKit/ARCompat.cs \
 	ARKit/ARFaceGeometry.cs \
+	ARKit/ARPlaneGeometry.cs \
 	ARKit/ARPointCloud.cs \
 
 # AssetsLibrary
@@ -279,6 +280,14 @@ AVKIT_API_SOURCES = \
 
 AVKIT_SOURCES = \
 	AVKit/AVPlayerViewController.cs \
+
+# BusinessChat
+
+BUSINESSCHAT_API_SOURCES = \
+	BusinessChat/Enums.cs \
+
+BUSINESSCHAT_SOURCES = \
+	BusinessChat/BCChatAction.cs \
 
 # CallKit
 
@@ -1271,6 +1280,7 @@ SECURITY_SOURCES = \
 	Security/SecIdentity.cs \
 	Security/SecPolicy.cs \
 	Security/SecSharedCredential.cs \
+	Security/SecStatusCodeExtensions.cs \
 	Security/SecTrust.cs \
 	Security/SslConnection.cs \
 	Security/SslContext.cs \
@@ -1555,6 +1565,7 @@ SHARED_CORE_SOURCES = \
 
 SHARED_SOURCES = \
 	../runtime/Delegates.generated.cs \
+	../tools/common/StringUtils.cs \
 	MonoNativeFunctionWrapperAttribute.cs \
 	NativeTypes/NMath.cs \
 	ObjCRuntime/AdoptsAttribute.cs \
@@ -1622,6 +1633,7 @@ MAC_FRAMEWORKS =            \
 	AudioToolbox            \
 	AudioUnit               \
 	AVKit                   \
+	BusinessChat            \
 	CFNetwork               \
 	CloudKit                \
 	Contacts                \
@@ -1695,6 +1707,7 @@ IOS_FRAMEWORKS =         \
 	AssetsLibrary \
 	AudioToolbox \
 	AudioUnit \
+	BusinessChat \
 	CallKit \
 	CFNetwork \
 	CloudKit \

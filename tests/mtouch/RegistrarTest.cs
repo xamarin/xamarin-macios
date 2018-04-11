@@ -279,9 +279,20 @@ class MyObjectErr : NSObject, IFoo1, IFoo2
 				mtouch.Linker = MTouchLinker.LinkSdk;
 				mtouch.Registrar = MTouchRegistrar.Static;
 				mtouch.AssertExecuteFailure ();
-				var invalidFrameworks = new string [] { "IdentityLookup", "FileProviderUI", "FileProvider", "DeviceCheck", "CoreNFC", "Vision", "PDFKit", "IOSurface", "ARKit" };
+				var invalidFrameworks = new [] {
+					new { Framework = "IdentityLookup", Version = "11.0" },
+					new { Framework = "FileProviderUI", Version = "11.0" },
+					new { Framework = "FileProvider", Version = "11.0" },
+					new { Framework = "DeviceCheck", Version = "11.0" },
+					new { Framework = "CoreNFC", Version = "11.0" },
+					new { Framework = "Vision", Version = "11.0" },
+					new { Framework = "PDFKit", Version = "11.0" },
+					new { Framework = "IOSurface", Version = "11.0" },
+					new { Framework = "ARKit", Version = "11.0" },
+					new { Framework = "BusinessChat", Version = "11.3" },
+				};
 				foreach (var framework in invalidFrameworks)
-					mtouch.AssertError (4134, $"Your application is using the '{framework}' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS 11.0, while you're building with the iOS {mtouch.Sdk} SDK.) Please select a newer SDK in your app's iOS Build options.");
+					mtouch.AssertError (4134, $"Your application is using the '{framework.Framework}' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS {framework.Version}, while you're building with the iOS {mtouch.Sdk} SDK.) Please select a newer SDK in your app's iOS Build options.");
 				mtouch.AssertErrorCount (invalidFrameworks.Length);
 				mtouch.AssertWarningCount (0);
 			}

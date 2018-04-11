@@ -136,7 +136,7 @@ namespace xharness
 		string DownloadMlaunch ()
 		{
 			// NOTE: the filename part in the url must be unique so that the caching logic works properly.
-			var mlaunch_url = "https://dl.xamarin.com/uploads/3euiqmcoizk/mlaunch-18deb964b64886af65fb1760b19adeee58dd8bea.zip";
+			var mlaunch_url = "https://dl.xamarin.com/ios/mlaunch-acdb43d346c431b2c40663c938c919dcb0e91bd7.zip";
 			var extraction_dir = Path.Combine (Path.GetTempPath (), Path.GetFileNameWithoutExtension (mlaunch_url));
 			var mlaunch_path = Path.Combine (extraction_dir, "bin", "mlaunch");
 
@@ -185,45 +185,9 @@ namespace xharness
 			}
 		}
 
-		string mlaunch;
 		public string MlaunchPath {
 			get {
-				if (mlaunch == null) {
-					// First check if we've built mlaunch locally.
-					var filename = Path.GetFullPath (Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mlaunch"));
-					if (File.Exists (filename)) {
-						Log ("Found mlaunch: {0}", filename);
-						Environment.SetEnvironmentVariable ("MLAUNCH_PATH", filename);
-						return mlaunch = filename;
-					}
-
-					// Then check if we can download mlaunch.
-					Log ("Could not find a locally built mlaunch, will try downloading it.");
-					try {
-						filename = DownloadMlaunch ();
-					} catch (Exception e) {
-						Log ("Could not download mlaunch: {0}", e);
-					}
-					if (File.Exists (filename)) {
-						Log ("Found mlaunch: {0}", filename);
-						Environment.SetEnvironmentVariable ("MLAUNCH_PATH", filename);
-						return mlaunch = filename;
-					}
-
-					// Then check if the system version of Xamarin.iOS has mlaunch.
-					// This may be a version of mlaunch we're not compatible with, since we don't control which XI version the system has.
-					Log ("Could not download mlaunch, will try the system's Xamarin.iOS.");
-					filename = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mlaunch";
-					if (File.Exists (filename)) {
-						Log ("Found mlaunch: {0}", filename);
-						Environment.SetEnvironmentVariable ("MLAUNCH_PATH", filename);
-						return mlaunch = filename;
-					}
-
-					throw new FileNotFoundException (string.Format ("Could not find mlaunch: {0}", filename));
-				}
-
-				return mlaunch;
+				return Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mlaunch");
 			}
 		}
 

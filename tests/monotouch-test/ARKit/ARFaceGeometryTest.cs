@@ -95,8 +95,8 @@ namespace MonoTouchFixtures.ARKit {
 		{
 			var face = new ARFaceGeometryPoker ();
 			var vertices = face.GetVertices ();
-			Assert.AreEqual (new VectorFloat3 (1, 2, 3), vertices [0]);
-			Assert.AreEqual (new VectorFloat3 (4, 5, 6), vertices [1]);
+			Assert.AreEqual (new VectorFloat3 (1, 2, 3), vertices [0], "Vertex 1");
+			Assert.AreEqual (new VectorFloat3 (4, 5, 6), vertices [1], "Vertex 2");
 		}
 
 		[Test]
@@ -104,8 +104,8 @@ namespace MonoTouchFixtures.ARKit {
 		{
 			var face = new ARFaceGeometryPoker ();
 			var textureCoordinates = face.GetTextureCoordinates ();
-			Assert.AreEqual (new VectorFloat2 (1, 2), textureCoordinates [0]);
-			Assert.AreEqual (new VectorFloat2 (3, 4), textureCoordinates [1]);
+			Assert.AreEqual (new VectorFloat2 (1, 2), textureCoordinates [0], "Texture Coordinates 1");
+			Assert.AreEqual (new VectorFloat2 (3, 4), textureCoordinates [1], "Texture Coordinates 2");
 		}
 
 		[Test]

@@ -516,6 +516,7 @@ namespace xharness
 			var xtro_prefixes = new string [] {
 				"tests/xtro-sharpie",
 				"src",
+				"Make.config",
 			};
 
 			SetEnabled (files, mtouch_prefixes, "mtouch", ref IncludeMtouch);
@@ -1165,7 +1166,14 @@ namespace xharness
 								using (var fs = new FileStream (path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
 									int read;
 									response.ContentLength64 = fs.Length;
-									response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
+									switch (Path.GetExtension (path).ToLowerInvariant ()) {
+									case ".html":
+										response.ContentType = System.Net.Mime.MediaTypeNames.Text.Html;
+										break;
+									default:
+										response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
+										break;
+									}
 									while ((read = fs.Read (buffer, 0, buffer.Length)) > 0)
 										response.OutputStream.Write (buffer, 0, read);
 								}
@@ -3109,7 +3117,9 @@ function toggleAll (show)
 		}
 
 		protected abstract Task RunTestAsync ();
-		protected virtual void VerifyRun () { }
+		// VerifyRun is called in ExecuteAsync to verify that the task can be executed/run.
+		// Typically used to fail tasks that don't have an available device.
+		public virtual void VerifyRun () { }
 
 		public override void Reset ()
 		{
@@ -3183,7 +3193,7 @@ function toggleAll (show)
 			set { throw new NotImplementedException (); }
 		}
 
-		protected override void VerifyRun ()
+		public override void VerifyRun ()
 		{
 			base.VerifyRun ();
 

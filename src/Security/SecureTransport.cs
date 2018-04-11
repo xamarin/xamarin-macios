@@ -82,7 +82,21 @@ namespace Security {
 		BadConfiguration			= -9848,
 		UnexpectedRecord			= -9849,
 		SSLWeakPeerEphemeralDHKey               = -9850,
-		SSLClientHelloReceived                  = -9851 // non falta
+		SSLClientHelloReceived                  = -9851, // non falta
+		SSLTransportReset                       = -9852,
+		SSLNetworkTimeout                       = -9853,
+		SSLConfigurationFailed                  = -9854,
+		SSLUnsupportedExtension                 = -9855,
+		SSLUnexpectedMessage                    = -9856,
+		SSLDecompressFail                       = -9857,
+		SSLHandshakeFail                        = -9858,
+		SSLDecodeError                          = -9859,
+		SSLInappropriateFallback                = -9860,
+		SSLMissingExtension                     = -9861,
+		SSLBadCertificateStatusResponse         = -9862,
+		SSLCertificateRequired                  = -9863,
+		SSLUnknownPskIdentity                   = -9864,
+		SSLUnrecognizedName                     = -9865,
 	}
 
 	// Security.framework/Headers/SecureTransport.h

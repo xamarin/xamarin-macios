@@ -21,22 +21,42 @@ namespace Xamarin.MMP.Tests
 			}
 		}
 
-		const string AOTTestBaseConfig = "<MonoBundlingExtraArgs>--aot=core,-Xamarin.Mac.dll</MonoBundlingExtraArgs>";
-		const string AOTTestHybridConfig = "<MonoBundlingExtraArgs>--aot=all|hybrid</MonoBundlingExtraArgs>";
+		enum TestType { Base, Hybrid }
+
+		string GetTestConfig (TestType type, bool useProjectTags)
+		{
+			if (useProjectTags) {
+				switch (type) {
+				case TestType.Base:
+					return "<AOTMode>Core</AOTMode>";
+				case TestType.Hybrid:
+					return "<AOTMode>All</AOTMode><HybridAOT>true</HybridAOT>";
+				}
+			} else {
+				switch (type) {
+				case TestType.Base:
+					return "<MonoBundlingExtraArgs>--aot=core</MonoBundlingExtraArgs>";
+				case TestType.Hybrid:
+					return "<MonoBundlingExtraArgs>--aot=all|hybrid</MonoBundlingExtraArgs>";
+				}
+			}
+			throw new NotImplementedException ();
+		}
 
 		DirectoryInfo GetOutputDirInfo (string tmpDir) => new DirectoryInfo (Path.Combine (tmpDir, GetOutputBundlePath (tmpDir)));
 		string GetOutputAppPath (string tmpDir) => Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MacOS/UnifiedExample");
 		string GetOutputBundlePath (string tmpDir) => Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MonoBundle");
 
 		bool IsFileManagedCode (FileInfo file) => file.Extension.ToLowerInvariant () == ".exe" || file.Extension.ToLowerInvariant () == ".dll";
-		bool ShouldBaseFilesBeAOT (FileInfo file) => file.Name == "System.dll" || file.Name == "mscorlib.dll";
+		bool ShouldBaseFilesBeAOT (FileInfo file) => file.Name == "Xamarin.Mac.dll" || file.Name == "System.dll" || file.Name == "mscorlib.dll";
 
 		// AOT unit tests can be found in tools/mmp/tests
-		[Test]
-		public void AOT_SmokeTest () {
+		[TestCase (false)]
+		[TestCase (true)]
+		public void AOT_SmokeTest (bool useProjectTags) {
 			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
-					CSProjConfig = AOTTestBaseConfig
+					CSProjConfig = GetTestConfig (TestType.Base, useProjectTags)
 				};
 				string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
 
@@ -44,12 +64,13 @@ namespace Xamarin.MMP.Tests
 			});
 		}
 
-		[Test]
-		public void AOT_32Bit_SmokeTest ()
+		[TestCase (false)]
+		[TestCase (true)]
+		public void AOT_32Bit_SmokeTest (bool useProjectTags)
 		{
 			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
-					CSProjConfig = "<XamMacArch>i386</XamMacArch>" + AOTTestBaseConfig
+					CSProjConfig = "<XamMacArch>i386</XamMacArch>" + GetTestConfig (TestType.Base, useProjectTags)
 				};
 				string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
 
@@ -57,12 +78,13 @@ namespace Xamarin.MMP.Tests
 			});
 		}
 
-		[Test]
-		public void HybridAOT_WithManualStrippingOfAllLibs_SmokeTest ()
+		[TestCase (false)]
+		[TestCase (true)]
+		public void HybridAOT_WithManualStrippingOfAllLibs_SmokeTest (bool useProjectTags)
 		{
 			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
-					CSProjConfig = AOTTestHybridConfig
+					CSProjConfig = GetTestConfig (TestType.Hybrid, useProjectTags)
 				};
 				string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
 
@@ -78,12 +100,13 @@ namespace Xamarin.MMP.Tests
 			});
 		}
 
-		[Test]
-		public void HybridAOT_WithManualStrippingOfJustMainExe ()
+		[TestCase (false)]
+		[TestCase (true)]
+		public void HybridAOT_WithManualStrippingOfJustMainExe (bool useProjectTags)
 		{
 			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
-					CSProjConfig = AOTTestHybridConfig
+					CSProjConfig = GetTestConfig (TestType.Hybrid, useProjectTags)
 				};
 				string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
 

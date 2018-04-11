@@ -234,7 +234,7 @@ namespace WebKit
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
-	interface WKPreferences : NSCoding {
+	interface WKPreferences : NSSecureCoding {
 		[Export ("minimumFontSize")]
 		nfloat MinimumFontSize { get; set; }
 
@@ -392,11 +392,19 @@ namespace WebKit
 		
 		[Field ("WKWebsiteDataTypeIndexedDBDatabases", "WebKit")]
 		NSString IndexedDBDatabases { get; }
+
+		[Mac (10, 13, 4, onlyOn64 : true), iOS (11, 3)]
+		[Field ("WKWebsiteDataTypeFetchCache")]
+		NSString FetchCache { get; }
+
+		[Mac (10, 13, 4, onlyOn64 : true), iOS (11, 3)]
+		[Field ("WKWebsiteDataTypeServiceWorkerRegistrations")]
+		NSString ServiceWorkerRegistrations { get; }
 	}
 	
 	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
-	interface WKWebsiteDataStore : NSCoding {
+	interface WKWebsiteDataStore : NSSecureCoding {
 
 		[Static]
 		[Export ("defaultDataStore")]
@@ -435,6 +443,10 @@ namespace WebKit
 	interface WKOpenPanelParameters	{
 		[Export ("allowsMultipleSelection")]
 		bool AllowsMultipleSelection { get; }
+
+		[Mac (10, 13, 4, onlyOn64 : true)]
+		[Export ("allowsDirectories")]
+		bool AllowsDirectories { get; }
 	}
 	
 	[Mac (10,10, onlyOn64 : true), iOS (8,0)]
@@ -482,7 +494,7 @@ namespace WebKit
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
-	interface WKUserContentController : NSCoding {
+	interface WKUserContentController : NSSecureCoding {
 
 		[Export ("userScripts")]
 		WKUserScript [] UserScripts { get; }
@@ -702,7 +714,7 @@ namespace WebKit
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
-	interface WKWebViewConfiguration : NSCopying, NSCoding {
+	interface WKWebViewConfiguration : NSCopying, NSSecureCoding {
 
 		[Export ("processPool", ArgumentSemantic.Retain)]
 		WKProcessPool ProcessPool { get; set; }
@@ -778,7 +790,7 @@ namespace WebKit
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
-	interface WKProcessPool : NSCoding {
+	interface WKProcessPool : NSSecureCoding {
 		// as of Mac 10.10, iOS 8.0 Beta 2,
 		// this interface is completely empty
 	}
