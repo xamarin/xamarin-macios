@@ -427,7 +427,7 @@ namespace Xamarin.Bundler {
 
 		static void LogArguments (string [] arguments)
 		{
-			if (Verbosity < 2)
+			if (Verbosity < 1)
 				return;
 			if (!arguments.Any ((v) => v.Length > 0 && v [0] == '@'))
 				return; // no need to print arguments unless we get response files
