@@ -45,6 +45,11 @@ namespace xharness
 			throw new NotSupportedException ();
 		}
 
+		public override void Write (char value)
+		{
+			WriteImpl (value.ToString ());
+		}
+
 		public override void Write (string value)
 		{
 			if (Timestamp)
