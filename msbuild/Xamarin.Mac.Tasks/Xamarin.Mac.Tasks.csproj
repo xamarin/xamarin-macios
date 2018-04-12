@@ -107,6 +107,9 @@
     <None Include="Xamarin.Mac.ObjCBinding.CSharp.targets">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Xamarin.Mac.ObjCBinding.CSharp.props">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Xamarin.Mac.AppExtension.Common.props">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
