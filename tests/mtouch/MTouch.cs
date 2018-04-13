@@ -3816,6 +3816,34 @@ public partial class KeyboardViewController : UIKit.UIInputViewController
 			}
 		}
 
+		[Test]
+		public void WatchOSExtensionsWithExtensions ()
+		{
+			using (var intents_extension = new MTouchTool ()) {
+				intents_extension.Profile = Profile.watchOS;
+				intents_extension.CreateTemporaryWatchOSIntentsExtension ();
+				intents_extension.CreateTemporaryCacheDirectory ();
+				intents_extension.DSym = false; // faster test
+				intents_extension.MSym = false; // faster test
+				intents_extension.NoStrip = true; // faster test
+
+				intents_extension.AssertExecute (MTouchAction.BuildDev, "extension build");
+
+				using (var watch_extension = new MTouchTool ()) {
+					watch_extension.Profile = Profile.watchOS;
+					watch_extension.AppExtensions.Add (intents_extension);
+					watch_extension.CreateTemporaryCacheDirectory ();
+					watch_extension.CreateTemporaryWatchKitExtension ();
+					watch_extension.DSym = false; // faster test
+					watch_extension.MSym = false; // faster test
+					watch_extension.NoStrip = true; // faster test
+
+					watch_extension.AssertExecute (MTouchAction.BuildDev, "build");
+					watch_extension.AssertNoWarnings ();
+				}
+			}
+		}
+
 		public void XamarinSdkAdjustLibs ()
 		{
 			using (var exttool = new MTouchTool ()) {
