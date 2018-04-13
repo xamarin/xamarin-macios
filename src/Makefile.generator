@@ -126,7 +126,7 @@ $(IOS_BUILD_DIR)/native/Xamarin.iOS.BindingAttributes.dll: generator-attributes.
 
 $(IOS_BUILD_DIR)/native/monotouch.BindingAttributes.dll: generator-attributes.cs Makefile.generator
 	$(Q) mkdir -p $(dir $@)
-	$(Q_GEN) $(SYSTEM_CSC) -out:$@ -debug generator-attributes.cs -target:library
+	$(Q_GEN) $(SYSTEM_CSC) -debug -out:$@ -debug generator-attributes.cs -target:library
 
 #
 # Xamarin.Watch (bwatch)
@@ -151,7 +151,7 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/%.dll: $(WATCH_BUILD_DIR)/%.dll | $(I
 
 $(WATCH_BUILD_DIR)/Xamarin.WatchOS.BindingAttributes.dll: generator-attributes.cs Makefile.generator
 	$(Q) mkdir -p $(dir $@)
-	$(Q_GEN) $(SYSTEM_CSC) -out:$@ -debug generator-attributes.cs -target:library
+	$(Q_GEN) $(SYSTEM_CSC) -debug -out:$@ -debug generator-attributes.cs -target:library
 
 # #
 # # Xamarin.TVOS (btv)
@@ -176,7 +176,7 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/%.dll: $(TVOS_BUILD_DIR)/%.dll | $(IO
 
 $(TVOS_BUILD_DIR)/Xamarin.TVOS.BindingAttributes.dll: generator-attributes.cs Makefile.generator
 	$(Q) mkdir -p $(dir $@)
-	$(Q_GEN) $(SYSTEM_CSC) -out:$@ -debug generator-attributes.cs -target:library
+	$(Q_GEN) $(SYSTEM_CSC) -debug -out:$@ -debug generator-attributes.cs -target:library
 
 #
 # Xamarin.Mac (bmac)
@@ -224,11 +224,11 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/bgen-classic.exe: $(MACIOS_B
 $(MAC_BUILD_DIR)/XamMac.BindingAttributes.dll: $(MACIOS_BINARIES_PATH)/XamMac.BindingAttributes.dll
 	$(Q) mkdir -p $(dir $@)
 	$(Q) cp $< $@
-	$(Q) cp $(<:.dll=.pdb) $(@:.dll=.pdb)
+	$(Q) cp $<.mdb $@.mdb
 
 $(MAC_BUILD_DIR)/Xamarin.Mac-%.BindingAttributes.dll: generator-attributes.cs Makefile.generator
 	$(Q) mkdir -p $(dir $@)
-	$(Q_GEN) $(SYSTEM_CSC) -out:$@ -debug generator-attributes.cs -target:library
+	$(Q_GEN) $(SYSTEM_CSC) -debug -out:$@ -debug generator-attributes.cs -target:library
 
 bgen:	\
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bgen                     \
