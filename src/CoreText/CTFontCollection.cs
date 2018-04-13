@@ -205,7 +205,7 @@ namespace CoreText {
 				if (cfArrayRef == IntPtr.Zero)
 					return new CTFontDescriptor [0];
 				var matches = NSArray.ArrayFromHandle (cfArrayRef,
-						fd => new CTFontDescriptor (cfArrayRef, false));
+						fd => new CTFontDescriptor (fd, false));
 				CFObject.CFRelease (cfArrayRef);
 				return matches;
 			}
