@@ -67,7 +67,8 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 
 	<Target Name="_CollectBundleResources">
 		<CollectBundleResources
-			SessionId=""
+			Condition="'$(IsMacEnabled)' == 'true'"
+			SessionId="$(BuildSessionId)"
 			OptimizePNGs="False"
 			BundleResources="@(Content);@(BundleResource)"
 			ProjectDir="$(MSBuildProjectDirectory)"
