@@ -213,7 +213,7 @@ namespace Registrar {
 			get {
 				if (protocol_member_method_map == null) {
 #if MTOUCH
-					if (App.IsExtension && App.IsCodeShared) {
+					if ((App.IsExtension && !App.IsWatchExtension) && App.IsCodeShared) {
 						protocol_member_method_map = Target.ContainerTarget.StaticRegistrar.ProtocolMemberMethodMap;
 					} else {
 						protocol_member_method_map = new Dictionary<ICustomAttribute, MethodDefinition> ();
