@@ -84,7 +84,7 @@ reset-mono::
 	$(Q) rm -f $(TOP)/.stamp-build* $(MONO_PATH)/configure
 
 reset-llvm::
-	$(Q) $(MAKE) -C $(TOP)/builds clean-llvm
+	$(Q) if test -d $(MONO_PATH); then $(MAKE) -C $(TOP)/builds clean-llvm; fi
 
 reset-fsharp::
 	$(Q) cd $(FSHARP_PATH) && git clean -xffdq
