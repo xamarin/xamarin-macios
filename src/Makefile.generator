@@ -211,7 +211,8 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bmac: bmac.ikvm | $(MAC_DESTDIR)$
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/%.dll: $(MAC_BUILD_DIR)/%.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen
 	$(Q) install -m 0755 $< $@
-	$(Q) install -m 0644 $(<:.dll=.pdb) $(@:.dll=.pdb)
+	$(Q) -install -m 0644 $(<:.dll=.pdb) $(@:.dll=.pdb)
+	$(Q) -install -m 0644 $<.mdb $@.mdb
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/%.exe: $(BUILD_DIR)/common/bgen.exe | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen
 	$(Q) install -m 0755 $< $@
