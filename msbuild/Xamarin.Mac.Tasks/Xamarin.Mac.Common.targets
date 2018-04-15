@@ -502,6 +502,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			ExtraArguments="$(MonoBundlingExtraArgs)"
 			NativeReferences="@(NativeReference)"
 			ExplicitReferences="@(ReferencePath);@(ReferenceCopyLocalAssemblyPaths)"
+			ResponseFilePath="$(IntermediateOutputPath)response-file.rsp"
 			SdkRoot="$(_SdkDevPath)"
 			IntermediateOutputPath="$(IntermediateOutputPath)mmp-cache"
 			AppManifest="$(_AppManifest)"
