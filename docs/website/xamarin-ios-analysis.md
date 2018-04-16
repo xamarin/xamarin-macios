@@ -1,6 +1,6 @@
 ---
-title: "Xamarin.iOS analysis rules"
-ms.topic: article
+title: "Xamarin.iOS Analysis Rules"
+ms.topic: troubleshooting
 ms.prod: xamarin
 ms.assetid: C29B69F5-08E4-4DCC-831E-7FD692AB0886
 ms.technology: xamarin-ios

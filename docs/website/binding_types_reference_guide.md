@@ -307,7 +307,7 @@ public interface UIActionSheetDelegate {
 ### DesignatedDefaultCtorAttribute
 
 When this attribute is applied to the interface definition it will generate
-a `[DesignatedInitializer]` attribute on the default (generated) constructor
+a `[DesignatedInitializer]` attribute on the default (generated) constructor,
 which maps to the `init` selector.
 
 <a name="DisableDefaultCtorAttribute" />
@@ -1870,8 +1870,9 @@ interface XyzPanel {
 }
 ```
 
-When the `[WrapAttribute]` is used inside a `Category` you need to include `This` as
-the first argument inside the `Wrap` signature, for example:
+When the `[Wrap]` attribute is applied on a method inside a type decorated 
+with a `[Category]` attribute you need to include `This` as
+the first argument since an extension method is being generated. For example:
 
 ```csharp
 [Wrap ("Write (This, image, options?.Dictionary, out error)")]
@@ -2468,8 +2469,8 @@ and tools can be developed to give user suggestions on how to improve
 
 ### RequiresSuperAttribute
 
-This is a specialized subclass of the `[Advice]` attribute can be used
-to hint the developer that overriding a method **requires** a call to 
+This is a specialized subclass of the `[Advice]` attribute that can be used
+to hint to the developer that overriding a method **requires** a call to 
 the base (overridden) method.
 
 This correspond to `clang` [` __attribute__((objc_requires_super))`](https://clang.llvm.org/docs/AttributeReference.html#objc-requires-super-clang-objc-requires-super)
