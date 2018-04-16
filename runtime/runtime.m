@@ -1929,12 +1929,77 @@ xamarin_release_managed_ref (id self, MonoObject *managed_obj)
 	} else {
 		/* If we're a wrapper type, we need to unregister here, since we won't enter the release trampoline */
 		xamarin_unregister_nsobject (self, managed_obj, &exception_gchandle);
-		// This lock is needed so that we can safely call retainCount in the toggleref callback.
+
+		//
+		// This lock is needed so that we can safely call retainCount in the
+		// toggleref callback.
+		//
+		// The race is between the following actions (given a managed object Z):
+		//
+		//   a1) This thread nulls out the handle for Z
+		//   a2) This thread calls release on Z's original handle
+		//   b1) Another thread fetches the handle for Z
+		//   b2) Another thread calls retainCount on Z's handle
+		//
+		// Possible execution orders:
+		//
+		//   1) a1-*: all such orders are safe, because b1 will read NULL and
+		//      b2 won't do anything
+		//   2) b1-b2-a1-a2: retainCount before release is safe.
+		//   3) b1-a1-b2-a2: retainCount before release is safe.
+		//   4) b1-a1-a2-b2: unsafe; this tries to call retainCount after
+		//      release.
+		//
+		// Order 4 would look like this:
+		//
+		//   * Thread A runs a GC, and starts calling toggleref callbacks.
+		//   * Thread A fetches the handle (H) for object Z in a toggleref
+		//     callback.
+		//   * Thread B calls xamarin_release_managed_ref for object Z, and
+		//     calls release on H, deallocating it.
+		//   * Thread A tries to call retainCount on H, which is now a
+		//     deallocated object.
+		//
+		// Solution: lock/unlock the framework peer lock here. This looks
+		// weird (since nothing happens inside the lock), but it works:
+		//
+		//   * Thread A runs a GC, locks the framework peer lock, and starts
+		//     calling toggleref callbacks.
+		//   * Thread A fetches the handle (H) for object Z in a toggleref
+		//     callback.
+		//   * Thread B calls xamarin_release_managed_ref for object Z.
+		//   * Thread B tries to lock the framework peer lock, and blocks
+		//     (before calling release on H)
+		//   * Thread A successfully calls retainCount on H
+		//   * Thread A finishes processing all toggleref callbacks, completes
+		//     the GC, and unlocks the framework peer lock.
+		//   * Thread B wakes up, and calls release on H.
+		//
+		// An alternative phrasing would be to say that the lock prevents both
+		// a1 and a2 from happening between b1 and b2 from above, thus making
+		// order 4 impossible.
+		//
+		// Q) Why not just unlock after calling release, to avoid the strange-
+		//    looking empty lock?
+		// A) Because calling release on an object might end up calling
+		//    managed code (the native object can override dealloc and do all
+		//    sorts of strange things, any of which may end up invoking
+		//    managed code), and we can deadlock:
+		//    1) Thread A calls release on a native object.
+		//    2) Thread A executes managed code, which blocks on something
+		//       that's supposed to happen on another thread B.
+		//    3) Thread B causes a garbage collection.
+		//    4) Thread B tries to lock the framework peer lock before running
+		//       the GC, and deadlocks because thread A already has the
+		//       framework peer lock.
+		//
+		//    This is https://github.com/xamarin /xamarin-macios/issues/3943
+		//
 		xamarin_framework_peer_lock ();
+		xamarin_framework_peer_unlock ();
 		MONO_ENTER_GC_SAFE;
 		[self release];
 		MONO_EXIT_GC_SAFE;
-		xamarin_framework_peer_unlock ();
 	}
 
 	xamarin_process_managed_exception_gchandle (exception_gchandle);
