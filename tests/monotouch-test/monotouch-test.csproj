@@ -274,6 +274,7 @@
     <Folder Include="PdfKit\" />
     <Folder Include="FileProvider\" />
     <Folder Include="Resources\Base.lproj\" />
+    <Folder Include="Compression\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AudioToolbox\1.caf" />
@@ -310,6 +311,8 @@
     <BundleResource Include="xamvideotest.mp4" />
     <BundleResource Include="CoreImage\xamarinmonkey.heic" />
     <BundleResource Include="Resources\Base.lproj\Localizable.strings" />
+    <BundleResource Include="uncompressed.js" />
+    <BundleResource Include="compressed_lze" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Security\openssl_crt.der">

@@ -1,6 +1,6 @@
 #
 # The source files used to build the platform assemblies:
-# 
+#
 # Xamarin.iOS: monotouch.dll and Xamarin.iOS.dll
 # Xamarin.Mac: XamMac.dll and Xamarin.Mac.dll
 # Xamarin.WatchOS: Xamarin.WatchOS.dll
@@ -195,7 +195,7 @@ AUDIOTOOLBOX_SOURCES = \
 	AudioToolbox/MusicPlayer.cs \
 	AudioToolbox/MusicTrack.cs \
 
-# AudioUnit 
+# AudioUnit
 
 AUDIOUNIT_CORE_SOURCES = \
 	AudioUnit/AudioComponent.cs \
@@ -318,6 +318,14 @@ CFNETWORK_SOURCES = \
 	CFNetwork/CFHTTPMessage.cs \
 	CFNetwork/CFHTTPStream.cs \
 	CFNetwork/CFHost.cs \
+
+# Compression
+
+COMPRESSION_API_SOURCES = \
+	Compression/Enums.cs \
+
+COMPRESSION_SOURCES = \
+	Compression/Compression.cs \
 
 # Contacts
 
@@ -451,7 +459,7 @@ COREGRAPHICS_SOURCES = \
 	CoreGraphics/CGPDFStream.cs \
 	CoreGraphics/CGPDFString.cs \
 	CoreGraphics/CGShading.cs \
-	
+
 # CoreImage
 
 COREIMAGE_CORE_SOURCES = \
@@ -535,7 +543,7 @@ CORESERVICES_SOURCES = \
 
 CORESPOTLIGHT_API_SOURCES = \
 	CoreSpotlight/CSEnums.cs \
-	
+
 CORESPOTLIGHT_SOURCES = \
 	CoreSpotlight/CSCompat.cs \
 	CoreSpotlight/CSSearchableIndex.cs \
@@ -1141,7 +1149,7 @@ OPENGLES_SOURCES = \
 
 PASSKIT_API_SOURCES = \
 	PassKit/PKEnums.cs \
-	
+
 PASSKIT_SOURCES = \
 	PassKit/PKPaymentRequest.cs	\
 
@@ -1176,7 +1184,7 @@ PHOTOSUI_CORE_SOURCES = \
 PRINTCORE_SOURCES = \
 	PrintCore/Defs.cs	\
 	PrintCore/PrintCore.cs
-	
+
 # QTKit
 
 QTKIT_CORE_SOURCES = \
@@ -1621,6 +1629,7 @@ COMMON_FRAMEWORKS =         \
 	CoreFoundation          \
 	CoreML                  \
 	CoreVideo               \
+	Compression             \
 	Foundation              \
 	GameKit                 \
 	SceneKit                \

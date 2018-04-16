@@ -49,5 +49,6 @@ namespace ObjCRuntime {
 		public const string CoreMLLibrary = "/System/Library/Frameworks/CoreML.framework/CoreML";	
 		public const string CoreVideoLibrary = "/System/Library/Frameworks/CoreVideo.framework/CoreVideo";
 		public const string VisionLibrary = "/System/Library/Frameworks/Vision.framework/Vision";
+		public const string libcompression = "/usr/lib/libcompression.dylib";
 	}
 }
