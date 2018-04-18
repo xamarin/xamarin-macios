@@ -10,9 +10,9 @@ namespace Compression {
 	public enum CompressionAlgorithm {
 		LZ4 = 0x100,
 		LZ4Raw = 0x101,
-		LZFSE = 0x801,
-		LZMA = 0x306,
-		ZLIB = 0x205,
+		Lzfse = 0x801,
+		Lzma = 0x306,
+		ZLib = 0x205,
 	}
 
 	public enum CompressionStatus {
@@ -21,6 +21,7 @@ namespace Compression {
 		Error = -1,
 	}
 
+	[Flags]
 	public enum StreamFlag {
 		Finalize = 0x0001,
 	}

@@ -32,6 +32,8 @@ namespace ObjCRuntime {
 		public const string WatchConnectivityLibrary = "/System/Library/Frameworks/WatchConnectivity.framework/WatchConnectivity";
 		public const string WatchKitLibrary = "/System/Library/Frameworks/WatchKit.framework/WatchKit";
 
+		public const string libcompression = "/usr/lib/libcompression.dylib";
+
 		// WatchOS 3.0
 		public const string AVFoundationLibrary = "/System/Library/Frameworks/AVFoundation.framework/AVFoundation";
 		public const string CloudKitLibrary = "/System/Library/Frameworks/CloudKit.framework/CloudKit";
@@ -49,6 +51,5 @@ namespace ObjCRuntime {
 		public const string CoreMLLibrary = "/System/Library/Frameworks/CoreML.framework/CoreML";	
 		public const string CoreVideoLibrary = "/System/Library/Frameworks/CoreVideo.framework/CoreVideo";
 		public const string VisionLibrary = "/System/Library/Frameworks/Vision.framework/Vision";
-		public const string libcompression = "/usr/lib/libcompression.dylib";
 	}
 }

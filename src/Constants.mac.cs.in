@@ -120,7 +120,9 @@ namespace MonoMac {
 
 		public const string SafariServicesLibrary = "/System/Library/Frameworks/SafariServices.framework/SafariServices";
 		public const string PrintCoreLibrary = "/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/PrintCore.framework/PrintCore";
-	
+
+		public const string libcompression = "/usr/lib/libcompression.dylib";
+
 		// macOS 10.12
 		public const string PhotosLibrary = "/System/Library/Frameworks/Photos.framework/Photos";
 		public const string IntentsLibrary = "/System/Library/Frameworks/Intents.framework/Intents";
@@ -136,6 +138,5 @@ namespace MonoMac {
 		public const string MetalPerformanceShadersLibrary = "/System/Library/Frameworks/MetalPerformanceShaders.framework/MetalPerformanceShaders";
 		// macOS 10.13.4
 		public const string BusinessChatLibrary = "/System/Library/Frameworks/BusinessChat.framework/BusinessChat";
-		public const string libcompression = "/usr/lib/libcompression.dylib";
 	}
 }

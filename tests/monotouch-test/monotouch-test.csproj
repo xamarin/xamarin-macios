@@ -311,7 +311,7 @@
     <BundleResource Include="xamvideotest.mp4" />
     <BundleResource Include="CoreImage\xamarinmonkey.heic" />
     <BundleResource Include="Resources\Base.lproj\Localizable.strings" />
-    <BundleResource Include="uncompressed.js" />
+    <BundleResource Include="uncompressed.txt" />
     <BundleResource Include="compressed_lze" />
   </ItemGroup>
   <ItemGroup>
