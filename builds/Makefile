@@ -1511,7 +1511,7 @@ clean-local:: clean-$(1)
 endif
 endif
 
-.stamp-build-$(1): build-$(2) $(MONO_PATH)/configure offsets-tool $(MONO_DEPENDENCIES) $(SDK_CONFIG)
+.stamp-build-$(1): .stamp-build-llvm $(MONO_PATH)/configure $(MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe $(MONO_DEPENDENCIES) $(SDK_CONFIG)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(1) $(SDK_ARGS)
 	$(Q) touch $$@
 
