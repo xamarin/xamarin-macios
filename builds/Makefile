@@ -474,9 +474,9 @@ build-tools-bcl: build-tools64
 build-tools: build-tools64
 
 .stamp-build-tools64: .stamp-configure-tools64 $(MONO_DEPENDENCIES)
-	$(MAKE) -C tools64 all EXTERNAL_MCS=$(SYSTEM_MCS) EXTERNAL_RUNTIME=$(SYSTEM_MONO) MONOTOUCH_MCS_FLAGS=$(IOS_MCS_FLAGS) XAMMAC_MCS_FLAGS=$(MAC_MCS_FLAGS)
+	$(MAKE) -C tools64 all EXTERNAL_MCS=$(SYSTEM_CSC) EXTERNAL_RUNTIME=$(SYSTEM_MONO) MONOTOUCH_MCS_FLAGS=$(IOS_CSC_FLAGS) XAMMAC_MCS_FLAGS=$(MAC_CSC_FLAGS)
 	# NO_INSTALL is defined in mono/mcs/build/profiles except for net_4_5. If we don't have it, then it attempts to install into a gac, and sometimes fail
-	NO_INSTALL=1 $(MAKE) -C tools64 -j 1 install EXTERNAL_MCS=$(SYSTEM_MCS) EXTERNAL_RUNTIME=$(SYSTEM_MONO)
+	NO_INSTALL=1 $(MAKE) -C tools64 -j 1 install EXTERNAL_MCS=$(SYSTEM_CSC) EXTERNAL_RUNTIME=$(SYSTEM_MONO)
 	@touch .stamp-build-tools64
 
 clean-tools64:
@@ -557,8 +557,8 @@ ifeq ($(WATCH_MONO_PATH),$(MONO_PATH))
 .stamp-build-watchbcl: .stamp-build-tools64 $(MONO_DEPENDENCIES)
 else
 .stamp-build-watchbcl: .stamp-configure-watchbcl .stamp-build-tools64 $(MONO_DEPENDENCIES)
-	$(MAKE) -C watchbcl all EXTERNAL_MCS=$(SYSTEM_MCS) EXTERNAL_RUNTIME=$(SYSTEM_MONO)
-	$(MAKE) -C watchbcl install EXTERNAL_MCS=$(SYSTEM_MCS) EXTERNAL_RUNTIME=$(SYSTEM_MONO)
+	$(MAKE) -C watchbcl all EXTERNAL_MCS=$(SYSTEM_CSC) EXTERNAL_RUNTIME=$(SYSTEM_MONO)
+	$(MAKE) -C watchbcl install EXTERNAL_MCS=$(SYSTEM_CSC) EXTERNAL_RUNTIME=$(SYSTEM_MONO)
 endif
 	$(Q) touch $@
 

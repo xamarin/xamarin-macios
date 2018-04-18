@@ -29,17 +29,17 @@ IOS_OPENTK_1_0_CORE_SOURCES = \
 OPENTK_1_0_SOURCES:=$(shell grep "Compile Include" OpenTK.csproj | sed 's/.*Include="//' | sed 's/".*//' | sed 's_\\_/_g' )
 
 OPENTK_1_0_DEPENDENCIES = Makefile OpenGLES/Makefile-1.0.include $(OPENTK_1_0_SOURCES) opentk.csproj
-OPENTK_1_0_MCS_FLAGS = -warn:0 -unsafe -target:library -noconfig -publicsign -debug:portable -optimize -define:MONOTOUCH -define:IPHONE -define:MOBILE -d:MINIMAL $(OPENTK_1_0_SOURCES) -keyfile:$(PRODUCT_KEY_PATH) -define:OPENTK_1_0
+OPENTK_1_0_CSC_FLAGS = -warn:0 -unsafe -target:library -noconfig -publicsign -debug:portable -optimize -define:MONOTOUCH -define:IPHONE -define:MOBILE -d:MINIMAL $(OPENTK_1_0_SOURCES) -keyfile:$(PRODUCT_KEY_PATH) -define:OPENTK_1_0
 
 # Xamarin.iOS
 
 $(IOS_BUILD_DIR)/reference/OpenTK-1.0%dll $(IOS_BUILD_DIR)/reference/OpenTK-1.0%pdb: $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll $(OPENTK_1_0_DEPENDENCIES) $(IOS_BUILD_DIR)/reference/OpenTK-1.0.dll.config
-	$(call Q_PROF_CSC,ios/unified) $(IOS_CSC) -r:$(MONOTOUCH_MONO_PATH)/System.dll -r:$(MONOTOUCH_MONO_PATH)/System.Xml.dll $(OPENTK_1_0_MCS_FLAGS) -out:$(basename $@).dll -r:$< -D:XAMCORE_2_0
+	$(call Q_PROF_CSC,ios/unified) $(IOS_CSC) -r:$(MONOTOUCH_MONO_PATH)/System.dll -r:$(MONOTOUCH_MONO_PATH)/System.Xml.dll $(OPENTK_1_0_CSC_FLAGS) -out:$(basename $@).dll -r:$< -D:XAMCORE_2_0
 
 # Xamarin.TVOS
 
 $(TVOS_BUILD_DIR)/reference/OpenTK-1.0%dll $(TVOS_BUILD_DIR)/reference/OpenTK-1.0%pdb: $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll $(OPENTK_1_0_DEPENDENCIES) $(TVOS_BUILD_DIR)/reference/OpenTK-1.0.dll.config
-	$(call Q_PROF_CSC,tvos) $(SYSTEM_CSC)     $(OPENTK_1_0_MCS_FLAGS) -r:$(TVOS_LIBDIR)/System.dll -r:$(TVOS_LIBDIR)/System.Xml.dll -out:$(basename $@).dll -r:$< -D:XAMCORE_2_0 -D:XAMCORE_3_0 -D:TVOS
+	$(call Q_PROF_CSC,tvos) $(SYSTEM_CSC)     $(OPENTK_1_0_CSC_FLAGS) -r:$(TVOS_LIBDIR)/System.dll -r:$(TVOS_LIBDIR)/System.Xml.dll -out:$(basename $@).dll -r:$< -D:XAMCORE_2_0 -D:XAMCORE_3_0 -D:TVOS
 
 # common targets
 
