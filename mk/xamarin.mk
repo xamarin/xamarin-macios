@@ -76,7 +76,7 @@ reset-$(1)::
 	@touch $(THISDIR)/.stamp-reset-$(1)
 
 print-$(1)::
-	@printf "*** %-16s %-45s %s (%s)\n" "$(DIRECTORY_$(2))" "$(MODULE_$(2))" "$(NEEDED_$(2)_VERSION)" "$(NEEDED_$(2)_BRANCH)"
+	@printf "*** %-16s %-45s %s (%s)\n" "$($(2)_DIRECTORY)" "$($(2)_MODULE)" "$(NEEDED_$(2)_VERSION)" "$(NEEDED_$(2)_BRANCH)"
 
 .PHONY: check-$(1) reset-$(1) print-$(1)
 
