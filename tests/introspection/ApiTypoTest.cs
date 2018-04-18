@@ -121,7 +121,7 @@ namespace Introspection
 			"Blinn",
 			"Blit",
 			"Bokeh",
-			"Bggr", // acronym for Blue, Green, Green, Red 
+			"Bggr", // acronym for Blue, Green, Green, Red
 			"Bsln",
 			"Bssid",
 			"Btle", // Bluetooth Low Energy
@@ -192,7 +192,7 @@ namespace Introspection
 			"Ecdh",  // Elliptic Curve Diffie–Hellman
 			"Ecdsa", // Elliptic Curve Digital Signature Algorithm
 			"Ecies", // Elliptic Curve Integrated Encryption Scheme
-			"Editability", 
+			"Editability",
 			"Eof", // acronym End-Of-File
 			"Elu",
 			"Emagic",
@@ -289,11 +289,14 @@ namespace Introspection
 			"Lerp",
 			"Linecap",
 			"Lingustic",
+			"libcompression",
 			"Lod",
 			"Lopass",
 			"Lowlevel",
 			"Lun",
 			"Luma",
+			"Lzfse", // acronym
+			"Lzma", // acronym
 			"Mapbuffer",
 			"Matchingcoalesce",
 			"Megaampere",
@@ -846,7 +849,7 @@ namespace Introspection
 
 						if (IsObsolete (f))
 							continue;
-						
+
 						txt = NameCleaner (f.Name);
 						typo = GetTypo (txt);
 						if (typo.Length > 0) {
@@ -866,7 +869,7 @@ namespace Introspection
 
 						if (IsObsolete (m))
 							continue;
-						
+
 						txt = NameCleaner (m.Name);
 						typo = GetTypo (txt);
 						if (typo.Length > 0) {
