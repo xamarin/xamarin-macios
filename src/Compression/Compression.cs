@@ -54,6 +54,10 @@ namespace Compression {
 				throw new ArgumentNullException (nameof (inSourceStream));
 			if (inDestinationStream == null)
 				throw new ArgumentNullException (nameof (inDestinationStream));
+			if (inBufferSize <= 0)
+				throw new ArgumentException ("In buffer size cannot be 0 or smaller than 0");
+			if (outBufferSize <= 0)
+				throw new ArgumentException ("Out buffer size cannot be 0 or smaller than 0");
 
 			operation = inOperation;
 			sourceStream = inSourceStream;
@@ -87,12 +91,13 @@ namespace Compression {
 						// Refill source buffer
 						byte[] data = new byte[inSize];
 						var read = await sourceStream.ReadAsync (data, 0, inSize).ConfigureAwait (false);
-						Marshal.Copy (data, 0, srcBuf, data.Length);
-						totalInputSize += data.Length;
+						var dataRead = (read == 0)? data.Length : read;
+						Marshal.Copy (data, 0, srcBuf, dataRead);
+						totalInputSize += dataRead;
 						internalStream.Source = srcBuf;
-						internalStream.SourceSize = (read == 0)? data.Length : read;
+						internalStream.SourceSize = dataRead;
 
-						if (data.Length < inSize || read == 0) {
+						if (dataRead < inSize) {
 							// Reached end of data.
 							finalizeStream = true;
 						}
