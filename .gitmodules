@@ -12,7 +12,7 @@
 [submodule "external/macios-binaries"]
     path = external/macios-binaries
     url = ../../xamarin/macios-binaries
-    branch = d15-6
+    branch = xcode9.4
 [submodule "external/mono"]
     path = external/mono
     url = ../../mono/mono.git
