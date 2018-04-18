@@ -46,7 +46,7 @@ namespace MonoTouchFixtures.Compression {
 		
 			using (var inputStream = File.OpenRead (lzeCompressedFilePath))
 			using (var outputStream = File.Create (firstTempPath))
-			using (var stream = new CompressionStream (inputStream, outputStream, StreamOperation.Decode, CompressionAlgorithm.LZFSE)) {
+			using (var stream = new CompressionStream (inputStream, outputStream, StreamOperation.Decode, CompressionAlgorithm.Lzfse)) {
 				var diff = stream.Process ();
 			}
 			// ensure that the data is the expected one
