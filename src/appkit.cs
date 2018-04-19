@@ -528,7 +528,7 @@ namespace AppKit {
 
 		// NSEventMask must be casted to nuint to preserve the NSEventMask.Any special value on 64 bit systems. NSEventMask is not [Native].
 		[Obsolete ("Use the 'NextEvent (NSEventMask, NSDate, [NSRunLoopMode|NSString], bool)' overloads instead.")]
-		[Wrap ("NextEvent (mask, expiration, mode, deqFlag)")]
+		[Wrap ("NextEvent (mask, expiration, (NSString) mode, deqFlag)")]
 		NSEvent NextEvent (NSEventMask mask, NSDate expiration, string mode, bool deqFlag);
 #endif
 

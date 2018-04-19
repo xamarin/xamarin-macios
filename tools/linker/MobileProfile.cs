@@ -70,6 +70,7 @@ namespace Xamarin.Linker {
 			"System.Diagnostics.TraceEvent",
 			"System.Diagnostics.TraceSource",
 			"System.Diagnostics.Tracing",
+			"System.Drawing.Common",
 			"System.Drawing.Primitives",
 			"System.Dynamic.Runtime",
 			"System.Globalization.Calendars",
