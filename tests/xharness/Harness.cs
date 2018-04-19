@@ -24,7 +24,7 @@ namespace xharness
 	public class Harness
 	{
 		public HarnessAction Action { get; set; }
-		public int Verbosity { get; set; }
+		public int Verbosity { get; set; } = 20;
 		public Log HarnessLog { get; set; }
 		public bool UseSystem { get; set; } // if the system XI/XM should be used, or the locally build XI/XM.
 		public HashSet<string> Labels { get; } = new HashSet<string> ();
@@ -679,6 +679,7 @@ namespace xharness
 					Log (1, "Updated {0}", path);
 				}
 			}
+			Log (2, $"Contents of {path}:{File.ReadAllText (path)}");
 		}
 
 		public void Save (StringWriter doc, string path)
@@ -697,6 +698,7 @@ namespace xharness
 					Log (1, "Updated {0}", path);
 				}
 			}
+			Log (2, $"Contents of {path}:{File.ReadAllText (path)}");
 		}
 
 		public void Save (string doc, string path)
@@ -713,6 +715,7 @@ namespace xharness
 					Log (1, "Updated {0}", path);
 				}
 			}
+			Log (2, $"Contents of {path}:{File.ReadAllText (path)}");
 		}
 
 		// We want guids that nobody else has, but we also want to generate the same guid

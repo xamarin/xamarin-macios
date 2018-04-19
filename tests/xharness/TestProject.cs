@@ -106,7 +106,6 @@ namespace xharness
 			Directory.CreateDirectory (directory);
 			var original_path = Path;
 			Path = System.IO.Path.Combine (directory, System.IO.Path.GetFileName (Path));
-
 			await Task.Yield ();
 
 			XmlDocument doc;
@@ -132,6 +131,7 @@ namespace xharness
 			this.ProjectReferences = projectReferences;
 
 			doc.Save (Path);
+			Console.WriteLine ($"Created project copy: {Path} from {original_path}");
 		}
 
 		public override string ToString()
