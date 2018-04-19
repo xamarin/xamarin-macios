@@ -108,7 +108,7 @@ define IOS_GENERATOR_template
 # core.dll
 $(IOS_BUILD_DIR)/$(1)/core.dll: $$(IOS_CORE_SOURCES) frameworks.sources
 	@mkdir -p $(IOS_BUILD_DIR)/$(1)
-	$$(call Q_PROF_CSC,ios/$(1)) $$(IOS_CSC) -out:$$@ -target:library -debug -unsafe \
+	$$(call Q_PROF_CSC,ios/$(1)) $$(IOS_CSC) -nologo -out:$$@ -target:library -debug -unsafe \
 		-r:$(IOS_LIBDIR)/Mono.Security.dll \
 		-nowarn:219,618,114,414,1635,3021,$$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		-define:COREBUILD $$(IOS_DEFINES) \
@@ -117,7 +117,7 @@ $(IOS_BUILD_DIR)/$(1)/core.dll: $$(IOS_CORE_SOURCES) frameworks.sources
 
 # generator.exe
 $(IOS_BUILD_DIR)/$(1)/generator.exe: $$(GENERATOR_SOURCES) $(IOS_BUILD_DIR)/$(1)/core.dll
-	$$(call Q_PROF_CSC,ios/$(1)) $$(IOS_CSC) -out:$$@ -debug -unsafe \
+	$$(call Q_PROF_CSC,ios/$(1)) $$(IOS_CSC) -nologo -out:$$@ -debug -unsafe \
 		-r:$(IOS_BUILD_DIR)/$(1)/core.dll \
 		$$(GENERATOR_DEFINES)             \
 		$$(GENERATOR_SOURCES)
@@ -133,7 +133,7 @@ $(IOS_BUILD_DIR)/$(1)/generated_sources: $$(IOS_$(1)_GENERATOR) $$(IOS_APIS) $(I
 		-core \
 		-sourceonly=$$@ \
 		-compiler=$$(IOS_CSC) \
-		-nostdlib -noconfig \
+		-nologo -nostdlib -noconfig \
 		-no-mono-path \
 		-tmpdir=$(IOS_BUILD_DIR)/$(1) \
 		-baselib=$(IOS_BUILD_DIR)/$(1)/core.dll \
@@ -153,7 +153,7 @@ IOS_VARIANTS_TARGETS += $(IOS_BUILD_DIR)/$(1)/$(3)
 # Xamarin.iOS.dll
 $(IOS_BUILD_DIR)/$(1)/$(3): $$(IOS_SOURCES) $(IOS_BUILD_DIR)/$(4)/generated_sources $(PRODUCT_KEY_PATH)
 	@mkdir -p $(IOS_BUILD_DIR)/$(1)
-	$$(call Q_PROF_CSC,ios/$(1)) $$(IOS_CSC) -out:$$@ -target:library -debug -unsafe -optimize \
+	$$(call Q_PROF_CSC,ios/$(1)) $$(IOS_CSC) -nologo -out:$$@ -target:library -debug -unsafe -optimize \
 		-r:$(IOS_LIBDIR)/Mono.Security.dll \
 		$$(ARGS_$(6)) \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) $$(IOS_DEFINES) \
@@ -180,14 +180,14 @@ IOS_VARIANTS_TARGETS += $(addprefix $(IOS_BUILD_DIR)/$(1)/,$(4) $(5))
 
 # MonoTouch.Dialog-1
 $(IOS_BUILD_DIR)/$(1)%$(4) $(IOS_BUILD_DIR)/$(1)%$(4:.dll=.pdb): $$(IOS_SOURCES) $(IOS_BUILD_DIR)/$(1)/$(3) $$(MONOTOUCH_DIALOG_SOURCES) $(PRODUCT_KEY_PATH) $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll
-	$$(call Q_PROF_CSC,ios/$(1)) $$(IOS_CSC) -out:$$(basename $$@).dll -target:library -debug:portable -optimize -publicsign \
+	$$(call Q_PROF_CSC,ios/$(1)) $$(IOS_CSC) -nologo -out:$$(basename $$@).dll -target:library -debug:portable -optimize -publicsign \
 		-keyfile:$(PRODUCT_KEY_PATH) -r:$(IOS_BUILD_DIR)/$(1)/$(3) $(6) -r:$(MONOTOUCH_MONO_PATH)/System.Core.dll -r:$(MONOTOUCH_MONO_PATH)/System.dll -r:$(MONOTOUCH_MONO_PATH)/System.Json.dll \
 		-nowarn:219,618,114,414,1635,3021,$$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		$$(MONOTOUCH_DIALOG_SOURCES) $$(MONOTOUCH_DIALOG_RESOURCES)
 
 # MonoTouch.NUnitLite
 $(IOS_BUILD_DIR)/$(1)%$(5) $(IOS_BUILD_DIR)/$(1)%$(5:.dll=.pdb): $$(IOS_TOUCHUNIT_SOURCES) $(IOS_BUILD_DIR)/$(1)/$(4) $(PRODUCT_KEY_PATH) $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll
-	$$(call Q_PROF_CSC,ios/$(1)) $$(IOS_CSC) -out:$$(basename $$@).dll -target:library -debug:portable -optimize -publicsign \
+	$$(call Q_PROF_CSC,ios/$(1)) $$(IOS_CSC) -nologo -out:$$(basename $$@).dll -target:library -debug:portable -optimize -publicsign \
 		-keyfile:$(PRODUCT_KEY_PATH) -r:$(IOS_BUILD_DIR)/$(1)/$(3) $(6) -r:$(IOS_BUILD_DIR)/$(1)/$(4) -r:$(MONOTOUCH_MONO_PATH)/System.dll -r:$(MONOTOUCH_MONO_PATH)/System.Xml.dll \
 		-nowarn:3006,612,649,414,1635 \
 		-define:NUNITLITE,CLR_4_0,NET_4_5,__MOBILE__ $$(IOS_DEFINES) \
@@ -196,7 +196,7 @@ $(IOS_BUILD_DIR)/$(1)%$(5) $(IOS_BUILD_DIR)/$(1)%$(5:.dll=.pdb): $$(IOS_TOUCHUNI
 # System.Drawing
 # not installed or shipped yet - must be compiled manually using "make System.Drawing.dll"
 $(IOS_BUILD_DIR)/$(1)/System.Drawing.dll: $$(IOS_SYSTEM_DRAWING_SOURCES) monotouch.dll $(PRODUCT_KEY_PATH)
-	$$(call Q_PROF_CSC,ios/$(1)) $$(IOS_CSC) -out:$$@ -target:library -debug:portable -optimize -publicsign \
+	$$(call Q_PROF_CSC,ios/$(1)) $$(IOS_CSC) -nologo -out:$$@ -target:library -debug:portable -optimize -publicsign \
 		-keyfile:$(PRODUCT_KEY_PATH) -r:$(IOS_BUILD_DIR)/$(1)/$(3) $(6) \
 		-nowarn:114,169,414,1635 $$(IOS_DEFINES) \
 		$$(IOS_SYSTEM_DRAWING_SOURCES)
@@ -488,14 +488,14 @@ define MAC_GENERATOR_template
 $(MAC_BUILD_DIR)/$(1)/core.dll: $(MAC_CORE_SOURCES) frameworks.sources
 	@mkdir -p $(MAC_BUILD_DIR)/$(1)
 	$$(call Q_PROF_CSC,mac/$(1)) \
-		$$(MAC_$(1)_CSC) -out:$$@ -target:library -debug -unsafe -nowarn:3021,612,618,1635 \
+		$$(MAC_$(1)_CSC) -nologo -out:$$@ -target:library -debug -unsafe -nowarn:3021,612,618,1635 \
 		$$(MAC_BOOTSTRAP_DEFINES) \
 		$(3) \
 		$$(MAC_CORE_SOURCES)
 
 $(MAC_BUILD_DIR)/$(1)/_bmac.exe: $(MAC_BUILD_DIR)/$(1)/core.dll $(MAC_APIS) $(GENERATOR_SOURCES)
 	$$(call Q_PROF_CSC,mac/$(1)) \
-		$$(MAC_$(1)_CSC) -out:$$@ -debug -unsafe \
+		$$(MAC_$(1)_CSC) -nologo -out:$$@ -debug -unsafe \
 		$(GENERATOR_DEFINES) \
 		-r:$$(@D)/core.dll \
 		$(GENERATOR_SOURCES)
@@ -504,6 +504,7 @@ $(MAC_BUILD_DIR)/$(1)/generated-sources: $$(MAC_$(1)_GENERATOR) $(MAC_APIS) $(MA
 	$$(call Q_PROF_GEN,mac/$(1)) $$(MAC_$(1)_GENERATE) \
 		$(MAC_GENERATED_DEFINES) \
 		-compiler:$$(MAC_$(1)_CSC) \
+		-nologo \
 		-process-enums \
 		-warnaserror:$(MAC_GENERATOR_WARNASERROR) \
 		-native-exception-marshalling \
@@ -526,7 +527,7 @@ define MAC_TARGETS_template
 $(MAC_BUILD_DIR)/$(1)/$(2): $(MAC_BUILD_DIR)/$(3)/generated-sources $(MAC_SOURCES) $(MAC_CFNETWORK_SOURCES) $(MAC_CLASSIC_SOURCES) $(SN_KEY)
 	@mkdir -p $(MAC_BUILD_DIR)/$(1)
 	$$(call Q_PROF_CSC,mac/$(1)) \
-		$$(MAC_$(3)_CSC) -out:$$@ -target:library -debug -unsafe \
+		$$(MAC_$(3)_CSC) -nologo -out:$$@ -target:library -debug -unsafe \
 		$$(MAC_COMMON_DEFINES),OBJECT_REF_TRACKING \
 		-r:Mono.Security.dll \
 		$$(MAC_$(3)_ARGS) \
@@ -763,7 +764,7 @@ $(WATCH_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $(TOP)/Make.co
 
 $(WATCH_BUILD_DIR)/watch/core.dll: $(WATCHOS_CORE_SOURCES) frameworks.sources | $(WATCH_BUILD_DIR)/watch
 	@mkdir -p $(WATCH_BUILD_DIR)/watch
-	$(call Q_PROF_CSC,watch) $(WATCH_CSC) -out:$@ -target:library -debug -unsafe \
+	$(call Q_PROF_CSC,watch) $(WATCH_CSC) -nologo -out:$@ -target:library -debug -unsafe \
 		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		-define:COREBUILD    \
 		$(WATCH_DEFINES)     \
@@ -771,7 +772,7 @@ $(WATCH_BUILD_DIR)/watch/core.dll: $(WATCHOS_CORE_SOURCES) frameworks.sources | 
 
 # generator.exe
 $(WATCH_BUILD_DIR)/watch/generator.exe: $(GENERATOR_SOURCES) $(WATCH_BUILD_DIR)/watch/core.dll
-	$(call Q_PROF_CSC,watch) $(WATCH_CSC) -out:$@ -debug -unsafe \
+	$(call Q_PROF_CSC,watch) $(WATCH_CSC) -nologo -out:$@ -debug -unsafe \
 		-r:$(WATCH_BUILD_DIR)/watch/core.dll \
 		$(GENERATOR_SOURCES)                  \
 		$(WATCH_DEFINES)     \
@@ -786,7 +787,7 @@ $(WATCH_BUILD_DIR)/watch/generated_sources: $(WATCH_GENERATOR) $(WATCHOS_APIS) $
 		-core                                                    \
 		-sourceonly=$@                                           \
 		-compiler=$(WATCH_CSC) \
-		-nostdlib -noconfig                                      \
+		-nologo -nostdlib -noconfig                              \
 		-no-mono-path                                            \
 		-tmpdir=$(WATCH_BUILD_DIR)/watch                         \
 		-baselib=$(WATCH_BUILD_DIR)/watch/core.dll               \
@@ -800,7 +801,7 @@ $(WATCH_BUILD_DIR)/watch/generated_sources: $(WATCH_GENERATOR) $(WATCHOS_APIS) $
 		--target-framework=Xamarin.WatchOS,v1.0                     \
 
 $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS.dll: $(WATCHOS_SOURCES) $(WATCH_BUILD_DIR)/watch/generated_sources $(PRODUCT_KEY_PATH) | $(WATCH_BUILD_DIR)/watch-32
-	$(call Q_PROF_CSC,watch) $(WATCH_CSC) -out:$@ -target:library -debug -unsafe -optimize \
+	$(call Q_PROF_CSC,watch) $(WATCH_CSC) -nologo -out:$@ -target:library -debug -unsafe -optimize \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) $(WATCH_DEFINES) \
 		$(ARGS_32) \
 		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
@@ -821,7 +822,7 @@ $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.pdb: $(WATCH_BUILD_DIR)/watch-32/Xa
 
 # MonoTouch.NUnitLite
 $(WATCH_BUILD_DIR)/reference/MonoTouch.NUnitLite.dll: $(WATCHOS_TOUCHUNIT_SOURCES) $(PRODUCT_KEY_PATH) $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll
-	$(call Q_PROF_CSC,watch) $(SYSTEM_CSC) -out:$@ -target:library -debug:portable -optimize -publicsign -noconfig -nostdlib \
+	$(call Q_PROF_CSC,watch) $(SYSTEM_CSC) -nologo -out:$@ -target:library -debug:portable -optimize -publicsign -noconfig -nostdlib \
 		-keyfile:$(PRODUCT_KEY_PATH) -r:$(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll -r:$(MONOTOUCH_WATCH_MONO_PATH)/mscorlib.dll -r:$(MONOTOUCH_WATCH_MONO_PATH)/System.dll -r:$(MONOTOUCH_WATCH_MONO_PATH)/System.Xml.dll \
 		-nowarn:3006,612,649,414,1635 \
 		-define:NUNITLITE,CLR_4_0,NET_4_5,__MOBILE__ $(WATCH_DEFINES) \
@@ -984,7 +985,7 @@ $(TVOS_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $(TOP)/Make.con
 
 $(TVOS_BUILD_DIR)/tvos/core.dll: $(TVOS_CORE_SOURCES) frameworks.sources Makefile | $(TVOS_BUILD_DIR)/tvos
 	@mkdir -p $(TVOS_BUILD_DIR)/tvos
-	$(call Q_PROF_CSC,tvos) $(TV_CSC) -out:$@ -target:library -debug -unsafe \
+	$(call Q_PROF_CSC,tvos) $(TV_CSC) -nologo -out:$@ -target:library -debug -unsafe \
 		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		-define:COREBUILD    \
 		$(TVOS_DEFINES)     \
@@ -992,7 +993,7 @@ $(TVOS_BUILD_DIR)/tvos/core.dll: $(TVOS_CORE_SOURCES) frameworks.sources Makefil
 
 # generator.exe
 $(TVOS_BUILD_DIR)/tvos/generator.exe: $(GENERATOR_SOURCES) $(TVOS_BUILD_DIR)/tvos/core.dll
-	$(call Q_PROF_CSC,tvos) $(TV_CSC) --keep -out:$@ -debug -unsafe \
+	$(call Q_PROF_CSC,tvos) $(TV_CSC) -nologo --keep -out:$@ -debug -unsafe \
 		-r:$(TVOS_BUILD_DIR)/tvos/core.dll \
 		$(GENERATOR_SOURCES)                  \
 		$(GENERATOR_DEFINES)                  \
@@ -1006,7 +1007,7 @@ $(TVOS_BUILD_DIR)/tvos/generated_sources: $(TVOS_GENERATOR) $(TVOS_APIS) $(TVOS_
 		-core                                                    \
 		-sourceonly=$@                                           \
 		-compiler=$(TV_CSC) \
-		-nostdlib -noconfig                                      \
+		-nologo -nostdlib -noconfig                              \
 		-no-mono-path                                            \
 		-tmpdir=$(TVOS_BUILD_DIR)/tvos                         \
 		-baselib=$(TVOS_BUILD_DIR)/tvos/core.dll               \
@@ -1020,7 +1021,7 @@ $(TVOS_BUILD_DIR)/tvos/generated_sources: $(TVOS_GENERATOR) $(TVOS_APIS) $(TVOS_
 		--target-framework=Xamarin.TVOS,v1.0                     \
 
 $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS.dll: $(TVOS_SOURCES) $(TVOS_BUILD_DIR)/tvos/generated_sources $(PRODUCT_KEY_PATH) | $(TVOS_BUILD_DIR)/tvos-64
-	$(call Q_PROF_CSC,tvos) $(TV_CSC) -out:$@ -target:library -debug -unsafe -optimize \
+	$(call Q_PROF_CSC,tvos) $(TV_CSC) -nologo -out:$@ -target:library -debug -unsafe -optimize \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) $(TVOS_DEFINES) \
 		-r:$(TVOS_LIBDIR)/Mono.Security.dll \
 		$(ARGS_64) \
@@ -1041,7 +1042,7 @@ $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.pdb: $(TVOS_BUILD_DIR)/tvos-64/Xamarin.
 
 # MonoTouch.NUnitLite
 $(TVOS_BUILD_DIR)/reference/MonoTouch.NUnitLite%dll $(TVOS_BUILD_DIR)/reference/MonoTouch.NUnitLite%pdb: $(TVOS_TOUCHUNIT_SOURCES) $(PRODUCT_KEY_PATH) $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll $(TVOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.dll
-	$(call Q_PROF_CSC,tvos) $(SYSTEM_CSC) -r:$(MONOTOUCH_TV_MONO_PATH)/mscorlib.dll -out:$(basename $@).dll -target:library -debug:portable -optimize -noconfig -nostdlib -publicsign \
+	$(call Q_PROF_CSC,tvos) $(SYSTEM_CSC) -nologo -r:$(MONOTOUCH_TV_MONO_PATH)/mscorlib.dll -out:$(basename $@).dll -target:library -debug:portable -optimize -noconfig -nostdlib -publicsign \
 		-keyfile:$(PRODUCT_KEY_PATH) -r:$(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll -r:$(TVOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.dll -r:$(MONOTOUCH_TV_MONO_PATH)/System.dll -r:$(MONOTOUCH_TV_MONO_PATH)/System.Xml.dll \
 		-nowarn:3006,612,649,414,1635 \
 		-define:NUNITLITE,CLR_4_0,NET_4_5,__MOBILE__ $(TVOS_DEFINES) \
@@ -1052,7 +1053,7 @@ $(TVOS_BUILD_DIR)/%.pdb: $(TVOS_BUILD_DIR)/%.dll
 	@touch $@
 
 $(TVOS_BUILD_DIR)/reference/MonoTouch.Dialog-1%dll $(TVOS_BUILD_DIR)/reference/MonoTouch.Dialog-1%pdb: $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll $(TVOS_SOURCES) $(MONOTOUCH_DIALOG_SOURCES) $(PRODUCT_KEY_PATH)
-	$(call Q_PROF_CSC,tvos) $(SYSTEM_CSC) -r:$(MONOTOUCH_TV_MONO_PATH)/mscorlib.dll -out:$(basename $@).dll -target:library -debug:portable -optimize -noconfig -nostdlib -publicsign \
+	$(call Q_PROF_CSC,tvos) $(SYSTEM_CSC) -nologo -r:$(MONOTOUCH_TV_MONO_PATH)/mscorlib.dll -out:$(basename $@).dll -target:library -debug:portable -optimize -noconfig -nostdlib -publicsign \
 		-keyfile:$(PRODUCT_KEY_PATH) -r:$< -r:$(MONOTOUCH_TV_MONO_PATH)/System.dll -r:$(MONOTOUCH_TV_MONO_PATH)/System.Core.dll -r:$(MONOTOUCH_TV_MONO_PATH)/System.Json.dll \
 		-define:XAMCORE_2_0 -define:XAMCORE_3_0 -define:TVOS -define:__TVOS__ -define:__UNIFIED__ \
 		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
