@@ -34,12 +34,12 @@ OPENTK_1_0_CSC_FLAGS = -warn:0 -unsafe -target:library -noconfig -publicsign -de
 # Xamarin.iOS
 
 $(IOS_BUILD_DIR)/reference/OpenTK-1.0%dll $(IOS_BUILD_DIR)/reference/OpenTK-1.0%pdb: $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll $(OPENTK_1_0_DEPENDENCIES) $(IOS_BUILD_DIR)/reference/OpenTK-1.0.dll.config
-	$(call Q_PROF_CSC,ios/unified) $(IOS_CSC) -r:$(MONOTOUCH_MONO_PATH)/System.dll -r:$(MONOTOUCH_MONO_PATH)/System.Xml.dll $(OPENTK_1_0_CSC_FLAGS) -out:$(basename $@).dll -r:$< -D:XAMCORE_2_0
+	$(call Q_PROF_CSC,ios/unified) $(IOS_CSC) -nologo -r:$(MONOTOUCH_MONO_PATH)/System.dll -r:$(MONOTOUCH_MONO_PATH)/System.Xml.dll $(OPENTK_1_0_CSC_FLAGS) -out:$(basename $@).dll -r:$< -D:XAMCORE_2_0
 
 # Xamarin.TVOS
 
 $(TVOS_BUILD_DIR)/reference/OpenTK-1.0%dll $(TVOS_BUILD_DIR)/reference/OpenTK-1.0%pdb: $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll $(OPENTK_1_0_DEPENDENCIES) $(TVOS_BUILD_DIR)/reference/OpenTK-1.0.dll.config
-	$(call Q_PROF_CSC,tvos) $(SYSTEM_CSC)     $(OPENTK_1_0_CSC_FLAGS) -r:$(TVOS_LIBDIR)/System.dll -r:$(TVOS_LIBDIR)/System.Xml.dll -out:$(basename $@).dll -r:$< -D:XAMCORE_2_0 -D:XAMCORE_3_0 -D:TVOS
+	$(call Q_PROF_CSC,tvos) $(SYSTEM_CSC) -nologo $(OPENTK_1_0_CSC_FLAGS) -r:$(TVOS_LIBDIR)/System.dll -r:$(TVOS_LIBDIR)/System.Xml.dll -out:$(basename $@).dll -r:$< -D:XAMCORE_2_0 -D:XAMCORE_3_0 -D:TVOS
 
 # common targets
 
@@ -56,7 +56,7 @@ HEADERTOXML_SOURCES_1_0=   \
 	$(OPENTK_PATH)/Source/Converter/Parser.cs
 
 HeaderToXml-1.0.exe: Makefile $(HEADERTOXML_SOURCES_1_0)
-	$(Q_CSC) $(SYSTEM_CSC) -warn:0 -d:IPHONE -d:MOBILE -debug:portable -out:$@ $(HEADERTOXML_SOURCES_1_0) -r:System.Xml.Linq
+	$(Q_CSC) $(SYSTEM_CSC) -nologo -warn:0 -d:IPHONE -d:MOBILE -debug:portable -out:$@ $(HEADERTOXML_SOURCES_1_0) -r:System.Xml.Linq
 
 BIND_SOURCES_1_0=  \
 	$(OPENTK_PATH)/Source/Bind/CppSpecWriter.cs                               \
@@ -87,7 +87,7 @@ BIND_SOURCES_1_0=  \
 	$(OPENTK_PATH)/Source/Bind/Utilities.cs
 
 Bind-1.0.exe: Makefile $(BIND_SOURCES_1_0)
-	$(Q_CSC) $(SYSTEM_CSC) -warn:0 -d:IPHONE -d:MOBILE -debug:portable -out:$@ $(BIND_SOURCES_1_0) -codepage:65001
+	$(Q_CSC) $(SYSTEM_CSC) -nologo -warn:0 -d:IPHONE -d:MOBILE -debug:portable -out:$@ $(BIND_SOURCES_1_0) -codepage:65001
 
 IPHONE_GLES_HEADERS_1_0 = /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS$(IOS_SDK_VERSION).sdk/System/Library/Frameworks/OpenGLES.framework/Headers
 IPHONE_SPECS_1_0        = $(OPENTK_PATH)/Source/Bind/Specifications
