@@ -23,6 +23,7 @@ namespace Compression {
 
 	[Flags]
 	public enum StreamFlag {
+		Continue = 0, // not present in the API, but makes it nice in our case
 		Finalize = 0x0001,
 	}
 

@@ -8,7 +8,7 @@ using ObjCRuntime;
 namespace Compression {
 
 	[iOS (9,0), TV (9,0), Mac (10,11)]
-	public partial class CompressionStream : IDisposable {
+	public partial class CompressionStream : /* Stream */ IDisposable {
 
 		[StructLayout(LayoutKind.Sequential)]
 		struct CompressionStreamStruct {
@@ -20,13 +20,13 @@ namespace Compression {
 		}
 
 		[DllImport (Constants.libcompression)]
-		static extern int /* CompressionStatus */ compression_stream_init (ref CompressionStreamStruct stream, int /* StreamOperation */ operation, int /* CompressionAlgorithm */ algorithm);
+		static extern CompressionStatus compression_stream_init (ref CompressionStreamStruct stream, StreamOperation operation, CompressionAlgorithm algorithm);
 
 		[DllImport (Constants.libcompression)]
-		static extern int /* CompressionStatus */ compression_stream_process (ref CompressionStreamStruct stream, int /* StreamFlag */ flags);
+		static extern CompressionStatus compression_stream_process (ref CompressionStreamStruct stream, StreamFlag flags);
 
 		[DllImport (Constants.libcompression)]
-		static extern int /* CompressionStatus */ compression_stream_destroy (ref CompressionStreamStruct stream);
+		static extern CompressionStatus compression_stream_destroy (ref CompressionStreamStruct stream);
 
 		const int defaultInBufSize = 1024;
 		const int defaultOutBufSize = 1024;
@@ -44,6 +44,10 @@ namespace Compression {
 		int totalOutputSize = 0;
 		IntPtr dstBuf = IntPtr.Zero;
 		IntPtr srcBuf = IntPtr.Zero;
+		byte [] srcManagedBuffer;
+		byte [] dstManagedBuffer;
+		GCHandle srcHandle;
+		GCHandle dstHandle;
 
 		public CompressionStream (Stream inSourceStream, Stream inDestinationStream, StreamOperation inOperation, CompressionAlgorithm algorithm)
 			: this (inSourceStream, inDestinationStream, inOperation, algorithm, defaultInBufSize, defaultOutBufSize) { }
@@ -62,15 +66,21 @@ namespace Compression {
 			operation = inOperation;
 			sourceStream = inSourceStream;
 			destinationStream = inDestinationStream;
-			status = (CompressionStatus) compression_stream_init (ref internalStream, (int) operation, (int) algorithm);
+			status = compression_stream_init (ref internalStream, operation, algorithm);
 			if (status != CompressionStatus.Ok)
 				throw new InvalidOperationException ("Internal stream could not be created.");
 
 			// set the different required values
 			inSize = inBufferSize;
+			srcManagedBuffer = new byte [inSize];
 			outSize = outBufferSize;
-			dstBuf = Marshal.AllocHGlobal (outSize);
-			srcBuf = Marshal.AllocHGlobal (inBufferSize);
+			dstManagedBuffer = new byte [outSize];
+
+			// pin the objects and pass them to the struct
+			srcHandle = GCHandle.Alloc (srcManagedBuffer, GCHandleType.Pinned);
+			dstHandle = GCHandle.Alloc (dstManagedBuffer, GCHandleType.Pinned);
+			srcBuf = srcHandle.AddrOfPinnedObject ();
+			dstBuf = dstHandle.AddrOfPinnedObject ();
 
 			internalStream.Destination = dstBuf;
 			internalStream.DestinationSize = outSize;
@@ -89,10 +99,8 @@ namespace Compression {
 				if (internalStream.SourceSize == 0) {
 					if (!finalizeStream || operation == StreamOperation.Encode) {
 						// Refill source buffer
-						byte[] data = new byte[inSize];
-						var read = await sourceStream.ReadAsync (data, 0, inSize).ConfigureAwait (false);
-						var dataRead = (read == 0)? data.Length : read;
-						Marshal.Copy (data, 0, srcBuf, dataRead);
+						var read = await sourceStream.ReadAsync (srcManagedBuffer, 0, inSize).ConfigureAwait (false);
+						var dataRead = (read == 0)? srcManagedBuffer.Length : read;
 						totalInputSize += dataRead;
 						internalStream.Source = srcBuf;
 						internalStream.SourceSize = dataRead;
@@ -105,9 +113,7 @@ namespace Compression {
 				}
 				if (internalStream.DestinationSize == 0) {
 					// output buffer is full, copy from managed to unmanaged and write
-					byte[] data  = new byte[outSize];
-					Marshal.Copy (dstBuf, data, 0, outSize);
-					await destinationStream.WriteAsync (data, 0, outSize).ConfigureAwait (false); // we should be appending
+					await destinationStream.WriteAsync (dstManagedBuffer, 0, outSize).ConfigureAwait (false); // we should be appending
 					totalOutputSize += outSize;
 
 					internalStream.Destination = dstBuf;
@@ -115,14 +121,12 @@ namespace Compression {
 				}
 
 				// stream should be set up, perform the action
-				status = (CompressionStatus) compression_stream_process (ref internalStream, finalizeStream? (int)StreamFlag.Finalize:0); // TODO, use flags instead!
+				status = compression_stream_process (ref internalStream, finalizeStream? StreamFlag.Finalize:StreamFlag.Continue); // TODO, use flags instead!
 				switch (status) {
 				case CompressionStatus.Ok:
 					// we will do the loop at least once more, lets be ready
 					if (internalStream.DestinationSize == 0) {
-						byte[] data  = new byte[outSize];
-						Marshal.Copy (dstBuf, data, 0, outSize);
-						await destinationStream.WriteAsync (data, 0, outSize).ConfigureAwait (false); // we should be appending
+						await destinationStream.WriteAsync (dstManagedBuffer, 0, outSize).ConfigureAwait (false); // we should be appending
 						totalOutputSize += outSize;
 
 						internalStream.Destination = dstBuf;
@@ -133,9 +137,7 @@ namespace Compression {
 					// we are done, write whatever we have in the buffer
 					if ((long)internalStream.Destination > (long)dstBuf) {
 						var size = (int)((long)internalStream.Destination - (long)dstBuf);
-						byte[] data  = new byte[size];
-						Marshal.Copy (dstBuf, data, 0, size);
-						await destinationStream.WriteAsync (data, 0, size).ConfigureAwait (false); // we should be appending
+						await destinationStream.WriteAsync (dstManagedBuffer, 0, size).ConfigureAwait (false); // we should be appending
 						totalOutputSize += size;
 					}
 					break;
@@ -154,12 +156,12 @@ namespace Compression {
 				}
 				compression_stream_destroy (ref internalStream);
 				if (dstBuf != IntPtr.Zero) {
-					Marshal.FreeHGlobal (dstBuf);
 					dstBuf = IntPtr.Zero;
+					dstHandle.Free ();
 				}
 				if (srcBuf != IntPtr.Zero) {
-					Marshal.FreeHGlobal (srcBuf);
 					srcBuf = IntPtr.Zero;
+					srcHandle.Free ();
 				}
 				disposedValue = true;
 			}
