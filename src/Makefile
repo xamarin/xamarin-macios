@@ -178,7 +178,7 @@ define IOS_LIBS_template
 IOS_VARIANTS_TARGETS += $(addprefix $(IOS_BUILD_DIR)/$(1)/,$(4) $(5))
 
 # MonoTouch.Dialog-1
-$(IOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.%: $(MACIOS_BINARIES_PATH)/MonoTouch.Dialog-Unified/ios/MonoTouch.Dialog-1.% $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll
+$(IOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.%: $(MACIOS_BINARIES_PATH)/MonoTouch.Dialog-Unified/ios/MonoTouch.Dialog-1.% | $(IOS_BUILD_DIR)/reference
 	$$(Q) cp $$< $$@
 
 # MonoTouch.NUnitLite
@@ -1044,7 +1044,7 @@ $(TVOS_BUILD_DIR)/%.pdb: $(TVOS_BUILD_DIR)/%.dll
 	@touch $@
 
 # MonoTouch.Dialog-1
-$(TVOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.%: $(MACIOS_BINARIES_PATH)/MonoTouch.Dialog-Unified/tvos/MonoTouch.Dialog-1.% $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll
+$(TVOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.%: $(MACIOS_BINARIES_PATH)/MonoTouch.Dialog-Unified/tvos/MonoTouch.Dialog-1.% | $(TVOS_BUILD_DIR)/reference
 	$(Q) cp $< $@
 
 # System.Drawing.Primitives.dll is special
