@@ -270,11 +270,8 @@ IOS_EXTRA_SYSTEM_NET_HTTP_FILES = \
 $(MONO_PATH)/mcs/class/lib/monotouch/reference/System.Net.Http%dll $(MONO_PATH)/mcs/class/lib/monotouch/reference/System.Net.Http%pdb: $(IOS_EXTRA_SYSTEM_NET_HTTP_FILES) $(MONO_PATH)/mcs/class/lib/monotouch/System.Net.Http.dll $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll
 	$(call Q_PROF_CSC,ios/unified) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/System.Net.Http PROFILE=monotouch LIBRARY_SUBDIR=reference MONOTOUCH_MCS_FLAGS=$(IOS_CSC_FLAGS) EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll) $(IOS_EXTRA_SYSTEM_NET_HTTP_FILES) -D:XAMCORE_2_0 -D:XAMARIN_MODERN -D:SYSTEM_NET_HTTP -D:UNIFIED -D:__UNIFIED__"
 	@# If the make we executed didn't result in building the dll/pdb (because make determined it wasn't necessary to rebuild),
-	@# then this make can end up confused and in an infinite loop. So touch the output files, to make sure they look
-	@# rebuilt to make. Unfortunately there's no special variable that means "all targets", $@ only means "target that triggered the rule",
-	@# which can be either the dll or the pdb. So add some weird logic to make sure we touch both the dll and the pdb in either case
-	@# (we'll touch one of them twice, but that shouldn't be a problem)
-	$(Q) touch $@ $(@:.dll=.pdb) $(@:.pdb=.dll)
+	@# then this make can end up confused and in an infinite loop. So touch the output files, to make sure they look rebuilt to make.
+	$(Q) touch $(basename $@).dll $(basename $@).pdb
 
 # sign dll (one target for both compat+reference)
 $(IOS_BUILD_DIR)/%/System.Net.Http.dll: $(MONO_PATH)/mcs/class/lib/monotouch/%/System.Net.Http.dll | $(IOS_BUILD_DIR)/compat $(IOS_BUILD_DIR)/reference
@@ -853,11 +850,8 @@ WATCH_EXTRA_SYSTEM_NET_HTTP_FILES = \
 $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http%dll $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http%pdb: $(WATCH_EXTRA_SYSTEM_NET_HTTP_FILES) $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/System.Net.Http.dll $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll
 	$(call Q_PROF_CSC,watch) $(MAKE) $(if $(V),,-s) -C $(WATCH_MONO_PATH)/mcs/class/System.Net.Http PROFILE=monotouch_watch LIBRARY_SUBDIR=reference MONOTOUCH_MCS_FLAGS=$(IOS_CSC_FLAGS) EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll) $(WATCH_EXTRA_SYSTEM_NET_HTTP_FILES) -D:XAMCORE_2_0 -D:XAMCORE_3_0 -D:XAMARIN_MODERN -D:SYSTEM_NET_HTTP -D:UNIFIED -D:__UNIFIED__"
 	@# If the make we executed didn't result in building the dll/pdb (because make determined it wasn't necessary to rebuild),
-	@# then this make can end up confused and in an infinite loop. So touch the output files, to make sure they look
-	@# rebuilt to make. Unfortunately there's no special variable that means "all targets", $@ only means "target that triggered the rule",
-	@# which can be either the dll or the pdb. So add some weird logic to make sure we touch both the dll and the pdb in either case
-	@# (we'll touch one of them twice, but that shouldn't be a problem)
-	$(Q) touch $@ $(@:.dll=.pdb) $(@:.pdb=.dll)
+	@# then this make can end up confused and in an infinite loop. So touch the output files, to make sure they look rebuilt to make.
+	$(Q) touch $(basename $@).dll $(basename $@).pdb
 
 # sign dll
 $(WATCH_BUILD_DIR)/reference/System.Net.Http.dll: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http.dll | $(WATCH_BUILD_DIR)/reference
@@ -1083,11 +1077,8 @@ TVOS_EXTRA_SYSTEM_NET_HTTP_FILES = \
 $(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http%dll $(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http%pdb: $(TVOS_EXTRA_SYSTEM_NET_HTTP_FILES) $(MONO_PATH)/mcs/class/lib/monotouch_tv/System.Net.Http.dll $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll
 	$(call Q_PROF_CSC,tvos) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/System.Net.Http PROFILE=monotouch_tv LIBRARY_SUBDIR=reference MONOTOUCH_MCS_FLAGS=$(IOS_CSC_FLAGS) EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll) $(TVOS_EXTRA_SYSTEM_NET_HTTP_FILES) -D:XAMCORE_2_0 -D:XAMCORE_3_0 -D:XAMARIN_MODERN -D:SYSTEM_NET_HTTP -D:UNIFIED -D:__UNIFIED__"
 	@# If the make we executed didn't result in building the dll/pdb (because make determined it wasn't necessary to rebuild),
-	@# then this make can end up confused and in an infinite loop. So touch the output files, to make sure they look
-	@# rebuilt to make. Unfortunately there's no special variable that means "all targets", $@ only means "target that triggered the rule",
-	@# which can be either the dll or the pdb. So add some weird logic to make sure we touch both the dll and the pdb in either case
-	@# (we'll touch one of them twice, but that shouldn't be a problem)
-	$(Q) touch $@ $(@:.dll=.pdb) $(@:.pdb=.dll)
+	@# then this make can end up confused and in an infinite loop. So touch the output files, to make sure they look rebuilt to make.
+	$(Q) touch $(basename $@).dll $(basename $@).pdb
 
 # sign dll
 $(TVOS_BUILD_DIR)/reference/System.Net.Http.dll: $(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http.dll | $(TVOS_BUILD_DIR)/reference
