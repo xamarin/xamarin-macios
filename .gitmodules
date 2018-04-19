@@ -13,10 +13,6 @@
     path = external/mono
     url = ../../mono/mono.git
     branch = 2017-12
-[submodule "external/MonoTouch.Dialog"]
-    path = external/MonoTouch.Dialog
-    url = ../../migueldeicaza/MonoTouch.Dialog.git
-    branch = master
 [submodule "external/opentk"]
     path = external/opentk
     url = ../../mono/opentk.git
