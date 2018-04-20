@@ -26,7 +26,7 @@ $(addprefix $(MAC_BUILD_DIR)/net_4_5/,OpenTK.dll): XAMMAC = -r:$(MAC_BUILD_DIR)/
 
 $(MAC_BUILD_DIR)/mobile-32/OpenTK.dll: $(MAC_OPENTK_SOURCES) $(MAC_BUILD_DIR)/mobile-32/Xamarin.Mac.dll
 	$(call Q_PROF_CSC,mac/$(VARIANT)) $(MAC_mobile_CSC) \
-		-out:$@ -target:library -debug:full -define:OPENTK_DLL -unsafe -nowarn:3021,612,618,1635 \
+		-nologo -out:$@ -target:library -debug:full -define:OPENTK_DLL -unsafe -nowarn:3021,612,618,1635 \
 		$(MAC_BOOTSTRAP_DEFINES),COREBUILD \
 		$(XAMMAC) \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) \
@@ -34,7 +34,7 @@ $(MAC_BUILD_DIR)/mobile-32/OpenTK.dll: $(MAC_OPENTK_SOURCES) $(MAC_BUILD_DIR)/mo
 
 $(MAC_BUILD_DIR)/full-32/OpenTK.dll: $(MAC_OPENTK_SOURCES) $(MAC_BUILD_DIR)/full-32/Xamarin.Mac.dll
 	$(call Q_PROF_CSC,mac/$(VARIANT)) $(MAC_full_CSC) \
-		-out:$@ -target:library -debug:full -define:OPENTK_DLL -unsafe -nowarn:3021,612,618,1635 \
+		-nologo -out:$@ -target:library -debug:full -define:OPENTK_DLL -unsafe -nowarn:3021,612,618,1635 \
 		$(MAC_BOOTSTRAP_DEFINES),COREBUILD \
 		-r:System.Drawing.dll $(XAMMAC) \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) \
@@ -43,7 +43,7 @@ $(MAC_BUILD_DIR)/full-32/OpenTK.dll: $(MAC_OPENTK_SOURCES) $(MAC_BUILD_DIR)/full
 $(MAC_BUILD_DIR)/net_4_5/OpenTK.dll: $(MAC_OPENTK_SOURCES) $(MAC_BUILD_DIR)/full-32/Xamarin.Mac.dll
 	@mkdir -p $(MAC_BUILD_DIR)/net_4_5
 	$(call Q_PROF_CSC,mac/$(VARIANT)) $(MAC_full_CSC) \
-		-out:$@ -target:library -debug:full -define:OPENTK_DLL -unsafe -nowarn:3021,612,618,1635 \
+		-nologo -out:$@ -target:library -debug:full -define:OPENTK_DLL -unsafe -nowarn:3021,612,618,1635 \
 		$(MAC_BOOTSTRAP_DEFINES),COREBUILD \
 		 $(XAMMAC) \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) \
