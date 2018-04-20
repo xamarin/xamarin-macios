@@ -132,8 +132,6 @@ function upon_exit ()
 	if ! test -z "$APIDIFF_FILE"; then
 		echo "API diff: $APIDIFF_FILE"
 	fi
-
-	make -C "$ROOT_DIR/src" V=1
 }
 
 trap upon_exit EXIT
