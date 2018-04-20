@@ -8,7 +8,15 @@ report_error ()
 trap report_error ERR
 
 cd $WORKSPACE
-./tools/compare-commits.sh --base=origin/pr/$ghprbPullId/merge^1
+
+BASE=origin/pr/$ghprbPullId/merge
+if ! git rev-parse $BASE >/dev/null 2>&1; then
+	echo "Can't compare API and create generator diff because the pull request has conflicts that must be resolved first (the branch '$BASE' doesn't exist)."
+	printf "🔥 [Failed to compare API and create generator diff because the pull request has conflicts that must be resolved first]($BUILD_URL/console) 🔥\\n" >> $WORKSPACE/jenkins/pr-comments.md
+	exit 0
+fi
+
+./tools/compare-commits.sh --base=$BASE^1
 
 mkdir -p jenkins-results/apicomparison
 
