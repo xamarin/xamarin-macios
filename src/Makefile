@@ -394,8 +394,10 @@ $(PROJECT_DIR)/xamios.csproj: xamios.tmpl.csproj Makefile $(wildcard $(TOP)/src/
 $(PROJECT_DIR)/MonoTouch.NUnitLite.csproj: MonoTouch.NUnitLite.templ.csproj Makefile touch-unit.sources
 	$(Q) sed -e 's*<!--%FILES%-->*$(foreach file,$(IOS_TOUCHUNIT_SOURCES),<Compile Include="$(file)"/>)*' $< | xmllint --format - > $@
 
+$(PROJECT_DIR)/MonoTouch.Dialog-1.csproj: MonoTouch.Dialog-1.templ.csproj Makefile touch-unit.sources
+	$(Q) sed -e 's*<!--%FILES%-->*$(foreach file,$(MONOTOUCH_DIALOG_SOURCES),<Compile Include="$(file)"/>)*' $< | xmllint --format - > $@
 
-PROJECT_FILES += $(PROJECT_DIR)/xamios.csproj $(PROJECT_DIR)/MonoTouch.NUnitLite.csproj
+PROJECT_FILES += $(PROJECT_DIR)/xamios.csproj $(PROJECT_DIR)/MonoTouch.NUnitLite.csproj $(PROJECT_DIR)/MonoTouch.Dialog-1.csproj
 
 all-ios: $(IOS_TARGETS)
 install-ios: $(IOS_TARGETS)
@@ -1106,7 +1108,10 @@ $(PROJECT_DIR)/xamtvos.csproj: xamtvos.tmpl.csproj Makefile $(wildcard $(TOP)/*.
 $(PROJECT_DIR)/MonoTouch.NUnitLite.tvos.csproj: MonoTouch.NUnitLite.tvos.templ.csproj Makefile touch-unit.sources
 	$(Q) sed -e 's*<!--%FILES%-->*$(foreach file,$(TVOS_TOUCHUNIT_SOURCES),<Compile Include="$(file)"/>)*' $< | xmllint --format - > $@
 
-PROJECT_FILES += $(PROJECT_DIR)/xamtvos.csproj $(PROJECT_DIR)/MonoTouch.NUnitLite.tvos.csproj
+$(PROJECT_DIR)/MonoTouch.Dialog-1.tvos.csproj: MonoTouch.Dialog-1.tvos.templ.csproj Makefile touch-unit.sources
+	$(Q) sed -e 's*<!--%FILES%-->*$(foreach file,$(MONOTOUCH_DIALOG_SOURCES),<Compile Include="$(file)"/>)*' $< | xmllint --format - > $@
+
+PROJECT_FILES += $(PROJECT_DIR)/xamtvos.csproj $(PROJECT_DIR)/MonoTouch.NUnitLite.tvos.csproj $(PROJECT_DIR)/MonoTouch.Dialog-1.tvos.csproj
 
 clean-tvos:
 	$(Q) rm -rf $(TVOS_BUILD_DIR)
