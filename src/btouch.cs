@@ -163,7 +163,7 @@ class BindingTouch {
 				return path;
 		}
 
-		throw new FileNotFoundException (name);
+		throw new FileNotFoundException ($"Could not find the assembly '{name}' in any of the directories: {string.Join (", ", GetLibraryDirectories ())}");
 	}
 
 	static string GetSDKRoot ()
