@@ -2,6 +2,7 @@ TOP=..
 include $(TOP)/Make.config
 
 BUILD_DIR=build
+PROJECT_DIR=.
 
 include $(TOP)/src/frameworks.sources
 include $(TOP)/mk/rules.mk
@@ -300,9 +301,9 @@ IOS_TARGETS_DIRS += \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1             \
 
 IOS_TARGETS += \
-	xamios.csproj                                                                  \
-	MonoTouch.NUnitLite.csproj                                                     \
-	MonoTouch.Dialog-1.csproj                                                      \
+	$(PROJECT_DIR)/xamios.csproj                                                   \
+	$(PROJECT_DIR)/MonoTouch.NUnitLite.csproj                                      \
+	$(PROJECT_DIR)/MonoTouch.Dialog-1.csproj                                       \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/Version                                      \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/System.Net.Http.dll             \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/System.Net.Http.pdb             \
@@ -384,16 +385,16 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.iOS.pdb: $(IOS_BUILD_DIR)/n
 $(IOS_TARGETS_DIRS):
 	$(Q) mkdir -p $@
 
-xamios.csproj: xamios.tmpl.csproj Makefile $(wildcard $(TOP)/src/*.sources)
+$(PROJECT_DIR)/xamios.csproj: xamios.tmpl.csproj Makefile $(wildcard $(TOP)/src/*.sources)
 	@sed -e 's*<!--%FILES%-->*$(foreach file,$(IOS_SOURCES),<Compile Include="$(file)"/>)*' -e 's*<!--%APIS%-->*$(foreach file,$(IOS_APIS),<None Include="$(file)"/>)*' $< | xmllint --format - > $@
 
-MonoTouch.NUnitLite.csproj: MonoTouch.NUnitLite.templ.csproj Makefile touch-unit.sources
+$(PROJECT_DIR)/MonoTouch.NUnitLite.csproj: MonoTouch.NUnitLite.templ.csproj Makefile touch-unit.sources
 	$(Q) sed -e 's*<!--%FILES%-->*$(foreach file,$(IOS_TOUCHUNIT_SOURCES),<Compile Include="$(file)"/>)*' $< | xmllint --format - > $@
 
-MonoTouch.Dialog-1.csproj: MonoTouch.Dialog-1.templ.csproj Makefile touch-unit.sources
+$(PROJECT_DIR)/MonoTouch.Dialog-1.csproj: MonoTouch.Dialog-1.templ.csproj Makefile touch-unit.sources
 	$(Q) sed -e 's*<!--%FILES%-->*$(foreach file,$(MONOTOUCH_DIALOG_SOURCES),<Compile Include="$(file)"/>)*' $< | xmllint --format - > $@
 
-PROJECT_FILES += xamios.csproj MonoTouch.NUnitLite.csproj MonoTouch.Dialog-1.csproj
+PROJECT_FILES += $(PROJECT_DIR)/xamios.csproj $(PROJECT_DIR)/MonoTouch.NUnitLite.csproj $(PROJECT_DIR)/MonoTouch.Dialog-1.csproj
 
 all-ios: $(IOS_TARGETS)
 install-ios: $(IOS_TARGETS)
@@ -461,10 +462,10 @@ $(MAC_BUILD_DIR)/Constants.cs: Constants.mac.cs.in Makefile $(TOP)/Make.config.i
 			-e "s/@OSX_SDK_VERSION@/$(OSX_SDK_VERSION)/g" \
 		$< > $@
 
-xammac.csproj: xammac.tmpl.csproj Makefile $(wildcard $(TOP)/src/*.sources)
+$(PROJECT_DIR)/xammac.csproj: xammac.tmpl.csproj Makefile $(wildcard $(TOP)/src/*.sources)
 	@sed -e 's*<!--%FILES%-->*$(foreach file,$(MAC_SOURCES) $(SHARED_SYSTEM_DRAWING_SOURCES),<Compile Include="$(file)"/>)*' -e 's*<!--%APIS%-->*$(foreach file,$(MAC_APIS),<None Include="$(file)"/>)*' $< | xmllint --format - > $@
 
-PROJECT_FILES += xammac.csproj
+PROJECT_FILES += $(PROJECT_DIR)/xammac.csproj
 
 $(MAC_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in
 	@mkdir -p $(MAC_BUILD_DIR)
@@ -614,7 +615,7 @@ MAC_TARGETS_DIRS += \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig        \
 
 MAC_TARGETS += \
-	xammac.csproj                                                                       \
+	$(PROJECT_DIR)/xammac.csproj                                                        \
 	$(MAC_VARIANTS_TARGETS)                                                             \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/XamMac.dll                      \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile/Xamarin.Mac.dll     \
@@ -862,13 +863,13 @@ $(WATCH_BUILD_DIR)/reference/System.Net.Http.dll: $(WATCH_MONO_PATH)/mcs/class/l
 $(WATCH_BUILD_DIR)/reference/System.Net.Http.pdb: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http.pdb | $(WATCH_BUILD_DIR)/reference
 	$(Q) cp $< $@
 
-xamwatch.csproj: xamwatch.tmpl.csproj Makefile $(wildcard $(TOP)/*.sources)
+$(PROJECT_DIR)/xamwatch.csproj: xamwatch.tmpl.csproj Makefile $(wildcard $(TOP)/*.sources)
 	@sed -e 's*<!--%FILES%-->*$(foreach file,$(WATCHOS_SOURCES),<Compile Include="$(file)"/>)*' -e 's*<!--%APIS%-->*$(foreach file,$(WATCHOS_APIS),<None Include="$(file)"/>)*' $< | xmllint --format - > $@
 
-MonoTouch.NUnitLite.watchos.csproj: MonoTouch.NUnitLite.watchos.templ.csproj Makefile touch-unit.sources
+$(PROJECT_DIR)/MonoTouch.NUnitLite.watchos.csproj: MonoTouch.NUnitLite.watchos.templ.csproj Makefile touch-unit.sources
 	$(Q) sed -e 's*<!--%FILES%-->*$(foreach file,$(WATCHOS_TOUCHUNIT_SOURCES),<Compile Include="$(file)"/>)*' $< | xmllint --format - > $@
 
-PROJECT_FILES += xamwatch.csproj MonoTouch.NUnitLite.watchos.csproj
+PROJECT_FILES += $(PROJECT_DIR)/xamwatch.csproj $(PROJECT_DIR)/MonoTouch.NUnitLite.watchos.csproj
 
 clean-watch:
 	$(Q) rm -rf $(WATCH_BUILD_DIR)
@@ -884,8 +885,8 @@ WATCH_TARGETS_DIRS +=                                          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/share/doc/Xamarin.WatchOS\
 
 WATCH_TARGETS += \
-	xamwatch.csproj                                                                \
-	MonoTouch.NUnitLite.watchos.csproj                                                      \
+	$(PROJECT_DIR)/xamwatch.csproj                                                          \
+	$(PROJECT_DIR)/MonoTouch.NUnitLite.watchos.csproj                                       \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.dll          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.pdb      \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.WatchOS.dll                        \
@@ -1089,16 +1090,16 @@ $(TVOS_BUILD_DIR)/reference/System.Net.Http.dll: $(MONO_PATH)/mcs/class/lib/mono
 $(TVOS_BUILD_DIR)/reference/System.Net.Http.pdb: $(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http.pdb | $(TVOS_BUILD_DIR)/reference
 	$(Q) cp $< $@
 
-xamtvos.csproj: xamtvos.tmpl.csproj Makefile $(wildcard $(TOP)/*.sources)
+$(PROJECT_DIR)/xamtvos.csproj: xamtvos.tmpl.csproj Makefile $(wildcard $(TOP)/*.sources)
 	@sed -e 's*<!--%FILES%-->*$(foreach file,$(TVOS_SOURCES),<Compile Include="$(file)"/>)*' -e 's*<!--%APIS%-->*$(foreach file,$(TVOS_APIS),<None Include="$(file)"/>)*' $< | xmllint --format - > $@
 
-MonoTouch.NUnitLite.tvos.csproj: MonoTouch.NUnitLite.tvos.templ.csproj Makefile touch-unit.sources
+$(PROJECT_DIR)/MonoTouch.NUnitLite.tvos.csproj: MonoTouch.NUnitLite.tvos.templ.csproj Makefile touch-unit.sources
 	$(Q) sed -e 's*<!--%FILES%-->*$(foreach file,$(TVOS_TOUCHUNIT_SOURCES),<Compile Include="$(file)"/>)*' $< | xmllint --format - > $@
 
-MonoTouch.Dialog-1.tvos.csproj: MonoTouch.Dialog-1.tvos.templ.csproj Makefile touch-unit.sources
+$(PROJECT_DIR)/MonoTouch.Dialog-1.tvos.csproj: MonoTouch.Dialog-1.tvos.templ.csproj Makefile touch-unit.sources
 	$(Q) sed -e 's*<!--%FILES%-->*$(foreach file,$(MONOTOUCH_DIALOG_SOURCES),<Compile Include="$(file)"/>)*' $< | xmllint --format - > $@
 
-PROJECT_FILES += xamtvos.csproj MonoTouch.NUnitLite.tvos.csproj MonoTouch.Dialog-1.tvos.csproj
+PROJECT_FILES += $(PROJECT_DIR)/xamtvos.csproj $(PROJECT_DIR)/MonoTouch.NUnitLite.tvos.csproj $(PROJECT_DIR)/MonoTouch.Dialog-1.tvos.csproj
 
 clean-tvos:
 	$(Q) rm -rf $(TVOS_BUILD_DIR)
@@ -1116,9 +1117,9 @@ TVOS_TARGETS_DIRS +=                                          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/share/doc/Xamarin.TVOS  \
 
 TVOS_TARGETS += \
-	xamtvos.csproj                                                                      \
-	MonoTouch.NUnitLite.tvos.csproj                                                      \
-	MonoTouch.Dialog-1.tvos.csproj                                                       \
+	$(PROJECT_DIR)/xamtvos.csproj                                                        \
+	$(PROJECT_DIR)/MonoTouch.NUnitLite.tvos.csproj                                       \
+	$(PROJECT_DIR)/MonoTouch.Dialog-1.tvos.csproj                                        \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll             \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/Xamarin.TVOS.pdb             \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.TVOS.dll                        \
