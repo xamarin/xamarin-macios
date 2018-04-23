@@ -105,13 +105,6 @@ namespace xharness
 				if (!File.Exists (proj_path))
 					proj_path = Path.GetFullPath (Path.Combine (srcDirectory, "MonoTouch.NUnitLite.csproj"));
 				AddProjectToSolution (harness, sln_path, writer, proj_path, out configuration);
-				string configuration2 = string.Empty;
-				if (infix != "watchos") {
-					proj_path = Path.GetFullPath (Path.Combine (srcDirectory, "MonoTouch.Dialog-1." + infix + ".csproj"));
-					if (!File.Exists (proj_path))
-						proj_path = Path.GetFullPath (Path.Combine (srcDirectory, "MonoTouch.Dialog-1.csproj"));
-					AddProjectToSolution (harness, sln_path, writer, proj_path, out configuration2);
-				}
 
 				writer.WriteLine ("Global");
 
@@ -164,7 +157,6 @@ namespace xharness
 
 				}
 				writer.Write (configuration);
-				writer.Write (configuration2);
 				writer.WriteLine ("\tEndGlobalSection");
 
 				if (folders.Length > 0) {
