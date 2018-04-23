@@ -148,6 +148,7 @@ rm -Rf "$OUTPUT_DIR"
 echo "${BLUE}Preparing temporary output directory...${CLEAR}"
 mkdir -p "$OUTPUT_DIR/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono"
 mkdir -p "$OUTPUT_DIR/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/mono"
+mkdir -p "$OUTPUT_DIR/project-files"
 
 ln -s git "$OUTPUT_DIR/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current"
 ln -s git "$OUTPUT_DIR/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current"
