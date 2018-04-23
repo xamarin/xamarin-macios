@@ -2,12 +2,12 @@ TOP=..
 include $(TOP)/Make.config
 
 BUILD_DIR=build
+PROJECT_DIR=.
 
 include $(TOP)/src/frameworks.sources
 include $(TOP)/mk/rules.mk
 
 include $(TOP)/src/system-drawing.sources
-include $(TOP)/src/monotouch-dialog.sources
 include $(TOP)/src/touch-unit.sources
 
 export MD_MTOUCH_SDK_ROOT=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)
@@ -179,11 +179,8 @@ define IOS_LIBS_template
 IOS_VARIANTS_TARGETS += $(addprefix $(IOS_BUILD_DIR)/$(1)/,$(4) $(5))
 
 # MonoTouch.Dialog-1
-$(IOS_BUILD_DIR)/$(1)%$(4) $(IOS_BUILD_DIR)/$(1)%$(4:.dll=.pdb): $$(IOS_SOURCES) $(IOS_BUILD_DIR)/$(1)/$(3) $$(MONOTOUCH_DIALOG_SOURCES) $(PRODUCT_KEY_PATH) $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll
-	$$(call Q_PROF_CSC,ios/$(1)) $$(IOS_CSC) -nologo -out:$$(basename $$@).dll -target:library -debug:portable -optimize -publicsign \
-		-keyfile:$(PRODUCT_KEY_PATH) -r:$(IOS_BUILD_DIR)/$(1)/$(3) $(6) -r:$(MONOTOUCH_MONO_PATH)/System.Core.dll -r:$(MONOTOUCH_MONO_PATH)/System.dll -r:$(MONOTOUCH_MONO_PATH)/System.Json.dll \
-		-nowarn:219,618,114,414,1635,3021,$$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
-		$$(MONOTOUCH_DIALOG_SOURCES) $$(MONOTOUCH_DIALOG_RESOURCES)
+$(IOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.%: $(MACIOS_BINARIES_PATH)/MonoTouch.Dialog-Unified/ios/MonoTouch.Dialog-1.% | $(IOS_BUILD_DIR)/reference
+	$$(Q) cp $$< $$@
 
 # MonoTouch.NUnitLite
 $(IOS_BUILD_DIR)/$(1)%$(5) $(IOS_BUILD_DIR)/$(1)%$(5:.dll=.pdb): $$(IOS_TOUCHUNIT_SOURCES) $(IOS_BUILD_DIR)/$(1)/$(4) $(PRODUCT_KEY_PATH) $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll
@@ -204,17 +201,15 @@ endef
 
 $(eval $(call IOS_LIBS_template,reference,--ns=ObjCRuntime,Xamarin.iOS.dll,MonoTouch.Dialog-1.dll,MonoTouch.NUnitLite.dll,-define:XAMCORE_2_0 -define:__UNIFIED__))
 
-$(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll: $(IOS_BUILD_DIR)/native-64/Xamarin.iOS.dll
-	$(Q) mkdir -p $(dir $@)
+$(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll: $(IOS_BUILD_DIR)/native-64/Xamarin.iOS.dll | $(IOS_BUILD_DIR)/reference
 	@# Don't strip, btouch-native needs to execute code from Xamarin.iOS,
 	@# and that'll break if we strip out the code from the reference assembly.
 	@# Note that there is only btouch-native executable for both 32 and 64 bits.
 	@#$(Q_GEN) mono-cil-strip $< $@
 	$(Q) cp $< $@
-	$(Q) cp $(<:.dll=.pdb) $(@:.dll=.pdb)
 
-$(IOS_BUILD_DIR)/reference/Xamarin.iOS.pdb: $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll
-	@touch $@
+$(IOS_BUILD_DIR)/reference/Xamarin.iOS.pdb: $(IOS_BUILD_DIR)/native-64/Xamarin.iOS.pdb | $(IOS_BUILD_DIR)/reference
+	$(Q) cp $< $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/% : $(MACIOS_BINARIES_PATH)/% | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
 	$(Q) cp $< $@
@@ -269,15 +264,14 @@ IOS_EXTRA_SYSTEM_NET_HTTP_FILES = \
 	$(abspath $(TOP)/src/ObjCRuntime/RuntimeOptions.cs) \
 
 # build (into custom LIBRARY_SUBDIR)
-$(MONO_PATH)/mcs/class/lib/monotouch/reference/System.Net.Http.dll: $(IOS_EXTRA_SYSTEM_NET_HTTP_FILES) $(MONO_PATH)/mcs/class/lib/monotouch/System.Net.Http.dll $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll
+$(MONO_PATH)/mcs/class/lib/monotouch/reference/System.Net.Http%dll $(MONO_PATH)/mcs/class/lib/monotouch/reference/System.Net.Http%pdb: $(IOS_EXTRA_SYSTEM_NET_HTTP_FILES) $(MONO_PATH)/mcs/class/lib/monotouch/System.Net.Http.dll $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll
 	$(call Q_PROF_CSC,ios/unified) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/System.Net.Http PROFILE=monotouch LIBRARY_SUBDIR=reference MONOTOUCH_MCS_FLAGS=$(IOS_CSC_FLAGS) EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll) $(IOS_EXTRA_SYSTEM_NET_HTTP_FILES) -D:XAMCORE_2_0 -D:XAMARIN_MODERN -D:SYSTEM_NET_HTTP -D:UNIFIED -D:__UNIFIED__"
-	$(Q) touch $@
-
-$(MONO_PATH)/mcs/class/lib/monotouch/reference/System.Net.Http.pdb: $(MONO_PATH)/mcs/class/lib/monotouch/reference/System.Net.Http.dll
-	@touch $@
+	@# If the make we executed didn't result in building the dll/pdb (because make determined it wasn't necessary to rebuild),
+	@# then this make can end up confused and in an infinite loop. So touch the output files, to make sure they look rebuilt to make.
+	$(Q) touch $(basename $@).dll $(basename $@).pdb
 
 # sign dll (one target for both compat+reference)
-$(IOS_BUILD_DIR)/%/System.Net.Http.dll: $(MONO_PATH)/mcs/class/lib/monotouch/%/System.Net.Http.dll
+$(IOS_BUILD_DIR)/%/System.Net.Http.dll: $(MONO_PATH)/mcs/class/lib/monotouch/%/System.Net.Http.dll | $(IOS_BUILD_DIR)/compat $(IOS_BUILD_DIR)/reference
 	$(Q) cp $< $@
 	$(call Q_PROF_SN,ios/$@) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
 
@@ -303,9 +297,8 @@ IOS_TARGETS_DIRS += \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1             \
 
 IOS_TARGETS += \
-	xamios.csproj                                                                  \
-	MonoTouch.NUnitLite.csproj                                                     \
-	MonoTouch.Dialog-1.csproj                                                      \
+	$(PROJECT_DIR)/xamios.csproj                                                   \
+	$(PROJECT_DIR)/MonoTouch.NUnitLite.csproj                                      \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/Version                                      \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/System.Net.Http.dll             \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/System.Net.Http.pdb             \
@@ -387,16 +380,13 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.iOS.pdb: $(IOS_BUILD_DIR)/n
 $(IOS_TARGETS_DIRS):
 	$(Q) mkdir -p $@
 
-xamios.csproj: xamios.tmpl.csproj Makefile $(wildcard $(TOP)/src/*.sources)
+$(PROJECT_DIR)/xamios.csproj: xamios.tmpl.csproj Makefile $(wildcard $(TOP)/src/*.sources)
 	@sed -e 's*<!--%FILES%-->*$(foreach file,$(IOS_SOURCES),<Compile Include="$(file)"/>)*' -e 's*<!--%APIS%-->*$(foreach file,$(IOS_APIS),<None Include="$(file)"/>)*' $< | xmllint --format - > $@
 
-MonoTouch.NUnitLite.csproj: MonoTouch.NUnitLite.templ.csproj Makefile touch-unit.sources
+$(PROJECT_DIR)/MonoTouch.NUnitLite.csproj: MonoTouch.NUnitLite.templ.csproj Makefile touch-unit.sources
 	$(Q) sed -e 's*<!--%FILES%-->*$(foreach file,$(IOS_TOUCHUNIT_SOURCES),<Compile Include="$(file)"/>)*' $< | xmllint --format - > $@
 
-MonoTouch.Dialog-1.csproj: MonoTouch.Dialog-1.templ.csproj Makefile touch-unit.sources
-	$(Q) sed -e 's*<!--%FILES%-->*$(foreach file,$(MONOTOUCH_DIALOG_SOURCES),<Compile Include="$(file)"/>)*' $< | xmllint --format - > $@
-
-PROJECT_FILES += xamios.csproj MonoTouch.NUnitLite.csproj MonoTouch.Dialog-1.csproj
+PROJECT_FILES += $(PROJECT_DIR)/xamios.csproj $(PROJECT_DIR)/MonoTouch.NUnitLite.csproj
 
 all-ios: $(IOS_TARGETS)
 install-ios: $(IOS_TARGETS)
@@ -464,10 +454,10 @@ $(MAC_BUILD_DIR)/Constants.cs: Constants.mac.cs.in Makefile $(TOP)/Make.config.i
 			-e "s/@OSX_SDK_VERSION@/$(OSX_SDK_VERSION)/g" \
 		$< > $@
 
-xammac.csproj: xammac.tmpl.csproj Makefile $(wildcard $(TOP)/src/*.sources)
+$(PROJECT_DIR)/xammac.csproj: xammac.tmpl.csproj Makefile $(wildcard $(TOP)/src/*.sources)
 	@sed -e 's*<!--%FILES%-->*$(foreach file,$(MAC_SOURCES) $(SHARED_SYSTEM_DRAWING_SOURCES),<Compile Include="$(file)"/>)*' -e 's*<!--%APIS%-->*$(foreach file,$(MAC_APIS),<None Include="$(file)"/>)*' $< | xmllint --format - > $@
 
-PROJECT_FILES += xammac.csproj
+PROJECT_FILES += $(PROJECT_DIR)/xammac.csproj
 
 $(MAC_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in
 	@mkdir -p $(MAC_BUILD_DIR)
@@ -617,7 +607,7 @@ MAC_TARGETS_DIRS += \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig        \
 
 MAC_TARGETS += \
-	xammac.csproj                                                                       \
+	$(PROJECT_DIR)/xammac.csproj                                                        \
 	$(MAC_VARIANTS_TARGETS)                                                             \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/XamMac.dll                      \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile/Xamarin.Mac.dll     \
@@ -800,15 +790,12 @@ $(WATCH_BUILD_DIR)/watch/generated_sources: $(WATCH_GENERATOR) $(WATCHOS_APIS) $
 		$(WATCHOS_APIS)                                            \
 		--target-framework=Xamarin.WatchOS,v1.0                     \
 
-$(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS.dll: $(WATCHOS_SOURCES) $(WATCH_BUILD_DIR)/watch/generated_sources $(PRODUCT_KEY_PATH) | $(WATCH_BUILD_DIR)/watch-32
-	$(call Q_PROF_CSC,watch) $(WATCH_CSC) -nologo -out:$@ -target:library -debug -unsafe -optimize \
+$(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS%dll $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS%pdb: $(WATCHOS_SOURCES) $(WATCH_BUILD_DIR)/watch/generated_sources $(PRODUCT_KEY_PATH) | $(WATCH_BUILD_DIR)/watch-32
+	$(call Q_PROF_CSC,watch) $(WATCH_CSC) -nologo -out:$(basename $@).dll -target:library -debug -unsafe -optimize \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) $(WATCH_DEFINES) \
 		$(ARGS_32) \
 		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		$(WATCHOS_SOURCES) @$(WATCH_BUILD_DIR)/watch/generated_sources
-
-$(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS.pdb: $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS.dll
-	@touch $@
 
 $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll: $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS.dll | $(WATCH_BUILD_DIR)/reference
 	@# Don't strip, bwatch needs to execute code from Xamarin.WatchOS (attributes),
@@ -821,15 +808,12 @@ $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.pdb: $(WATCH_BUILD_DIR)/watch-32/Xa
 	$(Q) cp $< $@
 
 # MonoTouch.NUnitLite
-$(WATCH_BUILD_DIR)/reference/MonoTouch.NUnitLite.dll: $(WATCHOS_TOUCHUNIT_SOURCES) $(PRODUCT_KEY_PATH) $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll
-	$(call Q_PROF_CSC,watch) $(SYSTEM_CSC) -nologo -out:$@ -target:library -debug:portable -optimize -publicsign -noconfig -nostdlib \
+$(WATCH_BUILD_DIR)/reference/MonoTouch.NUnitLite%dll $(WATCH_BUILD_DIR)/reference/MonoTouch.NUnitLite%pdb: $(WATCHOS_TOUCHUNIT_SOURCES) $(PRODUCT_KEY_PATH) $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll
+	$(call Q_PROF_CSC,watch) $(SYSTEM_CSC) -nologo -out:$(basename $@).dll -target:library -debug:portable -optimize -publicsign -noconfig -nostdlib \
 		-keyfile:$(PRODUCT_KEY_PATH) -r:$(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll -r:$(MONOTOUCH_WATCH_MONO_PATH)/mscorlib.dll -r:$(MONOTOUCH_WATCH_MONO_PATH)/System.dll -r:$(MONOTOUCH_WATCH_MONO_PATH)/System.Xml.dll \
 		-nowarn:3006,612,649,414,1635 \
 		-define:NUNITLITE,CLR_4_0,NET_4_5,__MOBILE__ $(WATCH_DEFINES) \
 		$(WATCHOS_TOUCHUNIT_SOURCES)
-
-$(WATCH_BUILD_DIR)/reference/MonoTouch.NUnitLite.pdb: $(WATCH_BUILD_DIR)/reference/MonoTouch.NUnitLite.dll
-	@touch $@
 
 # System.Drawing.Primitives.dll is special
 
@@ -857,28 +841,27 @@ WATCH_EXTRA_SYSTEM_NET_HTTP_FILES = \
 	$(abspath $(TOP)/src/ObjCRuntime/RuntimeOptions.cs) \
 
 # build (into custom LIBRARY_SUBDIR)
-$(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http.dll: $(WATCH_EXTRA_SYSTEM_NET_HTTP_FILES) $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/System.Net.Http.dll $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll
+$(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http%dll $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http%pdb: $(WATCH_EXTRA_SYSTEM_NET_HTTP_FILES) $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/System.Net.Http.dll $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll
 	$(call Q_PROF_CSC,watch) $(MAKE) $(if $(V),,-s) -C $(WATCH_MONO_PATH)/mcs/class/System.Net.Http PROFILE=monotouch_watch LIBRARY_SUBDIR=reference MONOTOUCH_MCS_FLAGS=$(IOS_CSC_FLAGS) EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll) $(WATCH_EXTRA_SYSTEM_NET_HTTP_FILES) -D:XAMCORE_2_0 -D:XAMCORE_3_0 -D:XAMARIN_MODERN -D:SYSTEM_NET_HTTP -D:UNIFIED -D:__UNIFIED__"
-	$(Q) touch $@
-
-$(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http.pdb: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http.dll
-	@touch $@
+	@# If the make we executed didn't result in building the dll/pdb (because make determined it wasn't necessary to rebuild),
+	@# then this make can end up confused and in an infinite loop. So touch the output files, to make sure they look rebuilt to make.
+	$(Q) touch $(basename $@).dll $(basename $@).pdb
 
 # sign dll
-$(WATCH_BUILD_DIR)/reference/System.Net.Http.dll: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http.dll
+$(WATCH_BUILD_DIR)/reference/System.Net.Http.dll: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http.dll | $(WATCH_BUILD_DIR)/reference
 	$(Q) cp $< $@
 	$(call Q_PROF_SN,watch) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
 
-$(WATCH_BUILD_DIR)/reference/System.Net.Http.pdb: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http.pdb
+$(WATCH_BUILD_DIR)/reference/System.Net.Http.pdb: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http.pdb | $(WATCH_BUILD_DIR)/reference
 	$(Q) cp $< $@
 
-xamwatch.csproj: xamwatch.tmpl.csproj Makefile $(wildcard $(TOP)/*.sources)
+$(PROJECT_DIR)/xamwatch.csproj: xamwatch.tmpl.csproj Makefile $(wildcard $(TOP)/*.sources)
 	@sed -e 's*<!--%FILES%-->*$(foreach file,$(WATCHOS_SOURCES),<Compile Include="$(file)"/>)*' -e 's*<!--%APIS%-->*$(foreach file,$(WATCHOS_APIS),<None Include="$(file)"/>)*' $< | xmllint --format - > $@
 
-MonoTouch.NUnitLite.watchos.csproj: MonoTouch.NUnitLite.watchos.templ.csproj Makefile touch-unit.sources
+$(PROJECT_DIR)/MonoTouch.NUnitLite.watchos.csproj: MonoTouch.NUnitLite.watchos.templ.csproj Makefile touch-unit.sources
 	$(Q) sed -e 's*<!--%FILES%-->*$(foreach file,$(WATCHOS_TOUCHUNIT_SOURCES),<Compile Include="$(file)"/>)*' $< | xmllint --format - > $@
 
-PROJECT_FILES += xamwatch.csproj MonoTouch.NUnitLite.watchos.csproj
+PROJECT_FILES += $(PROJECT_DIR)/xamwatch.csproj $(PROJECT_DIR)/MonoTouch.NUnitLite.watchos.csproj
 
 clean-watch:
 	$(Q) rm -rf $(WATCH_BUILD_DIR)
@@ -894,8 +877,8 @@ WATCH_TARGETS_DIRS +=                                          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/share/doc/Xamarin.WatchOS\
 
 WATCH_TARGETS += \
-	xamwatch.csproj                                                                \
-	MonoTouch.NUnitLite.watchos.csproj                                                      \
+	$(PROJECT_DIR)/xamwatch.csproj                                                          \
+	$(PROJECT_DIR)/MonoTouch.NUnitLite.watchos.csproj                                       \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.dll          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.pdb      \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.WatchOS.dll                        \
@@ -1020,16 +1003,13 @@ $(TVOS_BUILD_DIR)/tvos/generated_sources: $(TVOS_GENERATOR) $(TVOS_APIS) $(TVOS_
 		$(TVOS_APIS)                                            \
 		--target-framework=Xamarin.TVOS,v1.0                     \
 
-$(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS.dll: $(TVOS_SOURCES) $(TVOS_BUILD_DIR)/tvos/generated_sources $(PRODUCT_KEY_PATH) | $(TVOS_BUILD_DIR)/tvos-64
-	$(call Q_PROF_CSC,tvos) $(TV_CSC) -nologo -out:$@ -target:library -debug -unsafe -optimize \
+$(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS%dll $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS%pdb: $(TVOS_SOURCES) $(TVOS_BUILD_DIR)/tvos/generated_sources $(PRODUCT_KEY_PATH) | $(TVOS_BUILD_DIR)/tvos-64
+	$(call Q_PROF_CSC,tvos) $(TV_CSC) -nologo -out:$(basename $@).dll -target:library -debug -unsafe -optimize \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) $(TVOS_DEFINES) \
 		-r:$(TVOS_LIBDIR)/Mono.Security.dll \
 		$(ARGS_64) \
 		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		$(TVOS_SOURCES) @$(TVOS_BUILD_DIR)/tvos/generated_sources
-
-$(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS.pdb: $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS.dll
-	@touch $@
 
 $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll: $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS.dll | $(TVOS_BUILD_DIR)/reference
 	@# Don't strip, btv needs to execute code from Xamarin.TVOS (attributes),
@@ -1052,13 +1032,9 @@ $(TVOS_BUILD_DIR)/reference/MonoTouch.NUnitLite%dll $(TVOS_BUILD_DIR)/reference/
 $(TVOS_BUILD_DIR)/%.pdb: $(TVOS_BUILD_DIR)/%.dll
 	@touch $@
 
-$(TVOS_BUILD_DIR)/reference/MonoTouch.Dialog-1%dll $(TVOS_BUILD_DIR)/reference/MonoTouch.Dialog-1%pdb: $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll $(TVOS_SOURCES) $(MONOTOUCH_DIALOG_SOURCES) $(PRODUCT_KEY_PATH)
-	$(call Q_PROF_CSC,tvos) $(SYSTEM_CSC) -nologo -r:$(MONOTOUCH_TV_MONO_PATH)/mscorlib.dll -out:$(basename $@).dll -target:library -debug:portable -optimize -noconfig -nostdlib -publicsign \
-		-keyfile:$(PRODUCT_KEY_PATH) -r:$< -r:$(MONOTOUCH_TV_MONO_PATH)/System.dll -r:$(MONOTOUCH_TV_MONO_PATH)/System.Core.dll -r:$(MONOTOUCH_TV_MONO_PATH)/System.Json.dll \
-		-define:XAMCORE_2_0 -define:XAMCORE_3_0 -define:TVOS -define:__TVOS__ -define:__UNIFIED__ \
-		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
-		$(MONOTOUCH_DIALOG_SOURCES) $(MONOTOUCH_DIALOG_RESOURCES)
-	@touch $(basename $@).dll $(basename $@).pdb
+# MonoTouch.Dialog-1
+$(TVOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.%: $(MACIOS_BINARIES_PATH)/MonoTouch.Dialog-Unified/tvos/MonoTouch.Dialog-1.% | $(TVOS_BUILD_DIR)/reference
+	$(Q) cp $< $@
 
 # System.Drawing.Primitives.dll is special
 
@@ -1088,29 +1064,27 @@ TVOS_EXTRA_SYSTEM_NET_HTTP_FILES = \
 	$(abspath $(TOP)/src/ObjCRuntime/RuntimeOptions.cs) \
 
 # build (into custom LIBRARY_SUBDIR)
-$(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http.dll: $(TVOS_EXTRA_SYSTEM_NET_HTTP_FILES) $(MONO_PATH)/mcs/class/lib/monotouch_tv/System.Net.Http.dll $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll
+$(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http%dll $(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http%pdb: $(TVOS_EXTRA_SYSTEM_NET_HTTP_FILES) $(MONO_PATH)/mcs/class/lib/monotouch_tv/System.Net.Http.dll $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll
 	$(call Q_PROF_CSC,tvos) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/System.Net.Http PROFILE=monotouch_tv LIBRARY_SUBDIR=reference MONOTOUCH_MCS_FLAGS=$(IOS_CSC_FLAGS) EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll) $(TVOS_EXTRA_SYSTEM_NET_HTTP_FILES) -D:XAMCORE_2_0 -D:XAMCORE_3_0 -D:XAMARIN_MODERN -D:SYSTEM_NET_HTTP -D:UNIFIED -D:__UNIFIED__"
-	$(Q) touch $@
-
-$(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http.pdb: $(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http.dll
-	@touch $@
+	@# If the make we executed didn't result in building the dll/pdb (because make determined it wasn't necessary to rebuild),
+	@# then this make can end up confused and in an infinite loop. So touch the output files, to make sure they look rebuilt to make.
+	$(Q) touch $(basename $@).dll $(basename $@).pdb
 
 # sign dll
-$(TVOS_BUILD_DIR)/reference/System.Net.Http%dll $(TVOS_BUILD_DIR)/reference/System.Net.Http%pdb: $(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http.dll
-	$(Q) cp $< $(basename $@).dll
-	$(call Q_PROF_SN,tvos) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $(basename $@).dll $(PRODUCT_KEY_PATH)
-	$(Q) cp $(basename $<).pdb $(basename $@).pdb
+$(TVOS_BUILD_DIR)/reference/System.Net.Http.dll: $(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http.dll | $(TVOS_BUILD_DIR)/reference
+	$(Q) cp $< $@
+	$(call Q_PROF_SN,tvos) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
 
-xamtvos.csproj: xamtvos.tmpl.csproj Makefile $(wildcard $(TOP)/*.sources)
+$(TVOS_BUILD_DIR)/reference/System.Net.Http.pdb: $(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http.pdb | $(TVOS_BUILD_DIR)/reference
+	$(Q) cp $< $@
+
+$(PROJECT_DIR)/xamtvos.csproj: xamtvos.tmpl.csproj Makefile $(wildcard $(TOP)/*.sources)
 	@sed -e 's*<!--%FILES%-->*$(foreach file,$(TVOS_SOURCES),<Compile Include="$(file)"/>)*' -e 's*<!--%APIS%-->*$(foreach file,$(TVOS_APIS),<None Include="$(file)"/>)*' $< | xmllint --format - > $@
 
-MonoTouch.NUnitLite.tvos.csproj: MonoTouch.NUnitLite.tvos.templ.csproj Makefile touch-unit.sources
+$(PROJECT_DIR)/MonoTouch.NUnitLite.tvos.csproj: MonoTouch.NUnitLite.tvos.templ.csproj Makefile touch-unit.sources
 	$(Q) sed -e 's*<!--%FILES%-->*$(foreach file,$(TVOS_TOUCHUNIT_SOURCES),<Compile Include="$(file)"/>)*' $< | xmllint --format - > $@
 
-MonoTouch.Dialog-1.tvos.csproj: MonoTouch.Dialog-1.tvos.templ.csproj Makefile touch-unit.sources
-	$(Q) sed -e 's*<!--%FILES%-->*$(foreach file,$(MONOTOUCH_DIALOG_SOURCES),<Compile Include="$(file)"/>)*' $< | xmllint --format - > $@
-
-PROJECT_FILES += xamtvos.csproj MonoTouch.NUnitLite.tvos.csproj MonoTouch.Dialog-1.tvos.csproj
+PROJECT_FILES += $(PROJECT_DIR)/xamtvos.csproj $(PROJECT_DIR)/MonoTouch.NUnitLite.tvos.csproj
 
 clean-tvos:
 	$(Q) rm -rf $(TVOS_BUILD_DIR)
@@ -1128,9 +1102,8 @@ TVOS_TARGETS_DIRS +=                                          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/share/doc/Xamarin.TVOS  \
 
 TVOS_TARGETS += \
-	xamtvos.csproj                                                                      \
-	MonoTouch.NUnitLite.tvos.csproj                                                      \
-	MonoTouch.Dialog-1.tvos.csproj                                                       \
+	$(PROJECT_DIR)/xamtvos.csproj                                                        \
+	$(PROJECT_DIR)/MonoTouch.NUnitLite.tvos.csproj                                       \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll             \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/Xamarin.TVOS.pdb             \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.TVOS.dll                        \

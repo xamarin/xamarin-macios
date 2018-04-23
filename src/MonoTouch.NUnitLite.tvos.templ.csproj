@@ -38,10 +38,7 @@
     <Reference Include="Xamarin.TVOS" />
     <Reference Include="System" />
     <Reference Include="System.Xml" />
-    <ProjectReference Include="MonoTouch.Dialog-1.tvos.csproj">
-      <Project>{114214A5-A95C-456A-85BA-1B3F23B7AA0C}</Project>
-      <Name>MonoTouch.Dialog-1</Name>
-    </ProjectReference>
+    <Reference Include="MonoTouch.Dialog-1" />
   </ItemGroup>
   <ItemGroup>
     <!--%FILES%-->

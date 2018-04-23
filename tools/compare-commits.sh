@@ -148,6 +148,7 @@ rm -Rf "$OUTPUT_DIR"
 echo "${BLUE}Preparing temporary output directory...${CLEAR}"
 mkdir -p "$OUTPUT_DIR/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono"
 mkdir -p "$OUTPUT_DIR/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/mono"
+mkdir -p "$OUTPUT_DIR/project-files"
 
 ln -s git "$OUTPUT_DIR/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current"
 ln -s git "$OUTPUT_DIR/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current"
@@ -174,7 +175,7 @@ git checkout --quiet --force --detach "$BASE_HASH"
 touch "$OUTPUT_DIR/stamp"
 
 echo "${BLUE}Building src/...${CLEAR}"
-make -C "$ROOT_DIR/src" BUILD_DIR=../tools/comparison/build "IOS_DESTDIR=$OUTPUT_DIR/_ios-build" "MAC_DESTDIR=$OUTPUT_DIR/_mac-build" -j8
+make -C "$ROOT_DIR/src" BUILD_DIR=../tools/comparison/build PROJECT_DIR="$OUTPUT_DIR/project-files" "IOS_DESTDIR=$OUTPUT_DIR/_ios-build" "MAC_DESTDIR=$OUTPUT_DIR/_mac-build" -j8
 
 #
 # API diff
@@ -208,7 +209,7 @@ git diff --no-index build build-new > "$OUTPUT_DIR/generator-diff/generator.diff
 MODIFIED_FILES=$(find \
 	"$ROOT_DIR/_ios-build" \
 	"$ROOT_DIR/_mac-build" \
-	"$ROOT_DIR/src/build" \
+	"$ROOT_DIR/src" \
 	"$ROOT_DIR/tools/apidiff" \
 	-newer "$OUTPUT_DIR/stamp")
 
