@@ -383,6 +383,8 @@ class BindingTouch {
 					baselibdll = Path.Combine (GetSDKRoot (), "lib", "reference", "full", "Xamarin.Mac.dll");
 				else if (target_framework == TargetFramework.Xamarin_Mac_4_5_System)
 					baselibdll = Path.Combine (GetSDKRoot (), "lib", "reference", "full", "Xamarin.Mac.dll");
+				else
+					throw new NotImplementedException ();
 			}
 			if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
 				skipSystemDrawing = true;
@@ -393,6 +395,8 @@ class BindingTouch {
 			} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_System) {
 				skipSystemDrawing = false;
 				AddAnyMissingSystemReferences ("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5", references);
+			} else {
+				throw new NotImplementedException ();
 			}
 
 			break;
