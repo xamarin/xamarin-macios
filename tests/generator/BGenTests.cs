@@ -20,6 +20,7 @@ namespace GeneratorTests
 		[TestCase (Profile.macOSClassic)]
 		[TestCase (Profile.macOSFull)]
 		[TestCase (Profile.macOSMobile)]
+		[TestCase (Profile.macOSSystem)]
 		public void BMac_Smoke (Profile profile)
 		{
 			BuildFile (profile, "bmac_smoke.cs");
@@ -29,6 +30,7 @@ namespace GeneratorTests
 		[TestCase (Profile.macOSClassic)]
 		[TestCase (Profile.macOSFull)]
 		[TestCase (Profile.macOSMobile)]
+		[TestCase (Profile.macOSSystem)]
 		public void BMac_With_Hyphen_In_Name (Profile profile)
 		{
 			BuildFile (profile, "bmac-with-hyphen-in-name.cs");
@@ -38,6 +40,7 @@ namespace GeneratorTests
 		[TestCase (Profile.macOSClassic)]
 		[TestCase (Profile.macOSFull)]
 		[TestCase (Profile.macOSMobile)]
+		[TestCase (Profile.macOSSystem)]
 		public void PropertyRedefinitionMac (Profile profile)
 		{
 			BuildFile (profile, "property-redefination-mac.cs");
@@ -47,6 +50,7 @@ namespace GeneratorTests
 		[TestCase (Profile.macOSClassic)]
 		[TestCase (Profile.macOSFull)]
 		[TestCase (Profile.macOSMobile)]
+		[TestCase (Profile.macOSSystem)]
 		public void NSApplicationPublicEnsureMethods (Profile profile)
 		{
 			BuildFile (profile, "NSApplicationPublicEnsureMethods.cs");
@@ -56,6 +60,7 @@ namespace GeneratorTests
 		[TestCase (Profile.macOSClassic)]
 		[TestCase (Profile.macOSFull)]
 		[TestCase (Profile.macOSMobile)]
+		[TestCase (Profile.macOSSystem)]
 		public void ProtocolDuplicateAbstract (Profile profile)
 		{
 			BuildFile (profile, "protocol-duplicate-abstract.cs");
@@ -159,6 +164,7 @@ namespace GeneratorTests
 		[TestCase (Profile.macOSClassic)]
 		[TestCase (Profile.macOSFull)]
 		[TestCase (Profile.macOSMobile)]
+		[TestCase (Profile.macOSSystem)]
 		public void Bug31788 (Profile profile)
 		{
 			var bgen = new BGenTool ();
