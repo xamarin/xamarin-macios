@@ -214,6 +214,23 @@ namespace Bindings.Test {
 		void OutNSErrorOnStack (NSObject i1, NSObject i2, NSObject i3, long i4, int i5, out NSError error);
 	}
 
+	[Protocol]
+	interface ProtocolAssignerProtocol
+	{
+	}
+
+	interface IProtocolAssignerProtocol { }
+
+	[BaseType (typeof (NSObject))]
+	interface ProtocolAssigner
+	{
+		[Export ("setProtocol")]
+		void SetProtocol ();
+
+		[Export ("completedSetProtocol:")]
+		void CompletedSetProtocol (IProtocolAssignerProtocol value);
+	}
+
 	[BaseType (typeof (NSObject))]
 	interface ObjCExceptionTest {
 		[Export ("throwObjCException")]
