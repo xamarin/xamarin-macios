@@ -14,7 +14,7 @@ APIDIFF_DIR=.
 
 MONO_API_HTML_DIR = $(MONO_PATH)/mcs/tools/mono-api-html
 MONO_API_INFO_DIR = $(MONO_PATH)/mcs/tools/corcompare
-MONO_API_INFO = $(MONO_API_INFO_DIR)/bin/Debug/mono-api-info.exe
+MONO_API_INFO = $(MONO_PATH)/mcs/class/lib/net_4_x-darwin/mono-api-info.exe
 MONO_API_HTML = $(TOP)/external/macios-binaries/mono-api-html.exe
 
 # I18N are excluded - but otherwise if should be like ../../builds/Makefile + what XI adds
