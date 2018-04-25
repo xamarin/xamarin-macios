@@ -1,122 +1,308 @@
 ﻿using System;
 using System.IO;
-using System.Threading.Tasks;
+using System.IO.Compression;
 
 using Compression;
-using Foundation;
-
 using NUnit.Framework;
+
+using DeflateStream = Compression.DeflateStream;
 
 namespace MonoTouchFixtures.Compression {
 
 	[TestFixture]
-	[Preserve (AllMembers = true)]
-	public class CompressionStreamTest {
-
-#if MONOMAC
-		string lzeCompressedFilePath = Path.Combine (NSBundle.MainBundle.BundlePath, "Contents/Resources/compressed_lze");
-		string lzeUncompressedFilePath = Path.Combine (NSBundle.MainBundle.BundlePath, "Contents/Resources/uncompressed.txt");
-#else
-		string lzeCompressedFilePath = Path.Combine (NSBundle.MainBundle.BundlePath, "compressed_lze");
-		string lzeUncompressedFilePath = Path.Combine (NSBundle.MainBundle.BundlePath, "uncompressed.txt");
-#endif
-
-		string firstTempPath;
-		string secondTempPath;
-
-		[SetUp]
-		public void SetUp ()
+	public class DeflateStreamTest
+	{
+		private static void CopyStream (Stream src, Stream dest)
 		{
-			firstTempPath = Path.GetTempFileName ();
-			secondTempPath = Path.GetTempFileName ();
+			byte[] array = new byte[1024];
+			int bytes_read;
+			bytes_read = src.Read (array, 0, 1024);
+			while (bytes_read != 0) {
+				dest.Write (array, 0, bytes_read);
+				bytes_read = src.Read (array, 0, 1024);
+			}
 		}
 
-		[TearDown]
-		public void TearDown ()
+		private static bool compare_buffers (byte[] first, byte[] second, int length)
 		{
-			if (File.Exists (firstTempPath))
-				File.Delete (firstTempPath);
-			if (File.Exists (secondTempPath))
-				File.Delete (secondTempPath);
+			if (first.Length < length || second.Length < length) {
+				return false;
+			}
+			for (int i = 0; i < length; i++) {
+				if (first[i] != second[i]) {
+					return false;
+				}
+			}
+			return true;
 		}
 
 		[Test]
-		public void TestConstructorNullValues ()
+		[ExpectedException (typeof (ArgumentNullException))]
+		public void Constructor_Null ()
 		{
-			using (var inputStream = File.OpenRead (lzeCompressedFilePath)) {
-				Assert.Throws<ArgumentNullException> (() => new CompressionStream (null, inputStream, StreamOperation.Decode, CompressionAlgorithm.LZ4), "Null input stream");
-				Assert.Throws<ArgumentNullException> (() => new CompressionStream (inputStream, null, StreamOperation.Decode, CompressionAlgorithm.LZ4), "Null ouput stream");
-			}
-		}
-		
-		[Test]
-		public void TestConstructorWrongBufferSizes ()
-		{
-			using (var inputStream = File.OpenRead (lzeCompressedFilePath))
-			using (var outputStream = File.Create (firstTempPath)) {
-				Assert.Throws<ArgumentException> (() => new CompressionStream (inputStream, outputStream, StreamOperation.Decode, CompressionAlgorithm.Lzfse, 0, 512), "0 input size");
-				Assert.Throws<ArgumentException> (() => new CompressionStream (inputStream, outputStream, StreamOperation.Decode, CompressionAlgorithm.Lzfse, -12, 512), "negative input size");
-				Assert.Throws<ArgumentException> (() => new CompressionStream (inputStream, outputStream, StreamOperation.Decode, CompressionAlgorithm.Lzfse, 512, 0), "0 output size");
-				Assert.Throws<ArgumentException> (() => new CompressionStream (inputStream, outputStream, StreamOperation.Decode, CompressionAlgorithm.Lzfse, 512, -20), "negative output size");
-			}
+			DeflateStream ds = new DeflateStream (null, CompressionMode.Compress);
 		}
 
 		[Test]
-		public void TestProcessWrongFormat ()
+		[ExpectedException (typeof (ArgumentException))]
+		public void Constructor_InvalidCompressionMode ()
 		{
-			using (var inputStream = File.OpenRead (lzeCompressedFilePath))
-			using (var outputStream = File.Create (firstTempPath))
-			using (var stream = new CompressionStream (inputStream, outputStream, StreamOperation.Decode, CompressionAlgorithm.LZ4)) {
-				// it is async, we expect it to be aggregated
-				Assert.Throws<AggregateException> (() => stream.Process ());
+			DeflateStream ds = new DeflateStream (new MemoryStream (), (CompressionMode)Int32.MinValue);
+		}
+
+		[Test]
+		public void CheckCompressDecompress ()
+		{
+			byte [] data = new byte[100000];
+			for (int i = 0; i < 100000; i++) {
+				data[i] = (byte) i;
+			}
+			MemoryStream dataStream = new MemoryStream (data);
+			MemoryStream backing = new MemoryStream ();
+			DeflateStream compressing = new DeflateStream (backing, CompressionMode.Compress, true);
+			CopyStream (dataStream, compressing);
+			dataStream.Close();
+			compressing.Close();
+			backing.Seek (0, SeekOrigin.Begin);
+			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress);
+			MemoryStream output = new MemoryStream ();
+			CopyStream (decompressing, output);
+			Assert.IsTrue (compare_buffers (data, output.GetBuffer(), (int) output.Length));
+			decompressing.Close();
+			output.Close();
+		}
+
+		[Test]
+		public void CheckDecompress ()
+		{
+			MemoryStream backing = new MemoryStream (compressed_data);
+			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress);
+			StreamReader reader = new StreamReader (decompressing);
+			Assert.AreEqual ("Hello", reader.ReadLine ());
+			decompressing.Close();
+		}
+
+		[Test]
+		[ExpectedException (typeof (ArgumentNullException))]
+		public void CheckNullRead ()
+		{
+			MemoryStream backing = new MemoryStream (compressed_data);
+			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress);
+			decompressing.Read (null, 0, 20);
+		}
+
+		[Test]
+		[ExpectedException (typeof (InvalidOperationException))]
+		public void CheckCompressingRead ()
+		{
+			byte [] dummy = new byte[20];
+			MemoryStream backing = new MemoryStream ();
+			DeflateStream compressing = new DeflateStream (backing, CompressionMode.Compress);
+			compressing.Read (dummy, 0, 20);
+		}
+
+		[Test]
+		[ExpectedException (typeof (ArgumentException))]
+		public void CheckRangeRead ()
+		{
+			byte [] dummy = new byte[20];
+			MemoryStream backing = new MemoryStream (compressed_data);
+			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress);
+			decompressing.Read (dummy, 10, 20);
+		}
+
+		[Test]
+		[ExpectedException (typeof (ObjectDisposedException))]
+		public void CheckClosedRead ()
+		{
+			byte [] dummy = new byte[20];
+			MemoryStream backing = new MemoryStream (compressed_data);
+			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress);
+			decompressing.Close ();
+			decompressing.Read (dummy, 0, 20);
+		}
+
+		[Test]
+		[ExpectedException (typeof (ObjectDisposedException))]
+		public void CheckClosedFlush ()
+		{
+			MemoryStream backing = new MemoryStream ();
+			DeflateStream compressing = new DeflateStream (backing, CompressionMode.Compress);
+			compressing.Close ();
+			compressing.Flush ();
+		}
+
+		[Test]
+		[ExpectedException (typeof (NotSupportedException))]
+		public void CheckSeek ()
+		{
+			MemoryStream backing = new MemoryStream (compressed_data);
+			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress);
+			decompressing.Seek (20, SeekOrigin.Current);
+		}
+
+		[Test]
+		[ExpectedException (typeof (NotSupportedException))]
+		public void CheckSetLength ()
+		{
+			MemoryStream backing = new MemoryStream (compressed_data);
+			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress);
+			decompressing.SetLength (20);
+		}
+
+		[Test]
+		public void CheckGetCanSeekProp ()
+		{
+			MemoryStream backing = new MemoryStream (compressed_data);
+			DeflateStream decompress = new DeflateStream (backing, CompressionMode.Decompress);
+			Assert.IsFalse (decompress.CanSeek, "#A1");
+			Assert.IsTrue (backing.CanSeek, "#A2");
+			decompress.Dispose ();
+			Assert.IsFalse (decompress.CanSeek, "#A3");
+			Assert.IsFalse (backing.CanSeek, "#A4");
+
+			backing = new MemoryStream ();
+			DeflateStream compress = new DeflateStream (backing, CompressionMode.Compress);
+			Assert.IsFalse (compress.CanSeek, "#B1");
+			Assert.IsTrue (backing.CanSeek, "#B2");
+			compress.Dispose ();
+			Assert.IsFalse (decompress.CanSeek, "#B3");
+			Assert.IsFalse (backing.CanSeek, "#B4");
+		}
+
+		[Test]
+		public void CheckGetCanReadProp ()
+		{
+			MemoryStream backing = new MemoryStream (compressed_data);
+			DeflateStream decompress = new DeflateStream (backing, CompressionMode.Decompress);
+			Assert.IsTrue (decompress.CanRead, "#A1");
+			Assert.IsTrue (backing.CanRead, "#A2");
+			decompress.Dispose ();
+			Assert.IsFalse (decompress.CanRead, "#A3");
+			Assert.IsFalse (backing.CanRead, "#A4");
+
+			backing = new MemoryStream ();
+			DeflateStream compress = new DeflateStream (backing, CompressionMode.Compress);
+			Assert.IsFalse (compress.CanRead, "#B1");
+			Assert.IsTrue (backing.CanRead, "#B2");
+			compress.Dispose ();
+			Assert.IsFalse (decompress.CanRead, "#B3");
+			Assert.IsFalse (backing.CanRead, "#B4");
+		}
+
+		[Test]
+		public void CheckGetCanWriteProp ()
+		{
+			MemoryStream backing = new MemoryStream ();
+			DeflateStream decompress = new DeflateStream (backing, CompressionMode.Decompress);
+			Assert.IsFalse (decompress.CanWrite, "#A1");
+			Assert.IsTrue (backing.CanWrite, "#A2");
+			decompress.Dispose ();
+			Assert.IsFalse (decompress.CanWrite, "#A3");
+			Assert.IsFalse (backing.CanWrite, "#A4");
+
+			backing = new MemoryStream ();
+			DeflateStream compress = new DeflateStream (backing, CompressionMode.Compress);
+			Assert.IsTrue (compress.CanWrite, "#B1");
+			Assert.IsTrue (backing.CanWrite, "#B2");
+			compress.Dispose ();
+			Assert.IsFalse (decompress.CanWrite, "#B3");
+			Assert.IsFalse (backing.CanWrite, "#B4");
+		}
+
+		[Test]
+		[ExpectedException (typeof (NotSupportedException))]
+		public void CheckSetLengthProp ()
+		{
+			MemoryStream backing = new MemoryStream (compressed_data);
+			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress);
+			decompressing.SetLength (20);
+		}
+
+		[Test]
+		[ExpectedException (typeof (NotSupportedException))]
+		public void CheckGetLengthProp ()
+		{
+			MemoryStream backing = new MemoryStream (compressed_data);
+			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress);
+			long length = decompressing.Length;
+		}
+
+		[Test]
+		[ExpectedException (typeof (NotSupportedException))]
+		public void CheckGetPositionProp ()
+		{
+			MemoryStream backing = new MemoryStream (compressed_data);
+			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress);
+			long position = decompressing.Position;
+		}
+
+		[Test]
+		public void DisposeTest ()
+		{
+			MemoryStream backing = new MemoryStream (compressed_data);
+			DeflateStream decompress = new DeflateStream (backing, CompressionMode.Decompress);
+			decompress.Dispose ();
+			decompress.Dispose ();
+		}
+
+		static byte [] compressed_data = { 0xf3, 0x48, 0xcd, 0xc9, 0xc9,
+			0xe7, 0x02, 0x00 };
+
+
+		[Test]
+		public void JunkAtTheEnd ()
+		{
+			// Write a deflated stream, then some additional data...
+			using (MemoryStream ms = new MemoryStream())
+			{
+				// The compressed stream
+				using (DeflateStream stream = new DeflateStream(ms, CompressionMode.Compress, true))
+				{
+					stream.WriteByte(1);
+					stream.Flush();
+				}
+				// Junk
+				ms.WriteByte(2);
+
+				ms.Position = 0;
+				// Reading: this should not hang
+				using (DeflateStream stream = new DeflateStream(ms, CompressionMode.Decompress))
+				{
+					byte[] buffer  = new byte[512];
+					int len = stream.Read(buffer, 0, buffer.Length);
+					Console.WriteLine(len == 1);
+				}
 			}
 		}
 		
-		
-		[TestCase (512, 1024)]
-		[TestCase (256, 512)]
-		[TestCase (1024, 512)]
-		[TestCase (512, 256)]
-		public void TestDecodeRealFile (int inBufferSize, int outBufferSize)
+		class Bug19313Stream : MemoryStream
 		{
-
-			using (var inputStream = File.OpenRead (lzeCompressedFilePath))
-			using (var outputStream = File.Create (firstTempPath))
-			using (var stream = new CompressionStream (inputStream, outputStream, StreamOperation.Decode, CompressionAlgorithm.Lzfse, inBufferSize, outBufferSize)) {
-				stream.Process ();
+			public Bug19313Stream (byte [] buffer)
+				: base (buffer)
+			{
 			}
-			// ensure that the data is the expected one
-			string [] result = File.ReadAllLines (firstTempPath);
-			string [] expected = File.ReadAllLines (lzeUncompressedFilePath);
 
-			Assert.AreEqual (expected, result);
+			public override int Read (byte [] buffer, int offset, int count)
+			{
+				// Thread was blocking when DeflateStream uses a NetworkStream.
+				// Because the NetworkStream.Read calls Socket.Receive that
+				// blocks the thread waiting for at least a byte to return.
+				// This assert guarantees that Read is called only when there 
+				// is something to be read.
+				Assert.IsTrue (Position < Length, "Trying to read empty stream.");
+
+				return base.Read (buffer, offset, count);
+			}
 		}
 
-#if MONOMAC
-		[TestCase (CompressionAlgorithm.LZ4Raw)]
-#endif
-		[TestCase (CompressionAlgorithm.LZ4)]
-		[TestCase (CompressionAlgorithm.Lzfse)]
-		[TestCase (CompressionAlgorithm.Lzma)]
-		[TestCase (CompressionAlgorithm.ZLib)]
-		public void TestEncodeDecodeRoundTrip (CompressionAlgorithm algorithm)
+		[Test]
+		public void Bug19313 ()
 		{
-			using (var inputStream = File.OpenRead (lzeUncompressedFilePath))
-			using (var outputStream = File.Create (firstTempPath))
-			using (var stream = new CompressionStream (inputStream, outputStream, StreamOperation.Encode, algorithm)) {
-				stream.Process ();
-			}
-
-			// we have the data in the tempPath, lets deflate and compare with the expected data
-			using (var inputStream = File.OpenRead (firstTempPath))
-			using (var outputStream = File.Create (secondTempPath))
-			using (var stream = new CompressionStream (inputStream, outputStream, StreamOperation.Decode, algorithm)) {
-				stream.Process ();
-			}
-			
-			string [] result = File.ReadAllLines (secondTempPath);
-			string [] expected = File.ReadAllLines (lzeUncompressedFilePath);
-			Assert.AreEqual (expected, result);
+			byte [] buffer  = new byte [512];
+			using (var backing = new Bug19313Stream (compressed_data))
+			using (var decompressing = new DeflateStream (backing, CompressionMode.Decompress))
+				decompressing.Read (buffer, 0, buffer.Length);
 		}
 	}
 }

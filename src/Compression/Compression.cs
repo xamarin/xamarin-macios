@@ -1,6 +1,9 @@
 using System;
 using System.IO;
+using System.IO.Compression;
 using System.Runtime.InteropServices;
+using System.Runtime.Remoting.Messaging;
+using System.Threading;
 using System.Threading.Tasks;
 
 using ObjCRuntime;
@@ -8,7 +11,264 @@ using ObjCRuntime;
 namespace Compression {
 
 	[iOS (9,0), TV (9,0), Mac (10,11)]
-	public partial class CompressionStream : /* Stream */ IDisposable {
+	public class DeflateStream : Stream
+	{
+		delegate int ReadMethod (byte[] array, int offset, int count);
+		delegate void WriteMethod (byte[] array, int offset, int count);
+
+		Stream base_stream;
+		CompressionMode mode;
+		CompressionAlgorithm algorithm;
+		bool leaveOpen;
+		bool disposed;
+		DeflateStreamNative native;
+
+		public DeflateStream (Stream stream, CompressionMode mode) :
+			this (stream, mode, false)
+		{
+		}
+
+		public DeflateStream (Stream stream, CompressionMode mode, bool leaveOpen) :
+			this (stream, mode, CompressionAlgorithm.ZLib, leaveOpen)
+		{
+		}
+
+		public DeflateStream (Stream compressedStream, CompressionMode mode, CompressionAlgorithm algorithm, bool leaveOpen)
+		{
+			if (compressedStream == null)
+				throw new ArgumentNullException ("compressedStream");
+
+			if (mode != CompressionMode.Compress && mode != CompressionMode.Decompress)
+				throw new ArgumentException ("mode");
+
+			this.base_stream = compressedStream;
+
+			this.native = DeflateStreamNative.Create (compressedStream, mode, algorithm);
+			if (this.native == null) {
+				throw new NotImplementedException ("Failed to initialize zlib. You probably have an old zlib installed. Version 1.2.0.4 or later is required.");
+			}
+			this.mode = mode;
+			this.algorithm = algorithm;
+			this.leaveOpen = leaveOpen;
+		}
+		
+		protected override void Dispose (bool disposing)
+		{
+			native.Dispose (disposing);
+
+			if (disposing && !disposed) {
+				disposed = true;
+
+				if (!leaveOpen) {
+					Stream st = base_stream;
+					if (st != null)
+						st.Close ();
+					base_stream = null;
+				}
+			}
+
+			base.Dispose (disposing);
+		}
+
+		unsafe int ReadInternal (byte[] array, int offset, int count)
+		{
+			if (count == 0)
+				return 0;
+
+			return native.ReadStream (array, offset, count);
+		}
+
+		internal ValueTask<int> ReadAsyncMemory (Memory<byte> destination, CancellationToken cancellationToken)
+		{
+			throw new NotImplementedException ();
+		}
+
+		internal int ReadCore (Span<byte> destination)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public override int Read (byte[] array, int offset, int count)
+		{
+			if (disposed)
+				throw new ObjectDisposedException (GetType ().FullName);
+			if (array == null)
+				throw new ArgumentNullException ("Destination array is null.");
+			if (!CanRead)
+				throw new InvalidOperationException ("Stream does not support reading.");
+			int len = array.Length;
+			if (offset < 0 || count < 0)
+				throw new ArgumentException ("Dest or count is negative.");
+			if (offset > len)
+				throw new ArgumentException ("destination offset is beyond array size");
+			if ((offset + count) > len)
+				throw new ArgumentException ("Reading would overrun buffer");
+
+			return ReadInternal (array, offset, count);
+		}
+
+		unsafe void WriteInternal (byte[] array, int offset, int count)
+		{
+			if (count == 0)
+				return;
+
+			native.WriteStream (array, offset, count);
+		}
+
+		public override void Write (byte[] array, int offset, int count)
+		{
+			if (disposed)
+				throw new ObjectDisposedException (GetType ().FullName);
+
+			if (array == null)
+				throw new ArgumentNullException ("array");
+
+			if (offset < 0)
+				throw new ArgumentOutOfRangeException ("offset");
+
+			if (count < 0)
+				throw new ArgumentOutOfRangeException ("count");
+
+			if (!CanWrite)
+				throw new NotSupportedException ("Stream does not support writing");
+
+			if (offset > array.Length - count)
+				throw new ArgumentException ("Buffer too small. count/offset wrong.");
+
+			WriteInternal (array, offset, count);
+		}
+
+		public override void Flush ()
+		{
+			if (disposed)
+				throw new ObjectDisposedException (GetType ().FullName);
+
+			if (CanWrite) {
+				native.Flush ();
+			}
+		}
+
+		public override IAsyncResult BeginRead (byte [] array, int offset, int count,
+							AsyncCallback asyncCallback, object asyncState)
+		{
+			if (disposed)
+				throw new ObjectDisposedException (GetType ().FullName);
+
+			if (!CanRead)
+				throw new NotSupportedException ("This stream does not support reading");
+
+			if (array == null)
+				throw new ArgumentNullException ("array");
+
+			if (count < 0)
+				throw new ArgumentOutOfRangeException ("count", "Must be >= 0");
+
+			if (offset < 0)
+				throw new ArgumentOutOfRangeException ("offset", "Must be >= 0");
+
+			if (count + offset > array.Length)
+				throw new ArgumentException ("Buffer too small. count/offset wrong.");
+
+			ReadMethod r = new ReadMethod (ReadInternal);
+			return r.BeginInvoke (array, offset, count, asyncCallback, asyncState);
+		}
+
+		public override IAsyncResult BeginWrite (byte [] array, int offset, int count,
+							AsyncCallback asyncCallback, object asyncState)
+		{
+			if (disposed)
+				throw new ObjectDisposedException (GetType ().FullName);
+
+			if (!CanWrite)
+				throw new InvalidOperationException ("This stream does not support writing");
+
+			if (array == null)
+				throw new ArgumentNullException ("array");
+
+			if (count < 0)
+				throw new ArgumentOutOfRangeException ("count", "Must be >= 0");
+
+			if (offset < 0)
+				throw new ArgumentOutOfRangeException ("offset", "Must be >= 0");
+
+			if (count + offset > array.Length)
+				throw new ArgumentException ("Buffer too small. count/offset wrong.");
+
+			WriteMethod w = new WriteMethod (WriteInternal);
+			return w.BeginInvoke (array, offset, count, asyncCallback, asyncState);			
+		}
+
+		public override int EndRead(IAsyncResult asyncResult)
+		{
+			if (asyncResult == null)
+				throw new ArgumentNullException ("asyncResult");
+
+			AsyncResult ares = asyncResult as AsyncResult;
+			if (ares == null)
+				throw new ArgumentException ("Invalid IAsyncResult", "asyncResult");
+
+			ReadMethod r = ares.AsyncDelegate as ReadMethod;
+			if (r == null)
+				throw new ArgumentException ("Invalid IAsyncResult", "asyncResult");
+
+			return r.EndInvoke (asyncResult);
+		}
+
+		public override void EndWrite (IAsyncResult asyncResult)
+		{
+			if (asyncResult == null)
+				throw new ArgumentNullException ("asyncResult");
+
+			AsyncResult ares = asyncResult as AsyncResult;
+			if (ares == null)
+				throw new ArgumentException ("Invalid IAsyncResult", "asyncResult");
+
+			WriteMethod w = ares.AsyncDelegate as WriteMethod;
+			if (w == null)
+				throw new ArgumentException ("Invalid IAsyncResult", "asyncResult");
+
+			w.EndInvoke (asyncResult);
+			return;
+		}
+
+		public override long Seek (long offset, SeekOrigin origin)
+		{
+			throw new NotSupportedException();
+		}
+
+		public override void SetLength (long value)
+		{
+			throw new NotSupportedException();
+		}
+
+		public Stream BaseStream {
+			get { return base_stream; }
+		}
+
+		public override bool CanRead {
+			get { return !disposed && mode == CompressionMode.Decompress && base_stream.CanRead; }
+		}
+
+		public override bool CanSeek {
+			get { return false; }
+		}
+
+		public override bool CanWrite {
+			get { return !disposed && mode == CompressionMode.Compress && base_stream.CanWrite; }
+		}
+
+		public override long Length {
+			get { throw new NotSupportedException(); }
+		}
+
+		public override long Position {
+			get { throw new NotSupportedException(); }
+			set { throw new NotSupportedException(); }
+		}
+	}
+
+	class DeflateStreamNative
+	{
 
 		[StructLayout(LayoutKind.Sequential)]
 		struct CompressionStreamStruct {
@@ -28,154 +288,121 @@ namespace Compression {
 		[DllImport (Constants.libcompression)]
 		static extern CompressionStatus compression_stream_destroy (ref CompressionStreamStruct stream);
 
-		const int defaultInBufSize = 1024;
-		const int defaultOutBufSize = 1024;
-
-		int inSize;
-		int outSize;
-		bool disposedValue = false;
-		bool finalizeStream = false;
-		CompressionStatus status;
+		Stream base_stream;
+		CompressionStreamStruct compression_struct;
 		StreamOperation operation;
-		CompressionStreamStruct internalStream;
-		Stream sourceStream;
-		Stream destinationStream;
-		int totalInputSize = 0;
-		int totalOutputSize = 0;
-		IntPtr dstBuf = IntPtr.Zero;
-		IntPtr srcBuf = IntPtr.Zero;
-		byte [] srcManagedBuffer;
-		byte [] dstManagedBuffer;
-		GCHandle srcHandle;
-		GCHandle dstHandle;
+		CompressionAlgorithm algorithm;
+		bool disposed;
 
-		public CompressionStream (Stream inSourceStream, Stream inDestinationStream, StreamOperation inOperation, CompressionAlgorithm algorithm)
-			: this (inSourceStream, inDestinationStream, inOperation, algorithm, defaultInBufSize, defaultOutBufSize) { }
-
-		public CompressionStream (Stream inSourceStream, Stream inDestinationStream, StreamOperation inOperation, CompressionAlgorithm algorithm, int inBufferSize, int outBufferSize)
+		private DeflateStreamNative ()
 		{
-			if (inSourceStream == null)
-				throw new ArgumentNullException (nameof (inSourceStream));
-			if (inDestinationStream == null)
-				throw new ArgumentNullException (nameof (inDestinationStream));
-			if (inBufferSize <= 0)
-				throw new ArgumentException ("In buffer size cannot be 0 or smaller than 0");
-			if (outBufferSize <= 0)
-				throw new ArgumentException ("Out buffer size cannot be 0 or smaller than 0");
+		}
 
-			operation = inOperation;
-			sourceStream = inSourceStream;
-			destinationStream = inDestinationStream;
-			status = compression_stream_init (ref internalStream, operation, algorithm);
+		public static DeflateStreamNative Create (Stream compressedStream, CompressionMode mode, CompressionAlgorithm algorithm)
+		{
+			var dsn = new DeflateStreamNative ();
+			dsn.operation = (mode == CompressionMode.Compress) ? StreamOperation.Encode : StreamOperation.Decode;
+			dsn.algorithm = algorithm;
+			dsn.base_stream = compressedStream;
+			dsn.compression_struct = new CompressionStreamStruct ();
+			
+			var status = compression_stream_init (ref dsn.compression_struct, dsn.operation, dsn.algorithm);
 			if (status != CompressionStatus.Ok)
-				throw new InvalidOperationException ("Internal stream could not be created.");
-
-			// set the different required values
-			inSize = inBufferSize;
-			srcManagedBuffer = new byte [inSize];
-			outSize = outBufferSize;
-			dstManagedBuffer = new byte [outSize];
-
-			// pin the objects and pass them to the struct
-			srcHandle = GCHandle.Alloc (srcManagedBuffer, GCHandleType.Pinned);
-			dstHandle = GCHandle.Alloc (dstManagedBuffer, GCHandleType.Pinned);
-			srcBuf = srcHandle.AddrOfPinnedObject ();
-			dstBuf = dstHandle.AddrOfPinnedObject ();
-
-			internalStream.Destination = dstBuf;
-			internalStream.DestinationSize = outSize;
-			internalStream.Source = srcBuf;
-			internalStream.SourceSize = 0;
+				return null;
+			return dsn;
 		}
 
-		public float Process ()
-		{
-			return ProcessAsync ().Result;
-		}
-
-		public async Task<float> ProcessAsync ()
-		{
-			do {
-				if (internalStream.SourceSize == 0) {
-					if (!finalizeStream || operation == StreamOperation.Encode) {
-						// Refill source buffer
-						var read = await sourceStream.ReadAsync (srcManagedBuffer, 0, inSize).ConfigureAwait (false);
-						var dataRead = (read == 0)? srcManagedBuffer.Length : read;
-						totalInputSize += dataRead;
-						internalStream.Source = srcBuf;
-						internalStream.SourceSize = dataRead;
-
-						if (dataRead < inSize) {
-							// Reached end of data.
-							finalizeStream = true;
-						}
-					}
-				}
-				if (internalStream.DestinationSize == 0) {
-					// output buffer is full, copy from managed to unmanaged and write
-					await destinationStream.WriteAsync (dstManagedBuffer, 0, outSize).ConfigureAwait (false); // we should be appending
-					totalOutputSize += outSize;
-
-					internalStream.Destination = dstBuf;
-					internalStream.DestinationSize = outSize;
-				}
-
-				// stream should be set up, perform the action
-				status = compression_stream_process (ref internalStream, finalizeStream? StreamFlag.Finalize:StreamFlag.Continue); // TODO, use flags instead!
-				switch (status) {
-				case CompressionStatus.Ok:
-					// we will do the loop at least once more, lets be ready
-					if (internalStream.DestinationSize == 0) {
-						await destinationStream.WriteAsync (dstManagedBuffer, 0, outSize).ConfigureAwait (false); // we should be appending
-						totalOutputSize += outSize;
-
-						internalStream.Destination = dstBuf;
-						internalStream.DestinationSize = outSize;
-					}
-					break;
-				case CompressionStatus.End:
-					// we are done, write whatever we have in the buffer
-					if ((long)internalStream.Destination > (long)dstBuf) {
-						var size = (int)((long)internalStream.Destination - (long)dstBuf);
-						await destinationStream.WriteAsync (dstManagedBuffer, 0, size).ConfigureAwait (false); // we should be appending
-						totalOutputSize += size;
-					}
-					break;
-				default:
-					throw new InvalidOperationException ($"An error occurred when performing the operation: {status}");
-				}
-
-			} while (status == CompressionStatus.Ok);
-			return totalInputSize / totalOutputSize;
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (!disposedValue) {
-				if (disposing) {
-				}
-				compression_stream_destroy (ref internalStream);
-				if (dstBuf != IntPtr.Zero) {
-					dstBuf = IntPtr.Zero;
-					dstHandle.Free ();
-				}
-				if (srcBuf != IntPtr.Zero) {
-					srcBuf = IntPtr.Zero;
-					srcHandle.Free ();
-				}
-				disposedValue = true;
-			}
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-		}
-
-		~CompressionStream ()
+		~DeflateStreamNative ()
 		{
 			Dispose (false);
 		}
-	}
 
+		public void Dispose (bool disposing)
+		{
+			if (disposing && !disposed) {
+				disposed = true;
+				GC.SuppressFinalize (this);
+			
+				compression_stream_destroy (ref compression_struct);
+			}
+		}
+
+		public void Flush ()
+		{
+			if (compression_struct.SourceSize != 0) {
+				var closeStatus = compression_stream_process (ref compression_struct, StreamFlag.Finalize);
+				switch (closeStatus) {
+				case CompressionStatus.End:
+					break;
+				case CompressionStatus.Ok:
+					Console.WriteLine ($"Source size {compression_struct.SourceSize}");
+					Console.WriteLine ($"Destination size {compression_struct.DestinationSize}");
+					// as per the docs, we should never get here, lets throw an exception so that we know it happened.
+					throw new IOException ($"Unexpected CompressionStatus.Ok received.");
+				default:
+					throw new IOException ($"An error occurred when performing the operation: {closeStatus}");
+				}
+			}
+		}
+
+		unsafe public int ReadStream (byte[] array, int offset, int count)
+		{
+
+			var srcManagedBuffer = new byte [count - offset];
+			var dstManagedBuffer = new byte [count - offset];
+			fixed (byte *srcBuf = srcManagedBuffer)
+			fixed (byte *dstBuf = dstManagedBuffer) {
+				var read = base_stream.Read (srcManagedBuffer, offset, count); // we are taking care of the offset in this call
+
+				compression_struct.Destination = (IntPtr) dstBuf;
+				compression_struct.Source = (IntPtr) srcBuf;
+
+				// copy the data to the source buffer from the internal stream
+				compression_struct.DestinationSize = read;
+				compression_struct.SourceSize = read;
+				var readStatus = compression_stream_process (ref compression_struct, StreamFlag.Continue);
+				switch (readStatus) {
+				case CompressionStatus.Ok:
+				case CompressionStatus.End:
+						// copy the data to the passed array, no need to deal with the offset, read took care, count should be read
+						Array.Copy (dstManagedBuffer, 0, array, 0, read);
+						Console.WriteLine ($"Read {read}");
+					break;
+				default:
+					throw new IOException ($"An error occurred when performing the operation: {readStatus}");
+				}
+				return read;
+			}
+		}
+
+		unsafe public void WriteStream (byte[] buffer, int offset, int count)
+		{
+			var srcManagedBuffer = new byte [count - offset];
+			var dstManagedBuffer = new byte [count - offset];
+
+			fixed (byte *srcBuf = srcManagedBuffer)
+			fixed (byte *dstBuf = dstManagedBuffer) {
+				compression_struct.Destination = (IntPtr) dstBuf;
+				compression_struct.DestinationSize = count - offset;
+				compression_struct.Source = (IntPtr) srcBuf;
+				compression_struct.SourceSize = count - offset;
+				// we need to copy the data from the passed buffer to the source buffer
+				Array.Copy (buffer, offset, srcManagedBuffer, 0, count);
+				var writeStatus = compression_stream_process (ref compression_struct, StreamFlag.Continue);
+				switch (writeStatus) {
+				case CompressionStatus.Ok:
+				case CompressionStatus.End:
+					if (compression_struct.DestinationSize == 0) {
+						// we are happy, and we need to write to the stream all the data from the destination
+						// buffer
+						base_stream.Write (dstManagedBuffer, 0, count); // no need to deal with offset, the copy did it
+					}
+					break;
+				default:
+					throw new InvalidOperationException ($"An error occurred when performing the operation: {writeStatus}");
+				}
+			}
+		}
+
+	}
 }
