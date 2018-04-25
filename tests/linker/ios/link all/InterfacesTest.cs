@@ -64,6 +64,10 @@ namespace LinkAll.Interfaces {
 	[Preserve (AllMembers = true)]
 	public class InterfaceTest {
 
+		static Type type_a = typeof (A);
+		static Type type_b = typeof (B);
+		static Type type_i = typeof (I);
+
 		static void F (I i)
 		{
 			i.Bar ();
@@ -78,18 +82,18 @@ namespace LinkAll.Interfaces {
 			F (new A ());
 
 			// Foo and Bar methods are both used on A and must be present
-			Assert.NotNull (typeof(A).GetMethod ("Foo", BindingFlags.Instance | BindingFlags.Public), "A::Foo");
-			Assert.NotNull (typeof(A).GetMethod ("Bar", BindingFlags.Instance | BindingFlags.Public), "A::Bar");
+			Assert.NotNull (type_a.GetMethod ("Foo", BindingFlags.Instance | BindingFlags.Public), "A::Foo");
+			Assert.NotNull (type_a.GetMethod ("Bar", BindingFlags.Instance | BindingFlags.Public), "A::Bar");
 
 			// I::Foo is never used and can be removed
-			Assert.Null (typeof(I).GetMethod ("Foo", BindingFlags.Instance | BindingFlags.Public), "I::Foo");
+			Assert.Null (type_i.GetMethod ("Foo", BindingFlags.Instance | BindingFlags.Public), "I::Foo");
 			// I::Bar is used in F so everyone implementing I needs Bar 
-			Assert.NotNull (typeof(I).GetMethod ("Bar", BindingFlags.Instance | BindingFlags.Public), "I::Bar");
+			Assert.NotNull (type_i.GetMethod ("Bar", BindingFlags.Instance | BindingFlags.Public), "I::Bar");
 
 			// Foo and Bar are never used on B - so Foo can be removed
-			Assert.Null (typeof(B).GetMethod ("Foo", BindingFlags.Instance | BindingFlags.Public), "B::Foo");
+			Assert.Null (type_b.GetMethod ("Foo", BindingFlags.Instance | BindingFlags.Public), "B::Foo");
 			// but Bar cannot since B implements I
-			Assert.NotNull (typeof(B).GetMethod ("Bar", BindingFlags.Instance | BindingFlags.Public), "B::Bar");
+			Assert.NotNull (type_b.GetMethod ("Bar", BindingFlags.Instance | BindingFlags.Public), "B::Bar");
 		}
 
 		[DllImport ("/usr/lib/system/libsystem_dnssd.dylib")]
