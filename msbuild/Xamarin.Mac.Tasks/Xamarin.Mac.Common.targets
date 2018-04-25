@@ -479,6 +479,11 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		Inputs="$(TargetDir)$(TargetFileName)"
 		Outputs="$(_AppBundlePath)Contents\MacOS\$(_AppBundleName)">
 		<ItemGroup>
+			<!-- Skip the reference assemblies. 'mmp' will fail to AOT them if passed '--aot:all'. Similar to: https://github.com/xamarin/xamarin-macios/issues/3199 -->
+			<!-- Remove exact references, such as if a package had a framework reference to 'System' that we already have -->
+			<!-- This is exactly what "Microsoft.NuGet.Build.Tasks"'s 'ResolveNuGetPackageAssets' target is doing -->
+			<!-- Effectively 'ResolveNuGetPackageAssets' computes the NuGet packages using their json asset file, adds the full assemblies to 'ReferenceCopyLocalPaths' and outputs the resolved references via '_ReferencesFromNuGetPackages' -->
+			<ReferencePath Remove="@(_ReferencesFromNuGetPackages)" />
 			<ReferenceCopyLocalAssemblyPaths Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll'" />
 		</ItemGroup>
 		<Mmp
