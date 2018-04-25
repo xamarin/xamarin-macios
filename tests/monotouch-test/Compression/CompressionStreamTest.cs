@@ -5,7 +5,7 @@ using System.IO.Compression;
 using Compression;
 using NUnit.Framework;
 
-using DeflateStream = Compression.DeflateStream;
+using DeflateStream = Compression.CompressionStream; // done to not differ from the mono tests
 
 namespace MonoTouchFixtures.Compression {
 

@@ -11,7 +11,7 @@ using ObjCRuntime;
 namespace Compression {
 
 	[iOS (9,0), TV (9,0), Mac (10,11)]
-	public class DeflateStream : Stream
+	public class CompressionStream : Stream
 	{
 		delegate int ReadMethod (byte[] array, int offset, int count);
 		delegate void WriteMethod (byte[] array, int offset, int count);
@@ -23,22 +23,22 @@ namespace Compression {
 		bool disposed;
 		DeflateStreamNative native;
 
-		public DeflateStream (Stream stream, CompressionMode mode) :
+		public CompressionStream (Stream stream, CompressionMode mode) :
 			this (stream, mode, false)
 		{
 		}
 
-		public DeflateStream (Stream stream, CompressionMode mode, bool leaveOpen) :
+		public CompressionStream (Stream stream, CompressionMode mode, bool leaveOpen) :
 			this (stream, mode, CompressionAlgorithm.Zlib, leaveOpen)
 		{
 		}
 
-		public DeflateStream (Stream stream, CompressionMode mode, CompressionAlgorithm algorithm) :
+		public CompressionStream (Stream stream, CompressionMode mode, CompressionAlgorithm algorithm) :
 			this (stream, mode, algorithm, false)
 		{
 		}
 
-		public DeflateStream (Stream compressedStream, CompressionMode mode, CompressionAlgorithm algorithm, bool leaveOpen)
+		public CompressionStream (Stream compressedStream, CompressionMode mode, CompressionAlgorithm algorithm, bool leaveOpen)
 		{
 			if (compressedStream == null)
 				throw new ArgumentNullException ("compressedStream");
@@ -322,14 +322,19 @@ namespace Compression {
 			Dispose (false);
 		}
 
+		public void Dispose()
+		{ 
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
 		public void Dispose (bool disposing)
 		{
-			if (disposing && !disposed) {
-				disposed = true;
-				GC.SuppressFinalize (this);
-			
-				compression_stream_destroy (ref compression_struct);
-			}
+			if (disposed)
+				return;
+
+			compression_stream_destroy (ref compression_struct);
+			disposed = true;
 		}
 
 		public void Flush ()
@@ -341,7 +346,7 @@ namespace Compression {
 					break;
 				case CompressionStatus.Ok:
 					// as per the docs, we should never get here, lets throw an exception so that we know it happened.
-					throw new IOException ($"Unexpected CompressionStatus.Ok received.");
+					throw new IOException ("Unexpected CompressionStatus.Ok received.");
 				default:
 					throw new IOException ($"An error occurred when performing the operation: {closeStatus}");
 				}

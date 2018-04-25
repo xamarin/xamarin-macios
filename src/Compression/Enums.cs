@@ -15,19 +15,18 @@ namespace Compression {
 		Zlib = 0x205,
 	}
 
-	public enum CompressionStatus {
+	enum CompressionStatus {
 		Ok = 0,
 		End = 1,
 		Error = -1,
 	}
 
-	[Flags]
-	public enum StreamFlag {
+	enum StreamFlag {
 		Continue = 0, // not present in the API, but makes it nice in our case
 		Finalize = 0x0001,
 	}
 
-	public enum StreamOperation {
+	enum StreamOperation {
 		Encode = 0,
 		Decode = 1,
 	}
