@@ -23,6 +23,10 @@ security unlock-keychain -p `cat ~/.config/keychain`
 echo "Increase keychain unlock timeout"
 security set-keychain-settings -lut 7200
 
+# Prevent dialogs from asking for permissions.
+# http://stackoverflow.com/a/40039594/183422
+security set-key-partition-list -S apple-tool:,apple: -s -k `cat ~/.config/keychain` builder.keychain
+
 # clean mono keypairs (used in tests)
 rm -rf ~/.config/.mono/keypairs/
 
