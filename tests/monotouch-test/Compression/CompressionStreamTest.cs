@@ -50,8 +50,11 @@ namespace MonoTouchFixtures.Compression {
 			DeflateStream ds = new DeflateStream (new MemoryStream (), (CompressionMode)Int32.MinValue);
 		}
 
-		[Test]
-		public void CheckCompressDecompress ()
+		[TestCase (CompressionAlgorithm.LZ4)]
+		[TestCase (CompressionAlgorithm.Lzfse)]
+		[TestCase (CompressionAlgorithm.Lzma)]
+		[TestCase (CompressionAlgorithm.Zlib)]
+		public void CheckCompressDecompress (CompressionAlgorithm algorithm)
 		{
 			byte [] data = new byte[100000];
 			for (int i = 0; i < 100000; i++) {
@@ -59,12 +62,12 @@ namespace MonoTouchFixtures.Compression {
 			}
 			MemoryStream dataStream = new MemoryStream (data);
 			MemoryStream backing = new MemoryStream ();
-			DeflateStream compressing = new DeflateStream (backing, CompressionMode.Compress, true);
+			DeflateStream compressing = new DeflateStream (backing, CompressionMode.Compress, algorithm, true);
 			CopyStream (dataStream, compressing);
 			dataStream.Close();
 			compressing.Close();
 			backing.Seek (0, SeekOrigin.Begin);
-			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress);
+			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress, algorithm);
 			MemoryStream output = new MemoryStream ();
 			CopyStream (decompressing, output);
 			Assert.IsTrue (compare_buffers (data, output.GetBuffer(), (int) output.Length));

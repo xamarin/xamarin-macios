@@ -12,7 +12,7 @@ namespace Compression {
 		LZ4Raw = 0x101,
 		Lzfse = 0x801,
 		Lzma = 0x306,
-		ZLib = 0x205,
+		Zlib = 0x205,
 	}
 
 	public enum CompressionStatus {

@@ -29,7 +29,12 @@ namespace Compression {
 		}
 
 		public DeflateStream (Stream stream, CompressionMode mode, bool leaveOpen) :
-			this (stream, mode, CompressionAlgorithm.ZLib, leaveOpen)
+			this (stream, mode, CompressionAlgorithm.Zlib, leaveOpen)
+		{
+		}
+
+		public DeflateStream (Stream stream, CompressionMode mode, CompressionAlgorithm algorithm) :
+			this (stream, mode, algorithm, false)
 		{
 		}
 
@@ -45,7 +50,7 @@ namespace Compression {
 
 			this.native = DeflateStreamNative.Create (compressedStream, mode, algorithm);
 			if (this.native == null) {
-				throw new NotImplementedException ("Failed to initialize zlib. You probably have an old zlib installed. Version 1.2.0.4 or later is required.");
+				throw new NotImplementedException ("Failed to initialize internal compression structure.");
 			}
 			this.mode = mode;
 			this.algorithm = algorithm;
@@ -335,8 +340,6 @@ namespace Compression {
 				case CompressionStatus.End:
 					break;
 				case CompressionStatus.Ok:
-					Console.WriteLine ($"Source size {compression_struct.SourceSize}");
-					Console.WriteLine ($"Destination size {compression_struct.DestinationSize}");
 					// as per the docs, we should never get here, lets throw an exception so that we know it happened.
 					throw new IOException ($"Unexpected CompressionStatus.Ok received.");
 				default:
@@ -366,7 +369,6 @@ namespace Compression {
 				case CompressionStatus.End:
 						// copy the data to the passed array, no need to deal with the offset, read took care, count should be read
 						Array.Copy (dstManagedBuffer, 0, array, 0, read);
-						Console.WriteLine ($"Read {read}");
 					break;
 				default:
 					throw new IOException ($"An error occurred when performing the operation: {readStatus}");
