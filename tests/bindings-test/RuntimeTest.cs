@@ -27,7 +27,7 @@ namespace Xamarin.Tests
 				var ed = new EvilDeallocator ();
 				ed.MarkMeDirty ();
 			}
-			// Now create an object that will call a managed callback it its destructor
+			// Now create an object that will call a managed callback in its destructor
 			using (var evil = new EvilDeallocator ()) {
 				evil.EvilCallback += (int obj) => {
 					// Running the GC will cause the GC to check the toggle-ref status

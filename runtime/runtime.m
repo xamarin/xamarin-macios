@@ -1936,10 +1936,10 @@ xamarin_release_managed_ref (id self, MonoObject *managed_obj)
 		//
 		// The race is between the following actions (given a managed object Z):
 		//
-		//   a1) This thread nulls out the handle for Z
-		//   a2) This thread calls release on Z's original handle
-		//   b1) Another thread fetches the handle for Z
-		//   b2) Another thread calls retainCount on Z's handle
+		//   a1) Thread A nulls out the handle for Z
+		//   a2) Thread A calls release on Z's original handle
+		//   b1) Thread B fetches the handle for Z
+		//   b2) Thread B calls retainCount on Z's handle
 		//
 		// Possible execution orders:
 		//
@@ -1952,28 +1952,29 @@ xamarin_release_managed_ref (id self, MonoObject *managed_obj)
 		//
 		// Order 4 would look like this:
 		//
-		//   * Thread A runs a GC, and starts calling toggleref callbacks.
-		//   * Thread A fetches the handle (H) for object Z in a toggleref
+		//   * Thread B runs a GC, and starts calling toggleref callbacks.
+		//   * Thread B fetches the handle (H) for object Z in a toggleref
 		//     callback.
-		//   * Thread B calls xamarin_release_managed_ref for object Z, and
+		//   * Thread A calls xamarin_release_managed_ref for object Z, and
 		//     calls release on H, deallocating it.
-		//   * Thread A tries to call retainCount on H, which is now a
+		//   * Thread B tries to call retainCount on H, which is now a
 		//     deallocated object.
 		//
 		// Solution: lock/unlock the framework peer lock here. This looks
 		// weird (since nothing happens inside the lock), but it works:
 		//
-		//   * Thread A runs a GC, locks the framework peer lock, and starts
+		//   * Thread B runs a GC, locks the framework peer lock, and starts
 		//     calling toggleref callbacks.
-		//   * Thread A fetches the handle (H) for object Z in a toggleref
+		//   * Thread B fetches the handle (H) for object Z in a toggleref
 		//     callback.
-		//   * Thread B calls xamarin_release_managed_ref for object Z.
-		//   * Thread B tries to lock the framework peer lock, and blocks
+		//   * Thread A calls xamarin_release_managed_ref for object Z (and
+		//     also nulls out the handle for Z)
+		//   * Thread A tries to lock the framework peer lock, and blocks
 		//     (before calling release on H)
-		//   * Thread A successfully calls retainCount on H
-		//   * Thread A finishes processing all toggleref callbacks, completes
+		//   * Thread B successfully calls retainCount on H
+		//   * Thread B finishes processing all toggleref callbacks, completes
 		//     the GC, and unlocks the framework peer lock.
-		//   * Thread B wakes up, and calls release on H.
+		//   * Thread A wakes up, and calls release on H.
 		//
 		// An alternative phrasing would be to say that the lock prevents both
 		// a1 and a2 from happening between b1 and b2 from above, thus making
@@ -1985,15 +1986,15 @@ xamarin_release_managed_ref (id self, MonoObject *managed_obj)
 		//    managed code (the native object can override dealloc and do all
 		//    sorts of strange things, any of which may end up invoking
 		//    managed code), and we can deadlock:
-		//    1) Thread A calls release on a native object.
-		//    2) Thread A executes managed code, which blocks on something
-		//       that's supposed to happen on another thread B.
-		//    3) Thread B causes a garbage collection.
-		//    4) Thread B tries to lock the framework peer lock before running
-		//       the GC, and deadlocks because thread A already has the
+		//    1) Thread T calls release on a native object.
+		//    2) Thread T executes managed code, which blocks on something
+		//       that's supposed to happen on another thread U.
+		//    3) Thread U causes a garbage collection.
+		//    4) Thread U tries to lock the framework peer lock before running
+		//       the GC, and deadlocks because thread T already has the
 		//       framework peer lock.
 		//
-		//    This is https://github.com/xamarin /xamarin-macios/issues/3943
+		//    This is https://github.com/xamarin/xamarin-macios/issues/3943
 		//
 		xamarin_framework_peer_lock ();
 		xamarin_framework_peer_unlock ();
