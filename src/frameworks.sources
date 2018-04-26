@@ -725,6 +725,7 @@ FOUNDATION_SOURCES = \
 	Foundation/NSMutableUrlRequest.cs \
 	Foundation/NSNetService.cs \
 	Foundation/NSNotificationCenter.cs \
+	Foundation/NSNull.cs \
 	Foundation/NSOrderedSet.cs \
 	Foundation/NSOrderedSet_1.cs \
 	Foundation/NSOutputStream.cs \
