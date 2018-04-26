@@ -9,6 +9,11 @@ trap report_error ERR
 
 cd $WORKSPACE
 
+if ./jenkins/fetch-pr-labels.sh --check=skip-api-comparison; then
+	printf "❎ Skipped API comparison because the PR has the label 'skip-api-comparison'\\n" >> $WORKSPACE/jenkins/pr-comments.md
+	exit 0
+fi
+
 BASE=origin/pr/$ghprbPullId/merge
 if ! git rev-parse $BASE >/dev/null 2>&1; then
 	echo "Can't compare API and create generator diff because the pull request has conflicts that must be resolved first (the branch '$BASE' doesn't exist)."
