@@ -83,9 +83,8 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			Assert.Null (NSData.FromFile ("does not exists"), "unexisting");
 #if MONOMAC // Info.Plist isn't there to load from the same location on mac
-#if !LINKALL
-			Assert.NotNull (NSData.FromFile (NSBundle.MainBundle.PathForResource ("runtime-options", "plist")), "runtime-options.plist");
-#endif
+			if (!TestRuntime.IsLinkAll)
+				Assert.NotNull (NSData.FromFile (NSBundle.MainBundle.PathForResource ("runtime-options", "plist")), "runtime-options.plist");
 #else
 			Assert.NotNull (NSData.FromFile ("Info.plist"), "Info.plist");
 #endif
