@@ -296,7 +296,6 @@ IOS_TARGETS_DIRS += \
 IOS_TARGETS += \
 	$(PROJECT_DIR)/xamios.csproj                                                   \
 	$(PROJECT_DIR)/MonoTouch.NUnitLite.csproj                                      \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/Version                                      \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/System.Net.Http.dll             \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/System.Net.Http.pdb             \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/monotouch.dll                   \
@@ -624,7 +623,6 @@ MAC_TARGETS += \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Xamarin.Mac.pdb     \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Xamarin.Mac.dll             \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Xamarin.Mac.pdb             \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/Version                                  \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig/xammac.pc                  \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Facades/System.Drawing.Primitives.dll          \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Facades/netstandard.dll
@@ -684,10 +682,6 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Xamarin.Mac.dll 
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Xamarin.Mac.dll $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Xamarin.Mac.pdb: | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5
 	$(Q) ln -sF ../../reference/full/$(@F) $@
-
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/Version: $(TOP)/Make.config
-	$(Q) echo $(MAC_PACKAGE_VERSION) > $@
-	$(Q) chmod 0644 $@
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig/xammac.pc: $(TOP)/Make.config | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig
 	$(Q) sed -e "s/@PACKAGE_VERSION@/$(MAC_PACKAGE_VERSION)/g" xammac.pc.in > $@
