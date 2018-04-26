@@ -224,8 +224,8 @@ qa-test-dependencies.zip:
 ifdef INCLUDE_TVOS
 	@# TVOS
 	$(Q) mkdir -p $@.tmpdir/tvos
-	$(Q) cp $(TOP)/src/build/tvos/reference/MonoTouch.Dialog-1.dll* $@.tmpdir/tvos
-	$(Q) cp $(TOP)/src/build/tvos/reference/MonoTouch.NUnitLite.dll* $@.tmpdir/tvos
+	$(Q) cp $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/MonoTouch.Dialog-1.dll* $@.tmpdir/tvos
+	$(Q) cp $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/MonoTouch.NUnitLite.dll* $@.tmpdir/tvos
 	$(Q) cp $(TOP)/tests/test-libraries/.libs/tvos/libtest.a $@.tmpdir/tvos
 	$(Q) cp $(TOP)/tests/test-libraries/.libs/tvos/libtest.dylib $@.tmpdir/tvos
 	$(Q) cp -a $(TOP)/tests/test-libraries/.libs/tvos/XTest.framework $@.tmpdir/tvos
