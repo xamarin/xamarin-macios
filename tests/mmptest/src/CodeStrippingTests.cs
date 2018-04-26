@@ -62,7 +62,8 @@ namespace Xamarin.MMP.Tests
 			MMPTests.RunMMPTest (tmpDir =>
 			{
 				TI.UnifiedTestConfig test = CreateStripTestConfig (strip, tmpDir);
-
+				// Mono's linker is smart enough to remove libMonoPosixHelper unless used (DeflateStream uses it)
+				test.TestCode = "using (var ms = new System.IO.MemoryStream ()) { using (var gz = new System.IO.Compression.DeflateStream (ms, System.IO.Compression.CompressionMode.Compress)) { }}";
 				StripTestCore (test, debugStrips, releaseStrips, "Contents/MonoBundle/libMonoPosixHelper.dylib", shouldWarn: false);
 			});
 		}

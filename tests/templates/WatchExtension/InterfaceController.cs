@@ -71,7 +71,7 @@ namespace monotouchtestWatchKitExtension
 		void LoadTests ()
 		{
 			runner = new WatchOSRunner ();
-			var categoryFilter = new NotFilter (new CategoryExpression ("MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingInterpreter,RequiresBSDSockets").Filter);
+			var categoryFilter = new NotFilter (new CategoryExpression ("MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingLinqInterpreter,RequiresBSDSockets").Filter);
 			if (!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("NUNIT_FILTER_START"))) {
 				var firstChar = Environment.GetEnvironmentVariable ("NUNIT_FILTER_START") [0];
 				var lastChar = Environment.GetEnvironmentVariable ("NUNIT_FILTER_END") [0];
