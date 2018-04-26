@@ -1170,4 +1170,6 @@ all-local:: $(ALL_TARGETS)
 
 project-files: $(PROJECT_FILES)
 
-.SECONDARY:
+# Using .SECONDARY can cause make to go into an infinite loop.
+# See https://github.com/xamarin/maccore/issues/762.
+#.SECONDARY:

@@ -21,7 +21,7 @@ type TodayViewController() =
     [<Export ("widgetPerformUpdateWithCompletionHandler:")>]
     member this.WidgetPerformUpdate (completionHandler: Action<NCUpdateResult>) =
         runner <- new ConsoleRunner ()
-        let ce = new CategoryExpression ("MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingInterpreter")
+        let ce = new CategoryExpression ("MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingLinqInterpreter")
         runner.Filter <- new NotFilter (ce.Filter)
         let tp = this.GetType ()
         runner.Add (tp.Assembly)
