@@ -4106,7 +4106,8 @@ namespace Foundation
 #endif
 	{
 		[Export ("null"), Static]
-		NSNull Null { get; }
+		[Internal]
+		NSNull _Null { get; }
 	}
 
 	[iOS (8,0)]
@@ -12633,7 +12634,7 @@ namespace Foundation
 	}
 #endif
 
-#if XAMCORE_2_0 && !MONOMAC
+#if XAMCORE_2_0
 	// Users are not supposed to implement the NSUrlProtocolClient protocol, they're 
 	// only supposed to consume it. This is why there's no model for this protocol.
 	[Protocol (Name = "NSURLProtocolClient")]
@@ -12682,13 +12683,13 @@ namespace Foundation
 	interface NSUrlProtocol {
 		[DesignatedInitializer]
 		[Export ("initWithRequest:cachedResponse:client:")]
-#if XAMCORE_2_0 && !MONOMAC
+#if XAMCORE_2_0
 		IntPtr Constructor (NSUrlRequest request, [NullAllowed] NSCachedUrlResponse cachedResponse, INSUrlProtocolClient client);
 #else
 		IntPtr Constructor (NSUrlRequest request, [NullAllowed] NSCachedUrlResponse cachedResponse, NSUrlProtocolClient client);
 #endif
 
-#if XAMCORE_2_0 && !MONOMAC
+#if XAMCORE_2_0
 		[Export ("client")]
 		INSUrlProtocolClient Client { get; }
 #else

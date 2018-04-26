@@ -31,7 +31,7 @@ using System;
 using ObjCRuntime;
 
 namespace Foundation {
-#if !XAMCORE_2_0 || MONOMAC
+#if !XAMCORE_2_0 || (MONOMAC && !XAMCORE_4_0)
 	public sealed class NSUrlProtocolClient : NSObject
 	{
 		public NSUrlProtocolClient (IntPtr handle)

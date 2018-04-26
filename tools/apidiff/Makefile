@@ -275,12 +275,12 @@ ifdef INCLUDE_TVOS
 endif
 endif
 	$(Q) $(MAKE) all -j8
+	$(Q) $(MAKE) -j8 ios-markdown tvos-markdown watchos-markdown macos-markdown
 	$(Q) cp api-diff.html index.html
 	@echo "@MonkeyWrench: AddFile: $(CURDIR)/index.html"
 	@echo "@MonkeyWrench: AddFile: $(CURDIR)/api-diff.html"
 	@# remove empty files so they're not uploaded
 	@-find $(CURDIR)/diff -size 0 | xargs rm
-	$(MAKE) -j8 ios-markdown tvos-markdown watchos-markdown macos-markdown
 ifdef INCLUDE_IOS
 	$(MAKE) verify-reference-assemblies-ios -j8
 endif
