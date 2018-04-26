@@ -4106,7 +4106,8 @@ namespace Foundation
 #endif
 	{
 		[Export ("null"), Static]
-		NSNull Null { get; }
+		[Internal]
+		NSNull _Null { get; }
 	}
 
 	[iOS (8,0)]
