@@ -55,6 +55,8 @@
 	#define CtorChaining1     object_CtorChaining1
 	#define ObjCExceptionTest object_ObjCExceptionTest
 	#define ObjCProtocolClassTest object_ObjCProtocolClassTest
+	#define ProtocolAssigner      object_ProtocolAssigner
+	#define ObjCProtocolTestImpl  object_ObjCProtocolTestImpl
 	#define x_mdltransform_get_rotation_matrix object_x_mdltransform_get_rotation_matrix
 	#define x_mdltransformcomponent_get_local_transform object_x_mdltransformcomponent_get_local_transform
 	#define x_mdltransform_create_global_transform object_x_mdltransform_create_global_transform
@@ -119,6 +121,8 @@
 	#define CtorChaining1     ar_CtorChaining1
 	#define ObjCExceptionTest ar_ObjCExceptionTest
 	#define ObjCProtocolClassTest ar_ObjCProtocolClassTest
+	#define ProtocolAssigner      ar_ProtocolAssigner
+	#define ObjCProtocolTestImpl  ar_ObjCProtocolTestImpl
 	#define x_mdltransform_get_rotation_matrix ar_x_mdltransform_get_rotation_matrix
 	#define x_mdltransformcomponent_get_local_transform ar_x_mdltransformcomponent_get_local_transform
 	#define x_mdltransform_create_global_transform ar_x_mdltransform_create_global_transform
