@@ -324,8 +324,8 @@ namespace Compression {
 
 		public void Dispose()
 		{ 
-			Dispose(true);
-			GC.SuppressFinalize(this);
+			Dispose (true);
+			GC.SuppressFinalize (this);
 		}
 
 		public void Dispose (bool disposing)
