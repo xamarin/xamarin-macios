@@ -111,8 +111,8 @@ namespace Linker.Shared
 				//Console.WriteLine ("Unoptimized: {0} ms", unoptimizedWatch.ElapsedMilliseconds);
 				//Console.WriteLine ("Speedup: {0}x", unoptimizedWatch.ElapsedTicks / (double) optimizedWatch.ElapsedTicks);
 				// My testing found a 12-16x speedup on device and a 15-20x speedup in the simulator/desktop.
-				// Setting to 8 to have a margin for random stuff happening, but this may still have to be adjusted.
-				var speedup = 8;
+				// Setting to 6 to have a margin for random stuff happening, but this may still have to be adjusted.
+				var speedup = 6;
 				Assert.That (unoptimizedWatch.ElapsedTicks / (double) optimizedWatch.ElapsedTicks, Is.GreaterThan (speedup), $"At least {speedup}x speedup");
 			} finally {
 				Environment.SetEnvironmentVariable ("XAMARIN_IOS_SKIP_BLOCK_CHECK", skipBlockCheck);
