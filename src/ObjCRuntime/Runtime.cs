@@ -52,7 +52,7 @@ namespace ObjCRuntime {
 
 		internal static DynamicRegistrar Registrar;
 
-		const uint INVALID_TOKEN_REF = 0xFFFFFFFF;
+		internal const uint INVALID_TOKEN_REF = 0xFFFFFFFF;
 
 		internal unsafe struct MTRegistrationMap {
 			public IntPtr assembly;
@@ -1393,10 +1393,12 @@ namespace ObjCRuntime {
 			unsafe {
 				var map = options->RegistrationMap;
 				if (map != null) {
-					var token = Class.GetTokenReference (type);
-					var wrapper_token = xamarin_find_protocol_wrapper_type (token);
-					if (wrapper_token != INVALID_TOKEN_REF)
-						return (Type) Class.ResolveTokenReference (wrapper_token, 0x02000000 /* TypeDef */);
+					var token = Class.GetTokenReference (type, throw_exception: false);
+					if (token != INVALID_TOKEN_REF) {
+						var wrapper_token = xamarin_find_protocol_wrapper_type (token);
+						if (wrapper_token != INVALID_TOKEN_REF)
+							return (Type)Class.ResolveTokenReference (wrapper_token, 0x02000000 /* TypeDef */);
+					}
 				}
 			}
 
