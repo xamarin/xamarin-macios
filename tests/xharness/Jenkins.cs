@@ -2459,13 +2459,10 @@ function toggleAll (show)
 			}
 		}
 
-		protected void LogProcessExecution (Log log, Process process, string text, params object[] args)
+		protected void LogEvent (Log log, string text, params object[] args)
 		{
 			Jenkins.MainLog.WriteLine (text, args);
 			log.WriteLine (text, args);
-			foreach (string key in process.StartInfo.EnvironmentVariables.Keys)
-				log.WriteLine ("{0}={1}", key, process.StartInfo.EnvironmentVariables [key]);
-			log.WriteLine ("{0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
 		}
 
 		public string GuessFailureReason (Log log)
@@ -2582,7 +2579,7 @@ function toggleAll (show)
 				args.Append (StringUtils.Quote (SolutionPath));
 				nuget.StartInfo.Arguments = args.ToString ();
 				SetEnvironmentVariables (nuget);
-				LogProcessExecution (log, nuget, "Restoring nugets for {0} ({1})", TestName, Mode);
+				LogEvent (log, "Restoring nugets for {0} ({1})", TestName, Mode);
 
 				var timeout = TimeSpan.FromMinutes (15);
 				var result = await nuget.RunAsync (log, true, timeout);
@@ -2614,7 +2611,7 @@ function toggleAll (show)
 					args.Append (StringUtils.Quote (File.Exists (sln) ? sln : ProjectFile));
 					xbuild.StartInfo.Arguments = args.ToString ();
 					SetEnvironmentVariables (xbuild);
-					LogProcessExecution (log, xbuild, "Building {0} ({1})", TestName, Mode);
+					LogEvent (log, "Building {0} ({1})", TestName, Mode);
 					if (!Harness.DryRun) {
 						var timeout = TimeSpan.FromMinutes (5);
 						var result = await xbuild.RunAsync (log, true, timeout);
@@ -2650,7 +2647,7 @@ function toggleAll (show)
 					SetEnvironmentVariables (make);
 					var log = Logs.Create ($"make-{Platform}-{Timestamp}.txt", "Build log");
 					log.Timestamp = true;
-					LogProcessExecution (log, make, "Making {0} in {1}", Target, WorkingDirectory);
+					LogEvent (log, "Making {0} in {1}", Target, WorkingDirectory);
 					if (!Harness.DryRun) {
 						var timeout = Timeout;
 						var result = await make.RunAsync (log, true, timeout);
@@ -2695,7 +2692,7 @@ function toggleAll (show)
 					SetEnvironmentVariables (xbuild);
 					if (UseMSBuild)
 						xbuild.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = null;
-					LogProcessExecution (log, xbuild, "Building {0} ({1})", TestName, Mode);
+					LogEvent (log, "Building {0} ({1})", TestName, Mode);
 					if (!Harness.DryRun) {
 						var timeout = TimeSpan.FromMinutes (15);
 						var result = await xbuild.RunAsync (log, true, timeout);
@@ -2730,7 +2727,7 @@ function toggleAll (show)
 				args.Append ("/t:Clean ");
 				xbuild.StartInfo.Arguments = args.ToString ();
 				SetEnvironmentVariables (xbuild);
-				LogProcessExecution (log, xbuild, "Cleaning {0} ({1}) - {2}", TestName, Mode, project_file);
+				LogEvent (log, "Cleaning {0} ({1}) - {2}", TestName, Mode, project_file);
 				var timeout = TimeSpan.FromMinutes (1);
 				await xbuild.RunAsync (log, true, timeout);
 				log.WriteLine ("Clean timed out after {0} seconds.", timeout.TotalSeconds);
@@ -2968,7 +2965,6 @@ function toggleAll (show)
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
 					var log = Logs.Create ($"execute-{Platform}-{Timestamp}.txt", "Execution log");
 					log.Timestamp = true;
-					log.WriteLine ("{0} {1}", proc.StartInfo.FileName, proc.StartInfo.Arguments);
 					if (!Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;
 
