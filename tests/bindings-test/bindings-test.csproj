@@ -78,6 +78,8 @@
     <Compile Include="..\common\TestRuntime.cs">
       <Link>TestRuntime.cs</Link>
     </Compile>
+    <Compile Include="RuntimeTest.cs" />
+    <Compile Include="CodeBehind.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\tests\test-libraries\libtest.m">

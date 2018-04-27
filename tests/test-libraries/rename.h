@@ -5,6 +5,7 @@
 	#define ObjCRegistrarTest object_ObjCRegistrarTest
 	#define ObjCBlockTester   object_ObjCBlockTester
 	#define FreedNotifier     object_FreedNotifier
+	#define EvilDeallocator   object_EvilDeallocator
 	#define FakeType2         object_FakeType2
 	#define UltimateMachine   object_UltimateMachine
 	#define FrameworkTest     object_FrameworkTest
@@ -69,6 +70,7 @@
 	#define ObjCRegistrarTest ar_ObjCRegistrarTest
 	#define ObjCBlockTester   ar_ObjCBlockTester
 	#define FreedNotifier     ar_FreedNotifier
+	#define EvilDeallocator   ar_EvilDeallocator
 	#define FakeType2         ar_FakeType2
 	#define UltimateMachine   ar_UltimateMachine
 	#define FrameworkTest     ar_FrameworkTest
