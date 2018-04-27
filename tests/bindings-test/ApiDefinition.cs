@@ -330,6 +330,13 @@ namespace Bindings.Test {
 		[Export ("freedBlockCount")]
 		int FreedBlockCount { get; }
 	}
+
+	[BaseType (typeof (NSObject))]
+	interface EvilDeallocator
+	{
+		[Export ("evilCallback")]
+		Action<int> EvilCallback { get; set; }
+	}
 }
 
 

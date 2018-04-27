@@ -177,6 +177,12 @@ typedef unsigned int (^RegistrarTestBlock) (unsigned int magic);
 -(void) dealloc;
 @end
 
+@interface EvilDeallocator : NSObject {
+}
+@property (copy) void (^evilCallback)(int32_t magic_number);
+-(void) dealloc;
+@end
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

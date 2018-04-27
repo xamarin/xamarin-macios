@@ -64,6 +64,7 @@
     </Compile>
     <Compile Include="RegistrarBindingTest.cs" />
     <Compile Include="RuntimeTest.cs" />
+    <Compile Include="CodeBehind.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\tests\test-libraries\libtest.m">
