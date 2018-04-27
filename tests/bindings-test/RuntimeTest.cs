@@ -20,6 +20,21 @@ namespace Xamarin.Tests
 	public class RuntimeTest
 	{
 		[Test]
+		public void WrapperTypeLookupTest ()
+		{
+			using (var assigner = new MyProtocolAssigner ()) {
+				assigner.SetProtocol ();
+			}
+		}
+
+		class MyProtocolAssigner : ProtocolAssigner {
+			public bool Called;
+			public override void CompletedSetProtocol (IProtocolAssignerProtocol value)
+			{
+				Called = true;
+			}
+		}
+
 		public void EvilDeallocatorTest ()
 		{
 			// Create a few toggle-ref objects

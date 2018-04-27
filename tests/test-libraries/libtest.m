@@ -448,6 +448,22 @@ static UltimateMachine *shared;
 	}
 @end
 
+@implementation ProtocolAssigner
+-(void) setProtocol
+{
+	ObjCProtocolTestImpl *p = [[ObjCProtocolTestImpl alloc] init];
+	[self completedSetProtocol: p];
+}
+
+-(void) completedSetProtocol: (id<ProtocolAssignerProtocol>) value
+{
+	assert (!"THIS FUNCTION SHOULD BE OVERRIDDEN");
+}
+@end
+
+@implementation ObjCProtocolTestImpl
+@end
+
 @implementation ObjCExceptionTest
 {
 }
