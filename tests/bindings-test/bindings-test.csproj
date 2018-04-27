@@ -75,6 +75,9 @@
       <Link>Registrar.cs</Link>
     </Compile>
     <Compile Include="RegistrarBindingTest.cs" />
+    <Compile Include="..\common\TestRuntime.cs">
+      <Link>TestRuntime.cs</Link>
+    </Compile>
     <Compile Include="RuntimeTest.cs" />
     <Compile Include="CodeBehind.cs" />
   </ItemGroup>

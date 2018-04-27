@@ -1,3 +1,10 @@
+#if __MACOS__
+#define MONOMAC
+#endif
+#if __UNIFIED__
+#define XAMCORE_2_0
+#endif
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -637,4 +644,15 @@ partial class TestRuntime
 		}
 	}
 #endif // !MONOMAC && !__TVOS__
+
+	// Determine if linkall was enabled by checking if an unused class in this assembly is still here.
+	static bool? link_all;
+	public static bool IsLinkAll {
+		get {
+			if (!link_all.HasValue)
+				link_all = typeof (TestRuntime).Assembly.GetType (typeof (TestRuntime).FullName + "+LinkerSentinel") == null;
+			return link_all.Value;
+		}
+	}
+	class LinkerSentinel { }
 }
