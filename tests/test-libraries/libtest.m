@@ -609,4 +609,13 @@ static Class _TestClass = NULL;
 }
 @end
 
+@implementation EvilDeallocator
+-(void) dealloc
+{
+	if (self.evilCallback != NULL)
+		self.evilCallback (314);
+	[super dealloc];
+}
+@end
+
 #include "libtest.decompile.m"
