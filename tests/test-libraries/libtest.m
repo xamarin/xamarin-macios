@@ -448,6 +448,22 @@ static UltimateMachine *shared;
 	}
 @end
 
+@implementation ProtocolAssigner
+-(void) setProtocol
+{
+	ObjCProtocolTestImpl *p = [[ObjCProtocolTestImpl alloc] init];
+	[self completedSetProtocol: p];
+}
+
+-(void) completedSetProtocol: (id<ProtocolAssignerProtocol>) value
+{
+	assert (!"THIS FUNCTION SHOULD BE OVERRIDDEN");
+}
+@end
+
+@implementation ObjCProtocolTestImpl
+@end
+
 @implementation ObjCExceptionTest
 {
 }
@@ -605,6 +621,15 @@ static Class _TestClass = NULL;
 -(void) dealloc
 {
 	OSAtomicIncrement32 (&freed_blocks);
+	[super dealloc];
+}
+@end
+
+@implementation EvilDeallocator
+-(void) dealloc
+{
+	if (self.evilCallback != NULL)
+		self.evilCallback (314);
 	[super dealloc];
 }
 @end

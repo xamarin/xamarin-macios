@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhoneSimulator\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DEBUG;LINKALL;;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DEBUG;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchDebug>True</MtouchDebug>
@@ -38,7 +38,7 @@
     <MtouchLink>Full</MtouchLink>
     <MtouchI18n>mideast,other</MtouchI18n>
     <MtouchArch>i386, x86_64</MtouchArch>
-    <DefineConstants>LINKALL;;$(DefineConstants)</DefineConstants>
+    <DefineConstants>$(DefineConstants)</DefineConstants>
     <MtouchExtraArgs>--registrar:static --optimize=all,-remove-dynamic-registrar</MtouchExtraArgs>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
@@ -47,7 +47,7 @@
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DEBUG;LINKALL;;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DEBUG;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
@@ -64,7 +64,7 @@
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DEBUG;LINKALL;;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DEBUG;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
@@ -80,7 +80,7 @@
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DEBUG;LINKALL;;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DEBUG;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
@@ -103,7 +103,7 @@
     <MtouchUseLlvm>True</MtouchUseLlvm>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
     <MtouchExtraArgs>--optimize=all,-remove-dynamic-registrar</MtouchExtraArgs>
-    <DefineConstants>LINKALL;;$(DefineConstants)</DefineConstants>
+    <DefineConstants>$(DefineConstants)</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release32|iPhone' ">
@@ -118,7 +118,7 @@
     <MtouchUseLlvm>True</MtouchUseLlvm>
     <MtouchArch>ARMv7</MtouchArch>
     <MtouchExtraArgs>--optimize=all,-remove-dynamic-registrar</MtouchExtraArgs>
-    <DefineConstants>LINKALL;;$(DefineConstants)</DefineConstants>
+    <DefineConstants>$(DefineConstants)</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release64|iPhone' ">
@@ -133,7 +133,7 @@
     <MtouchUseLlvm>True</MtouchUseLlvm>
     <MtouchArch>ARM64</MtouchArch>
     <MtouchExtraArgs>--optimize=all,-remove-dynamic-registrar</MtouchExtraArgs>
-    <DefineConstants>LINKALL;;$(DefineConstants)</DefineConstants>
+    <DefineConstants>$(DefineConstants)</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-bitcode|iPhone' ">
@@ -148,7 +148,7 @@
     <MtouchUseLlvm>true</MtouchUseLlvm>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
     <MtouchExtraArgs>--bitcode:full --optimize=all,-remove-dynamic-registrar</MtouchExtraArgs>
-    <DefineConstants>LINKALL;;$(DefineConstants)</DefineConstants>
+    <DefineConstants>$(DefineConstants)</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
@@ -192,6 +192,9 @@
     </Compile>
     <Compile Include="SerializationTest.cs" />
     <Compile Include="ILReader.cs" />
+    <Compile Include="..\..\..\common\TestRuntime.cs">
+      <Link>TestRuntime.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" />
