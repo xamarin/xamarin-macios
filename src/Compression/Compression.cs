@@ -83,16 +83,6 @@ namespace Compression {
 			return native.ReadStream (array, offset, count);
 		}
 
-		internal ValueTask<int> ReadAsyncMemory (Memory<byte> destination, CancellationToken cancellationToken)
-		{
-			throw new NotImplementedException ();
-		}
-
-		internal int ReadCore (Span<byte> destination)
-		{
-			throw new NotImplementedException ();
-		}
-
 		public override int Read (byte[] array, int offset, int count)
 		{
 			if (disposed)
@@ -103,7 +93,7 @@ namespace Compression {
 				throw new InvalidOperationException ("Stream does not support reading.");
 			int len = array.Length;
 			if (offset < 0 || count < 0)
-				throw new ArgumentException ("Dest or count is negative.");
+				throw new ArgumentException ("offset or count is negative.");
 			if (offset > len)
 				throw new ArgumentException ("destination offset is beyond array size");
 			if ((offset + count) > len)
@@ -356,8 +346,8 @@ namespace Compression {
 		unsafe public int ReadStream (byte[] array, int offset, int count)
 		{
 
-			var srcManagedBuffer = new byte [count - offset];
-			var dstManagedBuffer = new byte [count - offset];
+			var srcManagedBuffer = new byte [count];
+			var dstManagedBuffer = new byte [count];
 			fixed (byte *srcBuf = srcManagedBuffer)
 			fixed (byte *dstBuf = dstManagedBuffer) {
 				var read = base_stream.Read (srcManagedBuffer, offset, count); // we are taking care of the offset in this call
@@ -373,37 +363,37 @@ namespace Compression {
 				case CompressionStatus.Ok:
 				case CompressionStatus.End:
 						// copy the data to the passed array, no need to deal with the offset, read took care, count should be read
-						Array.Copy (dstManagedBuffer, 0, array, 0, read);
+						// compression_struct.DestinationSize the size left after we read the data, in that case, the read has
+						// to be the initial read - what was left in the compression struct 
+						Array.Copy (dstManagedBuffer, 0, array, 0, read - compression_struct.DestinationSize);
+						return read - compression_struct.DestinationSize;
 					break;
 				default:
 					throw new IOException ($"An error occurred when performing the operation: {readStatus}");
 				}
-				return read;
 			}
 		}
 
 		unsafe public void WriteStream (byte[] buffer, int offset, int count)
 		{
-			var srcManagedBuffer = new byte [count - offset];
-			var dstManagedBuffer = new byte [count - offset];
+			var srcManagedBuffer = new byte [count];
+			var dstManagedBuffer = new byte [count];
 
 			fixed (byte *srcBuf = srcManagedBuffer)
 			fixed (byte *dstBuf = dstManagedBuffer) {
 				compression_struct.Destination = (IntPtr) dstBuf;
-				compression_struct.DestinationSize = count - offset;
+				compression_struct.DestinationSize = count;
 				compression_struct.Source = (IntPtr) srcBuf;
-				compression_struct.SourceSize = count - offset;
+				compression_struct.SourceSize = count;
 				// we need to copy the data from the passed buffer to the source buffer
 				Array.Copy (buffer, offset, srcManagedBuffer, 0, count);
 				var writeStatus = compression_stream_process (ref compression_struct, StreamFlag.Continue);
 				switch (writeStatus) {
 				case CompressionStatus.Ok:
 				case CompressionStatus.End:
-					if (compression_struct.DestinationSize == 0) {
-						// we are happy, and we need to write to the stream all the data from the destination
-						// buffer
-						base_stream.Write (dstManagedBuffer, 0, count); // no need to deal with offset, the copy did it
-					}
+					// destination size contans what is left from the compression, therefore, we need to write count - what is left
+					// in the buffer
+					base_stream.Write (dstManagedBuffer, 0, count - compression_struct.DestinationSize); // no need to deal with offset, the copy did it
 					break;
 				default:
 					throw new InvalidOperationException ($"An error occurred when performing the operation: {writeStatus}");
