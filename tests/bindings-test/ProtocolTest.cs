@@ -21,10 +21,9 @@ namespace Xamarin.BindingTests
 	{
 		bool HasProtocolAttributes {
 			get {
-#if LINKALL
-				if (!Runtime.DynamicRegistrationSupported)
+				if (TestRuntime.IsLinkAll && !Runtime.DynamicRegistrationSupported)
 					return false;
-#endif
+			
 				return true;
 			}
 		}

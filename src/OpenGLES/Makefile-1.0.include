@@ -29,7 +29,7 @@ IOS_OPENTK_1_0_CORE_SOURCES = \
 OPENTK_1_0_SOURCES:=$(shell grep "Compile Include" OpenTK.csproj | sed 's/.*Include="//' | sed 's/".*//' | sed 's_\\_/_g' )
 
 OPENTK_1_0_DEPENDENCIES = Makefile OpenGLES/Makefile-1.0.include $(OPENTK_1_0_SOURCES) opentk.csproj
-OPENTK_1_0_CSC_FLAGS = -warn:0 -unsafe -target:library -noconfig -publicsign -debug:portable -optimize -define:MONOTOUCH -define:IPHONE -define:MOBILE -d:MINIMAL $(OPENTK_1_0_SOURCES) -keyfile:$(PRODUCT_KEY_PATH) -define:OPENTK_1_0
+OPENTK_1_0_CSC_FLAGS = -warn:0 -unsafe -target:library -noconfig -publicsign -debug:portable -optimize -define:MONOTOUCH -define:IPHONE -define:MOBILE -d:MINIMAL $(OPENTK_1_0_SOURCES) -keyfile:$(PRODUCT_KEY_PATH) -define:OPENTK_1_0 -deterministic
 
 # Xamarin.iOS
 
