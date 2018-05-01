@@ -54,7 +54,19 @@ namespace MonoTouchFixtures {
 			for (int i = 0; i < 1000 * 1000 * 10; ++i)
 				new OneField ();
 
-			Assert.That (Test.retain.a, Is.EqualTo (0x1029458), "retain.a");
+			Exception ex = null;
+			thread = new Thread (() => {
+				try {
+					// This must be done on a separate thread so that the 'Test.retain' value doesn't
+					// show up on the main thread's stack as a temporary value in registers the
+					// GC can see.
+					Assert.That (Test.retain.a, Is.EqualTo (0x1029458), "retain.a");
+				} catch (Exception e) {
+					ex = e;
+				}
+			});
+			thread.Start ();
+			thread.Join ();
 
 			Test.retain = null;
 			GC.Collect ();

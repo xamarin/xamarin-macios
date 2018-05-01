@@ -158,10 +158,11 @@ namespace Linker.Shared {
 		}
 #endif // !__WATCHOS__
 
-#if LINKALL
 		[Test]
 		public void FinallyTest ()
 		{
+			IgnoreIfNotLinkAll ();
+
 			// bug #26415
 			FinallyTestMethod ();
 			Assert.IsTrue (finally_invoked);
@@ -186,6 +187,8 @@ namespace Linker.Shared {
 		[Test]
 		public void IntPtrSizeTest ()
 		{
+			IgnoreIfNotLinkAll ();
+
 			var S8methods = new MethodInfo []
 			{
 				GetType ().GetMethod (nameof (Size8Test), BindingFlags.NonPublic | BindingFlags.Instance),
@@ -314,6 +317,5 @@ namespace Linker.Shared {
 			if (IntPtr.Size <= 3)
 				throw new NUnit.Framework.Internal.NUnitException ("6");
 		}
-#endif
 	}
 }

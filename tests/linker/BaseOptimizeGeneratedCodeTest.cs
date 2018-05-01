@@ -27,10 +27,17 @@ namespace Linker.Shared
 	[Preserve (AllMembers = true)]
 	public abstract class BaseOptimizeGeneratedCodeTest
 	{
-#if LINKALL
+		protected void IgnoreIfNotLinkAll ()
+		{
+			if (!TestRuntime.IsLinkAll)
+				Assert.Ignore ("This test is only applicable when linking all assemblies.");
+		}
+
 		[Test]
 		public void SetupBlock_CustomDelegate ()
 		{
+			IgnoreIfNotLinkAll ();
+
 			int counter = 0;
 			var action = new Action (() => counter++);
 			Custom (action);
@@ -66,6 +73,8 @@ namespace Linker.Shared
 		[Test]
 		public void SetupBlockPerfTest ()
 		{
+			IgnoreIfNotLinkAll ();
+
 			const int iterations = 5000;
 
 			// Set the XAMARIN_IOS_SKIP_BLOCK_CHECK environment variable to skip a few expensive validation checks done in the simulator
@@ -102,8 +111,8 @@ namespace Linker.Shared
 				//Console.WriteLine ("Unoptimized: {0} ms", unoptimizedWatch.ElapsedMilliseconds);
 				//Console.WriteLine ("Speedup: {0}x", unoptimizedWatch.ElapsedTicks / (double) optimizedWatch.ElapsedTicks);
 				// My testing found a 12-16x speedup on device and a 15-20x speedup in the simulator/desktop.
-				// Setting to 8 to have a margin for random stuff happening, but this may still have to be adjusted.
-				var speedup = 8;
+				// Setting to 6 to have a margin for random stuff happening, but this may still have to be adjusted.
+				var speedup = 6;
 				Assert.That (unoptimizedWatch.ElapsedTicks / (double) optimizedWatch.ElapsedTicks, Is.GreaterThan (speedup), $"At least {speedup}x speedup");
 			} finally {
 				Environment.SetEnvironmentVariable ("XAMARIN_IOS_SKIP_BLOCK_CHECK", skipBlockCheck);
@@ -113,6 +122,8 @@ namespace Linker.Shared
 		[Test]
 		public void SetupBlockCodeTest ()
 		{
+			IgnoreIfNotLinkAll ();
+
 			int counter = 0;
 			var action = new Action (() => counter++);
 			SetupBlockOptimized_SpecificArgument (block_callback, action);
@@ -491,6 +502,5 @@ namespace Linker.Shared
 			GC.KeepAlive (dummy208); GC.KeepAlive (dummy218); GC.KeepAlive (dummy228); GC.KeepAlive (dummy238); GC.KeepAlive (dummy248); GC.KeepAlive (dummy258); GC.KeepAlive (dummy268); GC.KeepAlive (dummy278); GC.KeepAlive (dummy288); GC.KeepAlive (dummy298);
 			GC.KeepAlive (dummy209); GC.KeepAlive (dummy219); GC.KeepAlive (dummy229); GC.KeepAlive (dummy239); GC.KeepAlive (dummy249); GC.KeepAlive (dummy259); GC.KeepAlive (dummy269); GC.KeepAlive (dummy279); GC.KeepAlive (dummy289); GC.KeepAlive (dummy299);
 		}
-#endif // LINKALL
 	}
 }

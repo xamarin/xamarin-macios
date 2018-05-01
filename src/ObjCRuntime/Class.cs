@@ -407,7 +407,7 @@ namespace ObjCRuntime {
 			throw ErrorHelper.CreateError (8019, $"Could not find the assembly {Marshal.PtrToStringAuto (assembly_name)} in the loaded assemblies.");
 		}
 
-		internal unsafe static uint GetTokenReference (Type type)
+		internal unsafe static uint GetTokenReference (Type type, bool throw_exception = true)
 		{
 			if (type.IsGenericType)
 				type = type.GetGenericTypeDefinition ();
@@ -420,8 +420,11 @@ namespace ObjCRuntime {
 				return token;
 
 			// If type.Module.MetadataToken != 1, then the token must be a full token, which is not the case because we've already checked, so throw an exception.
-			if (type.Module.MetadataToken != 1)
+			if (type.Module.MetadataToken != 1) {
+				if (!throw_exception)
+					return Runtime.INVALID_TOKEN_REF;
 				throw ErrorHelper.CreateError (8025, $"Failed to compute the token reference for the type '{type.AssemblyQualifiedName}' because its module's metadata token is {type.Module.MetadataToken} when expected 1.");
+			}
 			
 			var map = Runtime.options->RegistrationMap;
 
@@ -435,11 +438,17 @@ namespace ObjCRuntime {
 				}
 			}
 			// If the assembly isn't registered, then the token must be a full token (which it isn't, because we've already checked).
-			if (assembly_index == -1)
+			if (assembly_index == -1) {
+				if (!throw_exception)
+					return Runtime.INVALID_TOKEN_REF;
 				throw ErrorHelper.CreateError (8025, $"Failed to compute the token reference for the type '{type.AssemblyQualifiedName}' because the assembly couldn't be found in the list of registered assemblies.");
+			}
 
-			if (assembly_index > 127)
+			if (assembly_index > 127) {
+				if (!throw_exception)
+					return Runtime.INVALID_TOKEN_REF;
 				throw ErrorHelper.CreateError (8025, $"Failed to compute the token reference for the type '{type.AssemblyQualifiedName}' because the assembly index {assembly_index} is not valid (must be <= 127).");
+			}
 
 			return (uint) ((type.MetadataToken << 8) + (assembly_index << 1));
 			

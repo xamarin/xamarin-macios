@@ -26,6 +26,11 @@ namespace MonoTouchFixtures.SpriteKit {
 	[Preserve (AllMembers = true)]
 	public class TextureAtlasTest {
 
+		// Apple bug ?
+		void CrashAvoider ()
+		{
+		}
+
 		[Test]
 		public void Empty ()
 		{
@@ -35,11 +40,11 @@ namespace MonoTouchFixtures.SpriteKit {
 			using (var atlas = new SKTextureAtlas ()) {
 				Assert.That (atlas.TextureNames, Is.Empty, "TextureNames");
 
-				// completionHandler is optional
-				SKTextureAtlas.PreloadTextures (new [] { atlas }, null);
+				// this completionHandler is *NOT* optional -> crash if null
+				SKTextureAtlas.PreloadTextures (new [] { atlas }, CrashAvoider);
 
-				// completionHandler is optional
-				atlas.Preload (null);
+				// this completionHandler is *NOT* optional -> crash if null
+				atlas.Preload (CrashAvoider);
 
 				// that returns a texture, calling 'MissingResource.png' (128 x 128)
 				using (var texture = atlas.TextureNamed ("ship")) {
