@@ -5109,7 +5109,7 @@ namespace XamCore.Foundation
 		bool IsClassKitDeepLink { get; }
 
 		[NoWatch, NoTV, NoMac, iOS (11,4)]
-		[NullAllowed, Export ("contextIdentifierPath")]
+		[NullAllowed, Export ("contextIdentifierPath", ArgumentSemantic.Strong)]
 		string[] ContextIdentifierPath { get; }
 	}
 
