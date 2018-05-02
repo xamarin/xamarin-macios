@@ -118,10 +118,10 @@ namespace XamCore.ClassKit {
 	[DisableDefaultCtor]
 	interface CLSObject : NSSecureCoding {
 
-		[Export ("dateCreated")]
+		[Export ("dateCreated", ArgumentSemantic.Strong)]
 		NSDate DateCreated { get; }
 
-		[Export ("dateLastModified")]
+		[Export ("dateLastModified", ArgumentSemantic.Strong)]
 		NSDate DateLastModified { get; }
 	}
 
@@ -136,7 +136,7 @@ namespace XamCore.ClassKit {
 		[Export ("duration")]
 		double Duration { get; }
 
-		[Export ("primaryActivityItem", ArgumentSemantic.Assign)]
+		[Export ("primaryActivityItem", ArgumentSemantic.Strong)]
 		CLSActivityItem PrimaryActivityItem { get; set; }
 
 		[Export ("addProgressRangeFromStart:toEnd:")]
@@ -145,7 +145,7 @@ namespace XamCore.ClassKit {
 		[Export ("addAdditionalActivityItem:")]
 		void AddAdditionalActivityItem (CLSActivityItem activityItem);
 
-		[Export ("additionalActivityItems")]
+		[Export ("additionalActivityItems", ArgumentSemantic.Strong)]
 		CLSActivityItem [] AdditionalActivityItems { get; }
 
 		// From CLSActivity (Activation) Category
@@ -180,7 +180,7 @@ namespace XamCore.ClassKit {
 		[Export ("value")]
 		bool Value { get; set; }
 
-		[Export ("valueType")]
+		[Export ("valueType", ArgumentSemantic.Assign)]
 		CLSBinaryValueType ValueType { get; }
 
 		[Export ("initWithIdentifier:title:type:")]
@@ -196,10 +196,10 @@ namespace XamCore.ClassKit {
 		[Export ("identifier")]
 		string Identifier { get; }
 
-		[NullAllowed, Export ("universalLinkURL", ArgumentSemantic.Assign)]
+		[NullAllowed, Export ("universalLinkURL", ArgumentSemantic.Strong)]
 		NSUrl UniversalLinkUrl { get; set; }
 
-		[Export ("type")]
+		[Export ("type", ArgumentSemantic.Assign)]
 		CLSContextType Type { get; }
 
 		[Export ("title")]
@@ -217,7 +217,7 @@ namespace XamCore.ClassKit {
 		IntPtr Constructor (CLSContextType type, string identifier, string title);
 
 		[Export ("active")]
-		bool Active { [Bind ("isActive")] get; set; }
+		bool Active { [Bind ("isActive")] get; }
 
 		[Export ("becomeActive")]
 		void BecomeActive ();
@@ -242,7 +242,7 @@ namespace XamCore.ClassKit {
 
 		// From CLSContext (Activity) Category
 
-		[NullAllowed, Export ("currentActivity")]
+		[NullAllowed, Export ("currentActivity", ArgumentSemantic.Strong)]
 		CLSActivity CurrentActivity { get; }
 
 		[Export ("createNewActivity")]
@@ -267,16 +267,16 @@ namespace XamCore.ClassKit {
 	interface CLSDataStore {
 
 		[Static]
-		[Export ("shared")]
+		[Export ("shared", ArgumentSemantic.Strong)]
 		CLSDataStore Shared { get; }
 
-		[Export ("mainAppContext")]
+		[Export ("mainAppContext", ArgumentSemantic.Strong)]
 		CLSContext MainAppContext { get; }
 
-		[NullAllowed, Export ("activeContext")]
+		[NullAllowed, Export ("activeContext", ArgumentSemantic.Strong)]
 		CLSContext ActiveContext { get; }
 
-		[NullAllowed, Export ("runningActivity")]
+		[NullAllowed, Export ("runningActivity", ArgumentSemantic.Strong)]
 		CLSActivity RunningActivity { get; }
 
 		[Wrap ("WeakDelegate"), Protocolize]
