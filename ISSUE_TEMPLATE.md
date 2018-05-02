@@ -1,3 +1,13 @@
+<!-- 🚨 STOP 🚨 𝗦𝗧𝗢𝗣 🚨 𝑺𝑻𝑶𝑷 🚨 -->
+
+<--
+Please fill in the *entire* template below.
+
+The template is designed to avoid unnecessary delays to confirm and fix reported issues. Issues with missing information generally ends up with a `need-info` label and take significally more time to fix. Please help us to help you!
+
+For more information see https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions
+For support requests use https://www.xamarin.com/support
+-->
 ### Steps to Reproduce
 
 1. 
