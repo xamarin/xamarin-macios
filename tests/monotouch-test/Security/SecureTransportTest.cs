@@ -99,12 +99,18 @@ namespace MonoTouchFixtures.Security {
 					using (var data = new NSData ())
 						Assert.That (ssl.SetOcspResponse (data), Is.EqualTo (0), "SetOcspResponse/empty");
 
+#if MONOMAC
+					if (TestRuntime.CheckXcodeVersion (9,3)) {
+#endif
 					int error;
 					var alpn = ssl.GetAlpnProtocols (out error);
 					Assert.That (alpn, Is.Empty, "alpn");
 					Assert.That (error, Is.EqualTo ((int) SecStatusCode.Param), "GetAlpnProtocols");
 					var protocols = new [] { "HTTP/1.1", "SPDY/1" };
 					Assert.That (ssl.SetAlpnProtocols (protocols), Is.EqualTo (0), "SetAlpnProtocols");
+#if MONOMAC
+					}
+#endif
 				}
 			}
 		}
