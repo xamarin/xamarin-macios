@@ -99,35 +99,21 @@ namespace MonoTouchFixtures.Security {
 					using (var data = new NSData ())
 						Assert.That (ssl.SetOcspResponse (data), Is.EqualTo (0), "SetOcspResponse/empty");
 
-// Test disabled for macOS due to Apple is not shipping SSLSetALPNProtocols and SSLCopyALPNProtocols on macOS
-#if !MONOMAC
+#if MONOMAC
+					if (TestRuntime.CheckXcodeVersion (9,3)) {
+#endif
 					int error;
 					var alpn = ssl.GetAlpnProtocols (out error);
 					Assert.That (alpn, Is.Empty, "alpn");
 					Assert.That (error, Is.EqualTo ((int) SecStatusCode.Param), "GetAlpnProtocols");
 					var protocols = new [] { "HTTP/1.1", "SPDY/1" };
 					Assert.That (ssl.SetAlpnProtocols (protocols), Is.EqualTo (0), "SetAlpnProtocols");
+#if MONOMAC
+					}
 #endif
 				}
 			}
 		}
-
-#if MONOMAC
-		[Test]
-		public void ReenableSSLGetSetAlpnProtocols ()
-		{
-			TestRuntime.AssertXcodeVersion (9,0);
-
-			// It seems that apple forgot to ship SSLSetALPNProtocols and SSLCopyALPNProtocols in macOS
-			// there are already radars filled about this https://bugs.swift.org/browse/SR-6131
-			// So this test will fail once Apple fixes this issue. when this happens we need to do two things, reenable
-			// the API and reenable the [Get|Set]AlpnProtocols test above, the one inside 'StreamDefaults' for the mac.
-
-			IntPtr seclib = Dlfcn.dlopen (Constants.SecurityLibrary, 0);
-			Assert.IsTrue (Dlfcn.GetIndirect (seclib, "SSLSetALPNProtocols") == IntPtr.Zero, "Reenable 'SetAlpnProtocols' inside src/Security/SslContext.cs and remove this test.");
-			Assert.IsTrue (Dlfcn.GetIndirect (seclib, "SSLCopyALPNProtocols") == IntPtr.Zero, "Reenable 'GetAlpnProtocols' inside src/Security/SslContext.cs and remove this test.");
-		}
-#endif
 
 		[Test]
 		public void DatagramDefaults ()
