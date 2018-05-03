@@ -68,7 +68,7 @@ namespace SpriteKit {
 #endif
 
 	delegate void SKNodeChildEnumeratorHandler (SKNode node, out bool stop);
-	delegate void SKActionTimingFunction (float /* float, not CGFloat */ time);
+	delegate float SKActionTimingFunction2 (float /* float, not CGFloat */ time);
 
 	[Watch (3,0)]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
@@ -2324,7 +2324,7 @@ namespace SpriteKit {
 
 		[iOS (8,0), Mac (10,10)]
 		[NullAllowed, Export ("timingFunction", ArgumentSemantic.Assign)]
-		SKActionTimingFunction TimingFunction { get; set; }
+		SKActionTimingFunction2 TimingFunction2 { get; set; }
 
 		[iOS (8,0), Mac(10,10)]
 		[Static, Export ("falloffBy:duration:")]
