@@ -1431,7 +1431,6 @@
 !missing-pinvoke! SecVerifyTransformCreate is not bound
 !missing-pinvoke! SessionCreate is not bound
 !missing-pinvoke! SessionGetInfo is not bound
-!missing-pinvoke! SSLCopyALPNProtocols is not bound
 !missing-pinvoke! SSLCopyCertificateAuthorities is not bound
 !missing-pinvoke! SSLCopyPeerCertificates is not bound
 !missing-pinvoke! SSLCopyTrustedRoots is not bound
@@ -1448,7 +1447,6 @@
 !missing-pinvoke! SSLSetAllowsAnyRoot is not bound
 !missing-pinvoke! SSLSetAllowsExpiredCerts is not bound
 !missing-pinvoke! SSLSetAllowsExpiredRoots is not bound
-!missing-pinvoke! SSLSetALPNProtocols is not bound
 !missing-pinvoke! SSLSetCertificateAuthorities is not bound
 !missing-pinvoke! SSLSetDiffieHellmanParams is not bound
 !missing-pinvoke! SSLSetEnableCertVerify is not bound
