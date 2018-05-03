@@ -376,16 +376,27 @@ class BindingTouch {
 			CurrentPlatform = PlatformName.MacOSX;
 			Unified = true;
 			nostdlib = true;
-			skipSystemDrawing = target_framework == TargetFramework.Xamarin_Mac_4_5_Full;
 			if (string.IsNullOrEmpty (baselibdll)) {
-				if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
+				if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile)
 					baselibdll = Path.Combine (GetSDKRoot (), "lib", "reference", "mobile", "Xamarin.Mac.dll");
-					AddAnyMissingSystemReferencesFromSDK ("lib/mono/Xamarin.Mac", references);
-				} else {
+				else if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full || target_framework == TargetFramework.Xamarin_Mac_4_5_System)
 					baselibdll = Path.Combine (GetSDKRoot (), "lib", "reference", "full", "Xamarin.Mac.dll");
-					AddAnyMissingSystemReferencesFromSDK ("lib/mono/4.5", references);
-				}
+				else
+					throw ErrorHelper.CreateError (1043, "Internal error: unknown target framework '{0}'.", target_framework); 
 			}
+			if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
+				skipSystemDrawing = true;
+				AddAnyMissingSystemReferencesFromSDK ("lib/mono/Xamarin.Mac", references);
+			} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full) {
+				skipSystemDrawing = true;
+				AddAnyMissingSystemReferencesFromSDK ("lib/mono/4.5", references);
+			} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_System) {
+				skipSystemDrawing = false;
+				AddAnyMissingSystemReferences ("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5", references);
+			} else {
+				throw ErrorHelper.CreateError (1043, "Internal error: unknown target framework '{0}'.", target_framework); 
+			}
+
 			break;
 		default:
 			throw ErrorHelper.CreateError (1043, "Internal error: unknown target framework '{0}'.", target_framework);
@@ -613,6 +624,11 @@ class BindingTouch {
 		if (!references.Any ((v) => Path.GetFileNameWithoutExtension (v) == "mscorlib"))
 			references.Add (Path.Combine (sdk_path, "mscorlib.dll"));
 
+		// In theory I believe this should be skipSystemDrawing however multiple XI targets do not set it
+		// so I do not believe it would be safe. 
+		if (target_framework == TargetFramework.Xamarin_Mac_4_5_System &&
+		    !references.Any ((v) => Path.GetFileNameWithoutExtension (v) == "System.Drawing"))
+			references.Add (Path.Combine (sdk_path, "System.Drawing.dll"));
 	}
 
 	static void AddAnyMissingSystemReferencesFromSDK (string sdk_offset, List<string> references)
