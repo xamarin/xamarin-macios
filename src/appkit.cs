@@ -19160,7 +19160,7 @@ namespace AppKit {
 	[Protocol]
 	interface NSTokenFieldDelegate {
 		[Export ("tokenField:completionsForSubstring:indexOfToken:indexOfSelectedItem:")]
-		NSArray GetCompletionStrings (NSTokenField tokenField, string substring, nint tokenIndex, nint selectedIndex);
+		NSArray GetCompletionStrings (NSTokenField tokenField, string substring, nint tokenIndex, ref nint selectedIndex);
 
 		[Export ("tokenField:shouldAddObjects:atIndex:")]
 		NSArray ShouldAddObjects (NSTokenField tokenField, NSObject[] tokens, nuint index);
