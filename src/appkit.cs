@@ -17994,7 +17994,7 @@ namespace AppKit {
 		NSArray GetCompletionStrings (NSTokenFieldCell tokenFieldCell, string substring, nint tokenIndex, ref nint selectedIndex);
 		
 		[Export ("tokenFieldCell:shouldAddObjects:atIndex:")]
-		NSArray ShouldAddObjects (NSTokenFieldCell tokenFieldCell, NSArray tokens, nuint index);
+		NSArray ShouldAddObjects (NSTokenFieldCell tokenFieldCell, NSObject[] tokens, nuint index);
 		
 		[Export ("tokenFieldCell:displayStringForRepresentedObject:")]
 		string GetDisplayString (NSTokenFieldCell tokenFieldCell, NSObject representedObject);
@@ -19160,10 +19160,10 @@ namespace AppKit {
 	[Protocol]
 	interface NSTokenFieldDelegate {
 		[Export ("tokenField:completionsForSubstring:indexOfToken:indexOfSelectedItem:")]
-		string [] GetCompletionStrings (NSTokenField tokenField, string substring, nint tokenIndex, nint selectedIndex);
+		NSArray GetCompletionStrings (NSTokenField tokenField, string substring, nint tokenIndex, nint selectedIndex);
 
 		[Export ("tokenField:shouldAddObjects:atIndex:")]
-		NSObject[] ShouldAddObjects (NSTokenField tokenField, NSObject[] tokens, nuint index);
+		NSArray ShouldAddObjects (NSTokenField tokenField, NSObject[] tokens, nuint index);
 
 		[Export ("tokenField:displayStringForRepresentedObject:")]
 		string GetDisplayString (NSTokenField tokenField, NSObject representedObject);
