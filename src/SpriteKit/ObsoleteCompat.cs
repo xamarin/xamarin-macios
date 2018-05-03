@@ -21,7 +21,7 @@ namespace SpriteKit {
 			return FalloffBy (to, duration);
 		}
 
-		[Obsolete ("Use the 'TimingFunction' property.")]
+		[Obsolete ("Use the 'TimingFunction2' property.")]
 		public virtual void SetTimingFunction (SKActionTimingFunction timingFunction)
 		{
 			TimingFunction = timingFunction;
