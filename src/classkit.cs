@@ -9,15 +9,15 @@
 
 #if XAMCORE_2_0
 using System;
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 using System.Reflection;
 
-namespace XamCore.ClassKit {
+namespace ClassKit {
 
 	[NoWatch, NoTV, NoMac, iOS (11,4)]
 	[Native]
-	enum CLSBinaryValueType : nint {
+	enum CLSBinaryValueType : long {
 		TrueFalse = 0,
 		PassFail,
 		YesNo,
@@ -25,7 +25,7 @@ namespace XamCore.ClassKit {
 
 	[NoWatch, NoTV, NoMac, iOS (11,4)]
 	[Native]
-	enum CLSContextType : nint {
+	enum CLSContextType : long {
 		None = 0,
 		App,
 		Chapter,
@@ -47,7 +47,7 @@ namespace XamCore.ClassKit {
 	[NoWatch, NoTV, NoMac, iOS (11,4)]
 	[Native]
 	[ErrorDomain ("CLSErrorCodeDomain")]
-	public enum CLSErrorCode : nint {
+	public enum CLSErrorCode : long {
 		None = 0,
 		ClassKitUnavailable,
 		InvalidArgument,
