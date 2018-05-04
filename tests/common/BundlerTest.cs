@@ -21,11 +21,11 @@ namespace Xamarin
 	[TestFixture]
 	public class BundlerTests
 	{
-		[Test]
 #if __MACOS__
 		// The cache doesn't work properly in mmp yet.
 		// [TestCase (Profile.macOSMobile)]
 #else
+		[Test]
 		[TestCase (Profile.iOS)]
 #endif
 		public void ModifiedResponseFile (Profile profile)
