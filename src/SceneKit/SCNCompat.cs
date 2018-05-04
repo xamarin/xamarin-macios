@@ -118,7 +118,7 @@ namespace SceneKit {
 		[Obsolete ("Use 'SearchMode' instead.")]
 		public SCNHitTestSearchMode? OptionSearchMode {
 			get {
-				return (SCNHitTestSearchMode?) GetLongValue (SCNHitTest.SearchModeKey);
+				return SearchMode;
 			}
 		}
 	}
