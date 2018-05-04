@@ -1123,9 +1123,16 @@ namespace SceneKit {
 		[Field ("SCNHitTestOptionCategoryBitMask")]
 		NSString OptionCategoryBitMaskKey { get; }
 
+#if !XAMCORE_4_0
 		[Watch (4, 0), TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
+		[Obsolete ("Use 'SearchModeKey' instead.")]
 		[Field ("SCNHitTestOptionSearchMode")]
 		NSString OptionSearchModeKey { get; }
+#endif
+
+		[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+		[Field ("SCNHitTestOptionSearchMode")]
+		NSString SearchModeKey { get; }
 	}
 	
 	[Watch (3,0)]
@@ -1615,7 +1622,7 @@ namespace SceneKit {
 		bool IgnoreChildNodes { get; set; }
 		bool IgnoreHiddenNodes { get; set; }
 		SCNNode RootNode { get; set; }
-		SCNHitTestSearchMode OptionSearchMode { get; }
+		SCNHitTestSearchMode SearchMode { get; set; }
 	}
 
 	[Watch (3,0)]

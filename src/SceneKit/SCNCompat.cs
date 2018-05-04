@@ -111,4 +111,16 @@ namespace SceneKit {
 		}
 	}
 #endif
+
+#if !XAMCORE_4_0
+	[Watch (3,0)]
+	public partial class SCNHitTestOptions {
+		[Obsolete ("Use 'SearchMode' instead.")]
+		public SCNHitTestSearchMode? OptionSearchMode {
+			get {
+				return (SCNHitTestSearchMode?) GetLongValue (SCNHitTest.SearchModeKey);
+			}
+		}
+	}
+#endif
 }
