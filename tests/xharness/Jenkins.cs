@@ -20,16 +20,16 @@ namespace xharness
 		public bool IncludeClassicMac = true;
 		public bool IncludeBcl;
 		public bool IncludeMac = true;
-		public bool IncludeiOS = true;
+		public bool IncludeiOS = false;
 		public bool IncludeiOSExtensions;
-		public bool IncludetvOS = true;
-		public bool IncludewatchOS = true;
+		public bool IncludetvOS = false;
+		public bool IncludewatchOS = false;
 		public bool IncludeMmpTest;
-		public bool IncludeiOSMSBuild = true;
+		public bool IncludeiOSMSBuild = false;
 		public bool IncludeMtouch;
 		public bool IncludeBtouch;
 		public bool IncludeMacBindingProject;
-		public bool IncludeSimulator = true;
+		public bool IncludeSimulator = false;
 		public bool IncludeDevice;
 		public bool IncludeXtro;
 
@@ -2587,6 +2587,7 @@ function toggleAll (show)
 			ExecutionResult = TestExecutingResult.Building;
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
 				var log = Logs.Create ($"build-{Platform}-{Timestamp}.txt", "Build log");
+				log.Timestamp = true;
 				await RestoreNugetsAsync (log, resource);
 				using (var xbuild = new Process ()) {
 					xbuild.StartInfo.FileName = "/Applications/Visual Studio.app/Contents/MacOS/vstool";
@@ -2661,6 +2662,7 @@ function toggleAll (show)
 		{
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
 				var log = Logs.Create ($"build-{Platform}-{Timestamp}.txt", "Build log");
+				log.Timestamp = true;
 
 				await RestoreNugetsAsync (log, resource);
 

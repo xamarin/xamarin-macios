@@ -357,7 +357,28 @@ namespace xharness
 
 		void ParseConfigFiles ()
 		{
-			ParseConfigFiles (FindConfigFiles (UseSystem ? "test-system.config" : "test.config"));
+			var config_name = UseSystem ? "test-system.config" : "test.config";
+			var test_config = FindConfigFiles (config_name);
+			if (!test_config.Any ()) {
+				// Run 'make test.config' in the tests/ directory
+				// First find the tests/ directory
+				var dir = Path.GetFullPath (RootDirectory);
+				string tests_dir = null;
+				while (dir.Length > 1) {
+					var file = Path.Combine (dir, "tests");
+					if (Directory.Exists (file)) {
+						tests_dir = file;
+						break;
+					}
+					dir = Path.GetDirectoryName (dir);
+				}
+				if (tests_dir == null)
+					throw new Exception ($"Could not find the directory 'tests'. Please run 'make' in the tests/ directory.");
+				// Run make
+				ProcessHelper.ExecuteCommandAsync ("make", $"-C {StringUtils.Quote (tests_dir)} {config_name}", new ConsoleLog (), TimeSpan.FromMinutes (1)).Wait ();
+				test_config = FindConfigFiles ("test.config");
+			}
+			ParseConfigFiles (test_config);
 			ParseConfigFiles (FindConfigFiles ("Make.config.local"));
 			ParseConfigFiles (FindConfigFiles ("Make.config"));
 		}

@@ -1909,6 +1909,10 @@ xamarin_release_managed_ref (id self, MonoObject *managed_obj)
 	// COOP: This is an icall, so at entry we're in unsafe mode.
 	// COOP: we stay in unsafe mode (since we write to the managed memory) unless calling a selector (which must be done in safe mode)
 	MONO_ASSERT_GC_UNSAFE;
+
+	char *crash_info = xamarin_strdup_printf ("xrmf:%p:%s", self, mono_class_get_name (mono_object_get_class (managed_obj)));
+	xamarin_append_to_crash_info (crash_info);
+	xamarin_free (crash_info);
 	
 	bool user_type = is_user_type (self);
 	guint32 exception_gchandle = 0;
@@ -2845,6 +2849,45 @@ xamarin_is_managed_exception_marshaling_disabled ()
 	}
 #else
 	return false;
+#endif
+}
+
+#if MONOMAC
+static char __crashreporter_info_buff__[16384 /* it looks like this is the max size the crash reporter will write */] = { 0 };
+const char *__crashreporter_info__ = &__crashreporter_info_buff__[0];
+volatile char *__crashreporter_next_buff = __crashreporter_info_buff__;
+int __crashreporter_lines = 0;
+
+asm (".desc __crashreporter_info__, 0x10");
+#endif
+
+void
+xamarin_append_to_crash_info (const char *text)
+{
+#if MONOMAC
+	// Multiple threads can write to __crashreporter_next_buff at the same
+	// time, which will most likely cause garbled output. But the point here
+	// is to track down issues that are difficult to track down, so we want to
+	// affect the app as little as possible, and the risk of some garbled
+	// output is probably worth it to avoid adding synchronization, which may
+	// scare off any well-hidden bugs. There's a limit to the amount of data
+	// we can write (seems to be 1 page worth of memory), so callers should
+	// add extra text sparingly, and we'll do the same here.
+	char *ptr = (char *) __crashreporter_next_buff;
+	size_t length_left = sizeof (__crashreporter_info_buff__) - (ptr - __crashreporter_info_buff__) - 1;
+	char buff[128];
+	int length = snprintf (buff, sizeof (buff), "%i:%s\n", OSAtomicIncrement32 (&__crashreporter_lines), text);
+	memcpy (ptr, buff, MIN (strlen (buff), length_left));
+	ptr += length;
+	if (ptr >= __crashreporter_info_buff__ + sizeof (__crashreporter_info_buff__)) {
+		// Start over at the beginning
+		__crashreporter_next_buff = __crashreporter_info_buff__;
+	} else {
+		// Append next time
+		__crashreporter_next_buff = ptr;
+	}
+#else
+	NSLog (@"Appending to crash report is only supported on macOS: %s", text);
 #endif
 }
 

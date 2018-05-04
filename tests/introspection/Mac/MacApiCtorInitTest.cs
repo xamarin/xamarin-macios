@@ -27,7 +27,7 @@ namespace Introspection {
 
 		public MacApiCtorInitTest ()
 		{
-			//LogProgress = true;
+			LogProgress = true;
 			ContinueOnFailure = true;
 		}
 

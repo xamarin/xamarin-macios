@@ -51,6 +51,8 @@ namespace Introspection {
 				select type;
 
 			foreach (var type in structQuery) {
+				if (LogProgress)
+					Console.WriteLine ("    {0}", type);
 				totalStructs++;
 				if (!CheckStruct (type)) {
 					totalErrors++;

@@ -186,10 +186,14 @@ namespace Xamarin
 
 		static object ReadFile (string filename)
 		{
-			using (var fs = new FileStream (filename, FileMode.Open, FileAccess.Read, FileShare.Read)) {
-				using (var reader = new BinaryReader (fs)) {
-					return ReadFile (reader, filename);
+			try {
+				using (var fs = new FileStream (filename, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+					using (var reader = new BinaryReader (fs)) {
+						return ReadFile (reader, filename);
+					}
 				}
+			} catch (Exception e) {
+				throw ErrorHelper.CreateError (99, e, $"Internal error: failed to read the file {filename}: {e.Message}");
 			}
 		}
 

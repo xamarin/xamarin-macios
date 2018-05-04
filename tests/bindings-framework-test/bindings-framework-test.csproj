@@ -54,13 +54,13 @@
     <TestLibrariesDirectory>..\..\tests\test-libraries</TestLibrariesDirectory>
   </PropertyGroup>
   <ItemGroup>
-    <ObjcBindingNativeFramework Include="..\..\tests\test-libraries\.libs\ios\XTest.framework">
+    <ObjcBindingNativeFramework Include="$(TestLibrariesDirectory)\.libs\ios\XTest.framework">
       <Link>XTest.framework</Link>
     </ObjcBindingNativeFramework>
-    <ObjcBindingNativeFramework Include="..\..\tests\test-libraries\.libs\ios\XStaticObjectTest.framework">
+    <ObjcBindingNativeFramework Include="$(TestLibrariesDirectory)\.libs\ios\XStaticObjectTest.framework">
       <Link>XStaticObjectTest.framework</Link>
     </ObjcBindingNativeFramework>
-    <ObjcBindingNativeFramework Include="..\..\tests\test-libraries\.libs\ios\XStaticArTest.framework">
+    <ObjcBindingNativeFramework Include="$(TestLibrariesDirectory)\.libs\ios\XStaticArTest.framework">
       <Link>XStaticArTest.framework</Link>
     </ObjcBindingNativeFramework>
   </ItemGroup>
@@ -70,20 +70,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\tests\test-libraries\libframework.m">
+    <None Include="$(TestLibrariesDirectory)\libframework.m">
       <Link>libframework.m</Link>
     </None>
-    <None Include="..\..\tests\test-libraries\libframework.h">
+    <None Include="$(TestLibrariesDirectory)\libframework.h">
       <Link>libframework.h</Link>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <TestLibrariesInput Include="..\..\tests\test-libraries\libframework.m" />
-    <TestLibrariesOutput Include="..\..\tests\test-libraries\.libs\ios\XTest.framework" />
-    <TestLibrariesOutput Include="..\..\tests\test-libraries\.libs\ios\XSharedObjectTest.framework" />
-    <TestLibrariesOutput Include="..\..\tests\test-libraries\.libs\ios\XSharedARTest.framework" />
-  </ItemGroup>
-  <Target Name="BeforeBuild" Inputs="@(TestLibrariesInput)" Outputs="@(TestLibrariesOutput)">
-    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
-  </Target>
+  <Import Project="$(TestLibrariesDirectory)\Build.targets" />
 </Project>

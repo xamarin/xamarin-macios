@@ -57,7 +57,7 @@
     <TestLibrariesDirectory>..\..\tests\test-libraries</TestLibrariesDirectory>
   </PropertyGroup>
   <ItemGroup>
-    <ObjcBindingNativeLibrary Include="..\..\tests\test-libraries\.libs\ios\libtest2.a">
+    <ObjcBindingNativeLibrary Include="$(TestLibrariesDirectory)\.libs\ios\libtest2.a">
       <Link>libtest2.a</Link>
     </ObjcBindingNativeLibrary>
   </ItemGroup>
@@ -68,23 +68,14 @@
     <Compile Include="BindingTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\tests\test-libraries\libtest2.m">
+    <None Include="$(TestLibrariesDirectory)\libtest2.m">
       <Link>libtest2.m</Link>
     </None>
-    <None Include="..\..\tests\test-libraries\libtest2.h">
+    <None Include="$(TestLibrariesDirectory)\libtest2.h">
       <Link>libtest2.h</Link>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <GeneratedTestInput Include="..\..\tests\test-libraries\*.m" />
-    <GeneratedTestInput Include="..\..\tests\test-libraries\*.h" />
-    <GeneratedTestInput Include="..\..\tests\test-libraries\*.cs" />
-    <GeneratedTestInput Include="..\..\tests\test-libraries\Makefile" />
-    <GeneratedTestOutput Include="..\..\tests\test-libraries\.libs\ios\libtest2.a" />
-  </ItemGroup>
-  <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)">
-    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
-  </Target>
+  <Import Project="$(TestLibrariesDirectory)\Build.targets" />
   <ItemGroup>
     <ProjectReference Include="..\bindings-test\bindings-test.csproj">
       <Project>{48585BC2-D604-4CF2-A827-D887BEA51FD6}</Project>

@@ -740,6 +740,8 @@ namespace Foundation {
 		}
 
 		protected virtual void Dispose (bool disposing) {
+			if (GetType ().Name == "CBCentralManager")
+				Console.WriteLine ("{0}.Dispose ({1}): 0x{3} disposed: {4}\n{2}", GetType ().Name, disposing, Environment.StackTrace, handle.ToString ("x"), disposed);
 			if (disposed)
 				return;
 			disposed = true;

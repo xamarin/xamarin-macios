@@ -61,6 +61,9 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="OpenTK" />
   </ItemGroup>
+  <PropertyGroup>
+    <TestLibrariesDirectory>..\..\tests\test-libraries</TestLibrariesDirectory>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\common\TestRuntime.cs">
       <Link>TestRuntime.cs</Link>
@@ -91,8 +94,8 @@
     <Compile Include="..\monotouch-test\**\*.cs" Exclude="..\monotouch-test\obj\**">
       <Link>%(RecursiveDir)%(Filename).cs</Link>
     </Compile>
-    <Compile Include="..\..\tests\test-libraries\TrampolineTest.generated.cs" />
-    <Compile Include="..\..\tests\test-libraries\RegistrarTest.generated.cs" />
+    <Compile Include="$(TestLibrariesDirectory)\TrampolineTest.generated.cs" />
+    <Compile Include="$(TestLibrariesDirectory)\RegistrarTest.generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -184,18 +187,5 @@
     </BundleResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
-  <PropertyGroup>
-    <TestLibrariesDirectory>..\..\tests\test-libraries</TestLibrariesDirectory>
-  </PropertyGroup>
-  <ItemGroup>
-    <GeneratedTestInput Include="..\..\tests\test-libraries\*.m" />
-    <GeneratedTestInput Include="..\..\tests\test-libraries\*.h" />
-    <GeneratedTestInput Include="..\..\tests\test-libraries\*.cs" />
-    <GeneratedTestInput Include="..\..\tests\test-libraries\Makefile" />
-    <GeneratedTestOutput Include="..\..\tests\test-libraries\TrampolineTest.generated.cs" />
-    <GeneratedTestOutput Include="..\..\tests\test-libraries\RegistrarTest.generated.cs" />
-  </ItemGroup>
-  <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)">
-    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
-  </Target>
+  <Import Project="$(TestLibrariesDirectory)\Build.targets" />
 </Project>
