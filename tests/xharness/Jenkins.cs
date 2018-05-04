@@ -133,27 +133,61 @@ namespace xharness
 			return Task.WhenAll (devs, sims);
 		}
 
+		AppRunnerTarget[] GetAppRunnerTargets (TestPlatform platform)
+		{
+			switch (platform) {
+			case TestPlatform.tvOS:
+				return new AppRunnerTarget [] { AppRunnerTarget.Simulator_tvOS };
+			case TestPlatform.watchOS:
+				return new AppRunnerTarget [] { AppRunnerTarget.Simulator_watchOS };
+			case TestPlatform.iOS_Unified:
+				return new AppRunnerTarget [] { AppRunnerTarget.Simulator_iOS32, AppRunnerTarget.Simulator_iOS64 };
+			case TestPlatform.iOS_Unified32:
+				return new AppRunnerTarget [] { AppRunnerTarget.Simulator_iOS32 };
+			case TestPlatform.iOS_Unified64:
+			case TestPlatform.iOS_TodayExtension64:
+				return new AppRunnerTarget [] { AppRunnerTarget.Simulator_iOS64 };
+			default:
+				throw new NotImplementedException (platform.ToString ());
+			}
+		}
+
+		string GetSimulatorMinVersion (TestPlatform platform)
+		{
+			switch (platform) {
+			case TestPlatform.iOS:
+			case TestPlatform.iOS_Unified:
+			case TestPlatform.iOS_TodayExtension64:
+			case TestPlatform.iOS_Unified32:
+			case TestPlatform.iOS_Unified64:
+				return "iOS " + Xamarin.SdkVersions.MiniOSSimulator;
+			case TestPlatform.tvOS:
+				return "tvOS " + Xamarin.SdkVersions.MinTVOSSimulator;
+			case TestPlatform.watchOS:
+				return "watchOS " + Xamarin.SdkVersions.MinWatchOSSimulator;
+			default:
+				throw new NotImplementedException (platform.ToString ());
+			}
+		}
+
 		IEnumerable<RunSimulatorTask> CreateRunSimulatorTaskAsync (XBuildTask buildTask)
 		{
 			var runtasks = new List<RunSimulatorTask> ();
 
-			AppRunnerTarget [] targets;
+			AppRunnerTarget [] targets = GetAppRunnerTargets (buildTask.Platform);
 			TestPlatform [] platforms;
 			bool [] ignored;
 
 			switch (buildTask.Platform) {
 			case TestPlatform.tvOS:
-				targets = new AppRunnerTarget [] { AppRunnerTarget.Simulator_tvOS };
 				platforms = new TestPlatform [] { TestPlatform.tvOS };
 				ignored = new [] { false };
 				break;
 			case TestPlatform.watchOS:
-				targets = new AppRunnerTarget [] { AppRunnerTarget.Simulator_watchOS };
 				platforms = new TestPlatform [] { TestPlatform.watchOS };
 				ignored = new [] { false };
 				break;
 			case TestPlatform.iOS_Unified:
-				targets = new AppRunnerTarget [] { AppRunnerTarget.Simulator_iOS32, AppRunnerTarget.Simulator_iOS64 };
 				platforms = new TestPlatform [] { TestPlatform.iOS_Unified32, TestPlatform.iOS_Unified64 };
 				ignored = new [] { !IncludeiOS32, false};
 				break;
@@ -167,7 +201,7 @@ namespace xharness
 			}
 
 			for (int i = 0; i < targets.Length; i++)
-				runtasks.Add (new RunSimulatorTask (buildTask, Simulators.SelectDevices (targets [i], SimulatorLoadLog)) { Platform = platforms [i], Ignored = ignored[i] || buildTask.Ignored });
+				runtasks.Add (new RunSimulatorTask (buildTask, Simulators.SelectDevices (targets [i], SimulatorLoadLog, false)) { Platform = platforms [i], Ignored = ignored[i] || buildTask.Ignored });
 
 			return runtasks;
 		}
@@ -201,6 +235,7 @@ namespace xharness
 			public bool UseThumb;
 			public MonoNativeFlavor MonoNativeFlavor;
 			public MonoNativeLinkMode MonoNativeLinkMode;
+			public IEnumerable<IDevice> Candidates;
 		}
 
 		IEnumerable<TestData> GetTestData (RunTestTask test)
@@ -274,6 +309,10 @@ namespace xharness
 					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Undefines = "DYNAMIC_REGISTRAR" };
 					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Undefines = "DYNAMIC_REGISTRAR", Ignored = !IncludeAll };
 					break;
+				case "introspection":
+					foreach (var target in GetAppRunnerTargets (test.Platform))
+						yield return new TestData { Variation = $"Debug ({GetSimulatorMinVersion (test.Platform)})", Debug = true, Candidates = Simulators.SelectDevices (target, SimulatorLoadLog, true) };
+					break;
 				}
 				break;
 			case "AnyCPU":
@@ -296,7 +335,7 @@ namespace xharness
 			}
 		}
 
-		IEnumerable<T> CreateTestVariations<T> (IEnumerable<T> tests, Func<XBuildTask, T, T> creator) where T: RunTestTask
+		IEnumerable<T> CreateTestVariations<T> (IEnumerable<T> tests, Func<XBuildTask, T, IEnumerable<IDevice>, T> creator) where T: RunTestTask
 		{
 			foreach (var task in tests) {
 				if (string.IsNullOrEmpty (task.Variation))
@@ -316,6 +355,7 @@ namespace xharness
 					var defines = test_data.Defines;
 					var undefines = test_data.Undefines;
 					var ignored = test_data.Ignored;
+					var candidates = test_data.Candidates;
 
 					var clone = task.TestProject.Clone ();
 					var clone_task = Task.Run (async () => {
@@ -393,7 +433,7 @@ namespace xharness
 						InitialTask = clone_task,
 						TestName = clone.Name,
 					};
-					T newVariation = creator (build, task);
+					T newVariation = creator (build, task, candidates);
 					newVariation.Variation = variation;
 					newVariation.Ignored = task.Ignored || ignored;
 					newVariation.BuildOnly = task.BuildOnly;
@@ -451,7 +491,7 @@ namespace xharness
 				}
 			}
 
-			var testVariations = CreateTestVariations (runSimulatorTasks, (buildTask, test) => new RunSimulatorTask (buildTask, test.Candidates)).ToList ();
+			var testVariations = CreateTestVariations (runSimulatorTasks, (buildTask, test, candidates) => new RunSimulatorTask (buildTask, candidates?.Cast<SimDevice> () ?? test.Candidates)).ToList ();
 
 			foreach (var taskGroup in testVariations.GroupBy ((RunSimulatorTask task) => task.Platform)) {
 				yield return new AggregatedRunSimulatorTask (taskGroup) {
@@ -533,7 +573,7 @@ namespace xharness
 				}
 			}
 
-			return CreateTestVariations (rv, (buildTask, test) => new RunDeviceTask (buildTask, test.Candidates));
+			return CreateTestVariations (rv, (buildTask, test, candidates) => new RunDeviceTask (buildTask, candidates?.Cast<Device> () ?? test.Candidates));
 		}
 
 		static string AddSuffixToPath (string path, string suffix)
@@ -865,7 +905,7 @@ namespace xharness
 							TestName = project.Name,
 							IsUnitTest = true,
 						};
-						execs = CreateTestVariations (new [] { exec }, (buildTask, test) => new MacExecuteTask (buildTask) { IsUnitTest = true } );
+						execs = CreateTestVariations (new [] { exec }, (buildTask, test, candidates) => new MacExecuteTask (buildTask) { IsUnitTest = true } );
 					}
 					exec.Variation = configurations.Length > 1 ? config : project.TargetFrameworkFlavor.ToString ();
 
@@ -1925,8 +1965,11 @@ namespace xharness
 									IEnumerable<IDevice> candidates = (runTest as RunDeviceTask)?.Candidates;
 									if (candidates == null)
 										candidates = (runTest as RunSimulatorTask)?.Candidates;
-									if (candidates != null)
-										writer.WriteLine ($"Candidate devices: {string.Join (", ", candidates.Select ((v) => v.Name))} <br />");
+									if (candidates != null) {
+										writer.WriteLine ($"Candidate devices:<br />");
+										foreach (var candidate in candidates)
+											writer.WriteLine ($"&nbsp;&nbsp;&nbsp;&nbsp;{candidate.Name} (Version: {candidate.OSVersion})<br />");
+									}
 									writer.WriteLine ($"Build duration: {runTest.BuildTask.Duration} <br />");
 								}
 								if (test.Duration.Ticks > 0)
