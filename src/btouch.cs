@@ -339,7 +339,7 @@ class BindingTouch {
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/2.1/monotouch.dll");
 			Path.Combine (GetSDKRoot (), "bin/smcs");
-			AddAnyMissingSystemReferencesFromSDK ("lib/mono/2.1/", references);
+			ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/2.1/", references);
 			break;
 		case "xamarin.ios":
 			CurrentPlatform = PlatformName.iOS;
@@ -347,7 +347,7 @@ class BindingTouch {
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.iOS/Xamarin.iOS.dll");
-			AddAnyMissingSystemReferencesFromSDK ("lib/mono/Xamarin.iOS", references);
+			ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.iOS", references);
 			break;
 		case "xamarin.tvos":
 			CurrentPlatform = PlatformName.TvOS;
@@ -355,7 +355,7 @@ class BindingTouch {
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll");
-			AddAnyMissingSystemReferencesFromSDK ("lib/mono/Xamarin.TVOS", references);
+			ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.TVOS", references);
 			break;
 		case "xamarin.watchos":
 			CurrentPlatform = PlatformName.WatchOS;
@@ -363,29 +363,40 @@ class BindingTouch {
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.dll");
-			AddAnyMissingSystemReferencesFromSDK ("lib/mono/Xamarin.WatchOS", references);
+			ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.WatchOS", references);
 			break;
 		case "xammac":
 			CurrentPlatform = PlatformName.MacOSX;
 			Unified = false;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib", "mono", "XamMac.dll");
-			AddAnyMissingSystemReferences ("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5", references);
+			ReferenceFixer.FixSDKReferences ("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5", references);
 			break;
 		case "xamarin.mac":
 			CurrentPlatform = PlatformName.MacOSX;
 			Unified = true;
 			nostdlib = true;
-			skipSystemDrawing = target_framework == TargetFramework.Xamarin_Mac_4_5_Full;
 			if (string.IsNullOrEmpty (baselibdll)) {
-				if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
+				if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile)
 					baselibdll = Path.Combine (GetSDKRoot (), "lib", "reference", "mobile", "Xamarin.Mac.dll");
-					AddAnyMissingSystemReferencesFromSDK ("lib/mono/Xamarin.Mac", references);
-				} else {
+				else if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full || target_framework == TargetFramework.Xamarin_Mac_4_5_System)
 					baselibdll = Path.Combine (GetSDKRoot (), "lib", "reference", "full", "Xamarin.Mac.dll");
-					AddAnyMissingSystemReferencesFromSDK ("lib/mono/4.5", references);
-				}
+				else
+					throw ErrorHelper.CreateError (1043, "Internal error: unknown target framework '{0}'.", target_framework); 
 			}
+			if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
+				skipSystemDrawing = true;
+				ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.Mac", references);
+			} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full) {
+				skipSystemDrawing = true;
+				ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/4.5", references);
+			} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_System) {
+				skipSystemDrawing = false;
+				ReferenceFixer.FixSDKReferences ("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5", references, forceSystemDrawing : true);
+			} else {
+				throw ErrorHelper.CreateError (1043, "Internal error: unknown target framework '{0}'.", target_framework); 
+			}
+
 			break;
 		default:
 			throw ErrorHelper.CreateError (1043, "Internal error: unknown target framework '{0}'.", target_framework);
@@ -606,19 +617,6 @@ class BindingTouch {
 		return 0;
 	}
 	
-	static void AddAnyMissingSystemReferences (string sdk_path, List<string> references)
-	{
-		if (!references.Any ((v) => Path.GetFileNameWithoutExtension (v) == "System"))
-			references.Add (Path.Combine (sdk_path, "System.dll"));
-		if (!references.Any ((v) => Path.GetFileNameWithoutExtension (v) == "mscorlib"))
-			references.Add (Path.Combine (sdk_path, "mscorlib.dll"));
-
-	}
-
-	static void AddAnyMissingSystemReferencesFromSDK (string sdk_offset, List<string> references)
-	{
-		AddAnyMissingSystemReferences (Path.Combine (GetSDKRoot (), sdk_offset), references);
-	}
 
 	static string GetWorkDir ()
 	{
@@ -629,6 +627,40 @@ class BindingTouch {
 			
 			var di = Directory.CreateDirectory (p);
 			return di.FullName;
+		}
+	}
+}
+
+static class ReferenceFixer
+{
+	public static void FixSDKReferences (string sdkRoot, string sdk_offset, List<string> references) => FixSDKReferences (Path.Combine (sdkRoot, sdk_offset), references);
+
+	public static void FixSDKReferences (string sdk_path, List<string> references, bool forceSystemDrawing = false)
+	{
+		FixRelativeReferences (sdk_path, references);
+		AddMissingRequiredReferences (sdk_path, references, forceSystemDrawing);
+	}
+
+	static bool ContainsReference (List<string> references, string name) => references.Any (v => Path.GetFileNameWithoutExtension (v) == name);
+	static void AddSDKReference (List<string> references, string sdk_path, string name) => references.Add (Path.Combine (sdk_path, name));
+
+	static void AddMissingRequiredReferences (string sdk_path, List<string> references, bool forceSystemDrawing = false)
+	{
+		foreach (var requiredLibrary in new string [] { "System", "mscorlib", "System.Core" }) {
+			if (!ContainsReference (references, requiredLibrary))
+				AddSDKReference (references, sdk_path, requiredLibrary + ".dll");
+		}
+		if (forceSystemDrawing && !ContainsReference (references, "System.Drawing"))
+			AddSDKReference (references, sdk_path, "System.Drawing.dll");
+	}
+
+	static bool ExistsInSDK (string sdk_path, string name) => File.Exists (Path.Combine (sdk_path, name));
+
+	static void FixRelativeReferences (string sdk_path, List<string> references)
+	{
+		foreach (var r in references.Where (x => ExistsInSDK (sdk_path, x + ".dll")).ToList ()) {
+			references.Remove (r);
+			AddSDKReference (references, sdk_path, r + ".dll");
 		}
 	}
 }
