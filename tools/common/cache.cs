@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Xamarin.Utils;
 using Xamarin.Bundler;
@@ -192,9 +193,17 @@ public class Cache {
 		if (args.Count > 0)
 			sb.Append ("# [first argument, ignore] # ").AppendLine (args [0]);
 		sb.Append (Driver.GetFullPath ()).AppendLine (" \\");
-		for (int i = 1; i < args.Count; i++) {
-			switch (args [i]) {
+		CollectArgumentsForCache (args, 1, sb);
+		return sb.ToString ();
+	}
+
+	void CollectArgumentsForCache (IList<string> args, int firstArgument, StringBuilder sb)
+	{
+		for (int i = firstArgument; i < args.Count; i++) {
+			var arg = args [i];
+			switch (arg) {
 			// Remove arguments that don't affect the cache status.
+			case "":
 			case "/v":
 			case "-v":
 			case "--v":
@@ -206,11 +215,13 @@ public class Cache {
 			case "--time":
 				break;
 			default:
-				sb.Append ('\t').Append (StringUtils.Quote (args [i])).AppendLine (" \\");
+				if (arg [0] == '@')
+					CollectArgumentsForCache (File.ReadAllLines (arg.Substring (1)), 0, sb);
+				
+				sb.Append ('\t').Append (StringUtils.Quote (arg)).AppendLine (" \\");
 				break;
 			}
 		}
-		return sb.ToString ();
 	}
 
 	public bool IsCacheValid ()
