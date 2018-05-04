@@ -455,6 +455,7 @@ namespace Xamarin.Bundler
 			bool enable_debug = app.EnableDebug;
 			bool enable_debug_symbols = app.PackageManagedDebugSymbols;
 			bool llvm_only = app.EnableLLVMOnlyBitCode;
+			bool interp = app.UseInterpreter;
 			string arch = abi.AsArchString ();
 
 			args.Append ("--debug ");
@@ -462,7 +463,7 @@ namespace Xamarin.Bundler
 			if (enable_llvm)
 				args.Append ("--llvm ");
 
-			if (!llvm_only)
+			if (!llvm_only && !interp)
 				args.Append ("-O=gsharedvt ");
 			args.Append (app.AotOtherArguments).Append (" ");
 			args.Append ("--aot=mtriple=");
@@ -472,6 +473,8 @@ namespace Xamarin.Bundler
 			args.Append (app.AotArguments);
 			if (llvm_only)
 				args.Append ("llvmonly,");
+			else if (interp)
+				args.Append ("interp,");
 			else
 				args.Append ("full,");
 
@@ -555,6 +558,8 @@ namespace Xamarin.Bundler
 
 			register_assemblies.AppendLine ("\tguint32 exception_gchandle = 0;");
 			foreach (var s in assemblies) {
+				if (!s.IsAOTCompiled)
+					continue;
 				if ((abi & Abi.SimulatorArchMask) == 0) {
 					var info = s.AssemblyDefinition.Name.Name;
 					info = EncodeAotSymbol (info);
@@ -635,6 +640,14 @@ namespace Xamarin.Bundler
 						sw.WriteLine ("xamarin_profiler_symbol_def xamarin_profiler_symbol = NULL;");
 					}
 
+					if (app.UseInterpreter) {
+						sw.WriteLine ("extern \"C\" { void mono_ee_interp_init (const char *); }");
+						sw.WriteLine ("extern \"C\" { void mono_icall_table_init (void); }");
+						sw.WriteLine ("extern \"C\" { void mono_marshal_ilgen_init (void); }");
+						sw.WriteLine ("extern \"C\" { void mono_method_builder_ilgen_init (void); }");
+						sw.WriteLine ("extern \"C\" { void mono_sgen_mono_ilgen_init (void); }");
+					}
+
 					sw.WriteLine ("void xamarin_setup_impl ()");
 					sw.WriteLine ("{");
 
@@ -643,7 +656,15 @@ namespace Xamarin.Bundler
 
 					if (app.EnableLLVMOnlyBitCode)
 						sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_LLVMONLY);");
-					
+					else if (app.UseInterpreter) {
+						sw.WriteLine ("\tmono_icall_table_init ();");
+						sw.WriteLine ("\tmono_marshal_ilgen_init ();");
+						sw.WriteLine ("\tmono_method_builder_ilgen_init ();");
+						sw.WriteLine ("\tmono_sgen_mono_ilgen_init ();");
+						sw.WriteLine ("\tmono_ee_interp_init (NULL);");
+						sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_INTERP);");
+					}
+
 					if (assembly_location.Length > 0)
 						sw.WriteLine ("\txamarin_set_assembly_directories (&assembly_locations);");
 
@@ -841,6 +862,9 @@ namespace Xamarin.Bundler
 
 			// If we are asked to run with concurrent sgen we also need to pass environment variables
 			if (app.EnableSGenConc)
+				return false;
+
+			if (app.UseInterpreter)
 				return false;
 
 			if (app.Registrar == RegistrarMode.Static)
@@ -1230,6 +1254,7 @@ namespace Xamarin.Bundler
 						app.LLVMOptimizations [asm] = opt;
 				}
 			},
+			{ "interpreter", "Enable the *experimental* interpreter.", v => { app.UseInterpreter = true; }},
 			{ "http-message-handler=", "Specify the default HTTP message handler for HttpClient", v => { http_message_handler = v; }},
 			{ "output-format=", "Specify the output format for some commands. Possible values: Default, XML", v =>
 				{

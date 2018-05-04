@@ -52,6 +52,16 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		public bool IsAOTCompiled {
+			get {
+				if (App.UseInterpreter)
+					/* interpreter only requires a few stubs that are attached
+					 * to mscorlib.dll, other assemblies won't be AOT compiled */
+					return FileName == "mscorlib.dll";
+				return true;
+			}
+		}
+
 		// Recursively list all the assemblies the specified assembly depends on.
 		HashSet<string> ComputeDependencies (List<Exception> warnings)
 		{
