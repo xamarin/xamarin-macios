@@ -173,32 +173,26 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/%: $(IOS_BUILD_DIR)/compat/%
 $(eval $(call IOS_TARGETS_template,native-32,--ns=ObjCRuntime,Xamarin.iOS.dll,native,native-32,32))
 $(eval $(call IOS_TARGETS_template,native-64,--ns=ObjCRuntime,Xamarin.iOS.dll,native,native-64,64))
 
-define IOS_LIBS_template
-IOS_VARIANTS_TARGETS += $(addprefix $(IOS_BUILD_DIR)/$(1)/,$(4) $(5))
-
 # MonoTouch.Dialog-1
 $(IOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.%: $(MACIOS_BINARIES_PATH)/MonoTouch.Dialog-Unified/ios/MonoTouch.Dialog-1.% | $(IOS_BUILD_DIR)/reference
-	$$(Q) cp $$< $$@
+	$(Q) cp $< $@
 
 # MonoTouch.NUnitLite
-$(IOS_BUILD_DIR)/$(1)%$(5) $(IOS_BUILD_DIR)/$(1)%$(5:.dll=.pdb): $$(IOS_TOUCHUNIT_SOURCES) $(IOS_BUILD_DIR)/$(1)/$(4) $(PRODUCT_KEY_PATH) $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll
-	$$(call Q_PROF_CSC,ios/$(1)) $$(IOS_CSC) -nologo -out:$$(basename $$@).dll -target:library -debug:portable -optimize -publicsign \
+$(IOS_BUILD_DIR)/reference%MonoTouch.NUnitLite.dll $(IOS_BUILD_DIR)/reference%MonoTouch.NUnitLite.pdb: $(IOS_TOUCHUNIT_SOURCES) $(IOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.dll $(PRODUCT_KEY_PATH) $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll
+	$(call Q_PROF_CSC,ios) $(IOS_CSC) -nologo -out:$(basename $@).dll -target:library -debug:portable -optimize -publicsign \
 		-deterministic \
-		-keyfile:$(PRODUCT_KEY_PATH) -r:$(IOS_BUILD_DIR)/$(1)/$(3) $(6) -r:$(IOS_BUILD_DIR)/$(1)/$(4) -r:$(MONOTOUCH_MONO_PATH)/System.dll -r:$(MONOTOUCH_MONO_PATH)/System.Xml.dll \
+		-keyfile:$(PRODUCT_KEY_PATH) -r:$(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll -define:XAMCORE_2_0 -define:__UNIFIED__ -r:$(IOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.dll -r:$(MONOTOUCH_MONO_PATH)/System.dll -r:$(MONOTOUCH_MONO_PATH)/System.Xml.dll \
 		-nowarn:3006,612,649,414,1635 \
-		-define:NUNITLITE,CLR_4_0,NET_4_5,__MOBILE__ $$(IOS_DEFINES) \
-		$$(IOS_TOUCHUNIT_SOURCES)
+		-define:NUNITLITE,CLR_4_0,NET_4_5,__MOBILE__ $(IOS_DEFINES) \
+		$(IOS_TOUCHUNIT_SOURCES)
 
 # System.Drawing
 # not installed or shipped yet - must be compiled manually using "make System.Drawing.dll"
-$(IOS_BUILD_DIR)/$(1)/System.Drawing.dll: $$(IOS_SYSTEM_DRAWING_SOURCES) monotouch.dll $(PRODUCT_KEY_PATH)
-	$$(call Q_PROF_CSC,ios/$(1)) $$(IOS_CSC) -nologo -out:$$@ -target:library -debug:portable -optimize -publicsign \
-		-keyfile:$(PRODUCT_KEY_PATH) -r:$(IOS_BUILD_DIR)/$(1)/$(3) $(6) \
-		-nowarn:114,169,414,1635 $$(IOS_DEFINES) \
-		$$(IOS_SYSTEM_DRAWING_SOURCES)
-endef
-
-$(eval $(call IOS_LIBS_template,reference,--ns=ObjCRuntime,Xamarin.iOS.dll,MonoTouch.Dialog-1.dll,MonoTouch.NUnitLite.dll,-define:XAMCORE_2_0 -define:__UNIFIED__))
+$(IOS_BUILD_DIR)/reference/System.Drawing.dll: $(IOS_SYSTEM_DRAWING_SOURCES) monotouch.dll $(PRODUCT_KEY_PATH)
+	$(call Q_PROF_CSC,ios/reference) $(IOS_CSC) -nologo -out:$@ -target:library -debug:portable -optimize -publicsign \
+		-keyfile:$(PRODUCT_KEY_PATH) -r:$(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll -define:XAMCORE_2_0 -define:__UNIFIED__ \
+		-nowarn:114,169,414,1635 $(IOS_DEFINES) \
+		$(IOS_SYSTEM_DRAWING_SOURCES)
 
 $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll: $(IOS_BUILD_DIR)/native-64/Xamarin.iOS.dll | $(IOS_BUILD_DIR)/reference
 	@# Don't strip, btouch-native needs to execute code from Xamarin.iOS,
@@ -1025,13 +1019,12 @@ $(TVOS_BUILD_DIR)/reference/MonoTouch.NUnitLite%dll $(TVOS_BUILD_DIR)/reference/
 		-define:NUNITLITE,CLR_4_0,NET_4_5,__MOBILE__ $(TVOS_DEFINES) \
 		-deterministic \
 		$(TVOS_TOUCHUNIT_SOURCES)
-	@touch $(basename $@).dll $(basename $@).pdb
-
-$(TVOS_BUILD_DIR)/%.pdb: $(TVOS_BUILD_DIR)/%.dll
-	@touch $@
 
 # MonoTouch.Dialog-1
-$(TVOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.%: $(MACIOS_BINARIES_PATH)/MonoTouch.Dialog-Unified/tvos/MonoTouch.Dialog-1.% | $(TVOS_BUILD_DIR)/reference
+$(TVOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.dll: $(MACIOS_BINARIES_PATH)/MonoTouch.Dialog-Unified/tvos/MonoTouch.Dialog-1.dll | $(TVOS_BUILD_DIR)/reference
+	$(Q) cp $< $@
+
+$(TVOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.pdb: $(MACIOS_BINARIES_PATH)/MonoTouch.Dialog-Unified/tvos/MonoTouch.Dialog-1.pdb | $(TVOS_BUILD_DIR)/reference
 	$(Q) cp $< $@
 
 # System.Drawing.Primitives.dll is special
