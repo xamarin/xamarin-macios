@@ -226,7 +226,7 @@ namespace xharness
 			return pairs.FirstOrDefault ();
 		}
 
-		public async Task<SimDevice []> FindAsync (AppRunnerTarget target, Log log, bool create_if_needed = true)
+		public async Task<SimDevice []> FindAsync (AppRunnerTarget target, Log log, bool create_if_needed = true, bool min_version = false)
 		{
 			SimDevice [] simulators = null;
 
@@ -238,25 +238,25 @@ namespace xharness
 			switch (target) {
 			case AppRunnerTarget.Simulator_iOS32:
 				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType.iPhone-5";
-				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-10-3";
+				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + (min_version ? Xamarin.SdkVersions.MiniOSSimulator : "10-3").Replace ('.', '-');
 				break;
 			case AppRunnerTarget.Simulator_iOS64:
-				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType.iPhone-X";
-				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
+				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType." + (min_version ? "iPhone-6" : "iPhone-X");
+				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + (min_version ? Xamarin.SdkVersions.MiniOSSimulator : Xamarin.SdkVersions.iOS).Replace ('.', '-');
 				break;
 			case AppRunnerTarget.Simulator_iOS:
 				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType.iPhone-5";
-				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
+				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + (min_version ? Xamarin.SdkVersions.MiniOSSimulator : Xamarin.SdkVersions.iOS).Replace ('.', '-');
 				break;
 			case AppRunnerTarget.Simulator_tvOS:
 				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType.Apple-TV-1080p";
-				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.tvOS-" + Xamarin.SdkVersions.TVOS.Replace ('.', '-');
+				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.tvOS-" + (min_version ? Xamarin.SdkVersions.MinTVOSSimulator : Xamarin.SdkVersions.TVOS).Replace ('.', '-');
 				break;
 			case AppRunnerTarget.Simulator_watchOS:
-				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-3-38mm";
-				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.watchOS-" + Xamarin.SdkVersions.WatchOS.Replace ('.', '-');
-				companion_devicetype = "com.apple.CoreSimulator.SimDeviceType.iPhone-X";
-				companion_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
+				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType." + (min_version ? "Apple-Watch-38mm" : "Apple-Watch-Series-3-38mm");
+				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.watchOS-" + (min_version ? Xamarin.SdkVersions.MinWatchOSSimulator : Xamarin.SdkVersions.WatchOS).Replace ('.', '-');
+				companion_devicetype = "com.apple.CoreSimulator.SimDeviceType." + (min_version ? "iPhone-6" : "iPhone-X");
+				companion_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + (min_version ? Xamarin.SdkVersions.MinWatchOSCompanionSimulator : Xamarin.SdkVersions.iOS).Replace ('.', '-');
 				break;
 			default:
 				throw new Exception (string.Format ("Unknown simulator target: {0}", target));
@@ -308,12 +308,13 @@ namespace xharness
 			return available_devices.Single ((v) => v.UDID == pair.Companion);
 		}
 
-		public IEnumerable<SimDevice> SelectDevices (AppRunnerTarget target, Log log)
+		public IEnumerable<SimDevice> SelectDevices (AppRunnerTarget target, Log log, bool min_version)
 		{
 			return new SimulatorEnumerable
 			{
 				Simulators = this,
 				Target = target,
+				MinVersion = min_version,
 				Log = log,
 			};
 		}
@@ -322,6 +323,7 @@ namespace xharness
 		{
 			public Simulators Simulators;
 			public AppRunnerTarget Target;
+			public bool MinVersion;
 			public Log Log;
 			object lock_obj = new object ();
 			Task<SimDevice []> findTask;
@@ -343,7 +345,7 @@ namespace xharness
 			{
 				lock (lock_obj) {
 					if (findTask == null)
-						findTask = Simulators.FindAsync (Target, Log);
+						findTask = Simulators.FindAsync (Target, Log, min_version: MinVersion);
 					return findTask;
 				}
 			}
@@ -428,6 +430,14 @@ namespace xharness
 		public Harness Harness;
 
 		public bool IsWatchSimulator { get { return SimRuntime.StartsWith ("com.apple.CoreSimulator.SimRuntime.watchOS", StringComparison.Ordinal); } }
+
+		public string OSVersion {
+			get {
+				var v = SimRuntime.Substring ("com.apple.CoreSimulator.SimRuntime.".Length);
+				var dash = v.IndexOf ('-');
+				return v.Substring (0, dash) + " " + v.Substring (dash + 1).Replace ('-', '.');
+			}
+		}
 
 		public async Task EraseAsync (Log log)
 		{
@@ -760,6 +770,12 @@ namespace xharness
 
 		public string UDID { get { return DeviceIdentifier; } set { DeviceIdentifier = value; } }
 
+		public string OSVersion {
+			get {
+				return ProductVersion;
+			}
+		}
+
 		// Add a speed property that can be used to sort a list of devices according to speed.
 		public int DebugSpeed {
 			get {
@@ -894,6 +910,7 @@ namespace xharness
 	{
 		string Name { get; set; }
 		string UDID { get; set; }
+		string OSVersion { get; }
 	}
 
 
