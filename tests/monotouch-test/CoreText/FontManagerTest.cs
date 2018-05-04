@@ -7,8 +7,6 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
 
-#if !__WATCHOS__
-
 using System;
 using System.IO;
 #if XAMCORE_2_0
@@ -136,5 +134,3 @@ namespace MonoTouchFixtures.CoreText {
 
 	}
 }
-
-#endif // !__WATCHOS__

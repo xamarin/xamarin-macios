@@ -7,8 +7,6 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
 
-#if !__WATCHOS__
-
 using System;
 #if XAMCORE_2_0
 using CoreGraphics;
@@ -38,7 +36,7 @@ using nuint=global::System.UInt32;
 #endif
 
 namespace MonoTouchFixtures.CoreText {
-
+	
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class A_FontTest {
@@ -99,7 +97,6 @@ namespace MonoTouchFixtures.CoreText {
 			}
 		}
 
-#if !MONOMAC // ToCTFont not available on mac
 		[Test]
 		public void GetGlyphsForCharacters_35048 ()
 		{
@@ -111,8 +108,5 @@ namespace MonoTouchFixtures.CoreText {
 				Assert.That (gid [1], Is.EqualTo (0), "1");
 			}
 		}
-#endif
 	}
 }
-
-#endif // !__WATCHOS__
