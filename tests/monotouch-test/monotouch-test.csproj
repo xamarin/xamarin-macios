@@ -311,6 +311,11 @@
     <BundleResource Include="xamvideotest.mp4" />
     <BundleResource Include="CoreImage\xamarinmonkey.heic" />
     <BundleResource Include="Resources\Base.lproj\Localizable.strings" />
+    <BundleResource Include="uncompressed.txt" />
+    <BundleResource Include="compressed_lze" />
+    <BundleResource Include="compressed_lz4" />
+    <BundleResource Include="compressed_lzma" />
+    <BundleResource Include="compressed_zip" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Security\openssl_crt.der">

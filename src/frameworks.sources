@@ -326,6 +326,9 @@ COMPRESSION_API_SOURCES = \
 
 COMPRESSION_SOURCES = \
 	Compression/Compression.cs \
+	Compression/CompressionStreamStruct.cs \
+	Compression/Deflater.cs \
+	Compression/Inflater.cs \
 
 # Contacts
 

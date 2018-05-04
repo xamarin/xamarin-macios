@@ -2,7 +2,10 @@
 using System.IO;
 using System.IO.Compression;
 
+using Foundation;
 using Compression;
+using ObjCRuntime;
+
 using NUnit.Framework;
 
 using DeflateStream = Compression.CompressionStream; // done to not differ from the mono tests
@@ -10,6 +13,7 @@ using DeflateStream = Compression.CompressionStream; // done to not differ from 
 namespace MonoTouchFixtures.Compression {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class DeflateStreamTest
 	{
 		private static void CopyStream (Stream src, Stream dest)
@@ -70,7 +74,8 @@ namespace MonoTouchFixtures.Compression {
 			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress, algorithm);
 			MemoryStream output = new MemoryStream ();
 			CopyStream (decompressing, output);
-			Assert.IsTrue (compare_buffers (data, output.GetBuffer(), (int) output.Length));
+			Assert.AreNotEqual (0, output.Length, "Legth should be more than 0.");
+			Assert.IsTrue (compare_buffers (data, output.GetBuffer(), (int) output.Length), "Buffers are not equal.");
 			decompressing.Close();
 			output.Close();
 		}
