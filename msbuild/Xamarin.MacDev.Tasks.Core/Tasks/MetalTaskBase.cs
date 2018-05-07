@@ -15,6 +15,8 @@ namespace Xamarin.MacDev.Tasks
 
 		public string SessionId { get; set; }
 
+		public ITaskItem AppManifest { get; set; }
+
 		[Required]
 		public string IntermediateOutputPath { get; set; }
 
@@ -28,12 +30,19 @@ namespace Xamarin.MacDev.Tasks
 		public string SdkDevPath { get; set; }
 
 		[Required]
+		public string SdkVersion { get; set; }
+
+		[Required]
 		public ITaskItem SourceFile { get; set; }
 
 		#endregion
 
 		[Output]
 		public ITaskItem OutputFile { get; set; }
+
+		protected abstract string MinimumDeploymentTargetKey {
+			get;
+		}
 
 		protected abstract string OperatingSystem {
 			get;
@@ -65,9 +74,22 @@ namespace Xamarin.MacDev.Tasks
 			var path = Path.Combine (intermediate, logicalName);
 			var args = new CommandLineArgumentBuilder ();
 			var dir = Path.GetDirectoryName (path);
+			string minimumDeploymentTarget;
 
 			if (!Directory.Exists (dir))
 				Directory.CreateDirectory (dir);
+
+			if (AppManifest != null) {
+				var plist = PDictionary.FromFile (AppManifest.ItemSpec);
+				PString value;
+
+				if (!plist.TryGetValue (MinimumDeploymentTargetKey, out value) || string.IsNullOrEmpty (value.Value))
+					minimumDeploymentTarget = SdkVersion;
+				else
+					minimumDeploymentTarget = value.Value;
+			} else {
+				minimumDeploymentTarget = SdkVersion;
+			}
 
 			OutputFile = new TaskItem (Path.ChangeExtension (path, ".air"));
 			OutputFile.SetMetadata ("LogicalName", Path.ChangeExtension (logicalName, ".air"));
@@ -77,13 +99,14 @@ namespace Xamarin.MacDev.Tasks
 			args.Add ("-c");
 			args.Add ("-gline-tables-only");
 			args.Add ("-ffast-math");
-			args.Add (string.Format ("-std={0}-metal1.0", OperatingSystem));
 
 			args.Add ("-serialize-diagnostics");
 			args.AddQuoted (Path.ChangeExtension (path, ".dia"));
 
 			args.Add ("-o");
 			args.AddQuoted (Path.ChangeExtension (path, ".air"));
+
+			args.Add (string.Format ("-m{0}-version-min={1}", OperatingSystem, minimumDeploymentTarget));
 
 			args.AddQuoted (SourceFile.ItemSpec);
 

@@ -305,9 +305,11 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			Condition="'$(IsMacEnabled)' == 'true' and '%(Metal.Identity)' != ''"
 			SessionId="$(BuildSessionId)"
 			IntermediateOutputPath="$(IntermediateOutputPath)"
+			AppManifest="$(_AppManifest)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(XamMacResourcePrefix)"
 			SdkDevPath="$(_SdkDevPath)"
+			SdkVersion="$(MacOSXSdkVersion)"
 			SourceFile="@(Metal)">
 			<Output TaskParameter="OutputFile" ItemName="_SmeltedMetal" />
 		</Metal>
