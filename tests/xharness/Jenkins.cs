@@ -703,6 +703,7 @@ namespace xharness
 							Platform = build.Platform,
 							TestName = project.Name,
 							Timeout = TimeSpan.FromMinutes (120),
+							Mode = "macOS",
 						};
 						execs = new [] { exec };
 					} else {
