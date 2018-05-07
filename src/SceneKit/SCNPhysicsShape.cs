@@ -17,6 +17,23 @@ namespace SceneKit
 {
 	public partial class SCNPhysicsShape
 	{
+		public static SCNPhysicsShape Create (SCNPhysicsShape [] shapes, SCNMatrix4 [] transforms)
+		{
+			if (shapes == null)
+				throw new ArgumentNullException ("shapes");
+
+			if (transforms == null)
+				throw new ArgumentNullException ("transforms");
+
+			var t = new NSValue [transforms.Length];
+			for (var i = 0; i < t.Length; i++)
+				t [i] = NSValue.FromSCNMatrix4 (transforms [i]);
+
+			return Create (shapes, t);
+		}
+
+#if XAMCORE_4_0
+		[Obsolete ("Use the 'Create' method that takes a 'SCNMatrix4 []'.")]
 		public static SCNPhysicsShape Create (SCNPhysicsShape [] shapes, SCNVector3 [] transforms)
 		{
 			if (shapes == null)
@@ -31,6 +48,7 @@ namespace SceneKit
 
 			return Create (shapes, t);
 		}
+#endif
 
 		public static SCNPhysicsShape Create (SCNGeometry geometry,
 			SCNPhysicsShapeType? shapeType = null,
