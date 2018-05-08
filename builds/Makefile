@@ -34,12 +34,6 @@ endif
 	$(Q) cd $(MONO_PATH) && git ls-files 'mcs/class/*.cs' '*.h' '*.c' '*.cpp' | grep -v "/Test/" | sed 's/ /\\ /g' | sed 's@^\(.*\)$$@	$(MONO_PATH)/\1 \\@' >> $(abspath $@).tmp
 	$(Q) mv $@.tmp $@
 
--include .deps.llvm.mk
-.deps.llvm.mk: $(TOP)/.git/modules/external/llvm/HEAD
-	$(Q) printf 'LLVM_DEPENDENCIES += Makefile \\\n' > $@.tmp
-	$(Q) cd $(LLVM_PATH) && git ls-files | grep -v "^test" | sed 's/ /\\ /g' | sed 's@^\(.*\)$$@	$(LLVM_PATH)/\1 \\@' >> $(abspath $@).tmp
-	$(Q) mv $@.tmp $@
-
 # ld: weak import of symbol '_fstatat' not supported because of option: -no_weak_imports for architecture x86_64
 # according to 'man fstatat' it appeared in OS X 10.10 (iOS 8)
 # so disable 'fstatat' by setting using ac_cv_func_fstatat=no
