@@ -66,7 +66,6 @@ endef
 
 
 $(shell rm -f .check-versions-failure)
-$(eval $(call CheckSubmoduleTemplate,llvm,LLVM))
 $(eval $(call CheckSubmoduleTemplate,mono,MONO))
 $(eval $(call CheckSubmoduleTemplate,fsharp,FSHARP))
 $(eval $(call CheckSubmoduleTemplate,Touch.Unit,TOUCH_UNIT))
@@ -81,9 +80,6 @@ include $(TOP)/mk/xamarin.mk
 
 reset-mono::
 	$(Q) rm -f $(TOP)/.stamp-build* $(MONO_PATH)/configure
-
-reset-llvm::
-	$(Q) if test -d $(MONO_PATH); then $(MAKE) -C $(TOP)/builds clean-llvm; fi
 
 reset-fsharp::
 	$(Q) cd $(FSHARP_PATH) && git clean -xffdq
