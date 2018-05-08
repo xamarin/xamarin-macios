@@ -21,6 +21,37 @@ namespace Xamarin
 	[TestFixture]
 	public class BundlerTests
 	{
+#if __MACOS__
+		// The cache doesn't work properly in mmp yet.
+		// [TestCase (Profile.macOSMobile)]
+#else
+		[Test]
+		[TestCase (Profile.iOS)]
+#endif
+		public void ModifiedResponseFile (Profile profile)
+		{
+			using (var bundler = new BundlerTool ()) {
+				bundler.Profile = profile;
+				bundler.CreateTemporaryCacheDirectory ();
+				bundler.CreateTemporaryApp (profile);
+				var tmpDir = bundler.CreateTemporaryDirectory ();
+				var responseFile = Path.Combine (tmpDir, "test-arguments.txt");
+				File.WriteAllText (responseFile, "");
+				bundler.ResponseFile = responseFile;
+				bundler.Linker = LinkerOption.DontLink; // faster test
+				bundler.Debug = true; // faster test
+				bundler.Verbosity = 4;
+				bundler.AssertExecute ();
+				bundler.AssertWarningCount (0);
+				bundler.AssertOutputPattern ("A full rebuild will be performed because the cache is either incomplete or entirely missing.");
+
+				File.WriteAllText (responseFile, "/linksdkonly");
+				bundler.AssertExecute ();
+				bundler.AssertWarningCount (0);
+				bundler.AssertOutputPattern ("A full rebuild has been forced because the cache for .* is not valid.");
+			}
+		}
+
 		[Test]
 #if __MACOS__
 		[TestCase (Profile.macOSMobile)]
