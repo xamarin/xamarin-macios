@@ -340,6 +340,12 @@ complicated to get it right when doing it manually.
 
 If this is not the case, please file a bug at [https://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=Xamarin.Mac) with a test case.
 
+### <a name="MM4175"/>MM4175: The type '{type}' does not contain a method named 'Create'. Please file a bug report at https://bugzilla.xamarin.com.
+
+This is an internal error.
+
+If you see this error, please file a bug [https://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=Xamarin.Mac).
+
 # MM5xxx: GCC and toolchain
 
 ## MM51xx: compilation
