@@ -940,7 +940,7 @@ namespace xharness
 
 		void BuildTestLibraries ()
 		{
-			ProcessHelper.ExecuteCommandAsync ("make", $"all -j{Environment.ProcessorCount} -C {StringUtils.Quote (Path.Combine (Harness.RootDirectory, "test-libraries"))}", MainLog, TimeSpan.FromMinutes (1)).Wait ();
+			ProcessHelper.ExecuteCommandAsync ("make", $"all -j{Environment.ProcessorCount} -C {StringUtils.Quote (Path.Combine (Harness.RootDirectory, "test-libraries"))}", MainLog, TimeSpan.FromMinutes (10)).Wait ();
 		}
 
 		Task RunTestServer ()
