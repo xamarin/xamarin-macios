@@ -225,23 +225,18 @@ namespace Xamarin.MMP.Tests
 		// In most cases we generate projects in tmp and this is not needed. But nuget and test projects can make that hard
 		public static void CleanUnifiedProject (string csprojTarget, bool useMSBuild = false)
 		{
-			RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/" + (useMSBuild ? "msbuild" : "xbuild"), new StringBuilder (csprojTarget + " /t:clean"), "Clean");
+			RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/" + (useMSBuild ? "msbuild" : "msbuild"), new StringBuilder (csprojTarget + " /t:clean"), "Clean");
 		}
 
 		public static string BuildProject (string csprojTarget, bool isUnified, bool diagnosticMSBuild = false, bool shouldFail = false, bool useMSBuild = false, bool release = false, string[] environment = null)
 		{
-			if (Environment.GetEnvironmentVariable ("XM_FORCE_MSBUILD") != null)
-				useMSBuild = true;
-
 			string rootDirectory = FindRootDirectory ();
 
 			// TODO - This is not enough for MSBuild to really work. We need stuff to have it not use system targets!
 			// These are required to have xbuild use are local build instead of system install
-			if (!useMSBuild) {
-				Environment.SetEnvironmentVariable ("XBUILD_FRAMEWORK_FOLDERS_PATH", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild-frameworks");
-				Environment.SetEnvironmentVariable ("MSBuildExtensionsPath", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild");
-				Environment.SetEnvironmentVariable ("XAMMAC_FRAMEWORK_PATH", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
-			}
+			Environment.SetEnvironmentVariable ("TargetFrameworkFallbackSearchPaths", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild-frameworks");
+			Environment.SetEnvironmentVariable ("MSBuildExtensionsPathFallbackPathsOverride", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild");
+			Environment.SetEnvironmentVariable ("XAMMAC_FRAMEWORK_PATH", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
 
 			// This is to force build to use our mmp and not system mmp
 			StringBuilder buildArgs = new StringBuilder ();
@@ -268,7 +263,7 @@ namespace Xamarin.MMP.Tests
 			};
 
 			if (isUnified)
-				return RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/" + (useMSBuild ? "msbuild" : "xbuild"), buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo, environment);
+				return RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/msbuild", buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo, environment);
 			else
 				return RunAndAssert ("/Applications/Visual Studio.app/Contents/MacOS/vstool", buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo, environment);
 		}

@@ -2401,7 +2401,7 @@ function toggleAll (show)
 			case TestPlatform.watchOS:
 				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = Harness.XcodeRoot;
 				process.StartInfo.EnvironmentVariables ["MD_MTOUCH_SDK_ROOT"] = Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current");
-				process.StartInfo.EnvironmentVariables ["XBUILD_FRAMEWORK_FOLDERS_PATH"] = Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
+				process.StartInfo.EnvironmentVariables ["TargetFrameworkFallbackSearchPaths"] = Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
 				process.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
 				break;
 			case TestPlatform.Mac:
@@ -2411,7 +2411,7 @@ function toggleAll (show)
 			case TestPlatform.Mac_UnifiedXM45:
 			case TestPlatform.Mac_UnifiedXM45_32:
 				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = Harness.XcodeRoot;
-				process.StartInfo.EnvironmentVariables ["XBUILD_FRAMEWORK_FOLDERS_PATH"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
+				process.StartInfo.EnvironmentVariables ["TargetFrameworkFallbackSearchPaths"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
 				process.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
 				process.StartInfo.EnvironmentVariables ["XamarinMacFrameworkRoot"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
 				process.StartInfo.EnvironmentVariables ["XAMMAC_FRAMEWORK_PATH"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
@@ -2419,7 +2419,7 @@ function toggleAll (show)
 			case TestPlatform.All:
 				// Don't set:
 				//     MSBuildExtensionsPath 
-				//     XBUILD_FRAMEWORK_FOLDERS_PATH
+				//     TargetFrameworkFallbackSearchPaths
 				// because these values used by both XM and XI and we can't set it to two different values at the same time.
 				// Any test that depends on these values should not be using 'TestPlatform.All'
 				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = Harness.XcodeRoot;
@@ -2680,7 +2680,7 @@ function toggleAll (show)
 				await RestoreNugetsAsync (log, resource);
 
 				using (var xbuild = new Process ()) {
-					xbuild.StartInfo.FileName = UseMSBuild ? "msbuild" : "xbuild";
+					xbuild.StartInfo.FileName = UseMSBuild ? "msbuild" : "msbuild";
 					var args = new StringBuilder ();
 					args.Append ("/verbosity:diagnostic ");
 					if (SpecifyPlatform)
@@ -2716,7 +2716,7 @@ function toggleAll (show)
 		{
 			// Don't require the desktop resource here, this shouldn't be that resource sensitive
 			using (var xbuild = new Process ()) {
-				xbuild.StartInfo.FileName = "xbuild";
+				xbuild.StartInfo.FileName = "msbuild";
 				var args = new StringBuilder ();
 				args.Append ("/verbosity:diagnostic ");
 				if (project_platform != null)
