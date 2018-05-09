@@ -340,6 +340,31 @@ complicated to get it right when doing it manually.
 
 If this is not the case, please file a bug at [https://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=Xamarin.Mac) with a test case.
 
+### <a name="MM4175"/>MM4175: The parameter '{parameter}' in the method '{method}' has an invalid BlockProxy attribute (the type passed to the attribute does not have a 'Create' method).
+
+The parameter in the error message has an invalid `[BlockProxy]` attribute,
+where the type passed to the attribute is unexpected:
+
+```csharp
+public override NSUrlSessionDataTask CreateDataTask (NSUrl url, [BlockProxy (typeof (UnexpectedType))] NSUrlSessionResponse completionHandler)
+{
+}
+```
+
+If the method is overriding another method, then the fix is to just delete the
+attribute:
+
+```csharp
+public override NSUrlSessionDataTask CreateDataTask (NSUrl url, NSUrlSessionResponse completionHandler)
+{
+}
+```
+
+because the base method has the correct version of the attribute, and the
+Xamarin.Mac runtime will find it there when needed.
+
+Reference: https://github.com/xamarin/xamarin-macios/issues/4072
+
 # MM5xxx: GCC and toolchain
 
 ## MM51xx: compilation

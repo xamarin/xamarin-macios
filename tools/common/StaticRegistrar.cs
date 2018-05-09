@@ -4167,11 +4167,15 @@ namespace Registrar {
 
 		MethodDefinition GetBlockProxyAttributeMethod (MethodDefinition method, int parameter)
 		{
-			var attrib = GetBlockProxyAttribute (method.Parameters [parameter]);
+			var param = method.Parameters [parameter];
+			var attrib = GetBlockProxyAttribute (param);
 			if (attrib == null)
 				return null;
 
-			return attrib.Type.Methods.First ((v) => v.Name == "Create");
+			var createMethod = attrib.Type.Methods.FirstOrDefault ((v) => v.Name == "Create");
+			if (createMethod == null)
+				ErrorHelper.Show (ErrorHelper.CreateWarning (App, 4175, method, $"{(string.IsNullOrEmpty (param.Name) ? $"Parameter #{param.Index + 1}" : $"The parameter '{param.Name}'")} in the method '{GetTypeFullName (method.DeclaringType)}.{GetDescriptiveMethodName (method)}' has an invalid BlockProxy attribute (the type passed to the attribute does not have a 'Create' method)."));
+			return createMethod;
 		}
 
 		public bool MapProtocolMember (MethodDefinition method, out MethodDefinition extensionMethod)
