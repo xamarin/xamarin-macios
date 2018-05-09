@@ -44,14 +44,14 @@ namespace MonoTouchFixtures.Compression {
 		[ExpectedException (typeof (ArgumentNullException))]
 		public void Constructor_Null ()
 		{
-			DeflateStream ds = new DeflateStream (null, CompressionMode.Compress);
+			DeflateStream ds = new DeflateStream (null, CompressionMode.Compress, CompressionAlgorithm.Zlib);
 		}
 
 		[Test]
 		[ExpectedException (typeof (ArgumentException))]
 		public void Constructor_InvalidCompressionMode ()
 		{
-			DeflateStream ds = new DeflateStream (new MemoryStream (), (CompressionMode)Int32.MinValue);
+			DeflateStream ds = new DeflateStream (new MemoryStream (), (CompressionMode)Int32.MinValue, CompressionAlgorithm.Zlib);
 		}
 
 		[TestCase (CompressionAlgorithm.LZ4)]
@@ -80,11 +80,11 @@ namespace MonoTouchFixtures.Compression {
 			output.Close();
 		}
 
-		[Test]
+		[Test] // Not passing the algorithm because the compressed data is Zlib compressed.
 		public void CheckDecompress ()
 		{
 			MemoryStream backing = new MemoryStream (compressed_data);
-			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress);
+			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib);
 			StreamReader reader = new StreamReader (decompressing);
 			Assert.AreEqual ("Hello", reader.ReadLine ());
 			decompressing.Close();
@@ -95,7 +95,7 @@ namespace MonoTouchFixtures.Compression {
 		public void CheckNullRead ()
 		{
 			MemoryStream backing = new MemoryStream (compressed_data);
-			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress);
+			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib);
 			decompressing.Read (null, 0, 20);
 		}
 
@@ -105,7 +105,7 @@ namespace MonoTouchFixtures.Compression {
 		{
 			byte [] dummy = new byte[20];
 			MemoryStream backing = new MemoryStream ();
-			DeflateStream compressing = new DeflateStream (backing, CompressionMode.Compress);
+			DeflateStream compressing = new DeflateStream (backing, CompressionMode.Compress, CompressionAlgorithm.Zlib);
 			compressing.Read (dummy, 0, 20);
 		}
 
@@ -115,7 +115,7 @@ namespace MonoTouchFixtures.Compression {
 		{
 			byte [] dummy = new byte[20];
 			MemoryStream backing = new MemoryStream (compressed_data);
-			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress);
+			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib);
 			decompressing.Read (dummy, 10, 20);
 		}
 
@@ -125,7 +125,7 @@ namespace MonoTouchFixtures.Compression {
 		{
 			byte [] dummy = new byte[20];
 			MemoryStream backing = new MemoryStream (compressed_data);
-			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress);
+			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib);
 			decompressing.Close ();
 			decompressing.Read (dummy, 0, 20);
 		}
@@ -135,7 +135,7 @@ namespace MonoTouchFixtures.Compression {
 		public void CheckClosedFlush ()
 		{
 			MemoryStream backing = new MemoryStream ();
-			DeflateStream compressing = new DeflateStream (backing, CompressionMode.Compress);
+			DeflateStream compressing = new DeflateStream (backing, CompressionMode.Compress, CompressionAlgorithm.Zlib);
 			compressing.Close ();
 			compressing.Flush ();
 		}
@@ -145,7 +145,7 @@ namespace MonoTouchFixtures.Compression {
 		public void CheckSeek ()
 		{
 			MemoryStream backing = new MemoryStream (compressed_data);
-			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress);
+			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib);
 			decompressing.Seek (20, SeekOrigin.Current);
 		}
 
@@ -154,7 +154,7 @@ namespace MonoTouchFixtures.Compression {
 		public void CheckSetLength ()
 		{
 			MemoryStream backing = new MemoryStream (compressed_data);
-			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress);
+			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib);
 			decompressing.SetLength (20);
 		}
 
@@ -162,7 +162,7 @@ namespace MonoTouchFixtures.Compression {
 		public void CheckGetCanSeekProp ()
 		{
 			MemoryStream backing = new MemoryStream (compressed_data);
-			DeflateStream decompress = new DeflateStream (backing, CompressionMode.Decompress);
+			DeflateStream decompress = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib);
 			Assert.IsFalse (decompress.CanSeek, "#A1");
 			Assert.IsTrue (backing.CanSeek, "#A2");
 			decompress.Dispose ();
@@ -170,7 +170,7 @@ namespace MonoTouchFixtures.Compression {
 			Assert.IsFalse (backing.CanSeek, "#A4");
 
 			backing = new MemoryStream ();
-			DeflateStream compress = new DeflateStream (backing, CompressionMode.Compress);
+			DeflateStream compress = new DeflateStream (backing, CompressionMode.Compress, CompressionAlgorithm.Zlib);
 			Assert.IsFalse (compress.CanSeek, "#B1");
 			Assert.IsTrue (backing.CanSeek, "#B2");
 			compress.Dispose ();
@@ -182,7 +182,7 @@ namespace MonoTouchFixtures.Compression {
 		public void CheckGetCanReadProp ()
 		{
 			MemoryStream backing = new MemoryStream (compressed_data);
-			DeflateStream decompress = new DeflateStream (backing, CompressionMode.Decompress);
+			DeflateStream decompress = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib);
 			Assert.IsTrue (decompress.CanRead, "#A1");
 			Assert.IsTrue (backing.CanRead, "#A2");
 			decompress.Dispose ();
@@ -190,7 +190,7 @@ namespace MonoTouchFixtures.Compression {
 			Assert.IsFalse (backing.CanRead, "#A4");
 
 			backing = new MemoryStream ();
-			DeflateStream compress = new DeflateStream (backing, CompressionMode.Compress);
+			DeflateStream compress = new DeflateStream (backing, CompressionMode.Compress, CompressionAlgorithm.Zlib);
 			Assert.IsFalse (compress.CanRead, "#B1");
 			Assert.IsTrue (backing.CanRead, "#B2");
 			compress.Dispose ();
@@ -202,7 +202,7 @@ namespace MonoTouchFixtures.Compression {
 		public void CheckGetCanWriteProp ()
 		{
 			MemoryStream backing = new MemoryStream ();
-			DeflateStream decompress = new DeflateStream (backing, CompressionMode.Decompress);
+			DeflateStream decompress = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib);
 			Assert.IsFalse (decompress.CanWrite, "#A1");
 			Assert.IsTrue (backing.CanWrite, "#A2");
 			decompress.Dispose ();
@@ -210,7 +210,7 @@ namespace MonoTouchFixtures.Compression {
 			Assert.IsFalse (backing.CanWrite, "#A4");
 
 			backing = new MemoryStream ();
-			DeflateStream compress = new DeflateStream (backing, CompressionMode.Compress);
+			DeflateStream compress = new DeflateStream (backing, CompressionMode.Compress, CompressionAlgorithm.Zlib);
 			Assert.IsTrue (compress.CanWrite, "#B1");
 			Assert.IsTrue (backing.CanWrite, "#B2");
 			compress.Dispose ();
@@ -223,7 +223,7 @@ namespace MonoTouchFixtures.Compression {
 		public void CheckSetLengthProp ()
 		{
 			MemoryStream backing = new MemoryStream (compressed_data);
-			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress);
+			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib);
 			decompressing.SetLength (20);
 		}
 
@@ -232,7 +232,7 @@ namespace MonoTouchFixtures.Compression {
 		public void CheckGetLengthProp ()
 		{
 			MemoryStream backing = new MemoryStream (compressed_data);
-			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress);
+			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib);
 			long length = decompressing.Length;
 		}
 
@@ -241,7 +241,7 @@ namespace MonoTouchFixtures.Compression {
 		public void CheckGetPositionProp ()
 		{
 			MemoryStream backing = new MemoryStream (compressed_data);
-			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress);
+			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib);
 			long position = decompressing.Position;
 		}
 
@@ -249,7 +249,7 @@ namespace MonoTouchFixtures.Compression {
 		public void DisposeTest ()
 		{
 			MemoryStream backing = new MemoryStream (compressed_data);
-			DeflateStream decompress = new DeflateStream (backing, CompressionMode.Decompress);
+			DeflateStream decompress = new DeflateStream (backing, CompressionMode.Decompress,  CompressionAlgorithm.Zlib);
 			decompress.Dispose ();
 			decompress.Dispose ();
 		}
@@ -258,14 +258,17 @@ namespace MonoTouchFixtures.Compression {
 			0xe7, 0x02, 0x00 };
 
 
-		[Test]
-		public void JunkAtTheEnd ()
+		[TestCase (CompressionAlgorithm.LZ4)]
+		[TestCase (CompressionAlgorithm.Lzfse)]
+		[TestCase (CompressionAlgorithm.Lzma)]
+		[TestCase (CompressionAlgorithm.Zlib)]
+		public void JunkAtTheEnd (CompressionAlgorithm algorithm)
 		{
 			// Write a deflated stream, then some additional data...
 			using (MemoryStream ms = new MemoryStream())
 			{
 				// The compressed stream
-				using (DeflateStream stream = new DeflateStream(ms, CompressionMode.Compress, true))
+				using (DeflateStream stream = new DeflateStream(ms, CompressionMode.Compress, algorithm, true))
 				{
 					stream.WriteByte(1);
 					stream.Flush();
@@ -275,7 +278,7 @@ namespace MonoTouchFixtures.Compression {
 
 				ms.Position = 0;
 				// Reading: this should not hang
-				using (DeflateStream stream = new DeflateStream(ms, CompressionMode.Decompress))
+				using (DeflateStream stream = new DeflateStream(ms, CompressionMode.Decompress, algorithm))
 				{
 					byte[] buffer  = new byte[512];
 					int len = stream.Read(buffer, 0, buffer.Length);
@@ -304,12 +307,12 @@ namespace MonoTouchFixtures.Compression {
 			}
 		}
 
-		[Test]
+		[Test] // zlib specific test
 		public void Bug19313 ()
 		{
 			byte [] buffer  = new byte [512];
 			using (var backing = new Bug19313Stream (compressed_data))
-			using (var decompressing = new DeflateStream (backing, CompressionMode.Decompress))
+			using (var decompressing = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib))
 				decompressing.Read (buffer, 0, buffer.Length);
 		}
 	}

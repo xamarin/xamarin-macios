@@ -12,8 +12,11 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
+using ObjCRuntime;
+
 namespace Compression
 {
+	[iOS (9,0), Mac (10,11)]
 	public partial class CompressionStream : Stream
 	{
 		private const int DefaultBufferSize = 8192;
@@ -27,22 +30,13 @@ namespace Compression
 		private int _activeAsyncOperation; // 1 == true, 0 == false
 		private bool _wroteBytes;
 
-		public CompressionStream (Stream stream, CompressionMode mode) : this(stream, mode, algorithm: CompressionAlgorithm.Zlib, leaveOpen: false)
+		// Implies mode = Compress
+		public CompressionStream (Stream stream, CompressionAlgorithm algorithm) : this (stream, algorithm, leaveOpen: false)
 		{
 		}
 
 		// Implies mode = Compress
-		public CompressionStream (Stream stream, CompressionAlgorithm algorithm) : this(stream, algorithm, leaveOpen: false)
-		{
-		}
-
-
-		public CompressionStream (Stream stream, CompressionMode mode, bool leaveOpen) : this(stream, mode, CompressionAlgorithm.Zlib, leaveOpen)
-		{
-		}
-
-		// Implies mode = Compress
-		public CompressionStream (Stream stream, CompressionAlgorithm algorithm, bool leaveOpen) : this(stream, CompressionMode.Compress, algorithm, leaveOpen)
+		public CompressionStream (Stream stream, CompressionAlgorithm algorithm, bool leaveOpen) : this (stream, CompressionMode.Compress, algorithm, leaveOpen)
 		{
 		}
 
@@ -57,7 +51,7 @@ namespace Compression
 		public CompressionStream (Stream stream, CompressionMode mode, CompressionAlgorithm algorithm, bool leaveOpen)
 		{
 			if (stream == null)
-				throw new ArgumentNullException(nameof(stream));
+				throw new ArgumentNullException (nameof (stream));
 
 			switch (mode) {
 			case CompressionMode.Decompress:
@@ -71,11 +65,11 @@ namespace Compression
 			}
 		}
 
-		internal void InitializeInflater(Stream stream, CompressionAlgorithm algorithm, bool leaveOpen)
+		internal void InitializeInflater (Stream stream, CompressionAlgorithm algorithm, bool leaveOpen)
 		{
-			Debug.Assert(stream != null);
+			Debug.Assert (stream != null);
 			if (!stream.CanRead)
-				throw new ArgumentException ("Stream does not support reading.", nameof(stream));
+				throw new ArgumentException ("Stream does not support reading.", nameof (stream));
 
 			_inflater = new Inflater (algorithm);
 			_stream = stream;
@@ -83,13 +77,13 @@ namespace Compression
 			_leaveOpen = leaveOpen;
 		}
 
-		internal void InitializeDeflater(Stream stream, CompressionAlgorithm algorithm, bool leaveOpen)
+		internal void InitializeDeflater (Stream stream, CompressionAlgorithm algorithm, bool leaveOpen)
 		{
-			Debug.Assert(stream != null);
+			Debug.Assert (stream != null);
 			if (!stream.CanWrite)
-				throw new ArgumentException("Stream does not support writing.", nameof(stream));
+				throw new ArgumentException ("Stream does not support writing.", nameof (stream));
 
-			_deflater = new Deflater(algorithm);
+			_deflater = new Deflater (algorithm);
 			_stream = stream;
 			_mode = CompressionMode.Compress;
 			_leaveOpen = leaveOpen;
@@ -99,10 +93,10 @@ namespace Compression
 		private void InitializeBuffer ()
 		{
 			Debug.Assert (_buffer == null);
-			_buffer = ArrayPool<byte>.Shared.Rent(DefaultBufferSize);
+			_buffer = ArrayPool<byte>.Shared.Rent (DefaultBufferSize);
 		}
 
-		private void EnsureBufferInitialized()
+		private void EnsureBufferInitialized ()
 		{
 			if (_buffer == null) {
 				InitializeBuffer ();
@@ -136,16 +130,16 @@ namespace Compression
 
 		public override long Length
 		{
-			get { throw new NotSupportedException("This operation is not supported."); }
+			get { throw new NotSupportedException ("This operation is not supported."); }
 		}
 
 		public override long Position
 		{
-			get { throw new NotSupportedException("This operation is not supported."); }
-			set { throw new NotSupportedException("This operation is not supported."); }
+			get { throw new NotSupportedException ("This operation is not supported."); }
+			set { throw new NotSupportedException ("This operation is not supported."); }
 		}
 
-		public override void Flush()
+		public override void Flush ()
 		{
 			EnsureNotDisposed ();
 			if (_mode == CompressionMode.Compress)
@@ -163,7 +157,7 @@ namespace Compression
 			return _mode != CompressionMode.Compress || !_wroteBytes ? Task.CompletedTask : FlushAsyncCore (cancellationToken);
 		}
 
-		private async Task FlushAsyncCore(CancellationToken cancellationToken)
+		private async Task FlushAsyncCore (CancellationToken cancellationToken)
 		{
 			AsyncOperationStarting ();
 			try {
@@ -176,7 +170,7 @@ namespace Compression
 					int compressedBytes;
 					flushSuccessful = _deflater.Flush (_buffer, out compressedBytes);
 					if (flushSuccessful) {
-						await _stream.WriteAsync(_buffer, 0, compressedBytes, cancellationToken).ConfigureAwait(false);
+						await _stream.WriteAsync(_buffer, 0, compressedBytes, cancellationToken).ConfigureAwait (false);
 					}
 					Debug.Assert (flushSuccessful == (compressedBytes > 0));
 				} while (flushSuccessful);
@@ -233,7 +227,7 @@ namespace Compression
 			int totalRead = 0;
 
 			while (true) {
-				int bytesRead = _inflater.Inflate (destination.Slice(totalRead));
+				int bytesRead = _inflater.Inflate (destination.Slice (totalRead));
 				totalRead += bytesRead;
 				if (totalRead == destination.Length) {
 					break;
@@ -262,13 +256,13 @@ namespace Compression
 		private void ValidateParameters (byte[] array, int offset, int count)
 		{
 			if (array == null)
-				throw new ArgumentNullException (nameof(array));
+				throw new ArgumentNullException (nameof (array));
 
 			if (offset < 0)
-				throw new ArgumentOutOfRangeException (nameof(offset));
+				throw new ArgumentOutOfRangeException (nameof (offset));
 
 			if (count < 0)
-				throw new ArgumentOutOfRangeException (nameof(count));
+				throw new ArgumentOutOfRangeException (nameof (count));
 
 			if (array.Length - offset < count)
 				throw new ArgumentException ("Offset plus count is larger than the length of target array.");
@@ -298,7 +292,7 @@ namespace Compression
 			throw new InvalidOperationException ("Reading from the compression stream is not supported.");
 		}
 
-		private void EnsureCompressionMode()
+		private void EnsureCompressionMode ()
 		{
 			if (_mode != CompressionMode.Compress)
 				ThrowCannotWriteToDeflateStreamException ();
@@ -310,19 +304,19 @@ namespace Compression
 			throw new InvalidOperationException ("Writing to the compression stream is not supported.");
 		}
 
-		public override IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback asyncCallback, object asyncState) =>
+		public override IAsyncResult BeginRead (byte[] buffer, int offset, int count, AsyncCallback asyncCallback, object asyncState) =>
 			TaskToApm.Begin(ReadAsync (buffer, offset, count, CancellationToken.None), asyncCallback, asyncState);
 
-		public override int EndRead(IAsyncResult asyncResult) =>
+		public override int EndRead (IAsyncResult asyncResult) =>
 			TaskToApm.End<int> (asyncResult);
 
-		public override Task<int> ReadAsync(byte[] array, int offset, int count, CancellationToken cancellationToken)
+		public override Task<int> ReadAsync (byte[] array, int offset, int count, CancellationToken cancellationToken)
 		{
 			ValidateParameters (array, offset, count);
 			return ReadAsyncMemory (new Memory<byte>(array, offset, count), cancellationToken).AsTask ();
 		}
 
-		public override ValueTask<int> ReadAsync(Memory<byte> destination, CancellationToken cancellationToken = default(CancellationToken))
+		public override ValueTask<int> ReadAsync (Memory<byte> destination, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			if (GetType () != typeof (CompressionStream)) {
 				// Ensure that existing streams derived from DeflateStream and that override ReadAsync(byte[],...)
@@ -399,7 +393,7 @@ namespace Compression
 					if (bytesRead == 0 && !_inflater.Finished ()) {
 						// We could have read in head information and didn't get any data.
 						// Read from the base stream again.
-						readTask = _stream.ReadAsync(_buffer, cancellationToken);
+						readTask = _stream.ReadAsync (_buffer, cancellationToken);
 					} else {
 						return bytesRead;
 					}
@@ -409,7 +403,7 @@ namespace Compression
 			}
 		}
 
-		public override void Write(byte[] array, int offset, int count)
+		public override void Write (byte[] array, int offset, int count)
 		{
 			ValidateParameters (array, offset, count);
 			WriteCore (new ReadOnlySpan<byte> (array, offset, count));
@@ -445,7 +439,7 @@ namespace Compression
 			}
 		}
 
-		private void WriteDeflaterOutput()
+		private void WriteDeflaterOutput ()
 		{
 			while (!_deflater.NeedsInput ()) {
 				int compressedBytes = _deflater.GetDeflateOutput (_buffer);
@@ -480,7 +474,7 @@ namespace Compression
 		}
 
 		// This is called by Dispose:
-		private void PurgeBuffers(bool disposing)
+		private void PurgeBuffers (bool disposing)
 		{
 			if (!disposing)
 				return;
@@ -563,7 +557,7 @@ namespace Compression
 
 		public override void EndWrite (IAsyncResult asyncResult) => TaskToApm.End (asyncResult);
 
-		public override Task WriteAsync(byte[] array, int offset, int count, CancellationToken cancellationToken)
+		public override Task WriteAsync (byte[] array, int offset, int count, CancellationToken cancellationToken)
 		{
 			ValidateParameters (array, offset, count);
 			return WriteAsyncMemory (new ReadOnlyMemory<byte> (array, offset, count), cancellationToken);
@@ -600,7 +594,7 @@ namespace Compression
 				// Pass new bytes through deflater
 				_deflater.SetInput (source);
 
-				await WriteDeflaterOutputAsync (cancellationToken).ConfigureAwait(false);
+				await WriteDeflaterOutputAsync (cancellationToken).ConfigureAwait (false);
 
 				_wroteBytes = true;
 			} finally {
@@ -611,7 +605,7 @@ namespace Compression
 		/// <summary>
 		/// Writes the bytes that have already been deflated
 		/// </summary>
-		private async Task WriteDeflaterOutputAsync(CancellationToken cancellationToken)
+		private async Task WriteDeflaterOutputAsync (CancellationToken cancellationToken)
 		{
 			while (!_deflater.NeedsInput ()) {
 				int compressedBytes = _deflater.GetDeflateOutput (_buffer);
@@ -679,7 +673,7 @@ namespace Compression
 					}
 
 					// Now, use the source stream's CopyToAsync to push directly to our inflater via this helper stream
-					await _deflateStream._stream.CopyToAsync(this, _arrayPoolBuffer.Length, _cancellationToken).ConfigureAwait(false);
+					await _deflateStream._stream.CopyToAsync (this, _arrayPoolBuffer.Length, _cancellationToken).ConfigureAwait (false);
 				} finally {
 					_deflateStream.AsyncOperationCompleting ();
 
@@ -716,17 +710,17 @@ namespace Compression
 				}
 			}
 
-			public override void Write(byte[] buffer, int offset, int count) => WriteAsync(buffer, offset, count, default(CancellationToken)).GetAwaiter().GetResult();
+			public override void Write (byte[] buffer, int offset, int count) => WriteAsync(buffer, offset, count, default(CancellationToken)).GetAwaiter().GetResult();
 			public override bool CanWrite => true;
-			public override void Flush() { }
+			public override void Flush () { }
 
 			public override bool CanRead => false;
 			public override bool CanSeek => false;
 			public override long Length { get { throw new NotSupportedException (); } }
 			public override long Position { get { throw new NotSupportedException (); } set { throw new NotSupportedException (); } }
-			public override int Read(byte[] buffer, int offset, int count) { throw new NotSupportedException (); }
-			public override long Seek(long offset, SeekOrigin origin) { throw new NotSupportedException (); }
-			public override void SetLength(long value) { throw new NotSupportedException (); }
+			public override int Read (byte[] buffer, int offset, int count) { throw new NotSupportedException (); }
+			public override long Seek (long offset, SeekOrigin origin) { throw new NotSupportedException (); }
+			public override void SetLength (long value) { throw new NotSupportedException (); }
 		}
 
 		private bool AsyncOperationIsActive => _activeAsyncOperation != 0;

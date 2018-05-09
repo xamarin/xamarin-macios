@@ -11,9 +11,7 @@ using ObjCRuntime;
 
 namespace Compression
 {
-	/// <summary>
-	/// Provides a wrapper around the ZLib decompression API.
-	/// </summary>
+
 	internal sealed class Inflater : IDisposable
 	{
 		private CompressionStreamStruct _compression_struct;
@@ -39,7 +37,7 @@ namespace Compression
 		/// <summary>
 		/// Returns true if the end of the stream has been reached.
 		/// </summary>
-		public bool Finished() => _finished;
+		public bool Finished () => _finished;
 
 		public unsafe bool Inflate (out byte b)
 		{
@@ -70,7 +68,7 @@ namespace Compression
 			if (destination.Length == 0)
 				return 0;
 
-			fixed (byte* bufPtr = &MemoryMarshal.GetReference(destination))
+			fixed (byte* bufPtr = &MemoryMarshal.GetReference (destination))
 			{
 				return InflateVerified (bufPtr, destination.Length);
 			}
@@ -95,9 +93,9 @@ namespace Compression
 			}
 		}
 
-		public bool NeedsInput() => _compression_struct.SourceSize == 0;
+		public bool NeedsInput () => _compression_struct.SourceSize == 0;
 
-		public void SetInput(byte[] inputBuffer, int startIndex, int count)
+		public void SetInput (byte[] inputBuffer, int startIndex, int count)
 		{
 			if (startIndex + count < inputBuffer.Length) {
 				_shouldFinalize = true;
@@ -112,7 +110,7 @@ namespace Compression
 
 			lock (SyncLock)
 			{
-				_inputBufferHandle = GCHandle.Alloc(inputBuffer, GCHandleType.Pinned);
+				_inputBufferHandle = GCHandle.Alloc (inputBuffer, GCHandleType.Pinned);
 				_compression_struct.Source = _inputBufferHandle.AddrOfPinnedObject() + startIndex;
 				_compression_struct.SourceSize = count;
 				_finished = false;
@@ -131,13 +129,13 @@ namespace Compression
 			}
 		}
 
-		public void Dispose()
+		public void Dispose ()
 		{
 			Dispose (true);
 			GC.SuppressFinalize (this);
 		}
 
-		~Inflater()
+		~Inflater ()
 		{
 			Dispose (false);
 		}
@@ -185,12 +183,12 @@ namespace Compression
 		/// </summary>
 		private void DeallocateInputBufferHandle ()
 		{
-			Debug.Assert(_inputBufferHandle.IsAllocated);
+			Debug.Assert (_inputBufferHandle.IsAllocated);
 
 			lock (SyncLock) {
 				_compression_struct.SourceSize = 0;
 				_compression_struct.Source = IntPtr.Zero;
-				_inputBufferHandle.Free();
+				_inputBufferHandle.Free ();
 			}
 		}
 	}

@@ -7,6 +7,8 @@ using CoreVideo;
 
 namespace Compression {
 
+	// this enum as per the headers is an int NOT an NSInterger
+	[iOS (9,0), TV (9,0), Mac (10,11)]
 	public enum CompressionAlgorithm {
 		LZ4 = 0x100,
 		LZ4Raw = 0x101,

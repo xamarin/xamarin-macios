@@ -12,9 +12,7 @@ using ObjCRuntime;
 
 namespace Compression
 {
-	/// <summary>
-	/// Provides a wrapper around the ZLib compression API.
-	/// </summary>
+
 	internal sealed class Deflater : IDisposable
 	{
 		private CompressionStreamStruct _compression_struct;
@@ -39,12 +37,12 @@ namespace Compression
 			DeflateInit (algorithm);
 		}
 
-		~Deflater()
+		~Deflater ()
 		{
 			Dispose (false);
 		}
 
-		public void Dispose()
+		public void Dispose ()
 		{
 			Dispose (true);
 			GC.SuppressFinalize (this);
@@ -59,11 +57,11 @@ namespace Compression
 			}
 		}
 
-		public bool NeedsInput() => _compression_struct.SourceSize == 0;
+		public bool NeedsInput () => _compression_struct.SourceSize == 0;
 
 		internal unsafe void SetInput (ReadOnlyMemory<byte> inputBuffer)
 		{
-			Debug.Assert (NeedsInput(), "We have something left in previous input!");
+			Debug.Assert (NeedsInput (), "We have something left in previous input!");
 			Debug.Assert (!_inputBufferHandle.HasPointer);
 
 			if (0 == inputBuffer.Length) {
@@ -78,7 +76,7 @@ namespace Compression
 			}
 		}
 
-		internal unsafe void SetInput(byte* inputBufferPtr, int count)
+		internal unsafe void SetInput (byte* inputBufferPtr, int count)
 		{
 			Debug.Assert (NeedsInput (), "We have something left in previous input!");
 			Debug.Assert (inputBufferPtr != null);
@@ -97,7 +95,7 @@ namespace Compression
 		internal int GetDeflateOutput (byte[] outputBuffer)
 		{
 			Debug.Assert (null != outputBuffer, "Can't pass in a null output buffer!");
-			Debug.Assert (!NeedsInput(), "GetDeflateOutput should only be called after providing input");
+			Debug.Assert (!NeedsInput (), "GetDeflateOutput should only be called after providing input");
 
 			try {
 				int bytesRead;
@@ -135,7 +133,7 @@ namespace Compression
 			}
 		}
 
-		internal bool Finish(byte[] outputBuffer, out int bytesRead)
+		internal bool Finish (byte[] outputBuffer, out int bytesRead)
 		{
 			Debug.Assert (null != outputBuffer, "Can't pass in a null output buffer!");
 			Debug.Assert (outputBuffer.Length > 0, "Can't pass in an empty output buffer!");
