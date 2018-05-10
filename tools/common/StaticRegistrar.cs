@@ -4173,7 +4173,7 @@ namespace Registrar {
 
 			var createMethod = attrib.Type.Methods.FirstOrDefault ((v) => v.Name == "Create");
 			if (createMethod == null)
-				throw ErrorHelper.CreateError (4175, $"The type '{GetAssemblyQualifiedName (attrib.Type)}' does not contain a method named 'Create'. Please file a bug report at https://bugzilla.xamarin.com.");
+				ErrorHelper.Warning (4175, $"The type '{GetAssemblyQualifiedName (attrib.Type)}' does not contain a method named 'Create'. Please file a bug report at https://bugzilla.xamarin.com.");
 			return createMethod;
 		}
 
