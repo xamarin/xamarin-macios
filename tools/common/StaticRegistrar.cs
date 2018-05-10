@@ -4171,7 +4171,10 @@ namespace Registrar {
 			if (attrib == null)
 				return null;
 
-			return attrib.Type.Methods.First ((v) => v.Name == "Create");
+			var createMethod = attrib.Type.Methods.FirstOrDefault ((v) => v.Name == "Create");
+			if (createMethod == null)
+				ErrorHelper.Warning (4175, $"The type '{GetAssemblyQualifiedName (attrib.Type)}' does not contain a method named 'Create'. Please file a bug report at https://bugzilla.xamarin.com.");
+			return createMethod;
 		}
 
 		public bool MapProtocolMember (MethodDefinition method, out MethodDefinition extensionMethod)
