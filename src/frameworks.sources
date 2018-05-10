@@ -321,13 +321,11 @@ CFNETWORK_SOURCES = \
 
 # Compression
 
-COMPRESSION_API_SOURCES = \
-	Compression/Enums.cs \
-
 COMPRESSION_SOURCES = \
 	Compression/Compression.cs \
 	Compression/CompressionStreamStruct.cs \
 	Compression/Deflater.cs \
+	Compression/Enums.cs \
 	Compression/Inflater.cs \
 
 # Contacts
