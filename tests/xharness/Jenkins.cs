@@ -713,7 +713,7 @@ namespace xharness
 							TestName = project.Name,
 							IsUnitTest = true,
 						};
-						execs = CreateTestVariations (new [] { exec }, (buildTask, test) => new MacExecuteTask (buildTask));
+						execs = CreateTestVariations (new [] { exec }, (buildTask, test) => new MacExecuteTask (buildTask) { IsUnitTest = true } );
 					}
 					exec.Variation = configurations.Length > 1 ? config : project.TargetFrameworkFlavor.ToString ();
 
