@@ -17989,35 +17989,35 @@ namespace AppKit {
 	[BaseType (typeof(NSObject))]
 	[Model]
 	[Protocol]
-	interface NSTokenFieldCellDelegate {		
+	interface NSTokenFieldCellDelegate {
 		[Export ("tokenFieldCell:completionsForSubstring:indexOfToken:indexOfSelectedItem:")]
 		NSArray GetCompletionStrings (NSTokenFieldCell tokenFieldCell, string substring, nint tokenIndex, ref nint selectedIndex);
-		
+
 		[Export ("tokenFieldCell:shouldAddObjects:atIndex:")]
 		NSArray ShouldAddObjects (NSTokenFieldCell tokenFieldCell, NSObject[] tokens, nuint index);
-		
+
 		[Export ("tokenFieldCell:displayStringForRepresentedObject:")]
 		string GetDisplayString (NSTokenFieldCell tokenFieldCell, NSObject representedObject);
-		
+
 		[Export ("tokenFieldCell:editingStringForRepresentedObject:")]
 		string GetEditingString (NSTokenFieldCell tokenFieldCell, NSObject representedObject);
-		
+
 		[Export ("tokenFieldCell:representedObjectForEditingString:")]
 		[return: NullAllowed]
 		NSObject GetRepresentedObject (NSTokenFieldCell tokenFieldCell, string editingString);
-		
+
 		[Export ("tokenFieldCell:writeRepresentedObjects:toPasteboard:")]
 		bool WriteRepresentedObjects (NSTokenFieldCell tokenFieldCell, NSObject [] objects, NSPasteboard pboard);
-		
+
 		[Export ("tokenFieldCell:readFromPasteboard:")]
 		NSObject [] Read (NSTokenFieldCell tokenFieldCell, NSPasteboard pboard);
-		
+
 		[Export ("tokenFieldCell:menuForRepresentedObject:")]
 		NSMenu GetMenu (NSTokenFieldCell tokenFieldCell, NSObject representedObject);
-		
+
 		[Export ("tokenFieldCell:hasMenuForRepresentedObject:")]
 		bool HasMenu (NSTokenFieldCell tokenFieldCell, NSObject representedObject);
-		
+
 		[Export ("tokenFieldCell:styleForRepresentedObject:")]
 		NSTokenStyle GetStyle (NSTokenFieldCell tokenFieldCell, NSObject representedObject);
 	}
@@ -18069,24 +18069,24 @@ namespace AppKit {
 
 		[Export ("tokenStyle")]
 		NSTokenStyle TokenStyle { get; set; }
-		
+
 		[Export ("completionDelay")]
 		double CompletionDelay { get; set; }
-		
+
 		[Static]
 		[Export ("defaultCompletionDelay")]
 		double DefaultCompletionDelay { get; }
-		
+
 		[Export ("tokenizingCharacterSet", ArgumentSemantic.Copy), NullAllowed] 
 		NSCharacterSet CharacterSet { get; set; }
-				
+
 		[Static]
 		[Export ("defaultTokenizingCharacterSet")] 
 		NSCharacterSet DefaultCharacterSet { get; }
-		
+
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed] 
 		NSObject WeakDelegate { get; set; }
-		
+
 		[Wrap ("WeakDelegate")]
 		[Protocolize]
 		NSTokenFieldCellDelegate Delegate { get; set; }
@@ -19160,10 +19160,10 @@ namespace AppKit {
 	[Protocol]
 	interface NSTokenFieldDelegate {
 		[Export ("tokenField:completionsForSubstring:indexOfToken:indexOfSelectedItem:")]
-		NSArray GetCompletionStrings (NSTokenField tokenField, string substring, nint tokenIndex, ref nint selectedIndex);
+		string [] GetCompletionStrings (NSTokenField tokenField, string substring, nint tokenIndex, nint selectedIndex);
 
 		[Export ("tokenField:shouldAddObjects:atIndex:")]
-		NSArray ShouldAddObjects (NSTokenField tokenField, NSObject[] tokens, nuint index);
+		NSArray ShouldAddObjects (NSTokenField tokenField, NSArray tokens, nuint index);
 
 		[Export ("tokenField:displayStringForRepresentedObject:")]
 		string GetDisplayString (NSTokenField tokenField, NSObject representedObject);
@@ -19176,7 +19176,7 @@ namespace AppKit {
 		NSObject GetRepresentedObject (NSTokenField tokenField, string editingString);
 
 		[Export ("tokenField:writeRepresentedObjects:toPasteboard:")]
-		bool WriteRepresentedObjects (NSTokenField tokenField, NSObject[] objects, NSPasteboard pboard);
+		bool WriteRepresented (NSTokenField tokenField, NSArray objects, NSPasteboard pboard);
 
 		[Export ("tokenField:readFromPasteboard:")]
 		NSObject [] Read (NSTokenField tokenField, NSPasteboard pboard);
