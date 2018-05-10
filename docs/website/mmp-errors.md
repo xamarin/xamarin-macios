@@ -326,11 +326,11 @@ There are currently two possible reasons for this warning:
    shouldn't happen, so please file an [issue](https://github.com/xamarin/xamarin-macios/issues/new)
    with a test project so that we can fix it.
 
-### <a name="MT4174"/>MT4174: Unable to locate the block to delegate conversion method for the method {method}'s parameter #{parameter}.
+### <a name="MM4174"/>MM4174: Unable to locate the block to delegate conversion method for the method {method}'s parameter #{parameter}.
 
 This is a warning indicating that the static registrar couldn't find the
 method to create a delegate for an Objective-C block. An attempt will be made
-at runtime to find the method, but it will likely fail as well (with an MT8009
+at runtime to find the method, but it will likely fail as well (with an MM8009
 exception).
 
 One possible reason for this warning is when manually writing bindings for API
