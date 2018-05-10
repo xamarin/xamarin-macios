@@ -187,7 +187,7 @@ namespace LinkAll.Attributes {
 		{
 			var d = new Dictionary<string,int> () { { "key", 0 } };
 			Assert.NotNull (d); // just to be 100% sure it won't be linked away (with the attribute we'll be looking for)
-			var proxy = Type.GetType ("System.Collections.Generic.Mscorlib_DictionaryDebugView`2, mscorlib");
+			var proxy = Type.GetType ("System.Collections.Generic.IDictionaryDebugView`2, mscorlib");
 #if DEBUG
 			Assert.NotNull (proxy, "proxy");
 			// having the type is nice, but it must not be empty to be useful
