@@ -319,6 +319,15 @@ CFNETWORK_SOURCES = \
 	CFNetwork/CFHTTPStream.cs \
 	CFNetwork/CFHost.cs \
 
+# Compression
+
+COMPRESSION_SOURCES = \
+	Compression/Compression.cs \
+	Compression/CompressionStreamStruct.cs \
+	Compression/Deflater.cs \
+	Compression/Enums.cs \
+	Compression/Inflater.cs \
+
 # Contacts
 
 CONTACTS_API_SOURCES = \
@@ -1622,6 +1631,7 @@ COMMON_FRAMEWORKS =         \
 	CoreFoundation          \
 	CoreML                  \
 	CoreVideo               \
+	Compression             \
 	Foundation              \
 	GameKit                 \
 	SceneKit                \

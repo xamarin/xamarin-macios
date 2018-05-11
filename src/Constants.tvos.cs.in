@@ -56,6 +56,8 @@ namespace ObjCRuntime {
 		public const string TVServicesLibrary = "/System/Library/Frameworks/TVServices.framework/TVServices";
 		public const string UIKitLibrary = "/System/Library/Frameworks/UIKit.framework/UIKit";
 
+		public const string libcompression = "/usr/lib/libcompression.dylib";
+
 		// TVOS 9.2
 		public const string MapKitLibrary = "/System/Library/Frameworks/MapKit.framework/MapKit";
 
