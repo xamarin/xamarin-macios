@@ -61,8 +61,10 @@ namespace Compression
 
 		internal unsafe void SetInput (ReadOnlyMemory<byte> inputBuffer)
 		{
-			Debug.Assert (NeedsInput (), "We have something left in previous input!");
-			Debug.Assert (!_inputBufferHandle.HasPointer);
+			if (!NeedsInput ())
+				throw new InvalidOperationException ("We have something left in previous input!");
+			if (_inputBufferHandle.HasPointer)
+				throw new InvalidOperationException ("Unexpected input buffer handler found.");
 
 			if (0 == inputBuffer.Length) {
 				return;
@@ -78,9 +80,12 @@ namespace Compression
 
 		internal unsafe void SetInput (byte* inputBufferPtr, int count)
 		{
-			Debug.Assert (NeedsInput (), "We have something left in previous input!");
-			Debug.Assert (inputBufferPtr != null);
-			Debug.Assert (!_inputBufferHandle.HasPointer);
+			if (! NeedsInput ())
+				throw new InvalidOperationException ("We have something left in previous input!");
+			if (inputBufferPtr == null)
+				throw new ArgumentNullException ( nameof (inputBufferPtr));
+			if (_inputBufferHandle.HasPointer)
+				throw new InvalidOperationException ("Unexpected input buffer handler found.");
 
 			if (count == 0) {
 				return;
@@ -94,8 +99,10 @@ namespace Compression
 
 		internal int GetDeflateOutput (byte[] outputBuffer)
 		{
-			Debug.Assert (null != outputBuffer, "Can't pass in a null output buffer!");
-			Debug.Assert (!NeedsInput (), "GetDeflateOutput should only be called after providing input");
+			if (outputBuffer == null) 
+				throw new ArgumentNullException (nameof (outputBuffer));
+			if (NeedsInput ())
+				throw new InvalidOperationException ("GetDeflateOutput should only be called after providing input");
 
 			try {
 				int bytesRead;
@@ -111,7 +118,8 @@ namespace Compression
 
 		private unsafe CompressionStatus ReadDeflateOutput (byte[] outputBuffer, StreamFlag flushCode, out int bytesRead)
 		{
-			Debug.Assert (outputBuffer?.Length > 0);
+			if (outputBuffer?.Length < 0)
+				throw new ArgumentException ("outputbuffer length must be bigger than 0");
 			lock (SyncLock) {
 				fixed (byte* bufPtr = &outputBuffer[0]) {
 					_compression_struct.Destination = (IntPtr)bufPtr;
@@ -135,8 +143,10 @@ namespace Compression
 
 		internal bool Finish (byte[] outputBuffer, out int bytesRead)
 		{
-			Debug.Assert (null != outputBuffer, "Can't pass in a null output buffer!");
-			Debug.Assert (outputBuffer.Length > 0, "Can't pass in an empty output buffer!");
+			if (outputBuffer == null)
+				throw new ArgumentNullException (nameof (outputBuffer));
+			if (outputBuffer.Length < 0)
+				throw new ArgumentException ("Can't pass in an empty output buffer!");
 
 			var errC = ReadDeflateOutput (outputBuffer, StreamFlag.Finalize , out bytesRead);
 			return errC == CompressionStatus.End;
@@ -147,10 +157,14 @@ namespace Compression
 		/// </summary>
 		internal bool Flush (byte[] outputBuffer, out int bytesRead)
 		{
-			Debug.Assert (null != outputBuffer, "Can't pass in a null output buffer!");
-			Debug.Assert (outputBuffer.Length > 0, "Can't pass in an empty output buffer!");
-			Debug.Assert (NeedsInput (), "We have something left in previous input!");
-			Debug.Assert (!_inputBufferHandle.HasPointer);
+			if (outputBuffer == null)
+				throw new ArgumentNullException (nameof (outputBuffer));
+			if (outputBuffer.Length < 0)
+				throw new ArgumentException ("Can't pass in an empty output buffer!");
+			if (!NeedsInput ())
+				throw new InvalidOperationException ("We have something left in previous input!");
+			if (_inputBufferHandle.HasPointer)
+				throw new InvalidOperationException ("InputHandler should not be set");
 
 			// Note: we require that NeedsInput() == true, i.e. that 0 == _zlibStream.AvailIn.
 			// If there is still input left we should never be getting here; instead we

@@ -67,7 +67,6 @@ namespace Compression
 
 		internal void InitializeInflater (Stream stream, CompressionAlgorithm algorithm, bool leaveOpen)
 		{
-			Debug.Assert (stream != null);
 			if (!stream.CanRead)
 				throw new ArgumentException ("Stream does not support reading.", nameof (stream));
 
@@ -79,7 +78,6 @@ namespace Compression
 
 		internal void InitializeDeflater (Stream stream, CompressionAlgorithm algorithm, bool leaveOpen)
 		{
-			Debug.Assert (stream != null);
 			if (!stream.CanWrite)
 				throw new ArgumentException ("Stream does not support writing.", nameof (stream));
 
@@ -92,7 +90,6 @@ namespace Compression
 
 		private void InitializeBuffer ()
 		{
-			Debug.Assert (_buffer == null);
 			_buffer = ArrayPool<byte>.Shared.Rent (DefaultBufferSize);
 		}
 
@@ -172,7 +169,6 @@ namespace Compression
 					if (flushSuccessful) {
 						await _stream.WriteAsync(_buffer, 0, compressedBytes, cancellationToken).ConfigureAwait (false);
 					}
-					Debug.Assert (flushSuccessful == (compressedBytes > 0));
 				} while (flushSuccessful);
 			} finally {
 				AsyncOperationCompleting ();
@@ -468,7 +464,6 @@ namespace Compression
 					if (flushSuccessful) {
 						_stream.Write (_buffer, 0, compressedBytes);
 					}
-					Debug.Assert (flushSuccessful == (compressedBytes > 0));
 				} while (flushSuccessful);
 			}
 		}
@@ -648,9 +643,12 @@ namespace Compression
 
 			public CopyToAsyncStream (CompressionStream deflateStream, Stream destination, int bufferSize, CancellationToken cancellationToken)
 			{
-				Debug.Assert (deflateStream != null);
-				Debug.Assert (destination != null);
-				Debug.Assert (bufferSize > 0);
+				if (deflateStream == null)
+					throw new ArgumentNullException (nameof (deflateStream));
+				if (destination == null)
+					throw new ArgumentNullException (nameof (destination));
+				if (bufferSize <= 0)
+					throw new ArgumentOutOfRangeException (nameof (bufferSize));
 
 				_deflateStream = deflateStream;
 				_destination = destination;
@@ -686,7 +684,8 @@ namespace Compression
 			public override async Task WriteAsync (byte[] buffer, int offset, int count, CancellationToken cancellationToken)
 			{
 				// Validate inputs
-				Debug.Assert (buffer != _arrayPoolBuffer);
+				if (buffer == _arrayPoolBuffer)
+					throw new ArgumentException (nameof (buffer));
 				_deflateStream.EnsureNotDisposed ();
 				if (count <= 0) {
 					return;
@@ -741,7 +740,8 @@ namespace Compression
 		private void AsyncOperationCompleting ()
 		{
 			int oldValue = Interlocked.CompareExchange (ref _activeAsyncOperation, 0, 1);
-			Debug.Assert (oldValue == 1, $"Expected {nameof(_activeAsyncOperation)} to be 1, got {oldValue}");
+			if (oldValue != 1)
+				throw new InvalidOperationException ($"Expected {nameof (_activeAsyncOperation)} to be 1, got {oldValue}");
 		}
 
 		private static void ThrowInvalidBeginCall ()

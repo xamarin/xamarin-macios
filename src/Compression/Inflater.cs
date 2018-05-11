@@ -44,18 +44,18 @@ namespace Compression
 			fixed (byte* bufPtr = &b)
 			{
 				int bytesRead = InflateVerified (bufPtr, 1);
-				Debug.Assert (bytesRead == 0 || bytesRead == 1);
 				return bytesRead != 0;
 			}
 		}
 
 		public unsafe int Inflate (byte[] bytes, int offset, int length)
 		{
+			if (bytes == null)
+				throw new ArgumentNullException (nameof (bytes));
 			// If Inflate is called on an invalid or unready inflater, return 0 to indicate no bytes have been read.
 			if (length == 0)
 				return 0;
 
-			Debug.Assert(null != bytes, "Can't pass in a null output buffer!");
 			fixed (byte* bufPtr = bytes)
 			{
 				return InflateVerified (bufPtr + offset, length);
@@ -97,13 +97,18 @@ namespace Compression
 
 		public void SetInput (byte[] inputBuffer, int startIndex, int count)
 		{
+			if (inputBuffer == null)
+				throw new ArgumentNullException (nameof (inputBuffer));
+			if (!NeedsInput ())
+				throw new InvalidOperationException ("We have something left in previous input!");
+			if (_inputBufferHandle.IsAllocated)
+				throw new InvalidOperationException ("inputBuggerHandler should not be allocated");
+			if (!(startIndex >= 0 && count >= 0 && count + startIndex <= inputBuffer.Length))
+				throw new ArgumentOutOfRangeException ("count and start index are out of range.");
+
 			if (startIndex + count < inputBuffer.Length) {
 				_shouldFinalize = true;
 			}
-			Debug.Assert (NeedsInput(), "We have something left in previous input!");
-			Debug.Assert (inputBuffer != null);
-			Debug.Assert (startIndex >= 0 && count >= 0 && count + startIndex <= inputBuffer.Length);
-			Debug.Assert (!_inputBufferHandle.IsAllocated);
 
 			if (0 == count)
 				return;
@@ -183,7 +188,8 @@ namespace Compression
 		/// </summary>
 		private void DeallocateInputBufferHandle ()
 		{
-			Debug.Assert (_inputBufferHandle.IsAllocated);
+			if (!_inputBufferHandle.IsAllocated)
+				throw new InvalidOperationException ("Inputbufferhandler should be allocated.");
 
 			lock (SyncLock) {
 				_compression_struct.SourceSize = 0;

@@ -74,7 +74,7 @@ namespace MonoTouchFixtures.Compression {
 			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress, algorithm);
 			MemoryStream output = new MemoryStream ();
 			CopyStream (decompressing, output);
-			Assert.AreNotEqual (0, output.Length, "Legth should be more than 0.");
+			Assert.AreNotEqual (0, output.Length, "Length should be more than 0.");
 			Assert.IsTrue (compare_buffers (data, output.GetBuffer(), (int) output.Length), "Buffers are not equal.");
 			decompressing.Close();
 			output.Close();
