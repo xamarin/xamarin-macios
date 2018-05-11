@@ -623,7 +623,6 @@
 !missing-protocol! NSTextAttachmentCell not bound
 !missing-protocol! NSTextInput not bound
 !missing-protocol! NSTextLayoutOrientationProvider not bound
-!missing-protocol! NSTokenFieldCellDelegate not bound
 !missing-protocol! NSUserInterfaceItemSearching not bound
 !missing-protocol-conformance! NSApplication should conform to NSUserInterfaceValidations
 !missing-protocol-conformance! NSButton should conform to NSUserInterfaceValidations
@@ -705,8 +704,6 @@
 !missing-selector! +NSScrollView::setRulerViewClass: not bound
 !missing-selector! +NSSet::setWithCollectionViewIndexPath: not bound
 !missing-selector! +NSSet::setWithCollectionViewIndexPaths: not bound
-!missing-selector! +NSTokenFieldCell::defaultCompletionDelay not bound
-!missing-selector! +NSTokenFieldCell::defaultTokenizingCharacterSet not bound
 !missing-selector! NSApplication::activateContextHelpMode: not bound
 !missing-selector! NSApplication::application:printFiles: not bound
 !missing-selector! NSApplication::beginModalSessionForWindow:relativeToWindow: not bound
@@ -1133,14 +1130,6 @@
 !missing-selector! NSTextView::dragImageForSelectionWithEvent:origin: not bound
 !missing-selector! NSTextView::dragSelectionWithEvent:offset:slideBack: not bound
 !missing-selector! NSTextView::toggleBaseWritingDirection: not bound
-!missing-selector! NSTokenFieldCell::completionDelay not bound
-!missing-selector! NSTokenFieldCell::delegate not bound
-!missing-selector! NSTokenFieldCell::setCompletionDelay: not bound
-!missing-selector! NSTokenFieldCell::setDelegate: not bound
-!missing-selector! NSTokenFieldCell::setTokenizingCharacterSet: not bound
-!missing-selector! NSTokenFieldCell::setTokenStyle: not bound
-!missing-selector! NSTokenFieldCell::tokenizingCharacterSet not bound
-!missing-selector! NSTokenFieldCell::tokenStyle not bound
 !missing-selector! NSToolbar::fullScreenAccessoryView not bound
 !missing-selector! NSToolbar::fullScreenAccessoryViewMaxHeight not bound
 !missing-selector! NSToolbar::fullScreenAccessoryViewMinHeight not bound
@@ -1198,7 +1187,6 @@
 !missing-type! NSPDFPanel not bound
 !missing-type! NSPersistentDocument not bound
 !missing-type! NSPICTImageRep not bound
-!missing-type! NSTokenFieldCell not bound
 !unknown-field! item bound
 !unknown-field! MenuItem bound
 !unknown-field! NSAlternativeString bound
