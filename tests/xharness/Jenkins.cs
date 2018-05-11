@@ -3479,8 +3479,7 @@ function toggleAll (show)
 			Jenkins.MainLog.WriteLine ("Running XI on '{0}' ({2}) for {1}", Device?.Name, ProjectFile, Device?.UDID);
 
 			ExecutionResult = (ExecutionResult & ~TestExecutingResult.InProgressMask) | TestExecutingResult.Running;
-			if (BuildTask.NotStarted)
-				await BuildTask.RunAsync ();
+			await BuildTask.RunAsync ();
 			if (!BuildTask.Succeeded) {
 				ExecutionResult = TestExecutingResult.BuildFailure;
 				return;
