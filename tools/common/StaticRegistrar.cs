@@ -4167,11 +4167,21 @@ namespace Registrar {
 
 		MethodDefinition GetBlockProxyAttributeMethod (MethodDefinition method, int parameter)
 		{
-			var attrib = GetBlockProxyAttribute (method.Parameters [parameter]);
+			var param = method.Parameters [parameter];
+			var attrib = GetBlockProxyAttribute (param);
 			if (attrib == null)
 				return null;
 
-			return attrib.Type.Methods.First ((v) => v.Name == "Create");
+			var createMethod = attrib.Type.Methods.FirstOrDefault ((v) => v.Name == "Create");
+			if (createMethod == null) {
+				// This may happen if users add their own BlockProxy attributes and don't know which types to pass.
+				// One common variation is that the IDE will add the BlockProxy attribute found in base methods when the user overrides those methods,
+				// which unfortunately doesn't compile (because the type passed to the BlockProxy attribute is internal), and then
+				// the user just modifies the attribute to something that compiles.
+				ErrorHelper.Show (ErrorHelper.CreateWarning (App, 4175, method, $"{(string.IsNullOrEmpty (param.Name) ? $"Parameter #{param.Index + 1}" : $"The parameter '{param.Name}'")} in the method '{GetTypeFullName (method.DeclaringType)}.{GetDescriptiveMethodName (method)}' has an invalid BlockProxy attribute (the type passed to the attribute does not have a 'Create' method)."));
+				// Returning null will make the caller look for the attribute in the base implementation.
+			}
+			return createMethod;
 		}
 
 		public bool MapProtocolMember (MethodDefinition method, out MethodDefinition extensionMethod)
