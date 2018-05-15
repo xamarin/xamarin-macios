@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using Xamarin.Utils;
@@ -15,6 +16,7 @@ namespace xharness
 		public Harness Harness;
 
 		bool loaded;
+		SemaphoreSlim semaphore = new SemaphoreSlim (1);
 
 		BlockingEnumerableCollection<SimRuntime> supported_runtimes = new BlockingEnumerableCollection<SimRuntime> ();
 		BlockingEnumerableCollection<SimDeviceType> supported_device_types = new BlockingEnumerableCollection<SimDeviceType> ();
@@ -28,9 +30,12 @@ namespace xharness
 
 		public async Task LoadAsync (Log log, bool force = false)
 		{
+			await semaphore.WaitAsync ();
 			if (loaded) {
-				if (!force)
+				if (!force) {
+					semaphore.Release ();
 					return;
+				}
 				supported_runtimes.Reset ();
 				supported_device_types.Reset ();
 				available_devices.Reset ();
@@ -103,6 +108,7 @@ namespace xharness
 					available_devices.SetCompleted ();
 					available_device_pairs.SetCompleted ();
 					File.Delete (tmpfile);
+					semaphore.Release ();
 				}
 			});
 		}
