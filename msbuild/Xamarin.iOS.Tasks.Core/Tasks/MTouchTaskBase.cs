@@ -107,6 +107,9 @@ namespace Xamarin.iOS.Tasks
 		public bool EnableSGenConc { get; set; }
 
 		[Required]
+		public bool UseInterpreter { get; set; }
+
+		[Required]
 		public bool LinkerDumpDependencies { get; set; }
 
 		[Required]
@@ -399,6 +402,9 @@ namespace Xamarin.iOS.Tasks
 
 			if (EnableSGenConc)
 				args.AddLine ("--sgen-conc");
+
+			if (UseInterpreter)
+				args.Add ("--interpreter");
 
 			switch (LinkMode.ToLowerInvariant ()) {
 			case "sdkonly": args.AddLine ("--linksdkonly"); break;

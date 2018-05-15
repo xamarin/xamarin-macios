@@ -25,6 +25,7 @@ Usage: configure [options]
 
     --enable-xamarin        Enable additional Xamarin-specific parts of the build.
 
+    --disable-packaged-llvm Compile LLVM instead of downloading a precompiled version.
 EOL
 }
 
@@ -81,6 +82,10 @@ while test x$1 != x; do
 	--enable-bitcode-on-ios)
 		# Private option
 		echo "ENABLE_BITCODE_ON_IOS=1" >> $CONFIGURED_FILE
+		shift
+		;;
+	--disable-packaged-llvm)
+		echo "IGNORE_PACKAGE_LLVM=1" >> $CONFIGURED_FILE
 		shift
 		;;
 	--help|-h)

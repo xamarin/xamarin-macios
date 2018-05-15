@@ -34,12 +34,6 @@ endif
 	$(Q) cd $(MONO_PATH) && git ls-files 'mcs/class/*.cs' '*.h' '*.c' '*.cpp' | grep -v "/Test/" | sed 's/ /\\ /g' | sed 's@^\(.*\)$$@	$(MONO_PATH)/\1 \\@' >> $(abspath $@).tmp
 	$(Q) mv $@.tmp $@
 
--include .deps.llvm.mk
-.deps.llvm.mk: $(TOP)/.git/modules/external/llvm/HEAD
-	$(Q) printf 'LLVM_DEPENDENCIES += Makefile \\\n' > $@.tmp
-	$(Q) cd $(LLVM_PATH) && git ls-files | grep -v "^test" | sed 's/ /\\ /g' | sed 's@^\(.*\)$$@	$(LLVM_PATH)/\1 \\@' >> $(abspath $@).tmp
-	$(Q) mv $@.tmp $@
-
 # ld: weak import of symbol '_fstatat' not supported because of option: -no_weak_imports for architecture x86_64
 # according to 'man fstatat' it appeared in OS X 10.10 (iOS 8)
 # so disable 'fstatat' by setting using ac_cv_func_fstatat=no
@@ -97,6 +91,10 @@ CCACHE_CXXFLAGS=-Qunused-arguments
 #
 SDK_CONFIG=$(MONO_PATH)/sdks/Make.config
 SDK_ARGS=XCODE_DIR=$(XCODE_DEVELOPER_ROOT) IOS_VERSION=$(IOS_SDK_VERSION) IOS_VERSION_MIN=$(MIN_IOS_SDK_VERSION) TVOS_VERSION=$(TVOS_SDK_VERSION) TVOS_VERSION_MIN=$(MIN_TVOS_SDK_VERSION) WATCHOS_VERSION=$(WATCH_SDK_VERSION) WATCHOS_VERSION_MIN=$(MIN_WATCHOS_SDK_VERSION)
+
+ifdef IGNORE_PACKAGE_LLVM
+SDK_ARGS += IGNORE_PACKAGE_LLVM=1
+endif
 
 SDK_BUILDDIR = $(MONO_PATH)/sdks/builds
 SDK_DESTDIR = $(abspath $(MONO_PATH)/sdks/out)
@@ -1112,11 +1110,17 @@ install-ios: install-iphoneos
 $(eval TARGET_LIBMONOSGEN:=$(TARGET_LIBMONOSGEN) $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.a)
 $(eval TARGET_SHAREDMONOSGEN:=$(TARGET_SHAREDMONOSGEN) $(BUILD_DESTDIR)/$(2)/tmp-lib/libmonosgen-2.0.dylib)
 $(eval TARGET_LIBLOGPROFILER:=$(TARGET_LIBLOGPROFILER) $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log-static.a)
+$(eval TARGET_LIBMONOEEINTERP:=$(TARGET_LIBMONOEEINTERP) $(BUILD_DESTDIR)/$(2)/lib/libmono-ee-interp.a)
+$(eval TARGET_LIBMONOICALLTABLE:=$(TARGET_LIBMONOICALLTABLE) $(BUILD_DESTDIR)/$(2)/lib/libmono-icall-table.a)
+$(eval TARGET_LIBMONOILGEN:=$(TARGET_LIBMONOILGEN) $(BUILD_DESTDIR)/$(2)/lib/libmono-ilgen.a)
 $(eval TARGET_SHAREDLIBLOGPROFILER:=$(TARGET_SHAREDLIBLOGPROFILER) $(BUILD_DESTDIR)/$(2)/tmp-lib/libmono-profiler-log.0.dylib)
 $(eval TARGET_MONOFRAMEWORK:=$(TARGET_MONOFRAMEWORK) $(BUILD_DESTDIR)/$(2)/tmp-lib/Mono)
 
 $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.a: .stamp-build-$(2)
 $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log-static.a: .stamp-build-$(2)
+$(BUILD_DESTDIR)/$(2)/lib/libmono-ee-interp.a: .stamp-build-$(2)
+$(BUILD_DESTDIR)/$(2)/lib/libmono-icall-table.a: .stamp-build-$(2)
+$(BUILD_DESTDIR)/$(2)/lib/libmono-ilgen.a: .stamp-build-$(2)
 $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log.a: .stamp-build-$(2)
 
 $(BUILD_DESTDIR)/$(2)/tmp-lib:
@@ -1190,6 +1194,9 @@ IPHONEOS_TARGETS = \
 	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmonosgen-2.0.a                                  \
 	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmonosgen-2.0.dylib                              \
 	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-profiler-log.a                             \
+	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-ee-interp.a                                \
+	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-icall-table.a                              \
+	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-ilgen.a                                    \
 	$(LIBMONO_PROFILER_IPHONEOS_DYLIB)														\
 	$(IOS_DESTDIR)$(IPHONEOS_SDK)/Frameworks/Mono.framework/Mono                            \
 	$(IOS_DESTDIR)$(IPHONEOS_SDK)/Frameworks/Mono.framework/Info.plist                      \
@@ -1208,6 +1215,15 @@ $(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmonosgen-2.0.dylib: $(TARGET_SHAREDMONOS
 
 $(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-profiler-log.a: $(TARGET_LIBLOGPROFILER) | $(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib
 	$(Q) lipo $(TARGET_LIBLOGPROFILER) -create -output $@
+
+$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-ee-interp.a: $(TARGET_LIBMONOEEINTERP) | $(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib
+	$(Q) lipo $(TARGET_LIBMONOEEINTERP) -create -output $@
+
+$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-icall-table.a: $(TARGET_LIBMONOICALLTABLE) | $(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib
+	$(Q) lipo $(TARGET_LIBMONOICALLTABLE) -create -output $@
+
+$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-ilgen.a: $(TARGET_LIBMONOILGEN) | $(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib
+	$(Q) lipo $(TARGET_LIBMONOILGEN) -create -output $@
 
 $(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-profiler-log.dylib: $(TARGET_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib
 	$(Q) lipo $(TARGET_SHAREDLIBLOGPROFILER) -create -output $@
@@ -1267,11 +1283,17 @@ clean-watchos: clean-targetwatch
 WATCHOS_TARGET_LIBMONOSGEN          = $(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.a
 WATCHOS_TARGET_SHAREDMONOSGEN       = $(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.dylib
 WATCHOS_TARGET_LIBLOGPROFILER       = $(BUILD_DESTDIR)/targetwatch/lib/libmono-profiler-log-static.a
+WATCHOS_TARGET_LIBMONOEEINTERP      = $(BUILD_DESTDIR)/targetwatch/lib/libmono-ee-interp.a
+WATCHOS_TARGET_LIBMONOICALLTABLE    = $(BUILD_DESTDIR)/targetwatch/lib/libmono-icall-table.a
+WATCHOS_TARGET_LIBMONOILGEN         = $(BUILD_DESTDIR)/targetwatch/lib/libmono-ilgen.a
 WATCHOS_TARGET_SHAREDLIBLOGPROFILER = $(BUILD_DESTDIR)/targetwatch/lib/libmono-profiler-log.0.dylib
 
 $(WATCHOS_TARGET_LIBMONOSGEN): .stamp-build-targetwatch
 $(WATCHOS_TARGET_SHAREDMONOSGEN): .stamp-build-targetwatch
 $(WATCHOS_TARGET_LIBLOGPROFILER): .stamp-build-targetwatch
+$(WATCHOS_TARGET_LIBMONOEEINTERP): .stamp-build-targetwatch
+$(WATCHOS_TARGET_LIBMONOICALLTABLE): .stamp-build-targetwatch
+$(WATCHOS_TARGET_LIBMONOILGEN): .stamp-build-targetwatch
 $(WATCHOS_TARGET_SHAREDLIBLOGPROFILER): .stamp-build-targetwatch
 
 device:: watchos
@@ -1280,6 +1302,9 @@ WATCHOS_TARGETS =                                                             \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmonosgen-2.0.a            \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmonosgen-2.0.dylib        \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-profiler-log.a       \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-ee-interp.a          \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-icall-table.a        \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-ilgen.a              \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Mono       \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Info.plist \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-profiler-log.dylib   \
@@ -1298,6 +1323,15 @@ $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmonosgen-2.0.dylib: $(WATCHOS_TA
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-profiler-log.a: $(WATCHOS_TARGET_LIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
 	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHOS_TARGET_LIBLOGPROFILER) -create -output $@
+
+$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-ee-interp.a: $(WATCHOS_TARGET_LIBMONOEEINTERP) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
+	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHOS_TARGET_LIBMONOEEINTERP) -create -output $@
+
+$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-icall-table.a: $(WATCHOS_TARGET_LIBMONOICALLTABLE) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
+	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHOS_TARGET_LIBMONOICALLTABLE) -create -output $@
+
+$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-ilgen.a: $(WATCHOS_TARGET_LIBMONOILGEN) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
+	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHOS_TARGET_LIBMONOILGEN) -create -output $@
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-profiler-log.dylib: $(WATCHOS_TARGET_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
 	$(Q) $(WATCHOS_BIN_PATH)/bitcode_strip $(WATCHOS_TARGET_SHAREDLIBLOGPROFILER) -m -o $@
@@ -1360,11 +1394,17 @@ clean-tvos: clean-targettv
 TVOS_TARGET_LIBMONOSGEN          = $(BUILD_DESTDIR)/targettv/lib/libmonosgen-2.0.a
 TVOS_TARGET_SHAREDMONOSGEN       = $(BUILD_DESTDIR)/targettv/lib/libmonosgen-2.0.dylib
 TVOS_TARGET_LIBLOGPROFILER       = $(BUILD_DESTDIR)/targettv/lib/libmono-profiler-log-static.a
+TVOS_TARGET_LIBMONOEEINTERP      = $(BUILD_DESTDIR)/targettv/lib/libmono-ee-interp.a
+TVOS_TARGET_LIBMONOICALLTABLE    = $(BUILD_DESTDIR)/targettv/lib/libmono-icall-table.a
+TVOS_TARGET_LIBMONOILGEN         = $(BUILD_DESTDIR)/targettv/lib/libmono-ilgen.a
 TVOS_TARGET_SHAREDLIBLOGPROFILER = $(BUILD_DESTDIR)/targettv/lib/libmono-profiler-log.0.dylib
 
 $(TVOS_TARGET_LIBMONOSGEN): .stamp-build-targettv
 $(TVOS_TARGET_SHAREDMONOSGEN): .stamp-build-targettv
 $(TVOS_TARGET_LIBLOGPROFILER): .stamp-build-targettv
+$(TVOS_TARGET_LIBMONOEEINTERP): .stamp-build-targettv
+$(TVOS_TARGET_LIBMONOICALLTABLE): .stamp-build-targettv
+$(TVOS_TARGET_LIBMONOILGEN): .stamp-build-targettv
 $(TVOS_TARGET_SHAREDLIBLOGPROFILER): .stamp-build-targettv
 
 device:: tvos
@@ -1373,6 +1413,9 @@ TVOS_TARGETS =                                                             \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmonosgen-2.0.a            \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmonosgen-2.0.dylib        \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.a       \
+	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-ee-interp.a          \
+	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-icall-table.a        \
+	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-ilgen.a              \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Mono       \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Info.plist \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.dylib   \
@@ -1391,6 +1434,15 @@ $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmonosgen-2.0.dylib: $(TVOS_TARGET_S
 
 $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.a: $(TVOS_TARGET_LIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
 	$(Q) $(TVOS_BIN_PATH)/lipo $(TVOS_TARGET_LIBLOGPROFILER) -create -output $@
+
+$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-ee-interp.a: $(TVOS_TARGET_LIBMONOEEINTERP) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
+	$(Q) $(TVOS_BIN_PATH)/lipo $(TVOS_TARGET_LIBMONOEEINTERP) -create -output $@
+
+$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-icall-table.a: $(TVOS_TARGET_LIBMONOICALLTABLE) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
+	$(Q) $(TVOS_BIN_PATH)/lipo $(TVOS_TARGET_LIBMONOICALLTABLE) -create -output $@
+
+$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-ilgen.a: $(TVOS_TARGET_LIBMONOILGEN) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
+	$(Q) $(TVOS_BIN_PATH)/lipo $(TVOS_TARGET_LIBMONOILGEN) -create -output $@
 
 $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.dylib: $(TVOS_TARGET_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
 	$(Q) lipo $(TVOS_TARGET_SHAREDLIBLOGPROFILER) -create -output $@

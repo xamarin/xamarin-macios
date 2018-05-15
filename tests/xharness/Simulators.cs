@@ -390,7 +390,7 @@ namespace xharness
 				};
 
 			var failure = false;
-			var tcc_edit_timeout = 5;
+			var tcc_edit_timeout = 30;
 			var watch = new Stopwatch ();
 			watch.Start ();
 

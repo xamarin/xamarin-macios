@@ -7,8 +7,6 @@
 // Copyright 2012 Xamarin Inc. All rights reserved.
 //
 
-#if !__WATCHOS__
-
 using System;
 #if XAMCORE_2_0
 using Foundation;
@@ -56,16 +54,13 @@ namespace MonoTouchFixtures.CoreText
 			sa.UnderlineColor = UIColor.Blue.CGColor;
 			sa.UnderlineStyleModifiers = CTUnderlineStyleModifiers.PatternDashDotDot;
 
-			// CTBaseline and CTWritingDirection support is new in iOS 6.0 and cause NRE before it
-			if (TestRuntime.CheckSystemAndSDKVersion (6,0)) {
-				Assert.IsNull (sa.BaselineClass, "#0");
-				sa.BaselineClass = CTBaselineClass.IdeographicHigh;
-				Assert.AreEqual (CTBaselineClass.IdeographicHigh, sa.BaselineClass, "#1");
+			Assert.IsNull (sa.BaselineClass, "#0");
+			sa.BaselineClass = CTBaselineClass.IdeographicHigh;
+			Assert.AreEqual (CTBaselineClass.IdeographicHigh, sa.BaselineClass, "#1");
 
-				sa.SetBaselineInfo (CTBaselineClass.Roman, 13);
-				sa.SetBaselineInfo (CTBaselineClass.IdeographicHigh, 3);
-				sa.SetWritingDirection (CTWritingDirection.LeftToRight);
-			}
+			sa.SetBaselineInfo (CTBaselineClass.Roman, 13);
+			sa.SetBaselineInfo (CTBaselineClass.IdeographicHigh, 3);
+			sa.SetWritingDirection (CTWritingDirection.LeftToRight);
 
 			var size = new SizeF (300, 300);
 			UIGraphics.BeginImageContext (size);
@@ -100,5 +95,3 @@ namespace MonoTouchFixtures.CoreText
 		}
 	}
 }
-
-#endif // !__WATCHOS__

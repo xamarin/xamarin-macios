@@ -7,8 +7,6 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
-#if !__WATCHOS__
-
 using System;
 using NUnit.Framework;
 using System.Linq;
@@ -85,4 +83,3 @@ namespace MonoTouchFixtures.CoreText {
 		}
 	}
 }
-#endif

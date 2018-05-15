@@ -157,6 +157,7 @@ namespace xharness
 			public bool Profiling;
 			public string LinkMode;
 			public string Defines;
+			public string Undefines;
 			public bool Ignored;
 		}
 
@@ -180,6 +181,13 @@ namespace xharness
 				case "monotouch-test":
 					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, Defines = "OPTIMIZEALL" };
 					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = true, Profiling = false, Defines = "OPTIMIZEALL" };
+					yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Ignored = true, };
+					break;
+				case "mscorlib":
+					yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Ignored = true, Undefines = "FULL_AOT_RUNTIME" };
+					break;
+				case "mini":
+					yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
 					break;
 				}
 				break;
@@ -231,6 +239,7 @@ namespace xharness
 					var profiling = test_data.Profiling;
 					var link_mode = test_data.LinkMode;
 					var defines = test_data.Defines;
+					var undefines = test_data.Undefines;
 					var ignored = test_data.Ignored;
 
 					var clone = task.TestProject.Clone ();
@@ -264,7 +273,15 @@ namespace xharness
 									pr.Xml.Save (pr.Path);
 								}
 							}
-							
+						}
+						if (!string.IsNullOrEmpty (undefines)) {
+							clone.Xml.RemoveDefines (undefines, task.ProjectPlatform, configuration);
+							if (clone.ProjectReferences != null) {
+								foreach (var pr in clone.ProjectReferences) {
+									pr.Xml.RemoveDefines (undefines, task.ProjectPlatform, configuration);
+									pr.Xml.Save (pr.Path);
+								}
+							}
 						}
 						clone.Xml.SetNode (isMac ? "Profiling" : "MTouchProfiling", profiling ? "True" : "False", task.ProjectPlatform, configuration);
 
@@ -686,6 +703,7 @@ namespace xharness
 							Platform = build.Platform,
 							TestName = project.Name,
 							Timeout = TimeSpan.FromMinutes (120),
+							Mode = "macOS",
 						};
 						execs = new [] { exec };
 					} else {
@@ -695,7 +713,7 @@ namespace xharness
 							TestName = project.Name,
 							IsUnitTest = true,
 						};
-						execs = CreateTestVariations (new [] { exec }, (buildTask, test) => new MacExecuteTask (buildTask));
+						execs = CreateTestVariations (new [] { exec }, (buildTask, test) => new MacExecuteTask (buildTask) { IsUnitTest = true } );
 					}
 					exec.Variation = configurations.Length > 1 ? config : project.TargetFrameworkFlavor.ToString ();
 
@@ -922,7 +940,7 @@ namespace xharness
 
 		void BuildTestLibraries ()
 		{
-			ProcessHelper.ExecuteCommandAsync ("make", $"all -j{Environment.ProcessorCount} -C {StringUtils.Quote (Path.Combine (Harness.RootDirectory, "test-libraries"))}", MainLog, TimeSpan.FromMinutes (1)).Wait ();
+			ProcessHelper.ExecuteCommandAsync ("make", $"all -j{Environment.ProcessorCount} -C {StringUtils.Quote (Path.Combine (Harness.RootDirectory, "test-libraries"))}", MainLog, TimeSpan.FromMinutes (10)).Wait ();
 		}
 
 		Task RunTestServer ()
@@ -2441,13 +2459,10 @@ function toggleAll (show)
 			}
 		}
 
-		protected void LogProcessExecution (Log log, Process process, string text, params object[] args)
+		protected void LogEvent (Log log, string text, params object[] args)
 		{
 			Jenkins.MainLog.WriteLine (text, args);
 			log.WriteLine (text, args);
-			foreach (string key in process.StartInfo.EnvironmentVariables.Keys)
-				log.WriteLine ("{0}={1}", key, process.StartInfo.EnvironmentVariables [key]);
-			log.WriteLine ("{0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
 		}
 
 		public string GuessFailureReason (Log log)
@@ -2564,7 +2579,7 @@ function toggleAll (show)
 				args.Append (StringUtils.Quote (SolutionPath));
 				nuget.StartInfo.Arguments = args.ToString ();
 				SetEnvironmentVariables (nuget);
-				LogProcessExecution (log, nuget, "Restoring nugets for {0} ({1})", TestName, Mode);
+				LogEvent (log, "Restoring nugets for {0} ({1})", TestName, Mode);
 
 				var timeout = TimeSpan.FromMinutes (15);
 				var result = await nuget.RunAsync (log, true, timeout);
@@ -2596,7 +2611,7 @@ function toggleAll (show)
 					args.Append (StringUtils.Quote (File.Exists (sln) ? sln : ProjectFile));
 					xbuild.StartInfo.Arguments = args.ToString ();
 					SetEnvironmentVariables (xbuild);
-					LogProcessExecution (log, xbuild, "Building {0} ({1})", TestName, Mode);
+					LogEvent (log, "Building {0} ({1})", TestName, Mode);
 					if (!Harness.DryRun) {
 						var timeout = TimeSpan.FromMinutes (5);
 						var result = await xbuild.RunAsync (log, true, timeout);
@@ -2632,7 +2647,7 @@ function toggleAll (show)
 					SetEnvironmentVariables (make);
 					var log = Logs.Create ($"make-{Platform}-{Timestamp}.txt", "Build log");
 					log.Timestamp = true;
-					LogProcessExecution (log, make, "Making {0} in {1}", Target, WorkingDirectory);
+					LogEvent (log, "Making {0} in {1}", Target, WorkingDirectory);
 					if (!Harness.DryRun) {
 						var timeout = Timeout;
 						var result = await make.RunAsync (log, true, timeout);
@@ -2677,7 +2692,7 @@ function toggleAll (show)
 					SetEnvironmentVariables (xbuild);
 					if (UseMSBuild)
 						xbuild.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = null;
-					LogProcessExecution (log, xbuild, "Building {0} ({1})", TestName, Mode);
+					LogEvent (log, "Building {0} ({1})", TestName, Mode);
 					if (!Harness.DryRun) {
 						var timeout = TimeSpan.FromMinutes (15);
 						var result = await xbuild.RunAsync (log, true, timeout);
@@ -2712,7 +2727,7 @@ function toggleAll (show)
 				args.Append ("/t:Clean ");
 				xbuild.StartInfo.Arguments = args.ToString ();
 				SetEnvironmentVariables (xbuild);
-				LogProcessExecution (log, xbuild, "Cleaning {0} ({1}) - {2}", TestName, Mode, project_file);
+				LogEvent (log, "Cleaning {0} ({1}) - {2}", TestName, Mode, project_file);
 				var timeout = TimeSpan.FromMinutes (1);
 				await xbuild.RunAsync (log, true, timeout);
 				log.WriteLine ("Clean timed out after {0} seconds.", timeout.TotalSeconds);
@@ -2950,7 +2965,6 @@ function toggleAll (show)
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
 					var log = Logs.Create ($"execute-{Platform}-{Timestamp}.txt", "Execution log");
 					log.Timestamp = true;
-					log.WriteLine ("{0} {1}", proc.StartInfo.FileName, proc.StartInfo.Arguments);
 					if (!Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;
 

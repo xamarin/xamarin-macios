@@ -95,6 +95,8 @@ namespace MonoTouch {
 		public const string MetalKitLibrary = "/System/Library/Frameworks/MetalKit.framework/MetalKit";
 		public const string ModelIOLibrary = "/System/Library/Frameworks/ModelIO.framework/ModelIO";
 		public const string GameplayKitLibrary = "/System/Library/Frameworks/GameplayKit.framework/GameplayKit";
+		public const string libcompression = "/usr/lib/libcompression.dylib";
+		
 		// iOS 9.3
 		public const string HealthKitUILibrary = "/System/Library/Frameworks/HealthKitUI.framework/HealthKit";
 		// iOS 10.0

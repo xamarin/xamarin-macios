@@ -81,6 +81,7 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 		<Message Text="BTouchEmitDebugInformation: $(BTouchEmitDebugInformation)"/>
 
 		<BTouch
+			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			OutputPath="$(OutputPath)"
 			ObjectiveCLibraries="@(ObjcBindingNativeLibrary)"
@@ -108,6 +109,7 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 
 	<Target Name="_PrepareNativeReferences" Condition="'$(DesignTimeBuild)' != 'true'">
 		<PrepareNativeReferences
+			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			IntermediateOutputPath="$(IntermediateOutputPath)"
 			NativeReferences="@(NativeReference)"
@@ -125,9 +127,10 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 	</Target>
 
 	<Target Name="_CompressFrameworks" Inputs="@(_NativeFrameworkResource)" Outputs="$(IntermediateOutputPath)%(_NativeFramework.Filename)%(_NativeFramework.Extension)" DependsOnTargets="_CollectNativeFrameworkResources">
-		<Delete SessionId="$(BuildSessionId)" Files="$(IntermediateOutputPath)%(_NativeFramework.Filename)%(_NativeFramework.Extension)" />
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(IntermediateOutputPath)%(_NativeFramework.Filename)%(_NativeFramework.Extension)" />
 
 		<Zip
+			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			ToolExe="$(ZipExe)"
 			ToolPath="$(ZipPath)"

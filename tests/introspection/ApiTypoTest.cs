@@ -289,11 +289,14 @@ namespace Introspection
 			"Lerp",
 			"Linecap",
 			"Lingustic",
+			"libcompression",
 			"Lod",
 			"Lopass",
 			"Lowlevel",
 			"Lun",
 			"Luma",
+			"Lzfse", // acronym
+			"Lzma", // acronym
 			"Mapbuffer",
 			"Matchingcoalesce",
 			"Megaampere",
@@ -517,6 +520,7 @@ namespace Introspection
 			"yx",
 			"yy",
 			"Yyy",
+			"Zlib",
 #if !XAMCORE_2_0
 			// classic only mistakes - that should not change anymore
 			"Timetime",

@@ -106,8 +106,22 @@ namespace xharness
 				}
 			};
 
+			var sb = new StringBuilder ();
+			if (process.StartInfo.EnvironmentVariables != null) {
+				var currentEnvironment = Environment.GetEnvironmentVariables ().Cast<System.Collections.DictionaryEntry> ().ToDictionary ((v) => (string) v.Key, (v) => (string) v.Value, StringComparer.Ordinal);
+				var processEnvironment = process.StartInfo.EnvironmentVariables.Cast<System.Collections.DictionaryEntry> ().ToDictionary ((v) => (string) v.Key, (v) => (string) v.Value, StringComparer.Ordinal);
+				var allKeys = currentEnvironment.Keys.Union (processEnvironment.Keys).Distinct ();
+				foreach (var key in allKeys) {
+					string a = null, b = null;
+					currentEnvironment.TryGetValue (key, out a);
+					processEnvironment.TryGetValue (key, out b);
+					if (a != b)
+						sb.Append ($"{key}={StringUtils.Quote (b)} ");
+				}
+			}
+			sb.Append ($"{StringUtils.Quote (process.StartInfo.FileName)} {process.StartInfo.Arguments}");
+			log.WriteLine (sb);
 
-			log.WriteLine ("{0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
 			process.Start ();
 
 			process.BeginErrorReadLine ();
