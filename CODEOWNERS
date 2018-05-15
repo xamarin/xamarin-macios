@@ -38,6 +38,7 @@
 /src/cfnetwork.cs @spouliot
 /src/CloudKit @mandel-macaque
 /src/cloudkit.cs @mandel-macaque
+/src/Compression @mandel-macaque
 /src/Contacts @dalexsoto @spouliot
 /src/contacts.cs @dalexsoto @spouliot
 /src/CoreAudio @dalexsoto
