@@ -244,11 +244,13 @@ namespace xharness
 			};
 		}
 
-		class SimulatorEnumerable : IEnumerable<SimDevice>
+		class SimulatorEnumerable : IEnumerable<SimDevice>, IAsyncEnumerable
 		{
 			public Simulators Simulators;
 			public AppRunnerTarget Target;
 			public Log Log;
+			object lock_obj = new object ();
+			Task<SimDevice []> findTask;
 
 			public IEnumerator<SimDevice> GetEnumerator ()
 			{
@@ -261,6 +263,19 @@ namespace xharness
 			IEnumerator IEnumerable.GetEnumerator ()
 			{
 				return GetEnumerator ();
+			}
+
+			Task<SimDevice []> Find ()
+			{
+				lock (lock_obj) {
+					if (findTask == null)
+						findTask = Simulators.FindAsync (Target, Log);
+					return findTask;
+				}
+			}
+
+			public Task ReadyTask {
+				get { return Find (); }
 			}
 
 			class Enumerator : IEnumerator<SimDevice>
@@ -290,7 +305,7 @@ namespace xharness
 					if (moved)
 						return false;
 					if (devices == null)
-						devices = Enumerable.Simulators.FindAsync (Enumerable.Target, Enumerable.Log).Result;
+						devices = Enumerable.Find ()?.Result?.ToArray (); // Create a copy of the list of devices, so we can have enumerator-specific current index.
 					moved = true;
 					return devices?.Length > 0;
 				}
@@ -301,6 +316,11 @@ namespace xharness
 				}
 			}
 		}
+	}
+
+	public interface IAsyncEnumerable
+	{
+		Task ReadyTask { get; }
 	}
 
 	public class SimRuntime
