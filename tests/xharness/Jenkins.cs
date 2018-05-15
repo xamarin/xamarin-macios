@@ -3118,7 +3118,7 @@ function toggleAll (show)
 			if (Finished)
 				return;
 
-			VerifyRun ();
+			await VerifyRunAsync ();
 			if (Finished)
 				return;
 
@@ -3133,7 +3133,7 @@ function toggleAll (show)
 		protected abstract Task RunTestAsync ();
 		// VerifyRun is called in ExecuteAsync to verify that the task can be executed/run.
 		// Typically used to fail tasks that don't have an available device.
-		public virtual void VerifyRun () { }
+		public virtual Task VerifyRunAsync () { return Task.CompletedTask; }
 
 		public override void Reset ()
 		{
@@ -3207,11 +3207,15 @@ function toggleAll (show)
 			set { throw new NotImplementedException (); }
 		}
 
-		public override void VerifyRun ()
+		public override async Task VerifyRunAsync ()
 		{
-			base.VerifyRun ();
+			await base.VerifyRunAsync ();
 
-			if (!candidates.Any ()) {
+			var enumerable = candidates;
+			var asyncEnumerable = enumerable as IAsyncEnumerable;
+			if (asyncEnumerable != null)
+				await asyncEnumerable.ReadyTask;
+			if (!enumerable.Any ()) {
 				ExecutionResult = TestExecutingResult.Skipped;
 				FailureMessage = "No applicable devices found.";
 			}
@@ -3479,8 +3483,7 @@ function toggleAll (show)
 			Jenkins.MainLog.WriteLine ("Running XI on '{0}' ({2}) for {1}", Device?.Name, ProjectFile, Device?.UDID);
 
 			ExecutionResult = (ExecutionResult & ~TestExecutingResult.InProgressMask) | TestExecutingResult.Running;
-			if (BuildTask.NotStarted)
-				await BuildTask.RunAsync ();
+			await BuildTask.RunAsync ();
 			if (!BuildTask.Succeeded) {
 				ExecutionResult = TestExecutingResult.BuildFailure;
 				return;
