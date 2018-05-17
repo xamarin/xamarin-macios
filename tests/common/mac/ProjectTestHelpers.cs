@@ -167,6 +167,7 @@ namespace Xamarin.MMP.Tests
 			public UnifiedTestConfig (string tmpDir)
 			{
 				TmpDir = tmpDir;
+				DiagnosticMSBuild = true;
 			}
 		}
 
