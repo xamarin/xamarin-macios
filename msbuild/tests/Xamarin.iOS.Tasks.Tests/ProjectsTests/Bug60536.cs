@@ -3,9 +3,9 @@ using System.IO;
 using System.Linq;
 using System.Collections;
 
-using NUnit.Framework;
+using Microsoft.Build.Evaluation;
 
-using Microsoft.Build.BuildEngine;
+using NUnit.Framework;
 
 namespace Xamarin.iOS.Tasks
 {
@@ -30,8 +30,8 @@ namespace Xamarin.iOS.Tasks
 			var project = SetupProject (Engine, csproj);
 
 			AppBundlePath = mtouchPaths ["app_bundlepath"];
-			Engine.GlobalProperties.SetProperty("Platform", platform);
-			Engine.GlobalProperties.SetProperty("Configuration", config);
+			Engine.ProjectCollection.SetGlobalProperty("Platform", platform);
+			Engine.ProjectCollection.SetGlobalProperty("Configuration", config);
 
 			if (clean) {
 				RunTarget (project, "Clean");
@@ -56,8 +56,9 @@ namespace Xamarin.iOS.Tasks
 			}
 
 			project = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
+			var projectInstance = project.CreateProjectInstance ();
 
-			Engine.BuildProject (project, new [] { target }, new Hashtable { {"Platform", "iPhone"} }, BuildSettings.None);
+			Engine.BuildProject (projectInstance, new [] { target }, new Hashtable { {"Platform", "iPhone"} });
 			if (Engine.Logger.ErrorEvents.Count != 1) {
 				string messages = string.Empty;
 				if (Engine.Logger.ErrorEvents.Count > 0)

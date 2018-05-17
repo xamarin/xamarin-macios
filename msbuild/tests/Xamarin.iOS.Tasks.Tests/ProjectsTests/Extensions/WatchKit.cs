@@ -38,7 +38,7 @@ namespace Xamarin.iOS.Tasks {
 				File.WriteAllText (appInfoPath, appInfoContents.Replace ("<string>com.xamarin.MyWatchApp</string>", "<string>com.xamarin.MyWatchAppX</string>"));
 
 				var proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
-				Engine.GlobalProperties.SetProperty ("Platform", Platform);
+				Engine.ProjectCollection.SetGlobalProperty ("Platform", Platform);
 				AppBundlePath = mtouchPaths ["app_bundlepath"];
 				RunTarget (proj, "Build", 2);
 				Assert.AreEqual ("The App Extension 'WatchExtension' has an invalid CFBundleIdentifier (com.xamarin.MyWatchApp.WatchExtension), it does not begin with the main app bundle's CFBundleIdentifier (com.xamarin.MyWatchAppX).", Engine.Logger.ErrorEvents [0].Message, "#1");
@@ -61,12 +61,12 @@ namespace Xamarin.iOS.Tasks {
 
 			AppBundlePath = mtouchPaths.AppBundlePath;
 
-			Engine.GlobalProperties.SetProperty ("Platform", Platform);
-			Engine.GlobalProperties.SetProperty ("BuildIpa", "true");
-			Engine.GlobalProperties.SetProperty ("IpaIncludeArtwork", "true");
-			Engine.GlobalProperties.SetProperty ("CodesignProvision", "Automatic"); // Provisioning profile
-			Engine.GlobalProperties.SetProperty ("CodesignKey", "iPhone Developer");
-			Engine.GlobalProperties.SetProperty ("Configuration", configuration);
+			Engine.ProjectCollection.SetGlobalProperty ("Platform", Platform);
+			Engine.ProjectCollection.SetGlobalProperty ("BuildIpa", "true");
+			Engine.ProjectCollection.SetGlobalProperty ("IpaIncludeArtwork", "true");
+			Engine.ProjectCollection.SetGlobalProperty ("CodesignProvision", "Automatic"); // Provisioning profile
+			Engine.ProjectCollection.SetGlobalProperty ("CodesignKey", "iPhone Developer");
+			Engine.ProjectCollection.SetGlobalProperty ("Configuration", configuration);
 
 			RunTarget (proj, "Clean");
 			Assert.IsFalse (Directory.Exists (AppBundlePath), "{1}: App bundle exists after cleanup: {0} ", AppBundlePath, Platform);
@@ -103,7 +103,7 @@ namespace Xamarin.iOS.Tasks {
 			string wkPath = "WatchKitSupport/WK";
 			Assert.Contains (wkPath, lines, wkPath + " does not exist");
 
-			var ipaIncludeArtwork = proj.GetEvaluatedProperty ("IpaIncludeArtwork");
+			var ipaIncludeArtwork = proj.GetPropertyValue ("IpaIncludeArtwork");
 			Assert.IsTrue (output.Contains ("iTunesMetadata.plist"), string.Format ("The ipa should contain at least one iTunesMetadata.plist file if we are using an AppStore config and IpaIncludeArtwork is true. IpaIncludeArtwork: {0}", ipaIncludeArtwork));
 
 			RunTarget (proj, "Clean");
