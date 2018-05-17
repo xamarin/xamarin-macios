@@ -288,7 +288,7 @@ namespace Xamarin.iOS.Tasks
 			RunTarget (MonoTouchProject, TargetName.Build);
 			var timestamps = ExpectedExecutableFiles.ToDictionary (file => file, file => GetLastModified (file));
 
-			Touch (Path.Combine (LibraryProjectBinPath, "MyLibrary.dll"));
+			Touch (Path.Combine (LibraryProjectObjPath, "MyLibrary.dll"));
 			RunTarget (MonoTouchProject, TargetName.Build);
 			var newTimestamps = ExpectedExecutableFiles.ToDictionary (file => file, file => GetLastModified (file));
 
