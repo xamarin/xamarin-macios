@@ -164,10 +164,10 @@ namespace Xamarin.MMP.Tests
 					var config = new TI.UnifiedTestConfig (tmpDir) { ProjectName = project, ItemGroup = nativeRefItemGroup };
 					string projectPath = TI.GenerateBindingLibraryProject (config);
 					string buildOutput = TI.BuildProject (projectPath, isUnified: true, diagnosticMSBuild: true);
-					Assert.IsTrue (buildOutput.Contains ("Target CoreCompile needs to be built"));
+					Assert.IsTrue (buildOutput.Contains (@"Building target ""CoreCompile"""));
 
 					string secondBuildOutput = TI.BuildProject (projectPath, isUnified: true, diagnosticMSBuild: true);
-					Assert.IsFalse (secondBuildOutput.Contains ("Target CoreCompile needs to be built"));
+					Assert.IsFalse (secondBuildOutput.Contains (@"Building target ""CoreCompile"""));
 				}
 			});
 		}
@@ -182,10 +182,10 @@ namespace Xamarin.MMP.Tests
 					var config = new TI.UnifiedTestConfig (tmpDir) { ProjectName = project };
 					string projectPath = TI.GenerateEXEProject (config);
 					string buildOutput = TI.BuildProject (projectPath, isUnified: true, diagnosticMSBuild: true);
-					Assert.IsTrue (buildOutput.Contains ("Target _CompileToNative needs to be built"));
+					Assert.IsTrue (buildOutput.Contains (@"Building target ""_CompileToNative"""));
 
 					string secondBuildOutput = TI.BuildProject (projectPath, isUnified: true, diagnosticMSBuild: true);
-					Assert.IsFalse (secondBuildOutput.Contains ("Target _CompileToNative needs to be built"));
+					Assert.IsFalse (secondBuildOutput.Contains (@"Building target ""_CompileToNative"""));
 				}
 			});
 		}
