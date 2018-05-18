@@ -108,6 +108,23 @@ namespace Xamarin.Tests
 			return false;
 		}
 
+		string RemovePathAtEnd (string line)
+		{
+			if (line.TrimEnd ().EndsWith ("]")) {
+				var start = line.LastIndexOf ("[");
+				if (start >= 0) {
+					// we want to get the space before `[` too.
+					if (start > 0 && line [start - 1] == ' ')
+						start --;
+
+					line = line.Substring (0, start);
+					return line;
+				}
+			}
+
+			return line;
+		}
+
 		public void ParseMessages ()
 		{
 			messages.Clear ();
@@ -120,9 +137,11 @@ namespace Xamarin.Tests
 					msg.IsError = true;
 					origin = line.Substring (0, idxError);
 					line = line.Substring (endError);
+					line = RemovePathAtEnd (line);
 				} else if (IndexOfAny (line, out var idxWarning, out var endWarning, ": warning ", ":  warning ")) {
 					origin = line.Substring (0, idxWarning);
 					line = line.Substring (endWarning);
+					line = RemovePathAtEnd (line);
 				} else if (line.StartsWith ("error ", StringComparison.Ordinal)) {
 					msg.IsError = true;
 					line = line.Substring (6);
