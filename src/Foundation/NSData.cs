@@ -47,7 +47,8 @@ namespace Foundation {
 		public byte[] ToArray ()
 		{
 			var res = new byte [Length];
-			Marshal.Copy (Bytes, res, 0, res.Length);
+			if (Length > 0)
+				Marshal.Copy (Bytes, res, 0, res.Length);
 			return res;
 		}
 
