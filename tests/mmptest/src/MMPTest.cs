@@ -357,7 +357,7 @@ namespace Xamarin.MMP.Tests
 					// If we fail, we'll likley fail with "did not generate an exe" before returning but let's check anyway
 					string secondBuildOutput = TI.BuildProject (Path.Combine (tmpDir, TI.GetUnifiedExecutableProjectName (test)), true, diagnosticMSBuild: true);
 					Assert.IsTrue (!secondBuildOutput.Contains ("Skipping target \"_CompileToNative"), "Did not skip");
-					Assert.IsTrue (secondBuildOutput.Contains ("CompileToNative needs to be built as output file"), "Did need to build");
+					Assert.IsTrue (secondBuildOutput.Contains ("Building target \"_CompileToNative\" completely"), "Did need to build");
 				}
 			});
 		}	
