@@ -192,7 +192,7 @@ namespace Xamarin.iOS.Tasks
 
 		public void Print (string message)
 		{
-			writer.WriteLine (FormatText (message));
+			writer.Write (FormatText (message));
 		}
 
 	}
