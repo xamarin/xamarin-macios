@@ -557,7 +557,7 @@ namespace Xamarin.iOS.Tasks
 			MonoTouchProjectInstance = MonoTouchProject.CreateProjectInstance ();
 
 			RunTarget_WithErrors (MonoTouchProjectInstance, TargetName.DetectAppManifest);
-			Assert.IsNull (MonoTouchProjectInstance.GetPropertyValue ("_AppManifest"), "#1");
+			Assert.IsNullOrEmpty (MonoTouchProjectInstance.GetPropertyValue ("_AppManifest"), "#1");
 		}
 
 		[Test]
