@@ -391,7 +391,7 @@ namespace Xamarin.iOS.Tasks
 
 			// Now we should have an AppBundleDir
 			RunTargetOnInstance (MonoTouchProjectInstance, TargetName.GenerateBundleName);
-			Assert.AreEqual ("bin/iPhoneSimulator/Debug/MySingleView.app", MonoTouchProjectInstance.GetPropertyValue ("AppBundleDir"), "#3");
+			Assert.AreEqual (@"bin\iPhoneSimulator\Debug\MySingleView.app", MonoTouchProjectInstance.GetPropertyValue ("AppBundleDir"), "#3");
 		}
 
 		[Test]
