@@ -41,18 +41,7 @@
 #include "runtime-internal.h"
 //#define DEBUG_REF_COUNTING
 
-static pthread_mutex_t refcount_mutex;
-static void
-x_init_mutex () __attribute__ ((constructor));
-
-static void
-x_init_mutex ()
-{
-	pthread_mutexattr_t attr;
-	pthread_mutexattr_init (&attr);
-	pthread_mutexattr_settype (&attr, PTHREAD_MUTEX_RECURSIVE);
-	pthread_mutex_init (&refcount_mutex, &attr);
-}
+static pthread_mutex_t refcount_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
 
 void *
 xamarin_marshal_return_value (MonoType *mtype, const char *type, MonoObject *retval, bool retain, MonoMethod *method, MethodDescription *desc, guint32 *exception_gchandle)
