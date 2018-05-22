@@ -141,7 +141,6 @@ namespace Xamarin.MMP.Tests
 			// Not necessarly required
 			public bool FSharp { get; set; }
 			public bool XM45 { get; set; }
-			public bool DiagnosticMSBuild { get; set; }
 			public bool Release { get; set; } = false;
 
 			public string ProjectName { get; set; } = "";
@@ -167,7 +166,6 @@ namespace Xamarin.MMP.Tests
 			public UnifiedTestConfig (string tmpDir)
 			{
 				TmpDir = tmpDir;
-				DiagnosticMSBuild = true;
 			}
 		}
 
@@ -229,7 +227,7 @@ namespace Xamarin.MMP.Tests
 			RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/msbuild", new StringBuilder (csprojTarget + " /t:clean"), "Clean");
 		}
 
-		public static string BuildProject (string csprojTarget, bool isUnified, bool diagnosticMSBuild = false, bool shouldFail = false, bool release = false, string[] environment = null)
+		public static string BuildProject (string csprojTarget, bool isUnified, bool shouldFail = false, bool release = false, string[] environment = null)
 		{
 			string rootDirectory = FindRootDirectory ();
 
@@ -242,7 +240,7 @@ namespace Xamarin.MMP.Tests
 			// This is to force build to use our mmp and not system mmp
 			StringBuilder buildArgs = new StringBuilder ();
 			if (isUnified) {
-				buildArgs.Append (diagnosticMSBuild ? " /verbosity:diagnostic " : " /verbosity:normal ");
+				buildArgs.Append (" /verbosity:diagnostic ");
 				buildArgs.Append (" /property:XamarinMacFrameworkRoot=" + rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current ");
 
 				if (release)
@@ -378,7 +376,7 @@ namespace Xamarin.MMP.Tests
 		public static string GenerateAndBuildUnifiedExecutable (UnifiedTestConfig config, bool shouldFail = false, string[] environment = null)
 		{
 			string csprojTarget = GenerateUnifiedExecutableProject (config);
-			return BuildProject (csprojTarget, isUnified: true, diagnosticMSBuild: config.DiagnosticMSBuild, shouldFail: shouldFail, release: config.Release, environment: environment);
+			return BuildProject (csprojTarget, isUnified: true, shouldFail: shouldFail, release: config.Release, environment: environment);
 		}
 
 		public static string RunGeneratedUnifiedExecutable (UnifiedTestConfig config)
@@ -410,7 +408,7 @@ namespace Xamarin.MMP.Tests
 		{
 			Guid guid = Guid.NewGuid ();
 			string csprojTarget = GenerateClassicEXEProject (tmpDir, "ClassicExample.csproj", testCode + GenerateOutputCommand (tmpDir,guid), csprojConfig, includeMonoRuntime: includeMonoRuntime);
-			string buildOutput = BuildProject (csprojTarget, isUnified : false, diagnosticMSBuild: false, shouldFail : shouldFail);
+			string buildOutput = BuildProject (csprojTarget, isUnified : false, shouldFail : shouldFail);
 			if (shouldFail)
 				return new OutputText (buildOutput, "");
 
@@ -427,7 +425,7 @@ namespace Xamarin.MMP.Tests
 			config.ProjectName = $"{projectName}.csproj";
 			string csprojTarget = GenerateSystemMonoEXEProject (config);
 
-			string buildOutput = BuildProject (csprojTarget, isUnified: true, diagnosticMSBuild: config.DiagnosticMSBuild, shouldFail: shouldFail, release: config.Release);
+			string buildOutput = BuildProject (csprojTarget, isUnified: true, shouldFail: shouldFail, release: config.Release);
 			if (shouldFail)
 				return new OutputText (buildOutput, "");
 
