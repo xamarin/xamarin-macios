@@ -30,15 +30,14 @@ namespace ObjCRuntime {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		internal unsafe static void Initialize (Runtime.InitializationOptions* options)
 		{
-			var map = options->RegistrationMap;
-
 			type_to_class = new Dictionary<Type, IntPtr> (Runtime.TypeEqualityComparer);
-
-			if (map == null)
-				return;
 
 			if (!Runtime.DynamicRegistrationSupported)
 				return; // Only the dynamic registrar needs the list of registered assemblies.
+
+			var map = options->RegistrationMap;
+			if (map == null)
+				return;
 			
 			for (int i = 0; i < map->assembly_count; i++) {
 				var ptr = Marshal.ReadIntPtr (map->assembly, i * IntPtr.Size);
