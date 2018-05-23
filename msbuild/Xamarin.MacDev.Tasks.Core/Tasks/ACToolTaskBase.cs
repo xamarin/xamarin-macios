@@ -496,7 +496,7 @@ namespace Xamarin.MacDev.Tasks
 				bundleResources.AddRange (GetCompiledBundleResources (manifestOutput, intermediateBundleDir));
 				outputManifests.Add (manifest);
 			} catch (Exception ex) {
-				Log.LogError ("Failed to load output manifest for {0} for the file {2}: {1}", ToolName, ex.Message, manifest.ItemSpec);
+				Log.LogError ("Failed to load {0} log file `{1}`: {2}", ToolName, manifest.ItemSpec, ex.Message);
 			}
 
 			foreach (var assetpack in specs.OfType<PDictionary> ()) {
