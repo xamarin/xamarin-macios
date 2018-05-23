@@ -124,6 +124,15 @@ namespace MonoTouchFixtures.Foundation {
 		}
 
 		[Test]
+		public void ToEmptyArray ()
+		{
+			using (var data = NSData.FromArray (new byte[0])) {
+				var arr = data.ToArray ();
+				Assert.AreEqual (0, arr.Length, "Length");
+			}
+		}
+
+		[Test]
 		public void BytesLength ()
 		{
 			// suggested alternative for http://stackoverflow.com/q/10623162/220643

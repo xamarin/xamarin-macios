@@ -3294,8 +3294,6 @@ namespace SceneKit {
 	[StrongDictionary ("SCNRenderingOptionsKeys")]
 	interface SCNRenderingOptions
 	{
-		[Internal, Export ("SCNRenderingOptionsKeys.RenderingApiKey")]
-		NSString _RenderingApiKey { get; set; }
 
 #if XAMCORE_2_0 || !MONOMAC
 		IMTLDevice Device { get; set; }
