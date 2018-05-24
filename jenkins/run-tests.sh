@@ -2,7 +2,7 @@
 
 report_error ()
 {
-	printf "🔥 [Test run failed]($BUILD_URL/Test_Report/) 🔥\\n" >> $WORKSPACE/jenkins/pr-comments.md
+	printf "🔥 [Test run failed]($BUILD_URL/Test_20Report/) 🔥\\n" >> $WORKSPACE/jenkins/pr-comments.md
 
 	if test -f $WORKSPACE/tests/TestSummary.md; then
 		printf "\\n" >> $WORKSPACE/jenkins/pr-comments.md
@@ -29,7 +29,7 @@ rm -rf ~/.config/.mono/keypairs/
 # Run tests
 make -C tests jenkins
 
-printf "✅ [Test run succeeded]($BUILD_URL/Test_Report/)\\n" >> $WORKSPACE/jenkins/pr-comments.md
+printf "✅ [Test run succeeded]($BUILD_URL/Test_20Report/)\\n" >> $WORKSPACE/jenkins/pr-comments.md
 
 if test -f $WORKSPACE/jenkins/failure-stamp; then
 	echo "Something went wrong:"
