@@ -202,7 +202,8 @@ namespace Compression
 			return ReadCore (new Span<byte> (array, offset, count));
 		}
 
-		public override int Read (Span<byte> destination)
+		// FIXME needs Span
+		internal override int Read (Span<byte> destination)
 		{
 			if (GetType () != typeof (CompressionStream)) {
 				// CompressStream is not sealed, and a derived type may have overridden Read(byte[], int, int) prior
@@ -312,7 +313,8 @@ namespace Compression
 			return ReadAsyncMemory (new Memory<byte>(array, offset, count), cancellationToken).AsTask ();
 		}
 
-		public override ValueTask<int> ReadAsync (Memory<byte> destination, CancellationToken cancellationToken = default(CancellationToken))
+		// FIXME needs Span
+		internal override ValueTask<int> ReadAsync (Memory<byte> destination, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			if (GetType () != typeof (CompressionStream)) {
 				// Ensure that existing streams derived from DeflateStream and that override ReadAsync(byte[],...)
@@ -405,7 +407,8 @@ namespace Compression
 			WriteCore (new ReadOnlySpan<byte> (array, offset, count));
 		}
 
-		public override void Write (ReadOnlySpan<byte> source)
+		// FIXME needs Span
+		internal override void Write (ReadOnlySpan<byte> source)
 		{
 			if (GetType () != typeof (CompressionStream)) {
 				// DeflateStream is not sealed, and a derived type may have overridden Write(byte[], int, int) prior
@@ -558,7 +561,8 @@ namespace Compression
 			return WriteAsyncMemory (new ReadOnlyMemory<byte> (array, offset, count), cancellationToken);
 		}
 
-		public override Task WriteAsync (ReadOnlyMemory<byte> source, CancellationToken cancellationToken)
+		// FIXME needs Span
+		internal override Task WriteAsync (ReadOnlyMemory<byte> source, CancellationToken cancellationToken)
 		{
 			if (GetType () != typeof (CompressionStream)) {
 				// Ensure that existing streams derived from DeflateStream and that override WriteAsync(byte[],...)
