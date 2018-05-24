@@ -139,6 +139,8 @@ enum NSObjectFlags {
 	NSObjectFlagsRegisteredToggleRef = 8,
 	NSObjectFlagsInFinalizerQueue = 16,
 	NSObjectFlagsHasManagedRef = 32,
+	NSObjectFlagsKnowsIsCustomType = 64,
+	NSObjectFlagsIsCustomType = 128,
 };
 
 struct AssemblyLocation {

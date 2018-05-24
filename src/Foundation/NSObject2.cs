@@ -79,6 +79,8 @@ namespace Foundation {
 			RegisteredToggleRef = 8,
 			InFinalizerQueue = 16,
 			HasManagedRef = 32,
+			KnowsIsCustomType = 64,
+			IsCustomType = 128,
 		}
 
 		bool disposed { 
@@ -101,6 +103,22 @@ namespace Foundation {
 
 		internal bool InFinalizerQueue {
 			get { return ((flags & Flags.InFinalizerQueue) == Flags.InFinalizerQueue); }
+		}
+
+		bool IsCustomType {
+			get {
+				bool value;
+				var knows = (flags & Flags.KnowsIsCustomType) == Flags.KnowsIsCustomType;
+				if (!knows) {
+					value = Class.IsCustomType (GetType ());
+					flags |= Flags.KnowsIsCustomType;
+					if (value)
+						flags |= Flags.IsCustomType;
+				} else {
+					value = (flags & Flags.IsCustomType) == Flags.IsCustomType;
+				}
+				return value;		
+			}
 		}
 
 		[Export ("init")]
@@ -169,7 +187,7 @@ namespace Foundation {
 			if (IsRegisteredToggleRef)
 				return;
 
-			if (!allowCustomTypes && Class.IsCustomType (GetType ()))
+			if (!allowCustomTypes && IsCustomType)
 				return;
 			
 			IsRegisteredToggleRef = true;
