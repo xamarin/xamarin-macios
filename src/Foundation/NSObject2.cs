@@ -107,14 +107,13 @@ namespace Foundation {
 
 		bool IsCustomType {
 			get {
-				bool value;
 				var value = (flags & Flags.IsCustomType) == Flags.IsCustomType;
 				if (!value) {
 					value = Class.IsCustomType (GetType ());
 					if (value)
 						flags |= Flags.IsCustomType;
 				}
-				return value;		
+				return value;
 			}
 		}
 

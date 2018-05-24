@@ -139,7 +139,7 @@ enum NSObjectFlags {
 	NSObjectFlagsRegisteredToggleRef = 8,
 	NSObjectFlagsInFinalizerQueue = 16,
 	NSObjectFlagsHasManagedRef = 32,
-	NSObjectFlagsKnowsIsCustomType = 64,
+	// 64, // Used by SoM
 	NSObjectFlagsIsCustomType = 128,
 };
 
