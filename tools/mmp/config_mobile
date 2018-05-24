@@ -11,4 +11,5 @@
 		<dllentry dll="__Internal" name="MoveMemory" target="mono_win32_compat_MoveMemory"/>
 		<dllentry dll="__Internal" name="ZeroMemory" target="mono_win32_compat_ZeroMemory"/>
 	</dllmap>
+	<dllmap dll="System.Native" target="__Internal"/>
 </configuration>
