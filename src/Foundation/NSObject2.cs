@@ -79,7 +79,7 @@ namespace Foundation {
 			RegisteredToggleRef = 8,
 			InFinalizerQueue = 16,
 			HasManagedRef = 32,
-			KnowsIsCustomType = 64,
+			// 64, // Used by SoM
 			IsCustomType = 128,
 		}
 
@@ -108,14 +108,11 @@ namespace Foundation {
 		bool IsCustomType {
 			get {
 				bool value;
-				var knows = (flags & Flags.KnowsIsCustomType) == Flags.KnowsIsCustomType;
-				if (!knows) {
+				var value = (flags & Flags.IsCustomType) == Flags.IsCustomType;
+				if (!value) {
 					value = Class.IsCustomType (GetType ());
-					flags |= Flags.KnowsIsCustomType;
 					if (value)
 						flags |= Flags.IsCustomType;
-				} else {
-					value = (flags & Flags.IsCustomType) == Flags.IsCustomType;
 				}
 				return value;		
 			}
