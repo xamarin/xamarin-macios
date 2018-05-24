@@ -1944,7 +1944,7 @@ convention and should marshal it in this way.
 This is typically used for callbacks that are defined like
 this in Objective-C:
 
-```csharp
+```objc
 typedef returnType (^SomeTypeDefinition) (int parameter1, NSString *parameter2);
 ```
 

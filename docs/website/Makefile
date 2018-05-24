@@ -8,7 +8,7 @@ all: xamarin-analysis-doc
 	cp mmp-errors.md $(WEBSITE_DOCS)/docs/mac/troubleshooting/mmp-errors.md
 	cp binding_objc_libs.md $(WEBSITE_DOCS)/docs/cross-platform/macios/binding/objective-c-libraries.md
 	cp binding_types_reference_guide.md $(WEBSITE_DOCS)/docs/cross-platform/macios/binding/binding-types-reference.md
-	cp xamarin-ios-analysis.md $(WEBSITE_DOCS)/ios/troubleshooting/xamarin-ios-analysis.md
+	cp xamarin-ios-analysis.md $(WEBSITE_DOCS)/docs/ios/troubleshooting/xamarin-ios-analysis.md
 	cp optimizations.md $(WEBSITE_DOCS)/docs/cross-platform/macios/optimizations.md
 
 diff:
