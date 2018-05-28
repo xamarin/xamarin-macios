@@ -120,14 +120,19 @@ namespace xharness
 			return $"{device_name} ({runtime_name}) - created by xharness";
 		}
 
-		async Task<IEnumerable<SimDevice>> FindOrCreateDevicesAsync (Log log, string runtime, string devicetype)
+		// Will return all devices that match the runtime + devicetype (even if a new device was created, any other devices will also be returned)
+		async Task<IEnumerable<SimDevice>> FindOrCreateDevicesAsync (Log log, string runtime, string devicetype, bool force = false)
 		{
 			if (runtime == null || devicetype == null)
 				return null;
-			
-			var devices = AvailableDevices.Where ((SimDevice v) => v.SimRuntime == runtime && v.SimDeviceType == devicetype);
-			if (devices.Any ())
-				return devices;
+
+			IEnumerable<SimDevice> devices = null;
+
+			if (!force) {
+				devices = AvailableDevices.Where ((SimDevice v) => v.SimRuntime == runtime && v.SimDeviceType == devicetype);
+				if (devices.Any ())
+					return devices;
+			}
 			
 			var rv = await Harness.ExecuteXcodeCommandAsync ("simctl", $"create {StringUtils.Quote (CreateName (devicetype, runtime))} {devicetype} {runtime}", log, TimeSpan.FromMinutes (1));
 			if (!rv.Succeeded) {
@@ -159,7 +164,18 @@ namespace xharness
 
 			if (!pairs.Any ()) {
 				// No device pair. Create one.
-				var device = devices.First ();
+				// First check if the watch is already paired
+				var unPairedDevices = devices.Where ((v) => !AvailableDevicePairs.Any ((SimDevicePair p) => { return p.Gizmo == v.UDID; }));
+				var device = unPairedDevices.FirstOrDefault ();
+				if (device == null) {
+					// watch device is already paired. Create a new device
+					var pairedDevice = devices.First ();
+					var matchingDevices = await FindOrCreateDevicesAsync (log, pairedDevice.SimRuntime, pairedDevice.SimDeviceType, force: true);
+					unPairedDevices = matchingDevices.Where ((v) => !AvailableDevicePairs.Any ((SimDevicePair p) => { return p.Gizmo == v.UDID; }));
+					if (unPairedDevices?.Any () != true)
+						return null;
+					device = unPairedDevices.First ();
+				}
 				var companion_device = companion_devices.First ();
 				log.WriteLine ($"Creating device pair for '{device.Name}' and '{companion_device.Name}'");
 				var rv = await Harness.ExecuteXcodeCommandAsync ("simctl", $"pair {device.UDID} {companion_device.UDID}", log, TimeSpan.FromMinutes (1));
