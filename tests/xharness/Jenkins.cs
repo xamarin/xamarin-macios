@@ -2003,7 +2003,7 @@ function toggleAll (show)
 										break;
 									}
 									writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
-									if (log.Description == "Test log" || log.Description == "Execution log") {
+									if (log.Description == "Test log" || log.Description == "Extension test log" || log.Description == "Execution log") {
 										string summary;
 										List<string> fails;
 										try {
