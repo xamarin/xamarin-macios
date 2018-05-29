@@ -38,6 +38,13 @@
     <StartAction>Project</StartAction>
     <StartArguments>--verbose --jenkins --autoconf --rootdir ..</StartArguments>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Run device tests' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>--verbose --jenkins --autoconf --rootdir .. --label=skip-mac-tests,skip-ios-simulator-tests,skip-ios-msbuild-tests,skip-system-permission-tests,run-ios-device-tests,run-ios-extensions-tests --markdown-summary=../TestSummary.md  --label=run-watchos-tests,skip-bcl-tests</StartArguments>
+    <EnvironmentVariables>
+      <Variable name="MONO_ENV_OPTIONS" value="--trace=E:all" />
+    </EnvironmentVariables>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
