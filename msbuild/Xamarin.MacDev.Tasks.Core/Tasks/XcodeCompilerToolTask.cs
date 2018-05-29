@@ -191,7 +191,8 @@ namespace Xamarin.MacDev.Tasks
 						var plist = PDictionary.FromFile (manifest.ItemSpec);
 
 						LogWarningsAndErrors (plist, items[0]);
-					} catch {
+					} catch (Exception ex) {
+						Log.LogError ("Failed to load {0} log file `{1}`: {2}", ToolName, manifest.ItemSpec, ex.Message);
 					}
 
 					File.Delete (manifest.ItemSpec);

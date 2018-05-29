@@ -78,7 +78,7 @@ public enum OutputFormat {
 
 namespace Xamarin.Bundler
 {
-	partial class Driver {
+	public partial class Driver {
 		internal const string NAME = "mtouch";
 
 		public static void ShowHelp (OptionSet os)
@@ -892,15 +892,6 @@ namespace Xamarin.Bundler
 			return PDictionary.FromFile (name);
 		}
 
-		static int watch_level;
-		static Stopwatch watch;
-
-		public static void Watch (string msg, int level)
-		{
-			if (watch != null && (watch_level > level))
-				Console.WriteLine ("{0}: {1} ms", msg, watch.ElapsedMilliseconds);
-		}
-
 		internal static bool TryParseBool (string value, out bool result)
 		{
 			if (string.IsNullOrEmpty (value)) {
@@ -1007,7 +998,7 @@ namespace Xamarin.Bundler
 			{ "gsharedvt:", "Generic sharing for value-types - always enabled [Deprecated]", v => {} },
 			{ "v", "Verbose", v => verbose++ },
 			{ "q", "Quiet", v => verbose-- },
-			{ "time", v => watch_level++ },
+			{ "time", v => WatchLevel++ },
 			{ "executable=", "Specifies the native executable name to output", v => app.ExecutableName = v },
 			{ "nofastsim", "Do not run the simulator fast-path build", v => app.NoFastSim = true },
 			{ "nodevcodeshare", "Do not share native code between extensions and main app.", v => app.NoDevCodeShare = true },
@@ -1316,11 +1307,6 @@ namespace Xamarin.Bundler
 				return 0;
 			
 			LogArguments (args);
-
-			if (watch_level > 0) {
-				watch = new Stopwatch ();
-				watch.Start ();
-			}
 
 			ErrorHelper.Verbosity = verbose;
 
