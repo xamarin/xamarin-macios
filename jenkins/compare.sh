@@ -37,7 +37,7 @@ cp -R tools/comparison/generator-diff jenkins-results/generator-diff
 printf "✅ [API Diff (from PR only)](%s/API_20diff_20_28PR_20only_29)" >> "$BUILD_URL" "$WORKSPACE/jenkins/pr-comments.md"
 if ! grep "href=" jenkins-results/apicomparison/api-diff.html >/dev/null 2>&1; then
 	printf " (no change)" >> "$WORKSPACE/jenkins/pr-comments.md"
-elif grep "</script>" jenkins-results/apicomparison/*.html | grep data-is-breaking; then
+elif grep "</script>" jenkins-results/apicomparison/*.html -A 999999 | grep data-is-breaking; then
 	printf " (🔥 breaking changes 🔥)" >> "$WORKSPACE/jenkins/pr-comments.md"
 else
 	printf " (please review changes)" >> "$WORKSPACE/jenkins/pr-comments.md"
