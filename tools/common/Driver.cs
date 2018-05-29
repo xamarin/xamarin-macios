@@ -471,5 +471,27 @@ namespace Xamarin.Bundler {
 			Touch ((IEnumerable<string>) filenames);
 		}
 
+		static int watch_level;
+		static Stopwatch watch;
+
+		public static int WatchLevel {
+			get { return watch_level; }
+			set {
+				watch_level = value;
+				if ((watch_level > 0) && (watch == null)) {
+					watch = new Stopwatch ();
+					watch.Start ();
+				}
+			}
+		}
+
+		public static void Watch (string msg, int level)
+		{
+			if ((watch == null) || (level > WatchLevel))
+				return;
+			for (int i = 0; i < level; i++)
+				Console.Write ("!");
+			Console.WriteLine ("Timestamp {0}: {1} ms", msg, watch.ElapsedMilliseconds);
+		}
 	}
 }

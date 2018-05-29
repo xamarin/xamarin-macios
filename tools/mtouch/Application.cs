@@ -1108,6 +1108,7 @@ namespace Xamarin.Bundler {
 
 			if (candidates.Count > 0)
 				SharedCodeApps.AddRange (candidates);
+			Driver.Watch ("Detect Code Sharing", 1);
 		}
 
 		void Initialize ()
@@ -1769,6 +1770,7 @@ namespace Xamarin.Bundler {
 			}
 
 			Driver.CalculateCompilerPath (this);
+			Driver.Watch ("Select Native Compiler", 1);
 		}
 
 		public string GetLibMono (AssemblyBuildTarget build_target)

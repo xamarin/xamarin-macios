@@ -179,9 +179,6 @@ namespace Xamarin.Bundler {
 		}
 					
 
-		static int watch_level;
-		static Stopwatch watch;
-
 		static AOTOptions aotOptions = null;
 
 		static string xm_framework_dir;
@@ -202,12 +199,6 @@ namespace Xamarin.Bundler {
 			}
 		}
 		
-		static void Watch (string msg, int level)
-		{
-			if (watch != null && (watch_level > level))
-				Console.WriteLine ("{0}: {1} ms", msg, watch.ElapsedMilliseconds);
-		}
-
 		public static bool EnableDebug {
 			get { return App.EnableDebug; }
 		}
@@ -281,7 +272,7 @@ namespace Xamarin.Bundler {
 				{ "q", "Quiet", v => verbose-- },
 				{ "i|icon=", "Use the specified file as the bundle icon", v => { icon = v; }},
 				{ "xml=", "Provide an extra XML definition file to the linker", v => App.Definitions.Add (v) },
-				{ "time", v => watch_level++ },
+				{ "time", v => WatchLevel++ },
 				{ "sdkroot=", "Specify the location of Apple SDKs", v => sdk_root = v },
 				{ "arch=", "Specify the architecture ('i386' or 'x86_64') of the native runtime (default to 'i386')", v => { arch = v; arch_set = true; } },
 				{ "profile=", "(Obsoleted in favor of --target-framework) Specify the .NET profile to use (defaults to '" + Xamarin.Utils.TargetFramework.Default + "')", v => SetTargetFramework (v) },
@@ -387,11 +378,6 @@ namespace Xamarin.Bundler {
 			App.RuntimeOptions = RuntimeOptions.Create (App, http_message_provider, tls_provider);
 
 			ErrorHelper.Verbosity = verbose;
-
-			if (watch_level > 0) {
-				watch = new Stopwatch ();
-				watch.Start ();
-			}
 
 			if (action == Action.Help || (args.Length == 0)) {
 				ShowHelp (os);
