@@ -3803,8 +3803,10 @@ namespace xharness
 				// We need to set the dialog permissions for all the apps
 				// before launching the simulator, because once launched
 				// the simulator caches the values in-memory.
-				foreach (var task in executingTasks)
+				foreach (var task in executingTasks) {
+					await task.VerifyRunAsync ();
 					await task.SelectSimulatorAsync ();
+				}
 
 				var devices = executingTasks.First ().Simulators;
 				Jenkins.MainLog.WriteLine ("Selected simulator: {0}", devices.Length > 0 ? devices [0].Name : "none");
