@@ -2733,6 +2733,7 @@ public partial class Generator : IMemberGatherer {
 				PrintPlatformAttributes (dictType);
 				print ("public partial class {0} : DictionaryContainer {{", typeName);
 				indent++;
+				sw.WriteLine ("/* This is a comment */");
 				sw.WriteLine ("#if !COREBUILD");
 				print ("[Preserve (Conditional = true)]");
 				print ("public {0} () : base (new NSMutableDictionary ()) {{}}\n", typeName);
