@@ -5115,6 +5115,16 @@ namespace Foundation
 		[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3), NoWatch]
 		[NullAllowed, Export ("detectedBarcodeDescriptor", ArgumentSemantic.Copy)]
 		CIBarcodeDescriptor DetectedBarcodeDescriptor { get; }
+
+		// From NSUserActivity (CLSDeepLinks)
+
+		[NoWatch, NoTV, NoMac, iOS (11,4)]
+		[Export ("isClassKitDeepLink")]
+		bool IsClassKitDeepLink { get; }
+
+		[NoWatch, NoTV, NoMac, iOS (11,4)]
+		[NullAllowed, Export ("contextIdentifierPath", ArgumentSemantic.Strong)]
+		string[] ContextIdentifierPath { get; }
 	}
 
 	[iOS (8,0)][Mac (10,10, onlyOn64 : true)] // same as NSUserActivity
