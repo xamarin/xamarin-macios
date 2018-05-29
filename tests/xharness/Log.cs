@@ -153,6 +153,14 @@ namespace xharness
 			}
 		}
 
+		public override void Flush()
+		{
+			base.Flush();
+
+			if (writer != null && !disposed)
+				writer.Flush ();
+		}
+
 		public override string FullPath {
 			get {
 				return Path;
