@@ -18701,20 +18701,6 @@
                 <parameters />
               </constructor>
             </constructors>
-            <properties>
-              <property name="CollapseWhiteSpaceIntoEmptyStringString" attrib="0" ptype="System.String">
-                <methods>
-                  <method name="get_CollapseWhiteSpaceIntoEmptyStringString()" attrib="2182" returntype="System.String">
-                    <parameters />
-                  </method>
-                  <method name="set_CollapseWhiteSpaceIntoEmptyStringString(System.String)" attrib="2182" returntype="System.Void">
-                    <parameters>
-                      <parameter name="value" position="0" attrib="0" type="System.String" />
-                    </parameters>
-                  </method>
-                </methods>
-              </property>
-            </properties>
           </class>
           <class name="XsltConfigSection" type="class" base="System.Object" sealed="true" charset="Ansi" layout="Auto">
             <attributes>

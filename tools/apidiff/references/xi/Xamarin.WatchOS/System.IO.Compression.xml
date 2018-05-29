@@ -22,11 +22,6 @@
           <property name="Destination" value="System.IO.Compression.GZipStream" />
         </properties>
       </attribute>
-      <attribute name="System.CLSCompliantAttribute">
-        <properties>
-          <property name="IsCompliant" value="True" />
-        </properties>
-      </attribute>
       <attribute name="System.Diagnostics.DebuggableAttribute">
         <properties>
           <property name="IsJITTrackingEnabled" value="IgnoreSymbolStoreSequencePoints" />
@@ -181,20 +176,6 @@
               <property name="CompressedLength" attrib="0" ptype="System.Int64">
                 <methods>
                   <method name="get_CompressedLength()" attrib="2182" returntype="System.Int64">
-                    <parameters />
-                  </method>
-                </methods>
-              </property>
-              <property name="Crc32" attrib="0" ptype="System.UInt32">
-                <attributes>
-                  <attribute name="System.CLSCompliantAttribute">
-                    <properties>
-                      <property name="IsCompliant" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
-                <methods>
-                  <method name="get_Crc32()" attrib="2182" returntype="System.UInt32">
                     <parameters />
                   </method>
                 </methods>

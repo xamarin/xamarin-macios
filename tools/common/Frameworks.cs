@@ -261,6 +261,8 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "PdfKit", "PDFKit", 11 },
 
 				{ "BusinessChat", "BusinessChat", 11, 3 },
+
+				{ "ClassKit", "ClassKit", 11,4 },
 			};
 		}
 		return ios_frameworks;
