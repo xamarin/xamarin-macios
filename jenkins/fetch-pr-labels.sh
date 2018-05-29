@@ -1,5 +1,7 @@
 #!/bin/bash -e
 
+# SC2154: ghprbPullId is referenced but not assigned.
+# shellcheck disable=SC2154
 if test -z "$ghprbPullId"; then
 	echo "Could not find the environment variable ghprbPullId, so it's not possible to fetch the labels for any pull request."
 	exit 1
