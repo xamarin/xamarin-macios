@@ -34,5 +34,20 @@ cp -R tools/comparison/apidiff/diff jenkins-results/apicomparison/
 cp    tools/comparison/apidiff/*.html jenkins-results/apicomparison/
 cp -R tools/comparison/generator-diff jenkins-results/generator-diff
 
-printf "✅ [API Diff (from PR only)](%s/API_20diff_20_28PR_20only_29)\\n" "$BUILD_URL" >> "$WORKSPACE/jenkins/pr-comments.md"
-printf "✅ [Generator Diff](%s/Generator_20Diff)\\n" "$BUILD_URL" >> "$WORKSPACE/jenkins/pr-comments.md"
+printf "✅ [API Diff (from PR only)](%s/API_20diff_20_28PR_20only_29)" "$BUILD_URL" >> "$WORKSPACE/jenkins/pr-comments.md"
+if ! grep "href=" jenkins-results/apicomparison/api-diff.html >/dev/null 2>&1; then
+	printf " (no change)" >> "$WORKSPACE/jenkins/pr-comments.md"
+elif perl -0777 -pe 's/<script type="text\/javascript">.*?<.script>/script removed/gs' jenkins-results/apicomparison/*.html | grep data-is-breaking; then
+	printf " (🔥 breaking changes 🔥)" >> "$WORKSPACE/jenkins/pr-comments.md"
+else
+	printf " (please review changes)" >> "$WORKSPACE/jenkins/pr-comments.md"
+fi
+printf "\\n" >> "$WORKSPACE/jenkins/pr-comments.md"
+
+printf "✅ [Generator Diff](%s/Generator_20Diff)" "$BUILD_URL" >> "$WORKSPACE/jenkins/pr-comments.md"
+if grep "^[+-][^+-]" jenkins-results/generator-diff/generator.diff | grep -v "^.[[]assembly: AssemblyInformationalVersion" | grep -v "^[+-][[:space:]]*internal const string Revision =" >/dev/null 2>&1; then
+	printf " (please review changes)" >> "$WORKSPACE/jenkins/pr-comments.md"
+else
+	printf " (only version changes)" >> "$WORKSPACE/jenkins/pr-comments.md"
+fi
+printf "\\n" >> "$WORKSPACE/jenkins/pr-comments.md"
