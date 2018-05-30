@@ -23,14 +23,18 @@ namespace ObjCRuntime {
 #if !COREBUILD
 		public static bool ThrowOnInitFailure = true;
 
-		static Dictionary<Type, IntPtr> type_to_class; // accessed from multiple threads, locking required.
+		static Dictionary<Type, ClassCache> type_to_class; // accessed from multiple threads, locking required.
+		struct ClassCache {
+			internal IntPtr handle;
+			internal bool is_custom_type;
+		}
 
 		internal IntPtr handle;
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		internal unsafe static void Initialize (Runtime.InitializationOptions* options)
 		{
-			type_to_class = new Dictionary<Type, IntPtr> (Runtime.TypeEqualityComparer);
+			type_to_class = new Dictionary<Type, ClassCache> (Runtime.TypeEqualityComparer);
 
 			if (!Runtime.DynamicRegistrationSupported)
 				return; // Only the dynamic registrar needs the list of registered assemblies.
@@ -102,9 +106,10 @@ namespace ObjCRuntime {
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)] // To inline the Runtime.DynamicRegistrationSupported code if possible.
-		static IntPtr GetClassHandle (Type type)
+		static IntPtr GetClassHandle (Type type, out bool is_custom_type)
 		{
-			IntPtr @class = IntPtr.Zero;
+			ClassCache @class = default(ClassCache);
+			IntPtr handle = IntPtr.Zero;
 
 			// We cache results in a dictionary (type_to_class) - we put failures (when @class = IntPtr.Zero) in the dictionary as well.
 			// We do as little as possible with the lock held (only fetch/add to the dictionary, nothing else)
@@ -114,20 +119,31 @@ namespace ObjCRuntime {
 				found = type_to_class.TryGetValue (type, out @class);
 
 			if (!found) {
-				@class = FindClass (type, out var is_custom_type);
+				handle = FindClass (type, out is_custom_type);
+				@class = new ClassCache { handle = handle, is_custom_type = is_custom_type };
 				lock (type_to_class)
 					type_to_class [type] = @class;
+			} else {
+				handle = @class.handle;
+				is_custom_type = @class.is_custom_type;
 			}
 
-			if (@class == IntPtr.Zero) {
+			if (handle == IntPtr.Zero) {
 				if (!Runtime.DynamicRegistrationSupported)
 					throw ErrorHelper.CreateError (8026, $"Can't register the class {type.FullName} when the dynamic registrar has been linked away.");
-				@class = Register (type);
+				handle = Register (type);
+				is_custom_type = Runtime.Registrar.IsCustomType (type);
+				@class = new ClassCache { handle = handle, is_custom_type = is_custom_type };
 				lock (type_to_class)
 					type_to_class [type] = @class;
 			}
 
-			return @class;
+			return handle;
+		}
+
+		static IntPtr GetClassHandle (Type type)
+		{
+			return GetClassHandle (type, out var is_custom_type);
 		}
 
 		internal static IntPtr GetClassForObject (IntPtr obj)
@@ -487,7 +503,7 @@ namespace ObjCRuntime {
 		static bool IsCustomType (Type type)
 		{
 			bool is_custom_type;
-			var @class = FindClass (type, out is_custom_type);
+			var @class = GetClassHandle (type, out is_custom_type);
 			if (@class != IntPtr.Zero)
 				return is_custom_type;
 			
