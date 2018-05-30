@@ -660,6 +660,7 @@ namespace Xamarin.Bundler
 					a.LoadAssembly (a.FullPath);
 				
 				// Link!
+				Driver.Watch ("Managed Link Preparation", 1);
 				LinkAssemblies (out output_assemblies, PreBuildDirectory, sharingTargets);
 			}
 
