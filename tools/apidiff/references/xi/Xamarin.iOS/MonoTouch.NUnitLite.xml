@@ -897,6 +897,7 @@
             </attributes>
             <interfaces>
               <interface name="Foundation.INSCoding" />
+              <interface name="Foundation.INSExtensionRequestHandling" />
               <interface name="Foundation.INSObjectProtocol" />
               <interface name="ObjCRuntime.INativeObject" />
               <interface name="System.Collections.IEnumerable" />
