@@ -65,6 +65,14 @@ namespace LinkAll.Serialization {
 		{
 		}
 	}
+
+	static class Helper
+	{
+		public static Type GetType (string name)
+		{
+			return Type.GetType (name);
+		}
+	}
 	
 	[TestFixture]
 	// we want the tests to be available because we use the linker
@@ -75,7 +83,7 @@ namespace LinkAll.Serialization {
 		public void UnusedType ()
 		{
 			// the serialization attributes only keeps the method(s) if the type was used
-			var t = Type.GetType ("LinkAll.Serialization.Unused");
+			var t = Helper.GetType ("LinkAll.Serialization.Unused");
 			// since it's not used in the app then it's removed by the linker
 			Assert.Null (t, "type");
 		}
@@ -84,7 +92,7 @@ namespace LinkAll.Serialization {
 		public void UsedType ()
 		{
 			// the serialization attributes only keeps the method(s) if the type was used
-			var t = Type.GetType ("LinkAll.Serialization.Used");
+			var t = Helper.GetType ("LinkAll.Serialization.Used");
 			// since it's used here...
 			Assert.NotNull (new Used (), "reference");
 			// it's not removed by the linker

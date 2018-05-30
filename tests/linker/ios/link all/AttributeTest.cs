@@ -125,6 +125,9 @@ namespace LinkAll.Attributes {
 	[Preserve (AllMembers = true)]
 	public class AttributeTest {
 		
+		// Good enough to fool linker to abort the tracking
+		static string mscorlib = "mscorlib";
+
 		[Test]
 		public void DebugAssemblyAttributes ()
 		{
@@ -187,7 +190,7 @@ namespace LinkAll.Attributes {
 		{
 			var d = new Dictionary<string,int> () { { "key", 0 } };
 			Assert.NotNull (d); // just to be 100% sure it won't be linked away (with the attribute we'll be looking for)
-			var proxy = Type.GetType ("System.Collections.Generic.IDictionaryDebugView`2, mscorlib");
+			var proxy = Type.GetType ("System.Collections.Generic.IDictionaryDebugView`2, " + mscorlib);
 #if DEBUG
 			Assert.NotNull (proxy, "proxy");
 			// having the type is nice, but it must not be empty to be useful
@@ -226,8 +229,8 @@ namespace LinkAll.Attributes {
 			// we ensure that we can create the type / call the code
 			Assert.True (SecurityDeclarationDecoratedUserCode.Check (), "call");
 			// we ensure that both the permission and the flag are NOT part of the final/linked binary (link all removes security declarations)
-			Assert.Null (Type.GetType ("System.Security.Permissions.FileIOPermissionAttribute, mscorlib"), "FileIOPermissionAttribute");
-			Assert.Null (Type.GetType ("System.Security.Permissions.FileIOPermissionAccess, mscorlib"), "FileIOPermissionAccess");
+			Assert.Null (Type.GetType ("System.Security.Permissions.FileIOPermissionAttribute, " + mscorlib), "FileIOPermissionAttribute");
+			Assert.Null (Type.GetType ("System.Security.Permissions.FileIOPermissionAccess, " + mscorlib), "FileIOPermissionAccess");
 		}
 	}
 }
