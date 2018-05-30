@@ -17,6 +17,10 @@ namespace SceneKit
 {
 	public partial class SCNPhysicsShape
 	{
+		public static void NewNonBreakingAPI ()
+		{
+		}
+
 		public static SCNPhysicsShape Create (SCNPhysicsShape [] shapes, SCNMatrix4 [] transforms)
 		{
 			if (shapes == null)
