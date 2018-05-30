@@ -33,6 +33,7 @@ LINKER_SOURCES = \
 	$(MONOLINKER)/Linker/MethodReferenceExtensions.cs		\
 	$(MONOLINKER)/Linker/TypeReferenceExtensions.cs		\
 	$(MONOLINKER)/Linker/TypePreserve.cs			\
+	$(MONOLINKER)/Linker/TypeNameParser.cs			\
 	$(MONOLINKER)/Linker/XApiReader.cs				\
 	$(MONOLINKER)/Linker/Tracer.cs		\
 	$(MONOLINKER)/Linker/MarkingHelpers.cs		\
