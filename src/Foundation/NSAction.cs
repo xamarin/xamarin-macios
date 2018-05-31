@@ -159,7 +159,7 @@ namespace Foundation {
 
 	// Use this for asynchronous operations
 	[Register ("__MonoMac_NSAsyncSynchronizationContextDispatcher")]
-	internal class NSAsyncSynchronizationContextDispatcher : NSAsyncDispatcher {
+	internal sealed class NSAsyncSynchronizationContextDispatcher : NSAsyncDispatcher {
 		SendOrPostCallback d;
 		object state;
 
