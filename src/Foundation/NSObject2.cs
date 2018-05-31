@@ -576,10 +576,22 @@ namespace Foundation {
 			var d = new NSAsyncActionDispatcher (action);
 #if MONOMAC
 			Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDoneHandle, 
-			                                                NSActionDispatcher.Selector.Handle, d.Handle, false);
+		                                                        NSAsyncActionDispatcher.Selector.Handle, d.Handle, false);
 #else
 			Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone), 
-			                                                Selector.GetHandle (NSActionDispatcher.SelectorName), d.Handle, false);
+			                                                Selector.GetHandle (NSAsyncActionDispatcher.SelectorName), d.Handle, false);
+#endif
+		}
+
+		internal void BeginInvokeOnMainThread (System.Threading.SendOrPostCallback cb, object state)
+		{
+			var d = new NSAsyncActionDispatcher2 (cb, state);
+#if MONOMAC
+			Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDoneHandle,
+		                                                        NSAsyncActionDispatcher2.Selector.Handle, d.Handle, false);
+#else
+			Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone),
+			                                                Selector.GetHandle (NSAsyncActionDispatcher2.SelectorName), d.Handle, false);
 #endif
 		}
 		
@@ -588,13 +600,26 @@ namespace Foundation {
 			using (var d = new NSActionDispatcher (action)) {
 #if MONOMAC
 				Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDoneHandle, 
-				                                                NSActionDispatcher.Selector.Handle, d.Handle, true);
+		                                                                NSActionDispatcher.Selector.Handle, d.Handle, true);
 #else
 				Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone), 
 				                                                Selector.GetHandle (NSActionDispatcher.SelectorName), d.Handle, true);
 #endif
 			}
 		}		
+
+		internal void InvokeOnMainThread (System.Threading.SendOrPostCallback cb, object state)
+		{
+			using (var d = new NSActionDispatcher2 (cb, state)) {
+#if MONOMAC
+				Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDoneHandle,
+			                                                        NSActionDispatcher2.Selector.Handle, d.Handle, true);
+#else
+				Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone),
+				                                                Selector.GetHandle (NSActionDispatcher2.SelectorName), d.Handle, true);
+#endif
+			}
+		}
 
 		public static NSObject FromObject (object obj)
 		{
