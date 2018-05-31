@@ -34,7 +34,9 @@ namespace Foundation {
 	[Register ("__MonoMac_NSActionDispatcher")]
 	internal sealed class NSActionDispatcher : NSObject {
 		public const string SelectorName = "xamarinApplySelector";
+#if MONOMAC
 		public static readonly Selector Selector = new Selector (SelectorName);
+#endif
 
 		readonly Action action;
 
@@ -60,15 +62,21 @@ namespace Foundation {
 	internal sealed class NSActionDispatcher2 : NSObject
 	{
 		public const string SelectorName = "xamarinApplySelector";
+#if MONOMAC
 		public static readonly Selector Selector = new Selector (SelectorName);
+#endif
 
 		readonly SendOrPostCallback d;
 		readonly object state;
 
 		public NSActionDispatcher2 (SendOrPostCallback d, object state)
 		{
+			if (d == null)
+				throw new ArgumentNullException (nameof (d));
+
 			this.d = d;
 			this.state = state;
+			IsDirectBinding = false;
 		}
 
 		[Export (SelectorName)]
@@ -83,7 +91,9 @@ namespace Foundation {
 	[Register ("__Xamarin_NSTimerActionDispatcher")]
 	internal sealed class NSTimerActionDispatcher : NSObject {
 		public const string SelectorName = "xamarinFireSelector:";
+#if MONOMAC
 		public static readonly Selector Selector = new Selector (SelectorName);
+#endif
 
 		readonly Action<NSTimer> action;
 
@@ -108,12 +118,17 @@ namespace Foundation {
 	[Register ("__MonoMac_NSAsyncActionDispatcher")]
 	internal class NSAsyncActionDispatcher : NSObject {
 		public const string SelectorName = "xamarinApplySelector";
+#if MONOMAC
 		public static readonly Selector Selector = new Selector (SelectorName);
+#endif
 		GCHandle gch;
 		Action action;
 
 		public NSAsyncActionDispatcher (Action action)
 		{
+			if (action == null)
+				throw new ArgumentNullException (nameof (action));
+
 			this.action = action;
 			gch = GCHandle.Alloc (this);
 			IsDirectBinding = false;
@@ -150,7 +165,9 @@ namespace Foundation {
 	internal class NSAsyncActionDispatcher2 : NSObject
 	{
 		public const string SelectorName = "xamarinApplySelector";
+#if MONOMAC
 		public static readonly Selector Selector = new Selector (SelectorName);
+#endif
 
 		GCHandle gch;
 		SendOrPostCallback d;
@@ -158,6 +175,9 @@ namespace Foundation {
 
 		public NSAsyncActionDispatcher2 (SendOrPostCallback d, object state)
 		{
+			if (d == null)
+				throw new ArgumentNullException (nameof (d));
+
 			this.d = d;
 			this.state = state;
 			gch = GCHandle.Alloc (this);
@@ -189,7 +209,7 @@ namespace Foundation {
 #endif
 			}
 		}
-#endif // !COREBUILD
 	}
+#endif // !COREBUILD
 }
 
