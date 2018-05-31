@@ -24,6 +24,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Threading;
 using ObjCRuntime;
 
 namespace Foundation {
@@ -51,6 +52,30 @@ namespace Foundation {
 		public void Apply ()
 		{
 			action ();
+		}
+	}
+
+	// Use this for synchronous operations
+	[Register ("__MonoMac_NSActionDispatcher2")]
+	internal sealed class NSActionDispatcher2 : NSObject
+	{
+		public const string SelectorName = "xamarinApplySelector";
+		public static readonly Selector Selector = new Selector (SelectorName);
+
+		readonly SendOrPostCallback d;
+		readonly object state;
+
+		public NSActionDispatcher2 (SendOrPostCallback d, object state)
+		{
+			this.d = d;
+			this.state = state;
+		}
+
+		[Export (SelectorName)]
+		[Preserve (Conditional = true)]
+		public void Apply ()
+		{
+			d (state);
 		}
 	}
 
@@ -119,6 +144,52 @@ namespace Foundation {
 			}
 		}
 	}
+
+	// Use this for asynchronous operations
+	[Register ("__MonoMac_NSAsyncActionDispatcher2")]
+	internal class NSAsyncActionDispatcher2 : NSObject
+	{
+		public const string SelectorName = "xamarinApplySelector";
+		public static readonly Selector Selector = new Selector (SelectorName);
+
+		GCHandle gch;
+		SendOrPostCallback d;
+		object state;
+
+		public NSAsyncActionDispatcher2 (SendOrPostCallback d, object state)
+		{
+			this.d = d;
+			this.state = state;
+			gch = GCHandle.Alloc (this);
+			IsDirectBinding = false;
+		}
+
+		[Export (SelectorName)]
+		[Preserve (Conditional = true)]
+		public void Apply ()
+		{
+			try {
+				d (state);
+			} finally {
+				d = null; // this is a one-shot dispatcher
+				state = null;
+				gch.Free ();
+
+				//
+				// Although I would like to call Dispose here, to
+				// reduce the load on the GC, we have some useful diagnostic
+				// code in our runtime that is useful to track down
+				// problems, so we are removing the Dispose and letting
+				// the GC and our pipeline do their job.
+				//
+#if MONOTOUCH
+				// MonoTouch has fixed the above problems, and we can call
+				// Dispose here.
+				Dispose ();
+#endif
+			}
+		}
 #endif // !COREBUILD
+	}
 }
 
