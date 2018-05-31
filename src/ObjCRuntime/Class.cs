@@ -23,6 +23,7 @@ namespace ObjCRuntime {
 #if !COREBUILD
 		public static bool ThrowOnInitFailure = true;
 
+		// We use the last significant bit of the IntPtr to store if this is a custom class or not.
 		static Dictionary<Type, IntPtr> type_to_class; // accessed from multiple threads, locking required.
 
 		internal IntPtr handle;
@@ -102,7 +103,7 @@ namespace ObjCRuntime {
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)] // To inline the Runtime.DynamicRegistrationSupported code if possible.
-		static IntPtr GetClassHandle (Type type)
+		static IntPtr GetClassHandle (Type type, bool throw_if_failure, out bool is_custom_type)
 		{
 			IntPtr @class = IntPtr.Zero;
 
@@ -114,20 +115,33 @@ namespace ObjCRuntime {
 				found = type_to_class.TryGetValue (type, out @class);
 
 			if (!found) {
-				@class = FindClass (type, out var is_custom_type);
+				@class = FindClass (type, out is_custom_type);
 				lock (type_to_class)
-					type_to_class [type] = @class;
+					type_to_class [type] = @class + (is_custom_type ? 1 : 0);
+			} else {
+				is_custom_type = (@class.ToInt64 () & 1) == 1;
+				if (is_custom_type)
+					@class -= 1;
 			}
 
 			if (@class == IntPtr.Zero) {
-				if (!Runtime.DynamicRegistrationSupported)
-					throw ErrorHelper.CreateError (8026, $"Can't register the class {type.FullName} when the dynamic registrar has been linked away.");
+				if (!Runtime.DynamicRegistrationSupported) {
+					if (throw_if_failure)
+						throw ErrorHelper.CreateError (8026, $"Can't register the class {type.FullName} when the dynamic registrar has been linked away.");
+					return IntPtr.Zero;
+				}
 				@class = Register (type);
+				is_custom_type = Runtime.Registrar.IsCustomType (type);
 				lock (type_to_class)
-					type_to_class [type] = @class;
+					type_to_class [type] = @class + (is_custom_type ? 1 : 0);
 			}
 
 			return @class;
+		}
+
+		static IntPtr GetClassHandle (Type type)
+		{
+			return GetClassHandle (type, true, out var is_custom_type);
 		}
 
 		internal static IntPtr GetClassForObject (IntPtr obj)
@@ -487,7 +501,7 @@ namespace ObjCRuntime {
 		static bool IsCustomType (Type type)
 		{
 			bool is_custom_type;
-			var @class = FindClass (type, out is_custom_type);
+			var @class = GetClassHandle (type, false, out is_custom_type);
 			if (@class != IntPtr.Zero)
 				return is_custom_type;
 			
