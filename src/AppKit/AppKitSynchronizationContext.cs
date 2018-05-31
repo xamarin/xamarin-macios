@@ -14,12 +14,12 @@ namespace AppKit {
 
 		public override void Post (SendOrPostCallback d, object state)
 		{
-			NSRunLoop.Main.BeginInvokeOnMainThread (() => d (state));
+			NSRunLoop.Main.BeginInvokeOnMainThread (d, state);
 		}
 
 		public override void Send (SendOrPostCallback d, object state)
 		{
-			NSRunLoop.Main.InvokeOnMainThread (() => d (state));
+			NSRunLoop.Main.InvokeOnMainThread (d, state);
 		}
 	}
 }
