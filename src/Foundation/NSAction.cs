@@ -82,6 +82,8 @@ namespace Foundation {
 	// Use this for asynchronous operations
 	[Register ("__MonoMac_NSAsyncActionDispatcher")]
 	internal class NSAsyncActionDispatcher : NSObject {
+		public const string SelectorName = "xamarinApplySelector";
+		public static readonly Selector Selector = new Selector (SelectorName);
 		GCHandle gch;
 		Action action;
 
@@ -92,7 +94,7 @@ namespace Foundation {
 			IsDirectBinding = false;
 		}
 
-		[Export (NSActionDispatcher.SelectorName)]
+		[Export (SelectorName)]
 		[Preserve (Conditional = true)]
 		public void Apply ()
 		{
