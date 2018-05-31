@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
@@ -151,6 +152,39 @@ namespace xharness
 			return devices;
 		}
 
+		async Task<bool> CreateDevicePair (Log log, SimDevice device, SimDevice companion_device, string runtime, string devicetype, bool create_device)
+		{
+			if (create_device) {
+				// watch device is already paired to some other phone. Create a new watch device
+				var matchingDevices = await FindOrCreateDevicesAsync (log, runtime, devicetype, force: true);
+				var unPairedDevices = matchingDevices.Where ((v) => !AvailableDevicePairs.Any ((SimDevicePair p) => { return p.Gizmo == v.UDID; }));
+				if (device != null) {
+					// If we're creating a new watch device, assume that the one we were given is not usable.
+					unPairedDevices = unPairedDevices.Where ((v) => v.UDID != device.UDID);
+				}
+				if (unPairedDevices?.Any () != true)
+					return false;
+				device = unPairedDevices.First ();
+			}
+			log.WriteLine ($"Creating device pair for '{device.Name}' and '{companion_device.Name}'");
+			var capturedLog = new StringBuilder ();
+			var pairLog = new CallbackLog ((string value) => {
+				log.WriteImpl (value);
+				capturedLog.Append (value);
+			});
+			var rv = await Harness.ExecuteXcodeCommandAsync ("simctl", $"pair {device.UDID} {companion_device.UDID}", pairLog, TimeSpan.FromMinutes (1));
+			if (!rv.Succeeded) {
+				if (!create_device && capturedLog.ToString ().Contains ("At least one of the requested devices is already paired with the maximum number of supported devices and cannot accept another pairing.")) {
+					log.WriteLine ($"Could not create device pair for '{device.Name}' ({device.UDID}) and '{companion_device.Name}' ({companion_device.UDID}), but will create a new watch device and try again.");
+					return await CreateDevicePair (log, device, companion_device, runtime, devicetype, true);
+				}
+
+				log.WriteLine ($"Could not create device pair for '{device.Name}' ({device.UDID}) and '{companion_device.Name}' ({companion_device.UDID})");
+				return false;
+			}
+			return true;
+		}
+
 		async Task<SimDevicePair> FindOrCreateDevicePairAsync (Log log, IEnumerable<SimDevice> devices, IEnumerable<SimDevice> companion_devices)
 		{
 			// Check if we already have a device pair with the specified devices
@@ -166,23 +200,12 @@ namespace xharness
 				// No device pair. Create one.
 				// First check if the watch is already paired
 				var unPairedDevices = devices.Where ((v) => !AvailableDevicePairs.Any ((SimDevicePair p) => { return p.Gizmo == v.UDID; }));
-				var device = unPairedDevices.FirstOrDefault ();
-				if (device == null) {
-					// watch device is already paired. Create a new device
-					var pairedDevice = devices.First ();
-					var matchingDevices = await FindOrCreateDevicesAsync (log, pairedDevice.SimRuntime, pairedDevice.SimDeviceType, force: true);
-					unPairedDevices = matchingDevices.Where ((v) => !AvailableDevicePairs.Any ((SimDevicePair p) => { return p.Gizmo == v.UDID; }));
-					if (unPairedDevices?.Any () != true)
-						return null;
-					device = unPairedDevices.First ();
-				}
+				var unpairedDevice = unPairedDevices.FirstOrDefault ();
 				var companion_device = companion_devices.First ();
-				log.WriteLine ($"Creating device pair for '{device.Name}' and '{companion_device.Name}'");
-				var rv = await Harness.ExecuteXcodeCommandAsync ("simctl", $"pair {device.UDID} {companion_device.UDID}", log, TimeSpan.FromMinutes (1));
-				if (!rv.Succeeded) {
-					log.WriteLine ($"Could not create device pair for '{device.Name}' ({device.UDID}) and '{companion_device.Name}' ({companion_device.UDID})");
+				var device = devices.First ();
+				if (!await CreateDevicePair (log, unpairedDevice, companion_device, device.SimRuntime, device.SimDeviceType, device == null))
 					return null;
-				}
+
 				await LoadAsync (log, force: true);
 
 				pairs = AvailableDevicePairs.Where ((SimDevicePair pair) => {
