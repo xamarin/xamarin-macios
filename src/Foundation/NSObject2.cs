@@ -579,7 +579,7 @@ namespace Foundation {
 		                                                        NSDispatcher.Selector.Handle, d.Handle, false);
 #else
 			Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone), 
-			                                                Selector.GetHandle (NSAsyncActionDispatcher.SelectorName), d.Handle, false);
+			                                                Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, false);
 #endif
 		}
 
@@ -591,7 +591,7 @@ namespace Foundation {
 		                                                        NSDispatcher.Selector.Handle, d.Handle, false);
 #else
 			Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone),
-			                                                Selector.GetHandle (NSAsyncActionDispatcher2.SelectorName), d.Handle, false);
+			                                                Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, false);
 #endif
 		}
 		
@@ -603,7 +603,7 @@ namespace Foundation {
 		                                                                NSDispatcher.Selector.Handle, d.Handle, true);
 #else
 				Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone), 
-				                                                Selector.GetHandle (NSActionDispatcher.SelectorName), d.Handle, true);
+				                                                Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, true);
 #endif
 			}
 		}		
@@ -616,7 +616,7 @@ namespace Foundation {
 			                                                        NSDispatcher.Selector.Handle, d.Handle, true);
 #else
 				Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone),
-				                                                Selector.GetHandle (NSActionDispatcher2.SelectorName), d.Handle, true);
+				                                                Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, true);
 #endif
 			}
 		}
