@@ -34,9 +34,7 @@ namespace Foundation {
 	[Register ("__MonoMac_NSActionDispatcher")]
 	internal sealed class NSActionDispatcher : NSObject {
 		public const string SelectorName = "xamarinApplySelector";
-#if MONOMAC
 		public static readonly Selector Selector = new Selector (SelectorName);
-#endif
 
 		readonly Action action;
 
@@ -91,9 +89,7 @@ namespace Foundation {
 	[Register ("__Xamarin_NSTimerActionDispatcher")]
 	internal sealed class NSTimerActionDispatcher : NSObject {
 		public const string SelectorName = "xamarinFireSelector:";
-#if MONOMAC
 		public static readonly Selector Selector = new Selector (SelectorName);
-#endif
 
 		readonly Action<NSTimer> action;
 
