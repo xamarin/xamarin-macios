@@ -250,6 +250,15 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "NSNull":
+				switch (selectorName) {
+				case "runActionForKey:object:arguments:":
+					// This selector comes from CAAction, and NSNull started conforming to this protocol in Xcode 7 (iOS 9)
+					if (!TestRuntime.CheckXcodeVersion (7, 0))
+						return true;
+					break;
+				}
+				break;
 			// Conform to SKWarpable
 			case "SKEffectNode":
 			case "SKSpriteNode":
@@ -257,6 +266,15 @@ namespace Introspection {
 				case "setSubdivisionLevels:":
 				case "setWarpGeometry:":
 					return true;
+				}
+				break;
+			case "SKAttribute":
+			case "SKAttributeNode":
+				switch (selectorName) {
+				case "encodeWithCoder:":
+					if (!TestRuntime.CheckXcodeVersion (8, 0))
+						return true;
+					break;
 				}
 				break;
 			case "SKUniform":

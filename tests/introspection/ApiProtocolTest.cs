@@ -215,7 +215,17 @@ namespace Introspection {
 				switch (type.Name) {
 				case "MTKView":
 					return true;
+				case "UIView":
+					if (!TestRuntime.CheckXcodeVersion (8, 0))
+						return true;
+					break;
 				}
+#if !__WATCHOS__
+				// Conformance added to UIView in Xcode 8 (iOS 10), but for some reason the type that fails is UIAlertView (which subclasses UIView)
+				if (type.IsSubclassOf (typeof (UIKit.UIView)) && !TestRuntime.CheckXcodeVersion (8, 0))
+					return true;
+#endif
+
 				break;
 			case "NSProgressReporting":
 				if (!TestRuntime.CheckXcodeVersion (9, 0))
@@ -238,6 +248,15 @@ namespace Introspection {
 				// inherits it from UIDocument
 				case "UIManagedDocument":
 					return true;
+				}
+				break;
+			case "CAAction":
+				switch (type.Name) {
+				case "NSNull":
+					// Conformance added in Xcode 7 (iOS 9)
+					if (!TestRuntime.CheckXcodeVersion (7, 0))
+						return true;
+					break;
 				}
 				break;
 			}
