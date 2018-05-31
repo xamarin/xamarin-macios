@@ -31,11 +31,24 @@ namespace Foundation {
 
 #if !COREBUILD
 	// Use this for synchronous operations
-	[Register ("__MonoMac_NSActionDispatcher")]
-	internal sealed class NSActionDispatcher : NSObject {
+	internal abstract class NSDispatcher : NSObject
+	{
 		public const string SelectorName = "xamarinApplySelector";
 		public static readonly Selector Selector = new Selector (SelectorName);
 
+		protected NSDispatcher ()
+		{
+			IsDirectBinding = false;
+		}
+
+		[Export (SelectorName)]
+		[Preserve (Conditional = true)]
+		public abstract void Apply ();
+	}
+
+	// Use this for synchronous operations
+	[Register ("__MonoMac_NSActionDispatcher")]
+	internal sealed class NSActionDispatcher : NSDispatcher {
 		readonly Action action;
 
 		public NSActionDispatcher (Action action)
@@ -44,45 +57,28 @@ namespace Foundation {
 				throw new ArgumentNullException ("action");
 
 			this.action = action;
-			IsDirectBinding = false;
 		}
 
-		[Export (SelectorName)]
-		[Preserve (Conditional = true)]
-		public void Apply ()
-		{
-			action ();
-		}
+		public override void Apply () => action ();
 	}
 
 	// Use this for synchronous operations
-	[Register ("__MonoMac_NSActionDispatcher2")]
-	internal sealed class NSActionDispatcher2 : NSObject
+	[Register ("__MonoMac_NSSynchronizationContextDispatcher")]
+	internal sealed class NSSynchronizationContextDispatcher : NSDispatcher
 	{
-		public const string SelectorName = "xamarinApplySelector";
-#if MONOMAC
-		public static readonly Selector Selector = new Selector (SelectorName);
-#endif
-
 		readonly SendOrPostCallback d;
 		readonly object state;
 
-		public NSActionDispatcher2 (SendOrPostCallback d, object state)
+		public NSSynchronizationContextDispatcher (SendOrPostCallback d, object state)
 		{
 			if (d == null)
 				throw new ArgumentNullException (nameof (d));
 
 			this.d = d;
 			this.state = state;
-			IsDirectBinding = false;
 		}
 
-		[Export (SelectorName)]
-		[Preserve (Conditional = true)]
-		public void Apply ()
-		{
-			d (state);
-		}
+		public override void Apply () => d (state);
 	}
 
 	// Used this for NSTimer support
@@ -110,14 +106,36 @@ namespace Foundation {
 		}
 	}
 
+	abstract class NSAsyncDispatcher : NSDispatcher {
+		readonly GCHandle gch;
+
+		protected NSAsyncDispatcher ()
+		{
+			gch = GCHandle.Alloc (this);
+		}
+
+		public override void Apply ()
+		{
+			gch.Free ();
+
+			//
+			// Although I would like to call Dispose here, to
+			// reduce the load on the GC, we have some useful diagnostic
+			// code in our runtime that is useful to track down
+			// problems, so we are removing the Dispose and letting
+			// the GC and our pipeline do their job.
+			// 
+#if MONOTOUCH
+			// MonoTouch has fixed the above problems, and we can call
+			// Dispose here.
+			Dispose ();
+#endif
+		}
+	}
+
 	// Use this for asynchronous operations
 	[Register ("__MonoMac_NSAsyncActionDispatcher")]
-	internal class NSAsyncActionDispatcher : NSObject {
-		public const string SelectorName = "xamarinApplySelector";
-#if MONOMAC
-		public static readonly Selector Selector = new Selector (SelectorName);
-#endif
-		GCHandle gch;
+	internal sealed class NSAsyncActionDispatcher : NSAsyncDispatcher {
 		Action action;
 
 		public NSAsyncActionDispatcher (Action action)
@@ -126,83 +144,42 @@ namespace Foundation {
 				throw new ArgumentNullException (nameof (action));
 
 			this.action = action;
-			gch = GCHandle.Alloc (this);
-			IsDirectBinding = false;
 		}
 
-		[Export (SelectorName)]
-		[Preserve (Conditional = true)]
-		public void Apply ()
+		public override void Apply ()
 		{
 			try {
 				action ();
 			} finally {
-				action = null; // this is a one-shot dispatcher
-				gch.Free ();
-
-				//
-				// Although I would like to call Dispose here, to
-				// reduce the load on the GC, we have some useful diagnostic
-				// code in our runtime that is useful to track down
-				// problems, so we are removing the Dispose and letting
-				// the GC and our pipeline do their job.
-				// 
-#if MONOTOUCH
-				// MonoTouch has fixed the above problems, and we can call
-				// Dispose here.
-				Dispose ();
-#endif
+				action = null;
+				base.Apply ();
 			}
 		}
 	}
 
 	// Use this for asynchronous operations
-	[Register ("__MonoMac_NSAsyncActionDispatcher2")]
-	internal class NSAsyncActionDispatcher2 : NSObject
-	{
-		public const string SelectorName = "xamarinApplySelector";
-#if MONOMAC
-		public static readonly Selector Selector = new Selector (SelectorName);
-#endif
-
-		GCHandle gch;
+	[Register ("__MonoMac_NSAsyncSynchronizationContextDispatcher")]
+	internal class NSAsyncSynchronizationContextDispatcher : NSAsyncDispatcher {
 		SendOrPostCallback d;
 		object state;
 
-		public NSAsyncActionDispatcher2 (SendOrPostCallback d, object state)
+		public NSAsyncSynchronizationContextDispatcher (SendOrPostCallback d, object state)
 		{
 			if (d == null)
 				throw new ArgumentNullException (nameof (d));
 
 			this.d = d;
 			this.state = state;
-			gch = GCHandle.Alloc (this);
-			IsDirectBinding = false;
 		}
 
-		[Export (SelectorName)]
-		[Preserve (Conditional = true)]
-		public void Apply ()
+		public override void Apply ()
 		{
 			try {
 				d (state);
 			} finally {
 				d = null; // this is a one-shot dispatcher
 				state = null;
-				gch.Free ();
-
-				//
-				// Although I would like to call Dispose here, to
-				// reduce the load on the GC, we have some useful diagnostic
-				// code in our runtime that is useful to track down
-				// problems, so we are removing the Dispose and letting
-				// the GC and our pipeline do their job.
-				//
-#if MONOTOUCH
-				// MonoTouch has fixed the above problems, and we can call
-				// Dispose here.
-				Dispose ();
-#endif
+				base.Apply ();
 			}
 		}
 	}
