@@ -183,6 +183,7 @@ namespace AVFoundation {
 		Metadata = 9,
 
 		[iOS (11, 0), Mac (10, 13)]
+		[TV (11, 0)]
 		[Field ("AVMediaTypeDepthData")]
 		DepthData = 10,
 	}
@@ -514,26 +515,32 @@ namespace AVFoundation {
 		EnhancedAC3 = 14,
 
 		[iOS (11, 0), Mac (10, 13)]
+		[TV (11, 0)]
 		[Field ("AVFileTypeJPEG")]
 		Jpeg = 15,
 
 		[iOS (11, 0), Mac (10, 13)]
+		[TV (11, 0)]
 		[Field ("AVFileTypeDNG")]
 		Dng = 16,
 
 		[iOS (11, 0), Mac (10, 13)]
+		[TV (11, 0)]
 		[Field ("AVFileTypeHEIC")]
 		Heic = 17,
 
 		[iOS (11, 0), Mac (10, 13)]
+		[TV (11, 0)]
 		[Field ("AVFileTypeAVCI")]
 		Avci = 18,
 
 		[iOS (11, 0), Mac (10, 13)]
+		[TV (11, 0)]
 		[Field ("AVFileTypeHEIF")]
 		Heif = 19,
 
 		[iOS (11, 0), Mac (10, 13)]
+		[TV (11, 0)]
 		[Field ("AVFileTypeTIFF")]
 		Tiff = 20,
 	}
@@ -5561,6 +5568,7 @@ namespace AVFoundation {
 		NSString KeySpaceHlsDateRange { get; }
 
 		[iOS (11, 0), Mac (10, 13)]
+		[TV (11, 0)]
 		[Field ("AVMetadataKeySpaceAudioFile")]
 		NSString KeySpaceAudioFile { get; }
 	}
@@ -7595,10 +7603,12 @@ namespace AVFoundation {
 		NSString PresetHighestQuality { get; }
 
 		[iOS (11, 0), Mac (10,13)]
+		[TV (11, 0)]
 		[Field ("AVAssetExportPresetHEVCHighestQuality")]
 		NSString PresetHevcHighestQuality { get; }
 
 		[iOS (11, 0), Mac (10,13)]
+		[TV (11, 0)]
 		[Field ("AVAssetExportPresetHEVC3840x2160")]
 		NSString PresetHevc3840x2160 { get; }
 
@@ -7620,6 +7630,7 @@ namespace AVFoundation {
 		NSString Preset3840x2160 { get; }
 
 		[iOS (11, 0), Mac (10,13)]
+		[TV (11, 0)]
 		[Field ("AVAssetExportPresetHEVC1920x1080")]
 		NSString PresetHevc1920x1080 { get; }
 
@@ -12217,10 +12228,12 @@ namespace AVFoundation {
 		NSString _Preset3840x2160 { get; }
 
 		[iOS (11, 0), Mac (10, 13)]
+		[TV (11, 0)]
 		[Internal, Field ("AVOutputSettingsPresetHEVC1920x1080")]
 		NSString _PresetHevc1920x1080 { get; }
 
 		[iOS (11, 0), Mac (10, 13)]
+		[TV (11, 0)]
 		[Internal, Field ("AVOutputSettingsPresetHEVC3840x2160")]
 		NSString _PresetHevc3840x2160 { get; }
 	}

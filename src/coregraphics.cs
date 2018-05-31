@@ -221,6 +221,8 @@ namespace CoreGraphics {
 	}
 
 	[iOS(11,0), Mac(10,13)]
+	[TV(11,0)]
+	[Watch (4,0)]
 	[Static]
 	[Internal]
 	public interface CGPDFOutlineKeys {

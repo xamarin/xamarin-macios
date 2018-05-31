@@ -532,6 +532,7 @@ namespace ModelIO {
 		MDLMaterialProperty GetProperty (MDLMaterialSemantic semantic);
 
 		[iOS (10,2), Mac (10,12,2)]
+		[TV (11,0)] // This is what apple's headers say (today)
 		[Export ("propertiesWithSemantic:")]
 		MDLMaterialProperty[] GetProperties (MDLMaterialSemantic semantic);
 
@@ -2335,6 +2336,7 @@ namespace ModelIO {
 	[BaseType (typeof (NSObject))]
 	interface MDLSubmeshTopology {
 		[iOS (10,2), Mac (10,12,2)]
+		[TV (10,1)]
 		[Export ("initWithSubmesh:")]
 		IntPtr Constructor (MDLSubmesh submesh);
 

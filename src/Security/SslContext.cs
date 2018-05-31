@@ -558,11 +558,13 @@ namespace Security {
 
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
+		[Watch (3,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern int SSLSetSessionConfig (IntPtr /* SSLContextRef* */ context, IntPtr /* CFStringRef* */ config);
 
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
+		[Watch (3,0)]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		public int SetSessionConfig (NSString config)
 		{
