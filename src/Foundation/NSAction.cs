@@ -54,31 +54,6 @@ namespace Foundation {
 		}
 	}
 
-	// Use this for synchronous operations
-	[Register ("__MonoMac_ActionDispatcher")]
-	internal sealed class ActionDispatcher : NSObject {
-		public const string SelectorName = "xamarinApplySelector";
-		public static readonly Selector Selector = new Selector (SelectorName);
-
-		readonly Action action;
-
-		public ActionDispatcher (Action action)
-		{
-			if (action == null)
-				throw new ArgumentNullException ("action");
-
-			this.action = action;
-			IsDirectBinding = false;
-		}
-
-		[Export (SelectorName)]
-		[Preserve (Conditional = true)]
-		public void Apply ()
-		{
-			action ();
-		}
-	}
-
 	// Used this for NSTimer support
 	[Register ("__Xamarin_NSTimerActionDispatcher")]
 	internal sealed class NSTimerActionDispatcher : NSObject {
