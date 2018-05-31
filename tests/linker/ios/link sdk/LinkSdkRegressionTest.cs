@@ -1146,5 +1146,10 @@ namespace LinkSdk {
 		{
 			return Type.GetType (name);
 		}
+
+		static Type GetTypeHelper (string name, bool throwOnError)
+		{
+			return Type.GetType (name, throwOnError);
+		}
 	}
 }
