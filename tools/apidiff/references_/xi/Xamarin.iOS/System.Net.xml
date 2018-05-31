@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<assemblies>
+  <assembly name="System.Net" version="2.0.5.0">
+    <attributes>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.Net.Cookie" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.Net.CookieCollection" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.Net.CookieContainer" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.Net.CookieException" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.Net.HttpRequestHeader" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.Net.HttpStatusCode" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.Net.HttpWebRequest" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.Net.HttpWebResponse" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.Net.ICredentials" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.Net.IWebRequestCreate" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.Net.NetworkCredential" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.Net.NetworkInformation.NetworkAddressChangedEventHandler" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.Net.NetworkInformation.NetworkChange" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.Net.NetworkInformation.NetworkInterface" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.Net.ProtocolViolationException" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.Net.WebException" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.Net.WebExceptionStatus" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.Net.WebHeaderCollection" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.Net.WebRequest" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.Net.WebResponse" />
+        </properties>
+      </attribute>
+      <attribute name="System.CLSCompliantAttribute">
+        <properties>
+          <property name="IsCompliant" value="True" />
+        </properties>
+      </attribute>
+      <attribute name="System.Diagnostics.DebuggableAttribute">
+        <properties>
+          <property name="IsJITTrackingEnabled" value="IgnoreSymbolStoreSequencePoints" />
+          <property name="IsJITOptimizerDisabled" value="IgnoreSymbolStoreSequencePoints" />
+          <property name="DebuggingFlags" value="IgnoreSymbolStoreSequencePoints" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyCompanyAttribute">
+        <properties>
+          <property name="Company" value="Mono development team" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyCopyrightAttribute">
+        <properties>
+          <property name="Copyright" value="(c) Various Mono authors" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyDefaultAliasAttribute">
+        <properties>
+          <property name="DefaultAlias" value="System.Net.dll" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyDelaySignAttribute">
+        <properties>
+          <property name="DelaySign" value="True" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyDescriptionAttribute">
+        <properties>
+          <property name="Description" value="System.Net.dll" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyFileVersionAttribute">
+        <properties>
+          <property name="Version" value="4.0.50524.0" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyInformationalVersionAttribute">
+        <properties>
+          <property name="InformationalVersion" value="4.0.50524.0" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyKeyFileAttribute">
+        <properties>
+          <property name="KeyFile" value="../silverlight.pub" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyProductAttribute">
+        <properties>
+          <property name="Product" value="Mono Common Language Infrastructure" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyTitleAttribute">
+        <properties>
+          <property name="Title" value="System.Net.dll" />
+        </properties>
+      </attribute>
+      <attribute name="System.Resources.NeutralResourcesLanguageAttribute">
+        <properties>
+          <property name="CultureName" value="en-US" />
+        </properties>
+      </attribute>
+      <attribute name="System.Resources.SatelliteContractVersionAttribute">
+        <properties>
+          <property name="Version" value="2.0.5.0" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.CompilationRelaxationsAttribute">
+        <properties>
+          <property name="CompilationRelaxations" value="8" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+        <properties>
+          <property name="AssemblyName" value="System.Windows, PublicKey=00240000048000009400000006020000002400005253413100040000010001008D56C76F9E8649383049F383C44BE0EC204181822A6C31CF5EB7EF486944D032188EA1D3920763712CCB12D75FB77E9811149E6148E5D32FBAAB37611C1878DDC19E20EF135D0CB2CFF2BFEC3D115810C3D9069638FE4BE215DBF795861920E5AB6F7DB2E2CEEF136AC23D5DD2BF031700AEC232F6C6B1C785B4305C123B37AB" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+        <properties>
+          <property name="AssemblyName" value="System.Windows.Browser, PublicKey=00240000048000009400000006020000002400005253413100040000010001008D56C76F9E8649383049F383C44BE0EC204181822A6C31CF5EB7EF486944D032188EA1D3920763712CCB12D75FB77E9811149E6148E5D32FBAAB37611C1878DDC19E20EF135D0CB2CFF2BFEC3D115810C3D9069638FE4BE215DBF795861920E5AB6F7DB2E2CEEF136AC23D5DD2BF031700AEC232F6C6B1C785B4305C123B37AB" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+        <properties>
+          <property name="AssemblyName" value="System.Xml, PublicKey=00240000048000009400000006020000002400005253413100040000010001008D56C76F9E8649383049F383C44BE0EC204181822A6C31CF5EB7EF486944D032188EA1D3920763712CCB12D75FB77E9811149E6148E5D32FBAAB37611C1878DDC19E20EF135D0CB2CFF2BFEC3D115810C3D9069638FE4BE215DBF795861920E5AB6F7DB2E2CEEF136AC23D5DD2BF031700AEC232F6C6B1C785B4305C123B37AB" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.RuntimeCompatibilityAttribute">
+        <properties>
+          <property name="WrapNonExceptionThrows" value="True" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
+        <properties>
+          <property name="Value" value="False" />
+        </properties>
+      </attribute>
+    </attributes>
+    <namespaces>
+      <namespace name="System.Net">
+        <classes>
+          <class name="IPEndPointCollection" type="class" base="System.Collections.ObjectModel.Collection`1[System.Net.IPEndPoint]" serializable="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.Collections.Generic.ICollection`1[T]" />
+              <interface name="System.Collections.Generic.IEnumerable`1[T]" />
+              <interface name="System.Collections.Generic.IList`1[T]" />
+              <interface name="System.Collections.Generic.IReadOnlyCollection`1[T]" />
+              <interface name="System.Collections.Generic.IReadOnlyList`1[T]" />
+              <interface name="System.Collections.ICollection" />
+              <interface name="System.Collections.IEnumerable" />
+              <interface name="System.Collections.IList" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="InsertItem(System.Int32, System.Net.IPEndPoint)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="index" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="item" position="1" attrib="0" type="System.Net.IPEndPoint" />
+                </parameters>
+              </method>
+              <method name="SetItem(System.Int32, System.Net.IPEndPoint)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="index" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="item" position="1" attrib="0" type="System.Net.IPEndPoint" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+        </classes>
+      </namespace>
+    </namespaces>
+  </assembly>
+</assemblies>
