@@ -343,15 +343,13 @@ namespace Xamarin.Bundler {
 				if (App.SdkVersion >= new Version (10, 11, 0))
 					return "-lcompression";
 				return "-weak-lcompression";
-			case ApplePlatform.TVOS:
 			case ApplePlatform.iOS:
 				if (App.SdkVersion >= new Version (9,0))
 					return "-lcompression";
 				return "-weak-lcompression";
+			case ApplePlatform.TVOS:
 			case ApplePlatform.WatchOS:
-				if (App.SdkVersion >= new Version (2, 0))
-					return "-lcompression";
-				return "-weak-lcompression";
+				return "-lcompression";
 			default:
 				return null;
 			}
