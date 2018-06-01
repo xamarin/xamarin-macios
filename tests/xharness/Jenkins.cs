@@ -36,6 +36,7 @@ namespace xharness
 		public bool IncludeBtouch;
 		public bool IncludeMacBindingProject;
 		public bool IncludeSimulator = true;
+		public bool IncludeOldSimulatorTests;
 		public bool IncludeDevice;
 		public bool IncludeXtro;
 		public bool IncludeDocs;
@@ -311,7 +312,12 @@ namespace xharness
 					break;
 				case "introspection":
 					foreach (var target in GetAppRunnerTargets (test.Platform))
-						yield return new TestData { Variation = $"Debug ({GetSimulatorMinVersion (test.Platform)})", Debug = true, Candidates = Simulators.SelectDevices (target, SimulatorLoadLog, true) };
+						yield return new TestData {
+							Variation = $"Debug ({GetSimulatorMinVersion (test.Platform)})",
+							Debug = true,
+							Candidates = Simulators.SelectDevices (target, SimulatorLoadLog, true),
+							Ignored = !IncludeOldSimulatorTests, 
+						};
 					break;
 				}
 				break;
@@ -728,6 +734,7 @@ namespace xharness
 			SetEnabled (labels, "ios-device", ref IncludeDevice);
 			SetEnabled (labels, "xtro", ref IncludeXtro);
 			SetEnabled (labels, "mac-32", ref IncludeMac32);
+			SetEnabled (labels, "old-simulator", ref IncludeOldSimulatorTests);
 			SetEnabled (labels, "all", ref IncludeAll);
 
 			// enabled by default
