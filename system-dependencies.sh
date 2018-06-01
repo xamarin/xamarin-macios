@@ -9,6 +9,7 @@ PROVISION_DOWNLOAD_DIR=/tmp/x-provisioning
 SUDO=sudo
 
 OPTIONAL_SHARPIE=1
+OPTIONAL_SIMULATORS=1
 
 # parse command-line arguments
 while ! test -z $1; do
@@ -48,6 +49,11 @@ while ! test -z $1; do
 			unset OPTIONAL_SHARPIE
 			shift
 			;;
+		--provision-simulators)
+			PROVISION_SIMULATORS=1
+			unset OPTIONAL_SIMULATORS
+			shift
+			;;
 		--provision-all)
 			PROVISION_MONO=1
 			PROVISION_VS=1
@@ -56,6 +62,7 @@ while ! test -z $1; do
 			PROVISION_AUTOTOOLS=1
 			PROVISION_HOMEBREW=1
 			PROVISION_SHARPIE=1
+			PROVISION_SIMULATORS=1
 			shift
 			;;
 		--ignore-all)
@@ -100,6 +107,15 @@ while ! test -z $1; do
 		--enforce-sharpie)
 			unset IGNORE_SHARPIE
 			unset OPTIONAL_SHARPIE
+			shift
+			;;
+		--ignore-simulators)
+			IGNORE_SIMULATORS=1
+			shift
+			;;
+		--enforce-simulators)
+			unset IGNORE_SIMULATORS
+			unset OPTIONAL_SIMULATORS
 			shift
 			;;
 		*)
@@ -757,6 +773,46 @@ function check_objective_sharpie () {
 	fi
 }
 
+function check_simulators ()
+{
+	if ! test -z $IGNORE_SIMULATORS; then return; fi
+
+	local EXTRA_SIMULATORS
+	local XCODE
+
+	EXTRA_SIMULATORS=$(grep ^EXTRA_SIMULATORS= Make.config | sed 's/.*=//')
+	XCODE=$(grep ^XCODE_DEVELOPER_ROOT= Make.config | sed 's/.*=//')/../..
+
+	make -C tools/siminstaller >/dev/null 2>&1
+
+	if ! test -d "$XCODE"; then
+		# can't test unless Xcode is present
+		warn "Can't check if simulators are available unless Xcode is already installed."
+		return
+	fi
+
+	IFS=', ' read -r -a SIMS <<< "$EXTRA_SIMULATORS"
+	arraylength=${#SIMS[@]}
+	for (( i=1; i<arraylength+1; i++ ));	do
+		SIMS[$i-1]="--install=${SIMS[$i-1]}"
+	done
+
+	if ! FAILED_SIMULATORS=$(mono --debug tools/siminstaller/bin/Debug/siminstaller.exe -q --xcode "$XCODE" --only-check "${SIMS[@]}"); then
+		if ! test -z $PROVISION_SIMULATORS; then
+			mono --debug tools/siminstaller/bin/Debug/siminstaller.exe -q --xcode "$XCODE" "${SIMS[@]}"
+			ok "Extra simulators installed successfully: '${FAILED_SIMULATORS//$'\n'/', '}'"
+		else
+			if test -z $OPTIONAL_SIMULATORS; then
+				fail "The simulators '${FAILED_SIMULATORS//$'\n'/', '}' are not installed or need to be upgraded."
+			else
+				warn "The simulators '${FAILED_SIMULATORS//$'\n'/', '}' are not installed or should be upgraded."
+			fi
+		fi
+	else
+		ok "Found all extra simulators: ${EXTRA_SIMULATORS// /, }"
+	fi
+}
+
 echo "Checking system..."
 
 check_osx_version
@@ -767,6 +823,7 @@ check_mono
 check_visual_studio
 check_cmake
 check_objective_sharpie
+check_simulators
 
 if test -z $FAIL; then
 	echo "System check succeeded"
