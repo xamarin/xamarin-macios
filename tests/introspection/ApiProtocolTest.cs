@@ -220,7 +220,7 @@ namespace Introspection {
 						return true;
 					break;
 				}
-#if !__WATCHOS__
+#if !__WATCHOS__ && !__MACOS__
 				// Conformance added to UIView in Xcode 8 (iOS 10), but for some reason the type that fails is UIAlertView (which subclasses UIView)
 				if (type.IsSubclassOf (typeof (UIKit.UIView)) && !TestRuntime.CheckXcodeVersion (8, 0))
 					return true;
