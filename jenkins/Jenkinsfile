@@ -104,9 +104,9 @@ def reportFinalStatus (err, gitHash, currentStage)
     def status = currentBuild.currentResult
 
     if ("${status}" == "SUCCESS" && err == "") {
-        comment = "✅ [Jenkins job](${env.RUN_DISPLAY_URL}) succeeded"
+        comment = "✅ [Jenkins job](${env.RUN_DISPLAY_URL}) (on internal Jenkins) succeeded"
     } else {
-        comment = "🔥 [Jenkins job](${env.RUN_DISPLAY_URL}) failed in stage '${currentStage}' 🔥"
+        comment = "🔥 [Jenkins job](${env.RUN_DISPLAY_URL}) (on internal Jenkins) failed in stage '${currentStage}' 🔥"
         if (err != "")
             comment += " : ${err}"
         manager.addErrorBadge (comment)
