@@ -269,7 +269,7 @@ namespace Introspection {
 				}
 				break;
 			case "SKAttribute":
-			case "SKAttributeNode":
+			case "SKAttributeValue":
 				switch (selectorName) {
 				case "encodeWithCoder:":
 					if (!TestRuntime.CheckXcodeVersion (8, 0))
