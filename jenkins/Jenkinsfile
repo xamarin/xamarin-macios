@@ -429,7 +429,7 @@ timestamps {
                                             echo ("Building on ${env.NODE_NAME}")
                                             if (skipLocalTestRunReason != "") {
                                                 echo (skipLocalTestRunReason)
-                                                appendFileComment ("ℹ️ Test run skipped: ${skipLocalTestRunReason}")
+                                                appendFileComment ("ℹ️ Test run skipped: ${skipLocalTestRunReason}\n")
                                             } else {
                                                 echo ("Html report: ${reportPrefix}/tests/index.html")
                                                 sh ("${workspace}/xamarin-macios/jenkins/run-tests.sh --target=wrench-jenkins --publish --keychain=xamarin-macios")
