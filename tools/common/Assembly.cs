@@ -336,6 +336,27 @@ namespace Xamarin.Bundler {
 				Driver.Log (3, "Linking with the framework {0} because it's referenced by a module reference in {1}", file, FileName);
 		}
 
+		public string GetCompressionLinkingFlag ()
+		{
+			switch(App.Platform) {
+				case ApplePlatform.MacOSX:
+					if (App.SdkVersion >= new Version (10, 11, 0))
+						return "-lcompression";
+					return "-weak-lcompression";
+				case ApplePlatform.TVOS:
+				case ApplePlatform.iOS:
+					if (App.SdkVersion >= new Version (9,0))
+						return "-lcompression";
+					return "-weak-lcompression";
+				case ApplePlatform.WatchOS:
+					if (App.SdkVersion >= new Version (2, 0))
+						return "-lcompression";
+					return "-weak-lcompression";
+				default:
+					return null;
+			}
+		}
+
 		public void ComputeLinkerFlags ()
 		{
 			foreach (var m in AssemblyDefinition.Modules) {
@@ -364,10 +385,14 @@ namespace Xamarin.Bundler {
 						Driver.Log (3, "Linking with {0} because it's referenced by a module reference in {1}", file, FileName);
 						break;
 					case "libsqlite3":
-					case "libcompression":
 						// remove lib prefix
 						LinkerFlags.Add ("-l" + file.Substring (3));
 						Driver.Log (3, "Linking with {0} because it's referenced by a module reference in {1}", file, FileName);
+						break;
+					case "libcompression":
+						var compressionLinkingFlag = GetCompressionLinkingFlag ();
+						if (!string.IsNullOrEmpty (compressionLinkingFlag))
+							LinkerFlags.Add (compressionLinkingFlag);
 					break;
 					case "libGLES":
 					case "libGLESv2":
