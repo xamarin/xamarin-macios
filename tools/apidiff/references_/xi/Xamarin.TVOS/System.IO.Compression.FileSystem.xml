@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<assemblies>
+  <assembly name="System.IO.Compression.FileSystem" version="2.0.5.0">
+    <attributes>
+      <attribute name="System.Diagnostics.DebuggableAttribute">
+        <properties>
+          <property name="IsJITTrackingEnabled" value="IgnoreSymbolStoreSequencePoints" />
+          <property name="IsJITOptimizerDisabled" value="IgnoreSymbolStoreSequencePoints" />
+          <property name="DebuggingFlags" value="IgnoreSymbolStoreSequencePoints" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyCompanyAttribute">
+        <properties>
+          <property name="Company" value="Mono development team" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyCopyrightAttribute">
+        <properties>
+          <property name="Copyright" value="(c) Various Mono authors" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyDefaultAliasAttribute">
+        <properties>
+          <property name="DefaultAlias" value="System.IO.Compression.FileSystem.dll" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyDelaySignAttribute">
+        <properties>
+          <property name="DelaySign" value="True" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyDescriptionAttribute">
+        <properties>
+          <property name="Description" value="System.IO.Compression.FileSystem.dll" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyFileVersionAttribute">
+        <properties>
+          <property name="Version" value="4.0.50524.0" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyInformationalVersionAttribute">
+        <properties>
+          <property name="InformationalVersion" value="4.0.50524.0" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyProductAttribute">
+        <properties>
+          <property name="Product" value="Mono Common Language Infrastructure" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyTitleAttribute">
+        <properties>
+          <property name="Title" value="System.IO.Compression.FileSystem.dll" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.CompilationRelaxationsAttribute">
+        <properties>
+          <property name="CompilationRelaxations" value="8" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+      <attribute name="System.Runtime.CompilerServices.RuntimeCompatibilityAttribute">
+        <properties>
+          <property name="WrapNonExceptionThrows" value="True" />
+        </properties>
+      </attribute>
+    </attributes>
+    <namespaces>
+      <namespace name="System.IO.Compression">
+        <classes>
+          <class name="ZipFile" type="class" base="System.Object" sealed="true" abstract="true" charset="Ansi" layout="Auto">
+            <methods>
+              <method name="CreateFromDirectory(System.String, System.String)" attrib="150" static="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="sourceDirectoryName" position="0" attrib="0" type="System.String" />
+                  <parameter name="destinationArchiveFileName" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="CreateFromDirectory(System.String, System.String, System.IO.Compression.CompressionLevel, System.Boolean)" attrib="150" static="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="sourceDirectoryName" position="0" attrib="0" type="System.String" />
+                  <parameter name="destinationArchiveFileName" position="1" attrib="0" type="System.String" />
+                  <parameter name="compressionLevel" position="2" attrib="0" type="System.IO.Compression.CompressionLevel" />
+                  <parameter name="includeBaseDirectory" position="3" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="CreateFromDirectory(System.String, System.String, System.IO.Compression.CompressionLevel, System.Boolean, System.Text.Encoding)" attrib="150" static="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="sourceDirectoryName" position="0" attrib="0" type="System.String" />
+                  <parameter name="destinationArchiveFileName" position="1" attrib="0" type="System.String" />
+                  <parameter name="compressionLevel" position="2" attrib="0" type="System.IO.Compression.CompressionLevel" />
+                  <parameter name="includeBaseDirectory" position="3" attrib="0" type="System.Boolean" />
+                  <parameter name="entryNameEncoding" position="4" attrib="0" type="System.Text.Encoding" />
+                </parameters>
+              </method>
+              <method name="ExtractToDirectory(System.String, System.String)" attrib="150" static="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="sourceArchiveFileName" position="0" attrib="0" type="System.String" />
+                  <parameter name="destinationDirectoryName" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="ExtractToDirectory(System.String, System.String, System.Boolean)" attrib="150" static="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="sourceArchiveFileName" position="0" attrib="0" type="System.String" />
+                  <parameter name="destinationDirectoryName" position="1" attrib="0" type="System.String" />
+                  <parameter name="overwrite" position="2" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="ExtractToDirectory(System.String, System.String, System.Text.Encoding)" attrib="150" static="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="sourceArchiveFileName" position="0" attrib="0" type="System.String" />
+                  <parameter name="destinationDirectoryName" position="1" attrib="0" type="System.String" />
+                  <parameter name="entryNameEncoding" position="2" attrib="0" type="System.Text.Encoding" />
+                </parameters>
+              </method>
+              <method name="ExtractToDirectory(System.String, System.String, System.Text.Encoding, System.Boolean)" attrib="150" static="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="sourceArchiveFileName" position="0" attrib="0" type="System.String" />
+                  <parameter name="destinationDirectoryName" position="1" attrib="0" type="System.String" />
+                  <parameter name="entryNameEncoding" position="2" attrib="0" type="System.Text.Encoding" />
+                  <parameter name="overwrite" position="3" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="Open(System.String, System.IO.Compression.ZipArchiveMode)" attrib="150" static="true" returntype="System.IO.Compression.ZipArchive">
+                <parameters>
+                  <parameter name="archiveFileName" position="0" attrib="0" type="System.String" />
+                  <parameter name="mode" position="1" attrib="0" type="System.IO.Compression.ZipArchiveMode" />
+                </parameters>
+              </method>
+              <method name="Open(System.String, System.IO.Compression.ZipArchiveMode, System.Text.Encoding)" attrib="150" static="true" returntype="System.IO.Compression.ZipArchive">
+                <parameters>
+                  <parameter name="archiveFileName" position="0" attrib="0" type="System.String" />
+                  <parameter name="mode" position="1" attrib="0" type="System.IO.Compression.ZipArchiveMode" />
+                  <parameter name="entryNameEncoding" position="2" attrib="0" type="System.Text.Encoding" />
+                </parameters>
+              </method>
+              <method name="OpenRead(System.String)" attrib="150" static="true" returntype="System.IO.Compression.ZipArchive">
+                <parameters>
+                  <parameter name="archiveFileName" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="ZipFileExtensions" type="class" base="System.Object" sealed="true" abstract="true" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.ComponentModel.EditorBrowsableAttribute">
+                <properties>
+                  <property name="State" value="Never" />
+                </properties>
+              </attribute>
+              <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+            </attributes>
+            <methods>
+              <method name="CreateEntryFromFile(System.IO.Compression.ZipArchive, System.String, System.String)" attrib="150" static="true" returntype="System.IO.Compression.ZipArchiveEntry">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="destination" position="0" attrib="0" type="System.IO.Compression.ZipArchive" direction="this" />
+                  <parameter name="sourceFileName" position="1" attrib="0" type="System.String" />
+                  <parameter name="entryName" position="2" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="CreateEntryFromFile(System.IO.Compression.ZipArchive, System.String, System.String, System.IO.Compression.CompressionLevel)" attrib="150" static="true" returntype="System.IO.Compression.ZipArchiveEntry">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="destination" position="0" attrib="0" type="System.IO.Compression.ZipArchive" direction="this" />
+                  <parameter name="sourceFileName" position="1" attrib="0" type="System.String" />
+                  <parameter name="entryName" position="2" attrib="0" type="System.String" />
+                  <parameter name="compressionLevel" position="3" attrib="0" type="System.IO.Compression.CompressionLevel" />
+                </parameters>
+              </method>
+              <method name="ExtractToDirectory(System.IO.Compression.ZipArchive, System.String)" attrib="150" static="true" returntype="System.Void">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="source" position="0" attrib="0" type="System.IO.Compression.ZipArchive" direction="this" />
+                  <parameter name="destinationDirectoryName" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="ExtractToDirectory(System.IO.Compression.ZipArchive, System.String, System.Boolean)" attrib="150" static="true" returntype="System.Void">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="source" position="0" attrib="0" type="System.IO.Compression.ZipArchive" direction="this" />
+                  <parameter name="destinationDirectoryName" position="1" attrib="0" type="System.String" />
+                  <parameter name="overwrite" position="2" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="ExtractToFile(System.IO.Compression.ZipArchiveEntry, System.String)" attrib="150" static="true" returntype="System.Void">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="source" position="0" attrib="0" type="System.IO.Compression.ZipArchiveEntry" direction="this" />
+                  <parameter name="destinationFileName" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="ExtractToFile(System.IO.Compression.ZipArchiveEntry, System.String, System.Boolean)" attrib="150" static="true" returntype="System.Void">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="source" position="0" attrib="0" type="System.IO.Compression.ZipArchiveEntry" direction="this" />
+                  <parameter name="destinationFileName" position="1" attrib="0" type="System.String" />
+                  <parameter name="overwrite" position="2" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+        </classes>
+      </namespace>
+    </namespaces>
+  </assembly>
+</assemblies>

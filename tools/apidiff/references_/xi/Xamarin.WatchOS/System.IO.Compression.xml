@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<assemblies>
+  <assembly name="System.IO.Compression" version="2.0.5.0">
+    <attributes>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.IO.Compression.CompressionLevel" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.IO.Compression.CompressionMode" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.IO.Compression.DeflateStream" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.IO.Compression.GZipStream" />
+        </properties>
+      </attribute>
+      <attribute name="System.Diagnostics.DebuggableAttribute">
+        <properties>
+          <property name="IsJITTrackingEnabled" value="IgnoreSymbolStoreSequencePoints" />
+          <property name="IsJITOptimizerDisabled" value="IgnoreSymbolStoreSequencePoints" />
+          <property name="DebuggingFlags" value="IgnoreSymbolStoreSequencePoints" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyCompanyAttribute">
+        <properties>
+          <property name="Company" value="Mono development team" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyCopyrightAttribute">
+        <properties>
+          <property name="Copyright" value="(c) Various Mono authors" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyDefaultAliasAttribute">
+        <properties>
+          <property name="DefaultAlias" value="System.IO.Compression.dll" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyDelaySignAttribute">
+        <properties>
+          <property name="DelaySign" value="True" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyDescriptionAttribute">
+        <properties>
+          <property name="Description" value="System.IO.Compression.dll" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyFileVersionAttribute">
+        <properties>
+          <property name="Version" value="4.0.50524.0" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyInformationalVersionAttribute">
+        <properties>
+          <property name="InformationalVersion" value="4.0.50524.0" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyProductAttribute">
+        <properties>
+          <property name="Product" value="Mono Common Language Infrastructure" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyTitleAttribute">
+        <properties>
+          <property name="Title" value="System.IO.Compression.dll" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.CompilationRelaxationsAttribute">
+        <properties>
+          <property name="CompilationRelaxations" value="8" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+      <attribute name="System.Runtime.CompilerServices.RuntimeCompatibilityAttribute">
+        <properties>
+          <property name="WrapNonExceptionThrows" value="True" />
+        </properties>
+      </attribute>
+    </attributes>
+    <namespaces>
+      <namespace name="System.IO.Compression">
+        <classes>
+          <class name="ZipArchive" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.IO.Stream)" attrib="6278">
+                <parameters>
+                  <parameter name="stream" position="0" attrib="0" type="System.IO.Stream" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.IO.Stream, System.IO.Compression.ZipArchiveMode)" attrib="6278">
+                <parameters>
+                  <parameter name="stream" position="0" attrib="0" type="System.IO.Stream" />
+                  <parameter name="mode" position="1" attrib="0" type="System.IO.Compression.ZipArchiveMode" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.IO.Stream, System.IO.Compression.ZipArchiveMode, System.Boolean)" attrib="6278">
+                <parameters>
+                  <parameter name="stream" position="0" attrib="0" type="System.IO.Stream" />
+                  <parameter name="mode" position="1" attrib="0" type="System.IO.Compression.ZipArchiveMode" />
+                  <parameter name="leaveOpen" position="2" attrib="0" type="System.Boolean" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.IO.Stream, System.IO.Compression.ZipArchiveMode, System.Boolean, System.Text.Encoding)" attrib="6278">
+                <parameters>
+                  <parameter name="stream" position="0" attrib="0" type="System.IO.Stream" />
+                  <parameter name="mode" position="1" attrib="0" type="System.IO.Compression.ZipArchiveMode" />
+                  <parameter name="leaveOpen" position="2" attrib="0" type="System.Boolean" />
+                  <parameter name="entryNameEncoding" position="3" attrib="0" type="System.Text.Encoding" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Entries" attrib="0" ptype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.IO.Compression.ZipArchiveEntry]">
+                <methods>
+                  <method name="get_Entries()" attrib="2182" returntype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.IO.Compression.ZipArchiveEntry]">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Mode" attrib="0" ptype="System.IO.Compression.ZipArchiveMode">
+                <methods>
+                  <method name="get_Mode()" attrib="2182" returntype="System.IO.Compression.ZipArchiveMode">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="CreateEntry(System.String)" attrib="134" returntype="System.IO.Compression.ZipArchiveEntry">
+                <parameters>
+                  <parameter name="entryName" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="CreateEntry(System.String, System.IO.Compression.CompressionLevel)" attrib="134" returntype="System.IO.Compression.ZipArchiveEntry">
+                <parameters>
+                  <parameter name="entryName" position="0" attrib="0" type="System.String" />
+                  <parameter name="compressionLevel" position="1" attrib="0" type="System.IO.Compression.CompressionLevel" />
+                </parameters>
+              </method>
+              <method name="Dispose()" attrib="486" virtual="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="Dispose(System.Boolean)" attrib="452" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="GetEntry(System.String)" attrib="134" returntype="System.IO.Compression.ZipArchiveEntry">
+                <parameters>
+                  <parameter name="entryName" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="ZipArchiveEntry" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <properties>
+              <property name="Archive" attrib="0" ptype="System.IO.Compression.ZipArchive">
+                <methods>
+                  <method name="get_Archive()" attrib="2182" returntype="System.IO.Compression.ZipArchive">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="CompressedLength" attrib="0" ptype="System.Int64">
+                <methods>
+                  <method name="get_CompressedLength()" attrib="2182" returntype="System.Int64">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="ExternalAttributes" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_ExternalAttributes()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                  <method name="set_ExternalAttributes(System.Int32)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="FullName" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_FullName()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="LastWriteTime" attrib="0" ptype="System.DateTimeOffset">
+                <methods>
+                  <method name="get_LastWriteTime()" attrib="2182" returntype="System.DateTimeOffset">
+                    <parameters />
+                  </method>
+                  <method name="set_LastWriteTime(System.DateTimeOffset)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.DateTimeOffset" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Length" attrib="0" ptype="System.Int64">
+                <methods>
+                  <method name="get_Length()" attrib="2182" returntype="System.Int64">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Name" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Name()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Delete()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="Open()" attrib="134" returntype="System.IO.Stream">
+                <parameters />
+              </method>
+              <method name="ToString()" attrib="198" virtual="true" is-override="true" returntype="System.String">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="ZipArchiveMode" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="Create" attrib="32854" fieldtype="System.IO.Compression.ZipArchiveMode" value="1" />
+              <field name="Read" attrib="32854" fieldtype="System.IO.Compression.ZipArchiveMode" value="0" />
+              <field name="Update" attrib="32854" fieldtype="System.IO.Compression.ZipArchiveMode" value="2" />
+            </fields>
+          </class>
+        </classes>
+      </namespace>
+    </namespaces>
+  </assembly>
+</assemblies>
