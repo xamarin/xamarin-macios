@@ -2,6 +2,7 @@
 
 // global variables
 repository = "xamarin/xamarin-macios"
+commentFile = null
 isPr = false
 branchName = null
 gitHash = null
@@ -94,12 +95,19 @@ def addComment (markdown)
     }
 }
 
+def appendFileComment (comment)
+{
+    if (fileExists (commentFile))
+        comment = readFile (comment) + comment
+
+    writeFile (file: commentFile, text: comment)
+}
+
 def reportFinalStatus (err, gitHash, currentStage)
 {
     if (!createFinalStatus)
         return
 
-    def commentFile = "${workspace}/xamarin-macios/jenkins/pr-comments.md"
     def comment = null
     def status = currentBuild.currentResult
 
@@ -186,6 +194,7 @@ timestamps {
                 // builds would otherwise use different workspaces, which
                 // wastes a lot of disk space.
                 workspace = "${env.HOME}/jenkins/workspace/xamarin-macios"
+                commentFile = "${workspace}/xamarin-macios/jenkins/pr-comments.md"
                 withEnv ([
                     "PATH=/Library/Frameworks/Mono.framework/Versions/Current/Commands:${env.PATH}",
                     "WORKSPACE=${workspace}"
@@ -402,6 +411,7 @@ timestamps {
                                                 }
                                             } catch (err) {
                                                 currentStage = "Running XM tests on '10.${macOS}'"
+                                                appendFileComment ("🔥 [Xamarin.Mac tests on 10.${macOS} failed](${env.RUN_DISPLAY_URL}) 🔥\n")
                                                 throw err
                                             }
                                         }
@@ -414,6 +424,7 @@ timestamps {
                                             echo ("Building on ${env.NODE_NAME}")
                                             if (skipLocalTestRunReason != "") {
                                                 echo (skipLocalTestRunReason)
+                                                appendFileComment ("ℹ️ Test run skipped: ${skipLocalTestRunReason}")
                                             } else {
                                                 echo ("Html report: ${reportPrefix}/tests/index.html")
                                                 sh ("${workspace}/xamarin-macios/jenkins/run-tests.sh --target=wrench-jenkins --publish --keychain=xamarin-macios")
