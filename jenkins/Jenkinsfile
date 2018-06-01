@@ -20,31 +20,6 @@ reportPrefix = null
 createFinalStatus = true
 skipLocalTestRunReason = ""
 
-def abortExecutingBuilds ()
-{
-    // This runs into problems with the Jenkins sandbox:
-    //      org.jenkinsci.plugins.scriptsecurity.sandbox.RejectedAccessException: Scripts not permitted to use method jenkins.model.Jenkins getItemByFullName java.lang.String
-    // so disable for now.
-
-    // def job = Jenkins.instance.getItemByFullName (env.JOB_NAME)
-    // for (build in job.builds) {
-    //     if (!build.isBuilding ())
-    //         continue
-
-    //     if (build.number > currentBuild.number) {
-    //         error ("There is already a newer build in progress (#${build.number})")
-    //     } else if (build.number < currentBuild.number) {
-    //         def exec = build.getExecutor ()
-    //         if (exec == null) {
-    //             echo ("No executor for build ${build.number}")
-    //         } else {
-    //             exec.interrupt (Result.ABORTED, new CauseOfInterruption.UserInterruption ("Aborted by build #${currentBuild.number}"))
-    //             echo ("Aborted previous build: #${build.number}")
-    //         }
-    //     }
-    // }
-}
-
 github_pull_request_info = null
 def githubGetPullRequestInfo ()
 {
@@ -207,11 +182,6 @@ timestamps {
     node ('xamarin-macios && macos-10.13') {
         try {
             timeout (time: 9, unit: 'HOURS') {
-                // This runs into problems with the Jenkins sandbox:
-                // stage ("Checking for previous builds") {
-                //     abortExecutingBuilds ()
-                // }
-
                 // Hard-code a workspace, since branch-based and PR-based
                 // builds would otherwise use different workspaces, which
                 // wastes a lot of disk space.
