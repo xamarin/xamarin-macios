@@ -98,7 +98,7 @@ def addComment (markdown)
 def appendFileComment (comment)
 {
     if (fileExists (commentFile))
-        comment = readFile (comment) + comment
+        comment = readFile (commentFile) + comment
 
     writeFile (file: commentFile, text: comment)
 }
