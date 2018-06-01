@@ -5,6 +5,10 @@
 [submodule "external/guiunit"]
     path = external/guiunit
     url = ../../mono/guiunit.git
+[submodule "external/macios-binaries"]
+    path = external/macios-binaries
+    url = ../../xamarin/macios-binaries
+    branch = d15-8
 [submodule "external/mono"]
     path = external/mono
     url = ../../mono/mono.git
@@ -20,8 +24,4 @@
 [submodule "external/Xamarin.MacDev"]
     path = external/Xamarin.MacDev
     url = ../../xamarin/Xamarin.MacDev
-    branch = master
-[submodule "external/macios-binaries"]
-    path = external/macios-binaries
-    url = ../../xamarin/macios-binaries
-    branch = master
+    branch = d15-8
