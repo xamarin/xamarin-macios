@@ -24,17 +24,31 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Threading;
 using ObjCRuntime;
 
 namespace Foundation {
 
 #if !COREBUILD
 	// Use this for synchronous operations
-	[Register ("__MonoMac_NSActionDispatcher")]
-	internal sealed class NSActionDispatcher : NSObject {
+	internal abstract class NSDispatcher : NSObject
+	{
 		public const string SelectorName = "xamarinApplySelector";
 		public static readonly Selector Selector = new Selector (SelectorName);
 
+		protected NSDispatcher ()
+		{
+			IsDirectBinding = false;
+		}
+
+		[Export (SelectorName)]
+		[Preserve (Conditional = true)]
+		public abstract void Apply ();
+	}
+
+	// Use this for synchronous operations
+	[Register ("__MonoMac_NSActionDispatcher")]
+	internal sealed class NSActionDispatcher : NSDispatcher {
 		readonly Action action;
 
 		public NSActionDispatcher (Action action)
@@ -43,40 +57,28 @@ namespace Foundation {
 				throw new ArgumentNullException ("action");
 
 			this.action = action;
-			IsDirectBinding = false;
 		}
 
-		[Export (SelectorName)]
-		[Preserve (Conditional = true)]
-		public void Apply ()
-		{
-			action ();
-		}
+		public override void Apply () => action ();
 	}
 
 	// Use this for synchronous operations
-	[Register ("__MonoMac_ActionDispatcher")]
-	internal sealed class ActionDispatcher : NSObject {
-		public const string SelectorName = "xamarinApplySelector";
-		public static readonly Selector Selector = new Selector (SelectorName);
+	[Register ("__MonoMac_NSSynchronizationContextDispatcher")]
+	internal sealed class NSSynchronizationContextDispatcher : NSDispatcher
+	{
+		readonly SendOrPostCallback d;
+		readonly object state;
 
-		readonly Action action;
-
-		public ActionDispatcher (Action action)
+		public NSSynchronizationContextDispatcher (SendOrPostCallback d, object state)
 		{
-			if (action == null)
-				throw new ArgumentNullException ("action");
+			if (d == null)
+				throw new ArgumentNullException (nameof (d));
 
-			this.action = action;
-			IsDirectBinding = false;
+			this.d = d;
+			this.state = state;
 		}
 
-		[Export (SelectorName)]
-		[Preserve (Conditional = true)]
-		public void Apply ()
-		{
-			action ();
-		}
+		public override void Apply () => d (state);
 	}
 
 	// Used this for NSTimer support
@@ -104,41 +106,80 @@ namespace Foundation {
 		}
 	}
 
+	abstract class NSAsyncDispatcher : NSDispatcher {
+		readonly GCHandle gch;
+
+		protected NSAsyncDispatcher ()
+		{
+			gch = GCHandle.Alloc (this);
+		}
+
+		public override void Apply ()
+		{
+			gch.Free ();
+
+			//
+			// Although I would like to call Dispose here, to
+			// reduce the load on the GC, we have some useful diagnostic
+			// code in our runtime that is useful to track down
+			// problems, so we are removing the Dispose and letting
+			// the GC and our pipeline do their job.
+			// 
+#if MONOTOUCH
+			// MonoTouch has fixed the above problems, and we can call
+			// Dispose here.
+			Dispose ();
+#endif
+		}
+	}
+
 	// Use this for asynchronous operations
 	[Register ("__MonoMac_NSAsyncActionDispatcher")]
-	internal class NSAsyncActionDispatcher : NSObject {
-		GCHandle gch;
+	internal sealed class NSAsyncActionDispatcher : NSAsyncDispatcher {
 		Action action;
 
 		public NSAsyncActionDispatcher (Action action)
 		{
+			if (action == null)
+				throw new ArgumentNullException (nameof (action));
+
 			this.action = action;
-			gch = GCHandle.Alloc (this);
-			IsDirectBinding = false;
 		}
 
-		[Export (NSActionDispatcher.SelectorName)]
-		[Preserve (Conditional = true)]
-		public void Apply ()
+		public override void Apply ()
 		{
 			try {
 				action ();
 			} finally {
-				action = null; // this is a one-shot dispatcher
-				gch.Free ();
+				action = null;
+				base.Apply ();
+			}
+		}
+	}
 
-				//
-				// Although I would like to call Dispose here, to
-				// reduce the load on the GC, we have some useful diagnostic
-				// code in our runtime that is useful to track down
-				// problems, so we are removing the Dispose and letting
-				// the GC and our pipeline do their job.
-				// 
-#if MONOTOUCH
-				// MonoTouch has fixed the above problems, and we can call
-				// Dispose here.
-				Dispose ();
-#endif
+	// Use this for asynchronous operations
+	[Register ("__MonoMac_NSAsyncSynchronizationContextDispatcher")]
+	internal sealed class NSAsyncSynchronizationContextDispatcher : NSAsyncDispatcher {
+		SendOrPostCallback d;
+		object state;
+
+		public NSAsyncSynchronizationContextDispatcher (SendOrPostCallback d, object state)
+		{
+			if (d == null)
+				throw new ArgumentNullException (nameof (d));
+
+			this.d = d;
+			this.state = state;
+		}
+
+		public override void Apply ()
+		{
+			try {
+				d (state);
+			} finally {
+				d = null; // this is a one-shot dispatcher
+				state = null;
+				base.Apply ();
 			}
 		}
 	}
