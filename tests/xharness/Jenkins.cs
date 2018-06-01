@@ -451,7 +451,7 @@ namespace xharness
 			return rv;
 		}
 
-		IEnumerable<TestTask> CreateRunSimulatorTasks ()
+		async Task<IEnumerable<TestTask>> CreateRunSimulatorTasksAsync ()
 		{
 			var runSimulatorTasks = new List<RunSimulatorTask> ();
 
@@ -500,12 +500,17 @@ namespace xharness
 
 			var testVariations = CreateTestVariations (runSimulatorTasks, (buildTask, test, candidates) => new RunSimulatorTask (buildTask, candidates?.Cast<SimDevice> () ?? test.Candidates)).ToList ();
 
-			foreach (var taskGroup in testVariations.GroupBy ((RunSimulatorTask task) => task.Platform)) {
-				yield return new AggregatedRunSimulatorTask (taskGroup) {
+			foreach (var tv in testVariations)
+				await tv.FindSimulatorAsync ();
+
+			var rv = new List<AggregatedRunSimulatorTask> ();
+			foreach (var taskGroup in testVariations.GroupBy ((RunSimulatorTask task) => task.Device.UDID)) {
+				rv.Add (new AggregatedRunSimulatorTask (taskGroup) {
 					Jenkins = this,
 					TestName = $"Tests for {taskGroup.Key}",
-				};
+				});
 			}
+			return rv;
 		}
 
 		IEnumerable<TestTask> CreateRunDeviceTasks ()
@@ -800,7 +805,7 @@ namespace xharness
 			return false;
 		}
 
-		Task PopulateTasksAsync ()
+		async Task PopulateTasksAsync ()
 		{
 			// Missing:
 			// api-diff
@@ -809,7 +814,7 @@ namespace xharness
 
 			LoadSimulatorsAndDevicesAsync ().DoNotAwait ();
 
-			Tasks.AddRange (CreateRunSimulatorTasks ());
+			Tasks.AddRange (await CreateRunSimulatorTasksAsync ());
 
 			var buildiOSMSBuild = new XBuildTask ()
 			{
@@ -1053,8 +1058,6 @@ namespace xharness
 			Tasks.Add (runSampleTests);
 
 			Tasks.AddRange (CreateRunDeviceTasks ());
-
-			return Task.CompletedTask;
 		}
 
 		RunTestTask CloneExecuteTask (RunTestTask task, TestProject original_project, TestPlatform platform, string suffix, bool ignore, bool requiresXcode94 = false)
@@ -3676,19 +3679,37 @@ namespace xharness
 			}
 		}
 
-		public Task SelectSimulatorAsync ()
+		public async Task FindSimulatorAsync ()
+		{
+			if (Device != null)
+				return;
+
+			var asyncEnumerable = Candidates as IAsyncEnumerable;
+			if (asyncEnumerable != null)
+				await asyncEnumerable.ReadyTask;
+
+			if (!Candidates.Any ()) {
+				ExecutionResult = TestExecutingResult.Skipped;
+				FailureMessage = "No applicable devices found.";
+			} else {
+				Device = Candidates.First ();
+				if (Platform == TestPlatform.watchOS)
+					CompanionDevice = Jenkins.Simulators.FindCompanionDevice (Jenkins.SimulatorLoadLog, Device);
+			}
+
+		}
+
+		public async Task SelectSimulatorAsync ()
 		{
 			if (Finished)
-				return Task.FromResult (true);
+				return;
 			
 			if (!BuildTask.Succeeded) {
 				ExecutionResult = TestExecutingResult.BuildFailure;
-				return Task.FromResult (true);
+				return;
 			}
 
-			Device = Candidates.First ();
-			if (Platform == TestPlatform.watchOS)
-				CompanionDevice = Jenkins.Simulators.FindCompanionDevice (Jenkins.SimulatorLoadLog, Device);
+			await FindSimulatorAsync ();
 
 			var clean_state = false;//Platform == TestPlatform.watchOS;
 			runner = new AppRunner ()
@@ -3703,8 +3724,6 @@ namespace xharness
 			};
 			runner.Simulators = Simulators;
 			runner.Initialize ();
-
-			return Task.FromResult (true);
 		}
 
 		class NondisposedResource : IAcquiredResource
