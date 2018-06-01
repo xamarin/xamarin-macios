@@ -324,7 +324,7 @@ timestamps {
                             }
                             if (manifestFilename != null) {
                                 def manifestUrl = "${packagePrefix}/${manifestFilename}"
-                                utils.reportGitHubStatus (gitHash, '${manifestFilename}', "${manifestUrl}", 'SUCCESS', "${manifestFilename}")
+                                utils.reportGitHubStatus (gitHash, "${manifestFilename}", "${manifestUrl}", 'SUCCESS', "${manifestFilename}")
                             }
                         }
 
