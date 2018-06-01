@@ -32,6 +32,7 @@ namespace xharness
 		public bool IncludeBtouch;
 		public bool IncludeMacBindingProject;
 		public bool IncludeSimulator = true;
+		public bool IncludeOldSimulatorTests;
 		public bool IncludeDevice;
 		public bool IncludeXtro;
 
@@ -235,11 +236,21 @@ namespace xharness
 					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL" };
 					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Ignored = !IncludeAll };
 					foreach (var target in GetAppRunnerTargets (test.Platform))
-						yield return new TestData { Variation = $"Debug ({GetSimulatorMinVersion (test.Platform)})", Debug = true, Candidates = Simulators.SelectDevices (target, SimulatorLoadLog, true) };
+						yield return new TestData {
+							Variation = $"Debug ({GetSimulatorMinVersion (test.Platform)})",
+							Debug = true,
+							Candidates = Simulators.SelectDevices (target, SimulatorLoadLog, true),
+							Ignored = !IncludeOldSimulatorTests,
+						};
 					break;
 				case "introspection":
 					foreach (var target in GetAppRunnerTargets (test.Platform))
-						yield return new TestData { Variation = $"Debug ({GetSimulatorMinVersion (test.Platform)})", Debug = true, Candidates = Simulators.SelectDevices (target, SimulatorLoadLog, true) };
+						yield return new TestData {
+							Variation = $"Debug ({GetSimulatorMinVersion (test.Platform)})",
+							Debug = true,
+							Candidates = Simulators.SelectDevices (target, SimulatorLoadLog, true),
+							Ignored = !IncludeOldSimulatorTests, 
+						};
 					break;
 				}
 				break;
@@ -631,6 +642,7 @@ namespace xharness
 			SetEnabled (labels, "ios-device", ref IncludeDevice);
 			SetEnabled (labels, "xtro", ref IncludeXtro);
 			SetEnabled (labels, "mac-32", ref IncludeMac32);
+			SetEnabled (labels, "old-simulator", ref IncludeOldSimulatorTests);
 			SetEnabled (labels, "all", ref IncludeAll);
 
 			// enabled by default
