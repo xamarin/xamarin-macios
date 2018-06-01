@@ -393,7 +393,7 @@ namespace Xamarin.Bundler {
 						var compressionLinkingFlag = GetCompressionLinkingFlag ();
 						if (!string.IsNullOrEmpty (compressionLinkingFlag))
 							LinkerFlags.Add (compressionLinkingFlag);
-					break;
+						break;
 					case "libGLES":
 					case "libGLESv2":
 						// special case for OpenGLES.framework
