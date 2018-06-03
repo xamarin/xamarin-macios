@@ -92,7 +92,7 @@ namespace Xamarin.Bundler {
 					assembly = ModuleDefinition.ReadModule (fileName, parameters).Assembly;
 					params_cache [assembly.Name.ToString ()] = parameters;
 				}
-				catch (SymbolsNotMatchingException e) {
+				catch (SymbolsNotMatchingException) {
 					parameters.ReadSymbols = false;
 					parameters.SymbolReaderProvider = null;
 					assembly = ModuleDefinition.ReadModule (fileName, parameters).Assembly;
