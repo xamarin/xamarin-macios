@@ -86,6 +86,8 @@ namespace MonoTouchFixtures.Compression {
 		[TestCase (CompressionAlgorithm.Zlib, "compressed_zip")]
 		public void TestDecodeRealFile (CompressionAlgorithm algorithm, string compressedFile)
 		{
+			if (!TestRuntime.CheckXcodeVersion (7, 0))
+				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
 #if MONOMAC
  			string compressedFilePath = Path.Combine (NSBundle.MainBundle.BundlePath, $"Contents/Resources/{compressedFile}");
 #else
