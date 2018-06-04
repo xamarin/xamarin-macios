@@ -388,7 +388,7 @@ namespace Xamarin.Bundler {
 						Driver.Log (3, "Linking with {0} because it's referenced by a module reference in {1}", file, FileName);
 						break;
 					case "libcompression":
-							LinkerFlags.Add (GetCompressionLinkingFlag ());
+						LinkerFlags.Add (GetCompressionLinkingFlag ());
 						break;
 					case "libGLES":
 					case "libGLESv2":
