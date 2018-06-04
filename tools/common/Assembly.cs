@@ -340,11 +340,11 @@ namespace Xamarin.Bundler {
 		{
 			switch(App.Platform) {
 			case ApplePlatform.MacOSX:
-				if (App.SdkVersion >= new Version (10, 11, 0))
+				if (App.DeploymentTarget >= new Version (10, 11, 0))
 					return "-lcompression";
 				return "-weak-lcompression";
 			case ApplePlatform.iOS:
-				if (App.SdkVersion >= new Version (9,0))
+				if (App.DeploymentTarget >= new Version (9,0))
 					return "-lcompression";
 				return "-weak-lcompression";
 			case ApplePlatform.TVOS:
