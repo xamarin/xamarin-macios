@@ -351,7 +351,7 @@ namespace Xamarin.Bundler {
 			case ApplePlatform.WatchOS:
 				return "-lcompression";
 			default:
-				return null;
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at http://bugzilla.xamarin.com with a test case.", App.Platform, App.SdkVersion);
 			}
 		}
 
@@ -388,9 +388,7 @@ namespace Xamarin.Bundler {
 						Driver.Log (3, "Linking with {0} because it's referenced by a module reference in {1}", file, FileName);
 						break;
 					case "libcompression":
-						var compressionLinkingFlag = GetCompressionLinkingFlag ();
-						if (!string.IsNullOrEmpty (compressionLinkingFlag))
-							LinkerFlags.Add (compressionLinkingFlag);
+							LinkerFlags.Add (GetCompressionLinkingFlag ());
 						break;
 					case "libGLES":
 					case "libGLESv2":
