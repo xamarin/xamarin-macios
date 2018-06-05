@@ -44,6 +44,8 @@ namespace MonoTouchFixtures.Compression {
 		[ExpectedException (typeof (ArgumentNullException))]
 		public void Constructor_Null ()
 		{
+			if (!TestRuntime.CheckXcodeVersion (7, 0))
+				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
 			DeflateStream ds = new DeflateStream (null, CompressionMode.Compress, CompressionAlgorithm.Zlib);
 		}
 
@@ -51,6 +53,8 @@ namespace MonoTouchFixtures.Compression {
 		[ExpectedException (typeof (ArgumentException))]
 		public void Constructor_InvalidCompressionMode ()
 		{
+			if (!TestRuntime.CheckXcodeVersion (7, 0))
+				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
 			DeflateStream ds = new DeflateStream (new MemoryStream (), (CompressionMode)Int32.MinValue, CompressionAlgorithm.Zlib);
 		}
 
@@ -60,6 +64,8 @@ namespace MonoTouchFixtures.Compression {
 		[TestCase (CompressionAlgorithm.Zlib)]
 		public void CheckCompressDecompress (CompressionAlgorithm algorithm)
 		{
+			if (!TestRuntime.CheckXcodeVersion (7, 0))
+				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
 			byte [] data = new byte[100000];
 			for (int i = 0; i < 100000; i++) {
 				data[i] = (byte) i;
@@ -83,6 +89,8 @@ namespace MonoTouchFixtures.Compression {
 		[Test] // Not passing the algorithm because the compressed data is Zlib compressed.
 		public void CheckDecompress ()
 		{
+			if (!TestRuntime.CheckXcodeVersion (7, 0))
+				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
 			MemoryStream backing = new MemoryStream (compressed_data);
 			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib);
 			StreamReader reader = new StreamReader (decompressing);
@@ -94,6 +102,8 @@ namespace MonoTouchFixtures.Compression {
 		[ExpectedException (typeof (ArgumentNullException))]
 		public void CheckNullRead ()
 		{
+			if (!TestRuntime.CheckXcodeVersion (7, 0))
+				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
 			MemoryStream backing = new MemoryStream (compressed_data);
 			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib);
 			decompressing.Read (null, 0, 20);
@@ -103,6 +113,8 @@ namespace MonoTouchFixtures.Compression {
 		[ExpectedException (typeof (InvalidOperationException))]
 		public void CheckCompressingRead ()
 		{
+			if (!TestRuntime.CheckXcodeVersion (7, 0))
+				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
 			byte [] dummy = new byte[20];
 			MemoryStream backing = new MemoryStream ();
 			DeflateStream compressing = new DeflateStream (backing, CompressionMode.Compress, CompressionAlgorithm.Zlib);
@@ -113,6 +125,8 @@ namespace MonoTouchFixtures.Compression {
 		[ExpectedException (typeof (ArgumentException))]
 		public void CheckRangeRead ()
 		{
+			if (!TestRuntime.CheckXcodeVersion (7, 0))
+				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
 			byte [] dummy = new byte[20];
 			MemoryStream backing = new MemoryStream (compressed_data);
 			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib);
@@ -123,6 +137,8 @@ namespace MonoTouchFixtures.Compression {
 		[ExpectedException (typeof (ObjectDisposedException))]
 		public void CheckClosedRead ()
 		{
+			if (!TestRuntime.CheckXcodeVersion (7, 0))
+				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
 			byte [] dummy = new byte[20];
 			MemoryStream backing = new MemoryStream (compressed_data);
 			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib);
@@ -134,6 +150,8 @@ namespace MonoTouchFixtures.Compression {
 		[ExpectedException (typeof (ObjectDisposedException))]
 		public void CheckClosedFlush ()
 		{
+			if (!TestRuntime.CheckXcodeVersion (7, 0))
+				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
 			MemoryStream backing = new MemoryStream ();
 			DeflateStream compressing = new DeflateStream (backing, CompressionMode.Compress, CompressionAlgorithm.Zlib);
 			compressing.Close ();
@@ -144,6 +162,8 @@ namespace MonoTouchFixtures.Compression {
 		[ExpectedException (typeof (NotSupportedException))]
 		public void CheckSeek ()
 		{
+			if (!TestRuntime.CheckXcodeVersion (7, 0))
+				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
 			MemoryStream backing = new MemoryStream (compressed_data);
 			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib);
 			decompressing.Seek (20, SeekOrigin.Current);
@@ -153,6 +173,8 @@ namespace MonoTouchFixtures.Compression {
 		[ExpectedException (typeof (NotSupportedException))]
 		public void CheckSetLength ()
 		{
+			if (!TestRuntime.CheckXcodeVersion (7, 0))
+				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
 			MemoryStream backing = new MemoryStream (compressed_data);
 			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib);
 			decompressing.SetLength (20);
@@ -161,6 +183,8 @@ namespace MonoTouchFixtures.Compression {
 		[Test]
 		public void CheckGetCanSeekProp ()
 		{
+			if (!TestRuntime.CheckXcodeVersion (7, 0))
+				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
 			MemoryStream backing = new MemoryStream (compressed_data);
 			DeflateStream decompress = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib);
 			Assert.IsFalse (decompress.CanSeek, "#A1");
@@ -181,6 +205,8 @@ namespace MonoTouchFixtures.Compression {
 		[Test]
 		public void CheckGetCanReadProp ()
 		{
+			if (!TestRuntime.CheckXcodeVersion (7, 0))
+				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
 			MemoryStream backing = new MemoryStream (compressed_data);
 			DeflateStream decompress = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib);
 			Assert.IsTrue (decompress.CanRead, "#A1");
@@ -201,6 +227,8 @@ namespace MonoTouchFixtures.Compression {
 		[Test]
 		public void CheckGetCanWriteProp ()
 		{
+			if (!TestRuntime.CheckXcodeVersion (7, 0))
+				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
 			MemoryStream backing = new MemoryStream ();
 			DeflateStream decompress = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib);
 			Assert.IsFalse (decompress.CanWrite, "#A1");
@@ -222,6 +250,8 @@ namespace MonoTouchFixtures.Compression {
 		[ExpectedException (typeof (NotSupportedException))]
 		public void CheckSetLengthProp ()
 		{
+			if (!TestRuntime.CheckXcodeVersion (7, 0))
+				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
 			MemoryStream backing = new MemoryStream (compressed_data);
 			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib);
 			decompressing.SetLength (20);
@@ -231,6 +261,8 @@ namespace MonoTouchFixtures.Compression {
 		[ExpectedException (typeof (NotSupportedException))]
 		public void CheckGetLengthProp ()
 		{
+			if (!TestRuntime.CheckXcodeVersion (7, 0))
+				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
 			MemoryStream backing = new MemoryStream (compressed_data);
 			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib);
 			long length = decompressing.Length;
@@ -240,6 +272,8 @@ namespace MonoTouchFixtures.Compression {
 		[ExpectedException (typeof (NotSupportedException))]
 		public void CheckGetPositionProp ()
 		{
+			if (!TestRuntime.CheckXcodeVersion (7, 0))
+				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
 			MemoryStream backing = new MemoryStream (compressed_data);
 			DeflateStream decompressing = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib);
 			long position = decompressing.Position;
@@ -248,6 +282,8 @@ namespace MonoTouchFixtures.Compression {
 		[Test]
 		public void DisposeTest ()
 		{
+			if (!TestRuntime.CheckXcodeVersion (7, 0))
+				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
 			MemoryStream backing = new MemoryStream (compressed_data);
 			DeflateStream decompress = new DeflateStream (backing, CompressionMode.Decompress,  CompressionAlgorithm.Zlib);
 			decompress.Dispose ();
@@ -264,6 +300,8 @@ namespace MonoTouchFixtures.Compression {
 		[TestCase (CompressionAlgorithm.Zlib)]
 		public void JunkAtTheEnd (CompressionAlgorithm algorithm)
 		{
+			if (!TestRuntime.CheckXcodeVersion (7, 0))
+				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
 			// Write a deflated stream, then some additional data...
 			using (MemoryStream ms = new MemoryStream())
 			{
@@ -310,6 +348,8 @@ namespace MonoTouchFixtures.Compression {
 		[Test] // zlib specific test
 		public void Bug19313 ()
 		{
+			if (!TestRuntime.CheckXcodeVersion (7, 0))
+				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
 			byte [] buffer  = new byte [512];
 			using (var backing = new Bug19313Stream (compressed_data))
 			using (var decompressing = new DeflateStream (backing, CompressionMode.Decompress, CompressionAlgorithm.Zlib))
