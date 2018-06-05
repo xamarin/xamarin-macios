@@ -2704,6 +2704,11 @@ namespace Registrar {
 
 				skip.Clear ();
 
+				if (Driver.XcodeVersion == new Version (10, 0) && @class.Type.Namespace == "TVMLKit") {
+					// TVML's headers are broken in Xcode 10 beta 1: rdar://40824310
+					continue;
+				}
+
 				uint token_ref = uint.MaxValue;
 				if (!@class.IsProtocol && !@class.IsCategory) {
 					if (!isPlatformType)
