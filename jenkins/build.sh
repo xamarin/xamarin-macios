@@ -51,11 +51,11 @@ else
 	fi
 fi
 
-if test -n "$ENABLE_DEVICE_BUILD"; then
-	./configure "$CONFIGURE_FLAGS"
-else
-	./configure "$CONFIGURE_FLAGS" --disable-ios-device
+if test -z "$ENABLE_DEVICE_BUILD"; then
+	CONFIGURE_FLAGS="$CONFIGURE_FLAGS --disable-ios-device"
 fi
+# shellcheck disable=SC2086
+./configure $CONFIGURE_FLAGS
 
 make reset
 make git-clean-all
