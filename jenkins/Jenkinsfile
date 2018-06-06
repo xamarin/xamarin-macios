@@ -236,6 +236,7 @@ timestamps {
                         stage ('Provisioning') {
                             currentStage = "${STAGE_NAME}"
                             echo ("Building on ${env.NODE_NAME}")
+                            sh ("cd ${workspace}/xamarin-macios && ./configure --enable-xamarin")
                             sh ("${workspace}/xamarin-macios/jenkins/provision-deps.sh")
                         }
 
