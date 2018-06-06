@@ -289,7 +289,7 @@ timestamps {
                                 def f_length = file.length;
                                 def md5 = sh (returnStdout: true, script: "md5 -q '${file}'").trim ()
                                 manifest += "${packagePrefix}/${file.name}\n"
-                                artifacts += "  {\n    \"file\": \"${file.name}\",\n    \"md5\": \"${md5}\",\n    \"size\": ${f_length}\n  }"
+                                artifacts += "  {\n    \"file\": \"${file.name}\",\n    \"url\": \"${packagePrefix}/${file.name}\",\n    \"md5\": \"${md5}\",\n    \"size\": ${f_length}\n  }"
                                 if (i < uploadingFiles.length - 1)
                                     artifacts += ","
                                 artifacts +="\n"
