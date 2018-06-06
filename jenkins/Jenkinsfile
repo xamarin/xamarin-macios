@@ -288,8 +288,15 @@ timestamps {
                                 def file = uploadingFiles [i]
                                 def f_length = file.length;
                                 def md5 = sh (returnStdout: true, script: "md5 -q '${file}'").trim ()
+                                def sha256 = sh (returnStdout: true, script: "shasum -a 256").trim ().split (" ") [0];
                                 manifest += "${packagePrefix}/${file.name}\n"
-                                artifacts += "  {\n    \"file\": \"${file.name}\",\n    \"url\": \"${packagePrefix}/${file.name}\",\n    \"md5\": \"${md5}\",\n    \"size\": ${f_length}\n  }"
+                                artifacts += "  {\n"
+                                artifacts += "    \"file\": \"${file.name}\",\n"
+                                artifacts += "    \"url\": \"${packagePrefix}/${file.name}\",\n"
+                                artifacts += "    \"md5\": \"${md5}\",\n"
+                                artifacts += "    \"sha256\": \"${sha256}\",\n"
+                                artifacts += "    \"size\": ${f_length}\n"
+                                artifacts += "  }"
                                 if (i < uploadingFiles.length - 1)
                                     artifacts += ","
                                 artifacts +="\n"
