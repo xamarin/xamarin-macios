@@ -84,21 +84,7 @@ namespace InstallSources
 		/// <param name="path">Path.</param>
 		string GetSourcePathForGeneratedPath (string path)
 		{
-			var frameworkPrefix = FrameworkPath.Remove (FrameworkPath.IndexOf (".framework", StringComparison.Ordinal));
-			var installPath = Path.Combine (InstallDir, "src", frameworkPrefix);
-			// we might be looking at a mdb that was already gone thorugh mdb rebase, if that is the case, do find the path for the final target 
-			if (path.StartsWith (InstallDir, StringComparison.InvariantCulture)) {
-				var src = path.Substring (installPath.Length + 1);
-				if (src.StartsWith ("/", StringComparison.Ordinal))
-					src = src.Remove (0, 1);
-				src = Path.Combine (XamarinSourcePath, (InstallDir.Contains ("Xamarin.iOS.framework")) ? "build/ios/native/" : "build/mac/full/", src);
-				return src;
-			} else {
-				var pos = path.IndexOf ($"/{frameworkPrefix}/", StringComparison.InvariantCulture);
-				var src = path.Remove (0, pos + $"/{frameworkPrefix}/".Length); // 3 for src and 1  for /
-				src = Path.Combine (XamarinSourcePath, src);
-				return src;
-			}
+			return path;
 		}
 
 		/// <summary>
