@@ -1,0 +1,3 @@
+!missing-selector! ASIdentifierManager::advertisingIdentifier not bound
+!missing-selector! ASIdentifierManager::isAdvertisingTrackingEnabled not bound
+!missing-type! ASIdentifierManager not bound

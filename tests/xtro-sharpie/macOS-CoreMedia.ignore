@@ -3,4 +3,3 @@
 !missing-pinvoke! CMAudioDeviceClockGetAudioDevice is not bound
 !missing-pinvoke! CMAudioDeviceClockSetAudioDeviceID is not bound
 !missing-pinvoke! CMAudioDeviceClockSetAudioDeviceUID is not bound
-!unknown-field! kCMSampleBufferAttachmentKey_CameraIntrinsicMatrix bound

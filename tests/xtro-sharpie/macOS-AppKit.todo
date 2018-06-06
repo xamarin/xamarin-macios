@@ -1,0 +1,76 @@
+!missing-enum! NSColorSystemEffect not bound
+!missing-field! NSAppearanceNameAccessibilityHighContrastAqua not bound
+!missing-field! NSAppearanceNameAccessibilityHighContrastDarkAqua not bound
+!missing-field! NSAppearanceNameAccessibilityHighContrastVibrantDark not bound
+!missing-field! NSAppearanceNameAccessibilityHighContrastVibrantLight not bound
+!missing-field! NSAppearanceNameDarkAqua not bound
+!missing-protocol! NSColorChanging not bound
+!missing-protocol! NSEditor not bound
+!missing-protocol! NSEditorRegistration not bound
+!missing-protocol! NSFontChanging not bound
+!missing-protocol! NSMenuItemValidation not bound
+!missing-protocol! NSPasteboardTypeOwner not bound
+!missing-protocol! NSStandardKeyBindingResponding not bound
+!missing-protocol! NSToolbarItemValidation not bound
+!missing-protocol! NSViewLayerContentScaleDelegate not bound
+!missing-protocol! NSViewToolTipOwner not bound
+!missing-protocol-conformance! NSAppearance should conform to NSSecureCoding
+!missing-protocol-conformance! NSApplication should conform to NSAppearanceCustomization (defined in 'NSAppearanceCustomization' category)
+!missing-protocol-conformance! NSApplication should conform to NSMenuItemValidation
+!missing-protocol-conformance! NSController should conform to NSEditor
+!missing-protocol-conformance! NSController should conform to NSEditorRegistration
+!missing-protocol-conformance! NSDocument should conform to NSEditorRegistration
+!missing-protocol-conformance! NSDocument should conform to NSMenuItemValidation
+!missing-protocol-conformance! NSDocumentController should conform to NSMenuItemValidation
+!missing-protocol-conformance! NSFontManager should conform to NSMenuItemValidation
+!missing-protocol-conformance! NSImageView should conform to NSMenuItemValidation
+!missing-protocol-conformance! NSMatrix should conform to NSViewToolTipOwner
+!missing-protocol-conformance! NSPathCell should conform to NSMenuItemValidation
+!missing-protocol-conformance! NSPopUpButtonCell should conform to NSMenuItemValidation
+!missing-protocol-conformance! NSResponder should conform to NSStandardKeyBindingResponding (defined in 'NSStandardKeyBindingMethods' category)
+!missing-protocol-conformance! NSSecureTextField should conform to NSViewToolTipOwner
+!missing-protocol-conformance! NSTableHeaderView should conform to NSViewToolTipOwner
+!missing-protocol-conformance! NSTextView should conform to NSColorChanging
+!missing-protocol-conformance! NSTextView should conform to NSMenuItemValidation
+!missing-protocol-conformance! NSTextView should conform to NSStandardKeyBindingResponding
+!missing-protocol-conformance! NSToolbarItem should conform to NSMenuItemValidation
+!missing-protocol-conformance! NSViewController should conform to NSEditor
+!missing-protocol-conformance! NSWindow should conform to NSMenuItemValidation
+!missing-protocol-member! NSApplicationDelegate::application:delegateHandlesKey: not found
+!missing-protocol-member! NSControlTextEditingDelegate::controlTextDidBeginEditing: not found
+!missing-protocol-member! NSControlTextEditingDelegate::controlTextDidChange: not found
+!missing-protocol-member! NSControlTextEditingDelegate::controlTextDidEndEditing: not found
+!missing-selector! +NSAnimationContext::runAnimationGroup: not bound
+!missing-selector! +NSColor::alternatingContentBackgroundColors not bound
+!missing-selector! +NSColor::controlAccentColor not bound
+!missing-selector! +NSColor::findHighlightColor not bound
+!missing-selector! +NSColor::linkColor not bound
+!missing-selector! +NSColor::placeholderTextColor not bound
+!missing-selector! +NSColor::selectedContentBackgroundColor not bound
+!missing-selector! +NSColor::separatorColor not bound
+!missing-selector! +NSColor::unemphasizedSelectedContentBackgroundColor not bound
+!missing-selector! +NSColor::unemphasizedSelectedTextBackgroundColor not bound
+!missing-selector! +NSColor::unemphasizedSelectedTextColor not bound
+!missing-selector! NSAppearance::bestMatchFromAppearancesWithNames: not bound
+!missing-selector! NSApplication::appearance not bound
+!missing-selector! NSApplication::effectiveAppearance not bound
+!missing-selector! NSApplication::isRegisteredForRemoteNotifications not bound
+!missing-selector! NSApplication::setAppearance: not bound
+!missing-selector! NSButton::contentTintColor not bound
+!missing-selector! NSButton::setContentTintColor: not bound
+!missing-selector! NSColor::colorWithSystemEffect: not bound
+!missing-selector! NSImageView::contentTintColor not bound
+!missing-selector! NSImageView::setContentTintColor: not bound
+!missing-selector! NSMenu::setItemArray: not bound
+!missing-selector! NSSliderCell::setImage: not bound
+!missing-selector! NSTabView::setTabViewItems: not bound
+!missing-selector! NSTextAttachmentCell::setCellBaselineOffset: not bound
+!missing-selector! NSTextView::performValidatedReplacementInRange:withAttributedString: not bound
+!missing-selector! NSToolbar::centeredItemIdentifier not bound
+!missing-selector! NSToolbar::setCenteredItemIdentifier: not bound
+!missing-selector! NSWindow::appearanceSource not bound
+!missing-selector! NSWindow::convertPointFromBacking: not bound
+!missing-selector! NSWindow::convertPointFromScreen: not bound
+!missing-selector! NSWindow::convertPointToBacking: not bound
+!missing-selector! NSWindow::convertPointToScreen: not bound
+!missing-selector! NSWindow::setAppearanceSource: not bound

@@ -1,0 +1,3 @@
+!missing-field! kCTCharacterShapeAttributeName not bound
+!missing-field! kCTTypesetterOptionDisableBidiProcessing not bound
+!missing-pinvoke! CTFontCollectionCreateMatchingFontDescriptorsWithOptions is not bound

@@ -26,5 +26,3 @@
 !incorrect-protocol-member! MTLRenderPipelineState::imageblockSampleLength is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderPipelineState::maxTotalThreadsPerThreadgroup is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderPipelineState::threadgroupSizeMatchesTileSize is REQUIRED and should be abstract
-!missing-selector! MTLRenderPassDescriptor::defaultSampleCount not bound
-!missing-selector! MTLRenderPassDescriptor::setDefaultSampleCount: not bound

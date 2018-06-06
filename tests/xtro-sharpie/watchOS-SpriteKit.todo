@@ -1,0 +1,25 @@
+!missing-protocol-conformance! SKAction should conform to NSSecureCoding
+!missing-protocol-conformance! SKAttribute should conform to NSSecureCoding
+!missing-protocol-conformance! SKAttributeValue should conform to NSSecureCoding
+!missing-protocol-conformance! SKAudioNode should conform to NSSecureCoding
+!missing-protocol-conformance! SKConstraint should conform to NSSecureCoding
+!missing-protocol-conformance! SKKeyframeSequence should conform to NSSecureCoding
+!missing-protocol-conformance! SKNode should conform to NSSecureCoding
+!missing-protocol-conformance! SKPhysicsBody should conform to NSSecureCoding
+!missing-protocol-conformance! SKPhysicsJoint should conform to NSSecureCoding
+!missing-protocol-conformance! SKPhysicsWorld should conform to NSSecureCoding
+!missing-protocol-conformance! SKRange should conform to NSSecureCoding
+!missing-protocol-conformance! SKReachConstraints should conform to NSSecureCoding
+!missing-protocol-conformance! SKRegion should conform to NSSecureCoding
+!missing-protocol-conformance! SKShader should conform to NSSecureCoding
+!missing-protocol-conformance! SKTexture should conform to NSSecureCoding
+!missing-protocol-conformance! SKTextureAtlas should conform to NSSecureCoding
+!missing-protocol-conformance! SKTileDefinition should conform to NSSecureCoding
+!missing-protocol-conformance! SKTileGroup should conform to NSSecureCoding
+!missing-protocol-conformance! SKTileGroupRule should conform to NSSecureCoding
+!missing-protocol-conformance! SKTileMapNode should conform to NSSecureCoding
+!missing-protocol-conformance! SKTileSet should conform to NSSecureCoding
+!missing-protocol-conformance! SKUniform should conform to NSSecureCoding
+!missing-protocol-conformance! SKWarpGeometry should conform to NSSecureCoding
+!missing-protocol-conformance! SKWarpGeometryGrid should conform to NSSecureCoding
+!missing-selector! +SKNode::nodeWithFileNamed:securelyWithClasses:andError: not bound

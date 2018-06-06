@@ -5,12 +5,6 @@
 !missing-enum! krb5plugin_preauth_client_request_type not bound
 !missing-enum! krb5plugin_preauth_entry_request_type not bound
 !missing-enum! locate_service_type not bound
-!missing-field! et_asn1_error_table not bound
-!missing-field! et_k524_error_table not bound
-!missing-field! et_kdb5_error_table not bound
-!missing-field! et_krb5_error_table not bound
-!missing-field! et_kv5m_error_table not bound
-!missing-field! et_prof_error_table not bound
 !missing-field! GSS_C_NT_ANONYMOUS not bound
 !missing-field! GSS_C_NT_EXPORT_NAME not bound
 !missing-field! GSS_C_NT_HOSTBASED_SERVICE not bound
@@ -21,7 +15,6 @@
 !missing-field! GSS_KRB5_NT_PRINCIPAL_NAME not bound
 !missing-field! gss_mech_krb5 not bound
 !missing-field! gss_mech_krb5_old not bound
-!missing-field! gss_mech_krb5_wrong not bound
 !missing-field! gss_mech_set_krb5 not bound
 !missing-field! gss_mech_set_krb5_both not bound
 !missing-field! gss_mech_set_krb5_old not bound
@@ -50,7 +43,6 @@
 !missing-pinvoke! cc_get_NC_info is not bound
 !missing-pinvoke! cc_get_principal is not bound
 !missing-pinvoke! cc_initialize is not bound
-!missing-pinvoke! cc_lock_request is not bound
 !missing-pinvoke! cc_open is not bound
 !missing-pinvoke! cc_remove_cred is not bound
 !missing-pinvoke! cc_seq_fetch_creds_begin is not bound
@@ -64,7 +56,6 @@
 !missing-pinvoke! cc_store is not bound
 !missing-pinvoke! com_err is not bound
 !missing-pinvoke! com_err_va is not bound
-!missing-pinvoke! error_manager is not bound
 !missing-pinvoke! error_message is not bound
 !missing-pinvoke! gss_accept_sec_context is not bound
 !missing-pinvoke! gss_acquire_cred is not bound
@@ -79,11 +70,9 @@
 !missing-pinvoke! gss_display_status is not bound
 !missing-pinvoke! gss_duplicate_name is not bound
 !missing-pinvoke! gss_export_name is not bound
-!missing-pinvoke! gss_export_name_object is not bound
 !missing-pinvoke! gss_export_sec_context is not bound
 !missing-pinvoke! gss_get_mic is not bound
 !missing-pinvoke! gss_import_name is not bound
-!missing-pinvoke! gss_import_name_object is not bound
 !missing-pinvoke! gss_import_sec_context is not bound
 !missing-pinvoke! gss_indicate_mechs is not bound
 !missing-pinvoke! gss_init_sec_context is not bound
@@ -118,9 +107,7 @@
 !missing-pinvoke! gss_wrap_size_limit is not bound
 !missing-pinvoke! initialize_asn1_error_table is not bound
 !missing-pinvoke! initialize_k524_error_table is not bound
-!missing-pinvoke! initialize_kdb5_error_table is not bound
 !missing-pinvoke! initialize_krb5_error_table is not bound
-!missing-pinvoke! initialize_kv5m_error_table is not bound
 !missing-pinvoke! initialize_prof_error_table is not bound
 !missing-pinvoke! KLAcquireInitialTickets is not bound
 !missing-pinvoke! KLAcquireInitialTicketsWithPassword is not bound
@@ -228,16 +215,12 @@
 !missing-pinvoke! krb5_c_is_coll_proof_cksum is not bound
 !missing-pinvoke! krb5_c_is_keyed_cksum is not bound
 !missing-pinvoke! krb5_c_keyed_checksum_types is not bound
-!missing-pinvoke! krb5_c_keylengths is not bound
 !missing-pinvoke! krb5_c_make_checksum is not bound
 !missing-pinvoke! krb5_c_make_random_key is not bound
-!missing-pinvoke! krb5_c_prf is not bound
-!missing-pinvoke! krb5_c_prf_length is not bound
 !missing-pinvoke! krb5_c_random_add_entropy is not bound
 !missing-pinvoke! krb5_c_random_make_octets is not bound
 !missing-pinvoke! krb5_c_random_os_entropy is not bound
 !missing-pinvoke! krb5_c_random_seed is not bound
-!missing-pinvoke! krb5_c_random_to_key is not bound
 !missing-pinvoke! krb5_c_string_to_key is not bound
 !missing-pinvoke! krb5_c_string_to_key_with_params is not bound
 !missing-pinvoke! krb5_c_valid_cksumtype is not bound
@@ -253,7 +236,6 @@
 !missing-pinvoke! krb5_cc_end_seq_get is not bound
 !missing-pinvoke! krb5_cc_gen_new is not bound
 !missing-pinvoke! krb5_cc_get_config is not bound
-!missing-pinvoke! krb5_cc_get_flags is not bound
 !missing-pinvoke! krb5_cc_get_name is not bound
 !missing-pinvoke! krb5_cc_get_principal is not bound
 !missing-pinvoke! krb5_cc_get_type is not bound
@@ -331,13 +313,10 @@
 !missing-pinvoke! krb5_get_credentials_validate is not bound
 !missing-pinvoke! krb5_get_default_realm is not bound
 !missing-pinvoke! krb5_get_error_message is not bound
-!missing-pinvoke! krb5_get_fallback_host_realm is not bound
 !missing-pinvoke! krb5_get_host_realm is not bound
 !missing-pinvoke! krb5_get_init_creds_keytab is not bound
 !missing-pinvoke! krb5_get_init_creds_opt_alloc is not bound
 !missing-pinvoke! krb5_get_init_creds_opt_free is not bound
-!missing-pinvoke! krb5_get_init_creds_opt_free_pa is not bound
-!missing-pinvoke! krb5_get_init_creds_opt_get_pa is not bound
 !missing-pinvoke! krb5_get_init_creds_opt_init is not bound
 !missing-pinvoke! krb5_get_init_creds_opt_set_address_list is not bound
 !missing-pinvoke! krb5_get_init_creds_opt_set_canonicalize is not bound

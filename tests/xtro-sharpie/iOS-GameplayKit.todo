@@ -1,0 +1,8 @@
+!missing-protocol-conformance! GKAgent should conform to NSSecureCoding
+!missing-protocol-conformance! GKAgent2D should conform to NSSecureCoding
+!missing-protocol-conformance! GKComponent should conform to NSSecureCoding
+!missing-protocol-conformance! GKEntity should conform to NSSecureCoding
+!missing-protocol-conformance! GKGraph should conform to NSSecureCoding
+!missing-protocol-conformance! GKGraphNode should conform to NSSecureCoding
+!missing-protocol-conformance! GKPolygonObstacle should conform to NSSecureCoding
+!missing-protocol-conformance! GKScene should conform to NSSecureCoding

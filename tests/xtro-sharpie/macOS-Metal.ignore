@@ -20,4 +20,3 @@
 !incorrect-protocol-member! MTLRenderCommandEncoder::drawIndexedPatches:patchIndexBuffer:patchIndexBufferOffset:controlPointIndexBuffer:controlPointIndexBufferOffset:indirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::drawPatches:patchIndexBuffer:patchIndexBufferOffset:indirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::textureBarrier is REQUIRED and should be abstract
-!unknown-native-enum! MTLMultisampleDepthResolveFilter bound

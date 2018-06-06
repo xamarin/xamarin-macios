@@ -1,6 +1,3 @@
-## suspisious as the related types, AVAudioUnitComponent[Manager], are *not* available on watchOS
-!missing-field! AVAudioUnitComponentTagsDidChangeNotification not bound
-
 ## all members are marked as not available on watchOS (but not the protocol itself)
 !missing-protocol! AVAudio3DMixing not bound
 
