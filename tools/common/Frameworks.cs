@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 
+#if MTOUCH || MMP
 using Mono.Cecil;
 
 using Xamarin.Bundler;
 using Registrar;
+#endif
 
 public class Framework
 {
@@ -43,7 +45,11 @@ public class Frameworks : Dictionary <string, Framework>
 	public void Add (string @namespace, string framework, Version version)
 	{
 		var fr = new Framework () {
+#if MTOUCH || MMP
 			Namespace = Driver.IsUnified ? @namespace : Registrar.Registrar.CompatNamespace + "." + @namespace,
+#else
+			Namespace = @namespace,
+#endif
 			Name = framework,
 			Version = version
 		};
@@ -81,6 +87,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "CoreVideo", 10, 3 },
 					{ "MobileCoreServices", "CoreServices", 10, 3 },
 					{ "OpenGL", 10, 3 },
+					{ "SearchKit", 10,3 },
 					{ "SystemConfiguration", 10, 3 },
 
 					{ "CoreData", 10, 4 },
@@ -89,6 +96,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "CoreAnimation", "QuartzCore", 10, 5 },
 					{ "CoreText", 10, 5 },
+					{ "PrintCore", 10,5 },
 					{ "ScriptingBridge", 10, 5 },
 					{ "QuickLook", 10, 5 },
 					{ "QuartzComposer", "Quartz", 10, 5 },
@@ -128,21 +136,29 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "Hypervisor", 10, 10 },
 					{ "LocalAuthentication", 10, 10 },
 					{ "MultipeerConnectivity", 10, 10 },
+					{ "NetworkExtension", 10, 10 },
 					{ "NotificationCenter", 10, 10 },
-					{ "GameplayKit", 10, 11 },
+
 					{ "Contacts", 10, 11 },
+					{ "ContactsUI", 10, 11 },
+					{ "CoreAudioKit", 10,11 },
+					{ "GameplayKit", 10, 11 },
 					{ "Metal", 10, 11 },
 					{ "MetalKit", 10, 11 },
 					{ "ModelIO", 10, 11 },
 
 					{ "Intents", 10, 12 },
 					{ "IOSurface", "IOSurface", 10, 12 },
+					{ "Photos", "Photos", 10,12 },
+					{ "PhotosUI", "PhotosUI", 10,12 },
 					{ "SafariServices", "SafariServices", 10, 12 },
 					{ "MediaPlayer", "MediaPlayer", 10, 12, 1 },
 
 					{ "CoreML", "CoreML", 10, 13 },
-					{ "Vision", "Vision", 10, 13 },
+					{ "CoreSpotlight", "CoreSpotlight", 10,13 },
+					{ "ExternalAccessory", "ExternalAccessory", 10, 13 },
 					{ "MetalPerformanceShaders", "MetalPerformanceShaders", 10, 13 },
+					{ "Vision", "Vision", 10, 13 },
 
 					{ "BusinessChat", "BusinessChat", 10, 13, 4 },
 				};
@@ -151,7 +167,7 @@ public class Frameworks : Dictionary <string, Framework>
 		}
 	}
 
-#if MTOUCH
+#if MTOUCH || __IOS__ || __TVOS__ || __WATCHOS__
 	static Frameworks ios_frameworks;
 	public static Frameworks GetiOSFrameworks (Application app)
 	{
@@ -345,6 +361,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "Metal", "Metal", 9 },
 					{ "MetalKit", "MetalKit", 9 },
 					{ "MetalPerformanceShaders", "MetalPerformanceShaders", 9 },
+					{ "CoreServices", "CFNetwork", 9 },
 					{ "MobileCoreServices", "MobileCoreServices", 9 },
 					{ "ModelIO", "ModelIO", 9 },
 					{ "OpenGLES", "OpenGLES", 9 },
@@ -380,6 +397,7 @@ public class Frameworks : Dictionary <string, Framework>
 	}
 #endif
 
+#if MTOUCH || MMP
 	public static void Gather (Application app, AssemblyDefinition product_assembly, HashSet<string> frameworks, HashSet<string> weak_frameworks)
 	{
 		var namespaces = new HashSet<string> ();
@@ -401,5 +419,5 @@ public class Frameworks : Dictionary <string, Framework>
 			}
 		}
 	}
-
+#endif
 }
