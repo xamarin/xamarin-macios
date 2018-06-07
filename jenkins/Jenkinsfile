@@ -17,6 +17,7 @@ currentStage = null
 xiPackageFilename = null
 xmPackageFilename = null
 manifestFilename = null
+artifactsFilename = null
 reportPrefix = null
 createFinalStatus = true
 skipLocalTestRunReason = ""
@@ -235,6 +236,7 @@ timestamps {
                         stage ('Provisioning') {
                             currentStage = "${STAGE_NAME}"
                             echo ("Building on ${env.NODE_NAME}")
+                            sh ("cd ${workspace}/xamarin-macios && ./configure --enable-xamarin")
                             sh ("${workspace}/xamarin-macios/jenkins/provision-deps.sh")
                         }
 
@@ -279,25 +281,32 @@ timestamps {
                             virtualPath = "jenkins/${branchName}/${gitHash}/${env.BUILD_NUMBER}"
                             packagePrefix = "https://bosstoragemirror.blob.core.windows.net/wrench/${virtualPath}/package"
 
-                            // Create metadata.json and manifest
+                            // Create artifacts.json and manifest
                             def uploadingFiles = findFiles (glob: "package/*")
                             def manifest = ""
-                            def metadata = "[\n"
+                            def artifacts = "[\n"
                             for (int i = 0; i < uploadingFiles.length; i++) {
                                 def file = uploadingFiles [i]
                                 def f_length = file.length;
                                 def md5 = sh (returnStdout: true, script: "md5 -q '${file}'").trim ()
+                                def sha256 = sh (returnStdout: true, script: "shasum -a 256").trim ().split (" ") [0];
                                 manifest += "${packagePrefix}/${file.name}\n"
-                                metadata += "  {\n    \"file\": \"${file.name}\",\n    \"md5\": \"${md5}\",\n    \"size\": ${f_length}\n  }"
+                                artifacts += "  {\n"
+                                artifacts += "    \"file\": \"${file.name}\",\n"
+                                artifacts += "    \"url\": \"${packagePrefix}/${file.name}\",\n"
+                                artifacts += "    \"md5\": \"${md5}\",\n"
+                                artifacts += "    \"sha256\": \"${sha256}\",\n"
+                                artifacts += "    \"size\": ${f_length}\n"
+                                artifacts += "  }"
                                 if (i < uploadingFiles.length - 1)
-                                    metadata += ","
-                                metadata +="\n"
+                                    artifacts += ","
+                                artifacts +="\n"
                             }
-                            metadata += "]\n"
-                            manifest += "${packagePrefix}/metadata.json\n"
+                            artifacts += "]\n"
+                            manifest += "${packagePrefix}/artifacts.json\n"
                             manifest += "${packagePrefix}/manifest\n"
                             writeFile (file: "package/manifest", text: manifest)
-                            writeFile (file: "package/metadata.json", text: metadata)
+                            writeFile (file: "package/artifacts.json", text: artifacts)
 
                             sh ("ls -la package")
                             uploadFiles ("package/*", virtualPath)
@@ -309,6 +318,7 @@ timestamps {
                             uploadFiles ("package/manifest", "jenkins/${branchName}/latest")
 
                             manifestFilename = "manifest"
+                            artifactsFilename = "artifacts.json"
                         }
 
                         stage ('Publish builds to GitHub') {
@@ -325,6 +335,10 @@ timestamps {
                             if (manifestFilename != null) {
                                 def manifestUrl = "${packagePrefix}/${manifestFilename}"
                                 utils.reportGitHubStatus (gitHash, "${manifestFilename}", "${manifestUrl}", 'SUCCESS', "${manifestFilename}")
+                            }
+                            if (artifactsFilename != null) {
+                                def artifactUrl = "${packagePrefix}/${artifactsFilename}"
+                                utils.reportGitHubStatus (gitHash, "Jenkins: Artifacts", "${artifactUrl}", 'SUCCESS', "${artifactsFilename}")
                             }
                         }
 
