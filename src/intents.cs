@@ -5513,7 +5513,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface INSpeakableString : INSpeakable, NSSecureCoding {
+	interface INSpeakableString : INSpeakable, NSCopying, NSSecureCoding {
 
 		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
 		[Internal]
@@ -7662,7 +7662,7 @@ namespace Intents {
 	[Watch (4,0), NoMac, iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface INParameter : NSSecureCoding {
+	interface INParameter : NSCopying, NSSecureCoding {
 
 		[Static]
 		[Export ("parameterForClass:keyPath:")]
@@ -8134,7 +8134,7 @@ namespace Intents {
 	[Watch (4,0), NoMac, iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface INSpatialEventTrigger : NSSecureCoding {
+	interface INSpatialEventTrigger : NSCopying, NSSecureCoding {
 
 		[Export ("initWithPlacemark:event:")]
 		IntPtr Constructor (CLPlacemark placemark, INSpatialEvent @event);
