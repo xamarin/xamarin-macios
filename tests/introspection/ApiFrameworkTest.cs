@@ -64,6 +64,13 @@ namespace Introspection {
 			case "CoreSpotlight":
 			case "WebKit":
 				return true;
+#elif __WATCHOS__ && !XAMCORE_4_0
+			// helpers (largely enums) for AVFoundation API - no p/invokes or obj-C API that requires native linking
+			case "AudioToolbox":
+				return true;
+			// mistakes (can't be fixed without breaking binary compatibility)
+			case "WebKit":
+				return true;
 #elif __MACOS__
 			// always included, ref: tools/common/CompilerFlags.cs
 			case "CFNetwork":

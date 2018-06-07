@@ -289,6 +289,7 @@ public class Frameworks : Dictionary <string, Framework>
 	{
 		if (watch_frameworks == null) {
 			watch_frameworks = new Frameworks {
+				{ "Accelerate", "Accelerate", 2 },
 				// The CFNetwork framework is in the SDK, but there are no headers inside the framework, so don't enable yet.
 				// { "CFNetwork", "CFNetwork", 2 },
 				{ "ClockKit", "ClockKit", 2 },
@@ -311,6 +312,8 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "WatchConnectivity", "WatchConnectivity", 2 },
 				{ "WatchKit", "WatchKit", 2 },
 
+				{ "CoreText", "CoreText", 2,2 },
+
 				// AVFoundation was introduced in 3.0, but the simulator SDK was broken until 3.2.
 				{ "AVFoundation", "AVFoundation", 3, app.IsSimulatorBuild ? 2 : 0 },
 				{ "CloudKit", "CloudKit", 3 },
@@ -320,7 +323,9 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "UserNotifications", "UserNotifications", 3 },
 				{ "Intents", "Intents", 3,2 },
 
+				{ "CoreBluetooth", "CoreBluetooth", 4 },
 				{ "CoreML", "CoreML", 4 },
+				{ "CoreVideo", "CoreVideo", 4 },
 			};
 		}
 		return watch_frameworks;
