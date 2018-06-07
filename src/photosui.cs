@@ -116,7 +116,7 @@ namespace PhotosUI {
 
 	[TV (10,0)]
 	[iOS (9,1)]
-	[Mac (10,12)]
+	[Mac (10,12, onlyOn64: true)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface PHLivePhotoViewDelegate {

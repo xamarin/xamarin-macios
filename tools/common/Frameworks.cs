@@ -87,7 +87,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "CoreVideo", 10, 3 },
 					{ "MobileCoreServices", "CoreServices", 10, 3 },
 					{ "OpenGL", 10, 3 },
-					{ "SearchKit", 10,3 },
+					{ "SearchKit", "CoreServices", 10,3 },
 					{ "SystemConfiguration", 10, 3 },
 
 					{ "CoreData", 10, 4 },
@@ -96,7 +96,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "CoreAnimation", "QuartzCore", 10, 5 },
 					{ "CoreText", 10, 5 },
-					{ "PrintCore", 10,5 },
+					{ "PrintCore", "CoreServices", 10,5 },
 					{ "ScriptingBridge", 10, 5 },
 					{ "QuickLook", 10, 5 },
 					{ "QuartzComposer", "Quartz", 10, 5 },
