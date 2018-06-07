@@ -386,6 +386,13 @@ namespace Xamarin.Bundler {
 			return System.Reflection.Assembly.GetExecutingAssembly ().Location;
 		}
 
+		static string xcode_bundle_version;
+		public static string XcodeBundleVersion {
+			get {
+				return xcode_bundle_version;
+			}
+		}
+
 		static Version xcode_version;
 		public static Version XcodeVersion {
 			get {
