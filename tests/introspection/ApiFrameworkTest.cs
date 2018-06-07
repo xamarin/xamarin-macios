@@ -1,6 +1,5 @@
-﻿#if XAMCORE_2_0
+﻿#if __UNIFIED__
 using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -60,6 +59,11 @@ namespace Introspection {
 			// ref: tools/common/CompilerFlags.cs
 			case "CoreServices":
 				return true;
+#elif __TVOS__ && !XAMCORE_4_0
+			// mistakes (can't be fixed without breaking binary compatibility)
+			case "CoreSpotlight":
+			case "WebKit":
+				return true;
 #elif __MACOS__
 			// always included, ref: tools/common/CompilerFlags.cs
 			case "CFNetwork":
@@ -113,7 +117,7 @@ namespace Introspection {
 				// Either Skip method or Frameworks.cs needs to be updated
 				ReportError ("Unknown framework '{0}'", ns);
 			}
-			AssertIfErrors ("Unknown frameworks found");
+			AssertIfErrors ($"{Errors} unknown frameworks found:\n{ErrorData}");
 		}
 	}
 }

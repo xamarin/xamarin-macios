@@ -358,6 +358,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "JavaScriptCore", "JavaScriptCore", 9 },
 					{ "MediaAccessibility", "MediaAccessibility", 9 },
 					{ "MediaPlayer", "MediaPlayer", 9 },
+					{ "MediaToolbox", "MediaToolbox", 9 },
 					{ "Metal", "Metal", 9 },
 					{ "MetalKit", "MetalKit", 9 },
 					{ "MetalPerformanceShaders", "MetalPerformanceShaders", 9 },
