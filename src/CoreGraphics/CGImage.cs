@@ -72,7 +72,7 @@ namespace CoreGraphics {
 		Rgb555 = 1 << 16,
 		Rgb565 = 2 << 16,
 		Rgb101010 = 3 << 16,
-		RgbCif10 = 4 << 16
+		RgbCif10 = 4 << 16,
 		Mask = 0xF0000,
 			
 	}
