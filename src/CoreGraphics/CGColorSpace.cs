@@ -80,6 +80,13 @@ namespace CoreGraphics {
 			CGColorSpaceRetain (handle);
 		}
 
+		public CGColorSpace (CFPropertyList propertyList)
+		{
+			if (propertyList == null)
+				throw new ArgumentNullException (nameof(propertyList));
+			this.handle = CGColorSpaceCreateWithPropertyList (propertyList.Handle);
+		}
+
 		[Preserve (Conditional=true)]
 		internal CGColorSpace (IntPtr handle, bool owns)
 		{
@@ -506,6 +513,25 @@ namespace CoreGraphics {
 				return CGColorSpaceSupportsOutput (handle);
 			}
 		}
+
+		[iOS(10,0)][Mac(10,12)][TV(10,0)][Watch(5,0)]
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern IntPtr CGColorSpaceCopyPropertyList (IntPtr space);
+
+		[iOS(10,0)][Mac(10,12)][TV(10,0)][Watch(5,0)]
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern IntPtr CGColorSpaceCreateWithPropertyList (IntPtr plist);
+
+		[iOS(10,0)][Mac(10,12)]
+		[TV(10,0)][Watch(5,0)]
+		public CFPropertyList ToPropertyList ()
+		{
+			var x = CGColorSpaceCopyPropertyList (handle);
+			if (x == IntPtr.Zero)
+				return null;
+			return new CFPropertyList (x);
+		}
+		
 #endif // !COREBUILD
 	}
 }
