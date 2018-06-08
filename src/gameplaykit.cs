@@ -63,7 +63,7 @@ namespace GameplayKit {
 
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (GKComponent))]
-	interface GKAgent : NSCoding {
+	interface GKAgent : NSSecureCoding {
 		
 		[Export ("delegate", ArgumentSemantic.Weak)][NullAllowed]
 		IGKAgentDelegate Delegate { get; set; }
@@ -216,7 +216,7 @@ namespace GameplayKit {
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[Abstract]
-	interface GKComponent : NSCopying, NSCoding {
+	interface GKComponent : NSCopying, NSSecureCoding {
 
 		[NullAllowed]
 		[Export ("entity", ArgumentSemantic.Weak)]
@@ -377,7 +377,7 @@ namespace GameplayKit {
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // designated
-	interface GKEntity : NSCopying, NSCoding {
+	interface GKEntity : NSCopying, NSSecureCoding {
 
 		[DesignatedInitializer]
 		[Export ("init")]
@@ -538,7 +538,7 @@ namespace GameplayKit {
 
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	interface GKGraph : NSCopying, NSCoding {
+	interface GKGraph : NSCopying, NSSecureCoding {
 		
 		[NullAllowed]
 		[Export ("nodes")]
@@ -776,7 +776,7 @@ namespace GameplayKit {
 
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	interface GKGraphNode : NSCoding {
+	interface GKGraphNode : NSSecureCoding {
 		
 		[Export ("connectedNodes")]
 		GKGraphNode [] ConnectedNodes { get; }
@@ -924,7 +924,7 @@ namespace GameplayKit {
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (GKObstacle))]
-	interface GKPolygonObstacle : NSCoding {
+	interface GKPolygonObstacle : NSSecureCoding {
 
 		[Export ("vertexCount")]
 		nuint VertexCount { get; }
@@ -1811,7 +1811,7 @@ namespace GameplayKit {
 
 	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
-	interface GKScene : NSCopying, NSCoding {
+	interface GKScene : NSCopying, NSSecureCoding {
 
 		[Static]
 		[Export ("sceneWithFileNamed:")]
