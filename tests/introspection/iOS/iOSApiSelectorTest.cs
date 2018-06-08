@@ -301,6 +301,123 @@ namespace Introspection {
 					break;
 				}
 				break;
+			// Xcode 10
+			case "GKTurnBasedExchange":
+				switch (name) {
+				case "completionDate":
+				case "data":
+				case "exchangeID":
+				case "sendDate":
+				case "timeoutDate":
+					if (TestRuntime.CheckXcodeVersion (10,0))
+						return true;
+					break;
+				}
+				break;
+			case "GKTurnBasedExchangeReply":
+				switch (name) {
+				case "data":
+				case "replyDate":
+					if (TestRuntime.CheckXcodeVersion (10,0))
+						return true;
+					break;
+				}
+				break;
+			case "GKScore":
+				switch (name) {
+				case "leaderboardIdentifier":
+				case "setLeaderboardIdentifier:":
+					if (TestRuntime.CheckXcodeVersion (10,0))
+						return true;
+					break;
+				}
+				break;
+			case "GKAchievementDescription":
+				switch (name) {
+				case "groupIdentifier":
+				case "isReplayable":
+					if (TestRuntime.CheckXcodeVersion (10,0))
+						return true;
+					break;
+				}
+				break;
+			case "GKInvite":
+				switch (name) {
+				case "playerAttributes":
+				case "playerGroup":
+				case "guestIdentifier":
+					if (TestRuntime.CheckXcodeVersion (10,0))
+						return true;
+					break;
+				}
+				break;
+			case "GKTurnBasedMatch":
+				switch (name) {
+				case "matchID":
+					if (TestRuntime.CheckXcodeVersion (10,0))
+						return true;
+					break;
+				}
+				break;
+			case "GKTurnBasedParticipant":
+				switch (name) {
+				case "timeoutDate":
+					if (TestRuntime.CheckXcodeVersion (10,0))
+						return true;
+					break;
+				}
+				break;
+			case "GKPlayer":
+				switch (name) {
+				case "guestIdentifier":
+					if (TestRuntime.CheckXcodeVersion (10,0))
+						return true;
+					break;
+				}
+				break;
+			case "GKMatchRequest":
+				switch (name) {
+				case "defaultNumberOfPlayers":
+				case "setDefaultNumberOfPlayers:":
+				case "inviteMessage":
+				case "setInviteMessage:":
+				case "maxPlayers":
+				case "setMaxPlayers:":
+				case "minPlayers":
+				case "setMinPlayers:":
+				case "playerAttributes":
+				case "setPlayerAttributes:":
+				case "playerGroup":
+				case "setPlayerGroup:":
+					if (TestRuntime.CheckXcodeVersion (10,0))
+						return true;
+					break;
+				}
+				break;
+			case "GKChallenge":
+				switch (name) {
+				case "completionDate":
+				case "issueDate":
+				case "message":
+				case "state":
+					if (TestRuntime.CheckXcodeVersion (10,0))
+						return true;
+					break;
+				}
+				break;
+			case "GKLeaderboard":
+			case "GKLeaderboardSet":
+				switch (name) {
+				case "groupIdentifier":
+				case "identifier":
+				case "setIdentifier:":
+				case "maxRange":
+				case "title":
+					if (TestRuntime.CheckXcodeVersion (10,0))
+						return true;
+					break;
+				}
+				break;
 			}
 
 			switch (name) {
