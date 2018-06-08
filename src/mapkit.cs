@@ -1221,6 +1221,7 @@ namespace MapKit {
 #if !MONOMAC
 	[NoTV]
 	[BaseType (typeof (UIBarButtonItem))]
+	[DisableDefaultCtor]
 	interface MKUserTrackingBarButtonItem {
 		[NullAllowed] // by default this property is null
 		[Export ("mapView", ArgumentSemantic.Retain)]
