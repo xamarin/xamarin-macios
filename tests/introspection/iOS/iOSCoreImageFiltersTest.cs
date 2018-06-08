@@ -34,12 +34,15 @@ namespace Introspection {
 		{
 			switch (type.Name) {
 			// iOS 12 beta 1 ?removed? some filters
+			// https://github.com/xamarin/xamarin-macios/issues/4189
 			case "CIAztecCodeGenerator":
 			case "CIBarcodeGenerator":
 			case "CICode128BarcodeGenerator":
 			case "CIPdf417BarcodeGenerator":
 			case "CIQRCodeGenerator":
-				return true;
+				if (TestRuntime.CheckXcodeVersion (10,0))
+					return true;
+				break;
 			}
 			return base.Skip (type);
 		}
