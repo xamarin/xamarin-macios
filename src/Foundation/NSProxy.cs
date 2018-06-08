@@ -26,6 +26,7 @@ namespace Foundation {
 	}
 }
 
+#if !XAMCORE_4_0 || (__IOS__ || __MACOS__)
 namespace WebKit {
 	// We need to keep NSProxy if WKNavigationDelegate or IWKNavigationDelegate are used
 	// This cannot be done on an interface but the protocol won't be used without a WKWebView
@@ -34,3 +35,4 @@ namespace WebKit {
 		static Type hack = typeof (NSProxy);
 	}
 }
+#endif
