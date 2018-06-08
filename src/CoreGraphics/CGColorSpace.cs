@@ -529,7 +529,7 @@ namespace CoreGraphics {
 			var x = CGColorSpaceCopyPropertyList (handle);
 			if (x == IntPtr.Zero)
 				return null;
-			return new CFPropertyList (x);
+			return new CFPropertyList (x, owns: true);
 		}
 		
 #endif // !COREBUILD

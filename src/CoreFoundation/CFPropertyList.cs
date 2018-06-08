@@ -37,11 +37,17 @@ namespace CoreFoundation
 			get { return handle; }
 		}
 
-		public CFPropertyList (IntPtr handle)
+		public CFPropertyList (IntPtr handle, bool owns)
 		{
 			this.handle = handle;
+			if (owns == false)
+				CFObject.CFRetain (handle);
 		}
 
+		public CFPropertyList (IntPtr handle) : this (handle, false)
+		{
+		}
+		
 		[DllImport (Constants.CoreFoundationLibrary)]
 		static extern IntPtr CFPropertyListCreateWithData (IntPtr allocator, IntPtr dataRef, CFPropertyListMutabilityOptions options, out CFPropertyListFormat format, /* CFError * */ out IntPtr error);
 
@@ -58,7 +64,7 @@ namespace CoreFoundation
 			IntPtr error;
 			var ret = CFPropertyListCreateWithData (IntPtr.Zero, data.Handle, options, out fmt, out error);
 			if (ret != null)
-				return (new CFPropertyList (ret), fmt, null);
+				return (new CFPropertyList (ret, owns: true), fmt, null);
 			return (null, CFPropertyListFormat.XmlFormat1, new NSError (error));
 		}
 
@@ -67,16 +73,19 @@ namespace CoreFoundation
 
 		public CFPropertyList DeepCopy (CFPropertyListMutabilityOptions options = CFPropertyListMutabilityOptions.MutableContainersAndLeaves)
 		{
-			return new CFPropertyList (CFPropertyListCreateDeepCopy (IntPtr.Zero, handle, options));
+			return new CFPropertyList (CFPropertyListCreateDeepCopy (IntPtr.Zero, handle, options), owns: true);
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /*CFDataRef*/IntPtr CFPropertyListCreateData(IntPtr allocator, IntPtr propertyList, CFPropertyListFormat format, CFPropertyListMutabilityOptions options, out IntPtr error);
 
-		public NSData AsData (CFPropertyListFormat format = CFPropertyListFormat.BinaryFormat1)
+		public (NSData data, NSError error) AsData (CFPropertyListFormat format = CFPropertyListFormat.BinaryFormat1)
 		{
 			IntPtr error;
-			return new NSData (CFPropertyListCreateData (IntPtr.Zero, handle, format, 0, out error));
+			var x = CFPropertyListCreateData (IntPtr.Zero, handle, format, 0, out error);
+			if (x == IntPtr.Zero)
+				return (null, new NSError (error));
+			return (new NSData (x), null);
 		}		
 
 		[DllImport (Constants.CoreFoundationLibrary)]
