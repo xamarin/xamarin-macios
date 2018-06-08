@@ -27,7 +27,7 @@ namespace Xamarin.iOS.Tasks {
 			});
 
 			if (isXcode10OrLater)
-				Assert.AreEqual ("Xcode 10 does not support watchOS 1 apps. Either upgrade to watchOS 2 apps, or use an earlier version of Xcode.", Engine.Logger.ErrorEvents[0].Message, "WK 1 error message");
+				Assert.AreEqual ("Xcode 10 does not support watchOS 1 apps. Either upgrade to watchOS 2 apps, or use an older version of Xcode.", Engine.Logger.ErrorEvents[0].Message, "WK 1 error message");
 		}
 
 		[Test]
