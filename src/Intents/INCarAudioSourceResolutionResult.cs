@@ -17,26 +17,26 @@ namespace Intents {
 
 		public static INCarAudioSourceResolutionResult GetSuccess (INCarAudioSource resolvedValue)
 		{
-#if IOS
+#if __WATCHOS__
+			throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+#elif __IOS__
 			if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
-#elif WATCH
-			if (WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (4, 0))
-#endif
 				return SuccessWithResolvedCarAudioSource (resolvedValue);
 			else
 				return SuccessWithResolvedValue (resolvedValue);
+#endif
 		}
 
 		public static INCarAudioSourceResolutionResult GetConfirmationRequired (INCarAudioSource valueToConfirm)
 		{
-#if IOS
+#if __WATCHOS__
+			throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+#elif __IOS__
 			if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
-#elif WATCH
-			if (WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (4, 0))
-#endif
 				return ConfirmationRequiredWithCarAudioSourceToConfirm (valueToConfirm);
 			else
 				return ConfirmationRequiredWithValueToConfirm (valueToConfirm);
+#endif
 		}
 	}
 }
