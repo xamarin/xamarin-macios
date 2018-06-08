@@ -14,9 +14,6 @@
 !missing-field! INWorkoutNameIdentifierHike not bound
 !missing-field! INWorkoutNameIdentifierSwim not bound
 !missing-protocol! INPlayMediaIntentHandling not bound
-!missing-protocol-conformance! INParameter should conform to NSCopying
-!missing-protocol-conformance! INSpatialEventTrigger should conform to NSCopying
-!missing-protocol-conformance! INSpeakableString should conform to NSCopying
 !missing-selector! +INRelevantShortcutStore::defaultStore not bound
 !missing-selector! +INUpcomingMediaManager::sharedManager not bound
 !missing-selector! +INVoiceShortcutCenter::sharedCenter not bound

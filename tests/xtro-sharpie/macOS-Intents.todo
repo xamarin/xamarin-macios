@@ -12,7 +12,6 @@
 !missing-field! INSetMessageAttributeIntentIdentifier not bound
 !missing-field! INStartAudioCallIntentIdentifier not bound
 !missing-field! INStartVideoCallIntentIdentifier not bound
-!missing-protocol-conformance! INSpeakableString should conform to NSCopying
 !missing-selector! +INDateComponentsResolutionResult::confirmationRequiredWithDateComponentsToConfirm: not bound
 !missing-selector! +INDateComponentsResolutionResult::disambiguationWithDateComponentsToDisambiguate: not bound
 !missing-selector! +INDateComponentsResolutionResult::successWithResolvedDateComponents: not bound
