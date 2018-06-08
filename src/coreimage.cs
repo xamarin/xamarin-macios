@@ -5427,4 +5427,58 @@ namespace CoreImage {
 		bool DisparityImage { get; set; }
 #endif
 	}
+
+	[CoreImageFilter]
+	[iOS (12,0)]
+	[TV (12,0)]
+	[NoMac]
+	[BaseType (typeof (CIFilter))]
+	interface CIAreaMinMax {
+		// FIXME https://github.com/xamarin/xamarin-macios/issues/4189
+	}
+
+	[CoreImageFilter]
+	[iOS (12,0)]
+	[TV (12,0)]
+	[NoMac]
+	[BaseType (typeof (CIFilter))]
+	interface CIDither {
+		// FIXME https://github.com/xamarin/xamarin-macios/issues/4189
+	}
+
+	[CoreImageFilter]
+	[iOS (12,0)]
+	[TV (12,0)]
+	[NoMac]
+	[BaseType (typeof (CIFilter))]
+	interface CIGuidedFilter {
+		// FIXME https://github.com/xamarin/xamarin-macios/issues/4189
+	}
+
+	[CoreImageFilter]
+	[iOS (12,0)]
+	[TV (12,0)]
+	[NoMac]
+	[BaseType (typeof (CIFilter))]
+	interface CIMeshGenerator {
+		// FIXME https://github.com/xamarin/xamarin-macios/issues/4189
+	}
+
+	[CoreImageFilter]
+	[iOS (12,0)]
+	[TV (12,0)]
+	[NoMac]
+	[BaseType (typeof (CIFilter))]
+	interface CIMix {
+		// FIXME https://github.com/xamarin/xamarin-macios/issues/4189
+	}
+
+	[CoreImageFilter]
+	[iOS (12,0)]
+	[TV (12,0)]
+	[NoMac]
+	[BaseType (typeof (CIFilter))]
+	interface CISampleNearest {
+		// FIXME https://github.com/xamarin/xamarin-macios/issues/4189
+	}
 }

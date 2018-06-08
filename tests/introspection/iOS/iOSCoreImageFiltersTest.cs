@@ -30,7 +30,19 @@ namespace Introspection {
 	[Preserve (AllMembers = true)]
 	public class iOSCoreImageFiltersTest : ApiCoreImageFiltersTest  {
 
-
+		protected override bool Skip (Type type)
+		{
+			switch (type.Name) {
+			// iOS 12 beta 1 ?removed? some filters
+			case "CIAztecCodeGenerator":
+			case "CIBarcodeGenerator":
+			case "CICode128BarcodeGenerator":
+			case "CIPdf417BarcodeGenerator":
+			case "CIQRCodeGenerator":
+				return true;
+			}
+			return base.Skip (type);
+		}
 	}
 }
 #endif // !__WATCHOS__
