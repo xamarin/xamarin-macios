@@ -223,6 +223,9 @@ namespace CoreSpotlight {
 		bool MultiValued { [Bind ("isMultiValued")] get; }
 	}
 
+#if XAMCORE_4_0
+	[NoTV]
+#endif
 	[iOS (9,0)]
 	[Mac (10,13, onlyOn64: true)]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
