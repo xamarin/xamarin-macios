@@ -82,10 +82,7 @@ namespace InstallSources
 		/// </summary>
 		/// <returns>The source path for native type.</returns>
 		/// <param name="path">Path.</param>
-		string GetSourcePathForGeneratedPath (string path)
-		{
-			return path;
-		}
+		string GetSourcePathForGeneratedPath (string path) => path;
 
 		/// <summary>
 		/// Returns the source path for the native common types.
