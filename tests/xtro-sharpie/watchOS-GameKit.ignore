@@ -1,7 +1,6 @@
 ## All members of the protocol are marked as not available on watchOS (but the protocols themselves are not decorated)
 !missing-protocol! GKChallengeListener not bound
 !missing-protocol! GKInviteEventListener not bound
-!missing-protocol! GKGameSessionEventListener not bound
 
 ## enum size declared after the enum, e.g. `typedef NSInteger GKPhotoSize;`, so we miss the metadata
 !unknown-native-enum! GKPhotoSize bound

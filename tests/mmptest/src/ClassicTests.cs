@@ -7,6 +7,8 @@ using System.Text;
 using NUnit.Framework;
 using System.Reflection;
 
+using Xamarin.Tests;
+
 namespace Xamarin.MMP.Tests
 {
 	public partial class MMPTests 
@@ -22,6 +24,8 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void Classic_SmokeTest ()
 		{
+			Configuration.AssertXcodeSupports32Bit ();
+
 			if (ShouldSkipClassicTest)
 				return;
 
@@ -33,6 +37,8 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void Classic_IntPtr_BindingTest () // Desk 88943, bug 22729, bug 22714
 		{
+			Configuration.AssertXcodeSupports32Bit ();
+
 			if (ShouldSkipClassicTest)
 				return;
 
@@ -47,6 +53,8 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void Classic_NewRefCount_Warns ()
 		{
+			Configuration.AssertXcodeSupports32Bit ();
+
 			if (ShouldSkipClassicTest)
 				return;
 

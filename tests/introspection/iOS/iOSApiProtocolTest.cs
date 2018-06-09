@@ -229,6 +229,12 @@ namespace Introspection {
 				case "HMHomeAccessControl":
 				case "HMAccessControl":
 					return true;
+				// iOS 12
+				case "ARDirectionalLightEstimate":
+				case "ARFrame":
+				case "ARLightEstimate":
+				case "NSManagedObjectID":
+					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
 				case "CLKComplicationTemplateCircularSmallRingImage":
@@ -497,6 +503,9 @@ namespace Introspection {
 				case "INRestaurantGuest":
 				case "INPerson":
 				case "HMCharacteristicEvent": // Selectors not available on 32 bit
+					return true;
+				// iOS 12
+				case "UNNotificationCategory":
 					return true;
 				}
 				break;

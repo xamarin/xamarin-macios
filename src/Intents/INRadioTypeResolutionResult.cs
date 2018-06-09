@@ -17,26 +17,26 @@ namespace Intents {
 
 		public static INRadioTypeResolutionResult GetSuccess (INRadioType resolvedValue)
 		{
-#if IOS
+#if __WATCHOS__
+			throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+#elif __IOS__
 			if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
-#elif WATCH
-			if (WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (4, 0))
-#endif
 				return SuccessWithResolvedRadioType (resolvedValue);
 			else
 				return SuccessWithResolvedValue (resolvedValue);
+#endif
 		}
 
 		public static INRadioTypeResolutionResult GetConfirmationRequired (INRadioType valueToConfirm)
 		{
-#if IOS
+#if __WATCHOS__
+			throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+#elif __IOS__
 			if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
-#elif WATCH
-			if (WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (4, 0))
-#endif
 				return ConfirmationRequiredWithRadioTypeToConfirm (valueToConfirm);
 			else
 				return ConfirmationRequiredWithValueToConfirm (valueToConfirm);
+#endif
 		}
 	}
 }

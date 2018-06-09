@@ -1825,6 +1825,7 @@ namespace Intents {
 
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INCarAirCirculationModeResolutionResult bound
+	[NoWatch]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INCarAirCirculationModeResolutionResult {
@@ -1874,6 +1875,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INCarAudioSourceResolutionResult bound
 	[BaseType (typeof (INIntentResolutionResult))]
+	[NoWatch]
 	[DisableDefaultCtor]
 	interface INCarAudioSourceResolutionResult {
 
@@ -1923,6 +1925,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INCarDefrosterResolutionResult bound
 	[BaseType (typeof (INIntentResolutionResult))]
+	[NoWatch]
 	[DisableDefaultCtor]
 	interface INCarDefrosterResolutionResult {
 
@@ -1972,6 +1975,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INCarSeatResolutionResult bound
 	[BaseType (typeof (INIntentResolutionResult))]
+	[NoWatch]
 	[DisableDefaultCtor]
 	interface INCarSeatResolutionResult {
 
@@ -3494,6 +3498,7 @@ namespace Intents {
 
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INRadioTypeResolutionResult bound
+	[NoWatch]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INRadioTypeResolutionResult {
@@ -3543,6 +3548,7 @@ namespace Intents {
 
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)]
+	[NoWatch]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INRelativeReferenceResolutionResult {
@@ -3592,6 +3598,7 @@ namespace Intents {
 
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)]
+	[NoWatch]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INRelativeSettingResolutionResult {
@@ -5513,7 +5520,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface INSpeakableString : INSpeakable, NSSecureCoding {
+	interface INSpeakableString : INSpeakable, NSCopying, NSSecureCoding {
 
 		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
 		[Internal]
@@ -7662,7 +7669,7 @@ namespace Intents {
 	[Watch (4,0), NoMac, iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface INParameter : NSSecureCoding {
+	interface INParameter : NSCopying, NSSecureCoding {
 
 		[Static]
 		[Export ("parameterForClass:keyPath:")]
@@ -8134,7 +8141,7 @@ namespace Intents {
 	[Watch (4,0), NoMac, iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface INSpatialEventTrigger : NSSecureCoding {
+	interface INSpatialEventTrigger : NSCopying, NSSecureCoding {
 
 		[Export ("initWithPlacemark:event:")]
 		IntPtr Constructor (CLPlacemark placemark, INSpatialEvent @event);

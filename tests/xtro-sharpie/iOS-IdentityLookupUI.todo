@@ -1,0 +1,7 @@
+!missing-selector! ILClassificationUIExtensionContext::isReadyForClassificationResponse not bound
+!missing-selector! ILClassificationUIExtensionContext::setReadyForClassificationResponse: not bound
+!missing-selector! ILClassificationUIExtensionViewController::classificationResponseForRequest: not bound
+!missing-selector! ILClassificationUIExtensionViewController::extensionContext not bound
+!missing-selector! ILClassificationUIExtensionViewController::prepareForClassificationRequest: not bound
+!missing-type! ILClassificationUIExtensionContext not bound
+!missing-type! ILClassificationUIExtensionViewController not bound

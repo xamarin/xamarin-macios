@@ -1,0 +1,33 @@
+!missing-enum! UIGraphicsImageRendererFormatRange not bound
+!missing-field! UIKitVersionNumber not bound
+!missing-field! UIKitVersionString not bound
+!missing-field! UITextContentTypeNewPassword not bound
+!missing-field! UITextContentTypeOneTimeCode not bound
+!missing-protocol! UIFocusItemContainer not bound
+!missing-protocol! UIFocusItemScrollableContainer not bound
+!missing-protocol! UIUserActivityRestoring not bound
+!missing-protocol-conformance! UIResponder should conform to UIUserActivityRestoring (defined in 'ActivityContinuation' category)
+!missing-protocol-conformance! UIScrollView should conform to UIFocusItemScrollableContainer
+!missing-protocol-conformance! UIView should conform to UIFocusItemContainer
+!missing-protocol-member! UIFocusEnvironment::focusItemContainer not found
+!missing-protocol-member! UIFocusEnvironment::parentFocusEnvironment not found
+!missing-protocol-member! UIFocusItem::didHintFocusMovement: not found
+!missing-protocol-member! UIFocusItem::frame not found
+!missing-protocol-member! UITextInputTraits::passwordRules not found
+!missing-protocol-member! UITextInputTraits::setPasswordRules: not found
+!missing-selector! +UIFocusSystem::focusSystemForEnvironment: not bound
+!missing-selector! +UITextInputPasswordRules::passwordRulesWithDescriptor: not bound
+!missing-selector! UIFocusMovementHint::interactionTransform not bound
+!missing-selector! UIFocusMovementHint::movementDirection not bound
+!missing-selector! UIFocusMovementHint::perspectiveTransform not bound
+!missing-selector! UIFocusMovementHint::rotation not bound
+!missing-selector! UIFocusMovementHint::translation not bound
+!missing-selector! UIFocusSystem::focusedItem not bound
+!missing-selector! UIFocusSystem::requestFocusUpdateToEnvironment: not bound
+!missing-selector! UIGraphicsImageRendererFormat::preferredRange not bound
+!missing-selector! UIGraphicsImageRendererFormat::setPreferredRange: not bound
+!missing-selector! UILabel::enablesMarqueeWhenAncestorFocused not bound
+!missing-selector! UILabel::setEnablesMarqueeWhenAncestorFocused: not bound
+!missing-selector! UITextInputPasswordRules::passwordRulesDescriptor not bound
+!missing-type! UIFocusMovementHint not bound
+!missing-type! UITextInputPasswordRules not bound

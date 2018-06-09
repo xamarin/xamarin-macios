@@ -103,3 +103,6 @@
 !missing-type! QCPlugInViewController not bound
 !missing-type! QCRenderer not bound
 !missing-type! QCView not bound
+!unknown-field! QCCompositionInputRSSArticleDurationKey bound
+!unknown-field! QCCompositionInputRSSFeedURLKey bound
+!unknown-field! QCCompositionProtocolRSSVisualizer bound

@@ -1,0 +1,8 @@
+!unknown-field! kCNNetworkInfoKeyBSSID bound
+!unknown-field! kCNNetworkInfoKeySSID bound
+!unknown-field! kCNNetworkInfoKeySSIDData bound
+!unknown-pinvoke! CNCopyCurrentNetworkInfo bound
+!unknown-pinvoke! CNCopySupportedInterfaces bound
+!unknown-pinvoke! CNMarkPortalOffline bound
+!unknown-pinvoke! CNMarkPortalOnline bound
+!unknown-pinvoke! CNSetSupportedSSIDs bound

@@ -1,0 +1,7 @@
+!missing-field! kCMSampleBufferAttachmentKey_DroppedFrameReason not bound
+!missing-field! kCMSampleBufferAttachmentKey_StillImageLensStabilizationInfo not bound
+!missing-field! kCMSampleBufferLensStabilizationInfo_Active not bound
+!missing-field! kCMSampleBufferLensStabilizationInfo_Off not bound
+!missing-field! kCMSampleBufferLensStabilizationInfo_OutOfRange not bound
+!missing-field! kCMSampleBufferLensStabilizationInfo_Unavailable not bound
+!missing-pinvoke! CMTimeFoldIntoRange is not bound

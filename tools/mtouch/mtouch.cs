@@ -376,6 +376,7 @@ namespace Xamarin.Bundler
 				var plist = FromPList (plist_path);
 				var version = plist.GetString ("CFBundleShortVersionString");
 				xcode_version = new Version (version);
+				xcode_bundle_version = plist.GetString ("CFBundleVersion");
 			} else {
 				throw ErrorHelper.CreateError (58, "The Xcode.app '{0}' is invalid (the file '{1}' does not exist).", Path.GetDirectoryName (Path.GetDirectoryName (developer_directory)), plist_path);
 			}

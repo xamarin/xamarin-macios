@@ -1,0 +1,4 @@
+!missing-pinvoke! ADClampedBannerSize is not bound
+!missing-selector! ADInterstitialAdPresentationViewController::initForInterstitialAd: not bound
+!missing-selector! ADInterstitialAdPresentationViewController::shouldTestVisibilityAtPoint: not bound
+!missing-type! ADInterstitialAdPresentationViewController not bound

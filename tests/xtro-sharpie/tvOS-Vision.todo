@@ -1,0 +1,14 @@
+!missing-protocol! VNRequestRevisionProviding not bound
+!missing-protocol-conformance! VNObservation should conform to VNRequestRevisionProviding
+!missing-selector! +VNDetectedObjectObservation::observationWithRequestRevision:boundingBox: not bound
+!missing-selector! +VNFaceObservation::faceObservationWithRequestRevision:boundingBox:roll:yaw: not bound
+!missing-selector! +VNRequest::currentRevision not bound
+!missing-selector! +VNRequest::defaultRevision not bound
+!missing-selector! +VNRequest::supportedRevisions not bound
+!missing-selector! VNFaceObservation::roll not bound
+!missing-selector! VNFaceObservation::yaw not bound
+!missing-selector! VNRecognizedObjectObservation::labels not bound
+!missing-selector! VNRequest::revision not bound
+!missing-selector! VNRequest::setRevision: not bound
+!missing-type! VNRecognizedObjectObservation not bound
+!wrong-base-type! VNTextObservation expected VNRectangleObservation actual VNDetectedObjectObservation

@@ -162,6 +162,12 @@ namespace Introspection {
 					return true;
 				case "MPSImageAllocator": // Header shows NSSecureCoding, but intro gives: MPSImageAllocator conforms to NSSecureCoding but SupportsSecureCoding returned false
 					return true;
+				// Xcode 10
+				case "ARDirectionalLightEstimate":
+				case "ARFrame":
+				case "ARLightEstimate":
+				case "NSManagedObjectID":
+					return true;
 				}
 				break;
 			// conformance added in Xcode 8 (iOS 10 / macOS 10.12)

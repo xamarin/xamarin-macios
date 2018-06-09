@@ -908,6 +908,13 @@ INTENTS_SOURCES = \
 	Intents/INStartWorkoutIntent.cs \
 	Intents/INWorkoutGoalUnitTypeResolutionResult.cs \
 	Intents/INWorkoutLocationTypeResolutionResult.cs \
+	Intents/INCarAirCirculationModeResolutionResult.watchOS.cs \
+	Intents/INCarAudioSourceResolutionResult.watchOS.cs \
+	Intents/INCarDefrosterResolutionResult.watchOS.cs \
+	Intents/INCarSeatResolutionResult.watchOS.cs \
+	Intents/INRadioTypeResolutionResult.watchOS.cs \
+	Intents/INRelativeReferenceResolutionResult.watchOS.cs \
+	Intents/INRelativeSettingResolutionResult.watchOS.cs \
 
 # IOSurface
 IOSURFACE_CORE_SOURCES = \
@@ -937,6 +944,7 @@ MAPKIT_CORE_SOURCES = \
 
 MAPKIT_SOURCES = \
 	MapKit/MKCircle.cs \
+	MapKit/MKCompat.cs \
 	MapKit/MKDirections.cs \
 	MapKit/MKFeatureDisplayPriority.cs \
 	MapKit/MKGeodesicPolyline.cs \
