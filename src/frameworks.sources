@@ -1642,6 +1642,7 @@ COMMON_FRAMEWORKS =         \
 MAC_FRAMEWORKS =            \
 	$(COMMON_FRAMEWORKS)    \
 	Accounts                \
+	AdSupport               \
 	AppKit                  \
 	AudioToolbox            \
 	AudioUnit               \
