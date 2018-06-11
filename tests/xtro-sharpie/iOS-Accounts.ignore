@@ -1,0 +1,4 @@
+# Exposed in iOS 12 SDK but already deprecated in macOS (10.13) SDK - no point in exposing them
+!missing-field! ACAccountTypeIdentifierLinkedIn not bound
+!missing-field! ACLinkedInAppIdKey not bound
+!missing-field! ACLinkedInPermissionsKey not bound
