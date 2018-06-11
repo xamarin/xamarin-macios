@@ -1723,6 +1723,7 @@ IOS_FRAMEWORKS =         \
 	AudioUnit \
 	BusinessChat \
 	CallKit \
+	CarPlay \
 	CFNetwork \
 	ClassKit \
 	CloudKit \
