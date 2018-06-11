@@ -115,7 +115,7 @@ namespace CoreBluetooth {
 		[Field ("CBConnectPeripheralOptionNotifyOnNotificationKey")]
 		NSString OptionNotifyOnNotificationKey { get; }
 
-		[NoMac] // xcode 9.2 beta 2 does not include this inside its macOS header files
+		[Mac (10,14)]
 		[iOS (11,2)][TV (11,2)][Watch (4,2)]
 		[Field ("CBConnectPeripheralOptionStartDelayKey")]
 		NSString OptionStartDelayKey { get; }
