@@ -40,11 +40,9 @@ namespace Accounts {
 		NSString ErrorDomain { get; }
 #endif
 
-#if !MONOMAC
-		[iOS (7,0)]
+		[iOS (7,0)][Mac (10,14, onlyOn64: true)]
 		[Export ("userFullName")]
 		string UserFullName { get; }
-#endif
 	}
 
 	[Mac (10,8, onlyOn64 : true)]
