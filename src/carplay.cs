@@ -703,6 +703,7 @@ namespace CarPlay {
 
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
 	[BaseType (typeof (CPTemplate))]
+	[DisableDefaultCtor]
 	interface CPVoiceControlTemplate {
 
 		[Export ("initWithTitleVariants:animatedImage:")]
