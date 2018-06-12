@@ -28,6 +28,7 @@
 /src/audiotoolbox.cs @dalexsoto
 /src/AudioUnit @dalexsoto
 /src/audiounit.cs @dalexsoto
+/src/authenticationservices.cs @spouliot
 /src/AVFoundation @mandel-macaque @dalexsoto
 /src/avfoundation.cs @mandel-macaque @dalexsoto
 /src/AVKit @spouliot @dalexsoto

@@ -418,6 +418,11 @@ namespace Introspection {
 			case "MDLColorSwatchTexture":
 				// they don't make sense without extra arguments
 				return true;
+			case "ASCredentialProviderViewController":
+				// goal is to "provides a standard interface for creating a credential provider extension", not a custom one
+				if (ctor.ToString () == "Void .ctor(String, NSBundle)")
+					return true;
+				break;
 			}
 
 			var ep = ctor.GetParameters ();

@@ -282,6 +282,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "ClassKit", "ClassKit", 11,4 },
 
+				{ "AuthenticationServices", "AuthenticationServices", 12,0 },
 				{ "CarPlay", "CarPlay", 12,0 },
 			};
 		}
