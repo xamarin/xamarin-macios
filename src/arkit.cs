@@ -211,7 +211,7 @@ namespace ARKit {
 		}
 
 #if !XAMCORE_4_0
-		[Obsolete ("Use 'ProjectPoint' instead.")]
+		[Obsolete ("Use 'Project' instead.")]
 		[Wrap ("Project (point, orientation, viewportSize)")]
 		CGPoint GetProjectPoint (Vector3 point, UIInterfaceOrientation orientation, CGSize viewportSize);
 #endif
@@ -1187,6 +1187,7 @@ namespace ARKit {
 	[iOS (12,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(ARAnchor))]
+	[DisableDefaultCtor]
 	interface AREnvironmentProbeAnchor {
 		[Export ("initWithTransform:extent:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -1241,7 +1242,7 @@ namespace ARKit {
 		[Static]
 		[Export ("referenceObjectsInGroupNamed:bundle:")]
 		[return: NullAllowed]
-		NSSet<ARReferenceObject> GetReferenceObjectsInGroup (string name, [NullAllowed] NSBundle bundle);
+		NSSet<ARReferenceObject> GetReferenceObjects (string resourceGroupName, [NullAllowed] NSBundle bundle);
 
 		[Export ("exportObjectToURL:previewImage:error:")]
 		bool ExportObject (NSUrl url, [NullAllowed] UIImage previewImage, [NullAllowed] out NSError error);
@@ -1249,16 +1250,23 @@ namespace ARKit {
 		[Export ("referenceObjectByApplyingTransform:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		ARReferenceObject GetReferenceObject (Matrix4 transform);
+
+		[iOS (12,0)]
+		[Field ("ARReferenceObjectArchiveExtension")]
+		NSString ArchiveExtension { get; }
 	}
 
 	[iOS (12,0)]
+	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(ARAnchor))]
+	[DisableDefaultCtor]
 	interface ARObjectAnchor {
 		[Export ("referenceObject", ArgumentSemantic.Strong)]
 		ARReferenceObject ReferenceObject { get; }
 	}
 
 	[iOS (12,0)]
+	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface ARWorldMap : NSCopying, NSSecureCoding {
