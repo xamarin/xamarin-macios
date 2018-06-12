@@ -248,9 +248,9 @@ function install_specific_xcode () {
 
 	# To test this script with new Xcode versions, copy the downloaded file to $XCODE_DMG,
 	# uncomment the following curl line, and run ./system-dependencies.sh --provision-xcode
-	if test -f "~/Downloads/$XCODE_NAME"; then
-		log "Found XCode $XCODE_VERSION in your ~/Downloads folder, copying that version instead."
-		cp "~/Downloads/$XCODE_NAME" "$XCODE_DMG"
+	if test -f "$HOME/Downloads/$XCODE_NAME"; then
+		log "Found Xcode $XCODE_VERSION in your ~/Downloads folder, copying that version instead."
+		cp "$HOME/Downloads/$XCODE_NAME" "$XCODE_DMG"
 	else
 		curl -L $XCODE_URL > $XCODE_DMG
 	fi
