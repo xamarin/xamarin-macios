@@ -234,7 +234,8 @@ function install_visual_studio () {
 function install_specific_xcode () {
 	local XCODE_URL=`grep XCODE$1_URL= Make.config | sed 's/.*=//'`
 	local XCODE_VERSION=`grep XCODE$1_VERSION= Make.config | sed 's/.*=//'`
-	local XCODE_ROOT=$(dirname $(dirname $XCODE$1_DEVELOPER_ROOT))
+	local XCODE_DEVELOPER_ROOT="$2"
+	local XCODE_ROOT="$(dirname "$(dirname "$XCODE_DEVELOPER_ROOT")")"
 
 	if test -z $XCODE_URL; then
 		fail "No XCODE$1_URL set in Make.config, cannot provision"
@@ -319,7 +320,7 @@ function check_specific_xcode () {
 	if ! test -d $XCODE_DEVELOPER_ROOT; then
 		if ! test -z $PROVISION_XCODE; then
 			if ! test -z $ENABLE_XAMARIN; then
-				install_specific_xcode $1
+				install_specific_xcode "$1" "$XCODE_DEVELOPER_ROOT"
 			else
 				fail "Automatic provisioning of Xcode is only supported for provisioning internal build bots."
 				fail "Please download and install Xcode $XCODE_VERSION here: https://developer.apple.com/downloads/index.action?name=Xcode"
