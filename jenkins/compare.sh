@@ -49,20 +49,18 @@ else
 	URL_GENERATOR="$BUILD_URL/Generator_20Diff"
 fi
 
-printf "✅ [API Diff (from PR only)](%s)" "$URL_API" >> "$WORKSPACE/jenkins/pr-comments.md"
 if ! grep "href=" jenkins-results/apicomparison/api-diff.html >/dev/null 2>&1; then
-	printf " (no change)" >> "$WORKSPACE/jenkins/pr-comments.md"
+	printf "✅ [API Diff (from PR only)](%s) (no change)" "$URL_API" >> "$WORKSPACE/jenkins/pr-comments.md"
 elif perl -0777 -pe 's/<script type="text\/javascript">.*?<.script>/script removed/gs' jenkins-results/apicomparison/*.html | grep data-is-breaking; then
-	printf " (🔥 breaking changes 🔥)" >> "$WORKSPACE/jenkins/pr-comments.md"
+	printf "⚠️ [API Diff (from PR only)](%s) (🔥 breaking changes 🔥)" "$URL_API" >> "$WORKSPACE/jenkins/pr-comments.md"
 else
-	printf " (please review changes)" >> "$WORKSPACE/jenkins/pr-comments.md"
+	printf "ℹ️ [API Diff (from PR only)](%s) (please review changes)" "$URL_API" >> "$WORKSPACE/jenkins/pr-comments.md"
 fi
 printf "\\n" >> "$WORKSPACE/jenkins/pr-comments.md"
 
-printf "✅ [Generator Diff](%s)" "$URL_GENERATOR" >> "$WORKSPACE/jenkins/pr-comments.md"
 if grep "^[+-][^+-]" jenkins-results/generator-diff/generator.diff | grep -v "^.[[]assembly: AssemblyInformationalVersion" | grep -v "^[+-][[:space:]]*internal const string Revision =" >/dev/null 2>&1; then
-	printf " (please review changes)" >> "$WORKSPACE/jenkins/pr-comments.md"
+	printf "ℹ️ [Generator Diff](%s) (please review changes)" "$URL_GENERATOR" >> "$WORKSPACE/jenkins/pr-comments.md"
 else
-	printf " (only version changes)" >> "$WORKSPACE/jenkins/pr-comments.md"
+	printf "✅ [Generator Diff](%s) (only version changes)" "$URL_GENERATOR" >> "$WORKSPACE/jenkins/pr-comments.md"
 fi
 printf "\\n" >> "$WORKSPACE/jenkins/pr-comments.md"
