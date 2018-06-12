@@ -621,44 +621,30 @@
 !missing-protocol! NSInputServerMouseTracker not bound
 !missing-protocol! NSInputServiceProvider not bound
 !missing-protocol! NSTextAttachmentCell not bound
-!missing-protocol! NSTextInput not bound
 !missing-protocol! NSTextLayoutOrientationProvider not bound
 !missing-protocol! NSTokenFieldCellDelegate not bound
 !missing-protocol! NSUserInterfaceItemSearching not bound
-!missing-protocol-conformance! NSApplication should conform to NSUserInterfaceValidations
-!missing-protocol-conformance! NSButton should conform to NSUserInterfaceValidations
 !missing-protocol-conformance! NSCollectionViewItem should conform to NSCollectionViewElement
 !missing-protocol-conformance! NSColorPicker should conform to NSColorPickingDefault
-!missing-protocol-conformance! NSDocument should conform to NSFilePresenter
-!missing-protocol-conformance! NSDocument should conform to NSUserInterfaceValidations
-!missing-protocol-conformance! NSDocumentController should conform to NSUserInterfaceValidations
 !missing-protocol-conformance! NSFontAssetRequest should conform to NSProgressReporting
 !missing-protocol-conformance! NSLayoutConstraint should conform to NSAnimatablePropertyContainer
-!missing-protocol-conformance! NSMatrix should conform to NSUserInterfaceValidations
 !missing-protocol-conformance! NSMenu should conform to NSAccessibilityElement
 !missing-protocol-conformance! NSMenuItem should conform to NSAccessibilityElement
-!missing-protocol-conformance! NSMenuItem should conform to NSValidatedUserInterfaceItem
 !missing-protocol-conformance! NSOpenGLContext should conform to NSLocking
 !missing-protocol-conformance! NSOutlineView should conform to NSAccessibilityOutline
 !missing-protocol-conformance! NSPageController should conform to NSAnimatablePropertyContainer
 !missing-protocol-conformance! NSPathCell should conform to NSOpenSavePanelDelegate
 !missing-protocol-conformance! NSSplitViewItem should conform to NSAnimatablePropertyContainer
 !missing-protocol-conformance! NSTableView should conform to NSTextViewDelegate
-!missing-protocol-conformance! NSTableView should conform to NSUserInterfaceValidations
 !missing-protocol-conformance! NSText should conform to NSChangeSpelling
 !missing-protocol-conformance! NSText should conform to NSIgnoreMisspelledWords
 !missing-protocol-conformance! NSTextAttachment should conform to NSTextAttachmentContainer
 !missing-protocol-conformance! NSTextAttachmentCell should conform to NSTextAttachmentCell
 !missing-protocol-conformance! NSTextContainer should conform to NSTextLayoutOrientationProvider
-!missing-protocol-conformance! NSTextField should conform to NSUserInterfaceValidations
-!missing-protocol-conformance! NSTextView should conform to NSTextInput
 !missing-protocol-conformance! NSTextView should conform to NSTextLayoutOrientationProvider
-!missing-protocol-conformance! NSTextView should conform to NSUserInterfaceValidations
 !missing-protocol-conformance! NSTitlebarAccessoryViewController should conform to NSAnimatablePropertyContainer
-!missing-protocol-conformance! NSToolbarItem should conform to NSValidatedUserInterfaceItem
 !missing-protocol-conformance! NSView should conform to NSAnimatablePropertyContainer
 !missing-protocol-conformance! NSWindow should conform to NSAnimatablePropertyContainer
-!missing-protocol-conformance! NSWindow should conform to NSUserInterfaceValidations
 !missing-protocol-member! NSApplicationDelegate::applicationDidChangeOcclusionState: not found
 !missing-protocol-member! NSBrowserDelegate::browser:draggingImageForRowsWithIndexes:inColumn:withEvent:offset: not found
 !missing-protocol-member! NSCollectionViewDelegate::collectionView:draggingImageForItemsAtIndexes:withEvent:offset: not found
@@ -920,7 +906,6 @@
 !missing-selector! NSObject::fontManager:willIncludeFont: not bound
 !missing-selector! NSObject::layer:shouldInheritContentsScale:fromWindow: not bound
 !missing-selector! NSObject::namesOfPromisedFilesDroppedAtDestination: not bound
-!missing-selector! NSObject::objectDidBeginEditing: not bound
 !missing-selector! NSObject::panel:compareFilename:with:caseSensitive: not bound
 !missing-selector! NSObject::panel:directoryDidChange: not bound
 !missing-selector! NSObject::panel:isValidFilename: not bound
@@ -929,7 +914,6 @@
 !missing-selector! NSObject::pasteboardChangedOwner: not bound
 !missing-selector! NSObject::tableView:writeRows:toPasteboard: not bound
 !missing-selector! NSObject::validateMenuItem: not bound
-!missing-selector! NSObject::validateToolbarItem: not bound
 !missing-selector! NSObject::view:stringForToolTip:point:userData: not bound
 !missing-selector! NSObjectController::fetchWithRequest:merge:error: not bound
 !missing-selector! NSObjectController::managedObjectContext not bound
@@ -1151,3 +1135,20 @@
 
 ## NSGlyphStorage protocol not bound
 !missing-protocol-conformance! NSLayoutManager should conform to NSGlyphStorage (defined in 'NSGlyphGeneration' category)
+
+## Fixed in XAMCORE_4_0
+!missing-protocol-conformance! NSController should conform to NSEditor
+!missing-protocol-conformance! NSDocument should conform to NSUserInterfaceValidations
+!missing-protocol-conformance! NSDocumentController should conform to NSUserInterfaceValidations
+!missing-protocol-conformance! NSTextView should conform to NSColorChanging
+
+## NSStandardKeyBindingResponding is strange case - technically on NSResponder but responder subclasses can implement any that make sense.
+!missing-protocol-conformance! NSTextView should conform to NSStandardKeyBindingResponding
+!missing-protocol-conformance! NSResponder should conform to NSStandardKeyBindingResponding (defined in 'NSStandardKeyBindingMethods' category)
+
+## 41367075 NSSecureTextField header claims NSViewToolTipOwner but does not respond to selector
+!missing-protocol-conformance! NSSecureTextField should conform to NSViewToolTipOwner
+
+## DoCommandBySelector conflicts with NSTextViewDelegate in generated code
+!missing-protocol-member! NSTextInput::doCommandBySelector: not found
+

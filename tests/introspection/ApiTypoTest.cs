@@ -479,6 +479,7 @@ namespace Introspection
 			"Udp",
 			"Unconfigured",
 			"Undecodable",
+			"Unemphasized",
 			"Underrun",
 			"Unflagged",
 			"Unfocusing",

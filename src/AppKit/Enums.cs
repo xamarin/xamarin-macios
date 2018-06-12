@@ -23,6 +23,7 @@
 //
 using System;
 using ObjCRuntime;
+using Foundation;
 
 namespace AppKit {
 
@@ -137,6 +138,7 @@ namespace AppKit {
 	}
 
 	[Native]
+	[Deprecated (PlatformName.MacOSX, 10, 14)]
 	public enum NSBackingStore : ulong {
 		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'Buffered' instead.")]
 		Retained, 
@@ -337,7 +339,14 @@ namespace AppKit {
 
 	[Native]
 	public enum NSBackgroundStyle : long {
-		Light, Dark, Raised, Lowered
+		Normal = 0,
+		[Deprecated (PlatformName.MacOSX, 10, 14, message : "In some appearances, Light may refer to a state where the background is actually a dark color. Use Normal instead.")]
+		Light = Normal,
+		Emphasized,
+		[Deprecated (PlatformName.MacOSX, 10, 14, message : "Dark is not a reliable indicator of background states with visually dark or saturated colors. Use Emphasized instead.")]
+		Dark = Emphasized, 
+		Raised, 
+		Lowered
 	}
 #endregion
 
@@ -877,6 +886,7 @@ namespace AppKit {
 		DocModal	       					= 1 << 6,
 		NonactivatingPanel     				= 1 << 7,
 		TexturedBackground     				= 1 << 8,
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		Unscaled	       					= 1 << 11,
 		UnifiedTitleAndToolbar 				= 1 << 12,
 		Hud		       						= 1 << 13,
@@ -984,8 +994,10 @@ namespace AppKit {
 	[Native]
 	public enum NSBoxType : ulong {
 		NSBoxPrimary,
+		[Advice ("Has been identical to 'NSBoxPrimary'.")]
 		NSBoxSecondary,
 		NSBoxSeparator,
+		[Advice ("'NSBoxOldStyle' is discouraged in modern application design. It should be replaced with either 'NSBoxPrimary' or 'NSBoxCustom'.")]
 		NSBoxOldStyle,
 		NSBoxCustom
 	};
@@ -1487,21 +1499,34 @@ namespace AppKit {
 	}
 
 	[Native]
+	[Deprecated (PlatformName.MacOSX, 10, 14)]	
 	public enum NSScrollArrowPosition : ulong {
 		MaxEnd, MinEnd, DefaultSetting, None
 	}
 
 	[Native]
 	public enum NSUsableScrollerParts : ulong {
-		NoScroller, OnlyArrows, All
+		NoScroller, 
+		[Deprecated (PlatformName.MacOSX, 10, 14)]		
+		OnlyArrows, 
+		All
 	}
 
 	[Native]
 	public enum NSScrollerPart : ulong {
-		None, DecrementPage, Knob, IncrementPage, DecrementLine, IncrementLine, KnobSlot
+		None,
+		DecrementPage,
+		Knob,
+		IncrementPage,
+		[Deprecated (PlatformName.MacOSX, 10, 14)]	
+		DecrementLine,
+		[Deprecated (PlatformName.MacOSX, 10, 14)]	
+		IncrementLine,
+		KnobSlot
 	}
 
 	[Native]
+	[Deprecated (PlatformName.MacOSX, 10, 14)]		
 	public enum NSScrollerArrow : ulong {
 		IncrementArrow, DecrementArrow
 	}
@@ -2101,6 +2126,7 @@ namespace AppKit {
 	}
 
 	[Native]
+	[Deprecated (PlatformName.MacOSX, 10, 14)]
 	public enum NSProgressIndicatorThickness : ulong {
 		Small = 10,
 		Regular = 14,
@@ -2139,6 +2165,7 @@ namespace AppKit {
 	[Native]
 	public enum NSWindowLevel : long {
 		Normal = 0,
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		Dock = 20,
 		Floating = 3,
 		MainMenu = 24, 
@@ -2499,8 +2526,11 @@ namespace AppKit {
 #region NSVisualEffectView
 	[Native]
 	public enum NSVisualEffectMaterial : long {
+		[Advice ("Use a specific semantic material instead.")]
 		AppearanceBased,
+		[Advice ("Use a semantic material instead.  To force the appearance of a view hierarchy, set the 'Appearance' property to an appropriate NSAppearance value.")]
 		Light,
+		[Advice ("Use a semantic material instead.  To force the appearance of a view hierarchy, set the 'Appearance' property to an appropriate NSAppearance value.")]
 		Dark,
 		Titlebar,
 		Selection,
@@ -2511,9 +2541,29 @@ namespace AppKit {
 		[Mac (10,11)]
 		Sidebar,
 		[Mac (10,11)]
+		[Advice ("Use a semantic material instead.  To force the appearance of a view hierarchy, set the 'Appearance' property to an appropriate NSAppearance value.")]
 		MediumLight,
 		[Mac (10,11)]
+		[Advice ("Use a semantic material instead.  To force the appearance of a view hierarchy, set the 'Appearance' property to an appropriate NSAppearance value.")]
 		UltraDark,
+		[Mac (10,14)]
+		HeaderView = 10,
+		[Mac (10,14)]
+		Sheet = 11,
+		[Mac (10,14)]
+		WindowBackground = 12,
+		[Mac (10,14)]
+		HUDWindow = 13,
+		[Mac (10,14)]
+		FullScreenUI = 15,
+		[Mac (10,14)]
+		ToolTip = 17,
+		[Mac (10,14)]
+		ContentBackground = 18,
+		[Mac (10,14)]
+		UnderWindowBackground = 21,
+		[Mac (10,14)]
+		UnderPageBackground = 22,
 	}
 
 	[Native]
@@ -2848,5 +2898,15 @@ namespace AppKit {
 		Fill,
 		FillEqually,
 		FillProportionally,
+	}
+
+	[Mac (10,14, onlyOn64: true)]
+	[Native]
+	public enum NSColorSystemEffect : long {
+		None,
+		Pressed,
+		DeepPressed,
+		Disabled,
+		Rollover
 	}
 }
