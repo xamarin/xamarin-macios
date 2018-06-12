@@ -2631,40 +2631,37 @@ namespace CoreImage {
 		CIVector Extent { get; set; }
 	}
 
+	[CoreImageFilter]
+	[Abstract]
+	[iOS (9,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIReductionFilter {
+		[CoreImageFilterProperty ("inputExtent")]
+		CIVector Extent { get; set; }
+	}
+
 	[CoreImageFilter (StringCtorVisibility = MethodAttributes.Public)]
 	[iOS (9,0)]
-	[BaseType (typeof (CIFilter))]
+	[BaseType (typeof (CIReductionFilter))]
 	interface CIAreaMaximum {
-
-		[CoreImageFilterProperty ("inputExtent")]
-		CIVector Extent { get; set; }
 	}
 
 	[CoreImageFilter]
 	[iOS (9,0)]
-	[BaseType (typeof (CIFilter))]
+	[BaseType (typeof (CIReductionFilter))]
 	interface CIAreaMaximumAlpha {
-
-		[CoreImageFilterProperty ("inputExtent")]
-		CIVector Extent { get; set; }
 	}
 
 	[CoreImageFilter]
 	[iOS (9,0)]
-	[BaseType (typeof (CIFilter))]
+	[BaseType (typeof (CIReductionFilter))]
 	interface CIAreaMinimum {
-
-		[CoreImageFilterProperty ("inputExtent")]
-		CIVector Extent { get; set; }
 	}
 
 	[CoreImageFilter]
 	[iOS (9,0)]
-	[BaseType (typeof (CIFilter))]
+	[BaseType (typeof (CIReductionFilter))]
 	interface CIAreaMinimumAlpha {
-
-		[CoreImageFilterProperty ("inputExtent")]
-		CIVector Extent { get; set; }
 	}
 
 	[CoreImageFilter (StringCtorVisibility = MethodAttributes.Public)]
@@ -3045,11 +3042,8 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[Mac (10,9)]
-	[BaseType (typeof (CIFilter))]
+	[BaseType (typeof (CIReductionFilter))]
 	interface CIColumnAverage {
-
-		[CoreImageFilterProperty ("inputExtent")]
-		CIVector Extent { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -5431,54 +5425,67 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[iOS (12,0)]
 	[TV (12,0)]
-	[NoMac]
-	[BaseType (typeof (CIFilter))]
+	[Mac (10,14, onlyOn64: true)]
+	[BaseType (typeof (CIReductionFilter))]
 	interface CIAreaMinMax {
-		// FIXME https://github.com/xamarin/xamarin-macios/issues/4189
 	}
 
 	[CoreImageFilter]
 	[iOS (12,0)]
 	[TV (12,0)]
-	[NoMac]
+	[Mac (10,14, onlyOn64: true)]
 	[BaseType (typeof (CIFilter))]
 	interface CIDither {
-		// FIXME https://github.com/xamarin/xamarin-macios/issues/4189
+		[CoreImageFilterProperty ("inputIntensity")]
+		float Intensity { get; set; }
 	}
 
 	[CoreImageFilter]
 	[iOS (12,0)]
 	[TV (12,0)]
-	[NoMac]
+	[Mac (10,14, onlyOn64: true)]
 	[BaseType (typeof (CIFilter))]
 	interface CIGuidedFilter {
-		// FIXME https://github.com/xamarin/xamarin-macios/issues/4189
+		[CoreImageFilterProperty ("inputGuideImage")]
+		CIImage GuideImage { get; set; }
+		[CoreImageFilterProperty ("inputEpsilon")]
+		float Epsilon { get; set; }
+		[CoreImageFilterProperty ("inputRadius")]
+		float Radius { get; set; }
 	}
 
 	[CoreImageFilter]
 	[iOS (12,0)]
 	[TV (12,0)]
-	[NoMac]
+	[Mac (10,14, onlyOn64: true)]
 	[BaseType (typeof (CIFilter))]
 	interface CIMeshGenerator {
-		// FIXME https://github.com/xamarin/xamarin-macios/issues/4189
+		// https://github.com/xamarin/xamarin-macios/issues/4226
+		//[CoreImageFilterProperty ("inputMesh")]
+		//CIVector [] Mesh { get; set; }
+		[CoreImageFilterProperty ("inputWidth")]
+		float Width { get; set; }
+		[CoreImageFilterProperty ("inputColor")]
+		CIColor Color { get; set; }
 	}
 
 	[CoreImageFilter]
 	[iOS (12,0)]
 	[TV (12,0)]
-	[NoMac]
+	[Mac (10,14, onlyOn64: true)]
 	[BaseType (typeof (CIFilter))]
 	interface CIMix {
-		// FIXME https://github.com/xamarin/xamarin-macios/issues/4189
+		[CoreImageFilterProperty ("inputBackgroundImage")]
+		CIImage BackgroundImage { get; set; }
+		[CoreImageFilterProperty ("inputAmount")]
+		float Amount { get; set; }
 	}
 
 	[CoreImageFilter]
 	[iOS (12,0)]
 	[TV (12,0)]
-	[NoMac]
+	[Mac (10,14, onlyOn64: true)]
 	[BaseType (typeof (CIFilter))]
 	interface CISampleNearest {
-		// FIXME https://github.com/xamarin/xamarin-macios/issues/4189
 	}
 }
