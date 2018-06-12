@@ -510,7 +510,7 @@ namespace ClockKit {
 		[Export ("entryWithDate:complicationTemplate:timelineAnimationGroup:")]
 		CLKComplicationTimelineEntry Create (NSDate date, CLKComplicationTemplate complicationTemplate, [NullAllowed] string timelineAnimationGroup);
 
-		[Export ("date", ArgumentSemantic.Assign)]
+		[Export ("date", ArgumentSemantic.Retain)]
 		NSDate Date { get; set; }
 
 		[Export ("complicationTemplate", ArgumentSemantic.Copy)]
@@ -535,16 +535,16 @@ namespace ClockKit {
 		[Export ("accessibilityLabel")]
 		string AccessibilityLabel { get; set; }
 
-		[NullAllowed, Export ("tintColor", ArgumentSemantic.Assign)]
+		[NullAllowed, Export ("tintColor", ArgumentSemantic.Retain)]
 		UIColor TintColor { get; set; }
 
-		[Export ("onePieceImage", ArgumentSemantic.Assign)]
+		[Export ("onePieceImage", ArgumentSemantic.Retain)]
 		UIImage OnePieceImage { get; set; }
 
-		[NullAllowed, Export ("twoPieceImageBackground", ArgumentSemantic.Assign)]
+		[NullAllowed, Export ("twoPieceImageBackground", ArgumentSemantic.Retain)]
 		UIImage TwoPieceImageBackground { get; set; }
 
-		[NullAllowed, Export ("twoPieceImageForeground", ArgumentSemantic.Assign)]
+		[NullAllowed, Export ("twoPieceImageForeground", ArgumentSemantic.Retain)]
 		UIImage TwoPieceImageForeground { get; set; }
 	}
 
@@ -556,7 +556,7 @@ namespace ClockKit {
 		[Export ("textProviderWithFormat:", IsVariadic = true)]
 		CLKTextProvider Create (string format, IntPtr varArgs);
 
-		[Export ("tintColor", ArgumentSemantic.Assign)]
+		[Export ("tintColor", ArgumentSemantic.Retain)]
 		UIColor TintColor { get; set; }
 
 		// Localizable (CLKTextProvider)
@@ -617,14 +617,14 @@ namespace ClockKit {
 		[Export ("textProviderWithDate:units:timeZone:")]
 		CLKDateTextProvider FromDate (NSDate date, NSCalendarUnit calendarUnits, [NullAllowed] NSTimeZone timeZone);
 
-		[Export ("date")]
+		[Export ("date", ArgumentSemantic.Retain)]
 		NSDate Date { get; set; }
 
 		[Export ("calendarUnits")]
 		NSCalendarUnit CalendarUnits { get; set; }
 
 		[NullAllowed]
-		[Export ("timeZone")]
+		[Export ("timeZone", ArgumentSemantic.Retain)]
 		NSTimeZone TimeZone { get; set; }
 	}
 
@@ -639,11 +639,11 @@ namespace ClockKit {
 		[Export ("textProviderWithDate:timeZone:")]
 		CLKTimeTextProvider FromDate (NSDate date, [NullAllowed] NSTimeZone timeZone);
 
-		[Export ("date")]
+		[Export ("date", ArgumentSemantic.Retain)]
 		NSDate Date { get; set; }
 
 		[NullAllowed]
-		[Export ("timeZone")]
+		[Export ("timeZone", ArgumentSemantic.Retain)]
 		NSTimeZone TimeZone { get; set; }
 	}
 
@@ -658,14 +658,14 @@ namespace ClockKit {
 		[Export ("textProviderWithStartDate:endDate:timeZone:")]
 		CLKTimeIntervalTextProvider FromStartDate (NSDate startDate, NSDate endDate, [NullAllowed] NSTimeZone timeZone);
 
-		[Export ("startDate")]
+		[Export ("startDate", ArgumentSemantic.Retain)]
 		NSDate StartDate { get; set; }
 
-		[Export ("endDate")]
+		[Export ("endDate", ArgumentSemantic.Retain)]
 		NSDate EndDate { get; set; }
 
 		[NullAllowed]
-		[Export ("timeZone")]
+		[Export ("timeZone", ArgumentSemantic.Retain)]
 		NSTimeZone TimeZone { get; set; }
 	}
 
@@ -676,7 +676,7 @@ namespace ClockKit {
 		[Export ("textProviderWithDate:style:units:")]
 		CLKRelativeDateTextProvider FromDate (NSDate date, CLKRelativeDateStyle style, NSCalendarUnit calendarUnits);
 
-		[Export ("date")]
+		[Export ("date", ArgumentSemantic.Retain)]
 		NSDate Date { get; set; }
 
 		[Export ("relativeDateStyle")]
