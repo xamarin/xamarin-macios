@@ -124,5 +124,6 @@ namespace MonoTouch {
 		public const string ClassKitLibrary = "/System/Library/Frameworks/ClassKit.framework/ClassKit";
 		// iOS 12.0
 		public const string CarPlayLibrary = "/System/Library/Frameworks/CarPlay.framework/CarPlay";
+		public const string NaturalLanguageLibrary = "/System/Library/Frameworks/Frameworks/NaturalLanguage.framework/NaturalLanguage";
 	}
 }

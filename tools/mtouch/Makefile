@@ -304,6 +304,7 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-weak_framework ClassKit				\
 						\
 	-weak_framework CarPlay					\
+	-weak_framework NaturalLanguage			\
 
 
 # note: there _was_ no CoreAudioKit.framework or Metal.framework for the simulator (before recent iOS9 betas)
