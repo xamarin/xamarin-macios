@@ -10255,7 +10255,7 @@ namespace Foundation
 	interface NSDistributedNotificationCenter {
 		[Static]
 		[Export ("defaultCenter")]
-		NSObject DefaultCenter { get; }
+		NSDistributedNotificationCenter DefaultCenter { get; }
 
 		[Export ("addObserver:selector:name:object:suspensionBehavior:")]
 		void AddObserver (NSObject observer, Selector selector, [NullAllowed] string notificationName, [NullAllowed] string notificationSenderc, NSNotificationSuspensionBehavior suspensionBehavior);
