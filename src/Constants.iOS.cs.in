@@ -57,6 +57,7 @@ namespace MonoTouch {
 		public const string AudioUnitLibrary = "/System/Library/Frameworks/AudioToolbox.framework/AudioToolbox";
 		public const string AccelerateImageLibrary = "/System/Library/Frameworks/Accelerate.framework/Frameworks/vImage.framework/vImage";
 		// iOS 6
+		public const string AdSupportLibrary = "/System/Library/Frameworks/AdSupport.framework/AdSupport";
 		public const string MediaToolboxLibrary = "/System/Library/Frameworks/MediaToolbox.framework/MediaToolbox";
 		public const string PassKitLibrary = "/System/Library/Frameworks/PassKit.framework/PassKit";
 		public const string SocialLibrary = "/System/Library/Frameworks/Social.framework/Social";
