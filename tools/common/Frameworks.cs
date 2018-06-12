@@ -161,6 +161,8 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "Vision", "Vision", 10, 13 },
 
 					{ "BusinessChat", "BusinessChat", 10, 13, 4 },
+
+					{ "AdSupport", "AdSupport", 10,14 },
 				};
 			}
 			return mac_frameworks;
