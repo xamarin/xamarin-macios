@@ -71,7 +71,7 @@ security -v find-identity "$KEYCHAIN.keychain"
 # Prevent dialogs from asking for permissions.
 # http://stackoverflow.com/a/40039594/183422
 # Discard output since there can be a *lot* of it.
-security set-key-partition-list -S apple-tool:,apple: -s -k "$(cat "$KEYCHAIN_PWD_FILE")" "$KEYCHAIN.keychain" >/dev/null 2>&1
+security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$(cat "$KEYCHAIN_PWD_FILE")" "$KEYCHAIN.keychain" >/dev/null 2>&1
 
 # clean mono keypairs (used in tests)
 rm -rf ~/.config/.mono/keypairs/
