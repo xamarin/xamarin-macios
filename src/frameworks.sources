@@ -294,6 +294,11 @@ BUSINESSCHAT_SOURCES = \
 CALLKIT_SOURCES = \
 	CallKit/CXProvider.cs \
 
+# CarPlay
+
+CARPLAY_SOURCES = \
+	CarPlay/CPNavigationAlert.cs \
+
 # ClassKit
 
 CLASSKIT_SOURCES = \

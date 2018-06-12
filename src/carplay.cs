@@ -4,7 +4,7 @@
 // Authors:
 //	Alex Soto  <alexsoto@microsoft.com>
 //
-// Copyright 2018 Xamarin Inc. All rights reserved.
+// Copyright 2018 Microsoft Corporation. All rights reserved.
 //
 
 #if XAMCORE_2_0
@@ -518,12 +518,6 @@ namespace CarPlay {
 	[DisableDefaultCtor]
 	interface CPNavigationAlert : NSSecureCoding {
 
-		// Defined inside CPNavigationAlert.h
-		// static NSTimeInterval const CPNavigationAlertMinimumDuration = 10;
-		[Static]
-		[Wrap ("10D")]
-		double NavigationAlertMinimumDuration { get; }
-
 		[Export ("initWithTitleVariants:subtitleVariants:image:priority:primaryAction:secondaryAction:duration:")]
 		IntPtr Constructor (string [] titleVariants, [NullAllowed] string [] subtitleVariants, [NullAllowed] UIImage image, CPNavigationAlertPriority priority, CPAlertAction primaryAction, [NullAllowed] CPAlertAction secondaryAction, double duration);
 
@@ -672,7 +666,7 @@ namespace CarPlay {
 		[Export ("summaryVariants", ArgumentSemantic.Copy)]
 		string [] SummaryVariants { get; }
 
-		[NullAllowed, Export ("additionalInformationVariants", ArgumentSemantic.Copy)]
+		[Export ("additionalInformationVariants", ArgumentSemantic.Copy)]
 		string [] AdditionalInformationVariants { get; }
 
 		[NullAllowed, Export ("userInfo", ArgumentSemantic.Strong)]
@@ -709,10 +703,10 @@ namespace CarPlay {
 		[Export ("initWithTitleVariants:animatedImage:")]
 		IntPtr Constructor (string [] titleVariants, UIImage animatedImage);
 
-		[NullAllowed, Export ("titleVariants", ArgumentSemantic.Copy)]
+		[Export ("titleVariants", ArgumentSemantic.Copy)]
 		string [] TitleVariants { get; }
 
-		[NullAllowed, Export ("animatedImage", ArgumentSemantic.Strong)]
+		[Export ("animatedImage", ArgumentSemantic.Strong)]
 		UIImage AnimatedImage { get; }
 	}
 }

@@ -34,6 +34,8 @@
 /src/avkit.cs @spouliot @dalexsoto
 /src/CallKit @dalexsoto
 /src/callkit.cs @dalexsoto
+/src/CarPlay @dalexsoto
+/src/carplay.cs @dalexsoto
 /src/CFNetwork @spouliot
 /src/cfnetwork.cs @spouliot
 /src/CloudKit @mandel-macaque
