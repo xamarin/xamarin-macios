@@ -424,7 +424,7 @@ namespace Intents {
 		[Watch (5,0), iOS (12,0)]
 		BouncePhoto = (1uL << 27),
 		[Watch (5,0), iOS (12,0)]
-		LongExposurePhoto = (1uL << 28)
+		LongExposurePhoto = (1uL << 28),
 	}
 
 	[iOS (10, 0)]
