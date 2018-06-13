@@ -1,10 +1,7 @@
 //
 // AuthenticationServices bindings
 //
-// Authors:
-//	Sebastien Pouliot  <sebastien.pouliot@microsoft.com>
-//
-// Copyright 2018 Microsoft Inc. All rights reserved.
+// Copyright 2018 Microsoft Corporation
 //
 
 using System;
@@ -47,6 +44,8 @@ namespace AuthenticationServices {
 		CanceledLogin = 1,
 	}
 
+	delegate void ASCredentialIdentityStoreCompletionHandler (bool success, NSError error);
+
 	[iOS (12,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -61,11 +60,11 @@ namespace AuthenticationServices {
 
 		[Async]
 		[Export ("saveCredentialIdentities:completion:")]
-		void SaveCredentialIdentities (ASPasswordCredentialIdentity[] credentialIdentities, [NullAllowed] Action<bool, NSError> completion);
+		void SaveCredentialIdentities (ASPasswordCredentialIdentity[] credentialIdentities, [NullAllowed] ASCredentialIdentityStoreCompletionHandler completion);
 
 		[Async]
 		[Export ("removeCredentialIdentities:completion:")]
-		void RemoveCredentialIdentities (ASPasswordCredentialIdentity[] credentialIdentities, [NullAllowed] Action<bool, NSError> completion);
+		void RemoveCredentialIdentities (ASPasswordCredentialIdentity[] credentialIdentities, [NullAllowed] ASCredentialIdentityStoreCompletionHandler completion);
 
 		[Async]
 		[Export ("removeAllCredentialIdentitiesWithCompletion:")]
@@ -73,7 +72,7 @@ namespace AuthenticationServices {
 
 		[Async]
 		[Export ("replaceCredentialIdentitiesWithIdentities:completion:")]
-		void ReplaceCredentialIdentities (ASPasswordCredentialIdentity[] newCredentialIdentities, [NullAllowed] Action<bool, NSError> completion);
+		void ReplaceCredentialIdentities (ASPasswordCredentialIdentity[] newCredentialIdentities, [NullAllowed] ASCredentialIdentityStoreCompletionHandler completion);
 	}
 
 	[iOS (12,0)]
@@ -87,12 +86,14 @@ namespace AuthenticationServices {
 		bool SupportsIncrementalUpdates { get; }
 	}
 
+	delegate void ASCredentialProviderExtensionRequestCompletionHandler (bool expired);
+
 	[iOS (12,0)]
 	[BaseType (typeof (NSExtensionContext))]
 	[DisableDefaultCtor]
 	interface ASCredentialProviderExtensionContext {
 		[Export ("completeRequestWithSelectedCredential:completionHandler:")]
-		void CompleteRequest (ASPasswordCredential credential, [NullAllowed] Action<bool> completionHandler);
+		void CompleteRequest (ASPasswordCredential credential, [NullAllowed] ASCredentialProviderExtensionRequestCompletionHandler completionHandler);
 
 		[Export ("completeExtensionConfigurationRequest")]
 		void CompleteExtensionConfigurationRequest ();
