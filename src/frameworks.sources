@@ -1726,6 +1726,7 @@ IOS_FRAMEWORKS =         \
 	AssetsLibrary \
 	AudioToolbox \
 	AudioUnit \
+	AuthenticationServices \
 	BusinessChat \
 	CallKit \
 	CarPlay \
