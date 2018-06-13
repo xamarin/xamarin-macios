@@ -16,6 +16,22 @@ using MonoTouch.Foundation;
 #endif
 using NUnit.Framework;
 
+namespace LinkAll
+{
+	static class Helper
+	{
+		public static Type GetType (string name)
+		{
+			return Type.GetType (name);
+		}
+
+		public static Type GetType (string typeName, bool throwOnError)
+		{
+			return Type.GetType (typeName, throwOnError);
+		}
+	}
+}
+
 namespace LinkAll.Serialization {
 
 	[Serializable]
@@ -63,14 +79,6 @@ namespace LinkAll.Serialization {
 		[OnSerialized]
 		void Serialized ()
 		{
-		}
-	}
-
-	static class Helper
-	{
-		public static Type GetType (string name)
-		{
-			return Type.GetType (name);
 		}
 	}
 	
