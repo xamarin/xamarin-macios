@@ -26,6 +26,12 @@ namespace MonoTouchFixtures.NaturalLanguage {
 	[Preserve (AllMembers = true)]
 	public class NLLanguageRecognizerTest {
 
+		[SetUp]
+		public void SetUp ()
+		{
+			TestRuntime.AssertXcodeVersion (10, 0);
+		}
+
 		[Test]
 		public void GetDominantLanguageTest ()
 		{
