@@ -2,3 +2,10 @@
 
 ## no generator support for FastEnumeration - https://bugzilla.xamarin.com/show_bug.cgi?id=4391
 !missing-protocol-conformance! CMSensorDataList should conform to NSFastEnumeration
+
+## For some reason sharpie is not picking up the following classes
+## that said according to https://developer.apple.com/videos/play/wwdc2018/205
+## they are available, also intro does not complain.
+!unknown-type! CMDyskineticSymptomResult bound
+!unknown-type! CMMovementDisorderManager bound
+!unknown-type! CMTremorResult bound
