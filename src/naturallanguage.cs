@@ -87,7 +87,7 @@ namespace NaturalLanguage {
 		[NullAllowed, Export ("language")]
 		NSString _Language { get; }
 
-		NLLanguage Language { [Wrap ("(_Language.Handle != IntPtr.Zero)? NLLanguageExtensions.GetValue (_Language) : NLLanguage.Undetermined")] get; }
+		NLLanguage Language { [Wrap ("(_Language != null)? NLLanguageExtensions.GetValue (_Language) : NLLanguage.Undetermined")] get; }
 
 		[Export ("revision")]
 		nuint Revision { get; }
@@ -121,6 +121,8 @@ namespace NaturalLanguage {
 		string[] GetPredictedLabels (string[] tokens);
 	}
 
+	public delegate void NLTokenizerEnumerateContinuationHandler (NSRange tokenRange, NLTokenizerAttributes flags, out bool stop);
+
 	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof(NSObject))]
@@ -138,7 +140,7 @@ namespace NaturalLanguage {
 
 		[Internal]
 		[Export ("setLanguage:")]
-		void _SetLanguage (string language);
+		void _SetLanguage (NSString language);
 
 		[Wrap ("_SetLanguage (language.GetConstant ())")]
 		void SetLanguage (NLLanguage language);
@@ -149,10 +151,11 @@ namespace NaturalLanguage {
 		[Export ("tokensForRange:")]
 		NSValue[] GetTokens (NSRange range);
 
-		[Async (ResultTypeName="NLTokenizerEnumerateContinuation")]
 		[Export ("enumerateTokensInRange:usingBlock:")]
-		void EnumerateTokensInRange (NSRange range, Action<NSRange, NLTokenizerAttributes, bool> block);
+		void EnumerateTokens (NSRange range, NLTokenizerEnumerateContinuationHandler handler);
 	}
+
+	public delegate void NLTaggerEnumerateTagsContinuationHandler (NSString tag, NSRange tokenRange, out bool stop);
 
 	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0)]
 	[DisableDefaultCtor]
@@ -196,13 +199,12 @@ namespace NaturalLanguage {
 		[Wrap ("NLLanguageExtensions.GetValue (_DominantLanguage)")]
 		NLLanguage DominantLanguage { get; }
 
-		[Async (ResultTypeName="NLTaggerEnumerateTagsContinuation")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("enumerateTagsInRange:unit:scheme:options:usingBlock:")]
-		void EnumerateTags (NSRange range, NLTokenUnit unit, NSString scheme, NLTaggerOptions options, Action<NSString, NSRange, bool> block);
+		void EnumerateTags (NSRange range, NLTokenUnit unit, NSString scheme, NLTaggerOptions options, NLTaggerEnumerateTagsContinuationHandler handler);
 
-		[Wrap ("EnumerateTags (range, unit, scheme.GetConstant (), options, block)")]
-		void EnumerateTags (NSRange range, NLTokenUnit unit, NLTagScheme scheme, NLTaggerOptions options, Action<NSString, NSRange, bool> block);
+		[Wrap ("EnumerateTags (range, unit, scheme.GetConstant (), options, handler)")]
+		void EnumerateTags (NSRange range, NLTokenUnit unit, NLTagScheme scheme, NLTaggerOptions options, NLTaggerEnumerateTagsContinuationHandler handler);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("tagAtIndex:unit:scheme:tokenRange:")]

@@ -40,14 +40,14 @@ namespace NaturalLanguage {
 
 	[Native]
 	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0)]
-	public enum NLModelType : ulong {
+	public enum NLModelType : long {
 		Classifier,
 		Sequence,
 	}
 
 	[Native]
 	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0)]
-	public enum NLTokenUnit : ulong {
+	public enum NLTokenUnit : long {
 		Word,
 		Sentence,
 		Paragraph,
@@ -176,7 +176,7 @@ namespace NaturalLanguage {
 		[Field ("NLLanguageTurkish")]
 		Turkish,
 		[Field ("NLLanguageUkrainian")]
-		NLLanguageUkrainian,
+		Ukrainian,
 		[Field ("NLLanguageUrdu")]
 		Urdu,
 		[Field ("NLLanguageVietnamese")]

@@ -41,30 +41,36 @@ namespace NaturalLanguage {
 			return lang;
 		}
 	
-		public Dictionary<NLLanguage, NSNumber> GetLanguageHypotheses (nuint maxHypotheses)
+		public Dictionary<NLLanguage, nuint> GetLanguageHypotheses (nuint maxHypotheses)
 		{
-			using (var hypo = GetNativeLanguageHypotheses (maxHypotheses))
-			{
-				var result = new Dictionary<NLLanguage, NSNumber> ();
+			using (var hypo = GetNativeLanguageHypotheses (maxHypotheses)) {
+				var result = new Dictionary<NLLanguage, nuint> (hypo.Keys.Length);
 				foreach (var k in hypo.Keys) {
-					result[NLLanguageExtensions.GetValue (k)] = hypo[k];
+					result[NLLanguageExtensions.GetValue (k)] = hypo[k].NUIntValue;
 				}
 				return result;
 			}
 		}
 
-		public Dictionary<NLLanguage, NSNumber> LanguageHints
+		public Dictionary<NLLanguage, nuint> LanguageHints
 		{
 			get {
-				var result = new Dictionary<NLLanguage, NSNumber> ();
+				var result = new Dictionary<NLLanguage, nuint> (NativeLanguageHints.Keys.Length);
 				foreach (var k in NativeLanguageHints.Keys) {
-					result[NLLanguageExtensions.GetValue (k)] = NativeLanguageHints[k];
+					result[NLLanguageExtensions.GetValue (k)] = NativeLanguageHints[k].NUIntValue;
 				}
 				return result;
 			}
 			set {
-				var rKeys = Array.ConvertAll<NLLanguage, NSString> (value.Keys.ToArray (), e => NLLanguageExtensions.GetConstant (e));
-				NativeLanguageHints = NSDictionary<NSString, NSNumber>.FromObjectsAndKeys (value.Values.ToArray (), rKeys, rKeys.Length);
+				var i = 0;
+				var nsKeys = new NSString[value.Keys.Count];
+				var nsValues = new NSNumber[value.Keys.Count];
+				foreach (var item in value) {
+					nsKeys[i] = NLLanguageExtensions.GetConstant (item.Key);
+					nsValues[i] = new NSNumber (item.Value);
+					i++;
+				}
+				NativeLanguageHints = NSDictionary<NSString, NSNumber>.FromObjectsAndKeys (nsValues, nsKeys, nsKeys.Length);
 			}
 		}
 	}
