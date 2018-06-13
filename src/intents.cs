@@ -4692,9 +4692,9 @@ namespace Intents {
 	[BaseType (typeof (INIntent))]
 	interface INSearchForMessagesIntent {
 
-		[Deprecated (PlatformName.MacOSX, 10,14, message: "Use the '[DesignatedInitializer]' overload instead")]
-		[Deprecated (PlatformName.WatchOS, 5,0, message: "Use the '[DesignatedInitializer]' overload instead")]
-		[Deprecated (PlatformName.iOS, 12,0, message: "Use the '[DesignatedInitializer]' overload instead")]
+		[Deprecated (PlatformName.MacOSX, 10,14, message: "Use the overload that takes 'conversationIdentifiers' instead.")]
+		[Deprecated (PlatformName.WatchOS, 5,0, message: "Use the overload that takes 'conversationIdentifiers' instead.")]
+		[Deprecated (PlatformName.iOS, 12,0, message: "Use the overload that takes 'conversationIdentifiers' instead.")]
 		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
 		[Export ("initWithRecipients:senders:searchTerms:attributes:dateTimeRange:identifiers:notificationIdentifiers:speakableGroupNames:")]
 		IntPtr Constructor ([NullAllowed] INPerson [] recipients, [NullAllowed] INPerson [] senders, [NullAllowed] string [] searchTerms, INMessageAttributeOptions attributes, [NullAllowed] INDateComponentsRange dateTimeRange, [NullAllowed] string [] identifiers, [NullAllowed] string [] notificationIdentifiers, [NullAllowed] INSpeakableString [] speakableGroupNames);
