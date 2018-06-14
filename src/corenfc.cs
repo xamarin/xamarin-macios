@@ -300,7 +300,7 @@ namespace CoreNFC {
 	[iOS (12,0)]
 	[Category]
 	[BaseType (typeof (NSUserActivity))]
-	interface NSUserActivityCoreNFC {
+	interface NSUserActivity_CoreNFC {
 
 		[Export ("ndefMessagePayload")]
 		NFCNdefMessage GetNdefMessagePayload ();
