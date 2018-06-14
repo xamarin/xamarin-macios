@@ -2,3 +2,9 @@
 
 ## no generator support for FastEnumeration - https://bugzilla.xamarin.com/show_bug.cgi?id=4391
 !missing-protocol-conformance! CMSensorDataList should conform to NSFastEnumeration
+
+## Sharpie is not picking up the following classes because CMMovementDisorderManager.h
+## is not part of the umbrella header https://trello.com/c/vdTmwyyO radar://41110708
+!unknown-type! CMDyskineticSymptomResult bound
+!unknown-type! CMMovementDisorderManager bound
+!unknown-type! CMTremorResult bound
