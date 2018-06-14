@@ -213,6 +213,12 @@
     <Compile Include="..\ApiAvailabilityTest.cs">
       <Link>ApiAvailabilityTest.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\tools\common\Frameworks.cs">
+      <Link>Frameworks.cs</Link>
+    </Compile>
+    <Compile Include="..\ApiFrameworkTest.cs">
+      <Link>ApiFrameworkTest.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist">

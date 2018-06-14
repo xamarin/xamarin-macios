@@ -9,6 +9,10 @@ report_error ()
 }
 trap report_error ERR
 
+if [[ x$1 == x--configure-flags ]]; then
+	CONFIGURE_FLAGS="$2"
+fi
+
 ls -la "$WORKSPACE/jenkins"
 echo "$WORKSPACE/jenkins/pr-comments.md:"
 cat "$WORKSPACE/jenkins/pr-comments.md"
@@ -20,7 +24,8 @@ ENABLE_DEVICE_BUILD=
 # SC2154: ghprbPullId is referenced but not assigned.
 # shellcheck disable=SC2154
 if test -z "$ghprbPullId"; then
-	echo "Could not find the environment variable ghprbPullId, so won't check if we're doing a device build."
+	echo "Could not find the environment variable ghprbPullId, so forcing a device build."
+	ENABLE_DEVICE_BUILD=1
 else
 	echo "Listing modified files for pull request #$ghprbPullId..."
 	if git diff-tree --no-commit-id --name-only -r "origin/pr/$ghprbPullId/merge^..origin/pr/$ghprbPullId/merge" > .tmp-files; then
@@ -46,12 +51,17 @@ else
 	fi
 fi
 
-if test -n "$ENABLE_DEVICE_BUILD"; then
-	./configure
-else
-	./configure --disable-ios-device
+if test -z "$ENABLE_DEVICE_BUILD"; then
+	CONFIGURE_FLAGS="$CONFIGURE_FLAGS --disable-ios-device"
 fi
+# shellcheck disable=SC2086
+./configure $CONFIGURE_FLAGS
 
-time make world
+make reset
+make git-clean-all
+make print-versions
+
+time make -j8
+time make install -j8
 
 printf "✅ [Build succeeded](%s/console)\\n" "$BUILD_URL" >> "$WORKSPACE/jenkins/pr-comments.md"

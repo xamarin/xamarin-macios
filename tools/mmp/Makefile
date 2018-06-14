@@ -105,9 +105,6 @@ tuner_sources = \
 	../linker/MonoTouch.Tuner/PreserveSmartEnumConversionsSubStep.cs		\
 	../../src/build/mac/Constants.cs
 
-linker_resources = \
-	linker/Descriptors/mscorlib.xml
-
 mmp_sources = \
 	$(TOP)/tools/common/cache.cs    \
 	driver.cs 	\
@@ -152,10 +149,10 @@ LOCAL_MMP = \
 	Mono.Cecil.dll \
 	Mono.Cecil.Mdb.dll \
 
-mmp.exe: Makefile $(MONO_CECIL_DLL) $(MONO_CECIL_MDB_DLL) $(mmp_sources) config config_mobile Info.plist.tmpl Info-framework.plist.tmpl $(tuner_sources) $(linker_resources)
+mmp.exe: Makefile $(MONO_CECIL_DLL) $(MONO_CECIL_MDB_DLL) $(mmp_sources) config config_mobile Info.plist.tmpl Info-framework.plist.tmpl $(tuner_sources)
 	$(Q_CSC) $(SYSTEM_CSC) -unsafe -out:mmp.exe $(DEFINES) -r:$(MONO_CECIL_DLL) -r:$(MONO_CECIL_MDB_DLL) \
 	-noconfig -nostdlib -r:$(MONO_PATH)/external/binary-reference-assemblies/mono/Mono.Security.dll -r:$(MONO_PATH)/external/binary-reference-assemblies/v4.6.1/mscorlib.dll -r:$(MONO_PATH)/external/binary-reference-assemblies/v4.6.1/System.Xml.dll -r:$(MONO_PATH)/external/binary-reference-assemblies/v4.6.1/System.Core.dll -r:$(MONO_PATH)/external/binary-reference-assemblies/v4.6.1/System.dll \
-	-resource:config -resource:config_mobile -resource:machine.4_5.config -resource:Info.plist.tmpl -resource:Info-framework.plist.tmpl $(linker_resources:%=-resource:%) $(tuner_sources) $(mmp_sources) -debug:portable -nologo -deterministic
+	-resource:config -resource:config_mobile -resource:machine.4_5.config -resource:Info.plist.tmpl -resource:Info-framework.plist.tmpl $(tuner_sources) $(mmp_sources) -debug:portable -nologo -deterministic
 	$(Q) cp $(MONO_CECIL_DLL) $(MONO_CECIL_MDB_DLL) .
 
 Mono.Cecil.dll: $(MONO_CECIL_DLL)

@@ -1383,8 +1383,13 @@ namespace xharness
 			if (markdown_summary != null) {
 				markdown_summary.WriteLine ("# Test results");
 				markdown_summary.WriteLine ();
+				var details = failedTests.Any ();
+				if (details) {
+					markdown_summary.WriteLine ("<details>");
+					markdown_summary.Write ("<summary>");
+				}
 				if (allTasks.Count == 0) {
-					markdown_summary.WriteLine ($"Loading tests...");
+					markdown_summary.Write ($"Loading tests...");
 				} else if (unfinishedTests.Any ()) {
 					var list = new List<string> ();
 					var grouped = allTasks.GroupBy ((v) => v.ExecutionResult).OrderBy ((v) => (int) v.Key);
@@ -1392,16 +1397,18 @@ namespace xharness
 						list.Add ($"{@group.Key.ToString ()}: {@group.Count ()}");
 					markdown_summary.Write ($"# Test run in progress: ");
 					markdown_summary.Write (string.Join (", ", list));
-					markdown_summary.WriteLine ();
 				} else if (failedTests.Any ()) {
-					markdown_summary.WriteLine ($"{failedTests.Count ()} tests failed, {skippedTests.Count ()} tests skipped, {passedTests.Count ()} tests passed.");
+					markdown_summary.Write ($"{failedTests.Count ()} tests failed, {skippedTests.Count ()} tests skipped, {passedTests.Count ()} tests passed.");
 				} else if (skippedTests.Any ()) {
-					markdown_summary.WriteLine ($"{skippedTests.Count ()} tests skipped, {passedTests.Count ()} tests passed.");
+					markdown_summary.Write ($"{skippedTests.Count ()} tests skipped, {passedTests.Count ()} tests passed.");
 				} else if (passedTests.Any ()) {
-					markdown_summary.WriteLine ($"# All {passedTests.Count ()} tests passed");
+					markdown_summary.Write ($"# All {passedTests.Count ()} tests passed");
 				} else {
-					markdown_summary.WriteLine ($"# No tests selected.");
+					markdown_summary.Write ($"# No tests selected.");
 				}
+				if (details)
+					markdown_summary.Write ("</summary>");
+				markdown_summary.WriteLine ();
 				markdown_summary.WriteLine ();
 				if (failedTests.Any ()) {
 					markdown_summary.WriteLine ("## Failed tests");
@@ -1418,6 +1425,8 @@ namespace xharness
 						markdown_summary.WriteLine ();
 					}
 				}
+				if (details)
+					markdown_summary.WriteLine ("</details>");
 			}
 
 			using (var writer = new StreamWriter (stream)) {
@@ -2202,7 +2211,7 @@ function toggleAll (show)
 		string failure_message;
 		public string FailureMessage {
 			get { return failure_message; }
-			protected set {
+			set {
 				failure_message = value;
 				MainLog.WriteLine (failure_message);
 			}
@@ -2357,12 +2366,17 @@ function toggleAll (show)
 					FailureMessage = $"Harness exception for '{TestName}': {e}";
 					log.WriteLine (FailureMessage);
 				}
+				PropagateResults ();
 			} finally {
 				logs?.Dispose ();
 				duration.Stop ();
 			}
 
 			Jenkins.GenerateReport (true);
+		}
+
+		protected virtual void PropagateResults ()
+		{
 		}
 
 		public virtual void Reset ()
@@ -3520,6 +3534,14 @@ function toggleAll (show)
 		public AggregatedRunSimulatorTask (IEnumerable<RunSimulatorTask> tasks)
 		{
 			this.Tasks = tasks;
+		}
+
+		protected override void PropagateResults ()
+		{
+			foreach (var task in Tasks) {
+				task.ExecutionResult = ExecutionResult;
+				task.FailureMessage = FailureMessage;
+			}
 		}
 
 		protected override async Task ExecuteAsync ()

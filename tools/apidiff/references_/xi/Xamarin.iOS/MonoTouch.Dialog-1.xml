@@ -1,0 +1,3415 @@
+<?xml version="1.0" encoding="utf-8"?>
+<assemblies>
+  <assembly name="MonoTouch.Dialog-1" version="0.0.0.0">
+    <attributes>
+      <attribute name="System.Diagnostics.DebuggableAttribute">
+        <properties>
+          <property name="IsJITTrackingEnabled" value="IgnoreSymbolStoreSequencePoints" />
+          <property name="IsJITOptimizerDisabled" value="IgnoreSymbolStoreSequencePoints" />
+          <property name="DebuggingFlags" value="IgnoreSymbolStoreSequencePoints" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.CompilationRelaxationsAttribute">
+        <properties>
+          <property name="CompilationRelaxations" value="8" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+      <attribute name="System.Runtime.CompilerServices.RuntimeCompatibilityAttribute">
+        <properties>
+          <property name="WrapNonExceptionThrows" value="True" />
+        </properties>
+      </attribute>
+    </attributes>
+    <namespaces>
+      <namespace name="MonoTouch.Dialog">
+        <classes>
+          <class name="ActivityElement" type="class" base="MonoTouch.Dialog.Element" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Animating" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_Animating()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_Animating(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="CellKey" attrib="0" ptype="Foundation.NSString">
+                <methods>
+                  <method name="get_CellKey()" attrib="2244" virtual="true" is-override="true" returntype="Foundation.NSString">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="GetCell(UIKit.UITableView)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UITableViewCell">
+                <parameters>
+                  <parameter name="tv" position="0" attrib="0" type="UIKit.UITableView" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="AlignmentAttribute" type="class" base="System.Attribute" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.AttributeUsageAttribute">
+                <properties>
+                  <property name="Inherited" value="False" />
+                  <property name="ValidOn" value="Field, Property" />
+                </properties>
+              </attribute>
+            </attributes>
+            <fields>
+              <field name="Alignment" attrib="6" fieldtype="UIKit.UITextAlignment" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(UIKit.UITextAlignment)" attrib="6278">
+                <parameters>
+                  <parameter name="alignment" position="0" attrib="0" type="UIKit.UITextAlignment" />
+                </parameters>
+              </constructor>
+            </constructors>
+          </class>
+          <class name="BadgeElement" type="class" base="MonoTouch.Dialog.Element" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="MonoTouch.Dialog.IElementSizing" />
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <fields>
+              <field name="Accessory" attrib="6" fieldtype="UIKit.UITableViewCellAccessory" />
+              <field name="ContentMode" attrib="6" fieldtype="UIKit.UIViewContentMode" />
+              <field name="LineBreakMode" attrib="6" fieldtype="UIKit.UILineBreakMode" />
+              <field name="Lines" attrib="6" fieldtype="System.Int32" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(UIKit.UIImage, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="badgeImage" position="0" attrib="0" type="UIKit.UIImage" />
+                  <parameter name="cellText" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(UIKit.UIImage, System.String, System.Action)" attrib="6278">
+                <parameters>
+                  <parameter name="badgeImage" position="0" attrib="0" type="UIKit.UIImage" />
+                  <parameter name="cellText" position="1" attrib="0" type="System.String" />
+                  <parameter name="tapped" position="2" attrib="0" type="System.Action" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Font" attrib="0" ptype="UIKit.UIFont">
+                <methods>
+                  <method name="get_Font()" attrib="2182" returntype="UIKit.UIFont">
+                    <parameters />
+                  </method>
+                  <method name="set_Font(UIKit.UIFont)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="UIKit.UIFont" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <events>
+              <event name="Tapped" attrib="0" eventtype="System.Action" />
+            </events>
+            <methods>
+              <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="GetCell(UIKit.UITableView)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UITableViewCell">
+                <parameters>
+                  <parameter name="tv" position="0" attrib="0" type="UIKit.UITableView" />
+                </parameters>
+              </method>
+              <method name="GetHeight(UIKit.UITableView, Foundation.NSIndexPath)" attrib="486" virtual="true" returntype="System.nfloat">
+                <parameters>
+                  <parameter name="tableView" position="0" attrib="0" type="UIKit.UITableView" />
+                  <parameter name="indexPath" position="1" attrib="0" type="Foundation.NSIndexPath" />
+                </parameters>
+              </method>
+              <method name="MakeCalendarBadge(UIKit.UIImage, System.String, System.String)" attrib="150" static="true" returntype="UIKit.UIImage">
+                <parameters>
+                  <parameter name="template" position="0" attrib="0" type="UIKit.UIImage" />
+                  <parameter name="smallText" position="1" attrib="0" type="System.String" />
+                  <parameter name="bigText" position="2" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="Selected(MonoTouch.Dialog.DialogViewController, UIKit.UITableView, Foundation.NSIndexPath)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="dvc" position="0" attrib="0" type="MonoTouch.Dialog.DialogViewController" />
+                  <parameter name="tableView" position="1" attrib="0" type="UIKit.UITableView" />
+                  <parameter name="path" position="2" attrib="0" type="Foundation.NSIndexPath" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="BaseBooleanImageElement" type="class" base="MonoTouch.Dialog.BoolElement" abstract="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.String, System.Boolean)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="value" position="1" attrib="0" type="System.Boolean" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="CellKey" attrib="0" ptype="Foundation.NSString">
+                <methods>
+                  <method name="get_CellKey()" attrib="2244" virtual="true" is-override="true" returntype="Foundation.NSString">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <events>
+              <event name="Tapped" attrib="0" eventtype="System.Action" />
+            </events>
+            <methods>
+              <method name="GetCell(UIKit.UITableView)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UITableViewCell">
+                <parameters>
+                  <parameter name="tv" position="0" attrib="0" type="UIKit.UITableView" />
+                </parameters>
+              </method>
+              <method name="GetImage()" attrib="1476" abstract="true" virtual="true" returntype="UIKit.UIImage">
+                <parameters />
+              </method>
+            </methods>
+            <classes>
+              <class name="TextWithImageCellView" type="class" base="UIKit.UITableViewCell" charset="Ansi" layout="Auto">
+                <interfaces>
+                  <interface name="CoreAnimation.ICALayerDelegate" />
+                  <interface name="Foundation.INSCoding" />
+                  <interface name="Foundation.INSObjectProtocol" />
+                  <interface name="ObjCRuntime.INativeObject" />
+                  <interface name="System.Collections.IEnumerable" />
+                  <interface name="System.IDisposable" />
+                  <interface name="System.IEquatable`1[Foundation.NSObject]" />
+                  <interface name="UIKit.IUIAccessibilityIdentification" />
+                  <interface name="UIKit.IUIAppearance" />
+                  <interface name="UIKit.IUIAppearanceContainer" />
+                  <interface name="UIKit.IUICoordinateSpace" />
+                  <interface name="UIKit.IUIDynamicItem" />
+                  <interface name="UIKit.IUIFocusEnvironment" />
+                  <interface name="UIKit.IUIFocusItem" />
+                  <interface name="UIKit.IUIGestureRecognizerDelegate" />
+                  <interface name="UIKit.IUIPasteConfigurationSupporting" />
+                  <interface name="UIKit.IUITraitEnvironment" />
+                </interfaces>
+                <constructors>
+                  <constructor name=".ctor(MonoTouch.Dialog.BaseBooleanImageElement)" attrib="6278">
+                    <parameters>
+                      <parameter name="parent_" position="0" attrib="0" type="MonoTouch.Dialog.BaseBooleanImageElement" />
+                    </parameters>
+                  </constructor>
+                </constructors>
+                <methods>
+                  <method name="LayoutSubviews()" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters />
+                  </method>
+                  <method name="UpdateFrom(MonoTouch.Dialog.BaseBooleanImageElement)" attrib="134" returntype="System.Void">
+                    <parameters>
+                      <parameter name="newParent" position="0" attrib="0" type="MonoTouch.Dialog.BaseBooleanImageElement" />
+                    </parameters>
+                  </method>
+                </methods>
+              </class>
+            </classes>
+          </class>
+          <class name="BindingContext" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <fields>
+              <field name="Root" attrib="6" fieldtype="MonoTouch.Dialog.RootElement" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(System.Object, System.Object, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="callbacks" position="0" attrib="0" type="System.Object" />
+                  <parameter name="o" position="1" attrib="0" type="System.Object" />
+                  <parameter name="title" position="2" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="Dispose()" attrib="486" virtual="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="Dispose(System.Boolean)" attrib="452" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="Fetch()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="BoolElement" type="class" base="MonoTouch.Dialog.Element" abstract="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.String, System.Boolean)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="value" position="1" attrib="0" type="System.Boolean" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Value" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_Value()" attrib="2502" virtual="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_Value(System.Boolean)" attrib="2502" virtual="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <events>
+              <event name="ValueChanged" attrib="0" eventtype="System.EventHandler" />
+            </events>
+            <methods>
+              <method name="Summary()" attrib="198" virtual="true" is-override="true" returntype="System.String">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="BooleanElement" type="class" base="MonoTouch.Dialog.BoolElement" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.String, System.Boolean)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="value" position="1" attrib="0" type="System.Boolean" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Boolean, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="value" position="1" attrib="0" type="System.Boolean" />
+                  <parameter name="key" position="2" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="CellKey" attrib="0" ptype="Foundation.NSString">
+                <methods>
+                  <method name="get_CellKey()" attrib="2244" virtual="true" is-override="true" returntype="Foundation.NSString">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Value" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_Value()" attrib="2246" virtual="true" is-override="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_Value(System.Boolean)" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="GetCell(UIKit.UITableView)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UITableViewCell">
+                <parameters>
+                  <parameter name="tv" position="0" attrib="0" type="UIKit.UITableView" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="BooleanImageElement" type="class" base="MonoTouch.Dialog.BaseBooleanImageElement" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.String, System.Boolean, UIKit.UIImage, UIKit.UIImage)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="value" position="1" attrib="0" type="System.Boolean" />
+                  <parameter name="onImage" position="2" attrib="0" type="UIKit.UIImage" />
+                  <parameter name="offImage" position="3" attrib="0" type="UIKit.UIImage" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="GetImage()" attrib="196" virtual="true" is-override="true" returntype="UIKit.UIImage">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="CaptionAttribute" type="class" base="System.Attribute" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.AttributeUsageAttribute">
+                <properties>
+                  <property name="Inherited" value="False" />
+                  <property name="ValidOn" value="Field, Property" />
+                </properties>
+              </attribute>
+            </attributes>
+            <fields>
+              <field name="Caption" attrib="6" fieldtype="System.String" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+          </class>
+          <class name="CheckboxAttribute" type="class" base="System.Attribute" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.AttributeUsageAttribute">
+                <properties>
+                  <property name="Inherited" value="False" />
+                  <property name="ValidOn" value="Field, Property" />
+                </properties>
+              </attribute>
+            </attributes>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+          </class>
+          <class name="CheckboxElement" type="class" base="MonoTouch.Dialog.StringElement" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <fields>
+              <field name="Group" attrib="6" fieldtype="System.String" />
+              <field name="Value" attrib="6" fieldtype="System.Boolean" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Boolean)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="value" position="1" attrib="0" type="System.Boolean" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Boolean, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="value" position="1" attrib="0" type="System.Boolean" />
+                  <parameter name="group" position="2" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="GetCell(UIKit.UITableView)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UITableViewCell">
+                <parameters>
+                  <parameter name="tv" position="0" attrib="0" type="UIKit.UITableView" />
+                </parameters>
+              </method>
+              <method name="Selected(MonoTouch.Dialog.DialogViewController, UIKit.UITableView, Foundation.NSIndexPath)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="dvc" position="0" attrib="0" type="MonoTouch.Dialog.DialogViewController" />
+                  <parameter name="tableView" position="1" attrib="0" type="UIKit.UITableView" />
+                  <parameter name="path" position="2" attrib="0" type="Foundation.NSIndexPath" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="DateAttribute" type="class" base="System.Attribute" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.AttributeUsageAttribute">
+                <properties>
+                  <property name="Inherited" value="False" />
+                  <property name="ValidOn" value="Field, Property" />
+                </properties>
+              </attribute>
+            </attributes>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+          </class>
+          <class name="DateElement" type="class" base="MonoTouch.Dialog.DateTimeElement" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.String, System.DateTime)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="date" position="1" attrib="0" type="System.DateTime" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="CreatePicker()" attrib="198" virtual="true" is-override="true" returntype="UIKit.UIDatePicker">
+                <parameters />
+              </method>
+              <method name="FormatDate(System.DateTime)" attrib="198" virtual="true" is-override="true" returntype="System.String">
+                <parameters>
+                  <parameter name="dt" position="0" attrib="0" type="System.DateTime" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="DateTimeElement" type="class" base="MonoTouch.Dialog.StringElement" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <fields>
+              <field name="BackgroundColor" attrib="6" fieldtype="UIKit.UIColor" />
+              <field name="DateValue" attrib="6" fieldtype="System.DateTime" />
+              <field name="MinuteInterval" attrib="6" fieldtype="System.Int32" />
+              <field name="datePicker" attrib="6" fieldtype="UIKit.UIDatePicker" />
+              <field name="fmt" attrib="5" fieldtype="Foundation.NSDateFormatter" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(System.String, System.DateTime)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="date" position="1" attrib="0" type="System.DateTime" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <events>
+              <event name="DateSelected" attrib="0" eventtype="System.Action`1[MonoTouch.Dialog.DateTimeElement]" />
+            </events>
+            <methods>
+              <method name="CreatePicker()" attrib="454" virtual="true" returntype="UIKit.UIDatePicker">
+                <parameters />
+              </method>
+              <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="FormatDate(System.DateTime)" attrib="454" virtual="true" returntype="System.String">
+                <parameters>
+                  <parameter name="dt" position="0" attrib="0" type="System.DateTime" />
+                </parameters>
+              </method>
+              <method name="GetCell(UIKit.UITableView)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UITableViewCell">
+                <parameters>
+                  <parameter name="tv" position="0" attrib="0" type="UIKit.UITableView" />
+                </parameters>
+              </method>
+              <method name="GetDateWithKind(System.DateTime)" attrib="132" returntype="System.DateTime">
+                <parameters>
+                  <parameter name="dt" position="0" attrib="0" type="System.DateTime" />
+                </parameters>
+              </method>
+              <method name="Selected(MonoTouch.Dialog.DialogViewController, UIKit.UITableView, Foundation.NSIndexPath)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="dvc" position="0" attrib="0" type="MonoTouch.Dialog.DialogViewController" />
+                  <parameter name="tableView" position="1" attrib="0" type="UIKit.UITableView" />
+                  <parameter name="path" position="2" attrib="0" type="Foundation.NSIndexPath" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="DialogViewController" type="class" base="UIKit.UITableViewController" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="Foundation.INSCoding" />
+              <interface name="Foundation.INSObjectProtocol" />
+              <interface name="ObjCRuntime.INativeObject" />
+              <interface name="System.Collections.IEnumerable" />
+              <interface name="System.IDisposable" />
+              <interface name="System.IEquatable`1[Foundation.NSObject]" />
+              <interface name="UIKit.IUIAppearanceContainer" />
+              <interface name="UIKit.IUIContentContainer" />
+              <interface name="UIKit.IUIFocusEnvironment" />
+              <interface name="UIKit.IUIPasteConfigurationSupporting" />
+              <interface name="UIKit.IUIScrollViewDelegate" />
+              <interface name="UIKit.IUITableViewDataSource" />
+              <interface name="UIKit.IUITableViewDelegate" />
+              <interface name="UIKit.IUITraitEnvironment" />
+            </interfaces>
+            <fields>
+              <field name="Style" attrib="6" fieldtype="UIKit.UITableViewStyle" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(MonoTouch.Dialog.RootElement)" attrib="6278">
+                <parameters>
+                  <parameter name="root" position="0" attrib="0" type="MonoTouch.Dialog.RootElement" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.IntPtr)" attrib="6278">
+                <parameters>
+                  <parameter name="handle" position="0" attrib="0" type="System.IntPtr" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(MonoTouch.Dialog.RootElement, System.Boolean)" attrib="6278">
+                <parameters>
+                  <parameter name="root" position="0" attrib="0" type="MonoTouch.Dialog.RootElement" />
+                  <parameter name="pushing" position="1" attrib="0" type="System.Boolean" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(UIKit.UITableViewStyle, MonoTouch.Dialog.RootElement)" attrib="6278">
+                <parameters>
+                  <parameter name="style" position="0" attrib="0" type="UIKit.UITableViewStyle" />
+                  <parameter name="root" position="1" attrib="0" type="MonoTouch.Dialog.RootElement" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(UIKit.UITableViewStyle, MonoTouch.Dialog.RootElement, System.Boolean)" attrib="6278">
+                <parameters>
+                  <parameter name="style" position="0" attrib="0" type="UIKit.UITableViewStyle" />
+                  <parameter name="root" position="1" attrib="0" type="MonoTouch.Dialog.RootElement" />
+                  <parameter name="pushing" position="2" attrib="0" type="System.Boolean" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="AutoHideSearch" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_AutoHideSearch()" attrib="2182" returntype="System.Boolean">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_AutoHideSearch(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Autorotate" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_Autorotate()" attrib="2182" returntype="System.Boolean">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_Autorotate(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="EnableSearch" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_EnableSearch()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_EnableSearch(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Pushing" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_Pushing()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_Pushing(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Root" attrib="0" ptype="MonoTouch.Dialog.RootElement">
+                <methods>
+                  <method name="get_Root()" attrib="2182" returntype="MonoTouch.Dialog.RootElement">
+                    <parameters />
+                  </method>
+                  <method name="set_Root(MonoTouch.Dialog.RootElement)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="MonoTouch.Dialog.RootElement" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="SearchPlaceholder" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_SearchPlaceholder()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_SearchPlaceholder(System.String)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <events>
+              <event name="OnSelection" attrib="0" eventtype="System.Action`1[Foundation.NSIndexPath]" />
+              <event name="RefreshRequested" attrib="0" eventtype="System.EventHandler" />
+              <event name="SearchTextChanged" attrib="0" eventtype="MonoTouch.Dialog.DialogViewController+SearchTextEventHandler" />
+              <event name="ViewAppearing" attrib="0" eventtype="System.EventHandler" />
+              <event name="ViewDisappearing" attrib="0" eventtype="System.EventHandler" />
+              <event name="ViewDissapearing" attrib="0" eventtype="System.EventHandler">
+                <attributes>
+                  <attribute name="System.ObsoleteAttribute">
+                    <properties>
+                      <property name="Message" value="Use the ViewDisappearing event instead" />
+                    </properties>
+                  </attribute>
+                </attributes>
+              </event>
+            </events>
+            <methods>
+              <method name="ActivateController(UIKit.UIViewController)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="controller" position="0" attrib="0" type="UIKit.UIViewController" />
+                </parameters>
+              </method>
+              <method name="CreateSizingSource(System.Boolean)" attrib="454" virtual="true" returntype="MonoTouch.Dialog.DialogViewController+Source">
+                <parameters>
+                  <parameter name="unevenRows" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="DeactivateController(System.Boolean)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="animated" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="Deselected(Foundation.NSIndexPath)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="indexPath" position="0" attrib="0" type="Foundation.NSIndexPath" />
+                </parameters>
+              </method>
+              <method name="DidRotate(UIKit.UIInterfaceOrientation)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="fromInterfaceOrientation" position="0" attrib="0" type="UIKit.UIInterfaceOrientation" />
+                </parameters>
+              </method>
+              <method name="FinishSearch()" attrib="454" virtual="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="LoadView()" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="MakeRefreshTableHeaderView(CoreGraphics.CGRect)" attrib="454" virtual="true" returntype="MonoTouch.Dialog.RefreshTableHeaderView">
+                <parameters>
+                  <parameter name="rect" position="0" attrib="0" type="CoreGraphics.CGRect" />
+                </parameters>
+              </method>
+              <method name="MakeTableView(CoreGraphics.CGRect, UIKit.UITableViewStyle)" attrib="454" virtual="true" returntype="UIKit.UITableView">
+                <parameters>
+                  <parameter name="bounds" position="0" attrib="0" type="CoreGraphics.CGRect" />
+                  <parameter name="style" position="1" attrib="0" type="UIKit.UITableViewStyle" />
+                </parameters>
+              </method>
+              <method name="OnSearchTextChanged(System.String)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="text" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="PerformFilter(System.String)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="text" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="ReloadComplete()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="ReloadData()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="SearchButtonClicked(System.String)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="text" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="Selected(Foundation.NSIndexPath)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="indexPath" position="0" attrib="0" type="Foundation.NSIndexPath" />
+                </parameters>
+              </method>
+              <method name="ShouldAutorotateToInterfaceOrientation(UIKit.UIInterfaceOrientation)" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="toInterfaceOrientation" position="0" attrib="0" type="UIKit.UIInterfaceOrientation" />
+                </parameters>
+              </method>
+              <method name="StartSearch()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="TriggerRefresh()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="ViewWillAppear(System.Boolean)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="animated" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="ViewWillDisappear(System.Boolean)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="animated" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+            </methods>
+            <classes>
+              <class name="SearchTextEventHandler" type="delegate" base="System.MulticastDelegate" sealed="true" charset="Ansi" layout="Auto">
+                <interfaces>
+                  <interface name="System.ICloneable" />
+                  <interface name="System.Runtime.Serialization.ISerializable" />
+                </interfaces>
+                <constructors>
+                  <constructor name=".ctor(System.Object, System.IntPtr)" attrib="6278">
+                    <parameters>
+                      <parameter name="object" position="0" attrib="0" type="System.Object" />
+                      <parameter name="method" position="1" attrib="0" type="System.IntPtr" />
+                    </parameters>
+                  </constructor>
+                </constructors>
+                <methods>
+                  <method name="BeginInvoke(System.Object, MonoTouch.Dialog.SearchChangedEventArgs, System.AsyncCallback, System.Object)" attrib="454" virtual="true" returntype="System.IAsyncResult">
+                    <parameters>
+                      <parameter name="sender" position="0" attrib="0" type="System.Object" />
+                      <parameter name="args" position="1" attrib="0" type="MonoTouch.Dialog.SearchChangedEventArgs" />
+                      <parameter name="callback" position="2" attrib="0" type="System.AsyncCallback" />
+                      <parameter name="object" position="3" attrib="0" type="System.Object" />
+                    </parameters>
+                  </method>
+                  <method name="EndInvoke(System.IAsyncResult)" attrib="454" virtual="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="result" position="0" attrib="0" type="System.IAsyncResult" />
+                    </parameters>
+                  </method>
+                  <method name="Invoke(System.Object, MonoTouch.Dialog.SearchChangedEventArgs)" attrib="454" virtual="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="sender" position="0" attrib="0" type="System.Object" />
+                      <parameter name="args" position="1" attrib="0" type="MonoTouch.Dialog.SearchChangedEventArgs" />
+                    </parameters>
+                  </method>
+                </methods>
+              </class>
+              <class name="SizingSource" type="class" base="MonoTouch.Dialog.DialogViewController+Source" charset="Ansi" layout="Auto">
+                <interfaces>
+                  <interface name="Foundation.INSObjectProtocol" />
+                  <interface name="ObjCRuntime.INativeObject" />
+                  <interface name="System.IDisposable" />
+                  <interface name="System.IEquatable`1[Foundation.NSObject]" />
+                  <interface name="UIKit.IUIScrollViewDelegate" />
+                </interfaces>
+                <constructors>
+                  <constructor name=".ctor(MonoTouch.Dialog.DialogViewController)" attrib="6278">
+                    <parameters>
+                      <parameter name="controller" position="0" attrib="0" type="MonoTouch.Dialog.DialogViewController" />
+                    </parameters>
+                  </constructor>
+                </constructors>
+                <methods>
+                  <method name="GetHeightForRow(UIKit.UITableView, Foundation.NSIndexPath)" attrib="198" virtual="true" is-override="true" returntype="System.nfloat">
+                    <parameters>
+                      <parameter name="tableView" position="0" attrib="0" type="UIKit.UITableView" />
+                      <parameter name="indexPath" position="1" attrib="0" type="Foundation.NSIndexPath" />
+                    </parameters>
+                  </method>
+                </methods>
+              </class>
+              <class name="Source" type="class" base="UIKit.UITableViewSource" charset="Ansi" layout="Auto">
+                <interfaces>
+                  <interface name="Foundation.INSObjectProtocol" />
+                  <interface name="ObjCRuntime.INativeObject" />
+                  <interface name="System.IDisposable" />
+                  <interface name="System.IEquatable`1[Foundation.NSObject]" />
+                  <interface name="UIKit.IUIScrollViewDelegate" />
+                </interfaces>
+                <fields>
+                  <field name="Container" attrib="4" fieldtype="MonoTouch.Dialog.DialogViewController" />
+                  <field name="Root" attrib="4" fieldtype="MonoTouch.Dialog.RootElement" />
+                </fields>
+                <constructors>
+                  <constructor name=".ctor(MonoTouch.Dialog.DialogViewController)" attrib="6278">
+                    <parameters>
+                      <parameter name="container" position="0" attrib="0" type="MonoTouch.Dialog.DialogViewController" />
+                    </parameters>
+                  </constructor>
+                </constructors>
+                <methods>
+                  <method name="AccessoryButtonTapped(UIKit.UITableView, Foundation.NSIndexPath)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="tableView" position="0" attrib="0" type="UIKit.UITableView" />
+                      <parameter name="indexPath" position="1" attrib="0" type="Foundation.NSIndexPath" />
+                    </parameters>
+                  </method>
+                  <method name="DraggingEnded(UIKit.UIScrollView, System.Boolean)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="scrollView" position="0" attrib="0" type="UIKit.UIScrollView" />
+                      <parameter name="willDecelerate" position="1" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                  <method name="DraggingStarted(UIKit.UIScrollView)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="scrollView" position="0" attrib="0" type="UIKit.UIScrollView" />
+                    </parameters>
+                  </method>
+                  <method name="GetCell(UIKit.UITableView, Foundation.NSIndexPath)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UITableViewCell">
+                    <parameters>
+                      <parameter name="tableView" position="0" attrib="0" type="UIKit.UITableView" />
+                      <parameter name="indexPath" position="1" attrib="0" type="Foundation.NSIndexPath" />
+                    </parameters>
+                  </method>
+                  <method name="GetHeightForFooter(UIKit.UITableView, System.nint)" attrib="198" virtual="true" is-override="true" returntype="System.nfloat">
+                    <parameters>
+                      <parameter name="tableView" position="0" attrib="0" type="UIKit.UITableView" />
+                      <parameter name="sectionIdx" position="1" attrib="0" type="System.nint" />
+                    </parameters>
+                  </method>
+                  <method name="GetHeightForHeader(UIKit.UITableView, System.nint)" attrib="198" virtual="true" is-override="true" returntype="System.nfloat">
+                    <parameters>
+                      <parameter name="tableView" position="0" attrib="0" type="UIKit.UITableView" />
+                      <parameter name="sectionIdx" position="1" attrib="0" type="System.nint" />
+                    </parameters>
+                  </method>
+                  <method name="GetViewForFooter(UIKit.UITableView, System.nint)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UIView">
+                    <parameters>
+                      <parameter name="tableView" position="0" attrib="0" type="UIKit.UITableView" />
+                      <parameter name="sectionIdx" position="1" attrib="0" type="System.nint" />
+                    </parameters>
+                  </method>
+                  <method name="GetViewForHeader(UIKit.UITableView, System.nint)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UIView">
+                    <parameters>
+                      <parameter name="tableView" position="0" attrib="0" type="UIKit.UITableView" />
+                      <parameter name="sectionIdx" position="1" attrib="0" type="System.nint" />
+                    </parameters>
+                  </method>
+                  <method name="NumberOfSections(UIKit.UITableView)" attrib="198" virtual="true" is-override="true" returntype="System.nint">
+                    <parameters>
+                      <parameter name="tableView" position="0" attrib="0" type="UIKit.UITableView" />
+                    </parameters>
+                  </method>
+                  <method name="RowDeselected(UIKit.UITableView, Foundation.NSIndexPath)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="tableView" position="0" attrib="0" type="UIKit.UITableView" />
+                      <parameter name="indexPath" position="1" attrib="0" type="Foundation.NSIndexPath" />
+                    </parameters>
+                  </method>
+                  <method name="RowSelected(UIKit.UITableView, Foundation.NSIndexPath)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="tableView" position="0" attrib="0" type="UIKit.UITableView" />
+                      <parameter name="indexPath" position="1" attrib="0" type="Foundation.NSIndexPath" />
+                    </parameters>
+                  </method>
+                  <method name="RowsInSection(UIKit.UITableView, System.nint)" attrib="198" virtual="true" is-override="true" returntype="System.nint">
+                    <parameters>
+                      <parameter name="tableview" position="0" attrib="0" type="UIKit.UITableView" />
+                      <parameter name="section" position="1" attrib="0" type="System.nint" />
+                    </parameters>
+                  </method>
+                  <method name="Scrolled(UIKit.UIScrollView)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="scrollView" position="0" attrib="0" type="UIKit.UIScrollView" />
+                    </parameters>
+                  </method>
+                  <method name="TitleForFooter(UIKit.UITableView, System.nint)" attrib="198" virtual="true" is-override="true" returntype="System.String">
+                    <parameters>
+                      <parameter name="tableView" position="0" attrib="0" type="UIKit.UITableView" />
+                      <parameter name="section" position="1" attrib="0" type="System.nint" />
+                    </parameters>
+                  </method>
+                  <method name="TitleForHeader(UIKit.UITableView, System.nint)" attrib="198" virtual="true" is-override="true" returntype="System.String">
+                    <parameters>
+                      <parameter name="tableView" position="0" attrib="0" type="UIKit.UITableView" />
+                      <parameter name="section" position="1" attrib="0" type="System.nint" />
+                    </parameters>
+                  </method>
+                  <method name="WillDisplay(UIKit.UITableView, UIKit.UITableViewCell, Foundation.NSIndexPath)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="tableView" position="0" attrib="0" type="UIKit.UITableView" />
+                      <parameter name="cell" position="1" attrib="0" type="UIKit.UITableViewCell" />
+                      <parameter name="indexPath" position="2" attrib="0" type="Foundation.NSIndexPath" />
+                    </parameters>
+                  </method>
+                </methods>
+              </class>
+            </classes>
+          </class>
+          <class name="Element" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <fields>
+              <field name="Caption" attrib="6" fieldtype="System.String" />
+              <field name="Parent" attrib="6" fieldtype="MonoTouch.Dialog.Element" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="CellKey" attrib="0" ptype="Foundation.NSString">
+                <methods>
+                  <method name="get_CellKey()" attrib="2500" virtual="true" returntype="Foundation.NSString">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IndexPath" attrib="0" ptype="Foundation.NSIndexPath">
+                <methods>
+                  <method name="get_IndexPath()" attrib="2182" returntype="Foundation.NSIndexPath">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Deselected(MonoTouch.Dialog.DialogViewController, UIKit.UITableView, Foundation.NSIndexPath)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="dvc" position="0" attrib="0" type="MonoTouch.Dialog.DialogViewController" />
+                  <parameter name="tableView" position="1" attrib="0" type="UIKit.UITableView" />
+                  <parameter name="path" position="2" attrib="0" type="Foundation.NSIndexPath" />
+                </parameters>
+              </method>
+              <method name="Dispose()" attrib="486" virtual="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="Dispose(System.Boolean)" attrib="452" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="GetActiveCell()" attrib="134" returntype="UIKit.UITableViewCell">
+                <parameters />
+              </method>
+              <method name="GetCell(UIKit.UITableView)" attrib="454" virtual="true" returntype="UIKit.UITableViewCell">
+                <parameters>
+                  <parameter name="tv" position="0" attrib="0" type="UIKit.UITableView" />
+                </parameters>
+              </method>
+              <method name="GetContainerTableView()" attrib="134" returntype="UIKit.UITableView">
+                <parameters />
+              </method>
+              <method name="GetImmediateRootElement()" attrib="134" returntype="MonoTouch.Dialog.RootElement">
+                <parameters />
+              </method>
+              <method name="Matches(System.String)" attrib="454" virtual="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="text" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="RemoveTag(UIKit.UITableViewCell, System.Int32)" attrib="148" static="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="cell" position="0" attrib="0" type="UIKit.UITableViewCell" />
+                  <parameter name="tag" position="1" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="Selected(MonoTouch.Dialog.DialogViewController, UIKit.UITableView, Foundation.NSIndexPath)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="dvc" position="0" attrib="0" type="MonoTouch.Dialog.DialogViewController" />
+                  <parameter name="tableView" position="1" attrib="0" type="UIKit.UITableView" />
+                  <parameter name="path" position="2" attrib="0" type="Foundation.NSIndexPath" />
+                </parameters>
+              </method>
+              <method name="Summary()" attrib="454" virtual="true" returntype="System.String">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="EntryAttribute" type="class" base="System.Attribute" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.AttributeUsageAttribute">
+                <properties>
+                  <property name="Inherited" value="False" />
+                  <property name="ValidOn" value="Field, Property" />
+                </properties>
+              </attribute>
+            </attributes>
+            <fields>
+              <field name="AutocapitalizationType" attrib="6" fieldtype="UIKit.UITextAutocapitalizationType" />
+              <field name="AutocorrectionType" attrib="6" fieldtype="UIKit.UITextAutocorrectionType" />
+              <field name="ClearButtonMode" attrib="6" fieldtype="UIKit.UITextFieldViewMode" />
+              <field name="KeyboardType" attrib="6" fieldtype="UIKit.UIKeyboardType" />
+              <field name="Placeholder" attrib="6" fieldtype="System.String" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="placeholder" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+          </class>
+          <class name="EntryElement" type="class" base="MonoTouch.Dialog.Element" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <fields>
+              <field name="val" attrib="4" fieldtype="System.String" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(System.String, System.String, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="placeholder" position="1" attrib="0" type="System.String" />
+                  <parameter name="value" position="2" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.String, System.String, System.Boolean)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="placeholder" position="1" attrib="0" type="System.String" />
+                  <parameter name="value" position="2" attrib="0" type="System.String" />
+                  <parameter name="isPassword" position="3" attrib="0" type="System.Boolean" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="AlignEntryWithAllSections" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_AlignEntryWithAllSections()" attrib="2182" returntype="System.Boolean">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_AlignEntryWithAllSections(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="AutocapitalizationType" attrib="0" ptype="UIKit.UITextAutocapitalizationType">
+                <methods>
+                  <method name="get_AutocapitalizationType()" attrib="2182" returntype="UIKit.UITextAutocapitalizationType">
+                    <parameters />
+                  </method>
+                  <method name="set_AutocapitalizationType(UIKit.UITextAutocapitalizationType)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="UIKit.UITextAutocapitalizationType" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="AutocorrectionType" attrib="0" ptype="UIKit.UITextAutocorrectionType">
+                <methods>
+                  <method name="get_AutocorrectionType()" attrib="2182" returntype="UIKit.UITextAutocorrectionType">
+                    <parameters />
+                  </method>
+                  <method name="set_AutocorrectionType(UIKit.UITextAutocorrectionType)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="UIKit.UITextAutocorrectionType" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="CellKey" attrib="0" ptype="Foundation.NSString">
+                <methods>
+                  <method name="get_CellKey()" attrib="2244" virtual="true" is-override="true" returntype="Foundation.NSString">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="ClearButtonMode" attrib="0" ptype="UIKit.UITextFieldViewMode">
+                <methods>
+                  <method name="get_ClearButtonMode()" attrib="2182" returntype="UIKit.UITextFieldViewMode">
+                    <parameters />
+                  </method>
+                  <method name="set_ClearButtonMode(UIKit.UITextFieldViewMode)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="UIKit.UITextFieldViewMode" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="EnablesReturnKeyAutomatically" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_EnablesReturnKeyAutomatically()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_EnablesReturnKeyAutomatically(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="EntryEnded" attrib="0" ptype="System.EventHandler">
+                <methods>
+                  <method name="get_EntryEnded()" attrib="2182" returntype="System.EventHandler">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_EntryEnded(System.EventHandler)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.EventHandler" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="EntryKey" attrib="0" ptype="Foundation.NSString">
+                <methods>
+                  <method name="get_EntryKey()" attrib="2500" virtual="true" returntype="Foundation.NSString">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="EntryStarted" attrib="0" ptype="System.EventHandler">
+                <methods>
+                  <method name="get_EntryStarted()" attrib="2182" returntype="System.EventHandler">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_EntryStarted(System.EventHandler)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.EventHandler" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="KeyboardType" attrib="0" ptype="UIKit.UIKeyboardType">
+                <methods>
+                  <method name="get_KeyboardType()" attrib="2182" returntype="UIKit.UIKeyboardType">
+                    <parameters />
+                  </method>
+                  <method name="set_KeyboardType(UIKit.UIKeyboardType)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="UIKit.UIKeyboardType" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="NotifyChangedOnKeyStroke" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_NotifyChangedOnKeyStroke()" attrib="2182" returntype="System.Boolean">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_NotifyChangedOnKeyStroke(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="ReturnKeyType" attrib="0" ptype="System.Nullable`1[UIKit.UIReturnKeyType]">
+                <methods>
+                  <method name="get_ReturnKeyType()" attrib="2182" returntype="System.Nullable`1[UIKit.UIReturnKeyType]">
+                    <parameters />
+                  </method>
+                  <method name="set_ReturnKeyType(System.Nullable`1[UIKit.UIReturnKeyType])" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Nullable`1[UIKit.UIReturnKeyType]" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="TextAlignment" attrib="0" ptype="UIKit.UITextAlignment">
+                <methods>
+                  <method name="get_TextAlignment()" attrib="2182" returntype="UIKit.UITextAlignment">
+                    <parameters />
+                  </method>
+                  <method name="set_TextAlignment(UIKit.UITextAlignment)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="UIKit.UITextAlignment" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Value" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Value()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_Value(System.String)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <events>
+              <event name="Changed" attrib="0" eventtype="System.EventHandler" />
+              <event name="ShouldReturn" attrib="0" eventtype="System.Func`1[System.Boolean]" />
+            </events>
+            <methods>
+              <method name="BecomeFirstResponder(System.Boolean)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="animated" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="CreateTextField(CoreGraphics.CGRect)" attrib="452" virtual="true" returntype="UIKit.UITextField">
+                <parameters>
+                  <parameter name="frame" position="0" attrib="0" type="CoreGraphics.CGRect" />
+                </parameters>
+              </method>
+              <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="FetchValue()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="GetCell(UIKit.UITableView)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UITableViewCell">
+                <parameters>
+                  <parameter name="tv" position="0" attrib="0" type="UIKit.UITableView" />
+                </parameters>
+              </method>
+              <method name="Matches(System.String)" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="text" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="ResignFirstResponder(System.Boolean)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="animated" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="Selected(MonoTouch.Dialog.DialogViewController, UIKit.UITableView, Foundation.NSIndexPath)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="dvc" position="0" attrib="0" type="MonoTouch.Dialog.DialogViewController" />
+                  <parameter name="tableView" position="1" attrib="0" type="UIKit.UITableView" />
+                  <parameter name="indexPath" position="2" attrib="0" type="Foundation.NSIndexPath" />
+                </parameters>
+              </method>
+              <method name="Summary()" attrib="198" virtual="true" is-override="true" returntype="System.String">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="FloatElement" type="class" base="MonoTouch.Dialog.Element" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <fields>
+              <field name="MaxValue" attrib="6" fieldtype="System.Single" />
+              <field name="MinValue" attrib="6" fieldtype="System.Single" />
+              <field name="ShowCaption" attrib="6" fieldtype="System.Boolean" />
+              <field name="Value" attrib="6" fieldtype="System.Single" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(System.Single)" attrib="6278">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Single" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(UIKit.UIImage, UIKit.UIImage, System.Single)" attrib="6278">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="UIKit.UIImage" />
+                  <parameter name="right" position="1" attrib="0" type="UIKit.UIImage" />
+                  <parameter name="value" position="2" attrib="0" type="System.Single" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="CellKey" attrib="0" ptype="Foundation.NSString">
+                <methods>
+                  <method name="get_CellKey()" attrib="2244" virtual="true" is-override="true" returntype="Foundation.NSString">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="GetCell(UIKit.UITableView)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UITableViewCell">
+                <parameters>
+                  <parameter name="tv" position="0" attrib="0" type="UIKit.UITableView" />
+                </parameters>
+              </method>
+              <method name="Summary()" attrib="198" virtual="true" is-override="true" returntype="System.String">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="GlassButton" type="class" base="UIKit.UIButton" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="CoreAnimation.ICALayerDelegate" />
+              <interface name="Foundation.INSCoding" />
+              <interface name="Foundation.INSObjectProtocol" />
+              <interface name="ObjCRuntime.INativeObject" />
+              <interface name="System.Collections.IEnumerable" />
+              <interface name="System.IDisposable" />
+              <interface name="System.IEquatable`1[Foundation.NSObject]" />
+              <interface name="UIKit.IUIAccessibilityContentSizeCategoryImageAdjusting" />
+              <interface name="UIKit.IUIAccessibilityIdentification" />
+              <interface name="UIKit.IUIAppearance" />
+              <interface name="UIKit.IUIAppearanceContainer" />
+              <interface name="UIKit.IUICoordinateSpace" />
+              <interface name="UIKit.IUIDynamicItem" />
+              <interface name="UIKit.IUIFocusEnvironment" />
+              <interface name="UIKit.IUIFocusItem" />
+              <interface name="UIKit.IUIPasteConfigurationSupporting" />
+              <interface name="UIKit.IUISpringLoadedInteractionSupporting" />
+              <interface name="UIKit.IUITraitEnvironment" />
+            </interfaces>
+            <fields>
+              <field name="DisabledColor" attrib="6" fieldtype="UIKit.UIColor" />
+              <field name="HighlightedColor" attrib="6" fieldtype="UIKit.UIColor" />
+              <field name="NormalColor" attrib="6" fieldtype="UIKit.UIColor" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(CoreGraphics.CGRect)" attrib="6278">
+                <parameters>
+                  <parameter name="frame" position="0" attrib="0" type="CoreGraphics.CGRect" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Enabled" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_Enabled()" attrib="2246" virtual="true" is-override="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_Enabled(System.Boolean)" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <events>
+              <event name="Tapped" attrib="0" eventtype="System.Action`1[MonoTouch.Dialog.GlassButton]" />
+            </events>
+            <methods>
+              <method name="BeginTracking(UIKit.UITouch, UIKit.UIEvent)" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="uitouch" position="0" attrib="0" type="UIKit.UITouch" />
+                  <parameter name="uievent" position="1" attrib="0" type="UIKit.UIEvent" />
+                </parameters>
+              </method>
+              <method name="ContinueTracking(UIKit.UITouch, UIKit.UIEvent)" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="uitouch" position="0" attrib="0" type="UIKit.UITouch" />
+                  <parameter name="uievent" position="1" attrib="0" type="UIKit.UIEvent" />
+                </parameters>
+              </method>
+              <method name="Draw(CoreGraphics.CGRect)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="rect" position="0" attrib="0" type="CoreGraphics.CGRect" />
+                </parameters>
+              </method>
+              <method name="EndTracking(UIKit.UITouch, UIKit.UIEvent)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="uitouch" position="0" attrib="0" type="UIKit.UITouch" />
+                  <parameter name="uievent" position="1" attrib="0" type="UIKit.UIEvent" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="GraphicsUtil" type="class" base="System.Object" sealed="true" abstract="true" charset="Ansi" layout="Auto">
+            <methods>
+              <method name="FillRoundedRect(CoreGraphics.CGContext, CoreGraphics.CGRect, System.nfloat)" attrib="150" static="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ctx" position="0" attrib="0" type="CoreGraphics.CGContext" />
+                  <parameter name="rect" position="1" attrib="0" type="CoreGraphics.CGRect" />
+                  <parameter name="radius" position="2" attrib="0" type="System.nfloat" />
+                </parameters>
+              </method>
+              <method name="MakeRoundedPath(System.Single, System.Single)" attrib="150" static="true" returntype="CoreGraphics.CGPath">
+                <parameters>
+                  <parameter name="size" position="0" attrib="0" type="System.Single" />
+                  <parameter name="radius" position="1" attrib="0" type="System.Single" />
+                </parameters>
+              </method>
+              <method name="MakeRoundedRectPath(CoreGraphics.CGRect, System.nfloat)" attrib="150" static="true" returntype="CoreGraphics.CGPath">
+                <parameters>
+                  <parameter name="rect" position="0" attrib="0" type="CoreGraphics.CGRect" />
+                  <parameter name="radius" position="1" attrib="0" type="System.nfloat" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="Group" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <fields>
+              <field name="Key" attrib="6" fieldtype="System.String" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="key" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+          </class>
+          <class name="HtmlAttribute" type="class" base="System.Attribute" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.AttributeUsageAttribute">
+                <properties>
+                  <property name="Inherited" value="False" />
+                  <property name="ValidOn" value="Field, Property" />
+                </properties>
+              </attribute>
+            </attributes>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+          </class>
+          <class name="HtmlElement" type="class" base="MonoTouch.Dialog.Element" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.String, Foundation.NSUrl)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="url" position="1" attrib="0" type="Foundation.NSUrl" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="url" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="CellKey" attrib="0" ptype="Foundation.NSString">
+                <methods>
+                  <method name="get_CellKey()" attrib="2244" virtual="true" is-override="true" returntype="Foundation.NSString">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Url" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Url()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_Url(System.String)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="GetCell(UIKit.UITableView)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UITableViewCell">
+                <parameters>
+                  <parameter name="tv" position="0" attrib="0" type="UIKit.UITableView" />
+                </parameters>
+              </method>
+              <method name="Selected(MonoTouch.Dialog.DialogViewController, UIKit.UITableView, Foundation.NSIndexPath)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="dvc" position="0" attrib="0" type="MonoTouch.Dialog.DialogViewController" />
+                  <parameter name="tableView" position="1" attrib="0" type="UIKit.UITableView" />
+                  <parameter name="path" position="2" attrib="0" type="Foundation.NSIndexPath" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="IColorizeBackground" type="interface" abstract="true" charset="Ansi" layout="Auto">
+            <methods>
+              <method name="WillDisplay(UIKit.UITableView, UIKit.UITableViewCell, Foundation.NSIndexPath)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="tableView" position="0" attrib="0" type="UIKit.UITableView" />
+                  <parameter name="cell" position="1" attrib="0" type="UIKit.UITableViewCell" />
+                  <parameter name="indexPath" position="2" attrib="0" type="Foundation.NSIndexPath" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="IElementSizing" type="interface" abstract="true" charset="Ansi" layout="Auto">
+            <methods>
+              <method name="GetHeight(UIKit.UITableView, Foundation.NSIndexPath)" attrib="1478" abstract="true" virtual="true" returntype="System.nfloat">
+                <parameters>
+                  <parameter name="tableView" position="0" attrib="0" type="UIKit.UITableView" />
+                  <parameter name="indexPath" position="1" attrib="0" type="Foundation.NSIndexPath" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="ImageElement" type="class" base="MonoTouch.Dialog.Element" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <fields>
+              <field name="Value" attrib="6" fieldtype="UIKit.UIImage" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(UIKit.UIImage)" attrib="6278">
+                <parameters>
+                  <parameter name="image" position="0" attrib="0" type="UIKit.UIImage" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="CellKey" attrib="0" ptype="Foundation.NSString">
+                <methods>
+                  <method name="get_CellKey()" attrib="2244" virtual="true" is-override="true" returntype="Foundation.NSString">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="GetCell(UIKit.UITableView)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UITableViewCell">
+                <parameters>
+                  <parameter name="tv" position="0" attrib="0" type="UIKit.UITableView" />
+                </parameters>
+              </method>
+              <method name="Selected(MonoTouch.Dialog.DialogViewController, UIKit.UITableView, Foundation.NSIndexPath)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="dvc" position="0" attrib="0" type="MonoTouch.Dialog.DialogViewController" />
+                  <parameter name="tableView" position="1" attrib="0" type="UIKit.UITableView" />
+                  <parameter name="path" position="2" attrib="0" type="Foundation.NSIndexPath" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="ImageStringElement" type="class" base="MonoTouch.Dialog.StringElement" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.String, UIKit.UIImage)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="image" position="1" attrib="0" type="UIKit.UIImage" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Action, UIKit.UIImage)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="tapped" position="1" attrib="0" type="System.Action" />
+                  <parameter name="image" position="2" attrib="0" type="UIKit.UIImage" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.String, UIKit.UIImage)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="value" position="1" attrib="0" type="System.String" />
+                  <parameter name="image" position="2" attrib="0" type="UIKit.UIImage" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Accessory" attrib="0" ptype="UIKit.UITableViewCellAccessory">
+                <methods>
+                  <method name="get_Accessory()" attrib="2182" returntype="UIKit.UITableViewCellAccessory">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_Accessory(UIKit.UITableViewCellAccessory)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="UIKit.UITableViewCellAccessory" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="CellKey" attrib="0" ptype="Foundation.NSString">
+                <methods>
+                  <method name="get_CellKey()" attrib="2244" virtual="true" is-override="true" returntype="Foundation.NSString">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="GetCell(UIKit.UITableView)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UITableViewCell">
+                <parameters>
+                  <parameter name="tv" position="0" attrib="0" type="UIKit.UITableView" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="JsonElement" type="class" base="MonoTouch.Dialog.RootElement" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.Reflection.DefaultMemberAttribute">
+                <properties>
+                  <property name="MemberName" value="Item" />
+                </properties>
+              </attribute>
+            </attributes>
+            <interfaces>
+              <interface name="System.Collections.Generic.IEnumerable`1[MonoTouch.Dialog.Section]" />
+              <interface name="System.Collections.IEnumerable" />
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <fields>
+              <field name="Url" attrib="6" fieldtype="System.String" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(System.String, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="url" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, MonoTouch.Dialog.Group, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="group" position="1" attrib="0" type="MonoTouch.Dialog.Group" />
+                  <parameter name="url" position="2" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Int32, System.Int32, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="section" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="element" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="url" position="3" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="DateKind" attrib="0" ptype="System.DateTimeKind">
+                <methods>
+                  <method name="get_DateKind()" attrib="2198" static="true" returntype="System.DateTimeKind">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_DateKind(System.DateTimeKind)" attrib="2198" static="true" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.DateTimeKind" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Item" attrib="0" ptype="MonoTouch.Dialog.Element" params="System.String">
+                <methods>
+                  <method name="get_Item(System.String)" attrib="2182" returntype="MonoTouch.Dialog.Element">
+                    <parameters>
+                      <parameter name="key" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="FromFile(System.String)" attrib="150" static="true" returntype="MonoTouch.Dialog.JsonElement">
+                <parameters>
+                  <parameter name="file" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="FromFile(System.String, System.Object)" attrib="150" static="true" returntype="MonoTouch.Dialog.JsonElement">
+                <parameters>
+                  <parameter name="file" position="0" attrib="0" type="System.String" />
+                  <parameter name="arg" position="1" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="FromJson(System.Json.JsonObject)" attrib="150" static="true" returntype="MonoTouch.Dialog.JsonElement">
+                <parameters>
+                  <parameter name="json" position="0" attrib="0" type="System.Json.JsonObject" />
+                </parameters>
+              </method>
+              <method name="FromJson(System.Json.JsonObject, System.Object)" attrib="150" static="true" returntype="MonoTouch.Dialog.JsonElement">
+                <parameters>
+                  <parameter name="json" position="0" attrib="0" type="System.Json.JsonObject" />
+                  <parameter name="data" position="1" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="FromJson(MonoTouch.Dialog.JsonElement, System.Json.JsonObject, System.Object)" attrib="150" static="true" returntype="MonoTouch.Dialog.JsonElement">
+                <parameters>
+                  <parameter name="parent" position="0" attrib="0" type="MonoTouch.Dialog.JsonElement" />
+                  <parameter name="json" position="1" attrib="0" type="System.Json.JsonObject" />
+                  <parameter name="data" position="2" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="GetCell(UIKit.UITableView)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UITableViewCell">
+                <parameters>
+                  <parameter name="tv" position="0" attrib="0" type="UIKit.UITableView" />
+                </parameters>
+              </method>
+              <method name="Selected(MonoTouch.Dialog.DialogViewController, UIKit.UITableView, Foundation.NSIndexPath)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="dvc" position="0" attrib="0" type="MonoTouch.Dialog.DialogViewController" />
+                  <parameter name="tableView" position="1" attrib="0" type="UIKit.UITableView" />
+                  <parameter name="path" position="2" attrib="0" type="Foundation.NSIndexPath" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="LoadMoreElement" type="class" base="MonoTouch.Dialog.Element" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="MonoTouch.Dialog.IElementSizing" />
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <fields>
+              <field name="Font" attrib="6" fieldtype="UIKit.UIFont" />
+              <field name="Height" attrib="6" fieldtype="System.Nullable`1[System.Single]" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.String, System.String, System.Action`1[MonoTouch.Dialog.LoadMoreElement])" attrib="6278">
+                <parameters>
+                  <parameter name="normalCaption" position="0" attrib="0" type="System.String" />
+                  <parameter name="loadingCaption" position="1" attrib="0" type="System.String" />
+                  <parameter name="tapped" position="2" attrib="0" type="System.Action`1[MonoTouch.Dialog.LoadMoreElement]" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.String, System.Action`1[MonoTouch.Dialog.LoadMoreElement], UIKit.UIFont, UIKit.UIColor)" attrib="6278">
+                <parameters>
+                  <parameter name="normalCaption" position="0" attrib="0" type="System.String" />
+                  <parameter name="loadingCaption" position="1" attrib="0" type="System.String" />
+                  <parameter name="tapped" position="2" attrib="0" type="System.Action`1[MonoTouch.Dialog.LoadMoreElement]" />
+                  <parameter name="font" position="3" attrib="0" type="UIKit.UIFont" />
+                  <parameter name="textColor" position="4" attrib="0" type="UIKit.UIColor" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Accessory" attrib="0" ptype="UIKit.UITableViewCellAccessory">
+                <methods>
+                  <method name="get_Accessory()" attrib="2182" returntype="UIKit.UITableViewCellAccessory">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_Accessory(UIKit.UITableViewCellAccessory)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="UIKit.UITableViewCellAccessory" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Alignment" attrib="0" ptype="UIKit.UITextAlignment">
+                <methods>
+                  <method name="get_Alignment()" attrib="2182" returntype="UIKit.UITextAlignment">
+                    <parameters />
+                  </method>
+                  <method name="set_Alignment(UIKit.UITextAlignment)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="UIKit.UITextAlignment" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Animating" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_Animating()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_Animating(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="BackgroundColor" attrib="0" ptype="UIKit.UIColor">
+                <methods>
+                  <method name="get_BackgroundColor()" attrib="2182" returntype="UIKit.UIColor">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_BackgroundColor(UIKit.UIColor)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="UIKit.UIColor" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="LoadingCaption" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_LoadingCaption()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_LoadingCaption(System.String)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="NormalCaption" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_NormalCaption()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_NormalCaption(System.String)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="TextColor" attrib="0" ptype="UIKit.UIColor">
+                <methods>
+                  <method name="get_TextColor()" attrib="2182" returntype="UIKit.UIColor">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_TextColor(UIKit.UIColor)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="UIKit.UIColor" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <events>
+              <event name="Tapped" attrib="0" eventtype="System.Action`1[MonoTouch.Dialog.LoadMoreElement]" />
+            </events>
+            <methods>
+              <method name="GetCell(UIKit.UITableView)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UITableViewCell">
+                <parameters>
+                  <parameter name="tv" position="0" attrib="0" type="UIKit.UITableView" />
+                </parameters>
+              </method>
+              <method name="GetHeight(UIKit.UITableView, Foundation.NSIndexPath)" attrib="486" virtual="true" returntype="System.nfloat">
+                <parameters>
+                  <parameter name="tableView" position="0" attrib="0" type="UIKit.UITableView" />
+                  <parameter name="indexPath" position="1" attrib="0" type="Foundation.NSIndexPath" />
+                </parameters>
+              </method>
+              <method name="Selected(MonoTouch.Dialog.DialogViewController, UIKit.UITableView, Foundation.NSIndexPath)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="dvc" position="0" attrib="0" type="MonoTouch.Dialog.DialogViewController" />
+                  <parameter name="tableView" position="1" attrib="0" type="UIKit.UITableView" />
+                  <parameter name="path" position="2" attrib="0" type="Foundation.NSIndexPath" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="MessageElement" type="class" base="MonoTouch.Dialog.Element" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="MonoTouch.Dialog.IElementSizing" />
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <fields>
+              <field name="Body" attrib="6" fieldtype="System.String" />
+              <field name="Date" attrib="6" fieldtype="System.DateTime" />
+              <field name="MessageCount" attrib="6" fieldtype="System.Int32" />
+              <field name="NewFlag" attrib="6" fieldtype="System.Boolean" />
+              <field name="Sender" attrib="6" fieldtype="System.String" />
+              <field name="Subject" attrib="6" fieldtype="System.String" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.Action`3[MonoTouch.Dialog.DialogViewController,UIKit.UITableView,Foundation.NSIndexPath])" attrib="6278">
+                <parameters>
+                  <parameter name="tapped" position="0" attrib="0" type="System.Action`3[MonoTouch.Dialog.DialogViewController,UIKit.UITableView,Foundation.NSIndexPath]" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <events>
+              <event name="Tapped" attrib="0" eventtype="System.Action`3[MonoTouch.Dialog.DialogViewController,UIKit.UITableView,Foundation.NSIndexPath]" />
+            </events>
+            <methods>
+              <method name="GetCell(UIKit.UITableView)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UITableViewCell">
+                <parameters>
+                  <parameter name="tv" position="0" attrib="0" type="UIKit.UITableView" />
+                </parameters>
+              </method>
+              <method name="GetHeight(UIKit.UITableView, Foundation.NSIndexPath)" attrib="486" virtual="true" returntype="System.nfloat">
+                <parameters>
+                  <parameter name="tableView" position="0" attrib="0" type="UIKit.UITableView" />
+                  <parameter name="indexPath" position="1" attrib="0" type="Foundation.NSIndexPath" />
+                </parameters>
+              </method>
+              <method name="Matches(System.String)" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="text" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="Selected(MonoTouch.Dialog.DialogViewController, UIKit.UITableView, Foundation.NSIndexPath)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="dvc" position="0" attrib="0" type="MonoTouch.Dialog.DialogViewController" />
+                  <parameter name="tableView" position="1" attrib="0" type="UIKit.UITableView" />
+                  <parameter name="path" position="2" attrib="0" type="Foundation.NSIndexPath" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="MessageSummaryView" type="class" base="UIKit.UIView" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="CoreAnimation.ICALayerDelegate" />
+              <interface name="Foundation.INSCoding" />
+              <interface name="Foundation.INSObjectProtocol" />
+              <interface name="ObjCRuntime.INativeObject" />
+              <interface name="System.Collections.IEnumerable" />
+              <interface name="System.IDisposable" />
+              <interface name="System.IEquatable`1[Foundation.NSObject]" />
+              <interface name="UIKit.IUIAccessibilityIdentification" />
+              <interface name="UIKit.IUIAppearance" />
+              <interface name="UIKit.IUIAppearanceContainer" />
+              <interface name="UIKit.IUICoordinateSpace" />
+              <interface name="UIKit.IUIDynamicItem" />
+              <interface name="UIKit.IUIFocusEnvironment" />
+              <interface name="UIKit.IUIFocusItem" />
+              <interface name="UIKit.IUIPasteConfigurationSupporting" />
+              <interface name="UIKit.IUITraitEnvironment" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Body" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Body()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Date" attrib="0" ptype="System.DateTime">
+                <methods>
+                  <method name="get_Date()" attrib="2182" returntype="System.DateTime">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="MessageCount" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_MessageCount()" attrib="2182" returntype="System.Int32">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="NewFlag" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_NewFlag()" attrib="2182" returntype="System.Boolean">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Sender" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Sender()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Subject" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Subject()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Draw(CoreGraphics.CGRect)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="rect" position="0" attrib="0" type="CoreGraphics.CGRect" />
+                </parameters>
+              </method>
+              <method name="Update(System.String, System.String, System.String, System.DateTime, System.Boolean, System.Int32)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="sender" position="0" attrib="0" type="System.String" />
+                  <parameter name="body" position="1" attrib="0" type="System.String" />
+                  <parameter name="subject" position="2" attrib="0" type="System.String" />
+                  <parameter name="date" position="3" attrib="0" type="System.DateTime" />
+                  <parameter name="newFlag" position="4" attrib="0" type="System.Boolean" />
+                  <parameter name="messageCount" position="5" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="MultilineAttribute" type="class" base="System.Attribute" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.AttributeUsageAttribute">
+                <properties>
+                  <property name="Inherited" value="False" />
+                  <property name="ValidOn" value="Field, Property" />
+                </properties>
+              </attribute>
+            </attributes>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+          </class>
+          <class name="MultilineElement" type="class" base="MonoTouch.Dialog.StringElement" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="MonoTouch.Dialog.IElementSizing" />
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Action)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="tapped" position="1" attrib="0" type="System.Action" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="value" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="GetCell(UIKit.UITableView)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UITableViewCell">
+                <parameters>
+                  <parameter name="tv" position="0" attrib="0" type="UIKit.UITableView" />
+                </parameters>
+              </method>
+              <method name="GetHeight(UIKit.UITableView, Foundation.NSIndexPath)" attrib="454" virtual="true" returntype="System.nfloat">
+                <parameters>
+                  <parameter name="tableView" position="0" attrib="0" type="UIKit.UITableView" />
+                  <parameter name="indexPath" position="1" attrib="0" type="Foundation.NSIndexPath" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="OnTapAttribute" type="class" base="System.Attribute" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.AttributeUsageAttribute">
+                <properties>
+                  <property name="Inherited" value="False" />
+                  <property name="ValidOn" value="Field, Property" />
+                </properties>
+              </attribute>
+            </attributes>
+            <fields>
+              <field name="Method" attrib="6" fieldtype="System.String" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="method" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+          </class>
+          <class name="OwnerDrawnElement" type="class" base="MonoTouch.Dialog.Element" abstract="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="MonoTouch.Dialog.IElementSizing" />
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(UIKit.UITableViewCellStyle, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="style" position="0" attrib="0" type="UIKit.UITableViewCellStyle" />
+                  <parameter name="cellIdentifier" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="CellReuseIdentifier" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_CellReuseIdentifier()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_CellReuseIdentifier(System.String)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Style" attrib="0" ptype="UIKit.UITableViewCellStyle">
+                <methods>
+                  <method name="get_Style()" attrib="2182" returntype="UIKit.UITableViewCellStyle">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_Style(UIKit.UITableViewCellStyle)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="UIKit.UITableViewCellStyle" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Draw(CoreGraphics.CGRect, CoreGraphics.CGContext, UIKit.UIView)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="bounds" position="0" attrib="0" type="CoreGraphics.CGRect" />
+                  <parameter name="context" position="1" attrib="0" type="CoreGraphics.CGContext" />
+                  <parameter name="view" position="2" attrib="0" type="UIKit.UIView" />
+                </parameters>
+              </method>
+              <method name="GetCell(UIKit.UITableView)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UITableViewCell">
+                <parameters>
+                  <parameter name="tv" position="0" attrib="0" type="UIKit.UITableView" />
+                </parameters>
+              </method>
+              <method name="GetHeight(UIKit.UITableView, Foundation.NSIndexPath)" attrib="486" virtual="true" returntype="System.nfloat">
+                <parameters>
+                  <parameter name="tableView" position="0" attrib="0" type="UIKit.UITableView" />
+                  <parameter name="indexPath" position="1" attrib="0" type="Foundation.NSIndexPath" />
+                </parameters>
+              </method>
+              <method name="Height(CoreGraphics.CGRect)" attrib="1478" abstract="true" virtual="true" returntype="System.nfloat">
+                <parameters>
+                  <parameter name="bounds" position="0" attrib="0" type="CoreGraphics.CGRect" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="PasswordAttribute" type="class" base="MonoTouch.Dialog.EntryAttribute" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.AttributeUsageAttribute">
+                <properties>
+                  <property name="Inherited" value="False" />
+                  <property name="ValidOn" value="Field, Property" />
+                </properties>
+              </attribute>
+            </attributes>
+            <constructors>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="placeholder" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+          </class>
+          <class name="RadioElement" type="class" base="MonoTouch.Dialog.StringElement" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <fields>
+              <field name="Group" attrib="6" fieldtype="System.String" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="group" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="GetCell(UIKit.UITableView)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UITableViewCell">
+                <parameters>
+                  <parameter name="tv" position="0" attrib="0" type="UIKit.UITableView" />
+                </parameters>
+              </method>
+              <method name="Selected(MonoTouch.Dialog.DialogViewController, UIKit.UITableView, Foundation.NSIndexPath)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="dvc" position="0" attrib="0" type="MonoTouch.Dialog.DialogViewController" />
+                  <parameter name="tableView" position="1" attrib="0" type="UIKit.UITableView" />
+                  <parameter name="indexPath" position="2" attrib="0" type="Foundation.NSIndexPath" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="RadioGroup" type="class" base="MonoTouch.Dialog.Group" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor(System.Int32)" attrib="6278">
+                <parameters>
+                  <parameter name="selected" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Int32)" attrib="6278">
+                <parameters>
+                  <parameter name="key" position="0" attrib="0" type="System.String" />
+                  <parameter name="selected" position="1" attrib="0" type="System.Int32" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Selected" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_Selected()" attrib="2502" virtual="true" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                  <method name="set_Selected(System.Int32)" attrib="2502" virtual="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+          </class>
+          <class name="RadioSelectionAttribute" type="class" base="System.Attribute" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.AttributeUsageAttribute">
+                <properties>
+                  <property name="Inherited" value="False" />
+                  <property name="ValidOn" value="Field, Property" />
+                </properties>
+              </attribute>
+            </attributes>
+            <fields>
+              <field name="Target" attrib="6" fieldtype="System.String" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="target" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+          </class>
+          <class name="RangeAttribute" type="class" base="System.Attribute" charset="Ansi" layout="Auto">
+            <fields>
+              <field name="High" attrib="6" fieldtype="System.Single" />
+              <field name="Low" attrib="6" fieldtype="System.Single" />
+              <field name="ShowCaption" attrib="6" fieldtype="System.Boolean" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(System.Single, System.Single)" attrib="6278">
+                <parameters>
+                  <parameter name="low" position="0" attrib="0" type="System.Single" />
+                  <parameter name="high" position="1" attrib="0" type="System.Single" />
+                </parameters>
+              </constructor>
+            </constructors>
+          </class>
+          <class name="RefreshTableHeaderView" type="class" base="UIKit.UIView" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="CoreAnimation.ICALayerDelegate" />
+              <interface name="Foundation.INSCoding" />
+              <interface name="Foundation.INSObjectProtocol" />
+              <interface name="ObjCRuntime.INativeObject" />
+              <interface name="System.Collections.IEnumerable" />
+              <interface name="System.IDisposable" />
+              <interface name="System.IEquatable`1[Foundation.NSObject]" />
+              <interface name="UIKit.IUIAccessibilityIdentification" />
+              <interface name="UIKit.IUIAppearance" />
+              <interface name="UIKit.IUIAppearanceContainer" />
+              <interface name="UIKit.IUICoordinateSpace" />
+              <interface name="UIKit.IUIDynamicItem" />
+              <interface name="UIKit.IUIFocusEnvironment" />
+              <interface name="UIKit.IUIFocusItem" />
+              <interface name="UIKit.IUIPasteConfigurationSupporting" />
+              <interface name="UIKit.IUITraitEnvironment" />
+            </interfaces>
+            <fields>
+              <field name="Activity" attrib="4" fieldtype="UIKit.UIActivityIndicatorView" />
+              <field name="ArrowView" attrib="4" fieldtype="UIKit.UIImageView" />
+              <field name="IsFlipped" attrib="6" fieldtype="System.Boolean" />
+              <field name="LastUpdateLabel" attrib="4" fieldtype="UIKit.UILabel" />
+              <field name="StatusLabel" attrib="4" fieldtype="UIKit.UILabel" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(CoreGraphics.CGRect)" attrib="6278">
+                <parameters>
+                  <parameter name="rect" position="0" attrib="0" type="CoreGraphics.CGRect" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="LastUpdate" attrib="0" ptype="System.DateTime">
+                <methods>
+                  <method name="get_LastUpdate()" attrib="2182" returntype="System.DateTime">
+                    <parameters />
+                  </method>
+                  <method name="set_LastUpdate(System.DateTime)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.DateTime" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="CreateViews()" attrib="454" virtual="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="Draw(CoreGraphics.CGRect)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="rect" position="0" attrib="0" type="CoreGraphics.CGRect" />
+                </parameters>
+              </method>
+              <method name="Flip(System.Boolean)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="animate" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="LayoutSubviews()" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="SetActivity(System.Boolean)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="active" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="SetStatus(MonoTouch.Dialog.RefreshViewStatus)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="status" position="0" attrib="0" type="MonoTouch.Dialog.RefreshViewStatus" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="RefreshViewStatus" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="Loading" attrib="32854" fieldtype="MonoTouch.Dialog.RefreshViewStatus" value="2" />
+              <field name="PullToReload" attrib="32854" fieldtype="MonoTouch.Dialog.RefreshViewStatus" value="1" />
+              <field name="ReleaseToReload" attrib="32854" fieldtype="MonoTouch.Dialog.RefreshViewStatus" value="0" />
+            </fields>
+          </class>
+          <class name="RootElement" type="class" base="MonoTouch.Dialog.Element" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.Reflection.DefaultMemberAttribute">
+                <properties>
+                  <property name="MemberName" value="Item" />
+                </properties>
+              </attribute>
+            </attributes>
+            <interfaces>
+              <interface name="System.Collections.Generic.IEnumerable`1[MonoTouch.Dialog.Section]" />
+              <interface name="System.Collections.IEnumerable" />
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <fields>
+              <field name="NeedColorUpdate" attrib="6" fieldtype="System.Boolean" />
+              <field name="TableView" attrib="6" fieldtype="UIKit.UITableView" />
+              <field name="UnevenRows" attrib="6" fieldtype="System.Boolean" />
+              <field name="createOnSelected" attrib="6" fieldtype="System.Func`2[MonoTouch.Dialog.RootElement,UIKit.UIViewController]" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, MonoTouch.Dialog.Group)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="group" position="1" attrib="0" type="MonoTouch.Dialog.Group" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Func`2[MonoTouch.Dialog.RootElement,UIKit.UIViewController])" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="createOnSelected" position="1" attrib="0" type="System.Func`2[MonoTouch.Dialog.RootElement,UIKit.UIViewController]" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Int32, System.Int32)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="section" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="element" position="2" attrib="0" type="System.Int32" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Count" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_Count()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Item" attrib="0" ptype="MonoTouch.Dialog.Section" params="System.Int32">
+                <methods>
+                  <method name="get_Item(System.Int32)" attrib="2182" returntype="MonoTouch.Dialog.Section">
+                    <parameters>
+                      <parameter name="idx" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="RadioSelected" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_RadioSelected()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                  <method name="set_RadioSelected(System.Int32)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Add(MonoTouch.Dialog.Section)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="section" position="0" attrib="0" type="MonoTouch.Dialog.Section" />
+                </parameters>
+              </method>
+              <method name="Add(System.Collections.Generic.IEnumerable`1[MonoTouch.Dialog.Section])" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="sections" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[MonoTouch.Dialog.Section]" />
+                </parameters>
+              </method>
+              <method name="Clear()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="GetCell(UIKit.UITableView)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UITableViewCell">
+                <parameters>
+                  <parameter name="tv" position="0" attrib="0" type="UIKit.UITableView" />
+                </parameters>
+              </method>
+              <method name="Insert(System.Int32, MonoTouch.Dialog.Section)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="idx" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="section" position="1" attrib="0" type="MonoTouch.Dialog.Section" />
+                </parameters>
+              </method>
+              <method name="Insert(System.Int32, UIKit.UITableViewRowAnimation, MonoTouch.Dialog.Section[])" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="idx" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="anim" position="1" attrib="0" type="UIKit.UITableViewRowAnimation" />
+                  <parameter name="newSections" position="2" attrib="0" type="MonoTouch.Dialog.Section[]">
+                    <attributes>
+                      <attribute name="System.ParamArrayAttribute" />
+                    </attributes>
+                  </parameter>
+                </parameters>
+              </method>
+              <method name="MakeViewController()" attrib="452" virtual="true" returntype="UIKit.UIViewController">
+                <parameters />
+              </method>
+              <method name="Prepare()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="PrepareDialogViewController(UIKit.UIViewController)" attrib="452" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="dvc" position="0" attrib="0" type="UIKit.UIViewController" />
+                </parameters>
+              </method>
+              <method name="Reload(MonoTouch.Dialog.Element, UIKit.UITableViewRowAnimation)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="element" position="0" attrib="0" type="MonoTouch.Dialog.Element" />
+                  <parameter name="animation" position="1" attrib="0" type="UIKit.UITableViewRowAnimation" />
+                </parameters>
+              </method>
+              <method name="Reload(MonoTouch.Dialog.Section, UIKit.UITableViewRowAnimation)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="section" position="0" attrib="0" type="MonoTouch.Dialog.Section" />
+                  <parameter name="animation" position="1" attrib="0" type="UIKit.UITableViewRowAnimation" />
+                </parameters>
+              </method>
+              <method name="Remove(MonoTouch.Dialog.Section)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="s" position="0" attrib="0" type="MonoTouch.Dialog.Section" />
+                </parameters>
+              </method>
+              <method name="Remove(MonoTouch.Dialog.Section, UIKit.UITableViewRowAnimation)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="s" position="0" attrib="0" type="MonoTouch.Dialog.Section" />
+                  <parameter name="anim" position="1" attrib="0" type="UIKit.UITableViewRowAnimation" />
+                </parameters>
+              </method>
+              <method name="RemoveAt(System.Int32)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="idx" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="RemoveAt(System.Int32, UIKit.UITableViewRowAnimation)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="idx" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="anim" position="1" attrib="0" type="UIKit.UITableViewRowAnimation" />
+                </parameters>
+              </method>
+              <method name="Selected(MonoTouch.Dialog.DialogViewController, UIKit.UITableView, Foundation.NSIndexPath)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="dvc" position="0" attrib="0" type="MonoTouch.Dialog.DialogViewController" />
+                  <parameter name="tableView" position="1" attrib="0" type="UIKit.UITableView" />
+                  <parameter name="path" position="2" attrib="0" type="Foundation.NSIndexPath" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="SearchChangedEventArgs" type="class" base="System.EventArgs" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="text" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Text" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Text()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_Text(System.String)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+          </class>
+          <class name="Section" type="class" base="MonoTouch.Dialog.Element" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.Reflection.DefaultMemberAttribute">
+                <properties>
+                  <property name="MemberName" value="Item" />
+                </properties>
+              </attribute>
+            </attributes>
+            <interfaces>
+              <interface name="System.Collections.IEnumerable" />
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <fields>
+              <field name="Elements" attrib="6" fieldtype="System.Collections.Generic.List`1[MonoTouch.Dialog.Element]" />
+              <field name="EntryAlignment" attrib="6" fieldtype="CoreGraphics.CGSize" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(UIKit.UIView)" attrib="6278">
+                <parameters>
+                  <parameter name="header" position="0" attrib="0" type="UIKit.UIView" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="footer" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(UIKit.UIView, UIKit.UIView)" attrib="6278">
+                <parameters>
+                  <parameter name="header" position="0" attrib="0" type="UIKit.UIView" />
+                  <parameter name="footer" position="1" attrib="0" type="UIKit.UIView" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Count" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_Count()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Footer" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Footer()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_Footer(System.String)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="FooterView" attrib="0" ptype="UIKit.UIView">
+                <methods>
+                  <method name="get_FooterView()" attrib="2182" returntype="UIKit.UIView">
+                    <parameters />
+                  </method>
+                  <method name="set_FooterView(UIKit.UIView)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="UIKit.UIView" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Header" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Header()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_Header(System.String)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="HeaderView" attrib="0" ptype="UIKit.UIView">
+                <methods>
+                  <method name="get_HeaderView()" attrib="2182" returntype="UIKit.UIView">
+                    <parameters />
+                  </method>
+                  <method name="set_HeaderView(UIKit.UIView)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="UIKit.UIView" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Item" attrib="0" ptype="MonoTouch.Dialog.Element" params="System.Int32">
+                <methods>
+                  <method name="get_Item(System.Int32)" attrib="2182" returntype="MonoTouch.Dialog.Element">
+                    <parameters>
+                      <parameter name="idx" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Add(MonoTouch.Dialog.Element)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="element" position="0" attrib="0" type="MonoTouch.Dialog.Element" />
+                </parameters>
+              </method>
+              <method name="Add(MonoTouch.Dialog.RootElement)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="element" position="0" attrib="0" type="MonoTouch.Dialog.RootElement" />
+                </parameters>
+              </method>
+              <method name="Add(System.Collections.Generic.IEnumerable`1[MonoTouch.Dialog.Element])" attrib="134" returntype="System.Int32">
+                <attributes>
+                  <attribute name="System.ObsoleteAttribute">
+                    <properties>
+                      <property name="Message" value="Please use AddAll since this version will not work in future versions of MonoTouch when we introduce 4.0 covariance" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="elements" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[MonoTouch.Dialog.Element]" />
+                </parameters>
+              </method>
+              <method name="Add(System.Collections.Generic.IEnumerable`1[UIKit.UIView])" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="views" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[UIKit.UIView]" />
+                </parameters>
+              </method>
+              <method name="Add(UIKit.UIView)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="view" position="0" attrib="0" type="UIKit.UIView" />
+                </parameters>
+              </method>
+              <method name="AddAll(System.Collections.Generic.IEnumerable`1[MonoTouch.Dialog.Element])" attrib="134" returntype="System.Int32">
+                <parameters>
+                  <parameter name="elements" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[MonoTouch.Dialog.Element]" />
+                </parameters>
+              </method>
+              <method name="Clear()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="GetCell(UIKit.UITableView)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UITableViewCell">
+                <parameters>
+                  <parameter name="tv" position="0" attrib="0" type="UIKit.UITableView" />
+                </parameters>
+              </method>
+              <method name="GetEnumerator()" attrib="486" virtual="true" returntype="System.Collections.IEnumerator">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.IteratorStateMachineAttribute" />
+                </attributes>
+                <parameters />
+              </method>
+              <method name="Insert(System.Int32, MonoTouch.Dialog.Element[])" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="index" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="newElements" position="1" attrib="0" type="MonoTouch.Dialog.Element[]">
+                    <attributes>
+                      <attribute name="System.ParamArrayAttribute" />
+                    </attributes>
+                  </parameter>
+                </parameters>
+              </method>
+              <method name="Insert(System.Int32, UIKit.UITableViewRowAnimation, MonoTouch.Dialog.Element[])" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="idx" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="anim" position="1" attrib="0" type="UIKit.UITableViewRowAnimation" />
+                  <parameter name="newElements" position="2" attrib="0" type="MonoTouch.Dialog.Element[]">
+                    <attributes>
+                      <attribute name="System.ParamArrayAttribute" />
+                    </attributes>
+                  </parameter>
+                </parameters>
+              </method>
+              <method name="Insert(System.Int32, UIKit.UITableViewRowAnimation, MonoTouch.Dialog.RootElement)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="idx" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="anim" position="1" attrib="0" type="UIKit.UITableViewRowAnimation" />
+                  <parameter name="newElement" position="2" attrib="0" type="MonoTouch.Dialog.RootElement" />
+                </parameters>
+              </method>
+              <method name="Insert(System.Int32, UIKit.UITableViewRowAnimation, System.Collections.Generic.IEnumerable`1[MonoTouch.Dialog.Element])" attrib="134" returntype="System.Int32">
+                <parameters>
+                  <parameter name="idx" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="anim" position="1" attrib="0" type="UIKit.UITableViewRowAnimation" />
+                  <parameter name="newElements" position="2" attrib="0" type="System.Collections.Generic.IEnumerable`1[MonoTouch.Dialog.Element]" />
+                </parameters>
+              </method>
+              <method name="Remove(MonoTouch.Dialog.Element)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="e" position="0" attrib="0" type="MonoTouch.Dialog.Element" />
+                </parameters>
+              </method>
+              <method name="Remove(System.Int32)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="idx" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="RemoveRange(System.Int32, System.Int32)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="start" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="count" position="1" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="RemoveRange(System.Int32, System.Int32, UIKit.UITableViewRowAnimation)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="start" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="count" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="anim" position="2" attrib="0" type="UIKit.UITableViewRowAnimation" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="SectionAttribute" type="class" base="System.Attribute" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.AttributeUsageAttribute">
+                <properties>
+                  <property name="Inherited" value="False" />
+                  <property name="ValidOn" value="Field, Property" />
+                </properties>
+              </attribute>
+            </attributes>
+            <fields>
+              <field name="Caption" attrib="6" fieldtype="System.String" />
+              <field name="Footer" attrib="6" fieldtype="System.String" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="footer" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+          </class>
+          <class name="SkipAttribute" type="class" base="System.Attribute" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.AttributeUsageAttribute">
+                <properties>
+                  <property name="Inherited" value="False" />
+                  <property name="ValidOn" value="Field, Property" />
+                </properties>
+              </attribute>
+            </attributes>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+          </class>
+          <class name="StringElement" type="class" base="MonoTouch.Dialog.Element" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <fields>
+              <field name="Alignment" attrib="6" fieldtype="UIKit.UITextAlignment" />
+              <field name="Value" attrib="6" fieldtype="System.String" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Action)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="tapped" position="1" attrib="0" type="System.Action" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="value" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <events>
+              <event name="Tapped" attrib="0" eventtype="System.Action" />
+            </events>
+            <methods>
+              <method name="GetCell(UIKit.UITableView)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UITableViewCell">
+                <parameters>
+                  <parameter name="tv" position="0" attrib="0" type="UIKit.UITableView" />
+                </parameters>
+              </method>
+              <method name="Matches(System.String)" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="text" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="Selected(MonoTouch.Dialog.DialogViewController, UIKit.UITableView, Foundation.NSIndexPath)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="dvc" position="0" attrib="0" type="MonoTouch.Dialog.DialogViewController" />
+                  <parameter name="tableView" position="1" attrib="0" type="UIKit.UITableView" />
+                  <parameter name="indexPath" position="2" attrib="0" type="Foundation.NSIndexPath" />
+                </parameters>
+              </method>
+              <method name="Summary()" attrib="198" virtual="true" is-override="true" returntype="System.String">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="StyledMultilineElement" type="class" base="MonoTouch.Dialog.StyledStringElement" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="MonoTouch.Dialog.IColorizeBackground" />
+              <interface name="MonoTouch.Dialog.IElementSizing" />
+              <interface name="MonoTouch.Dialog.Utilities.IImageUpdated" />
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Action)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="tapped" position="1" attrib="0" type="System.Action" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="value" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.String, UIKit.UITableViewCellStyle)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="value" position="1" attrib="0" type="System.String" />
+                  <parameter name="style" position="2" attrib="0" type="UIKit.UITableViewCellStyle" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="GetHeight(UIKit.UITableView, Foundation.NSIndexPath)" attrib="454" virtual="true" returntype="System.nfloat">
+                <parameters>
+                  <parameter name="tableView" position="0" attrib="0" type="UIKit.UITableView" />
+                  <parameter name="indexPath" position="1" attrib="0" type="Foundation.NSIndexPath" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="StyledStringElement" type="class" base="MonoTouch.Dialog.StringElement" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="MonoTouch.Dialog.IColorizeBackground" />
+              <interface name="MonoTouch.Dialog.Utilities.IImageUpdated" />
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <fields>
+              <field name="Accessory" attrib="6" fieldtype="UIKit.UITableViewCellAccessory" />
+              <field name="Font" attrib="6" fieldtype="UIKit.UIFont" />
+              <field name="LineBreakMode" attrib="6" fieldtype="UIKit.UILineBreakMode" />
+              <field name="Lines" attrib="6" fieldtype="System.Int32" />
+              <field name="SubtitleFont" attrib="6" fieldtype="UIKit.UIFont" />
+              <field name="TextColor" attrib="6" fieldtype="UIKit.UIColor" />
+              <field name="style" attrib="4" fieldtype="UIKit.UITableViewCellStyle" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Action)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="tapped" position="1" attrib="0" type="System.Action" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="value" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.String, UIKit.UITableViewCellStyle)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="value" position="1" attrib="0" type="System.String" />
+                  <parameter name="style" position="2" attrib="0" type="UIKit.UITableViewCellStyle" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="BackgroundColor" attrib="0" ptype="UIKit.UIColor">
+                <methods>
+                  <method name="get_BackgroundColor()" attrib="2182" returntype="UIKit.UIColor">
+                    <parameters />
+                  </method>
+                  <method name="set_BackgroundColor(UIKit.UIColor)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="UIKit.UIColor" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="BackgroundUri" attrib="0" ptype="System.Uri">
+                <methods>
+                  <method name="get_BackgroundUri()" attrib="2182" returntype="System.Uri">
+                    <parameters />
+                  </method>
+                  <method name="set_BackgroundUri(System.Uri)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Uri" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="DetailColor" attrib="0" ptype="UIKit.UIColor">
+                <methods>
+                  <method name="get_DetailColor()" attrib="2182" returntype="UIKit.UIColor">
+                    <parameters />
+                  </method>
+                  <method name="set_DetailColor(UIKit.UIColor)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="UIKit.UIColor" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Image" attrib="0" ptype="UIKit.UIImage">
+                <methods>
+                  <method name="get_Image()" attrib="2182" returntype="UIKit.UIImage">
+                    <parameters />
+                  </method>
+                  <method name="set_Image(UIKit.UIImage)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="UIKit.UIImage" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="ImageUri" attrib="0" ptype="System.Uri">
+                <methods>
+                  <method name="get_ImageUri()" attrib="2182" returntype="System.Uri">
+                    <parameters />
+                  </method>
+                  <method name="set_ImageUri(System.Uri)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Uri" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <events>
+              <event name="AccessoryTapped" attrib="0" eventtype="System.Action" />
+            </events>
+            <methods>
+              <method name="GetCell(UIKit.UITableView)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UITableViewCell">
+                <parameters>
+                  <parameter name="tv" position="0" attrib="0" type="UIKit.UITableView" />
+                </parameters>
+              </method>
+              <method name="GetKey(System.Int32)" attrib="452" virtual="true" returntype="System.String">
+                <parameters>
+                  <parameter name="style" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="PrepareCell(UIKit.UITableViewCell)" attrib="132" returntype="System.Void">
+                <parameters>
+                  <parameter name="cell" position="0" attrib="0" type="UIKit.UITableViewCell" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="TimeAttribute" type="class" base="System.Attribute" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.AttributeUsageAttribute">
+                <properties>
+                  <property name="Inherited" value="False" />
+                  <property name="ValidOn" value="Field, Property" />
+                </properties>
+              </attribute>
+            </attributes>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+          </class>
+          <class name="TimeElement" type="class" base="MonoTouch.Dialog.DateTimeElement" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.String, System.DateTime)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="date" position="1" attrib="0" type="System.DateTime" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="CreatePicker()" attrib="198" virtual="true" is-override="true" returntype="UIKit.UIDatePicker">
+                <parameters />
+              </method>
+              <method name="FormatDate(System.DateTime)" attrib="198" virtual="true" is-override="true" returntype="System.String">
+                <parameters>
+                  <parameter name="dt" position="0" attrib="0" type="System.DateTime" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="UIViewElement" type="class" base="MonoTouch.Dialog.Element" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="MonoTouch.Dialog.IElementSizing" />
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <fields>
+              <field name="ContainerView" attrib="6" fieldtype="UIKit.UIView" />
+              <field name="Flags" attrib="6" fieldtype="MonoTouch.Dialog.UIViewElement+CellFlags" />
+              <field name="View" attrib="4" fieldtype="UIKit.UIView" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(System.String, UIKit.UIView, System.Boolean)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="view" position="1" attrib="0" type="UIKit.UIView" />
+                  <parameter name="transparent" position="2" attrib="0" type="System.Boolean" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, UIKit.UIView, System.Boolean, UIKit.UIEdgeInsets)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="view" position="1" attrib="0" type="UIKit.UIView" />
+                  <parameter name="transparent" position="2" attrib="0" type="System.Boolean" />
+                  <parameter name="insets" position="3" attrib="0" type="UIKit.UIEdgeInsets" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="CellKey" attrib="0" ptype="Foundation.NSString">
+                <methods>
+                  <method name="get_CellKey()" attrib="2244" virtual="true" is-override="true" returntype="Foundation.NSString">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Insets" attrib="0" ptype="UIKit.UIEdgeInsets">
+                <methods>
+                  <method name="get_Insets()" attrib="2182" returntype="UIKit.UIEdgeInsets">
+                    <parameters />
+                  </method>
+                  <method name="set_Insets(UIKit.UIEdgeInsets)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="UIKit.UIEdgeInsets" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="GetCell(UIKit.UITableView)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UITableViewCell">
+                <parameters>
+                  <parameter name="tv" position="0" attrib="0" type="UIKit.UITableView" />
+                </parameters>
+              </method>
+              <method name="GetHeight(UIKit.UITableView, Foundation.NSIndexPath)" attrib="486" virtual="true" returntype="System.nfloat">
+                <parameters>
+                  <parameter name="tableView" position="0" attrib="0" type="UIKit.UITableView" />
+                  <parameter name="indexPath" position="1" attrib="0" type="Foundation.NSIndexPath" />
+                </parameters>
+              </method>
+            </methods>
+            <classes>
+              <class name="CellFlags" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+                <attributes>
+                  <attribute name="System.FlagsAttribute" />
+                </attributes>
+                <interfaces>
+                  <interface name="System.IComparable" />
+                  <interface name="System.IConvertible" />
+                  <interface name="System.IFormattable" />
+                </interfaces>
+                <fields>
+                  <field name="DisableSelection" attrib="32854" fieldtype="MonoTouch.Dialog.UIViewElement+CellFlags" value="2" />
+                  <field name="Transparent" attrib="32854" fieldtype="MonoTouch.Dialog.UIViewElement+CellFlags" value="1" />
+                </fields>
+              </class>
+            </classes>
+          </class>
+        </classes>
+      </namespace>
+      <namespace name="MonoTouch.Dialog.Utilities">
+        <classes>
+          <class name="IImageUpdated" type="interface" abstract="true" charset="Ansi" layout="Auto">
+            <methods>
+              <method name="UpdatedImage(System.Uri)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="uri" position="0" attrib="0" type="System.Uri" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="ImageLoader" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <fields>
+              <field name="BaseDir" attrib="54" fieldtype="System.String" />
+              <field name="DefaultLoader" attrib="22" fieldtype="MonoTouch.Dialog.Utilities.ImageLoader" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(System.Int32, System.Int32)" attrib="6278">
+                <parameters>
+                  <parameter name="cacheSize" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="memoryLimit" position="1" attrib="0" type="System.Int32" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="DefaultRequestImage(System.Uri, MonoTouch.Dialog.Utilities.IImageUpdated)" attrib="150" static="true" returntype="UIKit.UIImage">
+                <parameters>
+                  <parameter name="uri" position="0" attrib="0" type="System.Uri" />
+                  <parameter name="notify" position="1" attrib="0" type="MonoTouch.Dialog.Utilities.IImageUpdated" />
+                </parameters>
+              </method>
+              <method name="Purge()" attrib="150" static="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="PurgeCache()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="RequestImage(System.Uri, MonoTouch.Dialog.Utilities.IImageUpdated)" attrib="134" returntype="UIKit.UIImage">
+                <parameters>
+                  <parameter name="uri" position="0" attrib="0" type="System.Uri" />
+                  <parameter name="notify" position="1" attrib="0" type="MonoTouch.Dialog.Utilities.IImageUpdated" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="LRUCache`2" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.Reflection.DefaultMemberAttribute">
+                <properties>
+                  <property name="MemberName" value="Item" />
+                </properties>
+              </attribute>
+            </attributes>
+            <generic-parameters>
+              <generic-parameter name="TKey" attributes="0" />
+              <generic-parameter name="TValue" attributes="4">
+                <generic-parameter-constraints>
+                  <generic-parameter-constraint name="System.IDisposable" />
+                </generic-parameter-constraints>
+              </generic-parameter>
+            </generic-parameters>
+            <constructors>
+              <constructor name=".ctor(System.Int32)" attrib="6278">
+                <parameters>
+                  <parameter name="entryLimit" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Int32, System.Int32, System.Func`2[TValue,System.Int32])" attrib="6278">
+                <parameters>
+                  <parameter name="entryLimit" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="sizeLimit" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="slotSizer" position="2" attrib="0" type="System.Func`2[TValue,System.Int32]" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Item" attrib="0" ptype="TValue" params="TKey">
+                <methods>
+                  <method name="get_Item(TKey)" attrib="2182" returntype="TValue">
+                    <parameters>
+                      <parameter name="key" position="0" attrib="0" type="TKey" />
+                    </parameters>
+                  </method>
+                  <method name="set_Item(TKey, TValue)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="key" position="0" attrib="0" type="TKey" />
+                      <parameter name="value" position="1" attrib="0" type="TValue" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Purge()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="ToString()" attrib="198" virtual="true" is-override="true" returntype="System.String">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+        </classes>
+      </namespace>
+    </namespaces>
+  </assembly>
+</assemblies>

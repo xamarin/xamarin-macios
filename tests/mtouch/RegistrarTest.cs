@@ -290,6 +290,7 @@ class MyObjectErr : NSObject, IFoo1, IFoo2
 					new { Framework = "IOSurface", Version = "11.0" },
 					new { Framework = "ARKit", Version = "11.0" },
 					new { Framework = "BusinessChat", Version = "11.3" },
+					new { Framework = "ClassKit", Version = "11.4" },
 				};
 				foreach (var framework in invalidFrameworks)
 					mtouch.AssertError (4134, $"Your application is using the '{framework.Framework}' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS {framework.Version}, while you're building with the iOS {mtouch.Sdk} SDK.) Please select a newer SDK in your app's iOS Build options.");

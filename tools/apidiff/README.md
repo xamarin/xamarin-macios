@@ -1,4 +1,6 @@
-= New Releases =
+# New Releases
+
+Note: Don't forget to :warning: **build** :warning: the XI/XM assemblies before trying to regenerate the XML files.
 
 Doing a `make update-refs` will update the XML files where we keep the current **public** API.
 
@@ -16,7 +18,7 @@ installed (say you have XI 9.4.0.0 installed in /Library/Frameworks/Xamarin.iOS.
 in which case you can do IOS_INSTALL_VERSION=9.4.0.0
 
 
-= New Revisions =
+# New Revisions
 
 On the bots each revision rebuilds every assemblies. Each of them will be compared to the XML reference files. Any changes (addition/removal) to the public API will be reported in HTML files.
 

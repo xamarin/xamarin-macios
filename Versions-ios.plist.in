@@ -29,6 +29,7 @@
 			<string>11.1</string>
 			<string>11.2</string>
 			<string>11.3</string>
+			<string>11.4</string>
 		</array>
 		<key>tvOS</key>
 		<array>
@@ -42,6 +43,7 @@
 			<string>11.1</string>
 			<string>11.2</string>
 			<string>11.3</string>
+			<string>11.4</string>
 		</array>
 		<key>watchOS</key>
 		<array>
