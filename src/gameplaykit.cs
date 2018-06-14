@@ -90,7 +90,7 @@ namespace GameplayKit {
 
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (GKAgent))]
-	interface GKAgent2D : NSCoding {
+	interface GKAgent2D : NSSecureCoding {
 		
 		[Export ("position", ArgumentSemantic.Assign)]
 		Vector2 Position { 
