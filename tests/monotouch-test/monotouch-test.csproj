@@ -285,6 +285,7 @@
     <Content Include="Pacifico.ttf" />
     <Content Include="LL-171A-B-B797E457-16AB-C708-1E0F-32C19DBD47B5.icc" />
     <Content Include="drum01.mp3" />
+    <Content Include="Model3.arobject" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="LaunchScreen.storyboard" />
