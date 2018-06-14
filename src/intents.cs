@@ -10,6 +10,7 @@
 #if XAMCORE_2_0 // The Intents framework uses generics which is only supported in Unified
 
 using System;
+using System.ComponentModel;
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
@@ -2879,22 +2880,22 @@ namespace Intents {
 
 		// INImage_IntentsUI (IntentsUI)
 
-		[NoMac, NoWatch]
+		[NoMac, Watch (5,0)]
 		[Static]
 		[Export ("imageWithCGImage:")]
 		INImage FromImage (CGImage image);
 
-		[NoMac, NoWatch]
+		[NoMac, Watch (5,0)]
 		[Static]
 		[Export ("imageWithUIImage:")]
 		INImage FromImage (UIImage image);
 
-		[NoMac, NoWatch]
+		[NoMac, Watch (5,0)]
 		[Static]
 		[Export ("imageSizeForIntentResponse:")]
 		CGSize GetImageSize (INIntentResponse response);
 
-		[NoMac, NoWatch, iOS (11,0)]
+		[NoMac, Watch (5,0), iOS (11,0)]
 		[Async]
 		[Export ("fetchUIImageWithCompletion:")]
 		void FetchImage (Action<UIImage> completion);
@@ -8818,6 +8819,7 @@ namespace Intents {
 		[Export ("code")]
 		INPlayMediaIntentResponseCode Code { get; }
 
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[NullAllowed, Export ("nowPlayingInfo", ArgumentSemantic.Copy)]
 		NSDictionary WeakNowPlayingInfo { get; set; }
 	}
