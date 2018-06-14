@@ -212,7 +212,7 @@ namespace ARKit {
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'Project' instead.")]
-		[Wrap ("Project (point, orientation, viewportSize)")]
+		[Wrap ("Project (point, orientation, viewportSize)", IsVirtual = true)]
 		CGPoint GetProjectPoint (Vector3 point, UIInterfaceOrientation orientation, CGSize viewportSize);
 #endif
 
