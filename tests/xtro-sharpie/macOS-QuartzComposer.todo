@@ -1,3 +1,10 @@
+## OpenGL deprecated in 10.14 in favor of Metal
+!missing-selector! QCRenderer::initWithCGLContext:pixelFormat:colorSpace:composition: not bound
+!missing-selector! QCRenderer::initWithOpenGLContext:pixelFormat:file: not bound
+
+
+## unsorted
+
 !missing-field! QCCompositionPickerPanelDidSelectCompositionNotification not bound
 !missing-field! QCCompositionPickerViewDidSelectCompositionNotification not bound
 !missing-field! QCCompositionRepositoryDidUpdateNotification not bound
@@ -79,9 +86,7 @@
 !missing-selector! QCPlugInViewController::initWithPlugIn:viewNibName: not bound
 !missing-selector! QCRenderer::createSnapshotImageOfType: not bound
 !missing-selector! QCRenderer::initOffScreenWithSize:colorSpace:composition: not bound
-!missing-selector! QCRenderer::initWithCGLContext:pixelFormat:colorSpace:composition: not bound
 !missing-selector! QCRenderer::initWithComposition:colorSpace: not bound
-!missing-selector! QCRenderer::initWithOpenGLContext:pixelFormat:file: not bound
 !missing-selector! QCRenderer::renderAtTime:arguments: not bound
 !missing-selector! QCRenderer::renderingTimeForTime:arguments: not bound
 !missing-selector! QCView::createSnapshotImageOfType: not bound
