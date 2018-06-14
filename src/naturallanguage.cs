@@ -121,7 +121,7 @@ namespace NaturalLanguage {
 		string[] GetPredictedLabels (string[] tokens);
 	}
 
-	public delegate void NLTokenizerEnumerateContinuationHandler (NSRange tokenRange, NLTokenizerAttributes flags, out bool stop);
+	delegate void NLTokenizerEnumerateContinuationHandler (NSRange tokenRange, NLTokenizerAttributes flags, out bool stop);
 
 	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0)]
 	[DisableDefaultCtor]
@@ -155,7 +155,7 @@ namespace NaturalLanguage {
 		void EnumerateTokens (NSRange range, NLTokenizerEnumerateContinuationHandler handler);
 	}
 
-	public delegate void NLTaggerEnumerateTagsContinuationHandler (NSString tag, NSRange tokenRange, out bool stop);
+	delegate void NLTaggerEnumerateTagsContinuationHandler (NSString tag, NSRange tokenRange, out bool stop);
 
 	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0)]
 	[DisableDefaultCtor]
