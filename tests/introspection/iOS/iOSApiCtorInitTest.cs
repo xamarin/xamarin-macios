@@ -220,6 +220,8 @@ namespace Introspection {
 			case "INGetAvailableRestaurantReservationBookingsIntentResponse": // Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: Unable to initialize 'INGetAvailableRestaurantReservationBookingsIntentResponse'. Please make sure that your intent definition file is valid.
 			case "INGetRestaurantGuestIntentResponse": // Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: Unable to initialize 'INGetRestaurantGuestIntentResponse'. Please make sure that your intent definition file is valid.
 				return TestRuntime.CheckXcodeVersion (10,0);
+			case "RPBroadcastPickerView": // Symbol not available in simulator
+				return Runtime.Arch == Arch.SIMULATOR;
 			default:
 				return base.Skip (type);
 			}
