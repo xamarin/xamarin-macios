@@ -36,3 +36,18 @@
 ## unsorted
 
 !missing-selector! +CLPlacemark::placemarkWithLocation:name:postalAddress: not bound
+
+## This type is introduced and deprecated in Xcdoe 10 Beta 1
+!missing-selector! INIdentifierString::identifier not bound
+!missing-selector! INIdentifierString::initWithIdentifier:string: not bound
+!missing-selector! INIdentifierString::initWithString: not bound
+!missing-selector! INIdentifierString::string not bound
+!missing-type! INIdentifierString not bound
+
+## Deprecated so no need to be bound
+!missing-selector! INRequestRideIntent::initWithPickupLocation:dropOffLocation:rideOptionName:partySize:paymentMethod: not bound
+
+## Research required before we can bind the following ones
+!missing-selector! +NSString::deferredLocalizedNSStringStringWithFormat: not bound
+!missing-selector! +NSString::deferredLocalizedNSStringStringWithFormat:fromTable: not bound
+!missing-selector! +NSString::deferredLocalizedNSStringStringWithFormat:fromTable:arguments: not bound

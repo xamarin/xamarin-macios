@@ -5125,6 +5125,12 @@ namespace Foundation
 		[NoWatch, NoTV, NoMac, iOS (11,4)]
 		[NullAllowed, Export ("contextIdentifierPath", ArgumentSemantic.Strong)]
 		string[] ContextIdentifierPath { get; }
+
+		// From NSUserActivity (IntentsAdditions)
+
+		[Watch (5,0), NoTV, NoMac, iOS (12,0)]
+		[NullAllowed, Export ("suggestedInvocationPhrase")]
+		string SuggestedInvocationPhrase { get; set; }
 	}
 
 	[iOS (8,0)][Mac (10,10, onlyOn64 : true)] // same as NSUserActivity
