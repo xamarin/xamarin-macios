@@ -1059,6 +1059,17 @@ MULTIPEERCONNECTIVITY_SOURCES = \
 	MultipeerConnectivity/Compat.cs \
 	MultipeerConnectivity/MCSession.cs \
 
+# Network
+
+NETWORK_SOURCES = \
+	Network/NWConnection.cs			\
+	Network/NWEndpoint.cs			\
+	Network/NWParameters.cs			\
+	Network/NWProtocolDefinition.cs		\
+	Network/NWProtocolMetadata.cs		\
+	Network/NWProtocolOptions.cs		\
+	Network/NWProtocolStack.cs
+	
 # NetworkExtension
 
 NETWORKEXTENSION_API_SOURCES = \
@@ -1678,6 +1689,7 @@ MAC_FRAMEWORKS =            \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity	\
+	Network			\
 	NetworkExtension        \
 	NotificationCenter 	\
 	OpenGL                  \
@@ -1763,6 +1775,7 @@ IOS_FRAMEWORKS =         \
 	MobileCoreServices \
 	ModelIO \
 	MultipeerConnectivity \
+	Network \
 	NetworkExtension \
 	NewsstandKit \
 	NotificationCenter \
@@ -1851,6 +1864,7 @@ TVOS_FRAMEWORKS =           \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity   \
+	Network			\
 	OpenGLES                \
 	Photos                  \
 	PhotosUI                \

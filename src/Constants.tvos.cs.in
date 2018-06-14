@@ -44,6 +44,7 @@ namespace ObjCRuntime {
 		public const string MetalPerformanceShadersLibrary = "/System/Library/Frameworks/MetalPerformanceShaders.framework/MetalPerformanceShaders";
 		public const string MobileCoreServicesLibrary = "/System/Library/Frameworks/MobileCoreServices.framework/MobileCoreServices";
 		public const string ModelIOLibrary = "/System/Library/Frameworks/ModelIO.framework/ModelIO";
+		public const string NetworkLibrary = "/System/Library/Frameworks/Network.framework/Network";
 		public const string OpenGLESLibrary = "/System/Library/Frameworks/OpenGLES.framework/OpenGLES";
 		public const string PassKitLibrary = "/System/Library/Frameworks/PassKit.framework/PassKit";
 		public const string QuartzLibrary = "/System/Library/Frameworks/QuartzCore.framework/QuartzCore";
