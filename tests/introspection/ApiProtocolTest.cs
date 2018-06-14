@@ -127,6 +127,9 @@ namespace Introspection {
 				case "NSMappingModel":
 				case "NSPropertyMapping":
 					return true;
+				// Xcode 10
+				case "NSManagedObjectID":
+					return true;
 				}
 				break;
 			case "NSSecureCoding":
