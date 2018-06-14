@@ -1,5 +1,5 @@
 //
-// NWConnection.cs: Bindings the Netowkr NWConnection API.
+// NWConnection.cs: Bindings for the Network NWConnection API.
 //
 // Authors:
 //   Miguel de Icaza (miguel@microsoft.com)
