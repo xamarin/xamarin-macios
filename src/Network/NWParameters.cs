@@ -1,5 +1,5 @@
 //
-// NWParameter.cs: Bindings the Netowrk nw_parameters_t API.
+// NWParameter.cs: Bindings the Network nw_parameters_t API.
 //
 // Authors:
 //   Miguel de Icaza (miguel@microsoft.com)
