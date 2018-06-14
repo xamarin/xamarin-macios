@@ -452,7 +452,13 @@ timestamps {
                                         stage ('Test docs') {
                                             currentStage = "${STAGE_NAME}"
                                             echo ("Building on ${env.NODE_NAME}")
-                                            sh ("make -C ${workspace}/xamarin-macios/tests wrench-docs")
+                                            def targetBranch = isPr ? githubGetPullRequestInfo () ["base"] ["ref"] : "${BRANCH_NAME}"
+                                            def testDocs = targetBranch == "master"
+                                            if (!testDocs) {
+                                                echo ("Skipping docs testing, it's only done on master (current (target) branch is ${targetBranch})")
+                                            } else {
+                                                sh ("make -C ${workspace}/xamarin-macios/tests wrench-docs")
+                                            }
                                         }
                                     }
 
