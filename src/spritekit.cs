@@ -149,7 +149,6 @@ namespace SpriteKit {
 		[return: NullAllowed]
 		SKNode Create (string filename);
 
-		// new is needed after iOS 12 due to the new UIFocustItem protocol.
 		[Export ("frame")]
 		CGRect Frame { get; }
 
