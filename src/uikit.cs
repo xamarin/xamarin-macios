@@ -5121,7 +5121,7 @@ namespace UIKit {
 	// Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: do not call -[UIDocument init] - the designated initializer is -[UIDocument initWithFileURL:
 	[DisableDefaultCtor]
 	[ThreadSafe]
-	interface UIDocument : NSFilePresenter, NSProgressReporting , UIUserActivityRestoring {
+	interface UIDocument : NSFilePresenter, NSProgressReporting, UIUserActivityRestoring {
 		[Export ("localizedName", ArgumentSemantic.Copy)]
 		string LocalizedName { get;  }
 
@@ -6133,10 +6133,10 @@ namespace UIKit {
 		[Export ("opaque")]
 		bool Opaque { get; set; }
 
-		[Introduced (PlatformName.iOS, 10, 0, message: "Use the preferredRange property instead")]
-		[Deprecated (PlatformName.iOS, 12, 0, message: "Use the preferredRange property instead")]
-		[Introduced (PlatformName.TvOS, 10, 0, message: "Use the preferredRange property instead")]
-		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use the preferredRange property instead")]
+		[Introduced (PlatformName.iOS, 10, 0, message: "Use the 'PreferredRange' property instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use the 'PreferredRange' property instead.")]
+		[Introduced (PlatformName.TvOS, 10, 0, message: "Use the 'PreferredRange' property instead.")]
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use the 'PreferredRange' property instead.")]
 		[Export ("prefersExtendedRange")]
 		bool PrefersExtendedRange { get; set; }
 
@@ -8465,7 +8465,7 @@ namespace UIKit {
 	[BaseType (typeof (UIDocument))]
 	// *** Assertion failure in -[UIManagedDocument init], /SourceCache/UIKit_Sim/UIKit-1914.84/UIDocument.m:258
 	[DisableDefaultCtor]
-	interface UIManagedDocument {
+	interface UIManagedDocument : UIManagedDocument {
 		// note: ctor are not inherited, but this is how the documentation tells you to create an UIManagedDocument
 		// https://developer.apple.com/library/ios/#documentation/UIKit/Reference/UIManagedDocument_Class/Reference/Reference.html
 		[Export ("initWithFileURL:")]
@@ -13011,7 +13011,7 @@ namespace UIKit {
 		CoreAnimation.CALayer Layer { get; }
 
 		[Export ("frame")]
-		new CGRect Frame { get; set; }
+		CGRect Frame { get; set; }
 		
 		[Export ("center")]
 		new CGPoint Center { get; set; }
@@ -16733,10 +16733,14 @@ namespace UIKit {
 		[Export ("canBecomeFocused")]
 		bool CanBecomeFocused { get; }
 
+		// FIXME: declared as a @required, but this breaks compatibilit
+		// Radar: 41121416
+#if XAMCORE_4_0 
 		[TV (12, 0), iOS (12, 0), NoWatch]
 		[Abstract]
 		[Export ("frame")]
 		CGRect Frame { get; }
+#endif
 
 		[TV (12, 0), iOS (12, 0), NoWatch]
 		[Export ("didHintFocusMovement:")]
@@ -17003,7 +17007,9 @@ namespace UIKit {
 		[return: NullAllowed]
 		NSString GetSoundIdentifier (UIFocusUpdateContext context);
 
-
+		// FIXME: declared as a @required, but this breaks compatibility
+		// Radar: 41121293
+#if XAMCORE_4_0 
 		[TV (12, 0), iOS (12, 0)]
 		[Abstract]
 		[NullAllowed, Export ("parentFocusEnvironment", ArgumentSemantic.Weak)]
@@ -17013,6 +17019,7 @@ namespace UIKit {
 		[Abstract]
 		[NullAllowed, Export ("focusItemContainer")]
 		IUIFocusItemContainer FocusItemContainer { get; }
+#endif
 	}
 
 	[TV (12,0), iOS (12,0)]
@@ -18331,7 +18338,6 @@ namespace UIKit {
 		bool SupportsMultipleItems { get; set; }
 	}
 
-
 	interface IUIFocusItemContainer {}
 	[iOS (12,0), TV (12,0), NoWatch]
 	[Protocol]
@@ -18351,17 +18357,14 @@ namespace UIKit {
 	interface UIFocusItemScrollableContainer : UIFocusItemContainer
 	{
 		[Abstract]
-		[TV(9,0), NoWatch]
 		[Export ("contentOffset", ArgumentSemantic.Assign)]
 		CGPoint ContentOffset { get; set; }
 
 		[Abstract]
-		[TV(9,0), NoWatch]
 		[Export ("contentSize")]
 		CGSize ContentSize { get; }
 
 		[Abstract]
-		[iOS (12,0), TV(12,0), NoWatch]
 		[Export ("visibleSize")]
 		CGSize VisibleSize { get; }
 	}

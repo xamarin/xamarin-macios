@@ -2267,10 +2267,9 @@ namespace UIKit {
 	[Native]
 	public enum UIPrintErrorCode : long
 	{
-		ingNotAvailableError = 1,
+		NotAvailableError = 1,
 		NoContentError,
 		UnknownImageFormatError,
 		JobFailedError
 	}
-	
 }
