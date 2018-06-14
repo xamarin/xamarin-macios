@@ -149,8 +149,10 @@ namespace SpriteKit {
 		[return: NullAllowed]
 		SKNode Create (string filename);
 
+#if MONOMAC || WATCH
 		[Export ("frame")]
 		CGRect Frame { get; }
+#endif
 
 		[Export ("calculateAccumulatedFrame")]
 		CGRect CalculateAccumulatedFrame ();

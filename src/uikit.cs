@@ -5234,10 +5234,6 @@ namespace UIKit {
 		void UpdateUserActivityState (NSUserActivity userActivity);
 
 		[iOS (8,0)]
-		[Export ("restoreUserActivityState:")]
-		new void RestoreUserActivityState (NSUserActivity userActivity);
-
-		[iOS (8,0)]
 		[Field ("NSUserActivityDocumentURLKey")]
 		NSString UserActivityDocumentUrlKey { get; }
 
@@ -6133,9 +6129,7 @@ namespace UIKit {
 		[Export ("opaque")]
 		bool Opaque { get; set; }
 
-		[Introduced (PlatformName.iOS, 10, 0, message: "Use the 'PreferredRange' property instead.")]
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Use the 'PreferredRange' property instead.")]
-		[Introduced (PlatformName.TvOS, 10, 0, message: "Use the 'PreferredRange' property instead.")]
 		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use the 'PreferredRange' property instead.")]
 		[Export ("prefersExtendedRange")]
 		bool PrefersExtendedRange { get; set; }
@@ -8465,7 +8459,7 @@ namespace UIKit {
 	[BaseType (typeof (UIDocument))]
 	// *** Assertion failure in -[UIManagedDocument init], /SourceCache/UIKit_Sim/UIKit-1914.84/UIDocument.m:258
 	[DisableDefaultCtor]
-	interface UIManagedDocument : UIManagedDocument {
+	interface UIManagedDocument {
 		// note: ctor are not inherited, but this is how the documentation tells you to create an UIManagedDocument
 		// https://developer.apple.com/library/ios/#documentation/UIKit/Reference/UIManagedDocument_Class/Reference/Reference.html
 		[Export ("initWithFileURL:")]
@@ -9878,10 +9872,6 @@ namespace UIKit {
 		[Export ("updateUserActivityState:")]
 		void UpdateUserActivityState (NSUserActivity activity);
 
-		[iOS (8,0)]
-		[Export ("restoreUserActivityState:")]
-		new void RestoreUserActivityState (NSUserActivity activity);
-
 		[iOS (9,0)]
 		[Export ("pressesBegan:withEvent:")]
 		void PressesBegan (NSSet<UIPress> presses, UIPressesEvent evt);
@@ -10043,9 +10033,6 @@ namespace UIKit {
 	interface UIScrollView : UIFocusItemScrollableContainer {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
-
-		[Export ("contentOffset")]
-		new CGPoint ContentOffset { get; set; }
 
 		[Export ("contentSize")]
 		new CGSize ContentSize { get; set; }
@@ -13011,7 +12998,7 @@ namespace UIKit {
 		CoreAnimation.CALayer Layer { get; }
 
 		[Export ("frame")]
-		CGRect Frame { get; set; }
+		new CGRect Frame { get; set; }
 		
 		[Export ("center")]
 		new CGPoint Center { get; set; }
@@ -16735,12 +16722,12 @@ namespace UIKit {
 
 		// FIXME: declared as a @required, but this breaks compatibilit
 		// Radar: 41121416
-#if XAMCORE_4_0 
 		[TV (12, 0), iOS (12, 0), NoWatch]
+#if XAMCORE_4_0 
 		[Abstract]
+#endif
 		[Export ("frame")]
 		CGRect Frame { get; }
-#endif
 
 		[TV (12, 0), iOS (12, 0), NoWatch]
 		[Export ("didHintFocusMovement:")]
@@ -17009,17 +16996,19 @@ namespace UIKit {
 
 		// FIXME: declared as a @required, but this breaks compatibility
 		// Radar: 41121293
-#if XAMCORE_4_0 
 		[TV (12, 0), iOS (12, 0)]
+#if XAMCORE_4_0 
 		[Abstract]
+#endif
 		[NullAllowed, Export ("parentFocusEnvironment", ArgumentSemantic.Weak)]
 		IUIFocusEnvironment ParentFocusEnvironment { get; }
 
 		[TV (12, 0), iOS (12, 0)]
+#if XAMCORE_4_0 
 		[Abstract]
+#endif
 		[NullAllowed, Export ("focusItemContainer")]
 		IUIFocusItemContainer FocusItemContainer { get; }
-#endif
 	}
 
 	[TV (12,0), iOS (12,0)]
@@ -18369,7 +18358,7 @@ namespace UIKit {
 		CGSize VisibleSize { get; }
 	}
 
-	[iOS (8,0), TV (8,0), NoWatch] // it was added on 8,0, but was not binded and the method was added in 12,0
+	[iOS (8,0), NoWatch] // it was added on 8,0, but was not binded and the method was added in 12,0
 	[Protocol]
 	interface UIUserActivityRestoring
 	{
@@ -18421,15 +18410,4 @@ namespace UIKit {
 #endif // !WATCH
 	}
 
-	[Static]
-	[iOS (12,0), TV (12,0), Watch (5,0)]
-	interface UIKitVersion {
-
-		[Field ("UIKitVersionNumber")]
-		double UIKitVersionNumber { get; }
-
-		[Field ("UIKitVersionString")]
-		NSString UIKitVersionString { get; }
-
-	}
 }

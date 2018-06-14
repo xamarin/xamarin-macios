@@ -28,3 +28,7 @@
 !missing-protocol-conformance! UIColor should conform to NSItemProviderWriting (defined in 'UINSItemProvider' category)
 !missing-protocol-conformance! UIImage should conform to NSItemProviderReading (defined in 'NSItemProvider' category)
 !missing-protocol-conformance! UIImage should conform to NSItemProviderWriting (defined in 'NSItemProvider' category)
+
+# not needed ad we do the same in other frameworks with versions.
+!missing-field! UIKitVersionNumber not bound
+!missing-field! UIKitVersionString not bound
