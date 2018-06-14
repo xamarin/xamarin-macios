@@ -5121,7 +5121,7 @@ namespace UIKit {
 	// Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: do not call -[UIDocument init] - the designated initializer is -[UIDocument initWithFileURL:
 	[DisableDefaultCtor]
 	[ThreadSafe]
-	interface UIDocument : NSFilePresenter, NSProgressReporting {
+	interface UIDocument : NSFilePresenter, NSProgressReporting , UIUserActivityRestoring {
 		[Export ("localizedName", ArgumentSemantic.Copy)]
 		string LocalizedName { get;  }
 
@@ -5235,7 +5235,7 @@ namespace UIKit {
 
 		[iOS (8,0)]
 		[Export ("restoreUserActivityState:")]
-		void RestoreUserActivityState (NSUserActivity userActivity);
+		new void RestoreUserActivityState (NSUserActivity userActivity);
 
 		[iOS (8,0)]
 		[Field ("NSUserActivityDocumentURLKey")]
@@ -5703,8 +5703,8 @@ namespace UIKit {
 		[Field ("UIFontTextStyleCallout")]
 		Callout,
 
-		[NoWatch, NoTV]
-		[iOS (11,0)]
+		[NoTV]
+		[iOS (11,0), Watch (5,0)]
 		[Field ("UIFontTextStyleLargeTitle")]
 		LargeTitle,
 	}
@@ -6133,6 +6133,10 @@ namespace UIKit {
 		[Export ("opaque")]
 		bool Opaque { get; set; }
 
+		[Introduced (PlatformName.iOS, 10, 0, message: "Use the preferredRange property instead")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use the preferredRange property instead")]
+		[Introduced (PlatformName.TvOS, 10, 0, message: "Use the preferredRange property instead")]
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use the preferredRange property instead")]
 		[Export ("prefersExtendedRange")]
 		bool PrefersExtendedRange { get; set; }
 
@@ -6145,6 +6149,10 @@ namespace UIKit {
 		[Static]
 		[Export ("formatForTraitCollection:")]
 		UIGraphicsImageRendererFormat GetFormat (UITraitCollection traitCollection);
+
+		[TV (12, 0), iOS (12, 0)]
+		[Export ("preferredRange", ArgumentSemantic.Assign)]
+		UIGraphicsImageRendererFormatRange PreferredRange { get; set; }
 	}
 
 	[iOS (10,0), TV (10,0)]
@@ -6321,6 +6329,10 @@ namespace UIKit {
 		[iOS (11,0), TV (11,0)]
 		[Export ("smartInsertDeleteType", ArgumentSemantic.Assign)]
 		UITextSmartInsertDeleteType SmartInsertDeleteType { get; set; }
+
+		[iOS (12, 0)]
+		[NullAllowed, Export ("passwordRules", ArgumentSemantic.Copy)]
+		UITextInputPasswordRules PasswordRules { get; set; }
 	}
 
 	interface UIKeyboardEventArgs {
@@ -7987,6 +7999,10 @@ namespace UIKit {
 		[iOS (9,0)]
 		[Export ("allowsDefaultTighteningForTruncation")]
 		bool AllowsDefaultTighteningForTruncation { get; set; }
+
+		[TV (12, 0), NoWatch, NoiOS]
+		[Export ("enablesMarqueeWhenAncestorFocused")]
+		bool EnablesMarqueeWhenAncestorFocused { get; set; }
 	}
 
 	[BaseType (typeof (UIView))]
@@ -9712,7 +9728,7 @@ namespace UIKit {
 	}
 
 	[BaseType (typeof (NSObject))]
-	interface UIResponder : UIAccessibilityAction, UIAccessibilityFocus
+	interface UIResponder : UIAccessibilityAction, UIAccessibilityFocus, UIUserActivityRestoring
 #if !TVOS
 	, UIAccessibilityDragging
 #endif // !TVOS
@@ -9864,7 +9880,7 @@ namespace UIKit {
 
 		[iOS (8,0)]
 		[Export ("restoreUserActivityState:")]
-		void RestoreUserActivityState (NSUserActivity activity);
+		new void RestoreUserActivityState (NSUserActivity activity);
 
 		[iOS (9,0)]
 		[Export ("pressesBegan:withEvent:")]
@@ -10024,15 +10040,15 @@ namespace UIKit {
 	}
 
 	[BaseType (typeof (UIView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(UIScrollViewDelegate)})]
-	interface UIScrollView {
+	interface UIScrollView : UIFocusItemScrollableContainer {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 
 		[Export ("contentOffset")]
-		CGPoint ContentOffset { get; set; }
+		new CGPoint ContentOffset { get; set; }
 
 		[Export ("contentSize")]
-		CGSize ContentSize { get; set; }
+		new CGSize ContentSize { get; set; }
 
 		[Export ("contentInset")]
 		UIEdgeInsets ContentInset { get; set; }
@@ -12886,7 +12902,7 @@ namespace UIKit {
 	}
 		
 	[BaseType (typeof (UIResponder))]
-	interface UIView : UIAppearance, UIAppearanceContainer, UIAccessibility, UIDynamicItem, NSCoding, UIAccessibilityIdentification, UITraitEnvironment, UICoordinateSpace, UIFocusItem, CALayerDelegate {
+	interface UIView : UIAppearance, UIAppearanceContainer, UIAccessibility, UIDynamicItem, NSCoding, UIAccessibilityIdentification, UITraitEnvironment, UICoordinateSpace, UIFocusItem, CALayerDelegate, UIFocusItemContainer {
 		[DesignatedInitializer]
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
@@ -12995,7 +13011,7 @@ namespace UIKit {
 		CoreAnimation.CALayer Layer { get; }
 
 		[Export ("frame")]
-		CGRect Frame { get; set; }
+		new CGRect Frame { get; set; }
 		
 		[Export ("center")]
 		new CGPoint Center { get; set; }
@@ -14320,7 +14336,7 @@ namespace UIKit {
 		[Export ("userInterfaceIdiom")]
 		UIUserInterfaceIdiom UserInterfaceIdiom { get; }
 
-		[TV (10, 0), NoWatch, NoiOS]
+		[TV (10, 0), NoWatch, iOS (12,0)]
 		[Export ("userInterfaceStyle")]
 		UIUserInterfaceStyle UserInterfaceStyle { get; }
 
@@ -14355,7 +14371,7 @@ namespace UIKit {
 		[Static, Export ("traitCollectionWithForceTouchCapability:")]
 		UITraitCollection FromForceTouchCapability (UIForceTouchCapability capability);
 
-		[TV (10, 0), NoWatch, NoiOS]
+		[TV (10, 0), NoWatch, iOS (12,0)]
 		[Static]
 		[Export ("traitCollectionWithUserInterfaceStyle:")]
 		UITraitCollection FromUserInterfaceStyle (UIUserInterfaceStyle userInterfaceStyle);
@@ -14862,6 +14878,14 @@ namespace UIKit {
 		[iOS (11,0), TV (11,0)]
 		[Field ("UITextContentTypePassword")]
 		NSString Password { get; }
+
+		[TV (12, 0), iOS (12, 0)]
+		[Field ("UITextContentTypeNewPassword")]
+		NSString NewPassword { get; }
+
+		[TV (12, 0), iOS (12, 0)]
+		[Field ("UITextContentTypeOneTimeCode")]
+		NSString OneTimeCode { get; }
 	}
 	
 	[BaseType (typeof (UIViewController), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(UISplitViewControllerDelegate)})]
@@ -16679,6 +16703,27 @@ namespace UIKit {
 		IUIFocusEnvironment[] PreferredFocusEnvironments { get; set; }
 	}
 
+	[TV (12,0), iOS (12,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface UIFocusMovementHint : NSCopying
+	{
+		[Export ("movementDirection")]
+		CGVector MovementDirection { get; }
+
+		[Export ("perspectiveTransform")]
+		CATransform3D PerspectiveTransform { get; }
+
+		[Export ("rotation")]
+		CGVector Rotation { get; }
+
+		[Export ("translation")]
+		CGVector Translation { get; }
+
+		[Export ("interactionTransform")]
+		CATransform3D InteractionTransform { get; }
+	}
+
 	interface IUIFocusItem {}
 	[iOS (10,0)]
 	[Protocol]
@@ -16687,6 +16732,15 @@ namespace UIKit {
 		[Abstract]
 		[Export ("canBecomeFocused")]
 		bool CanBecomeFocused { get; }
+
+		[TV (12, 0), iOS (12, 0), NoWatch]
+		[Abstract]
+		[Export ("frame")]
+		CGRect Frame { get; }
+
+		[TV (12, 0), iOS (12, 0), NoWatch]
+		[Export ("didHintFocusMovement:")]
+		void DidHintFocusMovement (UIFocusMovementHint hint);
 	}
 		
 	[DisableDefaultCtor] // [Assert] -init is not a useful initializer for this class. Use one of the designated initializers instead
@@ -16747,6 +16801,24 @@ namespace UIKit {
 		// The 2 values associated with the 'UIFocusSoundIdentifier' smart enum cannot be used.
 		// See https://developer.apple.com/documentation/uikit/uifocussystem/2887479-register
 		// Do not specify one of the UIKit sound identifiers (such as default); doing so will cause an immediate assertion failure and crash your app.
+		
+		[TV (12, 0), iOS (12, 0)]
+		[NullAllowed, Export ("focusedItem", ArgumentSemantic.Weak)]
+		IUIFocusItem FocusedItem { get; }
+
+		[TV (12,0), iOS (12,0)]
+		[Static]
+		[Export ("focusSystemForEnvironment:")]
+		[return: NullAllowed]
+		UIFocusSystem Create (IUIFocusEnvironment environment);
+
+		[TV (12,0), iOS (12,0)]
+		[Export ("requestFocusUpdateToEnvironment:")]
+		void RequestFocusUpdate (IUIFocusEnvironment environment);
+
+		[TV (12,0), iOS (12,0)]
+		[Export ("updateFocusIfNeeded")]
+		void UpdateFocusIfNeeded ();
 	}
 
 	interface IUIFocusDebuggerOutput {}
@@ -16930,7 +17002,30 @@ namespace UIKit {
 		[Export ("soundIdentifierForFocusUpdateInContext:")]
 		[return: NullAllowed]
 		NSString GetSoundIdentifier (UIFocusUpdateContext context);
-		
+
+
+		[TV (12, 0), iOS (12, 0)]
+		[Abstract]
+		[NullAllowed, Export ("parentFocusEnvironment", ArgumentSemantic.Weak)]
+		IUIFocusEnvironment ParentFocusEnvironment { get; }
+
+		[TV (12, 0), iOS (12, 0)]
+		[Abstract]
+		[NullAllowed, Export ("focusItemContainer")]
+		IUIFocusItemContainer FocusItemContainer { get; }
+	}
+
+	[TV (12,0), iOS (12,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface UITextInputPasswordRules : NSSecureCoding, NSCopying
+	{
+		[Export ("passwordRulesDescriptor")]
+		string PasswordRulesDescriptor { get; }
+
+		[Static]
+		[Export ("passwordRulesWithDescriptor:")]
+		UITextInputPasswordRules Create (string passwordRulesDescriptor);
 	}
 #endif // !WATCH
 
@@ -18235,6 +18330,52 @@ namespace UIKit {
 		[Export ("supportsMultipleItems")]
 		bool SupportsMultipleItems { get; set; }
 	}
+
+
+	interface IUIFocusItemContainer {}
+	[iOS (12,0), TV (12,0), NoWatch]
+	[Protocol]
+	interface UIFocusItemContainer
+	{
+		[Abstract]
+		[Export ("coordinateSpace")]
+		IUICoordinateSpace CoordinateSpace { get; }
+
+		[Abstract]
+		[Export ("focusItemsInRect:")]
+		IUIFocusItem[] GetFocusItems (CGRect rect);
+	}
+
+	[iOS (12,0), TV(12,0), NoWatch]
+	[Protocol]
+	interface UIFocusItemScrollableContainer : UIFocusItemContainer
+	{
+		[Abstract]
+		[TV(9,0), NoWatch]
+		[Export ("contentOffset", ArgumentSemantic.Assign)]
+		CGPoint ContentOffset { get; set; }
+
+		[Abstract]
+		[TV(9,0), NoWatch]
+		[Export ("contentSize")]
+		CGSize ContentSize { get; }
+
+		[Abstract]
+		[iOS (12,0), TV(12,0), NoWatch]
+		[Export ("visibleSize")]
+		CGSize VisibleSize { get; }
+	}
+
+	[iOS (8,0), TV (8,0), NoWatch] // it was added on 8,0, but was not binded and the method was added in 12,0
+	[Protocol]
+	interface UIUserActivityRestoring
+	{
+		[Abstract]
+		[iOS (8,0), TV(12,0)]
+		[Export ("restoreUserActivityState:")]
+		void RestoreUserActivityState (NSUserActivity userActivity);
+	}
+
 #endif // !WATCH
 
 	[Watch (4,0), TV (11,0), iOS (11,0)]
@@ -18275,5 +18416,17 @@ namespace UIKit {
 		[Export ("scaledValueForValue:compatibleWithTraitCollection:")]
 		nfloat GetScaledValue (nfloat value, [NullAllowed] UITraitCollection traitCollection);
 #endif // !WATCH
+	}
+
+	[Static]
+	[iOS (12,0), TV (12,0), Watch (5,0)]
+	interface UIKitVersion {
+
+		[Field ("UIKitVersionNumber")]
+		double UIKitVersionNumber { get; }
+
+		[Field ("UIKitVersionString")]
+		NSString UIKitVersionString { get; }
+
 	}
 }
