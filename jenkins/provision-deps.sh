@@ -1,12 +1,14 @@
 #!/bin/bash -e
 
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+WORKSPACE=$(pwd)
+
 report_error ()
 {
-	echo "🔥 [Provisioning failed]($BUILD_URL/console) 🔥" >> $WORKSPACE/jenkins/pr-comments.md
+	echo "🔥 [Provisioning failed]($BUILD_URL/console) 🔥" >> "$WORKSPACE/jenkins/pr-comments.md"
 }
 trap report_error ERR
 
-cd $WORKSPACE
 ./system-dependencies.sh --provision-all
 
-echo "✅ [Provisioning succeeded]($BUILD_URL/console)" >> $WORKSPACE/jenkins/pr-comments.md
+echo "✅ [Provisioning succeeded]($BUILD_URL/console)" >> "$WORKSPACE/jenkins/pr-comments.md"

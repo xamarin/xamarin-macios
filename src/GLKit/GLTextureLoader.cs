@@ -148,6 +148,9 @@ namespace GLKit {
 		
 	}
 
+	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
 	public class GLKTextureOperations : DictionaryContainer {
 		public GLKTextureOperations () : base (new NSMutableDictionary ()) {}
 
