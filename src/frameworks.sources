@@ -1072,6 +1072,14 @@ MULTIPEERCONNECTIVITY_SOURCES = \
 	MultipeerConnectivity/Compat.cs \
 	MultipeerConnectivity/MCSession.cs \
 
+# Natural Language
+
+NATURALLANGUAGE_API_SOURCES = \
+	NaturalLanguage/Enums.cs \
+
+NATURALLANGUAGE_SOURCES = \
+	NaturalLanguage/NLLanguageRecognizer.cs \
+
 # NetworkExtension
 
 NETWORKEXTENSION_API_SOURCES = \
@@ -1692,6 +1700,7 @@ MAC_FRAMEWORKS =            \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity	\
+	NaturalLanguage         \
 	NetworkExtension        \
 	NotificationCenter 	\
 	OpenGL                  \
@@ -1779,6 +1788,7 @@ IOS_FRAMEWORKS =         \
 	MobileCoreServices \
 	ModelIO \
 	MultipeerConnectivity \
+	NaturalLanguage \
 	NetworkExtension \
 	NewsstandKit \
 	NotificationCenter \
@@ -1867,6 +1877,7 @@ TVOS_FRAMEWORKS =           \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity   \
+	NaturalLanguage         \
 	OpenGLES                \
 	Photos                  \
 	PhotosUI                \

@@ -163,6 +163,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "BusinessChat", "BusinessChat", 10, 13, 4 },
 
 					{ "AdSupport", "AdSupport", 10,14 },
+					{ "NaturalLanguage", "NaturalLanguage", 10,14 },
 				};
 			}
 			return mac_frameworks;
@@ -284,6 +285,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "AuthenticationServices", "AuthenticationServices", 12,0 },
 				{ "CarPlay", "CarPlay", 12,0 },
+				{ "NaturalLanguage", "NaturalLanguage", 12,0 },
 			};
 		}
 		return ios_frameworks;
@@ -401,6 +403,8 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "CoreML", "CoreML", 11 },
 					{ "IOSurface", "IOSurface", 11 },
 					{ "Vision", "Vision", 11 },
+
+					{ "NaturalLanguage", "NaturalLanguage", 12,0 },
 				};
 			}
 			return tvos_frameworks;
