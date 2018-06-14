@@ -338,7 +338,7 @@ namespace ReplayKit {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 
-		[NullAllowed, Export ("preferredExtension", ArgumentSemantic.Strong)]
+		[NullAllowed, Export ("preferredExtension")]
 		string PreferredExtension { get; set; }
 
 		[Export ("showsMicrophoneButton")]
