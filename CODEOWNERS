@@ -28,6 +28,7 @@
 /src/audiotoolbox.cs @dalexsoto
 /src/AudioUnit @dalexsoto
 /src/audiounit.cs @dalexsoto
+/src/authenticationservices.cs @spouliot
 /src/AVFoundation @mandel-macaque @dalexsoto
 /src/avfoundation.cs @mandel-macaque @dalexsoto
 /src/AVKit @spouliot @dalexsoto
@@ -125,6 +126,8 @@
 /src/modelio.cs @VincentDondain
 /src/MultipeerConnectivity @spouliot
 /src/multipeerconnectivity.cs @spouliot
+/src/naturallanguage.cs @mandel-macaque
+/src/NaturalLanguage @mandel-macaque
 /src/NetworkExtension @spouliot
 /src/networkextension.cs @spouliot
 /src/NotificationCenter @spouliot

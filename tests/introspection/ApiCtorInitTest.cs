@@ -418,6 +418,12 @@ namespace Introspection {
 			case "MDLColorSwatchTexture":
 				// they don't make sense without extra arguments
 				return true;
+			case "ASCredentialProviderViewController": // goal is to "provides a standard interface for creating a credential provider extension", not a custom one
+			case "INUIAddVoiceShortcutViewController": // Doesn't make sense without INVoiceShortcut and there is no other way to set this unless you use the other only .ctor
+			case "INUIEditVoiceShortcutViewController": // Doesn't make sense without INVoiceShortcut and there is no other way to set this unless you use the other only .ctor
+				if (ctor.ToString () == "Void .ctor(String, NSBundle)")
+					return true;
+				break;
 			}
 
 			var ep = ctor.GetParameters ();

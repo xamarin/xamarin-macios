@@ -154,6 +154,11 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void RebuildWatchAppNoChanges ()
 		{
+			if (config == "Release") {
+				// https://trello.com/c/pvuuoF6b/115-41119081-clang-cant-compile-in-xcode-10-beta-1-something-that-compiled-fine-with-xcode-94-error-in-backend-unsupported-calling-c
+				Assert.Ignore ("Radar: 41119081");
+			}
+
 			bool expectedCodesignResults = Platform != "iPhoneSimulator";
 
 			BuildProject ("MyWatch2Container", Platform, config, clean: true);
@@ -172,6 +177,11 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void CodesignAfterModifyingWatchApp2Test ()
 		{
+			if (config == "Release") {
+				// https://trello.com/c/pvuuoF6b/115-41119081-clang-cant-compile-in-xcode-10-beta-1-something-that-compiled-fine-with-xcode-94-error-in-backend-unsupported-calling-c
+				Assert.Ignore ("Radar: 41119081");
+			}
+
 			var csproj = BuildProject ("MyWatch2Container", Platform, config, clean: true);
 			var testsDir = Path.GetDirectoryName (Path.GetDirectoryName (csproj));
 			var appexProjectDir = Path.Combine (testsDir, "MyWatchKit2Extension");

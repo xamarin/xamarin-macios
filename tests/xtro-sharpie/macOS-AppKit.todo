@@ -14,7 +14,6 @@
 !missing-protocol! NSToolbarItemValidation not bound
 !missing-protocol! NSViewLayerContentScaleDelegate not bound
 !missing-protocol! NSViewToolTipOwner not bound
-!missing-protocol-conformance! NSAppearance should conform to NSSecureCoding
 !missing-protocol-conformance! NSApplication should conform to NSAppearanceCustomization (defined in 'NSAppearanceCustomization' category)
 !missing-protocol-conformance! NSApplication should conform to NSMenuItemValidation
 !missing-protocol-conformance! NSController should conform to NSEditor
