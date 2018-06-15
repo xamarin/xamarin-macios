@@ -235,7 +235,6 @@ namespace Introspection {
 				case "ARFrame":
 				case "ARLightEstimate":
 				case "ASCredentialProviderExtensionContext":
-				case "NSManagedObjectID":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
