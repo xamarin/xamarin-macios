@@ -164,6 +164,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "AdSupport", "AdSupport", 10,14 },
 					{ "NaturalLanguage", "NaturalLanguage", 10,14 },
+					{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10,14 },
 				};
 			}
 			return mac_frameworks;
