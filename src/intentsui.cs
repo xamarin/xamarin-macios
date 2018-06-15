@@ -139,11 +139,11 @@ namespace IntentsUI {
 
 		[Abstract]
 		[Export ("editVoiceShortcutViewController:didUpdateVoiceShortcut:error:")]
-		void DidUpdateVoiceShortcut (INUIEditVoiceShortcutViewController controller, [NullAllowed] INVoiceShortcut voiceShortcut, [NullAllowed] NSError error);
+		void DidUpdate (INUIEditVoiceShortcutViewController controller, [NullAllowed] INVoiceShortcut voiceShortcut, [NullAllowed] NSError error);
 
 		[Abstract]
 		[Export ("editVoiceShortcutViewController:didDeleteVoiceShortcutWithIdentifier:")]
-		void DidDeleteVoiceShortcut (INUIEditVoiceShortcutViewController controller, NSUuid deletedVoiceShortcutIdentifier);
+		void DidDelete (INUIEditVoiceShortcutViewController controller, NSUuid deletedVoiceShortcutIdentifier);
 
 		[Abstract]
 		[Export ("editVoiceShortcutViewControllerDidCancel:")]

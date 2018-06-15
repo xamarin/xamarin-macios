@@ -2880,22 +2880,22 @@ namespace Intents {
 
 		// INImage_IntentsUI (IntentsUI)
 
-		[NoMac, Watch (5,0)]
+		[NoMac, NoWatch]
 		[Static]
 		[Export ("imageWithCGImage:")]
 		INImage FromImage (CGImage image);
 
-		[NoMac, Watch (5,0)]
+		[NoMac, NoWatch]
 		[Static]
 		[Export ("imageWithUIImage:")]
 		INImage FromImage (UIImage image);
 
-		[NoMac, Watch (5,0)]
+		[NoMac, NoWatch]
 		[Static]
 		[Export ("imageSizeForIntentResponse:")]
 		CGSize GetImageSize (INIntentResponse response);
 
-		[NoMac, Watch (5,0), iOS (11,0)]
+		[NoMac, NoWatch, iOS (11,0)]
 		[Async]
 		[Export ("fetchUIImageWithCompletion:")]
 		void FetchImage (Action<UIImage> completion);
