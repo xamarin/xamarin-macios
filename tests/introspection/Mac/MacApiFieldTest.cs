@@ -76,6 +76,17 @@ namespace Introspection {
 					break;
 				}
 				break;
+			// Xcode 10
+			case "QCComposition":
+				switch (p.Name) {
+				case "InputRSSArticleDurationKey":
+				case "InputRSSFeedURLKey":
+				case "ProtocolRSSVisualizer":
+					if (Mac.CheckSystemVersion (10,14)); // radar 41125938
+						return true;
+					break;
+				}
+				break;
 			}
 
 			switch (p.Name) {
@@ -186,6 +197,13 @@ namespace Introspection {
 				if (Mac.Is32BitMavericks)
 					return true;
 				goto default;
+			// Xcode 10
+			case "QCCompositionInputRSSFeedURLKey":
+			case "QCCompositionInputRSSArticleDurationKey":
+			case "QCCompositionProtocolRSSVisualizer":
+				if (Mac.CheckSystemVersion (10,14)); // radar 41125938
+					return true;
+				break;
 			default:
 				return base.Skip (constantName, libraryName);
 			}
