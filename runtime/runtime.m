@@ -2277,7 +2277,7 @@ xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwMan
 		if (exc_handle != NULL) {
 			int handle = [exc_handle getHandle];
 			MonoObject *exc = mono_gchandle_get_target (handle);
-			mono_set_pending_exception ((MonoException *) exc);
+			mono_runtime_set_pending_exception ((MonoException *) exc, false);
 		} else {
 			int handle = xamarin_create_ns_exception (ns_exception, &exception_gchandle);
 			if (exception_gchandle != 0) {
@@ -2288,7 +2288,7 @@ xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwMan
 			}
 			MONO_ENTER_GC_UNSAFE;
 			MonoObject *exc = mono_gchandle_get_target (handle);
-			mono_set_pending_exception ((MonoException *) exc);
+			mono_runtime_set_pending_exception ((MonoException *) exc, false);
 			mono_gchandle_free (handle);
 			MONO_EXIT_GC_UNSAFE;
 		}
