@@ -219,6 +219,7 @@ namespace Introspection
 			"Gbrg",	// acronym for Green-Blue-Reg-Green
 			"Geocoder",
 			"Gigapascals",
+			"Gop", // acronym for Group Of Pictures
 			"Gpp",
 			"Gps",
 			"Gpu",	// acronym for Graphics Processing Unit
