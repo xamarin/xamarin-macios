@@ -198,6 +198,15 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "UIUserActivityRestoring":
+				switch (type.Name) {
+				// UIKit.framework/Headers/UIDocument.h
+				case "UIDocument":
+				// inherits it from UIDocument
+				case "UIManagedDocument":
+					return true;
+				}
+				break;
 			}
 			return false;
 		}
