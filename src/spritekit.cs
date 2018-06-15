@@ -149,6 +149,13 @@ namespace SpriteKit {
 		[return: NullAllowed]
 		SKNode Create (string filename);
 
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Internal]
+		[Static]
+		[Export ("nodeWithFileNamed:securelyWithClasses:andError:")]
+		[return: NullAllowed]
+		SKNode Create (string filename, IntPtr classesPtr, out NSError error);
+
 		[Export ("frame")]
 		CGRect Frame { get; }
 
@@ -2927,7 +2934,7 @@ namespace SpriteKit {
 	[Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (SKNode))]
 	[DisableDefaultCtor]
-	interface SKAudioNode : NSCoding {
+	interface SKAudioNode : NSSecureCoding {
 		[Export ("initWithAVAudioNode:")]
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] AVAudioNode node);
@@ -3136,7 +3143,7 @@ namespace SpriteKit {
 	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 	[TV (10,0)]
 	[BaseType (typeof(SKNode))]
-	interface SKTileMapNode : NSCopying, NSCoding
+	interface SKTileMapNode : NSCopying, NSSecureCoding
 	{
 		[Static]
 		[Export ("tileMapNodeWithTileSet:columns:rows:tileSize:")]
