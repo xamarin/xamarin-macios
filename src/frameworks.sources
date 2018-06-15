@@ -902,6 +902,7 @@ INTENTS_SOURCES = \
 	Intents/INRelativeReferenceResolutionResult.cs \
 	Intents/INRelativeSettingResolutionResult.cs \
 	Intents/INRideOption.cs \
+	Intents/INPlayMediaIntentResponse.cs \
 	Intents/INSaveProfileInCarIntent.cs \
 	Intents/INSearchCallHistoryIntent.cs \
 	Intents/INSetCarLockStatusIntent.cs \

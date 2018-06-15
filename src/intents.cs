@@ -10,6 +10,7 @@
 #if XAMCORE_2_0 // The Intents framework uses generics which is only supported in Unified
 
 using System;
+using System.ComponentModel;
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
@@ -8818,6 +8819,7 @@ namespace Intents {
 		[Export ("code")]
 		INPlayMediaIntentResponseCode Code { get; }
 
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[NullAllowed, Export ("nowPlayingInfo", ArgumentSemantic.Copy)]
 		NSDictionary WeakNowPlayingInfo { get; set; }
 	}
