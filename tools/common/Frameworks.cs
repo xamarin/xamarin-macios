@@ -286,6 +286,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "AuthenticationServices", "AuthenticationServices", 12,0 },
 				{ "CarPlay", "CarPlay", 12,0 },
+				{ "IdentityLookupUI", "IdentityLookupUI", 12,0 },
 				{ "NaturalLanguage", "NaturalLanguage", 12,0 },
 			};
 		}
