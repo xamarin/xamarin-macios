@@ -1720,6 +1720,7 @@ MAC_FRAMEWORKS =            \
 	Social                  \
 	StoreKit                \
 	SystemConfiguration     \
+	VideoSubscriberAccount  \
 	VideoToolbox            \
 	Vision                  \
 	WebKit                  \

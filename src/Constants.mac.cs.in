@@ -140,5 +140,6 @@ namespace MonoMac {
 		// macOS 10.14
 		public const string AdSupportLibrary = "/System/Library/Frameworks/AdSupport.framework/AdSupport";
 		public const string NaturalLanguageLibrary = "/System/Library/Frameworks/Frameworks/NaturalLanguage.framework/NaturalLanguage";
+		public const string VideoSubscriberAccountLibrary = "/System/Library/Frameworks/VideoSubscriberAccount.framework/VideoSubscriberAccount";
 	}
 }
