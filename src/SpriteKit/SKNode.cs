@@ -55,9 +55,9 @@ namespace SpriteKit
 		public static SKNode Create (string filename, Type [] types, out NSError error)
 		{
 			// Let's fail early.
-			if (filename is null)
+			if (filename == null)
 				throw new ArgumentNullException (nameof (filename));
-			if (types is null)
+			if (types == null)
 				throw new ArgumentNullException (nameof (filename));
 			if (types.Length == 0)
 				throw new InvalidOperationException ($"'{nameof (filename)}' length must be greater than zero.");
