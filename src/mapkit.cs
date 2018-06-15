@@ -796,6 +796,10 @@ namespace MapKit {
 		[TV (11,0)][NoWatch][iOS (11,0)][Mac (10,13, onlyOn64: true)]
 		[Export ("mapView:clusterAnnotationForMemberAnnotations:"), DelegateName ("MKCreateClusterAnnotation"), DefaultValue (null)]
 		MKClusterAnnotation CreateClusterAnnotation (MKMapView mapView, IMKAnnotation[] memberAnnotations);
+
+		[TV (11,0)][NoWatch][iOS (11,0)][Mac (10,13, onlyOn64: true)]
+		[Export ("mapViewDidChangeVisibleRegion:")]
+		void DidChangeVisibleRegion (MKMapView mapView);
 	}
 		
 	[BaseType (typeof (MKAnnotationView))]
