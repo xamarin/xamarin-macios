@@ -92,10 +92,10 @@ namespace UserNotificationsUI {
 		[Export ("dismissNotificationContentExtension")]
 		void DismissNotificationContentExtension ();
 
-		// property, but we have to add the two methods
+		// property, but we have to add the two methods since it is a category.
 		[iOS (12, 0)]
 		[Export ("notificationActions", ArgumentSemantic.Copy)]
-		UNNotificationAction[] NotificationActions ();
+		UNNotificationAction[] GetNotificationActions ();
 
 		[iOS (12, 0)]
 		[Export ("setNotificationActions:", ArgumentSemantic.Copy)]
