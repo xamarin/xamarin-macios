@@ -94,6 +94,8 @@
 /src/homekit.cs @VincentDondain
 /src/iad.cs @spouliot
 /src/iAd.framework @spouliot
+/src/identitylookup.cs @dalexsoto
+/src/identitylookupui.cs @dalexsoto
 /src/ImageIO @spouliot @chamons
 /src/imageio.cs @spouliot @chamons
 /src/ImageKit @chamons

@@ -235,6 +235,7 @@ namespace Introspection {
 				case "ARFrame":
 				case "ARLightEstimate":
 				case "ASCredentialProviderExtensionContext":
+				case "ILClassificationUIExtensionContext": // Conformance not in headers
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -394,6 +395,7 @@ namespace Introspection {
 					return true;
 				// Xcode 10
 				case "ASCredentialProviderExtensionContext":
+				case "ILClassificationUIExtensionContext": // Conformance not in headers
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -496,6 +498,7 @@ namespace Introspection {
 #endif
 				// Xcode 10
 				case "ASCredentialProviderExtensionContext":
+				case "ILClassificationUIExtensionContext": // Conformance not in headers
 					return true;
 				}
 				break;

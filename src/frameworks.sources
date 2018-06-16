@@ -1772,6 +1772,7 @@ IOS_FRAMEWORKS =         \
 	HealthKitUI \
 	HomeKit \
 	IdentityLookup \
+	IdentityLookupUI \
 	ImageIO \
 	Intents \
 	IntentsUI \
