@@ -16720,7 +16720,7 @@ namespace UIKit {
 		[Export ("canBecomeFocused")]
 		bool CanBecomeFocused { get; }
 
-		// FIXME: declared as a @required, but this breaks compatibilit
+		// FIXME: declared as a @required, but this breaks compatibility
 		// Radar: 41121416
 		[TV (12, 0), iOS (12, 0), NoWatch]
 #if XAMCORE_4_0 
@@ -18365,7 +18365,7 @@ namespace UIKit {
 		[Abstract]
 		[iOS (8,0), TV(12,0)]
 		[Export ("restoreUserActivityState:")]
-		void RestoreUserActivityState (NSUserActivity userActivity);
+		void RestoreUserActivityState (NSUserActivity activity);
 	}
 
 #endif // !WATCH
