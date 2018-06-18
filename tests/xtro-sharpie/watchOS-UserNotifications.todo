@@ -1,4 +1,0 @@
-!missing-selector! +UNNotificationSound::defaultCriticalSound not bound
-!missing-selector! +UNNotificationSound::defaultCriticalSoundWithAudioVolume: not bound
-!missing-selector! UNNotificationSettings::criticalAlertSetting not bound
-!missing-selector! UNNotificationSettings::providesAppNotificationSettings not bound
