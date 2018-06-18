@@ -64,6 +64,15 @@ namespace Introspection {
 
 		protected virtual bool Skip (Type type, string protocolName)
 		{
+			// The following protocols are skipped in classic since they were added in 
+			// later versions
+			if (IntPtr.Size == 4) {
+				switch (protocolName) {
+				case "UIUserActivityRestoring":
+					return true;
+				}
+			}
+
 			switch (protocolName) {
 			case "NSCopying":
 				switch (type.Name) {
