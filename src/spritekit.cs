@@ -156,8 +156,10 @@ namespace SpriteKit {
 		[return: NullAllowed]
 		SKNode Create (string filename, IntPtr classesPtr, out NSError error);
 
+#if MONOMAC || WATCH
 		[Export ("frame")]
 		CGRect Frame { get; }
+#endif
 
 		[Export ("calculateAccumulatedFrame")]
 		CGRect CalculateAccumulatedFrame ();

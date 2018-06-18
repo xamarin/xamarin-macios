@@ -61,3 +61,12 @@
 
 ## https://github.com/xamarin/xamarin-macios/issues/3213 should be fixed before conformance to 'UIStateRestoring' is restored.
 !missing-protocol-conformance! UIViewController should conform to UIStateRestoring (defined in 'UIStateRestoration' category)
+
+# not needed ad we do the same in other frameworks with versions.
+!missing-field! UIKitVersionNumber not bound
+!missing-field! UIKitVersionString not bound
+
+## fixed for XAMCORE_4_0
+!incorrect-protocol-member! UIFocusItem::frame is REQUIRED and should be abstract
+!incorrect-protocol-member! UIFocusEnvironment::focusItemContainer is REQUIRED and should be abstract
+!incorrect-protocol-member! UIFocusEnvironment::parentFocusEnvironment is REQUIRED and should be abstract
