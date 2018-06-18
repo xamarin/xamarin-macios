@@ -12,8 +12,7 @@ CLEAR=$(tput sgr0 2>/dev/null || true)
 # Clone files on High Sierra, instead of copying them. Much faster.
 
 CP="cp"
-OSVERSION=${OSTYPE:6}
-if [[ $OSVERSION -ge 17 ]]; then
+if df -t apfs / >/dev/null 2>&1; then
 	CP="cp -c"
 fi
 
