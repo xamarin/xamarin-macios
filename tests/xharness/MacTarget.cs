@@ -4,6 +4,8 @@ namespace xharness
 {
 	public class MacTarget : Target
 	{
+		public bool ThirtyTwoBit;
+
 		protected override bool FixProjectReference (string name)
 		{
 			switch (name) {

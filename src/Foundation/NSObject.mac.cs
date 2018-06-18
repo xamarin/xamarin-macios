@@ -105,6 +105,7 @@ namespace Foundation {
 		static IntPtr ms = Dlfcn.dlopen (Constants.MetalPerformanceShadersLibrary, 1);
 		static IntPtr bc = Dlfcn.dlopen (Constants.BusinessChatLibrary, 1);
 		static IntPtr ad = Dlfcn.dlopen (Constants.AdSupportLibrary, 1);
+		static IntPtr nl = Dlfcn.dlopen (Constants.NaturalLanguageLibrary, 1);
 #endif
 		// ** IF YOU ADD ITEMS HERE PLEASE UPDATE linker/ObjCExtensions.cs and mmp/linker/MonoMac.Tuner/MonoMacNamespaces.cs
 

@@ -63,6 +63,7 @@ namespace Introspection {
 				break;
 			case "MTLFence":
 			case "MTLHeap":
+			case "RPBroadcastPickerView": // Symbol not available in simulator
 				if (Runtime.Arch != Arch.DEVICE)
 					return true;
 
@@ -233,7 +234,7 @@ namespace Introspection {
 				case "ARDirectionalLightEstimate":
 				case "ARFrame":
 				case "ARLightEstimate":
-				case "NSManagedObjectID":
+				case "ASCredentialProviderExtensionContext":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -391,6 +392,9 @@ namespace Introspection {
 				case "HMHomeAccessControl":
 				case "HMAccessControl":
 					return true;
+				// Xcode 10
+				case "ASCredentialProviderExtensionContext":
+					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
 				case "CLKComplicationTemplateCircularSmallRingImage":
@@ -490,6 +494,9 @@ namespace Introspection {
 				case "CLKComplicationTimelineEntry":
 					return true;
 #endif
+				// Xcode 10
+				case "ASCredentialProviderExtensionContext":
+					return true;
 				}
 				break;
 			case "NSMutableCopying":

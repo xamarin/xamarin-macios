@@ -357,7 +357,7 @@ namespace AppKit {
 
 	[Mac (10,9)]
 	[BaseType (typeof (NSObject))]
-	interface NSAppearance : NSCoding {
+	interface NSAppearance : NSSecureCoding {
 		[DesignatedInitializer]
 		[Export ("initWithAppearanceNamed:bundle:")]
 		IntPtr Constructor (string name, [NullAllowed] NSBundle bundle);

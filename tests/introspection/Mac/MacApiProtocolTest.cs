@@ -68,6 +68,9 @@ namespace Introspection {
 				case "NSFetchRequest": // Not declared in header file
 				case "NSManagedObjectModel": // Not declared in header file
 				case "NSUserInterfaceCompressionOptions": // Not declared in header file
+				// Xcode 10 (running on macOS 10.14)
+				case "NSTextAlternatives":
+				case "QTDataReference": // no header files anymore for deprecated QuickTime
 					return true;
 				default:
 					// CIFilter started implementing NSSecureCoding in 10.11
@@ -137,6 +140,8 @@ namespace Introspection {
 				case "NSConstraintConflict": // Not declared in header file
 				case "NSQueryGenerationToken": // Declared in header file but SupportsSecureCoding returns false - radar 32856944
 				case "NSPersistentHistoryToken": // Conformance not in headers
+				// Xcode 10 (running on macOS 10.14)
+				case "NSTextAlternatives":
 					return true;
 				}
 				break;

@@ -483,4 +483,88 @@ namespace CoreMotion {
 		[Export ("type")]
 		CMPedometerEventType Type { get; }
 	}
+
+	[Watch (5,0), NoTV, NoMac, iOS (12,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CMDyskineticSymptomResult : NSCopying, NSSecureCoding {
+
+		[Export ("startDate", ArgumentSemantic.Copy)]
+		NSDate StartDate { get; }
+
+		[Export ("endDate", ArgumentSemantic.Copy)]
+		NSDate EndDate { get; }
+
+		[Export ("percentOffWrist")]
+		float PercentOffWrist { get; }
+
+		[Export ("percentUnlikely")]
+		float PercentUnlikely { get; }
+
+		[Export ("percentLikely")]
+		float PercentLikely { get; }
+	}
+
+	[Watch (5,0), NoTV, NoMac, iOS (12,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CMTremorResult : NSCopying, NSSecureCoding {
+
+		[Export ("startDate", ArgumentSemantic.Copy)]
+		NSDate StartDate { get; }
+
+		[Export ("endDate", ArgumentSemantic.Copy)]
+		NSDate EndDate { get; }
+
+		[Export ("percentOffWrist")]
+		float PercentOffWrist { get; }
+
+		[Export ("percentUnknown")]
+		float PercentUnknown { get; }
+
+		[Export ("percentNone")]
+		float PercentNone { get; }
+
+		[Export ("percentSlight")]
+		float PercentSlight { get; }
+
+		[Export ("percentMild")]
+		float PercentMild { get; }
+
+		[Export ("percentModerate")]
+		float PercentModerate { get; }
+
+		[Export ("percentStrong")]
+		float PercentStrong { get; }
+	}
+
+	[Watch (5,0), NoTV, NoMac, NoiOS]
+	delegate void CMDyskineticSymptomResultHandler (CMDyskineticSymptomResult [] dyskineticSymptomResult, NSError error);
+
+	[Watch (5,0), NoTV, NoMac, NoiOS]
+	delegate void CMTremorResultHandler (CMTremorResult [] tremorResults, NSError error);
+
+	[Watch (5,0), NoTV, NoMac, NoiOS]
+	[BaseType (typeof (NSObject))]
+	interface CMMovementDisorderManager {
+
+		[Static]
+		[Export ("isAvailable")]
+		bool IsAvailable { get; }
+
+		[Static]
+		[Export ("authorizationStatus")]
+		CMAuthorizationStatus AuthorizationStatus { get; }
+
+		[Export ("monitorKinesiasForDuration:")]
+		void MonitorKinesias (double durationInSeconds);
+
+		[Async]
+		[Export ("queryDyskineticSymptomFromDate:toDate:withHandler:")]
+		void QueryDyskineticSymptom (NSDate fromDate, NSDate toDate, CMDyskineticSymptomResultHandler handler);
+
+		[Async]
+		[Export ("queryTremorFromDate:toDate:withHandler:")]
+		void QueryTremor (NSDate fromDate, NSDate toDate, CMTremorResultHandler handler);
+	}
 }

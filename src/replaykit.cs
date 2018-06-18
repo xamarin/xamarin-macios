@@ -13,6 +13,7 @@ using CoreMedia;
 using ObjCRuntime;
 using Foundation;
 using UIKit;
+using CoreGraphics;
 
 namespace ReplayKit {
 
@@ -328,5 +329,19 @@ namespace ReplayKit {
 		[iOS (10,2)][TV (10,1)]
 		[Export ("finishBroadcastWithError:")]
 		void FinishBroadcast (NSError error);
+	}
+
+	[NoTV, iOS (12,0)]
+	[BaseType (typeof (UIView))]
+	interface RPBroadcastPickerView : NSCoding {
+
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frame);
+
+		[NullAllowed, Export ("preferredExtension")]
+		string PreferredExtension { get; set; }
+
+		[Export ("showsMicrophoneButton")]
+		bool ShowsMicrophoneButton { get; set; }
 	}
 }
