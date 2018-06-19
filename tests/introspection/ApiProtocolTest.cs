@@ -179,6 +179,9 @@ namespace Introspection {
 				case "ARFrame":
 				case "ARLightEstimate":
 				case "NSManagedObjectID":
+				// beta 2
+				case "NSShadow":
+				case "NSTextAttachment":
 					return true;
 				}
 				break;

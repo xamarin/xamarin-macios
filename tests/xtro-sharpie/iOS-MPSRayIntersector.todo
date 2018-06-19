@@ -84,3 +84,10 @@
 !missing-type! MPSRayIntersector not bound
 !missing-type! MPSTriangleAccelerationStructure not bound
 !unknown-simd-type-mapping! The Simd type MPSAxisAlignedBoundingBox does not have a mapping to a managed type. Please add one in SimdCheck.cs
+## appended from unclassified file
+!missing-enum! MPSBoundingBoxIntersectionTestType not bound
+!missing-enum! MPSTriangleIntersectionTestType not bound
+!missing-selector! MPSRayIntersector::boundingBoxIntersectionTestType not bound
+!missing-selector! MPSRayIntersector::setBoundingBoxIntersectionTestType: not bound
+!missing-selector! MPSRayIntersector::setTriangleIntersectionTestType: not bound
+!missing-selector! MPSRayIntersector::triangleIntersectionTestType not bound

@@ -193,3 +193,7 @@
 !missing-type! ITLibMediaItemVideoInfo not bound
 !missing-type! ITLibPlaylist not bound
 !missing-type! ITLibrary not bound
+## appended from unclassified file
+!missing-enum! ITLibInitOptions not bound
+!missing-selector! +ITLibrary::libraryWithAPIVersion:options:error: not bound
+!missing-selector! ITLibrary::initWithAPIVersion:options:error: not bound

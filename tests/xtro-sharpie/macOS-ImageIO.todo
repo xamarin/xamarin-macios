@@ -65,3 +65,8 @@
 !missing-field! kCGImagePropertyDNGRowInterleaveFactor not bound
 !missing-field! kCGImagePropertyDNGShadowScale not bound
 !missing-field! kCGImagePropertyDNGSubTileBlockSize not bound
+## appended from unclassified file
+!missing-field! kCGImagePropertyPNGComment not bound
+!missing-field! kCGImagePropertyPNGDisclaimer not bound
+!missing-field! kCGImagePropertyPNGSource not bound
+!missing-field! kCGImagePropertyPNGWarning not bound

@@ -70,3 +70,5 @@
 !missing-type! MTLSharedEventHandle not bound
 !missing-type! MTLSharedEventListener not bound
 !missing-type! MTLSharedTextureHandle not bound
+## appended from unclassified file
+!missing-protocol-member! MTLRenderCommandEncoder::executeCommandsInBuffer:indirectBuffer:indirectBufferOffset: not found

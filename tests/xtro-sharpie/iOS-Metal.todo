@@ -54,3 +54,5 @@
 !missing-type! MTLIndirectCommandBufferDescriptor not bound
 !missing-type! MTLSharedEventHandle not bound
 !missing-type! MTLSharedEventListener not bound
+## appended from unclassified file
+!missing-protocol-member! MTLComputeCommandEncoder::setStageInRegionWithIndirectBuffer:indirectBufferOffset: not found

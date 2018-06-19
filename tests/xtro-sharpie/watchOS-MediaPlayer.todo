@@ -182,3 +182,10 @@
 !missing-type! MPSeekCommandEvent not bound
 !missing-type! MPSkipIntervalCommand not bound
 !missing-type! MPSkipIntervalCommandEvent not bound
+## appended from unclassified file
+!missing-selector! MPMediaItemArtwork::bounds not bound
+!missing-selector! MPMediaItemArtwork::imageCropRect not bound
+!missing-selector! MPMediaItemArtwork::imageWithSize: not bound
+!missing-selector! MPMediaItemArtwork::initWithBoundsSize:requestHandler: not bound
+!missing-selector! MPMediaItemArtwork::initWithImage: not bound
+!missing-type! MPMediaItemArtwork not bound
