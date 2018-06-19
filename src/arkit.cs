@@ -1211,7 +1211,7 @@ namespace ARKit {
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface ARReferenceObject : NSCopying, NSSecureCoding {
+	interface ARReferenceObject : NSSecureCoding {
 		[Export ("initWithArchiveURL:error:")]
 		IntPtr Constructor (NSUrl archiveUrl, [NullAllowed] out NSError error);
 
