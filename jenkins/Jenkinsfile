@@ -334,11 +334,11 @@ timestamps {
                             utils = load ("${workspace}/xamarin-macios/jenkins/utils.groovy")
                             if (xiPackageFilename != null) {
                                 xiPackageUrl = "${packagePrefix}/${xiPackageFilename}"
-                                utils.reportGitHubStatus (gitHash, 'jenkins-PKG-Xamarin.iOS', "${xiPackageUrl}", 'SUCCESS', "${xiPackageFilename}")
+                                utils.reportGitHubStatus (gitHash, 'PKG-Xamarin.iOS', "${xiPackageUrl}", 'SUCCESS', "${xiPackageFilename}")
                             }
                             if (xmPackageFilename != null) {
                                 xmPackageUrl = "${packagePrefix}/${xmPackageFilename}"
-                                utils.reportGitHubStatus (gitHash, 'jenkins-PKG-Xamarin.Mac', "${xmPackageUrl}", 'SUCCESS', "${xmPackageFilename}")
+                                utils.reportGitHubStatus (gitHash, 'PKG-Xamarin.Mac', "${xmPackageUrl}", 'SUCCESS', "${xmPackageFilename}")
                             }
                             if (manifestFilename != null) {
                                 def manifestUrl = "${packagePrefix}/${manifestFilename}"
