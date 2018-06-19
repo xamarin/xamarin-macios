@@ -18,6 +18,10 @@ if test -n "$ghprbPullId"; then
 		printf "❎ Skipped API comparison because the PR has the label 'skip-api-comparison'\\n" >> "$WORKSPACE/jenkins/pr-comments.md"
 		exit 0
 	fi
+	if ./jenkins/fetch-pr-labels.sh --check=skip-public-jenkins; then
+		echo "Skipping API comparison because the label 'skip-public-jenkins' was found."
+		exit 0
+	fi
 fi
 
 if test -z "$ghprbPullId"; then
