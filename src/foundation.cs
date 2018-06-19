@@ -8049,7 +8049,7 @@ namespace Foundation
 		bool HasSuffix (NSString suffix);
 
 		// UNUserNotificationCenterSupport category
-		[iOS (10,0), Watch (3,0), NoTV, NoMac]
+		[iOS (10,0), Watch (3,0), NoTV, Mac (10,14, onlyOn64: true)]
 		[Static]
 		[Export ("localizedUserNotificationStringForKey:arguments:")]
 		string GetLocalizedUserNotificationString (string key, [Params] [NullAllowed] NSObject [] arguments);
