@@ -5488,4 +5488,22 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CISampleNearest {
 	}
+
+	[CoreImageFilter]
+	[iOS (12,0)]
+	[TV (12,0)]
+	[Mac (10,14, onlyOn64: true)]
+	[BaseType (typeof (CIFilter))]
+	interface CICameraCalibrationLensCorrection {
+		// FIXME
+	}
+
+	[CoreImageFilter]
+	[iOS (12,0)]
+	[TV (12,0)]
+	[Mac (10,14, onlyOn64: true)]
+	[BaseType (typeof (CIFilter))]
+	interface CICoreMLModelFilter {
+		// FIXME
+	}
 }

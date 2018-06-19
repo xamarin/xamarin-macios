@@ -33,7 +33,6 @@
 !missing-protocol-member! MTLDevice::newSharedEventWithHandle: not found
 !missing-protocol-member! MTLDevice::newSharedTextureWithDescriptor: not found
 !missing-protocol-member! MTLDevice::newSharedTextureWithHandle: not found
-!missing-protocol-member! MTLRenderCommandEncoder::executeCommandsInBuffer:indirectBuffer:indirectBufferOffset: not found
 !missing-protocol-member! MTLRenderCommandEncoder::executeCommandsInBuffer:withRange: not found
 !missing-protocol-member! MTLRenderCommandEncoder::memoryBarrierWithResources:count:afterStages:beforeStages: not found
 !missing-protocol-member! MTLRenderCommandEncoder::memoryBarrierWithScope:afterStages:beforeStages: not found
