@@ -16,6 +16,8 @@ currentStage = null
 
 xiPackageFilename = null
 xmPackageFilename = null
+msbuildZipFilename = null
+bundleZipFilename = null
 manifestFilename = null
 artifactsFilename = null
 reportPrefix = null
@@ -271,6 +273,12 @@ timestamps {
                                 xmPackageFilename = xmPackages [0].name
                                 echo ("Created Xamarin.Mac package: ${xmPackageFilename}")
                             }
+                            def msbuildZip = findFiles (glob: "package/msbuild.zip")
+                            if (msbuildZip.length > 0)
+                                msbuildZipFilename = msbuildZip [0].name
+                            def bundleZip = findFiles (glob: "package/bundle.zip")
+                            if (bundleZip.length > 0)
+                                bundleZipFilename = bundleZip [0].name
                             withCredentials ([string (credentialsId: 'codesign_keychain_pw', variable: 'PRODUCTSIGN_KEYCHAIN_PASSWORD')]) {
                                 sh ("${workspace}/xamarin-macios/jenkins/productsign.sh")
                             }
@@ -326,11 +334,11 @@ timestamps {
                             utils = load ("${workspace}/xamarin-macios/jenkins/utils.groovy")
                             if (xiPackageFilename != null) {
                                 xiPackageUrl = "${packagePrefix}/${xiPackageFilename}"
-                                utils.reportGitHubStatus (gitHash, 'jenkins-PKG-Xamarin.iOS', "${xiPackageUrl}", 'SUCCESS', "${xiPackageFilename}")
+                                utils.reportGitHubStatus (gitHash, 'PKG-Xamarin.iOS', "${xiPackageUrl}", 'SUCCESS', "${xiPackageFilename}")
                             }
                             if (xmPackageFilename != null) {
                                 xmPackageUrl = "${packagePrefix}/${xmPackageFilename}"
-                                utils.reportGitHubStatus (gitHash, 'jenkins-PKG-Xamarin.Mac', "${xmPackageUrl}", 'SUCCESS', "${xmPackageFilename}")
+                                utils.reportGitHubStatus (gitHash, 'PKG-Xamarin.Mac', "${xmPackageUrl}", 'SUCCESS', "${xmPackageFilename}")
                             }
                             if (manifestFilename != null) {
                                 def manifestUrl = "${packagePrefix}/${manifestFilename}"
@@ -339,6 +347,14 @@ timestamps {
                             if (artifactsFilename != null) {
                                 def artifactUrl = "${packagePrefix}/${artifactsFilename}"
                                 utils.reportGitHubStatus (gitHash, "Jenkins: Artifacts", "${artifactUrl}", 'SUCCESS', "${artifactsFilename}")
+                            }
+                            if (bundleZipFilename != null) {
+                                def bundleZipUrl = "${packagePrefix}/${bundleZipFilename}"
+                                utils.reportGitHubStatus (gitHash, "bundle.zip", "${bundleZipUrl}", 'SUCCESS', "${bundleZipFilename}")
+                            }
+                            if (msbuildZipFilename != null) {
+                                def msbuildZipUrl = "${packagePrefix}/${msbuildZipFilename}"
+                                utils.reportGitHubStatus (gitHash, "msbuild.zip", "${msbuildZipUrl}", 'SUCCESS', "${msbuildZipFilename}")
                             }
                         }
 
