@@ -333,7 +333,7 @@ namespace ReplayKit {
 
 	[NoTV, iOS (12,0)]
 	[BaseType (typeof (UIView))]
-	interface RPBroadcastPickerView : NSCoding {
+	interface RPSystemBroadcastPickerView : NSCoding {
 
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
