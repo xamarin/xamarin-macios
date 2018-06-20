@@ -1420,6 +1420,7 @@ namespace Intents {
 		FailureRequiringAppLaunch,
 		FailureUnknownMediaType,
 		FailureNoUnplayedContent,
+		FailureRestrictedContent,
 	}
 
 	[Watch (5,0), NoMac, iOS (12,0)]
