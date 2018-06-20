@@ -412,7 +412,7 @@ namespace ARKit {
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface ARReferenceImage : NSCopying {
+	interface ARReferenceImage {
 		[NullAllowed, Export ("name")]
 		string Name { get; set; }
 
