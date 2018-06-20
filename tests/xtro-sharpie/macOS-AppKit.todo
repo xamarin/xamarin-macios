@@ -73,3 +73,7 @@
 !missing-selector! NSWindow::convertPointToBacking: not bound
 !missing-selector! NSWindow::convertPointToScreen: not bound
 !missing-selector! NSWindow::setAppearanceSource: not bound
+## appended from unclassified file
+!missing-protocol-conformance! NSBezierPath should conform to NSSecureCoding
+!missing-protocol-conformance! NSGradient should conform to NSSecureCoding
+!missing-protocol-conformance! NSShadow should conform to NSSecureCoding

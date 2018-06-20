@@ -1,0 +1,3 @@
+!missing-selector! MKMapSnapshot::appearance not bound
+!missing-selector! MKMapSnapshotOptions::appearance not bound
+!missing-selector! MKMapSnapshotOptions::setAppearance: not bound

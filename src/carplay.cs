@@ -45,24 +45,17 @@ namespace CarPlay {
 
 	[Flags, NoWatch, NoTV, NoMac, iOS (12,0)]
 	[Native]
-	enum CPPanDirection : ulong {
+	enum CPPanDirection : long {
 		None = 0,
-		Left = 1uL << 0,
-		Right = 1uL << 1,
-		Up = 1uL << 2,
-		Down = 1uL << 3,
+		Left = 1L << 0,
+		Right = 1L << 1,
+		Up = 1L << 2,
+		Down = 1L << 3,
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
 	[Native]
-	enum CPNavigationAlertPriority : ulong {
-		Default = 0,
-		High,
-	}
-
-	[NoWatch, NoTV, NoMac, iOS (12,0)]
-	[Native]
-	public enum CPNavigationAlertDismissalContext : ulong {
+	enum CPNavigationAlertDismissalContext : ulong {
 		Timeout = 0,
 		UserDismissed,
 		SystemDismissed,
@@ -70,7 +63,7 @@ namespace CarPlay {
 
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
 	[Native]
-	public enum CPTripPauseReason : ulong {
+	enum CPTripPauseReason : ulong {
 		Arrived = 1,
 		Loading = 2,
 		Locating = 3,
@@ -87,15 +80,45 @@ namespace CarPlay {
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
+	[Flags]
+	[Native]
+	enum CPManeuverDisplayStyle : long {
+		Default,
+		LeadingSymbol,
+		TrailingSymbol,
+		SymbolOnly,
+		InstructionOnly,
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (12,0)]
+	[Native]
+	enum CPTimeRemainingColor : ulong {
+		Default = 0,
+		Green,
+		Orange,
+		Red,
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (12,0)]
+	[Native]
+	enum CPTripEstimateStyle : ulong {
+		Light = 0,
+		Dark,
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (12,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CPAlert : NSSecureCoding {
 
-		[Export ("initWithTitleVariants:style:actions:")]
-		IntPtr Constructor (string [] title, CPAlertStyle style, CPAlertAction [] actions);
+		[Export ("initWithTitleVariants:message:style:actions:")]
+		IntPtr Constructor (string [] titleVariants, [NullAllowed] string message, CPAlertStyle style, CPAlertAction [] actions);
 
 		[Export ("titleVariants", ArgumentSemantic.Copy)]
 		string [] TitleVariants { get; }
+
+		[NullAllowed, Export ("message")]
+		string Message { get; }
 
 		[Export ("style")]
 		CPAlertStyle Style { get; }
@@ -265,11 +288,11 @@ namespace CarPlay {
 
 		[Abstract]
 		[Export ("application:didConnectCarInterfaceController:toWindow:")]
-		void DidConnectCarInterfaceController (UIApplication application, CPInterfaceController interfaceController, UIWindow window);
+		void DidConnectCarInterfaceController (UIApplication application, CPInterfaceController interfaceController, CPMapContentWindow window);
 
 		[Abstract]
 		[Export ("application:didDisconnectCarInterfaceController:fromWindow:")]
-		void DidDisconnectCarInterfaceController (UIApplication application, CPInterfaceController interfaceController, UIWindow window);
+		void DidDisconnectCarInterfaceController (UIApplication application, CPInterfaceController interfaceController, CPMapContentWindow window);
 
 		[Export ("application:didSelectNavigationAlert:")]
 		void DidSelectNavigationAlert (UIApplication application, CPNavigationAlert navigationAlert);
@@ -373,14 +396,17 @@ namespace CarPlay {
 	[BaseType (typeof (NSObject))]
 	interface CPManeuver : NSCopying, NSSecureCoding {
 
-		[NullAllowed, Export ("symbol", ArgumentSemantic.Strong)]
-		UIImage Symbol { get; set; }
+		[NullAllowed, Export ("symbolSet", ArgumentSemantic.Strong)]
+		CPImageSet SymbolSet { get; set; }
 
 		[Export ("instructionVariants", ArgumentSemantic.Copy)]
 		string [] InstructionVariants { get; set; }
 
-		[NullAllowed, Export ("distanceFromPreviousManeuver", ArgumentSemantic.Copy)]
-		NSMeasurement<NSUnitLength> DistanceFromPreviousManeuver { get; set; }
+		[NullAllowed, Export ("initialTravelEstimates", ArgumentSemantic.Strong)]
+		CPTravelEstimates InitialTravelEstimates { get; set; }
+
+		[Export ("attributedInstructionVariants", ArgumentSemantic.Copy)]
+		NSAttributedString [] AttributedInstructionVariants { get; set; }
 
 		[NullAllowed, Export ("userInfo", ArgumentSemantic.Strong)]
 		NSObject UserInfo { get; set; }
@@ -410,19 +436,29 @@ namespace CarPlay {
 
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
 	[BaseType (typeof (CPTemplate))]
+	[DisableDefaultCtor]
 	interface CPMapTemplate : CPBarButtonProviding {
+
+		[Export ("initWithConfiguration:")]
+		IntPtr Constructor ([NullAllowed] CPMapTemplateConfiguration configuration);
+
+		[Export ("configuration")]
+		CPMapTemplateConfiguration Configuration { get; }
 
 		[Export ("mapButtons", ArgumentSemantic.Strong)]
 		CPMapButton [] MapButtons { get; set; }
 
-		[Export ("showTripPreviews:")]
-		void ShowTripPreviews (CPTrip [] tripPreviews);
+		[Export ("showTripPreviews:textConfiguration:")]
+		void ShowTripPreviews (CPTrip [] tripPreviews, [NullAllowed] CPTripPreviewTextConfiguration textConfiguration);
 
 		[Export ("hideTripPreviews")]
 		void HideTripPreviews ();
 
 		[Export ("updateTravelEstimates:forTrip:")]
 		void UpdateTravelEstimates (CPTravelEstimates estimates, CPTrip trip);
+
+		[Export ("updateTravelEstimates:forTrip:withTimeRemainingColor:")]
+		void UpdateTravelEstimates (CPTravelEstimates estimates, CPTrip trip, CPTimeRemainingColor timeRemainingColor);
 
 		[Export ("startNavigationSessionForTrip:")]
 		CPNavigationSession StartNavigationSession (CPTrip trip);
@@ -445,6 +481,9 @@ namespace CarPlay {
 
 		[Export ("dismissPanningInterfaceAnimated:")]
 		void DismissPanningInterface (bool animated);
+
+		[Export ("panningInterfaceVisible")]
+		bool PanningInterfaceVisible { [Bind ("isPanningInterfaceVisible")] get; }
 
 		[NullAllowed, Export ("currentNavigationAlert", ArgumentSemantic.Strong)]
 		CPNavigationAlert CurrentNavigationAlert { get; }
@@ -491,6 +530,15 @@ namespace CarPlay {
 		[Export ("mapTemplate:panWithDirection:")]
 		void Pan (CPMapTemplate mapTemplate, CPPanDirection direction);
 
+		[Export ("mapTemplateDidBeginPanGesture:")]
+		void DidBeginPanGesture (CPMapTemplate mapTemplate);
+
+		[Export ("mapTemplate:didUpdatePanGestureWithDelta:velocity:")]
+		void DidUpdatePanGesture (CPMapTemplate mapTemplate, CGPoint delta, CGPoint velocity);
+
+		[Export ("mapTemplate:didEndPanGestureWithVelocity:")]
+		void DidEndPanGesture (CPMapTemplate mapTemplate, CGPoint velocity);
+
 		[Export ("mapTemplate:willShowNavigationAlert:")]
 		void WillShowNavigationAlert (CPMapTemplate mapTemplate, CPNavigationAlert navigationAlert);
 
@@ -511,6 +559,9 @@ namespace CarPlay {
 
 		[Export ("mapTemplateDidCancelNavigation:")]
 		void DidCancelNavigation (CPMapTemplate mapTemplate);
+
+		[Export ("mapTemplate:displayStyleForManeuver:")]
+		CPManeuverDisplayStyle GetDisplayStyle (CPMapTemplate mapTemplate, CPManeuver maneuver);
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
@@ -518,11 +569,11 @@ namespace CarPlay {
 	[DisableDefaultCtor]
 	interface CPNavigationAlert : NSSecureCoding {
 
-		[Export ("initWithTitleVariants:subtitleVariants:image:priority:primaryAction:secondaryAction:duration:")]
-		IntPtr Constructor (string [] titleVariants, [NullAllowed] string [] subtitleVariants, [NullAllowed] UIImage image, CPNavigationAlertPriority priority, CPAlertAction primaryAction, [NullAllowed] CPAlertAction secondaryAction, double duration);
+		[Export ("initWithTitleVariants:subtitleVariants:imageSet:primaryAction:secondaryAction:duration:")]
+		IntPtr Constructor (string [] titleVariants, string [] subtitleVariants, [NullAllowed] CPImageSet imageSet, CPAlertAction primaryAction, [NullAllowed] CPAlertAction secondaryAction, double duration);
 
-		[Export ("alertPriority")]
-		CPNavigationAlertPriority AlertPriority { get; }
+		[Export ("updateTitleVariants:subtitleVariants:")]
+		void UpdateTitleVariants (string [] newTitleVariants, string [] newSubtitleVariants);
 
 		[Export ("titleVariants", ArgumentSemantic.Copy)]
 		string [] TitleVariants { get; }
@@ -530,8 +581,8 @@ namespace CarPlay {
 		[Export ("subtitleVariants", ArgumentSemantic.Copy)]
 		string [] SubtitleVariants { get; }
 
-		[NullAllowed, Export ("image", ArgumentSemantic.Copy)]
-		UIImage Image { get; }
+		[NullAllowed, Export ("imageSet", ArgumentSemantic.Copy)]
+		CPImageSet ImageSet { get; }
 
 		[Export ("primaryAction", ArgumentSemantic.Strong)]
 		CPAlertAction PrimaryAction { get; }
@@ -546,26 +597,10 @@ namespace CarPlay {
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface CPTravelEstimates : NSSecureCoding {
-
-		[Export ("initWithDistanceRemaining:timeRemaining:")]
-		[DesignatedInitializer]
-		IntPtr Constructor (NSMeasurement<NSUnitLength> distance, double time);
-
-		[Export ("distanceRemaining", ArgumentSemantic.Copy)]
-		NSMeasurement<NSUnitLength> DistanceRemaining { get; }
-
-		[Export ("timeRemaining")]
-		double TimeRemaining { get; }
-	}
-
-	[NoWatch, NoTV, NoMac, iOS (12,0)]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
 	interface CPNavigationSession {
 
-		[Export ("pauseTripForReason:")]
-		void PauseTrip (CPTripPauseReason reason);
+		[Export ("pauseTripForReason:description:")]
+		void PauseTrip (CPTripPauseReason reason, [NullAllowed] string description);
 
 		[Export ("finishTrip")]
 		void FinishTrip ();
@@ -659,12 +694,15 @@ namespace CarPlay {
 	[DisableDefaultCtor]
 	interface CPRouteChoice : NSCopying, NSSecureCoding {
 
-		[Export ("initWithSummaryVariants:additionalInformationVariants:")]
+		[Export ("initWithSummaryVariants:additionalInformationVariants:selectionSummaryVariants:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string [] summaryVariants, string [] additionalInformationVariants);
+		IntPtr Constructor (string [] summaryVariants, string [] additionalInformationVariants, string [] selectionSummaryVariants);
 
 		[Export ("summaryVariants", ArgumentSemantic.Copy)]
 		string [] SummaryVariants { get; }
+
+		[Export ("selectionSummaryVariants", ArgumentSemantic.Copy)]
+		string [] SelectionSummaryVariants { get; }
 
 		[Export ("additionalInformationVariants", ArgumentSemantic.Copy)]
 		string [] AdditionalInformationVariants { get; }
@@ -696,18 +734,115 @@ namespace CarPlay {
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
+	[BaseType (typeof (NSObject))]
+	interface CPVoiceControlState : NSSecureCoding {
+
+		[Export ("initWithIdentifier:titleVariants:image:repeats:")]
+		IntPtr Constructor (string identifier, [NullAllowed] string [] titleVariants, [NullAllowed] UIImage image, bool repeats);
+
+		[NullAllowed, Export ("titleVariants", ArgumentSemantic.Copy)]
+		string [] TitleVariants { get; }
+
+		[NullAllowed, Export ("image", ArgumentSemantic.Strong)]
+		UIImage Image { get; }
+
+		[Export ("identifier")]
+		string Identifier { get; }
+
+		[Export ("repeats")]
+		bool Repeats { get; }
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (12,0)]
 	[BaseType (typeof (CPTemplate))]
 	[DisableDefaultCtor]
 	interface CPVoiceControlTemplate {
 
-		[Export ("initWithTitleVariants:animatedImage:")]
-		IntPtr Constructor (string [] titleVariants, UIImage animatedImage);
+		[Export ("initWithVoiceControlStates:")]
+		IntPtr Constructor (CPVoiceControlState [] voiceControlStates);
 
-		[Export ("titleVariants", ArgumentSemantic.Copy)]
-		string [] TitleVariants { get; }
+		[NullAllowed, Export ("voiceControlStates", ArgumentSemantic.Copy)]
+		CPVoiceControlState [] VoiceControlStates { get; }
 
-		[Export ("animatedImage", ArgumentSemantic.Strong)]
-		UIImage AnimatedImage { get; }
+		[Export ("activateVoiceControlStateWithIdentifier:")]
+		void ActivateVoiceControlState (string identifier);
+
+		[NullAllowed, Export ("activeStateIdentifier")]
+		string ActiveStateIdentifier { get; }
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (12,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CPImageSet : NSSecureCoding {
+
+		[Export ("initWithLightContentImage:darkContentImage:")]
+		IntPtr Constructor (UIImage lightImage, UIImage darkImage);
+
+		[Export ("lightContentImage")]
+		UIImage LightContentImage { get; }
+
+		[Export ("darkContentImage")]
+		UIImage DarkContentImage { get; }
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (12,0)]
+	[BaseType (typeof (UIWindow))]
+	interface CPMapContentWindow {
+
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frame);
+
+		[Export ("mapButtonSafeAreaLayoutGuide")]
+		UILayoutGuide MapButtonSafeAreaLayoutGuide { get; }
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (12,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CPMapTemplateConfiguration : NSSecureCoding {
+
+		[Export ("initWithGuidanceBackgroundColor:tripEstimateStyle:")]
+		IntPtr Constructor (UIColor guidanceBackgroundColor, CPTripEstimateStyle tripEstimateStyle);
+
+		[Export ("guidanceBackgroundColor")]
+		UIColor GuidanceBackgroundColor { get; }
+
+		[Export ("tripEstimateStyle")]
+		CPTripEstimateStyle TripEstimateStyle { get; }
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (12,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CPTravelEstimates : NSSecureCoding {
+
+		[Export ("initWithDistanceRemaining:timeRemaining:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSMeasurement<NSUnitLength> distance, double time);
+
+		[Export ("distanceRemaining", ArgumentSemantic.Copy)]
+		NSMeasurement<NSUnitLength> DistanceRemaining { get; }
+
+		[Export ("timeRemaining")]
+		double TimeRemaining { get; }
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (12,0)]
+	[BaseType (typeof (NSObject))]
+	interface CPTripPreviewTextConfiguration : NSSecureCoding {
+
+		[Export ("initWithStartButtonTitle:additionalRoutesButtonTitle:overviewButtonTitle:")]
+		IntPtr Constructor ([NullAllowed] string startButtonTitle, [NullAllowed] string additionalRoutesButtonTitle, [NullAllowed] string overviewButtonTitle);
+
+		[NullAllowed, Export ("startButtonTitle")]
+		string StartButtonTitle { get; }
+
+		[NullAllowed, Export ("additionalRoutesButtonTitle")]
+		string AdditionalRoutesButtonTitle { get; }
+
+		[NullAllowed, Export ("overviewButtonTitle")]
+		string OverviewButtonTitle { get; }
 	}
 }
 

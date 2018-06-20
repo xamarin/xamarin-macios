@@ -65,3 +65,6 @@
 !missing-type! HKQuantitySeriesSampleBuilder not bound
 !missing-type! HKQuantitySeriesSampleQuery not bound
 !missing-type! HKWorkoutBuilder not bound
+## appended from unclassified file
+!missing-field! HKMetadataKeyCrossTrainerDistance not bound
+!missing-field! HKMetadataKeyIndoorBikeDistance not bound

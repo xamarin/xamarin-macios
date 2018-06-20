@@ -24,3 +24,12 @@
 !missing-selector! AVVideoComposition::renderScale not bound
 !missing-type! AVAssetResourceLoadingRequestor not bound
 !missing-type! AVPortraitEffectsMatte not bound
+## appended from unclassified file
+!missing-selector! AVAudioEngine::connectMIDI:to:format:block: not bound
+!missing-selector! AVAudioEngine::connectMIDI:toNodes:format:block: not bound
+!missing-selector! AVAudioEngine::disconnectMIDI:from: not bound
+!missing-selector! AVAudioEngine::disconnectMIDI:fromNodes: not bound
+!missing-selector! AVAudioEngine::disconnectMIDIInput: not bound
+!missing-selector! AVAudioEngine::disconnectMIDIOutput: not bound
+!missing-selector! AVMutableCompositionTrack::addTrackAssociationToTrack:type: not bound
+!missing-selector! AVMutableCompositionTrack::removeTrackAssociationToTrack:type: not bound

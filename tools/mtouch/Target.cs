@@ -1243,8 +1243,14 @@ namespace Xamarin.Bundler
 						// Since this is in fact most likely the wrong thing to do,
 						// I'm restricting this to a very specific version of Xcode,
 						// so that we can remove the hack asap once Apple fixes their headers.
-						if (Driver.XcodeBundleVersion != "14274.16")
-							throw ErrorHelper.CreateError (99, "Verify if the workaround for rdar://40824697 is still needed.");
+						switch (Driver.XcodeBundleVersion) {
+						case "14274.16": // beta 1
+						case "14274.19": // beta 2
+							break;
+						default:
+							ErrorHelper.Show (ErrorHelper.CreateWarning (99, $"Verify if the workaround for rdar://40824697 is still needed for Xcode 10 {Driver.XcodeBundleVersion}."));
+							break;
+						}
 						registrar_task.CompilerFlags.AddOtherFlag ($"-I{Path.Combine (Driver.DeveloperDirectory, "Toolchains", "XcodeDefault.xctoolchain", "usr", "include", "c++", "v1")}");
 					}
 						                                          

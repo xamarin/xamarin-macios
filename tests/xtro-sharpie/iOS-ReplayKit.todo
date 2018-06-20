@@ -1,0 +1,6 @@
+!missing-selector! RPSystemBroadcastPickerView::preferredExtension not bound
+!missing-selector! RPSystemBroadcastPickerView::setPreferredExtension: not bound
+!missing-selector! RPSystemBroadcastPickerView::setShowsMicrophoneButton: not bound
+!missing-selector! RPSystemBroadcastPickerView::showsMicrophoneButton not bound
+!missing-type! RPSystemBroadcastPickerView not bound
+!unknown-type! RPBroadcastPickerView bound
