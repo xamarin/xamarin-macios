@@ -105,8 +105,10 @@ namespace MonoTouchFixtures.CoreImage {
 				using (var cs = CGColorSpace.CreateDeviceGray ()) {
 					f.ColorSpace = cs;
 					var rc = CFGetRetainCount (cs.Handle);
-					for (int i = 0; i < 5; i++)
-						Assert.NotNull (f.ColorSpace, i.ToString ());
+					for (int i = 0; i < 5; i++) {
+						using (var fcs = f.ColorSpace)
+							Assert.NotNull (fcs, i.ToString ());
+					}
 					Assert.That (CFGetRetainCount (cs.Handle), Is.EqualTo (rc), "RetainCount");
 					f.ColorSpace = null;
 				}
