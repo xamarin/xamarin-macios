@@ -470,7 +470,7 @@ namespace AVFoundation {
 	}
 
 #if !MONOMAC || !XAMCORE_4_0
-	[NoTV, NoWatch]
+	[NoTV, Watch (5,0)]
 	[Native]
 	public enum AVAudioSessionRecordPermission : ulong {
 		Undetermined = 1970168948 /*'undt'*/,
@@ -873,7 +873,7 @@ namespace AVFoundation {
 		CannotDoInCurrentContext = 2
 	}
 
-	[TV (11,0), NoWatch, Mac (10,13), iOS (11,0)]
+	[TV (11,0), Watch (5, 0), Mac (10,13), iOS (11,0)]
 	[Native]
 	public enum AVAudioSessionRouteSharingPolicy : ulong {
 		Default = 0,
@@ -993,5 +993,13 @@ namespace AVFoundation {
 		Hlg = 0x1,
 		Hdr10 = 0x2,
 		DolbyVision = 0x4,
+	}
+
+	[Flags]
+	[Native]
+	[Watch (5, 0), TV (12, 0), iOS (12, 0), NoMac]
+	public enum AVAudioSessionActivationOptions : ulong
+	{
+		None = 0x0,
 	}
 }
