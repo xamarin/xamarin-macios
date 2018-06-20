@@ -91,6 +91,7 @@ namespace Contacts {
 		ContainmentCycle = 202,
 		ContainmentScope = 203,
 		ParentRecordDoesNotExist = 204,
+		RecordIdentifierInvalid = 205,
 		ValidationMultipleErrors = 300,
 		ValidationTypeMismatch = 301,
 		ValidationConfigurationError = 302,
