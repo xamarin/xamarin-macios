@@ -23,6 +23,7 @@
 using System;
 using System.ComponentModel;
 using Foundation;
+using CoreML;
 using ObjCRuntime;
 
 namespace NaturalLanguage {
@@ -109,6 +110,11 @@ namespace NaturalLanguage {
 		[Export ("modelWithContentsOfURL:error:")]
 		[return: NullAllowed]
 		NLModel Create (NSUrl url, [NullAllowed] out NSError error);
+
+		[Static]
+		[Export ("modelWithMLModel:error:")]
+		[return: NullAllowed]
+		NLModel Create (MLModel mlModel, [NullAllowed] out NSError error);
 
 		[Export ("configuration", ArgumentSemantic.Copy)]
 		NLModelConfiguration Configuration { get; }
