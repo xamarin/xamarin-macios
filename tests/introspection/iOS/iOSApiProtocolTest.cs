@@ -188,10 +188,6 @@ namespace Introspection {
 				case "MSSession":
 				case "SFContentBlockerState":
 				case "SFSafariViewControllerConfiguration":
-				case "VSAccountMetadata":
-				case "VSAccountMetadataRequest":
-				// iOS 10.2
-				case "VSAccountProviderResponse":
 				// iOS 10.3
 				case "MPMusicPlayerControllerMutableQueue":
 				case "MPMusicPlayerControllerQueue":
@@ -343,10 +339,6 @@ namespace Introspection {
 				case "MSSession":
 				case "SFContentBlockerState":
 				case "SFSafariViewControllerConfiguration":
-				case "VSAccountMetadata":
-				case "VSAccountMetadataRequest":
-				// iOS 10.2
-				case "VSAccountProviderResponse":
 				// iOS 10.3
 				case "MPMusicPlayerControllerMutableQueue":
 				case "MPMusicPlayerControllerQueue":
@@ -476,10 +468,6 @@ namespace Introspection {
 				case "HKDocumentSample":
 				case "HKCdaDocumentSample":
 				case "SFSafariViewControllerConfiguration":
-				case "VSAccountMetadata":
-				case "VSAccountMetadataRequest":
-				// iOS 10.2
-				case "VSAccountProviderResponse":
 					return true;
 				// iOS 11.0
 				case "UICollectionViewUpdateItem": // Conformance not in headers
@@ -511,7 +499,6 @@ namespace Introspection {
 				break;
 			case "NSMutableCopying":
 				switch (type.Name) {
-				case "UNNotificationSound":
 				// iOS 10.3
 				case "MPMusicPlayerControllerMutableQueue":
 				case "MPMusicPlayerControllerQueue":
@@ -520,9 +507,6 @@ namespace Introspection {
 				case "INRestaurantGuest":
 				case "INPerson":
 				case "HMCharacteristicEvent": // Selectors not available on 32 bit
-					return true;
-				// iOS 12
-				case "UNNotificationCategory":
 					return true;
 				}
 				break;

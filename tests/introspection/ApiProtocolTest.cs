@@ -97,6 +97,11 @@ namespace Introspection {
 				case "MLMultiArrayConstraint":
 				case "VSSubscription":
 					return true; // skip
+				// xcode 10
+				case "VSAccountMetadata":
+				case "VSAccountMetadataRequest":
+				case "VSAccountProviderResponse":
+					return true;
 				}
 				break;
 			case "NSMutableCopying":
@@ -104,6 +109,10 @@ namespace Introspection {
 				// iOS 10 : test throw because of generic usage
 				case "NSMeasurement`1":
 					return true; // skip
+				// Xcode 10
+				case "UNNotificationCategory":
+				case "UNNotificationSound":
+					return true;
 				}
 				break;
 			case "NSCoding":
@@ -138,6 +147,9 @@ namespace Introspection {
 					return true;
 				// Xcode 10
 				case "NSManagedObjectID":
+				case "VSAccountMetadata":
+				case "VSAccountMetadataRequest":
+				case "VSAccountProviderResponse":
 					return true;
 				}
 				break;
@@ -182,6 +194,9 @@ namespace Introspection {
 				// beta 2
 				case "NSShadow":
 				case "NSTextAttachment":
+				case "VSAccountMetadata":
+				case "VSAccountMetadataRequest":
+				case "VSAccountProviderResponse":
 					return true;
 				}
 				break;

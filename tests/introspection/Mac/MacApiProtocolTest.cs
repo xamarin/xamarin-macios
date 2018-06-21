@@ -71,6 +71,9 @@ namespace Introspection {
 				// Xcode 10 (running on macOS 10.14)
 				case "NSTextAlternatives":
 				case "QTDataReference": // no header files anymore for deprecated QuickTime
+				case "NSTextBlock":
+				case "NSTextTable":
+				case "NSTextTableBlock":
 					return true;
 				default:
 					// CIFilter started implementing NSSecureCoding in 10.11
