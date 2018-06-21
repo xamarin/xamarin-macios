@@ -3043,7 +3043,7 @@ namespace AVFoundation {
 	[iOS (12, 0), TV (12,0)]
 	interface AVFragmentMinding {
 
-#if !MONOMAC || XAMARIN_4_0
+#if !MONOMAC || XAMCORE_4_0
 		[Abstract] // not kept in Mac OS because is a breaking change, in other paltforms we are ok
 #endif
 		[Export ("isAssociatedWithFragmentMinder")]
