@@ -873,7 +873,7 @@ namespace AVFoundation {
 		CannotDoInCurrentContext = 2
 	}
 
-	[TV (11,0), Watch (5, 0), Mac (10,13), iOS (11,0)]
+	[TV (11,0), Watch (5,0), Mac (10,13), iOS (11,0)]
 	[Native]
 	public enum AVAudioSessionRouteSharingPolicy : ulong {
 		Default = 0,
@@ -997,7 +997,7 @@ namespace AVFoundation {
 
 	[Flags]
 	[Native]
-	[Watch (5, 0), TV (12, 0), iOS (12, 0), NoMac]
+	[Watch (5,0), TV (12,0), iOS (12,0), NoMac]
 	public enum AVAudioSessionActivationOptions : ulong
 	{
 		None = 0x0,
