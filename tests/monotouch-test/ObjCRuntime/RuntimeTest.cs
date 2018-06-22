@@ -292,9 +292,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void FinalizationRaceCondition ()
 		{
-			if ((IntPtr.Size == 8) && TestRuntime.CheckXcodeVersion (7, 0))
-				Assert.Ignore ("NSString retainCount is nuint.MaxValue, so we won't collect them");
-			
 #if __WATCHOS__
 			if (Runtime.Arch == Arch.DEVICE)
 				Assert.Ignore ("This test uses too much memory for the watch.");
