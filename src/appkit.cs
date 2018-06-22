@@ -1352,7 +1352,7 @@ namespace AppKit {
 	[DisableDefaultCtor] // An uncaught exception was raised: -[NSBitmapImageRep init]: unrecognized selector sent to instance 0x686880
 	partial interface NSBitmapImageRep : NSSecureCoding {
 		[Export ("initWithFocusedViewRect:")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use NSView.CacheDisplay() to snapshot a view.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'NSView.CacheDisplay()' instead.")]
 		IntPtr Constructor (CGRect rect);
 
 		[Export ("initWithBitmapDataPlanes:pixelsWide:pixelsHigh:bitsPerSample:samplesPerPixel:hasAlpha:isPlanar:colorSpaceName:bytesPerRow:bitsPerPixel:")]
@@ -1521,7 +1521,7 @@ namespace AppKit {
 		IntPtr Constructor (CGRect frameRect);
 
 		[Export ("borderType")]
-		[Advice ("BorderType is only applicable to NSBoxOldStyle, which is deprecated. To replace a borderType of NSNoBorder, use the `Transparent` property.")]
+		[Advice ("Only used with deprecated NSBoxOldStyle. Use 'Transparent' property for NSNoBorder.")]
 		NSBorderType BorderType { get; set; }
 	
 		[Export ("titlePosition")]
@@ -2425,11 +2425,11 @@ namespace AppKit {
 		[Export ("image", ArgumentSemantic.Retain)]
 		NSImage Image  { get; set; }
 	
-		[Availability (Deprecated = Platform.Mac_10_14, Message = "The controlTint property is not respected on 10.14 and later. For custom cells, use NSColor.ControlAccentColor to respect the user's preferred accent color when drawing.")]
+		[Availability (Deprecated = Platform.Mac_10_14, Message = "'ControlTint' property not honored on 10.14. For custom cells, use 'NSColor.ControlAccentColor'.")]
 		[Export ("controlTint")]
 		NSControlTint ControlTint { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_14, Message = "Changes to the accent color can be manually observed by implementing ViewDidChangeEffectiveAppearance in a NSView subclass, or by Key-Value Observing the EffectiveAppearance property on NSApplication. Views are automatically redisplayed when the accent color changes.")]
+		[Availability (Deprecated = Platform.Mac_10_14, Message = "Implement 'ViewDidChangeEffectiveAppearance' on NSView or observe 'NSApplication.EffectiveAppearance'")]
 		[Notification, Field ("NSControlTintDidChangeNotification")]
 		NSString ControlTintChangedNotification { get; }
 
@@ -2766,7 +2766,7 @@ namespace AppKit {
 		bool IsFirstResponder { get; } 
 
 		[Export ("newItemForRepresentedObject:")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use NSCollectionViewDataSource.GetItem() instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'NSCollectionViewDataSource.GetItem()' instead.")]
 		[return: Release ()]
 		NSCollectionViewItem NewItemForRepresentedObject (NSObject obj);
 
@@ -2803,23 +2803,23 @@ namespace AppKit {
 		NSIndexSet SelectionIndexes { get; set; }
 
 		[Export ("itemPrototype", ArgumentSemantic.Retain)]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use RegisterNib or RegisterClassForItem instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'RegisterNib' or 'RegisterClassForItem' instead.")]
 		NSCollectionViewItem ItemPrototype { get; set; }
 
 		[Export ("maxNumberOfRows")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use NSCollectionViewGridLayout as the receiver's CollectionViewLayout, setting its MaximumNumberOfRows instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Set a NSCollectionViewGridLayout on CollectionViewLayout and set its MaximumNumberOfRows instead.")]
 		nint MaxNumberOfRows { get; set; }
 
 		[Export ("maxNumberOfColumns")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use NSCollectionViewGridLayout as the receiver's CollectionViewLayout, setting its MaximumNumberOfColumns instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Set a NSCollectionViewGridLayout on CollectionViewLayout and set its MaximumNumberOfColumns instead.")]
 		nint MaxNumberOfColumns { get; set; }
 
 		[Export ("minItemSize")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use NSCollectionViewGridLayout as the receiver's CollectionViewLayout, setting its MinimumItemSize instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Set a NSCollectionViewGridLayout on CollectionViewLayout and set its MinimumItemSize instead.")]
 		CGSize MinItemSize { get; set; }
 
 		[Export ("maxItemSize")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use NSCollectionViewGridLayout as the receiver's CollectionViewLayout, setting its MaximumItemSize instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Set a NSCollectionViewGridLayout on CollectionViewLayout and set its MaximumItemSize instead.")]
 		CGSize MaxItemSize { get; set; }
 
 		[Export ("backgroundColors", ArgumentSemantic.Copy), NullAllowed]
@@ -3684,12 +3684,12 @@ namespace AppKit {
 
 		[Static]
 		[Export ("controlShadowColor")]
-		[Advice ("Use a color that matches the semantics being used, such as `SeparatorColor`")]
+		[Advice ("Use a context specific color, 'SeparatorColor'")]
 		NSColor ControlShadow { get; }
 
 		[Static]
 		[Export ("controlDarkShadowColor")]
-		[Advice ("Use a color that matches the semantics being used, such as `SeparatorColor`")]
+		[Advice ("Use a context specific color, 'SeparatorColor'")]
 		NSColor ControlDarkShadow { get; }
 
 		[Static]
@@ -3698,12 +3698,12 @@ namespace AppKit {
 
 		[Static]
 		[Export ("controlHighlightColor")]
-		[Advice ("Use a color that matches the semantics being used, such as `SeparatorColor`")]
+		[Advice ("Use a context specific color, 'SeparatorColor'")]
 		NSColor ControlHighlight { get; }
 
 		[Static]
 		[Export ("controlLightHighlightColor")]
-		[Advice ("Use a color that matches the semantics being used, such as `SeparatorColor`")]
+		[Advice ("Use a context specific color, 'SeparatorColor'")]
 		NSColor ControlLightHighlight { get; }
 
 		[Static]
@@ -3760,22 +3760,22 @@ namespace AppKit {
 
 		[Static]
 		[Export ("scrollBarColor")]
-		[Advice ("Use `NSScroller` instead")]
+		[Advice ("Use 'NSScroller' instead")]
 		NSColor ScrollBar { get; }
 
 		[Static]
 		[Export ("knobColor")]
-		[Advice ("Use `NSScroller` instead")]
+		[Advice ("Use 'NSScroller' instead")]
 		NSColor Knob { get; }
 
 		[Static]
 		[Export ("selectedKnobColor")]
-		[Advice ("Use `NSScroller` instead")]
+		[Advice ("Use 'NSScroller' instead")]
 		NSColor SelectedKnob { get; }
 
 		[Static]
 		[Export ("windowFrameColor")]
-		[Advice ("Use `NSVisualEffectMaterial.Title` instead")]
+		[Advice ("Use 'NSVisualEffectMaterial.Title' instead")]
 		NSColor WindowFrame { get; }
 
 		[Static]
@@ -3784,7 +3784,7 @@ namespace AppKit {
 
 		[Static]
 		[Export ("selectedMenuItemColor")]
-		[Advice ("Use `NSVisualEffectMaterial.Selection` instead")]
+		[Advice ("Use 'NSVisualEffectMaterial.Selection' instead")]
 		NSColor SelectedMenuItem { get; }
 
 		[Static]
@@ -3801,7 +3801,7 @@ namespace AppKit {
 
 		[Static]
 		[Export ("headerColor")]
-		[Advice ("Use `NSVisualEffectMaterial.HeaderView` instead")]
+		[Advice ("Use 'NSVisualEffectMaterial.HeaderView' instead")]
 		NSColor Header { get; }
 
 		[Static]
@@ -3828,7 +3828,7 @@ namespace AppKit {
 
 		[Static]
 		[Export ("colorForControlTint:")]
-		[Advice ("NSControlTint does not describe the full range of available control accent colors. Use NSColor.ControlAccentColor instead.")]
+		[Advice ("Use 'NSColor.ControlAccentColor' instead.")]
 		NSColor FromControlTint (NSControlTint controlTint);
 
 		[Static]
@@ -3845,15 +3845,15 @@ namespace AppKit {
 		void SetStroke ();
 
 		[Export ("colorSpaceName")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use Type and NSColorType instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Type' and 'NSColorType' instead.")]
 		string ColorSpaceName { get; }
 
 		[Export ("colorUsingColorSpaceName:")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use GetColor or UsingColorSpace instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'GetColor' or 'UsingColorSpace' instead.")]
 		NSColor UsingColorSpace ([NullAllowed] string colorSpaceName);
 
 		[Export ("colorUsingColorSpaceName:device:")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use GetColor or UsingColorSpace instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'GetColor' or 'UsingColorSpace' instead.")]
 		NSColor UsingColorSpace ([NullAllowed] string colorSpaceName, [NullAllowed] NSDictionary deviceDescription);
 
 		[Export ("colorUsingColorSpace:")]
@@ -4145,7 +4145,7 @@ namespace AppKit {
 		bool IsEditable { get; }
 
 		[Export ("writeToFile:")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use WriteToUrl instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'WriteToUrl' instead.")]
 		bool WriteToFile ([NullAllowed] string path);
 
 		[Export ("removeFile")]
@@ -4649,7 +4649,7 @@ namespace AppKit {
 		[Export ("sizeToFit")]
 		void SizeToFit ();
 
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Override Layout instead. This method should never be called.")]
+		[Availability (Deprecated = Platform.Mac_10_10, Message = "Override 'Layout' instead.")]
 		[Export ("calcSize")]
 		void CalcSize ();
 
@@ -9994,7 +9994,7 @@ namespace AppKit {
 		bool Opaque { [Bind ("isOpaque")]get; set; }
 
 		[Export ("colorSpaceName")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use Type and NSColorType instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Type' and 'NSColorType' instead.")]
 		string ColorSpaceName { get; set; }
 
 		[Export ("bitsPerSample")]
@@ -11499,7 +11499,7 @@ namespace AppKit {
 		NSString NSStringType{ get; }
 		
 		[Field ("NSFilenamesPboardType")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message : "Create multiple pasteboard items with 'NSPasteboardTypeFileURL' or 'UTTypeFileURL' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message : "Create multiple items with 'NSPasteboardTypeFileURL' or 'UTTypeFileURL' instead.")]
 		NSString NSFilenamesType{ get; }
 		
 		[Field ("NSPostScriptPboardType")]
@@ -13496,18 +13496,18 @@ namespace AppKit {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frameRect);
 
-		[Availability (Deprecated = Platform.Mac_10_7, Message = "Use GetScrollerWidth instead.")]
+		[Availability (Deprecated = Platform.Mac_10_7, Message = "Use 'GetScrollerWidth' instead.")]
 		[Static]
 		[Export ("scrollerWidth")]
 		nfloat ScrollerWidth { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_7, Message = "Use GetScrollerWidth instead.")]
+		[Availability (Deprecated = Platform.Mac_10_7, Message = "Use 'GetScrollerWidth' instead.")]
 		[Static]
 		[Export ("scrollerWidthForControlSize:")]
 		nfloat ScrollerWidthForControlSize (NSControlSize controlSize);
 
 		[Export ("drawParts")]
-		[Availability (Deprecated = Platform.Mac_10_7, Message = "Not invoked on any macOS version.")]
+		[Availability (Deprecated = Platform.Mac_10_7, Message = "Not used on on macOS.")]
 		void DrawParts ();
 
 		[Export ("rectForPart:")]
@@ -13520,7 +13520,7 @@ namespace AppKit {
 		NSUsableScrollerParts UsableParts { get; }
 
 		[Export ("drawArrow:highlight:")]
-		[Availability (Deprecated = Platform.Mac_10_7, Message = "Scrollers don't have arrows as of 10.7.")]
+		[Availability (Deprecated = Platform.Mac_10_7, Message = "Scrollers don't have arrows anymore.")]
 		void DrawArrow (NSScrollerArrow whichArrow, bool highlight);
 
 		[Export ("drawKnob")]
@@ -13530,7 +13530,7 @@ namespace AppKit {
 		void DrawKnobSlot (CGRect slotRect, bool highlight);
 
 		[Export ("highlight:")]
-		[Availability (Deprecated = Platform.Mac_10_14, Message = "Has had no effect since 10.7.")]
+		[Availability (Deprecated = Platform.Mac_10_14, Message = "No effect since 10.7.")]
 		void Highlight (bool flag);
 
 		[Export ("testPart:")]
@@ -13540,7 +13540,7 @@ namespace AppKit {
 		void TrackKnob (NSEvent theEvent);
 
 		[Export ("trackScrollButtons:")]
-		[Availability (Deprecated = Platform.Mac_10_14, Message = "Not invoked since 10.7.")]
+		[Availability (Deprecated = Platform.Mac_10_14, Message = "No effect since 10.7.")]
 		void TrackScrollButtons (NSEvent theEvent);
 
 		[Export ("hitPart")]
@@ -13548,11 +13548,11 @@ namespace AppKit {
 
 		//Detected properties
 		[Export ("arrowsPosition")]
-		[Availability (Deprecated = Platform.Mac_10_14, Message = "Has had no effect since 10.7.")]
+		[Availability (Deprecated = Platform.Mac_10_14, Message = "No effect since 10.7.")]
 		NSScrollArrowPosition ArrowsPosition { get; set; }
 
 		[Export ("controlTint")]
-		[Availability (Deprecated = Platform.Mac_10_14, Message = "Has had no effect since 10.7.")]
+		[Availability (Deprecated = Platform.Mac_10_14, Message = "No effect since 10.7.")]
 		NSControlTint ControlTint { get; set; }
 
 		[Export ("controlSize")]
@@ -15159,11 +15159,11 @@ namespace AppKit {
 		[Export ("sendActionOn:")]
 		nint SendActionOn (NSTouchPhase mask);
 
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use the menu property instead.")]
+		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use 'Menu' instead.")]
 		[Export ("popUpStatusItemMenu:")]
 		void PopUpStatusItemMenu (NSMenu menu);
 
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use the standard button instead which handles highlight drawing.")]
+		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use standard button instead.")]
 		[Export ("drawStatusBarBackgroundInRect:withHighlight:")]
 		void DrawStatusBarBackground (CGRect rect, bool highlight);
 
@@ -15828,26 +15828,26 @@ namespace AppKit {
 		CGRect ConvertRectFromBase (CGRect aRect);
 
 		[Export ("canDraw")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "If a view needs display, DrawRect or UpdateLayer will be called automatically when the view is able to draw.  To check whether a view is in a window, call Window.  To check whether a view is hidden, call IsHiddenOrHasHiddenAncestor.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "DrawRect or UpdateLayer will be called when it is able to draw.")]
 		bool CanDraw ();
 
 		[Export ("setNeedsDisplayInRect:")]
 		void SetNeedsDisplayInRect (CGRect invalidRect);
 
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "To draw, subclass NSView and implement -DrawRect; AppKit's automatic deferred display mechanism will call DrawRect as necessary to display the view.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Subclass NSView and implement 'DrawRect'.")]
 		[Export ("lockFocus")]
 		void LockFocus ();
 
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "To draw, subclass NSView and implement -DrawRect; AppKit's automatic deferred display mechanism will call DrawRect as necessary to display the view.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Subclass NSView and implement 'DrawRect'.")]
 		[Export ("unlockFocus")][ThreadSafe]
 		void UnlockFocus ();
 
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "To draw, subclass NSView and implement -DrawRect; AppKit's automatic deferred display mechanism will call DrawRect as necessary to display the view.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Subclass NSView and implement 'DrawRect'.")]
 		[Export ("lockFocusIfCanDraw")][ThreadSafe]
 		bool LockFocusIfCanDraw ();
 
 		[Export ("lockFocusIfCanDrawInContext:")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSView.DisplayRectIgnoringOpacity (CGRect, NSGraphicsContext)' to draw a view subtree into a graphics context.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSView.DisplayRectIgnoringOpacity (CGRect, NSGraphicsContext)' to draw into a graphics context.")]
 		bool LockFocusIfCanDrawInContext (NSGraphicsContext context);
 
 		[Export ("focusView")][Static]
@@ -17830,7 +17830,7 @@ namespace AppKit {
 		bool DrawsBackground { get; set; }
 
 		[Export ("controlTint")]
-		[Availability (Deprecated = Platform.Mac_10_14, Message = "The controlTint property is not respected on 10.14 and later.")]
+		[Availability (Deprecated = Platform.Mac_10_14, Message = "The 'ControlTint' property is not honored on 10.14.")]
 		NSControlTint ControlTint { get; set; }
 
 		[Export ("controlSize")]
@@ -20460,23 +20460,23 @@ namespace AppKit {
 		void UseOptimizedDrawing (bool flag);
 	
 		[Export ("disableFlushWindow")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use NSAnimationContext.RunAnimation to perform atomic updates across runloop invocations.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'NSAnimationContext.RunAnimation'.")]
 		void DisableFlushWindow ();
 	
 		[Export ("enableFlushWindow")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use NSAnimationContext.RunAnimation to perform atomic updates across runloop invocations.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'NSAnimationContext.RunAnimation'.")]
 		void EnableFlushWindow ();
 	
 		[Export ("isFlushWindowDisabled")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use NSAnimationContext.RunAnimation to perform atomic updates across runloop invocations.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'NSAnimationContext.RunAnimation'.")]
 		bool FlushWindowDisabled { get; }
 	
 		[Export ("flushWindow")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Allow AppKit's automatic deferred display mechanism to take care of flushing any graphics contexts as needed.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		void FlushWindow ();
 	
 		[Export ("flushWindowIfNeeded")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Allow AppKit's automatic deferred display mechanism to take care of flushing any graphics contexts as needed.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		void FlushWindowIfNeeded ();
 	
 		[Export ("viewsNeedDisplay")]
@@ -20489,7 +20489,7 @@ namespace AppKit {
 		void Display ();
 	
 		[Export ("autodisplay")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use NSAnimationContext.RunAnimation to temporarily prevent AppKit's automatic deferred display mechanism from drawing.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'NSAnimationContext.RunAnimation'.")]
 		bool Autodisplay  { [Bind ("isAutodisplay")] get; set; }
 	
 		[Export ("preservesContentDuringLiveResize")]
@@ -20665,7 +20665,7 @@ namespace AppKit {
 		void SetOneShot (bool flag);
 	
 		[Export ("isOneShot")]
-		[Availability (Deprecated = Platform.Mac_10_14, Message = "This property does not do anything and should not be used.")]
+		[Availability (Deprecated = Platform.Mac_10_14)]
 		bool IsOneShot { get; }
 	
 		[Export ("dataWithEPSInsideRect:")]
@@ -20699,7 +20699,7 @@ namespace AppKit {
 		bool AllowsToolTipsWhenApplicationIsInactive  { get; set; }
 	
 		[Export ("backingType")]
-		[Availability (Deprecated = Platform.Mac_10_14, Message = "This property does not do anything and should not be used.")]
+		[Availability (Deprecated = Platform.Mac_10_14)]
 		NSBackingStore BackingType { get; set; }
 	
 		[Export ("level")]
@@ -25717,7 +25717,7 @@ namespace AppKit {
 		NSObject[] AccessibilitySelectedColumns { get; } 
 
 		[Export ("accessibilityHeaderGroup")]
-		[Availability (Deprecated = Platform.Mac_10_14, Message = "Use AccessibilityHeader instead.")]
+		[Availability (Deprecated = Platform.Mac_10_14, Message = "Use 'AccessibilityHeader' instead.")]
 		string AccessibilityHeaderGroup { get; } 
 
 		[Export ("accessibilitySelectedCells")]

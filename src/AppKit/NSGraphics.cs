@@ -202,11 +202,11 @@ namespace AppKit {
 		public extern static void DrawWindowBackground (CGRect aRect);
 		
 		[DllImport (Constants.AppKitLibrary, EntryPoint="NSDisableScreenUpdates")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message : "As of 10.11 it is not generally necessary to take explicit action to achieve visual atomicity. NSAnimationContext.RunAnimation and other similar methods can be used when a stronger than normal need for visual atomicity is required. The NSAnimationContext methods do not suffer from the same performance problems as NSDisableScreenUpdates.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message : "Not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.")]
 		public extern static void DisableScreenUpdates ();
 		
 		[DllImport (Constants.AppKitLibrary, EntryPoint="NSEnableScreenUpdates")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message : "As of 10.11 it is not generally necessary to take explicit action to achieve visual atomicity. NSAnimationContext.RunAnimation and other similar methods can be used when a stronger than normal need for visual atomicity is required. The NSAnimationContext methods do not suffer from the same performance problems as NSDisableScreenUpdates.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message : "Not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.")]
 		public extern static void EnableScreenUpdates ();
 		
 	}

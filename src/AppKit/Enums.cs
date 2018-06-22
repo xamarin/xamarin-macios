@@ -340,10 +340,10 @@ namespace AppKit {
 	[Native]
 	public enum NSBackgroundStyle : long {
 		Normal = 0,
-		[Deprecated (PlatformName.MacOSX, 10, 14, message : "In some appearances, Light may refer to a state where the background is actually a dark color. Use Normal instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Normal' instead.")]
 		Light = Normal,
 		Emphasized,
-		[Deprecated (PlatformName.MacOSX, 10, 14, message : "Dark is not a reliable indicator of background states with visually dark or saturated colors. Use Emphasized instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Emphasized' instead.")]
 		Dark = Emphasized, 
 		Raised, 
 		Lowered
@@ -994,10 +994,10 @@ namespace AppKit {
 	[Native]
 	public enum NSBoxType : ulong {
 		NSBoxPrimary,
-		[Advice ("Has been identical to 'NSBoxPrimary'.")]
+		[Advice ("Identical to 'NSBoxPrimary'.")]
 		NSBoxSecondary,
 		NSBoxSeparator,
-		[Advice ("'NSBoxOldStyle' is discouraged in modern application design. It should be replaced with either 'NSBoxPrimary' or 'NSBoxCustom'.")]
+		[Advice ("'NSBoxOldStyle' is discouraged. Use 'NSBoxPrimary' or 'NSBoxCustom'.")]
 		NSBoxOldStyle,
 		NSBoxCustom
 	};
@@ -2526,11 +2526,11 @@ namespace AppKit {
 #region NSVisualEffectView
 	[Native]
 	public enum NSVisualEffectMaterial : long {
-		[Advice ("Use a specific semantic material instead.")]
+		[Advice ("Use a specific material instead.")]
 		AppearanceBased,
-		[Advice ("Use a semantic material instead.  To force the appearance of a view hierarchy, set the 'Appearance' property to an appropriate NSAppearance value.")]
+		[Advice ("Use a semantic material instead.")]
 		Light,
-		[Advice ("Use a semantic material instead.  To force the appearance of a view hierarchy, set the 'Appearance' property to an appropriate NSAppearance value.")]
+		[Advice ("Use a semantic material instead.")]
 		Dark,
 		Titlebar,
 		Selection,
@@ -2541,10 +2541,10 @@ namespace AppKit {
 		[Mac (10,11)]
 		Sidebar,
 		[Mac (10,11)]
-		[Advice ("Use a semantic material instead.  To force the appearance of a view hierarchy, set the 'Appearance' property to an appropriate NSAppearance value.")]
+		[Advice ("Use a semantic material instead.")]
 		MediumLight,
 		[Mac (10,11)]
-		[Advice ("Use a semantic material instead.  To force the appearance of a view hierarchy, set the 'Appearance' property to an appropriate NSAppearance value.")]
+		[Advice ("Use a semantic material instead.")]
 		UltraDark,
 		[Mac (10,14)]
 		HeaderView = 10,
