@@ -1509,7 +1509,7 @@ namespace AppKit {
 		NoScroller, 
 		[Deprecated (PlatformName.MacOSX, 10, 14)]		
 		OnlyArrows, 
-		All
+		All,
 	}
 
 	[Native]
@@ -1522,7 +1522,7 @@ namespace AppKit {
 		DecrementLine,
 		[Deprecated (PlatformName.MacOSX, 10, 14)]	
 		IncrementLine,
-		KnobSlot
+		KnobSlot,
 	}
 
 	[Native]
@@ -2907,6 +2907,6 @@ namespace AppKit {
 		Pressed,
 		DeepPressed,
 		Disabled,
-		Rollover
+		Rollover,
 	}
 }

@@ -5898,7 +5898,7 @@ namespace AppKit {
 		[Abstract]
 #endif
 		[Export ("draggedImage")]
-		[Advice ("Use NSDraggingItem objects instead.")]
+		[Advice ("Use 'NSDraggingItem' objects instead.")]
 		NSImage DraggedImage { get; }
 
 #if XAMCORE_4_0
@@ -6157,7 +6157,7 @@ namespace AppKit {
 		void ChangeFont ([NullAllowed] NSFontManager sender);
 
 		[Export ("validModesForFontPanel:")]
-		NSFontPanelModeMask ValidModesForFontPanel (NSFontPanel fontPanel);
+		NSFontPanelModeMask GetValidModes (NSFontPanel fontPanel);
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -11656,7 +11656,7 @@ namespace AppKit {
 		NSString NSPasteboardTypeFindPanelSearchOptions { get; }
 
 		[Mac (10, 7), Field ("NSPasteboardTypeTextFinderOptions")]
-		NSString PasteboardTypeTextFinderOptions { get; }
+		NSString NSPasteboardTypeTextFinderOptions { get; }
 
 		[Mac (10, 13)]
 		[Field ("NSPasteboardTypeURL")]
@@ -23004,9 +23004,6 @@ namespace AppKit {
 	partial interface NSRunningApplication {
 		[Mac (10, 7), Static, Export ("terminateAutomaticallyTerminableApplications")]
 		void TerminateAutomaticallyTerminableApplications ();
-	}
-
-	partial interface NSPasteboard {
 	}
 
 	delegate void NSSpellCheckerShowCorrectionIndicatorOfTypeHandler (string acceptedString);
