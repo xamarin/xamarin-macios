@@ -21,9 +21,15 @@ namespace IOSurface {
 	[TV (11,0)]
 	[Mac (10, 12)]
 	interface IOSurfacePropertyKey {
+		[Internal]
 		[Field ("IOSurfacePropertyAllocSizeKey")]
-		NSString AllocSizeKey { get; }
-		
+		NSString _DeprecatedAllocSizeKey { get; }
+
+		[iOS (12, 0), TV (12,0), Mac (10, 14)]
+		[Internal]
+		[Field ("IOSurfacePropertyKeyAllocSize")]
+		NSString _NewAllocSizeKey { get; }
+
 		[Field ("IOSurfacePropertyKeyWidth")]
 		NSString WidthKey { get; }
 		
