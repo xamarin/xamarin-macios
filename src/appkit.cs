@@ -2807,19 +2807,19 @@ namespace AppKit {
 		NSCollectionViewItem ItemPrototype { get; set; }
 
 		[Export ("maxNumberOfRows")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Set a NSCollectionViewGridLayout on CollectionViewLayout and set its MaximumNumberOfRows instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Set a NSCollectionViewGridLayout on CollectionViewLayout and set its 'MaximumNumberOfRows' instead.")]
 		nint MaxNumberOfRows { get; set; }
 
 		[Export ("maxNumberOfColumns")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Set a NSCollectionViewGridLayout on CollectionViewLayout and set its MaximumNumberOfColumns instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Set a NSCollectionViewGridLayout on CollectionViewLayout and set its 'MaximumNumberOfColumns' instead.")]
 		nint MaxNumberOfColumns { get; set; }
 
 		[Export ("minItemSize")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Set a NSCollectionViewGridLayout on CollectionViewLayout and set its MinimumItemSize instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Set a NSCollectionViewGridLayout on CollectionViewLayout and set its 'MinimumItemSize' instead.")]
 		CGSize MinItemSize { get; set; }
 
 		[Export ("maxItemSize")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Set a NSCollectionViewGridLayout on CollectionViewLayout and set its MaximumItemSize instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Set a NSCollectionViewGridLayout on CollectionViewLayout and set its 'MaximumItemSize' instead.")]
 		CGSize MaxItemSize { get; set; }
 
 		[Export ("backgroundColors", ArgumentSemantic.Copy), NullAllowed]
@@ -13507,7 +13507,7 @@ namespace AppKit {
 		nfloat ScrollerWidthForControlSize (NSControlSize controlSize);
 
 		[Export ("drawParts")]
-		[Availability (Deprecated = Platform.Mac_10_7, Message = "Not used on on macOS.")]
+		[Availability (Deprecated = Platform.Mac_10_7, Message = "Not used")]
 		void DrawParts ();
 
 		[Export ("rectForPart:")]
@@ -15828,7 +15828,7 @@ namespace AppKit {
 		CGRect ConvertRectFromBase (CGRect aRect);
 
 		[Export ("canDraw")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "DrawRect or UpdateLayer will be called when it is able to draw.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "'DrawRect' or 'UpdateLayer' will be called when it is able to draw.")]
 		bool CanDraw ();
 
 		[Export ("setNeedsDisplayInRect:")]
