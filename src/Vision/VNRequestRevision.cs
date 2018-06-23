@@ -11,10 +11,12 @@
 
 using System;
 using Foundation;
+using ObjCRuntime;
 
 namespace Vision {
 	public partial class VNRequest {
 
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		public const VNRequestRevision Revision1 = VNRequestRevision.One;
 
 		internal static VNRequestRevision [] GetSupportedVersions (NSIndexSet indexSet)
@@ -39,10 +41,14 @@ namespace Vision {
 	}
 
 	public partial class VNDetectFaceLandmarksRequest {
+
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		public const VNRequestRevision Revision2 = VNRequestRevision.Two;
 	}
 
 	public partial class VNDetectFaceRectanglesRequest {
+
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		public const VNRequestRevision Revision2 = VNRequestRevision.Two;
 	}
 }

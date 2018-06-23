@@ -160,7 +160,8 @@ namespace Vision {
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
-		// We must inline the following static properties so the correct class_ptr is used.
+		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr is used.
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[New]
 		[Static]
@@ -208,7 +209,8 @@ namespace Vision {
 		[Export ("symbologies", ArgumentSemantic.Copy)]
 		NSString [] WeakSymbologies { get; set; }
 
-		// We must inline the following static properties so the correct class_ptr is used.
+		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr is used.
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[New]
 		[Static]
@@ -243,7 +245,8 @@ namespace Vision {
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
-		// We must inline the following static properties so the correct class_ptr is used.
+		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr is used.
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[New]
 		[Static]
@@ -278,7 +281,8 @@ namespace Vision {
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
-		// We must inline the following static properties so the correct class_ptr is used.
+		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr is used.
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[New]
 		[Static]
@@ -313,7 +317,8 @@ namespace Vision {
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
-		// We must inline the following static properties so the correct class_ptr is used.
+		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr is used.
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[New]
 		[Static]
@@ -366,7 +371,8 @@ namespace Vision {
 		[Export ("maximumObservations")]
 		nuint MaximumObservations { get; set; }
 
-		// We must inline the following static properties so the correct class_ptr is used.
+		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr is used.
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[New]
 		[Static]
@@ -404,7 +410,8 @@ namespace Vision {
 		[Export ("reportCharacterBoxes")]
 		bool ReportCharacterBoxes { get; set; }
 
-		// We must inline the following static properties so the correct class_ptr is used.
+		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr is used.
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[New]
 		[Static]
@@ -647,7 +654,8 @@ namespace Vision {
 		[Wrap ("this (imageData, orientation, options?.Dictionary, completionHandler)")]
 		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
-		// We must inline the following static properties so the correct class_ptr is used.
+		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr is used.
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[New]
 		[Static]
@@ -799,7 +807,8 @@ namespace Vision {
 		[Wrap ("this (imageData, orientation, options?.Dictionary, completionHandler)")]
 		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
-		// We must inline the following static properties so the correct class_ptr is used.
+		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr is used.
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[New]
 		[Static]
@@ -951,7 +960,8 @@ namespace Vision {
 		[Wrap ("this (imageData, orientation, options?.Dictionary, completionHandler)")]
 		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
-		// We must inline the following static properties so the correct class_ptr is used.
+		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr is used.
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[New]
 		[Static]
@@ -1242,7 +1252,8 @@ namespace Vision {
 		[Export ("revision")]
 		VNRequestRevision Revision { get; set; }
 
-		// We must inline the following static properties into subclasses so the correct class_ptr is used.
+		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr is used.
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Static]
 		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
@@ -1277,7 +1288,8 @@ namespace Vision {
 		[Export ("regionOfInterest", ArgumentSemantic.Assign)]
 		CGRect RegionOfInterest { get; set; }
 
-		// We must inline the following static properties so the correct class_ptr is used.
+		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr is used.
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[New]
 		[Static]
@@ -1565,7 +1577,8 @@ namespace Vision {
 		[Wrap ("this (imageData, orientation, options?.Dictionary, completionHandler)")]
 		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
-		// We must inline the following static properties so the correct class_ptr is used.
+		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr is used.
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[New]
 		[Static]
@@ -1606,7 +1619,8 @@ namespace Vision {
 		[Export ("initWithDetectedObjectObservation:completionHandler:")]
 		IntPtr Constructor (VNDetectedObjectObservation observation, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
-		// We must inline the following static properties so the correct class_ptr is used.
+		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr is used.
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[New]
 		[Static]
@@ -1648,7 +1662,8 @@ namespace Vision {
 		[DesignatedInitializer]
 		IntPtr Constructor (VNRectangleObservation observation, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
-		// We must inline the following static properties so the correct class_ptr is used.
+		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr is used.
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[New]
 		[Static]
@@ -1693,7 +1708,8 @@ namespace Vision {
 		[Export ("lastFrame")]
 		bool LastFrame { [Bind ("isLastFrame")] get; set; }
 
-		// We must inline the following static properties so the correct class_ptr is used.
+		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr is used.
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[New]
 		[Static]
