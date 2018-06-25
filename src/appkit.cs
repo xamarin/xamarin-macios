@@ -13524,7 +13524,7 @@ namespace AppKit {
 		void DrawKnobSlot (CGRect slotRect, bool highlight);
 
 		[Export ("highlight:")]
-		[Availability (Deprecated = Platform.Mac_10_14, Message = "No effect since 10.7.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "No effect since 10.7.")]
 		void Highlight (bool flag);
 
 		[Export ("testPart:")]
@@ -20867,7 +20867,7 @@ namespace AppKit {
 		NSWindow ParentWindow { get; set; }
 	
 		[Export ("graphicsContext")]
-		[Availability (Deprecated = Platform.Mac_10_14, Message = "Add instances of NSView to display content in a window.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Add instances of NSView to display content in a window.")]
 		NSGraphicsContext GraphicsContext { get; }
 	
 		[Availability (Deprecated = Platform.Mac_10_7)]
