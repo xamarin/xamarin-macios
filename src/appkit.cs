@@ -2429,7 +2429,7 @@ namespace AppKit {
 		[Export ("controlTint")]
 		NSControlTint ControlTint { get; set; }
 
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Implement 'ViewDidChangeEffectiveAppearance' on NSView or observe 'NSApplication.EffectiveAppearance'")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Implement 'ViewDidChangeEffectiveAppearance' on NSView or observe 'NSApplication.EffectiveAppearance'.")]
 		[Notification, Field ("NSControlTintDidChangeNotification")]
 		NSString ControlTintChangedNotification { get; }
 
@@ -13502,7 +13502,7 @@ namespace AppKit {
 		nfloat ScrollerWidthForControlSize (NSControlSize controlSize);
 
 		[Export ("drawParts")]
-		[Deprecated (PlatformName.MacOSX, 10, 7, message: "Not used")]
+		[Deprecated (PlatformName.MacOSX, 10, 7, message: "Not used.")]
 		void DrawParts ();
 
 		[Export ("rectForPart:")]
