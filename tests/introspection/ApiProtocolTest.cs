@@ -101,6 +101,7 @@ namespace Introspection {
 				case "VSAccountMetadata":
 				case "VSAccountMetadataRequest":
 				case "VSAccountProviderResponse":
+				case "HKCumulativeQuantitySeriesSample":
 					return true;
 				}
 				break;
