@@ -13490,12 +13490,12 @@ namespace AppKit {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frameRect);
 
-		[Availability (Deprecated = Platform.Mac_10_7, Message = "Use `GetScrollerWidth` instead.")]
+		[Availability (Deprecated = Platform.Mac_10_7, Message = "Use GetScrollerWidth instead.")]
 		[Static]
 		[Export ("scrollerWidth")]
 		nfloat ScrollerWidth { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_7, Message = "Use `GetScrollerWidth` instead.")]
+		[Availability (Deprecated = Platform.Mac_10_7, Message = "Use GetScrollerWidth instead.")]
 		[Static]
 		[Export ("scrollerWidthForControlSize:")]
 		nfloat ScrollerWidthForControlSize (NSControlSize controlSize);
