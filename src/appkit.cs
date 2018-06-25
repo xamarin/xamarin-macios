@@ -18991,7 +18991,7 @@ namespace AppKit {
 
 		[Abstract]
 		[Export ("attributedSubstringFromRange:")]
-		NSAttributedString AttributedSubstringFromRange (NSRange range);
+		NSAttributedString GetAttributedSubstring (NSRange range);
 
 		[Abstract]
 		[Export ("markedRange")]
@@ -19003,11 +19003,11 @@ namespace AppKit {
 
 		[Abstract]
 		[Export ("firstRectForCharacterRange:")]
-		CGRect FirstRectForCharacterRange (NSRange range);
+		CGRect GetFirstRectForCharacterRange (NSRange range);
 
 		[Abstract]
 		[Export ("characterIndexForPoint:")]
-		nuint CharacterIndexForPoint (CGPoint point);
+		nuint GetCharacterIndex (CGPoint point);
 
 		[Abstract]
 		[Export ("validAttributesForMarkedText")]
@@ -19534,7 +19534,7 @@ namespace AppKit {
 
 		[Mac (10,14, onlyOn64: true)]
 		[Export ("performValidatedReplacementInRange:withAttributedString:")]
-		bool PerformValidatedReplacementInRange (NSRange range, NSAttributedString attributedString);
+		bool PerformValidatedReplacement (NSRange range, NSAttributedString attributedString);
 
 		[Mac (10, 14, onlyOn64: true)]
 		[Static]
@@ -23167,12 +23167,13 @@ namespace AppKit {
 		bool AllowsExpansionToolTips { get; set; }
 	}
 
+	[Mac (10, 14)]
 	[Protocol]
 	interface NSViewToolTipOwner
 	{
 		[Abstract]
 		[Export ("view:stringForToolTip:point:userData:")]
-		string StringForToolTip (NSView view, nint tag, CGPoint point, IntPtr data);
+		string GetStringForToolTip (NSView view, nint tag, CGPoint point, IntPtr data);
 	}
 
 	partial interface NSMatrix : NSUserInterfaceValidations, NSViewToolTipOwner {
