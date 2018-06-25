@@ -323,6 +323,10 @@ namespace Bindings.Test {
 		[Export ("callOptionalStaticCallback")]
 		void CallOptionalStaticCallback ();
 
+		[Static]
+		[Export ("callAssertMainThreadBlockRelease:")]
+		void CallAssertMainThreadBlockRelease (OuterBlock completionHandler);
+
 		[Export ("testFreedBlocks")]
 		void TestFreedBlocks ();
 
@@ -330,6 +334,9 @@ namespace Bindings.Test {
 		[Export ("freedBlockCount")]
 		int FreedBlockCount { get; }
 	}
+
+	delegate void InnerBlock (int magic_number);
+	delegate void OuterBlock ([BlockCallback] InnerBlock callback);
 
 	[BaseType (typeof (NSObject))]
 	interface EvilDeallocator
