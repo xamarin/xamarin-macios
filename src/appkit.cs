@@ -2425,11 +2425,11 @@ namespace AppKit {
 		[Export ("image", ArgumentSemantic.Retain)]
 		NSImage Image  { get; set; }
 	
-		[Availability (Deprecated = Platform.Mac_10_14, Message = "'ControlTint' property not honored on 10.14. For custom cells, use 'NSColor.ControlAccentColor'.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "'ControlTint' property not honored on 10.14. For custom cells, use 'NSColor.ControlAccentColor'.")]
 		[Export ("controlTint")]
 		NSControlTint ControlTint { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_14, Message = "Implement 'ViewDidChangeEffectiveAppearance' on NSView or observe 'NSApplication.EffectiveAppearance'")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Implement 'ViewDidChangeEffectiveAppearance' on NSView or observe 'NSApplication.EffectiveAppearance'")]
 		[Notification, Field ("NSControlTintDidChangeNotification")]
 		NSString ControlTintChangedNotification { get; }
 
@@ -4649,7 +4649,7 @@ namespace AppKit {
 		[Export ("sizeToFit")]
 		void SizeToFit ();
 
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Override 'Layout' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Override 'Layout' instead.")]
 		[Export ("calcSize")]
 		void CalcSize ();
 
@@ -7066,7 +7066,7 @@ namespace AppKit {
 		NSGraphicsContext FromBitmap (NSBitmapImageRep bitmapRep);
 	
 		[Static, Export ("graphicsContextWithGraphicsPort:flipped:")]
-		[Availability (Deprecated = Platform.Mac_10_14, Message = "Use 'FromCGContext' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'FromCGContext' instead.")]
 		NSGraphicsContext FromGraphicsPort (IntPtr graphicsPort, bool initialFlippedState);
 	
 		[Static, Export ("currentContext")]
@@ -7081,7 +7081,7 @@ namespace AppKit {
 		[Static, Export ("restoreGraphicsState")]
 		void GlobalRestoreGraphicsState ();
 	
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "This method has no effect.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "This method has no effect.")]
 		[Static, Export ("setGraphicsState:")]
 		void SetGraphicsState (nint gState);
 	
@@ -7102,7 +7102,7 @@ namespace AppKit {
 
 		// keep signature in sync with 'graphicsContextWithGraphicsPort:flipped:'
 		[Export ("graphicsPort")]
-		[Availability (Deprecated = Platform.Mac_10_14, Message = "Use 'CGContext' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'CGContext' instead.")]
 		IntPtr GraphicsPortHandle {get; }
 	
 		[Export ("isFlipped")]
@@ -11646,7 +11646,7 @@ namespace AppKit {
 		NSString NSPasteboardTypeMultipleTextSelection { get; }
 
 		[Field ("NSPasteboardTypeFindPanelSearchOptions")]
-		[Availability (Deprecated = Platform.Mac_10_14, Message = "Use 'NSPasteboardTypeTextFinderOptions' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'NSPasteboardTypeTextFinderOptions' instead.")]
 		NSString NSPasteboardTypeFindPanelSearchOptions { get; }
 
 		[Mac (10, 7), Field ("NSPasteboardTypeTextFinderOptions")]
@@ -13490,18 +13490,18 @@ namespace AppKit {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frameRect);
 
-		[Availability (Deprecated = Platform.Mac_10_7, Message = "Use 'GetScrollerWidth' instead.")]
+		[Availability (Deprecated = Platform.Mac_10_7, Message = "Use `GetScrollerWidth` instead.")]
 		[Static]
 		[Export ("scrollerWidth")]
 		nfloat ScrollerWidth { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_7, Message = "Use 'GetScrollerWidth' instead.")]
+		[Availability (Deprecated = Platform.Mac_10_7, Message = "Use `GetScrollerWidth` instead.")]
 		[Static]
 		[Export ("scrollerWidthForControlSize:")]
 		nfloat ScrollerWidthForControlSize (NSControlSize controlSize);
 
 		[Export ("drawParts")]
-		[Availability (Deprecated = Platform.Mac_10_7, Message = "Not used")]
+		[Deprecated (PlatformName.MacOSX, 10, 7, message: "Not used")]
 		void DrawParts ();
 
 		[Export ("rectForPart:")]
@@ -13514,7 +13514,7 @@ namespace AppKit {
 		NSUsableScrollerParts UsableParts { get; }
 
 		[Export ("drawArrow:highlight:")]
-		[Availability (Deprecated = Platform.Mac_10_7, Message = "Scrollers don't have arrows anymore.")]
+		[Deprecated (PlatformName.MacOSX, 10, 7, message: "Scrollers don't have arrows anymore.")]
 		void DrawArrow (NSScrollerArrow whichArrow, bool highlight);
 
 		[Export ("drawKnob")]
@@ -13534,7 +13534,7 @@ namespace AppKit {
 		void TrackKnob (NSEvent theEvent);
 
 		[Export ("trackScrollButtons:")]
-		[Availability (Deprecated = Platform.Mac_10_14, Message = "No effect since 10.7.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "No effect since 10.7.")]
 		void TrackScrollButtons (NSEvent theEvent);
 
 		[Export ("hitPart")]
@@ -13542,11 +13542,11 @@ namespace AppKit {
 
 		//Detected properties
 		[Export ("arrowsPosition")]
-		[Availability (Deprecated = Platform.Mac_10_14, Message = "No effect since 10.7.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "No effect since 10.7.")]
 		NSScrollArrowPosition ArrowsPosition { get; set; }
 
 		[Export ("controlTint")]
-		[Availability (Deprecated = Platform.Mac_10_14, Message = "No effect since 10.7.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "No effect since 10.7.")]
 		NSControlTint ControlTint { get; set; }
 
 		[Export ("controlSize")]
@@ -15153,11 +15153,11 @@ namespace AppKit {
 		[Export ("sendActionOn:")]
 		nint SendActionOn (NSTouchPhase mask);
 
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use 'Menu' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use 'Menu' instead.")]
 		[Export ("popUpStatusItemMenu:")]
 		void PopUpStatusItemMenu (NSMenu menu);
 
-		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use standard button instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use standard button instead.")]
 		[Export ("drawStatusBarBackgroundInRect:withHighlight:")]
 		void DrawStatusBarBackground (CGRect rect, bool highlight);
 
@@ -17824,7 +17824,7 @@ namespace AppKit {
 		bool DrawsBackground { get; set; }
 
 		[Export ("controlTint")]
-		[Availability (Deprecated = Platform.Mac_10_14, Message = "The 'ControlTint' property is not honored on 10.14.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "The 'ControlTint' property is not honored on 10.14.")]
 		NSControlTint ControlTint { get; set; }
 
 		[Export ("controlSize")]
@@ -20659,7 +20659,7 @@ namespace AppKit {
 		void SetOneShot (bool flag);
 	
 		[Export ("isOneShot")]
-		[Availability (Deprecated = Platform.Mac_10_14)]
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		bool IsOneShot { get; }
 	
 		[Export ("dataWithEPSInsideRect:")]
@@ -20693,7 +20693,7 @@ namespace AppKit {
 		bool AllowsToolTipsWhenApplicationIsInactive  { get; set; }
 	
 		[Export ("backingType")]
-		[Availability (Deprecated = Platform.Mac_10_14)]
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		NSBackingStore BackingType { get; set; }
 	
 		[Export ("level")]
@@ -25708,7 +25708,7 @@ namespace AppKit {
 		NSObject[] AccessibilitySelectedColumns { get; } 
 
 		[Export ("accessibilityHeaderGroup")]
-		[Availability (Deprecated = Platform.Mac_10_14, Message = "Use 'AccessibilityHeader' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'AccessibilityHeader' instead.")]
 		string AccessibilityHeaderGroup { get; } 
 
 		[Export ("accessibilitySelectedCells")]
