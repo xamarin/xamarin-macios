@@ -17813,7 +17813,7 @@ namespace AppKit {
 		NSTabViewType TabViewType { get; set; }
 
 		[Export ("tabViewItems")]
-		NSTabViewItem [] Items { get; set; }
+		NSTabViewItem [] Items { get; [Mac (10, 14)] set; }
 
 		[Export ("allowsTruncatedLabels")]
 		bool AllowsTruncatedLabels { get; set; }
@@ -18219,7 +18219,7 @@ namespace AppKit {
 		CGSize CellSize { get; }
 
 		[Export ("cellBaselineOffset")]
-		CGPoint CellBaselineOffset { get; set; }
+		CGPoint CellBaselineOffset { get; [Mac (10, 14)] set; }
 
 		[Export ("drawWithFrame:inView:characterIndex:")]
 		void DrawWithFrame (CGRect cellFrame, NSView controlView, nuint charIndex);
