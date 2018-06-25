@@ -616,6 +616,28 @@ static Class _TestClass = NULL;
     [obj release];
 }
 
+-(void) callAssertMainThreadBlockReleaseCallback
+{
+	MainThreadDeallocator *obj = [[MainThreadDeallocator alloc] init];
+	__block bool success = false;
+
+	dispatch_sync (dispatch_get_global_queue (DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul), ^{
+		[self assertMainThreadBlockReleaseCallback: ^(int magic_number)
+		{
+			assert (magic_number == 42);
+			assert ([NSThread isMainThread]); // This may crash way after the failed test has finished executing.
+			success = obj != NULL; // this captures the 'obj', and it's only freed when the block is freed.
+		}];
+    });
+	assert (success);
+    [obj release];
+}
+
+-(void) assertMainThreadBlockReleaseCallback: (innerBlock) completionHandler
+{
+	assert (!"THIS FUNCTION SHOULD BE OVERRIDDEN");
+}
+
 -(void) testFreedBlocks
 {
 	FreedNotifier* obj = [[FreedNotifier alloc] init];

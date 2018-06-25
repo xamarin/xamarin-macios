@@ -2118,7 +2118,7 @@ get_method_block_wrapper_creator (MonoMethod *method, int par, guint32 *exceptio
 	return res;
 }
 
-static void
+void
 xamarin_release_block_on_main_thread (void *obj)
 {
 	if ([NSThread isMainThread]) {

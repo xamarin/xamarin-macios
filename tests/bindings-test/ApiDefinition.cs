@@ -327,6 +327,12 @@ namespace Bindings.Test {
 		[Export ("callAssertMainThreadBlockRelease:")]
 		void CallAssertMainThreadBlockRelease (OuterBlock completionHandler);
 
+		[Export ("assertMainThreadBlockReleaseCallback:")]
+		void AssertMainThreadBlockReleaseCallback (InnerBlock completionHandler);
+
+		[Export ("callAssertMainThreadBlockReleaseCallback")]
+		void CallAssertMainThreadBlockReleaseCallback ();
+
 		[Export ("testFreedBlocks")]
 		void TestFreedBlocks ();
 

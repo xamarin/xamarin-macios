@@ -1594,6 +1594,20 @@ namespace ObjCRuntime {
 
 			throw ErrorHelper.CreateError (8003, "Failed to find the closed generic method '{0}' on the type '{1}'.", open_method.Name, closed_type.FullName);
 		}
+
+		[EditorBrowsable (EditorBrowsableState.Never)]
+#if MONOMAC
+		public static void ReleaseBlockOnMainThread (IntPtr block)
+		{
+			if (release_block_on_main_thread == null)
+				release_block_on_main_thread = LookupInternalFunction<Action<IntPtr>> ("xamarin_release_block_on_main_thread");
+			release_block_on_main_thread (block);
+		}
+		static Action<IntPtr> release_block_on_main_thread;
+#else
+		[DllImport ("__Internal", EntryPoint = "xamarin_release_block_on_main_thread")]
+		public static extern void ReleaseBlockOnMainThread (IntPtr block);
+#endif
 	}
 		
 	internal class IntPtrEqualityComparer : IEqualityComparer<IntPtr>

@@ -170,6 +170,8 @@ typedef unsigned int (^RegistrarTestBlock) (unsigned int magic);
 typedef void (^innerBlock) (int magic_number);
 typedef void (^outerBlock) (innerBlock callback);
 +(void) callAssertMainThreadBlockRelease: (outerBlock) completionHandler;
+-(void) callAssertMainThreadBlockReleaseCallback;
+-(void) assertMainThreadBlockReleaseCallback: (innerBlock) completionHandler;
 
 -(void) testFreedBlocks;
 +(int) freedBlockCount;
