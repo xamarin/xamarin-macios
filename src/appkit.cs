@@ -4156,6 +4156,7 @@ namespace AppKit {
 		bool WriteToUrl ([NullAllowed] NSUrl url, [NullAllowed] out NSError error);
 	}
 
+	[Mac (10, 14)]
 	[Protocol]
 	interface NSColorChanging
 	{
@@ -4832,6 +4833,7 @@ namespace AppKit {
 		void EndEditing ([NullAllowed] NSText textObj);
 	}
 
+	[Mac (10, 14)]
 	[Protocol]
 	interface NSEditorRegistration
 	{
@@ -4842,6 +4844,7 @@ namespace AppKit {
 		void ObjectDidEndEditing (INSEditor editor);
 	}
 
+	[Mac (10, 14)]
 	[Category]
 	[BaseType (typeof(NSObject))]
 	interface NSObject_NSEditorRegistration
@@ -4855,6 +4858,7 @@ namespace AppKit {
 	
 	interface INSEditor {}
 
+	[Mac (10, 14)]
 	[Protocol]
 	interface NSEditor
 	{
@@ -6150,6 +6154,7 @@ namespace AppKit {
 
 	}
 
+	[Mac (10, 14)]
 	[Protocol]
 	interface NSFontChanging
 	{
@@ -11403,6 +11408,7 @@ namespace AppKit {
 		nint NumberOfTouchesRequired { get; set; }
 	}
 
+	[Mac (10, 14)]
 	[Protocol]
 	interface NSPasteboardTypeOwner
 	{
@@ -12662,6 +12668,7 @@ namespace AppKit {
 
 	// Technically on NSResponder but responder subclasses can implement any that make sense
 	// So bound for user classes but not added to NSResponder binding
+	[Mac (10, 14)]
 	[Protocol]
 	interface NSStandardKeyBindingResponding
 	{
@@ -19900,6 +19907,7 @@ namespace AppKit {
 		void DidRemoveItem (NSNotification notification);
 	}
 
+	[Mac (10, 14)]
 	[Protocol]
 	interface NSToolbarItemValidation
 	{
@@ -19908,6 +19916,7 @@ namespace AppKit {
 		bool ValidateToolbarItem (NSToolbarItem item);
 	}
 
+	[Mac (10, 14)]
 	[Category]
 	[BaseType (typeof(NSObject))]
 	interface NSObject_NSToolbarItemValidation
@@ -25990,6 +25999,7 @@ namespace AppKit {
 		bool ValidateMenuItem (NSMenuItem menuItem);
 	}
 
+	[Mac (10, 14)]
 	[Protocol]
 	interface NSMenuItemValidation
 	{
