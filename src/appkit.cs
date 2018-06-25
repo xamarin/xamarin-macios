@@ -11499,7 +11499,7 @@ namespace AppKit {
 		NSString NSStringType{ get; }
 		
 		[Field ("NSFilenamesPboardType")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message : "Create multiple items with 'NSPasteboardTypeFileURL' or 'UTTypeFileURL' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message : "Create multiple items with 'NSPasteboardTypeFileUrl' or 'MobileCoreServices.UTType.FileURL' instead.")]
 		NSString NSFilenamesType{ get; }
 		
 		[Field ("NSPostScriptPboardType")]
@@ -11545,7 +11545,7 @@ namespace AppKit {
 		NSString NSPictType{ get; }
 		
 		[Field ("NSURLPboardType")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'NSPasteboardTypeURL' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'NSPasteboardTypeUrl' instead.")]
 		NSString NSUrlType{ get; }
 		
 		[Field ("NSPDFPboardType")]
@@ -11553,7 +11553,7 @@ namespace AppKit {
 		NSString NSPdfType{ get; }
 		
 		[Field ("NSVCardPboardType")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'UTTypeVCard' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'MobileCoreServices.UTType.VCard' instead.")]
 		NSString NSVCardType{ get; }
 		
 		[Field ("NSFilesPromisePboardType")]
@@ -11605,12 +11605,6 @@ namespace AppKit {
 		[Mac (10, 13)]
 		[Field ("NSPasteboardNameDrag")]
 		NSString NSPasteboardNameDrag { get; }
-
-		[Field ("kUTTypeFileURL")]
-		NSString UTTypeFileURL { get; }
-
-		[Field ("kUTTypeVCard")]
-		NSString UTTypeVCard { get; }
 
 		[Field ("NSPasteboardTypeString")]
 		NSString NSPasteboardTypeString { get; }

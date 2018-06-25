@@ -346,7 +346,7 @@ namespace AppKit {
 		[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Emphasized' instead.")]
 		Dark = Emphasized, 
 		Raised, 
-		Lowered
+		Lowered,
 	}
 #endregion
 
