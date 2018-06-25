@@ -8143,12 +8143,6 @@ namespace AppKit {
 		[Export ("target", ArgumentSemantic.Weak), NullAllowed]
 		NSObject Target { get; set; }
 
-		[Export ("action"), NullAllowed]
-		Selector Action { get; set; }
-
-		[Export ("tag")]
-		nint Tag { get; set; }
-
 		[Export ("representedObject", ArgumentSemantic.Retain)]
 		NSObject RepresentedObject { get; set; }
 
@@ -19956,14 +19950,8 @@ namespace AppKit {
 		[Export ("menuFormRepresentation", ArgumentSemantic.Retain)]
 		NSMenuItem MenuFormRepresentation { get; set; }
 
-		[Export ("tag")]
-		nint Tag { get; set; }
-
 		[Export ("target", ArgumentSemantic.Weak), NullAllowed]
 		NSObject Target { get; set; }
-
-		[Export ("action"), NullAllowed]
-		Selector Action { get; set; }
 
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")]get; set; }
@@ -25929,11 +25917,11 @@ namespace AppKit {
 	{
 		[Abstract]
 		[NullAllowed, Export ("action")]
-		Selector Action { get; [NotImplemented] set;}
+		Selector Action { get; set;}
 
 		[Abstract]
 		[Export ("tag")]
-		nint Tag { get; [NotImplemented] set;}
+		nint Tag { get; set;}
 	}
 
 #if XAMCORE_2_0
