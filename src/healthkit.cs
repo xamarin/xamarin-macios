@@ -196,11 +196,11 @@ namespace HealthKit {
 
 		[NoWatch, iOS (12, 0)]
 		[Field ("HKPredicateKeyPathClinicalRecordFHIRResourceIdentifier")]
-		NSString ClinicalRecordFHIRResourceIdentifier { get; }
+		NSString ClinicalRecordFhiRResourceIdentifier { get; }
 
 		[NoWatch, iOS (12, 0)]
 		[Field ("HKPredicateKeyPathClinicalRecordFHIRResourceType")]
-		NSString ClinicalRecordFHIRResourceType { get; }
+		NSString ClinicalRecordFhiRResourceType { get; }
 	}
 
 	[NoWatch] // headers says it's available but it's only usable from another, unavailable, type
@@ -2640,6 +2640,8 @@ namespace HealthKit {
 		IntPtr Constructor (HKQuantitySample quantitySample, HKQuantitySeriesSampleQueryQuantityDelegate quantityHandler);
 	}
 
+	delegate void HKQuantitySeriesSampleBuilderFinishSeriesDelegate (HKQuantitySample [] samples, NSError error);
+
 	[Watch (5,0), iOS (12,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
@@ -2662,11 +2664,11 @@ namespace HealthKit {
 
 		[Async, Internal]
 		[Export ("finishSeriesWithMetadata:completion:")]
-		void FinishSeries ([NullAllowed] NSDictionary metadata, Action<NSArray<HKQuantitySample>, NSError> completionHandler);
+		void FinishSeries ([NullAllowed] NSDictionary metadata, HKQuantitySeriesSampleBuilderFinishSeriesDelegate completionHandler);
 
 		[Async]
 		[Wrap ("FinishSeries (metadata.Dictionary, completionHandler)")]
-		void FinishSeries ([NullAllowed] HKMetadata metadata, Action<NSArray<HKQuantitySample>, NSError> completionHandler);
+		void FinishSeries ([NullAllowed] HKMetadata metadata, HKQuantitySeriesSampleBuilderFinishSeriesDelegate completionHandler);
 
 		[Export ("discard")]
 		void Discard ();
@@ -2733,7 +2735,7 @@ namespace HealthKit {
 		string DisplayName { get; }
 
 		[NullAllowed, Export ("FHIRResource", ArgumentSemantic.Copy)]
-		HKFHIRResource FHIRResource { get; }
+		HKFHIRResource FhiRResource { get; }
 	}
 
 	interface IHKLiveWorkoutBuilderDelegate {}
