@@ -8140,6 +8140,14 @@ namespace AppKit {
 		[Export ("indentationLevel")]
 		nint IndentationLevel { get; set; }
 
+#pragma warning disable 0108 // Protocol is read only but must be get/set
+		[Export ("action"), NullAllowed]
+		Selector Action { get; set; }
+
+		[Export ("tag")]
+		nint Tag { get; set; }
+#pragma warning restore 0108
+
 		[Export ("target", ArgumentSemantic.Weak), NullAllowed]
 		NSObject Target { get; set; }
 
@@ -19950,8 +19958,18 @@ namespace AppKit {
 		[Export ("menuFormRepresentation", ArgumentSemantic.Retain)]
 		NSMenuItem MenuFormRepresentation { get; set; }
 
+#pragma warning disable 0108 // Protocol is read only but must be get/set
+		[Export ("action"), NullAllowed]
+		Selector Action { get; set; }
+#pragma warning restore 0108
+
 		[Export ("target", ArgumentSemantic.Weak), NullAllowed]
 		NSObject Target { get; set; }
+
+#pragma warning disable 0108 // Protocol is read only but must be get/set
+		[Export ("tag")]
+		nint Tag { get; set; }
+#pragma warning restore 0108
 
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")]get; set; }
@@ -25918,11 +25936,11 @@ namespace AppKit {
 	{
 		[Abstract]
 		[NullAllowed, Export ("action")]
-		Selector Action { get; set;}
+		Selector Action { get; }
 
 		[Abstract]
 		[Export ("tag")]
-		nint Tag { get; set;}
+		nint Tag { get; }
 	}
 
 #if XAMCORE_2_0
