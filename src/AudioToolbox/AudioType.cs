@@ -456,10 +456,17 @@ namespace AudioToolbox {
 		HoaAcn14               = (2 << 16) | 14,
 		HoaAcn15               = (2 << 16) | 15,
 		HoaAcn65024            = (2 << 16) | 65024,
-
-		BeginReserved          = unchecked((int)0xF0000000),
-		EndReserved            = unchecked((int)0xFFFFFFFE),
 	}
+
+#if !COREBUILD
+	public static class AudioChannelLabelExtension
+	{
+		public static bool IsReserved (this AudioChannelLabel value)
+		{
+			return (uint)value >= 0xF0000000 && (uint)value <= 0xFFFFFFFE;
+		}
+	}
+#endif
 
 	[Flags]
 	public enum AudioChannelBit : uint // UInt32 mChannelBitmap in AudioChannelLayout
@@ -703,10 +710,6 @@ namespace AudioToolbox {
 		HOA_ACN_N3D              = (191U<<16),
 		
 		DiscreteInOrder          = (147<<16) | 0,                       // needs to be ORed with the actual number of channels  
-
-		BeginReserved            = 0xF0000000,
-		EndReserved              = 0xFFFEFFFF,
-
 		Unknown                  = 0xFFFF0000                           // needs to be ORed with the actual number of channels  
 	}
 
@@ -728,6 +731,11 @@ namespace AudioToolbox {
 		public static uint GetNumberOfChannels (this AudioChannelLayoutTag inLayoutTag)
 		{
 			return (uint)inLayoutTag & 0x0000FFFF;
+		}
+
+		public static bool IsReserved (this AudioChannelLayoutTag value)
+		{
+			return (uint)value >= 0xF0000000 && (uint)value <= 0xFFFFFFFE;
 		}
 	}
 #endif // !COREBUILD
