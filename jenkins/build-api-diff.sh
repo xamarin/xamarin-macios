@@ -9,6 +9,13 @@ report_error ()
 }
 trap report_error ERR
 
+# SC2154: ghprbPullId is referenced but not assigned.
+# shellcheck disable=SC2154
+if test -n "$ghprbPullId" && ./jenkins/fetch-pr-labels.sh --check=skip-public-jenkins; then
+	echo "Skipping API diff because the label 'skip-public-jenkins' was found."
+	exit 0
+fi
+
 export BUILD_REVISION=jenkins
 make -j8 -C tools/apidiff jenkins-api-diff
 
