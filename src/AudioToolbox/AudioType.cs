@@ -400,7 +400,11 @@ namespace AudioToolbox {
 		// X-Y Recording
 		XY_X                  = 206,
 		XY_Y                  = 207,
-   
+
+		// Binaural Recording
+		BinauralLeft          = 208,
+		BinauralRight         = 209,
+
 		// other
 		HeadphonesLeft        = 301,
 		HeadphonesRight       = 302,
@@ -451,7 +455,10 @@ namespace AudioToolbox {
 		HoaAcn13               = (2 << 16) | 13,
 		HoaAcn14               = (2 << 16) | 14,
 		HoaAcn15               = (2 << 16) | 15,
-		HoaAcn65024            = (2 << 16) | 65024  
+		HoaAcn65024            = (2 << 16) | 65024,
+
+		BeginReserved          = unchecked((int)0xF0000000),
+		EndReserved            = unchecked((int)0xFFFFFFFE),
 	}
 
 	[Flags]
@@ -696,6 +703,10 @@ namespace AudioToolbox {
 		HOA_ACN_N3D              = (191U<<16),
 		
 		DiscreteInOrder          = (147<<16) | 0,                       // needs to be ORed with the actual number of channels  
+
+		BeginReserved            = 0xF0000000,
+		EndReserved              = 0xFFFEFFFF,
+
 		Unknown                  = 0xFFFF0000                           // needs to be ORed with the actual number of channels  
 	}
 
