@@ -459,7 +459,7 @@ namespace AudioToolbox {
 	}
 
 #if !COREBUILD
-	public static class AudioChannelLabelExtension
+	public static class AudioChannelLabelExtensions
 	{
 		public static bool IsReserved (this AudioChannelLabel value)
 		{
