@@ -363,6 +363,9 @@ namespace Introspection {
 			case "UISearchBar":
 				// - (nullable instancetype)initWithCoder:(NSCoder *)aDecoder NS_DESIGNATED_INITIALIZER __TVOS_PROHIBITED;
 				return true;
+			case "TVDigitEntryViewController":
+				// full screen, no customization w/NIB
+				return true;
 #endif
 			case "PdfAnnotationButtonWidget":
 			case "PdfAnnotationChoiceWidget":

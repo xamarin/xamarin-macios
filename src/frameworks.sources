@@ -1891,6 +1891,7 @@ TVOS_FRAMEWORKS =           \
 	StoreKit                \
 	SystemConfiguration     \
 	TVMLKit                 \
+	TVUIKit					\
 	TVServices				\
 	UIKit                   \
 	UserNotifications       \
