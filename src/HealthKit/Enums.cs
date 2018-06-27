@@ -566,7 +566,7 @@ namespace HealthKit
 	}
  
 	[NoWatch, iOS (12, 0)]
-	public enum HKFHIRResourceType {
+	public enum HKFhirResourceType {
 		[Field ("HKFHIRResourceTypeAllergyIntolerance")]
 		AllergyIntolerance,
 		[Field ("HKFHIRResourceTypeCondition")]
