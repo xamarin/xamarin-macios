@@ -1,4 +1,5 @@
 using CoreGraphics;
+using CoreLocation;
 using ObjCRuntime;
 using Foundation;
 #if !MONOMAC
@@ -9,10 +10,12 @@ using PHLivePhotoViewContentMode = Foundation.NSObject;
 #else
 using AppKit;
 using UIImage = AppKit.NSImage;
+using UIColor = AppKit.NSColor;
 // ease compilation for [NoMac] decorated members
 using UIGestureRecognizer = Foundation.NSObject;
 using PHLivePhotoBadgeOptions = Foundation.NSObject;
 #endif
+using MapKit;
 using Photos;
 using System;
 
@@ -145,6 +148,14 @@ namespace PhotosUI {
 
 		[Export ("project")]
 		PHProject Project { get; }
+
+		[Mac (10,14, onlyOn64: true)]
+		[Export ("showEditorForAsset:")]
+		void ShowEditor (PHAsset asset);
+
+		[Mac (10,14, onlyOn64: true)]
+		[Export ("updatedProjectInfoFromProjectInfo:completion:")]
+		NSProgress UpdatedProjectInfo ([NullAllowed] PHProjectInfo existingProjectInfo, Action<PHProjectInfo> completionHandler);
 	}
 
 	[Mac (10,13, onlyOn64 : true)]
@@ -184,6 +195,7 @@ namespace PhotosUI {
 	[Protocol]
 	interface PHProjectExtensionController {
 
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("supportedProjectTypes", ArgumentSemantic.Copy)]
 		PHProjectTypeDescription [] GetSupportedProjectTypes ();
 
@@ -198,6 +210,14 @@ namespace PhotosUI {
 		[Abstract]
 		[Export ("finishProjectWithCompletionHandler:")]
 		void FinishProject (Action completion);
+
+		[Protected]
+		[Mac (10,14, onlyOn64: true)]
+		[Export ("typeDescriptionDataSourceForCategory:invalidator:")]
+		IPHProjectTypeDescriptionDataSource GetTypeDescriptionDataSource (string category, IPHProjectTypeDescriptionInvalidator invalidator);
+
+		[Wrap ("GetTypeDescriptionDataSource (category.GetConstant(), invalidator)")]
+		IPHProjectTypeDescriptionDataSource GetTypeDescriptionDataSource (PHProjectCategory category, IPHProjectTypeDescriptionInvalidator invalidator);
 	}
 
 	[Mac (10,13, onlyOn64 : true)]
@@ -227,6 +247,29 @@ namespace PhotosUI {
 
 		[Export ("initWithProjectType:title:description:image:")]
 		IntPtr Constructor (NSString projectType, string localizedTitle, [NullAllowed] string localizedDescription, [NullAllowed] UIImage image);
+
+		[Mac (10,14, onlyOn64: true)]
+		[Export ("initWithProjectType:title:attributedDescription:image:subtypeDescriptions:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSString projectType, string localizedTitle, [NullAllowed] NSAttributedString localizedAttributedDescription, [NullAllowed] UIImage image, PHProjectTypeDescription[] subtypeDescriptions);
+
+		[Mac (10,14, onlyOn64: true)]
+		[Export ("initWithProjectType:title:attributedDescription:image:canProvideSubtypes:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSString projectType, string localizedTitle, [NullAllowed] NSAttributedString localizedAttributedDescription, [NullAllowed] UIImage image, bool canProvideSubtypes);
+
+		[Mac (10,14, onlyOn64: true)]
+		[Export ("initWithProjectType:title:description:image:canProvideSubtypes:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSString projectType, string localizedTitle, [NullAllowed] string localizedDescription, [NullAllowed] UIImage image, bool canProvideSubtypes);
+
+		[Mac (10, 14, onlyOn64: true)]
+		[Export ("canProvideSubtypes")]
+		bool CanProvideSubtypes { get; }
+
+		[Mac (10, 14, onlyOn64: true)]
+		[NullAllowed, Export ("localizedAttributedDescription", ArgumentSemantic.Copy)]
+		NSAttributedString LocalizedAttributedDescription { get; }
 	}
 
 	[Mac (10,13, onlyOn64 : true)]
@@ -243,6 +286,10 @@ namespace PhotosUI {
 
 		[Export ("identifier")]
 		string Identifier { get; }
+
+		[Mac (10, 14, onlyOn64: true)]
+		[Export ("quality")]
+		double Quality { get; }
 	}
 
 	[Mac (10,13, onlyOn64 : true)]
@@ -275,6 +322,14 @@ namespace PhotosUI {
 
 		[Export ("regionsOfInterest")]
 		PHProjectRegionOfInterest[] RegionsOfInterest { get; }
+
+		[Mac (10, 14, onlyOn64: true)]
+		[Export ("horizontallyFlipped")]
+		bool HorizontallyFlipped { get; }
+
+		[Mac (10, 14, onlyOn64: true)]
+		[Export ("verticallyFlipped")]
+		bool VerticallyFlipped { get; }
 	}
 
 	[Mac (10,13, onlyOn64 : true)]
@@ -291,6 +346,22 @@ namespace PhotosUI {
 
 		[Export ("sections")]
 		PHProjectSection[] Sections { get; }
+
+		[Mac (10, 14, onlyOn64: true)]
+		[Export ("brandingEnabled")]
+		bool BrandingEnabled { get; }
+
+		[Mac (10, 14, onlyOn64: true)]
+		[Export ("pageNumbersEnabled")]
+		bool PageNumbersEnabled { get; }
+
+		[Mac (10, 14, onlyOn64: true)]
+		[NullAllowed, Export ("productIdentifier")]
+		string ProductIdentifier { get; }
+
+		[Mac (10, 14, onlyOn64: true)]
+		[NullAllowed, Export ("themeIdentifier")]
+		string ThemeIdentifier { get; }
 	}
 
 	[Mac (10,13, onlyOn64 : true)]
@@ -326,5 +397,82 @@ namespace PhotosUI {
 
 		[Export ("cloudAssetIdentifiers")]
 		PHCloudIdentifier[] CloudAssetIdentifiers { get; }
+
+		[Mac (10, 14, onlyOn64: true)]
+		[NullAllowed, Export ("backgroundColor")]
+		UIColor BackgroundColor { get; }
+	}
+
+	[Mac (10,14, onlyOn64: true)]
+	[NoiOS][NoTV]
+	[DisableDefaultCtor]
+	[BaseType (typeof(PHProjectElement))]
+	interface PHProjectMapElement : NSSecureCoding
+	{
+		[Export ("mapType")]
+		MKMapType MapType { get; }
+
+		[Export ("centerCoordinate")]
+		CLLocationCoordinate2D CenterCoordinate { get; }
+
+		[Export ("heading")]
+		double Heading { get; }
+
+		[Export ("pitch")]
+		nfloat Pitch { get; }
+
+		[Export ("altitude")]
+		double Altitude { get; }
+
+		[Export ("annotations", ArgumentSemantic.Copy)]
+		IMKAnnotation[] Annotations { get; }
+	}
+
+	interface IPHProjectTypeDescriptionDataSource {}
+	[Mac (10,14, onlyOn64: true)]
+	[NoiOS][NoTV]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface PHProjectTypeDescriptionDataSource
+	{
+		[Abstract]
+		[Export ("subtypesForProjectType:")]
+		PHProjectTypeDescription[] GetSubtypes (string projectType);
+
+		[Abstract]
+		[Export ("typeDescriptionForProjectType:")]
+		[return: NullAllowed]
+		PHProjectTypeDescription GetTypeDescription (string projectType);
+
+		[Abstract]
+		[Export ("footerTextForSubtypesOfProjectType:")]
+		[return: NullAllowed]
+		NSAttributedString GetFooterTextForSubtypes (string projectType);
+
+		[Export ("extensionWillDiscardDataSource")]
+		void WillDiscardDataSource ();
+	}
+
+	interface IPHProjectTypeDescriptionInvalidator {}
+	[Mac (10,14, onlyOn64: true)]
+	[NoiOS][NoTV]
+	[Protocol]
+	interface PHProjectTypeDescriptionInvalidator
+	{
+		[Abstract]
+		[Export ("invalidateTypeDescriptionForProjectType:")]
+		void InvalidateTypeDescription (string projectType);
+
+		[Abstract]
+		[Export ("invalidateFooterTextForSubtypesOfProjectType:")]
+		void InvalidateFooterTextForSubtypes (string projectType);
+	}
+
+	[iOS (8,0)]
+	[NoMac][NoTV]
+	[BaseType (typeof (NSExtensionContext))]
+	interface PHEditingExtensionContext
+	{
+
 	}
 }

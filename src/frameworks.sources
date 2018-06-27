@@ -1197,7 +1197,7 @@ PHOTOS_SOURCES = \
 
 # PhotosUI
 
-PHOTOSUI_CORE_SOURCES = \
+PHOTOSUI_API_SOURCES = \
 	PhotosUI/PHEnums.cs \
 
 # PrintCode

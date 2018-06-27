@@ -337,4 +337,18 @@ namespace Photos
 		Unknown,
 		Aborted,
 	}
+
+	[Mac (10,14, onlyOn64 : true)]
+	[NoiOS][NoTV]
+	public enum FigEXIFCustomRenderedValue : short {
+		NotCustom = 0,
+		Custom = 1,
+		HDRImage = 2,
+		HDRPlusEV0_HDRImage = 3,
+		HDRPlusEV0_EV0Image = 4,
+		PanoramaImage = 6,
+		SDOFImage = 7,
+		SDOFPlusOriginal_SDOFImage = 8,
+		SDOFPlusOriginal_OriginalImage = 9,
+	}
 }
