@@ -136,11 +136,177 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern NWParametersExpiredDnsBehavior nw_parameters_get_expired_dns_behavior (nw_parameters_t parameters);
 
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWParametersExpiredDnsBehavior ExpiredDnsBehavior {
 			get => nw_parameters_get_expired_dns_behavior (handle);
 			set => nw_parameters_set_expired_dns_behavior (handle, value);
 		}
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_parameters_require_interface (nw_parameters_t parameters, IntPtr handleInterface);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public void RequireInterface (NWInterface iface)
+		{
+			nw_parameters_require_interface (handle, iface == null ? IntPtr.Zero : iface.handle);
+		}
+		
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern IntPtr nw_parameters_copy_required_interface (nw_parameters_t parameters);
+		
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public NWInterface Interface {
+			get {
+				var iface = nw_parameters_copy_required_interface (handle);
+
+				if (iface == IntPtr.Zero)
+					return null;
+
+				return new NWInterface (handle, owns: true);
+			}
+		}
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_parameters_prohibit_interface (nw_parameters_t parameters, IntPtr handleInterface);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public void ProhibitInterface (NWInterface iface)
+		{
+			if (iface == null)
+				throw new ArgumentNullException (nameof (iface));
+
+			nw_parameters_prohibit_interface (handle, iface.handle);
+		}
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_parameters_clear_prohibited_interfaces (nw_parameters_t parameters);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public void ClearProhibitedInterfaces ()
+		{
+			nw_parameters_clear_prohibited_interfaces (handle);
+		}
+		
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_parameters_set_required_interface_type (nw_parameters_t parameters, NWInterfaceType ifaceType);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern NWInterfaceType nw_parameters_get_required_interface_type (nw_parameters_t parameters);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public NWInterfaceType RequiredIntefaceType {
+			get => nw_parameters_get_required_interface_type (handle);
+			set => nw_parameters_set_required_interface_type (handle, value);
+		}
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_parameters_prohibit_interface_type (nw_parameters_t parameters, NWInterfaceType type);
+		
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public void ProhibitInterfaceType (NWInterfaceType ifaceType)
+		{
+			nw_parameters_prohibit_interface_type (handle, ifaceType);
+		}
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_parameters_clear_prohibited_interface_types (nw_parameters_t parameters);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public void ClearProhibitedInterfaceTypes ()
+		{
+			nw_parameters_clear_prohibited_interface_types (handle);
+		}
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		static extern bool nw_parameters_get_prohibit_expensive (IntPtr handle);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_parameters_set_prohibit_expensive (IntPtr handle, [MarshalAs (UnmanagedType.I1)] bool prohibit_expensive);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public bool ProhibitExpensive {
+			get => nw_parameters_get_prohibit_expensive (handle);
+			set => nw_parameters_set_prohibit_expensive (handle, value);
+		}
+	
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		static extern bool nw_parameters_get_reuse_local_address (IntPtr handle);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_parameters_set_reuse_local_address (IntPtr handle, [MarshalAs (UnmanagedType.I1)] bool reuse_local_address);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public bool ReuseLocalAddress {
+			get => nw_parameters_get_reuse_local_address (handle);
+			set => nw_parameters_set_reuse_local_address (handle, value);
+		}
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		static extern bool nw_parameters_get_fast_open_enabled (IntPtr handle);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_parameters_set_fast_open_enabled (IntPtr handle, [MarshalAs (UnmanagedType.I1)] bool fast_open_enabled);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public bool FastOpenEnabled {
+			get => nw_parameters_get_fast_open_enabled (handle);
+			set => nw_parameters_set_fast_open_enabled (handle, value);
+		}
+	
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern NWServiceClass nw_parameters_get_service_class (IntPtr handle);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_parameters_set_service_class (IntPtr handle, NWServiceClass service_class);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public NWServiceClass ServiceClass {
+			get => nw_parameters_get_service_class (handle);
+			set => nw_parameters_set_service_class (handle, value);
+		}
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern IntPtr nw_parameters_copy_local_endpoint (IntPtr handle);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_parameters_set_local_endpoint (IntPtr handle, IntPtr endpoint);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public NWEndpoint Endpoint {
+			get {
+				var x = nw_parameters_copy_local_endpoint (handle);
+				if (x == IntPtr.Zero)
+					return null;
+
+				return new NWEndpoint (handle, owns: true);
+			}
 			
+			set {
+				nw_parameters_set_local_endpoint (handle, value == null ? IntPtr.Zero : value.handle);
+			}
+		}
 	}
 
 	public enum NWParametersExpiredDnsBehavior {

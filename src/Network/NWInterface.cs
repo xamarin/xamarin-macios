@@ -18,7 +18,7 @@ using OS_nw_interface=System.IntPtr;
 namespace Network {
 	
 	public class NWInterface : INativeObject, IDisposable {
-		IntPtr handle;
+		internal IntPtr handle;
 		public IntPtr Handle {
 			get { return handle; }
 		}

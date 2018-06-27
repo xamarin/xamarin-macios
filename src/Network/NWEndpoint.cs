@@ -25,7 +25,7 @@ namespace Network {
 	}
 	
 	public class NWEndpoint : INativeObject, IDisposable {
-		IntPtr handle;
+		internal IntPtr handle;
 		public IntPtr Handle {
 			get { return handle; }
 		}
