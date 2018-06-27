@@ -8,6 +8,7 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
@@ -53,23 +54,23 @@ namespace Network {
 			}
 		}
 
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_definition nw_protocol_options_copy_definition (OS_nw_protocol_options options);
 
 		public NWProtocolDefinition ProtocolDefinition => new NWProtocolDefinition (nw_protocol_options_copy_definition (handle), owns: true);
 
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_ip_options_set_version (OS_nw_protocol_options options, NWIPVersion version);
 
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void SetVersion (NWIPVersion version)
 		{
 			nw_ip_options_set_version (handle, version);
 		}
 
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_ip_options_set_hop_limit (OS_nw_protocol_options options, byte hop_limit);
 	
@@ -78,21 +79,21 @@ namespace Network {
 			nw_ip_options_set_hop_limit (handle, hopLimit);
 		}
 
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_ip_options_set_use_minimum_mtu (OS_nw_protocol_options options, bool use_minimum_mtu);
+		static extern void nw_ip_options_set_use_minimum_mtu (OS_nw_protocol_options options, [MarshalAs(UnmanagedType.I1)]bool use_minimum_mtu);
 	
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void SetUseMinimumMtu (bool useMinimumMtu)
 		{
 			nw_ip_options_set_use_minimum_mtu (handle, useMinimumMtu);
 		}
 
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_ip_options_set_disable_fragmentation (OS_nw_protocol_options options, bool disable_fragmentation);
+		static extern void nw_ip_options_set_disable_fragmentation (OS_nw_protocol_options options, [MarshalAs(UnmanagedType.I1)]bool disable_fragmentation);
 
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void SetDisableFragmentation (bool disableFragmentation)
 		{
 			nw_ip_options_set_disable_fragmentation (handle, disableFragmentation);

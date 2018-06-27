@@ -8,6 +8,7 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
@@ -59,7 +60,7 @@ namespace Network {
 			}
 		}
 
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern nw_parameters_t nw_parameters_create ();
 
@@ -68,7 +69,7 @@ namespace Network {
 			handle = nw_parameters_create ();
 		}
 
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern nw_parameters_t nw_parameters_copy (nw_parameters_t handle);
 
@@ -77,59 +78,61 @@ namespace Network {
 			return new NWParameters (nw_parameters_copy (handle), owns: true);
 		}
 		
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		static extern void nw_parameters_set_multipath_service (nw_parameters_t parameters, NWMultiPathService multipath_service);
 	
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern NWMultiPathService nw_parameters_get_multipath_service (nw_parameters_t parameters);
 
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWMultiPathService MultipathService {
 			get => nw_parameters_get_multipath_service (handle);
 			set => nw_parameters_set_multipath_service (handle, value);
 		}
 
 		
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_parameters_copy_default_protocol_stack (nw_parameters_t parameters);
 
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWProtocolStack ProtocolStack => new NWProtocolStack (nw_parameters_copy_default_protocol_stack (handle), owns: true);
 	
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_parameters_set_local_only (nw_parameters_t parameters, bool local_only);
+		static extern void nw_parameters_set_local_only (nw_parameters_t parameters, [MarshalAs(UnmanagedType.I1)] bool local_only);
 
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]			
 		static extern bool nw_parameters_get_local_only (nw_parameters_t parameters);
 
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public bool LocalOnly {
 			get => nw_parameters_get_local_only (handle);
 			set => nw_parameters_set_local_only (handle, value);
 		}
 	
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_parameters_set_prefer_no_proxy (nw_parameters_t parameters, bool prefer_no_proxy);
+		static extern void nw_parameters_set_prefer_no_proxy (nw_parameters_t parameters, [MarshalAs(UnmanagedType.I1)] bool prefer_no_proxy);
 	
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool nw_parameters_get_prefer_no_proxy (nw_parameters_t parameters);
 
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public bool PreferNoProxy {
 			get => nw_parameters_get_prefer_no_proxy (handle);
 			set => nw_parameters_set_prefer_no_proxy (handle, value);
 		}
 	
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		static extern void nw_parameters_set_expired_dns_behavior (nw_parameters_t parameters, NWParametersExpiredDnsBehavior expired_dns_behavior);
 	
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern NWParametersExpiredDnsBehavior nw_parameters_get_expired_dns_behavior (nw_parameters_t parameters);
 

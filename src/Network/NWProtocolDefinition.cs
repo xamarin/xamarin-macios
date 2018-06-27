@@ -8,6 +8,7 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
@@ -58,8 +59,9 @@ namespace Network {
 			}
 		}
 
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]			
 		static extern bool nw_protocol_definition_is_equal (OS_nw_protocol_definition definition1, OS_nw_protocol_definition definition2);
 
 		public bool Equals (object other)
@@ -71,11 +73,11 @@ namespace Network {
 			return nw_protocol_definition_is_equal (handle, (other as NWProtocolDefinition).handle);
 		}
 
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_definition nw_protocol_copy_ip_definition ();
 		
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public static NWProtocolDefinition IPDefinition => new NWProtocolDefinition (nw_protocol_copy_ip_definition (), owns: true);
 
 		

@@ -8,6 +8,7 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
@@ -40,7 +41,7 @@ namespace Network {
 			get { return handle; }
 		}
 
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_metadata nw_ip_create_metadata ();
 
@@ -79,42 +80,43 @@ namespace Network {
 			}
 		}
 
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_definition nw_protocol_metadata_copy_definition (OS_nw_protocol_metadata metadata);
 
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWProtocolDefinition ProtocolDefinition => new NWProtocolDefinition (nw_protocol_metadata_copy_definition (handle), owns: true);
 
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool nw_protocol_metadata_is_ip (OS_nw_protocol_metadata metadata);
 	
 		public bool IsIP => nw_protocol_metadata_is_ip (handle);
 
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_ip_metadata_set_ecn_flag (OS_nw_protocol_metadata metadata, NWIPEcnFlag ecn_flag);
 
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern NWIPEcnFlag nw_ip_metadata_get_ecn_flag (OS_nw_protocol_metadata metadata);
 			
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWIPEcnFlag IPMetadataEcnFlag {
 			get => nw_ip_metadata_get_ecn_flag (handle);
 			set => nw_ip_metadata_set_ecn_flag (handle, value);
 		}
 
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_ip_metadata_set_service_class (OS_nw_protocol_metadata metadata, NWServiceClass service_class);
 	
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern NWServiceClass nw_ip_metadata_get_service_class (OS_nw_protocol_metadata metadata);
 		
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWServiceClass ServiceClass {
 			get => nw_ip_metadata_get_service_class (handle);
 			set => nw_ip_metadata_set_service_class (handle, value);
