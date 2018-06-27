@@ -11,9 +11,13 @@ namespace Extrospection {
 		public static IList<string> On (string fx)
 		{
 			List<string> list;
-			if (!lists.TryGetValue (fx, out list)) {
+
+			string existingName = lists.Keys.FirstOrDefault (x => String.Compare (x, fx, true) == 0);
+			if (existingName == null) {
 				list = new List<string> ();
 				lists.Add (fx, list); 
+			} else {
+				list = lists[existingName];
 			}
 			return list;
 		}
