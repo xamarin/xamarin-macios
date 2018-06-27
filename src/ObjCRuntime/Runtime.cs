@@ -1600,10 +1600,11 @@ namespace ObjCRuntime {
 		public static void ReleaseBlockOnMainThread (IntPtr block)
 		{
 			if (release_block_on_main_thread == null)
-				release_block_on_main_thread = LookupInternalFunction<Action<IntPtr>> ("xamarin_release_block_on_main_thread");
+				release_block_on_main_thread = LookupInternalFunction<intptr_func> ("xamarin_release_block_on_main_thread");
 			release_block_on_main_thread (block);
 		}
-		static Action<IntPtr> release_block_on_main_thread;
+		delegate void intptr_func (IntPtr block);
+		static intptr_func release_block_on_main_thread;
 #else
 		[DllImport ("__Internal", EntryPoint = "xamarin_release_block_on_main_thread")]
 		public static extern void ReleaseBlockOnMainThread (IntPtr block);
