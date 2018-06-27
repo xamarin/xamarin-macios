@@ -7900,11 +7900,12 @@ namespace AppKit {
 
 #if XAMCORE_4_0
 		[Export ("itemArray", ArgumentSemantic.Copy)]
-		NSMenuItem[] ItemArray { get; set; }
+		NSMenuItem[] ItemArray { get; [Mac (10, 14)] set; }
 #else
 		[Export ("itemArray")]
 		NSMenuItem [] ItemArray ();
 
+		[Mac (10, 14)]
 		[Export ("setItemArray:")]
 		void SetItemArray (NSMenuItem [] items);
 #endif
