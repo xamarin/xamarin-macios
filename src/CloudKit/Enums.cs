@@ -234,4 +234,13 @@ namespace CloudKit
 		TensOfGigabytes,
 		HundredsOfGigabytes,
 	}
+
+	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Native]
+	public enum CKShareParticipantRole : long {
+		Unknown = 0,
+		Owner = 1,
+		PrivateUser = 3,
+		PublicUser = 4,
+	}
 }
