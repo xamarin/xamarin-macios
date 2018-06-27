@@ -229,6 +229,13 @@ namespace Introspection {
 				case "HMHomeAccessControl":
 				case "HMAccessControl":
 					return true;
+				// iOS 12
+				case "ARDirectionalLightEstimate":
+				case "ARFrame":
+				case "ARLightEstimate":
+				case "ASCredentialProviderExtensionContext":
+				case "NSManagedObjectID":
+					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
 				case "CLKComplicationTemplateCircularSmallRingImage":
@@ -385,6 +392,9 @@ namespace Introspection {
 				case "HMHomeAccessControl":
 				case "HMAccessControl":
 					return true;
+				// Xcode 10
+				case "ASCredentialProviderExtensionContext":
+					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
 				case "CLKComplicationTemplateCircularSmallRingImage":
@@ -484,6 +494,9 @@ namespace Introspection {
 				case "CLKComplicationTimelineEntry":
 					return true;
 #endif
+				// Xcode 10
+				case "ASCredentialProviderExtensionContext":
+					return true;
 				}
 				break;
 			case "NSMutableCopying":
@@ -497,6 +510,9 @@ namespace Introspection {
 				case "INRestaurantGuest":
 				case "INPerson":
 				case "HMCharacteristicEvent": // Selectors not available on 32 bit
+					return true;
+				// iOS 12
+				case "UNNotificationCategory":
 					return true;
 				}
 				break;

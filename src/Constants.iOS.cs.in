@@ -57,6 +57,7 @@ namespace MonoTouch {
 		public const string AudioUnitLibrary = "/System/Library/Frameworks/AudioToolbox.framework/AudioToolbox";
 		public const string AccelerateImageLibrary = "/System/Library/Frameworks/Accelerate.framework/Frameworks/vImage.framework/vImage";
 		// iOS 6
+		public const string AdSupportLibrary = "/System/Library/Frameworks/AdSupport.framework/AdSupport";
 		public const string MediaToolboxLibrary = "/System/Library/Frameworks/MediaToolbox.framework/MediaToolbox";
 		public const string PassKitLibrary = "/System/Library/Frameworks/PassKit.framework/PassKit";
 		public const string SocialLibrary = "/System/Library/Frameworks/Social.framework/Social";
@@ -122,5 +123,8 @@ namespace MonoTouch {
 		public const string BusinessChatLibrary = "/System/Library/Frameworks/BusinessChat.framework/BusinessChat";
 		// iOS 11.4
 		public const string ClassKitLibrary = "/System/Library/Frameworks/ClassKit.framework/ClassKit";
+		// iOS 12.0
+		public const string AuthenticationServicesLibrary = "/System/Library/Frameworks/AuthenticationServices.framework/AuthenticationServices";
+		public const string CarPlayLibrary = "/System/Library/Frameworks/CarPlay.framework/CarPlay";
 	}
 }

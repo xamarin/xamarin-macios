@@ -911,7 +911,8 @@ namespace SceneKit {
 		[Export ("geometryWithMDLMesh:")]
 		SCNGeometry FromMesh (MDLMesh mesh);
 
-		[NoWatch, NoTV, Mac (10,13, onlyOn64: true), iOS (11,0)]
+		[NoWatch, Mac (10,13, onlyOn64: true), iOS (11,0)]
+		[TV (12,0)]
 		[NullAllowed, Export ("tessellator", ArgumentSemantic.Retain)]
 		SCNGeometryTessellator Tessellator { get; set; }
 #endif
@@ -1053,7 +1054,8 @@ namespace SceneKit {
 	}
 
 #if XAMCORE_2_0 && !WATCH
-	[NoWatch, NoTV, Mac (10, 13, onlyOn64: true), iOS (11,0)]
+	[NoWatch, Mac (10, 13, onlyOn64: true), iOS (11,0)]
+	[TV (12,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface SCNGeometryTessellator : NSCopying, NSSecureCoding

@@ -20,6 +20,7 @@ namespace xharness
 		public bool IncludeClassicMac = true;
 		public bool IncludeBcl;
 		public bool IncludeMac = true;
+		public bool IncludeMac32;
 		public bool IncludeiOS = true;
 		public bool IncludeiOSExtensions;
 		public bool IncludetvOS = true;
@@ -558,6 +559,7 @@ namespace xharness
 			SetEnabled (labels, "ios-extensions", ref IncludeiOSExtensions);
 			SetEnabled (labels, "ios-device", ref IncludeDevice);
 			SetEnabled (labels, "xtro", ref IncludeXtro);
+			SetEnabled (labels, "mac-32", ref IncludeMac32);
 			SetEnabled (labels, "all", ref IncludeAll);
 
 			// enabled by default
@@ -647,6 +649,7 @@ namespace xharness
 
 			foreach (var project in Harness.MacTestProjects) {
 				bool ignored = !IncludeMac;
+				bool ignored32 = !IncludeMac || !IncludeMac32;
 				if (!IncludeMmpTest && project.Path.Contains ("mmptest"))
 					ignored = true;
 
@@ -678,7 +681,7 @@ namespace xharness
 					if (project.IsNUnitProject) {
 						var dll = Path.Combine (Path.GetDirectoryName (build.TestProject.Path), project.Xml.GetOutputAssemblyPath (build.ProjectPlatform, build.ProjectConfiguration).Replace ('\\', '/'));
 						exec = new NUnitExecuteTask (build) {
-							Ignored = ignored || !IncludeClassicMac,
+							Ignored = ignored32 || !IncludeClassicMac,
 							TestLibrary = dll,
 							TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.ConsoleRunner.3.5.0", "tools", "nunit3-console.exe"),
 							WorkingDirectory = Path.GetDirectoryName (dll),
@@ -689,7 +692,7 @@ namespace xharness
 						execs = new [] { exec };
 					} else {
 						exec = new MacExecuteTask (build) {
-							Ignored = ignored || !IncludeClassicMac,
+							Ignored = ignored32 || !IncludeClassicMac,
 							BCLTest = project.IsBclTest,
 							TestName = project.Name,
 							IsUnitTest = true,
@@ -702,10 +705,10 @@ namespace xharness
 					foreach (var e in execs) {
 						if (project.GenerateVariations) {
 							Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_Unified, "-unified", ignored));
-							Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_Unified32, "-unified-32", ignored));
+							Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_Unified32, "-unified-32", ignored32));
 							if (project.GenerateFull) {
 								Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_UnifiedXM45, "-unifiedXM45", ignored));
-								Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_UnifiedXM45_32, "-unifiedXM45-32", ignored));
+								Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_UnifiedXM45_32, "-unifiedXM45-32", ignored32));
 							}
 						}
 					}

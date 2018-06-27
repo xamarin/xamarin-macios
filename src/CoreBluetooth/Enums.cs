@@ -116,6 +116,8 @@ namespace CoreBluetooth {
 		ConnectionLimitReached,
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
 		UnknownDevice,
+		[iOS (12,0)][TV (12,0)][Mac (10,14)][Watch (5,0)]
+		OperationNotSupported,
 	}
 
 	[Watch (4,0)]

@@ -7,7 +7,6 @@
 !missing-enum! vDSP_DFT_Direction not bound
 !missing-pinvoke! appleblas_dgeadd is not bound
 !missing-pinvoke! appleblas_sgeadd is not bound
-!missing-pinvoke! ATLU_DestroyThreadMemory is not bound
 !missing-pinvoke! BNNSFilterApply is not bound
 !missing-pinvoke! BNNSFilterApplyBatch is not bound
 !missing-pinvoke! BNNSFilterCreateConvolutionLayer is not bound

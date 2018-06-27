@@ -1,0 +1,5 @@
+!missing-enum! PKAddPaymentPassStyle not bound
+!missing-selector! PKAddPaymentPassRequestConfiguration::setStyle: not bound
+!missing-selector! PKAddPaymentPassRequestConfiguration::style not bound
+!missing-selector! PKPaymentButton::cornerRadius not bound
+!missing-selector! PKPaymentButton::setCornerRadius: not bound

@@ -343,6 +343,7 @@
 !missing-selector! IOBluetoothL2CAPChannel::setDelegate: not bound
 !missing-selector! IOBluetoothL2CAPChannel::setDelegate:withConfiguration: not bound
 !missing-selector! IOBluetoothL2CAPChannel::writeAsync:length:refcon: not bound
+!missing-selector! IOBluetoothL2CAPChannel::writeAsyncTrap:length:refcon: not bound
 !missing-selector! IOBluetoothL2CAPChannel::writeSync:length: not bound
 !missing-selector! IOBluetoothOBEXSession::initWithDevice:channelID: not bound
 !missing-selector! IOBluetoothOBEXSession::initWithIncomingRFCOMMChannel:eventSelector:selectorTarget:refCon: not bound

@@ -50,6 +50,15 @@ namespace Messages {
 		UrlExceedsMaxSize,
 		SendWithoutRecentInteraction,
 		SendWhileNotVisible,
+		APIUnavailableInPresentationContext,
+	}
+
+	[iOS (12,0)]
+	[Native]
+	public enum MSMessagesAppPresentationContext : long
+	{
+		Messages,
+		Media,
 	}
 
 	[iOS (11,0)]
@@ -114,6 +123,10 @@ namespace Messages {
 
 		[Export ("didTransitionToPresentationStyle:")]
 		void DidTransition (MSMessagesAppPresentationStyle presentationStyle);
+
+		[iOS (12,0)]
+		[Export ("presentationContext")]
+		MSMessagesAppPresentationContext PresentationContext { get; }
 	}
 
 	[iOS (10,0)]

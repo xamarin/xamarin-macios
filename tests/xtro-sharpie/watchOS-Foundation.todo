@@ -1,0 +1,65 @@
+!missing-field! NSNonOwnedPointerHashCallBacks not bound
+!missing-field! NSNonOwnedPointerMapKeyCallBacks not bound
+!missing-field! NSNonOwnedPointerMapValueCallBacks not bound
+!missing-field! NSNonOwnedPointerOrNullMapKeyCallBacks not bound
+!missing-field! NSNonRetainedObjectHashCallBacks not bound
+!missing-field! NSNonRetainedObjectMapKeyCallBacks not bound
+!missing-field! NSNonRetainedObjectMapValueCallBacks not bound
+!missing-field! NSObjectHashCallBacks not bound
+!missing-field! NSObjectMapKeyCallBacks not bound
+!missing-field! NSObjectMapValueCallBacks not bound
+!missing-field! NSOwnedObjectIdentityHashCallBacks not bound
+!missing-field! NSOwnedPointerHashCallBacks not bound
+!missing-field! NSOwnedPointerMapKeyCallBacks not bound
+!missing-field! NSOwnedPointerMapValueCallBacks not bound
+!missing-field! NSPointerToStructHashCallBacks not bound
+!missing-field! NSSecureUnarchiveFromDataTransformerName not bound
+!missing-pinvoke! NSAllHashTableObjects is not bound
+!missing-pinvoke! NSAllMapTableKeys is not bound
+!missing-pinvoke! NSAllMapTableValues is not bound
+!missing-pinvoke! NSCompareHashTables is not bound
+!missing-pinvoke! NSCompareMapTables is not bound
+!missing-pinvoke! NSCopyHashTableWithZone is not bound
+!missing-pinvoke! NSCopyMapTableWithZone is not bound
+!missing-pinvoke! NSCountHashTable is not bound
+!missing-pinvoke! NSCountMapTable is not bound
+!missing-pinvoke! NSCreateHashTable is not bound
+!missing-pinvoke! NSCreateHashTableWithZone is not bound
+!missing-pinvoke! NSCreateMapTable is not bound
+!missing-pinvoke! NSCreateMapTableWithZone is not bound
+!missing-pinvoke! NSEndHashTableEnumeration is not bound
+!missing-pinvoke! NSEndMapTableEnumeration is not bound
+!missing-pinvoke! NSEnumerateHashTable is not bound
+!missing-pinvoke! NSEnumerateMapTable is not bound
+!missing-pinvoke! NSFreeHashTable is not bound
+!missing-pinvoke! NSFreeMapTable is not bound
+!missing-pinvoke! NSHashGet is not bound
+!missing-pinvoke! NSHashInsert is not bound
+!missing-pinvoke! NSHashInsertIfAbsent is not bound
+!missing-pinvoke! NSHashInsertKnownAbsent is not bound
+!missing-pinvoke! NSHashRemove is not bound
+!missing-pinvoke! NSMapGet is not bound
+!missing-pinvoke! NSMapInsert is not bound
+!missing-pinvoke! NSMapInsertIfAbsent is not bound
+!missing-pinvoke! NSMapInsertKnownAbsent is not bound
+!missing-pinvoke! NSMapMember is not bound
+!missing-pinvoke! NSMapRemove is not bound
+!missing-pinvoke! NSNextHashEnumeratorItem is not bound
+!missing-pinvoke! NSNextMapEnumeratorPair is not bound
+!missing-pinvoke! NSResetHashTable is not bound
+!missing-pinvoke! NSResetMapTable is not bound
+!missing-pinvoke! NSStringFromHashTable is not bound
+!missing-pinvoke! NSStringFromMapTable is not bound
+!missing-selector! +NSKeyedArchiver::archivedDataWithRootObject:requiringSecureCoding:error: not bound
+!missing-selector! +NSKeyedUnarchiver::unarchivedObjectOfClass:fromData:error: not bound
+!missing-selector! +NSKeyedUnarchiver::unarchivedObjectOfClasses:fromData:error: not bound
+!missing-selector! +NSSecureUnarchiveFromDataTransformer::allowedTopLevelClasses not bound
+!missing-selector! +NSUserActivity::deleteAllSavedUserActivitiesWithCompletionHandler: not bound
+!missing-selector! +NSUserActivity::deleteSavedUserActivitiesWithPersistentIdentifiers:completionHandler: not bound
+!missing-selector! NSKeyedArchiver::initRequiringSecureCoding: not bound
+!missing-selector! NSKeyedUnarchiver::initForReadingFromData:error: not bound
+!missing-selector! NSUserActivity::isEligibleForPrediction not bound
+!missing-selector! NSUserActivity::persistentIdentifier not bound
+!missing-selector! NSUserActivity::setEligibleForPrediction: not bound
+!missing-selector! NSUserActivity::setPersistentIdentifier: not bound
+!missing-type! NSSecureUnarchiveFromDataTransformer not bound

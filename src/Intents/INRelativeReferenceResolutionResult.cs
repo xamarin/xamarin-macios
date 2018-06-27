@@ -17,26 +17,26 @@ namespace Intents {
 
 		public static INRelativeReferenceResolutionResult GetSuccess (INRelativeReference resolvedValue)
 		{
-#if IOS
+#if __WATCHOS__
+			throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+#elif __IOS__
 			if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
-#elif WATCH
-			if (WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (4, 0))
-#endif
 				return SuccessWithResolvedRelativeReference (resolvedValue);
 			else
 				return SuccessWithResolvedValue (resolvedValue);
+#endif
 		}
 
 		public static INRelativeReferenceResolutionResult GetConfirmationRequired (INRelativeReference valueToConfirm)
 		{
-#if IOS
+#if __WATCHOS__
+			throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+#elif __IOS__
 			if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
-#elif WATCH
-			if (WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (4, 0))
-#endif
 				return ConfirmationRequiredWithRelativeReferenceToConfirm (valueToConfirm);
 			else
 				return ConfirmationRequiredWithValueToConfirm (valueToConfirm);
+#endif
 		}
 	}
 }

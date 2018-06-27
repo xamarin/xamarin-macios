@@ -1,12 +1,5 @@
 !missing-field! gICDCallbackFunctions not bound
 !missing-field! gICDScannerCallbackFunctions not bound
-!missing-field! ICLoggingEnabled not bound
-!missing-field! ICLoggingLevelBasicInfo not bound
-!missing-field! ICLoggingLevelError not bound
-!missing-field! ICLoggingLevelMask not bound
-!missing-field! ICLoggingLevelTimingInfo not bound
-!missing-field! ICLoggingLevelVerboseInfo not bound
-!missing-field! ICLoggingLevelWarning not bound
 !missing-field! kICABluetoothAddressKey not bound
 !missing-field! kICABluetoothTransportType not bound
 !missing-field! kICABonjourServiceNameKey not bound
@@ -221,4 +214,3 @@
 !missing-pinvoke! ICDScannerNewObjectInfoCreated is not bound
 !missing-pinvoke! ICDSendNotification is not bound
 !missing-pinvoke! ICDSendNotificationAndWaitForReply is not bound
-!missing-pinvoke! ICDStatusChanged is not bound

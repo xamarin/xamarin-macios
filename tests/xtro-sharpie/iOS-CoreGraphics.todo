@@ -1,0 +1,7 @@
+!missing-enum! CGImagePixelFormatInfo not bound
+!missing-pinvoke! CGColorSpaceCopyPropertyList is not bound
+!missing-pinvoke! CGColorSpaceCreateWithPropertyList is not bound
+!missing-pinvoke! CGImageGetByteOrderInfo is not bound
+!missing-pinvoke! CGImageGetPixelFormatInfo is not bound
+!missing-pinvoke! CGPDFArrayApplyBlock is not bound
+!missing-pinvoke! CGPDFDictionaryApplyBlock is not bound

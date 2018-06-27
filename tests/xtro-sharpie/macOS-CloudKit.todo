@@ -1,0 +1,16 @@
+!missing-enum! CKShareParticipantRole not bound
+!missing-protocol! CKRecordKeyValueSetting not bound
+!missing-protocol-conformance! CKRecord should conform to CKRecordKeyValueSetting (defined in 'CKRecordKeyValueSettingConformance' category)
+!missing-selector! CKFetchRecordZoneChangesConfiguration::desiredKeys not bound
+!missing-selector! CKFetchRecordZoneChangesConfiguration::previousServerChangeToken not bound
+!missing-selector! CKFetchRecordZoneChangesConfiguration::resultsLimit not bound
+!missing-selector! CKFetchRecordZoneChangesConfiguration::setDesiredKeys: not bound
+!missing-selector! CKFetchRecordZoneChangesConfiguration::setPreviousServerChangeToken: not bound
+!missing-selector! CKFetchRecordZoneChangesConfiguration::setResultsLimit: not bound
+!missing-selector! CKFetchRecordZoneChangesOperation::configurationsByRecordZoneID not bound
+!missing-selector! CKFetchRecordZoneChangesOperation::initWithRecordZoneIDs:configurationsByRecordZoneID: not bound
+!missing-selector! CKFetchRecordZoneChangesOperation::setConfigurationsByRecordZoneID: not bound
+!missing-selector! CKShareMetadata::participantRole not bound
+!missing-selector! CKShareParticipant::role not bound
+!missing-selector! CKShareParticipant::setRole: not bound
+!missing-type! CKFetchRecordZoneChangesConfiguration not bound
