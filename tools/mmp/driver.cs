@@ -1366,6 +1366,10 @@ namespace Xamarin.Bundler {
 				}
 
 				args.Append ("-liconv -x objective-c++ ");
+				if (XcodeVersion.Major > 10) {
+					// Xcode 10 doesn't ship with libstdc++
+					args.Append ("-stdlib:libc++");
+				}
 				args.Append ("-I").Append (StringUtils.Quote (Path.Combine (GetXamMacPrefix (), "include"))).Append (' ');
 				if (registrarPath != null)
 					args.Append (StringUtils.Quote (registrarPath)).Append (' ');

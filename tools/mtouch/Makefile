@@ -388,7 +388,7 @@ bin/Makefile/Mono.Cecil.Mdb.dll: $(MONO_CECIL_MDB_DLL) | bin/Makefile
 
 # In Xcode 10 beta 1 simd/vector.h won't compile as Objective-C++ (can't find 'cmath'), so include a directory that contains the cmath file.
 # This is filed as rdar://40824697
-REGISTRAR_CFLAGS=-I$(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1
+REGISTRAR_CFLAGS=-stdlib=libc++
 
 %.registrar.ios.i386.a:   %.registrar.ios.i386.m      %.registrar.ios.i386.h
 	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(SIMULATOR86_CFLAGS)    $(REGISTRAR_CFLAGS) -x objective-c++ -o $@ -c $< -Wall -Wno-unguarded-availability-new -I$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/usr/include
