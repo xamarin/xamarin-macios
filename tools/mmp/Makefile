@@ -23,6 +23,7 @@ linker_sources = \
 	$(LINKER_DIR)/Linker/Pipeline.cs				\
 	$(LINKER_DIR)/Linker/AssemblyResolver.cs			\
 	$(LINKER_DIR)/Linker/TypePreserve.cs			\
+	$(LINKER_DIR)/Linker/TypeNameParser.cs			\
 	$(LINKER_DIR)/Linker/Annotations.cs			\
 	$(LINKER_DIR)/Linker/LinkContext.cs			\
 	$(LINKER_DIR)/Linker/ILogger.cs				\
@@ -38,6 +39,7 @@ linker_sources = \
 	$(LINKER_DIR)/Linker/MarkingHelpers.cs		\
 	$(LINKER_DIR)/Linker/Tracer.cs		\
 	$(LINKER_DIR)/Linker/TypeReferenceExtensions.cs		\
+	$(LINKER_DIR)/Linker/AssemblyUtilities.cs	\
 	$(LINKER_DIR)/Linker.Steps/BaseStep.cs			\
 	$(LINKER_DIR)/Linker.Steps/LoadReferencesStep.cs		\
 	$(LINKER_DIR)/Linker.Steps/LoadI18nAssemblies.cs		\
@@ -147,8 +149,10 @@ LOCAL_MMP = \
 	Mono.Cecil.dll \
 	Mono.Cecil.Mdb.dll \
 
-mmp.exe: Makefile $(MONO_CECIL_DLL) $(MONO_CECIL_MDB_DLL) $(mmp_sources) config config_mobile Info.plist.tmpl Info-framework.plist.tmpl $(tuner_sources) $(linker_resources)
-	$(Q_CSC) $(SYSTEM_CSC) -unsafe -out:mmp.exe $(DEFINES) -r:$(MONO_CECIL_DLL) -r:$(MONO_CECIL_MDB_DLL) -r:Mono.Security.dll  -resource:config -resource:config_mobile -resource:machine.4_5.config -resource:Info.plist.tmpl -resource:Info-framework.plist.tmpl $(tuner_sources) $(mmp_sources) -debug:portable -nologo -deterministic
+mmp.exe: Makefile $(MONO_CECIL_DLL) $(MONO_CECIL_MDB_DLL) $(mmp_sources) config config_mobile Info.plist.tmpl Info-framework.plist.tmpl $(tuner_sources)
+	$(Q_CSC) $(SYSTEM_CSC) -unsafe -out:mmp.exe $(DEFINES) -r:$(MONO_CECIL_DLL) -r:$(MONO_CECIL_MDB_DLL) \
+	-noconfig -nostdlib -r:$(MONO_PATH)/external/binary-reference-assemblies/mono/Mono.Security.dll -r:$(MONO_PATH)/external/binary-reference-assemblies/v4.6.1/mscorlib.dll -r:$(MONO_PATH)/external/binary-reference-assemblies/v4.6.1/System.Xml.dll -r:$(MONO_PATH)/external/binary-reference-assemblies/v4.6.1/System.Core.dll -r:$(MONO_PATH)/external/binary-reference-assemblies/v4.6.1/System.dll \
+	-resource:config -resource:config_mobile -resource:machine.4_5.config -resource:Info.plist.tmpl -resource:Info-framework.plist.tmpl $(tuner_sources) $(mmp_sources) -debug:portable -nologo -deterministic
 	$(Q) cp $(MONO_CECIL_DLL) $(MONO_CECIL_MDB_DLL) .
 
 Mono.Cecil.dll: $(MONO_CECIL_DLL)

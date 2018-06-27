@@ -436,14 +436,14 @@ namespace LinkSdk {
 #else
 			const string OpenTKAssembly = "OpenTK";
 #endif
-			var gl = Type.GetType ("OpenTK.Graphics.ES11.GL, " + OpenTKAssembly, false);
+			var gl = GetTypeHelper ("OpenTK.Graphics.ES11.GL, " + OpenTKAssembly, false);
 			Assert.NotNull (gl, "ES11/GL");
-			var core = Type.GetType ("OpenTK.Graphics.ES11.GL/Core, " + OpenTKAssembly, false);
+			var core = GetTypeHelper ("OpenTK.Graphics.ES11.GL/Core, " + OpenTKAssembly, false);
 			Assert.NotNull (core, "ES11/Core");
 
-			gl = Type.GetType ("OpenTK.Graphics.ES20.GL, " + OpenTKAssembly, false);
+			gl = GetTypeHelper ("OpenTK.Graphics.ES20.GL, " + OpenTKAssembly, false);
 			Assert.NotNull (gl, "ES20/GL");
-			core = Type.GetType ("OpenTK.Graphics.ES20.GL/Core, " + OpenTKAssembly, false);
+			core = GetTypeHelper ("OpenTK.Graphics.ES20.GL/Core, " + OpenTKAssembly, false);
 			Assert.NotNull (core, "ES20/Core");
 		}
 #endif // !__WATCHOS__
@@ -773,7 +773,7 @@ namespace LinkSdk {
 		public void Pointer_5200 ()
 		{
 			// ensure the linker did not remove the type, which is used by the runtime
-			Assert.NotNull (Type.GetType ("System.Reflection.Pointer, mscorlib"));
+			Assert.NotNull (GetTypeHelper ("System.Reflection.Pointer, mscorlib"));
 		}
 
 		[Test]
@@ -1065,8 +1065,8 @@ namespace LinkSdk {
 			// we ensure that we can create the type / call the code
 			Assert.True (SecurityDeclarationDecoratedUserCode.Check (), "call");
 			// we ensure that both the permission and the flag are NOT part of the final/linked binary (link removes security declarations)
-			Assert.Null (Type.GetType ("System.Security.Permissions.FileIOPermissionAttribute, mscorlib"), "FileIOPermissionAttribute");
-			Assert.Null (Type.GetType ("System.Security.Permissions.FileIOPermissionAccess, mscorlib"), "FileIOPermissionAccess");
+			Assert.Null (GetTypeHelper ("System.Security.Permissions.FileIOPermissionAttribute, mscorlib"), "FileIOPermissionAttribute");
+			Assert.Null (GetTypeHelper ("System.Security.Permissions.FileIOPermissionAccess, mscorlib"), "FileIOPermissionAccess");
 		}
 
 #if !__WATCHOS__
@@ -1094,7 +1094,7 @@ namespace LinkSdk {
 		[Test]
 		public void MonoRuntime34671 ()
 		{
-			Assert.NotNull (Type.GetType ("Mono.Runtime"), "Mono.Runtime");
+			Assert.NotNull (GetTypeHelper ("Mono.Runtime"), "Mono.Runtime");
 		}
 
 		[Test]
@@ -1119,7 +1119,7 @@ namespace LinkSdk {
 		{
 			// make test work for classic (monotouch) and unified (iOS, tvOS and watchOS)
 			var fqn = typeof (NSObject).AssemblyQualifiedName.Replace ("Foundation.NSObject", "Security.Tls.OldTlsProvider");
-			Assert.Null (Type.GetType (fqn), "Should not be included");
+			Assert.Null (GetTypeHelper (fqn), "Should not be included");
 		}
 
 		[Test]
@@ -1127,7 +1127,7 @@ namespace LinkSdk {
 		{
 			// make test work for classic (monotouch) and unified (iOS, tvOS and watchOS)
 			var fqn = typeof (NSObject).AssemblyQualifiedName.Replace ("Foundation.NSObject", "Security.Tls.AppleTlsProvider");
-			Assert.Null (Type.GetType (fqn), "Should be included");
+			Assert.Null (GetTypeHelper (fqn), "Should be included");
 		}
 
 		[Test]
@@ -1138,7 +1138,18 @@ namespace LinkSdk {
 			var t = typeof (WKWebView);
 			Assert.NotNull (t, "avoid compiler optimization of unused variable"); 
 			var fqn = typeof (NSObject).AssemblyQualifiedName.Replace ("Foundation.NSObject", "Foundation.NSProxy");
-			Assert.NotNull (Type.GetType (fqn), fqn);
+			Assert.NotNull (GetTypeHelper (fqn), fqn);
+		}
+
+		// Fools linker not to keep the type by using it in test check
+		static Type GetTypeHelper (string name)
+		{
+			return Type.GetType (name);
+		}
+
+		static Type GetTypeHelper (string name, bool throwOnError)
+		{
+			return Type.GetType (name, throwOnError);
 		}
 	}
 }
