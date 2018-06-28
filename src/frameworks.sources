@@ -1078,6 +1078,7 @@ MULTIPEERCONNECTIVITY_SOURCES = \
 NETWORK_SOURCES = \
 	Network/NWAdvertiseDescriptor.cs	\
 	Network/NWConnection.cs			\
+	Network/NWContentContext.cs		\
 	Network/NWEndpoint.cs			\
 	Network/NWError.cs			\
 	Network/NWInterface.cs			\

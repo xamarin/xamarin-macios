@@ -199,5 +199,88 @@ namespace Network {
 			        block_ptr_handler->CleanupBlock ();
 			}
 		}
+		
+		delegate void nw_connection_path_event_handler_t (IntPtr block, IntPtr path);
+		static nw_connection_path_event_handler_t static_PathChanged = TrampolinePathChanged;
+		
+		[MonoPInvokeCallback (typeof (nw_connection_path_event_handler_t))]
+		static unsafe void TrampolinePathChanged (IntPtr block, IntPtr path)
+		{
+			var descriptor = (BlockLiteral *) block;
+			var del = (Action<NWPath>) (descriptor->Target);
+			if (del != null){
+				var x = new NWPath (path, owns: false);
+			        del (x);
+				x.Dispose ();
+			}
+		}
+		
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern unsafe void nw_connection_set_path_changed_handler (IntPtr handle, void *callback);
+		
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public void SetPathChangedHandler (Action<NWPath> callback)
+		{
+			unsafe {
+			        BlockLiteral *block_ptr_handler;
+			        BlockLiteral block_handler;
+			        block_handler = new BlockLiteral ();
+			        block_ptr_handler = &block_handler;
+			        block_handler.SetupBlockUnsafe (static_PathChanged, callback);
+			
+			        nw_connection_set_path_changed_handler (handle, (void*) block_ptr_handler);
+			        block_ptr_handler->CleanupBlock ();
+			}
+		}
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_connection_set_queue (IntPtr handle, IntPtr queue);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public void SetQueue (DispatchQueue queue)
+		{
+			if (queue == null)
+				throw new ArgumentNullException (nameof (queue));
+			nw_connection_set_queue (handle, queue.handle);
+		}
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_connection_start (IntPtr handle);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public void Start () => nw_connection_start (handle);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_connection_restart (IntPtr handle);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public void Restart () => nw_connection_restart (handle);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_connection_cancel (IntPtr handle);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public void Cancel () => nw_connection_cancel (handle);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_connection_force_cancel (IntPtr handle);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public void ForceCancel () => nw_connection_force_cancel (handle);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_connection_cancel_current_endpoint (IntPtr handle);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public void CancelCurrentEndpoint () => nw_connection_cancel_current_endpoint (handle);
+
+		
 	}
 }

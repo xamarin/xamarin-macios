@@ -24,7 +24,7 @@ namespace Network {
 	}
 		
 	public class NWProtocolDefinition : INativeObject, IDisposable {
-		IntPtr handle;
+		internal IntPtr handle;
 		public IntPtr Handle {
 			get { return handle; }
 		}
