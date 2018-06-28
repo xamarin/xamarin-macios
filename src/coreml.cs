@@ -34,6 +34,8 @@ namespace CoreML {
 		Image = 4,
 		MultiArray = 5,
 		Dictionary = 6,
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		Sequence = 7,
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -53,6 +55,22 @@ namespace CoreML {
 		Double = 65536 | 64,
 		Float32 = 65536 | 32,
 		Int32 = 131072 | 32,
+	}
+
+	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Native]
+	public enum MLImageSizeConstraintType : long {
+		Unspecified = 0,
+		Enumerated = 2,
+		Range = 3,
+	}
+
+	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Native]
+	public enum MLMultiArrayShapeConstraintType : long {
+		Unspecified = 1,
+		Enumerated = 2,
+		Range = 3,
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -92,6 +110,10 @@ namespace CoreML {
 
 		[NullAllowed, Export ("dictionaryConstraint", ArgumentSemantic.Assign)]
 		MLDictionaryConstraint DictionaryConstraint { get; }
+
+		[Watch (5,0),TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[NullAllowed, Export ("sequenceConstraint")]
+		MLSequenceConstraint SequenceConstraint { get; }
 	}
 
 	interface IMLFeatureProvider { }
@@ -138,9 +160,18 @@ namespace CoreML {
 		[NullAllowed, Export ("imageBufferValue")]
 		CVPixelBuffer ImageBufferValue { get; }
 
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[NullAllowed, Export ("sequenceValue")]
+		MLSequence SequenceValue { get; }
+
 		[Static]
 		[Export ("featureValueWithPixelBuffer:")]
 		MLFeatureValue Create (CVPixelBuffer value);
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Static]
+		[Export ("featureValueWithSequence:")]
+		MLFeatureValue Create (MLSequence sequence);
 
 		[Static]
 		[Export ("featureValueWithInt64:")]
@@ -190,6 +221,11 @@ namespace CoreML {
 		[Export ("predictionFromFeatures:options:error:")]
 		[return: NullAllowed]
 		IMLFeatureProvider GetPrediction (IMLFeatureProvider input, MLPredictionOptions options, out NSError error);
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("predictionsFromBatch:options:error:")]
+		[return: NullAllowed]
+		IMLBatchProvider GetPredictions (IMLBatchProvider inputBatch, MLPredictionOptions options, [NullAllowed] out NSError error);
 
 		// Category MLModel (MLModelCompilation)
 
@@ -333,6 +369,10 @@ namespace CoreML {
 
 		[Export ("pixelFormatType")]
 		uint PixelFormatType { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("sizeConstraint")]
+		MLImageSizeConstraint SizeConstraint { get; }
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -346,6 +386,10 @@ namespace CoreML {
 
 		[Export ("dataType")]
 		MLMultiArrayDataType DataType { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("shapeConstraint")]
+		MLMultiArrayShapeConstraint ShapeConstraint { get; }
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -380,6 +424,132 @@ namespace CoreML {
 
 		[Export ("encodeToCommandBuffer:inputs:outputs:error:")]
 		bool Encode (IMTLCommandBuffer commandBuffer, IMTLTexture[] inputs, IMTLTexture[] outputs, [NullAllowed] out NSError error);
+	}
+
+	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[BaseType (typeof(NSObject))]
+	interface MLArrayBatchProvider : MLBatchProvider {
+
+		[Export ("array")]
+		IMLFeatureProvider[] Array { get; }
+
+		[Export ("initWithFeatureProviderArray:")]
+		IntPtr Constructor (IMLFeatureProvider[] array);
+
+		[Export ("initWithDictionary:error:")]
+		IntPtr Constructor (NSDictionary<NSString, NSArray> dictionary, [NullAllowed] out NSError error);
+	}
+
+	interface IMLBatchProvider {}
+
+	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Protocol]
+	interface MLBatchProvider {
+
+		[Abstract]
+		[Export ("count")]
+		nint Count { get; }
+
+		[Abstract]
+		[Export ("featuresAtIndex:")]
+		IMLFeatureProvider GetFeatures (nint index);
+	}
+
+	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Protocol]
+	interface MLCustomModel {
+
+		[Abstract]
+		[Export ("initWithModelDescription:parameterDictionary:error:")]
+		IntPtr Constructor (MLModelDescription modelDescription, NSDictionary<NSString, NSObject> parameters, [NullAllowed] out NSError error);
+
+		[Abstract]
+		[Export ("predictionFromFeatures:options:error:")]
+		[return: NullAllowed]
+		IMLFeatureProvider GetPrediction (IMLFeatureProvider inputFeatures, MLPredictionOptions options, [NullAllowed] out NSError error);
+
+		[Export ("predictionsFromBatch:options:error:")]
+		[return: NullAllowed]
+		IMLBatchProvider GetPredictions (IMLBatchProvider inputBatch, MLPredictionOptions options, [NullAllowed] out NSError error);
+	}
+
+	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[BaseType (typeof(NSObject))]
+	interface MLImageSize {
+
+		[Export ("pixelsWide")]
+		nint PixelsWide { get; }
+
+		[Export ("pixelsHigh")]
+		nint PixelsHigh { get; }
+	}
+
+	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[BaseType (typeof(NSObject))]
+	interface MLImageSizeConstraint {
+
+		[Export ("type")]
+		MLImageSizeConstraintType Type { get; }
+
+		[Export ("pixelsWideRange")]
+		NSRange PixelsWideRange { get; }
+
+		[Export ("pixelsHighRange")]
+		NSRange PixelsHighRange { get; }
+
+		[Export ("enumeratedImageSizes")]
+		MLImageSize[] EnumeratedImageSizes { get; }
+	}
+
+	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[BaseType (typeof(NSObject))]
+	interface MLMultiArrayShapeConstraint {
+
+		[Export ("type")]
+		MLMultiArrayShapeConstraintType Type { get; }
+
+		[Export ("sizeRangeForDimension")]
+		NSValue[] SizeRangeForDimension { get; }
+
+		[Export ("enumeratedShapes")]
+		NSArray<NSNumber>[] EnumeratedShapes { get; }
+	}
+
+	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[BaseType (typeof(NSObject))]
+	interface MLSequence {
+
+		[Export ("type")]
+		MLFeatureType Type { get; }
+
+		[Static]
+		[Export ("emptySequenceWithType:")]
+		MLSequence CreateEmpty (MLFeatureType type);
+
+		[Static]
+		[Export ("sequenceWithStringArray:")]
+		MLSequence Create (string[] stringValues);
+
+		[Export ("stringValues")]
+		string[] StringValues { get; }
+
+		[Static]
+		[Export ("sequenceWithInt64Array:")]
+		MLSequence Create (NSNumber[] int64Values);
+
+		[Export ("int64Values")]
+		NSNumber[] Int64Values { get; }
+	}
+
+	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[BaseType (typeof(NSObject))]
+	interface MLSequenceConstraint : NSCopying {
+
+		[Export ("valueDescription")]
+		MLFeatureDescription ValueDescription { get; }
+
+		[Export ("countRange")]
+		NSRange CountRange { get; }
 	}
 }
 #endif // XAMCORE_2_0
