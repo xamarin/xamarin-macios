@@ -1122,7 +1122,7 @@ xamarin_nsstring_to_smart_enum (id value, void *ptr, MonoClass *managedType, gui
 		managed_method = xamarin_get_managed_method_for_token (context /* token ref */, exception_gchandle);
 		if (*exception_gchandle != 0) return NULL;
 
-		arg_ptrs [0] = xamarin_get_nsobject_with_type_for_ptr (value, false, xamarin_get_parameter_type (managed_method, 0), exception_gchandle);
+		arg_ptrs [0] = xamarin_get_nsobject_with_type_for_ptr (value, false, xamarin_get_parameter_type (managed_method, 0), NULL, NULL, exception_gchandle);
 		if (*exception_gchandle != 0) return NULL;
 
 		obj = mono_runtime_invoke (managed_method, NULL, arg_ptrs, &exception);

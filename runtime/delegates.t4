@@ -179,7 +179,9 @@
 		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_nsobject_with_type",
 			"id", "IntPtr", "obj",
 			"void *", "IntPtr", "type",
-			"int32_t *", "out bool", "created"
+			"int32_t *", "out bool", "created",
+			"SEL", "IntPtr", "selector",
+			"MonoReflectionMethod *", "IntPtr", "method"
 		) {
 			WrappedManagedFunction = "GetNSObjectWithType",
 			OnlyDynamicUsage = false,
@@ -270,6 +272,14 @@
 		) {
 			WrappedManagedFunction = "ConvertNSStringToSmartEnum",
 			OnlyDynamicUsage = true,
+		},
+
+		new XDelegate ("int32_t", "int", "xamarin_create_runtime_exception",
+			"int32_t", "int", "code",
+			"const char *", "IntPtr", "message"
+		) {
+			WrappedManagedFunction = "CreateRuntimeException",
+			OnlyDynamicUsage = false,
 		},
 	};
 	delegates.CalculateLengths ();

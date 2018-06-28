@@ -2482,3 +2482,32 @@ This usually indicates a bug in Xamarin.iOS, because the dynamic registrar shoul
 It's possible to force the linker to keep the dynamic registrar by adding
 `--optimize=-remove-dynamic-registrar` to the additional mtouch arguments in
 the project's iOS Build options.
+
+### <a name="MM8027"/>MM8027: Failed to marshal the Objective-C object {handle} (type: {managed_type}). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance.
+
+This occurs when the Xamarin.iOS runtime finds an Objective-C object without a
+corresponding managed wrapper object, and when trying to create that managed
+wrapper, it turns out it's not possible.
+
+There are a few reasons this may happen:
+
+* If it occurs when deserializing a storyboard/nib/xib and mentioning a
+  managed type that's used in that storyboard/nib/xib, then the fix is to add
+  a constructor that takes a single `IntPtr` argument to that managed type.
+  This constructor should not have any logic (because it's invoked before the
+  native and managed instances are fully created).
+
+* A managed wrapper existed at some point, but was collected by the GC. If the
+  native object is still alive, and later resurfaces to managed code, the
+  Xamarin.iOS runtime will try to re-create a managed wrapper instance. In
+  most cases the problem here is that the managed wrapper shouldn't have been
+  collected by the GC in the first place.
+
+  Possible causes include:
+
+  * Manually calling Dispose too early on the managed wrapper.
+  * Incorrect bindings for third-party libraries.
+  * Reference-counting bugs in third-party libraries.
+
+* It could be a bug in Xamarin.iOS. If this is the case, please file a bug at
+  [https://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).

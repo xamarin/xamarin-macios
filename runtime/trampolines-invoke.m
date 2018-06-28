@@ -118,7 +118,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	if (isCategoryInstance) {
 		// we know this must be an id
 		p = mono_signature_get_params (msig, &iter);
-		arg_ptrs [0] = xamarin_get_nsobject_with_type_for_ptr (self, false, p, &exception_gchandle);
+		arg_ptrs [0] = xamarin_get_nsobject_with_type_for_ptr (self, false, p, sel, method, &exception_gchandle);
 		if (exception_gchandle != 0)
 			goto exception_handling;
 		mofs = 1;
@@ -195,7 +195,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 									MonoObject *obj;
 									NSObject *targ = *(NSObject **) arg;
 
-									obj = xamarin_get_nsobject_with_type_for_ptr (targ, false, p, &exception_gchandle);
+									obj = xamarin_get_nsobject_with_type_for_ptr (targ, false, p, sel, method, &exception_gchandle);
 									if (exception_gchandle != 0)
 										goto exception_handling;
 #if DEBUG
@@ -324,7 +324,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 								} else {
 									MonoObject *obj;
 									id targ = [arr objectAtIndex: j];
-									obj = xamarin_get_nsobject_with_type_for_ptr (targ, false, e, &exception_gchandle);
+									obj = xamarin_get_nsobject_with_type_for_ptr (targ, false, e, sel, method, &exception_gchandle);
 									if (exception_gchandle != 0)
 										goto exception_handling;
 #if DEBUG
@@ -343,7 +343,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 							}
 							MonoObject *obj;
 							int32_t created = false;
-							obj = xamarin_get_nsobject_with_type_for_ptr_created (id_arg, false, p, &created, &exception_gchandle);
+							obj = xamarin_get_nsobject_with_type_for_ptr_created (id_arg, false, p, &created, sel, method, &exception_gchandle);
 							if (exception_gchandle != 0)
 								goto exception_handling;
 
@@ -380,7 +380,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 								[id_arg autorelease];
 							}
 							MonoObject *obj;
-							obj = xamarin_get_nsobject_with_type_for_ptr (id_arg, false, p, &exception_gchandle);
+							obj = xamarin_get_nsobject_with_type_for_ptr (id_arg, false, p, sel, method, &exception_gchandle);
 							if (exception_gchandle != 0)
 								goto exception_handling;
 #if DEBUG
