@@ -2532,6 +2532,28 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			using (var obj = new NullOutParameters ())
 				obj.Invoke_V_null_out ();
 		}
+
+		[Test]
+		public unsafe void ByrefParameter ()
+		{
+			using (var obj = new ByrefParameterTest ()) {
+				using (var param = new NSObject ()) {
+					// We want an instance of an NSObject subclass that doesn't have a managed wrapper, so we create a native NSString handle.
+					IntPtr handle = NSString.CreateNative ("ByrefParameter");
+					Messaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("doSomething:"), new IntPtr (&handle));
+					NSString.ReleaseNative (handle);
+				}
+			}
+		}
+
+		class ByrefParameterTest : NSObject {
+			[Export ("doSomething:")]
+			public void DoSomething (ref NSString str)
+			{
+				Assert.IsNotNull (str, "NonNull NSString&");
+				Assert.AreEqual ("ByrefParameter", str.ToString ());
+			}
+		}
 	}
 
 #if !__WATCHOS__
