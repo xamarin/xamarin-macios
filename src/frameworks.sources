@@ -390,8 +390,8 @@ COREDATA_SOURCES = \
 COREFOUNDATION_CORE_SOURCES = \
 	CoreFoundation/CFIndex.cs \
 	CoreFoundation/CFRunLoop.cs \
-    CoreFoundation/CFString.cs \
-    CoreFoundation/Dispatch.cs \
+	CoreFoundation/CFString.cs \
+	CoreFoundation/Dispatch.cs \
 
 COREFOUNDATION_SOURCES = \
 	CoreFoundation/CFAllocator.cs \
@@ -416,6 +416,7 @@ COREFOUNDATION_SOURCES = \
 	CoreFoundation/CFUrl.cs \
 	CoreFoundation/CFWriteStream.cs \
 	CoreFoundation/DispatchBlock.cs \
+	CoreFoundation/DispatchData.cs \
 	CoreFoundation/DispatchQueueSynchronizationContext.cs \
 	CoreFoundation/DispatchSource.cs \
 
