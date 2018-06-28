@@ -224,14 +224,19 @@ timestamps {
                     }
 
                     if (isPr) {
-                        if (!githubGetPullRequestLabels ().contains ("build-package")) {
+                        def hasBuildPackage = githubGetPullRequestLabels ().contains ("build-package")
+                        def hasRunInternalTests = githubGetPullRequestLabels ().contains ("run-internal-tests")
+
+                        if (!hasBuildPackage && !hasRunInternalTests) {
                             // don't add a comment to the pull request, since the public jenkins will also add comments, which ends up being too much.
                             createFinalStatus = false
-                            echo ("Build skipped because the pull request doesn't have the label 'build-package'.")
+                            echo ("Build skipped because the pull request doesn't have either of the labels 'build-package' or 'run-internal-tests'.")
                             return
                         }
 
-                        skipLocalTestRunReason = "Not running tests here because they're run on public Jenkins."
+
+                        if (!hasRunInternalTests)
+                            skipLocalTestRunReason = "Not running tests here because they're run on public Jenkins."
                     }
 
                     dir ("${workspace}") {
