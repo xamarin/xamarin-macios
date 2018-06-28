@@ -2672,7 +2672,7 @@ namespace HealthKit {
 		[Export ("insertQuantity:date:error:")]
 		bool Insert (HKQuantity quantity, NSDate date, [NullAllowed] out NSError error);
 
-		[Async, Prototec]
+		[Async, Protected]
 		[Export ("finishSeriesWithMetadata:completion:")]
 		void FinishSeries ([NullAllowed] NSDictionary metadata, HKQuantitySeriesSampleBuilderFinishSeriesDelegate completionHandler);
 
