@@ -11659,7 +11659,7 @@ namespace AppKit {
 		NSString NSPasteboardTypeFindPanelSearchOptions { get; }
 
 		[Mac (10, 7), Field ("NSPasteboardTypeTextFinderOptions")]
-		NSString NSPasteboardTypeTextFinderOptions { get; }
+		NSString PasteboardTypeTextFinderOptions { get; }
 
 		[Mac (10, 13)]
 		[Field ("NSPasteboardTypeURL")]
@@ -17821,8 +17821,16 @@ namespace AppKit {
 		[Export ("tabViewType")]
 		NSTabViewType TabViewType { get; set; }
 
+#if XAMCORE_4_0
 		[Export ("tabViewItems")]
 		NSTabViewItem [] Items { get; [Mac (10, 14)] set; }
+#else
+		[Export ("tabViewItems")]
+		NSTabViewItem [] Items { get; }
+
+		[Export ("setTabViewItems:")]
+		void SetItems (NSTabViewItem [] items);
+#endif
 
 		[Export ("allowsTruncatedLabels")]
 		bool AllowsTruncatedLabels { get; set; }
@@ -18227,8 +18235,16 @@ namespace AppKit {
 		[Export ("cellSize")]
 		CGSize CellSize { get; }
 
+#if XAMCORE_4_0
 		[Export ("cellBaselineOffset")]
 		CGPoint CellBaselineOffset { get; [Mac (10, 14)] set; }
+#else
+		[Export ("cellBaselineOffset")]
+		CGPoint CellBaselineOffset { get; }
+
+		[Export ("setCellBaselineOffset:")]
+		void SetCellBaselineOffset (CGPoint point);
+#endif
 
 		[Export ("drawWithFrame:inView:characterIndex:")]
 		void DrawWithFrame (CGRect cellFrame, NSView controlView, nuint charIndex);
