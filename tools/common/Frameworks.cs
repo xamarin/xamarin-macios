@@ -408,6 +408,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "Vision", "Vision", 11 },
 
 					{ "NaturalLanguage", "NaturalLanguage", 12,0 },
+					{ "TVUIKit", "TVUIKit", 12,0 },
 				};
 			}
 			return tvos_frameworks;
