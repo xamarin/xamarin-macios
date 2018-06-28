@@ -2744,13 +2744,13 @@ namespace HealthKit {
 		[Export ("displayName")]
 		string DisplayName { get; }
 
-		[NullAllowed, Export ("FhirResource", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("FHIRResource", ArgumentSemantic.Copy)]
 		HKFhirResource FhirResource { get; }
 	}
 
 	interface IHKLiveWorkoutBuilderDelegate {}
 	[Watch (5,0), NoiOS]
-	[Model, Protocol]
+	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface HKLiveWorkoutBuilderDelegate
 	{
@@ -2764,6 +2764,7 @@ namespace HealthKit {
 	}
 
 	[Watch (5,0), NoiOS]
+	[DisableDefaultCtor]
 	[BaseType (typeof(HKWorkoutBuilder))]
 	interface HKLiveWorkoutBuilder
 	{
