@@ -1075,10 +1075,13 @@ MULTIPEERCONNECTIVITY_SOURCES = \
 # Network
 
 NETWORK_SOURCES = \
+	Network/NWAdvertiseDescriptor.cs	\
 	Network/NWConnection.cs			\
 	Network/NWEndpoint.cs			\
+	Network/NWError.cs			\
 	Network/NWInterface.cs			\
 	Network/NWParameters.cs			\
+	Network/NWPath.cs			\
 	Network/NWProtocolDefinition.cs		\
 	Network/NWProtocolMetadata.cs		\
 	Network/NWProtocolOptions.cs		\
