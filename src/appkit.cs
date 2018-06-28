@@ -17828,6 +17828,7 @@ namespace AppKit {
 		[Export ("tabViewItems")]
 		NSTabViewItem [] Items { get; }
 
+		[Mac (10, 14)]
 		[Export ("setTabViewItems:")]
 		void SetItems (NSTabViewItem [] items);
 #endif
@@ -18242,6 +18243,7 @@ namespace AppKit {
 		[Export ("cellBaselineOffset")]
 		CGPoint CellBaselineOffset { get; }
 
+		[Mac (10, 14)]
 		[Export ("setCellBaselineOffset:")]
 		void SetCellBaselineOffset (CGPoint point);
 #endif
