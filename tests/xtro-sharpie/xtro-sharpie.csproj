@@ -48,7 +48,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'macOS' ">
     <StartAction>Project</StartAction>
-    <StartArguments>macosx10.13-x86_64.pch ../../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/x86_64/mobile/Xamarin.Mac.dll</StartArguments>
+    <StartArguments>macosx10.14-x86_64.pch ../../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/x86_64/mobile/Xamarin.Mac.dll</StartArguments>
     <StartWorkingDirectory>.</StartWorkingDirectory>
   </PropertyGroup>
   <ItemGroup>

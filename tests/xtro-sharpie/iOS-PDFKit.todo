@@ -1,0 +1,9 @@
+!missing-designated-initializer! PDFActionResetForm::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! PDFDocument::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! PDFOutline::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! PDFPage::init is missing an [DesignatedInitializer] attribute
+!missing-field! kPDFDestinationUnspecifiedValue not bound
+!missing-selector! PDFAnnotation::popup not bound
+!missing-selector! PDFAnnotation::setPopup: not bound
+!missing-selector! PDFView::enablePageShadows: not bound
+!missing-selector! PDFView::pageShadowsEnabled not bound
