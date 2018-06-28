@@ -225,7 +225,7 @@ namespace CoreML {
 		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Export ("predictionsFromBatch:options:error:")]
 		[return: NullAllowed]
-		IMLBatchProvider GetPredictions (IMLBatchProvider inputBatch, MLPredictionOptions options, [NullAllowed] out NSError error);
+		IMLBatchProvider GetPredictions (IMLBatchProvider inputBatch, MLPredictionOptions options, out NSError error);
 
 		// Category MLModel (MLModelCompilation)
 
@@ -428,6 +428,7 @@ namespace CoreML {
 
 	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface MLArrayBatchProvider : MLBatchProvider {
 
 		[Export ("array")]
@@ -437,7 +438,7 @@ namespace CoreML {
 		IntPtr Constructor (IMLFeatureProvider[] array);
 
 		[Export ("initWithDictionary:error:")]
-		IntPtr Constructor (NSDictionary<NSString, NSArray> dictionary, [NullAllowed] out NSError error);
+		IntPtr Constructor (NSDictionary<NSString, NSArray> dictionary, out NSError error);
 	}
 
 	interface IMLBatchProvider {}
@@ -456,25 +457,27 @@ namespace CoreML {
 	}
 
 	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-	[Protocol]
+	[BaseType (typeof(NSObject))]
+	[Protocol, Model]
 	interface MLCustomModel {
 
-		[Abstract]
+		// [Abstract]
 		[Export ("initWithModelDescription:parameterDictionary:error:")]
-		IntPtr Constructor (MLModelDescription modelDescription, NSDictionary<NSString, NSObject> parameters, [NullAllowed] out NSError error);
+		IntPtr Constructor (MLModelDescription modelDescription, NSDictionary<NSString, NSObject> parameters, out NSError error);
 
 		[Abstract]
 		[Export ("predictionFromFeatures:options:error:")]
 		[return: NullAllowed]
-		IMLFeatureProvider GetPrediction (IMLFeatureProvider inputFeatures, MLPredictionOptions options, [NullAllowed] out NSError error);
+		IMLFeatureProvider GetPrediction (IMLFeatureProvider inputFeatures, MLPredictionOptions options, out NSError error);
 
 		[Export ("predictionsFromBatch:options:error:")]
 		[return: NullAllowed]
-		IMLBatchProvider GetPredictions (IMLBatchProvider inputBatch, MLPredictionOptions options, [NullAllowed] out NSError error);
+		IMLBatchProvider GetPredictions (IMLBatchProvider inputBatch, MLPredictionOptions options, out NSError error);
 	}
 
 	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface MLImageSize {
 
 		[Export ("pixelsWide")]
@@ -486,6 +489,7 @@ namespace CoreML {
 
 	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface MLImageSizeConstraint {
 
 		[Export ("type")]
@@ -503,6 +507,7 @@ namespace CoreML {
 
 	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface MLMultiArrayShapeConstraint {
 
 		[Export ("type")]
@@ -517,6 +522,7 @@ namespace CoreML {
 
 	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface MLSequence {
 
 		[Export ("type")]
@@ -543,6 +549,7 @@ namespace CoreML {
 
 	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface MLSequenceConstraint : NSCopying {
 
 		[Export ("valueDescription")]
