@@ -669,10 +669,10 @@ namespace CloudKit {
 		[Export ("init")]
 		IntPtr Constructor ();
 
-		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use the 'configurationsByRecordZoneID' overload instead.")]
-		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use the 'configurationsByRecordZoneID' overload instead.")]
-		[Deprecated (PlatformName.iOS, 12, 0, message: "Use the 'configurationsByRecordZoneID' overload instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use the 'configurationsByRecordZoneID' overload instead.")]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use the overload with the 'NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesConfiguration>' parameter instead.")]
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use the overload with the 'NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesConfiguration>' parameter instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use the overload with the 'NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesConfiguration>' parameter instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use the overload with the 'NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesConfiguration>' parameter instead.")]
 		[Export ("initWithRecordZoneIDs:optionsByRecordZoneID:")]
 		IntPtr Constructor (CKRecordZoneID[] recordZoneIDs, [NullAllowed] NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesOptions> optionsByRecordZoneID);
 
