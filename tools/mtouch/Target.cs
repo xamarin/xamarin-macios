@@ -887,6 +887,7 @@ namespace Xamarin.Bundler
 					SharedLibrary = mode != AssemblyBuildTarget.StaticObject,
 					Language = "objective-c++",
 				};
+				pinvoke_task.CompilerFlags.AddStandardCppLibrary ();
 				if (pinvoke_task.SharedLibrary) {
 					if (mode == AssemblyBuildTarget.Framework) {
 						var name = Path.GetFileNameWithoutExtension (ifile);
@@ -1234,25 +1235,7 @@ namespace Xamarin.Bundler
 					if (Driver.XcodeVersion >= new Version (9, 0))
 						registrar_task.CompilerFlags.AddOtherFlag ("-Wno-unguarded-availability-new");
 
-					if (Driver.XcodeVersion >= new Version (10, 0)) {
-						// Workaround rdar://40824697, where some headers are broken
-						// and won't compile in Objective-C++ mode because they
-						// reference 'cmath', which isn't included in the individual SDKs.
-						// So add an include directory for a directory that contains a 'cmath' file
-						// (no idea if it's the right 'cmath' file, Xcode has several, and they're all different...)
-						// Since this is in fact most likely the wrong thing to do,
-						// I'm restricting this to a very specific version of Xcode,
-						// so that we can remove the hack asap once Apple fixes their headers.
-						switch (Driver.XcodeBundleVersion) {
-						case "14274.16": // beta 1
-						case "14274.19": // beta 2
-							break;
-						default:
-							ErrorHelper.Show (ErrorHelper.CreateWarning (99, $"Verify if the workaround for rdar://40824697 is still needed for Xcode 10 {Driver.XcodeBundleVersion}."));
-							break;
-						}
-						registrar_task.CompilerFlags.AddOtherFlag ($"-I{Path.Combine (Driver.DeveloperDirectory, "Toolchains", "XcodeDefault.xctoolchain", "usr", "include", "c++", "v1")}");
-					}
+					registrar_task.CompilerFlags.AddStandardCppLibrary ();
 						                                          
 					LinkWithTaskOutput (registrar_task);
 				}
@@ -1311,6 +1294,7 @@ namespace Xamarin.Bundler
 				};
 				main_task.AddDependency (generate_main_task);
 				main_task.CompilerFlags.AddDefine ("MONOTOUCH");
+				main_task.CompilerFlags.AddStandardCppLibrary ();
 				LinkWithTaskOutput (main_task);
 			}
 
