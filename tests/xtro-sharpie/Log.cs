@@ -6,18 +6,14 @@ using System.Linq;
 namespace Extrospection {
 
 	static class Log {
-		static Dictionary<string, List<string>> lists = new Dictionary<string, List<string>> ();
+		static Dictionary<string, List<string>> lists = new Dictionary<string, List<string>> (StringComparer.OrdinalIgnoreCase);
 
 		public static IList<string> On (string fx)
 		{
 			List<string> list;
-
-			string existingName = lists.Keys.FirstOrDefault (x => String.Compare (x, fx, true) == 0);
-			if (existingName == null) {
+			if (!lists.TryGetValue (fx, out list)) {
 				list = new List<string> ();
 				lists.Add (fx, list); 
-			} else {
-				list = lists[existingName];
 			}
 			return list;
 		}
