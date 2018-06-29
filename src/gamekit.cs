@@ -2357,9 +2357,9 @@ namespace GameKit {
 
 	[NoWatch]
 	[iOS (10,0)][Mac (10,12)][TV (10,0)]
-	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'GKMatchmakerViewController' (real-time) or 'GKTurnBasedMatchmakerViewController' (turn based) instead.")]
-	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'GKMatchmakerViewController' (real-time) or 'GKTurnBasedMatchmakerViewController' (turn based) instead.")]
-	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'GKMatchmakerViewController' (real-time) or 'GKTurnBasedMatchmakerViewController' (turn based) instead.")]
+	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'GKMatchmakerViewController' (real-time) or 'GKTurnBasedMatchmakerViewController' (turn-based) instead.")]
+	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'GKMatchmakerViewController' (real-time) or 'GKTurnBasedMatchmakerViewController' (turn-based) instead.")]
+	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'GKMatchmakerViewController' (real-time) or 'GKTurnBasedMatchmakerViewController' (turn-based) instead.")]
 	[BaseType (typeof(NSObject))]
 	interface GKGameSession
 	{
