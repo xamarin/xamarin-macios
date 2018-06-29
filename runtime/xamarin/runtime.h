@@ -200,6 +200,7 @@ void			xamarin_create_classes ();
 const char *	xamarin_skip_encoding_flags (const char *encoding);
 void			xamarin_add_registration_map (struct MTRegistrationMap *map);
 uint32_t		xamarin_find_protocol_wrapper_type (uint32_t token_ref);
+void			xamarin_release_block_on_main_thread (void *obj);
 
 bool			xamarin_has_managed_ref (id self);
 bool			xamarin_has_managed_ref_safe (id self);
