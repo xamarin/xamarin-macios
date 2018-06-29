@@ -2517,7 +2517,7 @@ namespace GameKit {
 #if !MONOMAC
 	[NoWatch]
 	[NoiOS][TV (10,0)]
-	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'GKMatchmakerViewController' (real-time) or 'GKTurnBasedMatchmakerViewController' (turn-based) instead..")]
+	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'GKMatchmakerViewController' (real-time) or 'GKTurnBasedMatchmakerViewController' (turn-based) instead.")]
 	[BaseType (typeof(UIViewController))]
 	interface GKGameSessionSharingViewController
 	{
@@ -2539,7 +2539,7 @@ namespace GameKit {
 
 	[NoWatch]
 	[NoiOS][TV (10,0)]
-	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'GKMatchmakerViewControllerDelegate' (real-time) or 'GKTurnBasedMatchmakerViewControllerDelegate' (turn-based) instead..")]
+	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'GKMatchmakerViewControllerDelegate' (real-time) or 'GKTurnBasedMatchmakerViewControllerDelegate' (turn-based) instead.")]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface GKGameSessionSharingViewControllerDelegate
