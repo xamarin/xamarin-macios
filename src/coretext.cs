@@ -73,4 +73,19 @@ namespace CoreText {
 		[Field ("kCTFontVariationAxisHiddenKey")]
 		NSString Hidden { get; }
 	}
+
+	[Static]
+	interface CTTypesetterOptionKey {
+
+		[Deprecated (PlatformName.iOS, 6, 0)]
+		[Field ("kCTTypesetterOptionDisableBidiProcessing")]
+		NSString DisableBidiProcessing { get; }
+
+		[Field ("kCTTypesetterOptionForcedEmbeddingLevel")]
+		NSString ForceEmbeddingLevel { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCTTypesetterOptionAllowUnboundedLayout")]
+		NSString AllowUnboundedLayout { get; }
+	}
 }
