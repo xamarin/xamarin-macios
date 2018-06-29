@@ -214,7 +214,7 @@ namespace PhotosUI {
 		[Protected]
 		[Mac (10,14, onlyOn64: true)]
 		[Export ("typeDescriptionDataSourceForCategory:invalidator:")]
-		IPHProjectTypeDescriptionDataSource GetTypeDescriptionDataSource (string category, IPHProjectTypeDescriptionInvalidator invalidator);
+		IPHProjectTypeDescriptionDataSource GetTypeDescriptionDataSource (NSString category, IPHProjectTypeDescriptionInvalidator invalidator);
 
 		[Wrap ("GetTypeDescriptionDataSource (category.GetConstant(), invalidator)")]
 		IPHProjectTypeDescriptionDataSource GetTypeDescriptionDataSource (PHProjectCategory category, IPHProjectTypeDescriptionInvalidator invalidator);
@@ -437,17 +437,17 @@ namespace PhotosUI {
 	{
 		[Abstract]
 		[Export ("subtypesForProjectType:")]
-		PHProjectTypeDescription[] GetSubtypes (string projectType);
+		PHProjectTypeDescription[] GetSubtypes (NSString projectType);
 
 		[Abstract]
 		[Export ("typeDescriptionForProjectType:")]
 		[return: NullAllowed]
-		PHProjectTypeDescription GetTypeDescription (string projectType);
+		PHProjectTypeDescription GetTypeDescription (NSString projectType);
 
 		[Abstract]
 		[Export ("footerTextForSubtypesOfProjectType:")]
 		[return: NullAllowed]
-		NSAttributedString GetFooterTextForSubtypes (string projectType);
+		NSAttributedString GetFooterTextForSubtypes (NSString projectType);
 
 		[Export ("extensionWillDiscardDataSource")]
 		void WillDiscardDataSource ();
@@ -461,18 +461,18 @@ namespace PhotosUI {
 	{
 		[Abstract]
 		[Export ("invalidateTypeDescriptionForProjectType:")]
-		void InvalidateTypeDescription (string projectType);
+		void InvalidateTypeDescription (NSString projectType);
 
 		[Abstract]
 		[Export ("invalidateFooterTextForSubtypesOfProjectType:")]
-		void InvalidateFooterTextForSubtypes (string projectType);
+		void InvalidateFooterTextForSubtypes (NSString projectType);
 	}
 
 	[iOS (8,0)]
 	[NoMac][NoTV]
+	[DisableDefaultCtor]
 	[BaseType (typeof (NSExtensionContext))]
 	interface PHEditingExtensionContext
 	{
-
 	}
 }

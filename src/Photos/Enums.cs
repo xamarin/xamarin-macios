@@ -340,15 +340,15 @@ namespace Photos
 
 	[Mac (10,14, onlyOn64 : true)]
 	[NoiOS][NoTV]
-	public enum FigEXIFCustomRenderedValue : short {
+	public enum FigExifCustomRenderedValue : short {
 		NotCustom = 0,
 		Custom = 1,
-		HDRImage = 2,
-		HDRPlusEV0_HDRImage = 3,
-		HDRPlusEV0_EV0Image = 4,
+		HdrImage = 2,
+		HdrPlusEV0_HDRImage = 3,
+		HdrPlusEV0_EV0Image = 4,
 		PanoramaImage = 6,
-		SDOFImage = 7,
-		SDOFPlusOriginal_SDOFImage = 8,
-		SDOFPlusOriginal_OriginalImage = 9,
+		SdofImage = 7,
+		SdofPlusOriginal_SDOFImage = 8,
+		SdofPlusOriginal_OriginalImage = 9,
 	}
 }
