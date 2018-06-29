@@ -206,6 +206,7 @@ namespace Introspection
 			"Exr",
 			"Felica", // Japanese contactless RFID smart card system
 			"Femtowatts",
+			"Fhir",
 			"Flipside",
 			"Formati",
 			"Fov",
