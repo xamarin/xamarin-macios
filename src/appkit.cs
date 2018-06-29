@@ -11417,11 +11417,11 @@ namespace AppKit {
 	{
 		[Abstract]
 		[Export ("pasteboard:provideDataForType:")]
-		void ProvideDataFor (NSPasteboard sender, string type);
+		void ProvideData (NSPasteboard sender, string type);
 
 		[Export ("pasteboardChangedOwner:")]
 		void PasteboardChangedOwner (NSPasteboard sender);
-}
+	}
 
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[NSPasteboard alloc]: unrecognized selector sent to class 0xac3dcbf0
