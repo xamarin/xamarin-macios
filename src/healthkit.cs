@@ -2586,9 +2586,9 @@ namespace HealthKit {
 
 		[Protected]
 		[Export ("metadata", ArgumentSemantic.Copy)]
-		NSDictionary _Metadata { get; }
+		NSDictionary NativeMetadata { get; }
 
-		[Wrap ("_Metadata")]
+		[Wrap ("NativeMetadata")]
 		HKMetadata Metadata { get; }
 
 		[Export ("workoutEvents", ArgumentSemantic.Copy)]
@@ -2629,14 +2629,14 @@ namespace HealthKit {
 		void DiscardWorkout ();
 
 		[Export ("elapsedTimeAtDate:")]
-		double GetElapsedTimeAtDate (NSDate date);
+		double GetElapsedTime (NSDate date);
 
 		[Export ("statisticsForType:")]
 		[return: NullAllowed]
 		HKStatistics GetStatistics (HKQuantityType quantityType);
 
 		[Export ("seriesBuilderForType:")]
-		HKSeriesBuilder SeriesBuilder (HKSeriesType seriesType);
+		HKSeriesBuilder GetSeriesBuilder (HKSeriesType seriesType);
 	}
 
 	delegate void HKQuantitySeriesSampleQueryQuantityDelegate (HKQuantitySeriesSampleQuery query, HKQuantity quantity, NSDate date, bool done, NSError error);
