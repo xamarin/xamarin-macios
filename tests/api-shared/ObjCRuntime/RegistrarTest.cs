@@ -31,6 +31,7 @@ namespace XamarinTests.ObjCRuntime {
 			}
 		}
 
+#if __UNIFIED__
 		[Test]
 		public void IntPtrCtor ()
 		{
@@ -53,6 +54,7 @@ namespace XamarinTests.ObjCRuntime {
 				Messaging.void_objc_msgSend (ptr, Selector.GetHandle ("release"));
 			}
 		}
+#endif
 
 		[Register ("IntPtrCtorTestClass")]
 		class IntPtrCtorTestClass : NSObject {
