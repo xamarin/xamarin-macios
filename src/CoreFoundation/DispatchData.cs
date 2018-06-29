@@ -34,19 +34,54 @@ using Foundation;
 namespace CoreFoundation {
 
 	public class DispatchData : DispatchObject {
+		static IntPtr lib, free;
+		static DispatchData ()
+		{
+			lib = Dlfcn.dlopen (Constants.libcLibrary, 0);
+			free = Dlfcn.dlsym (lib, "_dispatch_data_destructor_free");
+		}
+		
 		public DispatchData (IntPtr handle, bool owns) : base (handle, owns)
 		{
 		}
 
+		[DllImport (Constants.libcLibrary)]
+		extern static IntPtr dispatch_data_create (IntPtr buffer, ulong size, IntPtr dispatchQueue, IntPtr destructor);
+
+		//
+		// This constructor will do it for now, but we should support a constructor
+		// that allows custom releasing of the buffer
+		//
+		public static DispatchData FromByteBuffer (byte [] buffer)
+		{
+			if (buffer == null)
+				throw new ArgumentNullException (nameof (buffer));
+			var b = Marshal.AllocHGlobal (buffer.Length);
+			Marshal.Copy (buffer, 0, b, buffer.Length);
+			var dd = dispatch_data_create (b, (ulong) buffer.Length, IntPtr.Zero, destructor: free);
+			return new DispatchData (dd, owns: true);
+		}
+
+		//
+		// This will create a DispatchData by making a copy of the provided buffer
+		// 
+		public static DispatchData FromBuffer (IntPtr buffer, ulong size)
+		{
+			if (buffer == null)
+				throw new ArgumentNullException (nameof (buffer));
+			var dd = dispatch_data_create (buffer, size, IntPtr.Zero, destructor: IntPtr.Zero);
+			return new DispatchData (dd, owns: true);
+		}
+		
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_data_get_size (IntPtr handle);
 
 		public long Size => (long) dispatch_data_get_size (handle);
 
 		[DllImport (Constants.libcLibrary)]
-		extern static IntPtr dispatch_data_create_map (IntPtr handle, out IntPtr bufferPtr, out long size);
+		extern static IntPtr dispatch_data_create_map (IntPtr handle, out IntPtr bufferPtr, out ulong size);
 
-		public DispatchData CreateMap (out IntPtr bufferPtr, out long size)
+		public DispatchData CreateMap (out IntPtr bufferPtr, out ulong size)
 		{
 			var nh = dispatch_data_create_map (handle, out bufferPtr, out size);
 			return new DispatchData (nh, owns: true);
