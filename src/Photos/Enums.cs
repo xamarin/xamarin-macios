@@ -348,7 +348,7 @@ namespace Photos
 		HdrPlusEV0_EV0Image = 4,
 		PanoramaImage = 6,
 		SdofImage = 7,
-		SdofPlusOriginal_SDOFImage = 8,
+		SdofPlusOriginal_SdofImage = 8,
 		SdofPlusOriginal_OriginalImage = 9,
 	}
 }
