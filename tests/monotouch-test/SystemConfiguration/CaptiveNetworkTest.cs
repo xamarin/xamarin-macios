@@ -32,12 +32,6 @@ namespace MonoTouchFixtures.SystemConfiguration {
 	[Preserve (AllMembers = true)]
 	public class CaptiveNetworkTest {
 		
-		static bool RunningOnSnowLeopard {
-			get {
-				return !File.Exists ("/usr/lib/system/libsystem_kernel.dylib");
-			}
-		}
-
 #if !MONOMAC // Fields are not on Mac
 		[Test]
 		public void Fields ()
@@ -47,9 +41,15 @@ namespace MonoTouchFixtures.SystemConfiguration {
 					Assert.Inconclusive ("Fails (NullReferenceException) on iOS6 simulator");
 			}
 
+#if __TVOS__
+			Assert.IsNull (CaptiveNetwork.NetworkInfoKeyBSSID, "kCNNetworkInfoKeyBSSID");
+			Assert.IsNull (CaptiveNetwork.NetworkInfoKeySSID, "kCNNetworkInfoKeySSID");
+			Assert.IsNull (CaptiveNetwork.NetworkInfoKeySSIDData, "kCNNetworkInfoKeySSIDData");
+#else
 			Assert.That (CaptiveNetwork.NetworkInfoKeyBSSID.ToString (), Is.EqualTo ("BSSID"), "kCNNetworkInfoKeyBSSID");
 			Assert.That (CaptiveNetwork.NetworkInfoKeySSID.ToString (), Is.EqualTo ("SSID"), "kCNNetworkInfoKeySSID");
 			Assert.That (CaptiveNetwork.NetworkInfoKeySSIDData.ToString (), Is.EqualTo ("SSIDDATA"), "kCNNetworkInfoKeySSIDData");
+#endif
 		}
 #endif
 
@@ -58,9 +58,6 @@ namespace MonoTouchFixtures.SystemConfiguration {
 		public void GetSupportedInterfaces ()
 		{
 			if (Runtime.Arch == Arch.SIMULATOR) {
-				if (RunningOnSnowLeopard)
-					Assert.Inconclusive ("This test crash on the simulator with Snow Leopard");
-
 				if (TestRuntime.CheckSystemAndSDKVersion (6,0))
 					Assert.Inconclusive ("This test crash on the iOS 6 simulator with Lion");
 			}
@@ -78,7 +75,11 @@ namespace MonoTouchFixtures.SystemConfiguration {
 
 #if !MONOMAC // TryCopyCurrentNetworkInfo and fields checked are not on Mac
 		[Test]
+#if __TVOS__
+		[ExpectedException (typeof (NotSupportedException))]
+#else
 		[ExpectedException (typeof (ArgumentNullException))]
+#endif
 		public void TryCopyCurrentNetworkInfo_Null ()
 		{
 			NSDictionary dict;
@@ -86,6 +87,9 @@ namespace MonoTouchFixtures.SystemConfiguration {
 		}
 		
 		[Test]
+#if __TVOS__
+		[ExpectedException (typeof (NotSupportedException))]
+#endif
 		public void TryCopyCurrentNetworkInfo ()
 		{
 			if (Runtime.Arch == Arch.SIMULATOR) {
@@ -116,49 +120,65 @@ namespace MonoTouchFixtures.SystemConfiguration {
 #endif
 
 		[Test]
+#if __TVOS__
+		[ExpectedException (typeof (NotSupportedException))]
+#else
 		[ExpectedException (typeof (ArgumentNullException))]
+#endif
 		public void MarkPortalOnline_Null ()
 		{
 			CaptiveNetwork.MarkPortalOnline (null);
 		}
 
 		[Test]
+#if __TVOS__
+		[ExpectedException (typeof (NotSupportedException))]
+#endif
 		public void MarkPortalOnline ()
 		{
 			Assert.False (CaptiveNetwork.MarkPortalOnline ("xamxam"));
 		}
 		
 		[Test]
+#if __TVOS__
+		[ExpectedException (typeof (NotSupportedException))]
+#else
 		[ExpectedException (typeof (ArgumentNullException))]
+#endif
 		public void MarkPortalOffline_Null ()
 		{
 			CaptiveNetwork.MarkPortalOffline (null);
 		}
 
 		[Test]
+#if __TVOS__
+		[ExpectedException (typeof (NotSupportedException))]
+#endif
 		public void MarkPortalOffline ()
 		{
 			Assert.False (CaptiveNetwork.MarkPortalOffline ("xamxam"));
 		}
 		
 		[Test]
+#if __TVOS__
+		[ExpectedException (typeof (NotSupportedException))]
+#else
 		[ExpectedException (typeof (ArgumentNullException))]
+#endif
 		public void SetSupportedSSIDs_Null ()
 		{
 			CaptiveNetwork.SetSupportedSSIDs (null);
 		}
 
 		[Test]
+#if __TVOS__
+		[ExpectedException (typeof (NotSupportedException))]
+#endif
 		public void SetSupportedSSIDs ()
 		{
 #if MONOMAC
 			bool supported = true;
 #else
-			if (Runtime.Arch == Arch.SIMULATOR) {
-				if (RunningOnSnowLeopard)
-					Assert.Inconclusive ("This test crash on the simulator with Snow Leopard");
-			}
-
 			// that API is deprecated in iOS9 - and it might be why it returns false (or not)
 			bool supported = !UIDevice.CurrentDevice.CheckSystemVersion (9,0);
 #endif
