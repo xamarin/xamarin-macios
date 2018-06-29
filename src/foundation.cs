@@ -5201,6 +5201,24 @@ namespace Foundation
 		[Watch (5,0), NoTV, NoMac, iOS (12,0)]
 		[NullAllowed, Export ("suggestedInvocationPhrase")]
 		string SuggestedInvocationPhrase { get; set; }
+
+		[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
+		[Export ("eligibleForPrediction")]
+		bool EligibleForPrediction { [Bind ("isEligibleForPrediction")] get; set; }
+
+		[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
+		[NullAllowed, Export ("persistentIdentifier")]
+		string PersistentIdentifier { get; set; }
+
+		[Watch (5,0), NoTV, NoMac, iOS (12,0)]
+		[Static]
+		[Export ("deleteSavedUserActivitiesWithPersistentIdentifiers:completionHandler:")]
+		void DeleteSavedUserActivitiesWithPersistentIdentifiers (string[] persistentIdentifiers, Action handler);
+
+		[Watch (5,0), NoTV, NoMac, iOS (12,0)]
+		[Static]
+		[Export ("deleteAllSavedUserActivitiesWithCompletionHandler:")]
+		void DeleteAllSavedUserActivitiesWithCompletionHandler (Action handler);
 	}
 
 	[iOS (8,0)][Mac (10,10, onlyOn64 : true)] // same as NSUserActivity

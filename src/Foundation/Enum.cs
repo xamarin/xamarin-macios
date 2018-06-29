@@ -899,6 +899,8 @@ namespace Foundation  {
 		Video,
 		Background,
 		Voice,
+		[Mac (10,14)][iOS (12,0)][Watch (5,0)][TV (12,0)]
+		ResponsiveData,
 		[Mac (10,12)][iOS (10,0)][Watch (3,0)][TV (10,0)]
 		CallSignaling = 11,
 	}
