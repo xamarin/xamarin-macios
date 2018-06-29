@@ -827,7 +827,7 @@ GLKIT_SOURCES = \
 
 # HealthKit
 
-HEALTHKIT_CORE_SOURCES = \
+HEALTHKIT_API_SOURCES = \
 	HealthKit/Enums.cs \
 
 HEALTHKIT_SOURCES = \
@@ -1350,6 +1350,7 @@ STOREKIT_CORE_SOURCES = \
 
 STOREKIT_SOURCES = \
 	StoreKit/NativeMethods.cs \
+	StoreKit/SKAdNetworkCompat.cs \
 	StoreKit/SKCloudServiceSetupOptions.cs \
 	StoreKit/SKPayment.cs \
 	StoreKit/SKPaymentTransactionObserver.cs \

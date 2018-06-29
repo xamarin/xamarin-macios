@@ -714,14 +714,14 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
-		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0)]
+		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0, Message = "Use 'ManageUsers' instead.")]
 		[Async]
 		[Export ("addUserWithCompletionHandler:")]
 		void AddUser (Action<HMUser,NSError> completion);
 
 		[NoTV]
 		[NoWatch]
-		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0)]
+		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0, Message = "Use 'ManageUsers' instead.")]
 		[Async]
 		[Export ("removeUser:completionHandler:")]
 		void RemoveUser (HMUser user, Action<NSError> completion);
