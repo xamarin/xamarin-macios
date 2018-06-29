@@ -43,7 +43,6 @@
 !missing-selector! +NSColor::alternatingContentBackgroundColors not bound
 !missing-selector! +NSColor::controlAccentColor not bound
 !missing-selector! +NSColor::findHighlightColor not bound
-!missing-selector! +NSColor::linkColor not bound
 !missing-selector! +NSColor::placeholderTextColor not bound
 !missing-selector! +NSColor::selectedContentBackgroundColor not bound
 !missing-selector! +NSColor::separatorColor not bound
