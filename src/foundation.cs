@@ -10258,6 +10258,10 @@ namespace Foundation
 #if XAMCORE_4_0
 		NSDistributedNotificationCenter DefaultCenter { get; }
 #else
+		NSDistributedNotificationCenter GetDefaultCenter ();
+
+		[Advice ("Use 'GetDefaultCenter ()' for a strongly typed version.")]
+		[Wrap ("GetDefaultCenter ()", IsVirtual = true)]
 		NSObject DefaultCenter { get; }
 #endif
 
