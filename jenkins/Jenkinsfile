@@ -122,6 +122,12 @@ def reportFinalStatus (err, gitHash, currentStage)
             comment += " : ${err}"
         manager.addErrorBadge (comment)
         manager.buildFailure ()
+
+        // Ping the name part of the author's email.
+        // This is just a wild guess, there's no real way to know
+        // which slack username the committer has (if he's even on slack)
+        def who = env.CHANGE_AUTHOR_EMAIL.split ('@')[0];
+        slackSend (botUser: true, channel: "#ios-notifications", color: "danger", message: "@${who}: Internal Jenkins failed in stage '${currentStage}': ${err} (${env.RUN_DISPLAY_URL})")
     }
 
     if (fileExists (commentFile))
