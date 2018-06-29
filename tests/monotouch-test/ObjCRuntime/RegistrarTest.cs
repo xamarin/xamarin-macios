@@ -2087,7 +2087,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				ptr = Messaging.IntPtr_objc_msgSend (Class.GetHandle (typeof (D2)), Selector.GetHandle ("alloc"));
 				ptr = Messaging.IntPtr_objc_msgSend (ptr, Selector.GetHandle ("init"));
 				// Failed to marshal the Objective-C object 0x7adf5920 (type: AppDelegate_D2). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance (because the type 'AppDelegate+D2' does not have a constructor that takes one IntPtr argument).
-				Assert.Throws<Exception> (() => Runtime.GetNSObject<D2> (ptr), "c");
+				Assert.Throws<RuntimeException> (() => Runtime.GetNSObject<D2> (ptr), "c");
 			} finally {
 				Messaging.void_objc_msgSend (ptr, Selector.GetHandle ("release"));
 			}

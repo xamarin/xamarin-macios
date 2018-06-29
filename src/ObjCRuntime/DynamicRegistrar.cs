@@ -906,7 +906,7 @@ namespace Registrar {
 			if (res.IsInstanceCategory) {
 				mthis = IntPtr.Zero;
 			} else {
-				var nsobj = Runtime.GetNSObject (obj, Runtime.MissingCtorResolution.ThrowConstructor1NotFound, true);
+				var nsobj = Runtime.GetNSObject (obj, Runtime.MissingCtorResolution.ThrowConstructor1NotFound, true, selector, ObjectWrapper.Convert (res.Method));
 				mthis = ObjectWrapper.Convert (nsobj);
 				if (res.Method.ContainsGenericParameters) {
 					res.WriteUnmanagedDescription (desc, Runtime.FindClosedMethod (nsobj.GetType (), res.Method));
