@@ -7,3 +7,8 @@
 
 ## auto-generated attribute (but deprecated API where Apple removed it)
 !extra-designated-initializer! CKSubscription::initWithCoder: is incorrectly decorated with an [DesignatedInitializer] attribute
+
+## Formalizes a protocol for getting and setting keys on a CKRecord.
+## Not intended to be used directly by client code
+!missing-protocol! CKRecordKeyValueSetting not bound
+!missing-protocol-conformance! CKRecord should conform to CKRecordKeyValueSetting (defined in 'CKRecordKeyValueSettingConformance' category)
