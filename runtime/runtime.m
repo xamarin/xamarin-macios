@@ -2116,6 +2116,16 @@ get_method_block_wrapper_creator (MonoMethod *method, int par, guint32 *exceptio
 	return res;
 }
 
+void
+xamarin_release_block_on_main_thread (void *obj)
+{
+	if ([NSThread isMainThread]) {
+		_Block_release (obj);
+	} else {
+		dispatch_async_f (dispatch_get_main_queue (), obj, (dispatch_function_t) _Block_release);
+	}
+}
+
 /*
  * Creates a System.Delegate to wrap an Objective-C proxy when surfacing parameters from Objective-C to C#.
  * @method: method where the parameter is found
@@ -2165,7 +2175,7 @@ xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref,
 	MONO_EXIT_GC_SAFE;
 
 	if (block_wrapper_queue == NULL)
-		block_wrapper_queue = mono_gc_reference_queue_new ((void(*)(void*))_Block_release);
+		block_wrapper_queue = mono_gc_reference_queue_new (xamarin_release_block_on_main_thread);
 
 	mono_gc_reference_queue_add (block_wrapper_queue, delegate, nativeBlock);
 	pthread_mutex_unlock (&wrapper_hash_lock);

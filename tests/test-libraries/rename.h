@@ -6,6 +6,7 @@
 	#define ObjCBlockTester   object_ObjCBlockTester
 	#define FreedNotifier     object_FreedNotifier
 	#define EvilDeallocator   object_EvilDeallocator
+	#define MainThreadDeallocator object_MainThreadDeallocator
 	#define FakeType2         object_FakeType2
 	#define UltimateMachine   object_UltimateMachine
 	#define FrameworkTest     object_FrameworkTest
@@ -73,6 +74,7 @@
 	#define ObjCBlockTester   ar_ObjCBlockTester
 	#define FreedNotifier     ar_FreedNotifier
 	#define EvilDeallocator   ar_EvilDeallocator
+	#define MainThreadDeallocator ar_MainThreadDeallocator
 	#define FakeType2         ar_FakeType2
 	#define UltimateMachine   ar_UltimateMachine
 	#define FrameworkTest     ar_FrameworkTest
