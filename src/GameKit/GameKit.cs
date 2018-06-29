@@ -153,8 +153,17 @@ namespace GameKit {
 		Reliable,
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10,14)]
+	[Deprecated (PlatformName.TvOS, 12,0)]
+	[Deprecated (PlatformName.iOS, 12,0)]
 	[Native]
+#if WATCH && !XAMCORE_4_0
+	// removed in Xcode 10 but a breaking change (for us) to remove
+	[Obsolete ("Not used in watchOS.")]
+#else
+	[Unavailable (PlatformName.WatchOS)]
 	[ErrorDomain ("GKGameSessionErrorDomain")]
+#endif
 	public enum GKGameSessionErrorCode : long {
 		Unknown = 1,
 		NotAuthenticated = 2,
