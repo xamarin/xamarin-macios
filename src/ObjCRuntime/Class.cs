@@ -107,6 +107,11 @@ namespace ObjCRuntime {
 		{
 			IntPtr @class = IntPtr.Zero;
 
+			if (type.IsByRef || type.IsPointer || type.IsArray) {
+				is_custom_type = false;
+				return IntPtr.Zero;
+			}
+
 			// We cache results in a dictionary (type_to_class) - we put failures (when @class = IntPtr.Zero) in the dictionary as well.
 			// We do as little as possible with the lock held (only fetch/add to the dictionary, nothing else)
 
@@ -211,9 +216,6 @@ namespace ObjCRuntime {
 				// Using only the dynamic registrar
 				return IntPtr.Zero;
 			}
-
-			if (type.IsByRef)
-				return IntPtr.Zero;
 
 			if (type.IsGenericType)
 				type = type.GetGenericTypeDefinition ();
