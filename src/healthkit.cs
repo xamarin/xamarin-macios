@@ -2704,7 +2704,7 @@ namespace HealthKit {
 	}
 
 	[NoWatch, iOS (12,0)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject), Name = "HKFHIRResource")]
 	[DisableDefaultCtor]
 	interface HKFhirResource : NSSecureCoding, NSCopying
 	{
