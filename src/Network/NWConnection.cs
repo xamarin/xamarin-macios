@@ -24,6 +24,15 @@ namespace Network {
 		Failed    = 4,
 		Cancelled = 5
 	}
+
+	//
+	// Signature for a method invoked on data received, the "data" value can be null if the
+	// receive context is complete an the callback is ony delivering the completed event,
+	// or the connection encountered an error.    There are scenarios where the data will
+	// be present, and *also* the error will be set, indicating that some data was
+	// retrieved, before the error was raised.
+	//
+	public delegate void NWConnectionReceiveCompletion (IntPtr data, ulong dataSize, NWContentContext context, bool isComplete, NWError error);
 	
 	public class NWConnection : INativeObject, IDisposable {
 		IntPtr handle;
@@ -281,6 +290,227 @@ namespace Network {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void CancelCurrentEndpoint () => nw_connection_cancel_current_endpoint (handle);
 
+		delegate void nw_connection_receive_completion_t (IntPtr block,
+								  IntPtr dispatchData,
+								  IntPtr contentContext,
+								  [MarshalAs (UnmanagedType.U1)] bool isComplete,
+								  IntPtr error);
+								  
+		static nw_connection_receive_completion_t static_ReceiveCompletion = TrampolineReceiveCompletion;
 		
+		[MonoPInvokeCallback (typeof (nw_connection_receive_completion_t))]
+		static unsafe void TrampolineReceiveCompletion (IntPtr block, IntPtr dispatchDataPtr, IntPtr contentContext, bool isComplete, IntPtr error)
+		{
+			var descriptor = (BlockLiteral *) block;
+			var del = (NWConnectionReceiveCompletion) (descriptor->Target);
+			if (del != null){
+				DispatchData dispatchData = null, dataCopy = null;
+				IntPtr bufferAddress = IntPtr.Zero;
+				ulong bufferSize = 0;
+				
+				if (dispatchDataPtr != null){
+					dispatchData = new DispatchData (dispatchDataPtr, owns: false);
+					dataCopy =  dispatchData.CreateMap (out bufferAddress, out bufferSize);
+				}
+
+				del (bufferAddress,
+				     bufferSize,
+				     contentContext == IntPtr.Zero ? null : new NWContentContext (contentContext, owns: false),
+				     isComplete,
+				     error == IntPtr.Zero ? null : new NWError (error, owns: false));
+				
+				if (dispatchData != null){
+					dataCopy.Dispose ();
+					dataCopy.Dispose ();
+				}
+			}
+		}
+		
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern unsafe void nw_connection_receive (IntPtr handle, void *callback);
+		
+		public void Receive (NWConnectionReceiveCompletion callback)
+		{
+			unsafe {
+			        BlockLiteral *block_ptr_handler;
+			        BlockLiteral block_handler;
+			        block_handler = new BlockLiteral ();
+			        block_ptr_handler = &block_handler;
+			        block_handler.SetupBlockUnsafe (static_ReceiveCompletion, callback);
+			
+			        nw_connection_receive (handle, (void*) block_ptr_handler);
+			        block_ptr_handler->CleanupBlock ();
+			}
+		}
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern unsafe void nw_connection_receive_message (IntPtr handle, void *callback);
+		
+		public void ReceiveMessage (NWConnectionReceiveCompletion callback)
+		{
+			unsafe {
+			        BlockLiteral *block_ptr_handler;
+			        BlockLiteral block_handler;
+			        block_handler = new BlockLiteral ();
+			        block_ptr_handler = &block_handler;
+			        block_handler.SetupBlockUnsafe (static_ReceiveCompletion, callback);
+			
+			        nw_connection_receive_message (handle, (void*) block_ptr_handler);
+			        block_ptr_handler->CleanupBlock ();
+			}
+		}
+
+
+		delegate void nw_connection_send_completion_t (IntPtr block, IntPtr error);
+		static nw_connection_send_completion_t static_SendCompletion = TrampolineSendCompletion;
+		
+		[MonoPInvokeCallback (typeof (nw_connection_send_completion_t))]
+		static unsafe void TrampolineSendCompletion (IntPtr block, IntPtr error)
+		{
+			var descriptor = (BlockLiteral *) block;
+			var del = (Action<NWError>) (descriptor->Target);
+			if (del != null){
+				var err = error == IntPtr.Zero ? null : new NWError (error);
+			        del (err);
+				err?.Dispose ();
+			}
+		}
+		
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern unsafe void nw_connection_send (IntPtr handle,
+							      IntPtr dispatchData,
+							      IntPtr contentContext,
+							      [MarshalAs(UnmanagedType.U1)] bool isComplete,
+							      void *callback);
+
+		//
+		// This has more uses than the current ones, we might want to introduce
+		// additional SendXxx methods to encode the few options that are currently
+		// configured via one of the three NWContentContext static properties
+		//
+		unsafe void LowLevelSend (IntPtr handle, DispatchData buffer, IntPtr contentContext, bool isComplete, void *callback)
+		{
+			nw_connection_send (handle: handle,
+					    dispatchData: buffer == null ? IntPtr.Zero : buffer.Handle,
+					    contentContext: contentContext,
+					    isComplete: isComplete,
+					    callback: callback);
+					    
+		}
+		
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public void Send (byte [] buffer, NWContentContext context, Action<NWError> callback)
+		{
+			DispatchData d = null;
+			if (buffer != null)
+				d = DispatchData.FromByteBuffer (buffer);
+
+			Send (buffer, context, callback);
+		}
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public void Send (DispatchData buffer, NWContentContext context, bool isComplete, Action<NWError> callback)
+		{
+			if (context == null)
+				throw new ArgumentNullException (nameof (context));
+			if (callback == null)
+				throw new ArgumentNullException (nameof (callback));
+			
+			unsafe {
+			        BlockLiteral *block_ptr_handler;
+			        BlockLiteral block_handler;
+			        block_handler = new BlockLiteral ();
+			        block_ptr_handler = &block_handler;
+			        block_handler.SetupBlockUnsafe (static_SendCompletion, callback);
+
+				LowLevelSend (handle, buffer, context.Handle, isComplete, block_ptr_handler);
+			        block_ptr_handler->CleanupBlock ();
+			}
+		}
+
+		static IntPtr _nw_connection_send_idempotent_content;
+
+		// This is a special token handled by the library that configures the Send operation to be idempotent.
+		static IntPtr NW_CONNECTION_SEND_IDEMPOTENT_CONTENT ()
+		{
+			if (_nw_connection_send_idempotent_content == IntPtr.Zero)
+				_nw_connection_send_idempotent_content = Dlfcn.dlsym (Libraries.Network.Handle, "_nw_connection_send_idempotent_content");
+			return _nw_connection_send_idempotent_content;
+		}
+		
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public unsafe void SendIdempotent (DispatchData buffer, NWContentContext context, bool isComplete)
+		{
+			if (context == null)
+				throw new ArgumentNullException (nameof (context));
+
+			LowLevelSend (handle, buffer, context.Handle, isComplete, (void *) NW_CONNECTION_SEND_IDEMPOTENT_CONTENT ());
+		}
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public void SendIdempotent (byte [] buffer, NWContentContext context, bool isComplete)
+		{
+			DispatchData d = null;
+			if (buffer != null)
+				d = DispatchData.FromByteBuffer (buffer);
+
+			SendIdempotent (buffer, context, isComplete);
+		}
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		extern static string nw_connection_copy_description (IntPtr handle);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public string Description => nw_connection_copy_description (handle);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		extern static IntPtr nw_connection_copy_current_path (IntPtr handle);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public NWPath CurrentPath {
+			get {
+				var x = nw_connection_copy_current_path (handle);
+				if (x == IntPtr.Zero)
+					return null;
+				return new NWPath (x, owns: true);
+			}
+		}
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		extern static IntPtr nw_connection_copy_protocol_metadata (IntPtr handle, IntPtr protocolDefinition);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public NWProtocolMetadata GetProtocolMetadata (NWProtocolDefinition definition)
+		{
+			if (definition == null)
+				throw new ArgumentNullException (nameof (definition));
+			
+			var x = nw_connection_copy_protocol_metadata (handle, definition.handle);
+			if (x == IntPtr.Zero)
+				return null;
+			return new NWProtocolMetadata (x, owns: true);
+		}
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		extern static uint nw_connection_get_maximum_datagram_size (IntPtr handle);
+
+		public uint MaximumDatagramSize => nw_connection_get_maximum_datagram_size (handle);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		extern static void nw_connection_batch (IntPtr handle, IntPtr callback_block);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public void Batch (Action method)
+		{
+			BlockLiteral.SimpleCall (method, (arg)=> nw_connection_batch (handle, arg));
+		}
 	}
 }

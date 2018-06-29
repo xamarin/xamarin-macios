@@ -22,6 +22,12 @@ namespace Network {
 		Interactive = 2,
 		Aggregate = 3, 
 	}
+
+	static partial class Libraries  {
+		static public class Network {
+                        static public readonly IntPtr Handle = Dlfcn.dlopen (Constants.NetworkLibrary, 0);
+                }
+	}
 	
 	public class NWParameters : INativeObject, IDisposable {
 		internal IntPtr handle;
@@ -41,14 +47,12 @@ namespace Network {
 		{
 		}
 
-		static readonly IntPtr LibraryHandle = Dlfcn.dlopen (Constants.NetworkLibrary, 0);
-		
 		static IntPtr _nw_parameters_configure_protocol_default_configuration;
 		
 		static unsafe BlockLiteral *DEFAULT_CONFIGURATION ()
 		{
 			if (_nw_parameters_configure_protocol_default_configuration == IntPtr.Zero)
-				_nw_parameters_configure_protocol_default_configuration = Dlfcn.dlsym (LibraryHandle, "_nw_parameters_configure_protocol_default_configuration");
+				_nw_parameters_configure_protocol_default_configuration = Dlfcn.dlsym (Libraries.Network.Handle, "_nw_parameters_configure_protocol_default_configuration");
 
 			return (BlockLiteral *) _nw_parameters_configure_protocol_default_configuration;
 		}
@@ -57,7 +61,7 @@ namespace Network {
 		static unsafe BlockLiteral *DISABLE_PROTOCOL ()
 		{
 			if (_nw_parameters_configure_protocol_disable == IntPtr.Zero)
-				_nw_parameters_configure_protocol_disable = Dlfcn.dlsym (LibraryHandle, "_nw_parameters_configure_protocol_disable");
+				_nw_parameters_configure_protocol_disable = Dlfcn.dlsym (Libraries.Network.Handle, "_nw_parameters_configure_protocol_disable");
 			return (BlockLiteral *) _nw_parameters_configure_protocol_disable;
 		}
 

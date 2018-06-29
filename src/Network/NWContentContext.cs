@@ -13,7 +13,11 @@ using Foundation;
 using CoreFoundation;
 
 namespace Network {
-	
+
+	//
+	// The content context, there are a few pre-configured content contexts for sending
+	// available as static properties on this class
+	// 
 	public class NWContentContext : INativeObject, IDisposable {
 		IntPtr handle;
 		public IntPtr Handle {
@@ -198,5 +202,18 @@ namespace Network {
 			        block_ptr_handler->CleanupBlock ();
 			}
 		}
+
+		//
+		// Use this as a parameter to NWConnection.Send's with all the default properties
+		// ie: NW_CONNECTION_DEFAULT_MESSAGE_CONTEXT, use this for datagrams
+		public static NWContentContext DefaultMessage => new NWContentContext (Dlfcn.dlsym (Libraries.Network.Handle, "_nw_content_context_default_message"), owns: false);
+
+		// Use this as a parameter to NWConnection.Send's to indicate that no more sends are expected
+		// (ie: NW_CONNECTION_FINAL_MESSAGE_CONTEXT)
+		public static NWContentContext FinalMessage = new NWContentContext (Dlfcn.dlsym (Libraries.Network.Handle, "_nw_content_context_final_send"), owns: false);
+
+		// This sending context represents the entire connection
+		// ie: NW_CONNECTION_DEFAULT_STREAM_CONTEXT
+		public static NWContentContext DefaultStream = new NWContentContext (Dlfcn.dlsym (Libraries.Network.Handle, "_nw_content_context_default_stream"), owns: false);	
 	}
 }
