@@ -2300,18 +2300,18 @@ namespace Foundation
 		[return: NullAllowed]
 		NSData ArchivedDataWithRootObject (NSObject @object, bool requiresSecureCoding, [NullAllowed] out NSError error);
 
-		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use ArchivedDataWithRootObject(NSObject, bool, out NSError) instead.")]
-		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use ArchivedDataWithRootObject(NSObject, bool, out NSError) instead.")]
-		[Deprecated (PlatformName.iOS, 12, 0, message: "Use ArchivedDataWithRootObject(NSObject, bool, out NSError) instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use ArchivedDataWithRootObject(NSObject, bool, out NSError) instead.")]
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'ArchivedDataWithRootObject (NSObject, bool, out NSError)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'ArchivedDataWithRootObject (NSObject, bool, out NSError)' instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'ArchivedDataWithRootObject (NSObject, bool, out NSError)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'ArchivedDataWithRootObject (NSObject, bool, out NSError)' instead.")]
 		[Export ("archivedDataWithRootObject:")]
 		[Static]
 		NSData ArchivedDataWithRootObject (NSObject root);
 		
-		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use ArchivedDataWithRootObject(NSObject, bool, out NSError) instead.")]
-		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use ArchivedDataWithRootObject(NSObject, bool, out NSError) instead.")]
-		[Deprecated (PlatformName.iOS, 12, 0, message: "Use ArchivedDataWithRootObject(NSObject, bool, out NSError) instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use ArchivedDataWithRootObject(NSObject, bool, out NSError) instead.")]
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'ArchivedDataWithRootObject (NSObject, bool, out NSError)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'ArchivedDataWithRootObject (NSObject, bool, out NSError)' instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'ArchivedDataWithRootObject (NSObject, bool, out NSError)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'ArchivedDataWithRootObject (NSObject, bool, out NSError)' instead.")]
 		[Export ("archiveRootObject:toFile:")]
 		[Static]
 		bool ArchiveRootObjectToFile (NSObject root, string file);
@@ -2387,35 +2387,35 @@ namespace Foundation
 		NSObject GetUnarchivedObject (Type [] types, NSData data, [NullAllowed] out NSError error);
 
 		[Export ("initForReadingWithData:")]
-		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use NSKeyedUnarchiver (NSData, out NSError) instead.")]
-		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use NSKeyedUnarchiver (NSData, out NSError) instead.")]
-		[Deprecated (PlatformName.iOS, 12, 0, message: "Use NSKeyedUnarchiver (NSData, out NSError) instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use NSKeyedUnarchiver (NSData, out NSError) instead.")]
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'NSKeyedUnarchiver (NSData, out NSError)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'NSKeyedUnarchiver (NSData, out NSError)' instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'NSKeyedUnarchiver (NSData, out NSError)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'NSKeyedUnarchiver (NSData, out NSError)' instead.")]
 		[MarshalNativeExceptions]
 		IntPtr Constructor (NSData data);
 	
 		[Static, Export ("unarchiveObjectWithData:")]
-		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use GetUnarchivedObject() instead.")]
-		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use GetUnarchivedObject() instead.")]
-		[Deprecated (PlatformName.iOS, 12, 0, message: "Use GetUnarchivedObject() instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use GetUnarchivedObject() instead.")]
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'GetUnarchivedObject ()' instead.")]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'GetUnarchivedObject ()' instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'GetUnarchivedObject ()' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'GetUnarchivedObject ()' instead.")]
 		[MarshalNativeExceptions]
 		NSObject UnarchiveObject (NSData data);
 
-		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use GetUnarchivedObject() instead.")]
-		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use GetUnarchivedObject() instead.")]
-		[Deprecated (PlatformName.iOS, 12, 0, message: "Use GetUnarchivedObject() instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use GetUnarchivedObject() instead.")]
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'GetUnarchivedObject ()' instead.")]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'GetUnarchivedObject ()' instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'GetUnarchivedObject ()' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'GetUnarchivedObject ()' instead.")]
 		[Static, Export ("unarchiveTopLevelObjectWithData:error:")]
 		[iOS (9,0), Mac(10,11)]
 		// FIXME: [MarshalNativeExceptions]
 		NSObject UnarchiveTopLevelObject (NSData data, out NSError error);
 		
 		[Static, Export ("unarchiveObjectWithFile:")]
-		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use GetUnarchivedObject() instead.")]
-		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use GetUnarchivedObject() instead.")]
-		[Deprecated (PlatformName.iOS, 12, 0, message: "Use GetUnarchivedObject() instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use GetUnarchivedObject() instead.")]
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'GetUnarchivedObject ()' instead.")]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'GetUnarchivedObject ()' instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'GetUnarchivedObject ()' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'GetUnarchivedObject ()' instead.")]
 		[MarshalNativeExceptions]
 		NSObject UnarchiveFile (string file);
 
