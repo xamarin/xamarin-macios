@@ -7900,12 +7900,12 @@ namespace AppKit {
 
 #if XAMCORE_4_0
 		[Export ("itemArray", ArgumentSemantic.Copy)]
-		NSMenuItem[] ItemArray { get; [Mac (10, 14, onlyOn64: true))] set; }
+		NSMenuItem[] ItemArray { get; [Mac (10, 14, onlyOn64: true)] set; }
 #else
 		[Export ("itemArray")]
 		NSMenuItem [] ItemArray ();
 
-		[Mac (10, 14, onlyOn64: true))]
+		[Mac (10, 14, onlyOn64: true)]
 		[Export ("setItemArray:")]
 		void SetItemArray (NSMenuItem [] items);
 #endif
@@ -17823,12 +17823,12 @@ namespace AppKit {
 
 #if XAMCORE_4_0
 		[Export ("tabViewItems")]
-		NSTabViewItem [] Items { get; [Mac (10, 14, onlyOn64: true))] set; }
+		NSTabViewItem [] Items { get; [Mac (10, 14, onlyOn64: true)] set; }
 #else
 		[Export ("tabViewItems")]
 		NSTabViewItem [] Items { get; }
 
-		[Mac (10, 14, onlyOn64: true))]
+		[Mac (10, 14, onlyOn64: true)]
 		[Export ("setTabViewItems:")]
 		void SetItems (NSTabViewItem [] items);
 #endif
@@ -18238,7 +18238,7 @@ namespace AppKit {
 
 #if XAMCORE_4_0
 		[Export ("cellBaselineOffset")]
-		CGPoint CellBaselineOffset { get; [Mac (10, 14, onlyOn64: true))] set; }
+		CGPoint CellBaselineOffset { get; [Mac (10, 14, onlyOn64: true)] set; }
 #else
 		[Export ("cellBaselineOffset")]
 		CGPoint CellBaselineOffset { get; }
