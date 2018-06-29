@@ -2279,18 +2279,18 @@ namespace Foundation
 		IntPtr Constructor (bool requiresSecureCoding);
 
 		// hack so we can decorate the default .ctor with availability attributes
-		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use NSKeyedArchiver (bool) instead.")]
-		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use NSKeyedArchiver (bool) instead.")]
-		[Deprecated (PlatformName.iOS, 12, 0, message: "Use NSKeyedArchiver (bool) instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use NSKeyedArchiver (bool) instead.")]
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'NSKeyedArchiver (bool)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'NSKeyedArchiver (bool)' instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'NSKeyedArchiver (bool)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'NSKeyedArchiver (bool)' instead.")]
 		[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
 		[Export ("init")]
 		IntPtr Constructor ();
 
-		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use NSKeyedArchiver (bool) instead.")]
-		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use NSKeyedArchiver (bool) instead.")]
-		[Deprecated (PlatformName.iOS, 12, 0, message: "Use NSKeyedArchiver (bool) instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use NSKeyedArchiver (bool) instead.")]
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'NSKeyedArchiver (bool)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'NSKeyedArchiver (bool)' instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'NSKeyedArchiver (bool)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'NSKeyedArchiver (bool)' instead.")]
 		[Export ("initForWritingWithMutableData:")]
 		IntPtr Constructor (NSMutableData data);
 	
