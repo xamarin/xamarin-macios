@@ -5213,12 +5213,12 @@ namespace Foundation
 		[Watch (5,0), NoTV, NoMac, iOS (12,0)]
 		[Static]
 		[Export ("deleteSavedUserActivitiesWithPersistentIdentifiers:completionHandler:")]
-		void DeleteSavedUserActivitiesWithPersistentIdentifiers (string[] persistentIdentifiers, Action handler);
+		void DeleteSavedUserActivities (string[] persistentIdentifiers, Action handler);
 
 		[Watch (5,0), NoTV, NoMac, iOS (12,0)]
 		[Static]
 		[Export ("deleteAllSavedUserActivitiesWithCompletionHandler:")]
-		void DeleteAllSavedUserActivitiesWithCompletionHandler (Action handler);
+		void DeleteAllSavedUserActivities (Action handler);
 	}
 
 	[iOS (8,0)][Mac (10,10, onlyOn64 : true)] // same as NSUserActivity
