@@ -2274,18 +2274,44 @@ namespace Foundation
 	[DisableDefaultCtor]
 	interface NSKeyedArchiver {
 
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("initRequiringSecureCoding:")]
+		IntPtr Constructor (bool requiresSecureCoding);
+
 		// hack so we can decorate the default .ctor with availability attributes
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use NSKeyedArchiver (bool) instead.")]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use NSKeyedArchiver (bool) instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use NSKeyedArchiver (bool) instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use NSKeyedArchiver (bool) instead.")]
 		[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
 		[Export ("init")]
 		IntPtr Constructor ();
 
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use NSKeyedArchiver (bool) instead.")]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use NSKeyedArchiver (bool) instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use NSKeyedArchiver (bool) instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use NSKeyedArchiver (bool) instead.")]
 		[Export ("initForWritingWithMutableData:")]
 		IntPtr Constructor (NSMutableData data);
 	
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("archivedDataWithRootObject:requiringSecureCoding:error:")]
+		[return: NullAllowed]
+		NSData ArchivedDataWithRootObject (NSObject @object, bool requiresSecureCoding, [NullAllowed] out NSError error);
+
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use ArchivedDataWithRootObject(NSObject, bool, out NSError) instead.")]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use ArchivedDataWithRootObject(NSObject, bool, out NSError) instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use ArchivedDataWithRootObject(NSObject, bool, out NSError) instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use ArchivedDataWithRootObject(NSObject, bool, out NSError) instead.")]
 		[Export ("archivedDataWithRootObject:")]
 		[Static]
 		NSData ArchivedDataWithRootObject (NSObject root);
 		
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use ArchivedDataWithRootObject(NSObject, bool, out NSError) instead.")]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use ArchivedDataWithRootObject(NSObject, bool, out NSError) instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use ArchivedDataWithRootObject(NSObject, bool, out NSError) instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use ArchivedDataWithRootObject(NSObject, bool, out NSError) instead.")]
 		[Export ("archiveRootObject:toFile:")]
 		[Static]
 		bool ArchiveRootObjectToFile (NSObject root, string file);
@@ -2332,20 +2358,64 @@ namespace Foundation
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** -[NSKeyedUnarchiver init]: cannot use -init for initialization
 	[DisableDefaultCtor]
 	interface NSKeyedUnarchiver {
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("initForReadingFromData:error:")]
+		IntPtr Constructor (NSData data, [NullAllowed] out NSError error);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("unarchivedObjectOfClass:fromData:error:")]
+		[return: NullAllowed]
+		NSObject GetUnarchivedObject (Class cls, NSData data, [NullAllowed] out NSError error);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Wrap ("GetUnarchivedObject (new Class (type), data, out error)")]
+		[return: NullAllowed]
+		NSObject GetUnarchivedObject (Type type, NSData data, [NullAllowed] out NSError error);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("unarchivedObjectOfClasses:fromData:error:")]
+		[return: NullAllowed]
+		NSObject GetUnarchivedObject (NSSet<Class> classes, NSData data, [NullAllowed] out NSError error);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Wrap ("GetUnarchivedObject (new NSSet<Class> (Array.ConvertAll (types, t => new Class (t))), data, out error)")]
+		[return: NullAllowed]
+		NSObject GetUnarchivedObject (Type [] types, NSData data, [NullAllowed] out NSError error);
+
 		[Export ("initForReadingWithData:")]
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use NSKeyedUnarchiver (NSData, out NSError) instead.")]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use NSKeyedUnarchiver (NSData, out NSError) instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use NSKeyedUnarchiver (NSData, out NSError) instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use NSKeyedUnarchiver (NSData, out NSError) instead.")]
 		[MarshalNativeExceptions]
 		IntPtr Constructor (NSData data);
 	
 		[Static, Export ("unarchiveObjectWithData:")]
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use GetUnarchivedObject() instead.")]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use GetUnarchivedObject() instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use GetUnarchivedObject() instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use GetUnarchivedObject() instead.")]
 		[MarshalNativeExceptions]
 		NSObject UnarchiveObject (NSData data);
 
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use GetUnarchivedObject() instead.")]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use GetUnarchivedObject() instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use GetUnarchivedObject() instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use GetUnarchivedObject() instead.")]
 		[Static, Export ("unarchiveTopLevelObjectWithData:error:")]
 		[iOS (9,0), Mac(10,11)]
 		// FIXME: [MarshalNativeExceptions]
 		NSObject UnarchiveTopLevelObject (NSData data, out NSError error);
 		
 		[Static, Export ("unarchiveObjectWithFile:")]
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use GetUnarchivedObject() instead.")]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use GetUnarchivedObject() instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use GetUnarchivedObject() instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use GetUnarchivedObject() instead.")]
 		[MarshalNativeExceptions]
 		NSObject UnarchiveFile (string file);
 
