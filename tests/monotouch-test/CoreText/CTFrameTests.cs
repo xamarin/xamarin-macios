@@ -44,6 +44,7 @@ namespace MonoTouchFixtures.CoreText {
 		[Test]
 		public void CTTypesetterCreateTest ()
 		{
+			TestRuntime.AssertXcodeVersion (10, 0);
 			using (var framesetter = new CTFramesetter (new NSAttributedString ("Testing, testing, 1, 2, 3...")))
 			using (var type = framesetter.GetTypesetter ())
 			using (var newFrame = CTFramesetter.Create (type)) {

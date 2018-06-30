@@ -50,6 +50,7 @@ namespace MonoTouchFixtures.CoreText {
 		[Test]
 		public void GetMatchingFontDescriptorsCollectionOptionsTest ()
 		{
+			TestRuntime.AssertXcodeVersion (10, 0);
 			using (var collection = new CTFontCollection (null)) {
 				var fd1 = collection.GetMatchingFontDescriptors ();
 				var fd2 = collection.GetMatchingFontDescriptors (options: null); // documented to return the same thing as the parameterless if null
