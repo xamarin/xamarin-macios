@@ -1,0 +1,3 @@
+## APIs introduced and deprecated at the same time
+!missing-protocol-member! MLBatchProvider::featureProviderAtIndex: not found
+!missing-protocol-member! MLBatchProvider::featureProviderCount not found

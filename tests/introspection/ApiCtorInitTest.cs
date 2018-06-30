@@ -363,6 +363,9 @@ namespace Introspection {
 			case "UISearchBar":
 				// - (nullable instancetype)initWithCoder:(NSCoder *)aDecoder NS_DESIGNATED_INITIALIZER __TVOS_PROHIBITED;
 				return true;
+			case "TVDigitEntryViewController":
+				// full screen, no customization w/NIB
+				return true;
 #endif
 			case "PdfAnnotationButtonWidget":
 			case "PdfAnnotationChoiceWidget":
@@ -418,8 +421,10 @@ namespace Introspection {
 			case "MDLColorSwatchTexture":
 				// they don't make sense without extra arguments
 				return true;
-			case "ASCredentialProviderViewController":
-				// goal is to "provides a standard interface for creating a credential provider extension", not a custom one
+			case "ASCredentialProviderViewController": // goal is to "provides a standard interface for creating a credential provider extension", not a custom one
+			case "INUIAddVoiceShortcutViewController": // Doesn't make sense without INVoiceShortcut and there is no other way to set this unless you use the other only .ctor
+			case "INUIEditVoiceShortcutViewController": // Doesn't make sense without INVoiceShortcut and there is no other way to set this unless you use the other only .ctor
+			case "ILClassificationUIExtensionViewController": // Meant to be an extension
 				if (ctor.ToString () == "Void .ctor(String, NSBundle)")
 					return true;
 				break;

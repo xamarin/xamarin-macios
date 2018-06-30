@@ -82,6 +82,7 @@ namespace xharness
 		public string JENKINS_RESULTS_DIRECTORY { get; set; } // Use same name as in Makefiles, so that a grep finds it.
 		public string MAC_DESTDIR { get; set; }
 		public string IOS_DESTDIR { get; set; }
+		public bool IncludeMac32 { get; set; }
 
 		// Run
 		public AppRunnerTarget Target { get; set; }

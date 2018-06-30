@@ -64,6 +64,8 @@ namespace Xamarin.Linker {
 			PdfKit = profile.GetNamespace ("PdfKit");
 			CoreImage = profile.GetNamespace ("CoreImage");
 			AdSupport = profile.GetNamespace ("AdSupport");
+			NaturalLanguage = profile.GetNamespace ("NaturalLanguage");
+			VideoSubscriberAccount = profile.GetNamespace ("VideoSubscriberAccount");
 #if MONOMAC
 			PhotosUI = profile.GetNamespace ("PhotosUI");
 			IOBluetooth = profile.GetNamespace ("IOBluetooth");
@@ -155,6 +157,9 @@ namespace Xamarin.Linker {
 
 		public static string AdSupport { get; private set; }
 
+		public static string NaturalLanguage { get; private set; }
+
+		public static string VideoSubscriberAccount { get; private set; }
 #if MONOMAC
 		public static string PhotosUI { get; private set; }
 		public static string IOBluetooth { get; private set; }

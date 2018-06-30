@@ -46,12 +46,3 @@
 !missing-pinvoke! ATSFontSetEnabled is not bound
 !missing-pinvoke! ATSFontSetGlobalAutoActivationSetting is not bound
 !missing-pinvoke! ATSGetGeneration is not bound
-!missing-pinvoke! DisposeATSUDirectLayoutOperationOverrideUPP is not bound
-!missing-pinvoke! DisposeFMFontCallbackFilterUPP is not bound
-!missing-pinvoke! DisposeFMFontFamilyCallbackFilterUPP is not bound
-!missing-pinvoke! InvokeATSUDirectLayoutOperationOverrideUPP is not bound
-!missing-pinvoke! InvokeFMFontCallbackFilterUPP is not bound
-!missing-pinvoke! InvokeFMFontFamilyCallbackFilterUPP is not bound
-!missing-pinvoke! NewATSUDirectLayoutOperationOverrideUPP is not bound
-!missing-pinvoke! NewFMFontCallbackFilterUPP is not bound
-!missing-pinvoke! NewFMFontFamilyCallbackFilterUPP is not bound

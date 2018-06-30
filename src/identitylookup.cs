@@ -33,6 +33,15 @@ namespace IdentityLookup {
 		RedundantNetworkDeferral = 5,
 	}
 
+	[iOS (12, 0)]
+	[Native]
+	enum ILClassificationAction : long {
+		None = 0,
+		ReportNotJunk = 1,
+		ReportJunk = 2,
+		ReportJunkAndBlockSender = 3,
+	}
+
 	[iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -91,6 +100,86 @@ namespace IdentityLookup {
 
 		[Export ("data")]
 		NSData Data { get; }
+	}
+
+	[iOS (12,0)]
+	[BaseType (typeof (ILClassificationRequest))]
+	[DisableDefaultCtor]
+	interface ILCallClassificationRequest : NSSecureCoding {
+
+		[Export ("callCommunications", ArgumentSemantic.Copy)]
+		ILCallCommunication [] CallCommunications { get; }
+	}
+
+	[iOS (12,0)]
+	[BaseType (typeof (ILCommunication))]
+	[DisableDefaultCtor]
+	interface ILCallCommunication {
+
+		[Export ("isEqualToCallCommunication:")]
+		bool IsEqualTo (ILCallCommunication communication);
+	}
+
+	[Abstract]
+	[iOS (12,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface ILClassificationRequest : NSSecureCoding {
+
+	}
+
+	[iOS (12,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface ILClassificationResponse : NSSecureCoding {
+
+		[Export ("action", ArgumentSemantic.Assign)]
+		ILClassificationAction Action { get; }
+
+		// Objects can be NSString, NSNumber, NSArray, NSDictionary, or NSNull
+		[NullAllowed, Export ("userInfo", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, NSObject> UserInfo { get; set; }
+
+		[Export ("initWithClassificationAction:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (ILClassificationAction action);
+	}
+
+	[Abstract]
+	[iOS (12,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface ILCommunication : NSSecureCoding {
+
+		[NullAllowed, Export ("sender")]
+		string Sender { get; }
+
+		[Export ("dateReceived", ArgumentSemantic.Copy)]
+		NSDate DateReceived { get; }
+
+		[Export ("isEqualToCommunication:")]
+		bool IsEqualTo (ILCommunication communication);
+	}
+
+	[iOS (12,0)]
+	[BaseType (typeof (ILClassificationRequest))]
+	[DisableDefaultCtor]
+	interface ILMessageClassificationRequest : NSSecureCoding {
+
+		[Export ("messageCommunications", ArgumentSemantic.Copy)]
+		ILMessageCommunication [] MessageCommunications { get; }
+	}
+
+	[iOS (12,0)]
+	[BaseType (typeof (ILCommunication))]
+	[DisableDefaultCtor]
+	interface ILMessageCommunication {
+
+		[NullAllowed, Export ("messageBody")]
+		string MessageBody { get; }
+
+		[Export ("isEqualToMessageCommunication:")]
+		bool IsEqualTo (ILMessageCommunication communication);
 	}
 }
 #endif

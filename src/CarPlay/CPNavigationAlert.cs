@@ -15,8 +15,8 @@ using ObjCRuntime;
 namespace CarPlay {
 	public partial class CPNavigationAlert {
 		// Defined inside CPNavigationAlert.h
-		// static NSTimeInterval const CPNavigationAlertMinimumDuration = 10;
-		public const double MinimumDuration = 10;
+		// static NSTimeInterval const CPNavigationAlertMinimumDuration = 5;
+		public const double MinimumDuration = 5;
 	}
 }
 #endif // XAMCORE_2_0

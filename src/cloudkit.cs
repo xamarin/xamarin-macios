@@ -92,6 +92,14 @@ namespace CloudKit {
 		[Export ("rootRecordID", ArgumentSemantic.Copy)]
 		CKRecordID RootRecordID { get; }
 
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("participantRole", ArgumentSemantic.Assign)]
+		CKShareParticipantRole ParticipantRole { get; }
+
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'ParticipantRole' instead.")]
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'ParticipantRole' instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'ParticipantRole' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'ParticipantRole' instead.")]
 		[Export ("participantType", ArgumentSemantic.Assign)]
 		CKShareParticipantType Type { get; }
 
@@ -165,6 +173,14 @@ namespace CloudKit {
 		[Export ("userIdentity", ArgumentSemantic.Strong)]
 		CKUserIdentity UserIdentity { get; }
 
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("role", ArgumentSemantic.Assign)]
+		CKShareParticipantRole Role { get; set; }
+
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'Role' instead.")]
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Role' instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Role' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Role' instead.")]
 		[Export ("type", ArgumentSemantic.Assign)]
 		CKShareParticipantType Type { get; set; }
 
@@ -653,15 +669,31 @@ namespace CloudKit {
 		[Export ("init")]
 		IntPtr Constructor ();
 
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use the overload with the 'NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesConfiguration>' parameter instead.")]
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use the overload with the 'NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesConfiguration>' parameter instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use the overload with the 'NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesConfiguration>' parameter instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use the overload with the 'NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesConfiguration>' parameter instead.")]
 		[Export ("initWithRecordZoneIDs:optionsByRecordZoneID:")]
 		IntPtr Constructor (CKRecordZoneID[] recordZoneIDs, [NullAllowed] NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesOptions> optionsByRecordZoneID);
+
+		[iOS (12,0), Watch (5,0), TV (12,0), Mac (10,14, onlyOn64 : true)]
+		[Export ("initWithRecordZoneIDs:configurationsByRecordZoneID:")]
+		IntPtr Constructor (CKRecordZoneID[] recordZoneIDs, [NullAllowed] NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesConfiguration> configurationsByRecordZoneID);
 
 		[NullAllowed]
 		[Export ("recordZoneIDs", ArgumentSemantic.Copy)]
 		CKRecordZoneID[] RecordZoneIDs { get; set; }
 
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'ConfigurationsByRecordZoneID' instead.")]
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'ConfigurationsByRecordZoneID' instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'ConfigurationsByRecordZoneID' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'ConfigurationsByRecordZoneID' instead.")]
 		[NullAllowed, Export ("optionsByRecordZoneID", ArgumentSemantic.Copy)]
 		NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesOptions> OptionsByRecordZoneID { get; set; }
+
+		[iOS (12,0), Watch (5,0), TV (12,0), Mac (10,14, onlyOn64 : true)]
+		[NullAllowed, Export ("configurationsByRecordZoneID", ArgumentSemantic.Copy)]
+		NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesConfiguration> ConfigurationsByRecordZoneID { get; set; }
 
 		[Export ("fetchAllChanges")]
 		bool FetchAllChanges { get; set; }
@@ -681,7 +713,11 @@ namespace CloudKit {
 		[NullAllowed, Export ("fetchRecordZoneChangesCompletionBlock", ArgumentSemantic.Copy)]
 		Action<NSError> ChangesCompleted { get; set; }
 	}
-	
+
+	[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'CKFetchRecordZoneChangesConfiguration' instead.")]
+	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'CKFetchRecordZoneChangesConfiguration' instead.")]
+	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'CKFetchRecordZoneChangesConfiguration' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'CKFetchRecordZoneChangesConfiguration' instead.")]
 	[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
 	interface CKFetchRecordZoneChangesOptions : NSSecureCoding, NSCopying
@@ -694,6 +730,20 @@ namespace CloudKit {
 
 		[NullAllowed, Export ("desiredKeys", ArgumentSemantic.Copy)]
 		string[] DesiredKeys { get; set; }
+	}
+
+	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[BaseType (typeof (NSObject))]
+	interface CKFetchRecordZoneChangesConfiguration : NSSecureCoding, NSCopying {
+
+		[NullAllowed, Export ("previousServerChangeToken", ArgumentSemantic.Copy)]
+		CKServerChangeToken PreviousServerChangeToken { get; set; }
+
+		[Export ("resultsLimit")]
+		nuint ResultsLimit { get; set; }
+
+		[NullAllowed, Export ("desiredKeys", ArgumentSemantic.Copy)]
+		string [] DesiredKeys { get; set; }
 	}
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]

@@ -1,1 +1,0 @@
-!incorrect-protocol-member! QLPreviewingController::preparePreviewOfSearchableItemWithIdentifier:queryString:completionHandler: is OPTIONAL and should NOT be abstract

@@ -76,6 +76,8 @@ namespace MonoMac.Tuner {
 		{ Constants.ExternalAccessoryLibrary, Namespaces.ExternalAccessory },
 		{ Constants.MetalPerformanceShadersLibrary, Namespaces.MetalPerformanceShaders },
 		{ Constants.AdSupportLibrary, Namespaces.AdSupport },
+		{ Constants.NaturalLanguageLibrary, Namespaces.NaturalLanguage},
+		{ Constants.VideoSubscriberAccountLibrary, Namespaces.VideoSubscriberAccount },
 	};
 
 		public void Process (LinkContext context)

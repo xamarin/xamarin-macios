@@ -172,7 +172,7 @@ public partial class Generator {
 		case "AVCameraCalibrationData":
 		case "CGColorSpace":
 		case "CIBarcodeDescriptor":
-			print ("return Runtime.GetINativeObject <{0}> (GetHandle (\"{1}\"), true);", propertyType, propertyName);
+			print ("return Runtime.GetINativeObject <{0}> (GetHandle (\"{1}\"), false);", propertyType, propertyName);
 			break;
 		case "CIColor":
 			print ("return GetColor (\"{0}\");", propertyName);

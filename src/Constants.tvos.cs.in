@@ -75,5 +75,8 @@ namespace ObjCRuntime {
 		public const string CoreMLLibrary = "/System/Library/Frameworks/CoreML.framework/CoreML";
 		public const string VisionLibrary = "/System/Library/Frameworks/Vision.framework/Vision";
 		public const string IOSurfaceLibrary = "/System/Library/Frameworks/IOSurface.framework/IOSurface";
+
+		// tvOS 12.0
+		public const string NaturalLanguageLibrary = "/System/Library/Frameworks/Frameworks/NaturalLanguage.framework/NaturalLanguage";
 	}
 }

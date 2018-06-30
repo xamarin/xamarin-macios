@@ -64,6 +64,15 @@ namespace Introspection {
 
 		protected virtual bool Skip (Type type, string protocolName)
 		{
+			// The following protocols are skipped in classic since they were added in 
+			// later versions
+			if (IntPtr.Size == 4) {
+				switch (protocolName) {
+				case "UIUserActivityRestoring":
+					return true;
+				}
+			}
+
 			switch (protocolName) {
 			case "NSCopying":
 				switch (type.Name) {
@@ -88,6 +97,12 @@ namespace Introspection {
 				case "MLMultiArrayConstraint":
 				case "VSSubscription":
 					return true; // skip
+				// xcode 10
+				case "VSAccountMetadata":
+				case "VSAccountMetadataRequest":
+				case "VSAccountProviderResponse":
+				case "HKCumulativeQuantitySeriesSample":
+					return true;
 				}
 				break;
 			case "NSMutableCopying":
@@ -95,6 +110,10 @@ namespace Introspection {
 				// iOS 10 : test throw because of generic usage
 				case "NSMeasurement`1":
 					return true; // skip
+				// Xcode 10
+				case "UNNotificationCategory":
+				case "UNNotificationSound":
+					return true;
 				}
 				break;
 			case "NSCoding":
@@ -126,6 +145,12 @@ namespace Introspection {
 				case "NSEntityMapping":
 				case "NSMappingModel":
 				case "NSPropertyMapping":
+					return true;
+				// Xcode 10
+				case "NSManagedObjectID":
+				case "VSAccountMetadata":
+				case "VSAccountMetadataRequest":
+				case "VSAccountProviderResponse":
 					return true;
 				}
 				break;
@@ -167,6 +192,12 @@ namespace Introspection {
 				case "ARFrame":
 				case "ARLightEstimate":
 				case "NSManagedObjectID":
+				// beta 2
+				case "NSShadow":
+				case "NSTextAttachment":
+				case "VSAccountMetadata":
+				case "VSAccountMetadataRequest":
+				case "VSAccountProviderResponse":
 					return true;
 				}
 				break;
@@ -195,6 +226,15 @@ namespace Introspection {
 				case "SCNScene":
 				// GameplayKit.framework/Headers/SpriteKit+Additions.h
 				case "SKScene":
+					return true;
+				}
+				break;
+			case "UIUserActivityRestoring":
+				switch (type.Name) {
+				// UIKit.framework/Headers/UIDocument.h
+				case "UIDocument":
+				// inherits it from UIDocument
+				case "UIManagedDocument":
 					return true;
 				}
 				break;

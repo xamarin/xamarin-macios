@@ -4021,6 +4021,25 @@ namespace SceneKit {
 		[Export ("affectedByGravity")]
 		bool AffectedByGravity { [Bind ("isAffectedByGravity")] get; set; }
 		
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("setResting:")]
+		void SetResting (bool resting);
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("continuousCollisionDetectionThreshold")]
+		nfloat ContinuousCollisionDetectionThreshold { get; set; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("centerOfMassOffset", ArgumentSemantic.Assign)]
+		SCNVector3 CenterOfMassOffset { get; set; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("linearSleepingThreshold")]
+		nfloat LinearSleepingThreshold { get; set; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("angularSleepingThreshold")]
+		nfloat AngularSleepingThreshold { get; set; }
 	}
 
 	[Mac (10,10), iOS (8,0)]

@@ -1,14 +1,11 @@
 ifdef ENABLE_XAMARIN
-NEEDED_MACCORE_VERSION := 312828e025b2c9906ffbe6e14ae99bdf713cefea
+NEEDED_MACCORE_VERSION := a49e4f2ca17086ddebade8100a1a06d2c816a63d
 NEEDED_MACCORE_BRANCH := xcode10
 
 MACCORE_DIRECTORY := maccore
 MACCORE_MODULE    := git@github.com:xamarin/maccore.git
 MACCORE_VERSION   := $(shell cd $(MACCORE_PATH) 2> /dev/null && git rev-parse HEAD 2> /dev/null)
 MACCORE_BRANCH    := $(shell cd $(MACCORE_PATH) 2> /dev/null && git symbolic-ref --short HEAD 2> /dev/null)
-MACCORE_REMOTE    := origin
-MACCORE_BRANCH_AND_REMOTE := $(NEEDED_MACCORE_BRANCH) $(MACCORE_REMOTE)/$(NEEDED_MACCORE_BRANCH)
-NEEDED_MACCORE_REMOTE := $(MACCORE_REMOTE)
 
 define CheckVersionTemplate
 check-$(1)::
@@ -52,27 +49,19 @@ test-$(1)::
 	@echo "   $(2)_MODULE=$($(2)_MODULE)"
 	@echo "   NEEDED_$(2)_VERSION=$(NEEDED_$(2)_VERSION)"
 	@echo "   $(2)_VERSION=$($(2)_VERSION)"
-	@echo "   $(2)_BRANCH_AND_REMOTE=$($(2)_BRANCH_AND_REMOTE)"
 	@echo "   NEEDED_$(2)_BRANCH=$(NEEDED_$(2)_BRANCH)"
-	@echo "   NEEDED_$(2)_REMOTE=$(NEEDED_$(2)_REMOTE)"
 	@echo "   $(2)_BRANCH=$($(2)_BRANCH)"
 	@echo "   $(2)_PATH=$($(2)_PATH) => $(abspath $($(2)_PATH))"
 
 reset-$(1)::
-	@if test -d $($(2)_PATH); then \
-		if ! (cd $($(2)_PATH) && git show $(NEEDED_$(2)_VERSION) >/dev/null 2>&1 && git log -1 $(NEEDED_$(2)_REMOTE) >/dev/null 2>&1) ; then \
-			echo "*** git fetch `basename $$($(2)_PATH)`" && (cd $($(2)_PATH) && git fetch); \
-		fi;  \
-	else \
-		echo "*** git clone $($(2)_MODULE) --recursive $($(2)_DIRECTORY) -b $(NEEDED_$(2)_BRANCH)"; \
-		mkdir -p `dirname $($(2)_PATH)`; \
-		(cd $(abspath $($(2)_PATH)/..) && git clone $($(2)_MODULE) --recursive $($(2)_DIRECTORY) -b $(NEEDED_$(2)_BRANCH)); \
-	fi
-	@if test x$$(IGNORE_$(2)_VERSION) = "x"; then \
-		echo "*** [$(1)] git checkout -f" $(NEEDED_$(2)_BRANCH) && (cd $($(2)_PATH) && git checkout -f $(NEEDED_$(2)_BRANCH) || git checkout -f -b $($(2)_BRANCH_AND_REMOTE)); \
-		echo "*** [$(1)] git reset --hard $(NEEDED_$(2)_VERSION)" && (cd $($(2)_PATH) && git reset --hard $(NEEDED_$(2)_VERSION)); \
-	fi
-	@echo "*** [$(1)] git submodule update --init --recursive" && (cd $($(2)_PATH) && git submodule update --init --recursive)
+	$(Q) \
+	DEPENDENCY_PATH=$($(2)_PATH) \
+	DEPENDENCY_MODULE=$($(2)_MODULE) \
+	DEPENDENCY_HASH=$(NEEDED_$(2)_VERSION) \
+	DEPENDENCY_BRANCH=$(NEEDED_$(2)_BRANCH) \
+	DEPENDENCY_DIRECTORY=$($(2)_DIRECTORY) \
+	DEPENDENCY_IGNORE_VERSION=$(IGNORE_$(2)_VERSION) \
+		$(TOP)/mk/xamarin-reset.sh $(1)
 	@touch $(THISDIR)/.stamp-reset-$(1)
 
 print-$(1)::

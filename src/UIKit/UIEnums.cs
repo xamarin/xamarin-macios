@@ -1851,7 +1851,7 @@ namespace UIKit {
 		RightToLeft = UIUserInterfaceLayoutDirection.RightToLeft
 	}
 
-	[TV (10,0), NoWatch, NoiOS]
+	[TV (10,0), NoWatch, iOS (12,0)]
 	[Native]
 	public enum UIUserInterfaceStyle : long
 	{
@@ -2253,5 +2253,23 @@ namespace UIKit {
 		Generic = 1,
 	}
 	
-	
+	[iOS (12,0), TV (12,0), NoWatch]
+	[Native]
+	public enum UIGraphicsImageRendererFormatRange : long
+	{
+		Unspecified = -1,
+		Automatic = 0,
+		Extended,
+		Standard,
+	}
+
+	[iOS (12,0), NoTV, NoWatch]
+	[Native]
+	public enum UIPrintErrorCode : long
+	{
+		NotAvailableError = 1,
+		NoContentError,
+		UnknownImageFormatError,
+		JobFailedError
+	}
 }

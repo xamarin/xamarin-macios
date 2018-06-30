@@ -2705,11 +2705,15 @@ namespace Registrar {
 				skip.Clear ();
 
 				if (Driver.XcodeVersion == new Version (10, 0) && @class.Type.Namespace == "TVMLKit") {
-					// TVML's headers are broken in Xcode 10 beta 1: rdar://40824310
-					// I'm restricting this to a very specific version of Xcode,
-					// so that we can remove the workaround asap once Apple fixes their headers.
-					if (Driver.XcodeBundleVersion != "14274.16")
-						throw ErrorHelper.CreateError (99, "Verify if the workaround for rdar://40824310 is still needed.");
+					// TVML's headers are broken in Xcode 10 beta: rdar://40824310
+					switch (Driver.XcodeBundleVersion) {
+					case "14274.16": // beta 1
+					case "14274.19": // beta 2
+						break;
+					default:
+						ErrorHelper.Show (ErrorHelper.CreateWarning (99, $"Verify if the workaround for rdar://40824310 is still needed for Xcode 10 {Driver.XcodeBundleVersion}."));
+						break;
+					}
 					continue;
 				}
 

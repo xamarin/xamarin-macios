@@ -357,7 +357,7 @@ namespace AppKit {
 
 	[Mac (10,9)]
 	[BaseType (typeof (NSObject))]
-	interface NSAppearance : NSCoding {
+	interface NSAppearance : NSSecureCoding {
 		[DesignatedInitializer]
 		[Export ("initWithAppearanceNamed:bundle:")]
 		IntPtr Constructor (string name, [NullAllowed] NSBundle bundle);
@@ -3906,6 +3906,10 @@ namespace AppKit {
 		[Mac (10,10)]
 		[Static, Export ("quaternaryLabelColor")]
 		NSColor QuaternaryLabelColor { get; }
+
+		[Mac (10, 10)]
+		[Static, Export ("linkColor", ArgumentSemantic.Strong)]
+		NSColor LinkColor { get; }
 		
 		[Mac (10,12)]
 		[Static]

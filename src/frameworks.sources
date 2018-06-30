@@ -828,7 +828,7 @@ GLKIT_SOURCES = \
 
 # HealthKit
 
-HEALTHKIT_CORE_SOURCES = \
+HEALTHKIT_API_SOURCES = \
 	HealthKit/Enums.cs \
 
 HEALTHKIT_SOURCES = \
@@ -903,6 +903,7 @@ INTENTS_SOURCES = \
 	Intents/INRelativeReferenceResolutionResult.cs \
 	Intents/INRelativeSettingResolutionResult.cs \
 	Intents/INRideOption.cs \
+	Intents/INPlayMediaIntentResponse.cs \
 	Intents/INSaveProfileInCarIntent.cs \
 	Intents/INSearchCallHistoryIntent.cs \
 	Intents/INSetCarLockStatusIntent.cs \
@@ -927,7 +928,8 @@ IOSURFACE_CORE_SOURCES = \
 	IOSurface/IODefs.cs
 
 IOSURFACE_SOURCES = \
-	IOSurface/IOSurface.cs
+	IOSurface/IOSurface.cs \
+	IOSurface/IOSurfacePropertyKey.cs \
 
 # JavaScriptCore
 
@@ -1089,6 +1091,14 @@ NETWORK_SOURCES = \
 	Network/NWProtocolOptions.cs		\
 	Network/NWProtocolStack.cs
 	
+# Natural Language
+
+NATURALLANGUAGE_API_SOURCES = \
+	NaturalLanguage/Enums.cs \
+
+NATURALLANGUAGE_SOURCES = \
+	NaturalLanguage/NLLanguageRecognizer.cs \
+
 # NetworkExtension
 
 NETWORKEXTENSION_API_SOURCES = \
@@ -1357,6 +1367,7 @@ STOREKIT_CORE_SOURCES = \
 
 STOREKIT_SOURCES = \
 	StoreKit/NativeMethods.cs \
+	StoreKit/SKAdNetworkCompat.cs \
 	StoreKit/SKCloudServiceSetupOptions.cs \
 	StoreKit/SKPayment.cs \
 	StoreKit/SKPaymentTransactionObserver.cs \
@@ -1709,7 +1720,11 @@ MAC_FRAMEWORKS =            \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity	\
+<<<<<<< HEAD
 	Network			\
+=======
+	NaturalLanguage         \
+>>>>>>> xcode10
 	NetworkExtension        \
 	NotificationCenter 	\
 	OpenGL                  \
@@ -1728,6 +1743,8 @@ MAC_FRAMEWORKS =            \
 	Social                  \
 	StoreKit                \
 	SystemConfiguration     \
+	UserNotifications       \
+	VideoSubscriberAccount  \
 	VideoToolbox            \
 	Vision                  \
 	WebKit                  \
@@ -1779,6 +1796,7 @@ IOS_FRAMEWORKS =         \
 	HealthKitUI \
 	HomeKit \
 	IdentityLookup \
+	IdentityLookupUI \
 	ImageIO \
 	Intents \
 	IntentsUI \
@@ -1797,7 +1815,11 @@ IOS_FRAMEWORKS =         \
 	MobileCoreServices \
 	ModelIO \
 	MultipeerConnectivity \
+<<<<<<< HEAD
 	Network \
+=======
+	NaturalLanguage \
+>>>>>>> xcode10
 	NetworkExtension \
 	NewsstandKit \
 	NotificationCenter \
@@ -1886,7 +1908,11 @@ TVOS_FRAMEWORKS =           \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity   \
+<<<<<<< HEAD
 	Network			\
+=======
+	NaturalLanguage         \
+>>>>>>> xcode10
 	OpenGLES                \
 	Photos                  \
 	PhotosUI                \
@@ -1895,6 +1921,7 @@ TVOS_FRAMEWORKS =           \
 	StoreKit                \
 	SystemConfiguration     \
 	TVMLKit                 \
+	TVUIKit					\
 	TVServices				\
 	UIKit                   \
 	UserNotifications       \

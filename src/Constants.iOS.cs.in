@@ -126,5 +126,7 @@ namespace MonoTouch {
 		// iOS 12.0
 		public const string AuthenticationServicesLibrary = "/System/Library/Frameworks/AuthenticationServices.framework/AuthenticationServices";
 		public const string CarPlayLibrary = "/System/Library/Frameworks/CarPlay.framework/CarPlay";
+		public const string IdentityLookupUILibrary = "/System/Library/Frameworks/IdentityLookupUI.framework/IdentityLookupUI";
+		public const string NaturalLanguageLibrary = "/System/Library/Frameworks/Frameworks/NaturalLanguage.framework/NaturalLanguage";
 	}
 }

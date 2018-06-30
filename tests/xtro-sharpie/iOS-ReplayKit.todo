@@ -1,5 +1,0 @@
-!missing-selector! RPBroadcastPickerView::preferredExtension not bound
-!missing-selector! RPBroadcastPickerView::setPreferredExtension: not bound
-!missing-selector! RPBroadcastPickerView::setShowsMicrophoneButton: not bound
-!missing-selector! RPBroadcastPickerView::showsMicrophoneButton not bound
-!missing-type! RPBroadcastPickerView not bound

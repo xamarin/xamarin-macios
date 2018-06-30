@@ -98,9 +98,11 @@ namespace QuartzComposer {
 		[Field ("QCCompositionInputDestinationImageKey")]
 		NSString InputDestinationImageKey { get; }
 
+		[Obsoleted (PlatformName.MacOSX, 14,0, message: "Field will return 'null'.")]
 		[Field ("QCCompositionInputRSSFeedURLKey")]
 		NSString InputRSSFeedURLKey { get; }
 
+		[Obsoleted (PlatformName.MacOSX, 14,0, message: "Field will return 'null'.")]
 		[Field ("QCCompositionInputRSSArticleDurationKey")]
 		NSString InputRSSArticleDurationKey { get; }
 
@@ -158,6 +160,7 @@ namespace QuartzComposer {
 		[Field ("QCCompositionProtocolScreenSaver")]
 		NSString ProtocolScreenSaver { get; }
 
+		[Obsoleted (PlatformName.MacOSX, 14,0, message: "Field will return 'null'.")]
 		[Field ("QCCompositionProtocolRSSVisualizer")]
 		NSString ProtocolRSSVisualizer { get; }
 
@@ -166,6 +169,7 @@ namespace QuartzComposer {
 	}
 
 
+	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
 	[BaseType (typeof (CAOpenGLLayer))]
 	[DisableDefaultCtor] // return invalid handle
 	interface QCCompositionLayer {
