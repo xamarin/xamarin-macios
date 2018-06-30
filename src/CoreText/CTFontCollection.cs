@@ -171,7 +171,7 @@ namespace CoreText {
 		{
 			var cfArrayRef = CTFontCollectionCreateMatchingFontDescriptors (handle);
 			if (cfArrayRef == IntPtr.Zero)
-				return new CTFontDescriptor [0];
+				return Array.Empty <CTFontDescriptor> ();
 			var matches = NSArray.ArrayFromHandle (cfArrayRef,
 					fd => new CTFontDescriptor (fd, false));
 			CFObject.CFRelease (cfArrayRef);
@@ -187,7 +187,7 @@ namespace CoreText {
 		{
 			var cfArrayRef = CTFontCollectionCreateMatchingFontDescriptorsWithOptions (handle, options == null ? IntPtr.Zero : options.Dictionary.Handle);
 			if (cfArrayRef == IntPtr.Zero)
-				return new CTFontDescriptor [0];
+				return Array.Empty <CTFontDescriptor> ();
 			var matches = NSArray.ArrayFromHandle (cfArrayRef,
 					fd => new CTFontDescriptor (fd, false));
 			CFObject.CFRelease (cfArrayRef);
