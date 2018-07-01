@@ -1075,6 +1075,14 @@ MULTIPEERCONNECTIVITY_SOURCES = \
 	MultipeerConnectivity/Compat.cs \
 	MultipeerConnectivity/MCSession.cs \
 
+# Natural Language
+
+NATURALLANGUAGE_API_SOURCES = \
+	NaturalLanguage/Enums.cs \
+
+NATURALLANGUAGE_SOURCES = \
+	NaturalLanguage/NLLanguageRecognizer.cs \
+
 # Network
 
 NETWORK_SOURCES = \
@@ -1091,14 +1099,6 @@ NETWORK_SOURCES = \
 	Network/NWProtocolOptions.cs		\
 	Network/NWProtocolStack.cs
 	
-# Natural Language
-
-NATURALLANGUAGE_API_SOURCES = \
-	NaturalLanguage/Enums.cs \
-
-NATURALLANGUAGE_SOURCES = \
-	NaturalLanguage/NLLanguageRecognizer.cs \
-
 # NetworkExtension
 
 NETWORKEXTENSION_API_SOURCES = \
@@ -1720,11 +1720,8 @@ MAC_FRAMEWORKS =            \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity	\
-<<<<<<< HEAD
 	Network			\
-=======
 	NaturalLanguage         \
->>>>>>> xcode10
 	NetworkExtension        \
 	NotificationCenter 	\
 	OpenGL                  \
@@ -1815,11 +1812,8 @@ IOS_FRAMEWORKS =         \
 	MobileCoreServices \
 	ModelIO \
 	MultipeerConnectivity \
-<<<<<<< HEAD
-	Network \
-=======
 	NaturalLanguage \
->>>>>>> xcode10
+	Network \
 	NetworkExtension \
 	NewsstandKit \
 	NotificationCenter \
@@ -1908,11 +1902,8 @@ TVOS_FRAMEWORKS =           \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity   \
-<<<<<<< HEAD
-	Network			\
-=======
 	NaturalLanguage         \
->>>>>>> xcode10
+	Network			\
 	OpenGLES                \
 	Photos                  \
 	PhotosUI                \
