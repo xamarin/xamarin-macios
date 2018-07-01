@@ -1092,6 +1092,7 @@ NETWORK_SOURCES = \
 	Network/NWEndpoint.cs			\
 	Network/NWError.cs			\
 	Network/NWInterface.cs			\
+	Network/NWListener.cs			\
 	Network/NWParameters.cs			\
 	Network/NWPath.cs			\
 	Network/NWProtocolDefinition.cs		\

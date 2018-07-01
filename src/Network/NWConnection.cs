@@ -35,7 +35,7 @@ namespace Network {
 	public delegate void NWConnectionReceiveCompletion (IntPtr data, ulong dataSize, NWContentContext context, bool isComplete, NWError error);
 	
 	public class NWConnection : INativeObject, IDisposable {
-		IntPtr handle;
+		internal IntPtr handle;
 		public IntPtr Handle {
 			get { return handle; }
 		}
