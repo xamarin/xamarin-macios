@@ -338,6 +338,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "CoreVideo", "CoreVideo", 4 },
 
 				{ "NaturalLanguage", "NaturalLanguage", 5 },
+				{ "MediaPlayer", "MediaPlayer", 5 },
 			};
 		}
 		return watch_frameworks;

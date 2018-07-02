@@ -1841,6 +1841,7 @@ WATCHOS_FRAMEWORKS =        \
 	ImageIO                 \
 	Intents                 \
 	MapKit                  \
+	MediaPlayer             \
 	MobileCoreServices      \
 	NaturalLanguage         \
 	PassKit                 \
