@@ -1638,13 +1638,33 @@ namespace ModelIO {
 		[Export ("init")]
 		IntPtr Constructor ();
 
+#if !XAMCORE_4_0
+		[Static]
+		[Obsolete ("Use 'FromName' instead.")]
+		[Wrap ("FromName (name)")]
+		MDLTexture FromBundle (string name);
+#endif
+
 		[Static]
 		[Export ("textureNamed:")]
-		MDLTexture FromBundle (string name);
+		MDLTexture FromName (string name);
+
+#if !XAMCORE_4_0
+		[Static]
+		[Obsolete ("Use 'FromName' instead.")]
+		[Wrap ("FromName (name, bundleOrNil)")]
+		MDLTexture FromBundle (string name, [NullAllowed] NSBundle bundleOrNil);
+#endif
 
 		[Static]
 		[Export ("textureNamed:bundle:")]
-		MDLTexture FromBundle (string name, [NullAllowed] NSBundle bundleOrNil);
+		MDLTexture FromName (string name, [NullAllowed] NSBundle bundleOrNil);
+
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Static]
+		[Export ("textureNamed:assetResolver:")]
+		[return: NullAllowed]
+		MDLTexture FromName (string name, IMDLAssetResolver resolver);
 
 		[Static]
 		[Export ("textureCubeWithImagesNamed:")]
@@ -1771,7 +1791,12 @@ namespace ModelIO {
 
 	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor] // designated
 	interface MDLTransform : MDLTransformComponent, NSCopying {
+
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
 
 		[Export ("initWithTransformComponent:")]
 		IntPtr Constructor (IMDLTransformComponent component);
