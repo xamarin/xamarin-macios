@@ -149,6 +149,131 @@ namespace Network {
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void Cancel () => nw_listener_cancel (handle);
+
+		delegate void nw_listener_state_changed_handler_t (IntPtr block, NWListenerState state, IntPtr nwerror);
+		static nw_listener_state_changed_handler_t static_ListenerStateChanged = TrampolineListenerStateChanged;
 		
+		[MonoPInvokeCallback (typeof (nw_listener_state_changed_handler_t))]
+			static unsafe void TrampolineListenerStateChanged (IntPtr block, NWListenerState state,  IntPtr nwerror)
+		{
+			var descriptor = (BlockLiteral *) block;
+			var del = (Action<NWListenerState,NWError>) (descriptor->Target);
+			if (del != null){
+				NWError err = nwerror == IntPtr.Zero ? null : new NWError (nwerror, false);
+			        del (state, err);
+				err?.Dispose ();
+			}
+		}
+		
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern unsafe void nw_listener_set_state_changed_handler (IntPtr handle, void *callback);
+		
+		public void SetStateChangedHandler (Action<NWListenerState,NWError> callback)
+		{
+			unsafe {
+				if (callback == null){
+					nw_listener_set_state_changed_handler (handle, null);
+					return;
+				}
+			
+			        BlockLiteral *block_ptr_handler;
+			        BlockLiteral block_handler;
+			        block_handler = new BlockLiteral ();
+			        block_ptr_handler = &block_handler;
+			        block_handler.SetupBlockUnsafe (static_ListenerStateChanged, callback);
+			
+			        nw_listener_set_state_changed_handler (handle, (void*) block_ptr_handler);
+			        block_ptr_handler->CleanupBlock ();
+			}
+		}
+
+		delegate void nw_listener_new_connection_handler_t (IntPtr block, IntPtr connection);
+		static nw_listener_new_connection_handler_t static_NewConnection = TrampolineNewConnection;
+		
+		[MonoPInvokeCallback (typeof (nw_listener_new_connection_handler_t))]
+		static unsafe void TrampolineNewConnection (IntPtr block, IntPtr connection)
+		{
+			var descriptor = (BlockLiteral *) block;
+			var del = (Action<NWConnection>) (descriptor->Target);
+			if (del != null){
+				var nwconnection = new NWConnection (connection, owns: false);
+			        del (nwconnection);
+				nwconnection.Dispose ();
+			}
+		}
+		
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern unsafe void nw_listener_set_new_connection_handler (IntPtr handle, void *callback);
+		
+		public void SetNewConnectionHandler (Action<NWConnection> callback)
+		{
+			unsafe {
+				if (callback == null){
+					nw_listener_set_new_connection_handler (handle, null);
+					return;
+				}
+			
+			        BlockLiteral *block_ptr_handler;
+			        BlockLiteral block_handler;
+			        block_handler = new BlockLiteral ();
+			        block_ptr_handler = &block_handler;
+			        block_handler.SetupBlockUnsafe (static_NewConnection, callback);
+			
+			        nw_listener_set_new_connection_handler (handle, (void*) block_ptr_handler);
+			        block_ptr_handler->CleanupBlock ();
+			}
+		}
+
+		delegate void nw_listener_advertised_endpoint_changed_handler_t (IntPtr block, IntPtr endpoint, byte added);
+		static nw_listener_advertised_endpoint_changed_handler_t static_AdvertisedEndpointChangedHandler = TrampolineAdvertisedEndpointChangedHandler;
+
+		public delegate void AdvertisedEndpointChanged (NWEndpoint endpoint, bool added);
+
+		[MonoPInvokeCallback (typeof (nw_listener_advertised_endpoint_changed_handler_t))]
+		static unsafe void TrampolineAdvertisedEndpointChangedHandler (IntPtr block, IntPtr endpoint, byte added)
+		{
+			var descriptor = (BlockLiteral *) block;
+			var del = (AdvertisedEndpointChanged) (descriptor->Target);
+			if (del != null){
+				var nwendpoint = new NWEndpoint (endpoint, owns: false);
+			        del (nwendpoint, added != 0 ? true : false);
+				nwendpoint.Dispose ();
+			}
+		}
+		
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern unsafe void nw_listener_set_advertised_endpoint_changed_handler (IntPtr handle, void *callback);
+		
+		public void SetAdvertisedEndpointChangedHandler (AdvertisedEndpointChanged callback)
+		{
+			unsafe {
+				if (callback == null){
+					nw_listener_set_advertised_endpoint_changed_handler (handle, null);
+					return;
+				}
+				
+			        BlockLiteral *block_ptr_handler;
+			        BlockLiteral block_handler;
+			        block_handler = new BlockLiteral ();
+			        block_ptr_handler = &block_handler;
+			        block_handler.SetupBlockUnsafe (static_AdvertisedEndpointChangedHandler, callback);
+			
+			        nw_listener_set_advertised_endpoint_changed_handler (handle, (void*) block_ptr_handler);
+			        block_ptr_handler->CleanupBlock ();
+			}
+		}
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		extern static void nw_listener_set_advertise_descriptor (IntPtr handle, IntPtr advertiseDescriptor);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public void SetAdvertiseDescriptor (NWAdvertiseDescriptor descriptor)
+		{
+			nw_listener_set_advertise_descriptor (handle, descriptor == null ? IntPtr.Zero : descriptor.handle);
+		}
 	}
 }

@@ -18,7 +18,7 @@ using OS_nw_advertise_descriptor=System.IntPtr;
 namespace Network {
 	
 	public class NWAdvertiseDescriptor : INativeObject, IDisposable {
-		IntPtr handle;
+		internal IntPtr handle;
 		public IntPtr Handle {
 			get { return handle; }
 		}
