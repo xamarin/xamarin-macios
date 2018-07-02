@@ -344,7 +344,7 @@ namespace Photos
 		NotCustom = 0,
 		Custom = 1,
 		HdrImage = 2,
-		HdrPlusEV0_HDRImage = 3,
+		HdrPlusEV0_HdrImage = 3,
 		HdrPlusEV0_EV0Image = 4,
 		PanoramaImage = 6,
 		SdofImage = 7,
