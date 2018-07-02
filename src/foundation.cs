@@ -5212,11 +5212,13 @@ namespace Foundation
 
 		[Watch (5,0), NoTV, NoMac, iOS (12,0)]
 		[Static]
+		[Async]
 		[Export ("deleteSavedUserActivitiesWithPersistentIdentifiers:completionHandler:")]
 		void DeleteSavedUserActivities (string[] persistentIdentifiers, Action handler);
 
 		[Watch (5,0), NoTV, NoMac, iOS (12,0)]
 		[Static]
+		[Async]
 		[Export ("deleteAllSavedUserActivitiesWithCompletionHandler:")]
 		void DeleteAllSavedUserActivities (Action handler);
 	}
@@ -10733,6 +10735,10 @@ namespace Foundation
 		[Static]
 		[Export ("allowedTopLevelClasses", ArgumentSemantic.Copy)]
 		Class[] AllowedTopLevelClasses { get; }
+
+		[Static]
+		[Wrap ("Array.ConvertAll (AllowedTopLevelClasses, c => Class.Lookup (c))")]
+		Type [] AllowedTopLevelTypes { get; }
 	}
 	
 	[BaseType (typeof (NSValue))]

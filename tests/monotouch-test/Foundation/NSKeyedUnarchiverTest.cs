@@ -37,5 +37,17 @@ namespace MonoTouchFixtures.Foundation
 			Assert.IsNotNull (o);
 			Assert.IsNull (error);
 		}
+
+		[Test]
+		public void DataTransformer_AllowedTopLevelTypes_WrapperTests ()
+		{
+			if (!TestRuntime.CheckXcodeVersion (10, 0))
+				Assert.Ignore ("Ignoring DataTransformer_AllowedTopLevelTypes_WrapperTests as requires new APIs");
+
+			Class [] classes = NSSecureUnarchiveFromDataTransformer.AllowedTopLevelClasses;
+			Type [] types =  NSSecureUnarchiveFromDataTransformer.AllowedTopLevelTypes;
+
+			Assert.AreEqual (classes.Length, types.Length);
+		}
 	}
 }
