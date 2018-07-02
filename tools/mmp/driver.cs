@@ -652,6 +652,11 @@ namespace Xamarin.Bundler {
 				if (rv.Minor == 11 && XcodeVersion >= new Version (7, 3))
 					return new Version (rv.Major, rv.Minor, 4);
 			}
+			// Since Version has wrong behavior:
+			// new Version (10, 14) < new Version (10, 14, 0) => true
+			// Force any unset revision to 0 instead of -1
+			if (rv.Revision == -1)
+				return new Version (rv.Major, rv.Minor, 0);
 			return rv;
 		}
 
