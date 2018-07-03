@@ -29,16 +29,6 @@ namespace MonoTouchFixtures.AVKit {
 	[Preserve (AllMembers = true)]
 	public class PlayerViewControllerTest {
 
-#if !XAMCORE_2_0
-		[Test]
-		public void PreparePrerollAds_Old ()
-		{
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (8,0))
-				Assert.Inconclusive ("Requires 8.0+");
-
-			(null as AVPlayerViewController).PreparePrerollAds ();
-		}
-#endif
 		//[Test]
 		public void PreparePrerollAds_New ()
 		{
