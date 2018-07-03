@@ -91,7 +91,7 @@ namespace MonoTouchFixtures.CoreBluetooth {
 		public void TearDown ()
 		{
 			// should dispose the delegate
-			mgr.Dispose ();
+			mgr?.Dispose ();
 		}
 			
 		[Test, Timeout (5000)]
@@ -99,7 +99,7 @@ namespace MonoTouchFixtures.CoreBluetooth {
 		{
 			if (mgr.State == CBCentralManagerState.Unknown) {
 				// ensure we do get called
-				mgrDelegate.Event.WaitOne ();
+				Assert.IsTrue (mgrDelegate.Event.WaitOne (TimeSpan.FromSeconds (5)), "Initialization");
 			}
 
 			// Manager creates it, we'll simply check it has a non-null delegate
@@ -111,7 +111,7 @@ namespace MonoTouchFixtures.CoreBluetooth {
 		{
 			if (mgr.State == CBCentralManagerState.Unknown) {
 				// ensure we do get called
-				mgrDelegate.Event.WaitOne ();
+				Assert.IsTrue (mgrDelegate.Event.WaitOne (TimeSpan.FromSeconds (5)), "Initialization");
 			}
 			if (mgr.State != CBCentralManagerState.PoweredOn)
 				Assert.Inconclusive ("Bluetooth is off and therefore the test cannot be ran. State == {0}.", mgr.State);
@@ -124,7 +124,7 @@ namespace MonoTouchFixtures.CoreBluetooth {
 		{
 			if (mgr.State == CBCentralManagerState.Unknown) {
 				// ensure we do get called
-				mgrDelegate.Event.WaitOne ();
+				Assert.IsTrue (mgrDelegate.Event.WaitOne (TimeSpan.FromSeconds (5)), "Initialization");
 			}
 			if (mgr.State != CBCentralManagerState.PoweredOn)
 				Assert.Inconclusive ("Bluetooth is off and therefore the test cannot be ran. State == {0}.", mgr.State);
