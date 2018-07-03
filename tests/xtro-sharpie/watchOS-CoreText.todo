@@ -1,6 +1,0 @@
-!missing-field! kCTCharacterShapeAttributeName not bound
-!missing-field! kCTTypesetterOptionDisableBidiProcessing not bound
-!missing-pinvoke! CTFontCollectionCreateMatchingFontDescriptorsWithOptions is not bound
-## appended from unclassified file
-!missing-field! kCTTypesetterOptionAllowUnboundedLayout not bound
-!missing-pinvoke! CTFramesetterCreateWithTypesetter is not bound

@@ -98,7 +98,6 @@
 !missing-field! kCTStrokeWidthAttributeName not bound
 !missing-field! kCTSuperscriptAttributeName not bound
 !missing-field! kCTTabColumnTerminatorsAttributeName not bound
-!missing-field! kCTTypesetterOptionForcedEmbeddingLevel not bound
 !missing-field! kCTUnderlineColorAttributeName not bound
 !missing-field! kCTUnderlineStyleAttributeName not bound
 !missing-field! kCTVerticalFormsAttributeName not bound
@@ -132,3 +131,6 @@
 !missing-pinvoke! CTRunGetTypeID is not bound
 !missing-pinvoke! CTTextTabGetTypeID is not bound
 !missing-pinvoke! CTTypesetterGetTypeID is not bound
+
+## Manually bound field
+!missing-field! kCTCharacterShapeAttributeName not bound
