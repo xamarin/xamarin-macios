@@ -5540,7 +5540,7 @@ namespace AVFoundation {
 		NSString FormatHlsMetadata { get; }
 #endif
 
-		[iOS (9,3)][Mac (10, 11, 3)]
+		[iOS (9,3)][Mac (10, 12)]
 		[TV (9,2)]
 		[Field ("AVMetadataKeySpaceHLSDateRange")]
 		NSString KeySpaceHlsDateRange { get; }
@@ -10298,7 +10298,8 @@ namespace AVFoundation {
 		[Export ("seekToDate:")]
 		void Seek (NSDate date);
 
-		[iOS (6,0), Mac (10,7)]
+		[iOS (6,0)]
+		[Mac (10,9)] // Header says 10.7, but it's a lie
 		[Export ("seekToDate:completionHandler:")]
 		[Async]
 		void Seek (NSDate date, AVCompletion onComplete);
@@ -10493,14 +10494,14 @@ namespace AVFoundation {
 		[Export ("items", ArgumentSemantic.Copy)]
 		AVMetadataItem[] Items { get; }
 
-		[iOS (9,3)][Mac (10,11,3)]
+		[iOS (9,3)][Mac (10,12)]
 		[TV (9,2)]
 		[NullAllowed, Export ("classifyingLabel")]
 		string ClassifyingLabel { get; }
 
 		[iOS (9,3)]
 		[TV (9,2)]
-		[Mac (10,11,3)]
+		[Mac (10,12)]
 		[NullAllowed, Export ("uniqueID")]
 		string UniqueID { get; }
 	}
@@ -10810,17 +10811,17 @@ namespace AVFoundation {
 		AVInterstitialTimeRange[] InterstitialTimeRanges { get; set; }
 #endregion
 
-		[iOS (9,3)][Mac (10,11,3)]
+		[iOS (9,3)][Mac (10,12)]
 		[TV (9,2)]
 		[Export ("addMediaDataCollector:")]
 		void AddMediaDataCollector (AVPlayerItemMediaDataCollector collector);
 		
-		[iOS (9,3)][Mac (10,11,3)]
+		[iOS (9,3)][Mac (10,12)]
 		[TV (9,2)]
 		[Export ("removeMediaDataCollector:")]
 		void RemoveMediaDataCollector (AVPlayerItemMediaDataCollector collector);
 		
-		[iOS (9,3)][Mac (10,11,3)]
+		[iOS (9,3)][Mac (10,12)]
 		[TV (9,2)]
 		[Export ("mediaDataCollectors")]
 		AVPlayerItemMediaDataCollector[] MediaDataCollectors { get; }
@@ -12069,6 +12070,7 @@ namespace AVFoundation {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface AVOutputSettingsAssistant {
+		[Mac (10, 10)]
 		[Static, Export ("availableOutputSettingsPresets")]
 		string [] AvailableOutputSettingsPresets { get; }
 
@@ -12105,6 +12107,7 @@ namespace AVFoundation {
 		[Export ("sourceVideoAverageFrameDuration", ArgumentSemantic.Copy)]
 		CMTime SourceVideoAverageFrameDuration { get; set; }
 
+		[Mac (10, 10)]
 		[Export ("sourceVideoMinFrameDuration", ArgumentSemantic.Copy)]
 		CMTime SourceVideoMinFrameDuration { get; set; }
 

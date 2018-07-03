@@ -373,7 +373,7 @@ namespace GameKit {
 
 		[NoTV]
 		[NoWatch]
-		[iOS (7,0)][Mac (10,8)]
+		[iOS (7,0)][Mac (10,10)]
 		[Export ("loadImageWithCompletionHandler:")]
 		[Async]
 		void LoadImage ([NullAllowed] GKImageLoadedHandler completionHandler);
@@ -511,11 +511,12 @@ namespace GameKit {
 		IntPtr Constructor (string identifier, GKPlayer player);
 
 		[NoWatch]
-		[iOS (7,0)][Mac (10,8)]
+		[iOS (7,0)][Mac (10,10)]
+		[Deprecated (PlatformName.iOS, 8, 0, message : "Use the overload that takes a 'GKPlayer' instead.")]
 		[Export ("initWithLeaderboardIdentifier:forPlayer:")]
 		IntPtr Constructor (string identifier, string playerID);
 
-		[iOS (7,0)][Mac (10,8)]
+		[iOS (7,0)][Mac (10,10)]
 		[Internal][NullAllowed]
 		[Export ("initWithLeaderboardIdentifier:")]
 		IntPtr InitWithLeaderboardIdentifier (string identifier);

@@ -1041,6 +1041,7 @@ namespace PdfKit {
 		[Export ("fieldName")]
 		string FieldName { get; set; }
 
+		[Mac (10, 8)]
 		[Export ("attributedStringValue")]
 		NSAttributedString AttributedStringValue { get; set; }
 
