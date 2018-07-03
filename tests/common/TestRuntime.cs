@@ -663,4 +663,22 @@ partial class TestRuntime
 		}
 	}
 #endif // !MONOMAC && !__TVOS__
+
+#if __MACOS__
+	public static global::CoreGraphics.CGColor GetCGColor (NSColor color)
+#else
+	public static global::CoreGraphics.CGColor GetCGColor (UIColor color)
+#endif
+	{
+#if __MACOS__
+		var components = new nfloat [color.ComponentCount];
+		color.GetComponents (out components);
+		NSApplication.CheckForIllegalCrossThreadCalls = false;
+		var cs = color.ColorSpace.ColorSpace;
+		NSApplication.CheckForIllegalCrossThreadCalls = true;
+		return new global::CoreGraphics.CGColor (cs, components);
+#else
+		return color.CGColor;
+#endif
+	}
 }
