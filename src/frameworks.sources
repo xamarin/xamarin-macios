@@ -1095,6 +1095,7 @@ NETWORK_SOURCES = \
 	Network/NWListener.cs			\
 	Network/NWParameters.cs			\
 	Network/NWPath.cs			\
+	Network/NWPathMonitor.cs		\
 	Network/NWProtocolDefinition.cs		\
 	Network/NWProtocolMetadata.cs		\
 	Network/NWProtocolOptions.cs		\

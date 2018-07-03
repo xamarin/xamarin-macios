@@ -45,9 +45,16 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_metadata nw_ip_create_metadata ();
 
-		public NWProtocolMetadata ()
+		public static NWProtocolMetadata CreateIPMetadata ()
 		{
-			handle = nw_ip_create_metadata ();
+			return new NWProtocolMetadata (nw_ip_create_metadata (), owns: true);
+		}
+
+		[DllImport (Constants.NetworkLibrary)]
+		static extern OS_nw_protocol_metadata nw_udp_create_metadata ();
+		public static NWProtocolMetadata CreateUDPMetadata ()
+		{
+			return new NWProtocolMetadata (nw_udp_create_metadata (), owns: true);
 		}
 	
 		public NWProtocolMetadata (IntPtr handle, bool owns)
@@ -96,6 +103,20 @@ namespace Network {
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		static extern bool nw_protocol_metadata_is_udp (OS_nw_protocol_metadata metadata);
+	
+		public bool IsUdp => nw_protocol_metadata_is_udp (handle);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		static extern bool nw_protocol_metadata_is_tls (OS_nw_protocol_metadata metadata);
+	
+		public bool IsTls => nw_protocol_metadata_is_tls (handle);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_ip_metadata_set_ecn_flag (OS_nw_protocol_metadata metadata, NWIPEcnFlag ecn_flag);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -121,5 +142,19 @@ namespace Network {
 			get => nw_ip_metadata_get_service_class (handle);
 			set => nw_ip_metadata_set_service_class (handle, value);
 		}
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		extern static uint nw_tcp_get_available_receive_buffer (IntPtr handle);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public uint TcpGetAvaialbleReceiveBuffer () => nw_tcp_get_available_receive_buffer (handle);
+		
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		extern static uint nw_tcp_get_available_send_buffer (IntPtr handle);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public uint TcpGetAvailableSendBuffer () => nw_tcp_get_available_send_buffer (handle);
 	}
 }
