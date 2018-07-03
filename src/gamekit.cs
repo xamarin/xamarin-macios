@@ -1318,6 +1318,7 @@ namespace GameKit {
 	[BaseType (typeof (NSObject))]
 	[Mac (10, 8)]
 	[Watch (3,0)]
+	[DisableDefaultCtor]
 	interface GKAchievement : NSSecureCoding {
 		[NoTV]
 		[Deprecated (PlatformName.iOS, 6, 0, message : "Use 'IsHidden' on the 'GKAchievementDescription' class instead.")]
@@ -1351,7 +1352,10 @@ namespace GameKit {
 #else
 		void ResetAchivements ([NullAllowed] GKNotificationHandler completionHandler);
 #endif
-		
+
+		[Wrap ("this ((string) null)")]
+		IntPtr Constructor ();
+
 		[Export ("initWithIdentifier:")]
 		IntPtr Constructor ([NullAllowed] string identifier);
 

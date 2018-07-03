@@ -251,12 +251,6 @@ namespace CarPlay {
 
 		[Export ("templates", ArgumentSemantic.Strong)]
 		CPTemplate [] Templates { get; }
-
-		[Export ("presentAlert:")]
-		void PresentAlert (CPAlert alert);
-
-		[Export ("dismissAlertAnimated:")]
-		void DismissAlert (bool animated);
 	}
 
 	interface ICPInterfaceControllerDelegate { }
@@ -438,12 +432,6 @@ namespace CarPlay {
 	[BaseType (typeof (CPTemplate))]
 	[DisableDefaultCtor]
 	interface CPMapTemplate : CPBarButtonProviding {
-
-		[Export ("initWithConfiguration:")]
-		IntPtr Constructor ([NullAllowed] CPMapTemplateConfiguration configuration);
-
-		[Export ("configuration")]
-		CPMapTemplateConfiguration Configuration { get; }
 
 		[Export ("mapButtons", ArgumentSemantic.Strong)]
 		CPMapButton [] MapButtons { get; set; }

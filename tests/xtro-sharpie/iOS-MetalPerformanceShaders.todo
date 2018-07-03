@@ -270,3 +270,21 @@
 !missing-selector! MPSNNResizeBilinear::resizeWidth not bound
 !missing-type! MPSNNCropAndResizeBilinear not bound
 !missing-type! MPSNNResizeBilinear not bound
+## appended from unclassified file
+!missing-pinvoke! MPSImageBatchIterate is not bound
+!missing-selector! +MPSCNNNeuronNode::nodeWithSource:descriptor: not bound
+!missing-selector! MPSCNNBatchNormalizationGradient::initWithCoder:device: not bound
+!missing-selector! MPSCNNBatchNormalizationGradient::initWithDevice:fusedNeuronDescriptor: not bound
+!missing-selector! MPSImageNormalizedHistogram::clipRectSource not bound
+!missing-selector! MPSImageNormalizedHistogram::encodeToCommandBuffer:sourceTexture:minmaxTexture:histogram:histogramOffset: not bound
+!missing-selector! MPSImageNormalizedHistogram::histogramInfo not bound
+!missing-selector! MPSImageNormalizedHistogram::histogramSizeForSourceFormat: not bound
+!missing-selector! MPSImageNormalizedHistogram::initWithCoder:device: not bound
+!missing-selector! MPSImageNormalizedHistogram::initWithDevice:histogramInfo: not bound
+!missing-selector! MPSImageNormalizedHistogram::setClipRectSource: not bound
+!missing-selector! MPSImageNormalizedHistogram::setZeroHistogram: not bound
+!missing-selector! MPSImageNormalizedHistogram::zeroHistogram not bound
+!missing-selector! MPSNNOptimizerAdam::encodeToCommandBuffer:batchNormalizationState:inputMomentumVectors:inputVelocityVectors:resultState: not bound
+!missing-selector! MPSNNOptimizerRMSProp::encodeToCommandBuffer:batchNormalizationState:inputSumOfSquaresVectors:resultState: not bound
+!missing-selector! MPSNNOptimizerStochasticGradientDescent::encodeToCommandBuffer:batchNormalizationState:inputMomentumVectors:resultState: not bound
+!missing-type! MPSImageNormalizedHistogram not bound

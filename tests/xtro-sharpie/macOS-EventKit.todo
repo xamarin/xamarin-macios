@@ -1,0 +1,2 @@
+!missing-protocol-conformance! EKRecurrenceDayOfWeek should conform to NSSecureCoding
+!missing-protocol-conformance! EKRecurrenceEnd should conform to NSSecureCoding
