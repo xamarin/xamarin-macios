@@ -171,21 +171,76 @@ def uploadFiles (glob, virtualPath)
     ])
 }
 
-def runXamarinMacTests (url, macOS)
+// There must be a better way than this hack to show a
+// message in red in the Jenkins Blue Ocean UI...
+def echoError (message)
 {
+    try {
+        error (message)
+    } catch (e) {
+        // Ignore
+    }
+}
+
+def runXamarinMacTests (url, macOS, maccore_hash, xamarin_macios_hash)
+{
+    def failed = false
+    def workspace = "${env.HOME}/jenkins/workspace/xamarin-macios"
+    def failedTests = []
     try {
         echo ("Executing on ${env.NODE_NAME}")
         echo ("URL: ${url}")
-        sh ("env")
-        sh ("rm -f *.zip")
-        sh ("curl -L '${url}' --output mac-test-package.zip")
-        sh ("rm -rf mac-test-package")
-        sh ("unzip -o mac-test-package.zip")
-        sh ("cd mac-test-package && ./system-dependencies.sh --provision-mono --ignore-autotools --ignore-xamarin-studio --ignore-xcode --ignore-osx --ignore-cmake")
-        sh ("make -C mac-test-package/tests exec-mac-dontlink")
-        sh ("make -C mac-test-package/tests exec-mac-apitest")
+        sh ("mkdir -p '${workspace}'")
+        dir ("${workspace}") {
+            // Download the script we need, and then execute it, so that we
+            // don't clone all of xamarin-macios to get a single file.
+            // Due to how github has implemented pull requests, this works
+            // even for pull requests from forks, since each commit in the pull request
+            // is also available from the main repository.
+            sh ("""
+                curl -fLO https://raw.githubusercontent.com/xamarin/xamarin-macios/${xamarin_macios_hash}/jenkins/prepare-packaged-macos-tests.sh
+                chmod +x prepare-packaged-macos-tests.sh
+                ./prepare-packaged-macos-tests.sh '${url}' '${maccore_hash}'
+                """)
+            def tests = [ "dontlink", "apitest", "introspection", "linksdk", "linkall", "xammac_tests" ];
+            tests.each { test ->
+                def t = "${test}"
+                try {
+                    timeout (time: 10, unit: 'MINUTES') {
+                        sh ("make -C mac-test-package/tests exec-mac-${t} MONO_DEBUG=no-gdb-backtrace")
+                        echo ("${t} succeeded")
+                    }
+                } catch (error) {
+                    echoError ("${t} failed with error: ${error}")
+                    failed = true
+                    failedTests.add (t)
+                }
+            }
+        }
     } finally {
-        sh ("rm -rf mac-test-package *.zip")
+        sh ("rm -rf ${workspace}/mac-test-package ${workspace}/*.zip")
+        // Find and upload any crash reports
+        sh (script: """
+            rm -Rf ${workspace}/crash-reports
+            mkdir ${workspace}/crash-reports
+            find ~/Library/Logs/DiagnosticReports/ -mtime -10m -exec cp {} ${workspace}/crash-reports \\;
+            ls -la ${workspace}/crash-reports
+            """,
+            returnStatus: true /* Don't fail if something goes wrong */)
+        try {
+            if (findFiles (glob: "crash-reports/*").length > 0) {
+                archiveArtifacts ("${workspace}/crash-reports/*")
+            } else {
+                echo ("No crash reports found")
+            }
+        } catch (e) {
+            // Ignore any archiving errors.
+        }
+    }
+    if (failed) {
+        def failureMessage = "Xamarin.Mac tests on ${macOS} failed (${failedTests.join (', ')})"
+        manager.addErrorBadge (failureMessage)
+        error (failureMessage)
     }
 }
 
@@ -419,9 +474,15 @@ timestamps {
                                 echo ("Generator diff: ${reportPrefix}/generator-diff/index.html")
                             }
 
+                            def hasXamarinMacTests = true
                             stage ("Package XM tests") {
                                 currentStage = "${STAGE_NAME}"
-                                sh ("make -C ${workspace}/xamarin-macios/tests package-tests")
+                                def exitCode = sh (script: "make -C ${workspace}/xamarin-macios/tests package-tests", returnStatus: true)
+                                if (exitCode != 0) {
+                                    hasXamarinMacTests = false
+                                    manager.addErrorBadge ("Failed to package Xamarin.Mac tests (exit code: ${exitCode}")
+                                    manager.buildUnstable ()
+                                }
                                 uploadFiles ("tests/*.zip", virtualPath)
                             }
 
@@ -437,22 +498,33 @@ timestamps {
                                     def builders = [:]
 
                                     // Add test runs on older macOS versions
-                                    def url = "https://bosstoragemirror.blob.core.windows.net/wrench/${virtualPath}/tests/mac-test-package.zip"
-                                    def firstOS = sh (returnStdout: true, script: "grep ^MIN_OSX_SDK_VERSION= '${workspace}/xamarin-macios/Make.config' | sed 's/.*=//'").trim ().split ("\\.")[1].toInteger ()
-                                    def lastOS = sh (returnStdout: true, script: "grep ^OSX_SDK_VERSION= '${workspace}/xamarin-macios/Make.config' | sed 's/.*=//'").trim ().split ("\\.")[1].toInteger ()
-                                    for (os = firstOS; os < lastOS; os++) {
-                                        def macOS = "${os}" // Need to bind the label variable before the closure
-                                        builders ["XM tests on 10.${macOS}"] = {
-                                            try {
-                                                node ("xamarin-macios && macos-10.${macOS}") {
-                                                    stage ("Running XM tests on '10.${macOS}'") {
-                                                        runXamarinMacTests (url, "macOS 10.${macOS}")
+                                    if (hasXamarinMacTests) {
+                                        def url = "https://bosstoragemirror.blob.core.windows.net/wrench/${virtualPath}/tests/mac-test-package.zip"
+                                        def maccore_hash = sh (script: "grep NEEDED_MACCORE_VERSION ${workspace}/xamarin-macios/mk/xamarin.mk | sed 's/NEEDED_MACCORE_VERSION := //'", returnStdout: true).trim ()
+                                        def firstOS = sh (returnStdout: true, script: "grep ^MIN_OSX_SDK_VERSION= '${workspace}/xamarin-macios/Make.config' | sed 's/.*=//'").trim ().split ("\\.")[1].toInteger ()
+                                        def lastOS = sh (returnStdout: true, script: "grep ^OSX_SDK_VERSION= '${workspace}/xamarin-macios/Make.config' | sed 's/.*=//'").trim ().split ("\\.")[1].toInteger ()
+                                        def macOSes = []
+                                        for (os = firstOS; os < lastOS; os++)
+                                            macOSes.add (os)
+                                        macOSes.add (14) // 10.14, Mojave
+                                        for (i = 0; i < macOSes.size (); i++) {
+                                            def os = macOSes [i];
+                                            def macOS = "${os}" // Need to bind the label variable before the closure
+                                            builders ["XM tests on 10.${macOS}"] = {
+                                                try {
+                                                    node ("xamarin-macios && macos-10.${macOS}") {
+                                                        stage ("Running XM tests on '10.${macOS}'") {
+                                                            runXamarinMacTests (url, "macOS 10.${macOS}", maccore_hash, gitHash)
+                                                        }
                                                     }
+                                                } catch (err) {
+                                                    currentStage = "Running XM tests on '10.${macOS}'"
+                                                    def msg = err.getMessage ();
+                                                    if (msg == "")
+                                                        msg = "Xamarin.Mac tests on 10.${macOS} failed"
+                                                    appendFileComment ("🔥 [${msg}](${env.RUN_DISPLAY_URL}) 🔥\n")
+                                                    throw err
                                                 }
-                                            } catch (err) {
-                                                currentStage = "Running XM tests on '10.${macOS}'"
-                                                appendFileComment ("🔥 [Xamarin.Mac tests on 10.${macOS} failed](${env.RUN_DISPLAY_URL}) 🔥\n")
-                                                throw err
                                             }
                                         }
                                     }
