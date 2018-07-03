@@ -19,7 +19,7 @@ namespace MonoTouchFixtures.CoreMedia
 	{
 
 		[Test]
-		public void RetainReleseTest ()
+		public void RetainReleaseTest ()
 		{
 			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
 
