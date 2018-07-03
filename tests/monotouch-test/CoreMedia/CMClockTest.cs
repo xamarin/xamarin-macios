@@ -40,9 +40,6 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void CreateAudioClock ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6,0))
-				Assert.Inconclusive ("CMClock is new in 6.0");
-
 			CMClockError ce;
 			using (var clock = CMClock.CreateAudioClock (out ce))
 			{

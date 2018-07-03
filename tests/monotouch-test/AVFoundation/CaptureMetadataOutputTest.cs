@@ -45,9 +45,6 @@ namespace MonoTouchFixtures.AVFoundation {
 		[Test]
 		public void Defaults ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6,0))
-				Assert.Ignore ("requires iOS6+");
-
 			using (var obj = new AVCaptureMetadataOutput ()) {
 #if XAMCORE_2_0
 				Assert.AreEqual (AVMetadataObjectType.None, obj.AvailableMetadataObjectTypes, "AvailableMetadataObjectTypes");

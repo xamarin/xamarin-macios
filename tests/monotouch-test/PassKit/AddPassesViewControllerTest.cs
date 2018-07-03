@@ -30,9 +30,6 @@ namespace MonoTouchFixtures.PassKit {
 		[Test]
 		public void BoardingPass ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6,0))
-				Assert.Inconclusive ("PassKit is new in 6.0");
-
 			if (UIDevice.CurrentDevice.UserInterfaceIdiom != UIUserInterfaceIdiom.Phone)
 				Assert.Inconclusive ("PassKit does not work on iPads");
 

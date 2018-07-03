@@ -27,14 +27,6 @@ namespace MonoTouchFixtures.MapKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class LocalSearchTest {
-
-		[Test]
-		public void Default ()
-		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6, 1))
-				Assert.Inconclusive ("Requires iOS 6.1");
-		}
-
 		[Test]
 		public void EmptyRequest ()
 		{

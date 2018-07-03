@@ -53,26 +53,6 @@ namespace MonoTouchFixtures.SystemConfiguration {
 		}
 #endif
 
-#if !XAMCORE_2_0
-		[Test]
-		public void GetSupportedInterfaces ()
-		{
-			if (Runtime.Arch == Arch.SIMULATOR) {
-				if (TestRuntime.CheckSystemAndSDKVersion (6,0))
-					Assert.Inconclusive ("This test crash on the iOS 6 simulator with Lion");
-			}
-
-			string [] interfaces = CaptiveNetwork.GetSupportedInterfaces ();
-			if (Runtime.Arch == Arch.SIMULATOR) {
-				// we can't assume much about the computer running the simulator
-				Assert.NotNull (interfaces, "GetSupportedInterfaces");
-			} else {
-				Assert.That (interfaces.Length, Is.EqualTo (1), "1");
-				Assert.That (interfaces [0], Is.EqualTo ("en0"), "en0");
-			}
-		}
-#endif
-
 #if !MONOMAC // TryCopyCurrentNetworkInfo and fields checked are not on Mac
 		[Test]
 #if __TVOS__

@@ -98,23 +98,6 @@ namespace MonoTouchFixtures.Foundation {
 			}
 		}
 
-#if !XAMCORE_2_0
-		[Test]
-		public void UIKitAttachmentConveniences_Old ()
-		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
-				Assert.Inconclusive ("requires iOS7+");
-
-			NSAttributedString as1 = null;
-			// it's weird looking to use an instance (even null) so you can call a *static* category method...
-			using (var ta = new NSTextAttachment (null, null))
-			using (var as2 = as1.FromTextAttachment (ta)) {
-				Assert.That (as2.Length, Is.EqualTo ((nint) 1), "Length");
-				Assert.That (as2.Value [0], Is.EqualTo ((char)0xFFFC), "NSAttachmentCharacter");
-			}
-		}
-#endif
-
 #if !__WATCHOS__
 		[Test]
 		public void UIKitAttachmentConveniences_New ()

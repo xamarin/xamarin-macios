@@ -42,9 +42,6 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void ChannelAssignments ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6,0))
-				Assert.Inconclusive ("Requires iOS 6");
-
 			var aq = new OutputAudioQueue (AudioStreamBasicDescription.CreateLinearPCM ());
 
 			Assert.AreEqual (AudioQueueStatus.Ok, aq.SetChannelAssignments (
@@ -57,9 +54,6 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test][Ignore ("Fails on some machines with undefined error code 5")]
 		public void ProcessingTap ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6,0))
-				Assert.Inconclusive ("AudioQueueProcessingTapNew requires iOS 6");
-
 			var aq = new InputAudioQueue (AudioStreamBasicDescription.CreateLinearPCM ());
 			AudioQueueStatus ret;
 			bool called = false;

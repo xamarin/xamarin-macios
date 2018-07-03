@@ -28,23 +28,7 @@ namespace MonoTouchFixtures.MediaPlayer {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class MoviePlayerControllerTest {
-
-#if !XAMCORE_2_0
-		[Test]
-		public void PreparePrerollAds_Old ()
-		{
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (7,0))
-				Assert.Inconclusive ("Requires 7.0+");
-
-			// NSInvalidArgumentException +[MPMoviePlayerController preparePrerollAds]: unrecognized selector sent to class 0x109c46b48
-			if (UIDevice.CurrentDevice.CheckSystemVersion (10, 0))
-				Assert.Ignore ("Broken on iOS 10 beta 3");
-
-			MPMoviePlayerController mpc = null;
-			mpc.PreparePrerollAds ();
-		}
-#endif
-
+		
 		[Test]
 		public void PreparePrerollAds_New ()
 		{
