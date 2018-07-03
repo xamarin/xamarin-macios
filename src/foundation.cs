@@ -10260,8 +10260,9 @@ namespace Foundation
 #else
 		NSDistributedNotificationCenter GetDefaultCenter ();
 
+		[Static]
 		[Advice ("Use 'GetDefaultCenter ()' for a strongly typed version.")]
-		[Wrap ("GetDefaultCenter ()", IsVirtual = true)]
+		[Wrap ("GetDefaultCenter ()")]
 		NSObject DefaultCenter { get; }
 #endif
 
