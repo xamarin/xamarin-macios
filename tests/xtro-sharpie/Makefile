@@ -103,4 +103,4 @@ all: classify report
 	@touch $@
 	
 remove-empty-files:
-	find . -empty -exec git rm {} \;
+	find . -empty -exec git rm -f {} \;
