@@ -1640,31 +1640,31 @@ namespace ModelIO {
 
 #if !XAMCORE_4_0
 		[Static]
-		[Obsolete ("Use 'FromName' instead.")]
-		[Wrap ("FromName (name)")]
+		[Obsolete ("Use 'CreateTexture' instead.")]
+		[Wrap ("CreateTexture (name)")]
 		MDLTexture FromBundle (string name);
 #endif
 
 		[Static]
 		[Export ("textureNamed:")]
-		MDLTexture FromName (string name);
+		MDLTexture CreateTexture (string name);
 
 #if !XAMCORE_4_0
 		[Static]
-		[Obsolete ("Use 'FromName' instead.")]
-		[Wrap ("FromName (name, bundleOrNil)")]
+		[Obsolete ("Use 'CreateTexture' instead.")]
+		[Wrap ("CreateTexture (name, bundleOrNil)")]
 		MDLTexture FromBundle (string name, [NullAllowed] NSBundle bundleOrNil);
 #endif
 
 		[Static]
 		[Export ("textureNamed:bundle:")]
-		MDLTexture FromName (string name, [NullAllowed] NSBundle bundleOrNil);
+		MDLTexture CreateTexture (string name, [NullAllowed] NSBundle bundleOrNil);
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Static]
 		[Export ("textureNamed:assetResolver:")]
 		[return: NullAllowed]
-		MDLTexture FromName (string name, IMDLAssetResolver resolver);
+		MDLTexture CreateTexture (string name, IMDLAssetResolver resolver);
 
 		[Static]
 		[Export ("textureCubeWithImagesNamed:")]
@@ -1791,12 +1791,8 @@ namespace ModelIO {
 
 	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
-	[DisableDefaultCtor] // designated
+	[DesignatedDefaultCtor]
 	interface MDLTransform : MDLTransformComponent, NSCopying {
-
-		[DesignatedInitializer]
-		[Export ("init")]
-		IntPtr Constructor ();
 
 		[Export ("initWithTransformComponent:")]
 		IntPtr Constructor (IMDLTransformComponent component);
