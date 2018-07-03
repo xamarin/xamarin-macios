@@ -27,9 +27,5 @@ namespace AdSupport {
 
 		[Export ("advertisingIdentifier")]
 		NSUuid AdvertisingIdentifier { get; }
-
-		[NoTV][NoiOS]
-		[Export ("clearAdvertisingIdentifier")]
-		void ClearAdvertisingIdentifier ();
 	}
 }

@@ -411,6 +411,7 @@ namespace Introspection
 			"Rtl",
 			"Rtsp",
 			"Saml", // acronym
+			"Sdof",
 			"Scn",
 			"Sdk",
 			"Sdtv", // acronym: Standard Definition Tele Vision
