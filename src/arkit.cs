@@ -67,6 +67,7 @@ namespace ARKit {
 		InvalidWorldMap = 302,
 		InvalidConfiguration = 303,
 		InsufficientFeatures = 400,
+		ObjectMergeFailed = 401,
 		FileIOFailed = 500,
 	}
 
@@ -1245,11 +1246,15 @@ namespace ARKit {
 		NSSet<ARReferenceObject> GetReferenceObjects (string resourceGroupName, [NullAllowed] NSBundle bundle);
 
 		[Export ("exportObjectToURL:previewImage:error:")]
-		bool ExportObject (NSUrl url, [NullAllowed] UIImage previewImage, [NullAllowed] out NSError error);
+		bool Export (NSUrl url, [NullAllowed] UIImage previewImage, [NullAllowed] out NSError error);
 
 		[Export ("referenceObjectByApplyingTransform:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		ARReferenceObject GetReferenceObject (Matrix4 transform);
+		ARReferenceObject ApplyingTransform (Matrix4 transform);
+
+		[Export ("referenceObjectByMergingObject:error:")]
+		[return: NullAllowed]
+		ARReferenceObject Merging (ARReferenceObject @object, [NullAllowed] out NSError error);
 
 		[iOS (12,0)]
 		[Field ("ARReferenceObjectArchiveExtension")]
