@@ -213,7 +213,14 @@ namespace StoreKit {
 
 		[iOS (6,0)]
 		[Export ("downloadable")]
-		bool Downloadable { [Bind ("isDownloadable")] get; }
+		bool Downloadable {
+#if !MONOMAC
+			// Xcode 10 beta 3 headers says this is how it works on macOS as well, but this is a breaking change for macOS, so it's probably wrong.
+			// https://trello.com/c/A34S0kLY/125-41782055-skproductdownloadable-crashes-on-macos-1011-when-compiled-with-xcode-10
+			[Bind ("isDownloadable")]
+#endif
+			get;
+		}
 
 		[NoiOS]
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'DownloadContentLengths' instead.")]
