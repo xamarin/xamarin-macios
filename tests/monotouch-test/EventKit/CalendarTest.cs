@@ -36,11 +36,20 @@ namespace MonoTouchFixtures.EventKit {
 			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
 		}
 
+		void RequestPermission ()
+		{
+#if __MACOS__
+			TestRuntime.RequestEventStorePermission (EKEntityType.Event, true);
+			TestRuntime.RequestEventStorePermission (EKEntityType.Reminder, true);
+#endif
+		}
 
 		// note: default .ctor disable since it would thrown an objective-c exception telling us to use 'calendarWithEventStore:'
 		[Test]
 		public void FromEventStore ()
 		{
+			RequestPermission ();
+
 			EKEventStore store = new EKEventStore ();
 #if MONOMAC
 			var c = EKCalendar.Create (EKEntityType.Event, store);
@@ -88,6 +97,8 @@ namespace MonoTouchFixtures.EventKit {
 		[Test]
 		public void FromEventStoreWithReminder ()
 		{
+			RequestPermission ();
+
 			if (!TestRuntime.CheckXcodeVersion (4, 5))
 				Assert.Inconclusive ("+[EKCalendar calendarForEntityType:eventStore:]: unrecognized selector before 6.0");
 
@@ -127,6 +138,8 @@ namespace MonoTouchFixtures.EventKit {
 		[Test]
 		public void Title ()
 		{
+			RequestPermission ();
+
 			EKEventStore store = new EKEventStore ();
 #if MONOMAC
 			var c = EKCalendar.Create (EKEntityType.Event, store);

@@ -11,6 +11,7 @@ using Contacts;
 #endif
 #if MONOMAC
 using AppKit;
+using EventKit;
 #else
 #if !__TVOS__ && !__WATCHOS__
 using AddressBook;
@@ -663,6 +664,33 @@ partial class TestRuntime
 		}
 	}
 #endif // !MONOMAC && !__TVOS__
+
+#if __MACOS__
+	public static void RequestEventStorePermission (EKEntityType entityType, bool assert_granted = false)
+	{
+		TestRuntime.AssertMacSystemVersion (10, 9, throwIfOtherPlatform: false);
+
+		var status = EKEventStore.GetAuthorizationStatus (entityType);
+		Console.WriteLine ("EKEventStore.GetAuthorizationStatus ({1}): {0}", status, entityType);
+		switch (status) {
+		case EKAuthorizationStatus.Authorized:
+		case EKAuthorizationStatus.Restricted:
+			return;
+		case EKAuthorizationStatus.NotDetermined:
+			// There's an instance method on EKEventStore to request permission,
+			// but creating the instance can end up blocking the app showing a permission dialog...
+			// (on Mavericks at least)
+			if (TestRuntime.CheckMacSystemVersion (10, 10))
+				return; // Crossing fingers that this won't hang.
+			NUnit.Framework.Assert.Ignore ("This test requires permission to access events, but there's no API to request access without potentially showing dialogs.");
+			break;
+		case EKAuthorizationStatus.Denied:
+			if (assert_granted)
+				NUnit.Framework.Assert.Ignore ("This test requires permission to access events.");
+			break;
+		}
+	}
+#endif
 
 #if __MACOS__
 	public static global::CoreGraphics.CGColor GetCGColor (NSColor color)
