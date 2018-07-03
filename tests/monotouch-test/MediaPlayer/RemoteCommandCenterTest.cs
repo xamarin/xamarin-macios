@@ -34,10 +34,8 @@ namespace MonoTouchFixtures.MediaPlayer {
 		[Test]
 		public void Shared ()
 		{
-#if !MONOMAC
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (7, 1))
-				Assert.Inconclusive ("Requires 7.1+");
-#endif
+			TestRuntime.AssertiOSSystemVersion (7, 1, throwIfOtherPlatform: false);
+			TestRuntime.AssertMacSystemVersion (10, 12, 2, throwIfOtherPlatform: false);
 
 			MPRemoteCommandCenter shared = MPRemoteCommandCenter.Shared;
 			Assert.NotNull (shared.BookmarkCommand, "BookmarkCommand");

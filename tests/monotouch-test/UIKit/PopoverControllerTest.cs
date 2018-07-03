@@ -38,7 +38,7 @@ namespace MonoTouchFixtures.UIKit {
 			if (UIDevice.CurrentDevice.UserInterfaceIdiom != UIUserInterfaceIdiom.Pad)
 				return;
 
-			bool ios8 = TestRuntime.CheckSystemAndSDKVersion (8, 0);
+			bool ios8 = TestRuntime.CheckiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
 			
 			using (var vc = new UIViewController ())
 			using (var pc = new UIPopoverController (vc)) {

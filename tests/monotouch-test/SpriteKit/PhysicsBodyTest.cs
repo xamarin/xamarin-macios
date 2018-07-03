@@ -42,8 +42,7 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void BodyWithEdgeLoopFromRect ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("Requires iOS7");
+			TestRuntime.AssertXcodeVersion (5, 0, 1);
 
 			// bug 13772 - that call actually return a PKPhysicsBody (private PhysicKit framework)
 			SizeF size = new SizeF (3, 2);

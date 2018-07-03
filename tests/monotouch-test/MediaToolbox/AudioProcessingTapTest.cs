@@ -47,8 +47,7 @@ namespace MonoTouchFixtures.MediaToolbox
 		[Test]
 		public unsafe void Initialization ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6,0))
-				Assert.Inconclusive ("MediaToolbox is new in 6.0");
+			TestRuntime.AssertMacSystemVersion (10, 9, throwIfOtherPlatform: false);
 
 			var cb = new MTAudioProcessingTapCallbacks (
 #if XAMCORE_2_0

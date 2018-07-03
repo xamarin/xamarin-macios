@@ -20,6 +20,11 @@ namespace MonoTouchFixtures.MapKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class PolygonTest {
+		[SetUp]
+		public void Setup ()
+		{
+			TestRuntime.AssertMacSystemVersion (10, 9, throwIfOtherPlatform: false);
+		}
 		
 		[Test]
 		[ExpectedException (typeof (ArgumentNullException))]

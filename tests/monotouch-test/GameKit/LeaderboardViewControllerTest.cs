@@ -42,6 +42,7 @@ namespace MonoTouchFixtures.GameKit {
 			if (!TestRuntime.CheckSystemAndSDKVersion (6, 0))
 				Assert.Ignore ("Can't run before iOS 6 with the new registrar enabled");
 
+			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
 			using (var vc = new GKLeaderboardViewController ()) {
 				Assert.Null (vc.Category, "Category");
 				Assert.Null (vc.Delegate, "Delegate");

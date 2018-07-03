@@ -30,8 +30,9 @@ namespace MonoTouchFixtures.MultipeerConnectivity {
 		[Test]
 		public void Defaults ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("requires iOS7+");
+			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AsserttvOSSystemVersion (10, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertMacSystemVersion (10, 10, throwIfOtherPlatform: false);
 
 			using (var peer = new MCPeerID ()) {
 				Assert.Null (peer.DisplayName, "DisplayName");
@@ -41,8 +42,9 @@ namespace MonoTouchFixtures.MultipeerConnectivity {
 		[Test]
 		public void LocalPeer ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("requires iOS7+");
+			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AsserttvOSSystemVersion (10, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertMacSystemVersion (10, 10, throwIfOtherPlatform: false);
 
 			using (var peer = new MCPeerID ("myself")) {
 				Assert.That (peer.DisplayName, Is.EqualTo ("myself"), "DisplayName");

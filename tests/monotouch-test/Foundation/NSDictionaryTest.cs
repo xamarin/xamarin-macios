@@ -225,6 +225,8 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void IndexerTest ()
 		{
+			// This test doesn't work on Lion, because Lion returns mutable dictionaries in some places this test asserts that those dictionaries are non-mutable.
+			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
 			IntPtr strkeyptr = IntPtr.Zero;
 			IntPtr strobjptr = IntPtr.Zero;
 			IntPtr objptr;

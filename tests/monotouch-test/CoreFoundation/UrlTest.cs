@@ -42,7 +42,17 @@ namespace MonoTouchFixtures.CoreFoundation {
 		public void ToString_ ()
 		{
 			using (CFUrl url = CFUrl.FromFile ("/")) {
-				string value = TestRuntime.CheckiOSSystemVersion (7, 0, false) ? "file:///" : "file://localhost/";
+				string value = "file://localhost/";
+#if __IOS__
+				if (TestRuntime.CheckiOSSystemVersion (7, 0))
+					value = "file:///";
+#elif __WATCHOS__ || __TVOS__
+				value = "file:///";
+#elif __MACOS__
+				if (TestRuntime.CheckMacSystemVersion (10, 9))
+					value = "file:///";
+#endif
+
 				Assert.That (url.ToString (), Is.EqualTo (value), "FromFile");
 			}
 			using (CFUrl url = CFUrl.FromUrlString ("/", null)) {

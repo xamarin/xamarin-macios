@@ -32,8 +32,7 @@ namespace MonoTouchFixtures.AVKit {
 		//[Test]
 		public void PreparePrerollAds_New ()
 		{
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (8,0))
-				Assert.Inconclusive ("Requires 8.0+");
+			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
 
 			AVPlayerViewController.PrepareForPrerollAds ();
 		}

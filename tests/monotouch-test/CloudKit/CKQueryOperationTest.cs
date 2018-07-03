@@ -22,6 +22,7 @@ namespace MonoTouchFixtures.CloudKit
 		public void SetUp ()
 		{
 			TestRuntime.AssertXcodeVersion (6, 0);
+			TestRuntime.AssertMacSystemVersion (10, 10, throwIfOtherPlatform: false);
 			q = new CKQuery ("Foo", NSPredicate.FromFormat ("email = '@xamarin'"));
 			op = new CKQueryOperation (q);
 		}

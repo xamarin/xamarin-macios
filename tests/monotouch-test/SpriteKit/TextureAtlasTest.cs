@@ -34,8 +34,10 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void Empty ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("Requires iOS7");
+			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AsserttvOSSystemVersion (9, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertMacSystemVersion (10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertWatchOSVersion (3, 0, throwIfOtherPlatform: false);
 
 			using (var atlas = new SKTextureAtlas ()) {
 				Assert.That (atlas.TextureNames, Is.Empty, "TextureNames");

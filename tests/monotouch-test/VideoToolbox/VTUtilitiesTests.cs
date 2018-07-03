@@ -64,8 +64,9 @@ namespace MonoTouchFixtures.VideoToolbox {
 		[Test]
 		public void ToCGImageTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (9, 0))
-				Assert.Ignore ("Ignoring VideoToolbox.VTUtilitiesTests: Requires iOS9+");
+			TestRuntime.AssertiOSSystemVersion (9, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertMacSystemVersion (10, 11, throwIfOtherPlatform: false);
+			TestRuntime.AsserttvOSSystemVersion (10, 2, throwIfOtherPlatform: false);
 
 #if MONOMAC
 			var originalImage = new NSImage (NSBundle.MainBundle.PathForResource ("Xam", "png", "CoreImage"));

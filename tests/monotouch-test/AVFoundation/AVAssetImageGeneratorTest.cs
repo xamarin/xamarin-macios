@@ -112,6 +112,10 @@ namespace MonoTouchFixtures.AVFoundation {
 		[Test]
 		public void GenerateCGImagesAsynchronously ()
 		{
+			// This test deadlocks on Mountain Lion (but works on Lion)
+			// https://gist.github.com/rolfbjarne/1190d97af79e554c298f2c133dfd8e87
+			TestRuntime.AssertMacSystemVersion (10, 9, throwIfOtherPlatform: false);
+
 			handled = false;
 			mre = new ManualResetEvent (false);
 			ThreadStart main = () => {

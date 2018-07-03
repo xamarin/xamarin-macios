@@ -202,8 +202,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void InterstitialAds_New ()
 		{
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (7, 0))
-				Assert.Inconclusive ("prepareInterstitialAds is > iOS 7.0");
+			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
 			
 			UIViewController.PrepareForInterstitialAds ();
 		}

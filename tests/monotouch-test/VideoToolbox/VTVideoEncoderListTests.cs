@@ -32,8 +32,9 @@ namespace MonoTouchFixtures.VideoToolbox {
 		[Test]
 		public void VideoEncoderListTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Ignore ("Ignoring VideoToolbox tests: Requires iOS8+");
+			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertMacSystemVersion (10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AsserttvOSSystemVersion (10, 2, throwIfOtherPlatform: false);
 
 			var encoders = VTVideoEncoder.GetEncoderList ();
 			Assert.NotNull (encoders, "VTVideoEncoder.GetEncoderList () Should Not be null");

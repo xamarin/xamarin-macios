@@ -37,8 +37,9 @@ namespace MonoTouchFixtures.VideoToolbox {
 		[Test]
 		public void DecompressionSessionCreateTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Ignore ("Ignoring VideoToolbox tests: Requires iOS8+");
+			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AsserttvOSSystemVersion (10, 2, throwIfOtherPlatform: false);
 
 			using (var asset = AVAsset.FromUrl (NSBundle.MainBundle.GetUrlForResource ("xamvideotest", "mp4"))) 
 			using (var session = CreateSession (asset)){
@@ -49,8 +50,9 @@ namespace MonoTouchFixtures.VideoToolbox {
 		[Test]
 		public void DecompressionSessionSetDecompressionPropertiesTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Ignore ("Ignoring VideoToolbox tests: Requires iOS8+");
+			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertMacSystemVersion (10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AsserttvOSSystemVersion (10, 2, throwIfOtherPlatform: false);
 
 			using (var asset = AVAsset.FromUrl (NSBundle.MainBundle.GetUrlForResource ("xamvideotest", "mp4"))) 
 			using (var session = CreateSession (asset)){
@@ -67,8 +69,9 @@ namespace MonoTouchFixtures.VideoToolbox {
 		[Test]
 		public void DecompressionSessionSetPropertiesTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Ignore ("Ignoring VideoToolbox tests: Requires iOS8+");
+			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AsserttvOSSystemVersion (10, 2, throwIfOtherPlatform: false);
 
 			using (var asset = AVAsset.FromUrl (NSBundle.MainBundle.GetUrlForResource ("xamvideotest", "mp4"))) 
 			using (var session = CreateSession (asset)){
@@ -85,8 +88,9 @@ namespace MonoTouchFixtures.VideoToolbox {
 		[Test]
 		public void DecompressionSessionGetSupportedPropertiesTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Ignore ("Ignoring VideoToolbox tests: Requires iOS8+");
+			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AsserttvOSSystemVersion (10, 2, throwIfOtherPlatform: false);
 
 			using (var asset = AVAsset.FromUrl (NSBundle.MainBundle.GetUrlForResource ("xamvideotest", "mp4")))
 			using (var session = CreateSession (asset)) {

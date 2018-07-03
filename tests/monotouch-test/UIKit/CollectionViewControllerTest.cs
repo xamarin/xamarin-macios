@@ -28,7 +28,7 @@ namespace MonoTouchFixtures.UIKit {
 			// interesting ctor for the linker: a [PostSnippet] directly on the backing field is needed
 			using (var c = new UICollectionViewController (l)) {
 				// that's because Apple did not expose the init* argument as a property until 7.0
-				if (TestRuntime.CheckSystemAndSDKVersion (7, 0))
+				if (TestRuntime.CheckiOSSystemVersion (7, 0, throwIfOtherPlatform: false))
 					Assert.AreSame (l, c.Layout, "Layout");
 			}
 		}

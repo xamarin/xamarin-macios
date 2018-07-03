@@ -23,6 +23,8 @@ namespace MonoTouchFixtures.GLKit {
 		[Test]
 		public void Properties ()
 		{
+			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
+
 			var transform = new GLKEffectPropertyTransform ();
 			Assert.That (transform.ModelViewMatrix.ToString (), Is.EqualTo ("(1, 0, 0, 0)\n(0, 1, 0, 0)\n(0, 0, 1, 0)\n(0, 0, 0, 1)"), "ModelViewMatrix");
 			Assert.That (transform.ProjectionMatrix.ToString (), Is.EqualTo ("(1, 0, 0, 0)\n(0, 1, 0, 0)\n(0, 0, 1, 0)\n(0, 0, 0, 1)"), "ProjectionMatrix");

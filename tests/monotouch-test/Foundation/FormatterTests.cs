@@ -34,6 +34,7 @@ namespace MonoTouchFixtures.Foundation
 		void RequiresIos8 ()
 		{
 			TestRuntime.AssertXcodeVersion (6, 0);
+			TestRuntime.AssertMacSystemVersion (10, 10, throwIfOtherPlatform: false);
 
 			if (dateComponentsFormatter == null)
 				dateComponentsFormatter = new NSDateComponentsFormatter ();

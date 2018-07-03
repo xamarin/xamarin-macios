@@ -96,6 +96,18 @@ namespace MonoTouchFixtures.Foundation {
 			RequiresIos8 ();
 
 			foreach (NSCalendarType t in Enum.GetValues(typeof(NSCalendarType))) {
+				switch (t) {
+				case NSCalendarType.IslamicTabular:
+				case NSCalendarType.IslamicUmmAlQura:
+#if __MACOS__
+					if (!TestRuntime.CheckMacSystemVersion (10, 10))
+						continue;
+#else
+					if (!TestRuntime.CheckXcodeVersion (6, 0))
+						continue;
+#endif
+					break;
+				}
 				NSCalendar c = new NSCalendar (t);
 				Assert.IsNotNull (c.Identifier, "Can't find identifier: " + t.ToString());
 			}
@@ -218,6 +230,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void TestAddingByComponents ()
 		{
 			RequiresIos8 ();
+			TestRuntime.AssertMacSystemVersion (10, 10, throwIfOtherPlatform: false);
 
 			NSDate now = NSDate.Now;
 			NSDate oneDayFromNow = NSCalendar.CurrentCalendar.DateByAddingUnit (NSCalendarUnit.Day, 1, now, NSCalendarOptions.None);

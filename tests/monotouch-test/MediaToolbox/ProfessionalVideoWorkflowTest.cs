@@ -18,6 +18,7 @@ namespace MonoTouchFixtures.MediaToolbox {
 		[Test]
 		public void RegisterFormatReaders ()
 		{
+			TestRuntime.AssertMacSystemVersion (10, 10, throwIfOtherPlatform: false);
 			MTProfessionalVideoWorkflow.RegisterFormatReaders ();
 		}
 	}

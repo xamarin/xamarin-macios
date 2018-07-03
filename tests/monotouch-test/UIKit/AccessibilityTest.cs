@@ -30,8 +30,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void RequestGuidedAccessSession ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Inconclusive ("Requires iOS7 or later");
+			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
 
 			// should not affect execution since it needs to be a "supervised" device (and allowed in MDM)
 			UIAccessibility.RequestGuidedAccessSession (true, delegate (bool didSuccess) {

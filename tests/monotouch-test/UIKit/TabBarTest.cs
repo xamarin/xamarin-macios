@@ -138,7 +138,7 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			using (UITabBar tb = new UITabBar ()) {
 				// TintColor is inherited in iOS7 so it won't be null by default
-				if (TestRuntime.CheckSystemAndSDKVersion (7,0))
+				if (TestRuntime.CheckiOSSystemVersion (7, 0, throwIfOtherPlatform: false))
 					Assert.NotNull (tb.TintColor, "1");
 				else
 					Assert.Null (tb.TintColor, "1");
@@ -149,7 +149,7 @@ namespace MonoTouchFixtures.UIKit {
 				tb.TintColor = null;
 				if (TestRuntime.IsTVOS)
 					Assert.That (tb.TintColor, Is.EqualTo (UIColor.White), "3");
-				else if (TestRuntime.CheckSystemAndSDKVersion (7,0))
+				else if (TestRuntime.CheckiOSSystemVersion (7, 0, throwIfOtherPlatform: false))
 					Assert.That (tb.TintColor, Is.Not.EqualTo (UIColor.White), "3");
 				else
 					Assert.Null (tb.TintColor, "3");
@@ -164,7 +164,7 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.Null (tb.SelectedImageTintColor, "1");
 				
 				tb.SelectedImageTintColor = UIColor.Black;
-				if (!UIDevice.CurrentDevice.CheckSystemVersion (7, 1)) {
+				if (!TestRuntime.CheckiOSSystemVersion (7, 1)) {
 					// before 7.1 the tintColor would have been accepted
 					Assert.NotNull (tb.SelectedImageTintColor, "2");
 			

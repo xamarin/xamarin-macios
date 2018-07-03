@@ -188,6 +188,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void DrawingExtensions ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
+			TestRuntime.AssertMacSystemVersion (10, 11, throwIfOtherPlatform: false);
 
 			using (var s = new NSString ("foo")) {
 				NSStringDrawingOptions options = NSStringDrawingOptions.OneShot;

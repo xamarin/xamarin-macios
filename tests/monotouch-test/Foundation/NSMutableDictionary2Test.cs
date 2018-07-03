@@ -142,25 +142,42 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void Copy ()
 		{
+			var isMutableCopy = false;
+#if __MACOS__
+			if (!TestRuntime.CheckMacSystemVersion (10, 8))
+				isMutableCopy = true;
+#endif
 			using (var k = new NSString ("key")) 
 				using (var v = new NSString ("value"))
 					using (var d = new NSMutableDictionary <NSString, NSString> (k, v)) {
 						// NSObject.Copy works because NSDictionary conforms to NSCopying
 						using (var copy1 = (NSDictionary) d.Copy ()) {
 							Assert.AreNotSame (d, copy1, "1");
-							Assert.That (copy1, Is.Not.TypeOf<NSMutableDictionary> (), "NSDictionary-1");
+							if (isMutableCopy) {
+								Assert.That (copy1, Is.TypeOf<NSMutableDictionary> (), "NSDictionary-1");
+							} else {
+								Assert.That (copy1, Is.Not.TypeOf<NSMutableDictionary> (), "NSDictionary-1");
+							}
 							Assert.That (copy1.Count, Is.EqualTo ((nuint) 1), "Count-1");
 						}
 
 						using (var copy2 = (NSDictionary) d.Copy (null)) {
 							Assert.AreNotSame (d, copy2, "2");
-							Assert.That (copy2, Is.Not.TypeOf<NSMutableDictionary> (), "NSDictionary-2");
+							if (isMutableCopy) {
+								Assert.That (copy2, Is.TypeOf<NSMutableDictionary> (), "NSDictionary-2");
+							} else {
+								Assert.That (copy2, Is.Not.TypeOf<NSMutableDictionary> (), "NSDictionary-2");
+							}
 							Assert.That (copy2.Count, Is.EqualTo ((nuint) 1), "Count-2");
 						}
 
 						using (var copy3 = (NSDictionary) d.Copy (NSZone.Default)) {
 							Assert.AreNotSame (d, copy3, "3");
-							Assert.That (copy3, Is.Not.TypeOf<NSMutableDictionary> (), "NSDictionary-3");
+							if (isMutableCopy) {
+								Assert.That (copy3, Is.TypeOf<NSMutableDictionary> (), "NSDictionary-3");
+							} else {
+								Assert.That (copy3, Is.Not.TypeOf<NSMutableDictionary> (), "NSDictionary-3");
+							}
 							Assert.That (copy3.Count, Is.EqualTo ((nuint) 1), "Count-3");
 						}
 					}

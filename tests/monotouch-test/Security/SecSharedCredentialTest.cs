@@ -68,8 +68,7 @@ namespace MonoTouchFixtures.Security {
 		[Timeout (5000)]
 		public void AddSharedWebCredentialNotNullPassword ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Ignore ("Ignoring AddSharedWebCredentialNotNullPassword test: Requires iOS8+");
+			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
 
 			Action<NSError> handler = (NSError e) =>  {
 				// we do nothing, if we did block the test should be interactive because a dialog is shown.
@@ -83,8 +82,7 @@ namespace MonoTouchFixtures.Security {
 		[Timeout (5000)]
 		public void AddSharedWebCredentialNullPassword ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Ignore ("Ignoring AddSharedWebCredentialNullPassword test: Requires iOS8+");
+			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
 
 			password = null;
 			Action<NSError> handler = (NSError e) =>  {
@@ -96,8 +94,7 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 		public void CreateSharedWebCredentialPassword ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Ignore ("Ignoring CreateSharedWebCredentialPassword test: Requires iOS8+");
+			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
 
 			var pwd = SecSharedCredential.CreateSharedWebCredentialPassword ();
 			Assert.IsNotNull (pwd);

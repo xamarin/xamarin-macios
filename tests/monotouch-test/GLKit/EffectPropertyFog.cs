@@ -23,6 +23,8 @@ namespace MonoTouchFixtures.GLKit {
 		[Test]
 		public void Properties ()
 		{
+			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
+
 			var fog = new GLKEffectPropertyFog ();
 			Assert.That (fog.Color.ToString (), Is.EqualTo ("(0, 0, 0, 0)"), "Color");
 			

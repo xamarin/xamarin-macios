@@ -39,8 +39,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void InitWithFrameTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (9,0))
-				Assert.Inconclusive ("UIStackView is new in 9.0");
+			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
 
 			UIStackView stack = new UIStackView (new RectangleF (0, 0, 10, 10));
 			Assert.NotNull (stack, "UIStackView ctor(CGRect)");

@@ -25,10 +25,9 @@ namespace MonoTouchFixtures.PushKit {
 		[Test]
 		public void CtorDispatchQueue ()
 		{
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (8, 0))
-				Assert.Inconclusive ("Requires iOS8 or later");
+			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
 
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (8, 2) && IntPtr.Size == 4)
+			if (!TestRuntime.CheckiOSSystemVersion (8, 2, throwIfOtherPlatform: false) && IntPtr.Size == 4)
 				Assert.Inconclusive ("Requires iOS 8.2 or later in 32-bit mode.");
 
 			using (var dq = new DispatchQueue ("pk-test-queue"))

@@ -45,8 +45,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void GetName ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("requires iOS 7");
+			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
 
 			Assert.Throws<ArgumentNullException> (delegate { SoundBank.GetName (null); }, "null");
 
@@ -59,8 +58,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void GetName_DLS_SimOnly ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("requires iOS 7");
+			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
 			if (Runtime.Arch == Arch.DEVICE)
 				Assert.Ignore ("Use local file system (need a smaller sample)");
 
@@ -73,8 +71,8 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void GetInstrumentInfo ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("requires iOS 7");
+			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertMacSystemVersion (10, 9, throwIfOtherPlatform: false);
 
 			Assert.Throws<ArgumentNullException> (delegate { SoundBank.GetInstrumentInfo (null); }, "null");
 
@@ -87,8 +85,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void GetInstrumentInfo_DLS_SimOnly ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("requires iOS 7");
+			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
 			if (Runtime.Arch == Arch.DEVICE)
 				Assert.Ignore ("Use local file system (need a smaller sample)");
 

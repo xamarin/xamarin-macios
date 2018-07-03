@@ -89,9 +89,9 @@ partial class TestRuntime
 		return new Version (major, minor, build);
 	}
 
-	public static void AssertXcodeVersion (int major, int minor)
+	public static void AssertXcodeVersion (int major, int minor, int build = 0)
 	{
-		if (CheckXcodeVersion (major, minor))
+		if (CheckXcodeVersion (major, minor, build))
 			return;
 
 		NUnit.Framework.Assert.Ignore ("Requires the platform version shipped with Xcode {0}.{1}", major, minor);
@@ -378,6 +378,8 @@ partial class TestRuntime
 		case 4:
 #if __IOS__
 			switch (minor) {
+			case 1:
+				return true; // iOS 4.3.2
 			case 5:
 				return CheckiOSSystemVersion (6, 0);
 			case 6:
@@ -389,6 +391,8 @@ partial class TestRuntime
 			return true;
 #elif MONOMAC
 			switch (minor) {
+			case 1:
+				return CheckMacSystemVersion (10, 7, 0);
 			case 5:
 			case 6:
 				return CheckMacSystemVersion (10, 8, 0);
@@ -418,6 +422,12 @@ partial class TestRuntime
 #endif
 	}
 
+	public static void AssertiOSSystemVersion (int major, int minor, bool throwIfOtherPlatform = true)
+	{
+		if (!CheckiOSSystemVersion (major, minor, throwIfOtherPlatform))
+			NUnit.Framework.Assert.Ignore ($"This test requires iOS {major}.{minor}");
+	}
+
 	public static bool CheckExactiOSSystemVersion (int major, int minor)
 	{
 #if __IOS__
@@ -443,6 +453,12 @@ partial class TestRuntime
 #endif
 	}
 
+	public static void AsserttvOSSystemVersion (int major, int minor, bool throwIfOtherPlatform = true)
+	{
+		if (!ChecktvOSSystemVersion (major, minor, throwIfOtherPlatform))
+			NUnit.Framework.Assert.Ignore ($"This test requires tvOS {major}.{minor}");
+	}
+
 	// This method returns true if:
 	// system version >= specified version
 	// AND
@@ -459,6 +475,14 @@ partial class TestRuntime
 #endif
 	}
 
+	public static void AssertWatchOSVersion (int major, int minor, bool throwIfOtherPlatform = true)
+	{
+		if (CheckWatchOSSystemVersion (major, minor, throwIfOtherPlatform))
+			return;
+
+		NUnit.Framework.Assert.Ignore ($"This test requires watchOS {major}.{minor}");
+	}
+
 	public static bool CheckMacSystemVersion (int major, int minor, int build = 0, bool throwIfOtherPlatform = true)
 	{
 #if MONOMAC
@@ -470,25 +494,10 @@ partial class TestRuntime
 #endif
 	}
 
-	// This method returns true if:
-	// system version >= specified version
-	// AND
-	// sdk version >= specified version
-	public static bool CheckSystemAndSDKVersion (int major, int minor)
+	public static void AssertMacSystemVersion (int major, int minor, int build = 0, bool throwIfOtherPlatform = true)
 	{
-#if __WATCHOS__
-		throw new Exception ("Can't get iOS System/SDK version on WatchOS.");
-#elif MONOMAC
-		if (OSXVersion < new Version (major, minor))
-			return false;
-#else
-		if (!UIDevice.CurrentDevice.CheckSystemVersion (major, minor))
-			return false;
-#endif
-
-		// Check if the SDK version we're built includes the version we're checking for
-		// We don't want to execute iOS7 tests on an iOS7 device when built with the iOS6 SDK.
-		return CheckSDKVersion (major, minor);
+		if (!CheckMacSystemVersion (major, minor, build, throwIfOtherPlatform))
+			NUnit.Framework.Assert.Ignore ($"This test requires macOS {major}.{minor}.{build}");
 	}
 
 	public static bool CheckSDKVersion (int major, int minor)

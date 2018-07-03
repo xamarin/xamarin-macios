@@ -39,8 +39,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void InitWithNibNameTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8,0))
-				Assert.Inconclusive ("UIAlertControllerTest is new in 8.0");
+			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
 			
 			UIAlertController ctrl = new UIAlertController (null, null);
 			Assert.NotNull (ctrl, "UIAlertController ctor(String, NSBundle)");

@@ -32,8 +32,7 @@ namespace MonoTouchFixtures.CoreImage {
 		[Ignore ("got the original error back, needs more investigation")]
 		public void PresentationPolicy ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
-				Assert.Inconclusive ("Requires iOS7+");
+			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
 
 			using (var vc = new UIViewController ()) {
 				// without calling PrepareInterstitialAds we get a *unrecognized selector* native exception

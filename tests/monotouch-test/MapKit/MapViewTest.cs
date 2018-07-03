@@ -81,6 +81,11 @@ namespace MonoTouchFixtures.MapKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class MapViewTest {
+		[SetUp]
+		public void Setup ()
+		{
+			TestRuntime.AssertMacSystemVersion (10, 9, throwIfOtherPlatform: false);
+		}
 		
 		[Test]
 		public void InitWithFrame ()
@@ -155,7 +160,7 @@ namespace MonoTouchFixtures.MapKit {
 				Assert.Inconclusive ("backing fields are removed when newrefcount is enabled");
 
 #if !MONOMAC
-			if (UIDevice.CurrentDevice.CheckSystemVersion (7, 0)) {
+			if (TestRuntime.CheckiOSSystemVersion (7, 0)) {
 				// This test selects annotations on a map view, but according to apple's docs
 				// and a lot of googling this will not necessarily work until the map view is
 				// show. Since we can't relinquish control of the UI thread, we have no option
@@ -286,8 +291,7 @@ namespace MonoTouchFixtures.MapKit {
 		[Test]
 		public void Overlays7 () 
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Inconclusive ("requires 7.0+");
+			TestRuntime.AssertXcodeVersion (5, 0, 1);
 
 			using (var polygon = new MKPolygon ())
 			using (var polyline = new MKPolyline ())

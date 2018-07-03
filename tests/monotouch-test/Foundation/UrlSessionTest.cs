@@ -148,6 +148,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void SharedSession ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
+			TestRuntime.AssertMacSystemVersion (10, 9, throwIfOtherPlatform: false);
 			
 			// in iOS9 those selectors do not respond - but they do work (forwarded to __NSURLSessionLocal type ?)
 			// * delegateQueue, sessionDescription, setSessionDescription:, delegate

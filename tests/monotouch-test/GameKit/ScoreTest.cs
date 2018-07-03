@@ -59,11 +59,11 @@ namespace MonoTouchFixtures.GameKit {
 
 				// this is a new API in iOS8 (it was private before that) and returned an empty instance like:
 				// "<<GKPlayer: 0x81254e60>(playerID:(null) alias:(null) name:(null) status:(null))>"
-				if (TestRuntime.CheckSystemAndSDKVersion (8, 0)) {
+				if (TestRuntime.CheckiOSSystemVersion (8, 0, throwIfOtherPlatform: false)) {
 					Assert.Null (s.Player, "Player");
 				}
 
-				if (TestRuntime.CheckSystemAndSDKVersion (7, 0)) {
+				if (TestRuntime.CheckiOSSystemVersion (7, 0, throwIfOtherPlatform: false)) {
 					Assert.That (s.LeaderboardIdentifier, Is.EqualTo ("category-or-identifier"), "LeaderboardIdentifier");
 				}
 

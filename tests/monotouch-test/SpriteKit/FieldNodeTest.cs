@@ -31,8 +31,8 @@ namespace MonoTouchFixtures.SpriteKit {
 		[SetUp]
 		public void VersionCheck ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Inconclusive ("requires iOS8+");
+			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertMacSystemVersion (10, 10, throwIfOtherPlatform: false);
 		}
 
 		[Test]

@@ -34,6 +34,8 @@ namespace MonoTouchFixtures.GLKit {
 		[Culture ("en")]
 		public void Properties ()
 		{
+			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
+
 			var effect = new GLKBaseEffect ();
 			Assert.That (effect.LightModelAmbientColor.ToString (), Is.EqualTo ("(0.2, 0.2, 0.2, 1)"), "LightModelAmbientColor");
 			Assert.That (effect.ConstantColor.ToString (), Is.EqualTo ("(1, 1, 1, 1)"), "ConstantColor");

@@ -122,6 +122,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public void GetNSObject_Different_Class ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
+			TestRuntime.AssertMacSystemVersion (10, 9, throwIfOtherPlatform: false);
 
 			IntPtr class_ptr = Class.GetHandle ("SKPhysicsBody");
 			SizeF size = new SizeF (3, 2);
@@ -140,6 +141,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public void GetNSObject_Posing_Class ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
+			TestRuntime.AssertMacSystemVersion (10, 9, throwIfOtherPlatform: false);
 
 			NSUrlSession session = NSUrlSession.SharedSession;
 			using (var request = new NSUrlRequest (new NSUrl ("http://www.example.com"))) {

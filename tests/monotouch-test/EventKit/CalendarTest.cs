@@ -30,6 +30,12 @@ namespace MonoTouchFixtures.EventKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class EventKitCalendarTest {
+		[SetUp]
+		public void Setup ()
+		{
+			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
+		}
+
 
 		// note: default .ctor disable since it would thrown an objective-c exception telling us to use 'calendarWithEventStore:'
 		[Test]

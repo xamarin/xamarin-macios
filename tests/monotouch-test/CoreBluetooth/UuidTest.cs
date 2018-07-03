@@ -129,12 +129,14 @@ namespace MonoTouchFixtures.CoreBluetooth {
 				Assert.That (u1.GetHashCode (), Is.EqualTo (u2.GetHashCode ()), "GetHashCode-3");
 			}
 #if MONOMAC
-			guid = new byte [] { 0xaa, 0xbb, 0xcc, 0xdd };
-			Assert.That (CBUUID.FromBytes (guid),
-				Is.EqualTo (CBUUID.FromBytes (guid)));
+			if (TestRuntime.CheckMacSystemVersion (10, 10)) {
+				guid = new byte [] { 0xaa, 0xbb, 0xcc, 0xdd };
+				Assert.That (CBUUID.FromBytes (guid),
+					Is.EqualTo (CBUUID.FromBytes (guid)));
 
-			Assert.That (CBUUID.FromString ("12345678"),
-				Is.EqualTo (CBUUID.FromBytes (new byte [] { 0x12, 0x34, 0x56, 0x78 })));
+				Assert.That (CBUUID.FromString ("12345678"),
+					Is.EqualTo (CBUUID.FromBytes (new byte [] { 0x12, 0x34, 0x56, 0x78 })));
+			}
 #endif
 		}
 
@@ -165,17 +167,20 @@ namespace MonoTouchFixtures.CoreBluetooth {
 				Assert.That (u1.GetHashCode (), Is.EqualTo (u2.GetHashCode ()), "GetHashCode-3");
 			}
 #if MONOMAC
-			Assert.That (CBUUID.FromBytes (new byte [] { 0xab, 0xcd, 0xef, 0x12 }),
-				Is.EqualTo (MakeFull (0xab, 0xcd, 0xef, 0x12)));
+			if (TestRuntime.CheckMacSystemVersion (10, 10)) {
+				Assert.That (CBUUID.FromBytes (new byte [] { 0xab, 0xcd, 0xef, 0x12 }),
+					Is.EqualTo (MakeFull (0xab, 0xcd, 0xef, 0x12)));
 
-			Assert.That (CBUUID.FromString ("12345678"),
-				Is.EqualTo (CBUUID.FromString ("12345678-0000-1000-8000-00805f9b34fb")));
+				Assert.That (CBUUID.FromString ("12345678"),
+					Is.EqualTo (CBUUID.FromString ("12345678-0000-1000-8000-00805f9b34fb")));
+			}
 #endif
 		}
 
 		[Test]
 		public void Equality_PartialsOfDifferentSizeNotEqual ()
 		{
+			TestRuntime.AssertMacSystemVersion (10, 10, throwIfOtherPlatform: false);
 #if MONOMAC
 			Assert.That (CBUUID.FromPartial (0x1234), Is.Not.EqualTo (
 				CBUUID.FromBytes (new byte [] { 0x12, 0x34, 0x56, 0x78 })));

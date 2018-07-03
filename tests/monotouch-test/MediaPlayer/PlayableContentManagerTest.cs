@@ -48,8 +48,7 @@ namespace MonoTouchFixtures.MediaPlayer {
 		[Test]
 		public void Shared ()
 		{
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (7, 1))
-				Assert.Inconclusive ("Requires 7.1+");
+			TestRuntime.AssertiOSSystemVersion (7, 1, throwIfOtherPlatform: false);
 
 			MPPlayableContentManager shared = MPPlayableContentManager.Shared;
 			Assert.Null (shared.DataSource, "DataSource");

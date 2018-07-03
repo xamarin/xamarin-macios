@@ -46,8 +46,8 @@ namespace MonoTouchFixtures.SceneKit {
 		[Test]
 		public void AddAnimation ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8,0))
-				Assert.Ignore ("Requires iOS8");
+			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
 
 			using (var a = CAAnimation.CreateAnimation ())
 			using (var n = SCNNode.Create ()) {

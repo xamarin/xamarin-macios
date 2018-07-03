@@ -28,8 +28,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void CtorNull ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
-				Assert.Inconclusive ("requires iOS7+");
+			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
 
 			using (var ta = new NSTextAttachment (null, null)) {
 				Assert.IsTrue (ta.Bounds.IsEmpty, "Bounds");

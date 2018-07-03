@@ -24,6 +24,8 @@ namespace MonoTouchFixtures.GLKit {
 		[Culture ("en")]
 		public void Properties ()
 		{
+			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
+
 			var material = new GLKEffectPropertyMaterial ();
 			Assert.That (material.AmbientColor.ToString (), Is.EqualTo ("(0.2, 0.2, 0.2, 1)"), "AmbientColor");
 			Assert.That (material.DiffuseColor.ToString (), Is.EqualTo ("(0.8, 0.8, 0.8, 1)"), "DiffuseColor");

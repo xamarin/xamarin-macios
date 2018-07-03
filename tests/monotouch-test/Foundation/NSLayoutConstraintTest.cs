@@ -23,8 +23,7 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void FromVisualFormat ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("Ignoring FromVisualFormat tests: Requires iOS7+");
+			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
 
 			using (var testViewController = new TestViewController ()) {
 				var constraints = NSLayoutConstraint.FromVisualFormat ("V:|[topLayoutGuide]-[firstLabel]-[secondLabel]",

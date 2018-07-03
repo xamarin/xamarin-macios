@@ -16,6 +16,12 @@ namespace MonoTouchFixtures.MapKit {
 	[Preserve (AllMembers = true)]
 	public class GeometryTest {
 		
+		[SetUp]
+		public void Setup ()
+		{
+			TestRuntime.AssertMacSystemVersion (10, 9, throwIfOtherPlatform: false);
+		}
+
 		[Test]
 		public void MapPointsPerMeterAtLatitude ()
 		{

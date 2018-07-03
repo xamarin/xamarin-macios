@@ -39,8 +39,8 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void FromPointsTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Ignore ("requires iOS8+");
+			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertMacSystemVersion (10, 10, throwIfOtherPlatform: false);
 
 			var pts = new[] {
 				new PointF (0, 0),
@@ -54,8 +54,8 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void FromPointsOffsetTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Ignore ("requires iOS8+");
+			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertMacSystemVersion (10, 10, throwIfOtherPlatform: false);
 
 			var pts = new [] {
 				new PointF (0, 0),
@@ -71,8 +71,8 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void FromSplinePointsTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Ignore ("requires iOS8+");
+			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertMacSystemVersion (10, 10, throwIfOtherPlatform: false);
 
 			var pts = new[] {
 				new PointF (0, 0),
@@ -86,8 +86,8 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void FromSplinePointsOffsetTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Ignore ("requires iOS8+");
+			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertMacSystemVersion (10, 10, throwIfOtherPlatform: false);
 
 			var pts = new [] {
 				new PointF (0, 0),

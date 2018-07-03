@@ -37,8 +37,9 @@ namespace MonoTouchFixtures.VideoToolbox {
 		[Test]
 		public void CompressionSessionCreateTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Ignore ("Ignoring VideoToolbox tests: Requires iOS8+");
+			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AsserttvOSSystemVersion (10, 2, throwIfOtherPlatform: false);
 
 			using (var session = CreateSession ()){
 				Assert.IsNotNull (session, "Session should not be null");
@@ -48,8 +49,9 @@ namespace MonoTouchFixtures.VideoToolbox {
 		[Test]
 		public void CompressionSessionSetCompressionPropertiesTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Ignore ("Ignoring VideoToolbox tests: Requires iOS8+");
+			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertMacSystemVersion (10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AsserttvOSSystemVersion (10, 2, throwIfOtherPlatform: false);
 
 			using (var session = CreateSession ()){
 
@@ -58,15 +60,16 @@ namespace MonoTouchFixtures.VideoToolbox {
 					AllowFrameReordering = false
 				});
 
-				Assert.That (result == VTStatus.Ok, "SetCompressionProperties");
+				Assert.That (result, Is.EqualTo (VTStatus.Ok), "SetCompressionProperties");
 			}
 		}
 
 		[Test]
 		public void CompressionSessionSetPropertiesTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Ignore ("Ignoring VideoToolbox tests: Requires iOS8+");
+			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AsserttvOSSystemVersion (10, 2, throwIfOtherPlatform: false);
 
 			using (var session = CreateSession ()){
 
@@ -82,8 +85,9 @@ namespace MonoTouchFixtures.VideoToolbox {
 		[Test]
 		public void CompressionSessionSetCompressionPropertiesMultiPassStorageTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Ignore ("Ignoring VideoToolbox tests: Requires iOS8+");
+			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertMacSystemVersion (10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AsserttvOSSystemVersion (10, 2, throwIfOtherPlatform: false);
 
 			using (var session = CreateSession ())
 			using (var storage = VTMultiPassStorage.Create ()){
@@ -102,8 +106,9 @@ namespace MonoTouchFixtures.VideoToolbox {
 		[Test]
 		public void CompressionSessionGetSupportedPropertiesTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Ignore ("Ignoring VideoToolbox tests: Requires iOS8+");
+			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AsserttvOSSystemVersion (10, 2, throwIfOtherPlatform: false);
 
 			using (var session = CreateSession ()) {
 				var supportedProps = session.GetSupportedProperties ();
@@ -131,8 +136,9 @@ namespace MonoTouchFixtures.VideoToolbox {
 #endif
 		public void CompressionSessionGetSerializablePropertiesTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Ignore ("Ignoring VideoToolbox tests: Requires iOS8+");
+			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AsserttvOSSystemVersion (10, 2, throwIfOtherPlatform: false);
 			
 			using (var session = CreateSession ()) {
 				var supportedProps = session.GetSerializableProperties ();

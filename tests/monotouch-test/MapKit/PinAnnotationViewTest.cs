@@ -31,6 +31,11 @@ namespace MonoTouchFixtures.MapKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class PinAnnotationViewTest {
+		[SetUp]
+		public void Setup ()
+		{
+			TestRuntime.AssertMacSystemVersion (10, 9, throwIfOtherPlatform: false);
+		}
 		
 		[Test]
 		public void Ctor_Annotation ()
@@ -40,15 +45,17 @@ namespace MonoTouchFixtures.MapKit {
 				Assert.AreSame (a, av.Annotation, "Annotation");
 
 #if !MONOMAC
-				if (UIDevice.CurrentDevice.CheckSystemVersion (7, 0)) // Crashes with EXC_BAD_ACCESS (SIGABRT) if < iOS 7.0
+				if (TestRuntime.CheckiOSSystemVersion (7, 0)) // Crashes with EXC_BAD_ACCESS (SIGABRT) if < iOS 7.0
 					Assert.False (av.AnimatesDrop, "AnimatesDrop");
 
-				if (!UIDevice.CurrentDevice.CheckSystemVersion (9, 0))
+				if (!TestRuntime.CheckiOSSystemVersion (9, 0))
 					return;
 #endif
 
 				Assert.That (av.PinColor, Is.EqualTo (MKPinAnnotationColor.Red), "PinColor");
-				Assert.NotNull (av.PinTintColor, "PinTintColor");
+
+				if (TestRuntime.CheckXcodeVersion (7, 0))
+					Assert.NotNull (av.PinTintColor, "PinTintColor");
 			}
 		}
 
@@ -56,8 +63,8 @@ namespace MonoTouchFixtures.MapKit {
 		public void InitWithFrame ()
 		{
 #if !MONOMAC
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (7, 0)) // Crashes with EXC_BAD_ACCESS (SIGABRT) if < iOS 7.0
-				Assert.Inconclusive ("Crashes with EXC_BAD_ACCESS (SIGABRT) if < iOS 7.0");
+			// Crashes with EXC_BAD_ACCESS (SIGABRT) if < iOS 7.0
+			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
 #endif
 
 			RectangleF frame = new RectangleF (10, 10, 100, 100);
@@ -71,9 +78,13 @@ namespace MonoTouchFixtures.MapKit {
 				
 				Assert.That (av.PinColor, Is.EqualTo (MKPinAnnotationColor.Red), "PinColor");
 #if MONOMAC
-				Assert.That (av.PinTintColor.ToString (), Is.EqualTo ("Developer/systemRedColor"), "PinTintColor");
+				if (TestRuntime.CheckMacSystemVersion (10, 12)) {
+					Assert.That (av.PinTintColor.ToString (), Is.EqualTo ("Developer/systemRedColor"), "PinTintColor");
+				} else {
+					Assert.Null (av.PinTintColor, "PinTintColor"); // differs from the other init call
+				}
 #else
-				if (UIDevice.CurrentDevice.CheckSystemVersion (10,0))
+				if (TestRuntime.CheckiOSSystemVersion (10, 0))
 					Assert.That (av.PinTintColor.ToString (), Is.EqualTo (UIColor.FromRGBA (255, 59, 48, 255).ToString ()), "PinTintColor");
 				else
 					Assert.Null (av.PinTintColor, "PinTintColor"); // differs from the other init call

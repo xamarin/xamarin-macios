@@ -222,6 +222,7 @@ namespace MonoTouchFixtures.Foundation
 		public void AnyKeyPropertiesTest ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
+			TestRuntime.AssertMacSystemVersion (10, 9, throwIfOtherPlatform: false);
 
 			var availableProperties = new List<string> { };
 			using (var expression = NSExpression.FromAnyKey ()) {

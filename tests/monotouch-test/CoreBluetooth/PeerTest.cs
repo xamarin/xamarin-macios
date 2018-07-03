@@ -28,8 +28,8 @@ namespace MonoTouchFixtures.CoreBluetooth {
 		[Test]
 		public void Constructor ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8,0))
-				Assert.Ignore ("This requires at least iOS 8.0");
+			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertMacSystemVersion (10, 13, throwIfOtherPlatform: false);
 
 			// crash at dispose time in beta 4 (and 5)
 			// the type is undocumented but I think it's should be abstract (not user creatable)

@@ -20,6 +20,11 @@ namespace MonoTouchFixtures.MapKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ShapeTest {
+		[SetUp]
+		public void Setup ()
+		{
+			TestRuntime.AssertMacSystemVersion (10, 9, throwIfOtherPlatform: false);
+		}
 		
 		// used for types that inherits from MKShape
 		static public void CheckShape (MKShape shape)

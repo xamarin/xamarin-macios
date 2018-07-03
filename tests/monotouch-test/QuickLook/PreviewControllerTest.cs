@@ -43,11 +43,10 @@ namespace MonoTouchFixtures.QuickLook {
 		{
 			using (QLPreviewController pc = new QLPreviewController ()) {
 				Assert.Null (pc.CurrentPreviewItem, "CurrentPreviewItem");
-				var dev = UIDevice.CurrentDevice;
 				nint index = 0;
-				if (dev.CheckSystemVersion (10,0))
+				if (TestRuntime.CheckiOSSystemVersion (10, 0))
 					index = nint.MaxValue;
-				else if (dev.CheckSystemVersion (7,1))
+				else if (TestRuntime.CheckiOSSystemVersion (7, 1))
 					index = -1;
 				Assert.That (pc.CurrentPreviewItemIndex, Is.EqualTo (index), "CurrentPreviewItemIndex");
 				

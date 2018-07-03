@@ -55,6 +55,8 @@ namespace MonoTouchFixtures.CoreImage {
 		[Test]
 		public void WithMetadataDefaults ()
 		{
+			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
+
 			var options = new CIImageInitializationOptionsWithMetadata ();
 			Assert.That (options.Dictionary.Count, Is.EqualTo (0), "Count");
 			Assert.Null (options.Properties, "Properties");
@@ -63,6 +65,8 @@ namespace MonoTouchFixtures.CoreImage {
 		[Test]
 		public void WithMetadataProperties ()
 		{
+			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
+
 			var suboptions = new CGImageProperties () {
 				ProfileName = "Xamarin"
 			};

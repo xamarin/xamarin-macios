@@ -48,8 +48,10 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void Atlas_MissingResource ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("Requires iOS7");
+			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AsserttvOSSystemVersion (9, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertMacSystemVersion (10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertWatchOSVersion (3, 0, throwIfOtherPlatform: false);
 
 			using (var atlas = new SKTextureAtlas ()) {
 				// that returns a texture, calling 'MissingResource.png' (128 x 128)
@@ -65,7 +67,7 @@ namespace MonoTouchFixtures.SpriteKit {
 
 #if !MONOMAC
 					// FIXME: bug in iOS9 - it will randomly return 0,0 (but almost always on the first try)
-					if (!UIDevice.CurrentDevice.CheckSystemVersion (9,0))
+					if (!TestRuntime.CheckiOSSystemVersion (9, 0, throwIfOtherPlatform: false))
 						Assert.That (texture.Size, Is.EqualTo (new SizeF (128, 128)), "Size");
 #endif
 					

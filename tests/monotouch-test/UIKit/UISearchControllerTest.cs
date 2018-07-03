@@ -39,8 +39,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void InitWithNibNameTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8,0))
-				Assert.Inconclusive ("UISearchController is new in 8.0");
+			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
 
 			UISearchController ctrl = new UISearchController (null, null);
 			Assert.NotNull (ctrl, "UISearchController ctor(String, NSBundle)");

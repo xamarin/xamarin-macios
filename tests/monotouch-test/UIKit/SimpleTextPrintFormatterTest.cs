@@ -34,7 +34,7 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			using (var stpf = new UISimpleTextPrintFormatter ()) {
 				Assert.That (stpf.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
-				if (TestRuntime.CheckSystemAndSDKVersion (7,0)) {
+				if (TestRuntime.CheckiOSSystemVersion (7, 0, throwIfOtherPlatform: false)) {
 					Assert.Null (stpf.Color, "Color");
 					Assert.Null (stpf.Font, "Font");
 					Assert.That (stpf.TextAlignment, Is.EqualTo (UITextAlignment.Natural), "TextAlignment");
@@ -51,7 +51,7 @@ namespace MonoTouchFixtures.UIKit {
 		public void StringCtor ()
 		{
 			using (var stpf = new UISimpleTextPrintFormatter ("Xamarin")) {
-				if (TestRuntime.CheckSystemAndSDKVersion (7, 0)) {
+				if (TestRuntime.CheckiOSSystemVersion (7, 0, throwIfOtherPlatform: false)) {
 					Assert.Null (stpf.Color, "Color");
 					Assert.That (stpf.TextAlignment, Is.EqualTo (UITextAlignment.Natural), "TextAlignment");
 				} else {

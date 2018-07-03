@@ -29,8 +29,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void Ctor ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6,0))
-				Assert.Inconclusive ("EntryPointNotFoundException : CMMemoryPoolCreate before 6.0");
+			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
 
 			using (var mp = new CMMemoryPool ())
 			{
@@ -44,8 +43,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void CtorAgeOutPeriod ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6,0))
-				Assert.Inconclusive ("EntryPointNotFoundException : CMMemoryPoolCreate before 6.0");
+			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
 
 			using (var mp = new CMMemoryPool (TimeSpan.FromSeconds (40)))
 			{

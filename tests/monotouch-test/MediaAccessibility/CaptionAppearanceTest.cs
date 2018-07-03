@@ -31,7 +31,7 @@ namespace MonoTouchFixtures.MediaAccessibility {
 		[Test]
 		public void Fields ()
 		{
-			if (TestRuntime.CheckSystemAndSDKVersion (7,0)) {
+			if (TestRuntime.CheckXcodeVersion (5, 0, 1)) {
 				Assert.NotNull (MACaptionAppearance.MediaCharacteristicDescribesMusicAndSoundForAccessibility, "MediaCharacteristicDescribesMusicAndSoundForAccessibility");
 				Assert.NotNull (MACaptionAppearance.MediaCharacteristicTranscribesSpokenDialogForAccessibility, "MediaCharacteristicTranscribesSpokenDialogForAccessibility");
 				Assert.NotNull (MACaptionAppearance.SettingsChangedNotification, "SettingsChangedNotification");
@@ -47,8 +47,7 @@ namespace MonoTouchFixtures.MediaAccessibility {
 		[Culture ("en")] // this setting depends on locale of the device according to apple docs on MACaptionAppearanceGetDisplayType, we know english works
 		public void GetDisplayType ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
-				Assert.Ignore ("requires iOS7+");
+			TestRuntime.AssertXcodeVersion (5, 0, 1);
 
 			Assert.That (MACaptionAppearance.GetDisplayType (MACaptionAppearanceDomain.Default), Is.EqualTo (MACaptionAppearanceDisplayType.Automatic).Or.EqualTo (MACaptionAppearanceDisplayType.AlwaysOn).Or.EqualTo (MACaptionAppearanceDisplayType.ForcedOnly), "Default");
 		}

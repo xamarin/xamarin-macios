@@ -28,8 +28,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void Layout ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("requires iOS7+");
+			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
 
 			using (var tc = new NSTextContainer ()) {
 				Assert.Null (tc.LayoutManager, "LayoutManager");

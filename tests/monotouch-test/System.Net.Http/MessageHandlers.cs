@@ -44,6 +44,9 @@ namespace MonoTests.System.Net.Http
 		[TestCase (typeof (NSUrlSessionHandler))]
 		public void DnsFailure (Type handlerType)
 		{
+			TestRuntime.AssertMacSystemVersion (10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
+
 			PrintHandlerToTest ();
 
 			bool done = false;

@@ -54,8 +54,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void HostTimeClock ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6,0))
-				Assert.Inconclusive ("CMClock is new in 6.0");
+			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
 
 			using (var clock = CMClock.HostTimeClock) {
 				Assert.That (clock.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");

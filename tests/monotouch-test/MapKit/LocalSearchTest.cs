@@ -7,7 +7,7 @@
 // Copyright 2012 Xamarin Inc. All rights reserved.
 //
 
-#if !__TVOS__ && !__WATCHOS__
+#if !__WATCHOS__
 
 using System;
 #if XAMCORE_2_0
@@ -38,8 +38,9 @@ namespace MonoTouchFixtures.MapKit {
 		[Test]
 		public void EmptyRequest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6, 1))
-				Assert.Inconclusive ("Requires iOS 6.1");
+			TestRuntime.AssertiOSSystemVersion (6, 1, throwIfOtherPlatform: false);
+			TestRuntime.AssertMacSystemVersion (10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AsserttvOSSystemVersion (9, 2, throwIfOtherPlatform: false);
 
 			using (var lsr = new MKLocalSearchRequest ())
 			using (MKLocalSearch ls = new MKLocalSearch (lsr)) {

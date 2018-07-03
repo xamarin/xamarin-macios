@@ -27,10 +27,10 @@ namespace MonoTouchFixtures.MediaPlayer
 	{
 		MPNowPlayingInfo NowPlayingInfo;
 
-		bool v8_0 = TestRuntime.CheckSystemAndSDKVersion (8, 0);
-		bool v9_0 = TestRuntime.CheckSystemAndSDKVersion (9, 0);
-		bool v10_0 = TestRuntime.CheckSystemAndSDKVersion (10, 0);
-		bool v10_3 = TestRuntime.CheckSystemAndSDKVersion (10, 3);
+		bool v8_0 = TestRuntime.CheckiOSSystemVersion (8, 0);
+		bool v9_0 = TestRuntime.CheckiOSSystemVersion (9, 0);
+		bool v10_0 = TestRuntime.CheckiOSSystemVersion (10, 0);
+		bool v10_3 = TestRuntime.CheckiOSSystemVersion (10, 3);
 
 		[SetUp]
 		public void SetUp ()

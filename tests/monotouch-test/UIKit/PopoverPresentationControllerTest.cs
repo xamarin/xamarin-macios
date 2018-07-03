@@ -34,8 +34,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void PopoverBackgroundViewType ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8,0))
-				Assert.Inconclusive ("Requires iOS8+");
+			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
 
 			using (var vc = new UIViewController ())
 			using (var pc = new UIPopoverPresentationController (vc, null)) {

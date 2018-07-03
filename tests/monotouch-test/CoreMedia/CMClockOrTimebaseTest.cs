@@ -21,6 +21,8 @@ namespace MonoTouchFixtures.CoreMedia
 		[Test]
 		public void RetainReleseTest ()
 		{
+			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
+
 			var clock = CMClock.HostTimeClock;
 			var timebase = new CMClockOrTimebase (clock.Handle);
 			// we should be able to dispose the clock and the timebase with no crashes.

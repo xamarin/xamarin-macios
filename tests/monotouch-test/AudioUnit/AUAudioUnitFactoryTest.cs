@@ -23,8 +23,7 @@ namespace MonoTouchFixtures.AudioUnit {
 		[Test]
 		public void CreateAudioUnit ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (9, 0))
-				Assert.Ignore ("Ignoring AudioUnitv3 tests: Requires iOS9+");
+			TestRuntime.AssertXcodeVersion (7, 0);
 
 			const string expectedManufacturer = "Apple";
 			var desc = new AudioComponentDescription {

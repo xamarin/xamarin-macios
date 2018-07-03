@@ -119,8 +119,8 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void UIKitAttachmentConveniences_New ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
-				Assert.Inconclusive ("requires iOS7+");
+			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertMacSystemVersion (10, 11, throwIfOtherPlatform: false);
 
 			// so we added custom code calling the (old) category helper - but we had to pick a different name
 			using (var ta = new NSTextAttachment (null, null))
