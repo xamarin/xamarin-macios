@@ -237,6 +237,14 @@ namespace Introspection {
 					break;
 				}
 				break;
+			case "CAAction":
+				switch (type.Name) {
+				case "NSNull":
+					if (!Mac.CheckSystemVersion (10, 11)) // NSNull started implementing the CAAction protocol in 10.11
+						return true;
+					break;
+				}
+				break;
 			}
 
 			switch (type.Name) {
