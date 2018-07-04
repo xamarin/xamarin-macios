@@ -37,9 +37,9 @@ namespace MonoTouchFixtures.MediaPlayer {
 					Assert.Inconclusive ("This test needs music in the music library on the device.");
 
 				var six_dot_oh = true;
-				var nine_dot_two = TestRuntime.CheckiOSSystemVersion (9, 2);
-				var ten_dot_oh = TestRuntime.CheckiOSSystemVersion (10, 0);
-				var ten_dot_three = TestRuntime.CheckiOSSystemVersion (10, 3);
+				var nine_dot_two = TestRuntime.CheckSystemVersion (PlatformName.iOS, 9, 2);
+				var ten_dot_oh = TestRuntime.CheckSystemVersion (PlatformName.iOS, 10, 0);
+				var ten_dot_three = TestRuntime.CheckSystemVersion (PlatformName.iOS, 10, 3);
 
 				foreach (var i in items) {
 					object dummy;

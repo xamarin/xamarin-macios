@@ -125,9 +125,9 @@ namespace MonoTouchFixtures.SystemConfiguration {
 				// using Loopback iOS 10 / tvOS 10 / macOS 10.12 returns no flags (0) on devices
 				var expected = (NetworkReachabilityFlags) 0;
 #if MONOMAC
-				if (!TestRuntime.CheckMacSystemVersion (10, 12)) {
+				if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 12)) {
 					expected = NetworkReachabilityFlags.Reachable;
-					if (!TestRuntime.CheckMacSystemVersion (10, 11))
+					if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 11))
 						expected |= NetworkReachabilityFlags.IsLocalAddress;
 				}
 #else

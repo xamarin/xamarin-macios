@@ -47,7 +47,7 @@ namespace monotouchtest
 			testString.EnumerateLinguisticTags (range, NSLinguisticTagScheme.Token, NSLinguisticTaggerOptions.OmitWhitespace, null, Enumerator);
 			var expectedWordCount = 3;
 #if __MACOS__
-			if (!TestRuntime.CheckMacSystemVersion (10, 9))
+			if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 9))
 				expectedWordCount = 4;
 #endif
 			Assert.AreEqual (expectedWordCount, words.Count, "Word count: " + string.Join (", ", words));
@@ -81,7 +81,7 @@ namespace monotouchtest
 			var tags = testString.GetLinguisticTags (range, NSLinguisticTagScheme.NameOrLexicalClass, NSLinguisticTaggerOptions.OmitWhitespace, null, out tokenRanges);
 			var expectedWordCount = 3;
 #if __MACOS__
-			if (!TestRuntime.CheckMacSystemVersion (10, 9))
+			if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 9))
 				expectedWordCount = 4;
 #endif
 			Assert.AreEqual (expectedWordCount, tags.Length, "Tags Length");

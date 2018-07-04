@@ -33,7 +33,7 @@ namespace MonoTouchFixtures.EventKit {
 		[Test]
 		public void NullAllowedTest ()
 		{
-			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			using (var alarm = EKAlarm.FromTimeInterval (1234)) {
 				alarm.AbsoluteDate = null;

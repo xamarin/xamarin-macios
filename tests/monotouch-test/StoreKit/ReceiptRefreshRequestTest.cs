@@ -37,7 +37,7 @@ namespace MonoTouchFixtures.StoreKit {
 		[Test]
 		public void TerminateForInvalidReceipt ()
 		{
-			TestRuntime.AssertiOSSystemVersion (7, 1, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 1, throwIfOtherPlatform: false);
 			// not yet documented - seems to kill the app on purpose ?!? on both sim and devices
 			//SKReceiptRefreshRequest.TerminateForInvalidReceipt ();
 

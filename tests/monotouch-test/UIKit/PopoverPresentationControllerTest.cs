@@ -6,6 +6,7 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using UIKit;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -34,7 +35,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void PopoverBackgroundViewType ()
 		{
-			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			using (var vc = new UIViewController ())
 			using (var pc = new UIPopoverPresentationController (vc, null)) {

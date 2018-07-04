@@ -15,6 +15,7 @@ using AVKit;
 using Foundation;
 using UIKit;
 using iAd;
+using ObjCRuntime;
 #else
 using MonoTouch.AVKit;
 using MonoTouch.Foundation;
@@ -32,7 +33,7 @@ namespace MonoTouchFixtures.AVKit {
 		//[Test]
 		public void PreparePrerollAds_New ()
 		{
-			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			AVPlayerViewController.PrepareForPrerollAds ();
 		}

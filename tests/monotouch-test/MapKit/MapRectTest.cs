@@ -6,6 +6,7 @@ using System;
 using Foundation;
 using MapKit;
 using CoreGraphics;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.MapKit;
@@ -22,7 +23,7 @@ namespace MonoTouchFixtures.MapKit {
 		[SetUp]
 		public void Setup ()
 		{
-			TestRuntime.AssertMacSystemVersion (10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
 		}
 		
 		[Test]

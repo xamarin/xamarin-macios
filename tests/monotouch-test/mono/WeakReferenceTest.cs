@@ -34,9 +34,9 @@ namespace MonoTouchFixtures {
 		[SetUp]
 		public void Setup ()
 		{
-			TestRuntime.AssertWatchOSVersion (3, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertMacSystemVersion (10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.WatchOS, 3, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
 		}
 
 		[Test]

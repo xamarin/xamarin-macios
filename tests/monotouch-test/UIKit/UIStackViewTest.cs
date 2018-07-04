@@ -15,6 +15,7 @@ using System.Drawing;
 #if XAMCORE_2_0
 using Foundation;
 using UIKit;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -39,7 +40,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void InitWithFrameTest ()
 		{
-			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			UIStackView stack = new UIStackView (new RectangleF (0, 0, 10, 10));
 			Assert.NotNull (stack, "UIStackView ctor(CGRect)");

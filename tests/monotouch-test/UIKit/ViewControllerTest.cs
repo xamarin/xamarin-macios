@@ -14,6 +14,7 @@ using System.Reflection;
 #if XAMCORE_2_0
 using Foundation;
 using UIKit;
+using ObjCRuntime;
 #if !__TVOS__
 using iAd;
 #endif
@@ -190,7 +191,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void InterstitialAds_New ()
 		{
-			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 			
 			UIViewController.PrepareForInterstitialAds ();
 		}

@@ -13,6 +13,7 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using MediaAccessibility;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.MediaAccessibility;
@@ -30,8 +31,8 @@ namespace MonoTouchFixtures.MediaAccessibility {
 		[Test]
 		public void PreferredCharacteristics ()
 		{
-			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertMacSystemVersion (10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			if (TestRuntime.CheckXcodeVersion (7, 0)) {
 				Assert.NotNull (MAAudibleMedia.GetPreferredCharacteristics ());

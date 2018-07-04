@@ -75,7 +75,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void Ctor_SuiteName ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
-			TestRuntime.AssertMacSystemVersion (10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			// initWithSuiteName:
 			using (var ud = new NSUserDefaults ("suitename", NSUserDefaultsType.SuiteName)) {

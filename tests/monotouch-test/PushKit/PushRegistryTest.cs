@@ -8,6 +8,7 @@ using CoreFoundation;
 using Foundation;
 using PushKit;
 using UIKit;
+using ObjCRuntime;
 #else
 using MonoTouch.CoreFoundation;
 using MonoTouch.Foundation;
@@ -25,9 +26,9 @@ namespace MonoTouchFixtures.PushKit {
 		[Test]
 		public void CtorDispatchQueue ()
 		{
-			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
 
-			if (!TestRuntime.CheckiOSSystemVersion (8, 2, throwIfOtherPlatform: false) && IntPtr.Size == 4)
+			if (!TestRuntime.CheckSystemVersion (PlatformName.iOS, 8, 2, throwIfOtherPlatform: false) && IntPtr.Size == 4)
 				Assert.Inconclusive ("Requires iOS 8.2 or later in 32-bit mode.");
 
 			using (var dq = new DispatchQueue ("pk-test-queue"))

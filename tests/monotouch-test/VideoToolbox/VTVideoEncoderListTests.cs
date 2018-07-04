@@ -15,6 +15,7 @@ using System;
 using Foundation;
 using VideoToolbox;
 using CoreMedia;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.VideoToolbox;
@@ -32,9 +33,9 @@ namespace MonoTouchFixtures.VideoToolbox {
 		[Test]
 		public void VideoEncoderListTest ()
 		{
-			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertMacSystemVersion (10, 10, throwIfOtherPlatform: false);
-			TestRuntime.AsserttvOSSystemVersion (10, 2, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.TvOS, 10, 2, throwIfOtherPlatform: false);
 
 			var encoders = VTVideoEncoder.GetEncoderList ();
 			Assert.NotNull (encoders, "VTVideoEncoder.GetEncoderList () Should Not be null");

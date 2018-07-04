@@ -7,6 +7,7 @@ using System.Drawing;
 #if XAMCORE_2_0
 using Foundation;
 using UIKit;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -70,7 +71,7 @@ namespace MonoTouchFixtures.UIKit {
 		// if this fails ping lobrien (or doc team) since it means Apple changed the defaults we documented
 		public void LayoutManager ()
 		{
-			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			using (UITextView tv = new UITextView ()) {
 				var lm = tv.LayoutManager;

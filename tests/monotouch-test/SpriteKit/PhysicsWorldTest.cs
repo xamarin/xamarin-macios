@@ -4,6 +4,7 @@
 using System;
 #if XAMCORE_2_0
 using Foundation;
+using ObjCRuntime;
 using SpriteKit;
 #else
 using MonoTouch.Foundation;
@@ -31,8 +32,8 @@ namespace MonoTouchFixtures.SpriteKit {
 		[SetUp]
 		public void VersionCheck ()
 		{
-			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertMacSystemVersion (10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
 		}
 
 		[Test]

@@ -4,6 +4,7 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using CoreMedia;
+using ObjCRuntime;
 #else
 using MonoTouch.CoreMedia;
 using MonoTouch.Foundation;
@@ -21,7 +22,7 @@ namespace MonoTouchFixtures.CoreMedia
 		[Test]
 		public void RetainReleaseTest ()
 		{
-			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			var clock = CMClock.HostTimeClock;
 			var timebase = new CMClockOrTimebase (clock.Handle);

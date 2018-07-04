@@ -38,10 +38,10 @@ namespace MonoTouchFixtures.AVFoundation {
 		public void SetUp ()
 		{
 #if __WATCHOS__
-			if (!TestRuntime.CheckWatchOSSystemVersion (3, 0))
+			if (!TestRuntime.CheckSystemVersion (PlatformName.WatchOS, 3, 0))
 				Assert.Inconclusive ("Requires watchOS 3.0+");
 #else
-			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 #endif
 		}
 

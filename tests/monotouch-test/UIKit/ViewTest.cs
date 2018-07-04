@@ -278,7 +278,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void TintColor ()
 		{
-			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			using (var v = new UIView ()) {
 				var tc = v.TintColor;

@@ -92,7 +92,7 @@ namespace MonoTouchFixtures.Security {
 				SecStatusCode code = SecItemAdd (data.Handle, IntPtr.Zero);
 				var expected = Is.EqualTo (SecStatusCode.DuplicateItem).Or.EqualTo (SecStatusCode.Success);
 #if __MACOS__
-				if (!TestRuntime.CheckMacSystemVersion (10, 9))
+				if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 9))
 					expected = Is.EqualTo (SecStatusCode.Param);
 #endif
 				Assert.That (code, expected);

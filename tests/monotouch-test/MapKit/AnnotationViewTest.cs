@@ -8,6 +8,7 @@ using System.Reflection;
 #if XAMCORE_2_0
 using Foundation;
 using MapKit;
+using ObjCRuntime;
 #if MONOMAC
 using PlatformImage = AppKit.NSImage;
 using PlatformView = AppKit.NSView;
@@ -72,7 +73,7 @@ namespace MonoTouchFixtures.MapKit {
 		[SetUp]
 		public void Setup ()
 		{
-			TestRuntime.AssertMacSystemVersion (10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
 		}
 
 		[Test]

@@ -100,7 +100,7 @@ namespace MonoTouchFixtures.Foundation {
 				case NSCalendarType.IslamicTabular:
 				case NSCalendarType.IslamicUmmAlQura:
 #if __MACOS__
-					if (!TestRuntime.CheckMacSystemVersion (10, 10))
+					if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 10))
 						continue;
 #else
 					if (!TestRuntime.CheckXcodeVersion (6, 0))
@@ -230,7 +230,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void TestAddingByComponents ()
 		{
 			RequiresIos8 ();
-			TestRuntime.AssertMacSystemVersion (10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			NSDate now = NSDate.Now;
 			NSDate oneDayFromNow = NSCalendar.CurrentCalendar.DateByAddingUnit (NSCalendarUnit.Day, 1, now, NSCalendarOptions.None);

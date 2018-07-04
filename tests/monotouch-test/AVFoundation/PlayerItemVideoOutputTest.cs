@@ -14,6 +14,7 @@ using System;
 using AVFoundation;
 using CoreVideo;
 using Foundation;
+using ObjCRuntime;
 #else
 using MonoTouch.AVFoundation;
 using MonoTouch.CoreVideo;
@@ -30,7 +31,7 @@ namespace MonoTouchFixtures.AVFoundation {
 		[Test]
 		public void Ctor_CVPixelBufferAttributes ()
 		{
-			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			var attributes = new CVPixelBufferAttributes () {
 				PixelFormatType = CVPixelFormatType.CV32BGRA

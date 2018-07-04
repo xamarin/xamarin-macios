@@ -11,6 +11,7 @@ using System;
 using System.Security.Cryptography.X509Certificates;
 #if XAMCORE_2_0
 using Foundation;
+using ObjCRuntime;
 using Security;
 #if MONOMAC
 using AppKit;
@@ -50,7 +51,7 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.Null (creds.Password, "Password");
 				var expectedPersistence = NSUrlCredentialPersistence.ForSession;
 #if __MACOS__
-				if (!TestRuntime.CheckMacSystemVersion (10, 8))
+				if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 8))
 					expectedPersistence = (NSUrlCredentialPersistence) uint.MaxValue;
 #endif
 				Assert.That (creds.Persistence, Is.EqualTo (expectedPersistence), "Persistence");
@@ -69,7 +70,7 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.Null (creds.Password, "Password");
 				var expectedPersistence = NSUrlCredentialPersistence.ForSession;
 #if __MACOS__
-				if (!TestRuntime.CheckMacSystemVersion (10, 8))
+				if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 8))
 					expectedPersistence = (NSUrlCredentialPersistence)uint.MaxValue;
 #endif
 				Assert.That (creds.Persistence, Is.EqualTo (expectedPersistence), "Persistence");

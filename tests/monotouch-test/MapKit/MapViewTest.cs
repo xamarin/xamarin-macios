@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Reflection;
 #if XAMCORE_2_0
 using Foundation;
+using ObjCRuntime;
 #if !MONOMAC
 using UIKit;
 #endif
@@ -84,7 +85,7 @@ namespace MonoTouchFixtures.MapKit {
 		[SetUp]
 		public void Setup ()
 		{
-			TestRuntime.AssertMacSystemVersion (10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
 		}
 		
 		[Test]
@@ -160,7 +161,7 @@ namespace MonoTouchFixtures.MapKit {
 				Assert.Inconclusive ("backing fields are removed when newrefcount is enabled");
 
 #if !MONOMAC
-			if (TestRuntime.CheckiOSSystemVersion (7, 0)) {
+			if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0)) {
 				// This test selects annotations on a map view, but according to apple's docs
 				// and a lot of googling this will not necessarily work until the map view is
 				// show. Since we can't relinquish control of the UI thread, we have no option

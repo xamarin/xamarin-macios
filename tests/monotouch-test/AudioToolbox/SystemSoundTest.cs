@@ -78,7 +78,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void TestCallbackPlaySystem ()
 		{
-			TestRuntime.AssertiOSSystemVersion (9, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 9, 0, throwIfOtherPlatform: false);
 
 			string path = Path.Combine (NSBundle.MainBundle.ResourcePath, "drum01.mp3");
 
@@ -97,7 +97,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void TestCallbackPlayAlert ()
 		{
-			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			string path = Path.Combine (NSBundle.MainBundle.ResourcePath, "drum01.mp3");
 

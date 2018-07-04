@@ -89,13 +89,13 @@ namespace MonoTouchFixtures.Security {
 			// the system was able to construct the chain based on the single certificate
 			var expectedTrust = SecTrustResult.RecoverableTrustFailure;
 #if __MACOS__
-			if (!TestRuntime.CheckMacSystemVersion (10, 9))
+			if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 9))
 				expectedTrust = SecTrustResult.Unspecified;
 #endif
 			Assert.That (Evaluate (trust, true), Is.EqualTo (expectedTrust), "Evaluate");
 
 #if __MACOS__
-			var hasNetworkFetchAllowed = TestRuntime.CheckMacSystemVersion (10, 9);
+			var hasNetworkFetchAllowed = TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 9);
 #else
 			var hasNetworkFetchAllowed = TestRuntime.CheckXcodeVersion (5, 0);
 #endif
@@ -135,11 +135,11 @@ namespace MonoTouchFixtures.Security {
 
 					var trust_result = SecTrustResult.Invalid;
 #if __MACOS__
-					if (TestRuntime.CheckMacSystemVersion (10, 13)) {
+					if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 13)) {
 						trust_result = SecTrustResult.RecoverableTrustFailure;
-					} else if (TestRuntime.CheckMacSystemVersion (10, 12)) {
+					} else if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 12)) {
 						trust_result = SecTrustResult.Invalid;
-					} else if (TestRuntime.CheckMacSystemVersion (10, 8)) {
+					} else if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 8)) {
 						trust_result = SecTrustResult.RecoverableTrustFailure;
 					}
 #else
@@ -164,13 +164,13 @@ namespace MonoTouchFixtures.Security {
 				trust.SetVerifyDate (new DateTime (635108745218945450, DateTimeKind.Utc));
 				var expectedTrust = SecTrustResult.RecoverableTrustFailure;
 #if __MACOS__
-				if (!TestRuntime.CheckMacSystemVersion (10, 9))
+				if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 9))
 					expectedTrust = SecTrustResult.Unspecified;
 #endif
 				Assert.That (Evaluate (trust, true), Is.EqualTo (expectedTrust), "Evaluate");
 
 #if __MACOS__
-				var hasCreateRevocationPolicy = TestRuntime.CheckMacSystemVersion (10, 9);
+				var hasCreateRevocationPolicy = TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 9);
 #else
 				var hasCreateRevocationPolicy = TestRuntime.CheckXcodeVersion (5, 0);
 #endif
@@ -197,13 +197,13 @@ namespace MonoTouchFixtures.Security {
 				// a host name is not meaningful for client certificates
 				var expectedTrust = SecTrustResult.RecoverableTrustFailure;
 #if __MACOS__
-				if (!TestRuntime.CheckMacSystemVersion (10, 9))
+				if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 9))
 					expectedTrust = SecTrustResult.Unspecified;
 #endif
 				Assert.That (Evaluate (trust, true), Is.EqualTo (expectedTrust), "Evaluate");
 
 #if __MACOS__
-				var hasGetResult = TestRuntime.CheckMacSystemVersion (10, 9);
+				var hasGetResult = TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 9);
 #else
 				var hasGetResult = TestRuntime.CheckXcodeVersion (5, 0);
 #endif
@@ -235,7 +235,7 @@ namespace MonoTouchFixtures.Security {
 
 				var hasOCSPResponse = true;
 #if __MACOS__
-				if (!TestRuntime.CheckMacSystemVersion (10, 9))
+				if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 9))
 					hasOCSPResponse = false;
 #else
 				if (!TestRuntime.CheckXcodeVersion (5, 0))
@@ -338,11 +338,11 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (trust.GetCustomAnchorCertificates ().Length, Is.EqualTo (certs.Count), "GetCustomAnchorCertificates");
 
 #if __MACOS__
-				if (TestRuntime.CheckMacSystemVersion (10, 13)) {
+				if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 13)) {
 					trust_result = SecTrustResult.Unspecified;
-				} else if (TestRuntime.CheckMacSystemVersion (10, 12)) {
+				} else if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 12)) {
 					trust_result = SecTrustResult.Invalid;
-				} else if (TestRuntime.CheckMacSystemVersion (10, 11)) {
+				} else if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 11)) {
 					trust_result = SecTrustResult.RecoverableTrustFailure;
 				} else {
 					trust_result = SecTrustResult.Unspecified;

@@ -52,8 +52,8 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void CreateReadyWithPacketDescriptions ()
 		{
-			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertMacSystemVersion (10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			CMBlockBufferError bbe;
 			using (var bb = CMBlockBuffer.CreateEmpty (0, CMBlockBufferFlags.AlwaysCopyData, out bbe)) {
@@ -72,8 +72,8 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void CreateReady ()
 		{
-			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertMacSystemVersion (10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			CMBlockBufferError bbe;
 			using (var bb = CMBlockBuffer.CreateEmpty (0, CMBlockBufferFlags.AlwaysCopyData, out bbe)) {
@@ -88,8 +88,8 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void CreateReadyWithImageBuffer ()
 		{
-			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertMacSystemVersion (10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			CMFormatDescriptionError fde;
 			using (var pixelBuffer = new CVPixelBuffer (20, 10, CVPixelFormatType.CV24RGB))

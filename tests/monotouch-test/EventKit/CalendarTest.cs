@@ -33,7 +33,7 @@ namespace MonoTouchFixtures.EventKit {
 		[SetUp]
 		public void Setup ()
 		{
-			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
 		}
 
 		void RequestPermission ()

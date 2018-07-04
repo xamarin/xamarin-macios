@@ -14,6 +14,7 @@ using System;
 using Foundation;
 using MediaPlayer;
 using UIKit;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.MediaPlayer;
@@ -48,7 +49,7 @@ namespace MonoTouchFixtures.MediaPlayer {
 		[Test]
 		public void Shared ()
 		{
-			TestRuntime.AssertiOSSystemVersion (7, 1, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 1, throwIfOtherPlatform: false);
 
 			MPPlayableContentManager shared = MPPlayableContentManager.Shared;
 			Assert.Null (shared.DataSource, "DataSource");

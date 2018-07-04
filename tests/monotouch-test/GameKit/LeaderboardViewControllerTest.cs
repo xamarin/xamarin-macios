@@ -14,6 +14,7 @@ using System.IO;
 using System.Threading;
 #if XAMCORE_2_0
 using Foundation;
+using ObjCRuntime;
 #if MONOMAC
 using AppKit;
 #else
@@ -36,7 +37,7 @@ namespace MonoTouchFixtures.GameKit {
 		[Test]
 		public void DefaultCtor ()
 		{
-			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
 			using (var vc = new GKLeaderboardViewController ()) {
 				Assert.Null (vc.Category, "Category");
 				Assert.Null (vc.Delegate, "Delegate");

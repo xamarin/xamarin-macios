@@ -13,6 +13,7 @@ using System;
 using System.Drawing;
 #if XAMCORE_2_0
 using Foundation;
+using ObjCRuntime;
 #if MONOMAC
 using AppKit;
 using UIColor = AppKit.NSColor;
@@ -54,10 +55,10 @@ namespace MonoTouchFixtures.SpriteKit {
 		[SetUp]
 		public void VersionCheck ()
 		{
-			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
-			TestRuntime.AsserttvOSSystemVersion (9, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertMacSystemVersion (10, 9, throwIfOtherPlatform: false);
-			TestRuntime.AssertWatchOSVersion (3, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.TvOS, 9, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.WatchOS, 3, 0, throwIfOtherPlatform: false);
 		}
 
 		[Test]

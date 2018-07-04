@@ -15,6 +15,7 @@ using System.Drawing;
 using Foundation;
 using UIKit;
 using QuickLook;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.QuickLook;
@@ -44,9 +45,9 @@ namespace MonoTouchFixtures.QuickLook {
 			using (QLPreviewController pc = new QLPreviewController ()) {
 				Assert.Null (pc.CurrentPreviewItem, "CurrentPreviewItem");
 				nint index = 0;
-				if (TestRuntime.CheckiOSSystemVersion (10, 0))
+				if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 10, 0))
 					index = nint.MaxValue;
-				else if (TestRuntime.CheckiOSSystemVersion (7, 1))
+				else if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 1))
 					index = -1;
 				Assert.That (pc.CurrentPreviewItemIndex, Is.EqualTo (index), "CurrentPreviewItemIndex");
 				

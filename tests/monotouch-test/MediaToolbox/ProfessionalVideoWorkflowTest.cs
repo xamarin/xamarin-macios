@@ -3,6 +3,7 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using MediaToolbox;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.MediaToolbox;
@@ -18,7 +19,7 @@ namespace MonoTouchFixtures.MediaToolbox {
 		[Test]
 		public void RegisterFormatReaders ()
 		{
-			TestRuntime.AssertMacSystemVersion (10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
 			MTProfessionalVideoWorkflow.RegisterFormatReaders ();
 		}
 	}

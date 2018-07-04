@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using Foundation;
 using CoreMedia;
 using AVFoundation;
+using ObjCRuntime;
 #if MONOMAC
 using AppKit;
 #else
@@ -53,7 +54,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void Video ()
 		{
-			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			CMFormatDescriptionError fde;
 
@@ -89,7 +90,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void RefcountTest ()
 		{
-			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 			
 			// Bug #27205
 

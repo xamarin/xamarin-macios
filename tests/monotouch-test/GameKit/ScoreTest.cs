@@ -14,6 +14,7 @@ using System.IO;
 using System.Threading;
 #if XAMCORE_2_0
 using Foundation;
+using ObjCRuntime;
 #if MONOMAC
 using AppKit;
 #else
@@ -59,11 +60,11 @@ namespace MonoTouchFixtures.GameKit {
 
 				// this is a new API in iOS8 (it was private before that) and returned an empty instance like:
 				// "<<GKPlayer: 0x81254e60>(playerID:(null) alias:(null) name:(null) status:(null))>"
-				if (TestRuntime.CheckiOSSystemVersion (8, 0, throwIfOtherPlatform: false)) {
+				if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false)) {
 					Assert.Null (s.Player, "Player");
 				}
 
-				if (TestRuntime.CheckiOSSystemVersion (7, 0, throwIfOtherPlatform: false)) {
+				if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false)) {
 					Assert.That (s.LeaderboardIdentifier, Is.EqualTo ("category-or-identifier"), "LeaderboardIdentifier");
 				}
 

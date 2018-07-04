@@ -13,6 +13,7 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using CoreBluetooth;
+using ObjCRuntime;
 #else
 using MonoTouch.CoreBluetooth;
 using MonoTouch.Foundation;
@@ -28,8 +29,8 @@ namespace MonoTouchFixtures.CoreBluetooth {
 		[Test]
 		public void Constructor ()
 		{
-			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertMacSystemVersion (10, 13, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 13, throwIfOtherPlatform: false);
 
 			// crash at dispose time in beta 4 (and 5)
 			// the type is undocumented but I think it's should be abstract (not user creatable)

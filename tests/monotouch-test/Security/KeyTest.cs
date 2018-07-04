@@ -15,6 +15,7 @@ using System.Security.Cryptography.X509Certificates;
 #if XAMCORE_2_0
 using Foundation;
 using Security;
+using ObjCRuntime;
 #if MONOMAC
 using AppKit;
 #else
@@ -44,7 +45,7 @@ namespace MonoTouchFixtures.Security {
 		static X509Certificate2 _c;
 		static X509Certificate2 c {
 			get {
-				TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false); // System.Security.Cryptography.CryptographicException : Input data cannot be coded as a valid certificate.
+				TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false); // System.Security.Cryptography.CryptographicException : Input data cannot be coded as a valid certificate.
 				if (_c == null)
 					_c = new X509Certificate2 (ImportExportTest.farscape_pfx, "farscape");
 				return _c;
@@ -117,7 +118,7 @@ namespace MonoTouchFixtures.Security {
 					Assert.True (public_key.IsAlgorithmSupported (SecKeyOperationType.Encrypt, SecKeyAlgorithm.RsaEncryptionPkcs1), "public/IsAlgorithmSupported/Encrypt");
 
 #if MONOMAC
-					Assert.That (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionPkcs1), Is.EqualTo (TestRuntime.CheckMacSystemVersion (10, 13)), "public/IsAlgorithmSupported/Decrypt");
+					Assert.That (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionPkcs1), Is.EqualTo (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 13)), "public/IsAlgorithmSupported/Decrypt");
 
 					using (var pub = public_key.GetPublicKey ()) {
 						// a new native instance of the key is returned (so having a new managed SecKey is fine)
@@ -177,7 +178,7 @@ namespace MonoTouchFixtures.Security {
 				public_key.Dispose ();
 				var expectedResult = SecStatusCode.Success;
 #if __MACOS__
-				if (!TestRuntime.CheckMacSystemVersion (10, 8))
+				if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 8))
 					expectedResult = SecStatusCode.InvalidData;
 #endif
 				Assert.That (private_key.Decrypt (SecPadding.PKCS1, cipher, out result), Is.EqualTo (expectedResult), "Decrypt");
@@ -203,9 +204,9 @@ namespace MonoTouchFixtures.Security {
 				var rv = public_key.Encrypt (SecPadding.PKCS1, plain, out cipher);
 				var expectedStatus = SecStatusCode.Param;
 #if __MACOS__
-				if (!TestRuntime.CheckMacSystemVersion (10, 8))
+				if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 8))
 					expectedStatus = SecStatusCode.Success;
-				else if (!TestRuntime.CheckMacSystemVersion (10, 12))
+				else if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 12))
 					expectedStatus = SecStatusCode.OutputLengthError;
 #endif
 				Assert.That (rv, Is.EqualTo (expectedStatus), "Encrypt");
@@ -232,7 +233,7 @@ namespace MonoTouchFixtures.Security {
 					Assert.True (public_key.IsAlgorithmSupported (SecKeyOperationType.Encrypt, SecKeyAlgorithm.RsaEncryptionOaepSha1), "public/IsAlgorithmSupported/Encrypt");
 					// I would have expect false
 #if MONOMAC
-					Assert.That (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionOaepSha1), Is.EqualTo (TestRuntime.CheckMacSystemVersion (10, 13)), "public/IsAlgorithmSupported/Decrypt");
+					Assert.That (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionOaepSha1), Is.EqualTo (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 13)), "public/IsAlgorithmSupported/Decrypt");
 #else
  					Assert.True (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionOaepSha1), "public/IsAlgorithmSupported/Decrypt");
 #endif
@@ -248,7 +249,7 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (private_key.Decrypt (SecPadding.OAEP, cipher, out result), Is.EqualTo (SecStatusCode.Success), "Decrypt");
 				var expectEmpty = false;
 #if __MACOS__
-				if (!TestRuntime.CheckMacSystemVersion (10, 12))
+				if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 12))
 					expectEmpty = true;
 #endif
 				if (expectEmpty) {
@@ -289,7 +290,7 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 		public void SignVerifyECSHA1 ()
 		{
-			TestRuntime.AssertMacSystemVersion (10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			SecKey private_key;
 			SecKey public_key;

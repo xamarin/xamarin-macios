@@ -15,6 +15,7 @@ using System.IO;
 using Foundation;
 using SafariServices;
 using UIKit;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.SafariServices;
@@ -43,7 +44,7 @@ namespace MonoTouchFixtures.SafariServices {
 		[Test]
 		public void DefaultReadingList ()
 		{
-			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			NSError error;
 			using (var http = new NSUrl ("http://www.xamarin.com"))
@@ -64,7 +65,7 @@ namespace MonoTouchFixtures.SafariServices {
 		[Test]
 		public void SupportsUrl ()
 		{
-			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			Assert.False (SSReadingList.SupportsUrl (null), "null");
 

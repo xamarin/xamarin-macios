@@ -8,6 +8,7 @@ using System.Drawing;
 using Foundation;
 using CoreLocation;
 using MapKit;
+using ObjCRuntime;
 #else
 using MonoTouch.CoreLocation;
 using MonoTouch.Foundation;
@@ -23,7 +24,7 @@ namespace MonoTouchFixtures.MapKit {
 		[SetUp]
 		public void Setup ()
 		{
-			TestRuntime.AssertMacSystemVersion (10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
 		}
 		
 		// used for types that inherits from MKShape

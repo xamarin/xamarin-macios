@@ -11,6 +11,7 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using CoreFoundation;
+using ObjCRuntime;
 #else
 using MonoTouch.CoreFoundation;
 using MonoTouch.Foundation;
@@ -44,12 +45,12 @@ namespace MonoTouchFixtures.CoreFoundation {
 			using (CFUrl url = CFUrl.FromFile ("/")) {
 				string value = "file://localhost/";
 #if __IOS__
-				if (TestRuntime.CheckiOSSystemVersion (7, 0))
+				if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0))
 					value = "file:///";
 #elif __WATCHOS__ || __TVOS__
 				value = "file:///";
 #elif __MACOS__
-				if (TestRuntime.CheckMacSystemVersion (10, 9))
+				if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 9))
 					value = "file:///";
 #endif
 

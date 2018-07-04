@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 #if XAMCORE_2_0
 using Foundation;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 #endif
@@ -94,7 +95,7 @@ namespace MonoTouchFixtures.HttpClientTests
 		[TestCase (typeof (NSUrlSessionHandler), 9)]
 		public void EnsureModifiabilityPostSend (Type handlerType, int macOSMinVersion)
 		{
-			TestRuntime.AssertMacSystemVersion (10, macOSMinVersion, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, macOSMinVersion, throwIfOtherPlatform: false);
 
 			var wrapper = HandlerWrapper.GetWrapper (handlerType);
 			using (var client = new HttpClient (wrapper.Handler))

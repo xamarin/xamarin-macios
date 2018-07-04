@@ -13,6 +13,7 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using MediaPlayer;
+using ObjCRuntime;
 #if !MONOMAC
 using UIKit;
 #endif
@@ -39,8 +40,8 @@ namespace MonoTouchFixtures.MediaPlayer {
 				Assert.Ignore ("This test can only be executed once, it modifies global state.");
 			manualBindingDone = true;
 
-			TestRuntime.AssertiOSSystemVersion (7, 1, throwIfOtherPlatform: false);
-			TestRuntime.AssertMacSystemVersion (10, 12, 2, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 1, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 12, 2, throwIfOtherPlatform: false);
 
 			MPSkipIntervalCommand skip = MPRemoteCommandCenter.Shared.SkipBackwardCommand;
 

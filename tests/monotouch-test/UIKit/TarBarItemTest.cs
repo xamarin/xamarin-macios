@@ -130,7 +130,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void Ctor_3b_Null ()
 		{
-			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 				
 			using (UIImage img = new UIImage ()) {
 				using (UITabBarItem tbi1 = new UITabBarItem (null, null, null)) {
@@ -151,7 +151,7 @@ namespace MonoTouchFixtures.UIKit {
 
 					var hasSelectedImage = true;
 #if __IOS__
-					if (!TestRuntime.CheckiOSSystemVersion (7,1))
+					if (!TestRuntime.CheckSystemVersion (PlatformName.iOS, 7,1))
 						hasSelectedImage = false;
 #endif
 					if (hasSelectedImage)
@@ -165,7 +165,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void SelectedImage_7a ()
 		{
-			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			using (UIImage i1 = new UIImage ())
 			using (UITabBarItem tbi = new UITabBarItem ("title", i1, null)) {
@@ -184,7 +184,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void SelectedImage_7b ()
 		{
-			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			using (UIImage i1 = new UIImage ())
 			using (UIImage i2 = new UIImage ())

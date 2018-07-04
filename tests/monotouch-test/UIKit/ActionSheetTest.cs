@@ -8,6 +8,7 @@ using System.Reflection;
 #if XAMCORE_2_0
 using Foundation;
 using UIKit;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -38,7 +39,7 @@ namespace MonoTouchFixtures.UIKit {
 			Assert.That (a.DestructiveButtonIndex, Is.EqualTo ((nint) (-1)), "DestructiveButtonIndex");
 			Assert.That (a.FirstOtherButtonIndex, Is.EqualTo ((nint) (-1)), "FirstOtherButtonIndex");
 
-			var style = TestRuntime.CheckiOSSystemVersion (8, 0) ? UIActionSheetStyle.Default : UIActionSheetStyle.Automatic;
+			var style = TestRuntime.CheckSystemVersion (PlatformName.iOS, 8, 0) ? UIActionSheetStyle.Default : UIActionSheetStyle.Automatic;
 			Assert.That (a.Style, Is.EqualTo (style), "Style");
 
 			Assert.Null (a.Title, "Title");

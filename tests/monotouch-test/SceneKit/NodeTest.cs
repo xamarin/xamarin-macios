@@ -14,6 +14,7 @@ using System;
 using CoreAnimation;
 using Foundation;
 using SceneKit;
+using ObjCRuntime;
 #if MONOMAC
 using AppKit;
 #else
@@ -46,8 +47,8 @@ namespace MonoTouchFixtures.SceneKit {
 		[Test]
 		public void AddAnimation ()
 		{
-			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			using (var a = CAAnimation.CreateAnimation ())
 			using (var n = SCNNode.Create ()) {

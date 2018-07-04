@@ -14,6 +14,7 @@ using System;
 using Foundation;
 using CoreLocation;
 using MapKit;
+using ObjCRuntime;
 #else
 using MonoTouch.CoreLocation;
 using MonoTouch.Foundation;
@@ -31,9 +32,9 @@ namespace MonoTouchFixtures.MapKit {
 		[Test]
 		public void Default ()
 		{
-			TestRuntime.AssertiOSSystemVersion (6, 1, throwIfOtherPlatform: false);
-			TestRuntime.AssertMacSystemVersion (10, 9, throwIfOtherPlatform: false);
-			TestRuntime.AsserttvOSSystemVersion (9, 2, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 6, 1, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.TvOS, 9, 2, throwIfOtherPlatform: false);
 
 			using (var lsr = new MKLocalSearchRequest ()) {
 				Assert.Null (lsr.NaturalLanguageQuery, "NaturalLanguageQuery");

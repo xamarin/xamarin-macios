@@ -13,6 +13,7 @@ using System;
 using System.Drawing;
 #if XAMCORE_2_0
 using Foundation;
+using ObjCRuntime;
 #if !MONOMAC
 using UIKit;
 #endif
@@ -48,10 +49,10 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void Atlas_MissingResource ()
 		{
-			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
-			TestRuntime.AsserttvOSSystemVersion (9, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertMacSystemVersion (10, 9, throwIfOtherPlatform: false);
-			TestRuntime.AssertWatchOSVersion (3, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.TvOS, 9, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.WatchOS, 3, 0, throwIfOtherPlatform: false);
 
 			using (var atlas = new SKTextureAtlas ()) {
 				// that returns a texture, calling 'MissingResource.png' (128 x 128)
@@ -67,7 +68,7 @@ namespace MonoTouchFixtures.SpriteKit {
 
 #if !MONOMAC
 					// FIXME: bug in iOS9 - it will randomly return 0,0 (but almost always on the first try)
-					if (!TestRuntime.CheckiOSSystemVersion (9, 0, throwIfOtherPlatform: false))
+					if (!TestRuntime.CheckSystemVersion (PlatformName.iOS, 9, 0, throwIfOtherPlatform: false))
 						Assert.That (texture.Size, Is.EqualTo (new SizeF (128, 128)), "Size");
 #endif
 					

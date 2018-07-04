@@ -38,7 +38,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 		{
 			if (Runtime.Arch == Arch.SIMULATOR) {
 				// Fails (NullReferenceException) on iOS6 simulator
-				TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
+				TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 			}
 
 #if __TVOS__
@@ -74,7 +74,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 		{
 			if (Runtime.Arch == Arch.SIMULATOR) {
 #if __IOS__
-				if (TestRuntime.CheckiOSSystemVersion (6, 0))
+				if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 6, 0))
 					Assert.Inconclusive ("This test throws EntryPointNotFoundException on the iOS 6 simulator with Lion");
 #endif
 			}
@@ -93,7 +93,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 			return;
 #endif
 
-			if ((dict == null) && (Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckiOSSystemVersion (9, 0))
+			if ((dict == null) && (Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckSystemVersion (PlatformName.iOS, 9, 0))
 				Assert.Ignore ("null on iOS9 devices - CaptiveNetwork is being deprecated ?!?");
 
 			if (dict.Count == 3) {
@@ -123,7 +123,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 #endif
 		public void MarkPortalOnline ()
 		{
-			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			Assert.False (CaptiveNetwork.MarkPortalOnline ("xamxam"));
 		}
@@ -145,7 +145,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 #endif
 		public void MarkPortalOffline ()
 		{
-			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			Assert.False (CaptiveNetwork.MarkPortalOffline ("xamxam"));
 		}
@@ -167,7 +167,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 #endif
 		public void SetSupportedSSIDs ()
 		{
-			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 #if MONOMAC
 			bool supported = true;

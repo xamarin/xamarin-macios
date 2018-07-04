@@ -9,6 +9,7 @@ using System.Linq;
 using NUnit.Framework;
 
 using Foundation;
+using ObjCRuntime;
 
 namespace MonoTouchFixtures.Foundation {
 
@@ -144,7 +145,7 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			var isMutableCopy = false;
 #if __MACOS__
-			if (!TestRuntime.CheckMacSystemVersion (10, 8))
+			if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 8))
 				isMutableCopy = true;
 #endif
 			using (var k = new NSString ("key")) 

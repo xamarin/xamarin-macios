@@ -14,6 +14,7 @@ using System.Drawing;
 #if XAMCORE_2_0
 using Foundation;
 using SpriteKit;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.SpriteKit;
@@ -39,8 +40,8 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void FromPointsTest ()
 		{
-			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertMacSystemVersion (10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			var pts = new[] {
 				new PointF (0, 0),
@@ -54,8 +55,8 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void FromPointsOffsetTest ()
 		{
-			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertMacSystemVersion (10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			var pts = new [] {
 				new PointF (0, 0),
@@ -71,8 +72,8 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void FromSplinePointsTest ()
 		{
-			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertMacSystemVersion (10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			var pts = new[] {
 				new PointF (0, 0),
@@ -86,8 +87,8 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void FromSplinePointsOffsetTest ()
 		{
-			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertMacSystemVersion (10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			var pts = new [] {
 				new PointF (0, 0),

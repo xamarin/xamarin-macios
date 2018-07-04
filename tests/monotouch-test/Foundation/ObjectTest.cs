@@ -101,7 +101,7 @@ namespace MonoTouchFixtures.Foundation {
 			}
 			var hasSecAccessControl = TestRuntime.CheckXcodeVersion (6, 0);
 #if __MACOS__
-			if (!TestRuntime.CheckMacSystemVersion (10, 10))
+			if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 10))
 				hasSecAccessControl = false;
 #endif
 			if (hasSecAccessControl) {

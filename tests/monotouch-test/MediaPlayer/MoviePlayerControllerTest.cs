@@ -15,6 +15,7 @@ using Foundation;
 using MediaPlayer;
 using UIKit;
 using iAd;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.MediaPlayer;
@@ -32,10 +33,10 @@ namespace MonoTouchFixtures.MediaPlayer {
 		[Test]
 		public void PreparePrerollAds_New ()
 		{
-			TestRuntime.AssertiOSSystemVersion (7, 0);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0);
 
 			// NSInvalidArgumentException +[MPMoviePlayerController preparePrerollAds]: unrecognized selector sent to class 0x109c46b48
-			if (TestRuntime.CheckiOSSystemVersion (10, 0))
+			if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 10, 0))
 				Assert.Ignore ("Broken on iOS 10 beta 3");
 			
 			MPMoviePlayerController.PrepareForPrerollAds ();

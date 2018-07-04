@@ -13,6 +13,7 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using CoreMedia;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.CoreMedia;
@@ -29,7 +30,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void Ctor ()
 		{
-			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			using (var mp = new CMMemoryPool ())
 			{
@@ -43,7 +44,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void CtorAgeOutPeriod ()
 		{
-			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			using (var mp = new CMMemoryPool (TimeSpan.FromSeconds (40)))
 			{

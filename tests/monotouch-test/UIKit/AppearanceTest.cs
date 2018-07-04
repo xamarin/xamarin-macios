@@ -64,7 +64,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void Appearance ()
 		{
-			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			using (var traits = new UITraitCollection ()) {
 				nfloat r, g, b, a;
@@ -93,7 +93,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void AppearanceWhenContainedIn ()
 		{
-			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			using (var traits = new UITraitCollection ()) {
 				nfloat r, g, b, a;
@@ -122,7 +122,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void AppearanceWhenContainedIn_UITraitCollection ()
 		{
-			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			using (var traits = new UITraitCollection ()) {
 				nfloat r, g, b, a;
@@ -172,7 +172,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void Appearance_UITraitCollection ()
 		{
-			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			using (var traits = new UITraitCollection ()) {
 				nfloat r, g, b, a;

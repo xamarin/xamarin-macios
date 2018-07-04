@@ -14,6 +14,7 @@ using System.Drawing;
 #if XAMCORE_2_0
 using Foundation;
 using MapKit;
+using ObjCRuntime;
 #if MONOMAC
 using AppKit;
 #else
@@ -34,7 +35,7 @@ namespace MonoTouchFixtures.MapKit {
 		[SetUp]
 		public void Setup ()
 		{
-			TestRuntime.AssertMacSystemVersion (10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
 		}
 		
 		[Test]
@@ -45,10 +46,10 @@ namespace MonoTouchFixtures.MapKit {
 				Assert.AreSame (a, av.Annotation, "Annotation");
 
 #if !MONOMAC
-				if (TestRuntime.CheckiOSSystemVersion (7, 0)) // Crashes with EXC_BAD_ACCESS (SIGABRT) if < iOS 7.0
+				if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0)) // Crashes with EXC_BAD_ACCESS (SIGABRT) if < iOS 7.0
 					Assert.False (av.AnimatesDrop, "AnimatesDrop");
 
-				if (!TestRuntime.CheckiOSSystemVersion (9, 0))
+				if (!TestRuntime.CheckSystemVersion (PlatformName.iOS, 9, 0))
 					return;
 #endif
 
@@ -64,7 +65,7 @@ namespace MonoTouchFixtures.MapKit {
 		{
 #if !MONOMAC
 			// Crashes with EXC_BAD_ACCESS (SIGABRT) if < iOS 7.0
-			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 #endif
 
 			RectangleF frame = new RectangleF (10, 10, 100, 100);
@@ -78,13 +79,13 @@ namespace MonoTouchFixtures.MapKit {
 				
 				Assert.That (av.PinColor, Is.EqualTo (MKPinAnnotationColor.Red), "PinColor");
 #if MONOMAC
-				if (TestRuntime.CheckMacSystemVersion (10, 12)) {
+				if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 12)) {
 					Assert.That (av.PinTintColor.ToString (), Is.EqualTo ("Developer/systemRedColor"), "PinTintColor");
 				} else {
 					Assert.Null (av.PinTintColor, "PinTintColor"); // differs from the other init call
 				}
 #else
-				if (TestRuntime.CheckiOSSystemVersion (10, 0))
+				if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 10, 0))
 					Assert.That (av.PinTintColor.ToString (), Is.EqualTo (UIColor.FromRGBA (255, 59, 48, 255).ToString ()), "PinTintColor");
 				else
 					Assert.Null (av.PinTintColor, "PinTintColor"); // differs from the other init call

@@ -37,7 +37,7 @@ namespace MonoTouchFixtures.AddressBook {
 			TestRuntime.CheckAddressBookPermission ();
 			ABAddressBook ab = new ABAddressBook ();
 			var sources = ab.GetAllSources ();
-			int value = Runtime.Arch == Arch.DEVICE || TestRuntime.CheckiOSSystemVersion (7, 0, throwIfOtherPlatform: false) ? 0 : 1;
+			int value = Runtime.Arch == Arch.DEVICE || TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false) ? 0 : 1;
 			Assert.That (sources.Length, Is.GreaterThanOrEqualTo (value), "GetAllSources");
 		}
 		

@@ -7,6 +7,7 @@ using System.Drawing;
 #if XAMCORE_2_0
 using Foundation;
 using GLKit;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.GLKit;
@@ -23,7 +24,7 @@ namespace MonoTouchFixtures.GLKit {
 		[Test]
 		public void Properties ()
 		{
-			TestRuntime.AssertMacSystemVersion (10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			var transform = new GLKEffectPropertyTransform ();
 			Assert.That (transform.ModelViewMatrix.ToString (), Is.EqualTo ("(1, 0, 0, 0)\n(0, 1, 0, 0)\n(0, 0, 1, 0)\n(0, 0, 0, 1)"), "ModelViewMatrix");

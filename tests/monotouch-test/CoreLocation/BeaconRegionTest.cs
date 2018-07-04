@@ -32,7 +32,7 @@ namespace MonoTouchFixtures.CoreLocation {
 		[Test]
 		public void Ctor2 ()
 		{
-			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			using (var uuid = new NSUuid ("E2C56DB5-DFFB-48D2-B060-D0F5A71096E0"))
 			using (var br = new CLBeaconRegion (uuid, "identifier")) {
@@ -51,7 +51,7 @@ namespace MonoTouchFixtures.CoreLocation {
 		[Test]
 		public void Ctor3 ()
 		{
-			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			using (var uuid = new NSUuid ("E2C56DB5-DFFB-48D2-B060-D0F5A71096E0"))
 			using (var br = new CLBeaconRegion (uuid, 0, "identifier")) {
@@ -69,7 +69,7 @@ namespace MonoTouchFixtures.CoreLocation {
 		[Test]
 		public void Ctor4 ()
 		{
-			TestRuntime.AssertiOSSystemVersion (7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			using (var uuid = new NSUuid ("E2C56DB5-DFFB-48D2-B060-D0F5A71096E0"))
 			using (var br = new CLBeaconRegion (uuid, 2, 3, "identifier")) {

@@ -13,6 +13,7 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using NetworkExtension;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.NetworkExtension;
@@ -62,8 +63,8 @@ namespace MonoTouchFixtures.NetworkExtension {
 		[Test]
 		public void OnDemandRuleConnect ()
 		{
-			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertMacSystemVersion (10, 11, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 11, throwIfOtherPlatform: false);
 
 			using (var rule = new NEOnDemandRuleConnect ()) {
 				Assert.That (rule.Action, Is.EqualTo (NEOnDemandRuleAction.Connect), "Action");
@@ -74,8 +75,8 @@ namespace MonoTouchFixtures.NetworkExtension {
 		[Test]
 		public void OnDemandRuleDisconnect ()
 		{
-			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertMacSystemVersion (10, 11, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 11, throwIfOtherPlatform: false);
 
 			using (var rule = new NEOnDemandRuleDisconnect ()) {
 				Assert.That (rule.Action, Is.EqualTo (NEOnDemandRuleAction.Disconnect), "Action");
@@ -86,8 +87,8 @@ namespace MonoTouchFixtures.NetworkExtension {
 		[Test]
 		public void OnDemandRuleIgnore ()
 		{
-			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertMacSystemVersion (10, 11, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 11, throwIfOtherPlatform: false);
 
 			using (var rule = new NEOnDemandRuleIgnore ()) {
 				Assert.That (rule.Action, Is.EqualTo (NEOnDemandRuleAction.Ignore), "Action");
@@ -98,8 +99,8 @@ namespace MonoTouchFixtures.NetworkExtension {
 		[Test]
 		public void NEOnDemandRuleEvaluateConnection ()
 		{
-			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertMacSystemVersion (10, 11, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 11, throwIfOtherPlatform: false);
 
 			using (var rule = new NEOnDemandRuleEvaluateConnection ()) {
 				Assert.That (rule.Action, Is.EqualTo (NEOnDemandRuleAction.EvaluateConnection), "Action");
@@ -118,8 +119,8 @@ namespace MonoTouchFixtures.NetworkExtension {
 		[Test]
 		public void EvaluateConnectionRule_Default ()
 		{
-			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertMacSystemVersion (10, 11, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 11, throwIfOtherPlatform: false);
 
 			using (var rule = new NEEvaluateConnectionRule ()) {
 				Assert.That (rule.Action, Is.EqualTo ((NEEvaluateConnectionRuleAction) 0), "Action");
@@ -132,8 +133,8 @@ namespace MonoTouchFixtures.NetworkExtension {
 		[Test]
 		public void EvaluateConnectionRule ()
 		{
-			TestRuntime.AssertiOSSystemVersion (8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertMacSystemVersion (10, 11, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 11, throwIfOtherPlatform: false);
 
 			using (var rule = new NEEvaluateConnectionRule (new [] { "xamarin.com" }, NEEvaluateConnectionRuleAction.ConnectIfNeeded)) {
 				Assert.That (rule.Action, Is.EqualTo (NEEvaluateConnectionRuleAction.ConnectIfNeeded), "Action");
