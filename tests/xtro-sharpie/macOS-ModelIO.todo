@@ -1,2 +1,0 @@
-!missing-designated-initializer! MDLTransform::init is missing an [DesignatedInitializer] attribute
-!missing-selector! +MDLTexture::textureNamed:assetResolver: not bound
