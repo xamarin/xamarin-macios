@@ -560,5 +560,8 @@ namespace CoreMotion {
 		[Async]
 		[Export ("queryTremorFromDate:toDate:withHandler:")]
 		void QueryTremor (NSDate fromDate, NSDate toDate, CMTremorResultHandler handler);
+
+		[Export ("lastProcessedDate")]
+		NSDate LastProcessedDate { get; }
 	}
 }
