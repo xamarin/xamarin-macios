@@ -14652,7 +14652,7 @@ namespace AppKit {
 
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSSoundDelegate) })]
 	[DisableDefaultCtor] // no valid handle is returned
-	partial interface NSSound : NSCoding, NSCopying, NSPasteboardReading, NSPasteboardWriting
+	partial interface NSSound : NSSecureCoding, NSCopying, NSPasteboardReading, NSPasteboardWriting
 	{
 		[Static]
 		[Export ("soundNamed:")]

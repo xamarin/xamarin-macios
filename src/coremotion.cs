@@ -495,9 +495,6 @@ namespace CoreMotion {
 		[Export ("endDate", ArgumentSemantic.Copy)]
 		NSDate EndDate { get; }
 
-		[Export ("percentOffWrist")]
-		float PercentOffWrist { get; }
-
 		[Export ("percentUnlikely")]
 		float PercentUnlikely { get; }
 
@@ -515,9 +512,6 @@ namespace CoreMotion {
 
 		[Export ("endDate", ArgumentSemantic.Copy)]
 		NSDate EndDate { get; }
-
-		[Export ("percentOffWrist")]
-		float PercentOffWrist { get; }
 
 		[Export ("percentUnknown")]
 		float PercentUnknown { get; }

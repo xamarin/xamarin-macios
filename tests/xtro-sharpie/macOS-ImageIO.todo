@@ -70,3 +70,6 @@
 !missing-field! kCGImagePropertyPNGDisclaimer not bound
 !missing-field! kCGImagePropertyPNGSource not bound
 !missing-field! kCGImagePropertyPNGWarning not bound
+## appended from unclassified file
+!missing-field! kCGImagePropertyPrimaryImage not bound
+!missing-pinvoke! CGImageSourceGetPrimaryImageIndex is not bound
