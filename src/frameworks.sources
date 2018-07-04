@@ -1842,6 +1842,7 @@ WATCHOS_FRAMEWORKS =        \
 	Intents                 \
 	MapKit                  \
 	MobileCoreServices      \
+	NaturalLanguage         \
 	PassKit                 \
 	Security                \
 	UIKit                   \

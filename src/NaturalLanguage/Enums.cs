@@ -28,7 +28,7 @@ namespace NaturalLanguage {
 
 	[Flags]
 	[Native]
-	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0)]
+	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0), Watch (5,0)]
 	public enum NLTaggerOptions : ulong {
 		OmitWords = 1uL << 0,
 		OmitPunctuation = 1uL << 1,
@@ -39,14 +39,14 @@ namespace NaturalLanguage {
 	}
 
 	[Native]
-	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0)]
+	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0), Watch (5,0)]
 	public enum NLModelType : long {
 		Classifier,
 		Sequence,
 	}
 
 	[Native]
-	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0)]
+	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0), Watch (5,0)]
 	public enum NLTokenUnit : long {
 		Word,
 		Sentence,
@@ -57,14 +57,14 @@ namespace NaturalLanguage {
 
 	[Flags]
 	[Native]
-	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0)]
+	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0), Watch (5,0)]
 	public enum NLTokenizerAttributes : ulong {
 		Numeric = 1uL << 0,
 		Symbolic = 1uL << 1,
 		Emoji = 1uL << 2,
 	}
 
-	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0)]
+	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0), Watch (5,0)]
 	public enum NLLanguage {
 		[DefaultEnumValue]
 		[Field ("NLLanguageUndetermined")]
@@ -183,7 +183,7 @@ namespace NaturalLanguage {
 		Vietnamese,
 	}
 
-	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0)]
+	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0), Watch (5,0)]
 	public enum NLTagScheme {
 		[Field ("NLTagSchemeTokenType")]
 		TokenType,
@@ -201,7 +201,7 @@ namespace NaturalLanguage {
 		Script,
 	}
 
-	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0)]
+	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0), Watch (5,0)]
 	public enum NLTag {
 		[Field ("NLTagWord")]
 		Word,

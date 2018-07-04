@@ -336,6 +336,8 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "CoreBluetooth", "CoreBluetooth", 4 },
 				{ "CoreML", "CoreML", 4 },
 				{ "CoreVideo", "CoreVideo", 4 },
+
+				{ "NaturalLanguage", "NaturalLanguage", 5 },
 			};
 		}
 		return watch_frameworks;
