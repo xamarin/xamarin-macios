@@ -6,4 +6,3 @@
 !missing-selector! NSSliderCell::setImage: not bound
 ## appended from unclassified file
 !missing-field! NSMenuItemImportFromDeviceIdentifier not bound
-!missing-protocol-conformance! NSSound should conform to NSSecureCoding
