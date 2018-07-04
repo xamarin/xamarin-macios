@@ -30,6 +30,6 @@ In very broad strokes, the Jenkins job will:
 * Run selected Xamarin.Mac tests on all macOS versions we support. This is
   done in parallel with the normal test run.
 
-  If a particular macOS version much be excluded temporarily from testing,
+  If a particular macOS version must be excluded temporarily from testing,
   search Jenkinsfile for `excludedOSes` and follow the instructions you'll
   find.

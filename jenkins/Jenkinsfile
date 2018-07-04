@@ -517,7 +517,7 @@ timestamps {
                                         for (i = 0; i < macOSes.size (); i++) {
                                             def os = macOSes [i];
                                             def macOS = "${os}" // Need to bind the label variable before the closure
-                                            def excluded = ecludedOSes.indexOf (os) >= 0
+                                            def excluded = excludedOSes.indexOf (os) >= 0
                                             def nodeText = excluded ? "ℹ️ XM tests not executed on 10.${macOS} ℹ️" : "XM tests on 10.${macOS}"
                                             builders [nodeText] = {
                                                 try {
