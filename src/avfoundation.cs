@@ -9160,6 +9160,19 @@ namespace AVFoundation {
 		[NoWatch, NoTV, NoMac, iOS (12, 0)]
 		[Export ("embedsPortraitEffectsMatteInPhoto")]
 		bool EmbedsPortraitEffectsMatteInPhoto { get; set; }
+
+		[Internal]
+		[NoWatch, NoTV, NoMac, iOS (12, 0)]
+		[Export ("availableRawEmbeddedThumbnailPhotoCodecTypes")]
+		NSString[] _GetAvailableRawEmbeddedThumbnailPhotoCodecTypes { get; }
+
+		[NoWatch, NoTV, NoMac, iOS (12, 0)]
+		[Wrap ("Array.ConvertAll (_GetAvailableRawEmbeddedThumbnailPhotoCodecTypes, s => AVVideoCodecTypeExtensions.GetValue (s))")]
+		AVVideoCodecType[] GetAvailableRawEmbeddedThumbnailPhotoCodecTypes { get; }
+
+		[NoWatch, NoTV, NoMac, iOS (12, 0)]
+		[NullAllowed, Export ("rawEmbeddedThumbnailPhotoFormat", ArgumentSemantic.Copy)]
+		NSDictionary RawEmbeddedThumbnailPhotoFormat { get; set; }
 	}
 	
 #if !MONOMAC
@@ -9228,6 +9241,10 @@ namespace AVFoundation {
 		[NoWatch, NoTV, NoMac, iOS (12, 0)]
 		[Export ("portraitEffectsMatteDimensions")]
 		CMVideoDimensions PortraitEffectsMatteDimensions { get; }
+
+		[NoWatch, NoTV, NoMac, iOS (12, 0)]
+		[Export ("rawEmbeddedThumbnailDimensions")]
+		CMVideoDimensions RawEmbeddedThumbnailDimensions { get; }
 	}
 
 #if !MONOMAC
