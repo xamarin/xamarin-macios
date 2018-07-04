@@ -1387,4 +1387,12 @@ namespace WatchKit {
 		[return: NullAllowed]
 		SKTexture CreateTexture (SKNode node, CGRect crop);
 	}
+
+	[Watch (5,0)][NoiOS]
+	[BaseType (typeof (WKInterfaceObject))]
+	[DisableDefaultCtor]
+	interface WKInterfaceVolumeControl {
+		[Export ("setTintColor:")]
+		void SetTintColor ([NullAllowed] UIColor tintColor);
+	}
 }
