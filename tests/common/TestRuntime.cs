@@ -425,7 +425,7 @@ partial class TestRuntime
 	}
 
 	public static void AssertSystemVersion (PlatformName platform, int major, int minor, int build = 0, bool throwIfOtherPlatform = true)
-			{
+	{
 		switch (platform) {
 		case PlatformName.iOS:
 			AssertiOSSystemVersion (major, minor, throwIfOtherPlatform);
