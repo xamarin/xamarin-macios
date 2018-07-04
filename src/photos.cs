@@ -1251,6 +1251,10 @@ namespace Photos
 
 		[Export ("projectExtensionData")]
 		NSData ProjectExtensionData { get; }
+
+		[Mac (10, 14, onlyOn64: true)]
+		[Export ("hasProjectPreview")]
+		bool HasProjectPreview { get; }
 	}
 
 	[Mac (10,13, onlyOn64 : true)]
@@ -1267,8 +1271,13 @@ namespace Photos
 		[Export ("projectExtensionData", ArgumentSemantic.Copy)]
 		NSData ProjectExtensionData { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("setKeyAsset:")]
 		void SetKeyAsset ([NullAllowed] PHAsset keyAsset);
+
+		[Mac (10,14, onlyOn64: true)]
+		[Export ("setProjectPreviewImage:")]
+		void SetProjectPreviewImage (NSImage previewImage);
 	}
 
 	[Mac (10,13, onlyOn64 : true)]

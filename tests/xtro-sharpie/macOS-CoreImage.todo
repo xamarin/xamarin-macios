@@ -13,3 +13,6 @@
 !missing-selector! CIImage::initWithPortaitEffectsMatte: not bound
 !missing-selector! CIImage::initWithPortaitEffectsMatte:options: not bound
 !missing-selector! CIImage::portraitEffectsMatte not bound
+## appended from unclassified file
+!missing-selector! CIContext::depthBlurEffectFilterForImage:disparityImage:portraitEffectsMatte:orientation:options: not bound
+!missing-selector! CIContext::depthBlurEffectFilterForImageURL:options: not bound

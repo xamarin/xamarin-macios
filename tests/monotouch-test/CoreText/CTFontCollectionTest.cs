@@ -46,5 +46,21 @@ namespace MonoTouchFixtures.CoreText {
 			// Native crash (can't assert on it) if https://github.com/xamarin/xamarin-macios/pull/3871 fix not present.
 			descList.First ().GetAttributes ();
 		}
+
+		[Test]
+		public void GetMatchingFontDescriptorsCollectionOptionsTest ()
+		{
+			TestRuntime.AssertXcodeVersion (10, 0);
+			using (var collection = new CTFontCollection (null)) {
+				var fd1 = collection.GetMatchingFontDescriptors ();
+				var fd2 = collection.GetMatchingFontDescriptors (options: null); // documented to return the same thing as the parameterless if null
+				Assert.NotNull (fd1, "fd1");
+				Assert.NotNull (fd2, "fd2");
+				Assert.AreEqual (fd1.Length, fd2.Length, "equal collections");
+
+				var fd3 = collection.GetMatchingFontDescriptors (new CTFontCollectionOptions { RemoveDuplicates = true });
+				Assert.NotNull (fd3, "fd3");
+			}
+		}
 	}
 }

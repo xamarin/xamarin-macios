@@ -578,6 +578,7 @@ CORETEXT_SOURCES = \
 	CoreText/CTStringAttributes.cs \
 	CoreText/CTTextTab.cs \
 	CoreText/CTTypesetter.cs \
+	CoreText/CTTypesetterOptionKeyCompat.cs \
 	CoreText/ConstructorError.cs \
 
 # CoreTelephony
@@ -1197,7 +1198,7 @@ PHOTOS_SOURCES = \
 
 # PhotosUI
 
-PHOTOSUI_CORE_SOURCES = \
+PHOTOSUI_API_SOURCES = \
 	PhotosUI/PHEnums.cs \
 
 # PrintCode

@@ -101,6 +101,7 @@ namespace Introspection {
 				case "VSAccountMetadata":
 				case "VSAccountMetadataRequest":
 				case "VSAccountProviderResponse":
+				case "PHEditingExtensionContext":
 				case "HKCumulativeQuantitySeriesSample":
 					return true;
 				}
@@ -151,6 +152,7 @@ namespace Introspection {
 				case "VSAccountMetadata":
 				case "VSAccountMetadataRequest":
 				case "VSAccountProviderResponse":
+				case "PHEditingExtensionContext":
 					return true;
 				}
 				break;
@@ -198,6 +200,7 @@ namespace Introspection {
 				case "VSAccountMetadata":
 				case "VSAccountMetadataRequest":
 				case "VSAccountProviderResponse":
+				case "PHEditingExtensionContext":
 					return true;
 				}
 				break;

@@ -1,0 +1,3 @@
+!missing-enum! INUIAddVoiceShortcutButtonStyle not bound
+!missing-selector! INUIAddVoiceShortcutButton::initWithStyle: not bound
+!missing-type! INUIAddVoiceShortcutButton not bound

@@ -1,0 +1,3 @@
+!missing-protocol-conformance! NSShadow should conform to NSSecureCoding
+!missing-protocol-member! UIDocumentBrowserViewControllerDelegate::documentBrowser:didPickDocumentsAtURLs: not found
+!missing-selector! UIDocumentBrowserViewController::transitionControllerForDocumentAtURL: not bound
