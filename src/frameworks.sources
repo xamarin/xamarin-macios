@@ -1423,6 +1423,7 @@ UIKIT_SOURCES = \
 	UIKit/UIContentSizeCategory.cs \
 	UIKit/UIControl.cs \
 	UIKit/UIDevice.cs \
+	UIKit/UIDocumentBrowserViewController.cs \
 	UIKit/UIDocumentInteractionController.cs \
 	UIKit/UIDocumentMenuViewController.cs \
 	UIKit/UIDocumentPickerViewController.cs \
