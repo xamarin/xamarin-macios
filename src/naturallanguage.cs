@@ -28,7 +28,7 @@ using ObjCRuntime;
 
 namespace NaturalLanguage {
 
-	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0)]
+	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0), Watch (5,0)]
 	[DisableDefaultCtor] // designated
 	[BaseType (typeof(NSObject))]
 	interface NLLanguageRecognizer {
@@ -78,7 +78,7 @@ namespace NaturalLanguage {
 		}
 	}
 
-	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0)]
+	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0), Watch (5,0)]
 	[BaseType (typeof(NSObject))]
 	interface NLModelConfiguration : NSCopying, NSSecureCoding {
 		[Export ("type")]
@@ -102,7 +102,7 @@ namespace NaturalLanguage {
 		nuint GetCurrentRevision (NLModelType type);
 	}
 
-	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0)]
+	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0), Watch (5,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof(NSObject))]
 	interface NLModel {
@@ -129,7 +129,7 @@ namespace NaturalLanguage {
 
 	delegate void NLTokenizerEnumerateContinuationHandler (NSRange tokenRange, NLTokenizerAttributes flags, out bool stop);
 
-	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0)]
+	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0), Watch (5,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof(NSObject))]
 	interface NLTokenizer
@@ -163,7 +163,7 @@ namespace NaturalLanguage {
 
 	delegate void NLTaggerEnumerateTagsContinuationHandler (NSString tag, NSRange tokenRange, out bool stop);
 
-	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0)]
+	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0), Watch (5,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof(NSObject))]
 	interface NLTagger
