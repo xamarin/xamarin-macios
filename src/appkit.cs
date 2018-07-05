@@ -22274,58 +22274,88 @@ namespace AppKit {
 
 		[Mac (10,9)]
 		[Export ("attachmentFileURLs", ArgumentSemantic.Copy)]
-		NSUrl [] AttachmentFileUrls { get; }		
-		
-		// Constants
+		NSUrl [] AttachmentFileUrls { get; }
+	}
 
-		[Field ("NSSharingServiceNamePostOnFacebook")][Internal]
-		NSString NSSharingServiceNamePostOnFacebook { get; }
-		
-		[Field ("NSSharingServiceNamePostOnTwitter")][Internal]
-		NSString NSSharingServiceNamePostOnTwitter { get; }
-		
-		[Field ("NSSharingServiceNamePostOnSinaWeibo")][Internal]
-		NSString NSSharingServiceNamePostOnSinaWeibo { get; }
-		
-		[Field ("NSSharingServiceNameComposeEmail")][Internal]
-		NSString NSSharingServiceNameComposeEmail { get; }
-		
-		[Field ("NSSharingServiceNameComposeMessage")][Internal]
-		NSString NSSharingServiceNameComposeMessage { get; }
-		
-		[Field ("NSSharingServiceNameSendViaAirDrop")][Internal]
-		NSString NSSharingServiceNameSendViaAirDrop { get; }
-		
-		[Field ("NSSharingServiceNameAddToSafariReadingList")][Internal]
-		NSString NSSharingServiceNameAddToSafariReadingList { get; }
-		
-		[Field ("NSSharingServiceNameAddToIPhoto")][Internal]
-		NSString NSSharingServiceNameAddToIPhoto { get; }
-		
-		[Field ("NSSharingServiceNameAddToAperture")][Internal]
-		NSString NSSharingServiceNameAddToAperture { get; }
-		
-		[Field ("NSSharingServiceNameUseAsTwitterProfileImage")][Internal]
-		NSString NSSharingServiceNameUseAsTwitterProfileImage { get; }
-		
-		[Field ("NSSharingServiceNameUseAsDesktopPicture")][Internal]
-		NSString NSSharingServiceNameUseAsDesktopPicture { get; }
-		
-		[Field ("NSSharingServiceNamePostImageOnFlickr")][Internal]
-		NSString NSSharingServiceNamePostImageOnFlickr { get; }
-		
-		[Field ("NSSharingServiceNamePostVideoOnVimeo")][Internal]
-		NSString NSSharingServiceNamePostVideoOnVimeo { get; }
-		
-		[Field ("NSSharingServiceNamePostVideoOnYouku")][Internal]
-		NSString NSSharingServiceNamePostVideoOnYouku { get; }
-		
-		[Field ("NSSharingServiceNamePostVideoOnTudou")][Internal]
-		NSString NSSharingServiceNamePostVideoOnTudou { get; }
+	[Mac (10, 8)]
+	enum NSSharingServiceName {
 
-		[Mac (10, 12)]
-		[Field ("NSSharingServiceNameCloudSharing")][Internal]
-		NSString NSSharingServiceNameCloudSharing { get; }
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use the proprietary SDK instead.")]
+		[Field ("NSSharingServiceNamePostOnFacebook")]
+		PostOnFacebook,
+
+		[Field ("NSSharingServiceNamePostOnTwitter")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use the proprietary SDK instead.")]
+		PostOnTwitter,
+
+		[Field ("NSSharingServiceNamePostOnSinaWeibo")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use the proprietary SDK instead.")]
+		PostOnSinaWeibo,
+
+		[Field ("NSSharingServiceNameComposeEmail")]
+		ComposeEmail,
+
+		[Field ("NSSharingServiceNameComposeMessage")]
+		ComposeMessage,
+
+		[Field ("NSSharingServiceNameSendViaAirDrop")]
+		SendViaAirDrop,
+
+		[Field ("NSSharingServiceNameAddToSafariReadingList")]
+		AddToSafariReadingList,
+
+		[Field ("NSSharingServiceNameAddToIPhoto")]
+		AddToIPhoto,
+
+		[Field ("NSSharingServiceNameAddToAperture")]
+		AddToAperture,
+
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use the proprietary SDK instead.")]
+		[Field ("NSSharingServiceNameUseAsTwitterProfileImage")]
+		UseAsTwitterProfileImage,
+
+		[Field ("NSSharingServiceNameUseAsDesktopPicture")]
+		UseAsDesktopPicture,
+
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use the proprietary SDK instead.")]
+		[Field ("NSSharingServiceNamePostImageOnFlickr")]
+		PostImageOnFlickr,
+
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use the proprietary SDK instead.")]
+		[Field ("NSSharingServiceNamePostVideoOnVimeo")]
+		PostVideoOnVimeo,
+
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use the proprietary SDK instead.")]
+		[Field ("NSSharingServiceNamePostVideoOnYouku")]
+		PostVideoOnYouku,
+
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use the proprietary SDK instead.")]
+		[Field ("NSSharingServiceNamePostVideoOnTudou")]
+		PostVideoOnTudou,
+
+		[Mac (10,12)]
+		[Field ("NSSharingServiceNameCloudSharing")]
+		CloudSharing,
+
+		[Mac (10,9)]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use the proprietary SDK instead.")]
+		[Field ("NSSharingServiceNamePostOnTencentWeibo")]
+		PostOnTencentWeibo,
+
+		[Mac (10,9)]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use the proprietary SDK instead.")]
+		[Field ("NSSharingServiceNamePostOnLinkedIn")]
+		PostOnLinkedIn,
+
+		[Mac (10,9)]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use the proprietary SDK instead.")]
+		[Field ("NSSharingServiceNameUseAsFacebookProfileImage")]
+		UseAsFacebookProfileImage,
+
+		[Mac (10,9)]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use the proprietary SDK instead.")]
+		[Field ("NSSharingServiceNameUseAsLinkedInProfileImage")]
+		UseAsLinkedInProfileImage,
 	}
 	
 	[Mac (10, 8)]

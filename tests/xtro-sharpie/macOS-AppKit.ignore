@@ -57,6 +57,10 @@
 !extra-protocol-member! unexpected selector NSTextFieldDelegate::controlTextDidChange: found
 !extra-protocol-member! unexpected selector NSTextFieldDelegate::controlTextDidEndEditing: found
 
+## NSUserInterfaceItemIdentifier -> NS_TYPED_EXTENSIBLE_ENUM
+!missing-field! NSOutlineViewDisclosureButtonKey not bound
+!missing-field! NSOutlineViewShowHideButtonKey not bound
+!missing-field! NSMenuItemImportFromDeviceIdentifier not bound
 
 ## unsorted
 
@@ -354,8 +358,6 @@
 !missing-field! NSOffStateImageBinding not bound
 !missing-field! NSOnStateImageBinding not bound
 !missing-field! NSOptionsKey not bound
-!missing-field! NSOutlineViewDisclosureButtonKey not bound
-!missing-field! NSOutlineViewShowHideButtonKey not bound
 !missing-field! NSPaperSizeDocumentAttribute not bound
 !missing-field! NSPasteboardCommunicationException not bound
 !missing-field! NSPasteboardURLReadingContentsConformToTypesKey not bound
@@ -444,10 +446,6 @@
 !missing-field! NSSelectionIndexPathsBinding not bound
 !missing-field! NSSelectorNameBindingOption not bound
 !missing-field! NSSelectsAllWhenSettingContentBindingOption not bound
-!missing-field! NSSharingServiceNamePostOnLinkedIn not bound
-!missing-field! NSSharingServiceNamePostOnTencentWeibo not bound
-!missing-field! NSSharingServiceNameUseAsFacebookProfileImage not bound
-!missing-field! NSSharingServiceNameUseAsLinkedInProfileImage not bound
 !missing-field! NSShellCommandFileType not bound
 !missing-field! NSSortDescriptorsBinding not bound
 !missing-field! NSSoundPboardType not bound
