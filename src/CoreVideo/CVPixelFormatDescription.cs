@@ -77,6 +77,9 @@ namespace CoreVideo {
 		[iOS (9,0)][Mac (10,10)]
 		public static readonly NSString ComponentRangeWideRangeKey;
 
+		[iOS (12,0)][TV (12,0)][Watch (5,0)][Mac (10,14, onlyOn64: true)]
+		public static readonly NSString ContainsGrayscaleKey;
+
 		static CVPixelFormatDescription ()
 		{
 			var handle = Dlfcn.dlopen (Constants.CoreVideoLibrary, 0);
@@ -115,6 +118,9 @@ namespace CoreVideo {
 				ComponentRangeFullRangeKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatComponentRange_FullRange");
 				ComponentRangeVideoRangeKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatComponentRange_VideoRange");
 				ComponentRangeWideRangeKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatComponentRange_WideRange");
+
+				// Xcode 10
+				ContainsGrayscaleKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatContainsGrayscale");
 			}
 			finally {
 				Dlfcn.dlclose (handle);
