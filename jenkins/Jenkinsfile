@@ -125,6 +125,7 @@ def markdownToSlack (value)
 
 def reportFinalStatusToSlack (err, gitHash, currentStage, fileContents)
 {
+    def status = currentBuild.currentResult
     if ("${status}" == "SUCCESS" && err == "")
         return // not reporting success to slack
 
@@ -138,7 +139,6 @@ def reportFinalStatusToSlack (err, gitHash, currentStage, fileContents)
         authorName = sh (script: "git log -1 --pretty=%an", returnStdout: true).trim ()
         authorEmail = sh (script: "git log -1 --pretty=%ae", returnStdout: true).trim ()
         slackMessage = "Commit <https://github.com/${repository}/commit/${gitHash}|${gitHash}> failed to build."
-
     }
 
     JSONArray attachments = new JSONArray ()
