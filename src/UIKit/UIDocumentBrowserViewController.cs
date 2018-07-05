@@ -31,7 +31,8 @@ using ObjCRuntime;
 
 namespace UIKit {
 
-	public partial class UIDocumentBrowserViewController {
+	public partial class UIDocumentBrowserViewController
+	{
 
 		static bool CheckSystemVersion ()
 		{
@@ -42,7 +43,8 @@ namespace UIKit {
 #endif
 		}
 
-		public UIDocumentBrowserTransitionController GetTransitionController (NSUrl documentUrl) {
+		public virtual UIDocumentBrowserTransitionController GetTransitionController (NSUrl documentUrl)
+		{
 			if (CheckSystemVersion ())
 				return _NewGetTransitionController (documentUrl);
 			return _DeprecatedGetTransitionController (documentUrl);
