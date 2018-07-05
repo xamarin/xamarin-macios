@@ -704,6 +704,7 @@ namespace Introspection {
 				case "UIAlertController":
 				case "PKPaymentButton":
 				case "PKAddPassButton":
+				case "INUIAddVoiceShortcutButton":
 					return true;
 				}
 				break;
