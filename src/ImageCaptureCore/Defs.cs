@@ -39,7 +39,7 @@ namespace ImageCaptureCore {
 		Orientation5 = 5,
 		Orientation6 = 6,
 		Orientation7 = 7,
-		Orientation8 = 8
+		Orientation8 = 8,
 	}
 	
 	public enum ICReturnCodeOffset
@@ -50,7 +50,7 @@ namespace ImageCaptureCore {
 		Delete = -21150,
 		ExFAT = -21200,
 		PTP = -21250,
-		System = -21300
+		System = -21300,
 	}
 	
 	[Native]
@@ -103,14 +103,14 @@ namespace ImageCaptureCore {
 		MetadataAlreadyFetching = ICReturnCodeOffset.Metadata - 1,
 		MetadataCanceled = ICReturnCodeOffset.Metadata - 2,
 		MetadataInvalid = ICReturnCodeOffset.Metadata - 3,
-		MultiErrorDictionary = -30000
+		MultiErrorDictionary = -30000,
 	}
 	
 	[Native]
 	public enum ICDeviceType : ulong
 	{
 		Camera = 1,
-		Scanner = 2
+		Scanner = 2,
 	}
 	
 	[Native]
@@ -119,14 +119,14 @@ namespace ImageCaptureCore {
 		Local = 256,
 		Shared = 512,
 		Bonjour = 1024,
-		Bluetooth = 2048
+		Bluetooth = 2048,
 	}
 	
 	[Native]
 	public enum ICDeviceTypeMask : ulong
 	{
 		Camera = 1,
-		Scanner = 2
+		Scanner = 2,
 	}
 	
 	[Native]
@@ -136,7 +136,7 @@ namespace ImageCaptureCore {
 		Shared = 512,
 		Bonjour = 1024,
 		Bluetooth = 2048,
-		Remote = 65024
+		Remote = 65024,
 	}
 
 	[Native]
@@ -145,7 +145,7 @@ namespace ImageCaptureCore {
 		Flatbed = 0,
 		PositiveTransparency = 1,
 		NegativeTransparency = 2,
-		DocumentFeeder = 3
+		DocumentFeeder = 3,
 	}
 	
 	[Native]
@@ -156,7 +156,7 @@ namespace ImageCaptureCore {
 		Picas = 2,
 		Points = 3,
 		Twips = 4,
-		Pixels = 5
+		Pixels = 5,
 	}
 	
 	[Native]
@@ -164,14 +164,14 @@ namespace ImageCaptureCore {
 	{
 		Bits1 = 1,
 		Bits8 = 8,
-		Bits16 = 16
+		Bits16 = 16,
 	}
 	
 	[Native]
 	public enum ICScannerColorDataFormatType : ulong
 	{
 		Chunky = 0,
-		Planar = 1
+		Planar = 1,
 	}
 	
 	[Native]
@@ -185,7 +185,7 @@ namespace ImageCaptureCore {
 		Cmyk = 5,
 		Yuv = 6,
 		Yuvk = 7,
-		Ciexyz = 8
+		Ciexyz = 8,
 	}
 	
 	[Native]
@@ -262,14 +262,14 @@ namespace ImageCaptureCore {
 		Apsp = 75,
 		ICScannerDocumentType135 = 76,
 		Mf = 77,
-		Lf = 78
+		Lf = 78,
 	}
 	
 	public enum ICScannerFunctionalUnitState : uint
 	{
 		Ready = (1u << 0),
 		ScanInProgress = (1u << 1),
-		OverviewScanInProgress = (1u << 2)
+		OverviewScanInProgress = (1u << 2),
 	}
 	
 	[Native]
@@ -278,14 +278,14 @@ namespace ImageCaptureCore {
 		Enumeration = 0,
 		Range = 1,
 		Boolean = 2,
-		Template = 3
+		Template = 3,
 	}
 	
 	[Native]
 	public enum ICScannerTransferMode : ulong
 	{
 		FileBased = 0,
-		MemoryBased = 1
+		MemoryBased = 1,
 	}
 	
 	
