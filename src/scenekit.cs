@@ -2836,7 +2836,7 @@ namespace SceneKit {
 #if XAMCORE_2_0
 		[Abstract]
 #endif
-		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
+		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakSceneRendererDelegate { get; set;  }
 
 		[Wrap ("WeakSceneRendererDelegate")]
@@ -4144,7 +4144,7 @@ namespace SceneKit {
 		[Export ("timeStep")]
 		double TimeStep { get; set; }
 
-		[Export ("contactDelegate", ArgumentSemantic.Weak)]
+		[Export ("contactDelegate", ArgumentSemantic.UnsafeUnretained)]
 		[NullAllowed]
 		NSObject WeakContactDelegate { get; set; }
 
