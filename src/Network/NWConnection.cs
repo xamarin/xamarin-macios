@@ -34,41 +34,8 @@ namespace Network {
 	//
 	public delegate void NWConnectionReceiveCompletion (IntPtr data, ulong dataSize, NWContentContext context, bool isComplete, NWError error);
 	
-	public class NWConnection : INativeObject, IDisposable {
-		internal IntPtr handle;
-		public IntPtr Handle {
-			get { return handle; }
-		}
-
-		~NWConnection ()
-		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero) {
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
-
-		public NWConnection (IntPtr handle, bool owns)
-		{
-			this.handle = handle;
-			if (owns == false)
-				CFObject.CFRetain (handle);
-		}
-
-		public NWConnection (IntPtr handle) : this (handle, false)
-		{
-		}
+	public class NWConnection : NativeObject {
+		public NWConnection (IntPtr handle, bool owns) : base (handle, owns) {} 
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
@@ -372,7 +339,7 @@ namespace Network {
 			var descriptor = (BlockLiteral *) block;
 			var del = (Action<NWError>) (descriptor->Target);
 			if (del != null){
-				var err = error == IntPtr.Zero ? null : new NWError (error);
+				var err = error == IntPtr.Zero ? null : new NWError (error, owns: false);
 			        del (err);
 				err?.Dispose ();
 			}

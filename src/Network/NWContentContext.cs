@@ -18,41 +18,8 @@ namespace Network {
 	// The content context, there are a few pre-configured content contexts for sending
 	// available as static properties on this class
 	// 
-	public class NWContentContext : INativeObject, IDisposable {
-		IntPtr handle;
-		public IntPtr Handle {
-			get { return handle; }
-		}
-
-		public NWContentContext (IntPtr handle, bool owns)
-		{
-			this.handle = handle;
-			if (owns == false)
-				CFObject.CFRetain (handle);
-		}
-
-		public NWContentContext (IntPtr handle) : this (handle, false)
-		{
-		}
-
-		~NWContentContext ()
-		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero) {
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
+	public class NWContentContext : NativeObject {
+		public NWContentContext (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]

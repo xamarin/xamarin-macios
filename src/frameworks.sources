@@ -392,6 +392,7 @@ COREFOUNDATION_CORE_SOURCES = \
 	CoreFoundation/CFRunLoop.cs \
 	CoreFoundation/CFString.cs \
 	CoreFoundation/Dispatch.cs \
+	CoreFoundation/NativeObject.cs
 
 COREFOUNDATION_SOURCES = \
 	CoreFoundation/CFAllocator.cs \

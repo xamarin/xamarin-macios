@@ -17,41 +17,8 @@ using OS_nw_interface=System.IntPtr;
 
 namespace Network {
 	
-	public class NWInterface : INativeObject, IDisposable {
-		internal IntPtr handle;
-		public IntPtr Handle {
-			get { return handle; }
-		}
-
-		public NWInterface (IntPtr handle, bool owns)
-		{
-			this.handle = handle;
-			if (owns == false)
-				CFObject.CFRetain (handle);
-		}
-
-		public NWInterface (IntPtr handle) : this (handle, false)
-		{
-		}
-
-		~NWInterface ()
-		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero) {
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
+	public class NWInterface : NativeObject {
+		public NWInterface (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]

@@ -29,23 +29,8 @@ namespace Network {
                 }
 	}
 	
-	public class NWParameters : INativeObject, IDisposable {
-		internal IntPtr handle;
-		
-		public IntPtr Handle {
-			get { return handle; }
-		}
-
-		public NWParameters (IntPtr handle, bool owns)
-		{
-			this.handle = handle;
-			if (owns == false)
-				CoreFoundation.CFObject.CFRetain (handle);
-		}
-
-		public NWParameters (IntPtr handle) : this (handle, false)
-		{
-		}
+	public class NWParameters : NativeObject {
+		public NWParameters (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		static IntPtr _nw_parameters_configure_protocol_default_configuration;
 		
@@ -191,30 +176,11 @@ namespace Network {
 			return new NWParameters (ptr, owns: true);
 		}
 
-		~NWParameters ()
-		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero) {
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
-
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern nw_parameters_t nw_parameters_create ();
 
-		public NWParameters ()
+		public NWParameters () 
 		{
 			handle = nw_parameters_create ();
 		}

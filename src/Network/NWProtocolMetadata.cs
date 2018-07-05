@@ -35,11 +35,7 @@ namespace Network {
 		Ce = 3,
 	}
 	
-	public class NWProtocolMetadata : INativeObject, IDisposable {
-		IntPtr handle;
-		public IntPtr Handle {
-			get { return handle; }
-		}
+	public class NWProtocolMetadata : NativeObject {
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
@@ -57,35 +53,7 @@ namespace Network {
 			return new NWProtocolMetadata (nw_udp_create_metadata (), owns: true);
 		}
 	
-		public NWProtocolMetadata (IntPtr handle, bool owns)
-		{
-			this.handle = handle;
-			if (owns == false)
-				CFObject.CFRetain (handle);
-		}
-
-		public NWProtocolMetadata (IntPtr handle) : this (handle, false)
-		{
-		}
-
-		~NWProtocolMetadata ()
-		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero) {
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
+		public NWProtocolMetadata (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]

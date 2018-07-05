@@ -21,41 +21,8 @@ namespace Network {
 		Satisfiable = 3
 	}
 	
-	public class NWPath : INativeObject, IDisposable {
-		IntPtr handle;
-		public IntPtr Handle {
-			get { return handle; }
-		}
-
-		public NWPath (IntPtr handle, bool owns)
-		{
-			this.handle = handle;
-			if (owns == false)
-				CFObject.CFRetain (handle);
-		}
-
-		public NWPath (IntPtr handle) : this (handle, false)
-		{
-		}
-
-		~NWPath ()
-		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero) {
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
+	public class NWPath : NativeObject {
+		public NWPath (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]

@@ -17,41 +17,9 @@ using OS_nw_advertise_descriptor=System.IntPtr;
 
 namespace Network {
 	
-	public class NWAdvertiseDescriptor : INativeObject, IDisposable {
-		internal IntPtr handle;
-		public IntPtr Handle {
-			get { return handle; }
-		}
-
-		public NWAdvertiseDescriptor (IntPtr handle, bool owns)
-		{
-			this.handle = handle;
-			if (owns == false)
-				CFObject.CFRetain (handle);
-		}
-
-		public NWAdvertiseDescriptor (IntPtr handle) : this (handle, false)
-		{
-		}
-
-		~NWAdvertiseDescriptor ()
-		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero) {
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
+	public class NWAdvertiseDescriptor : NativeObject {
+		public NWAdvertiseDescriptor (IntPtr handle, bool owns) : base (handle, owns)
+		{ }
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]

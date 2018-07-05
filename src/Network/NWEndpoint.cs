@@ -24,41 +24,8 @@ namespace Network {
 		BonjourService = 3
 	}
 	
-	public class NWEndpoint : INativeObject, IDisposable {
-		internal IntPtr handle;
-		public IntPtr Handle {
-			get { return handle; }
-		}
-
-		public NWEndpoint (IntPtr handle, bool owns)
-		{
-			this.handle = handle;
-			if (owns == false)
-				CFObject.CFRetain (handle);
-		}
-
-		public NWEndpoint (IntPtr handle) : this (handle, false)
-		{
-		}
-
-		~NWEndpoint ()
-		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero) {
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
+	public class NWEndpoint : NativeObject {
+		public NWEndpoint (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[Mac(10,14)][iOS(12,0)][TV(12,0)]
 		[DllImport (Constants.NetworkLibrary)]

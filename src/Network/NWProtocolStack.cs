@@ -20,41 +20,8 @@ using nw_protocol_options_t=System.IntPtr;
 
 namespace Network {
 	
-	public class NWProtocolStack : INativeObject, IDisposable {
-		IntPtr handle;
-		public IntPtr Handle {
-			get { return handle; }
-		}
-
-		public NWProtocolStack (IntPtr handle, bool owns)
-		{
-			this.handle = handle;
-			if (owns == false)
-				CFObject.CFRetain (handle);
-		}
-
-		public NWProtocolStack (IntPtr handle) : this (handle, false)
-		{
-		}
-
-		~NWProtocolStack ()
-		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero) {
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
+	public class NWProtocolStack : NativeObject {
+		public NWProtocolStack (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]

@@ -21,40 +21,12 @@ namespace Network {
 		Tls = 3
 	}
 	
-	public class NWError : INativeObject, IDisposable {
-		internal IntPtr handle;
-		public IntPtr Handle {
-			get { return handle; }
-		}
-
-		public NWError (IntPtr handle, bool owns)
+	public class NWError : NativeObject {
+		public NWError (IntPtr handle, bool owns) : base (handle, owns)
 		{
 			this.handle = handle;
 			if (owns == false)
 				CFObject.CFRetain (handle);
-		}
-
-		public NWError (IntPtr handle) : this (handle, false)
-		{
-		}
-
-		~NWError ()
-		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero) {
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
