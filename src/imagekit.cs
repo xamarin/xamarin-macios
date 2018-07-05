@@ -31,7 +31,7 @@ using AppKit;
 using Foundation;
 using ObjCRuntime;
 using CoreImage;
-//using ImageCaptureCore;
+using ImageCaptureCore;
 using CoreGraphics;
 using CoreAnimation;
 
@@ -86,9 +86,8 @@ namespace ImageKit {
 		[Protocolize]
 		IKCameraDeviceViewDelegate Delegate { get; set; }
 		
-//		FIXME need ImageCaptureCore;
-//		[Export ("cameraDevice", ArgumentSemantic.Assign)]
-//		ICCameraDevice CameraDevice { get; set;  }
+		[Export ("cameraDevice", ArgumentSemantic.Assign)]
+		ICCameraDevice CameraDevice { get; set;  }
 
 		[Export ("hasDisplayModeTable")]
 		bool HasDisplayModeTable { get; set;  }
@@ -164,9 +163,8 @@ namespace ImageKit {
 		[Export ("cameraDeviceViewSelectionDidChange:"), EventArgs ("IKCameraDeviceView")]
 		void SelectionDidChange (IKCameraDeviceView cameraDeviceView);
 
-//		FIXME need ImageCaptureCore;
-//		[Export ("cameraDeviceView:didDownloadFile:location:fileData:error:"), EventArgs ("IKCameraDeviceViewICCameraFileNSUrlNSDataNSError")]
-//		void DidDownloadFile (IKCameraDeviceView cameraDeviceView, ICCameraFile file, NSUrl url, NSData data, NSError error);
+		[Export ("cameraDeviceView:didDownloadFile:location:fileData:error:"), EventArgs ("IKCameraDeviceViewICCameraFileNSUrlNSDataNSError")]
+		void DidDownloadFile (IKCameraDeviceView cameraDeviceView, ICCameraFile file, NSUrl url, NSData data, NSError error);
 
 		[Export ("cameraDeviceView:didEncounterError:"), EventArgs ("IKCameraDeviceViewNSError")]
 		void DidEncounterError (IKCameraDeviceView cameraDeviceView, NSError error);
@@ -199,19 +197,17 @@ namespace ImageKit {
 		[Export ("mode")]
 		IKDeviceBrowserViewDisplayMode Mode { get; set;  }
 
-//		FIXME need ImageCaptureCore;
-//		[Export ("selectedDevice")]
-//		ICDevice SelectedDevice { get;  }
+		[Export ("selectedDevice")]
+		ICDevice SelectedDevice { get;  }
 	}
 
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
 	interface IKDeviceBrowserViewDelegate {
-//		FIXME need ImageCaptureCore;
-//		[Abstract]
-//		[Export ("deviceBrowserView:selectionDidChange:"), EventArgs ("IKDeviceBrowserViewICDevice")]
-//		void SelectionDidChange (IKDeviceBrowserView deviceBrowserView, ICDevice device);
+		[Abstract]
+		[Export ("deviceBrowserView:selectionDidChange:"), EventArgs ("IKDeviceBrowserViewICDevice")]
+		void SelectionDidChange (IKDeviceBrowserView deviceBrowserView, ICDevice device);
 
 		[Export ("deviceBrowserView:didEncounterError:"), EventArgs ("IKDeviceBrowserViewNSError")]
 		void DidEncounterError (IKDeviceBrowserView deviceBrowserView, NSError error);
@@ -988,9 +984,8 @@ namespace ImageKit {
 		[Protocolize]
 		IKScannerDeviceViewDelegate Delegate { get; set; }
 
-//		FIXME need ImageCaptureCore;
-//		[Export ("scannerDevice", ArgumentSemantic.Assign)]
-//		ICScannerDevice ScannerDevice { get; set; }
+		[Export ("scannerDevice", ArgumentSemantic.Assign)]
+		ICScannerDevice ScannerDevice { get; set; }
 
 		[Export ("mode")]
 		IKScannerDeviceViewDisplayMode DisplayMode { get; set; }
@@ -1039,9 +1034,8 @@ namespace ImageKit {
 		[Export ("scannerDeviceView:didScanToURL:error:"), EventArgs ("IKScannerDeviceViewScanUrl")]
 		void DidScanToUrl (IKScannerDeviceView scannerDeviceView, NSUrl url, NSError error);
 
-		// Needs ImageCaptureCore
-		//[Export ("scannerDeviceView:didScanToBandData:scanInfo:error:"), EventArgs ("IKScannerDeviceViewScanBandData")]
-		//void DidScanToBandData (IKScannerDeviceView scannerDeviceView, ICScannerBandData data, NSDictionary scanInfo, NSError error);
+		[Export ("scannerDeviceView:didScanToBandData:scanInfo:error:"), EventArgs ("IKScannerDeviceViewScanBandData")]
+		void DidScanToBandData (IKScannerDeviceView scannerDeviceView, ICScannerBandData data, NSDictionary scanInfo, NSError error);
 	}
 
 	[BaseType (typeof (NSObject))]

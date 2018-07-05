@@ -861,6 +861,10 @@ HOMEKIT_SOURCES = \
 IAD_API_SOURCES = \
 	iAd/iAd.cs \
 
+# ImageCaptureKit
+IMAGECAPTURECORE_API_SOURCES = \
+	ImageCaptureCore/Defs.cs
+
 # ImageIO
 
 IMAGEIO_API_SOURCES = \
@@ -1688,6 +1692,7 @@ MAC_FRAMEWORKS =            \
 	GameplayKit             \
 	GLKit                   \
 	ImageIO                 \
+	ImageCaptureCore	\
 	ImageKit                \
 	Intents                 \
 	IOSurface 		\

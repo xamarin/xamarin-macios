@@ -1,0 +1,292 @@
+//
+// Copyright 2018 Microsoft
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
+
+//
+// Defs.cs: Enumerations and definitions for ImageCaptureCore
+//
+using System;
+
+using ObjCRuntime;
+
+namespace ImageCaptureCore {
+	[Native]
+	public enum ICExifOrientationType : ulong
+	{
+		Orientation1 = 1,
+		Orientation2 = 2,
+		Orientation3 = 3,
+		Orientation4 = 4,
+		Orientation5 = 5,
+		Orientation6 = 6,
+		Orientation7 = 7,
+		Orientation8 = 8
+	}
+	
+	public enum ICReturnCodeOffset
+	{
+		Thumbnail = -21000,
+		Metadata = -21050,
+		Download = -21100,
+		Delete = -21150,
+		ExFAT = -21200,
+		PTP = -21250,
+		System = -21300
+	}
+	
+	[Native]
+	public enum ICReturnCode : long
+	{
+		Success = 0,
+		InvalidParam = -9922,
+		CommunicationTimedOut = -9923,
+		ScanOperationCanceled = -9924,
+		ScannerInUseByLocalUser = -9925,
+		ScannerInUseByRemoteUser = -9926,
+		DeviceFailedToOpenSession = -9927,
+		DeviceFailedToCloseSession = -9928,
+		ScannerFailedToSelectFunctionalUnit = -9929,
+		ScannerFailedToCompleteOverviewScan = -9930,
+		ScannerFailedToCompleteScan = -9931,
+		ReceivedUnsolicitedScannerStatusInfo = -9932,
+		ReceivedUnsolicitedScannerErrorInfo = -9933,
+		DownloadFailed = -9934,
+		UploadFailed = -9935,
+		FailedToCompletePassThroughCommand = -9936,
+		DownloadCanceled = -9937,
+		FailedToEnabeTethering = -9938,
+		FailedToDisabeTethering = -9939,
+		FailedToCompleteSendMessageRequest = -9940,
+		DeleteFilesFailed = -9941,
+		DeleteFilesCanceled = -9942,
+		DeviceIsPasscodeLocked = -9943,
+		DeviceFailedToTakePicture = -9944,
+		DeviceSoftwareNotInstalled = -9945,
+		DeviceSoftwareIsBeingInstalled = -9946,
+		DeviceSoftwareInstallationCompleted = -9947,
+		DeviceSoftwareInstallationCanceled = -9948,
+		DeviceSoftwareInstallationFailed = -9949,
+		DeviceSoftwareNotAvailable = -9950,
+		DeviceCouldNotPair = -9951,
+		DeviceCouldNotUnpair = -9952,
+		DeviceNeedsCredentials = -9953,
+		DeviceIsBusyEnumerating = -9954,
+		DeviceCommandGeneralFailure = -9955,
+		DeviceFailedToCompleteTransfer = -9956,
+		DeviceFailedToSendData = -9957,
+		SessionNotOpened = -9958,
+		ThumbnailNotAvailable = ICReturnCodeOffset.Thumbnail,
+		ThumbnailAlreadyFetching = ICReturnCodeOffset.Thumbnail - 1,
+		ThumbnailCanceled = ICReturnCodeOffset.Thumbnail - 2,
+		ThumbnailInvalid = ICReturnCodeOffset.Thumbnail - 3,
+		ErrorDeviceEjected = ICReturnCodeOffset.System,
+		MetadataNotAvailable = ICReturnCodeOffset.Metadata,
+		MetadataAlreadyFetching = ICReturnCodeOffset.Metadata - 1,
+		MetadataCanceled = ICReturnCodeOffset.Metadata - 2,
+		MetadataInvalid = ICReturnCodeOffset.Metadata - 3,
+		MultiErrorDictionary = -30000
+	}
+	
+	[Native]
+	public enum ICDeviceType : ulong
+	{
+		Camera = 1,
+		Scanner = 2
+	}
+	
+	[Native]
+	public enum ICDeviceLocationType : ulong
+	{
+		Local = 256,
+		Shared = 512,
+		Bonjour = 1024,
+		Bluetooth = 2048
+	}
+	
+	[Native]
+	public enum ICDeviceTypeMask : ulong
+	{
+		Camera = 1,
+		Scanner = 2
+	}
+	
+	[Native]
+	public enum ICDeviceLocationTypeMask : ulong
+	{
+		Local = 256,
+		Shared = 512,
+		Bonjour = 1024,
+		Bluetooth = 2048,
+		Remote = 65024
+	}
+
+	[Native]
+	public enum ICScannerFunctionalUnitType : ulong
+	{
+		Flatbed = 0,
+		PositiveTransparency = 1,
+		NegativeTransparency = 2,
+		DocumentFeeder = 3
+	}
+	
+	[Native]
+	public enum ICScannerMeasurementUnit : ulong
+	{
+		Inches = 0,
+		Centimeters = 1,
+		Picas = 2,
+		Points = 3,
+		Twips = 4,
+		Pixels = 5
+	}
+	
+	[Native]
+	public enum ICScannerBitDepth : ulong
+	{
+		Bits1 = 1,
+		Bits8 = 8,
+		Bits16 = 16
+	}
+	
+	[Native]
+	public enum ICScannerColorDataFormatType : ulong
+	{
+		Chunky = 0,
+		Planar = 1
+	}
+	
+	[Native]
+	public enum ICScannerPixelDataType : ulong
+	{
+		Bw = 0,
+		Gray = 1,
+		Rgb = 2,
+		Palette = 3,
+		Cmy = 4,
+		Cmyk = 5,
+		Yuv = 6,
+		Yuvk = 7,
+		Ciexyz = 8
+	}
+	
+	[Native]
+	public enum ICScannerDocumentType : ulong
+	{
+		Default = 0,
+		A4 = 1,
+		B5 = 2,
+		USLetter = 3,
+		USLegal = 4,
+		A5 = 5,
+		Isob4 = 6,
+		Isob6 = 7,
+		USLedger = 9,
+		USExecutive = 10,
+		A3 = 11,
+		Isob3 = 12,
+		A6 = 13,
+		C4 = 14,
+		C5 = 15,
+		C6 = 16,
+		ICScannerDocumentType4A0 = 17,
+		ICScannerDocumentType2A0 = 18,
+		A0 = 19,
+		A1 = 20,
+		A2 = 21,
+		A7 = 22,
+		A8 = 23,
+		A9 = 24,
+		ICScannerDocumentType10 = 25,
+		Isob0 = 26,
+		Isob1 = 27,
+		Isob2 = 28,
+		Isob5 = 29,
+		Isob7 = 30,
+		Isob8 = 31,
+		Isob9 = 32,
+		Isob10 = 33,
+		Jisb0 = 34,
+		Jisb1 = 35,
+		Jisb2 = 36,
+		Jisb3 = 37,
+		Jisb4 = 38,
+		Jisb6 = 39,
+		Jisb7 = 40,
+		Jisb8 = 41,
+		Jisb9 = 42,
+		Jisb10 = 43,
+		C0 = 44,
+		C1 = 45,
+		C2 = 46,
+		C3 = 47,
+		C7 = 48,
+		C8 = 49,
+		C9 = 50,
+		C10 = 51,
+		USStatement = 52,
+		BusinessCard = 53,
+		E = 60,
+		ICScannerDocumentType3R = 61,
+		ICScannerDocumentType4R = 62,
+		ICScannerDocumentType5R = 63,
+		ICScannerDocumentType6R = 64,
+		ICScannerDocumentType8R = 65,
+		S8r = 66,
+		ICScannerDocumentType10R = 67,
+		S10r = 68,
+		ICScannerDocumentType11R = 69,
+		ICScannerDocumentType12R = 70,
+		S12r = 71,
+		ICScannerDocumentType110 = 72,
+		Apsh = 73,
+		Apsc = 74,
+		Apsp = 75,
+		ICScannerDocumentType135 = 76,
+		Mf = 77,
+		Lf = 78
+	}
+	
+	public enum ICScannerFunctionalUnitState : uint
+	{
+		Ready = (1u << 0),
+		ScanInProgress = (1u << 1),
+		OverviewScanInProgress = (1u << 2)
+	}
+	
+	[Native]
+	public enum ICScannerFeatureType : ulong
+	{
+		Enumeration = 0,
+		Range = 1,
+		Boolean = 2,
+		Template = 3
+	}
+	
+	[Native]
+	public enum ICScannerTransferMode : ulong
+	{
+		FileBased = 0,
+		MemoryBased = 1
+	}
+	
+	
+}
