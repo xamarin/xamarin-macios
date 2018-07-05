@@ -2,6 +2,8 @@
 !missing-field! kCVImageBufferICCProfileKey not bound
 !missing-field! kCVIndefiniteTime not bound
 !missing-field! kCVPixelBufferPoolFreeBufferNotification not bound
+
+## the following fields are manually bound in CVPixelFormatDescription.cs
 !missing-field! kCVPixelFormatBitsPerBlock not bound
 !missing-field! kCVPixelFormatBlackBlock not bound
 !missing-field! kCVPixelFormatBlockHeight not bound
@@ -18,6 +20,7 @@
 !missing-field! kCVPixelFormatComponentRange_WideRange not bound
 !missing-field! kCVPixelFormatConstant not bound
 !missing-field! kCVPixelFormatContainsAlpha not bound
+!missing-field! kCVPixelFormatContainsGrayscale not bound
 !missing-field! kCVPixelFormatContainsRGB not bound
 !missing-field! kCVPixelFormatContainsYCbCr not bound
 !missing-field! kCVPixelFormatFillExtendedPixelsCallback not bound
@@ -31,6 +34,7 @@
 !missing-field! kCVPixelFormatPlanes not bound
 !missing-field! kCVPixelFormatQDCompatibility not bound
 !missing-field! kCVPixelFormatVerticalSubsampling not bound
+
 !missing-field! kCVZeroTime not bound
 !missing-pinvoke! CVImageBufferCreateColorSpaceFromAttachments is not bound
 !missing-pinvoke! CVPixelBufferRelease is not bound
