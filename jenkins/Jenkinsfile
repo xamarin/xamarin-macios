@@ -113,6 +113,7 @@ def reportFinalStatus (err, gitHash, currentStage)
 
     def comment = null
     def status = currentBuild.currentResult
+    def slackMessage = null
 
     if ("${status}" == "SUCCESS" && err == "") {
         comment = "✅ [Jenkins job](${env.RUN_DISPLAY_URL}) (on internal Jenkins) succeeded"
@@ -123,17 +124,27 @@ def reportFinalStatus (err, gitHash, currentStage)
         manager.addErrorBadge (comment)
         manager.buildFailure ()
 
+        def who = env.CHANGE_AUTHOR_EMAIL.split ('@')[0];
+        slackMessage = "@${who}: Internal Jenkins failed in stage '${currentStage}': ${err} (${env.RUN_DISPLAY_URL})"
+    }
+
+    if (fileExists (commentFile)) {
+        def fileContents = readFile ("${commentFile}")
+
+        comment += "\n\n" + fileContents
+
+        if (slackMessage != null)
+            slackMessage += "\n\n" + fileContents
+    }
+
+    addComment ("${comment}")
+
+    if (slackMessage != null) {
         // Ping the name part of the author's email.
         // This is just a wild guess, there's no real way to know
         // which slack username the committer has (if he's even on slack)
-        def who = env.CHANGE_AUTHOR_EMAIL.split ('@')[0];
-        slackSend (botUser: true, channel: "#ios-notifications", color: "danger", message: "@${who}: Internal Jenkins failed in stage '${currentStage}': ${err} (${env.RUN_DISPLAY_URL})")
+        slackSend (botUser: true, channel: "#ios-notifications", color: "danger", message: slackMessage)
     }
-
-    if (fileExists (commentFile))
-        comment += "\n\n" + readFile ("${commentFile}")
-
-    addComment ("${comment}")
 }
 
 def processAtMonkeyWrench (outputFile)
