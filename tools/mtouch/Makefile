@@ -306,6 +306,7 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-weak_framework AuthenticationServices	\
 	-weak_framework CarPlay					\
 	-weak_framework NaturalLanguage			\
+	-weak_framework Network				\
 	-weak_framework IdentityLookupUI		\
 
 # note: there _was_ no CoreAudioKit.framework or Metal.framework for the simulator (before recent iOS9 betas)
