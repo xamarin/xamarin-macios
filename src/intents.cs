@@ -247,6 +247,7 @@ namespace Intents {
 		ImageProxyInvalid = 6006,
 		ImageProxyTimeout = 6007,
 		ImageServiceFailure = 6008,
+		ImageScalingFailed = 6009,
 		VoiceShortcutCreationFailed = 7000,
 		VoiceShortcutGetFailed = 7001,
 		VoiceShortcutDeleteFailed = 7002,
@@ -1448,6 +1449,13 @@ namespace Intents {
 	public enum INUpcomingMediaPredictionMode : long {
 		Default = 0,
 		OnlyPredictSuggestedIntents = 1,
+	}
+
+	[Watch (5,0), NoTV, NoMac, iOS (12,0)]
+	[Native]
+	public enum INRelevantShortcutRole : long {
+		Action,
+		Information,
 	}
 
 	[iOS (10, 0)]
@@ -5182,33 +5190,44 @@ namespace Intents {
 	[BaseType (typeof (INIntent))]
 	interface INSetClimateSettingsInCarIntent {
 
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use the overload that takes 'INSpeakableString carName'.")]
 		[Protected]
 		[Export ("initWithEnableFan:enableAirConditioner:enableClimateControl:enableAutoMode:airCirculationMode:fanSpeedIndex:fanSpeedPercentage:relativeFanSpeedSetting:temperature:relativeTemperatureSetting:climateZone:")]
-		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] NSNumber enableFan, [NullAllowed] NSNumber enableAirConditioner, [NullAllowed] NSNumber enableClimateControl, [NullAllowed] NSNumber enableAutoMode, INCarAirCirculationMode airCirculationMode, [NullAllowed] NSNumber fanSpeedIndex, [NullAllowed] NSNumber fanSpeedPercentage, INRelativeSetting relativeFanSpeedSetting, [NullAllowed] NSMeasurement<NSUnitTemperature> temperature, INRelativeSetting relativeTemperatureSetting, INCarSeat climateZone);
 
-		[Internal]
+		[iOS (12,0)]
+		[Export ("initWithEnableFan:enableAirConditioner:enableClimateControl:enableAutoMode:airCirculationMode:fanSpeedIndex:fanSpeedPercentage:relativeFanSpeedSetting:temperature:relativeTemperatureSetting:climateZone:carName:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] [BindAs (typeof (bool?))] NSNumber enableFan, [NullAllowed] [BindAs (typeof (bool?))] NSNumber enableAirConditioner, [NullAllowed] [BindAs (typeof (bool?))] NSNumber enableClimateControl, [NullAllowed] [BindAs (typeof (bool?))] NSNumber enableAutoMode, INCarAirCirculationMode airCirculationMode, [NullAllowed] [BindAs (typeof (int?))] NSNumber fanSpeedIndex, [NullAllowed] [BindAs (typeof (double?))] NSNumber fanSpeedPercentage, INRelativeSetting relativeFanSpeedSetting, [NullAllowed] NSMeasurement<NSUnitTemperature> temperature, INRelativeSetting relativeTemperatureSetting, INCarSeat climateZone, [NullAllowed] INSpeakableString carName);
+
+		[BindAs (typeof (bool?))]
 		[NullAllowed, Export ("enableFan", ArgumentSemantic.Copy)]
-		NSNumber _EnableFan { get; }
+		NSNumber EnableFan { get; }
 
-		[Internal]
+		[BindAs (typeof (bool?))]
 		[NullAllowed, Export ("enableAirConditioner", ArgumentSemantic.Copy)]
-		NSNumber _EnableAirConditioner { get; }
+		NSNumber EnableAirConditioner { get; }
 
-		[Internal]
+		[BindAs (typeof (bool?))]
 		[NullAllowed, Export ("enableClimateControl", ArgumentSemantic.Copy)]
-		NSNumber _EnableClimateControl { get; }
+		NSNumber EnableClimateControl { get; }
 
-		[Internal]
+		[BindAs (typeof (bool?))]
 		[NullAllowed, Export ("enableAutoMode", ArgumentSemantic.Copy)]
-		NSNumber _EnableAutoMode { get; }
+		NSNumber EnableAutoMode { get; }
 
 		[Export ("airCirculationMode", ArgumentSemantic.Assign)]
 		INCarAirCirculationMode AirCirculationMode { get; }
 
+#if XAMCORE_4_0 // Adding BindAs is a breaking change
+		[BindAs (typeof (int?))]
+#endif
 		[NullAllowed, Export ("fanSpeedIndex", ArgumentSemantic.Copy)]
 		NSNumber FanSpeedIndex { get; }
 
+#if XAMCORE_4_0 // Adding BindAs is a breaking change
+		[BindAs (typeof (double?))]
+#endif
 		[NullAllowed, Export ("fanSpeedPercentage", ArgumentSemantic.Copy)]
 		NSNumber FanSpeedPercentage { get; }
 
@@ -5223,6 +5242,10 @@ namespace Intents {
 
 		[Export ("climateZone", ArgumentSemantic.Assign)]
 		INCarSeat ClimateZone { get; }
+
+		[iOS (12,0)]
+		[NullAllowed, Export ("carName", ArgumentSemantic.Copy)]
+		INSpeakableString CarName { get; }
 	}
 
 	[iOS (10, 0)]
@@ -5276,6 +5299,10 @@ namespace Intents {
 
 		[Export ("resolveClimateZoneForSetClimateSettingsInCar:withCompletion:")]
 		void ResolveClimateZone (INSetClimateSettingsInCarIntent intent, Action<INCarSeatResolutionResult> completion);
+
+		[iOS (12,0)]
+		[Export ("resolveCarNameForSetClimateSettingsInCar:withCompletion:")]
+		void ResolveCarName (INSetClimateSettingsInCarIntent intent, Action<INSpeakableStringResolutionResult> completion);
 	}
 
 	[iOS (10, 0)]
@@ -5299,17 +5326,26 @@ namespace Intents {
 	[BaseType (typeof (INIntent))]
 	interface INSetDefrosterSettingsInCarIntent {
 
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use the overload that takes 'INSpeakableString carName'.")]
 		[Protected]
 		[Export ("initWithEnable:defroster:")]
-		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] NSNumber enable, INCarDefroster defroster);
 
-		[Internal]
+		[iOS (12,0)]
+		[Export ("initWithEnable:defroster:carName:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] [BindAs (typeof (bool?))] NSNumber enable, INCarDefroster defroster, [NullAllowed] INSpeakableString carName);
+
+		[BindAs (typeof (bool?))]
 		[NullAllowed, Export ("enable", ArgumentSemantic.Copy)]
-		NSNumber _Enable { get; }
+		NSNumber Enable { get; }
 
 		[Export ("defroster", ArgumentSemantic.Assign)]
 		INCarDefroster Defroster { get; }
+
+		[iOS (12,0)]
+		[NullAllowed, Export ("carName", ArgumentSemantic.Copy)]
+		INSpeakableString CarName { get; }
 	}
 
 	[iOS (10, 0)]
@@ -5336,6 +5372,10 @@ namespace Intents {
 
 		[Export ("resolveDefrosterForSetDefrosterSettingsInCar:withCompletion:")]
 		void ResolveDefroster (INSetDefrosterSettingsInCarIntent intent, Action<INCarDefrosterResolutionResult> completion);
+
+		[iOS (12,0)]
+		[Export ("resolveCarNameForSetDefrosterSettingsInCar:withCompletion:")]
+		void ResolveCarName (INSetDefrosterSettingsInCarIntent intent, Action<INSpeakableStringResolutionResult> completion);
 	}
 
 	[iOS (10, 0)]
@@ -5418,10 +5458,19 @@ namespace Intents {
 		[Export ("initWithProfileNumber:profileLabel:defaultProfile:"), Internal]
 		IntPtr InitWithProfileNumberLabel ([NullAllowed] NSNumber profileNumber, [NullAllowed] string profileLabel, [NullAllowed] NSNumber defaultProfile);
 
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use the overload that takes 'INSpeakableString carName'.")]
 		[iOS (10, 2)]
 		[Export ("initWithProfileNumber:profileName:defaultProfile:"), Internal]
 		IntPtr InitWithProfileNumberName ([NullAllowed] NSNumber profileNumber, [NullAllowed] string profileName, [NullAllowed] NSNumber defaultProfile);
 
+		[iOS (12,0)]
+		[Export ("initWithProfileNumber:profileName:defaultProfile:carName:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] [BindAs (typeof (int?))] NSNumber profileNumber, [NullAllowed] string profileName, [NullAllowed] [BindAs (typeof (bool?))] NSNumber defaultProfile, [NullAllowed] INSpeakableString carName);
+
+#if XAMCORE_4_0 // Breaking change
+		[BindAs (typeof (int?))]
+#endif
 		[NullAllowed, Export ("profileNumber", ArgumentSemantic.Copy)]
 		NSNumber ProfileNumber { get; }
 
@@ -5433,9 +5482,13 @@ namespace Intents {
 		[NullAllowed, Export ("profileName")]
 		string ProfileName { get; }
 
-		[Internal]
+		[BindAs (typeof (bool?))]
 		[NullAllowed, Export ("defaultProfile", ArgumentSemantic.Copy)]
-		NSNumber _DefaultProfile { get; }
+		NSNumber DefaultProfile { get; }
+
+		[iOS (12, 0)]
+		[NullAllowed, Export ("carName", ArgumentSemantic.Copy)]
+		INSpeakableString CarName { get; }
 	}
 
 	[iOS (10, 0)]
@@ -5463,6 +5516,10 @@ namespace Intents {
 		[Deprecated (PlatformName.iOS, 11, 0, message: "The property doesn't need to be resolved.")]
 		[Export ("resolveDefaultProfileForSetProfileInCar:withCompletion:")]
 		void ResolveDefaultProfile (INSetProfileInCarIntent intent, Action<INBooleanResolutionResult> completion);
+
+		[iOS (12,0)]
+		[Export ("resolveCarNameForSetProfileInCar:withCompletion:")]
+		void ResolveCarName (INSetProfileInCarIntent intent, Action<INSpeakableStringResolutionResult> completion);
 
 		[iOS (10, 2)]
 		[Export ("resolveProfileNameForSetProfileInCar:withCompletion:")]
@@ -5566,31 +5623,43 @@ namespace Intents {
 	[BaseType (typeof (INIntent))]
 	interface INSetSeatSettingsInCarIntent {
 
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use the overload that takes 'INSpeakableString carName'.")]
 		[Protected] // allow subclassing
 		[Export ("initWithEnableHeating:enableCooling:enableMassage:seat:level:relativeLevelSetting:")]
-		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] NSNumber enableHeating, [NullAllowed] NSNumber enableCooling, [NullAllowed] NSNumber enableMassage, INCarSeat seat, [NullAllowed] NSNumber level, INRelativeSetting relativeLevelSetting);
 
-		[Internal]
+		[iOS (12,0)]
+		[Export ("initWithEnableHeating:enableCooling:enableMassage:seat:level:relativeLevelSetting:carName:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] [BindAs (typeof (bool?))] NSNumber enableHeating, [NullAllowed] [BindAs (typeof (bool?))] NSNumber enableCooling, [NullAllowed] [BindAs (typeof (bool?))] NSNumber enableMassage, INCarSeat seat, [NullAllowed] [BindAs (typeof (int?))] NSNumber level, INRelativeSetting relativeLevelSetting, [NullAllowed] INSpeakableString carName);
+
+		[BindAs (typeof (bool?))]
 		[NullAllowed, Export ("enableHeating", ArgumentSemantic.Copy)]
-		NSNumber _EnableHeating { get; }
+		NSNumber EnableHeating { get; }
 
-		[Internal]
+		[BindAs (typeof (bool?))]
 		[NullAllowed, Export ("enableCooling", ArgumentSemantic.Copy)]
-		NSNumber _EnableCooling { get; }
+		NSNumber EnableCooling { get; }
 
-		[Internal]
+		[BindAs (typeof (bool?))]
 		[NullAllowed, Export ("enableMassage", ArgumentSemantic.Copy)]
-		NSNumber _EnableMassage { get; }
+		NSNumber EnableMassage { get; }
 
 		[Export ("seat", ArgumentSemantic.Assign)]
 		INCarSeat Seat { get; }
 
+#if XAMCORE_4_0
+		[BindAs (typeof (int?))]
+#endif
 		[NullAllowed, Export ("level", ArgumentSemantic.Copy)]
 		NSNumber Level { get; }
 
 		[Export ("relativeLevelSetting", ArgumentSemantic.Assign)]
 		INRelativeSetting RelativeLevelSetting { get; }
+
+		[iOS (12,0)]
+		[NullAllowed, Export ("carName", ArgumentSemantic.Copy)]
+		INSpeakableString CarName { get; }
 	}
 
 	[iOS (10, 0)]
@@ -5629,6 +5698,10 @@ namespace Intents {
 
 		[Export ("resolveRelativeLevelSettingForSetSeatSettingsInCar:withCompletion:")]
 		void ResolveRelativeLevelSetting (INSetSeatSettingsInCarIntent intent, Action<INRelativeSettingResolutionResult> completion);
+
+		[iOS (12,0)]
+		[Export ("resolveCarNameForSetSeatSettingsInCar:withCompletion:")]
+		void ResolveCarName (INSetSeatSettingsInCarIntent intent, Action<INSpeakableStringResolutionResult> completion);
 	}
 
 	[iOS (10, 0)]
@@ -6641,6 +6714,16 @@ namespace Intents {
 
 		[NullAllowed, Export ("distanceRemaining", ArgumentSemantic.Copy)]
 		NSMeasurement<NSUnitLength> DistanceRemaining { get; set; }
+
+		[Watch (5,0), iOS (12,0)]
+		[BindAs (typeof (bool?))]
+		[NullAllowed, Export ("charging", ArgumentSemantic.Copy)]
+		NSNumber Charging { get; set; }
+
+		[Watch (5,0), iOS (12,0)]
+		[BindAs (typeof (double?))]
+		[NullAllowed, Export ("minutesToFull", ArgumentSemantic.Copy)]
+		NSNumber MinutesToFull { get; set; }
 	}
 
 	[iOS (10, 3)]
@@ -8884,6 +8967,9 @@ namespace Intents {
 
 		[NullAllowed, Export ("watchTemplate", ArgumentSemantic.Copy)]
 		INDefaultCardTemplate WatchTemplate { get; set; }
+
+		[Export ("shortcutRole", ArgumentSemantic.Assign)]
+		INRelevantShortcutRole ShortcutRole { get; set; }
 
 		[Export ("shortcut", ArgumentSemantic.Copy)]
 		INShortcut Shortcut { get; }

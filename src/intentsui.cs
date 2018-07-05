@@ -34,6 +34,15 @@ namespace IntentsUI {
 		GenericAction,
 	}
 
+	[NoWatch, NoTV, NoMac, iOS (12,0)]
+	[Native]
+	public enum INUIAddVoiceShortcutButtonStyle : ulong {
+		White = 0,
+		WhiteOutline,
+		Black,
+		BlackOutline,
+	}
+
 	[iOS (11,0)]
 	delegate void INUIHostedViewControllingConfigureViewHandler (bool success, NSSet<INParameter> configuredParameters, CGSize desiredSize);
 
@@ -148,6 +157,15 @@ namespace IntentsUI {
 		[Abstract]
 		[Export ("editVoiceShortcutViewControllerDidCancel:")]
 		void DidCancel (INUIEditVoiceShortcutViewController controller);
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (12,0)]
+	[BaseType (typeof (UIButton))]
+	[DisableDefaultCtor]
+	interface INUIAddVoiceShortcutButton {
+
+		[Export ("initWithStyle:")]
+		IntPtr Constructor (INUIAddVoiceShortcutButtonStyle style);
 	}
 }
 
