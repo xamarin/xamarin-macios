@@ -9053,6 +9053,7 @@ namespace AVFoundation {
 		NSString HeightKey { get; }
 	}
 
+	
 	[NoTV, NoMac, NoWatch, iOS (12,0)]
 	[StrongDictionary ("AVCapturePhotoSettingsThumbnailFormatKeys")]
 	interface AVCapturePhotoSettingsThumbnailFormat {
@@ -9167,21 +9168,23 @@ namespace AVFoundation {
 		[Export ("availableEmbeddedThumbnailPhotoCodecTypes")]
 		NSString[] _GetAvailableEmbeddedThumbnailPhotoCodecTypes { get; }
 
-		[Obsoleted (PlatformName.iOS, 12, 0, message: "Use AvailableEmbeddedThumbnailPhotoCodecTypes instead.")]
 		[iOS (11, 0)]
-		[Wrap ("Array.ConvertAll (_GetAvailableEmbeddedThumbnailPhotoCodecTypes, s => AVVideoCodecTypeExtensions.GetValue (s))")]
+		[Wrap ("Array.ConvertAll (_GetAvailableEmbeddedThumbnailPhotoCodecTypes, s => AVVideoCodecTypeExtensions.GetValue (s))", IsVirtual = true)]
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'AvailableEmbeddedThumbnailPhotoCodecTypes' instead.")]
 		AVVideoCodecType[] GetAvailableEmbeddedThumbnailPhotoCodecTypes { get; }
 
 		[iOS (11, 0)]
-		[Wrap ("Array.ConvertAll (_GetAvailableEmbeddedThumbnailPhotoCodecTypes, s => AVVideoCodecTypeExtensions.GetValue (s))")]
+		[Wrap ("Array.ConvertAll (_GetAvailableEmbeddedThumbnailPhotoCodecTypes, s => AVVideoCodecTypeExtensions.GetValue (s))", IsVirtual = true)]
+#endif
 		AVVideoCodecType[] AvailableEmbeddedThumbnailPhotoCodecTypes { get; }
 
 #if XAMCORE_4_0
 		[iOS (11, 0)]
 		[NullAllowed, Export ("embeddedThumbnailPhotoFormat", ArgumentSemantic.Copy)]
-		NSDictionary NativeEmbeddedThumbnailPhotoFormat { get; set; }
+		NSDictionary WeakEmbeddedThumbnailPhotoFormat { get; set; }
 
-		[Warap ("NativeEmbeddedThumbnailPhotoFormat")]
+		[Warp ("WeakEmbeddedThumbnailPhotoFormat")]
 		AVCapturePhotoSettingsThumbnailFormat EmbeddedThumbnailPhotoFormat { get; set; }
 #else
 		[iOS (11, 0)]
@@ -9197,20 +9200,16 @@ namespace AVFoundation {
 		[Export ("embedsPortraitEffectsMatteInPhoto")]
 		bool EmbedsPortraitEffectsMatteInPhoto { get; set; }
 
-		[Internal]
+		[BindAs (typeof (AVVideoCodecType []))]
 		[NoWatch, NoTV, NoMac, iOS (12, 0)]
 		[Export ("availableRawEmbeddedThumbnailPhotoCodecTypes")]
-		NSString[] _AvailableRawEmbeddedThumbnailPhotoCodecTypes { get; }
-
-		[NoWatch, NoTV, NoMac, iOS (12, 0)]
-		[Wrap ("Array.ConvertAll (_AvailableRawEmbeddedThumbnailPhotoCodecTypes, s => AVVideoCodecTypeExtensions.GetValue (s))")]
-		AVVideoCodecType[] AvailableRawEmbeddedThumbnailPhotoCodecTypes { get; }
+		NSString[] AvailableRawEmbeddedThumbnailPhotoCodecTypes { get; }
 
 		[NoWatch, NoTV, NoMac, iOS (12, 0)]
 		[NullAllowed, Export ("rawEmbeddedThumbnailPhotoFormat", ArgumentSemantic.Copy)]
-		NSDictionary NativeRawEmbeddedThumbnailPhotoFormat { get; set; }
+		NSDictionary WeakRawEmbeddedThumbnailPhotoFormat { get; set; }
 
-		[Wrap ("NativeRawEmbeddedThumbnailPhotoFormat")]
+		[Wrap ("WeakRawEmbeddedThumbnailPhotoFormat")]
 		AVCapturePhotoSettingsThumbnailFormat RawEmbeddedThumbnailPhotoFormat { get; set; }
 
 	}
