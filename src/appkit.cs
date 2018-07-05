@@ -757,7 +757,7 @@ namespace AppKit {
 		[Mac (10, 7), Field ("NSApplicationLaunchRemoteNotificationKey")]
 		NSString LaunchRemoteNotificationKey { get; }
 
-		[Mac (10, 7), Field ("NSApplicationLaunchUserNotificationKey")]
+		[Mac (10, 8), Field ("NSApplicationLaunchUserNotificationKey")]
 		NSString LaunchUserNotificationKey { get; }
 
 		[Notification, Field ("NSApplicationDidFinishRestoringWindowsNotification")]
@@ -26044,6 +26044,7 @@ namespace AppKit {
 	interface INSUserInterfaceValidations {}
 
 	[Protocol]
+	[Mac (10,11)]
 	interface NSUserInterfaceValidations
 	{
 		[Abstract]

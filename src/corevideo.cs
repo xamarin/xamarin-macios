@@ -120,12 +120,12 @@ namespace CoreVideo {
 
 		[Static]
 		[Wrap ("CVImageBufferYCbCrMatrix.DciP3.GetConstant ()")]
-		[iOS (9,0), Mac (10,11)]
+		[iOS (9,0), Mac (10,12)]
 		NSString YCbCrMatrix_DCI_P3 { get; }
 
 		[Static]
 		[Wrap ("CVImageBufferYCbCrMatrix.P3D65.GetConstant ()")]
-		[iOS (9,0), Mac (10,11)]
+		[iOS (9,0), Mac (10,12)]
 		NSString YCbCrMatrix_P3_D65 { get; }
 
 		[Static]
@@ -348,11 +348,11 @@ namespace CoreVideo {
 		Smpte240M1995,
 
 		[Field ("kCVImageBufferYCbCrMatrix_DCI_P3")]
-		[iOS (9,0), Mac (10,11)]
+		[iOS (9,0), Mac (10,12)]
 		DciP3,
 
 		[Field ("kCVImageBufferYCbCrMatrix_P3_D65")]
-		[iOS (9,0), Mac (10,11)]
+		[iOS (9,0), Mac (10,12)]
 		P3D65,
 
 		[Field ("kCVImageBufferYCbCrMatrix_ITU_R_2020")]

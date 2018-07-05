@@ -34,10 +34,11 @@ namespace MonoTouchFixtures.AVFoundation {
 		[Test]
 		public void FromAssert_Null ()
 		{
+			TestRuntime.AssertXcodeVersion (5, 1);
 			// Apple's AVCustomEdit samples calls this with `nil`
 			Assert.Null (AVPlayerItem.FromAsset (null), "1");
 
-			if (TestRuntime.CheckSystemAndSDKVersion (7,0))
+			if (TestRuntime.CheckXcodeVersion (5, 0, 1))
 				Assert.Null (AVPlayerItem.FromAsset (null, null), "2");
 		}
 	}

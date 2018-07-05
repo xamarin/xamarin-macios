@@ -39,8 +39,7 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void Ctor_Capacity ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
-				Assert.Ignore ("Requires iOS7");
+			TestRuntime.AssertXcodeVersion (5, 0, 1);
 
 			using (var s = new SKKeyframeSequence (0)) {
 				Assert.That (s.Count, Is.EqualTo ((nuint) 0), "Count-0");
@@ -56,8 +55,7 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void Ctor_Arrays_Null ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
-				Assert.Ignore ("Requires iOS7");
+			TestRuntime.AssertXcodeVersion (5, 0, 1);
 
 			using (var s = new SKKeyframeSequence (null, (NSNumber []) null)) {
 				Assert.That (s.Count, Is.EqualTo ((nuint) 0), "Count-1");
@@ -81,8 +79,7 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void Ctor_Arrays ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
-				Assert.Ignore ("Requires iOS7");
+			TestRuntime.AssertXcodeVersion (5, 0, 1);
 
 			NSNumber[] keys = new NSNumber[] { 1.0f, 2.0f, 3.0f };
 			NSNumber[] values = new NSNumber[] { 1.0f, 2.0f, 3.0f };

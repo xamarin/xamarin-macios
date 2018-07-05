@@ -379,7 +379,7 @@ namespace GameController {
 		bool AllowsRotation { get; set; }
 	}
 
-	[Mac (10,9, onlyOn64: true)]
+	[Mac (10,12, onlyOn64: true)]
 	[iOS (10,0)]
 	[TV (9,0)]
 	[BaseType (typeof (GCMicroGamepad))]
@@ -394,7 +394,7 @@ namespace GameController {
 		IntPtr Constructor (GCController controller, NSData data);
 	}
 
-	[Mac (10,11, onlyOn64: true)]
+	[Mac (10,12, onlyOn64: true)]
 	[iOS (10,0)]
 	[TV (9,0)]
 	[BaseType (typeof (UIViewController))]

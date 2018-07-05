@@ -472,5 +472,11 @@ namespace Xamarin.Tests
 				return Version.Parse (XcodeVersion).Major < 10;
 			}
 		}
+
+		public static string NuGetPackagesDirectory {
+			get {
+				return Path.Combine (RootPath, "packages");
+			}
+		}
 	}
 }

@@ -15,6 +15,7 @@ using System.Drawing;
 #if XAMCORE_2_0
 using Foundation;
 using UIKit;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -39,8 +40,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void InitWithFrameTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (9,0))
-				Assert.Inconclusive ("UIStackView is new in 9.0");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			UIStackView stack = new UIStackView (new RectangleF (0, 0, 10, 10));
 			Assert.NotNull (stack, "UIStackView ctor(CGRect)");

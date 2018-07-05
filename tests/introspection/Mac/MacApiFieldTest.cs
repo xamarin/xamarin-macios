@@ -217,7 +217,12 @@ namespace Introspection {
 			case "NSAccessibilityNotifications":
 				return true;
 			case "AVFragmentedMovieTrack":
-				return notificationName == "AVFragmentedMovieTrackTimeRangeDidChangeNotification";
+				switch (notificationName) {
+				case "AVFragmentedMovieTrackTotalSampleDataLengthDidChangeNotification":
+				case "AVFragmentedMovieTrackTimeRangeDidChangeNotification":
+					return true;
+				}
+				break;
 			case "NSTask":
 				return notificationName == "NSTaskDidTerminateNotification";
 #endif

@@ -167,8 +167,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void Fields ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8,0))
-				Assert.Ignore ("requires iOS8+");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
 			// just to confirm it's not an NSUrl but an NSString
 			Assert.That (UIDocument.UserActivityDocumentUrlKey.ToString (), Is.EqualTo ("NSUserActivityDocumentURL"), "NSUserActivityDocumentURLKey");
 		}

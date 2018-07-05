@@ -195,6 +195,7 @@ namespace CoreBluetooth {
 		[Field ("CBAdvertisementDataServiceUUIDsKey")]
 		NSString ServiceUuidsKey { get; }
 
+		[Mac (10, 9)]
 		[Field ("CBAdvertisementDataOverflowServiceUUIDsKey")]
 		NSString OverflowServiceUuidsKey { get; }
 
@@ -226,14 +227,17 @@ namespace CoreBluetooth {
 	[Static, Internal]
 	interface RestoredStateKeys {
 		[iOS (7,0)]
+		[Mac (10,13)]
 		[Field ("CBCentralManagerRestoredStatePeripheralsKey")]
 		NSString PeripheralsKey { get; }
 
 		[iOS (7,0)]
+		[Mac (10,13)]
 		[Field ("CBCentralManagerRestoredStateScanServicesKey")]
 		NSString ScanServicesKey { get; }
 
 		[iOS (7,0)]
+		[Mac (10,13)]
 		[Field ("CBCentralManagerRestoredStateScanOptionsKey")]
 		NSString ScanOptionsKey { get; }
 	}

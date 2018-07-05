@@ -14,6 +14,7 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using CoreMedia;
+using ObjCRuntime;
 #if MONOMAC
 using AppKit;
 #else
@@ -113,8 +114,8 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void MultiplyByRatio ()
 		{
-			if (!TestRuntime.CheckXcodeVersion (5, 1))
-				Assert.Inconclusive ("Requires iOS 7.1+ or macOS 10.9+");
+			TestRuntime.AssertXcodeVersion (5, 1);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			var t = new CMTime (1000, 1);
 			t = CMTime.Multiply (t, 20, 10);

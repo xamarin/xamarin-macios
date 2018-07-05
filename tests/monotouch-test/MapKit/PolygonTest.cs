@@ -8,6 +8,7 @@ using System.Drawing;
 using Foundation;
 using CoreLocation;
 using MapKit;
+using ObjCRuntime;
 #else
 using MonoTouch.CoreLocation;
 using MonoTouch.Foundation;
@@ -20,6 +21,11 @@ namespace MonoTouchFixtures.MapKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class PolygonTest {
+		[SetUp]
+		public void Setup ()
+		{
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+		}
 		
 		[Test]
 		[ExpectedException (typeof (ArgumentNullException))]

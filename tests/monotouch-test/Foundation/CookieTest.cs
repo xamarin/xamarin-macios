@@ -207,7 +207,10 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.That (cookie.CommentUrl.ToString (), Is.EqualTo ("http://comment.uri/"), "CommentUrl");
 				DateTime dt1 = (DateTime) cookie.ExpiresDate; // does not include milliseconds (so we do a string match)
 				DateTime dt2 = c.Expires.ToUniversalTime ();
-				Assert.That (dt1.ToString (), Is.EqualTo (dt2.ToString ()), "ExpiresDate");
+				// There seems to be rounding somewhere, which means that some dates
+				// can be rounded up. This means that these two dates might be a second off.
+				// So assert that they're no more than a second apart.
+				Assert.That (Math.Abs ((dt1 - dt2).TotalSeconds), Is.LessThan (1.0), $"ExpiresDate");
 				Assert.False (cookie.IsHttpOnly, "IsHttpOnly");
 				Assert.True (cookie.IsSecure, "IsSecure");
 				Assert.IsFalse (cookie.IsSessionOnly, "IsSessionOnly");
