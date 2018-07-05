@@ -34,8 +34,7 @@ namespace UIKit {
 	public partial class UIDocumentBrowserViewController
 	{
 
-		static bool CheckSystemVersion ()
-		{
+		static bool CheckSystemVersion () {
 #if IOS
 			return UIKit.UIDevice.CurrentDevice.CheckSystemVersion (12, 0);
 #else
