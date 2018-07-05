@@ -1,5 +1,8 @@
 #!/bin/groovy
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
 // global variables
 repository = "xamarin/xamarin-macios"
 commentFile = null
@@ -106,6 +109,59 @@ def appendFileComment (comment)
     writeFile (file: commentFile, text: comment)
 }
 
+def markdownToSlack (value)
+{
+    def tmpfile = "/tmp/slacker.md"
+    writeFile (tmpfile, value)
+    try {
+        // this monstruousity converts markdown's [text](url) to slack's <url|text>
+        sh ("sed -i '' 's/[[]\\(.*\\)[]][\\(]\\(.*\\)[\\)]/<\\2|\\1>/' '${tmpfile}'")
+        value = readFile (tmpfile)
+    } finally {
+        sh ("rm -f '${tmpfile}'")
+    }
+    return value
+}
+
+def reportFinalStatusToSlack (err, gitHash, currentStage, fileContents)
+{
+    if ("${status}" == "SUCCESS" && err == "")
+        return // not reporting success to slack
+
+    def authorName = null
+    def authorEmail = null
+    if (isPr) {
+        authorName = env.CHANGE_AUTHOR_DISPLAY_NAME
+        authorEmail = env.CHANGE_AUTHOR_EMAIL
+        slackMessage = "Pull Request #<${env.CHANGE_URL}|${env.CHANGE_ID}> failed to build."
+    } else {
+        authorName = sh (script: "git log -1 --pretty=%an", returnStdout: true).trim ()
+        authorEmail = sh (script: "git log -1 --pretty=%ae", returnStdout: true).trim ()
+        slackMessage = "Commit <https://github.com/${repository}/commit/${gitHash}|${gitHash}> failed to build."
+
+    }
+
+    JSONArray attachments = new JSONArray ()
+    JSONObject attachment = new JSONObject ()
+    attachment.put ('author', authorName)
+    if (err != null) {
+        attachment.put ('title', "Internal jenkins failed in stage '${currentStage}': ${err}")
+    } else {
+        attachment.put ('title', "Internal jenkins failed in stage '${currentStage}'")
+    }
+    attachment.put ('title_link', env.RUN_DISPLAY_URL)
+    attachment.put ('color','danger')
+    attachment.put ('fallback', 'Build failed')
+    if (fileContents != null)
+        attachment.put ('text', markdownToSlack (fileContents))
+    attachments.add (attachment);
+
+    // Ping the name part of the author's email.
+    // This is just a wild guess, there's no real way to know
+    // which slack username the committer has (if he's even on slack)
+    slackSend (botUser: true, channel: "#ios-notifications", color: "danger", message: slackMessage, attachment: attachments.toString ())
+}
+
 def reportFinalStatus (err, gitHash, currentStage)
 {
     if (!createFinalStatus)
@@ -113,7 +169,6 @@ def reportFinalStatus (err, gitHash, currentStage)
 
     def comment = null
     def status = currentBuild.currentResult
-    def slackMessage = null
 
     if ("${status}" == "SUCCESS" && err == "") {
         comment = "✅ [Jenkins job](${env.RUN_DISPLAY_URL}) (on internal Jenkins) succeeded"
@@ -123,28 +178,17 @@ def reportFinalStatus (err, gitHash, currentStage)
             comment += " : ${err}"
         manager.addErrorBadge (comment)
         manager.buildFailure ()
-
-        def who = env.CHANGE_AUTHOR_EMAIL.split ('@')[0];
-        slackMessage = "@${who}: Internal Jenkins failed in stage '${currentStage}': ${err} (${env.RUN_DISPLAY_URL})"
     }
 
+    def fileContents = null
     if (fileExists (commentFile)) {
-        def fileContents = readFile ("${commentFile}")
-
+        fileContents = readFile ("${commentFile}")
         comment += "\n\n" + fileContents
-
-        if (slackMessage != null)
-            slackMessage += "\n\n" + fileContents
     }
 
     addComment ("${comment}")
 
-    if (slackMessage != null) {
-        // Ping the name part of the author's email.
-        // This is just a wild guess, there's no real way to know
-        // which slack username the committer has (if he's even on slack)
-        slackSend (botUser: true, channel: "#ios-notifications", color: "danger", message: slackMessage)
-    }
+    reportFinalStatusToSlack (err, gitHash, currentStage, fileContents)
 }
 
 def processAtMonkeyWrench (outputFile)
