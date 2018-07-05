@@ -1250,11 +1250,11 @@ namespace ARKit {
 
 		[Export ("referenceObjectByApplyingTransform:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		ARReferenceObject ApplyingTransform (Matrix4 transform);
+		ARReferenceObject ApplyTransform (Matrix4 transform);
 
 		[Export ("referenceObjectByMergingObject:error:")]
 		[return: NullAllowed]
-		ARReferenceObject Merging (ARReferenceObject @object, [NullAllowed] out NSError error);
+		ARReferenceObject Merge (ARReferenceObject @object, [NullAllowed] out NSError error);
 
 		[iOS (12,0)]
 		[Field ("ARReferenceObjectArchiveExtension")]

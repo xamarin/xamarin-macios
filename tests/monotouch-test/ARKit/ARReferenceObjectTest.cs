@@ -37,7 +37,7 @@ namespace MonoTouchFixtures.ARKit {
 			Assert.NotNull (model3.Center, "Center");
 			Assert.NotNull (model3.Extent, "Extent");
 			Assert.NotNull (model3.Scale, "Scale");
-			Assert.NotNull (model3.ApplyingTransform (MatrixFloat4x4.Identity), "ApplyingTransform");
+			Assert.NotNull (model3.ApplyTransform (MatrixFloat4x4.Identity), "ApplyTransform");
 		}
 	}
 }
