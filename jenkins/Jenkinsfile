@@ -182,6 +182,15 @@ def echoError (message)
     }
 }
 
+def indexOfElement (list, element)
+{
+    for (def i = 0; i < list.size (); i++) {
+        if (list [i] == element)
+            return i
+    }
+    return -1
+}
+
 def runXamarinMacTests (url, macOS, maccore_hash, xamarin_macios_hash)
 {
     def failed = false
@@ -517,7 +526,7 @@ timestamps {
                                         for (i = 0; i < macOSes.size (); i++) {
                                             def os = macOSes [i];
                                             def macOS = "${os}" // Need to bind the label variable before the closure
-                                            def excluded = excludedOSes.indexOf (os) >= 0
+                                            def excluded = indexOfElement (excludedOSes, os) >= 0
                                             def nodeText = excluded ? "ℹ️ XM tests not executed on 10.${macOS} ℹ️" : "XM tests on 10.${macOS}"
                                             builders [nodeText] = {
                                                 try {
