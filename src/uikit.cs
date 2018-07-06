@@ -18274,7 +18274,7 @@ namespace UIKit {
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface UIDocumentBrowserViewControllerDelegate {
-		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'DidPickDocumentAtUrls (UIDocumentBrowserViewController, NSUrl[])' instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'DidPickDocumentsAtUrls (UIDocumentBrowserViewController, NSUrl[])' instead.")]
 		[Export ("documentBrowser:didPickDocumentURLs:")]
 		void DidPickDocumentUrls (UIDocumentBrowserViewController controller, NSUrl[] documentUrls);
 
@@ -18295,7 +18295,7 @@ namespace UIKit {
 
 		[iOS (12,0)]
 		[Export ("documentBrowser:didPickDocumentsAtURLs:")]
-		void DidPickDocumentAtUrls (UIDocumentBrowserViewController controller, NSUrl[] documentUrls);
+		void DidPickDocumentsAtUrls (UIDocumentBrowserViewController controller, NSUrl[] documentUrls);
 	}
 
 	[NoTV, NoWatch]
