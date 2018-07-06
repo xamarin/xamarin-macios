@@ -39,7 +39,7 @@ namespace Network {
 		extern static OS_nw_endpoint nw_endpoint_create_host (string hostname, string port);
 
 		[Mac(10,14)][iOS(12,0)][TV(12,0)]
-		public NWEndpoint Create (string hostname, string port)
+		public static NWEndpoint Create (string hostname, string port)
 		{
 			if (hostname == null)
 				throw new ArgumentNullException (nameof (hostname));
@@ -91,7 +91,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe OS_nw_endpoint nw_endpoint_create_bonjour_service (string name, string type, string domain);
 
-		public NWEndpoint CreateBonjourService (string name, string serviceType, string domain)
+		public static NWEndpoint CreateBonjourService (string name, string serviceType, string domain)
 		{
 			if (serviceType == null)
 				throw new ArgumentNullException (nameof (serviceType));

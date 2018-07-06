@@ -69,7 +69,7 @@ namespace CoreFoundation {
 		protected virtual void InitializeHandle (IntPtr handle)
 		{
 #if !COREBUILD
-			if (Handle == IntPtr.Zero && Class.ThrowOnInitFailure) {
+			if (handle == IntPtr.Zero && Class.ThrowOnInitFailure) {
 				throw new Exception ($"Could not initialize an instance of the type '{GetType ().FullName}': handle is null.\n" +
 				    "It is possible to ignore this condition by setting ObjCRuntime.Class.ThrowOnInitFailure to false.");
 			}

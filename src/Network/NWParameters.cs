@@ -37,7 +37,7 @@ namespace Network {
 		static unsafe BlockLiteral *DEFAULT_CONFIGURATION ()
 		{
 			if (_nw_parameters_configure_protocol_default_configuration == IntPtr.Zero)
-				_nw_parameters_configure_protocol_default_configuration = Dlfcn.dlsym (Libraries.Network.Handle, "_nw_parameters_configure_protocol_default_configuration");
+				_nw_parameters_configure_protocol_default_configuration = Marshal.ReadIntPtr (Dlfcn.dlsym (Libraries.Network.Handle, "_nw_parameters_configure_protocol_default_configuration"));
 
 			return (BlockLiteral *) _nw_parameters_configure_protocol_default_configuration;
 		}
@@ -46,7 +46,7 @@ namespace Network {
 		static unsafe BlockLiteral *DISABLE_PROTOCOL ()
 		{
 			if (_nw_parameters_configure_protocol_disable == IntPtr.Zero)
-				_nw_parameters_configure_protocol_disable = Dlfcn.dlsym (Libraries.Network.Handle, "_nw_parameters_configure_protocol_disable");
+				_nw_parameters_configure_protocol_disable = Marshal.ReadIntPtr (Dlfcn.dlsym (Libraries.Network.Handle, "_nw_parameters_configure_protocol_disable"));
 			return (BlockLiteral *) _nw_parameters_configure_protocol_disable;
 		}
 
@@ -111,7 +111,8 @@ namespace Network {
 				tcpPtr = DEFAULT_CONFIGURATION ();
 			else
 				tcpHandler.SetupBlockUnsafe (static_ConfigureHandler, configureTcp);
-			
+
+			Console.WriteLine ("{0} and {1}", (IntPtr) DISABLE_PROTOCOL (), (IntPtr) tcpPtr);
 			var ptr = nw_parameters_create_secure_tcp (DISABLE_PROTOCOL (), tcpPtr);
 			
 			if (configureTcp != null)
@@ -482,7 +483,7 @@ namespace Network {
 		static extern void nw_parameters_set_local_endpoint (IntPtr handle, IntPtr endpoint);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public NWEndpoint Endpoint {
+		public NWEndpoint LocalEndpoint {
 			get {
 				var x = nw_parameters_copy_local_endpoint (handle);
 				if (x == IntPtr.Zero)
