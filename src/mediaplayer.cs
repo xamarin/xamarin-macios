@@ -21,37 +21,12 @@ using UIKit;
 using System;
 
 namespace MediaPlayer {
-#if WATCH
-	[Watch (5,0)]
-	[BaseType (typeof (NSObject))]
-	interface MPMediaEntity : NSSecureCoding {
-		[Static]
-		[Export ("canFilterByProperty:")]
-		bool CanFilterByProperty (NSString property);
-
-		[Export ("valueForProperty:")]
-		NSObject ValueForProperty (NSString property);
-
-		[Export ("enumerateValuesForProperties:usingBlock:")]
-		void EnumerateValues (NSSet propertiesToEnumerate, MPMediaItemEnumerator enumerator);
-
-		[iOS (8,0)]
-		[Export ("objectForKeyedSubscript:")]
-		NSObject GetObject (NSObject key);
-
-		[Field ("MPMediaEntityPropertyPersistentID")]
-		NSString PropertyPersistentID { get; }
-
-		[Export ("persistentID")]
-		ulong PersistentID { get; }
-	}
-#endif
-
 #if XAMCORE_2_0 || !MONOMAC
 	[Mac (10,12,2, onlyOn64: true)] // type exists only to expose fields
 	[BaseType (typeof (NSObject))]
-#if XAMCORE_2_0 && IOS
+#if IOS || WATCH
 	// introduced in 4.2
+	[Watch (5,0)]
 	interface MPMediaEntity : NSSecureCoding {
 #else
 	interface MPMediaItem : NSSecureCoding {
@@ -73,9 +48,13 @@ namespace MediaPlayer {
 		[Field ("MPMediaEntityPropertyPersistentID")]
 		NSString PropertyPersistentID { get; }
 
-#if XAMCORE_2_0 && IOS
+		[NoiOS, NoMac, NoTV, Watch (5,0)]
+		[Export ("persistentID")]
+		ulong PersistentID { get; }
+
+#if IOS || WATCH
 	}
-#if MONOMAC || TVOS
+#if MONOMAC || TVOS || WATCH
 	[Mac (10,12,2, onlyOn64: true)]
 	[Watch (5,0)]
 	[Static]
@@ -828,255 +807,314 @@ namespace MediaPlayer {
 	[BaseType (typeof (NSObject))]
 	interface MPMoviePlayerController : MPMediaPlayback {
 #endif
-#if !WATCH
+		[NoWatch]
 		[DesignatedInitializer]
 		[Export ("initWithContentURL:")]
 		IntPtr Constructor (NSUrl url);
 
+		[NoWatch]
 		[Export ("backgroundColor", ArgumentSemantic.Retain)]
 		// <quote>You should avoid using this property. It is available only when you use the initWithContentURL: method to initialize the movie player controller object.</quote>
 		[Availability (Deprecated = Platform.iOS_3_2, Obsoleted = Platform.iOS_8_0, Message = "Do not use; this API was removed and is not always available.")]
 		UIColor BackgroundColor { get; set; }
 
+		[NoWatch]
 		[Export ("scalingMode")]
 		MPMovieScalingMode ScalingMode { get; set; }
 
+		[NoWatch]
 		[Export ("movieControlMode")]
 		[Availability (Deprecated = Platform.iOS_3_2, Obsoleted = Platform.iOS_8_0, Message = "Do not use; this API was removed.")]
 		MPMovieControlMode MovieControlMode { get; set; }
 
+		[NoWatch]
 		[Export ("initialPlaybackTime")]
 		double InitialPlaybackTime { get; set; }
 
+		[NoWatch]
 		[NullAllowed] // by default this property is null
 		[Export ("contentURL", ArgumentSemantic.Copy)]
 		NSUrl ContentUrl { get; set; }
 
+		[NoWatch]
 		[Export ("view")]
 		UIView View { get; }
 
+		[NoWatch]
 		[Export ("backgroundView")]
 		UIView BackgroundView { get; }
 		
+		[NoWatch]
 		[Export ("playbackState")]
 		MPMoviePlaybackState PlaybackState { get; }
 
+		[NoWatch]
 		[Export ("loadState")]
 		MPMovieLoadState LoadState { get; }
 
+		[NoWatch]
 		[Export ("controlStyle")]
 		MPMovieControlStyle ControlStyle { get; set; }
 
+		[NoWatch]
 		[Export ("repeatMode")]
 		MPMovieRepeatMode RepeatMode { get; set; }
 
+		[NoWatch]
 		[Export ("shouldAutoplay")]
 		bool ShouldAutoplay { get; set; }
 
+		[NoWatch]
 		[Export ("useApplicationAudioSession")]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		bool UseApplicationAudioSession { get; set; }
 
+		[NoWatch]
 		[Export ("fullscreen")]
 		bool Fullscreen { [Bind ("isFullscreen")] get; set; }
 
+		[NoWatch]
 		[Export ("setFullscreen:animated:")]
 		void SetFullscreen (bool fullscreen, bool animated);
 
+		[NoWatch]
 		[Export ("allowsAirPlay")]
 		bool AllowsAirPlay { get; set; }
 
+		[NoWatch]
 		[Export ("airPlayVideoActive")]
 		bool AirPlayVideoActive { [Bind ("isAirPlayVideoActive")] get; }
 
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0)]
 		[Export ("accessLog")]
 		MPMovieAccessLog AccessLog { get; }
 
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0)]
 		[Export ("errorLog")]
 		MPMovieErrorLog ErrorLog { get; }
 
 		// Brought it from the MPMediaPlayback.h
 
+		[NoWatch]
 		[Export ("thumbnailImageAtTime:timeOption:")]
 		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'RequestThumbnails' instead.")]
 		UIImage ThumbnailImageAt (double time, MPMovieTimeOption timeOption);
 
+		[NoWatch]
 		[Export ("requestThumbnailImagesAtTimes:timeOption:")]
 		void RequestThumbnails (NSNumber [] doubleNumbers, MPMovieTimeOption timeOption);
 
+		[NoWatch]
 		[Export ("cancelAllThumbnailImageRequests")]
 		void CancelAllThumbnailImageRequests ();
 
 		//
 		// From interface MPMovieProperties
 		//
+		[NoWatch]
 		[Export ("movieMediaTypes")]
 		MPMovieMediaType MovieMediaTypes { get; }
 
+		[NoWatch]
 		[Export ("movieSourceType")]
 		MPMovieSourceType SourceType { get; set; }
 
+		[NoWatch]
 		[Export ("duration")]
 		double Duration { get; }
 
+		[NoWatch]
 		[Export ("playableDuration")]
 		double PlayableDuration { get; }
 
+		[NoWatch]
 		[Export ("naturalSize")]
 		CGSize NaturalSize { get; }
 
+		[NoWatch]
 		[Export ("endPlaybackTime")]
 		double EndPlaybackTime { get; set; }
 
+		[NoWatch]
 		[Export ("timedMetadata")]
 		MPTimedMetadata [] TimedMetadata { get; }
 
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerScalingModeDidChangeNotification")]
 		[Notification]
 		NSString ScalingModeDidChangeNotification { get; }
 
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerPlaybackDidFinishNotification")]
 		[Notification (typeof (MPMoviePlayerFinishedEventArgs))]
 		NSString PlaybackDidFinishNotification { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerPlaybackDidFinishReasonUserInfoKey")] // NSNumber (MPMovieFinishReason)
 		NSString PlaybackDidFinishReasonUserInfoKey { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerPlaybackStateDidChangeNotification")]
 		[Notification]
 		NSString PlaybackStateDidChangeNotification { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerLoadStateDidChangeNotification")]
 		[Notification]
 		NSString LoadStateDidChangeNotification { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerNowPlayingMovieDidChangeNotification")]
 		[Notification]
 		NSString NowPlayingMovieDidChangeNotification { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerWillEnterFullscreenNotification")]
 		[Notification (typeof (MPMoviePlayerFullScreenEventArgs))]
 		[Notification]
 		NSString WillEnterFullscreenNotification { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerDidEnterFullscreenNotification")]
 		[Notification]
 		NSString DidEnterFullscreenNotification { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerWillExitFullscreenNotification")]
 		[Notification (typeof (MPMoviePlayerFullScreenEventArgs))]
 		NSString WillExitFullscreenNotification { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerDidExitFullscreenNotification")]
 		[Notification]
 		NSString DidExitFullscreenNotification { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerFullscreenAnimationDurationUserInfoKey")]
 		NSString FullscreenAnimationDurationUserInfoKey { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerFullscreenAnimationCurveUserInfoKey")]
 		NSString FullscreenAnimationCurveUserInfoKey { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMovieMediaTypesAvailableNotification")]
 		[Notification]
 		NSString TypesAvailableNotification { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMovieSourceTypeAvailableNotification")]
 		[Notification]
 		NSString SourceTypeAvailableNotification { get; }
 
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMovieDurationAvailableNotification")]
 		[Notification]
 		NSString DurationAvailableNotification { get;  }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMovieNaturalSizeAvailableNotification")]
 		[Notification]
 		NSString NaturalSizeAvailableNotification { get;  }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerThumbnailImageRequestDidFinishNotification")]
 		[Notification (typeof (MPMoviePlayerThumbnailEventArgs))]
 		NSString ThumbnailImageRequestDidFinishNotification { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerThumbnailImageKey")]
 		NSString ThumbnailImageKey { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerThumbnailTimeKey")]
 		NSString ThumbnailTimeKey { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerThumbnailErrorKey")]
 		NSString ThumbnailErrorKey { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerTimedMetadataUpdatedNotification")]
 		[Notification (typeof (MPMoviePlayerTimedMetadataEventArgs))]
 		NSString TimedMetadataUpdatedNotification { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerTimedMetadataUserInfoKey")]
 		NSString TimedMetadataUserInfoKey { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerTimedMetadataKeyName")]
 		NSString TimedMetadataKeyName { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerTimedMetadataKeyInfo")]
 		NSString TimedMetadataKeyInfo { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerTimedMetadataKeyMIMEType")]
 		NSString TimedMetadataKeyMIMEType { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerTimedMetadataKeyDataType")]
 		NSString TimedMetadataKeyDataType { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerTimedMetadataKeyLanguageCode")]
 		NSString TimedMetadataKeyLanguageCode { get; }
-#endif
+
+		[Watch (5,0)]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMediaPlaybackIsPreparedToPlayDidChangeNotification")]
 		[Notification]
 		NSString MediaPlaybackIsPreparedToPlayDidChangeNotification { get; }
-#if !WATCH
+
 		[iOS (6,0)]
+		[NoWatch]
 		[Export ("readyForDisplay")]
 		bool ReadyForDisplay { get;  }
 
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[iOS (6,0)]
+		[NoWatch]
 		[Field ("MPMoviePlayerReadyForDisplayDidChangeNotification")]
 		[Notification]
 		NSString MoviePlayerReadyForDisplayDidChangeNotification { get; }
 
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
+		[NoWatch]
 		[Field ("MPMoviePlayerIsAirPlayVideoActiveDidChangeNotification")]
 		[Notification]
 		NSString MPMoviePlayerIsAirPlayVideoActiveDidChangeNotification { get; }
-#endif
 	}
 #endif
 
@@ -2156,7 +2194,6 @@ namespace MediaPlayer {
 	interface IMPSystemMusicPlayerController {}
 
 	[NoTV][NoMac]
-	[Watch (5,0)]
 	[iOS (11,0), Watch (5,0)]
 	[Protocol]
 	interface MPSystemMusicPlayerController {
