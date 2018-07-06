@@ -195,7 +195,6 @@ namespace Introspection {
 				case "ARLightEstimate":
 				case "NSManagedObjectID":
 				// beta 2
-				case "NSShadow":
 				case "NSTextAttachment":
 				case "VSAccountMetadata":
 				case "VSAccountMetadataRequest":
