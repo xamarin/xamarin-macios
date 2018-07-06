@@ -1,8 +1,5 @@
 #!/bin/groovy
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 // global variables
 repository = "xamarin/xamarin-macios"
 commentFile = null
@@ -141,25 +138,29 @@ def reportFinalStatusToSlack (err, gitHash, currentStage, fileContents)
         slackMessage = "Commit <https://github.com/${repository}/commit/${gitHash}|${gitHash}> failed to build."
     }
 
-    JSONArray attachments = new JSONArray ()
-    JSONObject attachment = new JSONObject ()
-    attachment.put ('author', authorName)
+    def title = null
     if (err != null) {
-        attachment.put ('title', "Internal jenkins failed in stage '${currentStage}': ${err}")
+        title = "Internal jenkins failed in stage '${currentStage}': ${err}"
     } else {
-        attachment.put ('title', "Internal jenkins failed in stage '${currentStage}'")
+        title = "Internal jenkins failed in stage '${currentStage}'"
     }
-    attachment.put ('title_link', env.RUN_DISPLAY_URL)
-    attachment.put ('color','danger')
-    attachment.put ('fallback', 'Build failed')
+    def text = ""
     if (fileContents != null)
-        attachment.put ('text', markdownToSlack (fileContents))
-    attachments.add (attachment);
-
-    // Ping the name part of the author's email.
-    // This is just a wild guess, there's no real way to know
-    // which slack username the committer has (if he's even on slack)
-    slackSend (botUser: true, channel: "#ios-notifications", color: "danger", message: slackMessage, attachment: attachments.toString ())
+        text = "\"text\": \"${groovy.json.JsonOutput.toJson (fileContents)}\","
+    def attachments = """
+    [
+        {
+            \"author\": \"${authorName} (${authorEmail})\",
+            \"title\": \"${title}\",
+            \"title_link\": \"${env.RUN_DISPLAY_URL}\",
+            \"color\": \"danger\",
+            ${text}
+            \"fallback\": \"Build failed\"
+        }
+    ]
+    """
+    echo (attachments)
+    slackSend (botUser: true, channel: "#ios-notifications", color: "danger", message: slackMessage, attachment: attachments)
 }
 
 def reportFinalStatus (err, gitHash, currentStage)
