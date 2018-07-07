@@ -53,6 +53,13 @@ namespace Network {
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
+		static extern IntPtr nw_endpoint_get_hostname (OS_nw_endpoint endpoint);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public string Hostname => Marshal.PtrToStringAnsi (nw_endpoint_get_hostname (handle));
+		
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
 		static extern string nw_endpoint_copy_port_string (OS_nw_endpoint endpoint);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]

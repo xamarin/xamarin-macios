@@ -62,6 +62,23 @@ namespace CoreFoundation {
 			return new DispatchData (dd, owns: true);
 		}
 
+		public static DispatchData FromByteBuffer (byte [] buffer, int start, int length)
+		{
+			if (buffer == null)
+				throw new ArgumentNullException (nameof (buffer));
+			if (start < 0 || start >= buffer.Length)
+				throw new ArgumentException (nameof (start));
+			if (length < 0)
+				throw new ArgumentException (nameof (length));
+			if (start+length >= buffer.Length)
+				throw new ArgumentException ("Start+Length go beyond the buffer.Length");
+				
+			var b = Marshal.AllocHGlobal (length);
+			Marshal.Copy (buffer, start, b, length);
+			var dd = dispatch_data_create (b, (ulong) length, IntPtr.Zero, destructor: free);
+			return new DispatchData (dd, owns: true);
+		}
+
 		//
 		// This will create a DispatchData by making a copy of the provided buffer
 		// 

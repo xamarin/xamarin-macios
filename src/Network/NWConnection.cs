@@ -288,16 +288,16 @@ namespace Network {
 				
 				if (dispatchData != null){
 					dataCopy.Dispose ();
-					dataCopy.Dispose ();
+					dispatchData.Dispose ();
 				}
 			}
 		}
 		
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe void nw_connection_receive (IntPtr handle, void *callback);
+		static extern unsafe void nw_connection_receive (IntPtr handle, uint minimumIncompleteLength, uint maximumLength, void *callback);
 		
-		public void Receive (NWConnectionReceiveCompletion callback)
+		public void Receive (uint minimumIncompleteLength, uint maximumLength, NWConnectionReceiveCompletion callback)
 		{
 			unsafe {
 			        BlockLiteral *block_ptr_handler;
@@ -306,7 +306,7 @@ namespace Network {
 			        block_ptr_handler = &block_handler;
 			        block_handler.SetupBlockUnsafe (static_ReceiveCompletion, callback);
 			
-			        nw_connection_receive (handle, (void*) block_ptr_handler);
+			        nw_connection_receive (handle, minimumIncompleteLength, maximumLength, (void*) block_ptr_handler);
 			        block_ptr_handler->CleanupBlock ();
 			}
 		}
@@ -369,13 +369,23 @@ namespace Network {
 		}
 		
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void Send (byte [] buffer, NWContentContext context, Action<NWError> callback)
+		public void Send (byte [] buffer, NWContentContext context, bool isComplete, Action<NWError> callback)
 		{
 			DispatchData d = null;
 			if (buffer != null)
 				d = DispatchData.FromByteBuffer (buffer);
 
-			Send (buffer, context, callback);
+			Send (d, context, isComplete, callback);
+		}
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public void Send (byte [] buffer, int start, int length, NWContentContext context, bool isComplete, Action<NWError> callback)
+		{
+			DispatchData d = null;
+			if (buffer != null)
+				d = DispatchData.FromByteBuffer (buffer, start, length);
+
+			Send (d, context, isComplete, callback);
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
