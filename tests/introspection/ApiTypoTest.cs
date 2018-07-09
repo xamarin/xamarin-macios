@@ -90,6 +90,9 @@ namespace Introspection
 			"Amete",
 			"Amr",
 			"Anglet",
+			"Apsc",
+			"Apsh",
+			"Apsp",
 			"Arraycollation",
 			"Argb",
 			"Asin",
@@ -137,6 +140,7 @@ namespace Introspection
 			"Chapv",
 			"Cholesky",
 			"Chromaticities",
+			"Ciexyz",
 			"Ciff",
 			"Cinepak",
 			"Clearcoat",
@@ -152,6 +156,7 @@ namespace Introspection
 			"Craete",
 			"Crosstraining",
 			"Cubemap",
+			"Cmy", // acronym: Cyan, magenta, yellow
 			"Cmyk", // acronym: Cyan, magenta, yellow and key
 			"Daap",
 			"Dav",
@@ -270,10 +275,12 @@ namespace Introspection
 			"Ipp",
 			"Iptc",
 			"Ircs",
+			"Isob",
 			"Itf",
 			"Itu",
 			"Jcb", // Japanese credit card company
 			"Jfif",
+			"Jisb",
 			"Json",
 			"Keyerror",
 			"Keyi",
@@ -383,6 +390,7 @@ namespace Introspection
 			"Psec",
 			"Psm", // Protocol/Service Multiplexer
 			"Psk",
+			"Ptp",
 			"Pvrtc", // MTLBlitOption - PowerVR Texture Compression
 			"Quaterniond",
 			"Quadding",
@@ -475,6 +483,7 @@ namespace Introspection
 			"Trc",
 			"Truncantion",
 			"Tweening",
+			"Twips",
 			"tx",
 			"ty",
 			"Udi",
@@ -517,6 +526,8 @@ namespace Introspection
 			"Yzx",
 			"Zxy",
 			"Zyx",
+			"Yuv",
+			"Yuvk",
 			"yuvs",
 			"yx",
 			"yy",
