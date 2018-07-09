@@ -56,7 +56,6 @@ namespace ImageCaptureCore {
 		[Export ("deviceDidChangeName:")]
 		void DidChangeName (ICDevice device);
 	
-		[Introduced (PlatformName.MacOSX, 10, 4)]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[Export ("deviceDidChangeSharingState:")]
 		void DidChangeSharingState (ICDevice device);
@@ -74,7 +73,6 @@ namespace ImageCaptureCore {
 		void DidReceiveCustomNotification (ICDevice device, NSDictionary<NSString, NSObject> notification, NSData data);
 	}
 	
-	[Mac (10,4)]
 	[BaseType (typeof(NSObject))]
 	interface ICDevice
 	{
@@ -109,12 +107,10 @@ namespace ImageCaptureCore {
 		[Export ("remote")]
 		bool Remote { [Bind ("isRemote")] get; }
 	
-		[Introduced (PlatformName.MacOSX, 10, 4)]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[Export ("shared")]
 		bool Shared { [Bind ("isShared")] get; }
 	
-		[Introduced (PlatformName.MacOSX, 10, 4)]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[Export ("hasConfigurableWiFiInterface")]
 		bool HasConfigurableWiFiInterface { get; }
@@ -191,7 +187,6 @@ namespace ImageCaptureCore {
 		[Export ("deviceBrowser:deviceDidChangeName:")]
 		void DeviceDidChangeName (ICDeviceBrowser browser, ICDevice device);
 	
-		[Introduced (PlatformName.MacOSX, 10, 4)]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[Export ("deviceBrowser:deviceDidChangeSharingState:")]
 		void DeviceDidChangeSharingState (ICDeviceBrowser browser, ICDevice device);
@@ -203,7 +198,6 @@ namespace ImageCaptureCore {
 		void DidEnumerateLocalDevices (ICDeviceBrowser browser);
 	}
 	
-	[Mac (10,4)]
 	[BaseType (typeof(NSObject))]
 	interface ICDeviceBrowser
 	{
@@ -233,7 +227,6 @@ namespace ImageCaptureCore {
 		void Stop ();
 	}
 	
-	[Mac (10,4)]
 	[BaseType (typeof(NSObject))]
 	interface ICCameraItem
 	{
@@ -286,7 +279,6 @@ namespace ImageCaptureCore {
 		bool AddedAfterContentCatalogCompleted { [Bind ("wasAddedAfterContentCatalogCompleted")] get; }
 	}
 	
-	[Mac (10,4)]
 	[BaseType (typeof(ICCameraItem))]
 	interface ICCameraFolder
 	{
@@ -294,7 +286,6 @@ namespace ImageCaptureCore {
 		ICCameraItem[] Contents { get; }
 	}
 	
-	[Mac (10,4)]
 	[BaseType (typeof(ICCameraItem))]
 	interface ICCameraFile
 	{
@@ -377,7 +368,6 @@ namespace ImageCaptureCore {
 		void DidReceiveDownloadProgress (ICCameraFile file, long downloadedBytes, long maxBytes);
 	}
 	
-	[Mac (10,4)]
 	[BaseType (typeof(ICDevice))]
 	interface ICCameraDevice
 	{
@@ -446,7 +436,6 @@ namespace ImageCaptureCore {
 		void RequestSendPtpCommand (NSData command, NSData outData, NSObject sendCommandDelegate, Selector didSendCommandSelector, [NullAllowed] IntPtr contextInfo);
 	}
 
-	[Mac (10,4)]
 	[BaseType (typeof(NSObject))]
 	interface ICScannerFeature
 	{
@@ -463,7 +452,6 @@ namespace ImageCaptureCore {
 		string Tooltip { get; }
 	}
 	
-	[Mac (10,4)]
 	[BaseType (typeof(ICScannerFeature))]
 	interface ICScannerFeatureEnumeration
 	{
@@ -483,7 +471,6 @@ namespace ImageCaptureCore {
 		string[] MenuItemLabelsTooltips { get; }
 	}
 	
-	[Mac (10,4)]
 	[BaseType (typeof(ICScannerFeature))]
 	interface ICScannerFeatureRange
 	{
@@ -503,7 +490,6 @@ namespace ImageCaptureCore {
 		nfloat StepSize { get; }
 	}
 	
-	[Mac (10,4)]
 	[BaseType (typeof(ICScannerFeature))]
 	interface ICScannerFeatureBoolean
 	{
@@ -511,7 +497,6 @@ namespace ImageCaptureCore {
 		bool Value { get; set; }
 	}
 	
-	[Mac (10,4)]
 	[BaseType (typeof(ICScannerFeature))]
 	interface ICScannerFeatureTemplate
 	{
@@ -519,7 +504,6 @@ namespace ImageCaptureCore {
 		NSMutableArray[] Targets { get; }
 	}
 	
-	[Mac (10,4)]
 	[BaseType (typeof(NSObject))]
 	interface ICScannerFunctionalUnit
 	{
@@ -614,7 +598,6 @@ namespace ImageCaptureCore {
 		nuint OverviewResolution { get; set; }
 	}
 	
-	[Mac (10,4)]
 	[BaseType (typeof(ICScannerFunctionalUnit))]
 	interface ICScannerFunctionalUnitFlatbed
 	{
@@ -628,7 +611,6 @@ namespace ImageCaptureCore {
 		CGSize DocumentSize { get; }
 	}
 	
-	[Mac (10,4)]
 	[BaseType (typeof(ICScannerFunctionalUnit))]
 	interface ICScannerFunctionalUnitPositiveTransparency
 	{
@@ -642,7 +624,6 @@ namespace ImageCaptureCore {
 		CGSize DocumentSize { get; }
 	}
 	
-	[Mac (10,4)]
 	[BaseType (typeof(ICScannerFunctionalUnit))]
 	interface ICScannerFunctionalUnitNegativeTransparency
 	{
@@ -656,7 +637,6 @@ namespace ImageCaptureCore {
 		CGSize DocumentSize { get; }
 	}
 	
-	[Mac (10,4)]
 	[BaseType (typeof(ICScannerFunctionalUnit))]
 	interface ICScannerFunctionalUnitDocumentFeeder
 	{
@@ -688,7 +668,6 @@ namespace ImageCaptureCore {
 		bool ReverseFeederPageOrder { get; }
 	}
 	
-	[Mac (10,4)]
 	[BaseType (typeof(NSObject))]
 	interface ICScannerBandData
 	{
@@ -743,7 +722,6 @@ namespace ImageCaptureCore {
 		[Export ("scannerDevice:didSelectFunctionalUnit:error:")]
 		void DidSelectFunctionalUnit (ICScannerDevice scanner, ICScannerFunctionalUnit functionalUnit, [NullAllowed] NSError error);
 	
-		[Introduced (PlatformName.MacOSX, 10, 6)]
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		[Export ("scannerDevice:didScanToURL:data:")]
 		void DidScanToUrl (ICScannerDevice scanner, NSUrl url, NSData data);
