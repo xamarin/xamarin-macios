@@ -369,6 +369,7 @@ namespace ImageCaptureCore {
 	}
 	
 	[BaseType (typeof(ICDevice))]
+	[DisableDefaultCtor] // ICDeviceBrowser creates instances of this class
 	interface ICCameraDevice
 	{
 		[Export ("batteryLevelAvailable")]
