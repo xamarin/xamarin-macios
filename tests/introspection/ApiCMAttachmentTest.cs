@@ -507,7 +507,9 @@ namespace Introspection {
 			foreach (var t in types) {
 				if (Skip (t))
 					continue; 
+				Console.WriteLine ($"Try to get a AttachableNativeObject for {t.Name}");
 				var obj = new AttachableNativeObject (GetINativeInstance (t));
+				Console.WriteLine ("Got the obj");
 				Assert.That (obj.Handle, Is.Not.EqualTo (IntPtr.Zero), t.Name + ".Handle");
 				using (var attch = new CFString ("myAttch")) {
 					CMAttachmentMode otherMode;
