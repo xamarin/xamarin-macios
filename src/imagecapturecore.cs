@@ -64,7 +64,7 @@ namespace ImageCaptureCore {
 		void DidReceiveStatusInformation (ICDevice device, NSDictionary<NSString, NSObject> status);
 	
 		[Export ("device:didEncounterError:")]
-		void DidEncouterError (ICDevice device, [NullAllowed] NSError error);
+		void DidEncounterError (ICDevice device, [NullAllowed] NSError error);
 	
 		[Export ("device:didReceiveButtonPress:")]
 		void DidReceiveButtonPress (ICDevice device, string buttonType);
@@ -733,7 +733,7 @@ namespace ImageCaptureCore {
 		void DidScanToBandData (ICScannerDevice scanner, ICScannerBandData data);
 	
 		[Export ("scannerDevice:didCompleteOverviewScanWithError:")]
-		void DidCOmpleteOverviewScan (ICScannerDevice scanner, [NullAllowed] NSError error);
+		void DidCompleteOverviewScan (ICScannerDevice scanner, [NullAllowed] NSError error);
 	
 		[Export ("scannerDevice:didCompleteScanWithError:")]
 		void DidCompleteScan (ICScannerDevice scanner, [NullAllowed] NSError error);
