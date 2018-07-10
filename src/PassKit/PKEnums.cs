@@ -202,9 +202,8 @@ namespace PassKit {
 	[iOS (12,0)]
 	[NoWatch]
 	[Native]
-	public enum PKAddPaymentPassStyle : ulong
-	{
+	public enum PKAddPaymentPassStyle : ulong {
 		Payment,
-		Access
+		Access,
 	}
 }
