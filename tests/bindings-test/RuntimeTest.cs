@@ -55,5 +55,24 @@ namespace Xamarin.Tests
 				};
 			}
 		}
+
+		[Test]
+		public void MainThreadDeallocationTest ()
+		{
+			ObjCBlockTester.CallAssertMainThreadBlockRelease ((callback) => {
+				callback (42);
+			});
+
+			using (var main_thread_tester = new MainThreadTest ()) {
+				main_thread_tester.CallAssertMainThreadBlockReleaseCallback ();
+			}
+		}
+
+		class MainThreadTest : ObjCBlockTester {
+			public override void AssertMainThreadBlockReleaseCallback (InnerBlock completionHandler)
+			{
+				completionHandler (42);
+			}
+		}
 	}
 }

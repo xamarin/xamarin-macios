@@ -110,17 +110,17 @@ while ! test -z $1; do
 done
 
 # reporting functions
+COLOR_RED=$(tput setaf 1 2>/dev/null || true)
+COLOR_ORANGE=$(tput setaf 3 2>/dev/null || true)
+COLOR_MAGENTA=$(tput setaf 5 2>/dev/null || true)
+COLOR_CLEAR=$(tput sgr0 2>/dev/null || true)
 function fail () {
-	tput setaf 1 2>/dev/null || true
-	echo "    $1"
-	tput sgr0 2>/dev/null || true
+	echo "    ${COLOR_RED}$1${COLOR_CLEAR}"
 	FAIL=1
 }
 
 function warn () {
-	tput setaf 3 2>/dev/null || true
-	echo "    $1"
-	tput sgr0 2>/dev/null || true
+	echo "    ${COLOR_ORANGE}$1${COLOR_CLEAR}"
 }
 
 function ok () {
@@ -439,6 +439,7 @@ function check_mono () {
 			fail "You may edit Make.config and change MAX_MONO_VERSION to your actual version to continue the"
 			fail "build (unless you're on a release branch). Once the build completes successfully, please"
 			fail "commit the new MAX_MONO_VERSION value."
+			fail "Alternatively you can ${COLOR_MAGENTA}export IGNORE_MONO=1${COLOR_RED} to skip this check."
 			return
 		fi
 	fi
@@ -551,7 +552,9 @@ function check_visual_studio () {
 			fail "You may edit Make.config and change MAX_VISUAL_STUDIO_VERSION to your actual version to continue the"
 			fail "build (unless you're on a release branch). Once the build completes successfully, please"
 			fail "commit the new MAX_VISUAL_STUDIO_VERSION value."
-			fail "Alternatively you can download an older version from $VS_URL."
+			fail "Alternatively you can download an older version from:"
+			fail "    $VS_URL,"
+			fail "or you can ${COLOR_MAGENTA}export IGNORE_VISUAL_STUDIO=1${COLOR_RED} to skip this check."
 		fi
 		return
 	fi
@@ -661,6 +664,7 @@ function check_objective_sharpie () {
 		else
 			if test -z $OPTIONAL_SHARPIE; then
 				fail "You must install Objective Sharpie, at least $MIN_SHARPIE_VERSION (no Objective Sharpie found). You can download it from $SHARPIE_URL"
+				fail "Alternatively you can ${COLOR_MAGENTA}export IGNORE_SHARPIE=1${COLOR_RED} to skip this check."
 			else
 				warn "You do not have Objective Sharpie installed (should be at least $MIN_SHARPIE_VERSION). You can download it from $SHARPIE_URL"
 			fi
@@ -675,6 +679,7 @@ function check_objective_sharpie () {
 			else
 				if test -z $OPTIONAL_SHARPIE; then
 					fail "You must have at least Objective Sharpie $MIN_SHARPIE_VERSION, found $ACTUAL_SHARPIE_VERSION. You can download it from $SHARPIE_URL"
+					fail "Alternatively you can ${COLOR_MAGENTA}export IGNORE_SHARPIE=1${COLOR_RED} to skip this check."
 				else
 					warn "You do not have have at least Objective Sharpie $MIN_SHARPIE_VERSION (found $ACTUAL_SHARPIE_VERSION). You can download it from $SHARPIE_URL"
 				fi
@@ -689,6 +694,7 @@ function check_objective_sharpie () {
 			else
 				if test -z $OPTIONAL_SHARPIE; then
 					fail "Your Objective Sharpie version is too new, max version is $MAX_SHARPIE_VERSION, found $ACTUAL_SHARPIE_VERSION. We recommend you download $SHARPIE_URL"
+					fail "Alternatively you can ${COLOR_MAGENTA}export IGNORE_SHARPIE=1${COLOR_RED} to skip this check."
 				else
 					warn "You do not have have at most Objective Sharpie $MAX_SHARPIE_VERSION (found $ACTUAL_SHARPIE_VERSION). We recommend you download $SHARPIE_URL"
 				fi
