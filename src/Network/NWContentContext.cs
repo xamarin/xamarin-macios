@@ -19,8 +19,31 @@ namespace Network {
 	// available as static properties on this class
 	// 
 	public class NWContentContext : NativeObject {
-		public NWContentContext (IntPtr handle, bool owns) : base (handle, owns) {}
+		bool global;
+		public NWContentContext (IntPtr handle, bool owns) : base (handle, owns)
+		{
+		}
 
+		// This constructor is only called by MakeGlobal
+		NWContentContext (IntPtr handle, bool owns, bool global) : base (handle, owns)
+		{
+			this.global = global;
+		}
+
+		// To prevent creating many versions of fairly common objects, we create versions
+		// that set "global = true" and in that case, we do not release the object.
+		static NWContentContext MakeGlobal (IntPtr handle)
+		{
+			return new NWContentContext (handle, owns: true, global: true);
+		}
+
+		protected override void Release ()
+		{
+			if (global)
+				return;
+			base.Release ();
+		}
+		
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_content_context_create (string contextIdentifier);
@@ -173,14 +196,36 @@ namespace Network {
 		//
 		// Use this as a parameter to NWConnection.Send's with all the default properties
 		// ie: NW_CONNECTION_DEFAULT_MESSAGE_CONTEXT, use this for datagrams
-		public static NWContentContext DefaultMessage => new NWContentContext (Dlfcn.dlsym (Libraries.Network.Handle, "_nw_content_context_default_message"), owns: false);
+		static NWContentContext defaultMessage;
+		public static NWContentContext DefaultMessage {
+			get {
+				if (defaultMessage == null)
+					defaultMessage = MakeGlobal (Marshal.ReadIntPtr (Dlfcn.dlsym (Libraries.Network.Handle, "_nw_content_context_default_message")));
+				
+				return defaultMessage;
+			}
+		}
 
 		// Use this as a parameter to NWConnection.Send's to indicate that no more sends are expected
 		// (ie: NW_CONNECTION_FINAL_MESSAGE_CONTEXT)
-		public static NWContentContext FinalMessage = new NWContentContext (Dlfcn.dlsym (Libraries.Network.Handle, "_nw_content_context_final_send"), owns: false);
+		static NWContentContext finalMessage;
+		public static NWContentContext FinalMessage {
+			get {
+				if (finalMessage == null)
+					finalMessage = MakeGlobal (Marshal.ReadIntPtr (Dlfcn.dlsym (Libraries.Network.Handle, "_nw_content_context_final_send")));
+				return finalMessage;
+			}
+		}
 
 		// This sending context represents the entire connection
 		// ie: NW_CONNECTION_DEFAULT_STREAM_CONTEXT
-		public static NWContentContext DefaultStream = new NWContentContext (Dlfcn.dlsym (Libraries.Network.Handle, "_nw_content_context_default_stream"), owns: false);	
+		static NWContentContext defaultStream;
+		public static NWContentContext DefaultStream {
+			get {
+				if (defaultStream == null)
+					defaultStream = MakeGlobal (Marshal.ReadIntPtr (Dlfcn.dlsym (Libraries.Network.Handle, "_nw_content_context_default_stream")));
+				return defaultStream;
+			}
+		}
 	}
 }

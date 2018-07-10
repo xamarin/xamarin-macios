@@ -414,7 +414,7 @@ namespace Network {
 		static IntPtr NW_CONNECTION_SEND_IDEMPOTENT_CONTENT ()
 		{
 			if (_nw_connection_send_idempotent_content == IntPtr.Zero)
-				_nw_connection_send_idempotent_content = Dlfcn.dlsym (Libraries.Network.Handle, "_nw_connection_send_idempotent_content");
+				_nw_connection_send_idempotent_content = Marshal.ReadIntPtr (Dlfcn.dlsym (Libraries.Network.Handle, "_nw_connection_send_idempotent_content"));
 			return _nw_connection_send_idempotent_content;
 		}
 		

@@ -38,7 +38,7 @@ namespace CoreFoundation {
 		static DispatchData ()
 		{
 			lib = Dlfcn.dlopen (Constants.libcLibrary, 0);
-			free = Dlfcn.dlsym (lib, "_dispatch_data_destructor_free");
+			free = Marshal.ReadIntPtr (Dlfcn.dlsym (lib, "_dispatch_data_destructor_free"));
 		}
 		
 		public DispatchData (IntPtr handle, bool owns) : base (handle, owns)
@@ -46,7 +46,7 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.libcLibrary)]
-		extern static IntPtr dispatch_data_create (IntPtr buffer, ulong size, IntPtr dispatchQueue, IntPtr destructor);
+		extern static IntPtr dispatch_data_create (IntPtr buffer, IntPtr size, IntPtr dispatchQueue, IntPtr destructor);
 
 		//
 		// This constructor will do it for now, but we should support a constructor
@@ -58,7 +58,7 @@ namespace CoreFoundation {
 				throw new ArgumentNullException (nameof (buffer));
 			var b = Marshal.AllocHGlobal (buffer.Length);
 			Marshal.Copy (buffer, 0, b, buffer.Length);
-			var dd = dispatch_data_create (b, (ulong) buffer.Length, IntPtr.Zero, destructor: free);
+			var dd = dispatch_data_create (b, (IntPtr) buffer.Length, IntPtr.Zero, destructor: free);
 			return new DispatchData (dd, owns: true);
 		}
 
@@ -75,7 +75,7 @@ namespace CoreFoundation {
 				
 			var b = Marshal.AllocHGlobal (length);
 			Marshal.Copy (buffer, start, b, length);
-			var dd = dispatch_data_create (b, (ulong) length, IntPtr.Zero, destructor: free);
+			var dd = dispatch_data_create (b, (IntPtr) length, IntPtr.Zero, destructor: free);
 			return new DispatchData (dd, owns: true);
 		}
 
@@ -86,7 +86,7 @@ namespace CoreFoundation {
 		{
 			if (buffer == null)
 				throw new ArgumentNullException (nameof (buffer));
-			var dd = dispatch_data_create (buffer, size, IntPtr.Zero, destructor: IntPtr.Zero);
+			var dd = dispatch_data_create (buffer, (IntPtr) size, IntPtr.Zero, destructor: IntPtr.Zero);
 			return new DispatchData (dd, owns: true);
 		}
 		
