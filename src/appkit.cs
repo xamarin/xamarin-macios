@@ -16612,8 +16612,7 @@ namespace AppKit {
 	}
 
 	[BaseType (typeof (NSResponder))]
-	// NSCoding is gone from Xcode 10 headers but API break to remove. Likely a mistake 41370178 
-	interface NSViewController : NSUserInterfaceItemIdentification, NSCoding, NSEditor, NSSeguePerforming
+	interface NSViewController : NSResponder, NSUserInterfaceItemIdentification, NSEditor, NSSeguePerforming
 #if XAMCORE_2_0
 	, NSExtensionRequestHandling 
 #endif
