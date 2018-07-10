@@ -275,7 +275,7 @@ namespace Network {
 				IntPtr bufferAddress = IntPtr.Zero;
 				ulong bufferSize = 0;
 				
-				if (dispatchDataPtr != null){
+				if (dispatchDataPtr != IntPtr.Zero){
 					dispatchData = new DispatchData (dispatchDataPtr, owns: false);
 					dataCopy =  dispatchData.CreateMap (out bufferAddress, out bufferSize);
 				}
