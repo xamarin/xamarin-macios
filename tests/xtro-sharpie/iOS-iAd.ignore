@@ -6,3 +6,6 @@
 ## Deprecated in iOS 4.2 - removed from XAMCORE_3_0
 !unknown-field! ADBannerContentSizeIdentifier320x50 bound
 !unknown-field! ADBannerContentSizeIdentifier480x32 bound
+
+## to be confirmed what to do with it.
+!missing-pinvoke! ADClampedBannerSize is not bound
