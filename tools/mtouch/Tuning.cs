@@ -134,6 +134,7 @@ namespace MonoTouch.Tuner {
 			context.SetParameter ("debug-build", options.DebugBuild.ToString ());
 			context.StaticRegistrar = options.Target.StaticRegistrar;
 			context.Target = options.Target;
+			context.ExcludedFeatures = new [] { "remoting", "com", "sre" };
 			options.LinkContext = context;
 
 			return context;

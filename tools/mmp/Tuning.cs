@@ -130,6 +130,7 @@ namespace MonoMac.Tuner {
 			context.OutputDirectory = options.OutputDirectory;
 			context.StaticRegistrar = options.Target.StaticRegistrar;
 			context.Target = options.Target;
+			context.ExcludedFeatures = new [] { "remoting", "com" };
 			return context;
 		}
 
