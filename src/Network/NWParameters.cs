@@ -112,7 +112,6 @@ namespace Network {
 			else
 				tcpHandler.SetupBlockUnsafe (static_ConfigureHandler, configureTcp);
 
-			Console.WriteLine ("{0} and {1}", (IntPtr) DISABLE_PROTOCOL (), (IntPtr) tcpPtr);
 			var ptr = nw_parameters_create_secure_tcp (DISABLE_PROTOCOL (), tcpPtr);
 			
 			if (configureTcp != null)
