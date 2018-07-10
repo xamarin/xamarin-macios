@@ -299,9 +299,8 @@ namespace iAd {
 	[iOS (12,0)]
 	[NoWatch]
 	[DisableDefaultCtor]
-	[BaseType (typeof(UIViewController))]
-	interface ADInterstitialAdPresentationViewController
-	{
+	[BaseType ( typeof(UIViewController))]
+	interface ADInterstitialAdPresentationViewController {
 		// inlined ctor
 		[Export ("initWithNibName:bundle:")]
 		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);

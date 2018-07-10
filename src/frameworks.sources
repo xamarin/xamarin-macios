@@ -861,6 +861,9 @@ HOMEKIT_SOURCES = \
 IAD_API_SOURCES = \
 	iAd/iAd.cs \
 
+IAD_SOURCES = \
+	iAd/ADBannerView.cs \
+
 # ImageIO
 
 IMAGEIO_API_SOURCES = \
