@@ -2298,7 +2298,11 @@ namespace Foundation
 		[Static]
 		[Export ("archivedDataWithRootObject:requiringSecureCoding:error:")]
 		[return: NullAllowed]
+#if XAMCORE_4_0
+		NSData GetArchivedData (NSObject @object, bool requiresSecureCoding, [NullAllowed] out NSError error);
+#else
 		NSData ArchivedDataWithRootObject (NSObject @object, bool requiresSecureCoding, [NullAllowed] out NSError error);
+#endif
 
 		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'ArchivedDataWithRootObject (NSObject, bool, out NSError)' instead.")]
 		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'ArchivedDataWithRootObject (NSObject, bool, out NSError)' instead.")]
@@ -2306,7 +2310,11 @@ namespace Foundation
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'ArchivedDataWithRootObject (NSObject, bool, out NSError)' instead.")]
 		[Export ("archivedDataWithRootObject:")]
 		[Static]
+#if XAMCORE_4_0
+		NSData GetArchivedData (NSObject root);
+#else
 		NSData ArchivedDataWithRootObject (NSObject root);
+#endif
 		
 		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'ArchivedDataWithRootObject (NSObject, bool, out NSError)' instead.")]
 		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'ArchivedDataWithRootObject (NSObject, bool, out NSError)' instead.")]
@@ -10730,8 +10738,7 @@ namespace Foundation
 
 	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 	[BaseType (typeof(NSValueTransformer))]
-	interface NSSecureUnarchiveFromDataTransformer
-	{
+	interface NSSecureUnarchiveFromDataTransformer {
 		[Static]
 		[Export ("allowedTopLevelClasses", ArgumentSemantic.Copy)]
 		Class[] AllowedTopLevelClasses { get; }
