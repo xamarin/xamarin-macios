@@ -205,6 +205,12 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "newWindowForTab:": // "This method can be implemented in the responder chain", optional but not protocol directly on NSResponder
+				switch (type.Name) {
+				case "NSViewController":
+					return true;
+				}
+				break;
 			}
 
 			switch (type.Namespace) {
