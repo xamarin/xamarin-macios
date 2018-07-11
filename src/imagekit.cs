@@ -205,7 +205,9 @@ namespace ImageKit {
 	[Model]
 	[Protocol]
 	interface IKDeviceBrowserViewDelegate {
+#if XAMCORE_4_0
 		[Abstract]
+#endif
 		[Export ("deviceBrowserView:selectionDidChange:"), EventArgs ("IKDeviceBrowserViewICDevice")]
 		void SelectionDidChange (IKDeviceBrowserView deviceBrowserView, ICDevice device);
 
