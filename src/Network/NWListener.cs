@@ -199,7 +199,6 @@ namespace Network {
 			if (del != null){
 				var nwconnection = new NWConnection (connection, owns: false);
 			        del (nwconnection);
-				nwconnection.Dispose ();
 			}
 		}
 		

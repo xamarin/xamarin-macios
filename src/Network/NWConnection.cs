@@ -187,7 +187,6 @@ namespace Network {
 			if (del != null){
 				var x = new NWPath (path, owns: false);
 			        del (x);
-				x.Dispose ();
 			}
 		}
 		
