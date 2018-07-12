@@ -296,4 +296,8 @@ namespace Security {
 		TLS_AES_128_CCM_SHA256						= 0x1304,	// iOS 11+
 		TLS_AES_128_CCM_8_SHA256					= 0x1305,	// iOS 11+
 	}
+
+	public enum SslCiphersuiteGroup {
+		Default, Compatibility, Legacy, Ats, AtsCompatibility
+	}
 }

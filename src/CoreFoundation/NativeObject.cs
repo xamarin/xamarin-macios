@@ -76,5 +76,14 @@ namespace CoreFoundation {
 #endif
 			this.handle = handle;
 		}
+
+		void Throw () => throw new ObjectDisposedException (GetType ().ToString ());
+			
+		internal IntPtr GetHandle ()
+		{
+			if (handle == IntPtr.Zero)
+				Throw ();
+			return handle;
+		}
 	}
 }

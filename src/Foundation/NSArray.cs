@@ -192,7 +192,7 @@ namespace Foundation {
 			return arr;
 		}
 
-		static nuint GetCount (IntPtr handle)
+		internal static nuint GetCount (IntPtr handle)
 		{
 #if XAMCORE_2_0
 	#if MONOMAC
@@ -209,7 +209,7 @@ namespace Foundation {
 #endif
 		}
 
-		static IntPtr GetAtIndex (IntPtr handle, nuint i)
+		internal static IntPtr GetAtIndex (IntPtr handle, nuint i)
 		{
 #if XAMCORE_2_0
 	#if MONOMAC

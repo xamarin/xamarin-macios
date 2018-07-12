@@ -2231,7 +2231,11 @@ public partial class Generator : IMemberGatherer {
 		if (Frameworks.HaveAudioUnit)
 			marshal_types.Add (TypeManager.AudioUnit);
 		marshal_types.Add (TypeManager.SecIdentity);
+		marshal_types.Add (TypeManager.SecIdentity2);
 		marshal_types.Add (TypeManager.SecTrust);
+		marshal_types.Add (TypeManager.SecTrust2);
+		marshal_types.Add (TypeManager.SecProtocolOptions);
+		marshal_types.Add (TypeManager.SecProtocolMetadata);
 		marshal_types.Add (TypeManager.SecAccessControl);
 		marshal_types.Add (TypeManager.AudioBuffers);
 		if (Frameworks.HaveAudioUnit) {
