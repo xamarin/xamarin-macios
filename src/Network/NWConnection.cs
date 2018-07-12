@@ -58,7 +58,7 @@ namespace Network {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWEndpoint Endpoint {
 			get {
-				var x = nw_connection_copy_endpoint (handle);
+				var x = nw_connection_copy_endpoint (GetHandle ());
 				if (x == IntPtr.Zero)
 					return null;
 				return new NWEndpoint (x, owns: true);
@@ -72,7 +72,7 @@ namespace Network {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWParameters Parameters {
 			get {
-				var x = nw_connection_copy_parameters (handle);
+				var x = nw_connection_copy_parameters (GetHandle());
 				if (x == IntPtr.Zero)
 					return null;
 				return new NWParameters (x, owns: true);
@@ -101,7 +101,7 @@ namespace Network {
 		public unsafe void SetStateChangeHandler (Action<NWConnectionState,NWError> stateHandler)
 		{
 			if (stateHandler == null){
-				nw_connection_set_state_changed_handler (handle, null);
+				nw_connection_set_state_changed_handler (GetHandle(), null);
 				return;
 			}
 			
@@ -112,7 +112,7 @@ namespace Network {
                                 block_ptr_handler = &block_handler;
                                 block_handler.SetupBlockUnsafe (static_stateChangeHandler, stateHandler);
 
-                                nw_connection_set_state_changed_handler (handle, (void*) block_ptr_handler);
+                                nw_connection_set_state_changed_handler (GetHandle(), (void*) block_ptr_handler);
                                 block_ptr_handler->CleanupBlock ();
                         }
 		}
@@ -138,7 +138,7 @@ namespace Network {
 		public unsafe void SetBooleanChangeHandler (Action<bool> callback)
 		{
 			if (callback == null){
-				nw_connection_set_viability_changed_handler  (handle, null);
+				nw_connection_set_viability_changed_handler  (GetHandle(), null);
 				return;
 			}
 			unsafe {
@@ -148,7 +148,7 @@ namespace Network {
 			        block_ptr_handler = &block_handler;
 			        block_handler.SetupBlockUnsafe (static_BooleanChangeHandler, callback);
 			
-			        nw_connection_set_viability_changed_handler (handle, (void*) block_ptr_handler);
+			        nw_connection_set_viability_changed_handler (GetHandle(), (void*) block_ptr_handler);
 			        block_ptr_handler->CleanupBlock ();
 			}
 		}
@@ -161,7 +161,7 @@ namespace Network {
 		public unsafe void SetBetterPathAvailableHandler (Action<bool> callback)
 		{
 			if (callback == null){
-				nw_connection_set_better_path_available_handler  (handle, null);
+				nw_connection_set_better_path_available_handler  (GetHandle(), null);
 				return;
 			}
 			unsafe {
@@ -171,7 +171,7 @@ namespace Network {
 			        block_ptr_handler = &block_handler;
 			        block_handler.SetupBlockUnsafe (static_BooleanChangeHandler, callback);
 			
-			        nw_connection_set_better_path_available_handler (handle, (void*) block_ptr_handler);
+			        nw_connection_set_better_path_available_handler (GetHandle(), (void*) block_ptr_handler);
 			        block_ptr_handler->CleanupBlock ();
 			}
 		}
@@ -204,7 +204,7 @@ namespace Network {
 			        block_ptr_handler = &block_handler;
 			        block_handler.SetupBlockUnsafe (static_PathChanged, callback);
 			
-			        nw_connection_set_path_changed_handler (handle, (void*) block_ptr_handler);
+			        nw_connection_set_path_changed_handler (GetHandle(), (void*) block_ptr_handler);
 			        block_ptr_handler->CleanupBlock ();
 			}
 		}
@@ -218,7 +218,7 @@ namespace Network {
 		{
 			if (queue == null)
 				throw new ArgumentNullException (nameof (queue));
-			nw_connection_set_queue (handle, queue.handle);
+			nw_connection_set_queue (GetHandle(), queue.handle);
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -226,35 +226,35 @@ namespace Network {
 		static extern void nw_connection_start (IntPtr handle);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void Start () => nw_connection_start (handle);
+		public void Start () => nw_connection_start (GetHandle());
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_connection_restart (IntPtr handle);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void Restart () => nw_connection_restart (handle);
+		public void Restart () => nw_connection_restart (GetHandle());
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_connection_cancel (IntPtr handle);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void Cancel () => nw_connection_cancel (handle);
+		public void Cancel () => nw_connection_cancel (GetHandle());
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_connection_force_cancel (IntPtr handle);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void ForceCancel () => nw_connection_force_cancel (handle);
+		public void ForceCancel () => nw_connection_force_cancel (GetHandle());
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_connection_cancel_current_endpoint (IntPtr handle);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void CancelCurrentEndpoint () => nw_connection_cancel_current_endpoint (handle);
+		public void CancelCurrentEndpoint () => nw_connection_cancel_current_endpoint (GetHandle());
 
 		delegate void nw_connection_receive_completion_t (IntPtr block,
 								  IntPtr dispatchData,
@@ -305,7 +305,7 @@ namespace Network {
 			        block_ptr_handler = &block_handler;
 			        block_handler.SetupBlockUnsafe (static_ReceiveCompletion, callback);
 			
-			        nw_connection_receive (handle, minimumIncompleteLength, maximumLength, (void*) block_ptr_handler);
+			        nw_connection_receive (GetHandle(), minimumIncompleteLength, maximumLength, (void*) block_ptr_handler);
 			        block_ptr_handler->CleanupBlock ();
 			}
 		}
@@ -323,7 +323,7 @@ namespace Network {
 			        block_ptr_handler = &block_handler;
 			        block_handler.SetupBlockUnsafe (static_ReceiveCompletion, callback);
 			
-			        nw_connection_receive_message (handle, (void*) block_ptr_handler);
+			        nw_connection_receive_message (GetHandle(), (void*) block_ptr_handler);
 			        block_ptr_handler->CleanupBlock ();
 			}
 		}
@@ -359,7 +359,7 @@ namespace Network {
 		//
 		unsafe void LowLevelSend (IntPtr handle, DispatchData buffer, IntPtr contentContext, bool isComplete, void *callback)
 		{
-			nw_connection_send (handle: handle,
+			nw_connection_send (handle: GetHandle(),
 					    dispatchData: buffer == null ? IntPtr.Zero : buffer.Handle,
 					    contentContext: contentContext,
 					    isComplete: isComplete,
@@ -402,7 +402,7 @@ namespace Network {
 			        block_ptr_handler = &block_handler;
 			        block_handler.SetupBlockUnsafe (static_SendCompletion, callback);
 
-				LowLevelSend (handle, buffer, context.Handle, isComplete, block_ptr_handler);
+				LowLevelSend (GetHandle(), buffer, context.Handle, isComplete, block_ptr_handler);
 			        block_ptr_handler->CleanupBlock ();
 			}
 		}
@@ -423,7 +423,7 @@ namespace Network {
 			if (context == null)
 				throw new ArgumentNullException (nameof (context));
 
-			LowLevelSend (handle, buffer, context.Handle, isComplete, (void *) NW_CONNECTION_SEND_IDEMPOTENT_CONTENT ());
+			LowLevelSend (GetHandle(), buffer, context.Handle, isComplete, (void *) NW_CONNECTION_SEND_IDEMPOTENT_CONTENT ());
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -441,7 +441,7 @@ namespace Network {
 		extern static string nw_connection_copy_description (IntPtr handle);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public string Description => nw_connection_copy_description (handle);
+		public string Description => nw_connection_copy_description (GetHandle());
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
@@ -450,7 +450,7 @@ namespace Network {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWPath CurrentPath {
 			get {
-				var x = nw_connection_copy_current_path (handle);
+				var x = nw_connection_copy_current_path (GetHandle());
 				if (x == IntPtr.Zero)
 					return null;
 				return new NWPath (x, owns: true);
@@ -467,7 +467,7 @@ namespace Network {
 			if (definition == null)
 				throw new ArgumentNullException (nameof (definition));
 			
-			var x = nw_connection_copy_protocol_metadata (handle, definition.handle);
+			var x = nw_connection_copy_protocol_metadata (GetHandle(), definition.handle);
 			if (x == IntPtr.Zero)
 				return null;
 			return new NWProtocolMetadata (x, owns: true);
@@ -477,7 +477,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		extern static uint nw_connection_get_maximum_datagram_size (IntPtr handle);
 
-		public uint MaximumDatagramSize => nw_connection_get_maximum_datagram_size (handle);
+		public uint MaximumDatagramSize => nw_connection_get_maximum_datagram_size (GetHandle());
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
@@ -486,7 +486,7 @@ namespace Network {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void Batch (Action method)
 		{
-			BlockLiteral.SimpleCall (method, (arg)=> nw_connection_batch (handle, arg));
+			BlockLiteral.SimpleCall (method, (arg)=> nw_connection_batch (GetHandle(), arg));
 		}
 	}
 }

@@ -25,7 +25,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_definition nw_protocol_options_copy_definition (OS_nw_protocol_options options);
 
-		public NWProtocolDefinition ProtocolDefinition => new NWProtocolDefinition (nw_protocol_options_copy_definition (handle), owns: true);
+		public NWProtocolDefinition ProtocolDefinition => new NWProtocolDefinition (nw_protocol_options_copy_definition (GetHandle()), owns: true);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
@@ -34,7 +34,7 @@ namespace Network {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void SetVersion (NWIPVersion version)
 		{
-			nw_ip_options_set_version (handle, version);
+			nw_ip_options_set_version (GetHandle(), version);
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -43,7 +43,7 @@ namespace Network {
 	
 		public void SetHopLimit (byte hopLimit)
 		{
-			nw_ip_options_set_hop_limit (handle, hopLimit);
+			nw_ip_options_set_hop_limit (GetHandle(), hopLimit);
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -53,7 +53,7 @@ namespace Network {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void SetUseMinimumMtu (bool useMinimumMtu)
 		{
-			nw_ip_options_set_use_minimum_mtu (handle, useMinimumMtu);
+			nw_ip_options_set_use_minimum_mtu (GetHandle(), useMinimumMtu);
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -63,7 +63,7 @@ namespace Network {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void SetDisableFragmentation (bool disableFragmentation)
 		{
-			nw_ip_options_set_disable_fragmentation (handle, disableFragmentation);
+			nw_ip_options_set_disable_fragmentation (GetHandle(), disableFragmentation);
 		}
 
 		

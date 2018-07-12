@@ -15,41 +15,8 @@ using CoreFoundation;
 
 namespace Network {
 	
-	public class NWPathMonitor : INativeObject, IDisposable {
-		IntPtr handle;
-		public IntPtr Handle {
-			get { return handle; }
-		}
-
-		public NWPathMonitor (IntPtr handle, bool owns)
-		{
-			this.handle = handle;
-			if (owns == false)
-				CFObject.CFRetain (handle);
-		}
-
-		public NWPathMonitor (IntPtr handle) : this (handle, false)
-		{
-		}
-
-		~NWPathMonitor ()
-		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero) {
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
+	public class NWPathMonitor : NativeObject {
+		public NWPathMonitor (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
@@ -76,14 +43,14 @@ namespace Network {
 		extern static void nw_path_monitor_cancel (IntPtr handle);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void Cancel () => nw_path_monitor_cancel (handle);
+		public void Cancel () => nw_path_monitor_cancel (GetHandle());
 			
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_path_monitor_start (IntPtr handle);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void Start () => nw_path_monitor_start (handle);
+		public void Start () => nw_path_monitor_start (GetHandle());
 		
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
@@ -94,7 +61,7 @@ namespace Network {
 		{
 			if (queue == null)
 				throw new ArgumentNullException (nameof (queue));
-			nw_path_monitor_set_queue (handle, queue.handle);
+			nw_path_monitor_set_queue (GetHandle(), queue.handle);
 		}
 		
 	}

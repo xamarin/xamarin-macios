@@ -22,40 +22,9 @@ namespace Network {
 			
 	}
 	
-	public class NWListener : INativeObject, IDisposable {
-		IntPtr handle;
-		public IntPtr Handle {
-			get { return handle; }
-		}
-
-		public NWListener (IntPtr handle, bool owns)
+	public class NWListener : NativeObject {
+		public NWListener (IntPtr handle, bool owns) : base (handle, owns)
 		{
-			this.handle = handle;
-			if (owns == false)
-				CFObject.CFRetain (handle);
-		}
-
-		public NWListener (IntPtr handle) : this (handle, false)
-		{
-		}
-
-		~NWListener ()
-		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero) {
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -75,7 +44,7 @@ namespace Network {
 			handle = nw_listener_create_with_port (port, parameters.handle);
 			if (handle == IntPtr.Zero)
 				return null;
-			return new NWListener (handle);
+			return new NWListener (handle, owns: true);
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -93,7 +62,7 @@ namespace Network {
 			handle = nw_listener_create (parameters.handle);
 			if (handle == IntPtr.Zero)
 				return null;
-			return new NWListener (handle);
+			return new NWListener (handle, owns: true);
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -112,7 +81,7 @@ namespace Network {
 			var handle = nw_listener_create_with_connection (connection.handle, parameters.handle);
 			if (handle == IntPtr.Zero)
 				return null;
-			return new NWListener (handle);
+			return new NWListener (handle, owns: true);
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -125,7 +94,7 @@ namespace Network {
 			if (queue == null)
 			 	throw new ArgumentNullException (nameof(queue));
 
-			nw_listener_set_queue (handle, queue.handle);
+			nw_listener_set_queue (GetHandle(), queue.handle);
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -133,14 +102,14 @@ namespace Network {
 		extern static ushort nw_listener_get_port (IntPtr listener);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public ushort Port => nw_listener_get_port (handle);
+		public ushort Port => nw_listener_get_port (GetHandle());
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void 	nw_listener_start (IntPtr handle);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void Start () => nw_listener_start (handle);
+		public void Start () => nw_listener_start (GetHandle());
 		
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -148,7 +117,7 @@ namespace Network {
 		extern static void 	nw_listener_cancel (IntPtr handle);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void Cancel () => nw_listener_cancel (handle);
+		public void Cancel () => nw_listener_cancel (GetHandle());
 
 		delegate void nw_listener_state_changed_handler_t (IntPtr block, NWListenerState state, IntPtr nwerror);
 		static nw_listener_state_changed_handler_t static_ListenerStateChanged = TrampolineListenerStateChanged;
@@ -173,7 +142,7 @@ namespace Network {
 		{
 			unsafe {
 				if (callback == null){
-					nw_listener_set_state_changed_handler (handle, null);
+					nw_listener_set_state_changed_handler (GetHandle(), null);
 					return;
 				}
 			
@@ -183,7 +152,7 @@ namespace Network {
 			        block_ptr_handler = &block_handler;
 			        block_handler.SetupBlockUnsafe (static_ListenerStateChanged, callback);
 			
-			        nw_listener_set_state_changed_handler (handle, (void*) block_ptr_handler);
+			        nw_listener_set_state_changed_handler (GetHandle(), (void*) block_ptr_handler);
 			        block_ptr_handler->CleanupBlock ();
 			}
 		}
@@ -210,7 +179,7 @@ namespace Network {
 		{
 			unsafe {
 				if (callback == null){
-					nw_listener_set_new_connection_handler (handle, null);
+					nw_listener_set_new_connection_handler (GetHandle(), null);
 					return;
 				}
 			
@@ -220,7 +189,7 @@ namespace Network {
 			        block_ptr_handler = &block_handler;
 			        block_handler.SetupBlockUnsafe (static_NewConnection, callback);
 			
-			        nw_listener_set_new_connection_handler (handle, (void*) block_ptr_handler);
+			        nw_listener_set_new_connection_handler (GetHandle(), (void*) block_ptr_handler);
 			        block_ptr_handler->CleanupBlock ();
 			}
 		}
@@ -250,7 +219,7 @@ namespace Network {
 		{
 			unsafe {
 				if (callback == null){
-					nw_listener_set_advertised_endpoint_changed_handler (handle, null);
+					nw_listener_set_advertised_endpoint_changed_handler (GetHandle(), null);
 					return;
 				}
 				
@@ -260,7 +229,7 @@ namespace Network {
 			        block_ptr_handler = &block_handler;
 			        block_handler.SetupBlockUnsafe (static_AdvertisedEndpointChangedHandler, callback);
 			
-			        nw_listener_set_advertised_endpoint_changed_handler (handle, (void*) block_ptr_handler);
+			        nw_listener_set_advertised_endpoint_changed_handler (GetHandle(), (void*) block_ptr_handler);
 			        block_ptr_handler->CleanupBlock ();
 			}
 		}
@@ -272,7 +241,7 @@ namespace Network {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void SetAdvertiseDescriptor (NWAdvertiseDescriptor descriptor)
 		{
-			nw_listener_set_advertise_descriptor (handle, descriptor == null ? IntPtr.Zero : descriptor.handle);
+			nw_listener_set_advertise_descriptor (GetHandle(), descriptor == null ? IntPtr.Zero : descriptor.handle);
 		}
 	}
 }

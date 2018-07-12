@@ -29,7 +29,7 @@ namespace Network {
 		extern static NWPathStatus nw_path_get_status (IntPtr handle);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public NWPathStatus Status => nw_path_get_status (handle);
+		public NWPathStatus Status => nw_path_get_status (GetHandle());
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
@@ -37,7 +37,7 @@ namespace Network {
 		extern static bool nw_path_is_expensive (IntPtr handle);
 		
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public bool IsExpensive => nw_path_is_expensive (handle);
+		public bool IsExpensive => nw_path_is_expensive (GetHandle());
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
@@ -45,7 +45,7 @@ namespace Network {
 		extern static bool nw_path_has_ipv4 (IntPtr handle);
 		
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public bool HasIpV4 => nw_path_has_ipv4 (handle);
+		public bool HasIpV4 => nw_path_has_ipv4 (GetHandle());
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
@@ -53,7 +53,7 @@ namespace Network {
 		extern static bool nw_path_has_ipv6 (IntPtr handle);
 		
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public bool HasIpV6 => nw_path_has_ipv6 (handle);
+		public bool HasIpV6 => nw_path_has_ipv6 (GetHandle());
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
@@ -61,7 +61,7 @@ namespace Network {
 		extern static bool nw_path_has_dns (IntPtr handle);
 		
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public bool HasDns => nw_path_has_dns (handle);
+		public bool HasDns => nw_path_has_dns (GetHandle());
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
@@ -69,7 +69,7 @@ namespace Network {
 		extern static bool nw_path_uses_interface_type (IntPtr handle, NWInterfaceType type);
 		
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public bool UsesInterfaceType (NWInterfaceType type) => nw_path_uses_interface_type (handle, type);
+		public bool UsesInterfaceType (NWInterfaceType type) => nw_path_uses_interface_type (GetHandle(), type);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
@@ -78,7 +78,7 @@ namespace Network {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWEndpoint EffectiveLocalEndpoint {
 			get {
-				var x = nw_path_copy_effective_local_endpoint (handle);
+				var x = nw_path_copy_effective_local_endpoint (GetHandle());
 				if (x == IntPtr.Zero)
 					return null;
 				return new NWEndpoint (x, owns: true);
@@ -92,7 +92,7 @@ namespace Network {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWEndpoint EffectiveRemoteEndpoint {
 			get {
-				var x = nw_path_copy_effective_remote_endpoint (handle);
+				var x = nw_path_copy_effective_remote_endpoint (GetHandle());
 				if (x == IntPtr.Zero)
 					return null;
 				return new NWEndpoint (x, owns: true);
@@ -110,7 +110,7 @@ namespace Network {
 			if (other == null)
 				return false;
 
-			return nw_path_is_equal (handle, other.handle);
+			return nw_path_is_equal (GetHandle(), other.handle);
 		}
 
 		delegate void nw_path_enumerate_interfaces_block_t (IntPtr block, IntPtr iface);
@@ -142,7 +142,7 @@ namespace Network {
 			        block_ptr_handler = &block_handler;
 			        block_handler.SetupBlockUnsafe (static_Enumerator, callback);
 			
-			        nw_path_enumerate_interfaces (handle, (void*) block_ptr_handler);
+			        nw_path_enumerate_interfaces (GetHandle(), (void*) block_ptr_handler);
 			        block_ptr_handler->CleanupBlock ();
 			}
 		}

@@ -32,7 +32,7 @@ namespace Network {
 		{
 			if (options == null)
 				throw new ArgumentNullException (nameof (options));
-			nw_protocol_stack_prepend_application_protocol (handle, options.Handle);
+			nw_protocol_stack_prepend_application_protocol (GetHandle(), options.Handle);
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -41,7 +41,7 @@ namespace Network {
 
 		public void ClearApplicationProtocols ()
 		{
-			nw_protocol_stack_clear_application_protocols (handle);
+			nw_protocol_stack_clear_application_protocols (GetHandle());
 		}
 
 		delegate void nw_protocol_stack_iterate_protocols_block_t (IntPtr block, IntPtr options);
@@ -71,7 +71,7 @@ namespace Network {
                                 block_ptr_handler = &block_handler;
                                 block_handler.SetupBlockUnsafe (static_iterateHandler, callback);
 
-                                nw_protocol_stack_iterate_application_protocols (Handle, (void*) block_ptr_handler);
+                                nw_protocol_stack_iterate_application_protocols (GetHandle(), (void*) block_ptr_handler);
                                 block_ptr_handler->CleanupBlock ();
                         }
 		}
@@ -86,8 +86,8 @@ namespace Network {
 		
 		[TV (12, 0), Mac (10, 14), iOS (12, 0)]
 		public NWProtocolOptions TransportProtocol {
-			get => new NWProtocolOptions (nw_protocol_stack_copy_transport_protocol (handle), owns: true);
-			set => nw_protocol_stack_set_transport_protocol (handle, value.Handle);
+			get => new NWProtocolOptions (nw_protocol_stack_copy_transport_protocol (GetHandle()), owns: true);
+			set => nw_protocol_stack_set_transport_protocol (GetHandle(), value.Handle);
 		}
 
 		[TV (12, 0), Mac (10, 14), iOS (12, 0)]
@@ -95,6 +95,6 @@ namespace Network {
 		extern static IntPtr nw_protocol_stack_copy_internet_protocol (nw_protocol_stack_t stack);
 
 		[TV (12, 0), Mac (10, 14), iOS (12, 0)]
-		public NWProtocolOptions InternetProtocol => new NWProtocolOptions (nw_protocol_stack_copy_internet_protocol (handle), owns: true);
+		public NWProtocolOptions InternetProtocol => new NWProtocolOptions (nw_protocol_stack_copy_internet_protocol (GetHandle()), owns: true);
 	}
 }

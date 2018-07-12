@@ -59,7 +59,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_content_context_get_identifier (IntPtr handle);
 
-		public string Identifier => Marshal.PtrToStringAnsi (nw_content_context_get_identifier (handle));
+		public string Identifier => Marshal.PtrToStringAnsi (nw_content_context_get_identifier (GetHandle()));
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
@@ -72,8 +72,8 @@ namespace Network {
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public bool IsFinal {
-			get => nw_content_context_get_is_final (handle);
-			set => nw_content_context_set_is_final (handle, value);
+			get => nw_content_context_get_is_final (GetHandle());
+			set => nw_content_context_set_is_final (GetHandle(), value);
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -86,8 +86,8 @@ namespace Network {
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public ulong ExpirationMilliseconds {
-			get => nw_content_context_get_expiration_milliseconds (handle);
-			set => nw_content_context_set_expiration_milliseconds (handle, value);
+			get => nw_content_context_get_expiration_milliseconds (GetHandle());
+			set => nw_content_context_set_expiration_milliseconds (GetHandle(), value);
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -100,8 +100,8 @@ namespace Network {
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public double RelativePriority {
-			get => nw_content_context_get_relative_priority (handle);
-			set => nw_content_context_set_relative_priority (handle, value);
+			get => nw_content_context_get_relative_priority (GetHandle());
+			set => nw_content_context_set_relative_priority (GetHandle(), value);
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -115,13 +115,13 @@ namespace Network {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWContentContext Antecedent {
 			get {
-				var h = nw_content_context_copy_antecedent (handle);
+				var h = nw_content_context_copy_antecedent (GetHandle());
 				if (h == IntPtr.Zero)
 					return null;
 				return new NWContentContext (h, owns: true);
 			}
 			set {
-				nw_content_context_set_antecedent (handle, value == null ? IntPtr.Zero : value.Handle);
+				nw_content_context_set_antecedent (GetHandle(), value == null ? IntPtr.Zero : value.Handle);
 			}
 		}
 
@@ -133,7 +133,7 @@ namespace Network {
 		{
 			if (protocolDefinition == null)
 				throw new ArgumentNullException (nameof (protocolDefinition));
-			var x = nw_content_context_copy_protocol_metadata (handle, protocolDefinition.handle);
+			var x = nw_content_context_copy_protocol_metadata (GetHandle(), protocolDefinition.handle);
 			if (x == IntPtr.Zero)
 				return null;
 			return new NWProtocolMetadata (x, owns: true);
@@ -148,7 +148,7 @@ namespace Network {
 		{
 			if (protocolMetadata == null)
 				throw new ArgumentNullException (nameof (protocolMetadata));
-			nw_content_context_set_metadata_for_protocol (handle, protocolMetadata.Handle);
+			nw_content_context_set_metadata_for_protocol (GetHandle(), protocolMetadata.Handle);
 		}
 
 		delegate void ProtocolIterator (IntPtr block, IntPtr definition, IntPtr metadata);
@@ -188,7 +188,7 @@ namespace Network {
 			        block_ptr_handler = &block_handler;
 			        block_handler.SetupBlockUnsafe (static_ProtocolIterator, callback);
 			
-			        nw_content_context_foreach_protocol_metadata (handle, (void*) block_ptr_handler);
+			        nw_content_context_foreach_protocol_metadata (GetHandle(), (void*) block_ptr_handler);
 			        block_ptr_handler->CleanupBlock ();
 			}
 		}

@@ -32,7 +32,7 @@ namespace Network {
 		extern static NWEndpointType nw_endpoint_get_type (OS_nw_endpoint handle);
 
 		[Mac(10,14)][iOS(12,0)][TV(12,0)]
-		public NWEndpointType Type => nw_endpoint_get_type (handle);
+		public NWEndpointType Type => nw_endpoint_get_type (GetHandle());
 
 		[Mac(10,14)][iOS(12,0)][TV(12,0)]
 		[DllImport (Constants.NetworkLibrary)]
@@ -56,14 +56,14 @@ namespace Network {
 		static extern IntPtr nw_endpoint_get_hostname (OS_nw_endpoint endpoint);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public string Hostname => Marshal.PtrToStringAnsi (nw_endpoint_get_hostname (handle));
+		public string Hostname => Marshal.PtrToStringAnsi (nw_endpoint_get_hostname (GetHandle()));
 		
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern string nw_endpoint_copy_port_string (OS_nw_endpoint endpoint);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public string Port => nw_endpoint_copy_port_string (handle);
+		public string Port => nw_endpoint_copy_port_string (GetHandle());
 
 		
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -71,7 +71,7 @@ namespace Network {
 		static extern ushort nw_endpoint_get_port (OS_nw_endpoint endpoint);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public ushort PortNumber => nw_endpoint_get_port (handle);
+		public ushort PortNumber => nw_endpoint_get_port (GetHandle());
 	
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
@@ -86,7 +86,7 @@ namespace Network {
 		static extern string nw_endpoint_copy_address_string (OS_nw_endpoint endpoint);
 		
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public string Address => nw_endpoint_copy_address_string (handle);
+		public string Address => nw_endpoint_copy_address_string (GetHandle());
 		
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
@@ -113,21 +113,21 @@ namespace Network {
 		static extern unsafe IntPtr nw_endpoint_get_bonjour_service_name (OS_nw_endpoint endpoint);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public string BonjourServiceName => Marshal.PtrToStringAnsi (nw_endpoint_get_bonjour_service_name (handle));
+		public string BonjourServiceName => Marshal.PtrToStringAnsi (nw_endpoint_get_bonjour_service_name (GetHandle()));
 		
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_endpoint_get_bonjour_service_type (OS_nw_endpoint endpoint);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public string BonjourServiceType => Marshal.PtrToStringAnsi (nw_endpoint_get_bonjour_service_type (handle));
+		public string BonjourServiceType => Marshal.PtrToStringAnsi (nw_endpoint_get_bonjour_service_type (GetHandle()));
 		
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_endpoint_get_bonjour_service_domain (OS_nw_endpoint endpoint);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public string BonjourServiceDomain => Marshal.PtrToStringAnsi (nw_endpoint_get_bonjour_service_domain (handle));
+		public string BonjourServiceDomain => Marshal.PtrToStringAnsi (nw_endpoint_get_bonjour_service_domain (GetHandle()));
 		
 	}
 }

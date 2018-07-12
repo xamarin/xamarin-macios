@@ -34,14 +34,14 @@ namespace Network {
 		static extern NWErrorDomain nw_error_get_error_domain (IntPtr error);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public NWErrorDomain ErrorDomain => nw_error_get_error_domain (handle);
+		public NWErrorDomain ErrorDomain => nw_error_get_error_domain (GetHandle());
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern int nw_error_get_error_code (IntPtr handle);
 		
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public int ErrorCode => nw_error_get_error_code (handle);
+		public int ErrorCode => nw_error_get_error_code (GetHandle());
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
@@ -50,7 +50,7 @@ namespace Network {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public CFException CFError {
 			get {
-				return CFException.FromCFError (nw_error_copy_cf_error (handle), true);
+				return CFException.FromCFError (nw_error_copy_cf_error (GetHandle()), true);
 			}
 		}
 	}

@@ -37,7 +37,7 @@ namespace Network {
 				return false;
 			if (!(other is NWProtocolDefinition))
 				return false;
-			return nw_protocol_definition_is_equal (handle, (other as NWProtocolDefinition).handle);
+			return nw_protocol_definition_is_equal (GetHandle(), (other as NWProtocolDefinition).handle);
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -103,21 +103,21 @@ namespace Network {
 		extern static void nw_tcp_options_set_no_delay (IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool noDelay);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void TcpSetNoDelay (bool noDelay) => nw_tcp_options_set_no_delay (handle, noDelay);
+		public void TcpSetNoDelay (bool noDelay) => nw_tcp_options_set_no_delay (GetHandle(), noDelay);
 		
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_tcp_options_set_no_push(IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool noPush);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void TcpSetNoPush (bool noPush) => nw_tcp_options_set_no_push (handle, noPush);
+		public void TcpSetNoPush (bool noPush) => nw_tcp_options_set_no_push (GetHandle(), noPush);
 			
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_tcp_options_set_no_options(IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool noOptions);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void TcpSetNoOptions (bool noOptions) => nw_tcp_options_set_no_options (handle, noOptions);
+		public void TcpSetNoOptions (bool noOptions) => nw_tcp_options_set_no_options (GetHandle(), noOptions);
 		
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -125,86 +125,86 @@ namespace Network {
 		extern static void nw_tcp_options_set_enable_keepalive(IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool enableKeepalive);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void TcpSetEnableKeepAlive (bool enableKeepalive) => nw_tcp_options_set_enable_keepalive (handle, enableKeepalive);
+		public void TcpSetEnableKeepAlive (bool enableKeepalive) => nw_tcp_options_set_enable_keepalive (GetHandle(), enableKeepalive);
 			
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_tcp_options_set_keepalive_count(IntPtr handle, uint keepaliveCount);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void TcpSetKeepaliveCount (uint keepaliveCount) => nw_tcp_options_set_keepalive_count (handle, keepaliveCount);
+		public void TcpSetKeepaliveCount (uint keepaliveCount) => nw_tcp_options_set_keepalive_count (GetHandle(), keepaliveCount);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_tcp_options_set_keepalive_idle_time(IntPtr handle, uint keepaliveIdleTime);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void TcpSetKeepaliveIdleTime (uint keepaliveIdleTime) => nw_tcp_options_set_keepalive_idle_time (handle, keepaliveIdleTime);
+		public void TcpSetKeepaliveIdleTime (uint keepaliveIdleTime) => nw_tcp_options_set_keepalive_idle_time (GetHandle(), keepaliveIdleTime);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_tcp_options_set_keepalive_interval(IntPtr handle, uint keepaliveInterval);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void TcpSetKeepaliveInterval (uint keepaliveInterval) => nw_tcp_options_set_keepalive_interval (handle, keepaliveInterval);
+		public void TcpSetKeepaliveInterval (uint keepaliveInterval) => nw_tcp_options_set_keepalive_interval (GetHandle(), keepaliveInterval);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_tcp_options_set_maximum_segment_size(IntPtr handle, uint maximumSegmentSize);
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void TcpSetMaximumSegmentSize (uint maximumSegmentSize) => nw_tcp_options_set_maximum_segment_size (handle, maximumSegmentSize);
+		public void TcpSetMaximumSegmentSize (uint maximumSegmentSize) => nw_tcp_options_set_maximum_segment_size (GetHandle(), maximumSegmentSize);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_tcp_options_set_connection_timeout(IntPtr handle, uint connectionTimeout);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void TcpSetConnectionTimeout (uint connectionTimeout) => nw_tcp_options_set_connection_timeout (handle, connectionTimeout);
+		public void TcpSetConnectionTimeout (uint connectionTimeout) => nw_tcp_options_set_connection_timeout (GetHandle(), connectionTimeout);
 		
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_tcp_options_set_persist_timeout(IntPtr handle, uint persistTimeout);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void TcpSetPersistTimeout (uint persistTimeout) => nw_tcp_options_set_persist_timeout (handle, persistTimeout);
+		public void TcpSetPersistTimeout (uint persistTimeout) => nw_tcp_options_set_persist_timeout (GetHandle(), persistTimeout);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_tcp_options_set_retransmit_connection_drop_time (IntPtr handle, uint retransmitConnectionDropTime);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void TcpSetRetransmitConnectionDropTime (uint retransmitConnectionDropTime) => nw_tcp_options_set_retransmit_connection_drop_time (handle, retransmitConnectionDropTime);
+		public void TcpSetRetransmitConnectionDropTime (uint retransmitConnectionDropTime) => nw_tcp_options_set_retransmit_connection_drop_time (GetHandle(), retransmitConnectionDropTime);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_tcp_options_set_retransmit_fin_drop (IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool retransmitFinDrop);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void TcpSetRetransmitFinDrop (bool retransmitFinDrop) => nw_tcp_options_set_retransmit_fin_drop (handle, retransmitFinDrop);
+		public void TcpSetRetransmitFinDrop (bool retransmitFinDrop) => nw_tcp_options_set_retransmit_fin_drop (GetHandle(), retransmitFinDrop);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_tcp_options_set_disable_ack_stretching (IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool disableAckStretching);
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void TcpSetDisableAckStretching (bool disableAckStretching) => nw_tcp_options_set_disable_ack_stretching (handle, disableAckStretching);
+		public void TcpSetDisableAckStretching (bool disableAckStretching) => nw_tcp_options_set_disable_ack_stretching (GetHandle(), disableAckStretching);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_tcp_options_set_enable_fast_open (IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool enableFastOpen);
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void TcpSetEnableFastOpen (bool enableFastOpen) => nw_tcp_options_set_enable_fast_open (handle, enableFastOpen);
+		public void TcpSetEnableFastOpen (bool enableFastOpen) => nw_tcp_options_set_enable_fast_open (GetHandle(), enableFastOpen);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_tcp_options_set_disable_ecn (IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool disableEcn);
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void TcpSetDisableEcn (bool disableEcn) => nw_tcp_options_set_disable_ecn (handle, disableEcn);
+		public void TcpSetDisableEcn (bool disableEcn) => nw_tcp_options_set_disable_ecn (GetHandle(), disableEcn);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_udp_options_set_prefer_no_checksum (IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool preferNoChecksums);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void UdpSetPreferNoChecksum (bool preferNoChecksums) => nw_udp_options_set_prefer_no_checksum (handle, preferNoChecksums);
+		public void UdpSetPreferNoChecksum (bool preferNoChecksums) => nw_udp_options_set_prefer_no_checksum (GetHandle(), preferNoChecksums);
 	}
 }

@@ -45,7 +45,7 @@ namespace Network {
 			if (txt == null)
 				throw new ArgumentNullException (nameof (txt));
 			var n = System.Text.Encoding.UTF8.GetByteCount (txt);
-			nw_advertise_descriptor_set_txt_record (handle, txt, (IntPtr) n);
+			nw_advertise_descriptor_set_txt_record (GetHandle (), txt, (IntPtr) n);
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -59,8 +59,8 @@ namespace Network {
 		
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public bool NoAutoRename {
-			set => nw_advertise_descriptor_set_no_auto_rename (handle, value);
-			get => nw_advertise_descriptor_get_no_auto_rename (handle);
+			set => nw_advertise_descriptor_set_no_auto_rename (GetHandle (), value);
+			get => nw_advertise_descriptor_get_no_auto_rename (GetHandle ());
 		}
 	}
 }
