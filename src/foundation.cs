@@ -10736,17 +10736,18 @@ namespace Foundation
 		NSString SecureUnarchiveFromDataTransformerName { get; }
 	}
 
-	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-	[BaseType (typeof(NSValueTransformer))]
-	interface NSSecureUnarchiveFromDataTransformer {
-		[Static]
-		[Export ("allowedTopLevelClasses", ArgumentSemantic.Copy)]
-		Class[] AllowedTopLevelClasses { get; }
-
-		[Static]
-		[Wrap ("Array.ConvertAll (AllowedTopLevelClasses, c => Class.Lookup (c))")]
-		Type [] AllowedTopLevelTypes { get; }
-	}
+	// Class [] return value is currently broken - https://github.com/xamarin/xamarin-macios/issues/4441
+// 	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+// 	[BaseType (typeof(NSValueTransformer))]
+// 	interface NSSecureUnarchiveFromDataTransformer {
+// 		[Static]
+// 		[Export ("allowedTopLevelClasses", ArgumentSemantic.Copy)]
+// 		Class[] AllowedTopLevelClasses { get; }
+// 
+// 		[Static]
+// 		[Wrap ("Array.ConvertAll (AllowedTopLevelClasses, c => Class.Lookup (c))")]
+// 		Type [] AllowedTopLevelTypes { get; }
+// 	}
 	
 	[BaseType (typeof (NSValue))]
 	// init returns NIL
