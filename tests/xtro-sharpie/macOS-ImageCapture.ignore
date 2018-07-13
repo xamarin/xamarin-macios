@@ -1,2 +1,0 @@
-## API break, fixed in XAMCORE_4_0. Up for consideration of being allowed
-!incorrect-protocol-member! IKDeviceBrowserViewDelegate::deviceBrowserView:selectionDidChange: is REQUIRED and should be abstract
