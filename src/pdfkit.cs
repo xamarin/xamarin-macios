@@ -1090,7 +1090,6 @@ namespace PdfKit {
 	[BaseType (typeof (NSObject), Name = "PDFDestination")]
 	interface PdfDestination : NSCopying {
 
-		[iOS (11,0)]
 		[Field ("kPDFDestinationUnspecifiedValue")]
 		nfloat UnspecifiedValue { get; }
 
