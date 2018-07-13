@@ -12,7 +12,7 @@ using System.Runtime.CompilerServices;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
-
+using Security;
 using OS_nw_protocol_definition=System.IntPtr;
 using OS_nw_protocol_metadata=System.IntPtr;
 using nw_service_class_t=System.IntPtr;
@@ -83,6 +83,13 @@ namespace Network {
 	
 		public bool IsTls => nw_protocol_metadata_is_tls (GetHandle());
 
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern IntPtr nw_tls_copy_sec_protocol_metadata (IntPtr handle);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public SecProtocolMetadata SecProtocolMetadata => new SecProtocolMetadata (nw_tls_copy_sec_protocol_metadata (GetHandle ()), owns: true);
+		
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_ip_metadata_set_ecn_flag (OS_nw_protocol_metadata metadata, NWIPEcnFlag ecn_flag);

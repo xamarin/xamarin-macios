@@ -12,6 +12,7 @@ using System.Runtime.CompilerServices;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
+using Security;
 using OS_nw_protocol_definition=System.IntPtr;
 using IntPtr=System.IntPtr;
 
@@ -214,7 +215,17 @@ namespace Network {
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void UdpSetPreferNoChecksum (bool preferNoChecksums) => nw_udp_options_set_prefer_no_checksum (GetHandle(), preferNoChecksums);
-		
+
+//
+// TLS options
+//
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		extern static IntPtr nw_tls_copy_sec_protocol_options (IntPtr options);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		public SecProtocolOptions TlsProtocolOptions => new SecProtocolOptions (nw_tls_copy_sec_protocol_options (GetHandle ()), owns: true);
 		
 	}
 }
