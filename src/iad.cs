@@ -295,4 +295,20 @@ namespace iAd {
 		[Export ("cancelPreroll")]
 		void CancelPreroll ();
 	}
+
+	[iOS (12,0)]
+	[NoWatch]
+	[DisableDefaultCtor]
+	[BaseType (typeof (UIViewController))]
+	interface ADInterstitialAdPresentationViewController {
+		// inlined ctor
+		[Export ("initWithNibName:bundle:")]
+		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+
+		[Export ("initForInterstitialAd:")]
+		IntPtr Constructor (ADInterstitialAd interstitialAd);
+
+		[Export ("shouldTestVisibilityAtPoint:")]
+		bool ShouldTestVisibility (CGPoint point);
+	}
 }
