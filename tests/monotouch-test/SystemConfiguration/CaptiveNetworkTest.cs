@@ -37,8 +37,8 @@ namespace MonoTouchFixtures.SystemConfiguration {
 		public void Fields ()
 		{
 			if (Runtime.Arch == Arch.SIMULATOR) {
-				if (TestRuntime.CheckSystemAndSDKVersion (6,0))
-					Assert.Inconclusive ("Fails (NullReferenceException) on iOS6 simulator");
+				// Fails (NullReferenceException) on iOS6 simulator
+				TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 			}
 
 #if __TVOS__
@@ -50,26 +50,6 @@ namespace MonoTouchFixtures.SystemConfiguration {
 			Assert.That (CaptiveNetwork.NetworkInfoKeySSID.ToString (), Is.EqualTo ("SSID"), "kCNNetworkInfoKeySSID");
 			Assert.That (CaptiveNetwork.NetworkInfoKeySSIDData.ToString (), Is.EqualTo ("SSIDDATA"), "kCNNetworkInfoKeySSIDData");
 #endif
-		}
-#endif
-
-#if !XAMCORE_2_0
-		[Test]
-		public void GetSupportedInterfaces ()
-		{
-			if (Runtime.Arch == Arch.SIMULATOR) {
-				if (TestRuntime.CheckSystemAndSDKVersion (6,0))
-					Assert.Inconclusive ("This test crash on the iOS 6 simulator with Lion");
-			}
-
-			string [] interfaces = CaptiveNetwork.GetSupportedInterfaces ();
-			if (Runtime.Arch == Arch.SIMULATOR) {
-				// we can't assume much about the computer running the simulator
-				Assert.NotNull (interfaces, "GetSupportedInterfaces");
-			} else {
-				Assert.That (interfaces.Length, Is.EqualTo (1), "1");
-				Assert.That (interfaces [0], Is.EqualTo ("en0"), "en0");
-			}
 		}
 #endif
 
@@ -93,8 +73,10 @@ namespace MonoTouchFixtures.SystemConfiguration {
 		public void TryCopyCurrentNetworkInfo ()
 		{
 			if (Runtime.Arch == Arch.SIMULATOR) {
-				if (TestRuntime.CheckSystemAndSDKVersion (6,0))
+#if __IOS__
+				if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 6, 0))
 					Assert.Inconclusive ("This test throws EntryPointNotFoundException on the iOS 6 simulator with Lion");
+#endif
 			}
 
 			NSDictionary dict;
@@ -106,7 +88,12 @@ namespace MonoTouchFixtures.SystemConfiguration {
 
 			Assert.AreEqual (StatusCode.OK, status, "Status");
 
-			if ((dict == null) && (Runtime.Arch == Arch.DEVICE) && UIDevice.CurrentDevice.CheckSystemVersion (9,0))
+#if __TVOS__
+			Assert.IsNull (dict, "Dictionary"); // null?
+			return;
+#endif
+
+			if ((dict == null) && (Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckSystemVersion (PlatformName.iOS, 9, 0))
 				Assert.Ignore ("null on iOS9 devices - CaptiveNetwork is being deprecated ?!?");
 
 			if (dict.Count == 3) {
@@ -136,6 +123,8 @@ namespace MonoTouchFixtures.SystemConfiguration {
 #endif
 		public void MarkPortalOnline ()
 		{
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+
 			Assert.False (CaptiveNetwork.MarkPortalOnline ("xamxam"));
 		}
 		
@@ -156,6 +145,8 @@ namespace MonoTouchFixtures.SystemConfiguration {
 #endif
 		public void MarkPortalOffline ()
 		{
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+
 			Assert.False (CaptiveNetwork.MarkPortalOffline ("xamxam"));
 		}
 		
@@ -176,11 +167,13 @@ namespace MonoTouchFixtures.SystemConfiguration {
 #endif
 		public void SetSupportedSSIDs ()
 		{
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+
 #if MONOMAC
 			bool supported = true;
 #else
 			// that API is deprecated in iOS9 - and it might be why it returns false (or not)
-			bool supported = !UIDevice.CurrentDevice.CheckSystemVersion (9,0);
+			bool supported = !TestRuntime.CheckXcodeVersion (7, 0);
 #endif
 			Assert.That (CaptiveNetwork.SetSupportedSSIDs (new string [2] { "one", "two" } ), Is.EqualTo (supported), "set");
 		}

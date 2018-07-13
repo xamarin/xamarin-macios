@@ -165,7 +165,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			Assert.IsTrue (transformM == transformN, "2");
 		}
 
-		[DllImport ("/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics")]
+		[DllImport (global::ObjCRuntime.Constants.CoreGraphicsLibrary)]
 		public extern static CGAffineTransform CGAffineTransformScale (CGAffineTransform t, nfloat sx, nfloat sy);
 
 		[Test]
@@ -220,7 +220,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			Assert.IsTrue (transformN == transformM);
 		}
 
-		[DllImport ("/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics")]
+		[DllImport (global::ObjCRuntime.Constants.CoreGraphicsLibrary)]
 		public extern static CGAffineTransform CGAffineTransformTranslate (CGAffineTransform t, nfloat sx, nfloat sy);
 
 		[Test]
@@ -258,7 +258,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			Assert.That ((double) 6, Is.EqualTo ((double) transformM.y0).Within (0.000001), "y0");
 		}
 
-		[DllImport ("/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics")]
+		[DllImport (global::ObjCRuntime.Constants.CoreGraphicsLibrary)]
 		public extern static CGAffineTransform CGAffineTransformRotate (CGAffineTransform t, nfloat angle);
 
 		[Test]

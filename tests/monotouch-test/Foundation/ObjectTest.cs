@@ -99,7 +99,12 @@ namespace MonoTouchFixtures.Foundation {
 			using (CGColor c = new CGColor (CGColorSpace.CreateDeviceRGB (), new nfloat [] { 0.1f, 0.2f, 0.3f, 1.0f })) {
 				Assert.IsNotNull (NSObject.FromObject (c), "CGColor");
 			}
-			if (TestRuntime.CheckXcodeVersion (6, 0)) {
+			var hasSecAccessControl = TestRuntime.CheckXcodeVersion (6, 0);
+#if __MACOS__
+			if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 10))
+				hasSecAccessControl = false;
+#endif
+			if (hasSecAccessControl) {
 				using (var sac = new SecAccessControl (SecAccessible.WhenPasscodeSetThisDeviceOnly)) {
 					Assert.IsNotNull (NSObject.FromObject (sac), "SecAccessControl");
 				}

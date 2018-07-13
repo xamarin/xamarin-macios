@@ -16,6 +16,7 @@ using NUnit.Framework;
 #if MONOMAC
 using Foundation;
 #endif
+using ObjCRuntime;
 
 namespace MonoTests.System.Net.Http
 {
@@ -44,6 +45,9 @@ namespace MonoTests.System.Net.Http
 		[TestCase (typeof (NSUrlSessionHandler))]
 		public void DnsFailure (Type handlerType)
 		{
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+
 			PrintHandlerToTest ();
 
 			bool done = false;

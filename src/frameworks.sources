@@ -861,6 +861,9 @@ HOMEKIT_SOURCES = \
 IAD_API_SOURCES = \
 	iAd/iAd.cs \
 
+IAD_SOURCES = \
+	iAd/ADBannerView.cs \
+
 # ImageCaptureKit
 IMAGECAPTURECORE_API_SOURCES = \
 	ImageCaptureCore/Defs.cs
@@ -1427,6 +1430,7 @@ UIKIT_SOURCES = \
 	UIKit/UIContentSizeCategory.cs \
 	UIKit/UIControl.cs \
 	UIKit/UIDevice.cs \
+	UIKit/UIDocumentBrowserViewController.cs \
 	UIKit/UIDocumentInteractionController.cs \
 	UIKit/UIDocumentMenuViewController.cs \
 	UIKit/UIDocumentPickerViewController.cs \
@@ -1846,6 +1850,7 @@ WATCHOS_FRAMEWORKS =        \
 	ImageIO                 \
 	Intents                 \
 	MapKit                  \
+	MediaPlayer             \
 	MobileCoreServices      \
 	NaturalLanguage         \
 	PassKit                 \

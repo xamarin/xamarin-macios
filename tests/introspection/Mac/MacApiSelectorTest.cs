@@ -205,6 +205,12 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "newWindowForTab:": // "This method can be implemented in the responder chain", optional but not protocol directly on NSResponder
+				switch (type.Name) {
+				case "NSViewController":
+					return true;
+				}
+				break;
 			}
 
 			switch (type.Namespace) {
@@ -349,6 +355,15 @@ namespace Introspection {
 				case "NSUrlSessionConfiguration":
 					if (Mac.IsAtLeast (10, 11))
 						return true;
+					break;
+				case "NSNull":
+					switch (selectorName) {
+					case "runActionForKey:object:arguments:":
+						// This comes from implementing the CAAction protocol, which started in 10.11.
+						if (!Mac.CheckSystemVersion (10, 11))
+							return true;
+						break;
+					}
 					break;
 				}
 				break;
@@ -514,6 +529,8 @@ namespace Introspection {
 					case "delegate":
 					case "setDelegate:":
 					case "expectedPlayerCount":
+					case "chooseBestHostPlayerWithCompletionHandler:":
+					case "rematchWithCompletionHandler:":
 						return true;
 					}
 					break;
@@ -528,6 +545,11 @@ namespace Introspection {
 					case "cancel":
 					case "queryPlayerGroupActivity:withCompletionHandler:":
 					case "queryActivityWithCompletionHandler:":
+					case "cancelInviteToPlayer:":
+					case "finishMatchmakingForMatch:":
+					case "matchForInvite:completionHandler:":
+					case "startBrowsingForNearbyPlayersWithReachableHandler:":
+					case "stopBrowsingForNearbyPlayers":
 						return true;
 					}
 					break;

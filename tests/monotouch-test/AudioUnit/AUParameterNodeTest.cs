@@ -24,8 +24,7 @@ namespace monotouchtest {
 		[Test]
 		public void CreateTokenByAddingParameterRecordingObserver ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (9, 0))
-				Assert.Ignore ("Ignoring AudioUnitv3 tests: Requires iOS9+");
+			TestRuntime.AssertXcodeVersion (7, 0);
 
 			const ulong address = 0;
 			const float newValue = 10f;
@@ -61,8 +60,7 @@ namespace monotouchtest {
 		[Test]
 		public void RemoveParameterObserver ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (9, 0))
-				Assert.Ignore ("Ignoring AudioUnitv3 tests: Requires iOS9+");
+			TestRuntime.AssertXcodeVersion (7, 0);
 
 			const ulong address = 0;
 			const float newValue = 10f;
@@ -91,8 +89,7 @@ namespace monotouchtest {
 		[Test]
 		public void ImplementorStringFromValueCallback ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (9, 0))
-				Assert.Ignore ("Ignoring AudioUnitv3 tests: Requires iOS9+");
+			TestRuntime.AssertXcodeVersion (7, 0);
 
 			const float floatValue = 10f;
 			const string expectedStringValue = "10";
@@ -122,8 +119,7 @@ namespace monotouchtest {
 		[Test]
 		public void ImplementorValueFromStringCallback ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (9, 0))
-				Assert.Ignore ("Ignoring AudioUnitv3 tests: Requires iOS9+");
+			TestRuntime.AssertXcodeVersion (7, 0);
 
 			const float expectedValue = 10f;
 			const string stringValue = "10";
@@ -157,8 +153,7 @@ namespace monotouchtest {
 		[Test, Ignore]
 		public void ImplementorDisplayNameWithLengthCallback ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (9, 0))
-				Assert.Ignore ("Ignoring AudioUnitv3 tests: Requires iOS9+");
+			TestRuntime.AssertXcodeVersion (7, 0);
 
 			const string displayName = "Resonance";
 			const int length = 5;

@@ -14,6 +14,7 @@ using System;
 using Foundation;
 using CoreText;
 using CoreGraphics;
+using ObjCRuntime;
 #else
 using MonoTouch.CoreGraphics;
 using MonoTouch.CoreText;

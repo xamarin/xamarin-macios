@@ -1,7 +1,0 @@
-!missing-enum! INRelevantShortcutRole not bound
-!missing-selector! INGetCarPowerLevelStatusIntentResponse::charging not bound
-!missing-selector! INGetCarPowerLevelStatusIntentResponse::minutesToFull not bound
-!missing-selector! INGetCarPowerLevelStatusIntentResponse::setCharging: not bound
-!missing-selector! INGetCarPowerLevelStatusIntentResponse::setMinutesToFull: not bound
-!missing-selector! INRelevantShortcut::setShortcutRole: not bound
-!missing-selector! INRelevantShortcut::shortcutRole not bound

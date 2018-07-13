@@ -12,6 +12,7 @@ using System.Linq;
 #if XAMCORE_2_0
 using Foundation;
 using CoreText;
+using ObjCRuntime;
 #else
 using MonoTouch.CoreText;
 using MonoTouch.Foundation;

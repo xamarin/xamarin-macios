@@ -1,4 +1,0 @@
-!missing-selector! AVCapturePhotoSettings::availableRawEmbeddedThumbnailPhotoCodecTypes not bound
-!missing-selector! AVCapturePhotoSettings::rawEmbeddedThumbnailPhotoFormat not bound
-!missing-selector! AVCapturePhotoSettings::setRawEmbeddedThumbnailPhotoFormat: not bound
-!missing-selector! AVCaptureResolvedPhotoSettings::rawEmbeddedThumbnailDimensions not bound

@@ -789,7 +789,7 @@ namespace UIKit {
 	[BaseType (typeof (NSObject))]
 	[DesignatedDefaultCtor]
 	[iOS (6,0)]
-	interface NSShadow : NSCoding, NSCopying {
+	interface NSShadow : NSSecureCoding, NSCopying {
 		[Export ("shadowOffset", ArgumentSemantic.Assign)]
 		CGSize ShadowOffset { get; set; }
 		
@@ -18251,14 +18251,20 @@ namespace UIKit {
 		[Export ("importDocumentAtURL:nextToDocumentAtURL:mode:completionHandler:")]
 		void ImportDocument (NSUrl documentUrl, NSUrl neighbourUrl, UIDocumentBrowserImportMode importMode, Action<NSUrl, NSError> completion);
 
+		[Internal] // got deprecated
 		[Export ("transitionControllerForDocumentURL:")]
-		UIDocumentBrowserTransitionController GetTransitionController (NSUrl documentUrl);
+		UIDocumentBrowserTransitionController _DeprecatedGetTransitionController (NSUrl documentUrl);
 
 		[Export ("customActions", ArgumentSemantic.Strong)]
 		UIDocumentBrowserAction[] CustomActions { get; set; }
 
 		[Export ("browserUserInterfaceStyle", ArgumentSemantic.Assign)]
 		UIDocumentBrowserUserInterfaceStyle BrowserUserInterfaceStyle { get; set; }
+
+		[Internal]
+		[iOS (12,0)]
+		[Export ("transitionControllerForDocumentAtURL:")]
+		UIDocumentBrowserTransitionController _NewGetTransitionController (NSUrl documentUrl);
 	}
 
 	interface IUIDocumentBrowserViewControllerDelegate {}
@@ -18268,6 +18274,7 @@ namespace UIKit {
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface UIDocumentBrowserViewControllerDelegate {
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'DidPickDocumentsAtUrls (UIDocumentBrowserViewController, NSUrl[])' instead.")]
 		[Export ("documentBrowser:didPickDocumentURLs:")]
 		void DidPickDocumentUrls (UIDocumentBrowserViewController controller, NSUrl[] documentUrls);
 
@@ -18285,6 +18292,10 @@ namespace UIKit {
 
 		[Export ("documentBrowser:willPresentActivityViewController:")]
 		void WillPresent (UIDocumentBrowserViewController controller, UIActivityViewController activityViewController);
+
+		[iOS (12,0)]
+		[Export ("documentBrowser:didPickDocumentsAtURLs:")]
+		void DidPickDocumentsAtUrls (UIDocumentBrowserViewController controller, NSUrl[] documentUrls);
 	}
 
 	[NoTV, NoWatch]

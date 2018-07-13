@@ -47,8 +47,7 @@ namespace MonoTouchFixtures.AVFoundation {
 		[Test]
 		public void Seven ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Inconclusive ("Requires iOS7");
+			TestRuntime.AssertXcodeVersion (5, 0, 1);
 
 			using (var i = new AVVideoCompositionInstruction ()) {
 				Assert.False (i.ContainsTweening, "ContainsTweening");
