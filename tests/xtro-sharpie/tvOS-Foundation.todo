@@ -13,7 +13,6 @@
 !missing-field! NSOwnedPointerMapKeyCallBacks not bound
 !missing-field! NSOwnedPointerMapValueCallBacks not bound
 !missing-field! NSPointerToStructHashCallBacks not bound
-!missing-field! NSSecureUnarchiveFromDataTransformerName not bound
 !missing-pinvoke! NSAllHashTableObjects is not bound
 !missing-pinvoke! NSAllMapTableKeys is not bound
 !missing-pinvoke! NSAllMapTableValues is not bound
@@ -50,10 +49,4 @@
 !missing-pinvoke! NSResetMapTable is not bound
 !missing-pinvoke! NSStringFromHashTable is not bound
 !missing-pinvoke! NSStringFromMapTable is not bound
-!missing-selector! +NSKeyedArchiver::archivedDataWithRootObject:requiringSecureCoding:error: not bound
-!missing-selector! +NSKeyedUnarchiver::unarchivedObjectOfClass:fromData:error: not bound
-!missing-selector! +NSKeyedUnarchiver::unarchivedObjectOfClasses:fromData:error: not bound
-!missing-selector! +NSSecureUnarchiveFromDataTransformer::allowedTopLevelClasses not bound
-!missing-selector! NSKeyedArchiver::initRequiringSecureCoding: not bound
-!missing-selector! NSKeyedUnarchiver::initForReadingFromData:error: not bound
-!missing-type! NSSecureUnarchiveFromDataTransformer not bound
+
