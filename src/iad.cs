@@ -299,7 +299,7 @@ namespace iAd {
 	[iOS (12,0)]
 	[NoWatch]
 	[DisableDefaultCtor]
-	[BaseType ( typeof(UIViewController))]
+	[BaseType (typeof (UIViewController))]
 	interface ADInterstitialAdPresentationViewController {
 		// inlined ctor
 		[Export ("initWithNibName:bundle:")]
