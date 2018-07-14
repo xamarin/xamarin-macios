@@ -620,6 +620,10 @@ namespace PassKit {
 		[NoWatch] // Radar: https://trello.com/c/MvaHEZlc
 		[Export ("requiresFelicaSecureElement")]
 		bool RequiresFelicaSecureElement { get; set; }
+
+		[iOS (12, 0)]
+		[Export ("style", ArgumentSemantic.Assign)]
+		PKAddPaymentPassStyle Style { get; set; }
 	}
 
 	[iOS (9,0)]
@@ -838,6 +842,18 @@ namespace PassKit {
 		[iOS (10,3), Watch (3,2)]
 		[Field ("PKPaymentNetworkIDCredit")]
 		NSString IDCredit { get; }
+
+		[iOS (12,0), Watch (5,0)]
+		[Field ("PKPaymentNetworkElectron")]
+		NSString Electron { get; }
+
+		[iOS (12,0), Watch (5,0)]
+		[Field ("PKPaymentNetworkMaestro")]
+		NSString Maestro { get; }
+
+		[iOS (12,0), Watch (5,0)]
+		[Field ("PKPaymentNetworkVPay")]
+		NSString VPay { get; }
 	}
 
 #if !WATCH
@@ -855,6 +871,10 @@ namespace PassKit {
 		[Export ("initWithPaymentButtonType:paymentButtonStyle:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (PKPaymentButtonType type, PKPaymentButtonStyle style);
+
+		[iOS (12, 0)]
+		[Export ("cornerRadius")]
+		nfloat CornerRadius { get; set; }
 	}
 
 	[iOS (9,0)]
