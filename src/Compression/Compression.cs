@@ -558,14 +558,14 @@ namespace Compression
 			return WriteAsyncMemory (new ReadOnlyMemory<byte> (array, offset, count), cancellationToken);
 		}
 
-		public override Task WriteAsync (ReadOnlyMemory<byte> source, CancellationToken cancellationToken)
+		public override ValueTask WriteAsync (ReadOnlyMemory<byte> source, CancellationToken cancellationToken)
 		{
 			if (GetType () != typeof (CompressionStream)) {
 				// Ensure that existing streams derived from DeflateStream and that override WriteAsync(byte[],...)
 				// get their existing behaviors when the newer Memory-based overload is used.
 				return base.WriteAsync (source, cancellationToken);
 			} else {
-				return WriteAsyncMemory (source, cancellationToken);
+				return new ValueTask(WriteAsyncMemory (source, cancellationToken));
 			}
 		}
 
@@ -576,7 +576,7 @@ namespace Compression
 			EnsureNotDisposed ();
 
 			return cancellationToken.IsCancellationRequested ?
-				Task.FromCanceled<int> (cancellationToken) :
+				Task.FromCanceled<int>(cancellationToken) :
 				WriteAsyncMemoryCore (source, cancellationToken);
 		}
 
