@@ -14630,6 +14630,7 @@ namespace UIKit {
 	}
 
 	[NoTV]
+	[Deprecated (PlatformName.iOS, 12, 0, message: "No longer supported; please adopt 'WKWebView'.")]
 	[BaseType (typeof (UIView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(UIWebViewDelegate)})]
 	interface UIWebView : UIScrollViewDelegate {
 		[Export ("initWithFrame:")]
@@ -14734,6 +14735,7 @@ namespace UIKit {
 	}
 
 	[NoTV]
+	[Deprecated (PlatformName.iOS, 12, 0, message: "No longer supported; please adopt 'WKWebView' APIs.")]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
