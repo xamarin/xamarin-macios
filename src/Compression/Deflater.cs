@@ -63,7 +63,7 @@ namespace Compression
 		{
 			if (!NeedsInput ())
 				throw new InvalidOperationException ("We have something left in previous input!");
-			if (_inputBufferHandle.Pointer == null)
+			if (_inputBufferHandle.Pointer != null)
 				throw new InvalidOperationException ("Unexpected input buffer handler found.");
 
 			if (0 == inputBuffer.Length) {
@@ -84,7 +84,7 @@ namespace Compression
 				throw new InvalidOperationException ("We have something left in previous input!");
 			if (inputBufferPtr == null)
 				throw new ArgumentNullException ( nameof (inputBufferPtr));
-			if (_inputBufferHandle.Pointer == null)
+			if (_inputBufferHandle.Pointer != null)
 				throw new InvalidOperationException ("Unexpected input buffer handler found.");
 
 			if (count == 0) {
