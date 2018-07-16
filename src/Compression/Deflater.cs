@@ -163,7 +163,7 @@ namespace Compression
 				throw new ArgumentException ("Can't pass in an empty output buffer!");
 			if (!NeedsInput ())
 				throw new InvalidOperationException ("We have something left in previous input!");
-			if (_inputBufferHandle.Pointer == null)
+			if (_inputBufferHandle.Pointer != null)
 				throw new InvalidOperationException ("InputHandler should not be set");
 
 			// Note: we require that NeedsInput() == true, i.e. that 0 == _zlibStream.AvailIn.
