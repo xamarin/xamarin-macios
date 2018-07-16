@@ -198,4 +198,12 @@ namespace PassKit {
 		BillingContactInvalid,
 		ShippingAddressUnserviceable,
 	}
+
+	[iOS (12,0)]
+	[NoWatch]
+	[Native]
+	public enum PKAddPaymentPassStyle : ulong {
+		Payment,
+		Access,
+	}
 }

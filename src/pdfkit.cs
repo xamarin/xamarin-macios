@@ -1090,6 +1090,7 @@ namespace PdfKit {
 	[BaseType (typeof (NSObject), Name = "PDFDestination")]
 	interface PdfDestination : NSCopying {
 
+		[Mac (10,13)] // This used to be a calculated macro and promoted to an actual field in 10.13.
 		[Field ("kPDFDestinationUnspecifiedValue")]
 		nfloat UnspecifiedValue { get; }
 
