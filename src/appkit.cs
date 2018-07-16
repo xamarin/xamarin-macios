@@ -8466,10 +8466,6 @@ namespace AppKit {
 		[Export ("initWithData:")]
 		IntPtr Constructor (NSData attribs);
 
-		// TODO: wrap the CLContext and take a CLContext here instead.
-		//[Export ("initWithCGLPixelFormatObj:")]
-		//IntPtr Constructor (IntPtr cglContextHandle);
-
 		[Export ("getValues:forAttribute:forVirtualScreen:")]
 		void GetValue (ref int /* GLint = int32_t */ vals, NSOpenGLPixelFormatAttribute attrib, int /* GLint = int32_t */ screen);
 
@@ -26007,6 +26003,7 @@ namespace AppKit {
 	}
 #endif
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use Metal.")]
 	[BaseType (typeof(CAOpenGLLayer))]
 	interface NSOpenGLLayer
 	{
