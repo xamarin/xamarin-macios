@@ -29,9 +29,9 @@ using System;
 using ObjCRuntime;
 
 namespace ImageCaptureCore {
+
 	[Native]
-	public enum ICExifOrientationType : ulong
-	{
+	public enum ICExifOrientationType : ulong {
 		Orientation1 = 1,
 		Orientation2 = 2,
 		Orientation3 = 3,
@@ -42,8 +42,7 @@ namespace ImageCaptureCore {
 		Orientation8 = 8,
 	}
 	
-	public enum ICReturnCodeOffset
-	{
+	public enum ICReturnCodeOffset {
 		Thumbnail = -21000,
 		Metadata = -21050,
 		Download = -21100,
@@ -54,8 +53,7 @@ namespace ImageCaptureCore {
 	}
 	
 	[Native]
-	public enum ICReturnCode : long
-	{
+	public enum ICReturnCode : long {
 		Success = 0,
 		InvalidParam = -9922,
 		CommunicationTimedOut = -9923,
@@ -107,15 +105,13 @@ namespace ImageCaptureCore {
 	}
 	
 	[Native]
-	public enum ICDeviceType : ulong
-	{
+	public enum ICDeviceType : ulong {
 		Camera = 1,
 		Scanner = 2,
 	}
 	
 	[Native]
-	public enum ICDeviceLocationType : ulong
-	{
+	public enum ICDeviceLocationType : ulong {
 		Local = 256,
 		Shared = 512,
 		Bonjour = 1024,
@@ -123,15 +119,13 @@ namespace ImageCaptureCore {
 	}
 	
 	[Native]
-	public enum ICDeviceTypeMask : ulong
-	{
+	public enum ICDeviceTypeMask : ulong {
 		Camera = 1,
 		Scanner = 2,
 	}
 	
 	[Native]
-	public enum ICDeviceLocationTypeMask : ulong
-	{
+	public enum ICDeviceLocationTypeMask : ulong {
 		Local = 256,
 		Shared = 512,
 		Bonjour = 1024,
@@ -140,8 +134,7 @@ namespace ImageCaptureCore {
 	}
 
 	[Native]
-	public enum ICScannerFunctionalUnitType : ulong
-	{
+	public enum ICScannerFunctionalUnitType : ulong {
 		Flatbed = 0,
 		PositiveTransparency = 1,
 		NegativeTransparency = 2,
@@ -149,8 +142,7 @@ namespace ImageCaptureCore {
 	}
 	
 	[Native]
-	public enum ICScannerMeasurementUnit : ulong
-	{
+	public enum ICScannerMeasurementUnit : ulong {
 		Inches = 0,
 		Centimeters = 1,
 		Picas = 2,
@@ -160,23 +152,20 @@ namespace ImageCaptureCore {
 	}
 	
 	[Native]
-	public enum ICScannerBitDepth : ulong
-	{
+	public enum ICScannerBitDepth : ulong {
 		Bits1 = 1,
 		Bits8 = 8,
 		Bits16 = 16,
 	}
 	
 	[Native]
-	public enum ICScannerColorDataFormatType : ulong
-	{
+	public enum ICScannerColorDataFormatType : ulong {
 		Chunky = 0,
 		Planar = 1,
 	}
 	
 	[Native]
-	public enum ICScannerPixelDataType : ulong
-	{
+	public enum ICScannerPixelDataType : ulong {
 		Bw = 0,
 		Gray = 1,
 		Rgb = 2,
@@ -189,8 +178,7 @@ namespace ImageCaptureCore {
 	}
 	
 	[Native]
-	public enum ICScannerDocumentType : ulong
-	{
+	public enum ICScannerDocumentType : ulong {
 		Default = 0,
 		A4 = 1,
 		B5 = 2,
@@ -265,16 +253,14 @@ namespace ImageCaptureCore {
 		Lf = 78,
 	}
 	
-	public enum ICScannerFunctionalUnitState : uint
-	{
+	public enum ICScannerFunctionalUnitState : uint {
 		Ready = (1u << 0),
 		ScanInProgress = (1u << 1),
 		OverviewScanInProgress = (1u << 2),
 	}
 	
 	[Native]
-	public enum ICScannerFeatureType : ulong
-	{
+	public enum ICScannerFeatureType : ulong {
 		Enumeration = 0,
 		Range = 1,
 		Boolean = 2,
@@ -282,8 +268,7 @@ namespace ImageCaptureCore {
 	}
 	
 	[Native]
-	public enum ICScannerTransferMode : ulong
-	{
+	public enum ICScannerTransferMode : ulong {
 		FileBased = 0,
 		MemoryBased = 1,
 	}
