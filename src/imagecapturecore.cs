@@ -594,7 +594,7 @@ namespace ImageCaptureCore {
 		bool OverviewScanInProgress { get; }
 	
 		[NullAllowed, Export ("overviewImage")]
-		unsafe CGImage OverviewImage { get; }
+		CGImage OverviewImage { get; }
 	
 		[Export ("overviewResolution")]
 		nuint OverviewResolution { get; set; }
