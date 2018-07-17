@@ -263,6 +263,7 @@ namespace Introspection
 			"Indoorwalk",
 			"Inode",
 			"Inser",
+			"Instamatic",
 			"Interac",
 			"Interframe",
 			"Interitem",
