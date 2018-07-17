@@ -2188,6 +2188,7 @@ public partial class Generator : IMemberGatherer {
 		marshal_types.Add (TypeManager.Class);
 		marshal_types.Add (TypeManager.CFRunLoop);
 		marshal_types.Add (TypeManager.CGColorSpace);
+		marshal_types.Add (TypeManager.DispatchData);
 		marshal_types.Add (TypeManager.DispatchQueue);
 		marshal_types.Add (TypeManager.Protocol);
 		if (Frameworks.HaveCoreMidi)

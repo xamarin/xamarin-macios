@@ -392,6 +392,7 @@ COREFOUNDATION_CORE_SOURCES = \
 	CoreFoundation/CFRunLoop.cs \
 	CoreFoundation/CFString.cs \
 	CoreFoundation/Dispatch.cs \
+	CoreFoundation/DispatchData.cs \
 	CoreFoundation/NativeObject.cs
 
 COREFOUNDATION_SOURCES = \
@@ -417,7 +418,7 @@ COREFOUNDATION_SOURCES = \
 	CoreFoundation/CFUrl.cs \
 	CoreFoundation/CFWriteStream.cs \
 	CoreFoundation/DispatchBlock.cs \
-	CoreFoundation/DispatchData.cs \
+	CoreFoundation/DispatchIO.cs \
 	CoreFoundation/DispatchQueueSynchronizationContext.cs \
 	CoreFoundation/DispatchSource.cs \
 

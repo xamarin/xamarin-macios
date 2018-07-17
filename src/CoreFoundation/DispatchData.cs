@@ -34,6 +34,15 @@ using Foundation;
 namespace CoreFoundation {
 
 	public class DispatchData : DispatchObject {
+#if !COREBUILD
+		public DispatchData (IntPtr handle, bool owns) : base (handle, owns)
+		{
+		}
+
+		public DispatchData (IntPtr handle) : base (handle, false)
+		{
+		}
+
 		static IntPtr lib, free;
 		static DispatchData ()
 		{
@@ -41,10 +50,6 @@ namespace CoreFoundation {
 			free = Marshal.ReadIntPtr (Dlfcn.dlsym (lib, "_dispatch_data_destructor_free"));
 		}
 		
-		public DispatchData (IntPtr handle, bool owns) : base (handle, owns)
-		{
-		}
-
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_data_create (IntPtr buffer, IntPtr size, IntPtr dispatchQueue, IntPtr destructor);
 
@@ -124,5 +129,6 @@ namespace CoreFoundation {
 		{
 			return new DispatchData (dispatch_data_create_subrange (handle, offset, size), owns: true);
 		}
+#endif
 	}
 }

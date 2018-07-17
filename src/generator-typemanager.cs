@@ -80,6 +80,7 @@ public static class TypeManager {
 	public static Type CVPixelBuffer;
 	public static Type CVPixelBufferPool;
 	public static Type DispatchQueue;
+	public static Type DispatchData;
 	public static Type MidiEndpoint;
 	public static Type MKCoordinateSpan;
 	public static Type MTAudioProcessingTap;
@@ -289,6 +290,7 @@ public static class TypeManager {
 			CVPixelBufferPool = Lookup (platform_assembly, "CoreVideo", "CVPixelBufferPool");
 		}
 		DispatchQueue = Lookup (platform_assembly, "CoreFoundation", "DispatchQueue");
+		DispatchData = Lookup (platform_assembly, "CoreFoundation", "DispatchData");
 		if (Frameworks.HaveCoreMidi)
 			MidiEndpoint = Lookup (platform_assembly, "CoreMidi", "MidiEndpoint");
 		if (Frameworks.HaveMapKit)
