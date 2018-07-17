@@ -33,6 +33,7 @@ namespace Introspection {
 		protected override bool Skip (string nativeName)
 		{
 			switch (nativeName) {
+			case "CISaliencyMapFilter": // Appears in 10.14 but not documented
 			case "CIEdgePreserveUpsampleFilter": // Appears in 10.13 but not documented
 			case "CIMaskedVariableBlur": // Appears removed in 10.11 but not documented
 				if (Mac.CheckSystemVersion (10, 11))
