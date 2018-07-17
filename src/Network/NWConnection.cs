@@ -34,6 +34,12 @@ namespace Network {
 	//
 	public delegate void NWConnectionReceiveCompletion (IntPtr data, ulong dataSize, NWContentContext context, bool isComplete, NWError error);
 	
+	//
+	// Signature for a method invoked on data received, same as NWConnectionReceiveCompletion,
+	// but they receive DispatchData instead of data + dataSize
+	//
+	public delegate void NWConnectionReceiveDispatchDataCompletion (DispatchData data, NWContentContext context, bool isComplete, NWError error);
+	
 	public class NWConnection : NativeObject {
 		public NWConnection (IntPtr handle, bool owns) : base (handle, owns) {} 
 
@@ -263,6 +269,7 @@ namespace Network {
 								  IntPtr error);
 								  
 		static nw_connection_receive_completion_t static_ReceiveCompletion = TrampolineReceiveCompletion;
+		static nw_connection_receive_completion_t static_ReceiveCompletionDispatchData = TrampolineReceiveCompletionData;
 		
 		[MonoPInvokeCallback (typeof (nw_connection_receive_completion_t))]
 		static unsafe void TrampolineReceiveCompletion (IntPtr block, IntPtr dispatchDataPtr, IntPtr contentContext, bool isComplete, IntPtr error)
@@ -273,7 +280,7 @@ namespace Network {
 				DispatchData dispatchData = null, dataCopy = null;
 				IntPtr bufferAddress = IntPtr.Zero;
 				ulong bufferSize = 0;
-				
+
 				if (dispatchDataPtr != IntPtr.Zero){
 					dispatchData = new DispatchData (dispatchDataPtr, owns: false);
 					dataCopy =  dispatchData.CreateMap (out bufferAddress, out bufferSize);
@@ -291,6 +298,29 @@ namespace Network {
 				}
 			}
 		}
+
+		[MonoPInvokeCallback (typeof (nw_connection_receive_completion_t))]
+		static unsafe void TrampolineReceiveCompletionData (IntPtr block, IntPtr dispatchDataPtr, IntPtr contentContext, bool isComplete, IntPtr error)
+		{
+			var descriptor = (BlockLiteral *) block;
+			var del = (NWConnectionReceiveDispatchDataCompletion) (descriptor->Target);
+			if (del != null){
+				DispatchData dispatchData = null, dataCopy = null;
+				IntPtr bufferAddress = IntPtr.Zero;
+				ulong bufferSize = 0;
+
+				if (dispatchDataPtr != IntPtr.Zero)
+					dispatchData = new DispatchData (dispatchDataPtr, owns: false);
+
+				del (dispatchData, 
+				     contentContext == IntPtr.Zero ? null : new NWContentContext (contentContext, owns: false),
+				     isComplete,
+				     error == IntPtr.Zero ? null : new NWError (error, owns: false));
+
+				if (dispatchData != null)
+					dispatchData.Dispose ();
+			}
+		}
 		
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
@@ -298,6 +328,9 @@ namespace Network {
 		
 		public void Receive (uint minimumIncompleteLength, uint maximumLength, NWConnectionReceiveCompletion callback)
 		{
+			if (callback == null)
+				throw new ArgumentNullException (nameof (callback));
+			
 			unsafe {
 			        BlockLiteral *block_ptr_handler;
 			        BlockLiteral block_handler;
@@ -310,12 +343,32 @@ namespace Network {
 			}
 		}
 
+		public void ReceiveData (uint minimumIncompleteLength, uint maximumLength, NWConnectionReceiveDispatchDataCompletion callback)
+		{
+			if (callback == null)
+				throw new ArgumentNullException (nameof (callback));
+			
+			unsafe {
+			        BlockLiteral *block_ptr_handler;
+			        BlockLiteral block_handler;
+			        block_handler = new BlockLiteral ();
+			        block_ptr_handler = &block_handler;
+			        block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchData, callback);
+			
+			        nw_connection_receive (GetHandle(), minimumIncompleteLength, maximumLength, (void*) block_ptr_handler);
+			        block_ptr_handler->CleanupBlock ();
+			}
+		}
+
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe void nw_connection_receive_message (IntPtr handle, void *callback);
 		
 		public void ReceiveMessage (NWConnectionReceiveCompletion callback)
 		{
+			if (callback == null)
+				throw new ArgumentNullException (nameof (callback));
+			
 			unsafe {
 			        BlockLiteral *block_ptr_handler;
 			        BlockLiteral block_handler;
@@ -328,6 +381,22 @@ namespace Network {
 			}
 		}
 
+		public void ReceiveMessageData (NWConnectionReceiveDispatchDataCompletion callback)
+		{
+			if (callback == null)
+				throw new ArgumentNullException (nameof (callback));
+			
+			unsafe {
+			        BlockLiteral *block_ptr_handler;
+			        BlockLiteral block_handler;
+			        block_handler = new BlockLiteral ();
+			        block_ptr_handler = &block_handler;
+			        block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchData, callback);
+			
+			        nw_connection_receive_message (GetHandle(), (void*) block_ptr_handler);
+			        block_ptr_handler->CleanupBlock ();
+			}
+		}
 
 		delegate void nw_connection_send_completion_t (IntPtr block, IntPtr error);
 		static nw_connection_send_completion_t static_SendCompletion = TrampolineSendCompletion;
