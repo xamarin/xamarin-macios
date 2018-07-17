@@ -59,7 +59,8 @@ namespace CoreFoundation {
                         var descriptor = (BlockLiteral *) block;
                         var del = (DispatchIOHandler) (descriptor->Target);
                         if (del != null){
-                                del (new DispatchData (dispatchData, owns: false), error);
+				var dd = dispatchData == IntPtr.Zero ? null : new DispatchData (dispatchData, owns: false);
+                                del (dd, error);
 			}
 		}
 			
