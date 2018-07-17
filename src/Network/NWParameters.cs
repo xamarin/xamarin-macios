@@ -316,7 +316,7 @@ namespace Network {
 		static extern NWInterfaceType nw_parameters_get_required_interface_type (nw_parameters_t parameters);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public NWInterfaceType RequiredIntefaceType {
+		public NWInterfaceType RequiredInterfaceType {
 			get => nw_parameters_get_required_interface_type (GetHandle());
 			set => nw_parameters_set_required_interface_type (GetHandle(), value);
 		}

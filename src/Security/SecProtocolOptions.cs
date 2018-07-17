@@ -42,9 +42,9 @@ namespace Security {
 		
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.SecurityLibrary)]
-		static extern void sec_protocol_options_add_tls_ciphersuite_group (sec_protocol_options_t handle, SslCiphersuiteGroup cipherSuiteGroup);
+		static extern void sec_protocol_options_add_tls_ciphersuite_group (sec_protocol_options_t handle, SslCipherSuiteGroup cipherSuiteGroup);
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void AddTlsCiphersuiteGroup (SslCiphersuiteGroup cipherSuiteGroup) => sec_protocol_options_add_tls_ciphersuite_group (GetHandle (), cipherSuiteGroup);
+		public void AddTlsCipherSuiteGroup (SslCipherSuiteGroup cipherSuiteGroup) => sec_protocol_options_add_tls_ciphersuite_group (GetHandle (), cipherSuiteGroup);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.SecurityLibrary)]

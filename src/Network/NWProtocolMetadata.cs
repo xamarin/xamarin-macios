@@ -123,7 +123,7 @@ namespace Network {
 		extern static uint nw_tcp_get_available_receive_buffer (IntPtr handle);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public uint TcpGetAvaialbleReceiveBuffer () => nw_tcp_get_available_receive_buffer (GetHandle());
+		public uint TcpGetAvailableReceiveBuffer () => nw_tcp_get_available_receive_buffer (GetHandle());
 		
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]

@@ -179,7 +179,7 @@ namespace Network {
 		static extern unsafe void nw_content_context_foreach_protocol_metadata (IntPtr handle, void *callback);
 		
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void ItereateProtocolMetadata (Action<NWProtocolDefinition,NWProtocolMetadata> callback)
+		public void IterateProtocolMetadata (Action<NWProtocolDefinition,NWProtocolMetadata> callback)
 		{
 			unsafe {
 			        BlockLiteral *block_ptr_handler;

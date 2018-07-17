@@ -42,7 +42,7 @@ namespace Network {
 	public enum NWInterfaceType {
 		Other = 0,
 		Wifi = 1,
-		Celullar = 2,
+		Cellular = 2,
 		Wired = 3,
 		Loopback = 4
 	}

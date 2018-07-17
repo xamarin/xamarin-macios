@@ -329,7 +329,7 @@ namespace Security {
 	
 	}
 
-	public enum SslCiphersuiteGroup {
+	public enum SslCipherSuiteGroup {
 		Default, Compatibility, Legacy, Ats, AtsCompatibility
 	}
 }

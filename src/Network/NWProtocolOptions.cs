@@ -128,31 +128,31 @@ namespace Network {
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
-		extern static void nw_tcp_options_set_enable_keepalive(IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool enableKeepalive);
+		extern static void nw_tcp_options_set_enable_keepalive(IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool enableKeepAlive);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void TcpSetEnableKeepAlive (bool enableKeepalive) => nw_tcp_options_set_enable_keepalive (GetHandle(), enableKeepalive);
+		public void TcpSetEnableKeepAlive (bool enableKeepAlive) => nw_tcp_options_set_enable_keepalive (GetHandle(), enableKeepAlive);
 			
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_tcp_options_set_keepalive_count(IntPtr handle, uint keepaliveCount);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void TcpSetKeepaliveCount (uint keepaliveCount) => nw_tcp_options_set_keepalive_count (GetHandle(), keepaliveCount);
+		public void TcpSetKeepAliveCount (uint keepaliveCount) => nw_tcp_options_set_keepalive_count (GetHandle(), keepaliveCount);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_tcp_options_set_keepalive_idle_time(IntPtr handle, uint keepaliveIdleTime);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void TcpSetKeepaliveIdleTime (uint keepaliveIdleTime) => nw_tcp_options_set_keepalive_idle_time (GetHandle(), keepaliveIdleTime);
+		public void TcpSetKeepAliveIdleTime (uint keepaliveIdleTime) => nw_tcp_options_set_keepalive_idle_time (GetHandle(), keepaliveIdleTime);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_tcp_options_set_keepalive_interval(IntPtr handle, uint keepaliveInterval);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void TcpSetKeepaliveInterval (uint keepaliveInterval) => nw_tcp_options_set_keepalive_interval (GetHandle(), keepaliveInterval);
+		public void TcpSetKeepAliveInterval (uint keepaliveInterval) => nw_tcp_options_set_keepalive_interval (GetHandle(), keepaliveInterval);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
