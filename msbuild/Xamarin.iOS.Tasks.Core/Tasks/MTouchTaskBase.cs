@@ -359,7 +359,7 @@ namespace Xamarin.iOS.Tasks
 
 		protected override string GenerateCommandLineCommands ()
 		{
-			var args = new CommandLineArgumentBuilder ();
+			var args = new StringBuilder ();
 			TargetArchitecture architectures;
 			bool msym;
 
@@ -374,73 +374,73 @@ namespace Xamarin.iOS.Tasks
 			if (!string.IsNullOrEmpty (IntermediateOutputPath)) {
 				Directory.CreateDirectory (IntermediateOutputPath);
 
-				args.AddQuotedLine ($"--cache={Path.GetFullPath (IntermediateOutputPath)}");
+				args.AppendLine ($"--cache={Path.GetFullPath (IntermediateOutputPath)}");
 			}
 
-			args.AddQuotedLine ((SdkIsSimulator ? "--sim=" : "--dev=") + Path.GetFullPath (AppBundleDir));
+			args.AppendLine ((SdkIsSimulator ? "--sim=" : "--dev=") + Path.GetFullPath (AppBundleDir));
 
 			if (AppleSdkSettings.XcodeVersion.Major >= 5 && IPhoneSdks.MonoTouch.Version.CompareTo (new IPhoneSdkVersion (6, 3, 7)) < 0)
-				args.AddLine ("--compiler=clang");
+				args.AppendLine ("--compiler=clang");
 
-			args.AddQuotedLine ($"--executable={ExecutableName}");
+			args.AppendLine ($"--executable={ExecutableName}");
 
 			if (IsAppExtension)
-				args.AddLine ("--extension");
+				args.AppendLine ("--extension");
 
 			if (Debug) {
 				if (FastDev && !SdkIsSimulator)
-					args.AddLine ("--fastdev");
+					args.AppendLine ("--fastdev");
 
-				args.AddLine ("--debug");
+				args.AppendLine ("--debug");
 			}
 
 			if (Profiling)
-				args.AddLine ("--profiling");
+				args.AppendLine ("--profiling");
 
 			if (LinkerDumpDependencies)
-				args.AddLine ("--linkerdumpdependencies");
+				args.AppendLine ("--linkerdumpdependencies");
 
 			if (EnableSGenConc)
-				args.AddLine ("--sgen-conc");
+				args.AppendLine ("--sgen-conc");
 
 			if (UseInterpreter)
-				args.Add ("--interpreter");
+				args.AppendLine ("--interpreter");
 
 			switch (LinkMode.ToLowerInvariant ()) {
-			case "sdkonly": args.AddLine ("--linksdkonly"); break;
-			case "none":    args.AddLine ("--nolink"); break;
+			case "sdkonly": args.AppendLine ("--linksdkonly"); break;
+			case "none":    args.AppendLine ("--nolink"); break;
 			}
 
 			if (!string.IsNullOrEmpty (I18n))
-				args.AddQuotedLine ($"--i18n={I18n}");
+				args.AppendLine ($"--i18n={I18n}");
 
-			args.AddQuotedLine ($"--sdkroot={SdkRoot}");
+			args.AppendLine ($"--sdkroot={SdkRoot}");
 
-			args.AddQuotedLine ($"--sdk={SdkVersion}");
+			args.AppendLine ($"--sdk={SdkVersion}");
 
 			if (!minimumOSVersion.IsUseDefault)
-				args.AddQuotedLine ($"--targetver={minimumOSVersion.ToString ()}");
+				args.AppendLine ($"--targetver={minimumOSVersion.ToString ()}");
 
 			if (UseFloat32 /* We want to compile 32-bit floating point code to use 32-bit floating point operations */)
-				args.AddLine ("--aot-options=-O=float32");
+				args.AppendLine ("--aot-options=-O=float32");
 			else
-				args.AddLine ("--aot-options=-O=-float32");
+				args.AppendLine ("--aot-options=-O=-float32");
 
 			if (!EnableGenericValueTypeSharing)
-				args.AddLine ("--gsharedvt=false");
+				args.AppendLine ("--gsharedvt=false");
 
 			if (LinkDescriptions != null) {
 				foreach (var desc in LinkDescriptions)
-					args.AddQuotedLine ($"--xml={desc.ItemSpec}");
+					args.AppendLine ($"--xml={desc.ItemSpec}");
 			}
 
 			if (EnableBitcode) {
 				switch (Framework) {
 				case PlatformFramework.WatchOS:
-					args.AddLine ("--bitcode=full");
+					args.AppendLine ("--bitcode=full");
 					break;
 				case PlatformFramework.TVOS:
-					args.AddLine ("--bitcode=asmonly");
+					args.AppendLine ("--bitcode=asmonly");
 					break;
 				default:
 					throw new InvalidOperationException (string.Format ("Bitcode is currently not supported on {0}.", Framework));
@@ -448,7 +448,7 @@ namespace Xamarin.iOS.Tasks
 			}
 
 			if (!string.IsNullOrEmpty (HttpClientHandler))
-				args.AddLine ($"--http-message-handler={HttpClientHandler}");
+				args.AppendLine ($"--http-message-handler={HttpClientHandler}");
 
 			string thumb = UseThumb && UseLlvm ? "+thumb2" : "";
 			string llvm = UseLlvm ? "+llvm" : "";
@@ -490,16 +490,16 @@ namespace Xamarin.iOS.Tasks
 			// Output the CompiledArchitectures
 			CompiledArchitectures = architectures.ToString ();
 
-			args.AddLine ($"--abi={abi}");
+			args.AppendLine ($"--abi={abi}");
 
 			// output symbols to preserve when stripping
-			args.AddQuotedLine ($"--symbollist={Path.GetFullPath (SymbolsList)}");
+			args.AppendLine ($"--symbollist={Path.GetFullPath (SymbolsList)}");
 
 			// don't have mtouch generate the dsyms...
-			args.AddLine ("--dsym=no");
+			args.AppendLine ("--dsym=no");
 
 			if (!string.IsNullOrEmpty (ArchiveSymbols) && bool.TryParse (ArchiveSymbols.Trim (), out msym))
-				args.AddLine ($"--msym={(msym ? "yes" : "no")}");
+				args.AppendLine ($"--msym={(msym ? "yes" : "no")}");
 
 			var gcc = new GccOptions ();
 
@@ -560,7 +560,7 @@ namespace Xamarin.iOS.Tasks
 						}
 					} else {
 						// other user-defined mtouch arguments
-						args.AddQuotedLine (StringParserService.Parse (argument, customTags));
+						args.AppendLine (StringParserService.Parse (argument, customTags));
 					}
 				}
 			}
@@ -569,38 +569,38 @@ namespace Xamarin.iOS.Tasks
 			BuildEntitlementFlags (gcc);
 
 			foreach (var framework in gcc.Frameworks)
-				args.AddQuotedLine ($"--framework={framework}");
+				args.AppendLine ($"--framework={framework}");
 
 			foreach (var framework in gcc.WeakFrameworks)
-				args.AddQuotedLine ($"--weak-framework={framework}");
+				args.AppendLine ($"--weak-framework={framework}");
 
 			if (gcc.Cxx)
-				args.AddLine ("--cxx");
+				args.AppendLine ("--cxx");
 
 			if (gcc.Arguments.Length > 0)
-				args.AddQuotedLine ($"--gcc_flags={gcc.Arguments.ToString ()}");
+				args.AppendLine ($"--gcc_flags={gcc.Arguments.ToString ()}");
 
 			foreach (var asm in References) {
-				if (IsFrameworkItem(asm)) {
-					args.AddQuotedLine ($"-r={ResolveFrameworkFile (asm.ItemSpec)}");
+				if (IsFrameworkItem (asm)) {
+					args.AppendLine ($"-r={ResolveFrameworkFile (asm.ItemSpec)}");
 				} else {
-					args.AddQuotedLine ($"-r={Path.GetFullPath (asm.ItemSpec)}");
+					args.AppendLine ($"-r={Path.GetFullPath (asm.ItemSpec)}");
 				}
 			}
 
 			foreach (var ext in AppExtensionReferences)
-				args.AddQuotedLine ($"--app-extension={Path.GetFullPath (ext.ItemSpec)}");
+				args.AppendLine ($"--app-extension={Path.GetFullPath (ext.ItemSpec)}");
 
-			args.AddLine ($"--target-framework={TargetFrameworkIdentifier},{TargetFrameworkVersion}");
+			args.AppendLine ($"--target-framework={TargetFrameworkIdentifier},{TargetFrameworkVersion}");
 
-			args.AddQuotedLine ($"--root-assembly={Path.GetFullPath (MainAssembly.ItemSpec)}");
+			args.AppendLine ($"--root-assembly={Path.GetFullPath (MainAssembly.ItemSpec)}");
 
 			// We give the priority to the ExtraArgs to set the mtouch verbosity.
 			if (string.IsNullOrEmpty (ExtraArgs) || (!string.IsNullOrEmpty (ExtraArgs) && !ExtraArgs.Contains ("-q") && !ExtraArgs.Contains ("-v")))
-				args.AddLine (GetVerbosityLevel (Verbosity));
+				args.AppendLine (GetVerbosityLevel (Verbosity));
 
 			if (!string.IsNullOrWhiteSpace (License))
-				args.AddLine ($"--license={License}");
+				args.AppendLine ($"--license={License}");
 
 			// Generate a response file
 			var responseFile = Path.GetFullPath (ResponseFilePath);
@@ -618,10 +618,7 @@ namespace Xamarin.iOS.Tasks
 			}
 
 			// Use only the response file
-			args = new CommandLineArgumentBuilder ();
-			args.AddQuoted ($"@{responseFile}");
-
-			return args.ToString ();
+			return CommandLineArgumentBuilder.Quote ($"@{responseFile}");
 		}
 
 		static bool IsFrameworkItem (ITaskItem item)
