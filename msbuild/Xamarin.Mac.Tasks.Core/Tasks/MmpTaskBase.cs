@@ -222,6 +222,7 @@ namespace Xamarin.Mac.Tasks
 			}
 
 			// Generate a response file
+			/*
 			var responseFile = Path.GetFullPath (ResponseFilePath);
 
 			if (File.Exists (responseFile))
@@ -239,6 +240,7 @@ namespace Xamarin.Mac.Tasks
 			// Use only the response file
 			args = new CommandLineArgumentBuilder ();
 			args.AddQuotedLine ($"@{responseFile}");
+			*/
 
 			return args.ToString ();
 		}
