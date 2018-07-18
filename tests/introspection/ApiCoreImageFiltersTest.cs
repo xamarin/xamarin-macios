@@ -69,6 +69,8 @@ namespace Introspection {
 			// FIXME: Remove if fixed.  Doesn't appear to exist in El Capitan.  Reported in radar #22099780
 //			case "CIMaskedVariableBlur":
 //			cd ..	return true;
+			case "CISaliencyMapFilter": // Appears in 10.14/iOS 12 but not documented
+				return true;
 			default:
  				return false;
 			}

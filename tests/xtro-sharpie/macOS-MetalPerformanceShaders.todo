@@ -242,7 +242,6 @@
 !missing-type! MPSRNNMatrixTrainingLayer not bound
 !missing-type! MPSRNNMatrixTrainingState not bound
 ## appended from unclassified file
-!missing-protocol-member! MPSCNNConvolutionDataSource::copyWithZone: not found
 !missing-protocol-member! MPSCNNConvolutionDataSource::copyWithZone:device: not found
 !missing-selector! MPSCNNBatchNormalization::initWithDevice:dataSource:fusedNeuronDescriptor: not bound
 !missing-selector! MPSCNNBatchNormalizationStatisticsGradient::initWithCoder:device: not bound
@@ -288,3 +287,7 @@
 !missing-selector! MPSNNOptimizerRMSProp::encodeToCommandBuffer:batchNormalizationState:inputSumOfSquaresVectors:resultState: not bound
 !missing-selector! MPSNNOptimizerStochasticGradientDescent::encodeToCommandBuffer:batchNormalizationState:inputMomentumVectors:resultState: not bound
 !missing-type! MPSImageNormalizedHistogram not bound
+!missing-protocol-member! MPSImageAllocator::imageBatchForCommandBuffer:imageDescriptor:kernel:count: not found
+!missing-selector! MPSNNFilterNode::trainingGraphWithSourceGradient:nodeHandler: not bound
+!missing-selector! MPSNNImageNode::setStopGradient: not bound
+!missing-selector! MPSNNImageNode::stopGradient not bound
