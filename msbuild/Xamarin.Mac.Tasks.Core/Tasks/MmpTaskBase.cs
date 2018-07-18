@@ -8,6 +8,7 @@
 
 using System;
 using System.IO;
+using System.Text;
 using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
@@ -101,26 +102,26 @@ namespace Xamarin.Mac.Tasks
 
 		protected override string GenerateCommandLineCommands ()
 		{
-			var args = new CommandLineArgumentBuilder ();
+			var args = new StringBuilder ();
 			bool msym;
 
-			args.AddLine ("/verbose");
+			args.AppendLine ("/verbose");
 
 			if (Debug)
-				args.AddLine ("/debug");
+				args.AppendLine ("/debug");
 
 			if (!string.IsNullOrEmpty (OutputPath))
-				args.AddQuotedLine ("/output:" + Path.GetFullPath (OutputPath));
+				args.AppendLine ("/output:" + Path.GetFullPath (OutputPath));
 
 			if (!string.IsNullOrEmpty (ApplicationName))
-				args.AddQuotedLine ("/name:" + ApplicationName);
+				args.AppendLine ("/name:" + ApplicationName);
 
 			if (TargetFrameworkIdentifier == "Xamarin.Mac")
-				args.AddLine ("/profile:Xamarin.Mac,Version=v2.0,Profile=Mobile");
+				args.AppendLine ("/profile:Xamarin.Mac,Version=v2.0,Profile=Mobile");
 			else if (UseXamMacFullFramework)
-				args.AddLine ($"/profile:Xamarin.Mac,Version={TargetFrameworkVersion},Profile=Full");
+				args.AppendLine ($"/profile:Xamarin.Mac,Version={TargetFrameworkVersion},Profile=Full");
 			else
-				args.AddLine ($"/profile:Xamarin.Mac,Version={TargetFrameworkVersion},Profile=System");
+				args.AppendLine ($"/profile:Xamarin.Mac,Version={TargetFrameworkVersion},Profile=System");
 
 			XamMacArch arch;
 			if (!Enum.TryParse (Architecture, true, out arch))
@@ -130,15 +131,15 @@ namespace Xamarin.Mac.Tasks
 				arch = XamMacArch.x86_64;
 
 			if (arch.HasFlag (XamMacArch.i386))
-				args.AddLine ("/arch:i386");
+				args.AppendLine ("/arch:i386");
 
 			if (arch.HasFlag (XamMacArch.x86_64))
-				args.AddLine ("/arch:x86_64");
+				args.AppendLine ("/arch:x86_64");
 
 			if (!string.IsNullOrEmpty (ArchiveSymbols) && bool.TryParse (ArchiveSymbols.Trim (), out msym))
-				args.AddLine ("--msym:" + (msym ? "yes" : "no"));
+				args.AppendLine ("--msym:" + (msym ? "yes" : "no"));
 
-			args.AddLine (string.Format ("--http-message-handler={0}", HttpClientHandler));
+			args.AppendLine (string.Format ("--http-message-handler={0}", HttpClientHandler));
 
 			if (AppManifest != null) {
 				try {
@@ -152,7 +153,7 @@ namespace Xamarin.Mac.Tasks
 					else
 						minimumDeploymentTarget = v.Value;
 
-					args.AddLine (string.Format("/minos={0}", minimumDeploymentTarget));
+					args.AppendLine (string.Format("/minos={0}", minimumDeploymentTarget));
 				}
 				catch (Exception ex) {
 					Log.LogWarning (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, "Error loading '{0}': {1}", AppManifest.ItemSpec, ex.Message);
@@ -160,22 +161,22 @@ namespace Xamarin.Mac.Tasks
 			}
 
 			if (Profiling)
-				args.AddLine ("/profiling");
+				args.AppendLine ("/profiling");
 
 			if (EnableSGenConc)
-				args.AddLine ("/sgen-conc");
+				args.AppendLine ("/sgen-conc");
 
 			switch ((LinkMode ?? string.Empty).ToLower ()) {
 			case "full":
 				break;
 			case "sdkonly":
-				args.AddLine ("/linksdkonly");
+				args.AppendLine ("/linksdkonly");
 				break;
 			case "platform":
-				args.AddLine ("/linkplatform");
+				args.AppendLine ("/linkplatform");
 				break;
 			default:
-				args.AddLine ("/nolink");
+				args.AppendLine ("/nolink");
 				break;
 			}
 
@@ -187,38 +188,38 @@ namespace Xamarin.Mac.Tasks
 				if (!string.IsNullOrEmpty (ExplicitAotAssemblies))
 					aot += $",{ExplicitAotAssemblies}";
 
-				args.AddLine (aot);
+				args.AppendLine (aot);
 			}
 
 			if (!string.IsNullOrEmpty (I18n))
-				args.AddQuotedLine ("/i18n:" + I18n);
+				args.AppendLine ("/i18n:" + I18n);
 
 			if (ExplicitReferences != null) {
 				foreach (var asm in ExplicitReferences)
-					args.AddQuotedLine ("/assembly:" + Path.GetFullPath (asm.ItemSpec));
+					args.AppendLine ("/assembly:" + Path.GetFullPath (asm.ItemSpec));
 			}
 
 			if (!string.IsNullOrEmpty (ApplicationAssembly.ItemSpec)) {
-				args.AddQuotedLine ("/root-assembly:" + Path.GetFullPath (ApplicationAssembly.ItemSpec));
+				args.AppendLine ("/root-assembly:" + Path.GetFullPath (ApplicationAssembly.ItemSpec));
 			}
 
 			if (!string.IsNullOrWhiteSpace (ExtraArguments))
-				args.AddLine (ExtraArguments);
+				args.AppendLine (ExtraArguments);
 
 			if (NativeReferences != null) {
 				foreach (var nr in NativeReferences)
-					args.AddQuotedLine ("/native-reference:" + Path.GetFullPath (nr.ItemSpec));
+					args.AppendLine ("/native-reference:" + Path.GetFullPath (nr.ItemSpec));
 			}
 				
 			if (IsAppExtension)
-				args.AddQuotedLine ("/extension");
+				args.AppendLine ("/extension");
 
-			args.AddQuotedLine ("/sdkroot:" + SdkRoot);
+			args.AppendLine ("/sdkroot:" + SdkRoot);
 
 			if (!string.IsNullOrEmpty (IntermediateOutputPath)) {
 				Directory.CreateDirectory (IntermediateOutputPath);
 
-				args.AddQuotedLine ("--cache:" + Path.GetFullPath (IntermediateOutputPath));
+				args.AppendLine ("--cache:" + Path.GetFullPath (IntermediateOutputPath));
 			}
 
 			// Generate a response file
@@ -237,10 +238,7 @@ namespace Xamarin.Mac.Tasks
 			}
 
 			// Use only the response file
-			args = new CommandLineArgumentBuilder ();
-			args.AddQuotedLine ($"@{responseFile}");
-
-			return args.ToString ();
+			return CommandLineArgumentBuilder.Quote ($"@{responseFile}");
 		}
 
 		string GetMonoBundleDirName ()
