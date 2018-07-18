@@ -602,6 +602,7 @@ namespace Xamarin.iOS.Tasks
 			if (!string.IsNullOrWhiteSpace (License))
 				args.AddLine ($"--license={License}");
 
+			/*
 			// Generate a response file
 			var responseFile = Path.GetFullPath (ResponseFilePath);
 
@@ -620,6 +621,7 @@ namespace Xamarin.iOS.Tasks
 			// Use only the response file
 			args = new CommandLineArgumentBuilder ();
 			args.AddQuoted ($"@{responseFile}");
+			*/
 
 			return args.ToString ();
 		}
