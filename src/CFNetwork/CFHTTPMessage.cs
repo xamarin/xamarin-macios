@@ -333,7 +333,7 @@ namespace CoreServices {
 				return _AuthenticationSchemeDigest.Handle;
 			case AuthenticationScheme.OAuth1:
 				if (_AuthenticationSchemeOAuth1 == null)
-					throw new NotSupportedException ("requires iOS 7.0 or OSX 10.9 and lower than iOS 12 or OSX 10.4");
+					throw new NotSupportedException ("Requires iOS 7.0 or macOS 10.9 and lower than iOS 12 or macOS 10.14");
 				return _AuthenticationSchemeOAuth1.Handle;
 			default:
 				throw new ArgumentException ();
