@@ -154,7 +154,7 @@ namespace CoreMidi {
 		string Name { get; }
 
 		[Export ("profileID")]
-		NSData ProfileID { get; }
+		NSData ProfileId { get; }
 
 		[Export ("initWithData:name:")]
 		IntPtr Constructor (NSData data, string inName);

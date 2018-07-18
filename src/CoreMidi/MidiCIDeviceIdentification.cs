@@ -9,8 +9,7 @@ namespace CoreMidi {
 
 	[NoWatch, NoTV, Mac (10,14, onlyOn64: true), iOS (12,0)]
 	[StructLayout (LayoutKind.Sequential)]
-	public struct MidiCIDeviceIdentification
-	{
+	public struct MidiCIDeviceIdentification {
 		public byte[] Manufacturer;
 		public byte[] Family;
 		public byte[] ModelNumber;
