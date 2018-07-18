@@ -83,6 +83,7 @@ namespace Xamarin.Linker {
 			MediaPlayer = profile.GetNamespace ("MediaPlayer");
 			PrintCore = profile.GetNamespace ("PrintCore");
 			ExternalAccessory = profile.GetNamespace ("ExternalAccessory");
+			iTunesLibrary= profile.GetNamespace ("iTunesLibrary");
 #else
 			Registrar = profile.GetNamespace ("Registrar");
 			UIKit = profile.GetNamespace ("UIKit");
@@ -185,6 +186,7 @@ namespace Xamarin.Linker {
 		public static string MediaPlayer { get; private set; }
 		public static string PrintCore { get; private set; }
 		public static string ExternalAccessory { get; private set; }
+		public static string iTunesLibrary { get; private set; }
 #else
 		public static string Registrar { get; private set; }
 

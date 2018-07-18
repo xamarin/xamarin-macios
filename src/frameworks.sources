@@ -935,6 +935,12 @@ IOSURFACE_SOURCES = \
 	IOSurface/IOSurface.cs \
 	IOSurface/IOSurfacePropertyKey.cs \
 
+# itunesLibrary
+
+ITUNESLIBRARY_API_SOURCES = \
+	iTunesLibrary/Enums.cs \
+	
+
 # JavaScriptCore
 
 JAVASCRIPTCORE_SOURCES = \
@@ -1697,6 +1703,7 @@ MAC_FRAMEWORKS =            \
 	ImageKit                \
 	Intents                 \
 	IOSurface 		\
+	iTunesLibrary           \
 	JavaScriptCore          \
 	LocalAuthentication     \
 	MapKit                  \
