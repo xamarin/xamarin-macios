@@ -37,7 +37,10 @@ namespace Network {
 	
 	public class NWProtocolMetadata : NativeObject {
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
+		// Officially listed on header files, but seems to not work on Mac/iOS
+		
+		//[TV (12,0), Mac (10,14), iOS (12,0)]
+		[TV (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_metadata nw_ip_create_metadata ();
 
@@ -45,7 +48,7 @@ namespace Network {
 		{
 			return new NWProtocolMetadata (nw_ip_create_metadata (), owns: true);
 		}
-
+	
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_metadata nw_udp_create_metadata ();
 		public static NWProtocolMetadata CreateUDPMetadata ()

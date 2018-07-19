@@ -222,6 +222,7 @@ namespace Introspection {
 			case "MidiEndpoint":
 			case "ABMultiValue":
 			case "ABMutableMultiValue":
+			case "SecProtocolMetadata": // Read-only object that is surfaced during TLS negotiation callbacks, can not be created from user code.
 			case "ABSource": // not skipped when running on iOS 6.1
 			// type was removed in iOS 10 (and replaced) and never consumed by other API
 			case "CGColorConverter":
