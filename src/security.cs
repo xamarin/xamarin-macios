@@ -1146,15 +1146,18 @@ namespace Security {
 	delegate void SecProtocolVerify (SecProtocolMetadata metadata, SecTrust2 trust, [BlockCallback] SecProtocolVerifyComplete verifyComplete);
 
 	[Internal]
-	[BaseType(typeof(NSObject))]
+	[Partial]
 	interface Callbacks {
 		[Export ("options:keyUpdateBlock:keyUpdateQueue:")]
+		[NoMethod]
 		void SetKeyUpdateBlock (SecProtocolOptions options, [BlockCallback] SecProtocolKeyUpdate keyUpdateBlock, DispatchQueue keyUpdateQueue);
 
 		[Export ("options:challengeBlock:challengeQueue:")]
+		[NoMethod]
 		void SetChallengeBlock (SecProtocolOptions options, [BlockCallback] SecProtocolChallenge challengeBlock, DispatchQueue challengeQueue);
 
 		[Export ("options:protocolVerify:verifyQueue:")]
+		[NoMethod]
 		void SetVerifyBlock (SecProtocolOptions options, [BlockCallback] SecProtocolVerify verifyBlock, DispatchQueue verifyQueue);
 	}
 }

@@ -2385,6 +2385,8 @@ public partial class Generator : IMemberGatherer {
 						continue;
 					else if (attr is RequiresSuperAttribute)
 						continue;
+					else if (attr is NoMethodAttribute)
+						continue;
 					else {
 						switch (attr.GetType ().Name) {
 						case "PreserveAttribute":
@@ -5163,6 +5165,13 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		PrintDelegateProxy (minfo);
+
+		if (AttributeManager.HasAttribute<NoMethodAttribute>(minfo.mi)){
+			// Call for side effect
+			MakeSignature (minfo);
+			return;
+		}
+		
 		PrintExport (minfo);
 
 		if (!minfo.is_interface_impl) {
@@ -7006,7 +7015,7 @@ public partial class Generator : IMemberGatherer {
 				if (deltype.Assembly != rootAssembly)
 					continue;
 
-				// This formats the delegate 
+				// This formats the delegate
 				delegate_types [deltype.FullName] = deltype.GetMethod ("Invoke");
 			}
 

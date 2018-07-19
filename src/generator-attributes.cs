@@ -856,3 +856,14 @@ public class DefaultEnumValueAttribute : Attribute {
 	{
 	}
 }
+
+//
+// This prevents the generator from generating the managed proxy to
+// the method being called, this is done when we are interested in
+// the side effects of the binding of the method, rather than the
+// method itself -- for security for example, we generate the
+// proxy code for invoking blocks and callbacks to blocks
+// see 
+[AttributeUsage (AttributeTargets.Method)]
+public class NoMethodAttribute : Attribute {
+}
