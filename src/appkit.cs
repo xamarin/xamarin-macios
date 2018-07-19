@@ -18506,7 +18506,6 @@ namespace AppKit {
 
 	[BaseType (typeof (NSTextField))]
 	interface NSSecureTextField 
-		// : NSViewToolTipOwner Header claims NSViewToolTipOwner but runtime does not respond - radar 41367075
 	{
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frameRect);
