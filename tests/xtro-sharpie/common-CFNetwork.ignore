@@ -54,6 +54,7 @@
 !missing-field! kCFStreamErrorDomainWinSock not bound
 !missing-field! kCFStreamNetworkServiceType not bound
 !missing-field! kCFStreamNetworkServiceTypeBackground not bound
+!missing-field! kCFStreamNetworkServiceTypeResponsiveData not bound
 !missing-field! kCFStreamNetworkServiceTypeCallSignaling not bound
 !missing-field! kCFStreamNetworkServiceTypeVideo not bound
 !missing-field! kCFStreamNetworkServiceTypeVoice not bound
