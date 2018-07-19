@@ -104,23 +104,23 @@ namespace Xamarin.Mac.Tasks
 			var args = new CommandLineArgumentBuilder ();
 			bool msym;
 
-			args.AddLine ("/verbose");
+			args.Add ("/verbose");
 
 			if (Debug)
-				args.AddLine ("/debug");
+				args.Add ("/debug");
 
 			if (!string.IsNullOrEmpty (OutputPath))
-				args.AddQuotedLine ("/output:" + Path.GetFullPath (OutputPath));
+				args.AddQuoted ("/output:" + Path.GetFullPath (OutputPath));
 
 			if (!string.IsNullOrEmpty (ApplicationName))
-				args.AddQuotedLine ("/name:" + ApplicationName);
+				args.AddQuoted ("/name:" + ApplicationName);
 
 			if (TargetFrameworkIdentifier == "Xamarin.Mac")
-				args.AddLine ("/profile:Xamarin.Mac,Version=v2.0,Profile=Mobile");
+				args.Add ("/profile:Xamarin.Mac,Version=v2.0,Profile=Mobile");
 			else if (UseXamMacFullFramework)
-				args.AddLine ($"/profile:Xamarin.Mac,Version={TargetFrameworkVersion},Profile=Full");
+				args.Add ($"/profile:Xamarin.Mac,Version={TargetFrameworkVersion},Profile=Full");
 			else
-				args.AddLine ($"/profile:Xamarin.Mac,Version={TargetFrameworkVersion},Profile=System");
+				args.Add ($"/profile:Xamarin.Mac,Version={TargetFrameworkVersion},Profile=System");
 
 			XamMacArch arch;
 			if (!Enum.TryParse (Architecture, true, out arch))
@@ -130,15 +130,15 @@ namespace Xamarin.Mac.Tasks
 				arch = XamMacArch.x86_64;
 
 			if (arch.HasFlag (XamMacArch.i386))
-				args.AddLine ("/arch:i386");
+				args.Add ("/arch:i386");
 
 			if (arch.HasFlag (XamMacArch.x86_64))
-				args.AddLine ("/arch:x86_64");
+				args.Add ("/arch:x86_64");
 
 			if (!string.IsNullOrEmpty (ArchiveSymbols) && bool.TryParse (ArchiveSymbols.Trim (), out msym))
-				args.AddLine ("--msym:" + (msym ? "yes" : "no"));
+				args.Add ("--msym:" + (msym ? "yes" : "no"));
 
-			args.AddLine (string.Format ("--http-message-handler={0}", HttpClientHandler));
+			args.Add (string.Format ("--http-message-handler={0}", HttpClientHandler));
 
 			if (AppManifest != null) {
 				try {
@@ -152,7 +152,7 @@ namespace Xamarin.Mac.Tasks
 					else
 						minimumDeploymentTarget = v.Value;
 
-					args.AddLine (string.Format("/minos={0}", minimumDeploymentTarget));
+					args.Add (string.Format("/minos={0}", minimumDeploymentTarget));
 				}
 				catch (Exception ex) {
 					Log.LogWarning (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, "Error loading '{0}': {1}", AppManifest.ItemSpec, ex.Message);
@@ -160,22 +160,22 @@ namespace Xamarin.Mac.Tasks
 			}
 
 			if (Profiling)
-				args.AddLine ("/profiling");
+				args.Add ("/profiling");
 
 			if (EnableSGenConc)
-				args.AddLine ("/sgen-conc");
+				args.Add ("/sgen-conc");
 
 			switch ((LinkMode ?? string.Empty).ToLower ()) {
 			case "full":
 				break;
 			case "sdkonly":
-				args.AddLine ("/linksdkonly");
+				args.Add ("/linksdkonly");
 				break;
 			case "platform":
-				args.AddLine ("/linkplatform");
+				args.Add ("/linkplatform");
 				break;
 			default:
-				args.AddLine ("/nolink");
+				args.Add ("/nolink");
 				break;
 			}
 
@@ -187,58 +187,39 @@ namespace Xamarin.Mac.Tasks
 				if (!string.IsNullOrEmpty (ExplicitAotAssemblies))
 					aot += $",{ExplicitAotAssemblies}";
 
-				args.AddLine (aot);
+				args.Add (aot);
 			}
 
 			if (!string.IsNullOrEmpty (I18n))
-				args.AddQuotedLine ("/i18n:" + I18n);
+				args.AddQuoted ("/i18n:" + I18n);
 
 			if (ExplicitReferences != null) {
 				foreach (var asm in ExplicitReferences)
-					args.AddQuotedLine ("/assembly:" + Path.GetFullPath (asm.ItemSpec));
+					args.AddQuoted ("/assembly:" + Path.GetFullPath (asm.ItemSpec));
 			}
 
 			if (!string.IsNullOrEmpty (ApplicationAssembly.ItemSpec)) {
-				args.AddQuotedLine ("/root-assembly:" + Path.GetFullPath (ApplicationAssembly.ItemSpec));
+				args.AddQuoted ("/root-assembly:" + Path.GetFullPath (ApplicationAssembly.ItemSpec));
 			}
 
 			if (!string.IsNullOrWhiteSpace (ExtraArguments))
-				args.AddLine (ExtraArguments);
+				args.Add (ExtraArguments);
 
 			if (NativeReferences != null) {
 				foreach (var nr in NativeReferences)
-					args.AddQuotedLine ("/native-reference:" + Path.GetFullPath (nr.ItemSpec));
+					args.AddQuoted ("/native-reference:" + Path.GetFullPath (nr.ItemSpec));
 			}
 				
 			if (IsAppExtension)
-				args.AddQuotedLine ("/extension");
+				args.AddQuoted ("/extension");
 
-			args.AddQuotedLine ("/sdkroot:" + SdkRoot);
+			args.AddQuoted ("/sdkroot:" + SdkRoot);
 
 			if (!string.IsNullOrEmpty (IntermediateOutputPath)) {
 				Directory.CreateDirectory (IntermediateOutputPath);
 
-				args.AddQuotedLine ("--cache:" + Path.GetFullPath (IntermediateOutputPath));
+				args.AddQuoted ("--cache:" + Path.GetFullPath (IntermediateOutputPath));
 			}
-
-			// Generate a response file
-			var responseFile = Path.GetFullPath (ResponseFilePath);
-
-			if (File.Exists (responseFile))
-				File.Delete (responseFile);
-
-			try {
-				using (var fs = File.Create (responseFile)) {
-					using (var writer = new StreamWriter (fs))
-						writer.Write (args);
-				}
-			} catch (Exception ex) {
-				Log.LogWarning ("Failed to create response file '{0}': {1}", responseFile, ex);
-			}
-
-			// Use only the response file
-			args = new CommandLineArgumentBuilder ();
-			args.AddQuotedLine ($"@{responseFile}");
 
 			return args.ToString ();
 		}
