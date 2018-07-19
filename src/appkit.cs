@@ -26003,7 +26003,7 @@ namespace AppKit {
 	}
 #endif
 
-	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use Metal.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")]
 	[BaseType (typeof(CAOpenGLLayer))]
 	interface NSOpenGLLayer
 	{

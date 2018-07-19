@@ -25,7 +25,7 @@ using ObjCRuntime;
 
 namespace OpenGL {
 
-	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use Metal.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")]
 	public enum CGLErrorCode : uint
 	{
 		NoError            = 0,		/* no error */
@@ -50,7 +50,7 @@ namespace OpenGL {
 
 	}
 
-	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use Metal.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")]
 	public enum CGLPixelFormatAttribute : uint
 	{
 		AllRenderers = 1,

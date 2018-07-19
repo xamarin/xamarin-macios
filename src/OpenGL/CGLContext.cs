@@ -32,7 +32,7 @@ using ObjCRuntime;
 using Foundation;
 
 namespace OpenGL {
-	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use Metal.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")]
 	public class CGLContext : INativeObject, IDisposable {
 		IntPtr handle;
 
