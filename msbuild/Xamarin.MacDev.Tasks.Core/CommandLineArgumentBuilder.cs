@@ -34,25 +34,14 @@ namespace Xamarin.MacDev
 		/// <summary>
 		/// Adds an argument without escaping or quoting.
 		/// </summary>
-		public void Add (string argument, bool appendLine = false)
+		public void Add (string argument)
 		{
-			if (builder.Length > 0 && !appendLine)
+			if (builder.Length > 0)
 				builder.Append (' ');
 
 			builder.Append (argument);
 
-			if (appendLine)
-				builder.AppendLine ();
-
 			hash.Add (argument);
-		}
-
-		/// <summary>
-		/// Adds an argument without escaping or quoting and goes to the next line
-		/// </summary>
-		public void AddLine (string argument)
-		{
-			Add (argument, true);
 		}
 
 		/// <summary>
@@ -77,7 +66,7 @@ namespace Xamarin.MacDev
 			AddQuoted (string.Format (argumentFormat, val0));
 		}
 
-		static void AppendQuoted (StringBuilder quoted, string text, bool appendLine = false)
+		static void AppendQuoted (StringBuilder quoted, string text)
 		{
 			if (text.IndexOfAny (QuoteSpecials) != -1) {
 				quoted.Append ("\"");
@@ -92,32 +81,21 @@ namespace Xamarin.MacDev
 			} else {
 				quoted.Append (text);
 			}
-
-			if (appendLine)
-				quoted.AppendLine ();
 		}
 
 		/// <summary>Adds an argument, quoting and escaping as necessary.</summary>
 		/// <remarks>The .NET process class does not support escaped 
 		/// arguments, only quoted arguments with escaped quotes.</remarks>
-		public void AddQuoted (string argument, bool appendLine = false)
+		public void AddQuoted (string argument)
 		{
 			if (argument == null)
 				return;
 
-			if (builder.Length > 0 && !appendLine)
+			if (builder.Length > 0)
 				builder.Append (' ');
 
-			AppendQuoted (builder, argument, appendLine);
+			AppendQuoted (builder, argument);
 			hash.Add (argument);
-		}
-
-		/// <summary>
-		/// Adds an argument, quoting, escaping as necessary, and goes to the next line
-		/// </summary>
-		public void AddQuotedLine (string argument)
-		{
-			AddQuoted (argument, true);
 		}
 
 		/// <summary>
