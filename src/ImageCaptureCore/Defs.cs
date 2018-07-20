@@ -26,6 +26,7 @@
 //
 using System;
 
+using Foundation;
 using ObjCRuntime;
 
 namespace ImageCaptureCore {
@@ -270,5 +271,18 @@ namespace ImageCaptureCore {
 	public enum ICScannerTransferMode : ulong {
 		FileBased = 0,
 		MemoryBased = 1,
+	}
+
+	enum ICTransportType {
+	    [Field ("ICTransportTypeUSB")]
+	    USB,
+	    [Field ("ICTransportTypeFireWire")]
+	    FireWire,
+	    [Field ("ICTransportTypeBluetooth")]
+	    Bluetooth,
+	    [Field ("ICTransportTypeTCPIP")]
+	    TCPIP,
+	    [Field ("ICTransportTypeMassStorage")]
+	    MassStorage,
 	}
 }
