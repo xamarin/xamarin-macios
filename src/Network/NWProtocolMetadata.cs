@@ -37,8 +37,9 @@ namespace Network {
 	
 	public class NWProtocolMetadata : NativeObject {
 
+#if false
 		// Officially listed on header files, but seems to not work on Mac/iOS
-		
+		// https://bugreport.apple.com/web/?problemID=42443077
 		//[TV (12,0), Mac (10,14), iOS (12,0)]
 		[TV (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
@@ -55,6 +56,7 @@ namespace Network {
 		{
 			return new NWProtocolMetadata (nw_udp_create_metadata (), owns: true);
 		}
+#endif
 	
 		public NWProtocolMetadata (IntPtr handle, bool owns) : base (handle, owns) {}
 

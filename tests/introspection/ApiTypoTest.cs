@@ -192,6 +192,8 @@ namespace Introspection
 			"Ecdh",  // Elliptic Curve Diffie–Hellman
 			"Ecdsa", // Elliptic Curve Digital Signature Algorithm
 			"Ecies", // Elliptic Curve Integrated Encryption Scheme
+			"Ecn",   // Explicit Congestion Notification
+			"Ect",   // ECN Capable Transport
 			"Editability", 
 			"Eof", // acronym End-Of-File
 			"Elu",

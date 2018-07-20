@@ -21,7 +21,9 @@ namespace Security {
 	
 	public class SecProtocolOptions : NativeObject {
 #if !COREBUILD
-		public SecProtocolOptions (IntPtr handle, bool owns) : base (handle, owns) {}
+		// This type is only ever surfaced in response to callbacks in TLS/Network and documented as read-only
+		// if this ever changes, make this public
+		internal SecProtocolOptions (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.SecurityLibrary)]
