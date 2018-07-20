@@ -60,7 +60,7 @@ namespace ImageCaptureCore {
 		NSString CameraDeviceCanReceiveFile { get; }
 
 		[Field ("ICCameraDeviceCanAcceptPTPCommands")]
-		NSString CameraDeviceCanAcceptPTPCommands { get; }
+		NSString CameraDeviceCanAcceptPtpCommands { get; }
 	}
 
 	[Static]
@@ -78,7 +78,7 @@ namespace ImageCaptureCore {
 	[Static]
 	interface ICDeviceLocationDescriptions {
 		[Field ("ICDeviceLocationDescriptionUSB")]
-		NSString USB { get; }
+		NSString Usb { get; }
 
 		[Field ("ICDeviceLocationDescriptionFireWire")]
 		NSString FireWire { get; }
@@ -93,7 +93,7 @@ namespace ImageCaptureCore {
 	[Static]
 	interface ICCameraDownloadOptionKeys {
 		[Field ("ICDownloadsDirectoryURL")]
-		NSString DownloadsDirectoryURL { get; }
+		NSString DownloadsDirectoryUrl { get; }
 
 		[Field ("ICSaveAsFilename")]
 		NSString SaveAsFilename { get; }
@@ -226,7 +226,7 @@ namespace ImageCaptureCore {
 		[Export ("hasConfigurableWiFiInterface")]
 		bool HasConfigurableWiFiInterface { get; }
 	
-	        [BindAs (typeof (ICTransportType))]
+		[BindAs (typeof (ICTransportType))]
 		[Export ("transportType")]
 		NSString TransportType { get; }
 	

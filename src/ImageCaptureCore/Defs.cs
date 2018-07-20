@@ -275,13 +275,13 @@ namespace ImageCaptureCore {
 
 	enum ICTransportType {
 	    [Field ("ICTransportTypeUSB")]
-	    USB,
+	    Usb,
 	    [Field ("ICTransportTypeFireWire")]
 	    FireWire,
 	    [Field ("ICTransportTypeBluetooth")]
 	    Bluetooth,
 	    [Field ("ICTransportTypeTCPIP")]
-	    TCPIP,
+	    TcpIp,
 	    [Field ("ICTransportTypeMassStorage")]
 	    MassStorage,
 	}
