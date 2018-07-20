@@ -248,6 +248,7 @@ namespace Intents {
 		ImageProxyTimeout = 6007,
 		ImageServiceFailure = 6008,
 		ImageScalingFailed = 6009,
+		PermissionDenied = 6010,
 		VoiceShortcutCreationFailed = 7000,
 		VoiceShortcutGetFailed = 7001,
 		VoiceShortcutDeleteFailed = 7002,
@@ -383,8 +384,10 @@ namespace Intents {
 
 	[Native]
 	public enum INPersonSuggestionType : long {
+		[iOS (12,0), [Mac (10,14, PlatformArchitecture.Arch64), Watch (5,0)]
+		None = 0,
 		SocialProfile = 1,
-		InstantMessageAddress
+		InstantMessageAddress,
 	}
 
 	[iOS (10, 0)]
