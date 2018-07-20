@@ -1144,9 +1144,6 @@
 !missing-protocol-conformance! NSTextView should conform to NSStandardKeyBindingResponding
 !missing-protocol-conformance! NSResponder should conform to NSStandardKeyBindingResponding (defined in 'NSStandardKeyBindingMethods' category)
 
-## 41367075 NSSecureTextField header claims NSViewToolTipOwner but does not respond to selector
-!missing-protocol-conformance! NSSecureTextField should conform to NSViewToolTipOwner
-
 ## DoCommandBySelector conflicts with NSTextViewDelegate in generated code
 !missing-protocol-member! NSTextInput::doCommandBySelector: not found
 

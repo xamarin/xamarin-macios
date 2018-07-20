@@ -191,6 +191,10 @@ namespace Introspection {
 					if (!Mac.CheckSystemVersion (10, 9))
 						return true;
 					break;
+				case "MPSImageDescriptor":
+					if (!Mac.CheckSystemVersion (10, 14)) // Likely to be fixed when we do MPS binding
+						return true;
+					break;
 				}
 				break;
 			case "readingOptionsForType:pasteboard:":

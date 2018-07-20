@@ -995,8 +995,8 @@ namespace TVMLKit {
 		[NullAllowed, Export ("artworkImageURL", ArgumentSemantic.Strong)]
 		NSUrl ArtworkImageUrl { get; }
 
-		[Export ("explicit")]
-		bool Explicit { [Bind ("isExplicit")] get; }
+		[Export ("explicitContent")]
+		bool ExplicitContent { [Bind ("isExplicitContent")] get; }
 
 		[Export ("resumeTime")]
 		/* NSInterval */ double ResumeTime { get; }

@@ -263,11 +263,11 @@ namespace CarPlay {
 
 		[Abstract]
 		[Export ("application:didConnectCarInterfaceController:toWindow:")]
-		void DidConnectCarInterfaceController (UIApplication application, CPInterfaceController interfaceController, CPMapContentWindow window);
+		void DidConnectCarInterfaceController (UIApplication application, CPInterfaceController interfaceController, CPWindow window);
 
 		[Abstract]
 		[Export ("application:didDisconnectCarInterfaceController:fromWindow:")]
-		void DidDisconnectCarInterfaceController (UIApplication application, CPInterfaceController interfaceController, CPMapContentWindow window);
+		void DidDisconnectCarInterfaceController (UIApplication application, CPInterfaceController interfaceController, CPWindow window);
 
 		[Export ("application:didSelectNavigationAlert:")]
 		void DidSelectNavigationAlert (UIApplication application, CPNavigationAlert navigationAlert);
@@ -335,8 +335,8 @@ namespace CarPlay {
 	[DisableDefaultCtor]
 	interface CPListTemplate : CPBarButtonProviding {
 
-		[Export ("initWithSections:")]
-		IntPtr Constructor (CPListSection [] sections);
+		[Export ("initWithTitle:sections:")]
+		IntPtr Constructor ([NullAllowed] string title, CPListSection[] sections);
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
@@ -349,7 +349,7 @@ namespace CarPlay {
 		CPListSection [] Sections { get; }
 
 		[NullAllowed, Export ("title")]
-		string Title { get; set; }
+		string Title { get; }
 
 		[Export ("updateSections:")]
 		void UpdateSections (CPListSection [] sections);
@@ -766,7 +766,7 @@ namespace CarPlay {
 
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
 	[BaseType (typeof (UIWindow))]
-	interface CPMapContentWindow {
+	interface CPWindow {
 
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);

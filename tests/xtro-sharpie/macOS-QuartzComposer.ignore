@@ -2,11 +2,6 @@
 !missing-selector! QCRenderer::initWithCGLContext:pixelFormat:colorSpace:composition: not bound
 !missing-selector! QCRenderer::initWithOpenGLContext:pixelFormat:file: not bound
 
-## Xcode 10 beta 1 removed some constants (without ever deprecating them) https://trello.com/c/oTIKcwum/119-41125938-constant-removal-in-quartzcomposerframework
-!unknown-field! QCCompositionInputRSSArticleDurationKey bound
-!unknown-field! QCCompositionInputRSSFeedURLKey bound
-!unknown-field! QCCompositionProtocolRSSVisualizer bound
-
 ## unsorted
 
 !missing-field! QCCompositionPickerPanelDidSelectCompositionNotification not bound

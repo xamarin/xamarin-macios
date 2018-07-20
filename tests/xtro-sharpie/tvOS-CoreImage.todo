@@ -16,3 +16,4 @@
 ## appended from unclassified file
 !missing-selector! CIContext::depthBlurEffectFilterForImage:disparityImage:portraitEffectsMatte:orientation:options: not bound
 !missing-selector! CIContext::depthBlurEffectFilterForImageURL:options: not bound
+!missing-selector! CIContext::depthBlurEffectFilterForImageData:options: not bound

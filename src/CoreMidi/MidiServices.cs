@@ -45,7 +45,6 @@ using Foundation;
 using MidiObjectRef = System.Int32;
 using MidiClientRef = System.Int32;
 using MidiDeviceRef = System.Int32;
-using MidiDeviceListRef = System.Int32;
 using MidiPortRef = System.Int32;
 using MidiEndpointRef = System.Int32;
 using MidiEntityRef = System.Int32;
@@ -222,9 +221,6 @@ namespace CoreMidi {
 		internal static IntPtr kMIDIPropertyTransmitsNotes;
 		internal static IntPtr kMIDIPropertyTransmitsProgramChanges;
 		internal static IntPtr kMIDIPropertyUniqueID;
-		internal static IntPtr kMIDIDriverPropertyUsesSerial;
-		internal static IntPtr kMIDIPropertyFactoryPatchNameFile;
-		internal static IntPtr kMIDIPropertyUserPatchNameFile;
 
 		static MidiObject ()
 		{
@@ -277,9 +273,6 @@ namespace CoreMidi {
 			kMIDIPropertyTransmitsNotes = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyTransmitsNotes");
 			kMIDIPropertyTransmitsProgramChanges = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyTransmitsProgramChanges");
 			kMIDIPropertyUniqueID = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyUniqueID");
-			kMIDIDriverPropertyUsesSerial = Dlfcn.GetIntPtr (midiLibrary, "kMIDIDriverPropertyUsesSerial");
-			kMIDIPropertyFactoryPatchNameFile = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyFactoryPatchNameFile");
-			kMIDIPropertyUserPatchNameFile = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyUserPatchNameFile");
 		}
 	
 #if XAMCORE_2_0
@@ -1453,10 +1446,6 @@ namespace CoreMidi {
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static MidiEntityRef MIDIDeviceGetEntity (MidiDeviceRef handle, nint item);
 
-		[NoiOS]
-		[DllImport (Constants.CoreMidiLibrary)]
-		extern static int MIDIDeviceAddEntity (MidiDeviceRef device, /* CFString */ IntPtr name, bool embedded, nuint numSourceEndpoints, nuint numDestinationEndpoints, MidiEntityRef newEntity);
-
 		public MidiEntity GetEntity (nint entityIndex)
 		{
 			if (handle == MidiObject.InvalidRef)
@@ -1465,16 +1454,6 @@ namespace CoreMidi {
 			if (h == MidiObject.InvalidRef)
 				return null;
 			return new MidiEntity (h);
-		}
-
-		[NoiOS]
-		public int Add (string name, bool embedded, nuint numSourceEndpoints, nuint numDestinationEndpoints, MidiEntity newEntity)
-		{
-			if (handle == MidiObject.InvalidRef)
-				throw new ObjectDisposedException ("handle");
-			using (NSString nsName = new NSString (name)) {
-				return MIDIDeviceAddEntity (handle, nsName.Handle, embedded, numSourceEndpoints, numDestinationEndpoints, newEntity.Handle);
-			}
 		}
 
 		public nint EntityCount {
@@ -1518,34 +1497,6 @@ namespace CoreMidi {
 				SetInt (kMIDIPropertyUniqueID, value);
 			}
 		}
-
-		public bool UsesSerial {
-			get {
-				return GetInt (kMIDIDriverPropertyUsesSerial) != 0;
-			}
-			set {
-				SetInt (kMIDIDriverPropertyUsesSerial, value ? 1 : 0);
-			}
-		}
-
-		public string FactoryPatchNameFile {
-			get {
-				return GetString (kMIDIPropertyFactoryPatchNameFile);
-			}
-			set {
-				SetString (kMIDIPropertyFactoryPatchNameFile, value);
-			}
-		}
-
-		public string UserPatchNameFile {
-			get {
-				return GetString (kMIDIPropertyUserPatchNameFile);
-			}
-			set {
-				SetString (kMIDIPropertyUserPatchNameFile, value);
-			}
-		}
-
 
 		public int AdvanceScheduleTimeMuSec {
 			get {
@@ -1887,65 +1838,6 @@ namespace CoreMidi {
 		internal MidiDevice (MidiDeviceRef handle, bool owns) : base (handle, owns)
 		{
 		}
-#endif // !COREBUILD
-	}
-
-	public class MidiDeviceList : MidiObject {
-
-#if !COREBUILD && MONOMAC
-		[DllImport (Constants.CoreMidiLibrary)]
-		static extern nuint MIDIDeviceListGetNumberOfDevices (MidiDeviceListRef devList);
-
-		[DllImport (Constants.CoreMidiLibrary)]
-		static extern MidiDeviceRef MIDIDeviceListGetDevice (MidiDeviceListRef devList, nuint index);
-
-		[DllImport (Constants.CoreMidiLibrary)]
-		static extern int MIDIDeviceListAddDevice (MidiDeviceListRef devList, MidiDeviceRef dev);
-
-		[DllImport (Constants.CoreMidiLibrary)]
-		static extern int MIDIDeviceListDispose (MidiDeviceListRef devList);
-
-		internal MidiDeviceList (MidiDeviceListRef handle) : base (handle)
-		{
-		}
-
-		internal MidiDeviceList (MidiDeviceListRef handle, bool owns) : base (handle, owns)
-		{
-		}
-
-		public nuint GetNumberOfDevices () 
-		{
-			if (handle == MidiObject.InvalidRef)
-				throw new ObjectDisposedException ("handle");
-			return MIDIDeviceListGetNumberOfDevices (handle);
-		}
-
-		public MidiDevice Get (nuint index)
-		{
-			if (handle == MidiObject.InvalidRef)
-				throw new ObjectDisposedException ("handle");
-			var h = MIDIDeviceListGetDevice (handle, index);
-			if (h == MidiObject.InvalidRef)
-				return null;
-			return new MidiDevice (h);
-		}
-
-		public int Add (MidiDevice device)
-		{
-			if (handle == MidiObject.InvalidRef)
-				throw new ObjectDisposedException ("handle");
-			return MIDIDeviceListAddDevice (handle, device.Handle);
-		}
-
-		internal override void DisposeHandle ()
-		{
-			if (handle != MidiObject.InvalidRef){
-				if (owns)
-					MIDIDeviceListDispose (handle);
-				handle = MidiObject.InvalidRef;
-			}
-		}
-
 #endif // !COREBUILD
 	}
 	
