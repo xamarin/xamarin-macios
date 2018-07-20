@@ -2258,7 +2258,7 @@ namespace AVFoundation {
 		[Async]
 		[Watch (5,0), NoTV, NoMac, NoiOS]
 		[Export ("activateWithOptions:completionHandler:")]
-		void Activate (AVAudioSessionActivationOptions options, Action<NSError> handler);
+		void Activate (AVAudioSessionActivationOptions options, Action<bool, NSError> handler);
 	}
 	
 	[iOS (6,0)]
