@@ -1465,6 +1465,7 @@ namespace CoreAnimation {
 	}
 
 #if MONOMAC
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")]
 	[BaseType (typeof (CALayer))]
 	interface CAOpenGLLayer {
 		[Export ("layer"), New, Static]
