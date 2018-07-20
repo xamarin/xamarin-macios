@@ -368,6 +368,10 @@ namespace HealthKit {
 		[Export ("isHealthDataAvailable")]
 		bool IsHealthDataAvailable { get; }
 
+		[NoWatch, iOS (12, 0)]
+		[Export ("supportsHealthRecords")]
+		bool SupportsHealthRecords { get; }
+
 		// FIXME NS_EXTENSION_UNAVAILABLE("Not available to extensions") ;
 		[Export ("authorizationStatusForType:")]
 		HKAuthorizationStatus GetAuthorizationStatus (HKObjectType type);
