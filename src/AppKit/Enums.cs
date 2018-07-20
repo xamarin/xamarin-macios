@@ -885,6 +885,7 @@ namespace AppKit {
 		Utility		       					= 1 << 4,
 		DocModal	       					= 1 << 6,
 		NonactivatingPanel     				= 1 << 7,
+		[Advice ("Textured should no longer be used.")]
 		TexturedBackground     				= 1 << 8,
 		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		Unscaled	       					= 1 << 11,
@@ -1977,6 +1978,7 @@ namespace AppKit {
 	}
 
 	[Native]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
 	public enum NSOpenGLContextParameter : ulong {
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		SwapRectangle = 200,
@@ -2007,6 +2009,7 @@ namespace AppKit {
 		BelowWindow = -1
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
 	public enum NSOpenGLPixelFormatAttribute : uint { // uint32_t NSOpenGLPixelFormatAttribute
 		AllRenderers       =   1,
 		DoubleBuffer       =   5,
@@ -2068,6 +2071,7 @@ namespace AppKit {
 
 #if XAMCORE_4_0
 	[Native]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
 	public enum NSOpenGLProfile : long {
 #else
 	public enum NSOpenGLProfile : int {
@@ -2088,6 +2092,7 @@ namespace AppKit {
 		Third = 1002,
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
 	public enum NSOpenGLGlobalOption : uint {
 		FormatCacheSize = 501,
 		ClearFormatCache = 502,
@@ -2097,18 +2102,21 @@ namespace AppKit {
 		ResetLibrary = 504
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
 	public enum NSGLTextureTarget : uint {
 		T2D = 0x0de1,
 		CubeMap = 0x8513,
 		RectangleExt = 0x84F5,
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
 	public enum NSGLFormat : uint {
 		RGB = 0x1907,
 		RGBA = 0x1908,
 		DepthComponent = 0x1902,
 	}
 	
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
 	public enum NSGLTextureCubeMap : uint {
 		None = 0,
 		PositiveX = 0x8515,
@@ -2119,6 +2127,7 @@ namespace AppKit {
 		NegativeZ = 0x851A
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
 	public enum NSGLColorBuffer : uint {
 		Front = 0x0404,
 		Back = 0x0405,
