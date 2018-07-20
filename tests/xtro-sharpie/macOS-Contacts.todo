@@ -1,2 +1,0 @@
-!missing-selector! +CNContact::predicateForContactsMatchingEmailAddress: not bound
-!missing-selector! +CNContact::predicateForContactsMatchingPhoneNumber: not bound
