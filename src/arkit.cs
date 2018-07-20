@@ -702,11 +702,6 @@ namespace ARKit {
 		nint MaximumNumberOfTrackedImages { get; set; }
 
 		[iOS (12,0)]
-		[Static]
-		[Export ("objectDetectionSupported")]
-		bool ObjectDetectionSupported { [Bind ("isObjectDetectionSupported")] get; }
-
-		[iOS (12,0)]
 		[Export ("detectionObjects", ArgumentSemantic.Copy)]
 		NSSet<ARReferenceObject> DetectionObjects { get; set; }
 	}

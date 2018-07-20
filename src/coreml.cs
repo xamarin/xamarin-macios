@@ -47,6 +47,7 @@ namespace CoreML {
 		IO = 3,
 		[Watch (4,2), TV (11,2), Mac (10,13,2, onlyOn64: true), iOS (11,2)]
 		CustomLayer = 4,
+		CustomModel = 5,
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]

@@ -1,0 +1,2 @@
+!missing-protocol! ARAnchorCopying not bound
+!missing-protocol-conformance! ARAnchor should conform to ARAnchorCopying

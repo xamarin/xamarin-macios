@@ -204,10 +204,6 @@ namespace CoreImage {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CIContext {
-		// When we bind OpenGL add these:
-		//[Export ("contextWithCGLContext:pixelFormat:colorSpace:options:")]
-		//CIContext ContextWithCGLContextpixelFormatcolorSpaceoptions (CGLContextObj ctx, CGLPixelFormatObj pf, CGColorSpaceRef cs, NSDictionary dict, );
-
 #if !MONOMAC || XAMCORE_2_0
 		[iOS (9,0)][Mac (10,11)]
 		[Static]
@@ -361,13 +357,6 @@ namespace CoreImage {
 		[Export ("contextForOfflineGPUAtIndex:")]
 		[Static]
 		CIContext FromOfflineGpu (int gpuIndex);
-
-		// When we bind CGLContext
-		//+(CIContext *)contextForOfflineGPUAtIndex:(unsigned int)index
-		//    colorSpace:(nullable CGColorSpaceRef)colorSpace
-		//    options:(nullable CI_DICTIONARY(NSString*,id) *)options
-		//    sharedContext:(nullable CGLContextObj)sharedContext NS_AVAILABLE_MAC(10_10);
-		
 #endif
 
 		[iOS (9,0)][Mac (10,11)]

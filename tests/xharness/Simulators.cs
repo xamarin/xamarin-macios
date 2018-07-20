@@ -417,6 +417,7 @@ namespace xharness
 			var TCC_db = Path.Combine (DataPath, "data", "Library", "TCC", "TCC.db");
 			var sim_services = new string [] {
 					"kTCCServiceAddressBook",
+					"kTCCServiceCalendar",
 					"kTCCServicePhotos",
 					"kTCCServiceMediaLibrary",
 					"kTCCServiceUbiquity",
@@ -452,8 +453,8 @@ namespace xharness
 							break;
 						case 3: // Xcode 10+
 							// CREATE TABLE access (service TEXT NOT NULL, client TEXT NOT NULL, client_type INTEGER NOT NULL, allowed INTEGER NOT NULL, prompt_count INTEGER NOT NULL, csreq BLOB, policy_id INTEGER, indirect_object_identifier_type INTEGER, indirect_object_identifier TEXT, indirect_object_code_identity BLOB, PRIMARY KEY (service, client, client_type, indirect_object_identifier), FOREIGN KEY (policy_id) REFERENCES policies(id) ON DELETE CASCADE ON UPDATE CASCADE);
-							sql.AppendFormat ("INSERT INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL,NULL,'UNUSED',NULL);", service, bundle_identifier);
-							sql.AppendFormat ("INSERT INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL,NULL,'UNUSED',NULL);", service, bundle_identifier + ".watchkitapp");
+							sql.AppendFormat ("INSERT INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL,NULL,'UNUSED',NULL,NULL);", service, bundle_identifier);
+							sql.AppendFormat ("INSERT INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL,NULL,'UNUSED',NULL,NULL);", service, bundle_identifier + ".watchkitapp");
 							break;
 						default:
 							throw new NotImplementedException ();
