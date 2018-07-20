@@ -175,7 +175,7 @@ namespace Contacts {
 		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Static]
 		[Export ("predicateForContactsMatchingPhoneNumber:")]
-		NSPredicate PredicateForContacts (CNPhoneNumber phoneNumber);
+		NSPredicate GetPredicateForContacts (CNPhoneNumber phoneNumber);
 
 		[Static]
 		[Export ("predicateForContactsWithIdentifiers:")]
