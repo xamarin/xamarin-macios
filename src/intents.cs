@@ -384,7 +384,7 @@ namespace Intents {
 
 	[Native]
 	public enum INPersonSuggestionType : long {
-		[iOS (12,0), Mac (10,14, PlatformArchitecture.Arch64), Watch (5,0)]
+		[iOS (12,0), Mac (10,14, onlyOn64: true), Watch (5,0)]
 		None = 0,
 		SocialProfile = 1,
 		InstantMessageAddress,
