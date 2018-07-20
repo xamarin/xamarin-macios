@@ -212,7 +212,7 @@ namespace ImageCaptureCore {
 		bool Browsing { [Bind ("isBrowsing")] get; }
 	
 		[Export ("browsedDeviceTypeMask", ArgumentSemantic.Assign)]
-		ICDeviceTypeMask BrowsedDeviceTypeMask { get; set; }
+		ICBrowsedDeviceType BrowsedDeviceTypeMask { get; set; }
 	
 		[NullAllowed, Export ("devices")]
 		ICDevice[] Devices { get; }

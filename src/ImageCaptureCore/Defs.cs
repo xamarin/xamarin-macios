@@ -118,19 +118,18 @@ namespace ImageCaptureCore {
 		Bluetooth = 2048,
 	}
 	
+	// Combination of ICDeviceTypeMask and ICDeviceLocationTypeMask
 	[Native]
-	public enum ICDeviceTypeMask : ulong {
+	[Flags]
+	public enum ICBrowsedDeviceType : ulong {
 		Camera = 1,
 		Scanner = 2,
-	}
-	
-	[Native]
-	public enum ICDeviceLocationTypeMask : ulong {
 		Local = 256,
 		Shared = 512,
 		Bonjour = 1024,
 		Bluetooth = 2048,
 		Remote = 65024,
+
 	}
 
 	[Native]
