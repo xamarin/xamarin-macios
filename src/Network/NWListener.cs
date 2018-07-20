@@ -138,6 +138,8 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe void nw_listener_set_state_changed_handler (IntPtr handle, void *callback);
 		
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void SetStateChangedHandler (Action<NWListenerState,NWError> callback)
 		{
 			unsafe {
@@ -175,6 +177,8 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe void nw_listener_set_new_connection_handler (IntPtr handle, void *callback);
 		
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void SetNewConnectionHandler (Action<NWConnection> callback)
 		{
 			unsafe {
@@ -215,6 +219,8 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe void nw_listener_set_advertised_endpoint_changed_handler (IntPtr handle, void *callback);
 		
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void SetAdvertisedEndpointChangedHandler (AdvertisedEndpointChanged callback)
 		{
 			unsafe {

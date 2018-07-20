@@ -72,6 +72,8 @@ namespace Network {
 		//
 		// If you pass null, to either configureTls, or configureTcp they will use the default options
 		//
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public unsafe static NWParameters CreateSecureTcp (Action<NWProtocolOptions> configureTls = null, Action<NWProtocolOptions> configureTcp = null)
 		{
 			var tlsHandler = new BlockLiteral ();
@@ -100,6 +102,8 @@ namespace Network {
 			return new NWParameters (ptr, owns: true);
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		// If you pass null to configureTcp, it will use the default options
 		public unsafe static NWParameters CreateTcp (Action<NWProtocolOptions> configureTcp = null)
 		{
@@ -128,6 +132,8 @@ namespace Network {
 		//
 		// If you pass null, to either configureTls, or configureTcp they will use the default options
 		//
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public unsafe static NWParameters CreateSecureUdp (Action<NWProtocolOptions> configureTls = null, Action<NWProtocolOptions> configureUdp = null)
 		{
 			var tlsHandler = new BlockLiteral ();
@@ -158,6 +164,7 @@ namespace Network {
 		}
 
 		// If you pass null to configureTcp, it will use the default options
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public unsafe static NWParameters CreateUdp (Action<NWProtocolOptions> configureUdp = null)
 		{
 			var udpHandler = new BlockLiteral ();
@@ -366,6 +373,7 @@ namespace Network {
 		static unsafe extern void nw_parameters_iterate_prohibited_interfaces (nw_parameters_t parameters, void *callback);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void IterateProhibitedInterfaces (Func<NWInterface,bool> iterationCallback)
 		{
                         unsafe {
@@ -400,6 +408,8 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe void nw_parameters_iterate_prohibited_interface_types (IntPtr handle, void *callback);
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void IterateProhibitedInterfaces (Func<NWInterfaceType,bool> callback)
 		{
                         unsafe {

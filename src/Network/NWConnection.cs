@@ -104,6 +104,7 @@ namespace Network {
 		unsafe static extern void nw_connection_set_state_changed_handler (nw_connection_t connection, void *handler);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public unsafe void SetStateChangeHandler (Action<NWConnectionState,NWError> stateHandler)
 		{
 			if (stateHandler == null){
@@ -141,6 +142,7 @@ namespace Network {
 		static extern unsafe void nw_connection_set_viability_changed_handler  (IntPtr handle, void *callback);
 		
 		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public unsafe void SetBooleanChangeHandler (Action<bool> callback)
 		{
 			if (callback == null){
@@ -164,6 +166,7 @@ namespace Network {
 		static extern unsafe void nw_connection_set_better_path_available_handler (IntPtr handle, void *callback);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public unsafe void SetBetterPathAvailableHandler (Action<bool> callback)
 		{
 			if (callback == null){
@@ -201,6 +204,7 @@ namespace Network {
 		static extern unsafe void nw_connection_set_path_changed_handler (IntPtr handle, void *callback);
 		
 		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetPathChangedHandler (Action<NWPath> callback)
 		{
 			unsafe {
@@ -326,6 +330,8 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe void nw_connection_receive (IntPtr handle, uint minimumIncompleteLength, uint maximumLength, void *callback);
 		
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void Receive (uint minimumIncompleteLength, uint maximumLength, NWConnectionReceiveCompletion callback)
 		{
 			if (callback == null)
@@ -343,6 +349,8 @@ namespace Network {
 			}
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void ReceiveData (uint minimumIncompleteLength, uint maximumLength, NWConnectionReceiveDispatchDataCompletion callback)
 		{
 			if (callback == null)
@@ -364,6 +372,8 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe void nw_connection_receive_message (IntPtr handle, void *callback);
 		
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void ReceiveMessage (NWConnectionReceiveCompletion callback)
 		{
 			if (callback == null)
@@ -381,6 +391,8 @@ namespace Network {
 			}
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void ReceiveMessageData (NWConnectionReceiveDispatchDataCompletion callback)
 		{
 			if (callback == null)
@@ -457,6 +469,7 @@ namespace Network {
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void Send (DispatchData buffer, NWContentContext context, bool isComplete, Action<NWError> callback)
 		{
 			if (context == null)

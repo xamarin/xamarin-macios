@@ -172,6 +172,7 @@ namespace Security {
 		static extern void sec_protocol_options_set_key_update_block(sec_protocol_options_t options, IntPtr key_update_block, dispatch_queue_t key_update_queue);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetKeyUpdateCallback (SecProtocolKeyUpdate keyUpdate, DispatchQueue keyUpdateQueue)
 		{
 			if (keyUpdate == null)

@@ -62,6 +62,9 @@ namespace Network {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe extern static void nw_protocol_stack_iterate_application_protocols (nw_protocol_stack_t stack, void *completion);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void IterateProtocols (Action<NWProtocolOptions> callback)
 		{
                         unsafe {
