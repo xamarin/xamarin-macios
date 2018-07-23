@@ -44,7 +44,6 @@
 !missing-field! kMIDIPropertyUniqueID not bound
 !missing-pinvoke! MIDIClientCreateWithBlock is not bound
 !missing-pinvoke! MIDIDestinationCreateWithBlock is not bound
-!missing-pinvoke! MIDIDeviceAddEntity is not bound
 !missing-pinvoke! MIDIDeviceCreate is not bound
 !missing-pinvoke! MIDIDeviceDispose is not bound
 !missing-pinvoke! MIDIDeviceListAddDevice is not bound
