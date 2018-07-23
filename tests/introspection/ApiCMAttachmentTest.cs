@@ -223,6 +223,7 @@ namespace Introspection {
 			case "ABMultiValue":
 			case "ABMutableMultiValue":
 			case "SecProtocolMetadata": // Read-only object that is surfaced during TLS negotiation callbacks, can not be created from user code.
+			case "SecProtocolOptions":  // Read-only object that is surfaced during TLS negotiation callbacks, can not be created from user code.
 			case "ABSource": // not skipped when running on iOS 6.1
 			// type was removed in iOS 10 (and replaced) and never consumed by other API
 			case "CGColorConverter":
@@ -420,6 +421,9 @@ namespace Introspection {
 			case "SecCertificate":
 				using (var cdata = NSData.FromArray (mail_google_com))
 					return new SecCertificate (cdata);
+			case "SecCertificate2":
+				using (var cdata = NSData.FromArray (mail_google_com))
+					return new SecCertificate2 (new SecCertificate (cdata));
 			case "SecKey":
 				SecKey private_key;
 				SecKey public_key;

@@ -71,6 +71,7 @@ namespace CoreFoundation {
 		//
 		// if size == ULong.MaxValue, reads as much data as is available
 		//
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void Read (int fd, ulong size, DispatchQueue dispatchQueue, DispatchIOHandler handler)
 		{
 			if (handler == null)
@@ -92,6 +93,7 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_write (int fd, IntPtr dispatchData, IntPtr dispatchQueue, IntPtr handler);
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void Write (int fd, DispatchData dispatchData, DispatchQueue dispatchQueue, DispatchIOHandler handler)
 		{
 			if (dispatchData == null)

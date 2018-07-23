@@ -165,6 +165,7 @@ namespace Network {
 
 		// If you pass null to configureTcp, it will use the default options
 		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public unsafe static NWParameters CreateUdp (Action<NWProtocolOptions> configureUdp = null)
 		{
 			var udpHandler = new BlockLiteral ();
