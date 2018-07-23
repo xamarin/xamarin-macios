@@ -885,7 +885,7 @@ namespace AppKit {
 		Utility		       					= 1 << 4,
 		DocModal	       					= 1 << 6,
 		NonactivatingPanel     				= 1 << 7,
-		[Advice ("Textured should no longer be used.")]
+		[Advice ("'TexturedBackground' should no longer be used.")]
 		TexturedBackground     				= 1 << 8,
 		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		Unscaled	       					= 1 << 11,
