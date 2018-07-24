@@ -639,6 +639,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			IntermediateOutputPath="$(IntermediateOutputPath)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(XamMacResourcePrefix)"
+			SdkPlatform="MacOSX"
 			SdkDevPath="$(_SdkDevPath)"
 			SdkRoot="$(_SdkRoot)"
 			SdkVersion="$(MacOSXSdkVersion)">
