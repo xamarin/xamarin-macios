@@ -238,7 +238,7 @@ namespace Xamarin.Mac.Tasks
 			}
 
 			// Use only the response file
-			actualArgs.AddQuotedLine ($"@{responseFile}");
+			actualArgs.AddQuoted ($"@{responseFile}");
 
 			return actualArgs.ToString ();
 		}
