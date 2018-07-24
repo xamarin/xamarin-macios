@@ -170,6 +170,11 @@ namespace ARKit {
 		[Export ("initWithName:transform:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		IntPtr Constructor (string name, Matrix4 transform);
+
+		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
+		[iOS (12,0)]
+		[Export ("initWithAnchor:")]
+		IntPtr Constructor (ARAnchor anchor);
 	}
 
 	[iOS (11,0)]
