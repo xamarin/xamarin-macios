@@ -1,4 +1,5 @@
 using System;
+using Foundation;
 using ObjCRuntime;
 
 namespace PhotosUI {
@@ -32,4 +33,22 @@ namespace PhotosUI {
 		LiveOff = 1 << 1,
 	}
 #endif
+	[NoiOS][NoTV][NoWatch]
+	[Mac (10,14, onlyOn64: true)]
+	public enum PHProjectCategory {
+		[Field ("PHProjectCategoryBook")]
+		Book,
+		[Field ("PHProjectCategoryCalendar")]
+		Calendar,
+		[Field ("PHProjectCategoryCard")]
+		Card,
+		[Field ("PHProjectCategoryPrints")]
+		Prints,
+		[Field ("PHProjectCategorySlideshow")]
+		Slideshow,
+		[Field ("PHProjectCategoryWallDecor")]
+		WallDecor,
+		[Field ("PHProjectCategoryOther")]
+		Other,
+	}
 }

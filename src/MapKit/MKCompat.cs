@@ -5,7 +5,7 @@ using ObjCRuntime;
 
 namespace MapKit {
 
-#if !XAMCORE_4_0
+#if !XAMCORE_4_0 && __IOS__
 	public partial class MKUserTrackingBarButtonItem {
 
 		[Obsolete ("Does not return a valid instance on iOS 12.")]

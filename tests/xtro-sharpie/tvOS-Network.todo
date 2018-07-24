@@ -191,3 +191,8 @@
 !missing-protocol! OS_nw_protocol_metadata not bound
 !missing-protocol! OS_nw_protocol_options not bound
 !missing-protocol! OS_nw_protocol_stack not bound
+## appended from unclassified file
+!missing-pinvoke! nw_ip_metadata_get_receive_time is not bound
+!missing-pinvoke! nw_ip_options_set_calculate_receive_time is not bound
+!missing-pinvoke! nw_parameters_get_include_peer_to_peer is not bound
+!missing-pinvoke! nw_parameters_set_include_peer_to_peer is not bound

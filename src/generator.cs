@@ -708,6 +708,7 @@ public class NamespaceManager
 		ImplicitNamespaces.Add (Get ("Foundation"));
 		ImplicitNamespaces.Add (Get ("ObjCRuntime"));
 		ImplicitNamespaces.Add (Get ("CoreGraphics"));
+		ImplicitNamespaces.Add (Get ("CoreML"));
 		ImplicitNamespaces.Add (Get ("SceneKit"));
 
 		if (Frameworks.HaveAudioUnit)

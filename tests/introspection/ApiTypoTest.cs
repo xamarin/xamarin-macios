@@ -413,6 +413,7 @@ namespace Introspection
 			"Rtl",
 			"Rtsp",
 			"Saml", // acronym
+			"Sdof",
 			"Scn",
 			"Sdk",
 			"Sdtv", // acronym: Standard Definition Tele Vision
@@ -482,6 +483,7 @@ namespace Introspection
 			"Udp",
 			"Unconfigured",
 			"Undecodable",
+			"Unemphasized",
 			"Underrun",
 			"Unflagged",
 			"Unfocusing",

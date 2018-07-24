@@ -1,9 +1,0 @@
-!missing-pinvoke! DisposeNavEventUPP is not bound
-!missing-pinvoke! DisposeNavObjectFilterUPP is not bound
-!missing-pinvoke! DisposeNavPreviewUPP is not bound
-!missing-pinvoke! InvokeNavEventUPP is not bound
-!missing-pinvoke! InvokeNavObjectFilterUPP is not bound
-!missing-pinvoke! InvokeNavPreviewUPP is not bound
-!missing-pinvoke! NewNavEventUPP is not bound
-!missing-pinvoke! NewNavObjectFilterUPP is not bound
-!missing-pinvoke! NewNavPreviewUPP is not bound

@@ -23,13 +23,6 @@ namespace CarPlay {
 
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
 	[Native]
-	enum CPAlertStyle : ulong {
-		ActionSheet = 0,
-		FullScreen,
-	}
-
-	[NoWatch, NoTV, NoMac, iOS (12,0)]
-	[Native]
 	enum CPAlertActionStyle : ulong {
 		Default = 0,
 		Cancel,
@@ -104,27 +97,6 @@ namespace CarPlay {
 	enum CPTripEstimateStyle : ulong {
 		Light = 0,
 		Dark,
-	}
-
-	[NoWatch, NoTV, NoMac, iOS (12,0)]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
-	interface CPAlert : NSSecureCoding {
-
-		[Export ("initWithTitleVariants:message:style:actions:")]
-		IntPtr Constructor (string [] titleVariants, [NullAllowed] string message, CPAlertStyle style, CPAlertAction [] actions);
-
-		[Export ("titleVariants", ArgumentSemantic.Copy)]
-		string [] TitleVariants { get; }
-
-		[NullAllowed, Export ("message")]
-		string Message { get; }
-
-		[Export ("style")]
-		CPAlertStyle Style { get; }
-
-		[Export ("actions", ArgumentSemantic.Strong)]
-		CPAlertAction [] Actions { get; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
@@ -243,6 +215,15 @@ namespace CarPlay {
 		[Export ("popToTemplate:animated:")]
 		void PopToTemplate (CPTemplate targetTemplate, bool animated);
 
+		[Export ("presentTemplate:animated:")]
+		void PresentTemplate (CPTemplate templateToPresent, bool animated);
+
+		[Export ("dismissTemplateAnimated:")]
+		void DismissTemplate (bool animated);
+
+		[Export ("presentedTemplate")]
+		CPTemplate PresentedTemplate { get; }
+
 		[Export ("rootTemplate")]
 		CPTemplate RootTemplate { get; }
 
@@ -251,12 +232,6 @@ namespace CarPlay {
 
 		[Export ("templates", ArgumentSemantic.Strong)]
 		CPTemplate [] Templates { get; }
-
-		[Export ("presentAlert:")]
-		void PresentAlert (CPAlert alert);
-
-		[Export ("dismissAlertAnimated:")]
-		void DismissAlert (bool animated);
 	}
 
 	interface ICPInterfaceControllerDelegate { }
@@ -439,17 +414,20 @@ namespace CarPlay {
 	[DisableDefaultCtor]
 	interface CPMapTemplate : CPBarButtonProviding {
 
-		[Export ("initWithConfiguration:")]
-		IntPtr Constructor ([NullAllowed] CPMapTemplateConfiguration configuration);
+		[Export ("guidanceBackgroundColor", ArgumentSemantic.Strong)]
+		UIColor GuidanceBackgroundColor { get; set; }
 
-		[Export ("configuration")]
-		CPMapTemplateConfiguration Configuration { get; }
+		[Export ("tripEstimateStyle", ArgumentSemantic.Assign)]
+		CPTripEstimateStyle TripEstimateStyle { get; set; }
 
 		[Export ("mapButtons", ArgumentSemantic.Strong)]
 		CPMapButton [] MapButtons { get; set; }
 
 		[Export ("showTripPreviews:textConfiguration:")]
 		void ShowTripPreviews (CPTrip [] tripPreviews, [NullAllowed] CPTripPreviewTextConfiguration textConfiguration);
+
+		[Export ("showRouteChoicesPreviewForTrip:textConfiguration:")]
+		void ShowRouteChoicesPreview (CPTrip tripPreview, [NullAllowed] CPTripPreviewTextConfiguration textConfiguration);
 
 		[Export ("hideTripPreviews")]
 		void HideTripPreviews ();
@@ -533,8 +511,8 @@ namespace CarPlay {
 		[Export ("mapTemplateDidBeginPanGesture:")]
 		void DidBeginPanGesture (CPMapTemplate mapTemplate);
 
-		[Export ("mapTemplate:didUpdatePanGestureWithDelta:velocity:")]
-		void DidUpdatePanGesture (CPMapTemplate mapTemplate, CGPoint delta, CGPoint velocity);
+		[Export ("mapTemplate:didUpdatePanGestureWithTranslation:velocity:")]
+		void DidUpdatePanGesture (CPMapTemplate mapTemplate, CGPoint translation, CGPoint velocity);
 
 		[Export ("mapTemplate:didEndPanGestureWithVelocity:")]
 		void DidEndPanGesture (CPMapTemplate mapTemplate, CGPoint velocity);
@@ -761,7 +739,7 @@ namespace CarPlay {
 		[Export ("initWithVoiceControlStates:")]
 		IntPtr Constructor (CPVoiceControlState [] voiceControlStates);
 
-		[NullAllowed, Export ("voiceControlStates", ArgumentSemantic.Copy)]
+		[Export ("voiceControlStates", ArgumentSemantic.Copy)]
 		CPVoiceControlState [] VoiceControlStates { get; }
 
 		[Export ("activateVoiceControlStateWithIdentifier:")]
@@ -800,21 +778,6 @@ namespace CarPlay {
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface CPMapTemplateConfiguration : NSSecureCoding {
-
-		[Export ("initWithGuidanceBackgroundColor:tripEstimateStyle:")]
-		IntPtr Constructor (UIColor guidanceBackgroundColor, CPTripEstimateStyle tripEstimateStyle);
-
-		[Export ("guidanceBackgroundColor")]
-		UIColor GuidanceBackgroundColor { get; }
-
-		[Export ("tripEstimateStyle")]
-		CPTripEstimateStyle TripEstimateStyle { get; }
-	}
-
-	[NoWatch, NoTV, NoMac, iOS (12,0)]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
 	interface CPTravelEstimates : NSSecureCoding {
 
 		[Export ("initWithDistanceRemaining:timeRemaining:")]
@@ -843,6 +806,39 @@ namespace CarPlay {
 
 		[NullAllowed, Export ("overviewButtonTitle")]
 		string OverviewButtonTitle { get; }
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (12,0)]
+	[BaseType (typeof (CPTemplate))]
+	[DisableDefaultCtor]
+	interface CPActionSheetTemplate {
+
+		[Export ("initWithTitle:message:actions:")]
+		IntPtr Constructor ([NullAllowed] string title, [NullAllowed] string message, CPAlertAction [] actions);
+
+		[NullAllowed, Export ("title")]
+		string Title { get; }
+
+		[NullAllowed, Export ("message")]
+		string Message { get; }
+
+		[Export ("actions", ArgumentSemantic.Strong)]
+		CPAlertAction [] Actions { get; }
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (12,0)]
+	[BaseType (typeof(CPTemplate))]
+	[DisableDefaultCtor]
+	interface CPAlertTemplate {
+
+		[Export ("initWithTitleVariants:actions:")]
+		IntPtr Constructor (string [] titleVariants, CPAlertAction [] actions);
+
+		[Export ("titleVariants", ArgumentSemantic.Copy)]
+		string [] TitleVariants { get; }
+
+		[Export ("actions", ArgumentSemantic.Strong)]
+		CPAlertAction [] Actions { get; }
 	}
 }
 

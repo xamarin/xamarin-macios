@@ -32,6 +32,7 @@ using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
 using CoreImage;
+using CoreML;
 using CoreVideo;
 using ImageIO;
 using IOSurface;
@@ -5495,7 +5496,11 @@ namespace CoreImage {
 	[Mac (10,14, onlyOn64: true)]
 	[BaseType (typeof (CIFilter))]
 	interface CICameraCalibrationLensCorrection {
-		// FIXME
+		[CoreImageFilterProperty ("inputAVCameraCalibrationData")]
+		AVCameraCalibrationData AVCameraCalibrationData { get; set; }
+
+		[CoreImageFilterProperty ("inputUseInverseLookUpTable")]
+		bool UseInverseLookUpTable { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -5504,6 +5509,7 @@ namespace CoreImage {
 	[Mac (10,14, onlyOn64: true)]
 	[BaseType (typeof (CIFilter))]
 	interface CICoreMLModelFilter {
-		// FIXME
+		[CoreImageFilterProperty ("inputModel")]
+		MLModel Model { get; set; }
 	}
 }

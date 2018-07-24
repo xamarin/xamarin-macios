@@ -189,6 +189,7 @@ public partial class Generator {
 		case "int":
 			print ("return GetInt (\"{0}\");", propertyName);
 			break;
+		case "MLModel":
 		case "NSAttributedString":
 		case "NSData":
 			// NSNumber should not be added - it should be bound as a float (common), int32 or bool
@@ -233,6 +234,7 @@ public partial class Generator {
 		case "CIColor":
 		case "CIImage":
 		case "CIVector":
+		case "MLModel":
 		case "NSAttributedString":
 		case "NSData":
 		// NSNumber should not be added - it should be bound as a int or a float
