@@ -26,6 +26,7 @@ using ObjCRuntime;
 using Security;
 using VideoToolbox;
 using UIKit;
+using Network;
 #else
 using MonoTouch.AudioToolbox;
 using MonoTouch.CoreMedia;
@@ -41,6 +42,7 @@ using MonoTouch.ObjCRuntime;
 using MonoTouch.Security;
 using MonoTouch.VideoToolbox;
 using MonoTouch.UIKit;
+using MonoTouch.Network;
 #endif
 
 namespace Introspection {
