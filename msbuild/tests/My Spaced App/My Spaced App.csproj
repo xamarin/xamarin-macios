@@ -76,6 +76,12 @@
     <Folder Include="en.lproj\" />
   </ItemGroup>
   <ItemGroup>
+    <NativeReference Include="..\..\..\tests\test-libraries\.libs\ios\libtest2.a">
+      <Kind>Static</Kind>
+      <Link>libtest2.a</Link>
+    </NativeReference>
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Info.plist" />
     <None Include="Entitlements.plist" />
   </ItemGroup>
