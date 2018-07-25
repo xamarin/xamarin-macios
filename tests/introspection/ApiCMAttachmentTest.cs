@@ -426,7 +426,7 @@ namespace Introspection {
 					new CVPixelBufferAttributes (CVPixelFormatType.CV24RGB, 100, 50)
 				);
 			case "NWAdvertiseDescriptor":
-				return new NWAdvertiseDescriptor ("sampleName" + DateTime.Now);
+				return NWAdvertiseDescriptor.CreateBonjourService ("sampleName" + DateTime.Now);
 			case "NWConnection": {
 				var endpoint = NWEndpoint.Create ("www.microsoft.com", "https");
 				var parameters = NWParameters.CreateTcp (configureTcp: null);
