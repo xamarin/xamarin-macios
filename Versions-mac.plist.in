@@ -8,6 +8,8 @@
 	<dict>
 		<key>macOS</key>
 		<array>
+			<string>10.7</string>
+			<string>10.8</string>
 			<string>10.9</string>
 			<string>10.10</string>
 			<string>10.11</string>
