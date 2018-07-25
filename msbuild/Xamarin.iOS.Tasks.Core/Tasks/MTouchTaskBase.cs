@@ -360,6 +360,7 @@ namespace Xamarin.iOS.Tasks
 		protected override string GenerateCommandLineCommands ()
 		{
 			var args = new CommandLineArgumentBuilder ();
+			var actualArgs = new CommandLineArgumentBuilder ();
 			TargetArchitecture architectures;
 			bool msym;
 
@@ -560,7 +561,7 @@ namespace Xamarin.iOS.Tasks
 						}
 					} else {
 						// other user-defined mtouch arguments
-						args.AddQuotedLine (StringParserService.Parse (argument, customTags));
+						actualArgs.AddQuoted (StringParserService.Parse (argument, customTags));
 					}
 				}
 			}
@@ -578,7 +579,7 @@ namespace Xamarin.iOS.Tasks
 				args.AddLine ("--cxx");
 
 			if (gcc.Arguments.Length > 0)
-				args.AddQuotedLine ($"--gcc_flags={gcc.Arguments.ToString ()}");
+				actualArgs.AddQuoted ($"--gcc_flags={gcc.Arguments.ToString ()}");
 
 			foreach (var asm in References) {
 				if (IsFrameworkItem(asm)) {
@@ -618,10 +619,9 @@ namespace Xamarin.iOS.Tasks
 			}
 
 			// Use only the response file
-			args = new CommandLineArgumentBuilder ();
-			args.AddQuoted ($"@{responseFile}");
+			actualArgs.AddQuoted ($"@{responseFile}");
 
-			return args.ToString ();
+			return actualArgs.ToString ();
 		}
 
 		static bool IsFrameworkItem (ITaskItem item)

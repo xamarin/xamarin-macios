@@ -518,7 +518,7 @@ namespace ObjCRuntime {
 		{
 			assemblies.Add (assembly);
 			foreach (var rf in assembly.GetReferencedAssemblies ()) {
-#if MONOMAc
+#if MONOMAC
 				if (!OnAssemblyRegistration (rf))
 					continue;
 #endif
