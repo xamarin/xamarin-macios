@@ -2514,9 +2514,6 @@ public partial class Generator : IMemberGatherer {
 		print ("");
 		print ("[DllImport (\"/usr/lib/libobjc.dylib\")]");
 		print ("static extern IntPtr _Block_copy (IntPtr ptr);");
-		print ("");
-		print ("[DllImport (\"/usr/lib/libobjc.dylib\")]");
-		print ("static extern void _Block_release (IntPtr ptr);");
 
 		while (trampolines.Count > 0){
 			var queue = trampolines.Values.ToArray ();
@@ -2604,7 +2601,7 @@ public partial class Generator : IMemberGatherer {
 			print_generated_code ();
 			print ("~{0} ()", ti.NativeInvokerName);
 			print ("{"); indent++;
-			print ("_Block_release (blockPtr);", ns.CoreObjCRuntime);
+			print ("Runtime.ReleaseBlockOnMainThread (blockPtr);", ns.CoreObjCRuntime);
 			indent--; print ("}");
 			print ("");
 			print ("[Preserve (Conditional=true)]");

@@ -167,6 +167,11 @@ typedef unsigned int (^RegistrarTestBlock) (unsigned int magic);
 +(void) callRequiredStaticCallback;
 -(void) callOptionalCallback;
 +(void) callOptionalStaticCallback;
+typedef void (^innerBlock) (int magic_number);
+typedef void (^outerBlock) (innerBlock callback);
++(void) callAssertMainThreadBlockRelease: (outerBlock) completionHandler;
+-(void) callAssertMainThreadBlockReleaseCallback;
+-(void) assertMainThreadBlockReleaseCallback: (innerBlock) completionHandler;
 
 -(void) testFreedBlocks;
 +(int) freedBlockCount;
@@ -180,6 +185,12 @@ typedef unsigned int (^RegistrarTestBlock) (unsigned int magic);
 @interface EvilDeallocator : NSObject {
 }
 @property (copy) void (^evilCallback)(int32_t magic_number);
+-(void) dealloc;
+@end
+
+// This object asserts that its dealloc function is called on the main thread
+@interface MainThreadDeallocator : NSObject {
+}
 -(void) dealloc;
 @end
 
