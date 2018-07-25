@@ -372,6 +372,12 @@
     <Compile Include="..\..\src\ObjCRuntime\BindingImplAttribute.cs">
       <Link>external\maccore\BindingImplAttribute.cs</Link>
     </Compile>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\AssemblyUtilities.cs">
+      <Link>Linker\AssemblyUtilities.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\TypeNameParser.cs">
+      <Link>Linker\TypeNameParser.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Core" />
