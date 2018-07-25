@@ -1717,6 +1717,62 @@ public class TestApp {
 		}
 
 		[Test]
+		public void MT0136 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var tmpdir = mtouch.CreateTemporaryDirectory ();
+				mtouch.CreateTemporaryCacheDirectory ();
+
+				var codeDll = @"public class A {}";
+				var codeExe = @"public class B : A {}";
+
+				var dllPath = CompileTestAppLibrary (tmpdir, codeDll, profile: Profile.iOS, appName: "A");
+
+				mtouch.CreateTemporaryApp (extraCode: codeExe, extraArg: $"-r:{StringUtils.Quote (dllPath)}");
+				mtouch.Debug = false;
+				mtouch.Linker = MTouchLinker.DontLink;
+				File.Delete (dllPath);
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertWarningPattern (136, "Cannot find 'A, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null' referenced from '.*/testApp.exe'.");
+				mtouch.AssertError (2002, "Failed to resolve assembly: 'A, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null'");
+				mtouch.AssertErrorCount (1);
+				mtouch.AssertWarningCount (1);
+			}
+		}
+
+		[Test]
+		public void MT0137 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var tmpdir = mtouch.CreateTemporaryDirectory ();
+				mtouch.CreateTemporaryCacheDirectory ();
+
+				var codeDll = @"public class A {}";
+				var codeExe = @"
+public class TAttribute : System.Attribute
+{
+	public TAttribute (System.Type type) {}
+}
+
+[T (typeof (A))]
+public class B
+{
+}
+";
+
+				var dllPath = CompileTestAppLibrary (tmpdir, codeDll, profile: Profile.iOS, appName: "A");
+
+				mtouch.CreateTemporaryApp (extraCode: codeExe, extraArg: $"-r:{StringUtils.Quote (dllPath)}");
+				mtouch.Debug = false;
+				mtouch.Linker = MTouchLinker.DontLink;
+				File.Delete (dllPath);
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				mtouch.AssertWarningPattern (137, "Cannot find 'A, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null', referenced by an attribute in 'testApp.exe'.");
+				mtouch.AssertWarningCount (1);
+			}
+		}
+
+		[Test]
 		[TestCase ("all")]
 		[TestCase ("-all")]
 		[TestCase ("remove-uithread-checks,dead-code-elimination,inline-isdirectbinding,inline-intptr-size,inline-runtime-arch,register-protocols")]

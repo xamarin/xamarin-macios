@@ -683,6 +683,22 @@ Alternatively, enable the managed [linker](https://docs.microsoft.com/en-us/xama
 
 As a last-straw solution, use an older version of Xamarin.iOS that does not require these new SDKs to be present during the build process.
 
+### <a name="MT0136"/>MT0136: Cannot find {assembly} referenced from {assembly}.
+
+This warning occurs when an assembly passed to mtouch contains a reference to
+another assembly that can't be found.
+
+mtouch may in certain cases still find references at a later point, which
+means that if the build otherwise succeeds, this warning can be ignored.
+
+### <a name="MT0137"/>MT0137: Cannot find {assembly}, referenced by an attribute in {assembly}.
+
+This warning occurs when an attribute contains a reference to another assembly
+that can't be found.
+
+mtouch may in certain cases still find references at a later point, which
+means that if the build otherwise succeeds, this warning can be ignored.
+
 # MT1xxx: Project related error messages
 
 ### MT10xx: Installer / mtouch
