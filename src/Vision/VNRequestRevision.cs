@@ -16,40 +16,28 @@ using ObjCRuntime;
 namespace Vision {
 	public partial class VNRequest {
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		public const VNRequestRevision Revision1 = VNRequestRevision.One;
-
-		internal static VNRequestRevision [] GetSupportedVersions (NSIndexSet indexSet)
+		internal static T [] GetSupportedVersions<T> (NSIndexSet indexSet) where T : struct, IConvertible // Enum is sadly a C# 7.3 feature
 		{
 			if (indexSet == null)
 				return null;
 
+			if (!typeof (T).IsEnum)
+				throw new ArgumentException ("T must be an enum.");
+
 			var count = indexSet.Count;
-			var supportedRevisions = new VNRequestRevision [indexSet.Count];
+			var supportedRevisions = new T [indexSet.Count];
 
 			if (count == 0)
 				return supportedRevisions;
-
+			
 			int j = 0;
 			for (var i = indexSet.FirstIndex; i <= indexSet.LastIndex;) {
-				supportedRevisions [j++] = (VNRequestRevision) (uint) i;
+				supportedRevisions [j++] = (T) Enum.Parse (typeof (T), i.ToString (), true);
 				i = indexSet.IndexGreaterThan (i);
 			}
 
 			return supportedRevisions;
 		}
-	}
-
-	public partial class VNDetectFaceLandmarksRequest {
-
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		public const VNRequestRevision Revision2 = VNRequestRevision.Two;
-	}
-
-	public partial class VNDetectFaceRectanglesRequest {
-
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		public const VNRequestRevision Revision2 = VNRequestRevision.Two;
 	}
 }
 #endif

@@ -124,6 +124,133 @@ namespace Vision {
 		Two = 2,
 	}
 
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Native]
+	enum VNCoreMLRequestRevision : ulong {
+		Unspecified = 0,
+		One = 1,
+	}
+
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Native]
+	enum VNDetectBarcodesRequestRevision : ulong {
+		Unspecified = 0,
+		One = 1,
+	}
+
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Native]
+	enum VNDetectFaceLandmarksRequestRevision : ulong {
+		Unspecified = 0,
+		One = 1,
+		Two = 2,
+	}
+
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Native]
+	enum VNDetectFaceRectanglesRequestRevision : ulong {
+		Unspecified = 0,
+		One = 1,
+		Two = 2,
+	}
+
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Native]
+	enum VNDetectHorizonRequestRevision : ulong {
+		Unspecified = 0,
+		One = 1,
+	}
+
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Native]
+	enum VNDetectRectanglesRequestRevision : ulong {
+		Unspecified = 0,
+		One = 1,
+	}
+
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Native]
+	enum VNDetectTextRectanglesRequestRevision : ulong {
+		Unspecified = 0,
+		One = 1,
+	}
+
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Native]
+	enum VNTranslationalImageRegistrationRequestRevision : ulong {
+		Unspecified = 0,
+		One = 1,
+	}
+
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Native]
+	enum VNHomographicImageRegistrationRequestRevision : ulong {
+		Unspecified = 0,
+		One = 1,
+	}
+
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Native]
+	enum VNTrackObjectRequestRevision : ulong {
+		Unspecified = 0,
+		One = 1,
+	}
+
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Native]
+	enum VNTrackRectangleRequestRevision : ulong {
+		Unspecified = 0,
+		One = 1,
+	}
+
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Native]
+	enum VNDetectedObjectObservationRequestRevision : ulong {
+		Unspecified = 0,
+		One = 1,
+		Two = 2,
+	}
+
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Native]
+	enum VNFaceObservationRequestRevision : ulong {
+		Unspecified = 0,
+		One = 1,
+		Two = 2,
+	}
+
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Native]
+	enum VNRecognizedObjectObservationRequestRevision : ulong {
+		Unspecified = 0,
+		One = 1,
+		Two = 2,
+	}
+
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Native]
+	enum VNRectangleObservationRequestRevision : ulong {
+		Unspecified = 0,
+		One = 1,
+		Two = 2,
+	}
+
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Native]
+	enum VNTextObservationRequestRevision : ulong {
+		Unspecified = 0,
+		One = 1,
+		Two = 2,
+	}
+
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Native]
+	enum VNBarcodeObservationRequestRevision : ulong {
+		Unspecified = 0,
+		One = 1,
+		Two = 2,
+	}
+
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -160,31 +287,33 @@ namespace Vision {
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
-		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
-		// into subclasses so the correct class_ptr is used.
+		// We must inline the following 5 properties
+		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr fot the static ones and the right enum type are used.
+
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
+		[Export ("revision")]
+		VNCoreMLRequestRevision Revision { get; set; }
+
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Static]
 		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
 		NSIndexSet WeakSupportedRevisions { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
-		[Wrap ("GetSupportedVersions (WeakSupportedRevisions)")]
-		VNRequestRevision [] SupportedRevisions { get; }
+		[Wrap ("GetSupportedVersions<VNCoreMLRequestRevision> (WeakSupportedRevisions)")]
+		VNCoreMLRequestRevision [] SupportedRevisions { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
 		[Export ("defaultRevision")]
-		VNRequestRevision DefaultRevision { get; }
+		VNCoreMLRequestRevision DefaultRevision { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
 		[Export ("currentRevision")]
-		VNRequestRevision CurrentRevision { get; }
+		VNCoreMLRequestRevision CurrentRevision { get; }
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -209,31 +338,33 @@ namespace Vision {
 		[Export ("symbologies", ArgumentSemantic.Copy)]
 		NSString [] WeakSymbologies { get; set; }
 
-		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
-		// into subclasses so the correct class_ptr is used.
+		// We must inline the following 5 properties
+		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr fot the static ones and the right enum type are used.
+
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
+		[Export ("revision")]
+		VNDetectBarcodesRequestRevision Revision { get; set; }
+
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Static]
 		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
 		NSIndexSet WeakSupportedRevisions { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
-		[Wrap ("GetSupportedVersions (WeakSupportedRevisions)")]
-		VNRequestRevision [] SupportedRevisions { get; }
+		[Wrap ("GetSupportedVersions<VNDetectBarcodesRequestRevision> (WeakSupportedRevisions)")]
+		VNDetectBarcodesRequestRevision [] SupportedRevisions { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
 		[Export ("defaultRevision")]
-		VNRequestRevision DefaultRevision { get; }
+		VNDetectBarcodesRequestRevision DefaultRevision { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
 		[Export ("currentRevision")]
-		VNRequestRevision CurrentRevision { get; }
+		VNDetectBarcodesRequestRevision CurrentRevision { get; }
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -245,31 +376,33 @@ namespace Vision {
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
-		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
-		// into subclasses so the correct class_ptr is used.
+		// We must inline the following 5 properties
+		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr fot the static ones and the right enum type are used.
+
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
+		[Export ("revision")]
+		VNDetectFaceLandmarksRequestRevision Revision { get; set; }
+
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Static]
 		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
 		NSIndexSet WeakSupportedRevisions { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
-		[Wrap ("GetSupportedVersions (WeakSupportedRevisions)")]
-		VNRequestRevision [] SupportedRevisions { get; }
+		[Wrap ("GetSupportedVersions<VNDetectFaceLandmarksRequestRevision> (WeakSupportedRevisions)")]
+		VNDetectFaceLandmarksRequestRevision [] SupportedRevisions { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
 		[Export ("defaultRevision")]
-		VNRequestRevision DefaultRevision { get; }
+		VNDetectFaceLandmarksRequestRevision DefaultRevision { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
 		[Export ("currentRevision")]
-		VNRequestRevision CurrentRevision { get; }
+		VNDetectFaceLandmarksRequestRevision CurrentRevision { get; }
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -281,31 +414,33 @@ namespace Vision {
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
-		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
-		// into subclasses so the correct class_ptr is used.
+		// We must inline the following 5 properties
+		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr fot the static ones and the right enum type are used.
+
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
+		[Export ("revision")]
+		VNDetectFaceRectanglesRequestRevision Revision { get; set; }
+
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Static]
 		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
 		NSIndexSet WeakSupportedRevisions { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
-		[Wrap ("GetSupportedVersions (WeakSupportedRevisions)")]
-		VNRequestRevision [] SupportedRevisions { get; }
+		[Wrap ("GetSupportedVersions<VNDetectFaceRectanglesRequestRevision> (WeakSupportedRevisions)")]
+		VNDetectFaceRectanglesRequestRevision [] SupportedRevisions { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
 		[Export ("defaultRevision")]
-		VNRequestRevision DefaultRevision { get; }
+		VNDetectFaceRectanglesRequestRevision DefaultRevision { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
 		[Export ("currentRevision")]
-		VNRequestRevision CurrentRevision { get; }
+		VNDetectFaceRectanglesRequestRevision CurrentRevision { get; }
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -317,31 +452,33 @@ namespace Vision {
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
-		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
-		// into subclasses so the correct class_ptr is used.
+		// We must inline the following 5 properties
+		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr fot the static ones and the right enum type are used.
+
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
+		[Export ("revision")]
+		VNDetectHorizonRequestRevision Revision { get; set; }
+
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Static]
 		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
 		NSIndexSet WeakSupportedRevisions { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
-		[Wrap ("GetSupportedVersions (WeakSupportedRevisions)")]
-		VNRequestRevision [] SupportedRevisions { get; }
+		[Wrap ("GetSupportedVersions<VNDetectHorizonRequestRevision> (WeakSupportedRevisions)")]
+		VNDetectHorizonRequestRevision [] SupportedRevisions { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
 		[Export ("defaultRevision")]
-		VNRequestRevision DefaultRevision { get; }
+		VNDetectHorizonRequestRevision DefaultRevision { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
 		[Export ("currentRevision")]
-		VNRequestRevision CurrentRevision { get; }
+		VNDetectHorizonRequestRevision CurrentRevision { get; }
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -371,31 +508,33 @@ namespace Vision {
 		[Export ("maximumObservations")]
 		nuint MaximumObservations { get; set; }
 
-		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
-		// into subclasses so the correct class_ptr is used.
+		// We must inline the following 5 properties
+		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr fot the static ones and the right enum type are used.
+
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
+		[Export ("revision")]
+		VNDetectRectanglesRequestRevision Revision { get; set; }
+
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Static]
 		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
 		NSIndexSet WeakSupportedRevisions { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
-		[Wrap ("GetSupportedVersions (WeakSupportedRevisions)")]
-		VNRequestRevision [] SupportedRevisions { get; }
+		[Wrap ("GetSupportedVersions<VNDetectRectanglesRequestRevision> (WeakSupportedRevisions)")]
+		VNDetectRectanglesRequestRevision [] SupportedRevisions { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
 		[Export ("defaultRevision")]
-		VNRequestRevision DefaultRevision { get; }
+		VNDetectRectanglesRequestRevision DefaultRevision { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
 		[Export ("currentRevision")]
-		VNRequestRevision CurrentRevision { get; }
+		VNDetectRectanglesRequestRevision CurrentRevision { get; }
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -410,31 +549,33 @@ namespace Vision {
 		[Export ("reportCharacterBoxes")]
 		bool ReportCharacterBoxes { get; set; }
 
-		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
-		// into subclasses so the correct class_ptr is used.
+		// We must inline the following 5 properties
+		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr fot the static ones and the right enum type are used.
+
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
+		[Export ("revision")]
+		VNDetectTextRectanglesRequestRevision Revision { get; set; }
+
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Static]
 		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
 		NSIndexSet WeakSupportedRevisions { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
-		[Wrap ("GetSupportedVersions (WeakSupportedRevisions)")]
-		VNRequestRevision [] SupportedRevisions { get; }
+		[Wrap ("GetSupportedVersions<VNDetectTextRectanglesRequestRevision> (WeakSupportedRevisions)")]
+		VNDetectTextRectanglesRequestRevision [] SupportedRevisions { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
 		[Export ("defaultRevision")]
-		VNRequestRevision DefaultRevision { get; }
+		VNDetectTextRectanglesRequestRevision DefaultRevision { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
 		[Export ("currentRevision")]
-		VNRequestRevision CurrentRevision { get; }
+		VNDetectTextRectanglesRequestRevision CurrentRevision { get; }
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -653,32 +794,6 @@ namespace Vision {
 
 		[Wrap ("this (imageData, orientation, options?.Dictionary, completionHandler)")]
 		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
-
-		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
-		// into subclasses so the correct class_ptr is used.
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
-		[Static]
-		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
-		NSIndexSet WeakSupportedRevisions { get; }
-
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
-		[Static]
-		[Wrap ("GetSupportedVersions (WeakSupportedRevisions)")]
-		VNRequestRevision [] SupportedRevisions { get; }
-
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
-		[Static]
-		[Export ("defaultRevision")]
-		VNRequestRevision DefaultRevision { get; }
-
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
-		[Static]
-		[Export ("currentRevision")]
-		VNRequestRevision CurrentRevision { get; }
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -807,31 +922,26 @@ namespace Vision {
 		[Wrap ("this (imageData, orientation, options?.Dictionary, completionHandler)")]
 		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
-		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
 		// into subclasses so the correct class_ptr is used.
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
 		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
 		NSIndexSet WeakSupportedRevisions { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
-		[Wrap ("GetSupportedVersions (WeakSupportedRevisions)")]
-		VNRequestRevision [] SupportedRevisions { get; }
+		[Wrap ("GetSupportedVersions<VNTranslationalImageRegistrationRequestRevision> (WeakSupportedRevisions)")]
+		VNTranslationalImageRegistrationRequestRevision [] SupportedRevisions { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
 		[Export ("defaultRevision")]
-		VNRequestRevision DefaultRevision { get; }
+		VNTranslationalImageRegistrationRequestRevision DefaultRevision { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
 		[Export ("currentRevision")]
-		VNRequestRevision CurrentRevision { get; }
+		VNTranslationalImageRegistrationRequestRevision CurrentRevision { get; }
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -960,31 +1070,33 @@ namespace Vision {
 		[Wrap ("this (imageData, orientation, options?.Dictionary, completionHandler)")]
 		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
-		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
-		// into subclasses so the correct class_ptr is used.
+		// We must inline the following 5 properties
+		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr fot the static ones and the right enum type are used.
+
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
+		[Export ("revision")]
+		VNHomographicImageRegistrationRequestRevision Revision { get; set; }
+
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Static]
 		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
 		NSIndexSet WeakSupportedRevisions { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
-		[Wrap ("GetSupportedVersions (WeakSupportedRevisions)")]
-		VNRequestRevision [] SupportedRevisions { get; }
+		[Wrap ("GetSupportedVersions<VNHomographicImageRegistrationRequestRevision> (WeakSupportedRevisions)")]
+		VNHomographicImageRegistrationRequestRevision [] SupportedRevisions { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
 		[Export ("defaultRevision")]
-		VNRequestRevision DefaultRevision { get; }
+		VNHomographicImageRegistrationRequestRevision DefaultRevision { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
 		[Export ("currentRevision")]
-		VNRequestRevision CurrentRevision { get; }
+		VNHomographicImageRegistrationRequestRevision CurrentRevision { get; }
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -1012,7 +1124,7 @@ namespace Vision {
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Static]
 		[Export ("observationWithRequestRevision:boundingBox:")]
-		VNDetectedObjectObservation FromBoundingBox (VNRequestRevision requestRevision, CGRect boundingBox);
+		VNDetectedObjectObservation FromBoundingBox (VNDetectedObjectObservationRequestRevision requestRevision, CGRect boundingBox);
 
 		[Export ("boundingBox", ArgumentSemantic.Assign)]
 		CGRect BoundingBox { get; }
@@ -1032,15 +1144,14 @@ namespace Vision {
 		VNFaceObservation FromBoundingBox (CGRect boundingBox);
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
 		[Export ("observationWithRequestRevision:boundingBox:")]
-		VNFaceObservation FromBoundingBox (VNRequestRevision requestRevision, CGRect boundingBox);
+		VNFaceObservation FromBoundingBox (VNFaceObservationRequestRevision requestRevision, CGRect boundingBox);
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Static]
 		[Export ("faceObservationWithRequestRevision:boundingBox:roll:yaw:")]
-		VNFaceObservation FromBoundingBox (VNRequestRevision requestRevision, CGRect boundingBox, [NullAllowed] [BindAs (typeof (nfloat?))] NSNumber roll, [NullAllowed] [BindAs (typeof (nfloat?))] NSNumber yaw);
+		VNFaceObservation FromBoundingBox (VNFaceObservationRequestRevision requestRevision, CGRect boundingBox, [NullAllowed] [BindAs (typeof (nfloat?))] NSNumber roll, [NullAllowed] [BindAs (typeof (nfloat?))] NSNumber yaw);
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[BindAs (typeof (nfloat?))]
@@ -1063,10 +1174,9 @@ namespace Vision {
 		[Export ("observationWithBoundingBox:")]
 		VNRecognizedObjectObservation FromBoundingBox (CGRect boundingBox);
 
-		[New]
 		[Static]
 		[Export ("observationWithRequestRevision:boundingBox:")]
-		VNRecognizedObjectObservation FromBoundingBox (VNRequestRevision requestRevision, CGRect boundingBox);
+		VNRecognizedObjectObservation FromBoundingBox (VNRecognizedObjectObservationRequestRevision requestRevision, CGRect boundingBox);
 
 		[Export ("labels", ArgumentSemantic.Copy)]
 		VNClassificationObservation [] Labels { get; }
@@ -1122,10 +1232,9 @@ namespace Vision {
 		VNRectangleObservation FromBoundingBox (CGRect boundingBox);
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
 		[Export ("observationWithRequestRevision:boundingBox:")]
-		VNRectangleObservation FromBoundingBox (VNRequestRevision requestRevision, CGRect boundingBox);
+		VNRectangleObservation FromBoundingBox (VNRectangleObservationRequestRevision requestRevision, CGRect boundingBox);
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -1142,10 +1251,9 @@ namespace Vision {
 		VNTextObservation FromBoundingBox (CGRect boundingBox);
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
 		[Export ("observationWithRequestRevision:boundingBox:")]
-		VNTextObservation FromBoundingBox (VNRequestRevision requestRevision, CGRect boundingBox);
+		VNTextObservation FromBoundingBox (VNTextObservationRequestRevision requestRevision, CGRect boundingBox);
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -1168,10 +1276,9 @@ namespace Vision {
 		VNBarcodeObservation FromBoundingBox (CGRect boundingBox);
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
 		[Export ("observationWithRequestRevision:boundingBox:")]
-		VNBarcodeObservation FromBoundingBox (VNRequestRevision requestRevision, CGRect boundingBox);
+		VNBarcodeObservation FromBoundingBox (VNBarcodeObservationRequestRevision requestRevision, CGRect boundingBox);
 
 		[NullAllowed, Export ("payloadStringValue")]
 		string PayloadStringValue { get; }
@@ -1248,31 +1355,33 @@ namespace Vision {
 		[Export ("usesCPUOnly")]
 		bool UsesCpuOnly { get; set; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[Export ("revision")]
-		VNRequestRevision Revision { get; set; }
+		// We must inline the following 5 properties
+		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr fot the static ones and the right enum type are used.
 
-		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
-		// into subclasses so the correct class_ptr is used.
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[Static]
-		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
-		NSIndexSet WeakSupportedRevisions { get; }
+		//[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		//[Export ("revision")]
+		//VNRequestRevision Revision { get; set; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[Static]
-		[Wrap ("GetSupportedVersions (WeakSupportedRevisions)")]
-		VNRequestRevision [] SupportedRevisions { get; }
+		//[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		//[Static]
+		//[Export ("supportedRevisions", ArgumentSemantic.Copy)]
+		//NSIndexSet WeakSupportedRevisions { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[Static]
-		[Export ("defaultRevision")]
-		VNRequestRevision DefaultRevision { get; }
+		//[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		//[Static]
+		//[Wrap ("GetSupportedVersions (WeakSupportedRevisions)")]
+		//VNRequestRevision [] SupportedRevisions { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[Static]
-		[Export ("currentRevision")]
-		VNRequestRevision CurrentRevision { get; }
+		//[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		//[Static]
+		//[Export ("defaultRevision")]
+		//VNRequestRevision DefaultRevision { get; }
+
+		//[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		//[Static]
+		//[Export ("currentRevision")]
+		//VNRequestRevision CurrentRevision { get; }
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -1287,32 +1396,6 @@ namespace Vision {
 
 		[Export ("regionOfInterest", ArgumentSemantic.Assign)]
 		CGRect RegionOfInterest { get; set; }
-
-		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
-		// into subclasses so the correct class_ptr is used.
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
-		[Static]
-		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
-		NSIndexSet WeakSupportedRevisions { get; }
-
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
-		[Static]
-		[Wrap ("GetSupportedVersions (WeakSupportedRevisions)")]
-		VNRequestRevision [] SupportedRevisions { get; }
-
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
-		[Static]
-		[Export ("defaultRevision")]
-		VNRequestRevision DefaultRevision { get; }
-
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
-		[Static]
-		[Export ("currentRevision")]
-		VNRequestRevision CurrentRevision { get; }
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -1576,32 +1659,6 @@ namespace Vision {
 
 		[Wrap ("this (imageData, orientation, options?.Dictionary, completionHandler)")]
 		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
-
-		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
-		// into subclasses so the correct class_ptr is used.
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
-		[Static]
-		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
-		NSIndexSet WeakSupportedRevisions { get; }
-
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
-		[Static]
-		[Wrap ("GetSupportedVersions (WeakSupportedRevisions)")]
-		VNRequestRevision [] SupportedRevisions { get; }
-
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
-		[Static]
-		[Export ("defaultRevision")]
-		VNRequestRevision DefaultRevision { get; }
-
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
-		[Static]
-		[Export ("currentRevision")]
-		VNRequestRevision CurrentRevision { get; }
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -1619,31 +1676,33 @@ namespace Vision {
 		[Export ("initWithDetectedObjectObservation:completionHandler:")]
 		IntPtr Constructor (VNDetectedObjectObservation observation, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
-		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
-		// into subclasses so the correct class_ptr is used.
+		// We must inline the following 5 properties
+		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr fot the static ones and the right enum type are used.
+
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
+		[Export ("revision")]
+		VNTrackObjectRequestRevision Revision { get; set; }
+
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Static]
 		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
 		NSIndexSet WeakSupportedRevisions { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
-		[Wrap ("GetSupportedVersions (WeakSupportedRevisions)")]
-		VNRequestRevision [] SupportedRevisions { get; }
+		[Wrap ("GetSupportedVersions<VNTrackObjectRequestRevision> (WeakSupportedRevisions)")]
+		VNTrackObjectRequestRevision [] SupportedRevisions { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
 		[Export ("defaultRevision")]
-		VNRequestRevision DefaultRevision { get; }
+		VNTrackObjectRequestRevision DefaultRevision { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
 		[Export ("currentRevision")]
-		VNRequestRevision CurrentRevision { get; }
+		VNTrackObjectRequestRevision CurrentRevision { get; }
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -1662,31 +1721,33 @@ namespace Vision {
 		[DesignatedInitializer]
 		IntPtr Constructor (VNRectangleObservation observation, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
-		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
-		// into subclasses so the correct class_ptr is used.
+		// We must inline the following 5 properties
+		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
+		// into subclasses so the correct class_ptr fot the static ones and the right enum type are used.
+
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
+		[Export ("revision")]
+		VNTrackRectangleRequestRevision Revision { get; set; }
+
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Static]
 		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
 		NSIndexSet WeakSupportedRevisions { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
-		[Wrap ("GetSupportedVersions (WeakSupportedRevisions)")]
-		VNRequestRevision [] SupportedRevisions { get; }
+		[Wrap ("GetSupportedVersions<VNTrackRectangleRequestRevision> (WeakSupportedRevisions)")]
+		VNTrackRectangleRequestRevision [] SupportedRevisions { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
 		[Export ("defaultRevision")]
-		VNRequestRevision DefaultRevision { get; }
+		VNTrackRectangleRequestRevision DefaultRevision { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
 		[Static]
 		[Export ("currentRevision")]
-		VNRequestRevision CurrentRevision { get; }
+		VNTrackRectangleRequestRevision CurrentRevision { get; }
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -1707,32 +1768,6 @@ namespace Vision {
 
 		[Export ("lastFrame")]
 		bool LastFrame { [Bind ("isLastFrame")] get; set; }
-
-		// We must inline the following 4 static properties ('WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
-		// into subclasses so the correct class_ptr is used.
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
-		[Static]
-		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
-		NSIndexSet WeakSupportedRevisions { get; }
-
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
-		[Static]
-		[Wrap ("GetSupportedVersions (WeakSupportedRevisions)")]
-		VNRequestRevision [] SupportedRevisions { get; }
-
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
-		[Static]
-		[Export ("defaultRevision")]
-		VNRequestRevision DefaultRevision { get; }
-
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[New]
-		[Static]
-		[Export ("currentRevision")]
-		VNRequestRevision CurrentRevision { get; }
 	}
 
 	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]

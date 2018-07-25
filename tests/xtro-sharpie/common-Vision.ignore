@@ -7,6 +7,31 @@
 !missing-pinvoke! VNImagePointForFaceLandmarkPoint is not bound
 !missing-pinvoke! VNNormalizedFaceBoundingBoxPointForLandmarkPoint is not bound
 
-## Custom enum to represent header constats like
+## Custom enums to represent header constats like
 ## static const NSUInteger VNCoreMLRequestRevision1 = 1;
 !unknown-native-enum! VNRequestRevision bound
+!unknown-native-enum! VNBarcodeObservationRequestRevision bound
+!unknown-native-enum! VNCoreMLRequestRevision bound
+!unknown-native-enum! VNDetectBarcodesRequestRevision bound
+!unknown-native-enum! VNDetectedObjectObservationRequestRevision bound
+!unknown-native-enum! VNDetectFaceLandmarksRequestRevision bound
+!unknown-native-enum! VNDetectFaceRectanglesRequestRevision bound
+!unknown-native-enum! VNDetectHorizonRequestRevision bound
+!unknown-native-enum! VNDetectRectanglesRequestRevision bound
+!unknown-native-enum! VNDetectTextRectanglesRequestRevision bound
+!unknown-native-enum! VNFaceObservationRequestRevision bound
+!unknown-native-enum! VNHomographicImageRegistrationRequestRevision bound
+!unknown-native-enum! VNRecognizedObjectObservationRequestRevision bound
+!unknown-native-enum! VNRectangleObservationRequestRevision bound
+!unknown-native-enum! VNTextObservationRequestRevision bound
+!unknown-native-enum! VNTrackObjectRequestRevision bound
+!unknown-native-enum! VNTrackRectangleRequestRevision bound
+!unknown-native-enum! VNTranslationalImageRegistrationRequestRevision bound
+
+## VNRequest is an abstract class so this will be bound in subclasses
+## matching the return type to the above defined custom enums 
+!missing-selector! +VNRequest::currentRevision not bound
+!missing-selector! +VNRequest::defaultRevision not bound
+!missing-selector! +VNRequest::supportedRevisions not bound
+!missing-selector! VNRequest::revision not bound
+!missing-selector! VNRequest::setRevision: not bound
