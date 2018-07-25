@@ -8,3 +8,7 @@
 !wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARPlaneGeometry::GetRawTextureCoordinates(): simd type: simd_float2
 !wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARPlaneGeometry::GetRawVertices(): simd type: simd_float3
 !wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARPointCloud::GetRawPoints(): simd type: simd_float3
+
+# Protocol inlined in ARAnchor (constructor in protocol)
+!missing-protocol! ARAnchorCopying not bound
+!missing-protocol-conformance! ARAnchor should conform to ARAnchorCopying
