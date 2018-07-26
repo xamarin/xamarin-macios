@@ -146,7 +146,7 @@ def reportFinalStatusToSlack (err, gitHash, currentStage, fileContents)
     }
     def text = ""
     if (fileContents != null)
-        text = "\"text\": \"${groovy.json.JsonOutput.toJson (fileContents)}\","
+        text = "\"text\": ${groovy.json.JsonOutput.toJson (fileContents)},"
     def attachments = """
     [
         {
