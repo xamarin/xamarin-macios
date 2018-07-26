@@ -273,6 +273,9 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-weak_framework WatchConnectivity			\
 	-weak_framework ModelIO						\
 	-weak_framework GameplayKit					\
+	-weak_framework Metal						\
+	-weak_framework MetalKit					\
+	-weak_framework MetalPerformanceShaders		\
 						\
 	-weak_framework HealthKitUI					\
 						\
@@ -297,6 +300,7 @@ SIMLAUNCHER_FRAMEWORKS =  \
 # note 2: there's no GameKit, in iOS 9 (beta 3 at least), you're supposed to reference GameCenter instead (looks fixed in beta 4)
 # note 3: there's no MetalKit or MetalPerformanceShaders in iOS 9 beta 4 - but other frameworks were added
 # note 4: GameCenter was removed in Xcode 7 beta 5, and GameKit is back.
+# note 5: Metal* seems to be supported as of some Xcode 7 beta (b2 didn't, but the final release does)
 
 # keep the above list of weak_framework in sync with mtouch.cs
 # except it is no a mistake that GameController and MediaAccessibility (#13636) are not built into simlauncher
