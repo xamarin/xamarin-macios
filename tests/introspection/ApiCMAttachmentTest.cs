@@ -451,6 +451,19 @@ namespace Introspection {
 			case "SecCertificate2":
 				using (var cdata = NSData.FromArray (mail_google_com))
 					return new SecCertificate2 (new SecCertificate (cdata));
+			case "SecTrust2":
+				X509Certificate x = new X509Certificate (mail_google_com);
+				using (var policy = SecPolicy.CreateSslPolicy (true, "mail.google.com"))
+					return new SecTrust2 (new SecTrust (x, policy));
+			case "SecIdentity2":
+				using (var options = NSDictionary.FromObjectAndKey (new NSString ("farscape"), SecImportExport.Passphrase)) {
+					NSDictionary[] array;
+					var result = SecImportExport.ImportPkcs12 (farscape_pfx, options, out array);
+					if (result != SecStatusCode.Success)
+						throw new InvalidOperationException (string.Format ("Could not create the new instance for type {0} due to {1}.", t.Name, result));
+					return new SecIdentity2 (SecIdentity (array [0].LowlevelObjectForKey (SecImportExport.Identity.Handle)));
+				}
+				
 			case "SecKey":
 				SecKey private_key;
 				SecKey public_key;
