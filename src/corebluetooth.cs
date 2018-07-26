@@ -679,6 +679,9 @@ namespace CoreBluetooth {
 #if MONOMAC
 		[Internal]
 		[Field ("CBUUIDValidRangeString")]
+		[Introduced (PlatformName.MacOSX, 10, 12)]
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
+		[Obsoleted (PlatformName.MacOSX, 10, 13)]
 		NSString CBUUIDValidRangeString { get; }
 
 		[Internal]
