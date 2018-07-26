@@ -150,7 +150,7 @@ def reportFinalStatusToSlack (err, gitHash, currentStage, fileContents)
     def attachments = """
     [
         {
-            \"author\": \"${authorName} (${authorEmail})\",
+            \"author_name\": \"${authorName} (${authorEmail})\",
             \"title\": \"${title}\",
             \"title_link\": \"${env.RUN_DISPLAY_URL}\",
             \"color\": \"danger\",
