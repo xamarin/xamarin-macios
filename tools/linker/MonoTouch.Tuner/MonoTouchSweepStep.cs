@@ -15,9 +15,9 @@ namespace MonoTouch.Tuner {
 		{
 		}
 
-		protected override void SweepAssembly (AssemblyDefinition assembly)
+		protected override void SweepAssemblyDefinition (AssemblyDefinition assembly)
 		{
-			base.SweepAssembly (assembly);
+			base.SweepAssemblyDefinition (assembly);
 
 			if (assembly.HasCustomAttributes)
 				SweepAttributes (assembly.CustomAttributes);
