@@ -18,15 +18,30 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void BasicTest ()
 		{
-			NugetRestore ("../MyAppWithPackageReference/MyAppWithPackageReference.csproj");
-			NugetRestore ("../MyExtensionWithPackageReference/MyExtensionWithPackageReference.csproj");
+			// We set MSBuildExtensionsPath when building with xbuild to redirect to our locally build XI/XM, but that confuses MSBuild, which uses MSBuildExtensionsPathFallbackPathsOverride instead.
+			// So if MSBuildExtensionsPath is set, move the value temporarily to MSBuildExtensionsPathFallbackPathsOverride instead, since we're using MSBuild here.
+			// This will become unnecessary when PR #4111 is merged.
+			var msbuildExtensions = Environment.GetEnvironmentVariable ("MSBuildExtensionsPath");
+			if (!string.IsNullOrEmpty (msbuildExtensions)) {
+				Environment.SetEnvironmentVariable ("MSBuildExtensionsPath", null);
+				Environment.SetEnvironmentVariable ("MSBuildExtensionsPathFallbackPathsOverride", msbuildExtensions);
+			}
+			try {
+				NugetRestore ("../MyAppWithPackageReference/MyAppWithPackageReference.csproj");
+				NugetRestore ("../MyExtensionWithPackageReference/MyExtensionWithPackageReference.csproj");
 
-			// Can't use the in-process MSBuild engine, because it complains that the project file is invalid (the attribute 'Version' in the element '<PackageReference>' is unrecognized)
-			var rv = ExecutionHelper.Execute ("msbuild", $"../MyAppWithPackageReference/MyAppWithPackageReference.csproj /p:Platform={Platform} /p:Configuration=Debug", out var output);
-			if (rv != 0) {
-				Console.WriteLine ("Build failed:");
-				Console.WriteLine (output);
-				Assert.Fail ("Build failed");
+				// Can't use the in-process MSBuild engine, because it complains that the project file is invalid (the attribute 'Version' in the element '<PackageReference>' is unrecognized)
+				var rv = ExecutionHelper.Execute ("msbuild", $"../MyAppWithPackageReference/MyAppWithPackageReference.csproj /p:Platform={Platform} /p:Configuration=Debug", out var output);
+				if (rv != 0) {
+					Console.WriteLine ("Build failed:");
+					Console.WriteLine (output);
+					Assert.Fail ("Build failed");
+				}
+			} finally {
+				if (!string.IsNullOrEmpty (msbuildExtensions)) {
+					Environment.SetEnvironmentVariable ("MSBuildExtensionsPath", msbuildExtensions);
+					Environment.SetEnvironmentVariable ("MSBuildExtensionsPathFallbackPathsOverride", null);
+				}
 			}
 		}
 	}
