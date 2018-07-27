@@ -44,6 +44,7 @@ namespace Xamarin.Tests
 	abstract class BundlerTool : Tool
 	{
 		public const string None = "None";
+		public bool AlwaysShowOutput;
 
 #pragma warning disable 0649 // Field 'X' is never assigned to, and will always have its default value Y
 		// These map directly to mtouch/mmp options
@@ -306,7 +307,7 @@ namespace Xamarin.Tests
 
 		public virtual int Execute ()
 		{
-			return Execute (ToolArguments, always_show_output: Verbosity > 0);
+			return Execute (ToolArguments, always_show_output: Verbosity > 0 || AlwaysShowOutput);
 		}
 
 		public virtual void AssertExecute (string message = null)

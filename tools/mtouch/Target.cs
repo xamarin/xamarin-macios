@@ -394,7 +394,7 @@ namespace Xamarin.Bundler
 
 				var reference_assembly = ManifestResolver.Resolve (reference);
 				if (reference_assembly == null) {
-					ErrorHelper.Warning (136, "Cannot find '{0}' referenced from '{1}'.", reference.FullName, main.FileName);
+					ErrorHelper.Warning (136, "Cannot find the assembly '{0}' referenced from '{1}'.", reference.FullName, main.FileName);
 					continue;
 				}
 				ComputeListOfAssemblies (assemblies, reference_assembly, exceptions);
@@ -406,12 +406,9 @@ namespace Xamarin.Bundler
 			// Custom Attribute metadata can include references to other assemblies, e.g. [X (typeof (Y)], 
 			// but it is not reflected in AssemblyReferences :-( ref: #37611
 			// so we must scan every custom attribute to look for System.Type
-			GetCustomAttributeReferences (main, assembly, assemblies, exceptions);
 			GetCustomAttributeReferences (main, main, assemblies, exceptions);
-			if (main.HasTypes) {
-				foreach (var ca in main.GetCustomAttributes ())
-					GetCustomAttributeReferences (main, ca, assemblies, exceptions);
-			}
+			foreach (var ca in main.GetCustomAttributes ())
+				GetCustomAttributeReferences (main, ca, assemblies, exceptions);
 		}
 
 		void GetCustomAttributeReferences (ModuleDefinition main, ICustomAttributeProvider cap, HashSet<string> assemblies, List<Exception> exceptions)
@@ -426,19 +423,19 @@ namespace Xamarin.Bundler
 		{
 			if (ca.HasConstructorArguments) {
 				foreach (var arg in ca.ConstructorArguments)
-					GetCustomAttributeArgumentReference (main, arg, assemblies, exceptions);
+					GetCustomAttributeArgumentReference (main, ca, arg, assemblies, exceptions);
 			}
 			if (ca.HasFields) {
 				foreach (var arg in ca.Fields)
-					GetCustomAttributeArgumentReference (main, arg.Argument, assemblies, exceptions);
+					GetCustomAttributeArgumentReference (main, ca, arg.Argument, assemblies, exceptions);
 			}
 			if (ca.HasProperties) {
 				foreach (var arg in ca.Properties)
-					GetCustomAttributeArgumentReference (main, arg.Argument, assemblies, exceptions);
+					GetCustomAttributeArgumentReference (main, ca, arg.Argument, assemblies, exceptions);
 			}
 		}
 
-		void GetCustomAttributeArgumentReference (ModuleDefinition main, CustomAttributeArgument arg, HashSet<string> assemblies, List<Exception> exceptions)
+		void GetCustomAttributeArgumentReference (ModuleDefinition main, CustomAttribute ca, CustomAttributeArgument arg, HashSet<string> assemblies, List<Exception> exceptions)
 		{
 			if (!arg.Type.Is ("System", "Type"))
 				return;
@@ -447,7 +444,7 @@ namespace Xamarin.Bundler
 				return;
 			var reference_assembly = ManifestResolver.Resolve (ar);
 			if (reference_assembly == null) {
-				ErrorHelper.Warning (137, "Cannot find '{0}', referenced by an attribute in '{1}'.", ar.FullName, main.Name);
+				ErrorHelper.Warning (137, "Cannot find the assembly '{0}', referenced by a {2} attribute in '{1}'.", ar.FullName, main.Name, ca.AttributeType.FullName);
 				return;
 			}
 			ComputeListOfAssemblies (assemblies, reference_assembly, exceptions);

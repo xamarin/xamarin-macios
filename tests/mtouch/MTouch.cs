@@ -1733,7 +1733,7 @@ public class TestApp {
 				mtouch.Linker = MTouchLinker.DontLink;
 				File.Delete (dllPath);
 				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
-				mtouch.AssertWarningPattern (136, "Cannot find 'A, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null' referenced from '.*/testApp.exe'.");
+				mtouch.AssertWarningPattern (136, "Cannot find the assembly 'A, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null' referenced from '.*/testApp.exe'.");
 				mtouch.AssertError (2002, "Failed to resolve assembly: 'A, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null'");
 				mtouch.AssertErrorCount (1);
 				mtouch.AssertWarningCount (1);
@@ -1749,26 +1749,31 @@ public class TestApp {
 
 				var codeDll = @"public class A {}";
 				var codeExe = @"
-public class TAttribute : System.Attribute
+[assembly: MyCustomAttribute (typeof (A))]
+
+public class MyCustomAttribute : System.Attribute
 {
-	public TAttribute (System.Type type) {}
+	public MyCustomAttribute (System.Type type) {}
 }
 
-[T (typeof (A))]
+[System.Diagnostics.DebuggerTypeProxyAttribute (typeof (A))]
 public class B
 {
 }
 ";
-
+				var codeExeFile = Path.Combine (tmpdir, "extraCode.cs");
+				File.WriteAllText (codeExeFile, codeExe);
 				var dllPath = CompileTestAppLibrary (tmpdir, codeDll, profile: Profile.iOS, appName: "A");
 
-				mtouch.CreateTemporaryApp (extraCode: codeExe, extraArg: $"-r:{StringUtils.Quote (dllPath)}");
+				mtouch.CreateTemporaryApp (extraArg: $"-r:{StringUtils.Quote (dllPath)} {StringUtils.Quote (codeExeFile)}");
 				mtouch.Debug = false;
 				mtouch.Linker = MTouchLinker.DontLink;
 				File.Delete (dllPath);
+				mtouch.AlwaysShowOutput = true;
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
-				mtouch.AssertWarningPattern (137, "Cannot find 'A, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null', referenced by an attribute in 'testApp.exe'.");
-				mtouch.AssertWarningCount (1);
+				mtouch.AssertWarning (137, "Cannot find the assembly 'A, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null', referenced by a MyCustomAttribute attribute in 'testApp.exe'.");
+				mtouch.AssertWarning (137, "Cannot find the assembly 'A, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null', referenced by a System.Diagnostics.DebuggerTypeProxyAttribute attribute in 'testApp.exe'.");
+				mtouch.AssertWarningCount (2);
 			}
 		}
 
