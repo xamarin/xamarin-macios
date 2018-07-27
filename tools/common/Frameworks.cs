@@ -66,6 +66,8 @@ public class Frameworks : Dictionary <string, Framework>
 		return null;
 	}
 
+	static Version NotAvailableInSimulator = new Version (int.MaxValue, int.MaxValue);
+
 	static Frameworks mac_frameworks;
 	public static Frameworks MacFrameworks {
 		get {
@@ -269,9 +271,9 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "ARKit", "ARKit", 11 },
 				{ "CoreNFC", "CoreNFC", 11 },
-				{ "DeviceCheck", "DeviceCheck", new Version (11, 0), new Version (int.MaxValue, int.MaxValue) /* no headers provided for simulator */ },
+				{ "DeviceCheck", "DeviceCheck", new Version (11, 0), NotAvailableInSimulator /* no headers provided for simulator */ },
 				{ "IdentityLookup", "IdentityLookup", 11 },
-				{ "IOSurface", "IOSurface", new Version (11, 0), new Version (int.MaxValue, int.MaxValue) /* Not available in the simulator (the header is there, but broken) */  },
+				{ "IOSurface", "IOSurface", new Version (11, 0), NotAvailableInSimulator /* Not available in the simulator (the header is there, but broken) */  },
 				{ "CoreML", "CoreML", 11 },
 				{ "Vision", "Vision", 11 },
 				{ "FileProvider", "FileProvider", 11 },
@@ -368,7 +370,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "MediaToolbox", "MediaToolbox", 9 },
 					{ "Metal", "Metal", 9 },
 					{ "MetalKit", "MetalKit", 9 },
-					{ "MetalPerformanceShaders", "MetalPerformanceShaders", new Version (9, 0), new Version (int.MaxValue, int.MaxValue) /* not available in the simulator */ },
+					{ "MetalPerformanceShaders", "MetalPerformanceShaders", new Version (9, 0), NotAvailableInSimulator /* not available in the simulator */ },
 					{ "CoreServices", "CFNetwork", 9 },
 					{ "MobileCoreServices", "MobileCoreServices", 9 },
 					{ "ModelIO", "ModelIO", 9 },
@@ -394,9 +396,9 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10 },
 					{ "VideoToolbox", "VideoToolbox", 10,2 },
 
-					{ "DeviceCheck", "DeviceCheck", new Version (11, 0), new Version (int.MaxValue, int.MaxValue) /* no headers provided for simulator */ },
+					{ "DeviceCheck", "DeviceCheck", new Version (11, 0), NotAvailableInSimulator /* no headers provided for simulator */ },
 					{ "CoreML", "CoreML", 11 },
-					{ "IOSurface", "IOSurface", new Version (11, 0), new Version (int.MaxValue, int.MaxValue) /* Not available in the simulator (the header is there, but broken) */  },
+					{ "IOSurface", "IOSurface", new Version (11, 0), NotAvailableInSimulator /* Not available in the simulator (the header is there, but broken) */  },
 					{ "Vision", "Vision", 11 },
 				};
 			}
