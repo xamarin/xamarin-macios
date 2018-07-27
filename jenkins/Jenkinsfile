@@ -147,8 +147,8 @@ def reportFinalStatusToSlack (err, gitHash, currentStage, fileContents)
     def text = ""
     if (fileContents != null)
         text = "\"text\": ${groovy.json.JsonOutput.toJson (fileContents)},"
-    def attachments = """
-    [
+    // The attachments string must not start with a newline, it will produce a very helpful 'Invalid JSON String' exception with no additional info.
+    def attachments = """[
         {
             \"author_name\": \"${authorName} (${authorEmail})\",
             \"title\": \"${title}\",
@@ -160,7 +160,7 @@ def reportFinalStatusToSlack (err, gitHash, currentStage, fileContents)
     ]
     """
     echo (attachments)
-    slackSend (botUser: true, channel: "#ios-notifications", color: "danger", message: slackMessage, attachment: attachments)
+    slackSend (botUser: true, channel: "#ios-notifications", color: "danger", message: slackMessage, attachments: attachments)
 }
 
 def reportFinalStatus (err, gitHash, currentStage)
