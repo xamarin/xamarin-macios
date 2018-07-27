@@ -29,7 +29,7 @@ namespace Xamarin.MacDev.Tasks
 
 		public string Type { get; set; }
 
-		public string Value;
+		public string Value { get; set; }
 
 		static string GetType (PObject value)
 		{
