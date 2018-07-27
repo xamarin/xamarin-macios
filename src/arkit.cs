@@ -100,6 +100,7 @@ namespace ARKit {
 	[Flags]
 	[Native]
 	public enum ARSessionRunOptions : ulong {
+		None = 0,
 		ResetTracking = 1 << 0,
 		RemoveExistingAnchors = 1 << 1,
 	}
