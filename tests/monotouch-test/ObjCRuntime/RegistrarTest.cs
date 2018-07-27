@@ -2690,4 +2690,43 @@ namespace MonoTouchFixtures.ObjCRuntime {
 	public class SomeConsumer : NSObject, ISomeDelegate
 	{
 	}
+#if !__WATCHOS__ // no MetalKit on watchOS
+	// These classes implement Metal* protocols, so that the generated registrar code includes the corresponding Metal* headers.
+	// https://github.com/xamarin/xamarin-macios/issues/4422
+	class MetalKitTypesInTheSimulator : NSObject, MetalKit.IMTKViewDelegate {
+		public void Draw (MetalKit.MTKView view)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void DrawableSizeWillChange (MetalKit.MTKView view, CGSize size)
+		{
+			throw new NotImplementedException ();
+		}
+	}
+	class MetalTypesInTheSimulator : NSObject, global::Metal.IMTLDrawable {
+		public void Present ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void Present (double presentationTime)
+		{
+			throw new NotImplementedException ();
+		}
+	}
+#if !__TVOS__ // MetalPerformanceShaders isn't available in the tvOS simulator either
+	class MetalPerformanceShadersTypesInTheSimulator : NSObject, global::MetalPerformanceShaders.IMPSDeviceProvider {
+		public global::Metal.IMTLDevice GetMTLDevice ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void Present (double presentationTime)
+		{
+			throw new NotImplementedException ();
+		}
+	}
+#endif // !__TVOS__
+#endif // !__WATCHOS__
 }
