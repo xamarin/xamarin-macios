@@ -5116,6 +5116,16 @@ namespace Foundation
 		[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3), NoWatch]
 		[NullAllowed, Export ("detectedBarcodeDescriptor", ArgumentSemantic.Copy)]
 		CIBarcodeDescriptor DetectedBarcodeDescriptor { get; }
+
+		// From NSUserActivity (CLSDeepLinks)
+
+		[NoWatch, NoTV, NoMac, iOS (11,4)]
+		[Export ("isClassKitDeepLink")]
+		bool IsClassKitDeepLink { get; }
+
+		[NoWatch, NoTV, NoMac, iOS (11,4)]
+		[NullAllowed, Export ("contextIdentifierPath", ArgumentSemantic.Strong)]
+		string[] ContextIdentifierPath { get; }
 	}
 
 	[iOS (8,0)][Mac (10,10, onlyOn64 : true)] // same as NSUserActivity
@@ -10245,7 +10255,16 @@ namespace Foundation
 	interface NSDistributedNotificationCenter {
 		[Static]
 		[Export ("defaultCenter")]
+#if XAMCORE_4_0
+		NSDistributedNotificationCenter DefaultCenter { get; }
+#else
+		NSDistributedNotificationCenter GetDefaultCenter ();
+
+		[Static]
+		[Advice ("Use 'GetDefaultCenter ()' for a strongly typed version.")]
+		[Wrap ("GetDefaultCenter ()")]
 		NSObject DefaultCenter { get; }
+#endif
 
 		[Export ("addObserver:selector:name:object:suspensionBehavior:")]
 		void AddObserver (NSObject observer, Selector selector, [NullAllowed] string notificationName, [NullAllowed] string notificationSenderc, NSNotificationSuspensionBehavior suspensionBehavior);

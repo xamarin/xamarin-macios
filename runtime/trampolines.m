@@ -41,18 +41,7 @@
 #include "runtime-internal.h"
 //#define DEBUG_REF_COUNTING
 
-static pthread_mutex_t refcount_mutex;
-static void
-x_init_mutex () __attribute__ ((constructor));
-
-static void
-x_init_mutex ()
-{
-	pthread_mutexattr_t attr;
-	pthread_mutexattr_init (&attr);
-	pthread_mutexattr_settype (&attr, PTHREAD_MUTEX_RECURSIVE);
-	pthread_mutex_init (&refcount_mutex, &attr);
-}
+static pthread_mutex_t refcount_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
 
 void *
 xamarin_marshal_return_value (MonoType *mtype, const char *type, MonoObject *retval, bool retain, MonoMethod *method, MethodDescription *desc, guint32 *exception_gchandle)
@@ -1133,7 +1122,7 @@ xamarin_nsstring_to_smart_enum (id value, void *ptr, MonoClass *managedType, gui
 		managed_method = xamarin_get_managed_method_for_token (context /* token ref */, exception_gchandle);
 		if (*exception_gchandle != 0) return NULL;
 
-		arg_ptrs [0] = xamarin_get_nsobject_with_type_for_ptr (value, false, xamarin_get_parameter_type (managed_method, 0), exception_gchandle);
+		arg_ptrs [0] = xamarin_get_nsobject_with_type_for_ptr (value, false, xamarin_get_parameter_type (managed_method, 0), NULL, NULL, exception_gchandle);
 		if (*exception_gchandle != 0) return NULL;
 
 		obj = mono_runtime_invoke (managed_method, NULL, arg_ptrs, &exception);

@@ -17,8 +17,6 @@ Copyright (c) 2018 Microsoft Corp. (www.microsoft.com)
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<!-- Hack associated with TargetFrameworkDirectory. Needs to be shared by xbuild and msbuild for now. -->
 
-	<Target Name="FixDesignTimeFacades" AfterTargets="GetReferenceAssemblyPaths" Condition="'$(OS)' != 'Windows_NT'" />
-
 	<!-- Location of Libraries -->
 	<Target Name="FixTargetFrameworkDirectory" AfterTargets="FixDesignTimeFacades" Condition="('$(OS)' != 'Windows_NT')">
 		<PropertyGroup>
@@ -30,6 +28,9 @@ Copyright (c) 2018 Microsoft Corp. (www.microsoft.com)
 			<!-- If we find cases of other non-XM assemblies being resolved from XM paths, we can look into using CandidateAssemblyFiles but it is msbuild only. -->
 			<TargetFrameworkDirectory Condition="'$(TargetFrameworkName)' == 'System'">$(TargetFrameworkDirectory);$(MacBclPath)</TargetFrameworkDirectory>
 		</PropertyGroup>
+	</Target>
+
+	<Target Name="FixDesignTimeFacades" AfterTargets="GetReferenceAssemblyPaths" Condition="('$(OS)' != 'Windows_NT')">
 		<ItemGroup>
 			<DesignTimeFacadeDirectories Remove="@(DesignTimeFacadeDirectories)" />
 			<DesignTimeFacadeDirectories Include="$(MacBclPath)/Facades/" />

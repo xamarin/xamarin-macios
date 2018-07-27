@@ -372,6 +372,12 @@
     <Compile Include="..\..\src\ObjCRuntime\BindingImplAttribute.cs">
       <Link>external\maccore\BindingImplAttribute.cs</Link>
     </Compile>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\AssemblyUtilities.cs">
+      <Link>Linker\AssemblyUtilities.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\TypeNameParser.cs">
+      <Link>Linker\TypeNameParser.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Core" />
@@ -405,12 +411,6 @@
       <Project>{8559DD7F-A16F-46D0-A05A-9139FAEBA8FD}</Project>
       <Name>Mono.Cecil.Mdb</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="..\linker\Descriptors\mscorlib.xml">
-      <Link>mscorlib.xml</Link>
-      <LogicalName>mscorlib.xml</LogicalName>
-    </EmbeddedResource>
   </ItemGroup>
   <Target Name="AfterBuild">
     <Exec Command="make mtouch" />

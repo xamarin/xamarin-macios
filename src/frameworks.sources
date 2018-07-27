@@ -294,6 +294,11 @@ BUSINESSCHAT_SOURCES = \
 CALLKIT_SOURCES = \
 	CallKit/CXProvider.cs \
 
+# ClassKit
+
+CLASSKIT_SOURCES = \
+	ClassKit/CLSContext.cs \
+
 # ClockKit
 
 CLOCKKIT_CORE_SOURCES = \
@@ -1721,6 +1726,7 @@ IOS_FRAMEWORKS =         \
 	BusinessChat \
 	CallKit \
 	CFNetwork \
+	ClassKit \
 	CloudKit \
 	Contacts \
 	ContactsUI \

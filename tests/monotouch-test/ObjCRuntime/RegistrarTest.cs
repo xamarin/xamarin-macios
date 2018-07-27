@@ -2087,7 +2087,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				ptr = Messaging.IntPtr_objc_msgSend (Class.GetHandle (typeof (D2)), Selector.GetHandle ("alloc"));
 				ptr = Messaging.IntPtr_objc_msgSend (ptr, Selector.GetHandle ("init"));
 				// Failed to marshal the Objective-C object 0x7adf5920 (type: AppDelegate_D2). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance (because the type 'AppDelegate+D2' does not have a constructor that takes one IntPtr argument).
-				Assert.Throws<Exception> (() => Runtime.GetNSObject<D2> (ptr), "c");
+				Assert.Throws<RuntimeException> (() => Runtime.GetNSObject<D2> (ptr), "c");
 			} finally {
 				Messaging.void_objc_msgSend (ptr, Selector.GetHandle ("release"));
 			}
@@ -2531,6 +2531,28 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		{
 			using (var obj = new NullOutParameters ())
 				obj.Invoke_V_null_out ();
+		}
+
+		[Test]
+		public unsafe void ByrefParameter ()
+		{
+			using (var obj = new ByrefParameterTest ()) {
+				using (var param = new NSObject ()) {
+					// We want an instance of an NSObject subclass that doesn't have a managed wrapper, so we create a native NSString handle.
+					IntPtr handle = NSString.CreateNative ("ByrefParameter");
+					Messaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("doSomething:"), new IntPtr (&handle));
+					NSString.ReleaseNative (handle);
+				}
+			}
+		}
+
+		class ByrefParameterTest : NSObject {
+			[Export ("doSomething:")]
+			public void DoSomething (ref NSString str)
+			{
+				Assert.IsNotNull (str, "NonNull NSString&");
+				Assert.AreEqual ("ByrefParameter", str.ToString ());
+			}
 		}
 	}
 

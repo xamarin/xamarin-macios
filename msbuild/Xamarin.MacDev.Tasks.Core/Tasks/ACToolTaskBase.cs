@@ -178,29 +178,10 @@ namespace Xamarin.MacDev.Tasks
 
 			args.Add ("--minimum-deployment-target", minimumDeploymentTarget);
 
-			switch (SdkPlatform) {
-			case "iPhoneSimulator":
-				args.Add ("--platform", IsWatchApp ? "watchsimulator" : "iphonesimulator");
-				break;
-			case "iPhoneOS":
-				args.Add ("--platform", IsWatchApp ? "watchos" : "iphoneos");
-				break;
-			case "MacOSX":
-				args.Add ("--platform", "macosx");
-				break;
-			case "WatchSimulator":
-				args.Add ("--platform", "watchsimulator");
-				break;
-			case "WatchOS":
-				args.Add ("--platform", "watchos");
-				break;
-			case "AppleTVSimulator":
-				args.Add ("--platform", "appletvsimulator");
-				break;
-			case "AppleTVOS":
-				args.Add ("--platform", "appletvos");
-				break;
-			}
+			var platform = PlatformUtils.GetTargetPlatform (SdkPlatform, IsWatchApp);
+
+			if (platform != null)
+				args.Add ("--platform", platform);
 		}
 
 		IEnumerable<ITaskItem> GetCompiledBundleResources (PDictionary output, string intermediateBundleDir)
@@ -496,7 +477,7 @@ namespace Xamarin.MacDev.Tasks
 				bundleResources.AddRange (GetCompiledBundleResources (manifestOutput, intermediateBundleDir));
 				outputManifests.Add (manifest);
 			} catch (Exception ex) {
-				Log.LogError ("Failed to load output manifest for {0} for the file {2}: {1}", ToolName, ex.Message, manifest.ItemSpec);
+				Log.LogError ("Failed to load {0} log file `{1}`: {2}", ToolName, manifest.ItemSpec, ex.Message);
 			}
 
 			foreach (var assetpack in specs.OfType<PDictionary> ()) {

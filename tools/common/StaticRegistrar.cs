@@ -3596,7 +3596,7 @@ namespace Registrar {
 								setup_call_stack.AppendLine ("if (nsobj{0}) {{", i);
 								body_setup.AppendLine ("MonoType *paramtype{0} = NULL;", i);
 								setup_call_stack.AppendLine ("paramtype{0} = xamarin_get_parameter_type (managed_method, {0});", i);
-								setup_call_stack.AppendLine ("mobj{0} = xamarin_get_nsobject_with_type_for_ptr (nsobj{0}, false, paramtype{0}, &exception_gchandle);", i);
+								setup_call_stack.AppendLine ("mobj{0} = xamarin_get_nsobject_with_type_for_ptr (nsobj{0}, false, paramtype{0}, _cmd, managed_method, &exception_gchandle);", i);
 								setup_call_stack.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 								if (App.EnableDebug) {
 									setup_call_stack.AppendLine ("xamarin_verify_parameter (mobj{0}, _cmd, self, nsobj{0}, {0}, mono_class_from_mono_type (paramtype{0}), managed_method);", i);
@@ -3623,7 +3623,7 @@ namespace Registrar {
 							setup_call_stack.AppendLine ("if (nsobj{0}) {{", i);
 							body_setup.AppendLine ("MonoType *paramtype{0} = NULL;", i);
 							setup_call_stack.AppendLine ("paramtype{0} = xamarin_get_parameter_type (managed_method, {0});", i);
-							setup_call_stack.AppendLine ("mobj{0} = xamarin_get_nsobject_with_type_for_ptr_created (nsobj{0}, false, paramtype{0}, &created{0}, &exception_gchandle);", i);
+							setup_call_stack.AppendLine ("mobj{0} = xamarin_get_nsobject_with_type_for_ptr_created (nsobj{0}, false, paramtype{0}, &created{0}, _cmd, managed_method, &exception_gchandle);", i);
 							setup_call_stack.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 							if (App.EnableDebug) {
 								setup_call_stack.AppendLine ("xamarin_verify_parameter (mobj{0}, _cmd, self, nsobj{0}, {0}, mono_class_from_mono_type (paramtype{0}), managed_method);", i);

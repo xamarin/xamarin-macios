@@ -1,27 +1,36 @@
 #!/bin/bash -e
 
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+WORKSPACE=$(pwd)
+
 report_error ()
 {
-	printf "🔥 [Build failed]($BUILD_URL/console) 🔥\\n" >> $WORKSPACE/jenkins/pr-comments.md
+	printf "🔥 [Build failed](%s/console) 🔥\\n" "$BUILD_URL" >> "$WORKSPACE/jenkins/pr-comments.md"
 }
 trap report_error ERR
 
-ls -la $WORKSPACE/jenkins
-echo "$WORKSPACE/jenkins/pr-comments.md:"
-cat $WORKSPACE/jenkins/pr-comments.md
+if [[ x$1 == x--configure-flags ]]; then
+	CONFIGURE_FLAGS="$2"
+fi
 
-cd $WORKSPACE
+ls -la "$WORKSPACE/jenkins"
+echo "$WORKSPACE/jenkins/pr-comments.md:"
+cat "$WORKSPACE/jenkins/pr-comments.md"
+
 export BUILD_REVISION=jenkins
 
 ENABLE_DEVICE_BUILD=
 
-if test -z $ghprbPullId; then
-	echo "Could not find the environment variable ghprbPullId, so won't check if we're doing a device build."
+# SC2154: ghprbPullId is referenced but not assigned.
+# shellcheck disable=SC2154
+if test -z "$ghprbPullId"; then
+	echo "Could not find the environment variable ghprbPullId, so forcing a device build."
+	ENABLE_DEVICE_BUILD=1
 else
 	echo "Listing modified files for pull request #$ghprbPullId..."
 	if git diff-tree --no-commit-id --name-only -r "origin/pr/$ghprbPullId/merge^..origin/pr/$ghprbPullId/merge" > .tmp-files; then
 		echo "Modified files found":
-		cat .tmp-files | sed 's/^/    /' || true
+		sed 's/^/    /' .tmp-files || true
 		if grep 'external/mono' .tmp-files > /dev/null; then
 			echo "Enabling device build because mono was bumped."
 		elif grep 'external/llvm' .tmp-files > /dev/null; then
@@ -32,7 +41,7 @@ else
 	fi
 	rm -f .tmp-files
 
-	if test -z $ENABLE_DEVICE_BUILD; then
+	if test -z "$ENABLE_DEVICE_BUILD"; then
 		if ./jenkins/fetch-pr-labels.sh --check=enable-device-build; then
 			ENABLE_DEVICE_BUILD=1
 			echo "Enabling device build because the label 'enable-device-build' was found."
@@ -42,12 +51,17 @@ else
 	fi
 fi
 
-if test -n "$ENABLE_DEVICE_BUILD"; then
-	./configure
-else
-	./configure --disable-ios-device
+if test -z "$ENABLE_DEVICE_BUILD"; then
+	CONFIGURE_FLAGS="$CONFIGURE_FLAGS --disable-ios-device"
 fi
+# shellcheck disable=SC2086
+./configure $CONFIGURE_FLAGS
 
-time make world
+make reset
+make git-clean-all
+make print-versions
 
-printf "✅ [Build succeeded]($BUILD_URL/console)\\n" >> $WORKSPACE/jenkins/pr-comments.md
+time make -j8
+time make install -j8
+
+printf "✅ [Build succeeded](%s/console)\\n" "$BUILD_URL" >> "$WORKSPACE/jenkins/pr-comments.md"

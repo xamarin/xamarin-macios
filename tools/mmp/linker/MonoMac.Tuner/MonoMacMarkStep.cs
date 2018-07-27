@@ -104,7 +104,7 @@ namespace MonoMac.Tuner {
 			MarkMethods (GetType (system, "System.Net.Configuration.WebRequestModulesSection"));
 			MarkMethods (GetType (system, "System.Net.HttpRequestCreator"));
 			MarkMethods (GetType (system, "System.Net.FileWebRequestCreator"));
-			MarkMethods (GetType (system, "System.Net.FtpRequestCreator"));
+			MarkMethods (GetType (system, "System.Net.FtpWebRequestCreator"));
 			
 			// types we cannot find (statiscally or using machine.config)
 			MarkMethods (GetType (system, "System.ComponentModel.BooleanConverter"));

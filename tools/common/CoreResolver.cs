@@ -17,6 +17,7 @@ namespace Xamarin.Bundler {
 	public abstract class CoreResolver : IAssemblyResolver {
 
 		internal Dictionary<string, AssemblyDefinition> cache;
+		Dictionary<string,ReaderParameters> params_cache;
 
 		public string FrameworkDirectory { get; set; }
 		public string RootDirectory { get; set; }
@@ -26,6 +27,7 @@ namespace Xamarin.Bundler {
 		public CoreResolver ()
 		{
 			cache = new Dictionary<string, AssemblyDefinition> (NormalizedStringComparer.OrdinalIgnoreCase);
+			params_cache = new Dictionary<string, ReaderParameters> (StringComparer.Ordinal);
 		}
 
 		public IDictionary<string, AssemblyDefinition> ResolverCache { get { return cache; } }
@@ -45,7 +47,12 @@ namespace Xamarin.Bundler {
 
 		public AssemblyDefinition Resolve (AssemblyNameReference name)
 		{
-			return Resolve (name, new ReaderParameters { AssemblyResolver = this });
+			var key = name.ToString ();
+			if (!params_cache.TryGetValue (key, out ReaderParameters parameters)) {
+				parameters = new ReaderParameters { AssemblyResolver = this };
+				params_cache [key] = parameters;
+			}
+			return Resolve (name, parameters);
 		}
 
 		public abstract AssemblyDefinition Resolve (AssemblyNameReference name, ReaderParameters parameters);
@@ -83,11 +90,9 @@ namespace Xamarin.Bundler {
 				var parameters = CreateDefaultReaderParameters (fileName);
 				try {
 					assembly = ModuleDefinition.ReadModule (fileName, parameters).Assembly;
+					params_cache [assembly.Name.ToString ()] = parameters;
 				}
-				catch (InvalidOperationException e) {
-					// cecil use the default message so it's not very helpful to detect the root cause
-					if (!e.TargetSite.ToString ().Contains ("Void ReadSymbols(Mono.Cecil.Cil.ISymbolReader)"))
-						throw;
+				catch (SymbolsNotMatchingException) {
 					parameters.ReadSymbols = false;
 					parameters.SymbolReaderProvider = null;
 					assembly = ModuleDefinition.ReadModule (fileName, parameters).Assembly;

@@ -102,6 +102,7 @@ namespace Xamarin.Mac.Tasks
 		protected override string GenerateCommandLineCommands ()
 		{
 			var args = new CommandLineArgumentBuilder ();
+			var actualArgs = new CommandLineArgumentBuilder ();
 			bool msym;
 
 			args.AddLine ("/verbose");
@@ -203,7 +204,7 @@ namespace Xamarin.Mac.Tasks
 			}
 
 			if (!string.IsNullOrWhiteSpace (ExtraArguments))
-				args.AddLine (ExtraArguments);
+				actualArgs.Add (ExtraArguments);
 
 			if (NativeReferences != null) {
 				foreach (var nr in NativeReferences)
@@ -237,10 +238,9 @@ namespace Xamarin.Mac.Tasks
 			}
 
 			// Use only the response file
-			args = new CommandLineArgumentBuilder ();
-			args.AddQuotedLine ($"@{responseFile}");
+			actualArgs.AddQuoted ($"@{responseFile}");
 
-			return args.ToString ();
+			return actualArgs.ToString ();
 		}
 
 		string GetMonoBundleDirName ()

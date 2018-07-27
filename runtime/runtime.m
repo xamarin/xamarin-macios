@@ -257,17 +257,17 @@ xamarin_get_parameter_type (MonoMethod *managed_method, int index)
 }
 
 MonoObject *
-xamarin_get_nsobject_with_type_for_ptr (id self, bool owns, MonoType* type, guint32 *exception_gchandle)
+xamarin_get_nsobject_with_type_for_ptr (id self, bool owns, MonoType* type, SEL selector, MonoMethod *managed_method, guint32 *exception_gchandle)
 {
 	// COOP: Reading managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 
 	int32_t created;
-	return xamarin_get_nsobject_with_type_for_ptr_created (self, owns, type, &created, exception_gchandle);
+	return xamarin_get_nsobject_with_type_for_ptr_created (self, owns, type, &created, selector, managed_method, exception_gchandle);
 }
 
 MonoObject *
-xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *type, int32_t *created, guint32 *exception_gchandle)
+xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *type, int32_t *created, SEL selector, MonoMethod *managed_method, guint32 *exception_gchandle)
 {
 	// COOP: Reading managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
@@ -288,7 +288,7 @@ xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *ty
 			return mobj;
 	}
 
-	return xamarin_get_nsobject_with_type (self, mono_type_get_object (mono_domain_get (), type), created, exception_gchandle);
+	return xamarin_get_nsobject_with_type (self, mono_type_get_object (mono_domain_get (), type), created, selector, managed_method == NULL ? NULL : mono_method_get_object (mono_domain_get (), managed_method, NULL), exception_gchandle);
 }
 
 MonoObject *
@@ -672,9 +672,10 @@ xamarin_check_for_gced_object (MonoObject *obj, SEL sel, id self, MonoMethod *me
 	char *type_name = xamarin_lookup_managed_type_name ([self class], exception_gchandle);
 	if (*exception_gchandle == 0) {
 		char *msg = xamarin_strdup_printf (m, self, object_getClassName (self), type_name, sel_getName (sel), method_full_name);
-		MonoException *mex = xamarin_create_exception (msg);
+		guint32 ex_handle = xamarin_create_runtime_exception (8027, msg, exception_gchandle);
 		xamarin_free (msg);
-		*exception_gchandle = mono_gchandle_new ((MonoObject *) mex, FALSE);
+		if (*exception_gchandle == 0)
+			*exception_gchandle = ex_handle;
 	}
 	mono_free (type_name);
 	mono_free (method_full_name);
@@ -2118,6 +2119,16 @@ get_method_block_wrapper_creator (MonoMethod *method, int par, guint32 *exceptio
 	return res;
 }
 
+void
+xamarin_release_block_on_main_thread (void *obj)
+{
+	if ([NSThread isMainThread]) {
+		_Block_release (obj);
+	} else {
+		dispatch_async_f (dispatch_get_main_queue (), obj, (dispatch_function_t) _Block_release);
+	}
+}
+
 /*
  * Creates a System.Delegate to wrap an Objective-C proxy when surfacing parameters from Objective-C to C#.
  * @method: method where the parameter is found
@@ -2167,7 +2178,7 @@ xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref,
 	MONO_EXIT_GC_SAFE;
 
 	if (block_wrapper_queue == NULL)
-		block_wrapper_queue = mono_gc_reference_queue_new ((void(*)(void*))_Block_release);
+		block_wrapper_queue = mono_gc_reference_queue_new (xamarin_release_block_on_main_thread);
 
 	mono_gc_reference_queue_add (block_wrapper_queue, delegate, nativeBlock);
 	pthread_mutex_unlock (&wrapper_hash_lock);
@@ -2277,7 +2288,7 @@ xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwMan
 		if (exc_handle != NULL) {
 			int handle = [exc_handle getHandle];
 			MonoObject *exc = mono_gchandle_get_target (handle);
-			mono_set_pending_exception ((MonoException *) exc);
+			mono_runtime_set_pending_exception ((MonoException *) exc, false);
 		} else {
 			int handle = xamarin_create_ns_exception (ns_exception, &exception_gchandle);
 			if (exception_gchandle != 0) {
@@ -2288,7 +2299,7 @@ xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwMan
 			}
 			MONO_ENTER_GC_UNSAFE;
 			MonoObject *exc = mono_gchandle_get_target (handle);
-			mono_set_pending_exception ((MonoException *) exc);
+			mono_runtime_set_pending_exception ((MonoException *) exc, false);
 			mono_gchandle_free (handle);
 			MONO_EXIT_GC_UNSAFE;
 		}

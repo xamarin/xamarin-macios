@@ -85,6 +85,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					Assert.AreEqual ("Can't register the class System.String when the dynamic registrar has been linked away.", e.Message, "exc message");
 				}
 			}
+			Assert.AreEqual (IntPtr.Zero, Class.GetHandle (typeof (NSObject).MakeByRefType ()), "NSObject&");
+			Assert.AreEqual (IntPtr.Zero, Class.GetHandle (typeof (NSObject).MakeArrayType ()), "NSObject[]");
+			Assert.AreEqual (IntPtr.Zero, Class.GetHandle (typeof (NSObject).MakePointerType ()), "NSObject*");
 		}
 
 		[Test]

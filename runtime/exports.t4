@@ -239,11 +239,12 @@
 
 		#region metadata/object-internals.h
 
-		new Export (true, "void", "mono_set_pending_exception",
-			"MonoException *", "exc"
+		new Export (true, "void", "mono_runtime_set_pending_exception",
+			"MonoException *", "exc",
+			"mono_bool", "overwrite"
 		)
 		{
-			AlternativeEntryPoint = "mono_raise_exception",
+			AlternativeExpression = "return mono_raise_exception (exc);",
 		},
 
 		#endregion
@@ -674,7 +675,7 @@
 	{
 		public string ReturnType;
 		public string EntryPoint;
-		public string AlternativeEntryPoint;
+		public string AlternativeExpression;
 		public List<Arg> Arguments;
 		public bool Optional;
 

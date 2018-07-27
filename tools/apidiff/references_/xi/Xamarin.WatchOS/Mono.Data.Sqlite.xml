@@ -1,0 +1,2913 @@
+<?xml version="1.0" encoding="utf-8"?>
+<assemblies>
+  <assembly name="Mono.Data.Sqlite" version="2.0.5.0">
+    <attributes>
+      <attribute name="System.CLSCompliantAttribute">
+        <properties>
+          <property name="IsCompliant" value="True" />
+        </properties>
+      </attribute>
+      <attribute name="System.Diagnostics.DebuggableAttribute">
+        <properties>
+          <property name="IsJITTrackingEnabled" value="IgnoreSymbolStoreSequencePoints" />
+          <property name="IsJITOptimizerDisabled" value="IgnoreSymbolStoreSequencePoints" />
+          <property name="DebuggingFlags" value="IgnoreSymbolStoreSequencePoints" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyCompanyAttribute">
+        <properties>
+          <property name="Company" value="http://sqlite.phxsoftware.com" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyConfigurationAttribute">
+        <properties>
+          <property name="Configuration" value="" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyCopyrightAttribute">
+        <properties>
+          <property name="Copyright" value="Public Domain" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyDelaySignAttribute">
+        <properties>
+          <property name="DelaySign" value="True" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyDescriptionAttribute">
+        <properties>
+          <property name="Description" value="ADO.NET 2.0 Data Provider for SQLite" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyFileVersionAttribute">
+        <properties>
+          <property name="Version" value="1.0.61.0" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyProductAttribute">
+        <properties>
+          <property name="Product" value="System.Data.SQLite" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyTitleAttribute">
+        <properties>
+          <property name="Title" value="System.Data.SQLite" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyTrademarkAttribute">
+        <properties>
+          <property name="Trademark" value="" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.CompilationRelaxationsAttribute">
+        <properties>
+          <property name="CompilationRelaxations" value="8" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.RuntimeCompatibilityAttribute">
+        <properties>
+          <property name="WrapNonExceptionThrows" value="True" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.ConstrainedExecution.ReliabilityContractAttribute">
+        <properties>
+          <property name="ConsistencyGuarantee" value="WillNotCorruptState" />
+          <property name="Cer" value="Success" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
+        <properties>
+          <property name="Value" value="False" />
+        </properties>
+      </attribute>
+      <attribute name="System.Security.AllowPartiallyTrustedCallersAttribute" />
+      <attribute name="System.Security.SecurityRulesAttribute">
+        <properties>
+          <property name="RuleSet" value="Level1" />
+        </properties>
+      </attribute>
+    </attributes>
+    <namespaces>
+      <namespace name="Mono.Data.Sqlite">
+        <classes>
+          <class name="CollationEncodingEnum" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="UTF16BE" attrib="32854" fieldtype="Mono.Data.Sqlite.CollationEncodingEnum" value="3" />
+              <field name="UTF16LE" attrib="32854" fieldtype="Mono.Data.Sqlite.CollationEncodingEnum" value="2" />
+              <field name="UTF8" attrib="32854" fieldtype="Mono.Data.Sqlite.CollationEncodingEnum" value="1" />
+            </fields>
+          </class>
+          <class name="CollationSequence" type="struct" base="System.ValueType" sealed="true" charset="Ansi" layout="Sequential">
+            <fields>
+              <field name="Encoding" attrib="6" fieldtype="Mono.Data.Sqlite.CollationEncodingEnum" />
+              <field name="Name" attrib="6" fieldtype="System.String" />
+              <field name="Type" attrib="6" fieldtype="Mono.Data.Sqlite.CollationTypeEnum" />
+            </fields>
+            <methods>
+              <method name="Compare(System.Char[], System.Char[])" attrib="134" returntype="System.Int32">
+                <parameters>
+                  <parameter name="c1" position="0" attrib="0" type="System.Char[]" />
+                  <parameter name="c2" position="1" attrib="0" type="System.Char[]" />
+                </parameters>
+              </method>
+              <method name="Compare(System.String, System.String)" attrib="134" returntype="System.Int32">
+                <parameters>
+                  <parameter name="s1" position="0" attrib="0" type="System.String" />
+                  <parameter name="s2" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="CollationTypeEnum" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="Binary" attrib="32854" fieldtype="Mono.Data.Sqlite.CollationTypeEnum" value="1" />
+              <field name="Custom" attrib="32854" fieldtype="Mono.Data.Sqlite.CollationTypeEnum" value="0" />
+              <field name="NoCase" attrib="32854" fieldtype="Mono.Data.Sqlite.CollationTypeEnum" value="2" />
+              <field name="Reverse" attrib="32854" fieldtype="Mono.Data.Sqlite.CollationTypeEnum" value="3" />
+            </fields>
+          </class>
+          <class name="CommitEventArgs" type="class" base="System.EventArgs" charset="Ansi" layout="Auto">
+            <fields>
+              <field name="AbortTransaction" attrib="6" fieldtype="System.Boolean" />
+            </fields>
+          </class>
+          <class name="FunctionType" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="Aggregate" attrib="32854" fieldtype="Mono.Data.Sqlite.FunctionType" value="1" />
+              <field name="Collation" attrib="32854" fieldtype="Mono.Data.Sqlite.FunctionType" value="2" />
+              <field name="Scalar" attrib="32854" fieldtype="Mono.Data.Sqlite.FunctionType" value="0" />
+            </fields>
+          </class>
+          <class name="SQLiteCommitHandler" type="delegate" base="System.MulticastDelegate" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.ICloneable" />
+              <interface name="System.Runtime.Serialization.ISerializable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.Object, System.IntPtr)" attrib="6278">
+                <parameters>
+                  <parameter name="object" position="0" attrib="0" type="System.Object" />
+                  <parameter name="method" position="1" attrib="0" type="System.IntPtr" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="BeginInvoke(System.Object, Mono.Data.Sqlite.CommitEventArgs, System.AsyncCallback, System.Object)" attrib="454" virtual="true" returntype="System.IAsyncResult">
+                <parameters>
+                  <parameter name="sender" position="0" attrib="0" type="System.Object" />
+                  <parameter name="e" position="1" attrib="0" type="Mono.Data.Sqlite.CommitEventArgs" />
+                  <parameter name="callback" position="2" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="object" position="3" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="EndInvoke(System.IAsyncResult)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="result" position="0" attrib="0" type="System.IAsyncResult" />
+                </parameters>
+              </method>
+              <method name="Invoke(System.Object, Mono.Data.Sqlite.CommitEventArgs)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="sender" position="0" attrib="0" type="System.Object" />
+                  <parameter name="e" position="1" attrib="0" type="Mono.Data.Sqlite.CommitEventArgs" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="SQLiteConfig" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="MultiThread" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteConfig" value="2" />
+              <field name="Serialized" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteConfig" value="3" />
+              <field name="SingleThread" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteConfig" value="1" />
+            </fields>
+          </class>
+          <class name="SQLiteDateFormats" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="ISO8601" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteDateFormats" value="1" />
+              <field name="JulianDay" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteDateFormats" value="2" />
+              <field name="Ticks" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteDateFormats" value="0" />
+              <field name="UnixEpoch" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteDateFormats" value="3" />
+            </fields>
+          </class>
+          <class name="SQLiteErrorCode" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="Abort" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteErrorCode" value="4" />
+              <field name="Auth" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteErrorCode" value="23" />
+              <field name="Busy" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteErrorCode" value="5" />
+              <field name="CantOpen" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteErrorCode" value="14" />
+              <field name="Constraint" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteErrorCode" value="19" />
+              <field name="Corrupt" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteErrorCode" value="11" />
+              <field name="Done" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteErrorCode" value="101" />
+              <field name="Empty" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteErrorCode" value="16" />
+              <field name="Error" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteErrorCode" value="1" />
+              <field name="Format" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteErrorCode" value="24" />
+              <field name="Full" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteErrorCode" value="13" />
+              <field name="IOErr" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteErrorCode" value="10" />
+              <field name="Internal" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteErrorCode" value="2" />
+              <field name="Interrupt" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteErrorCode" value="9" />
+              <field name="Locked" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteErrorCode" value="6" />
+              <field name="Mismatch" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteErrorCode" value="20" />
+              <field name="Misuse" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteErrorCode" value="21" />
+              <field name="NOLFS" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteErrorCode" value="22" />
+              <field name="NoMem" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteErrorCode" value="7" />
+              <field name="NotADatabase" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteErrorCode" value="26" />
+              <field name="NotFound" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteErrorCode" value="12" />
+              <field name="Ok" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteErrorCode" value="0" />
+              <field name="Perm" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteErrorCode" value="3" />
+              <field name="Protocol" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteErrorCode" value="15" />
+              <field name="Range" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteErrorCode" value="25" />
+              <field name="ReadOnly" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteErrorCode" value="8" />
+              <field name="Row" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteErrorCode" value="100" />
+              <field name="Schema" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteErrorCode" value="17" />
+              <field name="TooBig" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteErrorCode" value="18" />
+            </fields>
+          </class>
+          <class name="SQLiteJournalModeEnum" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="Delete" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteJournalModeEnum" value="0" />
+              <field name="Off" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteJournalModeEnum" value="2" />
+              <field name="Persist" attrib="32854" fieldtype="Mono.Data.Sqlite.SQLiteJournalModeEnum" value="1" />
+            </fields>
+          </class>
+          <class name="SQLiteUpdateEventHandler" type="delegate" base="System.MulticastDelegate" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.ICloneable" />
+              <interface name="System.Runtime.Serialization.ISerializable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.Object, System.IntPtr)" attrib="6278">
+                <parameters>
+                  <parameter name="object" position="0" attrib="0" type="System.Object" />
+                  <parameter name="method" position="1" attrib="0" type="System.IntPtr" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="BeginInvoke(System.Object, Mono.Data.Sqlite.UpdateEventArgs, System.AsyncCallback, System.Object)" attrib="454" virtual="true" returntype="System.IAsyncResult">
+                <parameters>
+                  <parameter name="sender" position="0" attrib="0" type="System.Object" />
+                  <parameter name="e" position="1" attrib="0" type="Mono.Data.Sqlite.UpdateEventArgs" />
+                  <parameter name="callback" position="2" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="object" position="3" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="EndInvoke(System.IAsyncResult)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="result" position="0" attrib="0" type="System.IAsyncResult" />
+                </parameters>
+              </method>
+              <method name="Invoke(System.Object, Mono.Data.Sqlite.UpdateEventArgs)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="sender" position="0" attrib="0" type="System.Object" />
+                  <parameter name="e" position="1" attrib="0" type="Mono.Data.Sqlite.UpdateEventArgs" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="SqliteCommand" type="class" base="System.Data.Common.DbCommand" sealed="true" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.ComponentModel.DesignerAttribute">
+                <properties>
+                  <property name="DesignerTypeName" value="SQLite.Designer.SqliteCommandDesigner, SQLite.Designer, Version=1.0.36.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139" />
+                </properties>
+              </attribute>
+              <attribute name="System.ComponentModel.ToolboxItemAttribute">
+                <properties>
+                  <property name="ToolboxItemTypeName" value="True" />
+                </properties>
+              </attribute>
+            </attributes>
+            <interfaces>
+              <interface name="System.ComponentModel.IComponent" />
+              <interface name="System.Data.IDbCommand" />
+              <interface name="System.ICloneable" />
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(Mono.Data.Sqlite.SqliteConnection)" attrib="6278">
+                <parameters>
+                  <parameter name="connection" position="0" attrib="0" type="Mono.Data.Sqlite.SqliteConnection" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="commandText" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, Mono.Data.Sqlite.SqliteConnection)" attrib="6278">
+                <parameters>
+                  <parameter name="commandText" position="0" attrib="0" type="System.String" />
+                  <parameter name="connection" position="1" attrib="0" type="Mono.Data.Sqlite.SqliteConnection" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, Mono.Data.Sqlite.SqliteConnection, Mono.Data.Sqlite.SqliteTransaction)" attrib="6278">
+                <parameters>
+                  <parameter name="commandText" position="0" attrib="0" type="System.String" />
+                  <parameter name="connection" position="1" attrib="0" type="Mono.Data.Sqlite.SqliteConnection" />
+                  <parameter name="transaction" position="2" attrib="0" type="Mono.Data.Sqlite.SqliteTransaction" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="CommandText" attrib="0" ptype="System.String">
+                <attributes>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.EditorAttribute">
+                    <properties>
+                      <property name="EditorBaseTypeName" value="System.Drawing.Design.UITypeEditor, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+                      <property name="EditorTypeName" value="Microsoft.VSDesigner.Data.SQL.Design.SqlCommandTextEditor, Microsoft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.RefreshPropertiesAttribute">
+                    <properties>
+                      <property name="RefreshProperties" value="All" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_CommandText()" attrib="2246" virtual="true" is-override="true" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_CommandText(System.String)" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="CommandTimeout" attrib="0" ptype="System.Int32">
+                <attributes>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="30" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_CommandTimeout()" attrib="2246" virtual="true" is-override="true" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                  <method name="set_CommandTimeout(System.Int32)" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="CommandType" attrib="0" ptype="System.Data.CommandType">
+                <attributes>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="Text" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.RefreshPropertiesAttribute">
+                    <properties>
+                      <property name="RefreshProperties" value="All" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_CommandType()" attrib="2246" virtual="true" is-override="true" returntype="System.Data.CommandType">
+                    <parameters />
+                  </method>
+                  <method name="set_CommandType(System.Data.CommandType)" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Data.CommandType" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Connection" attrib="0" ptype="Mono.Data.Sqlite.SqliteConnection">
+                <attributes>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="null" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.EditorAttribute">
+                    <properties>
+                      <property name="EditorBaseTypeName" value="System.Drawing.Design.UITypeEditor, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+                      <property name="EditorTypeName" value="Microsoft.VSDesigner.Data.Design.DbConnectionEditor, Microsoft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_Connection()" attrib="2182" returntype="Mono.Data.Sqlite.SqliteConnection">
+                    <parameters />
+                  </method>
+                  <method name="set_Connection(Mono.Data.Sqlite.SqliteConnection)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="Mono.Data.Sqlite.SqliteConnection" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="DbConnection" attrib="0" ptype="System.Data.Common.DbConnection">
+                <methods>
+                  <method name="get_DbConnection()" attrib="2244" virtual="true" is-override="true" returntype="System.Data.Common.DbConnection">
+                    <parameters />
+                  </method>
+                  <method name="set_DbConnection(System.Data.Common.DbConnection)" attrib="2244" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Data.Common.DbConnection" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="DbParameterCollection" attrib="0" ptype="System.Data.Common.DbParameterCollection">
+                <methods>
+                  <method name="get_DbParameterCollection()" attrib="2244" virtual="true" is-override="true" returntype="System.Data.Common.DbParameterCollection">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="DbTransaction" attrib="0" ptype="System.Data.Common.DbTransaction">
+                <methods>
+                  <method name="get_DbTransaction()" attrib="2244" virtual="true" is-override="true" returntype="System.Data.Common.DbTransaction">
+                    <parameters />
+                  </method>
+                  <method name="set_DbTransaction(System.Data.Common.DbTransaction)" attrib="2244" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Data.Common.DbTransaction" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="DesignTimeVisible" attrib="0" ptype="System.Boolean">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="False" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="True" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DesignOnlyAttribute">
+                    <properties>
+                      <property name="IsDesignOnly" value="True" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.EditorBrowsableAttribute">
+                    <properties>
+                      <property name="State" value="Never" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_DesignTimeVisible()" attrib="2246" virtual="true" is-override="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_DesignTimeVisible(System.Boolean)" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Parameters" attrib="0" ptype="Mono.Data.Sqlite.SqliteParameterCollection">
+                <attributes>
+                  <attribute name="System.ComponentModel.DesignerSerializationVisibilityAttribute">
+                    <properties>
+                      <property name="Visibility" value="Content" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_Parameters()" attrib="2182" returntype="Mono.Data.Sqlite.SqliteParameterCollection">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Transaction" attrib="0" ptype="Mono.Data.Sqlite.SqliteTransaction">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="False" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DesignerSerializationVisibilityAttribute">
+                    <properties>
+                      <property name="Visibility" value="Hidden" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_Transaction()" attrib="2182" returntype="Mono.Data.Sqlite.SqliteTransaction">
+                    <parameters />
+                  </method>
+                  <method name="set_Transaction(Mono.Data.Sqlite.SqliteTransaction)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="Mono.Data.Sqlite.SqliteTransaction" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="UpdatedRowSource" attrib="0" ptype="System.Data.UpdateRowSource">
+                <attributes>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="None" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_UpdatedRowSource()" attrib="2246" virtual="true" is-override="true" returntype="System.Data.UpdateRowSource">
+                    <parameters />
+                  </method>
+                  <method name="set_UpdatedRowSource(System.Data.UpdateRowSource)" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Data.UpdateRowSource" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Cancel()" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="Clone()" attrib="486" virtual="true" returntype="System.Object">
+                <parameters />
+              </method>
+              <method name="CreateDbParameter()" attrib="196" virtual="true" is-override="true" returntype="System.Data.Common.DbParameter">
+                <parameters />
+              </method>
+              <method name="CreateParameter()" attrib="134" returntype="Mono.Data.Sqlite.SqliteParameter">
+                <parameters />
+              </method>
+              <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="ExecuteDbDataReader(System.Data.CommandBehavior)" attrib="196" virtual="true" is-override="true" returntype="System.Data.Common.DbDataReader">
+                <parameters>
+                  <parameter name="behavior" position="0" attrib="0" type="System.Data.CommandBehavior" />
+                </parameters>
+              </method>
+              <method name="ExecuteNonQuery()" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
+                <parameters />
+              </method>
+              <method name="ExecuteReader()" attrib="134" returntype="Mono.Data.Sqlite.SqliteDataReader">
+                <parameters />
+              </method>
+              <method name="ExecuteReader(System.Data.CommandBehavior)" attrib="134" returntype="Mono.Data.Sqlite.SqliteDataReader">
+                <parameters>
+                  <parameter name="behavior" position="0" attrib="0" type="System.Data.CommandBehavior" />
+                </parameters>
+              </method>
+              <method name="ExecuteScalar()" attrib="198" virtual="true" is-override="true" returntype="System.Object">
+                <parameters />
+              </method>
+              <method name="Prepare()" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="SqliteCommandBuilder" type="class" base="System.Data.Common.DbCommandBuilder" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.ComponentModel.IComponent" />
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(Mono.Data.Sqlite.SqliteDataAdapter)" attrib="6278">
+                <parameters>
+                  <parameter name="adp" position="0" attrib="0" type="Mono.Data.Sqlite.SqliteDataAdapter" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="CatalogLocation" attrib="0" ptype="System.Data.Common.CatalogLocation">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_CatalogLocation()" attrib="2246" virtual="true" is-override="true" returntype="System.Data.Common.CatalogLocation">
+                    <parameters />
+                  </method>
+                  <method name="set_CatalogLocation(System.Data.Common.CatalogLocation)" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Data.Common.CatalogLocation" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="CatalogSeparator" attrib="0" ptype="System.String">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_CatalogSeparator()" attrib="2246" virtual="true" is-override="true" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_CatalogSeparator(System.String)" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="DataAdapter" attrib="0" ptype="Mono.Data.Sqlite.SqliteDataAdapter">
+                <methods>
+                  <method name="get_DataAdapter()" attrib="2182" returntype="Mono.Data.Sqlite.SqliteDataAdapter">
+                    <parameters />
+                  </method>
+                  <method name="set_DataAdapter(Mono.Data.Sqlite.SqliteDataAdapter)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="Mono.Data.Sqlite.SqliteDataAdapter" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="QuotePrefix" attrib="0" ptype="System.String">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="False" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="[" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_QuotePrefix()" attrib="2246" virtual="true" is-override="true" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_QuotePrefix(System.String)" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="QuoteSuffix" attrib="0" ptype="System.String">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_QuoteSuffix()" attrib="2246" virtual="true" is-override="true" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_QuoteSuffix(System.String)" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="SchemaSeparator" attrib="0" ptype="System.String">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_SchemaSeparator()" attrib="2246" virtual="true" is-override="true" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_SchemaSeparator(System.String)" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="ApplyParameterInfo(System.Data.Common.DbParameter, System.Data.DataRow, System.Data.StatementType, System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="parameter" position="0" attrib="0" type="System.Data.Common.DbParameter" />
+                  <parameter name="row" position="1" attrib="0" type="System.Data.DataRow" />
+                  <parameter name="statementType" position="2" attrib="0" type="System.Data.StatementType" />
+                  <parameter name="whereClause" position="3" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="GetDeleteCommand()" attrib="134" returntype="Mono.Data.Sqlite.SqliteCommand">
+                <parameters />
+              </method>
+              <method name="GetDeleteCommand(System.Boolean)" attrib="134" returntype="Mono.Data.Sqlite.SqliteCommand">
+                <parameters>
+                  <parameter name="useColumnsForParameterNames" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="GetInsertCommand()" attrib="134" returntype="Mono.Data.Sqlite.SqliteCommand">
+                <parameters />
+              </method>
+              <method name="GetInsertCommand(System.Boolean)" attrib="134" returntype="Mono.Data.Sqlite.SqliteCommand">
+                <parameters>
+                  <parameter name="useColumnsForParameterNames" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="GetParameterName(System.Int32)" attrib="196" virtual="true" is-override="true" returntype="System.String">
+                <parameters>
+                  <parameter name="parameterOrdinal" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetParameterName(System.String)" attrib="196" virtual="true" is-override="true" returntype="System.String">
+                <parameters>
+                  <parameter name="parameterName" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="GetParameterPlaceholder(System.Int32)" attrib="196" virtual="true" is-override="true" returntype="System.String">
+                <parameters>
+                  <parameter name="parameterOrdinal" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetSchemaTable(System.Data.Common.DbCommand)" attrib="196" virtual="true" is-override="true" returntype="System.Data.DataTable">
+                <parameters>
+                  <parameter name="sourceCommand" position="0" attrib="0" type="System.Data.Common.DbCommand" />
+                </parameters>
+              </method>
+              <method name="GetUpdateCommand()" attrib="134" returntype="Mono.Data.Sqlite.SqliteCommand">
+                <parameters />
+              </method>
+              <method name="GetUpdateCommand(System.Boolean)" attrib="134" returntype="Mono.Data.Sqlite.SqliteCommand">
+                <parameters>
+                  <parameter name="useColumnsForParameterNames" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="QuoteIdentifier(System.String)" attrib="198" virtual="true" is-override="true" returntype="System.String">
+                <parameters>
+                  <parameter name="unquotedIdentifier" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="SetRowUpdatingHandler(System.Data.Common.DbDataAdapter)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="adapter" position="0" attrib="0" type="System.Data.Common.DbDataAdapter" />
+                </parameters>
+              </method>
+              <method name="UnquoteIdentifier(System.String)" attrib="198" virtual="true" is-override="true" returntype="System.String">
+                <parameters>
+                  <parameter name="quotedIdentifier" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="SqliteConnection" type="class" base="System.Data.Common.DbConnection" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.ComponentModel.IComponent" />
+              <interface name="System.Data.IDbConnection" />
+              <interface name="System.ICloneable" />
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(Mono.Data.Sqlite.SqliteConnection)" attrib="6278">
+                <parameters>
+                  <parameter name="connection" position="0" attrib="0" type="Mono.Data.Sqlite.SqliteConnection" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="connectionString" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="ConnectionString" attrib="0" ptype="System.String">
+                <attributes>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.EditorAttribute">
+                    <properties>
+                      <property name="EditorBaseTypeName" value="System.Drawing.Design.UITypeEditor, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+                      <property name="EditorTypeName" value="SQLite.Designer.SqliteConnectionStringEditor, SQLite.Designer, Version=1.0.36.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.RefreshPropertiesAttribute">
+                    <properties>
+                      <property name="RefreshProperties" value="All" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_ConnectionString()" attrib="2246" virtual="true" is-override="true" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_ConnectionString(System.String)" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="DataSource" attrib="0" ptype="System.String">
+                <attributes>
+                  <attribute name="System.ComponentModel.DesignerSerializationVisibilityAttribute">
+                    <properties>
+                      <property name="Visibility" value="Hidden" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_DataSource()" attrib="2246" virtual="true" is-override="true" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Database" attrib="0" ptype="System.String">
+                <attributes>
+                  <attribute name="System.ComponentModel.DesignerSerializationVisibilityAttribute">
+                    <properties>
+                      <property name="Visibility" value="Hidden" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_Database()" attrib="2246" virtual="true" is-override="true" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="DbProviderFactory" attrib="0" ptype="System.Data.Common.DbProviderFactory">
+                <methods>
+                  <method name="get_DbProviderFactory()" attrib="2244" virtual="true" is-override="true" returntype="System.Data.Common.DbProviderFactory">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="DefaultTimeout" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_DefaultTimeout()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                  <method name="set_DefaultTimeout(System.Int32)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="SQLiteVersion" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_SQLiteVersion()" attrib="2198" static="true" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="ServerVersion" attrib="0" ptype="System.String">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="False" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DesignerSerializationVisibilityAttribute">
+                    <properties>
+                      <property name="Visibility" value="Hidden" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_ServerVersion()" attrib="2246" virtual="true" is-override="true" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="State" attrib="0" ptype="System.Data.ConnectionState">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="False" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DesignerSerializationVisibilityAttribute">
+                    <properties>
+                      <property name="Visibility" value="Hidden" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_State()" attrib="2246" virtual="true" is-override="true" returntype="System.Data.ConnectionState">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <events>
+              <event name="Commit" attrib="0" eventtype="Mono.Data.Sqlite.SQLiteCommitHandler" />
+              <event name="RollBack" attrib="0" eventtype="System.EventHandler" />
+              <event name="StateChange" attrib="0" eventtype="System.Data.StateChangeEventHandler" />
+              <event name="Update" attrib="0" eventtype="Mono.Data.Sqlite.SQLiteUpdateEventHandler" />
+            </events>
+            <methods>
+              <method name="BeginDbTransaction(System.Data.IsolationLevel)" attrib="196" virtual="true" is-override="true" returntype="System.Data.Common.DbTransaction">
+                <parameters>
+                  <parameter name="isolationLevel" position="0" attrib="0" type="System.Data.IsolationLevel" />
+                </parameters>
+              </method>
+              <method name="BeginTransaction()" attrib="134" returntype="Mono.Data.Sqlite.SqliteTransaction">
+                <parameters />
+              </method>
+              <method name="BeginTransaction(System.Boolean)" attrib="134" returntype="Mono.Data.Sqlite.SqliteTransaction">
+                <attributes>
+                  <attribute name="System.ObsoleteAttribute">
+                    <properties>
+                      <property name="Message" value="Use one of the standard BeginTransaction methods, this one will be removed soon" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="deferredLock" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="BeginTransaction(System.Data.IsolationLevel)" attrib="134" returntype="Mono.Data.Sqlite.SqliteTransaction">
+                <parameters>
+                  <parameter name="isolationLevel" position="0" attrib="0" type="System.Data.IsolationLevel" />
+                </parameters>
+              </method>
+              <method name="BeginTransaction(System.Data.IsolationLevel, System.Boolean)" attrib="134" returntype="Mono.Data.Sqlite.SqliteTransaction">
+                <attributes>
+                  <attribute name="System.ObsoleteAttribute">
+                    <properties>
+                      <property name="Message" value="Use one of the standard BeginTransaction methods, this one will be removed soon" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="isolationLevel" position="0" attrib="0" type="System.Data.IsolationLevel" />
+                  <parameter name="deferredLock" position="1" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="ChangeDatabase(System.String)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="databaseName" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="ChangePassword(System.Byte[])" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="newPassword" position="0" attrib="0" type="System.Byte[]" />
+                </parameters>
+              </method>
+              <method name="ChangePassword(System.String)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="newPassword" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="ClearAllPools()" attrib="150" static="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="ClearPool(Mono.Data.Sqlite.SqliteConnection)" attrib="150" static="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="connection" position="0" attrib="0" type="Mono.Data.Sqlite.SqliteConnection" />
+                </parameters>
+              </method>
+              <method name="Clone()" attrib="486" virtual="true" returntype="System.Object">
+                <parameters />
+              </method>
+              <method name="Close()" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="CreateCommand()" attrib="134" returntype="Mono.Data.Sqlite.SqliteCommand">
+                <parameters />
+              </method>
+              <method name="CreateDbCommand()" attrib="196" virtual="true" is-override="true" returntype="System.Data.Common.DbCommand">
+                <parameters />
+              </method>
+              <method name="CreateFile(System.String)" attrib="150" static="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="databaseFileName" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="EnlistTransaction(System.Transactions.Transaction)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="transaction" position="0" attrib="0" type="System.Transactions.Transaction" />
+                </parameters>
+              </method>
+              <method name="GetSchema()" attrib="198" virtual="true" is-override="true" returntype="System.Data.DataTable">
+                <parameters />
+              </method>
+              <method name="GetSchema(System.String)" attrib="198" virtual="true" is-override="true" returntype="System.Data.DataTable">
+                <parameters>
+                  <parameter name="collectionName" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="GetSchema(System.String, System.String[])" attrib="198" virtual="true" is-override="true" returntype="System.Data.DataTable">
+                <parameters>
+                  <parameter name="collectionName" position="0" attrib="0" type="System.String" />
+                  <parameter name="restrictionValues" position="1" attrib="0" type="System.String[]" />
+                </parameters>
+              </method>
+              <method name="Open()" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="SetConfig(Mono.Data.Sqlite.SQLiteConfig)" attrib="150" static="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="config" position="0" attrib="0" type="Mono.Data.Sqlite.SQLiteConfig" />
+                </parameters>
+              </method>
+              <method name="SetPassword(System.Byte[])" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="databasePassword" position="0" attrib="0" type="System.Byte[]" />
+                </parameters>
+              </method>
+              <method name="SetPassword(System.String)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="databasePassword" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="SqliteConnectionStringBuilder" type="class" base="System.Data.Common.DbConnectionStringBuilder" sealed="true" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.ComponentModel.DefaultPropertyAttribute">
+                <properties>
+                  <property name="Name" value="DataSource" />
+                </properties>
+              </attribute>
+              <attribute name="System.Reflection.DefaultMemberAttribute">
+                <properties>
+                  <property name="MemberName" value="Item" />
+                </properties>
+              </attribute>
+            </attributes>
+            <interfaces>
+              <interface name="System.Collections.ICollection" />
+              <interface name="System.Collections.IDictionary" />
+              <interface name="System.Collections.IEnumerable" />
+              <interface name="System.ComponentModel.ICustomTypeDescriptor" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="connectionString" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="BinaryGUID" attrib="0" ptype="System.Boolean">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="True" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="True" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_BinaryGUID()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_BinaryGUID(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="CacheSize" attrib="0" ptype="System.Int32">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="True" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="2000" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DisplayNameAttribute">
+                    <properties>
+                      <property name="DisplayNameValue" value="Cache Size" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_CacheSize()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                  <method name="set_CacheSize(System.Int32)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="DataSource" attrib="0" ptype="System.String">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="True" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DisplayNameAttribute">
+                    <properties>
+                      <property name="DisplayNameValue" value="Data Source" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_DataSource()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_DataSource(System.String)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="DateTimeFormat" attrib="0" ptype="Mono.Data.Sqlite.SQLiteDateFormats">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="True" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="ISO8601" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_DateTimeFormat()" attrib="2182" returntype="Mono.Data.Sqlite.SQLiteDateFormats">
+                    <parameters />
+                  </method>
+                  <method name="set_DateTimeFormat(Mono.Data.Sqlite.SQLiteDateFormats)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="Mono.Data.Sqlite.SQLiteDateFormats" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="DefaultIsolationLevel" attrib="0" ptype="System.Data.IsolationLevel">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="True" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="Serializable" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DisplayNameAttribute">
+                    <properties>
+                      <property name="DisplayNameValue" value="Default Isolation Level" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_DefaultIsolationLevel()" attrib="2182" returntype="System.Data.IsolationLevel">
+                    <parameters />
+                  </method>
+                  <method name="set_DefaultIsolationLevel(System.Data.IsolationLevel)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Data.IsolationLevel" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="DefaultTimeout" attrib="0" ptype="System.Int32">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="True" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="30" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DisplayNameAttribute">
+                    <properties>
+                      <property name="DisplayNameValue" value="Default Timeout" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_DefaultTimeout()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                  <method name="set_DefaultTimeout(System.Int32)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Enlist" attrib="0" ptype="System.Boolean">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="True" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="True" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_Enlist()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_Enlist(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="FailIfMissing" attrib="0" ptype="System.Boolean">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="True" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_FailIfMissing()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_FailIfMissing(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="JournalMode" attrib="0" ptype="Mono.Data.Sqlite.SQLiteJournalModeEnum">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="True" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="Delete" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DisplayNameAttribute">
+                    <properties>
+                      <property name="DisplayNameValue" value="Journal Mode" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_JournalMode()" attrib="2182" returntype="Mono.Data.Sqlite.SQLiteJournalModeEnum">
+                    <parameters />
+                  </method>
+                  <method name="set_JournalMode(Mono.Data.Sqlite.SQLiteJournalModeEnum)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="Mono.Data.Sqlite.SQLiteJournalModeEnum" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="LegacyFormat" attrib="0" ptype="System.Boolean">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="True" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="False" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DisplayNameAttribute">
+                    <properties>
+                      <property name="DisplayNameValue" value="Legacy Format" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_LegacyFormat()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_LegacyFormat(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="MaxPageCount" attrib="0" ptype="System.Int32">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="True" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="0" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DisplayNameAttribute">
+                    <properties>
+                      <property name="DisplayNameValue" value="Max Page Count" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_MaxPageCount()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                  <method name="set_MaxPageCount(System.Int32)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="PageSize" attrib="0" ptype="System.Int32">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="True" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="1024" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DisplayNameAttribute">
+                    <properties>
+                      <property name="DisplayNameValue" value="Page Size" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_PageSize()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                  <method name="set_PageSize(System.Int32)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Password" attrib="0" ptype="System.String">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="True" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.PasswordPropertyTextAttribute">
+                    <properties>
+                      <property name="Password" value="True" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_Password()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_Password(System.String)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Pooling" attrib="0" ptype="System.Boolean">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="True" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_Pooling()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_Pooling(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="ReadOnly" attrib="0" ptype="System.Boolean">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="True" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="False" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DisplayNameAttribute">
+                    <properties>
+                      <property name="DisplayNameValue" value="Read Only" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_ReadOnly()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_ReadOnly(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="SyncMode" attrib="0" ptype="Mono.Data.Sqlite.SynchronizationModes">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="True" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="Normal" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DisplayNameAttribute">
+                    <properties>
+                      <property name="DisplayNameValue" value="Synchronous" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_SyncMode()" attrib="2182" returntype="Mono.Data.Sqlite.SynchronizationModes">
+                    <parameters />
+                  </method>
+                  <method name="set_SyncMode(Mono.Data.Sqlite.SynchronizationModes)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="Mono.Data.Sqlite.SynchronizationModes" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Uri" attrib="0" ptype="System.String">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_Uri()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_Uri(System.String)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="UseUTF16Encoding" attrib="0" ptype="System.Boolean">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="True" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_UseUTF16Encoding()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_UseUTF16Encoding(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Version" attrib="0" ptype="System.Int32">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="True" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="3" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_Version()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                  <method name="set_Version(System.Int32)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="TryGetValue(System.String, out System.Object&amp;)" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="keyword" position="0" attrib="0" type="System.String" />
+                  <parameter name="value" position="1" attrib="2" type="System.Object" direction="out" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="SqliteConvert" type="class" base="System.Object" abstract="true" charset="Ansi" layout="Auto">
+            <fields>
+              <field name="UnixEpoch" attrib="52" fieldtype="System.DateTime" />
+            </fields>
+            <methods>
+              <method name="Split(System.String, System.Char)" attrib="150" static="true" returntype="System.String[]">
+                <parameters>
+                  <parameter name="source" position="0" attrib="0" type="System.String" />
+                  <parameter name="separator" position="1" attrib="0" type="System.Char" />
+                </parameters>
+              </method>
+              <method name="ToBoolean(System.Object)" attrib="150" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="source" position="0" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="ToBoolean(System.String)" attrib="150" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="source" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="ToDateTime(System.Double)" attrib="134" returntype="System.DateTime">
+                <parameters>
+                  <parameter name="julianDay" position="0" attrib="0" type="System.Double" />
+                </parameters>
+              </method>
+              <method name="ToDateTime(System.String)" attrib="134" returntype="System.DateTime">
+                <parameters>
+                  <parameter name="dateText" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="ToJulianDay(System.DateTime)" attrib="134" returntype="System.Double">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.DateTime" />
+                </parameters>
+              </method>
+              <method name="ToString(System.DateTime)" attrib="134" returntype="System.String">
+                <parameters>
+                  <parameter name="dateValue" position="0" attrib="0" type="System.DateTime" />
+                </parameters>
+              </method>
+              <method name="ToString(System.IntPtr, System.Int32)" attrib="454" virtual="true" returntype="System.String">
+                <parameters>
+                  <parameter name="nativestring" position="0" attrib="0" type="System.IntPtr" />
+                  <parameter name="nativestringlen" position="1" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="ToUTF8(System.DateTime)" attrib="134" returntype="System.Byte[]">
+                <parameters>
+                  <parameter name="dateTimeValue" position="0" attrib="0" type="System.DateTime" />
+                </parameters>
+              </method>
+              <method name="ToUTF8(System.String)" attrib="150" static="true" returntype="System.Byte[]">
+                <parameters>
+                  <parameter name="sourceText" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="UTF8ToString(System.IntPtr, System.Int32)" attrib="150" static="true" returntype="System.String">
+                <parameters>
+                  <parameter name="nativestring" position="0" attrib="0" type="System.IntPtr" />
+                  <parameter name="nativestringlen" position="1" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="SqliteDataAdapter" type="class" base="System.Data.Common.DbDataAdapter" sealed="true" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.ComponentModel.DefaultEventAttribute">
+                <properties>
+                  <property name="Name" value="RowUpdated" />
+                </properties>
+              </attribute>
+              <attribute name="System.ComponentModel.DesignerAttribute">
+                <properties>
+                  <property name="DesignerTypeName" value="Microsoft.VSDesigner.Data.VS.SqlDataAdapterDesigner, Microsoft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+                </properties>
+              </attribute>
+              <attribute name="System.ComponentModel.ToolboxItemAttribute">
+                <properties>
+                  <property name="ToolboxItemTypeName" value="SQLite.Designer.SqliteDataAdapterToolboxItem, SQLite.Designer, Version=1.0.36.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139" />
+                </properties>
+              </attribute>
+            </attributes>
+            <interfaces>
+              <interface name="System.ComponentModel.IComponent" />
+              <interface name="System.Data.IDataAdapter" />
+              <interface name="System.Data.IDbDataAdapter" />
+              <interface name="System.ICloneable" />
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(Mono.Data.Sqlite.SqliteCommand)" attrib="6278">
+                <parameters>
+                  <parameter name="cmd" position="0" attrib="0" type="Mono.Data.Sqlite.SqliteCommand" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, Mono.Data.Sqlite.SqliteConnection)" attrib="6278">
+                <parameters>
+                  <parameter name="commandText" position="0" attrib="0" type="System.String" />
+                  <parameter name="connection" position="1" attrib="0" type="Mono.Data.Sqlite.SqliteConnection" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="commandText" position="0" attrib="0" type="System.String" />
+                  <parameter name="connectionString" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="DeleteCommand" attrib="0" ptype="Mono.Data.Sqlite.SqliteCommand">
+                <attributes>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="null" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.EditorAttribute">
+                    <properties>
+                      <property name="EditorBaseTypeName" value="System.Drawing.Design.UITypeEditor, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+                      <property name="EditorTypeName" value="Microsoft.VSDesigner.Data.Design.DBCommandEditor, Microsoft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_DeleteCommand()" attrib="2182" returntype="Mono.Data.Sqlite.SqliteCommand">
+                    <parameters />
+                  </method>
+                  <method name="set_DeleteCommand(Mono.Data.Sqlite.SqliteCommand)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="Mono.Data.Sqlite.SqliteCommand" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="InsertCommand" attrib="0" ptype="Mono.Data.Sqlite.SqliteCommand">
+                <attributes>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="null" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.EditorAttribute">
+                    <properties>
+                      <property name="EditorBaseTypeName" value="System.Drawing.Design.UITypeEditor, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+                      <property name="EditorTypeName" value="Microsoft.VSDesigner.Data.Design.DBCommandEditor, Microsoft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_InsertCommand()" attrib="2182" returntype="Mono.Data.Sqlite.SqliteCommand">
+                    <parameters />
+                  </method>
+                  <method name="set_InsertCommand(Mono.Data.Sqlite.SqliteCommand)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="Mono.Data.Sqlite.SqliteCommand" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="SelectCommand" attrib="0" ptype="Mono.Data.Sqlite.SqliteCommand">
+                <attributes>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="null" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.EditorAttribute">
+                    <properties>
+                      <property name="EditorBaseTypeName" value="System.Drawing.Design.UITypeEditor, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+                      <property name="EditorTypeName" value="Microsoft.VSDesigner.Data.Design.DBCommandEditor, Microsoft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_SelectCommand()" attrib="2182" returntype="Mono.Data.Sqlite.SqliteCommand">
+                    <parameters />
+                  </method>
+                  <method name="set_SelectCommand(Mono.Data.Sqlite.SqliteCommand)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="Mono.Data.Sqlite.SqliteCommand" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="UpdateCommand" attrib="0" ptype="Mono.Data.Sqlite.SqliteCommand">
+                <attributes>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="null" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.EditorAttribute">
+                    <properties>
+                      <property name="EditorBaseTypeName" value="System.Drawing.Design.UITypeEditor, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+                      <property name="EditorTypeName" value="Microsoft.VSDesigner.Data.Design.DBCommandEditor, Microsoft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_UpdateCommand()" attrib="2182" returntype="Mono.Data.Sqlite.SqliteCommand">
+                    <parameters />
+                  </method>
+                  <method name="set_UpdateCommand(Mono.Data.Sqlite.SqliteCommand)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="Mono.Data.Sqlite.SqliteCommand" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <events>
+              <event name="RowUpdated" attrib="0" eventtype="System.EventHandler`1[System.Data.Common.RowUpdatedEventArgs]" />
+              <event name="RowUpdating" attrib="0" eventtype="System.EventHandler`1[System.Data.Common.RowUpdatingEventArgs]" />
+            </events>
+            <methods>
+              <method name="OnRowUpdated(System.Data.Common.RowUpdatedEventArgs)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Data.Common.RowUpdatedEventArgs" />
+                </parameters>
+              </method>
+              <method name="OnRowUpdating(System.Data.Common.RowUpdatingEventArgs)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Data.Common.RowUpdatingEventArgs" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="SqliteDataReader" type="class" base="System.Data.Common.DbDataReader" sealed="true" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.Reflection.DefaultMemberAttribute">
+                <properties>
+                  <property name="MemberName" value="Item" />
+                </properties>
+              </attribute>
+            </attributes>
+            <interfaces>
+              <interface name="System.Collections.IEnumerable" />
+              <interface name="System.Data.IDataReader" />
+              <interface name="System.Data.IDataRecord" />
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <properties>
+              <property name="Depth" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_Depth()" attrib="2246" virtual="true" is-override="true" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="FieldCount" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_FieldCount()" attrib="2246" virtual="true" is-override="true" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="HasRows" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_HasRows()" attrib="2246" virtual="true" is-override="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IsClosed" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsClosed()" attrib="2246" virtual="true" is-override="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Item" attrib="0" ptype="System.Object" params="System.Int32">
+                <methods>
+                  <method name="get_Item(System.Int32)" attrib="2246" virtual="true" is-override="true" returntype="System.Object">
+                    <parameters>
+                      <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Item" attrib="0" ptype="System.Object" params="System.String">
+                <methods>
+                  <method name="get_Item(System.String)" attrib="2246" virtual="true" is-override="true" returntype="System.Object">
+                    <parameters>
+                      <parameter name="name" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="RecordsAffected" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_RecordsAffected()" attrib="2246" virtual="true" is-override="true" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="VisibleFieldCount" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_VisibleFieldCount()" attrib="2246" virtual="true" is-override="true" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Close()" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="GetBoolean(System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetByte(System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.Byte">
+                <parameters>
+                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetBytes(System.Int32, System.Int64, System.Byte[], System.Int32, System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.Int64">
+                <parameters>
+                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="fieldOffset" position="1" attrib="0" type="System.Int64" />
+                  <parameter name="buffer" position="2" attrib="0" type="System.Byte[]" />
+                  <parameter name="bufferoffset" position="3" attrib="0" type="System.Int32" />
+                  <parameter name="length" position="4" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetChar(System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.Char">
+                <parameters>
+                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetChars(System.Int32, System.Int64, System.Char[], System.Int32, System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.Int64">
+                <parameters>
+                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="fieldoffset" position="1" attrib="0" type="System.Int64" />
+                  <parameter name="buffer" position="2" attrib="0" type="System.Char[]" />
+                  <parameter name="bufferoffset" position="3" attrib="0" type="System.Int32" />
+                  <parameter name="length" position="4" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetDataTypeName(System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.String">
+                <parameters>
+                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetDateTime(System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.DateTime">
+                <parameters>
+                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetDecimal(System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.Decimal">
+                <parameters>
+                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetDouble(System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.Double">
+                <parameters>
+                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetEnumerator()" attrib="198" virtual="true" is-override="true" returntype="System.Collections.IEnumerator">
+                <parameters />
+              </method>
+              <method name="GetFieldType(System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.Type">
+                <parameters>
+                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetFloat(System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.Single">
+                <parameters>
+                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetGuid(System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.Guid">
+                <parameters>
+                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetInt16(System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.Int16">
+                <parameters>
+                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetInt32(System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
+                <parameters>
+                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetInt64(System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.Int64">
+                <parameters>
+                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetName(System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.String">
+                <parameters>
+                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetOrdinal(System.String)" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
+                <parameters>
+                  <parameter name="name" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="GetSchemaTable()" attrib="198" virtual="true" is-override="true" returntype="System.Data.DataTable">
+                <parameters />
+              </method>
+              <method name="GetString(System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.String">
+                <parameters>
+                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetValue(System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.Object">
+                <parameters>
+                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetValues(System.Object[])" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
+                <parameters>
+                  <parameter name="values" position="0" attrib="0" type="System.Object[]" />
+                </parameters>
+              </method>
+              <method name="IsDBNull(System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="NextResult()" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
+                <parameters />
+              </method>
+              <method name="Read()" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="SqliteDataSourceEnumerator" type="class" base="System.Data.Common.DbDataSourceEnumerator" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="GetDataSources()" attrib="198" virtual="true" is-override="true" returntype="System.Data.DataTable">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="SqliteException" type="class" base="System.Data.Common.DbException" sealed="true" serializable="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.Runtime.Serialization.ISerializable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Int32, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="errorCode" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="extendedInformation" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Exception)" attrib="6278">
+                <parameters>
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
+                  <parameter name="innerException" position="1" attrib="0" type="System.Exception" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="ErrorCode" attrib="0" ptype="Mono.Data.Sqlite.SQLiteErrorCode">
+                <methods>
+                  <method name="get_ErrorCode()" attrib="2182" returntype="Mono.Data.Sqlite.SQLiteErrorCode">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+          </class>
+          <class name="SqliteFactory" type="class" base="System.Data.Common.DbProviderFactory" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IServiceProvider" />
+            </interfaces>
+            <fields>
+              <field name="Instance" attrib="54" fieldtype="Mono.Data.Sqlite.SqliteFactory" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="CreateCommand()" attrib="198" virtual="true" is-override="true" returntype="System.Data.Common.DbCommand">
+                <parameters />
+              </method>
+              <method name="CreateCommandBuilder()" attrib="198" virtual="true" is-override="true" returntype="System.Data.Common.DbCommandBuilder">
+                <parameters />
+              </method>
+              <method name="CreateConnection()" attrib="198" virtual="true" is-override="true" returntype="System.Data.Common.DbConnection">
+                <parameters />
+              </method>
+              <method name="CreateConnectionStringBuilder()" attrib="198" virtual="true" is-override="true" returntype="System.Data.Common.DbConnectionStringBuilder">
+                <parameters />
+              </method>
+              <method name="CreateDataAdapter()" attrib="198" virtual="true" is-override="true" returntype="System.Data.Common.DbDataAdapter">
+                <parameters />
+              </method>
+              <method name="CreateParameter()" attrib="198" virtual="true" is-override="true" returntype="System.Data.Common.DbParameter">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="SqliteFunction" type="class" base="System.Object" abstract="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6276">
+                <parameters />
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="SqliteConvert" attrib="0" ptype="Mono.Data.Sqlite.SqliteConvert">
+                <methods>
+                  <method name="get_SqliteConvert()" attrib="2182" returntype="Mono.Data.Sqlite.SqliteConvert">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Compare(System.String, System.String)" attrib="454" virtual="true" returntype="System.Int32">
+                <parameters>
+                  <parameter name="param1" position="0" attrib="0" type="System.String" />
+                  <parameter name="param2" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="Dispose()" attrib="486" virtual="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="Dispose(System.Boolean)" attrib="452" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="Final(System.Object)" attrib="454" virtual="true" returntype="System.Object">
+                <parameters>
+                  <parameter name="contextData" position="0" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="Invoke(System.Object[])" attrib="454" virtual="true" returntype="System.Object">
+                <parameters>
+                  <parameter name="args" position="0" attrib="0" type="System.Object[]" />
+                </parameters>
+              </method>
+              <method name="RegisterFunction(System.Type)" attrib="150" static="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="typ" position="0" attrib="0" type="System.Type" />
+                </parameters>
+              </method>
+              <method name="Step(System.Object[], System.Int32, System.Object&amp;)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="args" position="0" attrib="0" type="System.Object[]" />
+                  <parameter name="stepNumber" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="contextData" position="2" attrib="0" type="System.Object" direction="ref" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="SqliteFunctionAttribute" type="class" base="System.Attribute" sealed="true" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.AttributeUsageAttribute">
+                <properties>
+                  <property name="Inherited" value="False" />
+                  <property name="AllowMultiple" value="True" />
+                  <property name="ValidOn" value="Class" />
+                </properties>
+              </attribute>
+            </attributes>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Arguments" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_Arguments()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                  <method name="set_Arguments(System.Int32)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="FuncType" attrib="0" ptype="Mono.Data.Sqlite.FunctionType">
+                <methods>
+                  <method name="get_FuncType()" attrib="2182" returntype="Mono.Data.Sqlite.FunctionType">
+                    <parameters />
+                  </method>
+                  <method name="set_FuncType(Mono.Data.Sqlite.FunctionType)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="Mono.Data.Sqlite.FunctionType" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Name" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Name()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_Name(System.String)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+          </class>
+          <class name="SqliteFunctionEx" type="class" base="Mono.Data.Sqlite.SqliteFunction" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="GetCollationSequence()" attrib="132" returntype="Mono.Data.Sqlite.CollationSequence">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="SqliteMetaDataCollectionNames" type="class" base="System.Object" sealed="true" abstract="true" charset="Ansi" layout="Auto">
+            <fields>
+              <field name="Catalogs" attrib="54" fieldtype="System.String" />
+              <field name="Columns" attrib="54" fieldtype="System.String" />
+              <field name="ForeignKeys" attrib="54" fieldtype="System.String" />
+              <field name="IndexColumns" attrib="54" fieldtype="System.String" />
+              <field name="Indexes" attrib="54" fieldtype="System.String" />
+              <field name="Tables" attrib="54" fieldtype="System.String" />
+              <field name="Triggers" attrib="54" fieldtype="System.String" />
+              <field name="ViewColumns" attrib="54" fieldtype="System.String" />
+              <field name="Views" attrib="54" fieldtype="System.String" />
+            </fields>
+          </class>
+          <class name="SqliteParameter" type="class" base="System.Data.Common.DbParameter" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.Data.IDataParameter" />
+              <interface name="System.Data.IDbDataParameter" />
+              <interface name="System.ICloneable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.Data.DbType)" attrib="6278">
+                <parameters>
+                  <parameter name="dbType" position="0" attrib="0" type="System.Data.DbType" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="parameterName" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Data.DbType, System.Int32)" attrib="6278">
+                <parameters>
+                  <parameter name="parameterType" position="0" attrib="0" type="System.Data.DbType" />
+                  <parameter name="parameterSize" position="1" attrib="0" type="System.Int32" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Data.DbType, System.Object)" attrib="6278">
+                <parameters>
+                  <parameter name="dbType" position="0" attrib="0" type="System.Data.DbType" />
+                  <parameter name="value" position="1" attrib="0" type="System.Object" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Data.DbType, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="dbType" position="0" attrib="0" type="System.Data.DbType" />
+                  <parameter name="sourceColumn" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Data.DbType)" attrib="6278">
+                <parameters>
+                  <parameter name="parameterName" position="0" attrib="0" type="System.String" />
+                  <parameter name="dbType" position="1" attrib="0" type="System.Data.DbType" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Object)" attrib="6278">
+                <parameters>
+                  <parameter name="parameterName" position="0" attrib="0" type="System.String" />
+                  <parameter name="value" position="1" attrib="0" type="System.Object" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Data.DbType, System.Int32, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="parameterType" position="0" attrib="0" type="System.Data.DbType" />
+                  <parameter name="parameterSize" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="sourceColumn" position="2" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Data.DbType, System.String, System.Data.DataRowVersion)" attrib="6278">
+                <parameters>
+                  <parameter name="dbType" position="0" attrib="0" type="System.Data.DbType" />
+                  <parameter name="sourceColumn" position="1" attrib="0" type="System.String" />
+                  <parameter name="rowVersion" position="2" attrib="0" type="System.Data.DataRowVersion" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Data.DbType, System.Int32)" attrib="6278">
+                <parameters>
+                  <parameter name="parameterName" position="0" attrib="0" type="System.String" />
+                  <parameter name="parameterType" position="1" attrib="0" type="System.Data.DbType" />
+                  <parameter name="parameterSize" position="2" attrib="0" type="System.Int32" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Data.DbType, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="parameterName" position="0" attrib="0" type="System.String" />
+                  <parameter name="dbType" position="1" attrib="0" type="System.Data.DbType" />
+                  <parameter name="sourceColumn" position="2" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Data.DbType, System.Int32, System.String, System.Data.DataRowVersion)" attrib="6278">
+                <parameters>
+                  <parameter name="parameterType" position="0" attrib="0" type="System.Data.DbType" />
+                  <parameter name="parameterSize" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="sourceColumn" position="2" attrib="0" type="System.String" />
+                  <parameter name="rowVersion" position="3" attrib="0" type="System.Data.DataRowVersion" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Data.DbType, System.Int32, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="parameterName" position="0" attrib="0" type="System.String" />
+                  <parameter name="parameterType" position="1" attrib="0" type="System.Data.DbType" />
+                  <parameter name="parameterSize" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="sourceColumn" position="3" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Data.DbType, System.String, System.Data.DataRowVersion)" attrib="6278">
+                <parameters>
+                  <parameter name="parameterName" position="0" attrib="0" type="System.String" />
+                  <parameter name="dbType" position="1" attrib="0" type="System.Data.DbType" />
+                  <parameter name="sourceColumn" position="2" attrib="0" type="System.String" />
+                  <parameter name="rowVersion" position="3" attrib="0" type="System.Data.DataRowVersion" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Data.DbType, System.Int32, System.String, System.Data.DataRowVersion)" attrib="6278">
+                <parameters>
+                  <parameter name="parameterName" position="0" attrib="0" type="System.String" />
+                  <parameter name="parameterType" position="1" attrib="0" type="System.Data.DbType" />
+                  <parameter name="parameterSize" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="sourceColumn" position="3" attrib="0" type="System.String" />
+                  <parameter name="rowVersion" position="4" attrib="0" type="System.Data.DataRowVersion" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Data.DbType, System.Int32, System.Data.ParameterDirection, System.Boolean, System.Byte, System.Byte, System.String, System.Data.DataRowVersion, System.Object)" attrib="6278">
+                <attributes>
+                  <attribute name="System.ComponentModel.EditorBrowsableAttribute">
+                    <properties>
+                      <property name="State" value="Advanced" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="parameterName" position="0" attrib="0" type="System.String" />
+                  <parameter name="parameterType" position="1" attrib="0" type="System.Data.DbType" />
+                  <parameter name="parameterSize" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="direction" position="3" attrib="0" type="System.Data.ParameterDirection" />
+                  <parameter name="isNullable" position="4" attrib="0" type="System.Boolean" />
+                  <parameter name="precision" position="5" attrib="0" type="System.Byte" />
+                  <parameter name="scale" position="6" attrib="0" type="System.Byte" />
+                  <parameter name="sourceColumn" position="7" attrib="0" type="System.String" />
+                  <parameter name="rowVersion" position="8" attrib="0" type="System.Data.DataRowVersion" />
+                  <parameter name="value" position="9" attrib="0" type="System.Object" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Data.DbType, System.Int32, System.Data.ParameterDirection, System.Byte, System.Byte, System.String, System.Data.DataRowVersion, System.Boolean, System.Object)" attrib="6278">
+                <attributes>
+                  <attribute name="System.ComponentModel.EditorBrowsableAttribute">
+                    <properties>
+                      <property name="State" value="Advanced" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="parameterName" position="0" attrib="0" type="System.String" />
+                  <parameter name="parameterType" position="1" attrib="0" type="System.Data.DbType" />
+                  <parameter name="parameterSize" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="direction" position="3" attrib="0" type="System.Data.ParameterDirection" />
+                  <parameter name="precision" position="4" attrib="0" type="System.Byte" />
+                  <parameter name="scale" position="5" attrib="0" type="System.Byte" />
+                  <parameter name="sourceColumn" position="6" attrib="0" type="System.String" />
+                  <parameter name="rowVersion" position="7" attrib="0" type="System.Data.DataRowVersion" />
+                  <parameter name="sourceColumnNullMapping" position="8" attrib="0" type="System.Boolean" />
+                  <parameter name="value" position="9" attrib="0" type="System.Object" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="DbType" attrib="0" ptype="System.Data.DbType">
+                <attributes>
+                  <attribute name="System.ComponentModel.RefreshPropertiesAttribute">
+                    <properties>
+                      <property name="RefreshProperties" value="All" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.Data.Common.DbProviderSpecificTypePropertyAttribute">
+                    <properties>
+                      <property name="IsProviderSpecificTypeProperty" value="True" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_DbType()" attrib="2246" virtual="true" is-override="true" returntype="System.Data.DbType">
+                    <parameters />
+                  </method>
+                  <method name="set_DbType(System.Data.DbType)" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Data.DbType" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Direction" attrib="0" ptype="System.Data.ParameterDirection">
+                <methods>
+                  <method name="get_Direction()" attrib="2246" virtual="true" is-override="true" returntype="System.Data.ParameterDirection">
+                    <parameters />
+                  </method>
+                  <method name="set_Direction(System.Data.ParameterDirection)" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Data.ParameterDirection" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="IsNullable" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsNullable()" attrib="2246" virtual="true" is-override="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_IsNullable(System.Boolean)" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="ParameterName" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_ParameterName()" attrib="2246" virtual="true" is-override="true" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_ParameterName(System.String)" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Size" attrib="0" ptype="System.Int32">
+                <attributes>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="0" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_Size()" attrib="2246" virtual="true" is-override="true" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                  <method name="set_Size(System.Int32)" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="SourceColumn" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_SourceColumn()" attrib="2246" virtual="true" is-override="true" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_SourceColumn(System.String)" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="SourceColumnNullMapping" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_SourceColumnNullMapping()" attrib="2246" virtual="true" is-override="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_SourceColumnNullMapping(System.Boolean)" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="SourceVersion" attrib="0" ptype="System.Data.DataRowVersion">
+                <methods>
+                  <method name="get_SourceVersion()" attrib="2246" virtual="true" is-override="true" returntype="System.Data.DataRowVersion">
+                    <parameters />
+                  </method>
+                  <method name="set_SourceVersion(System.Data.DataRowVersion)" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Data.DataRowVersion" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Value" attrib="0" ptype="System.Object">
+                <attributes>
+                  <attribute name="System.ComponentModel.RefreshPropertiesAttribute">
+                    <properties>
+                      <property name="RefreshProperties" value="All" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.TypeConverterAttribute">
+                    <properties>
+                      <property name="ConverterTypeName" value="System.ComponentModel.StringConverter" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_Value()" attrib="2246" virtual="true" is-override="true" returntype="System.Object">
+                    <parameters />
+                  </method>
+                  <method name="set_Value(System.Object)" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Object" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Clone()" attrib="486" virtual="true" returntype="System.Object">
+                <parameters />
+              </method>
+              <method name="ResetDbType()" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="SqliteParameterCollection" type="class" base="System.Data.Common.DbParameterCollection" sealed="true" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.ComponentModel.EditorAttribute">
+                <properties>
+                  <property name="EditorBaseTypeName" value="System.Drawing.Design.UITypeEditor, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+                  <property name="EditorTypeName" value="Microsoft.VSDesigner.Data.Design.DBParametersEditor, Microsoft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+                </properties>
+              </attribute>
+              <attribute name="System.ComponentModel.ListBindableAttribute">
+                <properties>
+                  <property name="ListBindable" value="False" />
+                </properties>
+              </attribute>
+              <attribute name="System.Reflection.DefaultMemberAttribute">
+                <properties>
+                  <property name="MemberName" value="Item" />
+                </properties>
+              </attribute>
+            </attributes>
+            <interfaces>
+              <interface name="System.Collections.ICollection" />
+              <interface name="System.Collections.IEnumerable" />
+              <interface name="System.Collections.IList" />
+              <interface name="System.Data.IDataParameterCollection" />
+            </interfaces>
+            <properties>
+              <property name="Count" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_Count()" attrib="2246" virtual="true" is-override="true" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IsFixedSize" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsFixedSize()" attrib="2246" virtual="true" is-override="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IsReadOnly" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsReadOnly()" attrib="2246" virtual="true" is-override="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IsSynchronized" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsSynchronized()" attrib="2246" virtual="true" is-override="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Item" attrib="0" ptype="Mono.Data.Sqlite.SqliteParameter" params="System.Int32">
+                <methods>
+                  <method name="get_Item(System.Int32)" attrib="2182" returntype="Mono.Data.Sqlite.SqliteParameter">
+                    <parameters>
+                      <parameter name="index" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                  <method name="set_Item(System.Int32, Mono.Data.Sqlite.SqliteParameter)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="index" position="0" attrib="0" type="System.Int32" />
+                      <parameter name="value" position="1" attrib="0" type="Mono.Data.Sqlite.SqliteParameter" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Item" attrib="0" ptype="Mono.Data.Sqlite.SqliteParameter" params="System.String">
+                <methods>
+                  <method name="get_Item(System.String)" attrib="2182" returntype="Mono.Data.Sqlite.SqliteParameter">
+                    <parameters>
+                      <parameter name="parameterName" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                  <method name="set_Item(System.String, Mono.Data.Sqlite.SqliteParameter)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="parameterName" position="0" attrib="0" type="System.String" />
+                      <parameter name="value" position="1" attrib="0" type="Mono.Data.Sqlite.SqliteParameter" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="SyncRoot" attrib="0" ptype="System.Object">
+                <methods>
+                  <method name="get_SyncRoot()" attrib="2246" virtual="true" is-override="true" returntype="System.Object">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Add(Mono.Data.Sqlite.SqliteParameter)" attrib="134" returntype="System.Int32">
+                <parameters>
+                  <parameter name="parameter" position="0" attrib="0" type="Mono.Data.Sqlite.SqliteParameter" />
+                </parameters>
+              </method>
+              <method name="Add(System.Object)" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
+                <attributes>
+                  <attribute name="System.ComponentModel.EditorBrowsableAttribute">
+                    <properties>
+                      <property name="State" value="Never" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="Add(System.String, System.Data.DbType)" attrib="134" returntype="Mono.Data.Sqlite.SqliteParameter">
+                <parameters>
+                  <parameter name="parameterName" position="0" attrib="0" type="System.String" />
+                  <parameter name="parameterType" position="1" attrib="0" type="System.Data.DbType" />
+                </parameters>
+              </method>
+              <method name="Add(System.String, System.Data.DbType, System.Int32)" attrib="134" returntype="Mono.Data.Sqlite.SqliteParameter">
+                <parameters>
+                  <parameter name="parameterName" position="0" attrib="0" type="System.String" />
+                  <parameter name="parameterType" position="1" attrib="0" type="System.Data.DbType" />
+                  <parameter name="parameterSize" position="2" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="Add(System.String, System.Data.DbType, System.Int32, System.String)" attrib="134" returntype="Mono.Data.Sqlite.SqliteParameter">
+                <parameters>
+                  <parameter name="parameterName" position="0" attrib="0" type="System.String" />
+                  <parameter name="parameterType" position="1" attrib="0" type="System.Data.DbType" />
+                  <parameter name="parameterSize" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="sourceColumn" position="3" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="AddRange(Mono.Data.Sqlite.SqliteParameter[])" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="values" position="0" attrib="0" type="Mono.Data.Sqlite.SqliteParameter[]" />
+                </parameters>
+              </method>
+              <method name="AddRange(System.Array)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="values" position="0" attrib="0" type="System.Array" />
+                </parameters>
+              </method>
+              <method name="AddWithValue(System.String, System.Object)" attrib="134" returntype="Mono.Data.Sqlite.SqliteParameter">
+                <parameters>
+                  <parameter name="parameterName" position="0" attrib="0" type="System.String" />
+                  <parameter name="value" position="1" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="Clear()" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="Contains(System.Object)" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="Contains(System.String)" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="parameterName" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="CopyTo(System.Array, System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="array" position="0" attrib="0" type="System.Array" />
+                  <parameter name="index" position="1" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetEnumerator()" attrib="198" virtual="true" is-override="true" returntype="System.Collections.IEnumerator">
+                <parameters />
+              </method>
+              <method name="GetParameter(System.Int32)" attrib="196" virtual="true" is-override="true" returntype="System.Data.Common.DbParameter">
+                <parameters>
+                  <parameter name="index" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetParameter(System.String)" attrib="196" virtual="true" is-override="true" returntype="System.Data.Common.DbParameter">
+                <parameters>
+                  <parameter name="parameterName" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="IndexOf(System.Object)" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="IndexOf(System.String)" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
+                <parameters>
+                  <parameter name="parameterName" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="Insert(System.Int32, System.Object)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="index" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="Remove(System.Object)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="RemoveAt(System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="index" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="RemoveAt(System.String)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="parameterName" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="SetParameter(System.Int32, System.Data.Common.DbParameter)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="index" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.Data.Common.DbParameter" />
+                </parameters>
+              </method>
+              <method name="SetParameter(System.String, System.Data.Common.DbParameter)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="parameterName" position="0" attrib="0" type="System.String" />
+                  <parameter name="value" position="1" attrib="0" type="System.Data.Common.DbParameter" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="SqliteTransaction" type="class" base="System.Data.Common.DbTransaction" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.Data.IDbTransaction" />
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <properties>
+              <property name="Connection" attrib="0" ptype="Mono.Data.Sqlite.SqliteConnection">
+                <methods>
+                  <method name="get_Connection()" attrib="2182" returntype="Mono.Data.Sqlite.SqliteConnection">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="DbConnection" attrib="0" ptype="System.Data.Common.DbConnection">
+                <methods>
+                  <method name="get_DbConnection()" attrib="2244" virtual="true" is-override="true" returntype="System.Data.Common.DbConnection">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IsolationLevel" attrib="0" ptype="System.Data.IsolationLevel">
+                <methods>
+                  <method name="get_IsolationLevel()" attrib="2246" virtual="true" is-override="true" returntype="System.Data.IsolationLevel">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Commit()" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="Rollback()" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="SynchronizationModes" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="Full" attrib="32854" fieldtype="Mono.Data.Sqlite.SynchronizationModes" value="1" />
+              <field name="Normal" attrib="32854" fieldtype="Mono.Data.Sqlite.SynchronizationModes" value="0" />
+              <field name="Off" attrib="32854" fieldtype="Mono.Data.Sqlite.SynchronizationModes" value="2" />
+            </fields>
+          </class>
+          <class name="TypeAffinity" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="Blob" attrib="32854" fieldtype="Mono.Data.Sqlite.TypeAffinity" value="4" />
+              <field name="DateTime" attrib="32854" fieldtype="Mono.Data.Sqlite.TypeAffinity" value="10" />
+              <field name="Double" attrib="32854" fieldtype="Mono.Data.Sqlite.TypeAffinity" value="2" />
+              <field name="Int64" attrib="32854" fieldtype="Mono.Data.Sqlite.TypeAffinity" value="1" />
+              <field name="None" attrib="32854" fieldtype="Mono.Data.Sqlite.TypeAffinity" value="11" />
+              <field name="Null" attrib="32854" fieldtype="Mono.Data.Sqlite.TypeAffinity" value="5" />
+              <field name="Text" attrib="32854" fieldtype="Mono.Data.Sqlite.TypeAffinity" value="3" />
+              <field name="Uninitialized" attrib="32854" fieldtype="Mono.Data.Sqlite.TypeAffinity" value="0" />
+            </fields>
+          </class>
+          <class name="UpdateEventArgs" type="class" base="System.EventArgs" charset="Ansi" layout="Auto">
+            <fields>
+              <field name="Database" attrib="38" fieldtype="System.String" />
+              <field name="Event" attrib="38" fieldtype="Mono.Data.Sqlite.UpdateEventType" />
+              <field name="RowId" attrib="38" fieldtype="System.Int64" />
+              <field name="Table" attrib="38" fieldtype="System.String" />
+            </fields>
+          </class>
+          <class name="UpdateEventType" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="Delete" attrib="32854" fieldtype="Mono.Data.Sqlite.UpdateEventType" value="9" />
+              <field name="Insert" attrib="32854" fieldtype="Mono.Data.Sqlite.UpdateEventType" value="18" />
+              <field name="Update" attrib="32854" fieldtype="Mono.Data.Sqlite.UpdateEventType" value="23" />
+            </fields>
+          </class>
+        </classes>
+      </namespace>
+    </namespaces>
+  </assembly>
+</assemblies>

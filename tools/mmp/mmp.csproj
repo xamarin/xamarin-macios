@@ -146,6 +146,12 @@
     <Compile Include="..\..\external\mono\external\linker\linker\Linker\TypePreserve.cs">
       <Link>Linker\TypePreserve.cs</Link>
     </Compile>
+        <Compile Include="..\..\external\mono\external\linker\linker\Linker\AssemblyUtilities.cs">
+      <Link>Linker\AssemblyUtilities.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\TypeNameParser.cs">
+      <Link>Linker\TypeNameParser.cs</Link>
+    </Compile>
     <Compile Include="..\..\external\mono\external\linker\linker\Linker\XApiReader.cs">
       <Link>Linker\XApiReader.cs</Link>
     </Compile>
@@ -385,10 +391,6 @@
   <ItemGroup>
     <EmbeddedResource Include="config">
       <LogicalName>config</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="linker\Descriptors\mscorlib.xml">
-      <Link>Resources\mscorlib.xml</Link>
-      <LogicalName>mscorlib.xml</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="config_mobile">
       <LogicalName>config_mobile</LogicalName>
