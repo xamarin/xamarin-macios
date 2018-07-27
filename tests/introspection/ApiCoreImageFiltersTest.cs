@@ -66,11 +66,9 @@ namespace Introspection {
 			//  NSUnknownKeyException [<CIDepthOfField 0x158586970> valueForUndefinedKey:]: this class is not key value coding-compliant for the key inputPoint2.
 			case "CIDepthOfField":
 				return true;
-			// FIXME: Remove if fixed.  Doesn't appear to exist in El Capitan.  Reported in radar #22099780
-//			case "CIMaskedVariableBlur":
-//			cd ..	return true;
-			case "CISaliencyMapFilter": // Appears in 10.14/iOS 12 but not documented
-				return true;
+			// Apple does **not** document filters as API (like we do)
+			// uncomment calls to `GenerateBinding` to use introspection code to generate the skeleton binding code and complete it
+			// e.g. picking better types like `bool` instead of `NSNumber'
 			default:
  				return false;
 			}
