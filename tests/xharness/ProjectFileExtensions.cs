@@ -848,11 +848,8 @@ namespace xharness
 					// entries after index 2 is a list of values to filter the attribute value against.
 					var found = kvp.Length == 2;
 					var skipLogicalName = kvp.Length > 2;
-					for (var i = 2; i < kvp.Length; i++) {
-						if (a.Value.Contains ("Sync"))
-							Console.WriteLine ("STOP");
+					for (var i = 2; i < kvp.Length; i++)
 						found |= a.Value == kvp [i];
-					}
 					if (!found)
 						continue;
 					
