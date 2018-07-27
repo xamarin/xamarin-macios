@@ -796,7 +796,6 @@ namespace xharness
 				new string [] { "ObjcBindingCoreSource", "Include" },
 				new string [] { "ObjcBindingNativeLibrary", "Include" },
 				new string [] { "ObjcBindingNativeFramework", "Include" },
-				new string [] { "Import", "Project" },
 				new string [] { "FilesToCopy", "Include" },
 				new string [] { "FilesToCopyFoo", "Include" },
 				new string [] { "FilesToCopyFooBar", "Include" },
