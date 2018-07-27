@@ -1,9 +1,0 @@
-!missing-enum! PKAddPaymentPassStyle not bound
-!missing-selector! PKAddPaymentPassRequestConfiguration::setStyle: not bound
-!missing-selector! PKAddPaymentPassRequestConfiguration::style not bound
-!missing-selector! PKPaymentButton::cornerRadius not bound
-!missing-selector! PKPaymentButton::setCornerRadius: not bound
-## appended from unclassified file
-!missing-field! PKPaymentNetworkElectron not bound
-!missing-field! PKPaymentNetworkMaestro not bound
-!missing-field! PKPaymentNetworkVPay not bound

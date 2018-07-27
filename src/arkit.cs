@@ -67,6 +67,7 @@ namespace ARKit {
 		InvalidWorldMap = 302,
 		InvalidConfiguration = 303,
 		InsufficientFeatures = 400,
+		ObjectMergeFailed = 401,
 		FileIOFailed = 500,
 	}
 
@@ -169,6 +170,11 @@ namespace ARKit {
 		[Export ("initWithName:transform:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		IntPtr Constructor (string name, Matrix4 transform);
+
+		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
+		[iOS (12,0)]
+		[Export ("initWithAnchor:")]
+		IntPtr Constructor (ARAnchor anchor);
 	}
 
 	[iOS (11,0)]
@@ -321,6 +327,10 @@ namespace ARKit {
 	[BaseType (typeof (ARAnchor))]
 	[DisableDefaultCtor]
 	interface ARPlaneAnchor {
+		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
+		[iOS (12,0)]
+		[Export ("initWithAnchor:")]
+		IntPtr Constructor (ARAnchor anchor);
 
 		// [Export ("initWithTransform:")] marked as NS_UNAVAILABLE
 
@@ -701,11 +711,6 @@ namespace ARKit {
 		nint MaximumNumberOfTrackedImages { get; set; }
 
 		[iOS (12,0)]
-		[Static]
-		[Export ("objectDetectionSupported")]
-		bool ObjectDetectionSupported { [Bind ("isObjectDetectionSupported")] get; }
-
-		[iOS (12,0)]
 		[Export ("detectionObjects", ArgumentSemantic.Copy)]
 		NSSet<ARReferenceObject> DetectionObjects { get; set; }
 	}
@@ -1025,6 +1030,11 @@ namespace ARKit {
 	[BaseType (typeof(ARAnchor))]
 	[DisableDefaultCtor]
 	interface ARFaceAnchor : ARTrackable {
+		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
+		[iOS (12,0)]
+		[Export ("initWithAnchor:")]
+		IntPtr Constructor (ARAnchor anchor);
+
 #if !XAMCORE_4_0
 		[Obsolete ("Constructor marked as unavailable.")]
 		[Export ("init")]
@@ -1137,6 +1147,11 @@ namespace ARKit {
 	[BaseType (typeof(ARAnchor))]
 	[DisableDefaultCtor]
 	interface ARImageAnchor : ARTrackable {
+		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
+		[iOS (12,0)]
+		[Export ("initWithAnchor:")]
+		IntPtr Constructor (ARAnchor anchor);
+
 		[Export ("referenceImage", ArgumentSemantic.Strong)]
 		ARReferenceImage ReferenceImage { get; }
 	}
@@ -1189,6 +1204,11 @@ namespace ARKit {
 	[BaseType (typeof(ARAnchor))]
 	[DisableDefaultCtor]
 	interface AREnvironmentProbeAnchor {
+		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
+		[iOS (12,0)]
+		[Export ("initWithAnchor:")]
+		IntPtr Constructor (ARAnchor anchor);
+
 		[Export ("initWithTransform:extent:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		IntPtr Constructor (Matrix4 transform, Vector3 extent);
@@ -1245,11 +1265,15 @@ namespace ARKit {
 		NSSet<ARReferenceObject> GetReferenceObjects (string resourceGroupName, [NullAllowed] NSBundle bundle);
 
 		[Export ("exportObjectToURL:previewImage:error:")]
-		bool ExportObject (NSUrl url, [NullAllowed] UIImage previewImage, [NullAllowed] out NSError error);
+		bool Export (NSUrl url, [NullAllowed] UIImage previewImage, [NullAllowed] out NSError error);
 
 		[Export ("referenceObjectByApplyingTransform:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		ARReferenceObject GetReferenceObject (Matrix4 transform);
+		ARReferenceObject ApplyTransform (Matrix4 transform);
+
+		[Export ("referenceObjectByMergingObject:error:")]
+		[return: NullAllowed]
+		ARReferenceObject Merge (ARReferenceObject @object, [NullAllowed] out NSError error);
 
 		[iOS (12,0)]
 		[Field ("ARReferenceObjectArchiveExtension")]
@@ -1261,6 +1285,11 @@ namespace ARKit {
 	[BaseType (typeof(ARAnchor))]
 	[DisableDefaultCtor]
 	interface ARObjectAnchor {
+		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
+		[iOS (12,0)]
+		[Export ("initWithAnchor:")]
+		IntPtr Constructor (ARAnchor anchor);
+
 		[Export ("referenceObject", ArgumentSemantic.Strong)]
 		ARReferenceObject ReferenceObject { get; }
 	}

@@ -76,17 +76,6 @@ namespace Introspection {
 					break;
 				}
 				break;
-			// Xcode 10
-			case "QCComposition":
-				switch (p.Name) {
-				case "InputRSSArticleDurationKey":
-				case "InputRSSFeedURLKey":
-				case "ProtocolRSSVisualizer":
-					if (Mac.CheckSystemVersion (10,14)); // radar 41125938
-						return true;
-					break;
-				}
-				break;
 			}
 
 			switch (p.Name) {
@@ -167,9 +156,9 @@ namespace Introspection {
 			case "_AuthenticationSchemeOAuth1":
 				return true;
 			case "CBUUIDValidRangeString":
-				if (Mac.CheckSystemVersion (10, 13)); // radar 32858911
+				if (Mac.CheckSystemVersion (10, 13)) // radar 32858911
 					return true;
-				break;
+				goto default;
 			default:
 				return base.Skip (p);
 			}
@@ -179,9 +168,9 @@ namespace Introspection {
 		{
 			switch (constantName) {
 			case "CBUUIDValidRangeString":
-				if (Mac.CheckSystemVersion (10, 13)); // radar 32858911
+				if (Mac.CheckSystemVersion (10, 13)) // radar 32858911
 					return true;
-				break;
+				goto default;
 			// Only there for API compat
 			case "kSecUseNoAuthenticationUI":
 			case "kSecUseOperationPrompt":
@@ -197,13 +186,6 @@ namespace Introspection {
 				if (Mac.Is32BitMavericks)
 					return true;
 				goto default;
-			// Xcode 10
-			case "QCCompositionInputRSSFeedURLKey":
-			case "QCCompositionInputRSSArticleDurationKey":
-			case "QCCompositionProtocolRSSVisualizer":
-				if (Mac.CheckSystemVersion (10,14)); // radar 41125938
-					return true;
-				break;
 			default:
 				return base.Skip (constantName, libraryName);
 			}
@@ -217,7 +199,12 @@ namespace Introspection {
 			case "NSAccessibilityNotifications":
 				return true;
 			case "AVFragmentedMovieTrack":
-				return notificationName == "AVFragmentedMovieTrackTimeRangeDidChangeNotification";
+				switch (notificationName) {
+				case "AVFragmentedMovieTrackTotalSampleDataLengthDidChangeNotification":
+				case "AVFragmentedMovieTrackTimeRangeDidChangeNotification":
+					return true;
+				}
+				break;
 			case "NSTask":
 				return notificationName == "NSTaskDidTerminateNotification";
 #endif

@@ -1,1 +1,2 @@
 !missing-pinvoke! CMTimeFoldIntoRange is not bound
+!missing-field! kCMFormatDescriptionTransferFunction_Linear not bound

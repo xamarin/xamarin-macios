@@ -50,9 +50,6 @@ namespace MonoTouchFixtures.UIKit {
 			if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Phone)
 				return;
 			
-			if (!TestRuntime.CheckSystemAndSDKVersion (5, 1))
-				return;
-			
 			TestRuntime.IgnoreOnTVOS ();
 
 			using (UISplitViewController svc = new UISplitViewController ()) {

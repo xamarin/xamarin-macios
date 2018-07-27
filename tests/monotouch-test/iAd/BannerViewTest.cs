@@ -43,6 +43,14 @@ namespace MonoTouchFixtures.iAd {
 				// Width and Height are set by the Ad (e.g. 320 x 50 for the iPhone)
 			}
 		}
+		
+		[Test]
+		public void GetClampedBannerSize ()
+		{
+			SizeF size = new SizeF (2.0, 2.0);
+			var result = ADBannerView.GetClampedBannerSize (size);
+			Assert.IsFalse (result.IsEmpty);
+		}
 	}
 }
 

@@ -35,7 +35,7 @@ namespace MonoTouchFixtures.ImageIO {
 			Assert.NotNull (CGImageProperties.MakerNikonDictionary, "MakerNikonDictionary");
 
 			// iOS 8.3 finally fixed them :)
-			if (TestRuntime.CheckXcodeVersion (6, 3)) {
+			if (TestRuntime.CheckXcodeVersion (6, 3) || TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 7, throwIfOtherPlatform: false)) {
 				Assert.NotNull (CGImageProperties.MakerMinoltaDictionary, "MakerMinoltaDictionary");
 				Assert.NotNull (CGImageProperties.MakerFujiDictionary, "MakerFujiDictionary");
 				Assert.NotNull (CGImageProperties.MakerOlympusDictionary, "MakerOlympusDictionary");
@@ -64,7 +64,15 @@ namespace MonoTouchFixtures.ImageIO {
 			// documented as new in iOS 4.3 - https://developer.apple.com/library/ios/#documentation/GraphicsImaging/Reference/CGImageProperties_Reference/Reference/reference.html
 			IntPtr lib = Dlfcn.dlopen (Constants.ImageIOLibrary, 0);
 			try {
-				if (TestRuntime.CheckXcodeVersion (4, 5)) {
+				var hasSymbols = true;
+#if __MACOS__
+				if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 9))
+					hasSymbols = false;
+#else
+				if (!TestRuntime.CheckXcodeVersion (4, 5))
+					hasSymbols = false;
+#endif
+				if (hasSymbols) {
 					// symbols are available in iOS 6.0 beta 1
 					Assert.That (Dlfcn.dlsym (lib, "kCGImagePropertyExifCameraOwnerName"), Is.Not.EqualTo (IntPtr.Zero), "kCGImagePropertyExifCameraOwnerName");
 					Assert.That (Dlfcn.dlsym (lib, "kCGImagePropertyExifBodySerialNumber"), Is.Not.EqualTo (IntPtr.Zero), "kCGImagePropertyExifBodySerialNumber");

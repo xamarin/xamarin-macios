@@ -47,6 +47,16 @@ namespace FinderSync {
 		[Async, Mac (10,13, onlyOn64 : true)]
 		[Export ("setTagData:forItemWithURL:completion:")]
 		void SetTagData ([NullAllowed] NSData tagData, NSUrl itemUrl, Action<NSError> completion);
+
+		[Mac (10, 14, onlyOn64: true)]
+		[Static]
+		[Export ("extensionEnabled")]
+		bool ExtensionEnabled { [Bind ("isExtensionEnabled")] get; }
+
+		[Mac (10,14, onlyOn64: true)]
+		[Static]
+		[Export ("showExtensionManagementInterface")]
+		void ShowExtensionManagementInterface ();
 	}
 
 	[Mac (10, 10, onlyOn64: true)]

@@ -24,8 +24,9 @@ namespace MediaPlayer {
 #if XAMCORE_2_0 || !MONOMAC
 	[Mac (10,12,2, onlyOn64: true)] // type exists only to expose fields
 	[BaseType (typeof (NSObject))]
-#if XAMCORE_2_0 && IOS
+#if IOS || WATCH
 	// introduced in 4.2
+	[Watch (5,0)]
 	interface MPMediaEntity : NSSecureCoding {
 #else
 	interface MPMediaItem : NSSecureCoding {
@@ -47,10 +48,15 @@ namespace MediaPlayer {
 		[Field ("MPMediaEntityPropertyPersistentID")]
 		NSString PropertyPersistentID { get; }
 
-#if XAMCORE_2_0 && IOS
+		[NoiOS, NoMac, NoTV, Watch (5,0)]
+		[Export ("persistentID")]
+		ulong PersistentID { get; }
+
+#if IOS || WATCH
 	}
-#if MONOMAC || TVOS
+#if MONOMAC || TVOS || WATCH
 	[Mac (10,12,2, onlyOn64: true)]
+	[Watch (5,0)]
 	[Static]
 #else
 	[BaseType (typeof (MPMediaEntity))]
@@ -59,11 +65,13 @@ namespace MediaPlayer {
 #endif
 		[NoMac]
 		[NoTV]
+		[NoWatch]
 		[Export ("persistentIDPropertyForGroupingType:")][Static]
 		string GetPersistentIDProperty (MPMediaGrouping groupingType);
 
 		[NoMac]
 		[NoTV]
+		[NoWatch]
 		[Export ("titlePropertyForGroupingType:")][Static]
 		string GetTitleProperty (MPMediaGrouping groupingType);
 
@@ -228,6 +236,7 @@ namespace MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
+	[Watch (5,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MPMediaItemArtwork {
@@ -266,6 +275,7 @@ namespace MediaPlayer {
 
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	// Objective-C exception thrown.  Name: MPMediaItemCollectionInitException Reason: -init is not supported, use -initWithItems:
 	[DisableDefaultCtor]
 #if XAMCORE_2_0 && IOS
@@ -303,6 +313,7 @@ namespace MediaPlayer {
 
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	interface MPMediaLibrary : NSSecureCoding {
 		[Static, Export ("defaultMediaLibrary")]
@@ -348,7 +359,7 @@ namespace MediaPlayer {
 		void GetPlaylist (NSUuid uuid, [NullAllowed] MPMediaPlaylistCreationMetadata creationMetadata, Action<MPMediaPlaylist, NSError> completionHandler);
 	}
 
-#if !MONOMAC
+#if !MONOMAC && !WATCH
 	[NoTV]
 	[BaseType (typeof (UIViewController), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(MPMediaPickerControllerDelegate)})]
 	interface MPMediaPickerController {
@@ -397,6 +408,7 @@ namespace MediaPlayer {
 
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	[BaseType (typeof (MPMediaItemCollection))]
 	// Objective-C exception thrown.  Name: MPMediaItemCollectionInitException Reason: -init is not supported, use -initWithItems:
 	[DisableDefaultCtor]
@@ -445,7 +457,7 @@ namespace MediaPlayer {
 		void AddMediaItems (MPMediaItem[] mediaItems, [NullAllowed] Action<NSError> completionHandler);
 	}
 
-	[NoMac]
+	[NoMac, Watch (5,0)]
 	[Static]
 	interface MPMediaPlaylistProperty {
 		[Field ("MPMediaPlaylistPropertyPersistentID")]
@@ -473,6 +485,7 @@ namespace MediaPlayer {
 
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	interface MPMediaQuery : NSSecureCoding, NSCopying {
 		[DesignatedInitializer]
@@ -561,12 +574,14 @@ namespace MediaPlayer {
 
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	interface MPMediaPredicate : NSSecureCoding {
 	}
 
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	[BaseType (typeof (MPMediaPredicate))]
 	interface MPMediaPropertyPredicate {
 		[Static, Export ("predicateWithValue:forProperty:")]
@@ -587,6 +602,7 @@ namespace MediaPlayer {
 
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	[Availability (Deprecated = Platform.iOS_9_0)]
 	[BaseType (typeof (NSObject))]
 	interface MPMovieAccessLog : NSCopying {
@@ -602,6 +618,7 @@ namespace MediaPlayer {
 
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	[Availability (Deprecated = Platform.iOS_9_0)]
 	[BaseType (typeof (NSObject))]
 	interface MPMovieErrorLog : NSCopying {
@@ -617,6 +634,7 @@ namespace MediaPlayer {
 
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	[Availability (Deprecated = Platform.iOS_9_0)]
 	[BaseType (typeof (NSObject))]
 	interface MPMovieAccessLogEvent : NSCopying {
@@ -665,6 +683,7 @@ namespace MediaPlayer {
 
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	[Availability (Deprecated = Platform.iOS_9_0)]
 	[BaseType (typeof (NSObject))]
 	interface MPMovieErrorLogEvent : NSCopying {
@@ -691,6 +710,7 @@ namespace MediaPlayer {
 	}
 
 	[NoMac]
+	[NoWatch]
 	[Availability (Deprecated = Platform.iOS_9_0)]
 	interface MPMoviePlayerFinishedEventArgs {
 		[Export ("MPMoviePlayerPlaybackDidFinishReasonUserInfoKey")]
@@ -698,6 +718,7 @@ namespace MediaPlayer {
 	}
 
 #if !MONOMAC
+	[NoWatch]
 	[Availability (Deprecated = Platform.iOS_9_0)]
 	interface MPMoviePlayerFullScreenEventArgs {
 		[Export ("MPMoviePlayerFullscreenAnimationDurationUserInfoKey")]
@@ -707,6 +728,7 @@ namespace MediaPlayer {
 		UIViewAnimationCurve AnimationCurve { get; }
 	}
 
+	[NoWatch]
 	[Availability (Deprecated = Platform.iOS_9_0)]
 	interface MPMoviePlayerThumbnailEventArgs {
 		[Export ("MPMoviePlayerThumbnailImageKey")]
@@ -721,6 +743,7 @@ namespace MediaPlayer {
 #endif
 
 	[NoMac]
+	[NoWatch]
 	[Availability (Deprecated = Platform.iOS_9_0)]
 	interface MPMoviePlayerTimedMetadataEventArgs {
 		[Export ("MPMoviePlayerTimedMetadataUserInfoKey")]
@@ -729,6 +752,7 @@ namespace MediaPlayer {
 
 	// no [Model] yet... it can be easily created in user code (all abstract) if needed
 	[NoMac]
+	[Watch (5,0)]
 	[Protocol]
 	interface MPMediaPlayback {
 		[Abstract]
@@ -772,255 +796,322 @@ namespace MediaPlayer {
 		void EndSeeking ();
 	}
 
-#if !MONOMAC
+#if !MONOMAC 
+
+#if WATCH
+	[Static]
+	interface MPMoviePlayerController {
+#else
 	[NoTV]
 	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 	[BaseType (typeof (NSObject))]
 	interface MPMoviePlayerController : MPMediaPlayback {
+#endif
+		[NoWatch]
 		[DesignatedInitializer]
 		[Export ("initWithContentURL:")]
 		IntPtr Constructor (NSUrl url);
 
+		[NoWatch]
 		[Export ("backgroundColor", ArgumentSemantic.Retain)]
 		// <quote>You should avoid using this property. It is available only when you use the initWithContentURL: method to initialize the movie player controller object.</quote>
 		[Availability (Deprecated = Platform.iOS_3_2, Obsoleted = Platform.iOS_8_0, Message = "Do not use; this API was removed and is not always available.")]
 		UIColor BackgroundColor { get; set; }
 
+		[NoWatch]
 		[Export ("scalingMode")]
 		MPMovieScalingMode ScalingMode { get; set; }
 
+		[NoWatch]
 		[Export ("movieControlMode")]
 		[Availability (Deprecated = Platform.iOS_3_2, Obsoleted = Platform.iOS_8_0, Message = "Do not use; this API was removed.")]
 		MPMovieControlMode MovieControlMode { get; set; }
 
+		[NoWatch]
 		[Export ("initialPlaybackTime")]
 		double InitialPlaybackTime { get; set; }
 
+		[NoWatch]
 		[NullAllowed] // by default this property is null
 		[Export ("contentURL", ArgumentSemantic.Copy)]
 		NSUrl ContentUrl { get; set; }
 
+		[NoWatch]
 		[Export ("view")]
 		UIView View { get; }
 
+		[NoWatch]
 		[Export ("backgroundView")]
 		UIView BackgroundView { get; }
 		
+		[NoWatch]
 		[Export ("playbackState")]
 		MPMoviePlaybackState PlaybackState { get; }
 
+		[NoWatch]
 		[Export ("loadState")]
 		MPMovieLoadState LoadState { get; }
 
+		[NoWatch]
 		[Export ("controlStyle")]
 		MPMovieControlStyle ControlStyle { get; set; }
 
+		[NoWatch]
 		[Export ("repeatMode")]
 		MPMovieRepeatMode RepeatMode { get; set; }
 
+		[NoWatch]
 		[Export ("shouldAutoplay")]
 		bool ShouldAutoplay { get; set; }
 
+		[NoWatch]
 		[Export ("useApplicationAudioSession")]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		bool UseApplicationAudioSession { get; set; }
 
+		[NoWatch]
 		[Export ("fullscreen")]
 		bool Fullscreen { [Bind ("isFullscreen")] get; set; }
 
+		[NoWatch]
 		[Export ("setFullscreen:animated:")]
 		void SetFullscreen (bool fullscreen, bool animated);
 
+		[NoWatch]
 		[Export ("allowsAirPlay")]
 		bool AllowsAirPlay { get; set; }
 
+		[NoWatch]
 		[Export ("airPlayVideoActive")]
 		bool AirPlayVideoActive { [Bind ("isAirPlayVideoActive")] get; }
 
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0)]
 		[Export ("accessLog")]
 		MPMovieAccessLog AccessLog { get; }
 
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0)]
 		[Export ("errorLog")]
 		MPMovieErrorLog ErrorLog { get; }
 
 		// Brought it from the MPMediaPlayback.h
 
+		[NoWatch]
 		[Export ("thumbnailImageAtTime:timeOption:")]
 		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'RequestThumbnails' instead.")]
 		UIImage ThumbnailImageAt (double time, MPMovieTimeOption timeOption);
 
+		[NoWatch]
 		[Export ("requestThumbnailImagesAtTimes:timeOption:")]
 		void RequestThumbnails (NSNumber [] doubleNumbers, MPMovieTimeOption timeOption);
 
+		[NoWatch]
 		[Export ("cancelAllThumbnailImageRequests")]
 		void CancelAllThumbnailImageRequests ();
 
 		//
 		// From interface MPMovieProperties
 		//
+		[NoWatch]
 		[Export ("movieMediaTypes")]
 		MPMovieMediaType MovieMediaTypes { get; }
 
+		[NoWatch]
 		[Export ("movieSourceType")]
 		MPMovieSourceType SourceType { get; set; }
 
+		[NoWatch]
 		[Export ("duration")]
 		double Duration { get; }
 
+		[NoWatch]
 		[Export ("playableDuration")]
 		double PlayableDuration { get; }
 
+		[NoWatch]
 		[Export ("naturalSize")]
 		CGSize NaturalSize { get; }
 
+		[NoWatch]
 		[Export ("endPlaybackTime")]
 		double EndPlaybackTime { get; set; }
 
+		[NoWatch]
 		[Export ("timedMetadata")]
 		MPTimedMetadata [] TimedMetadata { get; }
 
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerScalingModeDidChangeNotification")]
 		[Notification]
 		NSString ScalingModeDidChangeNotification { get; }
 
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerPlaybackDidFinishNotification")]
 		[Notification (typeof (MPMoviePlayerFinishedEventArgs))]
 		NSString PlaybackDidFinishNotification { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerPlaybackDidFinishReasonUserInfoKey")] // NSNumber (MPMovieFinishReason)
 		NSString PlaybackDidFinishReasonUserInfoKey { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerPlaybackStateDidChangeNotification")]
 		[Notification]
 		NSString PlaybackStateDidChangeNotification { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerLoadStateDidChangeNotification")]
 		[Notification]
 		NSString LoadStateDidChangeNotification { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerNowPlayingMovieDidChangeNotification")]
 		[Notification]
 		NSString NowPlayingMovieDidChangeNotification { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerWillEnterFullscreenNotification")]
 		[Notification (typeof (MPMoviePlayerFullScreenEventArgs))]
 		[Notification]
 		NSString WillEnterFullscreenNotification { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerDidEnterFullscreenNotification")]
 		[Notification]
 		NSString DidEnterFullscreenNotification { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerWillExitFullscreenNotification")]
 		[Notification (typeof (MPMoviePlayerFullScreenEventArgs))]
 		NSString WillExitFullscreenNotification { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerDidExitFullscreenNotification")]
 		[Notification]
 		NSString DidExitFullscreenNotification { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerFullscreenAnimationDurationUserInfoKey")]
 		NSString FullscreenAnimationDurationUserInfoKey { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerFullscreenAnimationCurveUserInfoKey")]
 		NSString FullscreenAnimationCurveUserInfoKey { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMovieMediaTypesAvailableNotification")]
 		[Notification]
 		NSString TypesAvailableNotification { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMovieSourceTypeAvailableNotification")]
 		[Notification]
 		NSString SourceTypeAvailableNotification { get; }
 
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMovieDurationAvailableNotification")]
 		[Notification]
 		NSString DurationAvailableNotification { get;  }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMovieNaturalSizeAvailableNotification")]
 		[Notification]
 		NSString NaturalSizeAvailableNotification { get;  }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerThumbnailImageRequestDidFinishNotification")]
 		[Notification (typeof (MPMoviePlayerThumbnailEventArgs))]
 		NSString ThumbnailImageRequestDidFinishNotification { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerThumbnailImageKey")]
 		NSString ThumbnailImageKey { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerThumbnailTimeKey")]
 		NSString ThumbnailTimeKey { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerThumbnailErrorKey")]
 		NSString ThumbnailErrorKey { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerTimedMetadataUpdatedNotification")]
 		[Notification (typeof (MPMoviePlayerTimedMetadataEventArgs))]
 		NSString TimedMetadataUpdatedNotification { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerTimedMetadataUserInfoKey")]
 		NSString TimedMetadataUserInfoKey { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerTimedMetadataKeyName")]
 		NSString TimedMetadataKeyName { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerTimedMetadataKeyInfo")]
 		NSString TimedMetadataKeyInfo { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerTimedMetadataKeyMIMEType")]
 		NSString TimedMetadataKeyMIMEType { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerTimedMetadataKeyDataType")]
 		NSString TimedMetadataKeyDataType { get; }
 		
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMoviePlayerTimedMetadataKeyLanguageCode")]
 		NSString TimedMetadataKeyLanguageCode { get; }
 
+		[Watch (5,0)]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[Field ("MPMediaPlaybackIsPreparedToPlayDidChangeNotification")]
 		[Notification]
 		NSString MediaPlaybackIsPreparedToPlayDidChangeNotification { get; }
 
 		[iOS (6,0)]
+		[NoWatch]
 		[Export ("readyForDisplay")]
 		bool ReadyForDisplay { get;  }
 
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
 		[iOS (6,0)]
+		[NoWatch]
 		[Field ("MPMoviePlayerReadyForDisplayDidChangeNotification")]
 		[Notification]
 		NSString MoviePlayerReadyForDisplayDidChangeNotification { get; }
 
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
+		[NoWatch]
 		[Field ("MPMoviePlayerIsAirPlayVideoActiveDidChangeNotification")]
 		[Notification]
 		NSString MPMoviePlayerIsAirPlayVideoActiveDidChangeNotification { get; }
@@ -1029,6 +1120,7 @@ namespace MediaPlayer {
 
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	[Availability (Deprecated = Platform.iOS_9_0)]
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSGenericException Reason: MPTimedMetadata cannot be created directly
@@ -1054,7 +1146,7 @@ namespace MediaPlayer {
 		NSDictionary AllMetadata { get;  }
 	}
 
-#if !MONOMAC
+#if !MONOMAC && !WATCH
 	[NoTV]
 	[BaseType (typeof (UIViewController))]
 	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
@@ -1075,6 +1167,7 @@ namespace MediaPlayer {
 
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MPMusicPlayerController : MPMediaPlayback {
@@ -1173,7 +1266,7 @@ namespace MediaPlayer {
 		NSString VolumeDidChangeNotification { get; }
 	}
 
-#if !MONOMAC
+#if !MONOMAC && !WATCH
 	[NoTV]
 	[BaseType (typeof (UIView))]
 	interface MPVolumeView {
@@ -1257,6 +1350,7 @@ namespace MediaPlayer {
 
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: MPMediaQuerySection is a read-only object
 	[DisableDefaultCtor]
@@ -1268,7 +1362,7 @@ namespace MediaPlayer {
 		string Title { get; }
 	}
 
-	[Mac (10,12,2, onlyOn64: true)]
+	[Mac (10,12,2, onlyOn64: true), Watch (5,0)]
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: -init is not supported, use +defaultCenter
 	[DisableDefaultCtor]
@@ -1343,6 +1437,7 @@ namespace MediaPlayer {
 		[iOS (11,0)]
 		[TV (11,0)]
 		[Mac (10,13, onlyOn64: true)]
+		[Watch (5,0)]
 		[Field ("MPNowPlayingInfoPropertyServiceIdentifier")]
 		NSString PropertyServiceIdentifier { get; }
 
@@ -1375,6 +1470,7 @@ namespace MediaPlayer {
 
 	[Mac (10,12,2, onlyOn64: true)]
 	[iOS (7,1)]
+	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crash if used
 	interface MPContentItem {
@@ -1417,6 +1513,7 @@ namespace MediaPlayer {
 
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	[iOS (7,1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -1457,6 +1554,7 @@ namespace MediaPlayer {
 
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	[iOS (7,1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -1481,6 +1579,7 @@ namespace MediaPlayer {
 
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	[iOS (7,1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: -init is invalid. Use +sharedManager. <- [sic]
@@ -1524,6 +1623,7 @@ namespace MediaPlayer {
 
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	[iOS (8,4)]
 	[BaseType (typeof(NSObject))]
 	interface MPPlayableContentManagerContext {
@@ -1547,7 +1647,7 @@ namespace MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[iOS (7,1)]
+	[iOS (7,1), Watch (5,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPRemoteCommands cannot be initialized externally.
 	interface MPRemoteCommand {
@@ -1569,7 +1669,7 @@ namespace MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[iOS (7,1)]
+	[iOS (7,1), Watch (5,0)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangePlaybackRateCommands cannot be initialized externally.
 	interface MPChangePlaybackRateCommand {
@@ -1579,7 +1679,7 @@ namespace MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[iOS (8,0)]
+	[iOS (8,0), Watch (5,0)]
 	[BaseType (typeof(MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangeShuffleModeCommand cannot be initialized externally.
 	interface MPChangeShuffleModeCommand
@@ -1589,7 +1689,7 @@ namespace MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[iOS (8,0)]
+	[iOS (8,0), Watch (5,0)]
 	[BaseType (typeof(MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangeRepeatModeCommand cannot be initialized externally.
 	interface MPChangeRepeatModeCommand
@@ -1599,7 +1699,7 @@ namespace MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[iOS (7,1)]
+	[iOS (7,1), Watch (5,0)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPFeedbackCommands cannot be initialized externally.
 	interface MPFeedbackCommand {
@@ -1616,7 +1716,7 @@ namespace MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[iOS (7,1)]
+	[iOS (7,1), Watch (5,0)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPRatingCommands cannot be initialized externally.
 	interface MPRatingCommand {
@@ -1629,7 +1729,7 @@ namespace MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[iOS (7,1)]
+	[iOS (7,1), Watch (5,0)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPSkipIntervalCommands cannot be initialized externally.
 	interface MPSkipIntervalCommand {
@@ -1642,7 +1742,7 @@ namespace MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[iOS (7,1)]
+	[iOS (7,1), Watch (5,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MPRemoteCommandCenter {
@@ -1718,7 +1818,7 @@ namespace MediaPlayer {
 	}
 	
 	[Mac (10,12,2, onlyOn64: true)]
-	[iOS (7,1)]
+	[iOS (7,1), Watch (5,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPRemoteCommandEvents cannot be initialized externally.
 	interface MPRemoteCommandEvent {
@@ -1731,7 +1831,7 @@ namespace MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[iOS (7,1)]
+	[iOS (7,1), Watch (5,0)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangePlaybackRateCommandEvents cannot be initialized externally.
 	interface MPChangePlaybackRateCommandEvent {
@@ -1741,7 +1841,7 @@ namespace MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[iOS (7,1)]
+	[iOS (7,1), Watch (5,0)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPRatingCommandEvents cannot be initialized externally.
 	interface MPRatingCommandEvent {
@@ -1751,7 +1851,7 @@ namespace MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[iOS (7,1)]
+	[iOS (7,1), Watch (5,0)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // Name: NSGenericException Reason: MPSeekCommandEvents cannot be initialized externally.
 	interface MPSeekCommandEvent {
@@ -1761,7 +1861,7 @@ namespace MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[iOS (7,1)]
+	[iOS (7,1), Watch (5,0)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPSkipIntervalCommandEvents cannot be initialized externally.
 	interface MPSkipIntervalCommandEvent {
@@ -1771,7 +1871,7 @@ namespace MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[iOS (7,1)]
+	[iOS (7,1), Watch (5,0)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor]
 	interface MPFeedbackCommandEvent {
@@ -1781,7 +1881,7 @@ namespace MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[iOS (9,0)]
+	[iOS (9,0), Watch (5,0)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangeLanguageOptionCommandEvents cannot be initialized externally.
 	interface MPChangeLanguageOptionCommandEvent {
@@ -1795,7 +1895,7 @@ namespace MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[iOS (8,0)]
+	[iOS (8,0), Watch (5,0)]
 	[BaseType (typeof(MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangeShuffleModeCommandEvent cannot be initialized externally.
 	interface MPChangeShuffleModeCommandEvent
@@ -1810,7 +1910,7 @@ namespace MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[iOS (8,0)]
+	[iOS (8,0), Watch (5,0)]
 	[BaseType (typeof(MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangeRepeatModeCommandEvent cannot be initialized externally.
 	interface MPChangeRepeatModeCommandEvent
@@ -1825,7 +1925,7 @@ namespace MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[iOS (9,0)]
+	[iOS (9,0), Watch (5,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // pre-emptive
 	interface MPNowPlayingInfoLanguageOption {
@@ -1858,7 +1958,7 @@ namespace MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[iOS (9,0)]
+	[iOS (9,0), Watch (5,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // pre-emptive
 	interface MPNowPlayingInfoLanguageOptionGroup {
@@ -1877,6 +1977,7 @@ namespace MediaPlayer {
 
 	[Mac (10,12,2, onlyOn64: true)]
 	[iOS (9,0)]
+	[Watch (5,0)]
 	[Static]
 	// not [Internal] since they are exposed as an NSString[] property in MPNowPlayingInfoLanguageOption
 	interface MPLanguageOptionCharacteristics {
@@ -1912,14 +2013,14 @@ namespace MediaPlayer {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[iOS (9,1)]
+	[iOS (9,1), Watch (5,0)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // Objective-C exception thrown.  Name: NSGenericException Reason: MPChangePlaybackPositionCommands cannot be initialized externally.
 	interface MPChangePlaybackPositionCommand {
 	}
 
 	[Mac (10,12,2, onlyOn64: true)]
-	[iOS (9,1)]
+	[iOS (9,1), Watch (5,0)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // Objective-C exception thrown.  Name: NSGenericException Reason: MPChangePlaybackPositionCommandEvents cannot be initialized externally.
 	interface MPChangePlaybackPositionCommandEvent {
@@ -1929,6 +2030,7 @@ namespace MediaPlayer {
 
 	[NoMac]
 	[NoTV][iOS (9,3)]
+	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MPMediaPlaylistCreationMetadata {
@@ -1949,6 +2051,7 @@ namespace MediaPlayer {
 
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	[iOS (10,1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -1961,6 +2064,7 @@ namespace MediaPlayer {
 
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	[iOS (10,1)]
 	[BaseType (typeof(MPMusicPlayerQueueDescriptor))]
 	interface MPMusicPlayerMediaItemQueueDescriptor
@@ -1989,6 +2093,7 @@ namespace MediaPlayer {
 
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	[iOS (10,1)]
 	[BaseType (typeof(MPMusicPlayerQueueDescriptor))]
 	interface MPMusicPlayerStoreQueueDescriptor
@@ -2011,6 +2116,7 @@ namespace MediaPlayer {
 
 	[NoTV]
 	[NoMac]
+	[NoWatch]
 	[iOS (10,3)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
@@ -2026,6 +2132,7 @@ namespace MediaPlayer {
 
 	[NoTV]
 	[NoMac]
+	[NoWatch]
 	[iOS (10,3)]
 	[BaseType (typeof(MPMusicPlayerControllerQueue))]
 	interface MPMusicPlayerControllerMutableQueue
@@ -2039,6 +2146,7 @@ namespace MediaPlayer {
 
 	[NoTV]
 	[NoMac]
+	[NoWatch]
 	[iOS (10,3)]
 	[BaseType (typeof(MPMusicPlayerController))]
 	interface MPMusicPlayerApplicationController
@@ -2050,6 +2158,7 @@ namespace MediaPlayer {
 
 	[NoTV][NoMac]
 	[iOS (11,0)]
+	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MPMusicPlayerPlayParameters : NSSecureCoding {
@@ -2061,6 +2170,7 @@ namespace MediaPlayer {
 	}
 
 	[NoTV][NoMac]
+	[NoWatch]
 	[iOS (11,0)]
 	[BaseType (typeof (MPMusicPlayerQueueDescriptor))]
 	[DisableDefaultCtor]
@@ -2084,9 +2194,10 @@ namespace MediaPlayer {
 	interface IMPSystemMusicPlayerController {}
 
 	[NoTV][NoMac]
-	[iOS (11,0)]
+	[iOS (11,0), Watch (5,0)]
 	[Protocol]
 	interface MPSystemMusicPlayerController {
+		[NoWatch]
 		[Abstract]
 		[Export ("openToPlayQueueDescriptor:")]
 		void OpenToPlay (MPMusicPlayerQueueDescriptor queueDescriptor);

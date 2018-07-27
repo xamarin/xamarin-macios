@@ -4,5 +4,5 @@
 !missing-selector! +NSColor::findHighlightColor not bound
 !missing-selector! +NSColor::placeholderTextColor not bound
 !missing-selector! NSSliderCell::setImage: not bound
-## appended from unclassified file
-!missing-field! NSMenuItemImportFromDeviceIdentifier not bound
+!missing-selector! NSLayoutManager::limitsLayoutForSuspiciousContents not bound
+!missing-selector! NSLayoutManager::setLimitsLayoutForSuspiciousContents: not bound

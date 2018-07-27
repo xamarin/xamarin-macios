@@ -2450,26 +2450,6 @@ namespace AppKit {
 		Full
 	}
 
-	// Convenience enum for string values in ObjC
-	public enum NSSharingServiceName : int {
-		PostOnFacebook,
-		PostOnTwitter,
-		PostOnSinaWeibo,
-		ComposeEmail,
-		ComposeMessage,
-		SendViaAirDrop,
-		AddToSafariReadingList,
-		AddToIPhoto,
-		AddToAperture,
-		UseAsTwitterProfileImage,
-		UseAsDesktopPicture,
-		PostImageOnFlickr,
-		PostVideoOnVimeo,
-		PostVideoOnYouku,
-		PostVideoOnTudou,
-		CloudSharing
-	}
-
 	[Flags]
 	[Native]
 	public enum NSTypesetterControlCharacterAction : ulong {

@@ -219,6 +219,9 @@ namespace Introspection {
 				if (!TestRuntime.CheckXcodeVersion (9, 0))
 					prefix = Path.Combine (Path.GetDirectoryName (prefix), "PrivateFrameworks");
 				break;
+			case "PdfKit":
+				libname = "PDFKit";
+				break;
 #endif
 			case "CoreAnimation":
 				// generated code uses QuartzCore correctly - even if the [Field] property is wrong

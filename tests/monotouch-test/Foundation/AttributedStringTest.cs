@@ -44,9 +44,9 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void Attributes ()
 		{
-			red = UIColor.Red.CGColor;
-			yellow = UIColor.Yellow.CGColor;
-			
+			red = TestRuntime.GetCGColor (UIColor.Red);
+			yellow = TestRuntime.GetCGColor (UIColor.Yellow);
+
 			var j = new NSMutableAttributedString ("Hello", new CTStringAttributes() { ForegroundColor = red });
 			j.Append (new NSMutableAttributedString ("12345", new CTStringAttributes() { ForegroundColor = yellow }));
 			j.EnumerateAttributes (new NSRange (0, 10), NSAttributedStringEnumeration.None, cb);
@@ -98,29 +98,12 @@ namespace MonoTouchFixtures.Foundation {
 			}
 		}
 
-#if !XAMCORE_2_0
-		[Test]
-		public void UIKitAttachmentConveniences_Old ()
-		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
-				Assert.Inconclusive ("requires iOS7+");
-
-			NSAttributedString as1 = null;
-			// it's weird looking to use an instance (even null) so you can call a *static* category method...
-			using (var ta = new NSTextAttachment (null, null))
-			using (var as2 = as1.FromTextAttachment (ta)) {
-				Assert.That (as2.Length, Is.EqualTo ((nint) 1), "Length");
-				Assert.That (as2.Value [0], Is.EqualTo ((char)0xFFFC), "NSAttachmentCharacter");
-			}
-		}
-#endif
-
 #if !__WATCHOS__
 		[Test]
 		public void UIKitAttachmentConveniences_New ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
-				Assert.Inconclusive ("requires iOS7+");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 11, throwIfOtherPlatform: false);
 
 			// so we added custom code calling the (old) category helper - but we had to pick a different name
 			using (var ta = new NSTextAttachment (null, null))

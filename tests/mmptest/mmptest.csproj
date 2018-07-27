@@ -104,6 +104,8 @@
       <Link>StringUtils.cs</Link>
     </Compile>
     <Compile Include="src\WarningTests.cs" />
+    <Compile Include="src\Unified45.cs" />
+    <Compile Include="src\System.ServiceModel\Net45.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />

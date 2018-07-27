@@ -111,10 +111,8 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.Null (btn.GetBackgroundImage (UIControlState.Highlighted, UIBarMetrics.Default), "Get");
 				btn.SetBackgroundImage (null, UIControlState.Highlighted, UIBarMetrics.Default);
 
-				if (TestRuntime.CheckSystemAndSDKVersion (6,0)) {
-					Assert.Null (btn.GetBackgroundImage (UIControlState.Highlighted, UIBarButtonItemStyle.Plain, UIBarMetrics.Default), "Get2");
-					btn.SetBackgroundImage (null, UIControlState.Highlighted, UIBarButtonItemStyle.Plain, UIBarMetrics.Default);
-				}
+				Assert.Null (btn.GetBackgroundImage (UIControlState.Highlighted, UIBarButtonItemStyle.Plain, UIBarMetrics.Default), "Get2");
+				btn.SetBackgroundImage (null, UIControlState.Highlighted, UIBarButtonItemStyle.Plain, UIBarMetrics.Default);
 			}
 		}
 

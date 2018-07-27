@@ -368,6 +368,10 @@ namespace HealthKit {
 		[Export ("isHealthDataAvailable")]
 		bool IsHealthDataAvailable { get; }
 
+		[NoWatch, iOS (12, 0)]
+		[Export ("supportsHealthRecords")]
+		bool SupportsHealthRecords { get; }
+
 		// FIXME NS_EXTENSION_UNAVAILABLE("Not available to extensions") ;
 		[Export ("authorizationStatusForType:")]
 		HKAuthorizationStatus GetAuthorizationStatus (HKObjectType type);
@@ -2409,17 +2413,46 @@ namespace HealthKit {
 		[NullAllowed, Export ("endDate")]
 		NSDate EndDate { get; }
 
-		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use HKWorkoutSession (HKWorkoutConfiguration, out NSError)")]
+		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use HKWorkoutSession (HKHealthStore, HKWorkoutConfiguration, out NSError) instead.")]
 		[Export ("initWithActivityType:locationType:")]
 		IntPtr Constructor (HKWorkoutActivityType activityType, HKWorkoutSessionLocationType locationType);
 
 		[Watch (3,0)]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use HKWorkoutSession (HKHealthStore, HKWorkoutConfiguration, out NSError) instead.")]
 		[Export ("initWithConfiguration:error:")]
 		IntPtr Constructor (HKWorkoutConfiguration workoutConfiguration, out NSError error);
 
 		[Watch (5,0)]
 		[Export ("initWithHealthStore:configuration:error:")]
 		IntPtr Constructor (HKHealthStore healthStore, HKWorkoutConfiguration workoutConfiguration, [NullAllowed] out NSError error);
+
+		[Watch (5,0)]
+		[Export ("prepare")]
+		void Prepare ();
+
+		[Watch (5,0)]
+		[Export ("startActivityWithDate:")]
+		void StartActivity ([NullAllowed] NSDate date);
+
+		[Watch (5,0)]
+		[Export ("stopActivityWithDate:")]
+		void StopActivity ([NullAllowed] NSDate date);
+
+		[Watch (5,0)]
+		[Export ("end")]
+		void End ();
+
+		[Watch (5,0)]
+		[Export ("pause")]
+		void Pause ();
+
+		[Watch (5,0)]
+		[Export ("resume")]
+		void Resume ();
+
+		[Watch (5,0)]
+		[Export ("associatedWorkoutBuilder")]
+		HKLiveWorkoutBuilder AssociatedWorkoutBuilder { get; }
 	}
 
 	[NoiOS]

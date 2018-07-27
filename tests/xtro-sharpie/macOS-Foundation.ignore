@@ -1,6 +1,9 @@
 ## Only one type currently, which default returns. Currently unneeded unless they extend.
 !missing-selector! +NSDistributedNotificationCenter::notificationCenterForType: not bound
 
+## Class [] return value is currently broken - https://github.com/xamarin/xamarin-macios/issues/4441
+!missing-selector! +NSSecureUnarchiveFromDataTransformer::allowedTopLevelClasses not bound
+!missing-type! NSSecureUnarchiveFromDataTransformer not bound
 
 ## unsorted
 
@@ -73,22 +76,7 @@
 !missing-field! NSNegativeCurrencyFormatString not bound
 !missing-field! NSNextDayDesignations not bound
 !missing-field! NSNextNextDayDesignations not bound
-!missing-field! NSNonOwnedPointerHashCallBacks not bound
-!missing-field! NSNonOwnedPointerMapKeyCallBacks not bound
-!missing-field! NSNonOwnedPointerMapValueCallBacks not bound
-!missing-field! NSNonOwnedPointerOrNullMapKeyCallBacks not bound
-!missing-field! NSNonRetainedObjectHashCallBacks not bound
-!missing-field! NSNonRetainedObjectMapKeyCallBacks not bound
-!missing-field! NSNonRetainedObjectMapValueCallBacks not bound
-!missing-field! NSObjectHashCallBacks not bound
-!missing-field! NSObjectMapKeyCallBacks not bound
-!missing-field! NSObjectMapValueCallBacks not bound
 !missing-field! NSOperationNotSupportedForKeyException not bound
-!missing-field! NSOwnedObjectIdentityHashCallBacks not bound
-!missing-field! NSOwnedPointerHashCallBacks not bound
-!missing-field! NSOwnedPointerMapKeyCallBacks not bound
-!missing-field! NSOwnedPointerMapValueCallBacks not bound
-!missing-field! NSPointerToStructHashCallBacks not bound
 !missing-field! NSPositiveCurrencyFormatString not bound
 !missing-field! NSPriorDayDesignations not bound
 !missing-field! NSShortDateFormatString not bound
@@ -109,40 +97,16 @@
 !missing-field! NSZeroRect not bound
 !missing-field! NSZeroSize not bound
 !missing-field! NSZombieEnabled not bound
-!missing-pinvoke! NSAllHashTableObjects is not bound
-!missing-pinvoke! NSAllMapTableKeys is not bound
-!missing-pinvoke! NSAllMapTableValues is not bound
 !missing-pinvoke! NSAllocateCollectable is not bound
-!missing-pinvoke! NSCompareHashTables is not bound
-!missing-pinvoke! NSCompareMapTables is not bound
 !missing-pinvoke! NSContainsRect is not bound
-!missing-pinvoke! NSCopyHashTableWithZone is not bound
-!missing-pinvoke! NSCopyMapTableWithZone is not bound
 !missing-pinvoke! NSCountFrames is not bound
-!missing-pinvoke! NSCountHashTable is not bound
-!missing-pinvoke! NSCountMapTable is not bound
-!missing-pinvoke! NSCreateHashTable is not bound
-!missing-pinvoke! NSCreateHashTableWithZone is not bound
-!missing-pinvoke! NSCreateMapTable is not bound
-!missing-pinvoke! NSCreateMapTableWithZone is not bound
 !missing-pinvoke! NSDivideRect is not bound
 !missing-pinvoke! NSEdgeInsetsEqual is not bound
-!missing-pinvoke! NSEndHashTableEnumeration is not bound
-!missing-pinvoke! NSEndMapTableEnumeration is not bound
-!missing-pinvoke! NSEnumerateHashTable is not bound
-!missing-pinvoke! NSEnumerateMapTable is not bound
 !missing-pinvoke! NSEqualPoints is not bound
 !missing-pinvoke! NSEqualRects is not bound
 !missing-pinvoke! NSEqualSizes is not bound
 !missing-pinvoke! NSFileTypeForHFSTypeCode is not bound
 !missing-pinvoke! NSFrameAddress is not bound
-!missing-pinvoke! NSFreeHashTable is not bound
-!missing-pinvoke! NSFreeMapTable is not bound
-!missing-pinvoke! NSHashGet is not bound
-!missing-pinvoke! NSHashInsert is not bound
-!missing-pinvoke! NSHashInsertIfAbsent is not bound
-!missing-pinvoke! NSHashInsertKnownAbsent is not bound
-!missing-pinvoke! NSHashRemove is not bound
 !missing-pinvoke! NSHFSTypeCodeFromFileType is not bound
 !missing-pinvoke! NSHFSTypeOfFile is not bound
 !missing-pinvoke! NSInsetRect is not bound
@@ -152,27 +116,15 @@
 !missing-pinvoke! NSIntersectsRect is not bound
 !missing-pinvoke! NSIsEmptyRect is not bound
 !missing-pinvoke! NSIsFreedObject is not bound
-!missing-pinvoke! NSMapGet is not bound
-!missing-pinvoke! NSMapInsert is not bound
-!missing-pinvoke! NSMapInsertIfAbsent is not bound
-!missing-pinvoke! NSMapInsertKnownAbsent is not bound
-!missing-pinvoke! NSMapMember is not bound
-!missing-pinvoke! NSMapRemove is not bound
 !missing-pinvoke! NSMouseInRect is not bound
-!missing-pinvoke! NSNextHashEnumeratorItem is not bound
-!missing-pinvoke! NSNextMapEnumeratorPair is not bound
 !missing-pinvoke! NSOffsetRect is not bound
 !missing-pinvoke! NSPointFromString is not bound
 !missing-pinvoke! NSPointInRect is not bound
 !missing-pinvoke! NSReallocateCollectable is not bound
 !missing-pinvoke! NSRecordAllocationEvent is not bound
 !missing-pinvoke! NSRectFromString is not bound
-!missing-pinvoke! NSResetHashTable is not bound
-!missing-pinvoke! NSResetMapTable is not bound
 !missing-pinvoke! NSReturnAddress is not bound
 !missing-pinvoke! NSSizeFromString is not bound
-!missing-pinvoke! NSStringFromHashTable is not bound
-!missing-pinvoke! NSStringFromMapTable is not bound
 !missing-pinvoke! NSStringFromPoint is not bound
 !missing-pinvoke! NSStringFromRect is not bound
 !missing-pinvoke! NSStringFromSize is not bound

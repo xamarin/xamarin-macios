@@ -70,8 +70,8 @@ namespace MonoTouchFixtures.CoreImage {
 		[Test]
 		public void CustomFilterTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Inconclusive ("Custom filters require iOS8+");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 11, throwIfOtherPlatform: false);
 
 			MyFilter filter = new MyFilter ();
 			Assert.NotNull (filter);
@@ -97,8 +97,8 @@ namespace MonoTouchFixtures.CoreImage {
 		[Test]
 		public void ColorSpace ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("Ignoring ColorSpace test: CIColorCubeWithColorSpace requires iOS7+");
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			using (var f = new CIColorCubeWithColorSpace ()) {
 				Assert.Null (f.ColorSpace, "ColorSpace/default");

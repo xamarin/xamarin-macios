@@ -13,6 +13,7 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using NetworkExtension;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.NetworkExtension;
@@ -29,8 +30,8 @@ namespace MonoTouchFixtures.NetworkExtension {
 		[Test]
 		public void SharedManager ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8,0))
-				Assert.Inconclusive ("Requires iOS 8.0+");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 11, throwIfOtherPlatform: false);
 
 			var shared = NEVpnManager.SharedManager;
 			// https://developer.apple.com/library/ios/documentation/IDEs/Conceptual/AppDistributionGuide/AddingCapabilities/AddingCapabilities.html#//apple_ref/doc/uid/TP40012582-CH26-SW59
@@ -44,7 +45,12 @@ namespace MonoTouchFixtures.NetworkExtension {
 #else
 			Assert.False (shared.Enabled, "Enabled");
 #endif
-			if (TestRuntime.CheckSystemAndSDKVersion (9, 0)) {
+#if __IOS__
+			var HasLocalizedDescription = TestRuntime.CheckSystemVersion (PlatformName.iOS, 9, 0);
+#elif __MACOS__
+			var HasLocalizedDescription = TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 11);
+#endif
+			if (HasLocalizedDescription) {
 #if MONOMAC
 				Assert.AreEqual ("xammac_tests", shared.LocalizedDescription, "LocalizedDescription");
 #else
@@ -61,8 +67,8 @@ namespace MonoTouchFixtures.NetworkExtension {
 		[Test]
 		public void Fields ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8,0))
-				Assert.Inconclusive ("Requires iOS 8.0+");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 11, throwIfOtherPlatform: false);
 
 			Assert.That (NEVpnManager.ErrorDomain.ToString (), Is.EqualTo ("NEVPNErrorDomain"), "ErrorDomain");
 		}

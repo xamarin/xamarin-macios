@@ -78,8 +78,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void TestCallbackPlaySystem ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (9, 0))
-				Assert.Inconclusive ("requires iOS9");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 9, 0, throwIfOtherPlatform: false);
 
 			string path = Path.Combine (NSBundle.MainBundle.ResourcePath, "drum01.mp3");
 
@@ -98,8 +97,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void TestCallbackPlayAlert ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (9, 0))
-				Assert.Inconclusive ("requires iOS9");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			string path = Path.Combine (NSBundle.MainBundle.ResourcePath, "drum01.mp3");
 

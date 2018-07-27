@@ -2258,7 +2258,7 @@ namespace AVFoundation {
 		[Async]
 		[Watch (5,0), NoTV, NoMac, NoiOS]
 		[Export ("activateWithOptions:completionHandler:")]
-		void Activate (AVAudioSessionActivationOptions options, Action<NSError> handler);
+		void Activate (AVAudioSessionActivationOptions options, Action<bool, NSError> handler);
 	}
 	
 	[iOS (6,0)]
@@ -5540,7 +5540,7 @@ namespace AVFoundation {
 		NSString FormatHlsMetadata { get; }
 #endif
 
-		[iOS (9,3)][Mac (10, 11, 3)]
+		[iOS (9,3)][Mac (10, 12)]
 		[TV (9,2)]
 		[Field ("AVMetadataKeySpaceHLSDateRange")]
 		NSString KeySpaceHlsDateRange { get; }
@@ -9039,6 +9039,29 @@ namespace AVFoundation {
 	}
 #endif
 
+	[NoTV, NoMac, NoWatch, iOS (12,0)]
+	[Internal]
+	[Static]
+	interface AVCapturePhotoSettingsThumbnailFormatKeys {
+		[Field ("AVVideoCodecKey")]
+		NSString CodecKey { get; }
+
+		[Field ("AVVideoWidthKey")]
+		NSString WidthKey { get; }
+
+		[Field ("AVVideoHeightKey")]
+		NSString HeightKey { get; }
+	}
+
+	
+	[NoTV, NoMac, NoWatch, iOS (12,0)]
+	[StrongDictionary ("AVCapturePhotoSettingsThumbnailFormatKeys")]
+	interface AVCapturePhotoSettingsThumbnailFormat {
+		NSString Codec { get; set; }
+		NSNumber Width { get; set; }
+		NSNumber Height { get; set; }
+	}
+
 	[NoWatch]
 	[NoTV, NoMac, iOS (10,0)]
 	[BaseType (typeof(NSObject))]
@@ -9146,12 +9169,28 @@ namespace AVFoundation {
 		NSString[] _GetAvailableEmbeddedThumbnailPhotoCodecTypes { get; }
 
 		[iOS (11, 0)]
-		[Wrap ("Array.ConvertAll (_GetAvailableEmbeddedThumbnailPhotoCodecTypes, s => AVVideoCodecTypeExtensions.GetValue (s))")]
+		[Wrap ("Array.ConvertAll (_GetAvailableEmbeddedThumbnailPhotoCodecTypes, s => AVVideoCodecTypeExtensions.GetValue (s))", IsVirtual = true)]
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'AvailableEmbeddedThumbnailPhotoCodecTypes' instead.")]
 		AVVideoCodecType[] GetAvailableEmbeddedThumbnailPhotoCodecTypes { get; }
 
 		[iOS (11, 0)]
+		[Wrap ("Array.ConvertAll (_GetAvailableEmbeddedThumbnailPhotoCodecTypes, s => AVVideoCodecTypeExtensions.GetValue (s))", IsVirtual = true)]
+#endif
+		AVVideoCodecType[] AvailableEmbeddedThumbnailPhotoCodecTypes { get; }
+
+#if XAMCORE_4_0
+		[iOS (11, 0)]
+		[NullAllowed, Export ("embeddedThumbnailPhotoFormat", ArgumentSemantic.Copy)]
+		NSDictionary WeakEmbeddedThumbnailPhotoFormat { get; set; }
+
+		[Warp ("WeakEmbeddedThumbnailPhotoFormat")]
+		AVCapturePhotoSettingsThumbnailFormat EmbeddedThumbnailPhotoFormat { get; set; }
+#else
+		[iOS (11, 0)]
 		[NullAllowed, Export ("embeddedThumbnailPhotoFormat", ArgumentSemantic.Copy)]
 		NSDictionary EmbeddedThumbnailPhotoFormat { get; set; }
+#endif
 
 		[NoWatch, NoTV, NoMac, iOS (12, 0)]
 		[Export ("portraitEffectsMatteDeliveryEnabled")]
@@ -9160,6 +9199,19 @@ namespace AVFoundation {
 		[NoWatch, NoTV, NoMac, iOS (12, 0)]
 		[Export ("embedsPortraitEffectsMatteInPhoto")]
 		bool EmbedsPortraitEffectsMatteInPhoto { get; set; }
+
+		[BindAs (typeof (AVVideoCodecType []))]
+		[NoWatch, NoTV, NoMac, iOS (12, 0)]
+		[Export ("availableRawEmbeddedThumbnailPhotoCodecTypes")]
+		NSString[] AvailableRawEmbeddedThumbnailPhotoCodecTypes { get; }
+
+		[NoWatch, NoTV, NoMac, iOS (12, 0)]
+		[NullAllowed, Export ("rawEmbeddedThumbnailPhotoFormat", ArgumentSemantic.Copy)]
+		NSDictionary WeakRawEmbeddedThumbnailPhotoFormat { get; set; }
+
+		[Wrap ("WeakRawEmbeddedThumbnailPhotoFormat")]
+		AVCapturePhotoSettingsThumbnailFormat RawEmbeddedThumbnailPhotoFormat { get; set; }
+
 	}
 	
 #if !MONOMAC
@@ -9228,6 +9280,10 @@ namespace AVFoundation {
 		[NoWatch, NoTV, NoMac, iOS (12, 0)]
 		[Export ("portraitEffectsMatteDimensions")]
 		CMVideoDimensions PortraitEffectsMatteDimensions { get; }
+
+		[NoWatch, NoTV, NoMac, iOS (12, 0)]
+		[Export ("rawEmbeddedThumbnailDimensions")]
+		CMVideoDimensions RawEmbeddedThumbnailDimensions { get; }
 	}
 
 #if !MONOMAC
@@ -10298,7 +10354,8 @@ namespace AVFoundation {
 		[Export ("seekToDate:")]
 		void Seek (NSDate date);
 
-		[iOS (6,0), Mac (10,7)]
+		[iOS (6,0)]
+		[Mac (10,9)] // Header says 10.7, but it's a lie
 		[Export ("seekToDate:completionHandler:")]
 		[Async]
 		void Seek (NSDate date, AVCompletion onComplete);
@@ -10493,14 +10550,14 @@ namespace AVFoundation {
 		[Export ("items", ArgumentSemantic.Copy)]
 		AVMetadataItem[] Items { get; }
 
-		[iOS (9,3)][Mac (10,11,3)]
+		[iOS (9,3)][Mac (10,12)]
 		[TV (9,2)]
 		[NullAllowed, Export ("classifyingLabel")]
 		string ClassifyingLabel { get; }
 
 		[iOS (9,3)]
 		[TV (9,2)]
-		[Mac (10,11,3)]
+		[Mac (10,12)]
 		[NullAllowed, Export ("uniqueID")]
 		string UniqueID { get; }
 	}
@@ -10810,17 +10867,17 @@ namespace AVFoundation {
 		AVInterstitialTimeRange[] InterstitialTimeRanges { get; set; }
 #endregion
 
-		[iOS (9,3)][Mac (10,11,3)]
+		[iOS (9,3)][Mac (10,12)]
 		[TV (9,2)]
 		[Export ("addMediaDataCollector:")]
 		void AddMediaDataCollector (AVPlayerItemMediaDataCollector collector);
 		
-		[iOS (9,3)][Mac (10,11,3)]
+		[iOS (9,3)][Mac (10,12)]
 		[TV (9,2)]
 		[Export ("removeMediaDataCollector:")]
 		void RemoveMediaDataCollector (AVPlayerItemMediaDataCollector collector);
 		
-		[iOS (9,3)][Mac (10,11,3)]
+		[iOS (9,3)][Mac (10,12)]
 		[TV (9,2)]
 		[Export ("mediaDataCollectors")]
 		AVPlayerItemMediaDataCollector[] MediaDataCollectors { get; }
@@ -12069,6 +12126,7 @@ namespace AVFoundation {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface AVOutputSettingsAssistant {
+		[Mac (10, 10)]
 		[Static, Export ("availableOutputSettingsPresets")]
 		string [] AvailableOutputSettingsPresets { get; }
 
@@ -12105,6 +12163,7 @@ namespace AVFoundation {
 		[Export ("sourceVideoAverageFrameDuration", ArgumentSemantic.Copy)]
 		CMTime SourceVideoAverageFrameDuration { get; set; }
 
+		[Mac (10, 10)]
 		[Export ("sourceVideoMinFrameDuration", ArgumentSemantic.Copy)]
 		CMTime SourceVideoMinFrameDuration { get; set; }
 
