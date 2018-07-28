@@ -306,8 +306,6 @@ namespace Xamarin.Bundler
 				return app.LLVMAsmWriter.Value;
 			switch (app.Platform) {
 			case ApplePlatform.iOS:
-				if (app.Is32Build)
-					return true;
 				return false;
 			case ApplePlatform.TVOS:
 			case ApplePlatform.WatchOS:
