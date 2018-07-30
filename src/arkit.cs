@@ -100,6 +100,7 @@ namespace ARKit {
 	[Flags]
 	[Native]
 	public enum ARSessionRunOptions : ulong {
+		None = 0,
 		ResetTracking = 1 << 0,
 		RemoveExistingAnchors = 1 << 1,
 	}
@@ -576,7 +577,9 @@ namespace ARKit {
 		[NullAllowed, Export ("configuration", ArgumentSemantic.Copy)]
 		ARConfiguration Configuration { get; }
 
-		// 'runWithConfiguration:' selector marked as unavailable in Xcode 9 beta 5. Use 'Run (ARConfiguration configuration, ARSessionRunOptions options)' instead.
+		[Export ("runWithConfiguration:")]
+		void Run (ARConfiguration configuration);
+
 		[Export ("runWithConfiguration:options:")]
 		void Run (ARConfiguration configuration, ARSessionRunOptions options);
 
