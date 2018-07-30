@@ -287,3 +287,8 @@
 !missing-selector! MPSNNOptimizerRMSProp::encodeToCommandBuffer:batchNormalizationState:inputSumOfSquaresVectors:resultState: not bound
 !missing-selector! MPSNNOptimizerStochasticGradientDescent::encodeToCommandBuffer:batchNormalizationState:inputMomentumVectors:resultState: not bound
 !missing-type! MPSImageNormalizedHistogram not bound
+## appended from unclassified file
+!missing-protocol-member! MPSImageAllocator::imageBatchForCommandBuffer:imageDescriptor:kernel:count: not found
+!missing-selector! MPSNNFilterNode::trainingGraphWithSourceGradient:nodeHandler: not bound
+!missing-selector! MPSNNImageNode::setStopGradient: not bound
+!missing-selector! MPSNNImageNode::stopGradient not bound
