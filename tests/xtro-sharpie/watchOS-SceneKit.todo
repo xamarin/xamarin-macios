@@ -1,0 +1,4 @@
+!missing-selector! SCNPhysicsBody::angularRestingThreshold not bound
+!missing-selector! SCNPhysicsBody::linearRestingThreshold not bound
+!missing-selector! SCNPhysicsBody::setAngularRestingThreshold: not bound
+!missing-selector! SCNPhysicsBody::setLinearRestingThreshold: not bound
