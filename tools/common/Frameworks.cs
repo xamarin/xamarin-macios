@@ -256,7 +256,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "WatchConnectivity", "WatchConnectivity", 9 },
 				{ "ModelIO", "ModelIO", 9 },
 				{ "MetalKit", "MetalKit", 9 },
-				{ "MetalPerformanceShaders", "MetalPerformanceShaders", 9 },
+				{ "MetalPerformanceShaders", "MetalPerformanceShaders", new Version (9, 0), new Version (11, 0) /* MPS got simulator headers in Xcode 9 */ },
 				{ "GameplayKit", "GameplayKit", 9 },
 				{ "HealthKitUI", "HealthKitUI", 9,3 },
 
