@@ -146,7 +146,7 @@ def reportFinalStatusToSlack (err, gitHash, currentStage, fileContents)
     }
     def text = ""
     if (fileContents != null)
-        text = "\"text\": ${groovy.json.JsonOutput.toJson (fileContents)},"
+        text = "\"text\": ${groovy.json.JsonOutput.toJson (markdownToSlack (fileContents))},"
     // The attachments string must not start with a newline, it will produce a very helpful 'Invalid JSON String' exception with no additional info.
     def attachments = """[
         {
