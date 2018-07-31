@@ -1264,10 +1264,6 @@ namespace UIKit {
 		[iOS (9,0)] // documented as 7.0 but missing in 8.x
 		[Export ("CGGlyphAtIndex:")]
 		ushort GetGlyph (nuint glyphIndex);
-		
-		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
-		[Export ("limitsLayoutForSuspiciousContents")]
-		bool LimitsLayoutForSuspiciousContents { get; set; }
 	}
 	
 	[Model, BaseType (typeof (NSObject))]
