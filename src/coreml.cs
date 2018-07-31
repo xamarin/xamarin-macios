@@ -74,6 +74,13 @@ namespace CoreML {
 		Range = 3,
 	}
 
+	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Native]
+	public enum MLComputeUnits : long {
+		Only = 0,
+		AndGpu = 1,
+	}
+
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	interface MLDictionaryFeatureProvider : MLFeatureProvider {
@@ -210,10 +217,20 @@ namespace CoreML {
 		[Export ("modelDescription")]
 		MLModelDescription ModelDescription { get; }
 
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("configuration")]
+		MLModelConfiguration Configuration { get; }
+
 		[Static]
 		[Export ("modelWithContentsOfURL:error:")]
 		[return: NullAllowed]
 		MLModel Create (NSUrl url, out NSError error);
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Static]
+		[Export ("modelWithContentsOfURL:configuration:error:")]
+		[return: NullAllowed]
+		MLModel Create (NSUrl url, MLModelConfiguration configuration, out NSError error);
 
 		[Export ("predictionFromFeatures:error:")]
 		[return: NullAllowed]
@@ -558,6 +575,14 @@ namespace CoreML {
 
 		[Export ("countRange")]
 		NSRange CountRange { get; }
+	}
+
+	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[BaseType (typeof(NSObject))]
+	interface MLModelConfiguration : NSCopying {
+
+		[Export ("computeUnits", ArgumentSemantic.Assign)]
+		MLComputeUnits ComputeUnits { get; set; }
 	}
 }
 #endif // XAMCORE_2_0

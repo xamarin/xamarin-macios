@@ -1,6 +1,0 @@
-!missing-enum! MLComputeUnits not bound
-!missing-selector! +MLModel::modelWithContentsOfURL:configuration:error: not bound
-!missing-selector! MLModel::configuration not bound
-!missing-selector! MLModelConfiguration::computeUnits not bound
-!missing-selector! MLModelConfiguration::setComputeUnits: not bound
-!missing-type! MLModelConfiguration not bound
