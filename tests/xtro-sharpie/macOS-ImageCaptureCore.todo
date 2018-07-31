@@ -4,6 +4,7 @@
 !missing-enum! ICDeviceTypeMask not bound
 !missing-enum! ICEXIFOrientationType not bound
 !missing-enum! ICReturnCode not bound
+!missing-enum! ICReturnCodeOffset not bound
 !missing-enum! ICScannerBitDepth not bound
 !missing-enum! ICScannerColorDataFormatType not bound
 !missing-enum! ICScannerDocumentType not bound

@@ -234,7 +234,8 @@ function install_visual_studio () {
 function install_specific_xcode () {
 	local XCODE_URL=`grep XCODE$1_URL= Make.config | sed 's/.*=//'`
 	local XCODE_VERSION=`grep XCODE$1_VERSION= Make.config | sed 's/.*=//'`
-	local XCODE_ROOT=$(dirname `dirname $XCODE_DEVELOPER_ROOT`)
+	local XCODE_DEVELOPER_ROOT="$2"
+	local XCODE_ROOT="$(dirname "$(dirname "$XCODE_DEVELOPER_ROOT")")"
 
 	if test -z $XCODE_URL; then
 		fail "No XCODE$1_URL set in Make.config, cannot provision"
@@ -248,9 +249,9 @@ function install_specific_xcode () {
 
 	# To test this script with new Xcode versions, copy the downloaded file to $XCODE_DMG,
 	# uncomment the following curl line, and run ./system-dependencies.sh --provision-xcode
-	if test -f "~/Downloads/$XCODE_NAME"; then
-		log "Found XCode $XCODE_VERSION in your ~/Downloads folder, copying that version instead."
-		cp "~/Downloads/$XCODE_NAME" "$XCODE_DMG"
+	if test -f "$HOME/Downloads/$XCODE_NAME"; then
+		log "Found Xcode $XCODE_VERSION in your ~/Downloads folder, copying that version instead."
+		cp "$HOME/Downloads/$XCODE_NAME" "$XCODE_DMG"
 	else
 		curl -L $XCODE_URL > $XCODE_DMG
 	fi
@@ -319,7 +320,7 @@ function check_specific_xcode () {
 	if ! test -d $XCODE_DEVELOPER_ROOT; then
 		if ! test -z $PROVISION_XCODE; then
 			if ! test -z $ENABLE_XAMARIN; then
-				install_specific_xcode $1
+				install_specific_xcode "$1" "$XCODE_DEVELOPER_ROOT"
 			else
 				fail "Automatic provisioning of Xcode is only supported for provisioning internal build bots."
 				fail "Please download and install Xcode $XCODE_VERSION here: https://developer.apple.com/downloads/index.action?name=Xcode"
@@ -348,15 +349,17 @@ function check_specific_xcode () {
 		return
 	fi
 
-	local XCODE_SELECT=$(xcode-select -p)
-	if [[ "x$XCODE_SELECT" != "x$XCODE_DEVELOPER_ROOT" ]]; then
-		if ! test -z $PROVISION_XCODE; then
-			log "Executing '$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT'"
-			$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT
-			log "Clearing xcrun cache..."
-			xcrun -k
-		else
-			fail "'xcode-select -p' does not point to $XCODE_DEVELOPER_ROOT, it points to $XCODE_SELECT. Execute '$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT' to fix."
+	if test -z "$1"; then
+		local XCODE_SELECT=$(xcode-select -p)
+		if [[ "x$XCODE_SELECT" != "x$XCODE_DEVELOPER_ROOT" ]]; then
+			if ! test -z $PROVISION_XCODE; then
+				log "Executing '$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT'"
+				$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT
+				log "Clearing xcrun cache..."
+				xcrun -k
+			else
+				fail "'xcode-select -p' does not point to $XCODE_DEVELOPER_ROOT, it points to $XCODE_SELECT. Execute '$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT' to fix."
+			fi
 		fi
 	fi
 
@@ -368,6 +371,7 @@ function check_xcode () {
 
 	# must have latest Xcode in /Applications/Xcode<version>.app
 	check_specific_xcode
+	check_specific_xcode "94"
 
 	local XCODE_DEVELOPER_ROOT=`grep ^XCODE_DEVELOPER_ROOT= Make.config | sed 's/.*=//'`
 	local IOS_SDK_VERSION=`grep ^IOS_SDK_VERSION= Make.config | sed 's/.*=//'`

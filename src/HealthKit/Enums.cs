@@ -564,4 +564,52 @@ namespace HealthKit
 		PredictionSubMaxExercise,
 		PredictionNonExercise,
 	}
+ 
+	[NoWatch, iOS (12, 0)]
+	public enum HKFhirResourceType {
+		[Field ("HKFHIRResourceTypeAllergyIntolerance")]
+		AllergyIntolerance,
+		[Field ("HKFHIRResourceTypeCondition")]
+		Condition,
+		[Field ("HKFHIRResourceTypeImmunization")]
+		Immunization,
+		[Field ("HKFHIRResourceTypeMedicationDispense")]
+		MedicationDispense,
+		[Field ("HKFHIRResourceTypeMedicationOrder")]
+		MedicationOrder,
+		[Field ("HKFHIRResourceTypeMedicationStatement")]
+		MedicationStatement,
+		[Field ("HKFHIRResourceTypeObservation")]
+		Observation,
+		[Field ("HKFHIRResourceTypeProcedure")]
+		Procedure,
+	}
+
+	[Watch (5, 0), iOS (12, 0)]
+	public enum HKClinicalTypeIdentifier {
+
+		[Field ("HKClinicalTypeIdentifierAllergyRecord")]
+		AllergyRecord,
+		[Field ("HKClinicalTypeIdentifierConditionRecord")]
+		ConditionRecord,
+		[Field ("HKClinicalTypeIdentifierImmunizationRecord")]
+		ImmunizationRecord,
+		[Field ("HKClinicalTypeIdentifierLabResultRecord")]
+		LabResultRecord,
+		[Field ("HKClinicalTypeIdentifierMedicationRecord")]
+		MedicationRecord,
+		[Field ("HKClinicalTypeIdentifierProcedureRecord")]
+		ProcedureRecord,
+		[Field ("HKClinicalTypeIdentifierVitalSignRecord")]
+		VitalSignRecord,
+	}
+
+	[Watch (5,0), iOS (12,0)]
+	[Native]
+	public enum HKAuthorizationRequestStatus : long 
+	{
+		Unknown = 0,
+		ShouldRequest,
+		Unnecessary,
+	}
 }

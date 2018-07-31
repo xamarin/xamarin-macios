@@ -64,8 +64,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void Appearance ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8,0))
-				Assert.Inconclusive ("UITraitCollection requires iOS 8.0");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			using (var traits = new UITraitCollection ()) {
 				nfloat r, g, b, a;
@@ -94,8 +93,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void AppearanceWhenContainedIn ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8,0))
-				Assert.Inconclusive ("UITraitCollection requires iOS 8.0");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			using (var traits = new UITraitCollection ()) {
 				nfloat r, g, b, a;
@@ -124,8 +122,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void AppearanceWhenContainedIn_UITraitCollection ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8,0))
-				Assert.Inconclusive ("UITraitCollection requires iOS 8.0");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			using (var traits = new UITraitCollection ()) {
 				nfloat r, g, b, a;
@@ -175,8 +172,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void Appearance_UITraitCollection ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8,0))
-				Assert.Inconclusive ("UITraitCollection requires iOS 8.0");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			using (var traits = new UITraitCollection ()) {
 				nfloat r, g, b, a;

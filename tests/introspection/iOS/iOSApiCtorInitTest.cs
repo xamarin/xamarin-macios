@@ -215,6 +215,14 @@ namespace Introspection {
 			case "NEHotspotConfigurationManager":
 			case "NEHotspotHS20Settings":
 				return Runtime.Arch == Arch.SIMULATOR;
+			// iOS 12
+			case "INGetAvailableRestaurantReservationBookingDefaultsIntentResponse": // Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: Unable to initialize 'INGetAvailableRestaurantReservationBookingDefaultsIntentResponse'. Please make sure that your intent definition file is valid.
+			case "INGetAvailableRestaurantReservationBookingsIntentResponse": // Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: Unable to initialize 'INGetAvailableRestaurantReservationBookingsIntentResponse'. Please make sure that your intent definition file is valid.
+			case "INGetRestaurantGuestIntentResponse": // Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: Unable to initialize 'INGetRestaurantGuestIntentResponse'. Please make sure that your intent definition file is valid.
+				return TestRuntime.CheckXcodeVersion (10,0);
+			case "CMMovementDisorderManager": // Not available in simulator, added info to radar://41110708 
+			case "RPSystemBroadcastPickerView": // Symbol not available in simulator
+				return Runtime.Arch == Arch.SIMULATOR;
 			default:
 				return base.Skip (type);
 			}
@@ -291,6 +299,15 @@ namespace Introspection {
 				// iOS9 - the instance was "kind of valid" before
 				case "PKPaymentAuthorizationViewController":
 					if (TestRuntime.CheckXcodeVersion (7, 0))
+						return;
+					break;
+				// iOS 12
+				case "CIAztecCodeGenerator":
+				case "CIBarcodeGenerator":
+				case "CICode128BarcodeGenerator":
+				case "CIPdf417BarcodeGenerator":
+				case "CIQRCodeGenerator":
+					if (TestRuntime.CheckXcodeVersion (10,0))
 						return;
 					break;
 				}

@@ -1074,8 +1074,6 @@ public class B : A {}
 				mtouch.Sdk = sdk_version;
 				Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildSim));
 				var xcodeVersionString = Configuration.XcodeVersion;
-				if (xcodeVersionString.EndsWith (".0", StringComparison.Ordinal))
-					xcodeVersionString = xcodeVersionString.Substring (0, xcodeVersionString.Length - 2);
 				mtouch.AssertError (91, String.Format ("This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only (to try to avoid the new APIs).", name, GetSdkVersion (profile), xcodeVersionString));
 			}
 		}
@@ -3732,6 +3730,8 @@ public class HandlerTest
 				case "_xamarin_float_objc_msgSendSuper": // Classic only, this function can probably be removed when we switch to binary copy of a Classic version of libxamarin.a
 				case "_xamarin_nfloat_objc_msgSend": // XM only
 				case "_xamarin_nfloat_objc_msgSendSuper": // Xm only
+					continue;
+				case "____chkstk_darwin": // compiler magic, unrelated to XI/XM
 					continue;
 				default:
 					missingSimlauncherSymbols.Add (symbol);

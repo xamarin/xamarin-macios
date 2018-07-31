@@ -28,12 +28,15 @@
 /src/audiotoolbox.cs @dalexsoto
 /src/AudioUnit @dalexsoto
 /src/audiounit.cs @dalexsoto
+/src/authenticationservices.cs @spouliot
 /src/AVFoundation @mandel-macaque @dalexsoto
 /src/avfoundation.cs @mandel-macaque @dalexsoto
 /src/AVKit @spouliot @dalexsoto
 /src/avkit.cs @spouliot @dalexsoto
 /src/CallKit @dalexsoto
 /src/callkit.cs @dalexsoto
+/src/CarPlay @dalexsoto
+/src/carplay.cs @dalexsoto
 /src/CFNetwork @spouliot
 /src/cfnetwork.cs @spouliot
 /src/CloudKit @mandel-macaque
@@ -91,6 +94,8 @@
 /src/homekit.cs @VincentDondain
 /src/iad.cs @spouliot
 /src/iAd.framework @spouliot
+/src/identitylookup.cs @dalexsoto
+/src/identitylookupui.cs @dalexsoto
 /src/ImageIO @spouliot @chamons
 /src/imageio.cs @spouliot @chamons
 /src/ImageKit @chamons
@@ -123,6 +128,8 @@
 /src/modelio.cs @VincentDondain
 /src/MultipeerConnectivity @spouliot
 /src/multipeerconnectivity.cs @spouliot
+/src/naturallanguage.cs @mandel-macaque
+/src/NaturalLanguage @mandel-macaque
 /src/NetworkExtension @spouliot
 /src/networkextension.cs @spouliot
 /src/NotificationCenter @spouliot

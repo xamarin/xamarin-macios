@@ -294,6 +294,11 @@ BUSINESSCHAT_SOURCES = \
 CALLKIT_SOURCES = \
 	CallKit/CXProvider.cs \
 
+# CarPlay
+
+CARPLAY_SOURCES = \
+	CarPlay/CPNavigationAlert.cs \
+
 # ClassKit
 
 CLASSKIT_SOURCES = \
@@ -507,6 +512,7 @@ COREMEDIA_SOURCES = \
 # CoreMidi
 
 COREMIDI_CORE_SOURCES = \
+	CoreMidi/MidiCIDeviceIdentification.cs \
 	CoreMidi/MidiServices.cs \
 	CoreMidi/MidiThruConnection.cs \
 	CoreMidi/MidiThruConnectionParams.cs \
@@ -573,6 +579,7 @@ CORETEXT_SOURCES = \
 	CoreText/CTStringAttributes.cs \
 	CoreText/CTTextTab.cs \
 	CoreText/CTTypesetter.cs \
+	CoreText/CTTypesetterOptionKeyCompat.cs \
 	CoreText/ConstructorError.cs \
 
 # CoreTelephony
@@ -822,7 +829,7 @@ GLKIT_SOURCES = \
 
 # HealthKit
 
-HEALTHKIT_CORE_SOURCES = \
+HEALTHKIT_API_SOURCES = \
 	HealthKit/Enums.cs \
 
 HEALTHKIT_SOURCES = \
@@ -854,6 +861,9 @@ HOMEKIT_SOURCES = \
 
 IAD_API_SOURCES = \
 	iAd/iAd.cs \
+
+IAD_SOURCES = \
+	iAd/ADBannerView.cs \
 
 # ImageIO
 
@@ -897,6 +907,7 @@ INTENTS_SOURCES = \
 	Intents/INRelativeReferenceResolutionResult.cs \
 	Intents/INRelativeSettingResolutionResult.cs \
 	Intents/INRideOption.cs \
+	Intents/INPlayMediaIntentResponse.cs \
 	Intents/INSaveProfileInCarIntent.cs \
 	Intents/INSearchCallHistoryIntent.cs \
 	Intents/INSetCarLockStatusIntent.cs \
@@ -908,13 +919,21 @@ INTENTS_SOURCES = \
 	Intents/INStartWorkoutIntent.cs \
 	Intents/INWorkoutGoalUnitTypeResolutionResult.cs \
 	Intents/INWorkoutLocationTypeResolutionResult.cs \
+	Intents/INCarAirCirculationModeResolutionResult.watchOS.cs \
+	Intents/INCarAudioSourceResolutionResult.watchOS.cs \
+	Intents/INCarDefrosterResolutionResult.watchOS.cs \
+	Intents/INCarSeatResolutionResult.watchOS.cs \
+	Intents/INRadioTypeResolutionResult.watchOS.cs \
+	Intents/INRelativeReferenceResolutionResult.watchOS.cs \
+	Intents/INRelativeSettingResolutionResult.watchOS.cs \
 
 # IOSurface
 IOSURFACE_CORE_SOURCES = \
 	IOSurface/IODefs.cs
 
 IOSURFACE_SOURCES = \
-	IOSurface/IOSurface.cs
+	IOSurface/IOSurface.cs \
+	IOSurface/IOSurfacePropertyKey.cs \
 
 # JavaScriptCore
 
@@ -937,6 +956,7 @@ MAPKIT_CORE_SOURCES = \
 
 MAPKIT_SOURCES = \
 	MapKit/MKCircle.cs \
+	MapKit/MKCompat.cs \
 	MapKit/MKDirections.cs \
 	MapKit/MKFeatureDisplayPriority.cs \
 	MapKit/MKGeodesicPolyline.cs \
@@ -1059,6 +1079,14 @@ MULTIPEERCONNECTIVITY_SOURCES = \
 	MultipeerConnectivity/Compat.cs \
 	MultipeerConnectivity/MCSession.cs \
 
+# Natural Language
+
+NATURALLANGUAGE_API_SOURCES = \
+	NaturalLanguage/Enums.cs \
+
+NATURALLANGUAGE_SOURCES = \
+	NaturalLanguage/NLLanguageRecognizer.cs \
+
 # NetworkExtension
 
 NETWORKEXTENSION_API_SOURCES = \
@@ -1174,7 +1202,7 @@ PHOTOS_SOURCES = \
 
 # PhotosUI
 
-PHOTOSUI_CORE_SOURCES = \
+PHOTOSUI_API_SOURCES = \
 	PhotosUI/PHEnums.cs \
 
 # PrintCode
@@ -1327,6 +1355,7 @@ STOREKIT_CORE_SOURCES = \
 
 STOREKIT_SOURCES = \
 	StoreKit/NativeMethods.cs \
+	StoreKit/SKAdNetworkCompat.cs \
 	StoreKit/SKCloudServiceSetupOptions.cs \
 	StoreKit/SKPayment.cs \
 	StoreKit/SKPaymentTransactionObserver.cs \
@@ -1398,6 +1427,7 @@ UIKIT_SOURCES = \
 	UIKit/UIContentSizeCategory.cs \
 	UIKit/UIControl.cs \
 	UIKit/UIDevice.cs \
+	UIKit/UIDocumentBrowserViewController.cs \
 	UIKit/UIDocumentInteractionController.cs \
 	UIKit/UIDocumentMenuViewController.cs \
 	UIKit/UIDocumentPickerViewController.cs \
@@ -1634,6 +1664,7 @@ COMMON_FRAMEWORKS =         \
 MAC_FRAMEWORKS =            \
 	$(COMMON_FRAMEWORKS)    \
 	Accounts                \
+	AdSupport               \
 	AppKit                  \
 	AudioToolbox            \
 	AudioUnit               \
@@ -1678,6 +1709,7 @@ MAC_FRAMEWORKS =            \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity	\
+	NaturalLanguage         \
 	NetworkExtension        \
 	NotificationCenter 	\
 	OpenGL                  \
@@ -1696,6 +1728,8 @@ MAC_FRAMEWORKS =            \
 	Social                  \
 	StoreKit                \
 	SystemConfiguration     \
+	UserNotifications       \
+	VideoSubscriberAccount  \
 	VideoToolbox            \
 	Vision                  \
 	WebKit                  \
@@ -1712,8 +1746,10 @@ IOS_FRAMEWORKS =         \
 	AssetsLibrary \
 	AudioToolbox \
 	AudioUnit \
+	AuthenticationServices \
 	BusinessChat \
 	CallKit \
+	CarPlay \
 	CFNetwork \
 	ClassKit \
 	CloudKit \
@@ -1745,6 +1781,7 @@ IOS_FRAMEWORKS =         \
 	HealthKitUI \
 	HomeKit \
 	IdentityLookup \
+	IdentityLookupUI \
 	ImageIO \
 	Intents \
 	IntentsUI \
@@ -1763,6 +1800,7 @@ IOS_FRAMEWORKS =         \
 	MobileCoreServices \
 	ModelIO \
 	MultipeerConnectivity \
+	NaturalLanguage \
 	NetworkExtension \
 	NewsstandKit \
 	NotificationCenter \
@@ -1808,7 +1846,9 @@ WATCHOS_FRAMEWORKS =        \
 	ImageIO                 \
 	Intents                 \
 	MapKit                  \
+	MediaPlayer             \
 	MobileCoreServices      \
+	NaturalLanguage         \
 	PassKit                 \
 	Security                \
 	UIKit                   \
@@ -1851,6 +1891,7 @@ TVOS_FRAMEWORKS =           \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity   \
+	NaturalLanguage         \
 	OpenGLES                \
 	Photos                  \
 	PhotosUI                \
@@ -1859,6 +1900,7 @@ TVOS_FRAMEWORKS =           \
 	StoreKit                \
 	SystemConfiguration     \
 	TVMLKit                 \
+	TVUIKit					\
 	TVServices				\
 	UIKit                   \
 	UserNotifications       \

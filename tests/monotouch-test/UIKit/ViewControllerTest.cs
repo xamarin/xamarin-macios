@@ -14,6 +14,7 @@ using System.Reflection;
 #if XAMCORE_2_0
 using Foundation;
 using UIKit;
+using ObjCRuntime;
 #if !__TVOS__
 using iAd;
 #endif
@@ -186,24 +187,11 @@ namespace MonoTouchFixtures.UIKit {
 			}
 		}
 
-#if !XAMCORE_2_0
-		[Test]
-		public void InterstitialAds_Old ()
-		{
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (7, 0))
-				Assert.Inconclusive ("prepareInterstitialAds is > iOS 7.0");
-			
-			UIViewController vc = null;
-			vc.PrepareInterstitialAds ();
-		}
-#endif
-
 #if !__TVOS__
 		[Test]
 		public void InterstitialAds_New ()
 		{
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (7, 0))
-				Assert.Inconclusive ("prepareInterstitialAds is > iOS 7.0");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 			
 			UIViewController.PrepareForInterstitialAds ();
 		}

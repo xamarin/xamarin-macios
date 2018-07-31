@@ -31,8 +31,7 @@ namespace MonoTouchFixtures.GamePlayKit {
 		[Test]
 		public void GetAndRemoveTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (9, 0))
-				Assert.Ignore ("Ignoring GameplayKit tests: Requires iOS9+");
+			TestRuntime.AssertXcodeVersion (7, 0);
 
 			var entity = GKEntity.GetEntity ();
 			entity.AddComponent (new NumberComponent (10));
@@ -55,8 +54,7 @@ namespace MonoTouchFixtures.GamePlayKit {
 		[Test]
 		public void BadGetComponent ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (9, 0))
-				Assert.Ignore ("Ignoring GameplayKit tests: Requires iOS9+");
+			TestRuntime.AssertXcodeVersion (7, 0);
 
 			var entity = GKEntity.GetEntity ();
 			entity.GetComponent (null);
@@ -66,8 +64,7 @@ namespace MonoTouchFixtures.GamePlayKit {
 		[Test]
 		public void BadRemoval ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (9, 0))
-				Assert.Ignore ("Ignoring GameplayKit tests: Requires iOS9+");
+			TestRuntime.AssertXcodeVersion (7, 0);
 
 			var entity = GKEntity.GetEntity ();
 			entity.RemoveComponent (null);

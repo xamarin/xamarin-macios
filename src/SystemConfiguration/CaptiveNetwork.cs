@@ -20,6 +20,43 @@ namespace SystemConfiguration {
 	// http://developer.apple.com/library/ios/#documentation/SystemConfiguration/Reference/CaptiveNetworkRef/Reference/reference.html
 	// CaptiveNetwork.h
 	public static partial class CaptiveNetwork {
+
+#if __TVOS__
+		// in Xcode 10 the CaptiveNetwork API are marked as prohibited on tvOS
+#if !XAMCORE_4_0
+		[Obsolete ("Always return 'null'.")]
+		[Unavailable (PlatformName.TvOS)]
+		public static Foundation.NSString NetworkInfoKeyBSSID => null;
+
+		[Obsolete ("Always return 'null'.")]
+		[Unavailable (PlatformName.TvOS)]
+		public static Foundation.NSString NetworkInfoKeySSID => null;
+
+		[Obsolete ("Always return 'null'.")]
+		[Unavailable (PlatformName.TvOS)]
+		public static Foundation.NSString NetworkInfoKeySSIDData => null;
+
+		[Obsolete ("Throw a 'NotSupportedException'.")]
+		[Unavailable (PlatformName.TvOS)]
+		public static bool MarkPortalOffline (string iface) => throw new NotSupportedException ();
+
+		[Obsolete ("Throw a 'NotSupportedException'.")]
+		[Unavailable (PlatformName.TvOS)]
+		public static bool MarkPortalOnline (string iface)  => throw new NotSupportedException ();
+
+		[Obsolete ("Throw a 'NotSupportedException'.")]
+		[Unavailable (PlatformName.TvOS)]
+		public static bool SetSupportedSSIDs (string[] ssids) => throw new NotSupportedException ();
+
+		[Obsolete ("Throw a 'NotSupportedException'.")]
+		[Unavailable (PlatformName.TvOS)]
+		public static StatusCode TryCopyCurrentNetworkInfo (string interfaceName, out Foundation.NSDictionary currentNetworkInfo)  => throw new NotSupportedException ();
+
+		[Obsolete ("Throw a 'NotSupportedException'.")]
+		[Unavailable (PlatformName.TvOS)]
+		public static StatusCode TryGetSupportedInterfaces (out string[] supportedInterfaces)  => throw new NotSupportedException ();
+#endif
+#else
 		
 #if !MONOMAC
 
@@ -119,5 +156,6 @@ namespace SystemConfiguration {
 				return CNSetSupportedSSIDs (arr.Handle);
 			}
 		}
+#endif // __TVOS__
 	}
 }

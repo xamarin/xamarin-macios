@@ -206,6 +206,7 @@ namespace Introspection
 			"Exr",
 			"Felica", // Japanese contactless RFID smart card system
 			"Femtowatts",
+			"Fhir",
 			"Flipside",
 			"Formati",
 			"Fov",
@@ -219,6 +220,7 @@ namespace Introspection
 			"Gbrg",	// acronym for Green-Blue-Reg-Green
 			"Geocoder",
 			"Gigapascals",
+			"Gop", // acronym for Group Of Pictures
 			"Gpp",
 			"Gps",
 			"Gpu",	// acronym for Graphics Processing Unit
@@ -242,6 +244,7 @@ namespace Introspection
 			"Hvxc", // MPEG4ObjectID
 			"Ies",
 			"Icq",
+			"Ident",
 			"Identd",
 			"Imageblock",
 			"Imagefor",
@@ -408,6 +411,7 @@ namespace Introspection
 			"Rtl",
 			"Rtsp",
 			"Saml", // acronym
+			"Sdof",
 			"Scn",
 			"Sdk",
 			"Sdtv", // acronym: Standard Definition Tele Vision
@@ -477,6 +481,7 @@ namespace Introspection
 			"Udp",
 			"Unconfigured",
 			"Undecodable",
+			"Unemphasized",
 			"Underrun",
 			"Unflagged",
 			"Unfocusing",
@@ -828,7 +833,7 @@ namespace Introspection
 						continue;
 
 					string txt = NameCleaner (t.Name);
-					var typo = GetTypo (txt);
+					var typo = GetCachedTypo (txt);
 					if (typo.Length > 0 ) {
 						if (!Skip (t, typo)) {
 							ReportError ("Typo in TYPE: {0} - {1} ", t.Name, typo);
@@ -847,7 +852,7 @@ namespace Introspection
 							continue;
 						
 						txt = NameCleaner (f.Name);
-						typo = GetTypo (txt);
+						typo = GetCachedTypo (txt);
 						if (typo.Length > 0) {
 							if (!Skip (f, typo)) {
 								ReportError ("Typo in FIELD name: {0} - {1}, Type: {2}", f.Name, typo, t.Name);
@@ -867,7 +872,7 @@ namespace Introspection
 							continue;
 						
 						txt = NameCleaner (m.Name);
-						typo = GetTypo (txt);
+						typo = GetCachedTypo (txt);
 						if (typo.Length > 0) {
 							if (!Skip (m, typo)) {
 								ReportError ("Typo in METHOD name: {0} - {1}, Type: {2}", m.Name, typo, t.Name);
@@ -878,7 +883,7 @@ namespace Introspection
 						var parameters = m.GetParameters ();
 						foreach (ParameterInfo p in parameters) {
 							txt = NameCleaner (p.Name);
-							typo = GetTypo (txt);
+							typo = GetCachedTypo (txt);
 							if (typo.Length > 0) {
 								ReportError ("Typo in PARAMETER Name: {0} - {1}, Method: {2}, Type: {3}", p.Name, typo, m.Name, t.Name);
 								totalErrors++;
@@ -964,6 +969,14 @@ namespace Introspection
 			}
 		}
 
+		Dictionary<string, string> cached_typoes = new Dictionary<string, string> ();
+		string GetCachedTypo (string txt)
+		{
+			string rv;
+			if (!cached_typoes.TryGetValue (txt, out rv))
+				cached_typoes [txt] = rv = GetTypo (txt);
+			return rv;
+		}
 		public abstract string GetTypo (string txt);
 
 		static StringBuilder clean = new StringBuilder ();

@@ -459,5 +459,24 @@ namespace Xamarin.Tests
 				return "/Library/Frameworks/Mono.framework/Commands/mcs";
 			}
 		}
+
+		public static void AssertXcodeSupports32Bit ()
+		{
+			if (XcodeSupports32Bit)
+				return;
+			Assert.Ignore ("The current version of Xcode does not support compiling 32-bit macOS applications.");
+		}
+
+		public static bool XcodeSupports32Bit {
+			get {
+				return Version.Parse (XcodeVersion).Major < 10;
+			}
+		}
+
+		public static string NuGetPackagesDirectory {
+			get {
+				return Path.Combine (RootPath, "packages");
+			}
+		}
 	}
 }

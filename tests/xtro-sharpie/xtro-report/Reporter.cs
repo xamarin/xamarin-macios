@@ -61,7 +61,6 @@ namespace Extrospection {
 			case "PreferencePanes":
 			case "Python":
 			case "QD":
-			case "QuartzComposer":
 			case "QuartzFilters":
 			case "ruby":
 			case "ScreenSaver":

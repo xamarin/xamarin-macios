@@ -102,8 +102,9 @@ all: classify report
 	@$(TOP)/system-dependencies.sh --ignore-all --enforce-sharpie
 	@touch $@
 	
-unclassified2todo:
-	for f in *.unclassified; do \
-		mv -- "$f" "${f%.unclassified}.todo" \
-	done \
+remove-empty-files:
+	find . -empty -exec git rm -f {} \;
 
+unclassified2todo:
+	$(SYSTEM_CSC) u2todo.cs
+	$(MONO) u2todo.exe

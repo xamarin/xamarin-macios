@@ -23,6 +23,7 @@
 //
 using System;
 using ObjCRuntime;
+using Foundation;
 
 namespace AppKit {
 
@@ -137,6 +138,7 @@ namespace AppKit {
 	}
 
 	[Native]
+	[Deprecated (PlatformName.MacOSX, 10, 14)]
 	public enum NSBackingStore : ulong {
 		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'Buffered' instead.")]
 		Retained, 
@@ -337,7 +339,14 @@ namespace AppKit {
 
 	[Native]
 	public enum NSBackgroundStyle : long {
-		Light, Dark, Raised, Lowered
+		Normal = 0,
+		[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Normal' instead.")]
+		Light = Normal,
+		Emphasized,
+		[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Emphasized' instead.")]
+		Dark = Emphasized, 
+		Raised, 
+		Lowered,
 	}
 #endregion
 
@@ -876,7 +885,9 @@ namespace AppKit {
 		Utility		       					= 1 << 4,
 		DocModal	       					= 1 << 6,
 		NonactivatingPanel     				= 1 << 7,
+		[Advice ("'TexturedBackground' should no longer be used.")]
 		TexturedBackground     				= 1 << 8,
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		Unscaled	       					= 1 << 11,
 		UnifiedTitleAndToolbar 				= 1 << 12,
 		Hud		       						= 1 << 13,
@@ -984,8 +995,10 @@ namespace AppKit {
 	[Native]
 	public enum NSBoxType : ulong {
 		NSBoxPrimary,
+		[Advice ("Identical to 'NSBoxPrimary'.")]
 		NSBoxSecondary,
 		NSBoxSeparator,
+		[Advice ("'NSBoxOldStyle' is discouraged. Use 'NSBoxPrimary' or 'NSBoxCustom'.")]
 		NSBoxOldStyle,
 		NSBoxCustom
 	};
@@ -1487,21 +1500,34 @@ namespace AppKit {
 	}
 
 	[Native]
+	[Deprecated (PlatformName.MacOSX, 10, 14)]	
 	public enum NSScrollArrowPosition : ulong {
 		MaxEnd, MinEnd, DefaultSetting, None
 	}
 
 	[Native]
 	public enum NSUsableScrollerParts : ulong {
-		NoScroller, OnlyArrows, All
+		NoScroller, 
+		[Deprecated (PlatformName.MacOSX, 10, 14)]		
+		OnlyArrows, 
+		All,
 	}
 
 	[Native]
 	public enum NSScrollerPart : ulong {
-		None, DecrementPage, Knob, IncrementPage, DecrementLine, IncrementLine, KnobSlot
+		None,
+		DecrementPage,
+		Knob,
+		IncrementPage,
+		[Deprecated (PlatformName.MacOSX, 10, 14)]	
+		DecrementLine,
+		[Deprecated (PlatformName.MacOSX, 10, 14)]	
+		IncrementLine,
+		KnobSlot,
 	}
 
 	[Native]
+	[Deprecated (PlatformName.MacOSX, 10, 14)]		
 	public enum NSScrollerArrow : ulong {
 		IncrementArrow, DecrementArrow
 	}
@@ -1952,6 +1978,7 @@ namespace AppKit {
 	}
 
 	[Native]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
 	public enum NSOpenGLContextParameter : ulong {
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		SwapRectangle = 200,
@@ -1982,6 +2009,7 @@ namespace AppKit {
 		BelowWindow = -1
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
 	public enum NSOpenGLPixelFormatAttribute : uint { // uint32_t NSOpenGLPixelFormatAttribute
 		AllRenderers       =   1,
 		DoubleBuffer       =   5,
@@ -2043,6 +2071,7 @@ namespace AppKit {
 
 #if XAMCORE_4_0
 	[Native]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
 	public enum NSOpenGLProfile : long {
 #else
 	public enum NSOpenGLProfile : int {
@@ -2063,6 +2092,7 @@ namespace AppKit {
 		Third = 1002,
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
 	public enum NSOpenGLGlobalOption : uint {
 		FormatCacheSize = 501,
 		ClearFormatCache = 502,
@@ -2072,18 +2102,21 @@ namespace AppKit {
 		ResetLibrary = 504
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
 	public enum NSGLTextureTarget : uint {
 		T2D = 0x0de1,
 		CubeMap = 0x8513,
 		RectangleExt = 0x84F5,
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
 	public enum NSGLFormat : uint {
 		RGB = 0x1907,
 		RGBA = 0x1908,
 		DepthComponent = 0x1902,
 	}
 	
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
 	public enum NSGLTextureCubeMap : uint {
 		None = 0,
 		PositiveX = 0x8515,
@@ -2094,6 +2127,7 @@ namespace AppKit {
 		NegativeZ = 0x851A
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
 	public enum NSGLColorBuffer : uint {
 		Front = 0x0404,
 		Back = 0x0405,
@@ -2101,6 +2135,7 @@ namespace AppKit {
 	}
 
 	[Native]
+	[Deprecated (PlatformName.MacOSX, 10, 14)]
 	public enum NSProgressIndicatorThickness : ulong {
 		Small = 10,
 		Regular = 14,
@@ -2139,6 +2174,7 @@ namespace AppKit {
 	[Native]
 	public enum NSWindowLevel : long {
 		Normal = 0,
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		Dock = 20,
 		Floating = 3,
 		MainMenu = 24, 
@@ -2423,26 +2459,6 @@ namespace AppKit {
 		Full
 	}
 
-	// Convenience enum for string values in ObjC
-	public enum NSSharingServiceName : int {
-		PostOnFacebook,
-		PostOnTwitter,
-		PostOnSinaWeibo,
-		ComposeEmail,
-		ComposeMessage,
-		SendViaAirDrop,
-		AddToSafariReadingList,
-		AddToIPhoto,
-		AddToAperture,
-		UseAsTwitterProfileImage,
-		UseAsDesktopPicture,
-		PostImageOnFlickr,
-		PostVideoOnVimeo,
-		PostVideoOnYouku,
-		PostVideoOnTudou,
-		CloudSharing
-	}
-
 	[Flags]
 	[Native]
 	public enum NSTypesetterControlCharacterAction : ulong {
@@ -2499,8 +2515,11 @@ namespace AppKit {
 #region NSVisualEffectView
 	[Native]
 	public enum NSVisualEffectMaterial : long {
+		[Advice ("Use a specific material instead.")]
 		AppearanceBased,
+		[Advice ("Use a semantic material instead.")]
 		Light,
+		[Advice ("Use a semantic material instead.")]
 		Dark,
 		Titlebar,
 		Selection,
@@ -2511,9 +2530,29 @@ namespace AppKit {
 		[Mac (10,11)]
 		Sidebar,
 		[Mac (10,11)]
+		[Advice ("Use a semantic material instead.")]
 		MediumLight,
 		[Mac (10,11)]
+		[Advice ("Use a semantic material instead.")]
 		UltraDark,
+		[Mac (10,14)]
+		HeaderView = 10,
+		[Mac (10,14)]
+		Sheet = 11,
+		[Mac (10,14)]
+		WindowBackground = 12,
+		[Mac (10,14)]
+		HUDWindow = 13,
+		[Mac (10,14)]
+		FullScreenUI = 15,
+		[Mac (10,14)]
+		ToolTip = 17,
+		[Mac (10,14)]
+		ContentBackground = 18,
+		[Mac (10,14)]
+		UnderWindowBackground = 21,
+		[Mac (10,14)]
+		UnderPageBackground = 22,
 	}
 
 	[Native]
@@ -2848,5 +2887,15 @@ namespace AppKit {
 		Fill,
 		FillEqually,
 		FillProportionally,
+	}
+
+	[Mac (10,14, onlyOn64: true)]
+	[Native]
+	public enum NSColorSystemEffect : long {
+		None,
+		Pressed,
+		DeepPressed,
+		Disabled,
+		Rollover,
 	}
 }

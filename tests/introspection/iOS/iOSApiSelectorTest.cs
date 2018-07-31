@@ -138,6 +138,13 @@ namespace Introspection {
 			case "INPaymentStatusResolutionResult":
 			case "INPaymentAccountResolutionResult":
 				return true;
+			case "CMMovementDisorderManager":
+				// From Xcode 10 beta 2:
+				// This requires a special entitlement:
+				//     Usage of CMMovementDisorderManager requires a special entitlement.  Please see for more information https://developer.apple.com/documentation/coremotion/cmmovementdisordermanager
+				// but that web page doesn't explain anything (it's mostly empty, so this is probably just lagging documentation)
+				// I also tried enabling every entitlement in Xcode, but it still didn't work.
+				return true;
 #endif
 
 			default:
@@ -297,6 +304,123 @@ namespace Introspection {
 				case "isGreenCarTicketUsed":
 				case "isInShinkansenStation":
 					if (TestRuntime.CheckXcodeVersion (9, 3))
+						return true;
+					break;
+				}
+				break;
+			// Xcode 10
+			case "GKTurnBasedExchange":
+				switch (name) {
+				case "completionDate":
+				case "data":
+				case "exchangeID":
+				case "sendDate":
+				case "timeoutDate":
+					if (TestRuntime.CheckXcodeVersion (10,0))
+						return true;
+					break;
+				}
+				break;
+			case "GKTurnBasedExchangeReply":
+				switch (name) {
+				case "data":
+				case "replyDate":
+					if (TestRuntime.CheckXcodeVersion (10,0))
+						return true;
+					break;
+				}
+				break;
+			case "GKScore":
+				switch (name) {
+				case "leaderboardIdentifier":
+				case "setLeaderboardIdentifier:":
+					if (TestRuntime.CheckXcodeVersion (10,0))
+						return true;
+					break;
+				}
+				break;
+			case "GKAchievementDescription":
+				switch (name) {
+				case "groupIdentifier":
+				case "isReplayable":
+					if (TestRuntime.CheckXcodeVersion (10,0))
+						return true;
+					break;
+				}
+				break;
+			case "GKInvite":
+				switch (name) {
+				case "playerAttributes":
+				case "playerGroup":
+				case "guestIdentifier":
+					if (TestRuntime.CheckXcodeVersion (10,0))
+						return true;
+					break;
+				}
+				break;
+			case "GKTurnBasedMatch":
+				switch (name) {
+				case "matchID":
+					if (TestRuntime.CheckXcodeVersion (10,0))
+						return true;
+					break;
+				}
+				break;
+			case "GKTurnBasedParticipant":
+				switch (name) {
+				case "timeoutDate":
+					if (TestRuntime.CheckXcodeVersion (10,0))
+						return true;
+					break;
+				}
+				break;
+			case "GKPlayer":
+				switch (name) {
+				case "guestIdentifier":
+					if (TestRuntime.CheckXcodeVersion (10,0))
+						return true;
+					break;
+				}
+				break;
+			case "GKMatchRequest":
+				switch (name) {
+				case "defaultNumberOfPlayers":
+				case "setDefaultNumberOfPlayers:":
+				case "inviteMessage":
+				case "setInviteMessage:":
+				case "maxPlayers":
+				case "setMaxPlayers:":
+				case "minPlayers":
+				case "setMinPlayers:":
+				case "playerAttributes":
+				case "setPlayerAttributes:":
+				case "playerGroup":
+				case "setPlayerGroup:":
+					if (TestRuntime.CheckXcodeVersion (10,0))
+						return true;
+					break;
+				}
+				break;
+			case "GKChallenge":
+				switch (name) {
+				case "completionDate":
+				case "issueDate":
+				case "message":
+				case "state":
+					if (TestRuntime.CheckXcodeVersion (10,0))
+						return true;
+					break;
+				}
+				break;
+			case "GKLeaderboard":
+			case "GKLeaderboardSet":
+				switch (name) {
+				case "groupIdentifier":
+				case "identifier":
+				case "setIdentifier:":
+				case "maxRange":
+				case "title":
+					if (TestRuntime.CheckXcodeVersion (10,0))
 						return true;
 					break;
 				}

@@ -22,13 +22,19 @@ namespace StoreKit {
 	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]
 	partial interface SKDownload {
-#if MONOMAC
+
+		[iOS (12,0)]
 		[Export ("state")]
+		SKDownloadState State { get; }
+#if MONOMAC
+		[Obsolete ("Use 'State' instead.")]
+		[Wrap ("State", IsVirtual = true)]
 		SKDownloadState DownloadState { get;  }
 
 		[Export ("contentLength", ArgumentSemantic.Copy)]
 		NSNumber ContentLength { get; }
 #else
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'State' instead.")]
 		[Export ("downloadState")]
 		SKDownloadState DownloadState { get;  }
 		
@@ -62,10 +68,11 @@ namespace StoreKit {
 		[Export ("deleteContentForProductID:")]
 		[Static]
 		void DeleteContentForProduct (string productId);
-#else
+#endif
+
+		[Mac (10,14, onlyOn64: true)]
 		[Field ("SKDownloadTimeRemainingUnknown")]
 		double TimeRemainingUnknown { get; }
-#endif
 
 		[Mac (10,11)]
 		[Export ("transaction")]
@@ -97,11 +104,9 @@ namespace StoreKit {
 		[Export ("applicationUsername", ArgumentSemantic.Copy)]
 		string ApplicationUsername { get; }
 
-#if !MONOMAC
-		[iOS (8,3)]
+		[iOS (8,3), Mac (10,14, onlyOn64: true)]
 		[Export ("simulatesAskToBuyInSandbox")]
 		bool SimulatesAskToBuyInSandbox { get; [NotImplemented ("Not available on SKPayment, only available on SKMutablePayment")] set; }
-#endif
 	}
 
 	[BaseType (typeof (SKPayment))]
@@ -132,11 +137,9 @@ namespace StoreKit {
 		[Export ("applicationUsername", ArgumentSemantic.Copy)][New]
 		string ApplicationUsername { get; set; }
 
-#if !MONOMAC
-		[iOS (8,3)]
+		[iOS (8,3), Mac (10,14, onlyOn64: true)]
 		[Export ("simulatesAskToBuyInSandbox")]
 		bool SimulatesAskToBuyInSandbox { get; set; }
-#endif
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -211,28 +214,30 @@ namespace StoreKit {
 		[iOS (6,0)]
 		[Export ("downloadable")]
 		bool Downloadable {
-#if MONOMAC
-			get;
-#else
+#if !MONOMAC
+			// Xcode 10 beta 3 headers says this is how it works on macOS as well, but this is a breaking change for macOS, so it's probably wrong.
+			// https://trello.com/c/A34S0kLY/125-41782055-skproductdownloadable-crashes-on-macos-1011-when-compiled-with-xcode-10
 			[Bind ("isDownloadable")]
-			get;
 #endif
+			get;
 		}
 
-		[iOS (6,0)]
-#if MONOMAC
+		[NoiOS]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'DownloadContentLengths' instead.")]
 		[Export ("contentLengths")]
-#else
+		NSNumber [] ContentLengths { get; }
+
+		[iOS (6,0), Mac (10,14, onlyOn64: true)]
 		[Export ("downloadContentLengths")]
-#endif
 		NSNumber [] DownloadContentLengths { get;  }
 
-		[iOS (6,0)]
-#if MONOMAC
+		[NoiOS]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'DownloadContentVersion' instead.")]
 		[Export ("contentVersion")]
-#else
+		string ContentVersion { get; }
+
+		[iOS (6,0), Mac (10,14, onlyOn64: true)]
 		[Export ("downloadContentVersion")]
-#endif
 		string DownloadContentVersion { get;  }
 
 		[iOS (11,2), TV (11,2), Mac (10,13,2)]
@@ -242,6 +247,10 @@ namespace StoreKit {
 		[iOS (11,2), TV (11,2), Mac (10,13,2)]
 		[NullAllowed, Export ("introductoryPrice")]
 		SKProductDiscount IntroductoryPrice { get; }
+
+		[iOS (12,0), Mac (10,14, onlyOn64: true)]
+		[NullAllowed, Export ("subscriptionGroupIdentifier")]
+		string SubscriptionGroupIdentifier { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -652,17 +661,6 @@ namespace StoreKit {
 		PlayMusic,
 	}
 
-	[iOS (10,3)]
-	[NoTV]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor] // Not specified but very likely
-	interface SKStoreReviewController {
-
-		[Static]
-		[Export ("requestReview")]
-		void RequestReview ();
-	}
-
 	[iOS (11,0), TV (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // static Default property is the only documented way to get the controller
@@ -688,6 +686,17 @@ namespace StoreKit {
 		void Update (SKProduct[] storePromotionOrder, [NullAllowed] Action<NSError> completionHandler);
 	}
 #endif
+
+	[iOS (10,3), Mac (10,14, onlyOn64: true)]
+	[NoTV]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // Not specified but very likely
+	interface SKStoreReviewController {
+
+		[Static]
+		[Export ("requestReview")]
+		void RequestReview ();
+	}
 
 	[iOS (11,2), TV (11,2), Mac (10,13,2)]
 	[BaseType (typeof (NSObject))]
@@ -720,7 +729,7 @@ namespace StoreKit {
 		SKProductDiscountPaymentMode PaymentMode { get; }
 	}
 
-	[iOS (11,3), TV (11,3), NoMac]
+	[iOS (11,3), NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SKAdNetwork {

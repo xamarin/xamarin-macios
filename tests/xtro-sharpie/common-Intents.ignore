@@ -7,29 +7,10 @@
 !incorrect-protocol-member! INSpeakable::vocabularyIdentifier is REQUIRED and should be abstract
 
 ## new types that has deprecated members (likely to be removed from headers at some point)
-!missing-selector! +INCallDestinationTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
-!missing-selector! +INCallDestinationTypeResolutionResult::successWithResolvedValue: not bound
 !missing-selector! +INCallRecordTypeOptionsResolutionResult::confirmationRequiredWithValueToConfirm: not bound
 !missing-selector! +INCallRecordTypeOptionsResolutionResult::successWithResolvedValue: not bound
 !missing-selector! +INAccountTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
 !missing-selector! +INAccountTypeResolutionResult::successWithResolvedValue: not bound
-!missing-selector! +INBalanceTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
-!missing-selector! +INBalanceTypeResolutionResult::successWithResolvedValue: not bound
-!missing-selector! +INDateSearchTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
-!missing-selector! +INDateSearchTypeResolutionResult::successWithResolvedValue: not bound
-!missing-selector! +INLocationSearchTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
-!missing-selector! +INLocationSearchTypeResolutionResult::successWithResolvedValue: not bound
-!missing-selector! +INNoteContentTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
-!missing-selector! +INNoteContentTypeResolutionResult::successWithResolvedValue: not bound
-!missing-selector! +INNotebookItemTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
-!missing-selector! +INNotebookItemTypeResolutionResult::successWithResolvedValue: not bound
-!missing-selector! +INTaskStatusResolutionResult::confirmationRequiredWithValueToConfirm: not bound
-!missing-selector! +INTaskStatusResolutionResult::successWithResolvedValue: not bound
-!missing-selector! +INVisualCodeTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
-!missing-selector! +INVisualCodeTypeResolutionResult::successWithResolvedValue: not bound
-
-## added and deprecated in Xcode9 (but not removed from headers)
-!missing-selector! +INNotebookItemTypeResolutionResult::disambiguationWithValuesToDisambiguate: not bound
 
 ## The following were deprecated in ios(10.0, 10.0)
 !missing-selector! INRideDriver::initWithHandle:displayName:image:rating:phoneNumber: not bound
@@ -55,3 +36,11 @@
 ## unsorted
 
 !missing-selector! +CLPlacemark::placemarkWithLocation:name:postalAddress: not bound
+
+## Deprecated so no need to be bound
+!missing-selector! INRequestRideIntent::initWithPickupLocation:dropOffLocation:rideOptionName:partySize:paymentMethod: not bound
+
+## Research required before we can bind the following ones
+!missing-selector! +NSString::deferredLocalizedNSStringStringWithFormat: not bound
+!missing-selector! +NSString::deferredLocalizedNSStringStringWithFormat:fromTable: not bound
+!missing-selector! +NSString::deferredLocalizedNSStringStringWithFormat:fromTable:arguments: not bound

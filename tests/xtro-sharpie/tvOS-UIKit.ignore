@@ -52,8 +52,6 @@
 !unknown-native-enum! UITextAlignment bound
 
 ## Ignore what the header files say, the NSItemProviderReading methods are not actually implemented on TV or Watch
-!missing-protocol-conformance! NSAttributedString should conform to NSItemProviderReading (defined in 'UINSItemProvider' category)
-!missing-protocol-conformance! NSAttributedString should conform to NSItemProviderWriting (defined in 'UINSItemProvider' category)
 !missing-protocol-conformance! UIColor should conform to NSItemProviderReading (defined in 'UINSItemProvider' category)
 !missing-protocol-conformance! UIColor should conform to NSItemProviderWriting (defined in 'UINSItemProvider' category)
 !missing-protocol-conformance! UIImage should conform to NSItemProviderReading (defined in 'NSItemProvider' category)
@@ -61,3 +59,8 @@
 
 ## https://github.com/xamarin/xamarin-macios/issues/3213 should be fixed before conformance to 'UIStateRestoring' is restored.
 !missing-protocol-conformance! UIViewController should conform to UIStateRestoring (defined in 'UIStateRestoration' category)
+
+## fixed for XAMCORE_4_0
+!incorrect-protocol-member! UIFocusItem::frame is REQUIRED and should be abstract
+!incorrect-protocol-member! UIFocusEnvironment::focusItemContainer is REQUIRED and should be abstract
+!incorrect-protocol-member! UIFocusEnvironment::parentFocusEnvironment is REQUIRED and should be abstract

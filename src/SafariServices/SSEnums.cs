@@ -55,6 +55,7 @@ namespace SafariServices {
 	[iOS (11,0)]
 	[Native]
 	[ErrorDomain ("SFAuthenticationErrorDomain")]
+	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'ASWebAuthenticationSessionErrorCode' instead.")]
 	public enum SFAuthenticationError : long {
 		CanceledLogin = 1,
 	}

@@ -63,6 +63,7 @@ namespace Introspection {
 				break;
 			case "MTLFence":
 			case "MTLHeap":
+			case "RPSystemBroadcastPickerView": // Symbol not available in simulator
 				if (Runtime.Arch != Arch.DEVICE)
 					return true;
 
@@ -70,6 +71,13 @@ namespace Introspection {
 				if (!TestRuntime.CheckXcodeVersion (8, 0))
 					return true;
 				break;
+			case "CMMovementDisorderManager":
+				// From Xcode 10 beta 2:
+				// This requires a special entitlement:
+				//     Usage of CMMovementDisorderManager requires a special entitlement.  Please see for more information https://developer.apple.com/documentation/coremotion/cmmovementdisordermanager
+				// but that web page doesn't explain anything (it's mostly empty, so this is probably just lagging documentation)
+				// I also tried enabling every entitlement in Xcode, but it still didn't work.
+				return true;
 			}
 
 			return base.Skip (type);
@@ -180,10 +188,6 @@ namespace Introspection {
 				case "MSSession":
 				case "SFContentBlockerState":
 				case "SFSafariViewControllerConfiguration":
-				case "VSAccountMetadata":
-				case "VSAccountMetadataRequest":
-				// iOS 10.2
-				case "VSAccountProviderResponse":
 				// iOS 10.3
 				case "MPMusicPlayerControllerMutableQueue":
 				case "MPMusicPlayerControllerQueue":
@@ -228,6 +232,13 @@ namespace Introspection {
 				// Xcode 9.2 undocumented conformance (like due to new base type)
 				case "HMHomeAccessControl":
 				case "HMAccessControl":
+					return true;
+				// iOS 12
+				case "ARDirectionalLightEstimate":
+				case "ARFrame":
+				case "ARLightEstimate":
+				case "ASCredentialProviderExtensionContext":
+				case "ILClassificationUIExtensionContext": // Conformance not in headers
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -328,10 +339,6 @@ namespace Introspection {
 				case "MSSession":
 				case "SFContentBlockerState":
 				case "SFSafariViewControllerConfiguration":
-				case "VSAccountMetadata":
-				case "VSAccountMetadataRequest":
-				// iOS 10.2
-				case "VSAccountProviderResponse":
 				// iOS 10.3
 				case "MPMusicPlayerControllerMutableQueue":
 				case "MPMusicPlayerControllerQueue":
@@ -384,6 +391,10 @@ namespace Introspection {
 				// Xcode 9.2 undocumented conformance (like due to new base type)
 				case "HMHomeAccessControl":
 				case "HMAccessControl":
+					return true;
+				// Xcode 10
+				case "ASCredentialProviderExtensionContext":
+				case "ILClassificationUIExtensionContext": // Conformance not in headers
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -457,10 +468,6 @@ namespace Introspection {
 				case "HKDocumentSample":
 				case "HKCdaDocumentSample":
 				case "SFSafariViewControllerConfiguration":
-				case "VSAccountMetadata":
-				case "VSAccountMetadataRequest":
-				// iOS 10.2
-				case "VSAccountProviderResponse":
 					return true;
 				// iOS 11.0
 				case "UICollectionViewUpdateItem": // Conformance not in headers
@@ -484,11 +491,14 @@ namespace Introspection {
 				case "CLKComplicationTimelineEntry":
 					return true;
 #endif
+				// Xcode 10
+				case "ASCredentialProviderExtensionContext":
+				case "ILClassificationUIExtensionContext": // Conformance not in headers
+					return true;
 				}
 				break;
 			case "NSMutableCopying":
 				switch (type.Name) {
-				case "UNNotificationSound":
 				// iOS 10.3
 				case "MPMusicPlayerControllerMutableQueue":
 				case "MPMusicPlayerControllerQueue":
@@ -694,6 +704,7 @@ namespace Introspection {
 				case "UIAlertController":
 				case "PKPaymentButton":
 				case "PKAddPassButton":
+				case "INUIAddVoiceShortcutButton":
 					return true;
 				}
 				break;

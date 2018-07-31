@@ -431,7 +431,8 @@ namespace SceneKit {
 		Lines = 1,
 	}
 
-	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+	[NoWatch, Mac (10,13), iOS (11,0)]
+	[TV (12,0)]
 	[Native]
 	public enum SCNTessellationSmoothingMode : long
 	{

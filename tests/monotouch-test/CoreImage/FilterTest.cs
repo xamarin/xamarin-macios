@@ -70,8 +70,8 @@ namespace MonoTouchFixtures.CoreImage {
 		[Test]
 		public void CustomFilterTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Inconclusive ("Custom filters require iOS8+");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 11, throwIfOtherPlatform: false);
 
 			MyFilter filter = new MyFilter ();
 			Assert.NotNull (filter);
@@ -97,16 +97,18 @@ namespace MonoTouchFixtures.CoreImage {
 		[Test]
 		public void ColorSpace ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("Ignoring ColorSpace test: CIColorCubeWithColorSpace requires iOS7+");
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			using (var f = new CIColorCubeWithColorSpace ()) {
 				Assert.Null (f.ColorSpace, "ColorSpace/default");
 				using (var cs = CGColorSpace.CreateDeviceGray ()) {
 					f.ColorSpace = cs;
 					var rc = CFGetRetainCount (cs.Handle);
-					for (int i = 0; i < 5; i++)
-						Assert.NotNull (f.ColorSpace, i.ToString ());
+					for (int i = 0; i < 5; i++) {
+						using (var fcs = f.ColorSpace)
+							Assert.NotNull (fcs, i.ToString ());
+					}
 					Assert.That (CFGetRetainCount (cs.Handle), Is.EqualTo (rc), "RetainCount");
 					f.ColorSpace = null;
 				}
@@ -124,8 +126,8 @@ namespace MonoTouchFixtures.CoreImage {
 				using (var b = new CIQRCodeDescriptor (new NSData (), 1, 0, CIQRCodeErrorCorrectionLevel.Q)) {
 					f.BarcodeDescriptor = b;
 					var rc = CFGetRetainCount (b.Handle);
-					for (int i = 0; i < 5; i++)
-						Assert.NotNull (f.BarcodeDescriptor, i.ToString ());
+					//for (int i = 0; i < 5; i++)
+						//Assert.NotNull (f.BarcodeDescriptor, i.ToString ());
 					Assert.That (CFGetRetainCount (b.Handle), Is.EqualTo (rc), "RetainCount");
 					f.BarcodeDescriptor = null;
 				}

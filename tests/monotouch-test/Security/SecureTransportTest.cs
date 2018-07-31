@@ -51,6 +51,8 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 		public void StreamDefaults ()
 		{
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+
 			using (var ssl = new SslContext (SslProtocolSide.Client, SslConnectionType.Stream)) {
 				Assert.That (ssl.BufferedReadSize, Is.EqualTo ((nint) 0), "BufferedReadSize");
 				Assert.That (ssl.ClientCertificateState, Is.EqualTo (SslClientCertificateState.None), "ClientCertificateState");
@@ -99,40 +101,32 @@ namespace MonoTouchFixtures.Security {
 					using (var data = new NSData ())
 						Assert.That (ssl.SetOcspResponse (data), Is.EqualTo (0), "SetOcspResponse/empty");
 
-// Test disabled for macOS due to Apple is not shipping SSLSetALPNProtocols and SSLCopyALPNProtocols on macOS
-#if !MONOMAC
+#if MONOMAC
+					if (TestRuntime.CheckXcodeVersion (9,3)) {
+#endif
 					int error;
 					var alpn = ssl.GetAlpnProtocols (out error);
 					Assert.That (alpn, Is.Empty, "alpn");
 					Assert.That (error, Is.EqualTo ((int) SecStatusCode.Param), "GetAlpnProtocols");
 					var protocols = new [] { "HTTP/1.1", "SPDY/1" };
 					Assert.That (ssl.SetAlpnProtocols (protocols), Is.EqualTo (0), "SetAlpnProtocols");
+#if MONOMAC
+					}
 #endif
 				}
 			}
 		}
 
-#if MONOMAC
-		[Test]
-		public void ReenableSSLGetSetAlpnProtocols ()
-		{
-			TestRuntime.AssertXcodeVersion (9,0);
-
-			// It seems that apple forgot to ship SSLSetALPNProtocols and SSLCopyALPNProtocols in macOS
-			// there are already radars filled about this https://bugs.swift.org/browse/SR-6131
-			// So this test will fail once Apple fixes this issue. when this happens we need to do two things, reenable
-			// the API and reenable the [Get|Set]AlpnProtocols test above, the one inside 'StreamDefaults' for the mac.
-
-			IntPtr seclib = Dlfcn.dlopen (Constants.SecurityLibrary, 0);
-			Assert.IsTrue (Dlfcn.GetIndirect (seclib, "SSLSetALPNProtocols") == IntPtr.Zero, "Reenable 'SetAlpnProtocols' inside src/Security/SslContext.cs and remove this test.");
-			Assert.IsTrue (Dlfcn.GetIndirect (seclib, "SSLCopyALPNProtocols") == IntPtr.Zero, "Reenable 'GetAlpnProtocols' inside src/Security/SslContext.cs and remove this test.");
-		}
-#endif
-
 		[Test]
 		public void DatagramDefaults ()
 		{
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+
+#if __MACOS__
+			nint dsize = TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 10) ? 1327 : 1387;
+#else
 			nint dsize = TestRuntime.CheckXcodeVersion (6, 0) ? 1327 : 1387;
+#endif
 			using (var ssl = new SslContext (SslProtocolSide.Client, SslConnectionType.Datagram)) {
 				Assert.That (ssl.BufferedReadSize, Is.EqualTo ((nint) 0), "BufferedReadSize");
 				Assert.Null (ssl.Connection, "Connection");
@@ -162,6 +156,8 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 		public void SslSupportedCiphers ()
 		{
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+
 			int ssl_client_ciphers = -1;
 			using (var client = new SslContext (SslProtocolSide.Client, SslConnectionType.Stream)) {
 				// maximum downgrade
@@ -198,6 +194,8 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 		public void Tls12 ()
 		{
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+
 			var client = new TcpClient ("google.ca", 443);
 			using (NetworkStream ns = client.GetStream ())
 			using (var ssl = new SslContext (SslProtocolSide.Client, SslConnectionType.Stream)) {

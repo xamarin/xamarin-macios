@@ -9,6 +9,8 @@ using System.Text;
 using NUnit.Framework;
 using System.Reflection;
 
+using Xamarin.Tests;
+
 namespace Xamarin.MMP.Tests
 {
 	[TestFixture]
@@ -86,13 +88,15 @@ namespace Xamarin.MMP.Tests
 				test.XM45 = true;
 				TI.TestUnifiedExecutable (test);
 
-				// Now 32-bit
-				test.CSProjConfig = "<MonoBundlingExtraArgs>--registrar=static</MonoBundlingExtraArgs><XamMacArch>i386</XamMacArch>";
-				// Mobile
-				TI.TestUnifiedExecutable (test);
-				// XM45
-				test.XM45 = true;
-				TI.TestUnifiedExecutable (test);
+				if (Configuration.XcodeSupports32Bit) {
+					// Now 32-bit
+					test.CSProjConfig = "<MonoBundlingExtraArgs>--registrar=static</MonoBundlingExtraArgs><XamMacArch>i386</XamMacArch>";
+					// Mobile
+					TI.TestUnifiedExecutable (test);
+					// XM45
+					test.XM45 = true;
+					TI.TestUnifiedExecutable (test);
+				}
 			});
 		}
 
@@ -111,13 +115,15 @@ namespace Xamarin.MMP.Tests
 				test.XM45 = true;
 				TI.TestUnifiedExecutable (test);
 
-				// Now 32-bit
-				test.CSProjConfig = "<MonoBundlingExtraArgs>--registrar=static</MonoBundlingExtraArgs><XamMacArch>i386</XamMacArch>";
-				// Mobile
-				TI.TestUnifiedExecutable (test);
-				// XM45
-				test.XM45 = true;
-				TI.TestUnifiedExecutable (test);
+				if (Configuration.XcodeSupports32Bit) {
+					// Now 32-bit
+					test.CSProjConfig = "<MonoBundlingExtraArgs>--registrar=static</MonoBundlingExtraArgs><XamMacArch>i386</XamMacArch>";
+					// Mobile
+					TI.TestUnifiedExecutable (test);
+					// XM45
+					test.XM45 = true;
+					TI.TestUnifiedExecutable (test);
+				}
 			}, "test withSpace");
 		}
 
@@ -245,6 +251,8 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void Unified_HelloWorld_ShouldWarnOn32Bit ()
 		{
+			Configuration.AssertXcodeSupports32Bit ();
+
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					CSProjConfig = "<XamMacArch>i386</XamMacArch>"
@@ -760,6 +768,8 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void Unified32BitWithXMRequiringLibrary_ShouldReferenceCorrectXM_AndNotCrash ()
 		{
+			Configuration.AssertXcodeSupports32Bit ();
+
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig libConfig = new TI.UnifiedTestConfig (tmpDir) {
 					ProjectName = "UnifiedLibrary",

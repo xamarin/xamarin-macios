@@ -40,11 +40,9 @@ namespace Accounts {
 		NSString ErrorDomain { get; }
 #endif
 
-#if !MONOMAC
-		[iOS (7,0)]
+		[iOS (7,0)][NoMac]
 		[Export ("userFullName")]
 		string UserFullName { get; }
-#endif
 	}
 
 	[Mac (10,8, onlyOn64 : true)]
@@ -86,6 +84,9 @@ namespace Accounts {
 		[Async]
 		void SaveAccount (ACAccount account, ACAccountStoreSaveCompletionHandler completionHandler);
 
+#if XAMCORE_4_0
+		[NoMac] // marked as unavailable in xcode10 beta 2
+#endif
 		[Export ("requestAccessToAccountsWithType:withCompletionHandler:")]
 		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'RequestAccess (ACAccountType, AccountStoreOptions, ACRequestCompletionHandler)' instead.")]
 		[Async]

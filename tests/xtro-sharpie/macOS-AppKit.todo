@@ -1,0 +1,15 @@
+!missing-protocol! NSViewLayerContentScaleDelegate not bound
+!missing-protocol-conformance! NSApplication should conform to NSAppearanceCustomization (defined in 'NSAppearanceCustomization' category)
+!missing-protocol-conformance! NSTableHeaderView should conform to NSViewToolTipOwner
+!missing-selector! +NSColor::findHighlightColor not bound
+!missing-selector! +NSColor::placeholderTextColor not bound
+!missing-selector! NSSliderCell::setImage: not bound
+## appended from unclassified file
+!missing-field! NSAppearanceDocumentAttribute not bound
+!missing-protocol! NSUserActivityRestoring not bound
+!missing-protocol-conformance! NSDocument should conform to NSUserActivityRestoring (defined in 'NSUserActivity' category)
+!missing-protocol-conformance! NSResponder should conform to NSUserActivityRestoring (defined in 'NSUserActivity' category)
+!missing-selector! +NSBindingSelectionMarker::multipleValuesSelectionMarker not bound
+!missing-selector! +NSBindingSelectionMarker::noSelectionMarker not bound
+!missing-selector! +NSBindingSelectionMarker::notApplicableSelectionMarker not bound
+!missing-type! NSBindingSelectionMarker not bound

@@ -50,12 +50,14 @@ namespace MonoTouchFixtures.CoreImage {
 		[Test]
 		public void EmptyImage ()
 		{
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
 			Assert.IsNull (CIImage.EmptyImage.Properties);
 		}
 
 		[Test]
 		public void InitializationWithCustomMetadata ()
 		{
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
 			string file = Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08.png");
 			using (var dp = new CGDataProvider (file)) {
 				using (var img = CGImage.FromPNG (dp, null, false, CGColorRenderingIntent.Default)) {
@@ -90,13 +92,22 @@ namespace MonoTouchFixtures.CoreImage {
 		[Test]
 		public void AreaHistogram ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Inconclusive ("requires iOS8+");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			// validate that a null NSDictionary is correct (i.e. uses filter defaults)
 			using (var h = CIImage.EmptyImage.CreateByFiltering ("CIAreaHistogram", null)) {
 				// broken on simulator/64 bits on iOS9 beta 2 - radar 21564256 -> fixed in beta 4
-				Assert.That (h.Extent.Height, Is.EqualTo ((nfloat) 1), "Height");
+				var success = true;
+#if __MACOS__
+				if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 11))
+					success = false;
+#endif
+				if (success) {
+					Assert.That (h.Extent.Height, Is.EqualTo ((nfloat)1), "Height");
+				} else {
+					Assert.IsNull (h, "Image");
+				}
 			}
 		}
 

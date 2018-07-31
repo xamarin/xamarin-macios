@@ -130,8 +130,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void Ctor_3b_Null ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
-				Assert.Inconclusive ("Requires iOS7 or later");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 				
 			using (UIImage img = new UIImage ()) {
 				using (UITabBarItem tbi1 = new UITabBarItem (null, null, null)) {
@@ -149,7 +148,13 @@ namespace MonoTouchFixtures.UIKit {
 					Assert.Null (tbi3.Title, "Title-3a");
 					Assert.Null (tbi3.Image, "Image-3a");
 					// looks like a select-only image is not something allowed on 7.1
-					if (UIDevice.CurrentDevice.CheckSystemVersion (7,1))
+
+					var hasSelectedImage = true;
+#if __IOS__
+					if (!TestRuntime.CheckSystemVersion (PlatformName.iOS, 7,1))
+						hasSelectedImage = false;
+#endif
+					if (hasSelectedImage)
 						Assert.Null (tbi3.SelectedImage, "SelectedImage-3a");
 					else
 						Assert.AreSame (tbi3.SelectedImage, img, "SelectedImage-3a");
@@ -160,8 +165,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void SelectedImage_7a ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
-				Assert.Inconclusive ("Requires iOS7 or later");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			using (UIImage i1 = new UIImage ())
 			using (UITabBarItem tbi = new UITabBarItem ("title", i1, null)) {
@@ -180,8 +184,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void SelectedImage_7b ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
-				Assert.Inconclusive ("Requires iOS7 or later");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			using (UIImage i1 = new UIImage ())
 			using (UIImage i2 = new UIImage ())

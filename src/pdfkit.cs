@@ -508,9 +508,13 @@ namespace PdfKit {
 	}
 
 	[iOS (11,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (PdfAction), Name = "PDFActionResetForm")]
 	interface PdfActionResetForm {
-		//has a public Init ???
+		// - (instancetype)init NS_DESIGNATED_INITIALIZER;
+		[Export ("init")]
+		[DesignatedInitializer]
+		IntPtr Constructor ();
 		
 		//NSArray of NSString
 		[Export ("fields"), NullAllowed]
@@ -571,9 +575,12 @@ namespace PdfKit {
 		[Export ("userName")]
 		string UserName { get; set; }
 
-		[NoiOS]
 		[Export ("popup")]
+#if MONOMAC
 		PdfAnnotationPopup Popup { get; set; }
+#else
+		PdfAnnotation Popup { get; set; }
+#endif
 
 		[Export ("shouldDisplay")]
 		bool ShouldDisplay { get; set; }
@@ -1041,6 +1048,7 @@ namespace PdfKit {
 		[Export ("fieldName")]
 		string FieldName { get; set; }
 
+		[Mac (10, 8)]
 		[Export ("attributedStringValue")]
 		NSAttributedString AttributedStringValue { get; set; }
 
@@ -1082,6 +1090,10 @@ namespace PdfKit {
 	[BaseType (typeof (NSObject), Name = "PDFDestination")]
 	interface PdfDestination : NSCopying {
 
+		[Mac (10,13)] // This used to be a calculated macro and promoted to an actual field in 10.13.
+		[Field ("kPDFDestinationUnspecifiedValue")]
+		nfloat UnspecifiedValue { get; }
+
 		[DesignatedInitializer]
 		[Export ("initWithPage:atPoint:")]
 		IntPtr Constructor (PdfPage page, CGPoint point);
@@ -1103,6 +1115,7 @@ namespace PdfKit {
 
 	//Add attributes for delegates/events
 	[iOS (11,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject), Name = "PDFDocument", Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (PdfDocumentDelegate) })]
 	interface PdfDocument : NSCopying {
 
@@ -1145,6 +1158,11 @@ namespace PdfKit {
 		[Field ("PDFDocumentDidEndPageWriteNotification", "+PDFKit")]
 		[Notification]
 		NSString DidEndPageWriteNotification { get; }
+
+		// - (instancetype)init NS_DESIGNATED_INITIALIZER;
+		[Export ("init")]
+		[DesignatedInitializer]
+		IntPtr Constructor ();
 
 		[Export ("initWithURL:")]
 		[DesignatedInitializer]
@@ -1397,8 +1415,14 @@ namespace PdfKit {
 	}
 
 	[iOS (11,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject), Name = "PDFOutline")]
 	interface PdfOutline {
+
+		// - (instancetype)init NS_DESIGNATED_INITIALIZER;
+		[Export ("init")]
+		[DesignatedInitializer]
+		IntPtr Constructor ();
 
 		[Export ("document")]
 		PdfDocument Document { get; }
@@ -1437,8 +1461,14 @@ namespace PdfKit {
 	}
 
 	[iOS (11,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject), Name = "PDFPage")]
 	interface PdfPage : NSCopying {
+
+		// - (instancetype)init NS_DESIGNATED_INITIALIZER;
+		[Export ("init")]
+		[DesignatedInitializer]
+		IntPtr Constructor ();
 
 		[DesignatedInitializer]
 		[Export ("initWithImage:")]
@@ -1763,6 +1793,10 @@ namespace PdfKit {
 		[Mac (10,7)]
 		[Export ("interpolationQuality", ArgumentSemantic.Assign)]
 		PdfInterpolationQuality InterpolationQuality { get; set; }
+
+		[iOS (12,0), Mac (10,14, onlyOn64: true)]
+		[Export ("pageShadowsEnabled")]
+		bool PageShadowsEnabled { get; [Bind ("enablePageShadows:")] set; }
 
 		[NoMac]
 		[Export ("usePageViewController:withViewOptions:")]

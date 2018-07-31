@@ -171,7 +171,23 @@ namespace CoreText {
 		{
 			var cfArrayRef = CTFontCollectionCreateMatchingFontDescriptors (handle);
 			if (cfArrayRef == IntPtr.Zero)
-				return new CTFontDescriptor [0];
+				return Array.Empty <CTFontDescriptor> ();
+			var matches = NSArray.ArrayFromHandle (cfArrayRef,
+					fd => new CTFontDescriptor (fd, false));
+			CFObject.CFRelease (cfArrayRef);
+			return matches;
+		}
+
+		[Mac (10,7), iOS (12,0), TV (12,0), Watch (5,0)]
+		[DllImport (Constants.CoreTextLibrary)]
+		static extern IntPtr CTFontCollectionCreateMatchingFontDescriptorsWithOptions (IntPtr collection, IntPtr options);
+
+		[Mac (10,7), iOS (12,0), TV (12,0), Watch (5,0)]
+		public CTFontDescriptor [] GetMatchingFontDescriptors (CTFontCollectionOptions options)
+		{
+			var cfArrayRef = CTFontCollectionCreateMatchingFontDescriptorsWithOptions (handle, options == null ? IntPtr.Zero : options.Dictionary.Handle);
+			if (cfArrayRef == IntPtr.Zero)
+				return Array.Empty <CTFontDescriptor> ();
 			var matches = NSArray.ArrayFromHandle (cfArrayRef,
 					fd => new CTFontDescriptor (fd, false));
 			CFObject.CFRelease (cfArrayRef);
@@ -205,7 +221,7 @@ namespace CoreText {
 				if (cfArrayRef == IntPtr.Zero)
 					return new CTFontDescriptor [0];
 				var matches = NSArray.ArrayFromHandle (cfArrayRef,
-						fd => new CTFontDescriptor (cfArrayRef, false));
+						fd => new CTFontDescriptor (fd, false));
 				CFObject.CFRelease (cfArrayRef);
 				return matches;
 			}

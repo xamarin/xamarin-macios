@@ -122,6 +122,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public void GetNSObject_Different_Class ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			IntPtr class_ptr = Class.GetHandle ("SKPhysicsBody");
 			SizeF size = new SizeF (3, 2);
@@ -140,6 +141,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public void GetNSObject_Posing_Class ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			NSUrlSession session = NSUrlSession.SharedSession;
 			using (var request = new NSUrlRequest (new NSUrl ("http://www.example.com"))) {
@@ -292,9 +294,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void FinalizationRaceCondition ()
 		{
-			if ((IntPtr.Size == 8) && TestRuntime.CheckXcodeVersion (7, 0))
-				Assert.Ignore ("NSString retainCount is nuint.MaxValue, so we won't collect them");
-			
 #if __WATCHOS__
 			if (Runtime.Arch == Arch.DEVICE)
 				Assert.Ignore ("This test uses too much memory for the watch.");

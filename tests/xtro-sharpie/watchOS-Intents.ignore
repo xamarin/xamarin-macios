@@ -9,6 +9,8 @@
 ## but I am not sure if they should be in WatchOS since they are from last year
 ## and seems that intro did not complain, also there are others INCar* that are
 ## explicitly available in WatchOS
+## These are marked as unavailable in Xcode 10 beta 1 headers
+## (and also fail monotouch-tests, but strangely not introspection).
 !unknown-type! INCarAirCirculationModeResolutionResult bound
 !unknown-type! INCarAudioSourceResolutionResult bound
 !unknown-type! INCarDefrosterResolutionResult bound

@@ -189,6 +189,18 @@ namespace HealthKit {
 		[Watch (4, 0), iOS (11, 0)]
 		[Field ("HKPredicateKeyPathWorkoutTotalFlightsClimbed")]
 		NSString TotalFlightsClimbed { get; }
+
+		[Watch (5, 0), iOS (12, 0)]
+		[Field ("HKPredicateKeyPathSum")]
+		NSString PathSum { get; }
+
+		[NoWatch, iOS (12, 0)]
+		[Field ("HKPredicateKeyPathClinicalRecordFHIRResourceIdentifier")]
+		NSString ClinicalRecordFhirResourceIdentifier { get; }
+
+		[NoWatch, iOS (12, 0)]
+		[Field ("HKPredicateKeyPathClinicalRecordFHIRResourceType")]
+		NSString ClinicalRecordFhirResourceType { get; }
 	}
 
 	[NoWatch] // headers says it's available but it's only usable from another, unavailable, type
@@ -344,6 +356,9 @@ namespace HealthKit {
 
 	}
 
+	delegate void HKHealthStoreGetRequestStatusForAuthorizationToShareHandler (HKAuthorizationRequestStatus requestStatus, NSError error);
+	delegate void HKHealthStoreRecoverActiveWorkoutSessionHandler (HKWorkoutSession session, NSError error);
+
 	[Watch (2,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
@@ -352,6 +367,10 @@ namespace HealthKit {
 		[Static]
 		[Export ("isHealthDataAvailable")]
 		bool IsHealthDataAvailable { get; }
+
+		[NoWatch, iOS (12, 0)]
+		[Export ("supportsHealthRecords")]
+		bool SupportsHealthRecords { get; }
 
 		// FIXME NS_EXTENSION_UNAVAILABLE("Not available to extensions") ;
 		[Export ("authorizationStatusForType:")]
@@ -492,6 +511,16 @@ namespace HealthKit {
 		[Notification]
 		[Field ("HKUserPreferencesDidChangeNotification")]
 		NSString UserPreferencesDidChangeNotification { get; }
+
+		[Async]
+		[Watch (5,0), iOS (12,0)]
+		[Export ("getRequestStatusForAuthorizationToShareTypes:readTypes:completion:")]
+		void GetRequestStatusForAuthorizationToShare (NSSet<HKSampleType> typesToShare, NSSet<HKObjectType> typesToRead, HKHealthStoreGetRequestStatusForAuthorizationToShareHandler completion);
+
+		[Async]
+		[Watch (5,0), NoiOS]
+		[Export ("recoverActiveWorkoutSessionWithCompletion:")]
+		void RecoverActiveWorkoutSession (HKHealthStoreRecoverActiveWorkoutSessionHandler completion);
 	}
 
 	delegate void HKStoreSampleAddedCallback (bool success, NSError error);
@@ -646,6 +675,18 @@ namespace HealthKit {
 		[Watch (4,2), iOS (11,2)]
 		[Export ("ElevationDescended")]
 		HKQuantity ElevationDescended { get; set; }
+
+		[Watch (5,0), iOS (12,0)]
+		[Export ("FitnessMachineDuration")]
+		HKQuantity FitnessMachineDuration { get; set; }
+
+		[Watch (5, 0), iOS (12, 0)]
+		[Export ("IndoorBikeDistance")]
+		HKQuantity IndoorBikeDistance { get; set; }
+
+		[Watch (5, 0), iOS (12, 0)]
+		[Export ("CrossTrainerDistance")]
+		HKQuantity CrossTrainerDistance { get; set; }
 	}
 		
 	[Watch (2,0)]
@@ -784,6 +825,18 @@ namespace HealthKit {
 		[Watch (4,2), iOS (11,2)]
 		[Field ("HKMetadataKeyElevationDescended")]
 		NSString ElevationDescended { get; }
+
+		[Watch (5,0), iOS (12,0)]
+		[Field ("HKMetadataKeyFitnessMachineDuration")]
+		NSString FitnessMachineDuration { get; }
+
+		[Watch (5, 0), iOS (12, 0)]
+		[Field ("HKMetadataKeyIndoorBikeDistance")]
+		NSString IndoorBikeDistance { get; }
+
+		[Watch (5, 0), iOS (12, 0)]
+		[Field ("HKMetadataKeyCrossTrainerDistance")]
+		NSString CrossTrainerDistance { get; }
 	}
 
 	[Watch (2,0)]
@@ -893,6 +946,16 @@ namespace HealthKit {
 		[Export ("seriesTypeForIdentifier:")]
 		[return: NullAllowed]
 		HKSeriesType GetSeriesType (string identifier);
+
+		[Watch (5,0), iOS (12,0)]
+		[Static, Internal]
+		[Export ("clinicalTypeForIdentifier:")]
+		[return: NullAllowed]
+		HKClinicalType GetClinicalType (NSString identifier);
+
+		[Watch (5,0), iOS (12,0)]
+		[Wrap ("GetClinicalType (identifier.GetConstant ())")]
+		HKClinicalType GetClinicalType (HKClinicalTypeIdentifier identifier);
 	}
 
 	[Watch (2,0)]
@@ -911,6 +974,14 @@ namespace HealthKit {
 	[Abstract] // The HKSampleType class is an abstract subclass of the HKObjectType class, used to represent data samples. Never instantiate an HKSampleType object directly. Instead, you should always work with one of its concrete subclasses [...]
 #endif
 	interface HKSampleType {
+
+	}
+
+	[Watch (5,0)]
+	[iOS (12,0)]
+	[BaseType (typeof (HKSampleType))]
+	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKClinicalType 
+	interface HKClinicalType {
 
 	}
 
@@ -1008,6 +1079,10 @@ namespace HealthKit {
 		[Static]
 		[Export ("quantitySampleWithType:quantity:startDate:endDate:device:metadata:")]
 		HKQuantitySample FromType (HKQuantityType quantityType, HKQuantity quantity, NSDate startDate, NSDate endDate, [NullAllowed] HKDevice device, [NullAllowed] NSDictionary<NSString,NSObject> metadata);
+
+		[Watch (5, 0), iOS (12, 0)]
+		[Export ("count")]
+		nint Count { get; }
 	}
 
 	[Watch (2,0)]
@@ -1134,6 +1209,28 @@ namespace HealthKit {
 		[Static]
 		[Export ("predicateForActivitySummariesBetweenStartDateComponents:endDateComponents:")]
 		NSPredicate GetPredicateForActivitySummariesBetween (NSDateComponents startDateComponents, NSDateComponents endDateComponents);
+
+
+		// @interface HKClinicalRecordPredicates (HKQuery)
+		[NoWatch, iOS (12,0)]
+		[Static, Internal]
+		[Export ("predicateForClinicalRecordsWithFHIRResourceType:")]
+		NSPredicate GetPredicateForClinicalRecords (NSString resourceType);
+
+		[NoWatch, iOS (12,0)]
+		[Static]
+		[Wrap ("GetPredicateForClinicalRecords (resourceType.GetConstant ())")]
+		NSPredicate GetPredicateForClinicalRecords (HKFhirResourceType resourceType);
+
+		[NoWatch, iOS (12,0)]
+		[Static, Internal]
+		[Export ("predicateForClinicalRecordsFromSource:FHIRResourceType:identifier:")]
+		NSPredicate GetPredicateForClinicalRecords (HKSource source, string resourceType, string identifier);
+
+		[NoWatch, iOS (12,0)]
+		[Static]
+		[Wrap ("GetPredicateForClinicalRecords (source, resourceType.GetConstant (), identifier)")]
+		NSPredicate GetPredicateForClinicalRecords (HKSource source, HKFhirResourceType resourceType, string identifier);
 	}
 
 	[Watch (2,0)]
@@ -1250,6 +1347,24 @@ namespace HealthKit {
 
 		[Export ("sumQuantity")]
 		HKQuantity SumQuantity ();
+
+		[Watch (5,0), iOS (12,0)]
+		[Export ("mostRecentQuantityForSource:")]
+		[return: NullAllowed]
+		HKQuantity GetMostRecentQuantity (HKSource source);
+
+		[Watch (5, 0), iOS (12, 0)]
+		[NullAllowed, Export ("mostRecentQuantity")]
+		HKQuantity MostRecentQuantity { get; }
+
+		[Watch (5,0), iOS (12,0)]
+		[Export ("mostRecentQuantityDateIntervalForSource:")]
+		[return: NullAllowed]
+		NSDateInterval GetMostRecentQuantityDateInterval (HKSource source);
+
+		[Watch (5, 0), iOS (12, 0)]
+		[NullAllowed, Export ("mostRecentQuantityDateInterval")]
+		NSDateInterval MostRecentQuantityDateInterval { get; }
 	}
 
 	delegate void HKStatisticsCollectionEnumerator (HKStatistics result, bool stop);
@@ -2298,13 +2413,46 @@ namespace HealthKit {
 		[NullAllowed, Export ("endDate")]
 		NSDate EndDate { get; }
 
-		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use HKWorkoutSession (HKWorkoutConfiguration, out NSError)")]
+		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use HKWorkoutSession (HKHealthStore, HKWorkoutConfiguration, out NSError) instead.")]
 		[Export ("initWithActivityType:locationType:")]
 		IntPtr Constructor (HKWorkoutActivityType activityType, HKWorkoutSessionLocationType locationType);
 
 		[Watch (3,0)]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use HKWorkoutSession (HKHealthStore, HKWorkoutConfiguration, out NSError) instead.")]
 		[Export ("initWithConfiguration:error:")]
 		IntPtr Constructor (HKWorkoutConfiguration workoutConfiguration, out NSError error);
+
+		[Watch (5,0)]
+		[Export ("initWithHealthStore:configuration:error:")]
+		IntPtr Constructor (HKHealthStore healthStore, HKWorkoutConfiguration workoutConfiguration, [NullAllowed] out NSError error);
+
+		[Watch (5,0)]
+		[Export ("prepare")]
+		void Prepare ();
+
+		[Watch (5,0)]
+		[Export ("startActivityWithDate:")]
+		void StartActivity ([NullAllowed] NSDate date);
+
+		[Watch (5,0)]
+		[Export ("stopActivityWithDate:")]
+		void StopActivity ([NullAllowed] NSDate date);
+
+		[Watch (5,0)]
+		[Export ("end")]
+		void End ();
+
+		[Watch (5,0)]
+		[Export ("pause")]
+		void Pause ();
+
+		[Watch (5,0)]
+		[Export ("resume")]
+		void Resume ();
+
+		[Watch (5,0)]
+		[Export ("associatedWorkoutBuilder")]
+		HKLiveWorkoutBuilder AssociatedWorkoutBuilder { get; }
 	}
 
 	[NoiOS]
@@ -2416,12 +2564,12 @@ namespace HealthKit {
 		NSString TypeIdentifier { get; }
 	}
 
+	delegate void HKWorkoutRouteBuilderAddMetadataHandler (bool success, NSError error);
 	[Watch (4, 0), iOS (11, 0)]
 	[BaseType (typeof (HKSeriesBuilder))]
 	[DisableDefaultCtor]
 	interface HKWorkoutRouteBuilder {
 		[Export ("initWithHealthStore:device:")]
-		[DesignatedInitializer]
 		IntPtr Constructor (HKHealthStore healthStore, [NullAllowed] HKDevice device);
 
 		[Async, Export ("insertRouteData:completion:")]
@@ -2432,6 +2580,15 @@ namespace HealthKit {
 
 		[Async, Wrap ("FinishRoute (workout, metadata != null ? metadata.Dictionary : null, completion)")]
 		void FinishRoute (HKWorkout workout, HKMetadata metadata, Action<HKWorkoutRoute, NSError> completion);
+
+		[Watch (5, 0), iOS (12, 0)]
+		[Async, Protected]
+		[Export ("addMetadata:completion:")]
+		void AddMetadata (NSDictionary metadata, HKWorkoutRouteBuilderAddMetadataHandler completion);
+
+		[Watch (5, 0), iOS (12, 0)]
+		[Async, Wrap ("AddMetadata (metadata != null ? metadata.Dictionary : null, completion)")]
+		void AddMetadata (HKMetadata metadata, HKWorkoutRouteBuilderAddMetadataHandler completion);
 	}
 
 	[Watch (4,0), iOS (11,0)]
@@ -2442,4 +2599,225 @@ namespace HealthKit {
 		IntPtr Constructor (HKWorkoutRoute workoutRoute, HKWorkoutRouteBuilderDataHandler dataHandler);
 	}
 
+	delegate void HKWorkoutBuilderCompletionHandler (bool success, NSError error);
+	[Watch (5,0), iOS (12,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface HKWorkoutBuilder
+	{
+		[NullAllowed, Export ("device", ArgumentSemantic.Copy)]
+		HKDevice Device { get; }
+
+		[NullAllowed, Export ("startDate", ArgumentSemantic.Copy)]
+		NSDate StartDate { get; }
+
+		[NullAllowed, Export ("endDate", ArgumentSemantic.Copy)]
+		NSDate EndDate { get; }
+
+		[Export ("workoutConfiguration", ArgumentSemantic.Copy)]
+		HKWorkoutConfiguration WorkoutConfiguration { get; }
+
+		[Protected]
+		[Export ("metadata", ArgumentSemantic.Copy)]
+		NSDictionary NativeMetadata { get; }
+
+		[Wrap ("NativeMetadata")]
+		HKMetadata Metadata { get; }
+
+		[Export ("workoutEvents", ArgumentSemantic.Copy)]
+		HKWorkoutEvent[] WorkoutEvents { get; }
+
+		[Export ("initWithHealthStore:configuration:device:")]
+		IntPtr Constructor (HKHealthStore healthStore, HKWorkoutConfiguration configuration, [NullAllowed] HKDevice device);
+
+		[Async]
+		[Export ("beginCollectionWithStartDate:completion:")]
+		void BeginCollection (NSDate startDate, HKWorkoutBuilderCompletionHandler completionHandler);
+
+		[Async]
+		[Export ("addSamples:completion:")]
+		void Add (HKSample[] samples, HKWorkoutBuilderCompletionHandler completionHandler);
+
+		[Async]
+		[Export ("addWorkoutEvents:completion:")]
+		void Add (HKWorkoutEvent[] workoutEvents, HKWorkoutBuilderCompletionHandler completionHandler);
+
+		[Async, Protected]
+		[Export ("addMetadata:completion:")]
+		void Add (NSDictionary metadata, HKWorkoutBuilderCompletionHandler completionHandler);
+
+		[Async]
+		[Wrap ("Add (metadata.Dictionary, completionHandler)")]
+		void Add (HKMetadata metadata, HKWorkoutBuilderCompletionHandler completionHandler);
+
+		[Async]
+		[Export ("endCollectionWithEndDate:completion:")]
+		void EndCollection (NSDate endDate, HKWorkoutBuilderCompletionHandler completionHandler);
+
+		[Async]
+		[Export ("finishWorkoutWithCompletion:")]
+		void FinishWorkout (HKWorkoutBuilderCompletionHandler completionHandler);
+
+		[Export ("discardWorkout")]
+		void DiscardWorkout ();
+
+		[Export ("elapsedTimeAtDate:")]
+		double GetElapsedTime (NSDate date);
+
+		[Export ("statisticsForType:")]
+		[return: NullAllowed]
+		HKStatistics GetStatistics (HKQuantityType quantityType);
+
+		[Export ("seriesBuilderForType:")]
+		HKSeriesBuilder GetSeriesBuilder (HKSeriesType seriesType);
+	}
+
+	delegate void HKQuantitySeriesSampleQueryQuantityDelegate (HKQuantitySeriesSampleQuery query, HKQuantity quantity, NSDate date, bool done, NSError error);
+
+	[Watch (5,0), iOS (12,0)]
+	[BaseType (typeof(HKQuery))]
+	interface HKQuantitySeriesSampleQuery
+	{
+		[Export ("initWithSample:quantityHandler:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (HKQuantitySample quantitySample, HKQuantitySeriesSampleQueryQuantityDelegate quantityHandler);
+	}
+
+	delegate void HKQuantitySeriesSampleBuilderFinishSeriesDelegate (HKQuantitySample [] samples, NSError error);
+
+	[Watch (5,0), iOS (12,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface HKQuantitySeriesSampleBuilder
+	{
+		[Export ("initWithHealthStore:quantityType:startDate:device:")]
+		IntPtr Constructor (HKHealthStore healthStore, HKQuantityType quantityType, NSDate startDate, [NullAllowed] HKDevice device);
+
+		[Export ("quantityType", ArgumentSemantic.Copy)]
+		HKQuantityType QuantityType { get; }
+
+		[Export ("startDate", ArgumentSemantic.Copy)]
+		NSDate StartDate { get; }
+
+		[NullAllowed, Export ("device", ArgumentSemantic.Copy)]
+		HKDevice Device { get; }
+
+		[Export ("insertQuantity:date:error:")]
+		bool Insert (HKQuantity quantity, NSDate date, [NullAllowed] out NSError error);
+
+		[Async, Protected]
+		[Export ("finishSeriesWithMetadata:completion:")]
+		void FinishSeries ([NullAllowed] NSDictionary metadata, HKQuantitySeriesSampleBuilderFinishSeriesDelegate completionHandler);
+
+		[Async]
+		[Wrap ("FinishSeries (metadata?.Dictionary, completionHandler)")]
+		void FinishSeries ([NullAllowed] HKMetadata metadata, HKQuantitySeriesSampleBuilderFinishSeriesDelegate completionHandler);
+
+		[Export ("discard")]
+		void Discard ();
+	}
+
+	[Watch (5,0), NoiOS]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface HKLiveWorkoutDataSource
+	{
+		[Export ("typesToCollect", ArgumentSemantic.Copy)]
+		NSSet<HKQuantityType> TypesToCollect { get; }
+
+		[Export ("initWithHealthStore:workoutConfiguration:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (HKHealthStore healthStore, [NullAllowed] HKWorkoutConfiguration configuration);
+
+		[Export ("enableCollectionForType:predicate:")]
+		void EnableCollection (HKQuantityType quantityType, [NullAllowed] NSPredicate predicate);
+
+		[Export ("disableCollectionForType:")]
+		void DisableCollection (HKQuantityType quantityType);
+	}
+
+	[NoWatch, iOS (12,0)]
+	[BaseType (typeof (NSObject), Name = "HKFHIRResource")]
+	[DisableDefaultCtor]
+	interface HKFhirResource : NSSecureCoding, NSCopying
+	{
+		[Internal]
+		[Export ("resourceType")]
+		NSString _ResourceType { get; }
+
+		HKFhirResourceType ResourceType { [Wrap ("HKFhirResourceTypeExtensions.GetValue (_ResourceType)")] get; }
+
+		[Export ("identifier")]
+		string Identifier { get; }
+
+		[Export ("data", ArgumentSemantic.Copy)]
+		NSData Data { get; }
+
+		[NullAllowed, Export ("sourceURL", ArgumentSemantic.Copy)]
+		NSUrl SourceUrl { get; }
+	}
+
+	[Watch (5,0), iOS (12,0)]
+	[DisableDefaultCtor]
+	[BaseType (typeof(HKQuantitySample))]
+	interface HKCumulativeQuantitySeriesSample
+	{
+		[Export ("sum", ArgumentSemantic.Copy)]
+		HKQuantity Sum { get; }
+	}
+
+	[NoWatch, iOS (12,0)]
+	[DisableDefaultCtor]
+	[BaseType (typeof(HKSample))]
+	interface HKClinicalRecord : NSSecureCoding, NSCopying
+	{
+		[Export ("clinicalType", ArgumentSemantic.Copy)]
+		HKClinicalType ClinicalType { get; }
+
+		[Export ("displayName")]
+		string DisplayName { get; }
+
+		[NullAllowed, Export ("FHIRResource", ArgumentSemantic.Copy)]
+		HKFhirResource FhirResource { get; }
+	}
+
+	interface IHKLiveWorkoutBuilderDelegate {}
+	[Watch (5,0), NoiOS]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface HKLiveWorkoutBuilderDelegate
+	{
+		[Abstract]
+		[Export ("workoutBuilder:didCollectDataOfTypes:")]
+		void DidCollectData (HKLiveWorkoutBuilder workoutBuilder, NSSet<HKSampleType> collectedTypes);
+
+		[Abstract]
+		[Export ("workoutBuilderDidCollectEvent:")]
+		void DidCollectEvent (HKLiveWorkoutBuilder workoutBuilder);
+	}
+
+	[Watch (5,0), NoiOS]
+	[DisableDefaultCtor]
+	[BaseType (typeof(HKWorkoutBuilder))]
+	interface HKLiveWorkoutBuilder
+	{
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
+		IHKLiveWorkoutBuilderDelegate Delegate { get; set; }
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		NSObject WeakDelegate { get; set; }
+
+		[NullAllowed, Export ("workoutSession", ArgumentSemantic.Weak)]
+		HKWorkoutSession WorkoutSession { get; }
+
+		[Export ("shouldCollectWorkoutEvents")]
+		bool ShouldCollectWorkoutEvents { get; set; }
+
+		[NullAllowed, Export ("dataSource", ArgumentSemantic.Strong)]
+		HKLiveWorkoutDataSource DataSource { get; set; }
+
+		[Export ("elapsedTime")]
+		double ElapsedTime { get; }
+	}
 }

@@ -32,6 +32,7 @@ using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
 using CoreImage;
+using CoreML;
 using CoreVideo;
 using ImageIO;
 using IOSurface;
@@ -203,10 +204,6 @@ namespace CoreImage {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CIContext {
-		// When we bind OpenGL add these:
-		//[Export ("contextWithCGLContext:pixelFormat:colorSpace:options:")]
-		//CIContext ContextWithCGLContextpixelFormatcolorSpaceoptions (CGLContextObj ctx, CGLPixelFormatObj pf, CGColorSpaceRef cs, NSDictionary dict, );
-
 #if !MONOMAC || XAMCORE_2_0
 		[iOS (9,0)][Mac (10,11)]
 		[Static]
@@ -360,13 +357,6 @@ namespace CoreImage {
 		[Export ("contextForOfflineGPUAtIndex:")]
 		[Static]
 		CIContext FromOfflineGpu (int gpuIndex);
-
-		// When we bind CGLContext
-		//+(CIContext *)contextForOfflineGPUAtIndex:(unsigned int)index
-		//    colorSpace:(nullable CGColorSpaceRef)colorSpace
-		//    options:(nullable CI_DICTIONARY(NSString*,id) *)options
-		//    sharedContext:(nullable CGLContextObj)sharedContext NS_AVAILABLE_MAC(10_10);
-		
 #endif
 
 		[iOS (9,0)][Mac (10,11)]
@@ -2631,40 +2621,37 @@ namespace CoreImage {
 		CIVector Extent { get; set; }
 	}
 
+	[CoreImageFilter]
+	[Abstract]
+	[iOS (9,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIReductionFilter {
+		[CoreImageFilterProperty ("inputExtent")]
+		CIVector Extent { get; set; }
+	}
+
 	[CoreImageFilter (StringCtorVisibility = MethodAttributes.Public)]
 	[iOS (9,0)]
-	[BaseType (typeof (CIFilter))]
+	[BaseType (typeof (CIReductionFilter))]
 	interface CIAreaMaximum {
-
-		[CoreImageFilterProperty ("inputExtent")]
-		CIVector Extent { get; set; }
 	}
 
 	[CoreImageFilter]
 	[iOS (9,0)]
-	[BaseType (typeof (CIFilter))]
+	[BaseType (typeof (CIReductionFilter))]
 	interface CIAreaMaximumAlpha {
-
-		[CoreImageFilterProperty ("inputExtent")]
-		CIVector Extent { get; set; }
 	}
 
 	[CoreImageFilter]
 	[iOS (9,0)]
-	[BaseType (typeof (CIFilter))]
+	[BaseType (typeof (CIReductionFilter))]
 	interface CIAreaMinimum {
-
-		[CoreImageFilterProperty ("inputExtent")]
-		CIVector Extent { get; set; }
 	}
 
 	[CoreImageFilter]
 	[iOS (9,0)]
-	[BaseType (typeof (CIFilter))]
+	[BaseType (typeof (CIReductionFilter))]
 	interface CIAreaMinimumAlpha {
-
-		[CoreImageFilterProperty ("inputExtent")]
-		CIVector Extent { get; set; }
 	}
 
 	[CoreImageFilter (StringCtorVisibility = MethodAttributes.Public)]
@@ -3045,11 +3032,8 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[Mac (10,9)]
-	[BaseType (typeof (CIFilter))]
+	[BaseType (typeof (CIReductionFilter))]
 	interface CIColumnAverage {
-
-		[CoreImageFilterProperty ("inputExtent")]
-		CIVector Extent { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -5426,5 +5410,103 @@ namespace CoreImage {
 
 		bool DisparityImage { get; set; }
 #endif
+	}
+
+	[CoreImageFilter]
+	[iOS (12,0)]
+	[TV (12,0)]
+	[Mac (10,14, onlyOn64: true)]
+	[BaseType (typeof (CIReductionFilter))]
+	interface CIAreaMinMax {
+	}
+
+	[CoreImageFilter]
+	[iOS (12,0)]
+	[TV (12,0)]
+	[Mac (10,14, onlyOn64: true)]
+	[BaseType (typeof (CIFilter))]
+	interface CIDither {
+		[CoreImageFilterProperty ("inputIntensity")]
+		float Intensity { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (12,0)]
+	[TV (12,0)]
+	[Mac (10,14, onlyOn64: true)]
+	[BaseType (typeof (CIFilter))]
+	interface CIGuidedFilter {
+		[CoreImageFilterProperty ("inputGuideImage")]
+		CIImage GuideImage { get; set; }
+		[CoreImageFilterProperty ("inputEpsilon")]
+		float Epsilon { get; set; }
+		[CoreImageFilterProperty ("inputRadius")]
+		float Radius { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (12,0)]
+	[TV (12,0)]
+	[Mac (10,14, onlyOn64: true)]
+	[BaseType (typeof (CIFilter))]
+	interface CIMeshGenerator {
+		// https://github.com/xamarin/xamarin-macios/issues/4226
+		//[CoreImageFilterProperty ("inputMesh")]
+		//CIVector [] Mesh { get; set; }
+		[CoreImageFilterProperty ("inputWidth")]
+		float Width { get; set; }
+		[CoreImageFilterProperty ("inputColor")]
+		CIColor Color { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (12,0)]
+	[TV (12,0)]
+	[Mac (10,14, onlyOn64: true)]
+	[BaseType (typeof (CIFilter))]
+	interface CIMix {
+		[CoreImageFilterProperty ("inputBackgroundImage")]
+		CIImage BackgroundImage { get; set; }
+		[CoreImageFilterProperty ("inputAmount")]
+		float Amount { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (12,0)]
+	[TV (12,0)]
+	[Mac (10,14, onlyOn64: true)]
+	[BaseType (typeof (CIFilter))]
+	interface CISampleNearest {
+	}
+
+	[CoreImageFilter]
+	[iOS (12,0)]
+	[TV (12,0)]
+	[Mac (10,14, onlyOn64: true)]
+	[BaseType (typeof (CIFilter))]
+	interface CICameraCalibrationLensCorrection {
+		[CoreImageFilterProperty ("inputAVCameraCalibrationData")]
+		AVCameraCalibrationData AVCameraCalibrationData { get; set; }
+
+		[CoreImageFilterProperty ("inputUseInverseLookUpTable")]
+		bool UseInverseLookUpTable { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (12,0)]
+	[TV (12,0)]
+	[Mac (10,14, onlyOn64: true)]
+	[BaseType (typeof (CIFilter))]
+	interface CICoreMLModelFilter {
+		[CoreImageFilterProperty ("inputModel")]
+		MLModel Model { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (12,0)]
+	[TV (12,0)]
+	[Mac (10,14, onlyOn64: true)]
+	[BaseType (typeof (CIFilter))]
+	interface CISaliencyMapFilter {
 	}
 }

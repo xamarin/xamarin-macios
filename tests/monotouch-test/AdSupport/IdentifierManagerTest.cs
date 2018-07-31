@@ -30,9 +30,6 @@ namespace MonoTouchFixtures.AdSupport {
 		[Test]
 		public void SharedManager ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6,0))
-				Assert.Inconclusive ("AdSupport is new in 6.0");
-
 			// IsAdvertisingTrackingEnabled - device specific config
 			Assert.NotNull (ASIdentifierManager.SharedManager.AdvertisingIdentifier, "AdvertisingIdentifier");
 		}

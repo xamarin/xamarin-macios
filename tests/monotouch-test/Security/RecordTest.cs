@@ -34,7 +34,12 @@ namespace MonoTouchFixtures.Security {
 
 			// prior to iOS7 you had to deal without the class
 			using (var dict = rec.ToDictionary ()) {
-				if (TestRuntime.CheckXcodeVersion (5, 0))
+				var hasIdnt = true;
+#if !__MACOS__
+				if (!TestRuntime.CheckXcodeVersion (5, 0))
+					hasIdnt = false;
+#endif
+				if (hasIdnt)
 					Assert.That (dict ["class"].ToString (), Is.EqualTo ("idnt"), "idnt");
 				else
 					Assert.Null (dict ["class"], "idnt");

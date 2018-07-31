@@ -13,6 +13,7 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using UIKit;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -38,8 +39,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void Defaults ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("requires iOS7+");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			using (var lm = new NSLayoutManager ()) {
 				Assert.False (lm.AllowsNonContiguousLayout, "AllowsNonContiguousLayout");
@@ -61,8 +61,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void GetGlyphsTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("requires iOS7+");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			using (var txt = new NSTextStorage ()) {
 				var str = "hello world\n\t";

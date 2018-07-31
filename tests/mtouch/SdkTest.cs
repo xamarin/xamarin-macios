@@ -140,14 +140,25 @@ namespace Xamarin.Linker {
 		public void NoAssemblyReferenceInAttributes ()
 		{
 			var dir = Path.Combine (Configuration.MonoTouchRootDirectory, "lib/mono");
+			var failed = new List<string> ();
+			var curdir = Environment.CurrentDirectory;
 			foreach (var filename in Directory.GetFiles (dir, "*.dll", SearchOption.AllDirectories)) {
 				// This tests verifies that there aren't any attributes in any assembly we ship
 				// that references an assembly that's not in the normal assembly references.
 				// It takes a significant amount of time to look in all the attributes for assembly references,
 				// and knowing that no such attributes exist in any assembly we ship, allows us
 				// to complete skip this step in mtouch
-				VerifyNoAdditionalAssemblyReferenceInAttributes (filename);
+				try {
+					Environment.CurrentDirectory = Path.GetDirectoryName (filename);
+					VerifyNoAdditionalAssemblyReferenceInAttributes (filename);
+				} catch (Exception e) {
+					Console.WriteLine ($"Failed to process {filename}: {e.ToString ()}");
+					failed.Add ($"Failed to process {filename}: {e.Message}");
+				} finally {
+					Environment.CurrentDirectory = curdir;
+				}
 			}
+			Assert.IsEmpty (string.Join ("\n", failed), "Failed files");
 		}
 
 		void VerifyNoAdditionalAssemblyReferenceInAttributes (string filename)
