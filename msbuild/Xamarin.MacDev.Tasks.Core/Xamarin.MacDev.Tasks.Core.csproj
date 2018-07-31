@@ -54,6 +54,7 @@
     <!-- Mono has a different implementation of the Move task, so when building on a Mac we need to include XBuildMoveTaskBase.cs -->
     <Compile Include="MsBuildTasks\MoveTaskBase.cs" Condition="'$(OS)' == 'Windows_NT'" />
     <Compile Include="MsBuildTasks\XBuildMoveTaskBase.cs" Condition="'$(OS)' != 'Windows_NT'" />
+    <Compile Include="PlatformUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MsBuildTasks\CopyBase.cs" />

@@ -59,6 +59,7 @@ namespace UserNotifications {
 	public enum UNNotificationCategoryOptions : ulong {
 		None = 0,
 		CustomDismissAction = (1 << 0),
+		[NoMac]
 		AllowInCarPlay = (2 << 0),
 		HiddenPreviewsShowTitle = (1 << 2),
 		HiddenPreviewsShowSubtitle = (1 << 3),
@@ -339,7 +340,7 @@ namespace UserNotifications {
 		[Export ("categoryIdentifier")]
 		string CategoryIdentifier { get; }
 
-		[Unavailable (PlatformName.TvOS)]
+		[NoTV, NoMac]
 		[Export ("launchImageName")]
 		string LaunchImageName { get; }
 
@@ -394,7 +395,7 @@ namespace UserNotifications {
 		[Export ("categoryIdentifier")]
 		string CategoryIdentifier { get; set; }
 
-		[Unavailable (PlatformName.TvOS)]
+		[NoTV, NoMac]
 		[Export ("launchImageName")]
 		string LaunchImageName { get; set; }
 
@@ -547,8 +548,7 @@ namespace UserNotifications {
 		[Export ("lockScreenSetting")]
 		UNNotificationSetting LockScreenSetting { get; }
 
-		[Unavailable (PlatformName.TvOS)]
-		[Unavailable (PlatformName.WatchOS)]
+		[NoWatch, NoTV, NoMac]
 		[Export ("carPlaySetting")]
 		UNNotificationSetting CarPlaySetting { get; }
 
@@ -670,7 +670,7 @@ namespace UserNotifications {
 
 	[iOS (10, 0)]
 	[Watch (3, 0)]
-	[Mac (10,14, onlyOn64: true)]
+	[NoMac]
 	[Unavailable (PlatformName.TvOS)]
 	[BaseType (typeof (UNNotificationTrigger))]
 	[DisableDefaultCtor] // as per doc, use supplied method (CreateTrigger)

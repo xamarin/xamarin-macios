@@ -21,6 +21,8 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public string IntermediateOutputPath { get; set; }
 
+		public bool IsWatchApp { get; set; }
+
 		[Required]
 		public string ProjectDir { get; set; }
 
@@ -32,6 +34,9 @@ namespace Xamarin.MacDev.Tasks
 
 		[Required]
 		public string SdkDevPath { get; set; }
+
+		[Required]
+		public string SdkPlatform { get; set; }
 
 		[Required]
 		public string SdkRoot { get; set; }
@@ -106,7 +111,16 @@ namespace Xamarin.MacDev.Tasks
 			args.Add ("-o");
 			args.AddQuoted (Path.GetFullPath (output));
 			args.AddQuotedFormat ("--sdk-root={0}", SdkRoot);
-			args.AddQuotedFormat ("--target-version-{0}={1}", OperatingSystem, SdkVersion);
+
+			if (AppleSdkSettings.XcodeVersion.Major >= 10) {
+				var platform = PlatformUtils.GetTargetPlatform (SdkPlatform, IsWatchApp);
+				if (platform != null)
+					args.Add ("--target-platform", platform);
+
+				args.AddQuotedFormat ("--target-version={0}", SdkVersion);
+			} else {
+				args.AddQuotedFormat ("--target-version-{0}={1}", OperatingSystem, SdkVersion);
+			}
 			args.AddQuotedFormat ("--target-build-dir={0}", Path.GetFullPath (intermediate));
 
 			var startInfo = GetProcessStartInfo (environment, GetFullPathToTool (), args.ToString ());

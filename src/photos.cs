@@ -1278,6 +1278,10 @@ namespace Photos
 		[Mac (10,14, onlyOn64: true)]
 		[Export ("setProjectPreviewImage:")]
 		void SetProjectPreviewImage (NSImage previewImage);
+
+		[Mac (10,14, onlyOn64: true)]
+		[Export ("removeAssets:")]
+		void RemoveAssets (PHAsset [] /*id<NSFastEnumeration>*/ assets); //a collection of PHAsset objects
 	}
 
 	[Mac (10,13, onlyOn64 : true)]

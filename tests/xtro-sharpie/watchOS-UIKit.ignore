@@ -22,8 +22,6 @@
 !unknown-native-enum! UITextAlignment bound
 
 ## Ignore what the header files say, the NSItemProviderReading methods are not actually implemented on TV or Watch
-!missing-protocol-conformance! NSAttributedString should conform to NSItemProviderReading (defined in 'UINSItemProvider' category)
-!missing-protocol-conformance! NSAttributedString should conform to NSItemProviderWriting (defined in 'UINSItemProvider' category)
 !missing-protocol-conformance! UIColor should conform to NSItemProviderReading (defined in 'UINSItemProvider' category)
 !missing-protocol-conformance! UIColor should conform to NSItemProviderWriting (defined in 'UINSItemProvider' category)
 !missing-protocol-conformance! UIImage should conform to NSItemProviderReading (defined in 'NSItemProvider' category)

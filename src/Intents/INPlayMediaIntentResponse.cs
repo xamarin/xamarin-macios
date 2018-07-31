@@ -7,7 +7,7 @@
 // Copyright 2018 Microsoft Corporation.
 //
 
-#if XAMCORE_2_0 && !MONOMAC && !WATCH // We must remove !WATCH when MediaPlayer is enabled in watchOS
+#if XAMCORE_2_0 && !MONOMAC
 using System;
 using Foundation;
 using ObjCRuntime;
