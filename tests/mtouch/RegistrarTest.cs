@@ -278,7 +278,7 @@ class MyObjectErr : NSObject, IFoo1, IFoo2
 				mtouch.CreateTemporaryApp (extraCode: sb.ToString (), usings: "using System; using Foundation; using ObjCRuntime;", extraArg: "/debug:full");
 				mtouch.Linker = MTouchLinker.LinkSdk;
 				mtouch.Registrar = MTouchRegistrar.Static;
-				mtouch.AssertExecuteFailure ();
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev);
 				var invalidFrameworks = new [] {
 					new { Framework = "IdentityLookup", Version = "11.0" },
 					new { Framework = "FileProviderUI", Version = "11.0" },
@@ -296,6 +296,8 @@ class MyObjectErr : NSObject, IFoo1, IFoo2
 					mtouch.AssertError (4134, $"Your application is using the '{framework.Framework}' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS {framework.Version}, while you're building with the iOS {mtouch.Sdk} SDK.) Please select a newer SDK in your app's iOS Build options.");
 				mtouch.AssertErrorCount (invalidFrameworks.Length);
 				mtouch.AssertWarningCount (0);
+
+				mtouch.AssertExecute (MTouchAction.BuildSim);
 			}
 		}
 
