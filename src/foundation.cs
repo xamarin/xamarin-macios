@@ -8608,8 +8608,7 @@ namespace Foundation
 #if MONOMAC // Defined in AppKit NSKeyValueBinding.h
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface NSBindingSelectionMarker : NSCopying
-	{
+	interface NSBindingSelectionMarker : NSCopying {
 		[Static]
 		[Export ("multipleValuesSelectionMarker", ArgumentSemantic.Strong)]
 		NSBindingSelectionMarker MultipleValuesSelectionMarker { get; }
