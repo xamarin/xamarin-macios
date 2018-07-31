@@ -200,6 +200,7 @@ namespace Introspection
 			"Embd",
 			"Enc",
 			"Eppc",
+			"Eftpos", // Electronic funds transfer at point of sale
 			"Exhange",
 			"Exp",
 			"Expr",
