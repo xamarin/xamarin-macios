@@ -62,7 +62,7 @@ namespace CoreFoundation
 			CFPropertyListFormat fmt;
 			IntPtr error;
 			var ret = CFPropertyListCreateWithData (IntPtr.Zero, data.Handle, options, out fmt, out error);
-			if (ret != null)
+			if (ret != IntPtr.Zero)
 				return (new CFPropertyList (ret, owns: true), fmt, null);
 			return (null, CFPropertyListFormat.XmlFormat1, new NSError (error));
 		}
