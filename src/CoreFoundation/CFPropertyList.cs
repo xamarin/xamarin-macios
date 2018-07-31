@@ -37,9 +37,15 @@ namespace CoreFoundation
 			get { return handle; }
 		}
 
-		public CFPropertyList (IntPtr handle)
+		public CFPropertyList (IntPtr handle, bool owns)
 		{
 			this.handle = handle;
+			if (owns == false)
+				CFObject.CFRetain (handle);
+		}
+
+		public CFPropertyList (IntPtr handle) : this (handle, false)
+		{
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
@@ -57,7 +63,7 @@ namespace CoreFoundation
 			IntPtr error;
 			var ret = CFPropertyListCreateWithData (IntPtr.Zero, data.Handle, options, out fmt, out error);
 			if (ret != null)
-				return (new CFPropertyList (ret), fmt, null);
+				return (new CFPropertyList (ret, owns: true), fmt, null);
 			return (null, CFPropertyListFormat.XmlFormat1, new NSError (error));
 		}
 
@@ -66,7 +72,7 @@ namespace CoreFoundation
 
 		public CFPropertyList DeepCopy (CFPropertyListMutabilityOptions options = CFPropertyListMutabilityOptions.MutableContainersAndLeaves)
 		{
-			return new CFPropertyList (CFPropertyListCreateDeepCopy (IntPtr.Zero, handle, options));
+			return new CFPropertyList (CFPropertyListCreateDeepCopy (IntPtr.Zero, handle, options), owns: true);
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
