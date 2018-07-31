@@ -83,7 +83,7 @@ namespace CoreGraphics {
 		public CGColorSpace (CFPropertyList propertyList)
 		{
 			if (propertyList == null)
-				throw new ArgumentNullException (nameof(propertyList));
+				throw new ArgumentNullException (nameof (propertyList));
 			this.handle = CGColorSpaceCreateWithPropertyList (propertyList.Handle);
 		}
 

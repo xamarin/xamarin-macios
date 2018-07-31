@@ -45,7 +45,6 @@ namespace CoreFoundation
 		[DllImport (Constants.CoreFoundationLibrary)]
 		static extern IntPtr CFPropertyListCreateWithData (IntPtr allocator, IntPtr dataRef, CFPropertyListMutabilityOptions options, out CFPropertyListFormat format, /* CFError * */ out IntPtr error);
 
-
 		public (CFPropertyList propertyList, CFPropertyListFormat format, NSError error)
 			FromData (NSData data, CFPropertyListMutabilityOptions options = CFPropertyListMutabilityOptions.Immutable)
 		{
@@ -63,7 +62,7 @@ namespace CoreFoundation
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static IntPtr CFPropertyListCreateDeepCopy(IntPtr allocator, IntPtr propertyList, CFPropertyListMutabilityOptions mutabilityOption);
+		extern static IntPtr CFPropertyListCreateDeepCopy (IntPtr allocator, IntPtr propertyList, CFPropertyListMutabilityOptions mutabilityOption);
 
 		public CFPropertyList DeepCopy (CFPropertyListMutabilityOptions options = CFPropertyListMutabilityOptions.MutableContainersAndLeaves)
 		{
@@ -71,7 +70,7 @@ namespace CoreFoundation
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static /*CFDataRef*/IntPtr CFPropertyListCreateData(IntPtr allocator, IntPtr propertyList, CFPropertyListFormat format, CFPropertyListMutabilityOptions options, out IntPtr error);
+		extern static /*CFDataRef*/IntPtr CFPropertyListCreateData (IntPtr allocator, IntPtr propertyList, CFPropertyListFormat format, CFPropertyListMutabilityOptions options, out IntPtr error);
 
 		public NSData AsData (CFPropertyListFormat format = CFPropertyListFormat.BinaryFormat1)
 		{
@@ -86,7 +85,7 @@ namespace CoreFoundation
 		{
 			return CFPropertyListIsValid (handle, format);
 		}
-			
+
 		~CFPropertyList ()
 		{
 			Dispose (false);
@@ -133,19 +132,18 @@ namespace CoreFoundation
 				return null;
 			}
 		}
-		
 	}
 
 	public enum CFPropertyListFormat {
 		OpenStep = 1,
 		XmlFormat1 = 100,
-		BinaryFormat1 = 200
+		BinaryFormat1 = 200,
 	}
 
 	[Flags]
 	public enum CFPropertyListMutabilityOptions {
 		Immutable = 0,
 		MutableContainers = 1 << 0,
-		MutableContainersAndLeaves = 1 << 1
+		MutableContainersAndLeaves = 1 << 1,
 	}
 }

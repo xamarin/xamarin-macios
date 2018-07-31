@@ -74,9 +74,8 @@ namespace CoreGraphics {
 		Rgb101010 = 3 << 16,
 		RgbCif10 = 4 << 16,
 		Mask = 0xF0000,
-			
 	}
-	
+
 	// uint32_t -> CGImage.h
 	[Flags]
 	public enum CGBitmapFlags : uint {
@@ -108,9 +107,9 @@ namespace CoreGraphics {
 		ByteOrder16Little = (1 << 12),
 		ByteOrder32Little = (2 << 12),
 		ByteOrder16Big    = (3 << 12),
-		ByteOrder32Big    = (4 << 12)
+		ByteOrder32Big    = (4 << 12),
 	}
-	
+
 	// CGImage.h
 	public class CGImage : INativeObject
 #if !COREBUILD
