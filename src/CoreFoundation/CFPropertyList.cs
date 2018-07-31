@@ -123,19 +123,19 @@ namespace CoreFoundation
 				var typeid = CFType.GetTypeID (handle);
 
 				if (typeid == CFDataTypeID) {
-					return new NSData (handle);
+					return Runtime.GetNSObject<NSData> (handle);
 				} else if (typeid == CFStringTypeID) {
-					return new NSString (handle);
+					return Runtime.GetNSObject<NSString> (handle);
 				} else if (typeid == CFArrayTypeID) {
-					return new NSArray (handle);
+					return Runtime.GetNSObject<NSArray> (handle);
 				} else if (typeid == CFDictionaryTypeID) {
-					return new NSDictionary (handle);
+					return Runtime.GetNSObject<NSDictionary> (handle);
 				} else if (typeid == CFDateTypeID) {
-					return new NSDate (handle);
+					return Runtime.GetNSObject<NSDate> (handle);
 				} else if (typeid == CFBooleanTypeID) {
-					return (bool)new NSNumber (handle);
+					return (bool) Runtime.GetNSObject<NSNumber> (handle);
 				} else if (typeid == CFNumberTypeID) {
-					return new NSNumber (handle);
+					return Runtime.GetNSObject<NSNumber> (handle);
 				}
 
 				return null;
