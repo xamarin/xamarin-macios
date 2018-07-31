@@ -1264,7 +1264,7 @@ namespace UIKit {
 		[iOS (9,0)] // documented as 7.0 but missing in 8.x
 		[Export ("CGGlyphAtIndex:")]
 		ushort GetGlyph (nuint glyphIndex);
-
+		
 	}
 	
 	[Model, BaseType (typeof (NSObject))]
