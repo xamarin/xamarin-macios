@@ -77,8 +77,8 @@ namespace CoreML {
 	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 	[Native]
 	public enum MLComputeUnits : long {
-		Only = 0,
-		AndGpu = 1,
+		CpuOnly = 0,
+		CpuAndGpu = 1,
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
