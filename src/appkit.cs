@@ -8462,6 +8462,7 @@ namespace AppKit {
 
 	[ThreadSafe]
 	[BaseType (typeof (NSObject))]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
 	interface NSOpenGLPixelFormat : NSCoding {
 		[Export ("initWithData:")]
 		IntPtr Constructor (NSData attribs);
@@ -8478,6 +8479,7 @@ namespace AppKit {
 
 	[ThreadSafe]
 	[Availability (Deprecated = Platform.Mac_10_7)]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
 	[BaseType (typeof (NSObject))]
 	interface NSOpenGLPixelBuffer {
 		[Export ("initWithTextureTarget:textureInternalFormat:textureMaxMipMapLevel:pixelsWide:pixelsHigh:")]
@@ -8509,6 +8511,7 @@ namespace AppKit {
 	[ThreadSafe] // single thread - but not restricted to the main thread
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // warns with "invalid context" at runtime
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
 	interface NSOpenGLContext {
 		[Export ("initWithFormat:shareContext:")]
 		IntPtr Constructor (NSOpenGLPixelFormat format, [NullAllowed] NSOpenGLContext shareContext);
@@ -8598,6 +8601,7 @@ namespace AppKit {
 	}
 
 	[BaseType (typeof (NSView))]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
 	partial interface NSOpenGLView {
 		[Static]
 		[Export ("defaultPixelFormat")]
@@ -11027,6 +11031,10 @@ namespace AppKit {
 		[Mac (10,11)]
 		[Export ("enumerateEnclosingRectsForGlyphRange:withinSelectedGlyphRange:inTextContainer:usingBlock:")]
 		void EnumerateEnclosingRects (NSRange glyphRange, NSRange selectedRange, NSTextContainer textContainer, NSTextLayoutEnumerateEnclosingRects callback);
+
+		[Mac (10, 14, onlyOn64: true)]
+		[Export ("limitsLayoutForSuspiciousContents")]
+		bool LimitsLayoutForSuspiciousContents { get; set; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -16372,6 +16380,7 @@ namespace AppKit {
 		[Export ("locationOfPrintRect:")]
 		CGPoint LocationOfPrintRect (CGRect aRect);
 
+		[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
 		[Mac (10, 7), Export ("wantsBestResolutionOpenGLSurface")]
 		bool WantsBestResolutionOpenGLSurface { get; set; }
 
@@ -18235,17 +18244,8 @@ namespace AppKit {
 		[Export ("cellSize")]
 		CGSize CellSize { get; }
 
-#if XAMCORE_4_0
-		[Export ("cellBaselineOffset")]
-		CGPoint CellBaselineOffset { get; [Mac (10, 14, onlyOn64: true)] set; }
-#else
 		[Export ("cellBaselineOffset")]
 		CGPoint CellBaselineOffset { get; }
-
-		[Mac (10, 14, onlyOn64: true)]
-		[Export ("setCellBaselineOffset:")]
-		void SetCellBaselineOffset (CGPoint point);
-#endif
 
 		[Export ("drawWithFrame:inView:characterIndex:")]
 		void DrawWithFrame (CGRect cellFrame, NSView controlView, nuint charIndex);

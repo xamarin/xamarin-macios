@@ -4,8 +4,6 @@
 !missing-selector! +NSColor::findHighlightColor not bound
 !missing-selector! +NSColor::placeholderTextColor not bound
 !missing-selector! NSSliderCell::setImage: not bound
-!missing-selector! NSLayoutManager::limitsLayoutForSuspiciousContents not bound
-!missing-selector! NSLayoutManager::setLimitsLayoutForSuspiciousContents: not bound
 ## appended from unclassified file
 !missing-field! NSAppearanceDocumentAttribute not bound
 !missing-protocol! NSUserActivityRestoring not bound
