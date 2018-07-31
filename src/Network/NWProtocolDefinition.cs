@@ -20,15 +20,15 @@ namespace Network {
 	public enum NWIPVersion {
 		Any = 0,
 		Version4 = 1,
-		Version6 = 2
+		Version6 = 2,
 	}
-		
+
 	public class NWProtocolDefinition : NativeObject {
 		public NWProtocolDefinition (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]			
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool nw_protocol_definition_is_equal (OS_nw_protocol_definition definition1, OS_nw_protocol_definition definition2);
 
 		public bool Equals (object other)
@@ -43,7 +43,7 @@ namespace Network {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_definition nw_protocol_copy_ip_definition ();
-		
+
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public static NWProtocolDefinition IPDefinition => new NWProtocolDefinition (nw_protocol_copy_ip_definition (), owns: true);
 

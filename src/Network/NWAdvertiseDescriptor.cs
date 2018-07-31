@@ -16,7 +16,6 @@ using nw_advertise_descriptor_t=System.IntPtr;
 using OS_nw_advertise_descriptor=System.IntPtr;
 
 namespace Network {
-	
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	public class NWAdvertiseDescriptor : NativeObject {
 		public NWAdvertiseDescriptor (IntPtr handle, bool owns) : base (handle, owns)
@@ -51,12 +50,12 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_advertise_descriptor_set_no_auto_rename (IntPtr handle, [MarshalAs(UnmanagedType.I1)]  bool no_auto_rename);
+		static extern void nw_advertise_descriptor_set_no_auto_rename (IntPtr handle, [MarshalAs (UnmanagedType.I1)] bool no_auto_rename);
 
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool nw_advertise_descriptor_get_no_auto_rename (IntPtr handle);
-		
+
 		public bool NoAutoRename {
 			set => nw_advertise_descriptor_set_no_auto_rename (GetHandle (), value);
 			get => nw_advertise_descriptor_get_no_auto_rename (GetHandle ());

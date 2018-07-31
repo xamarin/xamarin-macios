@@ -19,9 +19,8 @@ namespace Network {
 		Ready = 2,
 		Failed = 3,
 		Cancelled = 4,
-			
 	}
-	
+
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	public class NWListener : NativeObject {
 		public NWListener (IntPtr handle, bool owns) : base (handle, owns)
@@ -29,7 +28,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		extern static IntPtr nw_listener_create_with_port(string port, IntPtr nwparameters);
+		extern static IntPtr nw_listener_create_with_port (string port, IntPtr nwparameters);
 
 		public static NWListener Create (string port, NWParameters parameters)
 		{
@@ -39,7 +38,7 @@ namespace Network {
 				throw new ArgumentNullException (nameof (parameters));
 			if (port == null)
 				throw new ArgumentNullException (nameof (port));
-			
+
 			handle = nw_listener_create_with_port (port, parameters.handle);
 			if (handle == IntPtr.Zero)
 				return null;
@@ -55,7 +54,7 @@ namespace Network {
 
 			if (parameters == null)
 				throw new ArgumentNullException (nameof (parameters));
-			
+
 			handle = nw_listener_create (parameters.handle);
 			if (handle == IntPtr.Zero)
 				return null;
@@ -65,14 +64,13 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_listener_create_with_connection (IntPtr nwconnection, IntPtr nwparameters);
 
-
 		public static NWListener Create (NWConnection connection, NWParameters parameters)
 		{
 			if (parameters == null)
 				throw new ArgumentNullException (nameof (parameters));
 			if (connection == null)
 				throw new ArgumentNullException (nameof (connection));
-			
+
 			var handle = nw_listener_create_with_connection (connection.handle, parameters.handle);
 			if (handle == IntPtr.Zero)
 				return null;
@@ -80,12 +78,12 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		extern static void nw_listener_set_queue(IntPtr listener, IntPtr queue);
+		extern static void nw_listener_set_queue (IntPtr listener, IntPtr queue);
 
 		public void SetQueue (DispatchQueue queue)
 		{
 			if (queue == null)
-			 	throw new ArgumentNullException (nameof(queue));
+				throw new ArgumentNullException (nameof (queue));
 
 			nw_listener_set_queue (GetHandle(), queue.handle);
 		}
@@ -96,34 +94,33 @@ namespace Network {
 		public ushort Port => nw_listener_get_port (GetHandle());
 
 		[DllImport (Constants.NetworkLibrary)]
-		extern static void 	nw_listener_start (IntPtr handle);
+		extern static void nw_listener_start (IntPtr handle);
 
 		public void Start () => nw_listener_start (GetHandle());
-		
 
 		[DllImport (Constants.NetworkLibrary)]
-		extern static void 	nw_listener_cancel (IntPtr handle);
+		extern static void nw_listener_cancel (IntPtr handle);
 
 		public void Cancel () => nw_listener_cancel (GetHandle());
 
 		delegate void nw_listener_state_changed_handler_t (IntPtr block, NWListenerState state, IntPtr nwerror);
 		static nw_listener_state_changed_handler_t static_ListenerStateChanged = TrampolineListenerStateChanged;
-		
+
 		[MonoPInvokeCallback (typeof (nw_listener_state_changed_handler_t))]
-			static unsafe void TrampolineListenerStateChanged (IntPtr block, NWListenerState state,  IntPtr nwerror)
+		static unsafe void TrampolineListenerStateChanged (IntPtr block, NWListenerState state, IntPtr nwerror)
 		{
 			var descriptor = (BlockLiteral *) block;
 			var del = (Action<NWListenerState,NWError>) (descriptor->Target);
 			if (del != null){
 				NWError err = nwerror == IntPtr.Zero ? null : new NWError (nwerror, owns: false);
-			        del (state, err);
+				del (state, err);
 				err?.Dispose ();
 			}
 		}
-		
+
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe void nw_listener_set_state_changed_handler (IntPtr handle, void *callback);
-		
+
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetStateChangedHandler (Action<NWListenerState,NWError> callback)
 		{
@@ -132,21 +129,21 @@ namespace Network {
 					nw_listener_set_state_changed_handler (GetHandle(), null);
 					return;
 				}
-			
-			        BlockLiteral *block_ptr_handler;
-			        BlockLiteral block_handler;
-			        block_handler = new BlockLiteral ();
-			        block_ptr_handler = &block_handler;
-			        block_handler.SetupBlockUnsafe (static_ListenerStateChanged, callback);
-			
-			        nw_listener_set_state_changed_handler (GetHandle(), (void*) block_ptr_handler);
-			        block_ptr_handler->CleanupBlock ();
+
+				BlockLiteral *block_ptr_handler;
+				BlockLiteral block_handler;
+				block_handler = new BlockLiteral ();
+				block_ptr_handler = &block_handler;
+				block_handler.SetupBlockUnsafe (static_ListenerStateChanged, callback);
+
+				nw_listener_set_state_changed_handler (GetHandle(), (void*) block_ptr_handler);
+				block_ptr_handler->CleanupBlock ();
 			}
 		}
 
 		delegate void nw_listener_new_connection_handler_t (IntPtr block, IntPtr connection);
 		static nw_listener_new_connection_handler_t static_NewConnection = TrampolineNewConnection;
-		
+
 		[MonoPInvokeCallback (typeof (nw_listener_new_connection_handler_t))]
 		static unsafe void TrampolineNewConnection (IntPtr block, IntPtr connection)
 		{
@@ -157,10 +154,10 @@ namespace Network {
 			        del (nwconnection);
 			}
 		}
-		
+
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe void nw_listener_set_new_connection_handler (IntPtr handle, void *callback);
-		
+
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetNewConnectionHandler (Action<NWConnection> callback)
 		{
@@ -169,15 +166,15 @@ namespace Network {
 					nw_listener_set_new_connection_handler (GetHandle(), null);
 					return;
 				}
-			
-			        BlockLiteral *block_ptr_handler;
-			        BlockLiteral block_handler;
-			        block_handler = new BlockLiteral ();
-			        block_ptr_handler = &block_handler;
-			        block_handler.SetupBlockUnsafe (static_NewConnection, callback);
-			
-			        nw_listener_set_new_connection_handler (GetHandle(), (void*) block_ptr_handler);
-			        block_ptr_handler->CleanupBlock ();
+
+				BlockLiteral *block_ptr_handler;
+				BlockLiteral block_handler;
+				block_handler = new BlockLiteral ();
+				block_ptr_handler = &block_handler;
+				block_handler.SetupBlockUnsafe (static_NewConnection, callback);
+
+				nw_listener_set_new_connection_handler (GetHandle(), (void*) block_ptr_handler);
+				block_ptr_handler->CleanupBlock ();
 			}
 		}
 
@@ -191,16 +188,16 @@ namespace Network {
 		{
 			var descriptor = (BlockLiteral *) block;
 			var del = (AdvertisedEndpointChanged) (descriptor->Target);
-			if (del != null){
+			if (del != null) {
 				var nwendpoint = new NWEndpoint (endpoint, owns: false);
-			        del (nwendpoint, added != 0 ? true : false);
+				del (nwendpoint, added != 0 ? true : false);
 				nwendpoint.Dispose ();
 			}
 		}
-		
+
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe void nw_listener_set_advertised_endpoint_changed_handler (IntPtr handle, void *callback);
-		
+
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetAdvertisedEndpointChangedHandler (AdvertisedEndpointChanged callback)
 		{
@@ -209,15 +206,15 @@ namespace Network {
 					nw_listener_set_advertised_endpoint_changed_handler (GetHandle(), null);
 					return;
 				}
-				
-			        BlockLiteral *block_ptr_handler;
-			        BlockLiteral block_handler;
-			        block_handler = new BlockLiteral ();
-			        block_ptr_handler = &block_handler;
-			        block_handler.SetupBlockUnsafe (static_AdvertisedEndpointChangedHandler, callback);
-			
-			        nw_listener_set_advertised_endpoint_changed_handler (GetHandle(), (void*) block_ptr_handler);
-			        block_ptr_handler->CleanupBlock ();
+
+				BlockLiteral *block_ptr_handler;
+				BlockLiteral block_handler;
+				block_handler = new BlockLiteral ();
+				block_ptr_handler = &block_handler;
+				block_handler.SetupBlockUnsafe (static_AdvertisedEndpointChangedHandler, callback);
+
+				nw_listener_set_advertised_endpoint_changed_handler (GetHandle(), (void*) block_ptr_handler);
+				block_ptr_handler->CleanupBlock ();
 			}
 		}
 

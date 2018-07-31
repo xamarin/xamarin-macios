@@ -30,31 +30,32 @@ namespace CoreFoundation {
 	public abstract class NativeObject : INativeObject, IDisposable {
 		internal IntPtr handle;
 		public IntPtr Handle {
-			get => handle; 
-			protected set => InitializeHandle (value); 
+			get => handle;
+			protected set => InitializeHandle (value);
 		}
 
-		protected NativeObject () {
+		protected NativeObject ()
+		{
 		}
-		
+
 		protected NativeObject (IntPtr handle, bool owns)
 		{
 			Handle = handle;
 			if (!owns)
 				Retain ();
 		}
-	
+
 		~NativeObject ()
 		{
 			Dispose (false);
 		}
-	
+
 		public void Dispose ()
 		{
 			Dispose (true);
 			GC.SuppressFinalize (this);
 		}
-	
+
 		protected virtual void Dispose (bool disposing)
 		{
 			if (Handle != IntPtr.Zero) {
@@ -62,10 +63,10 @@ namespace CoreFoundation {
 				handle = IntPtr.Zero;
 			}
 		}
-	
+
 		protected virtual void Retain () => CFObject.CFRetain (Handle);
 		protected virtual void Release () => CFObject.CFRelease (Handle);
-	
+
 		protected virtual void InitializeHandle (IntPtr handle)
 		{
 #if !COREBUILD
@@ -78,7 +79,7 @@ namespace CoreFoundation {
 		}
 
 		void Throw () => throw new ObjectDisposedException (GetType ().ToString ());
-			
+
 		internal IntPtr GetHandle ()
 		{
 			if (handle == IntPtr.Zero)

@@ -18,7 +18,7 @@ using dispatch_queue_t=System.IntPtr;
 using sec_identity_t=System.IntPtr;
 
 namespace Security {
-	
+
 	public class SecProtocolOptions : NativeObject {
 #if !COREBUILD
 		// This type is only ever surfaced in response to callbacks in TLS/Network and documented as read-only
@@ -41,7 +41,7 @@ namespace Security {
 		static extern void sec_protocol_options_add_tls_ciphersuite (sec_protocol_options_t handle, SslCipherSuite cipherSuite);
 
 		public void AddTlsCipherSuite (SslCipherSuite cipherSuite) => sec_protocol_options_add_tls_ciphersuite (GetHandle (), cipherSuite);
-		
+
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern void sec_protocol_options_add_tls_ciphersuite_group (sec_protocol_options_t handle, SslCipherSuiteGroup cipherSuiteGroup);
@@ -109,7 +109,6 @@ namespace Security {
 				throw new ArgumentNullException (nameof (parameters));
 			sec_protocol_options_set_tls_diffie_hellman_parameters (GetHandle (), parameters.Handle);
 		}
-		
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.SecurityLibrary)]
@@ -169,25 +168,26 @@ namespace Security {
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.SecurityLibrary)]
-		static extern void sec_protocol_options_set_key_update_block(sec_protocol_options_t options, IntPtr key_update_block, dispatch_queue_t key_update_queue);
+		static extern void sec_protocol_options_set_key_update_block (sec_protocol_options_t options, IntPtr key_update_block, dispatch_queue_t key_update_queue);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetKeyUpdateCallback (SecProtocolKeyUpdate keyUpdate, DispatchQueue keyUpdateQueue)
 		{
 			if (keyUpdate == null)
-				throw new ArgumentNullException(nameof(keyUpdate));
+				throw new ArgumentNullException (nameof (keyUpdate));
 			if (keyUpdateQueue == null)
-				throw new ArgumentNullException(nameof(keyUpdateQueue));
-			unsafe {
-                                BlockLiteral *block_ptr_handler;
-                                BlockLiteral block_handler;
-                                block_handler = new BlockLiteral ();
-                                block_ptr_handler = &block_handler;
-                                block_handler.SetupBlockUnsafe (Trampolines.SDSecProtocolKeyUpdate.Handler, keyUpdate);
+				throw new ArgumentNullException (nameof (keyUpdateQueue));
 
-                                sec_protocol_options_set_key_update_block (handle, (IntPtr)((void*) block_ptr_handler), keyUpdateQueue.Handle);
-                                block_ptr_handler->CleanupBlock ();
+			unsafe {
+				BlockLiteral *block_ptr_handler;
+				BlockLiteral block_handler;
+				block_handler = new BlockLiteral ();
+				block_ptr_handler = &block_handler;
+				block_handler.SetupBlockUnsafe (Trampolines.SDSecProtocolKeyUpdate.Handler, keyUpdate);
+
+				sec_protocol_options_set_key_update_block (handle, (IntPtr)((void*) block_ptr_handler), keyUpdateQueue.Handle);
+				block_ptr_handler->CleanupBlock ();
 			}
 		}
 
@@ -195,12 +195,12 @@ namespace Security {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern void sec_protocol_options_set_challenge_block(sec_protocol_options_t options, IntPtr challenge_block, dispatch_queue_t challenge_queue);
-		
+
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern void sec_protocol_options_set_verify_block(sec_protocol_options_t options, IntPtr verify_block, dispatch_queue_t verify_block_queue);
 #endif
-	
+
 #endif
 	}
 }

@@ -17,7 +17,7 @@ namespace Network {
 	//
 	// The content context, there are a few pre-configured content contexts for sending
 	// available as static properties on this class
-	// 
+	//
 	public class NWContentContext : NativeObject {
 		bool global;
 		public NWContentContext (IntPtr handle, bool owns) : base (handle, owns)
@@ -43,7 +43,7 @@ namespace Network {
 				return;
 			base.Release ();
 		}
-		
+
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_content_context_create (string contextIdentifier);
@@ -138,7 +138,7 @@ namespace Network {
 				return null;
 			return new NWProtocolMetadata (x, owns: true);
 		}
-		
+
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_content_context_set_metadata_for_protocol (IntPtr handle, IntPtr protocolMetadata);
@@ -153,18 +153,18 @@ namespace Network {
 
 		delegate void ProtocolIterator (IntPtr block, IntPtr definition, IntPtr metadata);
 		static ProtocolIterator static_ProtocolIterator = TrampolineProtocolIterator;
-		
+
 		[MonoPInvokeCallback (typeof (ProtocolIterator))]
 		static unsafe void TrampolineProtocolIterator (IntPtr block, IntPtr definition, IntPtr metadata)
 		{
 			var descriptor = (BlockLiteral *) block;
 			var del = (Action<NWProtocolDefinition,NWProtocolMetadata>) (descriptor->Target);
-			if (del != null){
+			if (del != null) {
 				var pdef = definition == IntPtr.Zero ? null : new NWProtocolDefinition (definition, owns: true);
 				var meta = metadata == IntPtr.Zero ? null : new NWProtocolMetadata (metadata, owns: true);
 
 				del (pdef, meta);
-				
+
 				pdef?.Dispose ();
 				meta?.Dispose ();
 				if (pdef != null)
@@ -173,24 +173,24 @@ namespace Network {
 					meta.Dispose ();
 			}
 		}
-		
+
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe void nw_content_context_foreach_protocol_metadata (IntPtr handle, void *callback);
-		
+
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void IterateProtocolMetadata (Action<NWProtocolDefinition,NWProtocolMetadata> callback)
 		{
 			unsafe {
-			        BlockLiteral *block_ptr_handler;
-			        BlockLiteral block_handler;
-			        block_handler = new BlockLiteral ();
-			        block_ptr_handler = &block_handler;
-			        block_handler.SetupBlockUnsafe (static_ProtocolIterator, callback);
-			
-			        nw_content_context_foreach_protocol_metadata (GetHandle(), (void*) block_ptr_handler);
-			        block_ptr_handler->CleanupBlock ();
+				BlockLiteral *block_ptr_handler;
+				BlockLiteral block_handler;
+				block_handler = new BlockLiteral ();
+				block_ptr_handler = &block_handler;
+				block_handler.SetupBlockUnsafe (static_ProtocolIterator, callback);
+
+				nw_content_context_foreach_protocol_metadata (GetHandle(), (void*) block_ptr_handler);
+				block_ptr_handler->CleanupBlock ();
 			}
 		}
 
@@ -202,7 +202,7 @@ namespace Network {
 			get {
 				if (defaultMessage == null)
 					defaultMessage = MakeGlobal (Marshal.ReadIntPtr (Dlfcn.dlsym (Libraries.Network.Handle, "_nw_content_context_default_message")));
-				
+
 				return defaultMessage;
 			}
 		}

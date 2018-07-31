@@ -1106,7 +1106,7 @@ NETWORK_SOURCES = \
 	Network/NWProtocolDefinition.cs		\
 	Network/NWProtocolMetadata.cs		\
 	Network/NWProtocolOptions.cs		\
-	Network/NWProtocolStack.cs
+	Network/NWProtocolStack.cs			\
 	
 # NetworkExtension
 
@@ -1342,7 +1342,7 @@ SECURITY_SOURCES = \
 	Security/SecStatusCodeExtensions.cs \
 	Security/SecTrust.cs \
 	Security/SslConnection.cs \
-	Security/SslContext.cs
+	Security/SslContext.cs \
 
 # Social
 

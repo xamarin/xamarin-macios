@@ -253,7 +253,7 @@ namespace Security {
 		TLS_DHE_PSK_WITH_AES_256_GCM_SHA384       		= 0x00AB,
 		TLS_RSA_PSK_WITH_AES_128_GCM_SHA256       		= 0x00AC,
 		TLS_RSA_PSK_WITH_AES_256_GCM_SHA384       		= 0x00AD,
-	
+
 		TLS_PSK_WITH_AES_128_CBC_SHA256				= 0x00AE,
 		TLS_PSK_WITH_AES_256_CBC_SHA384 			= 0x00AF,
 		TLS_PSK_WITH_NULL_SHA256				= 0x00B0,
@@ -263,7 +263,7 @@ namespace Security {
 		TLS_DHE_PSK_WITH_AES_256_CBC_SHA384       		= 0x00B3,
 		TLS_DHE_PSK_WITH_NULL_SHA256              		= 0x00B4,
 		TLS_DHE_PSK_WITH_NULL_SHA384              		= 0x00B5,
-							  		
+
 		TLS_RSA_PSK_WITH_AES_128_CBC_SHA256       		= 0x00B6,
 		TLS_RSA_PSK_WITH_AES_256_CBC_SHA384       		= 0x00B7,
 		TLS_RSA_PSK_WITH_NULL_SHA256              		= 0x00B8,
@@ -297,7 +297,7 @@ namespace Security {
 		TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384			= 0xC028,
 		TLS_ECDH_RSA_WITH_AES_128_CBC_SHA256			= 0xC029,
 		TLS_ECDH_RSA_WITH_AES_256_CBC_SHA384			= 0xC02A,
-									
+
 		TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256			= 0xC02B,	// iOS 9+
 		TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384			= 0xC02C,	// iOS 9+
 		TLS_ECDH_ECDSA_WITH_AES_128_GCM_SHA256			= 0xC02D,	// iOS 9+
@@ -306,8 +306,8 @@ namespace Security {
 		TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384			= 0xC030,	// iOS 9+
 		TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256			= 0xC031,	// iOS 9+
 		TLS_ECDH_RSA_WITH_AES_256_GCM_SHA384			= 0xC032,	// iOS 9+
-									
-		// https://tools.ietf.org/html/rfc7905			
+
+		// https://tools.ietf.org/html/rfc7905
 		TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256		= 0xCCA8,	// Xcode 9+
 		TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256		= 0xCCA9,	// Xcode 9+
 
@@ -325,11 +325,11 @@ namespace Security {
 		SSL_RSA_WITH_IDEA_CBC_MD5     				= 0xFF81,
 		SSL_RSA_WITH_DES_CBC_MD5      				= 0xFF82,
 		SSL_RSA_WITH_3DES_EDE_CBC_MD5 				= 0xFF83,
-		SSL_NO_SUCH_CIPHERSUITE       				= 0xFFFF
-	
+		SSL_NO_SUCH_CIPHERSUITE       				= 0xFFFF,
+
 	}
 
 	public enum SslCipherSuiteGroup {
-		Default, Compatibility, Legacy, Ats, AtsCompatibility
+		Default, Compatibility, Legacy, Ats, AtsCompatibility,
 	}
 }

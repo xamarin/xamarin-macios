@@ -18,9 +18,9 @@ namespace Network {
 		Invalid = 0,
 		Posix = 1,
 		Dns = 2,
-		Tls = 3
+		Tls = 3,
 	}
-	
+
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	public class NWError : NativeObject {
 		public NWError (IntPtr handle, bool owns) : base (handle, owns)
@@ -37,7 +37,7 @@ namespace Network {
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern int nw_error_get_error_code (IntPtr handle);
-		
+
 		public int ErrorCode => nw_error_get_error_code (GetHandle());
 
 		[DllImport (Constants.NetworkLibrary)]

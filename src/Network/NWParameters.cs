@@ -25,15 +25,15 @@ namespace Network {
 
 	static partial class Libraries  {
 		static public class Network {
-                        static public readonly IntPtr Handle = Dlfcn.dlopen (Constants.NetworkLibrary, 0);
-                }
+			static public readonly IntPtr Handle = Dlfcn.dlopen (Constants.NetworkLibrary, 0);
+		}
 	}
-	
+
 	public class NWParameters : NativeObject {
 		public NWParameters (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		static IntPtr _nw_parameters_configure_protocol_default_configuration;
-		
+
 		static unsafe BlockLiteral *DEFAULT_CONFIGURATION ()
 		{
 			if (_nw_parameters_configure_protocol_default_configuration == IntPtr.Zero)
@@ -56,15 +56,15 @@ namespace Network {
 		[MonoPInvokeCallback(typeof (nw_parameters_configure_protocol_block_t))]
 		static unsafe void TrampolineConfigureHandler (IntPtr block, IntPtr iface)
 		{
-                        var descriptor = (BlockLiteral *) block;
-                        var del = (Action<NWProtocolOptions>) (descriptor->Target);
-                        if (del != null){
+			var descriptor = (BlockLiteral *) block;
+			var del = (Action<NWProtocolOptions>) (descriptor->Target);
+			if (del != null) {
 				var x = new NWProtocolOptions (iface, owns: false);
 				del (x);
 				x.Dispose ();
 			}
 		}
-				
+
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static unsafe extern nw_parameters_t nw_parameters_create_secure_tcp (void *configure_tls, void *configure_tcp);
@@ -85,20 +85,20 @@ namespace Network {
 				tlsPtr = DEFAULT_CONFIGURATION ();
 			else
 				tlsHandler.SetupBlockUnsafe (static_ConfigureHandler, configureTls);
-			
+
 			if (configureTls == null)
 				tcpPtr = DEFAULT_CONFIGURATION ();
 			else
 				tcpHandler.SetupBlockUnsafe (static_ConfigureHandler, configureTcp);
-			
+
 			var ptr = nw_parameters_create_secure_tcp (tlsPtr, tcpPtr);
-			
+
 			if (configureTls != null)
 				tlsPtr->CleanupBlock ();
-			
+
 			if (configureTcp != null)
 				tcpPtr->CleanupBlock ();
-			
+
 			return new NWParameters (ptr, owns: true);
 		}
 
@@ -110,17 +110,17 @@ namespace Network {
 			var tcpHandler = new BlockLiteral ();
 
 			var tcpPtr = &tcpHandler;
-			
+
 			if (configureTcp == null)
 				tcpPtr = DEFAULT_CONFIGURATION ();
 			else
 				tcpHandler.SetupBlockUnsafe (static_ConfigureHandler, configureTcp);
 
 			var ptr = nw_parameters_create_secure_tcp (DISABLE_PROTOCOL (), tcpPtr);
-			
+
 			if (configureTcp != null)
 				tcpPtr->CleanupBlock ();
-			
+
 			return new NWParameters (ptr, owns: true);
 		}
 
@@ -141,25 +141,25 @@ namespace Network {
 
 			BlockLiteral *tlsPtr = &tlsHandler;
 			BlockLiteral *udpPtr = &udpHandler;
-			
+
 			if (configureTls == null)
 				tlsPtr = DEFAULT_CONFIGURATION ();
 			else
 				tlsHandler.SetupBlockUnsafe (static_ConfigureHandler, configureTls);
-			
+
 			if (configureTls == null)
 				udpPtr = DEFAULT_CONFIGURATION ();
 			else
 				udpHandler.SetupBlockUnsafe (static_ConfigureHandler, configureUdp);
-			
+
 			var ptr = nw_parameters_create_secure_udp (tlsPtr, udpPtr);
-			
+
 			if (configureTls != null)
 				tlsPtr->CleanupBlock ();
-			
+
 			if (configureUdp != null)
 				udpPtr->CleanupBlock ();
-			
+
 			return new NWParameters (ptr, owns: true);
 		}
 
@@ -175,12 +175,12 @@ namespace Network {
 				udpPtr = DEFAULT_CONFIGURATION ();
 			else
 				udpHandler.SetupBlockUnsafe (static_ConfigureHandler, configureUdp);
-			
+
 			var ptr = nw_parameters_create_secure_udp (DISABLE_PROTOCOL (), udpPtr);
-			
+
 			if (configureUdp != null)
 				udpPtr->CleanupBlock ();
-			
+
 			return new NWParameters (ptr, owns: true);
 		}
 
@@ -188,7 +188,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern nw_parameters_t nw_parameters_create ();
 
-		public NWParameters () 
+		public NWParameters ()
 		{
 			handle = nw_parameters_create ();
 		}
@@ -201,10 +201,10 @@ namespace Network {
 		{
 			return new NWParameters (nw_parameters_copy (GetHandle()), owns: true);
 		}
-		
+
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		static extern void nw_parameters_set_multipath_service (nw_parameters_t parameters, NWMultiPathService multipath_service);
-	
+
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern NWMultiPathService nw_parameters_get_multipath_service (nw_parameters_t parameters);
@@ -215,21 +215,20 @@ namespace Network {
 			set => nw_parameters_set_multipath_service (GetHandle(), value);
 		}
 
-		
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_parameters_copy_default_protocol_stack (nw_parameters_t parameters);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWProtocolStack ProtocolStack => new NWProtocolStack (nw_parameters_copy_default_protocol_stack (GetHandle()), owns: true);
-	
-		[TV (12,0), Mac (10,14), iOS (12,0)]
-		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_parameters_set_local_only (nw_parameters_t parameters, [MarshalAs(UnmanagedType.I1)] bool local_only);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]			
+		static extern void nw_parameters_set_local_only (nw_parameters_t parameters, [MarshalAs (UnmanagedType.I1)] bool local_only);
+
+		[TV (12,0), Mac (10,14), iOS (12,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool nw_parameters_get_local_only (nw_parameters_t parameters);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -237,11 +236,11 @@ namespace Network {
 			get => nw_parameters_get_local_only (GetHandle());
 			set => nw_parameters_set_local_only (GetHandle(), value);
 		}
-	
+
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_parameters_set_prefer_no_proxy (nw_parameters_t parameters, [MarshalAs(UnmanagedType.I1)] bool prefer_no_proxy);
-	
+		static extern void nw_parameters_set_prefer_no_proxy (nw_parameters_t parameters, [MarshalAs (UnmanagedType.I1)] bool prefer_no_proxy);
+
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -252,10 +251,10 @@ namespace Network {
 			get => nw_parameters_get_prefer_no_proxy (GetHandle());
 			set => nw_parameters_set_prefer_no_proxy (GetHandle(), value);
 		}
-	
+
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		static extern void nw_parameters_set_expired_dns_behavior (nw_parameters_t parameters, NWParametersExpiredDnsBehavior expired_dns_behavior);
-	
+
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern NWParametersExpiredDnsBehavior nw_parameters_get_expired_dns_behavior (nw_parameters_t parameters);
@@ -275,11 +274,11 @@ namespace Network {
 		{
 			nw_parameters_require_interface (GetHandle(), iface == null ? IntPtr.Zero : iface.handle);
 		}
-		
+
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_parameters_copy_required_interface (nw_parameters_t parameters);
-		
+
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWInterface Interface {
 			get {
@@ -314,7 +313,7 @@ namespace Network {
 		{
 			nw_parameters_clear_prohibited_interfaces (GetHandle());
 		}
-		
+
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_parameters_set_required_interface_type (nw_parameters_t parameters, NWInterfaceType ifaceType);
@@ -332,7 +331,6 @@ namespace Network {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_parameters_prohibit_interface_type (nw_parameters_t parameters, NWInterfaceType type);
-		
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void ProhibitInterfaceType (NWInterfaceType ifaceType)
@@ -350,25 +348,24 @@ namespace Network {
 			nw_parameters_clear_prohibited_interface_types (GetHandle());
 		}
 
-
 		delegate bool nw_parameters_iterate_interfaces_block_t (IntPtr block, IntPtr iface);
 		static nw_parameters_iterate_interfaces_block_t static_iterateProhibitedHandler = TrampolineIterateProhibitedHandler;
 
-                [MonoPInvokeCallback (typeof (nw_parameters_iterate_interfaces_block_t))]
+		[MonoPInvokeCallback (typeof (nw_parameters_iterate_interfaces_block_t))]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static unsafe bool TrampolineIterateProhibitedHandler (IntPtr block, IntPtr iface)
 		{
-                        var descriptor = (BlockLiteral *) block;
-                        var del = (Func<NWInterface,bool>) (descriptor->Target);
-                        if (del != null){
+			var descriptor = (BlockLiteral *) block;
+			var del = (Func<NWInterface,bool>) (descriptor->Target);
+			if (del != null) {
 				var x = new NWInterface (iface, owns: false);
-                                var ret = del (x);
+				var ret = del (x);
 				x.Dispose ();
 				return ret;
 			}
 			return false;
 		}
-	
+
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static unsafe extern void nw_parameters_iterate_prohibited_interfaces (nw_parameters_t parameters, void *callback);
@@ -377,34 +374,32 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void IterateProhibitedInterfaces (Func<NWInterface,bool> iterationCallback)
 		{
-                        unsafe {
-                                BlockLiteral *block_ptr_handler;
-                                BlockLiteral block_handler;
-                                block_handler = new BlockLiteral ();
-                                block_ptr_handler = &block_handler;
-                                block_handler.SetupBlockUnsafe (static_iterateProhibitedHandler, iterationCallback);
+			unsafe {
+				BlockLiteral *block_ptr_handler;
+				BlockLiteral block_handler;
+				block_handler = new BlockLiteral ();
+				block_ptr_handler = &block_handler;
+				block_handler.SetupBlockUnsafe (static_iterateProhibitedHandler, iterationCallback);
 
-                                nw_parameters_iterate_prohibited_interfaces (GetHandle(), (void*) block_ptr_handler);
-                                block_ptr_handler->CleanupBlock ();
-                        }
+				nw_parameters_iterate_prohibited_interfaces (GetHandle(), (void*) block_ptr_handler);
+				block_ptr_handler->CleanupBlock ();
+			}
 		}
-		
+
 		delegate bool nw_parameters_iterate_interface_types_block_t (IntPtr block, NWInterfaceType type);
 		static nw_parameters_iterate_interface_types_block_t static_IterateProhibitedTypeHandler = TrampolineIterateProhibitedTypeHandler;
 
-                [MonoPInvokeCallback (typeof (nw_parameters_iterate_interface_types_block_t))]
+		[MonoPInvokeCallback (typeof (nw_parameters_iterate_interface_types_block_t))]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static unsafe bool TrampolineIterateProhibitedTypeHandler (IntPtr block, NWInterfaceType type)
 		{
-                        var descriptor = (BlockLiteral *) block;
-                        var del = (Func<NWInterfaceType,bool>) (descriptor->Target);
-                        if (del != null){
-                                var ret = del (type);
-				return ret;
-			}
+			var descriptor = (BlockLiteral *) block;
+			var del = (Func<NWInterfaceType,bool>) (descriptor->Target);
+			if (del != null)
+				return del (type);
 			return false;
 		}
-	
+
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe void nw_parameters_iterate_prohibited_interface_types (IntPtr handle, void *callback);
@@ -413,18 +408,18 @@ namespace Network {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void IterateProhibitedInterfaces (Func<NWInterfaceType,bool> callback)
 		{
-                        unsafe {
-                                BlockLiteral *block_ptr_handler;
-                                BlockLiteral block_handler;
-                                block_handler = new BlockLiteral ();
-                                block_ptr_handler = &block_handler;
-                                block_handler.SetupBlockUnsafe (static_IterateProhibitedTypeHandler, callback);
+			unsafe {
+				BlockLiteral *block_ptr_handler;
+				BlockLiteral block_handler;
+				block_handler = new BlockLiteral ();
+				block_ptr_handler = &block_handler;
+				block_handler.SetupBlockUnsafe (static_IterateProhibitedTypeHandler, callback);
 
-                                nw_parameters_iterate_prohibited_interface_types (GetHandle(), (void*) block_ptr_handler);
-                                block_ptr_handler->CleanupBlock ();
-                        }
+				nw_parameters_iterate_prohibited_interface_types (GetHandle(), (void*) block_ptr_handler);
+				block_ptr_handler->CleanupBlock ();
+			}
 		}
-		
+
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -439,7 +434,7 @@ namespace Network {
 			get => nw_parameters_get_prohibit_expensive (GetHandle());
 			set => nw_parameters_set_prohibit_expensive (GetHandle(), value);
 		}
-	
+
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -469,7 +464,7 @@ namespace Network {
 			get => nw_parameters_get_fast_open_enabled (GetHandle());
 			set => nw_parameters_set_fast_open_enabled (GetHandle(), value);
 		}
-	
+
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern NWServiceClass nw_parameters_get_service_class (IntPtr handle);
@@ -501,7 +496,7 @@ namespace Network {
 
 				return new NWEndpoint (x, owns: true);
 			}
-			
+
 			set {
 				nw_parameters_set_local_endpoint (GetHandle(), value == null ? IntPtr.Zero : value.handle);
 			}
@@ -511,6 +506,6 @@ namespace Network {
 	public enum NWParametersExpiredDnsBehavior {
 		Default = 0,
 		Allow = 1,
-		Prohibit = 2
+		Prohibit = 2,
 	}
 }

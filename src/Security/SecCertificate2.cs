@@ -19,21 +19,21 @@ using Foundation;
 using CoreFoundation;
 
 namespace Security {
-	
+
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	public class SecCertificate2 : NativeObject {
 		public SecCertificate2 (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr sec_certificate_create (IntPtr seccertificateHandle);
-		
+
 		public SecCertificate2 (SecCertificate certificate)
 		{
 			if (certificate == null)
 				throw new ArgumentNullException (nameof (certificate));
 			handle = sec_certificate_create (certificate.Handle);
 		}
-		
+
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr sec_identity_copy_ref (IntPtr handle);
 

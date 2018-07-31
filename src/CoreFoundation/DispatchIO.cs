@@ -37,9 +37,9 @@ using ObjCRuntime;
 using Foundation;
 
 namespace CoreFoundation {
-	
+
 	public delegate void DispatchIOHandler (DispatchData data, int error);
-	
+
 	public class DispatchIO : DispatchObject {
 		[Preserve (Conditional = true)]
 		internal DispatchIO (IntPtr handle, bool owns) : base (handle, owns)
@@ -53,17 +53,16 @@ namespace CoreFoundation {
 		delegate void DispatchReadWrite (IntPtr block, IntPtr dispatchData, int error);
 		static DispatchReadWrite static_DispatchReadWriteHandler = Trampoline_DispatchReadWriteHandler;
 
-		[MonoPInvokeCallback(typeof(DispatchReadWrite))]
+		[MonoPInvokeCallback (typeof (DispatchReadWrite))]
 		static unsafe void Trampoline_DispatchReadWriteHandler (IntPtr block, IntPtr dispatchData, int error)
 		{
-                        var descriptor = (BlockLiteral *) block;
-                        var del = (DispatchIOHandler) (descriptor->Target);
-                        if (del != null){
+			var descriptor = (BlockLiteral *) block;
+			var del = (DispatchIOHandler) (descriptor->Target);
+			if (del != null) {
 				var dd = dispatchData == IntPtr.Zero ? null : new DispatchData (dispatchData, owns: false);
-                                del (dd, error);
+				del (dd, error);
 			}
 		}
-			
 
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_read (int fd, ulong length, IntPtr dispatchQueue, IntPtr block);
@@ -75,19 +74,20 @@ namespace CoreFoundation {
 		public static void Read (int fd, ulong size, DispatchQueue dispatchQueue, DispatchIOHandler handler)
 		{
 			if (handler == null)
-				throw new ArgumentNullException (nameof(handler));
+				throw new ArgumentNullException (nameof (handler));
 			if (dispatchQueue == null)
-				throw new ArgumentNullException (nameof(dispatchQueue));
-                        unsafe {
-                                BlockLiteral *block_ptr_handler;
-                                BlockLiteral block_handler;
-                                block_handler = new BlockLiteral ();
-                                block_ptr_handler = &block_handler;
-                                block_handler.SetupBlockUnsafe (static_DispatchReadWriteHandler, handler);
+				throw new ArgumentNullException (nameof (dispatchQueue));
 
-                                dispatch_read (fd, size, dispatchQueue.Handle, (IntPtr) block_ptr_handler);
-                                block_ptr_handler->CleanupBlock ();
-                        }
+			unsafe {
+				BlockLiteral *block_ptr_handler;
+				BlockLiteral block_handler;
+				block_handler = new BlockLiteral ();
+				block_ptr_handler = &block_handler;
+				block_handler.SetupBlockUnsafe (static_DispatchReadWriteHandler, handler);
+
+				dispatch_read (fd, size, dispatchQueue.Handle, (IntPtr) block_ptr_handler);
+				block_ptr_handler->CleanupBlock ();
+			}
 		}
 
 		[DllImport (Constants.libcLibrary)]
@@ -97,21 +97,22 @@ namespace CoreFoundation {
 		public static void Write (int fd, DispatchData dispatchData, DispatchQueue dispatchQueue, DispatchIOHandler handler)
 		{
 			if (dispatchData == null)
-				throw new ArgumentNullException (nameof(dispatchData));				
+				throw new ArgumentNullException (nameof (dispatchData));
 			if (handler == null)
-				throw new ArgumentNullException (nameof(handler));
+				throw new ArgumentNullException (nameof (handler));
 			if (dispatchQueue == null)
-				throw new ArgumentNullException (nameof(dispatchQueue));
-                        unsafe {
-                                BlockLiteral *block_ptr_handler;
-                                BlockLiteral block_handler;
-                                block_handler = new BlockLiteral ();
-                                block_ptr_handler = &block_handler;
-                                block_handler.SetupBlockUnsafe (static_DispatchReadWriteHandler, handler);
+				throw new ArgumentNullException (nameof (dispatchQueue));
 
-                                dispatch_write (fd, dispatchData.Handle, dispatchQueue.Handle, (IntPtr) block_ptr_handler);
-                                block_ptr_handler->CleanupBlock ();
-                        }
+			unsafe {
+				BlockLiteral *block_ptr_handler;
+				BlockLiteral block_handler;
+				block_handler = new BlockLiteral ();
+				block_ptr_handler = &block_handler;
+				block_handler.SetupBlockUnsafe (static_DispatchReadWriteHandler, handler);
+
+				dispatch_write (fd, dispatchData.Handle, dispatchQueue.Handle, (IntPtr) block_ptr_handler);
+				block_ptr_handler->CleanupBlock ();
+			}
 		}
 	}
 }

@@ -19,21 +19,21 @@ using Foundation;
 using CoreFoundation;
 
 namespace Security {
-	
+
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	public class SecTrust2 : NativeObject {
-		internal SecTrust2 (IntPtr handle) : base (handle, false) {} 
+		internal SecTrust2 (IntPtr handle) : base (handle, false) {}
 		public SecTrust2 (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr sec_trust_create (IntPtr sectrustHandle);
-		
+
 		public SecTrust2 (SecTrust trust)
 		{
 			if (trust == null)
 				throw new ArgumentNullException (nameof (trust));
-			
+
 			Handle = sec_trust_create (trust == null ? IntPtr.Zero : trust.Handle);
 
 		}
@@ -41,7 +41,7 @@ namespace Security {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr sec_trust_copy_ref (IntPtr handle);
-		
+
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public SecTrust Trust => new SecTrust (sec_trust_copy_ref (GetHandle ()), owns: true);
 	}

@@ -16,7 +16,7 @@ using CoreFoundation;
 using OS_nw_interface=System.IntPtr;
 
 namespace Network {
-	
+
 	public class NWInterface : NativeObject {
 		public NWInterface (IntPtr handle, bool owns) : base (handle, owns) {}
 
@@ -44,6 +44,6 @@ namespace Network {
 		Wifi = 1,
 		Cellular = 2,
 		Wired = 3,
-		Loopback = 4
+		Loopback = 4,
 	}
 }

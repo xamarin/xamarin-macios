@@ -19,7 +19,7 @@ using nw_protocol_stack_t=System.IntPtr;
 using nw_protocol_options_t=System.IntPtr;
 
 namespace Network {
-	
+
 	public class NWProtocolStack : NativeObject {
 		public NWProtocolStack (IntPtr handle, bool owns) : base (handle, owns) {}
 
@@ -47,14 +47,14 @@ namespace Network {
 		delegate void nw_protocol_stack_iterate_protocols_block_t (IntPtr block, IntPtr options);
 		static nw_protocol_stack_iterate_protocols_block_t static_iterateHandler = TrampolineIterateHandler;
 
-                [MonoPInvokeCallback (typeof (nw_protocol_stack_iterate_protocols_block_t))]
+		[MonoPInvokeCallback (typeof (nw_protocol_stack_iterate_protocols_block_t))]
 		static unsafe void TrampolineIterateHandler (IntPtr block, IntPtr options)
 		{
-                        var descriptor = (BlockLiteral *) block;
-                        var del = (Action<NWProtocolOptions>) (descriptor->Target);
-                        if (del != null){
+			var descriptor = (BlockLiteral *) block;
+			var del = (Action<NWProtocolOptions>) (descriptor->Target);
+			if (del != null) {
 				var x = new NWProtocolOptions (options, owns: false);
-                                del (x);
+				del (x);
 				x.Dispose ();
 			}
 		}
@@ -67,16 +67,16 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void IterateProtocols (Action<NWProtocolOptions> callback)
 		{
-                        unsafe {
-                                BlockLiteral *block_ptr_handler;
-                                BlockLiteral block_handler;
-                                block_handler = new BlockLiteral ();
-                                block_ptr_handler = &block_handler;
-                                block_handler.SetupBlockUnsafe (static_iterateHandler, callback);
+			unsafe {
+				BlockLiteral *block_ptr_handler;
+				BlockLiteral block_handler;
+				block_handler = new BlockLiteral ();
+				block_ptr_handler = &block_handler;
+				block_handler.SetupBlockUnsafe (static_iterateHandler, callback);
 
-                                nw_protocol_stack_iterate_application_protocols (GetHandle(), (void*) block_ptr_handler);
-                                block_ptr_handler->CleanupBlock ();
-                        }
+				nw_protocol_stack_iterate_application_protocols (GetHandle(), (void*) block_ptr_handler);
+				block_ptr_handler->CleanupBlock ();
+			}
 		}
 
 		[TV (12, 0), Mac (10, 14), iOS (12, 0)]
@@ -86,7 +86,7 @@ namespace Network {
 		[TV (12, 0), Mac (10, 14), iOS (12, 0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_protocol_stack_set_transport_protocol (nw_protocol_stack_t stack, IntPtr value);
-		
+
 		[TV (12, 0), Mac (10, 14), iOS (12, 0)]
 		public NWProtocolOptions TransportProtocol {
 			get => new NWProtocolOptions (nw_protocol_stack_copy_transport_protocol (GetHandle()), owns: true);

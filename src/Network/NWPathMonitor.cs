@@ -14,7 +14,7 @@ using Foundation;
 using CoreFoundation;
 
 namespace Network {
-	
+
 	public class NWPathMonitor : NativeObject {
 		public NWPathMonitor (IntPtr handle, bool owns) : base (handle, owns) {}
 
@@ -31,7 +31,7 @@ namespace Network {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_path_monitor_create_with_type (NWInterfaceType interfaceType);
-		
+
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWPathMonitor (NWInterfaceType interfaceType)
 		{
@@ -44,14 +44,14 @@ namespace Network {
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void Cancel () => nw_path_monitor_cancel (GetHandle());
-			
+
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_path_monitor_start (IntPtr handle);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void Start () => nw_path_monitor_start (GetHandle());
-		
+
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_path_monitor_set_queue (IntPtr handle, IntPtr queue);
@@ -63,6 +63,5 @@ namespace Network {
 				throw new ArgumentNullException (nameof (queue));
 			nw_path_monitor_set_queue (GetHandle(), queue.handle);
 		}
-		
 	}
 }

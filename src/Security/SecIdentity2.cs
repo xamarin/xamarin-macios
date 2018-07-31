@@ -19,10 +19,10 @@ using Foundation;
 using CoreFoundation;
 
 namespace Security {
-	
+
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	public class SecIdentity2 : NativeObject {
-		internal SecIdentity2 (IntPtr handle) : base (handle, false) {} 
+		internal SecIdentity2 (IntPtr handle) : base (handle, false) {}
 		public SecIdentity2 (IntPtr handle, bool owns) : base (handle, owns) {}
 
 #if !COREBUILD
@@ -33,7 +33,7 @@ namespace Security {
 		{
 			if (identity == null)
 				throw new ArgumentNullException (nameof (identity));
-			
+
 			Handle = sec_identity_create (identity == null ? IntPtr.Zero : identity.Handle);
 		}
 
@@ -46,9 +46,8 @@ namespace Security {
 				throw new ArgumentNullException (nameof (identity));
 			if (certificates == null)
 				throw new ArgumentNullException (nameof (certificates));
-			using (var nsarray = NSArray.FromObjects (certificates)){
+			using (var nsarray = NSArray.FromObjects (certificates))
 				Handle = sec_identity_create_with_certificates (identity.Handle, nsarray.Handle);
-			}
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
@@ -56,7 +55,6 @@ namespace Security {
 
 		public SecIdentity Identity => new SecIdentity (sec_identity_copy_ref (GetHandle ()), owns: true);
 
-		
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr sec_identity_copy_certificates_ref (IntPtr handle);
 
@@ -65,9 +63,8 @@ namespace Security {
 				var certArray = sec_identity_copy_certificates_ref (GetHandle ());
 				var n = (int) NSArray.GetCount (certArray);
 				var ret = new SecCertificate [n];
-				for (int i = 0; i < n; i++){
+				for (int i = 0; i < n; i++)
 					ret [i] = new SecCertificate (NSArray.GetAtIndex (certArray, (nuint) i), owns: false);
-				}
 				CFObject.CFRelease (certArray);
 				return ret;
 			}

@@ -49,7 +49,7 @@ namespace CoreFoundation {
 			lib = Dlfcn.dlopen (Constants.libcLibrary, 0);
 			free = Marshal.ReadIntPtr (Dlfcn.dlsym (lib, "_dispatch_data_destructor_free"));
 		}
-		
+
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_data_create (IntPtr buffer, IntPtr size, IntPtr dispatchQueue, IntPtr destructor);
 
@@ -77,7 +77,7 @@ namespace CoreFoundation {
 				throw new ArgumentException (nameof (length));
 			if (start > buffer.Length + length)
 				throw new ArgumentException ("Start+Length go beyond the buffer.Length");
-				
+
 			var b = Marshal.AllocHGlobal (length);
 			Marshal.Copy (buffer, start, b, length);
 			var dd = dispatch_data_create (b, (IntPtr) length, IntPtr.Zero, destructor: free);
@@ -86,7 +86,7 @@ namespace CoreFoundation {
 
 		//
 		// This will create a DispatchData by making a copy of the provided buffer
-		// 
+		//
 		public static DispatchData FromBuffer (IntPtr buffer, ulong size)
 		{
 			if (buffer == null)
@@ -94,7 +94,7 @@ namespace CoreFoundation {
 			var dd = dispatch_data_create (buffer, (IntPtr) size, IntPtr.Zero, destructor: IntPtr.Zero);
 			return new DispatchData (dd, owns: true);
 		}
-		
+
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_data_get_size (IntPtr handle);
 
@@ -118,7 +118,7 @@ namespace CoreFoundation {
 				throw new ArgumentNullException (nameof (data1));
 			if (data2 == null)
 				throw new ArgumentNullException (nameof (data2));
-			
+
 			return new DispatchData (dispatch_data_create_concat (data1.handle, data2.handle), owns: true);
 		}
 

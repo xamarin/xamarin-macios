@@ -7016,7 +7016,7 @@ public partial class Generator : IMemberGatherer {
 				if (deltype.Assembly != rootAssembly)
 					continue;
 
-				// This formats the delegate
+				// This formats the delegate 
 				delegate_types [deltype.FullName] = deltype.GetMethod ("Invoke");
 			}
 
