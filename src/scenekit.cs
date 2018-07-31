@@ -4034,12 +4034,12 @@ namespace SceneKit {
 		SCNVector3 CenterOfMassOffset { get; set; }
 
 		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[Export ("linearSleepingThreshold")]
-		nfloat LinearSleepingThreshold { get; set; }
+		[Export ("linearRestingThreshold")]
+		nfloat LinearRestingThreshold { get; set; }
 
 		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[Export ("angularSleepingThreshold")]
-		nfloat AngularSleepingThreshold { get; set; }
+		[Export ("angularRestingThreshold")]
+		nfloat AngularRestingThreshold { get; set; }
 	}
 
 	[Mac (10,10), iOS (8,0)]
