@@ -78,11 +78,14 @@ namespace CoreFoundation
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /*CFDataRef*/IntPtr CFPropertyListCreateData (IntPtr allocator, IntPtr propertyList, CFPropertyListFormat format, CFPropertyListMutabilityOptions options, out IntPtr error);
 
-		public NSData AsData (CFPropertyListFormat format = CFPropertyListFormat.BinaryFormat1)
+		public (NSData data, NSError error) AsData (CFPropertyListFormat format = CFPropertyListFormat.BinaryFormat1)
 		{
 			IntPtr error;
-			return new NSData (CFPropertyListCreateData (IntPtr.Zero, handle, format, 0, out error));
-		}		
+			var x = CFPropertyListCreateData (IntPtr.Zero, handle, format, 0, out error);
+			if (x == IntPtr.Zero)
+				return (null, new NSError (error));
+			return (new NSData (x), null);
+		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static bool CFPropertyListIsValid (IntPtr plist, CFPropertyListFormat format);
