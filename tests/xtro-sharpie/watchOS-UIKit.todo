@@ -1,0 +1,2 @@
+!missing-protocol-conformance! NSAttributedString should conform to NSItemProviderReading (defined in 'NSAttributedString_ItemProvider' category)
+!missing-protocol-conformance! NSAttributedString should conform to NSItemProviderWriting (defined in 'NSAttributedString_ItemProvider' category)
