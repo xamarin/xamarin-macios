@@ -84,7 +84,7 @@ namespace CoreFoundation
 			var x = CFPropertyListCreateData (IntPtr.Zero, handle, format, 0, out error);
 			if (x == IntPtr.Zero)
 				return (null, new NSError (error));
-			return (new NSData (x), null);
+			return (Runtime.GetNSObject<NSData> (x, owns: true), null);
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
