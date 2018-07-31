@@ -51,7 +51,7 @@ namespace CoreFoundation
 		[DllImport (Constants.CoreFoundationLibrary)]
 		static extern IntPtr CFPropertyListCreateWithData (IntPtr allocator, IntPtr dataRef, CFPropertyListMutabilityOptions options, out CFPropertyListFormat format, /* CFError * */ out IntPtr error);
 
-		public (CFPropertyList propertyList, CFPropertyListFormat format, NSError error)
+		public static (CFPropertyList PropertyList, CFPropertyListFormat Format, NSError Error)
 			FromData (NSData data, CFPropertyListMutabilityOptions options = CFPropertyListMutabilityOptions.Immutable)
 		{
 			if (data == null)
@@ -78,7 +78,7 @@ namespace CoreFoundation
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /*CFDataRef*/IntPtr CFPropertyListCreateData (IntPtr allocator, IntPtr propertyList, CFPropertyListFormat format, CFPropertyListMutabilityOptions options, out IntPtr error);
 
-		public (NSData data, NSError error) AsData (CFPropertyListFormat format = CFPropertyListFormat.BinaryFormat1)
+		public (NSData Data, NSError Error) AsData (CFPropertyListFormat format = CFPropertyListFormat.BinaryFormat1)
 		{
 			IntPtr error;
 			var x = CFPropertyListCreateData (IntPtr.Zero, handle, format, 0, out error);
