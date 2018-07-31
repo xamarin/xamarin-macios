@@ -8533,7 +8533,7 @@ namespace Foundation
 		[Static]
 		[Export ("defaultPlaceholderForMarker:withBinding:")]
 #if XAMCORE_4_0 && MONOMAC
-		NSObject GetDefaultPlaceholder (NSObject marker, NSBindingSelectionMarker binding);
+		NSObject GetDefaultPlaceholder (NSBindingSelectionMarker marker, NSString binding);
 #else
 		NSObject GetDefaultPlaceholder (NSObject marker, NSString binding);
 #endif
