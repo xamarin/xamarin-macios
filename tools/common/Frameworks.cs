@@ -413,7 +413,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "Vision", "Vision", 11 },
 
 					{ "NaturalLanguage", "NaturalLanguage", 12,0 },
-					{ "Network", "Network", 14, 0 } ,
+					{ "Network", "Network", 12, 0 } ,
 					{ "TVUIKit", "TVUIKit", 12,0 },
 				};
 			}

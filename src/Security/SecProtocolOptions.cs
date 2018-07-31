@@ -191,6 +191,7 @@ namespace Security {
 			}
 		}
 
+#if false
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern void sec_protocol_options_set_challenge_block(sec_protocol_options_t options, IntPtr challenge_block, dispatch_queue_t challenge_queue);
@@ -198,6 +199,8 @@ namespace Security {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern void sec_protocol_options_set_verify_block(sec_protocol_options_t options, IntPtr verify_block, dispatch_queue_t verify_block_queue);
+#endif
+	
 #endif
 	}
 }

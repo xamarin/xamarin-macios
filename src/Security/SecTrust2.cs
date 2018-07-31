@@ -34,7 +34,7 @@ namespace Security {
 			if (trust == null)
 				throw new ArgumentNullException (nameof (trust));
 			
-			handle = sec_trust_create (trust == null ? IntPtr.Zero : trust.Handle);
+			Handle = sec_trust_create (trust == null ? IntPtr.Zero : trust.Handle);
 
 		}
 

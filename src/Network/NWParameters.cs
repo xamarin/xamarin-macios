@@ -59,7 +59,7 @@ namespace Network {
                         var descriptor = (BlockLiteral *) block;
                         var del = (Action<NWProtocolOptions>) (descriptor->Target);
                         if (del != null){
-				var x = new NWProtocolOptions (iface, owns: false);
+				var x = Runtime.GetINativeObject<NWProtocolOptions> (iface, owns: false);
 				del (x);
 				x.Dispose ();
 			}
@@ -361,7 +361,7 @@ namespace Network {
                         var descriptor = (BlockLiteral *) block;
                         var del = (Func<NWInterface,bool>) (descriptor->Target);
                         if (del != null){
-				var x = new NWInterface (iface, owns: false);
+				var x = Runtime.GetINativeObject<NWInterface> (iface, owns: false);
                                 var ret = del (x);
 				x.Dispose ();
 				return ret;

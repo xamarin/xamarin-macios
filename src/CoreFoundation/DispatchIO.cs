@@ -8,7 +8,7 @@
 // Copyright 2010 Novell, Inc.
 // Copyright 2011-2014 Xamarin Inc
 //
-// this contains DispathcObject, Group and Queue
+// this contains DispatchObject, Group and Queue
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining

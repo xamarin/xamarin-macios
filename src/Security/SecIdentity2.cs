@@ -26,24 +26,20 @@ namespace Security {
 		public SecIdentity2 (IntPtr handle, bool owns) : base (handle, owns) {}
 
 #if !COREBUILD
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr sec_identity_create (IntPtr secidentityHandle);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public SecIdentity2 (SecIdentity identity)
 		{
 			if (identity == null)
 				throw new ArgumentNullException (nameof (identity));
 			
-			handle = sec_identity_create (identity == null ? IntPtr.Zero : identity.Handle);
+			Handle = sec_identity_create (identity == null ? IntPtr.Zero : identity.Handle);
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr sec_identity_create_with_certificates (IntPtr secidentityHandle, IntPtr arrayHandle);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public SecIdentity2 (SecIdentity identity, SecCertificate [] certificates)
 		{
 			if (identity == null)
@@ -51,23 +47,19 @@ namespace Security {
 			if (certificates == null)
 				throw new ArgumentNullException (nameof (certificates));
 			using (var nsarray = NSArray.FromObjects (certificates)){
-				handle = sec_identity_create_with_certificates (identity.Handle, nsarray.Handle);
+				Handle = sec_identity_create_with_certificates (identity.Handle, nsarray.Handle);
 			}
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr sec_identity_copy_ref (IntPtr handle);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public SecIdentity Identity => new SecIdentity (sec_identity_copy_ref (GetHandle ()), owns: true);
 
 		
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr sec_identity_copy_certificates_ref (IntPtr handle);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public SecCertificate [] Certificates {
 			get {
 				var certArray = sec_identity_copy_certificates_ref (GetHandle ());
@@ -76,6 +68,7 @@ namespace Security {
 				for (int i = 0; i < n; i++){
 					ret [i] = new SecCertificate (NSArray.GetAtIndex (certArray, (nuint) i), owns: false);
 				}
+				CFObject.CFRelease (certArray);
 				return ret;
 			}
 		}

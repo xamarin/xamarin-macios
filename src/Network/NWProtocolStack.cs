@@ -53,7 +53,7 @@ namespace Network {
                         var descriptor = (BlockLiteral *) block;
                         var del = (Action<NWProtocolOptions>) (descriptor->Target);
                         if (del != null){
-				var x = new NWProtocolOptions (options, owns: false);
+				var x = Runtime.GetINativeObject<NWProtocolOptions> (options, owns: false);
                                 del (x);
 				x.Dispose ();
 			}
