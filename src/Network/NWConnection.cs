@@ -32,7 +32,7 @@ namespace Network {
 	// be present, and *also* the error will be set, indicating that some data was
 	// retrieved, before the error was raised.
 	//
-	public delegate void NWConnectionReceiveCompletion (IntPtr data, ulong dataSize, NWContentContext context, bool isComplete, NWError error);
+	public delegate void NWConnectionReceiveCompletion (IntPtr data, nuint dataSize, NWContentContext context, bool isComplete, NWError error);
 
 	//
 	// Signature for a method invoked on data received, same as NWConnectionReceiveCompletion,
@@ -259,7 +259,7 @@ namespace Network {
 			if (del != null) {
 				DispatchData dispatchData = null, dataCopy = null;
 				IntPtr bufferAddress = IntPtr.Zero;
-				ulong bufferSize = 0;
+				nuint bufferSize = 0;
 
 				if (dispatchDataPtr != IntPtr.Zero) {
 					dispatchData = new DispatchData (dispatchDataPtr, owns: false);

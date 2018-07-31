@@ -65,13 +65,13 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.libcLibrary)]
-		extern static void dispatch_read (int fd, ulong length, IntPtr dispatchQueue, IntPtr block);
+		extern static void dispatch_read (int fd, nuint length, IntPtr dispatchQueue, IntPtr block);
 
 		//
-		// if size == ULong.MaxValue, reads as much data as is available
+		// if size == nuint.MaxValue, reads as much data as is available
 		//
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public static void Read (int fd, ulong size, DispatchQueue dispatchQueue, DispatchIOHandler handler)
+		public static void Read (int fd, nuint size, DispatchQueue dispatchQueue, DispatchIOHandler handler)
 		{
 			if (handler == null)
 				throw new ArgumentNullException (nameof (handler));

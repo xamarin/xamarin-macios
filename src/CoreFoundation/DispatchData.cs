@@ -51,7 +51,7 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.libcLibrary)]
-		extern static IntPtr dispatch_data_create (IntPtr buffer, IntPtr size, IntPtr dispatchQueue, IntPtr destructor);
+		extern static IntPtr dispatch_data_create (IntPtr buffer, nuint size, IntPtr dispatchQueue, IntPtr destructor);
 
 		//
 		// This constructor will do it for now, but we should support a constructor
@@ -63,7 +63,7 @@ namespace CoreFoundation {
 				throw new ArgumentNullException (nameof (buffer));
 			var b = Marshal.AllocHGlobal (buffer.Length);
 			Marshal.Copy (buffer, 0, b, buffer.Length);
-			var dd = dispatch_data_create (b, (IntPtr) buffer.Length, IntPtr.Zero, destructor: free);
+			var dd = dispatch_data_create (b, (nuint) buffer.Length, IntPtr.Zero, destructor: free);
 			return new DispatchData (dd, owns: true);
 		}
 
@@ -80,30 +80,30 @@ namespace CoreFoundation {
 
 			var b = Marshal.AllocHGlobal (length);
 			Marshal.Copy (buffer, start, b, length);
-			var dd = dispatch_data_create (b, (IntPtr) length, IntPtr.Zero, destructor: free);
+			var dd = dispatch_data_create (b, (nuint) length, IntPtr.Zero, destructor: free);
 			return new DispatchData (dd, owns: true);
 		}
 
 		//
 		// This will create a DispatchData by making a copy of the provided buffer
 		//
-		public static DispatchData FromBuffer (IntPtr buffer, ulong size)
+		public static DispatchData FromBuffer (IntPtr buffer, nuint size)
 		{
 			if (buffer == null)
 				throw new ArgumentNullException (nameof (buffer));
-			var dd = dispatch_data_create (buffer, (IntPtr) size, IntPtr.Zero, destructor: IntPtr.Zero);
+			var dd = dispatch_data_create (buffer, (nuint) size, IntPtr.Zero, destructor: IntPtr.Zero);
 			return new DispatchData (dd, owns: true);
 		}
 
 		[DllImport (Constants.libcLibrary)]
-		extern static IntPtr dispatch_data_get_size (IntPtr handle);
+		extern static nuint dispatch_data_get_size (IntPtr handle);
 
-		public long Size => (long) dispatch_data_get_size (handle);
+		public nuint Size => dispatch_data_get_size (handle);
 
 		[DllImport (Constants.libcLibrary)]
-		extern static IntPtr dispatch_data_create_map (IntPtr handle, out IntPtr bufferPtr, out ulong size);
+		extern static IntPtr dispatch_data_create_map (IntPtr handle, out IntPtr bufferPtr, out nuint size);
 
-		public DispatchData CreateMap (out IntPtr bufferPtr, out ulong size)
+		public DispatchData CreateMap (out IntPtr bufferPtr, out nuint size)
 		{
 			var nh = dispatch_data_create_map (handle, out bufferPtr, out size);
 			return new DispatchData (nh, owns: true);
@@ -123,9 +123,9 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.libcLibrary)]
-		extern static IntPtr dispatch_data_create_subrange (IntPtr handle, ulong offset, ulong size);
+		extern static IntPtr dispatch_data_create_subrange (IntPtr handle, nuint offset, nuint size);
 
-		public DispatchData CreateSubrange (ulong offset, ulong size)
+		public DispatchData CreateSubrange (nuint offset, nuint size)
 		{
 			return new DispatchData (dispatch_data_create_subrange (handle, offset, size), owns: true);
 		}
