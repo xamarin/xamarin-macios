@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using ObjCRuntime;
 using Foundation;
 
@@ -79,6 +80,22 @@ namespace HomeKit {
 				arr.Add (HMServiceType.Slats.GetConstant ());
 
 			return GetServices (arr.ToArray ());
+		}
+
+		[NoTV]
+		[NoWatch]
+		[Introduced (PlatformName.iOS, 8,0, PlatformArchitecture.All, message: "This API in now prohibited on iOS. Use 'ManageUsers' instead.")]
+		[Obsoleted (PlatformName.iOS, 9,0, PlatformArchitecture.All, message: "This API in now prohibited on iOS. Use 'ManageUsers' instead.")]
+		public virtual void RemoveUser (HMUser user, Action<NSError> completion) {
+			throw new NotSupportedException ();
+		}
+
+		[NoTV]
+		[NoWatch]
+		[Introduced (PlatformName.iOS, 8,0, PlatformArchitecture.All, message: "This API in now prohibited on iOS. Use 'ManageUsers' instead.")]
+		[Obsoleted (PlatformName.iOS, 9,0, PlatformArchitecture.All, message: "This API in now prohibited on iOS. Use 'ManageUsers' instead.")]
+		public virtual Task RemoveUserAsync (HMUser user) {
+			throw new NotSupportedException ();
 		}
 	}
 }
