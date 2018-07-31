@@ -23,8 +23,6 @@
 !missing-enum! CFNumberFormatterRoundingMode not bound
 !missing-enum! CFNumberFormatterStyle not bound
 !missing-enum! CFNumberType not bound
-!missing-enum! CFPropertyListFormat not bound
-!missing-enum! CFPropertyListMutabilityOptions not bound
 !missing-enum! CFRunLoopActivity not bound
 !missing-enum! CFRunLoopRunResult not bound
 !missing-enum! CFStreamErrorDomain not bound
@@ -651,14 +649,10 @@
 !missing-pinvoke! CFPreferencesSetMultiple is not bound
 !missing-pinvoke! CFPreferencesSetValue is not bound
 !missing-pinvoke! CFPreferencesSynchronize is not bound
-!missing-pinvoke! CFPropertyListCreateData is not bound
-!missing-pinvoke! CFPropertyListCreateDeepCopy is not bound
 !missing-pinvoke! CFPropertyListCreateFromStream is not bound
 !missing-pinvoke! CFPropertyListCreateFromXMLData is not bound
-!missing-pinvoke! CFPropertyListCreateWithData is not bound
 !missing-pinvoke! CFPropertyListCreateWithStream is not bound
 !missing-pinvoke! CFPropertyListCreateXMLData is not bound
-!missing-pinvoke! CFPropertyListIsValid is not bound
 !missing-pinvoke! CFPropertyListWrite is not bound
 !missing-pinvoke! CFPropertyListWriteToStream is not bound
 !missing-pinvoke! CFReadStreamCreateWithBytesNoCopy is not bound
