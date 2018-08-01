@@ -8533,6 +8533,7 @@ namespace Foundation
 		[Static]
 		[Export ("defaultPlaceholderForMarker:withBinding:")]
 #if XAMCORE_4_0 && MONOMAC
+		// When XAMCORE_4_0 occurs review - NSBindingSelectionMarker is 10.14 only type but GetDefaultPlaceholder is before, does it matter now?
 		NSObject GetDefaultPlaceholder (NSBindingSelectionMarker marker, NSString binding);
 #else
 		NSObject GetDefaultPlaceholder (NSObject marker, NSString binding);
@@ -8541,6 +8542,7 @@ namespace Foundation
 		[Static]
 		[Export ("setDefaultPlaceholder:forMarker:withBinding:")]
 #if XAMCORE_4_0 && MONOMAC
+		// When XAMCORE_4_0 occurs review - NSBindingSelectionMarker is 10.14 only type but SetDefaultPlaceholder is before, does it matter now?
 		void SetDefaultPlaceholder (NSObject placeholder, NSBindingSelectionMarker marker, NSString binding);
 #else
 		void SetDefaultPlaceholder (NSObject placeholder, NSObject marker, NSString binding);
@@ -8605,9 +8607,9 @@ namespace Foundation
 		void AwakeFromNib ();
 	}
 
-#if MONOMAC // Defined in AppKit NSKeyValueBinding.h
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
+	[Mac (10, 14)][NoWatch][NoTV][NoiOS]
 	interface NSBindingSelectionMarker : NSCopying {
 		[Static]
 		[Export ("multipleValuesSelectionMarker", ArgumentSemantic.Strong)]
@@ -8621,7 +8623,6 @@ namespace Foundation
 		[Export ("notApplicableSelectionMarker", ArgumentSemantic.Strong)]
 		NSBindingSelectionMarker NotApplicableSelectionMarker { get; }
 	}
-#endif
 
 	[Protocol (Name = "NSObject")] // exists both as a type and a protocol in ObjC, Swift uses NSObjectProtocol
 	interface NSObjectProtocol {
