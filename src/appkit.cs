@@ -442,7 +442,7 @@ namespace AppKit {
 
 	[BaseType (typeof (NSResponder), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSApplicationDelegate) })]
 	[DisableDefaultCtor] // An uncaught exception was raised: Creating more than one Application
-	interface NSApplication : NSAccessibilityElementProtocol, NSUserInterfaceValidations, NSMenuItemValidation, NSAccessibility {
+	interface NSApplication : NSAccessibilityElementProtocol, NSUserInterfaceValidations, NSMenuItemValidation, NSAccessibility, NSAppearanceCustomization {
 		[Export ("sharedApplication"), Static, ThreadSafe]
 		NSApplication SharedApplication { get; }
 	
@@ -4109,6 +4109,16 @@ namespace AppKit {
 		[Mac (10,14, onlyOn64: true)]
 		[Export ("colorWithSystemEffect:")]
 		NSColor WithSystemEffect (NSColorSystemEffect systemEffect);
+
+		[Mac (10, 13)]
+		[Static]
+		[Export ("findHighlightColor", ArgumentSemantic.Strong)]
+		NSColor FindHighlightColor { get; }
+
+		[Mac (10, 10)]
+		[Static]
+		[Export ("placeholderTextColor", ArgumentSemantic.Strong)]
+		NSColor PlaceholderTextColor { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -17744,7 +17754,7 @@ namespace AppKit {
 	}
 	
 	[BaseType (typeof (NSView))]
-	interface NSTableHeaderView {
+	interface NSTableHeaderView : NSViewToolTipOwner {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frameRect);
 

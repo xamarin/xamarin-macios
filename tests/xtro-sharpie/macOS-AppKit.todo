@@ -1,9 +1,3 @@
-!missing-protocol! NSViewLayerContentScaleDelegate not bound
-!missing-protocol-conformance! NSApplication should conform to NSAppearanceCustomization (defined in 'NSAppearanceCustomization' category)
-!missing-protocol-conformance! NSTableHeaderView should conform to NSViewToolTipOwner
-!missing-selector! +NSColor::findHighlightColor not bound
-!missing-selector! +NSColor::placeholderTextColor not bound
-!missing-selector! NSSliderCell::setImage: not bound
 ## appended from unclassified file
 !missing-field! NSAppearanceDocumentAttribute not bound
 !missing-protocol! NSUserActivityRestoring not bound
