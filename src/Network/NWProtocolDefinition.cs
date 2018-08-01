@@ -35,9 +35,9 @@ namespace Network {
 		{
 			if (other == null)
 				return false;
-			if (!(other is NWProtocolDefinition))
+			if (!(other is NWProtocolDefinition otherDefinition))
 				return false;
-			return nw_protocol_definition_is_equal (GetCheckedHandle (), (other as NWProtocolDefinition).handle);
+			return nw_protocol_definition_is_equal (GetCheckedHandle (), otherDefinition.Handle);
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
