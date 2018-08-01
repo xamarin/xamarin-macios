@@ -156,6 +156,8 @@ Alternatively, enable the managed [linker](https://docs.microsoft.com/xamarin/ma
 
 As a last-straw solution, use an older version of Xamarin.Mac that does not require these new SDKs to be present during the build process.
 
+<!-- 0136 and 0137 used by mtouch -->
+
 # MM1xxx: file copy / symlinks (project related)
 
 ### <a name="MM1034">MM1034: Could not create symlink '{file}' -> '{target}': error {number}
