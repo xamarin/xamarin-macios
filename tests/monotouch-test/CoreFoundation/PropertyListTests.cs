@@ -158,7 +158,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			using (var dummy = CreateDummy ($"<integer>{long.MaxValue}</integer>")) {
 				var value = dummy.Value;
 				Assert.AreEqual (typeof (NSNumber), value.GetType (), "Long Value Type");
-				Assert.AreEqual (long.MaxValue, ((NSNumber) value).LongValue, "Long Value");
+				Assert.AreEqual (long.MaxValue, ((NSNumber) value).Int64Value, "Long Value");
 			}
 
 			using (var dummy = CreateDummy ($"<real>3.1415926</real>")) {
