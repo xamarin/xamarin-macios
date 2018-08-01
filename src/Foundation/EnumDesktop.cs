@@ -96,6 +96,7 @@ namespace Foundation {
 
 	// Added from NSUserNotification.h
 	[Native]
+	[Advice ("'NSUserNotification' usages should be replaced with 'UserNotifications framework'.")]
 	public enum NSUserNotificationActivationType : long {
 		None = 0,
 		ContentsClicked = 1,
