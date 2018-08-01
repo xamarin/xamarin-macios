@@ -275,6 +275,7 @@
     <Folder Include="FileProvider\" />
     <Folder Include="Resources\Base.lproj\" />
     <Folder Include="NaturalLanguage\" />
+    <Folder Include="Vision\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AudioToolbox\1.caf" />
