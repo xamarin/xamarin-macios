@@ -78,11 +78,11 @@ namespace Network {
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
-		extern static ulong nw_content_context_get_expiration_milliseconds (IntPtr handle);
+		extern static /* uint64_t */ ulong nw_content_context_get_expiration_milliseconds (IntPtr handle);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
-		extern static void nw_content_context_set_expiration_milliseconds (IntPtr handle, ulong value);
+		extern static void nw_content_context_set_expiration_milliseconds (IntPtr handle, /* uint64_t */ ulong value);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public ulong ExpirationMilliseconds {

@@ -33,7 +33,7 @@ namespace Network {
 		public NWErrorDomain ErrorDomain => nw_error_get_error_domain (GetHandle());
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern int nw_error_get_error_code (IntPtr handle);
+		static extern /* int */ int nw_error_get_error_code (IntPtr handle);
 
 		public int ErrorCode => nw_error_get_error_code (GetHandle());
 

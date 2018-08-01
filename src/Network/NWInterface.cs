@@ -34,7 +34,7 @@ namespace Network {
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
-		static extern uint nw_interface_get_index (OS_nw_interface iface);
+		static extern /* uint32_t */ uint nw_interface_get_index (OS_nw_interface iface);
 
 		public uint Index => nw_interface_get_index (GetHandle());
 	}

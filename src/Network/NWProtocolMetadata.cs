@@ -125,14 +125,14 @@ namespace Network {
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
-		extern static uint nw_tcp_get_available_receive_buffer (IntPtr handle);
+		extern static /* uint32_t */ uint nw_tcp_get_available_receive_buffer (IntPtr handle);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public uint TcpGetAvailableReceiveBuffer () => nw_tcp_get_available_receive_buffer (GetHandle());
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
-		extern static uint nw_tcp_get_available_send_buffer (IntPtr handle);
+		extern static /* uint32_t */ uint nw_tcp_get_available_send_buffer (IntPtr handle);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public uint TcpGetAvailableSendBuffer () => nw_tcp_get_available_send_buffer (GetHandle());

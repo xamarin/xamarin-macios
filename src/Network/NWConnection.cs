@@ -512,7 +512,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		extern static uint nw_connection_get_maximum_datagram_size (IntPtr handle);
+		extern static /* uint32_t */ uint nw_connection_get_maximum_datagram_size (IntPtr handle);
 
 		public uint MaximumDatagramSize => nw_connection_get_maximum_datagram_size (GetHandle());
 
