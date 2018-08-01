@@ -55,5 +55,11 @@ namespace Foundation {
 		{
 			get {return error.UserInfo; }
 		}
+
+		public override string Message {
+			get {
+				return error.Description;
+			}
+		}
 	}
 }
