@@ -25,9 +25,6 @@ namespace Network {
 	public class NWError : NativeObject {
 		public NWError (IntPtr handle, bool owns) : base (handle, owns)
 		{
-			this.handle = handle;
-			if (owns == false)
-				CFObject.CFRetain (handle);
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
