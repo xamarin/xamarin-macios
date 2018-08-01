@@ -366,22 +366,19 @@ namespace Network {
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
-		static unsafe extern void nw_parameters_iterate_prohibited_interfaces (nw_parameters_t parameters, void *callback);
+		static extern void nw_parameters_iterate_prohibited_interfaces (nw_parameters_t parameters, ref BlockLiteral callback);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void IterateProhibitedInterfaces (Func<NWInterface,bool> iterationCallback)
 		{
-			unsafe {
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_iterateProhibitedHandler, iterationCallback);
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_iterateProhibitedHandler, iterationCallback);
 
-				try {
-					nw_parameters_iterate_prohibited_interfaces (GetCheckedHandle (), (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+			try {
+				nw_parameters_iterate_prohibited_interfaces (GetCheckedHandle (), ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
 			}
 		}
 
@@ -400,22 +397,19 @@ namespace Network {
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe void nw_parameters_iterate_prohibited_interface_types (IntPtr handle, void *callback);
+		static extern void nw_parameters_iterate_prohibited_interface_types (IntPtr handle, ref BlockLiteral callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void IterateProhibitedInterfaces (Func<NWInterfaceType,bool> callback)
 		{
-			unsafe {
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_IterateProhibitedTypeHandler, callback);
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_IterateProhibitedTypeHandler, callback);
 
-				try {
-					nw_parameters_iterate_prohibited_interface_types (GetCheckedHandle (), (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+			try {
+				nw_parameters_iterate_prohibited_interface_types (GetCheckedHandle (), ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
 			}
 		}
 

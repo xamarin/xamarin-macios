@@ -171,22 +171,19 @@ namespace Network {
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe void nw_content_context_foreach_protocol_metadata (IntPtr handle, void *callback);
+		static extern void nw_content_context_foreach_protocol_metadata (IntPtr handle, ref BlockLiteral callback);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void IterateProtocolMetadata (Action<NWProtocolDefinition,NWProtocolMetadata> callback)
 		{
-			unsafe {
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_ProtocolIterator, callback);
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_ProtocolIterator, callback);
 
-				try {
-					nw_content_context_foreach_protocol_metadata (GetCheckedHandle (), (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+			try {
+				nw_content_context_foreach_protocol_metadata (GetCheckedHandle (), ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
 			}
 		}
 

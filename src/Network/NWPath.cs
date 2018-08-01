@@ -108,7 +108,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe void nw_path_enumerate_interfaces (IntPtr handle, void *callback);
+		static extern void nw_path_enumerate_interfaces (IntPtr handle, ref BlockLiteral callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateInterfaces (Action<NWInterface> callback)
@@ -116,16 +116,13 @@ namespace Network {
 			if (callback == null)
 				return;
 
-			unsafe {
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_Enumerator, callback);
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_Enumerator, callback);
 
-				try {
-					nw_path_enumerate_interfaces (GetCheckedHandle (), (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+			try {
+				nw_path_enumerate_interfaces (GetCheckedHandle (), ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
 			}
 		}
 	}

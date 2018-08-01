@@ -60,22 +60,19 @@ namespace Network {
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe extern static void nw_protocol_stack_iterate_application_protocols (nw_protocol_stack_t stack, void *completion);
+		extern static void nw_protocol_stack_iterate_application_protocols (nw_protocol_stack_t stack, ref BlockLiteral completion);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void IterateProtocols (Action<NWProtocolOptions> callback)
 		{
-			unsafe {
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_iterateHandler, callback);
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_iterateHandler, callback);
 
-				try {
-					nw_protocol_stack_iterate_application_protocols (GetCheckedHandle (), (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+			try {
+				nw_protocol_stack_iterate_application_protocols (GetCheckedHandle (), ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
 			}
 		}
 

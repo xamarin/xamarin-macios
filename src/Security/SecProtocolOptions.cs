@@ -168,7 +168,7 @@ namespace Security {
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.SecurityLibrary)]
-		static extern void sec_protocol_options_set_key_update_block (sec_protocol_options_t options, IntPtr key_update_block, dispatch_queue_t key_update_queue);
+		static extern void sec_protocol_options_set_key_update_block (sec_protocol_options_t options, ref BlockLiteral key_update_block, dispatch_queue_t key_update_queue);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -179,14 +179,11 @@ namespace Security {
 			if (keyUpdateQueue == null)
 				throw new ArgumentNullException (nameof (keyUpdateQueue));
 
-			unsafe {
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (Trampolines.SDSecProtocolKeyUpdate.Handler, keyUpdate);
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (Trampolines.SDSecProtocolKeyUpdate.Handler, keyUpdate);
 
-				sec_protocol_options_set_key_update_block (Handle, (IntPtr)((void*) block_ptr_handler), keyUpdateQueue.Handle);
-				block_handler.CleanupBlock ();
-			}
+			sec_protocol_options_set_key_update_block (Handle, ref block_handler, keyUpdateQueue.Handle);
+			block_handler.CleanupBlock ();
 		}
 
 #if false

@@ -190,21 +190,18 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe void nw_connection_set_path_changed_handler (IntPtr handle, void *callback);
+		static extern void nw_connection_set_path_changed_handler (IntPtr handle, ref BlockLiteral callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetPathChangedHandler (Action<NWPath> callback)
 		{
-			unsafe {
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_PathChanged, callback);
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_PathChanged, callback);
 
-				try {
-					nw_connection_set_path_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+			try {
+				nw_connection_set_path_changed_handler (GetCheckedHandle (), ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
 			}
 		}
 
@@ -301,7 +298,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe void nw_connection_receive (IntPtr handle, uint minimumIncompleteLength, uint maximumLength, void *callback);
+		static extern void nw_connection_receive (IntPtr handle, /* uint32_t */ uint minimumIncompleteLength, /* uint32_t */ uint maximumLength, ref BlockLiteral callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void Receive (uint minimumIncompleteLength, uint maximumLength, NWConnectionReceiveCompletion callback)
@@ -309,16 +306,12 @@ namespace Network {
 			if (callback == null)
 				throw new ArgumentNullException (nameof (callback));
 
-			unsafe {
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_ReceiveCompletion, callback);
-
-				try {
-					nw_connection_receive (GetCheckedHandle (), minimumIncompleteLength, maximumLength, (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_ReceiveCompletion, callback);
+			try {
+				nw_connection_receive (GetCheckedHandle (), minimumIncompleteLength, maximumLength, ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
 			}
 		}
 
@@ -328,21 +321,18 @@ namespace Network {
 			if (callback == null)
 				throw new ArgumentNullException (nameof (callback));
 
-			unsafe {
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchData, callback);
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchData, callback);
 
-				try {
-					nw_connection_receive (GetCheckedHandle (), minimumIncompleteLength, maximumLength, (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+			try {
+				nw_connection_receive (GetCheckedHandle (), minimumIncompleteLength, maximumLength, ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
 			}
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe void nw_connection_receive_message (IntPtr handle, void *callback);
+		static extern void nw_connection_receive_message (IntPtr handle, ref BlockLiteral callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void ReceiveMessage (NWConnectionReceiveCompletion callback)
@@ -350,16 +340,13 @@ namespace Network {
 			if (callback == null)
 				throw new ArgumentNullException (nameof (callback));
 
-			unsafe {
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_ReceiveCompletion, callback);
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_ReceiveCompletion, callback);
 
-				try {
-					nw_connection_receive_message (GetCheckedHandle (), (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+			try {
+				nw_connection_receive_message (GetCheckedHandle (), ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
 			}
 		}
 
@@ -369,16 +356,13 @@ namespace Network {
 			if (callback == null)
 				throw new ArgumentNullException (nameof (callback));
 
-			unsafe {
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchData, callback);
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchData, callback);
 
-				try {
-					nw_connection_receive_message (GetCheckedHandle (), (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+			try {
+				nw_connection_receive_message (GetCheckedHandle (), ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
 			}
 		}
 
