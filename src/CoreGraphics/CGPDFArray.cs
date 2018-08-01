@@ -142,5 +142,41 @@ namespace CoreGraphics {
 			result = r ? CGPDFString.ToString (res) : null;
 			return r;
 		}
+
+		delegate bool ApplyBlockHandlerDelegate (IntPtr block, nint index, IntPtr value, IntPtr info);
+		static readonly ApplyBlockHandlerDelegate applyblock_handler = ApplyBlockHandler;
+
+		[MonoPInvokeCallback (typeof (ApplyBlockHandlerDelegate))]
+		static unsafe bool ApplyBlockHandler (IntPtr block, nint index, IntPtr value, IntPtr info)
+		{
+			var del = (ApplyBlockCallback) ((BlockLiteral *) block)->Target;
+			if (del != null)
+				return del (index, new CGPDFObject (value), info);
+
+			return false;
+		}
+
+		public delegate bool ApplyBlockCallback (nint index, CGPDFObject value, IntPtr info);
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		[iOS (12, 0)][Mac (10, 14)][TV (12, 0)][Watch (5, 0)]
+		extern static bool CGPDFArrayApplyBlock (/* CGPDFArrayRef */ IntPtr array, /* CGPDFArrayApplierBlock */ ref BlockLiteral block, /* void* */ IntPtr info);
+
+		[iOS (12, 0)][Mac (10, 14)][TV (12, 0)][Watch (5, 0)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public bool ApplyBlock (ApplyBlockCallback callback, IntPtr info = default (IntPtr))
+		{
+			if (callback == null)
+				throw new ArgumentNullException (nameof (callback));
+
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (applyblock_handler, callback);
+
+			try {
+				return CGPDFArrayApplyBlock (handle, ref block_handler, info);
+			} finally {
+				block_handler.CleanupBlock ();
+			}
+		}
 	}
 }
