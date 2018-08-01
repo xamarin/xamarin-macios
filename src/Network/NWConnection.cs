@@ -504,29 +504,11 @@ namespace Network {
 		public uint MaximumDatagramSize => nw_connection_get_maximum_datagram_size (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
-		extern static void nw_connection_batch (IntPtr handle, ref BlockLiteral callback_block);
-
-		delegate void dispatch_block_t (IntPtr block);
-		static dispatch_block_t static_dispatch_block_t = TrampolineDispatchBlock;
-
-		[MonoPInvokeCallback (typeof (dispatch_block_t))]
-		static void TrampolineDispatchBlock (IntPtr block)
-		{
-			var del = BlockLiteral.GetTarget<Action> (block);
-			if (del != null)
-				del ();
-		}
+		extern static void nw_connection_batch (IntPtr handle, IntPtr callback_block);
 
 		public void Batch (Action method)
 		{
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_dispatch_block_t, method);
-
-			try {
-				nw_connection_batch (GetCheckedHandle (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
-			}
+			BlockLiteral.SimpleCall (method, (arg)=> nw_connection_batch (GetCheckedHandle (), arg));
 		}
 	}
 }
