@@ -218,6 +218,7 @@
 !missing-field! NSBottomMarginDocumentAttribute not bound
 !missing-field! NSBrowserIllegalDelegateException not bound
 !missing-field! NSCategoryDocumentAttribute not bound
+!missing-field! NSAppearanceDocumentAttribute not bound
 !missing-field! NSCharacterEncodingDocumentAttribute not bound
 !missing-field! NSCocoaVersionDocumentAttribute not bound
 !missing-field! NSColorListDidChangeNotification not bound
@@ -1147,3 +1148,7 @@
 ## DoCommandBySelector conflicts with NSTextViewDelegate in generated code
 !missing-protocol-member! NSTextInput::doCommandBySelector: not found
 
+## 42781537 Classes fail to conformsToProtocol despite header declaration
+!missing-protocol! NSUserActivityRestoring not bound
+!missing-protocol-conformance! NSDocument should conform to NSUserActivityRestoring (defined in 'NSUserActivity' category)
+!missing-protocol-conformance! NSResponder should conform to NSUserActivityRestoring (defined in 'NSUserActivity' category)
