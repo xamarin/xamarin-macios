@@ -71,8 +71,11 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_iterateHandler, callback);
 
-				nw_protocol_stack_iterate_application_protocols (GetCheckedHandle (), (void*) block_ptr_handler);
-				block_handler.CleanupBlock ();
+				try {
+					nw_protocol_stack_iterate_application_protocols (GetCheckedHandle (), (void*) block_ptr_handler);
+				} finally {
+					block_handler.CleanupBlock ();
+				}
 			}
 		}
 

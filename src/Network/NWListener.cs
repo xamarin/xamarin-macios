@@ -133,8 +133,11 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_ListenerStateChanged, callback);
 
-				nw_listener_set_state_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
-				block_handler.CleanupBlock ();
+				try {
+					nw_listener_set_state_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
+				} finally {
+					block_handler.CleanupBlock ();
+				}
 			}
 		}
 
@@ -167,8 +170,11 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_NewConnection, callback);
 
-				nw_listener_set_new_connection_handler (GetCheckedHandle (), (void*) block_ptr_handler);
-				block_handler.CleanupBlock ();
+				try {
+					nw_listener_set_new_connection_handler (GetCheckedHandle (), (void*) block_ptr_handler);
+				} finally {
+					block_handler.CleanupBlock ();
+				}
 			}
 		}
 
@@ -204,8 +210,11 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_AdvertisedEndpointChangedHandler, callback);
 
-				nw_listener_set_advertised_endpoint_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
-				block_handler.CleanupBlock ();
+				try {
+					nw_listener_set_advertised_endpoint_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
+				} finally {
+					block_handler.CleanupBlock ();
+				}
 			}
 		}
 

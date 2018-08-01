@@ -182,8 +182,11 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_ProtocolIterator, callback);
 
-				nw_content_context_foreach_protocol_metadata (GetCheckedHandle (), (void*) block_ptr_handler);
-				block_handler.CleanupBlock ();
+				try {
+					nw_content_context_foreach_protocol_metadata (GetCheckedHandle (), (void*) block_ptr_handler);
+				} finally {
+					block_handler.CleanupBlock ();
+				}
 			}
 		}
 

@@ -377,8 +377,11 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_iterateProhibitedHandler, iterationCallback);
 
-				nw_parameters_iterate_prohibited_interfaces (GetCheckedHandle (), (void*) block_ptr_handler);
-				block_handler.CleanupBlock ();
+				try {
+					nw_parameters_iterate_prohibited_interfaces (GetCheckedHandle (), (void*) block_ptr_handler);
+				} finally {
+					block_handler.CleanupBlock ();
+				}
 			}
 		}
 
@@ -408,8 +411,11 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_IterateProhibitedTypeHandler, callback);
 
-				nw_parameters_iterate_prohibited_interface_types (GetCheckedHandle (), (void*) block_ptr_handler);
-				block_handler.CleanupBlock ();
+				try {
+					nw_parameters_iterate_prohibited_interface_types (GetCheckedHandle (), (void*) block_ptr_handler);
+				} finally {
+					block_handler.CleanupBlock ();
+				}
 			}
 		}
 

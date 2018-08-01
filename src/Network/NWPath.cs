@@ -121,8 +121,11 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_Enumerator, callback);
 
-				nw_path_enumerate_interfaces (GetCheckedHandle (), (void*) block_ptr_handler);
-				block_handler.CleanupBlock ();
+				try {
+					nw_path_enumerate_interfaces (GetCheckedHandle (), (void*) block_ptr_handler);
+				} finally {
+					block_handler.CleanupBlock ();
+				}
 			}
 		}
 	}

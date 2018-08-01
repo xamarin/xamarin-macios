@@ -109,8 +109,11 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_stateChangeHandler, stateHandler);
 
-				nw_connection_set_state_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
-				block_handler.CleanupBlock ();
+				try {
+					nw_connection_set_state_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
+				} finally {
+					block_handler.CleanupBlock ();
+				}
 			}
 		}
 
@@ -141,8 +144,11 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_BooleanChangeHandler, callback);
 
-				nw_connection_set_viability_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
-				block_handler.CleanupBlock ();
+				try {
+					nw_connection_set_viability_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
+				} finally {
+					block_handler.CleanupBlock ();
+				}
 			}
 		}
 
@@ -162,8 +168,11 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_BooleanChangeHandler, callback);
 
-				nw_connection_set_better_path_available_handler (GetCheckedHandle (), (void*) block_ptr_handler);
-				block_handler.CleanupBlock ();
+				try {
+					nw_connection_set_better_path_available_handler (GetCheckedHandle (), (void*) block_ptr_handler);
+				} finally {
+					block_handler.CleanupBlock ();
+				}
 			}
 		}
 
@@ -191,8 +200,11 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_PathChanged, callback);
 
-				nw_connection_set_path_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
-				block_handler.CleanupBlock ();
+				try {
+					nw_connection_set_path_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
+				} finally {
+					block_handler.CleanupBlock ();
+				}
 			}
 		}
 
@@ -302,8 +314,11 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_ReceiveCompletion, callback);
 
-				nw_connection_receive (GetCheckedHandle (), minimumIncompleteLength, maximumLength, (void*) block_ptr_handler);
-				block_handler.CleanupBlock ();
+				try {
+					nw_connection_receive (GetCheckedHandle (), minimumIncompleteLength, maximumLength, (void*) block_ptr_handler);
+				} finally {
+					block_handler.CleanupBlock ();
+				}
 			}
 		}
 
@@ -318,8 +333,11 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchData, callback);
 
-				nw_connection_receive (GetCheckedHandle (), minimumIncompleteLength, maximumLength, (void*) block_ptr_handler);
-				block_handler.CleanupBlock ();
+				try {
+					nw_connection_receive (GetCheckedHandle (), minimumIncompleteLength, maximumLength, (void*) block_ptr_handler);
+				} finally {
+					block_handler.CleanupBlock ();
+				}
 			}
 		}
 
@@ -337,8 +355,11 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_ReceiveCompletion, callback);
 
-				nw_connection_receive_message (GetCheckedHandle (), (void*) block_ptr_handler);
-				block_handler.CleanupBlock ();
+				try {
+					nw_connection_receive_message (GetCheckedHandle (), (void*) block_ptr_handler);
+				} finally {
+					block_handler.CleanupBlock ();
+				}
 			}
 		}
 
@@ -353,8 +374,11 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchData, callback);
 
-				nw_connection_receive_message (GetCheckedHandle (), (void*) block_ptr_handler);
-				block_handler.CleanupBlock ();
+				try {
+					nw_connection_receive_message (GetCheckedHandle (), (void*) block_ptr_handler);
+				} finally {
+					block_handler.CleanupBlock ();
+				}
 			}
 		}
 
@@ -424,8 +448,11 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_SendCompletion, callback);
 
-				LowLevelSend (GetCheckedHandle (), buffer, context.Handle, isComplete, block_ptr_handler);
-				block_handler.CleanupBlock ();
+				try {
+					LowLevelSend (GetCheckedHandle (), buffer, context.Handle, isComplete, block_ptr_handler);
+				} finally {
+					block_handler.CleanupBlock ();
+				}
 			}
 		}
 
