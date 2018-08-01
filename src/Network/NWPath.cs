@@ -117,14 +117,12 @@ namespace Network {
 				return;
 
 			unsafe {
-				BlockLiteral *block_ptr_handler;
-				BlockLiteral block_handler;
-				block_handler = new BlockLiteral ();
-				block_ptr_handler = &block_handler;
+				BlockLiteral block_handler = new BlockLiteral ();
+				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_Enumerator, callback);
 
 				nw_path_enumerate_interfaces (GetHandle(), (void*) block_ptr_handler);
-				block_ptr_handler->CleanupBlock ();
+				block_handler.CleanupBlock ();
 			}
 		}
 	}

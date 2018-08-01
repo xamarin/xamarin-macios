@@ -105,14 +105,12 @@ namespace Network {
 			}
 
 			unsafe {
-				BlockLiteral *block_ptr_handler;
-				BlockLiteral block_handler;
-				block_handler = new BlockLiteral ();
-				block_ptr_handler = &block_handler;
+				BlockLiteral block_handler = new BlockLiteral ();
+				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_stateChangeHandler, stateHandler);
 
 				nw_connection_set_state_changed_handler (GetHandle(), (void*) block_ptr_handler);
-				block_ptr_handler->CleanupBlock ();
+				block_handler.CleanupBlock ();
 			}
 		}
 
@@ -139,14 +137,12 @@ namespace Network {
 			}
 
 			unsafe {
-				BlockLiteral *block_ptr_handler;
-				BlockLiteral block_handler;
-				block_handler = new BlockLiteral ();
-				block_ptr_handler = &block_handler;
+				BlockLiteral block_handler = new BlockLiteral ();
+				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_BooleanChangeHandler, callback);
 
 				nw_connection_set_viability_changed_handler (GetHandle(), (void*) block_ptr_handler);
-				block_ptr_handler->CleanupBlock ();
+				block_handler.CleanupBlock ();
 			}
 		}
 
@@ -162,14 +158,12 @@ namespace Network {
 			}
 
 			unsafe {
-				BlockLiteral *block_ptr_handler;
-				BlockLiteral block_handler;
-				block_handler = new BlockLiteral ();
-				block_ptr_handler = &block_handler;
+				BlockLiteral block_handler = new BlockLiteral ();
+				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_BooleanChangeHandler, callback);
 
 				nw_connection_set_better_path_available_handler (GetHandle(), (void*) block_ptr_handler);
-				block_ptr_handler->CleanupBlock ();
+				block_handler.CleanupBlock ();
 			}
 		}
 
@@ -193,14 +187,12 @@ namespace Network {
 		public void SetPathChangedHandler (Action<NWPath> callback)
 		{
 			unsafe {
-				BlockLiteral *block_ptr_handler;
-				BlockLiteral block_handler;
-				block_handler = new BlockLiteral ();
-				block_ptr_handler = &block_handler;
+				BlockLiteral block_handler = new BlockLiteral ();
+				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_PathChanged, callback);
 
 				nw_connection_set_path_changed_handler (GetHandle(), (void*) block_ptr_handler);
-				block_ptr_handler->CleanupBlock ();
+				block_handler.CleanupBlock ();
 			}
 		}
 
@@ -306,14 +298,12 @@ namespace Network {
 				throw new ArgumentNullException (nameof (callback));
 
 			unsafe {
-				BlockLiteral *block_ptr_handler;
-				BlockLiteral block_handler;
-				block_handler = new BlockLiteral ();
-				block_ptr_handler = &block_handler;
+				BlockLiteral block_handler = new BlockLiteral ();
+				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_ReceiveCompletion, callback);
 
 				nw_connection_receive (GetHandle(), minimumIncompleteLength, maximumLength, (void*) block_ptr_handler);
-				block_ptr_handler->CleanupBlock ();
+				block_handler.CleanupBlock ();
 			}
 		}
 
@@ -324,14 +314,12 @@ namespace Network {
 				throw new ArgumentNullException (nameof (callback));
 
 			unsafe {
-				BlockLiteral *block_ptr_handler;
-				BlockLiteral block_handler;
-				block_handler = new BlockLiteral ();
-				block_ptr_handler = &block_handler;
+				BlockLiteral block_handler = new BlockLiteral ();
+				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchData, callback);
 
 				nw_connection_receive (GetHandle(), minimumIncompleteLength, maximumLength, (void*) block_ptr_handler);
-				block_ptr_handler->CleanupBlock ();
+				block_handler.CleanupBlock ();
 			}
 		}
 
@@ -345,14 +333,12 @@ namespace Network {
 				throw new ArgumentNullException (nameof (callback));
 
 			unsafe {
-				BlockLiteral *block_ptr_handler;
-				BlockLiteral block_handler;
-				block_handler = new BlockLiteral ();
-				block_ptr_handler = &block_handler;
+				BlockLiteral block_handler = new BlockLiteral ();
+				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_ReceiveCompletion, callback);
 
 				nw_connection_receive_message (GetHandle(), (void*) block_ptr_handler);
-				block_ptr_handler->CleanupBlock ();
+				block_handler.CleanupBlock ();
 			}
 		}
 
@@ -363,14 +349,12 @@ namespace Network {
 				throw new ArgumentNullException (nameof (callback));
 
 			unsafe {
-				BlockLiteral *block_ptr_handler;
-				BlockLiteral block_handler;
-				block_handler = new BlockLiteral ();
-				block_ptr_handler = &block_handler;
+				BlockLiteral block_handler = new BlockLiteral ();
+				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchData, callback);
 
 				nw_connection_receive_message (GetHandle(), (void*) block_ptr_handler);
-				block_ptr_handler->CleanupBlock ();
+				block_handler.CleanupBlock ();
 			}
 		}
 
@@ -436,14 +420,12 @@ namespace Network {
 				throw new ArgumentNullException (nameof (callback));
 
 			unsafe {
-				BlockLiteral *block_ptr_handler;
-				BlockLiteral block_handler;
-				block_handler = new BlockLiteral ();
-				block_ptr_handler = &block_handler;
+				BlockLiteral block_handler = new BlockLiteral ();
+				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_SendCompletion, callback);
 
 				LowLevelSend (GetHandle(), buffer, context.Handle, isComplete, block_ptr_handler);
-				block_ptr_handler->CleanupBlock ();
+				block_handler.CleanupBlock ();
 			}
 		}
 

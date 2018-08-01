@@ -182,14 +182,12 @@ namespace Network {
 		public void IterateProtocolMetadata (Action<NWProtocolDefinition,NWProtocolMetadata> callback)
 		{
 			unsafe {
-				BlockLiteral *block_ptr_handler;
-				BlockLiteral block_handler;
-				block_handler = new BlockLiteral ();
-				block_ptr_handler = &block_handler;
+				BlockLiteral block_handler = new BlockLiteral ();
+				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_ProtocolIterator, callback);
 
 				nw_content_context_foreach_protocol_metadata (GetHandle(), (void*) block_ptr_handler);
-				block_ptr_handler->CleanupBlock ();
+				block_handler.CleanupBlock ();
 			}
 		}
 

@@ -129,14 +129,12 @@ namespace Network {
 					return;
 				}
 
-				BlockLiteral *block_ptr_handler;
-				BlockLiteral block_handler;
-				block_handler = new BlockLiteral ();
-				block_ptr_handler = &block_handler;
+				BlockLiteral block_handler = new BlockLiteral ();
+				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_ListenerStateChanged, callback);
 
 				nw_listener_set_state_changed_handler (GetHandle(), (void*) block_ptr_handler);
-				block_ptr_handler->CleanupBlock ();
+				block_handler.CleanupBlock ();
 			}
 		}
 
@@ -165,14 +163,12 @@ namespace Network {
 					return;
 				}
 
-				BlockLiteral *block_ptr_handler;
-				BlockLiteral block_handler;
-				block_handler = new BlockLiteral ();
-				block_ptr_handler = &block_handler;
+				BlockLiteral block_handler = new BlockLiteral ();
+				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_NewConnection, callback);
 
 				nw_listener_set_new_connection_handler (GetHandle(), (void*) block_ptr_handler);
-				block_ptr_handler->CleanupBlock ();
+				block_handler.CleanupBlock ();
 			}
 		}
 
@@ -204,14 +200,12 @@ namespace Network {
 					return;
 				}
 
-				BlockLiteral *block_ptr_handler;
-				BlockLiteral block_handler;
-				block_handler = new BlockLiteral ();
-				block_ptr_handler = &block_handler;
+				BlockLiteral block_handler = new BlockLiteral ();
+				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_AdvertisedEndpointChangedHandler, callback);
 
 				nw_listener_set_advertised_endpoint_changed_handler (GetHandle(), (void*) block_ptr_handler);
-				block_ptr_handler->CleanupBlock ();
+				block_handler.CleanupBlock ();
 			}
 		}
 

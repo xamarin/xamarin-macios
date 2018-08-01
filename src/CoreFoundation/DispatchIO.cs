@@ -78,14 +78,12 @@ namespace CoreFoundation {
 				throw new ArgumentNullException (nameof (dispatchQueue));
 
 			unsafe {
-				BlockLiteral *block_ptr_handler;
-				BlockLiteral block_handler;
-				block_handler = new BlockLiteral ();
-				block_ptr_handler = &block_handler;
+				BlockLiteral block_handler = new BlockLiteral ();
+				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_DispatchReadWriteHandler, handler);
 
 				dispatch_read (fd, size, dispatchQueue.Handle, (IntPtr) block_ptr_handler);
-				block_ptr_handler->CleanupBlock ();
+				block_handler.CleanupBlock ();
 			}
 		}
 
@@ -103,14 +101,12 @@ namespace CoreFoundation {
 				throw new ArgumentNullException (nameof (dispatchQueue));
 
 			unsafe {
-				BlockLiteral *block_ptr_handler;
-				BlockLiteral block_handler;
-				block_handler = new BlockLiteral ();
-				block_ptr_handler = &block_handler;
+				BlockLiteral block_handler = new BlockLiteral ();
+				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_DispatchReadWriteHandler, handler);
 
 				dispatch_write (fd, dispatchData.Handle, dispatchQueue.Handle, (IntPtr) block_ptr_handler);
-				block_ptr_handler->CleanupBlock ();
+				block_handler.CleanupBlock ();
 			}
 		}
 	}

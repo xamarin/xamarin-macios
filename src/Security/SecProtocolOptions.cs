@@ -180,14 +180,12 @@ namespace Security {
 				throw new ArgumentNullException (nameof (keyUpdateQueue));
 
 			unsafe {
-				BlockLiteral *block_ptr_handler;
-				BlockLiteral block_handler;
-				block_handler = new BlockLiteral ();
-				block_ptr_handler = &block_handler;
+				BlockLiteral block_handler = new BlockLiteral ();
+				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (Trampolines.SDSecProtocolKeyUpdate.Handler, keyUpdate);
 
 				sec_protocol_options_set_key_update_block (handle, (IntPtr)((void*) block_ptr_handler), keyUpdateQueue.Handle);
-				block_ptr_handler->CleanupBlock ();
+				block_handler.CleanupBlock ();
 			}
 		}
 

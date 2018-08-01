@@ -373,14 +373,12 @@ namespace Network {
 		public void IterateProhibitedInterfaces (Func<NWInterface,bool> iterationCallback)
 		{
 			unsafe {
-				BlockLiteral *block_ptr_handler;
-				BlockLiteral block_handler;
-				block_handler = new BlockLiteral ();
-				block_ptr_handler = &block_handler;
+				BlockLiteral block_handler = new BlockLiteral ();
+				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_iterateProhibitedHandler, iterationCallback);
 
 				nw_parameters_iterate_prohibited_interfaces (GetHandle(), (void*) block_ptr_handler);
-				block_ptr_handler->CleanupBlock ();
+				block_handler.CleanupBlock ();
 			}
 		}
 
@@ -406,14 +404,12 @@ namespace Network {
 		public void IterateProhibitedInterfaces (Func<NWInterfaceType,bool> callback)
 		{
 			unsafe {
-				BlockLiteral *block_ptr_handler;
-				BlockLiteral block_handler;
-				block_handler = new BlockLiteral ();
-				block_ptr_handler = &block_handler;
+				BlockLiteral block_handler = new BlockLiteral ();
+				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_IterateProhibitedTypeHandler, callback);
 
 				nw_parameters_iterate_prohibited_interface_types (GetHandle(), (void*) block_ptr_handler);
-				block_ptr_handler->CleanupBlock ();
+				block_handler.CleanupBlock ();
 			}
 		}
 
