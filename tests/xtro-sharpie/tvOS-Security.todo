@@ -50,3 +50,5 @@
 !missing-protocol! OS_sec_protocol_metadata not bound
 !missing-protocol! OS_sec_protocol_options not bound
 !missing-protocol! OS_sec_trust not bound
+## appended from unclassified file
+!unknown-field! kSecUseItemList bound

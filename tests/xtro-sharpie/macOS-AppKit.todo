@@ -4,5 +4,12 @@
 !missing-selector! +NSColor::findHighlightColor not bound
 !missing-selector! +NSColor::placeholderTextColor not bound
 !missing-selector! NSSliderCell::setImage: not bound
-!missing-selector! NSLayoutManager::limitsLayoutForSuspiciousContents not bound
-!missing-selector! NSLayoutManager::setLimitsLayoutForSuspiciousContents: not bound
+## appended from unclassified file
+!missing-field! NSAppearanceDocumentAttribute not bound
+!missing-protocol! NSUserActivityRestoring not bound
+!missing-protocol-conformance! NSDocument should conform to NSUserActivityRestoring (defined in 'NSUserActivity' category)
+!missing-protocol-conformance! NSResponder should conform to NSUserActivityRestoring (defined in 'NSUserActivity' category)
+!missing-selector! +NSBindingSelectionMarker::multipleValuesSelectionMarker not bound
+!missing-selector! +NSBindingSelectionMarker::noSelectionMarker not bound
+!missing-selector! +NSBindingSelectionMarker::notApplicableSelectionMarker not bound
+!missing-type! NSBindingSelectionMarker not bound

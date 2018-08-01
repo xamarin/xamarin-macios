@@ -54,7 +54,8 @@ namespace CoreGraphics {
 		Lab,
 		DeviceN,
 		Indexed,
-		Pattern
+		Pattern,
+		XYZ,
 	}
 
 	public class CGColorSpace : INativeObject

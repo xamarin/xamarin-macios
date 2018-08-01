@@ -183,3 +183,6 @@
 !missing-pinvoke! ColorSyncTransformGetTypeID is not bound
 !missing-pinvoke! ColorSyncTransformSetProperty is not bound
 !missing-pinvoke! ColorSyncUnregisterDevice is not bound
+## appended from unclassified file
+!missing-pinvoke! CGDisplayCreateUUIDFromDisplayID is not bound
+!missing-pinvoke! CGDisplayGetDisplayIDFromUUID is not bound

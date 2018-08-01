@@ -215,8 +215,6 @@ namespace StoreKit {
 		[Export ("downloadable")]
 		bool Downloadable {
 #if !MONOMAC
-			// Xcode 10 beta 3 headers says this is how it works on macOS as well, but this is a breaking change for macOS, so it's probably wrong.
-			// https://trello.com/c/A34S0kLY/125-41782055-skproductdownloadable-crashes-on-macos-1011-when-compiled-with-xcode-10
 			[Bind ("isDownloadable")]
 #endif
 			get;
@@ -312,7 +310,7 @@ namespace StoreKit {
 
 	[BaseType (typeof (NSObject), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] {typeof (SKRequestDelegate)})]
 	interface SKRequest {
-		[Export ("delegate", ArgumentSemantic.Assign)][NullAllowed]
+		[Export ("delegate", ArgumentSemantic.Weak)][NullAllowed]
 		NSObject WeakDelegate { get; [NullAllowed] set; }
 
 		[Wrap ("WeakDelegate")]
@@ -373,7 +371,7 @@ namespace StoreKit {
 		[Export ("initWithProductIdentifiers:")]
 		IntPtr Constructor (NSSet productIdentifiersStringSet);
 		
-		[Export ("delegate", ArgumentSemantic.Assign)][NullAllowed][New]
+		[Export ("delegate", ArgumentSemantic.Weak)][NullAllowed][New]
 		NSObject WeakDelegate { get; [NullAllowed] set; }
 
 		[Wrap ("WeakDelegate")][New]

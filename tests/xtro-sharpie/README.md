@@ -97,6 +97,8 @@ How to fix ?
 * If it's a short term issue, e.g. a new xcode beta, then the entries should be moved to the corresponding `*.todo` file;
 * If this is not something we can fix (e.g. requires a rdar) then the entry should be moved to the corresponding `*.ignore` file along with a comment why;
 
+*Note: When bumping `xamarin-macios` for Xcode betas and after reviewing the `.unclassified` files, you can run `make unclassified2todo` to move the info inside the `.unclassified` files into associated `.todo` files.*
+
 Existing issues can be ignored (already shipped).
 
 

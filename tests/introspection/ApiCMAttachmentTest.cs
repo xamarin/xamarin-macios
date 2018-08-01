@@ -271,6 +271,8 @@ namespace Introspection {
 				return writeStream;
 			case "CFUrl":
 				return CFUrl.FromFile ("/etc");
+			case "CFPropertyList":
+				return CFPropertyList.FromData (NSData.FromString ("<string>data</string>")).PropertyList;
 			case "AudioFile":
 				var path = Path.GetFullPath ("1.caf");
 				var af = AudioFile.Open (CFUrl.FromFile (path), AudioFilePermission.Read, AudioFileType.CAF);

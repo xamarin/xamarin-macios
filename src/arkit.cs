@@ -100,6 +100,7 @@ namespace ARKit {
 	[Flags]
 	[Native]
 	public enum ARSessionRunOptions : ulong {
+		None = 0,
 		ResetTracking = 1 << 0,
 		RemoveExistingAnchors = 1 << 1,
 	}
@@ -143,11 +144,20 @@ namespace ARKit {
 		Mapped,
 	}
 
+	[iOS (12,0)]
+	[NoWatch, NoTV, NoMac]
+	[Protocol]
+	[Advice ("To conform to 'ARAnchorCopying' you need to implement:\n'[Export (\"initWithAnchor:\")]'\n'public YourConstructor (ARAnchor anchor)'")]
+	interface ARAnchorCopying : NSCopying {
+		// Constructors in interfaces are not possible in C#
+		// @required -(instancetype _Nonnull)initWithAnchor:(ARAnchor * _Nonnull)anchor;
+	}
+
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface ARAnchor : NSCopying, NSSecureCoding {
+	interface ARAnchor : ARAnchorCopying, NSSecureCoding {
 
 		[NullAllowed, Export ("identifier")]
 		NSUuid Identifier { get; }
@@ -576,7 +586,9 @@ namespace ARKit {
 		[NullAllowed, Export ("configuration", ArgumentSemantic.Copy)]
 		ARConfiguration Configuration { get; }
 
-		// 'runWithConfiguration:' selector marked as unavailable in Xcode 9 beta 5. Use 'Run (ARConfiguration configuration, ARSessionRunOptions options)' instead.
+		[Export ("runWithConfiguration:")]
+		void Run (ARConfiguration configuration);
+
 		[Export ("runWithConfiguration:options:")]
 		void Run (ARConfiguration configuration, ARSessionRunOptions options);
 

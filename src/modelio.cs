@@ -2722,6 +2722,10 @@ namespace ModelIO {
 		[Export ("jointBindTransforms")]
 		MDLMatrix4x4Array JointBindTransforms { get; }
 
+		[iOS (12,0), Mac (10,14, onlyOn64 : true), TV (12,0)]
+		[Export ("jointRestTransforms")]
+		MDLMatrix4x4Array JointRestTransforms { get; }
+
 		[Export ("initWithName:jointPaths:")]
 		IntPtr Constructor (string name, string[] jointPaths);
 	}

@@ -1541,6 +1541,7 @@ VISION_SOURCES = \
 	Vision/VNDetectBarcodesRequest.cs \
 	Vision/VNFaceLandmarkRegion2D.cs \
 	Vision/VNRequest.cs \
+	Vision/VNRequestRevision.cs \
 	Vision/VNUtils.cs \
 
 # WatchConnectivity
