@@ -37,6 +37,6 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr sec_identity_copy_ref (IntPtr handle);
 
-		public SecCertificate Certificate => new SecCertificate (sec_identity_copy_ref (GetHandle ()), owns: true);
+		public SecCertificate Certificate => new SecCertificate (sec_identity_copy_ref (GetCheckedHandle ()), owns: true);
 	}
 }

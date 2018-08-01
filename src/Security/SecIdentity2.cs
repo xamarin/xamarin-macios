@@ -53,14 +53,14 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr sec_identity_copy_ref (IntPtr handle);
 
-		public SecIdentity Identity => new SecIdentity (sec_identity_copy_ref (GetHandle ()), owns: true);
+		public SecIdentity Identity => new SecIdentity (sec_identity_copy_ref (GetCheckedHandle ()), owns: true);
 
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr sec_identity_copy_certificates_ref (IntPtr handle);
 
 		public SecCertificate [] Certificates {
 			get {
-				var certArray = sec_identity_copy_certificates_ref (GetHandle ());
+				var certArray = sec_identity_copy_certificates_ref (GetCheckedHandle ());
 				var n = (int) NSArray.GetCount (certArray);
 				var ret = new SecCertificate [n];
 				for (int i = 0; i < n; i++)

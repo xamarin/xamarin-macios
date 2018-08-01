@@ -61,7 +61,7 @@ namespace Network {
 
 		public NWEndpoint Endpoint {
 			get {
-				var x = nw_connection_copy_endpoint (GetHandle ());
+				var x = nw_connection_copy_endpoint (GetCheckedHandle ());
 				if (x == IntPtr.Zero)
 					return null;
 				return new NWEndpoint (x, owns: true);
@@ -73,7 +73,7 @@ namespace Network {
 
 		public NWParameters Parameters {
 			get {
-				var x = nw_connection_copy_parameters (GetHandle());
+				var x = nw_connection_copy_parameters (GetCheckedHandle ());
 				if (x == IntPtr.Zero)
 					return null;
 				return new NWParameters (x, owns: true);
@@ -100,7 +100,7 @@ namespace Network {
 		public unsafe void SetStateChangeHandler (Action<NWConnectionState,NWError> stateHandler)
 		{
 			if (stateHandler == null) {
-				nw_connection_set_state_changed_handler (GetHandle(), null);
+				nw_connection_set_state_changed_handler (GetCheckedHandle (), null);
 				return;
 			}
 
@@ -109,7 +109,7 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_stateChangeHandler, stateHandler);
 
-				nw_connection_set_state_changed_handler (GetHandle(), (void*) block_ptr_handler);
+				nw_connection_set_state_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
 				block_handler.CleanupBlock ();
 			}
 		}
@@ -132,7 +132,7 @@ namespace Network {
 		public unsafe void SetBooleanChangeHandler (Action<bool> callback)
 		{
 			if (callback == null) {
-				nw_connection_set_viability_changed_handler  (GetHandle(), null);
+				nw_connection_set_viability_changed_handler (GetCheckedHandle (), null);
 				return;
 			}
 
@@ -141,7 +141,7 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_BooleanChangeHandler, callback);
 
-				nw_connection_set_viability_changed_handler (GetHandle(), (void*) block_ptr_handler);
+				nw_connection_set_viability_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
 				block_handler.CleanupBlock ();
 			}
 		}
@@ -153,7 +153,7 @@ namespace Network {
 		public unsafe void SetBetterPathAvailableHandler (Action<bool> callback)
 		{
 			if (callback == null) {
-				nw_connection_set_better_path_available_handler  (GetHandle(), null);
+				nw_connection_set_better_path_available_handler (GetCheckedHandle (), null);
 				return;
 			}
 
@@ -162,7 +162,7 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_BooleanChangeHandler, callback);
 
-				nw_connection_set_better_path_available_handler (GetHandle(), (void*) block_ptr_handler);
+				nw_connection_set_better_path_available_handler (GetCheckedHandle (), (void*) block_ptr_handler);
 				block_handler.CleanupBlock ();
 			}
 		}
@@ -191,7 +191,7 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_PathChanged, callback);
 
-				nw_connection_set_path_changed_handler (GetHandle(), (void*) block_ptr_handler);
+				nw_connection_set_path_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
 				block_handler.CleanupBlock ();
 			}
 		}
@@ -203,33 +203,33 @@ namespace Network {
 		{
 			if (queue == null)
 				throw new ArgumentNullException (nameof (queue));
-			nw_connection_set_queue (GetHandle(), queue.handle);
+			nw_connection_set_queue (GetCheckedHandle (), queue.handle);
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_connection_start (IntPtr handle);
 
-		public void Start () => nw_connection_start (GetHandle());
+		public void Start () => nw_connection_start (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_connection_restart (IntPtr handle);
 
-		public void Restart () => nw_connection_restart (GetHandle());
+		public void Restart () => nw_connection_restart (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_connection_cancel (IntPtr handle);
 
-		public void Cancel () => nw_connection_cancel (GetHandle());
+		public void Cancel () => nw_connection_cancel (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_connection_force_cancel (IntPtr handle);
 
-		public void ForceCancel () => nw_connection_force_cancel (GetHandle());
+		public void ForceCancel () => nw_connection_force_cancel (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_connection_cancel_current_endpoint (IntPtr handle);
 
-		public void CancelCurrentEndpoint () => nw_connection_cancel_current_endpoint (GetHandle());
+		public void CancelCurrentEndpoint () => nw_connection_cancel_current_endpoint (GetCheckedHandle ());
 
 		delegate void nw_connection_receive_completion_t (IntPtr block,
 								  IntPtr dispatchData,
@@ -302,7 +302,7 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_ReceiveCompletion, callback);
 
-				nw_connection_receive (GetHandle(), minimumIncompleteLength, maximumLength, (void*) block_ptr_handler);
+				nw_connection_receive (GetCheckedHandle (), minimumIncompleteLength, maximumLength, (void*) block_ptr_handler);
 				block_handler.CleanupBlock ();
 			}
 		}
@@ -318,7 +318,7 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchData, callback);
 
-				nw_connection_receive (GetHandle(), minimumIncompleteLength, maximumLength, (void*) block_ptr_handler);
+				nw_connection_receive (GetCheckedHandle (), minimumIncompleteLength, maximumLength, (void*) block_ptr_handler);
 				block_handler.CleanupBlock ();
 			}
 		}
@@ -337,7 +337,7 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_ReceiveCompletion, callback);
 
-				nw_connection_receive_message (GetHandle(), (void*) block_ptr_handler);
+				nw_connection_receive_message (GetCheckedHandle (), (void*) block_ptr_handler);
 				block_handler.CleanupBlock ();
 			}
 		}
@@ -353,7 +353,7 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchData, callback);
 
-				nw_connection_receive_message (GetHandle(), (void*) block_ptr_handler);
+				nw_connection_receive_message (GetCheckedHandle (), (void*) block_ptr_handler);
 				block_handler.CleanupBlock ();
 			}
 		}
@@ -386,7 +386,7 @@ namespace Network {
 		//
 		unsafe void LowLevelSend (IntPtr handle, DispatchData buffer, IntPtr contentContext, bool isComplete, void *callback)
 		{
-			nw_connection_send (handle: GetHandle(),
+			nw_connection_send (handle: GetCheckedHandle (),
 					    dispatchData: buffer == null ? IntPtr.Zero : buffer.Handle,
 					    contentContext: contentContext,
 					    isComplete: isComplete,
@@ -424,7 +424,7 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_SendCompletion, callback);
 
-				LowLevelSend (GetHandle(), buffer, context.Handle, isComplete, block_ptr_handler);
+				LowLevelSend (GetCheckedHandle (), buffer, context.Handle, isComplete, block_ptr_handler);
 				block_handler.CleanupBlock ();
 			}
 		}
@@ -444,7 +444,7 @@ namespace Network {
 			if (context == null)
 				throw new ArgumentNullException (nameof (context));
 
-			LowLevelSend (GetHandle(), buffer, context.Handle, isComplete, (void *) NW_CONNECTION_SEND_IDEMPOTENT_CONTENT ());
+			LowLevelSend (GetCheckedHandle (), buffer, context.Handle, isComplete, (void *) NW_CONNECTION_SEND_IDEMPOTENT_CONTENT ());
 		}
 
 		public void SendIdempotent (byte [] buffer, NWContentContext context, bool isComplete)
@@ -459,14 +459,14 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		extern static string nw_connection_copy_description (IntPtr handle);
 
-		public string Description => nw_connection_copy_description (GetHandle());
+		public string Description => nw_connection_copy_description (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_connection_copy_current_path (IntPtr handle);
 
 		public NWPath CurrentPath {
 			get {
-				var x = nw_connection_copy_current_path (GetHandle());
+				var x = nw_connection_copy_current_path (GetCheckedHandle ());
 				if (x == IntPtr.Zero)
 					return null;
 				return new NWPath (x, owns: true);
@@ -481,7 +481,7 @@ namespace Network {
 			if (definition == null)
 				throw new ArgumentNullException (nameof (definition));
 
-			var x = nw_connection_copy_protocol_metadata (GetHandle(), definition.handle);
+			var x = nw_connection_copy_protocol_metadata (GetCheckedHandle (), definition.handle);
 			if (x == IntPtr.Zero)
 				return null;
 			return new NWProtocolMetadata (x, owns: true);
@@ -490,14 +490,14 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		extern static /* uint32_t */ uint nw_connection_get_maximum_datagram_size (IntPtr handle);
 
-		public uint MaximumDatagramSize => nw_connection_get_maximum_datagram_size (GetHandle());
+		public uint MaximumDatagramSize => nw_connection_get_maximum_datagram_size (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_connection_batch (IntPtr handle, IntPtr callback_block);
 
 		public void Batch (Action method)
 		{
-			BlockLiteral.SimpleCall (method, (arg)=> nw_connection_batch (GetHandle(), arg));
+			BlockLiteral.SimpleCall (method, (arg)=> nw_connection_batch (GetCheckedHandle (), arg));
 		}
 	}
 }

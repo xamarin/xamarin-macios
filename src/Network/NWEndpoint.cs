@@ -31,7 +31,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		extern static NWEndpointType nw_endpoint_get_type (OS_nw_endpoint handle);
 
-		public NWEndpointType Type => nw_endpoint_get_type (GetHandle());
+		public NWEndpointType Type => nw_endpoint_get_type (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static OS_nw_endpoint nw_endpoint_create_host (string hostname, string port);
@@ -51,17 +51,17 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_endpoint_get_hostname (OS_nw_endpoint endpoint);
 
-		public string Hostname => Marshal.PtrToStringAnsi (nw_endpoint_get_hostname (GetHandle()));
+		public string Hostname => Marshal.PtrToStringAnsi (nw_endpoint_get_hostname (GetCheckedHandle ()));
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern string nw_endpoint_copy_port_string (OS_nw_endpoint endpoint);
 
-		public string Port => nw_endpoint_copy_port_string (GetHandle());
+		public string Port => nw_endpoint_copy_port_string (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern ushort nw_endpoint_get_port (OS_nw_endpoint endpoint);
 
-		public ushort PortNumber => nw_endpoint_get_port (GetHandle());
+		public ushort PortNumber => nw_endpoint_get_port (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_endpoint nw_endpoint_create_address (IntPtr sockaddrPtr);
@@ -73,7 +73,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern string nw_endpoint_copy_address_string (OS_nw_endpoint endpoint);
 
-		public string Address => nw_endpoint_copy_address_string (GetHandle());
+		public string Address => nw_endpoint_copy_address_string (GetCheckedHandle ());
 
 #if false
 	// need to sort out sockaddr binding.
@@ -98,16 +98,16 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe IntPtr nw_endpoint_get_bonjour_service_name (OS_nw_endpoint endpoint);
 
-		public string BonjourServiceName => Marshal.PtrToStringAnsi (nw_endpoint_get_bonjour_service_name (GetHandle()));
+		public string BonjourServiceName => Marshal.PtrToStringAnsi (nw_endpoint_get_bonjour_service_name (GetCheckedHandle ()));
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_endpoint_get_bonjour_service_type (OS_nw_endpoint endpoint);
 
-		public string BonjourServiceType => Marshal.PtrToStringAnsi (nw_endpoint_get_bonjour_service_type (GetHandle()));
+		public string BonjourServiceType => Marshal.PtrToStringAnsi (nw_endpoint_get_bonjour_service_type (GetCheckedHandle ()));
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_endpoint_get_bonjour_service_domain (OS_nw_endpoint endpoint);
 
-		public string BonjourServiceDomain => Marshal.PtrToStringAnsi (nw_endpoint_get_bonjour_service_domain (GetHandle()));
+		public string BonjourServiceDomain => Marshal.PtrToStringAnsi (nw_endpoint_get_bonjour_service_domain (GetCheckedHandle ()));
 	}
 }

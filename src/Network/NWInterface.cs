@@ -24,19 +24,19 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern NWInterfaceType nw_interface_get_type (OS_nw_interface iface);
 
-		public NWInterfaceType InterfaceType => nw_interface_get_type (GetHandle());
+		public NWInterfaceType InterfaceType => nw_interface_get_type (GetCheckedHandle ());
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_interface_get_name (OS_nw_interface iface);
 
-		public string Name => Marshal.PtrToStringAnsi (nw_interface_get_name (GetHandle()));
+		public string Name => Marshal.PtrToStringAnsi (nw_interface_get_name (GetCheckedHandle ()));
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern /* uint32_t */ uint nw_interface_get_index (OS_nw_interface iface);
 
-		public uint Index => nw_interface_get_index (GetHandle());
+		public uint Index => nw_interface_get_index (GetCheckedHandle ());
 	}
 
 	public enum NWInterfaceType {

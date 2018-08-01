@@ -28,28 +28,28 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr sec_protocol_metadata_get_negotiated_protocol (IntPtr handle);
 
-		public string NegotiatedProtocol => Marshal.PtrToStringAnsi (sec_protocol_metadata_get_negotiated_protocol (GetHandle ()));
+		public string NegotiatedProtocol => Marshal.PtrToStringAnsi (sec_protocol_metadata_get_negotiated_protocol (GetCheckedHandle ()));
 
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr sec_protocol_metadata_copy_peer_public_key (IntPtr handle);
 
 #if !COREBUILD
-		public DispatchData PeerPublicKey => new DispatchData (sec_protocol_metadata_copy_peer_public_key (GetHandle ()), owns: true);
+		public DispatchData PeerPublicKey => new DispatchData (sec_protocol_metadata_copy_peer_public_key (GetCheckedHandle ()), owns: true);
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SslProtocol sec_protocol_metadata_get_negotiated_protocol_version (IntPtr handle);
 
-		public SslProtocol NegotiatedProtocolVersion => sec_protocol_metadata_get_negotiated_protocol_version (GetHandle ());
+		public SslProtocol NegotiatedProtocolVersion => sec_protocol_metadata_get_negotiated_protocol_version (GetCheckedHandle ());
 
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SslCipherSuite sec_protocol_metadata_get_negotiated_ciphersuite (IntPtr handle);
 
-		public SslCipherSuite NegotiatedCipherSuite => sec_protocol_metadata_get_negotiated_ciphersuite (GetHandle ());
+		public SslCipherSuite NegotiatedCipherSuite => sec_protocol_metadata_get_negotiated_ciphersuite (GetCheckedHandle ());
 
 		[DllImport (Constants.SecurityLibrary)]
 		extern static byte sec_protocol_metadata_get_early_data_accepted (IntPtr handle);
 
-		public bool EarlyDataAccepted => sec_protocol_metadata_get_early_data_accepted (GetHandle ()) != 0;
+		public bool EarlyDataAccepted => sec_protocol_metadata_get_early_data_accepted (GetCheckedHandle ()) != 0;
 
 		//
 		// MISSING: all the block APIs

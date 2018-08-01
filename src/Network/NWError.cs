@@ -30,19 +30,19 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern NWErrorDomain nw_error_get_error_domain (IntPtr error);
 
-		public NWErrorDomain ErrorDomain => nw_error_get_error_domain (GetHandle());
+		public NWErrorDomain ErrorDomain => nw_error_get_error_domain (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern /* int */ int nw_error_get_error_code (IntPtr handle);
 
-		public int ErrorCode => nw_error_get_error_code (GetHandle());
+		public int ErrorCode => nw_error_get_error_code (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_error_copy_cf_error (IntPtr error);
 
 		public CFException CFError {
 			get {
-				return CFException.FromCFError (nw_error_copy_cf_error (GetHandle()), true);
+				return CFException.FromCFError (nw_error_copy_cf_error (GetCheckedHandle ()), true);
 			}
 		}
 	}

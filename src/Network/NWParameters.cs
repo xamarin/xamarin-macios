@@ -198,7 +198,7 @@ namespace Network {
 
 		public NWParameters Clone ()
 		{
-			return new NWParameters (nw_parameters_copy (GetHandle()), owns: true);
+			return new NWParameters (nw_parameters_copy (GetCheckedHandle ()), owns: true);
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -210,8 +210,8 @@ namespace Network {
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWMultiPathService MultipathService {
-			get => nw_parameters_get_multipath_service (GetHandle());
-			set => nw_parameters_set_multipath_service (GetHandle(), value);
+			get => nw_parameters_get_multipath_service (GetCheckedHandle ());
+			set => nw_parameters_set_multipath_service (GetCheckedHandle (), value);
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -219,7 +219,7 @@ namespace Network {
 		static extern IntPtr nw_parameters_copy_default_protocol_stack (nw_parameters_t parameters);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public NWProtocolStack ProtocolStack => new NWProtocolStack (nw_parameters_copy_default_protocol_stack (GetHandle()), owns: true);
+		public NWProtocolStack ProtocolStack => new NWProtocolStack (nw_parameters_copy_default_protocol_stack (GetCheckedHandle ()), owns: true);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
@@ -232,8 +232,8 @@ namespace Network {
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public bool LocalOnly {
-			get => nw_parameters_get_local_only (GetHandle());
-			set => nw_parameters_set_local_only (GetHandle(), value);
+			get => nw_parameters_get_local_only (GetCheckedHandle ());
+			set => nw_parameters_set_local_only (GetCheckedHandle (), value);
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -247,8 +247,8 @@ namespace Network {
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public bool PreferNoProxy {
-			get => nw_parameters_get_prefer_no_proxy (GetHandle());
-			set => nw_parameters_set_prefer_no_proxy (GetHandle(), value);
+			get => nw_parameters_get_prefer_no_proxy (GetCheckedHandle ());
+			set => nw_parameters_set_prefer_no_proxy (GetCheckedHandle (), value);
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -260,8 +260,8 @@ namespace Network {
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWParametersExpiredDnsBehavior ExpiredDnsBehavior {
-			get => nw_parameters_get_expired_dns_behavior (GetHandle());
-			set => nw_parameters_set_expired_dns_behavior (GetHandle(), value);
+			get => nw_parameters_get_expired_dns_behavior (GetCheckedHandle ());
+			set => nw_parameters_set_expired_dns_behavior (GetCheckedHandle (), value);
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -271,7 +271,7 @@ namespace Network {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void RequireInterface (NWInterface iface)
 		{
-			nw_parameters_require_interface (GetHandle(), iface == null ? IntPtr.Zero : iface.handle);
+			nw_parameters_require_interface (GetCheckedHandle (), iface == null ? IntPtr.Zero : iface.handle);
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -281,12 +281,12 @@ namespace Network {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWInterface Interface {
 			get {
-				var iface = nw_parameters_copy_required_interface (GetHandle());
+				var iface = nw_parameters_copy_required_interface (GetCheckedHandle ());
 
 				if (iface == IntPtr.Zero)
 					return null;
 
-				return new NWInterface (GetHandle(), owns: true);
+				return new NWInterface (GetCheckedHandle (), owns: true);
 			}
 		}
 
@@ -300,7 +300,7 @@ namespace Network {
 			if (iface == null)
 				throw new ArgumentNullException (nameof (iface));
 
-			nw_parameters_prohibit_interface (GetHandle(), iface.handle);
+			nw_parameters_prohibit_interface (GetCheckedHandle (), iface.handle);
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -310,7 +310,7 @@ namespace Network {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void ClearProhibitedInterfaces ()
 		{
-			nw_parameters_clear_prohibited_interfaces (GetHandle());
+			nw_parameters_clear_prohibited_interfaces (GetCheckedHandle ());
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -323,8 +323,8 @@ namespace Network {
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWInterfaceType RequiredInterfaceType {
-			get => nw_parameters_get_required_interface_type (GetHandle());
-			set => nw_parameters_set_required_interface_type (GetHandle(), value);
+			get => nw_parameters_get_required_interface_type (GetCheckedHandle ());
+			set => nw_parameters_set_required_interface_type (GetCheckedHandle (), value);
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -334,7 +334,7 @@ namespace Network {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void ProhibitInterfaceType (NWInterfaceType ifaceType)
 		{
-			nw_parameters_prohibit_interface_type (GetHandle(), ifaceType);
+			nw_parameters_prohibit_interface_type (GetCheckedHandle (), ifaceType);
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -344,7 +344,7 @@ namespace Network {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void ClearProhibitedInterfaceTypes ()
 		{
-			nw_parameters_clear_prohibited_interface_types (GetHandle());
+			nw_parameters_clear_prohibited_interface_types (GetCheckedHandle ());
 		}
 
 		delegate bool nw_parameters_iterate_interfaces_block_t (IntPtr block, IntPtr iface);
@@ -377,7 +377,7 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_iterateProhibitedHandler, iterationCallback);
 
-				nw_parameters_iterate_prohibited_interfaces (GetHandle(), (void*) block_ptr_handler);
+				nw_parameters_iterate_prohibited_interfaces (GetCheckedHandle (), (void*) block_ptr_handler);
 				block_handler.CleanupBlock ();
 			}
 		}
@@ -408,7 +408,7 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_IterateProhibitedTypeHandler, callback);
 
-				nw_parameters_iterate_prohibited_interface_types (GetHandle(), (void*) block_ptr_handler);
+				nw_parameters_iterate_prohibited_interface_types (GetCheckedHandle (), (void*) block_ptr_handler);
 				block_handler.CleanupBlock ();
 			}
 		}
@@ -424,8 +424,8 @@ namespace Network {
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public bool ProhibitExpensive {
-			get => nw_parameters_get_prohibit_expensive (GetHandle());
-			set => nw_parameters_set_prohibit_expensive (GetHandle(), value);
+			get => nw_parameters_get_prohibit_expensive (GetCheckedHandle ());
+			set => nw_parameters_set_prohibit_expensive (GetCheckedHandle (), value);
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -439,8 +439,8 @@ namespace Network {
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public bool ReuseLocalAddress {
-			get => nw_parameters_get_reuse_local_address (GetHandle());
-			set => nw_parameters_set_reuse_local_address (GetHandle(), value);
+			get => nw_parameters_get_reuse_local_address (GetCheckedHandle ());
+			set => nw_parameters_set_reuse_local_address (GetCheckedHandle (), value);
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -454,8 +454,8 @@ namespace Network {
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public bool FastOpenEnabled {
-			get => nw_parameters_get_fast_open_enabled (GetHandle());
-			set => nw_parameters_set_fast_open_enabled (GetHandle(), value);
+			get => nw_parameters_get_fast_open_enabled (GetCheckedHandle ());
+			set => nw_parameters_set_fast_open_enabled (GetCheckedHandle (), value);
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -468,8 +468,8 @@ namespace Network {
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWServiceClass ServiceClass {
-			get => nw_parameters_get_service_class (GetHandle());
-			set => nw_parameters_set_service_class (GetHandle(), value);
+			get => nw_parameters_get_service_class (GetCheckedHandle ());
+			set => nw_parameters_set_service_class (GetCheckedHandle (), value);
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -483,7 +483,7 @@ namespace Network {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWEndpoint LocalEndpoint {
 			get {
-				var x = nw_parameters_copy_local_endpoint (GetHandle());
+				var x = nw_parameters_copy_local_endpoint (GetCheckedHandle ());
 				if (x == IntPtr.Zero)
 					return null;
 
@@ -491,7 +491,7 @@ namespace Network {
 			}
 
 			set {
-				nw_parameters_set_local_endpoint (GetHandle(), value == null ? IntPtr.Zero : value.handle);
+				nw_parameters_set_local_endpoint (GetCheckedHandle (), value == null ? IntPtr.Zero : value.handle);
 			}
 		}
 	}

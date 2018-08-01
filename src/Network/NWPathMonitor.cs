@@ -43,14 +43,14 @@ namespace Network {
 		extern static void nw_path_monitor_cancel (IntPtr handle);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void Cancel () => nw_path_monitor_cancel (GetHandle());
+		public void Cancel () => nw_path_monitor_cancel (GetCheckedHandle ());
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_path_monitor_start (IntPtr handle);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public void Start () => nw_path_monitor_start (GetHandle());
+		public void Start () => nw_path_monitor_start (GetCheckedHandle ());
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
@@ -61,7 +61,7 @@ namespace Network {
 		{
 			if (queue == null)
 				throw new ArgumentNullException (nameof (queue));
-			nw_path_monitor_set_queue (GetHandle(), queue.handle);
+			nw_path_monitor_set_queue (GetCheckedHandle (), queue.handle);
 		}
 	}
 }

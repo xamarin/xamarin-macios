@@ -80,7 +80,7 @@ namespace CoreFoundation {
 
 		void Throw () => throw new ObjectDisposedException (GetType ().ToString ());
 
-		internal IntPtr GetHandle ()
+		internal IntPtr GetCheckedHandle ()
 		{
 			if (handle == IntPtr.Zero)
 				Throw ();

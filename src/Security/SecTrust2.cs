@@ -43,6 +43,6 @@ namespace Security {
 		extern static IntPtr sec_trust_copy_ref (IntPtr handle);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public SecTrust Trust => new SecTrust (sec_trust_copy_ref (GetHandle ()), owns: true);
+		public SecTrust Trust => new SecTrust (sec_trust_copy_ref (GetCheckedHandle ()), owns: true);
 	}
 }

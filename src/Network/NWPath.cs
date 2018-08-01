@@ -28,44 +28,44 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		extern static NWPathStatus nw_path_get_status (IntPtr handle);
 
-		public NWPathStatus Status => nw_path_get_status (GetHandle());
+		public NWPathStatus Status => nw_path_get_status (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs(UnmanagedType.U1)]
 		extern static bool nw_path_is_expensive (IntPtr handle);
 
-		public bool IsExpensive => nw_path_is_expensive (GetHandle());
+		public bool IsExpensive => nw_path_is_expensive (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs(UnmanagedType.U1)]
 		extern static bool nw_path_has_ipv4 (IntPtr handle);
 
-		public bool HasIPV4 => nw_path_has_ipv4 (GetHandle());
+		public bool HasIPV4 => nw_path_has_ipv4 (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs(UnmanagedType.U1)]
 		extern static bool nw_path_has_ipv6 (IntPtr handle);
 
-		public bool HasIPV6 => nw_path_has_ipv6 (GetHandle());
+		public bool HasIPV6 => nw_path_has_ipv6 (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs(UnmanagedType.U1)]
 		extern static bool nw_path_has_dns (IntPtr handle);
 
-		public bool HasDns => nw_path_has_dns (GetHandle());
+		public bool HasDns => nw_path_has_dns (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs(UnmanagedType.U1)]
 		extern static bool nw_path_uses_interface_type (IntPtr handle, NWInterfaceType type);
 
-		public bool UsesInterfaceType (NWInterfaceType type) => nw_path_uses_interface_type (GetHandle(), type);
+		public bool UsesInterfaceType (NWInterfaceType type) => nw_path_uses_interface_type (GetCheckedHandle (), type);
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_path_copy_effective_local_endpoint (IntPtr handle);
 
 		public NWEndpoint EffectiveLocalEndpoint {
 			get {
-				var x = nw_path_copy_effective_local_endpoint (GetHandle());
+				var x = nw_path_copy_effective_local_endpoint (GetCheckedHandle ());
 				if (x == IntPtr.Zero)
 					return null;
 				return new NWEndpoint (x, owns: true);
@@ -77,7 +77,7 @@ namespace Network {
 
 		public NWEndpoint EffectiveRemoteEndpoint {
 			get {
-				var x = nw_path_copy_effective_remote_endpoint (GetHandle());
+				var x = nw_path_copy_effective_remote_endpoint (GetCheckedHandle ());
 				if (x == IntPtr.Zero)
 					return null;
 				return new NWEndpoint (x, owns: true);
@@ -93,7 +93,7 @@ namespace Network {
 			if (other == null)
 				return false;
 
-			return nw_path_is_equal (GetHandle(), other.handle);
+			return nw_path_is_equal (GetCheckedHandle (), other.handle);
 		}
 
 		delegate void nw_path_enumerate_interfaces_block_t (IntPtr block, IntPtr iface);
@@ -121,7 +121,7 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_Enumerator, callback);
 
-				nw_path_enumerate_interfaces (GetHandle(), (void*) block_ptr_handler);
+				nw_path_enumerate_interfaces (GetCheckedHandle (), (void*) block_ptr_handler);
 				block_handler.CleanupBlock ();
 			}
 		}

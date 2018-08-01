@@ -85,23 +85,23 @@ namespace Network {
 			if (queue == null)
 				throw new ArgumentNullException (nameof (queue));
 
-			nw_listener_set_queue (GetHandle(), queue.handle);
+			nw_listener_set_queue (GetCheckedHandle (), queue.handle);
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static ushort nw_listener_get_port (IntPtr listener);
 
-		public ushort Port => nw_listener_get_port (GetHandle());
+		public ushort Port => nw_listener_get_port (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_listener_start (IntPtr handle);
 
-		public void Start () => nw_listener_start (GetHandle());
+		public void Start () => nw_listener_start (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_listener_cancel (IntPtr handle);
 
-		public void Cancel () => nw_listener_cancel (GetHandle());
+		public void Cancel () => nw_listener_cancel (GetCheckedHandle ());
 
 		delegate void nw_listener_state_changed_handler_t (IntPtr block, NWListenerState state, IntPtr nwerror);
 		static nw_listener_state_changed_handler_t static_ListenerStateChanged = TrampolineListenerStateChanged;
@@ -125,7 +125,7 @@ namespace Network {
 		{
 			unsafe {
 				if (callback == null){
-					nw_listener_set_state_changed_handler (GetHandle(), null);
+					nw_listener_set_state_changed_handler (GetCheckedHandle (), null);
 					return;
 				}
 
@@ -133,7 +133,7 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_ListenerStateChanged, callback);
 
-				nw_listener_set_state_changed_handler (GetHandle(), (void*) block_ptr_handler);
+				nw_listener_set_state_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
 				block_handler.CleanupBlock ();
 			}
 		}
@@ -159,7 +159,7 @@ namespace Network {
 		{
 			unsafe {
 				if (callback == null){
-					nw_listener_set_new_connection_handler (GetHandle(), null);
+					nw_listener_set_new_connection_handler (GetCheckedHandle (), null);
 					return;
 				}
 
@@ -167,7 +167,7 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_NewConnection, callback);
 
-				nw_listener_set_new_connection_handler (GetHandle(), (void*) block_ptr_handler);
+				nw_listener_set_new_connection_handler (GetCheckedHandle (), (void*) block_ptr_handler);
 				block_handler.CleanupBlock ();
 			}
 		}
@@ -196,7 +196,7 @@ namespace Network {
 		{
 			unsafe {
 				if (callback == null){
-					nw_listener_set_advertised_endpoint_changed_handler (GetHandle(), null);
+					nw_listener_set_advertised_endpoint_changed_handler (GetCheckedHandle (), null);
 					return;
 				}
 
@@ -204,7 +204,7 @@ namespace Network {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_AdvertisedEndpointChangedHandler, callback);
 
-				nw_listener_set_advertised_endpoint_changed_handler (GetHandle(), (void*) block_ptr_handler);
+				nw_listener_set_advertised_endpoint_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
 				block_handler.CleanupBlock ();
 			}
 		}
@@ -214,7 +214,7 @@ namespace Network {
 
 		public void SetAdvertiseDescriptor (NWAdvertiseDescriptor descriptor)
 		{
-			nw_listener_set_advertise_descriptor (GetHandle(), descriptor == null ? IntPtr.Zero : descriptor.handle);
+			nw_listener_set_advertise_descriptor (GetCheckedHandle (), descriptor == null ? IntPtr.Zero : descriptor.handle);
 		}
 	}
 }
