@@ -286,7 +286,7 @@ namespace Network {
 				if (iface == IntPtr.Zero)
 					return null;
 
-				return new NWInterface (GetCheckedHandle (), owns: true);
+				return new NWInterface (iface, owns: true);
 			}
 		}
 
