@@ -34,7 +34,7 @@ namespace Security {
 			if (identity == null)
 				throw new ArgumentNullException (nameof (identity));
 
-			Handle = sec_identity_create (identity.Handle);
+			InitializeHandle (sec_identity_create (identity.Handle));
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
@@ -47,7 +47,7 @@ namespace Security {
 			if (certificates == null)
 				throw new ArgumentNullException (nameof (certificates));
 			using (var nsarray = NSArray.FromObjects (certificates))
-				Handle = sec_identity_create_with_certificates (identity.Handle, nsarray.Handle);
+				InitializeHandle (sec_identity_create_with_certificates (identity.Handle, nsarray.Handle));
 		}
 
 		[DllImport (Constants.SecurityLibrary)]

@@ -184,7 +184,7 @@ namespace Security {
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (Trampolines.SDSecProtocolKeyUpdate.Handler, keyUpdate);
 
-				sec_protocol_options_set_key_update_block (handle, (IntPtr)((void*) block_ptr_handler), keyUpdateQueue.Handle);
+				sec_protocol_options_set_key_update_block (Handle, (IntPtr)((void*) block_ptr_handler), keyUpdateQueue.Handle);
 				block_handler.CleanupBlock ();
 			}
 		}

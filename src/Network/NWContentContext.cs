@@ -52,7 +52,7 @@ namespace Network {
 		{
 			if (contextIdentifier == null)
 				throw new ArgumentNullException (nameof (contextIdentifier));
-			handle = nw_content_context_create (contextIdentifier);
+			InitializeHandle (nw_content_context_create (contextIdentifier));
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -133,7 +133,7 @@ namespace Network {
 		{
 			if (protocolDefinition == null)
 				throw new ArgumentNullException (nameof (protocolDefinition));
-			var x = nw_content_context_copy_protocol_metadata (GetCheckedHandle (), protocolDefinition.handle);
+			var x = nw_content_context_copy_protocol_metadata (GetCheckedHandle (), protocolDefinition.Handle);
 			if (x == IntPtr.Zero)
 				return null;
 			return new NWProtocolMetadata (x, owns: true);

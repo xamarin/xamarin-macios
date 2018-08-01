@@ -25,7 +25,7 @@ namespace Network {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWPathMonitor ()
 		{
-			handle = nw_path_monitor_create ();
+			InitializeHandle (nw_path_monitor_create ());
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -35,7 +35,7 @@ namespace Network {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWPathMonitor (NWInterfaceType interfaceType)
 		{
-			handle = nw_path_monitor_create_with_type (interfaceType);
+			InitializeHandle (nw_path_monitor_create_with_type (interfaceType));
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -61,7 +61,7 @@ namespace Network {
 		{
 			if (queue == null)
 				throw new ArgumentNullException (nameof (queue));
-			nw_path_monitor_set_queue (GetCheckedHandle (), queue.handle);
+			nw_path_monitor_set_queue (GetCheckedHandle (), queue.Handle);
 		}
 	}
 }

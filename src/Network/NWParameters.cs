@@ -189,7 +189,7 @@ namespace Network {
 
 		public NWParameters ()
 		{
-			handle = nw_parameters_create ();
+			InitializeHandle (nw_parameters_create ());
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -300,7 +300,7 @@ namespace Network {
 			if (iface == null)
 				throw new ArgumentNullException (nameof (iface));
 
-			nw_parameters_prohibit_interface (GetCheckedHandle (), iface.handle);
+			nw_parameters_prohibit_interface (GetCheckedHandle (), iface.Handle);
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]

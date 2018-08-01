@@ -39,7 +39,7 @@ namespace Network {
 			if (port == null)
 				throw new ArgumentNullException (nameof (port));
 
-			handle = nw_listener_create_with_port (port, parameters.handle);
+			handle = nw_listener_create_with_port (port, parameters.Handle);
 			if (handle == IntPtr.Zero)
 				return null;
 			return new NWListener (handle, owns: true);
@@ -55,7 +55,7 @@ namespace Network {
 			if (parameters == null)
 				throw new ArgumentNullException (nameof (parameters));
 
-			handle = nw_listener_create (parameters.handle);
+			handle = nw_listener_create (parameters.Handle);
 			if (handle == IntPtr.Zero)
 				return null;
 			return new NWListener (handle, owns: true);
@@ -71,7 +71,7 @@ namespace Network {
 			if (connection == null)
 				throw new ArgumentNullException (nameof (connection));
 
-			var handle = nw_listener_create_with_connection (connection.handle, parameters.handle);
+			var handle = nw_listener_create_with_connection (connection.Handle, parameters.Handle);
 			if (handle == IntPtr.Zero)
 				return null;
 			return new NWListener (handle, owns: true);

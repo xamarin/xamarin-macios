@@ -53,7 +53,7 @@ namespace Network {
 				throw new ArgumentNullException (nameof (endpoint));
 			if (parameters == null)
 				throw new ArgumentNullException (nameof (parameters));
-			handle = nw_connection_create (endpoint.handle, parameters.handle);
+			InitializeHandle (nw_connection_create (endpoint.Handle, parameters.Handle));
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -481,7 +481,7 @@ namespace Network {
 			if (definition == null)
 				throw new ArgumentNullException (nameof (definition));
 
-			var x = nw_connection_copy_protocol_metadata (GetCheckedHandle (), definition.handle);
+			var x = nw_connection_copy_protocol_metadata (GetCheckedHandle (), definition.Handle);
 			if (x == IntPtr.Zero)
 				return null;
 			return new NWProtocolMetadata (x, owns: true);

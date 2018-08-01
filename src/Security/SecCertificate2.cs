@@ -31,7 +31,7 @@ namespace Security {
 		{
 			if (certificate == null)
 				throw new ArgumentNullException (nameof (certificate));
-			handle = sec_certificate_create (certificate.Handle);
+			InitializeHandle (sec_certificate_create (certificate.Handle));
 		}
 
 		[DllImport (Constants.SecurityLibrary)]

@@ -28,7 +28,7 @@ namespace CoreFoundation {
 	// systems.
 	//
 	public abstract class NativeObject : INativeObject, IDisposable {
-		internal IntPtr handle;
+		IntPtr handle;
 		public IntPtr Handle {
 			get => handle;
 			protected set => InitializeHandle (value);

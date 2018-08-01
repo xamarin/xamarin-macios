@@ -93,7 +93,7 @@ namespace Network {
 			if (other == null)
 				return false;
 
-			return nw_path_is_equal (GetCheckedHandle (), other.handle);
+			return nw_path_is_equal (GetCheckedHandle (), other.Handle);
 		}
 
 		delegate void nw_path_enumerate_interfaces_block_t (IntPtr block, IntPtr iface);
