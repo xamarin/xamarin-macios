@@ -40,14 +40,13 @@ namespace Network {
 	//
 	public delegate void NWConnectionReceiveDispatchDataCompletion (DispatchData data, NWContentContext context, bool isComplete, NWError error);
 	
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	public class NWConnection : NativeObject {
 		public NWConnection (IntPtr handle, bool owns) : base (handle, owns) {} 
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern nw_connection_t nw_connection_create (nw_endpoint_t endpoint, nw_parameters_t parameters);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWConnection (NWEndpoint endpoint, NWParameters parameters)
 		{
 			if (endpoint == null)
@@ -57,11 +56,9 @@ namespace Network {
 			handle = nw_connection_create (endpoint.handle, parameters.handle);
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern nw_endpoint_t nw_connection_copy_endpoint (nw_connection_t connection);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWEndpoint Endpoint {
 			get {
 				var x = nw_connection_copy_endpoint (GetHandle ());
@@ -71,11 +68,9 @@ namespace Network {
 			}
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern nw_parameters_t nw_connection_copy_parameters (nw_connection_t connection);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWParameters Parameters {
 			get {
 				var x = nw_connection_copy_parameters (GetHandle());
@@ -99,11 +94,9 @@ namespace Network {
 			}
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern void nw_connection_set_state_changed_handler (nw_connection_t connection, void *handler);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public unsafe void SetStateChangeHandler (Action<NWConnectionState,NWError> stateHandler)
 		{
@@ -137,11 +130,9 @@ namespace Network {
 			}
 		}
 		
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe void nw_connection_set_viability_changed_handler  (IntPtr handle, void *callback);
 		
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public unsafe void SetBooleanChangeHandler (Action<bool> callback)
 		{
@@ -161,11 +152,9 @@ namespace Network {
 			}
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe void nw_connection_set_better_path_available_handler (IntPtr handle, void *callback);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public unsafe void SetBetterPathAvailableHandler (Action<bool> callback)
 		{
@@ -199,11 +188,9 @@ namespace Network {
 			}
 		}
 		
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe void nw_connection_set_path_changed_handler (IntPtr handle, void *callback);
 		
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetPathChangedHandler (Action<NWPath> callback)
 		{
@@ -219,11 +206,9 @@ namespace Network {
 			}
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_connection_set_queue (IntPtr handle, IntPtr queue);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void SetQueue (DispatchQueue queue)
 		{
 			if (queue == null)
@@ -231,39 +216,29 @@ namespace Network {
 			nw_connection_set_queue (GetHandle(), queue.handle);
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_connection_start (IntPtr handle);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void Start () => nw_connection_start (GetHandle());
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_connection_restart (IntPtr handle);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void Restart () => nw_connection_restart (GetHandle());
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_connection_cancel (IntPtr handle);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void Cancel () => nw_connection_cancel (GetHandle());
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_connection_force_cancel (IntPtr handle);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void ForceCancel () => nw_connection_force_cancel (GetHandle());
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_connection_cancel_current_endpoint (IntPtr handle);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void CancelCurrentEndpoint () => nw_connection_cancel_current_endpoint (GetHandle());
 
 		delegate void nw_connection_receive_completion_t (IntPtr block,
@@ -326,12 +301,10 @@ namespace Network {
 			}
 		}
 		
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe void nw_connection_receive (IntPtr handle, uint minimumIncompleteLength, uint maximumLength, void *callback);
 		
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void Receive (uint minimumIncompleteLength, uint maximumLength, NWConnectionReceiveCompletion callback)
 		{
 			if (callback == null)
@@ -350,7 +323,6 @@ namespace Network {
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void ReceiveData (uint minimumIncompleteLength, uint maximumLength, NWConnectionReceiveDispatchDataCompletion callback)
 		{
 			if (callback == null)
@@ -368,12 +340,10 @@ namespace Network {
 			}
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe void nw_connection_receive_message (IntPtr handle, void *callback);
 		
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void ReceiveMessage (NWConnectionReceiveCompletion callback)
 		{
 			if (callback == null)
@@ -392,7 +362,6 @@ namespace Network {
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void ReceiveMessageData (NWConnectionReceiveDispatchDataCompletion callback)
 		{
 			if (callback == null)
@@ -425,7 +394,6 @@ namespace Network {
 			}
 		}
 		
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe void nw_connection_send (IntPtr handle,
 							      IntPtr dispatchData,
@@ -448,7 +416,6 @@ namespace Network {
 					    
 		}
 		
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void Send (byte [] buffer, NWContentContext context, bool isComplete, Action<NWError> callback)
 		{
 			DispatchData d = null;
@@ -458,7 +425,6 @@ namespace Network {
 			Send (d, context, isComplete, callback);
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void Send (byte [] buffer, int start, int length, NWContentContext context, bool isComplete, Action<NWError> callback)
 		{
 			DispatchData d = null;
@@ -468,7 +434,6 @@ namespace Network {
 			Send (d, context, isComplete, callback);
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void Send (DispatchData buffer, NWContentContext context, bool isComplete, Action<NWError> callback)
 		{
@@ -499,7 +464,6 @@ namespace Network {
 			return _nw_connection_send_idempotent_content;
 		}
 		
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public unsafe void SendIdempotent (DispatchData buffer, NWContentContext context, bool isComplete)
 		{
 			if (context == null)
@@ -508,7 +472,6 @@ namespace Network {
 			LowLevelSend (GetHandle(), buffer, context.Handle, isComplete, (void *) NW_CONNECTION_SEND_IDEMPOTENT_CONTENT ());
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void SendIdempotent (byte [] buffer, NWContentContext context, bool isComplete)
 		{
 			DispatchData d = null;
@@ -518,18 +481,14 @@ namespace Network {
 			SendIdempotent (buffer, context, isComplete);
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static string nw_connection_copy_description (IntPtr handle);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public string Description => nw_connection_copy_description (GetHandle());
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_connection_copy_current_path (IntPtr handle);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWPath CurrentPath {
 			get {
 				var x = nw_connection_copy_current_path (GetHandle());
@@ -539,11 +498,9 @@ namespace Network {
 			}
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_connection_copy_protocol_metadata (IntPtr handle, IntPtr protocolDefinition);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWProtocolMetadata GetProtocolMetadata (NWProtocolDefinition definition)
 		{
 			if (definition == null)
@@ -555,17 +512,14 @@ namespace Network {
 			return new NWProtocolMetadata (x, owns: true);
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static uint nw_connection_get_maximum_datagram_size (IntPtr handle);
 
 		public uint MaximumDatagramSize => nw_connection_get_maximum_datagram_size (GetHandle());
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_connection_batch (IntPtr handle, IntPtr callback_block);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void Batch (Action method)
 		{
 			BlockLiteral.SimpleCall (method, (arg)=> nw_connection_batch (GetHandle(), arg));

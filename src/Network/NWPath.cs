@@ -21,61 +21,48 @@ namespace Network {
 		Satisfiable = 3
 	}
 	
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	public class NWPath : NativeObject {
 		public NWPath (IntPtr handle, bool owns) : base (handle, owns) {}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static NWPathStatus nw_path_get_status (IntPtr handle);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWPathStatus Status => nw_path_get_status (GetHandle());
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs(UnmanagedType.U1)]
 		extern static bool nw_path_is_expensive (IntPtr handle);
 		
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public bool IsExpensive => nw_path_is_expensive (GetHandle());
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs(UnmanagedType.U1)]
 		extern static bool nw_path_has_ipv4 (IntPtr handle);
 		
-		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public bool HasIpV4 => nw_path_has_ipv4 (GetHandle());
+		public bool HasIPV4 => nw_path_has_ipv4 (GetHandle());
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs(UnmanagedType.U1)]
 		extern static bool nw_path_has_ipv6 (IntPtr handle);
 		
-		[TV (12,0), Mac (10,14), iOS (12,0)]
-		public bool HasIpV6 => nw_path_has_ipv6 (GetHandle());
+		public bool HasIPV6 => nw_path_has_ipv6 (GetHandle());
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs(UnmanagedType.U1)]
 		extern static bool nw_path_has_dns (IntPtr handle);
 		
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public bool HasDns => nw_path_has_dns (GetHandle());
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs(UnmanagedType.U1)]
 		extern static bool nw_path_uses_interface_type (IntPtr handle, NWInterfaceType type);
 		
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public bool UsesInterfaceType (NWInterfaceType type) => nw_path_uses_interface_type (GetHandle(), type);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_path_copy_effective_local_endpoint (IntPtr handle);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWEndpoint EffectiveLocalEndpoint {
 			get {
 				var x = nw_path_copy_effective_local_endpoint (GetHandle());
@@ -85,11 +72,9 @@ namespace Network {
 			}
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_path_copy_effective_remote_endpoint (IntPtr handle);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWEndpoint EffectiveRemoteEndpoint {
 			get {
 				var x = nw_path_copy_effective_remote_endpoint (GetHandle());
@@ -99,12 +84,10 @@ namespace Network {
 			}
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs(UnmanagedType.U1)]
 		extern static bool nw_path_is_equal (IntPtr p1, IntPtr p2);
 		
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public bool EqualsTo (NWPath other)
 		{
 			if (other == null)
@@ -126,12 +109,10 @@ namespace Network {
 			}
 		}
 		
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe void nw_path_enumerate_interfaces (IntPtr handle, void *callback);
 		
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void EnumerateInterfaces (Action<NWInterface> callback)
 		{
 			if (callback == null)

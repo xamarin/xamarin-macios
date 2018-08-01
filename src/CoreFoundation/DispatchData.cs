@@ -75,7 +75,7 @@ namespace CoreFoundation {
 				throw new ArgumentException (nameof (start));
 			if (length < 0)
 				throw new ArgumentException (nameof (length));
-			if (start+length >= buffer.Length)
+			if (start > buffer.Length + length)
 				throw new ArgumentException ("Start+Length go beyond the buffer.Length");
 				
 			var b = Marshal.AllocHGlobal (length);

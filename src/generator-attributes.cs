@@ -863,7 +863,7 @@ public class DefaultEnumValueAttribute : Attribute {
 // the side effects of the binding of the method, rather than the
 // method itself -- for security for example, we generate the
 // proxy code for invoking blocks and callbacks to blocks
-// see 
+// see security.cs for an example
 [AttributeUsage (AttributeTargets.Method)]
 public class NoMethodAttribute : Attribute {
 }

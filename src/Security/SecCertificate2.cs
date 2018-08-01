@@ -24,11 +24,9 @@ namespace Security {
 	public class SecCertificate2 : NativeObject {
 		public SecCertificate2 (IntPtr handle, bool owns) : base (handle, owns) {}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr sec_certificate_create (IntPtr seccertificateHandle);
 		
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public SecCertificate2 (SecCertificate certificate)
 		{
 			if (certificate == null)
@@ -36,11 +34,9 @@ namespace Security {
 			handle = sec_certificate_create (certificate.Handle);
 		}
 		
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr sec_identity_copy_ref (IntPtr handle);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public SecCertificate Certificate => new SecCertificate (sec_identity_copy_ref (GetHandle ()), owns: true);
 	}
 }

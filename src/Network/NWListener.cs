@@ -22,16 +22,15 @@ namespace Network {
 			
 	}
 	
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	public class NWListener : NativeObject {
 		public NWListener (IntPtr handle, bool owns) : base (handle, owns)
 		{
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_listener_create_with_port(string port, IntPtr nwparameters);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public static NWListener Create (string port, NWParameters parameters)
 		{
 			IntPtr handle;
@@ -39,7 +38,7 @@ namespace Network {
 			if (parameters == null)
 				throw new ArgumentNullException (nameof (parameters));
 			if (port == null)
-				throw new ArgumentNullException (nameof (parameters));
+				throw new ArgumentNullException (nameof (port));
 			
 			handle = nw_listener_create_with_port (port, parameters.handle);
 			if (handle == IntPtr.Zero)
@@ -47,11 +46,9 @@ namespace Network {
 			return new NWListener (handle, owns: true);
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_listener_create (IntPtr nwparameters);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public static NWListener Create (NWParameters parameters)
 		{
 			IntPtr handle;
@@ -65,12 +62,10 @@ namespace Network {
 			return new NWListener (handle, owns: true);
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_listener_create_with_connection (IntPtr nwconnection, IntPtr nwparameters);
 
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public static NWListener Create (NWConnection connection, NWParameters parameters)
 		{
 			if (parameters == null)
@@ -84,11 +79,9 @@ namespace Network {
 			return new NWListener (handle, owns: true);
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_listener_set_queue(IntPtr listener, IntPtr queue);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void SetQueue (DispatchQueue queue)
 		{
 			if (queue == null)
@@ -97,26 +90,20 @@ namespace Network {
 			nw_listener_set_queue (GetHandle(), queue.handle);
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static ushort nw_listener_get_port (IntPtr listener);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public ushort Port => nw_listener_get_port (GetHandle());
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void 	nw_listener_start (IntPtr handle);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void Start () => nw_listener_start (GetHandle());
 		
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void 	nw_listener_cancel (IntPtr handle);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void Cancel () => nw_listener_cancel (GetHandle());
 
 		delegate void nw_listener_state_changed_handler_t (IntPtr block, NWListenerState state, IntPtr nwerror);
@@ -128,18 +115,16 @@ namespace Network {
 			var descriptor = (BlockLiteral *) block;
 			var del = (Action<NWListenerState,NWError>) (descriptor->Target);
 			if (del != null){
-				NWError err = nwerror == IntPtr.Zero ? null : new NWError (nwerror, false);
+				NWError err = nwerror == IntPtr.Zero ? null : new NWError (nwerror, owns: false);
 			        del (state, err);
 				err?.Dispose ();
 			}
 		}
 		
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe void nw_listener_set_state_changed_handler (IntPtr handle, void *callback);
 		
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void SetStateChangedHandler (Action<NWListenerState,NWError> callback)
 		{
 			unsafe {
@@ -173,12 +158,10 @@ namespace Network {
 			}
 		}
 		
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe void nw_listener_set_new_connection_handler (IntPtr handle, void *callback);
 		
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void SetNewConnectionHandler (Action<NWConnection> callback)
 		{
 			unsafe {
@@ -215,12 +198,10 @@ namespace Network {
 			}
 		}
 		
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe void nw_listener_set_advertised_endpoint_changed_handler (IntPtr handle, void *callback);
 		
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void SetAdvertisedEndpointChangedHandler (AdvertisedEndpointChanged callback)
 		{
 			unsafe {
@@ -240,11 +221,9 @@ namespace Network {
 			}
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_listener_set_advertise_descriptor (IntPtr handle, IntPtr advertiseDescriptor);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void SetAdvertiseDescriptor (NWAdvertiseDescriptor descriptor)
 		{
 			nw_listener_set_advertise_descriptor (GetHandle(), descriptor == null ? IntPtr.Zero : descriptor.handle);

@@ -17,11 +17,11 @@ using OS_nw_advertise_descriptor=System.IntPtr;
 
 namespace Network {
 	
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	public class NWAdvertiseDescriptor : NativeObject {
 		public NWAdvertiseDescriptor (IntPtr handle, bool owns) : base (handle, owns)
 		{ }
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_advertise_descriptor_create_bonjour_service (string name, string type, string domain);
 
@@ -39,7 +39,6 @@ namespace Network {
 			return new NWAdvertiseDescriptor (x, owns: true);
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_advertise_descriptor_set_txt_record (IntPtr handle, string txtRecord, IntPtr txtLen);
 
@@ -51,16 +50,13 @@ namespace Network {
 			nw_advertise_descriptor_set_txt_record (GetHandle (), txt, (IntPtr) n);
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_advertise_descriptor_set_no_auto_rename (IntPtr handle, [MarshalAs(UnmanagedType.I1)]  bool no_auto_rename);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool nw_advertise_descriptor_get_no_auto_rename (IntPtr handle);
 		
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public bool NoAutoRename {
 			set => nw_advertise_descriptor_set_no_auto_rename (GetHandle (), value);
 			get => nw_advertise_descriptor_get_no_auto_rename (GetHandle ());
