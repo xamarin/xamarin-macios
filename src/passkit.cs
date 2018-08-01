@@ -854,6 +854,10 @@ namespace PassKit {
 		[iOS (12,0), Watch (5,0)]
 		[Field ("PKPaymentNetworkVPay")]
 		NSString VPay { get; }
+
+		[iOS (12,0), Watch (5,0)]
+		[Field ("PKPaymentNetworkEftpos")]
+		NSString Eftpos { get; }
 	}
 
 #if !WATCH
