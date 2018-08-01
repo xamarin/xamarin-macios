@@ -34,7 +34,7 @@ namespace Security {
 			if (identity == null)
 				throw new ArgumentNullException (nameof (identity));
 
-			Handle = sec_identity_create (identity == null ? IntPtr.Zero : identity.Handle);
+			Handle = sec_identity_create (identity.Handle);
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
