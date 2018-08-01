@@ -170,6 +170,8 @@ namespace iAd {
 
 	[Category (allowStaticMembers: true)] // Classic isn't internal so we need this
 	[BaseType (typeof (MPMoviePlayerController))]
+	[Deprecated (PlatformName.iOS, 9,0, message: "Use 'iAdPreroll_AVPlayerViewController' instead.")]
+	[Obsoleted (PlatformName.iOS, 12,0)] // header removed in xcode10 beta5
 	partial interface IAdPreroll {
 
 #if XAMCORE_2_0
