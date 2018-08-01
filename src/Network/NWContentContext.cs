@@ -160,8 +160,8 @@ namespace Network {
 			var descriptor = (BlockLiteral *) block;
 			var del = (Action<NWProtocolDefinition,NWProtocolMetadata>) (descriptor->Target);
 			if (del != null){
-				var pdef = definition == IntPtr.Zero ? null : Runtime.GetINativeObject<NWProtocolDefinition> (definition, owns: true);
-				var meta = metadata == IntPtr.Zero ? null : Runtime.GetINativeObject<NWProtocolMetadata> (metadata, owns: true);
+				var pdef = definition == IntPtr.Zero ? null : new NWProtocolDefinition (definition, owns: true);
+				var meta = metadata == IntPtr.Zero ? null : new NWProtocolMetadata (metadata, owns: true);
 
 				del (pdef, meta);
 				

@@ -105,7 +105,7 @@ namespace Network {
 			var descriptor = (BlockLiteral *) block;
 			var del = (Action<NWInterface>) (descriptor->Target);
 			if (del != null){
-				del (Runtime.GetINativeObject<NWInterface> (iface, owns: false));
+				del (new NWInterface (iface, owns: false));
 			}
 		}
 		

@@ -115,7 +115,7 @@ namespace Network {
 			var descriptor = (BlockLiteral *) block;
 			var del = (Action<NWListenerState,NWError>) (descriptor->Target);
 			if (del != null){
-				NWError err = nwerror == IntPtr.Zero ? null : Runtime.GetINativeObject<NWError> (nwerror, owns: false);
+				NWError err = nwerror == IntPtr.Zero ? null : new NWError (nwerror, owns: false);
 			        del (state, err);
 				err?.Dispose ();
 			}
@@ -153,7 +153,7 @@ namespace Network {
 			var descriptor = (BlockLiteral *) block;
 			var del = (Action<NWConnection>) (descriptor->Target);
 			if (del != null){
-				var nwconnection = Runtime.GetINativeObject<NWConnection> (connection, owns: false);
+				var nwconnection = new NWConnection (connection, owns: false);
 			        del (nwconnection);
 			}
 		}
@@ -192,7 +192,7 @@ namespace Network {
 			var descriptor = (BlockLiteral *) block;
 			var del = (AdvertisedEndpointChanged) (descriptor->Target);
 			if (del != null){
-				var nwendpoint = Runtime.GetINativeObject<NWEndpoint> (endpoint, owns: false);
+				var nwendpoint = new NWEndpoint (endpoint, owns: false);
 			        del (nwendpoint, added != 0 ? true : false);
 				nwendpoint.Dispose ();
 			}

@@ -89,7 +89,7 @@ namespace Network {
                         var descriptor = (BlockLiteral *) block;
                         var del = (Action<NWConnectionState,NWError>) (descriptor->Target);
                         if (del != null){
-				NWError err = error != IntPtr.Zero ? Runtime.GetINativeObject<NWError> (error, owns: false) : null;
+				NWError err = error != IntPtr.Zero ? new NWError (error, owns: false) : null;
                                 del (state, err);
 			}
 		}
@@ -183,7 +183,7 @@ namespace Network {
 			var descriptor = (BlockLiteral *) block;
 			var del = (Action<NWPath>) (descriptor->Target);
 			if (del != null){
-				var x = Runtime.GetINativeObject<NWPath> (path, owns: false);
+				var x = new NWPath (path, owns: false);
 			        del (x);
 			}
 		}
@@ -267,9 +267,9 @@ namespace Network {
 
 				del (bufferAddress,
 				     bufferSize,
-				     contentContext == IntPtr.Zero ? null : Runtime.GetINativeObject<NWContentContext> (contentContext, owns: false),
+				     contentContext == IntPtr.Zero ? null : new NWContentContext (contentContext, owns: false),
 				     isComplete,
-				     error == IntPtr.Zero ? null : Runtime.GetINativeObject<NWError> (error, owns: false));
+				     error == IntPtr.Zero ? null : new NWError (error, owns: false));
 				
 				if (dispatchData != null){
 					dataCopy.Dispose ();
@@ -388,7 +388,7 @@ namespace Network {
 			var descriptor = (BlockLiteral *) block;
 			var del = (Action<NWError>) (descriptor->Target);
 			if (del != null){
-				var err = error == IntPtr.Zero ? null : Runtime.GetINativeObject<NWError> (error, owns: false);
+				var err = error == IntPtr.Zero ? null : new NWError (error, owns: false);
 			        del (err);
 				err?.Dispose ();
 			}
