@@ -25,6 +25,7 @@ using System.Linq;
 using System.Text;
 
 using NUnit.Framework;
+using ARKit;
 
 #if XAMCORE_2_0
 using Foundation;
@@ -526,6 +527,38 @@ namespace Introspection {
 			//}
 
 			return SkipDueToAttribute (type);
+		}
+
+		/// <summary>
+		/// Ensures that all subclasses of a base class that conforms to IARAnchorCopying re-expose its constructor.
+		/// Note: we cannot have constructors in protocols so we have to inline them in every subclass.
+		/// </summary>
+		[Test]
+		public void ARAnchorCopyingCtorTest ()
+		{
+			Errors = 0;
+
+			foreach (Type t in Assembly.GetTypes ()) {
+				// we only care for NSObject subclasses that we expose publicly
+				if (!t.IsPublic || !NSObjectType.IsAssignableFrom (t))
+					continue;
+
+				var base_class = t.BaseType;
+				// NSObject ctor requirements are handled by the generator
+				if (base_class == NSObjectType)
+					continue;
+
+				// We only care about base classes that conform to 'IARAnchorCopying' for now
+				if (!typeof (IARAnchorCopying).IsAssignableFrom (base_class))
+					continue;
+
+				const string arAnchorCtor = "Void .ctor(ARAnchor)";
+				var ctorList = t.GetConstructors ().Select ((ConstructorInfo arg) => arg.ToString ()).ToList ();
+				if (!ctorList.Contains (arAnchorCtor))
+					ReportError ("{0} should re-expose IARAnchorCopying::{1} from IARAnchorCopying", t, arAnchorCtor.Replace ("Void ", String.Empty));
+			}
+
+			Assert.AreEqual (0, Errors, "{0} potential errors found when validating if subclasses of 'ARAnchor' re-expose 'IARAnchorCopying' constructor", Errors);
 		}
 	}
 }
