@@ -166,6 +166,9 @@ namespace TVUIKit {
 		[NullAllowed, Export ("image", ArgumentSemantic.Strong)]
 		UIImage Image { get; set; }
 
+		[Export ("imageView", ArgumentSemantic.Strong)]
+		UIImageView ImageView { get; }
+
 		[NullAllowed, Export ("title")]
 		string Title { get; set; }
 
