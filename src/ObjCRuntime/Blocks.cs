@@ -300,43 +300,6 @@ namespace ObjCRuntime {
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		static extern IntPtr _Block_copy (ref BlockLiteral block);
-
-		delegate void dispatch_block_t (IntPtr block);
-		static dispatch_block_t static_dispatch_block_t = TrampolineDispatchBlock;
-
-		[MonoPInvokeCallback (typeof (dispatch_block_t))]
-		static unsafe void TrampolineDispatchBlock (IntPtr block)
-		{
-			var descriptor = (BlockLiteral *) block;
-			var del = (Action) (descriptor->Target);
-			if (del != null){
-			        del ();
-			}
-		}
-
-		//
-		// Simple method that we can use to wrap methods that need to call a block
-		//
-		// usage:
-		// void MyCallBack () {} 
-		// BlockLiteral.SimpleCall (MyCallBack, (x) => my_PINvokeThatTakesaBlock (x));
-		//  The above will call the unmanaged my_PINvokeThatTakesaBlock method with a block
-		// that when invoked will call MyCallback
-		//
-		internal unsafe static void SimpleCall  (Action callbackToInvoke, Action <IntPtr> pinvoke)
-		{
-			unsafe {
-			        BlockLiteral *block_ptr_handler;
-			        BlockLiteral block_handler;
-			        block_handler = new BlockLiteral ();
-			        block_ptr_handler = &block_handler;
-			        block_handler.SetupBlockUnsafe (static_dispatch_block_t, callbackToInvoke);
-
-				pinvoke ((IntPtr) block_ptr_handler);
-			        block_ptr_handler->CleanupBlock ();
-			}
-		}
-		
 #endif
 	}
 		
