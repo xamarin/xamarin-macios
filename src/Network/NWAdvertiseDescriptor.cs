@@ -25,10 +25,13 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_advertise_descriptor_create_bonjour_service (string name, string type, string domain);
 
-		public static NWAdvertiseDescriptor CreateBonjourService (string name, string type = null, string domain = null)
+		public static NWAdvertiseDescriptor CreateBonjourService (string name, string type, string domain = null)
 		{
 			if (name == null)
 				throw new ArgumentNullException (nameof (name));
+
+			if (type == null)
+				throw new ArgumentNullException (nameof (type));
 
 			var x = nw_advertise_descriptor_create_bonjour_service (name, type, domain);
 			if (x == IntPtr.Zero)

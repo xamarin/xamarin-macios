@@ -1,4 +1,4 @@
-﻿#if !__WATCHOS__
+#if !__WATCHOS__
 
 using System;
 using System.Drawing;
@@ -204,6 +204,7 @@ namespace Introspection {
 			case "AudioComponent":
 			case "AudioUnit":
 			case "AURenderEventEnumerator":
+			case "CFPropertyList":
 			case "CGLayer":
 			case "CMFormatDescription":
 			case "CMAudioFormatDescription":
@@ -426,7 +427,7 @@ namespace Introspection {
 					new CVPixelBufferAttributes (CVPixelFormatType.CV24RGB, 100, 50)
 				);
 			case "NWAdvertiseDescriptor":
-				return NWAdvertiseDescriptor.CreateBonjourService ("sampleName" + DateTime.Now);
+				return NWAdvertiseDescriptor.CreateBonjourService ("sampleName" + DateTime.Now, "_nfs._tcp");
 			case "NWConnection": {
 				var endpoint = NWEndpoint.Create ("www.microsoft.com", "https");
 				var parameters = NWParameters.CreateTcp (configureTcp: null);
