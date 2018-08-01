@@ -285,9 +285,8 @@ namespace Network {
 			var descriptor = (BlockLiteral *) block;
 			var del = (NWConnectionReceiveDispatchDataCompletion) (descriptor->Target);
 			if (del != null) {
-				DispatchData dispatchData = null, dataCopy = null;
+				DispatchData dispatchData = null;
 				IntPtr bufferAddress = IntPtr.Zero;
-				ulong bufferSize = 0;
 
 				if (dispatchDataPtr != IntPtr.Zero)
 					dispatchData = new DispatchData (dispatchDataPtr, owns: false);
