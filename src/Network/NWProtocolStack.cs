@@ -87,7 +87,7 @@ namespace Network {
 		[TV (12, 0), Mac (10, 14), iOS (12, 0)]
 		public NWProtocolOptions TransportProtocol {
 			get => new NWProtocolOptions (nw_protocol_stack_copy_transport_protocol (GetCheckedHandle ()), owns: true);
-			set => nw_protocol_stack_set_transport_protocol (GetCheckedHandle (), value.Handle);
+			set => nw_protocol_stack_set_transport_protocol (GetCheckedHandle (), value.GetHandle ());
 		}
 
 		[TV (12, 0), Mac (10, 14), iOS (12, 0)]

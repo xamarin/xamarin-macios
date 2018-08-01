@@ -271,7 +271,7 @@ namespace Network {
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void RequireInterface (NWInterface iface)
 		{
-			nw_parameters_require_interface (GetCheckedHandle (), iface == null ? IntPtr.Zero : iface.handle);
+			nw_parameters_require_interface (GetCheckedHandle (), iface.GetHandle ());
 		}
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -491,7 +491,7 @@ namespace Network {
 			}
 
 			set {
-				nw_parameters_set_local_endpoint (GetCheckedHandle (), value == null ? IntPtr.Zero : value.handle);
+				nw_parameters_set_local_endpoint (GetCheckedHandle (), value.GetHandle ());
 			}
 		}
 	}

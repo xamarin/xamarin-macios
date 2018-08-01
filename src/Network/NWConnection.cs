@@ -387,7 +387,7 @@ namespace Network {
 		unsafe void LowLevelSend (IntPtr handle, DispatchData buffer, IntPtr contentContext, bool isComplete, void *callback)
 		{
 			nw_connection_send (handle: GetCheckedHandle (),
-					    dispatchData: buffer == null ? IntPtr.Zero : buffer.Handle,
+					    dispatchData: buffer.GetHandle (),
 					    contentContext: contentContext,
 					    isComplete: isComplete,
 					    callback: callback);

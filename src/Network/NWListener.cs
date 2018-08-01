@@ -214,7 +214,7 @@ namespace Network {
 
 		public void SetAdvertiseDescriptor (NWAdvertiseDescriptor descriptor)
 		{
-			nw_listener_set_advertise_descriptor (GetCheckedHandle (), descriptor == null ? IntPtr.Zero : descriptor.handle);
+			nw_listener_set_advertise_descriptor (GetCheckedHandle (), descriptor.GetHandle ());
 		}
 	}
 }

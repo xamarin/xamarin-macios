@@ -121,7 +121,7 @@ namespace Network {
 				return new NWContentContext (h, owns: true);
 			}
 			set {
-				nw_content_context_set_antecedent (GetCheckedHandle (), value == null ? IntPtr.Zero : value.Handle);
+				nw_content_context_set_antecedent (GetCheckedHandle (), value.GetHandle ());
 			}
 		}
 
