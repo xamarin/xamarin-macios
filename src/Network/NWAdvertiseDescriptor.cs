@@ -39,14 +39,14 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_advertise_descriptor_set_txt_record (IntPtr handle, string txtRecord, IntPtr txtLen);
+		static extern void nw_advertise_descriptor_set_txt_record (IntPtr handle, string txtRecord, nuint txtLen);
 
 		public void SetTxtRecord (string txt)
 		{
 			if (txt == null)
 				throw new ArgumentNullException (nameof (txt));
 			var n = System.Text.Encoding.UTF8.GetByteCount (txt);
-			nw_advertise_descriptor_set_txt_record (GetHandle (), txt, (IntPtr) n);
+			nw_advertise_descriptor_set_txt_record (GetHandle (), txt, (nuint) n);
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
