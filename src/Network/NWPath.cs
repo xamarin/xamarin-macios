@@ -100,10 +100,9 @@ namespace Network {
 		static nw_path_enumerate_interfaces_block_t static_Enumerator = TrampolineEnumerator;
 
 		[MonoPInvokeCallback (typeof (nw_path_enumerate_interfaces_block_t))]
-		static unsafe void TrampolineEnumerator (IntPtr block, IntPtr iface)
+		static void TrampolineEnumerator (IntPtr block, IntPtr iface)
 		{
-			var descriptor = (BlockLiteral *) block;
-			var del = (Action<NWInterface>) (descriptor->Target);
+			var del = BlockLiteral.GetTarget<Action<NWInterface>> (block);
 			if (del != null)
 				del (new NWInterface (iface, owns: false));
 		}

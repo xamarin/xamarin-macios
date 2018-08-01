@@ -54,10 +54,9 @@ namespace Network {
 		static nw_parameters_configure_protocol_block_t static_ConfigureHandler = TrampolineConfigureHandler;
 
 		[MonoPInvokeCallback(typeof (nw_parameters_configure_protocol_block_t))]
-		static unsafe void TrampolineConfigureHandler (IntPtr block, IntPtr iface)
+		static void TrampolineConfigureHandler (IntPtr block, IntPtr iface)
 		{
-			var descriptor = (BlockLiteral *) block;
-			var del = (Action<NWProtocolOptions>) (descriptor->Target);
+			var del = BlockLiteral.GetTarget<Action<NWProtocolOptions>> (block);
 			if (del != null) {
 				var x = new NWProtocolOptions (iface, owns: false);
 				del (x);
@@ -353,10 +352,9 @@ namespace Network {
 
 		[MonoPInvokeCallback (typeof (nw_parameters_iterate_interfaces_block_t))]
 		[return: MarshalAs (UnmanagedType.I1)]
-		static unsafe bool TrampolineIterateProhibitedHandler (IntPtr block, IntPtr iface)
+		static bool TrampolineIterateProhibitedHandler (IntPtr block, IntPtr iface)
 		{
-			var descriptor = (BlockLiteral *) block;
-			var del = (Func<NWInterface,bool>) (descriptor->Target);
+			var del = BlockLiteral.GetTarget<Func<NWInterface,bool>> (block);
 			if (del != null) {
 				var x = new NWInterface (iface, owns: false);
 				var ret = del (x);
@@ -391,10 +389,9 @@ namespace Network {
 
 		[MonoPInvokeCallback (typeof (nw_parameters_iterate_interface_types_block_t))]
 		[return: MarshalAs (UnmanagedType.I1)]
-		static unsafe bool TrampolineIterateProhibitedTypeHandler (IntPtr block, NWInterfaceType type)
+		static bool TrampolineIterateProhibitedTypeHandler (IntPtr block, NWInterfaceType type)
 		{
-			var descriptor = (BlockLiteral *) block;
-			var del = (Func<NWInterfaceType,bool>) (descriptor->Target);
+			var del = BlockLiteral.GetTarget<Func<NWInterfaceType,bool>> (block);
 			if (del != null)
 				return del (type);
 			return false;

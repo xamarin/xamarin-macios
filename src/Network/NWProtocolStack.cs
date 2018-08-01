@@ -48,10 +48,9 @@ namespace Network {
 		static nw_protocol_stack_iterate_protocols_block_t static_iterateHandler = TrampolineIterateHandler;
 
 		[MonoPInvokeCallback (typeof (nw_protocol_stack_iterate_protocols_block_t))]
-		static unsafe void TrampolineIterateHandler (IntPtr block, IntPtr options)
+		static void TrampolineIterateHandler (IntPtr block, IntPtr options)
 		{
-			var descriptor = (BlockLiteral *) block;
-			var del = (Action<NWProtocolOptions>) (descriptor->Target);
+			var del = BlockLiteral.GetTarget<Action<NWProtocolOptions>> (block);
 			if (del != null) {
 				var x = new NWProtocolOptions (options, owns: false);
 				del (x);

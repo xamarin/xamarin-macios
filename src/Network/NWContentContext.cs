@@ -155,10 +155,9 @@ namespace Network {
 		static ProtocolIterator static_ProtocolIterator = TrampolineProtocolIterator;
 
 		[MonoPInvokeCallback (typeof (ProtocolIterator))]
-		static unsafe void TrampolineProtocolIterator (IntPtr block, IntPtr definition, IntPtr metadata)
+		static void TrampolineProtocolIterator (IntPtr block, IntPtr definition, IntPtr metadata)
 		{
-			var descriptor = (BlockLiteral *) block;
-			var del = (Action<NWProtocolDefinition,NWProtocolMetadata>) (descriptor->Target);
+			var del = BlockLiteral.GetTarget<Action<NWProtocolDefinition,NWProtocolMetadata>> (block);
 			if (del != null) {
 				var pdef = definition == IntPtr.Zero ? null : new NWProtocolDefinition (definition, owns: true);
 				var meta = metadata == IntPtr.Zero ? null : new NWProtocolMetadata (metadata, owns: true);

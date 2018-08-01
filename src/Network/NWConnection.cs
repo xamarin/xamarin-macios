@@ -84,10 +84,9 @@ namespace Network {
 		static StateChangeCallback static_stateChangeHandler = Trampoline_StateChangeCallback;
 
 		[MonoPInvokeCallback (typeof (StateChangeCallback))]
-		static unsafe void Trampoline_StateChangeCallback (IntPtr block, NWConnectionState state, IntPtr error)
+		static void Trampoline_StateChangeCallback (IntPtr block, NWConnectionState state, IntPtr error)
 		{
-			var descriptor = (BlockLiteral *) block;
-			var del = (Action<NWConnectionState,NWError>) (descriptor->Target);
+			var del = BlockLiteral.GetTarget<Action<NWConnectionState,NWError>> (block);
 			if (del != null) {
 				NWError err = error != IntPtr.Zero ? new NWError (error, owns: false) : null;
 				del (state, err);
@@ -121,10 +120,9 @@ namespace Network {
 		static nw_connection_boolean_event_handler_t static_BooleanChangeHandler = TrampolineBooleanChangeHandler;
 
 		[MonoPInvokeCallback (typeof (nw_connection_boolean_event_handler_t))]
-		static unsafe void TrampolineBooleanChangeHandler (IntPtr block, bool value)
+		static void TrampolineBooleanChangeHandler (IntPtr block, bool value)
 		{
-			var descriptor = (BlockLiteral *) block;
-			var del = (Action<bool>) (descriptor->Target);
+			var del = BlockLiteral.GetTarget<Action<bool>> (block);
 			if (del != null)
 			        del (value);
 		}
@@ -179,10 +177,9 @@ namespace Network {
 		static nw_connection_path_event_handler_t static_PathChanged = TrampolinePathChanged;
 
 		[MonoPInvokeCallback (typeof (nw_connection_path_event_handler_t))]
-		static unsafe void TrampolinePathChanged (IntPtr block, IntPtr path)
+		static void TrampolinePathChanged (IntPtr block, IntPtr path)
 		{
-			var descriptor = (BlockLiteral *) block;
-			var del = (Action<NWPath>) (descriptor->Target);
+			var del = BlockLiteral.GetTarget<Action<NWPath>> (block);
 			if (del != null) {
 				var x = new NWPath (path, owns: false);
 				del (x);
@@ -252,10 +249,9 @@ namespace Network {
 		static nw_connection_receive_completion_t static_ReceiveCompletionDispatchData = TrampolineReceiveCompletionData;
 
 		[MonoPInvokeCallback (typeof (nw_connection_receive_completion_t))]
-		static unsafe void TrampolineReceiveCompletion (IntPtr block, IntPtr dispatchDataPtr, IntPtr contentContext, bool isComplete, IntPtr error)
+		static void TrampolineReceiveCompletion (IntPtr block, IntPtr dispatchDataPtr, IntPtr contentContext, bool isComplete, IntPtr error)
 		{
-			var descriptor = (BlockLiteral *) block;
-			var del = (NWConnectionReceiveCompletion) (descriptor->Target);
+			var del = BlockLiteral.GetTarget<NWConnectionReceiveCompletion> (block);
 			if (del != null) {
 				DispatchData dispatchData = null, dataCopy = null;
 				IntPtr bufferAddress = IntPtr.Zero;
@@ -280,10 +276,9 @@ namespace Network {
 		}
 
 		[MonoPInvokeCallback (typeof (nw_connection_receive_completion_t))]
-		static unsafe void TrampolineReceiveCompletionData (IntPtr block, IntPtr dispatchDataPtr, IntPtr contentContext, bool isComplete, IntPtr error)
+		static void TrampolineReceiveCompletionData (IntPtr block, IntPtr dispatchDataPtr, IntPtr contentContext, bool isComplete, IntPtr error)
 		{
-			var descriptor = (BlockLiteral *) block;
-			var del = (NWConnectionReceiveDispatchDataCompletion) (descriptor->Target);
+			var del = BlockLiteral.GetTarget<NWConnectionReceiveDispatchDataCompletion> (block);
 			if (del != null) {
 				DispatchData dispatchData = null;
 				IntPtr bufferAddress = IntPtr.Zero;
@@ -383,10 +378,9 @@ namespace Network {
 		static nw_connection_send_completion_t static_SendCompletion = TrampolineSendCompletion;
 
 		[MonoPInvokeCallback (typeof (nw_connection_send_completion_t))]
-		static unsafe void TrampolineSendCompletion (IntPtr block, IntPtr error)
+		static void TrampolineSendCompletion (IntPtr block, IntPtr error)
 		{
-			var descriptor = (BlockLiteral *) block;
-			var del = (Action<NWError>) (descriptor->Target);
+			var del = BlockLiteral.GetTarget<Action<NWError>> (block);
 			if (del != null) {
 				var err = error == IntPtr.Zero ? null : new NWError (error, owns: false);
 				del (err);

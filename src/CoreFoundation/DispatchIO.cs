@@ -54,10 +54,9 @@ namespace CoreFoundation {
 		static DispatchReadWrite static_DispatchReadWriteHandler = Trampoline_DispatchReadWriteHandler;
 
 		[MonoPInvokeCallback (typeof (DispatchReadWrite))]
-		static unsafe void Trampoline_DispatchReadWriteHandler (IntPtr block, IntPtr dispatchData, int error)
+		static void Trampoline_DispatchReadWriteHandler (IntPtr block, IntPtr dispatchData, int error)
 		{
-			var descriptor = (BlockLiteral *) block;
-			var del = (DispatchIOHandler) (descriptor->Target);
+			var del = BlockLiteral.GetTarget<DispatchIOHandler> (block);
 			if (del != null) {
 				var dd = dispatchData == IntPtr.Zero ? null : new DispatchData (dispatchData, owns: false);
 				del (dd, error);

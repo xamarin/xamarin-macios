@@ -107,10 +107,9 @@ namespace Network {
 		static nw_listener_state_changed_handler_t static_ListenerStateChanged = TrampolineListenerStateChanged;
 
 		[MonoPInvokeCallback (typeof (nw_listener_state_changed_handler_t))]
-		static unsafe void TrampolineListenerStateChanged (IntPtr block, NWListenerState state, IntPtr nwerror)
+		static void TrampolineListenerStateChanged (IntPtr block, NWListenerState state,  IntPtr nwerror)
 		{
-			var descriptor = (BlockLiteral *) block;
-			var del = (Action<NWListenerState,NWError>) (descriptor->Target);
+			var del = BlockLiteral.GetTarget<Action<NWListenerState,NWError>> (block);
 			if (del != null){
 				NWError err = nwerror == IntPtr.Zero ? null : new NWError (nwerror, owns: false);
 				del (state, err);
@@ -145,10 +144,9 @@ namespace Network {
 		static nw_listener_new_connection_handler_t static_NewConnection = TrampolineNewConnection;
 
 		[MonoPInvokeCallback (typeof (nw_listener_new_connection_handler_t))]
-		static unsafe void TrampolineNewConnection (IntPtr block, IntPtr connection)
+		static void TrampolineNewConnection (IntPtr block, IntPtr connection)
 		{
-			var descriptor = (BlockLiteral *) block;
-			var del = (Action<NWConnection>) (descriptor->Target);
+			var del = BlockLiteral.GetTarget<Action<NWConnection>> (block);
 			if (del != null){
 				var nwconnection = new NWConnection (connection, owns: false);
 			        del (nwconnection);
@@ -184,10 +182,9 @@ namespace Network {
 		public delegate void AdvertisedEndpointChanged (NWEndpoint endpoint, bool added);
 
 		[MonoPInvokeCallback (typeof (nw_listener_advertised_endpoint_changed_handler_t))]
-		static unsafe void TrampolineAdvertisedEndpointChangedHandler (IntPtr block, IntPtr endpoint, byte added)
+		static void TrampolineAdvertisedEndpointChangedHandler (IntPtr block, IntPtr endpoint, byte added)
 		{
-			var descriptor = (BlockLiteral *) block;
-			var del = (AdvertisedEndpointChanged) (descriptor->Target);
+			var del = BlockLiteral.GetTarget<AdvertisedEndpointChanged> (block);
 			if (del != null) {
 				var nwendpoint = new NWEndpoint (endpoint, owns: false);
 				del (nwendpoint, added != 0 ? true : false);

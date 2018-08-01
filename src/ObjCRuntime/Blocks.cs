@@ -232,6 +232,11 @@ namespace ObjCRuntime {
 			return (T) (object) Runtime.GetDelegateForBlock (invoke, typeof (T));
 		}
 
+		public unsafe static T GetTarget<T> (IntPtr block) where T: class /* /* requires C# 7.3+: System.MulticastDelegate */
+		{
+			return (T) ((BlockLiteral *) block)->Target;
+		}
+
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		public static bool IsManagedBlock (IntPtr block)
 		{
