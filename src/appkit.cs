@@ -839,7 +839,12 @@ namespace AppKit {
 	}
 
 	delegate void NSApplicationEnumerateWindowsHandler (NSWindow window, ref bool stop);
+// radar://42781537
+//#if XAMCORE_4_0
+//	delegate void ContinueUserActivityRestorationHandler (NSUserActivityRestoring [] restorableObjects);
+//#else
 	delegate void ContinueUserActivityRestorationHandler (NSObject [] restorableObjects);
+//#endif
 	
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -5323,7 +5328,7 @@ namespace AppKit {
 	
 	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
-	partial interface NSDocument {
+	partial interface NSDocument /* : NSUserActivityRestoring radar://42781537 */ {
 		[Export ("initWithType:error:")]
 		IntPtr Constructor (string typeName, out NSError outError);
 
@@ -5666,6 +5671,7 @@ namespace AppKit {
 		[Export ("updateUserActivityState:")]
 		void UpdateUserActivityState (NSUserActivity userActivity);
 
+		// Should be removed but radar://42781537 - Classes fail to conformsToProtocol despite header declaration
 		[Mac (10,10, onlyOn64 : true)]
 		[Export ("restoreUserActivityState:")]
 		void RestoreUserActivityState (NSUserActivity userActivity);
@@ -12981,7 +12987,7 @@ namespace AppKit {
 
 	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
-	partial interface NSResponder : NSCoding, NSTouchBarProvider {
+	partial interface NSResponder : NSCoding, NSTouchBarProvider /* radar://42781537 , NSUserActivityRestoring */ {
 		[Export ("tryToPerform:with:")]
 		bool TryToPerformwith (Selector anAction, [NullAllowed] NSObject anObject);
 
@@ -13143,6 +13149,7 @@ namespace AppKit {
 		[Export ("updateUserActivityState:")]
 		void UpdateUserActivityState (NSUserActivity userActivity);
 
+		// Should be removed but radar://42781537 - Classes fail to conformsToProtocol despite header declaration
 		[Mac (10,10, onlyOn64 : true)]
 		[Export ("restoreUserActivityState:")]
 		void RestoreUserActivityState (NSUserActivity userActivity);
@@ -13170,6 +13177,15 @@ namespace AppKit {
 		[Export ("encodeRestorableStateWithCoder:backgroundQueue:")]
 		void EncodeRestorableState (NSCoder coder, NSOperationQueue queue);
 	}
+
+// 	[Protocol] // radar://42781537 - Classes fail to conformsToProtocol despite header declaration
+// 	interface NSUserActivityRestoring
+// 	{
+// 		[Mac (10,10)]
+// 		[Abstract]
+// 		[Export ("restoreUserActivityState:")]
+// 		void RestoreUserActivityState (NSUserActivity userActivity);
+// 	}
 
 	[Category]
 	[BaseType (typeof(NSResponder))]
