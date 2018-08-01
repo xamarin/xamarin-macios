@@ -166,10 +166,6 @@ namespace Network {
 
 				pdef?.Dispose ();
 				meta?.Dispose ();
-				if (pdef != null)
-					pdef.Dispose ();
-				if (meta != null)
-					meta.Dispose ();
 			}
 		}
 
