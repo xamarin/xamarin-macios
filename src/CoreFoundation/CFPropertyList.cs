@@ -49,7 +49,7 @@ namespace CoreFoundation
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		static extern IntPtr CFPropertyListCreateWithData (IntPtr allocator, IntPtr dataRef, CFPropertyListMutabilityOptions options, out CFPropertyListFormat format, /* CFError * */ out IntPtr error);
+		static extern IntPtr CFPropertyListCreateWithData (IntPtr allocator, IntPtr dataRef, nuint options, out nint format, /* CFError * */ out IntPtr error);
 
 		public static (CFPropertyList PropertyList, CFPropertyListFormat Format, NSError Error)
 			FromData (NSData data, CFPropertyListMutabilityOptions options = CFPropertyListMutabilityOptions.Immutable)
@@ -59,40 +59,40 @@ namespace CoreFoundation
 			if (data.Handle == IntPtr.Zero)
 				throw new ObjectDisposedException (nameof (data));
 
-			CFPropertyListFormat fmt;
+			nint fmt;
 			IntPtr error;
-			var ret = CFPropertyListCreateWithData (IntPtr.Zero, data.Handle, options, out fmt, out error);
+			var ret = CFPropertyListCreateWithData (IntPtr.Zero, data.Handle, (nuint) (ulong) options, out fmt, out error);
 			if (ret != IntPtr.Zero)
-				return (new CFPropertyList (ret, owns: true), fmt, null);
+				return (new CFPropertyList (ret, owns: true), (CFPropertyListFormat) (long) fmt, null);
 			return (null, CFPropertyListFormat.XmlFormat1, new NSError (error));
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static IntPtr CFPropertyListCreateDeepCopy (IntPtr allocator, IntPtr propertyList, CFPropertyListMutabilityOptions mutabilityOption);
+		extern static IntPtr CFPropertyListCreateDeepCopy (IntPtr allocator, IntPtr propertyList, nuint mutabilityOption);
 
 		public CFPropertyList DeepCopy (CFPropertyListMutabilityOptions options = CFPropertyListMutabilityOptions.MutableContainersAndLeaves)
 		{
-			return new CFPropertyList (CFPropertyListCreateDeepCopy (IntPtr.Zero, handle, options), owns: true);
+			return new CFPropertyList (CFPropertyListCreateDeepCopy (IntPtr.Zero, handle, (nuint) (ulong) options), owns: true);
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static /*CFDataRef*/IntPtr CFPropertyListCreateData (IntPtr allocator, IntPtr propertyList, CFPropertyListFormat format, CFPropertyListMutabilityOptions options, out IntPtr error);
+		extern static /*CFDataRef*/IntPtr CFPropertyListCreateData (IntPtr allocator, IntPtr propertyList, nint format, nuint options, out IntPtr error);
 
 		public (NSData Data, NSError Error) AsData (CFPropertyListFormat format = CFPropertyListFormat.BinaryFormat1)
 		{
 			IntPtr error;
-			var x = CFPropertyListCreateData (IntPtr.Zero, handle, format, 0, out error);
+			var x = CFPropertyListCreateData (IntPtr.Zero, handle, (nint) (long) format, 0, out error);
 			if (x == IntPtr.Zero)
 				return (null, new NSError (error));
 			return (Runtime.GetNSObject<NSData> (x, owns: true), null);
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static bool CFPropertyListIsValid (IntPtr plist, CFPropertyListFormat format);
+		extern static bool CFPropertyListIsValid (IntPtr plist, nint format);
 
 		public bool IsValid (CFPropertyListFormat format)
 		{
-			return CFPropertyListIsValid (handle, format);
+			return CFPropertyListIsValid (handle, (nint) (long) format);
 		}
 
 		~CFPropertyList ()
@@ -143,14 +143,16 @@ namespace CoreFoundation
 		}
 	}
 
-	public enum CFPropertyListFormat {
+	[Native]
+	public enum CFPropertyListFormat : long {
 		OpenStep = 1,
 		XmlFormat1 = 100,
 		BinaryFormat1 = 200,
 	}
 
 	[Flags]
-	public enum CFPropertyListMutabilityOptions {
+	[Native]
+	public enum CFPropertyListMutabilityOptions : ulong {
 		Immutable = 0,
 		MutableContainers = 1 << 0,
 		MutableContainersAndLeaves = 1 << 1,
