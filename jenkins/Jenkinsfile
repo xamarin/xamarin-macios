@@ -109,7 +109,7 @@ def appendFileComment (comment)
 def markdownToSlack (value)
 {
     def tmpfile = "/tmp/slacker.md"
-    writeFile (tmpfile, value)
+    writeFile (file: tmpfile, text: value)
     try {
         // this monstruousity converts markdown's [text](url) to slack's <url|text>
         sh ("sed -i '' 's/[[]\\(.*\\)[]][\\(]\\(.*\\)[\\)]/<\\2|\\1>/' '${tmpfile}'")
