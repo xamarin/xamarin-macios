@@ -3335,7 +3335,7 @@ namespace AVFoundation {
 	[BaseType (typeof(NSObject))]
 	interface AVSampleBufferRenderSynchronizer
 	{
-
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Field ("AVSampleBufferRenderSynchronizerRateDidChangeNotification")]
 		[Notification]
 		NSString RateDidChangeNotification { get; }
