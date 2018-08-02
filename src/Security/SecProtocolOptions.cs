@@ -53,21 +53,21 @@ namespace Security {
 		static extern void sec_protocol_options_set_tls_min_version (sec_protocol_options_t handle, SslProtocol protocol);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		void SetTlsMinVersion (SslProtocol protocol) => sec_protocol_options_set_tls_min_version (GetCheckedHandle (), protocol);
+		public void SetTlsMinVersion (SslProtocol protocol) => sec_protocol_options_set_tls_min_version (GetCheckedHandle (), protocol);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern void sec_protocol_options_set_tls_max_version (sec_protocol_options_t handle, SslProtocol protocol);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		void SetTlsMaxVersion (SslProtocol protocol) => sec_protocol_options_set_tls_max_version (GetCheckedHandle (), protocol);
+		public void SetTlsMaxVersion (SslProtocol protocol) => sec_protocol_options_set_tls_max_version (GetCheckedHandle (), protocol);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern void sec_protocol_options_add_tls_application_protocol (sec_protocol_options_t handle, string applicationProtocol);
 
 		[TV (12,0), Mac (10,14), iOS (12,0)]
-		void AddTlsApplicationProtocol (string applicationProtocol)
+		public void AddTlsApplicationProtocol (string applicationProtocol)
 		{
 			if (applicationProtocol == null)
 				throw new ArgumentNullException (nameof (applicationProtocol));

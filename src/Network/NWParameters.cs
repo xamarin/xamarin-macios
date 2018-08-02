@@ -194,6 +194,7 @@ namespace Network {
 			return new NWParameters (nw_parameters_copy (GetCheckedHandle ()), owns: true);
 		}
 
+		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_parameters_set_multipath_service (nw_parameters_t parameters, NWMultiPathService multipath_service);
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -233,6 +234,7 @@ namespace Network {
 			set => nw_parameters_set_prefer_no_proxy (GetCheckedHandle (), value);
 		}
 
+		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_parameters_set_expired_dns_behavior (nw_parameters_t parameters, NWParametersExpiredDnsBehavior expired_dns_behavior);
 
 		[DllImport (Constants.NetworkLibrary)]
