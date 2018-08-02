@@ -936,6 +936,11 @@
 !unknown-pinvoke! dispatch_apply_f bound
 !unknown-pinvoke! dispatch_async_f bound
 !unknown-pinvoke! dispatch_barrier_async_f bound
+!unknown-pinvoke! dispatch_data_create bound
+!unknown-pinvoke! dispatch_data_create_concat bound
+!unknown-pinvoke! dispatch_data_create_map bound
+!unknown-pinvoke! dispatch_data_create_subrange bound
+!unknown-pinvoke! dispatch_data_get_size bound
 !unknown-pinvoke! dispatch_get_context bound
 !unknown-pinvoke! dispatch_get_current_queue bound
 !unknown-pinvoke! dispatch_get_global_queue bound
@@ -947,6 +952,7 @@
 !unknown-pinvoke! dispatch_group_wait bound
 !unknown-pinvoke! dispatch_queue_create bound
 !unknown-pinvoke! dispatch_queue_get_label bound
+!unknown-pinvoke! dispatch_read bound
 !unknown-pinvoke! dispatch_release bound
 !unknown-pinvoke! dispatch_resume bound
 !unknown-pinvoke! dispatch_retain bound
@@ -968,4 +974,5 @@
 !unknown-pinvoke! dispatch_sync_f bound
 !unknown-pinvoke! dispatch_time bound
 !unknown-pinvoke! dispatch_walltime bound
+!unknown-pinvoke! dispatch_write bound
 !unknown-pinvoke! open bound
