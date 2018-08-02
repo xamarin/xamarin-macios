@@ -2819,7 +2819,6 @@ class Test {
 				mtouch.AssertOutputPattern (".*_OBJC_METACLASS_._Test_Subexistent in registrar.o.*");
 				mtouch.AssertOutputPattern (".*_OBJC_CLASS_._Inexistent., referenced from:.*");
 				mtouch.AssertOutputPattern (".*_OBJC_CLASS_._Test_Subexistent in registrar.o.*");
-				mtouch.AssertOutputPattern (".*objc-class-ref in registrar.o.*");
 				mtouch.AssertOutputPattern (".*ld: symbol.s. not found for architecture arm64.*");
 				mtouch.AssertOutputPattern (".*clang: error: linker command failed with exit code 1 .use -v to see invocation.*");
 
