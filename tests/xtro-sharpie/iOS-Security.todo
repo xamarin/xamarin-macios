@@ -1,4 +1,3 @@
-!missing-enum! SSLCiphersuiteGroup not bound
 !missing-pinvoke! sec_certificate_copy_ref is not bound
 !missing-pinvoke! sec_protocol_metadata_access_distinguished_names is not bound
 !missing-pinvoke! sec_protocol_metadata_access_ocsp_response is not bound
