@@ -3335,6 +3335,11 @@ namespace AVFoundation {
 	[BaseType (typeof(NSObject))]
 	interface AVSampleBufferRenderSynchronizer
 	{
+
+		[Field ("AVSampleBufferRenderSynchronizerRateDidChangeNotification")]
+		[Notification]
+		NSString RateDidChangeNotification { get; }
+
 		[Export ("timebase", ArgumentSemantic.Retain)]
 		CMTimebase Timebase { get; }
 
@@ -8083,10 +8088,10 @@ namespace AVFoundation {
 		[Export ("pixelSize")]
 		float PixelSize { get; }
 
-		[Export ("lensDistortionLookupTable")]
+		[NullAllowed, Export ("lensDistortionLookupTable")]
 		NSData LensDistortionLookupTable { get; }
 
-		[Export ("inverseLensDistortionLookupTable")]
+		[NullAllowed, Export ("inverseLensDistortionLookupTable")]
 		NSData InverseLensDistortionLookupTable { get; }
 
 		[Export ("lensDistortionCenter")]
