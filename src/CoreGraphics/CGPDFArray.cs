@@ -209,7 +209,7 @@ namespace CoreGraphics {
 		{
 			var del = (ApplyCallback) ((BlockLiteral *) block)->Target;
 			if (del != null)
-				return del (index, new CGPDFObject (value), info);
+				return del (index, new CGPDFObject (value), info == IntPtr.Zero ? null : GCHandle.FromIntPtr (info).Target);
 
 			return false;
 		}
@@ -229,11 +229,13 @@ namespace CoreGraphics {
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (applyblock_handler, callback);
-
+			var gc_handle = info == null ? default (GCHandle) : GCHandle.Alloc (info);
 			try {
-				return CGPDFArrayApplyBlock (handle, ref block_handler, info);
+				return CGPDFArrayApplyBlock (handle, ref block_handler, info == null ? IntPtr.Zero : GCHandle.ToIntPtr (gc_handle));
 			} finally {
 				block_handler.CleanupBlock ();
+				if (info != null)
+					gc_handle.Free ();
 			}
 		}
 	}
