@@ -1265,7 +1265,8 @@ namespace UIKit {
 		[Export ("CGGlyphAtIndex:")]
 		ushort GetGlyph (nuint glyphIndex);
 
-		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+		[NoWatch]
+		[TV (12, 0), iOS (12, 0)]
 		[Export ("limitsLayoutForSuspiciousContents")]
 		bool LimitsLayoutForSuspiciousContents { get; set; }
 		
