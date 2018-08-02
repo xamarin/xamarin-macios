@@ -111,13 +111,17 @@ def reportFinalStatus (err, gitHash, currentStage)
     if (!createFinalStatus)
         return
 
-    def comment = null
+    def comment = ""
     def status = currentBuild.currentResult
 
     if ("${status}" == "SUCCESS" && err == "") {
         comment = "✅ [Jenkins job](${env.RUN_DISPLAY_URL}) (on internal Jenkins) succeeded"
     } else {
-        comment = "🔥 [Jenkins job](${env.RUN_DISPLAY_URL}) (on internal Jenkins) failed in stage '${currentStage}' 🔥"
+        // Aborted builds throw either a FlowInterruptedException or an AbortException (depending on what's executing),
+        // so treat either as an abortion (both can be thrown in other circumstances as well, so it's just a best guess).
+        if (err.contains ("FlowInterruptedException") || err.contains ("AbortException"))
+            comment += "❌ [Build was (probably) aborted](${env.RUN_DISPLAY_URL})\n\n"
+        comment += "🔥 [Jenkins job](${env.RUN_DISPLAY_URL}) (on internal Jenkins) failed in stage '${currentStage}' 🔥"
         if (err != "")
             comment += " : ${err}"
         manager.addErrorBadge (comment)
@@ -253,6 +257,27 @@ def runXamarinMacTests (url, macOS, maccore_hash, xamarin_macios_hash)
     }
 }
 
+def abortExecutingBuilds ()
+{
+    def job = Jenkins.instance.getItemByFullName (env.JOB_NAME)
+    for (build in job.builds) {
+        if (!build.isBuilding ())
+            continue
+        echo ("Current build: ${currentBuild.number} Checking build: ${build.number}");
+        if (build.number > currentBuild.number) {
+            error ("There is already a newer build in progress (#${build.number})")
+        } else if (build.number < currentBuild.number) {
+            def exec = build.getExecutor ()
+            if (exec == null) {
+                echo ("No executor for build ${build.number}")
+            } else {
+                exec.interrupt (Result.ABORTED, new CauseOfInterruption.UserInterruption ("Aborted by build #${currentBuild.number}"))
+                echo ("Aborted previous build: #${build.number}")
+            }
+        }
+    }
+}
+
 timestamps {
     node ('xamarin-macios && macos-10.13') {
         try {
@@ -301,6 +326,9 @@ timestamps {
 
                         if (!hasRunInternalTests)
                             skipLocalTestRunReason = "Not running tests here because they're run on public Jenkins."
+
+                        // only aborting PR builds, since for normal branches we want to build as much as possible by default.
+                        abortExecutingBuilds ()
                     }
 
                     dir ("${workspace}") {
