@@ -25,7 +25,9 @@ using System.Linq;
 using System.Text;
 
 using NUnit.Framework;
+#if __IOS__
 using ARKit;
+#endif
 
 #if XAMCORE_2_0
 using Foundation;
@@ -529,6 +531,7 @@ namespace Introspection {
 			return SkipDueToAttribute (type);
 		}
 
+#if __IOS__
 		/// <summary>
 		/// Ensures that all subclasses of a base class that conforms to IARAnchorCopying re-expose its constructor.
 		/// Note: we cannot have constructors in protocols so we have to inline them in every subclass.
@@ -551,5 +554,6 @@ namespace Introspection {
 
 			Assert.AreEqual (0, Errors, "{0} potential errors found when validating if subclasses of 'ARAnchor' re-expose 'IARAnchorCopying' constructor", Errors);
 		}
+#endif
 	}
 }
