@@ -226,6 +226,19 @@ namespace Metal {
 		public uint ThreadGroupsPerGrid3;
 	}
 
+	[NoMac]
+	[iOS (10,0), TV (10,0)]
+	public struct MTLStageInRegionIndirectArguments
+	{
+		public uint StageInOrigin1;
+		public uint StageInOrigin2;
+		public uint StageInOrigin3;
+
+		public uint StageInSize1;
+		public uint StageInSize2;
+		public uint StageInSize3;		
+	}
+
 	public struct MTLDrawPrimitivesIndirectArguments {
 		public uint VertexCount;
 		public uint InstanceCount;

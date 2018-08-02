@@ -111,6 +111,10 @@ namespace Metal {
 		kCubeArray = 6,
 #endif
 		k3D = 7,
+		[iOS (12,0), TV (12,0), Mac (10,14)]
+		k2DMultisampleArray = 8,
+		[iOS (12,0), TV (12,0), Mac (10,14)]
+		kTextureBuffer = 9,
 	}
 
 	[Native]
@@ -614,6 +618,9 @@ namespace Metal {
 		[NoMac, iOS (11,0), NoTV, NoWatch] Rgb10A2Unorm = 75,
 		[NoMac, iOS (11,0), NoTV, NoWatch] Rg11B10Float = 76,
 		[NoMac, iOS (11,0), NoTV, NoWatch] Rgb9E5Float = 77,
+
+		[Mac (10,14), iOS (12,0), TV (12,0)] RenderPipeline = 78,
+		[Mac (10,14), iOS (12,0), TV (12,0)] IndirectCommandBuffer = 80,
 	}
 
 	[Native]
@@ -660,6 +667,15 @@ namespace Metal {
 		[iOS (11,0), NoTV, NoWatch, NoMac]
 		iOS_GPUFamily4_v1 = 11,
 
+		[iOS (12,0), NoTV, NoWatch, NoMac]
+		iOS_GPUFamily1_v5 = 12,
+		[iOS (12,0), NoTV, NoWatch, NoMac]
+		iOS_GPUFamily2_v5 = 13,
+		[iOS (12,0), NoTV, NoWatch, NoMac]
+		iOS_GPUFamily3_v4 = 14,
+		[iOS (12,0), NoTV, NoWatch, NoMac]
+		iOS_GPUFamily4_v2 = 15,
+
 		[Mac (10,11), NoiOS, NoTV, NoWatch]
 		macOS_GPUFamily1_v1 = 10000,
 		
@@ -690,6 +706,9 @@ namespace Metal {
 
 		[NoiOS, TV (11,0), NoWatch, NoMac]
 		tvOS_GPUFamily2_v1 = 30003,
+
+		[NoiOS, TV (12,0), NoWatch, NoMac]
+		tvOS_GPUFamily1_v4 = 30004,
 	}
 
 	[iOS (9,0)][Mac (10,11)]
@@ -703,6 +722,8 @@ namespace Metal {
 		v1_2 = (1 << 16) + 2,
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
 		v2_0 = (2 << 16),
+		[Mac (10,14), iOS (12,0), TV (12,0), NoWatch]
+		v2_1 = (2 << 16) + 1,
 	}
 
 	[iOS (9,0)][Mac (10,11)]
@@ -931,6 +952,41 @@ namespace Metal {
 	{
 		None = 0,
 		CustomSamplePositions = 1 << 0,
+	}
+
+	[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0)]
+	[Native]
+	public enum MTLDispatchType : ulong
+	{
+		Serial,
+		Concurrent,
+	}
+
+	[Flags, Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0)]
+	[Native]
+	public enum MTLBarrierScope : ulong
+	{
+		Buffers = 1 << 0,
+		Textures = 1 << 1,
+		[NoiOS, NoTV]
+		RenderTargets = 1 << 2,
+	}
+
+	[Flags, Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0)]
+	[Native]
+	public enum MTLIndirectCommandType : ulong
+	{
+		Draw = 1 << 0,
+		Indexed = 1 << 1,
+	}
+
+	[NoiOS, NoTV]
+	[Mac (10,14, onlyOn64: true)]
+	[Native]
+	public enum MTLMultisampleStencilResolveFilter : ulong
+	{
+		Sample0 = 0,
+		DepthResolvedSample = 1
 	}
 }
 #endif
