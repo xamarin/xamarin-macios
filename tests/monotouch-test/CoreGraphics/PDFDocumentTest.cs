@@ -80,7 +80,8 @@ namespace MonoTouchFixtures.CoreGraphics {
 				pdf.SetOutline (outline);
 			}
 
-			DumpPdf (pdf);
+			if (TestRuntime.CheckXcodeVersion (10, 0))
+				DumpPdf (pdf);
 		}
 
 		HashSet<IntPtr> processed = new HashSet<IntPtr> ();
