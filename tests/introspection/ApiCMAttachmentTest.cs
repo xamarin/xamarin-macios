@@ -175,6 +175,7 @@ namespace Introspection {
 			switch (nativeName) {
 			case "CFMachPort":
 			case "CFMessagePort":
+			case "DispatchIO": // no way to instantiate it
 			case "DispatchSource":
 			case "AudioConverter": // does crash the tests
 			case "AudioFile": // does crash the tests
@@ -273,6 +274,8 @@ namespace Introspection {
 				return CFUrl.FromFile ("/etc");
 			case "CFPropertyList":
 				return CFPropertyList.FromData (NSData.FromString ("<string>data</string>")).PropertyList;
+			case "DispatchData":
+				return DispatchData.FromByteBuffer (new byte [] { 1, 2, 3, 4 });
 			case "AudioFile":
 				var path = Path.GetFullPath ("1.caf");
 				var af = AudioFile.Open (CFUrl.FromFile (path), AudioFilePermission.Read, AudioFileType.CAF);
