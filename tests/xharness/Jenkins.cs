@@ -678,10 +678,13 @@ namespace xharness
 					build.SpecifyConfiguration = build.ProjectConfiguration != "Debug";
 					RunTestTask exec;
 					IEnumerable<RunTestTask> execs;
+					var ignored_main = ignored;
+					if ((ignored32 || !IncludeClassicMac) && project.GenerateVariations)
+						ignored_main = true; // Only if generating variations is the main project is an XM Classic app
 					if (project.IsNUnitProject) {
 						var dll = Path.Combine (Path.GetDirectoryName (build.TestProject.Path), project.Xml.GetOutputAssemblyPath (build.ProjectPlatform, build.ProjectConfiguration).Replace ('\\', '/'));
 						exec = new NUnitExecuteTask (build) {
-							Ignored = ignored32 || !IncludeClassicMac,
+							Ignored = ignored_main,
 							TestLibrary = dll,
 							TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.ConsoleRunner.3.5.0", "tools", "nunit3-console.exe"),
 							WorkingDirectory = Path.GetDirectoryName (dll),
@@ -692,7 +695,7 @@ namespace xharness
 						execs = new [] { exec };
 					} else {
 						exec = new MacExecuteTask (build) {
-							Ignored = ignored32 || !IncludeClassicMac,
+							Ignored = ignored_main,
 							BCLTest = project.IsBclTest,
 							TestName = project.Name,
 							IsUnitTest = true,
