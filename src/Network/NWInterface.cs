@@ -17,22 +17,20 @@ using OS_nw_interface=System.IntPtr;
 
 namespace Network {
 
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	public class NWInterface : NativeObject {
 		public NWInterface (IntPtr handle, bool owns) : base (handle, owns) {}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern NWInterfaceType nw_interface_get_type (OS_nw_interface iface);
 
 		public NWInterfaceType InterfaceType => nw_interface_get_type (GetCheckedHandle ());
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_interface_get_name (OS_nw_interface iface);
 
 		public string Name => Marshal.PtrToStringAnsi (nw_interface_get_name (GetCheckedHandle ()));
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern /* uint32_t */ uint nw_interface_get_index (OS_nw_interface iface);
 

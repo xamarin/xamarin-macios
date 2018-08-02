@@ -15,48 +15,39 @@ using CoreFoundation;
 
 namespace Network {
 
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	public class NWPathMonitor : NativeObject {
 		public NWPathMonitor (IntPtr handle, bool owns) : base (handle, owns) {}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_path_monitor_create ();
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWPathMonitor ()
 		{
 			InitializeHandle (nw_path_monitor_create ());
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_path_monitor_create_with_type (NWInterfaceType interfaceType);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWPathMonitor (NWInterfaceType interfaceType)
 		{
 			InitializeHandle (nw_path_monitor_create_with_type (interfaceType));
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_path_monitor_cancel (IntPtr handle);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void Cancel () => nw_path_monitor_cancel (GetCheckedHandle ());
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_path_monitor_start (IntPtr handle);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void Start () => nw_path_monitor_start (GetCheckedHandle ());
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_path_monitor_set_queue (IntPtr handle, IntPtr queue);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void SetQueue (DispatchQueue queue)
 		{
 			if (queue == null)

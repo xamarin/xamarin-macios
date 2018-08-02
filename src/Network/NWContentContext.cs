@@ -18,6 +18,7 @@ namespace Network {
 	// The content context, there are a few pre-configured content contexts for sending
 	// available as static properties on this class
 	//
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	public class NWContentContext : NativeObject {
 		bool global;
 		public NWContentContext (IntPtr handle, bool owns) : base (handle, owns)
@@ -44,7 +45,6 @@ namespace Network {
 			base.Release ();
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_content_context_create (string contextIdentifier);
 
@@ -55,64 +55,51 @@ namespace Network {
 			InitializeHandle (nw_content_context_create (contextIdentifier));
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_content_context_get_identifier (IntPtr handle);
 
 		public string Identifier => Marshal.PtrToStringAnsi (nw_content_context_get_identifier (GetCheckedHandle ()));
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool nw_content_context_get_is_final (IntPtr handle);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_content_context_set_is_final (IntPtr handle, [MarshalAs (UnmanagedType.I1)] bool is_final);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public bool IsFinal {
 			get => nw_content_context_get_is_final (GetCheckedHandle ());
 			set => nw_content_context_set_is_final (GetCheckedHandle (), value);
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static /* uint64_t */ ulong nw_content_context_get_expiration_milliseconds (IntPtr handle);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_content_context_set_expiration_milliseconds (IntPtr handle, /* uint64_t */ ulong value);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public ulong ExpirationMilliseconds {
 			get => nw_content_context_get_expiration_milliseconds (GetCheckedHandle ());
 			set => nw_content_context_set_expiration_milliseconds (GetCheckedHandle (), value);
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static double nw_content_context_get_relative_priority (IntPtr handle);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_content_context_set_relative_priority (IntPtr handle, double value);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public double RelativePriority {
 			get => nw_content_context_get_relative_priority (GetCheckedHandle ());
 			set => nw_content_context_set_relative_priority (GetCheckedHandle (), value);
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_content_context_copy_antecedent (IntPtr handle);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_content_context_set_antecedent (IntPtr handle, IntPtr value);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public NWContentContext Antecedent {
 			get {
 				var h = nw_content_context_copy_antecedent (GetCheckedHandle ());
@@ -125,7 +112,6 @@ namespace Network {
 			}
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_content_context_copy_protocol_metadata (IntPtr handle, IntPtr protocol);
 
@@ -139,11 +125,9 @@ namespace Network {
 			return new NWProtocolMetadata (x, owns: true);
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_content_context_set_metadata_for_protocol (IntPtr handle, IntPtr protocolMetadata);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void SetMetadata (NWProtocolMetadata protocolMetadata)
 		{
 			if (protocolMetadata == null)
@@ -169,11 +153,9 @@ namespace Network {
 			}
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_content_context_foreach_protocol_metadata (IntPtr handle, ref BlockLiteral callback);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void IterateProtocolMetadata (Action<NWProtocolDefinition,NWProtocolMetadata> callback)
 		{

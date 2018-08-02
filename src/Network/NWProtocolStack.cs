@@ -20,14 +20,13 @@ using nw_protocol_options_t=System.IntPtr;
 
 namespace Network {
 
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	public class NWProtocolStack : NativeObject {
 		public NWProtocolStack (IntPtr handle, bool owns) : base (handle, owns) {}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_protocol_stack_prepend_application_protocol (nw_protocol_stack_t stack, nw_protocol_options_t options);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public void PrependApplicationProtocol (NWProtocolOptions options)
 		{
 			if (options == null)
@@ -35,7 +34,6 @@ namespace Network {
 			nw_protocol_stack_prepend_application_protocol (GetCheckedHandle (), options.Handle);
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_protocol_stack_clear_application_protocols (nw_protocol_stack_t stack);
 
@@ -58,11 +56,9 @@ namespace Network {
 			}
 		}
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_protocol_stack_iterate_application_protocols (nw_protocol_stack_t stack, ref BlockLiteral completion);
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void IterateProtocols (Action<NWProtocolOptions> callback)
 		{
@@ -76,25 +72,20 @@ namespace Network {
 			}
 		}
 
-		[TV (12, 0), Mac (10, 14), iOS (12, 0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_protocol_stack_copy_transport_protocol (nw_protocol_stack_t stack);
 
-		[TV (12, 0), Mac (10, 14), iOS (12, 0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_protocol_stack_set_transport_protocol (nw_protocol_stack_t stack, IntPtr value);
 
-		[TV (12, 0), Mac (10, 14), iOS (12, 0)]
 		public NWProtocolOptions TransportProtocol {
 			get => new NWProtocolOptions (nw_protocol_stack_copy_transport_protocol (GetCheckedHandle ()), owns: true);
 			set => nw_protocol_stack_set_transport_protocol (GetCheckedHandle (), value.GetHandle ());
 		}
 
-		[TV (12, 0), Mac (10, 14), iOS (12, 0)]
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_protocol_stack_copy_internet_protocol (nw_protocol_stack_t stack);
 
-		[TV (12, 0), Mac (10, 14), iOS (12, 0)]
 		public NWProtocolOptions InternetProtocol => new NWProtocolOptions (nw_protocol_stack_copy_internet_protocol (GetCheckedHandle ()), owns: true);
 	}
 }
