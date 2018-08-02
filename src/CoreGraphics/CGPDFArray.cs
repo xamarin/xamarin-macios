@@ -202,7 +202,9 @@ namespace CoreGraphics {
 		delegate bool ApplyBlockHandlerDelegate (IntPtr block, nint index, IntPtr value, IntPtr info);
 		static readonly ApplyBlockHandlerDelegate applyblock_handler = ApplyBlockHandler;
 
+#if !MONOMAC
 		[MonoPInvokeCallback (typeof (ApplyBlockHandlerDelegate))]
+#endif
 		static unsafe bool ApplyBlockHandler (IntPtr block, nint index, IntPtr value, IntPtr info)
 		{
 			var del = (ApplyBlockCallback) ((BlockLiteral *) block)->Target;
