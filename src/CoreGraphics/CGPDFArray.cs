@@ -209,12 +209,12 @@ namespace CoreGraphics {
 		{
 			var del = (ApplyCallback) ((BlockLiteral *) block)->Target;
 			if (del != null)
-				return del (index, new CGPDFObject (value), info == IntPtr.Zero ? null : GCHandle.FromIntPtr (info).Target);
+				return del (index, CGPDFObject.FromHandle (value), info == IntPtr.Zero ? null : GCHandle.FromIntPtr (info).Target);
 
 			return false;
 		}
 
-		public delegate bool ApplyCallback (nint index, CGPDFObject value, object info);
+		public delegate bool ApplyCallback (nint index, object value, object info);
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		[iOS (12, 0)][Mac (10, 14)][TV (12, 0)][Watch (5, 0)]
