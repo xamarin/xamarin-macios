@@ -207,14 +207,14 @@ namespace CoreGraphics {
 #endif
 		static unsafe bool ApplyBlockHandler (IntPtr block, nint index, IntPtr value, IntPtr info)
 		{
-			var del = (ApplyBlockCallback) ((BlockLiteral *) block)->Target;
+			var del = (ApplyCallback) ((BlockLiteral *) block)->Target;
 			if (del != null)
 				return del (index, new CGPDFObject (value), info);
 
 			return false;
 		}
 
-		public delegate bool ApplyBlockCallback (nint index, CGPDFObject value, IntPtr info);
+		public delegate bool ApplyCallback (nint index, CGPDFObject value, object info);
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		[iOS (12, 0)][Mac (10, 14)][TV (12, 0)][Watch (5, 0)]
@@ -222,7 +222,7 @@ namespace CoreGraphics {
 
 		[iOS (12, 0)][Mac (10, 14)][TV (12, 0)][Watch (5, 0)]
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public bool ApplyBlock (ApplyBlockCallback callback, IntPtr info = default (IntPtr))
+		public bool Apply (ApplyCallback callback, object info = null)
 		{
 			if (callback == null)
 				throw new ArgumentNullException (nameof (callback));
