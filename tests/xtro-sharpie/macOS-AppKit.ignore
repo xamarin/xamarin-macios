@@ -1148,6 +1148,12 @@
 ## DoCommandBySelector conflicts with NSTextViewDelegate in generated code
 !missing-protocol-member! NSTextInput::doCommandBySelector: not found
 
+## 42814697 NSViewLayerContentScaleDelegate defined in header but never used
+!missing-protocol! NSViewLayerContentScaleDelegate not bound
+
+## Defined in NSSlider (NSSliderDeprecated)
+!missing-selector! NSSliderCell::setImage: not bound
+
 ## 42781537 Classes fail to conformsToProtocol despite header declaration
 !missing-protocol! NSUserActivityRestoring not bound
 !missing-protocol-conformance! NSDocument should conform to NSUserActivityRestoring (defined in 'NSUserActivity' category)
