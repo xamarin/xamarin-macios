@@ -14223,6 +14223,7 @@ namespace Foundation
 	[Mac (10, 8)]
 	[BaseType (typeof (NSObject))]
 	[DesignatedDefaultCtor]
+	[Advice ("'NSUserNotification' usages should be replaced with 'UserNotifications' framework.")]
 	interface NSUserNotification : NSCoding, NSCopying {
 		[Export ("title", ArgumentSemantic.Copy)]
 		string Title { get; set; }
@@ -14303,6 +14304,7 @@ namespace Foundation
 
 	[Mac (10,10)]
 	[BaseType (typeof(NSObject))]
+	[Advice ("'NSUserNotification' usages should be replaced with 'UserNotifications' framework.")]
 	interface NSUserNotificationAction : NSCopying
 	{
 		[Static]
@@ -14321,6 +14323,7 @@ namespace Foundation
 	           Delegates=new string [] {"WeakDelegate"},
 	Events=new Type [] { typeof (NSUserNotificationCenterDelegate) })]
 	[DisableDefaultCtor] // crash with: NSUserNotificationCenter designitated initializer is _centerForBundleIdentifier
+	[Advice ("'NSUserNotification' usages should be replaced with 'UserNotifications' framework.")]
 	interface NSUserNotificationCenter 
 	{
 		[Export ("defaultUserNotificationCenter")][Static]
