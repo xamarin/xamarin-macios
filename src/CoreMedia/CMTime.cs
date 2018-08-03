@@ -308,6 +308,16 @@ namespace CoreMedia {
 			return CMTimeMinimum (time1, time2);
 		}
 
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[DllImport (Constants.CoreMediaLibrary)]
+		extern static CMTime CMTimeFoldIntoRange (CMTime time, CMTimeRange foldRange);
+
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		public static CMTime FoldIntoRange (CMTime time, CMTimeRange foldRange)
+		{
+			return CMTimeFoldIntoRange (time, foldRange);
+		}
+
 		// FIXME: generated will need some changes to emit [Field] in partial struct (not class)
 		public readonly static NSString ValueKey;
 		public readonly static NSString ScaleKey;
