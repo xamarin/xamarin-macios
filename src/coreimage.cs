@@ -5513,7 +5513,6 @@ namespace CoreImage {
 
 		bool DisparityImage { get; set; }
 
-		[Field ("kCIImageRepresentationPortraitEffectsMatteImage")]
 		bool PortraitEffectsMatteImage { get; set} 
 #endif
 		[TV (12, 0), iOS (12, 0), Mac (10, 14, onlyOn64: true)]
