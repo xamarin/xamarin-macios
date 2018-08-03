@@ -4,6 +4,8 @@
 ## there's another P/Invoke that returns the same result according to the documentation (CGColorSpaceCopyName), so no need to bind another one.
 !missing-pinvoke! CGColorSpaceGetName is not bound
 
+# There's an identical function that takes a C callback instead of a block, and which we've bound, which makes this function redundant since the managed API would be identical.
+!missing-pinvoke! CGPDFDictionaryApplyBlock is not bound
 
 ## unsorted
 
