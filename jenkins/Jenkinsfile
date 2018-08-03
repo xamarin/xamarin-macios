@@ -106,6 +106,63 @@ def appendFileComment (comment)
     writeFile (file: commentFile, text: comment)
 }
 
+def markdownToSlack (value)
+{
+    def tmpfile = "/tmp/slacker.md"
+    writeFile (file: tmpfile, text: value)
+    try {
+        // this monstruousity converts markdown's [text](url) to slack's <url|text>
+        sh ("sed -i '' 's/[[]\\(.*\\)[]][\\(]\\(.*\\)[\\)]/<\\2|\\1>/' '${tmpfile}'")
+        value = readFile (tmpfile)
+    } finally {
+        sh ("rm -f '${tmpfile}'")
+    }
+    return value
+}
+
+def reportFinalStatusToSlack (err, gitHash, currentStage, fileContents)
+{
+    def status = currentBuild.currentResult
+    if ("${status}" == "SUCCESS" && err == "")
+        return // not reporting success to slack
+
+    def authorName = null
+    def authorEmail = null
+    if (isPr) {
+        authorName = env.CHANGE_AUTHOR_DISPLAY_NAME
+        authorEmail = env.CHANGE_AUTHOR_EMAIL
+        slackMessage = "Pull Request #<${env.CHANGE_URL}|${env.CHANGE_ID}> failed to build."
+    } else {
+        authorName = sh (script: "git log -1 --pretty=%an", returnStdout: true).trim ()
+        authorEmail = sh (script: "git log -1 --pretty=%ae", returnStdout: true).trim ()
+        slackMessage = "Commit <https://github.com/${repository}/commit/${gitHash}|${gitHash}> failed to build."
+    }
+
+    def title = null
+    if (err != null) {
+        title = "Internal jenkins failed in stage '${currentStage}': ${err}"
+    } else {
+        title = "Internal jenkins failed in stage '${currentStage}'"
+    }
+    def text = ""
+    if (fileContents != null)
+        text = "\"text\": ${groovy.json.JsonOutput.toJson (markdownToSlack (fileContents))},"
+    // The attachments string must not start with a newline, it will produce a very helpful 'Invalid JSON String' exception with no additional info.
+    def attachments = """[
+        {
+            \"author_name\": \"${authorName} (${authorEmail})\",
+            \"title\": \"${title}\",
+            \"title_link\": \"${env.RUN_DISPLAY_URL}\",
+            \"color\": \"danger\",
+            ${text}
+            \"fallback\": \"Build failed\"
+        }
+    ]
+    """
+    echo (attachments)
+    slackSend (botUser: true, channel: "#ios-notifications", color: "danger", message: slackMessage, attachments: attachments)
+}
+
 def reportFinalStatus (err, gitHash, currentStage)
 {
     if (!createFinalStatus)
@@ -128,10 +185,15 @@ def reportFinalStatus (err, gitHash, currentStage)
         manager.buildFailure ()
     }
 
-    if (fileExists (commentFile))
-        comment += "\n\n" + readFile ("${commentFile}")
+    def fileContents = null
+    if (fileExists (commentFile)) {
+        fileContents = readFile ("${commentFile}")
+        comment += "\n\n" + fileContents
+    }
 
     addComment ("${comment}")
+
+    reportFinalStatusToSlack (err, gitHash, currentStage, fileContents)
 }
 
 def processAtMonkeyWrench (outputFile)
