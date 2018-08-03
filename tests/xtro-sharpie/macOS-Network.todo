@@ -9,8 +9,6 @@
 !missing-field! kNWErrorDomainTLS not bound
 !missing-pinvoke! nw_endpoint_get_address is not bound
 !missing-pinvoke! nw_ip_create_metadata is not bound
-!missing-pinvoke! nw_parameters_set_expired_dns_behavior is not bound
-!missing-pinvoke! nw_parameters_set_multipath_service is not bound
 !missing-pinvoke! nw_path_monitor_set_cancel_handler is not bound
 !missing-pinvoke! nw_path_monitor_set_update_handler is not bound
 !missing-pinvoke! nw_protocol_metadata_is_tcp is not bound
