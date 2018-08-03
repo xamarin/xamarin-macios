@@ -1,5 +1,0 @@
-!missing-selector! AUAudioUnit::disableProfile:cable:onChannel:error: not bound
-!missing-selector! AUAudioUnit::enableProfile:cable:onChannel:error: not bound
-!missing-selector! AUAudioUnit::profileChangedBlock not bound
-!missing-selector! AUAudioUnit::profileStateForCable:channel: not bound
-!missing-selector! AUAudioUnit::setProfileChangedBlock: not bound
