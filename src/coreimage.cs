@@ -1897,7 +1897,7 @@ namespace CoreImage {
 
 		[TV (12,0), iOS (12,0), Mac (10, 14, onlyOn64: true)]
 		[Export ("initWithPortaitEffectsMatte:options:")] // selector typo, rdar filled 42894821
-		IntPtr Constructor (AVPortraitEffectsMatte matte, [NullAllowed] NSDictionary<NSString, NSObject> options);
+		IntPtr Constructor (AVPortraitEffectsMatte matte, [NullAllowed] NSDictionary options);
 
 		[TV (11,0), iOS (11,0), Mac (10, 14, onlyOn64: true)]
 		[Export ("initWithPortaitEffectsMatte:")] // selector typo, rdar filled 42894821
@@ -1907,7 +1907,7 @@ namespace CoreImage {
 		[Static]
 		[Export ("imageWithPortaitEffectsMatte:options:")] // selector typo, rdar filled 42894821
 		[return: NullAllowed]
-		CIImage FromPortraitEffectsMatte (AVPortraitEffectsMatte matte, [NullAllowed] NSDictionary<NSString, NSObject> options);
+		CIImage FromPortraitEffectsMatte (AVPortraitEffectsMatte matte, [NullAllowed] NSDictionary options);
 
 		[TV (12,0), iOS (12,0), Mac (10, 14, onlyOn64: true)]
 		[Static]
@@ -1919,7 +1919,7 @@ namespace CoreImage {
 
 		[TV (11, 0), iOS (11, 0), Mac (10,13)]
 		[Export ("initWithDepthData:options:")]
-		IntPtr Constructor (AVDepthData data, [NullAllowed] NSDictionary<NSString, NSObject> options);
+		IntPtr Constructor (AVDepthData data, [NullAllowed] NSDictionary options);
 
 		[TV (11, 0), iOS (11, 0), Mac (10,13)]
 		[Export ("initWithDepthData:")]
@@ -1929,7 +1929,7 @@ namespace CoreImage {
 		[Static]
 		[Export ("imageWithDepthData:options:")]
 		[return: NullAllowed]
-		CIImage FromDepthData (AVDepthData data, [NullAllowed] NSDictionary<NSString, NSObject> options);
+		CIImage FromDepthData (AVDepthData data, [NullAllowed] NSDictionary options);
 
 		[TV (11, 0), iOS (11, 0), Mac (10,13)]
 		[Static]
@@ -5513,7 +5513,7 @@ namespace CoreImage {
 
 		bool DisparityImage { get; set; }
 
-		bool PortraitEffectsMatteImage { get; set} 
+		bool PortraitEffectsMatteImage { get; set; } 
 #endif
 		[TV (12, 0), iOS (12, 0), Mac (10, 14, onlyOn64: true)]
 		AVPortraitEffectsMatte AVPortraitEffectsMatte { get; set; } 
