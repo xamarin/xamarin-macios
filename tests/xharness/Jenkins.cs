@@ -660,7 +660,6 @@ namespace xharness
 				if (configurations == null)
 					configurations = new string [] { "Debug" };
 				foreach (var config in configurations) {
-					var requiresXcode94 = false;
 					BuildProjectTask build;
 					if (project.GenerateVariations) {
 						build = new MdtoolTask ();
