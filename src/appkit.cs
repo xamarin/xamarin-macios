@@ -442,7 +442,7 @@ namespace AppKit {
 
 	[BaseType (typeof (NSResponder), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSApplicationDelegate) })]
 	[DisableDefaultCtor] // An uncaught exception was raised: Creating more than one Application
-	interface NSApplication : NSAccessibilityElementProtocol, NSUserInterfaceValidations, NSMenuItemValidation, NSAccessibility {
+	interface NSApplication : NSAccessibilityElementProtocol, NSUserInterfaceValidations, NSMenuItemValidation, NSAccessibility, NSAppearanceCustomization {
 		[Export ("sharedApplication"), Static, ThreadSafe]
 		NSApplication SharedApplication { get; }
 	
@@ -839,7 +839,12 @@ namespace AppKit {
 	}
 
 	delegate void NSApplicationEnumerateWindowsHandler (NSWindow window, ref bool stop);
+// radar://42781537
+//#if XAMCORE_4_0
+//	delegate void ContinueUserActivityRestorationHandler (NSUserActivityRestoring [] restorableObjects);
+//#else
 	delegate void ContinueUserActivityRestorationHandler (NSObject [] restorableObjects);
+//#endif
 	
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -4109,6 +4114,16 @@ namespace AppKit {
 		[Mac (10,14, onlyOn64: true)]
 		[Export ("colorWithSystemEffect:")]
 		NSColor WithSystemEffect (NSColorSystemEffect systemEffect);
+
+		[Mac (10, 13)]
+		[Static]
+		[Export ("findHighlightColor", ArgumentSemantic.Strong)]
+		NSColor FindHighlightColor { get; }
+
+		[Mac (10, 10)]
+		[Static]
+		[Export ("placeholderTextColor", ArgumentSemantic.Strong)]
+		NSColor PlaceholderTextColor { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -5313,7 +5328,7 @@ namespace AppKit {
 	
 	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
-	partial interface NSDocument {
+	partial interface NSDocument /* : NSUserActivityRestoring radar://42781537 */ {
 		[Export ("initWithType:error:")]
 		IntPtr Constructor (string typeName, out NSError outError);
 
@@ -5656,6 +5671,7 @@ namespace AppKit {
 		[Export ("updateUserActivityState:")]
 		void UpdateUserActivityState (NSUserActivity userActivity);
 
+		// Should be removed but radar://42781537 - Classes fail to conformsToProtocol despite header declaration
 		[Mac (10,10, onlyOn64 : true)]
 		[Export ("restoreUserActivityState:")]
 		void RestoreUserActivityState (NSUserActivity userActivity);
@@ -12971,7 +12987,7 @@ namespace AppKit {
 
 	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
-	partial interface NSResponder : NSCoding, NSTouchBarProvider {
+	partial interface NSResponder : NSCoding, NSTouchBarProvider /* radar://42781537 , NSUserActivityRestoring */ {
 		[Export ("tryToPerform:with:")]
 		bool TryToPerformwith (Selector anAction, [NullAllowed] NSObject anObject);
 
@@ -13133,6 +13149,7 @@ namespace AppKit {
 		[Export ("updateUserActivityState:")]
 		void UpdateUserActivityState (NSUserActivity userActivity);
 
+		// Should be removed but radar://42781537 - Classes fail to conformsToProtocol despite header declaration
 		[Mac (10,10, onlyOn64 : true)]
 		[Export ("restoreUserActivityState:")]
 		void RestoreUserActivityState (NSUserActivity userActivity);
@@ -13160,6 +13177,15 @@ namespace AppKit {
 		[Export ("encodeRestorableStateWithCoder:backgroundQueue:")]
 		void EncodeRestorableState (NSCoder coder, NSOperationQueue queue);
 	}
+
+// 	[Protocol] // radar://42781537 - Classes fail to conformsToProtocol despite header declaration
+// 	interface NSUserActivityRestoring
+// 	{
+// 		[Mac (10,10)]
+// 		[Abstract]
+// 		[Export ("restoreUserActivityState:")]
+// 		void RestoreUserActivityState (NSUserActivity userActivity);
+// 	}
 
 	[Category]
 	[BaseType (typeof(NSResponder))]
@@ -17744,7 +17770,7 @@ namespace AppKit {
 	}
 	
 	[BaseType (typeof (NSView))]
-	interface NSTableHeaderView {
+	interface NSTableHeaderView : NSViewToolTipOwner {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frameRect);
 

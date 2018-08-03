@@ -8532,11 +8532,21 @@ namespace Foundation
 		// NSPlaceholders (informal) protocol
 		[Static]
 		[Export ("defaultPlaceholderForMarker:withBinding:")]
+#if XAMCORE_4_0 && MONOMAC
+		// When XAMCORE_4_0 occurs review - NSBindingSelectionMarker is 10.14 only type but GetDefaultPlaceholder is before, does it matter now?
+		NSObject GetDefaultPlaceholder (NSBindingSelectionMarker marker, NSString binding);
+#else
 		NSObject GetDefaultPlaceholder (NSObject marker, NSString binding);
+#endif
 
 		[Static]
 		[Export ("setDefaultPlaceholder:forMarker:withBinding:")]
+#if XAMCORE_4_0 && MONOMAC
+		// When XAMCORE_4_0 occurs review - NSBindingSelectionMarker is 10.14 only type but SetDefaultPlaceholder is before, does it matter now?
+		void SetDefaultPlaceholder (NSObject placeholder, NSBindingSelectionMarker marker, NSString binding);
+#else
 		void SetDefaultPlaceholder (NSObject placeholder, NSObject marker, NSString binding);
+#endif
 
 		[Export ("objectDidEndEditing:")]
 		void ObjectDidEndEditing (NSObject editor);
@@ -8595,6 +8605,23 @@ namespace Foundation
 #endif
 		[Export ("awakeFromNib")]
 		void AwakeFromNib ();
+	}
+
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	[Mac (10, 14)][NoWatch][NoTV][NoiOS]
+	interface NSBindingSelectionMarker : NSCopying {
+		[Static]
+		[Export ("multipleValuesSelectionMarker", ArgumentSemantic.Strong)]
+		NSBindingSelectionMarker MultipleValuesSelectionMarker { get; }
+
+		[Static]
+		[Export ("noSelectionMarker", ArgumentSemantic.Strong)]
+		NSBindingSelectionMarker NoSelectionMarker { get; }
+
+		[Static]
+		[Export ("notApplicableSelectionMarker", ArgumentSemantic.Strong)]
+		NSBindingSelectionMarker NotApplicableSelectionMarker { get; }
 	}
 
 	[Protocol (Name = "NSObject")] // exists both as a type and a protocol in ObjC, Swift uses NSObjectProtocol
@@ -14196,6 +14223,7 @@ namespace Foundation
 	[Mac (10, 8)]
 	[BaseType (typeof (NSObject))]
 	[DesignatedDefaultCtor]
+	[Advice ("'NSUserNotification' usages should be replaced with 'UserNotifications' framework.")]
 	interface NSUserNotification : NSCoding, NSCopying {
 		[Export ("title", ArgumentSemantic.Copy)]
 		string Title { get; set; }
@@ -14276,6 +14304,7 @@ namespace Foundation
 
 	[Mac (10,10)]
 	[BaseType (typeof(NSObject))]
+	[Advice ("'NSUserNotification' usages should be replaced with 'UserNotifications' framework.")]
 	interface NSUserNotificationAction : NSCopying
 	{
 		[Static]
@@ -14294,6 +14323,7 @@ namespace Foundation
 	           Delegates=new string [] {"WeakDelegate"},
 	Events=new Type [] { typeof (NSUserNotificationCenterDelegate) })]
 	[DisableDefaultCtor] // crash with: NSUserNotificationCenter designitated initializer is _centerForBundleIdentifier
+	[Advice ("'NSUserNotification' usages should be replaced with 'UserNotifications' framework.")]
 	interface NSUserNotificationCenter 
 	{
 		[Export ("defaultUserNotificationCenter")][Static]

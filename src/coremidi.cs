@@ -34,6 +34,7 @@ using ObjCRuntime;
 namespace CoreMidi {
 	
 #if !MONOMAC
+	[NoMac][NoTV][NoWatch]
 	[BaseType (typeof (NSObject), Name="MIDINetworkHost")]
 	interface MidiNetworkHost {
 		[Export ("name", ArgumentSemantic.Retain)]
@@ -67,6 +68,7 @@ namespace CoreMidi {
 		bool HasSameAddressAs (MidiNetworkHost other);
 	}
 
+	[NoMac][NoTV][NoWatch]
 	[Static]
 	interface Midi {
 		[Field ("MIDINetworkNotificationContactsDidChange")]
@@ -81,6 +83,7 @@ namespace CoreMidi {
 		NSString NetworkBonjourServiceType { get; }
 	}
 
+	[NoMac][NoTV][NoWatch]
 	[BaseType (typeof (NSObject), Name="MIDINetworkConnection")]
 	interface MidiNetworkConnection {
 		[Export ("host", ArgumentSemantic.Retain)]
@@ -90,6 +93,7 @@ namespace CoreMidi {
 		MidiNetworkConnection FromHost (MidiNetworkHost host);
 	}
 
+	[NoMac][NoTV][NoWatch]
 	[BaseType (typeof (NSObject), Name="MIDINetworkSession")]
 	// default 'init' crash the application
 	[DisableDefaultCtor]
