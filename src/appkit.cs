@@ -805,14 +805,6 @@ namespace AppKit {
 		[Mac (10,12)]
 		[Export ("enumerateWindowsWithOptions:usingBlock:")]
 		void EnumerateWindows (NSWindowListOptions options, NSApplicationEnumerateWindowsHandler block);
-
-		[Mac (10, 14, onlyOn64: true)]
-		[NullAllowed, Export ("appearance", ArgumentSemantic.Strong)]
-		NSAppearance Appearance { get; set; }
-
-		[Mac (10, 14, onlyOn64: true)]
-		[Export ("effectiveAppearance", ArgumentSemantic.Strong)]
-		NSAppearance EffectiveAppearance { get; }
 	}
 
 	[Static]
