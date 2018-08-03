@@ -217,6 +217,10 @@ namespace Introspection {
 					if (!Mac.CheckSystemVersion (10, 13) || IntPtr.Size == 4) // Was added in 10.13
 						return true;
 					break;
+				case "NSApplication":
+					if (!Mac.CheckSystemVersion (10, 14)) // Was added in 10.14
+						return true;
+					break;
 				}
 				break;
 			case "NSUserInterfaceValidations":

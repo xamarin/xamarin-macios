@@ -25,6 +25,9 @@ using System.Linq;
 using System.Text;
 
 using NUnit.Framework;
+#if __IOS__
+using ARKit;
+#endif
 
 #if XAMCORE_2_0
 using Foundation;
@@ -527,5 +530,30 @@ namespace Introspection {
 
 			return SkipDueToAttribute (type);
 		}
+
+#if __IOS__
+		/// <summary>
+		/// Ensures that all subclasses of a base class that conforms to IARAnchorCopying re-expose its constructor.
+		/// Note: we cannot have constructors in protocols so we have to inline them in every subclass.
+		/// </summary>
+		[Test]
+		public void ARAnchorCopyingCtorTest ()
+		{
+			Errors = 0;
+
+			foreach (Type t in Assembly.GetTypes ()) {
+				if (t.Name == "IARAnchorCopying" || t.Name == "ARAnchorCopyingWrapper")
+					continue;
+
+				if (!typeof (IARAnchorCopying).IsAssignableFrom (t))
+					continue;
+
+				if (t.GetConstructor (new Type [] { typeof (ARAnchor) }) == null)
+					ReportError ("{0} should re-expose IARAnchorCopying::.ctor(ARAnchor)", t);
+			}
+
+			Assert.AreEqual (0, Errors, "{0} potential errors found when validating if subclasses of 'ARAnchor' re-expose 'IARAnchorCopying' constructor", Errors);
+		}
+#endif
 	}
 }

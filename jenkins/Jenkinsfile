@@ -106,28 +106,94 @@ def appendFileComment (comment)
     writeFile (file: commentFile, text: comment)
 }
 
+def markdownToSlack (value)
+{
+    def tmpfile = "/tmp/slacker.md"
+    writeFile (file: tmpfile, text: value)
+    try {
+        // this monstruousity converts markdown's [text](url) to slack's <url|text>
+        sh ("sed -i '' 's/[[]\\(.*\\)[]][\\(]\\(.*\\)[\\)]/<\\2|\\1>/' '${tmpfile}'")
+        value = readFile (tmpfile)
+    } finally {
+        sh ("rm -f '${tmpfile}'")
+    }
+    return value
+}
+
+def reportFinalStatusToSlack (err, gitHash, currentStage, fileContents)
+{
+    def status = currentBuild.currentResult
+    if ("${status}" == "SUCCESS" && err == "")
+        return // not reporting success to slack
+
+    def authorName = null
+    def authorEmail = null
+    if (isPr) {
+        authorName = env.CHANGE_AUTHOR_DISPLAY_NAME
+        authorEmail = env.CHANGE_AUTHOR_EMAIL
+        slackMessage = "Pull Request #<${env.CHANGE_URL}|${env.CHANGE_ID}> failed to build."
+    } else {
+        authorName = sh (script: "git log -1 --pretty=%an", returnStdout: true).trim ()
+        authorEmail = sh (script: "git log -1 --pretty=%ae", returnStdout: true).trim ()
+        slackMessage = "Commit <https://github.com/${repository}/commit/${gitHash}|${gitHash}> failed to build."
+    }
+
+    def title = null
+    if (err != null) {
+        title = "Internal jenkins failed in stage '${currentStage}': ${err}"
+    } else {
+        title = "Internal jenkins failed in stage '${currentStage}'"
+    }
+    def text = ""
+    if (fileContents != null)
+        text = "\"text\": ${groovy.json.JsonOutput.toJson (markdownToSlack (fileContents))},"
+    // The attachments string must not start with a newline, it will produce a very helpful 'Invalid JSON String' exception with no additional info.
+    def attachments = """[
+        {
+            \"author_name\": \"${authorName} (${authorEmail})\",
+            \"title\": \"${title}\",
+            \"title_link\": \"${env.RUN_DISPLAY_URL}\",
+            \"color\": \"danger\",
+            ${text}
+            \"fallback\": \"Build failed\"
+        }
+    ]
+    """
+    echo (attachments)
+    slackSend (botUser: true, channel: "#ios-notifications", color: "danger", message: slackMessage, attachments: attachments)
+}
+
 def reportFinalStatus (err, gitHash, currentStage)
 {
     if (!createFinalStatus)
         return
 
-    def comment = null
+    def comment = ""
     def status = currentBuild.currentResult
 
     if ("${status}" == "SUCCESS" && err == "") {
         comment = "✅ [Jenkins job](${env.RUN_DISPLAY_URL}) (on internal Jenkins) succeeded"
     } else {
-        comment = "🔥 [Jenkins job](${env.RUN_DISPLAY_URL}) (on internal Jenkins) failed in stage '${currentStage}' 🔥"
+        // Aborted builds throw either a FlowInterruptedException or an AbortException (depending on what's executing),
+        // so treat either as an abortion (both can be thrown in other circumstances as well, so it's just a best guess).
+        if (err.contains ("FlowInterruptedException") || err.contains ("AbortException"))
+            comment += "❌ [Build was (probably) aborted](${env.RUN_DISPLAY_URL})\n\n"
+        comment += "🔥 [Jenkins job](${env.RUN_DISPLAY_URL}) (on internal Jenkins) failed in stage '${currentStage}' 🔥"
         if (err != "")
             comment += " : ${err}"
         manager.addErrorBadge (comment)
         manager.buildFailure ()
     }
 
-    if (fileExists (commentFile))
-        comment += "\n\n" + readFile ("${commentFile}")
+    def fileContents = null
+    if (fileExists (commentFile)) {
+        fileContents = readFile ("${commentFile}")
+        comment += "\n\n" + fileContents
+    }
 
     addComment ("${comment}")
+
+    reportFinalStatusToSlack (err, gitHash, currentStage, fileContents)
 }
 
 def processAtMonkeyWrench (outputFile)
@@ -253,6 +319,27 @@ def runXamarinMacTests (url, macOS, maccore_hash, xamarin_macios_hash)
     }
 }
 
+def abortExecutingBuilds ()
+{
+    def job = Jenkins.instance.getItemByFullName (env.JOB_NAME)
+    for (build in job.builds) {
+        if (!build.isBuilding ())
+            continue
+        echo ("Current build: ${currentBuild.number} Checking build: ${build.number}");
+        if (build.number > currentBuild.number) {
+            error ("There is already a newer build in progress (#${build.number})")
+        } else if (build.number < currentBuild.number) {
+            def exec = build.getExecutor ()
+            if (exec == null) {
+                echo ("No executor for build ${build.number}")
+            } else {
+                exec.interrupt (Result.ABORTED, new CauseOfInterruption.UserInterruption ("Aborted by build #${currentBuild.number}"))
+                echo ("Aborted previous build: #${build.number}")
+            }
+        }
+    }
+}
+
 timestamps {
     node ('xamarin-macios && macos-10.13') {
         try {
@@ -301,6 +388,9 @@ timestamps {
 
                         if (!hasRunInternalTests)
                             skipLocalTestRunReason = "Not running tests here because they're run on public Jenkins."
+
+                        // only aborting PR builds, since for normal branches we want to build as much as possible by default.
+                        abortExecutingBuilds ()
                     }
 
                     dir ("${workspace}") {
