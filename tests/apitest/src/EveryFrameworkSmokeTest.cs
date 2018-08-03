@@ -75,6 +75,7 @@ namespace Xamarin.Mac.Tests
 				case "CoreMLLibrary":
 				case "ExternalAccessoryLibrary":
 				case "CoreSpotlightLibrary":
+				case "BusinessChatLibrary":
 					return LoadStatus.Acceptable;
 				}
 			}
