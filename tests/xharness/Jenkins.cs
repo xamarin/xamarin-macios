@@ -20,7 +20,7 @@ namespace xharness
 		public bool IncludeClassicMac = true;
 		public bool IncludeBcl;
 		public bool IncludeMac = true;
-		public bool IncludeMac32;
+		public bool IncludeMac32 = true;
 		public bool IncludeiOS = true;
 		public bool IncludeiOSExtensions;
 		public bool IncludetvOS = true;
