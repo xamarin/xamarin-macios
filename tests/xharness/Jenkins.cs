@@ -680,8 +680,6 @@ namespace xharness
 					RunTestTask exec;
 					IEnumerable<RunTestTask> execs;
 					var ignored_main = ignored;
-					if (project.Name.Contains ("api"))
-						Console.WriteLine ("STOP");
 					if ((ignored32 || !IncludeClassicMac) && project.GenerateVariations) {
 						ignored_main = true; // Only if generating variations is the main project is an XM Classic app
 						build.RequiresXcode94 = true;
