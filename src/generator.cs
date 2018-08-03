@@ -2857,6 +2857,9 @@ public partial class Generator : IMemberGatherer {
 						} else if (IsWrappedType (pi.PropertyType)){
 							getter = "Dictionary [{0}] as " + pi.PropertyType;
 							setter = "SetNativeValue ({0}, value)";
+						} else if (pi.PropertyType.Name == "CGColorSpace") {
+							getter = "GetNativeValue<" + pi.PropertyType +"> ({0})";
+							setter = "SetNativeValue ({0}, value)";
 						} else {
 							throw new BindingException (1031, true,
 										    "Limitation: can not automatically create strongly typed dictionary for " +
