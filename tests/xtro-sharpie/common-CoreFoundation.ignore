@@ -969,3 +969,20 @@
 !unknown-pinvoke! dispatch_time bound
 !unknown-pinvoke! dispatch_walltime bound
 !unknown-pinvoke! open bound
+!missing-field! kCFStreamErrorDomainSOCKS not bound
+!missing-field! kCFStreamErrorDomainSSL not bound
+!missing-field! kCFStreamPropertyShouldCloseNativeSocket not bound
+!missing-field! kCFStreamPropertySocketSecurityLevel not bound
+!missing-field! kCFStreamPropertySOCKSPassword not bound
+!missing-field! kCFStreamPropertySOCKSProxy not bound
+!missing-field! kCFStreamPropertySOCKSProxyHost not bound
+!missing-field! kCFStreamPropertySOCKSProxyPort not bound
+!missing-field! kCFStreamPropertySOCKSUser not bound
+!missing-field! kCFStreamPropertySOCKSVersion not bound
+!missing-field! kCFStreamSocketSecurityLevelNegotiatedSSL not bound
+!missing-field! kCFStreamSocketSecurityLevelNone not bound
+!missing-field! kCFStreamSocketSecurityLevelSSLv2 not bound
+!missing-field! kCFStreamSocketSecurityLevelSSLv3 not bound
+!missing-field! kCFStreamSocketSecurityLevelTLSv1 not bound
+!missing-field! kCFStreamSocketSOCKSVersion4 not bound
+!missing-field! kCFStreamSocketSOCKSVersion5 not bound
