@@ -457,6 +457,30 @@ namespace CoreImage {
 		bool WritePngRepresentation (CIImage image, NSUrl url, CIFormat format, CGColorSpace colorSpace, CIImageRepresentationOptions options, [NullAllowed] out NSError error);
 	}
 
+
+	[Category]
+	[BaseType (typeof(CIContext))]
+	interface CIContext_CIDepthBlurEffect
+	{
+		// as per the docs: The 'options' parameter is a key value/pair reserved for future use.
+		[TV (12,0), iOS (12,0), Mac (10,14, onlyOn64: true)]
+		[Export ("depthBlurEffectFilterForImageURL:options:")]
+		[return: NullAllowed]
+		CIFilter GetDepthBlurEffectFilter (NSUrl url, [NullAllowed] NSDictionary options);
+
+		// as per the docs: The 'options' parameter is a key value/pair reserved for future use.
+		[TV (12,0), iOS (12,0), Mac (10,14, onlyOn64: true)]
+		[Export ("depthBlurEffectFilterForImageData:options:")]
+		[return: NullAllowed]
+		CIFilter GetDepthBlurEffectFilter (NSData data, [NullAllowed] NSDictionary options);
+
+		// as per the docs: The 'options' parameter is a key value/pair reserved for future use.
+		[TV (12,0), iOS (12,0), Mac (10,14, onlyOn64: true)]
+		[Export ("depthBlurEffectFilterForImage:disparityImage:portraitEffectsMatte:orientation:options:")]
+		[return: NullAllowed]
+		CIFilter GetDepthBlurEffectFilter (CIImage image, CIImage disparityImage, [NullAllowed] CIImage portraitEffectsMatte, CGImagePropertyOrientation orientation, [NullAllowed] NSDictionary options);
+	}
+
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] //  In iOS8 they expose custom filters, we expose a protected one in CIFilter.cs
 	interface CIFilter : NSSecureCoding, NSCopying {
@@ -919,6 +943,14 @@ namespace CoreImage {
 		[iOS (11,0), TV (11,0), Mac (10,13)]
 		[Field ("kCIInputDisparityImageKey", "+CoreImage")]
 		NSString DisparityImage { get; }
+
+		[TV (12, 0), iOS (12, 0), Mac (10, 14, onlyOn64: true)]
+		[Field ("kCIInputMatteImageKey", "+CoreImage")]
+		NSString MatteImage { get; }
+
+		[TV (12, 0), iOS (12, 0), Mac (10, 14, onlyOn64: true)]
+		[Field ("kCIInputAmountKey", "+CoreImage")]
+		NSString Amount { get; }
 	}
 		
 	[Static]
@@ -1257,6 +1289,9 @@ namespace CoreImage {
 
 		[iOS (11,0), TV (11,0), Mac (10,13)]
 		bool AuxiliaryDisparity { get; set; }
+
+		[TV (12, 0), iOS (12, 0), Mac (10, 14, onlyOn64: true)]
+		bool AuxiliaryPortraitEffectsMatte { get; }
 	}
 
 	[Internal]
@@ -1284,6 +1319,10 @@ namespace CoreImage {
 		[iOS (11,0), TV (11,0), Mac (10,13)]
 		[Field ("kCIImageAuxiliaryDisparity")]
 		NSString AuxiliaryDisparityKey { get; }
+
+		[TV (12, 0), iOS (12, 0), Mac (10, 14, onlyOn64: true)]
+		[Field ("kCIImageAuxiliaryPortraitEffectsMatte")]
+		NSString AuxiliaryPortraitEffectsMatteKey { get; }
 	}
 	
 	[BaseType (typeof (NSObject))]
@@ -1841,6 +1880,62 @@ namespace CoreImage {
 		[Mac (10,13)]
 		[Export ("imageTransformForCGOrientation:")]
 		CGAffineTransform GetImageTransform (CGImagePropertyOrientation orientation);
+
+		[TV (12, 0), iOS (12, 0), Mac (10, 14, onlyOn64: true)]
+		[Export ("imageByInsertingIntermediate")]
+		CIImage CreateByInsertingIntermediate ();
+
+		[TV (12, 0), iOS (12, 0), Mac (10, 14, onlyOn64: true)]
+		[Export ("imageByInsertingIntermediate:")]
+		CIImage CreateByInsertingIntermediate (bool cache);
+
+		// CIImage_AVPortraitEffectsMatte category
+
+		[TV (12, 0), iOS (12, 0), Mac (10, 14, onlyOn64: true)]
+		[NullAllowed, Export ("portraitEffectsMatte")]
+		AVPortraitEffectsMatte PortraitEffectsMatte { get; }
+
+		[TV (12,0), iOS (12,0), Mac (10, 14, onlyOn64: true)]
+		[Export ("initWithPortaitEffectsMatte:options:")] // selector typo, rdar filled 42894821
+		IntPtr Constructor (AVPortraitEffectsMatte matte, [NullAllowed] NSDictionary options);
+
+		[TV (11,0), iOS (11,0), Mac (10, 14, onlyOn64: true)]
+		[Export ("initWithPortaitEffectsMatte:")] // selector typo, rdar filled 42894821
+		IntPtr Constructor (AVPortraitEffectsMatte matte);
+
+		[TV (12,0), iOS (12,0), Mac (10, 14, onlyOn64: true)]
+		[Static]
+		[Export ("imageWithPortaitEffectsMatte:options:")] // selector typo, rdar filled 42894821
+		[return: NullAllowed]
+		CIImage FromPortraitEffectsMatte (AVPortraitEffectsMatte matte, [NullAllowed] NSDictionary options);
+
+		[TV (12,0), iOS (12,0), Mac (10, 14, onlyOn64: true)]
+		[Static]
+		[Export ("imageWithPortaitEffectsMatte:")] // selector typo, rdar filled 42894821
+		[return: NullAllowed]
+		CIImage FromPortraitEffectsMatte (AVPortraitEffectsMatte matte);
+
+		// CIImage_AVDepthData category
+
+		[TV (11, 0), iOS (11, 0), Mac (10,13)]
+		[Export ("initWithDepthData:options:")]
+		IntPtr Constructor (AVDepthData data, [NullAllowed] NSDictionary options);
+
+		[TV (11, 0), iOS (11, 0), Mac (10,13)]
+		[Export ("initWithDepthData:")]
+		IntPtr Constructor (AVDepthData data);
+
+		[TV (11, 0), iOS (11, 0), Mac (10,13)]
+		[Static]
+		[Export ("imageWithDepthData:options:")]
+		[return: NullAllowed]
+		CIImage FromDepthData (AVDepthData data, [NullAllowed] NSDictionary options);
+
+		[TV (11, 0), iOS (11, 0), Mac (10,13)]
+		[Static]
+		[Export ("imageWithDepthData:")]
+		[return: NullAllowed]
+		CIImage FromDepthData (AVDepthData data);
 	}
 
 	interface ICIImageProcessorInput {}
@@ -5393,6 +5488,14 @@ namespace CoreImage {
 
 		[Field ("kCIImageRepresentationDisparityImage")]
 		NSString DisparityImageKey { get; }
+
+		[TV (12, 0), iOS (12, 0), Mac (10, 14, onlyOn64: true)]
+		[Field ("kCIImageRepresentationAVPortraitEffectsMatte")]
+		NSString AVPortraitEffectsMatteKey { get; }
+
+		[TV (12, 0), iOS (12, 0), Mac (10, 14, onlyOn64: true)]
+		[Field ("kCIImageRepresentationPortraitEffectsMatteImage")]
+		NSString PortraitEffectsMatteImageKey { get; }
 	}
 
 	[iOS (11,0)]
@@ -5409,7 +5512,11 @@ namespace CoreImage {
 		bool DepthImage { get; set; }
 
 		bool DisparityImage { get; set; }
+
+		bool PortraitEffectsMatteImage { get; set; } 
 #endif
+		[TV (12, 0), iOS (12, 0), Mac (10, 14, onlyOn64: true)]
+		AVPortraitEffectsMatte AVPortraitEffectsMatte { get; set; } 
 	}
 
 	[CoreImageFilter]
