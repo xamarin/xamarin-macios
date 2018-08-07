@@ -456,6 +456,7 @@ namespace Xamarin.Bundler
 			bool enable_debug_symbols = app.PackageManagedDebugSymbols;
 			bool llvm_only = app.EnableLLVMOnlyBitCode;
 			bool interp = app.UseInterpreter;
+			bool is32bit = (abi & Abi.Arch32Mask) > 0;
 			string arch = abi.AsArchString ();
 
 			args.Append ("--debug ");
@@ -503,7 +504,7 @@ namespace Xamarin.Bundler
 			}
 
 			if (enable_llvm)
-				args.Append ("llvm-path=").Append (MonoTouchDirectory).Append ("/LLVM/bin/,");
+				args.Append ("llvm-path=").Append (MonoTouchDirectory).Append (is32bit ? "/LLVM36/bin/," : "/LLVM/bin/,");
 
 			if (!llvm_only)
 				args.Append ("outfile=").Append (StringUtils.Quote (outputFile));

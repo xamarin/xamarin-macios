@@ -1512,11 +1512,19 @@ install-llvm: install-llvm32 install-llvm64
 LLVM_TARGETS = \
 	$(PREFIX)/LLVM/bin/opt \
 	$(PREFIX)/LLVM/bin/llc \
+	$(PREFIX)/LLVM36/bin/opt \
+	$(PREFIX)/LLVM36/bin/llc
 
 $(PREFIX)/LLVM/bin/%: $(SDK_DESTDIR)/ios-llvm64/bin/% | $(PREFIX)/LLVM/bin
 	$(call Q_2,INSTALL ,[LLVM64]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $^ $@
 
+$(PREFIX)/LLVM36/bin/%: $(SDK_DESTDIR)/ios-llvm36-32/bin/% | $(PREFIX)/LLVM36/bin
+	$(call Q_2,INSTALL ,[LLVM64]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $^ $@
+
 $(PREFIX)/LLVM/bin:
+	$(Q) mkdir -p $@
+
+$(PREFIX)/LLVM36/bin:
 	$(Q) mkdir -p $@
 
 install-llvm32:.stamp-build-llvm $(LLVM_TARGETS)
