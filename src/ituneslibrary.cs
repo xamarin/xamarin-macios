@@ -311,7 +311,7 @@ namespace iTunesLibrary {
 		bool Master { [Bind ("isMaster")] get; }
 
 		[NullAllowed, Export ("parentID", ArgumentSemantic.Retain)]
-		NSNumber ParentID { get; }
+		NSNumber ParentId { get; }
 
 		[Export ("visible")]
 		bool Visible { [Bind ("isVisible")] get; }
