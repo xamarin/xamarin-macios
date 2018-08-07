@@ -226,8 +226,7 @@ namespace Metal {
 		public uint ThreadGroupsPerGrid3;
 	}
 
-	[NoMac]
-	[iOS (10,0), TV (10,0)]
+	[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0)]
 	public struct MTLStageInRegionIndirectArguments
 	{
 		public uint StageInOrigin1;

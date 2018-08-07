@@ -986,7 +986,7 @@ namespace Metal {
 	public enum MTLMultisampleStencilResolveFilter : ulong
 	{
 		Sample0 = 0,
-		DepthResolvedSample = 1
+		DepthResolvedSample = 1,
 	}
 }
 #endif

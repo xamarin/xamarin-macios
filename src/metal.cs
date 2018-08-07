@@ -664,28 +664,28 @@ namespace Metal {
 		[Abstract]
 #endif
 		[Export ("optimizeContentsForGPUAccess:")]
-		void OptimizeContentsForGPUAccess (IMTLTexture texture);
+		void OptimizeContentsForGpuAccess (IMTLTexture texture);
 
 		[Mac (10,14, onlyOn64: true), iOS (12,0)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("optimizeContentsForGPUAccess:slice:level:")]
-		void OptimizeContentsForGPUAccess (IMTLTexture texture, nuint slice, nuint level);
+		void OptimizeContentsForGpuAccess (IMTLTexture texture, nuint slice, nuint level);
 
 		[Mac (10,14, onlyOn64: true), iOS (12,0)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("optimizeContentsForCPUAccess:")]
-		void OptimizeContentsForCPUAccess (IMTLTexture texture);
+		void OptimizeContentsForCpuAccess (IMTLTexture texture);
 
 		[Mac (10,14, onlyOn64: true), iOS (12,0)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("optimizeContentsForCPUAccess:slice:level:")]
-		void OptimizeContentsForCPUAccess (IMTLTexture texture, nuint slice, nuint level);
+		void OptimizeContentsForCpuAccess (IMTLTexture texture, nuint slice, nuint level);
 
 		[Mac (10,14, onlyOn64: true), iOS (12,0)]
 #if XAMCORE_4_0
@@ -3173,7 +3173,7 @@ namespace Metal {
 		[Export ("tileBuffers")]
 		MTLPipelineBufferDescriptorArray TileBuffers { get; }
 
-		[NoMac, iOS (12,0), TV (12,0)]
+		[iOS (12,0)]
 		[Export ("maxTotalThreadsPerThreadgroup")]
 		nuint MaxTotalThreadsPerThreadgroup { get; set; }
 
@@ -3252,16 +3252,12 @@ namespace Metal {
 		[Export ("setFragmentBuffer:offset:atIndex:")]
 		void SetFragmentBuffer (IMTLBuffer buffer, nuint offset, nuint index);
 
-#if XAMCORE_4_0
 		[Abstract]
-#endif
 		[NoiOS, NoTV]
 		[Export ("drawPatches:patchStart:patchCount:patchIndexBuffer:patchIndexBufferOffset:instanceCount:baseInstance:tessellationFactorBuffer:tessellationFactorBufferOffset:tessellationFactorBufferInstanceStride:")]
 		void DrawPatches (nuint numberOfPatchControlPoints, nuint patchStart, nuint patchCount, [NullAllowed] IMTLBuffer patchIndexBuffer, nuint patchIndexBufferOffset, nuint instanceCount, nuint baseInstance, IMTLBuffer buffer, nuint offset, nuint instanceStride);
 
-#if XAMCORE_4_0
 		[Abstract]
-#endif
 		[NoiOS, NoTV]
 		[Export ("drawIndexedPatches:patchStart:patchCount:patchIndexBuffer:patchIndexBufferOffset:controlPointIndexBuffer:controlPointIndexBufferOffset:instanceCount:baseInstance:tessellationFactorBuffer:tessellationFactorBufferOffset:tessellationFactorBufferInstanceStride:")]
 		void DrawIndexedPatches (nuint numberOfPatchControlPoints, nuint patchStart, nuint patchCount, [NullAllowed] IMTLBuffer patchIndexBuffer, nuint patchIndexBufferOffset, IMTLBuffer controlPointIndexBuffer, nuint controlPointIndexBufferOffset, nuint instanceCount, nuint baseInstance, IMTLBuffer buffer, nuint offset, nuint instanceStride);
