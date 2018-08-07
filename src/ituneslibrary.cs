@@ -68,7 +68,7 @@ namespace iTunesLibrary {
 		string SortAlbumArtist { get; }
 
 		[Export ("persistentID", ArgumentSemantic.Retain)]
-		NSNumber PersistentID { get; }
+		NSNumber PersistentId { get; }
 	}
 
 	[Mac (10,14, onlyOn64: true)]
@@ -82,7 +82,7 @@ namespace iTunesLibrary {
 		string SortName { get; }
 
 		[Export ("persistentID", ArgumentSemantic.Retain)]
-		NSNumber PersistentID { get; }
+		NSNumber PersistentId { get; }
 	}
 
 	[Mac (10,14, onlyOn64: true)]
@@ -106,7 +106,7 @@ namespace iTunesLibrary {
 	interface ITLibMediaEntity
 	{
 		[Export ("persistentID", ArgumentSemantic.Retain)]
-		NSNumber PersistentID { get; }
+		NSNumber PersistentId { get; }
 
 		[Export ("valueForProperty:")]
 		[return: NullAllowed]
@@ -116,7 +116,7 @@ namespace iTunesLibrary {
 		void EnumerateValues (NSSet<NSString> properties, ITLibMediaEntityEnumerateValuesHandler handler);
 
 		[Export ("enumerateValuesExceptForProperties:usingBlock:")]
-		void EnumerateValuesExcluding (NSSet<NSString> properties, ITLibMediaEntityEnumerateValuesHandler handler);
+		void EnumerateValuesExcept (NSSet<NSString> properties, ITLibMediaEntityEnumerateValuesHandler handler);
 	}
 
 	[Mac (10,14, onlyOn64: true)]
@@ -162,6 +162,7 @@ namespace iTunesLibrary {
 		[Export ("mediaKind", ArgumentSemantic.Assign)]
 		ITLibMediaItemMediaKind MediaKind { get; }
 
+		[Export ("fileSize")]
 		ulong FileSize { get; }
 
 		[Export ("size")]
@@ -385,4 +386,5 @@ namespace iTunesLibrary {
 		[Export ("unloadData")]
 		void UnloadData ();
 	}
+
 }

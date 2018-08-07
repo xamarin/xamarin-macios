@@ -50,7 +50,7 @@ namespace iTunesLibrary {
 		Movie = 3,
 		Podcast = 4,
 		Audiobook = 5,
-		PDFBooklet = 6,
+		PdfBooklet = 6,
 		MusicVideo = 7,
 		TVShow = 8,
 		InteractiveBooklet = 9,
@@ -61,7 +61,7 @@ namespace iTunesLibrary {
 		VoiceMemo = 17,
 		iTunesU = 18,
 		Book = 19,
-		PDFBook = 20,
+		PdfBook = 20,
 		AlertTone = 21,
 	}
 
@@ -108,7 +108,7 @@ namespace iTunesLibrary {
 		VoiceMemos = 14,
 		Purchases = 16,
 		iTunesU = 26,
-		ITLibDistinguishedPlaylistKind90sMusic = 42,
+		NightiesMusic = 42,
 		MyTopRated = 43,
 		Top25MostPlayed = 44,
 		RecentlyPlayed = 45,
