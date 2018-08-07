@@ -206,7 +206,7 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyExifSceneType")]
 		NSString ExifSceneType { get; }
 		[Field ("kCGImagePropertyExifCFAPattern")]
-		NSString ExifCFAPattern { get; }
+		NSString ExifCfaPattern { get; }
 		[Field ("kCGImagePropertyExifCustomRendered")]
 		NSString ExifCustomRendered { get; }
 		[Field ("kCGImagePropertyExifExposureMode")]
@@ -790,11 +790,11 @@ namespace ImageIO {
 
 		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Field ("kCGImagePropertyDNGCFALayout")]
-		NSString DNGCFALayout { get; }
+		NSString DNGCfaLayout { get; }
 
 		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Field ("kCGImagePropertyDNGCFAPlaneColor")]
-		NSString DNGCFAPlaneColor { get; }
+		NSString DNGCfaPlaneColor { get; }
 
 		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Field ("kCGImagePropertyDNGChromaBlurRadius")]

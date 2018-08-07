@@ -136,6 +136,7 @@ namespace Introspection
 			"Cartes", // french
 			"Cavlc",
 			"Cda", // acronym: Clinical Document Architecture
+			"Cfa", // acronym: Color Filter Array
 			"Celp", // MPEG4ObjectID
 			"Characterteristic",
 			"Chapv",
