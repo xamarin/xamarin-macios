@@ -1,0 +1,24 @@
+## OpenGL is deprecated in 10.14
+!missing-selector! +CARenderer::rendererWithCGLContext:options: not bound
+
+## others
+
+!missing-protocol! CALayoutManager not bound
+!missing-protocol-conformance! CAConstraintLayoutManager should conform to CALayoutManager
+!missing-selector! +CALayer::layerWithRemoteClientId: not bound
+!missing-selector! CAConstraint::offset not bound
+!missing-selector! CAMetalLayer::colorspace not bound
+!missing-selector! CAMetalLayer::setColorspace: not bound
+!missing-selector! CAMetalLayer::setWantsExtendedDynamicRangeContent: not bound
+!missing-selector! CAMetalLayer::wantsExtendedDynamicRangeContent not bound
+!missing-selector! CAOpenGLLayer::colorspace not bound
+!missing-selector! CAOpenGLLayer::setColorspace: not bound
+!missing-selector! CAOpenGLLayer::setWantsExtendedDynamicRangeContent: not bound
+!missing-selector! CAOpenGLLayer::wantsExtendedDynamicRangeContent not bound
+!missing-selector! CARemoteLayerClient::clientId not bound
+!missing-selector! CARemoteLayerClient::initWithServerPort: not bound
+!missing-selector! CARemoteLayerClient::layer not bound
+!missing-selector! CARemoteLayerClient::setLayer: not bound
+!missing-selector! CARemoteLayerServer::serverPort not bound
+!missing-type! CARemoteLayerClient not bound
+!missing-type! CARemoteLayerServer not bound
