@@ -130,6 +130,7 @@
 /src/multipeerconnectivity.cs @spouliot
 /src/naturallanguage.cs @mandel-macaque
 /src/NaturalLanguage @mandel-macaque
+/src/Network @migueldeicaza
 /src/NetworkExtension @spouliot
 /src/networkextension.cs @spouliot
 /src/NotificationCenter @spouliot

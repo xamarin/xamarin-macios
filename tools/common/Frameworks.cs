@@ -164,6 +164,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "AdSupport", "AdSupport", 10,14 },
 					{ "NaturalLanguage", "NaturalLanguage", 10,14 },
+					{ "Network", "Network", 10, 14 },
 					{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10,14 },
 					{ "UserNotifications", "UserNotifications", 10,14 },
 				};
@@ -289,6 +290,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "CarPlay", "CarPlay", 12,0 },
 				{ "IdentityLookupUI", "IdentityLookupUI", 12,0 },
 				{ "NaturalLanguage", "NaturalLanguage", 12,0 },
+				{ "Network", "Network", 12, 0 },
 			};
 		}
 		return ios_frameworks;
@@ -411,6 +413,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "Vision", "Vision", 11 },
 
 					{ "NaturalLanguage", "NaturalLanguage", 12,0 },
+					{ "Network", "Network", 12, 0 } ,
 					{ "TVUIKit", "TVUIKit", 12,0 },
 				};
 			}

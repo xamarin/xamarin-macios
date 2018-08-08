@@ -65,6 +65,7 @@ namespace Xamarin.Linker {
 			CoreImage = profile.GetNamespace ("CoreImage");
 			AdSupport = profile.GetNamespace ("AdSupport");
 			NaturalLanguage = profile.GetNamespace ("NaturalLanguage");
+			Network = profile.GetNamespace ("Network");
 			VideoSubscriberAccount = profile.GetNamespace ("VideoSubscriberAccount");
 #if MONOMAC
 			PhotosUI = profile.GetNamespace ("PhotosUI");
@@ -158,6 +159,7 @@ namespace Xamarin.Linker {
 		public static string AdSupport { get; private set; }
 
 		public static string NaturalLanguage { get; private set; }
+		public static string Network { get; private set; }
 
 		public static string VideoSubscriberAccount { get; private set; }
 #if MONOMAC

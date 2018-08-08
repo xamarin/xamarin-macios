@@ -113,6 +113,7 @@ namespace MonoMac {
 		public const string MetalKitLibrary = "/System/Library/Frameworks/MetalKit.framework/MetalKit";
 		public const string ModelIOLibrary = "/System/Library/Frameworks/ModelIO.framework/ModelIO";
 		public const string GameplayKitLibrary = "/System/Library/Frameworks/GameplayKit.framework/GameplayKit";
+		public const string NetworkLibrary = "/System/Library/Frameworks/Network.framework/Network";
 		public const string NetworkExtensionLibrary = "/System/Library/Frameworks/NetworkExtension.framework/NetworkExtension";
 		public const string CoreAudioKitLibrary = "/System/Library/Frameworks/CoreAudioKit.framework/CoreAudioKit";
 		public const string MediaToolboxLibrary = "/System/Library/Frameworks/MediaToolbox.framework/MediaToolbox";

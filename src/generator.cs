@@ -2189,6 +2189,7 @@ public partial class Generator : IMemberGatherer {
 		marshal_types.Add (TypeManager.Class);
 		marshal_types.Add (TypeManager.CFRunLoop);
 		marshal_types.Add (TypeManager.CGColorSpace);
+		marshal_types.Add (TypeManager.DispatchData);
 		marshal_types.Add (TypeManager.DispatchQueue);
 		marshal_types.Add (TypeManager.Protocol);
 		if (Frameworks.HaveCoreMidi)
@@ -2232,7 +2233,11 @@ public partial class Generator : IMemberGatherer {
 		if (Frameworks.HaveAudioUnit)
 			marshal_types.Add (TypeManager.AudioUnit);
 		marshal_types.Add (TypeManager.SecIdentity);
+		marshal_types.Add (TypeManager.SecIdentity2);
 		marshal_types.Add (TypeManager.SecTrust);
+		marshal_types.Add (TypeManager.SecTrust2);
+		marshal_types.Add (TypeManager.SecProtocolOptions);
+		marshal_types.Add (TypeManager.SecProtocolMetadata);
 		marshal_types.Add (TypeManager.SecAccessControl);
 		marshal_types.Add (TypeManager.AudioBuffers);
 		if (Frameworks.HaveAudioUnit) {
@@ -2380,6 +2385,8 @@ public partial class Generator : IMemberGatherer {
 					else if (attr is AvailabilityBaseAttribute)
 						continue;
 					else if (attr is RequiresSuperAttribute)
+						continue;
+					else if (attr is NoMethodAttribute)
 						continue;
 					else {
 						switch (attr.GetType ().Name) {
@@ -5162,6 +5169,13 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		PrintDelegateProxy (minfo);
+
+		if (AttributeManager.HasAttribute<NoMethodAttribute>(minfo.mi)){
+			// Call for side effect
+			MakeSignature (minfo);
+			return;
+		}
+		
 		PrintExport (minfo);
 
 		if (!minfo.is_interface_impl) {

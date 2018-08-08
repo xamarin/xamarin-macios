@@ -10,6 +10,7 @@
 using System;
 using Foundation;
 using ObjCRuntime;
+using CoreFoundation;
 
 namespace Security {
 
@@ -1129,5 +1130,34 @@ namespace Security {
 
 		int Port { get; set; }
 	}
+
 #endif
+
+	delegate void SecProtocolVerifyComplete (bool complete);
+
+	// Respond with the identity to use for this challenge.
+	delegate void SecProtocolChallengeComplete (SecIdentity2 identity);
+
+	//
+	// These are fake NSObject types, used purely for the generator to do all the heavy lifting with block generation
+	//
+	delegate void SecProtocolKeyUpdate (SecProtocolMetadata metadata, [BlockCallback] Action complete);
+	delegate void SecProtocolChallenge (SecProtocolMetadata metadata, [BlockCallback] SecProtocolChallengeComplete challengeComplete);
+	delegate void SecProtocolVerify (SecProtocolMetadata metadata, SecTrust2 trust, [BlockCallback] SecProtocolVerifyComplete verifyComplete);
+
+	[Internal]
+	[Partial]
+	interface Callbacks {
+		[Export ("options:keyUpdateBlock:keyUpdateQueue:")]
+		[NoMethod]
+		void SetKeyUpdateBlock (SecProtocolOptions options, [BlockCallback] SecProtocolKeyUpdate keyUpdateBlock, DispatchQueue keyUpdateQueue);
+
+		[Export ("options:challengeBlock:challengeQueue:")]
+		[NoMethod]
+		void SetChallengeBlock (SecProtocolOptions options, [BlockCallback] SecProtocolChallenge challengeBlock, DispatchQueue challengeQueue);
+
+		[Export ("options:protocolVerify:verifyQueue:")]
+		[NoMethod]
+		void SetVerifyBlock (SecProtocolOptions options, [BlockCallback] SecProtocolVerify verifyBlock, DispatchQueue verifyQueue);
+	}
 }
