@@ -487,7 +487,12 @@ namespace Xamarin.MMP.Tests
 			return Path.Combine(assemblyDirectory, TestDirectory + "common/mac");
 		}
 
-		static string CopyFileWithSubstitutions (string src, string target, Func<string, string > replacementAction)
+		public static void CopyDirectory (string src, string target)
+		{
+			Xamarin.Bundler.Driver.RunCommand ("/bin/cp", $"-r {src} {target}");
+		}
+
+		public static string CopyFileWithSubstitutions (string src, string target, Func<string, string > replacementAction)
 		{
 			string text = replacementAction (System.IO.File.ReadAllText (src));
 			System.IO.File.WriteAllText (target, text);

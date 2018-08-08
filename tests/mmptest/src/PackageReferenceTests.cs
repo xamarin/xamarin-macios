@@ -6,15 +6,17 @@ using NUnit.Framework;
 namespace Xamarin.MMP.Tests
 {
 	[TestFixture]
-	public class PackageReferenceTests {
+	public class PackageReferenceTests
+	{
+		const string PackageReference = @"<ItemGroup><PackageReference Include = ""Newtonsoft.Json"" Version = ""10.0.3"" /></ItemGroup>";
 
 		[TestCase (true)]
 		[TestCase (false)]
-		public void PackageReferencs_ResolveLibAndRefCorrectly (bool full)
+		public void AppsWithPackageReferencs_BuildAndRun (bool full)
 		{
 			MMPTests.RunMMPTest (tmpDir => {
 				var config = new TI.UnifiedTestConfig (tmpDir) {
-					ItemGroup = @"<ItemGroup><PackageReference Include = ""Newtonsoft.Json"" Version = ""10.0.3"" /></ItemGroup>",
+					ItemGroup = PackageReference,
 					TestCode = @"var output = Newtonsoft.Json.JsonConvert.SerializeObject (new int[] { 1, 2, 3 });
 			if (output == ""[1,2,3]"")
 				",
@@ -26,6 +28,20 @@ namespace Xamarin.MMP.Tests
 				TI.NugetRestore (project);
 				TI.BuildProject (project, true, useMSBuild: true);
 				TI.RunGeneratedUnifiedExecutable (config);
+			});
+		}
+
+		[Test]
+		public void ExtensionProjectPackageReferencs_Build ()
+		{
+			MMPTests.RunMMPTest (tmpDir => {
+				TI.CopyDirectory (Path.Combine (TI.FindSourceDirectory (), @"Today"), tmpDir);
+
+				string project = Path.Combine (tmpDir, "Today/TodayExtensionTest.csproj");
+
+				TI.CopyFileWithSubstitutions (project, project, s => s.Replace ("%ITEMGROUP%", PackageReference));
+				TI.NugetRestore (project);
+				TI.BuildProject (Path.Combine (tmpDir, "Today/TodayExtensionTest.csproj"), isUnified: true, useMSBuild: true);
 			});
 		}
 	}

@@ -20,8 +20,10 @@ namespace Xamarin.MMP.Tests
 
 			MMPTests.RunMMPTest (tmpDir =>
 			{
-				string testPath = Path.Combine (TI.FindSourceDirectory (), @"Today/TodayExtensionTest.csproj");
-				TI.BuildProject (testPath, isUnified: true);
+				TI.CopyDirectory (Path.Combine (TI.FindSourceDirectory (), @"Today"), tmpDir);
+				string project = Path.Combine (tmpDir, "Today/TodayExtensionTest.csproj");
+				TI.CopyFileWithSubstitutions (project, project, s => s.Replace ("%ITEMGROUP%", ""));
+				TI.BuildProject (project, isUnified: true);
 			});
 		}
 
@@ -33,8 +35,8 @@ namespace Xamarin.MMP.Tests
 
 			MMPTests.RunMMPTest (tmpDir =>
 			{
-				string testPath = Path.Combine (TI.FindSourceDirectory (), @"Finder/FinderExtensionTest.csproj");
-				TI.BuildProject (testPath, isUnified: true);
+				TI.CopyDirectory (Path.Combine (TI.FindSourceDirectory (), @"Finder"), tmpDir);
+				TI.BuildProject (Path.Combine (tmpDir, "Finder/FinderExtensionTest.csproj"), isUnified: true);
 			});
 		}
 
@@ -46,8 +48,8 @@ namespace Xamarin.MMP.Tests
 
 			MMPTests.RunMMPTest (tmpDir =>
 			{
-				string testPath = Path.Combine (TI.FindSourceDirectory (), @"Share/ShareExtensionTest.csproj");
-				TI.BuildProject (testPath, isUnified: true);
+				TI.CopyDirectory (Path.Combine (TI.FindSourceDirectory (), @"Share"), tmpDir);
+				TI.BuildProject (Path.Combine (tmpDir, "Share/ShareExtensionTest.csproj"), isUnified: true);
 			});
 		}
 	}

@@ -71,4 +71,5 @@
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.AppExtension.CSharp.targets" />
+%ITEMGROUP%  
 </Project>
