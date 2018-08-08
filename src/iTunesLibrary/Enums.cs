@@ -57,7 +57,7 @@ namespace iTunesLibrary {
 		HomeVideo = 12,
 		Ringtone = 14,
 		DigitalBooklet = 15,
-		IOSApplication = 16,
+		iOSApplication = 16,
 		VoiceMemo = 17,
 		iTunesU = 18,
 		Book = 19,
@@ -304,7 +304,7 @@ namespace iTunesLibrary {
 		[Field ("ITLibPlaylistPropertyMaster")]
 		Master,
 		[Field ("ITLibPlaylistPropertyParentPersistentID")]
-		ParentPersistentID,
+		ParentPersistentId,
 		[Field ("ITLibPlaylistPropertyVisible")]
 		Visible,
 		[Field ("ITLibPlaylistPropertyItems")]
@@ -316,6 +316,6 @@ namespace iTunesLibrary {
 	[Mac (10,14, onlyOn64: true)]
 	public enum ITLibMediaEntityProperty {
 		[Field ("ITLibMediaEntityPropertyPersistentID")]
-		PersistentID,
+		PersistentId,
 	}
 }

@@ -291,7 +291,7 @@ namespace iTunesLibrary {
 		nint EpisodeOrder { get; }
 
 		[Export ("hd")]
-		bool Hd { [Bind ("isHD")] get; }
+		bool HD { [Bind ("isHD")] get; }
 
 		[Export ("videoWidth")]
 		nuint VideoWidth { get; }
