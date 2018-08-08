@@ -4,7 +4,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{005176FB-37A1-4308-8C2A-07B7ED3E0064}</ProjectGuid>
-    <ProjectTypeGuids>{889C2465-30A1-4310-B175-96B1F4D843DE};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectTypeGuids>{10CE9E57-9141-4DF0-916A-2C4FD4EE2A73};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <RootNamespace>TodayExtensionTest</RootNamespace>
     <AssemblyName>TodayExtensionTest</AssemblyName>
