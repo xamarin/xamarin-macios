@@ -167,6 +167,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "Network", "Network", 10, 14 },
 					{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10,14 },
 					{ "UserNotifications", "UserNotifications", 10,14 },
+					{ "iTunesLibrary", "iTunesLibrary", 10,14 },
 				};
 			}
 			return mac_frameworks;
