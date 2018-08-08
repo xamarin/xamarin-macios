@@ -9,6 +9,7 @@ namespace Xamarin.MMP.Tests
 	public class PackageReferenceTests
 	{
 		const string PackageReference = @"<ItemGroup><PackageReference Include = ""Newtonsoft.Json"" Version = ""10.0.3"" /></ItemGroup>";
+		const string TestCode = @"var output = Newtonsoft.Json.JsonConvert.SerializeObject (new int[] { 1, 2, 3 });";
 
 		[TestCase (true)]
 		[TestCase (false)]
@@ -17,8 +18,7 @@ namespace Xamarin.MMP.Tests
 			MMPTests.RunMMPTest (tmpDir => {
 				var config = new TI.UnifiedTestConfig (tmpDir) {
 					ItemGroup = PackageReference,
-					TestCode = @"var output = Newtonsoft.Json.JsonConvert.SerializeObject (new int[] { 1, 2, 3 });
-			if (output == ""[1,2,3]"")
+					TestCode = TestCode + @"			if (output == ""[1,2,3]"")
 				",
 					XM45 = full
 				};
@@ -38,8 +38,11 @@ namespace Xamarin.MMP.Tests
 				TI.CopyDirectory (Path.Combine (TI.FindSourceDirectory (), @"Today"), tmpDir);
 
 				string project = Path.Combine (tmpDir, "Today/TodayExtensionTest.csproj");
+				string main = Path.Combine (tmpDir, "Today/TodayViewController.cs");
 
 				TI.CopyFileWithSubstitutions (project, project, s => s.Replace ("%ITEMGROUP%", PackageReference));
+				TI.CopyFileWithSubstitutions (main, main, s => s.Replace ("%TESTCODE%", TestCode));
+
 				TI.NugetRestore (project);
 				TI.BuildProject (Path.Combine (tmpDir, "Today/TodayExtensionTest.csproj"), isUnified: true, useMSBuild: true);
 			});

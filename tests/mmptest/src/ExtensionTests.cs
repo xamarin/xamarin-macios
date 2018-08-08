@@ -22,7 +22,9 @@ namespace Xamarin.MMP.Tests
 			{
 				TI.CopyDirectory (Path.Combine (TI.FindSourceDirectory (), @"Today"), tmpDir);
 				string project = Path.Combine (tmpDir, "Today/TodayExtensionTest.csproj");
+				string main = Path.Combine (tmpDir, "Today/TodayViewController.cs");
 				TI.CopyFileWithSubstitutions (project, project, s => s.Replace ("%ITEMGROUP%", ""));
+				TI.CopyFileWithSubstitutions (main, main, s => s.Replace ("%TESTCODE%", ""));
 				TI.BuildProject (project, isUnified: true);
 			});
 		}
