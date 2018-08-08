@@ -14,3 +14,7 @@
 
 ## untyped enum in Security.framework/Headers/SecPolicy.h but the API use CFOptionFlags
 !unknown-native-enum! SecRevocation bound
+
+## identical to NSObject version (headers macros) which can be called by CFObject
+!missing-pinvoke! sec_release is not bound
+!missing-pinvoke! sec_retain is not bound

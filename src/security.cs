@@ -721,6 +721,7 @@ namespace Security {
 		[Field ("kSecValuePersistentRef")]
 		IntPtr ValuePersistentRef { get; }
 
+		[NoWatch, NoTV, NoiOS]
 		[Field ("kSecUseItemList")]
 		IntPtr UseItemList { get; }
 
