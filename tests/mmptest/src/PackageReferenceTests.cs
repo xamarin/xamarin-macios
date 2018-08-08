@@ -44,7 +44,8 @@ namespace Xamarin.MMP.Tests
 				TI.CopyFileWithSubstitutions (main, main, s => s.Replace ("%TESTCODE%", TestCode));
 
 				TI.NugetRestore (project);
-				TI.BuildProject (Path.Combine (tmpDir, "Today/TodayExtensionTest.csproj"), isUnified: true, useMSBuild: true);
+				string output = TI.BuildProject (Path.Combine (tmpDir, "Today/TodayExtensionTest.csproj"), isUnified: true, useMSBuild: true);
+				Assert.IsTrue (!output.Contains ("MM2013"));
 			});
 		}
 	}
