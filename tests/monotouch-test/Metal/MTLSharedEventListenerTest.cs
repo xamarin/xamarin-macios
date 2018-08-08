@@ -22,6 +22,7 @@ namespace MonoTouchFixtures.Metal {
 		[SetUp]
 		public void SetUp ()
 		{
+			TestRuntime.AssertDevice ();
 			TestRuntime.AssertXcodeVersion (10, 0);
 			queue = new DispatchQueue ("myQueue");
 			listener = new MTLSharedEventListener (queue);

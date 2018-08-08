@@ -3207,7 +3207,7 @@ namespace Metal {
 		DispatchQueue DispatchQueue { get; }
 	}
 
-	delegate void MTLSharedEventNotificationBlock (IMTLSharedEvent arg0, ulong arg1);
+	delegate void MTLSharedEventNotificationBlock (IMTLSharedEvent @event, ulong value);
 
 	interface IMTLSharedEvent {}
 
@@ -3281,7 +3281,7 @@ namespace Metal {
 		[Export ("commandTypes", ArgumentSemantic.Assign)]
 		MTLIndirectCommandType CommandTypes { get; set; }
 
-		[NoiOS, NoTV, Mac (10,14, onlyOn64: true)]
+		[NoiOS, NoTV]
 		[Export ("inheritPipelineState")]
 		bool InheritPipelineState { get; set; }
 

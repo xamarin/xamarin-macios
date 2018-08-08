@@ -55,7 +55,5 @@
 !incorrect-protocol-member! MTLTexture::allowGPUOptimizedContents is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::newSharedTextureWithDescriptor: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::newSharedTextureWithHandle: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLIndirectRenderCommand::drawIndexedPatches:patchStart:patchCount:patchIndexBuffer:patchIndexBufferOffset:controlPointIndexBuffer:controlPointIndexBufferOffset:instanceCount:baseInstance:tessellationFactorBuffer:tessellationFactorBufferOffset:tessellationFactorBufferInstanceStride: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLIndirectRenderCommand::drawPatches:patchStart:patchCount:patchIndexBuffer:patchIndexBufferOffset:instanceCount:baseInstance:tessellationFactorBuffer:tessellationFactorBufferOffset:tessellationFactorBufferInstanceStride: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLTexture::isShareable is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLTexture::newSharedTextureHandle is REQUIRED and should be abstract

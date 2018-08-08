@@ -227,15 +227,16 @@ namespace Metal {
 	}
 
 	[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0)]
-	public struct MTLStageInRegionIndirectArguments
-	{
-		public uint StageInOrigin1;
-		public uint StageInOrigin2;
-		public uint StageInOrigin3;
+	[StructLayout (LayoutKind.Sequential)]
+	public struct MTLStageInRegionIndirectArguments {
+		public uint[] StageInOrigin;
+		public uint[] StageInSize;
 
-		public uint StageInSize1;
-		public uint StageInSize2;
-		public uint StageInSize3;		
+		public MTLStageInRegionIndirectArguments (uint[] stageInOrigin, uint[] stageInSize)
+		{
+			StageInOrigin = stageInOrigin;
+			StageInSize = stageInSize;
+		}
 	}
 
 	public struct MTLDrawPrimitivesIndirectArguments {

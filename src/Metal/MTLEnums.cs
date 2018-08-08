@@ -111,9 +111,9 @@ namespace Metal {
 		kCubeArray = 6,
 #endif
 		k3D = 7,
-		[iOS (12,0), TV (12,0), Mac (10,14)]
+		[iOS (12,0), TV (12,0), Mac (10,14, onlyOn64: true)]
 		k2DMultisampleArray = 8,
-		[iOS (12,0), TV (12,0), Mac (10,14)]
+		[iOS (12,0), TV (12,0), Mac (10,14, onlyOn64: true)]
 		kTextureBuffer = 9,
 	}
 
@@ -619,8 +619,8 @@ namespace Metal {
 		[NoMac, iOS (11,0), NoTV, NoWatch] Rg11B10Float = 76,
 		[NoMac, iOS (11,0), NoTV, NoWatch] Rgb9E5Float = 77,
 
-		[Mac (10,14), iOS (12,0), TV (12,0)] RenderPipeline = 78,
-		[Mac (10,14), iOS (12,0), TV (12,0)] IndirectCommandBuffer = 80,
+		[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0)] RenderPipeline = 78,
+		[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0)] IndirectCommandBuffer = 80,
 	}
 
 	[Native]
@@ -722,7 +722,7 @@ namespace Metal {
 		v1_2 = (1 << 16) + 2,
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
 		v2_0 = (2 << 16),
-		[Mac (10,14), iOS (12,0), TV (12,0), NoWatch]
+		[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0), NoWatch]
 		v2_1 = (2 << 16) + 1,
 	}
 
