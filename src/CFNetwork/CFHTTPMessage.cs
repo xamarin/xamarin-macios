@@ -308,14 +308,18 @@ namespace CoreServices {
 			}
 		}
 
-		// convenience enum on top of kCFHTTPAuthenticationScheme* NSString fields
+		// convenience enum on top of kCFHTTPAuthenticationScheme* fields
 		public enum AuthenticationScheme {
 			Default,
 			Basic,
 			Negotiate,
 			NTLM,
 			Digest,
-			OAuth1
+			[Mac (10, 9)][iOS (7,0)]
+			[Deprecated (PlatformName.iOS, 12,0, message: "Not available anymore.")]
+			[Deprecated (PlatformName.TvOS, 12,0, message: "Not available anymore.")]
+			[Deprecated (PlatformName.MacOSX, 10,14, message: "Not available anymore.")]
+			OAuth1,
 		}
 
 		internal static IntPtr GetAuthScheme (AuthenticationScheme scheme)
@@ -324,17 +328,17 @@ namespace CoreServices {
 			case AuthenticationScheme.Default:
 				return IntPtr.Zero;
 			case AuthenticationScheme.Basic:
-				return _AuthenticationSchemeBasic.Handle;
+				return _AuthenticationSchemeBasic;
 			case AuthenticationScheme.Negotiate:
-				return _AuthenticationSchemeNegotiate.Handle;
+				return _AuthenticationSchemeNegotiate;
 			case AuthenticationScheme.NTLM:
-				return _AuthenticationSchemeNTLM.Handle;
+				return _AuthenticationSchemeNTLM;
 			case AuthenticationScheme.Digest:
-				return _AuthenticationSchemeDigest.Handle;
+				return _AuthenticationSchemeDigest;
 			case AuthenticationScheme.OAuth1:
 				if (_AuthenticationSchemeOAuth1 == null)
 					throw new NotSupportedException ("Requires iOS 7.0 or macOS 10.9 and lower than iOS 12 or macOS 10.14");
-				return _AuthenticationSchemeOAuth1.Handle;
+				return _AuthenticationSchemeOAuth1;
 			default:
 				throw new ArgumentException ();
 			}

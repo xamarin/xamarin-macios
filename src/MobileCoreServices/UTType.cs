@@ -210,5 +210,19 @@ namespace MobileCoreServices {
 			NSString.ReleaseNative (a);
 			return ret;
 		}
+
+		[DllImport (Constants.CoreServicesLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		static extern unsafe bool /* Boolean */ UTTypeEqual (/* CFStringRef */ IntPtr inUTI1, /* CFStringRef */ IntPtr inUTI2);
+
+		[iOS (12,0)][TV (12,0)][Watch (5,0)]
+		public static bool Equals (NSString uti1, NSString uti2)
+		{
+			if (uti1 == null)
+				return uti2 == null;
+			else if (uti2 == null)
+				return false;
+			return UTTypeEqual (uti1.Handle, uti2.Handle);
+		}
 	}
 }

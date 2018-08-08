@@ -78,4 +78,3 @@
 !missing-pinvoke! UpdateIconRef is not bound
 !missing-pinvoke! UTCreateStringForOSType is not bound
 !missing-pinvoke! UTGetOSTypeFromString is not bound
-!missing-pinvoke! UTTypeEqual is not bound
