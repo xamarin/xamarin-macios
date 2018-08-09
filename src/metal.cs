@@ -541,14 +541,14 @@ namespace Metal {
 		[Abstract]
 #endif
 		[Export ("memoryBarrierWithScope:")]
-		void MemoryBarrier (MTLBarrierScope scope);
+		void EncodeMemoryBarrier (MTLBarrierScope scope);
 
 		[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("memoryBarrierWithResources:count:")]
-		void MemoryBarrier (IMTLResource[] resources, nuint count);
+		void EncodeMemoryBarrier (IMTLResource[] resources, nuint count);
 	}
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
@@ -2238,7 +2238,7 @@ namespace Metal {
 		void SetVertexTextures (IMTLTexture [] textures, NSRange range);
 
 		[NoiOS, NoTV, NoWatch, Mac (10,11)]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'MemoryBarrier (MTLBarrierScope, MTLRenderStages, MTLRenderStages)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'EncodeMemoryBarrier (MTLBarrierScope, MTLRenderStages, MTLRenderStages)' instead.")]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
@@ -2385,14 +2385,14 @@ namespace Metal {
 		[Abstract]
 #endif
 		[Export ("memoryBarrierWithScope:afterStages:beforeStages:")]
-		void MemoryBarrier (MTLBarrierScope scope, MTLRenderStages after, MTLRenderStages before);
+		void EncodeMemoryBarrier (MTLBarrierScope scope, MTLRenderStages after, MTLRenderStages before);
 
 		[NoiOS, NoTV, Mac (10,14, onlyOn64: true)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("memoryBarrierWithResources:count:afterStages:beforeStages:")]
-		void MemoryBarrier (IMTLResource[] resources, nuint count, MTLRenderStages after, MTLRenderStages before);
+		void EncodeMemoryBarrier (IMTLResource[] resources, nuint count, MTLRenderStages after, MTLRenderStages before);
 
 		[iOS (11, 0), NoTV, NoMac, NoWatch]
 #if XAMCORE_4_0
