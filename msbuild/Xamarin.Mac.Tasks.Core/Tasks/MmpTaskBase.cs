@@ -233,7 +233,9 @@ namespace Xamarin.Mac.Tasks
 				Log.LogWarning ("Failed to create response file '{0}': {1}", responseFile, ex);
 			}
 
-			// Reponse file must come before extra arguments
+			// Some arguments can not safely go in the response file and are 
+			// added seperatly. They must go _after_ the response file
+			// as they may override options passed in the response file
 			var actualArgs = new CommandLineArgumentBuilder ();
 
 			actualArgs.AddQuoted ($"@{responseFile}");
