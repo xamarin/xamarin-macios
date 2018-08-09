@@ -2300,9 +2300,11 @@ public partial class Generator : IMemberGatherer {
 					if (AttributeManager.HasAttribute<CoreImageFilterPropertyAttribute> (pi))
 						continue;
 
-					// we ensure that we do not get a NRE in the case we forgot and ExportAttr in a property
-					var hasWrapGet = pi.GetGetMethod () != null && AttributeManager.HasAttribute<WrapAttribute> (pi.GetGetMethod ());
-					var hasWrapSet = pi.GetSetMethod () != null && AttributeManager.HasAttribute<WrapAttribute> (pi.GetSetMethod ());
+					// Ensure there's a [Wrap] on either (or both) the getter and setter - since we already know there's no [Export]
+					var getMethod = pi.GetGetMethod ();
+					var hasWrapGet = getMethod != null && AttributeManager.HasAttribute<WrapAttribute> (getMethod);
+					var setMethod = pi.GetSetMethod ();
+					var hasWrapSet = setMethod != null && AttributeManager.HasAttribute<WrapAttribute> (setMethod);
 					if (hasWrapGet || hasWrapSet)
 						continue;
 
