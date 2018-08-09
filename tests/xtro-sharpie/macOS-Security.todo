@@ -10,8 +10,6 @@
 !missing-pinvoke! sec_protocol_metadata_peers_are_equal is not bound
 !missing-pinvoke! sec_protocol_options_set_challenge_block is not bound
 !missing-pinvoke! sec_protocol_options_set_verify_block is not bound
-!missing-pinvoke! sec_release is not bound
-!missing-pinvoke! sec_retain is not bound
 !missing-pinvoke! SecCertificateCopyKey is not bound
 !missing-pinvoke! SecTrustEvaluateWithError is not bound
 !missing-protocol! OS_sec_certificate not bound
