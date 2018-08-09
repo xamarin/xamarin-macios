@@ -2300,7 +2300,10 @@ public partial class Generator : IMemberGatherer {
 					if (AttributeManager.HasAttribute<CoreImageFilterPropertyAttribute> (pi))
 						continue;
 
-					if (AttributeManager.HasAttribute<WrapAttribute> (pi.GetGetMethod ()) || AttributeManager.HasAttribute<WrapAttribute> (pi.GetSetMethod ()))
+					// we ensure that we do not get a NRE in the case we forgot and ExportAttr in a property
+					var hasWrapGet = pi.GetGetMethod () != null && AttributeManager.HasAttribute<WrapAttribute> (pi.GetGetMethod ());
+					var hasWrapSet = pi.GetSetMethod () != null && AttributeManager.HasAttribute<WrapAttribute> (pi.GetSetMethod ());
+					if (hasWrapGet || hasWrapSet)
 						continue;
 
 					throw new BindingException (1018, true, "No [Export] attribute on property {0}.{1}", t.FullName, pi.Name);
