@@ -620,7 +620,7 @@ namespace Xamarin.iOS.Tasks
 			}
 
 			// Some arguments can not safely go in the response file and are 
-			// added seperatly. They must go _after_ the response file
+			// added separately. They must go _after_ the response file
 			// as they may override options passed in the response file
 			var actualArgs = new CommandLineArgumentBuilder ();
 
