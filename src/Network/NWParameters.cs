@@ -84,7 +84,7 @@ namespace Network {
 			else
 				tlsHandler.SetupBlockUnsafe (static_ConfigureHandler, configureTls);
 
-			if (configureTls == null)
+			if (configureTcp == null)
 				tcpPtr = DEFAULT_CONFIGURATION ();
 			else
 				tcpHandler.SetupBlockUnsafe (static_ConfigureHandler, configureTcp);
@@ -142,7 +142,7 @@ namespace Network {
 			else
 				tlsHandler.SetupBlockUnsafe (static_ConfigureHandler, configureTls);
 
-			if (configureTls == null)
+			if (configureUdp == null)
 				udpPtr = DEFAULT_CONFIGURATION ();
 			else
 				udpHandler.SetupBlockUnsafe (static_ConfigureHandler, configureUdp);
