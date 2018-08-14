@@ -78,7 +78,7 @@ public enum OutputFormat {
 
 namespace Xamarin.Bundler
 {
-	partial class Driver {
+	public partial class Driver {
 		internal const string NAME = "mtouch";
 
 		public static void ShowHelp (OptionSet os)
@@ -456,6 +456,7 @@ namespace Xamarin.Bundler
 			bool enable_debug = app.EnableDebug;
 			bool enable_debug_symbols = app.PackageManagedDebugSymbols;
 			bool llvm_only = app.EnableLLVMOnlyBitCode;
+			bool interp = app.UseInterpreter;
 			string arch = abi.AsArchString ();
 
 			args.Append ("--debug ");
@@ -463,7 +464,7 @@ namespace Xamarin.Bundler
 			if (enable_llvm)
 				args.Append ("--llvm ");
 
-			if (!llvm_only)
+			if (!llvm_only && !interp)
 				args.Append ("-O=gsharedvt ");
 			args.Append (app.AotOtherArguments).Append (" ");
 			args.Append ("--aot=mtriple=");
@@ -473,6 +474,8 @@ namespace Xamarin.Bundler
 			args.Append (app.AotArguments);
 			if (llvm_only)
 				args.Append ("llvmonly,");
+			else if (interp)
+				args.Append ("interp,");
 			else
 				args.Append ("full,");
 
@@ -556,6 +559,8 @@ namespace Xamarin.Bundler
 
 			register_assemblies.AppendLine ("\tguint32 exception_gchandle = 0;");
 			foreach (var s in assemblies) {
+				if (!s.IsAOTCompiled)
+					continue;
 				if ((abi & Abi.SimulatorArchMask) == 0) {
 					var info = s.AssemblyDefinition.Name.Name;
 					info = EncodeAotSymbol (info);
@@ -636,6 +641,14 @@ namespace Xamarin.Bundler
 						sw.WriteLine ("xamarin_profiler_symbol_def xamarin_profiler_symbol = NULL;");
 					}
 
+					if (app.UseInterpreter) {
+						sw.WriteLine ("extern \"C\" { void mono_ee_interp_init (const char *); }");
+						sw.WriteLine ("extern \"C\" { void mono_icall_table_init (void); }");
+						sw.WriteLine ("extern \"C\" { void mono_marshal_ilgen_init (void); }");
+						sw.WriteLine ("extern \"C\" { void mono_method_builder_ilgen_init (void); }");
+						sw.WriteLine ("extern \"C\" { void mono_sgen_mono_ilgen_init (void); }");
+					}
+
 					sw.WriteLine ("void xamarin_setup_impl ()");
 					sw.WriteLine ("{");
 
@@ -644,7 +657,15 @@ namespace Xamarin.Bundler
 
 					if (app.EnableLLVMOnlyBitCode)
 						sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_LLVMONLY);");
-					
+					else if (app.UseInterpreter) {
+						sw.WriteLine ("\tmono_icall_table_init ();");
+						sw.WriteLine ("\tmono_marshal_ilgen_init ();");
+						sw.WriteLine ("\tmono_method_builder_ilgen_init ();");
+						sw.WriteLine ("\tmono_sgen_mono_ilgen_init ();");
+						sw.WriteLine ("\tmono_ee_interp_init (NULL);");
+						sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_INTERP);");
+					}
+
 					if (assembly_location.Length > 0)
 						sw.WriteLine ("\txamarin_set_assembly_directories (&assembly_locations);");
 
@@ -844,6 +865,9 @@ namespace Xamarin.Bundler
 			if (app.EnableSGenConc)
 				return false;
 
+			if (app.UseInterpreter)
+				return false;
+
 			if (app.Registrar == RegistrarMode.Static)
 				return false;
 
@@ -867,15 +891,6 @@ namespace Xamarin.Bundler
 			if (!File.Exists (name))
 				throw new MonoTouchException (24, true, "Could not find required file '{0}'.", name);
 			return PDictionary.FromFile (name);
-		}
-
-		static int watch_level;
-		static Stopwatch watch;
-
-		public static void Watch (string msg, int level)
-		{
-			if (watch != null && (watch_level > level))
-				Console.WriteLine ("{0}: {1} ms", msg, watch.ElapsedMilliseconds);
 		}
 
 		internal static bool TryParseBool (string value, out bool result)
@@ -984,7 +999,7 @@ namespace Xamarin.Bundler
 			{ "gsharedvt:", "Generic sharing for value-types - always enabled [Deprecated]", v => {} },
 			{ "v", "Verbose", v => verbose++ },
 			{ "q", "Quiet", v => verbose-- },
-			{ "time", v => watch_level++ },
+			{ "time", v => WatchLevel++ },
 			{ "executable=", "Specifies the native executable name to output", v => app.ExecutableName = v },
 			{ "nofastsim", "Do not run the simulator fast-path build", v => app.NoFastSim = true },
 			{ "nodevcodeshare", "Do not share native code between extensions and main app.", v => app.NoDevCodeShare = true },
@@ -1058,7 +1073,7 @@ namespace Xamarin.Bundler
 			{ "launchdev=", "Launch an app that is installed on device, specified by bundle identifier [DEPRECATED]", v => { SetAction (Action.LaunchDevice); }, true },
 			{ "debugdev=", "Launch app app that is installed on device, specified by bundle identifer, and wait for a native debugger to attach. [DEPRECATED]", v => { SetAction (Action.DebugDevice); }, true },
 			{ "provide-assets=", "If the app contains on-demand resources, then mtouch should provide those from this .app directory. [DEPRECATED]", v => { }, true },
-			{ "wait-for-exit:", "If mtouch should wait until the launched app exits before existing. [DEPRECATED]", v => { }, true },
+			{ "wait-for-exit:", "If mtouch should wait until the launched app exits. [DEPRECATED]", v => { }, true },
 			{ "wait-for-unlock:", "If mtouch should wait until the device is unlocked when launching an app (or exit with an error code). [DEPRECATED]", v => { }, true },
 			{ "killdev=", "Kill an app that is running on device, specified by bundle identifier [DEPRECATED]", v => { SetAction (Action.KillApp); }, true },
 			{ "logdev", "Write the syslog from the device to the console [DEPRECATED]", v => { SetAction (Action.LogDev); }, true },
@@ -1115,8 +1130,8 @@ namespace Xamarin.Bundler
 			{ "pie:", "Enable (default) or disable PIE (Position Independent Executable).", v => { app.EnablePie = ParseBool (v, "pie"); }},
 			{ "compiler=", "Specify the Objective-C compiler to use (valid values are gcc, g++, clang, clang++ or the full path to a GCC-compatible compiler).", v => { app.Compiler = v; }},
 			{ "fastdev", "Build an app that supports fastdev (this app will only work when launched using Xamarin Studio)", v => { app.AddAssemblyBuildTarget ("@all=dynamiclibrary"); }},
-			{ "force-thread-check", "Keep UI thread checks inside (even release) builds [DEPRECATED, use --linker-optimize=-remove-uithread-checks instead]", v => { app.Optimizations.RemoveUIThreadChecks = false; }, true},
-			{ "disable-thread-check", "Remove UI thread checks inside (even debug) builds [DEPRECATED, use --linker-optimize=remove-uithread-checks instead]", v => { app.Optimizations.RemoveUIThreadChecks = true; }, true},
+			{ "force-thread-check", "Keep UI thread checks inside (even release) builds [DEPRECATED, use --optimize=-remove-uithread-checks instead]", v => { app.Optimizations.RemoveUIThreadChecks = false; }, true},
+			{ "disable-thread-check", "Remove UI thread checks inside (even debug) builds [DEPRECATED, use --optimize=remove-uithread-checks instead]", v => { app.Optimizations.RemoveUIThreadChecks = true; }, true},
 			{ "debug:", "Generate debug code in Mono for the specified assembly (set to 'all' to generate debug code for all assemblies, the default is to generate debug code for user assemblies only)",
 				v => {
 					app.EnableDebug = true;
@@ -1231,6 +1246,7 @@ namespace Xamarin.Bundler
 						app.LLVMOptimizations [asm] = opt;
 				}
 			},
+			{ "interpreter", "Enable the *experimental* interpreter.", v => { app.UseInterpreter = true; }},
 			{ "http-message-handler=", "Specify the default HTTP message handler for HttpClient", v => { http_message_handler = v; }},
 			{ "output-format=", "Specify the output format for some commands. Possible values: Default, XML", v =>
 				{
@@ -1292,11 +1308,6 @@ namespace Xamarin.Bundler
 				return 0;
 			
 			LogArguments (args);
-
-			if (watch_level > 0) {
-				watch = new Stopwatch ();
-				watch.Start ();
-			}
 
 			ErrorHelper.Verbosity = verbose;
 

@@ -12,7 +12,7 @@ using Xamarin.Tests;
 namespace Xamarin.MMP.Tests
 {
 	[TestFixture]
-	public partial class MMPTests
+	public class AOTTests
 	{
 		void ValidateAOTStatus (string tmpDir, Func<FileInfo, bool> shouldAOT, string buildResults)
 		{ 
@@ -56,7 +56,7 @@ namespace Xamarin.MMP.Tests
 		[TestCase (false)]
 		[TestCase (true)]
 		public void AOT_SmokeTest (bool useProjectTags) {
-			RunMMPTest (tmpDir => {
+			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					CSProjConfig = GetTestConfig (TestType.Base, useProjectTags)
 				};
@@ -72,7 +72,7 @@ namespace Xamarin.MMP.Tests
 		{
 			Configuration.AssertXcodeSupports32Bit ();
 
-			RunMMPTest (tmpDir => {
+			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					CSProjConfig = "<XamMacArch>i386</XamMacArch>" + GetTestConfig (TestType.Base, useProjectTags)
 				};
@@ -86,7 +86,7 @@ namespace Xamarin.MMP.Tests
 		[TestCase (true)]
 		public void HybridAOT_WithManualStrippingOfAllLibs_SmokeTest (bool useProjectTags)
 		{
-			RunMMPTest (tmpDir => {
+			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					CSProjConfig = GetTestConfig (TestType.Hybrid, useProjectTags)
 				};
@@ -108,7 +108,7 @@ namespace Xamarin.MMP.Tests
 		[TestCase (true)]
 		public void HybridAOT_WithManualStrippingOfJustMainExe (bool useProjectTags)
 		{
-			RunMMPTest (tmpDir => {
+			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					CSProjConfig = GetTestConfig (TestType.Hybrid, useProjectTags)
 				};

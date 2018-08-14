@@ -20,6 +20,7 @@ namespace GeneratorTests
 		[TestCase (Profile.macOSClassic)]
 		[TestCase (Profile.macOSFull)]
 		[TestCase (Profile.macOSMobile)]
+		[TestCase (Profile.macOSSystem)]
 		public void BMac_Smoke (Profile profile)
 		{
 			BuildFile (profile, "bmac_smoke.cs");
@@ -27,8 +28,25 @@ namespace GeneratorTests
 
 		[Test]
 		[TestCase (Profile.macOSClassic)]
+		[TestCase (Profile.macOSSystem)]
+		public void BMac_NonAbsoluteReference_StillBuilds (Profile profile)
+		{
+			BuildFile (profile, true, false, new List<string> () { "System.Drawing" }, "bmac_smoke.cs");
+		}
+
+		[Test]
+		[TestCase (Profile.macOSClassic)]
+		[TestCase (Profile.macOSSystem)]
+		public void BMac_AbsoluteSystemReference_StillBuilds (Profile profile)
+		{
+			BuildFile (profile, true, false, new List<string> () { "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5/System.Drawing.dll" }, "bmac_smoke.cs");
+		}
+
+		[Test]
+		[TestCase (Profile.macOSClassic)]
 		[TestCase (Profile.macOSFull)]
 		[TestCase (Profile.macOSMobile)]
+		[TestCase (Profile.macOSSystem)]
 		public void BMac_With_Hyphen_In_Name (Profile profile)
 		{
 			BuildFile (profile, "bmac-with-hyphen-in-name.cs");
@@ -38,6 +56,7 @@ namespace GeneratorTests
 		[TestCase (Profile.macOSClassic)]
 		[TestCase (Profile.macOSFull)]
 		[TestCase (Profile.macOSMobile)]
+		[TestCase (Profile.macOSSystem)]
 		public void PropertyRedefinitionMac (Profile profile)
 		{
 			BuildFile (profile, "property-redefination-mac.cs");
@@ -47,6 +66,7 @@ namespace GeneratorTests
 		[TestCase (Profile.macOSClassic)]
 		[TestCase (Profile.macOSFull)]
 		[TestCase (Profile.macOSMobile)]
+		[TestCase (Profile.macOSSystem)]
 		public void NSApplicationPublicEnsureMethods (Profile profile)
 		{
 			BuildFile (profile, "NSApplicationPublicEnsureMethods.cs");
@@ -56,6 +76,7 @@ namespace GeneratorTests
 		[TestCase (Profile.macOSClassic)]
 		[TestCase (Profile.macOSFull)]
 		[TestCase (Profile.macOSMobile)]
+		[TestCase (Profile.macOSSystem)]
 		public void ProtocolDuplicateAbstract (Profile profile)
 		{
 			BuildFile (profile, "protocol-duplicate-abstract.cs");
@@ -159,6 +180,7 @@ namespace GeneratorTests
 		[TestCase (Profile.macOSClassic)]
 		[TestCase (Profile.macOSFull)]
 		[TestCase (Profile.macOSMobile)]
+		[TestCase (Profile.macOSSystem)]
 		public void Bug31788 (Profile profile)
 		{
 			var bgen = new BGenTool ();
@@ -551,10 +573,19 @@ namespace GeneratorTests
 
 		BGenTool BuildFile (Profile profile, bool nowarnings, bool processEnums, params string [] filenames)
 		{
+			return BuildFile (profile, nowarnings, processEnums, Enumerable.Empty<string> (), filenames);
+		}
+
+		BGenTool BuildFile (Profile profile, bool nowarnings, bool processEnums, IEnumerable<string> references, params string [] filenames)
+		{
 			var bgen = new BGenTool ();
 			bgen.Profile = profile;
 			bgen.ProcessEnums = processEnums;
 			bgen.Defines = BGenTool.GetDefaultDefines (bgen.Profile);
+			bgen.References = references.ToList ();
+			TestContext.Out.WriteLine (TestContext.CurrentContext.Test.FullName);
+			foreach (var filename in filenames)
+				TestContext.Out.WriteLine ($"\t{filename}");
 			bgen.CreateTemporaryBinding (filenames.Select ((filename) => File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", filename))).ToArray ());
 			bgen.AssertExecute ("build");
 			if (nowarnings)

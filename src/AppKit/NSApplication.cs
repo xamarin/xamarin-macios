@@ -120,13 +120,6 @@ namespace AppKit {
 				throw new InvalidOperationException (string.Format("Event registration is overwriting existing delegate. Either just use events or your own delegate: {0} {1}", newDelegateValue.GetType(), internalDelegateType));
 		}
 
-		public NSEvent NextEvent (NSEventMask mask, NSDate expiration, string mode, bool deqFlag)
-		{
-			// NSEventMask must be casted to nuint to preserve the NSEventMask.Any special value
-			// on 64 bit systems.
-			return NextEvent ((nuint)(ulong) mask, expiration, mode, deqFlag);
-		}
-
 		public void DiscardEvents (NSEventMask mask, NSEvent lastEvent)
 		{
 			DiscardEvents ((nuint)(ulong) mask, lastEvent);

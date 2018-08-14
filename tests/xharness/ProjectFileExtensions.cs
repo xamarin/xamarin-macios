@@ -245,6 +245,16 @@ namespace xharness
 			SetAssemblyReference (csproj, "Xamarin.iOS", value);
 		}
 
+		public static void AddReference (this XmlDocument csproj, string projectName)
+		{
+			var reference = csproj.SelectSingleNode ("/*/*/*[local-name() = 'Reference' and @Include = 'System']");
+			var node = csproj.CreateElement ("Reference", MSBuild_Namespace);
+			var include_attribute = csproj.CreateAttribute ("Include");
+			include_attribute.Value = projectName;
+			node.Attributes.Append (include_attribute);
+			reference.ParentNode.AppendChild (node);
+		}
+
 		public static void SetAssemblyReference (this XmlDocument csproj, string current, string value)
 		{
 			var project = csproj.ChildNodes [1];
@@ -622,6 +632,35 @@ namespace xharness
 			foreach (XmlNode def in otherDefines) {
 				if (!def.InnerText.Contains ("$(DefineConstants"))
 					def.InnerText = def.InnerText + ";$(DefineConstants)";
+			}
+		}
+
+		public static void RemoveDefines (this XmlDocument csproj, string defines, string platform, string configuration)
+		{
+			var separator = new char [] { ';' };
+			var defs = defines.Split (separator, StringSplitOptions.RemoveEmptyEntries);
+			var projnode = csproj.SelectNodes ("//*[local-name() = 'PropertyGroup']/*[local-name() = 'DefineConstants']");
+			foreach (XmlNode xmlnode in projnode) {
+				if (string.IsNullOrEmpty (xmlnode.InnerText))
+					continue;
+
+				var parent = xmlnode.ParentNode;
+				if (!IsNodeApplicable (parent, platform, configuration))
+					continue;
+
+				var existing = xmlnode.InnerText.Split (separator, StringSplitOptions.RemoveEmptyEntries);
+				var any = false;
+				foreach (var def in defs) {
+					for (var i = 0; i < existing.Length; i++) {
+						if (existing [i] == def) {
+							existing [i] = null;
+							any = true;
+						}
+					}
+				}
+				if (!any)
+					continue;
+				xmlnode.InnerText = string.Join (separator [0].ToString (), existing.Where ((v) => !string.IsNullOrEmpty (v)));
 			}
 		}
 

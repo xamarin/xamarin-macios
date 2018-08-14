@@ -85,9 +85,8 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			Assert.Null (NSData.FromFile ("does not exists"), "unexisting");
 #if MONOMAC // Info.Plist isn't there to load from the same location on mac
-#if !LINKALL
-			Assert.NotNull (NSData.FromFile (NSBundle.MainBundle.PathForResource ("runtime-options", "plist")), "runtime-options.plist");
-#endif
+			if (!TestRuntime.IsLinkAll)
+				Assert.NotNull (NSData.FromFile (NSBundle.MainBundle.PathForResource ("runtime-options", "plist")), "runtime-options.plist");
 #else
 			Assert.NotNull (NSData.FromFile ("Info.plist"), "Info.plist");
 #endif
@@ -123,6 +122,15 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.AreEqual (3, arr.Length, "Length");
 				for (int i = 0; i < arr.Length; i++)
 					Assert.AreEqual (i + 1, arr [i], "idx " + i.ToString ());
+			}
+		}
+
+		[Test]
+		public void ToEmptyArray ()
+		{
+			using (var data = NSData.FromArray (new byte[0])) {
+				var arr = data.ToArray ();
+				Assert.AreEqual (0, arr.Length, "Length");
 			}
 		}
 

@@ -58,7 +58,7 @@ namespace MonoTouch.Tuner {
 		}
 	}
 
-	class Linker {
+	static class Linker {
 
 		public static void Process (LinkerOptions options, out MonoTouchLinkContext context, out List<AssemblyDefinition> assemblies)
 		{
@@ -171,53 +171,60 @@ namespace MonoTouch.Tuner {
 		{
 			var pipeline = new Pipeline ();
 
-			pipeline.AppendStep (new LoadReferencesStep ());
+			pipeline.Append (new LoadReferencesStep ());
 
 			if (options.I18nAssemblies != I18nAssemblies.None)
-				pipeline.AppendStep (new LoadI18nAssemblies (options.I18nAssemblies));
+				pipeline.Append (new LoadI18nAssemblies (options.I18nAssemblies));
 
 			// that must be done early since the XML files can "add" new assemblies [#15878]
 			// and some of the assemblies might be (directly or referenced) SDK assemblies
 			foreach (string definition in options.ExtraDefinitions)
-				pipeline.AppendStep (GetResolveStep (definition));
+				pipeline.Append (GetResolveStep (definition));
 
 			if (options.LinkMode != LinkMode.None)
-				pipeline.AppendStep (new BlacklistStep ());
+				pipeline.Append (new BlacklistStep ());
 
-			pipeline.AppendStep (new CustomizeIOSActions (options.LinkMode, options.SkippedAssemblies));
+			pipeline.Append (new CustomizeIOSActions (options.LinkMode, options.SkippedAssemblies));
 
 			// We need to store the Field attribute in annotations, since it may end up removed.
-			pipeline.AppendStep (new ProcessExportedFields ());
+			pipeline.Append (new ProcessExportedFields ());
 
 			if (options.LinkMode != LinkMode.None) {
-				pipeline.AppendStep (new CoreTypeMapStep ());
+				pipeline.Append (new CoreTypeMapStep ());
 
-				pipeline.AppendStep (GetSubSteps (options));
+				pipeline.Append (GetSubSteps (options));
 
-				pipeline.AppendStep (new PreserveCode (options));
+				pipeline.Append (new PreserveCode (options));
 
-				pipeline.AppendStep (new RemoveResources (options.I18nAssemblies)); // remove collation tables
+				pipeline.Append (new RemoveResources (options.I18nAssemblies)); // remove collation tables
 
-				pipeline.AppendStep (new MonoTouchMarkStep ());
-				pipeline.AppendStep (new MonoTouchSweepStep (options));
-				pipeline.AppendStep (new CleanStep ());
+				pipeline.Append (new MonoTouchMarkStep ());
+				pipeline.Append (new MonoTouchSweepStep (options));
+				pipeline.Append (new CleanStep ());
 
 				if (!options.DebugBuild)
 					pipeline.AppendStep (GetPostLinkOptimizations (options));
 
-				pipeline.AppendStep (new FixModuleFlags ());
+				pipeline.Append (new FixModuleFlags ());
 			} else {
 				SubStepDispatcher sub = new SubStepDispatcher () {
 					new RemoveUserResourcesSubStep (options)
 				};
-				pipeline.AppendStep (sub);
+				pipeline.Append (sub);
 			}
 
-			pipeline.AppendStep (new ListExportedSymbols (options.MarshalNativeExceptionsState));
+			pipeline.Append (new ListExportedSymbols (options.MarshalNativeExceptionsState));
 
-			pipeline.AppendStep (new OutputStep ());
+			pipeline.Append (new OutputStep ());
 
 			return pipeline;
+		}
+
+		static void Append (this Pipeline self, IStep step)
+		{
+			self.AppendStep (step);
+			if (Driver.WatchLevel > 0)
+				self.AppendStep (new TimeStampStep (step));
 		}
 
 		static List<AssemblyDefinition> ListAssemblies (MonoTouchLinkContext context)
@@ -248,6 +255,20 @@ namespace MonoTouch.Tuner {
 			catch (Exception e) {
 				throw new MonoTouchException (2005, true, e, "Definitions from '{0}' could not be parsed.", filename);
 			}
+		}
+	}
+
+	public class TimeStampStep : IStep {
+		string message;
+
+		public TimeStampStep (IStep step)
+		{
+			message = step.ToString ();
+		}
+
+		public void Process (LinkContext context)
+		{
+			Driver.Watch (message, 2);
 		}
 	}
 

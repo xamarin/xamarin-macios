@@ -140,6 +140,21 @@
     <Content Include="..\monotouch-test\AudioToolbox\1.caf">
       <Link>AudioToolbox\1.caf</Link>
     </Content>
+    <Content Include="..\monotouch-test\uncompressed.txt">
+      <Link>uncompressed.txt</Link>
+    </Content>
+    <Content Include="..\monotouch-test\compressed_lze">
+      <Link>compressed_lze</Link>
+    </Content>
+    <Content Include="..\monotouch-test\compressed_lz4">
+      <Link>compressed_lz4</Link>
+    </Content>
+    <Content Include="..\monotouch-test\compressed_lzma">
+      <Link>compressed_lzma</Link>
+    </Content>
+    <Content Include="..\monotouch-test\compressed_zip">
+      <Link>compressed_zip</Link>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\monotouch-test\Security\openssl_crt.der">

@@ -40,8 +40,19 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			Assert.Throws <ArgumentNullException> (() => NSArray.FromStrings (null), "null");
 
-			using (var a = NSArray.FromStrings (new string [1]))
+			using (var a = NSArray.FromStrings (new string [1])) {
 				Assert.That (a.Count, Is.EqualTo (1), "null item");
+				Assert.IsNull (a.GetItem <NSString> (0), "0");
+			}
+		}
+
+		[Test]
+		public void Null ()
+		{
+			using (var a = NSArray.FromNSObjects (NSNull.Null)) {
+				Assert.That (a.Count, Is.EqualTo (1), "Count");
+				Assert.IsNull (a.GetItem<NSNull> (0), "0");
+			}
 		}
 
 		int comparator_count;

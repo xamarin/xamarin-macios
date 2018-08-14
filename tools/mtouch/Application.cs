@@ -128,8 +128,27 @@ namespace Xamarin.Bundler {
 		public List<string> References = new List<string> ();
 		
 		public bool? BuildDSym;
-		public bool Is32Build { get { return IsArchEnabled (Abi.Arch32Mask); } } // If we're targetting a 32 bit arch.
-		public bool Is64Build { get { return IsArchEnabled (Abi.Arch64Mask); } } // If we're targetting a 64 bit arch.
+
+		// If we're targetting a 32 bit arch.
+		bool? is32bits;
+		public bool Is32Build {
+			get {
+				if (!is32bits.HasValue)
+					is32bits = IsArchEnabled (Abi.Arch32Mask);
+				return is32bits.Value;
+			}
+		}
+
+		// If we're targetting a 64 bit arch.
+		bool? is64bits;
+		public bool Is64Build {
+			get {
+				if (!is64bits.HasValue)
+					is64bits = IsArchEnabled (Abi.Arch64Mask);
+				return is64bits.Value;
+			}
+		}
+
 		public bool IsDualBuild { get { return Is32Build && Is64Build; } } // if we're building both a 32 and a 64 bit version.
 		public bool IsLLVM { get { return IsArchEnabled (Abi.LLVM); } }
 
@@ -442,6 +461,9 @@ namespace Xamarin.Bundler {
 
 			if (EnableLLVMOnlyBitCode)
 				return false;
+
+			if (UseInterpreter)
+				return true;
 
 			switch (Platform) {
 			case ApplePlatform.iOS:
@@ -1086,6 +1108,7 @@ namespace Xamarin.Bundler {
 
 			if (candidates.Count > 0)
 				SharedCodeApps.AddRange (candidates);
+			Driver.Watch ("Detect Code Sharing", 1);
 		}
 
 		void Initialize ()
@@ -1747,6 +1770,7 @@ namespace Xamarin.Bundler {
 			}
 
 			Driver.CalculateCompilerPath (this);
+			Driver.Watch ("Select Native Compiler", 1);
 		}
 
 		public string GetLibMono (AssemblyBuildTarget build_target)
@@ -2100,7 +2124,7 @@ namespace Xamarin.Bundler {
 
 		public void BundleAssemblies ()
 		{
-			var strip = ManagedStrip && IsDeviceBuild && !EnableDebug && !PackageManagedDebugSymbols;
+			var strip = !UseInterpreter && ManagedStrip && IsDeviceBuild && !EnableDebug && !PackageManagedDebugSymbols;
 
 			var grouped = Targets.SelectMany ((Target t) => t.Assemblies).GroupBy ((Assembly asm) => asm.Identity);
 			foreach (var @group in grouped) {
@@ -2110,7 +2134,7 @@ namespace Xamarin.Bundler {
 				var size_specific = assemblies.Length > 1 && !Cache.CompareAssemblies (assemblies [0].FullPath, assemblies [1].FullPath, true, true);
 
 				if (IsExtension && !IsWatchExtension) {
-					var codeShared = assemblies.Count ((v) => v.IsCodeShared);
+					var codeShared = assemblies.Count ((v) => v.IsCodeShared || v.BundleInContainerApp);
 					if (codeShared > 0) {
 						if (codeShared != assemblies.Length)
 							throw ErrorHelper.CreateError (99, $"Internal error: all assemblies in a joined build target must have the same code sharing options ({string.Join (", ", assemblies.Select ((v) => v.Identity + "=" + v.IsCodeShared))}). Please file a bug report with a test case (http://bugzilla.xamarin.com).");

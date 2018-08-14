@@ -2291,7 +2291,7 @@ namespace Intents {
 		INDateComponentsRangeResolutionResult Unsupported { get; }
 	}
 
-#if XAMCORE_4_0 // yep not usable from macOS
+#if XAMCORE_4_0 // TODO: Double check this if XAMCORE_4_0 happens, its been 2 years (2018) and still not usable in macOS
 	[NoMac]
 #else
 	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
@@ -3252,7 +3252,7 @@ namespace Intents {
 		INMessageAttributeOptionsResolutionResult Unsupported { get; }
 	}
 
-#if XAMCORE_4_0 // Yep not usable from macOS
+#if XAMCORE_4_0 // TODO: Double check this if XAMCORE_4_0 happens, its been 2 years (2018) and still not usable in macOS
 	[NoMac]
 #else
 	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]

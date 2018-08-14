@@ -105,6 +105,9 @@ classify: build $(XIOS_PCH) $(XWATCHOS_PCH) $(XTVOS_PCH) $(XMAC_PCH)
 insane:
 	XTRO_SANITY_SKIP=1 make all
 
+remove-empty:
+	find . -size 0 | xargs git rm
+
 all: classify report
 
 .stamp-check-sharpie:

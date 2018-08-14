@@ -329,6 +329,15 @@ CFNETWORK_SOURCES = \
 	CFNetwork/CFHTTPStream.cs \
 	CFNetwork/CFHost.cs \
 
+# Compression
+
+COMPRESSION_SOURCES = \
+	Compression/Compression.cs \
+	Compression/CompressionStreamStruct.cs \
+	Compression/Deflater.cs \
+	Compression/Enums.cs \
+	Compression/Inflater.cs \
+
 # Contacts
 
 CONTACTS_API_SOURCES = \
@@ -740,6 +749,7 @@ FOUNDATION_SOURCES = \
 	Foundation/NSMutableUrlRequest.cs \
 	Foundation/NSNetService.cs \
 	Foundation/NSNotificationCenter.cs \
+	Foundation/NSNull.cs \
 	Foundation/NSOrderedSet.cs \
 	Foundation/NSOrderedSet_1.cs \
 	Foundation/NSOutputStream.cs \
@@ -1689,6 +1699,7 @@ COMMON_FRAMEWORKS =         \
 	CoreFoundation          \
 	CoreML                  \
 	CoreVideo               \
+	Compression             \
 	Foundation              \
 	GameKit                 \
 	SceneKit                \

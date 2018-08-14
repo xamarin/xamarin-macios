@@ -403,7 +403,7 @@ function check_xcode () {
 function check_mono () {
 	if ! test -z $IGNORE_MONO; then return; fi
 
-	PKG_CONFIG_PATH=/Library/Frameworks/Mono.framework/Versions/Current/bin/pkg-config
+	MONO_VERSION_FILE=/Library/Frameworks/Mono.framework/Versions/Current/VERSION
 	if ! /Library/Frameworks/Mono.framework/Commands/mono --version 2>/dev/null >/dev/null; then
 		if ! test -z $PROVISION_MONO; then
 			install_mono
@@ -411,11 +411,11 @@ function check_mono () {
 			fail "You must install the Mono MDK (http://www.mono-project.com/download/)"
 			return
 		fi
-	elif ! test -e $PKG_CONFIG_PATH; then
+	elif ! test -e $MONO_VERSION_FILE; then
 		if ! test -z $PROVISION_MONO; then
 			install_mono
 		else
-			fail "Could not find pkg-config, you must install the Mono MDK (http://www.mono-project.com/download/)"
+			fail "Could not find VERSION file, you must install the Mono MDK (http://www.mono-project.com/download/)"
 			return
 		fi
 	fi
@@ -423,11 +423,11 @@ function check_mono () {
 	MIN_MONO_VERSION=`grep MIN_MONO_VERSION= Make.config | sed 's/.*=//'`
 	MAX_MONO_VERSION=`grep MAX_MONO_VERSION= Make.config | sed 's/.*=//'`
 
-	ACTUAL_MONO_VERSION=`$PKG_CONFIG_PATH --modversion mono`.`cat /Library/Frameworks/Mono.framework/Home/updateinfo | cut -d' ' -f2 | cut -c6- | awk '{print(int($0))}'`
+	ACTUAL_MONO_VERSION=`cat $MONO_VERSION_FILE`
 	if ! is_at_least_version $ACTUAL_MONO_VERSION $MIN_MONO_VERSION; then
 		if ! test -z $PROVISION_MONO; then
 			install_mono
-			ACTUAL_MONO_VERSION=`$PKG_CONFIG_PATH --modversion mono`
+			ACTUAL_MONO_VERSION=`cat $MONO_VERSION_FILE`
 		else
 			fail "You must have at least Mono $MIN_MONO_VERSION, found $ACTUAL_MONO_VERSION"
 			return
@@ -437,7 +437,7 @@ function check_mono () {
 	elif is_at_least_version $ACTUAL_MONO_VERSION $MAX_MONO_VERSION; then
 		if ! test -z $PROVISION_MONO; then
 			install_mono
-			ACTUAL_MONO_VERSION=`$PKG_CONFIG_PATH --modversion mono`.`cat /Library/Frameworks/Mono.framework/Home/updateinfo | cut -d' ' -f2 | cut -c6- | awk '{print(int($0))}'`
+			ACTUAL_MONO_VERSION=`cat $MONO_VERSION_FILE`
 		else
 			fail "Your mono version is too new, max version is $MAX_MONO_VERSION, found $ACTUAL_MONO_VERSION."
 			fail "You may edit Make.config and change MAX_MONO_VERSION to your actual version to continue the"

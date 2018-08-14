@@ -23,6 +23,7 @@ namespace ObjCRuntime {
 #if !COREBUILD
 		public static bool ThrowOnInitFailure = true;
 
+		// We use the last significant bit of the IntPtr to store if this is a custom class or not.
 		static Dictionary<Type, IntPtr> type_to_class; // accessed from multiple threads, locking required.
 
 		internal IntPtr handle;
@@ -30,15 +31,14 @@ namespace ObjCRuntime {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		internal unsafe static void Initialize (Runtime.InitializationOptions* options)
 		{
-			var map = options->RegistrationMap;
-
 			type_to_class = new Dictionary<Type, IntPtr> (Runtime.TypeEqualityComparer);
-
-			if (map == null)
-				return;
 
 			if (!Runtime.DynamicRegistrationSupported)
 				return; // Only the dynamic registrar needs the list of registered assemblies.
+
+			var map = options->RegistrationMap;
+			if (map == null)
+				return;
 			
 			for (int i = 0; i < map->assembly_count; i++) {
 				var ptr = Marshal.ReadIntPtr (map->assembly, i * IntPtr.Size);
@@ -103,7 +103,7 @@ namespace ObjCRuntime {
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)] // To inline the Runtime.DynamicRegistrationSupported code if possible.
-		static IntPtr GetClassHandle (Type type)
+		static IntPtr GetClassHandle (Type type, bool throw_if_failure, out bool is_custom_type)
 		{
 			IntPtr @class = IntPtr.Zero;
 
@@ -115,20 +115,33 @@ namespace ObjCRuntime {
 				found = type_to_class.TryGetValue (type, out @class);
 
 			if (!found) {
-				@class = FindClass (type, out var is_custom_type);
+				@class = FindClass (type, out is_custom_type);
 				lock (type_to_class)
-					type_to_class [type] = @class;
+					type_to_class [type] = @class + (is_custom_type ? 1 : 0);
+			} else {
+				is_custom_type = (@class.ToInt64 () & 1) == 1;
+				if (is_custom_type)
+					@class -= 1;
 			}
 
 			if (@class == IntPtr.Zero) {
-				if (!Runtime.DynamicRegistrationSupported)
-					throw ErrorHelper.CreateError (8026, $"Can't register the class {type.FullName} when the dynamic registrar has been linked away.");
+				if (!Runtime.DynamicRegistrationSupported) {
+					if (throw_if_failure)
+						throw ErrorHelper.CreateError (8026, $"Can't register the class {type.FullName} when the dynamic registrar has been linked away.");
+					return IntPtr.Zero;
+				}
 				@class = Register (type);
+				is_custom_type = Runtime.Registrar.IsCustomType (type);
 				lock (type_to_class)
-					type_to_class [type] = @class;
+					type_to_class [type] = @class + (is_custom_type ? 1 : 0);
 			}
 
 			return @class;
+		}
+
+		static IntPtr GetClassHandle (Type type)
+		{
+			return GetClassHandle (type, true, out var is_custom_type);
 		}
 
 		internal static IntPtr GetClassForObject (IntPtr obj)
@@ -404,10 +417,10 @@ namespace ObjCRuntime {
 				return asm;
 			}
 
-			throw ErrorHelper.CreateError (8019, $"Could not find the assembly {assembly_name} in the loaded assemblies.");
+			throw ErrorHelper.CreateError (8019, $"Could not find the assembly {Marshal.PtrToStringAuto (assembly_name)} in the loaded assemblies.");
 		}
 
-		internal unsafe static uint GetTokenReference (Type type)
+		internal unsafe static uint GetTokenReference (Type type, bool throw_exception = true)
 		{
 			if (type.IsGenericType)
 				type = type.GetGenericTypeDefinition ();
@@ -420,8 +433,11 @@ namespace ObjCRuntime {
 				return token;
 
 			// If type.Module.MetadataToken != 1, then the token must be a full token, which is not the case because we've already checked, so throw an exception.
-			if (type.Module.MetadataToken != 1)
+			if (type.Module.MetadataToken != 1) {
+				if (!throw_exception)
+					return Runtime.INVALID_TOKEN_REF;
 				throw ErrorHelper.CreateError (8025, $"Failed to compute the token reference for the type '{type.AssemblyQualifiedName}' because its module's metadata token is {type.Module.MetadataToken} when expected 1.");
+			}
 			
 			var map = Runtime.options->RegistrationMap;
 
@@ -435,11 +451,17 @@ namespace ObjCRuntime {
 				}
 			}
 			// If the assembly isn't registered, then the token must be a full token (which it isn't, because we've already checked).
-			if (assembly_index == -1)
+			if (assembly_index == -1) {
+				if (!throw_exception)
+					return Runtime.INVALID_TOKEN_REF;
 				throw ErrorHelper.CreateError (8025, $"Failed to compute the token reference for the type '{type.AssemblyQualifiedName}' because the assembly couldn't be found in the list of registered assemblies.");
+			}
 
-			if (assembly_index > 127)
+			if (assembly_index > 127) {
+				if (!throw_exception)
+					return Runtime.INVALID_TOKEN_REF;
 				throw ErrorHelper.CreateError (8025, $"Failed to compute the token reference for the type '{type.AssemblyQualifiedName}' because the assembly index {assembly_index} is not valid (must be <= 127).");
+			}
 
 			return (uint) ((type.MetadataToken << 8) + (assembly_index << 1));
 			
@@ -479,7 +501,7 @@ namespace ObjCRuntime {
 		static bool IsCustomType (Type type)
 		{
 			bool is_custom_type;
-			var @class = FindClass (type, out is_custom_type);
+			var @class = GetClassHandle (type, false, out is_custom_type);
 			if (@class != IntPtr.Zero)
 				return is_custom_type;
 			

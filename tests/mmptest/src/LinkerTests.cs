@@ -9,7 +9,8 @@ using System.Reflection;
 
 namespace Xamarin.MMP.Tests
 {
-	public partial class MMPTests
+	[TestFixture]
+	public class LinkerTests
 	{
 		int GetNumberOfTypesInLibrary (string path)
 		{
@@ -32,7 +33,7 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void ModernLinkingSDK_WithAllNonProductSkipped_BuildsWithSameNumberOfTypes ()
 		{
-			RunMMPTest (tmpDir => {
+			MMPTests.RunMMPTest (tmpDir => {
 				string[] dependencies = { "mscorlib", "System.Core", "System" };
 				string config = "<LinkMode>SdkOnly</LinkMode><MonoBundlingExtraArgs>--linkskip=" + dependencies.Aggregate ((arg1, arg2) => arg1 + " --linkskip=" + arg2) + "</MonoBundlingExtraArgs>";
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = config };
@@ -48,7 +49,7 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void FullLinkingSdk_BuildsWithFewerPlatformTypesOnly ()
 		{
-			RunMMPTest (tmpDir => {
+			MMPTests.RunMMPTest (tmpDir => {
 				string[] nonPlatformDependencies = { "mscorlib", "System.Core", "System" };
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = PlatformProjectConfig, XM45 = true };
 				TI.TestUnifiedExecutable (test);
@@ -68,7 +69,7 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void PlatformSDKOnClassic_ShouldNotBeSupported ()
 		{
-			RunMMPTest (tmpDir => {
+			MMPTests.RunMMPTest (tmpDir => {
 				TI.TestClassicExecutable (tmpDir, csprojConfig: "<MonoBundlingExtraArgs>--linkplatform</MonoBundlingExtraArgs>\n", includeMonoRuntime:true, shouldFail: true);
 			});
 		}
@@ -80,7 +81,7 @@ namespace Xamarin.MMP.Tests
 		[TestCase ("default")]
 		public void DynamicSymbolMode (string mode)
 		{
-			RunMMPTest (tmpDir => {
+			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig config = new TI.UnifiedTestConfig (tmpDir) {
 					CSProjConfig = $"<MonoBundlingExtraArgs>--dynamic-symbol-mode={mode}</MonoBundlingExtraArgs>\n", 
 				};
@@ -111,7 +112,7 @@ namespace Xamarin.MMP.Tests
 		[TestCase ("sdkonly", true)]
 		public void Linking_ShouldHandleMixedModeAssemblies (string linker, bool builds_successfully)
 		{
-			RunMMPTest(tmpDir => {
+			MMPTests.RunMMPTest(tmpDir => {
 				string libraryPath = Path.Combine (TI.FindSourceDirectory (), "../MixedClassLibrary.dll");
 
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {

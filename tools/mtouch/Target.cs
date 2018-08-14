@@ -55,8 +55,25 @@ namespace Xamarin.Bundler
 		// If the assemblies were symlinked.
 		public bool Symlinked;
 
-		public bool Is32Build { get { return Application.IsArchEnabled (Abis, Abi.Arch32Mask); } } // If we're targetting a 32 bit arch for this target.
-		public bool Is64Build { get { return Application.IsArchEnabled (Abis, Abi.Arch64Mask); } } // If we're targetting a 64 bit arch for this target.
+		// If we're targetting a 32 bit arch for this target.
+		bool? is32bits;
+		public bool Is32Build {
+			get {
+				if (!is32bits.HasValue)
+					is32bits = Application.IsArchEnabled (Abis, Abi.Arch32Mask);
+				return is32bits.Value;
+			}
+		}
+
+		// If we're targetting a 64 bit arch for this target.
+		bool? is64bits;
+		public bool Is64Build {
+			get {
+				if (!is64bits.HasValue)
+					is64bits = Application.IsArchEnabled (Abis, Abi.Arch64Mask);
+				return is64bits.Value;
+			}
+		}
 
 		// If we didn't link the final executable because the existing binary is up-to-date.
 		public bool CachedExecutable {
@@ -643,6 +660,7 @@ namespace Xamarin.Bundler
 					a.LoadAssembly (a.FullPath);
 				
 				// Link!
+				Driver.Watch ("Managed Link Preparation", 1);
 				LinkAssemblies (out output_assemblies, PreBuildDirectory, sharingTargets);
 			}
 
@@ -697,6 +715,20 @@ namespace Xamarin.Bundler
 					foreach (var asm in t.Assemblies)
 						t.Resolver.Add (asm.AssemblyDefinition);
 				}
+
+				// Find assemblies that are in more than 1 appex, but not in the container app.
+				// These assemblies will be bundled once into the container .app instead of in each appex.
+				var grouped = sharingTargets.SelectMany ((v) => v.Assemblies).
+							    GroupBy ((v) => Assembly.GetIdentity (v.AssemblyDefinition)).
+							    Where ((v) => !Assemblies.ContainsKey (v.Key)).
+							    Where ((v) => v.Count () > 1);
+				foreach (var gr in grouped) {
+					var asm = gr.First ();
+					Assemblies.Add (asm);
+					Resolver.Add (asm.AssemblyDefinition);
+					gr.All ((v) => v.BundleInContainerApp = true);
+				}
+				                                                                       
 
 				// If any of the appex'es build to a grouped SDK framework, then we must ensure that all SDK assemblies
 				// in that appex are also in the container app.
@@ -816,15 +848,15 @@ namespace Xamarin.Bundler
 			//   its GUID).
 			// 
 
-			LinkDirectory = Path.Combine (ArchDirectory, "Link");
+			LinkDirectory = Path.Combine (ArchDirectory, "1-Link");
 			if (!Directory.Exists (LinkDirectory))
 				Directory.CreateDirectory (LinkDirectory);
 
-			PreBuildDirectory = Path.Combine (ArchDirectory, "PreBuild");
+			PreBuildDirectory = Path.Combine (ArchDirectory, "2-PreBuild");
 			if (!Directory.Exists (PreBuildDirectory))
 				Directory.CreateDirectory (PreBuildDirectory);
 			
-			BuildDirectory = Path.Combine (ArchDirectory, "Build");
+			BuildDirectory = Path.Combine (ArchDirectory, "3-Build");
 			if (!Directory.Exists (BuildDirectory))
 				Directory.CreateDirectory (BuildDirectory);
 
@@ -913,6 +945,9 @@ namespace Xamarin.Bundler
 
 			// Here we create the tasks to run the AOT compiler.
 			foreach (var a in Assemblies) {
+				if (!a.IsAOTCompiled)
+					continue;
+
 				foreach (var abi in GetArchitectures (a.BuildTarget)) {
 					a.CreateAOTTask (abi);
 				}
@@ -923,6 +958,9 @@ namespace Xamarin.Bundler
 			foreach (var @group in grouped) {
 				var name = @group.Key;
 				var assemblies = @group.AsEnumerable ().ToArray ();
+				if (assemblies.Length <= 0)
+					continue;
+
 				// We ensure elsewhere that all assemblies in a group have the same build target.
 				var build_target = assemblies [0].BuildTarget;
 
@@ -933,8 +971,10 @@ namespace Xamarin.Bundler
 					string compiler_output;
 					var compiler_flags = new CompilerFlags (this);
 					var link_dependencies = new List<CompileTask> ();
-					var infos = assemblies.Select ((asm) => asm.AotInfos [abi]).ToList ();
+					var infos = assemblies.Where ((asm) => asm.AotInfos.ContainsKey (abi)).Select ((asm) => asm.AotInfos [abi]).ToList ();
 					var aottasks = infos.Select ((info) => info.Task);
+					if (aottasks == null)
+						continue;
 
 					var existingLinkTask = infos.Where ((v) => v.LinkTask != null).Select ((v) => v.LinkTask).ToList ();
 					if (existingLinkTask.Count > 0) {
@@ -1089,6 +1129,9 @@ namespace Xamarin.Bundler
 				}
 			}
 
+			if (App.UseInterpreter)
+				return;
+
 			// Code in one assembly (either in a P/Invoke or a third-party library) can depend on a third-party library in another assembly.
 			// This means that we must always build assemblies only when all their dependent assemblies have been built, so that 
 			// we can link (natively) with the frameworks/dylibs for those dependent assemblies.
@@ -1231,6 +1274,10 @@ namespace Xamarin.Bundler
 					// This is because iOS has a forward declaration of NSPortMessage, but no actual declaration.
 					// They still use NSPortMessage in other API though, so it can't just be removed from our bindings.
 					registrar_task.CompilerFlags.AddOtherFlag ("-Wno-receiver-forward-class");
+
+					// clang sometimes detects missing [super ...] calls, but clang doesn't know about
+					// calling super through managed code, so ignore those warnings.
+					registrar_task.CompilerFlags.AddOtherFlag ("-Wno-objc-missing-super-calls");
 
 					if (Driver.XcodeVersion >= new Version (9, 0))
 						registrar_task.CompilerFlags.AddOtherFlag ("-Wno-unguarded-availability-new");
@@ -1434,6 +1481,15 @@ namespace Xamarin.Bundler
 				default:
 					throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).", App.LibProfilerLinkMode);
 				}
+			}
+
+			if (App.UseInterpreter) {
+				string libinterp = Path.Combine (libdir, "libmono-ee-interp.a");
+				linker_flags.AddLinkWith (libinterp);
+				string libicalltable = Path.Combine (libdir, "libmono-icall-table.a");
+				linker_flags.AddLinkWith (libicalltable);
+				string libilgen = Path.Combine (libdir, "libmono-ilgen.a");
+				linker_flags.AddLinkWith (libilgen);
 			}
 
 			if (!string.IsNullOrEmpty (App.UserGccFlags))

@@ -980,15 +980,17 @@ namespace LinkSdk {
 			Assert.That (path, Is.EqualTo ("/Applications"), "path - ProgramFiles");
 
 			path = TestFolder (Environment.SpecialFolder.UserProfile, readOnly: device);
+			var bundlePath = NSBundle.MainBundle.BundlePath;
+			var isExtension = bundlePath.EndsWith (".appex", StringComparison.Ordinal);
 			if (Runtime.Arch == Arch.DEVICE) {
-#if __WATCHOS__
-				Assert.That (path, Is.StringStarting ("/private/var/mobile/Containers/Data/PluginKitPlugin/"), "Containers-ios8");
-#else
-				if (UIDevice.CurrentDevice.CheckSystemVersion (8, 0))
-					Assert.True (path.StartsWith ("/private/var/mobile/Containers/Data/Application/", StringComparison.Ordinal), "Containers-ios8");
-				else
-					Assert.True (path.StartsWith ("/private/var/mobile/Applications/", StringComparison.Ordinal), "pre-Containers");
+				if (isExtension)
+					Assert.That (path, Is.StringStarting ("/private/var/mobile/Containers/Data/PluginKitPlugin/"), "Containers-ios8");
+#if !__WATCHOS__
+				else if (UIDevice.CurrentDevice.CheckSystemVersion (8, 0))
+					Assert.That (path, Is.StringStarting ("/private/var/mobile/Containers/Data/Application/"), "Containers-ios8");
 #endif
+				else
+					Assert.That (path, Is.StringStarting ("/private/var/mobile/Applications/"), "pre-Containers");
 			}
 
 #if !__WATCHOS__
@@ -1068,13 +1070,15 @@ namespace LinkSdk {
 		}
 
 #if !__WATCHOS__
+		static Type type_uibutton = typeof (UIButton);
+
 		[Test]
 		public void UIButtonSubclass ()
 		{
 			// ensure the linker keeps the .ctor(UIButtonType) around
 			using (var b = new UIButton (UIButtonType.Custom)) {
 				// https://trello.com/c/Nf2B8mIM/484-remove-debug-code-in-the-linker
-				var m = typeof (UIButton).GetMethod ("VerifyIsUIButton", BindingFlags.Instance | BindingFlags.NonPublic);
+				var m = type_uibutton.GetMethod ("VerifyIsUIButton", BindingFlags.Instance | BindingFlags.NonPublic);
 #if DEBUG
 				// kept in debug builds
 				Assert.NotNull (m, "VerifyIsUIButton");

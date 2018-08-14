@@ -11,7 +11,8 @@ using Xamarin.Tests;
 
 namespace Xamarin.MMP.Tests
 {
-	public partial class MMPTests 
+	[TestFixture]
+	public class ClassicTests
 	{
 		bool ShouldSkipClassicTest
 		{
@@ -29,7 +30,7 @@ namespace Xamarin.MMP.Tests
 			if (ShouldSkipClassicTest)
 				return;
 
-			RunMMPTest (tmpDir => {
+			MMPTests.RunMMPTest (tmpDir => {
 				TI.TestClassicExecutable (tmpDir);
 			});
 		}
@@ -45,7 +46,7 @@ namespace Xamarin.MMP.Tests
 			const string IntPtrTestCase = @"NSDictionary d = new NSDictionary ();
 				NSObject o = d;
 				NSObject v = o.ValueForKey ((NSString)""count"");";
-			RunMMPTest (tmpDir => {
+			MMPTests.RunMMPTest (tmpDir => {
 				TI.TestClassicExecutable (tmpDir, IntPtrTestCase);
 			});
 		}
@@ -58,7 +59,7 @@ namespace Xamarin.MMP.Tests
 			if (ShouldSkipClassicTest)
 				return;
 
-			RunMMPTest (tmpDir => {
+			MMPTests.RunMMPTest (tmpDir => {
 				string buildOutput = TI.TestClassicExecutable (tmpDir, csprojConfig : "<IncludeMonoRuntime>true</IncludeMonoRuntime><MonoBundlingExtraArgs>--new-refcount=false</MonoBundlingExtraArgs>").BuildOutput;
 				Assert.IsTrue (buildOutput.Contains ("Disabling the new refcount logic is deprecated"), "Classic_NewRefCount_Warns did not warn as expected:\n\n", buildOutput);
 			});

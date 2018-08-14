@@ -22,12 +22,7 @@ Copyright (c) 2017 Microsoft Corp. (www.microsoft.com)
 		<FrameworkPathOverride Condition="'$(TargetFrameworkName)' != 'System'">$(MacBclPath)</FrameworkPathOverride>
 	</PropertyGroup>
 
-	<Target Name="FixDesignTimeFacades" AfterTargets="GetReferenceAssemblyPaths" Condition="('$(OS)' != 'Windows_NT')">
-		<ItemGroup>
-			<DesignTimeFacadeDirectories Remove="@(DesignTimeFacadeDirectories)" />
-			<DesignTimeFacadeDirectories Include="$(MacBclPath)/Facades/" />
-		</ItemGroup>
-	</Target>
-	
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.TargetFrameworkFix.targets"/>
+
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.Common.ImplicitFacade.msbuild.targets" Condition="'$(TargetFrameworkName)' == 'Modern' Or '$(TargetFrameworkName)' == 'Full'"/>
 </Project>

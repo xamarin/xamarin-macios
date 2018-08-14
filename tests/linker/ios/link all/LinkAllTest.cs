@@ -40,7 +40,7 @@ using NUnit.Framework;
 namespace LinkAll {
 	
 	// we DO NOT want the code to be "fully" available
-	public partial class NotPreserved {
+	public class NotPreserved {
 		
 		public byte One {
 			get; set;
@@ -85,6 +85,9 @@ namespace LinkAll {
 	#error Unknown platform
 #endif
 
+		Type not_preserved_type = typeof (NotPreserved);
+
+
 		class TypeAttribute : Attribute {
 			public TypeAttribute (Type type) {}
 		}
@@ -103,7 +106,8 @@ namespace LinkAll {
 			// which means the property will be available for MEF_3862
 			NotPreserved np = new NotPreserved ();
 			Assert.That (np.Two, Is.EqualTo (0), "Two==0");
-			PropertyInfo pi = typeof (NotPreserved).GetProperty ("Two");
+
+			PropertyInfo pi = not_preserved_type.GetProperty ("Two");
 			// check the *unused* setter absence from the application
 			Assert.NotNull (pi.GetGetMethod (), "getter");
 			Assert.Null (pi.GetSetMethod (), "setter");
@@ -115,7 +119,8 @@ namespace LinkAll {
 			// that ensure the setter is not linked away, 
 			NotPreserved np = new NotPreserved ();
 			np.One = 1;
-			PropertyInfo pi = typeof (NotPreserved).GetProperty ("One");
+
+			PropertyInfo pi = not_preserved_type.GetProperty ("One");
 			// check the *unused* setter absence from the application
 			Assert.Null (pi.GetGetMethod (), "getter");
 			Assert.NotNull (pi.GetSetMethod (), "setter");
@@ -126,7 +131,7 @@ namespace LinkAll {
 		{
 			// note: avoiding using "typeof(DefaultValueAttribute)" in the code
 			// so the linker does not keep it just because of it
-			PropertyInfo pi = typeof (NotPreserved).GetProperty ("Two");
+			PropertyInfo pi = not_preserved_type.GetProperty ("Two");
 			object [] attrs = pi.GetCustomAttributes (false);
 			bool default_value = false;
 			foreach (var ca in attrs) {
@@ -546,13 +551,14 @@ namespace LinkAll {
 			Assert.Null (Type.GetType (fqn), fqn);
 		}
 
+		static Type type_Task = typeof (Task);
+
 		[Test]
 		public void Bug59015 ()
 		{
 			CheckAsyncTaskMethodBuilder (typeof (AsyncTaskMethodBuilder));
 			CheckAsyncTaskMethodBuilder (typeof (AsyncTaskMethodBuilder<int>));
-			var t = typeof (Task);
-			var snfwc = t.GetMethod ("SetNotificationForWaitCompletion", BindingFlags.Instance | BindingFlags.NonPublic);
+			var snfwc = type_Task.GetMethod ("NotifyDebuggerOfWaitCompletion", BindingFlags.Instance | BindingFlags.NonPublic);
 #if DEBUG
 			Assert.NotNull (snfwc, "Task.NotifyDebuggerOfWaitCompletion");
 #else
@@ -590,6 +596,21 @@ namespace LinkAll {
 		internal sealed class ProtocolWithGenericsInOptionalMemberWrapper : BaseWrapper, IProtocolWithGenericsInOptionalMember
 		{
 			public ProtocolWithGenericsInOptionalMemberWrapper (IntPtr handle, bool owns) : base (handle, owns) { }
+		}
+
+		[Test]
+		public void NoFatCorlib ()
+		{
+			var corlib = typeof (int).Assembly.Location;
+			// special location when we build a shared (app and extensions) framework for mono
+			if (corlib.EndsWith ("/Frameworks/Xamarin.Sdk.framework/MonoBundle/mscorlib.dll", StringComparison.Ordinal))
+				Assert.Pass (corlib);
+#if __WATCHOS__
+			var suffix = "link all.appex/mscorlib.dll";
+#else
+			var suffix = "link all.app/mscorlib.dll";
+#endif
+			Assert.That (corlib, Is.StringEnding (suffix), corlib);
 		}
 	}
 

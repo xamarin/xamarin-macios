@@ -1,7 +1,4 @@
 using System;
-#if !__WATCHOS__
-using System.Drawing;
-#endif
 
 #if __UNIFIED__
 using ObjCRuntime;
@@ -12,6 +9,9 @@ using AppKit;
 using UIKit;
 #endif
 #else
+#if !__WATCHOS__
+using System.Drawing;
+#endif
 using MonoTouch.ObjCRuntime;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -214,6 +214,23 @@ namespace Bindings.Test {
 		void OutNSErrorOnStack (NSObject i1, NSObject i2, NSObject i3, long i4, int i5, out NSError error);
 	}
 
+	[Protocol]
+	interface ProtocolAssignerProtocol
+	{
+	}
+
+	interface IProtocolAssignerProtocol { }
+
+	[BaseType (typeof (NSObject))]
+	interface ProtocolAssigner
+	{
+		[Export ("setProtocol")]
+		void SetProtocol ();
+
+		[Export ("completedSetProtocol:")]
+		void CompletedSetProtocol (IProtocolAssignerProtocol value);
+	}
+
 	[BaseType (typeof (NSObject))]
 	interface ObjCExceptionTest {
 		[Export ("throwObjCException")]
@@ -261,8 +278,17 @@ namespace Bindings.Test {
 		[Export ("requiredCallback:")]
 		void RequiredCallback (Action<int> completionHandler);
 
+		[Abstract]
+		[Static]
+		[Export ("requiredStaticCallback:")]
+		void RequiredStaticCallback (Action<int> completionHandler);
+
 		[Export ("optionalCallback:")]
 		void OptionalCallback (Action<int> completionHandler);
+
+		[Static]
+		[Export ("optionalStaticCallback:")]
+		void OptionalStaticCallback (Action<int> completionHandler);
 	}
 
 	interface IObjCProtocolBlockTest { }
@@ -273,6 +299,10 @@ namespace Bindings.Test {
 		[Export ("TestObject", ArgumentSemantic.Retain)]
 		IObjCProtocolBlockTest TestObject { get; set; }
 
+		[Static]
+		[Export ("TestClass")]
+		Class TestClass { get; set; }
+
 		[Export ("classCallback:")]
 		void ClassCallback (Action<int> completionHandler);
 
@@ -282,8 +312,16 @@ namespace Bindings.Test {
 		[Export ("callRequiredCallback")]
 		void CallRequiredCallback ();
 
+		[Static]
+		[Export ("callRequiredStaticCallback")]
+		void CallRequiredStaticCallback ();
+
 		[Export ("callOptionalCallback")]
 		void CallOptionalCallback ();
+
+		[Static]
+		[Export ("callOptionalStaticCallback")]
+		void CallOptionalStaticCallback ();
 
 		[Export ("testFreedBlocks")]
 		void TestFreedBlocks ();
@@ -291,6 +329,13 @@ namespace Bindings.Test {
 		[Static]
 		[Export ("freedBlockCount")]
 		int FreedBlockCount { get; }
+	}
+
+	[BaseType (typeof (NSObject))]
+	interface EvilDeallocator
+	{
+		[Export ("evilCallback")]
+		Action<int> EvilCallback { get; set; }
 	}
 }
 

@@ -23,19 +23,36 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
+	
+	<!-- Due to IDE/template bugs, many bindings projects exist in the wild withtout correct TFI/TFV tags.
+	In addition, System is not supported, so treat System as Modern or Full, depending on TFV being set.
+	Microsoft.CSharp.targets gives TargetFrameworkVersion / TargetFrameworkIdentifier default values, so we _must_ do this _before_ 
+	import Microsoft.CSharp.targets. However, we can't do most of Xamarin.Mac.ObjCBinding.CSharp.props before it. -->
 
-	<Import Project="Xamarin.Mac.ObjCBinding.CSharp.props"/>
+	<Choose>
+		<When Condition=" '$(UseXamMacFullFramework)' == '' And ( '$(TargetFrameworkVersion)' == 'v2.0' Or '$(TargetFrameworkVersion)' == '' )">
+			<PropertyGroup>
+				<TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+				<TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
+			</PropertyGroup>
+		</When>
+		<Otherwise>
+			<PropertyGroup>
+				<TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+				<UseXamMacFullFramework>true</UseXamMacFullFramework>
+				<TargetFrameworkIdentifier></TargetFrameworkIdentifier>
+			</PropertyGroup>
+		</Otherwise>
+	</Choose>
 
 	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-	<Import Project="Xamarin.Mac.ObjCBinding.Common.targets" />
+	
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.ObjCBinding.CSharp.props"/>
+
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.ObjCBinding.Common.targets" />
 
 	<PropertyGroup>
-		<IsXBuild Condition="'$(MSBuildRuntimeVersion)' == ''">true</IsXBuild>
-		<IsXBuild Condition="'$(MSBuildRuntimeVersion)' != ''">false</IsXBuild>
-	</PropertyGroup>
-
-	<PropertyGroup>
-		<_GeneratedSourcesFileList>$(GeneratedSourcesDir)\sources.list</_GeneratedSourcesFileList>
+		<_GeneratedSourcesFileList>$(GeneratedSourcesDir)sources.list</_GeneratedSourcesFileList>
 
 		<!-- Add our own pre-build steps -->
 		<CompileDependsOn>
@@ -45,11 +62,6 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 			$(CompileDependsOn)
 		</CompileDependsOn>
 	</PropertyGroup>
-
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.XM45.xbuild.targets"
-		Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework' And '$(IsXBuild)' == 'true' "/>
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.msbuild.targets"
-		Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework' And '$(IsXBuild)' == 'false' "/>
 
 	<!-- Override the CoreCompile Target to use btouch -->
 	<Target Name="_GenerateBindings"
@@ -69,11 +81,14 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 		<Message Text="BTouchEmitDebugInformation: $(BTouchEmitDebugInformation)"/>
 
 		<BTouch
+			Condition="'$(IsMacEnabled)' == 'true'"
+			SessionId="$(BuildSessionId)"
+			OutputPath="$(OutputPath)"
+			ObjectiveCLibraries="@(ObjcBindingNativeLibrary)"
 			AdditionalLibPaths="$(AdditionalLibPaths)"
 			AllowUnsafeBlocks="$(AllowUnsafeBlocks)"
 			ApiDefinitions="@(ObjcBindingApiDefinition)"
 			BaseLibDll="$(BaseLibDllPath)"
-			CompilerPath="$(CscPath)"
 			CoreSources="@(ObjcBindingCoreSource)"
 			DefineConstants="$(DefineConstants)"
 			EmitDebugInformation="$(BTouchEmitDebugInformation)"
@@ -81,7 +96,6 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 			GeneratedSourcesDir="$(GeneratedSourcesDir)"
 			GeneratedSourcesFileList="$(_GeneratedSourcesFileList)"
 			Namespace="$(Namespace)"
-			NoStdLib="$(NoStdLib)"
 			OutputAssembly="$(OutputAssembly)"
 			ProcessEnums="$(ProcessEnums)"
 			ProjectDir="$(MSBuildProjectDirectory)"
@@ -95,6 +109,7 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 
 	<Target Name="_PrepareNativeReferences" Condition="'$(DesignTimeBuild)' != 'true'">
 		<PrepareNativeReferences
+			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			IntermediateOutputPath="$(IntermediateOutputPath)"
 			NativeReferences="@(NativeReference)"
@@ -112,9 +127,10 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 	</Target>
 
 	<Target Name="_CompressFrameworks" Inputs="@(_NativeFrameworkResource)" Outputs="$(IntermediateOutputPath)%(_NativeFramework.Filename)%(_NativeFramework.Extension)" DependsOnTargets="_CollectNativeFrameworkResources">
-		<Delete SessionId="$(BuildSessionId)" Files="$(IntermediateOutputPath)%(_NativeFramework.Filename)%(_NativeFramework.Extension)" />
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(IntermediateOutputPath)%(_NativeFramework.Filename)%(_NativeFramework.Extension)" />
 
 		<Zip
+			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			ToolExe="$(ZipExe)"
 			ToolPath="$(ZipPath)"
