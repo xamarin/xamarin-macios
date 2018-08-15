@@ -102,7 +102,6 @@ namespace Xamarin.Mac.Tasks
 		protected override string GenerateCommandLineCommands ()
 		{
 			var args = new CommandLineArgumentBuilder ();
-			var actualArgs = new CommandLineArgumentBuilder ();
 			bool msym;
 
 			args.AddLine ("/verbose");
@@ -203,9 +202,6 @@ namespace Xamarin.Mac.Tasks
 				args.AddQuotedLine ("/root-assembly:" + Path.GetFullPath (ApplicationAssembly.ItemSpec));
 			}
 
-			if (!string.IsNullOrWhiteSpace (ExtraArguments))
-				actualArgs.Add (ExtraArguments);
-
 			if (NativeReferences != null) {
 				foreach (var nr in NativeReferences)
 					args.AddQuotedLine ("/native-reference:" + Path.GetFullPath (nr.ItemSpec));
@@ -237,8 +233,15 @@ namespace Xamarin.Mac.Tasks
 				Log.LogWarning ("Failed to create response file '{0}': {1}", responseFile, ex);
 			}
 
-			// Use only the response file
+			// Some arguments can not safely go in the response file and are 
+			// added separately. They must go _after_ the response file
+			// as they may override options passed in the response file
+			var actualArgs = new CommandLineArgumentBuilder ();
+
 			actualArgs.AddQuoted ($"@{responseFile}");
+
+			if (!string.IsNullOrWhiteSpace (ExtraArguments))
+				actualArgs.Add (ExtraArguments);
 
 			return actualArgs.ToString ();
 		}

@@ -108,6 +108,7 @@
     </Compile>
     <Compile Include="ProjectsTests\ProjectWithSpaces.cs" />
     <Compile Include="ProjectsTests\ProjectReference.cs" />
+    <Compile Include="ProjectsTests\ResponseFileArguments.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

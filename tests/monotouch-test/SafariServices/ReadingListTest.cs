@@ -59,6 +59,18 @@ namespace MonoTouchFixtures.SafariServices {
 				Assert.False (rl.Add (local, null, null, out error), "Add-3");
 				Assert.That (error.Domain, Is.EqualTo ((string) SSReadingList.ErrorDomain), "Domain");
 				Assert.That (error.Code, Is.EqualTo ((nint) (int) SSReadingListError.UrlSchemeNotAllowed), "Code");
+
+				try {
+					throw new NSErrorException (error);
+				}
+				catch (NSErrorException ns) {
+					Assert.That (ns.Error.Code, Is.EqualTo (error.Code), "Code");
+					Assert.That (ns.Error.Domain, Is.EqualTo (error.Domain), "Domain");
+					Assert.That (ns.Message, Is.EqualTo (error.Description), "Message");
+				}
+				catch (Exception e) {
+					Assert.Fail (e.ToString ());
+				}
 			}
 		}
 

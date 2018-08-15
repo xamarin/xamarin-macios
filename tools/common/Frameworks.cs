@@ -13,6 +13,7 @@ public class Framework
 	public string Namespace;
 	public string Name;
 	public Version Version;
+	public Version VersionAvailableInSimulator;
 }
 
 public class Frameworks : Dictionary <string, Framework>
@@ -42,7 +43,7 @@ public class Frameworks : Dictionary <string, Framework>
 		Add (@namespace, framework, new Version (major_version, minor_version, build_version));
 	}
 
-	public void Add (string @namespace, string framework, Version version)
+	public void Add (string @namespace, string framework, Version version, Version version_available_in_simulator = null)
 	{
 		var fr = new Framework () {
 #if MTOUCH || MMP
@@ -51,7 +52,8 @@ public class Frameworks : Dictionary <string, Framework>
 			Namespace = @namespace,
 #endif
 			Name = framework,
-			Version = version
+			Version = version,
+			VersionAvailableInSimulator = version_available_in_simulator ?? version,
 		};
 		base.Add (fr.Namespace, fr);
 	}
@@ -63,6 +65,8 @@ public class Frameworks : Dictionary <string, Framework>
 				return kvp.Value;
 		return null;
 	}
+
+	static Version NotAvailableInSimulator = new Version (int.MaxValue, int.MaxValue);
 
 	static Frameworks mac_frameworks;
 	public static Frameworks MacFrameworks {
@@ -239,7 +243,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "CloudKit", "CloudKit", 8 },
 				{ "AVKit", "AVKit", 8 },
 				{ "CoreAudioKit", "CoreAudioKit", app.IsSimulatorBuild ? 9 : 8 },
-				{ "Metal", "Metal", 8 },
+				{ "Metal", "Metal", new Version (8, 0), new Version (9, 0) },
 				{ "WebKit", "WebKit", 8 },
 				{ "NetworkExtension", "NetworkExtension", 8 },
 				{ "VideoToolbox", "VideoToolbox", 8 },
@@ -252,7 +256,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "WatchConnectivity", "WatchConnectivity", 9 },
 				{ "ModelIO", "ModelIO", 9 },
 				{ "MetalKit", "MetalKit", 9 },
-				{ "MetalPerformanceShaders", "MetalPerformanceShaders", 9 },
+				{ "MetalPerformanceShaders", "MetalPerformanceShaders", new Version (9, 0), new Version (11, 0) /* MPS got simulator headers in Xcode 9 */ },
 				{ "GameplayKit", "GameplayKit", 9 },
 				{ "HealthKitUI", "HealthKitUI", 9,3 },
 
@@ -267,9 +271,9 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "ARKit", "ARKit", 11 },
 				{ "CoreNFC", "CoreNFC", 11 },
-				{ "DeviceCheck", "DeviceCheck", 11 },
+				{ "DeviceCheck", "DeviceCheck", new Version (11, 0), NotAvailableInSimulator /* no headers provided for simulator */ },
 				{ "IdentityLookup", "IdentityLookup", 11 },
-				{ "IOSurface", "IOSurface", 11 },
+				{ "IOSurface", "IOSurface", new Version (11, 0), NotAvailableInSimulator /* Not available in the simulator (the header is there, but broken) */  },
 				{ "CoreML", "CoreML", 11 },
 				{ "Vision", "Vision", 11 },
 				{ "FileProvider", "FileProvider", 11 },
@@ -317,7 +321,7 @@ public class Frameworks : Dictionary <string, Framework>
 				// AVFoundation was introduced in 3.0, but the simulator SDK was broken until 3.2.
 				{ "AVFoundation", "AVFoundation", 3, app.IsSimulatorBuild ? 2 : 0 },
 				{ "CloudKit", "CloudKit", 3 },
-				{ "GameKit", "GameKit", 3 },
+				{ "GameKit", "GameKit", new Version (3, 0), new Version (3, 2) /* No headers provided for watchOS/simulator until watchOS 3.2. */ },
 				{ "SceneKit", "SceneKit", 3 },
 				{ "SpriteKit", "SpriteKit", 3 },
 				{ "UserNotifications", "UserNotifications", 3 },
@@ -366,7 +370,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "MediaToolbox", "MediaToolbox", 9 },
 					{ "Metal", "Metal", 9 },
 					{ "MetalKit", "MetalKit", 9 },
-					{ "MetalPerformanceShaders", "MetalPerformanceShaders", 9 },
+					{ "MetalPerformanceShaders", "MetalPerformanceShaders", new Version (9, 0), NotAvailableInSimulator /* not available in the simulator */ },
 					{ "CoreServices", "CFNetwork", 9 },
 					{ "MobileCoreServices", "MobileCoreServices", 9 },
 					{ "ModelIO", "ModelIO", 9 },
@@ -392,9 +396,9 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10 },
 					{ "VideoToolbox", "VideoToolbox", 10,2 },
 
-					{ "DeviceCheck", "DeviceCheck", 11 },
+					{ "DeviceCheck", "DeviceCheck", new Version (11, 0), NotAvailableInSimulator /* no headers provided for simulator */ },
 					{ "CoreML", "CoreML", 11 },
-					{ "IOSurface", "IOSurface", 11 },
+					{ "IOSurface", "IOSurface", new Version (11, 0), NotAvailableInSimulator /* Not available in the simulator (the header is there, but broken) */  },
 					{ "Vision", "Vision", 11 },
 				};
 			}

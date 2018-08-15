@@ -1676,5 +1676,19 @@ namespace Xamarin.Bundler
 				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
 			}
 		}
+
+		public static bool IsFrameworkAvailableInSimulator (Application app, string framework)
+		{
+			if (!GetFrameworks (app).TryGetValue (framework, out var fw))
+				return true; // Unknown framework, assume it's valid for the simulator
+
+			if (fw.VersionAvailableInSimulator == null)
+				return false;
+
+			if (fw.VersionAvailableInSimulator > app.SdkVersion)
+				return false;
+
+			return true;
+		}
 	}
 }
