@@ -24,6 +24,22 @@ namespace NetworkExtension {
 		}
 	}
 
+	public partial class NWPath {
+
+		[Obsolete ("This type is not meant to be user created.")]
+		public NWPath ()
+		{
+		}
+	}
+
+	public partial class NWHostEndpoint {
+
+		[Obsolete ("Use the 'Create' method instead.")]
+		public NWHostEndpoint ()
+		{
+		}
+	}
+
 	public partial class NWTcpConnectionAuthenticationDelegate : NSObject {
 
 		[Obsolete ("Use 'NWTcpConnectionAuthenticationDelegate_Extensions.EvaluateTrustAsync' instead.")]
