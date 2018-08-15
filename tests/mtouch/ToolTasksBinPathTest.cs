@@ -74,13 +74,14 @@ namespace Xamarin.Mac.Tasks {
 				UseShellExecute = false,
 				CreateNoWindow = true,
 				RedirectStandardOutput = true,
+				RedirectStandardError = true,
 			};
 			var proc = Process.Start (psi);
 
 			string output = proc.StandardOutput.ReadToEnd ();
-			Console.WriteLine (output); // Print the output in case something wrong happens when executing the command
+			string err = proc.StandardError.ReadToEnd ();
 
-			Assert.True (output.Contains (metalTask.DevicePlatformBinDir));
+			Assert.True (output.Contains (metalTask.DevicePlatformBinDir), err);
 		}
 
 		[Test]
@@ -93,13 +94,14 @@ namespace Xamarin.Mac.Tasks {
 				UseShellExecute = false,
 				CreateNoWindow = true,
 				RedirectStandardOutput = true,
+				RedirectStandardError = true,
 			};
 			var proc = Process.Start (psi);
 
 			string output = proc.StandardOutput.ReadToEnd ();
-			Console.WriteLine (output); // Print the output in case something wrong happens when executing the command
+			string err = proc.StandardError.ReadToEnd ();
 
-			Assert.True (output.Contains (metalLibTask.DevicePlatformBinDir));
+			Assert.True (output.Contains (metalLibTask.DevicePlatformBinDir), err);
 		}
 	}
 }
