@@ -1,0 +1,4 @@
+!missing-enum! NSWorkspaceAuthorizationType not bound
+!missing-selector! +NSFileManager::fileManagerWithAuthorization: not bound
+!missing-selector! NSWorkspace::requestAuthorizationOfType:completionHandler: not bound
+!missing-type! NSWorkspaceAuthorization not bound
