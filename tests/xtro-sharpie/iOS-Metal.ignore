@@ -26,3 +26,32 @@
 !incorrect-protocol-member! MTLRenderPipelineState::imageblockSampleLength is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderPipelineState::maxTotalThreadsPerThreadgroup is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderPipelineState::threadgroupSizeMatchesTileSize is REQUIRED and should be abstract
+
+## New required members on existing protocols
+!incorrect-protocol-member! MTLBlitCommandEncoder::copyIndirectCommandBuffer:sourceRange:destination:destinationIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBlitCommandEncoder::optimizeContentsForCPUAccess: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBlitCommandEncoder::optimizeContentsForCPUAccess:slice:level: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBlitCommandEncoder::optimizeContentsForGPUAccess: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBlitCommandEncoder::optimizeContentsForGPUAccess:slice:level: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBlitCommandEncoder::optimizeIndirectCommandBuffer:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBlitCommandEncoder::resetCommandsInBuffer:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::computeCommandEncoderWithDispatchType: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::encodeSignalEvent:value: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::encodeWaitForEvent:value: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::dispatchType is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::memoryBarrierWithResources:count: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::memoryBarrierWithScope: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::setStageInRegionWithIndirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::maxArgumentBufferSamplerCount is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::maxBufferLength is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::minimumTextureBufferAlignmentForPixelFormat: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newEvent is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newIndirectCommandBufferWithDescriptor:maxCommandCount:options: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newSharedEvent is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newSharedEventWithHandle: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::executeCommandsInBuffer:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderPipelineState::supportIndirectCommandBuffers is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::allowGPUOptimizedContents is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLArgumentEncoder::newArgumentEncoderForBufferAtIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLArgumentEncoder::setIndirectCommandBuffer:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLArgumentEncoder::setIndirectCommandBuffers:withRange: is REQUIRED and should be abstract
