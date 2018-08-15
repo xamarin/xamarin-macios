@@ -9844,7 +9844,8 @@ namespace Foundation
 		[Async (ResultTypeName = "LoadInPlaceResult"), Export ("loadInPlaceFileRepresentationForTypeIdentifier:completionHandler:")]
 		NSProgress LoadInPlaceFileRepresentation (string typeIdentifier, LoadInPlaceFileRepresentationHandler completionHandler);
 
-		[NoWatch, NoTV, NoMac, iOS (11, 0)]
+		[NoWatch, NoTV, iOS (11,0)]
+		[Mac (10,14, onlyOn64: true)]
 		[NullAllowed, Export ("suggestedName")]
 		string SuggestedName { get; set; }
 
