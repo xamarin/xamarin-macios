@@ -182,8 +182,9 @@ namespace Introspection {
 				// NSInvalidArgumentException Reason: image must be non-nil
 				return true;
 
-			// iOS 10 - this works only on devices, so we skip the simulator
+			// these work only on devices, so we skip the simulator
 			case "MTLHeapDescriptor":
+			case "MTLSharedEventListener":
 				return Runtime.Arch == Arch.SIMULATOR;
 #if __WATCHOS__
 			// The following watchOS 3.2 Beta 2 types Fails, but they can be created we verified using an ObjC app, we will revisit before stable
