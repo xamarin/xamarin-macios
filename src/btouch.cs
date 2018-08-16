@@ -442,15 +442,6 @@ class BindingTouch {
 			// Keep source files at the end of the command line - csc will create TWO assemblies if any sources preceed the -out parameter
 			var cargs = new StringBuilder ();
 
-			if (CurrentPlatform == PlatformName.MacOSX) {
-				// HACK
-				bool isCSC = compiler.Contains ("/Library/Frameworks/Mono.framework/Versions/Current/bin/csc");
-				if (!isCSC && !string.IsNullOrEmpty (net_sdk) && net_sdk != "mobile")
-					cargs.Append ("-sdk:").Append (net_sdk).Append (' ');
-			} else {
-				if (!string.IsNullOrEmpty (net_sdk))
-					cargs.Append ("-sdk:").Append (net_sdk).Append (' ');
-			}
 			cargs.Append ("-debug -unsafe -target:library -nowarn:436").Append (' ');
 			cargs.Append ("-out:").Append (StringUtils.Quote (tmpass)).Append (' ');
 			cargs.Append ("-r:").Append (StringUtils.Quote (GetAttributeLibraryPath ())).Append (' ');
