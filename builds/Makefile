@@ -1,9 +1,6 @@
 TOP=..
 include $(TOP)/Make.config
 
-XCODE_DEVELOPER_ROOT=$(XCODE94_DEVELOPER_ROOT)
-export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
-
 PREFIX=$(abspath $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/)
 
 IPHONESIMULATOR_SDK=$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk
@@ -203,7 +200,7 @@ MAC_TARGETS = \
 
 define MacBuildTemplate
 $(2)_CPPFLAGS = \
-	-isysroot $(XCODE_MAC_SDKROOT) \
+	-isysroot $(5) \
 	-mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
 $(2)_CFLAGS = -O2 -arch $(1)
 $(2)_CXXFLAGS = -O2 -arch $(1)
@@ -230,9 +227,9 @@ $(2)_CONFIGURE_ENVIRONMENT = \
 	CFLAGS="$$($(2)_CFLAGS)" \
 	CXXFLAGS="$$($(2)_CXXFLAGS)" \
 	LDFLAGS="$$($(2)_LDFLAGS)" \
-	CC="$(MAC_CC)" \
-	CXX="$(MAC_CXX)" \
-	DEVELOPER_DIR="$(XCODE_DEVELOPER_ROOT)" \
+	CC="$(MAC$(4)_CC)" \
+	CXX="$(MAC$(4)_CXX)" \
+	DEVELOPER_DIR="$(3)" \
 
 setup:: setup-$(2)
 
@@ -254,8 +251,8 @@ $(BUILD_DESTDIR)/mono-$(2): mono-wrapper.in .stamp-configure-$(2) | $(BUILD_DEST
 build-$(2): .stamp-build-$(2)
 endef
 
-$(eval $(call MacBuildTemplate,i386,mac32))
-$(eval $(call MacBuildTemplate,x86_64,mac64))
+$(eval $(call MacBuildTemplate,i386,mac32,$(XCODE94_DEVELOPER_ROOT),32,$(XCODE94_MAC_SDKROOT)))
+$(eval $(call MacBuildTemplate,x86_64,mac64,$(XCODE_DEVELOPER_ROOT),,$(XCODE_MAC_SDKROOT)))
 
 $(MONO_PATH)/mcs/class/lib/%: .stamp-build-tools64; @true
 
@@ -538,6 +535,8 @@ setup-watchbcl: .stamp-configure-watchbcl
 ifneq ($(WATCH_MONO_PATH),$(MONO_PATH))
 .stamp-configure-watchbcl: $(WATCH_MONO_PATH)/configure
 	$(Q) $(WATCHBCL_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh watchbcl ../$(WATCH_MONO_PATH)/configure $(WATCHBCL_CONFIGURE_FLAGS)
+else
+.stamp-configure-watchbcl: ;
 endif
 
 build-tools-bcl: build-watchbcl
@@ -1941,8 +1940,9 @@ CROSS_CONFIGURE_ENVIRONMENT = \
 	CFLAGS="$(CROSS_CFLAGS)" \
 	CXXFLAGS="$(CROSS_CXXFLAGS)" \
 	LDFLAGS="$(CROSS_LDFLAGS)" \
-	CC="$(MAC_CC)" \
-	CXX="$(MAC_CXX)" \
+	CC="$(MAC32_CC)" \
+	CXX="$(MAC32_CXX)" \
+	DEVELOPER_DIR="$(XCODE94_DEVELOPER_ROOT)" \
 
 ifdef INCLUDE_IOS
 ifdef INCLUDE_DEVICE
@@ -2076,8 +2076,9 @@ WATCH_CONFIGURE_ENVIRONMENT = \
 	CFLAGS="$(CROSS_CFLAGS)" \
 	CXXFLAGS="$(CROSS_CXXFLAGS)" \
 	LDFLAGS="$(CROSS_LDFLAGS)" \
-	CC="$(MAC_CC)" \
-	CXX="$(MAC_CXX)" \
+	CC="$(MAC32_CC)" \
+	CXX="$(MAC32_CXX)" \
+	DEVELOPER_DIR="$(XCODE94_DEVELOPER_ROOT)" \
 
 ifdef INCLUDE_WATCH
 ifdef INCLUDE_DEVICE
