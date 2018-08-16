@@ -165,6 +165,7 @@ namespace AudioToolbox {
 			}
 		}
 
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		public AudioSessionInputRouteKind PreviousInputRoute {
 			get {
 				using (var array = Extract (previous_route_key, AudioSession.AudioRouteKey_Inputs))
@@ -172,6 +173,7 @@ namespace AudioToolbox {
 			}
 		}
 
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		public AudioSessionOutputRouteKind [] PreviousOutputRoutes {
 			get {
 				using (var array = Extract (previous_route_key, AudioSession.AudioRouteKey_Outputs))
@@ -179,6 +181,7 @@ namespace AudioToolbox {
 			}
 		}
 
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		public AudioSessionInputRouteKind CurrentInputRoute {
 			get {
 				using (var array = Extract (current_route_key, AudioSession.AudioRouteKey_Inputs))
@@ -186,6 +189,7 @@ namespace AudioToolbox {
 			}
 		}
 
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		public AudioSessionOutputRouteKind [] CurrentOutputRoutes {
 			get {
 				using (var array = Extract (current_route_key, AudioSession.AudioRouteKey_Outputs))
@@ -440,12 +444,14 @@ namespace AudioToolbox {
 			}
 		}
 
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		static public AccessoryInfo[] InputSources {
 			get {
 				return ExtractAccessoryInfo (GetIntPtr (AudioSessionProperty.InputSources), InputSourceKey_ID, InputSourceKey_Description);
 			}
 		}
 
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		static public AccessoryInfo[] OutputDestinations {
 			get {
 				return ExtractAccessoryInfo (GetIntPtr (AudioSessionProperty.OutputDestinations), OutputDestinationKey_ID, OutputDestinationKey_Description);
@@ -490,6 +496,7 @@ namespace AudioToolbox {
 
 		*/
 
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		static internal AudioSessionInputRouteKind GetInputRoute (NSArray arr)
 		{
 			if (arr == null || arr.Count == 0)
@@ -520,6 +527,7 @@ namespace AudioToolbox {
 			}
 		}
 
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		static internal AudioSessionOutputRouteKind [] GetOutputRoutes (NSArray arr)
 		{
 			if (arr == null || arr.Count == 0)
@@ -563,12 +571,14 @@ namespace AudioToolbox {
 			return result;
 		}
 
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		static public AudioSessionInputRouteKind InputRoute {
 			get {
 				return GetInputRoute ((NSArray) AudioRouteDescription [AudioRouteKey_Inputs]);
 			}
 		}
 		
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		static public AudioSessionOutputRouteKind [] OutputRoutes {
 			get {
 				return GetOutputRoutes ((NSArray) AudioRouteDescription [AudioRouteKey_Outputs]);

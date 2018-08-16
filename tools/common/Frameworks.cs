@@ -100,6 +100,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "ScriptingBridge", 10, 5 },
 					{ "QuickLook", 10, 5 },
 					{ "QuartzComposer", "Quartz", 10, 5 },
+					{ "ImageCaptureCore", "ImageCaptureCore", 10,5 },
 
 					{ "QTKit", 10, 6 },
 					{ "QuickLookUI", "Quartz", 10, 6 },
@@ -164,9 +165,10 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "AdSupport", "AdSupport", 10,14 },
 					{ "NaturalLanguage", "NaturalLanguage", 10,14 },
+					{ "Network", "Network", 10, 14 },
 					{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10,14 },
 					{ "UserNotifications", "UserNotifications", 10,14 },
-					{ "ImageCaptureCore", "ImageCaptureCore", 10,14 },
+					{ "iTunesLibrary", "iTunesLibrary", 10,14 },
 				};
 			}
 			return mac_frameworks;
@@ -290,6 +292,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "CarPlay", "CarPlay", 12,0 },
 				{ "IdentityLookupUI", "IdentityLookupUI", 12,0 },
 				{ "NaturalLanguage", "NaturalLanguage", 12,0 },
+				{ "Network", "Network", 12, 0 },
 			};
 		}
 		return ios_frameworks;
@@ -412,6 +415,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "Vision", "Vision", 11 },
 
 					{ "NaturalLanguage", "NaturalLanguage", 12,0 },
+					{ "Network", "Network", 12, 0 } ,
 					{ "TVUIKit", "TVUIKit", 12,0 },
 				};
 			}

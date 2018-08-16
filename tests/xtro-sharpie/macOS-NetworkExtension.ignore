@@ -2,3 +2,12 @@
 !unknown-field! NEFilterProviderRemediationMapRemediationButtonTexts bound
 !unknown-field! NEFilterProviderRemediationMapRemediationURLs bound
 !unknown-type! NEFilterProvider bound
+
+## Native code has NWPathStatus in NetworkExtension and nw_path_status_t in Network (with the same elements).
+## NetworkExtension.NWPathStatus is the oldest, but NetworkExtension isn't present on all the platforms Network
+## is, which means we can't use the same managed enum for both cases (the native enums aren't entirely identical
+## either: one is pointer sized while the other is 32-bit always).
+!duplicate-type-name! NWPathStatus enum exists as both NetworkExtension.NWPathStatus and Network.NWPathStatus
+## These are because xtro is mapping the wrong managed enum to the native NWPathStatus enum.
+!missing-enum-native! NWPathStatus
+!wrong-enum-size! NWPathStatus managed 4 vs native 8

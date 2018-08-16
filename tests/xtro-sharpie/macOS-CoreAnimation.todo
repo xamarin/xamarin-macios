@@ -1,4 +1,0 @@
-!missing-field! kCAGradientLayerConic not bound
-!missing-field! kCAGradientLayerRadial not bound
-!missing-field! kCARendererMetalCommandQueue not bound
-!missing-selector! CARenderer::setDestination: not bound

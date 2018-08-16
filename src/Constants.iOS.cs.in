@@ -82,6 +82,7 @@ namespace MonoTouch {
 		public const string CoreAudioKitLibrary = "/System/Library/Frameworks/CoreAudioKit.framework/CoreAudioKit";
 		public const string CoreMotionLibrary = "/System/Library/Frameworks/CoreMotion.framework/CoreMotion";
 		public const string VideoToolboxLibrary = "/System/Library/Frameworks/VideoToolbox.framework/VideoToolbox";
+		public const string NetworkLibrary = "/System/Library/Frameworks/Network.framework/Network";
 		public const string NetworkExtensionLibrary = "/System/Library/Frameworks/NetworkExtension.framework/NetworkExtension";
 		public const string WebKitLibrary = "/System/Library/Frameworks/WebKit.framework/WebKit";
 		// iOS 8.2

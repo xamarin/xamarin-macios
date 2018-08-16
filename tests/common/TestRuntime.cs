@@ -728,6 +728,7 @@ partial class TestRuntime
 	}
 #endif
 
+#if __UNIFIED__
 #if __MACOS__
 	public static global::CoreGraphics.CGColor GetCGColor (NSColor color)
 #else
@@ -745,4 +746,5 @@ partial class TestRuntime
 		return color.CGColor;
 #endif
 	}
+#endif // __UNIFIED__
 }

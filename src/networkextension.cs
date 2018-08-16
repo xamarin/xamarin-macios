@@ -1183,6 +1183,7 @@ namespace NetworkExtension {
 	
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof(NWEndpoint))]
+	[DisableDefaultCtor]
 	interface NWHostEndpoint
 	{
 		[Static]
@@ -1217,6 +1218,7 @@ namespace NetworkExtension {
 
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface NWPath
 	{
 		[Export ("status")]

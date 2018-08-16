@@ -23,7 +23,7 @@ namespace Xamarin.MMP.Tests
 		string GetTestMMPInvocation (string tmpDir, string libPath, TargetFramework targetFramework, bool correctReference = true)
 		{
 			string xmReference = correctReference ? GetXMReference (targetFramework) : GetWrongXMReference (targetFramework);
-			return $"-v -v -v -v -v --output={tmpDir} --arch=x86_64 --sdkroot {Configuration.xcode_root} --minos 10.9 {libPath} --sdk {Configuration.macos_sdk_version} --nolink -p --profile:{targetFramework} -a:{xmReference}";
+			return $"-v -v -v -v -v --output={tmpDir} --arch=x86_64 --sdkroot {Configuration.xcode_root} --minos 10.7 {libPath} --sdk {Configuration.macos_sdk_version} --nolink -p --profile:{targetFramework} -a:{xmReference}";
 		}
 
 		string GetWrongXMReference (TargetFramework target)

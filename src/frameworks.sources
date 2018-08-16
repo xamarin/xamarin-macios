@@ -390,8 +390,10 @@ COREDATA_SOURCES = \
 COREFOUNDATION_CORE_SOURCES = \
 	CoreFoundation/CFIndex.cs \
 	CoreFoundation/CFRunLoop.cs \
-    CoreFoundation/CFString.cs \
-    CoreFoundation/Dispatch.cs \
+	CoreFoundation/CFString.cs \
+	CoreFoundation/Dispatch.cs \
+	CoreFoundation/DispatchData.cs \
+	CoreFoundation/NativeObject.cs \
 
 COREFOUNDATION_SOURCES = \
 	CoreFoundation/CFAllocator.cs \
@@ -416,6 +418,7 @@ COREFOUNDATION_SOURCES = \
 	CoreFoundation/CFUrl.cs \
 	CoreFoundation/CFWriteStream.cs \
 	CoreFoundation/DispatchBlock.cs \
+	CoreFoundation/DispatchIO.cs \
 	CoreFoundation/DispatchQueueSynchronizationContext.cs \
 	CoreFoundation/DispatchSource.cs \
 
@@ -512,6 +515,7 @@ COREMEDIA_SOURCES = \
 # CoreMidi
 
 COREMIDI_CORE_SOURCES = \
+	CoreMidi/MidiCIDeviceIdentification.cs \
 	CoreMidi/MidiServices.cs \
 	CoreMidi/MidiThruConnection.cs \
 	CoreMidi/MidiThruConnectionParams.cs \
@@ -938,6 +942,12 @@ IOSURFACE_SOURCES = \
 	IOSurface/IOSurface.cs \
 	IOSurface/IOSurfacePropertyKey.cs \
 
+# itunesLibrary
+
+ITUNESLIBRARY_API_SOURCES = \
+	iTunesLibrary/Enums.cs \
+	
+
 # JavaScriptCore
 
 JAVASCRIPTCORE_SOURCES = \
@@ -1090,6 +1100,24 @@ NATURALLANGUAGE_API_SOURCES = \
 NATURALLANGUAGE_SOURCES = \
 	NaturalLanguage/NLLanguageRecognizer.cs \
 
+# Network
+
+NETWORK_SOURCES = \
+	Network/NWAdvertiseDescriptor.cs	\
+	Network/NWConnection.cs			\
+	Network/NWContentContext.cs		\
+	Network/NWEndpoint.cs			\
+	Network/NWError.cs			\
+	Network/NWInterface.cs			\
+	Network/NWListener.cs			\
+	Network/NWParameters.cs			\
+	Network/NWPath.cs			\
+	Network/NWPathMonitor.cs		\
+	Network/NWProtocolDefinition.cs		\
+	Network/NWProtocolMetadata.cs		\
+	Network/NWProtocolOptions.cs		\
+	Network/NWProtocolStack.cs			\
+	
 # NetworkExtension
 
 NETWORKEXTENSION_API_SOURCES = \
@@ -1306,13 +1334,18 @@ SECURITY_CORE_SOURCES = \
 	Security/Certificate.cs \
 	Security/SecAccessControl.cs \
 	Security/SecureTransport.cs \
+	Security/SecProtocolMetadata.cs \
+	Security/SecProtocolOptions.cs \
 	Security/Trust.cs \
+	Security/SecTrust2.cs \
+	Security/SecIdentity2.cs \
 
 SECURITY_SOURCES = \
 	Security/Authorization.cs \
 	Security/ImportExport.cs \
 	Security/Items.cs \
 	Security/Policy.cs \
+	Security/SecCertificate2.cs \
 	Security/SecIdentity.cs \
 	Security/SecPolicy.cs \
 	Security/SecSharedCredential.cs \
@@ -1518,6 +1551,7 @@ VISION_SOURCES = \
 	Vision/VNDetectBarcodesRequest.cs \
 	Vision/VNFaceLandmarkRegion2D.cs \
 	Vision/VNRequest.cs \
+	Vision/VNRequestRevision.cs \
 	Vision/VNUtils.cs \
 
 # WatchConnectivity
@@ -1700,6 +1734,7 @@ MAC_FRAMEWORKS =            \
 	ImageKit                \
 	Intents                 \
 	IOSurface 		\
+	iTunesLibrary           \
 	JavaScriptCore          \
 	LocalAuthentication     \
 	MapKit                  \
@@ -1713,6 +1748,7 @@ MAC_FRAMEWORKS =            \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity	\
+	Network			\
 	NaturalLanguage         \
 	NetworkExtension        \
 	NotificationCenter 	\
@@ -1805,6 +1841,7 @@ IOS_FRAMEWORKS =         \
 	ModelIO \
 	MultipeerConnectivity \
 	NaturalLanguage \
+	Network \
 	NetworkExtension \
 	NewsstandKit \
 	NotificationCenter \
@@ -1896,6 +1933,7 @@ TVOS_FRAMEWORKS =           \
 	ModelIO                 \
 	MultipeerConnectivity   \
 	NaturalLanguage         \
+	Network			\
 	OpenGLES                \
 	Photos                  \
 	PhotosUI                \

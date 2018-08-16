@@ -65,6 +65,7 @@ namespace Xamarin.Linker {
 			CoreImage = profile.GetNamespace ("CoreImage");
 			AdSupport = profile.GetNamespace ("AdSupport");
 			NaturalLanguage = profile.GetNamespace ("NaturalLanguage");
+			Network = profile.GetNamespace ("Network");
 			VideoSubscriberAccount = profile.GetNamespace ("VideoSubscriberAccount");
 #if MONOMAC
 			PhotosUI = profile.GetNamespace ("PhotosUI");
@@ -84,6 +85,7 @@ namespace Xamarin.Linker {
 			PrintCore = profile.GetNamespace ("PrintCore");
 			ExternalAccessory = profile.GetNamespace ("ExternalAccessory");
 			ImageCaptureCore = profile.GetNamespace ("ImageCaptureCore");
+			iTunesLibrary= profile.GetNamespace ("iTunesLibrary");
 #else
 			Registrar = profile.GetNamespace ("Registrar");
 			UIKit = profile.GetNamespace ("UIKit");
@@ -159,6 +161,7 @@ namespace Xamarin.Linker {
 		public static string AdSupport { get; private set; }
 
 		public static string NaturalLanguage { get; private set; }
+		public static string Network { get; private set; }
 
 		public static string VideoSubscriberAccount { get; private set; }
 #if MONOMAC
@@ -187,6 +190,7 @@ namespace Xamarin.Linker {
 		public static string PrintCore { get; private set; }
 		public static string ExternalAccessory { get; private set; }
 		public static string ImageCaptureCore { get; private set; }
+		public static string iTunesLibrary { get; private set; }
 #else
 		public static string Registrar { get; private set; }
 

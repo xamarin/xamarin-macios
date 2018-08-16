@@ -20,7 +20,7 @@ namespace xharness
 		public bool IncludeClassicMac = true;
 		public bool IncludeBcl;
 		public bool IncludeMac = true;
-		public bool IncludeMac32;
+		public bool IncludeMac32 = true;
 		public bool IncludeiOS = true;
 		public bool IncludeiOSExtensions;
 		public bool IncludetvOS = true;
@@ -678,10 +678,15 @@ namespace xharness
 					build.SpecifyConfiguration = build.ProjectConfiguration != "Debug";
 					RunTestTask exec;
 					IEnumerable<RunTestTask> execs;
+					var ignored_main = ignored;
+					if ((ignored32 || !IncludeClassicMac) && project.GenerateVariations) {
+						ignored_main = true; // Only if generating variations is the main project is an XM Classic app
+						build.RequiresXcode94 = true;
+					}
 					if (project.IsNUnitProject) {
 						var dll = Path.Combine (Path.GetDirectoryName (build.TestProject.Path), project.Xml.GetOutputAssemblyPath (build.ProjectPlatform, build.ProjectConfiguration).Replace ('\\', '/'));
 						exec = new NUnitExecuteTask (build) {
-							Ignored = ignored32 || !IncludeClassicMac,
+							Ignored = ignored_main,
 							TestLibrary = dll,
 							TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.ConsoleRunner.3.5.0", "tools", "nunit3-console.exe"),
 							WorkingDirectory = Path.GetDirectoryName (dll),
@@ -692,7 +697,7 @@ namespace xharness
 						execs = new [] { exec };
 					} else {
 						exec = new MacExecuteTask (build) {
-							Ignored = ignored32 || !IncludeClassicMac,
+							Ignored = ignored_main,
 							BCLTest = project.IsBclTest,
 							TestName = project.Name,
 							IsUnitTest = true,
@@ -705,10 +710,10 @@ namespace xharness
 					foreach (var e in execs) {
 						if (project.GenerateVariations) {
 							Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_Unified, "-unified", ignored));
-							Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_Unified32, "-unified-32", ignored32));
+							Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_Unified32, "-unified-32", ignored32, true));
 							if (project.GenerateFull) {
 								Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_UnifiedXM45, "-unifiedXM45", ignored));
-								Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_UnifiedXM45_32, "-unifiedXM45-32", ignored32));
+								Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_UnifiedXM45_32, "-unifiedXM45-32", ignored32, true));
 							}
 						}
 					}
@@ -808,7 +813,7 @@ namespace xharness
 			Tasks.AddRange (CreateRunDeviceTasks ());
 		}
 
-		RunTestTask CloneExecuteTask (RunTestTask task, TestProject original_project, TestPlatform platform, string suffix, bool ignore)
+		RunTestTask CloneExecuteTask (RunTestTask task, TestProject original_project, TestPlatform platform, string suffix, bool ignore, bool requiresXcode94 = false)
 		{
 			var build = new XBuildTask ()
 			{
@@ -821,6 +826,7 @@ namespace xharness
 			};
 			var tp = new TestProject (Path.ChangeExtension (AddSuffixToPath (original_project.Path, suffix), "csproj"));
 			build.CloneTestProject (tp);
+			build.RequiresXcode94 = requiresXcode94;
 
 			var macExec = task as MacExecuteTask;
 			if (macExec != null) {
@@ -2090,6 +2096,8 @@ function oninitialload ()
 		public Task InitialTask; // a task that's executed before this task's ExecuteAsync method.
 		public Task CompletedTask; // a task that's executed after this task's ExecuteAsync method.
 
+		public bool RequiresXcode94;
+
 		public void CloneTestProject (TestProject project)
 		{
 			// Don't build in the original project directory
@@ -2312,6 +2320,8 @@ function oninitialload ()
 
 		protected void SetEnvironmentVariables (Process process)
 		{
+			var xcodeRoot = RequiresXcode94 ? Harness.Xcode94Root : Harness.XcodeRoot;
+			
 			switch (Platform) {
 			case TestPlatform.iOS:
 			case TestPlatform.iOS_Unified:
@@ -2320,7 +2330,7 @@ function oninitialload ()
 			case TestPlatform.iOS_TodayExtension64:
 			case TestPlatform.tvOS:
 			case TestPlatform.watchOS:
-				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = Harness.XcodeRoot;
+				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = xcodeRoot;
 				process.StartInfo.EnvironmentVariables ["MD_MTOUCH_SDK_ROOT"] = Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current");
 				process.StartInfo.EnvironmentVariables ["XBUILD_FRAMEWORK_FOLDERS_PATH"] = Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
 				process.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
@@ -2331,7 +2341,7 @@ function oninitialload ()
 			case TestPlatform.Mac_Unified32:
 			case TestPlatform.Mac_UnifiedXM45:
 			case TestPlatform.Mac_UnifiedXM45_32:
-				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = Harness.XcodeRoot;
+				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = xcodeRoot;
 				process.StartInfo.EnvironmentVariables ["XBUILD_FRAMEWORK_FOLDERS_PATH"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
 				process.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
 				process.StartInfo.EnvironmentVariables ["XamarinMacFrameworkRoot"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
@@ -2343,7 +2353,7 @@ function oninitialload ()
 				//     XBUILD_FRAMEWORK_FOLDERS_PATH
 				// because these values used by both XM and XI and we can't set it to two different values at the same time.
 				// Any test that depends on these values should not be using 'TestPlatform.All'
-				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = Harness.XcodeRoot;
+				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = xcodeRoot;
 				process.StartInfo.EnvironmentVariables ["MD_MTOUCH_SDK_ROOT"] = Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current");
 				process.StartInfo.EnvironmentVariables ["XamarinMacFrameworkRoot"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
 				process.StartInfo.EnvironmentVariables ["XAMMAC_FRAMEWORK_PATH"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");

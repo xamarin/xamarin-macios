@@ -1,8 +1,4 @@
-!missing-protocol! NSViewLayerContentScaleDelegate not bound
-!missing-protocol-conformance! NSApplication should conform to NSAppearanceCustomization (defined in 'NSAppearanceCustomization' category)
-!missing-protocol-conformance! NSTableHeaderView should conform to NSViewToolTipOwner
-!missing-selector! +NSColor::findHighlightColor not bound
-!missing-selector! +NSColor::placeholderTextColor not bound
-!missing-selector! NSSliderCell::setImage: not bound
-!missing-selector! NSLayoutManager::limitsLayoutForSuspiciousContents not bound
-!missing-selector! NSLayoutManager::setLimitsLayoutForSuspiciousContents: not bound
+!missing-enum! NSWorkspaceAuthorizationType not bound
+!missing-selector! +NSFileManager::fileManagerWithAuthorization: not bound
+!missing-selector! NSWorkspace::requestAuthorizationOfType:completionHandler: not bound
+!missing-type! NSWorkspaceAuthorization not bound

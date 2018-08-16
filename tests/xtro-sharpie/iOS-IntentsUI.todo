@@ -1,0 +1,7 @@
+## appended from unclassified file
+!missing-protocol! INUIAddVoiceShortcutButtonDelegate not bound
+!missing-selector! INUIAddVoiceShortcutButton::delegate not bound
+!missing-selector! INUIAddVoiceShortcutButton::setDelegate: not bound
+!missing-selector! INUIAddVoiceShortcutButton::setShortcut: not bound
+!missing-selector! INUIAddVoiceShortcutButton::shortcut not bound
+!missing-selector! INUIAddVoiceShortcutButton::style not bound

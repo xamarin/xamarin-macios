@@ -62,6 +62,10 @@ namespace Introspection
 			return SkipAllowed (methodName.DeclaringType.Name, methodName.Name, typo);
 		}
 
+		readonly HashSet<string> allowedRule3 = new HashSet<string> {
+			"IARAnchorCopying", // We're showing a code snippet in the 'Advice' message and that shouldn't end with a dot.
+		};
+
 		HashSet<string> allowedMemberRule4 = new HashSet<string> {
 			"Platform",
 			"PlatformHelper",
@@ -133,6 +137,7 @@ namespace Introspection
 			"Cartes", // french
 			"Cavlc",
 			"Cda", // acronym: Clinical Document Architecture
+			"Cfa", // acronym: Color Filter Array
 			"Celp", // MPEG4ObjectID
 			"Characterteristic",
 			"Chapv",
@@ -195,6 +200,8 @@ namespace Introspection
 			"Ecdh",  // Elliptic Curve Diffie–Hellman
 			"Ecdsa", // Elliptic Curve Digital Signature Algorithm
 			"Ecies", // Elliptic Curve Integrated Encryption Scheme
+			"Ecn",   // Explicit Congestion Notification
+			"Ect",   // ECN Capable Transport
 			"Editability", 
 			"Eof", // acronym End-Of-File
 			"Elu",
@@ -203,6 +210,7 @@ namespace Introspection
 			"Embd",
 			"Enc",
 			"Eppc",
+			"Eftpos", // Electronic funds transfer at point of sale
 			"Exhange",
 			"Exp",
 			"Expr",
@@ -954,8 +962,10 @@ namespace Introspection
 
 					// Rule 3: https://github.com/xamarin/xamarin-macios/wiki/BINDINGS#rule-3
 					if (!message.EndsWith (".", StringComparison.Ordinal)) {
-						ReportError ("[Rule 3] Missing '.' in attribute's message: \"{0}\" - {1}", message, memberAndType);
-						totalErrors++;
+						if (!allowedRule3.Contains (typeName)) {
+							ReportError ("[Rule 3] Missing '.' in attribute's message: \"{0}\" - {1}", message, memberAndType);
+							totalErrors++;
+						}
 					}
 
 					// Rule 4: https://github.com/xamarin/xamarin-macios/wiki/BINDINGS#rule-4

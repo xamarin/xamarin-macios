@@ -40,7 +40,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void InitWithFrameTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 9, 0, throwIfOtherPlatform: false);
 
 			UIStackView stack = new UIStackView (new RectangleF (0, 0, 10, 10));
 			Assert.NotNull (stack, "UIStackView ctor(CGRect)");

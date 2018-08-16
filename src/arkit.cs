@@ -100,6 +100,7 @@ namespace ARKit {
 	[Flags]
 	[Native]
 	public enum ARSessionRunOptions : ulong {
+		None = 0,
 		ResetTracking = 1 << 0,
 		RemoveExistingAnchors = 1 << 1,
 	}
@@ -143,11 +144,20 @@ namespace ARKit {
 		Mapped,
 	}
 
+	[iOS (12,0)]
+	[NoWatch, NoTV, NoMac]
+	[Protocol]
+	[Advice ("To conform to 'ARAnchorCopying' you need to implement:\n'[Export (\"initWithAnchor:\")]'\n'public YourConstructor (ARAnchor anchor)'")]
+	interface ARAnchorCopying : NSCopying {
+		// Constructors in interfaces are not possible in C#
+		// @required -(instancetype _Nonnull)initWithAnchor:(ARAnchor * _Nonnull)anchor;
+	}
+
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface ARAnchor : NSCopying, NSSecureCoding {
+	interface ARAnchor : ARAnchorCopying, NSSecureCoding {
 
 		[NullAllowed, Export ("identifier")]
 		NSUuid Identifier { get; }
@@ -170,6 +180,11 @@ namespace ARKit {
 		[Export ("initWithName:transform:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		IntPtr Constructor (string name, Matrix4 transform);
+
+		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
+		[iOS (12,0)]
+		[Export ("initWithAnchor:")]
+		IntPtr Constructor (ARAnchor anchor);
 	}
 
 	[iOS (11,0)]
@@ -322,6 +337,10 @@ namespace ARKit {
 	[BaseType (typeof (ARAnchor))]
 	[DisableDefaultCtor]
 	interface ARPlaneAnchor {
+		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
+		[iOS (12,0)]
+		[Export ("initWithAnchor:")]
+		IntPtr Constructor (ARAnchor anchor);
 
 		// [Export ("initWithTransform:")] marked as NS_UNAVAILABLE
 
@@ -567,7 +586,9 @@ namespace ARKit {
 		[NullAllowed, Export ("configuration", ArgumentSemantic.Copy)]
 		ARConfiguration Configuration { get; }
 
-		// 'runWithConfiguration:' selector marked as unavailable in Xcode 9 beta 5. Use 'Run (ARConfiguration configuration, ARSessionRunOptions options)' instead.
+		[Export ("runWithConfiguration:")]
+		void Run (ARConfiguration configuration);
+
 		[Export ("runWithConfiguration:options:")]
 		void Run (ARConfiguration configuration, ARSessionRunOptions options);
 
@@ -1021,6 +1042,11 @@ namespace ARKit {
 	[BaseType (typeof(ARAnchor))]
 	[DisableDefaultCtor]
 	interface ARFaceAnchor : ARTrackable {
+		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
+		[iOS (12,0)]
+		[Export ("initWithAnchor:")]
+		IntPtr Constructor (ARAnchor anchor);
+
 #if !XAMCORE_4_0
 		[Obsolete ("Constructor marked as unavailable.")]
 		[Export ("init")]
@@ -1133,6 +1159,11 @@ namespace ARKit {
 	[BaseType (typeof(ARAnchor))]
 	[DisableDefaultCtor]
 	interface ARImageAnchor : ARTrackable {
+		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
+		[iOS (12,0)]
+		[Export ("initWithAnchor:")]
+		IntPtr Constructor (ARAnchor anchor);
+
 		[Export ("referenceImage", ArgumentSemantic.Strong)]
 		ARReferenceImage ReferenceImage { get; }
 	}
@@ -1185,6 +1216,11 @@ namespace ARKit {
 	[BaseType (typeof(ARAnchor))]
 	[DisableDefaultCtor]
 	interface AREnvironmentProbeAnchor {
+		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
+		[iOS (12,0)]
+		[Export ("initWithAnchor:")]
+		IntPtr Constructor (ARAnchor anchor);
+
 		[Export ("initWithTransform:extent:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		IntPtr Constructor (Matrix4 transform, Vector3 extent);
@@ -1261,6 +1297,11 @@ namespace ARKit {
 	[BaseType (typeof(ARAnchor))]
 	[DisableDefaultCtor]
 	interface ARObjectAnchor {
+		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
+		[iOS (12,0)]
+		[Export ("initWithAnchor:")]
+		IntPtr Constructor (ARAnchor anchor);
+
 		[Export ("referenceObject", ArgumentSemantic.Strong)]
 		ARReferenceObject ReferenceObject { get; }
 	}

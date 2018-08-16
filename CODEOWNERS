@@ -96,6 +96,8 @@
 /src/iAd.framework @spouliot
 /src/identitylookup.cs @dalexsoto
 /src/identitylookupui.cs @dalexsoto
+/src/ituneslibrary.cs @mandel-macaque
+/src/iTunesLibrary @mandel-macaque
 /src/ImageIO @spouliot @chamons
 /src/imageio.cs @spouliot @chamons
 /src/ImageKit @chamons
@@ -130,6 +132,7 @@
 /src/multipeerconnectivity.cs @spouliot
 /src/naturallanguage.cs @mandel-macaque
 /src/NaturalLanguage @mandel-macaque
+/src/Network @migueldeicaza
 /src/NetworkExtension @spouliot
 /src/networkextension.cs @spouliot
 /src/NotificationCenter @spouliot
