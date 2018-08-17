@@ -8,8 +8,6 @@ namespace Xamarin.MMP.Tests
 	{
 		[TestCase (false, "x86_64")]
 		[TestCase (true, "x86_64")]
-		[TestCase (false, "i386")]
-		[TestCase (true, "i386")]
 		public void SmokeTest (bool full, string arch)
 		{
 			if (!PlatformHelpers.CheckSystemVersion (10, 11))
@@ -29,8 +27,6 @@ namespace Xamarin.MMP.Tests
 
 		[TestCase (false, "x86_64")]
 		[TestCase (true, "x86_64")]
-		[TestCase (false, "i386")]
-		[TestCase (true, "i386")]
 		public void DirectoryContainsSpaces (bool full, string arch)
 		{
 			if (!PlatformHelpers.CheckSystemVersion (10, 11))
