@@ -1,0 +1,469 @@
+!missing-enum! BluetoothAuthenticationRequirementsValues not bound
+!missing-enum! BluetoothCompanyIdentifers not bound
+!missing-enum! BluetoothFeatureBits not bound
+!missing-enum! BluetoothHCIAFHChannelAssessmentModes not bound
+!missing-enum! BluetoothHCIAuthentionEnableModes not bound
+!missing-enum! BluetoothHCIConnectionModes not bound
+!missing-enum! BluetoothHCIDeleteStoredLinkKeyFlags not bound
+!missing-enum! BluetoothHCIEncryptionModes not bound
+!missing-enum! BluetoothHCIExtendedInquiryResponseDataTypes not bound
+!missing-enum! BluetoothHCIFECRequiredValues not bound
+!missing-enum! BluetoothHCIGeneralFlowControlStates not bound
+!missing-enum! BluetoothHCIHoldModeActivityStates not bound
+!missing-enum! BluetoothHCIInquiryModes not bound
+!missing-enum! BluetoothHCIInquiryScanTypes not bound
+!missing-enum! BluetoothHCILinkPolicySettingsValues not bound
+!missing-enum! BluetoothHCIPageScanEnableStates not bound
+!missing-enum! BluetoothHCIPageScanModes not bound
+!missing-enum! BluetoothHCIPageScanPeriodModes not bound
+!missing-enum! BluetoothHCIPageScanTypes not bound
+!missing-enum! BluetoothHCIReadStoredLinkKeysFlags not bound
+!missing-enum! BluetoothHCIRetransmissionEffortTypes not bound
+!missing-enum! BluetoothHCIRoles not bound
+!missing-enum! BluetoothHCISCOFlowControlStates not bound
+!missing-enum! BluetoothHCISimplePairingModes not bound
+!missing-enum! BluetoothHCITimeoutValues not bound
+!missing-enum! BluetoothHCITransmitReadPowerLevelTypes not bound
+!missing-enum! BluetoothHCIVersions not bound
+!missing-enum! BluetoothIOCapabilities not bound
+!missing-enum! BluetoothKeypressNotificationTypes not bound
+!missing-enum! BluetoothL2CAPSegmentationAndReassembly not bound
+!missing-enum! BluetoothLEFeatureBits not bound
+!missing-enum! BluetoothLESecurityManagerKeyDistributionFormat not bound
+!missing-enum! BluetoothLinkTypes not bound
+!missing-enum! BluetoothLMPVersions not bound
+!missing-enum! BluetoothOOBDataPresenceValues not bound
+!missing-enum! BluetoothRFCOMMLineStatus not bound
+!missing-enum! BluetoothRFCOMMParityType not bound
+!missing-enum! BluetoothSimplePairingDebugModes not bound
+!missing-enum! BluetoothTransportTypes not bound
+!missing-enum! FTSFileType not bound
+!missing-enum! IOBluetoothDeviceSearchOptionsBits not bound
+!missing-enum! IOBluetoothDeviceSearchTypesBits not bound
+!missing-enum! IOBluetoothHandsFreeAudioGatewayFeatures not bound
+!missing-enum! IOBluetoothHandsFreeCallHoldModes not bound
+!missing-enum! IOBluetoothHandsFreeCodecID not bound
+!missing-enum! IOBluetoothHandsFreeDeviceFeatures not bound
+!missing-enum! IOBluetoothHandsFreePDUMessageStatus not bound
+!missing-enum! IOBluetoothHandsFreeSMSSupport not bound
+!missing-enum! IOBluetoothL2CAPChannelEventType not bound
+!missing-enum! IOBluetoothSMSMode not bound
+!missing-enum! IOBluetoothUserNotificationChannelDirection not bound
+!missing-enum! OBEXConnectFlagValues not bound
+!missing-enum! OBEXErrorCodes not bound
+!missing-enum! OBEXHeaderIdentifiers not bound
+!missing-enum! OBEXNonceFlagValues not bound
+!missing-enum! OBEXOpCodeCommandValues not bound
+!missing-enum! OBEXOpCodeResponseValues not bound
+!missing-enum! OBEXOpCodeSessionValues not bound
+!missing-enum! OBEXPutFlagValues not bound
+!missing-enum! OBEXRealmValues not bound
+!missing-enum! OBEXSessionEventTypes not bound
+!missing-enum! OBEXSessionParameterTags not bound
+!missing-enum! OBEXTransportEventTypes not bound
+!missing-enum! OBEXVersions not bound
+!missing-enum! ProtocolParameters not bound
+!missing-enum! SDPAttributeDeviceIdentificationRecord not bound
+!missing-enum! SDPAttributeIdentifierCodes not bound
+!missing-enum! SDPServiceClasses not bound
+!missing-field! IOBluetoothHandsFreeCallDirection not bound
+!missing-field! IOBluetoothHandsFreeCallIndex not bound
+!missing-field! IOBluetoothHandsFreeCallMode not bound
+!missing-field! IOBluetoothHandsFreeCallMultiparty not bound
+!missing-field! IOBluetoothHandsFreeCallName not bound
+!missing-field! IOBluetoothHandsFreeCallNumber not bound
+!missing-field! IOBluetoothHandsFreeCallStatus not bound
+!missing-field! IOBluetoothHandsFreeCallType not bound
+!missing-field! IOBluetoothHandsFreeIndicatorBattChg not bound
+!missing-field! IOBluetoothHandsFreeIndicatorCall not bound
+!missing-field! IOBluetoothHandsFreeIndicatorCallHeld not bound
+!missing-field! IOBluetoothHandsFreeIndicatorCallSetup not bound
+!missing-field! IOBluetoothHandsFreeIndicatorRoam not bound
+!missing-field! IOBluetoothHandsFreeIndicatorService not bound
+!missing-field! IOBluetoothHandsFreeIndicatorSignal not bound
+!missing-field! IOBluetoothHostControllerPoweredOffNotification not bound
+!missing-field! IOBluetoothHostControllerPoweredOnNotification not bound
+!missing-field! IOBluetoothL2CAPChannelPublishedNotification not bound
+!missing-field! IOBluetoothL2CAPChannelTerminatedNotification not bound
+!missing-field! IOBluetoothPDUEncoding not bound
+!missing-field! IOBluetoothPDUOriginatingAddress not bound
+!missing-field! IOBluetoothPDUOriginatingAddressType not bound
+!missing-field! IOBluetoothPDUProtocolID not bound
+!missing-field! IOBluetoothPDUServicCenterAddress not bound
+!missing-field! IOBluetoothPDUServiceCenterAddressType not bound
+!missing-field! IOBluetoothPDUTimestamp not bound
+!missing-field! IOBluetoothPDUType not bound
+!missing-field! IOBluetoothPDUUserData not bound
+!missing-field! kFTSListingNameKey not bound
+!missing-field! kFTSListingSizeKey not bound
+!missing-field! kFTSListingTypeKey not bound
+!missing-field! kFTSProgressBytesTotalKey not bound
+!missing-field! kFTSProgressBytesTransferredKey not bound
+!missing-field! kFTSProgressEstimatedTimeKey not bound
+!missing-field! kFTSProgressPercentageKey not bound
+!missing-field! kFTSProgressPrecentageKey not bound
+!missing-field! kFTSProgressTimeElapsedKey not bound
+!missing-field! kFTSProgressTransferRateKey not bound
+!missing-field! kOBEXHeaderIDKeyAppParameters not bound
+!missing-field! kOBEXHeaderIDKeyAuthorizationChallenge not bound
+!missing-field! kOBEXHeaderIDKeyAuthorizationResponse not bound
+!missing-field! kOBEXHeaderIDKeyBody not bound
+!missing-field! kOBEXHeaderIDKeyByteSequence not bound
+!missing-field! kOBEXHeaderIDKeyConnectionID not bound
+!missing-field! kOBEXHeaderIDKeyCount not bound
+!missing-field! kOBEXHeaderIDKeyDescription not bound
+!missing-field! kOBEXHeaderIDKeyEndOfBody not bound
+!missing-field! kOBEXHeaderIDKeyHTTP not bound
+!missing-field! kOBEXHeaderIDKeyLength not bound
+!missing-field! kOBEXHeaderIDKeyName not bound
+!missing-field! kOBEXHeaderIDKeyObjectClass not bound
+!missing-field! kOBEXHeaderIDKeyTarget not bound
+!missing-field! kOBEXHeaderIDKeyTime4Byte not bound
+!missing-field! kOBEXHeaderIDKeyTimeISO not bound
+!missing-field! kOBEXHeaderIDKeyType not bound
+!missing-field! kOBEXHeaderIDKeyUnknown1ByteQuantity not bound
+!missing-field! kOBEXHeaderIDKeyUnknown4ByteQuantity not bound
+!missing-field! kOBEXHeaderIDKeyUnknownByteSequence not bound
+!missing-field! kOBEXHeaderIDKeyUnknownUnicodeText not bound
+!missing-field! kOBEXHeaderIDKeyUserDefined not bound
+!missing-field! kOBEXHeaderIDKeyWho not bound
+!missing-pinvoke! IOBluetoothAddSCOAudioDevice is not bound
+!missing-pinvoke! IOBluetoothAddServiceDict is not bound
+!missing-pinvoke! IOBluetoothDeviceRegisterForDisconnectNotification is not bound
+!missing-pinvoke! IOBluetoothFindNumberOfRegistryEntriesOfClassName is not bound
+!missing-pinvoke! IOBluetoothGetObjectIDFromArguments is not bound
+!missing-pinvoke! IOBluetoothGetUniqueFileNameAndPath is not bound
+!missing-pinvoke! IOBluetoothIgnoreHIDDevice is not bound
+!missing-pinvoke! IOBluetoothIsFileAppleDesignatedPIMData is not bound
+!missing-pinvoke! IOBluetoothL2CAPChannelRegisterForChannelCloseNotification is not bound
+!missing-pinvoke! IOBluetoothNSStringFromDeviceAddress is not bound
+!missing-pinvoke! IOBluetoothNSStringFromDeviceAddressColon is not bound
+!missing-pinvoke! IOBluetoothNSStringToDeviceAddress is not bound
+!missing-pinvoke! IOBluetoothNumberOfAvailableHIDDevices is not bound
+!missing-pinvoke! IOBluetoothNumberOfKeyboardHIDDevices is not bound
+!missing-pinvoke! IOBluetoothNumberOfPointingHIDDevices is not bound
+!missing-pinvoke! IOBluetoothNumberOfTabletHIDDevices is not bound
+!missing-pinvoke! IOBluetoothOBEXSessionCreateWithIncomingIOBluetoothRFCOMMChannel is not bound
+!missing-pinvoke! IOBluetoothOBEXSessionCreateWithIOBluetoothDeviceRefAndChannelNumber is not bound
+!missing-pinvoke! IOBluetoothOBEXSessionCreateWithIOBluetoothSDPServiceRecordRef is not bound
+!missing-pinvoke! IOBluetoothOBEXSessionOpenTransportConnection is not bound
+!missing-pinvoke! IOBluetoothPackData is not bound
+!missing-pinvoke! IOBluetoothPackDataList is not bound
+!missing-pinvoke! IOBluetoothRegisterForDeviceConnectNotifications is not bound
+!missing-pinvoke! IOBluetoothRegisterForFilteredL2CAPChannelOpenNotifications is not bound
+!missing-pinvoke! IOBluetoothRegisterForFilteredRFCOMMChannelOpenNotifications is not bound
+!missing-pinvoke! IOBluetoothRegisterForL2CAPChannelOpenNotifications is not bound
+!missing-pinvoke! IOBluetoothRegisterForRFCOMMChannelOpenNotifications is not bound
+!missing-pinvoke! IOBluetoothRemoveIgnoredHIDDevice is not bound
+!missing-pinvoke! IOBluetoothRemoveSCOAudioDevice is not bound
+!missing-pinvoke! IOBluetoothRemoveServiceWithRecordHandle is not bound
+!missing-pinvoke! IOBluetoothRFCOMMChannelRegisterForChannelCloseNotification is not bound
+!missing-pinvoke! IOBluetoothUnpackData is not bound
+!missing-pinvoke! IOBluetoothUnpackDataList is not bound
+!missing-pinvoke! IOBluetoothUserNotificationUnregister is not bound
+!missing-pinvoke! OBEXAddApplicationParameterHeader is not bound
+!missing-pinvoke! OBEXAddAuthorizationChallengeHeader is not bound
+!missing-pinvoke! OBEXAddAuthorizationResponseHeader is not bound
+!missing-pinvoke! OBEXAddBodyHeader is not bound
+!missing-pinvoke! OBEXAddByteSequenceHeader is not bound
+!missing-pinvoke! OBEXAddConnectionIDHeader is not bound
+!missing-pinvoke! OBEXAddCountHeader is not bound
+!missing-pinvoke! OBEXAddDescriptionHeader is not bound
+!missing-pinvoke! OBEXAddHTTPHeader is not bound
+!missing-pinvoke! OBEXAddLengthHeader is not bound
+!missing-pinvoke! OBEXAddNameHeader is not bound
+!missing-pinvoke! OBEXAddObjectClassHeader is not bound
+!missing-pinvoke! OBEXAddTargetHeader is not bound
+!missing-pinvoke! OBEXAddTime4ByteHeader is not bound
+!missing-pinvoke! OBEXAddTimeISOHeader is not bound
+!missing-pinvoke! OBEXAddTypeHeader is not bound
+!missing-pinvoke! OBEXAddUserDefinedHeader is not bound
+!missing-pinvoke! OBEXAddWhoHeader is not bound
+!missing-pinvoke! OBEXCreateVCard is not bound
+!missing-pinvoke! OBEXCreateVEvent is not bound
+!missing-pinvoke! OBEXGetHeaders is not bound
+!missing-pinvoke! OBEXHeadersToBytes is not bound
+!missing-pinvoke! OBEXSessionAbort is not bound
+!missing-pinvoke! OBEXSessionAbortResponse is not bound
+!missing-pinvoke! OBEXSessionConnect is not bound
+!missing-pinvoke! OBEXSessionConnectResponse is not bound
+!missing-pinvoke! OBEXSessionDelete is not bound
+!missing-pinvoke! OBEXSessionDisconnect is not bound
+!missing-pinvoke! OBEXSessionDisconnectResponse is not bound
+!missing-pinvoke! OBEXSessionGet is not bound
+!missing-pinvoke! OBEXSessionGetAvailableCommandPayloadLength is not bound
+!missing-pinvoke! OBEXSessionGetAvailableCommandResponsePayloadLength is not bound
+!missing-pinvoke! OBEXSessionGetMaxPacketLength is not bound
+!missing-pinvoke! OBEXSessionGetResponse is not bound
+!missing-pinvoke! OBEXSessionHasOpenOBEXConnection is not bound
+!missing-pinvoke! OBEXSessionPut is not bound
+!missing-pinvoke! OBEXSessionPutResponse is not bound
+!missing-pinvoke! OBEXSessionSetPath is not bound
+!missing-pinvoke! OBEXSessionSetPathResponse is not bound
+!missing-pinvoke! OBEXSessionSetServerCallback is not bound
+!missing-protocol! IOBluetoothDeviceAsyncCallbacks not bound
+!missing-protocol! IOBluetoothDeviceInquiryDelegate not bound
+!missing-protocol! IOBluetoothDevicePairDelegate not bound
+!missing-protocol! IOBluetoothHandsFreeAudioGatewayDelegate not bound
+!missing-protocol! IOBluetoothHandsFreeDelegate not bound
+!missing-protocol! IOBluetoothHandsFreeDeviceDelegate not bound
+!missing-protocol! IOBluetoothL2CAPChannelDelegate not bound
+!missing-protocol! IOBluetoothRFCOMMChannelDelegate not bound
+!missing-selector! +IOBluetoothDevice::deviceWithAddress: not bound
+!missing-selector! +IOBluetoothDevice::deviceWithAddressString: not bound
+!missing-selector! +IOBluetoothDevice::recentDevices: not bound
+!missing-selector! +IOBluetoothDevice::registerForConnectNotifications:selector: not bound
+!missing-selector! +IOBluetoothDevice::withAddress: not bound
+!missing-selector! +IOBluetoothDevice::withDeviceRef: not bound
+!missing-selector! +IOBluetoothDeviceInquiry::inquiryWithDelegate: not bound
+!missing-selector! +IOBluetoothDevicePair::pairWithDevice: not bound
+!missing-selector! +IOBluetoothL2CAPChannel::registerForChannelOpenNotifications:selector: not bound
+!missing-selector! +IOBluetoothL2CAPChannel::registerForChannelOpenNotifications:selector:withPSM:direction: not bound
+!missing-selector! +IOBluetoothL2CAPChannel::withObjectID: not bound
+!missing-selector! +IOBluetoothOBEXSession::withDevice:channelID: not bound
+!missing-selector! +IOBluetoothOBEXSession::withIncomingRFCOMMChannel:eventSelector:selectorTarget:refCon: not bound
+!missing-selector! +IOBluetoothOBEXSession::withSDPServiceRecord: not bound
+!missing-selector! +IOBluetoothRFCOMMChannel::registerForChannelOpenNotifications:selector: not bound
+!missing-selector! +IOBluetoothRFCOMMChannel::registerForChannelOpenNotifications:selector:withChannelID:direction: not bound
+!missing-selector! +IOBluetoothRFCOMMChannel::withObjectID: not bound
+!missing-selector! +IOBluetoothRFCOMMChannel::withRFCOMMChannelRef: not bound
+!missing-selector! +IOBluetoothSDPDataElement::withElementValue: not bound
+!missing-selector! +IOBluetoothSDPDataElement::withSDPDataElementRef: not bound
+!missing-selector! +IOBluetoothSDPDataElement::withType:sizeDescriptor:size:value: not bound
+!missing-selector! +IOBluetoothSDPServiceAttribute::withID:attributeElement: not bound
+!missing-selector! +IOBluetoothSDPServiceAttribute::withID:attributeElementValue: not bound
+!missing-selector! +IOBluetoothSDPServiceRecord::publishedServiceRecordWithDictionary: not bound
+!missing-selector! +IOBluetoothSDPServiceRecord::withSDPServiceRecordRef: not bound
+!missing-selector! +IOBluetoothSDPServiceRecord::withServiceDictionary:device: not bound
+!missing-selector! +IOBluetoothSDPUUID::uuid16: not bound
+!missing-selector! +IOBluetoothSDPUUID::uuid32: not bound
+!missing-selector! +IOBluetoothSDPUUID::uuidWithBytes:length: not bound
+!missing-selector! +IOBluetoothSDPUUID::uuidWithData: not bound
+!missing-selector! +IOBluetoothSDPUUID::withSDPUUIDRef: not bound
+!missing-selector! +NSMutableDictionary::dictionaryWithOBEXHeadersData: not bound
+!missing-selector! +NSMutableDictionary::dictionaryWithOBEXHeadersData:headersDataSize: not bound
+!missing-selector! +NSMutableDictionary::withOBEXHeadersData:headersDataSize: not bound
+!missing-selector! +NSObject::withL2CAPChannelRef: not bound
+!missing-selector! +OBEXFileTransferServices::withOBEXSession: not bound
+!missing-selector! IOBluetoothDevice::addressString not bound
+!missing-selector! IOBluetoothDevice::awakeAfterUsingCoder: not bound
+!missing-selector! IOBluetoothDevice::classOfDevice not bound
+!missing-selector! IOBluetoothDevice::connectionHandle not bound
+!missing-selector! IOBluetoothDevice::deviceClassMajor not bound
+!missing-selector! IOBluetoothDevice::deviceClassMinor not bound
+!missing-selector! IOBluetoothDevice::getServiceRecordForUUID: not bound
+!missing-selector! IOBluetoothDevice::isHandsFreeAudioGateway not bound
+!missing-selector! IOBluetoothDevice::isHandsFreeDevice not bound
+!missing-selector! IOBluetoothDevice::lastNameUpdate not bound
+!missing-selector! IOBluetoothDevice::name not bound
+!missing-selector! IOBluetoothDevice::nameOrAddress not bound
+!missing-selector! IOBluetoothDevice::openConnection: not bound
+!missing-selector! IOBluetoothDevice::openConnection:withPageTimeout:authenticationRequired: not bound
+!missing-selector! IOBluetoothDevice::openL2CAPChannel:findExisting:newChannel: not bound
+!missing-selector! IOBluetoothDevice::openL2CAPChannelAsync:withPSM:delegate: not bound
+!missing-selector! IOBluetoothDevice::openL2CAPChannelAsync:withPSM:withConfiguration:delegate: not bound
+!missing-selector! IOBluetoothDevice::openL2CAPChannelSync:withPSM:delegate: not bound
+!missing-selector! IOBluetoothDevice::openL2CAPChannelSync:withPSM:withConfiguration:delegate: not bound
+!missing-selector! IOBluetoothDevice::openRFCOMMChannel:channel: not bound
+!missing-selector! IOBluetoothDevice::openRFCOMMChannelAsync:withChannelID:delegate: not bound
+!missing-selector! IOBluetoothDevice::openRFCOMMChannelSync:withChannelID:delegate: not bound
+!missing-selector! IOBluetoothDevice::performSDPQuery: not bound
+!missing-selector! IOBluetoothDevice::performSDPQuery:uuids: not bound
+!missing-selector! IOBluetoothDevice::registerForDisconnectNotification:selector: not bound
+!missing-selector! IOBluetoothDevice::remoteNameRequest: not bound
+!missing-selector! IOBluetoothDevice::remoteNameRequest:withPageTimeout: not bound
+!missing-selector! IOBluetoothDevice::sendL2CAPEchoRequest:length: not bound
+!missing-selector! IOBluetoothDevice::serviceClassMajor not bound
+!missing-selector! IOBluetoothDevice::services not bound
+!missing-selector! IOBluetoothDevice::setSupervisionTimeout: not bound
+!missing-selector! IOBluetoothDeviceInquiry::delegate not bound
+!missing-selector! IOBluetoothDeviceInquiry::initWithDelegate: not bound
+!missing-selector! IOBluetoothDeviceInquiry::inquiryLength not bound
+!missing-selector! IOBluetoothDeviceInquiry::searchType not bound
+!missing-selector! IOBluetoothDeviceInquiry::setDelegate: not bound
+!missing-selector! IOBluetoothDeviceInquiry::setInquiryLength: not bound
+!missing-selector! IOBluetoothDeviceInquiry::setSearchCriteria:majorDeviceClass:minorDeviceClass: not bound
+!missing-selector! IOBluetoothDeviceInquiry::setSearchType: not bound
+!missing-selector! IOBluetoothDeviceInquiry::setUpdateNewDeviceNames: not bound
+!missing-selector! IOBluetoothDeviceInquiry::updateNewDeviceNames not bound
+!missing-selector! IOBluetoothDevicePair::delegate not bound
+!missing-selector! IOBluetoothDevicePair::replyPINCode:PINCode: not bound
+!missing-selector! IOBluetoothDevicePair::replyUserConfirmation: not bound
+!missing-selector! IOBluetoothDevicePair::setDelegate: not bound
+!missing-selector! IOBluetoothDevicePair::setDevice: not bound
+!missing-selector! IOBluetoothHandsFree::delegate not bound
+!missing-selector! IOBluetoothHandsFree::device not bound
+!missing-selector! IOBluetoothHandsFree::deviceCallHoldModes not bound
+!missing-selector! IOBluetoothHandsFree::deviceSupportedFeatures not bound
+!missing-selector! IOBluetoothHandsFree::deviceSupportedSMSServices not bound
+!missing-selector! IOBluetoothHandsFree::indicator: not bound
+!missing-selector! IOBluetoothHandsFree::initWithDevice:delegate: not bound
+!missing-selector! IOBluetoothHandsFree::inputVolume not bound
+!missing-selector! IOBluetoothHandsFree::isConnected not bound
+!missing-selector! IOBluetoothHandsFree::isInputMuted not bound
+!missing-selector! IOBluetoothHandsFree::isOutputMuted not bound
+!missing-selector! IOBluetoothHandsFree::isSMSEnabled not bound
+!missing-selector! IOBluetoothHandsFree::outputVolume not bound
+!missing-selector! IOBluetoothHandsFree::setDelegate: not bound
+!missing-selector! IOBluetoothHandsFree::setIndicator:value: not bound
+!missing-selector! IOBluetoothHandsFree::setInputMuted: not bound
+!missing-selector! IOBluetoothHandsFree::setInputVolume: not bound
+!missing-selector! IOBluetoothHandsFree::setOutputMuted: not bound
+!missing-selector! IOBluetoothHandsFree::setOutputVolume: not bound
+!missing-selector! IOBluetoothHandsFree::setSupportedFeatures: not bound
+!missing-selector! IOBluetoothHandsFree::SMSMode not bound
+!missing-selector! IOBluetoothHandsFree::supportedFeatures not bound
+!missing-selector! IOBluetoothHandsFreeAudioGateway::createIndicator:min:max:currentValue: not bound
+!missing-selector! IOBluetoothHandsFreeAudioGateway::initWithDevice:delegate: not bound
+!missing-selector! IOBluetoothHandsFreeAudioGateway::processATCommand: not bound
+!missing-selector! IOBluetoothHandsFreeAudioGateway::sendResponse: not bound
+!missing-selector! IOBluetoothHandsFreeAudioGateway::sendResponse:withOK: not bound
+!missing-selector! IOBluetoothHandsFreeDevice::dialNumber: not bound
+!missing-selector! IOBluetoothHandsFreeDevice::initWithDevice:delegate: not bound
+!missing-selector! IOBluetoothHandsFreeDevice::memoryDial: not bound
+!missing-selector! IOBluetoothHandsFreeDevice::placeAllOthersOnHold: not bound
+!missing-selector! IOBluetoothHandsFreeDevice::releaseCall: not bound
+!missing-selector! IOBluetoothHandsFreeDevice::sendATCommand: not bound
+!missing-selector! IOBluetoothHandsFreeDevice::sendATCommand:timeout:selector:target: not bound
+!missing-selector! IOBluetoothHandsFreeDevice::sendDTMF: not bound
+!missing-selector! IOBluetoothHandsFreeDevice::sendSMS:message: not bound
+!missing-selector! IOBluetoothHostController::delegate not bound
+!missing-selector! IOBluetoothHostController::powerState not bound
+!missing-selector! IOBluetoothHostController::setClassOfDevice:forTimeInterval: not bound
+!missing-selector! IOBluetoothHostController::setDelegate: not bound
+!missing-selector! IOBluetoothL2CAPChannel::device not bound
+!missing-selector! IOBluetoothL2CAPChannel::incomingMTU not bound
+!missing-selector! IOBluetoothL2CAPChannel::localChannelID not bound
+!missing-selector! IOBluetoothL2CAPChannel::objectID not bound
+!missing-selector! IOBluetoothL2CAPChannel::outgoingMTU not bound
+!missing-selector! IOBluetoothL2CAPChannel::PSM not bound
+!missing-selector! IOBluetoothL2CAPChannel::registerForChannelCloseNotification:selector: not bound
+!missing-selector! IOBluetoothL2CAPChannel::remoteChannelID not bound
+!missing-selector! IOBluetoothL2CAPChannel::requestRemoteMTU: not bound
+!missing-selector! IOBluetoothL2CAPChannel::setDelegate: not bound
+!missing-selector! IOBluetoothL2CAPChannel::setDelegate:withConfiguration: not bound
+!missing-selector! IOBluetoothL2CAPChannel::writeAsync:length:refcon: not bound
+!missing-selector! IOBluetoothL2CAPChannel::writeAsyncTrap:length:refcon: not bound
+!missing-selector! IOBluetoothL2CAPChannel::writeSync:length: not bound
+!missing-selector! IOBluetoothOBEXSession::initWithDevice:channelID: not bound
+!missing-selector! IOBluetoothOBEXSession::initWithIncomingRFCOMMChannel:eventSelector:selectorTarget:refCon: not bound
+!missing-selector! IOBluetoothOBEXSession::initWithSDPServiceRecord: not bound
+!missing-selector! IOBluetoothOBEXSession::openTransportConnection:selectorTarget:refCon: not bound
+!missing-selector! IOBluetoothOBEXSession::sendDataToTransport:dataLength: not bound
+!missing-selector! IOBluetoothOBEXSession::setOBEXSessionOpenConnectionCallback:refCon: not bound
+!missing-selector! IOBluetoothOBEXSession::setOpenTransportConnectionAsyncSelector:target:refCon: not bound
+!missing-selector! IOBluetoothRFCOMMChannel::registerForChannelCloseNotification:selector: not bound
+!missing-selector! IOBluetoothRFCOMMChannel::sendRemoteLineStatus: not bound
+!missing-selector! IOBluetoothRFCOMMChannel::setDelegate: not bound
+!missing-selector! IOBluetoothRFCOMMChannel::setSerialParameters:dataBits:parity:stopBits: not bound
+!missing-selector! IOBluetoothRFCOMMChannel::write:length:sleep: not bound
+!missing-selector! IOBluetoothRFCOMMChannel::writeAsync:length:refcon: not bound
+!missing-selector! IOBluetoothRFCOMMChannel::writeSimple:length:sleep:bytesSent: not bound
+!missing-selector! IOBluetoothRFCOMMChannel::writeSync:length: not bound
+!missing-selector! IOBluetoothSDPDataElement::containsDataElement: not bound
+!missing-selector! IOBluetoothSDPDataElement::containsValue: not bound
+!missing-selector! IOBluetoothSDPDataElement::initWithElementValue: not bound
+!missing-selector! IOBluetoothSDPDataElement::initWithType:sizeDescriptor:size:value: not bound
+!missing-selector! IOBluetoothSDPServiceAttribute::initWithID:attributeElement: not bound
+!missing-selector! IOBluetoothSDPServiceAttribute::initWithID:attributeElementValue: not bound
+!missing-selector! IOBluetoothSDPServiceRecord::attributes not bound
+!missing-selector! IOBluetoothSDPServiceRecord::device not bound
+!missing-selector! IOBluetoothSDPServiceRecord::getAttributeDataElement: not bound
+!missing-selector! IOBluetoothSDPServiceRecord::getL2CAPPSM: not bound
+!missing-selector! IOBluetoothSDPServiceRecord::getRFCOMMChannelID: not bound
+!missing-selector! IOBluetoothSDPServiceRecord::getServiceRecordHandle: not bound
+!missing-selector! IOBluetoothSDPServiceRecord::hasServiceFromArray: not bound
+!missing-selector! IOBluetoothSDPServiceRecord::initWithServiceDictionary:device: not bound
+!missing-selector! IOBluetoothSDPServiceRecord::matchesSearchArray: not bound
+!missing-selector! IOBluetoothSDPServiceRecord::matchesUUID16: not bound
+!missing-selector! IOBluetoothSDPServiceRecord::matchesUUIDArray: not bound
+!missing-selector! IOBluetoothSDPServiceRecord::sortedAttributes not bound
+!missing-selector! IOBluetoothSDPUUID::getUUIDWithLength: not bound
+!missing-selector! IOBluetoothSDPUUID::initWithUUID16: not bound
+!missing-selector! IOBluetoothSDPUUID::initWithUUID32: not bound
+!missing-selector! IOBluetoothSDPUUID::isEqualToUUID: not bound
+!missing-selector! NSMutableDictionary::addApplicationParameterHeader:length: not bound
+!missing-selector! NSMutableDictionary::addAuthorizationChallengeHeader:length: not bound
+!missing-selector! NSMutableDictionary::addAuthorizationResponseHeader:length: not bound
+!missing-selector! NSMutableDictionary::addBodyHeader:length:endOfBody: not bound
+!missing-selector! NSMutableDictionary::addByteSequenceHeader:length: not bound
+!missing-selector! NSMutableDictionary::addConnectionIDHeader:length: not bound
+!missing-selector! NSMutableDictionary::addCountHeader: not bound
+!missing-selector! NSMutableDictionary::addDescriptionHeader: not bound
+!missing-selector! NSMutableDictionary::addHTTPHeader:length: not bound
+!missing-selector! NSMutableDictionary::addImageDescriptorHeader:length: not bound
+!missing-selector! NSMutableDictionary::addImageHandleHeader: not bound
+!missing-selector! NSMutableDictionary::addLengthHeader: not bound
+!missing-selector! NSMutableDictionary::addNameHeader: not bound
+!missing-selector! NSMutableDictionary::addObjectClassHeader:length: not bound
+!missing-selector! NSMutableDictionary::addTargetHeader:length: not bound
+!missing-selector! NSMutableDictionary::addTime4ByteHeader: not bound
+!missing-selector! NSMutableDictionary::addTimeISOHeader:length: not bound
+!missing-selector! NSMutableDictionary::addTypeHeader: not bound
+!missing-selector! NSMutableDictionary::addUserDefinedHeader:length: not bound
+!missing-selector! NSMutableDictionary::addWhoHeader:length: not bound
+!missing-selector! NSObject::fileTransferServicesAbortComplete:error: not bound
+!missing-selector! NSObject::fileTransferServicesConnectionComplete:error: not bound
+!missing-selector! NSObject::fileTransferServicesCopyRemoteFileComplete:error: not bound
+!missing-selector! NSObject::fileTransferServicesCopyRemoteFileProgress:transferProgress: not bound
+!missing-selector! NSObject::fileTransferServicesCreateFolderComplete:error:folder: not bound
+!missing-selector! NSObject::fileTransferServicesDisconnectionComplete:error: not bound
+!missing-selector! NSObject::fileTransferServicesFilePreparationComplete:error: not bound
+!missing-selector! NSObject::fileTransferServicesPathChangeComplete:error:finalPath: not bound
+!missing-selector! NSObject::fileTransferServicesRemoveItemComplete:error:removedItem: not bound
+!missing-selector! NSObject::fileTransferServicesRetrieveFolderListingComplete:error:listing: not bound
+!missing-selector! NSObject::fileTransferServicesSendFileComplete:error: not bound
+!missing-selector! NSObject::fileTransferServicesSendFileProgress:transferProgress: not bound
+!missing-selector! NSObject::readLinkQualityForDeviceComplete:device:info:error: not bound
+!missing-selector! NSObject::readRSSIForDeviceComplete:device:info:error: not bound
+!missing-selector! NSObject::registerIncomingDataListener:refCon: not bound
+!missing-selector! NSObject::write:length: not bound
+!missing-selector! OBEXFileTransferServices::changeCurrentFolderForwardToPath: not bound
+!missing-selector! OBEXFileTransferServices::copyRemoteFile:toLocalPath: not bound
+!missing-selector! OBEXFileTransferServices::createFolder: not bound
+!missing-selector! OBEXFileTransferServices::delegate not bound
+!missing-selector! OBEXFileTransferServices::getDefaultVCard: not bound
+!missing-selector! OBEXFileTransferServices::initWithOBEXSession: not bound
+!missing-selector! OBEXFileTransferServices::removeItem: not bound
+!missing-selector! OBEXFileTransferServices::sendData:type:name: not bound
+!missing-selector! OBEXFileTransferServices::sendFile: not bound
+!missing-selector! OBEXFileTransferServices::setDelegate: not bound
+!missing-selector! OBEXSession::clientHandleIncomingData: not bound
+!missing-selector! OBEXSession::getAvailableCommandPayloadLength: not bound
+!missing-selector! OBEXSession::getAvailableCommandResponsePayloadLength: not bound
+!missing-selector! OBEXSession::OBEXAbort:optionalHeadersLength:eventSelector:selectorTarget:refCon: not bound
+!missing-selector! OBEXSession::OBEXAbortResponse:optionalHeaders:optionalHeadersLength:eventSelector:selectorTarget:refCon: not bound
+!missing-selector! OBEXSession::OBEXConnect:maxPacketLength:optionalHeaders:optionalHeadersLength:eventSelector:selectorTarget:refCon: not bound
+!missing-selector! OBEXSession::OBEXConnectResponse:flags:maxPacketLength:optionalHeaders:optionalHeadersLength:eventSelector:selectorTarget:refCon: not bound
+!missing-selector! OBEXSession::OBEXDisconnect:optionalHeadersLength:eventSelector:selectorTarget:refCon: not bound
+!missing-selector! OBEXSession::OBEXDisconnectResponse:optionalHeaders:optionalHeadersLength:eventSelector:selectorTarget:refCon: not bound
+!missing-selector! OBEXSession::OBEXGet:headers:headersLength:eventSelector:selectorTarget:refCon: not bound
+!missing-selector! OBEXSession::OBEXGetResponse:optionalHeaders:optionalHeadersLength:eventSelector:selectorTarget:refCon: not bound
+!missing-selector! OBEXSession::OBEXPut:headersData:headersDataLength:bodyData:bodyDataLength:eventSelector:selectorTarget:refCon: not bound
+!missing-selector! OBEXSession::OBEXPutResponse:optionalHeaders:optionalHeadersLength:eventSelector:selectorTarget:refCon: not bound
+!missing-selector! OBEXSession::OBEXSetPath:constants:optionalHeaders:optionalHeadersLength:eventSelector:selectorTarget:refCon: not bound
+!missing-selector! OBEXSession::OBEXSetPathResponse:optionalHeaders:optionalHeadersLength:eventSelector:selectorTarget:refCon: not bound
+!missing-selector! OBEXSession::openTransportConnection:selectorTarget:refCon: not bound
+!missing-selector! OBEXSession::sendDataToTransport:dataLength: not bound
+!missing-selector! OBEXSession::serverHandleIncomingData: not bound
+!missing-selector! OBEXSession::setEventCallback: not bound
+!missing-selector! OBEXSession::setEventRefCon: not bound
+!missing-selector! OBEXSession::setEventSelector:target:refCon: not bound
+!missing-type! IOBluetoothDevice not bound
+!missing-type! IOBluetoothDeviceInquiry not bound
+!missing-type! IOBluetoothDevicePair not bound
+!missing-type! IOBluetoothHandsFree not bound
+!missing-type! IOBluetoothHandsFreeAudioGateway not bound
+!missing-type! IOBluetoothHandsFreeDevice not bound
+!missing-type! IOBluetoothHostController not bound
+!missing-type! IOBluetoothL2CAPChannel not bound
+!missing-type! IOBluetoothOBEXSession not bound
+!missing-type! IOBluetoothObject not bound
+!missing-type! IOBluetoothRFCOMMChannel not bound
+!missing-type! IOBluetoothSDPDataElement not bound
+!missing-type! IOBluetoothSDPServiceAttribute not bound
+!missing-type! IOBluetoothSDPServiceRecord not bound
+!missing-type! IOBluetoothSDPUUID not bound
+!missing-type! IOBluetoothUserNotification not bound
+!missing-type! OBEXFileTransferServices not bound
+!missing-type! OBEXSession not bound

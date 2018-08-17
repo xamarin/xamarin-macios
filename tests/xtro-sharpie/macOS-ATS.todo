@@ -1,0 +1,48 @@
+!missing-enum! ATSFontFilterSelector not bound
+!missing-enum! ATSFontNotifyAction not bound
+!missing-enum! ATSFontNotifyOption not bound
+!missing-enum! ATSFontQueryMessageID not bound
+!missing-pinvoke! ATSCreateFontQueryRunLoopSource is not bound
+!missing-pinvoke! ATSFontActivateFromFileReference is not bound
+!missing-pinvoke! ATSFontActivateFromMemory is not bound
+!missing-pinvoke! ATSFontApplyFunction is not bound
+!missing-pinvoke! ATSFontDeactivate is not bound
+!missing-pinvoke! ATSFontFamilyApplyFunction is not bound
+!missing-pinvoke! ATSFontFamilyFindFromName is not bound
+!missing-pinvoke! ATSFontFamilyFindFromQuickDrawName is not bound
+!missing-pinvoke! ATSFontFamilyGetEncoding is not bound
+!missing-pinvoke! ATSFontFamilyGetGeneration is not bound
+!missing-pinvoke! ATSFontFamilyGetName is not bound
+!missing-pinvoke! ATSFontFamilyGetQuickDrawName is not bound
+!missing-pinvoke! ATSFontFamilyIteratorCreate is not bound
+!missing-pinvoke! ATSFontFamilyIteratorNext is not bound
+!missing-pinvoke! ATSFontFamilyIteratorRelease is not bound
+!missing-pinvoke! ATSFontFamilyIteratorReset is not bound
+!missing-pinvoke! ATSFontFindFromContainer is not bound
+!missing-pinvoke! ATSFontFindFromName is not bound
+!missing-pinvoke! ATSFontFindFromPostScriptName is not bound
+!missing-pinvoke! ATSFontGetAutoActivationSettingForApplication is not bound
+!missing-pinvoke! ATSFontGetContainer is not bound
+!missing-pinvoke! ATSFontGetContainerFromFileReference is not bound
+!missing-pinvoke! ATSFontGetFileReference is not bound
+!missing-pinvoke! ATSFontGetFontFamilyResource is not bound
+!missing-pinvoke! ATSFontGetGeneration is not bound
+!missing-pinvoke! ATSFontGetGlobalAutoActivationSetting is not bound
+!missing-pinvoke! ATSFontGetHorizontalMetrics is not bound
+!missing-pinvoke! ATSFontGetName is not bound
+!missing-pinvoke! ATSFontGetPostScriptName is not bound
+!missing-pinvoke! ATSFontGetTable is not bound
+!missing-pinvoke! ATSFontGetTableDirectory is not bound
+!missing-pinvoke! ATSFontGetVerticalMetrics is not bound
+!missing-pinvoke! ATSFontIsEnabled is not bound
+!missing-pinvoke! ATSFontIteratorCreate is not bound
+!missing-pinvoke! ATSFontIteratorNext is not bound
+!missing-pinvoke! ATSFontIteratorRelease is not bound
+!missing-pinvoke! ATSFontIteratorReset is not bound
+!missing-pinvoke! ATSFontNotificationSubscribe is not bound
+!missing-pinvoke! ATSFontNotificationUnsubscribe is not bound
+!missing-pinvoke! ATSFontNotify is not bound
+!missing-pinvoke! ATSFontSetAutoActivationSettingForApplication is not bound
+!missing-pinvoke! ATSFontSetEnabled is not bound
+!missing-pinvoke! ATSFontSetGlobalAutoActivationSetting is not bound
+!missing-pinvoke! ATSGetGeneration is not bound

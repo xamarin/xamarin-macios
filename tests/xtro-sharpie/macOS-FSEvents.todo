@@ -1,0 +1,6 @@
+!missing-pinvoke! FSEventStreamCreateRelativeToDevice is not bound
+!missing-pinvoke! FSEventStreamGetDeviceBeingWatched is not bound
+!missing-pinvoke! FSEventStreamRetain is not bound
+!missing-pinvoke! FSEventStreamSetDispatchQueue is not bound
+!missing-pinvoke! FSEventStreamSetExclusionPaths is not bound
+!missing-pinvoke! FSEventStreamUnscheduleFromRunLoop is not bound
