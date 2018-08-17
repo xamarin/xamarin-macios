@@ -72,6 +72,13 @@
     <Compile Include="..\common\MachO.cs">
       <Link>MachO.cs</Link>
     </Compile>
+    <Compile Include="ToolTasksBinPathTest.cs" />
+    <Compile Include="..\..\msbuild\Xamarin.Mac.Tasks\Tasks\Metal.cs">
+      <Link>Metal.cs</Link>
+    </Compile>
+    <Compile Include="..\..\msbuild\Xamarin.Mac.Tasks\Tasks\MetalLib.cs">
+      <Link>MetalLib.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
