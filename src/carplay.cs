@@ -664,7 +664,8 @@ namespace CarPlay {
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
 	[BaseType (typeof (NSObject))]
 	interface CPTemplate : NSSecureCoding {
-
+		[NullAllowed, Export ("userInfo", ArgumentSemantic.Strong)]
+		NSObject UserInfo { get; set; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
