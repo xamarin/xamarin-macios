@@ -194,7 +194,7 @@ namespace xharness
 		void LoadConfig ()
 		{
 			ParseConfigFiles ();
-			var src_root = Path.GetDirectoryName (RootDirectory);
+			var src_root = Path.GetDirectoryName (Path.GetFullPath (RootDirectory));
 			MONO_PATH = Path.GetFullPath (Path.Combine (src_root, "external", "mono"));
 			WATCH_MONO_PATH = make_config ["WATCH_MONO_PATH"];
 			TVOS_MONO_PATH = MONO_PATH;
