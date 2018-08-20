@@ -13,6 +13,7 @@ public class Framework
 	public string Namespace;
 	public string Name;
 	public Version Version;
+	public bool AlwaysWeakLinked;
 }
 
 public class Frameworks : Dictionary <string, Framework>
@@ -32,6 +33,11 @@ public class Frameworks : Dictionary <string, Framework>
 		Add (@namespace, @namespace, new Version (major_version, minor_version));
 	}
 
+	public void Add (string @namespace, string framework, int major_version, bool alwaysWeakLink)
+	{
+		Add (@namespace, framework, new Version (major_version, 0), alwaysWeakLink);
+	}
+
 	public void Add (string @namespace, string framework, int major_version, int minor_version)
 	{
 		Add (@namespace, framework, new Version (major_version, minor_version));
@@ -42,7 +48,7 @@ public class Frameworks : Dictionary <string, Framework>
 		Add (@namespace, framework, new Version (major_version, minor_version, build_version));
 	}
 
-	public void Add (string @namespace, string framework, Version version)
+	public void Add (string @namespace, string framework, Version version, bool alwaysWeakLink = false)
 	{
 		var fr = new Framework () {
 #if MTOUCH || MMP
@@ -51,7 +57,8 @@ public class Frameworks : Dictionary <string, Framework>
 			Namespace = @namespace,
 #endif
 			Name = framework,
-			Version = version
+			Version = version,
+			AlwaysWeakLinked = alwaysWeakLink,
 		};
 		base.Add (fr.Namespace, fr);
 	}
@@ -273,7 +280,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "IntentsUI", "IntentsUI", 10 },
 
 				{ "ARKit", "ARKit", 11 },
-				{ "CoreNFC", "CoreNFC", 11 },
+				{ "CoreNFC", "CoreNFC", 11, true }, /* not always present, e.g. iPad w/iOS 12, so must be weak linked */
 				{ "DeviceCheck", "DeviceCheck", 11 },
 				{ "IdentityLookup", "IdentityLookup", 11 },
 				{ "IOSurface", "IOSurface", 11 },
@@ -423,7 +430,7 @@ public class Frameworks : Dictionary <string, Framework>
 	}
 #endif
 
-#if MTOUCH || MMP
+#if MMP
 	public static void Gather (Application app, AssemblyDefinition product_assembly, HashSet<string> frameworks, HashSet<string> weak_frameworks)
 	{
 		var namespaces = new HashSet<string> ();
@@ -435,8 +442,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 		// Iterate over all the namespaces and check which frameworks we need to link with.
 		foreach (var nspace in namespaces) {
-			Framework framework;
-			if (Driver.GetFrameworks (app).TryGetValue (nspace, out framework)) {
+			if (Driver.GetFrameworks (app).TryGetValue (nspace, out var framework)) {
 				if (app.SdkVersion >= framework.Version) {
 					var add_to = app.DeploymentTarget >= framework.Version ? frameworks : weak_frameworks;
 					add_to.Add (framework.Name);
