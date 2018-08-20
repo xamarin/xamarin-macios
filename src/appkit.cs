@@ -21885,6 +21885,7 @@ namespace AppKit {
 		void RequestAuthorization (NSWorkspaceAuthorizationType type, Action<NSWorkspaceAuthorization, NSError> completionHandler);
 	}
 	
+	[Mac (10,14, onlyOn64: true)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface NSWorkspaceAuthorization {

@@ -13482,7 +13482,7 @@ namespace Foundation
 		bool TrashItem (NSUrl url, out NSUrl resultingItemUrl, out NSError error);
 
 #if MONOMAC
-		[Mac (10,14)]
+		[Mac (10,14, onlyOn64: true)]
 		[Static]
 		[Export ("fileManagerWithAuthorization:")]
 		NSFileManager FromAuthorization (NSWorkspaceAuthorization authorization);
