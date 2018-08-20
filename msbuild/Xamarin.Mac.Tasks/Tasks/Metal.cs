@@ -10,9 +10,11 @@ namespace Xamarin.Mac.Tasks
 			get { return "macosx"; }
 		}
 
+#if !MTOUCH_TESTS
 		protected override string MinimumDeploymentTargetKey {
 			get { return ManifestKeys.LSMinimumSystemVersion; }
 		}
+#endif
 
 		protected override string DevicePlatformBinDir {
 			get {
