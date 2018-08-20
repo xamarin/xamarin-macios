@@ -13480,6 +13480,13 @@ namespace Foundation
 
 		[Mac (10, 8), Export ("trashItemAtURL:resultingItemURL:error:")]
 		bool TrashItem (NSUrl url, out NSUrl resultingItemUrl, out NSError error);
+
+#if MONOMAC
+		[Mac (10,14, onlyOn64: true)]
+		[Static]
+		[Export ("fileManagerWithAuthorization:")]
+		NSFileManager FromAuthorization (NSWorkspaceAuthorization authorization);
+#endif
 	}
 
 	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]

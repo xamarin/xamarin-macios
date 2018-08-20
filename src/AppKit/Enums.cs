@@ -2898,4 +2898,12 @@ namespace AppKit {
 		Disabled,
 		Rollover,
 	}
+
+	[Mac (10,14, onlyOn64: true)]
+	[Native]
+	public enum NSWorkspaceAuthorizationType : long  {
+		CreateSymbolicLink,
+		SetAttributes,
+		ReplaceFile,
+	}
 }
