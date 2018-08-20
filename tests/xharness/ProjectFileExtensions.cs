@@ -380,6 +380,11 @@ namespace xharness
 			return string.Empty;
 		}
 
+		public static string GetMtouchLink (this XmlDocument csproj, string platform, string configuration)
+		{
+			return GetNode (csproj, "MtouchLink", platform, configuration);
+		}
+
 		public static void SetMtouchUseLlvm (this XmlDocument csproj, bool value, string platform, string configuration)
 		{
 			SetNode (csproj, "MtouchUseLlvm", true ? "true" : "false", platform, configuration);
@@ -388,6 +393,17 @@ namespace xharness
 		public static void SetMtouchUseBitcode (this XmlDocument csproj, bool value, string platform, string configuration)
 		{
 			SetNode (csproj, "MtouchEnableBitcode", true ? "true" : "false", platform, configuration);
+		}
+
+		public static IEnumerable<XmlNode> GetPropertyGroups (this XmlDocument csproj, string platform, string configuration)
+		{
+			var propertyGroups = csproj.SelectNodes ("//*[local-name() = 'PropertyGroup' and @Condition]");
+			foreach (XmlNode node in propertyGroups) {
+				if (!EvaluateCondition (node, platform, configuration))
+					continue;
+
+				yield return node;
+			}
 		}
 
 		public static void SetNode (this XmlDocument csproj, string node, string value, string platform, string configuration)
@@ -417,6 +433,16 @@ namespace xharness
 			}
 		}
 
+		public static string GetNode (this XmlDocument csproj, string name, string platform, string configuration)
+		{
+			foreach (var pg in GetPropertyGroups (csproj, platform, configuration)) {
+				foreach (XmlNode node in pg.ChildNodes)
+					if (node.Name == name)
+						return node.InnerText;
+			}
+
+			return null;
+		}
 
 		public static string GetImport (this XmlDocument csproj)
 		{

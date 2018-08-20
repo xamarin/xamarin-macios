@@ -2708,7 +2708,7 @@ function toggleAll (show)
 						xbuild.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = null;
 					LogEvent (log, "Building {0} ({1})", TestName, Mode);
 					if (!Harness.DryRun) {
-						var timeout = TimeSpan.FromMinutes (15);
+						var timeout = TimeSpan.FromMinutes (60);
 						var result = await xbuild.RunAsync (log, true, timeout);
 						if (result.TimedOut) {
 							ExecutionResult = TestExecutingResult.TimedOut;
