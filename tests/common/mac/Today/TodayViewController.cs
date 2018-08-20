@@ -17,7 +17,7 @@ namespace TodayExtensionTest
 		public override void ViewDidLoad ()
 		{
 			base.ViewDidLoad ();
-
+%TESTCODE%
 			// Do any additional setup after loading the view.
 		}
 
