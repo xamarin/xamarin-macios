@@ -44,7 +44,7 @@ namespace MonoTouchFixtures.NaturalLanguage {
 		public void GetLanguageHypothesesTest ()
 		{
 			using (var recognizer = new NLLanguageRecognizer ()) {
-				var languages = new Dictionary<NLLanguage, nuint> () {
+				var languages = new Dictionary<NLLanguage, double> () {
 					{ NLLanguage.German, 1 },
 					{ NLLanguage.Spanish, 10 },
 				};
@@ -61,7 +61,7 @@ namespace MonoTouchFixtures.NaturalLanguage {
 		[Test]
 		public void LanguageHintsTest ()
 		{
-			var languages = new Dictionary<NLLanguage, nuint> () {
+			var languages = new Dictionary<NLLanguage, double> () {
 				{ NLLanguage.German, 1 },
 				{ NLLanguage.Spanish, 10 },
 			};
