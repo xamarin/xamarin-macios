@@ -37,7 +37,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 	[Preserve (AllMembers = true)]
 	public class FunctionTest {
 #if !__WATCHOS__ // FIXME: It doesn't look like this test needs to use UIKit, so it might be possible to rewrite it to run on WatchOS as well.
-		//[Test]
+		[Test]
 		public void Test ()
 		{
 			bool tested = false;
