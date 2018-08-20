@@ -41,6 +41,12 @@ using pfloat = System.nfloat;
 using pfloat = System.Single;
 #endif
 
+#if XAMCORE_4_0
+#warning Our managed SCNMatrix4 is row-major, while the native SCNMatrix4 is column-major.
+#warning This should be fixed, but it's a breaking change.
+#warning See https://github.com/xamarin/xamarin-macios/issues/4525 for more information.
+#endif
+
 
 namespace SceneKit 
 {
