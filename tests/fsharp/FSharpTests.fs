@@ -30,5 +30,4 @@ type FSharpTest () =
         let e = 5555
 
         let pr = sprintf "%d %d %d %d %d" a b c d e
-        let eq = String.Equals (pr, "1111 2222 3333 4444 5555")
-        Assert.IsTrue eq
+        Assert.AreEqual ("1111 2222 3333 4444 5555", pr)
