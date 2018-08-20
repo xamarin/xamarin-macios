@@ -21879,8 +21879,17 @@ namespace AppKit {
 		[Field ("NSWorkspaceAccessibilityDisplayOptionsDidChangeNotification")]
 		[Notification]
 		NSString DisplayOptionsDidChangeNotification { get; }
+
+		[Mac (10,14, onlyOn64: true)]
+		[Export ("requestAuthorizationOfType:completionHandler:")]
+		void RequestAuthorization (NSWorkspaceAuthorizationType type, Action<NSWorkspaceAuthorization, NSError> completionHandler);
 	}
 	
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface NSWorkspaceAuthorization {
+	}
+
 	[BaseType (typeof (NSObject))]
 	[ThreadSafe] // NSRunningApplication is documented to be thread-safe.
 	partial interface NSRunningApplication {

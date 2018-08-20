@@ -2898,4 +2898,20 @@ namespace AppKit {
 		Disabled,
 		Rollover,
 	}
+
+	[Mac (10,14, onlyOn64: true)]
+	[Native]
+	public enum NSWorkspaceAuthorizationType : long  {
+		CreateSymbolicLink,
+		SetAttributes,
+		ReplaceFile,
+	}
+
+	[Mac (10,14, onlyOn64: true)]
+	[Native]
+	public enum NSWorkspaceAuthorizationError : ulong  {
+		Invalid = 67328,
+		Minimum = 67328,
+		Maximum = 67455,
+	}
 }
