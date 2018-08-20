@@ -13,6 +13,7 @@ xmPackageUrl = null
 utils = null
 errorMessage = null
 currentStage = null
+failedStages = []
 
 xiPackageFilename = null
 xmPackageFilename = null
@@ -171,14 +172,19 @@ def reportFinalStatus (err, gitHash, currentStage)
     def comment = ""
     def status = currentBuild.currentResult
 
-    if ("${status}" == "SUCCESS" && err == "") {
+    if ("${status}" == "SUCCESS" && err == "" && failedStages.size () == 0) {
         comment = "✅ [Jenkins job](${env.RUN_DISPLAY_URL}) (on internal Jenkins) succeeded"
     } else {
         // Aborted builds throw either a FlowInterruptedException or an AbortException (depending on what's executing),
         // so treat either as an abortion (both can be thrown in other circumstances as well, so it's just a best guess).
         if (err.contains ("FlowInterruptedException") || err.contains ("AbortException"))
             comment += "❌ [Build was (probably) aborted](${env.RUN_DISPLAY_URL})\n\n"
-        comment += "🔥 [Jenkins job](${env.RUN_DISPLAY_URL}) (on internal Jenkins) failed in stage '${currentStage}' 🔥"
+        comment += "🔥 [Jenkins job](${env.RUN_DISPLAY_URL}) (on internal Jenkins) failed"
+        if (currentStage != "" && !failedStages.contains (currentStage))
+            failedStages.add (currentStage)
+        if (failedStages.size () > 0)
+            comment += " in stage(s) '${failedStages.join (', ')}'"
+        comment += " 🔥"
         if (err != "")
             comment += " : ${err}"
         manager.addErrorBadge (comment)
@@ -579,8 +585,8 @@ timestamps {
                                 def exitCode = sh (script: "make -C ${workspace}/xamarin-macios/tests package-tests", returnStatus: true)
                                 if (exitCode != 0) {
                                     hasXamarinMacTests = false
-                                    manager.addErrorBadge ("Failed to package Xamarin.Mac tests (exit code: ${exitCode}")
-                                    manager.buildUnstable ()
+                                    echoError ("Failed to package Xamarin.Mac tests (exit code: ${exitCode}")
+                                    failedStages.add (currentStage)
                                 }
                                 uploadFiles ("tests/*.zip", virtualPath)
                             }
@@ -635,6 +641,7 @@ timestamps {
                                                     if (msg == "")
                                                         msg = "Xamarin.Mac tests on 10.${macOS} failed"
                                                     appendFileComment ("🔥 [${msg}](${env.RUN_DISPLAY_URL}) 🔥\n")
+                                                    failedStages.add (currentStage)
                                                     throw err
                                                 }
                                             }
@@ -671,6 +678,8 @@ timestamps {
                                     parallel builders
                                 }
                             }
+
+                            currentStage = ""
                         } // dir ("xamarin-macios")
                     } // dir ("${workspace}")
                 }
