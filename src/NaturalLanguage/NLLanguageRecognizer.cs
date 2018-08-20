@@ -52,12 +52,12 @@ namespace NaturalLanguage {
 			}
 		}
 
-		public Dictionary<NLLanguage, nuint> LanguageHints
+		public Dictionary<NLLanguage, double> LanguageHints
 		{
 			get {
-				var result = new Dictionary<NLLanguage, nuint> (NativeLanguageHints.Keys.Length);
+				var result = new Dictionary<NLLanguage, double> (NativeLanguageHints.Keys.Length);
 				foreach (var k in NativeLanguageHints.Keys) {
-					result[NLLanguageExtensions.GetValue (k)] = NativeLanguageHints[k].NUIntValue;
+					result[NLLanguageExtensions.GetValue (k)] = NativeLanguageHints[k].DoubleValue;
 				}
 				return result;
 			}
