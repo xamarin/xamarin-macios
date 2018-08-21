@@ -290,7 +290,13 @@ function install_specific_xcode () {
 		$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -license accept
 	fi
 
-	if is_at_least_version $XCODE_VERSION 8.0; then
+	if is_at_least_version "$XCODE_VERSION" 9.0; then
+		if ! "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -checkFirstLaunchStatus; then
+			log "Executing '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch'"
+			$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -runFirstLaunch
+			log "Executed '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch'"
+		fi
+	elif is_at_least_version $XCODE_VERSION 8.0; then
 		PKGS="MobileDevice.pkg MobileDeviceDevelopment.pkg XcodeSystemResources.pkg"
 		for pkg in $PKGS; do
 			if test -f "$XCODE_DEVELOPER_ROOT/../Resources/Packages/$pkg"; then
@@ -336,8 +342,21 @@ function check_specific_xcode () {
 					$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -license accept
 				else
 					fail "The license for Xcode $XCODE_VERSION has not been accepted. Execute '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild' to review the license and accept it."
+					return
 				fi
-				return
+			fi
+		fi
+
+		if is_at_least_version "$XCODE_VERSION" 9.0; then
+			if ! "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -checkFirstLaunchStatus; then
+				if ! test -z "$PROVISION_XCODE"; then
+					log "Executing '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch'"
+					$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -runFirstLaunch
+					log "Executed '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch'"
+				else
+					fail "Xcode has pending first launch tasks. Execute '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch' to execute those tasks."
+					return
+				fi
 			fi
 		fi
 	fi
