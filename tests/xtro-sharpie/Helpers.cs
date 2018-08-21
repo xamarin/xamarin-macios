@@ -242,7 +242,7 @@ namespace Extrospection {
 
 		public static string GetSelector (this ObjCMethodDecl self)
 		{
-			return self.Selector.ToString () ?? (self.IsPropertyAccessor ? self.Name : null);
+			return self.Selector.ToString () ?? self.Name;
 		}
 
 		public static bool IsObsolete (this ICustomAttributeProvider provider)
