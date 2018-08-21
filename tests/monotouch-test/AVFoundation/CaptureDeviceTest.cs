@@ -3,6 +3,7 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using AVFoundation;
+using ObjCRuntime;
 #else
 using MonoTouch.AVFoundation;
 using MonoTouch.Foundation;
@@ -36,7 +37,7 @@ namespace MonoTouchFixtures.AVFoundation {
 			Compare (AVMediaType.Video, AVMediaTypes.Video);
 
 			// obsoleted in iOS 6, removed in iOS12
-			if (TestRuntime.CheckSDKVersion (12,0))
+			if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 12,0))
 				Assert.Null (AVMediaType.TimedMetadata, "AVMediaTypeTimedMetadata");
 			else
 				Compare (AVMediaType.TimedMetadata, AVMediaTypes.TimedMetadata);
