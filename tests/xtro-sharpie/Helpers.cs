@@ -9,7 +9,7 @@ using Clang.Ast;
 
 namespace Extrospection {
 	
-	public static class Helpers {
+	public static partial class Helpers {
 
 		// the original name can be lost and, if not registered (e.g. enums), might not be available
 		static Dictionary<string,string> map = new Dictionary<string, string> () {
