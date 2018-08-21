@@ -161,13 +161,6 @@
                   <parameter name="value" position="0" attrib="0" type="System.UInt64" />
                 </parameters>
               </constructor>
-              <constructor name=".ctor(System.ReadOnlySpan`1[System.Byte], System.Boolean, System.Boolean)" attrib="6278">
-                <parameters>
-                  <parameter name="value" position="0" attrib="0" type="System.ReadOnlySpan`1[System.Byte]" />
-                  <parameter name="isUnsigned" position="1" attrib="4112" type="System.Boolean" optional="true" defaultValue="False" />
-                  <parameter name="isBigEndian" position="2" attrib="4112" type="System.Boolean" optional="true" defaultValue="False" />
-                </parameters>
-              </constructor>
             </constructors>
             <properties>
               <property name="IsEven" attrib="0" ptype="System.Boolean">
@@ -389,13 +382,6 @@
                   <parameter name="provider" position="1" attrib="0" type="System.IFormatProvider" />
                 </parameters>
               </method>
-              <method name="Parse(System.ReadOnlySpan`1[System.Char], System.Globalization.NumberStyles, System.IFormatProvider)" attrib="150" static="true" returntype="System.Numerics.BigInteger">
-                <parameters>
-                  <parameter name="value" position="0" attrib="0" type="System.ReadOnlySpan`1[System.Char]" />
-                  <parameter name="style" position="1" attrib="4112" type="System.Globalization.NumberStyles" optional="true" defaultValue="7" />
-                  <parameter name="provider" position="2" attrib="4112" type="System.IFormatProvider" optional="true" defaultValue="NULL" />
-                </parameters>
-              </method>
               <method name="Parse(System.String, System.Globalization.NumberStyles, System.IFormatProvider)" attrib="150" static="true" returntype="System.Numerics.BigInteger">
                 <parameters>
                   <parameter name="value" position="0" attrib="0" type="System.String" />
@@ -449,32 +435,10 @@
                   <parameter name="provider" position="1" attrib="0" type="System.IFormatProvider" />
                 </parameters>
               </method>
-              <method name="TryFormat(System.Span`1[System.Char], out System.Int32&amp;, System.ReadOnlySpan`1[System.Char], System.IFormatProvider)" attrib="134" returntype="System.Boolean">
-                <parameters>
-                  <parameter name="destination" position="0" attrib="0" type="System.Span`1[System.Char]" />
-                  <parameter name="charsWritten" position="1" attrib="2" type="System.Int32" direction="out" />
-                  <parameter name="format" position="2" attrib="4112" type="System.ReadOnlySpan`1[System.Char]" optional="true" defaultValue="NULL" />
-                  <parameter name="provider" position="3" attrib="4112" type="System.IFormatProvider" optional="true" defaultValue="NULL" />
-                </parameters>
-              </method>
-              <method name="TryParse(System.ReadOnlySpan`1[System.Char], out System.Numerics.BigInteger&amp;)" attrib="150" static="true" returntype="System.Boolean">
-                <parameters>
-                  <parameter name="value" position="0" attrib="0" type="System.ReadOnlySpan`1[System.Char]" />
-                  <parameter name="result" position="1" attrib="2" type="System.Numerics.BigInteger" direction="out" />
-                </parameters>
-              </method>
               <method name="TryParse(System.String, out System.Numerics.BigInteger&amp;)" attrib="150" static="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="value" position="0" attrib="0" type="System.String" />
                   <parameter name="result" position="1" attrib="2" type="System.Numerics.BigInteger" direction="out" />
-                </parameters>
-              </method>
-              <method name="TryParse(System.ReadOnlySpan`1[System.Char], System.Globalization.NumberStyles, System.IFormatProvider, out System.Numerics.BigInteger&amp;)" attrib="150" static="true" returntype="System.Boolean">
-                <parameters>
-                  <parameter name="value" position="0" attrib="0" type="System.ReadOnlySpan`1[System.Char]" />
-                  <parameter name="style" position="1" attrib="0" type="System.Globalization.NumberStyles" />
-                  <parameter name="provider" position="2" attrib="0" type="System.IFormatProvider" />
-                  <parameter name="result" position="3" attrib="2" type="System.Numerics.BigInteger" direction="out" />
                 </parameters>
               </method>
               <method name="TryParse(System.String, System.Globalization.NumberStyles, System.IFormatProvider, out System.Numerics.BigInteger&amp;)" attrib="150" static="true" returntype="System.Boolean">
@@ -483,14 +447,6 @@
                   <parameter name="style" position="1" attrib="0" type="System.Globalization.NumberStyles" />
                   <parameter name="provider" position="2" attrib="0" type="System.IFormatProvider" />
                   <parameter name="result" position="3" attrib="2" type="System.Numerics.BigInteger" direction="out" />
-                </parameters>
-              </method>
-              <method name="TryWriteBytes(System.Span`1[System.Byte], out System.Int32&amp;, System.Boolean, System.Boolean)" attrib="134" returntype="System.Boolean">
-                <parameters>
-                  <parameter name="destination" position="0" attrib="0" type="System.Span`1[System.Byte]" />
-                  <parameter name="bytesWritten" position="1" attrib="2" type="System.Int32" direction="out" />
-                  <parameter name="isUnsigned" position="2" attrib="4112" type="System.Boolean" optional="true" defaultValue="False" />
-                  <parameter name="isBigEndian" position="3" attrib="4112" type="System.Boolean" optional="true" defaultValue="False" />
                 </parameters>
               </method>
               <method name="op_Addition(System.Numerics.BigInteger, System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Numerics.BigInteger">
