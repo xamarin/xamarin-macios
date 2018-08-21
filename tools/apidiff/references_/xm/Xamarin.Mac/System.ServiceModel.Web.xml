@@ -1,0 +1,1617 @@
+<?xml version="1.0" encoding="utf-8"?>
+<assemblies>
+  <assembly name="System.ServiceModel.Web" version="2.0.5.0">
+    <attributes>
+      <attribute name="System.Runtime.CompilerServices.TypeForwardedToAttribute">
+        <properties>
+          <property name="Destination" value="System.Runtime.Serialization.Json.DataContractJsonSerializer" />
+        </properties>
+      </attribute>
+      <attribute name="System.CLSCompliantAttribute">
+        <properties>
+          <property name="IsCompliant" value="True" />
+        </properties>
+      </attribute>
+      <attribute name="System.Diagnostics.DebuggableAttribute">
+        <properties>
+          <property name="IsJITTrackingEnabled" value="IgnoreSymbolStoreSequencePoints" />
+          <property name="IsJITOptimizerDisabled" value="IgnoreSymbolStoreSequencePoints" />
+          <property name="DebuggingFlags" value="IgnoreSymbolStoreSequencePoints" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyCompanyAttribute">
+        <properties>
+          <property name="Company" value="MONO development team" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyCopyrightAttribute">
+        <properties>
+          <property name="Copyright" value="(c) 2003 Various Authors" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyDefaultAliasAttribute">
+        <properties>
+          <property name="DefaultAlias" value="System.ServiceModel.Web.dll" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyDelaySignAttribute">
+        <properties>
+          <property name="DelaySign" value="True" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyDescriptionAttribute">
+        <properties>
+          <property name="Description" value="System.ServiceModel.Web.dll" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyFileVersionAttribute">
+        <properties>
+          <property name="Version" value="4.0.50524.0" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyInformationalVersionAttribute">
+        <properties>
+          <property name="InformationalVersion" value="4.0.50524.0" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyProductAttribute">
+        <properties>
+          <property name="Product" value="MONO CLI" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyTitleAttribute">
+        <properties>
+          <property name="Title" value="System.ServiceModel.Web.dll" />
+        </properties>
+      </attribute>
+      <attribute name="System.Resources.NeutralResourcesLanguageAttribute">
+        <properties>
+          <property name="CultureName" value="en-US" />
+        </properties>
+      </attribute>
+      <attribute name="System.Resources.SatelliteContractVersionAttribute">
+        <properties>
+          <property name="Version" value="2.0.5.0" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.CompilationRelaxationsAttribute">
+        <properties>
+          <property name="CompilationRelaxations" value="NoStringInterning" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+      <attribute name="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+        <properties>
+          <property name="AssemblyName" value="System.Json, PublicKey=0024000004800000940000000602000000240000525341310004000001000100b5fc90e7027f67871e773a8fde8938c81dd402ba65b9201d60593e96c492651e889cc13f1415ebb53fac1131ae0bd333c5ee6021672d9718ea31a8aebd0da0072f25d87dba6fc90ffd598ed4da35e44c398c454307e8e33b8426143daec9f596836f97c8f74750e5975c64e2189f45def46b2a2b1247adc3652bf5c308055da9" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+        <properties>
+          <property name="AssemblyName" value="System.ServiceModel.Web.Extensions, PublicKey=0024000004800000940000000602000000240000525341310004000001000100b5fc90e7027f67871e773a8fde8938c81dd402ba65b9201d60593e96c492651e889cc13f1415ebb53fac1131ae0bd333c5ee6021672d9718ea31a8aebd0da0072f25d87dba6fc90ffd598ed4da35e44c398c454307e8e33b8426143daec9f596836f97c8f74750e5975c64e2189f45def46b2a2b1247adc3652bf5c308055da9" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+        <properties>
+          <property name="AssemblyName" value="System.Windows.Browser, PublicKey=00240000048000009400000006020000002400005253413100040000010001008D56C76F9E8649383049F383C44BE0EC204181822A6C31CF5EB7EF486944D032188EA1D3920763712CCB12D75FB77E9811149E6148E5D32FBAAB37611C1878DDC19E20EF135D0CB2CFF2BFEC3D115810C3D9069638FE4BE215DBF795861920E5AB6F7DB2E2CEEF136AC23D5DD2BF031700AEC232F6C6B1C785B4305C123B37AB" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.RuntimeCompatibilityAttribute">
+        <properties>
+          <property name="WrapNonExceptionThrows" value="True" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
+        <properties>
+          <property name="Value" value="False" />
+        </properties>
+      </attribute>
+    </attributes>
+    <namespaces>
+      <namespace name="System">
+        <classes>
+          <class name="UriTemplate" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="template" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Boolean)" attrib="6278">
+                <parameters>
+                  <parameter name="template" position="0" attrib="0" type="System.String" />
+                  <parameter name="ignoreTrailingSlash" position="1" attrib="0" type="System.Boolean" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Collections.Generic.IDictionary`2[System.String,System.String])" attrib="6278">
+                <parameters>
+                  <parameter name="template" position="0" attrib="0" type="System.String" />
+                  <parameter name="additionalDefaults" position="1" attrib="0" type="System.Collections.Generic.IDictionary`2[System.String,System.String]" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Boolean, System.Collections.Generic.IDictionary`2[System.String,System.String])" attrib="6278">
+                <parameters>
+                  <parameter name="template" position="0" attrib="0" type="System.String" />
+                  <parameter name="ignoreTrailingSlash" position="1" attrib="0" type="System.Boolean" />
+                  <parameter name="additionalDefaults" position="2" attrib="0" type="System.Collections.Generic.IDictionary`2[System.String,System.String]" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Defaults" attrib="0" ptype="System.Collections.Generic.IDictionary`2[System.String,System.String]">
+                <methods>
+                  <method name="get_Defaults()" attrib="2182" returntype="System.Collections.Generic.IDictionary`2[System.String,System.String]">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IgnoreTrailingSlash" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IgnoreTrailingSlash()" attrib="2182" returntype="System.Boolean">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="PathSegmentVariableNames" attrib="0" ptype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.String]">
+                <methods>
+                  <method name="get_PathSegmentVariableNames()" attrib="2182" returntype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.String]">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="QueryValueVariableNames" attrib="0" ptype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.String]">
+                <methods>
+                  <method name="get_QueryValueVariableNames()" attrib="2182" returntype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.String]">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="BindByName(System.Uri, System.Collections.Generic.IDictionary`2[System.String,System.String])" attrib="134" returntype="System.Uri">
+                <parameters>
+                  <parameter name="baseAddress" position="0" attrib="0" type="System.Uri" />
+                  <parameter name="parameters" position="1" attrib="0" type="System.Collections.Generic.IDictionary`2[System.String,System.String]" />
+                </parameters>
+              </method>
+              <method name="BindByName(System.Uri, System.Collections.Specialized.NameValueCollection)" attrib="134" returntype="System.Uri">
+                <parameters>
+                  <parameter name="baseAddress" position="0" attrib="0" type="System.Uri" />
+                  <parameter name="parameters" position="1" attrib="0" type="System.Collections.Specialized.NameValueCollection" />
+                </parameters>
+              </method>
+              <method name="BindByName(System.Uri, System.Collections.Generic.IDictionary`2[System.String,System.String], System.Boolean)" attrib="134" returntype="System.Uri">
+                <parameters>
+                  <parameter name="baseAddress" position="0" attrib="0" type="System.Uri" />
+                  <parameter name="parameters" position="1" attrib="0" type="System.Collections.Generic.IDictionary`2[System.String,System.String]" />
+                  <parameter name="omitDefaults" position="2" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="BindByName(System.Uri, System.Collections.Specialized.NameValueCollection, System.Boolean)" attrib="134" returntype="System.Uri">
+                <parameters>
+                  <parameter name="baseAddress" position="0" attrib="0" type="System.Uri" />
+                  <parameter name="parameters" position="1" attrib="0" type="System.Collections.Specialized.NameValueCollection" />
+                  <parameter name="omitDefaults" position="2" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="BindByPosition(System.Uri, System.String[])" attrib="134" returntype="System.Uri">
+                <parameters>
+                  <parameter name="baseAddress" position="0" attrib="0" type="System.Uri" />
+                  <parameter name="values" position="1" attrib="0" type="System.String[]">
+                    <attributes>
+                      <attribute name="System.ParamArrayAttribute" />
+                    </attributes>
+                  </parameter>
+                </parameters>
+              </method>
+              <method name="IsEquivalentTo(System.UriTemplate)" attrib="134" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="other" position="0" attrib="0" type="System.UriTemplate" />
+                </parameters>
+              </method>
+              <method name="Match(System.Uri, System.Uri)" attrib="134" returntype="System.UriTemplateMatch">
+                <parameters>
+                  <parameter name="baseAddress" position="0" attrib="0" type="System.Uri" />
+                  <parameter name="candidate" position="1" attrib="0" type="System.Uri" />
+                </parameters>
+              </method>
+              <method name="ToString()" attrib="198" virtual="true" is-override="true" returntype="System.String">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="UriTemplateEquivalenceComparer" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.Collections.Generic.IEqualityComparer`1[System.UriTemplate]" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="Equals(System.UriTemplate, System.UriTemplate)" attrib="486" virtual="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="x" position="0" attrib="0" type="System.UriTemplate" />
+                  <parameter name="y" position="1" attrib="0" type="System.UriTemplate" />
+                </parameters>
+              </method>
+              <method name="GetHashCode(System.UriTemplate)" attrib="486" virtual="true" returntype="System.Int32">
+                <parameters>
+                  <parameter name="obj" position="0" attrib="0" type="System.UriTemplate" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="UriTemplateMatch" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="BaseUri" attrib="0" ptype="System.Uri">
+                <methods>
+                  <method name="get_BaseUri()" attrib="2182" returntype="System.Uri">
+                    <parameters />
+                  </method>
+                  <method name="set_BaseUri(System.Uri)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Uri" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="BoundVariables" attrib="0" ptype="System.Collections.Specialized.NameValueCollection">
+                <methods>
+                  <method name="get_BoundVariables()" attrib="2182" returntype="System.Collections.Specialized.NameValueCollection">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Data" attrib="0" ptype="System.Object">
+                <methods>
+                  <method name="get_Data()" attrib="2182" returntype="System.Object">
+                    <parameters />
+                  </method>
+                  <method name="set_Data(System.Object)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Object" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="QueryParameters" attrib="0" ptype="System.Collections.Specialized.NameValueCollection">
+                <methods>
+                  <method name="get_QueryParameters()" attrib="2182" returntype="System.Collections.Specialized.NameValueCollection">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="RelativePathSegments" attrib="0" ptype="System.Collections.ObjectModel.Collection`1[System.String]">
+                <methods>
+                  <method name="get_RelativePathSegments()" attrib="2182" returntype="System.Collections.ObjectModel.Collection`1[System.String]">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="RequestUri" attrib="0" ptype="System.Uri">
+                <methods>
+                  <method name="get_RequestUri()" attrib="2182" returntype="System.Uri">
+                    <parameters />
+                  </method>
+                  <method name="set_RequestUri(System.Uri)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Uri" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Template" attrib="0" ptype="System.UriTemplate">
+                <methods>
+                  <method name="get_Template()" attrib="2182" returntype="System.UriTemplate">
+                    <parameters />
+                  </method>
+                  <method name="set_Template(System.UriTemplate)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.UriTemplate" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="WildcardPathSegments" attrib="0" ptype="System.Collections.ObjectModel.Collection`1[System.String]">
+                <methods>
+                  <method name="get_WildcardPathSegments()" attrib="2182" returntype="System.Collections.ObjectModel.Collection`1[System.String]">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+          </class>
+          <class name="UriTemplateMatchException" type="class" base="System.SystemException" serializable="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.Runtime.Serialization.ISerializable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="6276">
+                <parameters>
+                  <parameter name="info" position="0" attrib="0" type="System.Runtime.Serialization.SerializationInfo" />
+                  <parameter name="context" position="1" attrib="0" type="System.Runtime.Serialization.StreamingContext" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Exception)" attrib="6278">
+                <parameters>
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
+                  <parameter name="innerException" position="1" attrib="0" type="System.Exception" />
+                </parameters>
+              </constructor>
+            </constructors>
+          </class>
+          <class name="UriTemplateTable" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.Collections.Generic.IEnumerable`1[System.Collections.Generic.KeyValuePair`2[System.UriTemplate,System.Object]])" attrib="6278">
+                <parameters>
+                  <parameter name="keyValuePairs" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[System.Collections.Generic.KeyValuePair`2[System.UriTemplate,System.Object]]" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Uri)" attrib="6278">
+                <parameters>
+                  <parameter name="baseAddress" position="0" attrib="0" type="System.Uri" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Uri, System.Collections.Generic.IEnumerable`1[System.Collections.Generic.KeyValuePair`2[System.UriTemplate,System.Object]])" attrib="6278">
+                <parameters>
+                  <parameter name="baseAddress" position="0" attrib="0" type="System.Uri" />
+                  <parameter name="keyValuePairs" position="1" attrib="0" type="System.Collections.Generic.IEnumerable`1[System.Collections.Generic.KeyValuePair`2[System.UriTemplate,System.Object]]" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="BaseAddress" attrib="0" ptype="System.Uri">
+                <methods>
+                  <method name="get_BaseAddress()" attrib="2182" returntype="System.Uri">
+                    <parameters />
+                  </method>
+                  <method name="set_BaseAddress(System.Uri)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Uri" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="IsReadOnly" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsReadOnly()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="KeyValuePairs" attrib="0" ptype="System.Collections.Generic.IList`1[System.Collections.Generic.KeyValuePair`2[System.UriTemplate,System.Object]]">
+                <methods>
+                  <method name="get_KeyValuePairs()" attrib="2182" returntype="System.Collections.Generic.IList`1[System.Collections.Generic.KeyValuePair`2[System.UriTemplate,System.Object]]">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="MakeReadOnly(System.Boolean)" attrib="134" returntype="System.Void">
+                <attributes />
+                <parameters>
+                  <parameter name="allowDuplicateEquivalentUriTemplates" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="Match(System.Uri)" attrib="134" returntype="System.Collections.ObjectModel.Collection`1[System.UriTemplateMatch]">
+                <parameters>
+                  <parameter name="uri" position="0" attrib="0" type="System.Uri" />
+                </parameters>
+              </method>
+              <method name="MatchSingle(System.Uri)" attrib="134" returntype="System.UriTemplateMatch">
+                <parameters>
+                  <parameter name="uri" position="0" attrib="0" type="System.Uri" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+        </classes>
+      </namespace>
+      <namespace name="System.ServiceModel">
+        <classes>
+          <class name="WebHttpBinding" type="class" base="System.ServiceModel.Channels.Binding" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.ServiceModel.Channels.IBindingRuntimePreferences" />
+              <interface name="System.ServiceModel.IDefaultCommunicationTimeouts" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.ServiceModel.WebHttpSecurityMode)" attrib="6278">
+                <parameters>
+                  <parameter name="securityMode" position="0" attrib="0" type="System.ServiceModel.WebHttpSecurityMode" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="configurationName" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="EnvelopeVersion" attrib="0" ptype="System.ServiceModel.EnvelopeVersion">
+                <methods>
+                  <method name="get_EnvelopeVersion()" attrib="2182" returntype="System.ServiceModel.EnvelopeVersion">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="MaxBufferSize" attrib="0" ptype="System.Int32">
+                <attributes>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="524288" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_MaxBufferSize()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                  <method name="set_MaxBufferSize(System.Int32)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="MaxReceivedMessageSize" attrib="0" ptype="System.Int64">
+                <attributes>
+                  <attribute name="System.ComponentModel.DefaultValueAttribute">
+                    <properties>
+                      <property name="Value" value="65536" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_MaxReceivedMessageSize()" attrib="2182" returntype="System.Int64">
+                    <parameters />
+                  </method>
+                  <method name="set_MaxReceivedMessageSize(System.Int64)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int64" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="ReaderQuotas" attrib="0" ptype="System.Xml.XmlDictionaryReaderQuotas">
+                <methods>
+                  <method name="get_ReaderQuotas()" attrib="2182" returntype="System.Xml.XmlDictionaryReaderQuotas">
+                    <parameters />
+                  </method>
+                  <method name="set_ReaderQuotas(System.Xml.XmlDictionaryReaderQuotas)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Xml.XmlDictionaryReaderQuotas" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Scheme" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Scheme()" attrib="2246" virtual="true" is-override="true" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Security" attrib="0" ptype="System.ServiceModel.WebHttpSecurity">
+                <methods>
+                  <method name="get_Security()" attrib="2182" returntype="System.ServiceModel.WebHttpSecurity">
+                    <parameters />
+                  </method>
+                  <method name="set_Security(System.ServiceModel.WebHttpSecurity)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.ServiceModel.WebHttpSecurity" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="WriteEncoding" attrib="0" ptype="System.Text.Encoding">
+                <methods>
+                  <method name="get_WriteEncoding()" attrib="2182" returntype="System.Text.Encoding">
+                    <parameters />
+                  </method>
+                  <method name="set_WriteEncoding(System.Text.Encoding)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Text.Encoding" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="CreateBindingElements()" attrib="198" virtual="true" is-override="true" returntype="System.ServiceModel.Channels.BindingElementCollection">
+                <parameters />
+              </method>
+              <method name="ShouldSerializeReaderQuotas()" attrib="134" returntype="System.Boolean">
+                <attributes>
+                  <attribute name="System.ComponentModel.EditorBrowsableAttribute">
+                    <properties>
+                      <property name="State" value="Advanced" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters />
+              </method>
+              <method name="ShouldSerializeSecurity()" attrib="134" returntype="System.Boolean">
+                <attributes>
+                  <attribute name="System.ComponentModel.EditorBrowsableAttribute">
+                    <properties>
+                      <property name="State" value="Advanced" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters />
+              </method>
+              <method name="ShouldSerializeWriteEncoding()" attrib="134" returntype="System.Boolean">
+                <attributes>
+                  <attribute name="System.ComponentModel.EditorBrowsableAttribute">
+                    <properties>
+                      <property name="State" value="Advanced" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="WebHttpSecurity" type="class" base="System.Object" sealed="true" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Mode" attrib="0" ptype="System.ServiceModel.WebHttpSecurityMode">
+                <methods>
+                  <method name="get_Mode()" attrib="2182" returntype="System.ServiceModel.WebHttpSecurityMode">
+                    <parameters />
+                  </method>
+                  <method name="set_Mode(System.ServiceModel.WebHttpSecurityMode)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.ServiceModel.WebHttpSecurityMode" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Transport" attrib="0" ptype="System.ServiceModel.HttpTransportSecurity">
+                <methods>
+                  <method name="get_Transport()" attrib="2182" returntype="System.ServiceModel.HttpTransportSecurity">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_Transport(System.ServiceModel.HttpTransportSecurity)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.ServiceModel.HttpTransportSecurity" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="ShouldSerializeMode()" attrib="134" returntype="System.Boolean">
+                <attributes>
+                  <attribute name="System.ComponentModel.EditorBrowsableAttribute">
+                    <properties>
+                      <property name="State" value="Advanced" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters />
+              </method>
+              <method name="ShouldSerializeTransport()" attrib="134" returntype="System.Boolean">
+                <attributes>
+                  <attribute name="System.ComponentModel.EditorBrowsableAttribute">
+                    <properties>
+                      <property name="State" value="Advanced" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="WebHttpSecurityMode" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="None" attrib="32854" fieldtype="System.ServiceModel.WebHttpSecurityMode" value="0" />
+              <field name="Transport" attrib="32854" fieldtype="System.ServiceModel.WebHttpSecurityMode" value="1" />
+              <field name="TransportCredentialOnly" attrib="32854" fieldtype="System.ServiceModel.WebHttpSecurityMode" value="2" />
+            </fields>
+          </class>
+        </classes>
+      </namespace>
+      <namespace name="System.ServiceModel.Channels">
+        <classes>
+          <class name="WebBodyFormatMessageProperty" type="class" base="System.Object" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.ServiceModel.Channels.IMessageProperty" />
+            </interfaces>
+            <fields>
+              <field name="Name" attrib="32854" fieldtype="System.String" value="WebBodyFormatMessageProperty" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(System.ServiceModel.Channels.WebContentFormat)" attrib="6278">
+                <parameters>
+                  <parameter name="format" position="0" attrib="0" type="System.ServiceModel.Channels.WebContentFormat" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Format" attrib="0" ptype="System.ServiceModel.Channels.WebContentFormat">
+                <methods>
+                  <method name="get_Format()" attrib="2182" returntype="System.ServiceModel.Channels.WebContentFormat">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="CreateCopy()" attrib="486" virtual="true" returntype="System.ServiceModel.Channels.IMessageProperty">
+                <parameters />
+              </method>
+              <method name="ToString()" attrib="198" virtual="true" is-override="true" returntype="System.String">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="WebContentFormat" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="Default" attrib="32854" fieldtype="System.ServiceModel.Channels.WebContentFormat" value="0" />
+              <field name="Json" attrib="32854" fieldtype="System.ServiceModel.Channels.WebContentFormat" value="2" />
+              <field name="Raw" attrib="32854" fieldtype="System.ServiceModel.Channels.WebContentFormat" value="3" />
+              <field name="Xml" attrib="32854" fieldtype="System.ServiceModel.Channels.WebContentFormat" value="1" />
+            </fields>
+          </class>
+          <class name="WebContentTypeMapper" type="class" base="System.Object" abstract="true" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor()" attrib="6276">
+                <parameters />
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="GetMessageFormatForContentType(System.String)" attrib="1478" abstract="true" virtual="true" returntype="System.ServiceModel.Channels.WebContentFormat">
+                <parameters>
+                  <parameter name="contentType" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="WebMessageEncodingBindingElement" type="class" base="System.ServiceModel.Channels.MessageEncodingBindingElement" sealed="true" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.Text.Encoding)" attrib="6278">
+                <parameters>
+                  <parameter name="writeEncoding" position="0" attrib="0" type="System.Text.Encoding" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="ContentTypeMapper" attrib="0" ptype="System.ServiceModel.Channels.WebContentTypeMapper">
+                <methods>
+                  <method name="get_ContentTypeMapper()" attrib="2182" returntype="System.ServiceModel.Channels.WebContentTypeMapper">
+                    <parameters />
+                  </method>
+                  <method name="set_ContentTypeMapper(System.ServiceModel.Channels.WebContentTypeMapper)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.ServiceModel.Channels.WebContentTypeMapper" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="MaxReadPoolSize" attrib="0" ptype="System.Int32">
+                <attributes />
+                <methods>
+                  <method name="get_MaxReadPoolSize()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                  <method name="set_MaxReadPoolSize(System.Int32)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="MaxWritePoolSize" attrib="0" ptype="System.Int32">
+                <attributes />
+                <methods>
+                  <method name="get_MaxWritePoolSize()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                  <method name="set_MaxWritePoolSize(System.Int32)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="MessageVersion" attrib="0" ptype="System.ServiceModel.Channels.MessageVersion">
+                <methods>
+                  <method name="get_MessageVersion()" attrib="2246" virtual="true" is-override="true" returntype="System.ServiceModel.Channels.MessageVersion">
+                    <parameters />
+                  </method>
+                  <method name="set_MessageVersion(System.ServiceModel.Channels.MessageVersion)" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.ServiceModel.Channels.MessageVersion" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="ReaderQuotas" attrib="0" ptype="System.Xml.XmlDictionaryReaderQuotas">
+                <methods>
+                  <method name="get_ReaderQuotas()" attrib="2182" returntype="System.Xml.XmlDictionaryReaderQuotas">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="WriteEncoding" attrib="0" ptype="System.Text.Encoding">
+                <methods>
+                  <method name="get_WriteEncoding()" attrib="2182" returntype="System.Text.Encoding">
+                    <parameters />
+                  </method>
+                  <method name="set_WriteEncoding(System.Text.Encoding)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Text.Encoding" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="BuildChannelFactory(System.ServiceModel.Channels.BindingContext)" attrib="198" virtual="true" is-override="true" returntype="System.ServiceModel.Channels.IChannelFactory`1[TChannel]">
+                <parameters>
+                  <parameter name="context" position="0" attrib="0" type="System.ServiceModel.Channels.BindingContext" />
+                </parameters>
+                <generic-parameters>
+                  <generic-parameter name="TChannel" attributes="0" />
+                </generic-parameters>
+              </method>
+              <method name="Clone()" attrib="198" virtual="true" is-override="true" returntype="System.ServiceModel.Channels.BindingElement">
+                <parameters />
+              </method>
+              <method name="CreateMessageEncoderFactory()" attrib="198" virtual="true" is-override="true" returntype="System.ServiceModel.Channels.MessageEncoderFactory">
+                <parameters />
+              </method>
+              <method name="GetProperty(System.ServiceModel.Channels.BindingContext)" attrib="198" virtual="true" is-override="true" returntype="T">
+                <parameters>
+                  <parameter name="context" position="0" attrib="0" type="System.ServiceModel.Channels.BindingContext" />
+                </parameters>
+                <generic-parameters>
+                  <generic-parameter name="T" attributes="4" />
+                </generic-parameters>
+              </method>
+            </methods>
+          </class>
+        </classes>
+      </namespace>
+      <namespace name="System.ServiceModel.Description">
+        <classes>
+          <class name="WebHttpBehavior" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.ServiceModel.Description.IEndpointBehavior" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="AutomaticFormatSelectionEnabled" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_AutomaticFormatSelectionEnabled()" attrib="2502" virtual="true" returntype="System.Boolean">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_AutomaticFormatSelectionEnabled(System.Boolean)" attrib="2502" virtual="true" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="DefaultBodyStyle" attrib="0" ptype="System.ServiceModel.Web.WebMessageBodyStyle">
+                <methods>
+                  <method name="get_DefaultBodyStyle()" attrib="2502" virtual="true" returntype="System.ServiceModel.Web.WebMessageBodyStyle">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_DefaultBodyStyle(System.ServiceModel.Web.WebMessageBodyStyle)" attrib="2502" virtual="true" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.ServiceModel.Web.WebMessageBodyStyle" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="DefaultOutgoingRequestFormat" attrib="0" ptype="System.ServiceModel.Web.WebMessageFormat">
+                <methods>
+                  <method name="get_DefaultOutgoingRequestFormat()" attrib="2502" virtual="true" returntype="System.ServiceModel.Web.WebMessageFormat">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_DefaultOutgoingRequestFormat(System.ServiceModel.Web.WebMessageFormat)" attrib="2502" virtual="true" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.ServiceModel.Web.WebMessageFormat" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="DefaultOutgoingResponseFormat" attrib="0" ptype="System.ServiceModel.Web.WebMessageFormat">
+                <methods>
+                  <method name="get_DefaultOutgoingResponseFormat()" attrib="2502" virtual="true" returntype="System.ServiceModel.Web.WebMessageFormat">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_DefaultOutgoingResponseFormat(System.ServiceModel.Web.WebMessageFormat)" attrib="2502" virtual="true" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.ServiceModel.Web.WebMessageFormat" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="FaultExceptionEnabled" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_FaultExceptionEnabled()" attrib="2502" virtual="true" returntype="System.Boolean">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_FaultExceptionEnabled(System.Boolean)" attrib="2502" virtual="true" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="HelpEnabled" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_HelpEnabled()" attrib="2502" virtual="true" returntype="System.Boolean">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_HelpEnabled(System.Boolean)" attrib="2502" virtual="true" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="AddBindingParameters(System.ServiceModel.Description.ServiceEndpoint, System.ServiceModel.Channels.BindingParameterCollection)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="endpoint" position="0" attrib="0" type="System.ServiceModel.Description.ServiceEndpoint" />
+                  <parameter name="bindingParameters" position="1" attrib="0" type="System.ServiceModel.Channels.BindingParameterCollection" />
+                </parameters>
+              </method>
+              <method name="AddClientErrorInspector(System.ServiceModel.Description.ServiceEndpoint, System.ServiceModel.Dispatcher.ClientRuntime)" attrib="452" virtual="true" returntype="System.Void">
+                <attributes />
+                <parameters>
+                  <parameter name="endpoint" position="0" attrib="0" type="System.ServiceModel.Description.ServiceEndpoint" />
+                  <parameter name="clientRuntime" position="1" attrib="0" type="System.ServiceModel.Dispatcher.ClientRuntime" />
+                </parameters>
+              </method>
+              <method name="ApplyClientBehavior(System.ServiceModel.Description.ServiceEndpoint, System.ServiceModel.Dispatcher.ClientRuntime)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="endpoint" position="0" attrib="0" type="System.ServiceModel.Description.ServiceEndpoint" />
+                  <parameter name="clientRuntime" position="1" attrib="0" type="System.ServiceModel.Dispatcher.ClientRuntime" />
+                </parameters>
+              </method>
+              <method name="ApplyDispatchBehavior(System.ServiceModel.Description.ServiceEndpoint, System.ServiceModel.Dispatcher.EndpointDispatcher)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="endpoint" position="0" attrib="0" type="System.ServiceModel.Description.ServiceEndpoint" />
+                  <parameter name="endpointDispatcher" position="1" attrib="0" type="System.ServiceModel.Dispatcher.EndpointDispatcher" />
+                </parameters>
+              </method>
+              <method name="GetQueryStringConverter(System.ServiceModel.Description.OperationDescription)" attrib="452" virtual="true" returntype="System.ServiceModel.Dispatcher.QueryStringConverter">
+                <parameters>
+                  <parameter name="operationDescription" position="0" attrib="0" type="System.ServiceModel.Description.OperationDescription" />
+                </parameters>
+              </method>
+              <method name="GetReplyClientFormatter(System.ServiceModel.Description.OperationDescription, System.ServiceModel.Description.ServiceEndpoint)" attrib="452" virtual="true" returntype="System.ServiceModel.Dispatcher.IClientMessageFormatter">
+                <parameters>
+                  <parameter name="operationDescription" position="0" attrib="0" type="System.ServiceModel.Description.OperationDescription" />
+                  <parameter name="endpoint" position="1" attrib="0" type="System.ServiceModel.Description.ServiceEndpoint" />
+                </parameters>
+              </method>
+              <method name="GetRequestClientFormatter(System.ServiceModel.Description.OperationDescription, System.ServiceModel.Description.ServiceEndpoint)" attrib="452" virtual="true" returntype="System.ServiceModel.Dispatcher.IClientMessageFormatter">
+                <parameters>
+                  <parameter name="operationDescription" position="0" attrib="0" type="System.ServiceModel.Description.OperationDescription" />
+                  <parameter name="endpoint" position="1" attrib="0" type="System.ServiceModel.Description.ServiceEndpoint" />
+                </parameters>
+              </method>
+              <method name="Validate(System.ServiceModel.Description.ServiceEndpoint)" attrib="454" virtual="true" returntype="System.Void">
+                <attributes />
+                <parameters>
+                  <parameter name="endpoint" position="0" attrib="0" type="System.ServiceModel.Description.ServiceEndpoint" />
+                </parameters>
+              </method>
+              <method name="ValidateBinding(System.ServiceModel.Description.ServiceEndpoint)" attrib="452" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="endpoint" position="0" attrib="0" type="System.ServiceModel.Description.ServiceEndpoint" />
+                </parameters>
+              </method>
+              <method name="ValidateOperation(System.ServiceModel.Description.OperationDescription)" attrib="132" returntype="System.Void">
+                <parameters>
+                  <parameter name="operation" position="0" attrib="0" type="System.ServiceModel.Description.OperationDescription" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+        </classes>
+      </namespace>
+      <namespace name="System.ServiceModel.Dispatcher">
+        <classes>
+          <class name="JsonQueryStringConverter" type="class" base="System.ServiceModel.Dispatcher.QueryStringConverter" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="CanConvert(System.Type)" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="type" position="0" attrib="0" type="System.Type" />
+                </parameters>
+              </method>
+              <method name="ConvertStringToValue(System.String, System.Type)" attrib="198" virtual="true" is-override="true" returntype="System.Object">
+                <parameters>
+                  <parameter name="parameter" position="0" attrib="0" type="System.String" />
+                  <parameter name="parameterType" position="1" attrib="0" type="System.Type" />
+                </parameters>
+              </method>
+              <method name="ConvertValueToString(System.Object, System.Type)" attrib="198" virtual="true" is-override="true" returntype="System.String">
+                <parameters>
+                  <parameter name="parameter" position="0" attrib="0" type="System.Object" />
+                  <parameter name="parameterType" position="1" attrib="0" type="System.Type" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="QueryStringConverter" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="CanConvert(System.Type)" attrib="454" virtual="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="type" position="0" attrib="0" type="System.Type" />
+                </parameters>
+              </method>
+              <method name="ConvertStringToValue(System.String, System.Type)" attrib="454" virtual="true" returntype="System.Object">
+                <parameters>
+                  <parameter name="parameter" position="0" attrib="0" type="System.String" />
+                  <parameter name="parameterType" position="1" attrib="0" type="System.Type" />
+                </parameters>
+              </method>
+              <method name="ConvertValueToString(System.Object, System.Type)" attrib="454" virtual="true" returntype="System.String">
+                <parameters>
+                  <parameter name="parameter" position="0" attrib="0" type="System.Object" />
+                  <parameter name="parameterType" position="1" attrib="0" type="System.Type" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+        </classes>
+      </namespace>
+      <namespace name="System.ServiceModel.Web">
+        <classes>
+          <class name="IncomingWebResponseContext" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <properties>
+              <property name="ContentLength" attrib="0" ptype="System.Int64">
+                <methods>
+                  <method name="get_ContentLength()" attrib="2182" returntype="System.Int64">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="ContentType" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_ContentType()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="ETag" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_ETag()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Headers" attrib="0" ptype="System.Net.WebHeaderCollection">
+                <methods>
+                  <method name="get_Headers()" attrib="2182" returntype="System.Net.WebHeaderCollection">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Location" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Location()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="StatusCode" attrib="0" ptype="System.Net.HttpStatusCode">
+                <methods>
+                  <method name="get_StatusCode()" attrib="2182" returntype="System.Net.HttpStatusCode">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="StatusDescription" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_StatusDescription()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+          </class>
+          <class name="OutgoingWebRequestContext" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <properties>
+              <property name="Accept" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Accept()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_Accept(System.String)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="ContentLength" attrib="0" ptype="System.Int64">
+                <methods>
+                  <method name="get_ContentLength()" attrib="2182" returntype="System.Int64">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_ContentLength(System.Int64)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int64" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="ContentType" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_ContentType()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_ContentType(System.String)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Headers" attrib="0" ptype="System.Net.WebHeaderCollection">
+                <methods>
+                  <method name="get_Headers()" attrib="2182" returntype="System.Net.WebHeaderCollection">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IfMatch" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_IfMatch()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_IfMatch(System.String)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="IfModifiedSince" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_IfModifiedSince()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_IfModifiedSince(System.String)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="IfNoneMatch" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_IfNoneMatch()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_IfNoneMatch(System.String)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="IfUnmodifiedSince" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_IfUnmodifiedSince()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_IfUnmodifiedSince(System.String)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Method" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Method()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_Method(System.String)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="SuppressEntityBody" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_SuppressEntityBody()" attrib="2182" returntype="System.Boolean">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_SuppressEntityBody(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="UserAgent" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_UserAgent()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_UserAgent(System.String)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+          </class>
+          <class name="WebChannelFactory`1" type="class" base="System.ServiceModel.ChannelFactory`1[TChannel]" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+              <interface name="System.ServiceModel.Channels.IChannelFactory" />
+              <interface name="System.ServiceModel.Channels.IChannelFactory`1[TChannel]" />
+              <interface name="System.ServiceModel.ICommunicationObject" />
+            </interfaces>
+            <generic-parameters>
+              <generic-parameter name="TChannel" attributes="0" />
+            </generic-parameters>
+            <constructors>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="endpointConfigurationName" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Type)" attrib="6278">
+                <parameters>
+                  <parameter name="channelType" position="0" attrib="0" type="System.Type" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Uri)" attrib="6278">
+                <parameters>
+                  <parameter name="remoteAddress" position="0" attrib="0" type="System.Uri" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.ServiceModel.Channels.Binding, System.Uri)" attrib="6278">
+                <parameters>
+                  <parameter name="binding" position="0" attrib="0" type="System.ServiceModel.Channels.Binding" />
+                  <parameter name="remoteAddress" position="1" attrib="0" type="System.Uri" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Uri)" attrib="6278">
+                <parameters>
+                  <parameter name="endpointConfigurationName" position="0" attrib="0" type="System.String" />
+                  <parameter name="remoteAddress" position="1" attrib="0" type="System.Uri" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="OnOpening()" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="WebGetAttribute" type="class" base="System.Attribute" sealed="true" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.AttributeUsageAttribute">
+                <properties>
+                  <property name="ValidOn" value="Method" />
+                </properties>
+              </attribute>
+            </attributes>
+            <interfaces>
+              <interface name="System.ServiceModel.Description.IOperationBehavior" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="BodyStyle" attrib="0" ptype="System.ServiceModel.Web.WebMessageBodyStyle">
+                <methods>
+                  <method name="get_BodyStyle()" attrib="2182" returntype="System.ServiceModel.Web.WebMessageBodyStyle">
+                    <parameters />
+                  </method>
+                  <method name="set_BodyStyle(System.ServiceModel.Web.WebMessageBodyStyle)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.ServiceModel.Web.WebMessageBodyStyle" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="IsBodyStyleSetExplicitly" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsBodyStyleSetExplicitly()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IsRequestFormatSetExplicitly" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsRequestFormatSetExplicitly()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IsResponseFormatSetExplicitly" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsResponseFormatSetExplicitly()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="RequestFormat" attrib="0" ptype="System.ServiceModel.Web.WebMessageFormat">
+                <methods>
+                  <method name="get_RequestFormat()" attrib="2182" returntype="System.ServiceModel.Web.WebMessageFormat">
+                    <parameters />
+                  </method>
+                  <method name="set_RequestFormat(System.ServiceModel.Web.WebMessageFormat)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.ServiceModel.Web.WebMessageFormat" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="ResponseFormat" attrib="0" ptype="System.ServiceModel.Web.WebMessageFormat">
+                <methods>
+                  <method name="get_ResponseFormat()" attrib="2182" returntype="System.ServiceModel.Web.WebMessageFormat">
+                    <parameters />
+                  </method>
+                  <method name="set_ResponseFormat(System.ServiceModel.Web.WebMessageFormat)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.ServiceModel.Web.WebMessageFormat" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="UriTemplate" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_UriTemplate()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_UriTemplate(System.String)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+          </class>
+          <class name="WebInvokeAttribute" type="class" base="System.Attribute" sealed="true" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.AttributeUsageAttribute">
+                <properties>
+                  <property name="ValidOn" value="Method" />
+                </properties>
+              </attribute>
+            </attributes>
+            <interfaces>
+              <interface name="System.ServiceModel.Description.IOperationBehavior" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="BodyStyle" attrib="0" ptype="System.ServiceModel.Web.WebMessageBodyStyle">
+                <methods>
+                  <method name="get_BodyStyle()" attrib="2182" returntype="System.ServiceModel.Web.WebMessageBodyStyle">
+                    <parameters />
+                  </method>
+                  <method name="set_BodyStyle(System.ServiceModel.Web.WebMessageBodyStyle)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.ServiceModel.Web.WebMessageBodyStyle" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="IsBodyStyleSetExplicitly" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsBodyStyleSetExplicitly()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IsRequestFormatSetExplicitly" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsRequestFormatSetExplicitly()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IsResponseFormatSetExplicitly" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsResponseFormatSetExplicitly()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Method" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Method()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_Method(System.String)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="RequestFormat" attrib="0" ptype="System.ServiceModel.Web.WebMessageFormat">
+                <methods>
+                  <method name="get_RequestFormat()" attrib="2182" returntype="System.ServiceModel.Web.WebMessageFormat">
+                    <parameters />
+                  </method>
+                  <method name="set_RequestFormat(System.ServiceModel.Web.WebMessageFormat)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.ServiceModel.Web.WebMessageFormat" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="ResponseFormat" attrib="0" ptype="System.ServiceModel.Web.WebMessageFormat">
+                <methods>
+                  <method name="get_ResponseFormat()" attrib="2182" returntype="System.ServiceModel.Web.WebMessageFormat">
+                    <parameters />
+                  </method>
+                  <method name="set_ResponseFormat(System.ServiceModel.Web.WebMessageFormat)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.ServiceModel.Web.WebMessageFormat" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="UriTemplate" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_UriTemplate()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_UriTemplate(System.String)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+          </class>
+          <class name="WebMessageBodyStyle" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="Bare" attrib="32854" fieldtype="System.ServiceModel.Web.WebMessageBodyStyle" value="0" />
+              <field name="Wrapped" attrib="32854" fieldtype="System.ServiceModel.Web.WebMessageBodyStyle" value="1" />
+              <field name="WrappedRequest" attrib="32854" fieldtype="System.ServiceModel.Web.WebMessageBodyStyle" value="2" />
+              <field name="WrappedResponse" attrib="32854" fieldtype="System.ServiceModel.Web.WebMessageBodyStyle" value="3" />
+            </fields>
+          </class>
+          <class name="WebMessageFormat" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="Json" attrib="32854" fieldtype="System.ServiceModel.Web.WebMessageFormat" value="1" />
+              <field name="Xml" attrib="32854" fieldtype="System.ServiceModel.Web.WebMessageFormat" value="0" />
+            </fields>
+          </class>
+          <class name="WebOperationContext" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor(System.ServiceModel.OperationContext)" attrib="6278">
+                <parameters>
+                  <parameter name="operationContext" position="0" attrib="0" type="System.ServiceModel.OperationContext" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="IncomingResponse" attrib="0" ptype="System.ServiceModel.Web.IncomingWebResponseContext">
+                <methods>
+                  <method name="get_IncomingResponse()" attrib="2182" returntype="System.ServiceModel.Web.IncomingWebResponseContext">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="OutgoingRequest" attrib="0" ptype="System.ServiceModel.Web.OutgoingWebRequestContext">
+                <methods>
+                  <method name="get_OutgoingRequest()" attrib="2182" returntype="System.ServiceModel.Web.OutgoingWebRequestContext">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Attach(System.ServiceModel.OperationContext)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="owner" position="0" attrib="0" type="System.ServiceModel.OperationContext" />
+                </parameters>
+              </method>
+              <method name="Detach(System.ServiceModel.OperationContext)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="owner" position="0" attrib="0" type="System.ServiceModel.OperationContext" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+        </classes>
+      </namespace>
+    </namespaces>
+  </assembly>
+</assemblies>

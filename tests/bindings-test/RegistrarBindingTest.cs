@@ -28,10 +28,16 @@ namespace Xamarin.BindingTests
 				obj.TestObject = new BlockCallbackClass ();
 				obj.CallOptionalCallback ();
 				obj.CallRequiredCallback ();
+				ObjCBlockTester.TestClass = new Class (typeof (BlockCallbackClass));
+				ObjCBlockTester.CallRequiredStaticCallback ();
+				ObjCBlockTester.CallOptionalStaticCallback ();
 
 				obj.TestObject = new BlockCallbackClassExplicit ();
 				obj.CallOptionalCallback ();
 				obj.CallRequiredCallback ();
+				ObjCBlockTester.TestClass = new Class (typeof (BlockCallbackClassExplicit));
+				ObjCBlockTester.CallRequiredStaticCallback ();
+				ObjCBlockTester.CallOptionalStaticCallback ();
 			}
 		}
 
@@ -47,6 +53,18 @@ namespace Xamarin.BindingTests
 			{
 				completionHandler (42);
 			}
+
+			[Export ("requiredStaticCallback:")]
+			public static void RequiredStaticCallback (Action<int> completionHandler)
+			{
+				completionHandler (42);
+			}
+
+			[Export ("optionalStaticCallback:")]
+			public static void OptionalStaticCallback (Action<int> completionHandler)
+			{
+				completionHandler (42);
+			}
 		}
 
 		class BlockCallbackClassExplicit : NSObject, IObjCProtocolBlockTest
@@ -59,6 +77,18 @@ namespace Xamarin.BindingTests
 
 			[Export ("optionalCallback:")]
 			public void OptionalCallback (Action<int> completionHandler)
+			{
+				completionHandler (42);
+			}
+
+			[Export ("requiredStaticCallback:")]
+			public static void RequiredStaticCallback (Action<int> completionHandler)
+			{
+				completionHandler (42);
+			}
+
+			[Export ("optionalStaticCallback:")]
+			public static void OptionalRequiredCallback (Action<int> completionHandler)
 			{
 				completionHandler (42);
 			}

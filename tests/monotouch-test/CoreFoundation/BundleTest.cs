@@ -181,7 +181,8 @@ namespace MonoTouchFixtures.CoreFoundation {
 			var preferred = new string [] {"en", "es"};
 			var used = CFBundle.GetPreferredLocalizations (preferred);
 			Assert.IsTrue (used.Length > 0);
-			Assert.That (used, Has.Exactly (1).EqualTo ("en"));
+			foreach (var u in used)
+				Assert.That (preferred, Contains.Item (u), u);
 		}
 
 		[Test]

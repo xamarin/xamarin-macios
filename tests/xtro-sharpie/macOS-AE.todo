@@ -19,6 +19,7 @@
 !missing-pinvoke! AEDecodeMessage is not bound
 !missing-pinvoke! AEDeleteItem is not bound
 !missing-pinvoke! AEDeleteParam is not bound
+!missing-pinvoke! AEDeterminePermissionToAutomateTarget is not bound
 !missing-pinvoke! AEDisposeDesc is not bound
 !missing-pinvoke! AEDisposeRemoteProcessResolver is not bound
 !missing-pinvoke! AEDisposeToken is not bound

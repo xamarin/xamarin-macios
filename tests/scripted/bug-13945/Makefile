@@ -16,7 +16,7 @@ bug-13945:
 
 	@cp .libs/ios/nativeA.arm64.o libNative.a
 	@$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/btouch-native binding.cs --link-with=libNative.a,Native -s:managed.cs -o:binding.dll
-	@$(SYSTEM_MCS) app.cs -r:$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/Xamarin.iOS.dll -r:binding.dll -out:app.exe
+	@$(SYSTEM_CSC) app.cs -r:$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/Xamarin.iOS.dll -r:binding.dll -out:app.exe
 	@$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/mtouch -r:binding.dll app.exe --abi=arm64  -sdk "$(IOS_SDK_VERSION)"  -dev:TheApp.app -sdkroot $(XCODE_DEVELOPER_ROOT) --cache=$(shell pwd)/cache -r:$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/Xamarin.iOS.dll
 
 	@cp -Rp cache cache-first

@@ -1,0 +1,1099 @@
+<?xml version="1.0" encoding="utf-8"?>
+<assemblies>
+  <assembly name="System.Transactions" version="2.0.5.0">
+    <attributes>
+      <attribute name="System.CLSCompliantAttribute">
+        <properties>
+          <property name="IsCompliant" value="True" />
+        </properties>
+      </attribute>
+      <attribute name="System.Diagnostics.DebuggableAttribute">
+        <properties>
+          <property name="IsJITTrackingEnabled" value="IgnoreSymbolStoreSequencePoints" />
+          <property name="IsJITOptimizerDisabled" value="IgnoreSymbolStoreSequencePoints" />
+          <property name="DebuggingFlags" value="IgnoreSymbolStoreSequencePoints" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyCompanyAttribute">
+        <properties>
+          <property name="Company" value="Mono development team" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyCopyrightAttribute">
+        <properties>
+          <property name="Copyright" value="(c) Various Mono authors" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyDefaultAliasAttribute">
+        <properties>
+          <property name="DefaultAlias" value="System.Transactions.dll" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyDelaySignAttribute">
+        <properties>
+          <property name="DelaySign" value="True" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyDescriptionAttribute">
+        <properties>
+          <property name="Description" value="System.Transactions.dll" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyFileVersionAttribute">
+        <properties>
+          <property name="Version" value="4.0.50524.0" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyInformationalVersionAttribute">
+        <properties>
+          <property name="InformationalVersion" value="4.0.50524.0" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyProductAttribute">
+        <properties>
+          <property name="Product" value="Mono Common Language Infrastructure" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyTitleAttribute">
+        <properties>
+          <property name="Title" value="System.Transactions.dll" />
+        </properties>
+      </attribute>
+      <attribute name="System.Resources.NeutralResourcesLanguageAttribute">
+        <properties>
+          <property name="CultureName" value="en-US" />
+        </properties>
+      </attribute>
+      <attribute name="System.Resources.SatelliteContractVersionAttribute">
+        <properties>
+          <property name="Version" value="2.0.5.0" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.CompilationRelaxationsAttribute">
+        <properties>
+          <property name="CompilationRelaxations" value="8" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.RuntimeCompatibilityAttribute">
+        <properties>
+          <property name="WrapNonExceptionThrows" value="True" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.InteropServices.BestFitMappingAttribute">
+        <properties>
+          <property name="BestFitMapping" value="False" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
+        <properties>
+          <property name="Value" value="False" />
+        </properties>
+      </attribute>
+      <attribute name="System.Security.AllowPartiallyTrustedCallersAttribute" />
+    </attributes>
+    <namespaces>
+      <namespace name="System.Transactions">
+        <classes>
+          <class name="CommittableTransaction" type="class" base="System.Transactions.Transaction" sealed="true" serializable="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IAsyncResult" />
+              <interface name="System.IDisposable" />
+              <interface name="System.Runtime.Serialization.ISerializable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.TimeSpan)" attrib="6278">
+                <parameters>
+                  <parameter name="timeout" position="0" attrib="0" type="System.TimeSpan" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Transactions.TransactionOptions)" attrib="6278">
+                <parameters>
+                  <parameter name="options" position="0" attrib="0" type="System.Transactions.TransactionOptions" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="BeginCommit(System.AsyncCallback, System.Object)" attrib="134" returntype="System.IAsyncResult">
+                <parameters>
+                  <parameter name="asyncCallback" position="0" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="asyncState" position="1" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="Commit()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="EndCommit(System.IAsyncResult)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="asyncResult" position="0" attrib="0" type="System.IAsyncResult" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="DependentCloneOption" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="BlockCommitUntilComplete" attrib="32854" fieldtype="System.Transactions.DependentCloneOption" value="0" />
+              <field name="RollbackIfNotComplete" attrib="32854" fieldtype="System.Transactions.DependentCloneOption" value="1" />
+            </fields>
+          </class>
+          <class name="DependentTransaction" type="class" base="System.Transactions.Transaction" sealed="true" serializable="true" charset="Ansi" layout="Auto">
+            <attributes />
+            <interfaces>
+              <interface name="System.IDisposable" />
+              <interface name="System.Runtime.Serialization.ISerializable" />
+            </interfaces>
+            <methods>
+              <method name="Complete()" attrib="134" returntype="System.Void">
+                <attributes />
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="Enlistment" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <methods>
+              <method name="Done()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="EnlistmentOptions" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <attributes>
+              <attribute name="System.FlagsAttribute" />
+            </attributes>
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="EnlistDuringPrepareRequired" attrib="32854" fieldtype="System.Transactions.EnlistmentOptions" value="1" />
+              <field name="None" attrib="32854" fieldtype="System.Transactions.EnlistmentOptions" value="0" />
+            </fields>
+          </class>
+          <class name="EnterpriseServicesInteropOption" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="Automatic" attrib="32854" fieldtype="System.Transactions.EnterpriseServicesInteropOption" value="1" />
+              <field name="Full" attrib="32854" fieldtype="System.Transactions.EnterpriseServicesInteropOption" value="2" />
+              <field name="None" attrib="32854" fieldtype="System.Transactions.EnterpriseServicesInteropOption" value="0" />
+            </fields>
+          </class>
+          <class name="HostCurrentTransactionCallback" type="delegate" base="System.MulticastDelegate" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.ICloneable" />
+              <interface name="System.Runtime.Serialization.ISerializable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.Object, System.IntPtr)" attrib="6278">
+                <parameters>
+                  <parameter name="object" position="0" attrib="0" type="System.Object" />
+                  <parameter name="method" position="1" attrib="0" type="System.IntPtr" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="BeginInvoke(System.AsyncCallback, System.Object)" attrib="454" virtual="true" returntype="System.IAsyncResult">
+                <parameters>
+                  <parameter name="callback" position="0" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="object" position="1" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="EndInvoke(System.IAsyncResult)" attrib="454" virtual="true" returntype="System.Transactions.Transaction">
+                <parameters>
+                  <parameter name="result" position="0" attrib="0" type="System.IAsyncResult" />
+                </parameters>
+              </method>
+              <method name="Invoke()" attrib="454" virtual="true" returntype="System.Transactions.Transaction">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="IDtcTransaction" type="interface" abstract="true" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.Runtime.InteropServices.InterfaceTypeAttribute">
+                <properties>
+                  <property name="Value" value="InterfaceIsIUnknown" />
+                </properties>
+              </attribute>
+            </attributes>
+            <methods>
+              <method name="Abort(System.IntPtr, System.Int32, System.Int32)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="reason" position="0" attrib="0" type="System.IntPtr" />
+                  <parameter name="retaining" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="async" position="2" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="Commit(System.Int32, System.Int32, System.Int32)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="retaining" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="commitType" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="reserved" position="2" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetTransactionInfo(System.IntPtr)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="transactionInformation" position="0" attrib="0" type="System.IntPtr" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="IEnlistmentNotification" type="interface" abstract="true" charset="Ansi" layout="Auto">
+            <methods>
+              <method name="Commit(System.Transactions.Enlistment)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="enlistment" position="0" attrib="0" type="System.Transactions.Enlistment" />
+                </parameters>
+              </method>
+              <method name="InDoubt(System.Transactions.Enlistment)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="enlistment" position="0" attrib="0" type="System.Transactions.Enlistment" />
+                </parameters>
+              </method>
+              <method name="Prepare(System.Transactions.PreparingEnlistment)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="preparingEnlistment" position="0" attrib="0" type="System.Transactions.PreparingEnlistment" />
+                </parameters>
+              </method>
+              <method name="Rollback(System.Transactions.Enlistment)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="enlistment" position="0" attrib="0" type="System.Transactions.Enlistment" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="IPromotableSinglePhaseNotification" type="interface" abstract="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.Transactions.ITransactionPromoter" />
+            </interfaces>
+            <methods>
+              <method name="Initialize()" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="Rollback(System.Transactions.SinglePhaseEnlistment)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="singlePhaseEnlistment" position="0" attrib="0" type="System.Transactions.SinglePhaseEnlistment" />
+                </parameters>
+              </method>
+              <method name="SinglePhaseCommit(System.Transactions.SinglePhaseEnlistment)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="singlePhaseEnlistment" position="0" attrib="0" type="System.Transactions.SinglePhaseEnlistment" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="ISimpleTransactionSuperior" type="interface" abstract="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.Transactions.ITransactionPromoter" />
+            </interfaces>
+            <methods>
+              <method name="Rollback()" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="ISinglePhaseNotification" type="interface" abstract="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.Transactions.IEnlistmentNotification" />
+            </interfaces>
+            <methods>
+              <method name="SinglePhaseCommit(System.Transactions.SinglePhaseEnlistment)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="singlePhaseEnlistment" position="0" attrib="0" type="System.Transactions.SinglePhaseEnlistment" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="ITransactionPromoter" type="interface" abstract="true" charset="Ansi" layout="Auto">
+            <methods>
+              <method name="Promote()" attrib="1478" abstract="true" virtual="true" returntype="System.Byte[]">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="IsolationLevel" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="Chaos" attrib="32854" fieldtype="System.Transactions.IsolationLevel" value="5" />
+              <field name="ReadCommitted" attrib="32854" fieldtype="System.Transactions.IsolationLevel" value="2" />
+              <field name="ReadUncommitted" attrib="32854" fieldtype="System.Transactions.IsolationLevel" value="3" />
+              <field name="RepeatableRead" attrib="32854" fieldtype="System.Transactions.IsolationLevel" value="1" />
+              <field name="Serializable" attrib="32854" fieldtype="System.Transactions.IsolationLevel" value="0" />
+              <field name="Snapshot" attrib="32854" fieldtype="System.Transactions.IsolationLevel" value="4" />
+              <field name="Unspecified" attrib="32854" fieldtype="System.Transactions.IsolationLevel" value="6" />
+            </fields>
+          </class>
+          <class name="PreparingEnlistment" type="class" base="System.Transactions.Enlistment" charset="Ansi" layout="Auto">
+            <methods>
+              <method name="ForceRollback()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="ForceRollback(System.Exception)" attrib="134" returntype="System.Void">
+                <attributes />
+                <parameters>
+                  <parameter name="e" position="0" attrib="0" type="System.Exception" />
+                </parameters>
+              </method>
+              <method name="Prepared()" attrib="134" returntype="System.Void">
+                <attributes />
+                <parameters />
+              </method>
+              <method name="RecoveryInformation()" attrib="134" returntype="System.Byte[]">
+                <attributes />
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="SinglePhaseEnlistment" type="class" base="System.Transactions.Enlistment" charset="Ansi" layout="Auto">
+            <methods>
+              <method name="Aborted()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="Aborted(System.Exception)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="e" position="0" attrib="0" type="System.Exception" />
+                </parameters>
+              </method>
+              <method name="Committed()" attrib="134" returntype="System.Void">
+                <attributes />
+                <parameters />
+              </method>
+              <method name="InDoubt()" attrib="134" returntype="System.Void">
+                <attributes />
+                <parameters />
+              </method>
+              <method name="InDoubt(System.Exception)" attrib="134" returntype="System.Void">
+                <attributes />
+                <parameters>
+                  <parameter name="e" position="0" attrib="0" type="System.Exception" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="SubordinateTransaction" type="class" base="System.Transactions.Transaction" sealed="true" serializable="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+              <interface name="System.Runtime.Serialization.ISerializable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.Transactions.IsolationLevel, System.Transactions.ISimpleTransactionSuperior)" attrib="6278">
+                <parameters>
+                  <parameter name="isoLevel" position="0" attrib="0" type="System.Transactions.IsolationLevel" />
+                  <parameter name="superior" position="1" attrib="0" type="System.Transactions.ISimpleTransactionSuperior" />
+                </parameters>
+              </constructor>
+            </constructors>
+          </class>
+          <class name="Transaction" type="class" base="System.Object" serializable="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+              <interface name="System.Runtime.Serialization.ISerializable" />
+            </interfaces>
+            <properties>
+              <property name="Current" attrib="0" ptype="System.Transactions.Transaction">
+                <methods>
+                  <method name="get_Current()" attrib="2198" static="true" returntype="System.Transactions.Transaction">
+                    <parameters />
+                  </method>
+                  <method name="set_Current(System.Transactions.Transaction)" attrib="2198" static="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Transactions.Transaction" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="IsolationLevel" attrib="0" ptype="System.Transactions.IsolationLevel">
+                <methods>
+                  <method name="get_IsolationLevel()" attrib="2182" returntype="System.Transactions.IsolationLevel">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="PromoterType" attrib="0" ptype="System.Guid">
+                <methods>
+                  <method name="get_PromoterType()" attrib="2182" returntype="System.Guid">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="TransactionInformation" attrib="0" ptype="System.Transactions.TransactionInformation">
+                <methods>
+                  <method name="get_TransactionInformation()" attrib="2182" returntype="System.Transactions.TransactionInformation">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <events>
+              <event name="TransactionCompleted" attrib="0" eventtype="System.Transactions.TransactionCompletedEventHandler" />
+            </events>
+            <methods>
+              <method name="BeginCommitInternal(System.AsyncCallback)" attrib="132" returntype="System.IAsyncResult">
+                <parameters>
+                  <parameter name="callback" position="0" attrib="0" type="System.AsyncCallback" />
+                </parameters>
+              </method>
+              <method name="Clone()" attrib="134" returntype="System.Transactions.Transaction">
+                <parameters />
+              </method>
+              <method name="DependentClone(System.Transactions.DependentCloneOption)" attrib="134" returntype="System.Transactions.DependentTransaction">
+                <attributes />
+                <parameters>
+                  <parameter name="cloneOption" position="0" attrib="0" type="System.Transactions.DependentCloneOption" />
+                </parameters>
+              </method>
+              <method name="Dispose()" attrib="486" virtual="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="EndCommitInternal(System.IAsyncResult)" attrib="132" returntype="System.Void">
+                <parameters>
+                  <parameter name="ar" position="0" attrib="0" type="System.IAsyncResult" />
+                </parameters>
+              </method>
+              <method name="EnlistDurable(System.Guid, System.Transactions.IEnlistmentNotification, System.Transactions.EnlistmentOptions)" attrib="16518" returntype="System.Transactions.Enlistment">
+                <attributes />
+                <parameters>
+                  <parameter name="resourceManagerIdentifier" position="0" attrib="0" type="System.Guid" />
+                  <parameter name="enlistmentNotification" position="1" attrib="0" type="System.Transactions.IEnlistmentNotification" />
+                  <parameter name="enlistmentOptions" position="2" attrib="0" type="System.Transactions.EnlistmentOptions" />
+                </parameters>
+              </method>
+              <method name="EnlistDurable(System.Guid, System.Transactions.ISinglePhaseNotification, System.Transactions.EnlistmentOptions)" attrib="16518" returntype="System.Transactions.Enlistment">
+                <attributes />
+                <parameters>
+                  <parameter name="resourceManagerIdentifier" position="0" attrib="0" type="System.Guid" />
+                  <parameter name="singlePhaseNotification" position="1" attrib="0" type="System.Transactions.ISinglePhaseNotification" />
+                  <parameter name="enlistmentOptions" position="2" attrib="0" type="System.Transactions.EnlistmentOptions" />
+                </parameters>
+              </method>
+              <method name="EnlistPromotableSinglePhase(System.Transactions.IPromotableSinglePhaseNotification)" attrib="134" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="promotableSinglePhaseNotification" position="0" attrib="0" type="System.Transactions.IPromotableSinglePhaseNotification" />
+                </parameters>
+              </method>
+              <method name="EnlistPromotableSinglePhase(System.Transactions.IPromotableSinglePhaseNotification, System.Guid)" attrib="134" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="promotableSinglePhaseNotification" position="0" attrib="0" type="System.Transactions.IPromotableSinglePhaseNotification" />
+                  <parameter name="promoterType" position="1" attrib="0" type="System.Guid" />
+                </parameters>
+              </method>
+              <method name="EnlistVolatile(System.Transactions.IEnlistmentNotification, System.Transactions.EnlistmentOptions)" attrib="134" returntype="System.Transactions.Enlistment">
+                <attributes />
+                <parameters>
+                  <parameter name="enlistmentNotification" position="0" attrib="0" type="System.Transactions.IEnlistmentNotification" />
+                  <parameter name="enlistmentOptions" position="1" attrib="0" type="System.Transactions.EnlistmentOptions" />
+                </parameters>
+              </method>
+              <method name="EnlistVolatile(System.Transactions.ISinglePhaseNotification, System.Transactions.EnlistmentOptions)" attrib="134" returntype="System.Transactions.Enlistment">
+                <attributes />
+                <parameters>
+                  <parameter name="singlePhaseNotification" position="0" attrib="0" type="System.Transactions.ISinglePhaseNotification" />
+                  <parameter name="enlistmentOptions" position="1" attrib="0" type="System.Transactions.EnlistmentOptions" />
+                </parameters>
+              </method>
+              <method name="Equals(System.Object)" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="obj" position="0" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="GetHashCode()" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
+                <parameters />
+              </method>
+              <method name="GetPromotedToken()" attrib="134" returntype="System.Byte[]">
+                <parameters />
+              </method>
+              <method name="PromoteAndEnlistDurable(System.Guid, System.Transactions.IPromotableSinglePhaseNotification, System.Transactions.ISinglePhaseNotification, System.Transactions.EnlistmentOptions)" attrib="16518" returntype="System.Transactions.Enlistment">
+                <attributes />
+                <parameters>
+                  <parameter name="manager" position="0" attrib="0" type="System.Guid" />
+                  <parameter name="promotableNotification" position="1" attrib="0" type="System.Transactions.IPromotableSinglePhaseNotification" />
+                  <parameter name="notification" position="2" attrib="0" type="System.Transactions.ISinglePhaseNotification" />
+                  <parameter name="options" position="3" attrib="0" type="System.Transactions.EnlistmentOptions" />
+                </parameters>
+              </method>
+              <method name="Rollback()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="Rollback(System.Exception)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="e" position="0" attrib="0" type="System.Exception" />
+                </parameters>
+              </method>
+              <method name="SetDistributedTransactionIdentifier(System.Transactions.IPromotableSinglePhaseNotification, System.Guid)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="promotableNotification" position="0" attrib="0" type="System.Transactions.IPromotableSinglePhaseNotification" />
+                  <parameter name="distributedTransactionIdentifier" position="1" attrib="0" type="System.Guid" />
+                </parameters>
+              </method>
+              <method name="op_Equality(System.Transactions.Transaction, System.Transactions.Transaction)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="x" position="0" attrib="0" type="System.Transactions.Transaction" />
+                  <parameter name="y" position="1" attrib="0" type="System.Transactions.Transaction" />
+                </parameters>
+              </method>
+              <method name="op_Inequality(System.Transactions.Transaction, System.Transactions.Transaction)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="x" position="0" attrib="0" type="System.Transactions.Transaction" />
+                  <parameter name="y" position="1" attrib="0" type="System.Transactions.Transaction" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="TransactionAbortedException" type="class" base="System.Transactions.TransactionException" serializable="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.Runtime.Serialization.ISerializable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="6276">
+                <parameters>
+                  <parameter name="info" position="0" attrib="0" type="System.Runtime.Serialization.SerializationInfo" />
+                  <parameter name="context" position="1" attrib="0" type="System.Runtime.Serialization.StreamingContext" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Exception)" attrib="6278">
+                <parameters>
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
+                  <parameter name="innerException" position="1" attrib="0" type="System.Exception" />
+                </parameters>
+              </constructor>
+            </constructors>
+          </class>
+          <class name="TransactionCompletedEventHandler" type="delegate" base="System.MulticastDelegate" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.ICloneable" />
+              <interface name="System.Runtime.Serialization.ISerializable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.Object, System.IntPtr)" attrib="6278">
+                <parameters>
+                  <parameter name="object" position="0" attrib="0" type="System.Object" />
+                  <parameter name="method" position="1" attrib="0" type="System.IntPtr" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="BeginInvoke(System.Object, System.Transactions.TransactionEventArgs, System.AsyncCallback, System.Object)" attrib="454" virtual="true" returntype="System.IAsyncResult">
+                <parameters>
+                  <parameter name="sender" position="0" attrib="0" type="System.Object" />
+                  <parameter name="e" position="1" attrib="0" type="System.Transactions.TransactionEventArgs" />
+                  <parameter name="callback" position="2" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="object" position="3" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="EndInvoke(System.IAsyncResult)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="result" position="0" attrib="0" type="System.IAsyncResult" />
+                </parameters>
+              </method>
+              <method name="Invoke(System.Object, System.Transactions.TransactionEventArgs)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="sender" position="0" attrib="0" type="System.Object" />
+                  <parameter name="e" position="1" attrib="0" type="System.Transactions.TransactionEventArgs" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="TransactionEventArgs" type="class" base="System.EventArgs" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Transaction" attrib="0" ptype="System.Transactions.Transaction">
+                <methods>
+                  <method name="get_Transaction()" attrib="2182" returntype="System.Transactions.Transaction">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+          </class>
+          <class name="TransactionException" type="class" base="System.SystemException" serializable="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.Runtime.Serialization.ISerializable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="6276">
+                <parameters>
+                  <parameter name="info" position="0" attrib="0" type="System.Runtime.Serialization.SerializationInfo" />
+                  <parameter name="context" position="1" attrib="0" type="System.Runtime.Serialization.StreamingContext" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Exception)" attrib="6278">
+                <parameters>
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
+                  <parameter name="innerException" position="1" attrib="0" type="System.Exception" />
+                </parameters>
+              </constructor>
+            </constructors>
+          </class>
+          <class name="TransactionInDoubtException" type="class" base="System.Transactions.TransactionException" serializable="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.Runtime.Serialization.ISerializable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="6276">
+                <parameters>
+                  <parameter name="info" position="0" attrib="0" type="System.Runtime.Serialization.SerializationInfo" />
+                  <parameter name="context" position="1" attrib="0" type="System.Runtime.Serialization.StreamingContext" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Exception)" attrib="6278">
+                <parameters>
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
+                  <parameter name="innerException" position="1" attrib="0" type="System.Exception" />
+                </parameters>
+              </constructor>
+            </constructors>
+          </class>
+          <class name="TransactionInformation" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <properties>
+              <property name="CreationTime" attrib="0" ptype="System.DateTime">
+                <methods>
+                  <method name="get_CreationTime()" attrib="2182" returntype="System.DateTime">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="DistributedIdentifier" attrib="0" ptype="System.Guid">
+                <methods>
+                  <method name="get_DistributedIdentifier()" attrib="2182" returntype="System.Guid">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="LocalIdentifier" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_LocalIdentifier()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Status" attrib="0" ptype="System.Transactions.TransactionStatus">
+                <methods>
+                  <method name="get_Status()" attrib="2182" returntype="System.Transactions.TransactionStatus">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+          </class>
+          <class name="TransactionInterop" type="class" base="System.Object" sealed="true" abstract="true" charset="Ansi" layout="Auto">
+            <attributes />
+            <fields>
+              <field name="PromoterTypeDtc" attrib="54" fieldtype="System.Guid" />
+            </fields>
+            <methods>
+              <method name="GetDtcTransaction(System.Transactions.Transaction)" attrib="150" static="true" returntype="System.Transactions.IDtcTransaction">
+                <attributes />
+                <parameters>
+                  <parameter name="transaction" position="0" attrib="0" type="System.Transactions.Transaction" />
+                </parameters>
+              </method>
+              <method name="GetExportCookie(System.Transactions.Transaction, System.Byte[])" attrib="150" static="true" returntype="System.Byte[]">
+                <attributes />
+                <parameters>
+                  <parameter name="transaction" position="0" attrib="0" type="System.Transactions.Transaction" />
+                  <parameter name="whereabouts" position="1" attrib="0" type="System.Byte[]" />
+                </parameters>
+              </method>
+              <method name="GetTransactionFromDtcTransaction(System.Transactions.IDtcTransaction)" attrib="150" static="true" returntype="System.Transactions.Transaction">
+                <attributes />
+                <parameters>
+                  <parameter name="transactionNative" position="0" attrib="0" type="System.Transactions.IDtcTransaction" />
+                </parameters>
+              </method>
+              <method name="GetTransactionFromExportCookie(System.Byte[])" attrib="150" static="true" returntype="System.Transactions.Transaction">
+                <attributes />
+                <parameters>
+                  <parameter name="cookie" position="0" attrib="0" type="System.Byte[]" />
+                </parameters>
+              </method>
+              <method name="GetTransactionFromTransmitterPropagationToken(System.Byte[])" attrib="150" static="true" returntype="System.Transactions.Transaction">
+                <attributes />
+                <parameters>
+                  <parameter name="propagationToken" position="0" attrib="0" type="System.Byte[]" />
+                </parameters>
+              </method>
+              <method name="GetTransmitterPropagationToken(System.Transactions.Transaction)" attrib="150" static="true" returntype="System.Byte[]">
+                <attributes />
+                <parameters>
+                  <parameter name="transaction" position="0" attrib="0" type="System.Transactions.Transaction" />
+                </parameters>
+              </method>
+              <method name="GetWhereabouts()" attrib="150" static="true" returntype="System.Byte[]">
+                <attributes />
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="TransactionManager" type="class" base="System.Object" sealed="true" abstract="true" charset="Ansi" layout="Auto">
+            <properties>
+              <property name="DefaultTimeout" attrib="0" ptype="System.TimeSpan">
+                <methods>
+                  <method name="get_DefaultTimeout()" attrib="2198" static="true" returntype="System.TimeSpan">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="HostCurrentCallback" attrib="0" ptype="System.Transactions.HostCurrentTransactionCallback">
+                <attributes />
+                <methods>
+                  <method name="get_HostCurrentCallback()" attrib="2198" static="true" returntype="System.Transactions.HostCurrentTransactionCallback">
+                    <parameters />
+                  </method>
+                  <method name="set_HostCurrentCallback(System.Transactions.HostCurrentTransactionCallback)" attrib="2198" static="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Transactions.HostCurrentTransactionCallback" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="MaximumTimeout" attrib="0" ptype="System.TimeSpan">
+                <methods>
+                  <method name="get_MaximumTimeout()" attrib="2198" static="true" returntype="System.TimeSpan">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <events>
+              <event name="DistributedTransactionStarted" attrib="0" eventtype="System.Transactions.TransactionStartedEventHandler" />
+            </events>
+            <methods>
+              <method name="RecoveryComplete(System.Guid)" attrib="150" static="true" returntype="System.Void">
+                <attributes />
+                <parameters>
+                  <parameter name="resourceManagerIdentifier" position="0" attrib="0" type="System.Guid" />
+                </parameters>
+              </method>
+              <method name="Reenlist(System.Guid, System.Byte[], System.Transactions.IEnlistmentNotification)" attrib="150" static="true" returntype="System.Transactions.Enlistment">
+                <attributes />
+                <parameters>
+                  <parameter name="resourceManagerIdentifier" position="0" attrib="0" type="System.Guid" />
+                  <parameter name="recoveryInformation" position="1" attrib="0" type="System.Byte[]" />
+                  <parameter name="enlistmentNotification" position="2" attrib="0" type="System.Transactions.IEnlistmentNotification" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="TransactionManagerCommunicationException" type="class" base="System.Transactions.TransactionException" serializable="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.Runtime.Serialization.ISerializable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="6276">
+                <parameters>
+                  <parameter name="info" position="0" attrib="0" type="System.Runtime.Serialization.SerializationInfo" />
+                  <parameter name="context" position="1" attrib="0" type="System.Runtime.Serialization.StreamingContext" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Exception)" attrib="6278">
+                <parameters>
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
+                  <parameter name="innerException" position="1" attrib="0" type="System.Exception" />
+                </parameters>
+              </constructor>
+            </constructors>
+          </class>
+          <class name="TransactionOptions" type="struct" base="System.ValueType" sealed="true" charset="Ansi" layout="Sequential">
+            <properties>
+              <property name="IsolationLevel" attrib="0" ptype="System.Transactions.IsolationLevel">
+                <methods>
+                  <method name="get_IsolationLevel()" attrib="2182" returntype="System.Transactions.IsolationLevel">
+                    <parameters />
+                  </method>
+                  <method name="set_IsolationLevel(System.Transactions.IsolationLevel)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Transactions.IsolationLevel" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Timeout" attrib="0" ptype="System.TimeSpan">
+                <methods>
+                  <method name="get_Timeout()" attrib="2182" returntype="System.TimeSpan">
+                    <parameters />
+                  </method>
+                  <method name="set_Timeout(System.TimeSpan)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.TimeSpan" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Equals(System.Object)" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="obj" position="0" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="GetHashCode()" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
+                <parameters />
+              </method>
+              <method name="op_Equality(System.Transactions.TransactionOptions, System.Transactions.TransactionOptions)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="x" position="0" attrib="0" type="System.Transactions.TransactionOptions" />
+                  <parameter name="y" position="1" attrib="0" type="System.Transactions.TransactionOptions" />
+                </parameters>
+              </method>
+              <method name="op_Inequality(System.Transactions.TransactionOptions, System.Transactions.TransactionOptions)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="x" position="0" attrib="0" type="System.Transactions.TransactionOptions" />
+                  <parameter name="y" position="1" attrib="0" type="System.Transactions.TransactionOptions" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="TransactionPromotionException" type="class" base="System.Transactions.TransactionException" serializable="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.Runtime.Serialization.ISerializable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="6276">
+                <parameters>
+                  <parameter name="info" position="0" attrib="0" type="System.Runtime.Serialization.SerializationInfo" />
+                  <parameter name="context" position="1" attrib="0" type="System.Runtime.Serialization.StreamingContext" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Exception)" attrib="6278">
+                <parameters>
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
+                  <parameter name="innerException" position="1" attrib="0" type="System.Exception" />
+                </parameters>
+              </constructor>
+            </constructors>
+          </class>
+          <class name="TransactionScope" type="class" base="System.Object" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.Transactions.Transaction)" attrib="6278">
+                <parameters>
+                  <parameter name="transactionToUse" position="0" attrib="0" type="System.Transactions.Transaction" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Transactions.TransactionScopeAsyncFlowOption)" attrib="6278">
+                <parameters>
+                  <parameter name="asyncFlowOption" position="0" attrib="0" type="System.Transactions.TransactionScopeAsyncFlowOption" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Transactions.TransactionScopeOption)" attrib="6278">
+                <parameters>
+                  <parameter name="scopeOption" position="0" attrib="0" type="System.Transactions.TransactionScopeOption" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Transactions.Transaction, System.TimeSpan)" attrib="6278">
+                <parameters>
+                  <parameter name="transactionToUse" position="0" attrib="0" type="System.Transactions.Transaction" />
+                  <parameter name="scopeTimeout" position="1" attrib="0" type="System.TimeSpan" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Transactions.Transaction, System.Transactions.TransactionScopeAsyncFlowOption)" attrib="6278">
+                <parameters>
+                  <parameter name="transactionToUse" position="0" attrib="0" type="System.Transactions.Transaction" />
+                  <parameter name="asyncFlowOption" position="1" attrib="0" type="System.Transactions.TransactionScopeAsyncFlowOption" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Transactions.TransactionScopeOption, System.TimeSpan)" attrib="6278">
+                <parameters>
+                  <parameter name="scopeOption" position="0" attrib="0" type="System.Transactions.TransactionScopeOption" />
+                  <parameter name="scopeTimeout" position="1" attrib="0" type="System.TimeSpan" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Transactions.TransactionScopeOption, System.Transactions.TransactionOptions)" attrib="6278">
+                <parameters>
+                  <parameter name="scopeOption" position="0" attrib="0" type="System.Transactions.TransactionScopeOption" />
+                  <parameter name="transactionOptions" position="1" attrib="0" type="System.Transactions.TransactionOptions" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Transactions.TransactionScopeOption, System.Transactions.TransactionScopeAsyncFlowOption)" attrib="6278">
+                <parameters>
+                  <parameter name="option" position="0" attrib="0" type="System.Transactions.TransactionScopeOption" />
+                  <parameter name="asyncFlow" position="1" attrib="0" type="System.Transactions.TransactionScopeAsyncFlowOption" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Transactions.Transaction, System.TimeSpan, System.Transactions.EnterpriseServicesInteropOption)" attrib="6278">
+                <attributes />
+                <parameters>
+                  <parameter name="transactionToUse" position="0" attrib="0" type="System.Transactions.Transaction" />
+                  <parameter name="scopeTimeout" position="1" attrib="0" type="System.TimeSpan" />
+                  <parameter name="interopOption" position="2" attrib="0" type="System.Transactions.EnterpriseServicesInteropOption" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Transactions.Transaction, System.TimeSpan, System.Transactions.TransactionScopeAsyncFlowOption)" attrib="6278">
+                <parameters>
+                  <parameter name="transactionToUse" position="0" attrib="0" type="System.Transactions.Transaction" />
+                  <parameter name="scopeTimeout" position="1" attrib="0" type="System.TimeSpan" />
+                  <parameter name="asyncFlowOption" position="2" attrib="0" type="System.Transactions.TransactionScopeAsyncFlowOption" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Transactions.TransactionScopeOption, System.TimeSpan, System.Transactions.TransactionScopeAsyncFlowOption)" attrib="6278">
+                <parameters>
+                  <parameter name="scopeOption" position="0" attrib="0" type="System.Transactions.TransactionScopeOption" />
+                  <parameter name="scopeTimeout" position="1" attrib="0" type="System.TimeSpan" />
+                  <parameter name="asyncFlow" position="2" attrib="0" type="System.Transactions.TransactionScopeAsyncFlowOption" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Transactions.TransactionScopeOption, System.Transactions.TransactionOptions, System.Transactions.EnterpriseServicesInteropOption)" attrib="6278">
+                <attributes />
+                <parameters>
+                  <parameter name="scopeOption" position="0" attrib="0" type="System.Transactions.TransactionScopeOption" />
+                  <parameter name="transactionOptions" position="1" attrib="0" type="System.Transactions.TransactionOptions" />
+                  <parameter name="interopOption" position="2" attrib="0" type="System.Transactions.EnterpriseServicesInteropOption" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Transactions.TransactionScopeOption, System.Transactions.TransactionOptions, System.Transactions.TransactionScopeAsyncFlowOption)" attrib="6278">
+                <parameters>
+                  <parameter name="scopeOption" position="0" attrib="0" type="System.Transactions.TransactionScopeOption" />
+                  <parameter name="transactionOptions" position="1" attrib="0" type="System.Transactions.TransactionOptions" />
+                  <parameter name="asyncFlowOption" position="2" attrib="0" type="System.Transactions.TransactionScopeAsyncFlowOption" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="Complete()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="Dispose()" attrib="486" virtual="true" returntype="System.Void">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="TransactionScopeAsyncFlowOption" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="Enabled" attrib="32854" fieldtype="System.Transactions.TransactionScopeAsyncFlowOption" value="1" />
+              <field name="Suppress" attrib="32854" fieldtype="System.Transactions.TransactionScopeAsyncFlowOption" value="0" />
+            </fields>
+          </class>
+          <class name="TransactionScopeOption" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="Required" attrib="32854" fieldtype="System.Transactions.TransactionScopeOption" value="0" />
+              <field name="RequiresNew" attrib="32854" fieldtype="System.Transactions.TransactionScopeOption" value="1" />
+              <field name="Suppress" attrib="32854" fieldtype="System.Transactions.TransactionScopeOption" value="2" />
+            </fields>
+          </class>
+          <class name="TransactionStartedEventHandler" type="delegate" base="System.MulticastDelegate" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.ICloneable" />
+              <interface name="System.Runtime.Serialization.ISerializable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.Object, System.IntPtr)" attrib="6278">
+                <parameters>
+                  <parameter name="object" position="0" attrib="0" type="System.Object" />
+                  <parameter name="method" position="1" attrib="0" type="System.IntPtr" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="BeginInvoke(System.Object, System.Transactions.TransactionEventArgs, System.AsyncCallback, System.Object)" attrib="454" virtual="true" returntype="System.IAsyncResult">
+                <parameters>
+                  <parameter name="sender" position="0" attrib="0" type="System.Object" />
+                  <parameter name="e" position="1" attrib="0" type="System.Transactions.TransactionEventArgs" />
+                  <parameter name="callback" position="2" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="object" position="3" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="EndInvoke(System.IAsyncResult)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="result" position="0" attrib="0" type="System.IAsyncResult" />
+                </parameters>
+              </method>
+              <method name="Invoke(System.Object, System.Transactions.TransactionEventArgs)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="sender" position="0" attrib="0" type="System.Object" />
+                  <parameter name="e" position="1" attrib="0" type="System.Transactions.TransactionEventArgs" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="TransactionStatus" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="Aborted" attrib="32854" fieldtype="System.Transactions.TransactionStatus" value="2" />
+              <field name="Active" attrib="32854" fieldtype="System.Transactions.TransactionStatus" value="0" />
+              <field name="Committed" attrib="32854" fieldtype="System.Transactions.TransactionStatus" value="1" />
+              <field name="InDoubt" attrib="32854" fieldtype="System.Transactions.TransactionStatus" value="3" />
+            </fields>
+          </class>
+        </classes>
+      </namespace>
+    </namespaces>
+  </assembly>
+</assemblies>

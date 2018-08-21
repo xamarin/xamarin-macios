@@ -1,2 +1,0 @@
-## MKErrorCode is not exposed in watchOS API so there's no point in exposing the domain
-!missing-field! MKErrorDomain not bound

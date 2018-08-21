@@ -353,9 +353,6 @@ static class C {
 		WriteFrameworkDefines (w);
 		w.AppendLine (@"
 using System;
-#if !__WATCHOS__
-using System.Drawing;
-#endif
 
 #if __UNIFIED__
 using AVFoundation;
@@ -378,6 +375,9 @@ using Security;
 using UIKit;
 #endif
 #else
+#if !__WATCHOS__
+using System.Drawing;
+#endif
 using MonoTouch.ObjCRuntime;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;

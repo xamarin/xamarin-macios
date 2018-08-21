@@ -404,7 +404,9 @@ namespace AudioUnit
 
 	public class AudioUnit : IDisposable, ObjCRuntime.INativeObject
 	{
+#pragma warning disable 649 // Field 'AudioUnit.handle' is never assigned to, and will always have its default value
 		internal IntPtr handle;
+#pragma warning restore 649
 		public IntPtr Handle {
 			get {
 				return handle;

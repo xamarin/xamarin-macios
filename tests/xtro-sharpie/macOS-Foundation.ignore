@@ -131,7 +131,6 @@
 !missing-pinvoke! NSUnionRect is not bound
 !missing-protocol! NSSpellServerDelegate not bound
 !missing-protocol! NSURLHandleClient not bound
-!missing-protocol! NSURLProtocolClient not bound
 !missing-protocol-conformance! NSURL should conform to NSURLHandleClient
 !missing-protocol-member! NSFileManagerDelegate::fileManager:shouldCopyItemAtURL:toURL: not found
 !missing-protocol-member! NSFileManagerDelegate::fileManager:shouldLinkItemAtURL:toURL: not found

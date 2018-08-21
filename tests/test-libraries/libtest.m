@@ -448,6 +448,22 @@ static UltimateMachine *shared;
 	}
 @end
 
+@implementation ProtocolAssigner
+-(void) setProtocol
+{
+	ObjCProtocolTestImpl *p = [[ObjCProtocolTestImpl alloc] init];
+	[self completedSetProtocol: p];
+}
+
+-(void) completedSetProtocol: (id<ProtocolAssignerProtocol>) value
+{
+	assert (!"THIS FUNCTION SHOULD BE OVERRIDDEN");
+}
+@end
+
+@implementation ObjCProtocolTestImpl
+@end
+
 @implementation ObjCExceptionTest
 {
 }
@@ -513,6 +529,16 @@ static UltimateMachine *shared;
 static volatile int freed_blocks = 0;
 
 @implementation ObjCBlockTester
+static Class _TestClass = NULL;
+
++ (Class)TestClass {
+	return _TestClass;
+}
+
++ (void)setTestClass:(Class) value {
+	_TestClass = value;
+}
+
 -(void) classCallback: (void (^)(int32_t magic_number))completionHandler
 {
 	assert (!"THIS FUNCTION SHOULD BE OVERRIDDEN");
@@ -540,10 +566,32 @@ static volatile int freed_blocks = 0;
 	assert (called);
 }
 
++(void) callRequiredStaticCallback
+{
+	__block bool called = false;
+	[self.TestClass requiredStaticCallback: ^(int magic_number)
+	{
+		assert (magic_number == 42);
+		called = true;
+	}];
+	assert (called);
+}
+
 -(void) callOptionalCallback
 {
 	__block bool called = false;
 	[self.TestObject optionalCallback: ^(int magic_number)
+	{
+		assert (magic_number == 42);
+		called = true;
+	}];
+	assert (called);
+}
+
++(void) callOptionalStaticCallback
+{
+	__block bool called = false;
+	[self.TestClass optionalStaticCallback: ^(int magic_number)
 	{
 		assert (magic_number == 42);
 		called = true;
@@ -573,6 +621,15 @@ static volatile int freed_blocks = 0;
 -(void) dealloc
 {
 	OSAtomicIncrement32 (&freed_blocks);
+	[super dealloc];
+}
+@end
+
+@implementation EvilDeallocator
+-(void) dealloc
+{
+	if (self.evilCallback != NULL)
+		self.evilCallback (314);
 	[super dealloc];
 }
 @end

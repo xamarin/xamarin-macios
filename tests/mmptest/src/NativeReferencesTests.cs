@@ -11,11 +11,11 @@ using Xamarin.Tests;
 
 namespace Xamarin.MMP.Tests
 {
-	public partial class MMPTests {
-		const string ItemGroupTemplate = @"<ItemGroup>{0}</ItemGroup>";
-		const string NativeReferenceTemplate = @"<NativeReference Include=""{0}""><IsCxx>False</IsCxx><Kind>{1}</Kind></NativeReference>";
+	public class NativeReferenceTests {
+		public const string ItemGroupTemplate = @"<ItemGroup>{0}</ItemGroup>";
+		public const string NativeReferenceTemplate = @"<NativeReference Include=""{0}""><IsCxx>False</IsCxx><Kind>{1}</Kind></NativeReference>";
 
-		public string SimpleDylibPath {
+		public static string SimpleDylibPath {
 			get {
 				string rootDir = TI.FindRootDirectory ();
 				string buildLibPath = Path.Combine (rootDir, "../tests/mac-binding-project/bin/SimpleClassDylib.dylib");
@@ -24,7 +24,7 @@ namespace Xamarin.MMP.Tests
 			}
 		}
 
-		public string SimpleStaticPath {
+		public static string SimpleStaticPath {
 			get {
 				string rootDir = TI.FindRootDirectory ();
 				string buildLibPath = Path.Combine (rootDir, "../tests/mac-binding-project/bin/SimpleClassStatic.a");
@@ -33,7 +33,7 @@ namespace Xamarin.MMP.Tests
 			}
 		}
 
-		public string MobileStaticBindingPath {
+		public static string MobileStaticBindingPath {
 			get {
 				string rootDir = TI.FindRootDirectory ();
 				string buildLibPath = Path.Combine (rootDir, "../tests/mac-binding-project/bin/Mobile-static/MobileBinding.dll");
@@ -42,9 +42,9 @@ namespace Xamarin.MMP.Tests
 			}
 		}
 
-		string CreateNativeRefInclude (string path, string kind) => string.Format (NativeReferenceTemplate, path, kind);
-		string CreateItemGroup (IEnumerable<string> elements) => string.Format (ItemGroupTemplate, string.Concat (elements));
-		string CreateSingleNativeRef (string path, string kind) => CreateItemGroup (CreateNativeRefInclude (path, kind).FromSingleItem ());
+		public static string CreateNativeRefInclude (string path, string kind) => string.Format (NativeReferenceTemplate, path, kind);
+		public static string CreateItemGroup (IEnumerable<string> elements) => string.Format (ItemGroupTemplate, string.Concat (elements));
+		public static string CreateSingleNativeRef (string path, string kind) => CreateItemGroup (CreateNativeRefInclude (path, kind).FromSingleItem ());
 
 		string CreateCopyOfSimpleClassInTestDir (string tmpDir, string fileName = "SimpleClassDylib.dylib")
 		{
@@ -83,7 +83,7 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void Unified_WithNativeReferences_InMainProjectWorks ()
 		{
-			RunMMPTest (tmpDir => {
+			MMPTests.RunMMPTest (tmpDir => {
 				// Could be any dylib not in /System
 				const string SystemLibPath = "/Library/Frameworks/Mono.framework/Versions/Current/lib/libsqlite3.0.dylib";
 
@@ -109,7 +109,7 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void Unified_WithStaticNativeRef_ClangIncludesOurStaticLib ()
 		{
-			RunMMPTest (tmpDir => {
+			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { ItemGroup = CreateSingleNativeRef (SimpleStaticPath, "Static") };
 				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_InMainProjectWorks - Static", null, true, false, s => {
 					string clangLine = s.Split ('\n').First (x => x.Contains ("xcrun -sdk macosx clang"));
@@ -123,7 +123,7 @@ namespace Xamarin.MMP.Tests
 		{
 			Configuration.AssertXcodeSupports32Bit ();
 
-			RunMMPTest (tmpDir => {
+			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					CSProjConfig = "<XamMacArch>i386</XamMacArch>",
 					References = $"<Reference Include=\"SimpleBinding_static\"><HintPath>{MobileStaticBindingPath}</HintPath></Reference>",
@@ -136,7 +136,7 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void Unified_WithNativeReferences_MissingLibrariesActAsExpected ()
 		{
-			RunMMPTest (tmpDir => {
+			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { ItemGroup = CreateSingleNativeRef ("/Library/Frameworks/ALibThatDoesNotExist.dylib", "Dynamic") };
 				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_MissingLibrariesActAsExpected - Nonexistant", null, false);
 
@@ -153,7 +153,7 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void Unified_WithNativeReferences_IgnoredWorks ()
 		{
-			RunMMPTest (tmpDir => {
+			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					ItemGroup = CreateSingleNativeRef (Path.GetFullPath (SimpleDylibPath), "Dynamic"),
 					CSProjConfig = string.Format (@"<MonoBundlingExtraArgs>--ignore-native-library=""{0}""</MonoBundlingExtraArgs>", Path.GetFullPath (SimpleDylibPath))
@@ -166,7 +166,7 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void Unified_WithNativeReferences_ReadOnlyNativeLib ()
 		{
-			RunMMPTest (tmpDir => {
+			MMPTests.RunMMPTest (tmpDir => {
 				string filePath = CreateCopyOfSimpleClassInTestDir (tmpDir);
 				File.SetAttributes (filePath, FileAttributes.ReadOnly);
 
@@ -180,7 +180,7 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void NativeReference_WithDllImportOfSamePath_Builds ()
 		{
-			RunMMPTest (tmpDir => {
+			MMPTests.RunMMPTest (tmpDir => {
 				string filePath = CreateCopyOfSimpleClassInTestDir (tmpDir);
 
 				// Use absolute path here and in TestDecl to trigger bug
@@ -199,7 +199,7 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void MultipleNativeReferences_OnlyInvokeMMPOneTime_AndCopyEverythingIn ()
 		{
-			RunMMPTest (tmpDir => {
+			MMPTests.RunMMPTest (tmpDir => {
 				string firstPath = CreateCopyOfSimpleClassInTestDir (tmpDir);
 				string secondPath = CreateCopyOfSimpleClassInTestDir (tmpDir, "SeconClassDylib.dylib");
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {

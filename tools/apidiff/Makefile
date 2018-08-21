@@ -135,20 +135,20 @@ endif
 $(APIDIFF_DIR)/api-diff.html: $(API_DIFF_DEPENDENCIES)
 	$(QF_GEN) echo "<h1>API diffs</h1>" > $@
 ifdef INCLUDE_IOS
-	$(Q) if [[ "x0" != "x`stat -L -f %z $(APIDIFF_DIR)/ios-api-diff.html`" ]]; then  \
+	$(Q) if ! grep "No change detected" $(APIDIFF_DIR)/ios-api-diff.html >/dev/null 2>&1; then  \
 		echo "<h2><a href='ios-api-diff.html'>Xamarin.iOS API diff</a></h2>" >> $@; \
 	else \
 		echo "<h2>Xamarin.iOS API diff is empty</h2>" >> $@; \
 	fi;
 ifdef INCLUDE_TVOS
-	$(Q) if [[ "x0" != "x`stat -L -f %z $(APIDIFF_DIR)/tvos-api-diff.html`" ]]; then  \
+	$(Q) if ! grep "No change detected" $(APIDIFF_DIR)/tvos-api-diff.html >/dev/null 2>&1; then  \
 		echo "<h2><a href='tvos-api-diff.html'>Xamarin.TVOS API diff</a></h2>" >> $@; \
 	else \
 		echo "<h2>Xamarin.TVOS API diff is empty</h2>" >> $@; \
 	fi;
 endif
 ifdef INCLUDE_WATCH
-	$(Q) if [[ "x0" != "x`stat -L -f %z $(APIDIFF_DIR)/watchos-api-diff.html`" ]]; then  \
+	$(Q) if ! grep "No change detected" $(APIDIFF_DIR)/watchos-api-diff.html >/dev/null 2>&1; then  \
 		echo "<h2><a href='watchos-api-diff.html'>Xamarin.WatchOS API diff</a></h2>" >> $@; \
 	else \
 		echo "<h2>Xamarin.WatchOS API diff is empty</h2>" >> $@; \
@@ -156,7 +156,7 @@ ifdef INCLUDE_WATCH
 endif
 endif
 ifdef INCLUDE_MAC
-	$(Q) if [[ "x0" != "x`stat -L -f %z $(APIDIFF_DIR)/mac-api-diff.html`" ]]; then  \
+	$(Q) if ! grep "No change detected" $(APIDIFF_DIR)/mac-api-diff.html >/dev/null 2>&1; then  \
 		echo "<h2><a href='mac-api-diff.html'>Xamarin.Mac API diff</a></h2>" >> $@; \
 	else \
 		echo "<h2>Xamarin.Mac API diff is empty</h2>" >> $@; \

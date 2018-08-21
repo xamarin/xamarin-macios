@@ -594,6 +594,8 @@ See the [equivalent mtouch warning](~/ios/troubleshooting/mtouch-errors.md#MT521
 
 #### MM5311: lipo failed with an error code '{0}'. Check build log for details.
 
+### <a name="MM5311">MM5311: lipo failed with an error code '{0}'. Check build log for details.
+
 <!-- MM6xxx: mmp internal tools -->
 <!-- MM7xxx: reserved -->
 

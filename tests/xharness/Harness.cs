@@ -198,45 +198,9 @@ namespace xharness
 			}
 		}
 
-		string mlaunch;
 		public string MlaunchPath {
 			get {
-				if (mlaunch == null) {
-					// First check if we've built mlaunch locally.
-					var filename = Path.GetFullPath (Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mlaunch"));
-					if (File.Exists (filename)) {
-						Log ("Found mlaunch: {0}", filename);
-						Environment.SetEnvironmentVariable ("MLAUNCH_PATH", filename);
-						return mlaunch = filename;
-					}
-
-					// Then check if we can download mlaunch.
-					Log ("Could not find a locally built mlaunch, will try downloading it.");
-					try {
-						filename = DownloadMlaunch ();
-					} catch (Exception e) {
-						Log ("Could not download mlaunch: {0}", e);
-					}
-					if (File.Exists (filename)) {
-						Log ("Found mlaunch: {0}", filename);
-						Environment.SetEnvironmentVariable ("MLAUNCH_PATH", filename);
-						return mlaunch = filename;
-					}
-
-					// Then check if the system version of Xamarin.iOS has mlaunch.
-					// This may be a version of mlaunch we're not compatible with, since we don't control which XI version the system has.
-					Log ("Could not download mlaunch, will try the system's Xamarin.iOS.");
-					filename = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mlaunch";
-					if (File.Exists (filename)) {
-						Log ("Found mlaunch: {0}", filename);
-						Environment.SetEnvironmentVariable ("MLAUNCH_PATH", filename);
-						return mlaunch = filename;
-					}
-
-					throw new FileNotFoundException (string.Format ("Could not find mlaunch: {0}", filename));
-				}
-
-				return mlaunch;
+				return Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mlaunch");
 			}
 		}
 
@@ -273,7 +237,7 @@ namespace xharness
 
 			var hard_coded_test_suites = new [] {
 				new { Directory = "mmptest", ProjectFile = "mmptest", Name = "mmptest", IsNUnit = true, Configurations = (string[]) null, Platform = "x86", },
-				new { Directory = "msbuild-mac", ProjectFile = "msbuild-mac", Name = "MSBuild tests", IsNUnit = false, Configurations = (string[]) null, Platform = "x86" },
+				new { Directory = "msbuild-mac", ProjectFile = "msbuild-mac", Name = "MSBuild tests", IsNUnit = true, Configurations = (string[]) null, Platform = "x86" },
 				new { Directory = "xammac_tests", ProjectFile = "xammac_tests", Name = "xammac tests", IsNUnit = false, Configurations = new string [] { "Debug", "Release" }, Platform = "AnyCPU" },
 				new { Directory = "linker/mac/link all", ProjectFile = "link all-mac", Name = "link all", IsNUnit = false, Configurations = new string [] { "Debug", "Release" }, Platform = "x86", },
 				new { Directory = "linker/mac/link sdk", ProjectFile = "link sdk-mac", Name = "link sdk", IsNUnit = false, Configurations = new string [] { "Debug", "Release" }, Platform = "x86", },

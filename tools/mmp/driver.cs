@@ -179,9 +179,6 @@ namespace Xamarin.Bundler {
 		}
 					
 
-		static int watch_level;
-		static Stopwatch watch;
-
 		static AOTOptions aotOptions = null;
 
 		static string xm_framework_dir;
@@ -202,12 +199,6 @@ namespace Xamarin.Bundler {
 			}
 		}
 		
-		static void Watch (string msg, int level)
-		{
-			if (watch != null && (watch_level > level))
-				Console.WriteLine ("{0}: {1} ms", msg, watch.ElapsedMilliseconds);
-		}
-
 		public static bool EnableDebug {
 			get { return App.EnableDebug; }
 		}
@@ -281,13 +272,13 @@ namespace Xamarin.Bundler {
 				{ "q", "Quiet", v => verbose-- },
 				{ "i|icon=", "Use the specified file as the bundle icon", v => { icon = v; }},
 				{ "xml=", "Provide an extra XML definition file to the linker", v => App.Definitions.Add (v) },
-				{ "time", v => watch_level++ },
+				{ "time", v => WatchLevel++ },
 				{ "sdkroot=", "Specify the location of Apple SDKs", v => sdk_root = v },
 				{ "arch=", "Specify the architecture ('i386' or 'x86_64') of the native runtime (default to 'i386')", v => { arch = v; arch_set = true; } },
 				{ "profile=", "(Obsoleted in favor of --target-framework) Specify the .NET profile to use (defaults to '" + Xamarin.Utils.TargetFramework.Default + "')", v => SetTargetFramework (v) },
 				{ "target-framework=", "Specify the .NET target framework to use (defaults to '" + Xamarin.Utils.TargetFramework.Default + "')", v => SetTargetFramework (v) },
-				{ "force-thread-check", "Keep UI thread checks inside (even release) builds [DEPRECATED, use --linker-optimize=-remove-uithread-checks instead]", v => { App.Optimizations.RemoveUIThreadChecks = false; }, true},
-				{ "disable-thread-check", "Remove UI thread checks inside (even debug) builds [DEPRECATED, use --linker-optimize=remove-uithread-checks instead]", v => { App.Optimizations.RemoveUIThreadChecks = true; }, true},
+				{ "force-thread-check", "Keep UI thread checks inside (even release) builds [DEPRECATED, use --optimize=-remove-uithread-checks instead]", v => { App.Optimizations.RemoveUIThreadChecks = false; }, true},
+				{ "disable-thread-check", "Remove UI thread checks inside (even debug) builds [DEPRECATED, use --optimize=remove-uithread-checks instead]", v => { App.Optimizations.RemoveUIThreadChecks = true; }, true},
 				{ "registrar:", "Specify the registrar to use (dynamic [default], static, partial)", v => {
 						switch (v) {
 						case "static":
@@ -388,11 +379,6 @@ namespace Xamarin.Bundler {
 
 			ErrorHelper.Verbosity = verbose;
 
-			if (watch_level > 0) {
-				watch = new Stopwatch ();
-				watch.Start ();
-			}
-
 			if (action == Action.Help || (args.Length == 0)) {
 				ShowHelp (os);
 				return;
@@ -462,7 +448,7 @@ namespace Xamarin.Bundler {
 				throw new MonoMacException (1404, true, "Target framework '{0}' is invalid.", userTargetFramework);
 
 			if (IsClassic && App.LinkMode == LinkMode.Platform)
-				throw new MonoMacException (2100, true, "Xamarin.Mac Classic API does not support Platform Linking.");
+				throw new MonoMacException (2109, true, "Xamarin.Mac Classic API does not support Platform Linking.");
 
 			// sanity check as this should never happen: we start out by not setting any
 			// Unified/Classic properties, and only IsUnifiedMobile if we are are on the

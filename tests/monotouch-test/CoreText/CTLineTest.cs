@@ -7,8 +7,6 @@
 // Copyright 2012 Xamarin Inc. All rights reserved.
 //
 
-#if !__WATCHOS__
-
 using System;
 #if XAMCORE_2_0
 using Foundation;
@@ -51,7 +49,7 @@ namespace MonoTouchFixtures.CoreText
 		{
 			if (!TestRuntime.CheckXcodeVersion (7, 0))
 				Assert.Ignore ("Requires iOS9+ or macOS 10.11+");
-
+			
 			var sa = new CTStringAttributes ();
 			sa.ForegroundColor = TestRuntime.GetCGColor (UIColor.Blue);
 			sa.Font = new CTFont ("Georgia-BoldItalic", 24);
@@ -83,5 +81,3 @@ namespace MonoTouchFixtures.CoreText
 		}
 	}
 }
-
-#endif // !__WATCHOS__

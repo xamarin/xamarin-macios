@@ -19,6 +19,15 @@ namespace Xamarin.BindingTests
 	[Preserve (AllMembers = true)]
 	public class ProtocolTest
 	{
+		bool HasProtocolAttributes {
+			get {
+				if (TestRuntime.IsLinkAll && !Runtime.DynamicRegistrationSupported)
+					return false;
+			
+				return true;
+			}
+		}
+
 		[Test]
 		public void OnlyProtocol ()
 		{
@@ -30,7 +39,7 @@ namespace Xamarin.BindingTests
 			Assert.IsNotNull (IP1, "IP1");
 			// with a [Protocol] attribute
 			var IP1Attributes = IP1.GetCustomAttributes (typeof (ProtocolAttribute), false);
-			if (Runtime.DynamicRegistrationSupported) {
+			if (HasProtocolAttributes) {
 				Assert.AreEqual (1, IP1Attributes.Length, "[Protocol] IP1");
 				var IP1Protocol = (ProtocolAttribute)IP1Attributes [0];
 				Assert.AreEqual ("P1", IP1Protocol.Name, "Name");
@@ -62,7 +71,7 @@ namespace Xamarin.BindingTests
 
 			// with a [Protocol] attribute
 			var IP2Attributes = IP2.GetCustomAttributes (typeof (ProtocolAttribute), false);
-			if (Runtime.DynamicRegistrationSupported) {
+			if (HasProtocolAttributes) {
 				Assert.AreEqual (1, IP2Attributes.Length, "[Protocol] IP2");
 				var IP2Protocol = (ProtocolAttribute)IP2Attributes [0];
 				Assert.AreEqual ("P2", IP2Protocol.Name, "Name");
@@ -98,7 +107,7 @@ namespace Xamarin.BindingTests
 
 			// with a [Protocol] attribute
 			var IP3Attributes = IP3.GetCustomAttributes (typeof (ProtocolAttribute), false);
-			if (Runtime.DynamicRegistrationSupported) {
+			if (HasProtocolAttributes) {
 				Assert.AreEqual (1, IP3Attributes.Length, "[Protocol] IP3");
 				var IP3Protocol = (ProtocolAttribute)IP3Attributes [0];
 				Assert.AreEqual ("P3", IP3Protocol.Name, "Name");

@@ -16,7 +16,7 @@
     <OutputPath>bin\Debug</OutputPath>
     <WarningLevel>4</WarningLevel>
     <DebugSymbols>True</DebugSymbols>
-    <DefineConstants>MONOTOUCH</DefineConstants>
+    <DefineConstants>MONOTOUCH;MTOUCH_TESTS</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

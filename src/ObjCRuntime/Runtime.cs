@@ -52,7 +52,7 @@ namespace ObjCRuntime {
 
 		internal static DynamicRegistrar Registrar;
 
-		const uint INVALID_TOKEN_REF = 0xFFFFFFFF;
+		internal const uint INVALID_TOKEN_REF = 0xFFFFFFFF;
 
 		internal unsafe struct MTRegistrationMap {
 			public IntPtr assembly;
@@ -797,6 +797,8 @@ namespace ObjCRuntime {
 				method = method.GetBaseDefinition ();
 			}
 
+			string selector = null;
+
 			// Might be the implementation of an interface method, so find the corresponding
 			// MethodInfo for the interface, and check for BlockProxy attributes there as well.
 			foreach (var iface in method.DeclaringType.GetInterfaces ()) {
@@ -809,6 +811,45 @@ namespace ObjCRuntime {
 						var createMethod = GetBlockProxyAttributeMethod (map.InterfaceMethods [i], parameter);
 						if (createMethod != null)
 							return createMethod;
+					}
+				}
+
+				// We store the BlockProxy type in the ProtocolMemberAttribute, so check those.
+				// We may run into binding assemblies built with earlier versions of the generator,
+				// which means we can't rely on finding the BlockProxy attribute in the ProtocolMemberAttribute.
+				if (selector == null)
+					selector = method.GetCustomAttribute<ExportAttribute> ()?.Selector ?? string.Empty;
+				if (!string.IsNullOrEmpty (selector)) {
+					var memberAttributes = iface.GetCustomAttributes<ProtocolMemberAttribute> ();
+					foreach (var attrib in memberAttributes) {
+						if (attrib.ParameterBlockProxy == null || attrib.ParameterBlockProxy.Length <= parameter || attrib.ParameterBlockProxy [parameter] == null)
+							continue; // no need to check anything if what we want isn't there
+						if (attrib.Selector != selector)
+							continue;
+						if (attrib.IsStatic != method.IsStatic)
+							continue;
+						var methodParameters = method.GetParameters ();
+						if (attrib.ParameterType.Length != methodParameters.Length)
+							continue;
+						var notApplicable = false;
+						for (int i = 0; i < methodParameters.Length; i++) {
+							var paramType = methodParameters [i].ParameterType;
+							var isByRef = paramType.IsByRef;
+							if (isByRef)
+								paramType = paramType.GetElementType ();
+							if (isByRef != attrib.ParameterByRef [i]) {
+								notApplicable = true;
+								break;
+							}
+							if (paramType != attrib.ParameterType [i]) {
+								notApplicable = true;
+								break;
+							}
+						}
+						if (notApplicable)
+							continue;
+						
+						return attrib.ParameterBlockProxy [parameter].GetMethod ("Create");
 					}
 				}
 
@@ -1352,10 +1393,12 @@ namespace ObjCRuntime {
 			unsafe {
 				var map = options->RegistrationMap;
 				if (map != null) {
-					var token = Class.GetTokenReference (type);
-					var wrapper_token = xamarin_find_protocol_wrapper_type (token);
-					if (wrapper_token != INVALID_TOKEN_REF)
-						return (Type) Class.ResolveTokenReference (wrapper_token, 0x02000000 /* TypeDef */);
+					var token = Class.GetTokenReference (type, throw_exception: false);
+					if (token != INVALID_TOKEN_REF) {
+						var wrapper_token = xamarin_find_protocol_wrapper_type (token);
+						if (wrapper_token != INVALID_TOKEN_REF)
+							return (Type)Class.ResolveTokenReference (wrapper_token, 0x02000000 /* TypeDef */);
+					}
 				}
 			}
 

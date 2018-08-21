@@ -386,10 +386,6 @@
     <EmbeddedResource Include="config">
       <LogicalName>config</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="linker\Descriptors\mscorlib.xml">
-      <Link>Resources\mscorlib.xml</Link>
-      <LogicalName>mscorlib.xml</LogicalName>
-    </EmbeddedResource>
     <EmbeddedResource Include="config_mobile">
       <LogicalName>config_mobile</LogicalName>
     </EmbeddedResource>

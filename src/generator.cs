@@ -5467,6 +5467,27 @@ public partial class Generator : IMemberGatherer {
 					sb.Append (parameters [i].ParameterType.IsByRef ? "true" : "false");
 				}
 				sb.Append (" }");
+
+				var blockProxies = new string [parameters.Length];
+				var anyblockProxy = false;
+				for (int i = 0; i < parameters.Length; i++) {
+					var parType = GetCorrectGenericType (parameters [i].ParameterType);
+					if (parType.IsSubclassOf (TypeManager.System_Delegate)) {
+						var ti = MakeTrampoline (parType);
+						blockProxies [i] = $"typeof ({ns.CoreObjCRuntime}.Trampolines.{ti.NativeInvokerName})";
+						anyblockProxy = true;
+					}
+				}
+				if (anyblockProxy) {
+					sb.Append (", ParameterBlockProxy = new Type [] { ");
+					for (int i = 0; i < blockProxies.Length; i++) {
+						if (i > 0)
+							sb.Append (", ");
+						sb.Append (blockProxies [i] == null ? "null" : blockProxies [i]);
+					}
+					sb.Append (" }");
+				}
+
 				if (attrib.IsVariadic)
 					sb.Append (", IsVariadic = true");
 			}

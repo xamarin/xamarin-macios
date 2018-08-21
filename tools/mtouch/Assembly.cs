@@ -33,6 +33,7 @@ namespace Xamarin.Bundler {
 		public AssemblyBuildTarget BuildTarget;
 		public string BuildTargetName;
 		public bool IsCodeShared;
+		public bool BundleInContainerApp;
 
 		public Dictionary<Abi, AotInfo> AotInfos = new Dictionary<Abi, AotInfo> ();
 
@@ -48,6 +49,16 @@ namespace Xamarin.Bundler {
 		public HashSet<string> DependencyMap {
 			get {
 				return dependency_map;
+			}
+		}
+
+		public bool IsAOTCompiled {
+			get {
+				if (App.UseInterpreter)
+					/* interpreter only requires a few stubs that are attached
+					 * to mscorlib.dll, other assemblies won't be AOT compiled */
+					return FileName == "mscorlib.dll";
+				return true;
 			}
 		}
 

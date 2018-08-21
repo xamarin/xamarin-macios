@@ -153,9 +153,22 @@ It is required to specify a root assembly (typically the main executable) when b
 
 Mtouch does not recognize the command line argument mentioned in the error message.
 
-<a name="MT0019" />
+Sometimes this error happens because of how the argument is formatted in the response file passed to `mtouch`.
 
-### MT0019: Only one --[log|install|kill|launch]dev or --[launch|debug]sim option can be used.
+Always use the command-line option that takes an equal sign or colon instead of a space.
+
+Do either of these:
+
+	`--foo=something`
+	`--foo:something`
+
+instead of this:
+
+	`--foo something`
+
+<a name="MT0019"/>
+
+#### MT0019: Only one --[log|install|kill|launch]dev or --[launch|debug]sim option can be used.
 
 There are several options for mtouch that can't be used simultaneously:
 
@@ -1158,7 +1171,7 @@ If you're deploying an enterprise app or using a free provisioning profile, you 
 A few operations from mtouch require the <tt>DeveloperDiskImage.dmg</tt> file to be present.   This
 	file is part of Xcode and is usually located relative to the
 	SDK that you are using to build against, in
-	the <tt>Xcode.app/Contents/Developer/iPhoneOS.platform/DeviceSupport/VERSION/DeveloperDiskImage.dmg</tt>.
+	the <tt>/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/DeviceSupport/VERSION/DeveloperDiskImage.dmg</tt>.
 
 This error can happen either because you do not have a
 	DeveloperDiskImage.dmg that matches the device that you have
@@ -2179,7 +2192,81 @@ we're open to adding support for new combinations of types. If this is the
 case, please file an enhancement request on [github](https://github.com/xamarin/xamarin-macios/issues/new)
 with a test case and we'll evaluate it.
 
-## MT5xxx: GCC and toolchain error messages
+[1]: https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS
+[2]: https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS&component=General&bug_severity=enhancement
+
+### <a name="MT4173"/>MT4173: The registrar can't compute the block signature for the delegate of type {delegate-type} in the method {method} because *.
+
+This is a warning indicating that the registrar couldn't inject the block
+signature of the specified method into the generated registrar code, because
+the registrar couldn't compute it.
+
+This means that the block signature has to be computed at runtime, which is
+somewhat slower.
+
+There are currently two possible reasons for this warning:
+
+1. The type of the managed delegate is either a `System.Delegate` or
+   `System.MulticastDelegate`. These types don't represent a specific signature,
+   which means the registrar can't compute the corresponding native signature
+   either. In this case the fix is to use a specific delegate type for the
+   block (alternatively the warning can be ignored by adding `--nowarn:4173`
+   as an additional mtouch argument in the project's iOS Build options).
+2. The registrar can't find the `Invoke` method of the delegate. This
+   shouldn't happen, so please file an [issue](https://github.com/xamarin/xamarin-macios/issues/new)
+   with a test project so that we can fix it.
+
+### <a name="MT4174"/>MT4174: Unable to locate the block to delegate conversion method for the method {method}'s parameter #{parameter}.
+
+This is a warning indicating that the static registrar couldn't find the
+method to create a delegate for an Objective-C block. An attempt will be made
+at runtime to find the method, but it will likely fail as well (with an MT8009
+exception).
+
+One possible reason for this warning is when manually writing bindings for API
+that uses blocks. It's recommended to use a binding project to bind
+Objective-C code, in particular when it involves blocks, since it's quite
+complicated to get it right when doing it manually.
+
+If this is not the case, please file a bug at [https://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS) with a test case.
+
+### <a name="MT4175"/>MT4175: The parameter '{parameter}' in the method '{method}' has an invalid BlockProxy attribute (the type passed to the attribute does not have a 'Create' method).
+
+This is a warning indicating that the parameter in the error message has an
+invalid `[BlockProxy]` attribute, where the type passed to the attribute is
+unexpected:
+
+```csharp
+public override NSUrlSessionDataTask CreateDataTask (NSUrl url, [BlockProxy (typeof (UnexpectedType))] NSUrlSessionResponse completionHandler)
+{
+}
+```
+
+Any `[BlockProxy]` attributes with invalid types will be ignored.
+
+This also means that removing the attribute will fix the warning:
+
+```csharp
+public override NSUrlSessionDataTask CreateDataTask (NSUrl url, NSUrlSessionResponse completionHandler)
+{
+}
+```
+
+Xamarin.iOS will instead look for the attribute in the following locations:
+
+* For method overrides (like the example above), on the base method.
+* For methods implementing protocol members, on the method in the
+  corresponding managed interface.
+
+In all cases the attribute is generated by our binding generator, and should
+be present in those locations.
+
+If no attribute can be found, then an <a href="#MT4174">MT4174</a> warning
+will be shown.
+
+Reference: https://github.com/xamarin/xamarin-macios/issues/4072
+
+# MT5xxx: GCC and toolchain error messages
 
 ### MT51xx: Compilation
 
@@ -2492,6 +2579,7 @@ An error occurred when signing the application. Please review the build log to s
 <!-- 5308 is used by mmp -->
 <!-- 5309 is used by mmp -->
 <!-- 5310 is used by mmp -->
+<!-- 5311 is used by mmp -->
 
 ## MT6xxx: mtouch internal tools error messages
 

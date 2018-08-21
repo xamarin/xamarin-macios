@@ -661,7 +661,6 @@ namespace xharness
 					}
 				}
 
-				listener.Cancel ();
 
 				// cleanup after us
 				if (EnsureCleanSimulatorState)
@@ -698,6 +697,8 @@ namespace xharness
 				var callbackLog = new CallbackLog ((line) => {
 					// MT1111: Application launched successfully, but it's not possible to wait for the app to exit as requested because it's not possible to detect app termination when launching using gdbserver
 					waitedForExit &= line?.Contains ("MT1111: ") != true;
+					if (line?.Contains ("error MT1007") == true)
+						launch_failure = true;
 				});
 				var runLog = Log.CreateAggregatedLog (callbackLog, main_log);
 				var timeout = TimeSpan.FromMinutes (Harness.Timeout);
@@ -734,6 +735,7 @@ namespace xharness
 				}
 			}
 
+			listener.Cancel ();
 			listener.Dispose ();
 
 			// check the final status
@@ -820,6 +822,8 @@ namespace xharness
 					} else {
 						FailureMessage = $"Killed by the OS ({crash_reason})";
 					}
+				} else if (launch_failure) {
+					FailureMessage = $"Launch failure";
 				}
 			}
 

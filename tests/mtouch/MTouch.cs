@@ -357,7 +357,7 @@ public class B : A {}
 				mtouch.CreateTemporaryCacheDirectory ();
 				mtouch.Verbosity = 4; // This is required to get the debug output we're testing for
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build 1");
-				mtouch.AssertOutputPattern ("Linking .*/testApp.exe into .*/PreBuild using mode 'None'");
+				mtouch.AssertOutputPattern ("Linking .*/testApp.exe into .*/2-PreBuild using mode 'None'");
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build 2");
 				mtouch.AssertOutputPattern ("Cached assemblies reloaded.");
 			}
@@ -1101,8 +1101,8 @@ public class B : A {}
 					apptool.Linker = MTouchLinker.LinkAll;
 					apptool.AssertExecute (MTouchAction.BuildDev, "build app");
 					
-					Assert.IsTrue(Directory.Exists(Path.Combine(apptool.Cache, "Build", "Msym")), "App Msym dir");
-					Assert.IsFalse(Directory.Exists(Path.Combine(exttool.Cache, "Build", "Msym")), "Extenson Msym dir");
+					Assert.IsTrue(Directory.Exists(Path.Combine(apptool.Cache, "3-Build", "Msym")), "App Msym dir");
+					Assert.IsFalse(Directory.Exists(Path.Combine(exttool.Cache, "3-Build", "Msym")), "Extenson Msym dir");
 					exttool.AssertNoWarnings();
 					apptool.AssertNoWarnings();
 				}
@@ -1133,8 +1133,8 @@ public class B : A {}
 					apptool.CustomArguments = new string [] { "--nodevcodeshare" };
 					apptool.AssertExecute (MTouchAction.BuildDev, "build app");
 					
-					Assert.IsTrue(Directory.Exists(Path.Combine(apptool.Cache, "Build", "Msym")), "App Msym dir");
-					Assert.IsTrue(Directory.Exists(Path.Combine(exttool.Cache, "Build", "Msym")), "Extenson Msym dir");
+					Assert.IsTrue(Directory.Exists(Path.Combine(apptool.Cache, "3-Build", "Msym")), "App Msym dir");
+					Assert.IsTrue(Directory.Exists(Path.Combine(exttool.Cache, "3-Build", "Msym")), "Extenson Msym dir");
 					exttool.AssertNoWarnings();
 					apptool.AssertNoWarnings();
 				}
@@ -3059,6 +3059,43 @@ class Test {
 		}
 
 		[Test]
+		public void ExtensionsWithSharedLibrary ()
+		{
+			using (var tool = new MTouchTool ()) {
+				tool.CreateTemporaryApp ();
+				tool.CreateTemporaryCacheDirectory ();
+				tool.Linker = MTouchLinker.LinkSdk;
+
+				var tmpdir = tool.CreateTemporaryDirectory ();
+				var dll = CompileTestAppLibrary (tmpdir, "public class L {}", appName: "commonTestLibrary");
+
+				using (var ext1 = new MTouchTool ()) {
+					ext1.References = new string [] { dll };
+					ext1.CreateTemporaryCacheDirectory ();
+					ext1.CreateTemporaryTodayExtension (extraCode: "class E1 : L {}", extraArg: $"-r:{StringUtils.Quote (dll)}");
+					ext1.Linker = MTouchLinker.LinkSdk;
+					tool.AppExtensions.Add (ext1);
+
+					using (var ext2 = new MTouchTool ()) {
+						ext2.References = new string [] { dll };
+						ext2.CreateTemporaryCacheDirectory ();
+						ext2.CreateTemporaryServiceExtension (extraCode: "class E1 : L {}", extraArg: $"-r:{StringUtils.Quote (dll)}");
+						ext2.Linker = MTouchLinker.LinkSdk;
+						tool.AppExtensions.Add (ext2);
+
+						ext2.AssertExecute (MTouchAction.BuildDev, "ext 2 build");
+						ext1.AssertExecute (MTouchAction.BuildDev, "ext 1 build");
+						tool.AssertExecute (MTouchAction.BuildDev, "main build");
+
+						Assert.That (Path.Combine (ext1.AppPath, Path.GetFileName (dll)), Does.Not.Exist, "ext1 existence");
+						Assert.That (Path.Combine (ext2.AppPath, Path.GetFileName (dll)), Does.Not.Exist, "ext2 existence");
+						Assert.That (Path.Combine (tool.AppPath, Path.GetFileName (dll)), Does.Exist, "existence");
+					}
+				}
+			}
+		}
+
+		[Test]
 		public void LinkWithNoLibrary ()
 		{
 			using (var tool = new MTouchTool ()) {
@@ -4117,24 +4154,6 @@ public class TestApp {
 			var a = string.Join (", ", actual);
 
 			Assert.AreEqual (e, a, message);
-		}
-
-		static void VerifyOutput (string msg, string actual, params string[] expected)
-		{
-			var split = actual.Split (new char[] {'\n', '\r'}, StringSplitOptions.RemoveEmptyEntries);
-			var actual_messages = new HashSet<string> (split, new Registrar.PatternEquality ());
-			var exp_messages = new HashSet<string> (expected, new Registrar.PatternEquality ());
-
-			actual_messages.ExceptWith (exp_messages);
-			exp_messages.ExceptWith (split);
-
-			var text = new StringBuilder ();
-			foreach (var a in actual_messages)
-				text.AppendFormat ("Unexpected error/warning ({0}):\n\t{1}\n", msg, a);
-			foreach (var a in exp_messages)
-				text.AppendFormat ("Expected error/warning not shown ({0}):\n\t{1}\n", msg, a);
-			if (text.Length != 0)
-				Assert.Fail (text.ToString ());
 		}
 
 		public static void AssertDeviceAvailable ()

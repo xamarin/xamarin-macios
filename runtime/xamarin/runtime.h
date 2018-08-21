@@ -85,7 +85,8 @@ typedef struct __attribute__((packed)) {
 
 typedef struct __attribute__((packed)) {
 	const uint32_t *protocol_tokens; // an array of token references to managed interfaces that represent protocols
-	const Protocol **protocols; // the corresponding native protocols
+	// __unsafe_unretained needed to prevent "error: pointer to non-const type 'const Protocol *' with no explicit ownership" in Embeddinator
+	const __unsafe_unretained Protocol **protocols; // the corresponding native protocols
 } MTProtocolMap;
 
 struct MTRegistrationMap;
@@ -138,6 +139,8 @@ enum NSObjectFlags {
 	NSObjectFlagsRegisteredToggleRef = 8,
 	NSObjectFlagsInFinalizerQueue = 16,
 	NSObjectFlagsHasManagedRef = 32,
+	// 64, // Used by SoM
+	NSObjectFlagsIsCustomType = 128,
 };
 
 struct AssemblyLocation {

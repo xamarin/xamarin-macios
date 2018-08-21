@@ -112,6 +112,18 @@ typedef unsigned int (^RegistrarTestBlock) (unsigned int magic);
 	-(void) outNSErrorOnStack:(id)obj1 obj:(id)obj2 obj:(id)obj3 int64:(long long)l4 i:(int)i5 err:(NSError **)err; // 5 in regs, 6th (out) in mem (on at least x86-64)
 @end
 
+@protocol ProtocolAssignerProtocol
+@end
+
+@interface ProtocolAssigner : NSObject {
+}
+-(void) setProtocol;
+-(void) completedSetProtocol: (id<ProtocolAssignerProtocol>) value;
+@end
+
+@interface ObjCProtocolTestImpl : NSObject <ProtocolAssignerProtocol>
+@end
+
 /*
  * ObjC test class used for exception tests.
  */
@@ -139,17 +151,22 @@ typedef unsigned int (^RegistrarTestBlock) (unsigned int magic);
 @protocol ObjCProtocolBlockTest
 @required
 	-(void) requiredCallback: (void (^)(int32_t magic_number))completionHandler;
+	+(void) requiredStaticCallback: (void (^)(int32_t magic_number))completionHandler;
 @optional
 	-(void) optionalCallback: (void (^)(int32_t magic_number))completionHandler;
+	+(void) optionalStaticCallback: (void (^)(int32_t magic_number))completionHandler;
 @end
 
 @interface ObjCBlockTester : NSObject {
 }
 @property (retain) NSObject<ObjCProtocolBlockTest>* TestObject;
+@property (class, retain) Class TestClass;
 -(void) classCallback: (void (^)(int32_t magic_number))completionHandler;
 -(void) callClassCallback;
 -(void) callRequiredCallback;
++(void) callRequiredStaticCallback;
 -(void) callOptionalCallback;
++(void) callOptionalStaticCallback;
 
 -(void) testFreedBlocks;
 +(int) freedBlockCount;
@@ -157,6 +174,12 @@ typedef unsigned int (^RegistrarTestBlock) (unsigned int magic);
 
 @interface FreedNotifier : NSObject {
 }
+-(void) dealloc;
+@end
+
+@interface EvilDeallocator : NSObject {
+}
+@property (copy) void (^evilCallback)(int32_t magic_number);
 -(void) dealloc;
 @end
 

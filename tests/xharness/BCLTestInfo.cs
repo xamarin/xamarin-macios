@@ -199,6 +199,7 @@ namespace xharness
 				inputProject.SetTargetFrameworkVersion ("v2.0");
 				inputProject.RemoveNode ("UseXamMacFullFramework");
 				inputProject.AddAdditionalDefines ("MOBILE;XAMMAC");
+				inputProject.AddReference ("Mono.Security");
 				break;
 			case MacFlavors.Full:
 				inputProject.AddAdditionalDefines ("XAMMAC_4_5");

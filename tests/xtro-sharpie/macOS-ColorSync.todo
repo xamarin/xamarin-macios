@@ -138,6 +138,8 @@
 !missing-field! kColorSyncTransformSimplifiedConversionData not bound
 !missing-field! kColorSyncTransformSrcSpace not bound
 !missing-field! kColorSyncTransformTag not bound
+!missing-pinvoke! CGDisplayCreateUUIDFromDisplayID is not bound
+!missing-pinvoke! CGDisplayGetDisplayIDFromUUID is not bound
 !missing-pinvoke! ColorSyncCMMCopyCMMIdentifier is not bound
 !missing-pinvoke! ColorSyncCMMCopyLocalizedName is not bound
 !missing-pinvoke! ColorSyncCMMCreate is not bound
@@ -183,6 +185,3 @@
 !missing-pinvoke! ColorSyncTransformGetTypeID is not bound
 !missing-pinvoke! ColorSyncTransformSetProperty is not bound
 !missing-pinvoke! ColorSyncUnregisterDevice is not bound
-## appended from unclassified file
-!missing-pinvoke! CGDisplayCreateUUIDFromDisplayID is not bound
-!missing-pinvoke! CGDisplayGetDisplayIDFromUUID is not bound

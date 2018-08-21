@@ -124,7 +124,7 @@ namespace Xamarin.Bundler {
 			options.Add ("ignore-dynamic-symbol:", "Specify that Xamarin.iOS/Xamarin.Mac should not try to prevent the linker from removing the specified symbol.", (v) => {
 				app.IgnoredSymbols.Add (v);
 			});
-			options.Add ("root-assembly:", "Specifies any root assemblies. There must be at least one root assembly, usually the main executable.", (v) => {
+			options.Add ("root-assembly=", "Specifies any root assemblies. There must be at least one root assembly, usually the main executable.", (v) => {
 				app.RootAssemblies.Add (v);
 			});
 			options.Add ("optimize=", "A comma-delimited list of optimizations to enable/disable. To enable an optimization, use --optimize=[+]remove-uithread-checks. To disable an optimizations: --optimize=-remove-uithread-checks. Use '+all' to enable or '-all' disable all optimizations. Only compiler-generated code or code otherwise marked as safe to optimize will be optimized.\n" +
@@ -434,7 +434,7 @@ namespace Xamarin.Bundler {
 
 		static void LogArguments (string [] arguments)
 		{
-			if (Verbosity < 2)
+			if (Verbosity < 1)
 				return;
 			if (!arguments.Any ((v) => v.Length > 0 && v [0] == '@'))
 				return; // no need to print arguments unless we get response files
@@ -478,5 +478,27 @@ namespace Xamarin.Bundler {
 			Touch ((IEnumerable<string>) filenames);
 		}
 
+		static int watch_level;
+		static Stopwatch watch;
+
+		public static int WatchLevel {
+			get { return watch_level; }
+			set {
+				watch_level = value;
+				if ((watch_level > 0) && (watch == null)) {
+					watch = new Stopwatch ();
+					watch.Start ();
+				}
+			}
+		}
+
+		public static void Watch (string msg, int level)
+		{
+			if ((watch == null) || (level > WatchLevel))
+				return;
+			for (int i = 0; i < level; i++)
+				Console.Write ("!");
+			Console.WriteLine ("Timestamp {0}: {1} ms", msg, watch.ElapsedMilliseconds);
+		}
 	}
 }

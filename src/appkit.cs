@@ -551,8 +551,23 @@ namespace AppKit {
 		void EndSheet (NSWindow  sheet, nint returnCode);
 	
 		[Export ("nextEventMatchingMask:untilDate:inMode:dequeue:"), Protected]
+		NSEvent NextEvent (NSEventMask mask, [NullAllowed] NSDate expiration, NSString runLoopMode, bool deqFlag);
+
+#if !XAMCORE_4_0
+		[Obsolete ("Use the 'NextEvent (NSEventMask, NSDate, [NSRunLoopMode|NSString], bool)' overloads instead.")]
+		[Wrap ("NextEvent ((NSEventMask) (ulong) mask, expiration, (NSString) mode, deqFlag)", IsVirtual = true), Protected]
 		NSEvent NextEvent (nuint mask, NSDate expiration, string mode, bool deqFlag);
-	
+
+		// NSEventMask must be casted to nuint to preserve the NSEventMask.Any special value on 64 bit systems. NSEventMask is not [Native].
+		[Obsolete ("Use the 'NextEvent (NSEventMask, NSDate, [NSRunLoopMode|NSString], bool)' overloads instead.")]
+		[Wrap ("NextEvent (mask, expiration, (NSString) mode, deqFlag)")]
+		NSEvent NextEvent (NSEventMask mask, NSDate expiration, string mode, bool deqFlag);
+#endif
+
+		// NSEventMask must be casted to nuint to preserve the NSEventMask.Any special value on 64 bit systems. NSEventMask is not [Native].
+		[Wrap ("NextEvent (mask, expiration, runLoopMode.GetConstant (), deqFlag)")]
+		NSEvent NextEvent (NSEventMask mask, NSDate expiration, NSRunLoopMode runLoopMode, bool deqFlag);
+
 		[Export ("discardEventsMatchingMask:beforeEvent:"), Protected]
 		void DiscardEvents (nuint mask, NSEvent lastEvent);
 	
@@ -18592,6 +18607,42 @@ namespace AppKit {
 		void SelectionIsChanging (NSNotification notification);
 	}
 
+	[BaseType (typeof(NSObject))]
+	[Model]
+	[Protocol]
+	interface NSTokenFieldCellDelegate {
+		[Export ("tokenFieldCell:completionsForSubstring:indexOfToken:indexOfSelectedItem:")]
+		NSArray GetCompletionStrings (NSTokenFieldCell tokenFieldCell, string substring, nint tokenIndex, ref nint selectedIndex);
+
+		[Export ("tokenFieldCell:shouldAddObjects:atIndex:")]
+		NSArray ShouldAddObjects (NSTokenFieldCell tokenFieldCell, NSObject[] tokens, nuint index);
+
+		[Export ("tokenFieldCell:displayStringForRepresentedObject:")]
+		string GetDisplayString (NSTokenFieldCell tokenFieldCell, NSObject representedObject);
+
+		[Export ("tokenFieldCell:editingStringForRepresentedObject:")]
+		string GetEditingString (NSTokenFieldCell tokenFieldCell, NSObject representedObject);
+
+		[Export ("tokenFieldCell:representedObjectForEditingString:")]
+		[return: NullAllowed]
+		NSObject GetRepresentedObject (NSTokenFieldCell tokenFieldCell, string editingString);
+
+		[Export ("tokenFieldCell:writeRepresentedObjects:toPasteboard:")]
+		bool WriteRepresentedObjects (NSTokenFieldCell tokenFieldCell, NSObject [] objects, NSPasteboard pboard);
+
+		[Export ("tokenFieldCell:readFromPasteboard:")]
+		NSObject [] Read (NSTokenFieldCell tokenFieldCell, NSPasteboard pboard);
+
+		[Export ("tokenFieldCell:menuForRepresentedObject:")]
+		NSMenu GetMenu (NSTokenFieldCell tokenFieldCell, NSObject representedObject);
+
+		[Export ("tokenFieldCell:hasMenuForRepresentedObject:")]
+		bool HasMenu (NSTokenFieldCell tokenFieldCell, NSObject representedObject);
+
+		[Export ("tokenFieldCell:styleForRepresentedObject:")]
+		NSTokenStyle GetStyle (NSTokenFieldCell tokenFieldCell, NSObject representedObject);
+	}
+
 	[BaseType (typeof (NSActionCell))]
 	interface NSTextFieldCell {
 		[DesignatedInitializer]
@@ -18629,6 +18680,37 @@ namespace AppKit {
 		[Export ("wantsNotificationForMarkedText")]
 		[Override]
 		bool WantsNotificationForMarkedText { get; set; }
+	}
+
+	[BaseType (typeof(NSTextFieldCell))]
+	[DisableDefaultCtor]
+	interface NSTokenFieldCell {
+		[Export ("initTextCell:")]
+		IntPtr Constructor (string aString);
+
+		[Export ("tokenStyle")]
+		NSTokenStyle TokenStyle { get; set; }
+
+		[Export ("completionDelay")]
+		double CompletionDelay { get; set; }
+
+		[Static]
+		[Export ("defaultCompletionDelay")]
+		double DefaultCompletionDelay { get; }
+
+		[Export ("tokenizingCharacterSet", ArgumentSemantic.Copy), NullAllowed] 
+		NSCharacterSet CharacterSet { get; set; }
+
+		[Static]
+		[Export ("defaultTokenizingCharacterSet")] 
+		NSCharacterSet DefaultCharacterSet { get; }
+
+		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed] 
+		NSObject WeakDelegate { get; set; }
+
+		[Wrap ("WeakDelegate")]
+		[Protocolize]
+		NSTokenFieldCellDelegate Delegate { get; set; }
 	}
 
 	[BaseType (typeof (NSTextFieldCell))]
@@ -20448,7 +20530,7 @@ namespace AppKit {
 		NSWindowStyle StyleMask { get; set; }
 	
 		[Export ("fieldEditor:forObject:")]
-		NSText FieldEditor (bool createFlag, NSObject forObject);
+		NSText FieldEditor (bool createFlag, [NullAllowed] NSObject forObject);
 	
 		[Export ("endEditingFor:")]
 		void EndEditingFor ([NullAllowed] NSObject anObject);

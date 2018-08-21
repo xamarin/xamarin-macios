@@ -1,5 +1,5 @@
 TOP=.
-SUBDIRS=builds runtime fsharp src tools msbuild
+SUBDIRS=builds runtime fsharp src msbuild tools
 include $(TOP)/Make.config
 include $(TOP)/mk/versions.mk
 
@@ -57,7 +57,7 @@ $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/buildinfo: Make.config.inc .git/index | $(IOS
 	$(Q) echo "Branch: $(CURRENT_BRANCH)" >> $@
 	$(Q) echo "Build date: $(shell date '+%Y-%m-%d %H:%M:%S%z')" >> $@
 
-$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Version: Make.config.inc
+$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Version: Make.config.inc | $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)
 	$(Q) echo $(IOS_PACKAGE_VERSION) > $@
 
 $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/updateinfo: Make.config.inc

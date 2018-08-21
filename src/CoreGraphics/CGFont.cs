@@ -32,9 +32,7 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
-#if !MONOMAC && !WATCH
 using CoreText;
-#endif
 
 namespace CoreGraphics {
 
@@ -277,8 +275,6 @@ namespace CoreGraphics {
 		// CFStringRef kCGFontVariationAxisMaxValue;
 		// CFStringRef kCGFontVariationAxisDefaultValue;
 
-#if !WATCH
-#if !MONOMAC
 		[DllImport (Constants.CoreTextLibrary)]
 		unsafe static extern /* CTFontRef */ IntPtr CTFontCreateWithGraphicsFont (/* CGFontRef */ IntPtr graphicsFont, /* CGFloat */ nfloat size, CGAffineTransform *matrix, /* CTFontDescriptorRef */ IntPtr attributes);
 
@@ -300,13 +296,10 @@ namespace CoreGraphics {
 		{
 			return new CTFont (CTFontCreateWithGraphicsFont (handle, size, &matrix, IntPtr.Zero), true);
 		}
-#endif // !MONOMAC
 	
 #if TODO
 		ToCTFont() overloads where attributes is CTFontDescriptorRef
 #endif // TODO
-
-#endif // !WATCH
 
 		[DllImport (Constants.CoreTextLibrary, EntryPoint="CGFontGetTypeID")]
 		public extern static /* CFTypeID */ nint GetTypeID ();

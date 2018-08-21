@@ -263,5 +263,62 @@ class D : NSObject {
 				bundler.AssertWarningCount (3);
 			}
 		}
+
+		[Test]
+#if __MACOS__
+		[TestCase (Profile.macOSMobile)]
+#else
+		[TestCase (Profile.iOS)]
+#endif
+		public void MX4175 (Profile profile)
+		{
+			var code = @"
+using System;
+using Foundation;
+using ObjCRuntime;
+class Issue4072Session : NSUrlSession {
+	public Issue4072Session ()
+		: base (IntPtr.Zero)
+	{
+	}
+	public override NSUrlSessionDataTask CreateDataTask (NSUrl url, [BlockProxy (typeof (Delegate))] NSUrlSessionResponse completionHandler)
+	{
+		return base.CreateDataTask (url, completionHandler);
+	}
+
+	static void Main ()
+	{
+		Console.WriteLine (typeof (NSObject));
+	}
+}
+";
+			using (var bundler = new BundlerTool ()) {
+				bundler.Profile = profile;
+				bundler.CreateTemporaryCacheDirectory ();
+				bundler.CreateTemporaryApp (profile, code: code, extraArg: "/debug:full");
+				bundler.Registrar = RegistrarOption.Static;
+				bundler.Linker = LinkerOption.DontLink;
+				bundler.AssertExecute ();
+				bundler.AssertWarning (4175, "The parameter 'completionHandler' in the method 'Issue4072Session.CreateDataTask(Foundation.NSUrl,Foundation.NSUrlSessionResponse)' has an invalid BlockProxy attribute (the type passed to the attribute does not have a 'Create' method).", "testApp.cs", 11);
+				bundler.AssertWarningCount (1);
+			}
+
+			using (var bundler = new BundlerTool ()) {
+				bundler.Profile = profile;
+				bundler.CreateTemporaryCacheDirectory ();
+				bundler.CreateTemporaryApp (profile, code: code, extraArg: "/debug-"); // Build without debug info so that the source code location isn't available.
+				bundler.Registrar = RegistrarOption.Static;
+#if !__MACOS__
+				bundler.Linker = LinkerOption.LinkAll; // This will remove the parameter name in Xamarin.iOS (the parameter name removal optimization (MetadataReducerSubStep) isn't implemented for Xamarin.Mac).
+#endif
+				bundler.AssertExecute ();
+#if __MACOS__
+				bundler.AssertWarning (4175, "The parameter 'completionHandler' in the method 'Issue4072Session.CreateDataTask(Foundation.NSUrl,Foundation.NSUrlSessionResponse)' has an invalid BlockProxy attribute (the type passed to the attribute does not have a 'Create' method).");
+#else
+				bundler.AssertWarning (4175, "Parameter #2 in the method 'Issue4072Session.CreateDataTask(Foundation.NSUrl,Foundation.NSUrlSessionResponse)' has an invalid BlockProxy attribute (the type passed to the attribute does not have a 'Create' method).");
+#endif
+				bundler.AssertWarningCount (1);
+			}
+		}
 	}
 }

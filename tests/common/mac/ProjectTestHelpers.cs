@@ -155,6 +155,7 @@ namespace Xamarin.MMP.Tests
 			public string SystemMonoVersion { get; set; } = "";
 			public string TargetFrameworkVersion { get; set; } = "";
 			public Dictionary<string, string> PlistReplaceStrings { get; set; } = new Dictionary<string, string>();
+			public Tuple<string, string> CustomProjectReplacement { get; set; } = null;
 
 			// Binding project specific
 			public string APIDefinitionConfig { get; set; }
@@ -229,6 +230,9 @@ namespace Xamarin.MMP.Tests
 
 		public static string BuildProject (string csprojTarget, bool isUnified, bool diagnosticMSBuild = false, bool shouldFail = false, bool useMSBuild = false, bool release = false, string[] environment = null)
 		{
+			if (Environment.GetEnvironmentVariable ("XM_FORCE_MSBUILD") != null)
+				useMSBuild = true;
+
 			string rootDirectory = FindRootDirectory ();
 
 			// TODO - This is not enough for MSBuild to really work. We need stuff to have it not use system targets!
@@ -271,12 +275,15 @@ namespace Xamarin.MMP.Tests
 
 		static string ProjectTextReplacement (UnifiedTestConfig config, string text)
 		{
-			return text.Replace ("%CODE%", config.CSProjConfig)
+			 text = text.Replace ("%CODE%", config.CSProjConfig)
 					   .Replace ("%REFERENCES%", config.References)
 					   .Replace ("%REFERENCES_BEFORE_PLATFORM%", config.ReferencesBeforePlatform)
 					   .Replace ("%NAME%", config.AssemblyName ?? Path.GetFileNameWithoutExtension (config.ProjectName))
 					   .Replace ("%ITEMGROUP%", config.ItemGroup)
 					   .Replace ("%TARGET_FRAMEWORK_VERSION%", config.TargetFrameworkVersion);
+			if (config.CustomProjectReplacement != null)
+				text = text.Replace (config.CustomProjectReplacement.Item1, config.CustomProjectReplacement.Item2);
+			return text;
 		}
 
 		public static string RunEXEAndVerifyGUID (string tmpDir, Guid guid, string path)

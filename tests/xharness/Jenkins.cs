@@ -158,6 +158,7 @@ namespace xharness
 			public bool Profiling;
 			public string LinkMode;
 			public string Defines;
+			public string Undefines;
 			public bool Ignored;
 		}
 
@@ -181,6 +182,13 @@ namespace xharness
 				case "monotouch-test":
 					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, Defines = "OPTIMIZEALL" };
 					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = true, Profiling = false, Defines = "OPTIMIZEALL" };
+					yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Ignored = true, };
+					break;
+				case "mscorlib":
+					yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Ignored = true, Undefines = "FULL_AOT_RUNTIME" };
+					break;
+				case "mini":
+					yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
 					break;
 				}
 				break;
@@ -189,8 +197,8 @@ namespace xharness
 				case "monotouch-test":
 					// The default is to run monotouch-test with the dynamic registrar (in the simulator), so that's already covered
 					yield return new TestData { Variation = "Debug (static registrar)", MTouchExtraArgs = "--registrar:static", Debug = true, Profiling = false };
-					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, LinkMode = "Full", Defines = "LINKALL;OPTIMIZEALL" };
-					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, Profiling = false, LinkMode = "Full", Defines = "LINKALL;OPTIMIZEALL", Ignored = !IncludeAll };
+					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL" };
+					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Ignored = !IncludeAll };
 					break;
 				}
 				break;
@@ -200,10 +208,10 @@ namespace xharness
 				case "xammac tests":
 					switch (test.ProjectConfiguration) {
 					case "Release":
-						yield return new TestData { Variation = "Release (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all", Debug = false, LinkMode = "Full", Defines = "LINKALL;OPTIMIZEALL"};
+						yield return new TestData { Variation = "Release (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all", Debug = false, LinkMode = "Full", Defines = "OPTIMIZEALL"};
 						break;
 					case "Debug":
-						yield return new TestData { Variation = "Release (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, LinkMode = "Full", Defines = "LINKALL;OPTIMIZEALL", Ignored = !IncludeAll };
+						yield return new TestData { Variation = "Debug (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, LinkMode = "Full", Defines = "OPTIMIZEALL", Ignored = !IncludeAll };
 						break;
 					}
 					break;
@@ -232,6 +240,7 @@ namespace xharness
 					var profiling = test_data.Profiling;
 					var link_mode = test_data.LinkMode;
 					var defines = test_data.Defines;
+					var undefines = test_data.Undefines;
 					var ignored = test_data.Ignored;
 
 					var clone = task.TestProject.Clone ();
@@ -265,7 +274,15 @@ namespace xharness
 									pr.Xml.Save (pr.Path);
 								}
 							}
-							
+						}
+						if (!string.IsNullOrEmpty (undefines)) {
+							clone.Xml.RemoveDefines (undefines, task.ProjectPlatform, configuration);
+							if (clone.ProjectReferences != null) {
+								foreach (var pr in clone.ProjectReferences) {
+									pr.Xml.RemoveDefines (undefines, task.ProjectPlatform, configuration);
+									pr.Xml.Save (pr.Path);
+								}
+							}
 						}
 						clone.Xml.SetNode (isMac ? "Profiling" : "MTouchProfiling", profiling ? "True" : "False", task.ProjectPlatform, configuration);
 
@@ -644,6 +661,7 @@ namespace xharness
 				TestName = "Install Sources tests",
 				Mode = "iOS",
 				Timeout = TimeSpan.FromMinutes (60),
+				Ignored = !IncludeMac && !IncludeSimulator,
 			};
 			Tasks.Add (nunitExecutionInstallSource);
 
@@ -693,6 +711,7 @@ namespace xharness
 							Platform = build.Platform,
 							TestName = project.Name,
 							Timeout = TimeSpan.FromMinutes (120),
+							Mode = "macOS",
 						};
 						execs = new [] { exec };
 					} else {
@@ -702,7 +721,7 @@ namespace xharness
 							TestName = project.Name,
 							IsUnitTest = true,
 						};
-						execs = CreateTestVariations (new [] { exec }, (buildTask, test) => new MacExecuteTask (buildTask));
+						execs = CreateTestVariations (new [] { exec }, (buildTask, test) => new MacExecuteTask (buildTask) { IsUnitTest = true } );
 					}
 					exec.Variation = configurations.Length > 1 ? config : project.TargetFrameworkFlavor.ToString ();
 
@@ -930,7 +949,7 @@ namespace xharness
 
 		void BuildTestLibraries ()
 		{
-			ProcessHelper.ExecuteCommandAsync ("make", $"all -j{Environment.ProcessorCount} -C {StringUtils.Quote (Path.Combine (Harness.RootDirectory, "test-libraries"))}", MainLog, TimeSpan.FromMinutes (1)).Wait ();
+			ProcessHelper.ExecuteCommandAsync ("make", $"all -j{Environment.ProcessorCount} -C {StringUtils.Quote (Path.Combine (Harness.RootDirectory, "test-libraries"))}", MainLog, TimeSpan.FromMinutes (10)).Wait ();
 		}
 
 		Task RunTestServer ()
@@ -1174,7 +1193,14 @@ namespace xharness
 								using (var fs = new FileStream (path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
 									int read;
 									response.ContentLength64 = fs.Length;
-									response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
+									switch (Path.GetExtension (path).ToLowerInvariant ()) {
+									case ".html":
+										response.ContentType = System.Net.Mime.MediaTypeNames.Text.Html;
+										break;
+									default:
+										response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
+										break;
+									}
 									while ((read = fs.Read (buffer, 0, buffer.Length)) > 0)
 										response.OutputStream.Write (buffer, 0, read);
 								}
@@ -1354,7 +1380,8 @@ namespace xharness
 				allTasks.AddRange (allDeviceTasks);
 			}
 
-			var failedTests = allTasks.Where ((v) => v.Failed || v.Skipped);
+			var failedTests = allTasks.Where ((v) => v.Failed);
+			var skippedTests = allTasks.Where ((v) => v.Skipped);
 			var unfinishedTests = allTasks.Where ((v) => !v.Finished);
 			var passedTests = allTasks.Where ((v) => v.Succeeded);
 			var runningTests = allTasks.Where ((v) => v.Running && !v.Waiting);
@@ -1365,8 +1392,13 @@ namespace xharness
 			if (markdown_summary != null) {
 				markdown_summary.WriteLine ("# Test results");
 				markdown_summary.WriteLine ();
+				var details = failedTests.Any ();
+				if (details) {
+					markdown_summary.WriteLine ("<details>");
+					markdown_summary.Write ("<summary>");
+				}
 				if (allTasks.Count == 0) {
-					markdown_summary.WriteLine ($"Loading tests...");
+					markdown_summary.Write ($"Loading tests...");
 				} else if (unfinishedTests.Any ()) {
 					var list = new List<string> ();
 					var grouped = allTasks.GroupBy ((v) => v.ExecutionResult).OrderBy ((v) => (int) v.Key);
@@ -1374,14 +1406,18 @@ namespace xharness
 						list.Add ($"{@group.Key.ToString ()}: {@group.Count ()}");
 					markdown_summary.Write ($"# Test run in progress: ");
 					markdown_summary.Write (string.Join (", ", list));
-					markdown_summary.WriteLine ();
 				} else if (failedTests.Any ()) {
-					markdown_summary.WriteLine ($"{failedTests.Count ()} tests failed, {passedTests.Count ()} tests passed.");
+					markdown_summary.Write ($"{failedTests.Count ()} tests failed, {skippedTests.Count ()} tests skipped, {passedTests.Count ()} tests passed.");
+				} else if (skippedTests.Any ()) {
+					markdown_summary.Write ($"{skippedTests.Count ()} tests skipped, {passedTests.Count ()} tests passed.");
 				} else if (passedTests.Any ()) {
-					markdown_summary.WriteLine ($"# All {passedTests.Count ()} tests passed");
+					markdown_summary.Write ($"# All {passedTests.Count ()} tests passed");
 				} else {
-					markdown_summary.WriteLine ($"# No tests selected.");
+					markdown_summary.Write ($"# No tests selected.");
 				}
+				if (details)
+					markdown_summary.Write ("</summary>");
+				markdown_summary.WriteLine ();
 				markdown_summary.WriteLine ();
 				if (failedTests.Any ()) {
 					markdown_summary.WriteLine ("## Failed tests");
@@ -1398,6 +1434,8 @@ namespace xharness
 						markdown_summary.WriteLine ();
 					}
 				}
+				if (details)
+					markdown_summary.WriteLine ("</details>");
 			}
 
 			using (var writer = new StreamWriter (stream)) {
@@ -1615,6 +1653,7 @@ function autorefresh()
 					console.log (""Could not find id "" + ar_obj.id + "" in updated page."");
 				}
 			}
+			setTimeout (autorefresh, 1000);
 	    }
 	};
 	xhttp.open(""GET"", window.location.href, true);
@@ -1650,9 +1689,39 @@ function oninitialload ()
 		if (evt != '')
 			autoshowdetailsmessage (evt);
 	}
-}");
+}
+
+function toggleAll (show)
+{
+	var expandable = document.getElementsByClassName ('expander');
+	var counter = 0;
+	var value = show ? '-' : '+';
+	for (var i = 0; i < expandable.length; i++) {
+		var div = expandable [i];
+		if (div.textContent != value)
+			div.textContent = value;
+		counter++;
+	}
+	
+	var togglable = document.getElementsByClassName ('togglable');
+	counter = 0;
+	value = show ? 'block' : 'none';
+	for (var i = 0; i < togglable.length; i++) {
+		var div = togglable [i];
+		if (div.style.display != value) {
+			if (show && div.innerText.trim () == '') {
+				// don't show nothing
+			} else {
+				div.style.display = value;
+			}
+		}
+		counter++;
+	}
+}
+
+");
 				if (IsServerMode)
-					writer.WriteLine ("setInterval (autorefresh, 1000);");
+					writer.WriteLine ("setTimeout (autorefresh, 1000);");
 				writer.WriteLine ("</script>");
 				writer.WriteLine ("</head>");
 				writer.WriteLine ("<body onload='oninitialload ();'>");
@@ -1672,6 +1741,8 @@ function oninitialload ()
 					; // default
 				} else if (failedTests.Any ()) {
 					headerColor = "red";
+				} else if (skippedTests.Any ()) {
+					headerColor = "orange";
 				} else if (passedTests.Any ()) {
 					headerColor = "green";
 				} else {
@@ -1691,7 +1762,9 @@ function oninitialload ()
 					writer.Write (string.Join (", ", list));
 					writer.Write (")");
 				} else if (failedTests.Any ()) {
-					writer.Write ($"{failedTests.Count ()} tests failed, {passedTests.Count ()} tests passed.");
+					writer.Write ($"{failedTests.Count ()} tests failed, {skippedTests.Count ()} tests skipped, {passedTests.Count ()} tests passed");
+				} else if (skippedTests.Any ()) {
+					writer.Write ($"{skippedTests.Count ()} tests skipped, {passedTests.Count ()} tests passed");
 				} else if (passedTests.Any ()) {
 					writer.Write ($"All {passedTests.Count ()} tests passed");
 				} else {
@@ -1699,9 +1772,10 @@ function oninitialload ()
 				}
 				writer.WriteLine ("</span>");
 				writer.WriteLine ("</h2>");
-				if (IsServerMode && allTasks.Count > 0) {
-					writer.WriteLine (@"
-<ul id='nav'>
+				if (allTasks.Count > 0) {
+					writer.WriteLine ($"<ul id='nav'>");
+					if (IsServerMode) {
+						writer.WriteLine (@"
 	<li>Select
 		<ul>
 			<li class=""adminitem""><a href='javascript:sendrequest (""select?all"");'>All tests</a></li>
@@ -1730,19 +1804,26 @@ function oninitialload ()
 			<li class=""adminitem""><a href='javascript:sendrequest (""runselected"");'>All selected tests</a></li>
 			<li class=""adminitem""><a href='javascript:sendrequest (""runfailed"");'>All failed tests</a></li>
 		</ul>
-	</li>
+	</li>");
+					}
+					writer.WriteLine (@"
 	<li>Toggle visibility
 		<ul>
-			<li class=""adminitem""><a href='javascript:toggleVisibility (""toggleable-ignored"");'>Ignored tests</a></li>
+			<li class=""adminitem""><a href='javascript:toggleAll (true);'>Expand all</a></li>
+			<li class=""adminitem""><a href='javascript:toggleAll (false);'>Collapse all</a></li>
+			<li class=""adminitem""><a href='javascript:toggleVisibility (""toggleable-ignored"");'>Hide/Show ignored tests</a></li>
 		</ul>
-	</li>
+	</li>");
+					if (IsServerMode) {
+						writer.WriteLine (@"
 	<li>Reload
 		<ul>
 			<li class=""adminitem""><a href='javascript:sendrequest (""reload-devices"");'>Devices</a></li>
 			<li class=""adminitem""><a href='javascript:sendrequest (""reload-simulators"");'>Simulators</a></li>
 		</ul>
-	</li>
-</ul>");
+	</li>");
+					}
+					writer.WriteLine ("</ul>");
 				}
 
 				writer.WriteLine ("<div id='test-table' style='width: 100%'>");
@@ -1839,7 +1920,7 @@ function oninitialload ()
 						if (IsServerMode)
 							writer.Write ($" <span><a class='runall' href='javascript: runtest (\"{string.Join (",", group.Select ((v) => v.ID.ToString ()))}\");'>Run all</a></span>");
 						writer.WriteLine ("</div>");
-						writer.WriteLine ($"<div id='test_container2_{groupId}' style='display: {defaultDisplay}; margin-left: 20px;'>");
+						writer.WriteLine ($"<div id='test_container2_{groupId}' class='togglable' style='display: {defaultDisplay}; margin-left: 20px;'>");
 					}
 
 					// Test data
@@ -1859,7 +1940,7 @@ function oninitialload ()
 								writer.Write ($" <span><a class='runall' href='javascript: runtest (\"{string.Join (",", modeGroup.Select ((v) => v.ID.ToString ()))}\");'>Run all</a></span>");
 							writer.WriteLine ("</div>");
 
-							writer.WriteLine ($"<div id='test_container2_{modeGroupId}' style='display: {defaultDisplay}; margin-left: 20px;'>");
+							writer.WriteLine ($"<div id='test_container2_{modeGroupId}' class='togglable' style='display: {defaultDisplay}; margin-left: 20px;'>");
 						}
 						foreach (var test in modeGroup.OrderBy ((v) => v.Variation, StringComparer.OrdinalIgnoreCase)) {
 							var runTest = test as RunTestTask;
@@ -1887,7 +1968,7 @@ function oninitialload ()
 							if (IsServerMode && !test.InProgress && !test.Waiting)
 								writer.Write ($" <span><a class='runall' href='javascript:runtest ({test.ID})'>Run</a></span> ");
 							writer.WriteLine ("</div>");
-							writer.WriteLine ($"<div id='logs_{log_id}' class='autorefreshable logs' data-onautorefresh='{log_id}' style='display: {defaultDisplay};'>");
+							writer.WriteLine ($"<div id='logs_{log_id}' class='autorefreshable logs togglable' data-onautorefresh='{log_id}' style='display: {defaultDisplay};'>");
 
 							if (!string.IsNullOrEmpty (test.FailureMessage)) {
 								var msg = System.Web.HttpUtility.HtmlEncode (test.FailureMessage).Replace ("\n", "<br />");
@@ -1940,7 +2021,7 @@ function oninitialload ()
 										break;
 									}
 									writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
-									if (log.Description == "Test log" || log.Description == "Execution log") {
+									if (log.Description == "Test log" || log.Description == "Extension test log" || log.Description == "Execution log") {
 										string summary;
 										List<string> fails;
 										try {
@@ -2015,21 +2096,25 @@ function oninitialload ()
 												var failures = doc.SelectNodes ("//test-case[@result='Error' or @result='Failure']").Cast<System.Xml.XmlNode> ().ToArray ();
 												if (failures.Length > 0) {
 													writer.WriteLine ("<div style='padding-left: 15px;'>");
+													writer.WriteLine ("<ul>");
 													foreach (var failure in failures) {
+														writer.WriteLine ("<li>");
 														var test_name = failure.Attributes ["name"]?.Value;
 														var message = failure.SelectSingleNode ("failure/message")?.InnerText;
 														writer.Write (System.Web.HttpUtility.HtmlEncode (test_name));
 														if (!string.IsNullOrEmpty (message)) {
 															writer.Write (": ");
-															writer.Write (System.Web.HttpUtility.HtmlEncode (message));
+															writer.Write (HtmlFormat (message));
 														}
 														writer.WriteLine ("<br />");
+														writer.WriteLine ("</li>");
 													}
+													writer.WriteLine ("</ul>");
 													writer.WriteLine ("</div>");
 												}
 											}
 										} catch (Exception ex) {
-											writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {System.Web.HttpUtility.HtmlEncode (ex.Message)}</span><br />");
+											writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {HtmlFormat (ex.Message)}</span><br />");
 										}
 									}
 								}
@@ -2049,6 +2134,12 @@ function oninitialload ()
 			}
 		}
 		Dictionary<Log, Tuple<long, object>> log_data = new Dictionary<Log, Tuple<long, object>> ();
+
+		static string HtmlFormat (string value)
+		{
+			var rv = System.Web.HttpUtility.HtmlEncode (value);
+			return rv.Replace ("\t", "&nbsp;&nbsp;&nbsp;&nbsp;").Replace ("\n", "<br/>\n");
+		}
 
 		static string LinkEncode (string path)
 		{
@@ -2131,7 +2222,7 @@ function oninitialload ()
 		string failure_message;
 		public string FailureMessage {
 			get { return failure_message; }
-			protected set {
+			set {
 				failure_message = value;
 				MainLog.WriteLine (failure_message);
 			}
@@ -2286,12 +2377,17 @@ function oninitialload ()
 					FailureMessage = $"Harness exception for '{TestName}': {e}";
 					log.WriteLine (FailureMessage);
 				}
+				PropagateResults ();
 			} finally {
 				logs?.Dispose ();
 				duration.Stop ();
 			}
 
 			Jenkins.GenerateReport (true);
+		}
+
+		protected virtual void PropagateResults ()
+		{
 		}
 
 		public virtual void Reset ()
@@ -2390,13 +2486,10 @@ function oninitialload ()
 			}
 		}
 
-		protected void LogProcessExecution (Log log, Process process, string text, params object[] args)
+		protected void LogEvent (Log log, string text, params object[] args)
 		{
 			Jenkins.MainLog.WriteLine (text, args);
 			log.WriteLine (text, args);
-			foreach (string key in process.StartInfo.EnvironmentVariables.Keys)
-				log.WriteLine ("{0}={1}", key, process.StartInfo.EnvironmentVariables [key]);
-			log.WriteLine ("{0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
 		}
 
 		public string GuessFailureReason (Log log)
@@ -2513,7 +2606,7 @@ function oninitialload ()
 				args.Append (StringUtils.Quote (SolutionPath));
 				nuget.StartInfo.Arguments = args.ToString ();
 				SetEnvironmentVariables (nuget);
-				LogProcessExecution (log, nuget, "Restoring nugets for {0} ({1})", TestName, Mode);
+				LogEvent (log, "Restoring nugets for {0} ({1})", TestName, Mode);
 
 				var timeout = TimeSpan.FromMinutes (15);
 				var result = await nuget.RunAsync (log, true, timeout);
@@ -2545,7 +2638,7 @@ function oninitialload ()
 					args.Append (StringUtils.Quote (File.Exists (sln) ? sln : ProjectFile));
 					xbuild.StartInfo.Arguments = args.ToString ();
 					SetEnvironmentVariables (xbuild);
-					LogProcessExecution (log, xbuild, "Building {0} ({1})", TestName, Mode);
+					LogEvent (log, "Building {0} ({1})", TestName, Mode);
 					if (!Harness.DryRun) {
 						var timeout = TimeSpan.FromMinutes (5);
 						var result = await xbuild.RunAsync (log, true, timeout);
@@ -2581,7 +2674,7 @@ function oninitialload ()
 					SetEnvironmentVariables (make);
 					var log = Logs.Create ($"make-{Platform}-{Timestamp}.txt", "Build log");
 					log.Timestamp = true;
-					LogProcessExecution (log, make, "Making {0} in {1}", Target, WorkingDirectory);
+					LogEvent (log, "Making {0} in {1}", Target, WorkingDirectory);
 					if (!Harness.DryRun) {
 						var timeout = Timeout;
 						var result = await make.RunAsync (log, true, timeout);
@@ -2626,7 +2719,7 @@ function oninitialload ()
 					SetEnvironmentVariables (xbuild);
 					if (UseMSBuild)
 						xbuild.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = null;
-					LogProcessExecution (log, xbuild, "Building {0} ({1})", TestName, Mode);
+					LogEvent (log, "Building {0} ({1})", TestName, Mode);
 					if (!Harness.DryRun) {
 						var timeout = TimeSpan.FromMinutes (15);
 						var result = await xbuild.RunAsync (log, true, timeout);
@@ -2661,7 +2754,7 @@ function oninitialload ()
 				args.Append ("/t:Clean ");
 				xbuild.StartInfo.Arguments = args.ToString ();
 				SetEnvironmentVariables (xbuild);
-				LogProcessExecution (log, xbuild, "Cleaning {0} ({1}) - {2}", TestName, Mode, project_file);
+				LogEvent (log, "Cleaning {0} ({1}) - {2}", TestName, Mode, project_file);
 				var timeout = TimeSpan.FromMinutes (1);
 				await xbuild.RunAsync (log, true, timeout);
 				log.WriteLine ("Clean timed out after {0} seconds.", timeout.TotalSeconds);
@@ -2899,7 +2992,6 @@ function oninitialload ()
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
 					var log = Logs.Create ($"execute-{Platform}-{Timestamp}.txt", "Execution log");
 					log.Timestamp = true;
-					log.WriteLine ("{0} {1}", proc.StartInfo.FileName, proc.StartInfo.Arguments);
 					if (!Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;
 
@@ -3051,7 +3143,7 @@ function oninitialload ()
 			if (Finished)
 				return;
 
-			VerifyRun ();
+			await VerifyRunAsync ();
 			if (Finished)
 				return;
 
@@ -3066,7 +3158,7 @@ function oninitialload ()
 		protected abstract Task RunTestAsync ();
 		// VerifyRun is called in ExecuteAsync to verify that the task can be executed/run.
 		// Typically used to fail tasks that don't have an available device.
-		public virtual void VerifyRun () { }
+		public virtual Task VerifyRunAsync () { return Task.CompletedTask; }
 
 		public override void Reset ()
 		{
@@ -3140,11 +3232,15 @@ function oninitialload ()
 			set { throw new NotImplementedException (); }
 		}
 
-		public override void VerifyRun ()
+		public override async Task VerifyRunAsync ()
 		{
-			base.VerifyRun ();
+			await base.VerifyRunAsync ();
 
-			if (!candidates.Any ()) {
+			var enumerable = candidates;
+			var asyncEnumerable = enumerable as IAsyncEnumerable;
+			if (asyncEnumerable != null)
+				await asyncEnumerable.ReadyTask;
+			if (!enumerable.Any ()) {
 				ExecutionResult = TestExecutingResult.Skipped;
 				FailureMessage = "No applicable devices found.";
 			}
@@ -3412,8 +3508,7 @@ function oninitialload ()
 			Jenkins.MainLog.WriteLine ("Running XI on '{0}' ({2}) for {1}", Device?.Name, ProjectFile, Device?.UDID);
 
 			ExecutionResult = (ExecutionResult & ~TestExecutingResult.InProgressMask) | TestExecutingResult.Running;
-			if (BuildTask.NotStarted)
-				await BuildTask.RunAsync ();
+			await BuildTask.RunAsync ();
 			if (!BuildTask.Succeeded) {
 				ExecutionResult = TestExecutingResult.BuildFailure;
 				return;
@@ -3452,11 +3547,21 @@ function oninitialload ()
 			this.Tasks = tasks;
 		}
 
+		protected override void PropagateResults ()
+		{
+			foreach (var task in Tasks) {
+				task.ExecutionResult = ExecutionResult;
+				task.FailureMessage = FailureMessage;
+			}
+		}
+
 		protected override async Task ExecuteAsync ()
 		{
-			foreach (var task in Tasks)
-				task.VerifyRun ();
-			
+			if (Tasks.All ((v) => v.Ignored)) {
+				ExecutionResult = TestExecutingResult.Ignored;
+				return;
+			}
+
 			// First build everything. This is required for the run simulator
 			// task to properly configure the simulator.
 			build_timer.Start ();

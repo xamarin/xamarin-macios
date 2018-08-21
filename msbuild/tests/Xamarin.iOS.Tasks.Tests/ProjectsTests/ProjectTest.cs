@@ -78,7 +78,7 @@ namespace Xamarin.iOS.Tasks
 			TestFilesExists (AppBundlePath, ExpectedAppFiles);
 			TestFilesDoNotExist (AppBundlePath, UnexpectedAppFiles);
 
-			var coreFiles = GetCoreAppFiles (platform, config, appName + ".exe", appName);
+			var coreFiles = GetCoreAppFiles (platform, config, appName.Replace (" ", "") + ".exe", appName.Replace (" ", ""));
 			var baseDirs = new string [] {
 				Path.Combine (AppBundlePath, ".monotouch-32"),
 				Path.Combine (AppBundlePath, ".monotouch-64"),

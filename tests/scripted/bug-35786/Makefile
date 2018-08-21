@@ -10,7 +10,7 @@ libs/C%.cs: Makefile
 	@echo "public class C$* {}" >> $@
 
 libs/C%.dll: libs/C%.cs Makefile
-	$(SYSTEM_MCS) -target:library $< -out:$@
+	$(SYSTEM_CSC) -target:library $< -out:$@
 
 libs/All.cs: Makefile
 	@echo "public class All {" > $@
@@ -24,10 +24,10 @@ libs/All.dll.rsp: Makefile
 	@printf -- "-r:libs/C%i.dll\n" {1..$(ITERATIONS)} > $@
 
 libs/All.dll: libs/All.cs libs/All.dll.rsp $(ALL_DLLS)
-	$(SYSTEM_MCS) -target:library @$@.rsp $< -out:$@
+	$(SYSTEM_CSC) -target:library @$@.rsp $< -out:$@
 
 libs/bug-35786.exe: Main.cs libs/All.dll
-	$(SYSTEM_MCS) -target:exe $< -out:$@ -r:libs/All.dll -r:$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/Xamarin.iOS.dll -lib:$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS
+	$(SYSTEM_CSC) -target:exe $< -out:$@ -r:libs/All.dll -r:$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/Xamarin.iOS.dll -lib:$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS
 
 bug-35786:
 	@git clean -xfdq

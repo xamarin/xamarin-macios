@@ -173,6 +173,11 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "MonoMac.ImageKit.IKPictureTaker":
+			case "ImageKit.IKPictureTaker":
+				// https://bugzilla.xamarin.com/show_bug.cgi?id=46624
+				// https://trello.com/c/T6vkA2QF/62-29311598-ikpicturetaker-crashes-randomly-upon-deallocation?menu=filter&filter=corenfc
+				return true;
 			}
 
 			switch (type.Namespace) {
