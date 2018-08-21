@@ -292,9 +292,9 @@ function install_specific_xcode () {
 
 	if is_at_least_version "$XCODE_VERSION" 9.0; then
 		if ! "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -checkFirstLaunchStatus; then
-			log "Executing xcodebuild -runFirstLaunch"
+			log "Executing '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch'"
 			$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -runFirstLaunch
-			log "Executed xcodebuild -runFirstLaunch"
+			log "Executed '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch'"
 		fi
 	elif is_at_least_version $XCODE_VERSION 8.0; then
 		PKGS="MobileDevice.pkg MobileDeviceDevelopment.pkg XcodeSystemResources.pkg"
