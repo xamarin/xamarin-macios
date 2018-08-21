@@ -1498,7 +1498,9 @@ build-llvm32: .stamp-build-llvm
 build-llvm64: .stamp-build-llvm
 
 .stamp-build-llvm: $(SDK_CONFIG)
-	$(MAKE) -C $(SDK_BUILDDIR) build-ios-llvm $(SDK_ARGS)
+	$(MAKE) -C $(SDK_BUILDDIR) download-llvm-llvm32 $(SDK_ARGS) || $(MAKE) -C $(SDK_BUILDDIR) package-llvm-llvm32 $(SDK_ARGS)
+	$(MAKE) -C $(SDK_BUILDDIR) download-llvm-llvm36-32 $(SDK_ARGS) || $(MAKE) -C $(SDK_BUILDDIR) package-llvm-llvm36-32 $(SDK_ARGS)
+	$(MAKE) -C $(SDK_BUILDDIR) download-llvm-llvm64 $(SDK_ARGS) || $(MAKE) -C $(SDK_BUILDDIR) package-llvm-llvm64 $(SDK_ARGS)
 	$(Q) touch $@
 
 clean-llvm: $(SDK_CONFIG)
