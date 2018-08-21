@@ -41,23 +41,23 @@ namespace NaturalLanguage {
 			return lang;
 		}
 	
-		public Dictionary<NLLanguage, nuint> GetLanguageHypotheses (nuint maxHypotheses)
+		public Dictionary<NLLanguage, double> GetLanguageHypotheses (nuint maxHypotheses)
 		{
 			using (var hypo = GetNativeLanguageHypotheses (maxHypotheses)) {
-				var result = new Dictionary<NLLanguage, nuint> (hypo.Keys.Length);
+				var result = new Dictionary<NLLanguage, double> (hypo.Keys.Length);
 				foreach (var k in hypo.Keys) {
-					result[NLLanguageExtensions.GetValue (k)] = hypo[k].NUIntValue;
+					result[NLLanguageExtensions.GetValue (k)] = hypo[k].DoubleValue;
 				}
 				return result;
 			}
 		}
 
-		public Dictionary<NLLanguage, nuint> LanguageHints
+		public Dictionary<NLLanguage, double> LanguageHints
 		{
 			get {
-				var result = new Dictionary<NLLanguage, nuint> (NativeLanguageHints.Keys.Length);
+				var result = new Dictionary<NLLanguage, double> (NativeLanguageHints.Keys.Length);
 				foreach (var k in NativeLanguageHints.Keys) {
-					result[NLLanguageExtensions.GetValue (k)] = NativeLanguageHints[k].NUIntValue;
+					result[NLLanguageExtensions.GetValue (k)] = NativeLanguageHints[k].DoubleValue;
 				}
 				return result;
 			}
