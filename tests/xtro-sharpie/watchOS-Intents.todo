@@ -1,0 +1,4 @@
+## appended from unclassified file
+!missing-selector! +INIntentResolutionResult::needsValue not bound
+!missing-selector! +INIntentResolutionResult::notRequired not bound
+!missing-selector! +INIntentResolutionResult::unsupported not bound

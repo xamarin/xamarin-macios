@@ -1,0 +1,4 @@
+!missing-selector! AVAudioEngine::disableManualRenderingMode not bound
+!missing-selector! AVCaptureFileOutput::pauseRecording not bound
+!missing-selector! AVCaptureFileOutput::resumeRecording not bound
+!missing-selector! AVSampleBufferRenderSynchronizer::currentTime not bound

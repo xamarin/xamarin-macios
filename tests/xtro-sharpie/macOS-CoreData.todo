@@ -1,0 +1,3 @@
+!missing-selector! +NSPersistentStore::migrationManagerClass not bound
+!missing-selector! NSCoreDataCoreSpotlightDelegate::domainIdentifier not bound
+!missing-selector! NSCoreDataCoreSpotlightDelegate::indexName not bound

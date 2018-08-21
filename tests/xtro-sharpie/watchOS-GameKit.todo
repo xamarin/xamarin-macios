@@ -1,0 +1,3 @@
+!missing-selector! +GKVoiceChatService::defaultVoiceChatService not bound
+!missing-selector! +GKVoiceChatService::isVoIPAllowed not bound
+!missing-selector! GKSession::disconnectFromAllPeers not bound

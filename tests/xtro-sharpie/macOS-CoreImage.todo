@@ -1,0 +1,5 @@
+!missing-selector! +CIContext::context not bound
+!missing-selector! CIContext::init not bound
+!missing-selector! CIImage::autoAdjustmentFilters not bound
+!missing-selector! CIImage::imageBySamplingLinear not bound
+!missing-selector! CIImage::imageBySamplingNearest not bound

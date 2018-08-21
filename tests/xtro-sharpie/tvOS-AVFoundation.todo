@@ -1,0 +1,2 @@
+!missing-selector! AVAudioEngine::disableManualRenderingMode not bound
+!missing-selector! AVSampleBufferRenderSynchronizer::currentTime not bound
