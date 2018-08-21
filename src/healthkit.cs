@@ -954,6 +954,7 @@ namespace HealthKit {
 		HKClinicalType GetClinicalType (NSString identifier);
 
 		[Watch (5,0), iOS (12,0)]
+		[Static]
 		[Wrap ("GetClinicalType (identifier.GetConstant ())")]
 		HKClinicalType GetClinicalType (HKClinicalTypeIdentifier identifier);
 	}
