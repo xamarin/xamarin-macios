@@ -456,6 +456,7 @@ namespace Xamarin.Bundler
 			bool enable_debug_symbols = app.PackageManagedDebugSymbols;
 			bool llvm_only = app.EnableLLVMOnlyBitCode;
 			bool interp = app.UseInterpreter;
+			bool is32bit = (abi & Abi.Arch32Mask) > 0;
 			string arch = abi.AsArchString ();
 
 			args.Append ("--debug ");
@@ -503,7 +504,7 @@ namespace Xamarin.Bundler
 			}
 
 			if (enable_llvm)
-				args.Append ("llvm-path=").Append (MonoTouchDirectory).Append ("/LLVM/bin/,");
+				args.Append ("llvm-path=").Append (MonoTouchDirectory).Append (is32bit ? "/LLVM36/bin/," : "/LLVM/bin/,");
 
 			if (!llvm_only)
 				args.Append ("outfile=").Append (StringUtils.Quote (outputFile));
@@ -663,7 +664,8 @@ namespace Xamarin.Bundler
 						sw.WriteLine ("\tmono_sgen_mono_ilgen_init ();");
 						sw.WriteLine ("\tmono_ee_interp_init (NULL);");
 						sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_INTERP);");
-					}
+					} else if (app.IsDeviceBuild)
+						sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_FULL);");
 
 					if (assembly_location.Length > 0)
 						sw.WriteLine ("\txamarin_set_assembly_directories (&assembly_locations);");

@@ -1770,10 +1770,13 @@ public class B
 				mtouch.Linker = MTouchLinker.DontLink;
 				File.Delete (dllPath);
 				mtouch.AlwaysShowOutput = true;
-				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertWarningPattern (136, "Cannot find the assembly 'A, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null' referenced from '.*/testApp.exe'.");
 				mtouch.AssertWarning (137, "Cannot find the assembly 'A, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null', referenced by a MyCustomAttribute attribute in 'testApp.exe'.");
 				mtouch.AssertWarning (137, "Cannot find the assembly 'A, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null', referenced by a System.Diagnostics.DebuggerTypeProxyAttribute attribute in 'testApp.exe'.");
-				mtouch.AssertWarningCount (2);
+				mtouch.AssertWarningCount (3);
+				mtouch.AssertError (2002, "Failed to resolve assembly: 'A, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null'");
+				mtouch.AssertErrorCount (1);
 			}
 		}
 

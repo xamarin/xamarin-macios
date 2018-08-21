@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2011-2014 Xamarin Inc. All rights reserved.
  * Copyright 2010 Novell Inc.
@@ -1339,6 +1338,10 @@ namespace Xamarin.Bundler {
 						throw new MonoMacException (5202, true, "Mono.framework MDK is missing. Please install the MDK for your Mono.framework version from http://mono-project.com/Downloads");
 
 					args.Append (StringUtils.Quote (lib)).Append (' ');
+
+					var libsystem_native_path = Path.Combine (libdir, "libmono-system-native.a");
+					args.Append (StringUtils.Quote (libsystem_native_path)).Append (' ');
+					args.Append ("-u ").Append ("_SystemNative_RealPath").Append (' '); // This keeps libmono_system_native_la-pal_io.o symbols
 
 					if (profiling.HasValue && profiling.Value) {
 						args.Append (StringUtils.Quote (Path.Combine (libdir, "libmono-profiler-log.a"))).Append (' ');
