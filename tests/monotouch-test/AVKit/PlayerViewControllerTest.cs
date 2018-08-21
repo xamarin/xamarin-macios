@@ -30,7 +30,7 @@ namespace MonoTouchFixtures.AVKit {
 	[Preserve (AllMembers = true)]
 	public class PlayerViewControllerTest {
 
-		//[Test]
+		[Test]
 		public void PreparePrerollAds_New ()
 		{
 			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
