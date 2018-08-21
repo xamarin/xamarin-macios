@@ -531,8 +531,12 @@ timestamps {
                                 } else {
                                     def outputFile = "${workspace}/xamarin-macios/wrench-launch-external.output.tmp"
                                     try {
+                                        // VSTS does not allow any branch name anymore, it has to be an existing branch.
+                                        // Since pull requests don't create branches in the xamarin org (that VSTS sees at least),
+                                        // I've created a 'pull-request' branch which we'll use for pull requests.
+                                        def vsts_branch = isPr ? "pull-request" : branchName;
                                         withCredentials ([string (credentialsId: 'macios_provisionator_pat', variable: 'PROVISIONATOR_VSTS_PAT')]) {
-                                            sh ("make -C ${workspace}/xamarin-macios/tests wrench-launch-external MAC_PACKAGE_URL=${xmPackageUrl} IOS_PACKAGE_URL=${xiPackageUrl} WRENCH_URL=${env.RUN_DISPLAY_URL} BUILD_REVISION=${gitHash} BUILD_LANE=jenkins/${branchName} BUILD_WORK_HOST=${env.NODE_NAME} 2>&1 | tee ${outputFile}")
+                                            sh ("make -C ${workspace}/xamarin-macios/tests wrench-launch-external MAC_PACKAGE_URL=${xmPackageUrl} IOS_PACKAGE_URL=${xiPackageUrl} WRENCH_URL=${env.RUN_DISPLAY_URL} BUILD_REVISION=${gitHash} BUILD_LANE=${vsts_branch} BUILD_WORK_HOST=${env.NODE_NAME} 2>&1 | tee ${outputFile}")
                                         }
                                         processAtMonkeyWrench (outputFile)
                                     } catch (error) {
