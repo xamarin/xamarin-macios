@@ -193,24 +193,25 @@ def runXamarinMacTests (url, macOS)
 
 @NonCPS
 def getBuildTasksToolRedirect() {
-    def connection = "https://dl.internalx.com/build-tools/latest/Xamarin.Build.Tasks.nupkg".toURL().openConnection()
-    connection.instanceFollowRedirects = false
-    connection.setRequestProperty("Authorization", "token ${env.GITHUB_AUTH_TOKEN}")
-    def response = connection.responseCode
-    connection.disconnect()
-    if (response == 302) {
-        return connection.getHeaderField("Location")
-    } else {
-        throw new Exception("DL link failed ${response}: ${content}")
+    withCredentials ([string (credentialsId: 'macios_github_comment_token', variable: 'GITHUB_PAT_TOKEN')]) {
+        def connection = "https://dl.internalx.com/build-tools/latest/Xamarin.Build.Tasks.nupkg".toURL().openConnection()
+        connection.instanceFollowRedirects = false
+        connection.setRequestProperty("Authorization", "token ${GITHUB_PAT_TOKEN}")
+        def response = connection.responseCode
+        def content = connection.content.readLines()
+        connection.disconnect()
+        if (response == 302) {
+            return connection.getHeaderField("Location")
+        } else {
+            throw new Exception("DL link failed ${response}:\n${content}")
+        }
     }
 }
 
 def getStoragePrefixURL() {
-    def finalURL = ""
     withCredentials([usernamePassword(credentialsId: 'storage-account-and-container-name', passwordVariable: 'STORAGE_CONTAINER', usernameVariable: 'STORAGE_ACCOUNT')]) {
-        finalURL = "https://${env.STORAGE_ACCOUNT}.blob.core.windows.net/${env.STORAGE_CONTAINER}"
+        return "https://${env.STORAGE_ACCOUNT}.blob.core.windows.net/${env.STORAGE_CONTAINER}"
     }
-    return finalURL;
 }
 
 timestamps {
