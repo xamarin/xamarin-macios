@@ -12,3 +12,6 @@
 ## Not intended to be used directly by client code
 !missing-protocol! CKRecordKeyValueSetting not bound
 !missing-protocol-conformance! CKRecord should conform to CKRecordKeyValueSetting (defined in 'CKRecordKeyValueSettingConformance' category)
+
+## NSInvalidArgumentException Reason: You must call -[CKMarkNotificationsReadOperation initWithNotificationIDsToMarkRead:]
+!missing-selector! CKMarkNotificationsReadOperation::init not bound

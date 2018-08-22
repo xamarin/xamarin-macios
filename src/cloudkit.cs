@@ -750,15 +750,13 @@ namespace CloudKit {
 	delegate void CKFetchRecordsCompletedHandler (NSDictionary recordsByRecordId, NSError error);
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
-	[DisableDefaultCtor] // designated
+#if WATCH
+	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
+#else
+	[DesignatedDefaultCtor]
+#endif
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKFetchRecordsOperation {
-
-#if !WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
-		[DesignatedInitializer]
-		[Export ("init")]
-		IntPtr Constructor ();
-#endif
 
 		[Export ("initWithRecordIDs:")]
 		IntPtr Constructor (CKRecordID [] recordIds);
@@ -802,14 +800,12 @@ namespace CloudKit {
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (CKDatabaseOperation))]
-	[DisableDefaultCtor] // designated
-	interface CKFetchRecordZonesOperation {
-
-#if !WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
-		[DesignatedInitializer]
-		[Export ("init")]
-		IntPtr Constructor ();
+#if WATCH
+	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
+#else
+	[DesignatedDefaultCtor]
 #endif
+	interface CKFetchRecordZonesOperation {
 
 		[Export ("initWithRecordZoneIDs:")]
 		IntPtr Constructor (CKRecordZoneID [] zoneIds);
@@ -906,7 +902,11 @@ namespace CloudKit {
 	}
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
+#if WATCH
 	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
+#else
+	[DesignatedDefaultCtor]
+#endif
 	[BaseType (typeof (CKOperation))]
 	[Deprecated (PlatformName.iOS, 11, 0)]
 	[Deprecated (PlatformName.MacOSX, 10, 13)]
@@ -932,7 +932,11 @@ namespace CloudKit {
 	delegate void CKModifyRecordsOperationHandler (CKRecord [] savedRecords, CKRecordID [] deletedRecordIds, NSError operationError);
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
+#if WATCH
 	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
+#else
+	[DesignatedDefaultCtor]
+#endif
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKModifyRecordsOperation {
 
@@ -984,7 +988,11 @@ namespace CloudKit {
 	delegate void CKModifyRecordZonesHandler (CKRecordZone [] savedRecordZones, CKRecordZoneID [] deletedRecordZoneIds, NSError operationError);
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
+#if WATCH
 	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
+#else
+	[DesignatedDefaultCtor]
+#endif
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKModifyRecordZonesOperation {
 
@@ -1212,11 +1220,16 @@ namespace CloudKit {
 	[Watch (3,0)]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSOperation))]
-	[DisableDefaultCtor] // Assertion failure in -[CKOperation init], /SourceCache/CloudKit/CloudKit-175.3/Framework/Operations/CKOperation.m:65
+	[DisableDefaultCtor]
 #if XAMCORE_4_0 || WATCH
 	[Abstract] // as per docs
 #endif
 	interface CKOperation {
+
+		[Protected] // since it should (and will) be `abstract`
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
 
 		// Apple removed, without deprecation, this property in iOS 9.3 SDK
 		// [Mac (10,11), iOS (9,0)]
@@ -1290,7 +1303,7 @@ namespace CloudKit {
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64 : true), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
-	[DisableDefaultCtor] 
+	[DesignatedDefaultCtor]
 	interface CKOperationGroup : NSSecureCoding {
 
 		[Export ("operationGroupID")]
@@ -1334,14 +1347,12 @@ namespace CloudKit {
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (CKDatabaseOperation))]
-	[DisableDefaultCtor] // designated
-	interface CKQueryOperation {
-
-#if !WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
-		[DesignatedInitializer]
-		[Export ("init")]
-		IntPtr Constructor ();
+#if WATCH
+	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
+#else
+	[DesignatedDefaultCtor]
 #endif
+	interface CKQueryOperation {
 
 		[Field ("CKQueryOperationMaximumResults")][Internal]
 		IntPtr _MaximumResults { get; set; }
@@ -1626,7 +1637,6 @@ namespace CloudKit {
 
 	[NoWatch]
 	[iOS (10,0)][TV (10,0), Mac (10,12, onlyOn64 : true)]
-	[DisableDefaultCtor]
 	[BaseType (typeof(CKSubscription))]
 	interface CKDatabaseSubscription : NSSecureCoding, NSCopying
 	{
