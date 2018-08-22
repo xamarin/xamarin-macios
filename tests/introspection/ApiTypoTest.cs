@@ -567,6 +567,7 @@ namespace Introspection
 #if MONOMAC
 			"Abbr",
 			"Accum",
+			"Ack", // TcpSetDisableAckStretching
 			"Addin",
 			"Addons",
 			"Appactive",
@@ -590,7 +591,9 @@ namespace Introspection
 			"Descriptorfor",
 			"Dimensionsfor",
 			"Dissapearing",
+			"Distinguised", // ITLibPlaylistPropertyDistinguisedKind
 			"Dirs",
+			"Drm", // MediaItemProperty.IsDrmProtected 
 			"Editability",
 			"Eisu",
 			"Entryat",
