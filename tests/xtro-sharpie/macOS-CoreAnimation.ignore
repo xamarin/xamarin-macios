@@ -21,4 +21,6 @@
 !missing-selector! CARemoteLayerClient::setLayer: not bound
 !missing-selector! CARemoteLayerServer::serverPort not bound
 !missing-type! CARemoteLayerClient not bound
+!missing-selector! CARemoteLayerClient::invalidate not bound
 !missing-type! CARemoteLayerServer not bound
+!missing-selector! +CARemoteLayerServer::sharedServer not bound

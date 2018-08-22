@@ -1,2 +1,0 @@
-!missing-selector! +CARemoteLayerServer::sharedServer not bound
-!missing-selector! CARemoteLayerClient::invalidate not bound
