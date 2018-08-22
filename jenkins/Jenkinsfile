@@ -152,23 +152,25 @@ def processAtMonkeyWrench (outputFile)
 
 def uploadFiles (glob, virtualPath)
 {
-    step ([
-        $class: 'WAStoragePublisher',
-        allowAnonymousAccess: true,
-        cleanUpContainer: false,
-        cntPubAccess: true,
-        containerName: "wrench",
-        doNotFailIfArchivingReturnsNothing: false,
-        doNotUploadIndividualFiles: false,
-        doNotWaitForPreviousBuild: true,
-        excludeFilesPath: '',
-        filesPath: glob,
-        storageAccName: 'bosstoragemirror',
-        storageCredentialId: 'bc6a99d18d7d9ca3f6bf6b19e364d564',
-        uploadArtifactsOnlyIfSuccessful: false,
-        uploadZips: false,
-        virtualPath: virtualPath
-    ])
+    withCredentials([usernamePassword(credentialsId: 'storage-account-and-container-name', passwordVariable: 'STORAGE_CONTAINER', usernameVariable: 'STORAGE_ACCOUNT'), string(credentialsId: 'storage-credential-id', variable: 'STORAGE_CREDENTIAL_ID')]) {
+        step ([
+            $class: 'WAStoragePublisher',
+            allowAnonymousAccess: true,
+            cleanUpContainer: false,
+            cntPubAccess: true,
+            containerName: env.STORAGE_CONTAINER,
+            doNotFailIfArchivingReturnsNothing: false,
+            doNotUploadIndividualFiles: false,
+            doNotWaitForPreviousBuild: true,
+            excludeFilesPath: '',
+            filesPath: glob,
+            storageAccName: env.STORAGE_ACCOUNT,
+            storageCredentialId: env.STORAGE_CREDENTIAL_ID,
+            uploadArtifactsOnlyIfSuccessful: false,
+            uploadZips: false,
+            virtualPath: virtualPath
+        ])
+    }
 }
 
 def runXamarinMacTests (url, macOS)
@@ -186,6 +188,29 @@ def runXamarinMacTests (url, macOS)
         sh ("make -C mac-test-package/tests exec-mac-apitest")
     } finally {
         sh ("rm -rf mac-test-package *.zip")
+    }
+}
+
+@NonCPS
+def getBuildTasksToolRedirect() {
+    withCredentials ([string (credentialsId: 'macios_github_comment_token', variable: 'GITHUB_PAT_TOKEN')]) {
+        def connection = "https://dl.internalx.com/build-tools/latest/Xamarin.Build.Tasks.nupkg".toURL().openConnection()
+        connection.instanceFollowRedirects = false
+        connection.setRequestProperty("Authorization", "token ${GITHUB_PAT_TOKEN}")
+        def response = connection.responseCode
+        def content = connection.content.readLines()
+        connection.disconnect()
+        if (response == 302) {
+            return connection.getHeaderField("Location")
+        } else {
+            throw new Exception("DL link failed ${response}:\n${content}")
+        }
+    }
+}
+
+def getStoragePrefixURL() {
+    withCredentials([usernamePassword(credentialsId: 'storage-account-and-container-name', passwordVariable: 'STORAGE_CONTAINER', usernameVariable: 'STORAGE_ACCOUNT')]) {
+        return "https://${env.STORAGE_ACCOUNT}.blob.core.windows.net/${env.STORAGE_CONTAINER}"
     }
 }
 
@@ -284,37 +309,39 @@ timestamps {
                             }
                         }
 
+                        // Download BuildTasks tool
+                        stage('download-buildtasks-tool') {
+                            def redirect = getBuildTasksToolRedirect()
+                            sh "curl -o Xamarin.Build.Tasks.nupkg \"${redirect}\""
+                            dir("BuildTasks") {
+                                deleteDir()
+                                sh "unzip ../Xamarin.Build.Tasks.nupkg"
+                            }
+                        }
+
+                        // Create ci-checkout.json file in package dir
+                        stage('ci-checkout') {
+                            dir("BuildTasks") {
+                                sh "mono tools/BuildTasks/build-tasks.exe workspaceinfo -p ${env.WORKSPACE} -o ${env.WORKSPACE}/package/ci-checkout.json"
+                            }
+                        }
+
                         stage ('Upload to Azure') {
                             currentStage = "${STAGE_NAME}"
-                            virtualPath = "jenkins/${branchName}/${gitHash}/${env.BUILD_NUMBER}"
-                            packagePrefix = "https://bosstoragemirror.blob.core.windows.net/wrench/${virtualPath}/package"
+                            virtualPath = "${env.JOB_NAME}-${env.BUILD_NUM}"
+                            packagePrefix = "${getStoragePrefixURL()}/${virtualPath}/package"
 
-                            // Create artifacts.json and manifest
+                            // Create manifest
                             def uploadingFiles = findFiles (glob: "package/*")
                             def manifest = ""
-                            def artifacts = "[\n"
                             for (int i = 0; i < uploadingFiles.length; i++) {
                                 def file = uploadingFiles [i]
-                                def f_length = file.length;
-                                def md5 = sh (returnStdout: true, script: "md5 -q '${file}'").trim ()
-                                def sha256 = sh (returnStdout: true, script: "shasum -a 256").trim ().split (" ") [0];
                                 manifest += "${packagePrefix}/${file.name}\n"
-                                artifacts += "  {\n"
-                                artifacts += "    \"file\": \"${file.name}\",\n"
-                                artifacts += "    \"url\": \"${packagePrefix}/${file.name}\",\n"
-                                artifacts += "    \"md5\": \"${md5}\",\n"
-                                artifacts += "    \"sha256\": \"${sha256}\",\n"
-                                artifacts += "    \"size\": ${f_length}\n"
-                                artifacts += "  }"
-                                if (i < uploadingFiles.length - 1)
-                                    artifacts += ","
-                                artifacts +="\n"
                             }
-                            artifacts += "]\n"
+
                             manifest += "${packagePrefix}/artifacts.json\n"
                             manifest += "${packagePrefix}/manifest\n"
                             writeFile (file: "package/manifest", text: manifest)
-                            writeFile (file: "package/artifacts.json", text: artifacts)
 
                             sh ("ls -la package")
                             uploadFiles ("package/*", virtualPath)
@@ -326,7 +353,15 @@ timestamps {
                             uploadFiles ("package/manifest", "jenkins/${branchName}/latest")
 
                             manifestFilename = "manifest"
-                            artifactsFilename = "artifacts.json"
+                        }
+
+                        // Generate, Upload and Report artifacts.json
+                        stage('report-artifacts') {
+                            withCredentials([usernamePassword(credentialsId: 'storage-credential', passwordVariable: 'STORAGE_PASSWORD', usernameVariable: 'STORAGE_ACCOUNT')]) {
+                                dir("BuildTasks") {
+                                    sh "mono tools/BuildTasks/build-tasks.exe artifacts -s ${env.WORKSPACE}/monodroid -a ${env.STORAGE_ACCOUNT} -c ${env.STORAGE_PASSWORD}"
+                                }
+                            }
                         }
 
                         stage ('Publish builds to GitHub') {
@@ -343,10 +378,6 @@ timestamps {
                             if (manifestFilename != null) {
                                 def manifestUrl = "${packagePrefix}/${manifestFilename}"
                                 utils.reportGitHubStatus (gitHash, "${manifestFilename}", "${manifestUrl}", 'SUCCESS', "${manifestFilename}")
-                            }
-                            if (artifactsFilename != null) {
-                                def artifactUrl = "${packagePrefix}/${artifactsFilename}"
-                                utils.reportGitHubStatus (gitHash, "Jenkins: Artifacts", "${artifactUrl}", 'SUCCESS', "${artifactsFilename}")
                             }
                             if (bundleZipFilename != null) {
                                 def bundleZipUrl = "${packagePrefix}/${bundleZipFilename}"
@@ -432,7 +463,7 @@ timestamps {
                                     def builders = [:]
 
                                     // Add test runs on older macOS versions
-                                    def url = "https://bosstoragemirror.blob.core.windows.net/wrench/${virtualPath}/tests/mac-test-package.zip"
+                                    def url = "${getStoragePrefixURL()}/${virtualPath}/tests/mac-test-package.zip"
                                     def firstOS = sh (returnStdout: true, script: "grep ^MIN_OSX_SDK_VERSION= '${workspace}/xamarin-macios/Make.config' | sed 's/.*=//'").trim ().split ("\\.")[1].toInteger ()
                                     def lastOS = sh (returnStdout: true, script: "grep ^OSX_SDK_VERSION= '${workspace}/xamarin-macios/Make.config' | sed 's/.*=//'").trim ().split ("\\.")[1].toInteger ()
                                     for (os = firstOS; os < lastOS; os++) {
