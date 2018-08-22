@@ -119,7 +119,7 @@ namespace Security {
 				return;
 			}
 
-			using (NSData cert = NSData.FromArray (impl.GetRawCertData ())) {
+			using (NSData cert = NSData.FromArray (impl.RawData)) {
 				Initialize (cert);
 			}
 		}
