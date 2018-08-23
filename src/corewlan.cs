@@ -134,6 +134,10 @@ namespace CoreWlan {
 
 		[Export ("isEqualToConfiguration:")]
 		bool IsEqualToConfiguration (CWConfiguration configuration);
+
+		[Static]
+		[Export ("configuration")]
+		CWConfiguration Create ();
 	}
 
 	[BaseType (typeof (CWConfiguration))]
