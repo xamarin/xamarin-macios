@@ -107,6 +107,7 @@
       <Link>ExecutionHelper.cs</Link>
     </Compile>
     <Compile Include="ProjectsTests\ProjectWithSpaces.cs" />
+    <Compile Include="ProjectsTests\ProjectReference.cs" />
     <Compile Include="ProjectsTests\ResponseFileArguments.cs" />
   </ItemGroup>
   <ItemGroup />
