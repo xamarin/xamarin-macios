@@ -1,0 +1,28 @@
+# the following protocols ae binded manualy as NativeObject
+
+!missing-protocol! OS_nw_advertise_descriptor not bound
+!missing-protocol! OS_nw_connection not bound
+!missing-protocol! OS_nw_content_context not bound
+!missing-protocol! OS_nw_endpoint not bound
+!missing-protocol! OS_nw_error not bound
+!missing-protocol! OS_nw_interface not bound
+!missing-protocol! OS_nw_listener not bound
+!missing-protocol! OS_nw_parameters not bound
+!missing-protocol! OS_nw_path not bound
+!missing-protocol! OS_nw_path_monitor not bound
+!missing-protocol! OS_nw_protocol_definition not bound
+!missing-protocol! OS_nw_protocol_metadata not bound
+!missing-protocol! OS_nw_protocol_options not bound
+!missing-protocol! OS_nw_protocol_stack not bound
+
+# binded but with a name alias changes and xtro gets confused.
+!missing-pinvoke! nw_ip_create_metadata is not bound
+!missing-pinvoke! nw_udp_create_metadata is not bound
+
+# binded via a Marshal.ReadIntPtr (Dlfcn.dlsym ..
+!missing-field! _nw_parameters_configure_protocol_default_configuration not bound
+!missing-field! _nw_parameters_configure_protocol_disable not bound
+!missing-field! _nw_content_context_default_message not bound
+!missing-field! _nw_content_context_default_stream not bound
+!missing-field! _nw_content_context_final_send not bound
+!missing-field! _nw_connection_send_idempotent_content not bound

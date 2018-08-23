@@ -16,8 +16,11 @@ using CoreFoundation;
 namespace Network {
 	public enum NWErrorDomain {
 		Invalid = 0,
+		[Field ("kNWErrorDomainPOSIX")]
 		Posix = 1,
+		[Field ("kNWErrorDomainDNS")]
 		Dns = 2,
+		[Field ("kNWErrorDomainTLS")]
 		Tls = 3,
 	}
 

@@ -441,6 +441,19 @@ namespace Network {
 				nw_parameters_set_local_endpoint (GetCheckedHandle (), value.GetHandle ());
 			}
 		}
+
+
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_parameters_set_include_peer_to_peer (IntPtr handle, bool includePeerToPeer);
+
+		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		static extern bool nw_parameters_get_include_peer_to_peer (IntPtr handle);
+
+		public bool IncludePeerToPeer {
+			get => nw_parameters_get_include_peer_to_peer (GetCheckedHandle ());
+			set => nw_parameters_set_include_peer_to_peer (GetCheckedHandle (), value);
+		}
 	}
 
 	public enum NWParametersExpiredDnsBehavior {

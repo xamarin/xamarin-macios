@@ -83,6 +83,12 @@ namespace Network {
 		public bool IsTls => nw_protocol_metadata_is_tls (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		static extern bool nw_protocol_metadata_is_tcp (OS_nw_protocol_metadata metadata);
+
+		public bool IsTcp => nw_protocol_metadata_is_tcp (GetCheckedHandle ());
+
+		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_tls_copy_sec_protocol_metadata (IntPtr handle);
 
 		public SecProtocolMetadata SecProtocolMetadata => new SecProtocolMetadata (nw_tls_copy_sec_protocol_metadata (GetCheckedHandle ()), owns: true);
@@ -96,6 +102,13 @@ namespace Network {
 		public NWIPEcnFlag IPMetadataEcnFlag {
 			get => nw_ip_metadata_get_ecn_flag (GetCheckedHandle ());
 			set => nw_ip_metadata_set_ecn_flag (GetCheckedHandle (), value);
+		}
+
+		[DllImport (Constants.NetworkLibrary)]
+		static extern /* uint64_t */ ulong nw_ip_metadata_get_receive_time (OS_nw_protocol_metadata metadata);
+
+		public ulong IPMetadataReceiveTime {
+			get => nw_ip_metadata_get_receive_time (GetCheckedHandle ());
 		}
 
 		[DllImport (Constants.NetworkLibrary)]

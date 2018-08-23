@@ -86,6 +86,14 @@ namespace Network {
 			nw_ip_options_set_disable_fragmentation (GetCheckedHandle (), disableFragmentation);
 		}
 
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_ip_options_set_calculate_receive_time (IntPtr options, bool calculateReceiveTime);
+
+		public void IPSetCalculateReceiveTime (bool calculateReceiveTime)
+		{
+			nw_ip_options_set_calculate_receive_time (GetCheckedHandle (), calculateReceiveTime);
+		}
+
 //
 // TCP Options
 //
