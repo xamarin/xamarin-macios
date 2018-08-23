@@ -231,6 +231,45 @@ function install_visual_studio () {
 	rm -f $VS_DMG
 }
 
+function run_xcode_first_launch ()
+{
+	local XCODE_VERSION="$1"
+	local XCODE_DEVELOPER_ROOT="$2"
+
+	# xcodebuild -runFirstLaunch seems to have been introduced in Xcode 9
+	if ! is_at_least_version "$XCODE_VERSION" 9.0; then
+		return
+	fi
+
+	# Delete any cached files by xcodebuild, because other branches'
+	# system-dependencies.sh keep installing earlier versions of these
+	# packages manually, which means subsequent first launch checks will
+	# succeed because we've successfully run the first launch tasks once
+	# (and this is cached), while someone else (we!) overwrote with
+	# earlier versions (bypassing the cache).
+	#
+	# Removing the cache will make xcodebuild realize older packages are installed,
+	# and (re-)install any newer packages.
+	#
+	# We'll be able to remove this logic one day, when all branches in use are
+	# using 'xcodebuild -runFirstLaunch' instead of manually installing
+	# packages.
+	find /var/folders -name '*com.apple.dt.Xcode.InstallCheckCache*' -print -delete 2>/dev/null | sed 's/^\(.*\)$/        Deleted Xcode cache file: \1 (this is normal)/' || true
+	if ! "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -checkFirstLaunchStatus; then
+		if ! test -z "$PROVISION_XCODE"; then
+			# Remove sudo's cache as well, otherwise nothing will happen.
+			$SUDO find /var/folders -name '*com.apple.dt.Xcode.InstallCheckCache*' -print -delete 2>/dev/null | sed 's/^\(.*\)$/        Deleted Xcode cache file: \1 (this is normal)/' || true
+			# Run the first launch tasks
+			log "Executing '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch'"
+			$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -runFirstLaunch
+			log "Executed '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch'"
+		else
+			fail "Xcode has pending first launch tasks. Execute '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch' to execute those tasks."
+			return
+		fi
+	fi
+}
+
 function install_specific_xcode () {
 	local XCODE_URL=`grep XCODE$1_URL= Make.config | sed 's/.*=//'`
 	local XCODE_VERSION=`grep XCODE$1_VERSION= Make.config | sed 's/.*=//'`
@@ -291,11 +330,7 @@ function install_specific_xcode () {
 	fi
 
 	if is_at_least_version "$XCODE_VERSION" 9.0; then
-		if ! "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -checkFirstLaunchStatus; then
-			log "Executing '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch'"
-			$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -runFirstLaunch
-			log "Executed '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch'"
-		fi
+		run_xcode_first_launch "$XCODE_VERSION" "$XCODE_DEVELOPER_ROOT"
 	elif is_at_least_version $XCODE_VERSION 8.0; then
 		PKGS="MobileDevice.pkg MobileDeviceDevelopment.pkg XcodeSystemResources.pkg"
 		for pkg in $PKGS; do
@@ -347,18 +382,7 @@ function check_specific_xcode () {
 			fi
 		fi
 
-		if is_at_least_version "$XCODE_VERSION" 9.0; then
-			if ! "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -checkFirstLaunchStatus; then
-				if ! test -z "$PROVISION_XCODE"; then
-					log "Executing '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch'"
-					$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -runFirstLaunch
-					log "Executed '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch'"
-				else
-					fail "Xcode has pending first launch tasks. Execute '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch' to execute those tasks."
-					return
-				fi
-			fi
-		fi
+		run_xcode_first_launch "$XCODE_VERSION" "$XCODE_DEVELOPER_ROOT"
 	fi
 
 	local XCODE_ACTUAL_VERSION=`/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$XCODE_DEVELOPER_ROOT/../version.plist"`
