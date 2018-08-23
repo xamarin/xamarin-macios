@@ -97,11 +97,14 @@ $(IOS_BUILD_DIR)/native/core.dll: $(IOS_CORE_SOURCES) frameworks.sources
 
 # generated_sources
 $(IOS_BUILD_DIR)/native/generated_sources: $(IOS_GENERATOR) $(IOS_APIS) $(IOS_BUILD_DIR)/native/core.dll $(IOS_BUILD_DIR)/native/Xamarin.iOS.BindingAttributes.dll ios.rsp
-	$(call Q_PROF_GEN,ios) $(IOS_GENERATE) \
+	$(call Q_PROF_GEN,ios) $(IOS_GENERATE) @ios.rsp
+
+ios.rsp: Makefile Makefile.generator frameworks.sources
+	$(Q_GEN) echo \
 		$(IOS_GENERATOR_FLAGS) \
 		$(IOS_GENERATOR_native_FLAGS) \
 		-core \
-		-sourceonly=$@ \
+		-sourceonly=$(IOS_BUILD_DIR)/native/generated_sources \
 		-compiler=$(IOS_CSC) \
 		-nologo -nostdlib -noconfig \
 		-no-mono-path \
@@ -442,8 +445,11 @@ $(MAC_BUILD_DIR)/$(1)/core.dll: $(MAC_CORE_SOURCES) frameworks.sources
 		$(3) \
 		$$(MAC_CORE_SOURCES)
 
-$(MAC_BUILD_DIR)/$(1)/generated-sources: $$(MAC_$(1)_GENERATOR) $(MAC_APIS) $(MAC_BUILD_DIR)/$(1)/core.dll $(MAC_BUILD_DIR)/$(7)
-	$$(call Q_PROF_GEN,mac/$(1)) $$(MAC_$(1)_GENERATE) \
+$(MAC_BUILD_DIR)/$(1)/generated-sources: $$(MAC_$(1)_GENERATOR) $(MAC_APIS) $(MAC_BUILD_DIR)/$(1)/core.dll $(MAC_BUILD_DIR)/$(7) mac-$(1).rsp
+	$$(call Q_PROF_GEN,mac/$(1)) $$(MAC_$(1)_GENERATE) @mac-$(1).rsp
+
+mac-$(1).rsp: Makefile Makefile.generator frameworks.sources
+	$$(Q_GEN) echo \
 		$(MAC_GENERATED_DEFINES) \
 		-compiler:$$(MAC_$(1)_CSC) \
 		-nologo \
@@ -451,15 +457,16 @@ $(MAC_BUILD_DIR)/$(1)/generated-sources: $$(MAC_$(1)_GENERATOR) $(MAC_APIS) $(MA
 		-warnaserror:$(MAC_GENERATOR_WARNASERROR) \
 		-native-exception-marshalling \
 		-core \
-		-sourceonly:$$@ \
-		-tmpdir:$$(@D) \
-		-baselib:$$(@D)/core.dll \
+		-sourceonly:$(MAC_BUILD_DIR)/$(1)/generated-sources \
+		-tmpdir:$(MAC_BUILD_DIR)/$(1) \
+		-baselib:$(MAC_BUILD_DIR)/$(1)/core.dll \
 		-attributelib:$(MAC_BUILD_DIR)/$(7) \
 		-d:NO_SYSTEM_DRAWING \
 		$(2) \
 		$(3) \
 		$(xm_$(1)_profile) \
-		$(MAC_APIS)
+		$(MAC_APIS) \
+		> $$@
 endef
 
 $(eval $(call MAC_GENERATOR_template,full,--ns=ObjCRuntime,-d:NO_SYSTEM_DRAWING,,,full,Xamarin.Mac-full.BindingAttributes.dll))
@@ -709,13 +716,16 @@ $(WATCH_BUILD_DIR)/watch/core.dll: $(WATCHOS_CORE_SOURCES) frameworks.sources | 
 		$(WATCHOS_CORE_SOURCES)
 
 # generated_sources
-$(WATCH_BUILD_DIR)/watch/generated_sources: $(WATCH_GENERATOR) $(WATCHOS_APIS) $(WATCH_BUILD_DIR)/watch/core.dll $(WATCH_BUILD_DIR)/Xamarin.WatchOS.BindingAttributes.dll
-	$(call Q_PROF_GEN,watch) $(WATCH_GENERATE) \
+$(WATCH_BUILD_DIR)/watch/generated_sources: $(WATCH_GENERATOR) $(WATCHOS_APIS) $(WATCH_BUILD_DIR)/watch/core.dll $(WATCH_BUILD_DIR)/Xamarin.WatchOS.BindingAttributes.dll watchos.rsp
+	$(call Q_PROF_GEN,watch) $(WATCH_GENERATE) @watchos.rsp
+
+watchos.rsp: Makefile Makefile.generator frameworks.sources
+	$(Q_GEN) echo  \
 		-inline-selectors                                        \
 		-process-enums                                           \
 		-warnaserror:$(WATCH_GENERATOR_WARNASERROR)              \
 		-core                                                    \
-		-sourceonly=$@                                           \
+		-sourceonly=$(WATCH_BUILD_DIR)/watch/generated_sources   \
 		-compiler=$(WATCH_CSC) \
 		-nologo -nostdlib -noconfig                              \
 		-no-mono-path                                            \
@@ -729,6 +739,7 @@ $(WATCH_BUILD_DIR)/watch/generated_sources: $(WATCH_GENERATOR) $(WATCHOS_APIS) $
 		--ns:ObjCRuntime                                         \
 		$(WATCHOS_APIS)                                            \
 		--target-framework=Xamarin.WatchOS,v1.0                     \
+		> $@
 
 $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS%dll $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS%pdb: $(WATCHOS_SOURCES) $(WATCH_BUILD_DIR)/watch/generated_sources $(PRODUCT_KEY_PATH) | $(WATCH_BUILD_DIR)/watch-32
 	$(call Q_PROF_CSC,watch) $(WATCH_CSC) -nologo -out:$(basename $@).dll -target:library -debug -unsafe -optimize \
@@ -917,13 +928,16 @@ $(TVOS_BUILD_DIR)/tvos/core.dll: $(TVOS_CORE_SOURCES) frameworks.sources Makefil
 		$(TVOS_CORE_SOURCES)
 
 # generated_sources
-$(TVOS_BUILD_DIR)/tvos/generated_sources: $(TVOS_GENERATOR) $(TVOS_APIS) $(TVOS_BUILD_DIR)/tvos/core.dll $(TVOS_BUILD_DIR)/Xamarin.TVOS.BindingAttributes.dll
-	$(call Q_PROF_GEN,tvos) $(TVOS_GENERATE) \
+$(TVOS_BUILD_DIR)/tvos/generated_sources: $(TVOS_GENERATOR) $(TVOS_APIS) $(TVOS_BUILD_DIR)/tvos/core.dll $(TVOS_BUILD_DIR)/Xamarin.TVOS.BindingAttributes.dll tvos.rsp
+	$(call Q_PROF_GEN,tvos) $(TVOS_GENERATE) @tvos.rsp
+
+tvos.rsp: Makefile Makefile.generator frameworks.sources
+	$(Q_GEN) echo \
 		-inline-selectors                                        \
 		-process-enums                                           \
 		-warnaserror:$(TVOS_GENERATOR_WARNASERROR)               \
 		-core                                                    \
-		-sourceonly=$@                                           \
+		-sourceonly=$(TVOS_BUILD_DIR)/tvos/generated_sources     \
 		-compiler=$(TV_CSC) \
 		-nologo -nostdlib -noconfig                              \
 		-no-mono-path                                            \
@@ -937,6 +951,7 @@ $(TVOS_BUILD_DIR)/tvos/generated_sources: $(TVOS_GENERATOR) $(TVOS_APIS) $(TVOS_
 		--ns:ObjCRuntime                                         \
 		$(TVOS_APIS)                                            \
 		--target-framework=Xamarin.TVOS,v1.0                     \
+		> $@
 
 $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS%dll $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS%pdb: $(TVOS_SOURCES) $(TVOS_BUILD_DIR)/tvos/generated_sources $(PRODUCT_KEY_PATH) | $(TVOS_BUILD_DIR)/tvos-64
 	$(call Q_PROF_CSC,tvos) $(TV_CSC) -nologo -out:$(basename $@).dll -target:library -debug -unsafe -optimize \
