@@ -1,0 +1,30 @@
+<!-- All msbuild target logic needs to be inside a project tag -->
+<Project DefaultTargets="WriteProjectReferences" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<!-- Import the project we want to inspect -->
+	<Import Project="$(ProjectFile)" Condition="'$(ProjectFile)' != ''" />
+
+	<!-- Iterates over project references, and output them to the 'ProjReferences' output variable -->
+	<Target Name="IterateOverReferencedProjects" Condition="'$(ProjectFile)' != '' And '@(ProjectReference)' != ''">
+		<MSBuild Projects="$(MSBuildProjectFile)" Properties="ProjectFile=$([System.IO.Path]::GetFullPath('$([System.IO.Path]::GetDirectoryName ($(ProjectFile)))/%(ProjectReference.Identity)'))" Targets="WriteProjectReferences" RebaseOutputs="true">
+			<Output ItemName="ProjReferences" TaskParameter="TargetOutputs"/>
+		</MSBuild>
+	</Target>
+
+	<!-- Writes the list of project references to 'ReferenceListPath' -->
+	<Target Name="WriteProjectReferences" Condition="'$(ProjectFile)' != ''" DependsOnTargets="IterateOverReferencedProjects" Outputs ="@(ProjReferences)">
+		<CreateItem Include="$([System.IO.Path]::GetFullPath('$([System.IO.Path]::GetDirectoryName ($(ProjectFile)))/%(ProjectReference.Identity)'))" Condition="'%(ProjectReference.Identity)' != ''">
+			<Output ItemName="ProjReferences" TaskParameter="Include"/>
+		</CreateItem>
+		<WriteLinesToFile File="$(ReferenceListPath)" Lines="@(ProjReferences)"	Overwrite="True" Condition="'$(ReferenceListPath)' != ''" />
+	</Target>
+
+	<!-- Write the list of input files to 'InputsPath' -->
+	<Target Name="WriteInputs">
+		<WriteLinesToFile
+			File="$(InputsPath)"
+			Lines="@(ProjectReference);@(Compile);@(EmbeddedResource)"
+			Overwrite="True"
+		/>
+	</Target>
+</Project>
