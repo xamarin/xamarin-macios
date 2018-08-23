@@ -1,2 +1,0 @@
-!missing-selector! +AVPlayerViewController::preparePrerollAds not bound
-!missing-selector! +UIViewController::prepareInterstitialAds not bound
