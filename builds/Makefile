@@ -215,7 +215,7 @@ $(2)_CPPFLAGS = \
 	-mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
 $(2)_CFLAGS = -O2 -arch $(1)
 $(2)_CXXFLAGS = -O2 -arch $(1)
-$(2)_LDFLAGS = $(COMMON_LDFLAGS)
+$(2)_LDFLAGS = $(COMMON_LDFLAGS) -isysroot $(XCODE_MAC_SDKROOT) -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
 $(2)_CONFIGURE_FLAGS = \
 	--prefix=$$(BUILD_DESTDIR)/$(2) \
 	--host=$(1)-apple-darwin10 \
