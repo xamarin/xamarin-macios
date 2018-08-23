@@ -4,7 +4,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{B20EB7A2-A5ED-4CB9-95B3-58209092BF69}</ProjectGuid>
-    <ProjectTypeGuids>{889C2465-30A1-4310-B175-96B1F4D843DE};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectTypeGuids>{10CE9E57-9141-4DF0-916A-2C4FD4EE2A73};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <RootNamespace>FinderExtensionTest</RootNamespace>
     <AssemblyName>FinderExtensionTest</AssemblyName>
