@@ -1,69 +1,15 @@
-
-GENERATOR_SOURCES =                                             \
-	$(TOP)/src/btouch.cs                               \
-	$(TOP)/src/error.cs                                \
-	$(TOP)/src/generator.cs                            \
-	$(TOP)/src/generator-attributes.cs                 \
-	$(TOP)/src/generator-attribute-manager.cs          \
-	$(TOP)/src/generator-enums.cs                      \
-	$(TOP)/src/generator-filters.cs                    \
-	$(TOP)/src/generator-typemanager.cs                \
-	$(TOP)/src/ObjCRuntime/Stret.cs                    \
-	$(TOP)/tools/common/TargetFramework.cs             \
-	$(TOP)/tools/common/StringUtils.cs				   \
-	$(BUILD_DIR)/generator-frameworks.g.cs                    \
-	$(MONO_PATH)/mcs/class/Mono.Options/Mono.Options/Options.cs \
-
-GENERATOR_DEFINES = -d:BGENERATOR -d:NET_4_0
-
 #
-# IKVM
+# Generator
 #
 
-IKVM_REFLECTION_SOURCES = \
-	$(MONO_PATH)/external/ikvm/reflect/Impl/ITypeOwner.cs \
-	$(MONO_PATH)/external/ikvm/reflect/Impl/SymbolSupport.cs \
-	$(MONO_PATH)/mcs/class/Mono.Security/Mono.Security.Cryptography/CryptoConvert.cs \
-	$(wildcard $(MONO_PATH)/external/ikvm/reflect/*.cs) \
-	$(wildcard $(MONO_PATH)/external/ikvm/reflect/Emit/*.cs) \
-	$(wildcard $(MONO_PATH)/external/ikvm/reflect/Metadata/*.cs) \
-	$(wildcard $(MONO_PATH)/external/ikvm/reflect/Reader/*.cs) \
-	$(wildcard $(MONO_PATH)/external/ikvm/reflect/Writer/*.cs) \
+# generator.csproj.inc contains the generator_dependencies variable used to determine if the generator needs to be rebuilt or not.
+generator.csproj.inc: Makefile.generator $(TOP)/tools/common/create-makefile-fragment.sh
+	$(Q_GEN) $(TOP)/tools/common/create-makefile-fragment.sh $(CURDIR)/generator.csproj
 
-GENERATOR_ATTRIBUTE_SOURCES = \
-	$(TOP)/src/Foundation/AdviceAttribute.cs \
-	$(TOP)/src/Foundation/ExportAttribute.cs \
-	$(TOP)/src/Foundation/FieldAttribute.cs \
-	$(TOP)/src/Foundation/ModelAttribute.cs \
-	$(TOP)/src/Foundation/NotImplementedAttribute.cs \
-	$(TOP)/src/Foundation/PreserveAttribute.cs \
-	$(TOP)/src/Foundation/ProtocolAttribute.cs \
-	$(TOP)/src/Foundation/RegisterAttribute.cs \
-	$(TOP)/src/ObjCRuntime/AlphaAttribute.cs \
-	$(TOP)/src/ObjCRuntime/ArgumentSemantic.cs \
-	$(TOP)/src/ObjCRuntime/BindAsAttribute.cs \
-	$(TOP)/src/ObjCRuntime/BindingImplAttribute.cs \
-	$(TOP)/src/ObjCRuntime/LinkWithAttribute.cs \
-	$(TOP)/src/ObjCRuntime/NativeAttribute.cs \
-	$(TOP)/src/ObjCRuntime/PlatformAvailability2.cs \
-	$(TOP)/src/ObjCRuntime/PlatformAvailabilityShadow.cs \
-	$(TOP)/src/ObjCRuntime/Registrar.core.cs \
-	$(TOP)/src/ObjCRuntime/RequiresSuperAttribute.cs \
+-include generator.csproj.inc
 
-IKVM_REFLECTION_FLAGS = -d:NO_AUTHENTICODE,STATIC,NO_SYMBOL_WRITER
-
-$(BUILD_DIR)/common/bgen.exe: $(GENERATOR_SOURCES) $(IKVM_REFLECTION_SOURCES) $(GENERATOR_ATTRIBUTE_SOURCES) Makefile.generator
-	$(Q) mkdir -p $(BUILD_DIR)/common
-	$(Q_GEN) $(SYSTEM_CSC) -nologo -debug:portable -out:$@ $(IKVM_REFLECTION_FLAGS) $(GENERATOR_DEFINES) $(IKVM_REFLECTION_SOURCES) $(GENERATOR_ATTRIBUTE_SOURCES) $(GENERATOR_SOURCES) -deterministic
-
-# The command-line arguments in the csproj are currently kept up-to-date manually
-generator.csproj: generator.csproj.in Makefile.generator
-	@sed \
-		-e 's^<!--%IKVM_FILES%-->^$(foreach file,$(subst /,\\,$(IKVM_REFLECTION_SOURCES)),<Compile Include="$(file)"><Link>ikvm\\$(notdir $(subst \\,/,$(file)))</Link></Compile>)^' \
-		-e 's^<!--%FILES%-->^$(foreach file,$(subst /,\\,$(GENERATOR_SOURCES) $(GENERATOR_ATTRIBUTE_SOURCES)),<Compile Include="$(file)"/>)^' \
-		$< | xmllint --format - > $@
-
-PROJECT_FILES += generator.csproj
+$(BUILD_DIR)/common/bgen.exe: $(generator_dependencies) Makefile.generator
+	$(Q_GEN) $(SYSTEM_MSBUILD) $(XBUILD_VERBOSITY) /p:Configuration=Debug generator.csproj
 
 #
 # Common
@@ -82,7 +28,6 @@ IOS_TARGETS_DIRS +=                              \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen   \
 
 IOS_TARGETS +=                                                          \
-	generator.csproj                                               \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/monotouch.BindingAttributes.dll \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/Xamarin.iOS.BindingAttributes.dll \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/bgen.exe                 \
