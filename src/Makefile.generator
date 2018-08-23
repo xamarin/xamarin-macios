@@ -57,7 +57,7 @@ $(BUILD_DIR)/common/bgen.exe: $(GENERATOR_SOURCES) $(IKVM_REFLECTION_SOURCES) $(
 	$(Q_GEN) $(SYSTEM_CSC) -nologo -debug:portable -out:$@ $(IKVM_REFLECTION_FLAGS) $(GENERATOR_DEFINES) $(IKVM_REFLECTION_SOURCES) $(GENERATOR_ATTRIBUTE_SOURCES) $(GENERATOR_SOURCES) -deterministic
 
 # The command-line arguments in the csproj are currently kept up-to-date manually
-generator.csproj: generator-ikvm.csproj.in Makefile.generator
+generator.csproj: generator.csproj.in Makefile.generator
 	@sed \
 		-e 's^<!--%IKVM_FILES%-->^$(foreach file,$(subst /,\\,$(IKVM_REFLECTION_SOURCES)),<Compile Include="$(file)"><Link>ikvm\\$(notdir $(subst \\,/,$(file)))</Link></Compile>)^' \
 		-e 's^<!--%FILES%-->^$(foreach file,$(subst /,\\,$(GENERATOR_SOURCES) $(GENERATOR_ATTRIBUTE_SOURCES)),<Compile Include="$(file)"/>)^' \
