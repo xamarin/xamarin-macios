@@ -112,16 +112,7 @@ $(IOS_BUILD_DIR)/$(1)/core.dll: $$(IOS_CORE_SOURCES) frameworks.sources
 		$$(IOS_$(1)_DEFINES) \
 		$$(IOS_CORE_SOURCES)
 
-# generator.exe
-$(IOS_BUILD_DIR)/$(1)/generator.exe: $$(GENERATOR_SOURCES) $(IOS_BUILD_DIR)/$(1)/core.dll
-	$$(call Q_PROF_CSC,ios/$(1)) $$(IOS_CSC) -nologo -out:$$@ -debug -unsafe \
-		-r:$(IOS_BUILD_DIR)/$(1)/core.dll \
-		$$(GENERATOR_DEFINES)             \
-		$$(GENERATOR_SOURCES)
-
 # generated_sources
-# Unfortunatelly, generator uses reflection to load api which means we need to build another
-# mono (tools64) to be able to load 2.1 mscorlib (mscorlib internal version must match runtime version)
 
 $(IOS_BUILD_DIR)/$(1)/generated_sources: $$(IOS_$(1)_GENERATOR) $$(IOS_APIS) $(IOS_BUILD_DIR)/$(1)/core.dll $(IOS_BUILD_DIR)/native/$(4)
 	$$(call Q_PROF_GEN,ios/$(1)) $$(IOS_$(1)_GENERATE) \
@@ -475,13 +466,6 @@ $(MAC_BUILD_DIR)/$(1)/core.dll: $(MAC_CORE_SOURCES) frameworks.sources
 		$(3) \
 		$$(MAC_CORE_SOURCES)
 
-$(MAC_BUILD_DIR)/$(1)/_bmac.exe: $(MAC_BUILD_DIR)/$(1)/core.dll $(MAC_APIS) $(GENERATOR_SOURCES)
-	$$(call Q_PROF_CSC,mac/$(1)) \
-		$$(MAC_$(1)_CSC) -nologo -out:$$@ -debug -unsafe \
-		$(GENERATOR_DEFINES) \
-		-r:$$(@D)/core.dll \
-		$(GENERATOR_SOURCES)
-
 $(MAC_BUILD_DIR)/$(1)/generated-sources: $$(MAC_$(1)_GENERATOR) $(MAC_APIS) $(MAC_BUILD_DIR)/$(1)/core.dll $(MAC_BUILD_DIR)/$(7)
 	$$(call Q_PROF_GEN,mac/$(1)) $$(MAC_$(1)_GENERATE) \
 		$(MAC_GENERATED_DEFINES) \
@@ -748,14 +732,6 @@ $(WATCH_BUILD_DIR)/watch/core.dll: $(WATCHOS_CORE_SOURCES) frameworks.sources | 
 		$(WATCH_DEFINES)     \
 		$(WATCHOS_CORE_SOURCES)
 
-# generator.exe
-$(WATCH_BUILD_DIR)/watch/generator.exe: $(GENERATOR_SOURCES) $(WATCH_BUILD_DIR)/watch/core.dll
-	$(call Q_PROF_CSC,watch) $(WATCH_CSC) -nologo -out:$@ -debug -unsafe \
-		-r:$(WATCH_BUILD_DIR)/watch/core.dll \
-		$(GENERATOR_SOURCES)                  \
-		$(WATCH_DEFINES)     \
-		$(GENERATOR_DEFINES)                  \
-
 # generated_sources
 $(WATCH_BUILD_DIR)/watch/generated_sources: $(WATCH_GENERATOR) $(WATCHOS_APIS) $(WATCH_BUILD_DIR)/watch/core.dll $(WATCH_BUILD_DIR)/Xamarin.WatchOS.BindingAttributes.dll
 	$(call Q_PROF_GEN,watch) $(WATCH_GENERATE) \
@@ -963,13 +939,6 @@ $(TVOS_BUILD_DIR)/tvos/core.dll: $(TVOS_CORE_SOURCES) frameworks.sources Makefil
 		-define:COREBUILD    \
 		$(TVOS_DEFINES)     \
 		$(TVOS_CORE_SOURCES)
-
-# generator.exe
-$(TVOS_BUILD_DIR)/tvos/generator.exe: $(GENERATOR_SOURCES) $(TVOS_BUILD_DIR)/tvos/core.dll
-	$(call Q_PROF_CSC,tvos) $(TV_CSC) -nologo --keep -out:$@ -debug -unsafe \
-		-r:$(TVOS_BUILD_DIR)/tvos/core.dll \
-		$(GENERATOR_SOURCES)                  \
-		$(GENERATOR_DEFINES)                  \
 
 # generated_sources
 $(TVOS_BUILD_DIR)/tvos/generated_sources: $(TVOS_GENERATOR) $(TVOS_APIS) $(TVOS_BUILD_DIR)/tvos/core.dll $(TVOS_BUILD_DIR)/Xamarin.TVOS.BindingAttributes.dll
