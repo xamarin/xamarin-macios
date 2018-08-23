@@ -650,5 +650,29 @@ namespace Xamarin.MMP.Tests
 				rv.Messages.AssertErrorCount (0);
 			});
 		}
+
+		[Test]
+		public void MM0138 ()
+		{
+			MMPTests.RunMMPTest (tmpDir => {
+				var rv = TI.TestClassicExecutable (tmpDir, csprojConfig: "<IncludeMonoRuntime>true</IncludeMonoRuntime>", shouldFail: true);
+				rv.Messages.AssertError (138, "Building 32-bit apps is not possible when using Xcode 10. Please migrate project to the Unified API.");
+				rv.Messages.AssertWarningCount (0);
+			});
+		}
+
+		[Test]
+		public void MM0139 ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					CSProjConfig = "<XamMacArch>i386</XamMacArch>"
+				};
+
+				var rv = TI.TestUnifiedExecutable (test, shouldFail: true);
+				rv.Messages.AssertError (139, "Building 32-bit apps is not possible when using Xcode 10. Please change the architecture in the project's Mac Build options to 'x86_64'.");
+				rv.Messages.AssertWarningCount (0);
+			});
+		}
 	}
 }
