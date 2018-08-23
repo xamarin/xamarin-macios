@@ -202,7 +202,6 @@ namespace CoreImage {
 	}
 
 	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
 	interface CIContext {
 #if !MONOMAC || XAMCORE_2_0
 		[iOS (9,0)][Mac (10,11)]
@@ -238,11 +237,11 @@ namespace CoreImage {
 		[Export ("initWithOptions:")]
 		IntPtr Constructor ([NullAllowed] NSDictionary options);
 
-#if !MONOMAC
 		[Static]
-		[Wrap ("FromOptions ((NSDictionary) null)")]
+		[Export ("context")]
 		CIContext Create ();
 
+#if !MONOMAC
 		[Static]
 		[Export ("contextWithEAGLContext:")]
 		CIContext FromContext (EAGLContext eaglContext);
@@ -1736,11 +1735,6 @@ namespace CoreImage {
 		[Field ("kCIImageAutoAdjustEnhance"), Internal]
 		NSString AutoAdjustEnhanceKey { get; }
 
-//		[Availability (Deprecated = Platform.iOS_9_0)]
-//		[Availability (Deprecated = Platform.Mac_10_11)]
-//		[Export ("autoAdjustmentFilters"), Internal]
-//		NSArray _GetAutoAdjustmentFilters ();
-
 		[Export ("autoAdjustmentFiltersWithOptions:"), Internal]
 		NSArray _GetAutoAdjustmentFilters ([NullAllowed] NSDictionary opts);
 
@@ -1777,6 +1771,18 @@ namespace CoreImage {
 		[Mac (10,13)]
 		[Export ("imageByApplyingFilter:")]
 		CIImage CreateByFiltering (string filterName);
+
+		[iOS (11, 0)]
+		[TV (11,0)]
+		[Mac (10,13)]
+		[Export ("imageBySamplingLinear")]
+		CIImage CreateBySamplingLinear ();
+
+		[iOS (11, 0)]
+		[TV (11,0)]
+		[Mac (10,13)]
+		[Export ("imageBySamplingNearest")]
+		CIImage CreateBySamplingNearest ();
 
 		[iOS (8,0), Mac (10,10)]
 		[Field ("kCIImageAutoAdjustCrop"), Internal]
