@@ -74,8 +74,6 @@ IOS_LIBDIR = $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
 IOS_BMONO = MONO_PATH=$(IOS_LIBDIR) $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btouch-mono
 IOS_GENERATOR=$(BUILD_DIR)/common/bgen.exe
 IOS_GENERATE=$(SYSTEM_MONO) --debug $(IOS_GENERATOR)
-IOS_native_GENERATOR=$(IOS_GENERATOR)
-IOS_native_GENERATE=$(IOS_GENERATE)
 $(IOS_BUILD_DIR)/Constants.cs: Constants.iOS.cs.in Makefile $(TOP)/Make.config.inc | $(IOS_BUILD_DIR)
 	$(call Q_PROF_GEN,ios) sed \
 		-e "s/@VERSION@/$(IOS_PACKAGE_VERSION_MAJOR).$(IOS_PACKAGE_VERSION_MINOR).$(IOS_PACKAGE_VERSION_REV)/g" \
@@ -87,57 +85,36 @@ $(IOS_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in
 	$(Q) mkdir -p $(IOS_BUILD_DIR)
 	$(call Q_PROF_GEN,ios) sed < $< > $@ 's|@PRODUCT_NAME@|$(IOS_PRODUCT)|g; s|@PACKAGE_HEAD_REV@|$(PACKAGE_HEAD_REV)|g; s|@PACKAGE_HEAD_BRANCH@|$(CURRENT_BRANCH)|g; s|@PACKAGE_VERSION_MAJOR@|$(IOS_PACKAGE_VERSION_MAJOR)|g; s|@PACKAGE_VERSION_MINOR@|$(IOS_PACKAGE_VERSION_MINOR)|g; s|@PACKAGE_VERSION_REV@|$(IOS_PACKAGE_VERSION_REV)|g; s|@PACKAGE_VERSION_BUILD@|$(IOS_PACKAGE_VERSION_BUILD)|g'
 
-# filled by TARGETS_template below
-IOS_VARIANTS_TARGETS =
-
-# Template to expand into assembly targets for
-# each variation (compat 32, native 32, native 64)
-#
-# Template Arguments:
-#
-#   - $(3) -> Product assembly name (monotouch.dll | Xamarin.iOS.dll)
-#   - $(4) -> MonoTouch.Dialog assembly name
-#   - $(5) -> MonoTouch.NUnitLite assembly name
-#   - $(6) -> Extra mcs arguments to pass to mcs when *not* using pmcs
-#
-
-define IOS_GENERATOR_template
 # core.dll
-$(IOS_BUILD_DIR)/$(1)/core.dll: $$(IOS_CORE_SOURCES) frameworks.sources
-	@mkdir -p $(IOS_BUILD_DIR)/$(1)
-	$$(call Q_PROF_CSC,ios/$(1)) $$(IOS_CSC) -nologo -out:$$@ -target:library -debug -unsafe \
+$(IOS_BUILD_DIR)/native/core.dll: $(IOS_CORE_SOURCES) frameworks.sources
+	$(Q) mkdir -p $(IOS_BUILD_DIR)native
+	$(call Q_PROF_CSC,ios) $(IOS_CSC) -nologo -out:$@ -target:library -debug -unsafe \
 		-r:$(IOS_LIBDIR)/Mono.Security.dll \
-		-nowarn:219,618,114,414,1635,3021,$$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
-		-define:COREBUILD $$(IOS_DEFINES) \
-		$$(IOS_$(1)_DEFINES) \
-		$$(IOS_CORE_SOURCES)
+		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
+		-define:COREBUILD $(IOS_DEFINES) \
+		$(IOS_native_DEFINES) \
+		$(IOS_CORE_SOURCES)
 
 # generated_sources
-
-$(IOS_BUILD_DIR)/$(1)/generated_sources: $$(IOS_$(1)_GENERATOR) $$(IOS_APIS) $(IOS_BUILD_DIR)/$(1)/core.dll $(IOS_BUILD_DIR)/native/$(4)
-	$$(call Q_PROF_GEN,ios/$(1)) $$(IOS_$(1)_GENERATE) \
-		$$(IOS_GENERATOR_FLAGS) \
-		$$(IOS_GENERATOR_$(1)_FLAGS) \
+$(IOS_BUILD_DIR)/native/generated_sources: $(IOS_GENERATOR) $(IOS_APIS) $(IOS_BUILD_DIR)/native/core.dll $(IOS_BUILD_DIR)/native/Xamarin.iOS.BindingAttributes.dll ios.rsp
+	$(call Q_PROF_GEN,ios) $(IOS_GENERATE) \
+		$(IOS_GENERATOR_FLAGS) \
+		$(IOS_GENERATOR_native_FLAGS) \
 		-core \
-		-sourceonly=$$@ \
-		-compiler=$$(IOS_CSC) \
+		-sourceonly=$@ \
+		-compiler=$(IOS_CSC) \
 		-nologo -nostdlib -noconfig \
 		-no-mono-path \
-		-tmpdir=$(IOS_BUILD_DIR)/$(1) \
-		-baselib=$(IOS_BUILD_DIR)/$(1)/core.dll \
-		-attributelib=$(IOS_BUILD_DIR)/native/$(4) \
-		-r=$$(MONO_PATH)/mcs/class/lib/monotouch/System.dll \
-		-ns=MonoTouch.ObjCRuntime \
+		-tmpdir=$(IOS_BUILD_DIR)/native \
+		-baselib=$(IOS_BUILD_DIR)/native/core.dll \
+		-attributelib=$(IOS_BUILD_DIR)/native/Xamarin.iOS.BindingAttributes.dll \
+		-r=$(MONO_PATH)/mcs/class/lib/monotouch/System.dll \
 		-native-exception-marshalling \
-		$(2) \
+		--ns=ObjCRuntime \
 		--target-framework=Xamarin.iOS,v1.0 \
-		$$(IOS_APIS)
-endef
-$(eval $(call IOS_GENERATOR_template,native,--ns=ObjCRuntime,native,Xamarin.iOS.BindingAttributes.dll))
+		$(IOS_APIS)
 
 define IOS_TARGETS_template
-IOS_VARIANTS_TARGETS += $(IOS_BUILD_DIR)/$(1)/$(3)
-
 # Xamarin.iOS.dll
 $(IOS_BUILD_DIR)/$(1)/$(3): $$(IOS_SOURCES) $(IOS_BUILD_DIR)/$(4)/generated_sources $(PRODUCT_KEY_PATH)
 	@mkdir -p $(IOS_BUILD_DIR)/$(1)
