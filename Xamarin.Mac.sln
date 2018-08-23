@@ -87,8 +87,8 @@ Global
 		{8559DD7F-A16F-46D0-A05A-9139FAEBA8FD}.net_4_0_Debug|Any CPU.Build.0 = net_4_0_Debug|Any CPU
 		{8559DD7F-A16F-46D0-A05A-9139FAEBA8FD}.net_4_0_Release|Any CPU.ActiveCfg = net_4_0_Release|Any CPU
 		{8559DD7F-A16F-46D0-A05A-9139FAEBA8FD}.net_4_0_Release|Any CPU.Build.0 = net_4_0_Release|Any CPU
-		{8559DD7F-A16F-46D0-A05A-9139FAEBA8FD}.Release|Any CPU.ActiveCfg = net_2_0_Release|Any CPU
-		{8559DD7F-A16F-46D0-A05A-9139FAEBA8FD}.Release|Any CPU.Build.0 = net_2_0_Release|Any CPU
+		{8559DD7F-A16F-46D0-A05A-9139FAEBA8FD}.Release|Any CPU.ActiveCfg = net_4_0_Release|Any CPU
+		{8559DD7F-A16F-46D0-A05A-9139FAEBA8FD}.Release|Any CPU.Build.0 = net_4_0_Release|Any CPU
 		{8559DD7F-A16F-46D0-A05A-9139FAEBA8FD}.Release|x86.ActiveCfg = net_2_0_Release|Any CPU
 		{8559DD7F-A16F-46D0-A05A-9139FAEBA8FD}.Release|x86.Build.0 = net_2_0_Release|Any CPU
 		{8559DD7F-A16F-46D0-A05A-9139FAEBA8FD}.silverlight_Debug|Any CPU.ActiveCfg = net_2_0_Debug|Any CPU
@@ -171,8 +171,8 @@ Global
 		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.net_4_0_Debug|Any CPU.Build.0 = net_4_0_Debug|Any CPU
 		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.net_4_0_Release|Any CPU.ActiveCfg = net_4_0_Release|Any CPU
 		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.net_4_0_Release|Any CPU.Build.0 = net_4_0_Release|Any CPU
-		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.Release|Any CPU.ActiveCfg = net_2_0_Release|Any CPU
-		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.Release|Any CPU.Build.0 = net_2_0_Release|Any CPU
+		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.Release|Any CPU.ActiveCfg = net_4_0_Release|Any CPU
+		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.Release|Any CPU.Build.0 = net_4_0_Release|Any CPU
 		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.Release|x86.ActiveCfg = net_2_0_Release|Any CPU
 		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.Release|x86.Build.0 = net_2_0_Release|Any CPU
 		{D68133BD-1E63-496E-9EDE-4FBDBF77B486}.silverlight_Debug|Any CPU.ActiveCfg = silverlight_Debug|Any CPU
@@ -227,8 +227,8 @@ Global
 		{F3232882-0FA0-4BB6-9D9C-E2CC779EAF0D}.net_4_0_Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3232882-0FA0-4BB6-9D9C-E2CC779EAF0D}.net_4_0_Release|Any CPU.ActiveCfg = Debug|x86
 		{F3232882-0FA0-4BB6-9D9C-E2CC779EAF0D}.net_4_0_Release|Any CPU.Build.0 = Debug|x86
-		{F3232882-0FA0-4BB6-9D9C-E2CC779EAF0D}.Release|Any CPU.ActiveCfg = Release|x86
-		{F3232882-0FA0-4BB6-9D9C-E2CC779EAF0D}.Release|Any CPU.Build.0 = Release|x86
+		{F3232882-0FA0-4BB6-9D9C-E2CC779EAF0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3232882-0FA0-4BB6-9D9C-E2CC779EAF0D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F3232882-0FA0-4BB6-9D9C-E2CC779EAF0D}.Release|x86.ActiveCfg = Release|x86
 		{F3232882-0FA0-4BB6-9D9C-E2CC779EAF0D}.Release|x86.Build.0 = Release|x86
 		{F3232882-0FA0-4BB6-9D9C-E2CC779EAF0D}.silverlight_Debug|Any CPU.ActiveCfg = Debug|x86
