@@ -9,3 +9,5 @@ xamtvos.csproj
 xamwatch.csproj
 generator.csproj
 *~
+*.rsp
+
