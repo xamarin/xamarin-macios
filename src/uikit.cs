@@ -7399,11 +7399,12 @@ namespace UIKit {
 		[iOS (10,0), TV (10,0)]
 		[Export ("imageRendererFormat")]
 		UIGraphicsImageRendererFormat ImageRendererFormat { get; }
+#endif
 
+		[Watch (3,0)]
 		[iOS (10,0), TV (10,0)]
 		[Export ("imageWithHorizontallyFlippedOrientation")]
 		UIImage GetImageWithHorizontallyFlippedOrientation ();
-#endif
 
 		// From the NSItemProviderWriting protocol, a static method.
 		// NSItemProviderWriting doesn't seem to be implemented for tvOS/watchOS, even though the headers say otherwise.
