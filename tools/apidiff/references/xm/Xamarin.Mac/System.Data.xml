@@ -139,6 +139,7 @@
           </class>
           <class name="InvalidUdtException" type="class" base="System.SystemException" sealed="true" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <methods>
@@ -653,6 +654,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -731,6 +735,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -1291,6 +1298,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -1345,6 +1355,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -1375,6 +1388,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -1461,6 +1477,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <fields>
               <field name="MaxByteSizeValue" attrib="32854" fieldtype="System.Int32" value="8000" />
             </fields>
@@ -1563,6 +1582,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor(Microsoft.SqlServer.Server.Format)" attrib="6278">
                 <parameters>
@@ -2034,6 +2056,7 @@
           </class>
           <class name="ConstraintException" type="class" base="System.Data.DataException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -2061,6 +2084,7 @@
           </class>
           <class name="DBConcurrencyException" type="class" base="System.SystemException" sealed="true" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -2802,6 +2826,7 @@
           </class>
           <class name="DataException" type="class" base="System.SystemException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -4625,6 +4650,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <attributes>
@@ -6743,6 +6771,7 @@
           </class>
           <class name="DeletedRowInaccessibleException" type="class" base="System.Data.DataException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -6770,6 +6799,7 @@
           </class>
           <class name="DuplicateNameException" type="class" base="System.Data.DataException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -6797,6 +6827,7 @@
           </class>
           <class name="EvaluateException" type="class" base="System.Data.InvalidExpressionException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -7977,6 +8008,7 @@
           </class>
           <class name="InRowChangingEventException" type="class" base="System.Data.DataException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -8091,6 +8123,7 @@
           </class>
           <class name="InvalidConstraintException" type="class" base="System.Data.DataException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -8118,6 +8151,7 @@
           </class>
           <class name="InvalidExpressionException" type="class" base="System.Data.DataException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -8276,6 +8310,7 @@
           </class>
           <class name="MissingPrimaryKeyException" type="class" base="System.Data.DataException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -8316,6 +8351,7 @@
           </class>
           <class name="NoNullAllowedException" type="class" base="System.Data.DataException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -8343,6 +8379,7 @@
           </class>
           <class name="OperationAbortedException" type="class" base="System.SystemException" sealed="true" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
           </class>
@@ -8414,6 +8451,7 @@
           </class>
           <class name="ReadOnlyException" type="class" base="System.Data.DataException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -8441,6 +8479,7 @@
           </class>
           <class name="RowNotInTableException" type="class" base="System.Data.DataException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -8685,6 +8724,7 @@
           </class>
           <class name="StrongTypingException" type="class" base="System.Data.DataException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -8712,6 +8752,7 @@
           </class>
           <class name="SyntaxErrorException" type="class" base="System.Data.InvalidExpressionException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -8739,6 +8780,7 @@
           </class>
           <class name="TypedDataSetGeneratorException" type="class" base="System.Data.DataException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -8934,6 +8976,7 @@
           </class>
           <class name="VersionNotFoundException" type="class" base="System.Data.DataException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -9120,6 +9163,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor(System.Security.Permissions.SecurityAction)" attrib="6276">
                 <parameters>
@@ -12540,6 +12586,7 @@
           </class>
           <class name="DbException" type="class" base="System.Runtime.InteropServices.ExternalException" abstract="true" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -13195,6 +13242,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor(System.Boolean)" attrib="6278">
                 <parameters>
@@ -14266,6 +14316,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor(System.Security.Permissions.SecurityAction)" attrib="6278">
                 <parameters>
@@ -16357,6 +16410,7 @@
           </class>
           <class name="SqlException" type="class" base="System.Data.Common.DbException" sealed="true" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <properties>
@@ -17453,6 +17507,7 @@
           </class>
           <class name="SqlAlreadyFilledException" type="class" base="System.Data.SqlTypes.SqlTypeException" sealed="true" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -21167,6 +21222,7 @@
           </class>
           <class name="SqlNotFilledException" type="class" base="System.Data.SqlTypes.SqlTypeException" sealed="true" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -21188,6 +21244,7 @@
           </class>
           <class name="SqlNullValueException" type="class" base="System.Data.SqlTypes.SqlTypeException" sealed="true" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -21848,6 +21905,7 @@
           </class>
           <class name="SqlTruncateException" type="class" base="System.Data.SqlTypes.SqlTypeException" sealed="true" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -21869,6 +21927,7 @@
           </class>
           <class name="SqlTypeException" type="class" base="System.SystemException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
