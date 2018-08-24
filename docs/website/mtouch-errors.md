@@ -699,6 +699,8 @@ that can't be found.
 mtouch may in certain cases still find references at a later point, which
 means that if the build otherwise succeeds, this warning can be ignored.
 
+<!-- 0138-0139: used by mmp -->
+
 # MT1xxx: Project related error messages
 
 ### MT10xx: Installer / mtouch
