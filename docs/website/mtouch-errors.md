@@ -872,6 +872,8 @@ Alternatively, enable the managed [linker](https://docs.microsoft.com/en-us/xama
 
 As a last-straw solution, use an older version of Xamarin.iOS that does not require these new SDKs to be present during the build process.
 
+<!-- 0138-0139: used by mmp -->
+
 ## MT1xxx: Project related error messages
 
 ### MT10xx: Installer / mtouch
