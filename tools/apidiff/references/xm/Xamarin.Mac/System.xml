@@ -23700,22 +23700,11 @@
                   <parameter name="cancellationToken" position="0" attrib="0" type="System.Threading.CancellationToken" />
                 </parameters>
               </method>
-              <method name="Read(System.Span`1[System.Byte])" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
-                <parameters>
-                  <parameter name="destination" position="0" attrib="0" type="System.Span`1[System.Byte]" />
-                </parameters>
-              </method>
               <method name="Read(System.Byte[], System.Int32, System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
                 <parameters>
                   <parameter name="array" position="0" attrib="0" type="System.Byte[]" />
                   <parameter name="offset" position="1" attrib="0" type="System.Int32" />
                   <parameter name="count" position="2" attrib="0" type="System.Int32" />
-                </parameters>
-              </method>
-              <method name="ReadAsync(System.Memory`1[System.Byte], System.Threading.CancellationToken)" attrib="198" virtual="true" is-override="true" returntype="System.Threading.Tasks.ValueTask`1[System.Int32]">
-                <parameters>
-                  <parameter name="destination" position="0" attrib="0" type="System.Memory`1[System.Byte]" />
-                  <parameter name="cancellationToken" position="1" attrib="4112" type="System.Threading.CancellationToken" optional="true" defaultValue="NULL" />
                 </parameters>
               </method>
               <method name="ReadAsync(System.Byte[], System.Int32, System.Int32, System.Threading.CancellationToken)" attrib="198" virtual="true" is-override="true" returntype="System.Threading.Tasks.Task`1[System.Int32]">
@@ -23738,11 +23727,6 @@
               <method name="SetLength(System.Int64)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
                 <parameters>
                   <parameter name="value" position="0" attrib="0" type="System.Int64" />
-                </parameters>
-              </method>
-              <method name="Write(System.ReadOnlySpan`1[System.Byte])" attrib="198" virtual="true" is-override="true" returntype="System.Void">
-                <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.ReadOnlySpan`1[System.Byte]" />
                 </parameters>
               </method>
               <method name="Write(System.Byte[], System.Int32, System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
@@ -24820,6 +24804,9 @@
               <property name="BytesReceived" attrib="0" ptype="System.Int64">
                 <methods>
                   <method name="get_BytesReceived()" attrib="2182" returntype="System.Int64">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -24827,6 +24814,9 @@
               <property name="TotalBytesToReceive" attrib="0" ptype="System.Int64">
                 <methods>
                   <method name="get_TotalBytesToReceive()" attrib="2182" returntype="System.Int64">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -26767,8 +26757,7 @@
                 <attributes>
                   <attribute name="System.ObsoleteAttribute">
                     <properties>
-                      <property name="Message" value="Serialization is obsoleted for this type" />
-                      <property name="IsError" value="False" />
+                      <property name="Message" value="Serialization is obsoleted for this type.  http://go.microsoft.com/fwlink/?linkid=14202" />
                     </properties>
                   </attribute>
                 </attributes>
@@ -27381,6 +27370,9 @@
                 <parameters>
                   <parameter name="context" position="0" attrib="2" type="System.Net.TransportContext" direction="out" />
                 </parameters>
+              </method>
+              <method name="GetRequestStreamAsync()" attrib="198" virtual="true" is-override="true" returntype="System.Threading.Tasks.Task`1[System.IO.Stream]">
+                <parameters />
               </method>
               <method name="GetResponse()" attrib="198" virtual="true" is-override="true" returntype="System.Net.WebResponse">
                 <parameters />
@@ -28983,6 +28975,9 @@
               <property name="BytesReceived" attrib="0" ptype="System.Int64">
                 <methods>
                   <method name="get_BytesReceived()" attrib="2182" returntype="System.Int64">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -28990,6 +28985,9 @@
               <property name="BytesSent" attrib="0" ptype="System.Int64">
                 <methods>
                   <method name="get_BytesSent()" attrib="2182" returntype="System.Int64">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -28997,6 +28995,9 @@
               <property name="TotalBytesToReceive" attrib="0" ptype="System.Int64">
                 <methods>
                   <method name="get_TotalBytesToReceive()" attrib="2182" returntype="System.Int64">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -29004,6 +29005,9 @@
               <property name="TotalBytesToSend" attrib="0" ptype="System.Int64">
                 <methods>
                   <method name="get_TotalBytesToSend()" attrib="2182" returntype="System.Int64">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -29138,13 +29142,6 @@
             </methods>
           </class>
           <class name="WebClient" type="class" base="System.ComponentModel.Component" charset="Ansi" layout="Auto">
-            <attributes>
-              <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                <properties>
-                  <property name="Value" value="True" />
-                </properties>
-              </attribute>
-            </attributes>
             <interfaces>
               <interface name="System.ComponentModel.IComponent" />
               <interface name="System.IDisposable" />
@@ -29232,9 +29229,15 @@
               <property name="CachePolicy" attrib="0" ptype="System.Net.Cache.RequestCachePolicy">
                 <methods>
                   <method name="get_CachePolicy()" attrib="2182" returntype="System.Net.Cache.RequestCachePolicy">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters />
                   </method>
                   <method name="set_CachePolicy(System.Net.Cache.RequestCachePolicy)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
                     <parameters>
                       <parameter name="value" position="0" attrib="0" type="System.Net.Cache.RequestCachePolicy" />
                     </parameters>
@@ -29370,37 +29373,23 @@
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                 </parameters>
               </method>
-              <method name="DownloadDataAsync(System.Uri)" attrib="16518" returntype="System.Void">
+              <method name="DownloadDataAsync(System.Uri)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                 </parameters>
               </method>
-              <method name="DownloadDataAsync(System.Uri, System.Object)" attrib="16518" returntype="System.Void">
+              <method name="DownloadDataAsync(System.Uri, System.Object)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                   <parameter name="userToken" position="1" attrib="0" type="System.Object" />
                 </parameters>
               </method>
-              <method name="DownloadDataTaskAsync(System.String)" attrib="16518" returntype="System.Threading.Tasks.Task`1[System.Byte[]]">
-                <attributes>
-                  <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                    <properties>
-                      <property name="Value" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
+              <method name="DownloadDataTaskAsync(System.String)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.Byte[]]">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.String" />
                 </parameters>
               </method>
-              <method name="DownloadDataTaskAsync(System.Uri)" attrib="16518" returntype="System.Threading.Tasks.Task`1[System.Byte[]]">
-                <attributes>
-                  <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                    <properties>
-                      <property name="Value" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
+              <method name="DownloadDataTaskAsync(System.Uri)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.Byte[]]">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                 </parameters>
@@ -29417,40 +29406,26 @@
                   <parameter name="fileName" position="1" attrib="0" type="System.String" />
                 </parameters>
               </method>
-              <method name="DownloadFileAsync(System.Uri, System.String)" attrib="16518" returntype="System.Void">
+              <method name="DownloadFileAsync(System.Uri, System.String)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                   <parameter name="fileName" position="1" attrib="0" type="System.String" />
                 </parameters>
               </method>
-              <method name="DownloadFileAsync(System.Uri, System.String, System.Object)" attrib="16518" returntype="System.Void">
+              <method name="DownloadFileAsync(System.Uri, System.String, System.Object)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                   <parameter name="fileName" position="1" attrib="0" type="System.String" />
                   <parameter name="userToken" position="2" attrib="0" type="System.Object" />
                 </parameters>
               </method>
-              <method name="DownloadFileTaskAsync(System.String, System.String)" attrib="16518" returntype="System.Threading.Tasks.Task">
-                <attributes>
-                  <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                    <properties>
-                      <property name="Value" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
+              <method name="DownloadFileTaskAsync(System.String, System.String)" attrib="134" returntype="System.Threading.Tasks.Task">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.String" />
                   <parameter name="fileName" position="1" attrib="0" type="System.String" />
                 </parameters>
               </method>
-              <method name="DownloadFileTaskAsync(System.Uri, System.String)" attrib="16518" returntype="System.Threading.Tasks.Task">
-                <attributes>
-                  <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                    <properties>
-                      <property name="Value" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
+              <method name="DownloadFileTaskAsync(System.Uri, System.String)" attrib="134" returntype="System.Threading.Tasks.Task">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                   <parameter name="fileName" position="1" attrib="0" type="System.String" />
@@ -29466,37 +29441,23 @@
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                 </parameters>
               </method>
-              <method name="DownloadStringAsync(System.Uri)" attrib="16518" returntype="System.Void">
+              <method name="DownloadStringAsync(System.Uri)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                 </parameters>
               </method>
-              <method name="DownloadStringAsync(System.Uri, System.Object)" attrib="16518" returntype="System.Void">
+              <method name="DownloadStringAsync(System.Uri, System.Object)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                   <parameter name="userToken" position="1" attrib="0" type="System.Object" />
                 </parameters>
               </method>
-              <method name="DownloadStringTaskAsync(System.String)" attrib="16518" returntype="System.Threading.Tasks.Task`1[System.String]">
-                <attributes>
-                  <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                    <properties>
-                      <property name="Value" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
+              <method name="DownloadStringTaskAsync(System.String)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.String]">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.String" />
                 </parameters>
               </method>
-              <method name="DownloadStringTaskAsync(System.Uri)" attrib="16518" returntype="System.Threading.Tasks.Task`1[System.String]">
-                <attributes>
-                  <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                    <properties>
-                      <property name="Value" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
+              <method name="DownloadStringTaskAsync(System.Uri)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.String]">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                 </parameters>
@@ -29600,37 +29561,23 @@
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                 </parameters>
               </method>
-              <method name="OpenReadAsync(System.Uri)" attrib="16518" returntype="System.Void">
+              <method name="OpenReadAsync(System.Uri)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                 </parameters>
               </method>
-              <method name="OpenReadAsync(System.Uri, System.Object)" attrib="16518" returntype="System.Void">
+              <method name="OpenReadAsync(System.Uri, System.Object)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                   <parameter name="userToken" position="1" attrib="0" type="System.Object" />
                 </parameters>
               </method>
-              <method name="OpenReadTaskAsync(System.String)" attrib="16518" returntype="System.Threading.Tasks.Task`1[System.IO.Stream]">
-                <attributes>
-                  <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                    <properties>
-                      <property name="Value" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
+              <method name="OpenReadTaskAsync(System.String)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.IO.Stream]">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.String" />
                 </parameters>
               </method>
-              <method name="OpenReadTaskAsync(System.Uri)" attrib="16518" returntype="System.Threading.Tasks.Task`1[System.IO.Stream]">
-                <attributes>
-                  <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                    <properties>
-                      <property name="Value" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
+              <method name="OpenReadTaskAsync(System.Uri)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.IO.Stream]">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                 </parameters>
@@ -29657,69 +29604,41 @@
                   <parameter name="method" position="1" attrib="0" type="System.String" />
                 </parameters>
               </method>
-              <method name="OpenWriteAsync(System.Uri)" attrib="16518" returntype="System.Void">
+              <method name="OpenWriteAsync(System.Uri)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                 </parameters>
               </method>
-              <method name="OpenWriteAsync(System.Uri, System.String)" attrib="16518" returntype="System.Void">
+              <method name="OpenWriteAsync(System.Uri, System.String)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                   <parameter name="method" position="1" attrib="0" type="System.String" />
                 </parameters>
               </method>
-              <method name="OpenWriteAsync(System.Uri, System.String, System.Object)" attrib="16518" returntype="System.Void">
+              <method name="OpenWriteAsync(System.Uri, System.String, System.Object)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                   <parameter name="method" position="1" attrib="0" type="System.String" />
                   <parameter name="userToken" position="2" attrib="0" type="System.Object" />
                 </parameters>
               </method>
-              <method name="OpenWriteTaskAsync(System.String)" attrib="16518" returntype="System.Threading.Tasks.Task`1[System.IO.Stream]">
-                <attributes>
-                  <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                    <properties>
-                      <property name="Value" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
+              <method name="OpenWriteTaskAsync(System.String)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.IO.Stream]">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.String" />
                 </parameters>
               </method>
-              <method name="OpenWriteTaskAsync(System.Uri)" attrib="16518" returntype="System.Threading.Tasks.Task`1[System.IO.Stream]">
-                <attributes>
-                  <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                    <properties>
-                      <property name="Value" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
+              <method name="OpenWriteTaskAsync(System.Uri)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.IO.Stream]">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                 </parameters>
               </method>
-              <method name="OpenWriteTaskAsync(System.String, System.String)" attrib="16518" returntype="System.Threading.Tasks.Task`1[System.IO.Stream]">
-                <attributes>
-                  <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                    <properties>
-                      <property name="Value" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
+              <method name="OpenWriteTaskAsync(System.String, System.String)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.IO.Stream]">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.String" />
                   <parameter name="method" position="1" attrib="0" type="System.String" />
                 </parameters>
               </method>
-              <method name="OpenWriteTaskAsync(System.Uri, System.String)" attrib="16518" returntype="System.Threading.Tasks.Task`1[System.IO.Stream]">
-                <attributes>
-                  <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                    <properties>
-                      <property name="Value" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
+              <method name="OpenWriteTaskAsync(System.Uri, System.String)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.IO.Stream]">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                   <parameter name="method" position="1" attrib="0" type="System.String" />
@@ -29751,20 +29670,20 @@
                   <parameter name="data" position="2" attrib="0" type="System.Byte[]" />
                 </parameters>
               </method>
-              <method name="UploadDataAsync(System.Uri, System.Byte[])" attrib="16518" returntype="System.Void">
+              <method name="UploadDataAsync(System.Uri, System.Byte[])" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                   <parameter name="data" position="1" attrib="0" type="System.Byte[]" />
                 </parameters>
               </method>
-              <method name="UploadDataAsync(System.Uri, System.String, System.Byte[])" attrib="16518" returntype="System.Void">
+              <method name="UploadDataAsync(System.Uri, System.String, System.Byte[])" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                   <parameter name="method" position="1" attrib="0" type="System.String" />
                   <parameter name="data" position="2" attrib="0" type="System.Byte[]" />
                 </parameters>
               </method>
-              <method name="UploadDataAsync(System.Uri, System.String, System.Byte[], System.Object)" attrib="16518" returntype="System.Void">
+              <method name="UploadDataAsync(System.Uri, System.String, System.Byte[], System.Object)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                   <parameter name="method" position="1" attrib="0" type="System.String" />
@@ -29772,54 +29691,26 @@
                   <parameter name="userToken" position="3" attrib="0" type="System.Object" />
                 </parameters>
               </method>
-              <method name="UploadDataTaskAsync(System.String, System.Byte[])" attrib="16518" returntype="System.Threading.Tasks.Task`1[System.Byte[]]">
-                <attributes>
-                  <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                    <properties>
-                      <property name="Value" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
+              <method name="UploadDataTaskAsync(System.String, System.Byte[])" attrib="134" returntype="System.Threading.Tasks.Task`1[System.Byte[]]">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.String" />
                   <parameter name="data" position="1" attrib="0" type="System.Byte[]" />
                 </parameters>
               </method>
-              <method name="UploadDataTaskAsync(System.Uri, System.Byte[])" attrib="16518" returntype="System.Threading.Tasks.Task`1[System.Byte[]]">
-                <attributes>
-                  <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                    <properties>
-                      <property name="Value" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
+              <method name="UploadDataTaskAsync(System.Uri, System.Byte[])" attrib="134" returntype="System.Threading.Tasks.Task`1[System.Byte[]]">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                   <parameter name="data" position="1" attrib="0" type="System.Byte[]" />
                 </parameters>
               </method>
-              <method name="UploadDataTaskAsync(System.String, System.String, System.Byte[])" attrib="16518" returntype="System.Threading.Tasks.Task`1[System.Byte[]]">
-                <attributes>
-                  <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                    <properties>
-                      <property name="Value" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
+              <method name="UploadDataTaskAsync(System.String, System.String, System.Byte[])" attrib="134" returntype="System.Threading.Tasks.Task`1[System.Byte[]]">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.String" />
                   <parameter name="method" position="1" attrib="0" type="System.String" />
                   <parameter name="data" position="2" attrib="0" type="System.Byte[]" />
                 </parameters>
               </method>
-              <method name="UploadDataTaskAsync(System.Uri, System.String, System.Byte[])" attrib="16518" returntype="System.Threading.Tasks.Task`1[System.Byte[]]">
-                <attributes>
-                  <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                    <properties>
-                      <property name="Value" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
+              <method name="UploadDataTaskAsync(System.Uri, System.String, System.Byte[])" attrib="134" returntype="System.Threading.Tasks.Task`1[System.Byte[]]">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                   <parameter name="method" position="1" attrib="0" type="System.String" />
@@ -29852,20 +29743,20 @@
                   <parameter name="fileName" position="2" attrib="0" type="System.String" />
                 </parameters>
               </method>
-              <method name="UploadFileAsync(System.Uri, System.String)" attrib="16518" returntype="System.Void">
+              <method name="UploadFileAsync(System.Uri, System.String)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                   <parameter name="fileName" position="1" attrib="0" type="System.String" />
                 </parameters>
               </method>
-              <method name="UploadFileAsync(System.Uri, System.String, System.String)" attrib="16518" returntype="System.Void">
+              <method name="UploadFileAsync(System.Uri, System.String, System.String)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                   <parameter name="method" position="1" attrib="0" type="System.String" />
                   <parameter name="fileName" position="2" attrib="0" type="System.String" />
                 </parameters>
               </method>
-              <method name="UploadFileAsync(System.Uri, System.String, System.String, System.Object)" attrib="16518" returntype="System.Void">
+              <method name="UploadFileAsync(System.Uri, System.String, System.String, System.Object)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                   <parameter name="method" position="1" attrib="0" type="System.String" />
@@ -29873,54 +29764,26 @@
                   <parameter name="userToken" position="3" attrib="0" type="System.Object" />
                 </parameters>
               </method>
-              <method name="UploadFileTaskAsync(System.String, System.String)" attrib="16518" returntype="System.Threading.Tasks.Task`1[System.Byte[]]">
-                <attributes>
-                  <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                    <properties>
-                      <property name="Value" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
+              <method name="UploadFileTaskAsync(System.String, System.String)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.Byte[]]">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.String" />
                   <parameter name="fileName" position="1" attrib="0" type="System.String" />
                 </parameters>
               </method>
-              <method name="UploadFileTaskAsync(System.Uri, System.String)" attrib="16518" returntype="System.Threading.Tasks.Task`1[System.Byte[]]">
-                <attributes>
-                  <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                    <properties>
-                      <property name="Value" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
+              <method name="UploadFileTaskAsync(System.Uri, System.String)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.Byte[]]">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                   <parameter name="fileName" position="1" attrib="0" type="System.String" />
                 </parameters>
               </method>
-              <method name="UploadFileTaskAsync(System.String, System.String, System.String)" attrib="16518" returntype="System.Threading.Tasks.Task`1[System.Byte[]]">
-                <attributes>
-                  <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                    <properties>
-                      <property name="Value" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
+              <method name="UploadFileTaskAsync(System.String, System.String, System.String)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.Byte[]]">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.String" />
                   <parameter name="method" position="1" attrib="0" type="System.String" />
                   <parameter name="fileName" position="2" attrib="0" type="System.String" />
                 </parameters>
               </method>
-              <method name="UploadFileTaskAsync(System.Uri, System.String, System.String)" attrib="16518" returntype="System.Threading.Tasks.Task`1[System.Byte[]]">
-                <attributes>
-                  <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                    <properties>
-                      <property name="Value" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
+              <method name="UploadFileTaskAsync(System.Uri, System.String, System.String)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.Byte[]]">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                   <parameter name="method" position="1" attrib="0" type="System.String" />
@@ -29953,20 +29816,20 @@
                   <parameter name="data" position="2" attrib="0" type="System.String" />
                 </parameters>
               </method>
-              <method name="UploadStringAsync(System.Uri, System.String)" attrib="16518" returntype="System.Void">
+              <method name="UploadStringAsync(System.Uri, System.String)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                   <parameter name="data" position="1" attrib="0" type="System.String" />
                 </parameters>
               </method>
-              <method name="UploadStringAsync(System.Uri, System.String, System.String)" attrib="16518" returntype="System.Void">
+              <method name="UploadStringAsync(System.Uri, System.String, System.String)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                   <parameter name="method" position="1" attrib="0" type="System.String" />
                   <parameter name="data" position="2" attrib="0" type="System.String" />
                 </parameters>
               </method>
-              <method name="UploadStringAsync(System.Uri, System.String, System.String, System.Object)" attrib="16518" returntype="System.Void">
+              <method name="UploadStringAsync(System.Uri, System.String, System.String, System.Object)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                   <parameter name="method" position="1" attrib="0" type="System.String" />
@@ -29974,54 +29837,26 @@
                   <parameter name="userToken" position="3" attrib="0" type="System.Object" />
                 </parameters>
               </method>
-              <method name="UploadStringTaskAsync(System.String, System.String)" attrib="16518" returntype="System.Threading.Tasks.Task`1[System.String]">
-                <attributes>
-                  <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                    <properties>
-                      <property name="Value" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
+              <method name="UploadStringTaskAsync(System.String, System.String)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.String]">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.String" />
                   <parameter name="data" position="1" attrib="0" type="System.String" />
                 </parameters>
               </method>
-              <method name="UploadStringTaskAsync(System.Uri, System.String)" attrib="16518" returntype="System.Threading.Tasks.Task`1[System.String]">
-                <attributes>
-                  <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                    <properties>
-                      <property name="Value" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
+              <method name="UploadStringTaskAsync(System.Uri, System.String)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.String]">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                   <parameter name="data" position="1" attrib="0" type="System.String" />
                 </parameters>
               </method>
-              <method name="UploadStringTaskAsync(System.String, System.String, System.String)" attrib="16518" returntype="System.Threading.Tasks.Task`1[System.String]">
-                <attributes>
-                  <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                    <properties>
-                      <property name="Value" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
+              <method name="UploadStringTaskAsync(System.String, System.String, System.String)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.String]">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.String" />
                   <parameter name="method" position="1" attrib="0" type="System.String" />
                   <parameter name="data" position="2" attrib="0" type="System.String" />
                 </parameters>
               </method>
-              <method name="UploadStringTaskAsync(System.Uri, System.String, System.String)" attrib="16518" returntype="System.Threading.Tasks.Task`1[System.String]">
-                <attributes>
-                  <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                    <properties>
-                      <property name="Value" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
+              <method name="UploadStringTaskAsync(System.Uri, System.String, System.String)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.String]">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                   <parameter name="method" position="1" attrib="0" type="System.String" />
@@ -30054,20 +29889,20 @@
                   <parameter name="data" position="2" attrib="0" type="System.Collections.Specialized.NameValueCollection" />
                 </parameters>
               </method>
-              <method name="UploadValuesAsync(System.Uri, System.Collections.Specialized.NameValueCollection)" attrib="16518" returntype="System.Void">
+              <method name="UploadValuesAsync(System.Uri, System.Collections.Specialized.NameValueCollection)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                   <parameter name="data" position="1" attrib="0" type="System.Collections.Specialized.NameValueCollection" />
                 </parameters>
               </method>
-              <method name="UploadValuesAsync(System.Uri, System.String, System.Collections.Specialized.NameValueCollection)" attrib="16518" returntype="System.Void">
+              <method name="UploadValuesAsync(System.Uri, System.String, System.Collections.Specialized.NameValueCollection)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                   <parameter name="method" position="1" attrib="0" type="System.String" />
                   <parameter name="data" position="2" attrib="0" type="System.Collections.Specialized.NameValueCollection" />
                 </parameters>
               </method>
-              <method name="UploadValuesAsync(System.Uri, System.String, System.Collections.Specialized.NameValueCollection, System.Object)" attrib="16518" returntype="System.Void">
+              <method name="UploadValuesAsync(System.Uri, System.String, System.Collections.Specialized.NameValueCollection, System.Object)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                   <parameter name="method" position="1" attrib="0" type="System.String" />
@@ -30075,54 +29910,26 @@
                   <parameter name="userToken" position="3" attrib="0" type="System.Object" />
                 </parameters>
               </method>
-              <method name="UploadValuesTaskAsync(System.String, System.Collections.Specialized.NameValueCollection)" attrib="16518" returntype="System.Threading.Tasks.Task`1[System.Byte[]]">
-                <attributes>
-                  <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                    <properties>
-                      <property name="Value" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
+              <method name="UploadValuesTaskAsync(System.String, System.Collections.Specialized.NameValueCollection)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.Byte[]]">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.String" />
                   <parameter name="data" position="1" attrib="0" type="System.Collections.Specialized.NameValueCollection" />
                 </parameters>
               </method>
-              <method name="UploadValuesTaskAsync(System.Uri, System.Collections.Specialized.NameValueCollection)" attrib="16518" returntype="System.Threading.Tasks.Task`1[System.Byte[]]">
-                <attributes>
-                  <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                    <properties>
-                      <property name="Value" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
+              <method name="UploadValuesTaskAsync(System.Uri, System.Collections.Specialized.NameValueCollection)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.Byte[]]">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                   <parameter name="data" position="1" attrib="0" type="System.Collections.Specialized.NameValueCollection" />
                 </parameters>
               </method>
-              <method name="UploadValuesTaskAsync(System.String, System.String, System.Collections.Specialized.NameValueCollection)" attrib="16518" returntype="System.Threading.Tasks.Task`1[System.Byte[]]">
-                <attributes>
-                  <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                    <properties>
-                      <property name="Value" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
+              <method name="UploadValuesTaskAsync(System.String, System.String, System.Collections.Specialized.NameValueCollection)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.Byte[]]">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.String" />
                   <parameter name="method" position="1" attrib="0" type="System.String" />
                   <parameter name="data" position="2" attrib="0" type="System.Collections.Specialized.NameValueCollection" />
                 </parameters>
               </method>
-              <method name="UploadValuesTaskAsync(System.Uri, System.String, System.Collections.Specialized.NameValueCollection)" attrib="16518" returntype="System.Threading.Tasks.Task`1[System.Byte[]]">
-                <attributes>
-                  <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
-                    <properties>
-                      <property name="Value" value="False" />
-                    </properties>
-                  </attribute>
-                </attributes>
+              <method name="UploadValuesTaskAsync(System.Uri, System.String, System.Collections.Specialized.NameValueCollection)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.Byte[]]">
                 <parameters>
                   <parameter name="address" position="0" attrib="0" type="System.Uri" />
                   <parameter name="method" position="1" attrib="0" type="System.String" />
@@ -40059,23 +39866,9 @@
                   <parameter name="cancellationToken" position="1" attrib="0" type="System.Threading.CancellationToken" />
                 </parameters>
               </method>
-              <method name="ReceiveAsync(System.Memory`1[System.Byte], System.Threading.CancellationToken)" attrib="198" virtual="true" is-override="true" returntype="System.Threading.Tasks.ValueTask`1[System.Net.WebSockets.ValueWebSocketReceiveResult]">
-                <parameters>
-                  <parameter name="buffer" position="0" attrib="0" type="System.Memory`1[System.Byte]" />
-                  <parameter name="cancellationToken" position="1" attrib="0" type="System.Threading.CancellationToken" />
-                </parameters>
-              </method>
               <method name="SendAsync(System.ArraySegment`1[System.Byte], System.Net.WebSockets.WebSocketMessageType, System.Boolean, System.Threading.CancellationToken)" attrib="198" virtual="true" is-override="true" returntype="System.Threading.Tasks.Task">
                 <parameters>
                   <parameter name="buffer" position="0" attrib="0" type="System.ArraySegment`1[System.Byte]" />
-                  <parameter name="messageType" position="1" attrib="0" type="System.Net.WebSockets.WebSocketMessageType" />
-                  <parameter name="endOfMessage" position="2" attrib="0" type="System.Boolean" />
-                  <parameter name="cancellationToken" position="3" attrib="0" type="System.Threading.CancellationToken" />
-                </parameters>
-              </method>
-              <method name="SendAsync(System.ReadOnlyMemory`1[System.Byte], System.Net.WebSockets.WebSocketMessageType, System.Boolean, System.Threading.CancellationToken)" attrib="198" virtual="true" is-override="true" returntype="System.Threading.Tasks.Task">
-                <parameters>
-                  <parameter name="buffer" position="0" attrib="0" type="System.ReadOnlyMemory`1[System.Byte]" />
                   <parameter name="messageType" position="1" attrib="0" type="System.Net.WebSockets.WebSocketMessageType" />
                   <parameter name="endOfMessage" position="2" attrib="0" type="System.Boolean" />
                   <parameter name="cancellationToken" position="3" attrib="0" type="System.Threading.CancellationToken" />
@@ -40398,15 +40191,6 @@
                   <parameter name="internalBuffer" position="6" attrib="0" type="System.ArraySegment`1[System.Byte]" />
                 </parameters>
               </method>
-              <method name="CreateFromStream(System.IO.Stream, System.Boolean, System.String, System.TimeSpan, System.Memory`1[System.Byte])" attrib="150" static="true" returntype="System.Net.WebSockets.WebSocket">
-                <parameters>
-                  <parameter name="stream" position="0" attrib="0" type="System.IO.Stream" />
-                  <parameter name="isServer" position="1" attrib="0" type="System.Boolean" />
-                  <parameter name="subProtocol" position="2" attrib="0" type="System.String" />
-                  <parameter name="keepAliveInterval" position="3" attrib="0" type="System.TimeSpan" />
-                  <parameter name="buffer" position="4" attrib="4112" type="System.Memory`1[System.Byte]" optional="true" defaultValue="NULL" />
-                </parameters>
-              </method>
               <method name="CreateServerBuffer(System.Int32)" attrib="150" static="true" returntype="System.ArraySegment`1[System.Byte]">
                 <parameters>
                   <parameter name="receiveBufferSize" position="0" attrib="0" type="System.Int32" />
@@ -40441,15 +40225,6 @@
                   <parameter name="cancellationToken" position="1" attrib="0" type="System.Threading.CancellationToken" />
                 </parameters>
               </method>
-              <method name="ReceiveAsync(System.Memory`1[System.Byte], System.Threading.CancellationToken)" attrib="454" virtual="true" returntype="System.Threading.Tasks.ValueTask`1[System.Net.WebSockets.ValueWebSocketReceiveResult]">
-                <attributes>
-                  <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
-                </attributes>
-                <parameters>
-                  <parameter name="buffer" position="0" attrib="0" type="System.Memory`1[System.Byte]" />
-                  <parameter name="cancellationToken" position="1" attrib="0" type="System.Threading.CancellationToken" />
-                </parameters>
-              </method>
               <method name="RegisterPrefixes()" attrib="150" static="true" returntype="System.Void">
                 <attributes>
                   <attribute name="System.ComponentModel.EditorBrowsableAttribute">
@@ -40463,14 +40238,6 @@
               <method name="SendAsync(System.ArraySegment`1[System.Byte], System.Net.WebSockets.WebSocketMessageType, System.Boolean, System.Threading.CancellationToken)" attrib="1478" abstract="true" virtual="true" returntype="System.Threading.Tasks.Task">
                 <parameters>
                   <parameter name="buffer" position="0" attrib="0" type="System.ArraySegment`1[System.Byte]" />
-                  <parameter name="messageType" position="1" attrib="0" type="System.Net.WebSockets.WebSocketMessageType" />
-                  <parameter name="endOfMessage" position="2" attrib="0" type="System.Boolean" />
-                  <parameter name="cancellationToken" position="3" attrib="0" type="System.Threading.CancellationToken" />
-                </parameters>
-              </method>
-              <method name="SendAsync(System.ReadOnlyMemory`1[System.Byte], System.Net.WebSockets.WebSocketMessageType, System.Boolean, System.Threading.CancellationToken)" attrib="454" virtual="true" returntype="System.Threading.Tasks.Task">
-                <parameters>
-                  <parameter name="buffer" position="0" attrib="0" type="System.ReadOnlyMemory`1[System.Byte]" />
                   <parameter name="messageType" position="1" attrib="0" type="System.Net.WebSockets.WebSocketMessageType" />
                   <parameter name="endOfMessage" position="2" attrib="0" type="System.Boolean" />
                   <parameter name="cancellationToken" position="3" attrib="0" type="System.Threading.CancellationToken" />
