@@ -14,16 +14,6 @@ using Foundation;
 using CoreFoundation;
 
 namespace Network {
-	public enum NWErrorDomain {
-		Invalid = 0,
-		[Field ("kNWErrorDomainPOSIX")]
-		Posix = 1,
-		[Field ("kNWErrorDomainDNS")]
-		Dns = 2,
-		[Field ("kNWErrorDomainTLS")]
-		Tls = 3,
-	}
-
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	public class NWError : NativeObject {
 		public NWError (IntPtr handle, bool owns) : base (handle, owns)
