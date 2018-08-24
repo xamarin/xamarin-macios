@@ -158,6 +158,18 @@ As a last-straw solution, use an older version of Xamarin.Mac that does not requ
 
 <!-- 0136 and 0137 used by mtouch -->
 
+#### MM0138: Building 32-bit apps is not possible when using Xcode 10. Please migrate project to the Unified API.
+
+Xcode 10 does not support building 32-bit applications.
+
+The project must be [migrated to a Unified project](https://docs.microsoft.com/en-us/xamarin/cross-platform/macios/unified/updating-mac-apps) in order to support 64-bit.
+
+#### MM0139: Building 32-bit apps is not possible when using Xcode 10. Please change the architecture in the project's Mac Build options to 'x86_64'.
+
+Xcode 10 does not support building 32-bit applications.
+
+Change the architecture in the project's Mac Build options to 'x86_64' in order to build a 64-bit application.
+
 # MM1xxx: file copy / symlinks (project related)
 
 ### <a name="MM1034">MM1034: Could not create symlink '{file}' -> '{target}': error {number}
