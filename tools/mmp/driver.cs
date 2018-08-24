@@ -119,8 +119,6 @@ namespace Xamarin.Bundler {
 		static bool is_extension;
 		static bool frameworks_copied_to_bundle_dir;	// Have we copied any frameworks to Foo.app/Contents/Frameworks?
 
-		// This must be kept in sync with the system launcher's minimum mono version (in launcher/launcher-system.m)
-		static Version MinimumMonoVersion = new Version (4, 2, 0);
 		const string pkg_config = "/Library/Frameworks/Mono.framework/Commands/pkg-config";
 
 		static void ShowHelp (OptionSet os) {
@@ -1199,9 +1197,9 @@ namespace Xamarin.Bundler {
 			}
 
 			Version mono_ver;
-			if (Version.TryParse (mono_version.ToString ().TrimEnd (), out mono_ver) && mono_ver < MinimumMonoVersion)
+			if (Version.TryParse (mono_version.ToString ().TrimEnd (), out mono_ver) && mono_ver < MonoVersions.MinimumMonoVersion)
 				throw new MonoMacException (1, true, "This version of Xamarin.Mac requires Mono {0} (the current Mono version is {1}). Please update the Mono.framework from http://mono-project.com/Downloads", 
-					MinimumMonoVersion, mono_version.ToString ().TrimEnd ());
+					MonoVersions.MinimumMonoVersion, mono_version.ToString ().TrimEnd ());
 			
 			cflags = cflagsb.ToString ().Replace (Environment.NewLine, String.Empty);
 			libdir = libdirb.ToString ().Replace (Environment.NewLine, String.Empty);

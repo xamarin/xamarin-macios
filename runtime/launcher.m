@@ -440,7 +440,7 @@ app_initialize (xamarin_initialize_data *data)
 	
 	if (!minVersion) {
 		// This must be kept in sync with mmp's minimum mono version (in driver.cs)
-		minVersion = @"4.2.0";
+		minVersion = @MIN_XM_MONO_VERSION;
 	}
 
 	char *mono_version;
