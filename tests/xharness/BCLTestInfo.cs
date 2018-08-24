@@ -174,7 +174,7 @@ namespace xharness
 
 		public MacBCLTestInfo (Harness harness, string testName, MacFlavors flavor) : base (harness, testName)
 		{
-			if (flavor == MacFlavors.All)
+			if (flavor == MacFlavors.All || flavor == MacFlavors.NonSystem)
 				throw new ArgumentException ("Each target must be a specific flavor");
 
 			Flavor = flavor;
@@ -204,6 +204,8 @@ namespace xharness
 			case MacFlavors.Full:
 				inputProject.AddAdditionalDefines ("XAMMAC_4_5");
 				break;
+			default:
+				throw new NotImplementedException (Flavor.ToString ());
 			}
 			inputProject.SetOutputPath ("bin\\$(Platform)\\$(Configuration)" + FlavorSuffix);
 			inputProject.SetIntermediateOutputPath ("obj\\$(Platform)\\$(Configuration)" + FlavorSuffix);
