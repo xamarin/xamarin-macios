@@ -106,7 +106,7 @@ namespace Foundation {
 			}
 		}
 
-#if !XAMCORE_4_0
+#if !XAMCORE_4_0 && !MONOMAC
 		[Obsolete ("Use 'GetLocalizedUserNotificationString' that takes 'NSString' to preserve localization.")]
 		public static string GetLocalizedUserNotificationString (string key, params NSObject[] arguments) {
 			return GetLocalizedUserNotificationString ((NSString) key, arguments);
