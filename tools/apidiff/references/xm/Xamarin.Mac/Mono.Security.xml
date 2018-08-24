@@ -4460,6 +4460,7 @@
           </class>
           <class name="TlsException" type="class" base="System.Exception" sealed="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -8363,6 +8364,7 @@
               </class>
               <class name="XMLError" type="class" base="System.Exception" charset="Ansi" layout="Auto">
                 <interfaces>
+                  <interface name="System.Runtime.InteropServices._Exception" />
                   <interface name="System.Runtime.Serialization.ISerializable" />
                 </interfaces>
                 <fields>

@@ -294,6 +294,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -409,6 +412,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <fields>
               <field name="DefaultNamespace" attrib="32854" fieldtype="System.String" value="http://tempuri.org/" />
             </fields>
@@ -466,6 +472,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -579,6 +588,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -673,6 +685,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <parameters>
@@ -717,6 +732,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -1920,8 +1938,8 @@
                 <attributes>
                   <attribute name="System.Xml.Serialization.XmlElementAttribute">
                     <properties>
-                      <property name="ElementName" value="match" />
                       <property name="Type" value="System.Web.Services.Description.MimeTextMatch" />
+                      <property name="ElementName" value="match" />
                     </properties>
                   </attribute>
                 </attributes>
@@ -2290,14 +2308,14 @@
                 <attributes>
                   <attribute name="System.Xml.Serialization.XmlElementAttribute">
                     <properties>
-                      <property name="ElementName" value="output" />
                       <property name="Type" value="System.Web.Services.Description.OperationOutput" />
+                      <property name="ElementName" value="output" />
                     </properties>
                   </attribute>
                   <attribute name="System.Xml.Serialization.XmlElementAttribute">
                     <properties>
-                      <property name="ElementName" value="input" />
                       <property name="Type" value="System.Web.Services.Description.OperationInput" />
+                      <property name="ElementName" value="input" />
                     </properties>
                   </attribute>
                 </attributes>
@@ -4883,8 +4901,8 @@
                   <attribute name="System.Xml.Serialization.XmlElementAttribute">
                     <properties>
                       <property name="Namespace" value="http://www.w3.org/2001/XMLSchema" />
-                      <property name="ElementName" value="schema" />
                       <property name="Type" value="System.Xml.Schema.XmlSchema" />
+                      <property name="ElementName" value="schema" />
                     </properties>
                   </attribute>
                 </attributes>
@@ -5933,8 +5951,8 @@
                 <attributes>
                   <attribute name="System.Xml.Serialization.XmlElementAttribute">
                     <properties>
-                      <property name="ElementName" value="exclude" />
                       <property name="Type" value="System.Web.Services.Discovery.ExcludePathInfo" />
+                      <property name="ElementName" value="exclude" />
                     </properties>
                   </attribute>
                 </attributes>
@@ -6214,6 +6232,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -6915,6 +6936,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -7045,6 +7069,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -7102,6 +7129,7 @@
           </class>
           <class name="SoapException" type="class" base="System.SystemException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <fields>
@@ -7341,6 +7369,9 @@
             </methods>
           </class>
           <class name="SoapExtensionAttribute" type="class" base="System.Attribute" abstract="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6276">
                 <parameters />
@@ -7653,6 +7684,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <parameters>
@@ -8115,6 +8149,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -8240,6 +8277,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />

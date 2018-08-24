@@ -853,7 +853,11 @@
                   <interface name="UIKit.IUIScrollViewDelegate" />
                 </interfaces>
                 <fields>
-                  <field name="Container" attrib="4" fieldtype="MonoTouch.Dialog.DialogViewController" />
+                  <field name="Container" attrib="4" fieldtype="MonoTouch.Dialog.DialogViewController">
+                    <attributes>
+                      <attribute name="System.WeakAttribute" />
+                    </attributes>
+                  </field>
                   <field name="Root" attrib="4" fieldtype="MonoTouch.Dialog.RootElement" />
                 </fields>
                 <constructors>
