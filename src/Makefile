@@ -96,10 +96,10 @@ $(IOS_BUILD_DIR)/native/core.dll: $(IOS_CORE_SOURCES) frameworks.sources
 		$(IOS_CORE_SOURCES)
 
 # generated_sources
-$(IOS_BUILD_DIR)/native/generated_sources: $(IOS_GENERATOR) $(IOS_APIS) $(IOS_BUILD_DIR)/native/core.dll $(IOS_BUILD_DIR)/native/Xamarin.iOS.BindingAttributes.dll ios.rsp
-	$(call Q_PROF_GEN,ios) $(IOS_GENERATE) @ios.rsp
+$(IOS_BUILD_DIR)/native/generated_sources: $(IOS_GENERATOR) $(IOS_APIS) $(IOS_BUILD_DIR)/native/core.dll $(IOS_BUILD_DIR)/native/Xamarin.iOS.BindingAttributes.dll $(BUILD_DIR)/ios.rsp
+	$(call Q_PROF_GEN,ios) $(IOS_GENERATE) @$(BUILD_DIR)/ios.rsp
 
-ios.rsp: Makefile Makefile.generator frameworks.sources
+$(BUILD_DIR)/ios.rsp: Makefile Makefile.generator frameworks.sources
 	$(Q_GEN) echo \
 		$(IOS_GENERATOR_FLAGS) \
 		$(IOS_GENERATOR_native_FLAGS) \
@@ -448,10 +448,10 @@ $(MAC_BUILD_DIR)/$(1)/core.dll: $(MAC_CORE_SOURCES) frameworks.sources
 		$(3) \
 		$$(MAC_CORE_SOURCES)
 
-$(MAC_BUILD_DIR)/$(1)/generated-sources: $$(MAC_$(1)_GENERATOR) $(MAC_APIS) $(MAC_BUILD_DIR)/$(1)/core.dll $(MAC_BUILD_DIR)/$(7) mac-$(1).rsp
-	$$(call Q_PROF_GEN,mac/$(1)) $$(MAC_$(1)_GENERATE) @mac-$(1).rsp
+$(MAC_BUILD_DIR)/$(1)/generated-sources: $$(MAC_$(1)_GENERATOR) $(MAC_APIS) $(MAC_BUILD_DIR)/$(1)/core.dll $(MAC_BUILD_DIR)/$(7) $(BUILD_DIR)/mac-$(1).rsp
+	$$(call Q_PROF_GEN,mac/$(1)) $$(MAC_$(1)_GENERATE) @$(BUILD_DIR)/mac-$(1).rsp
 
-mac-$(1).rsp: Makefile Makefile.generator frameworks.sources
+$(BUILD_DIR)/mac-$(1).rsp: Makefile Makefile.generator frameworks.sources
 	$$(Q_GEN) echo \
 		$(MAC_GENERATED_DEFINES) \
 		-compiler:$$(MAC_$(1)_CSC) \
@@ -719,10 +719,10 @@ $(WATCH_BUILD_DIR)/watch/core.dll: $(WATCHOS_CORE_SOURCES) frameworks.sources | 
 		$(WATCHOS_CORE_SOURCES)
 
 # generated_sources
-$(WATCH_BUILD_DIR)/watch/generated_sources: $(WATCH_GENERATOR) $(WATCHOS_APIS) $(WATCH_BUILD_DIR)/watch/core.dll $(WATCH_BUILD_DIR)/Xamarin.WatchOS.BindingAttributes.dll watchos.rsp
-	$(call Q_PROF_GEN,watch) $(WATCH_GENERATE) @watchos.rsp
+$(WATCH_BUILD_DIR)/watch/generated_sources: $(WATCH_GENERATOR) $(WATCHOS_APIS) $(WATCH_BUILD_DIR)/watch/core.dll $(WATCH_BUILD_DIR)/Xamarin.WatchOS.BindingAttributes.dll $(BUILD_DIR)/watchos.rsp
+	$(call Q_PROF_GEN,watch) $(WATCH_GENERATE) @$(BUILD_DIR)/watchos.rsp
 
-watchos.rsp: Makefile Makefile.generator frameworks.sources
+$(BUILD_DIR)/watchos.rsp: Makefile Makefile.generator frameworks.sources
 	$(Q_GEN) echo  \
 		-inline-selectors                                        \
 		-process-enums                                           \
@@ -931,10 +931,10 @@ $(TVOS_BUILD_DIR)/tvos/core.dll: $(TVOS_CORE_SOURCES) frameworks.sources Makefil
 		$(TVOS_CORE_SOURCES)
 
 # generated_sources
-$(TVOS_BUILD_DIR)/tvos/generated_sources: $(TVOS_GENERATOR) $(TVOS_APIS) $(TVOS_BUILD_DIR)/tvos/core.dll $(TVOS_BUILD_DIR)/Xamarin.TVOS.BindingAttributes.dll tvos.rsp
-	$(call Q_PROF_GEN,tvos) $(TVOS_GENERATE) @tvos.rsp
+$(TVOS_BUILD_DIR)/tvos/generated_sources: $(TVOS_GENERATOR) $(TVOS_APIS) $(TVOS_BUILD_DIR)/tvos/core.dll $(TVOS_BUILD_DIR)/Xamarin.TVOS.BindingAttributes.dll $(BUILD_DIR)/tvos.rsp
+	$(call Q_PROF_GEN,tvos) $(TVOS_GENERATE) @$(BUILD_DIR)/tvos.rsp
 
-tvos.rsp: Makefile Makefile.generator frameworks.sources
+$(BUILD_DIR)/tvos.rsp: Makefile Makefile.generator frameworks.sources
 	$(Q_GEN) echo \
 		-inline-selectors                                        \
 		-process-enums                                           \
