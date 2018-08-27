@@ -1191,7 +1191,12 @@ namespace Xamarin.Bundler {
 
 				RunCommand (pkg_config, "--cflags mono-2", env, cflagsb);
 				RunCommand (pkg_config, "--variable=libdir mono-2", env, libdirb);
-				RunCommand (pkg_config, "--modversion mono-2", env, mono_version);
+				var versionFile = "/Library/Frameworks/Mono.framework/Versions/Current/VERSION";
+				if (File.Exists (versionFile)) {
+					mono_version.Append (File.ReadAllText (versionFile));
+				} else {
+					RunCommand (pkg_config, "--modversion mono-2", env, mono_version);
+				}
 			} catch (Win32Exception e) {
 				throw new MonoMacException (5301, true, e, "pkg-config could not be found. Please install the Mono.framework from http://mono-project.com/Downloads");
 			}
