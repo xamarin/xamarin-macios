@@ -17,7 +17,7 @@ using OS_nw_interface=System.IntPtr;
 
 namespace Network {
 
-	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 	public class NWInterface : NativeObject {
 		public NWInterface (IntPtr handle, bool owns) : base (handle, owns) {}
 

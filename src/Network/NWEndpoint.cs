@@ -24,7 +24,7 @@ namespace Network {
 		BonjourService = 3,
 	}
 
-	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 	public class NWEndpoint : NativeObject {
 		public NWEndpoint (IntPtr handle, bool owns) : base (handle, owns) {}
 

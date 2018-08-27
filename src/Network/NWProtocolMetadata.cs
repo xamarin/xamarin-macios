@@ -35,11 +35,9 @@ namespace Network {
 		Ce = 3,
 	}
 
-	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 	public class NWProtocolMetadata : NativeObject {
 
-		// Officially listed on header files, but seems to not work on Mac/iOS
-		// https://bugreport.apple.com/web/?problemID=42443077
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_metadata nw_ip_create_metadata ();
 
