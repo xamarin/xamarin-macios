@@ -8151,7 +8151,7 @@ namespace Foundation
 		[iOS (10,0), Watch (3,0), NoTV, Mac (10,14, onlyOn64: true)]
 		[Static]
 		[Export ("localizedUserNotificationStringForKey:arguments:")]
-		string GetLocalizedUserNotificationString (string key, [Params] [NullAllowed] NSObject [] arguments);
+		NSString GetLocalizedUserNotificationString (NSString key, [Params] [NullAllowed] NSObject [] arguments);
 
 		[Export ("getParagraphStart:end:contentsEnd:forRange:")]
 		void GetParagraphPositions (out nuint paragraphStartPosition, out nuint paragraphEndPosition, out nuint contentsEndPosition, NSRange range);
