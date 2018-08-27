@@ -26,8 +26,12 @@ fi
 PROJECT_FILE="$1"
 PROJECT=$(basename -s .csproj "$PROJECT_FILE")
 PROJECT_DIR=$(dirname "$PROJECT_FILE")
-FRAGMENT_PATH=$PROJECT_FILE.inc
+FRAGMENT_PATH="$2"
 REFERENCES_PATH=$PROJECT-references.txt
+
+if test -z "$FRAGMENT_PATH"; then
+	FRAGMENT_PATH=$PROJECT_FILE.inc
+fi
 
 # ProjectInspector.csproj is an MSBuild file with a target
 # (WriteProjectReferences) that takes another project file as input (the
