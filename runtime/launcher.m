@@ -247,6 +247,7 @@ exit_with_message (const char *reason, const char *argv0, bool request_mono)
 	exit (1);
 }
 
+#ifdef DYNAMIC_MONO_RUNTIME
 static int
 check_mono_version (const char *version, const char *req_version)
 {
@@ -280,7 +281,6 @@ check_mono_version (const char *version, const char *req_version)
 	return TRUE;
 }
 
-#ifdef DYNAMIC_MONO_RUNTIME
 static int
 push_env (const char *variable, NSString *str_value)
 {
@@ -427,8 +427,9 @@ app_initialize (xamarin_initialize_data *data)
 		setrlimit (RLIMIT_NOFILE, &limit);
 	}
 
-	// 5) Verify the minimum Mono version. The minimum mono version is specified in: [...]
 	NSDictionary *plist = [[NSBundle mainBundle] infoDictionary];
+#ifdef DYNAMIC_MONO_RUNTIME
+	// 5) Verify the minimum Mono version. The minimum mono version is specified in: [...]
 	NSString *minVersion = NULL;
 	if (plist != NULL) {
 		minVersion = (NSString *) [plist objectForKey:@"MonoMinimumVersion"];
@@ -444,7 +445,6 @@ app_initialize (xamarin_initialize_data *data)
 	}
 
 	char *mono_version;
-#ifdef DYNAMIC_MONO_RUNTIME
 	const char *err = xamarin_initialize_dynamic_runtime (mono_runtime_prefix);
 	if (err) {
 		mono_version = xamarin_get_mono_runtime_build_info ();
@@ -454,11 +454,11 @@ app_initialize (xamarin_initialize_data *data)
 			exit_with_message (err, data->basename, true);
 		}
 	}
-#endif
 
 	mono_version = mono_get_runtime_build_info ();
 	if (!check_mono_version (mono_version, [minVersion UTF8String]))
 		exit_with_message ([[NSString stringWithFormat:@"This application requires the Mono framework version %@ or newer.", minVersion] UTF8String], data->basename, true);
+#endif
 
 	// 6) Find the executable. The name is: [...]
 	if (data->launch_mode == XamarinLaunchModeApp) {
