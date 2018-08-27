@@ -3,13 +3,13 @@
 #
 
 # generator.csproj.inc contains the generator_dependencies variable used to determine if the generator needs to be rebuilt or not.
-generator.csproj.inc: Makefile.generator $(TOP)/tools/common/create-makefile-fragment.sh
-	$(Q_GEN) $(TOP)/tools/common/create-makefile-fragment.sh $(CURDIR)/generator.csproj
+$(BUILD_DIR)/generator.csproj.inc: Makefile.generator $(TOP)/tools/common/create-makefile-fragment.sh | $(BUILD_DIR)
+	$(Q_GEN) $(TOP)/tools/common/create-makefile-fragment.sh $(abspath $(CURDIR)/generator.csproj) $(abspath $@)
 
--include generator.csproj.inc
+-include $(BUILD_DIR)/generator.csproj.inc
 
-$(BUILD_DIR)/common/bgen.exe: $(generator_dependencies) Makefile.generator
-	$(Q_GEN) $(SYSTEM_MSBUILD) $(XBUILD_VERBOSITY) /p:Configuration=Debug generator.csproj
+$(BUILD_DIR)/common/bgen.exe: $(generator_dependencies) Makefile.generator $(BUILD_DIR)/generator-frameworks.g.cs
+	$(Q_GEN) $(SYSTEM_MSBUILD) $(XBUILD_VERBOSITY) /p:Configuration=Debug generator.csproj /p:IntermediateOutputPath=$(BUILD_DIR)/IDE/obj/common/ /p:OutputPath=$(BUILD_DIR)/common
 
 #
 # Common
