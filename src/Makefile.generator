@@ -4,7 +4,7 @@
 
 # generator.csproj.inc contains the generator_dependencies variable used to determine if the generator needs to be rebuilt or not.
 $(BUILD_DIR)/generator.csproj.inc: Makefile.generator $(TOP)/tools/common/create-makefile-fragment.sh | $(BUILD_DIR)
-	$(Q_GEN) $(TOP)/tools/common/create-makefile-fragment.sh $(CURDIR)/generator.csproj $@
+	$(Q_GEN) $(TOP)/tools/common/create-makefile-fragment.sh $(abspath $(CURDIR)/generator.csproj) $(abspath $@)
 
 -include $(BUILD_DIR)/generator.csproj.inc
 
