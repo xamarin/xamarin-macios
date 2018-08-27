@@ -122,6 +122,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor(System.String, System.String, System.String)" attrib="6278">
                 <parameters>
@@ -191,6 +194,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -226,6 +232,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <parameters>
@@ -286,6 +295,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -301,6 +313,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -323,6 +338,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor(System.Type, System.String)" attrib="6278">
                 <parameters>
@@ -403,6 +421,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor(System.ComponentModel.DataAnnotations.DataType)" attrib="6278">
                 <parameters>
@@ -475,6 +496,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -627,6 +651,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <parameters>
@@ -689,6 +716,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -797,6 +827,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor(System.Boolean)" attrib="6278">
                 <parameters>
@@ -844,6 +877,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -866,6 +902,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor(System.Type)" attrib="6278">
                 <parameters>
@@ -902,6 +941,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -943,6 +985,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <parameters>
@@ -1027,6 +1072,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -1042,6 +1090,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -1086,6 +1137,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor(System.Type)" attrib="6278">
                 <parameters>
@@ -1112,6 +1166,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor(System.Int32)" attrib="6278">
                 <parameters>
@@ -1153,6 +1210,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -1175,6 +1235,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor(System.Double, System.Double)" attrib="6278">
                 <parameters>
@@ -1250,6 +1313,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <parameters>
@@ -1303,6 +1369,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -1345,6 +1414,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor(System.Boolean)" attrib="6278">
                 <parameters>
@@ -1374,6 +1446,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor(System.Boolean)" attrib="6278">
                 <parameters>
@@ -1403,6 +1478,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor(System.Int32)" attrib="6278">
                 <parameters>
@@ -1463,6 +1541,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -1478,6 +1559,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <parameters>
@@ -1552,6 +1636,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -1566,6 +1653,9 @@
             </methods>
           </class>
           <class name="ValidationAttribute" type="class" base="System.Attribute" abstract="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6276">
                 <parameters />
@@ -1763,6 +1853,7 @@
           </class>
           <class name="ValidationException" type="class" base="System.Exception" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -1953,6 +2044,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -2006,6 +2100,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -2021,6 +2118,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption)" attrib="6278">
                 <parameters>
@@ -2062,6 +2162,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <parameters>
@@ -2088,6 +2191,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <parameters>
@@ -2114,6 +2220,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -2129,6 +2238,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <parameters>
