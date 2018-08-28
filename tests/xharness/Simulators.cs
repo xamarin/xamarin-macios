@@ -174,9 +174,15 @@ namespace xharness
 			});
 			var rv = await Harness.ExecuteXcodeCommandAsync ("simctl", $"pair {device.UDID} {companion_device.UDID}", pairLog, TimeSpan.FromMinutes (1));
 			if (!rv.Succeeded) {
-				if (!create_device && capturedLog.ToString ().Contains ("At least one of the requested devices is already paired with the maximum number of supported devices and cannot accept another pairing.")) {
-					log.WriteLine ($"Could not create device pair for '{device.Name}' ({device.UDID}) and '{companion_device.Name}' ({companion_device.UDID}), but will create a new watch device and try again.");
-					return await CreateDevicePair (log, device, companion_device, runtime, devicetype, true);
+				if (!create_device) {
+					var try_creating_device = false;
+					var captured_log = capturedLog.ToString ();
+					try_creating_device |= captured_log.Contains ("At least one of the requested devices is already paired with the maximum number of supported devices and cannot accept another pairing.");
+					try_creating_device |= captured_log.Contains ("The selected devices are already paired with each other.");
+					if (try_creating_device) {
+						log.WriteLine ($"Could not create device pair for '{device.Name}' ({device.UDID}) and '{companion_device.Name}' ({companion_device.UDID}), but will create a new watch device and try again.");
+						return await CreateDevicePair (log, device, companion_device, runtime, devicetype, true);
+					}
 				}
 
 				log.WriteLine ($"Could not create device pair for '{device.Name}' ({device.UDID}) and '{companion_device.Name}' ({companion_device.UDID})");
