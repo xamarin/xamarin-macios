@@ -2542,6 +2542,8 @@ namespace HealthKit {
 		HKSeriesType WorkoutRouteType { get; }
 	}
 
+	[iOS (11,0)]
+	[Watch (4,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface HKSeriesBuilder : NSSecureCoding {
@@ -2549,6 +2551,8 @@ namespace HealthKit {
 		void Discard ();
 	}
 
+	[iOS (11,0)]
+	[Watch (4,0)]
 	[BaseType (typeof(HKSample))]
 	[DisableDefaultCtor]
 	interface HKSeriesSample : NSCopying {
