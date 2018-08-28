@@ -15,14 +15,6 @@
 !missing-protocol! OS_nw_protocol_options not bound
 !missing-protocol! OS_nw_protocol_stack not bound
 
-# binded via a Marshal.ReadIntPtr (Dlfcn.dlsym ..
-!missing-field! _nw_parameters_configure_protocol_default_configuration not bound
-!missing-field! _nw_parameters_configure_protocol_disable not bound
-!missing-field! _nw_content_context_default_message not bound
-!missing-field! _nw_content_context_default_stream not bound
-!missing-field! _nw_content_context_final_send not bound
-!missing-field! _nw_connection_send_idempotent_content not bound
-
 # no need, please see comment: https://github.com/xamarin/xamarin-macios/pull/4251#issuecomment-410815837
 !missing-pinvoke! nw_release is not bound
 !missing-pinvoke! nw_retain is not bound
