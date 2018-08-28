@@ -14,7 +14,9 @@ using Foundation;
 using CoreFoundation;
 
 namespace Network {
-	public enum NWPathStatus {
+
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	public enum NWPathStatus : long {
 		Invalid = 0,
 		Satisfied = 1,
 		Unsatisfied = 2,
