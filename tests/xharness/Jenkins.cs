@@ -2824,7 +2824,7 @@ function toggleAll (show)
 						ExecutionResult = TestExecutingResult.Running;
 						var result = await proc.RunAsync (log, true, Timeout);
 						if (result.TimedOut) {
-							FailureMessage = $"Execution timed out after {Timeout.Minutes} minutes.";
+							FailureMessage = $"Execution timed out after {Timeout.TotalMinutes} minutes.";
 							log.WriteLine (FailureMessage);
 							ExecutionResult = TestExecutingResult.TimedOut;
 						} else if (result.Succeeded) {
