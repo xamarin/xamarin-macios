@@ -163,6 +163,8 @@ namespace MonoTouchFixtures.CoreImage {
 				Assert.Null (f.Mesh, "Mesh/Null");
 				f.Mesh = new CIVector [1] { new CIVector (1) };
 				Assert.That (f.Mesh.Length, Is.EqualTo (1), "Mesh/Non-null");
+				f.Mesh = null;
+				Assert.Null (f.Mesh, "Mesh/Null/again");
 			}
 		}
 	}

@@ -252,8 +252,15 @@ public partial class Generator {
 			indent--;
 			break;
 		case "CIVector[]":
-			print ("var array = NSArray.FromNSObjects (value);");
-			print ($"SetHandle (\"{propertyName}\", array.GetHandle ());");
+			print ("if (value == null) {");
+			indent++;
+			print ($"SetHandle (\"{propertyName}\", IntPtr.Zero);");
+			indent--;
+			print ("} else {");
+			indent++;
+			print ($"SetHandle (\"{propertyName}\", NSArray.FromNSObjects (value).GetHandle ());");
+			indent--;
+			print ("}");
 			break;
 		default:
 			throw new BindingException (1018, true, "Unimplemented CoreImage property type {0}", propertyType);
