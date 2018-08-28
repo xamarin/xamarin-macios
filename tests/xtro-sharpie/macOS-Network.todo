@@ -1,4 +1,3 @@
 !missing-pinvoke! nw_endpoint_get_address is not bound
 !missing-pinvoke! nw_path_monitor_set_cancel_handler is not bound
 !missing-pinvoke! nw_path_monitor_set_update_handler is not bound
-!missing-protocol! OS_nw_object not bound

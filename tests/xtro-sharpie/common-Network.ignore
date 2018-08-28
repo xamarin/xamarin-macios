@@ -14,6 +14,7 @@
 !missing-protocol! OS_nw_protocol_metadata not bound
 !missing-protocol! OS_nw_protocol_options not bound
 !missing-protocol! OS_nw_protocol_stack not bound
+!missing-protocol! OS_nw_object not bound
 
 # no need, please see comment: https://github.com/xamarin/xamarin-macios/pull/4251#issuecomment-410815837
 !missing-pinvoke! nw_release is not bound

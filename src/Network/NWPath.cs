@@ -15,8 +15,9 @@ using CoreFoundation;
 
 namespace Network {
 
+	// this maps to `nw_path_status_t` in Network/Headers/path.h (and not the enum from NetworkExtension)
 	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-	public enum NWPathStatus : long {
+	public enum NWPathStatus {
 		Invalid = 0,
 		Satisfied = 1,
 		Unsatisfied = 2,
