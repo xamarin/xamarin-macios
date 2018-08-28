@@ -18,7 +18,7 @@ using IntPtr=System.IntPtr;
 
 namespace Network {
 
-	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 	public class NWProtocolOptions : NativeObject {
 		public NWProtocolOptions (IntPtr handle, bool owns) : base (handle, owns) {}
 
@@ -84,6 +84,14 @@ namespace Network {
 		public void IPSetDisableFragmentation (bool disableFragmentation)
 		{
 			nw_ip_options_set_disable_fragmentation (GetCheckedHandle (), disableFragmentation);
+		}
+
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_ip_options_set_calculate_receive_time (IntPtr options, bool calculateReceiveTime);
+
+		public void IPSetCalculateReceiveTime (bool calculateReceiveTime)
+		{
+			nw_ip_options_set_calculate_receive_time (GetCheckedHandle (), calculateReceiveTime);
 		}
 
 //

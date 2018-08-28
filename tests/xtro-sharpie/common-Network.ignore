@@ -1,0 +1,21 @@
+# the following are binded manualy as NativeObject
+
+!missing-protocol! OS_nw_advertise_descriptor not bound
+!missing-protocol! OS_nw_connection not bound
+!missing-protocol! OS_nw_content_context not bound
+!missing-protocol! OS_nw_endpoint not bound
+!missing-protocol! OS_nw_error not bound
+!missing-protocol! OS_nw_interface not bound
+!missing-protocol! OS_nw_listener not bound
+!missing-protocol! OS_nw_parameters not bound
+!missing-protocol! OS_nw_path not bound
+!missing-protocol! OS_nw_path_monitor not bound
+!missing-protocol! OS_nw_protocol_definition not bound
+!missing-protocol! OS_nw_protocol_metadata not bound
+!missing-protocol! OS_nw_protocol_options not bound
+!missing-protocol! OS_nw_protocol_stack not bound
+!missing-protocol! OS_nw_object not bound
+
+# no need, please see comment: https://github.com/xamarin/xamarin-macios/pull/4251#issuecomment-410815837
+!missing-pinvoke! nw_release is not bound
+!missing-pinvoke! nw_retain is not bound

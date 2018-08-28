@@ -14,6 +14,9 @@ using Foundation;
 using CoreFoundation;
 
 namespace Network {
+
+	// this maps to `nw_path_status_t` in Network/Headers/path.h (and not the enum from NetworkExtension)
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 	public enum NWPathStatus {
 		Invalid = 0,
 		Satisfied = 1,
@@ -21,7 +24,7 @@ namespace Network {
 		Satisfiable = 3,
 	}
 
-	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 	public class NWPath : NativeObject {
 		public NWPath (IntPtr handle, bool owns) : base (handle, owns) {}
 

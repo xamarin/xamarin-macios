@@ -40,7 +40,7 @@ namespace Network {
 	//
 	public delegate void NWConnectionReceiveDispatchDataCompletion (DispatchData data, NWContentContext context, bool isComplete, NWError error);
 
-	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 	public class NWConnection : NativeObject {
 		public NWConnection (IntPtr handle, bool owns) : base (handle, owns) {}
 
@@ -440,22 +440,12 @@ namespace Network {
 			}
 		}
 
-		static IntPtr _nw_connection_send_idempotent_content;
-
-		// This is a special token handled by the library that configures the Send operation to be idempotent.
-		static IntPtr NW_CONNECTION_SEND_IDEMPOTENT_CONTENT ()
-		{
-			if (_nw_connection_send_idempotent_content == IntPtr.Zero)
-				_nw_connection_send_idempotent_content = Marshal.ReadIntPtr (Dlfcn.dlsym (Libraries.Network.Handle, "_nw_connection_send_idempotent_content"));
-			return _nw_connection_send_idempotent_content;
-		}
-
 		public unsafe void SendIdempotent (DispatchData buffer, NWContentContext context, bool isComplete)
 		{
 			if (context == null)
 				throw new ArgumentNullException (nameof (context));
 
-			LowLevelSend (GetCheckedHandle (), buffer, context.Handle, isComplete, (void *) NW_CONNECTION_SEND_IDEMPOTENT_CONTENT ());
+			LowLevelSend (GetCheckedHandle (), buffer, context.Handle, isComplete, (void *) NWConnectionConstants._SendIdempotentContent);
 		}
 
 		public void SendIdempotent (byte [] buffer, NWContentContext context, bool isComplete)

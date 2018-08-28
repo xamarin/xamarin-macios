@@ -29,27 +29,13 @@ namespace Network {
 		}
 	}
 
-	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 	public class NWParameters : NativeObject {
 		public NWParameters (IntPtr handle, bool owns) : base (handle, owns) {}
 
-		static IntPtr _nw_parameters_configure_protocol_default_configuration;
+		static unsafe BlockLiteral *DEFAULT_CONFIGURATION () => (BlockLiteral *) NWParametersConstants._DefaultConfiguration;
 
-		static unsafe BlockLiteral *DEFAULT_CONFIGURATION ()
-		{
-			if (_nw_parameters_configure_protocol_default_configuration == IntPtr.Zero)
-				_nw_parameters_configure_protocol_default_configuration = Marshal.ReadIntPtr (Dlfcn.dlsym (Libraries.Network.Handle, "_nw_parameters_configure_protocol_default_configuration"));
-
-			return (BlockLiteral *) _nw_parameters_configure_protocol_default_configuration;
-		}
-
-		static IntPtr _nw_parameters_configure_protocol_disable;
-		static unsafe BlockLiteral *DISABLE_PROTOCOL ()
-		{
-			if (_nw_parameters_configure_protocol_disable == IntPtr.Zero)
-				_nw_parameters_configure_protocol_disable = Marshal.ReadIntPtr (Dlfcn.dlsym (Libraries.Network.Handle, "_nw_parameters_configure_protocol_disable"));
-			return (BlockLiteral *) _nw_parameters_configure_protocol_disable;
-		}
+		static unsafe BlockLiteral *DISABLE_PROTOCOL () => (BlockLiteral *) NWParametersConstants._ProtocolDisable;
 
 		delegate void nw_parameters_configure_protocol_block_t (IntPtr block, IntPtr iface);
 		static nw_parameters_configure_protocol_block_t static_ConfigureHandler = TrampolineConfigureHandler;
@@ -440,6 +426,19 @@ namespace Network {
 			set {
 				nw_parameters_set_local_endpoint (GetCheckedHandle (), value.GetHandle ());
 			}
+		}
+
+
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_parameters_set_include_peer_to_peer (IntPtr handle, bool includePeerToPeer);
+
+		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		static extern bool nw_parameters_get_include_peer_to_peer (IntPtr handle);
+
+		public bool IncludePeerToPeer {
+			get => nw_parameters_get_include_peer_to_peer (GetCheckedHandle ());
+			set => nw_parameters_set_include_peer_to_peer (GetCheckedHandle (), value);
 		}
 	}
 

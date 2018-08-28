@@ -18,7 +18,7 @@ namespace Network {
 	// The content context, there are a few pre-configured content contexts for sending
 	// available as static properties on this class
 	//
-	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 	public class NWContentContext : NativeObject {
 		bool global;
 		public NWContentContext (IntPtr handle, bool owns) : base (handle, owns)
@@ -176,7 +176,7 @@ namespace Network {
 		public static NWContentContext DefaultMessage {
 			get {
 				if (defaultMessage == null)
-					defaultMessage = MakeGlobal (Marshal.ReadIntPtr (Dlfcn.dlsym (Libraries.Network.Handle, "_nw_content_context_default_message")));
+					defaultMessage = MakeGlobal (NWContentContextConstants._DefaultMessage);
 
 				return defaultMessage;
 			}
@@ -188,7 +188,7 @@ namespace Network {
 		public static NWContentContext FinalMessage {
 			get {
 				if (finalMessage == null)
-					finalMessage = MakeGlobal (Marshal.ReadIntPtr (Dlfcn.dlsym (Libraries.Network.Handle, "_nw_content_context_final_send")));
+					finalMessage = MakeGlobal (NWContentContextConstants._FinalSend); 
 				return finalMessage;
 			}
 		}
@@ -199,7 +199,7 @@ namespace Network {
 		public static NWContentContext DefaultStream {
 			get {
 				if (defaultStream == null)
-					defaultStream = MakeGlobal (Marshal.ReadIntPtr (Dlfcn.dlsym (Libraries.Network.Handle, "_nw_content_context_default_stream")));
+					defaultStream = MakeGlobal (NWContentContextConstants._DefaultStream);
 				return defaultStream;
 			}
 		}
