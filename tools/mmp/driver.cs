@@ -484,6 +484,12 @@ namespace Xamarin.Bundler {
 			// InitializeCommon needs SdkVersion set to something valid
 			ValidateSDKVersion ();
 
+			if (action != Action.RunRegistrar && XcodeVersion.Major >= 10 && !Is64Bit) {
+				if (IsClassic)
+					throw ErrorHelper.CreateError (138, "Building 32-bit apps is not possible when using Xcode 10. Please migrate project to the Unified API.");
+				throw ErrorHelper.CreateError (139, "Building 32-bit apps is not possible when using Xcode 10. Please change the architecture in the project's Mac Build options to 'x86_64'.");
+			}
+
 			// InitializeCommon needs the current profile
 			if (IsClassic)
 				Profile.Current = new MonoMacProfile ();
