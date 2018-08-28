@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{F3CFAA8D-3D2D-4F7F-9C71-5488CFEB5EB3}</ProjectGuid>
+    <ProjectGuid>{244C7FD0-39C9-49F7-8D88-A954EA8DFFF6}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>xtroreport</RootNamespace>
-    <AssemblyName>xtro-report</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <RootNamespace>u2todo</RootNamespace>
+    <AssemblyName>u2todo</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,7 +32,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Reporter.cs" />
+    <Compile Include="u2todo.cs" />
     <Compile Include="..\Filter.cs">
       <Link>Filter.cs</Link>
     </Compile>

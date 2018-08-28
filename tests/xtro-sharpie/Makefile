@@ -118,5 +118,5 @@ remove-empty-files:
 	find . -empty -exec git rm -f {} \;
 
 unclassified2todo:
-	$(SYSTEM_CSC) u2todo.cs
+	$(SYSTEM_CSC) Filter.cs u2todo/u2todo.cs
 	$(MONO) u2todo.exe

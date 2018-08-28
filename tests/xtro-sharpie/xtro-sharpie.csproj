@@ -87,6 +87,7 @@
     <Compile Include="SimdCheck.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="RequiresSuperCheck.cs" />
+    <Compile Include="Filter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

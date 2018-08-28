@@ -8,6 +8,7 @@
 // Copyright 2011-2015, Xamarin Inc
 //
 using System.ComponentModel;
+using AVFoundation;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
@@ -19,6 +20,10 @@ using AppKit;
 using UIKit;
 #endif
 using System;
+#if WATCH
+using AVMediaSelectionGroup = Foundation.NSObject;
+using AVMediaSelectionOption = Foundation.NSObject;
+#endif
 
 namespace MediaPlayer {
 #if XAMCORE_2_0 || !MONOMAC
@@ -2215,4 +2220,23 @@ namespace MediaPlayer {
 		void SetExternalMediaContentIdentifier (NSString identifier);
 	}
 #endif
+	[iOS (9,0)][TV (9,0)]
+	[Mac (10,12,1, onlyOn64: true)]
+	[NoWatch]
+	[Category]
+	[BaseType (typeof (AVMediaSelectionOption))]
+	interface AVMediaSelectionOption_MPNowPlayingInfoLanguageOptionAdditions {
+		[NullAllowed, Export ("makeNowPlayingInfoLanguageOption")]
+		MPNowPlayingInfoLanguageOption CreateNowPlayingInfoLanguageOption ();
+	}
+
+	[iOS (9,0)][TV (9,0)]
+	[Mac (10,12,1, onlyOn64: true)]
+	[NoWatch]
+	[Category]
+	[BaseType (typeof (AVMediaSelectionGroup))]
+	interface AVMediaSelectionGroup_MPNowPlayingInfoLanguageOptionAdditions {
+		[Export ("makeNowPlayingInfoLanguageOptionGroup")]
+		MPNowPlayingInfoLanguageOptionGroup CreateNowPlayingInfoLanguageOptionGroup ();
+	}
 }

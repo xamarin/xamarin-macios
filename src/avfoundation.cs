@@ -1026,6 +1026,10 @@ namespace AVFoundation {
 		[Export ("manualRenderingSampleTime")]
 		long ManualRenderingSampleTime { get; }
 
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("disableManualRenderingMode")]
+		void DisableManualRenderingMode ();
+
 #if !WATCH
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0), NoWatch]
 		[Export ("connectMIDI:to:format:block:")]
@@ -3341,6 +3345,10 @@ namespace AVFoundation {
 		[Field ("AVSampleBufferRenderSynchronizerRateDidChangeNotification")]
 		[Notification]
 		NSString RateDidChangeNotification { get; }
+
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("currentTime")]
+		CMTime CurrentTime { get; }
 
 		[Export ("timebase", ArgumentSemantic.Retain)]
 		CMTimebase Timebase { get; }
@@ -8958,6 +8966,14 @@ namespace AVFoundation {
 
 		[Export ("stopRecording")]
 		void StopRecording ();
+
+		[NoiOS]
+		[Export ("pauseRecording")]
+		void PauseRecording ();
+
+		[NoiOS]
+		[Export ("resumeRecording")]
+		void ResumeRecording ();
 
 #if MONOMAC
 		[Mac (10,7)]

@@ -28,7 +28,8 @@ namespace CloudKit {
 	}
 #endif
 
-#if XAMCORE_2_0 || !MONOMAC
+#if WATCH
+
 	public partial class CKModifyBadgeOperation {
 
 		// `init` does not work on watchOS but we can keep compatibility with a different init

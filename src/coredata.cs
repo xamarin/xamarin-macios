@@ -10,7 +10,7 @@
 using System;
 using Foundation;
 using ObjCRuntime;
-#if !WATCH && !MONOMAC
+#if !WATCH
 using CoreSpotlight;
 #endif
 
@@ -1565,8 +1565,8 @@ namespace CoreData
 		NSNotification ObjectIdNotification { get; }
 	}
 
-#if !WATCH && !MONOMAC
-	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+#if !WATCH
+	[NoWatch, NoTV, Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
 	interface NSCoreDataCoreSpotlightDelegate
 	{
@@ -1600,6 +1600,10 @@ namespace CoreData
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSPersistentStore {
+
+		[Static]
+		[Export ("migrationManagerClass")]
+		Class MigrationManagerClass { get; }
 
 		[Static, Export ("metadataForPersistentStoreWithURL:error:")]
 		[return: NullAllowed]
@@ -1664,8 +1668,8 @@ namespace CoreData
 		[Field ("NSPersistentStoreSaveConflictsErrorKey")]
 		NSString SaveConflictsErrorKey { get; }
 
-#if !WATCH && !MONOMAC
-		[NoWatch, NoTV, Mac (10, 13), iOS (11, 0)]
+#if !WATCH
+		[NoWatch, NoTV, Mac (10, 13, onlyOn64: true), iOS (11, 0)]
 		[Export ("coreSpotlightExporter")]
 		NSCoreDataCoreSpotlightDelegate CoreSpotlightExporter { get; }
 #endif

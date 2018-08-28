@@ -35,3 +35,14 @@
 !missing-selector! CKContainer::discoverUserInfoWithEmailAddress:completionHandler: not bound
 !missing-selector! CKContainer::discoverUserInfoWithUserRecordID:completionHandler: not bound
 !missing-field! CKOwnerDefaultName not bound
+
+## some `init` do not work on watchOS (only) and we provide compatibility stubs for them to ease code sharing
+!missing-selector! CKDiscoverAllContactsOperation::init not bound
+!missing-selector! CKDiscoverUserInfosOperation::init not bound
+!missing-selector! CKFetchRecordChangesOperation::init not bound
+!missing-selector! CKFetchRecordsOperation::init not bound
+!missing-selector! CKFetchRecordZonesOperation::init not bound
+!missing-selector! CKModifyBadgeOperation::init not bound
+!missing-selector! CKModifyRecordsOperation::init not bound
+!missing-selector! CKModifyRecordZonesOperation::init not bound
+!missing-selector! CKQueryOperation::init not bound

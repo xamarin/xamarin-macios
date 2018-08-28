@@ -1359,11 +1359,9 @@ namespace SpriteKit {
 		IntPtr InitWithURL (NSUrl url);
 #endif
 
-		[NoWatch]
 		[Export ("play")]
 		void Play ();
 
-		[NoWatch]
 		[Export ("pause")]
 		void Pause ();
 
