@@ -92,10 +92,7 @@ namespace Xamarin.Bundler {
 					assembly = ModuleDefinition.ReadModule (fileName, parameters).Assembly;
 					params_cache [assembly.Name.ToString ()] = parameters;
 				}
-				catch (InvalidOperationException e) {
-					// cecil use the default message so it's not very helpful to detect the root cause
-					if (!e.TargetSite.ToString ().Contains ("Void ReadSymbols(Mono.Cecil.Cil.ISymbolReader)"))
-						throw;
+				catch (SymbolsNotMatchingException) {
 					parameters.ReadSymbols = false;
 					parameters.SymbolReaderProvider = null;
 					assembly = ModuleDefinition.ReadModule (fileName, parameters).Assembly;

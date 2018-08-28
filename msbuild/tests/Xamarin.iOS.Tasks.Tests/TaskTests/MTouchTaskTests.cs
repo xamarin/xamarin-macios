@@ -107,7 +107,7 @@ namespace Xamarin.iOS.Tasks
 			Task.ExtraArgs = "--customarg";
 
 			var args = Task.GenerateCommandLineCommands ();
-			Assert.IsTrue (Task.ResponseFile.Contains ("--customarg"), "#1");
+			Assert.IsTrue (args.Contains ("--customarg"), "#1");
 		}
 
 		[Test]
@@ -187,13 +187,13 @@ namespace Xamarin.iOS.Tasks
 				Task.ProjectDir = "path/to";
 				Task.ExtraArgs = "xyz-${ProjectDir}-xyz xxx-${AppBundleDir}-xxx yyy-${TargetPath}-yyy yzy-${TargetDir}-yzy zzz-${TargetName}-zzz zyx-${TargetExt}-zyx";
 				var args = Task.GenerateCommandLineCommands ();
-				Assert.IsFalse (Task.ResponseFile.Contains ("$"), "#1");
-				Assert.IsTrue (Task.ResponseFile.Contains ("xyz-path/to-xyz"), "#ProjectDir");
-				Assert.IsTrue (Task.ResponseFile.Contains ("xxx-../MySingleView/bin/iPhoneSimulator/Debug/MySingleView.app-xxx"), "#AppBundleDir");
-				Assert.IsTrue (Task.ResponseFile.Contains ("yyy-Main.exe-yyy"), "#TargetPath");
-				Assert.IsTrue (Task.ResponseFile.Contains ("yzy--yzy"), "#TargetDir");
-				Assert.IsTrue (Task.ResponseFile.Contains ("zzz-Main.exe-zzz"), "#TargetName");
-				Assert.IsTrue (Task.ResponseFile.Contains ("zyx-.exe-zyx"), "#TargetExt");
+				Assert.IsFalse (args.Contains ("$"), "#1");
+				Assert.IsTrue (args.Contains ("xyz-path/to-xyz"), "#ProjectDir");
+				Assert.IsTrue (args.Contains ("xxx-../MySingleView/bin/iPhoneSimulator/Debug/MySingleView.app-xxx"), "#AppBundleDir");
+				Assert.IsTrue (args.Contains ("yyy-Main.exe-yyy"), "#TargetPath");
+				Assert.IsTrue (args.Contains ("yzy--yzy"), "#TargetDir");
+				Assert.IsTrue (args.Contains ("zzz-Main.exe-zzz"), "#TargetName");
+				Assert.IsTrue (args.Contains ("zyx-.exe-zyx"), "#TargetExt");
 			} finally {
 				Task.ExtraArgs = null;
 			}
@@ -203,8 +203,8 @@ namespace Xamarin.iOS.Tasks
 		public void BuildEntitlementFlagsTest ()
 		{
 			var args = Task.GenerateCommandLineCommands ();
-			Assert.IsTrue (Task.ResponseFile.Contains ("\"--gcc_flags=-Xlinker -sectcreate -Xlinker __TEXT -Xlinker __entitlements -Xlinker"), "#1");
-			Assert.IsTrue (Task.ResponseFile.Contains ("Entitlements.plist"), "#2");
+			Assert.IsTrue (args.Contains ("\"--gcc_flags=-Xlinker -sectcreate -Xlinker __TEXT -Xlinker __entitlements -Xlinker"), "#1");
+			Assert.IsTrue (args.Contains ("Entitlements.plist"), "#2");
 		}
 
 		[Test]

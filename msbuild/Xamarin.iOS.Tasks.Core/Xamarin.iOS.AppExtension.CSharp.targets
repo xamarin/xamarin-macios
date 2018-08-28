@@ -22,6 +22,23 @@ Copyright (C) 2014-2016 Xamarin. All rights reserved.
 		<TargetFrameworkIdentifier Condition="'$(TargetFrameworkIdentifier)' == ''">Xamarin.iOS</TargetFrameworkIdentifier>
 		<TargetFrameworkVersion Condition="'$(TargetFrameworkVersion)' == ''">v1.0</TargetFrameworkVersion>
 
+		<!-- This must be set before importing Microsoft.CSharp.targets -->
+		<!--
+			In Xamarin.iOS.Common.targets, just before the _CompileToNative target, we modify the
+			mtouch references to ensure that we get the lib assemblies for nugets, and not the ref references:
+
+			https://github.com/xamarin/xamarin-macios/blob/9e31d07ecc08a64372dd562e843c3d8950d24985/msbuild/Xamarin.iOS.Tasks.Core/Xamarin.iOS.Common.targets#L784-L791
+
+			This logic removes nuget references, and then re-adds any copy-local dll references.
+
+			This works fine in executable projects, but not in library projects (aka extensions), because nugets aren't copied for library projects:
+
+			https://github.com/NuGet/NuGet.BuildTasks/blob/cf4b0a12cf1f75e0654f28c2a9020251c41d126a/src/Microsoft.NuGet.Build.Tasks/Microsoft.NuGet.targets#L86
+
+			So we need to set the CopyNuGetImplementations variable to 'true' for our library projects.
+		-->
+		<CopyNuGetImplementations Condition="'$(CopyNuGetImplementations)' == ''">true</CopyNuGetImplementations>
+
 		<_IsUnifiedDefined>$([System.Text.RegularExpressions.Regex]::IsMatch('$(DefineConstants.Trim())', '(^|;)__UNIFIED__($|;)'))</_IsUnifiedDefined>
 		<_IsMobileDefined>$([System.Text.RegularExpressions.Regex]::IsMatch('$(DefineConstants.Trim())', '(^|;)__MOBILE__($|;)'))</_IsMobileDefined>
 		<_IsIOSDefined>$([System.Text.RegularExpressions.Regex]::IsMatch('$(DefineConstants.Trim())', '(^|;)__IOS__($|;)'))</_IsIOSDefined>

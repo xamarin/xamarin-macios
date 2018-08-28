@@ -31,9 +31,12 @@ namespace Xamarin.Mac.Linker.Test {
 			}
 		}
 		
+		static string linker_removed_type = "MonoMac.CoreImage.CIColor, XamMac";
+
 		public static void EnsureLinker (bool enabled)
 		{
-			if ((Type.GetType ("MonoMac.CoreImage.CIColor, XamMac") != null) == enabled) {
+
+			if ((Type.GetType (linker_removed_type) != null) == enabled) {
 				Log.WriteLine ("[FAIL]\tThe linker was {0}enabled on this build", enabled ? "not " : String.Empty);
 			}
 		}

@@ -5,47 +5,31 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{F3232882-0FA0-4BB6-9D9C-E2CC779EAF0D}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>linker</RootNamespace>
     <AssemblyName>mmp</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <UseXamMacFullFramework>true</UseXamMacFullFramework>
+    <RootNamespace>mmp</RootNamespace>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
-    <DebugType>full</DebugType>
+    <DebugType>portable</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>MONOMAC;MMP;DEBUG</DefineConstants>
+    <DefineConstants>MONOMAC;MMP;XAMARIN_APPLETLS;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>anycpu</PlatformTarget>
-    <ConsolePause>False</ConsolePause>
+    <Deterministic>True</Deterministic>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <EnableCodeSigning>false</EnableCodeSigning>
-    <CreatePackage>false</CreatePackage>
-    <EnablePackageSigning>false</EnablePackageSigning>
-    <IncludeMonoRuntime>false</IncludeMonoRuntime>
-    <UseSGen>false</UseSGen>
-    <UseRefCounting>false</UseRefCounting>
-    <Profiling>false</Profiling>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>none</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>portable</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
+    <DefineConstants>MONOMAC;MMP;XAMARIN_APPLETLS</DefineConstants>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ConsolePause>False</ConsolePause>
-    <DefineConstants>MONOMAC;MMP</DefineConstants>
+    <Deterministic>True</Deterministic>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <EnableCodeSigning>false</EnableCodeSigning>
-    <CreatePackage>false</CreatePackage>
-    <EnablePackageSigning>false</EnablePackageSigning>
-    <IncludeMonoRuntime>false</IncludeMonoRuntime>
-    <UseSGen>false</UseSGen>
-    <UseRefCounting>false</UseRefCounting>
-    <Profiling>false</Profiling>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -145,6 +129,12 @@
     </Compile>
     <Compile Include="..\..\external\mono\external\linker\linker\Linker\TypePreserve.cs">
       <Link>Linker\TypePreserve.cs</Link>
+    </Compile>
+        <Compile Include="..\..\external\mono\external\linker\linker\Linker\AssemblyUtilities.cs">
+      <Link>Linker\AssemblyUtilities.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\TypeNameParser.cs">
+      <Link>Linker\TypeNameParser.cs</Link>
     </Compile>
     <Compile Include="..\..\external\mono\external\linker\linker\Linker\XApiReader.cs">
       <Link>Linker\XApiReader.cs</Link>

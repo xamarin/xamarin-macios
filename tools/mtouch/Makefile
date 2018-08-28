@@ -5,156 +5,6 @@ include $(TOP)/Make.config
 # in system headers show up.
 export CCACHE_CPP2=1
 
-LINKER_DIR=../linker
-
-CECIL_PATH=$(MONO_PATH)/external/cecil
-MONO_CECIL_FILES = $(wildcard $(CECIL_PATH)/*.cs) $(wildcard $(CECIL_PATH)/*/*.cs) $(wildcard $(CECIL_PATH)/*/*/*.cs) $(wildcard $(CECIL_PATH)/*/*/*/*.cs) $(wildcard $(CECIL_PATH)/*/*/*/*/*.cs)
-
-MONO_DIR=$(MONO_PATH)
-MONOLINKER=$(LINKER_TOOLS_PATH)/linker
-MONO_TUNER=$(LINKER_TOOLS_PATH)/tuner
-
-LINKER_SOURCES = \
-	$(MONOLINKER)/Linker/Annotations.cs			\
-	$(MONOLINKER)/Linker/AssemblyAction.cs			\
-	$(MONOLINKER)/Linker/AssemblyResolver.cs			\
-	$(MONOLINKER)/Linker/I18nAssemblies.cs			\
-	$(MONOLINKER)/Linker/IXApiVisitor.cs			\
-	$(MONOLINKER)/Linker/ILogger.cs				\
-	$(MONOLINKER)/Linker/ConsoleLogger.cs			\
-	$(MONOLINKER)/Linker/LinkContext.cs			\
-	$(MONOLINKER)/Linker/LoadException.cs			\
-	$(MONOLINKER)/Linker/MarkException.cs			\
-	$(MONOLINKER)/Linker/MethodAction.cs			\
-	$(MONOLINKER)/Linker/Pipeline.cs				\
-	$(MONOLINKER)/Linker/MethodReferenceExtensions.cs		\
-	$(MONOLINKER)/Linker/TypeReferenceExtensions.cs		\
-	$(MONOLINKER)/Linker/TypePreserve.cs			\
-	$(MONOLINKER)/Linker/XApiReader.cs				\
-	$(MONOLINKER)/Linker/Tracer.cs		\
-	$(MONOLINKER)/Linker/MarkingHelpers.cs		\
-	$(MONOLINKER)/Linker.Steps/BaseStep.cs			\
-	$(MONOLINKER)/Linker.Steps/BlacklistStep.cs		\
-	$(MONOLINKER)/Linker.Steps/CleanStep.cs			\
-	$(MONOLINKER)/Linker.Steps/IStep.cs			\
-	$(MONOLINKER)/Linker.Steps/LoadI18nAssemblies.cs		\
-	$(MONOLINKER)/Linker.Steps/LoadReferencesStep.cs		\
-	$(MONOLINKER)/Linker.Steps/MarkStep.cs			\
-	$(MONOLINKER)/Linker.Steps/OutputStep.cs			\
-	$(MONOLINKER)/Linker.Steps/ResolveFromAssemblyStep.cs	\
-	$(MONOLINKER)/Linker.Steps/ResolveFromXApiStep.cs		\
-	$(MONOLINKER)/Linker.Steps/ResolveFromXmlStep.cs		\
-	$(MONOLINKER)/Linker.Steps/ResolveStep.cs			\
-	$(MONOLINKER)/Linker.Steps/SweepStep.cs			\
-	$(MONOLINKER)/Linker.Steps/TypeMapStep.cs			\
-	$(MONO_TUNER)/Mono.Tuner/ApplyPreserveAttributeBase.cs		\
-	$(MONO_TUNER)/Mono.Tuner/CecilRocks.cs				\
-	$(MONO_TUNER)/Mono.Tuner/CustomizeActions.cs			\
-	$(MONO_TUNER)/Mono.Tuner/Dispatcher.cs				\
-	$(MONO_TUNER)/Mono.Tuner/Extensions.cs				\
-	$(MONO_TUNER)/Mono.Tuner/FixModuleFlags.cs			\
-	$(MONO_TUNER)/Mono.Tuner/PreserveSoapHttpClients.cs		\
-	$(MONO_TUNER)/Mono.Tuner/Profile.cs				\
-	$(MONO_TUNER)/Mono.Tuner/RemoveAttributesBase.cs		\
-	$(MONO_TUNER)/Mono.Tuner/RemoveResources.cs			\
-	$(MONO_TUNER)/Mono.Tuner/RemoveSecurity.cs			\
-	$(LINKER_DIR)/MonoTouch.Tuner/Extensions.cs			\
-	$(LINKER_DIR)/MonoTouch.Tuner/InlinerSubStep.cs		\
-	$(LINKER_DIR)/MonoTouch.Tuner/ListExportedSymbols.cs	\
-	$(LINKER_DIR)/MonoTouch.Tuner/MetadataReducerSubStep.cs	\
-	$(LINKER_DIR)/MonoTouch.Tuner/MonoTouchMarkStep.cs		\
-	$(LINKER_DIR)/MonoTouch.Tuner/MonoTouchProfile.cs		\
-	$(LINKER_DIR)/MonoTouch.Tuner/MonoTouchSweepStep.cs		\
-	$(LINKER_DIR)/MonoTouch.Tuner/OptimizeGeneratedCodeSubStep.cs	\
-	$(LINKER_DIR)/MonoTouch.Tuner/PreserveCode.cs			\
-	$(LINKER_DIR)/MonoTouch.Tuner/ProcessExportedFields.cs	\
-	$(LINKER_DIR)/MonoTouch.Tuner/RemoveAttributes.cs		\
-	$(LINKER_DIR)/MonoTouch.Tuner/RemoveCode.cs			\
-	$(LINKER_DIR)/MonoTouch.Tuner/SealerSubStep.cs	\
-	$(LINKER_DIR)/MonoTouch.Tuner/PreserveSmartEnumConversionsSubStep.cs		\
-	$(TOP)/tools/linker/ApplyPreserveAttribute.cs 		\
-	$(TOP)/tools/linker/BaseProfile.cs			\
-	$(TOP)/tools/linker/CoreHttpMessageHandler.cs	\
-	$(TOP)/tools/linker/CoreMarkStep.cs			\
-	$(TOP)/tools/linker/CoreOptimizeGeneratedCode.cs	\
-	$(TOP)/tools/linker/CorePreserveCode.cs		\
-	$(TOP)/tools/linker/CoreRemoveAttributes.cs		\
-	$(TOP)/tools/linker/CoreRemoveSecurity.cs		\
-	$(TOP)/tools/linker/CoreSweepStep.cs		\
-	$(TOP)/tools/linker/CoreTypeMapStep.cs		\
-	$(TOP)/tools/linker/ExceptionalSubStep.cs		\
-	$(TOP)/tools/linker/MarkNSObjects.cs			\
-	$(TOP)/tools/linker/MobileExtensions.cs		\
-	$(TOP)/tools/linker/MobileMarkStep.cs			\
-	$(TOP)/tools/linker/MobileProfile.cs			\
-	$(TOP)/tools/linker/MobileRemoveAttributes.cs		\
-	$(TOP)/tools/linker/MobileResolveMainAssemblyStep.cs	\
-	$(TOP)/tools/linker/MobileSweepStep.cs			\
-	$(TOP)/tools/linker/ObjCExtensions.cs			\
-	$(TOP)/tools/linker/RemoveUserResourcesSubStep.cs \
-
-
-COMMON_SOURCES = 											\
-	$(TOP)/src/build/ios/Constants.cs						\
-	error.cs \
-	$(TOP)/src/ObjCRuntime/ErrorHelper.cs			\
-	$(TOP)/src/ObjCRuntime/ExceptionMode.cs			\
-	$(MONO_DIR)/mcs/class/Mono.Options/Mono.Options/Options.cs
-
-MTOUCH_SOURCES = \
-	$(COMMON_SOURCES)	\
-	$(LINKER_SOURCES)	\
-	$(TOP)/src/ObjCRuntime/ArgumentSemantic.cs	\
-	$(TOP)/src/ObjCRuntime/BindingImplAttribute.cs	\
-	$(TOP)/src/ObjCRuntime/LinkWithAttribute.cs	\
-	$(TOP)/src/ObjCRuntime/NativeAttribute.cs	\
-	$(TOP)/src/ObjCRuntime/PlatformAvailability2.cs	\
-	$(TOP)/src/ObjCRuntime/ObjectWrapper.cs	\
-	Application.cs			\
-	Assembly.cs			\
-	$(TOP)/tools/common/cache.cs			\
-	$(TOP)/tools/common/Driver.cs		\
-	$(TOP)/tools/common/Frameworks.cs	\
-	$(TOP)/tools/common/MachO.cs		\
-	$(TOP)/tools/common/Symbols.cs			\
-	mtouch.cs		\
-	$(TOP)/tools/common/PInvokeWrapperGenerator.cs	\
-	$(TOP)/tools/common/TargetFramework.cs	\
-	$(TOP)/tools/common/BuildTasks.cs	\
-	$(TOP)/tools/common/StringUtils.cs		\
-	$(TOP)/tools/common/StaticRegistrar.cs	\
-	$(TOP)/src/ObjCRuntime/Registrar.core.cs	\
-	$(TOP)/src/ObjCRuntime/Registrar.cs	\
-	$(TOP)/src/ObjCRuntime/RuntimeOptions.cs \
-	Tuning.cs	\
-	Stripper.cs	\
-	AssemblyResolver.cs	\
-	Target.cs		\
-	SdkVersions.cs \
-	BitcodeConverter.cs	\
-	BuildTasks.mtouch.cs \
-	$(TOP)/tools/common/Application.cs \
-	$(TOP)/tools/common/Assembly.cs \
-	$(TOP)/tools/common/CoreResolver.cs \
-	$(TOP)/tools/common/DerivedLinkContext.cs \
-	$(TOP)/tools/common/Target.cs \
-	$(TOP)/tools/common/CompilerFlags.cs \
-	$(TOP)/tools/common/Optimizations.cs \
-	$(TOP)/src/Foundation/ExportAttribute.cs \
-	$(TOP)/src/Foundation/ConnectAttribute.cs \
-	$(XAMARIN_MACDEV_PATH)/Xamarin.MacDev/PListObject.cs \
-
-CECIL_CONFIG=net_4_0_Release
-MONO_CECIL_DLL=$(CECIL_PATH)/bin/$(CECIL_CONFIG)/Mono.Cecil.dll
-MONO_CECIL_MDB_DLL=$(CECIL_PATH)/bin/$(CECIL_CONFIG)/Mono.Cecil.Mdb.dll
-MONO_CECIL_FILES=$(wildcard $(CECIL_PATH)/*.cs) $(wildcard $(CECIL_PATH)/*/*.cs) $(wildcard $(CECIL_PATH)/*/*/*.cs) $(wildcard $(CECIL_PATH)/*/*/*/*.cs) $(wildcard $(CECIL_PATH)/*/*/*/*/*.cs)
-
-$(MONO_CECIL_DLL): $(CECIL_PATH)/Mono.Cecil.csproj $(MONO_CECIL_FILES)
-	$(Q_XBUILD) cd $(CECIL_PATH) && $(SYSTEM_XBUILD) /p:Configuration=$(CECIL_CONFIG) Mono.Cecil.csproj $(XBUILD_VERBOSITY)
-
-$(MONO_CECIL_MDB_DLL): $(MONO_CECIL_DLL) $(CECIL_PATH)/symbols/mdb/Mono.Cecil.Mdb.csproj $(MONO_CECIL_FILES)
-	$(Q_XBUILD) cd $(CECIL_PATH) && $(SYSTEM_XBUILD) /p:Configuration=$(CECIL_CONFIG) symbols/mdb/Mono.Cecil.Mdb.csproj $(XBUILD_VERBOSITY)
-
 SIMLAUNCHERS = simlauncher32-sgen simlauncher64-sgen
 
 UNREFERENCED_SYMBOLS = 							\
@@ -271,6 +121,9 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-weak_framework WatchConnectivity			\
 	-weak_framework ModelIO						\
 	-weak_framework GameplayKit					\
+	-weak_framework Metal						\
+	-weak_framework MetalKit					\
+	-weak_framework MetalPerformanceShaders		\
 						\
 	-weak_framework HealthKitUI					\
 						\
@@ -295,6 +148,7 @@ SIMLAUNCHER_FRAMEWORKS =  \
 # note 2: there's no GameKit, in iOS 9 (beta 3 at least), you're supposed to reference GameCenter instead (looks fixed in beta 4)
 # note 3: there's no MetalKit or MetalPerformanceShaders in iOS 9 beta 4 - but other frameworks were added
 # note 4: GameCenter was removed in Xcode 7 beta 5, and GameKit is back.
+# note 5: Metal* seems to be supported as of some Xcode 7 beta (b2 didn't, but the final release does)
 
 # keep the above list of weak_framework in sync with mtouch.cs
 # except it is no a mistake that GameController and MediaAccessibility (#13636) are not built into simlauncher
@@ -320,50 +174,41 @@ endef
 $(eval $(call SimlauncherTemplate,-sgen,$(BUILD_DESTDIR)/simulator86/lib/libmono-profiler-log.a -u _mono_profiler_init_log -DXAMCORE_2_0 Xamarin.iOS.registrar.ios.a,sgen,86,32))
 $(eval $(call SimlauncherTemplate,-sgen,$(BUILD_DESTDIR)/simulator64/lib/libmono-profiler-log.a -u _mono_profiler_init_log -DXAMCORE_2_0 Xamarin.iOS.registrar.ios.a,sgen,64,64))
 
-IOS_DEFINES = -d:MONOTOUCH -d:MTOUCH $(APPLETLS_DEFINES)
+#
+# mtouch
+#
 
-ifdef ENABLE_BITCODE_ON_IOS
-MTOUCH_DEFINES= -define:ENABLE_BITCODE_ON_IOS
-endif
+MTOUCH_CONF=Release
+MTOUCH_DIR=bin/$(MTOUCH_CONF)
+LOCAL_MTOUCH=$(MTOUCH_DIR)/mtouch.exe
 
-MTOUCH_COMPILE_DEPS = $(MTOUCH_SOURCES) $(MONO_CECIL_DLL) $(MONO_CECIL_MDB_DLL) Makefile $(LINKER_RESOURCES)
-MTOUCH_COMPILE_ARGS = -unsafe $(IOS_DEFINES) -r:$(MONO_CECIL_DLL) -r:$(MONO_CECIL_MDB_DLL) -r:System.Xml.Linq.dll $(MTOUCH_SOURCES) -nowarn:0436 $(MTOUCH_DEFINES) -debug:portable -nologo -deterministic
+# mtouch.csproj.inc contains the mtouch_dependencies variable used to determine if mtouch needs to be rebuilt or not.
+mtouch.csproj.inc: Makefile ../common/create-makefile-fragment.sh
+	$(Q_GEN) ../common/create-makefile-fragment.sh $(CURDIR)/mtouch.csproj
 
-# bin/Debug/mtouch.exe is used from mtouch.csproj when debugging
-bin/Debug/mtouch.exe: $(MTOUCH_COMPILE_DEPS)
-	$(Q) mkdir -p bin/Debug
-	$(Q_CSC) $(SYSTEM_CSC) $(MTOUCH_COMPILE_ARGS) -out:$@ -d:DEV
+-include mtouch.csproj.inc
 
-# bin/Makefile/mtouch.exe is what we build from the makefile (and end up releasing)
-bin/Makefile/mtouch.exe: $(MTOUCH_COMPILE_DEPS)
-	$(Q) mkdir -p $(dir $@)
-	$(Q_CSC) $(SYSTEM_CSC) $(MTOUCH_COMPILE_ARGS) -out:$@
+$(MTOUCH_DIR)/mtouch.exe: $(mtouch_dependencies)
+	$(Q_GEN) $(SYSTEM_MSBUILD) $(TOP)/Xamarin.iOS.sln "/t:mtouch" $(XBUILD_VERBOSITY) /p:Configuration=$(MTOUCH_CONF)
 
-LOCAL_MTOUCH = \
-	bin/Makefile/mtouch.exe \
-	bin/Makefile/Mono.Cecil.dll \
-	bin/Makefile/Mono.Cecil.Mdb.dll \
-
-bin/Makefile/Mono.Cecil.dll: $(MONO_CECIL_DLL) | bin/Makefile
-	$(Q) cp $<* $(dir $@)
-
-bin/Makefile/Mono.Cecil.Mdb.dll: $(MONO_CECIL_MDB_DLL) | bin/Makefile
-	$(Q) cp $<* $(dir $@)
+#
+# Partial static registrar libraries
+#
 
 %.registrar.ios.i386.m     %.registrar.ios.i386.h:     $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/%.dll     $(LOCAL_MTOUCH)
-	$(Q_GEN) $(SYSTEM_MONO) --debug bin/Makefile/mtouch.exe --xamarin-framework-directory=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX) $(MTOUCH_VERBOSITY) --runregistrar:$(abspath $(basename $@).m) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(IOS_SDK_VERSION)   $< --registrar:static --target-framework Xamarin.iOS,v1.0    --abi i386
+	$(Q_GEN) $(SYSTEM_MONO) --debug $(LOCAL_MTOUCH) --xamarin-framework-directory=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX) $(MTOUCH_VERBOSITY) --runregistrar:$(abspath $(basename $@).m) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(IOS_SDK_VERSION)   $< --registrar:static --target-framework Xamarin.iOS,v1.0    --abi i386
 	$(Q) touch $(basename $@).m $(basename $@).h
 
 %.registrar.ios.x86_64.m   %.registrar.ios.x86_64.h:   $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/%.dll     $(LOCAL_MTOUCH)
-	$(Q_GEN) $(SYSTEM_MONO) --debug bin/Makefile/mtouch.exe --xamarin-framework-directory=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX) $(MTOUCH_VERBOSITY) --runregistrar:$(abspath $(basename $@).m) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(IOS_SDK_VERSION)   $< --registrar:static --target-framework Xamarin.iOS,v1.0    --abi x86_64
+	$(Q_GEN) $(SYSTEM_MONO) --debug $(LOCAL_MTOUCH) --xamarin-framework-directory=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX) $(MTOUCH_VERBOSITY) --runregistrar:$(abspath $(basename $@).m) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(IOS_SDK_VERSION)   $< --registrar:static --target-framework Xamarin.iOS,v1.0    --abi x86_64
 	$(Q) touch $(basename $@).m $(basename $@).h
 
 %.registrar.watchos.m %.registrar.watchos.h: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/%.dll $(LOCAL_MTOUCH)
-	$(Q_GEN) $(SYSTEM_MONO) --debug bin/Makefile/mtouch.exe --xamarin-framework-directory=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX) $(MTOUCH_VERBOSITY) --runregistrar:$(abspath $(basename $@).m) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(WATCH_SDK_VERSION) $< --registrar:static --target-framework Xamarin.WatchOS,1.0 --abi i386
+	$(Q_GEN) $(SYSTEM_MONO) --debug $(LOCAL_MTOUCH) --xamarin-framework-directory=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX) $(MTOUCH_VERBOSITY) --runregistrar:$(abspath $(basename $@).m) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(WATCH_SDK_VERSION) $< --registrar:static --target-framework Xamarin.WatchOS,1.0 --abi i386
 	$(Q) touch $(basename $@).m $(basename $@).h
 
 %.registrar.tvos.m    %.registrar.tvos.h:    $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/%.dll    $(LOCAL_MTOUCH)
-	$(Q_GEN) $(SYSTEM_MONO) --debug bin/Makefile/mtouch.exe --xamarin-framework-directory=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX) $(MTOUCH_VERBOSITY) --runregistrar:$(abspath $(basename $@).m) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(TVOS_SDK_VERSION)  $< --registrar:static --target-framework Xamarin.TVOS,1.0    --abi x86_64
+	$(Q_GEN) $(SYSTEM_MONO) --debug $(LOCAL_MTOUCH) --xamarin-framework-directory=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX) $(MTOUCH_VERBOSITY) --runregistrar:$(abspath $(basename $@).m) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(TVOS_SDK_VERSION)  $< --registrar:static --target-framework Xamarin.TVOS,1.0    --abi x86_64
 	$(Q) touch $(basename $@).m $(basename $@).h
 
 %.registrar.ios.a:        %.registrar.ios.i386.a %.registrar.ios.x86_64.a
@@ -384,8 +229,6 @@ bin/Makefile/Mono.Cecil.Mdb.dll: $(MONO_CECIL_MDB_DLL) | bin/Makefile
 TARGETS = \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mtouch                                          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/mtouch.exe                               \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/Mono.Cecil.dll                           \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/Mono.Cecil.Mdb.dll                       \
 	$(foreach launcher,$(SIMLAUNCHERS),$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/$(launcher)) \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/usr/lib/Xamarin.iOS.registrar.a         \
 
@@ -412,17 +255,10 @@ TARGET_DIRS = \
 $(TARGET_DIRS):
 	$(Q) mkdir -p $@
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/mtouch.exe: bin/Makefile/mtouch.exe | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch
-	$(Q) cp $< $(dir $@)
-	$(Q) cp $(<:.exe=.pdb) $(dir $@)
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/Mono.Cecil.dll: $(MONO_CECIL_DLL) | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch
-	$(Q) cp $< $(dir $@)
-	$(Q) cp $(<:.exe=.pdb) $(dir $@)
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/Mono.Cecil.Mdb.dll: $(MONO_CECIL_MDB_DLL) | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch
-	$(Q) cp $< $(dir $@)
-	$(Q) cp $(<:.exe=.pdb) $(dir $@)
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/mtouch.exe: $(MTOUCH_DIR)/mtouch.exe | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch
+	$(Q) cp $(dir $<)/*.exe $(dir $@)
+	$(Q) cp $(dir $<)/*.dll $(dir $@)
+	$(Q) cp $(dir $<)/*.pdb $(dir $@)
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mtouch: mtouch.in | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
 	$(Q_GEN) sed 's!@MONOTOUCH_PREFIX@!$(abspath $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX))!g' $< > $@
@@ -451,14 +287,11 @@ endif
 mtouch: \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mtouch                                          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/mtouch.exe                               \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/Mono.Cecil.dll                           \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/Mono.Cecil.Mdb.dll
 
 clean-local::
 	rm -Rf bin obj
 	rm -f $(SIMLAUNCHERS)
-	$(SYSTEM_XBUILD) /t:Clean /p:Configuration=$(CECIL_CONFIG) $(CECIL_PATH)/Mono.Cecil.csproj
-	$(SYSTEM_XBUILD) /t:Clean /p:Configuration=$(CECIL_CONFIG) $(CECIL_PATH)/symbols/mdb/Mono.Cecil.Mdb.csproj
+	$(SYSTEM_MSBUILD) "/t:Clean" /p:Configuration=$(MTOUCH_CONF) *.csproj
 
 include $(TOP)/mk/rules.mk
 include ../common/Make.common

@@ -18,6 +18,7 @@ namespace Xamarin.Mac.Linker.Test {
 	} 
 
 	class TypeDescriptorTest {
+		static string typeToCheck = "Xamarin.Mac.Linker.Test.CustomConverter";
 
 		static void Check (string typeName)
 		{
@@ -57,7 +58,7 @@ namespace Xamarin.Mac.Linker.Test {
 			Check ("System.ComponentModel.CollectionConverter");
 			Check ("System.ComponentModel.EnumConverter");
 
-			var t = Type.GetType ("Xamarin.Mac.Linker.Test.CustomConverter", false);
+			var t = Type.GetType (typeToCheck, false);
 			Test.Log.WriteLine ("{0}\tXamarin.Mac.Linker.Test.CustomConverter", t == null ? "[PASS]" : "[FAIL]");
 
 			Test.Terminate ();

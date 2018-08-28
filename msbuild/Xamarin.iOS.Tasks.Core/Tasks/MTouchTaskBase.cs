@@ -360,6 +360,8 @@ namespace Xamarin.iOS.Tasks
 		protected override string GenerateCommandLineCommands ()
 		{
 			var args = new CommandLineArgumentBuilder ();
+			List<string> unescapedArgs = new List<string> ();
+
 			TargetArchitecture architectures;
 			bool msym;
 
@@ -560,7 +562,7 @@ namespace Xamarin.iOS.Tasks
 						}
 					} else {
 						// other user-defined mtouch arguments
-						args.AddQuotedLine (StringParserService.Parse (argument, customTags));
+						unescapedArgs.Add (StringParserService.Parse (argument, customTags));
 					}
 				}
 			}
@@ -578,7 +580,7 @@ namespace Xamarin.iOS.Tasks
 				args.AddLine ("--cxx");
 
 			if (gcc.Arguments.Length > 0)
-				args.AddQuotedLine ($"--gcc_flags={gcc.Arguments.ToString ()}");
+				unescapedArgs.Add ($"--gcc_flags={gcc.Arguments.ToString ()}");
 
 			foreach (var asm in References) {
 				if (IsFrameworkItem(asm)) {
@@ -617,11 +619,17 @@ namespace Xamarin.iOS.Tasks
 				Log.LogWarning ("Failed to create response file '{0}': {1}", responseFile, ex);
 			}
 
-			// Use only the response file
-			args = new CommandLineArgumentBuilder ();
-			args.AddQuoted ($"@{responseFile}");
+			// Some arguments can not safely go in the response file and are 
+			// added separately. They must go _after_ the response file
+			// as they may override options passed in the response file
+			var actualArgs = new CommandLineArgumentBuilder ();
 
-			return args.ToString ();
+			actualArgs.AddQuoted ($"@{responseFile}");
+
+			foreach (var arg in unescapedArgs)
+				actualArgs.AddQuoted (arg);
+
+			return actualArgs.ToString ();
 		}
 
 		static bool IsFrameworkItem (ITaskItem item)

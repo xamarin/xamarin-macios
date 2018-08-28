@@ -86,7 +86,7 @@ typedef struct __attribute__((packed)) {
 typedef struct __attribute__((packed)) {
 	const uint32_t *protocol_tokens; // an array of token references to managed interfaces that represent protocols
 	// __unsafe_unretained needed to prevent "error: pointer to non-const type 'const Protocol *' with no explicit ownership" in Embeddinator
-	const __unsafe_unretained Protocol **protocols; // the corresponding native protocols
+	const __unsafe_unretained Protocol * const * protocols; // the corresponding native protocols
 } MTProtocolMap;
 
 struct MTRegistrationMap;
@@ -173,8 +173,8 @@ bool			xamarin_is_class_nsstring (MonoClass *cls);
 bool			xamarin_is_class_nullable (MonoClass *cls, MonoClass **element_type, guint32 *exception_gchandle);
 MonoClass *		xamarin_get_nullable_type (MonoClass *cls, guint32 *exception_gchandle);
 MonoType *		xamarin_get_parameter_type (MonoMethod *managed_method, int index);
-MonoObject *	xamarin_get_nsobject_with_type_for_ptr (id self, bool owns, MonoType* type, guint32 *exception_gchandle);
-MonoObject *	xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *type, int32_t *created, guint32 *exception_gchandle);
+MonoObject *	xamarin_get_nsobject_with_type_for_ptr (id self, bool owns, MonoType* type, SEL selector, MonoMethod *managed_method, guint32 *exception_gchandle);
+MonoObject *	xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *type, int32_t *created, SEL selector, MonoMethod *managed_method, guint32 *exception_gchandle);
 int *			xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref, int par, void *nativeBlock, guint32 *exception_gchandle);
 id              xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate, const char *signature /* NULL allowed, but requires the dynamic registrar at runtime to compute */, guint32 *exception_gchandle);
 id				xamarin_get_nsobject_handle (MonoObject *obj);
@@ -200,6 +200,7 @@ void			xamarin_create_classes ();
 const char *	xamarin_skip_encoding_flags (const char *encoding);
 void			xamarin_add_registration_map (struct MTRegistrationMap *map);
 uint32_t		xamarin_find_protocol_wrapper_type (uint32_t token_ref);
+void			xamarin_release_block_on_main_thread (void *obj);
 
 bool			xamarin_has_managed_ref (id self);
 bool			xamarin_has_managed_ref_safe (id self);

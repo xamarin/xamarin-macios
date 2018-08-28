@@ -2053,6 +2053,13 @@ namespace Registrar {
 			
 			namespaces.Add (ns);
 
+#if !MMP
+			if (App.IsSimulatorBuild && !Driver.IsFrameworkAvailableInSimulator (App, ns)) {
+				Driver.Log (5, "Not importing the framework {0} in the generated registrar code because it's not available in the simulator.", ns);
+				return;
+			}
+#endif
+
 			string h;
 			switch (ns) {
 #if MMP
@@ -2121,30 +2128,6 @@ namespace Registrar {
 				}
 				goto default;
 #endif
-			case "CoreAudioKit":
-				// fatal error: 'CoreAudioKit/CoreAudioKit.h' file not found
-				// radar filed with Apple - but that framework / header is not yet shipped with the iOS SDK simulator
-#if MTOUCH
-				if (IsSimulator)
-					return;
-#endif
-				goto default;
-			case "Metal":
-			case "MetalKit":
-			case "MetalPerformanceShaders": // https://trello.com/c/mrjkAO9U/518-metal-simulator
-				// #error Metal Simulator is currently unsupported
-				// this framework is _officially_ not available on the simulator (in iOS8)
-#if !MONOMAC
-				if (IsSimulator)
-					return;
-#endif
-				goto default;
-			case "GameKit":
-#if !MONOMAC
-				if (IsSimulator && App.Platform == Xamarin.Utils.ApplePlatform.WatchOS && App.SdkVersion < new Version (3, 2))
-					return; // No headers provided for watchOS/simulator until watchOS 3.2.
-#endif
-				goto default;
 			case "WatchKit":
 				// There's a bug in Xcode 7 beta 2 headers where the build fails with
 				// ObjC++ files if WatchKit.h is included before UIKit.h (radar 21651022).
@@ -2154,12 +2137,6 @@ namespace Registrar {
 				header.WriteLine ("#import <WatchKit/WatchKit.h>");
 				namespaces.Add ("UIKit");
 				return;
-			case "DeviceCheck":
-#if !MONOMAC
-				if (IsSimulator)
-					return; // No headers provided for simulator
-#endif
-				goto default;
 			case "QTKit":
 #if MONOMAC
 				if (App.SdkVersion >= MacOSTenTwelveVersion)
@@ -2167,10 +2144,6 @@ namespace Registrar {
 #endif
 				goto default;
 			case "IOSurface": // There is no IOSurface.h
-#if !MONOMAC
-				if (IsSimulator)
-					return; // Not available in the simulator (the header is there, but broken).
-#endif
 				h = "<IOSurface/IOSurfaceObjC.h>";
 				break;
 			default:
@@ -2586,21 +2559,16 @@ namespace Registrar {
 		static bool IsIntentsType (ObjCType type) => IsTypeCore (type, "Intents");
 		static bool IsExternalAccessoryType (ObjCType type) => IsTypeCore (type, "ExternalAccessory");
 
-		static bool IsMetalType (ObjCType type)
+#if !MONOMAC
+		bool IsTypeAllowedInSimulator (ObjCType type)
 		{
 			var ns = type.Type.Namespace;
 			if (!IsDualBuild)
 				ns = ns.Substring (CompatNamespace.Length + 1);
 
-			switch (ns) {
-			case "Metal":
-			case "MetalKit":
-			case "MetalPerformanceShaders":
-				return true;
-			default:
-				return false;
-			}
+			return Driver.IsFrameworkAvailableInSimulator (App, ns);
 		}
+#endif
 
 		class ProtocolInfo
 		{
@@ -2676,8 +2644,10 @@ namespace Registrar {
 
 #if !MONOMAC
 				var isPlatformType = IsPlatformType (@class.Type);
-				if (isPlatformType && IsSimulatorOrDesktop && IsMetalType (@class))
-					continue; // Metal isn't supported in the simulator.
+				if (isPlatformType && IsSimulatorOrDesktop && !IsTypeAllowedInSimulator (@class)) {
+					Driver.Log (5, "The static registrar won't generate code for {0} because its framework is not supported in the simulator.", @class.ExportedName);
+					continue; // Some types are not supported in the simulator.
+				}
 #else
 				// Don't register 64-bit only API on 32-bit XM
 				if (!Is64Bits && IsOnly64Bits (@class.Type))
@@ -3596,7 +3566,7 @@ namespace Registrar {
 								setup_call_stack.AppendLine ("if (nsobj{0}) {{", i);
 								body_setup.AppendLine ("MonoType *paramtype{0} = NULL;", i);
 								setup_call_stack.AppendLine ("paramtype{0} = xamarin_get_parameter_type (managed_method, {0});", i);
-								setup_call_stack.AppendLine ("mobj{0} = xamarin_get_nsobject_with_type_for_ptr (nsobj{0}, false, paramtype{0}, &exception_gchandle);", i);
+								setup_call_stack.AppendLine ("mobj{0} = xamarin_get_nsobject_with_type_for_ptr (nsobj{0}, false, paramtype{0}, _cmd, managed_method, &exception_gchandle);", i);
 								setup_call_stack.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 								if (App.EnableDebug) {
 									setup_call_stack.AppendLine ("xamarin_verify_parameter (mobj{0}, _cmd, self, nsobj{0}, {0}, mono_class_from_mono_type (paramtype{0}), managed_method);", i);
@@ -3623,7 +3593,7 @@ namespace Registrar {
 							setup_call_stack.AppendLine ("if (nsobj{0}) {{", i);
 							body_setup.AppendLine ("MonoType *paramtype{0} = NULL;", i);
 							setup_call_stack.AppendLine ("paramtype{0} = xamarin_get_parameter_type (managed_method, {0});", i);
-							setup_call_stack.AppendLine ("mobj{0} = xamarin_get_nsobject_with_type_for_ptr_created (nsobj{0}, false, paramtype{0}, &created{0}, &exception_gchandle);", i);
+							setup_call_stack.AppendLine ("mobj{0} = xamarin_get_nsobject_with_type_for_ptr_created (nsobj{0}, false, paramtype{0}, &created{0}, _cmd, managed_method, &exception_gchandle);", i);
 							setup_call_stack.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 							if (App.EnableDebug) {
 								setup_call_stack.AppendLine ("xamarin_verify_parameter (mobj{0}, _cmd, self, nsobj{0}, {0}, mono_class_from_mono_type (paramtype{0}), managed_method);", i);

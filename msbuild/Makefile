@@ -20,7 +20,7 @@ MSBUILD_DIRECTORIES          =
 MSBUILD_SYMLINKS             =
 MSBUILD_TASK_ASSEMBLIES      =
 
-ALL_SOURCES = $(wildcard $(TOP)/msbuild/*/*.cs) $(wildcard $(TOP)/msbuild/*/*/*.cs) $(wildcard $(TOP)/msbuild/*/*/*/*.cs) *.sln $(wildcard */*.csproj) $(wildcard */packages.config)
+ALL_SOURCES:= $(shell git ls-files | sed 's/ /\\ /g')
 CONFIG      = Debug
 
 ##

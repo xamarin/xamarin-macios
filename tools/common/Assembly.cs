@@ -336,6 +336,25 @@ namespace Xamarin.Bundler {
 				Driver.Log (3, "Linking with the framework {0} because it's referenced by a module reference in {1}", file, FileName);
 		}
 
+		public string GetCompressionLinkingFlag ()
+		{
+			switch(App.Platform) {
+			case ApplePlatform.MacOSX:
+				if (App.DeploymentTarget >= new Version (10, 11, 0))
+					return "-lcompression";
+				return "-weak-lcompression";
+			case ApplePlatform.iOS:
+				if (App.DeploymentTarget >= new Version (9,0))
+					return "-lcompression";
+				return "-weak-lcompression";
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				return "-lcompression";
+			default:
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at http://bugzilla.xamarin.com with a test case.", App.Platform, App.SdkVersion);
+			}
+		}
+
 		public void ComputeLinkerFlags ()
 		{
 			foreach (var m in AssemblyDefinition.Modules) {
@@ -348,6 +367,13 @@ namespace Xamarin.Bundler {
 						continue; // obfuscated assemblies.
 					
 					string file = Path.GetFileNameWithoutExtension (name);
+
+#if !MONOMAC
+					if (App.IsSimulatorBuild && !Driver.IsFrameworkAvailableInSimulator (App, file)) {
+						Driver.Log (3, "Not linking with {0} (referenced by a module reference in {1}) because it's not available in the simulator.", file, FileName);
+						continue;
+					}
+#endif
 
 					switch (file) {
 					// special case
@@ -364,11 +390,13 @@ namespace Xamarin.Bundler {
 						Driver.Log (3, "Linking with {0} because it's referenced by a module reference in {1}", file, FileName);
 						break;
 					case "libsqlite3":
-					case "libcompression":
 						// remove lib prefix
 						LinkerFlags.Add ("-l" + file.Substring (3));
 						Driver.Log (3, "Linking with {0} because it's referenced by a module reference in {1}", file, FileName);
-					break;
+						break;
+					case "libcompression":
+						LinkerFlags.Add (GetCompressionLinkingFlag ());
+						break;
 					case "libGLES":
 					case "libGLESv2":
 						// special case for OpenGLES.framework
@@ -380,21 +408,6 @@ namespace Xamarin.Bundler {
 						// sub-frameworks
 						if (Frameworks.Add ("Accelerate"))
 							Driver.Log (3, "Linking with the framework Accelerate because {0} is referenced by a module reference in {1}", file, FileName);
-						break;
-					case "CoreAudioKit":
-					case "Metal":
-					case "MetalKit":
-					case "MetalPerformanceShaders":
-					case "CoreNFC":
-					case "DeviceCheck":
-						// some frameworks do not exists on simulators and will result in linker errors if we include them
-#if MTOUCH
-						if (!App.IsSimulatorBuild) {
-#endif
-							AddFramework (file);
-#if MTOUCH
-						}
-#endif
 						break;
 					case "openal32":
 						if (Frameworks.Add ("OpenAL"))

@@ -203,7 +203,7 @@ namespace xharness
 				var unpairedDevice = unPairedDevices.FirstOrDefault ();
 				var companion_device = companion_devices.First ();
 				var device = devices.First ();
-				if (!await CreateDevicePair (log, unpairedDevice, companion_device, device.SimRuntime, device.SimDeviceType, device == null))
+				if (!await CreateDevicePair (log, unpairedDevice, companion_device, device.SimRuntime, device.SimDeviceType, unpairedDevice == null))
 					return null;
 
 				await LoadAsync (log, force: true);

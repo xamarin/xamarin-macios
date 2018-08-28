@@ -416,6 +416,12 @@ namespace ObjCRuntime {
 			return GCHandle.ToIntPtr (GCHandle.Alloc (ex)).ToInt32 ();
 		}
 
+		static int CreateRuntimeException (int code, IntPtr message)
+		{
+			var ex = ErrorHelper.CreateError (code, Marshal.PtrToStringAuto (message));
+			return GCHandle.ToIntPtr (GCHandle.Alloc (ex)).ToInt32 ();
+		}
+
 		static IntPtr UnwrapNSException (int exc_handle)
 		{
 			var obj = GCHandle.FromIntPtr (new IntPtr (exc_handle)).Target;
@@ -512,7 +518,7 @@ namespace ObjCRuntime {
 		{
 			assemblies.Add (assembly);
 			foreach (var rf in assembly.GetReferencedAssemblies ()) {
-#if MONOMAc
+#if MONOMAC
 				if (!OnAssemblyRegistration (rf))
 					continue;
 #endif
@@ -698,11 +704,11 @@ namespace ObjCRuntime {
 			return ObjectWrapper.Convert (GetINativeObject (ptr, owns, iface, type));
 		}
 
-		static IntPtr GetNSObjectWithType (IntPtr ptr, IntPtr type_ptr, out bool created)
+		static IntPtr GetNSObjectWithType (IntPtr ptr, IntPtr type_ptr, out bool created, IntPtr selector, IntPtr method)
 		{
 			// It doesn't work to use System.Type in the signature, we get garbage.
 			var type = (System.Type) ObjectWrapper.Convert (type_ptr);
-			return ObjectWrapper.Convert (GetNSObject (ptr, type, MissingCtorResolution.ThrowConstructor1NotFound, true, out created));
+			return ObjectWrapper.Convert (GetNSObject (ptr, type, MissingCtorResolution.ThrowConstructor1NotFound, true, out created, selector, method));
 		}
 
 		static void Dispose (IntPtr mobj)
@@ -1016,7 +1022,7 @@ namespace ObjCRuntime {
 			Ignore,
 		}
 
-		static void MissingCtor (IntPtr ptr, IntPtr klass, Type type, MissingCtorResolution resolution)
+		static void MissingCtor (IntPtr ptr, IntPtr klass, Type type, MissingCtorResolution resolution, IntPtr selector = default (IntPtr), IntPtr method = default (IntPtr))
 		{
 			string msg;
 
@@ -1041,15 +1047,26 @@ namespace ObjCRuntime {
 				return;
 			}
 
-			throw new Exception (string.Format (msg, ptr.ToString ("x"), new Class (klass).Name, type.FullName));
+			if (selector != IntPtr.Zero || method != IntPtr.Zero)
+				msg += "\nAdditional information:\n";
+
+			if (selector != IntPtr.Zero)
+				msg += $"\tSelector: {Selector.GetName (selector)}\n";
+			if (method != IntPtr.Zero) {
+				var mi = ObjectWrapper.Convert (method) as MethodBase;
+				if (mi != null)
+					msg += $"\tMethod: {mi.FullName}\n";
+			}
+
+			throw ErrorHelper.CreateError (8027, string.Format (msg, ptr.ToString ("x"), new Class (klass).Name, type.FullName));
 		}
 
-		static NSObject ConstructNSObject (IntPtr ptr, IntPtr klass, MissingCtorResolution missingCtorResolution)
+		static NSObject ConstructNSObject (IntPtr ptr, IntPtr klass, MissingCtorResolution missingCtorResolution, IntPtr selector = default (IntPtr), IntPtr method = default (IntPtr))
 		{
 			Type type = Class.Lookup (klass);
 
 			if (type != null) {
-				return ConstructNSObject<NSObject> (ptr, type, missingCtorResolution);
+				return ConstructNSObject<NSObject> (ptr, type, missingCtorResolution, selector, method);
 			} else {
 				return new NSObject (ptr);
 			}
@@ -1061,7 +1078,8 @@ namespace ObjCRuntime {
 		}
 
 		// The generic argument T is only used to cast the return value.
-		static T ConstructNSObject<T> (IntPtr ptr, Type type, MissingCtorResolution missingCtorResolution) where T: class, INativeObject
+		// The 'selector' and 'method' arguments are only used in error messages.
+		static T ConstructNSObject<T> (IntPtr ptr, Type type, MissingCtorResolution missingCtorResolution, IntPtr selector = default (IntPtr), IntPtr method = default (IntPtr)) where T: class, INativeObject
 		{
 			if (type == null)
 				throw new ArgumentNullException ("type");
@@ -1069,7 +1087,7 @@ namespace ObjCRuntime {
 			var ctor = GetIntPtrConstructor (type);
 
 			if (ctor == null) {
-				MissingCtor (ptr, IntPtr.Zero, type, missingCtorResolution);
+				MissingCtor (ptr, IntPtr.Zero, type, missingCtorResolution, selector, method);
 				return null;
 			}
 
@@ -1158,7 +1176,7 @@ namespace ObjCRuntime {
 			return GetNSObject (ptr, MissingCtorResolution.ThrowConstructor1NotFound);
 		}
 
-		internal static NSObject GetNSObject (IntPtr ptr, MissingCtorResolution missingCtorResolution, bool evenInFinalizerQueue = false) {
+		internal static NSObject GetNSObject (IntPtr ptr, MissingCtorResolution missingCtorResolution, bool evenInFinalizerQueue = false, IntPtr selector = default (IntPtr), IntPtr method = default (IntPtr)) {
 			if (ptr == IntPtr.Zero)
 				return null;
 
@@ -1167,7 +1185,7 @@ namespace ObjCRuntime {
 			if (o != null)
 				return o;
 
-			return ConstructNSObject (ptr, Class.GetClassForObject (ptr), missingCtorResolution);
+			return ConstructNSObject (ptr, Class.GetClassForObject (ptr), missingCtorResolution, selector, method);
 		}
 
 		static public T GetNSObject<T> (IntPtr ptr) where T : NSObject
@@ -1237,7 +1255,8 @@ namespace ObjCRuntime {
 		// NSObject subclasses (the test case in #13518 should work even with type checks).
 		//
 
-		static NSObject GetNSObject (IntPtr ptr, Type target_type, MissingCtorResolution missingCtorResolution, bool evenInFinalizerQueue, out bool created) {
+		// The 'selector' and 'method' arguments are only used in error messages.
+		static NSObject GetNSObject (IntPtr ptr, Type target_type, MissingCtorResolution missingCtorResolution, bool evenInFinalizerQueue, out bool created, IntPtr selector = default (IntPtr), IntPtr method = default (IntPtr)) {
 			created = false;
 
 			if (ptr == IntPtr.Zero)
@@ -1269,7 +1288,7 @@ namespace ObjCRuntime {
 			}
 
 			created = true;
-			return ConstructNSObject<NSObject> (ptr, target_type, MissingCtorResolution.ThrowConstructor1NotFound);
+			return ConstructNSObject<NSObject> (ptr, target_type, MissingCtorResolution.ThrowConstructor1NotFound, selector, method);
 		}
 
 		static Type LookupINativeObjectImplementation (IntPtr ptr, Type target_type, Type implementation = null)
@@ -1594,6 +1613,21 @@ namespace ObjCRuntime {
 
 			throw ErrorHelper.CreateError (8003, "Failed to find the closed generic method '{0}' on the type '{1}'.", open_method.Name, closed_type.FullName);
 		}
+
+		[EditorBrowsable (EditorBrowsableState.Never)]
+#if MONOMAC
+		public static void ReleaseBlockOnMainThread (IntPtr block)
+		{
+			if (release_block_on_main_thread == null)
+				release_block_on_main_thread = LookupInternalFunction<intptr_func> ("xamarin_release_block_on_main_thread");
+			release_block_on_main_thread (block);
+		}
+		delegate void intptr_func (IntPtr block);
+		static intptr_func release_block_on_main_thread;
+#else
+		[DllImport ("__Internal", EntryPoint = "xamarin_release_block_on_main_thread")]
+		public static extern void ReleaseBlockOnMainThread (IntPtr block);
+#endif
 	}
 		
 	internal class IntPtrEqualityComparer : IEqualityComparer<IntPtr>

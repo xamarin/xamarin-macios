@@ -110,17 +110,17 @@ while ! test -z $1; do
 done
 
 # reporting functions
+COLOR_RED=$(tput setaf 1 2>/dev/null || true)
+COLOR_ORANGE=$(tput setaf 3 2>/dev/null || true)
+COLOR_MAGENTA=$(tput setaf 5 2>/dev/null || true)
+COLOR_CLEAR=$(tput sgr0 2>/dev/null || true)
 function fail () {
-	tput setaf 1 2>/dev/null || true
-	echo "    $1"
-	tput sgr0 2>/dev/null || true
+	echo "    ${COLOR_RED}$1${COLOR_CLEAR}"
 	FAIL=1
 }
 
 function warn () {
-	tput setaf 3 2>/dev/null || true
-	echo "    $1"
-	tput sgr0 2>/dev/null || true
+	echo "    ${COLOR_ORANGE}$1${COLOR_CLEAR}"
 }
 
 function ok () {
@@ -231,6 +231,45 @@ function install_visual_studio () {
 	rm -f $VS_DMG
 }
 
+function run_xcode_first_launch ()
+{
+	local XCODE_VERSION="$1"
+	local XCODE_DEVELOPER_ROOT="$2"
+
+	# xcodebuild -runFirstLaunch seems to have been introduced in Xcode 9
+	if ! is_at_least_version "$XCODE_VERSION" 9.0; then
+		return
+	fi
+
+	# Delete any cached files by xcodebuild, because other branches'
+	# system-dependencies.sh keep installing earlier versions of these
+	# packages manually, which means subsequent first launch checks will
+	# succeed because we've successfully run the first launch tasks once
+	# (and this is cached), while someone else (we!) overwrote with
+	# earlier versions (bypassing the cache).
+	#
+	# Removing the cache will make xcodebuild realize older packages are installed,
+	# and (re-)install any newer packages.
+	#
+	# We'll be able to remove this logic one day, when all branches in use are
+	# using 'xcodebuild -runFirstLaunch' instead of manually installing
+	# packages.
+	find /var/folders -name '*com.apple.dt.Xcode.InstallCheckCache*' -print -delete 2>/dev/null | sed 's/^\(.*\)$/        Deleted Xcode cache file: \1 (this is normal)/' || true
+	if ! "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -checkFirstLaunchStatus; then
+		if ! test -z "$PROVISION_XCODE"; then
+			# Remove sudo's cache as well, otherwise nothing will happen.
+			$SUDO find /var/folders -name '*com.apple.dt.Xcode.InstallCheckCache*' -print -delete 2>/dev/null | sed 's/^\(.*\)$/        Deleted Xcode cache file: \1 (this is normal)/' || true
+			# Run the first launch tasks
+			log "Executing '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch'"
+			$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -runFirstLaunch
+			log "Executed '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch'"
+		else
+			fail "Xcode has pending first launch tasks. Execute '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch' to execute those tasks."
+			return
+		fi
+	fi
+}
+
 function install_specific_xcode () {
 	local XCODE_URL=`grep XCODE$1_URL= Make.config | sed 's/.*=//'`
 	local XCODE_VERSION=`grep XCODE$1_VERSION= Make.config | sed 's/.*=//'`
@@ -289,7 +328,9 @@ function install_specific_xcode () {
 		$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -license accept
 	fi
 
-	if is_at_least_version $XCODE_VERSION 8.0; then
+	if is_at_least_version "$XCODE_VERSION" 9.0; then
+		run_xcode_first_launch "$XCODE_VERSION" "$XCODE_DEVELOPER_ROOT"
+	elif is_at_least_version $XCODE_VERSION 8.0; then
 		PKGS="MobileDevice.pkg MobileDeviceDevelopment.pkg XcodeSystemResources.pkg"
 		for pkg in $PKGS; do
 			if test -f "$XCODE_DEVELOPER_ROOT/../Resources/Packages/$pkg"; then
@@ -335,10 +376,12 @@ function check_specific_xcode () {
 					$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -license accept
 				else
 					fail "The license for Xcode $XCODE_VERSION has not been accepted. Execute '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild' to review the license and accept it."
+					return
 				fi
-				return
 			fi
 		fi
+
+		run_xcode_first_launch "$XCODE_VERSION" "$XCODE_DEVELOPER_ROOT"
 	fi
 
 	local XCODE_ACTUAL_VERSION=`/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$XCODE_DEVELOPER_ROOT/../version.plist"`
@@ -439,6 +482,7 @@ function check_mono () {
 			fail "You may edit Make.config and change MAX_MONO_VERSION to your actual version to continue the"
 			fail "build (unless you're on a release branch). Once the build completes successfully, please"
 			fail "commit the new MAX_MONO_VERSION value."
+			fail "Alternatively you can ${COLOR_MAGENTA}export IGNORE_MONO=1${COLOR_RED} to skip this check."
 			return
 		fi
 	fi
@@ -551,7 +595,9 @@ function check_visual_studio () {
 			fail "You may edit Make.config and change MAX_VISUAL_STUDIO_VERSION to your actual version to continue the"
 			fail "build (unless you're on a release branch). Once the build completes successfully, please"
 			fail "commit the new MAX_VISUAL_STUDIO_VERSION value."
-			fail "Alternatively you can download an older version from $VS_URL."
+			fail "Alternatively you can download an older version from:"
+			fail "    $VS_URL,"
+			fail "or you can ${COLOR_MAGENTA}export IGNORE_VISUAL_STUDIO=1${COLOR_RED} to skip this check."
 		fi
 		return
 	fi
@@ -661,6 +707,7 @@ function check_objective_sharpie () {
 		else
 			if test -z $OPTIONAL_SHARPIE; then
 				fail "You must install Objective Sharpie, at least $MIN_SHARPIE_VERSION (no Objective Sharpie found). You can download it from $SHARPIE_URL"
+				fail "Alternatively you can ${COLOR_MAGENTA}export IGNORE_SHARPIE=1${COLOR_RED} to skip this check."
 			else
 				warn "You do not have Objective Sharpie installed (should be at least $MIN_SHARPIE_VERSION). You can download it from $SHARPIE_URL"
 			fi
@@ -675,6 +722,7 @@ function check_objective_sharpie () {
 			else
 				if test -z $OPTIONAL_SHARPIE; then
 					fail "You must have at least Objective Sharpie $MIN_SHARPIE_VERSION, found $ACTUAL_SHARPIE_VERSION. You can download it from $SHARPIE_URL"
+					fail "Alternatively you can ${COLOR_MAGENTA}export IGNORE_SHARPIE=1${COLOR_RED} to skip this check."
 				else
 					warn "You do not have have at least Objective Sharpie $MIN_SHARPIE_VERSION (found $ACTUAL_SHARPIE_VERSION). You can download it from $SHARPIE_URL"
 				fi
@@ -689,6 +737,7 @@ function check_objective_sharpie () {
 			else
 				if test -z $OPTIONAL_SHARPIE; then
 					fail "Your Objective Sharpie version is too new, max version is $MAX_SHARPIE_VERSION, found $ACTUAL_SHARPIE_VERSION. We recommend you download $SHARPIE_URL"
+					fail "Alternatively you can ${COLOR_MAGENTA}export IGNORE_SHARPIE=1${COLOR_RED} to skip this check."
 				else
 					warn "You do not have have at most Objective Sharpie $MAX_SHARPIE_VERSION (found $ACTUAL_SHARPIE_VERSION). We recommend you download $SHARPIE_URL"
 				fi

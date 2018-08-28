@@ -127,7 +127,7 @@ public class ListSourceFiles {
 			{ "xamarin-path=", "The path of the xamarin source.", v => xamarinpath = v },
 			{ "install-dir=", "The directory to install into. The files will be put into a src subdirectory of this directory.", v => installDir = v },
 			{ "destination-dir=", "The path to the directory used for the -pathmap at build time.", v => destinationDir = v},
-			{ "v|erbose", "Enable verbose output", v => verbose = true },
+			{ "v|verbose", "Enable verbose output", v => verbose = true },
 		};
 
 		var paths = os.Parse (arguments);
