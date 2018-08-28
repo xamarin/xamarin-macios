@@ -199,6 +199,10 @@ public partial class Generator {
 			// NSString should not be added - it should be bound as a string
 			print ("return (string) (ValueForKey (\"{0}\") as NSString);", propertyName);
 			break;
+		case "CIVector[]":
+			print ($"var handle = GetHandle (\"{propertyName}\");");
+			print ("return NSArray.ArrayFromHandle<CIVector> (handle);");
+			break;
 		default:
 			throw new BindingException (1018, true, "Unimplemented CoreImage property type {0}", propertyType);
 		}
@@ -246,6 +250,10 @@ public partial class Generator {
 			indent++;
 			print ("SetValue (\"{0}\", ns);", propertyName);
 			indent--;
+			break;
+		case "CIVector[]":
+			print ("var array = NSArray.FromNSObjects (value);");
+			print ($"SetHandle (\"{propertyName}\", array.GetHandle ());");
 			break;
 		default:
 			throw new BindingException (1018, true, "Unimplemented CoreImage property type {0}", propertyType);

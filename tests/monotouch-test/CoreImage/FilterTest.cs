@@ -153,6 +153,18 @@ namespace MonoTouchFixtures.CoreImage {
 				}
 			}
 		}
+
+		[Test]
+		public void CIVectorArray ()
+		{
+			TestRuntime.AssertXcodeVersion (10, 0);
+
+			using (var f = new CIMeshGenerator ()) {
+				Assert.Null (f.Mesh, "Mesh/Null");
+				f.Mesh = new CIVector [1] { new CIVector (1) };
+				Assert.That (f.Mesh.Length, Is.EqualTo (1), "Mesh/Non-null");
+			}
+		}
 	}
 }
 
