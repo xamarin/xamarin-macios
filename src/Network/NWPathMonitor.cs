@@ -54,5 +54,78 @@ namespace Network {
 				throw new ArgumentNullException (nameof (queue));
 			nw_path_monitor_set_queue (GetCheckedHandle (), queue.Handle);
 		}
+
+		delegate void nw_path_monitor_update_handler_t (IntPtr block, IntPtr path);
+		static nw_path_monitor_update_handler_t static_UpdateSnapshot = TrampolineUpdatedSnapshot;
+
+		[MonoPInvokeCallback (typeof (nw_path_monitor_update_handler_t))]
+		static void TrampolineUpdatedSnapshot (IntPtr block, IntPtr path)
+		{
+			var del = BlockLiteral.GetTarget<Action<NWPath>> (block);
+			if (del != null) {
+				var nwPath = new NWPath (path, owns: false);
+				del (nwPath);
+			}
+		}
+
+		[DllImport (Constants.NetworkLibrary)]
+		static extern unsafe void nw_path_monitor_set_update_handler (IntPtr handle, void *callback);
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public void SetUpdatedSnapshotHandler (Action<NWPath> callback)
+		{
+			unsafe {
+				if (callback == null) {
+					nw_path_monitor_set_update_handler (GetCheckedHandle (), null);
+					return;
+				}
+
+				BlockLiteral block_handler = new BlockLiteral ();
+				BlockLiteral *block_ptr_handler = &block_handler;
+				block_handler.SetupBlockUnsafe (static_UpdateSnapshot, callback);
+
+				try {
+					nw_path_monitor_set_update_handler (GetCheckedHandle (), (void*) block_ptr_handler);
+				} finally {
+					block_handler.CleanupBlock ();
+				}
+			}
+		}
+
+		delegate void nw_path_monitor_cancel_handler_t (IntPtr block);
+		static nw_path_monitor_cancel_handler_t static_MonitorCanceled = TrampolineMonitorCanceled;
+
+		[MonoPInvokeCallback (typeof (nw_path_monitor_cancel_handler_t))]
+		static void TrampolineMonitorCanceled (IntPtr block)
+		{
+			var del = BlockLiteral.GetTarget<Action> (block);
+			if (del != null) {
+				del ();
+			}
+		}
+
+		[DllImport (Constants.NetworkLibrary)]
+		static extern unsafe void nw_path_monitor_set_cancel_handler (IntPtr handle, void *callback);
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public void SetMonitorCanceledHandler (Action callback)
+		{
+			unsafe {
+				if (callback == null) {
+					nw_path_monitor_set_cancel_handler (GetCheckedHandle (), null);
+					return;
+				}
+
+				BlockLiteral block_handler = new BlockLiteral ();
+				BlockLiteral *block_ptr_handler = &block_handler;
+				block_handler.SetupBlockUnsafe (static_MonitorCanceled, callback);
+
+				try {
+					nw_path_monitor_set_cancel_handler (GetCheckedHandle (), (void*) block_ptr_handler);
+				} finally {
+					block_handler.CleanupBlock ();
+				}
+			}
+		}
 	}
 }
