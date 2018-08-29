@@ -62,7 +62,7 @@ namespace Network {
 		static void TrampolineUpdatedSnapshot (IntPtr block, IntPtr path)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWPath>> (block);
-			if (del != null){
+			if (del != null) {
 				var nwPath = new NWPath (path, owns: false);
 				del (nwPath);
 			}
@@ -75,7 +75,7 @@ namespace Network {
 		public void SetUpdatedSnapshotHandler (Action<NWPath> callback)
 		{
 			unsafe {
-				if (callback == null){
+				if (callback == null) {
 					nw_path_monitor_set_update_handler (GetCheckedHandle (), null);
 					return;
 				}
@@ -99,7 +99,7 @@ namespace Network {
 		static void TrampolineMonitorCancelled (IntPtr block)
 		{
 			var del = BlockLiteral.GetTarget<Action> (block);
-			if (del != null){
+			if (del != null) {
 				del ();
 			}
 		}
@@ -111,7 +111,7 @@ namespace Network {
 		public void SetMonitorCancelledHandler (Action callback)
 		{
 			unsafe {
-				if (callback == null){
+				if (callback == null) {
 					nw_path_monitor_set_update_handler (GetCheckedHandle (), null);
 					return;
 				}
