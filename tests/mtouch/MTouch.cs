@@ -3673,8 +3673,8 @@ public class TestApp {
 		[TestCase ("CFNetworkHandler", "CFNetworkHandler")]
 		[TestCase ("NSUrlSessionHandler", "NSUrlSessionHandler")]
 		[TestCase ("HttpClientHandler", "HttpClientHandler")]
-		[TestCase (null, "HttpClientHandler")]
-		[TestCase ("", "HttpClientHandler")]
+		[TestCase (null, "NSUrlSessionHandler")]
+		[TestCase ("", "NSUrlSessionHandler")]
 		public void HttpClientHandler (string mtouchHandler, string expectedHandler)
 		{
 			var testCode = $@"
