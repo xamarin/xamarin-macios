@@ -1,13 +1,8 @@
 !missing-field! kSecCodeInfoRuntimeVersion not bound
 !missing-pinvoke! sec_certificate_copy_ref is not bound
-!missing-pinvoke! sec_protocol_metadata_access_distinguished_names is not bound
-!missing-pinvoke! sec_protocol_metadata_access_ocsp_response is not bound
-!missing-pinvoke! sec_protocol_metadata_access_peer_certificate_chain is not bound
-!missing-pinvoke! sec_protocol_metadata_access_supported_signature_algorithms is not bound
 !missing-pinvoke! sec_protocol_metadata_challenge_parameters_are_equal is not bound
 !missing-pinvoke! sec_protocol_metadata_create_secret is not bound
 !missing-pinvoke! sec_protocol_metadata_create_secret_with_context is not bound
-!missing-pinvoke! sec_protocol_metadata_peers_are_equal is not bound
 !missing-pinvoke! sec_protocol_options_set_challenge_block is not bound
 !missing-pinvoke! sec_protocol_options_set_verify_block is not bound
 !missing-pinvoke! SecCertificateCopyKey is not bound

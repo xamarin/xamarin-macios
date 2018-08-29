@@ -51,9 +51,173 @@ namespace Security {
 
 		public bool EarlyDataAccepted => sec_protocol_metadata_get_early_data_accepted (GetCheckedHandle ()) != 0;
 
-		//
-		// MISSING: all the block APIs
-		//
+ 		[DllImport (Constants.SecurityLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		extern static bool sec_protocol_metadata_challenge_parameters_are_equal (IntPtr metadataA, IntPtr metadataB);
 
+		public static bool ParametersAreEqual (SecProtocolMetadata metadataA, SecProtocolMetadata metadataB)
+		{
+			return sec_protocol_metadata_challenge_parameters_are_equal (metadataA.GetCheckedHandle (), metadataB.GetCheckedHandle ());
+		}
+
+ 		[DllImport (Constants.SecurityLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		extern static bool sec_protocol_metadata_peers_are_equal (IntPtr metadataA, IntPtr metadataB);
+
+		public static bool PeersAreEqual (SecProtocolMetadata metadataA, SecProtocolMetadata metadataB)
+		{
+			return sec_protocol_metadata_peers_are_equal (metadataA.GetCheckedHandle (), metadataB.GetCheckedHandle ());
+		}
+
+#if !COREBUILD
+
+		delegate void sec_protocol_metadata_access_distinguished_names_handler_t (IntPtr block, IntPtr dispatchData);
+ 		static sec_protocol_metadata_access_distinguished_names_handler_t static_DistinguishedNamesForPeer  = TrampolineDistinguishedNamesForPeer;
+
+ 		[MonoPInvokeCallback (typeof (sec_protocol_metadata_access_distinguished_names_handler_t))]
+ 		static void TrampolineDistinguishedNamesForPeer (IntPtr block, IntPtr data)
+ 		{
+ 			var del = BlockLiteral.GetTarget<Action<DispatchData>> (block);
+ 			if (del != null) {
+ 				var dispatchData = new DispatchData (data, owns: false);
+ 				del (dispatchData);
+ 			}
+ 		}
+
+ 		[DllImport (Constants.SecurityLibrary)]
+ 		static extern unsafe void sec_protocol_metadata_access_distinguished_names (IntPtr handle, void *callback);
+
+ 		[BindingImpl (BindingImplOptions.Optimizable)]
+ 		public void SetDistinguishedNamesForPeerHandler (Action<DispatchData> callback)
+ 		{
+ 			unsafe {
+ 				if (callback == null) {
+ 					sec_protocol_metadata_access_distinguished_names (GetCheckedHandle (), null);
+ 					return;
+ 				}
+
+ 				BlockLiteral block_handler = new BlockLiteral ();
+ 				BlockLiteral *block_ptr_handler = &block_handler;
+ 				block_handler.SetupBlockUnsafe (static_DistinguishedNamesForPeer, callback);
+
+ 				try {
+ 					sec_protocol_metadata_access_distinguished_names (GetCheckedHandle (), (void*) block_ptr_handler);
+ 				} finally {
+ 					block_handler.CleanupBlock ();
+ 				}
+ 			}
+ 		}
+
+		delegate void sec_protocol_metadata_access_ocsp_response_handler_t (IntPtr block, IntPtr dispatchData);
+ 		static sec_protocol_metadata_access_ocsp_response_handler_t static_OCSPReposeForPeer  = TrampolineOCSPReposeForPeer;
+
+ 		[MonoPInvokeCallback (typeof (sec_protocol_metadata_access_ocsp_response_handler_t))]
+ 		static void TrampolineOCSPReposeForPeer (IntPtr block, IntPtr data)
+ 		{
+ 			var del = BlockLiteral.GetTarget<Action<DispatchData>> (block);
+ 			if (del != null) {
+ 				var dispatchData = new DispatchData (data, owns: false);
+ 				del (dispatchData);
+ 			}
+ 		}
+
+ 		[DllImport (Constants.SecurityLibrary)]
+ 		static extern unsafe void sec_protocol_metadata_access_ocsp_response (IntPtr handle, void *callback);
+
+ 		[BindingImpl (BindingImplOptions.Optimizable)]
+ 		public void SetOCSPResponseForPeerHandler (Action<DispatchData> callback)
+ 		{
+ 			unsafe {
+ 				if (callback == null) {
+ 					sec_protocol_metadata_access_ocsp_response (GetCheckedHandle (), null);
+ 					return;
+ 				}
+
+ 				BlockLiteral block_handler = new BlockLiteral ();
+ 				BlockLiteral *block_ptr_handler = &block_handler;
+ 				block_handler.SetupBlockUnsafe (static_OCSPReposeForPeer, callback);
+
+ 				try {
+ 					sec_protocol_metadata_access_ocsp_response (GetCheckedHandle (), (void*) block_ptr_handler);
+ 				} finally {
+ 					block_handler.CleanupBlock ();
+ 				}
+ 			}
+ 		}
+
+		delegate void sec_protocol_metadata_access_peer_certificate_chain_handler_t (IntPtr block, IntPtr certificate);
+ 		static sec_protocol_metadata_access_peer_certificate_chain_handler_t static_CertificateChainForPeer  = TrampolineCertificateChainForPeer;
+
+ 		[MonoPInvokeCallback (typeof (sec_protocol_metadata_access_peer_certificate_chain_handler_t))]
+ 		static void TrampolineCertificateChainForPeer (IntPtr block, IntPtr certificate)
+ 		{
+ 			var del = BlockLiteral.GetTarget<Action<SecCertificate>> (block);
+ 			if (del != null) {
+ 				var secCertificate = new SecCertificate (certificate, owns: false);
+ 				del (secCertificate);
+ 			}
+ 		}
+
+ 		[DllImport (Constants.SecurityLibrary)]
+ 		static extern unsafe void sec_protocol_metadata_access_peer_certificate_chain (IntPtr handle, void *callback);
+
+ 		[BindingImpl (BindingImplOptions.Optimizable)]
+ 		public void SetCertificateChainForPeerHandler (Action<SecCertificate> callback)
+ 		{
+ 			unsafe {
+ 				if (callback == null) {
+ 					sec_protocol_metadata_access_peer_certificate_chain (GetCheckedHandle (), null);
+ 					return;
+ 				}
+
+ 				BlockLiteral block_handler = new BlockLiteral ();
+ 				BlockLiteral *block_ptr_handler = &block_handler;
+ 				block_handler.SetupBlockUnsafe (static_CertificateChainForPeer, callback);
+
+ 				try {
+ 					sec_protocol_metadata_access_peer_certificate_chain (GetCheckedHandle (), (void*) block_ptr_handler);
+ 				} finally {
+ 					block_handler.CleanupBlock ();
+ 				}
+ 			}
+ 		}
+
+		delegate void sec_protocol_metadata_access_supported_signature_algorithms_handler_t (IntPtr block, ushort signatureAlgorithm);
+ 		static sec_protocol_metadata_access_supported_signature_algorithms_handler_t static_SignatureAlgorithmsForPeer  = TrampolineSignatureAlgorithmsForPeer;
+
+ 		[MonoPInvokeCallback (typeof (sec_protocol_metadata_access_supported_signature_algorithms_handler_t))]
+ 		static void TrampolineSignatureAlgorithmsForPeer (IntPtr block, ushort signatureAlgorithm)
+ 		{
+ 			var del = BlockLiteral.GetTarget<Action<ushort>> (block);
+ 			if (del != null) {
+ 				del (signatureAlgorithm);
+ 			}
+ 		}
+
+ 		[DllImport (Constants.SecurityLibrary)]
+ 		static extern unsafe void sec_protocol_metadata_access_supported_signature_algorithms (IntPtr handle, void *callback);
+
+ 		[BindingImpl (BindingImplOptions.Optimizable)]
+ 		public void SetSignatureAlgorithmsForPeerHandler (Action<ushort> callback)
+ 		{
+ 			unsafe {
+ 				if (callback == null){
+ 					sec_protocol_metadata_access_supported_signature_algorithms (GetCheckedHandle (), null);
+ 					return;
+ 				}
+
+ 				BlockLiteral block_handler = new BlockLiteral ();
+ 				BlockLiteral *block_ptr_handler = &block_handler;
+ 				block_handler.SetupBlockUnsafe (static_SignatureAlgorithmsForPeer, callback);
+
+ 				try {
+ 					sec_protocol_metadata_access_supported_signature_algorithms (GetCheckedHandle (), (void*) block_ptr_handler);
+ 				} finally {
+ 					block_handler.CleanupBlock ();
+ 				}
+ 			}
+ 		}
+
+#endif
 	}
 }
