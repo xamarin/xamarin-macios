@@ -258,7 +258,10 @@ public partial class Generator {
 			indent--;
 			print ("} else {");
 			indent++;
-			print ($"SetHandle (\"{propertyName}\", NSArray.FromNSObjects (value).GetHandle ());");
+			print ("using (var array = NSArray.FromNSObjects (value))");
+			indent++;
+			print ($"SetHandle (\"{propertyName}\", array.GetHandle ());");
+			indent--;
 			indent--;
 			print ("}");
 			break;
