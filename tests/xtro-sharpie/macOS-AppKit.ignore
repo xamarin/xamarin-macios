@@ -670,7 +670,6 @@
 !missing-selector! +NSBitmapImageRep::representationOfImageRepsInArray:usingType:properties: not bound
 !missing-selector! +NSBundle::loadNibFile:externalNameTable:withZone: not bound
 !missing-selector! +NSFont::fontWithName:matrix: not bound
-!missing-selector! +NSImageRep::registeredImageRepClasses not bound
 !missing-selector! +NSInputManager::cycleToNextInputLanguage: not bound
 !missing-selector! +NSInputManager::cycleToNextInputServerInLanguage: not bound
 !missing-selector! +NSMediaLibraryBrowserController::sharedMediaLibraryBrowserController not bound

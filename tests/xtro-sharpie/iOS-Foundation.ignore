@@ -3,7 +3,3 @@
 
 ## does not exists in iOS as a type - but some API refers to it (messy)
 !unknown-type! NSPortMessage bound
-
-## Class [] return value is currently broken - https://github.com/xamarin/xamarin-macios/issues/4441
-!missing-selector! +NSSecureUnarchiveFromDataTransformer::allowedTopLevelClasses not bound
-!missing-type! NSSecureUnarchiveFromDataTransformer not bound
