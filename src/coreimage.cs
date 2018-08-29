@@ -202,7 +202,13 @@ namespace CoreImage {
 	}
 
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface CIContext {
+		// marked iOS5 but it's not working in iOS7.1
+		[iOS (8,0)]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 #if !MONOMAC || XAMCORE_2_0
 		[iOS (9,0)][Mac (10,11)]
 		[Static]
