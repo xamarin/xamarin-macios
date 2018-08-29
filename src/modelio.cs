@@ -251,6 +251,8 @@ namespace ModelIO {
 		[Static]
 		[Export ("placeLightProbesWithDensity:heuristic:usingIrradianceDataSource:")]
 		[Mac (10, 12)]
+		[iOS (10,0)]
+		[TV (10,0)]
 		MDLLightProbe[] PlaceLightProbes (float density, MDLProbePlacement type, IMDLLightProbeIrradianceDataSource dataSource);
 	}
 
