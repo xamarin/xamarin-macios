@@ -5569,9 +5569,8 @@ namespace CoreImage {
 	[Mac (10,14, onlyOn64: true)]
 	[BaseType (typeof (CIFilter))]
 	interface CIMeshGenerator {
-		// https://github.com/xamarin/xamarin-macios/issues/4226
-		//[CoreImageFilterProperty ("inputMesh")]
-		//CIVector [] Mesh { get; set; }
+		[CoreImageFilterProperty ("inputMesh")]
+		CIVector [] Mesh { get; set; }
 		[CoreImageFilterProperty ("inputWidth")]
 		float Width { get; set; }
 		[CoreImageFilterProperty ("inputColor")]
