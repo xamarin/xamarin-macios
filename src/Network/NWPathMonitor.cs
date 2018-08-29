@@ -93,10 +93,10 @@ namespace Network {
 		}
 
 		delegate void nw_path_monitor_cancel_handler_t (IntPtr block);
-		static nw_path_monitor_cancel_handler_t static_MonitorCancelled = TrampolineMonitorCancelled;
+		static nw_path_monitor_cancel_handler_t static_MonitorCanceled = TrampolineMonitorCanceled;
 
 		[MonoPInvokeCallback (typeof (nw_path_monitor_cancel_handler_t))]
-		static void TrampolineMonitorCancelled (IntPtr block)
+		static void TrampolineMonitorCanceled (IntPtr block)
 		{
 			var del = BlockLiteral.GetTarget<Action> (block);
 			if (del != null) {
@@ -108,17 +108,17 @@ namespace Network {
 		static extern unsafe void nw_path_monitor_set_cancel_handler (IntPtr handle, void *callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void SetMonitorCancelledHandler (Action callback)
+		public void SetMonitorCanceledHandler (Action callback)
 		{
 			unsafe {
 				if (callback == null) {
-					nw_path_monitor_set_update_handler (GetCheckedHandle (), null);
+					nw_path_monitor_set_cancel_handler (GetCheckedHandle (), null);
 					return;
 				}
 
 				BlockLiteral block_handler = new BlockLiteral ();
 				BlockLiteral *block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_MonitorCancelled, callback);
+				block_handler.SetupBlockUnsafe (static_MonitorCanceled, callback);
 
 				try {
 					nw_path_monitor_set_cancel_handler (GetCheckedHandle (), (void*) block_ptr_handler);
