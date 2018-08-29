@@ -7,5 +7,7 @@ xamios.csproj
 xammac.csproj
 xamtvos.csproj
 xamwatch.csproj
-generator.csproj
+generator.csproj.inc
 *~
+*.rsp
+

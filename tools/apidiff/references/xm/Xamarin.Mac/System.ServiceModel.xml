@@ -3364,6 +3364,7 @@
         <classes>
           <class name="ActionNotSupportedException" type="class" base="System.ServiceModel.CommunicationException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -3681,6 +3682,7 @@
               </attribute>
             </attributes>
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
               <interface name="System.ServiceModel.Description.IEndpointBehavior" />
             </interfaces>
             <constructors>
@@ -4470,6 +4472,7 @@
           </class>
           <class name="CommunicationException" type="class" base="System.SystemException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -4497,6 +4500,7 @@
           </class>
           <class name="CommunicationObjectAbortedException" type="class" base="System.ServiceModel.CommunicationException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -4524,6 +4528,7 @@
           </class>
           <class name="CommunicationObjectFaultedException" type="class" base="System.ServiceModel.CommunicationException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -4585,6 +4590,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -5213,6 +5221,7 @@
           </class>
           <class name="EndpointNotFoundException" type="class" base="System.ServiceModel.CommunicationException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -5579,6 +5588,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor(System.Type)" attrib="6278">
                 <parameters>
@@ -5653,6 +5665,7 @@
           </class>
           <class name="FaultException" type="class" base="System.ServiceModel.CommunicationException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -5784,6 +5797,7 @@
           </class>
           <class name="FaultException`1" type="class" base="System.ServiceModel.FaultException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <generic-parameters>
@@ -6709,6 +6723,7 @@
           </class>
           <class name="InvalidMessageContractException" type="class" base="System.SystemException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -6743,6 +6758,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -6771,6 +6789,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -6835,6 +6856,9 @@
             </properties>
           </class>
           <class name="MessageContractMemberAttribute" type="class" base="System.Attribute" abstract="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6276">
                 <parameters />
@@ -6909,6 +6933,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -6924,6 +6951,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -6970,6 +7000,7 @@
           </class>
           <class name="MessageHeaderException" type="class" base="System.ServiceModel.ProtocolException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -7155,6 +7186,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -7184,6 +7218,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -7991,6 +8028,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -8194,6 +8234,7 @@
           </class>
           <class name="ProtocolException" type="class" base="System.ServiceModel.CommunicationException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -8245,6 +8286,7 @@
           </class>
           <class name="QuotaExceededException" type="class" base="System.SystemException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -8392,6 +8434,7 @@
           </class>
           <class name="ServerTooBusyException" type="class" base="System.ServiceModel.CommunicationException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -8419,6 +8462,7 @@
           </class>
           <class name="ServiceActivationException" type="class" base="System.ServiceModel.CommunicationException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -8453,6 +8497,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -8550,6 +8597,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <parameters>
@@ -8830,6 +8880,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -16392,6 +16445,7 @@
           </class>
           <class name="MessageSecurityException" type="class" base="System.ServiceModel.CommunicationException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -16550,6 +16604,7 @@
           </class>
           <class name="SecurityAccessDeniedException" type="class" base="System.ServiceModel.CommunicationException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -16577,6 +16632,7 @@
           </class>
           <class name="SecurityNegotiationException" type="class" base="System.ServiceModel.CommunicationException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>

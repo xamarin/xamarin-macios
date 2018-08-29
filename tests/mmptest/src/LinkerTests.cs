@@ -129,5 +129,15 @@ namespace Xamarin.MMP.Tests
 				Assert.True (buildOutput.Contains ("2014") == builds_successfully, $"Building with {linker} did not give 2014 status {builds_successfully} as expected.\n\n{buildOutput}");
 			});
 		}
+
+		[Test]
+		public void LinkingAdditionalArguments_ShouldBeUsed ()
+		{
+			MMPTests.RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<MonoBundlingExtraArgs>-v -v --linkplatform</MonoBundlingExtraArgs>" };
+				string buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
+				Assert.IsTrue (buildOutput.Contains ("Selected Linking: 'Platform'"), $"Build Output did not contain expected selected linking line: {buildOutput}");
+			});
+		}
 	}
 }
