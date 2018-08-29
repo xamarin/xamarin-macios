@@ -3,7 +3,3 @@
 
 ## type was not marked as unavailable before Xcode9
 !unknown-type! NSUbiquitousKeyValueStore bound
-
-## Class [] return value is currently broken - https://github.com/xamarin/xamarin-macios/issues/4441
-!missing-selector! +NSSecureUnarchiveFromDataTransformer::allowedTopLevelClasses not bound
-!missing-type! NSSecureUnarchiveFromDataTransformer not bound

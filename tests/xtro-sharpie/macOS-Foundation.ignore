@@ -1,10 +1,6 @@
 ## Only one type currently, which default returns. Currently unneeded unless they extend.
 !missing-selector! +NSDistributedNotificationCenter::notificationCenterForType: not bound
 
-## Class [] return value is currently broken - https://github.com/xamarin/xamarin-macios/issues/4441
-!missing-selector! +NSSecureUnarchiveFromDataTransformer::allowedTopLevelClasses not bound
-!missing-type! NSSecureUnarchiveFromDataTransformer not bound
-
 ## unsorted
 
 !duplicate-type-name! NSFileWrapperReadingOptions enum exists as both Foundation.NSFileWrapperReadingOptions and AppKit.NSFileWrapperReadingOptions

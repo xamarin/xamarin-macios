@@ -9936,9 +9936,9 @@ namespace AppKit {
 		[Export ("unregisterImageRepClass:")]
 		void UnregisterImageRepClass (Class imageRepClass);
 
-		//[Static]
-		//[Export ("registeredImageRepClasses")]
-		//Class [] RegisteredImageRepClasses ();
+		[Static]
+		[Export ("registeredImageRepClasses")]
+		Class [] GetRegisteredImageRepClasses ();
 
 		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Static]
