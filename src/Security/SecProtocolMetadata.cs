@@ -55,8 +55,12 @@ namespace Security {
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool sec_protocol_metadata_challenge_parameters_are_equal (IntPtr metadataA, IntPtr metadataB);
 
-		public static bool ParametersAreEqual (SecProtocolMetadata metadataA, SecProtocolMetadata metadataB)
+		public static bool ChallengeParametersAreEqual (SecProtocolMetadata metadataA, SecProtocolMetadata metadataB)
 		{
+			if (metadataA == null)
+				throw new ArgumentNullException (nameof (metadataA));
+			if (metadataB == null)
+				throw new ArgumentNullException (nameof (metadataB));
 			return sec_protocol_metadata_challenge_parameters_are_equal (metadataA.GetCheckedHandle (), metadataB.GetCheckedHandle ());
 		}
 
@@ -66,6 +70,10 @@ namespace Security {
 
 		public static bool PeersAreEqual (SecProtocolMetadata metadataA, SecProtocolMetadata metadataB)
 		{
+			if (metadataA == null)
+				throw new ArgumentNullException (nameof (metadataA));
+			if (metadataB == null)
+				throw new ArgumentNullException (nameof (metadataB));
 			return sec_protocol_metadata_peers_are_equal (metadataA.GetCheckedHandle (), metadataB.GetCheckedHandle ());
 		}
 
@@ -109,10 +117,10 @@ namespace Security {
  		}
 
 		delegate void sec_protocol_metadata_access_ocsp_response_handler_t (IntPtr block, IntPtr dispatchData);
- 		static sec_protocol_metadata_access_ocsp_response_handler_t static_OCSPReposeForPeer  = TrampolineOCSPReposeForPeer;
+ 		static sec_protocol_metadata_access_ocsp_response_handler_t static_OcspReposeForPeer  = TrampolineOcspReposeForPeer;
 
  		[MonoPInvokeCallback (typeof (sec_protocol_metadata_access_ocsp_response_handler_t))]
- 		static void TrampolineOCSPReposeForPeer (IntPtr block, IntPtr data)
+ 		static void TrampolineOcspReposeForPeer (IntPtr block, IntPtr data)
  		{
  			var del = BlockLiteral.GetTarget<Action<DispatchData>> (block);
  			if (del != null) {
@@ -125,7 +133,7 @@ namespace Security {
  		static extern unsafe void sec_protocol_metadata_access_ocsp_response (IntPtr handle, void *callback);
 
  		[BindingImpl (BindingImplOptions.Optimizable)]
- 		public void SetOCSPResponseForPeerHandler (Action<DispatchData> callback)
+ 		public void SetOcspResponseForPeerHandler (Action<DispatchData> callback)
  		{
  			unsafe {
  				if (callback == null) {
@@ -135,7 +143,7 @@ namespace Security {
 
  				BlockLiteral block_handler = new BlockLiteral ();
  				BlockLiteral *block_ptr_handler = &block_handler;
- 				block_handler.SetupBlockUnsafe (static_OCSPReposeForPeer, callback);
+ 				block_handler.SetupBlockUnsafe (static_OcspReposeForPeer, callback);
 
  				try {
  					sec_protocol_metadata_access_ocsp_response (GetCheckedHandle (), (void*) block_ptr_handler);
