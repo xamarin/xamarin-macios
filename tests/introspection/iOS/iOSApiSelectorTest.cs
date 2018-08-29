@@ -160,6 +160,15 @@ namespace Introspection {
 			var declaredType = method.DeclaringType;
 
 			switch (declaredType.Name) {
+			case "NSNull":
+				switch (name) {
+				// conformance to CAAction started with iOS8
+				case "runActionForKey:object:arguments:":
+					if (!TestRuntime.CheckXcodeVersion (8,0))
+						return true;
+					break;
+				}
+				break;
 			case "NSUrlSession":
 				switch (name) {
 				case "delegateQueue":

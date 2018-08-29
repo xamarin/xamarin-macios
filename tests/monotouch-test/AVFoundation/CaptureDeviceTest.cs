@@ -29,12 +29,14 @@ namespace MonoTouchFixtures.AVFoundation {
 			Compare (AVMediaType.Audio, AVMediaTypes.Audio);
 			Compare (AVMediaType.ClosedCaption, AVMediaTypes.ClosedCaption);
 			Compare (AVMediaType.Metadata, AVMediaTypes.Metadata);
-			Compare (AVMediaType.MetadataObject, AVMediaTypes.MetadataObject);
 			Compare (AVMediaType.Muxed, AVMediaTypes.Muxed);
 			Compare (AVMediaType.Subtitle, AVMediaTypes.Subtitle);
 			Compare (AVMediaType.Text, AVMediaTypes.Text);
 			Compare (AVMediaType.Timecode, AVMediaTypes.Timecode);
 			Compare (AVMediaType.Video, AVMediaTypes.Video);
+
+			if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 9,0))
+				Compare (AVMediaType.MetadataObject, AVMediaTypes.MetadataObject);
 
 			// obsoleted in iOS 6, removed in iOS12
 			if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 12,0))

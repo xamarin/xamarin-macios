@@ -144,6 +144,7 @@ namespace SpriteKit {
 		[Static, Export ("node")]
 		SKNode Create ();
 
+		[iOS (8,0)]
 		[Mac (10, 10)]
 		[Static]
 		[Export ("nodeWithFileNamed:")]

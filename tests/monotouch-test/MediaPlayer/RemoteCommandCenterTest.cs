@@ -41,8 +41,6 @@ namespace MonoTouchFixtures.MediaPlayer {
 			MPRemoteCommandCenter shared = MPRemoteCommandCenter.Shared;
 			Assert.NotNull (shared.BookmarkCommand, "BookmarkCommand");
 			Assert.NotNull (shared.ChangePlaybackRateCommand, "ChangePlaybackRateCommand");
-			Assert.NotNull (shared.ChangeRepeatModeCommand, "ChangeRepeatModeCommand");
-			Assert.NotNull (shared.ChangeShuffleModeCommand, "ChangeShuffleModeCommand");
 			Assert.NotNull (shared.DislikeCommand, "DislikeCommand");
 			Assert.NotNull (shared.LikeCommand, "LikeCommand");
 			Assert.NotNull (shared.NextTrackCommand, "NextTrackCommand");
@@ -55,6 +53,27 @@ namespace MonoTouchFixtures.MediaPlayer {
 			Assert.NotNull (shared.SkipForwardCommand, "SkipForwardCommand");
 			Assert.NotNull (shared.StopCommand, "StopCommand");
 			Assert.NotNull (shared.TogglePlayPauseCommand, "TogglePlayPauseCommand");
+		}
+
+		[Test]
+		public void Shared_8 ()
+		{
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 12, 2, throwIfOtherPlatform: false);
+
+			MPRemoteCommandCenter shared = MPRemoteCommandCenter.Shared;
+			Assert.NotNull (shared.ChangeRepeatModeCommand, "ChangeRepeatModeCommand");
+			Assert.NotNull (shared.ChangeShuffleModeCommand, "ChangeShuffleModeCommand");
+		}
+
+		[Test]
+		public void Shared_9 ()
+		{
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 9, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 12, 2, throwIfOtherPlatform: false);
+
+			MPRemoteCommandCenter shared = MPRemoteCommandCenter.Shared;
+			Assert.NotNull (shared.EnableLanguageOptionCommand, "EnableLanguageOptionCommand");
 		}
 	}
 }

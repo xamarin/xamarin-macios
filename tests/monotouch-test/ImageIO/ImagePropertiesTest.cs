@@ -35,7 +35,7 @@ namespace MonoTouchFixtures.ImageIO {
 			Assert.NotNull (CGImageProperties.MakerNikonDictionary, "MakerNikonDictionary");
 
 			// iOS 8.3 finally fixed them :)
-			if (TestRuntime.CheckXcodeVersion (6, 3) || TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 7, throwIfOtherPlatform: false)) {
+			if (TestRuntime.CheckXcodeVersion (6, 3) && TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 7, throwIfOtherPlatform: false)) {
 				Assert.NotNull (CGImageProperties.MakerMinoltaDictionary, "MakerMinoltaDictionary");
 				Assert.NotNull (CGImageProperties.MakerFujiDictionary, "MakerFujiDictionary");
 				Assert.NotNull (CGImageProperties.MakerOlympusDictionary, "MakerOlympusDictionary");

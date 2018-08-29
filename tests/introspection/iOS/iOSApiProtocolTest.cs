@@ -624,6 +624,7 @@ namespace Introspection {
 				case "UIVisualEffectView":
 				case "WKWebView":
 				case "ADBannerView":
+				case "UIAlertView":
 					return !TestRuntime.CheckXcodeVersion (8, 0);
 				}
 				break;
@@ -711,7 +712,12 @@ namespace Introspection {
 
 			case "UIPasteConfigurationSupporting": // types do not conform to protocol but protocol methods work on those types (base type tests in monotouch-test)
 				return true; // Skip everything because 'UIResponder' implements 'UIPasteConfigurationSupporting' and that's 130+ types
-
+			case "CAAction":
+				switch (type.Name) {
+				case "NSNull":
+					return !TestRuntime.CheckXcodeVersion (8,0);
+				}
+				break;
 #if !__WATCHOS__
 			// Undocumented conformance (members were inlinded in 'UIViewController' before so all subtypes should conform)
 			case "UIStateRestoring":
