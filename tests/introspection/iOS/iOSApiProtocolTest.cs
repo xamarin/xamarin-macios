@@ -626,6 +626,12 @@ namespace Introspection {
 				case "ADBannerView":
 				case "UIAlertView":
 					return !TestRuntime.CheckXcodeVersion (8, 0);
+				case "MKOverlayView":
+				case "MKCircleView":
+				case "MKOverlayPathView":
+				case "MKPolygonView":
+				case "MKPolylineView":
+					return !TestRuntime.CheckXcodeVersion (7,0);
 				}
 				break;
 

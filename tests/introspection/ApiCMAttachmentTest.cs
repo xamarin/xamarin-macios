@@ -168,9 +168,9 @@ namespace Introspection {
 		protected virtual bool Skip (string nativeName)
 		{
 			if (nativeName.Contains ("`")) {
-				nativeName = nativeName.Substring (0, nativeName.IndexOf ("`"));
+				nativeName = nativeName.Substring (0, nativeName.IndexOf ('`'));
 			}
-			if (nativeName.StartsWith ("CGPDF"))  // all those types crash the app
+			if (nativeName.StartsWith ("CGPDF", StringComparison.Ordinal))  // all those types crash the app
 				return true;
 			switch (nativeName) {
 			case "CFMachPort":
@@ -324,7 +324,7 @@ namespace Introspection {
 					Size = 16.0f
 				};
 				using (var fd = new CTFontDescriptor (fda))
-					return new CTFont (fd, 10, CTFontOptions.Default);
+					return new CTFont (fd, 10);
 			case "CTFontCollection":
 				return new CTFontCollection (new CTFontCollectionOptions ());
 			case "CTFontDescriptor":
