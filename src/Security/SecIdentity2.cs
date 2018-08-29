@@ -20,7 +20,7 @@ using CoreFoundation;
 
 namespace Security {
 
-	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 	public class SecIdentity2 : NativeObject {
 		internal SecIdentity2 (IntPtr handle) : base (handle, false) {}
 		public SecIdentity2 (IntPtr handle, bool owns) : base (handle, owns) {}
