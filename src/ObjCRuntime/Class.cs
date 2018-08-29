@@ -65,7 +65,8 @@ namespace ObjCRuntime {
 		}
 
 		[Preserve (Conditional = true)]
-		public Class (IntPtr handle, bool owns) {
+		public Class (IntPtr handle, bool owns)
+		{
 			// Class(es) can't be freed, so we ignore the 'owns' parameter.
 			this.handle = handle;
 		}
