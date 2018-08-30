@@ -57,12 +57,10 @@ namespace Security {
 
 		public static bool ChallengeParametersAreEqual (SecProtocolMetadata metadataA, SecProtocolMetadata metadataB)
 		{
-			if (metadataA == null && metadataB == null)
-				return false;  // This was tested in a native app. We do copy the behaviour.
 			if (metadataA == null)
-				throw new ArgumentNullException (nameof (metadataA));
-			if (metadataB == null)
-				throw new ArgumentNullException (nameof (metadataB));
+				return metadataB == null;
+			else if (metadataB == null)
+				return false; // This was tested in a native app. We do copy the behaviour.
 			return sec_protocol_metadata_challenge_parameters_are_equal (metadataA.GetCheckedHandle (), metadataB.GetCheckedHandle ());
 		}
 
@@ -72,12 +70,10 @@ namespace Security {
 
 		public static bool PeersAreEqual (SecProtocolMetadata metadataA, SecProtocolMetadata metadataB)
 		{
-			if (metadataA == null && metadataB == null)
-				return false;  // This was tested in a native app. We do copy the behaviour.
 			if (metadataA == null)
-				throw new ArgumentNullException (nameof (metadataA));
-			if (metadataB == null)
-				throw new ArgumentNullException (nameof (metadataB));
+				return metadataB == null;
+			else if (metadataB == null)
+				return false; // This was tested in a native app. We do copy the behaviour.
 			return sec_protocol_metadata_peers_are_equal (metadataA.GetCheckedHandle (), metadataB.GetCheckedHandle ());
 		}
 
