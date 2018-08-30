@@ -5868,6 +5868,7 @@ namespace UIKit {
 
 #if !WATCH
 	[BaseType (typeof(NSObject), Delegates=new string [] {"WeakDelegate"}, Events=new Type[] {typeof (UIGestureRecognizerDelegate)})]
+	[Dispose ("OnDispose ();")]
 	interface UIGestureRecognizer {
 		[DesignatedInitializer]
 		[Export ("initWithTarget:action:")]
