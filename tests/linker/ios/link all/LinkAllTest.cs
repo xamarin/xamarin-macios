@@ -598,6 +598,7 @@ namespace LinkAll {
 			public ProtocolWithGenericsInOptionalMemberWrapper (IntPtr handle, bool owns) : base (handle, owns) { }
 		}
 
+		[Test]
 		public void NoFatCorlib ()
 		{
 			var corlib = typeof (int).Assembly.Location;

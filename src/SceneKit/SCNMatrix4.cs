@@ -28,6 +28,7 @@ SOFTWARE.
 
 using System;
 using System.Runtime.InteropServices;
+using Foundation;
 
 using Vector3 = global::OpenTK.Vector3;
 using Vector3d = global::OpenTK.Vector3d;
@@ -48,6 +49,7 @@ namespace SceneKit
     /// </summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
+    [Advice ("This is a row major matrix representation.")]
     public struct SCNMatrix4 : IEquatable<SCNMatrix4>
     {
         #region Fields

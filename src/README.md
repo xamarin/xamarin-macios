@@ -23,9 +23,9 @@ code too complicated, all the attributes are also compiled into the generator
 executable, and then instantiated as mock-objects of the real attributes.
 
 The solution generator.sln can be used to debug the generator. There are
-multiple run configurations (`ios-classic`, `ios-unified`, `tvos`, `watchos`,
-`mac-classic`, `mac-unified`, `mac-full`), each configured to execute the
-generator with the options for the corresponding profile.
+multiple run configurations (`ios`, `tvos`, `watchos`, `mac-unified`,
+`mac-full`), each configured to execute the generator with the options for the
+corresponding profile.
 
 ### Generator diff
 

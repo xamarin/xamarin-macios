@@ -1,0 +1,23 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppWithExtraArgumentThatOverrides", "AppWithExtraArgumentThatOverrides.csproj", "{EE94F06F-56CB-4A1A-A9C6-858D2D70D9CE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|iPhoneSimulator = Debug|iPhoneSimulator
+		Release|iPhone = Release|iPhone
+		Release|iPhoneSimulator = Release|iPhoneSimulator
+		Debug|iPhone = Debug|iPhone
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EE94F06F-56CB-4A1A-A9C6-858D2D70D9CE}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{EE94F06F-56CB-4A1A-A9C6-858D2D70D9CE}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{EE94F06F-56CB-4A1A-A9C6-858D2D70D9CE}.Release|iPhone.ActiveCfg = Release|iPhone
+		{EE94F06F-56CB-4A1A-A9C6-858D2D70D9CE}.Release|iPhone.Build.0 = Release|iPhone
+		{EE94F06F-56CB-4A1A-A9C6-858D2D70D9CE}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{EE94F06F-56CB-4A1A-A9C6-858D2D70D9CE}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{EE94F06F-56CB-4A1A-A9C6-858D2D70D9CE}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{EE94F06F-56CB-4A1A-A9C6-858D2D70D9CE}.Debug|iPhone.Build.0 = Debug|iPhone
+	EndGlobalSection
+EndGlobal

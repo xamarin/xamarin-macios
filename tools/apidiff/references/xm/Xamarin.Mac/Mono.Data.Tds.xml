@@ -2535,6 +2535,7 @@
           </class>
           <class name="TdsInternalException" type="class" base="System.SystemException" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <properties>
@@ -2818,6 +2819,7 @@
           </class>
           <class name="TdsTimeoutException" type="class" base="Mono.Data.Tds.Protocol.TdsInternalException" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
           </class>

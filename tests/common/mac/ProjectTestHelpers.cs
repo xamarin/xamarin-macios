@@ -394,12 +394,7 @@ namespace Xamarin.MMP.Tests
 
 		public static OutputText TestUnifiedExecutable (UnifiedTestConfig config, bool shouldFail = false, bool useMSBuild = false, string[] environment = null)
 		{
-			// If we've already generated guid bits for this config, don't tack on a second copy
-			if (config.guid == Guid.Empty)
-			{
-				config.guid = Guid.NewGuid ();
-				config.TestCode += GenerateOutputCommand (config.TmpDir, config.guid);
-			}
+			AddGUIDTestCode (config);
 
 			string buildOutput = GenerateAndBuildUnifiedExecutable (config, shouldFail, useMSBuild, environment);
 			if (shouldFail)
@@ -408,6 +403,15 @@ namespace Xamarin.MMP.Tests
 			string runOutput = RunGeneratedUnifiedExecutable (config);
 
 			return new OutputText (buildOutput, runOutput);
+		}
+
+		public static void AddGUIDTestCode (UnifiedTestConfig config)
+		{
+			// If we've already generated guid bits for this config, don't tack on a second copy
+			if (config.guid == Guid.Empty) {
+				config.guid = Guid.NewGuid ();
+				config.TestCode += GenerateOutputCommand (config.TmpDir, config.guid);
+			}
 		}
 
 		public static OutputText TestClassicExecutable (string tmpDir, string testCode = "", string csprojConfig = "", bool shouldFail = false, bool includeMonoRuntime = false)
@@ -483,7 +487,12 @@ namespace Xamarin.MMP.Tests
 			return Path.Combine(assemblyDirectory, TestDirectory + "common/mac");
 		}
 
-		static string CopyFileWithSubstitutions (string src, string target, Func<string, string > replacementAction)
+		public static void CopyDirectory (string src, string target)
+		{
+			Xamarin.Bundler.Driver.RunCommand ("/bin/cp", $"-r {src} {target}");
+		}
+
+		public static string CopyFileWithSubstitutions (string src, string target, Func<string, string > replacementAction)
 		{
 			string text = replacementAction (System.IO.File.ReadAllText (src));
 			System.IO.File.WriteAllText (target, text);
@@ -545,6 +554,16 @@ namespace TestCase
 		{
 			return string.Format ("System.IO.File.Create(\"{0}\").Dispose();",  Path.Combine (tmpDir, guid.ToString ()));
 		}
+
+		public static void NugetRestore (string project)
+		{
+			var rv = ExecutionHelper.Execute ("nuget", $"restore {StringUtils.Quote (project)}", out var output);
+			if (rv != 0) {
+				Console.WriteLine ("nuget restore failed:");
+				Console.WriteLine (output);
+				Assert.Fail ($"'nuget restore' failed for {project}");
+			}
+		} 
 	}
 
 	static class PlatformHelpers

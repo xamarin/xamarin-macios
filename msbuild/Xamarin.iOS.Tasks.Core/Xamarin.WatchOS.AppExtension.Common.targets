@@ -20,6 +20,10 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 		<IsWatchExtension>True</IsWatchExtension>
 		<AppBundleExtension>.appex</AppBundleExtension>
 		<MtouchHttpClientHandler Condition="'$(MtouchHttpClientHandler)' == ''">NSUrlSessionHandler</MtouchHttpClientHandler>
+
+		<!-- This must be set before importing Microsoft.CSharp.targets -->
+		<!-- See Xamarin.iOS.AppExtension.CSharp.targets for a detailed explanation of this variable -->
+		<CopyNuGetImplementations Condition="'$(CopyNuGetImplementations)' == ''">true</CopyNuGetImplementations>
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)..\iOS\Xamarin.iOS.Common.targets" />

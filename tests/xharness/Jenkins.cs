@@ -2824,7 +2824,7 @@ function toggleAll (show)
 						ExecutionResult = TestExecutingResult.Running;
 						var result = await proc.RunAsync (log, true, Timeout);
 						if (result.TimedOut) {
-							FailureMessage = $"Execution timed out after {Timeout.Minutes} minutes.";
+							FailureMessage = $"Execution timed out after {Timeout.TotalMinutes} minutes.";
 							log.WriteLine (FailureMessage);
 							ExecutionResult = TestExecutingResult.TimedOut;
 						} else if (result.Succeeded) {
@@ -3557,13 +3557,18 @@ function toggleAll (show)
 			await Task.WhenAll (Tasks.Select ((v) => v.BuildAsync ()).Distinct ());
 			build_timer.Stop ();
 
+			var executingTasks = Tasks.Where ((v) => !v.Ignored && !v.Failed);
+			if (!executingTasks.Any ()) {
+				ExecutionResult = TestExecutingResult.Failed;
+				return;
+			}
+
 			using (var desktop = await NotifyBlockingWaitAsync (Jenkins.DesktopResource.AcquireExclusiveAsync ())) {
 				run_timer.Start ();
 
 				// We need to set the dialog permissions for all the apps
 				// before launching the simulator, because once launched
 				// the simulator caches the values in-memory.
-				var executingTasks = Tasks.Where ((v) => !v.Ignored && !v.Failed);
 				foreach (var task in executingTasks)
 					await task.SelectSimulatorAsync ();
 
