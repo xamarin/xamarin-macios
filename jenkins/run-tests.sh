@@ -64,8 +64,8 @@ security default-keychain -s "$KEYCHAIN.keychain"
 security list-keychains -s "$KEYCHAIN.keychain"
 echo "Unlock keychain"
 security unlock-keychain -p "$(cat "$KEYCHAIN_PWD_FILE")"
-echo "Increase keychain unlock timeout"
-security set-keychain-settings -lut 7200
+echo "Increase keychain unlock timeout to 6 hours"
+security set-keychain-settings -lut 21600
 security -v find-identity "$KEYCHAIN.keychain"
 
 # Prevent dialogs from asking for permissions.
