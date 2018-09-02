@@ -90,10 +90,10 @@ CCACHE_CXXFLAGS=-Qunused-arguments
 # Configuration for the mono sdk makefiles
 #
 SDK_CONFIG=$(MONO_PATH)/sdks/Make.config
-SDK_ARGS=XCODE_DIR=$(XCODE_DEVELOPER_ROOT) IOS_VERSION=$(IOS_SDK_VERSION) IOS_VERSION_MIN=$(MIN_IOS_SDK_VERSION) TVOS_VERSION=$(TVOS_SDK_VERSION) TVOS_VERSION_MIN=$(MIN_TVOS_SDK_VERSION) WATCHOS_VERSION=$(WATCH_SDK_VERSION) WATCHOS_VERSION_MIN=$(MIN_WATCHOS_SDK_VERSION)
+SDK_ARGS=XCODE_DIR=$(XCODE_DEVELOPER_ROOT) IOS_VERSION=$(IOS_SDK_VERSION) IOS_VERSION_MIN=$(MIN_IOS_SDK_VERSION) TVOS_VERSION=$(TVOS_SDK_VERSION) TVOS_VERSION_MIN=$(MIN_TVOS_SDK_VERSION) WATCHOS_VERSION=$(WATCH_SDK_VERSION) WATCHOS_VERSION_MIN=$(MIN_WATCHOS_SDK_VERSION) IGNORE_PROVISION_LLVM=1
 
-ifdef IGNORE_PACKAGE_LLVM
-SDK_ARGS += IGNORE_PACKAGE_LLVM=1
+ifdef DISABLE_DOWNLOAD_LLVM
+SDK_ARGS += DISABLE_DOWNLOAD_LLVM=1
 endif
 
 SDK_BUILDDIR = $(MONO_PATH)/sdks/builds
@@ -1498,11 +1498,11 @@ build-llvm32: .stamp-build-llvm
 build-llvm64: .stamp-build-llvm
 
 .stamp-build-llvm: $(SDK_CONFIG)
-	$(MAKE) -C $(SDK_BUILDDIR) build-ios-llvm $(SDK_ARGS)
+	$(MAKE) -C $(SDK_BUILDDIR) provision-llvm36-llvm32 provision-llvm-llvm64 $(SDK_ARGS)
 	$(Q) touch $@
 
 clean-llvm: $(SDK_CONFIG)
-	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-llvm $(SDK_ARGS)
+	$(MAKE) -C $(SDK_BUILDDIR) clean-llvm36-llvm32 clean-llvm-llvm64 $(SDK_ARGS)
 	$(RM) .stamp-*-llvm*
 
 .PHONY: install-llvm64 llvm llvm64
@@ -1515,10 +1515,10 @@ LLVM_TARGETS = \
 	$(PREFIX)/LLVM36/bin/opt \
 	$(PREFIX)/LLVM36/bin/llc
 
-$(PREFIX)/LLVM/bin/%: $(SDK_DESTDIR)/ios-llvm64/bin/% | $(PREFIX)/LLVM/bin
+$(PREFIX)/LLVM/bin/%: $(SDK_DESTDIR)/llvm-llvm64/bin/% | $(PREFIX)/LLVM/bin
 	$(call Q_2,INSTALL ,[LLVM64]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $^ $@
 
-$(PREFIX)/LLVM36/bin/%: $(SDK_DESTDIR)/ios-llvm36-32/bin/% | $(PREFIX)/LLVM36/bin
+$(PREFIX)/LLVM36/bin/%: $(SDK_DESTDIR)/llvm36-llvm32/bin/% | $(PREFIX)/LLVM36/bin
 	$(call Q_2,INSTALL ,[LLVM64]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $^ $@
 
 $(PREFIX)/LLVM/bin:
