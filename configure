@@ -85,7 +85,7 @@ while test x$1 != x; do
 		shift
 		;;
 	--disable-packaged-llvm)
-		echo "IGNORE_PACKAGE_LLVM=1" >> $CONFIGURED_FILE
+		echo "DISABLE_DOWNLOAD_LLVM=1" >> $CONFIGURED_FILE
 		shift
 		;;
 	--help|-h)
