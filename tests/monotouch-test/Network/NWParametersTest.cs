@@ -262,18 +262,18 @@ namespace MonoTouchFixtures.Network {
 		}
 
 		[Test]
-		public void RequireInterfacePropertyTest ()
+		public void RequiredInterfacePropertyTest ()
 		{
 
 			using (var parameters = new NWParameters ())
 			{
-				var defaultValue = parameters.RequireInterface;
+				var defaultValue = parameters.RequiredInterface;
 				Assert.IsNull (defaultValue, "Default value changed.");
 				// try to set a null value, we should have no issues
-				parameters.RequireInterface = null;
-				Assert.IsNull (parameters.RequireInterface, "Value should still be null.");
-				parameters.RequireInterface = interfaces[0];
-				Assert.AreNotEqual (IntPtr.Zero, parameters.RequireInterface.Handle, "New value was not set.");
+				parameters.RequiredInterface = null;
+				Assert.IsNull (parameters.RequiredInterface, "Value should still be null.");
+				parameters.RequiredInterface = interfaces[0];
+				Assert.AreNotEqual (IntPtr.Zero, parameters.RequiredInterface.Handle, "New value was not set.");
 			}
 		}
 
