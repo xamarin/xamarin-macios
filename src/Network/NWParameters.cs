@@ -16,17 +16,12 @@ using CoreFoundation;
 using nw_parameters_t=System.IntPtr;
 
 namespace Network {
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 	public enum NWMultiPathService {
 		Disabled = 0,
 		Handover = 1,
 		Interactive = 2,
 		Aggregate = 3, 
-	}
-
-	static partial class Libraries  {
-		static public class Network {
-			static public readonly IntPtr Handle = Dlfcn.dlopen (Constants.NetworkLibrary, 0);
-		}
 	}
 
 	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
@@ -442,6 +437,7 @@ namespace Network {
 		}
 	}
 
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 	public enum NWParametersExpiredDnsBehavior {
 		Default = 0,
 		Allow = 1,
