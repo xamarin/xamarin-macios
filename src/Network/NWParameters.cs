@@ -234,15 +234,10 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_parameters_require_interface (nw_parameters_t parameters, IntPtr handleInterface);
 
-		public void RequireInterface (NWInterface iface)
-		{
-			nw_parameters_require_interface (GetCheckedHandle (), iface.GetHandle ());
-		}
-
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_parameters_copy_required_interface (nw_parameters_t parameters);
 
-		public NWInterface Interface {
+		public NWInterface RequireInterface {
 			get {
 				var iface = nw_parameters_copy_required_interface (GetCheckedHandle ());
 
@@ -250,6 +245,9 @@ namespace Network {
 					return null;
 
 				return new NWInterface (iface, owns: true);
+			}
+			set {
+				nw_parameters_require_interface (GetCheckedHandle (), value.GetHandle ());
 			}
 		}
 
