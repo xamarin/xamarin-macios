@@ -59,6 +59,11 @@ namespace Xamarin.Tests
 		[Test]
 		public void MainThreadDeallocationTest ()
 		{
+#if OPTIMIZEALL
+			if (!TestRuntime.IsLinkAll)
+				Assert.Ignore ("This test must be processed by the linker if all optimizations are turned on.");
+#endif
+
 			ObjCBlockTester.CallAssertMainThreadBlockRelease ((callback) => {
 				callback (42);
 			});
