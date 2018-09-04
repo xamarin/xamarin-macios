@@ -60,7 +60,7 @@ xamarin_marshal_return_value (MonoType *mtype, const char *type, MonoObject *ret
 		case _C_PTR: {
 			MonoClass *klass = mono_class_from_mono_type (mtype);
 			if (mono_class_is_delegate (klass)) {
-				return xamarin_get_block_for_delegate (method, retval, NULL, exception_gchandle);
+				return xamarin_get_block_for_delegate (method, retval, NULL, INVALID_TOKEN_REF, exception_gchandle);
 			} else {
 				return *(void **) mono_object_unbox (retval);
 			}
