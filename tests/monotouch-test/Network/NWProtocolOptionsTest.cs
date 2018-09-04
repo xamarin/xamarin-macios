@@ -22,9 +22,6 @@ namespace MonoTouchFixtures.Network {
 		[Test]
 		public void CreateTlsTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 12, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 14, throwIfOtherPlatform: false);
-
 			using (var options = NWProtocolOptions.CreateTls ()) {
 				var sec = options.TlsProtocolOptions;
 				// we cannot test much more :(
@@ -35,9 +32,6 @@ namespace MonoTouchFixtures.Network {
 		[Test]
 		public void CreateTcpTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 12, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 14, throwIfOtherPlatform: false);
-
 			using (var options = NWProtocolOptions.CreateTcp ()) {
 				// we cannot test much more :(
 				Assert.AreNotEqual (IntPtr.Zero, options.Handle);
@@ -47,9 +41,6 @@ namespace MonoTouchFixtures.Network {
 		[Test]
 		public void CreateUdpTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 12, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 14, throwIfOtherPlatform: false);
-
 			using (var options = NWProtocolOptions.CreateUdp ()) {
 				// we cannot test much more :(
 				Assert.AreNotEqual (IntPtr.Zero, options.Handle);

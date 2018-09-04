@@ -237,7 +237,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_parameters_copy_required_interface (nw_parameters_t parameters);
 
-		public NWInterface RequireInterface {
+		public NWInterface RequiredInterface {
 			get {
 				var iface = nw_parameters_copy_required_interface (GetCheckedHandle ());
 
