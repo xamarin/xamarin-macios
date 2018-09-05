@@ -1,3 +1,4 @@
+# manually added in MidiServices.cs (not bindings)
 !missing-field! kMIDIPropertyAdvanceScheduleTimeMuSec not bound
 !missing-field! kMIDIPropertyCanRoute not bound
 !missing-field! kMIDIPropertyConnectionUniqueID not bound
@@ -42,17 +43,18 @@
 !missing-field! kMIDIPropertyTransmitsNotes not bound
 !missing-field! kMIDIPropertyTransmitsProgramChanges not bound
 !missing-field! kMIDIPropertyUniqueID not bound
+
+# no known use
+!missing-pinvoke! MIDIEndpointGetRefCons is not bound
+!missing-pinvoke! MIDIEndpointSetRefCons is not bound
+
+# old apis that have been ignored, please refer to issue https://github.com/xamarin/xamarin-macios/issues/4452
 !missing-pinvoke! MIDIClientCreateWithBlock is not bound
 !missing-pinvoke! MIDIDestinationCreateWithBlock is not bound
 !missing-pinvoke! MIDIDeviceCreate is not bound
 !missing-pinvoke! MIDIDeviceDispose is not bound
-!missing-pinvoke! MIDIDeviceListAddDevice is not bound
-!missing-pinvoke! MIDIDeviceListDispose is not bound
-!missing-pinvoke! MIDIDeviceListGetDevice is not bound
-!missing-pinvoke! MIDIDeviceListGetNumberOfDevices is not bound
 !missing-pinvoke! MIDIDeviceRemoveEntity is not bound
-!missing-pinvoke! MIDIEndpointGetRefCons is not bound
-!missing-pinvoke! MIDIEndpointSetRefCons is not bound
+!missing-pinvoke! MIDIDriverEnableMonitoring is not bound
 !missing-pinvoke! MIDIEntityAddOrRemoveEndpoints is not bound
 !missing-pinvoke! MIDIExternalDeviceCreate is not bound
 !missing-pinvoke! MIDIGetDriverDeviceList is not bound

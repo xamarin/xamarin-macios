@@ -1892,7 +1892,7 @@ namespace CoreMidi {
 
 	public class MidiDeviceList : MidiObject {
 
-#if !COREBUILD && MONOMAC
+#if !COREBUILD
 		[DllImport (Constants.CoreMidiLibrary)]
 		static extern nuint MIDIDeviceListGetNumberOfDevices (MidiDeviceListRef devList);
 
