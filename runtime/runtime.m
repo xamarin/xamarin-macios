@@ -72,7 +72,7 @@ const char *xamarin_arch_name = "x86_64";
 const char *xamarin_arch_name = NULL;
 #endif
 
-#if TARGET_OS_WATCH
+#if TARGET_OS_WATCH || MONOMAC
 bool xamarin_is_gc_coop = true;
 #else
 bool xamarin_is_gc_coop = false;
