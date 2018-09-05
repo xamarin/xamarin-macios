@@ -9191,15 +9191,14 @@ namespace AVFoundation {
 		[Export ("availableEmbeddedThumbnailPhotoCodecTypes")]
 		NSString[] _GetAvailableEmbeddedThumbnailPhotoCodecTypes { get; }
 
-		[iOS (11, 0)]
-		[Wrap ("Array.ConvertAll (_GetAvailableEmbeddedThumbnailPhotoCodecTypes, s => AVVideoCodecTypeExtensions.GetValue (s))", IsVirtual = true)]
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'AvailableEmbeddedThumbnailPhotoCodecTypes' instead.")]
+		[iOS (11, 0)]
+		[Wrap ("Array.ConvertAll (_GetAvailableEmbeddedThumbnailPhotoCodecTypes, s => AVVideoCodecTypeExtensions.GetValue (s))", IsVirtual = false)]
 		AVVideoCodecType[] GetAvailableEmbeddedThumbnailPhotoCodecTypes { get; }
-
+#endif
 		[iOS (11, 0)]
 		[Wrap ("Array.ConvertAll (_GetAvailableEmbeddedThumbnailPhotoCodecTypes, s => AVVideoCodecTypeExtensions.GetValue (s))", IsVirtual = true)]
-#endif
 		AVVideoCodecType[] AvailableEmbeddedThumbnailPhotoCodecTypes { get; }
 
 #if XAMCORE_4_0
