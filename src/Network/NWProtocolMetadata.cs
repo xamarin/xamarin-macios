@@ -48,7 +48,7 @@ namespace Network {
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_metadata nw_udp_create_metadata ();
-		public static NWProtocolMetadata CreateUDPMetadata ()
+		public static NWProtocolMetadata CreateUdpMetadata ()
 		{
 			return new NWProtocolMetadata (nw_udp_create_metadata (), owns: true);
 		}
