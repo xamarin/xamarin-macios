@@ -206,7 +206,7 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyExifSceneType")]
 		NSString ExifSceneType { get; }
 		[Field ("kCGImagePropertyExifCFAPattern")]
-		NSString ExifCfaPattern { get; }
+		NSString ExifCFAPattern { get; }
 		[Field ("kCGImagePropertyExifCustomRendered")]
 		NSString ExifCustomRendered { get; }
 		[Field ("kCGImagePropertyExifExposureMode")]
