@@ -58,6 +58,11 @@ namespace Xamarin.Bundler {
 					/* interpreter only requires a few stubs that are attached
 					 * to mscorlib.dll, other assemblies won't be AOT compiled */
 					return FileName == "mscorlib.dll";
+				if (App.UseInterpreterMixed)
+					/* TODO: for now, only (fully) AOT compile mscorlib.dll. We
+					 * need an additional option to drive what assemblies
+					 * should be AOT compiled */
+					return FileName == "mscorlib.dll";
 				return true;
 			}
 		}

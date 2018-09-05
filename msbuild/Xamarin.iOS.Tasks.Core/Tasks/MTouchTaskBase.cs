@@ -110,6 +110,9 @@ namespace Xamarin.iOS.Tasks
 		public bool UseInterpreter { get; set; }
 
 		[Required]
+		public bool UseInterpreterMixed { get; set; }
+
+		[Required]
 		public bool LinkerDumpDependencies { get; set; }
 
 		[Required]
@@ -407,6 +410,9 @@ namespace Xamarin.iOS.Tasks
 
 			if (UseInterpreter)
 				args.Add ("--interpreter");
+
+			if (UseInterpreterMixed)
+				args.Add ("--interp-mixed");
 
 			switch (LinkMode.ToLowerInvariant ()) {
 			case "sdkonly": args.AddLine ("--linksdkonly"); break;

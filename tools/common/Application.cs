@@ -64,6 +64,7 @@ namespace Xamarin.Bundler {
 		public bool? EnableCoopGC;
 		public bool EnableSGenConc;
 		public bool UseInterpreter;
+		public bool UseInterpreterMixed;
 		public MarshalObjectiveCExceptionMode MarshalObjectiveCExceptions;
 		public MarshalManagedExceptionMode MarshalManagedExceptions;
 

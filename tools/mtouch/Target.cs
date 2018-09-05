@@ -1136,6 +1136,11 @@ namespace Xamarin.Bundler
 			if (App.UseInterpreter)
 				return;
 
+			if (App.UseInterpreterMixed)
+				/* TODO: not sure? we might have to continue here, depending on
+				 * the set of assemblies are AOT'd? */
+				return;
+
 			// Code in one assembly (either in a P/Invoke or a third-party library) can depend on a third-party library in another assembly.
 			// This means that we must always build assemblies only when all their dependent assemblies have been built, so that 
 			// we can link (natively) with the frameworks/dylibs for those dependent assemblies.
@@ -1484,7 +1489,7 @@ namespace Xamarin.Bundler
 				}
 			}
 
-			if (App.UseInterpreter) {
+			if (App.UseInterpreter || App.UseInterpreterMixed) {
 				string libinterp = Path.Combine (libdir, "libmono-ee-interp.a");
 				linker_flags.AddLinkWith (libinterp);
 				string libicalltable = Path.Combine (libdir, "libmono-icall-table.a");
