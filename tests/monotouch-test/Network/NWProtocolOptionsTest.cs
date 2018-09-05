@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !__WATCHOS__
+using System;
 #if XAMCORE_2_0
 using Foundation;
 using Network;
@@ -11,6 +12,9 @@ using MonoTouch.Network;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Network {
+
+	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class NWProtocolOptionsTest {
 
 		[SetUp]
@@ -48,3 +52,4 @@ namespace MonoTouchFixtures.Network {
 		}
 	}
 }
+#endif

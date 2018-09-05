@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !__WATCHOS__
+using System;
 using System.Collections.Generic;
 using System.Threading;
 #if XAMCORE_2_0
@@ -18,6 +19,8 @@ using NUnit.Framework;
 
 namespace MonoTouchFixtures.Network {
 
+	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class NWParametersTest {
 
 		AutoResetEvent secureEvent;  // used to let us know the handler was indeed called.
@@ -375,3 +378,4 @@ namespace MonoTouchFixtures.Network {
 		}
 	}
 }
+#endif
