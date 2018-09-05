@@ -68,12 +68,20 @@ namespace ImageIO {
 		NSString MakerCanonDictionary { get; }
 		[Field ("kCGImagePropertyMakerNikonDictionary")]
 		NSString MakerNikonDictionary { get; }
+
+		[iOS (8,3)][Mac (10,10)]
 		[Field ("kCGImagePropertyMakerMinoltaDictionary")]
 		NSString MakerMinoltaDictionary { get; }
+
+		[iOS (8,3)][Mac (10,10)]
 		[Field ("kCGImagePropertyMakerFujiDictionary")]
 		NSString MakerFujiDictionary { get; }
+
+		[iOS (8,3)][Mac (10,10)]
 		[Field ("kCGImagePropertyMakerOlympusDictionary")]
 		NSString MakerOlympusDictionary { get; }
+
+		[iOS (8,3)][Mac (10,10)]
 		[Field ("kCGImagePropertyMakerPentaxDictionary")]
 		NSString MakerPentaxDictionary { get; }
 
