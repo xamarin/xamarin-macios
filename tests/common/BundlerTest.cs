@@ -259,8 +259,11 @@ class D : NSObject {
 				bundler.AssertWarning (4173, "The registrar can't compute the block signature for the delegate of type System.Delegate in the method D.D4 because System.Delegate doesn't have a specific signature.", "testApp.cs", 24);
 				bundler.AssertWarning (4173, "The registrar can't compute the block signature for the delegate of type System.MulticastDelegate in the method D.D5 because System.MulticastDelegate doesn't have a specific signature.", "testApp.cs", 30);
 				bundler.AssertWarning (4174, "Unable to locate the block to delegate conversion method for the method D.D3's parameter #1.", "testApp.cs", 18);
+				bundler.AssertWarning (4176, "Unable to locate the delegate to block conversion type for the return value of the method D.D4.", "testApp.cs", 24);
+				bundler.AssertWarning (4176, "Unable to locate the delegate to block conversion type for the return value of the method D.D5.", "testApp.cs", 30);
+				bundler.AssertWarning (4176, "Unable to locate the delegate to block conversion type for the return value of the method D.D6.", "testApp.cs", 36);
 				bundler.AssertErrorCount (2);
-				bundler.AssertWarningCount (3);
+				bundler.AssertWarningCount (6);
 			}
 		}
 
