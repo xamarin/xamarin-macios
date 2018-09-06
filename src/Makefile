@@ -168,11 +168,7 @@ $(IOS_BUILD_DIR)/reference/System.Drawing.dll: $(IOS_SYSTEM_DRAWING_SOURCES) mon
 		$(IOS_SYSTEM_DRAWING_SOURCES)
 
 $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll: $(IOS_BUILD_DIR)/native-64/Xamarin.iOS.dll | $(IOS_BUILD_DIR)/reference
-	@# Don't strip, btouch-native needs to execute code from Xamarin.iOS,
-	@# and that'll break if we strip out the code from the reference assembly.
-	@# Note that there is only btouch-native executable for both 32 and 64 bits.
-	@#$(Q_GEN) mono-cil-strip $< $@
-	$(Q) cp $< $@
+	$(Q_GEN) mono-cil-strip $< $@
 
 $(IOS_BUILD_DIR)/reference/Xamarin.iOS.pdb: $(IOS_BUILD_DIR)/native-64/Xamarin.iOS.pdb | $(IOS_BUILD_DIR)/reference
 	$(Q) cp $< $@
@@ -753,11 +749,7 @@ $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS%dll $(WATCH_BUILD_DIR)/watch-32/Xama
 		$(WATCHOS_SOURCES) @$(WATCH_BUILD_DIR)/watch/generated_sources
 
 $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll: $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS.dll | $(WATCH_BUILD_DIR)/reference
-	@# Don't strip, bwatch needs to execute code from Xamarin.WatchOS (attributes),
-	@# and that'll break if we strip out the code from the reference assembly.
-	@# Note that there is only bwatch executable for both 32 and 64 bits.
-	@#$(Q_GEN) mono-cil-strip $< $@
-	$(Q) cp $< $@
+	$(Q_GEN) mono-cil-strip $< $@
 
 $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.pdb: $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS.pdb | $(WATCH_BUILD_DIR)/reference
 	$(Q) cp $< $@
@@ -966,10 +958,7 @@ $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS%dll $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVO
 		$(TVOS_SOURCES) @$(TVOS_BUILD_DIR)/tvos/generated_sources
 
 $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll: $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS.dll | $(TVOS_BUILD_DIR)/reference
-	@# Don't strip, btv needs to execute code from Xamarin.TVOS (attributes),
-	@# and that'll break if we strip out the code from the reference assembly.
-	@#$(Q_GEN) mono-cil-strip $< $@
-	$(Q) cp $< $@
+	$(Q_GEN) mono-cil-strip $< $@
 
 $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.pdb: $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS.pdb | $(TVOS_BUILD_DIR)/reference
 	$(Q) cp $< $@
@@ -1060,8 +1049,8 @@ TVOS_TARGETS += \
 	$(PROJECT_DIR)/MonoTouch.NUnitLite.tvos.csproj                                       \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll             \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/Xamarin.TVOS.pdb             \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.TVOS.dll                        \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.TVOS.pdb                        \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.TVOS.dll                        \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.TVOS.pdb                        \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/System.Net.Http.dll          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/System.Net.Http.pdb          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/OpenTK-1.0.dll               \
@@ -1088,10 +1077,10 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/%.config: $(TVOS_BUILD_D
 	$(Q) install -m 0644 $< $@
 
 # the actual architecture-specific versions
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.TVOS.dll: $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.TVOS.dll: $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits
 	$(Q) install -m 0755 $< $@
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.TVOS.pdb: $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.TVOS.pdb: $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits
 	$(Q) install -m 0644 $< $@
 
 $(TVOS_TARGETS_DIRS):

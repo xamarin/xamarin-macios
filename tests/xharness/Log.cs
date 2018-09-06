@@ -366,6 +366,15 @@ namespace xharness
 			}
 		}
 
+		public override StreamReader GetReader ()
+		{
+			if (File.Exists (CapturePath)) {
+				return new StreamReader (new FileStream (CapturePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+			} else {
+				return new StreamReader (new MemoryStream ());
+			}
+		}
+
 		public override void Flush ()
 		{
 			base.Flush ();

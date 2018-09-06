@@ -747,6 +747,13 @@ namespace LinkSdk {
 		
 		[Test]
 		// https://bugzilla.novell.com/show_bug.cgi?id=650402
+#if __WATCHOS__
+		// Fails with:
+		//     System.ExecutionEngineException : Attempting to JIT compile method 'System.Data.DataColumn:set_Expression (string)' while running in aot-only mode.
+		// because DataColumn.set_Expression uses filter clauses, which we don't support with bitcode:
+		//     LLVM failed for 'DataColumn.set_Expression': non-finally/catch/fault clause.
+		[Ignore ("https://bugzilla.xamarin.com/show_bug.cgi?id=59987")]
+#endif
 		public void ForeignKey_650402 ()
 		{
 			DataSet data = new DataSet ();

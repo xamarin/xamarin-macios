@@ -1183,6 +1183,45 @@ namespace NS {
 		}
 
 		[Test]
+		public void MT4176 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var code = @"
+namespace NS {
+	using System;
+	using Foundation;
+	using ObjCRuntime;
+
+	public class Consumer : NSObject
+	{
+		[Export (""getAction"")]
+		public Action GetFunction ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		[Export (""getProperty"")]
+		public Action GetProperty {
+			get {
+				throw new NotImplementedException ();
+			}
+		}
+	}
+}
+
+";
+				mtouch.Linker = MTouchLinker.DontLink; // faster
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.CreateTemporaryApp (extraCode: code, extraArg: "-debug");
+				mtouch.WarnAsError = new int [] { 4176 };
+				mtouch.AssertExecuteFailure ("build");
+				mtouch.AssertError (4176, "Unable to locate the delegate to block conversion type for the return value of the method NS.Consumer.GetFunction.", "testApp.cs", 11);
+				mtouch.AssertError (4176, "Unable to locate the delegate to block conversion type for the return value of the method NS.Consumer.get_GetProperty.", "testApp.cs", 17);
+				mtouch.AssertErrorCount (2);
+			}
+		}
+
+		[Test]
 		public void NoWarnings ()
 		{
 			var code = @"
