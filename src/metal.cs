@@ -3310,7 +3310,7 @@ namespace Metal {
 
 		[Abstract]
 		[Export ("indirectRenderCommandAtIndex:")]
-		IMTLIndirectRenderCommand CreateIndirectRenderCommand (nuint commandIndex);
+		IMTLIndirectRenderCommand GetCommand (nuint commandIndex);
 	}
 
 	[NoiOS, NoTV, Mac (10,14, onlyOn64: true)]
