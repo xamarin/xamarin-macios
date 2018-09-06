@@ -52,7 +52,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<MtouchProjectDirectory>$(MSBuildProjectDirectory)</MtouchProjectDirectory>
 		<MtouchEnableSGenConc Condition="'$(MtouchEnableSGenConc)' == ''">False</MtouchEnableSGenConc>
 		<MtouchUseInterpreter Condition="'$(MtouchUseInterpreter)' == ''">False</MtouchUseInterpreter>
-		<MtouchUseInterpreterMixed Condition="'$(MtouchUseInterpreterMixed)' == ''">False</MtouchUseInterpreterMixed>
+		<MtouchInterpreter Condition="'$(MtouchInterpreter)' == ''">all</MtouchInterpreter>
 		<MtouchVerbosity Condition="$(MtouchVerbosity) == ''">2</MtouchVerbosity>
 
 		<IsMacEnabled>true</IsMacEnabled>

@@ -462,7 +462,7 @@ namespace Xamarin.Bundler {
 			if (EnableLLVMOnlyBitCode)
 				return false;
 
-			if (UseInterpreter || UseInterpreterMixed)
+			if (IsInterpreted (Assembly.GetIdentity (assembly)))
 				return true;
 
 			switch (Platform) {
@@ -2124,8 +2124,20 @@ namespace Xamarin.Bundler {
 
 		public void BundleAssemblies ()
 		{
-			/* TODO: must be more fine-grained for UseInterpreterMixed case */
-			var strip = !UseInterpreter && !UseInterpreterMixed && ManagedStrip && IsDeviceBuild && !EnableDebug && !PackageManagedDebugSymbols;
+			Assembly.StripAssembly strip = ((path) => 
+			{
+				if (!ManagedStrip)
+					return false;
+				if (!IsDeviceBuild)
+					return false;
+				if (EnableDebug)
+					return false;
+				if (PackageManagedDebugSymbols)
+					return false;
+				if (IsInterpreted (Assembly.GetIdentity (path)))
+					return false;
+				return true;
+			});
 
 			var grouped = Targets.SelectMany ((Target t) => t.Assemblies).GroupBy ((Assembly asm) => asm.Identity);
 			foreach (var @group in grouped) {

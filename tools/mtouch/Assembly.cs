@@ -54,16 +54,7 @@ namespace Xamarin.Bundler {
 
 		public bool IsAOTCompiled {
 			get {
-				if (App.UseInterpreter)
-					/* interpreter only requires a few stubs that are attached
-					 * to mscorlib.dll, other assemblies won't be AOT compiled */
-					return FileName == "mscorlib.dll";
-				if (App.UseInterpreterMixed)
-					/* TODO: for now, only (fully) AOT compile mscorlib.dll. We
-					 * need an additional option to drive what assemblies
-					 * should be AOT compiled */
-					return FileName == "mscorlib.dll";
-				return true;
+				return App.IsAOTCompiled (Identity);
 			}
 		}
 
@@ -113,15 +104,18 @@ namespace Xamarin.Bundler {
 			ComputeDependencies (exceptions);
 		}
 
+		public delegate bool StripAssembly (string path);
+
 		// returns false if the assembly was not copied (because it was already up-to-date).
-		public bool CopyAssembly (string source, string target, bool copy_debug_symbols = true, bool strip = false)
+		public bool CopyAssembly (string source, string target, bool copy_debug_symbols = true, StripAssembly strip = null)
 		{
 			var copied = false;
 
 			try {
-				if (!Application.IsUptodate (source, target) && (strip || !Cache.CompareAssemblies (source, target))) {
+				var strip_assembly = strip != null && strip (source);
+				if (!Application.IsUptodate (source, target) && (strip_assembly || !Cache.CompareAssemblies (source, target))) {
 					copied = true;
-					if (strip) {
+					if (strip_assembly) {
 						Driver.FileDelete (target);
 						Directory.CreateDirectory (Path.GetDirectoryName (target));
 						MonoTouch.Tuner.Stripper.Process (source, target);
@@ -200,7 +194,7 @@ namespace Xamarin.Bundler {
 		// Aot data is copied separately, because we might want to copy aot data 
 		// even if we don't want to copy the assembly (if 32/64-bit assemblies are identical, 
 		// only one is copied, but we still want the aotdata for both).
-		public void CopyToDirectory (string directory, bool reload = true, bool check_case = false, bool only_copy = false, bool copy_debug_symbols = true, bool strip = false)
+		public void CopyToDirectory (string directory, bool reload = true, bool check_case = false, bool only_copy = false, bool copy_debug_symbols = true, StripAssembly strip = null)
 		{
 			var target = Path.Combine (directory, FileName);
 

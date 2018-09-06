@@ -832,7 +832,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			EnableBitcode="$(MtouchEnableBitcode)"
 			EnableSGenConc="$(MtouchEnableSGenConc)"
 			UseInterpreter="$(MtouchUseInterpreter)"
-			UseInterpreterMixed="$(MtouchUseInterpreterMixed)"
+			Interpreter="$(MtouchInterpreter)"
 			AppExtensionReferences="@(_ResolvedAppExtensionReferences)"
 			ArchiveSymbols="$(MonoSymbolArchive)"
 			Verbosity="$(MtouchVerbosity)"

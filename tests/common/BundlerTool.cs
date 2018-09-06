@@ -74,6 +74,7 @@ namespace Xamarin.Tests
 		public int Verbosity;
 		public int [] WarnAsError; // null array: nothing passed to mtouch/mmp. empty array: pass --warnaserror (which means makes all warnings errors).
 		public string [] XmlDefinitions;
+		public string Interpreter;
 
 		// These are a bit smarter
 		public bool NoPlatformAssemblyReference;
@@ -291,7 +292,12 @@ namespace Xamarin.Tests
 					sb.Append (" --xml:").Append (StringUtils.Quote (xd));
 			}
 
-
+			if (Interpreter != null) {
+				if (Interpreter.Length == 0)
+					sb.Append (" --interpreter");
+				else
+					sb.Append (" --interpreter=").Append (Interpreter);
+			}
 		}
 
 		public string CreateTemporaryDirectory ()

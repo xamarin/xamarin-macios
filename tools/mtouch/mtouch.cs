@@ -455,8 +455,8 @@ namespace Xamarin.Bundler
 			bool enable_debug = app.EnableDebug;
 			bool enable_debug_symbols = app.PackageManagedDebugSymbols;
 			bool llvm_only = app.EnableLLVMOnlyBitCode;
-			bool interp = app.UseInterpreter;
-			bool interp_mixed = app.UseInterpreterMixed;
+			bool interp = app.IsInterpreted (Assembly.GetIdentity (filename));
+			bool interp_full = !interp && app.UseInterpreter && fname == "mscorlib.dll";
 			bool is32bit = (abi & Abi.Arch32Mask) > 0;
 			string arch = abi.AsArchString ();
 
@@ -477,7 +477,7 @@ namespace Xamarin.Bundler
 				args.Append ("llvmonly,");
 			else if (interp)
 				args.Append ("interp,");
-			else if (interp_mixed)
+			else if (interp_full)
 				args.Append ("interp,full,");
 			else
 				args.Append ("full,");
@@ -644,7 +644,7 @@ namespace Xamarin.Bundler
 						sw.WriteLine ("xamarin_profiler_symbol_def xamarin_profiler_symbol = NULL;");
 					}
 
-					if (app.UseInterpreter || app.UseInterpreterMixed) {
+					if (app.UseInterpreter) {
 						sw.WriteLine ("extern \"C\" { void mono_ee_interp_init (const char *); }");
 						sw.WriteLine ("extern \"C\" { void mono_icall_table_init (void); }");
 						sw.WriteLine ("extern \"C\" { void mono_marshal_ilgen_init (void); }");
@@ -660,7 +660,7 @@ namespace Xamarin.Bundler
 
 					if (app.EnableLLVMOnlyBitCode)
 						sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_LLVMONLY);");
-					else if (app.UseInterpreter || app.UseInterpreterMixed) {
+					else if (app.UseInterpreter) {
 						sw.WriteLine ("\tmono_icall_table_init ();");
 						sw.WriteLine ("\tmono_marshal_ilgen_init ();");
 						sw.WriteLine ("\tmono_method_builder_ilgen_init ();");
@@ -869,7 +869,7 @@ namespace Xamarin.Bundler
 			if (app.EnableSGenConc)
 				return false;
 
-			if (app.UseInterpreter || app.UseInterpreterMixed)
+			if (app.UseInterpreter)
 				return false;
 
 			if (app.Registrar == RegistrarMode.Static)
@@ -1250,8 +1250,14 @@ namespace Xamarin.Bundler
 						app.LLVMOptimizations [asm] = opt;
 				}
 			},
-			{ "interpreter", "Enable the *experimental* interpreter.", v => { app.UseInterpreter = true; }},
-			{ "interp-mixed", "Enable the *experimental* interpreter mixed with AOT mode.", v => { app.UseInterpreterMixed = true; }},
+			{ "interpreter:", "Enable the *experimental* interpreter. Optionally takes a comma-separated list of assemblies to interpret (if prefixed with a minus sign, the assembly will be AOT-compiled instead). 'all' can be used to specify all assemblies. This argument can be specified multiple times.", v =>
+				{ 
+					app.UseInterpreter = true;
+					if (!string.IsNullOrEmpty (v)) {
+							app.InterpretedAssemblies.AddRange (v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
+					}
+				}
+			},
 			{ "http-message-handler=", "Specify the default HTTP message handler for HttpClient", v => { http_message_handler = v; }},
 			{ "output-format=", "Specify the output format for some commands. Possible values: Default, XML", v =>
 				{
