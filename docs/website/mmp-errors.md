@@ -378,6 +378,20 @@ will be shown.
 
 Reference: https://github.com/xamarin/xamarin-macios/issues/4072
 
+### <a name="MM4176"/>MM4176: Unable to locate the delegate to block conversion type for the return value of the method {method}.
+
+This is a warning indicating that the static registrar couldn't find the type
+used to convert a delegate to an Objective-C block. An attempt will be made at
+runtime to find the method, but it will likely fail as well (with an MM8009
+exception).
+
+One possible reason for this warning is when manually writing bindings for API
+that uses blocks. It's recommended to use a binding project to bind
+Objective-C code, in particular when it involves blocks, since it's quite
+complicated to get it right when doing it manually.
+
+If this is not the case, please file a bug at [https://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=Xamarin.Mac) with a test case.
+
 # MM5xxx: GCC and toolchain
 
 ## MM51xx: compilation

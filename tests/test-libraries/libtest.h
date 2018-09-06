@@ -148,15 +148,29 @@ typedef unsigned int (^RegistrarTestBlock) (unsigned int magic);
 -(void) idAsIntPtr: (id)p1;
 @end
 
+typedef void (^int_callback)(int32_t magic_number);
 @protocol ObjCProtocolBlockTest
 @required
-	-(void) requiredCallback: (void (^)(int32_t magic_number))completionHandler;
-	+(void) requiredStaticCallback: (void (^)(int32_t magic_number))completionHandler;
+	-(void) requiredCallback: (int_callback)completionHandler;
+	+(void) requiredStaticCallback: (int_callback)completionHandler;
+	-(int_callback) requiredReturnValue;
+	+(int_callback) requiredStaticReturnValue;
 @optional
-	-(void) optionalCallback: (void (^)(int32_t magic_number))completionHandler;
-	+(void) optionalStaticCallback: (void (^)(int32_t magic_number))completionHandler;
+	-(void) optionalCallback: (int_callback)completionHandler;
+	+(void) optionalStaticCallback: (int_callback)completionHandler;
+	-(int_callback) optionalReturnValue;
+	+(int_callback) optionalStaticReturnValue;
 @end
 
+typedef void (^simple_callback)();
+@protocol ProtocolWithBlockProperties
+@required
+	@property simple_callback myRequiredProperty;
+	@property (class) simple_callback myRequiredStaticProperty;
+@optional
+	@property simple_callback myOptionalProperty;
+	@property (class) simple_callback myOptionalStaticProperty;
+@end
 @interface ObjCBlockTester : NSObject {
 }
 @property (retain) NSObject<ObjCProtocolBlockTest>* TestObject;
@@ -175,6 +189,12 @@ typedef void (^outerBlock) (innerBlock callback);
 
 -(void) testFreedBlocks;
 +(int) freedBlockCount;
+
++(void) callProtocolWithBlockProperties: (id<ProtocolWithBlockProperties>) obj required: (bool) required instance: (bool) instance;
++(void) callProtocolWithBlockReturnValue: (id<ObjCProtocolBlockTest>) obj required: (bool) required instance: (bool) instance;
+
++(void) setProtocolWithBlockProperties: (id<ProtocolWithBlockProperties>) obj required: (bool) required instance: (bool) instance;
++(int) calledBlockCount;
 @end
 
 @interface FreedNotifier : NSObject {
