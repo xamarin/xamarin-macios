@@ -447,9 +447,9 @@ namespace ObjCRuntime {
 			return ObjectWrapper.Convert (CreateBlockProxy ((MethodInfo) ObjectWrapper.Convert (method), block));
 		}
 			
-		static IntPtr CreateDelegateProxy (IntPtr method, IntPtr @delegate, IntPtr signature)
+		static IntPtr CreateDelegateProxy (IntPtr method, IntPtr @delegate, IntPtr signature, uint token_ref)
 		{
-			return BlockLiteral.GetBlockForDelegate ((MethodInfo) ObjectWrapper.Convert (method), ObjectWrapper.Convert (@delegate), Marshal.PtrToStringAuto (signature));
+			return BlockLiteral.GetBlockForDelegate ((MethodInfo) ObjectWrapper.Convert (method), ObjectWrapper.Convert (@delegate), token_ref, Marshal.PtrToStringAuto (signature));
 		}
 
 		static unsafe Assembly GetEntryAssembly ()
@@ -776,6 +776,48 @@ namespace ObjCRuntime {
 			return null;
 		}
 
+		internal static ProtocolMemberAttribute GetProtocolMemberAttribute (Type type, string selector, MethodInfo method)
+		{
+			var memberAttributes = type.GetCustomAttributes<ProtocolMemberAttribute> ();
+			if (memberAttributes == null)
+				return null;
+
+			foreach (var attrib in memberAttributes) {
+				if (attrib.IsStatic != method.IsStatic)
+					continue;
+
+				if (attrib.Selector != selector)
+					continue;
+
+				if (!attrib.IsProperty) {
+					var methodParameters = method.GetParameters ();
+					if ((attrib.ParameterType?.Length ?? 0) != methodParameters.Length)
+						continue;
+					var notApplicable = false;
+					for (int i = 0; i < methodParameters.Length; i++) {
+						var paramType = methodParameters [i].ParameterType;
+						var isByRef = paramType.IsByRef;
+						if (isByRef)
+							paramType = paramType.GetElementType ();
+						if (isByRef != attrib.ParameterByRef [i]) {
+							notApplicable = true;
+							break;
+						}
+						if (paramType != attrib.ParameterType [i]) {
+							notApplicable = true;
+							break;
+						}
+					}
+					if (notApplicable)
+						continue;
+				}
+
+				return attrib;
+			}
+
+			return null;
+		}
+
 		//
 		// Returns a MethodInfo that represents the method that can be used to turn
 		// a the block in the given method at the given parameter into a strongly typed
@@ -824,39 +866,11 @@ namespace ObjCRuntime {
 				// We may run into binding assemblies built with earlier versions of the generator,
 				// which means we can't rely on finding the BlockProxy attribute in the ProtocolMemberAttribute.
 				if (selector == null)
-					selector = method.GetCustomAttribute<ExportAttribute> ()?.Selector ?? string.Empty;
+					selector = GetExportAttribute (method)?.Selector ?? string.Empty;
 				if (!string.IsNullOrEmpty (selector)) {
-					var memberAttributes = iface.GetCustomAttributes<ProtocolMemberAttribute> ();
-					foreach (var attrib in memberAttributes) {
-						if (attrib.ParameterBlockProxy == null || attrib.ParameterBlockProxy.Length <= parameter || attrib.ParameterBlockProxy [parameter] == null)
-							continue; // no need to check anything if what we want isn't there
-						if (attrib.Selector != selector)
-							continue;
-						if (attrib.IsStatic != method.IsStatic)
-							continue;
-						var methodParameters = method.GetParameters ();
-						if (attrib.ParameterType.Length != methodParameters.Length)
-							continue;
-						var notApplicable = false;
-						for (int i = 0; i < methodParameters.Length; i++) {
-							var paramType = methodParameters [i].ParameterType;
-							var isByRef = paramType.IsByRef;
-							if (isByRef)
-								paramType = paramType.GetElementType ();
-							if (isByRef != attrib.ParameterByRef [i]) {
-								notApplicable = true;
-								break;
-							}
-							if (paramType != attrib.ParameterType [i]) {
-								notApplicable = true;
-								break;
-							}
-						}
-						if (notApplicable)
-							continue;
-						
+					var attrib = GetProtocolMemberAttribute (iface, selector, method);
+					if (attrib != null && attrib.ParameterBlockProxy.Length > parameter && attrib.ParameterBlockProxy [parameter] != null)
 						return attrib.ParameterBlockProxy [parameter].GetMethod ("Create");
-					}
 				}
 
 				// Might be an implementation of an optional protocol member.
@@ -1010,6 +1024,31 @@ namespace ObjCRuntime {
 			}
 		}
 
+		internal static PropertyInfo FindPropertyInfo (MethodInfo accessor)
+		{
+			if (!accessor.IsSpecialName)
+				return null;
+
+			foreach (var pi in accessor.DeclaringType.GetProperties ()) {
+				if (pi.GetGetMethod () == accessor)
+					return pi;
+				if (pi.GetSetMethod () == accessor)
+					return pi;
+			}
+
+			return null;
+		}
+
+		internal static ExportAttribute GetExportAttribute (MethodInfo method)
+		{
+			var attrib = method.GetCustomAttribute<ExportAttribute> ();
+			if (attrib == null) {
+				var pinfo = FindPropertyInfo (method);
+				if (pinfo != null)
+					attrib = pinfo.GetCustomAttribute<ExportAttribute> ();
+			}
+			return attrib;
+		}
 
 		static NSObject IgnoreConstructionError (IntPtr ptr, IntPtr klass, Type type)
 		{

@@ -289,6 +289,22 @@ namespace Bindings.Test {
 		[Static]
 		[Export ("optionalStaticCallback:")]
 		void OptionalStaticCallback (Action<int> completionHandler);
+
+		[Abstract]
+		[Export ("requiredReturnValue")]
+		Action<int> RequiredReturnValue ();
+
+		[Abstract]
+		[Static]
+		[Export ("requiredStaticReturnValue")]
+		Action<int> RequiredStaticReturnValue ();
+
+		[Export ("optionalReturnValue")]
+		Action<int> OptionalReturnValue ();
+
+		[Static]
+		[Export ("optionalStaticReturnValue")]
+		Action<int> OptionalStaticReturnValue ();
 	}
 
 	interface IObjCProtocolBlockTest { }
@@ -339,6 +355,23 @@ namespace Bindings.Test {
 		[Static]
 		[Export ("freedBlockCount")]
 		int FreedBlockCount { get; }
+
+		[Static]
+		[Export ("calledBlockCount")]
+		int CalledBlockCount { get; }
+
+		[Static]
+		[Export ("callProtocolWithBlockProperties:required:instance:")]
+		void CallProtocolWithBlockProperties (IProtocolWithBlockProperties obj, bool required, bool instance);
+
+		[Static]
+		[Export ("callProtocolWithBlockReturnValue:required:instance:")]
+		void CallProtocolWithBlockReturnValue (IObjCProtocolBlockTest obj, bool required, bool instance);
+
+		[Static]
+		[Export ("setProtocolWithBlockProperties:required:instance:")]
+		void SetProtocolWithBlockProperties (IProtocolWithBlockProperties obj, bool required, bool instance);
+
 	}
 
 	delegate void InnerBlock (int magic_number);
@@ -350,6 +383,28 @@ namespace Bindings.Test {
 		[Export ("evilCallback")]
 		Action<int> EvilCallback { get; set; }
 	}
+
+	delegate void SimpleCallback ();
+	[BaseType (typeof (NSObject))]
+	[Protocol]
+	interface ProtocolWithBlockProperties {
+		[Abstract]
+		[Export ("myRequiredProperty")]
+		SimpleCallback MyRequiredProperty { get; set; }
+
+		[Export ("myOptionalProperty")]
+		SimpleCallback MyOptionalProperty { get; set; }
+
+		[Static]
+		[Abstract]
+		[Export ("myRequiredStaticProperty")]
+		SimpleCallback MyRequiredStaticProperty { get; set; }
+
+		[Static]
+		[Export ("myOptionalStaticProperty")]
+		SimpleCallback MyOptionalStaticProperty { get; set; }
+	}
+	interface IProtocolWithBlockProperties { }
 }
 
 

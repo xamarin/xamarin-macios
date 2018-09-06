@@ -1397,10 +1397,62 @@ namespace Registrar {
 			return rv;
 		}
 
+		public DelegateProxyAttribute GetDelegateProxyAttribute (MethodDefinition method)
+		{
+			if (!TryGetAttribute (method.MethodReturnType, ObjCRuntime, "DelegateProxyAttribute", out var attrib))
+				return null;
+
+			var rv = new DelegateProxyAttribute ();
+
+			switch (attrib.ConstructorArguments.Count) {
+			case 1:
+				rv.DelegateType = ((TypeReference) attrib.ConstructorArguments [0].Value).Resolve ();
+				break;
+			default:
+				throw ErrorHelper.CreateError (4124, "Invalid DelegateProxyAttribute found on '{0}'. Please file a bug report at https://bugzilla.xamarin.com", ((MethodReference) method)?.FullName);
+			}
+
+			return rv;
+		}
+
 		protected override string PlatformName {
 			get {
 				return App.PlatformName;
 			}
+		}
+
+		ProtocolMemberAttribute GetProtocolMemberAttribute (TypeReference type, string selector, ObjCMethod obj_method, MethodDefinition method)
+		{
+			var memberAttributes = GetProtocolMemberAttributes (type);
+			foreach (var attrib in memberAttributes) {
+				if (attrib.IsStatic != method.IsStatic)
+					continue;
+
+				if (attrib.IsProperty) {
+					if (method.IsSetter && attrib.SetterSelector != selector)
+						continue;
+					else if (method.IsGetter && attrib.GetterSelector != selector)
+						continue;
+				} else {
+					if (attrib.Selector != selector)
+						continue;
+				}
+
+				if (!obj_method.IsPropertyAccessor) {
+					var attribParameters = new TypeReference [attrib.ParameterType?.Length ?? 0];
+					for (var i = 0; i < attribParameters.Length; i++) {
+						attribParameters [i] = attrib.ParameterType [i];
+						if (attrib.ParameterByRef [i])
+							attribParameters [i] = new ByReferenceType (attribParameters [i]);
+					}
+					if (!ParametersMatch (method.Parameters, attribParameters))
+						continue;
+				}
+
+				return attrib;
+			}
+
+			return null;
 		}
 
 		protected override IEnumerable<ProtocolMemberAttribute> GetProtocolMemberAttributes (TypeReference type)
@@ -1433,6 +1485,9 @@ namespace Registrar {
 						break;
 					case "ReturnType":
 						rv.ReturnType = (TypeReference)prop.Argument.Value;
+						break;
+					case "ReturnTypeDelegateProxy":
+						rv.ReturnTypeDelegateProxy = (TypeReference) prop.Argument.Value;
 						break;
 					case "ParameterType":
 						if (prop.Argument.Value != null) {
@@ -3071,8 +3126,7 @@ namespace Registrar {
 			sb.WriteLine (map.ToString ());
 			sb.WriteLine (map_init.ToString ());
 
-			if (exceptions.Count > 0)
-				throw new AggregateException (exceptions);
+			ErrorHelper.ThrowIfErrors (exceptions);
 		}
 
 		static bool HasIntPtrBoolCtor (TypeDefinition type)
@@ -3680,7 +3734,7 @@ namespace Registrar {
 								if (creatorMethod != null) {
 									token = $"0x{CreateTokenReference (creatorMethod, TokenType.Method):X} /* {creatorMethod.FullName} */ ";
 								} else {
-									ErrorHelper.Show (ErrorHelper.CreateWarning (App, 4174, method.Method, "Unable to locate the block to delegate conversion method for the method {0}'s parameter #{1}.",
+									exceptions.Add (ErrorHelper.CreateWarning (App, 4174, method.Method, "Unable to locate the block to delegate conversion method for the method {0}'s parameter #{1}.",
 														     method.DescriptiveMethodName, i + 1));
 								}
 							}
@@ -3832,6 +3886,7 @@ namespace Registrar {
 						setup_return.AppendLine ("res = nsstr;");
 					} else if (IsDelegate (type.Resolve ())) {
 						var signature = "NULL";
+						var token = "INVALID_TOKEN_REF";
 						if (App.Optimizations.OptimizeBlockLiteralSetupBlock == true) {
 							if (type.Is ("System", "Delegate") || type.Is ("System", "MulticastDelegate")) {
 								ErrorHelper.Show (ErrorHelper.CreateWarning (App, 4173, method.Method, $"The registrar can't compute the block signature for the delegate of type {type.FullName} in the method {descriptiveMethodName} because {type.FullName} doesn't have a specific signature."));
@@ -3843,8 +3898,14 @@ namespace Registrar {
 									signature = "\"" + ComputeSignature (method.DeclaringType.Type, null, method, isBlockSignature: true) + "\"";
 								}
 							}
+							var delegateProxyType = GetDelegateProxyType (method);
+							if (delegateProxyType != null) {
+								token = $"0x{CreateTokenReference (delegateProxyType, TokenType.TypeDef):X} /* {delegateProxyType.FullName} */ ";
+							} else {
+								exceptions.Add (ErrorHelper.CreateWarning (App, 4176, method.Method, "Unable to locate the delegate to block conversion type for the return value of the method {0}.", method.DescriptiveMethodName));
+							}
 						}
-						setup_return.AppendLine ("res = xamarin_get_block_for_delegate (managed_method, retval, {0}, &exception_gchandle);", signature);
+						setup_return.AppendLine ("res = xamarin_get_block_for_delegate (managed_method, retval, {0}, {1}, &exception_gchandle);", signature, token);
 						setup_return.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 					} else {
 						throw ErrorHelper.CreateError (4104, 
@@ -4049,6 +4110,52 @@ namespace Registrar {
 			}
 		}
 
+		TypeDefinition GetDelegateProxyType (ObjCMethod obj_method)
+		{
+			// A mirror of this method is also implemented in BlockLiteral:GetDelegateProxyType
+			// If this method is changed, that method will probably have to be updated too (tests!!!)
+			MethodDefinition method = obj_method.Method;
+			MethodDefinition first = method;
+			MethodDefinition last = null;
+			while (method != last) {
+				last = method;
+				var delegateProxyType = GetDelegateProxyAttribute (method);
+				if (delegateProxyType?.DelegateType != null)
+					return delegateProxyType.DelegateType;
+
+				method = GetBaseMethodInTypeHierarchy (method);
+			}
+
+			// Might be the implementation of an interface method, so find the corresponding
+			// MethodDefinition for the interface, and check for DelegateProxy attributes there as well.
+			var map = PrepareMethodMapping (first.DeclaringType);
+			if (map != null && map.TryGetValue (first, out var list)) {
+				if (list.Count != 1)
+					throw Shared.GetMT4127 (first, list);
+				var delegateProxyType = GetDelegateProxyAttribute (list [0]);
+				if (delegateProxyType?.DelegateType != null)
+					return delegateProxyType.DelegateType;
+			}
+
+			// Might be an implementation of an optional protocol member.
+			if (obj_method.DeclaringType.Protocols != null) {
+				string selector = null;
+
+				foreach (var proto in obj_method.DeclaringType.Protocols) {
+					// We store the DelegateProxy type in the ProtocolMemberAttribute, so check those.
+					if (selector == null)
+						selector = obj_method.Selector ?? string.Empty;
+					if (selector != null) {
+						var attrib = GetProtocolMemberAttribute (proto.Type, selector, obj_method, method);
+						if (attrib?.ReturnTypeDelegateProxy != null)
+							return attrib.ReturnTypeDelegateProxy.Resolve ();
+					}
+				}
+			}
+
+			return null;
+		}
+
 		MethodDefinition GetBlockWrapperCreator (ObjCMethod obj_method, int parameter)
 		{
 			// A mirror of this method is also implemented in Runtime:GetBlockWrapperCreator
@@ -4087,48 +4194,35 @@ namespace Registrar {
 					if (selector == null)
 						selector = obj_method.Selector ?? string.Empty;
 					if (selector != null) {
-						var memberAttributes = GetProtocolMemberAttributes (proto.Type);
-						foreach (var attrib in memberAttributes) {
-							if (attrib.ParameterBlockProxy == null || attrib.ParameterBlockProxy.Length <= parameter || attrib.ParameterBlockProxy [parameter] == null)
-								continue; // no need to check anything if what we want isn't there
-							if (attrib.Selector != selector)
-								continue;
-							if (attrib.IsStatic != method.IsStatic)
-								continue;
-							var attribParameters = new TypeReference [attrib.ParameterType?.Length ?? 0];
-							for (var i = 0; i < attribParameters.Length; i++) {
-								attribParameters [i] = attrib.ParameterType [i];
-								if (attrib.ParameterByRef [i])
-									attribParameters [i] = new ByReferenceType (attribParameters [i]);
-							}
-							if (!ParametersMatch (method.Parameters, attribParameters))
-								continue;
-
+						var attrib = GetProtocolMemberAttribute (proto.Type, selector, obj_method, method);
+						if (attrib?.ParameterBlockProxy?.Length > parameter && attrib.ParameterBlockProxy [parameter] != null)
 							return attrib.ParameterBlockProxy [parameter].Resolve ().Methods.First ((v) => v.Name == "Create");
+					}
+
+					if (proto.Methods != null) {
+						foreach (var pMethod in proto.Methods) {
+							if (!pMethod.IsOptional)
+								continue;
+							if (pMethod.Name != method.Name)
+								continue;
+							if (!TypeMatch (pMethod.ReturnType, method.ReturnType))
+								continue;
+							if (ParametersMatch (method.Parameters, pMethod.Parameters))
+								continue;
+
+							MethodDefinition extensionMethod = pMethod.Method;
+							if (extensionMethod == null) {
+								MapProtocolMember (obj_method.Method, out extensionMethod);
+								if (extensionMethod == null)
+									return null;
+							}
+
+							var createMethod = GetBlockProxyAttributeMethod (extensionMethod, parameter + 1);
+							if (createMethod != null)
+								return createMethod;
 						}
 					}
 
-					foreach (var pMethod in proto.Methods) {
-						if (!pMethod.IsOptional)
-							continue;
-						if (pMethod.Name != method.Name)
-							continue;
-						if (!TypeMatch (pMethod.ReturnType, method.ReturnType))
-							continue;
-						if (ParametersMatch (method.Parameters, pMethod.Parameters))
-							continue;
-						
-						MethodDefinition extensionMethod = pMethod.Method;
-						if (extensionMethod == null) {
-							MapProtocolMember (obj_method.Method, out extensionMethod);
-							if (extensionMethod == null)
-								return null;
-						}
-													
-						var createMethod = GetBlockProxyAttributeMethod (extensionMethod, parameter + 1);
-						if (createMethod != null)
-							return createMethod;
-					}
 				}
 			}
 
@@ -4843,6 +4937,11 @@ namespace Registrar {
 		public TypeDefinition Type { get; set; }
 	}
 
+	class DelegateProxyAttribute : Attribute
+	{
+		public TypeDefinition DelegateType { get; set; }
+	}
+
 	class BindAsAttribute : Attribute
 	{
 		public BindAsAttribute (TypeReference type)
@@ -4863,6 +4962,7 @@ namespace Registrar {
 		public string Name { get; set; }
 		public string Selector { get; set; }
 		public TypeReference ReturnType { get; set; }
+		public TypeReference ReturnTypeDelegateProxy { get; set; }
 		public TypeReference[] ParameterType { get; set; }
 		public bool[] ParameterByRef { get; set; }
 		public TypeReference [] ParameterBlockProxy { get; set; }

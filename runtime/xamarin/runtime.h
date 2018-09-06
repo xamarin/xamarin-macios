@@ -176,7 +176,7 @@ MonoType *		xamarin_get_parameter_type (MonoMethod *managed_method, int index);
 MonoObject *	xamarin_get_nsobject_with_type_for_ptr (id self, bool owns, MonoType* type, SEL selector, MonoMethod *managed_method, guint32 *exception_gchandle);
 MonoObject *	xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *type, int32_t *created, SEL selector, MonoMethod *managed_method, guint32 *exception_gchandle);
 int *			xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref, int par, void *nativeBlock, guint32 *exception_gchandle);
-id              xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate, const char *signature /* NULL allowed, but requires the dynamic registrar at runtime to compute */, guint32 *exception_gchandle);
+id              xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate, const char *signature /* NULL allowed, but requires the dynamic registrar at runtime to compute */, guint32 token_ref /* INVALID_TOKEN_REF allowed, but requires the dynamic registrar at runtime */, guint32 *exception_gchandle);
 id				xamarin_get_nsobject_handle (MonoObject *obj);
 void			xamarin_set_nsobject_handle (MonoObject *obj, id handle);
 uint8_t         xamarin_get_nsobject_flags (MonoObject *obj);
