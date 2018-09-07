@@ -4856,6 +4856,7 @@ namespace Registrar {
 			header.WriteLine ("#pragma clang diagnostic ignored \"-Wdeprecated-declarations\"");
 			header.WriteLine ("#pragma clang diagnostic ignored \"-Wtypedef-redefinition\""); // temporary hack until we can stop including glib.h
 			header.WriteLine ("#pragma clang diagnostic ignored \"-Wobjc-designated-initializers\"");
+			header.WriteLine ("#pragma clang diagnostic ignored \"-Wunguarded-availability-new\"");
 
 			if (App.EnableDebug) {
 				header.WriteLine ("#define DEBUG 1");
