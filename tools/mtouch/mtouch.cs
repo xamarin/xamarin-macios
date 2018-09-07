@@ -1254,7 +1254,7 @@ namespace Xamarin.Bundler
 				{ 
 					app.UseInterpreter = true;
 					if (!string.IsNullOrEmpty (v)) {
-							app.InterpretedAssemblies.AddRange (v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
+						app.InterpretedAssemblies.AddRange (v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
 					}
 				}
 			},
