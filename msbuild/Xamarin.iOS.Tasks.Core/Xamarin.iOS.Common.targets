@@ -831,7 +831,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			UseThumb="$(MtouchUseThumb)"
 			EnableBitcode="$(MtouchEnableBitcode)"
 			EnableSGenConc="$(MtouchEnableSGenConc)"
-			UseInterpreter="$(MtouchUseInterpreter)"
 			Interpreter="$(MtouchInterpreter)"
 			AppExtensionReferences="@(_ResolvedAppExtensionReferences)"
 			ArchiveSymbols="$(MonoSymbolArchive)"
