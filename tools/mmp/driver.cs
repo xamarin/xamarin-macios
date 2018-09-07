@@ -505,6 +505,7 @@ namespace Xamarin.Bundler {
 			if (verbose > 0)
 				Console.WriteLine ("Selected target framework: {0}; API: {1}", targetFramework, IsClassic ? "Classic" : "Unified");
 
+			Log (1, $"Selected Linking: '{App.LinkMode}'");
 
 			if (action == Action.RunRegistrar) {
 				App.Registrar = RegistrarMode.Static;
