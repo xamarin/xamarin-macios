@@ -106,7 +106,6 @@ namespace Xamarin.iOS.Tasks
 		[Required]
 		public bool EnableSGenConc { get; set; }
 
-		[Required]
 		public string Interpreter { get; set; }
 
 		[Required]
