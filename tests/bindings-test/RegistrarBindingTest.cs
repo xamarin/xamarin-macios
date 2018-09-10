@@ -245,5 +245,49 @@ namespace Xamarin.BindingTests
 				ObjCBlockTester.CallProtocolWithBlockReturnValue (pb, required, instance);
 			}
 		}
+
+		[Test]
+		[TestCase (true, true)]
+		[TestCase (true, false)]
+		[TestCase (false, true)]
+		[TestCase (false, false)]
+		public void LinkedAway (bool required, bool instance)
+		{
+			if (!(TestRuntime.IsLinkAll && TestRuntime.IsOptimizeAll))
+				Assert.Ignore ("This test is only applicable if optimized & linking all assemblies.");
+
+			using (var pb = new FakePropertyBlock ()) {
+				try {
+					Messaging.void_objc_msgSend_IntPtr_bool_bool (Class.GetHandle (typeof (ObjCBlockTester)), Selector.GetHandle ("setProtocolWithBlockProperties:required:instance:"), pb.Handle, required, instance);
+					Assert.Fail ("Expected an MT8028 error");
+				} catch (RuntimeException re) {
+					Assert.AreEqual (8028, re.Code, "Code");
+					Assert.AreEqual ("The runtime function get_block_wrapper_creator has been linked away.", re.Message, "Message");
+				}
+			}
+		}
+
+		// Each method here will show a warning like this:
+		//     MT4174: Unable to locate the block to delegate conversion method for the method ...
+		// This is expected.
+		// This is 'fake' because it doesn't implement the ProtocolWithBlockProperties protocol,
+		// which means that XI won't be able to find the delegate<->block conversion methods
+		// (either at runtime or build time).
+		// The point of this test is to ensure that we don't crash when the runtime tries
+		// to find those conversion methods, and instead finds that many required functions
+		// have been linked away (which happen when _forcing_ the dynamic registrar to be linked away).
+		public class FakePropertyBlock : NSObject {
+			[Export ("myOptionalProperty")]
+			public SimpleCallback MyOptionalProperty { get; set; }
+
+			[Export ("myRequiredProperty")]
+			public SimpleCallback MyRequiredProperty { get; set; }
+
+			[Export ("myOptionalStaticProperty")]
+			public static SimpleCallback MyOptionalStaticProperty { get; set; }
+
+			[Export ("myRequiredStaticProperty")]
+			public static SimpleCallback MyRequiredStaticProperty { get; set; }
+		}
 	}
 }

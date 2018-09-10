@@ -522,3 +522,8 @@ There are a few reasons this may happen:
 
 * It could be a bug in Xamarin.Mac. If this is the case, please file a bug at
   [https://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=Xamarin.Mac).
+
+### <a name="MM8028"/>MM8028: The runtime function {function} has been linked away.
+
+This usually indicates a bug in Xamarin.Mac, because runtime functions should
+not be linked away if they're needed. Please [submit an issue](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions).

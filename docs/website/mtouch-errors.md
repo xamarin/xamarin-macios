@@ -2541,3 +2541,8 @@ There are a few reasons this may happen:
 
 * It could be a bug in Xamarin.iOS. If this is the case, please file a bug at
   [https://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
+
+### <a name="MT8028"/>MT8028: The runtime function {function} has been linked away.
+
+This usually indicates a bug in Xamarin.iOS, because runtime functions should
+not be linked away if they're needed. Please [submit an issue](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions).
