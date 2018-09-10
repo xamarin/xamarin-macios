@@ -68,7 +68,7 @@ namespace NaturalLanguage {
 	public enum NLLanguage {
 		[DefaultEnumValue]
 		[Field (null)]
-		Unevaludated,
+		Unevaluated,
 		[Field ("NLLanguageUndetermined")]
 		Undetermined,
 		[Field ("NLLanguageAmharic")]
