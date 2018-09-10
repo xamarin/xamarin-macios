@@ -703,6 +703,21 @@ public class B : A {}
 		}
 
 		[Test]
+		public void MT0032 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Debug = false;
+				mtouch.CustomArguments = new string[] { "--debugtrack:true" };
+				mtouch.WarnAsError = new int[] { 32 };
+				mtouch.CreateTemporaryApp ();
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (32, "The option '--debugtrack' is ignored unless '--debug' is also specified.");
+				mtouch.AssertErrorCount (1);
+				mtouch.AssertWarningCount (0);
+			}
+		}
+
+		[Test]
 		[TestCase (Profile.iOS, Profile.tvOS)]
 		[TestCase (Profile.iOS, Profile.watchOS)]
 		[TestCase (Profile.tvOS, Profile.iOS)]
