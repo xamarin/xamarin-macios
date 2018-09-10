@@ -38,9 +38,7 @@ bool xamarin_detect_unified_build = false;
 #if MONOMAC
 bool xamarin_use_new_assemblies = false;
 #endif
-#if MONOTOUCH && DEBUG && (defined (__i386__) || defined (__x86_64__))
-bool xamarin_gc_pump = true;
-#else
+#if DEBUG
 bool xamarin_gc_pump = false;
 #endif
 #if MONOMAC
@@ -2216,8 +2214,10 @@ xamarin_get_is_unified ()
 void
 xamarin_set_gc_pump_enabled (bool value)
 {
+#if DEBUG
 	// COOP: no managed memory access: any mode.
 	xamarin_gc_pump = value;
+#endif
 }
 
 const char *
