@@ -7,17 +7,10 @@
 // Copyright 2018 Microsoft Corp. All rights reserved.
 //
 
-#if !__WATCHOS__ 
-
 using System;
 using System.Collections.Generic;
-#if XAMCORE_2_0
 using Foundation;
 using NaturalLanguage;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.NaturalLanguage;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.NaturalLanguage {
@@ -41,38 +34,26 @@ namespace MonoTouchFixtures.NaturalLanguage {
 		}
 
 		[Test]
-		public void GetLanguageHypothesesTest ()
+		public void Process ()
 		{
 			using (var recognizer = new NLLanguageRecognizer ()) {
 				var languages = new Dictionary<NLLanguage, double> () {
 					{ NLLanguage.German, 1 },
 					{ NLLanguage.Spanish, 10 },
 				};
+				Assert.That (recognizer.LanguageHints.Count, Is.EqualTo (0), "LanguageHints/0");
 				recognizer.LanguageHints = languages;
+				Assert.That (recognizer.LanguageHints.Count, Is.EqualTo (2), "LanguageHints/2");
 
+				Assert.That (recognizer.DominantLanguage, Is.EqualTo (NLLanguage.Unevaludated), "DominantLanguage/Pre-Process");
 				var text = "Die Kleinen haben friedlich zusammen gespielt.";
 				recognizer.Process (text);
+				Assert.That (recognizer.DominantLanguage, Is.EqualTo (NLLanguage.German), "DominantLanguage/Post-Process");
+
 				// just test that we do return something. We are not testing the API perse.
 				var hypo = recognizer.GetLanguageHypotheses (5);
-				Assert.AreNotEqual (0, hypo.Keys.Count);
-			}
-		}
-
-		[Test]
-		public void LanguageHintsTest ()
-		{
-			var languages = new Dictionary<NLLanguage, double> () {
-				{ NLLanguage.German, 1 },
-				{ NLLanguage.Spanish, 10 },
-			};
-			using (var recognizer = new NLLanguageRecognizer ()) {
-				// testing setter
-				recognizer.LanguageHints = languages;
-				// testing getter
-				Assert.AreEqual (languages.Keys.Count, recognizer.LanguageHints.Keys.Count, "Size");
+				Assert.That (hypo.Count, Is.GreaterThan (0), "GetLanguageHypotheses");
 			}
 		}
 	}
 }
-
-#endif // !__WATCHOS__
