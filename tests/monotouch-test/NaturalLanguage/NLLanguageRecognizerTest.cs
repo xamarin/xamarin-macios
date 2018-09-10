@@ -45,7 +45,7 @@ namespace MonoTouchFixtures.NaturalLanguage {
 				recognizer.LanguageHints = languages;
 				Assert.That (recognizer.LanguageHints.Count, Is.EqualTo (2), "LanguageHints/2");
 
-				Assert.That (recognizer.DominantLanguage, Is.EqualTo (NLLanguage.Unevaludated), "DominantLanguage/Pre-Process");
+				Assert.That (recognizer.DominantLanguage, Is.EqualTo (NLLanguage.Unevaluated), "DominantLanguage/Pre-Process");
 				var text = "Die Kleinen haben friedlich zusammen gespielt.";
 				recognizer.Process (text);
 				Assert.That (recognizer.DominantLanguage, Is.EqualTo (NLLanguage.German), "DominantLanguage/Post-Process");
