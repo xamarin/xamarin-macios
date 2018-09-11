@@ -239,6 +239,7 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		extern static /* CFDictionaryRef */ IntPtr SecCertificateCopyValues (/* SecCertificateRef */ IntPtr certificate, /* CFArrayRef */ IntPtr keys, /* CFErrorRef _Nullable * */ IntPtr error);
 
+		[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'GetKey' instead.")]
 		public NSData GetPublicKey ()
 		{
 			if (handle == IntPtr.Zero)
@@ -270,12 +271,26 @@ namespace Security {
 		static extern /* __nullable SecKeyRef */ IntPtr SecCertificateCopyPublicKey (IntPtr /* SecCertificateRef */ certificate);
 
 		[iOS (10,3)]
+		[Deprecated (PlatformName.iOS, 12,0, message: "Use 'GetKey' instead.")]
+		[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'GetKey' instead.")]
+		[Deprecated (PlatformName.WatchOS, 5,0, message: "Use 'GetKey' instead.")]
 		public SecKey GetPublicKey ()
 		{
 			IntPtr data = SecCertificateCopyPublicKey (handle);
 			return (data == IntPtr.Zero) ? null : new SecKey (data, true);
 		}
 #endif
+		[TV (12,0)][Mac (10,14, onlyOn64: true)][iOS (12,0)][Watch (5,0)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern IntPtr /* SecKeyRef* */ SecCertificateCopyKey (IntPtr /* SecKeyRef* */ key);
+
+		[TV (12,0)][Mac (10,14, onlyOn64: true)][iOS (12,0)][Watch (5,0)]
+		public SecKey GetKey ()
+		{
+			var key = SecCertificateCopyKey (handle);
+			return key == IntPtr.Zero ? null : new SecKey (key, true);
+		}
+
 		[iOS (10,3)] // [Mac (10,5)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ int SecCertificateCopyCommonName (IntPtr /* SecCertificateRef */ certificate, out IntPtr /* CFStringRef * __nonnull CF_RETURNS_RETAINED */ commonName);

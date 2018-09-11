@@ -530,6 +530,9 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (cert.GetSerialNumber (out err).Description, Is.EqualTo ("<2b9f7ee5 ca25a625 14204782 753a9bb9>"), "GetSerialNumber/NSError");
 				Assert.Null (err, "err") ;
 			}
+			if (TestRuntime.CheckXcodeVersion (10,0)) {
+				Assert.NotNull (cert.GetKey (), "GetKey");
+			}
 		}
 
 		[Test]
