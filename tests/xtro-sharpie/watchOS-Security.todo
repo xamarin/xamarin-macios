@@ -1,13 +1,6 @@
-!missing-pinvoke! sec_certificate_copy_ref is not bound
 !missing-pinvoke! sec_protocol_metadata_create_secret is not bound
 !missing-pinvoke! sec_protocol_metadata_create_secret_with_context is not bound
 !missing-pinvoke! sec_protocol_options_set_challenge_block is not bound
 !missing-pinvoke! sec_protocol_options_set_verify_block is not bound
 !missing-pinvoke! SecCertificateCopyKey is not bound
 !missing-pinvoke! SecTrustEvaluateWithError is not bound
-!missing-protocol! OS_sec_certificate not bound
-!missing-protocol! OS_sec_identity not bound
-!missing-protocol! OS_sec_object not bound
-!missing-protocol! OS_sec_protocol_metadata not bound
-!missing-protocol! OS_sec_protocol_options not bound
-!missing-protocol! OS_sec_trust not bound
