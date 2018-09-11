@@ -282,6 +282,10 @@ namespace MonoTouchFixtures.Security {
 			using (SecKey pkey = trust.GetPublicKey ()) {
 				Assert.That (CFGetRetainCount (pkey.Handle), Is.GreaterThanOrEqualTo ((nint) 1), "RetainCount(pkey)");
 			}
+			if (TestRuntime.CheckXcodeVersion (10,0)) {
+				Assert.False (trust.Evaluate (out var error), "Evaluate");
+				Assert.NotNull (error, "error");
+			}
 		}
 
 		[Test]
@@ -357,6 +361,10 @@ namespace MonoTouchFixtures.Security {
 
 				// since we modified the `trust` instance it's result was invalidated (marked as unspecified on iOS 11)
 				Assert.That (trust.GetTrustResult (), Is.EqualTo (trust_result), "GetTrustResult-2");
+			}
+			if (TestRuntime.CheckXcodeVersion (10,0)) {
+				Assert.True (trust.Evaluate (out var error), "Evaluate");
+				Assert.Null (error, "error");
 			}
 		}
 
