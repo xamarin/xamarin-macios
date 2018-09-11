@@ -475,11 +475,15 @@ namespace Xamarin.Bundler
 			args.Append (app.AotArguments);
 			if (llvm_only)
 				args.Append ("llvmonly,");
-			else if (interp)
+			else if (interp) {
+				if (fname != "mscorlib.dll")
+					throw ErrorHelper.CreateError (99, $"Internal error: can only enable the interpreter for mscorlib.dll when AOT-compiling assemblies (tried to interpret {fname}). Please file an issue at https://github.com/xamarin/xamarin-macios/issues/new.");
 				args.Append ("interp,");
-			else if (interp_full)
+			} else if (interp_full) {
+				if (fname != "mscorlib.dll")
+					throw ErrorHelper.CreateError (99, $"Internal error: can only enable the interpreter for mscorlib.dll when AOT-compiling assemblies (tried to interpret {fname}). Please file an issue at https://github.com/xamarin/xamarin-macios/issues/new."); 
 				args.Append ("interp,full,");
-			else
+			} else
 				args.Append ("full,");
 
 			var aname = Path.GetFileNameWithoutExtension (fname);
