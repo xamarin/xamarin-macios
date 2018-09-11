@@ -18,3 +18,11 @@
 ## identical to NSObject version (headers macros) which can be called by CFObject
 !missing-pinvoke! sec_release is not bound
 !missing-pinvoke! sec_retain is not bound
+
+## the following are manualy bound as NativeObject
+!missing-protocol! OS_sec_certificate not bound
+!missing-protocol! OS_sec_identity not bound
+!missing-protocol! OS_sec_object not bound
+!missing-protocol! OS_sec_protocol_metadata not bound
+!missing-protocol! OS_sec_protocol_options not bound
+!missing-protocol! OS_sec_trust not bound
