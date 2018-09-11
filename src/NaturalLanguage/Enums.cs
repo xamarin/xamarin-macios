@@ -67,6 +67,8 @@ namespace NaturalLanguage {
 	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0), Watch (5,0)]
 	public enum NLLanguage {
 		[DefaultEnumValue]
+		[Field (null)]
+		Unevaluated,
 		[Field ("NLLanguageUndetermined")]
 		Undetermined,
 		[Field ("NLLanguageAmharic")]
@@ -200,71 +202,4 @@ namespace NaturalLanguage {
 		[Field ("NLTagSchemeScript")]
 		Script,
 	}
-
-	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0), Watch (5,0)]
-	public enum NLTag {
-		[Field ("NLTagWord")]
-		Word,
-		[Field ("NLTagPunctuation")]
-		Punctuation,
-		[Field ("NLTagWhitespace")]
-		Whitespace,
-		[Field ("NLTagOther")]
-		Other, 
-		[Field ("NLTagNoun")]
-		Noun,
-		[Field ("NLTagVerb")]
-		Verb,
-		[Field ("NLTagAdjective")]
-		Adjective,
-		[Field ("NLTagAdverb")]
-		Adverb,
-		[Field ("NLTagPronoun")]
-		Pronoun,
-		[Field ("NLTagDeterminer")]
-		Determiner,
-		[Field ("NLTagParticle")]
-		Particle,
-		[Field ("NLTagPreposition")]
-		Preposition,
-		[Field ("NLTagNumber")]
-		Number,
-		[Field ("NLTagConjunction")]
-		Conjunction,
-		[Field ("NLTagInterjection")]
-		Interjection,
-		[Field ("NLTagClassifier")]
-		Classifier,
-		[Field ("NLTagIdiom")]
-		Idiom,
-		[Field ("NLTagOtherWord")]
-		OtherWord,
-		[Field ("NLTagSentenceTerminator")]
-		SentenceTerminator,
-		[Field ("NLTagOpenQuote")]
-		OpenQuote,
-		[Field ("NLTagCloseQuote")]
-		CloseQuote,
-		[Field ("NLTagOpenParenthesis")]
-		OpenParenthesis, 
-		[Field ("NLTagCloseParenthesis")]
-		CloseParenthesis,
-		[Field ("NLTagWordJoiner")]
-		WordJoiner,
-		[Field ("NLTagDash")]
-		Dash,
-		[Field ("NLTagOtherPunctuation")]
-		OtherPunctuation,
-		[Field ("NLTagParagraphBreak")]
-		ParagraphBreak,
-		[Field ("NLTagOtherWhitespace")]
-		OtherWhitespace,
-		[Field ("NLTagPersonalName")]
-		PersonalName,
-		[Field ("NLTagPlaceName")]
-		PlaceName,
-		[Field ("NLTagOrganizationName")]
-		OrganizationName, 
-	}
-
 }
