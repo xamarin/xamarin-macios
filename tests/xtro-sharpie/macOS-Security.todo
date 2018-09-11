@@ -1,5 +1,4 @@
 !missing-field! kSecCodeInfoRuntimeVersion not bound
-!missing-pinvoke! sec_certificate_copy_ref is not bound
 !missing-pinvoke! sec_protocol_metadata_create_secret is not bound
 !missing-pinvoke! sec_protocol_metadata_create_secret_with_context is not bound
 !missing-pinvoke! sec_protocol_options_set_challenge_block is not bound

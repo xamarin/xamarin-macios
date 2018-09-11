@@ -171,10 +171,10 @@ namespace NaturalLanguage {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("initWithTagSchemes:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSString[] tagSchemes);
+		IntPtr Constructor ([Params] NSString[] tagSchemes);
 
 		[Wrap ("this (Array.ConvertAll (tagSchemes, e => e.GetConstant ()))")]
-		IntPtr Constructor (NLTagScheme[] tagSchemes);
+		IntPtr Constructor ([Params] NLTagScheme[] tagSchemes);
 
 		[Internal]
 		[Export ("tagSchemes", ArgumentSemantic.Copy)]
@@ -215,17 +215,18 @@ namespace NaturalLanguage {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("tagAtIndex:unit:scheme:tokenRange:")]
 		[return: NullAllowed]
-		NSString GetTag (nuint characterIndex, NLTokenUnit unit, NSString scheme, [NullAllowed] NSRange tokenRange);
+		NSString GetTag (nuint characterIndex, NLTokenUnit unit, NSString scheme, out NSRange tokenRange);
 
-		[Wrap ("NLTagExtensions.GetValue (GetTag (characterIndex, unit, scheme.GetConstant (), tokenRange))")]
-		NLTag GetTag (nuint characterIndex, NLTokenUnit unit, NLTagScheme scheme, [NullAllowed] NSRange tokenRange);
+		[return: NullAllowed]
+		[Wrap ("GetTag (characterIndex, unit, scheme.GetConstant (), out tokenRange)")]
+		NSString GetTag (nuint characterIndex, NLTokenUnit unit, NLTagScheme scheme, out NSRange tokenRange);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("tagsInRange:unit:scheme:options:tokenRanges:")]
 		NSString[] GetTags (NSRange range, NLTokenUnit unit, NSString scheme, NLTaggerOptions options, [NullAllowed] out NSValue[] tokenRanges);
 
-		[Wrap ("Array.ConvertAll (GetTags (range, unit, scheme.GetConstant (), options, out tokenRanges), e => NLTagExtensions.GetValue (e))")]
-		NLTag[] GetTags (NSRange range, NLTokenUnit unit, NLTagScheme scheme, NLTaggerOptions options, [NullAllowed] out NSValue[] tokenRanges);
+		[Wrap ("GetTags (range, unit, scheme.GetConstant (), options, out tokenRanges)")]
+		NSString[] GetTags (NSRange range, NLTokenUnit unit, NLTagScheme scheme, NLTaggerOptions options, [NullAllowed] out NSValue[] tokenRanges);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("setLanguage:range:")]
@@ -250,5 +251,72 @@ namespace NaturalLanguage {
 
 		[Wrap ("GetModels (tagScheme.GetConstant ())")]
 		NLModel[] GetModels (NLTagScheme tagScheme);
+	}
+
+	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0), Watch (5,0)]
+	[Static] // only used to compare with NSString not as input/output
+	interface NLTag {
+		[Field ("NLTagWord")]
+		NSString Word { get; }
+		[Field ("NLTagPunctuation")]
+		NSString Punctuation { get; }
+		[Field ("NLTagWhitespace")]
+		NSString Whitespace { get; }
+		[Field ("NLTagOther")]
+		NSString Other { get; }
+		[Field ("NLTagNoun")]
+		NSString Noun { get; }
+		[Field ("NLTagVerb")]
+		NSString Verb { get; }
+		[Field ("NLTagAdjective")]
+		NSString Adjective { get; }
+		[Field ("NLTagAdverb")]
+		NSString Adverb { get; }
+		[Field ("NLTagPronoun")]
+		NSString Pronoun { get; }
+		[Field ("NLTagDeterminer")]
+		NSString Determiner { get; }
+		[Field ("NLTagParticle")]
+		NSString Particle { get; }
+		[Field ("NLTagPreposition")]
+		NSString Preposition { get; }
+		[Field ("NLTagNumber")]
+		NSString Number { get; }
+		[Field ("NLTagConjunction")]
+		NSString Conjunction { get; }
+		[Field ("NLTagInterjection")]
+		NSString Interjection { get; }
+		[Field ("NLTagClassifier")]
+		NSString Classifier { get; }
+		[Field ("NLTagIdiom")]
+		NSString Idiom { get; }
+		[Field ("NLTagOtherWord")]
+		NSString OtherWord { get; }
+		[Field ("NLTagSentenceTerminator")]
+		NSString SentenceTerminator { get; }
+		[Field ("NLTagOpenQuote")]
+		NSString OpenQuote { get; }
+		[Field ("NLTagCloseQuote")]
+		NSString CloseQuote { get; }
+		[Field ("NLTagOpenParenthesis")]
+		NSString OpenParenthesis { get; }
+		[Field ("NLTagCloseParenthesis")]
+		NSString CloseParenthesis { get; }
+		[Field ("NLTagWordJoiner")]
+		NSString WordJoiner { get; }
+		[Field ("NLTagDash")]
+		NSString Dash { get; }
+		[Field ("NLTagOtherPunctuation")]
+		NSString OtherPunctuation { get; }
+		[Field ("NLTagParagraphBreak")]
+		NSString ParagraphBreak { get; }
+		[Field ("NLTagOtherWhitespace")]
+		NSString OtherWhitespace { get; }
+		[Field ("NLTagPersonalName")]
+		NSString PersonalName { get; }
+		[Field ("NLTagPlaceName")]
+		NSString PlaceName { get; }
+		[Field ("NLTagOrganizationName")]
+		NSString OrganizationName { get; }
 	}
 }

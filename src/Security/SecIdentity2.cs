@@ -51,7 +51,7 @@ namespace Security {
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern static IntPtr sec_identity_copy_ref (IntPtr handle);
+		extern static /* SecIdentityRef */ IntPtr sec_identity_copy_ref (/* OS_sec_identity */ IntPtr handle);
 
 		public SecIdentity Identity => new SecIdentity (sec_identity_copy_ref (GetCheckedHandle ()), owns: true);
 
