@@ -846,6 +846,7 @@ HEALTHKIT_API_SOURCES = \
 	HealthKit/Enums.cs \
 
 HEALTHKIT_SOURCES = \
+	HealthKit/EnumsCompat.cs \
 	HealthKit/HKAnchoredObjectQuery.cs \
 	HealthKit/HKObjectType.cs \
 	HealthKit/HKObsolete.cs \
