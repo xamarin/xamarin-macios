@@ -27,34 +27,60 @@ namespace MonoTouchFixtures.Network {
 		string host;
 		NWPath path;
 		List<NWInterface> interfaces = new List<NWInterface> ();
+		NWConnection connection;
 
-		[SetUp]
-		public void SetUp ()
+		[TestFixtureSetUp]
+		public void Init ()
 		{
 			TestRuntime.AssertXcodeVersion (10, 0);
+			// we want to use a single connection, since it is expensive
 			connectedEvent = new AutoResetEvent(false);
 			interfaces = new List<NWInterface> ();
-			host = "wwww.google.com";
+			host = "www.google.com";
 			// we create a connection which we are going to use to get the availabe
 			// interfaces, that way we can later test protperties of the NWParameters class.
 			using (var parameters = NWParameters.CreateUdp ())
 			using (var endpoint = NWEndpoint.Create (host, "80"))
-			using (var connection = new NWConnection (endpoint, parameters)) {
+			{
+				connection = new NWConnection (endpoint, parameters);
+				connection.SetQueue (DispatchQueue.DefaultGlobalQueue); // important, else we will get blocked
 				connection.SetStateChangeHandler (ConnectionStateHandler);
-				connection.SetQueue (DispatchQueue.MainQueue);
-				connection.Start ();
-				connectedEvent.WaitOne (500);
-				path = connection.CurrentPath;
-				path.EnumerateInterfaces (EnumerateInterfacesHandler);
+				connection.Start (); 
+				Assert.True (connectedEvent.WaitOne (20000), "Connection timed out.");
 			}
+		}
+
+		[TestFixtureTearDown]
+		public void Dispose()
+		{
+			connection?.Cancel ();
+		}
+
+		[SetUp]
+		public void SetUp ()
+		{
+
+			path = connection.CurrentPath;
+			path.EnumerateInterfaces (EnumerateInterfacesHandler);
+			Assert.That (interfaces.Count, Is.GreaterThan (0), "interfaces.Count");
 		}
 
 		void ConnectionStateHandler (NWConnectionState state, NWError error)
 		{
-			var errno = (SslStatus)(error != null ? error.ErrorCode : 0);
+			Console.WriteLine ($"State is {state} and error {error}");
 			switch (state){
 			case NWConnectionState.Ready:
 				connectedEvent.Set ();
+				break;
+			case NWConnectionState.Cancelled:
+				connection?.Dispose ();
+				connection = null;
+				foreach (var i in interfaces)
+					i.Dispose ();
+				break;
+			case NWConnectionState.Invalid:
+			case NWConnectionState.Failed:
+				Assert.Inconclusive ("Network connection could not be performed.");
 				break;
 			}
 		}
@@ -67,10 +93,7 @@ namespace MonoTouchFixtures.Network {
 		[TearDown]
 		public void TearDown ()
 		{
-			if (path != null)
-				path.Dispose ();
-			foreach (var i in interfaces)
-				i.Dispose ();
+			path?.Dispose ();
 		}
 
 		[Test]
@@ -82,25 +105,35 @@ namespace MonoTouchFixtures.Network {
 		[Test]
 		public void IsExpensivePropertyTest ()
 		{
-			Assert.False (path.IsExpensive, "Path was not expected to be expensive.");
+			Assert.False (path.IsExpensive, "Path was not expected to be expensive."); // To be tested as part of NWProtocolStack
 		} 
 
 		[Test]
 		public void HasIPV4PropertyTest ()
 		{
-			Assert.False (path.HasIPV4);
+#if !MONOMAC	
+			if (Runtime.Arch != Arch.DEVICE)
+				Assert.False (path.HasIPV4, "By default the interface does not support IPV4 on the simulator"); 
+			else
+#endif
+				Assert.True (path.HasIPV4, "By default the interface does support IPV4 on the device");
 		}
 
 		[Test]
 		public void HasIPV6PropertyTest ()
 		{
-			Assert.False (path.HasIPV6);
+			Assert.False (path.HasIPV6, "By default the interface does not support IPV6"); // To be tested as part of NWProtocolStack
 		}
 
 		[Test]
 		public void HasDnsPropertyTest ()
 		{
-			Assert.False (path.HasDns);
+#if !MONOMAC	
+			if (Runtime.Arch != Arch.DEVICE)
+				Assert.False (path.HasDns,  "By default the interface does not support DNS on the simulator");
+			else
+#endif
+				Assert.True (path.HasDns,  "By default the interface does support DNS on the device");
 		}
 
 		[Test]
@@ -119,7 +152,7 @@ namespace MonoTouchFixtures.Network {
 				i.Dispose ();
 			interfaces = new List<NWInterface> ();
 			path.EnumerateInterfaces (EnumerateInterfacesHandler);
-			Assert.AreNotEqual (0, interfaces.Count, "We should have at least on interface.");
+			Assert.That (interfaces.Count, Is.GreaterThan (0), "interfaces.Count");
 		}
 	}
 }
