@@ -51,7 +51,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<MtouchUseThumb Condition="'$(MtouchUseThumb)' == ''">False</MtouchUseThumb>
 		<MtouchProjectDirectory>$(MSBuildProjectDirectory)</MtouchProjectDirectory>
 		<MtouchEnableSGenConc Condition="'$(MtouchEnableSGenConc)' == ''">False</MtouchEnableSGenConc>
-		<MtouchUseInterpreter Condition="'$(MtouchUseInterpreter)' == ''">False</MtouchUseInterpreter>
 		<MtouchVerbosity Condition="$(MtouchVerbosity) == ''">2</MtouchVerbosity>
 
 		<IsMacEnabled>true</IsMacEnabled>
