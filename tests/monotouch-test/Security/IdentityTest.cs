@@ -42,5 +42,14 @@ namespace MonoTouchFixtures.Security {
 				Assert.NotNull (id.Certificate, "Certificate");
 			}
 		}
+
+		[Test]
+		public void I2 ()
+		{
+			using (var i1 = GetIdentity ()) 
+			using (var i2 = new SecIdentity2 (i1)) {
+				Assert.That (i1.Certificate.GetCommonName (), Is.EqualTo (i2.Identity.Certificate.GetCommonName ()), "GetCommonName");
+			}
+		}
 	}
 }
