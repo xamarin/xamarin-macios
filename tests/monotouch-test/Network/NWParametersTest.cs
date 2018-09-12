@@ -29,32 +29,65 @@ namespace MonoTouchFixtures.Network {
 		bool secureConnectionWasSet = false;
 		bool protocolConfigured = false;
 		List<NWInterface> interfaces = new List<NWInterface> ();
+		string host;
+ 		NWConnection connection;
 
-		[SetUp]
-		public void SetUp ()
+
+		[TestFixtureSetUp]
+		public void Init ()
 		{
 			TestRuntime.AssertXcodeVersion (10, 0);
-			secureEvent = new AutoResetEvent(false);
-			configureEvent = new AutoResetEvent(false);
+			// we want to use a single connection, since it is expensive
 			connectedEvent = new AutoResetEvent(false);
-			secureConnectionWasSet = false;
-			protocolConfigured = false;
+			host = "www.google.com";
 			interfaces = new List<NWInterface> ();
-			// we create a connection which we are going to use to get the availabe
-			// interfaces, that way we can later test protperties of the NWParameters class.
 			using (var parameters = NWParameters.CreateUdp ())
-			using (var endpoint = NWEndpoint.Create ("wwww.google.com", "80"))
-			using (var connection = new NWConnection (endpoint, parameters)) {
+			using (var endpoint = NWEndpoint.Create (host, "80")) {
+				connection = new NWConnection (endpoint, parameters);
+				connection.SetQueue (DispatchQueue.DefaultGlobalQueue); // important, else we will get blocked
 				connection.SetStateChangeHandler (ConnectionStateHandler);
-				connection.SetQueue (DispatchQueue.MainQueue);
-				connection.Start ();
-				connectedEvent.WaitOne (500);
+				connection.Start (); 
+				Assert.True (connectedEvent.WaitOne (20000), "Connection timed out.");
 				using (var path = connection.CurrentPath)
 				{
 					path.EnumerateInterfaces (EnumerateInterfacesHandler);
 				}
-			}
+ 			}
+ 		}
+
+		[TestFixtureTearDown]
+		public void Dispose()
+		{
+			connection?.Cancel ();
 		}
+
+		[SetUp]
+		public void SetUp ()
+		{
+			secureEvent = new AutoResetEvent(false);
+			configureEvent = new AutoResetEvent(false);
+			secureConnectionWasSet = false;
+			protocolConfigured = false;
+		}
+
+ 		void ConnectionStateHandler (NWConnectionState state, NWError error)
+ 		{
+ 			switch (state){
+ 			case NWConnectionState.Ready:
+ 				connectedEvent.Set ();
+ 				break;
+ 			case NWConnectionState.Cancelled:
+ 				connection?.Dispose ();
+ 				connection = null;
+				foreach (var i in interfaces)
+					i.Dispose ();
+				break;
+ 			case NWConnectionState.Invalid:
+ 			case NWConnectionState.Failed:
+ 				Assert.Inconclusive ("Network connection could not be performed.");
+ 				break;
+ 			}
+ 		}
 
 		[TearDown]
 		public void TearDown ()
@@ -62,19 +95,6 @@ namespace MonoTouchFixtures.Network {
 			secureEvent = null;
 			secureConnectionWasSet = false;
 			protocolConfigured = false;
-			foreach (var i in interfaces) {
-				i.Dispose ();
-			}
-		}
-
-		void ConnectionStateHandler (NWConnectionState state, NWError error)
-		{
-			var errno = (SslStatus)(error != null ? error.ErrorCode : 0);
-			switch (state){
-			case NWConnectionState.Ready:
-				connectedEvent.Set ();
-				break;
-			}
 		}
 
 		void EnumerateInterfacesHandler (NWInterface nwInterface)
