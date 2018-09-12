@@ -56,7 +56,15 @@ namespace MonoTouchFixtures.HealthKit {
 					break;
 				case HKQuantityTypeIdentifier.WaistCircumference:
 				case HKQuantityTypeIdentifier.VO2Max:
+				case HKQuantityTypeIdentifier.InsulinDelivery:
+				case HKQuantityTypeIdentifier.RestingHeartRate:
+				case HKQuantityTypeIdentifier.WalkingHeartRateAverage:
+				case HKQuantityTypeIdentifier.HeartRateVariabilitySdnn:
 					if (!TestRuntime.CheckXcodeVersion(9, 0))
+						continue;
+					break;
+				case HKQuantityTypeIdentifier.DistanceDownhillSnowSports:
+					if (!TestRuntime.CheckXcodeVersion (9, 2))
 						continue;
 					break;
 				}

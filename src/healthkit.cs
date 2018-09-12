@@ -1432,349 +1432,338 @@ namespace HealthKit {
 
 	[Watch (2,0)]
 	[iOS (8,0)]
-	[Static]
-	interface HKQuantityTypeIdentifierKey {
+	enum HKQuantityTypeIdentifier {
 
 		[Field ("HKQuantityTypeIdentifierBodyMassIndex")]
-		NSString BodyMassIndex { get; }
+		BodyMassIndex,
 
 		[Field ("HKQuantityTypeIdentifierBodyFatPercentage")]
-		NSString BodyFatPercentage { get; }
+		BodyFatPercentage,
 
 		[Field ("HKQuantityTypeIdentifierHeight")]
-		NSString Height { get; }
+		Height,
 
 		[Field ("HKQuantityTypeIdentifierBodyMass")]
-		NSString BodyMass { get; }
+		BodyMass,
 
 		[Field ("HKQuantityTypeIdentifierLeanBodyMass")]
-		NSString LeanBodyMass { get; }
+		LeanBodyMass,
 
 		[Field ("HKQuantityTypeIdentifierHeartRate")]
-		NSString HeartRate { get; }
+		HeartRate,
 
 		[Field ("HKQuantityTypeIdentifierStepCount")]
-		NSString StepCount { get; }
+		StepCount,
 
 		[Field ("HKQuantityTypeIdentifierDistanceWalkingRunning")]
-		NSString DistanceWalkingRunning { get; }
+		DistanceWalkingRunning,
 
 		[Field ("HKQuantityTypeIdentifierDistanceCycling")]
-		NSString DistanceCycling { get; }
-
-		[iOS (10,0), Watch (3,0)]
-		[Field ("HKQuantityTypeIdentifierDistanceWheelchair")]
-		NSString DistanceWheelchair { get; }
+		DistanceCycling,
 
 		[Field ("HKQuantityTypeIdentifierBasalEnergyBurned")]
-		NSString BasalEnergyBurned { get; }
+		BasalEnergyBurned,
 
 		[Field ("HKQuantityTypeIdentifierActiveEnergyBurned")]
-		NSString ActiveEnergyBurned { get; }
+		ActiveEnergyBurned,
 
 		[Field ("HKQuantityTypeIdentifierFlightsClimbed")]
-		NSString FlightsClimbed { get; }
+		FlightsClimbed,
 
 		[Field ("HKQuantityTypeIdentifierNikeFuel")]
-		NSString NikeFuel { get; }
-
-		[iOS (9,3), Watch (2,2)]
-		[Field ("HKQuantityTypeIdentifierAppleExerciseTime")]
-		NSString AppleExerciseTime { get; }
-
-		[iOS (10,0), Watch (3,0)]
-		[Field ("HKQuantityTypeIdentifierPushCount")]
-		NSString PushCount { get; }
-
-		[iOS (10,0), Watch (3,0)]
-		[Field ("HKQuantityTypeIdentifierDistanceSwimming")]
-		NSString DistanceSwimming { get; }
-
-		[iOS (10,0), Watch (3,0)]
-		[Field ("HKQuantityTypeIdentifierSwimmingStrokeCount")]
-		NSString SwimmingStrokeCount { get; }
+		NikeFuel,
 
 		// Blood
 		[Field ("HKQuantityTypeIdentifierOxygenSaturation")]
-		NSString OxygenSaturation { get; }
+		OxygenSaturation,
 
 		[Field ("HKQuantityTypeIdentifierBloodGlucose")]
-		NSString BloodGlucose { get; }
+		BloodGlucose,
 
 		[Field ("HKQuantityTypeIdentifierBloodPressureSystolic")]
-		NSString BloodPressureSystolic { get; }
+		BloodPressureSystolic,
 
 		[Field ("HKQuantityTypeIdentifierBloodPressureDiastolic")]
-		NSString BloodPressureDiastolic { get; }
+		BloodPressureDiastolic,
 
 		[Field ("HKQuantityTypeIdentifierBloodAlcoholContent")]
-		NSString BloodAlcoholContent { get; }
-
-		[Field ("HKQuantityTypeIdentifierForcedVitalCapacity")]
-		NSString ForcedVitalCapacity { get; }
-
-		[Field ("HKQuantityTypeIdentifierForcedExpiratoryVolume1")]
-		NSString ForcedExpiratoryVolume1 { get; }
-
-		[Field ("HKQuantityTypeIdentifierPeakExpiratoryFlowRate")]
-		NSString PeakExpiratoryFlowRate { get; }
+		BloodAlcoholContent,
 
 		[Field ("HKQuantityTypeIdentifierPeripheralPerfusionIndex")]
-		NSString PeripheralPerfusionIndex { get; }
+		PeripheralPerfusionIndex,
+
+		[Field ("HKQuantityTypeIdentifierForcedVitalCapacity")]
+		ForcedVitalCapacity,
+
+		[Field ("HKQuantityTypeIdentifierForcedExpiratoryVolume1")]
+		ForcedExpiratoryVolume1,
+
+		[Field ("HKQuantityTypeIdentifierPeakExpiratoryFlowRate")]
+		PeakExpiratoryFlowRate,
 
 		// Miscellaneous
 		[Field ("HKQuantityTypeIdentifierNumberOfTimesFallen")]
-		NSString NumberOfTimesFallen { get; }
-
-		[Field ("HKQuantityTypeIdentifierElectrodermalActivity")]
-		NSString ElectrodermalActivity { get; }
+		NumberOfTimesFallen,
 
 		[Field ("HKQuantityTypeIdentifierInhalerUsage")]
-		NSString InhalerUsage { get; }
+		InhalerUsage,
 
 		[Field ("HKQuantityTypeIdentifierRespiratoryRate")]
-		NSString RespiratoryRate { get; }
-
-		[iOS (11,0), Watch (4,0)]
-		[Field ("HKQuantityTypeIdentifierInsulinDelivery")]
-		NSString InsulinDelivery { get; }
-
-		[iOS (11,0), Watch (4,0)]
-		[Field ("HKQuantityTypeIdentifierRestingHeartRate")]
-		NSString RestingHeartRate { get; }
-
-		[iOS (11,0), Watch (4,0)]
-		[Field ("HKQuantityTypeIdentifierWalkingHeartRateAverage")]
-		NSString WalkingHeartRateAverage { get; }
-
-		[iOS (11,0), Watch (4,0)]
-		[Field ("HKQuantityTypeIdentifierHeartRateVariabilitySDNN")]
-		NSString HeartRateVariabilitySdnn { get; }
+		RespiratoryRate,
 
 		[Field ("HKQuantityTypeIdentifierBodyTemperature")]
-		NSString BodyTemperature { get; }
+		BodyTemperature,
 
 		// Nutrition
 		[Field ("HKQuantityTypeIdentifierDietaryFatTotal")]
-		NSString DietaryFatTotal { get; }
+		DietaryFatTotal,
 
 		[Field ("HKQuantityTypeIdentifierDietaryFatPolyunsaturated")]
-		NSString DietaryFatPolyunsaturated { get; }
+		DietaryFatPolyunsaturated,
 
 		[Field ("HKQuantityTypeIdentifierDietaryFatMonounsaturated")]
-		NSString DietaryFatMonounsaturated { get; }
+		DietaryFatMonounsaturated,
 
 		[Field ("HKQuantityTypeIdentifierDietaryFatSaturated")]
-		NSString DietaryFatSaturated { get; }
+		DietaryFatSaturated,
 
 		[Field ("HKQuantityTypeIdentifierDietaryCholesterol")]
-		NSString DietaryCholesterol { get; }
+		DietaryCholesterol,
 
 		[Field ("HKQuantityTypeIdentifierDietarySodium")]
-		NSString DietarySodium { get; }
+		DietarySodium,
 
 		[Field ("HKQuantityTypeIdentifierDietaryCarbohydrates")]
-		NSString DietaryCarbohydrates { get; }
+		DietaryCarbohydrates,
 
 		[Field ("HKQuantityTypeIdentifierDietaryFiber")]
-		NSString DietaryFiber { get; }
+		DietaryFiber,
 
 		[Field ("HKQuantityTypeIdentifierDietarySugar")]
-		NSString DietarySugar { get; }
+		DietarySugar,
 
 		[Field ("HKQuantityTypeIdentifierDietaryEnergyConsumed")]
-		NSString DietaryEnergyConsumed { get; }
+		DietaryEnergyConsumed,
 
 		[Field ("HKQuantityTypeIdentifierDietaryProtein")]
-		NSString DietaryProtein { get; }
+		DietaryProtein,
 
 		[Field ("HKQuantityTypeIdentifierDietaryVitaminA")]
-		NSString DietaryVitaminA { get; }
+		DietaryVitaminA,
 
 		[Field ("HKQuantityTypeIdentifierDietaryVitaminB6")]
-		NSString DietaryVitaminB6 { get; }
+		DietaryVitaminB6,
 
 		[Field ("HKQuantityTypeIdentifierDietaryVitaminB12")]
-		NSString DietaryVitaminB12 { get; }
+		DietaryVitaminB12,
 
 		[Field ("HKQuantityTypeIdentifierDietaryVitaminC")]
-		NSString DietaryVitaminC { get; }
+		DietaryVitaminC,
 
 		[Field ("HKQuantityTypeIdentifierDietaryVitaminD")]
-		NSString DietaryVitaminD { get; }
+		DietaryVitaminD,
 
 		[Field ("HKQuantityTypeIdentifierDietaryVitaminE")]
-		NSString DietaryVitaminE { get; }
+		DietaryVitaminE,
 
 		[Field ("HKQuantityTypeIdentifierDietaryVitaminK")]
-		NSString DietaryVitaminK { get; }
+		DietaryVitaminK,
 
 		[Field ("HKQuantityTypeIdentifierDietaryCalcium")]
-		NSString DietaryCalcium { get; }
+		DietaryCalcium,
 
 		[Field ("HKQuantityTypeIdentifierDietaryIron")]
-		NSString DietaryIron { get; }
+		DietaryIron,
 
 		[Field ("HKQuantityTypeIdentifierDietaryThiamin")]
-		NSString DietaryThiamin { get; }
+		DietaryThiamin,
 
 		[Field ("HKQuantityTypeIdentifierDietaryRiboflavin")]
-		NSString DietaryRiboflavin { get; }
+		DietaryRiboflavin,
 
 		[Field ("HKQuantityTypeIdentifierDietaryNiacin")]
-		NSString DietaryNiacin { get; }
+		DietaryNiacin,
 
 		[Field ("HKQuantityTypeIdentifierDietaryFolate")]
-		NSString DietaryFolate { get; }
+		DietaryFolate,
 
 		[Field ("HKQuantityTypeIdentifierDietaryBiotin")]
-		NSString DietaryBiotin { get; }
+		DietaryBiotin,
 
 		[Field ("HKQuantityTypeIdentifierDietaryPantothenicAcid")]
-		NSString DietaryPantothenicAcid { get; }
+		DietaryPantothenicAcid,
 
 		[Field ("HKQuantityTypeIdentifierDietaryPhosphorus")]
-		NSString DietaryPhosphorus { get; }
+		DietaryPhosphorus,
 
 		[Field ("HKQuantityTypeIdentifierDietaryIodine")]
-		NSString DietaryIodine { get; }
+		DietaryIodine,
 
 		[Field ("HKQuantityTypeIdentifierDietaryMagnesium")]
-		NSString DietaryMagnesium { get; }
+		DietaryMagnesium,
 
 		[Field ("HKQuantityTypeIdentifierDietaryZinc")]
-		NSString DietaryZinc { get; }
+		DietaryZinc,
 
 		[Field ("HKQuantityTypeIdentifierDietarySelenium")]
-		NSString DietarySelenium { get; }
+		DietarySelenium,
 
 		[Field ("HKQuantityTypeIdentifierDietaryCopper")]
-		NSString DietaryCopper { get; }
+		DietaryCopper,
 
 		[Field ("HKQuantityTypeIdentifierDietaryManganese")]
-		NSString DietaryManganese { get; }
+		DietaryManganese,
 
 		[Field ("HKQuantityTypeIdentifierDietaryChromium")]
-		NSString DietaryChromium { get; }
+		DietaryChromium,
 
 		[Field ("HKQuantityTypeIdentifierDietaryMolybdenum")]
-		NSString DietaryMolybdenum { get; }
+		DietaryMolybdenum,
 
 		[Field ("HKQuantityTypeIdentifierDietaryChloride")]
-		NSString DietaryChloride { get; }
+		DietaryChloride,
 
 		[Field ("HKQuantityTypeIdentifierDietaryPotassium")]
-		NSString DietaryPotassium { get; }
+		DietaryPotassium,
 
 		[Field ("HKQuantityTypeIdentifierDietaryCaffeine")]
-		NSString DietaryCaffeine { get; }
+		DietaryCaffeine,
 
 		[iOS (9,0)]
 		[Field ("HKQuantityTypeIdentifierBasalBodyTemperature")]
-		NSString BasalBodyTemperature { get; }
+		BasalBodyTemperature,
 
 		[iOS (9,0)]
 		[Field ("HKQuantityTypeIdentifierDietaryWater")]
-		NSString DietaryWater { get; }
+		DietaryWater,
 
 		[iOS (9,0)]
 		[Field ("HKQuantityTypeIdentifierUVExposure")]
-		NSString UVExposure { get; }
+		UVExposure,
+
+		[Field ("HKQuantityTypeIdentifierElectrodermalActivity")]
+		ElectrodermalActivity,
+
+		[iOS (9,3), Watch (2,2)]
+		[Field ("HKQuantityTypeIdentifierAppleExerciseTime")]
+		AppleExerciseTime,
+
+		[iOS (10,0), Watch (3,0)]
+		[Field ("HKQuantityTypeIdentifierDistanceWheelchair")]
+		DistanceWheelchair,
+
+		[iOS (10,0), Watch (3,0)]
+		[Field ("HKQuantityTypeIdentifierPushCount")]
+		PushCount,
+
+		[iOS (10,0), Watch (3,0)]
+		[Field ("HKQuantityTypeIdentifierDistanceSwimming")]
+		DistanceSwimming,
+
+		[iOS (10,0), Watch (3,0)]
+		[Field ("HKQuantityTypeIdentifierSwimmingStrokeCount")]
+		SwimmingStrokeCount,
 
 		[Watch (4, 0), iOS (11, 0)]
 		[Field ("HKQuantityTypeIdentifierWaistCircumference")]
-		NSString WaistCircumference { get; }
+		WaistCircumference,
 
 		[Watch (4, 0), iOS (11, 0)]
 		[Field ("HKQuantityTypeIdentifierVO2Max")]
-		NSString VO2Max { get; }
+		VO2Max,
 
 		[Watch (4,2), iOS (11,2)]
 		[Field ("HKQuantityTypeIdentifierDistanceDownhillSnowSports")]
-		NSString DistanceDownhillSnowSports { get; }
+		DistanceDownhillSnowSports,
 
-        // If you add field, add them to the enum too.
+		[iOS (11,0), Watch (4,0)]
+		[Field ("HKQuantityTypeIdentifierInsulinDelivery")]
+		InsulinDelivery,
+
+		[iOS (11,0), Watch (4,0)]
+		[Field ("HKQuantityTypeIdentifierRestingHeartRate")]
+		RestingHeartRate,
+
+		[iOS (11,0), Watch (4,0)]
+		[Field ("HKQuantityTypeIdentifierWalkingHeartRateAverage")]
+		WalkingHeartRateAverage,
+
+		[iOS (11,0), Watch (4,0)]
+		[Field ("HKQuantityTypeIdentifierHeartRateVariabilitySDNN")]
+		HeartRateVariabilitySdnn,
+
 	}
 
 	[Watch (2,0)]
 	[iOS (8,0)]
-	[Static]
-	interface HKCorrelationTypeKey {
+	enum HKCorrelationTypeIdentifier {
 		[Field ("HKCorrelationTypeIdentifierBloodPressure")]
-		NSString IdentifierBloodPressure { get; }
+		BloodPressure,
 		
 		[Field ("HKCorrelationTypeIdentifierFood")]
-		NSString IdentifierFood { get; }
-
-		// If you add fields, add them to the enum too.
+		Food,
 	}
 
 	[Watch (2,0)]
 	[iOS (8,0)]
-	[Static]
-	interface HKCategoryTypeIdentifierKey
+	enum HKCategoryTypeIdentifier
 	{
 		/**** HKCategoryType Identifiers ****/
 
 		[Field ("HKCategoryTypeIdentifierSleepAnalysis")]
-		NSString SleepAnalysis { get; }
+		SleepAnalysis,
 
 		[iOS (9,0)]
 		[Field ("HKCategoryTypeIdentifierAppleStandHour")]
-		NSString AppleStandHour { get; }
+		AppleStandHour,
 
 		[iOS (9,0)]
 		[Field ("HKCategoryTypeIdentifierCervicalMucusQuality")]
-		NSString CervicalMucusQuality { get; }
+		CervicalMucusQuality,
 
 		[iOS (9,0)]
 		[Field ("HKCategoryTypeIdentifierOvulationTestResult")]
-		NSString OvulationTestResult { get; }
+		OvulationTestResult,
 
 		[iOS (9,0)]
 		[Field ("HKCategoryTypeIdentifierMenstrualFlow")]
-		NSString MenstrualFlow { get; }
+		MenstrualFlow,
 
 		[iOS (9,0)]
 		[Field ("HKCategoryTypeIdentifierIntermenstrualBleeding")]
-		NSString IntermenstrualBleeding { get; }
+		IntermenstrualBleeding,
 
 		[iOS (9,0)]
 		[Field ("HKCategoryTypeIdentifierSexualActivity")]
-		NSString SexualActivity { get; }
+		SexualActivity,
 
 		[iOS (10,0), Watch (3,0)]
 		[Field ("HKCategoryTypeIdentifierMindfulSession")]
-		NSString MindfulSession { get; }
-
-		// If you add fields, add them to the enum too.
+		MindfulSession,
 	}
 
 	[Watch (2,0)]
 	[iOS (8,0)]
-	[Static]
-	interface HKCharacteristicTypeIdentifierKey
+	enum HKCharacteristicTypeIdentifier
 	{
 		/**** HKCharacteristicType Identifiers ****/
 
 		[Field ("HKCharacteristicTypeIdentifierBiologicalSex")]
-		NSString BiologicalSex { get; }
+		BiologicalSex,
 
 		[Field ("HKCharacteristicTypeIdentifierBloodType")]
-		NSString BloodType { get; }
+		BloodType,
 
 		[Field ("HKCharacteristicTypeIdentifierDateOfBirth")]
-		NSString DateOfBirth { get; }
+		DateOfBirth,
 
 		[iOS (9,0)]
 		[Field ("HKCharacteristicTypeIdentifierFitzpatrickSkinType")]
-		NSString FitzpatrickSkinType { get; }
+		FitzpatrickSkinType,
 
 		[iOS (10,0), Watch (3,0)]
 		[Field ("HKCharacteristicTypeIdentifierWheelchairUse")]
-		NSString WheelchairUse { get; }
-
-		// If you add fields, add them to the enum too.
+		WheelchairUse,
 	}
 
 	[Watch (2,0)]
