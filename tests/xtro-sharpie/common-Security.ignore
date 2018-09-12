@@ -26,3 +26,7 @@
 !missing-protocol! OS_sec_protocol_metadata not bound
 !missing-protocol! OS_sec_protocol_options not bound
 !missing-protocol! OS_sec_trust not bound
+
+## test crash (API and test commented) - better test case needed
+!missing-pinvoke! sec_protocol_metadata_create_secret is not bound
+!missing-pinvoke! sec_protocol_metadata_create_secret_with_context is not bound

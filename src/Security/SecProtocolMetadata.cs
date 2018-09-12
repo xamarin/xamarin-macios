@@ -34,7 +34,7 @@ namespace Security {
 		extern static IntPtr sec_protocol_metadata_copy_peer_public_key (IntPtr handle);
 
 #if !COREBUILD
-		public DispatchData PeerPublicKey => new DispatchData (sec_protocol_metadata_copy_peer_public_key (GetCheckedHandle ()), owns: true);
+		public DispatchData PeerPublicKey => CreateDispatchData (sec_protocol_metadata_copy_peer_public_key (GetCheckedHandle ()));
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SslProtocol sec_protocol_metadata_get_negotiated_protocol_version (IntPtr handle);
@@ -218,6 +218,36 @@ namespace Security {
 			}
  		}
 
+#if false
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* OS_dispatch_data */ IntPtr sec_protocol_metadata_create_secret (/* OS_sec_protocol_metadata */ IntPtr metadata, /* size_t */ nuint label_len, /* const char*/ [MarshalAs(UnmanagedType.LPStr)] string label, /* size_t */ nuint exporter_length);
+
+		public DispatchData CreateSecret (string label, nuint exporterLength)
+		{
+			if (label == null)
+				throw new ArgumentNullException (nameof (label));
+			return CreateDispatchData (sec_protocol_metadata_create_secret (GetCheckedHandle (), (nuint) label.Length, label, exporterLength));
+		}
+
+		[DllImport (Constants.SecurityLibrary)]
+		static unsafe extern /* OS_dispatch_data */ IntPtr sec_protocol_metadata_create_secret_with_context (/* OS_sec_protocol_metadata */ IntPtr metadata, /* size_t */ nuint label_len, /* const char*/ [MarshalAs(UnmanagedType.LPStr)] string label, /* size_t */  nuint context_len, byte* context, /* size_t */ nuint exporter_length);
+
+		public unsafe DispatchData CreateSecret (string label, byte[] context, nuint exporterLength)
+		{
+			if (label == null)
+				throw new ArgumentNullException (nameof (label));
+			if (context == null)
+				throw new ArgumentNullException (nameof (context));
+			fixed (byte* p = context)
+				return CreateDispatchData (sec_protocol_metadata_create_secret_with_context (GetCheckedHandle (), (nuint) label.Length, label, (nuint) context.Length, p, exporterLength));
+		}
+#endif
+		// API returning `OS_dispatch_data` can also return `null` and
+		// a managed instance with (with an empty handle) is not the same
+		static DispatchData CreateDispatchData (IntPtr handle)
+		{
+			return handle == IntPtr.Zero ? null : new DispatchData (handle, owns: true);
+		}
 #endif
 	}
 }
