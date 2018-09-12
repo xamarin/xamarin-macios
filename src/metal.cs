@@ -1484,7 +1484,8 @@ namespace Metal {
 		[Export ("stencilAttachmentPixelFormat")]
 		MTLPixelFormat StencilAttachmentPixelFormat { get; set; }
 		
-		[NoiOS, NoTV, NoWatch, Mac (10,11)]
+		[iOS (12,0)]
+		[NoTV, NoWatch, Mac (10,11)]
 		[Export ("inputPrimitiveTopology", ArgumentSemantic.Assign)]
 		MTLPrimitiveTopologyClass InputPrimitiveTopology { get; set; }
 		
@@ -2280,7 +2281,8 @@ namespace Metal {
 		[Export ("drawPatches:patchStart:patchCount:patchIndexBuffer:patchIndexBufferOffset:instanceCount:baseInstance:")]
 		void DrawPatches (nuint numberOfPatchControlPoints, nuint patchStart, nuint patchCount, [NullAllowed] IMTLBuffer patchIndexBuffer, nuint patchIndexBufferOffset, nuint instanceCount, nuint baseInstance);
 
-		[NoiOS, NoTV, NoWatch, Mac (10,12)]
+		[iOS (12,0)]
+		[NoTV, NoWatch, Mac (10,12)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
@@ -2294,14 +2296,16 @@ namespace Metal {
 		[Export ("drawIndexedPatches:patchStart:patchCount:patchIndexBuffer:patchIndexBufferOffset:controlPointIndexBuffer:controlPointIndexBufferOffset:instanceCount:baseInstance:")]
 		void DrawIndexedPatches (nuint numberOfPatchControlPoints, nuint patchStart, nuint patchCount, [NullAllowed] IMTLBuffer patchIndexBuffer, nuint patchIndexBufferOffset, IMTLBuffer controlPointIndexBuffer, nuint controlPointIndexBufferOffset, nuint instanceCount, nuint baseInstance);
 
-		[NoiOS, NoTV, NoWatch, Mac (10,12)]
+		[iOS (12,0)]
+		[NoTV, NoWatch, Mac (10,12)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("drawIndexedPatches:patchIndexBuffer:patchIndexBufferOffset:controlPointIndexBuffer:controlPointIndexBufferOffset:indirectBuffer:indirectBufferOffset:")]
 		void DrawIndexedPatches (nuint numberOfPatchControlPoints, [NullAllowed] IMTLBuffer patchIndexBuffer, nuint patchIndexBufferOffset, IMTLBuffer controlPointIndexBuffer, nuint controlPointIndexBufferOffset, IMTLBuffer indirectBuffer, nuint indirectBufferOffset);
 
-		[Mac (10,13), NoiOS, NoTV, NoWatch]
+		[iOS (12,0)]
+		[Mac (10,13), NoTV, NoWatch]
 		[Obsoleted (PlatformName.MacOSX, 10, 14, message: "API removed, please do not use.")]
 #if XAMCORE_4_0
 		[Abstract]
@@ -2309,7 +2313,8 @@ namespace Metal {
 		[Export ("setViewports:count:")]
 		void SetViewports (IntPtr viewports, nuint count);
 
-		[Mac (10,13), NoiOS, NoTV, NoWatch]
+		[iOS (12,0)]
+		[Mac (10,13), NoTV, NoWatch]
 		[Obsoleted (PlatformName.MacOSX, 10, 14, message: "API removed, please do not use.")]
 #if XAMCORE_4_0
 		[Abstract]
@@ -2615,7 +2620,8 @@ namespace Metal {
 		[Export ("clearStencil")]
 		uint ClearStencil { get; set; } /* uint32_t */
 
-		[NoiOS, NoTV]
+		[iOS (12,0)]
+		[NoTV]
 		[Mac (10, 14, onlyOn64: true)]
 		[Export ("stencilResolveFilter", ArgumentSemantic.Assign)]
 		MTLMultisampleStencilResolveFilter StencilResolveFilter { get; set; }
@@ -2652,7 +2658,8 @@ namespace Metal {
 		[Autorelease]
 		MTLRenderPassDescriptor CreateRenderPassDescriptor ();
 		
-		[NoiOS, Mac (10,11)]
+		[iOS (12,0)]
+		[Mac (10,11)]
 		[NoTV]
 		[Export ("renderTargetArrayLength")]
 		nuint RenderTargetArrayLength { get; set; }
@@ -3253,12 +3260,12 @@ namespace Metal {
 		void SetFragmentBuffer (IMTLBuffer buffer, nuint offset, nuint index);
 
 		[Abstract]
-		[NoiOS, NoTV]
+		[NoTV]
 		[Export ("drawPatches:patchStart:patchCount:patchIndexBuffer:patchIndexBufferOffset:instanceCount:baseInstance:tessellationFactorBuffer:tessellationFactorBufferOffset:tessellationFactorBufferInstanceStride:")]
 		void DrawPatches (nuint numberOfPatchControlPoints, nuint patchStart, nuint patchCount, [NullAllowed] IMTLBuffer patchIndexBuffer, nuint patchIndexBufferOffset, nuint instanceCount, nuint baseInstance, IMTLBuffer buffer, nuint offset, nuint instanceStride);
 
 		[Abstract]
-		[NoiOS, NoTV]
+		[NoTV]
 		[Export ("drawIndexedPatches:patchStart:patchCount:patchIndexBuffer:patchIndexBufferOffset:controlPointIndexBuffer:controlPointIndexBufferOffset:instanceCount:baseInstance:tessellationFactorBuffer:tessellationFactorBufferOffset:tessellationFactorBufferInstanceStride:")]
 		void DrawIndexedPatches (nuint numberOfPatchControlPoints, nuint patchStart, nuint patchCount, [NullAllowed] IMTLBuffer patchIndexBuffer, nuint patchIndexBufferOffset, IMTLBuffer controlPointIndexBuffer, nuint controlPointIndexBufferOffset, nuint instanceCount, nuint baseInstance, IMTLBuffer buffer, nuint offset, nuint instanceStride);
 

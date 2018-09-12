@@ -675,6 +675,8 @@ namespace Metal {
 		iOS_GPUFamily3_v4 = 14,
 		[iOS (12,0), NoTV, NoWatch, NoMac]
 		iOS_GPUFamily4_v2 = 15,
+		[iOS (12,0), NoTV, NoWatch, NoMac]
+		iOS_GPUFamily5_v1 = 16,
 
 		[Mac (10,11), NoiOS, NoTV, NoWatch]
 		macOS_GPUFamily1_v1 = 10000,
@@ -774,7 +776,8 @@ namespace Metal {
 	}
 
 	[NoTV]
-	[NoiOS, Mac (10,11)]
+	[iOS (12,0)]
+	[Mac (10,11)]
 	[Native]
 	public enum MTLPrimitiveTopologyClass : ulong {
 		Unspecified = 0,
@@ -977,10 +980,13 @@ namespace Metal {
 	public enum MTLIndirectCommandType : ulong
 	{
 		Draw = 1 << 0,
-		Indexed = 1 << 1,
+		DrawIndexed = 1 << 1,
+		DrawPatches = 1 << 2,
+		DrawIndexedPatches = 1 << 3,
 	}
 
-	[NoiOS, NoTV]
+	[iOS (12,0)]
+	[NoTV]
 	[Mac (10,14, onlyOn64: true)]
 	[Native]
 	public enum MTLMultisampleStencilResolveFilter : ulong
