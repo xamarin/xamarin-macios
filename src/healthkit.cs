@@ -1432,7 +1432,6 @@ namespace HealthKit {
 
 	[Watch (2,0)]
 	[iOS (8,0)]
-	[Static]
 	enum HKQuantityTypeIdentifier {
 
 		[Field ("HKQuantityTypeIdentifierBodyMassIndex")]
