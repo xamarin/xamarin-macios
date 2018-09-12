@@ -1,0 +1,2 @@
+!missing-protocol-conformance! NSManagedObjectContext should conform to NSEditor (defined in 'NSEditorAndEditorRegistrationConformance' category)
+!missing-protocol-conformance! NSManagedObjectContext should conform to NSEditorRegistration (defined in 'NSEditorAndEditorRegistrationConformance' category)
