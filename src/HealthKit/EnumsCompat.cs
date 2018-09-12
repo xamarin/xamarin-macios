@@ -5,6 +5,7 @@ using Foundation;
 using ObjCRuntime;
 
 namespace HealthKit {
+	[Obsolete ("Use the 'HKQuantityTypeIdentifier' enum instead.")]
 	[Introduced (PlatformName.WatchOS, 2,0, PlatformArchitecture.All)]
 	[Introduced (PlatformName.iOS, 8,0, PlatformArchitecture.All)]
 	public unsafe static partial class HKQuantityTypeIdentifierKey  {
@@ -541,6 +542,7 @@ namespace HealthKit {
 		}
 	} /* class HKQuantityTypeIdentifierKey */
 
+	[Obsolete ("Use the 'HKCategoryTypeIdentifier' enum instead.")]
 	[Introduced (PlatformName.WatchOS, 2,0, PlatformArchitecture.All)]
 	[Introduced (PlatformName.iOS, 8,0, PlatformArchitecture.All)]
 	public unsafe static partial class HKCategoryTypeIdentifierKey  {
@@ -609,6 +611,7 @@ namespace HealthKit {
 		}
 	} /* class HKCategoryTypeIdentifierKey */
 
+	[Obsolete ("Use the 'HKCharacteristicTypeIdentifier' enum instead.")]
 	[Introduced (PlatformName.WatchOS, 2,0, PlatformArchitecture.All)]
 	[Introduced (PlatformName.iOS, 8,0, PlatformArchitecture.All)]
 	public unsafe static partial class HKCharacteristicTypeIdentifierKey  {
@@ -649,6 +652,7 @@ namespace HealthKit {
 		}
 	} /* class HKCharacteristicTypeIdentifierKey */
 
+	[Obsolete ("Use the 'HKCorrelationType' enum instead.")]
 	[Introduced (PlatformName.WatchOS, 2,0, PlatformArchitecture.All)]
 	[Introduced (PlatformName.iOS, 8,0, PlatformArchitecture.All)]
 	public unsafe static partial class HKCorrelationTypeKey  {
