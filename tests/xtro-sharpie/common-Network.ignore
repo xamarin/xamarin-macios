@@ -19,3 +19,6 @@
 # no need, please see comment: https://github.com/xamarin/xamarin-macios/pull/4251#issuecomment-410815837
 !missing-pinvoke! nw_release is not bound
 !missing-pinvoke! nw_retain is not bound
+
+## xcode 10.0 backlog
+!missing-pinvoke! nw_endpoint_get_address is not bound
