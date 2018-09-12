@@ -37,8 +37,7 @@ namespace MonoTouchFixtures.Network {
 			connectedEvent = new AutoResetEvent(false);
 			host = "www.google.com";
 			using (var parameters = NWParameters.CreateUdp ())
-			using (var endpoint = NWEndpoint.Create (host, "80"))
-			{
+			using (var endpoint = NWEndpoint.Create (host, "80")) {
 				connection = new NWConnection (endpoint, parameters);
 				connection.SetQueue (DispatchQueue.DefaultGlobalQueue); // important, else we will get blocked
 				connection.SetStateChangeHandler (ConnectionStateHandler);
@@ -66,7 +65,6 @@ namespace MonoTouchFixtures.Network {
 
 		void ConnectionStateHandler (NWConnectionState state, NWError error)
 		{
-			Console.WriteLine ($"State is {state} and error {error}");
 			switch (state){
 			case NWConnectionState.Ready:
 				connectedEvent.Set ();
