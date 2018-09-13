@@ -102,20 +102,18 @@ namespace CoreFoundation {
 				return;
 			}
 
-			unsafe {
-				DispatchBlock.Invoke (
-					delegate {
-						var sc = SynchronizationContext.Current;
+			DispatchBlock.Invoke (
+				delegate {
+					var sc = SynchronizationContext.Current;
+					if (sc == null)
+						SynchronizationContext.SetSynchronizationContext (new DispatchQueueSynchronizationContext (queue));
+					try {
+						handler ();
+					} finally {
 						if (sc == null)
-							SynchronizationContext.SetSynchronizationContext (new DispatchQueueSynchronizationContext (queue));
-						try {
-							handler ();
-						} finally {
-							if (sc == null)
-								SynchronizationContext.SetSynchronizationContext (null);
-						}
-					}, block=> dispatch_source_set_event_handler (GetCheckedHandle (), block));
-			}
+							SynchronizationContext.SetSynchronizationContext (null);
+					}
+				}, block=> dispatch_source_set_event_handler (GetCheckedHandle (), block));
 		}
 
 		public void Suspend ()
@@ -133,20 +131,18 @@ namespace CoreFoundation {
 			if (handler == null)
 				throw new ArgumentNullException ("handler");
 
-			unsafe {
-				DispatchBlock.Invoke (
-					delegate {
-						var sc = SynchronizationContext.Current;
+			DispatchBlock.Invoke (
+				delegate {
+					var sc = SynchronizationContext.Current;
+					if (sc == null)
+						SynchronizationContext.SetSynchronizationContext (new DispatchQueueSynchronizationContext (queue));
+					try {
+						handler ();
+					} finally {
 						if (sc == null)
-							SynchronizationContext.SetSynchronizationContext (new DispatchQueueSynchronizationContext (queue));
-						try {
-							handler ();
-						} finally {
-							if (sc == null)
-								SynchronizationContext.SetSynchronizationContext (null);
-						}
-					}, block => dispatch_source_set_registration_handler (GetCheckedHandle (), block));
-			}
+							SynchronizationContext.SetSynchronizationContext (null);
+					}
+				}, block => dispatch_source_set_registration_handler (GetCheckedHandle (), block));
 		}
 
 		public void SetCancelHandler (Action handler)
@@ -154,20 +150,18 @@ namespace CoreFoundation {
 			if (handler == null)
 				throw new ArgumentNullException ("handler");
 
-			unsafe {
-				DispatchBlock.Invoke (
-					delegate {
-						var sc = SynchronizationContext.Current;
+			DispatchBlock.Invoke (
+				delegate {
+					var sc = SynchronizationContext.Current;
+					if (sc == null)
+						SynchronizationContext.SetSynchronizationContext (new DispatchQueueSynchronizationContext (queue));
+					try {
+						handler ();
+					} finally {
 						if (sc == null)
-							SynchronizationContext.SetSynchronizationContext (new DispatchQueueSynchronizationContext (queue));
-						try {
-							handler ();
-						} finally {
-							if (sc == null)
-								SynchronizationContext.SetSynchronizationContext (null);
-						}
-					}, block => dispatch_source_set_cancel_handler (GetCheckedHandle (), block));
-			}
+							SynchronizationContext.SetSynchronizationContext (null);
+					}
+				}, block => dispatch_source_set_cancel_handler (GetCheckedHandle (), block));
 		}
 
 		public void Cancel ()
