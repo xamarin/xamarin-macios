@@ -27,8 +27,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	<PropertyGroup>
 		<BaseLibDllPath>$(MacBclPath)/Xamarin.Mac.dll</BaseLibDllPath>
 		<BTouchToolPath>$(XamarinMacFrameworkRoot)/bin/</BTouchToolPath>
-		<BTouchToolExe Condition="Exists('$(BTouchToolPath)/bgen')">bgen</BTouchToolExe>
-		<BTouchToolExe Condition="!Exists('$(BTouchToolPath)/bgen')">bmac-mobile-mono</BTouchToolExe>
+		<BTouchToolExe>bgen</BTouchToolExe>
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 
 		<DefineConstants>__UNIFIED__;__MACOS__;$(DefineConstants)</DefineConstants>
