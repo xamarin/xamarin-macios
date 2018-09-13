@@ -50,6 +50,8 @@
 !incorrect-protocol-member! MTLDevice::newSharedEvent is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::newSharedEventWithHandle: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::executeCommandsInBuffer:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::drawIndexedPatches:patchIndexBuffer:patchIndexBufferOffset:controlPointIndexBuffer:controlPointIndexBufferOffset:indirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::drawPatches:patchIndexBuffer:patchIndexBufferOffset:indirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderPipelineState::supportIndirectCommandBuffers is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLTexture::allowGPUOptimizedContents is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLArgumentEncoder::newArgumentEncoderForBufferAtIndex: is REQUIRED and should be abstract
