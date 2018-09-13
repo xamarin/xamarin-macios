@@ -282,6 +282,27 @@ namespace Introspection {
 				case "CLKComplicationTemplateExtraLargeColumnsText":
 				case "CLKComplicationTemplateExtraLargeRingImage":
 				case "CLKComplicationTemplateExtraLargeRingText":
+				// watchOS 5 / Xcode 10 GM
+				case "CLKComplicationTemplateGraphicBezelCircularText":
+				case "CLKComplicationTemplateGraphicCircular":
+				case "CLKComplicationTemplateGraphicCircularClosedGaugeImage":
+				case "CLKComplicationTemplateGraphicCircularClosedGaugeText":
+				case "CLKComplicationTemplateGraphicCircularImage":
+				case "CLKComplicationTemplateGraphicCircularOpenGaugeImage":
+				case "CLKComplicationTemplateGraphicCircularOpenGaugeRangeText":
+				case "CLKComplicationTemplateGraphicCircularOpenGaugeSimpleText":
+				case "CLKComplicationTemplateGraphicCornerCircularImage":
+				case "CLKComplicationTemplateGraphicCornerGaugeImage":
+				case "CLKComplicationTemplateGraphicCornerGaugeText":
+				case "CLKComplicationTemplateGraphicCornerStackText":
+				case "CLKComplicationTemplateGraphicCornerTextImage":
+				case "CLKComplicationTemplateGraphicRectangularLargeImage":
+				case "CLKComplicationTemplateGraphicRectangularStandardBody":
+				case "CLKComplicationTemplateGraphicRectangularTextGauge":
+				case "CLKFullColorImageProvider":
+				case "CLKGaugeProvider":
+				case "CLKSimpleGaugeProvider":
+				case "CLKTimeIntervalGaugeProvider":
 					return true;
 #endif
 				}
@@ -438,6 +459,27 @@ namespace Introspection {
 				case "CLKComplicationTemplateExtraLargeColumnsText":
 				case "CLKComplicationTemplateExtraLargeRingImage":
 				case "CLKComplicationTemplateExtraLargeRingText":
+				// watchOS 5 / Xcode 10 GM
+				case "CLKComplicationTemplateGraphicBezelCircularText":
+				case "CLKComplicationTemplateGraphicCircular":
+				case "CLKComplicationTemplateGraphicCircularClosedGaugeImage":
+				case "CLKComplicationTemplateGraphicCircularClosedGaugeText":
+				case "CLKComplicationTemplateGraphicCircularImage":
+				case "CLKComplicationTemplateGraphicCircularOpenGaugeImage":
+				case "CLKComplicationTemplateGraphicCircularOpenGaugeRangeText":
+				case "CLKComplicationTemplateGraphicCircularOpenGaugeSimpleText":
+				case "CLKComplicationTemplateGraphicCornerCircularImage":
+				case "CLKComplicationTemplateGraphicCornerGaugeImage":
+				case "CLKComplicationTemplateGraphicCornerGaugeText":
+				case "CLKComplicationTemplateGraphicCornerStackText":
+				case "CLKComplicationTemplateGraphicCornerTextImage":
+				case "CLKComplicationTemplateGraphicRectangularLargeImage":
+				case "CLKComplicationTemplateGraphicRectangularStandardBody":
+				case "CLKComplicationTemplateGraphicRectangularTextGauge":
+				case "CLKFullColorImageProvider":
+				case "CLKGaugeProvider":
+				case "CLKSimpleGaugeProvider":
+				case "CLKTimeIntervalGaugeProvider":
 					return true;
 #endif
 				}

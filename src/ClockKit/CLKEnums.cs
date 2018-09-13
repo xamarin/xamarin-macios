@@ -68,5 +68,11 @@ namespace ClockKit {
 		NaturalAbbreviated,
 	}
 
+	[Watch (5,0)]
+	[Native]
+	public enum CLKGaugeProviderStyle : long {
+		Ring,
+		Fill,
+	}
 }
 
