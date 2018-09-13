@@ -50,10 +50,6 @@ namespace CoreFoundation {
 	public abstract class DispatchObject : NativeObject
 	{
 #if !COREBUILD
-		// Temporary field to easier split up changes into different commits.
-		// It will be removed in a later commit in this PR.
-		internal IntPtr handle { get { return Handle; } set { InitializeHandle (value); } }
-
 		//
 		// Constructors and lifecycle
 		//
