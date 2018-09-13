@@ -47,6 +47,17 @@ namespace CoreFoundation {
 		Low = -2,
 		Background = Int16.MinValue
 	}
+
+	// dispatch_qos_class_t is defined in usr/include/dispatch/queue.h, but redirects to qos_class_t
+	// the qos_class_t enum is defined in usr/include/sys/qos.h (typed as 'unsigned int')
+	public enum DispatchQualityOfService : uint {
+		UserInteractive = 0x21,
+		UserInitiated   = 0x19,
+		Default         = 0x15,
+		Utility         = 0x11,
+		Background      = 0x09,
+		Unspecified     = 0x00,
+	}
 	
 	public abstract class DispatchObject : NativeObject
 	{
@@ -386,6 +397,22 @@ namespace CoreFoundation {
 			return gchandle.Target;
 		}
 
+		public DispatchQualityOfService GetQualityOfService (out int relative_priority)
+		{
+			unsafe {
+				fixed (int* rel_pri = &relative_priority)
+					return dispatch_queue_get_qos_class (Handle, rel_pri);
+			}
+		}
+
+		public DispatchQualityOfService QualityOfService {
+			get {
+				unsafe {
+					return dispatch_queue_get_qos_class (Handle, null);
+				}
+			}
+		}
+
 		//
 		// Native methods
 		//
@@ -423,6 +450,9 @@ namespace CoreFoundation {
 
 		[DllImport(Constants.libcLibrary)]
 		extern static IntPtr dispatch_queue_get_specific (IntPtr queue, /* const void* */ IntPtr key);
+
+		[DllImport (Constants.libcLibrary)]
+		unsafe extern static /* dispatch_qos_class_t */ DispatchQualityOfService dispatch_queue_get_qos_class (/* dispatch_queue_t */ IntPtr queue, /* int *_Nullable */ int* relative_priority);
 
 		public override bool Equals (object other)
 		{
