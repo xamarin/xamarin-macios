@@ -99,12 +99,12 @@ namespace CoreTelephony {
 		[iOS (12,0)]
 		[NullAllowed]
 		[Export ("serviceSubscriberCellularProvidersDidUpdateNotifier", ArgumentSemantic.Copy)]
-		Action<NSString> CellularProvidersDidUpdateNotifier { get; set; }
+		Action<NSString> ServiceSubscriberCellularProvidersDidUpdateNotifier { get; set; }
 
 		[iOS (12,0)]
 		[Notification]
 		[Field ("CTServiceRadioAccessTechnologyDidChangeNotification")]
-		NSString RadioAccessTechnologyDidChangeNotification { get; }
+		NSString ServiceRadioAccessTechnologyDidChangeNotification { get; }
 	}
 
 #if !XAMCORE_2_0
