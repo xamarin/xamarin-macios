@@ -59,13 +59,10 @@ namespace CoreFoundation {
 		//
 		[Preserve (Conditional = true)]
 		internal DispatchObject (IntPtr handle, bool owns)
+			: base (handle, owns)
 		{
 			if (handle == IntPtr.Zero)
 				throw new ArgumentNullException ("handle");
-			
-			this.handle = handle;
-			if (!owns)
-				dispatch_retain (handle);
 		}
 
 		internal DispatchObject ()
@@ -151,10 +148,9 @@ namespace CoreFoundation {
 		{
 		}
 		
-		public DispatchQueue (string label) : base ()
+		public DispatchQueue (string label)
+			: base (dispatch_queue_create (label, IntPtr.Zero), true)
 		{
-			// Initialized in owned state for the queue.
-			handle = dispatch_queue_create (label, IntPtr.Zero);
 			if (handle == IntPtr.Zero)
 				throw new Exception ("Error creating dispatch queue");
 		}
@@ -169,8 +165,8 @@ namespace CoreFoundation {
 		}
 		
 		public DispatchQueue (string label, bool concurrent)
+			: base (dispatch_queue_create (label, concurrent ? ConcurrentQueue : IntPtr.Zero), true)
 		{
-			handle = dispatch_queue_create (label, concurrent ? ConcurrentQueue : IntPtr.Zero);
 			if (handle == IntPtr.Zero)
 				throw new Exception ("Error creating dispatch queue");
 		}
