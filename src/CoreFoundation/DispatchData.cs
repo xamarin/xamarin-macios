@@ -43,10 +43,13 @@ namespace CoreFoundation {
 		{
 		}
 
-		static IntPtr free;
-		static DispatchData ()
-		{
-			free = Marshal.ReadIntPtr (Dlfcn.dlsym (Libraries.LibC.Handle, "_dispatch_data_destructor_free"));
+		static IntPtr free_ptr;
+		static IntPtr free {
+			get {
+				if (free_ptr == IntPtr.Zero)
+					free_ptr = Marshal.ReadIntPtr (Dlfcn.dlsym (Libraries.LibC.Handle, "_dispatch_data_destructor_free"));
+				return free_ptr;
+			}
 		}
 
 		[DllImport (Constants.libcLibrary)]

@@ -38,20 +38,21 @@ namespace CoreFoundation {
 	class CFBoolean : INativeObject, IDisposable {
 		IntPtr handle;
 
-		public static readonly CFBoolean True;
-		public static readonly CFBoolean False;
-
-		static CFBoolean ()
-		{
-			var handle = Dlfcn.dlopen (Constants.CoreFoundationLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-				True  = new CFBoolean (Dlfcn.GetIntPtr (handle, "kCFBooleanTrue"), false);
-				False = new CFBoolean (Dlfcn.GetIntPtr (handle, "kCFBooleanFalse"), false);
+		static CFBoolean true_value;
+		public static CFBoolean True {
+			get {
+				if (true_value == null)
+					true_value = new CFBoolean (Dlfcn.GetIntPtr (Libraries.CoreFoundation.Handle, "kCFBooleanTrue"), false);
+				return true_value;
 			}
-			finally {
-				Dlfcn.dlclose (handle);
+		}
+
+		static CFBoolean false_value;
+		public static CFBoolean False {
+			get {
+				if (false_value == null)
+					false_value = new CFBoolean (Dlfcn.GetIntPtr (Libraries.CoreFoundation.Handle, "kCFBooleanFalse"), false);
+				return false_value;
 			}
 		}
 
