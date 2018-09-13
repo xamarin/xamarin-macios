@@ -73,7 +73,7 @@ namespace CoreTelephony {
 		[Export ("subscriberCellularProvider", ArgumentSemantic.Retain)]
 		CTCarrier SubscriberCellularProvider { get; }
 
-		[Deprecated (PlatformName.iOS, 12,0, message: "Use 'CellularProvidersDidUpdateNotifier' instead.")]
+		[Deprecated (PlatformName.iOS, 12,0, message: "Use 'ServiceSubscriberCellularProvidersDidUpdateNotifier' instead.")]
 		[NullAllowed] // by default this property is null
 		[Export ("subscriberCellularProviderDidUpdateNotifier")]
 #if XAMCORE_2_0
