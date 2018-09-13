@@ -47,13 +47,12 @@ namespace CoreFoundation {
 		Background = Int16.MinValue
 	}
 	
-	public abstract class DispatchObject : INativeObject
-#if !COREBUILD
-		, IDisposable
-#endif
+	public abstract class DispatchObject : NativeObject
 	{
 #if !COREBUILD
-		internal IntPtr handle;
+		// Temporary field to easier split up changes into different commits.
+		// It will be removed in a later commit in this PR.
+		internal IntPtr handle { get { return Handle; } set { InitializeHandle (value); } }
 
 		//
 		// Constructors and lifecycle
@@ -79,27 +78,14 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_retain (IntPtr o);
 
-		~DispatchObject ()
+		protected override void Retain ()
 		{
-			Dispose (false);
+			dispatch_retain (Handle);
 		}
 
-		public void Dispose ()
+		protected override void Release ()
 		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public IntPtr Handle {
-			get { return handle; }
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				dispatch_release (handle);
-				handle = IntPtr.Zero;
-			}
+			dispatch_release (Handle);
 		}
 
 		public static bool operator == (DispatchObject a, DispatchObject b)
