@@ -705,6 +705,7 @@ namespace ClockKit {
 
 	[Watch (5,0)]
 	[Abstract] // <quote>An abstract superclass for all the circular graphic templates.</quote>
+	[DisableDefaultCtor]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateGraphicCircular {
 	}
@@ -897,6 +898,7 @@ namespace ClockKit {
 	[Watch (5,0)]
 	[BaseType (typeof (NSObject))]
 	[Abstract] // <quote>An abstract superclass that...</quote>
+	[DisableDefaultCtor]
 	interface CLKGaugeProvider : NSCopying {
 		[Export ("style", ArgumentSemantic.Assign)]
 		CLKGaugeProviderStyle Style { get; }
