@@ -9503,6 +9503,7 @@ namespace AVFoundation {
 		[Export ("portraitEffectsMatteDeliveryEnabled")]
 		bool PortraitEffectsMatteDeliveryEnabled { [Bind ("isPortraitEffectsMatteDeliveryEnabled")] get; set; }
 
+		[NoWatch, NoTV, NoMac, iOS (12, 0)]
 		[Export ("autoRedEyeReductionSupported")]
 		bool AutoRedEyeReductionSupported { [Bind ("isAutoRedEyeReductionSupported")] get; }
 	}
