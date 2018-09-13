@@ -320,6 +320,14 @@ namespace CoreFoundation {
 
 		}
 						     
+		internal static readonly dispatch_callback_t free_gchandle = static_free_gchandle;
+
+		[MonoPInvokeCallback (typeof (dispatch_callback_t))]
+		static void static_free_gchandle (IntPtr context)
+		{
+			GCHandle.FromIntPtr (context).Free ();
+		}
+
 		public void DispatchAsync (Action action)
 		{
 			if (action == null)
@@ -367,6 +375,17 @@ namespace CoreFoundation {
 			dispatch_apply_f ((IntPtr) times, Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch_iterations);
 		}
 		
+		public void SetSpecific (IntPtr key, object context)
+		{
+			dispatch_queue_set_specific (GetCheckedHandle (), key, (IntPtr) GCHandle.Alloc (context), free_gchandle);
+		}
+
+		public object GetSpecific (IntPtr key)
+		{
+			GCHandle gchandle = (GCHandle) dispatch_queue_get_specific (GetCheckedHandle (), key);
+			return gchandle.Target;
+		}
+
 		//
 		// Native methods
 		//
@@ -398,6 +417,12 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		// this returns a "const char*" so we cannot make a string out of it since it will be freed (and crash)
 		extern static IntPtr dispatch_queue_get_label (IntPtr queue);
+
+		[DllImport(Constants.libcLibrary)]
+		extern static void dispatch_queue_set_specific (IntPtr queue, /* const void* */ IntPtr key, /* void *_Nullable */ IntPtr context, dispatch_callback_t /* _Nullable */ destructor);
+
+		[DllImport(Constants.libcLibrary)]
+		extern static IntPtr dispatch_queue_get_specific (IntPtr queue, /* const void* */ IntPtr key);
 
 		public override bool Equals (object other)
 		{
