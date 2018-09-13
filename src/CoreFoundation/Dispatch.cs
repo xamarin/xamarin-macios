@@ -343,7 +343,15 @@ namespace CoreFoundation {
 			
 			dispatch_barrier_async_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
 		}
-		
+
+		public void DispatchBarrierSync (Action action)
+		{
+			if (action == null)
+				throw new ArgumentNullException (nameof (action));
+
+			dispatch_barrier_sync_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
+		}
+
 		public void DispatchAfter (DispatchTime when, Action action)
 		{
 			if (action == null)
@@ -373,6 +381,9 @@ namespace CoreFoundation {
 
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_barrier_async_f (IntPtr queue, IntPtr context, dispatch_callback_t dispatch);
+
+		[DllImport(Constants.libcLibrary)]
+		extern static void dispatch_barrier_sync_f (IntPtr queue, IntPtr context, dispatch_callback_t dispatch);
 
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_after_f (/* dispath_time_t */ ulong time, IntPtr queue, IntPtr context, dispatch_callback_t dispatch);
