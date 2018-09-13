@@ -120,26 +120,14 @@ namespace CoreFoundation {
 
 		public static bool operator != (DispatchObject a, DispatchObject b)
 		{
-			var oa = a as object;
-			var ob = b as object;
-			
-			if (oa == null){
-				if (ob == null)
-					return false;
-				return true;
-			} else {
-				if (ob == null)
-					return true;
-				return a.handle != b.handle;
-			}
+			return !(a == b);
 		}
 
 		public override bool Equals (object other)
 		{
-			if (other == null)
-				return false;
-			
 			var od = other as DispatchQueue;
+			if (od == null)
+				return false;
 			return od.handle == handle;
 		}
 
