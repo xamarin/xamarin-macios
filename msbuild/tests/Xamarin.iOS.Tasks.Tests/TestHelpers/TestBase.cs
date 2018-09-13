@@ -3,10 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Microsoft.Build.BuildEngine;
 using Microsoft.Build.Utilities;
 using NUnit.Framework;
 using Xamarin.MacDev;
+
+using Xamarin.Tests;
+using Xamarin.Utils;
 
 namespace Xamarin.iOS.Tasks
 {
@@ -104,7 +108,7 @@ namespace Xamarin.iOS.Tasks
 				ProjectBinPath = binPath,
 				ProjectObjPath = objPath,
 				ProjectCSProjPath = Path.Combine (projectPath, csprojName + ".csproj"),
-				AppBundlePath = Path.Combine (binPath, projectName + ".app"),
+				AppBundlePath = Path.Combine (binPath, projectName.Replace (" ", "") + ".app"),
 			};
 		}
 
@@ -343,6 +347,16 @@ namespace Xamarin.iOS.Tasks
 		{
 			if (!Xamarin.Tests.Configuration.include_device && platform == "iPhone")
 				Assert.Ignore ("This build does not include device support.");
+		}
+
+		public static void NugetRestore (string project)
+		{
+			var rv = ExecutionHelper.Execute ("nuget", $"restore {StringUtils.Quote (project)}", out var output);
+			if (rv != 0) {
+				Console.WriteLine ("nuget restore failed:");
+				Console.WriteLine (output);
+				Assert.Fail ($"'nuget restore' failed for {project}");
+			}
 		}
 	}
 

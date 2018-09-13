@@ -22,51 +22,51 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
     <StartAction>Project</StartAction>
-    <StartArguments></StartArguments>
-    <StartWorkingDirectory>%WORKING_DIR%</StartWorkingDirectory>
+    <StartArguments/>
+    <StartWorkingDirectory>$(ProjectDir)</StartWorkingDirectory>
     <EnvironmentVariables>
-      <Variable name="MD_MTOUCH_SDK_ROOT" value="%MD_MTOUCH_SDK_ROOT%" />
-      <Variable name="XamarinMacFrameworkRoot" value="%XamarinMacFrameworkRoot%" />
+      <Variable name="MD_MTOUCH_SDK_ROOT" value="../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git"/>
+      <Variable name="XamarinMacFrameworkRoot" value="../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current"/>
     </EnvironmentVariables>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(RunConfiguration)' == 'ios-unified' ">
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'ios' ">
     <StartAction>Project</StartAction>
-    <StartArguments>%IOS_UNIFIED_ARGS%</StartArguments>
-    <StartWorkingDirectory>%WORKING_DIR%</StartWorkingDirectory>
+    <StartArguments>@$(RunConfiguration).rsp</StartArguments>
+    <StartWorkingDirectory>$(ProjectDir)</StartWorkingDirectory>
     <EnvironmentVariables>
-      <Variable name="MD_MTOUCH_SDK_ROOT" value="%MD_MTOUCH_SDK_ROOT%" />
+      <Variable name="MD_MTOUCH_SDK_ROOT" value="../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git"/>
     </EnvironmentVariables>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'tvos' ">
     <StartAction>Project</StartAction>
-    <StartArguments>%TVOS_ARGS%</StartArguments>
-    <StartWorkingDirectory>%WORKING_DIR%</StartWorkingDirectory>
+    <StartArguments>@$(RunConfiguration).rsp</StartArguments>
+    <StartWorkingDirectory>$(ProjectDir)</StartWorkingDirectory>
     <EnvironmentVariables>
-      <Variable name="MD_MTOUCH_SDK_ROOT" value="%MD_MTOUCH_SDK_ROOT%" />
+      <Variable name="MD_MTOUCH_SDK_ROOT" value="../_ios-build//Library/Frameworks/Xamarin.iOS.framework/Versions/git"/>
     </EnvironmentVariables>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'watchos' ">
     <StartAction>Project</StartAction>
-    <StartArguments>%WATCHOS_ARGS%</StartArguments>
-    <StartWorkingDirectory>%WORKING_DIR%</StartWorkingDirectory>
+    <StartArguments>@$(RunConfiguration).rsp</StartArguments>
+    <StartWorkingDirectory>$(ProjectDir)</StartWorkingDirectory>
     <EnvironmentVariables>
-      <Variable name="MD_MTOUCH_SDK_ROOT" value="%MD_MTOUCH_SDK_ROOT%" />
+      <Variable name="MD_MTOUCH_SDK_ROOT" value="../_ios-build//Library/Frameworks/Xamarin.iOS.framework/Versions/git"/>
     </EnvironmentVariables>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'mac-mobile' ">
     <StartAction>Project</StartAction>
-    <StartArguments>%MAC_MOBILE_ARGS%</StartArguments>
-    <StartWorkingDirectory>%WORKING_DIR%</StartWorkingDirectory>
+    <StartArguments>@$(RunConfiguration).rsp</StartArguments>
+    <StartWorkingDirectory>$(ProjectDir)</StartWorkingDirectory>
     <EnvironmentVariables>
-      <Variable name="XamarinMacFrameworkRoot" value="%XamarinMacFrameworkRoot%" />
+      <Variable name="XamarinMacFrameworkRoot" value="../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current"/>
     </EnvironmentVariables>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'mac-full' ">
     <StartAction>Project</StartAction>
-    <StartArguments>%MAC_FULL_ARGS%</StartArguments>
-    <StartWorkingDirectory>%WORKING_DIR%</StartWorkingDirectory>
+    <StartArguments>@$(RunConfiguration).rsp</StartArguments>
+    <StartWorkingDirectory>$(ProjectDir)</StartWorkingDirectory>
     <EnvironmentVariables>
-      <Variable name="XamarinMacFrameworkRoot" value="%XamarinMacFrameworkRoot%" />
+      <Variable name="XamarinMacFrameworkRoot" value="../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current"/>
     </EnvironmentVariables>
   </PropertyGroup>
   <ItemGroup>

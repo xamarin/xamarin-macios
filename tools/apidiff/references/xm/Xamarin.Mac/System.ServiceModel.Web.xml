@@ -335,6 +335,7 @@
           </class>
           <class name="UriTemplateMatchException" type="class" base="System.SystemException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -1370,6 +1371,7 @@
               </attribute>
             </attributes>
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
               <interface name="System.ServiceModel.Description.IOperationBehavior" />
             </interfaces>
             <constructors>
@@ -1458,6 +1460,7 @@
               </attribute>
             </attributes>
             <interfaces>
+              <interface name="System.Runtime.InteropServices._Attribute" />
               <interface name="System.ServiceModel.Description.IOperationBehavior" />
             </interfaces>
             <constructors>

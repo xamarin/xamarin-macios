@@ -8,4 +8,5 @@ simlauncher-sgen
 simlauncher32-sgen
 simlauncher64-sgen
 *.stamp
+mtouch.csproj.inc
 

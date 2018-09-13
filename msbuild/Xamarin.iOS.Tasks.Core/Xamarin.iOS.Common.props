@@ -40,7 +40,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<MtouchDebug Condition="'$(MtouchDebug)' == ''">False</MtouchDebug>
 		<MtouchEnableGenericValueTypeSharing Condition="'$(MtouchEnableGenericValueTypeSharing)' == ''">True</MtouchEnableGenericValueTypeSharing>
 		<MtouchFastDev Condition="'$(MtouchFastDev)' == ''">False</MtouchFastDev>
-		<MtouchHttpClientHandler Condition="'$(MtouchHttpClientHandler)' == ''">HttpClientHandler</MtouchHttpClientHandler>
+		<MtouchHttpClientHandler Condition="'$(MtouchHttpClientHandler)' == ''">NSUrlSessionHandler</MtouchHttpClientHandler>
 		<MtouchProfiling Condition="'$(MtouchProfiling)' == ''">False</MtouchProfiling>
 		<MtouchLinkerDumpDependencies Condition="'$(MtouchLinkerDumpDependencies)' == ''">False</MtouchLinkerDumpDependencies>
 		<MtouchLink Condition="'$(MtouchLink)' == ''">SdkOnly</MtouchLink>

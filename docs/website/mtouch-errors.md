@@ -683,6 +683,22 @@ Alternatively, enable the managed [linker](https://docs.microsoft.com/en-us/xama
 
 As a last-straw solution, use an older version of Xamarin.iOS that does not require these new SDKs to be present during the build process.
 
+### <a name="MT0136"/>MT0136: Cannot find the assembly {assembly} referenced from {assembly}.
+
+This warning occurs when an assembly passed to mtouch contains a reference to
+another assembly that can't be found.
+
+mtouch may in certain cases still find references at a later point, which
+means that if the build otherwise succeeds, this warning can be ignored.
+
+### <a name="MT0137"/>MT0137: Cannot find the assembly {assembly}, referenced by an attribute in {assembly}.
+
+This warning occurs when an attribute contains a reference to another assembly
+that can't be found.
+
+mtouch may in certain cases still find references at a later point, which
+means that if the build otherwise succeeds, this warning can be ignored.
+
 # MT1xxx: Project related error messages
 
 ### MT10xx: Installer / mtouch
@@ -1771,6 +1787,20 @@ will be shown.
 
 Reference: https://github.com/xamarin/xamarin-macios/issues/4072
 
+### <a name="MT4176"/>MT4176: Unable to locate the delegate to block conversion type for the return value of the method {method}.
+
+This is a warning indicating that the static registrar couldn't find the type
+used to convert a delegate to an Objective-C block. An attempt will be made at
+runtime to find the method, but it will likely fail as well (with an MT8009
+exception).
+
+One possible reason for this warning is when manually writing bindings for API
+that uses blocks. It's recommended to use a binding project to bind
+Objective-C code, in particular when it involves blocks, since it's quite
+complicated to get it right when doing it manually.
+
+If this is not the case, please file a bug at [https://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS) with a test case.
+
 # MT5xxx: GCC and toolchain error messages
 
 ### MT51xx: Compilation
@@ -2511,3 +2541,8 @@ There are a few reasons this may happen:
 
 * It could be a bug in Xamarin.iOS. If this is the case, please file a bug at
   [https://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
+
+### <a name="MT8028"/>MT8028: The runtime function {function} has been linked away.
+
+This usually indicates a bug in Xamarin.iOS, because runtime functions should
+not be linked away if they're needed. Please [submit an issue](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions).

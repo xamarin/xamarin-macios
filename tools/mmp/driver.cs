@@ -119,8 +119,6 @@ namespace Xamarin.Bundler {
 		static bool is_extension;
 		static bool frameworks_copied_to_bundle_dir;	// Have we copied any frameworks to Foo.app/Contents/Frameworks?
 
-		// This must be kept in sync with the system launcher's minimum mono version (in launcher/launcher-system.m)
-		static Version MinimumMonoVersion = new Version (4, 2, 0);
 		const string pkg_config = "/Library/Frameworks/Mono.framework/Commands/pkg-config";
 
 		static void ShowHelp (OptionSet os) {
@@ -499,6 +497,7 @@ namespace Xamarin.Bundler {
 			if (verbose > 0)
 				Console.WriteLine ("Selected target framework: {0}; API: {1}", targetFramework, IsClassic ? "Classic" : "Unified");
 
+			Log (1, $"Selected Linking: '{App.LinkMode}'");
 
 			if (action == Action.RunRegistrar) {
 				App.Registrar = RegistrarMode.Static;
@@ -1192,15 +1191,20 @@ namespace Xamarin.Bundler {
 
 				RunCommand (pkg_config, "--cflags mono-2", env, cflagsb);
 				RunCommand (pkg_config, "--variable=libdir mono-2", env, libdirb);
-				RunCommand (pkg_config, "--modversion mono-2", env, mono_version);
+				var versionFile = "/Library/Frameworks/Mono.framework/Versions/Current/VERSION";
+				if (File.Exists (versionFile)) {
+					mono_version.Append (File.ReadAllText (versionFile));
+				} else {
+					RunCommand (pkg_config, "--modversion mono-2", env, mono_version);
+				}
 			} catch (Win32Exception e) {
 				throw new MonoMacException (5301, true, e, "pkg-config could not be found. Please install the Mono.framework from http://mono-project.com/Downloads");
 			}
 
 			Version mono_ver;
-			if (Version.TryParse (mono_version.ToString ().TrimEnd (), out mono_ver) && mono_ver < MinimumMonoVersion)
+			if (Version.TryParse (mono_version.ToString ().TrimEnd (), out mono_ver) && mono_ver < MonoVersions.MinimumMonoVersion)
 				throw new MonoMacException (1, true, "This version of Xamarin.Mac requires Mono {0} (the current Mono version is {1}). Please update the Mono.framework from http://mono-project.com/Downloads", 
-					MinimumMonoVersion, mono_version.ToString ().TrimEnd ());
+					MonoVersions.MinimumMonoVersion, mono_version.ToString ().TrimEnd ());
 			
 			cflags = cflagsb.ToString ().Replace (Environment.NewLine, String.Empty);
 			libdir = libdirb.ToString ().Replace (Environment.NewLine, String.Empty);

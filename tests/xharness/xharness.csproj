@@ -45,6 +45,14 @@
       <Variable name="MONO_ENV_OPTIONS" value="--trace=E:all" />
     </EnvironmentVariables>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Makefile.inc' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>--configure --autoconf --rootdir ..</StartArguments>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Makefile-mac.inc' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>--configure --autoconf --rootdir .. --mac </StartArguments>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Xml" />

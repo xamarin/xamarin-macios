@@ -278,7 +278,7 @@ class MyObjectErr : NSObject, IFoo1, IFoo2
 				mtouch.CreateTemporaryApp (extraCode: sb.ToString (), usings: "using System; using Foundation; using ObjCRuntime;", extraArg: "/debug:full");
 				mtouch.Linker = MTouchLinker.LinkSdk;
 				mtouch.Registrar = MTouchRegistrar.Static;
-				mtouch.AssertExecuteFailure ();
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev);
 				var invalidFrameworks = new [] {
 					new { Framework = "IdentityLookup", Version = "11.0" },
 					new { Framework = "FileProviderUI", Version = "11.0" },
@@ -296,6 +296,8 @@ class MyObjectErr : NSObject, IFoo1, IFoo2
 					mtouch.AssertError (4134, $"Your application is using the '{framework.Framework}' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS {framework.Version}, while you're building with the iOS {mtouch.Sdk} SDK.) Please select a newer SDK in your app's iOS Build options.");
 				mtouch.AssertErrorCount (invalidFrameworks.Length);
 				mtouch.AssertWarningCount (0);
+
+				mtouch.AssertExecute (MTouchAction.BuildSim);
 			}
 		}
 
@@ -1177,6 +1179,45 @@ namespace NS {
 				mtouch.AssertExecuteFailure ("build");
 				mtouch.AssertError (4174, "Unable to locate the block to delegate conversion method for the method NS.Consumer.ResolveRecipients's parameter #2.", "testApp.cs", 11);
 				mtouch.AssertErrorCount (1);
+			}
+		}
+
+		[Test]
+		public void MT4176 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var code = @"
+namespace NS {
+	using System;
+	using Foundation;
+	using ObjCRuntime;
+
+	public class Consumer : NSObject
+	{
+		[Export (""getAction"")]
+		public Action GetFunction ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		[Export (""getProperty"")]
+		public Action GetProperty {
+			get {
+				throw new NotImplementedException ();
+			}
+		}
+	}
+}
+
+";
+				mtouch.Linker = MTouchLinker.DontLink; // faster
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.CreateTemporaryApp (extraCode: code, extraArg: "-debug");
+				mtouch.WarnAsError = new int [] { 4176 };
+				mtouch.AssertExecuteFailure ("build");
+				mtouch.AssertError (4176, "Unable to locate the delegate to block conversion type for the return value of the method NS.Consumer.GetFunction.", "testApp.cs", 11);
+				mtouch.AssertError (4176, "Unable to locate the delegate to block conversion type for the return value of the method NS.Consumer.get_GetProperty.", "testApp.cs", 17);
+				mtouch.AssertErrorCount (2);
 			}
 		}
 
