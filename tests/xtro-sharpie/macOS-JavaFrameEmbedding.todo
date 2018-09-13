@@ -1,7 +1,0 @@
-!missing-field! JavaFrameViewDidCreateJavaFrame not bound
-!missing-selector! +JavaFrameView::setJavaStartupOptions: not bound
-!missing-selector! JavaFrameView::initWithFrame:javaFrameClassName: not bound
-!missing-selector! JavaFrameView::setDelegate: not bound
-!missing-selector! JavaFrameView::setJavaFrameClassName: not bound
-!missing-selector! NSObject::javaFrameView:didCreateJavaFrame:withJNIEnv: not bound
-!missing-type! JavaFrameView not bound
