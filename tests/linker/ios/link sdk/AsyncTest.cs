@@ -16,7 +16,7 @@ namespace LinkSdk {
 
 		public Task<string> LoadCategories ()
 		{
-			return Task.Run (async () => await (new HttpClient ()).GetStringAsync ("http://google.com"));
+			return Task.Run (async () => await (new HttpClient ()).GetStringAsync ("https://google.com"));
 		}
 
 		[Test]
