@@ -1,0 +1,4 @@
+!missing-selector! AVCapturePhotoOutput::isAutoRedEyeReductionSupported not bound
+!missing-selector! AVCapturePhotoSettings::isAutoRedEyeReductionEnabled not bound
+!missing-selector! AVCapturePhotoSettings::setAutoRedEyeReductionEnabled: not bound
+!missing-selector! AVCaptureResolvedPhotoSettings::isRedEyeReductionEnabled not bound

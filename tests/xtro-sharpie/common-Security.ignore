@@ -30,3 +30,7 @@
 ## test crash (API and test commented) - better test case needed
 !missing-pinvoke! sec_protocol_metadata_create_secret is not bound
 !missing-pinvoke! sec_protocol_metadata_create_secret_with_context is not bound
+
+## xcode10.0 backlog
+!missing-pinvoke! sec_protocol_options_set_challenge_block is not bound
+!missing-pinvoke! sec_protocol_options_set_verify_block is not bound

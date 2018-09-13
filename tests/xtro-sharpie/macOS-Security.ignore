@@ -665,6 +665,7 @@
 !missing-field! kSecCodeInfoTimestamp not bound
 !missing-field! kSecCodeInfoTrust not bound
 !missing-field! kSecCodeInfoUnique not bound
+!missing-field! kSecCodeInfoRuntimeVersion not bound
 !missing-field! kSecCompressionRatio not bound
 !missing-field! kSecDecodeTypeAttribute not bound
 !missing-field! kSecDigestHMACKeyAttribute not bound
