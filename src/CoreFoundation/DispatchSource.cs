@@ -195,12 +195,12 @@ namespace CoreFoundation {
 
 			public void MergeData (IntPtr value)
 			{
-				dispatch_source_merge_data (handle, value);
+				dispatch_source_merge_data (Handle, value);
 			}
 
 			public IntPtr PendingData {
 				get {
-					return dispatch_source_get_data (handle);
+					return dispatch_source_get_data (Handle);
 				}
 			}
 		}

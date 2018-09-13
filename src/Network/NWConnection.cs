@@ -212,7 +212,7 @@ namespace Network {
 		{
 			if (queue == null)
 				throw new ArgumentNullException (nameof (queue));
-			nw_connection_set_queue (GetCheckedHandle (), queue.handle);
+			nw_connection_set_queue (GetCheckedHandle (), queue.Handle);
 		}
 
 		[DllImport (Constants.NetworkLibrary)]

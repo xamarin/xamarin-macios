@@ -97,14 +97,14 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		extern static nuint dispatch_data_get_size (IntPtr handle);
 
-		public nuint Size => dispatch_data_get_size (handle);
+		public nuint Size => dispatch_data_get_size (Handle);
 
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_data_create_map (IntPtr handle, out IntPtr bufferPtr, out nuint size);
 
 		public DispatchData CreateMap (out IntPtr bufferPtr, out nuint size)
 		{
-			var nh = dispatch_data_create_map (handle, out bufferPtr, out size);
+			var nh = dispatch_data_create_map (Handle, out bufferPtr, out size);
 			return new DispatchData (nh, owns: true);
 		}
 
@@ -118,7 +118,7 @@ namespace CoreFoundation {
 			if (data2 == null)
 				throw new ArgumentNullException (nameof (data2));
 
-			return new DispatchData (dispatch_data_create_concat (data1.handle, data2.handle), owns: true);
+			return new DispatchData (dispatch_data_create_concat (data1.Handle, data2.Handle), owns: true);
 		}
 
 		[DllImport (Constants.libcLibrary)]
@@ -126,7 +126,7 @@ namespace CoreFoundation {
 
 		public DispatchData CreateSubrange (nuint offset, nuint size)
 		{
-			return new DispatchData (dispatch_data_create_subrange (handle, offset, size), owns: true);
+			return new DispatchData (dispatch_data_create_subrange (Handle, offset, size), owns: true);
 		}
 #endif
 	}

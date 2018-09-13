@@ -97,7 +97,7 @@ namespace CoreFoundation {
 			} else {
 				if (ob == null)
 					return false;
-				return a.handle == b.handle;
+				return a.Handle == b.Handle;
 			}
 		}
 
@@ -111,12 +111,12 @@ namespace CoreFoundation {
 			var od = other as DispatchQueue;
 			if (od == null)
 				return false;
-			return od.handle == handle;
+			return od.Handle == Handle;
 		}
 
 		public override int GetHashCode ()
 		{
-			return (int) handle;
+			return (int) Handle;
 		}
 
 		[DllImport (Constants.libcLibrary)]
@@ -126,7 +126,7 @@ namespace CoreFoundation {
 		{
 			// note: null is allowed because DISPATCH_TARGET_QUEUE_DEFAULT is defined as NULL (dispatch/queue.h)
 			IntPtr q = queue == null ? IntPtr.Zero : queue.Handle;
-			dispatch_set_target_queue (handle, q);
+			dispatch_set_target_queue (Handle, q);
 		}
 
 		[DllImport (Constants.libcLibrary)]
@@ -151,7 +151,7 @@ namespace CoreFoundation {
 		public DispatchQueue (string label)
 			: base (dispatch_queue_create (label, IntPtr.Zero), true)
 		{
-			if (handle == IntPtr.Zero)
+			if (Handle == IntPtr.Zero)
 				throw new Exception ("Error creating dispatch queue");
 		}
 
@@ -167,7 +167,7 @@ namespace CoreFoundation {
 		public DispatchQueue (string label, bool concurrent)
 			: base (dispatch_queue_create (label, concurrent ? ConcurrentQueue : IntPtr.Zero), true)
 		{
-			if (handle == IntPtr.Zero)
+			if (Handle == IntPtr.Zero)
 				throw new Exception ("Error creating dispatch queue");
 		}
 		
@@ -337,7 +337,7 @@ namespace CoreFoundation {
 			if (action == null)
 				throw new ArgumentNullException ("action");
 			
-			dispatch_async_f (handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
+			dispatch_async_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
 		}
 
 		public void DispatchSync (Action action)
@@ -345,7 +345,7 @@ namespace CoreFoundation {
 			if (action == null)
 				throw new ArgumentNullException ("action");
 			
-			dispatch_sync_f (handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
+			dispatch_sync_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
 		}
 
 		public void DispatchBarrierAsync (Action action)
@@ -353,7 +353,7 @@ namespace CoreFoundation {
 			if (action == null)
 				throw new ArgumentNullException ("action");
 			
-			dispatch_barrier_async_f (handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
+			dispatch_barrier_async_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
 		}
 		
 		public void DispatchAfter (DispatchTime when, Action action)
@@ -361,14 +361,14 @@ namespace CoreFoundation {
 			if (action == null)
 				throw new ArgumentNullException ("action");
 
-			dispatch_after_f (when.Nanoseconds, handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
+			dispatch_after_f (when.Nanoseconds, Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
 		}
 
 		public void Submit (Action<int> action, long times)
 		{
 			if (action == null)
 				throw new ArgumentNullException ("action");
-			dispatch_apply_f ((IntPtr) times, handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch_iterations);
+			dispatch_apply_f ((IntPtr) times, Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch_iterations);
 		}
 		
 		//
@@ -411,7 +411,7 @@ namespace CoreFoundation {
 			DispatchQueue o = other as DispatchQueue;
 			if (o == null)
 				return false;
-			return (o.Handle == handle);
+			return (o.Handle == Handle);
 		}
 
 		public static bool operator == (DispatchQueue left, DispatchQueue right)
@@ -430,7 +430,7 @@ namespace CoreFoundation {
 
 		public override int GetHashCode ()
 		{
-			return (int)handle;
+			return (int) Handle;
 		}
 		
 #if MONOMAC
@@ -517,7 +517,7 @@ namespace CoreFoundation {
 			if (action == null)
 				throw new ArgumentNullException ("action");
 
-			dispatch_group_async_f (GetCheckedHandle (), queue.handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, queue)), DispatchQueue.static_dispatch);
+			dispatch_group_async_f (GetCheckedHandle (), queue.Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, queue)), DispatchQueue.static_dispatch);
 		}
 
 		public void Notify (DispatchQueue queue, Action action)
@@ -527,7 +527,7 @@ namespace CoreFoundation {
 			if (action == null)
 				throw new ArgumentNullException ("action");
 
-			dispatch_group_notify_f (GetCheckedHandle (), queue.handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, queue)), DispatchQueue.static_dispatch);
+			dispatch_group_notify_f (GetCheckedHandle (), queue.Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, queue)), DispatchQueue.static_dispatch);
 		}
 
 		public void Enter ()
