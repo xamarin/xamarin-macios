@@ -122,12 +122,6 @@ namespace CoreFoundation {
 			return (int) handle;
 		}
 
-		protected void Check ()
-		{
-			if (handle == IntPtr.Zero)
-				throw new ObjectDisposedException (GetType ().ToString ());
-		}			
-
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_set_target_queue (/* dispatch_object_t */ IntPtr queue, /* dispatch_queue_t */ IntPtr target);
 
@@ -187,10 +181,7 @@ namespace CoreFoundation {
 
 		public string Label {
 			get {
-				if (handle == IntPtr.Zero)
-					throw new ObjectDisposedException ("DispatchQueue");
-				
-				return Marshal.PtrToStringAnsi (dispatch_queue_get_label (handle));
+				return Marshal.PtrToStringAnsi (dispatch_queue_get_label (GetCheckedHandle ()));
 			}
 		}
 
@@ -203,14 +194,12 @@ namespace CoreFoundation {
 
 		public void Suspend ()
 		{
-			Check ();
-			dispatch_suspend (handle);
+			dispatch_suspend (GetCheckedHandle ());
 		}
 
 		public void Resume ()
 		{
-			Check ();
-			dispatch_resume (handle);
+			dispatch_resume (GetCheckedHandle ());
 		}
 
 		[DllImport (Constants.libcLibrary)]
@@ -224,12 +213,10 @@ namespace CoreFoundation {
 
 		public IntPtr Context {
 			get {
-				Check ();
-				return dispatch_get_context (handle);
+				return dispatch_get_context (GetCheckedHandle ());
 			}
 			set {
-				Check ();
-				dispatch_set_context (handle, value);
+				dispatch_set_context (GetCheckedHandle (), value);
 			}
 		}
 	
@@ -534,8 +521,7 @@ namespace CoreFoundation {
 			if (action == null)
 				throw new ArgumentNullException ("action");
 
-			Check ();
-			dispatch_group_async_f (handle, queue.handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, queue)), DispatchQueue.static_dispatch);
+			dispatch_group_async_f (GetCheckedHandle (), queue.handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, queue)), DispatchQueue.static_dispatch);
 		}
 
 		public void Notify (DispatchQueue queue, Action action)
@@ -545,26 +531,22 @@ namespace CoreFoundation {
 			if (action == null)
 				throw new ArgumentNullException ("action");
 
-			Check ();
-			dispatch_group_notify_f (handle, queue.handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, queue)), DispatchQueue.static_dispatch);
+			dispatch_group_notify_f (GetCheckedHandle (), queue.handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, queue)), DispatchQueue.static_dispatch);
 		}
 
 		public void Enter ()
 		{
-			Check ();			
-			dispatch_group_enter (handle);
+			dispatch_group_enter (GetCheckedHandle ());
 		}
 
 		public void Leave ()
 		{
-			Check ();
-			dispatch_group_leave (handle);
+			dispatch_group_leave (GetCheckedHandle ());
 		}
 
 		public bool Wait (DispatchTime timeout)
 		{
-			Check ();			
-			return dispatch_group_wait (handle, timeout.Nanoseconds) == 0;
+			return dispatch_group_wait (GetCheckedHandle (), timeout.Nanoseconds) == 0;
 		}
 
 		[DllImport (Constants.libcLibrary)]
