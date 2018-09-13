@@ -55,6 +55,6 @@ namespace CoreTelephony {
 	public enum CTCellularPlanProvisioningAddPlanResult : long {
 		Unknown,
 		Fail,
-		Success
+		Success,
 	}
 }
