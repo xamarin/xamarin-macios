@@ -132,11 +132,8 @@ namespace UIKit {
 				throw new ArgumentNullException ("token");
 			if (recognizers == null)
 				return;
-			if (recognizers.ContainsKey (token)){
-				var sel = recognizers [token];
-				recognizers.Remove (token);
+			if (recognizers.Remove (token, out var sel))
 				RemoveTarget (token, sel);
-			}
 		}
 
 		//
@@ -144,10 +141,7 @@ namespace UIKit {
 		//
 		public IEnumerable<Token> GetTargets ()
 		{
-			if (recognizers == null)
-				yield break;
-			foreach (var kv in recognizers)
-				yield return kv.Key;
+			return (IEnumerable<Token>) recognizers?.Keys ?? Array.Empty<Token> ();
 		}
 	}
 
