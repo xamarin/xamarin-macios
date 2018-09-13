@@ -79,32 +79,25 @@ namespace CoreText {
 
 		static CTFontNameKeyId ()
 		{
-			var handle = Dlfcn.dlopen (Constants.CoreTextLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-				Copyright     = Dlfcn.GetStringConstant (handle, "kCTFontCopyrightNameKey");
-				Family        = Dlfcn.GetStringConstant (handle, "kCTFontFamilyNameKey");
-				SubFamily     = Dlfcn.GetStringConstant (handle, "kCTFontSubFamilyNameKey");
-				Style         = Dlfcn.GetStringConstant (handle, "kCTFontStyleNameKey");
-				Unique        = Dlfcn.GetStringConstant (handle, "kCTFontUniqueNameKey");
-				Full          = Dlfcn.GetStringConstant (handle, "kCTFontFullNameKey");
-				Version       = Dlfcn.GetStringConstant (handle, "kCTFontVersionNameKey");
-				PostScript    = Dlfcn.GetStringConstant (handle, "kCTFontPostScriptNameKey");
-				Trademark     = Dlfcn.GetStringConstant (handle, "kCTFontTrademarkNameKey");
-				Manufacturer  = Dlfcn.GetStringConstant (handle, "kCTFontManufacturerNameKey");
-				Designer      = Dlfcn.GetStringConstant (handle, "kCTFontDesignerNameKey");
-				Description   = Dlfcn.GetStringConstant (handle, "kCTFontDescriptionNameKey");
-				VendorUrl     = Dlfcn.GetStringConstant (handle, "kCTFontVendorURLNameKey");
-				DesignerUrl   = Dlfcn.GetStringConstant (handle, "kCTFontDesignerURLNameKey");
-				License       = Dlfcn.GetStringConstant (handle, "kCTFontLicenseNameKey");
-				LicenseUrl    = Dlfcn.GetStringConstant (handle, "kCTFontLicenseURLNameKey");
-				SampleText    = Dlfcn.GetStringConstant (handle, "kCTFontSampleTextNameKey");
-				PostscriptCid = Dlfcn.GetStringConstant (handle, "kCTFontPostScriptCIDNameKey");
-			}
-			finally {
-				Dlfcn.dlclose (handle);
-			}
+			var handle = Libraries.CoreText.Handle;
+			Copyright     = Dlfcn.GetStringConstant (handle, "kCTFontCopyrightNameKey");
+			Family        = Dlfcn.GetStringConstant (handle, "kCTFontFamilyNameKey");
+			SubFamily     = Dlfcn.GetStringConstant (handle, "kCTFontSubFamilyNameKey");
+			Style         = Dlfcn.GetStringConstant (handle, "kCTFontStyleNameKey");
+			Unique        = Dlfcn.GetStringConstant (handle, "kCTFontUniqueNameKey");
+			Full          = Dlfcn.GetStringConstant (handle, "kCTFontFullNameKey");
+			Version       = Dlfcn.GetStringConstant (handle, "kCTFontVersionNameKey");
+			PostScript    = Dlfcn.GetStringConstant (handle, "kCTFontPostScriptNameKey");
+			Trademark     = Dlfcn.GetStringConstant (handle, "kCTFontTrademarkNameKey");
+			Manufacturer  = Dlfcn.GetStringConstant (handle, "kCTFontManufacturerNameKey");
+			Designer      = Dlfcn.GetStringConstant (handle, "kCTFontDesignerNameKey");
+			Description   = Dlfcn.GetStringConstant (handle, "kCTFontDescriptionNameKey");
+			VendorUrl     = Dlfcn.GetStringConstant (handle, "kCTFontVendorURLNameKey");
+			DesignerUrl   = Dlfcn.GetStringConstant (handle, "kCTFontDesignerURLNameKey");
+			License       = Dlfcn.GetStringConstant (handle, "kCTFontLicenseNameKey");
+			LicenseUrl    = Dlfcn.GetStringConstant (handle, "kCTFontLicenseURLNameKey");
+			SampleText    = Dlfcn.GetStringConstant (handle, "kCTFontSampleTextNameKey");
+			PostscriptCid = Dlfcn.GetStringConstant (handle, "kCTFontPostScriptCIDNameKey");
 		}
 
 		public static NSString ToId (CTFontNameKey key)
