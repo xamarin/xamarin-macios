@@ -151,6 +151,18 @@ namespace CoreFoundation {
 
 		[DllImport (Constants.libcLibrary)]
 		internal extern static void dispatch_suspend (IntPtr o);
+
+		[Mac (10,12)]
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Watch (3,0)]
+		public void Activate ()
+		{
+			dispatch_activate (GetCheckedHandle ());
+		}
+
+		[DllImport (Constants.libcLibrary)]
+		extern static void dispatch_activate (/* dispatch_object_t */ IntPtr @object);
 #endif // !COREBUILD
 	}
 
@@ -188,6 +200,17 @@ namespace CoreFoundation {
 				throw new Exception ("Error creating dispatch queue");
 		}
 		
+		[Mac (10,12)]
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Watch (3,0)]
+		public DispatchQueue (string label, Attributes attributes, DispatchQueue target = null)
+			: base (dispatch_queue_create_with_target (label, attributes?.Create () ?? IntPtr.Zero, target.GetHandle ()), true)
+		{
+			if (Handle == IntPtr.Zero)
+				throw new Exception ("Error creating dispatch queue");
+		}
+
 		//
 		// Properties and methods
 		//
@@ -420,6 +443,9 @@ namespace CoreFoundation {
 		extern static IntPtr dispatch_queue_create (string label, IntPtr attr);
 
 		[DllImport (Constants.libcLibrary)]
+		extern static IntPtr dispatch_queue_create_with_target (string label, IntPtr attr, IntPtr target);
+
+		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_async_f (IntPtr queue, IntPtr context, dispatch_callback_t dispatch);
 
 		[DllImport (Constants.libcLibrary)]
@@ -494,6 +520,59 @@ namespace CoreFoundation {
 			dispatch_main ();
 		}
 #endif
+
+		public class Attributes
+		{
+			public bool Concurrent { get; set; }
+
+			public bool IsInitiallyInactive { get; set; }
+
+			public AutoreleaseFrequency? AutoreleaseFrequency { get; set; }
+
+			public int RelativePriority { get; set; }
+
+			public DispatchQualityOfService? QualityOfService { get; set; }
+
+			internal IntPtr Create ()
+			{
+				IntPtr rv = IntPtr.Zero;
+
+				if (Concurrent)
+					rv = DispatchQueue.ConcurrentQueue;
+
+				if (IsInitiallyInactive)
+					rv = dispatch_queue_attr_make_initially_inactive (rv);
+
+				if (AutoreleaseFrequency.HasValue)
+					rv = dispatch_queue_attr_make_with_autorelease_frequency (rv, (nuint) (ulong) AutoreleaseFrequency.Value);
+
+				if (QualityOfService.HasValue)
+					rv = dispatch_queue_attr_make_with_qos_class (rv, QualityOfService.Value, RelativePriority);
+
+				return rv;
+			}
+
+			[DllImport (Constants.libcLibrary)]
+			static extern /* dispatch_queue_attr_t */ IntPtr dispatch_queue_attr_make_initially_inactive (/* dispatch_queue_attr_t _Nullable */ IntPtr attr);
+
+			[DllImport (Constants.libcLibrary)]
+			static extern /* dispatch_queue_attr_t */ IntPtr dispatch_queue_attr_make_with_autorelease_frequency (/* dispatch_queue_attr_t _Nullable */ IntPtr attr, /* dispatch_autorelease_frequency_t */ nuint frequency);
+
+			[DllImport (Constants.libcLibrary)]
+			static extern /* dispatch_queue_attr_t */ IntPtr dispatch_queue_attr_make_with_qos_class (/* dispatch_queue_attr_t _Nullable */ IntPtr attr, /* dispatch_qos_class_t */ DispatchQualityOfService qos_class, int relative_priority);
+		}
+
+		[Mac (10,12)]
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Watch (3,0)]
+		[Native]
+		public enum AutoreleaseFrequency : ulong /* unsigned long */
+		{
+			Inherit = 0,
+			WorkItem = 1,
+			Never = 2,
+		}
 #endif // !COREBUILD
 	}
 
