@@ -42,6 +42,10 @@ namespace MonoTouchFixtures.Network {
 			using (var parameters = NWParameters.CreateUdp ())
 			using (var endpoint = NWEndpoint.Create (host, "80"))
 			{
+				using (var protocolStack = parameters.ProtocolStack) {
+					var ipOptions = protocolStack.InternetProtocol;
+					ipOptions.IPSetVersion (NWIPVersion.Version4);
+				}
 				connection = new NWConnection (endpoint, parameters);
 				connection.SetQueue (DispatchQueue.DefaultGlobalQueue); // important, else we will get blocked
 				connection.SetStateChangeHandler (ConnectionStateHandler);
