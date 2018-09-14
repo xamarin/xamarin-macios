@@ -63,7 +63,6 @@ namespace Introspection {
 				break;
 			case "MTLFence":
 			case "MTLHeap":
-			case "RPSystemBroadcastPickerView": // Symbol not available in simulator
 				if (Runtime.Arch != Arch.DEVICE)
 					return true;
 

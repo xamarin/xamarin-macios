@@ -222,7 +222,6 @@ namespace Introspection {
 			case "INGetRestaurantGuestIntentResponse": // Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: Unable to initialize 'INGetRestaurantGuestIntentResponse'. Please make sure that your intent definition file is valid.
 				return TestRuntime.CheckXcodeVersion (10,0);
 			case "CMMovementDisorderManager": // Not available in simulator, added info to radar://41110708 
-			case "RPSystemBroadcastPickerView": // Symbol not available in simulator
 				return Runtime.Arch == Arch.SIMULATOR;
 			default:
 				return base.Skip (type);
