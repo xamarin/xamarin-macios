@@ -126,6 +126,7 @@ namespace MonoTouchFixtures.Network {
 		[Test]
 		public void HasIPV6PropertyTest ()
 		{
+			Assert.Ignore ("We cannot test the use of IPV6 since it is different per machine configuraton and makes the test flaky.");
 			Assert.False (path.HasIPV6, "By default the interface does not support IPV6"); // To be tested as part of NWProtocolStack
 		}
 
