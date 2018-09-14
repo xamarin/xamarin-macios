@@ -24,6 +24,14 @@ namespace ClockKit {
 		UtilitarianSmallFlat = 6,
 		[Watch (3,0)]
 		ExtraLarge = 7,
+		[Watch (5,0)]
+		GraphicCorner,
+		[Watch (5,0)]
+		GraphicBezel,
+		[Watch (5,0)]
+		GraphicCircular,
+		[Watch (5,0)]
+		GraphicRectangular,
 	}
 
 	[Native]
