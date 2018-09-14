@@ -7,6 +7,8 @@ using System.Text;
 using NUnit.Framework;
 using System.Reflection;
 
+using Xamarin.Tests;
+
 namespace Xamarin.MMP.Tests
 {
 	[TestFixture]
@@ -68,6 +70,8 @@ namespace Xamarin.MMP.Tests
 		[TestCase (true)]
 		public void AOT_32Bit_SmokeTest (bool useProjectTags)
 		{
+			Configuration.AssertXcodeSupports32Bit ();
+
 			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					CSProjConfig = "<XamMacArch>i386</XamMacArch>" + GetTestConfig (TestType.Base, useProjectTags)

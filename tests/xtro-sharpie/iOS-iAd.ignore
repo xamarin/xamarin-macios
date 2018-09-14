@@ -6,3 +6,7 @@
 ## Deprecated in iOS 4.2 - removed from XAMCORE_3_0
 !unknown-field! ADBannerContentSizeIdentifier320x50 bound
 !unknown-field! ADBannerContentSizeIdentifier480x32 bound
+
+## static members in category -> bound manually
+!missing-selector! +AVPlayerViewController::preparePrerollAds not bound
+!missing-selector! +UIViewController::prepareInterstitialAds not bound

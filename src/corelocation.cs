@@ -322,11 +322,10 @@ namespace CoreLocation {
 		[Export ("deferredLocationUpdatesAvailable")]
 		bool DeferredLocationUpdatesAvailable { get; }
 
-#if !MONOMAC
 		[iOS (6,0)]
+		[Mac (10,14, onlyOn64: true)]
 		[Field ("CLTimeIntervalMax")]
 		double MaxTimeInterval { get; }
-#endif
 
 		[NoWatch][NoTV]
 		[Mac (10,10)]
@@ -378,10 +377,6 @@ namespace CoreLocation {
 		[Export ("stopMonitoringVisits")]
 		void StopMonitoringVisits ();
 
-		[iOS (9,0)]
-		[Export ("requestLocation")]
-		void RequestLocation ();
-
 		[NoTV]
 		[iOS (9,0), Watch (4,0)]
 		[Export ("allowsBackgroundLocationUpdates")]
@@ -391,6 +386,10 @@ namespace CoreLocation {
 		[Export ("showsBackgroundLocationIndicator")]
 		bool ShowsBackgroundLocationIndicator { get; set; }
 #endif
+		[iOS (9,0)]
+		[Mac (10,14, onlyOn64: true)]
+		[Export ("requestLocation")]
+		void RequestLocation ();
 	}
 	
 	[BaseType (typeof (NSObject))]
@@ -491,11 +490,7 @@ namespace CoreLocation {
 	[Static]
 	partial interface CLLocationDistance {
 
-#if XAMCORE_4_0 // Unavailable on macOS
-		[NoMac]
-#else
-		[Mac (10,9)]
-#endif
+		[Mac (10,14, onlyOn64: true)]
 		[iOS (6,0)]
 		[Field ("CLLocationDistanceMax")]
 		double MaxDistance { get; }

@@ -63,7 +63,9 @@ namespace ClockKit {
 	public enum CLKRelativeDateStyle : long {
 		Natural,
 		Offset,
-		Timer
+		Timer,
+		[Watch (5,0)]
+		NaturalAbbreviated,
 	}
 
 }

@@ -10,7 +10,7 @@
 using System;
 using Foundation;
 using ObjCRuntime;
-#if !WATCH && !MONOMAC
+#if !WATCH
 using CoreSpotlight;
 #endif
 
@@ -313,6 +313,8 @@ namespace CoreData
 		[Deprecated (PlatformName.iOS, 11, 0, message : "Use 'NSEntityDescription.Indexes' instead.")]
 		[Mac (10, 7)]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'NSEntityDescription.Indexes' instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message : "Use 'NSEntityDescription.Indexes' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message : "Use 'NSEntityDescription.Indexes' instead.")]
 		NSPropertyDescription [] CompoundIndexes { get; set; }
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
@@ -1563,8 +1565,8 @@ namespace CoreData
 		NSNotification ObjectIdNotification { get; }
 	}
 
-#if !WATCH && !MONOMAC
-	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+#if !WATCH
+	[NoWatch, NoTV, Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
 	interface NSCoreDataCoreSpotlightDelegate
 	{
@@ -1598,6 +1600,10 @@ namespace CoreData
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSPersistentStore {
+
+		[Static]
+		[Export ("migrationManagerClass")]
+		Class MigrationManagerClass { get; }
 
 		[Static, Export ("metadataForPersistentStoreWithURL:error:")]
 		[return: NullAllowed]
@@ -1662,8 +1668,8 @@ namespace CoreData
 		[Field ("NSPersistentStoreSaveConflictsErrorKey")]
 		NSString SaveConflictsErrorKey { get; }
 
-#if !WATCH && !MONOMAC
-		[NoWatch, NoTV, Mac (10, 13), iOS (11, 0)]
+#if !WATCH
+		[NoWatch, NoTV, Mac (10, 13, onlyOn64: true), iOS (11, 0)]
 		[Export ("coreSpotlightExporter")]
 		NSCoreDataCoreSpotlightDelegate CoreSpotlightExporter { get; }
 #endif
@@ -1795,6 +1801,7 @@ namespace CoreData
 		NSDictionary MetadataForPersistentStoreOfType (NSString storeType, NSUrl url, out NSError error);
 		
 		[iOS (7,0)]
+		[Mac (10, 9)]
 		[Static, Export ("metadataForPersistentStoreOfType:URL:options:error:")]
 		[return: NullAllowed]
 		NSDictionary<NSString, NSObject> GetMetadata (string storeType, NSUrl url, [NullAllowed] NSDictionary options, out NSError error);
@@ -1804,6 +1811,7 @@ namespace CoreData
 		bool SetMetadata (NSDictionary metadata, NSString storeType, NSUrl url, out NSError error);
 		
 		[iOS (7,0)]
+		[Mac (10,9)]
 		[Static, Export ("setMetadata:forPersistentStoreOfType:URL:options:error:")]
 		bool SetMetadata ([NullAllowed] NSDictionary<NSString, NSObject> metadata, string storeType, NSUrl url, [NullAllowed] NSDictionary options, out NSError error);
 
@@ -2175,6 +2183,8 @@ namespace CoreData
 		[Export ("indexed")]
 		[Deprecated (PlatformName.iOS, 11, 0, message : "Use 'NSEntityDescription.Indexes' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'NSEntityDescription.Indexes' instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message : "Use 'NSEntityDescription.Indexes' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message : "Use 'NSEntityDescription.Indexes' instead.")]
 		bool Indexed { [Bind ("isIndexed")] get; set; }
 
 		[Export ("versionHash")]

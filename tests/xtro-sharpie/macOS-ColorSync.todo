@@ -1,0 +1,187 @@
+!missing-enum! ColorSyncAlphaInfo not bound
+!missing-enum! ColorSyncDataDepth not bound
+!missing-field! kCMMApplyTransformProcName not bound
+!missing-field! kCMMCreateTransformPropertyProcName not bound
+!missing-field! kCMMInitializeLinkProfileProcName not bound
+!missing-field! kCMMInitializeTransformProcName not bound
+!missing-field! kColorSyncACESCGLinearProfile not bound
+!missing-field! kColorSyncAdobeRGB1998Profile not bound
+!missing-field! kColorSyncBestQuality not bound
+!missing-field! kColorSyncBlackPointCompensation not bound
+!missing-field! kColorSyncCameraDeviceClass not bound
+!missing-field! kColorSyncConversion1DLut not bound
+!missing-field! kColorSyncConversion3DLut not bound
+!missing-field! kColorSyncConversionBPC not bound
+!missing-field! kColorSyncConversionChannelID not bound
+!missing-field! kColorSyncConversionGridPoints not bound
+!missing-field! kColorSyncConversionInpChan not bound
+!missing-field! kColorSyncConversionMatrix not bound
+!missing-field! kColorSyncConversionNDLut not bound
+!missing-field! kColorSyncConversionOutChan not bound
+!missing-field! kColorSyncConversionParamCurve0 not bound
+!missing-field! kColorSyncConversionParamCurve1 not bound
+!missing-field! kColorSyncConversionParamCurve2 not bound
+!missing-field! kColorSyncConversionParamCurve3 not bound
+!missing-field! kColorSyncConversionParamCurve4 not bound
+!missing-field! kColorSyncConvertQuality not bound
+!missing-field! kColorSyncCustomProfiles not bound
+!missing-field! kColorSyncDCIP3Profile not bound
+!missing-field! kColorSyncDeviceClass not bound
+!missing-field! kColorSyncDeviceDefaultProfileID not bound
+!missing-field! kColorSyncDeviceDescription not bound
+!missing-field! kColorSyncDeviceDescriptions not bound
+!missing-field! kColorSyncDeviceHostScope not bound
+!missing-field! kColorSyncDeviceID not bound
+!missing-field! kColorSyncDeviceModeDescription not bound
+!missing-field! kColorSyncDeviceModeDescriptions not bound
+!missing-field! kColorSyncDeviceProfileID not bound
+!missing-field! kColorSyncDeviceProfileIsCurrent not bound
+!missing-field! kColorSyncDeviceProfileIsDefault not bound
+!missing-field! kColorSyncDeviceProfileIsFactory not bound
+!missing-field! kColorSyncDeviceProfilesNotification not bound
+!missing-field! kColorSyncDeviceProfileURL not bound
+!missing-field! kColorSyncDeviceRegisteredNotification not bound
+!missing-field! kColorSyncDeviceUnregisteredNotification not bound
+!missing-field! kColorSyncDeviceUserScope not bound
+!missing-field! kColorSyncDisplayDeviceClass not bound
+!missing-field! kColorSyncDisplayDeviceProfilesNotification not bound
+!missing-field! kColorSyncDisplayP3Profile not bound
+!missing-field! kColorSyncDraftQuality not bound
+!missing-field! kColorSyncFactoryProfiles not bound
+!missing-field! kColorSyncFixedPointRange not bound
+!missing-field! kColorSyncGenericCMYKProfile not bound
+!missing-field! kColorSyncGenericGrayGamma22Profile not bound
+!missing-field! kColorSyncGenericGrayProfile not bound
+!missing-field! kColorSyncGenericLabProfile not bound
+!missing-field! kColorSyncGenericRGBProfile not bound
+!missing-field! kColorSyncGenericXYZProfile not bound
+!missing-field! kColorSyncITUR2020Profile not bound
+!missing-field! kColorSyncITUR709Profile not bound
+!missing-field! kColorSyncNormalQuality not bound
+!missing-field! kColorSyncPreferredCMM not bound
+!missing-field! kColorSyncPrinterDeviceClass not bound
+!missing-field! kColorSyncProfile not bound
+!missing-field! kColorSyncProfileClass not bound
+!missing-field! kColorSyncProfileColorSpace not bound
+!missing-field! kColorSyncProfileComputerDomain not bound
+!missing-field! kColorSyncProfileDescription not bound
+!missing-field! kColorSyncProfileHeader not bound
+!missing-field! kColorSyncProfileHostScope not bound
+!missing-field! kColorSyncProfileMD5Digest not bound
+!missing-field! kColorSyncProfilePCS not bound
+!missing-field! kColorSyncProfileRepositoryChangeNotification not bound
+!missing-field! kColorSyncProfileURL not bound
+!missing-field! kColorSyncProfileUserDomain not bound
+!missing-field! kColorSyncProfileUserScope not bound
+!missing-field! kColorSyncRegistrationUpdateWindowServer not bound
+!missing-field! kColorSyncRenderingIntent not bound
+!missing-field! kColorSyncRenderingIntentAbsolute not bound
+!missing-field! kColorSyncRenderingIntentPerceptual not bound
+!missing-field! kColorSyncRenderingIntentRelative not bound
+!missing-field! kColorSyncRenderingIntentSaturation not bound
+!missing-field! kColorSyncRenderingIntentUseProfileHeader not bound
+!missing-field! kColorSyncROMMRGBProfile not bound
+!missing-field! kColorSyncScannerDeviceClass not bound
+!missing-field! kColorSyncSigAbstractClass not bound
+!missing-field! kColorSyncSigAToB0Tag not bound
+!missing-field! kColorSyncSigAToB1Tag not bound
+!missing-field! kColorSyncSigAToB2Tag not bound
+!missing-field! kColorSyncSigBlueColorantTag not bound
+!missing-field! kColorSyncSigBlueTRCTag not bound
+!missing-field! kColorSyncSigBToA0Tag not bound
+!missing-field! kColorSyncSigBToA1Tag not bound
+!missing-field! kColorSyncSigBToA2Tag not bound
+!missing-field! kColorSyncSigCmykData not bound
+!missing-field! kColorSyncSigColorSpaceClass not bound
+!missing-field! kColorSyncSigCopyrightTag not bound
+!missing-field! kColorSyncSigDeviceMfgDescTag not bound
+!missing-field! kColorSyncSigDeviceModelDescTag not bound
+!missing-field! kColorSyncSigDisplayClass not bound
+!missing-field! kColorSyncSigGamutTag not bound
+!missing-field! kColorSyncSigGrayData not bound
+!missing-field! kColorSyncSigGrayTRCTag not bound
+!missing-field! kColorSyncSigGreenColorantTag not bound
+!missing-field! kColorSyncSigGreenTRCTag not bound
+!missing-field! kColorSyncSigInputClass not bound
+!missing-field! kColorSyncSigLabData not bound
+!missing-field! kColorSyncSigLinkClass not bound
+!missing-field! kColorSyncSigMediaBlackPointTag not bound
+!missing-field! kColorSyncSigMediaWhitePointTag not bound
+!missing-field! kColorSyncSigNamedColor2Tag not bound
+!missing-field! kColorSyncSigNamedColorClass not bound
+!missing-field! kColorSyncSigOutputClass not bound
+!missing-field! kColorSyncSigPreview0Tag not bound
+!missing-field! kColorSyncSigPreview1Tag not bound
+!missing-field! kColorSyncSigPreview2Tag not bound
+!missing-field! kColorSyncSigProfileDescriptionTag not bound
+!missing-field! kColorSyncSigProfileSequenceDescTag not bound
+!missing-field! kColorSyncSigRedColorantTag not bound
+!missing-field! kColorSyncSigRedTRCTag not bound
+!missing-field! kColorSyncSigRgbData not bound
+!missing-field! kColorSyncSigTechnologyTag not bound
+!missing-field! kColorSyncSigViewingCondDescTag not bound
+!missing-field! kColorSyncSigViewingConditionsTag not bound
+!missing-field! kColorSyncSigXYZData not bound
+!missing-field! kColorSyncSRGBProfile not bound
+!missing-field! kColorSyncTransformCodeFragmentMD5 not bound
+!missing-field! kColorSyncTransformCodeFragmentType not bound
+!missing-field! kColorSyncTransformCreator not bound
+!missing-field! kColorSyncTransformDeviceToDevice not bound
+!missing-field! kColorSyncTransformDeviceToPCS not bound
+!missing-field! kColorSyncTransformDstSpace not bound
+!missing-field! kColorSyncTransformFullConversionData not bound
+!missing-field! kColorSyncTransformGamutCheck not bound
+!missing-field! kColorSyncTransformInfo not bound
+!missing-field! kColorSyncTransformParametricConversionData not bound
+!missing-field! kColorSyncTransformPCSToDevice not bound
+!missing-field! kColorSyncTransformPCSToPCS not bound
+!missing-field! kColorSyncTransformSimplifiedConversionData not bound
+!missing-field! kColorSyncTransformSrcSpace not bound
+!missing-field! kColorSyncTransformTag not bound
+!missing-pinvoke! CGDisplayCreateUUIDFromDisplayID is not bound
+!missing-pinvoke! CGDisplayGetDisplayIDFromUUID is not bound
+!missing-pinvoke! ColorSyncCMMCopyCMMIdentifier is not bound
+!missing-pinvoke! ColorSyncCMMCopyLocalizedName is not bound
+!missing-pinvoke! ColorSyncCMMCreate is not bound
+!missing-pinvoke! ColorSyncCMMGetBundle is not bound
+!missing-pinvoke! ColorSyncCMMGetTypeID is not bound
+!missing-pinvoke! ColorSyncCreateCodeFragment is not bound
+!missing-pinvoke! ColorSyncDeviceCopyDeviceInfo is not bound
+!missing-pinvoke! ColorSyncDeviceSetCustomProfiles is not bound
+!missing-pinvoke! ColorSyncIterateDeviceProfiles is not bound
+!missing-pinvoke! ColorSyncIterateInstalledCMMs is not bound
+!missing-pinvoke! ColorSyncIterateInstalledProfiles is not bound
+!missing-pinvoke! ColorSyncProfileContainsTag is not bound
+!missing-pinvoke! ColorSyncProfileCopyData is not bound
+!missing-pinvoke! ColorSyncProfileCopyDescriptionString is not bound
+!missing-pinvoke! ColorSyncProfileCopyHeader is not bound
+!missing-pinvoke! ColorSyncProfileCopyTag is not bound
+!missing-pinvoke! ColorSyncProfileCopyTagSignatures is not bound
+!missing-pinvoke! ColorSyncProfileCreate is not bound
+!missing-pinvoke! ColorSyncProfileCreateDeviceProfile is not bound
+!missing-pinvoke! ColorSyncProfileCreateDisplayTransferTablesFromVCGT is not bound
+!missing-pinvoke! ColorSyncProfileCreateLink is not bound
+!missing-pinvoke! ColorSyncProfileCreateMutable is not bound
+!missing-pinvoke! ColorSyncProfileCreateMutableCopy is not bound
+!missing-pinvoke! ColorSyncProfileCreateWithDisplayID is not bound
+!missing-pinvoke! ColorSyncProfileCreateWithName is not bound
+!missing-pinvoke! ColorSyncProfileCreateWithURL is not bound
+!missing-pinvoke! ColorSyncProfileEstimateGamma is not bound
+!missing-pinvoke! ColorSyncProfileEstimateGammaWithDisplayID is not bound
+!missing-pinvoke! ColorSyncProfileGetDisplayTransferFormulaFromVCGT is not bound
+!missing-pinvoke! ColorSyncProfileGetMD5 is not bound
+!missing-pinvoke! ColorSyncProfileGetTypeID is not bound
+!missing-pinvoke! ColorSyncProfileGetURL is not bound
+!missing-pinvoke! ColorSyncProfileInstall is not bound
+!missing-pinvoke! ColorSyncProfileRemoveTag is not bound
+!missing-pinvoke! ColorSyncProfileSetHeader is not bound
+!missing-pinvoke! ColorSyncProfileSetTag is not bound
+!missing-pinvoke! ColorSyncProfileUninstall is not bound
+!missing-pinvoke! ColorSyncProfileVerify is not bound
+!missing-pinvoke! ColorSyncRegisterDevice is not bound
+!missing-pinvoke! ColorSyncTransformConvert is not bound
+!missing-pinvoke! ColorSyncTransformCopyProperty is not bound
+!missing-pinvoke! ColorSyncTransformCreate is not bound
+!missing-pinvoke! ColorSyncTransformGetTypeID is not bound
+!missing-pinvoke! ColorSyncTransformSetProperty is not bound
+!missing-pinvoke! ColorSyncUnregisterDevice is not bound

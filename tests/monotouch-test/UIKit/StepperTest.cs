@@ -43,9 +43,6 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void BackgroundImage ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6,0))
-				Assert.Inconclusive ("requires iOS 6");
-
 			using (var s = new UIStepper ()) {
 				s.SetBackgroundImage (null, UIControlState.Application);
 			}

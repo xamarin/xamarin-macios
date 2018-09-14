@@ -37,29 +37,6 @@ using CoreGraphics;
 namespace CoreText {
 
 #region Typesetter Values
-	public static class CTTypesetterOptionKey {
-
-		[Deprecated (PlatformName.iOS, 6, 0)]
-		public static readonly NSString DisableBidiProcessing;
-		public static readonly NSString ForceEmbeddingLevel;
-
-		static CTTypesetterOptionKey ()
-		{
-			var handle = Dlfcn.dlopen (Constants.CoreTextLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-#pragma warning disable 618				
-				DisableBidiProcessing = Dlfcn.GetStringConstant (handle, "kCTTypesetterOptionDisableBidiProcessing");
-#pragma warning restore 618
-				ForceEmbeddingLevel   = Dlfcn.GetStringConstant (handle, "kCTTypesetterOptionForcedEmbeddingLevel");
-			}
-			finally {
-				Dlfcn.dlclose (handle);
-			}
-		}
-	}
-
 	public class CTTypesetterOptions {
 
 		public CTTypesetterOptions ()
@@ -93,6 +70,15 @@ namespace CoreText {
 		public int? ForceEmbeddingLevel {
 			get {return Adapter.GetInt32Value (Dictionary, CTTypesetterOptionKey.ForceEmbeddingLevel);}
 			set {Adapter.SetValue (Dictionary, CTTypesetterOptionKey.ForceEmbeddingLevel, value);}
+		}
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		public bool AllowUnboundedLayout {
+			get => CFDictionary.GetBooleanValue (Dictionary.Handle, CTTypesetterOptionKey.AllowUnboundedLayout.Handle);
+			set {
+				Adapter.AssertWritable (Dictionary);
+				CFMutableDictionary.SetValue (Dictionary.Handle, CTTypesetterOptionKey.AllowUnboundedLayout.Handle, value);
+			}
 		}
 	}
 #endregion

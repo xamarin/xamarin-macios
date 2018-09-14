@@ -66,7 +66,7 @@ namespace MonoTouchFixtures.AddressBookUI {
 				// iOS 8.2 beta 5 (12D5480a) simulator (Xcode 6.2 beta 5): working
 
 				// we don't check before 8.2 - where both device and simulators works again properly
-				if (!UIDevice.CurrentDevice.CheckSystemVersion (8,2))
+				if (!TestRuntime.CheckSystemVersion (PlatformName.iOS, 8, 2))
 					return;
 
 				// iOS 11.0 beta 1, 2, 3 and 4 are broken

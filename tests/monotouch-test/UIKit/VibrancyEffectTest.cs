@@ -13,6 +13,7 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using UIKit;
+using ObjCRuntime;
 #if !__TVOS__
 using NotificationCenter;
 #endif
@@ -28,22 +29,10 @@ namespace MonoTouchFixtures.UIKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class VibrancyEffectTest {
-
-#if !XAMCORE_2_0
-		[Test]
-		public void NotificationCenterVibrancyEffect_Old ()
-		{
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (8,0))
-				Assert.Inconclusive ("Requires 8.0+");
-
-			(null as UIVibrancyEffect).NotificationCenterVibrancyEffect ();
-		}
-#endif
 		[Test]
 		public void NotificationCenterVibrancyEffect_New ()
 		{
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (8,0))
-				Assert.Inconclusive ("Requires 8.0+");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			UIVibrancyEffect.CreateForNotificationCenter ();
 		}

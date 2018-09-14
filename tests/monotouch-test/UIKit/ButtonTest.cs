@@ -7,6 +7,7 @@ using System.Drawing;
 #if XAMCORE_2_0
 using Foundation;
 using UIKit;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -46,7 +47,12 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.IsNull (b.Title (UIControlState.Normal), "title");
 
 				b.SetTitleColor (null, UIControlState.Normal);
-				if (TestRuntime.CheckSystemAndSDKVersion (7,0))
+				var hasTitleColor = true;
+#if __IOS__
+				if (!TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0))
+					hasTitleColor = false;
+#endif
+				if (hasTitleColor)
 					Assert.That (b.TitleColor (UIControlState.Normal), Is.EqualTo (UIColor.White), "titlecolor");
 				else
 					Assert.IsNull (b.TitleColor (UIControlState.Normal), "titlecolor");

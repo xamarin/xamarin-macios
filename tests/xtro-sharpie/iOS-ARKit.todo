@@ -1,0 +1,5 @@
+!missing-enum! ARPlaneClassification not bound
+!missing-enum! ARPlaneClassificationStatus not bound
+!missing-selector! +ARPlaneAnchor::isClassificationSupported not bound
+!missing-selector! ARPlaneAnchor::classification not bound
+!missing-selector! ARPlaneAnchor::classificationStatus not bound

@@ -645,6 +645,11 @@ namespace Xamarin.Bundler {
 				if (rv.Minor == 11 && XcodeVersion >= new Version (7, 3))
 					return new Version (rv.Major, rv.Minor, 4);
 			}
+			// Since Version has wrong behavior:
+			// new Version (10, 14) < new Version (10, 14, 0) => true
+			// Force any unset revision to 0 instead of -1
+			if (rv.Revision == -1)
+				return new Version (rv.Major, rv.Minor, 0);
 			return rv;
 		}
 
@@ -1359,6 +1364,10 @@ namespace Xamarin.Bundler {
 				}
 
 				args.Append ("-liconv -x objective-c++ ");
+				if (XcodeVersion.Major >= 10) {
+					// Xcode 10 doesn't ship with libstdc++
+					args.Append ("-stdlib=libc++ ");
+				}
 				args.Append ("-I").Append (StringUtils.Quote (Path.Combine (GetXamMacPrefix (), "include"))).Append (' ');
 				if (registrarPath != null)
 					args.Append (StringUtils.Quote (registrarPath)).Append (' ');

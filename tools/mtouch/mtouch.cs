@@ -376,6 +376,7 @@ namespace Xamarin.Bundler
 				var plist = FromPList (plist_path);
 				var version = plist.GetString ("CFBundleShortVersionString");
 				xcode_version = new Version (version);
+				xcode_bundle_version = plist.GetString ("CFBundleVersion");
 			} else {
 				throw ErrorHelper.CreateError (58, "The Xcode.app '{0}' is invalid (the file '{1}' does not exist).", Path.GetDirectoryName (Path.GetDirectoryName (developer_directory)), plist_path);
 			}
@@ -1003,8 +1004,8 @@ namespace Xamarin.Bundler
 			{ "nofastsim", "Do not run the simulator fast-path build", v => app.NoFastSim = true },
 			{ "nodevcodeshare", "Do not share native code between extensions and main app.", v => app.NoDevCodeShare = true },
 			{ "nolink", "Do not link the assemblies", v => app.LinkMode = LinkMode.None },
-			{ "nodebugtrack", "Disable debug tracking of object resurrection bugs", v => app.DebugTrack = false },
-			{ "debugtrack:", "Enable debug tracking of object resurrection bugs (enabled by default for the simulator)", v => { app.DebugTrack = ParseBool (v, "--debugtrack"); } },
+			{ "nodebugtrack", "Disable debug tracking of object resurrection bugs [DEPRECATED - already disabled by default]", v => app.DebugTrack = false, true },
+			{ "debugtrack:", "Enable debug tracking of object resurrection bugs", v => { app.DebugTrack = ParseBool (v, "--debugtrack"); } },
 			{ "linkerdumpdependencies", "Dump linker dependencies for linker-analyzer tool", v => app.LinkerDumpDependencies = true },
 			{ "linksdkonly", "Link only the SDK assemblies", v => app.LinkMode = LinkMode.SDKOnly },
 			{ "linkskip=", "Skip linking of the specified assembly", v => app.LinkSkipped.Add (v) },

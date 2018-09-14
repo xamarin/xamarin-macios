@@ -121,6 +121,22 @@ namespace CoreText {
 					constraints, out fitRange);
 		}
 #endregion
+		[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0), Watch (5,0)]
+		[DllImport (Constants.CoreTextLibrary)]
+		static extern IntPtr CTFramesetterCreateWithTypesetter (IntPtr typesetter);
+
+		[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0), Watch (5,0)]
+		public static CTFramesetter Create (CTTypesetter typesetter)
+		{
+			if (typesetter == null)
+				throw new ArgumentNullException (nameof (typesetter));
+
+			var ret = CTFramesetterCreateWithTypesetter (typesetter.Handle);
+			if (ret == IntPtr.Zero)
+				return null;
+
+			return new CTFramesetter (ret, owns: true);
+		}
 	}
 }
 

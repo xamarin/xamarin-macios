@@ -80,11 +80,9 @@
     <Compile Include="..\EmbeddedResources\ResourcesTest.cs">
       <Link>EmbeddedResources\ResourcesTest.cs</Link>
     </Compile>
-    <Compile Include="System.ServiceModel\Net45.cs" />
     <Compile Include="..\common\mac\ProjectTestHelpers.cs">
       <Link>ProjectTestHelpers.cs</Link>
     </Compile>
-    <Compile Include="Unified45.cs" />
     <Compile Include="..\..\tools\common\StringUtils.cs">
       <Link>StringUtils.cs</Link>
     </Compile>
@@ -177,7 +175,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="EmbeddedResources\" />
-    <Folder Include="System.ServiceModel\" />
 	<Folder Include="..\monotouch-test\BundleResourceResources\Base.lproj\" />
   </ItemGroup>
   <ItemGroup>

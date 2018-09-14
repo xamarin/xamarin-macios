@@ -113,6 +113,7 @@ namespace MonoMac {
 		public const string MetalKitLibrary = "/System/Library/Frameworks/MetalKit.framework/MetalKit";
 		public const string ModelIOLibrary = "/System/Library/Frameworks/ModelIO.framework/ModelIO";
 		public const string GameplayKitLibrary = "/System/Library/Frameworks/GameplayKit.framework/GameplayKit";
+		public const string NetworkLibrary = "/System/Library/Frameworks/Network.framework/Network";
 		public const string NetworkExtensionLibrary = "/System/Library/Frameworks/NetworkExtension.framework/NetworkExtension";
 		public const string CoreAudioKitLibrary = "/System/Library/Frameworks/CoreAudioKit.framework/CoreAudioKit";
 		public const string MediaToolboxLibrary = "/System/Library/Frameworks/MediaToolbox.framework/MediaToolbox";
@@ -138,5 +139,12 @@ namespace MonoMac {
 		public const string MetalPerformanceShadersLibrary = "/System/Library/Frameworks/MetalPerformanceShaders.framework/MetalPerformanceShaders";
 		// macOS 10.13.4
 		public const string BusinessChatLibrary = "/System/Library/Frameworks/BusinessChat.framework/BusinessChat";
+
+		// macOS 10.14
+		public const string AdSupportLibrary = "/System/Library/Frameworks/AdSupport.framework/AdSupport";
+		public const string NaturalLanguageLibrary = "/System/Library/Frameworks/Frameworks/NaturalLanguage.framework/NaturalLanguage";
+		public const string VideoSubscriberAccountLibrary = "/System/Library/Frameworks/VideoSubscriberAccount.framework/VideoSubscriberAccount";
+		public const string UserNotificationsLibrary = "/System/Library/Frameworks/UserNotifications.framework/UserNotifications";
+		public const string iTunesLibraryLibrary = "/System/Library/Frameworks/iTunesLibrary.framewor/iTunesLibrary";
 	}
 }

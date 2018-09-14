@@ -1,0 +1,37 @@
+!missing-field! kLSSharedFileListFavoriteItems not bound
+!missing-field! kLSSharedFileListFavoriteVolumes not bound
+!missing-field! kLSSharedFileListGlobalLoginItems not bound
+!missing-field! kLSSharedFileListItemBeforeFirst not bound
+!missing-field! kLSSharedFileListItemHidden not bound
+!missing-field! kLSSharedFileListItemLast not bound
+!missing-field! kLSSharedFileListLoginItemHidden not bound
+!missing-field! kLSSharedFileListRecentApplicationItems not bound
+!missing-field! kLSSharedFileListRecentDocumentItems not bound
+!missing-field! kLSSharedFileListRecentItemsMaxAmount not bound
+!missing-field! kLSSharedFileListRecentServerItems not bound
+!missing-field! kLSSharedFileListSessionLoginItems not bound
+!missing-field! kLSSharedFileListVolumesComputerVisible not bound
+!missing-field! kLSSharedFileListVolumesIDiskVisible not bound
+!missing-field! kLSSharedFileListVolumesNetworkVisible not bound
+!missing-pinvoke! LSSharedFileListAddObserver is not bound
+!missing-pinvoke! LSSharedFileListCopyProperty is not bound
+!missing-pinvoke! LSSharedFileListCopySnapshot is not bound
+!missing-pinvoke! LSSharedFileListCreate is not bound
+!missing-pinvoke! LSSharedFileListGetSeedValue is not bound
+!missing-pinvoke! LSSharedFileListGetTypeID is not bound
+!missing-pinvoke! LSSharedFileListInsertItemFSRef is not bound
+!missing-pinvoke! LSSharedFileListInsertItemURL is not bound
+!missing-pinvoke! LSSharedFileListItemCopyDisplayName is not bound
+!missing-pinvoke! LSSharedFileListItemCopyIconRef is not bound
+!missing-pinvoke! LSSharedFileListItemCopyProperty is not bound
+!missing-pinvoke! LSSharedFileListItemCopyResolvedURL is not bound
+!missing-pinvoke! LSSharedFileListItemGetID is not bound
+!missing-pinvoke! LSSharedFileListItemGetTypeID is not bound
+!missing-pinvoke! LSSharedFileListItemMove is not bound
+!missing-pinvoke! LSSharedFileListItemRemove is not bound
+!missing-pinvoke! LSSharedFileListItemResolve is not bound
+!missing-pinvoke! LSSharedFileListItemSetProperty is not bound
+!missing-pinvoke! LSSharedFileListRemoveAllItems is not bound
+!missing-pinvoke! LSSharedFileListRemoveObserver is not bound
+!missing-pinvoke! LSSharedFileListSetAuthorization is not bound
+!missing-pinvoke! LSSharedFileListSetProperty is not bound

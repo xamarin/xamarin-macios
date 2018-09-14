@@ -91,6 +91,14 @@ namespace Xamarin.Utils
 			SourceFiles.Add (file);
 		}
 
+		public void AddStandardCppLibrary ()
+		{
+			if (Driver.XcodeVersion.Major < 10)
+				return;
+			// Xcode 10 doesn't ship with libstdc++, so use libc++ instead.
+			AddOtherFlag ("-stdlib=libc++");
+		}
+
 		public void AddOtherFlag (string flag)
 		{
 			if (OtherFlags == null)

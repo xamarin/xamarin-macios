@@ -13,6 +13,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 #if XAMCORE_2_0
 using Foundation;
+using ObjCRuntime;
 #if MONOMAC
 using AppKit;
 #else
@@ -44,6 +45,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void ConstructorTest ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			var bytes = Marshal.AllocHGlobal (1);
 			var deallocated = false;
@@ -163,6 +165,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void Base64_Short ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			using (var data = NSData.FromArray (new byte [1] { 42 })) {
 				string s1 = data.GetBase64EncodedString (NSDataBase64EncodingOptions.EndLineWithCarriageReturn);
@@ -183,6 +186,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void Base64_Long ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			byte[] array = new byte [60];
 			using (var data = NSData.FromArray (array)) {
@@ -333,6 +337,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void Base64String ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			using (var d = new NSData ("WGFtYXJpbg==", NSDataBase64DecodingOptions.IgnoreUnknownCharacters)) {
 				Assert.That (d.ToString (), Is.EqualTo ("Xamarin"));
@@ -343,6 +348,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void Base64Data ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			using (var b = NSData.FromString ("WGFtYXJpbg=="))
 			using (var d = new NSData (b, NSDataBase64DecodingOptions.IgnoreUnknownCharacters)) {

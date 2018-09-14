@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xtro-report", "xtro-report\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xtro-sanity", "xtro-sanity\xtro-sanity.csproj", "{E4D9B627-EF24-43AF-B6F2-60F38694C905}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "u2todo", "u2todo\u2todo.csproj", "{244C7FD0-39C9-49F7-8D88-A954EA8DFFF6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,5 +27,9 @@ Global
 		{E4D9B627-EF24-43AF-B6F2-60F38694C905}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4D9B627-EF24-43AF-B6F2-60F38694C905}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4D9B627-EF24-43AF-B6F2-60F38694C905}.Release|Any CPU.Build.0 = Release|Any CPU
+		{244C7FD0-39C9-49F7-8D88-A954EA8DFFF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{244C7FD0-39C9-49F7-8D88-A954EA8DFFF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{244C7FD0-39C9-49F7-8D88-A954EA8DFFF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{244C7FD0-39C9-49F7-8D88-A954EA8DFFF6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

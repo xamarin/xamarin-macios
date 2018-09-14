@@ -11,3 +11,7 @@
 
 ## bound in informal protocol CIImageProvider
 !missing-selector! NSObject::provideImageData:bytesPerRow:origin::size::userInfo: not bound
+
+## at some point in time (iOS11/macOS 10.11) this API was removed/deprecated and we added a compatibility
+## stub using 'autoAdjustmentFiltersWithOptions:'. Now it's back (in headers but can be ignored)
+!missing-selector! CIImage::autoAdjustmentFilters not bound

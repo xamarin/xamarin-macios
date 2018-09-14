@@ -167,6 +167,16 @@ namespace Contacts {
 		[Export ("predicateForContactsMatchingName:")]
 		NSPredicate GetPredicateForContacts (string matchingName);
 
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("predicateForContactsMatchingEmailAddress:")]
+		NSPredicate GetPredicateForContactsMatchingEmailAddress (string emailAddress);
+
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("predicateForContactsMatchingPhoneNumber:")]
+		NSPredicate GetPredicateForContacts (CNPhoneNumber phoneNumber);
+
 		[Static]
 		[Export ("predicateForContactsWithIdentifiers:")]
 		NSPredicate GetPredicateForContacts (string [] identifiers);

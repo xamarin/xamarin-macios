@@ -13,6 +13,7 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using SpriteKit;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.SpriteKit;
@@ -34,8 +35,10 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void Empty ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("Requires iOS7");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.TvOS, 9, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.WatchOS, 3, 0, throwIfOtherPlatform: false);
 
 			using (var atlas = new SKTextureAtlas ()) {
 				Assert.That (atlas.TextureNames, Is.Empty, "TextureNames");

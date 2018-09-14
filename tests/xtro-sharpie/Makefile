@@ -84,12 +84,21 @@ report: build
 report-short:
 	JENKINS_SERVER_COOKIE=1 make report
 
+classify-ios:
+	$(MONO) bin/Debug/xtro-sharpie.exe $(XIOS_PCH) $(XIOS) $(XIOS_GL)
+
+classify-tvos:
+	$(MONO) bin/Debug/xtro-sharpie.exe $(XTVOS_PCH) $(XTVOS) $(XTVOS_GL)
+
+classify-watchos:
+	$(MONO) bin/Debug/xtro-sharpie.exe $(XWATCHOS_PCH) $(XWATCHOS)
+
+classify-macos:
+	$(MONO) bin/Debug/xtro-sharpie.exe $(XMAC_PCH) $(XMAC)
+
 classify: build $(XIOS_PCH) $(XWATCHOS_PCH) $(XTVOS_PCH) $(XMAC_PCH)
 	rm -f *.unclassified
-	$(MONO) bin/Debug/xtro-sharpie.exe $(XIOS_PCH) $(XIOS) $(XIOS_GL)
-	$(MONO) bin/Debug/xtro-sharpie.exe $(XWATCHOS_PCH) $(XWATCHOS)
-	$(MONO) bin/Debug/xtro-sharpie.exe $(XTVOS_PCH) $(XTVOS) $(XTVOS_GL)
-	$(MONO) bin/Debug/xtro-sharpie.exe $(XMAC_PCH) $(XMAC)
+	$(MAKE) -j4 classify-ios classify-tvos classify-watchos classify-macos
 	$(MONO) xtro-sanity/bin/Debug/xtro-sanity.exe .
 	rm -f *.raw
 
@@ -105,8 +114,9 @@ all: classify report
 	@$(TOP)/system-dependencies.sh --ignore-all --enforce-sharpie
 	@touch $@
 	
-unclassified2todo:
-	for f in *.unclassified; do \
-		mv -- "$f" "${f%.unclassified}.todo" \
-	done \
+remove-empty-files:
+	find . -empty -exec git rm -f {} \;
 
+unclassified2todo:
+	$(SYSTEM_CSC) Filter.cs u2todo/u2todo.cs
+	$(MONO) u2todo.exe
