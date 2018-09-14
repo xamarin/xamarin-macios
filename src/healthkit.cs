@@ -360,7 +360,7 @@ namespace HealthKit {
 		// FIXME NS_EXTENSION_UNAVAILABLE("Not available to extensions") ;
 		[Async]
 		[Export ("requestAuthorizationToShareTypes:readTypes:completion:")]
-		void RequestAuthorizationToShare (NSSet typesToShare, NSSet typesToRead, Action<bool, NSError> completion);
+		void RequestAuthorizationToShare ([NullAllowed] NSSet typesToShare, [NullAllowed] NSSet typesToRead, Action<bool, NSError> completion);
 
 		// FIXME NS_EXTENSION_UNAVAILABLE("Not available to extensions") ;
 		[Async]
