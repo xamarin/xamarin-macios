@@ -25,13 +25,13 @@ namespace ClockKit {
 		[Watch (3,0)]
 		ExtraLarge = 7,
 		[Watch (5,0)]
-		GraphicCorner = 8,
+		GraphicCorner,
 		[Watch (5,0)]
-		GraphicBezel = 9,
+		GraphicBezel,
 		[Watch (5,0)]
-		GraphicCircular = 10,
+		GraphicCircular,
 		[Watch (5,0)]
-		GraphicRectangular = 11,
+		GraphicRectangular,
 	}
 
 	[Native]
