@@ -486,7 +486,7 @@ namespace Xamarin.Bundler
 				throw new ArgumentNullException (nameof (install_name));
 
 			flags.AddOtherFlag ("-shared");
-			if (!App.EnableBitCode)
+			if (!App.EnableBitCode && !Target.Is64Build)
 				flags.AddOtherFlag ("-read_only_relocs suppress");
 			if (App.EnableBitCode)
 				flags.AddOtherFlag ("-lc++");
