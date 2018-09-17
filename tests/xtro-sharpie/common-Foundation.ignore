@@ -630,7 +630,6 @@
 !missing-selector! NSMutableArray::sortWithOptions:usingComparator: not bound
 !missing-selector! NSMutableData::increaseLengthBy: not bound
 !missing-selector! NSMutableData::initWithLength: not bound
-!missing-selector! NSMutableDictionary::addEntriesFromDictionary: not bound
 !missing-selector! NSMutableDictionary::initWithCapacity: not bound
 !missing-selector! NSMutableDictionary::removeObjectsForKeys: not bound
 !missing-selector! NSMutableDictionary::setDictionary: not bound
