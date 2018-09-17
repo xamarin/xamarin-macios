@@ -200,7 +200,7 @@ namespace Xamarin.Bundler {
 #endif
 
 						if (App.SdkVersion >= framework.Version) {
-							var add_to = App.DeploymentTarget >= framework.Version ? asm.Frameworks : asm.WeakFrameworks;
+							var add_to = framework.AlwaysWeakLinked || App.DeploymentTarget < framework.Version ? asm.WeakFrameworks : asm.Frameworks;
 							add_to.Add (framework.Name);
 							continue;
 						} else {

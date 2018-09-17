@@ -48,17 +48,17 @@ namespace MonoTouchFixtures.MultipeerConnectivity {
 		[Test]
 		public void CtorPeer ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("requires iOS7+");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			using (var peer = new MCPeerID ("me"))
 			using (var s = new MCSession (peer)) {
 				Assert.AreSame (s.MyPeerID, peer, "MyPeerID");
 				Assert.Null (s.SecurityIdentity, "SecurityIdentity");
 #if MONOMAC
-				var pref = MCEncryptionPreference.Required;
+				var pref = TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 11) ? MCEncryptionPreference.Required : MCEncryptionPreference.Optional;
 #else
-				var pref = UIDevice.CurrentDevice.CheckSystemVersion (9,0) ? MCEncryptionPreference.Required : MCEncryptionPreference.Optional;
+				var pref = TestRuntime.CheckSystemVersion (PlatformName.iOS, 9, 0) ? MCEncryptionPreference.Required : MCEncryptionPreference.Optional;
 #endif
 				Assert.That (s.EncryptionPreference, Is.EqualTo (pref), "EncryptionPreference");
 				Assert.That (s.ConnectedPeers, Is.Empty, "ConnectedPeers");
@@ -68,8 +68,8 @@ namespace MonoTouchFixtures.MultipeerConnectivity {
 		[Test]
 		public void Ctor_OptionalIdentity ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("requires iOS7+");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			using (var peer = new MCPeerID ("me"))
 			using (var s = new MCSession (peer, null, MCEncryptionPreference.None)) {
@@ -83,8 +83,8 @@ namespace MonoTouchFixtures.MultipeerConnectivity {
 		[Test]
 		public void Ctor_Identity ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("requires iOS7+");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			using (var id = IdentityTest.GetIdentity ())
 			using (var peer = new MCPeerID ("me"))
@@ -100,8 +100,8 @@ namespace MonoTouchFixtures.MultipeerConnectivity {
 		[Test]
 		public void Ctor_Identity_Certificates ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("requires iOS7+");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			using (var id = IdentityTest.GetIdentity ())
 			using (var trust = new SecTrust (id.Certificate, SecPolicy.CreateBasicX509Policy ()))

@@ -43,8 +43,7 @@ namespace MonoTouchFixtures.Photos {
 		[Test]
 		public void FetchResultToArray ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Inconclusive ("Requires iOS8 or later");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			if (ALAssetsLibrary.AuthorizationStatus != ALAuthorizationStatus.Authorized)
 				Assert.Inconclusive ("Requires access to the photo library");
@@ -63,8 +62,7 @@ namespace MonoTouchFixtures.Photos {
 		[Test]
 		public void FetchResultIndex ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Inconclusive ("Requires iOS8 or later");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
 				
 			if (ALAssetsLibrary.AuthorizationStatus != ALAuthorizationStatus.Authorized)
 				Assert.Inconclusive ("Requires access to the photo library");
@@ -83,8 +81,7 @@ namespace MonoTouchFixtures.Photos {
 		[Test]
 		public void FetchResultObjectsAt ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Inconclusive ("Requires iOS8 or later");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			if (ALAssetsLibrary.AuthorizationStatus != ALAuthorizationStatus.Authorized)
 				Assert.Inconclusive ("Requires access to the photo library");

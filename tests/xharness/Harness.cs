@@ -82,10 +82,12 @@ namespace xharness
 		public string JENKINS_RESULTS_DIRECTORY { get; set; } // Use same name as in Makefiles, so that a grep finds it.
 		public string MAC_DESTDIR { get; set; }
 		public string IOS_DESTDIR { get; set; }
+		public bool IncludeMac32 { get; set; }
 
 		// Run
 		public AppRunnerTarget Target { get; set; }
 		public string SdkRoot { get; set; }
+		public string SdkRoot94 { get; set; }
 		public string Configuration { get; set; } = "Debug";
 		public string LogFile { get; set; }
 		public string LogDirectory { get; set; } = Environment.CurrentDirectory;
@@ -106,17 +108,28 @@ namespace xharness
 			LaunchTimeout = InWrench ? 3 : 120;
 		}
 
+		static string FindXcode (string path)
+		{
+			var p = path;
+			do {
+				if (p == "/") {
+					throw new Exception (string.Format ("Could not find Xcode.app in {0}", path));
+				} else if (File.Exists (Path.Combine (p, "Contents", "MacOS", "Xcode"))) {
+					return p;
+				}
+				p = Path.GetDirectoryName (p);
+			} while (true);
+		}
+
 		public string XcodeRoot {
 			get {
-				var p = SdkRoot;
-				do {
-					if (p == "/") {
-						throw new Exception (string.Format ("Could not find Xcode.app in {0}", SdkRoot));
-					} else if (File.Exists (Path.Combine (p, "Contents", "MacOS", "Xcode"))) {
-						return p;
-					}
-					p = Path.GetDirectoryName (p);
-				} while (true);
+				return FindXcode (SdkRoot);
+			}
+		}
+
+		public string Xcode94Root {
+			get {
+				return FindXcode (SdkRoot94);
 			}
 		}
 
@@ -207,6 +220,8 @@ namespace xharness
 			IOS_DESTDIR = make_config ["IOS_DESTDIR"];
 			if (string.IsNullOrEmpty (SdkRoot))
 				SdkRoot = make_config ["XCODE_DEVELOPER_ROOT"];
+			if (string.IsNullOrEmpty (SdkRoot94))
+				SdkRoot94 = make_config ["XCODE94_DEVELOPER_ROOT"];
 		}
 		 
 		void AutoConfigureMac ()

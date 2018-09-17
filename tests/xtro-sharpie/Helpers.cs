@@ -9,7 +9,7 @@ using Clang.Ast;
 
 namespace Extrospection {
 	
-	public static class Helpers {
+	public static partial class Helpers {
 
 		// the original name can be lost and, if not registered (e.g. enums), might not be available
 		static Dictionary<string,string> map = new Dictionary<string, string> () {
@@ -242,7 +242,7 @@ namespace Extrospection {
 
 		public static string GetSelector (this ObjCMethodDecl self)
 		{
-			return self.Selector.ToString () ?? (self.IsPropertyAccessor ? self.Name : null);
+			return self.Selector.ToString () ?? self.Name;
 		}
 
 		public static bool IsObsolete (this ICustomAttributeProvider provider)
@@ -338,6 +338,7 @@ namespace Extrospection {
 			case "MPSImage":
 			case "MPSMatrix":
 			case "MPSNeuralNetwork":
+			case "MPSRayIntersector":
 				return "MetalPerformanceShaders";
 			case "QuartzCore":
 				return "CoreAnimation";

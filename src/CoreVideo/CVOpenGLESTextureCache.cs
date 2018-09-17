@@ -33,6 +33,8 @@ namespace MonoTouch.CoreVideo {
 #endif
 
 	// CVOpenGLESTextureCache.h
+	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'CVMetalTextureCache' instead.")]
+	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'CVMetalTextureCache' instead.")]
 	public class CVOpenGLESTextureCache : INativeObject, IDisposable {
 		internal IntPtr handle;
 

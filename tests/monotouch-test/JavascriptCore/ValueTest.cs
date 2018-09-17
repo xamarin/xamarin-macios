@@ -31,8 +31,7 @@ namespace MonoTouchFixtures.JavascriptCore {
 		[Test]
 		public void From ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("requires iOS7+");
+			TestRuntime.AssertXcodeVersion (5, 0, 1);
 
 			using (var c = new JSContext ()) {
 				using (var d = JSValue.From (1.0, c)) {
@@ -46,8 +45,7 @@ namespace MonoTouchFixtures.JavascriptCore {
 		[Test]
 		public void Invoke ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("requires iOS7+");
+			TestRuntime.AssertXcodeVersion (5, 0, 1);
 
 			using (var c = new JSContext ()) {
 				using (var d = JSValue.From (1.0, c)) {
@@ -67,8 +65,7 @@ namespace MonoTouchFixtures.JavascriptCore {
 		[Test]
 		public void IsEqual ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("requires iOS7+");
+			TestRuntime.AssertXcodeVersion (5, 0, 1);
 
 			using (var c = new JSContext ())
 			using (var d = JSValue.From (1.0d, c))

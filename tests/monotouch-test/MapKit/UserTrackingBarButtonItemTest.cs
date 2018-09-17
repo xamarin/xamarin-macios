@@ -68,9 +68,6 @@ namespace MonoTouchFixtures.MapKit {
 		[Test]
 		public void Ctor_MKMapView ()
 		{
-			if (!TestRuntime.CheckSDKVersion (7, 0))
-				Assert.Ignore ("This test crashes with the iOS 6 SDK and an iOS 7 device [iOS bug] (so just force at least an iOS 7 SDK)");
-
 			using (MKMapView mv = new MKMapView ())
 			using (MKUserTrackingBarButtonItem ut = new MKUserTrackingBarButtonItem (mv)) {
 				Assert.AreSame (mv, ut.MapView, "MapView");
@@ -80,9 +77,6 @@ namespace MonoTouchFixtures.MapKit {
 		[Test]
 		public void MapView_BackingFields ()
 		{
-			if (!TestRuntime.CheckSDKVersion (7, 0))
-				Assert.Ignore ("This test crashes with the iOS 6 SDK and an iOS 7 device [iOS bug] (so just force at least an iOS 7 SDK)");
-
 			if (UserTrackingBarButtonItemPoker.NewRefcountEnabled ())
 				Assert.Inconclusive ("backing fields are removed when newrefcount is enabled");
 			

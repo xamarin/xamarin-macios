@@ -18,6 +18,10 @@ if test -n "$ghprbPullId"; then
 		printf "❎ Skipped API comparison because the PR has the label 'skip-api-comparison'\\n" >> "$WORKSPACE/jenkins/pr-comments.md"
 		exit 0
 	fi
+	if ./jenkins/fetch-pr-labels.sh --check=skip-public-jenkins; then
+		echo "Skipping API comparison because the label 'skip-public-jenkins' was found."
+		exit 0
+	fi
 fi
 
 if test -z "$ghprbPullId"; then
@@ -49,6 +53,7 @@ else
 	URL_GENERATOR="$BUILD_URL/Generator_20Diff"
 fi
 
+printf "✅ [API Diff (from PR only)](%s)" "$URL_API" >> "$WORKSPACE/jenkins/pr-comments.md"
 if ! grep "href=" jenkins-results/apicomparison/api-diff.html >/dev/null 2>&1; then
 	printf "✅ [API Diff (from PR only)](%s) (no change)" "$URL_API" >> "$WORKSPACE/jenkins/pr-comments.md"
 elif perl -0777 -pe 's/<script type="text\/javascript">.*?<.script>/script removed/gs' jenkins-results/apicomparison/*.html | grep data-is-breaking; then
@@ -58,6 +63,7 @@ else
 fi
 printf "\\n" >> "$WORKSPACE/jenkins/pr-comments.md"
 
+printf "✅ [Generator Diff](%s)" "$URL_GENERATOR" >> "$WORKSPACE/jenkins/pr-comments.md"
 if grep "^[+-][^+-]" jenkins-results/generator-diff/generator.diff | grep -v "^.[[]assembly: AssemblyInformationalVersion" | grep -v "^[+-][[:space:]]*internal const string Revision =" >/dev/null 2>&1; then
 	printf "ℹ️ [Generator Diff](%s) (please review changes)" "$URL_GENERATOR" >> "$WORKSPACE/jenkins/pr-comments.md"
 else

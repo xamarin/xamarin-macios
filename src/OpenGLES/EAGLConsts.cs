@@ -11,6 +11,9 @@ using Foundation;
 using ObjCRuntime;
 
 namespace OpenGLES {
+
+	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	public static class EAGLDrawableProperty {
 		public static readonly NSString ColorFormat;
 		public static readonly NSString RetainedBacking;
@@ -32,6 +35,8 @@ namespace OpenGLES {
 		}
 	}
 
+	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	public static class EAGLColorFormat {
 		public static readonly NSString RGB565;
 		public static readonly NSString RGBA8;

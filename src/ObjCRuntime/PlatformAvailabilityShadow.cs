@@ -122,6 +122,7 @@ enum Platform : ulong
 	Mac_10_11_3 = 0x10000000000b0300,
 	Mac_10_12   = 0x10000000000c0000,
 	Mac_10_13   = 0x10000000000d0000,
+	Mac_10_14   = 0x10000000000e0000,
 
 	//              0xT000000000MMmmss
 	Watch_Version = 0x2000000000ffffff,

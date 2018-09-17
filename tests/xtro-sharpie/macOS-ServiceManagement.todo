@@ -1,0 +1,11 @@
+!missing-field! kSMDomainSystemLaunchd not bound
+!missing-field! kSMDomainUserLaunchd not bound
+!missing-field! kSMErrorDomainFramework not bound
+!missing-field! kSMErrorDomainIPC not bound
+!missing-field! kSMErrorDomainLaunchd not bound
+!missing-pinvoke! SMCopyAllJobDictionaries is not bound
+!missing-pinvoke! SMJobBless is not bound
+!missing-pinvoke! SMJobCopyDictionary is not bound
+!missing-pinvoke! SMJobRemove is not bound
+!missing-pinvoke! SMJobSubmit is not bound
+!missing-pinvoke! SMLoginItemSetEnabled is not bound

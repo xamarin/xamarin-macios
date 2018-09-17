@@ -138,6 +138,13 @@ namespace Introspection {
 			case "INPaymentStatusResolutionResult":
 			case "INPaymentAccountResolutionResult":
 				return true;
+			case "CMMovementDisorderManager":
+				// From Xcode 10 beta 2:
+				// This requires a special entitlement:
+				//     Usage of CMMovementDisorderManager requires a special entitlement.  Please see for more information https://developer.apple.com/documentation/coremotion/cmmovementdisordermanager
+				// but that web page doesn't explain anything (it's mostly empty, so this is probably just lagging documentation)
+				// I also tried enabling every entitlement in Xcode, but it still didn't work.
+				return true;
 #endif
 
 			default:
@@ -153,6 +160,15 @@ namespace Introspection {
 			var declaredType = method.DeclaringType;
 
 			switch (declaredType.Name) {
+			case "NSNull":
+				switch (name) {
+				// conformance to CAAction started with iOS8
+				case "runActionForKey:object:arguments:":
+					if (!TestRuntime.CheckXcodeVersion (8,0))
+						return true;
+					break;
+				}
+				break;
 			case "NSUrlSession":
 				switch (name) {
 				case "delegateQueue":

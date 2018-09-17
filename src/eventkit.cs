@@ -385,7 +385,7 @@ namespace EventKit {
 
 	[Mac (10,8, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
-	interface EKRecurrenceEnd : NSCopying {
+	interface EKRecurrenceEnd : NSCopying, NSSecureCoding {
 		[Export ("endDate")]
 		NSDate EndDate { get;  }
 
@@ -403,7 +403,7 @@ namespace EventKit {
 
 	[Mac (10,8, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
-	interface EKRecurrenceDayOfWeek : NSCopying {
+	interface EKRecurrenceDayOfWeek : NSCopying, NSSecureCoding {
 		[Export ("dayOfTheWeek")]
 #if XAMCORE_4_0
 		EKWeekday DayOfTheWeek { get;  }

@@ -55,6 +55,10 @@ namespace Xamarin.iOS.Tasks
 				version = currentSdk.GetClosestInstalledSdk (version, false);
 				sdk_path = currentSdk.GetSdkPath (version, SdkIsSimulator);
 			} else {
+				if (AppleSdkSettings.XcodeVersion.Major >= 10) {
+					Log.LogError ("Xcode 10 does not support watchOS 1 apps. Either upgrade to watchOS 2 apps, or use an older version of Xcode.");
+					return false;
+				}
 				if (!(AppleSdkSettings.XcodeVersion.Major > 6 || (AppleSdkSettings.XcodeVersion.Major == 6 && AppleSdkSettings.XcodeVersion.Minor >= 2))) {
 					Log.LogError ("An installation of Xcode >= 6.2 is required to build WatchKit applications.");
 					return false;

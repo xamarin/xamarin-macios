@@ -83,6 +83,23 @@ namespace UserNotificationsUI {
 
 		[Export ("mediaPlayingPaused")]
 		void MediaPlayingPaused ();
+
+		[NoWatch, NoTV, NoMac, iOS (12,0)]
+		[Export ("performNotificationDefaultAction")]
+		void PerformNotificationDefaultAction ();
+
+		[NoWatch, NoTV, NoMac, iOS (12,0)]
+		[Export ("dismissNotificationContentExtension")]
+		void DismissNotificationContentExtension ();
+
+		// property, but we have to add the two methods since it is a category.
+		[iOS (12, 0)]
+		[Export ("notificationActions")]
+		UNNotificationAction[] GetNotificationActions ();
+
+		[iOS (12, 0)]
+		[Export ("setNotificationActions:")]
+		void SetNotificationActions (UNNotificationAction[] actions);
 	}
 }
 

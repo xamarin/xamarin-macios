@@ -468,7 +468,6 @@ Given the following Objective-C code:
 -(void) classCallback: (void (^)())completionHandler;
 -(void) callClassCallback;
 @end
-
 @implementation ObjCBlockTester
 -(void) classCallback: (void (^)())completionHandler
 {

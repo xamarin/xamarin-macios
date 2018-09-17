@@ -1,0 +1,43 @@
+!missing-field! kFCFontCGColorAttribute not bound
+!missing-field! kFCFontFaceAttribute not bound
+!missing-field! kFCFontFamilyAttribute not bound
+!missing-field! kFCFontNameAttribute not bound
+!missing-field! kFCFontSizeAttribute not bound
+!missing-field! kFCFontVisibleNameAttribute not bound
+!missing-field! kFontPanelATSUFontIDKey not bound
+!missing-field! kFontPanelAttributeSizesKey not bound
+!missing-field! kFontPanelAttributesKey not bound
+!missing-field! kFontPanelAttributeTagsKey not bound
+!missing-field! kFontPanelAttributeValuesKey not bound
+!missing-field! kFontPanelBackgroundColorAttributeName not bound
+!missing-field! kFontPanelFeatureSelectorsKey not bound
+!missing-field! kFontPanelFeatureTypesKey not bound
+!missing-field! kFontPanelMouseTrackingState not bound
+!missing-field! kFontPanelVariationAxesKey not bound
+!missing-field! kFontPanelVariationValuesKey not bound
+!missing-pinvoke! CMCalibrateDisplay is not bound
+!missing-pinvoke! DisposeCalibrateEventUPP is not bound
+!missing-pinvoke! DisposeCalibrateUPP is not bound
+!missing-pinvoke! DisposeCanCalibrateUPP is not bound
+!missing-pinvoke! DisposeNColorChangedUPP is not bound
+!missing-pinvoke! FCAddCollection is not bound
+!missing-pinvoke! FCAddFontDescriptorToCollection is not bound
+!missing-pinvoke! FCCopyCollectionNames is not bound
+!missing-pinvoke! FCCopyFontDescriptorsInCollection is not bound
+!missing-pinvoke! FCFontDescriptorCreateWithFontAttributes is not bound
+!missing-pinvoke! FCFontDescriptorCreateWithName is not bound
+!missing-pinvoke! FCRemoveCollection is not bound
+!missing-pinvoke! FCRemoveFontDescriptorFromCollection is not bound
+!missing-pinvoke! FPIsFontPanelVisible is not bound
+!missing-pinvoke! FPShowHideFontPanel is not bound
+!missing-pinvoke! GetColor is not bound
+!missing-pinvoke! InvokeCalibrateEventUPP is not bound
+!missing-pinvoke! InvokeCalibrateUPP is not bound
+!missing-pinvoke! InvokeCanCalibrateUPP is not bound
+!missing-pinvoke! InvokeNColorChangedUPP is not bound
+!missing-pinvoke! NewCalibrateEventUPP is not bound
+!missing-pinvoke! NewCalibrateUPP is not bound
+!missing-pinvoke! NewCanCalibrateUPP is not bound
+!missing-pinvoke! NewNColorChangedUPP is not bound
+!missing-pinvoke! NPickColor is not bound
+!missing-pinvoke! SetFontInfoForSelection is not bound

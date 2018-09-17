@@ -68,16 +68,16 @@ namespace CoreServices {
 		NSString _HTTPVersion2_0 { get; }
 
 		[Internal][Field ("kCFHTTPAuthenticationSchemeBasic", "CFNetwork")]
-		NSString _AuthenticationSchemeBasic { get; }
+		IntPtr _AuthenticationSchemeBasic { get; }
 
 		[Internal][Field ("kCFHTTPAuthenticationSchemeNegotiate", "CFNetwork")]
-		NSString _AuthenticationSchemeNegotiate { get; }
+		IntPtr _AuthenticationSchemeNegotiate { get; }
 
 		[Internal][Field ("kCFHTTPAuthenticationSchemeNTLM", "CFNetwork")]
-		NSString _AuthenticationSchemeNTLM { get; }
+		IntPtr _AuthenticationSchemeNTLM { get; }
 
 		[Internal][Field ("kCFHTTPAuthenticationSchemeDigest", "CFNetwork")]
-		NSString _AuthenticationSchemeDigest { get; }
+		IntPtr _AuthenticationSchemeDigest { get; }
 
 		[Internal][Field ("kCFHTTPAuthenticationUsername", "CFNetwork")]
 		NSString _AuthenticationUsername { get; }
@@ -94,6 +94,6 @@ namespace CoreServices {
 		// yet both 7.0+ and 10.9 returns null
 		[Mac (10, 9)][iOS (7,0)]
 		[Internal][Field ("kCFHTTPAuthenticationSchemeOAuth1", "CFNetwork")]
-		NSString _AuthenticationSchemeOAuth1 { get; }
+		IntPtr _AuthenticationSchemeOAuth1 { get; }
 	}
 }

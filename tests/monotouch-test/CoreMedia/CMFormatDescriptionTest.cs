@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using Foundation;
 using CoreMedia;
 using AVFoundation;
+using ObjCRuntime;
 #if MONOMAC
 using AppKit;
 #else
@@ -53,8 +54,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void Video ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("This test fails on iOS 6 (even though the API exists).");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			CMFormatDescriptionError fde;
 
@@ -90,8 +90,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void RefcountTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("This test uses iOS 7 API");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 			
 			// Bug #27205
 

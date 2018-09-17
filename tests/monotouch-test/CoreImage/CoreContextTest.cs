@@ -92,7 +92,7 @@ namespace MonoTouchFixtures.CoreImage {
 			using (var ctx = new EAGLContext (EAGLRenderingAPI.OpenGLES2))
 			using (var ci = CIContext.FromContext (ctx)) {
 				Assert.NotNull (ci);
-				if (UIDevice.CurrentDevice.CheckSystemVersion (9, 0))
+				if (TestRuntime.CheckXcodeVersion (7, 0))
 					Assert.That (ci.WorkingColorSpace.Model, Is.EqualTo (CGColorSpaceModel.RGB), "WorkingColorSpace");
 			}
 		}

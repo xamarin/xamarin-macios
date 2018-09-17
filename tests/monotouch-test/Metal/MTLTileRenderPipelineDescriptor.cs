@@ -68,6 +68,14 @@ namespace MonoTouchFixtures.Metal {
 			var buffers = descriptor.TileBuffers;
 			Assert.NotNull (buffers);
 		}
+
+		[Test]
+		public void GetSetMaxTotalThreadsPerThreadgroupTest ()
+		{
+			TestRuntime.AssertXcodeVersion (10, 0);
+			descriptor.MaxTotalThreadsPerThreadgroup = 10;
+			Assert.AreEqual (10, descriptor.MaxTotalThreadsPerThreadgroup);
+		}
 	}
 }
 

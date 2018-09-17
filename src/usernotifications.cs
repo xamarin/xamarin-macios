@@ -22,6 +22,7 @@ namespace UserNotifications {
 	[iOS (10, 0)]
 	[TV (10, 0)]
 	[Watch (3, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[ErrorDomain ("UNErrorDomain")]
 	[Native]
 	public enum UNErrorCode : long {
@@ -38,6 +39,7 @@ namespace UserNotifications {
 
 	[iOS (10, 0)]
 	[Watch (3, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[Unavailable (PlatformName.TvOS)]
 	[Native]
 	[Flags]
@@ -50,12 +52,14 @@ namespace UserNotifications {
 
 	[iOS (10, 0)]
 	[Watch (3, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[Unavailable (PlatformName.TvOS)]
 	[Native]
 	[Flags]
 	public enum UNNotificationCategoryOptions : ulong {
 		None = 0,
 		CustomDismissAction = (1 << 0),
+		[NoMac]
 		AllowInCarPlay = (2 << 0),
 		HiddenPreviewsShowTitle = (1 << 2),
 		HiddenPreviewsShowSubtitle = (1 << 3),
@@ -64,16 +68,20 @@ namespace UserNotifications {
 	[iOS (10, 0)]
 	[TV (10, 0)]
 	[Watch (3, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[Native]
 	public enum UNAuthorizationStatus : long {
 		NotDetermined = 0,
 		Denied,
-		Authorized
+		Authorized,
+		[iOS (12, 0), TV (12, 0), Watch (5, 0)]
+		Provisional,
 	}
 
 	[iOS (10, 0)]
 	[TV (10, 0)]
 	[Watch (3, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[Native]
 	public enum UNNotificationSetting : long {
 		NotSupported = 0,
@@ -82,6 +90,7 @@ namespace UserNotifications {
 	}
 
 	[iOS (10, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[Unavailable (PlatformName.TvOS)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Native]
@@ -94,6 +103,7 @@ namespace UserNotifications {
 	[iOS (10, 0)]
 	[TV (10, 0)]
 	[Watch (3, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[Native]
 	[Flags]
 	public enum UNAuthorizationOptions : ulong {
@@ -101,12 +111,20 @@ namespace UserNotifications {
 		Badge = (1 << 0),
 		Sound = (1 << 1),
 		Alert = (1 << 2),
-		CarPlay = (1 << 3)
+		CarPlay = (1 << 3),
+		[iOS (12, 0), TV(12,0), Watch (5,0)]
+		CriticalAlert = (1 << 4),
+		[iOS (12, 0), TV(12,0), Watch (5,0)]
+		ProvidesAppNotificationSettings = (1 << 5),
+		[iOS (12, 0), TV(12,0), Watch (5,0)]
+		Provisional = (1 << 6),
+
 	}
 
 	[iOS (10, 0)]
 	[TV (10, 0)]
 	[Watch (3, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[Native]
 	[Flags]
 	public enum UNNotificationPresentationOptions : ulong {
@@ -117,6 +135,7 @@ namespace UserNotifications {
 	}
 
 	[NoWatch, NoTV, iOS (11,0)]
+	[Mac (10,14, onlyOn64: true)]
 	[Native]
 	public enum UNShowPreviewsSetting : long
 	{
@@ -128,6 +147,7 @@ namespace UserNotifications {
 	[iOS (10, 0)]
 	[TV (10, 0)]
 	[Watch (3, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // as per docs (not user created)
 	interface UNNotification : NSCopying, NSSecureCoding {
@@ -141,6 +161,7 @@ namespace UserNotifications {
 
 	[iOS (10, 0)]
 	[Watch (3, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[Unavailable (PlatformName.TvOS)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // as per docs (use FromIdentifier)
@@ -162,6 +183,7 @@ namespace UserNotifications {
 
 	[iOS (10, 0)]
 	[Watch (3, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[Unavailable (PlatformName.TvOS)]
 	[BaseType (typeof (UNNotificationAction))]
 	[DisableDefaultCtor] // as per docs (use FromIdentifier)
@@ -180,6 +202,7 @@ namespace UserNotifications {
 
 	[iOS (10, 0)]
 	[Watch (3, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[Unavailable (PlatformName.TvOS)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // as per docs (use FromIdentifier)
@@ -202,6 +225,7 @@ namespace UserNotifications {
 
 	[iOS (10, 0)]
 	[Watch (3, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[Unavailable (PlatformName.TvOS)]
 	[Static]
 	[Internal]
@@ -251,6 +275,7 @@ namespace UserNotifications {
 
 	[iOS (10, 0)]
 	[Watch (3, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[Unavailable (PlatformName.TvOS)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // as per docs (use FromIdentifier)
@@ -281,11 +306,21 @@ namespace UserNotifications {
 		[Export ("categoryWithIdentifier:actions:intentIdentifiers:hiddenPreviewsBodyPlaceholder:options:")]
 		UNNotificationCategory FromIdentifier (string identifier, UNNotificationAction[] actions, string[] intentIdentifiers, string hiddenPreviewsBodyPlaceholder, UNNotificationCategoryOptions options);
 
+		[NoWatch, iOS (12,0)]
+		[Static]
+		[Export ("categoryWithIdentifier:actions:intentIdentifiers:hiddenPreviewsBodyPlaceholder:categorySummaryFormat:options:")]
+		UNNotificationCategory FromIdentifier (string identifier, UNNotificationAction[] actions, string[] intentIdentifiers, [NullAllowed] string hiddenPreviewsBodyPlaceholder, [NullAllowed] NSString categorySummaryFormat, UNNotificationCategoryOptions options);
+
+		[NoWatch, iOS (12, 0)]
+		[Export ("categorySummaryFormat")]
+		string CategorySummaryFormat { get; }
+
 	}
 
 	[iOS (10, 0)]
 	[TV (10, 0)]
 	[Watch (3, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // as per docs
 	interface UNNotificationContent : NSCopying, NSMutableCopying, NSSecureCoding {
@@ -305,7 +340,7 @@ namespace UserNotifications {
 		[Export ("categoryIdentifier")]
 		string CategoryIdentifier { get; }
 
-		[Unavailable (PlatformName.TvOS)]
+		[NoTV, NoMac]
 		[Export ("launchImageName")]
 		string LaunchImageName { get; }
 
@@ -328,11 +363,20 @@ namespace UserNotifications {
 		[Unavailable (PlatformName.TvOS)]
 		[Export ("userInfo", ArgumentSemantic.Copy)]
 		NSDictionary UserInfo { get; }
+
+		[NoWatch, NoTV, iOS (12, 0)]
+		[Export ("summaryArgument")]
+		string SummaryArgument { get; }
+
+		[NoWatch, NoTV, iOS (12, 0)]
+		[Export ("summaryArgumentCount")]
+		nuint SummaryArgumentCount { get; }
 	}
 
 	[iOS (10, 0)]
 	[TV (10, 0)]
 	[Watch (3, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[BaseType (typeof (UNNotificationContent))]
 	interface UNMutableNotificationContent {
 
@@ -351,7 +395,7 @@ namespace UserNotifications {
 		[Export ("categoryIdentifier")]
 		string CategoryIdentifier { get; set; }
 
-		[Unavailable (PlatformName.TvOS)]
+		[NoTV, NoMac]
 		[Export ("launchImageName")]
 		string LaunchImageName { get; set; }
 
@@ -373,11 +417,20 @@ namespace UserNotifications {
 
 		[Export ("userInfo", ArgumentSemantic.Copy)]
 		NSDictionary UserInfo { get; set; }
+
+		[NoWatch, NoTV, iOS (12, 0)]
+		[Export ("summaryArgument")]
+		string SummaryArgument { get; set; }
+
+		[NoWatch, NoTV, iOS (12, 0)]
+		[Export ("summaryArgumentCount")]
+		nuint SummaryArgumentCount { get; set; }
 	}
 
 	[iOS (10, 0)]
 	[TV (10, 0)]
 	[Watch (3, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UNNotificationRequest : NSCopying, NSSecureCoding {
@@ -398,6 +451,7 @@ namespace UserNotifications {
 
 	[iOS (10, 0)]
 	[Watch (3, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[Unavailable (PlatformName.TvOS)]
 	[Static]
 	[Internal]
@@ -412,6 +466,7 @@ namespace UserNotifications {
 
 	[iOS (10, 0)]
 	[Watch (3, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[Unavailable (PlatformName.TvOS)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // as per docs
@@ -435,6 +490,7 @@ namespace UserNotifications {
 
 	[iOS (10, 0)]
 	[Watch (3, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[Unavailable (PlatformName.TvOS)]
 	[BaseType (typeof (UNNotificationResponse))]
 	[DisableDefaultCtor] // as per docs
@@ -445,6 +501,7 @@ namespace UserNotifications {
 	}
 
 	[iOS (10, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[Unavailable (PlatformName.TvOS)]
 	[Unavailable (PlatformName.WatchOS)]
 	[BaseType (typeof (NSObject))]
@@ -462,6 +519,7 @@ namespace UserNotifications {
 	[iOS (10, 0)]
 	[TV (10, 0)]
 	[Watch (3, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // as per docs
 	interface UNNotificationSettings : NSCopying, NSSecureCoding {
@@ -490,8 +548,7 @@ namespace UserNotifications {
 		[Export ("lockScreenSetting")]
 		UNNotificationSetting LockScreenSetting { get; }
 
-		[Unavailable (PlatformName.TvOS)]
-		[Unavailable (PlatformName.WatchOS)]
+		[NoWatch, NoTV, NoMac]
 		[Export ("carPlaySetting")]
 		UNNotificationSetting CarPlaySetting { get; }
 
@@ -503,10 +560,19 @@ namespace UserNotifications {
 		[NoWatch, NoTV, iOS (11, 0)]
 		[Export ("showPreviewsSetting")]
 		UNShowPreviewsSetting ShowPreviewsSetting { get; }
+
+		[Watch (5, 0), NoTV, Mac (10, 14, onlyOn64: true), iOS (12, 0)]
+		[Export ("criticalAlertSetting")]
+		UNNotificationSetting CriticalAlertSetting { get; }
+
+		[Watch (5, 0), NoTV, Mac (10, 14, onlyOn64: true), iOS (12, 0)]
+		[Export ("providesAppNotificationSettings")]
+		bool ProvidesAppNotificationSettings { get; }
 	}
 
 	[iOS (10, 0)]
 	[Watch (3, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[Unavailable (PlatformName.TvOS)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // as per docs (use provided methods)
@@ -520,6 +586,26 @@ namespace UserNotifications {
 		[Static]
 		[Export ("soundNamed:")]
 		UNNotificationSound GetSound (string name);
+
+		[Watch (5, 0), iOS (12, 0)]
+		[Static]
+		[Export ("defaultCriticalSound", ArgumentSemantic.Copy)]
+		UNNotificationSound DefaultCriticalSound { get; }
+
+		[Watch (5,0), iOS (12,0)]
+		[Static]
+		[Export ("defaultCriticalSoundWithAudioVolume:")]
+		UNNotificationSound GetDefaultCriticalSound (float volume);
+
+		[NoWatch, iOS (12,0)]
+		[Static]
+		[Export ("criticalSoundNamed:")]
+		UNNotificationSound GetCriticalSound (string name);
+
+		[NoWatch, iOS (12,0)]
+		[Static]
+		[Export ("criticalSoundNamed:withAudioVolume:")]
+		UNNotificationSound GetCriticalSound (string name, float volume);
 	}
 
 	[iOS (10, 0)]
@@ -537,6 +623,7 @@ namespace UserNotifications {
 	[iOS (10, 0)]
 	[TV (10, 0)]
 	[Watch (3, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[BaseType (typeof (UNNotificationTrigger))]
 	[DisableDefaultCtor] // as per docs (system created)
 	interface UNPushNotificationTrigger {
@@ -546,6 +633,7 @@ namespace UserNotifications {
 	[iOS (10, 0)]
 	[TV (10, 0)]
 	[Watch (3, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[BaseType (typeof (UNNotificationTrigger))]
 	[DisableDefaultCtor] // as per doc, use supplied method (CreateTrigger)
 	interface UNTimeIntervalNotificationTrigger {
@@ -564,6 +652,7 @@ namespace UserNotifications {
 	[iOS (10, 0)]
 	[TV (10, 0)]
 	[Watch (3, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[DisableDefaultCtor] // as per doc, use supplied method (CreateTrigger)
 	[BaseType (typeof (UNNotificationTrigger))]
 	interface UNCalendarNotificationTrigger {
@@ -581,6 +670,7 @@ namespace UserNotifications {
 
 	[iOS (10, 0)]
 	[Watch (3, 0)]
+	[NoMac]
 	[Unavailable (PlatformName.TvOS)]
 	[BaseType (typeof (UNNotificationTrigger))]
 	[DisableDefaultCtor] // as per doc, use supplied method (CreateTrigger)
@@ -600,6 +690,7 @@ namespace UserNotifications {
 	[iOS (10, 0)]
 	[TV (10, 0)]
 	[Watch (3, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface UNUserNotificationCenterDelegate {
@@ -610,11 +701,16 @@ namespace UserNotifications {
 		[Unavailable (PlatformName.TvOS)]
 		[Export ("userNotificationCenter:didReceiveNotificationResponse:withCompletionHandler:")]
 		void DidReceiveNotificationResponse (UNUserNotificationCenter center, UNNotificationResponse response, Action completionHandler);
+
+		[NoWatch, NoTV, Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("userNotificationCenter:openSettingsForNotification:")]
+		void OpenSettings (UNUserNotificationCenter center, [NullAllowed] UNNotification notification);
 	}
 
 	[iOS (10, 0)]
 	[TV (10, 0)]
 	[Watch (3, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UNUserNotificationCenter {

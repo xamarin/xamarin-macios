@@ -400,7 +400,11 @@ namespace AudioToolbox {
 		// X-Y Recording
 		XY_X                  = 206,
 		XY_Y                  = 207,
-   
+
+		// Binaural Recording
+		BinauralLeft          = 208,
+		BinauralRight         = 209,
+
 		// other
 		HeadphonesLeft        = 301,
 		HeadphonesRight       = 302,
@@ -451,8 +455,18 @@ namespace AudioToolbox {
 		HoaAcn13               = (2 << 16) | 13,
 		HoaAcn14               = (2 << 16) | 14,
 		HoaAcn15               = (2 << 16) | 15,
-		HoaAcn65024            = (2 << 16) | 65024  
+		HoaAcn65024            = (2 << 16) | 65024,
 	}
+
+#if !COREBUILD
+	public static class AudioChannelLabelExtensions
+	{
+		public static bool IsReserved (this AudioChannelLabel value)
+		{
+			return (uint)value >= 0xF0000000 && (uint)value <= 0xFFFFFFFE;
+		}
+	}
+#endif
 
 	[Flags]
 	public enum AudioChannelBit : uint // UInt32 mChannelBitmap in AudioChannelLayout
@@ -717,6 +731,11 @@ namespace AudioToolbox {
 		public static uint GetNumberOfChannels (this AudioChannelLayoutTag inLayoutTag)
 		{
 			return (uint)inLayoutTag & 0x0000FFFF;
+		}
+
+		public static bool IsReserved (this AudioChannelLayoutTag value)
+		{
+			return (uint)value >= 0xF0000000 && (uint)value <= 0xFFFFFFFE;
 		}
 	}
 #endif // !COREBUILD
