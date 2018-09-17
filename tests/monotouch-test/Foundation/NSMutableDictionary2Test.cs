@@ -645,6 +645,53 @@ namespace MonoTouchFixtures.Foundation {
 			Assert.Throws<InvalidCastException> (() => GC.KeepAlive (dictK.Keys), "K Keys");
 			Assert.Throws<InvalidCastException> (() => dictK.KeysForObject (kv), "K KeysForObject");
 		}
+
+		[Test]
+		public void AddEntries ()
+		{
+			using (var dic1 = new NSMutableDictionary<NSString, NSDate> ()) {
+				var now = NSDate.Now;
+				using (var dic2 = NSDictionary.FromObjectAndKey ((NSDate) now, (NSString) "key")) {
+					Assert.AreEqual (0, dic1.Count, "Count 0");
+
+					dic1.AddEntries (dic2);
+
+					Assert.AreEqual (1, dic1.Count, "Count 1");
+					Assert.AreEqual (now, dic1 ["key"], "Value 1");
+
+					dic1.AddEntries (dic2);
+					
+					Assert.AreEqual (1, dic1.Count, "Count 2");
+					Assert.AreEqual (now, dic1 ["key"], "Value 2");
+				}
+
+				// Be nasty, and put something of the wrong type in the dictionary
+				dic1.Clear ();
+				using (var dic2 = NSDictionary.FromObjectAndKey ((NSString) "value", (NSString) "key")) {
+					Assert.AreEqual (0, dic1.Count, "X Count 0");
+
+					dic1.AddEntries (dic2);
+
+					Assert.AreEqual (1, dic1.Count, "X Count 1");
+					Assert.Throws<InvalidCastException> (() =>
+					{
+						var obj = dic1 [(NSString) "key"];
+					}, "ICE 1");
+				}
+
+				// Use a generic dict of the right types
+				dic1.Clear ();
+				using (var dic2 = new NSDictionary<NSString,NSDate> ((NSString) "key2", now.AddSeconds (3600))) {
+					Assert.AreEqual (0, dic1.Count, "Y Count 0");
+
+					dic1.AddEntries (dic2);
+
+					Assert.AreEqual (1, dic1.Count, "Y Count 1");
+					var obj = dic1 [(NSString) "key2"];
+					Assert.AreEqual (now.AddSeconds (3600).SecondsSinceReferenceDate, obj.SecondsSinceReferenceDate, "Y Value 1");
+				}
+			}
+		}
 	}
 }
 
