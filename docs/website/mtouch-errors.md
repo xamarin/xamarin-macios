@@ -860,6 +860,47 @@ A failure occurred when touching a file (which is done to ensure partial builds 
 
 This warning can most likely be ignored; in case of any problems file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new) and it will be investigated.
 
+<a name="MT0129" />
+
+### MT0129: Debugging symbol file for '*' does not match the assembly and is ignored.
+
+The debugging symbols, either a .pdb (portable pdb only) or a .mdb file, for the specified assembly could not be loaded.
+
+This generally means the assembly is newer or older than the symbols. Since they do not match they cannot be used and the symbols are ignored.
+
+This warning won't affect the application being built, however you might not be able to debug it entirely (in particular the code from specified assembly). Also exceptions, stack traces and crash reports might be missing some information.
+
+Please report this issue to the publisher of the assembly package (e.g. nuget author) so this can be fixed in their future releases.
+
+<a name="MT0130" />
+
+### MT0130: No root assemblies found. You should provide at least one root assembly.
+When running --runregistrar, at least one root assembly should be provided.
+
+<a name="MT0131" />
+
+### MT0131: Product assembly '{0}' not found in assembly list: '{1}'
+
+When running --runregistrar, the assembly list should include the product assembly, Xamarin.iOS, Xamarin.WatchOS, Xamarin.TVOS.
+
+<a name="MT0132" />
+
+### MT0132: Unknown optimization: *. Valid values are: *
+
+The specified optimization was not recognized.
+
+The accepted format is `[+|-]optimization-name`, where `optimization-name` is one of the values listed in the error message.
+
+See [Build optimizations](https://developer.xamarin.com/guides/cross-platform/macios/build-optimization/) for a complete description of each optimization.
+
+<a name="MT0133" />
+
+### MT0133: Found more than 1 assembly matching '{0}' choosing first: '{1}'
+
+When using --recursive-directories, only 1 assembly should match
+
+<!-- 0134 used by mmp -->
+
 <a name="MT0135" />
 
 ### MT0135: Did not link system framework '{0}' (referenced by assembly '{1}') because it was introduced in {2} {3}, and we're using the {2} {4} SDK.
