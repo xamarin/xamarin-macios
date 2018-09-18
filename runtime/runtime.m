@@ -2425,13 +2425,17 @@ xamarin_process_managed_exception (MonoObject *exception)
 void
 xamarin_throw_product_exception (int code, const char *message)
 {
+	xamarin_process_managed_exception_gchandle (xamarin_create_product_exception (code, message));
+}
+
+guint32
+xamarin_create_product_exception (int code, const char *message)
+{
 	guint32 exception_gchandle = 0;
 	guint32 handle = xamarin_create_product_exception_for_error (code, message, &exception_gchandle);
-	if (exception_gchandle != 0) {
-		xamarin_process_managed_exception_gchandle (exception_gchandle);
-	} else {
-		xamarin_process_managed_exception_gchandle (handle);
-	}
+	if (exception_gchandle != 0)
+		return exception_gchandle;
+	return handle;
 }
 
 void

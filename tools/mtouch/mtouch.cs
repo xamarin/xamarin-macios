@@ -1355,7 +1355,7 @@ namespace Xamarin.Bundler
 				throw new MonoTouchException (25, true, "No SDK version was provided. Please add --sdk=X.Y to specify which {0} SDK should be used to build your application.", app.PlatformName);
 
 			var framework_dir = GetFrameworkDirectory (app);
-			Driver.Log ("Xamarin.iOS {0}{1} using framework: {2}", Constants.Version, verbose > 1 ? "." + Constants.Revision : string.Empty, framework_dir);
+			Driver.Log ("Xamarin.iOS {0}.{1} using framework: {2}", Constants.Version, Constants.Revision, framework_dir);
 
 			if (action == Action.None)
 				throw new MonoTouchException (52, true, "No command specified.");

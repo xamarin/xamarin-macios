@@ -491,7 +491,7 @@ namespace Xamarin.Bundler {
 
 			App.InitializeCommon ();
 
-			Log ("Xamarin.Mac {0}{1}", Constants.Version, verbose > 0 ? "." + Constants.Revision : string.Empty);
+			Log ("Xamarin.Mac {0}.{1}", Constants.Version, Constants.Revision);
 
 			if (verbose > 0)
 				Console.WriteLine ("Selected target framework: {0}; API: {1}", targetFramework, IsClassic ? "Classic" : "Unified");

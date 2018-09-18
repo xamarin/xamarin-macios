@@ -655,4 +655,14 @@ partial class TestRuntime
 		}
 	}
 	class LinkerSentinel { }
+
+	public static bool IsOptimizeAll {
+		get {
+#if OPTIMIZEALL
+			return true;
+#else
+			return false;
+#endif
+		}
+	}
 }
