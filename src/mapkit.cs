@@ -14,7 +14,9 @@ using ObjCRuntime;
 using Foundation;
 using CoreGraphics;
 using CoreLocation;
-#if !MONOMAC
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
 #endif
 #if !TVOS && XAMCORE_2_0
@@ -796,6 +798,10 @@ namespace MapKit {
 		[TV (11,0)][NoWatch][iOS (11,0)][Mac (10,13, onlyOn64: true)]
 		[Export ("mapView:clusterAnnotationForMemberAnnotations:"), DelegateName ("MKCreateClusterAnnotation"), DefaultValue (null)]
 		MKClusterAnnotation CreateClusterAnnotation (MKMapView mapView, IMKAnnotation[] memberAnnotations);
+
+		[TV (11,0)][NoWatch][iOS (11,0)][Mac (10,13, onlyOn64: true)]
+		[Export ("mapViewDidChangeVisibleRegion:")]
+		void DidChangeVisibleRegion (MKMapView mapView);
 	}
 		
 	[BaseType (typeof (MKAnnotationView))]
@@ -1221,6 +1227,7 @@ namespace MapKit {
 #if !MONOMAC
 	[NoTV]
 	[BaseType (typeof (UIBarButtonItem))]
+	[DisableDefaultCtor]
 	interface MKUserTrackingBarButtonItem {
 		[NullAllowed] // by default this property is null
 		[Export ("mapView", ArgumentSemantic.Retain)]
@@ -1514,6 +1521,13 @@ namespace MapKit {
 
 		[Export ("pointForCoordinate:")]
 		CGPoint PointForCoordinate (CLLocationCoordinate2D coordinate);
+
+#if MONOMAC
+		[NoWatch][NoTV][NoiOS]
+		[Mac (10,14, onlyOn64: true)]
+		[Export ("appearance")]
+		NSAppearance Appearance { get; }
+#endif
 	}
 
 	[TV (9,2)]
@@ -1546,6 +1560,13 @@ namespace MapKit {
 
 		[Export ("showsBuildings")]
 		bool ShowsBuildings { get; set; }
+
+#if MONOMAC
+		[NoWatch][NoTV][NoiOS]
+		[Mac (10,14, onlyOn64: true)]
+		[NullAllowed, Export ("appearance", ArgumentSemantic.Strong)]
+		NSAppearance Appearance { get; set; }
+#endif
 	}
 
 	[TV (9,2)]

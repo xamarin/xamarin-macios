@@ -166,6 +166,13 @@ namespace Introspection {
 				if (IntPtr.Size == 4 && Mac.CheckSystemVersion (10, 13)) // 32-bit removed unannounced in 10.13
 					return true;
 				break;
+			case "EventKit.EKEventStore":
+			case "MonoMac.EventKit.EKEventStore":
+				if (Mac.CheckSystemVersion (10, 9) && !Mac.CheckSystemVersion (10, 10)) {
+					// Calling the constructor on Mavericks will put up a permission dialog.
+					return true;
+				}
+				break;
 			case "MonoMac.ImageKit.IKPictureTaker":
 			case "ImageKit.IKPictureTaker":
 				// https://bugzilla.xamarin.com/show_bug.cgi?id=46624

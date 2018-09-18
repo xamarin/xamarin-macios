@@ -703,6 +703,21 @@ public class B : A {}
 		}
 
 		[Test]
+		public void MT0032 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Debug = false;
+				mtouch.CustomArguments = new string[] { "--debugtrack:true" };
+				mtouch.WarnAsError = new int[] { 32 };
+				mtouch.CreateTemporaryApp ();
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (32, "The option '--debugtrack' is ignored unless '--debug' is also specified.");
+				mtouch.AssertErrorCount (1);
+				mtouch.AssertWarningCount (0);
+			}
+		}
+
+		[Test]
 		[TestCase (Profile.iOS, Profile.tvOS)]
 		[TestCase (Profile.iOS, Profile.watchOS)]
 		[TestCase (Profile.tvOS, Profile.iOS)]
@@ -1074,8 +1089,6 @@ public class B : A {}
 				mtouch.Sdk = sdk_version;
 				Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildSim));
 				var xcodeVersionString = Configuration.XcodeVersion;
-				if (xcodeVersionString.EndsWith (".0", StringComparison.Ordinal))
-					xcodeVersionString = xcodeVersionString.Substring (0, xcodeVersionString.Length - 2);
 				mtouch.AssertError (91, String.Format ("This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only (to try to avoid the new APIs).", name, GetSdkVersion (profile), xcodeVersionString));
 			}
 		}
@@ -2882,7 +2895,6 @@ class Test {
 				mtouch.AssertOutputPattern (".*_OBJC_METACLASS_._Test_Subexistent in registrar.o.*");
 				mtouch.AssertOutputPattern (".*_OBJC_CLASS_._Inexistent., referenced from:.*");
 				mtouch.AssertOutputPattern (".*_OBJC_CLASS_._Test_Subexistent in registrar.o.*");
-				mtouch.AssertOutputPattern (".*objc-class-ref in registrar.o.*");
 				mtouch.AssertOutputPattern (".*ld: symbol.s. not found for architecture arm64.*");
 				mtouch.AssertOutputPattern (".*clang: error: linker command failed with exit code 1 .use -v to see invocation.*");
 
@@ -3830,6 +3842,8 @@ public class HandlerTest
 				case "_xamarin_float_objc_msgSendSuper": // Classic only, this function can probably be removed when we switch to binary copy of a Classic version of libxamarin.a
 				case "_xamarin_nfloat_objc_msgSend": // XM only
 				case "_xamarin_nfloat_objc_msgSendSuper": // Xm only
+					continue;
+				case "____chkstk_darwin": // compiler magic, unrelated to XI/XM
 					continue;
 				default:
 					missingSimlauncherSymbols.Add (symbol);

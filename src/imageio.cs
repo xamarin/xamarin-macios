@@ -68,12 +68,20 @@ namespace ImageIO {
 		NSString MakerCanonDictionary { get; }
 		[Field ("kCGImagePropertyMakerNikonDictionary")]
 		NSString MakerNikonDictionary { get; }
+
+		[iOS (8,3)][Mac (10,10)]
 		[Field ("kCGImagePropertyMakerMinoltaDictionary")]
 		NSString MakerMinoltaDictionary { get; }
+
+		[iOS (8,3)][Mac (10,10)]
 		[Field ("kCGImagePropertyMakerFujiDictionary")]
 		NSString MakerFujiDictionary { get; }
+
+		[iOS (8,3)][Mac (10,10)]
 		[Field ("kCGImagePropertyMakerOlympusDictionary")]
 		NSString MakerOlympusDictionary { get; }
+
+		[iOS (8,3)][Mac (10,10)]
 		[Field ("kCGImagePropertyMakerPentaxDictionary")]
 		NSString MakerPentaxDictionary { get; }
 
@@ -545,6 +553,22 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyAPNGUnclampedDelayTime")]
 		NSString PNGUnclampedDelayTime { get; }
 
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyPNGComment")]
+		NSString PNGComment { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyPNGDisclaimer")]
+		NSString PNGDisclaimer { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyPNGSource")]
+		NSString PNGSource { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyPNGWarning")]
+		NSString PNGWarning { get; }
+
 		// TIFF Dictionary Keys
 
 		[Field ("kCGImagePropertyTIFFCompression")]
@@ -723,6 +747,270 @@ namespace ImageIO {
 		[TV (10,0)]
 		[Field ("kCGImagePropertyDNGFixVignetteRadial")]
 		NSString DNGFixVignetteRadial { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGActiveArea")]
+		NSString DNGActiveArea { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGAnalogBalance")]
+		NSString DNGAnalogBalance { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGAntiAliasStrength")]
+		NSString DNGAntiAliasStrength { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGAsShotICCProfile")]
+		NSString DNGAsShotICCProfile { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGAsShotPreProfileMatrix")]
+		NSString DNGAsShotPreProfileMatrix { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGAsShotProfileName")]
+		NSString DNGAsShotProfileName { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGBaselineExposureOffset")]
+		NSString DNGBaselineExposureOffset { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGBayerGreenSplit")]
+		NSString DNGBayerGreenSplit { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGBestQualityScale")]
+		NSString DNGBestQualityScale { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGBlackLevelDeltaH")]
+		NSString DNGBlackLevelDeltaHorizontal { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGBlackLevelDeltaV")]
+		NSString DNGBlackLevelDeltaVertical { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGBlackLevelRepeatDim")]
+		NSString DNGBlackLevelRepeatDim { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGCFALayout")]
+		NSString DNGCfaLayout { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGCFAPlaneColor")]
+		NSString DNGCfaPlaneColor { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGChromaBlurRadius")]
+		NSString DNGChromaBlurRadius { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGColorimetricReference")]
+		NSString DNGColorimetricReference { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGCurrentICCProfile")]
+		NSString DNGCurrentICCProfile { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGCurrentPreProfileMatrix")]
+		NSString DNGCurrentPreProfileMatrix { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGDefaultBlackRender")]
+		NSString DNGDefaultBlackRender { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGDefaultCropOrigin")]
+		NSString DNGDefaultCropOrigin { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGDefaultCropSize")]
+		NSString DNGDefaultCropSize { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGDefaultScale")]
+		NSString DNGDefaultScale { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGDefaultUserCrop")]
+		NSString DNGDefaultUserCrop { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGExtraCameraProfiles")]
+		NSString DNGExtraCameraProfiles { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGForwardMatrix1")]
+		NSString DNGForwardMatrix1 { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGForwardMatrix2")]
+		NSString DNGForwardMatrix2 { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGLinearizationTable")]
+		NSString DNGLinearizationTable { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGLinearResponseLimit")]
+		NSString DNGLinearResponseLimit { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGMakerNoteSafety")]
+		NSString DNGMakerNoteSafety { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGMaskedAreas")]
+		NSString DNGMaskedAreas { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGNewRawImageDigest")]
+		NSString DNGNewRawImageDigest { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGNoiseReductionApplied")]
+		NSString DNGNoiseReductionApplied { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGOpcodeList1")]
+		NSString DNGOpcodeList1 { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGOpcodeList2")]
+		NSString DNGOpcodeList2 { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGOpcodeList3")]
+		NSString DNGOpcodeList3 { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGOriginalBestQualityFinalSize")]
+		NSString DNGOriginalBestQualityFinalSize { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGOriginalDefaultCropSize")]
+		NSString DNGOriginalDefaultCropSize { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGOriginalDefaultFinalSize")]
+		NSString DNGOriginalDefaultFinalSize { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGOriginalRawFileData")]
+		NSString DNGOriginalRawFileData { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGOriginalRawFileDigest")]
+		NSString DNGOriginalRawFileDigest { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGOriginalRawFileName")]
+		NSString DNGOriginalRawFileName { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGPreviewApplicationName")]
+		NSString DNGPreviewApplicationName { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGPreviewApplicationVersion")]
+		NSString DNGPreviewApplicationVersion { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGPreviewColorSpace")]
+		NSString DNGPreviewColorSpace { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGPreviewDateTime")]
+		NSString DNGPreviewDateTime { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGPreviewSettingsDigest")]
+		NSString DNGPreviewSettingsDigest { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGPreviewSettingsName")]
+		NSString DNGPreviewSettingsName { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGProfileCopyright")]
+		NSString DNGProfileCopyright { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGProfileEmbedPolicy")]
+		NSString DNGProfileEmbedPolicy { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGProfileHueSatMapData1")]
+		NSString DNGProfileHueSatMapData1 { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGProfileHueSatMapData2")]
+		NSString DNGProfileHueSatMapData2 { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGProfileHueSatMapDims")]
+		NSString DNGProfileHueSatMapDims { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGProfileHueSatMapEncoding")]
+		NSString DNGProfileHueSatMapEncoding { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGProfileLookTableData")]
+		NSString DNGProfileLookTableData { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGProfileLookTableDims")]
+		NSString DNGProfileLookTableDims { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGProfileLookTableEncoding")]
+		NSString DNGProfileLookTableEncoding { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGProfileName")]
+		NSString DNGProfileName { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGProfileToneCurve")]
+		NSString DNGProfileToneCurve { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGRawDataUniqueID")]
+		NSString DNGRawDataUniqueId { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGRawImageDigest")]
+		NSString DNGRawImageDigest { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGRawToPreviewGain")]
+		NSString DNGRawToPreviewGain { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGReductionMatrix1")]
+		NSString DNGReductionMatrix1 { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGReductionMatrix2")]
+		NSString DNGReductionMatrix2 { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGRowInterleaveFactor")]
+		NSString DNGRowInterleaveFactor { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGShadowScale")]
+		NSString DNGShadowScale { get; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Field ("kCGImagePropertyDNGSubTileBlockSize")]
+		NSString DNGSubTileBlockSize { get; }
 
 		// 8BIM Dictionary Keys
 
@@ -1628,6 +1916,10 @@ namespace ImageIO {
 		[Mac (10, 9)][iOS (11, 3)][TV (11,3)][Watch (4,3)]
 		[Field ("kCGImagePropertyOpenEXRAspectRatio")]
 		NSString OpenExrAspectRatio { get; }
+
+		[Watch (4, 0), Mac (10, 13), iOS (11, 0), TV (11,0)]
+		[Field ("kCGImagePropertyPrimaryImage")]
+		NSString PrimaryImage { get; }
 	}
 
 	[iOS (7,0), Mac (10, 8)]
@@ -1954,6 +2246,10 @@ namespace ImageIO {
 
 		[Field ("kCGImageAuxiliaryDataTypeDisparity")]
 		Disparity,
+
+		[Watch (5, 0), Mac (10, 14, onlyOn64: true), iOS (12, 0), TV (12,0)]
+		[Field ("kCGImageAuxiliaryDataTypePortraitEffectsMatte")]
+		PortraitEffectsMatte,
 	}
 
 	[Mac (10,13), iOS (11,0), TV (11,0), Watch (4,0)]

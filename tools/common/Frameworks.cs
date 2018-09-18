@@ -14,6 +14,7 @@ public class Framework
 	public string Name;
 	public Version Version;
 	public Version VersionAvailableInSimulator;
+	public bool AlwaysWeakLinked;
 }
 
 public class Frameworks : Dictionary <string, Framework>
@@ -33,6 +34,11 @@ public class Frameworks : Dictionary <string, Framework>
 		Add (@namespace, @namespace, new Version (major_version, minor_version));
 	}
 
+	public void Add (string @namespace, string framework, int major_version, bool alwaysWeakLink)
+	{
+		Add (@namespace, framework, new Version (major_version, 0), alwaysWeakLink);
+	}
+
 	public void Add (string @namespace, string framework, int major_version, int minor_version)
 	{
 		Add (@namespace, framework, new Version (major_version, minor_version));
@@ -43,7 +49,7 @@ public class Frameworks : Dictionary <string, Framework>
 		Add (@namespace, framework, new Version (major_version, minor_version, build_version));
 	}
 
-	public void Add (string @namespace, string framework, Version version, Version version_available_in_simulator = null)
+	public void Add (string @namespace, string framework, Version version, Version version_available_in_simulator = null, bool alwaysWeakLink = false)
 	{
 		var fr = new Framework () {
 #if MTOUCH || MMP
@@ -54,6 +60,7 @@ public class Frameworks : Dictionary <string, Framework>
 			Name = framework,
 			Version = version,
 			VersionAvailableInSimulator = version_available_in_simulator ?? version,
+			AlwaysWeakLinked = alwaysWeakLink,
 		};
 		base.Add (fr.Namespace, fr);
 	}
@@ -165,6 +172,13 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "Vision", "Vision", 10, 13 },
 
 					{ "BusinessChat", "BusinessChat", 10, 13, 4 },
+
+					{ "AdSupport", "AdSupport", 10,14 },
+					{ "NaturalLanguage", "NaturalLanguage", 10,14 },
+					{ "Network", "Network", 10, 14 },
+					{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10,14 },
+					{ "UserNotifications", "UserNotifications", 10,14 },
+					{ "iTunesLibrary", "iTunesLibrary", 10,14 },
 				};
 			}
 			return mac_frameworks;
@@ -270,7 +284,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "IntentsUI", "IntentsUI", 10 },
 
 				{ "ARKit", "ARKit", 11 },
-				{ "CoreNFC", "CoreNFC", 11 },
+				{ "CoreNFC", "CoreNFC", 11, true }, /* not always present, e.g. iPad w/iOS 12, so must be weak linked */
 				{ "DeviceCheck", "DeviceCheck", new Version (11, 0), NotAvailableInSimulator /* no headers provided for simulator */ },
 				{ "IdentityLookup", "IdentityLookup", 11 },
 				{ "IOSurface", "IOSurface", new Version (11, 0), NotAvailableInSimulator /* Not available in the simulator (the header is there, but broken) */  },
@@ -283,6 +297,12 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "BusinessChat", "BusinessChat", 11, 3 },
 
 				{ "ClassKit", "ClassKit", 11,4 },
+
+				{ "AuthenticationServices", "AuthenticationServices", 12,0 },
+				{ "CarPlay", "CarPlay", 12,0 },
+				{ "IdentityLookupUI", "IdentityLookupUI", 12,0 },
+				{ "NaturalLanguage", "NaturalLanguage", 12,0 },
+				{ "Network", "Network", 12, 0 },
 			};
 		}
 		return ios_frameworks;
@@ -330,6 +350,9 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "CoreBluetooth", "CoreBluetooth", 4 },
 				{ "CoreML", "CoreML", 4 },
 				{ "CoreVideo", "CoreVideo", 4 },
+
+				{ "NaturalLanguage", "NaturalLanguage", 5 },
+				{ "MediaPlayer", "MediaPlayer", 5 },
 			};
 		}
 		return watch_frameworks;
@@ -400,6 +423,10 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "CoreML", "CoreML", 11 },
 					{ "IOSurface", "IOSurface", new Version (11, 0), NotAvailableInSimulator /* Not available in the simulator (the header is there, but broken) */  },
 					{ "Vision", "Vision", 11 },
+
+					{ "NaturalLanguage", "NaturalLanguage", 12,0 },
+					{ "Network", "Network", 12, 0 } ,
+					{ "TVUIKit", "TVUIKit", 12,0 },
 				};
 			}
 			return tvos_frameworks;
@@ -407,7 +434,7 @@ public class Frameworks : Dictionary <string, Framework>
 	}
 #endif
 
-#if MTOUCH || MMP
+#if MMP
 	public static void Gather (Application app, AssemblyDefinition product_assembly, HashSet<string> frameworks, HashSet<string> weak_frameworks)
 	{
 		var namespaces = new HashSet<string> ();
@@ -419,8 +446,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 		// Iterate over all the namespaces and check which frameworks we need to link with.
 		foreach (var nspace in namespaces) {
-			Framework framework;
-			if (Driver.GetFrameworks (app).TryGetValue (nspace, out framework)) {
+			if (Driver.GetFrameworks (app).TryGetValue (nspace, out var framework)) {
 				if (app.SdkVersion >= framework.Version) {
 					var add_to = app.DeploymentTarget >= framework.Version ? frameworks : weak_frameworks;
 					add_to.Add (framework.Name);

@@ -18,7 +18,7 @@ namespace Xamarin.iOS.Tasks
 
 		void AssertCompiledModelExists (string modelName)
 		{
-			var expected = new string[] { "coremldata.bin", "model.espresso.net", "model.espresso.shape", "model.espresso.weights", "model/coremldata.bin" };
+			var expected = new string[] { "coremldata.bin", "model.espresso.net", "model.espresso.shape", "model.espresso.weights", "model/coremldata.bin", "neural_network_optionals/coremldata.bin" };
 			var mlmodelc = Path.Combine (AppBundlePath, modelName + ".mlmodelc");
 
 			Assert.IsTrue (Directory.Exists (mlmodelc));

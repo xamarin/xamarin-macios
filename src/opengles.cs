@@ -17,6 +17,8 @@ using System;
 
 namespace OpenGLES {
 
+	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[BaseType (typeof (NSObject))]
 	// <quote>It is created when an EAGLContext object is initialized and disposed of when the last EAGLContext object that references it is released.</quote>
 	[DisableDefaultCtor]
@@ -28,6 +30,8 @@ namespace OpenGLES {
 		string DebugLabel { get; set; }
 	}
 
+	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // init now marked with NS_UNAVAILABLE
 	interface EAGLContext {
@@ -88,6 +92,8 @@ namespace OpenGLES {
 		bool TexImage (IOSurface.IOSurface ioSurface, nuint target, nuint internalFormat, uint width, uint height, nuint format, nuint type, uint plane);
 	}
 
+	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Protocol]
 	// no [Model] because "The EAGLDrawable protocol is not intended to be implemented by objects outside of the iOS."
 	interface EAGLDrawable {

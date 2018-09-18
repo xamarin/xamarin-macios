@@ -5,18 +5,24 @@
 //	Alex Soto  <alex.soto@xamarin.com>
 //
 // Copyright 2016 Xamarin Inc. All rights reserved.
+// Copyright 2018 Microsoft Corporation.
 //
 
 using System;
 using Foundation;
 using ObjCRuntime;
+#if MONOMAC
+using UIViewController = AppKit.NSViewController;
+#else
 using UIKit;
+#endif
 
 namespace VideoSubscriberAccount {
 
 	[Native]
 	[iOS (10, 0)]
 	[TV (10, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[Unavailable (PlatformName.WatchOS)]
 	[ErrorDomain ("VSErrorDomain")]
 	public enum VSErrorCode : long {
@@ -31,6 +37,7 @@ namespace VideoSubscriberAccount {
 	[Native]
 	[iOS (10, 0)]
 	[TV (10, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[Unavailable (PlatformName.WatchOS)]
 	public enum VSAccountAccessStatus : long {
 		NotDetermined = 0,
@@ -41,6 +48,7 @@ namespace VideoSubscriberAccount {
 
 	[iOS (10, 0)]
 	[TV (10, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Static]
 	[Internal]
@@ -62,6 +70,7 @@ namespace VideoSubscriberAccount {
 
 	[iOS (10, 0)]
 	[TV (10, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[Unavailable (PlatformName.WatchOS)]
 	[StrongDictionary ("VSErrorInfoKeys")]
 	interface VSErrorInfo {
@@ -81,6 +90,7 @@ namespace VideoSubscriberAccount {
 	[Protocol, Model]
 	[iOS (10, 0)]
 	[TV (10, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[Unavailable (PlatformName.WatchOS)]
 	[BaseType (typeof (NSObject))]
 	interface VSAccountManagerDelegate {
@@ -100,6 +110,7 @@ namespace VideoSubscriberAccount {
 
 	[iOS (10, 0)]
 	[TV (10, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[Unavailable (PlatformName.WatchOS)]
 	[BaseType (typeof (NSObject))]
 	interface VSAccountManager {
@@ -107,10 +118,12 @@ namespace VideoSubscriberAccount {
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		IVSAccountManagerDelegate Delegate { get; set; }
 
+		[NoMac]
 		[Async]
 		[Export ("checkAccessStatusWithOptions:completionHandler:")]
 		void CheckAccessStatus (NSDictionary options, Action<VSAccountAccessStatus, NSError> completionHandler);
 
+		[NoMac]
 		[Async]
 		[Export ("enqueueAccountMetadataRequest:completionHandler:")]
 		VSAccountManagerResult Enqueue (VSAccountMetadataRequest accountMetadataRequest, Action<VSAccountMetadata, NSError> completionHandler);
@@ -118,6 +131,7 @@ namespace VideoSubscriberAccount {
 
 	[iOS (10, 0)]
 	[TV (10, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Static]
 	[Internal]
@@ -129,6 +143,7 @@ namespace VideoSubscriberAccount {
 
 	[iOS (10, 0)]
 	[TV (10, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[Unavailable (PlatformName.WatchOS)]
 	[StrongDictionary ("VSCheckAccessOptionKeys")]
 	interface VSAccountManagerAccessOptions {
@@ -139,6 +154,7 @@ namespace VideoSubscriberAccount {
 
 	[iOS (10, 0)]
 	[TV (10, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[Unavailable (PlatformName.WatchOS)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -150,6 +166,7 @@ namespace VideoSubscriberAccount {
 
 	[iOS (10, 0)]
 	[TV (10, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[Unavailable (PlatformName.WatchOS)]
 	[BaseType (typeof (NSObject))]
 	interface VSAccountMetadata {
@@ -172,6 +189,7 @@ namespace VideoSubscriberAccount {
 	}
 
 	[iOS (10, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[TV (10, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[BaseType (typeof (NSObject))]
@@ -216,6 +234,7 @@ namespace VideoSubscriberAccount {
 
 	[iOS (10,2)]
 	[TV (10,1)]
+	[Mac (10,14, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	interface VSAccountProviderResponse {
 
@@ -235,12 +254,14 @@ namespace VideoSubscriberAccount {
 
 	[iOS (10,2)]
 	[TV (10,1)]
+	[Mac (10,14, onlyOn64: true)]
 	enum VSAccountProviderAuthenticationScheme {
 		[Field ("VSAccountProviderAuthenticationSchemeSAML")]
 		Saml,
 	}
 
 	[TV (11,0)][iOS (11,0)]
+	[Mac (10,14, onlyOn64: true)]
 	[Native]
 	public enum VSSubscriptionAccessLevel : long {
 		Unknown,
@@ -249,6 +270,7 @@ namespace VideoSubscriberAccount {
 	}
 
 	[TV (11,0)][iOS (11,0)]
+	[Mac (10,14, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	interface VSSubscription {
 		[Export ("expirationDate", ArgumentSemantic.Copy)]
@@ -266,6 +288,7 @@ namespace VideoSubscriberAccount {
 	}
 
 	[TV (11,0)][iOS (11,0)]
+	[Mac (10,14, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface VSSubscriptionRegistrationCenter {

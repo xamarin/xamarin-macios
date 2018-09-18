@@ -7,13 +7,14 @@
 // Copyright 2012 Xamarin Inc. All rights reserved.
 //
 
-#if !__TVOS__ && !__WATCHOS__
+#if !__WATCHOS__
 
 using System;
 #if XAMCORE_2_0
 using Foundation;
 using CoreLocation;
 using MapKit;
+using ObjCRuntime;
 #else
 using MonoTouch.CoreLocation;
 using MonoTouch.Foundation;
@@ -27,19 +28,12 @@ namespace MonoTouchFixtures.MapKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class LocalSearchTest {
-
-		[Test]
-		public void Default ()
-		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6, 1))
-				Assert.Inconclusive ("Requires iOS 6.1");
-		}
-
 		[Test]
 		public void EmptyRequest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6, 1))
-				Assert.Inconclusive ("Requires iOS 6.1");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 6, 1, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.TvOS, 9, 2, throwIfOtherPlatform: false);
 
 			using (var lsr = new MKLocalSearchRequest ())
 			using (MKLocalSearch ls = new MKLocalSearch (lsr)) {

@@ -482,6 +482,12 @@ namespace Xamarin.Bundler {
 			// InitializeCommon needs SdkVersion set to something valid
 			ValidateSDKVersion ();
 
+			if (action != Action.RunRegistrar && XcodeVersion.Major >= 10 && !Is64Bit) {
+				if (IsClassic)
+					throw ErrorHelper.CreateError (138, "Building 32-bit apps is not possible when using Xcode 10. Please migrate project to the Unified API.");
+				throw ErrorHelper.CreateError (139, "Building 32-bit apps is not possible when using Xcode 10. Please change the architecture in the project's Mac Build options to 'x86_64'.");
+			}
+
 			// InitializeCommon needs the current profile
 			if (IsClassic)
 				Profile.Current = new MonoMacProfile ();
@@ -637,6 +643,11 @@ namespace Xamarin.Bundler {
 				if (rv.Minor == 11 && XcodeVersion >= new Version (7, 3))
 					return new Version (rv.Major, rv.Minor, 4);
 			}
+			// Since Version has wrong behavior:
+			// new Version (10, 14) < new Version (10, 14, 0) => true
+			// Force any unset revision to 0 instead of -1
+			if (rv.Revision == -1)
+				return new Version (rv.Major, rv.Minor, 0);
 			return rv;
 		}
 
@@ -1356,6 +1367,10 @@ namespace Xamarin.Bundler {
 				}
 
 				args.Append ("-liconv -x objective-c++ ");
+				if (XcodeVersion.Major >= 10) {
+					// Xcode 10 doesn't ship with libstdc++
+					args.Append ("-stdlib=libc++ ");
+				}
 				args.Append ("-I").Append (StringUtils.Quote (Path.Combine (GetXamMacPrefix (), "include"))).Append (' ');
 				if (registrarPath != null)
 					args.Append (StringUtils.Quote (registrarPath)).Append (' ');

@@ -13,6 +13,7 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using MediaPlayer;
+using ObjCRuntime;
 #if !MONOMAC
 using UIKit;
 #endif
@@ -34,16 +35,12 @@ namespace MonoTouchFixtures.MediaPlayer {
 		[Test]
 		public void Shared ()
 		{
-#if !MONOMAC
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (7, 1))
-				Assert.Inconclusive ("Requires 7.1+");
-#endif
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 1, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 12, 2, throwIfOtherPlatform: false);
 
 			MPRemoteCommandCenter shared = MPRemoteCommandCenter.Shared;
 			Assert.NotNull (shared.BookmarkCommand, "BookmarkCommand");
 			Assert.NotNull (shared.ChangePlaybackRateCommand, "ChangePlaybackRateCommand");
-			Assert.NotNull (shared.ChangeRepeatModeCommand, "ChangeRepeatModeCommand");
-			Assert.NotNull (shared.ChangeShuffleModeCommand, "ChangeShuffleModeCommand");
 			Assert.NotNull (shared.DislikeCommand, "DislikeCommand");
 			Assert.NotNull (shared.LikeCommand, "LikeCommand");
 			Assert.NotNull (shared.NextTrackCommand, "NextTrackCommand");
@@ -56,6 +53,27 @@ namespace MonoTouchFixtures.MediaPlayer {
 			Assert.NotNull (shared.SkipForwardCommand, "SkipForwardCommand");
 			Assert.NotNull (shared.StopCommand, "StopCommand");
 			Assert.NotNull (shared.TogglePlayPauseCommand, "TogglePlayPauseCommand");
+		}
+
+		[Test]
+		public void Shared_8 ()
+		{
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 12, 2, throwIfOtherPlatform: false);
+
+			MPRemoteCommandCenter shared = MPRemoteCommandCenter.Shared;
+			Assert.NotNull (shared.ChangeRepeatModeCommand, "ChangeRepeatModeCommand");
+			Assert.NotNull (shared.ChangeShuffleModeCommand, "ChangeShuffleModeCommand");
+		}
+
+		[Test]
+		public void Shared_9 ()
+		{
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 9, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 12, 2, throwIfOtherPlatform: false);
+
+			MPRemoteCommandCenter shared = MPRemoteCommandCenter.Shared;
+			Assert.NotNull (shared.EnableLanguageOptionCommand, "EnableLanguageOptionCommand");
 		}
 	}
 }

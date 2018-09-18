@@ -4,6 +4,7 @@ using ObjCRuntime;
 
 namespace WebKit {
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	public enum DomCssRuleType : ushort {
 		Unknown = 0,
 		Style = 1,
@@ -18,6 +19,7 @@ namespace WebKit {
 		NamespaceRule = 10,
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	public enum DomCssValueType : ushort {
 		Inherit = 0,
 		PrimitiveValue = 1,
@@ -25,6 +27,7 @@ namespace WebKit {
 		Custom = 3
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[Flags]
 	public enum DomDocumentPosition : ushort {
 		Disconnected = 0x01,
@@ -35,6 +38,7 @@ namespace WebKit {
 		ImplementationSpecific = 0x20
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	public enum DomNodeType : ushort {
 		Element = 1,
 		Attribute = 2,
@@ -50,6 +54,7 @@ namespace WebKit {
 		Notation = 12
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	public enum DomRangeCompareHow : ushort {
 		StartToStart = 0, 
 		StartToEnd = 1, 
@@ -62,6 +67,7 @@ namespace WebKit {
 		DocumentViewer, DocumentBrowser, PrimaryWebBrowser
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	public enum DomEventPhase : ushort {
 		Capturing = 1, AtTarget, Bubbling
 	}
@@ -104,6 +110,7 @@ namespace WebKit {
 	}
 
 	// Used as an 'unsigned int' parameter 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	public enum DomKeyLocation : uint {
 		Standard = 0,
 		Left = 1,
@@ -112,6 +119,7 @@ namespace WebKit {
 	}
 
 	// Used as an 'int' parameter 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	public enum DomDelta : int {
 		Pixel = 0,
 		Line = 1,

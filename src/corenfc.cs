@@ -296,5 +296,14 @@ namespace CoreNFC {
 		[Export ("retryInterval")]
 		double RetryInterval { get; set; }
 	}
+
+	[iOS (12,0)]
+	[Category]
+	[BaseType (typeof (NSUserActivity))]
+	interface NSUserActivity_CoreNFC {
+
+		[Export ("ndefMessagePayload")]
+		NFCNdefMessage GetNdefMessagePayload ();
+	}
 }
 #endif

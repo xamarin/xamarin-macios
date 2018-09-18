@@ -1,6 +1,4 @@
-# Fixed in XAMCORE_4_0
+### Fixed in XAMCORE_4_0
 !extra-protocol-member! unexpected selector CLLocationManagerDelegate::locationManagerDidPauseLocationUpdates: found
 !extra-protocol-member! unexpected selector CLLocationManagerDelegate::locationManagerDidResumeLocationUpdates: found
 !extra-protocol-member! unexpected selector CLLocationManagerDelegate::locationManagerShouldDisplayHeadingCalibration: found
-!unknown-field! CLLocationDistanceMax bound
-!unknown-native-enum! CLProximity bound

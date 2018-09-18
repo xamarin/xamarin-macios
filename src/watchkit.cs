@@ -13,6 +13,7 @@ using CoreGraphics;
 using CoreLocation;
 using HealthKit;
 using HomeKit;
+using Intents;
 using PassKit;
 using SpriteKit;
 using SceneKit;
@@ -139,9 +140,14 @@ namespace WatchKit {
 		[Export ("clearAllMenuItems")]
 		void ClearAllMenuItems ();
 
+		[Deprecated (PlatformName.WatchOS, 5,0, message: "Use 'UpdateUserActivity(NSUserActivity)' instead.")]
 		[Export ("updateUserActivity:userInfo:webpageURL:")]
 		// This NSDictionary is OK, it is arbitrary and user specific
 		void UpdateUserActivity (string type, [NullAllowed] NSDictionary userInfo, [NullAllowed] NSUrl webpageURL);
+
+		[Watch (5,0)][ NoiOS]
+		[Export ("updateUserActivity:")]
+		void UpdateUserActivity (NSUserActivity userActivity);
 
 		[Export ("invalidateUserActivity")]
 		void InvalidateUserActivity ();
@@ -242,6 +248,18 @@ namespace WatchKit {
 		[Watch (4,0)][NoiOS]
 		[Export ("interfaceOffsetDidScrollToBottom")]
 		void InterfaceOffsetDidScrollToBottom ();
+
+		[Watch (5,0), NoiOS]
+		[Export ("contentSafeAreaInsets")]
+		UIEdgeInsets ContentSafeAreaInsets { get; }
+
+		[Watch (5,0), NoiOS]
+		[Export ("systemMinimumLayoutMargins")]
+		NSDirectionalEdgeInsets SystemMinimumLayoutMargins { get; }
+
+		[Watch (5,0), NoiOS]
+		[Export ("tableScrollingHapticFeedbackEnabled")]
+		bool TableScrollingHapticFeedbackEnabled { [Bind ("isTableScrollingHapticFeedbackEnabled")] get; set; }
 	}
 
 	[iOS (8,2)]
@@ -263,6 +281,7 @@ namespace WatchKit {
 		[Export ("didReceiveLocalNotification:withCompletion:")]
 		void DidReceiveLocalNotification (UILocalNotification localNotification, Action<WKUserNotificationInterfaceType> completionHandler);
 
+		[Deprecated (PlatformName.WatchOS, 5,0, message: "Use 'DidReceiveNotification(UNNotification)' instead.")]
 		[Watch (3,0)][iOS (10,0)]
 		[Export ("didReceiveNotification:withCompletion:")]
 		void DidReceiveNotification (UNNotification notification, Action<WKUserNotificationInterfaceType> completionHandler);
@@ -280,6 +299,28 @@ namespace WatchKit {
 		[Watch (3,0)][NoiOS]
 		[Export ("suggestionsForResponseToActionWithIdentifier:forNotification:inputLanguage:")]
 		string[] GetSuggestionsForResponseToAction (string identifier, UNNotification notification, string inputLanguage);
+
+		[Watch (5,0)][NoiOS]
+		[Export ("notificationActions", ArgumentSemantic.Copy)]
+		UNNotificationAction[] NotificationActions { get; set; }
+
+		[Watch (5,0)][NoiOS]
+		[Export ("didReceiveNotification:")]
+		void DidReceiveNotification (UNNotification notification);
+
+		[Watch (5,0)][NoiOS]
+		[Export ("performNotificationDefaultAction")]
+		void PerformNotificationDefaultAction ();
+
+		[Watch (5,0)][NoiOS]
+		[Export ("performDismissAction")]
+		void PerformDismissAction ();
+
+		[Deprecated (PlatformName.WatchOS, 5,0, message: "Use 'PerformDismissAction' instead.")]
+		[Watch (2,0)]
+		[Export ("dismissController")]
+		void DismissController ();
+
 	}
 	
 	[iOS (8,2)]
@@ -969,6 +1010,18 @@ namespace WatchKit {
 		[Watch (4,0)]
 		[Export ("deviceOrientationDidChange")]
 		void DeviceOrientationDidChange ();
+
+		[Watch (5,0)]
+		[Export ("handleActiveWorkoutRecovery")]
+		void HandleActiveWorkoutRecovery ();
+
+		[Watch (5,0)]
+		[Export ("handleRemoteNowPlayingActivity")]
+		void HandleRemoteNowPlayingActivity ();
+
+		[Watch (5,0)]
+		[Export ("handleIntent:completionHandler:")]
+		void HandleIntent (INIntent intent, Action<INIntentResponse> completionHandler);
 	}
 
 	[Watch (2,2), NoiOS]
@@ -1144,6 +1197,16 @@ namespace WatchKit {
 	interface WKWatchConnectivityRefreshBackgroundTask {
 	}
 
+	[Watch (5,0)][NoiOS]
+	[BaseType (typeof (WKRefreshBackgroundTask))]
+	interface WKRelevantShortcutRefreshBackgroundTask {
+	}
+
+	[Watch (5,0)][NoiOS]
+	[BaseType (typeof (WKRefreshBackgroundTask))]
+	interface WKIntentDidRunRefreshBackgroundTask {
+	}
+
 	[Watch (3,0)][NoiOS]
 	[Category]
 	[BaseType (typeof (WKExtension))]
@@ -1175,6 +1238,10 @@ namespace WatchKit {
 
 		[Export ("resignFocus")]
 		void ResignFocus ();
+
+		[Watch (5,0)]
+		[Export ("hapticFeedbackEnabled")]
+		bool HapticFeedbackEnabled { [Bind ("isHapticFeedbackEnabled")] get; set; }
 	}
 
 	interface IWKCrownDelegate {}
@@ -1335,5 +1402,13 @@ namespace WatchKit {
 		[Export ("textureFromNode:crop:")]
 		[return: NullAllowed]
 		SKTexture CreateTexture (SKNode node, CGRect crop);
+	}
+
+	[Watch (5,0)][NoiOS]
+	[BaseType (typeof (WKInterfaceObject))]
+	[DisableDefaultCtor]
+	interface WKInterfaceVolumeControl {
+		[Export ("setTintColor:")]
+		void SetTintColor ([NullAllowed] UIColor tintColor);
 	}
 }

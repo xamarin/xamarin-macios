@@ -7,6 +7,8 @@ using System.Text;
 using NUnit.Framework;
 using System.Reflection;
 
+using Xamarin.Tests;
+
 namespace Xamarin.MMP.Tests
 {
 	[TestFixture]
@@ -147,6 +149,8 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void Unified_HelloWorld_ShouldWarnOn32Bit ()
 		{
+			Configuration.AssertXcodeSupports32Bit ();
+
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					CSProjConfig = "<XamMacArch>i386</XamMacArch>"
@@ -533,6 +537,8 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void Unified32BitWithXMRequiringLibrary_ShouldReferenceCorrectXM_AndNotCrash ()
 		{
+			Configuration.AssertXcodeSupports32Bit ();
+
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig libConfig = new TI.UnifiedTestConfig (tmpDir) {
 					ProjectName = "UnifiedLibrary",
@@ -642,6 +648,30 @@ namespace Xamarin.MMP.Tests
 				var rv = TI.TestUnifiedExecutable (test, shouldFail: false);
 				rv.Messages.AssertWarning (132, $"Unknown optimization: '{opt}'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, static-block-to-delegate-lookup, trim-architectures.");
 				rv.Messages.AssertErrorCount (0);
+			});
+		}
+
+		[Test]
+		public void MM0138 ()
+		{
+			MMPTests.RunMMPTest (tmpDir => {
+				var rv = TI.TestClassicExecutable (tmpDir, csprojConfig: "<IncludeMonoRuntime>true</IncludeMonoRuntime>", shouldFail: true);
+				rv.Messages.AssertError (138, "Building 32-bit apps is not possible when using Xcode 10. Please migrate project to the Unified API.");
+				rv.Messages.AssertWarningCount (0);
+			});
+		}
+
+		[Test]
+		public void MM0139 ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					CSProjConfig = "<XamMacArch>i386</XamMacArch>"
+				};
+
+				var rv = TI.TestUnifiedExecutable (test, shouldFail: true);
+				rv.Messages.AssertError (139, "Building 32-bit apps is not possible when using Xcode 10. Please change the architecture in the project's Mac Build options to 'x86_64'.");
+				rv.Messages.AssertWarningCount (0);
 			});
 		}
 	}

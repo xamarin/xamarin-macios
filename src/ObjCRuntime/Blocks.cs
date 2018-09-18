@@ -236,6 +236,11 @@ namespace ObjCRuntime {
 			return (T) (object) Runtime.GetDelegateForBlock (invoke, typeof (T));
 		}
 
+		public unsafe static T GetTarget<T> (IntPtr block) where T: class /* /* requires C# 7.3+: System.MulticastDelegate */
+		{
+			return (T) ((BlockLiteral *) block)->Target;
+		}
+
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		public static bool IsManagedBlock (IntPtr block)
 		{
@@ -337,9 +342,54 @@ namespace ObjCRuntime {
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		static extern IntPtr _Block_copy (ref BlockLiteral block);
+
+		//
+		// Simple method that we can use to wrap methods that need to call a block
+		//
+		// usage:
+		// void MyCallBack () {} 
+		// BlockLiteral.SimpleCall (MyCallBack, (x) => my_PINvokeThatTakesaBlock (x));
+		//  The above will call the unmanaged my_PINvokeThatTakesaBlock method with a block
+		// that when invoked will call MyCallback
+		//
+		internal unsafe static void SimpleCall  (Action callbackToInvoke, Action <IntPtr> pinvoke)
+		{
+			unsafe {
+			        BlockLiteral block_handler = new BlockLiteral ();
+			        BlockLiteral *block_ptr_handler = &block_handler;
+			        block_handler.SetupBlockUnsafe (BlockStaticDispatchClass.static_dispatch_block, callbackToInvoke);
+
+				try {
+					pinvoke ((IntPtr) block_ptr_handler);
+				} finally {
+					block_handler.CleanupBlock ();
+				}
+			}
+		}
+		
 #endif
 	}
-		
+
+#if !COREBUILD
+	// This class sole purpose is to keep a static field that is initialized on
+	// first use of the class
+	
+	internal class BlockStaticDispatchClass {
+		internal delegate void dispatch_block_t (IntPtr block);
+
+		[MonoPInvokeCallback (typeof (dispatch_block_t))]
+		static unsafe void TrampolineDispatchBlock (IntPtr block)
+		{
+			var del = BlockLiteral.GetTarget<Action> (block);
+			if (del != null){
+			        del ();
+			}
+		}
+
+		internal static dispatch_block_t static_dispatch_block = TrampolineDispatchBlock;
+	}
+#endif
+	
 	[Flags]
 #if XAMCORE_3_0
 	internal

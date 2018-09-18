@@ -16,26 +16,26 @@ namespace Intents {
 	public partial class INCarSeatResolutionResult {
 		public static INCarSeatResolutionResult GetSuccess (INCarSeat resolvedValue)
 		{
-#if IOS
+#if __WATCHOS__
+			throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+#elif __IOS__
 			if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
-#elif WATCH
-			if (WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (4, 0))
-#endif
 				return SuccessWithResolvedCarSeat (resolvedValue);
 			else
 				return SuccessWithResolvedValue (resolvedValue);
+#endif
 		}
 
 		public static INCarSeatResolutionResult GetConfirmationRequired (INCarSeat valueToConfirm)
 		{
-#if IOS
+#if __WATCHOS__
+			throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+#elif __IOS__
 			if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
-#elif WATCH
-			if (WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (4, 0))
-#endif
 				return ConfirmationRequiredWithCarSeatToConfirm (valueToConfirm);
 			else
 				return ConfirmationRequiredWithValueToConfirm (valueToConfirm);
+#endif
 		}
 	}
 }

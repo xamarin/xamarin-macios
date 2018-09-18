@@ -30,9 +30,6 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void RefreshControl_18744 ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6, 0))
-				Assert.Ignore ("requires 6.0+");
-
 			using (var rc = new UIRefreshControl ())
 			using (var tvc = new UITableViewController ()) {
 				Assert.Null (tvc.RefreshControl, "default");

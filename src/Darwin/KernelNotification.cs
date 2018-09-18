@@ -28,6 +28,7 @@
 #if MONOMAC
 
 using System;
+using CoreFoundation;
 using ObjCRuntime;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
@@ -170,7 +171,7 @@ namespace Darwin {
 		protected virtual void Dispose (bool disposing)
 		{
 			if (handle != -1){
-				CoreFoundation.DispatchSource.VnodeMonitor.close (handle);
+				DispatchSource.VnodeMonitor.close (handle);
 				handle = -1;
 			}
 		}

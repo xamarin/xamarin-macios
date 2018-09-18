@@ -924,6 +924,7 @@ namespace Xamarin.Bundler
 					SharedLibrary = mode != AssemblyBuildTarget.StaticObject,
 					Language = "objective-c++",
 				};
+				pinvoke_task.CompilerFlags.AddStandardCppLibrary ();
 				if (pinvoke_task.SharedLibrary) {
 					if (mode == AssemblyBuildTarget.Framework) {
 						var name = Path.GetFileNameWithoutExtension (ifile);
@@ -1286,6 +1287,8 @@ namespace Xamarin.Bundler
 					if (Driver.XcodeVersion >= new Version (9, 0))
 						registrar_task.CompilerFlags.AddOtherFlag ("-Wno-unguarded-availability-new");
 
+					registrar_task.CompilerFlags.AddStandardCppLibrary ();
+						                                          
 					LinkWithTaskOutput (registrar_task);
 				}
 
@@ -1343,6 +1346,7 @@ namespace Xamarin.Bundler
 				};
 				main_task.AddDependency (generate_main_task);
 				main_task.CompilerFlags.AddDefine ("MONOTOUCH");
+				main_task.CompilerFlags.AddStandardCppLibrary ();
 				LinkWithTaskOutput (main_task);
 			}
 
