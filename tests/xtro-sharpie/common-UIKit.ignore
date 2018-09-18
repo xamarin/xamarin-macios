@@ -178,4 +178,3 @@
 !missing-field! NSCharacterEncodingDocumentOption not bound
 !missing-field! NSDefaultAttributesDocumentOption not bound
 !missing-field! NSDocumentTypeDocumentOption not bound
-!missing-selector! NSLayoutManager::fillBackgroundRectArray:count:forCharacterRange:color: not bound

@@ -55,6 +55,7 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.False (lm.ShowsInvisibleCharacters, "ShowsInvisibleCharacters");
 				Assert.Null (lm.TextStorage, "TextStorage");
 				Assert.True (lm.UsesFontLeading, "UsesFontLeading");
+				Assert.False (lm.LimitsLayoutForSuspiciousContents, "LimitsLayoutForSuspiciousContents");
 			}
 		}
 
