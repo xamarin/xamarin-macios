@@ -8058,13 +8058,11 @@ namespace Foundation
 		[Export ("paragraphRangeForRange:")]
 		NSRange GetParagraphRange (NSRange range);
 
-		[Watch (2,0), TV (9,0), Mac (10,0), iOS (2,0)]
-		[Export("componentsSeparatedByString:")]
-		string[] ComponentsSeparatedByString(string separator);
+		[Export ("componentsSeparatedByString:")]
+		NSString[] SeparateComponents(NSString separator);
 
-		[Watch (2,0), TV (9,0), Mac (10,5), iOS (2,0)]
-		[Export("componentsSeparatedByCharactersInSet:")]
-		string[] ComponentsSeparatedByCharactersInSet(NSCharacterSet separator);
+		[Export ("componentsSeparatedByCharactersInSet:")]
+		NSString[] SeparateComponents(NSCharacterSet separator);
 
 		// From the NSItemProviderReading protocol
 
