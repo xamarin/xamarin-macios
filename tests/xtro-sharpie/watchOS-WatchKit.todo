@@ -1,6 +1,0 @@
-!missing-selector! WKCrownSequencer::isHapticFeedbackEnabled not bound
-!missing-selector! WKCrownSequencer::setHapticFeedbackEnabled: not bound
-!missing-selector! WKInterfaceController::contentSafeAreaInsets not bound
-!missing-selector! WKInterfaceController::isTableScrollingHapticFeedbackEnabled not bound
-!missing-selector! WKInterfaceController::setTableScrollingHapticFeedbackEnabled: not bound
-!missing-selector! WKInterfaceController::systemMinimumLayoutMargins not bound

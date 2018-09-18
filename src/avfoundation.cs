@@ -9234,6 +9234,9 @@ namespace AVFoundation {
 		[Wrap ("WeakRawEmbeddedThumbnailPhotoFormat")]
 		AVCapturePhotoSettingsThumbnailFormat RawEmbeddedThumbnailPhotoFormat { get; set; }
 
+		[NoWatch, NoTV, NoMac, iOS (12, 0)]
+		[Export ("autoRedEyeReductionEnabled")]
+		bool AutoRedEyeReductionEnabled { [Bind ("isAutoRedEyeReductionEnabled")] get; set; }
 	}
 	
 #if !MONOMAC
@@ -9306,6 +9309,10 @@ namespace AVFoundation {
 		[NoWatch, NoTV, NoMac, iOS (12, 0)]
 		[Export ("rawEmbeddedThumbnailDimensions")]
 		CMVideoDimensions RawEmbeddedThumbnailDimensions { get; }
+
+		[NoWatch, NoTV, NoMac, iOS (12, 0)]
+		[Export ("redEyeReductionEnabled")]
+		bool RedEyeReductionEnabled { [Bind ("isRedEyeReductionEnabled")] get; }
 	}
 
 #if !MONOMAC
@@ -9495,6 +9502,10 @@ namespace AVFoundation {
 		[NoWatch, NoTV, NoMac, iOS (12, 0)]
 		[Export ("portraitEffectsMatteDeliveryEnabled")]
 		bool PortraitEffectsMatteDeliveryEnabled { [Bind ("isPortraitEffectsMatteDeliveryEnabled")] get; set; }
+
+		[NoWatch, NoTV, NoMac, iOS (12, 0)]
+		[Export ("autoRedEyeReductionSupported")]
+		bool AutoRedEyeReductionSupported { [Bind ("isAutoRedEyeReductionSupported")] get; }
 	}
 #endif
 	

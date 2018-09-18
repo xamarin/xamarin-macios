@@ -248,6 +248,18 @@ namespace WatchKit {
 		[Watch (4,0)][NoiOS]
 		[Export ("interfaceOffsetDidScrollToBottom")]
 		void InterfaceOffsetDidScrollToBottom ();
+
+		[Watch (5,0), NoiOS]
+		[Export ("contentSafeAreaInsets")]
+		UIEdgeInsets ContentSafeAreaInsets { get; }
+
+		[Watch (5,0), NoiOS]
+		[Export ("systemMinimumLayoutMargins")]
+		NSDirectionalEdgeInsets SystemMinimumLayoutMargins { get; }
+
+		[Watch (5,0), NoiOS]
+		[Export ("tableScrollingHapticFeedbackEnabled")]
+		bool TableScrollingHapticFeedbackEnabled { [Bind ("isTableScrollingHapticFeedbackEnabled")] get; set; }
 	}
 
 	[iOS (8,2)]
@@ -1226,6 +1238,10 @@ namespace WatchKit {
 
 		[Export ("resignFocus")]
 		void ResignFocus ();
+
+		[Watch (5,0)]
+		[Export ("hapticFeedbackEnabled")]
+		bool HapticFeedbackEnabled { [Bind ("isHapticFeedbackEnabled")] get; set; }
 	}
 
 	interface IWKCrownDelegate {}

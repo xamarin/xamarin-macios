@@ -10,6 +10,9 @@
 using System;
 using Foundation;
 using ObjCRuntime;
+#if MONOMAC
+using AppKit;
+#endif
 #if !WATCH
 using CoreSpotlight;
 #endif
@@ -909,7 +912,10 @@ namespace CoreData
 	interface NSManagedObjectContext : NSCoding
 #if !WATCH && !TVOS
 	, NSLocking
-#endif // !WATCH
+#endif
+#if MONOMAC
+	, NSEditor, NSEditorRegistration
+#endif
 	{
 
 		[NullAllowed] // by default this property is null

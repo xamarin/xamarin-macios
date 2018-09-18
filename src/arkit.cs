@@ -146,6 +146,28 @@ namespace ARKit {
 
 	[iOS (12,0)]
 	[NoWatch, NoTV, NoMac]
+	[Native]
+	public enum ARPlaneClassificationStatus : long {
+		NotAvailable = 0,
+		Undetermined,
+		Unknown,
+		Known,
+	}
+
+	[iOS (12,0)]
+	[NoWatch, NoTV, NoMac]
+	[Native]
+	public enum ARPlaneClassification : long {
+		None = 0,
+		Wall,
+		Floor,
+		Ceiling,
+		Table,
+		Seat,
+	}
+
+	[iOS (12,0)]
+	[NoWatch, NoTV, NoMac]
 	[Protocol]
 	[Advice ("To conform to 'ARAnchorCopying' you need to implement:\n'[Export (\"initWithAnchor:\")]'\n'public YourConstructor (ARAnchor anchor)'")]
 	interface ARAnchorCopying : NSCopying {
@@ -344,6 +366,11 @@ namespace ARKit {
 
 		// [Export ("initWithTransform:")] marked as NS_UNAVAILABLE
 
+		[iOS (12,0)]
+		[Static]
+		[Export ("classificationSupported")]
+		bool ClassificationSupported { [Bind ("isClassificationSupported")] get; }
+
 		[Export ("alignment")]
 		ARPlaneAnchorAlignment Alignment { get; }
 
@@ -362,6 +389,14 @@ namespace ARKit {
 		[iOS (11,3)]
 		[Export ("geometry", ArgumentSemantic.Strong)]
 		ARPlaneGeometry Geometry { get; }
+
+		[iOS (12,0)]
+		[Export ("classificationStatus", ArgumentSemantic.Assign)]
+		ARPlaneClassificationStatus ClassificationStatus { get; }
+
+		[iOS (12,0)]
+		[Export ("classification", ArgumentSemantic.Assign)]
+		ARPlaneClassification Classification { get; }
 	}
 
 	[iOS (11,3)]
