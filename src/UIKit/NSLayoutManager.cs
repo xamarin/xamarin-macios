@@ -45,12 +45,14 @@ namespace UIKit {
 				nuint rv;
 #if XAMCORE_2_0 && ARCH_32
 				// Unified/32: the output array is not the correct size, it needs to be int[], and it's an array of NSGlyphProperty (which is long)
-				var tmpArray = new nint [props.Length];
-				fixed (nint *properties = tmpArray) {
+				nint[] tmpArray = null;
+				if (props != null)
+					tmpArray = new nint [props.Length];
 #else
 				// Unified/64 + Classic: the input array is the correct size
-				fixed (NSGlyphProperty *properties = props) {
+				var tmpArray = props;
 #endif
+				fixed (void *properties = tmpArray) {
 					fixed (nuint* charIBuffer = charIndexBuffer) {
 						fixed (byte* bidi = bidiLevelBuffer) {
 							rv = GetGlyphsInternal (glyphRange, (IntPtr) glyphs, (IntPtr) properties, (IntPtr) charIBuffer, (IntPtr) bidi);
@@ -59,8 +61,10 @@ namespace UIKit {
 				}
 #if XAMCORE_2_0 && ARCH_32
 				// Marshal back from the tmpArray.
-				for (int i = 0; i < props.Length; i++)
-					props [i] = (NSGlyphProperty) (long) tmpArray [i];
+				if (tmpArray != null) {
+					for (int i = 0; i < props.Length; i++)
+						props [i] = (NSGlyphProperty) (long) tmpArray [i];
+				}
 #endif
 
 				return rv;
