@@ -43,7 +43,7 @@ namespace CoreMedia {
 		NSString RelativeFontSize { get; }
 	}
 
-	[Static] [Internal]
+	[Static][Internal]
 	interface CMSampleAttachmentKey {
 		[Field ("kCMSampleAttachmentKey_NotSync")]
 		NSString NotSync { get; }
