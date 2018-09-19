@@ -8059,10 +8059,10 @@ namespace Foundation
 		NSRange GetParagraphRange (NSRange range);
 
 		[Export ("componentsSeparatedByString:")]
-		NSString[] SeparateComponents(NSString separator);
+		NSString[] SeparateComponents (NSString separator);
 
 		[Export ("componentsSeparatedByCharactersInSet:")]
-		NSString[] SeparateComponents(NSCharacterSet separator);
+		NSString[] SeparateComponents (NSCharacterSet separator);
 
 		// From the NSItemProviderReading protocol
 
