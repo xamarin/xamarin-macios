@@ -2,9 +2,6 @@
 !unknown-native-enum! AVCaptureDeviceTransportControlsPlaybackMode bound
 !unknown-native-enum! AVVideoFieldMode bound
 
-## OSX only - but only the member is marked (not the protocol itself)
-!missing-protocol! AVFragmentMinding not bound
-
 ## from iOS 4.0 to 5.1
 !unknown-field! AVMediaTypeTimedMetadata bound
 

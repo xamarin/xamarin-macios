@@ -530,6 +530,9 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (cert.GetSerialNumber (out err).Description, Is.EqualTo ("<2b9f7ee5 ca25a625 14204782 753a9bb9>"), "GetSerialNumber/NSError");
 				Assert.Null (err, "err") ;
 			}
+			if (TestRuntime.CheckXcodeVersion (10,0)) {
+				Assert.NotNull (cert.GetKey (), "GetKey");
+			}
 		}
 
 		[Test]
@@ -628,6 +631,16 @@ namespace MonoTouchFixtures.Security {
 				using (var attrs = private_key.GetAttributes ()) {
 					Assert.That (attrs.Count, Is.GreaterThan (0), "private/GetAttributes");
 				}
+			}
+		}
+
+		[Test]
+		public void X2 ()
+		{
+			TestRuntime.AssertXcodeVersion (10,0);
+			using (var x1 = new SecCertificate (mail_google_com)) 
+			using (var x2 = new SecCertificate2 (x1)) {
+				Assert.That (x2.Certificate.GetCommonName (), Is.EqualTo (x1.GetCommonName ()), "CommonName");
 			}
 		}
 	}

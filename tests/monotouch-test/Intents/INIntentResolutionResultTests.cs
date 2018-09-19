@@ -186,8 +186,12 @@ namespace MonoTouchFixtures.Intents {
 		}
 
 		[Test]
+#if __WATCHOS__
+		[ExpectedException (typeof (PlatformNotSupportedException))]
+#endif
 		public void INCarAirCirculationModeResolutionResultPropertyTest ()
 		{
+		
 			using (var needsValue = INCarAirCirculationModeResolutionResult.NeedsValue)
 			using (var notRequired = INCarAirCirculationModeResolutionResult.NotRequired)
 			using (var unsupported = INCarAirCirculationModeResolutionResult.Unsupported) {
@@ -202,6 +206,9 @@ namespace MonoTouchFixtures.Intents {
 		}
 
 		[Test]
+#if __WATCHOS__
+		[ExpectedException (typeof (PlatformNotSupportedException))]
+#endif
 		public void INCarAudioSourceResolutionResultPropertyTest ()
 		{
 			using (var needsValue = INCarAudioSourceResolutionResult.NeedsValue)
@@ -218,6 +225,9 @@ namespace MonoTouchFixtures.Intents {
 		}
 
 		[Test]
+#if __WATCHOS__
+		[ExpectedException (typeof (PlatformNotSupportedException))]
+#endif
 		public void INCarDefrosterResolutionResultPropertyTest ()
 		{
 			using (var needsValue = INCarDefrosterResolutionResult.NeedsValue)
@@ -234,6 +244,9 @@ namespace MonoTouchFixtures.Intents {
 		}
 
 		[Test]
+#if __WATCHOS__
+		[ExpectedException (typeof (PlatformNotSupportedException))]
+#endif
 		public void INCarSeatResolutionResultPropertyTest ()
 		{
 			using (var needsValue = INCarSeatResolutionResult.NeedsValue)
@@ -314,6 +327,9 @@ namespace MonoTouchFixtures.Intents {
 		}
 
 		[Test]
+#if __WATCHOS__
+		[ExpectedException (typeof (PlatformNotSupportedException))]
+#endif
 		public void INRadioTypeResolutionResultPropertyTest ()
 		{
 			using (var needsValue = INRadioTypeResolutionResult.NeedsValue)
@@ -330,6 +346,9 @@ namespace MonoTouchFixtures.Intents {
 		}
 
 		[Test]
+#if __WATCHOS__
+		[ExpectedException (typeof (PlatformNotSupportedException))]
+#endif
 		public void INRelativeReferenceResolutionResultPropertyTest ()
 		{
 			using (var needsValue = INRelativeReferenceResolutionResult.NeedsValue)
@@ -346,6 +365,9 @@ namespace MonoTouchFixtures.Intents {
 		}
 
 		[Test]
+#if __WATCHOS__
+		[ExpectedException (typeof (PlatformNotSupportedException))]
+#endif
 		public void INRelativeSettingResolutionResultPropertyTest ()
 		{
 			using (var needsValue = INRelativeSettingResolutionResult.NeedsValue)

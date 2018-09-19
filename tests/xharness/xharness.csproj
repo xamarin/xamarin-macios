@@ -38,6 +38,10 @@
     <StartAction>Project</StartAction>
     <StartArguments>--verbose --jenkins --autoconf --rootdir ..</StartArguments>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Run Jenkins (internal) tests' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>--verbose --jenkins --autoconf --rootdir .. --label run-all-tests,skip-ios-device-tests,skip-mac-32-tests --markdown-summary=../TestSummary.md</StartArguments>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Run device tests' ">
     <StartAction>Project</StartAction>
     <StartArguments>--verbose --jenkins --autoconf --rootdir .. --label=skip-mac-tests,skip-ios-simulator-tests,skip-ios-msbuild-tests,skip-system-permission-tests,run-ios-device-tests,run-ios-extensions-tests --markdown-summary=../TestSummary.md  --label=run-watchos-tests,skip-bcl-tests</StartArguments>

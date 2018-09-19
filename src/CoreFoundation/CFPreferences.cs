@@ -85,7 +85,7 @@ namespace CoreFoundation
 				return null;
 			}
 
-			using (var plist = new CFPropertyList (valuePtr)) {
+			using (var plist = new CFPropertyList (valuePtr, true)) {
 				return plist.Value;
 			}
 		}

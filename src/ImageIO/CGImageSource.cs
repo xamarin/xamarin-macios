@@ -393,5 +393,15 @@ namespace ImageIO {
 
 			return info;
 		}
+
+		[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0), Watch (5,0)]
+		[DllImport (Constants.ImageIOLibrary)]
+		extern static nuint CGImageSourceGetPrimaryImageIndex (IntPtr /* CGImageSource */ src);
+
+		[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0), Watch (5,0)]
+		public nuint GetPrimaryImageIndex ()
+		{
+			return CGImageSourceGetPrimaryImageIndex (handle);
+		}
 	}
 }

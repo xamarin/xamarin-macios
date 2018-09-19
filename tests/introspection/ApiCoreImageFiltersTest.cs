@@ -66,9 +66,9 @@ namespace Introspection {
 			//  NSUnknownKeyException [<CIDepthOfField 0x158586970> valueForUndefinedKey:]: this class is not key value coding-compliant for the key inputPoint2.
 			case "CIDepthOfField":
 				return true;
-			// FIXME: Remove if fixed.  Doesn't appear to exist in El Capitan.  Reported in radar #22099780
-//			case "CIMaskedVariableBlur":
-//			cd ..	return true;
+			// Apple does **not** document filters as API (like we do)
+			// uncomment calls to `GenerateBinding` to use introspection code to generate the skeleton binding code and complete it
+			// e.g. picking better types like `bool` instead of `NSNumber'
 			default:
  				return false;
 			}
@@ -100,6 +100,7 @@ namespace Introspection {
 		// this test checks that all managed filters have a native peer, i.e. against extra filters
 		public void CheckManagedFilters ()
 		{
+			ContinueOnFailure = true;
 			List<string> filters = new List<string> (CIFilter.FilterNamesInCategories (null));
 			var superFilters = new List<string> ();
 			var nspace = CIFilterType.Namespace;
@@ -120,7 +121,6 @@ namespace Introspection {
 					continue;
 
 				NSObject obj = ctor.Invoke (null) as NSObject;
-				Assert.That (obj.Handle, Is.Not.EqualTo (IntPtr.Zero), t.Name + ".Handle");
 #if false
 				// check base type - we might have our own base type or different names, so it's debug only (not failure)
 				var super = new Class (obj.Class.SuperClass).Name;
@@ -135,7 +135,8 @@ namespace Introspection {
 				}
 #endif
 				int result = filters.RemoveAll (s => StringComparer.OrdinalIgnoreCase.Compare (t.Name, s) == 0);
-				Assert.That (result, Is.GreaterThan (0), t.Name);
+				if ((result == 0) && !Skip (t))
+					ReportError ($"Managed {t.Name} was not part of the native filter list");
 			}
 			// in case it's a buggy filter we need to try to remove it from the list too
 			for (int i = filters.Count - 1; i >= 0; i--) {

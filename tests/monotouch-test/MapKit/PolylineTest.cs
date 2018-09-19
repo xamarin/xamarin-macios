@@ -8,6 +8,7 @@ using System.Drawing;
 using Foundation;
 using CoreLocation;
 using MapKit;
+using ObjCRuntime;
 #else
 using MonoTouch.CoreLocation;
 using MonoTouch.Foundation;
@@ -21,6 +22,11 @@ namespace MonoTouchFixtures.MapKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class PolylineTest {
+		[SetUp]
+		public void Setup ()
+		{
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+		}
 		
 		[Test]
 		[ExpectedException (typeof (ArgumentNullException))]
@@ -33,7 +39,7 @@ namespace MonoTouchFixtures.MapKit {
 		{
 			// MKAnnotation
 			Assert.That (pl.Coordinate.Longitude, Is.NaN, "Coordinate.Longitude");
-			if (TestRuntime.CheckSystemAndSDKVersion (7,0))
+			if (TestRuntime.CheckXcodeVersion (5, 0, 1))
 				Assert.That (pl.Coordinate.Latitude, Is.EqualTo (-90f), "Coordinate.Latitude");
 			else
 				Assert.That (pl.Coordinate.Latitude, Is.NaN, "Coordinate.Latitude");
@@ -42,7 +48,7 @@ namespace MonoTouchFixtures.MapKit {
 			// MKOverlay
 			Assert.True (Double.IsPositiveInfinity (pl.BoundingMapRect.Origin.X), "BoundingMapRect.Origin.X");
 			Assert.True (Double.IsPositiveInfinity (pl.BoundingMapRect.Origin.Y), "BoundingMapRect.Origin.Y");
-			if (TestRuntime.CheckSystemAndSDKVersion (7,0)) {
+			if (TestRuntime.CheckXcodeVersion (5, 0, 1)) {
 				Assert.That (pl.BoundingMapRect.Size.Height, Is.EqualTo (0.0f), "BoundingMapRect.Size.Height");
 				Assert.That (pl.BoundingMapRect.Size.Width, Is.EqualTo (0.0f), "BoundingMapRect.Size.Width");
 			} else {

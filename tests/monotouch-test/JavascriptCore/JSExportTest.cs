@@ -29,8 +29,7 @@ namespace MonoTouchFixtures.JavascriptCore {
 		[Test]
 		public void ExportTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
-				Assert.Ignore ("requires iOS7+");
+			TestRuntime.AssertXcodeVersion (5, 0, 1);
 
 			if (RegistrarTest.CurrentRegistrar != Registrars.Static)
 				Assert.Ignore ("Exporting protocols to JavaScriptCore requires the static registrar.");

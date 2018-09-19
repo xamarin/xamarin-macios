@@ -51,10 +51,10 @@ namespace MonoTouchFixtures.CoreText
 				Assert.Ignore ("Requires iOS9+ or macOS 10.11+");
 			
 			var sa = new CTStringAttributes ();
-			sa.ForegroundColor = UIColor.Blue.CGColor;
+			sa.ForegroundColor = TestRuntime.GetCGColor (UIColor.Blue);
 			sa.Font = new CTFont ("Georgia-BoldItalic", 24);
 			sa.UnderlineStyle = CTUnderlineStyle.Double; // It does not seem to do anything
-			sa.UnderlineColor = UIColor.Blue.CGColor;
+			sa.UnderlineColor = TestRuntime.GetCGColor (UIColor.Blue);
 			sa.UnderlineStyleModifiers = CTUnderlineStyleModifiers.PatternDashDotDot;
 
 			var attributedString = new NSAttributedString ("Hello world.\nWoohooo!\nThere", sa);

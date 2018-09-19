@@ -33,6 +33,7 @@ using JavaScriptCore;
 
 namespace WebKit {
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (WebScriptObject), Name="DOMObject")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMObject init]: should never be used
 	partial interface DomObject : NSCopying {
@@ -41,6 +42,7 @@ namespace WebKit {
 	/////////////////////////
 	// DomObject subclasses
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomObject), Name="DOMAbstractView")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMAbstractView init]: should never be used
 	partial interface DomAbstractView {
@@ -48,6 +50,7 @@ namespace WebKit {
 		DomDocument Document { get; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomObject), Name="DOMCSSRule")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMCSSRule init]: should never be used
 	partial interface DomCssRule {
@@ -64,6 +67,7 @@ namespace WebKit {
 		DomCssRule ParentRule { get;  }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomCssRule), Name="DOMCSSCharsetRule")]
 	[DisableDefaultCtor]
 	partial interface DomCssCharsetRule {
@@ -71,6 +75,7 @@ namespace WebKit {
 		string Encoding { get; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomCssRule), Name="DOMCSSFontFaceRule")]
 	[DisableDefaultCtor]
 	partial interface DomCssFontFaceRule {
@@ -78,6 +83,7 @@ namespace WebKit {
 		DomCssStyleDeclaration Style { get; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomCssRule), Name="DOMCSSImportRule")]
 	[DisableDefaultCtor]
 	partial interface DomImportCssRule {
@@ -91,6 +97,7 @@ namespace WebKit {
 		DomCssStyleSheet StyleSheet { get; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomCssRule), Name="DOMCSSMediaRule")]
 	[DisableDefaultCtor]
 	partial interface DomCssMediaRule {
@@ -107,6 +114,7 @@ namespace WebKit {
 		void DeleteRule (uint index);
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomCssRule), Name="DOMCSSPageRule")]
 	[DisableDefaultCtor]
 	partial interface DomCssPageRule {
@@ -117,6 +125,7 @@ namespace WebKit {
 		DomCssStyleDeclaration Style { get; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomCssRule), Name="DOMCSSStyleRule")]
 	[DisableDefaultCtor]
 	partial interface DomCssStyleRule {
@@ -127,11 +136,13 @@ namespace WebKit {
 		DomCssStyleDeclaration Style { get; }
 	}
 	
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomCssRule), Name="DOMCSSUnknownRule")]
 	[DisableDefaultCtor]
 	partial interface DomCssUnknownRule {
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomObject), Name="DOMCSSRuleList")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMCSSRuleList init]: should never be used
 	partial interface DomCssRuleList {
@@ -142,6 +153,7 @@ namespace WebKit {
 		DomCssRule GetItem (int /* unsigned int */ index);
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomObject), Name="DOMCSSStyleDeclaration")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMCSSStyleDeclaration init]: should never be used
 	partial interface DomCssStyleDeclaration {
@@ -179,6 +191,7 @@ namespace WebKit {
 		bool IsPropertyImplicit (string propertyName);
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomStyleSheet), Name="DOMCSSStyleSheet")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMCSSStyleSheet init]: should never be used
 	partial interface DomCssStyleSheet {
@@ -204,6 +217,7 @@ namespace WebKit {
 		void RemoveRule (uint /* unsigned int */ index);
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomObject), Name="DOMCSSValue")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMCSSValue init]: should never be used
 	partial interface DomCssValue {
@@ -214,6 +228,7 @@ namespace WebKit {
 		DomCssValueType Type { get; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomObject), Name="DOMHTMLCollection")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMHTMLCollection init]: should never be used
 	partial interface DomHtmlCollection {
@@ -230,6 +245,7 @@ namespace WebKit {
 		DomNodeList GetTags (string name);
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomObject), Name="DOMImplementation")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMImplementation init]: should never be used
 	partial interface DomImplementation {
@@ -249,6 +265,7 @@ namespace WebKit {
 		DomHtmlDocument CreateHtmlDocument (string title);
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomObject), Name="DOMMediaList")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMMediaList init]: should never be used
 	partial interface DomMediaList {
@@ -268,6 +285,7 @@ namespace WebKit {
 		void AppendMedium (string newMedium);
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomObject), Name="DOMNamedNodeMap")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMNamedNodeMap init]: should never be used
 	partial interface DomNamedNodeMap {
@@ -296,6 +314,7 @@ namespace WebKit {
 		DomNode RemoveNamedItemNS (string namespaceURI, string localName);
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomObject), Name="DOMNode")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMNode init]: should never be used
 	partial interface DomNode : DomEventTarget {
@@ -401,6 +420,7 @@ namespace WebKit {
 
 	interface IDomNodeFilter {}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[Protocol, Model (AutoGeneratedName = true)]
 	[BaseType (typeof (NSObject), Name="DOMNodeFilter")]
 	interface DomNodeFilter {
@@ -409,6 +429,7 @@ namespace WebKit {
 		short AcceptNode (DomNode n);
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomObject), Name="DOMNodeIterator")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomNodeIterator {
@@ -440,6 +461,7 @@ namespace WebKit {
 		void Detach ();
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomObject), Name="DOMNodeList")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMNodeList init]: should never be used
 	partial interface DomNodeList {
@@ -450,6 +472,7 @@ namespace WebKit {
 		DomNode GetItem (int /* unsigned int */ index);
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomObject), Name="DOMRange")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMRange init]: should never be used
 	partial interface DomRange {
@@ -544,6 +567,7 @@ namespace WebKit {
 		bool IsPointInRange (DomNode refNode, int /* int, not NSInteger */ offset);
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomObject), Name="DOMStyleSheet")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMStyleSheet init]: should never be used
 	partial interface DomStyleSheet {
@@ -569,6 +593,7 @@ namespace WebKit {
 		DomMediaList Media { get;  }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomObject), Name="DOMStyleSheetList")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMStyleSheetList init]: should never be used
 	partial interface DomStyleSheetList {
@@ -582,6 +607,7 @@ namespace WebKit {
 	///////////////////////
 	// DomNode subclasses
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomNode), Name="DOMAttr")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMAttr init]: should never be used
 	partial interface DomAttr {
@@ -601,6 +627,7 @@ namespace WebKit {
 		DomCssStyleDeclaration Style { get;  }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomNode), Name="DOMCharacterData")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMCharacterData init]: should never be used
 	partial interface DomCharacterData {
@@ -626,6 +653,7 @@ namespace WebKit {
 		void ReplaceData (uint /* unsigned int */ offset, uint /* unsigned int */ length, string data);
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomNode), Name="DOMDocument")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMDocument init]: should never be used
 	partial interface DomDocument {
@@ -834,11 +862,13 @@ namespace WebKit {
 		DomNodeList QuerySelectorAll (string selectors);
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomNode), Name="DOMDocumentFragment")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMDocumentFragment init]: should never be used
 	partial interface DomDocumentFragment {
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomNode), Name="DOMDocumentType")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMDocumentType init]: should never be used
 	partial interface DomDocumentType {
@@ -862,6 +892,7 @@ namespace WebKit {
 
 	}
 	
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomNode), Name="DOMElement")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMElement init]: should never be used
 	partial interface DomElement {
@@ -1010,11 +1041,13 @@ namespace WebKit {
 		void WebKitRequestFullScreen (ushort flags);
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomNode), Name="DOMEntityReference")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMEntityReference init]: should never be used
 	partial interface DomEntityReference {
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (NSObject), Name = "DOMEventTarget")]
 	[Protocol]
 	[Model]
@@ -1043,6 +1076,7 @@ namespace WebKit {
 		bool DispatchEvent (DomEvent evt);
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomObject), Name="DOMEvent")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMEvent init]: should never be used
 	partial interface DomEvent {
@@ -1099,6 +1133,7 @@ namespace WebKit {
 	// Note: DOMMutationEvent is not bound since it is deprecated
 	// by the W3C to be replaced with Mutation Observers
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomEvent), Name = "DOMOverflowEvent")]
 	[DisableDefaultCtor]
 	partial interface DomOverflowEvent {
@@ -1121,6 +1156,7 @@ namespace WebKit {
 		bool HasVerticalOverflow { get; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomEvent), Name = "DOMProgressEvent")]
 	[DisableDefaultCtor]
 	partial interface DomProgressEvent {
@@ -1134,6 +1170,7 @@ namespace WebKit {
 		ulong Total { get; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomEvent), Name = "DOMUIEvent")]
 	[DisableDefaultCtor]
 	partial interface DomUIEvent {
@@ -1171,6 +1208,7 @@ namespace WebKit {
 		int Which { get; } /* int, not NSInteger */
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomUIEvent), Name = "DOMKeyboardEvent")]
 	[DisableDefaultCtor]
 	partial interface DomKeyboardEvent {
@@ -1223,6 +1261,7 @@ namespace WebKit {
 		int CharCode { get; } /* int, not NSInteger */
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomUIEvent), Name = "DOMMouseEvent")]
 	[DisableDefaultCtor]
 	partial interface DomMouseEvent {
@@ -1285,6 +1324,7 @@ namespace WebKit {
 		DomNode ToElement { get; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomMouseEvent), Name = "DOMWheelEvent")]
 	[DisableDefaultCtor]
 	partial interface DomWheelEvent {
@@ -1310,6 +1350,7 @@ namespace WebKit {
 		bool IsHorizontal { get; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (NSObject), Name="DOMEventListener")]
 	[Model]
 	[Protocol]
@@ -1320,6 +1361,7 @@ namespace WebKit {
 	}
 	interface IDomEventListener {}
 	
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomCharacterData), Name="DOMProcessingInstruction")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMProcessingInstruction init]: should never be used
 	partial interface DomProcessingInstruction {
@@ -1336,6 +1378,7 @@ namespace WebKit {
 	////////////////////////////////
 	// DomCharacterData subclasses
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomCharacterData), Name="DOMText")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMText init]: should never be used
 	partial interface DomText {
@@ -1349,6 +1392,7 @@ namespace WebKit {
 		DomText ReplaceWholeText (string content);
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomCharacterData), Name="DOMComment")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMComment init]: should never be used
 	partial interface DomComment {
@@ -1357,6 +1401,7 @@ namespace WebKit {
 	///////////////////////////
 	// DomText subclasses
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomText), Name="DOMCDATASection")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMCDATASection init]: should never be used
 	partial interface DomCDataSection {
@@ -1365,6 +1410,7 @@ namespace WebKit {
 	///////////////////////////
 	// DomDocument subclasses
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomDocument), Name="DOMHTMLDocument")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMHTMLDocument init]: should never be used
 	partial interface DomHtmlDocument {
@@ -1438,6 +1484,7 @@ namespace WebKit {
 	//////////////////////////
 	// DomElement subclasses
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLInputElement")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMHTMLElement init]: should never be used
 	partial interface DomHtmlInputElement {
@@ -1529,6 +1576,7 @@ namespace WebKit {
 		void Click ();
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLTextAreaElement")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMHTMLElement init]: should never be used
 	partial interface DomHtmlTextAreaElement {
@@ -1576,6 +1624,7 @@ namespace WebKit {
 		void Select ();
 	}
 	
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomElement), Name="DOMHTMLElement")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMHTMLElement init]: should never be used
 	partial interface DomHtmlElement {
@@ -1621,6 +1670,7 @@ namespace WebKit {
 
 	//////////////////////////////////////////////////////////////////
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (NSObject))]
 	partial interface WebArchive : NSCoding, NSCopying {
 		[Export ("initWithMainResource:subresources:subframeArchives:")]
@@ -1642,6 +1692,7 @@ namespace WebKit {
 		NSData Data { get; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (NSObject))]
 	partial interface WebBackForwardList {
 		[Export ("addItem:")]
@@ -1688,6 +1739,7 @@ namespace WebKit {
 		int Capacity { get; set; } /* int, not NSInteger */ 
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (NSObject))]
 	partial interface WebDataSource {
 		[Export ("initWithRequest:")]
@@ -1740,6 +1792,7 @@ namespace WebKit {
 		void AddSubresource (WebResource subresource);
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -1807,10 +1860,12 @@ namespace WebKit {
 //	}
 
 	
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (NSUrlDownload))]
 	partial interface WebDownload {
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol (FormalSince = "10.11")]
@@ -1819,6 +1874,7 @@ namespace WebKit {
 		NSWindow OnDownloadWindowForSheet (WebDownload download);
 	}
 	
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // invalid handle returned
 	partial interface WebFrame {
@@ -1892,6 +1948,7 @@ namespace WebKit {
 #endif
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[Model]
 	[Protocol (FormalSince = "10.11")]
 	[BaseType (typeof (NSObject))]
@@ -1944,6 +2001,7 @@ namespace WebKit {
 #endif
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (NSView))]
 	partial interface WebFrameView {
 		[Export ("initWithFrame:")]
@@ -1973,6 +2031,7 @@ namespace WebKit {
 		bool AllowsScrolling { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (NSObject))]
 	interface WebHistory {
 		[Export ("orderedLastVisitedDays")]
@@ -2012,6 +2071,7 @@ namespace WebKit {
 		WebHistoryItem GetHistoryItemForUrl (NSUrl url);
 	}
 	
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (NSObject))]
 	partial interface WebHistoryItem : NSCopying {
 		[Export ("initWithURLString:title:lastVisitedTimeInterval:")]
@@ -2041,6 +2101,7 @@ namespace WebKit {
 		NSString ChangedNotification { get; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (NSObject))]
 	[Model (AutoGeneratedName = true)]
 	[Protocol]
@@ -2057,6 +2118,7 @@ namespace WebKit {
 
 	interface IWebOpenPanelResultListener {}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol (FormalSince = "10.11")]
@@ -2074,6 +2136,7 @@ namespace WebKit {
 		void UnableToImplementPolicy (WebView webView, NSError error, WebFrame frame);
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (NSObject))]
 	[Model (AutoGeneratedName = true)]
 	[Protocol]
@@ -2088,6 +2151,7 @@ namespace WebKit {
 		void Ignore ();
 	}
 	
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (NSObject))]
 	partial interface WebPreferences : NSCoding {
 		[Static]
@@ -2201,6 +2265,7 @@ namespace WebKit {
 		string FrameName { get; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol (FormalSince = "10.11")]
@@ -2233,6 +2298,7 @@ namespace WebKit {
 		void OnPlugInFailed (WebView sender, NSError error, WebDataSource dataSource);
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol (FormalSince = "10.11")]
@@ -2373,6 +2439,7 @@ namespace WebKit {
 		CGRect UIGetContentRect (WebView sender);
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crash on dispose, documented as "You can not create a WebScriptObject object directly."
 	partial interface WebScriptObject {
@@ -2415,6 +2482,7 @@ namespace WebKit {
 #endif
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (NSView),
 		   Events=new Type [] {
 			   typeof (WebFrameLoadDelegate),
@@ -2801,6 +2869,7 @@ namespace WebKit {
 		NSString WebActionOriginalUrlKey { get; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomObject), Name="DOMBlob")]
 	[DisableDefaultCtor]
 	partial interface DomBlob {
@@ -2808,6 +2877,7 @@ namespace WebKit {
 		ulong Size { get; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomBlob), Name="DOMFile")]
 	[DisableDefaultCtor]
 	partial interface DomFile {
@@ -2815,6 +2885,7 @@ namespace WebKit {
 		string Name { get; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomObject), Name="DOMFileList")]
 	[DisableDefaultCtor]
 	partial interface DomFileList {
@@ -2825,6 +2896,7 @@ namespace WebKit {
 		DomFile GetItem (int /* unsigned int */ index);
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLFormElement")]
 	[DisableDefaultCtor]
 	partial interface DomHtmlFormElement {
@@ -2875,6 +2947,7 @@ namespace WebKit {
 		DomFileList Files { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLAnchorElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlAnchorElement {
@@ -2941,6 +3014,7 @@ namespace WebKit {
 		NSUrl AbsoluteImageUrl { get; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLAppletElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlAppletElement {
@@ -2979,6 +3053,7 @@ namespace WebKit {
 		string Width { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLAreaElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlAreaElement {
@@ -3030,6 +3105,7 @@ namespace WebKit {
 		NSUrl AbsoluteImageUrl { get; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLBRElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlBRElement {
@@ -3038,6 +3114,7 @@ namespace WebKit {
 		string Clear { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLBaseElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlBaseElement {
@@ -3049,6 +3126,7 @@ namespace WebKit {
 		string Target { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLBaseFontElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlBaseFontElement {
@@ -3063,6 +3141,7 @@ namespace WebKit {
 		string Size { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLBodyElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlBodyElement {
@@ -3086,6 +3165,7 @@ namespace WebKit {
 		string VLink { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLButtonElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlButtonElement {
@@ -3119,6 +3199,7 @@ namespace WebKit {
 		void Click ();
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLDListElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlDListElement {
@@ -3127,6 +3208,7 @@ namespace WebKit {
 		bool Compact { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLDirectoryElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlDirectoryElement {
@@ -3135,6 +3217,7 @@ namespace WebKit {
 		bool Compact { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLDivElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlDivElement {
@@ -3143,6 +3226,7 @@ namespace WebKit {
 		string Align { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLEmbedElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlEmbedElement {
@@ -3166,6 +3250,7 @@ namespace WebKit {
 		int Width { get; set; } /* int, not NSInteger */
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLFieldSetElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlFieldSetElement {
@@ -3174,6 +3259,7 @@ namespace WebKit {
 		DomHtmlFormElement Form { get; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLFontElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlFontElement {
@@ -3188,6 +3274,7 @@ namespace WebKit {
 		string Size { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLFrameElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlFrameElement {
@@ -3232,6 +3319,7 @@ namespace WebKit {
 		int Height { get; } /* int, not NSInteger */
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLFrameSetElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlFrameSetElement {
@@ -3243,6 +3331,7 @@ namespace WebKit {
 		string Rows { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLHRElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlHRElement {
@@ -3260,6 +3349,7 @@ namespace WebKit {
 		string Width { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLHeadElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlHeadElement {
@@ -3268,6 +3358,7 @@ namespace WebKit {
 		string Profile { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLHeadingElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlHeadingElement {
@@ -3276,6 +3367,7 @@ namespace WebKit {
 		string Align { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLHtmlElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlHtmlElement {
@@ -3284,6 +3376,7 @@ namespace WebKit {
 		string Version { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLIFrameElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlIFrameElement {
@@ -3325,6 +3418,7 @@ namespace WebKit {
 		DomAbstractView ContentWindow { get; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLImageElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlImageElement {
@@ -3390,6 +3484,7 @@ namespace WebKit {
 		NSUrl AbsoluteImageUrl { get; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLLIElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlLIElement {
@@ -3401,6 +3496,7 @@ namespace WebKit {
 		int Value { get; set; } /* int, not NSInteger */
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLLabelElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlLabelElement {
@@ -3416,6 +3512,7 @@ namespace WebKit {
 		string AccessKey { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLLegendElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlLegendElement {
@@ -3431,6 +3528,7 @@ namespace WebKit {
 		string AccessKey { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLLinkElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlLinkElement {
@@ -3469,6 +3567,7 @@ namespace WebKit {
 		NSUrl AbsoluteImageUrl { get; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLMapElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlMapElement {
@@ -3480,6 +3579,7 @@ namespace WebKit {
 		string Name { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLMarqueeElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlMarqueeElement {
@@ -3491,6 +3591,7 @@ namespace WebKit {
 		void Stop ();
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLMenuElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlMenuElement {
@@ -3499,6 +3600,7 @@ namespace WebKit {
 		bool Compact { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLMetaElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlMetaElement {
@@ -3516,6 +3618,7 @@ namespace WebKit {
 		string Scheme { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLModElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlModElement {
@@ -3527,6 +3630,7 @@ namespace WebKit {
 		string DateTime { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLOListElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlOListElement {
@@ -3541,6 +3645,7 @@ namespace WebKit {
 		string Type { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLObjectElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlObjectElement {
@@ -3603,6 +3708,7 @@ namespace WebKit {
 		NSUrl AbsoluteImageUrl { get; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLOptGroupElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlOptGroupElement {
@@ -3614,6 +3720,7 @@ namespace WebKit {
 		string Label { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLOptionElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlOptionElement {
@@ -3643,6 +3750,7 @@ namespace WebKit {
 		int Index { get; } /* int, not NSInteger */
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomObject), Name="DOMHTMLOptionsCollection")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlOptionsCollection {
@@ -3666,6 +3774,7 @@ namespace WebKit {
 		DomNode GetItem (uint /* unsigned int */ index);
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLParagraphElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlParagraphElement {
@@ -3674,6 +3783,7 @@ namespace WebKit {
 		string Align { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLParamElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlParamElement {
@@ -3691,6 +3801,7 @@ namespace WebKit {
 		string ValueType { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLPreElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlPreElement {
@@ -3702,6 +3813,7 @@ namespace WebKit {
 		bool Wrap { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLQuoteElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlQuoteElement {
@@ -3710,6 +3822,7 @@ namespace WebKit {
 		string Cite { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLScriptElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlScriptElement {
@@ -3736,6 +3849,7 @@ namespace WebKit {
 		string Type { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLSelectElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlSelectElement {
@@ -3789,6 +3903,7 @@ namespace WebKit {
 		void Remove (int /* int, not NSInteger */ index);
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLStyleElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlStyleElement {
@@ -3806,6 +3921,7 @@ namespace WebKit {
 		DomStyleSheet Sheet { get; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLTableCaptionElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlTableCaptionElement {
@@ -3814,6 +3930,7 @@ namespace WebKit {
 		string Align { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLTableCellElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlTableCellElement {
@@ -3864,6 +3981,7 @@ namespace WebKit {
 		string Width { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLTableColElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlTableColElement {
@@ -3887,6 +4005,7 @@ namespace WebKit {
 		string Width { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLTableElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlTableElement {
@@ -3958,6 +4077,7 @@ namespace WebKit {
 		void DeleteRow (int /* int, not NSInteger */ index);
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLTableRowElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
 	interface DomHtmlTableRowElement {

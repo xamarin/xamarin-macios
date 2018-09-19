@@ -153,25 +153,30 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGPDFDictionaryApplyFunction (/* CGPDFDictionaryRef */ IntPtr dic, ApplierFunction function, /* void* */ IntPtr info);
 
-#if !XAMCORE_2_0
+		static readonly ApplierFunction applyblock_handler = ApplyBridge;
+
+		public delegate void ApplyCallback (string key, object value, object info);
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (ApplierFunction))]
 #endif
 		static void ApplyBridge (string key, IntPtr pdfObject, IntPtr info)
 		{
-			Action<string,object> callback = (Action<string,object>) GCHandle.FromIntPtr (info).Target;
+			var data = (Tuple<ApplyCallback, object>) GCHandle.FromIntPtr (info).Target;
+			var callback = data.Item1;
 
-			callback (key, CGPDFObject.FromHandle (pdfObject));
+			callback (key, CGPDFObject.FromHandle (pdfObject), data.Item2);
 		}
 
-		[Obsolete ("Use the 'Apply(Action<string,CGPDFObject>)' method.")]
-		public void Apply (Action<string,object> callback)
+		public void Apply (ApplyCallback callback, object info = null)
 		{
-			GCHandle gch = GCHandle.Alloc (callback);
-			CGPDFDictionaryApplyFunction (Handle, ApplyBridge, GCHandle.ToIntPtr (gch));
-			gch.Free ();
+			var data = new Tuple<ApplyCallback, object> (callback, info);
+			var gch = GCHandle.Alloc (data);
+			try {
+				CGPDFDictionaryApplyFunction (Handle, applyblock_handler, GCHandle.ToIntPtr (gch));
+			} finally {
+				gch.Free ();
+			}
 		}
-#endif
 
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (ApplierFunction))]

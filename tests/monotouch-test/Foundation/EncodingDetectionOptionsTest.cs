@@ -10,6 +10,7 @@
 using System;
 #if XAMCORE_2_0
 using Foundation;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 #endif
@@ -25,6 +26,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void SetValueEnumArray ()
 		{
 			TestRuntime.AssertXcodeVersion (6, 0);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			var encodings = new NSStringEncoding [] { NSStringEncoding.ISOLatin1, NSStringEncoding.ISOLatin2 };
 			var edo = new EncodingDetectionOptions () {

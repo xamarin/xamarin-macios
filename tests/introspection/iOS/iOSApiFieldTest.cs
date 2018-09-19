@@ -74,13 +74,6 @@ namespace Introspection {
 			case "ErrorUserInfoAlternateRegionKey":			// kCLErrorUserInfoAlternateRegionKey
 				return true;
 
-			// documented since iOS 4.0 - but the symbols are not in the libraries (see specific unit tests)
-			case "MakerMinoltaDictionary": 				// kCGImagePropertyMakerMinoltaDictionary
-			case "MakerFujiDictionary":				// kCGImagePropertyMakerFujiDictionary
-			case "MakerOlympusDictionary":				// kCGImagePropertyMakerOlympusDictionary
-			case "MakerPentaxDictionary":				// kCGImagePropertyMakerPentaxDictionary
-				return true;
-
 			// ImageIO: documented since iOS 4.3 but null in iOS5 (works on iOS 6.1)
 			// https://developer.apple.com/library/ios/releasenotes/General/iOS43APIDiffs/
 			case "ExifCameraOwnerName":

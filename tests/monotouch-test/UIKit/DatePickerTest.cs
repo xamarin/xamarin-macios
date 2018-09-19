@@ -46,12 +46,7 @@ namespace MonoTouchFixtures.UIKit {
 		public void Locale ()
 		{
 			using (UIDatePicker dp = new UIDatePicker ()) {
-				// this is documented as deprecated in 5.1 but not in 6.0 (reversal or misdocumentation ?)
-				// default value also differs
-				if (TestRuntime.CheckSystemAndSDKVersion (6,0))
-					Assert.NotNull (dp.Locale, "Locale");
-				else
-					Assert.Null (dp.Locale, "Locale");
+				Assert.NotNull (dp.Locale, "Locale");
 			}
 		}
 		[Test]

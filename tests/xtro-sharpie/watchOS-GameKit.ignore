@@ -1,7 +1,6 @@
 ## All members of the protocol are marked as not available on watchOS (but the protocols themselves are not decorated)
 !missing-protocol! GKChallengeListener not bound
 !missing-protocol! GKInviteEventListener not bound
-!missing-protocol! GKGameSessionEventListener not bound
 
 ## enum size declared after the enum, e.g. `typedef NSInteger GKPhotoSize;`, so we miss the metadata
 !unknown-native-enum! GKPhotoSize bound
@@ -16,6 +15,7 @@
 !missing-selector! GKSession::connectToPeer:withTimeout: not bound
 !missing-selector! GKSession::delegate not bound
 !missing-selector! GKSession::denyConnectionFromPeer: not bound
+!missing-selector! GKSession::disconnectFromAllPeers not bound
 !missing-selector! GKSession::disconnectPeerFromAllPeers: not bound
 !missing-selector! GKSession::disconnectTimeout not bound
 !missing-selector! GKSession::displayName not bound
@@ -74,3 +74,8 @@
 !missing-selector! GKVoiceChatService::setRemoteParticipantVolume: not bound
 !missing-selector! GKVoiceChatService::startVoiceChatWithParticipantID:error: not bound
 !missing-selector! GKVoiceChatService::stopVoiceChatWithParticipantID: not bound
+!missing-selector! +GKVoiceChatService::defaultVoiceChatService not bound
+!missing-selector! +GKVoiceChatService::isVoIPAllowed not bound
+
+## enum removed in Xcode 10 - but it's a breaking change for us
+!unknown-native-enum! GKGameSessionErrorCode bound

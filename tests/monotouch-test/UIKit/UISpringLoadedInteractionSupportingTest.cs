@@ -16,6 +16,7 @@ using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 using UIKit;
+using IntentsUI;
 #else
 using MonoTouch.CoreGraphics;
 using MonoTouch.Foundation;
@@ -97,6 +98,16 @@ namespace MonoTouchFixtures.UIKit {
 			var tableView = new UITableView ();
 			tableView.SpringLoaded = true;
 			Assert.IsTrue (tableView.SpringLoaded);
+		}
+
+		[Test]
+		public void INUIAddVoiceShortcutButtonTest ()
+		{
+			TestRuntime.AssertXcodeVersion (10, 0);
+			TestRuntime.AssertDevice ();
+			var shortcutButton = new INUIAddVoiceShortcutButton (INUIAddVoiceShortcutButtonStyle.Black);
+			shortcutButton.SpringLoaded = true;
+			Assert.IsTrue (shortcutButton.SpringLoaded);
 		}
 	}
 }

@@ -23,8 +23,6 @@
 !missing-enum! CFNumberFormatterRoundingMode not bound
 !missing-enum! CFNumberFormatterStyle not bound
 !missing-enum! CFNumberType not bound
-!missing-enum! CFPropertyListFormat not bound
-!missing-enum! CFPropertyListMutabilityOptions not bound
 !missing-enum! CFRunLoopActivity not bound
 !missing-enum! CFRunLoopRunResult not bound
 !missing-enum! CFStreamErrorDomain not bound
@@ -651,14 +649,10 @@
 !missing-pinvoke! CFPreferencesSetMultiple is not bound
 !missing-pinvoke! CFPreferencesSetValue is not bound
 !missing-pinvoke! CFPreferencesSynchronize is not bound
-!missing-pinvoke! CFPropertyListCreateData is not bound
-!missing-pinvoke! CFPropertyListCreateDeepCopy is not bound
 !missing-pinvoke! CFPropertyListCreateFromStream is not bound
 !missing-pinvoke! CFPropertyListCreateFromXMLData is not bound
-!missing-pinvoke! CFPropertyListCreateWithData is not bound
 !missing-pinvoke! CFPropertyListCreateWithStream is not bound
 !missing-pinvoke! CFPropertyListCreateXMLData is not bound
-!missing-pinvoke! CFPropertyListIsValid is not bound
 !missing-pinvoke! CFPropertyListWrite is not bound
 !missing-pinvoke! CFPropertyListWriteToStream is not bound
 !missing-pinvoke! CFReadStreamCreateWithBytesNoCopy is not bound
@@ -942,6 +936,11 @@
 !unknown-pinvoke! dispatch_apply_f bound
 !unknown-pinvoke! dispatch_async_f bound
 !unknown-pinvoke! dispatch_barrier_async_f bound
+!unknown-pinvoke! dispatch_data_create bound
+!unknown-pinvoke! dispatch_data_create_concat bound
+!unknown-pinvoke! dispatch_data_create_map bound
+!unknown-pinvoke! dispatch_data_create_subrange bound
+!unknown-pinvoke! dispatch_data_get_size bound
 !unknown-pinvoke! dispatch_get_context bound
 !unknown-pinvoke! dispatch_get_current_queue bound
 !unknown-pinvoke! dispatch_get_global_queue bound
@@ -953,6 +952,7 @@
 !unknown-pinvoke! dispatch_group_wait bound
 !unknown-pinvoke! dispatch_queue_create bound
 !unknown-pinvoke! dispatch_queue_get_label bound
+!unknown-pinvoke! dispatch_read bound
 !unknown-pinvoke! dispatch_release bound
 !unknown-pinvoke! dispatch_resume bound
 !unknown-pinvoke! dispatch_retain bound
@@ -974,4 +974,22 @@
 !unknown-pinvoke! dispatch_sync_f bound
 !unknown-pinvoke! dispatch_time bound
 !unknown-pinvoke! dispatch_walltime bound
+!unknown-pinvoke! dispatch_write bound
 !unknown-pinvoke! open bound
+!missing-field! kCFStreamErrorDomainSOCKS not bound
+!missing-field! kCFStreamErrorDomainSSL not bound
+!missing-field! kCFStreamPropertyShouldCloseNativeSocket not bound
+!missing-field! kCFStreamPropertySocketSecurityLevel not bound
+!missing-field! kCFStreamPropertySOCKSPassword not bound
+!missing-field! kCFStreamPropertySOCKSProxy not bound
+!missing-field! kCFStreamPropertySOCKSProxyHost not bound
+!missing-field! kCFStreamPropertySOCKSProxyPort not bound
+!missing-field! kCFStreamPropertySOCKSUser not bound
+!missing-field! kCFStreamPropertySOCKSVersion not bound
+!missing-field! kCFStreamSocketSecurityLevelNegotiatedSSL not bound
+!missing-field! kCFStreamSocketSecurityLevelNone not bound
+!missing-field! kCFStreamSocketSecurityLevelSSLv2 not bound
+!missing-field! kCFStreamSocketSecurityLevelSSLv3 not bound
+!missing-field! kCFStreamSocketSecurityLevelTLSv1 not bound
+!missing-field! kCFStreamSocketSOCKSVersion4 not bound
+!missing-field! kCFStreamSocketSOCKSVersion5 not bound

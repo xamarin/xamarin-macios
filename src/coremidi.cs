@@ -34,6 +34,7 @@ using ObjCRuntime;
 namespace CoreMidi {
 	
 #if !MONOMAC
+	[NoMac][NoTV][NoWatch]
 	[BaseType (typeof (NSObject), Name="MIDINetworkHost")]
 	interface MidiNetworkHost {
 		[Export ("name", ArgumentSemantic.Retain)]
@@ -67,6 +68,7 @@ namespace CoreMidi {
 		bool HasSameAddressAs (MidiNetworkHost other);
 	}
 
+	[NoMac][NoTV][NoWatch]
 	[Static]
 	interface Midi {
 		[Field ("MIDINetworkNotificationContactsDidChange")]
@@ -81,6 +83,7 @@ namespace CoreMidi {
 		NSString NetworkBonjourServiceType { get; }
 	}
 
+	[NoMac][NoTV][NoWatch]
 	[BaseType (typeof (NSObject), Name="MIDINetworkConnection")]
 	interface MidiNetworkConnection {
 		[Export ("host", ArgumentSemantic.Retain)]
@@ -90,6 +93,7 @@ namespace CoreMidi {
 		MidiNetworkConnection FromHost (MidiNetworkHost host);
 	}
 
+	[NoMac][NoTV][NoWatch]
 	[BaseType (typeof (NSObject), Name="MIDINetworkSession")]
 	// default 'init' crash the application
 	[DisableDefaultCtor]
@@ -144,4 +148,83 @@ namespace CoreMidi {
 		MidiEndpoint DestinationEndPoint { get; }
 	}
 #endif
+
+	[NoWatch, NoTV, Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[BaseType (typeof(NSObject), Name="MIDICIProfile")]
+	[DisableDefaultCtor]
+	interface MidiCIProfile : NSSecureCoding
+	{
+		[Export ("name")]
+		string Name { get; }
+
+		[Export ("profileID")]
+		NSData ProfileId { get; }
+
+		[Export ("initWithData:name:")]
+		IntPtr Constructor (NSData data, string inName);
+	}
+
+	[NoWatch, NoTV, Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[BaseType (typeof(NSObject), Name="MIDICIProfileState")]
+	[DisableDefaultCtor]
+	interface MidiCIProfileState : NSSecureCoding
+	{
+		[Export ("enabledProfiles")]
+		MidiCIProfile[] EnabledProfiles { get; }
+
+		[Export ("disabledProfiles")]
+		MidiCIProfile[] DisabledProfiles { get; }
+
+		[Export ("initWithEnabledProfiles:disabledProfiles:")]
+		IntPtr Constructor (MidiCIProfile[] enabled, MidiCIProfile[] disabled);
+	}
+
+	delegate void MidiCIProfileChangedHandler (MidiCISession session, byte channel, MidiCIProfile profile, bool enabled);
+	delegate void MidiCIPropertyResponseHandler (MidiCISession session, byte channel, NSData response, NSError error);
+	delegate void MidiCIPropertyChangedHandler (MidiCISession session, byte channel, NSData data);
+
+	[NoWatch, NoTV, Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[BaseType (typeof(NSObject), Name="MIDICISession")]
+	[DisableDefaultCtor]
+	interface MidiCISession
+	{
+		[Export ("initWithMIDIEntity:dataReadyHandler:")]
+		IntPtr Constructor (uint entity, Action handler);
+
+		[Export ("entity")]
+		uint Entity { get; }
+
+		[Export ("supportsProfileCapability")]
+		bool SupportsProfileCapability { get; }
+
+		[Export ("supportsPropertyCapability")]
+		bool SupportsPropertyCapability { get; }
+
+		[Export ("deviceIdentification")]
+		MidiCIDeviceIdentification DeviceIdentification { get; }
+
+		[Export ("profileStateForChannel:")]
+		MidiCIProfileState GetProfileState (byte channel);
+
+		[Export ("enableProfile:onChannel:error:")]
+		bool EnableProfile (MidiCIProfile profile, byte channel, [NullAllowed] out NSError outError);
+
+		[Export ("disableProfile:onChannel:error:")]
+		bool DisableProfile (MidiCIProfile profile, byte channel, [NullAllowed] out NSError outError);
+
+		[NullAllowed, Export ("profileChangedCallback", ArgumentSemantic.Assign)]
+		MidiCIProfileChangedHandler ProfileChangedCallback { get; set; }
+
+		[Export ("hasProperty:onChannel:responseHandler:")]
+		void HasProperty (NSData inquiry, byte channel, MidiCIPropertyResponseHandler handler);
+
+		[Export ("getProperty:onChannel:responseHandler:")]
+		void GetProperty (NSData inquiry, byte channel, MidiCIPropertyResponseHandler handler);
+
+		[Export ("setProperty:onChannel:responseHandler:")]
+		void SetProperty (NSData inquiry, byte channel, MidiCIPropertyResponseHandler handler);
+
+		[NullAllowed, Export ("propertyChangedCallback", ArgumentSemantic.Assign)]
+		MidiCIPropertyChangedHandler PropertyChangedCallback { get; set; }
+	}
 }

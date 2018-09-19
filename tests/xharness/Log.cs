@@ -325,7 +325,12 @@ namespace xharness
 		{
 			if (startPosition == 0 || entire_file)
 				return;
-			
+
+			if (!File.Exists (CapturePath)) {
+				File.WriteAllText (Path, $"Could not capture the file '{CapturePath}' because it does not exist.");
+				return;
+			}
+
 			var currentEndPosition = endPosition;
 			if (currentEndPosition == 0)
 				currentEndPosition = new FileInfo (CapturePath).Length;

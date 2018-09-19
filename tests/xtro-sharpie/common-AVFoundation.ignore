@@ -28,6 +28,8 @@
 ### deprecated in iOS8
 !missing-protocol-member! AVAudioRecorderDelegate::audioRecorderEndInterruption:withOptions: not found
 
+## singleton -> API_DEPRECATED_WITH_REPLACEMENT("+sharedInstance", ...
+!missing-selector! AVAudioSession::init not bound
 
 ## unsorted
 

@@ -13,18 +13,19 @@ using ObjCRuntime;
 
 namespace SystemConfiguration {
 
-#if !MONOMAC
 	[Static]
 	interface CaptiveNetwork {
 
+		[NoTV][NoWatch][NoMac]
 		[Field ("kCNNetworkInfoKeyBSSID")]
 		NSString NetworkInfoKeyBSSID { get; }
 
+		[NoTV][NoWatch][NoMac]
 		[Field ("kCNNetworkInfoKeySSID")]
 		NSString NetworkInfoKeySSID { get; }
 
+		[NoTV][NoWatch][NoMac]
 		[Field ("kCNNetworkInfoKeySSIDData")]
 		NSString NetworkInfoKeySSIDData { get; }
 	}
-#endif
 }

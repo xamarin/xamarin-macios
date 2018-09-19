@@ -66,10 +66,10 @@ Xamarin.Mac.registrar.full.x86_64.m:   $(TOP)/src/build/mac/full-64/Xamarin.Mac.
 	$(Q) touch Xamarin.Mac.registrar.full.x86_64.m Xamarin.Mac.registrar.full.x86_64.h
 
 Xamarin.Mac.registrar.%.i386.a:   Xamarin.Mac.registrar.%.i386.m
-	$(Q_CC) xcrun -sdk macosx clang -DDEBUG -g -gdwarf-2 -x objective-c++ -o $@ -c -arch i386 $< -Wall -Wno-unguarded-availability-new -I$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
+	$(Q_CC) xcrun -sdk macosx clang -DDEBUG -g -gdwarf-2 -x objective-c++ -stdlib=libc++ -o $@ -c -arch i386 $< -Wall -Wno-unguarded-availability-new -I$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
 
 Xamarin.Mac.registrar.%.x86_64.a: Xamarin.Mac.registrar.%.x86_64.m
-	$(Q_CC) xcrun -sdk macosx clang -DDEBUG -g -gdwarf-2 -x objective-c++ -o $@ -c -arch x86_64 $< -Wall -Wno-unguarded-availability-new -I$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) -fobjc-runtime=macosx
+	$(Q_CC) xcrun -sdk macosx clang -DDEBUG -g -gdwarf-2 -x objective-c++ -stdlib=libc++ -o $@ -c -arch x86_64 $< -Wall -Wno-unguarded-availability-new -I$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) -fobjc-runtime=macosx
 
 Xamarin.Mac.registrar.%.a: Xamarin.Mac.registrar.%.i386.a Xamarin.Mac.registrar.%.x86_64.a
 	$(Q_LIPO) $(DEVICE_BIN_PATH)/lipo -create -output $@ $^
