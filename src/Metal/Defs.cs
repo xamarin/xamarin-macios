@@ -279,7 +279,9 @@ namespace Metal {
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLQuadTessellationFactorsHalf
 	{
+		[MarshalAs (UnmanagedType.ByValArray, SizeConst = 4)]
 		public ushort[] EdgeTessellationFactor;
+		[MarshalAs (UnmanagedType.ByValArray, SizeConst = 2)]
 		public ushort[] InsideTessellationFactor;
 		
 		public MTLQuadTessellationFactorsHalf (ushort[] edgeTessellationFactor, ushort[] insideTessellationFactor)
@@ -294,6 +296,7 @@ namespace Metal {
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLTriangleTessellationFactorsHalf
 	{
+		[MarshalAs (UnmanagedType.ByValArray, SizeConst = 3)]
 		public ushort[] EdgeTessellationFactor;
 		public ushort InsideTessellationFactor;
 		
