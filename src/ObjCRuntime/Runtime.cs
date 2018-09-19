@@ -1363,10 +1363,13 @@ namespace ObjCRuntime {
 			return implementation;
 		}
 
+		public static INativeObject GetINativeObject (IntPtr ptr, bool owns, Type target_type)
+		{
+			return GetINativeObject (ptr, owns, target_type, null);
+		}
+
 		// this method is identical in behavior to the generic one.
-		// TODO: figure out if it's possible to call the generic 
-		// implementation from native code.
-		static INativeObject GetINativeObject (IntPtr ptr, bool owns, Type target_type, Type implementation = null)
+		static INativeObject GetINativeObject (IntPtr ptr, bool owns, Type target_type, Type implementation)
 		{
 			if (ptr == IntPtr.Zero)
 				return null;
