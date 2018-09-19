@@ -36,7 +36,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 	public void Add (string @namespace, string framework, int major_version, bool alwaysWeakLink)
 	{
-		Add (@namespace, framework, new Version (major_version, 0), alwaysWeakLink);
+		Add (@namespace, framework, new Version (major_version, 0), null, alwaysWeakLink);
 	}
 
 	public void Add (string @namespace, string framework, int major_version, int minor_version)
