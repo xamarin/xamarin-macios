@@ -19,6 +19,9 @@ namespace Xamarin.MacDev.Tasks
 		public string SessionId { get; set; }
 
 		[Required]
+		public string AppBundleName { get; set; }
+
+		[Required]
 		public string IntermediateOutputPath { get; set; }
 
 		public bool IsWatchApp { get; set; }
@@ -122,6 +125,7 @@ namespace Xamarin.MacDev.Tasks
 				args.AddQuotedFormat ("--target-version-{0}={1}", OperatingSystem, SdkVersion);
 			}
 			args.AddQuotedFormat ("--target-build-dir={0}", Path.GetFullPath (intermediate));
+			args.AddQuotedFormat ("--resources-folder-path={0}.app", AppBundleName);
 
 			var startInfo = GetProcessStartInfo (environment, GetFullPathToTool (), args.ToString ());
 
@@ -154,7 +158,7 @@ namespace Xamarin.MacDev.Tasks
 		public override bool Execute ()
 		{
 			var prefixes = BundleResource.SplitResourcePrefixes (ResourcePrefix);
-			var intermediate = Path.Combine (IntermediateOutputPath, ToolName);
+			var intermediate = Path.Combine (IntermediateOutputPath, ToolName, AppBundleName + ".app");
 			var bundleResources = new List<ITaskItem> ();
 			var modified = new HashSet<string> ();
 			var items = new List<ITaskItem> ();
