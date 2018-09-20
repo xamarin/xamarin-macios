@@ -455,7 +455,8 @@ namespace Xamarin.Bundler
 			bool enable_debug = app.EnableDebug;
 			bool enable_debug_symbols = app.PackageManagedDebugSymbols;
 			bool llvm_only = app.EnableLLVMOnlyBitCode;
-			bool interp = app.UseInterpreter;
+			bool interp = app.IsInterpreted (Assembly.GetIdentity (filename));
+			bool interp_full = !interp && app.UseInterpreter && fname == "mscorlib.dll";
 			bool is32bit = (abi & Abi.Arch32Mask) > 0;
 			string arch = abi.AsArchString ();
 
@@ -474,9 +475,15 @@ namespace Xamarin.Bundler
 			args.Append (app.AotArguments);
 			if (llvm_only)
 				args.Append ("llvmonly,");
-			else if (interp)
+			else if (interp) {
+				if (fname != "mscorlib.dll")
+					throw ErrorHelper.CreateError (99, $"Internal error: can only enable the interpreter for mscorlib.dll when AOT-compiling assemblies (tried to interpret {fname}). Please file an issue at https://github.com/xamarin/xamarin-macios/issues/new.");
 				args.Append ("interp,");
-			else
+			} else if (interp_full) {
+				if (fname != "mscorlib.dll")
+					throw ErrorHelper.CreateError (99, $"Internal error: can only enable the interpreter for mscorlib.dll when AOT-compiling assemblies (tried to interpret {fname}). Please file an issue at https://github.com/xamarin/xamarin-macios/issues/new."); 
+				args.Append ("interp,full,");
+			} else
 				args.Append ("full,");
 
 			var aname = Path.GetFileNameWithoutExtension (fname);
@@ -1247,7 +1254,14 @@ namespace Xamarin.Bundler
 						app.LLVMOptimizations [asm] = opt;
 				}
 			},
-			{ "interpreter", "Enable the *experimental* interpreter.", v => { app.UseInterpreter = true; }},
+			{ "interpreter:", "Enable the *experimental* interpreter. Optionally takes a comma-separated list of assemblies to interpret (if prefixed with a minus sign, the assembly will be AOT-compiled instead). 'all' can be used to specify all assemblies. This argument can be specified multiple times.", v =>
+				{ 
+					app.UseInterpreter = true;
+					if (!string.IsNullOrEmpty (v)) {
+						app.InterpretedAssemblies.AddRange (v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
+					}
+				}
+			},
 			{ "http-message-handler=", "Specify the default HTTP message handler for HttpClient", v => { http_message_handler = v; }},
 			{ "output-format=", "Specify the output format for some commands. Possible values: Default, XML", v =>
 				{
@@ -1341,7 +1355,7 @@ namespace Xamarin.Bundler
 				throw new MonoTouchException (25, true, "No SDK version was provided. Please add --sdk=X.Y to specify which {0} SDK should be used to build your application.", app.PlatformName);
 
 			var framework_dir = GetFrameworkDirectory (app);
-			Driver.Log ("Xamarin.iOS {0}{1} using framework: {2}", Constants.Version, verbose > 1 ? "." + Constants.Revision : string.Empty, framework_dir);
+			Driver.Log ("Xamarin.iOS {0}.{1} using framework: {2}", Constants.Version, Constants.Revision, framework_dir);
 
 			if (action == Action.None)
 				throw new MonoTouchException (52, true, "No command specified.");

@@ -527,6 +527,7 @@ static UltimateMachine *shared;
 @end
 
 static volatile int freed_blocks = 0;
+static volatile int called_blocks = 0;
 
 @implementation ObjCBlockTester
 static Class _TestClass = NULL;
@@ -654,6 +655,73 @@ static Class _TestClass = NULL;
 {
 	return freed_blocks;
 }
++(int) calledBlockCount
+{
+	return called_blocks;
+}
+
+static void block_called ()
+{
+	OSAtomicIncrement32 (&called_blocks);
+}
+
++(void) callProtocolWithBlockProperties: (id<ProtocolWithBlockProperties>) obj required: (bool) required instance: (bool) instance;
+{
+	if (required) {
+		if (instance) {
+			obj.myRequiredProperty ();
+		} else {
+			[[(NSObject *) obj class] myRequiredStaticProperty] ();
+		}
+	} else {
+		if (instance) {
+			obj.myOptionalProperty ();
+		} else {
+			[[(NSObject *) obj class] myOptionalStaticProperty] ();
+		}
+	}
+}
+
++(void) callProtocolWithBlockReturnValue: (id<ObjCProtocolBlockTest>) obj required: (bool) required instance: (bool) instance;
+{
+	if (required) {
+		if (instance) {
+			[obj requiredReturnValue] (42);
+		} else {
+			[[(NSObject *) obj class] requiredStaticReturnValue] (42);
+		}
+	} else {
+		if (instance) {
+			[obj optionalReturnValue] (42);
+		} else {
+			[[(NSObject *) obj class] optionalStaticReturnValue] (42);
+		}
+	}
+}
+
++(void) callProtocolWithBlockPropertiesRequired: (id<ProtocolWithBlockProperties>) obj
+{
+	obj.myRequiredProperty ();
+}
+
++(void) setProtocolWithBlockProperties: (id<ProtocolWithBlockProperties>) obj required: (bool) required instance: (bool) instance
+{
+	simple_callback callback = ^{ block_called (); };
+	if (required) {
+		if (instance) {
+			obj.myRequiredProperty = callback;
+		} else {
+			[[(NSObject *) obj class] setMyRequiredStaticProperty: callback];
+		}
+	} else {
+		if (instance) {
+			obj.myOptionalProperty = callback;
+		} else {
+			[[(NSObject *) obj class] setMyOptionalStaticProperty: callback];
+		}
+	}
+}
+
 @end
 
 @implementation FreedNotifier

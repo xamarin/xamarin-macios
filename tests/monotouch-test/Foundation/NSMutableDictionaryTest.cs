@@ -93,5 +93,25 @@ namespace monotouchtest
 				Assert.NotNull (testDict ["Key2"], "Key2");
 			}
 		}
+
+		[Test]
+		public void AddEntries ()
+		{
+			using (var dic1 = new NSMutableDictionary ()) {
+				using (var dic2 = NSDictionary.FromObjectAndKey ((NSString) "value", (NSString) "key")) {
+					Assert.AreEqual (0, dic1.Count, "Count 0");
+
+					dic1.AddEntries (dic2);
+
+					Assert.AreEqual (1, dic1.Count, "Count 1");
+					Assert.AreEqual ("value", dic1 ["key"].ToString (), "Value 1");
+
+					dic1.AddEntries (dic2);
+					
+					Assert.AreEqual (1, dic1.Count, "Count 2");
+					Assert.AreEqual ("value", dic1 ["key"].ToString (), "Value 2");
+				}
+			}
+		}
 	}
 }

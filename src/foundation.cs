@@ -7519,6 +7519,9 @@ namespace Foundation
 		[Static]
 		[Export ("dictionaryWithSharedKeySet:")]
 		NSDictionary FromSharedKeySet (NSObject sharedKeyToken);
+
+		[Export ("addEntriesFromDictionary:")]
+		void AddEntries (NSDictionary other);
 	}
 
 	[BaseType (typeof (NSSet))]

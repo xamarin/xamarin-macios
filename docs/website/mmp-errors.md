@@ -378,6 +378,20 @@ will be shown.
 
 Reference: https://github.com/xamarin/xamarin-macios/issues/4072
 
+### <a name="MM4176"/>MM4176: Unable to locate the delegate to block conversion type for the return value of the method {method}.
+
+This is a warning indicating that the static registrar couldn't find the type
+used to convert a delegate to an Objective-C block. An attempt will be made at
+runtime to find the method, but it will likely fail as well (with an MM8009
+exception).
+
+One possible reason for this warning is when manually writing bindings for API
+that uses blocks. It's recommended to use a binding project to bind
+Objective-C code, in particular when it involves blocks, since it's quite
+complicated to get it right when doing it manually.
+
+If this is not the case, please file a bug at [https://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=Xamarin.Mac) with a test case.
+
 # MM5xxx: GCC and toolchain
 
 ## MM51xx: compilation
@@ -508,3 +522,8 @@ There are a few reasons this may happen:
 
 * It could be a bug in Xamarin.Mac. If this is the case, please file a bug at
   [https://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=Xamarin.Mac).
+
+### <a name="MM8028"/>MM8028: The runtime function {function} has been linked away.
+
+This usually indicates a bug in Xamarin.Mac, because runtime functions should
+not be linked away if they're needed. Please [submit an issue](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions).

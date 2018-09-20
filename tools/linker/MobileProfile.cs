@@ -48,6 +48,7 @@ namespace Xamarin.Linker {
 			"Microsoft.Win32.Registry.AccessControl",
 			"Microsoft.Win32.Registry",
 			"System.AppContext",
+			"System.Buffers",
 			"System.Collections.Concurrent",
 			"System.Collections.NonGeneric",
 			"System.Collections.Specialized",

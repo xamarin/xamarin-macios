@@ -4778,6 +4778,7 @@ public partial class Generator : IMemberGatherer {
 				sel = ba.Selector;
 			}
 
+			PrintBlockProxy (pi.PropertyType);
 			PrintAttributes (pi, platform:true);
 
 			if (not_implemented_attr == null && (!minfo.is_sealed || !minfo.is_wrapper))
@@ -5101,6 +5102,15 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
+	void PrintBlockProxy (Type type)
+	{
+		type = GetCorrectGenericType (type);
+		if (type.IsSubclassOf (TypeManager.System_Delegate)) {
+			var ti = MakeTrampoline (type);
+			print ("[param: BlockProxy (typeof ({0}.Trampolines.{1}))]", ns.CoreObjCRuntime, ti.NativeInvokerName);
+		}
+	}
+
 	void PrintExport (MemberInformation minfo)
 	{
 		if (minfo.is_export)
@@ -5418,8 +5428,14 @@ public partial class Generator : IMemberGatherer {
 			sb.Append (", IsStatic = ").Append (AttributeManager.HasAttribute<StaticAttribute> (mi) ? "true" : "false");
 			sb.Append (", Name = \"").Append (mi.Name).Append ("\"");
 			sb.Append (", Selector = \"").Append (attrib.Selector).Append ("\"");
-			if (mi.ReturnType != TypeManager.System_Void)
-				sb.Append (", ReturnType = typeof (").Append (RenderType (GetCorrectGenericType (mi.ReturnType))).Append(")");
+			if (mi.ReturnType != TypeManager.System_Void) {
+				var retType = GetCorrectGenericType (mi.ReturnType);
+				sb.Append (", ReturnType = typeof (").Append (RenderType (retType)).Append (")");
+				if (retType.IsSubclassOf (TypeManager.System_Delegate)) {
+					var ti = MakeTrampoline (retType);
+					sb.Append ($", ReturnTypeDelegateProxy = typeof ({ns.CoreObjCRuntime}.Trampolines.{ti.StaticName})");
+				}
+			}
 			var parameters = mi.GetParameters ();
 			if (parameters != null && parameters.Length > 0) {
 				sb.Append (", ParameterType = new Type [] { ");
@@ -5489,6 +5505,15 @@ public partial class Generator : IMemberGatherer {
 				sb.Append (", SetterSelector = \"").Append (ba != null ? ba.Selector : ea.Selector).Append ("\"");
 			}
 			sb.Append (", ArgumentSemantic = ArgumentSemantic.").Append (attrib.ArgumentSemantic);
+			// Check for block/delegate proxies
+			var propType = GetCorrectGenericType (pi.PropertyType);
+			if (propType.IsSubclassOf (TypeManager.System_Delegate)) {
+				var ti = MakeTrampoline (propType);
+				if (pi.SetMethod != null)
+					sb.Append ($", ParameterBlockProxy = new Type [] {{ typeof ({ns.CoreObjCRuntime}.Trampolines.{ti.NativeInvokerName}) }}");
+				if (pi.GetMethod != null)
+					sb.Append ($", ReturnTypeDelegateProxy = typeof ({ns.CoreObjCRuntime}.Trampolines.{ti.StaticName})");
+			}
 			sb.Append (")]");
 			print (sb.ToString ());
 		}
@@ -5565,6 +5590,7 @@ public partial class Generator : IMemberGatherer {
 			}
 			if (pi.CanWrite) {
 				var setMethod = pi.GetSetMethod ();
+				PrintBlockProxy (pi.PropertyType);
 				PrintAttributes (setMethod, notImplemented:true);
 				if (!AttributeManager.HasAttribute<NotImplementedAttribute> (setMethod))
 					PrintExport (minfo, GetSetterExportAttribute (pi));
