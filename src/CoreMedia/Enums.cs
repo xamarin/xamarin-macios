@@ -68,10 +68,10 @@ namespace CoreMedia {
 		SampleReferenceByteOffset, 
 		[Field ("kCMSampleBufferAttachmentKey_GradualDecoderRefresh")]
 		GradualDecoderRefresh,
-		[iOS (6,0)][NoMac]
+		[iOS (6,0)][Mac (10,14)]
 		[Field ("kCMSampleBufferAttachmentKey_DroppedFrameReason")]
 		DroppedFrameReason,
-		[iOS (9,0)][NoMac]
+		[iOS (9,0)][Mac (10,14)]
 		[Field ("kCMSampleBufferAttachmentKey_StillImageLensStabilizationInfo")]
 		StillImageLensStabilizationInfo,
 		[iOS (11,0), Mac (10,13), TV (11,0)]
