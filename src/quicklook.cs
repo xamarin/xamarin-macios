@@ -131,7 +131,7 @@ namespace QuickLook {
 		[Abstract]
 		[Export ("previewItemURL")]
 #if XAMCORE_4_0
-		NSUrl PreviewItemTitle { get; }
+		NSUrl PreviewItemTitleUrl { get; }
 #else
 		NSUrl ItemUrl { get; }
 #endif
