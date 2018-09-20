@@ -1,0 +1,2 @@
+## deprecated (same version as introduced) in favour of `widgetController` which we bind
+!missing-selector! +NCWidgetController::defaultWidgetController not bound

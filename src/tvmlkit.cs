@@ -1,6 +1,9 @@
 // Copyright 2015 Xamarin Inc.
+// Copyright 2018 Microsoft Corporation
 
 using System;
+using System.ComponentModel;
+using AVFoundation;
 using Foundation;
 using JavaScriptCore;
 using ObjCRuntime;
@@ -138,6 +141,63 @@ namespace TVMLKit {
 		Decoration
 	}
 
+	[TV (12,0)]
+	[Native]
+	public enum TVPlaybackState : long {
+		Undefined,
+		Begin,
+		Loading,
+		Playing,
+		Paused,
+		Scanning,
+		FastForwarding,
+		Rewinding,
+		End,
+	}
+
+	[TV (12,0)]
+	[Native]
+	public enum TVPlaylistRepeatMode : long {
+		None = 0,
+		All,
+		One,
+	}
+
+	[TV (12,0)]
+	[Native]
+	public enum TVPlaylistEndAction : long {
+		Stop = 0,
+		Pause,
+		WaitForMoreItems,
+	}
+
+	[TV (12,0)]
+	public enum TVMediaItemType {
+		// NS_TYPED_EXTENSIBLE_ENUM
+		[DefaultEnumValue]
+		UnknownCustomExtension = -1,
+		None,
+		[Field ("TVMediaItemTypeAudio")]
+		Audio,
+		[Field ("TVMediaItemTypeVideo")]
+		Video,
+	}
+
+	[TV (12,0)]
+	public enum TVMediaItemContentRatingDomain {
+		// NS_TYPED_EXTENSIBLE_ENUM
+		[DefaultEnumValue]
+		UnknownCustomExtension = -1,
+		[Field (null)] // property is nullable
+		None,
+		[Field ("TVMediaItemContentRatingDomainMovie")]
+		Movie,
+		[Field ("TVMediaItemContentRatingDomainTVShow")]
+		TVShow,
+		[Field ("TVMediaItemContentRatingDomainMusic")]
+		Music,
+	}
+
 	[TV (9,0)]
 	[BaseType (typeof (NSObject))]
 	interface TVApplicationControllerContext : NSCopying {
@@ -166,6 +226,11 @@ namespace TVMLKit {
 
 		[Export ("appController:didStopWithOptions:")]
 		void DidStop (TVApplicationController appController, [NullAllowed] NSDictionary<NSString, NSObject> options);
+
+		[TV (12,0)]
+		[Export ("playerForAppController:")]
+		[return: NullAllowed]
+		TVPlayer GetPlayer (TVApplicationController appController);
 	}
 
 	interface ITVApplicationControllerDelegate {}
@@ -806,6 +871,11 @@ namespace TVMLKit {
 		[Export ("collectionViewCellClassForElement:")]
 		[return: NullAllowed]
 		Class GetCollectionViewCellClass (TVViewElement element);
+
+		[TV (12,0)]
+		[Export ("playerViewControllerForPlayer:")]
+		[return: NullAllowed]
+		UIViewController GetPlayerViewController (TVPlayer player);
 	}
 
 	interface ITVInterfaceCreating {}
@@ -843,5 +913,185 @@ namespace TVMLKit {
 
 		[Export ("attributedStringWithFont:foregroundColor:textAlignment:")]
 		NSAttributedString GetAttributedString (UIFont font, [NullAllowed] UIColor foregroundColor, UITextAlignment alignment);
+	}
+
+	interface ITVPlaybackEventMarshaling {}
+
+	[TV (12,0)]
+	[Protocol]
+	interface TVPlaybackEventMarshaling {
+		[Abstract]
+		[NullAllowed, Export ("properties", ArgumentSemantic.Strong)]
+		NSDictionary<NSString, NSObject> Properties { get; }
+
+		[Export ("processReturnJSValue:inContext:")]
+		void ProcessReturn (JSValue value, JSContext jsContext);
+	}
+
+	[TV (12,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface TVPlaybackCustomEventUserInfo : TVPlaybackEventMarshaling {
+		[Export ("initWithProperties:expectsReturnValue:")]
+		IntPtr Constructor ([NullAllowed] NSDictionary<NSString, NSObject> properties, bool expectsReturnValue);
+
+		[Export ("expectsReturnValue")]
+		bool ExpectsReturnValue { get; set; }
+
+		[NullAllowed, Export ("returnValue", ArgumentSemantic.Strong)]
+		NSObject ReturnValue { get; }
+	}
+
+	[TV (12,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface TVPlaylist {
+		[Export ("mediaItems", ArgumentSemantic.Copy)]
+		TVMediaItem[] MediaItems { get; }
+
+		[Export ("endAction", ArgumentSemantic.Assign)]
+		TVPlaylistEndAction EndAction { get; }
+
+		[Export ("repeatMode", ArgumentSemantic.Assign)]
+		TVPlaylistRepeatMode RepeatMode { get; }
+
+		[NullAllowed, Export ("userInfo", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, NSObject> UserInfo { get; }
+	}
+
+	[TV (12,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface TVMediaItem {
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[NullAllowed, Export ("type", ArgumentSemantic.Strong)]
+		NSString /* NS_TYPED_EXTENSIBLE_ENUM */ WeakType { get; }
+
+		[Wrap ("TVMediaItemTypeExtensions.GetValue (WeakType)")]
+		TVMediaItemType Type { get; }
+
+		[NullAllowed, Export ("url", ArgumentSemantic.Strong)]
+		NSUrl Url { get; }
+
+		[NullAllowed, Export ("title", ArgumentSemantic.Strong)]
+		string Title { get; }
+
+		[NullAllowed, Export ("subtitle", ArgumentSemantic.Strong)]
+		string Subtitle { get; }
+
+		[NullAllowed, Export ("itemDescription", ArgumentSemantic.Strong)]
+		string ItemDescription { get; }
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[NullAllowed, Export ("contentRatingDomain", ArgumentSemantic.Strong)]
+		NSString /* NS_TYPED_EXTENSIBLE_ENUM */ WeakContentRatingDomain { get; }
+
+		[Wrap ("TVMediaItemContentRatingDomainExtensions.GetValue (WeakContentRatingDomain)")]
+		TVMediaItemContentRatingDomain ContentRatingDomain { get; }
+
+		[NullAllowed, Export ("contentRatingRanking", ArgumentSemantic.Strong)]
+		NSNumber ContentRatingRanking { get; }
+
+		[NullAllowed, Export ("artworkImageURL", ArgumentSemantic.Strong)]
+		NSUrl ArtworkImageUrl { get; }
+
+		[Export ("containsExplicitContent")]
+		bool ExplicitContent { get; }
+
+		[Export ("resumeTime")]
+		/* NSInterval */ double ResumeTime { get; }
+
+		[Export ("interstitials", ArgumentSemantic.Strong)]
+		TVTimeRange[] Interstitials { get; }
+
+		[Export ("highlightGroups", ArgumentSemantic.Strong)]
+		TVHighlightGroup[] HighlightGroups { get; }
+
+		[Export ("userInfo", ArgumentSemantic.Strong)]
+		NSDictionary<NSString, NSObject> UserInfo { get; }
+	}
+
+	[TV (12,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface TVTimeRange {
+		[Export ("startTime")]
+		/* NSInterval */ double StartTime { get; }
+
+		[Export ("endTime")]
+		/* NSInterval */ double EndTime { get; }
+
+		[Export ("duration")]
+		/* NSInterval */ double Duration { get; }
+	}
+
+	[TV (12,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface TVHighlightGroup {
+		[NullAllowed, Export ("localizedName", ArgumentSemantic.Strong)]
+		string LocalizedName { get; }
+
+		[Export ("highlights", ArgumentSemantic.Strong)]
+		TVHighlight[] Highlights { get; }
+	}
+
+	[TV (12,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface TVHighlight {
+		[NullAllowed, Export ("localizedName", ArgumentSemantic.Strong)]
+		string LocalizedName { get; }
+
+		[NullAllowed, Export ("highlightDescription", ArgumentSemantic.Strong)]
+		string HighlightDescription { get; }
+
+		[Export ("timeRange", ArgumentSemantic.Strong)]
+		TVTimeRange TimeRange { get; }
+
+		[NullAllowed, Export ("imageURL", ArgumentSemantic.Strong)]
+		NSUrl ImageUrl { get; }
+	}
+
+	[TV (12,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface TVPlayer {
+		[Export ("initWithPlayer:")]
+		IntPtr Constructor (AVPlayer player);
+
+		[Export ("player", ArgumentSemantic.Strong)]
+		AVPlayer Player { get; }
+
+		[NullAllowed, Export ("playlist", ArgumentSemantic.Strong)]
+		TVPlaylist Playlist { get; }
+
+		[Export ("state", ArgumentSemantic.Assign)]
+		TVPlaybackState State { get; }
+
+		[NullAllowed, Export ("currentMediaItem", ArgumentSemantic.Strong)]
+		TVMediaItem CurrentMediaItem { get; }
+
+		[NullAllowed, Export ("nextMediaItem", ArgumentSemantic.Strong)]
+		TVMediaItem NextMediaItem { get; }
+
+		[NullAllowed, Export ("previousMediaItem", ArgumentSemantic.Strong)]
+		TVMediaItem PreviousMediaItem { get; }
+
+		[Async]
+		[Export ("dispatchEvent:userInfo:completion:")]
+		void DispatchEvent (string @event, [NullAllowed] ITVPlaybackEventMarshaling userInfo, [NullAllowed] Action<bool> completion);
+
+		[Export ("pause")]
+		void Pause ();
+
+		[Export ("next")]
+		void Next ();
+
+		[Export ("previous")]
+		void Previous ();
+
+		[Export ("changeToMediaItemAtIndex:")]
+		void ChangeToMediaItem (nint index);
 	}
 }

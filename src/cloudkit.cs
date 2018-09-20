@@ -92,6 +92,14 @@ namespace CloudKit {
 		[Export ("rootRecordID", ArgumentSemantic.Copy)]
 		CKRecordID RootRecordID { get; }
 
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("participantRole", ArgumentSemantic.Assign)]
+		CKShareParticipantRole ParticipantRole { get; }
+
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'ParticipantRole' instead.")]
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'ParticipantRole' instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'ParticipantRole' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'ParticipantRole' instead.")]
 		[Export ("participantType", ArgumentSemantic.Assign)]
 		CKShareParticipantType Type { get; }
 
@@ -165,6 +173,14 @@ namespace CloudKit {
 		[Export ("userIdentity", ArgumentSemantic.Strong)]
 		CKUserIdentity UserIdentity { get; }
 
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("role", ArgumentSemantic.Assign)]
+		CKShareParticipantRole Role { get; set; }
+
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'Role' instead.")]
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Role' instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Role' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Role' instead.")]
 		[Export ("type", ArgumentSemantic.Assign)]
 		CKShareParticipantType Type { get; set; }
 
@@ -653,15 +669,31 @@ namespace CloudKit {
 		[Export ("init")]
 		IntPtr Constructor ();
 
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use the overload with the 'NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesConfiguration>' parameter instead.")]
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use the overload with the 'NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesConfiguration>' parameter instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use the overload with the 'NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesConfiguration>' parameter instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use the overload with the 'NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesConfiguration>' parameter instead.")]
 		[Export ("initWithRecordZoneIDs:optionsByRecordZoneID:")]
 		IntPtr Constructor (CKRecordZoneID[] recordZoneIDs, [NullAllowed] NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesOptions> optionsByRecordZoneID);
+
+		[iOS (12,0), Watch (5,0), TV (12,0), Mac (10,14, onlyOn64 : true)]
+		[Export ("initWithRecordZoneIDs:configurationsByRecordZoneID:")]
+		IntPtr Constructor (CKRecordZoneID[] recordZoneIDs, [NullAllowed] NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesConfiguration> configurationsByRecordZoneID);
 
 		[NullAllowed]
 		[Export ("recordZoneIDs", ArgumentSemantic.Copy)]
 		CKRecordZoneID[] RecordZoneIDs { get; set; }
 
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'ConfigurationsByRecordZoneID' instead.")]
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'ConfigurationsByRecordZoneID' instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'ConfigurationsByRecordZoneID' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'ConfigurationsByRecordZoneID' instead.")]
 		[NullAllowed, Export ("optionsByRecordZoneID", ArgumentSemantic.Copy)]
 		NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesOptions> OptionsByRecordZoneID { get; set; }
+
+		[iOS (12,0), Watch (5,0), TV (12,0), Mac (10,14, onlyOn64 : true)]
+		[NullAllowed, Export ("configurationsByRecordZoneID", ArgumentSemantic.Copy)]
+		NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesConfiguration> ConfigurationsByRecordZoneID { get; set; }
 
 		[Export ("fetchAllChanges")]
 		bool FetchAllChanges { get; set; }
@@ -681,7 +713,11 @@ namespace CloudKit {
 		[NullAllowed, Export ("fetchRecordZoneChangesCompletionBlock", ArgumentSemantic.Copy)]
 		Action<NSError> ChangesCompleted { get; set; }
 	}
-	
+
+	[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'CKFetchRecordZoneChangesConfiguration' instead.")]
+	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'CKFetchRecordZoneChangesConfiguration' instead.")]
+	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'CKFetchRecordZoneChangesConfiguration' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'CKFetchRecordZoneChangesConfiguration' instead.")]
 	[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
 	interface CKFetchRecordZoneChangesOptions : NSSecureCoding, NSCopying
@@ -696,19 +732,31 @@ namespace CloudKit {
 		string[] DesiredKeys { get; set; }
 	}
 
+	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[BaseType (typeof (NSObject))]
+	interface CKFetchRecordZoneChangesConfiguration : NSSecureCoding, NSCopying {
+
+		[NullAllowed, Export ("previousServerChangeToken", ArgumentSemantic.Copy)]
+		CKServerChangeToken PreviousServerChangeToken { get; set; }
+
+		[Export ("resultsLimit")]
+		nuint ResultsLimit { get; set; }
+
+		[NullAllowed, Export ("desiredKeys", ArgumentSemantic.Copy)]
+		string [] DesiredKeys { get; set; }
+	}
+
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	delegate void CKFetchRecordsCompletedHandler (NSDictionary recordsByRecordId, NSError error);
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
-	[DisableDefaultCtor] // designated
+#if WATCH
+	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
+#else
+	[DesignatedDefaultCtor]
+#endif
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKFetchRecordsOperation {
-
-#if !WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
-		[DesignatedInitializer]
-		[Export ("init")]
-		IntPtr Constructor ();
-#endif
 
 		[Export ("initWithRecordIDs:")]
 		IntPtr Constructor (CKRecordID [] recordIds);
@@ -752,14 +800,12 @@ namespace CloudKit {
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (CKDatabaseOperation))]
-	[DisableDefaultCtor] // designated
-	interface CKFetchRecordZonesOperation {
-
-#if !WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
-		[DesignatedInitializer]
-		[Export ("init")]
-		IntPtr Constructor ();
+#if WATCH
+	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
+#else
+	[DesignatedDefaultCtor]
 #endif
+	interface CKFetchRecordZonesOperation {
 
 		[Export ("initWithRecordZoneIDs:")]
 		IntPtr Constructor (CKRecordZoneID [] zoneIds);
@@ -856,7 +902,11 @@ namespace CloudKit {
 	}
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
+#if WATCH
 	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
+#else
+	[DesignatedDefaultCtor]
+#endif
 	[BaseType (typeof (CKOperation))]
 	[Deprecated (PlatformName.iOS, 11, 0)]
 	[Deprecated (PlatformName.MacOSX, 10, 13)]
@@ -882,7 +932,11 @@ namespace CloudKit {
 	delegate void CKModifyRecordsOperationHandler (CKRecord [] savedRecords, CKRecordID [] deletedRecordIds, NSError operationError);
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
+#if WATCH
 	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
+#else
+	[DesignatedDefaultCtor]
+#endif
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKModifyRecordsOperation {
 
@@ -934,7 +988,11 @@ namespace CloudKit {
 	delegate void CKModifyRecordZonesHandler (CKRecordZone [] savedRecordZones, CKRecordZoneID [] deletedRecordZoneIds, NSError operationError);
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
+#if WATCH
 	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
+#else
+	[DesignatedDefaultCtor]
+#endif
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKModifyRecordZonesOperation {
 
@@ -1162,11 +1220,16 @@ namespace CloudKit {
 	[Watch (3,0)]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSOperation))]
-	[DisableDefaultCtor] // Assertion failure in -[CKOperation init], /SourceCache/CloudKit/CloudKit-175.3/Framework/Operations/CKOperation.m:65
+	[DisableDefaultCtor]
 #if XAMCORE_4_0 || WATCH
 	[Abstract] // as per docs
 #endif
 	interface CKOperation {
+
+		[Protected] // since it should (and will) be `abstract`
+		[DesignatedInitializer]
+		[Export ("init")]
+		IntPtr Constructor ();
 
 		// Apple removed, without deprecation, this property in iOS 9.3 SDK
 		// [Mac (10,11), iOS (9,0)]
@@ -1240,7 +1303,7 @@ namespace CloudKit {
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64 : true), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
-	[DisableDefaultCtor] 
+	[DesignatedDefaultCtor]
 	interface CKOperationGroup : NSSecureCoding {
 
 		[Export ("operationGroupID")]
@@ -1284,14 +1347,12 @@ namespace CloudKit {
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (CKDatabaseOperation))]
-	[DisableDefaultCtor] // designated
-	interface CKQueryOperation {
-
-#if !WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
-		[DesignatedInitializer]
-		[Export ("init")]
-		IntPtr Constructor ();
+#if WATCH
+	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
+#else
+	[DesignatedDefaultCtor]
 #endif
+	interface CKQueryOperation {
 
 		[Field ("CKQueryOperationMaximumResults")][Internal]
 		IntPtr _MaximumResults { get; set; }
@@ -1576,7 +1637,6 @@ namespace CloudKit {
 
 	[NoWatch]
 	[iOS (10,0)][TV (10,0), Mac (10,12, onlyOn64 : true)]
-	[DisableDefaultCtor]
 	[BaseType (typeof(CKSubscription))]
 	interface CKDatabaseSubscription : NSSecureCoding, NSCopying
 	{

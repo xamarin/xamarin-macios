@@ -16,7 +16,7 @@
     <OutputPath>bin\Debug</OutputPath>
     <WarningLevel>4</WarningLevel>
     <DebugSymbols>True</DebugSymbols>
-    <DefineConstants>MONOTOUCH</DefineConstants>
+    <DefineConstants>MONOTOUCH;MTOUCH_TESTS</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -71,6 +71,13 @@
     </Compile>
     <Compile Include="..\common\MachO.cs">
       <Link>MachO.cs</Link>
+    </Compile>
+    <Compile Include="ToolTasksBinPathTest.cs" />
+    <Compile Include="..\..\msbuild\Xamarin.Mac.Tasks\Tasks\Metal.cs">
+      <Link>Metal.cs</Link>
+    </Compile>
+    <Compile Include="..\..\msbuild\Xamarin.Mac.Tasks\Tasks\MetalLib.cs">
+      <Link>MetalLib.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

@@ -1,9 +1,13 @@
-## OSX only - but only the member is marked (not the protocol itself)
-!missing-protocol! AVFragmentMinding not bound
-
-## this was tvos 10.2 in Xcode 8.3 and changed to iOS-only in Xcode9 betas
-## it's still exposed by AVContentKeySessionDelegate which is available in tvos 10.2
-!unknown-type! AVPersistableContentKeyRequest bound
-
 ## https://github.com/xamarin/xamarin-macios/issues/3213 should be fixed before conformance to 'AVQueuedSampleBufferRendering' is restored.
 !missing-protocol-conformance! AVSampleBufferDisplayLayer should conform to AVQueuedSampleBufferRendering (defined in 'AVSampleBufferDisplayLayerQueueManagement' category)
+
+# as per the header comments, the following two enums have to be ignored on tvOS
+!missing-enum! AVAudioSessionIOType not bound
+!missing-enum! AVAudioSessionRecordPermission not bound
+
+# removed in TV 12,0, API that used them was removed in TV 10, added obsolete attr.
+!unknown-field! AVAssetDownloadTaskMediaSelectionKey bound
+!unknown-field! AVAssetDownloadTaskMinimumRequiredMediaBitrateKey bound
+
+# added in TV 12, but makes no sense to bind it because AVCaptureDevice does not exist in tvOS
+!missing-field! AVCaptureLensPositionCurrent not bound

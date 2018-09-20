@@ -1164,15 +1164,10 @@ namespace Xamarin.Bundler {
 				BitCodeMode = BitCodeMode.LLVMOnly;
 			}
 
-			if (EnableDebug) {
-				if (!DebugTrack.HasValue) {
-					DebugTrack = IsSimulatorBuild;
-				}
-			} else {
-				if (DebugTrack.HasValue) {
-					ErrorHelper.Warning (32, "The option '--debugtrack' is ignored unless '--debug' is also specified.");
-				}
+			if (!DebugTrack.HasValue) {
 				DebugTrack = false;
+			} else if (DebugTrack.Value && !EnableDebug) {
+				ErrorHelper.Warning (32, "The option '--debugtrack' is ignored unless '--debug' is also specified.");
 			}
 
 			if (EnableAsmOnlyBitCode)

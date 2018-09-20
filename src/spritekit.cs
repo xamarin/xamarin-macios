@@ -127,15 +127,15 @@ namespace SpriteKit {
 #if MONOMAC
 	[Mac (10,9, onlyOn64 : true)]
 	[BaseType (typeof (NSResponder))]
-	partial interface SKNode : NSCoding, NSCopying {
+	partial interface SKNode : NSSecureCoding, NSCopying {
 #elif IOS || TVOS
 	[iOS (7,0)]
 	[BaseType (typeof (UIResponder))]
-	partial interface SKNode : NSCoding, NSCopying, UIFocusItem {
+	partial interface SKNode : NSSecureCoding, NSCopying, UIFocusItem {
 #else // WATCHOS
 	[Watch (3,0)]
 	[BaseType (typeof (NSObject))]
-	partial interface SKNode : NSCoding, NSCopying {
+	partial interface SKNode : NSSecureCoding, NSCopying {
 #endif
 		[DesignatedInitializer]
 		[Export ("init")]
@@ -144,13 +144,24 @@ namespace SpriteKit {
 		[Static, Export ("node")]
 		SKNode Create ();
 
+		[iOS (8,0)]
+		[Mac (10, 10)]
 		[Static]
 		[Export ("nodeWithFileNamed:")]
 		[return: NullAllowed]
 		SKNode Create (string filename);
 
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Internal]
+		[Static]
+		[Export ("nodeWithFileNamed:securelyWithClasses:andError:")]
+		[return: NullAllowed]
+		SKNode Create (string filename, IntPtr classesPtr, out NSError error);
+
+#if MONOMAC || WATCH
 		[Export ("frame")]
 		CGRect Frame { get; }
+#endif
 
 		[Export ("calculateAccumulatedFrame")]
 		CGRect CalculateAccumulatedFrame ();
@@ -639,7 +650,7 @@ namespace SpriteKit {
 	[Mac (10,10, onlyOn64 : true)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
-	interface SKShader : NSCopying, NSCoding {
+	interface SKShader : NSCopying, NSSecureCoding {
 		[Export ("initWithSource:")]
 		IntPtr Constructor (string shaderSourceCode);
 
@@ -793,7 +804,7 @@ namespace SpriteKit {
 	[Mac (10,9, onlyOn64 : true)]
 	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
-	partial interface SKKeyframeSequence : NSCoding, NSCopying {
+	partial interface SKKeyframeSequence : NSSecureCoding, NSCopying {
 
 		[DesignatedInitializer]
 		[Export ("initWithKeyframeValues:times:")]
@@ -1159,7 +1170,7 @@ namespace SpriteKit {
 	[Watch (3,0)]
 	[iOS (8,0), Mac(10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	interface SKReachConstraints : NSCoding {
+	interface SKReachConstraints : NSSecureCoding {
 		[DesignatedInitializer]
 		[Export ("initWithLowerAngleLimit:upperAngleLimit:")]
 		IntPtr Constructor (nfloat lowerAngleLimit, nfloat upperAngleLimit);
@@ -1174,7 +1185,7 @@ namespace SpriteKit {
 	[Watch (3,0)]
 	[iOS(8,0), Mac(10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	interface SKRegion : NSCopying, NSCoding {
+	interface SKRegion : NSCopying, NSSecureCoding {
 		[Export ("initWithRadius:")]
 		IntPtr Constructor (float /* float, not CGFloat */ radius);
 
@@ -1349,11 +1360,9 @@ namespace SpriteKit {
 		IntPtr InitWithURL (NSUrl url);
 #endif
 
-		[NoWatch]
 		[Export ("play")]
 		void Play ();
 
-		[NoWatch]
 		[Export ("pause")]
 		void Pause ();
 
@@ -1368,7 +1377,7 @@ namespace SpriteKit {
 	[iOS (8,0)]
 	[Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	interface SKConstraint : NSCoding, NSCopying {
+	interface SKConstraint : NSSecureCoding, NSCopying {
 		[Export ("enabled")]
 		bool Enabled { get; set; }
 
@@ -1425,8 +1434,11 @@ namespace SpriteKit {
 #if XAMCORE_3_0
 	[DisableDefaultCtor]
 #endif
+#if MONOMAC
+	partial interface SKView : NSSecureCoding {
+#else
 	partial interface SKView {
-
+#endif
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 
@@ -1581,7 +1593,7 @@ namespace SpriteKit {
 	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	partial interface SKTexture : NSCoding, NSCopying {
+	partial interface SKTexture : NSSecureCoding, NSCopying {
 
 		[Static, Export ("textureWithImageNamed:")]
 		SKTexture FromImageNamed (string name);
@@ -1687,7 +1699,7 @@ namespace SpriteKit {
 	[Mac (10,9, onlyOn64 : true)]
 	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
-	partial interface SKTextureAtlas : NSCoding {
+	partial interface SKTextureAtlas : NSSecureCoding {
 
 		[Static, Export ("atlasNamed:")]
 		SKTextureAtlas FromName (string name);
@@ -1724,7 +1736,7 @@ namespace SpriteKit {
 	[Mac (10,10, onlyOn64 : true)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
-	interface SKUniform : NSCopying, NSCoding {
+	interface SKUniform : NSCopying, NSSecureCoding {
 		[Export ("initWithName:")]
 		IntPtr Constructor (string name);
 
@@ -2121,7 +2133,7 @@ namespace SpriteKit {
 	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // <quote>To create an action, call the class method for the action you are interested in. </quote>
-	partial interface SKAction : NSCoding, NSCopying {
+	partial interface SKAction : NSSecureCoding, NSCopying {
 
 		[Export ("duration")]
 		double Duration { get; set; }
@@ -2536,7 +2548,7 @@ namespace SpriteKit {
 	[iOS (7,0)]
 	[DisableDefaultCtor] // see https://bugzilla.xamarin.com/show_bug.cgi?id=14502
 	[BaseType (typeof (NSObject))]
-	partial interface SKPhysicsBody : NSCoding, NSCopying {
+	partial interface SKPhysicsBody : NSSecureCoding, NSCopying {
 
 		[iOS (7,1), Mac (10,10)] // this method is missing the NS_AVAILABLE macro, but it shows up in the 10.10 sdk, but not the 10.9 sdk.]
 		[Static, Export ("bodyWithBodies:")]
@@ -2723,7 +2735,7 @@ namespace SpriteKit {
 		   Delegates=new string [] {"WeakContactDelegate"},
 		   Events=new Type [] {typeof (SKPhysicsContactDelegate)})]
 	[DisableDefaultCtor] // <quote>You do not create SKPhysicsWorld objects directly; instead, read the physicsWorld property of an SKScene object.</quote>
-	partial interface SKPhysicsWorld : NSCoding {
+	partial interface SKPhysicsWorld : NSSecureCoding {
 
 		[Export ("gravity")]
 		CGVector Gravity { get; set; }
@@ -2779,7 +2791,7 @@ namespace SpriteKit {
 	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
 	[Abstract] // <quote>You never instantiate objects of this class directly</quote>
-	partial interface SKPhysicsJoint : NSCoding {
+	partial interface SKPhysicsJoint : NSSecureCoding {
 
 		[Export ("bodyA", ArgumentSemantic.Retain)]
 		SKPhysicsBody BodyA { get; set; }
@@ -2889,7 +2901,7 @@ namespace SpriteKit {
 	[Mac (10,10, onlyOn64 : true)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
-	interface SKRange : NSCoding, NSCopying {
+	interface SKRange : NSSecureCoding, NSCopying {
 		[DesignatedInitializer]
 		[Export ("initWithLowerLimit:upperLimit:")]
 		IntPtr Constructor (nfloat lowerLimit, nfloat upperLimier);
@@ -2924,7 +2936,7 @@ namespace SpriteKit {
 	[Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (SKNode))]
 	[DisableDefaultCtor]
-	interface SKAudioNode : NSCoding {
+	interface SKAudioNode : NSSecureCoding {
 		[Export ("initWithAVAudioNode:")]
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] AVAudioNode node);
@@ -2989,7 +3001,7 @@ namespace SpriteKit {
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface SKAttribute : NSCoding
+	interface SKAttribute : NSSecureCoding
 	{
 		[Static]
 		[Export ("attributeWithName:type:")]
@@ -3009,7 +3021,7 @@ namespace SpriteKit {
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor] // DesignatedInitializer below
-	interface SKAttributeValue : NSCoding
+	interface SKAttributeValue : NSSecureCoding
 	{
 		[DesignatedInitializer]
 		[Export ("init")]
@@ -3061,7 +3073,7 @@ namespace SpriteKit {
 	[TV (10,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface SKTileDefinition : NSCopying, NSCoding
+	interface SKTileDefinition : NSCopying, NSSecureCoding
 	{
 		[Static]
 		[Export ("tileDefinitionWithTexture:")]
@@ -3133,7 +3145,7 @@ namespace SpriteKit {
 	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 	[TV (10,0)]
 	[BaseType (typeof(SKNode))]
-	interface SKTileMapNode : NSCopying, NSCoding
+	interface SKTileMapNode : NSCopying, NSSecureCoding
 	{
 		[Static]
 		[Export ("tileMapNodeWithTileSet:columns:rows:tileSize:")]
@@ -3244,7 +3256,7 @@ namespace SpriteKit {
 	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 	[TV (10,0)]
 	[BaseType (typeof(NSObject))]
-	interface SKTileSet : NSCopying, NSCoding
+	interface SKTileSet : NSCopying, NSSecureCoding
 	{
 		[Static]
 		[Export ("tileSetWithTileGroups:")]
@@ -3290,7 +3302,7 @@ namespace SpriteKit {
 	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 	[TV (10,0)]
 	[BaseType (typeof(NSObject))]
-	interface SKTileGroup : NSCopying, NSCoding
+	interface SKTileGroup : NSCopying, NSSecureCoding
 	{
 		[Static]
 		[Export ("tileGroupWithTileDefinition:")]
@@ -3321,7 +3333,7 @@ namespace SpriteKit {
 	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 	[TV (10,0)]
 	[BaseType (typeof(NSObject))]
-	interface SKTileGroupRule : NSCopying, NSCoding
+	interface SKTileGroupRule : NSCopying, NSSecureCoding
 	{
 		[Static]
 		[Export ("tileGroupRuleWithAdjacency:tileDefinitions:")]
@@ -3344,7 +3356,7 @@ namespace SpriteKit {
 	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 	[TV (10,0)]
 	[BaseType (typeof(NSObject))]
-	interface SKWarpGeometry : NSCopying, NSCoding {}
+	interface SKWarpGeometry : NSCopying, NSSecureCoding {}
 
 	[Watch (3,0)]
 	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
@@ -3366,7 +3378,7 @@ namespace SpriteKit {
 	[TV (10,0)]
 	[BaseType (typeof(SKWarpGeometry))]
 	[DisableDefaultCtor]
-	interface SKWarpGeometryGrid : NSCoding
+	interface SKWarpGeometryGrid : NSSecureCoding
 	{
 		[Static]
 		[Export ("grid")]

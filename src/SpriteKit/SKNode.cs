@@ -50,6 +50,27 @@ namespace SpriteKit
 		{
 			return GetEnumerator ();
 		}
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		public static SKNode Create (string filename, Type [] types, out NSError error)
+		{
+			// Let's fail early.
+			if (filename == null)
+				throw new ArgumentNullException (nameof (filename));
+			if (types == null)
+				throw new ArgumentNullException (nameof (filename));
+			if (types.Length == 0)
+				throw new InvalidOperationException ($"'{nameof (filename)}' length must be greater than zero.");
+
+			using (var classes = new NSMutableSet<Class> (types.Length)) {
+				foreach (var type in types)
+					classes.Add (new Class (type));
+				return Create (filename, classes.Handle, out error);
+			}
+		}
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		public static SKNode Create (string filename, NSSet<Class> classes, out NSError error) => Create (filename, classes.Handle, out error);
 	}
 #endif
 }

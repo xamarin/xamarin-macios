@@ -4,11 +4,14 @@ using System.IO;
 using NUnit.Framework;
 using Xamarin.MacDev;
 using System.Diagnostics;
+using Xamarin.Tests;
 
 namespace Xamarin.iOS.Tasks {
 	[TestFixture ("iPhone")]
 	[TestFixture ("iPhoneSimulator")]
 	public class WatchKit : ExtensionTestBase {
+
+		bool isXcode10OrLater = Version.Parse (Configuration.XcodeVersion).Major >= 10;
 
 		public WatchKit (string platform) : base(platform)
 		{
@@ -17,16 +20,22 @@ namespace Xamarin.iOS.Tasks {
 		[Test]
 		public void BasicTest () 
 		{
-			this.BuildExtension ("MyWatchApp", "MyWatchKitExtension", Platform, "Debug", additionalAsserts: (ProjectPaths mtouchPaths) =>
+			this.BuildExtension ("MyWatchApp", "MyWatchKitExtension", Platform, "Debug", expectedErrorCount: isXcode10OrLater ? 1 : 0,  additionalAsserts: (ProjectPaths mtouchPaths) =>
 			{
 				Assert.IsTrue (Directory.Exists (Path.Combine (mtouchPaths.AppBundlePath, "PlugIns", "MyWatchKitExtension.appex")), "appex");
 				Assert.IsFalse (Directory.Exists (Path.Combine (mtouchPaths.AppBundlePath, "PlugIns", "MyWatchKitExtension.appex", "Frameworks")), "frameworks");
 			});
+
+			if (isXcode10OrLater)
+				Assert.AreEqual ("Xcode 10 does not support watchOS 1 apps. Either upgrade to watchOS 2 apps, or use an older version of Xcode.", Engine.Logger.ErrorEvents[0].Message, "WK 1 error message");
 		}
 
 		[Test]
 		public void InvalidBundleIdTest ()
 		{
+			if (isXcode10OrLater)
+				Assert.Ignore ("WK 1 apps are not supported when running with Xcode 10+.");
+
 			var mtouchPaths = SetupProjectPaths ("MyWatchApp", platform: Platform);
 			using (var xiproj = XIProject.Clone (mtouchPaths.ProjectPath, "MyWatchKitExtension", "MyWatchKitApp")) {
 				mtouchPaths = SetupProjectPaths ("MyWatchApp", "MyWatchApp", xiproj.ProjectDirectory, platform: Platform);
@@ -49,6 +58,9 @@ namespace Xamarin.iOS.Tasks {
 		[Test]
 		public void CreateIpa () 
 		{
+			if (isXcode10OrLater)
+				Assert.Ignore ("WK 1 apps are not supported when running with Xcode 10+.");
+
 			if (Platform == "iPhoneSimulator")
 				return; // this is a device-only test.
 

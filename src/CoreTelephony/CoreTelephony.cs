@@ -49,4 +49,12 @@ namespace CoreTelephony {
 		Restricted,
 		NotRestricted
 	}
+
+	[iOS (12,0)]
+	[Native]
+	public enum CTCellularPlanProvisioningAddPlanResult : long {
+		Unknown,
+		Fail,
+		Success,
+	}
 }

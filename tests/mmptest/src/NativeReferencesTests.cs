@@ -7,6 +7,8 @@ using System.Text;
 using NUnit.Framework;
 using System.Reflection;
 
+using Xamarin.Tests;
+
 namespace Xamarin.MMP.Tests
 {
 	public class NativeReferenceTests {
@@ -119,6 +121,8 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void Unified_WithStaticNativeRef_32bit ()
 		{
+			Configuration.AssertXcodeSupports32Bit ();
+
 			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					CSProjConfig = "<XamMacArch>i386</XamMacArch>",

@@ -40,8 +40,7 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void Create ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("Requires iOS7");
+			TestRuntime.AssertXcodeVersion (5, 0, 1);
 
 			using (var s = new SKScene (new SizeF (320, 240)))
 			using (var b1 = SKPhysicsBody.CreateCircularBody (1.0f))

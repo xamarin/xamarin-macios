@@ -6,6 +6,7 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using UIKit;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -21,8 +22,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void Ctor ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Inconclusive ("requires iOS 7.0+");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			using (var l1 = new UICollectionViewLayout ())
 			using (var l2 = new UICollectionViewLayout ())

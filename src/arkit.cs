@@ -62,7 +62,13 @@ namespace ARKit {
 		SensorFailed = 102,
 		CameraUnauthorized = 103,
 		WorldTrackingFailed = 200,
-		InvalidReferenceImage = 300
+		InvalidReferenceImage = 300,
+		InvalidReferenceObject = 301,
+		InvalidWorldMap = 302,
+		InvalidConfiguration = 303,
+		InsufficientFeatures = 400,
+		ObjectMergeFailed = 401,
+		FileIOFailed = 500,
 	}
 
 	[iOS (11,0)]
@@ -94,6 +100,7 @@ namespace ARKit {
 	[Flags]
 	[Native]
 	public enum ARSessionRunOptions : ulong {
+		None = 0,
 		ResetTracking = 1 << 0,
 		RemoveExistingAnchors = 1 << 1,
 	}
@@ -118,14 +125,68 @@ namespace ARKit {
 		Vertical = 1 << 1,
 	}
 
+	[iOS (12,0)]
+	[NoWatch, NoTV, NoMac]
+	[Native]
+	public enum AREnvironmentTexturing : long {
+		None,
+		Manual,
+		Automatic,
+	}
+
+	[iOS (12,0)]
+	[NoWatch, NoTV, NoMac]
+	[Native]
+	public enum ARWorldMappingStatus : long {
+		NotAvailable,
+		Limited,
+		Extending,
+		Mapped,
+	}
+
+	[iOS (12,0)]
+	[NoWatch, NoTV, NoMac]
+	[Native]
+	public enum ARPlaneClassificationStatus : long {
+		NotAvailable = 0,
+		Undetermined,
+		Unknown,
+		Known,
+	}
+
+	[iOS (12,0)]
+	[NoWatch, NoTV, NoMac]
+	[Native]
+	public enum ARPlaneClassification : long {
+		None = 0,
+		Wall,
+		Floor,
+		Ceiling,
+		Table,
+		Seat,
+	}
+
+	[iOS (12,0)]
+	[NoWatch, NoTV, NoMac]
+	[Protocol]
+	[Advice ("To conform to 'ARAnchorCopying' you need to implement:\n'[Export (\"initWithAnchor:\")]'\n'public YourConstructor (ARAnchor anchor)'")]
+	interface ARAnchorCopying : NSCopying {
+		// Constructors in interfaces are not possible in C#
+		// @required -(instancetype _Nonnull)initWithAnchor:(ARAnchor * _Nonnull)anchor;
+	}
+
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface ARAnchor : NSCopying, NSSecureCoding {
+	interface ARAnchor : ARAnchorCopying, NSSecureCoding {
 
 		[NullAllowed, Export ("identifier")]
 		NSUuid Identifier { get; }
+
+		[iOS (12,0)]
+		[NullAllowed, Export ("name")]
+		string Name { get; }
 
 		[Export ("transform")]
 		Matrix4 Transform {
@@ -136,6 +197,16 @@ namespace ARKit {
 		[Export ("initWithTransform:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		IntPtr Constructor (Matrix4 transform);
+
+		[iOS (12,0)]
+		[Export ("initWithName:transform:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		IntPtr Constructor (string name, Matrix4 transform);
+
+		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
+		[iOS (12,0)]
+		[Export ("initWithAnchor:")]
+		IntPtr Constructor (ARAnchor anchor);
 	}
 
 	[iOS (11,0)]
@@ -177,9 +248,20 @@ namespace ARKit {
 			get;
 		}
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'Project' instead.")]
+		[Wrap ("Project (point, orientation, viewportSize)", IsVirtual = true)]
+		CGPoint GetProjectPoint (Vector3 point, UIInterfaceOrientation orientation, CGSize viewportSize);
+#endif
+
 		[Export ("projectPoint:orientation:viewportSize:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		CGPoint GetProjectPoint (Vector3 point, UIInterfaceOrientation orientation, CGSize viewportSize);
+		CGPoint Project (Vector3 point, UIInterfaceOrientation orientation, CGSize viewportSize);
+
+		[iOS (12,0)]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		[Export ("unprojectPoint:ontoPlaneWithTransform:orientation:viewportSize:")]
+		Vector3 Unproject (CGPoint point, Matrix4 planeTransform, UIInterfaceOrientation orientation, CGSize viewportSize);
 
 		[Export ("projectionMatrixForOrientation:viewportSize:zNear:zFar:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -219,6 +301,10 @@ namespace ARKit {
 
 		[NullAllowed, Export ("rawFeaturePoints", ArgumentSemantic.Strong)]
 		ARPointCloud RawFeaturePoints { get; }
+
+		[iOS (12,0)]
+		[Export ("worldMappingStatus")]
+		ARWorldMappingStatus WorldMappingStatus { get; }
 
 		[Export ("hitTest:types:")]
 		ARHitTestResult[] HitTest (CGPoint point, ARHitTestResultType types);
@@ -273,8 +359,17 @@ namespace ARKit {
 	[BaseType (typeof (ARAnchor))]
 	[DisableDefaultCtor]
 	interface ARPlaneAnchor {
+		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
+		[iOS (12,0)]
+		[Export ("initWithAnchor:")]
+		IntPtr Constructor (ARAnchor anchor);
 
 		// [Export ("initWithTransform:")] marked as NS_UNAVAILABLE
+
+		[iOS (12,0)]
+		[Static]
+		[Export ("classificationSupported")]
+		bool ClassificationSupported { [Bind ("isClassificationSupported")] get; }
 
 		[Export ("alignment")]
 		ARPlaneAnchorAlignment Alignment { get; }
@@ -294,6 +389,14 @@ namespace ARKit {
 		[iOS (11,3)]
 		[Export ("geometry", ArgumentSemantic.Strong)]
 		ARPlaneGeometry Geometry { get; }
+
+		[iOS (12,0)]
+		[Export ("classificationStatus", ArgumentSemantic.Assign)]
+		ARPlaneClassificationStatus ClassificationStatus { get; }
+
+		[iOS (12,0)]
+		[Export ("classification", ArgumentSemantic.Assign)]
+		ARPlaneClassification Classification { get; }
 	}
 
 	[iOS (11,3)]
@@ -421,6 +524,11 @@ namespace ARKit {
 
 		[Export ("hitTest:types:")]
 		ARHitTestResult[] HitTest (CGPoint point, ARHitTestResultType types);
+
+		[iOS (12,0)]
+		[Export ("unprojectPoint:ontoPlaneWithTransform:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		Vector3 Unproject (CGPoint point, Matrix4 planeTransform);
 	}
 
 	interface IARSCNViewDelegate {}
@@ -513,7 +621,9 @@ namespace ARKit {
 		[NullAllowed, Export ("configuration", ArgumentSemantic.Copy)]
 		ARConfiguration Configuration { get; }
 
-		// 'runWithConfiguration:' selector marked as unavailable in Xcode 9 beta 5. Use 'Run (ARConfiguration configuration, ARSessionRunOptions options)' instead.
+		[Export ("runWithConfiguration:")]
+		void Run (ARConfiguration configuration);
+
 		[Export ("runWithConfiguration:options:")]
 		void Run (ARConfiguration configuration, ARSessionRunOptions options);
 
@@ -530,6 +640,17 @@ namespace ARKit {
 		[Export ("setWorldOrigin:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		void SetWorldOrigin (Matrix4 relativeTransform);
+
+		[iOS (12,0)]
+		[Async]
+		[Export ("getCurrentWorldMapWithCompletionHandler:")]
+		void GetCurrentWorldMap (Action<ARWorldMap, NSError> completionHandler);
+
+		[iOS (12,0)]
+		[Async]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		[Export ("createReferenceObjectWithTransform:center:extent:completionHandler:")]
+		void CreateReferenceObject (Matrix4 transform, Vector3 center, Vector3 extent, Action<ARReferenceObject, NSError> completionHandler);
 	}
 
 	[iOS (11,0)]
@@ -591,7 +712,7 @@ namespace ARKit {
 
 		[iOS (11,3)]
 		[Static]
-		[Export ("supportedVideoFormats", ArgumentSemantic.Strong)]
+		[Export ("supportedVideoFormats")]
 		ARVideoFormat[] SupportedVideoFormats { get; }
 
 		[iOS (11,3)]
@@ -617,12 +738,28 @@ namespace ARKit {
 		[Export ("autoFocusEnabled")]
 		bool AutoFocusEnabled { [Bind ("isAutoFocusEnabled")] get; set; }
 
+		[iOS (12,0)]
+		[Export ("environmentTexturing", ArgumentSemantic.Assign)]
+		AREnvironmentTexturing EnvironmentTexturing { get; set; }
+
 		[Export ("planeDetection", ArgumentSemantic.Assign)]
 		ARPlaneDetection PlaneDetection { get; set; }
+
+		[iOS (12,0)]
+		[NullAllowed, Export ("initialWorldMap", ArgumentSemantic.Strong)]
+		ARWorldMap InitialWorldMap { get; set; }
 
 		[iOS (11,3)]
 		[NullAllowed, Export ("detectionImages", ArgumentSemantic.Copy)]
 		NSSet<ARReferenceImage> DetectionImages { get; set; }
+
+		[iOS (12,0)]
+		[Export ("maximumNumberOfTrackedImages")]
+		nint MaximumNumberOfTrackedImages { get; set; }
+
+		[iOS (12,0)]
+		[Export ("detectionObjects", ArgumentSemantic.Copy)]
+		NSSet<ARReferenceObject> DetectionObjects { get; set; }
 	}
 
 	[iOS (11,0)]
@@ -766,6 +903,9 @@ namespace ARKit {
 		float NoseSneerLeft { get; set; }
 
 		float NoseSneerRight { get; set; }
+
+		[iOS (12,0)]
+		float TongueOut { get; set; }
 	}
 
 	[iOS (11,0)]
@@ -926,6 +1066,10 @@ namespace ARKit {
 
 		[Field ("ARBlendShapeLocationNoseSneerRight")]
 		NSString NoseSneerRightKey { get; }
+
+		[iOS (12,0)]
+		[Field ("ARBlendShapeLocationTongueOut")]
+		NSString TongueOutKey { get; }
 	}
 
 	[iOS (11,0)]
@@ -933,6 +1077,11 @@ namespace ARKit {
 	[BaseType (typeof(ARAnchor))]
 	[DisableDefaultCtor]
 	interface ARFaceAnchor : ARTrackable {
+		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
+		[iOS (12,0)]
+		[Export ("initWithAnchor:")]
+		IntPtr Constructor (ARAnchor anchor);
+
 #if !XAMCORE_4_0
 		[Obsolete ("Constructor marked as unavailable.")]
 		[Export ("init")]
@@ -941,6 +1090,27 @@ namespace ARKit {
 
 		[Export ("geometry")]
 		ARFaceGeometry Geometry { get; }
+
+		[iOS (12,0)]
+		[Export ("leftEyeTransform")]
+		Matrix4 LeftEyeTransform {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+		}
+
+		[iOS (12,0)]
+		[Export ("rightEyeTransform")]
+		Matrix4 RightEyeTransform {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+		}
+
+		[iOS (12,0)]
+		[Export ("lookAtPoint")]
+		Vector3 LookAtPoint {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+		}
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("blendShapes")]
@@ -1023,7 +1193,12 @@ namespace ARKit {
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(ARAnchor))]
 	[DisableDefaultCtor]
-	interface ARImageAnchor {
+	interface ARImageAnchor : ARTrackable {
+		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
+		[iOS (12,0)]
+		[Export ("initWithAnchor:")]
+		IntPtr Constructor (ARAnchor anchor);
+
 		[Export ("referenceImage", ArgumentSemantic.Strong)]
 		ARReferenceImage ReferenceImage { get; }
 	}
@@ -1044,6 +1219,150 @@ namespace ARKit {
 
 		[Export ("primaryLightIntensity")]
 		nfloat PrimaryLightIntensity { get; }
+	}
+
+	[iOS (12,0)]
+	[NoWatch, NoTV, NoMac]
+	[BaseType (typeof(ARConfiguration))]
+	interface ARImageTrackingConfiguration {
+		[Export ("autoFocusEnabled")]
+		bool AutoFocusEnabled { [Bind ("isAutoFocusEnabled")] get; set; }
+
+		[Export ("trackingImages", ArgumentSemantic.Copy)]
+		NSSet<ARReferenceImage> TrackingImages { get; set; }
+
+		[Export ("maximumNumberOfTrackedImages")]
+		nint MaximumNumberOfTrackedImages { get; set; }
+	}
+
+	[iOS (12,0)]
+	[NoWatch, NoTV, NoMac]
+	[BaseType (typeof(ARConfiguration))]
+	interface ARObjectScanningConfiguration {
+		[Export ("autoFocusEnabled")]
+		bool AutoFocusEnabled { [Bind ("isAutoFocusEnabled")] get; set; }
+
+		[Export ("planeDetection", ArgumentSemantic.Assign)]
+		ARPlaneDetection PlaneDetection { get; set; }
+	}
+
+	[iOS (12,0)]
+	[NoWatch, NoTV, NoMac]
+	[BaseType (typeof(ARAnchor))]
+	[DisableDefaultCtor]
+	interface AREnvironmentProbeAnchor {
+		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
+		[iOS (12,0)]
+		[Export ("initWithAnchor:")]
+		IntPtr Constructor (ARAnchor anchor);
+
+		[Export ("initWithTransform:extent:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		IntPtr Constructor (Matrix4 transform, Vector3 extent);
+
+		[Export ("initWithName:transform:extent:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		IntPtr Constructor (string name, Matrix4 transform, Vector3 extent);
+
+		[NullAllowed, Export ("environmentTexture", ArgumentSemantic.Strong)]
+		IMTLTexture EnvironmentTexture { get; }
+
+		[Export ("extent")]
+		Vector3 Extent {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+		}
+	}
+
+	[iOS (12,0)]
+	[NoWatch, NoTV, NoMac]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface ARReferenceObject : NSSecureCoding {
+		[Export ("initWithArchiveURL:error:")]
+		IntPtr Constructor (NSUrl archiveUrl, [NullAllowed] out NSError error);
+
+		[NullAllowed, Export ("name")]
+		string Name { get; set; }
+
+		[Export ("center")]
+		Vector3 Center {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+		}
+
+		[Export ("extent")]
+		Vector3 Extent {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+		}
+
+		[Export ("scale")]
+		Vector3 Scale {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+		}
+
+		[Export ("rawFeaturePoints", ArgumentSemantic.Strong)]
+		ARPointCloud RawFeaturePoints { get; }
+
+		[Static]
+		[Export ("referenceObjectsInGroupNamed:bundle:")]
+		[return: NullAllowed]
+		NSSet<ARReferenceObject> GetReferenceObjects (string resourceGroupName, [NullAllowed] NSBundle bundle);
+
+		[Export ("exportObjectToURL:previewImage:error:")]
+		bool Export (NSUrl url, [NullAllowed] UIImage previewImage, [NullAllowed] out NSError error);
+
+		[Export ("referenceObjectByApplyingTransform:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		ARReferenceObject ApplyTransform (Matrix4 transform);
+
+		[Export ("referenceObjectByMergingObject:error:")]
+		[return: NullAllowed]
+		ARReferenceObject Merge (ARReferenceObject @object, [NullAllowed] out NSError error);
+
+		[iOS (12,0)]
+		[Field ("ARReferenceObjectArchiveExtension")]
+		NSString ArchiveExtension { get; }
+	}
+
+	[iOS (12,0)]
+	[NoWatch, NoTV, NoMac]
+	[BaseType (typeof(ARAnchor))]
+	[DisableDefaultCtor]
+	interface ARObjectAnchor {
+		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
+		[iOS (12,0)]
+		[Export ("initWithAnchor:")]
+		IntPtr Constructor (ARAnchor anchor);
+
+		[Export ("referenceObject", ArgumentSemantic.Strong)]
+		ARReferenceObject ReferenceObject { get; }
+	}
+
+	[iOS (12,0)]
+	[NoWatch, NoTV, NoMac]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface ARWorldMap : NSCopying, NSSecureCoding {
+		[Export ("center")]
+		Vector3 Center {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+		}
+
+		[Export ("extent")]
+		Vector3 Extent {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+		}
+
+		[Export ("anchors", ArgumentSemantic.Copy)]
+		ARAnchor[] Anchors { get; set; }
+
+		[Export ("rawFeaturePoints", ArgumentSemantic.Strong)]
+		ARPointCloud RawFeaturePoints { get; }
 	}
 }
 

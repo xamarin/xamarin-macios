@@ -64,6 +64,15 @@ namespace Introspection {
 
 		protected virtual bool Skip (Type type, string protocolName)
 		{
+			// The following protocols are skipped in classic since they were added in 
+			// later versions
+			if (IntPtr.Size == 4) {
+				switch (protocolName) {
+				case "UIUserActivityRestoring":
+					return true;
+				}
+			}
+
 			switch (protocolName) {
 			case "NSCopying":
 				switch (type.Name) {
@@ -88,6 +97,13 @@ namespace Introspection {
 				case "MLMultiArrayConstraint":
 				case "VSSubscription":
 					return true; // skip
+				// xcode 10
+				case "VSAccountMetadata":
+				case "VSAccountMetadataRequest":
+				case "VSAccountProviderResponse":
+				case "PHEditingExtensionContext":
+				case "HKCumulativeQuantitySeriesSample":
+					return true;
 				}
 				break;
 			case "NSMutableCopying":
@@ -95,6 +111,10 @@ namespace Introspection {
 				// iOS 10 : test throw because of generic usage
 				case "NSMeasurement`1":
 					return true; // skip
+				// Xcode 10
+				case "UNNotificationCategory":
+				case "UNNotificationSound":
+					return true;
 				}
 				break;
 			case "NSCoding":
@@ -126,6 +146,13 @@ namespace Introspection {
 				case "NSEntityMapping":
 				case "NSMappingModel":
 				case "NSPropertyMapping":
+					return true;
+				// Xcode 10
+				case "NSManagedObjectID":
+				case "VSAccountMetadata":
+				case "VSAccountMetadataRequest":
+				case "VSAccountProviderResponse":
+				case "PHEditingExtensionContext":
 					return true;
 				}
 				break;
@@ -162,6 +189,18 @@ namespace Introspection {
 					return true;
 				case "MPSImageAllocator": // Header shows NSSecureCoding, but intro gives: MPSImageAllocator conforms to NSSecureCoding but SupportsSecureCoding returned false
 					return true;
+				// Xcode 10
+				case "ARDirectionalLightEstimate":
+				case "ARFrame":
+				case "ARLightEstimate":
+				case "NSManagedObjectID":
+				// beta 2
+				case "NSTextAttachment":
+				case "VSAccountMetadata":
+				case "VSAccountMetadataRequest":
+				case "VSAccountProviderResponse":
+				case "PHEditingExtensionContext":
+					return true;
 				}
 				break;
 			// conformance added in Xcode 8 (iOS 10 / macOS 10.12)
@@ -189,6 +228,15 @@ namespace Introspection {
 				case "SCNScene":
 				// GameplayKit.framework/Headers/SpriteKit+Additions.h
 				case "SKScene":
+					return true;
+				}
+				break;
+			case "UIUserActivityRestoring":
+				switch (type.Name) {
+				// UIKit.framework/Headers/UIDocument.h
+				case "UIDocument":
+				// inherits it from UIDocument
+				case "UIManagedDocument":
 					return true;
 				}
 				break;

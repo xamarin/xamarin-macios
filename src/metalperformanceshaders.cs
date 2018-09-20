@@ -1253,7 +1253,7 @@ namespace MetalPerformanceShaders {
 	[iOS (10,0)][TV (10,0)][Mac (10, 13, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface MPSImageDescriptor {
+	interface MPSImageDescriptor : NSCopying {
 
 		[Export ("width")]
 		nuint Width { get; set; }
@@ -3240,7 +3240,7 @@ namespace MetalPerformanceShaders {
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject), Name = "MPSCNNConvolutionDataSource")]
-	interface MPSCnnConvolutionDataSource {
+	interface MPSCnnConvolutionDataSource : NSCopying {
 		[Abstract]
 		[Export ("dataType")]
 		MPSDataType DataType { get; }

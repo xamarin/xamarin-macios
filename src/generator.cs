@@ -708,6 +708,7 @@ public class NamespaceManager
 		ImplicitNamespaces.Add (Get ("Foundation"));
 		ImplicitNamespaces.Add (Get ("ObjCRuntime"));
 		ImplicitNamespaces.Add (Get ("CoreGraphics"));
+		ImplicitNamespaces.Add (Get ("CoreML"));
 		ImplicitNamespaces.Add (Get ("SceneKit"));
 
 		if (Frameworks.HaveAudioUnit)
@@ -2188,6 +2189,7 @@ public partial class Generator : IMemberGatherer {
 		marshal_types.Add (TypeManager.Class);
 		marshal_types.Add (TypeManager.CFRunLoop);
 		marshal_types.Add (TypeManager.CGColorSpace);
+		marshal_types.Add (TypeManager.DispatchData);
 		marshal_types.Add (TypeManager.DispatchQueue);
 		marshal_types.Add (TypeManager.Protocol);
 		if (Frameworks.HaveCoreMidi)
@@ -2231,7 +2233,11 @@ public partial class Generator : IMemberGatherer {
 		if (Frameworks.HaveAudioUnit)
 			marshal_types.Add (TypeManager.AudioUnit);
 		marshal_types.Add (TypeManager.SecIdentity);
+		marshal_types.Add (TypeManager.SecIdentity2);
 		marshal_types.Add (TypeManager.SecTrust);
+		marshal_types.Add (TypeManager.SecTrust2);
+		marshal_types.Add (TypeManager.SecProtocolOptions);
+		marshal_types.Add (TypeManager.SecProtocolMetadata);
 		marshal_types.Add (TypeManager.SecAccessControl);
 		marshal_types.Add (TypeManager.AudioBuffers);
 		if (Frameworks.HaveAudioUnit) {
@@ -2294,7 +2300,12 @@ public partial class Generator : IMemberGatherer {
 					if (AttributeManager.HasAttribute<CoreImageFilterPropertyAttribute> (pi))
 						continue;
 
-					if (AttributeManager.HasAttribute<WrapAttribute> (pi.GetGetMethod ()) || AttributeManager.HasAttribute<WrapAttribute> (pi.GetSetMethod ()))
+					// Ensure there's a [Wrap] on either (or both) the getter and setter - since we already know there's no [Export]
+					var getMethod = pi.GetGetMethod ();
+					var hasWrapGet = getMethod != null && AttributeManager.HasAttribute<WrapAttribute> (getMethod);
+					var setMethod = pi.GetSetMethod ();
+					var hasWrapSet = setMethod != null && AttributeManager.HasAttribute<WrapAttribute> (setMethod);
+					if (hasWrapGet || hasWrapSet)
 						continue;
 
 					throw new BindingException (1018, true, "No [Export] attribute on property {0}.{1}", t.FullName, pi.Name);
@@ -2379,6 +2390,8 @@ public partial class Generator : IMemberGatherer {
 					else if (attr is AvailabilityBaseAttribute)
 						continue;
 					else if (attr is RequiresSuperAttribute)
+						continue;
+					else if (attr is NoMethodAttribute)
 						continue;
 					else {
 						switch (attr.GetType ().Name) {
@@ -2852,6 +2865,9 @@ public partial class Generator : IMemberGatherer {
 							setter = "SetNativeValue ({0}, value.Dictionary)";
 						} else if (IsWrappedType (pi.PropertyType)){
 							getter = "Dictionary [{0}] as " + pi.PropertyType;
+							setter = "SetNativeValue ({0}, value)";
+						} else if (pi.PropertyType.Name == "CGColorSpace") {
+							getter = "GetNativeValue<" + pi.PropertyType +"> ({0})";
 							setter = "SetNativeValue ({0}, value)";
 						} else {
 							throw new BindingException (1031, true,
@@ -5165,6 +5181,13 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		PrintDelegateProxy (minfo);
+
+		if (AttributeManager.HasAttribute<NoMethodAttribute>(minfo.mi)){
+			// Call for side effect
+			MakeSignature (minfo);
+			return;
+		}
+		
 		PrintExport (minfo);
 
 		if (!minfo.is_interface_impl) {

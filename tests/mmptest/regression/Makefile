@@ -4,7 +4,7 @@ include $(TOP)/Make.config
 
 MMP=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/bin/mmp
 
-export MD_APPLE_SDK_ROOT=$(shell dirname `dirname $(XCODE_DEVELOPER_ROOT)`)
+export MD_APPLE_SDK_ROOT=$(shell dirname `dirname $(XCODE94_DEVELOPER_ROOT)`)
 export XBUILD_FRAMEWORK_FOLDERS_PATH=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks
 export MSBuildExtensionsPath=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild
 export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
@@ -60,10 +60,10 @@ ALL_TESTS = \
 all-local:: run
 
 embedded-mono/bin system-mono/bin embedded-mono-profile/bin system-mono-profile/bin $(foreach test,$(TESTS_UNIFIED),$(test)/bin): dylib/libTest.dylib
-	DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT) XAMMAC_FRAMEWORK_PATH=$(abspath $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)) $(SYSTEM_XBUILD)  $(@D)/$(@D).csproj
+	DEVELOPER_DIR=$(XCODE94_DEVELOPER_ROOT) XAMMAC_FRAMEWORK_PATH=$(abspath $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)) $(SYSTEM_XBUILD)  $(@D)/$(@D).csproj
 
 %/bin: dylib/libTest.dylib
-	DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT) XAMMAC_FRAMEWORK_PATH=$(abspath $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)) $(MDTOOL) build $*/$*.csproj
+	DEVELOPER_DIR=$(XCODE94_DEVELOPER_ROOT) XAMMAC_FRAMEWORK_PATH=$(abspath $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)) $(MDTOOL) build $*/$*.csproj
 
 dylib/libTest.dylib: dylib/src.c
 	clang $< -o$@ -arch i386 -arch x86_64 -shared

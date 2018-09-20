@@ -45,9 +45,7 @@ namespace MonoTouchFixtures.CoreImage {
 			using (var dtor = CIDetector.CreateFaceDetector (null, false)) {
 			}
 
-			if (TestRuntime.CheckSystemAndSDKVersion (6, 0)) {
-				using (var dtor = CIDetector.CreateFaceDetector (null, false, 2.0f)) {
-				}
+			using (var dtor = CIDetector.CreateFaceDetector (null, false, 2.0f)) {
 			}
 
 			using (var dtor = CIDetector.CreateFaceDetector (null, null, null, null)) {

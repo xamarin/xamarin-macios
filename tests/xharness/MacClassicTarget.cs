@@ -4,6 +4,11 @@ namespace xharness
 {
 	public class MacClassicTarget : MacTarget
 	{
+		public MacClassicTarget ()
+		{
+			ThirtyTwoBit = true;
+		}
+
 		protected override void ExecuteInternal ()
 		{
 			// nothing to do here

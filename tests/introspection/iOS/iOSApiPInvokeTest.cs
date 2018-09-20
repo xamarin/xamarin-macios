@@ -72,7 +72,7 @@ namespace Introspection {
 			// 1. is the current SDK target (or a newer one)
 			var sdk = new Version (Constants.SdkVersion);
 #if __WATCHOS__
-			if (!TestRuntime.CheckWatchOSSystemVersion (sdk.Major, sdk.Minor))
+			if (!TestRuntime.CheckSystemVersion (PlatformName.WatchOS, sdk.Major, sdk.Minor))
 				return true;
 #elif __IOS__ || __TVOS__
 			if (!UIDevice.CurrentDevice.CheckSystemVersion (sdk.Major, sdk.Minor))

@@ -103,8 +103,10 @@
     <Compile Include="..\..\tools\common\StringUtils.cs">
       <Link>StringUtils.cs</Link>
     </Compile>
-    <Compile Include="src\BindingProjectTests.cs" />
     <Compile Include="src\WarningTests.cs" />
+    <Compile Include="src\Unified45.cs" />
+    <Compile Include="src\System.ServiceModel\Net45.cs" />
+    <Compile Include="src\BindingProjectTests.cs" />
     <Compile Include="src\SmokeTests.cs" />
     <Compile Include="src\RegistrarTests.cs" />
     <Compile Include="src\AssemblyReferencesTests.cs" />

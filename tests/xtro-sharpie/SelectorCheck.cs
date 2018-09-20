@@ -89,8 +89,14 @@ namespace Extrospection {
 			string selector = decl.GetSelector ();
 			if (String.IsNullOrEmpty (selector))
 				return;
-			
-			var name = (decl.IsClassMethod ? "+" : String.Empty) + decl.QualifiedName;
+
+			var name = decl.QualifiedName;
+			if (decl.IsClassMethod) {
+				// we do not bind `+{type}:new` just instance `init`
+				if (selector == "new")
+					return;
+				name = "+" + name;
+			}
 			bool found = qualified_selectors.Contains (name);
 			if (!found) {
 				// a category could be inlined into the type it extend

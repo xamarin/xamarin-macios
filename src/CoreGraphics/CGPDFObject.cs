@@ -163,7 +163,7 @@ namespace CoreGraphics {
 				return false;
 			}
 		}
-#if !XAMCORE_2_0
+
 		internal static object FromHandle (IntPtr handle)
 		{
 			IntPtr ip;
@@ -218,6 +218,5 @@ namespace CoreGraphics {
 			}
 			return null;
 		}
-#endif
 	}
 }

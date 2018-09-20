@@ -17,5 +17,4 @@ packages
 .DS_Store
 jenkins-results
 .vs
-
 *.raw

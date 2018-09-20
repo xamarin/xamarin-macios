@@ -37,8 +37,7 @@ namespace MonoTouchFixtures.GamePlayKit {
 		[Test]
 		public void FromPointsTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (9, 0))
-				Assert.Ignore ("Ignoring GameplayKit tests: Requires iOS9+");
+			TestRuntime.AssertXcodeVersion (7, 0);
 
 			var obstacle = GKPolygonObstacle.FromPoints (points);
 			Assert.NotNull (obstacle, "GKPolygonObstacle.FromPoints should not be null");
@@ -53,8 +52,7 @@ namespace MonoTouchFixtures.GamePlayKit {
 		[Test]
 		public void InitWithPointsTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (9, 0))
-				Assert.Ignore ("Ignoring GameplayKit tests: Requires iOS9+");
+			TestRuntime.AssertXcodeVersion (7, 0);
 
 			var obstacle = new GKPolygonObstacle (points);
 			Assert.NotNull (obstacle, "GKPolygonObstacle ctor should not be null");
