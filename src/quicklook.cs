@@ -130,13 +130,19 @@ namespace QuickLook {
 	interface QLPreviewItem {
 		[Abstract]
 		[Export ("previewItemURL")]
+#if XAMCORE_4_0
+		NSUrl PreviewItemTitle { get; }
+#else
 		NSUrl ItemUrl { get; }
+#endif
 
+		[Export ("previewItemTitle")]
 #if !XAMCORE_4_0
 		[Abstract]
-#endif
-		[Export ("previewItemTitle")]
 		string ItemTitle { get; }
+#else
+		string PreviewItemTitle { get; }
+#endif
 	}
 
 	[iOS (11,0)]
