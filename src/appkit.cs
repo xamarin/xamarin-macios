@@ -23144,6 +23144,9 @@ namespace AppKit {
 
 		[Mac (10, 8), Export ("quickLookWithEvent:")]
 		void QuickLook (NSEvent withEvent);
+
+		[Mac (10, 7), Export ("validateProposedFirstResponder:forEvent:")]
+		bool ValidateProposedFirstResponder (NSResponder responder, [NullAllowed] NSEvent forEvent);
 	}
 
 	[Category, BaseType (typeof (NSResponder))]
