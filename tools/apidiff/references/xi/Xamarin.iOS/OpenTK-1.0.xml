@@ -24,6 +24,10 @@
       <namespace name="CoreVideo">
         <classes>
           <class name="CVOpenGLESTexture" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="ObjCRuntime.DeprecatedAttribute" />
+              <attribute name="ObjCRuntime.DeprecatedAttribute" />
+            </attributes>
             <interfaces>
               <interface name="ObjCRuntime.INativeObject" />
               <interface name="System.IDisposable" />
@@ -81,6 +85,10 @@
             </methods>
           </class>
           <class name="CVOpenGLESTextureCache" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="ObjCRuntime.DeprecatedAttribute" />
+              <attribute name="ObjCRuntime.DeprecatedAttribute" />
+            </attributes>
             <interfaces>
               <interface name="ObjCRuntime.INativeObject" />
               <interface name="System.IDisposable" />
@@ -48736,8 +48744,10 @@
               <interface name="UIKit.IUIDynamicItem" />
               <interface name="UIKit.IUIFocusEnvironment" />
               <interface name="UIKit.IUIFocusItem" />
+              <interface name="UIKit.IUIFocusItemContainer" />
               <interface name="UIKit.IUIPasteConfigurationSupporting" />
               <interface name="UIKit.IUITraitEnvironment" />
+              <interface name="UIKit.IUIUserActivityRestoring" />
             </interfaces>
             <constructors>
               <constructor name=".ctor(CoreGraphics.CGRect)" attrib="6278">

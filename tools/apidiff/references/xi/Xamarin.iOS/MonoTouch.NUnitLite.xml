@@ -911,6 +911,7 @@
               <interface name="UIKit.IUITableViewDataSource" />
               <interface name="UIKit.IUITableViewDelegate" />
               <interface name="UIKit.IUITraitEnvironment" />
+              <interface name="UIKit.IUIUserActivityRestoring" />
             </interfaces>
             <constructors>
               <constructor name=".ctor(MonoTouch.Dialog.RootElement)" attrib="6278">
