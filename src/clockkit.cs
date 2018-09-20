@@ -692,5 +692,267 @@ namespace ClockKit {
 		[Field ("CLKLaunchedTimelineEntryDateKey")]
 		NSString LaunchedTimelineEntryDate { get; }
 	}
+
+	[Watch (5,0)]
+	[BaseType (typeof (CLKComplicationTemplate))]
+	interface CLKComplicationTemplateGraphicBezelCircularText {
+		[Export ("circularTemplate", ArgumentSemantic.Copy)]
+		CLKComplicationTemplateGraphicCircular CircularTemplate { get; set; }
+
+		[NullAllowed, Export ("textProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider TextProvider { get; set; }
+	}
+
+	[Watch (5,0)]
+	[Abstract] // <quote>An abstract superclass for all the circular graphic templates.</quote>
+	[DisableDefaultCtor]
+	[BaseType (typeof (CLKComplicationTemplate))]
+	interface CLKComplicationTemplateGraphicCircular {
+	}
+
+	[Watch (5,0)]
+	[BaseType (typeof (CLKComplicationTemplateGraphicCircular))]
+	interface CLKComplicationTemplateGraphicCircularClosedGaugeImage {
+		[Export ("gaugeProvider", ArgumentSemantic.Copy)]
+		CLKGaugeProvider GaugeProvider { get; set; }
+
+		[Export ("imageProvider", ArgumentSemantic.Copy)]
+		CLKFullColorImageProvider ImageProvider { get; set; }
+	}
+
+	[Watch (5,0)]
+	[BaseType (typeof (CLKComplicationTemplateGraphicCircular))]
+	interface CLKComplicationTemplateGraphicCircularClosedGaugeText {
+		[Export ("gaugeProvider", ArgumentSemantic.Copy)]
+		CLKGaugeProvider GaugeProvider { get; set; }
+
+		[Export ("centerTextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider CenterTextProvider { get; set; }
+	}
+
+	[Watch (5,0)]
+	[BaseType (typeof (CLKComplicationTemplateGraphicCircular))]
+	interface CLKComplicationTemplateGraphicCircularImage {
+		[Export ("imageProvider", ArgumentSemantic.Copy)]
+		CLKFullColorImageProvider ImageProvider { get; set; }
+	}
+
+	[Watch (5,0)]
+	[BaseType (typeof (CLKComplicationTemplateGraphicCircular))]
+	interface CLKComplicationTemplateGraphicCircularOpenGaugeImage {
+		[Export ("gaugeProvider", ArgumentSemantic.Copy)]
+		CLKGaugeProvider GaugeProvider { get; set; }
+
+		[Export ("bottomImageProvider", ArgumentSemantic.Copy)]
+		CLKFullColorImageProvider BottomImageProvider { get; set; }
+
+		[Export ("centerTextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider CenterTextProvider { get; set; }
+	}
+
+	[Watch (5,0)]
+	[BaseType (typeof (CLKComplicationTemplateGraphicCircular))]
+	interface CLKComplicationTemplateGraphicCircularOpenGaugeRangeText {
+		[Export ("gaugeProvider", ArgumentSemantic.Copy)]
+		CLKGaugeProvider GaugeProvider { get; set; }
+
+		[Export ("leadingTextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider LeadingTextProvider { get; set; }
+
+		[Export ("trailingTextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider TrailingTextProvider { get; set; }
+
+		[Export ("centerTextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider CenterTextProvider { get; set; }
+	}
+
+	[Watch (5,0)]
+	[BaseType (typeof (CLKComplicationTemplateGraphicCircular))]
+	interface CLKComplicationTemplateGraphicCircularOpenGaugeSimpleText {
+		[Export ("gaugeProvider", ArgumentSemantic.Copy)]
+		CLKGaugeProvider GaugeProvider { get; set; }
+
+		[Export ("bottomTextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider BottomTextProvider { get; set; }
+
+		[Export ("centerTextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider CenterTextProvider { get; set; }
+	}
+
+	[Watch (5,0)]
+	[BaseType (typeof (CLKComplicationTemplate))]
+	interface CLKComplicationTemplateGraphicCornerCircularImage {
+		[Export ("imageProvider", ArgumentSemantic.Copy)]
+		CLKFullColorImageProvider ImageProvider { get; set; }
+	}
+
+	[Watch (5,0)]
+	[BaseType (typeof (CLKComplicationTemplate))]
+	interface CLKComplicationTemplateGraphicCornerGaugeImage {
+		[Export ("gaugeProvider", ArgumentSemantic.Copy)]
+		CLKGaugeProvider GaugeProvider { get; set; }
+
+		[NullAllowed, Export ("leadingTextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider LeadingTextProvider { get; set; }
+
+		[NullAllowed, Export ("trailingTextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider TrailingTextProvider { get; set; }
+
+		[Export ("imageProvider", ArgumentSemantic.Copy)]
+		CLKFullColorImageProvider ImageProvider { get; set; }
+	}
+
+	[Watch (5,0)]
+	[BaseType (typeof (CLKComplicationTemplate))]
+	interface CLKComplicationTemplateGraphicCornerGaugeText {
+		[Export ("gaugeProvider", ArgumentSemantic.Copy)]
+		CLKGaugeProvider GaugeProvider { get; set; }
+
+		[NullAllowed, Export ("leadingTextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider LeadingTextProvider { get; set; }
+
+		[NullAllowed, Export ("trailingTextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider TrailingTextProvider { get; set; }
+
+		[Export ("outerTextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider OuterTextProvider { get; set; }
+	}
+
+	[Watch (5,0)]
+	[BaseType (typeof (CLKComplicationTemplate))]
+	interface CLKComplicationTemplateGraphicCornerStackText {
+		[Export ("innerTextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider InnerTextProvider { get; set; }
+
+		[Export ("outerTextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider OuterTextProvider { get; set; }
+	}
+
+	[Watch (5,0)]
+	[BaseType (typeof (CLKComplicationTemplate))]
+	interface CLKComplicationTemplateGraphicCornerTextImage {
+		[Export ("textProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider TextProvider { get; set; }
+
+		[Export ("imageProvider", ArgumentSemantic.Copy)]
+		CLKFullColorImageProvider ImageProvider { get; set; }
+	}
+
+	[Watch (5,0)]
+	[BaseType (typeof (CLKComplicationTemplate))]
+	interface CLKComplicationTemplateGraphicRectangularLargeImage {
+		[Export ("imageProvider", ArgumentSemantic.Copy)]
+		CLKFullColorImageProvider ImageProvider { get; set; }
+
+		[Export ("textProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider TextProvider { get; set; }
+	}
+
+	[Watch (5,0)]
+	[BaseType (typeof (CLKComplicationTemplate))]
+	interface CLKComplicationTemplateGraphicRectangularStandardBody {
+		[NullAllowed, Export ("headerImageProvider", ArgumentSemantic.Copy)]
+		CLKFullColorImageProvider HeaderImageProvider { get; set; }
+
+		[Export ("headerTextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider HeaderTextProvider { get; set; }
+
+		[Export ("body1TextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider Body1TextProvider { get; set; }
+
+		[NullAllowed, Export ("body2TextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider Body2TextProvider { get; set; }
+	}
+
+	[Watch (5,0)]
+	[BaseType (typeof (CLKComplicationTemplate))]
+	interface CLKComplicationTemplateGraphicRectangularTextGauge {
+		[NullAllowed, Export ("headerImageProvider", ArgumentSemantic.Copy)]
+		CLKFullColorImageProvider HeaderImageProvider { get; set; }
+
+		[Export ("headerTextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider HeaderTextProvider { get; set; }
+
+		[Export ("body1TextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider Body1TextProvider { get; set; }
+
+		[Export ("gaugeProvider", ArgumentSemantic.Copy)]
+		CLKGaugeProvider GaugeProvider { get; set; }
+	}
+
+	[Watch (5,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CLKFullColorImageProvider : NSCopying {
+		[Static]
+		[Export ("providerWithFullColorImage:")]
+		CLKFullColorImageProvider Create (UIImage image);
+
+		[Export ("image", ArgumentSemantic.Retain)]
+		UIImage Image { get; set; }
+
+		[NullAllowed, Export ("accessibilityLabel", ArgumentSemantic.Retain)]
+		string AccessibilityLabel { get; set; }
+	}
+
+	[Watch (5,0)]
+	[BaseType (typeof (NSObject))]
+	[Abstract] // <quote>An abstract superclass that...</quote>
+	[DisableDefaultCtor]
+	interface CLKGaugeProvider : NSCopying {
+		[Export ("style", ArgumentSemantic.Assign)]
+		CLKGaugeProviderStyle Style { get; }
+
+		[NullAllowed, Export ("gaugeColors")]
+		UIColor[] GaugeColors { get; }
+
+		[NullAllowed, Export ("gaugeColorLocations")]
+		[BindAs (typeof (float []))] // between 0.0 and 1.0
+		NSNumber[] GaugeColorLocations { get; }
+	}
+
+	[Watch (5,0)]
+	[BaseType (typeof (CLKGaugeProvider))]
+	[DisableDefaultCtor]
+	interface CLKSimpleGaugeProvider {
+		[Static]
+		[Export ("gaugeProviderWithStyle:gaugeColors:gaugeColorLocations:fillFraction:")]
+		CLKSimpleGaugeProvider Create (CLKGaugeProviderStyle style, [NullAllowed] UIColor[] gaugeColors, [NullAllowed][BindAs (typeof (float []))] NSNumber[] gaugeColorLocations, float fillFraction);
+
+		[Static]
+		[Export ("gaugeProviderWithStyle:gaugeColor:fillFraction:")]
+		CLKSimpleGaugeProvider Create (CLKGaugeProviderStyle style, UIColor color, float fillFraction);
+
+		[Export ("fillFraction")]
+		float FillFraction { get; }
+
+		[Field ("CLKSimpleGaugeProviderFillFractionEmpty")]
+		float FillFractionEmpty { get; }
+	}
+
+	[Watch (5,0)]
+	[BaseType (typeof (CLKGaugeProvider))]
+	[DisableDefaultCtor]
+	interface CLKTimeIntervalGaugeProvider {
+		[Static]
+		[Export ("gaugeProviderWithStyle:gaugeColors:gaugeColorLocations:startDate:endDate:")]
+		CLKTimeIntervalGaugeProvider Create (CLKGaugeProviderStyle style, [NullAllowed] UIColor[] gaugeColors, [NullAllowed][BindAs (typeof (float []))] NSNumber[] gaugeColorLocations, NSDate startDate, NSDate endDate);
+
+		[Static]
+		[Export ("gaugeProviderWithStyle:gaugeColors:gaugeColorLocations:startDate:startFillFraction:endDate:endFillFraction:")]
+		CLKTimeIntervalGaugeProvider Create (CLKGaugeProviderStyle style, [NullAllowed] UIColor[] gaugeColors, [NullAllowed][BindAs (typeof (float []))] NSNumber[] gaugeColorLocations, NSDate startDate, float startFillFraction, NSDate endDate, float endFillFraction);
+
+		[Export ("startDate")]
+		NSDate StartDate { get; }
+
+		[Export ("endDate")]
+		NSDate EndDate { get; }
+
+		[Export ("startFillFraction")]
+		float StartFillFraction { get; }
+
+		[Export ("endFillFraction")]
+		float EndFillFraction { get; }
+	}
 }
 

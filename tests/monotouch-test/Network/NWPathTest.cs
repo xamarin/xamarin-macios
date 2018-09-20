@@ -42,6 +42,10 @@ namespace MonoTouchFixtures.Network {
 			using (var parameters = NWParameters.CreateUdp ())
 			using (var endpoint = NWEndpoint.Create (host, "80"))
 			{
+				using (var protocolStack = parameters.ProtocolStack) {
+					var ipOptions = protocolStack.InternetProtocol;
+					ipOptions.IPSetVersion (NWIPVersion.Version4);
+				}
 				connection = new NWConnection (endpoint, parameters);
 				connection.SetQueue (DispatchQueue.DefaultGlobalQueue); // important, else we will get blocked
 				connection.SetStateChangeHandler (ConnectionStateHandler);
@@ -122,6 +126,7 @@ namespace MonoTouchFixtures.Network {
 		[Test]
 		public void HasIPV6PropertyTest ()
 		{
+			Assert.Ignore ("We cannot test the use of IPV6 since it is different per machine configuraton and makes the test flaky.");
 			Assert.False (path.HasIPV6, "By default the interface does not support IPV6"); // To be tested as part of NWProtocolStack
 		}
 

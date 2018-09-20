@@ -1,6 +1,0 @@
-!missing-selector! SBObject::elementArrayWithCode: not bound
-!missing-selector! SBObject::initWithElementCode:properties:data: not bound
-!missing-selector! SBObject::propertyWithClass:code: not bound
-!missing-selector! SBObject::propertyWithCode: not bound
-!missing-selector! SBObject::sendEvent:id:parameters: not bound
-!missing-selector! SBObject::setTo: not bound
