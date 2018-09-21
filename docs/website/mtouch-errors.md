@@ -541,6 +541,8 @@ Xamarin.iOS requires the header files, from the SDK version specified in the err
 
 A potential, alternative solution is to enable the managed linker. This will remove unused API including, in most cases, the new API where the header files are missing (or incomplete). However this will not work if your project uses API that was introduced in a newer SDK than the one your Xcode provides.
 
+To enable the managed linker, go to your project's iOS Build Options, and set `Linker Behavior` to either `Link Framework SDKs only` or `Link All`.
+
 A last-straw solution would be to use an older version of Xamarin.iOS, one that supports the SDK your project requires.
 
 <!-- MT0092 used by mlaunch -->
