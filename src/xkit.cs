@@ -432,7 +432,7 @@ namespace UIKit {
 		[Export ("lineFragmentUsedRectForGlyphAtIndex:effectiveRange:")]
 		CGRect GetLineFragmentUsedRect (nuint glyphIndex, /* nullable NSRangePointer */ IntPtr effectiveGlyphRange);
 
-		[Wrap ("GetLineFragmentRect (glyphIndex, IntPtr.Zero)")]
+		[Wrap ("GetLineFragmentUsedRect (glyphIndex, IntPtr.Zero)")]
 		CGRect GetLineFragmentUsedRect (nuint glyphIndex);
 
 		[Sealed]
@@ -450,7 +450,7 @@ namespace UIKit {
 		CGRect GetLineFragmentUsedRect (nuint glyphIndex, /* nullable NSRangePointer */ IntPtr effectiveGlyphRange, bool withoutAdditionalLayout);
 
 		[iOS (9,0)]
-		[Wrap ("GetLineFragmentRect (glyphIndex, IntPtr.Zero)")]
+		[Wrap ("GetLineFragmentUsedRect (glyphIndex, IntPtr.Zero)")]
 		CGRect GetLineFragmentUsedRect (nuint glyphIndex, bool withoutAdditionalLayout);
 
 		[iOS (9,0)]
