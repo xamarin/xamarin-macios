@@ -19,7 +19,7 @@ namespace Xamarin.MacDev.Tasks
 		public string SessionId { get; set; }
 
 		[Required]
-		public string AppBundlePath { get; set; }
+		public string AppBundleDir { get; set; }
 
 		[Required]
 		public string IntermediateOutputPath { get; set; }
@@ -64,7 +64,7 @@ namespace Xamarin.MacDev.Tasks
 		#endregion
 		
 		string AppBundleName {
-			get { return Path.GetFileName (AppBundlePath.TrimEnd ('/')); }
+			get { return Path.GetFileName (AppBundleDir); }
 		}
 
 		static string ToolName {

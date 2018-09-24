@@ -593,7 +593,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<CompileSceneKitAssets
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
-			AppBundlePath="$(_AppBundlePath)"
+			AppBundleDir="$(AppBundleDir)"
 			ToolExe="$(CopySceneKitAssetsExe)"
 			ToolPath="$(CopySceneKitAssetsPath)"
 			SceneKitAssets="@(SceneKitAsset)"
