@@ -589,10 +589,11 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<Target Name="_CompileSceneKitAssets" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_CoreCompileSceneKitAssets" />
 
-	<Target Name="_CoreCompileSceneKitAssets">
+	<Target Name="_CoreCompileSceneKitAssets" DependsOnTargets="_GenerateBundleName">
 		<CompileSceneKitAssets
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
+			AppBundlePath="$(_AppBundlePath)"
 			ToolExe="$(CopySceneKitAssetsExe)"
 			ToolPath="$(CopySceneKitAssetsPath)"
 			SceneKitAssets="@(SceneKitAsset)"
