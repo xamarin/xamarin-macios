@@ -1276,10 +1276,11 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_CoreCompileSceneKitAssets"
 		Inputs="@(SceneKitAsset)"
 		Outputs="$(_SceneKitCache)"
-		DependsOnTargets="_BeforeCoreCompileSceneKitAssets">
+		DependsOnTargets="_BeforeCoreCompileSceneKitAssets;_GenerateBundleName">
 
 		<CompileSceneKitAssets
 			SessionId="$(BuildSessionId)"
+			AppBundleDir="$(AppBundleDir)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			ToolExe="$(CopySceneKitAssetsExe)"
 			ToolPath="$(CopySceneKitAssetsPath)"
