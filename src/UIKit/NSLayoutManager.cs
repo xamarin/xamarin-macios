@@ -149,7 +149,7 @@ namespace UIKit {
 		[Obsolete ("Use 'GetGlyphRange' instead.")]
 		public NSRange GlyphRangeForCharacterRange (NSRange charRange, ref NSRange actualCharRange)
 		{
-			return GetGlyphRange (charRange);
+			return GetGlyphRange (charRange, out actualCharRange);
 		}
 		
 		// CharacterRangeForGlyphRange
