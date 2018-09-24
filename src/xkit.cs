@@ -986,7 +986,10 @@ namespace UIKit {
 		[Export ("showCGGlyphs:positions:count:font:matrix:attributes:inContext:")]
 		void ShowGlyphs (IntPtr glyphs, IntPtr positions, nuint glyphCount, NSFont font, CGAffineTransform textMatrix, NSDictionary attributes, [NullAllowed] CGContext graphicsContext);
 
-		[Protected] // "You should never call this method, but you might override it."
+		// Unfortunately we can't provide a nicer API for this, because it uses C-style arrays.
+		// And providing a nicer overload when it's only purpose is to be overridden is useless.
+		[Advice ("This method should never be called, only overridden.")] // According to Apple's documentation
+		[Protected]
 		[Export ("fillBackgroundRectArray:count:forCharacterRange:color:")]
 		void FillBackground (IntPtr rectArray, nuint rectCount, NSRange characterRange, NSColor color);
 
