@@ -19,7 +19,7 @@ namespace Xamarin.MacDev.Tasks
 		public string SessionId { get; set; }
 
 		[Required]
-		public string AppBundleName { get; set; }
+		public string AppBundlePath { get; set; }
 
 		[Required]
 		public string IntermediateOutputPath { get; set; }
@@ -62,6 +62,10 @@ namespace Xamarin.MacDev.Tasks
 		public ITaskItem[] BundleResources { get; set; }
 
 		#endregion
+		
+		string AppBundleName {
+			get { return Path.GetFileName (AppBundlePath.TrimEnd ('/')); }
+		}
 
 		static string ToolName {
 			get { return "copySceneKitAssets"; }
@@ -125,7 +129,7 @@ namespace Xamarin.MacDev.Tasks
 				args.AddQuotedFormat ("--target-version-{0}={1}", OperatingSystem, SdkVersion);
 			}
 			args.AddQuotedFormat ("--target-build-dir={0}", Path.GetFullPath (intermediate));
-			args.AddQuotedFormat ("--resources-folder-path={0}.app", AppBundleName);
+			args.AddQuotedFormat ("--resources-folder-path={0}", AppBundleName);
 
 			var startInfo = GetProcessStartInfo (environment, GetFullPathToTool (), args.ToString ());
 
@@ -158,7 +162,7 @@ namespace Xamarin.MacDev.Tasks
 		public override bool Execute ()
 		{
 			var prefixes = BundleResource.SplitResourcePrefixes (ResourcePrefix);
-			var intermediate = Path.Combine (IntermediateOutputPath, ToolName, AppBundleName + ".app");
+			var intermediate = Path.Combine (IntermediateOutputPath, ToolName, AppBundleName);
 			var bundleResources = new List<ITaskItem> ();
 			var modified = new HashSet<string> ();
 			var items = new List<ITaskItem> ();
