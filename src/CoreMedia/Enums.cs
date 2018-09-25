@@ -68,14 +68,19 @@ namespace CoreMedia {
 		SampleReferenceByteOffset, 
 		[Field ("kCMSampleBufferAttachmentKey_GradualDecoderRefresh")]
 		GradualDecoderRefresh,
-		[iOS (6,0)][Mac (10,14)]
+		[iOS (6,0)][Mac (10,14, onlyOn64: true)]
 		[Field ("kCMSampleBufferAttachmentKey_DroppedFrameReason")]
 		DroppedFrameReason,
-		[iOS (9,0)][Mac (10,14)]
+		[iOS (9,0)][Mac (10,14, onlyOn64: true)]
 		[Field ("kCMSampleBufferAttachmentKey_StillImageLensStabilizationInfo")]
 		StillImageLensStabilizationInfo,
 		[iOS (11,0), Mac (10,13), TV (11,0)]
 		[Field ("kCMSampleBufferAttachmentKey_CameraIntrinsicMatrix")]
 		CameraIntrinsicMatrix,
+		[Mac (10,14, onlyOn64: true)]
+		[Field ("kCMSampleBufferAttachmentKey_DroppedFrameReasonInfo")]
+		DroppedFrameReasonInfo,
+		[Field ("kCMSampleBufferAttachmentKey_ForceKeyFrame")]
+		ForceKeyFrame,
 	}
 }
