@@ -490,6 +490,9 @@ COREIMAGE_SOURCES = \
 	CoreImage/CISampler.cs \
 	CoreImage/CIVector.cs \
 
+COREIMAGE_API_SOURCES = \
+	CoreMedia/Enums.cs \
+
 # CoreLocation
 
 CORELOCATION_CORE_SOURCES = \
