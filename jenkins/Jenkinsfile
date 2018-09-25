@@ -243,12 +243,12 @@ def uploadFiles (glob, virtualPath)
     ])
 }
 
-def appendUpdateInfo (platform, artifacts)
+def getUpdateInfo (platform)
 {
     try {
         def (productId, versionId) = sh (returnStdout: true, script: "more package/${platform}-updateinfo").trim().split(' ')
-        artifacts += "    \"productId\": \"${productId}\",\n"
-        artifacts += "    \"versionId\": \"${versionId}\",\n"
+        return "    \"productId\": \"${productId}\",\n"
+             + "    \"versionId\": \"${versionId}\",\n"
     } catch (ex) {
         echo "Did not find updateinfo file for xamarin.${platform}"
     }
@@ -480,10 +480,9 @@ timestamps {
                                 artifacts += "    \"url\": \"${packagePrefix}/${file.name}\",\n"
                                 artifacts += "    \"md5\": \"${md5}\",\n"
                                 artifacts += "    \"sha256\": \"${sha256}\",\n"
-                                if (file.name =~ /xamarin.mac.*.pkg$/) {
-                                    appendUpdateInfo('mac', artifacts)
-                                } else if (file.name =~ /xamarin.ios.*.pkg$/) {
-                                    appendUpdateInfo('ios', artifacts)
+                                def match = file.name =~ /xamarin.(mac|ios).*.pkg$/
+                                if (match.matches()) {
+                                    artifacts += getUpdateInfo(match[0][1])
                                 }
                                 artifacts += "    \"size\": ${f_length}\n"
                                 artifacts += "  }"
