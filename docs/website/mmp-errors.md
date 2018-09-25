@@ -223,7 +223,7 @@ In addition 32-bit applications will not run on the version of macOS after High 
 
 For more details: https://developer.apple.com/news/?id=06282017a
 
-Consider updating your application and any dependencies to 64-bit.
+Consider [updating your application and any dependencies](https://docs.microsoft.com/en-us/xamarin/cross-platform/macios/32-and-64/mac-64-bit) to 64-bit.
 
 <a name="MM0135" />
 
