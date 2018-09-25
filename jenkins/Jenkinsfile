@@ -248,7 +248,7 @@ def getUpdateInfo (platform)
     try {
         def (productId, versionId) = sh (returnStdout: true, script: "more package/${platform}-updateinfo").trim().split(' ')
         return "    \"productId\": \"${productId}\",\n"
-             + "    \"versionId\": \"${versionId}\",\n"
+             + "    \"releaseId\": \"${versionId}\",\n"
     } catch (ex) {
         echo "Did not find updateinfo file for xamarin.${platform}"
     }
