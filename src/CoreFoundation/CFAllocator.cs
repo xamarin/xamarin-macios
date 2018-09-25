@@ -37,7 +37,7 @@ namespace CoreFoundation {
 	// CFBase.h
 	public partial class CFAllocator : INativeObject, IDisposable 
 	{
-#if !COREBUILD && !MTOUCH
+#if !COREBUILD
 		static CFAllocator Default_cf;
 		static CFAllocator SystemDefault_cf;
 		static CFAllocator Malloc_cf;
@@ -45,17 +45,6 @@ namespace CoreFoundation {
 		static CFAllocator Null_cf;
 #endif
 		IntPtr handle;
-
-#if MTOUCH
-		internal static IntPtr null_ptr;
-
-		static CFAllocator ()
-		{
-			var handle = Dlfcn.dlopen (Constants.CoreFoundationLibrary, 0);
-			null_ptr = Dlfcn.GetIntPtr (handle, "kCFAllocatorNull");
-			Dlfcn.dlclose (handle);
-		}
-#endif
 
 		public CFAllocator (IntPtr handle)
 		{
@@ -91,7 +80,7 @@ namespace CoreFoundation {
 				handle = IntPtr.Zero;
 			}
 		}
-#if !COREBUILD && !MTOUCH
+#if !COREBUILD
 		public static CFAllocator Default {
 			get {
 				return Default_cf ?? (Default_cf = new CFAllocator (default_ptr)); 

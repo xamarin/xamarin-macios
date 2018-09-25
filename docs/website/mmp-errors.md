@@ -153,6 +153,8 @@ Xamarin.Mac requires the header files, from the SDK version specified in the err
 
 One potential, alternative solution, is to enable the managed linker. This will remove unused API including, in most cases, the new API where the header files are missing (or incomplete). However this will not work if your project uses API that was introduced in a newer SDK than the one your Xcode provides.
 
+To enable the managed linker, go to your project's Mac Build Options, and set `Linker Behavior` to either `Link Framework SDKs only` or `Link All`.
+
 A second potential, alternative solution, is use the dynamic registrar instead. This will impose a startup cost by dynamically registering types but remove the header file requirement. 
 
 A last-straw solution would be to use an older version of Xamarin.Mac, one that supports the SDK your project requires.
