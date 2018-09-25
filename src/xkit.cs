@@ -366,7 +366,9 @@ namespace UIKit {
 		[Wrap ("GetTextContainer (glyphIndex, IntPtr.Zero)")]
 		NSTextContainer GetTextContainer (nuint glyphIndex);
 
+#if XAMCORE_4_0 || MONOMAC
 		[Sealed]
+#endif
 		[Export ("textContainerForGlyphAtIndex:effectiveRange:")]
 		NSTextContainer GetTextContainer (nuint glyphIndex, /* nullable NSRangePointer */ out NSRange effectiveGlyphRange);
 
