@@ -206,8 +206,6 @@ namespace Xamarin.iOS.Tasks
 				}
 			}
 
-			Log.LogWarning($"UseFakeWatchOS4_3Sdk: {UseFakeWatchOS4_3Sdk} Framework: {Framework}");
-
 			SetValueIfNotNull (plist, "DTCompiler", dtCompiler);
 			SetValueIfNotNull (plist, "DTPlatformBuild", dtPlatformBuild);
 			SetValueIfNotNull (plist, "DTSDKBuild", dtSDKBuild);
