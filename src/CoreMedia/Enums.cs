@@ -80,6 +80,7 @@ namespace CoreMedia {
 		[Mac (10,14, onlyOn64: true)]
 		[Field ("kCMSampleBufferAttachmentKey_DroppedFrameReasonInfo")]
 		DroppedFrameReasonInfo,
+		[Mac (10,10)]
 		[Field ("kCMSampleBufferAttachmentKey_ForceKeyFrame")]
 		ForceKeyFrame,
 	}
