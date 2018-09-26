@@ -243,6 +243,17 @@ def uploadFiles (glob, virtualPath)
     ])
 }
 
+def getUpdateInfo (platform)
+{
+    try {
+        def (productId, versionId) = sh (returnStdout: true, script: "more package/${platform}-updateinfo").trim().split(' ')
+        return "    \"productId\": \"${productId}\",\n"
+             + "    \"releaseId\": \"${versionId}\",\n"
+    } catch (ex) {
+        echo "Did not find updateinfo file for xamarin.${platform}"
+    }
+}
+
 // There must be a better way than this hack to show a
 // message in red in the Jenkins Blue Ocean UI...
 def echoError (message)
@@ -469,6 +480,11 @@ timestamps {
                                 artifacts += "    \"url\": \"${packagePrefix}/${file.name}\",\n"
                                 artifacts += "    \"md5\": \"${md5}\",\n"
                                 artifacts += "    \"sha256\": \"${sha256}\",\n"
+                                def match = file.name =~ /xamarin.(mac|ios)-(\d+(\.\d+)+).*.pkg$/
+                                if (match.matches()) {
+                                    artifacts += getUpdateInfo(match[0][1])
+                                    artifacts += "    \"version\": \"${match[0][2]}\",\n"
+                                }
                                 artifacts += "    \"size\": ${f_length}\n"
                                 artifacts += "  }"
                                 if (i < uploadingFiles.length - 1)
