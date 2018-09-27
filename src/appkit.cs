@@ -4120,7 +4120,7 @@ namespace AppKit {
 
 		[Mac (10,14, onlyOn64: true)]
 		[Export ("colorWithSystemEffect:")]
-		NSColor WithSystemEffect (NSColorSystemEffect systemEffect);
+		NSColor FromSystemEffect (NSColorSystemEffect systemEffect);
 
 		[Mac (10, 13)]
 		[Static]
@@ -7925,16 +7925,13 @@ namespace AppKit {
 		[PostSnippet ("__mt_items_var = ItemArray();")]
 		void RemoveAllItems ();
 
-#if XAMCORE_4_0
 		[Export ("itemArray", ArgumentSemantic.Copy)]
-		NSMenuItem[] ItemArray { get; [Mac (10, 14, onlyOn64: true)] set; }
-#else
-		[Export ("itemArray")]
-		NSMenuItem [] ItemArray ();
+		NSMenuItem[] Items { get; [Mac (10, 14, onlyOn64: true)] set; }
 
-		[Mac (10, 14, onlyOn64: true)]
-		[Export ("setItemArray:")]
-		void SetItemArray (NSMenuItem [] items);
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'Items' instead.")]
+		[Wrap ("Items", IsVirtual = true)]
+		NSMenuItem [] ItemArray ();
 #endif
 
 		[Export ("numberOfItems")]
