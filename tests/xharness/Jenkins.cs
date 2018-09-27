@@ -38,6 +38,8 @@ namespace xharness
 		public Log SimulatorLoadLog;
 		public Log DeviceLoadLog;
 
+		public HashSet<string> TestsToSkipOnDevice = new HashSet<string> ();
+
 		public string LogDirectory {
 			get {
 				return Path.Combine (Harness.JENKINS_RESULTS_DIRECTORY, "tests");
@@ -371,6 +373,9 @@ namespace xharness
 			foreach (var project in Harness.IOSTestProjects) {
 				if (!project.IsExecutableProject)
 					continue;
+
+				if (TestsToSkipOnDevice.Contains (project.Name))
+					continue;
 				
 				bool ignored = !IncludeDevice;
 				if (!IsIncluded (project))
@@ -460,6 +465,8 @@ namespace xharness
 			// whatever we did automatically.
 			SelectTestsByLabel (pull_request);
 
+			DisableKnownFailingDeviceTests ();
+
 			if (!Harness.INCLUDE_IOS) {
 				MainLog.WriteLine ("The iOS build is diabled, so any iOS tests will be disabled as well.");
 				IncludeiOS = false;
@@ -479,6 +486,19 @@ namespace xharness
 				MainLog.WriteLine ("The macOS build is disabled, so any macOS tests will be disabled as well.");
 				IncludeMac = false;
 			}
+		}
+
+		void DisableKnownFailingDeviceTests ()
+		{
+			// https://github.com/xamarin/maccore/issues/1008
+			// Also hits https://github.com/xamarin/maccore/issues/1009 which will need seperate exclusion if 1008 is fixed first
+			IncludeiOSExtensions = false;
+
+			// https://github.com/xamarin/maccore/issues/1014
+			TestsToSkipOnDevice.Add ("System");
+
+			// https://github.com/xamarin/maccore/issues/1011
+			TestsToSkipOnDevice.Add ("mini");
 		}
 
 		void SelectTestsByModifiedFiles (int pull_request)
