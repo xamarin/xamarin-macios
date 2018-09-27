@@ -12324,7 +12324,11 @@ namespace Foundation
 	partial interface NSFilePresenter {
 		[Abstract]
 		[Export ("presentedItemURL", ArgumentSemantic.Retain)]
+#if XAMCORE_4_0
+		NSUrl PresentedItemUrl { get; }
+#else
 		NSUrl PresentedItemURL { get; }
+#endif
 
 #if XAMCORE_2_0
 		[Abstract]
