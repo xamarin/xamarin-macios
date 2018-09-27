@@ -2542,7 +2542,7 @@ namespace AppKit {
 		[Mac (10,14)]
 		WindowBackground = 12,
 		[Mac (10,14)]
-		HUDWindow = 13,
+		HudWindow = 13,
 		[Mac (10,14)]
 		FullScreenUI = 15,
 		[Mac (10,14)]
