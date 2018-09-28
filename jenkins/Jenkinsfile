@@ -243,15 +243,22 @@ def uploadFiles (glob, virtualPath)
     ])
 }
 
-def getUpdateInfo (platform)
+@NonCPS
+def getUpdateInfoAndVersion (file)
 {
-    try {
-        def (productId, versionId) = sh (returnStdout: true, script: "more package/${platform}-updateinfo").trim().split(' ')
-        return "    \"productId\": \"${productId}\",\n"
-             + "    \"releaseId\": \"${versionId}\",\n"
-    } catch (ex) {
-        echo "Did not find updateinfo file for xamarin.${platform}"
+    def result = ""
+    def match = file.name =~ /xamarin.(mac|ios)-(\d+(\.\d+)+).*.pkg$/
+    if (match.matches()) {
+        try {
+            def more = sh (returnStdout: true, script: "more package/${match[0][1]}-updateinfo").trim().split(' ')
+            result += "    \"productId\": \"${more[0]}\",\n"
+            result += "    \"releaseId\": \"${more[1]}\",\n"
+        } catch (ex) {
+            echo "Did not find updateinfo file for xamarin.${platform}"
+        }
+        result += "    \"version\": \"${match[0][2]}\",\n"
     }
+    return result
 }
 
 // There must be a better way than this hack to show a
@@ -473,18 +480,14 @@ timestamps {
                                 def file = uploadingFiles [i]
                                 def f_length = file.length;
                                 def md5 = sh (returnStdout: true, script: "md5 -q '${file}'").trim ()
-                                def sha256 = sh (returnStdout: true, script: "shasum -a 256").trim ().split (" ") [0];
+                                def sha256 = sh (returnStdout: true, script: "shasum -a 256 ${file}").trim ().split (" ") [0];
                                 manifest += "${packagePrefix}/${file.name}\n"
                                 artifacts += "  {\n"
                                 artifacts += "    \"file\": \"${file.name}\",\n"
                                 artifacts += "    \"url\": \"${packagePrefix}/${file.name}\",\n"
                                 artifacts += "    \"md5\": \"${md5}\",\n"
                                 artifacts += "    \"sha256\": \"${sha256}\",\n"
-                                def match = file.name =~ /xamarin.(mac|ios)-(\d+(\.\d+)+).*.pkg$/
-                                if (match.matches()) {
-                                    artifacts += getUpdateInfo(match[0][1])
-                                    artifacts += "    \"version\": \"${match[0][2]}\",\n"
-                                }
+                                artifacts += getUpdateInfoAndVersion (file.name)
                                 artifacts += "    \"size\": ${f_length}\n"
                                 artifacts += "  }"
                                 if (i < uploadingFiles.length - 1)
