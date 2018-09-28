@@ -674,5 +674,23 @@ namespace Xamarin.MMP.Tests
 				rv.Messages.AssertWarningCount (0);
 			});
 		}
+
+		[Test]
+		public void BuildingSameSolutionTwice_ShouldNotRunACToolTwice ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					AssetIcons = true
+				};
+
+				string project = TI.GenerateUnifiedExecutableProject (test);
+
+				string buildOutput = TI.BuildProject (project, true, diagnosticMSBuild: true, useMSBuild: true);
+				Assert.True (buildOutput.Contains ("actool execution started with arguments"), $"Initial build should run actool");
+
+				buildOutput = TI.BuildProject (project, true, diagnosticMSBuild: true, useMSBuild: true);
+				Assert.False (buildOutput.Contains ("actool execution started with arguments"), $"Second build should not run actool");
+			});
+		}
 	}
 }
