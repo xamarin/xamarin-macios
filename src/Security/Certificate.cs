@@ -28,7 +28,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if XAMARIN_APPLETLS || __WATCHOS__
+#if XAMARIN_APPLETLS
 #define NATIVE_APPLE_CERTIFICATE
 #endif
 
@@ -193,7 +193,8 @@ namespace Security {
 			if (handle == IntPtr.Zero)
 				throw new ObjectDisposedException ("SecCertificate");
 
-			return new X509Certificate (handle);
+			var impl = new Mono.AppleTls.X509CertificateImplApple (handle, false);
+			return new X509Certificate (impl);
 #else
 			return new X509Certificate (GetRawData ());
 #endif
