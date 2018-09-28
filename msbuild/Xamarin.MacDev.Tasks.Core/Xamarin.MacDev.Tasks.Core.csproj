@@ -55,6 +55,9 @@
     <Compile Include="MsBuildTasks\MoveTaskBase.cs" Condition="'$(OS)' == 'Windows_NT'" />
     <Compile Include="MsBuildTasks\XBuildMoveTaskBase.cs" Condition="'$(OS)' != 'Windows_NT'" />
     <Compile Include="PlatformUtils.cs" />
+    <Compile Include="Tasks\IntentDefinitionCompilerTaskBase.cs" />
+    <Compile Include="Tasks\IntentDefinitionCodegenTaskBase.cs" />
+    <Compile Include="SiriIntentsKeys.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MsBuildTasks\CopyBase.cs" />
