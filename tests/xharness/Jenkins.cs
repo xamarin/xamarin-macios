@@ -23,6 +23,7 @@ namespace xharness
 		public bool IncludeMac32 = true;
 		public bool IncludeiOS = true;
 		public bool IncludeiOSExtensions;
+		public bool ForceExtensionBuildOnly;
 		public bool IncludetvOS = true;
 		public bool IncludewatchOS = true;
 		public bool IncludeMmpTest;
@@ -37,8 +38,6 @@ namespace xharness
 		public Log MainLog;
 		public Log SimulatorLoadLog;
 		public Log DeviceLoadLog;
-
-		public HashSet<string> TestsToSkipOnDevice = new HashSet<string> ();
 
 		public string LogDirectory {
 			get {
@@ -366,6 +365,17 @@ namespace xharness
 			}
 		}
 
+		RunDeviceTask CreateRunTask (XBuildTask build_task, IEnumerable<Device> connected, bool buildOnly, bool ignored)
+		{
+			RunDeviceTask task;
+			if (buildOnly)
+				task = RunDeviceTask.CreateBuildOnly (build_task);
+			else
+				task = new RunDeviceTask (build_task, connected);
+			task.Ignored = ignored;
+			return task;
+		}
+
 		IEnumerable<TestTask> CreateRunDeviceTasks ()
 		{
 			var rv = new List<RunDeviceTask> ();
@@ -374,9 +384,6 @@ namespace xharness
 				if (!project.IsExecutableProject)
 					continue;
 
-				if (TestsToSkipOnDevice.Contains (project.Name))
-					continue;
-				
 				bool ignored = !IncludeDevice;
 				if (!IsIncluded (project))
 					ignored = true;
@@ -390,7 +397,7 @@ namespace xharness
 						TestName = project.Name,
 					};
 					build64.CloneTestProject (project);
-					rv.Add (new RunDeviceTask (build64, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports64Bit)) { Ignored = ignored || !IncludeiOS });
+					rv.Add (CreateRunTask (build64, Devices.Connected64BitIOS, project.BuildOnly, ignored || !IncludeiOS));
 
 					var build32 = new XBuildTask {
 						Jenkins = this,
@@ -400,8 +407,8 @@ namespace xharness
 						TestName = project.Name,
 					};
 					build32.CloneTestProject (project);
-					rv.Add (new RunDeviceTask (build32, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports32Bit)) { Ignored = ignored || !IncludeiOS });
-
+					rv.Add (CreateRunTask (build32, Devices.Connected32BitIOS, project.BuildOnly, ignored || !IncludeiOS));
+					
 					var todayProject = project.AsTodayExtensionProject ();
 					var buildToday = new XBuildTask {
 						Jenkins = this,
@@ -411,7 +418,7 @@ namespace xharness
 						TestName = project.Name,
 					};
 					buildToday.CloneTestProject (todayProject);
-					rv.Add (new RunDeviceTask (buildToday, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports64Bit)) { Ignored = ignored || !IncludeiOSExtensions });
+					rv.Add (CreateRunTask (buildToday, Devices.Connected64BitIOS, project.BuildOnly || ForceExtensionBuildOnly, ignored || !IncludeiOSExtensions));
 				}
 
 				if (!project.SkiptvOSVariation) {
@@ -424,7 +431,7 @@ namespace xharness
 						TestName = project.Name,
 					};
 					buildTV.CloneTestProject (tvOSProject);
-					rv.Add (new RunDeviceTask (buildTV, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.tvOS)) { Ignored = ignored || !IncludetvOS });
+					rv.Add (CreateRunTask (buildTV, Devices.ConnectedTV, project.BuildOnly, ignored || !IncludetvOS));
 				}
 
 				if (!project.SkipwatchOSVariation) {
@@ -437,7 +444,7 @@ namespace xharness
 						TestName = project.Name,
 					};
 					buildWatch.CloneTestProject (watchOSProject);
-					rv.Add (new RunDeviceTask (buildWatch, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.watchOS)) { Ignored = ignored || !IncludewatchOS });
+					rv.Add (CreateRunTask (buildWatch, Devices.ConnectedWatch, project.BuildOnly, ignored || !IncludewatchOS));
 				}
 			}
 
@@ -491,14 +498,15 @@ namespace xharness
 		void DisableKnownFailingDeviceTests ()
 		{
 			// https://github.com/xamarin/maccore/issues/1008
-			// Also hits https://github.com/xamarin/maccore/issues/1009 which will need seperate exclusion if 1008 is fixed first
-			IncludeiOSExtensions = false;
+			ForceExtensionBuildOnly = false;
 
-			// https://github.com/xamarin/maccore/issues/1014
-			TestsToSkipOnDevice.Add ("System");
+			// https://github.com/xamarin/maccore/issues/1009 
+			foreach (var fsharp in Harness.IOSTestProjects.Where (x => x.Name == "fsharp" || x.Name == "fsharplibrary"))
+				fsharp.BuildOnly = true;
 
 			// https://github.com/xamarin/maccore/issues/1011
-			TestsToSkipOnDevice.Add ("mini");
+			foreach (var mono in Harness.IOSTestProjects.Where (x => x.Name == "mini"))
+				mono.BuildOnly = true;
 		}
 
 		void SelectTestsByModifiedFiles (int pull_request)
@@ -3103,10 +3111,12 @@ function toggleAll (show)
 	abstract class RunTestTask : TestTask
 	{
 		public readonly BuildToolTask BuildTask;
+		public bool BuildOnly;
 
-		public RunTestTask (BuildToolTask build_task)
+		public RunTestTask (BuildToolTask build_task, bool buildOnly = false)
 		{
-			this.BuildTask = build_task;
+			BuildTask = build_task;
+			BuildOnly = buildOnly;
 
 			Jenkins = build_task.Jenkins;
 			TestProject = build_task.TestProject;
@@ -3160,6 +3170,9 @@ function toggleAll (show)
 
 		protected override async Task ExecuteAsync ()
 		{
+			if (BuildOnly)
+				return;
+
 			if (Finished)
 				return;
 
@@ -3217,6 +3230,12 @@ function toggleAll (show)
 			: base (build_task)
 		{
 			this.candidates = candidates;
+		}
+
+		protected RunXITask (BuildToolTask build_task)
+			: base (build_task, buildOnly: true)
+		{
+			this.candidates = Enumerable.Empty<TDevice> ();
 		}
 
 		public override IEnumerable<Log> AggregatedLogs {
@@ -3306,22 +3325,34 @@ function toggleAll (show)
 		public RunDeviceTask (XBuildTask build_task, IEnumerable<Device> candidates)
 			: base (build_task, candidates.OrderBy ((v) => v.DebugSpeed))
 		{
+			AppRunnerTarget = GetBuildTaskPlatform (build_task);
+		}
+
+		public static RunDeviceTask CreateBuildOnly (XBuildTask build_task)
+		{
+			return new RunDeviceTask (build_task);
+		}
+
+		RunDeviceTask (XBuildTask build_task)
+			: base (build_task)
+		{
+			AppRunnerTarget = GetBuildTaskPlatform (build_task);
+		}
+
+		private AppRunnerTarget GetBuildTaskPlatform (XBuildTask build_task)
+		{
 			switch (build_task.Platform) {
 			case TestPlatform.iOS:
 			case TestPlatform.iOS_Unified:
 			case TestPlatform.iOS_Unified32:
 			case TestPlatform.iOS_Unified64:
-				AppRunnerTarget = AppRunnerTarget.Device_iOS;
-				break;
+				return AppRunnerTarget.Device_iOS;
 			case TestPlatform.iOS_TodayExtension64:
-				AppRunnerTarget = AppRunnerTarget.Device_iOS;
-				break;
+				return AppRunnerTarget.Device_iOS;
 			case TestPlatform.tvOS:
-				AppRunnerTarget = AppRunnerTarget.Device_tvOS;
-				break;
+				return AppRunnerTarget.Device_tvOS;
 			case TestPlatform.watchOS:
-				AppRunnerTarget = AppRunnerTarget.Device_watchOS;
-				break;
+				return AppRunnerTarget.Device_watchOS;
 			default:
 				throw new NotImplementedException ();
 			}

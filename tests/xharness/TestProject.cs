@@ -145,6 +145,7 @@ namespace xharness
 		public bool SkipiOSVariation;
 		public bool SkipwatchOSVariation;
 		public bool SkiptvOSVariation;
+		public bool BuildOnly;
 
 		// Optional
 		public BCLTestInfo BCLInfo { get; set; }
