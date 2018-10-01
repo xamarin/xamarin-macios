@@ -247,7 +247,7 @@ def uploadFiles (glob, virtualPath)
 def getUpdateInfoAndVersion (file)
 {
     def result = ""
-    def match = file.name =~ /xamarin.(mac|ios)-(\d+(\.\d+)+).*.pkg$/
+    def match = file =~ /xamarin.(mac|ios)-(\d+(\.\d+)+).*.pkg$/
     if (match.matches()) {
         try {
             def more = sh (returnStdout: true, script: "more package/${match[0][1]}-updateinfo").trim().split(' ')
