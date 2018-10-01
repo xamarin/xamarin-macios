@@ -369,7 +369,7 @@ namespace xharness
 		{
 			RunDeviceTask task;
 			if (buildOnly)
-				task = RunDeviceTask.CreateBuildOnly (build_task);
+				task = new RunDeviceTask (build_task, Enumerable.Empty<Device> ()) { BuildOnly = true };
 			else
 				task = new RunDeviceTask (build_task, connected);
 			task.Ignored = ignored;
@@ -383,7 +383,7 @@ namespace xharness
 			foreach (var project in Harness.IOSTestProjects) {
 				if (!project.IsExecutableProject)
 					continue;
-
+				
 				bool ignored = !IncludeDevice;
 				if (!IsIncluded (project))
 					ignored = true;
@@ -408,7 +408,7 @@ namespace xharness
 					};
 					build32.CloneTestProject (project);
 					rv.Add (CreateRunTask (build32, Devices.Connected32BitIOS, project.BuildOnly, ignored || !IncludeiOS));
-					
+
 					var todayProject = project.AsTodayExtensionProject ();
 					var buildToday = new XBuildTask {
 						Jenkins = this,
@@ -3232,12 +3232,6 @@ function toggleAll (show)
 			this.candidates = candidates;
 		}
 
-		protected RunXITask (BuildToolTask build_task)
-			: base (build_task, buildOnly: true)
-		{
-			this.candidates = Enumerable.Empty<TDevice> ();
-		}
-
 		public override IEnumerable<Log> AggregatedLogs {
 			get {
 				var rv = base.AggregatedLogs;
@@ -3328,18 +3322,7 @@ function toggleAll (show)
 			AppRunnerTarget = GetBuildTaskPlatform (build_task);
 		}
 
-		public static RunDeviceTask CreateBuildOnly (XBuildTask build_task)
-		{
-			return new RunDeviceTask (build_task);
-		}
-
-		RunDeviceTask (XBuildTask build_task)
-			: base (build_task)
-		{
-			AppRunnerTarget = GetBuildTaskPlatform (build_task);
-		}
-
-		private AppRunnerTarget GetBuildTaskPlatform (XBuildTask build_task)
+		AppRunnerTarget GetBuildTaskPlatform (XBuildTask build_task)
 		{
 			switch (build_task.Platform) {
 			case TestPlatform.iOS:
