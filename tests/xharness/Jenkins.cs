@@ -498,7 +498,7 @@ namespace xharness
 		void DisableKnownFailingDeviceTests ()
 		{
 			// https://github.com/xamarin/maccore/issues/1008
-			ForceExtensionBuildOnly = false;
+			ForceExtensionBuildOnly = true;
 
 			// https://github.com/xamarin/maccore/issues/1009 
 			foreach (var fsharp in Harness.IOSTestProjects.Where (x => x.Name == "fsharp" || x.Name == "fsharplibrary"))
