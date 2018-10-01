@@ -1,23 +1,22 @@
 // Copyright 2015 Xamarin, Inc.
+#if !WATCH
+
+#if !MONOMAC
+using NSFont=UIKit.UIFont;
+#endif
+
 using System;
 using ObjCRuntime;
 using Foundation;
 using CoreGraphics;
 
+#if MONOMAC
 namespace AppKit {
-	partial class NSLayoutManager {
-#if !XAMCORE_2_0
-		public uint GlyphAtIndex (nint glyphIndex, ref bool isValidIndex)
-		{
-			return GlyphAtIndexisValidIndex ((nuint) glyphIndex, ref isValidIndex);
-		}
-
-		public uint GlyphAtIndex (nint glyphIndex)
-		{
-			return GlyphCount (glyphIndex);
-		}
+#else
+namespace UIKit {
 #endif
-
+	partial class NSLayoutManager {
+#if !XAMCORE_4_0 && MONOMAC
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		public CGRect [] GetRectArray (NSRange glyphRange, NSRange selectedGlyphRange, NSTextContainer textContainer)
 		{
@@ -37,8 +36,9 @@ namespace AppKit {
 			}
 			return returnArray;
 		}
+#endif // MONOMAC
 
-#if !XAMCORE_4_0
+#if !XAMCORE_4_0 && MONOMAC
 		[Obsolete ("Use 'GetIntAttribute' instead.")]
 		public virtual nint IntAttributeforGlyphAtIndex (nint attributeTag, nint glyphIndex)
 		{
@@ -47,3 +47,5 @@ namespace AppKit {
 #endif
 	}
 }
+
+#endif // !WATCH
