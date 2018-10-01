@@ -3113,10 +3113,9 @@ function toggleAll (show)
 		public readonly BuildToolTask BuildTask;
 		public bool BuildOnly;
 
-		public RunTestTask (BuildToolTask build_task, bool buildOnly = false)
+		public RunTestTask (BuildToolTask build_task)
 		{
 			BuildTask = build_task;
-			BuildOnly = buildOnly;
 
 			Jenkins = build_task.Jenkins;
 			TestProject = build_task.TestProject;
