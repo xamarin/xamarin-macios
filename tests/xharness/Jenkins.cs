@@ -365,17 +365,6 @@ namespace xharness
 			}
 		}
 
-		RunDeviceTask CreateRunTask (XBuildTask build_task, IEnumerable<Device> connected, bool buildOnly, bool ignored)
-		{
-			RunDeviceTask task;
-			if (buildOnly)
-				task = new RunDeviceTask (build_task, connected) { BuildOnly = true };
-			else
-				task = new RunDeviceTask (build_task, connected);
-			task.Ignored = ignored;
-			return task;
-		}
-
 		IEnumerable<TestTask> CreateRunDeviceTasks ()
 		{
 			var rv = new List<RunDeviceTask> ();
