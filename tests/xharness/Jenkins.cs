@@ -369,7 +369,7 @@ namespace xharness
 		{
 			RunDeviceTask task;
 			if (buildOnly)
-				task = new RunDeviceTask (build_task, Enumerable.Empty<Device> ()) { BuildOnly = true };
+				task = new RunDeviceTask (build_task, connected) { BuildOnly = true };
 			else
 				task = new RunDeviceTask (build_task, connected);
 			task.Ignored = ignored;
@@ -397,7 +397,7 @@ namespace xharness
 						TestName = project.Name,
 					};
 					build64.CloneTestProject (project);
-					rv.Add (CreateRunTask (build64, Devices.Connected64BitIOS, project.BuildOnly, ignored || !IncludeiOS));
+					rv.Add (new RunDeviceTask (build64, Devices.Connected64BitIOS) { Ignored = ignored || !IncludeiOS, BuildOnly = project.BuildOnly });
 
 					var build32 = new XBuildTask {
 						Jenkins = this,
@@ -407,7 +407,7 @@ namespace xharness
 						TestName = project.Name,
 					};
 					build32.CloneTestProject (project);
-					rv.Add (CreateRunTask (build32, Devices.Connected32BitIOS, project.BuildOnly, ignored || !IncludeiOS));
+					rv.Add (new RunDeviceTask (build32, Devices.Connected32BitIOS) { Ignored = ignored || !IncludeiOS, BuildOnly = project.BuildOnly });
 
 					var todayProject = project.AsTodayExtensionProject ();
 					var buildToday = new XBuildTask {
@@ -418,7 +418,7 @@ namespace xharness
 						TestName = project.Name,
 					};
 					buildToday.CloneTestProject (todayProject);
-					rv.Add (CreateRunTask (buildToday, Devices.Connected64BitIOS, project.BuildOnly || ForceExtensionBuildOnly, ignored || !IncludeiOSExtensions));
+					rv.Add (new RunDeviceTask (buildToday, Devices.Connected64BitIOS) { Ignored = ignored || !IncludeiOSExtensions, BuildOnly = project.BuildOnly || ForceExtensionBuildOnly });
 				}
 
 				if (!project.SkiptvOSVariation) {
@@ -431,7 +431,7 @@ namespace xharness
 						TestName = project.Name,
 					};
 					buildTV.CloneTestProject (tvOSProject);
-					rv.Add (CreateRunTask (buildTV, Devices.ConnectedTV, project.BuildOnly, ignored || !IncludetvOS));
+					rv.Add (new RunDeviceTask (buildTV, Devices.ConnectedTV) { Ignored = ignored || !IncludetvOS, BuildOnly = project.BuildOnly });
 				}
 
 				if (!project.SkipwatchOSVariation) {
@@ -444,7 +444,7 @@ namespace xharness
 						TestName = project.Name,
 					};
 					buildWatch.CloneTestProject (watchOSProject);
-					rv.Add (CreateRunTask (buildWatch, Devices.ConnectedWatch, project.BuildOnly, ignored || !IncludewatchOS));
+					rv.Add (new RunDeviceTask (buildWatch, Devices.ConnectedWatch) { Ignored = ignored || !IncludewatchOS, BuildOnly = project.BuildOnly });
 				}
 			}
 
@@ -3169,9 +3169,6 @@ function toggleAll (show)
 
 		protected override async Task ExecuteAsync ()
 		{
-			if (BuildOnly)
-				return;
-
 			if (Finished)
 				return;
 
@@ -3181,6 +3178,11 @@ function toggleAll (show)
 
 			if (!await BuildAsync ())
 				return;
+
+			if (BuildOnly) {
+				ExecutionResult = TestExecutingResult.Succeeded;
+				return;
+			}
 
 			ExecutionResult = TestExecutingResult.Running;
 			duration.Restart (); // don't count the build time.
