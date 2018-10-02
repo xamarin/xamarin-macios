@@ -246,17 +246,11 @@ def uploadFiles (glob, virtualPath)
 @NonCPS
 def getUpdateInfoAndVersion (file)
 {
-    def result = ""
+    def result = [:]
     def match = file =~ /xamarin.(mac|ios)-(\d+(\.\d+)+).*.pkg$/
     if (match.matches()) {
-        try {
-            def more = sh (returnStdout: true, script: "more package/${match[0][1]}-updateinfo").trim().split(' ')
-            result += "    \"productId\": \"${more[0]}\",\n"
-            result += "    \"releaseId\": \"${more[1]}\",\n"
-        } catch (ex) {
-            echo "Did not find updateinfo file for xamarin.${platform}"
-        }
-        result += "    \"version\": \"${match[0][2]}\",\n"
+        result['platform'] = match[0][1]
+        result['version'] = match[0][2]
     }
     return result
 }
@@ -487,7 +481,22 @@ timestamps {
                                 artifacts += "    \"url\": \"${packagePrefix}/${file.name}\",\n"
                                 artifacts += "    \"md5\": \"${md5}\",\n"
                                 artifacts += "    \"sha256\": \"${sha256}\",\n"
-                                artifacts += getUpdateInfoAndVersion (file.name)
+                                def map = getUpdateInfoAndVersion (file.name)
+                                def platform = map['platform']
+                                if (platform) {
+                                    try {
+                                        def updateInfo = readFile "package/${platform}-updateinfo"
+                                        def parts = updateInfo.trim ().split (" ")
+                                        artifacts += "    \"productId\": \"${parts[0]}\",\n"
+                                        artifacts += "    \"releaseId\": \"${parts[1]}\",\n"
+                                    } catch (ex) {
+                                        echo "Did not find updateinfo file for xamarin.${platform}"
+                                    }
+                                }
+                                def version = map['version']
+                                if (version) {
+                                    artifacts += "    \"version\": \"${version}\",\n"
+                                }
                                 artifacts += "    \"size\": ${f_length}\n"
                                 artifacts += "  }"
                                 if (i < uploadingFiles.length - 1)
