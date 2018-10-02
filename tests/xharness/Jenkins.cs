@@ -3100,7 +3100,7 @@ function toggleAll (show)
 
 		public RunTestTask (BuildToolTask build_task)
 		{
-			BuildTask = build_task;
+			this.BuildTask = build_task;
 
 			Jenkins = build_task.Jenkins;
 			TestProject = build_task.TestProject;
@@ -3305,23 +3305,22 @@ function toggleAll (show)
 		public RunDeviceTask (XBuildTask build_task, IEnumerable<Device> candidates)
 			: base (build_task, candidates.OrderBy ((v) => v.DebugSpeed))
 		{
-			AppRunnerTarget = GetBuildTaskPlatform (build_task);
-		}
-
-		AppRunnerTarget GetBuildTaskPlatform (XBuildTask build_task)
-		{
 			switch (build_task.Platform) {
 			case TestPlatform.iOS:
 			case TestPlatform.iOS_Unified:
 			case TestPlatform.iOS_Unified32:
 			case TestPlatform.iOS_Unified64:
-				return AppRunnerTarget.Device_iOS;
+				AppRunnerTarget = AppRunnerTarget.Device_iOS;
+				break;
 			case TestPlatform.iOS_TodayExtension64:
-				return AppRunnerTarget.Device_iOS;
+				AppRunnerTarget = AppRunnerTarget.Device_iOS;
+				break;
 			case TestPlatform.tvOS:
-				return AppRunnerTarget.Device_tvOS;
+				AppRunnerTarget = AppRunnerTarget.Device_tvOS;
+				break;
 			case TestPlatform.watchOS:
-				return AppRunnerTarget.Device_watchOS;
+				AppRunnerTarget = AppRunnerTarget.Device_watchOS;
+				break;
 			default:
 				throw new NotImplementedException ();
 			}
