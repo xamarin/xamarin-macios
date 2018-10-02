@@ -500,10 +500,6 @@ namespace xharness
 			// https://github.com/xamarin/maccore/issues/1008
 			ForceExtensionBuildOnly = true;
 
-			// https://github.com/xamarin/maccore/issues/1009 
-			foreach (var fsharp in Harness.IOSTestProjects.Where (x => x.Name == "fsharp" || x.Name == "fsharplibrary"))
-				fsharp.BuildOnly = true;
-
 			// https://github.com/xamarin/maccore/issues/1011
 			foreach (var mono in Harness.IOSTestProjects.Where (x => x.Name == "mini"))
 				mono.BuildOnly = true;
