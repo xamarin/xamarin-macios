@@ -63,14 +63,14 @@ namespace Xamarin.Linker.Steps
 					continue;
 
 				if (ca.ConstructorArguments.Count != 1) {
-					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.Target.App, 4124, provider, "Invalid BindAsAttribute found on '{0}': should have 1 constructor arguments, found {1}. Please file a bug report at https://bugzilla.xamarin.com", provider.AsString (), ca.ConstructorArguments.Count));
+					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.Target.App, 4124, provider, "Invalid BindAsAttribute found on '{0}': should have 1 constructor arguments, found {1}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", provider.AsString (), ca.ConstructorArguments.Count));
 					continue;
 				}
 
 				var managedType = ca.ConstructorArguments [0].Value as TypeReference;
 				var managedEnumType = managedType?.GetElementType ().Resolve ();
 				if (managedEnumType == null) {
-					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.Target.App, 4124, provider, "Invalid BindAsAttribute found on '{0}': could not find the underlying enum type of {1}. Please file a bug report at https://bugzilla.xamarin.com", provider.AsString (), managedType?.FullName));
+					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.Target.App, 4124, provider, "Invalid BindAsAttribute found on '{0}': could not find the underlying enum type of {1}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", provider.AsString (), managedType?.FullName));
 					continue;
 				}
 

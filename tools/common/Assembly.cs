@@ -351,7 +351,7 @@ namespace Xamarin.Bundler {
 			case ApplePlatform.WatchOS:
 				return "-lcompression";
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at http://bugzilla.xamarin.com with a test case.", App.Platform, App.SdkVersion);
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", App.Platform, App.SdkVersion);
 			}
 		}
 
