@@ -123,39 +123,32 @@ namespace AddressBook {
 
 		internal static void Init ()
 		{
-			var handle = Dlfcn.dlopen (Constants.AddressBookLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-				Address             = Dlfcn.GetInt32 (handle, "kABPersonAddressProperty");
-				Birthday            = Dlfcn.GetInt32 (handle, "kABPersonBirthdayProperty");
-				CreationDate        = Dlfcn.GetInt32 (handle, "kABPersonCreationDateProperty");
-				Date                = Dlfcn.GetInt32 (handle, "kABPersonDateProperty");
-				Department          = Dlfcn.GetInt32 (handle, "kABPersonDepartmentProperty");
-				Email               = Dlfcn.GetInt32 (handle, "kABPersonEmailProperty");
-				FirstName           = Dlfcn.GetInt32 (handle, "kABPersonFirstNameProperty");
-				FirstNamePhonetic   = Dlfcn.GetInt32 (handle, "kABPersonFirstNamePhoneticProperty");
-				InstantMessage      = Dlfcn.GetInt32 (handle, "kABPersonInstantMessageProperty");
-				JobTitle            = Dlfcn.GetInt32 (handle, "kABPersonJobTitleProperty");
-				Kind                = Dlfcn.GetInt32 (handle, "kABPersonKindProperty");
-				LastName            = Dlfcn.GetInt32 (handle, "kABPersonLastNameProperty");
-				LastNamePhonetic    = Dlfcn.GetInt32 (handle, "kABPersonLastNamePhoneticProperty");
-				MiddleName          = Dlfcn.GetInt32 (handle, "kABPersonMiddleNameProperty");
-				MiddleNamePhonetic  = Dlfcn.GetInt32 (handle, "kABPersonMiddleNamePhoneticProperty");
-				ModificationDate    = Dlfcn.GetInt32 (handle, "kABPersonModificationDateProperty");
-				Nickname            = Dlfcn.GetInt32 (handle, "kABPersonNicknameProperty");
-				Note                = Dlfcn.GetInt32 (handle, "kABPersonNoteProperty");
-				Organization        = Dlfcn.GetInt32 (handle, "kABPersonOrganizationProperty");
-				Phone               = Dlfcn.GetInt32 (handle, "kABPersonPhoneProperty");
-				Prefix              = Dlfcn.GetInt32 (handle, "kABPersonPrefixProperty");
-				RelatedNames        = Dlfcn.GetInt32 (handle, "kABPersonRelatedNamesProperty");
-				Suffix              = Dlfcn.GetInt32 (handle, "kABPersonSuffixProperty");
-				Url                 = Dlfcn.GetInt32 (handle, "kABPersonURLProperty");
-				SocialProfile       = Dlfcn.GetInt32 (handle, "kABPersonSocialProfileProperty");
-			}
-			finally {
-				Dlfcn.dlclose (handle);
-			}
+			var handle = Libraries.AddressBook.Handle;
+			Address             = Dlfcn.GetInt32 (handle, "kABPersonAddressProperty");
+			Birthday            = Dlfcn.GetInt32 (handle, "kABPersonBirthdayProperty");
+			CreationDate        = Dlfcn.GetInt32 (handle, "kABPersonCreationDateProperty");
+			Date                = Dlfcn.GetInt32 (handle, "kABPersonDateProperty");
+			Department          = Dlfcn.GetInt32 (handle, "kABPersonDepartmentProperty");
+			Email               = Dlfcn.GetInt32 (handle, "kABPersonEmailProperty");
+			FirstName           = Dlfcn.GetInt32 (handle, "kABPersonFirstNameProperty");
+			FirstNamePhonetic   = Dlfcn.GetInt32 (handle, "kABPersonFirstNamePhoneticProperty");
+			InstantMessage      = Dlfcn.GetInt32 (handle, "kABPersonInstantMessageProperty");
+			JobTitle            = Dlfcn.GetInt32 (handle, "kABPersonJobTitleProperty");
+			Kind                = Dlfcn.GetInt32 (handle, "kABPersonKindProperty");
+			LastName            = Dlfcn.GetInt32 (handle, "kABPersonLastNameProperty");
+			LastNamePhonetic    = Dlfcn.GetInt32 (handle, "kABPersonLastNamePhoneticProperty");
+			MiddleName          = Dlfcn.GetInt32 (handle, "kABPersonMiddleNameProperty");
+			MiddleNamePhonetic  = Dlfcn.GetInt32 (handle, "kABPersonMiddleNamePhoneticProperty");
+			ModificationDate    = Dlfcn.GetInt32 (handle, "kABPersonModificationDateProperty");
+			Nickname            = Dlfcn.GetInt32 (handle, "kABPersonNicknameProperty");
+			Note                = Dlfcn.GetInt32 (handle, "kABPersonNoteProperty");
+			Organization        = Dlfcn.GetInt32 (handle, "kABPersonOrganizationProperty");
+			Phone               = Dlfcn.GetInt32 (handle, "kABPersonPhoneProperty");
+			Prefix              = Dlfcn.GetInt32 (handle, "kABPersonPrefixProperty");
+			RelatedNames        = Dlfcn.GetInt32 (handle, "kABPersonRelatedNamesProperty");
+			Suffix              = Dlfcn.GetInt32 (handle, "kABPersonSuffixProperty");
+			Url                 = Dlfcn.GetInt32 (handle, "kABPersonURLProperty");
+			SocialProfile       = Dlfcn.GetInt32 (handle, "kABPersonSocialProfileProperty");
 		}
 
 		public static int ToId (ABPersonProperty property)
@@ -239,20 +232,13 @@ namespace AddressBook {
 
 		internal static void Init ()
 		{
-			var handle = Dlfcn.dlopen (Constants.AddressBookLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-				City        = Dlfcn.GetStringConstant (handle, "kABPersonAddressCityKey");
-				Country     = Dlfcn.GetStringConstant (handle, "kABPersonAddressCountryKey");
-				CountryCode = Dlfcn.GetStringConstant (handle, "kABPersonAddressCountryCodeKey");
-				State       = Dlfcn.GetStringConstant (handle, "kABPersonAddressStateKey");
-				Street      = Dlfcn.GetStringConstant (handle, "kABPersonAddressStreetKey");
-				Zip         = Dlfcn.GetStringConstant (handle, "kABPersonAddressZIPKey");
-			}
-			finally {
-				Dlfcn.dlclose (handle);
-			}
+			var handle = Libraries.AddressBook.Handle;
+			City        = Dlfcn.GetStringConstant (handle, "kABPersonAddressCityKey");
+			Country     = Dlfcn.GetStringConstant (handle, "kABPersonAddressCountryKey");
+			CountryCode = Dlfcn.GetStringConstant (handle, "kABPersonAddressCountryCodeKey");
+			State       = Dlfcn.GetStringConstant (handle, "kABPersonAddressStateKey");
+			Street      = Dlfcn.GetStringConstant (handle, "kABPersonAddressStreetKey");
+			Zip         = Dlfcn.GetStringConstant (handle, "kABPersonAddressZIPKey");
 		}
 	}
 
@@ -267,15 +253,7 @@ namespace AddressBook {
 
 		internal static void Init ()
 		{
-			var handle = Dlfcn.dlopen (Constants.AddressBookLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-				Anniversary = Dlfcn.GetStringConstant (handle, "kABPersonAnniversaryLabel");
-			}
-			finally {
-				Dlfcn.dlclose (handle);
-			}
+			Anniversary = Dlfcn.GetStringConstant (Libraries.AddressBook.Handle, "kABPersonAnniversaryLabel");
 		}
 	}
 
@@ -298,16 +276,9 @@ namespace AddressBook {
 
 		internal static void Init ()
 		{
-			var handle = Dlfcn.dlopen (Constants.AddressBookLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-				Organization  = Dlfcn.GetNSNumber (handle, "kABPersonKindOrganization");
-				Person        = Dlfcn.GetNSNumber (handle, "kABPersonKindPerson");
-			}
-			finally {
-				Dlfcn.dlclose (handle);
-			}
+			var handle = Libraries.AddressBook.Handle;
+			Organization  = Dlfcn.GetNSNumber (handle, "kABPersonKindOrganization");
+			Person        = Dlfcn.GetNSNumber (handle, "kABPersonKindPerson");
 		}
 
 		public static ABPersonKind ToPersonKind (NSNumber value)
@@ -338,17 +309,11 @@ namespace AddressBook {
 
 		static ABPersonSocialProfile ()
 		{
-			var handle = Dlfcn.dlopen (Constants.AddressBookLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-				URLKey = Dlfcn.GetStringConstant (handle, "kABPersonSocialProfileURLKey");
-				ServiceKey = Dlfcn.GetStringConstant (handle, "kABPersonSocialProfileServiceKey");
-				UsernameKey = Dlfcn.GetStringConstant (handle, "kABPersonSocialProfileUsernameKey");
-				UserIdentifierKey = Dlfcn.GetStringConstant (handle, "kABPersonSocialProfileUserIdentifierKey");
-			} finally {
-				Dlfcn.dlclose (handle);
-			}
+			var handle = Libraries.AddressBook.Handle;
+			URLKey = Dlfcn.GetStringConstant (handle, "kABPersonSocialProfileURLKey");
+			ServiceKey = Dlfcn.GetStringConstant (handle, "kABPersonSocialProfileServiceKey");
+			UsernameKey = Dlfcn.GetStringConstant (handle, "kABPersonSocialProfileUsernameKey");
+			UserIdentifierKey = Dlfcn.GetStringConstant (handle, "kABPersonSocialProfileUserIdentifierKey");
 		}
 	}
 
@@ -366,20 +331,14 @@ namespace AddressBook {
 
 		static ABPersonSocialProfileService ()
 		{
-			var handle = Dlfcn.dlopen (Constants.AddressBookLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-				Twitter = Dlfcn.GetStringConstant (handle, "kABPersonSocialProfileServiceTwitter");
-				GameCenter = Dlfcn.GetStringConstant (handle, "kABPersonSocialProfileServiceGameCenter");
-				Facebook = Dlfcn.GetStringConstant (handle, "kABPersonSocialProfileServiceFacebook");
-				Myspace = Dlfcn.GetStringConstant (handle, "kABPersonSocialProfileServiceMyspace");
-				LinkedIn = Dlfcn.GetStringConstant (handle, "kABPersonSocialProfileServiceLinkedIn");
-				Flickr = Dlfcn.GetStringConstant (handle, "kABPersonSocialProfileServiceFlickr");
-				SinaWeibo = Dlfcn.GetStringConstant (handle, "kABPersonSocialProfileServiceSinaWeibo");
-			} finally {
-				Dlfcn.dlclose (handle);
-			}
+			var handle = Libraries.AddressBook.Handle;
+			Twitter = Dlfcn.GetStringConstant (handle, "kABPersonSocialProfileServiceTwitter");
+			GameCenter = Dlfcn.GetStringConstant (handle, "kABPersonSocialProfileServiceGameCenter");
+			Facebook = Dlfcn.GetStringConstant (handle, "kABPersonSocialProfileServiceFacebook");
+			Myspace = Dlfcn.GetStringConstant (handle, "kABPersonSocialProfileServiceMyspace");
+			LinkedIn = Dlfcn.GetStringConstant (handle, "kABPersonSocialProfileServiceLinkedIn");
+			Flickr = Dlfcn.GetStringConstant (handle, "kABPersonSocialProfileServiceFlickr");
+			SinaWeibo = Dlfcn.GetStringConstant (handle, "kABPersonSocialProfileServiceSinaWeibo");
 		}		
 	}
 	
@@ -400,23 +359,16 @@ namespace AddressBook {
 
 		internal static void Init ()
 		{
-			var handle = Dlfcn.dlopen (Constants.AddressBookLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-				HomeFax = Dlfcn.GetStringConstant (handle, "kABPersonPhoneHomeFAXLabel");
-				iPhone  = Dlfcn.GetStringConstant (handle, "kABPersonPhoneIPhoneLabel");
-				Main    = Dlfcn.GetStringConstant (handle, "kABPersonPhoneMainLabel");
-				Mobile  = Dlfcn.GetStringConstant (handle, "kABPersonPhoneMobileLabel");
-				Pager   = Dlfcn.GetStringConstant (handle, "kABPersonPhonePagerLabel");
-				WorkFax = Dlfcn.GetStringConstant (handle, "kABPersonPhoneWorkFAXLabel");
+			var handle = Libraries.AddressBook.Handle;
+			HomeFax = Dlfcn.GetStringConstant (handle, "kABPersonPhoneHomeFAXLabel");
+			iPhone  = Dlfcn.GetStringConstant (handle, "kABPersonPhoneIPhoneLabel");
+			Main    = Dlfcn.GetStringConstant (handle, "kABPersonPhoneMainLabel");
+			Mobile  = Dlfcn.GetStringConstant (handle, "kABPersonPhoneMobileLabel");
+			Pager   = Dlfcn.GetStringConstant (handle, "kABPersonPhonePagerLabel");
+			WorkFax = Dlfcn.GetStringConstant (handle, "kABPersonPhoneWorkFAXLabel");
 
-				// Since 5.0
-				OtherFax = Dlfcn.GetStringConstant (handle, "kABPersonPhoneOtherFAXLabel");
-			}
-			finally {
-				Dlfcn.dlclose (handle);
-			}
+			// Since 5.0
+			OtherFax = Dlfcn.GetStringConstant (handle, "kABPersonPhoneOtherFAXLabel");
 		}
 	}
 
@@ -441,24 +393,17 @@ namespace AddressBook {
 
 		internal static void Init ()
 		{
-			var handle = Dlfcn.dlopen (Constants.AddressBookLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-				Aim     = Dlfcn.GetStringConstant (handle, "kABPersonInstantMessageServiceAIM");
-				Icq     = Dlfcn.GetStringConstant (handle, "kABPersonInstantMessageServiceICQ");
-				Jabber  = Dlfcn.GetStringConstant (handle, "kABPersonInstantMessageServiceJabber");
-				Msn     = Dlfcn.GetStringConstant (handle, "kABPersonInstantMessageServiceMSN");
-				Yahoo   = Dlfcn.GetStringConstant (handle, "kABPersonInstantMessageServiceYahoo");
-				QQ      = Dlfcn.GetStringConstant (handle, "kABPersonInstantMessageServiceQQ");
-				GoogleTalk = Dlfcn.GetStringConstant (handle, "kABPersonInstantMessageServiceGoogleTalk");
-				Skype   = Dlfcn.GetStringConstant (handle, "kABPersonInstantMessageServiceSkype");
-				Facebook   = Dlfcn.GetStringConstant (handle, "kABPersonInstantMessageServiceFacebook");
-				GaduGadu   = Dlfcn.GetStringConstant (handle, "kABPersonInstantMessageServiceGaduGadu");
-			}
-			finally {
-				Dlfcn.dlclose (handle);
-			}
+			var handle = Libraries.AddressBook.Handle;
+			Aim     = Dlfcn.GetStringConstant (handle, "kABPersonInstantMessageServiceAIM");
+			Icq     = Dlfcn.GetStringConstant (handle, "kABPersonInstantMessageServiceICQ");
+			Jabber  = Dlfcn.GetStringConstant (handle, "kABPersonInstantMessageServiceJabber");
+			Msn     = Dlfcn.GetStringConstant (handle, "kABPersonInstantMessageServiceMSN");
+			Yahoo   = Dlfcn.GetStringConstant (handle, "kABPersonInstantMessageServiceYahoo");
+			QQ      = Dlfcn.GetStringConstant (handle, "kABPersonInstantMessageServiceQQ");
+			GoogleTalk = Dlfcn.GetStringConstant (handle, "kABPersonInstantMessageServiceGoogleTalk");
+			Skype   = Dlfcn.GetStringConstant (handle, "kABPersonInstantMessageServiceSkype");
+			Facebook   = Dlfcn.GetStringConstant (handle, "kABPersonInstantMessageServiceFacebook");
+			GaduGadu   = Dlfcn.GetStringConstant (handle, "kABPersonInstantMessageServiceGaduGadu");
 		}
 	}
 
@@ -474,16 +419,9 @@ namespace AddressBook {
 
 		internal static void Init ()
 		{
-			var handle = Dlfcn.dlopen (Constants.AddressBookLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-				Service   = Dlfcn.GetStringConstant (handle, "kABPersonInstantMessageServiceKey");
-				Username  = Dlfcn.GetStringConstant (handle, "kABPersonInstantMessageUsernameKey");
-			}
-			finally {
-				Dlfcn.dlclose (handle);
-			}
+			var handle = Libraries.AddressBook.Handle;
+			Service   = Dlfcn.GetStringConstant (handle, "kABPersonInstantMessageServiceKey");
+			Username  = Dlfcn.GetStringConstant (handle, "kABPersonInstantMessageUsernameKey");
 		}
 	}
 
@@ -498,15 +436,7 @@ namespace AddressBook {
 
 		internal static void Init ()
 		{
-			var handle = Dlfcn.dlopen (Constants.AddressBookLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-				HomePage  = Dlfcn.GetStringConstant (handle, "kABPersonHomePageLabel");
-			}
-			finally {
-				Dlfcn.dlclose (handle);
-			}
+			HomePage  = Dlfcn.GetStringConstant (Libraries.AddressBook.Handle, "kABPersonHomePageLabel");
 		}
 	}
 
@@ -531,25 +461,18 @@ namespace AddressBook {
 
 		internal static void Init ()
 		{
-			var handle = Dlfcn.dlopen (Constants.AddressBookLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-				Assistant = Dlfcn.GetStringConstant (handle, "kABPersonAssistantLabel");
-				Brother   = Dlfcn.GetStringConstant (handle, "kABPersonBrotherLabel");
-				Child     = Dlfcn.GetStringConstant (handle, "kABPersonChildLabel");
-				Father    = Dlfcn.GetStringConstant (handle, "kABPersonFatherLabel");
-				Friend    = Dlfcn.GetStringConstant (handle, "kABPersonFriendLabel");
-				Manager   = Dlfcn.GetStringConstant (handle, "kABPersonManagerLabel");
-				Mother    = Dlfcn.GetStringConstant (handle, "kABPersonMotherLabel");
-				Parent    = Dlfcn.GetStringConstant (handle, "kABPersonParentLabel");
-				Partner   = Dlfcn.GetStringConstant (handle, "kABPersonPartnerLabel");
-				Sister    = Dlfcn.GetStringConstant (handle, "kABPersonSisterLabel");
-				Spouse    = Dlfcn.GetStringConstant (handle, "kABPersonSpouseLabel");
-			}
-			finally {
-				Dlfcn.dlclose (handle);
-			}
+			var handle = Libraries.AddressBook.Handle;
+			Assistant = Dlfcn.GetStringConstant (handle, "kABPersonAssistantLabel");
+			Brother   = Dlfcn.GetStringConstant (handle, "kABPersonBrotherLabel");
+			Child     = Dlfcn.GetStringConstant (handle, "kABPersonChildLabel");
+			Father    = Dlfcn.GetStringConstant (handle, "kABPersonFatherLabel");
+			Friend    = Dlfcn.GetStringConstant (handle, "kABPersonFriendLabel");
+			Manager   = Dlfcn.GetStringConstant (handle, "kABPersonManagerLabel");
+			Mother    = Dlfcn.GetStringConstant (handle, "kABPersonMotherLabel");
+			Parent    = Dlfcn.GetStringConstant (handle, "kABPersonParentLabel");
+			Partner   = Dlfcn.GetStringConstant (handle, "kABPersonPartnerLabel");
+			Sister    = Dlfcn.GetStringConstant (handle, "kABPersonSisterLabel");
+			Spouse    = Dlfcn.GetStringConstant (handle, "kABPersonSpouseLabel");
 		}
 	}
 
@@ -566,17 +489,10 @@ namespace AddressBook {
 
 		internal static void Init ()
 		{
-			var handle = Dlfcn.dlopen (Constants.AddressBookLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-				Home      = Dlfcn.GetStringConstant (handle, "kABHomeLabel");
-				Other     = Dlfcn.GetStringConstant (handle, "kABOtherLabel");
-				Work      = Dlfcn.GetStringConstant (handle, "kABWorkLabel");
-			}
-			finally {
-				Dlfcn.dlclose (handle);
-			}
+			var handle = Libraries.AddressBook.Handle;
+			Home      = Dlfcn.GetStringConstant (handle, "kABHomeLabel");
+			Other     = Dlfcn.GetStringConstant (handle, "kABOtherLabel");
+			Work      = Dlfcn.GetStringConstant (handle, "kABWorkLabel");
 		}
 	}
 

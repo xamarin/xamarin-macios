@@ -284,11 +284,8 @@ namespace CoreFoundation {
 
 						// Last case: this is technically not right for the simulator, as this path
 						// actually points to the MacOS library, not the one in the SDK.
-						if (main_q == IntPtr.Zero){
-							var h = Dlfcn.dlopen ("/usr/lib/libSystem.dylib", 0x0);
-							main_q = Dlfcn.GetIndirect (h, "_dispatch_main_q");
-							Dlfcn.dlclose (h);
-						}
+						if (main_q == IntPtr.Zero)
+							main_q = Dlfcn.GetIndirect (Libraries.System.Handle, "_dispatch_main_q");
 					}
 				}
 #if MONOMAC

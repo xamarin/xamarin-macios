@@ -42,18 +42,11 @@ namespace CoreFoundation {
 
 		static CFErrorDomain ()
 		{
-			var handle = Dlfcn.dlopen (Constants.CoreFoundationLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-				Cocoa     = Dlfcn.GetStringConstant (handle, "kCFErrorDomainCocoa");
-				Mach      = Dlfcn.GetStringConstant (handle, "kCFErrorDomainMach");
-				OSStatus  = Dlfcn.GetStringConstant (handle, "kCFErrorDomainOSStatus");
-				Posix     = Dlfcn.GetStringConstant (handle, "kCFErrorDomainPosix");
-			}
-			finally {
-				Dlfcn.dlclose (handle);
-			}
+			var handle = Libraries.CoreFoundation.Handle;
+			Cocoa     = Dlfcn.GetStringConstant (handle, "kCFErrorDomainCocoa");
+			Mach      = Dlfcn.GetStringConstant (handle, "kCFErrorDomainMach");
+			OSStatus  = Dlfcn.GetStringConstant (handle, "kCFErrorDomainOSStatus");
+			Posix     = Dlfcn.GetStringConstant (handle, "kCFErrorDomainPosix");
 		}
 	}
 
@@ -67,19 +60,12 @@ namespace CoreFoundation {
 
 		static CFExceptionDataKey ()
 		{
-			var handle = Dlfcn.dlopen (Constants.CoreFoundationLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-				Description                 = Dlfcn.GetStringConstant (handle, "kCFErrorDescriptionKey");
-				LocalizedDescription        = Dlfcn.GetStringConstant (handle, "kCFErrorLocalizedDescriptionKey");
-				LocalizedFailureReason      = Dlfcn.GetStringConstant (handle, "kCFErrorLocalizedFailureReasonKey");
-				LocalizedRecoverySuggestion = Dlfcn.GetStringConstant (handle, "kCFErrorLocalizedRecoverySuggestionKey");
-				UnderlyingError             = Dlfcn.GetStringConstant (handle, "kCFErrorUnderlyingErrorKey");
-			}
-			finally {
-				Dlfcn.dlclose (handle);
-			}
+			var handle = Libraries.CoreFoundation.Handle;
+			Description                 = Dlfcn.GetStringConstant (handle, "kCFErrorDescriptionKey");
+			LocalizedDescription        = Dlfcn.GetStringConstant (handle, "kCFErrorLocalizedDescriptionKey");
+			LocalizedFailureReason      = Dlfcn.GetStringConstant (handle, "kCFErrorLocalizedFailureReasonKey");
+			LocalizedRecoverySuggestion = Dlfcn.GetStringConstant (handle, "kCFErrorLocalizedRecoverySuggestionKey");
+			UnderlyingError             = Dlfcn.GetStringConstant (handle, "kCFErrorUnderlyingErrorKey");
 		}
 	}
 

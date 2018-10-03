@@ -81,13 +81,9 @@ namespace CoreFoundation {
 
 		static CFDictionary ()
 		{
-			var lib = Dlfcn.dlopen (Constants.CoreFoundationLibrary, 0);
-			try {
-				KeyCallbacks = Dlfcn.GetIndirect (lib, "kCFTypeDictionaryKeyCallBacks");
-				ValueCallbacks = Dlfcn.GetIndirect (lib, "kCFTypeDictionaryValueCallBacks");
-			} finally {
-				Dlfcn.dlclose (lib);
-			}
+			var lib = Libraries.CoreFoundation.Handle;
+			KeyCallbacks = Dlfcn.GetIndirect (lib, "kCFTypeDictionaryKeyCallBacks");
+			ValueCallbacks = Dlfcn.GetIndirect (lib, "kCFTypeDictionaryValueCallBacks");
 		}
 		
 		public static CFDictionary FromObjectAndKey (INativeObject obj, INativeObject key)

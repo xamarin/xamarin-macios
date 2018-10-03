@@ -119,28 +119,22 @@ namespace CoreMedia {
 		public static NSString TimeMappingTargetKey { get; private set; }
 
 		static CMTimeRange () {
-			var lib = Dlfcn.dlopen (Constants.CoreMediaLibrary, 0);
-			if (lib != IntPtr.Zero) {
-				try {
-					var retZero = Dlfcn.dlsym (lib, "kCMTimeRangeZero");
-					Zero = (CMTimeRange)Marshal.PtrToStructure (retZero, typeof(CMTimeRange));
+			var lib = Libraries.CoreMedia.Handle;
+			var retZero = Dlfcn.dlsym (lib, "kCMTimeRangeZero");
+			Zero = (CMTimeRange)Marshal.PtrToStructure (retZero, typeof(CMTimeRange));
 
-					var retInvalid = Dlfcn.dlsym (lib, "kCMTimeRangeInvalid");
+			var retInvalid = Dlfcn.dlsym (lib, "kCMTimeRangeInvalid");
 #if !XAMCORE_3_0
-					Invalid = (CMTimeRange)Marshal.PtrToStructure (retInvalid, typeof(CMTimeRange));
+			Invalid = (CMTimeRange)Marshal.PtrToStructure (retInvalid, typeof(CMTimeRange));
 #endif
-					InvalidRange = (CMTimeRange)Marshal.PtrToStructure (retInvalid, typeof(CMTimeRange));
+			InvalidRange = (CMTimeRange)Marshal.PtrToStructure (retInvalid, typeof(CMTimeRange));
 
-					var retMappingInvalid = Dlfcn.dlsym (lib, "kCMTimeMappingInvalid");
-					if (retMappingInvalid  != IntPtr.Zero)
-						InvalidMapping = (CMTimeRange)Marshal.PtrToStructure (retMappingInvalid, typeof(CMTimeRange));
+			var retMappingInvalid = Dlfcn.dlsym (lib, "kCMTimeMappingInvalid");
+			if (retMappingInvalid  != IntPtr.Zero)
+				InvalidMapping = (CMTimeRange)Marshal.PtrToStructure (retMappingInvalid, typeof(CMTimeRange));
 
-					TimeMappingSourceKey = Dlfcn.GetStringConstant (lib, "kCMTimeMappingSourceKey");
-					TimeMappingTargetKey = Dlfcn.GetStringConstant (lib, "kCMTimeMappingTargetKey");
-				} finally {
-					Dlfcn.dlclose (lib);
-				}
-			}
+			TimeMappingSourceKey = Dlfcn.GetStringConstant (lib, "kCMTimeMappingSourceKey");
+			TimeMappingTargetKey = Dlfcn.GetStringConstant (lib, "kCMTimeMappingTargetKey");
 		}
 #endif // !COREBUILD
 	}

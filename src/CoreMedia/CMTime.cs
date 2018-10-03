@@ -326,17 +326,11 @@ namespace CoreMedia {
 		
 		static CMTime ()
 		{
-			var lib = Dlfcn.dlopen (Constants.CoreMediaLibrary, 0);
-			if (lib != IntPtr.Zero) {
-				try {
-					ValueKey  = Dlfcn.GetStringConstant (lib, "kCMTimeValueKey");
-					ScaleKey  = Dlfcn.GetStringConstant (lib, "kCMTimeScaleKey");
-					EpochKey  = Dlfcn.GetStringConstant (lib, "kCMTimeEpochKey");
-					FlagsKey  = Dlfcn.GetStringConstant (lib, "kCMTimeFlagsKey");
-				} finally {
-					Dlfcn.dlclose (lib);
-				}
-			}
+			var lib = Libraries.CoreMedia.Handle;
+			ValueKey  = Dlfcn.GetStringConstant (lib, "kCMTimeValueKey");
+			ScaleKey  = Dlfcn.GetStringConstant (lib, "kCMTimeScaleKey");
+			EpochKey  = Dlfcn.GetStringConstant (lib, "kCMTimeEpochKey");
+			FlagsKey  = Dlfcn.GetStringConstant (lib, "kCMTimeFlagsKey");
 		}
 
 		[DllImport(Constants.CoreMediaLibrary)]

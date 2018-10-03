@@ -144,15 +144,7 @@ namespace AddressBook {
 		
 		static ABAddressBook ()
 		{
-			var handle = Dlfcn.dlopen (Constants.AddressBookLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-				ErrorDomain = Dlfcn.GetStringConstant (handle, "ABAddressBookErrorDomain");
-			}
-			finally {
-				Dlfcn.dlclose (handle);
-			}
+			ErrorDomain = Dlfcn.GetStringConstant (Libraries.AddressBook.Handle, "ABAddressBookErrorDomain");
 		}
 
 		~ABAddressBook ()
