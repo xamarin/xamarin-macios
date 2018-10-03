@@ -59,12 +59,13 @@ fi
 if test -z "$ENABLE_DEVICE_BUILD"; then
 	CONFIGURE_FLAGS="$CONFIGURE_FLAGS --disable-ios-device"
 fi
-# shellcheck disable=SC2086
-./configure $CONFIGURE_FLAGS
 
 make reset
 make git-clean-all
 make print-versions
+
+# shellcheck disable=SC2086
+./configure $CONFIGURE_FLAGS
 
 time make -j8
 time make install -j8
