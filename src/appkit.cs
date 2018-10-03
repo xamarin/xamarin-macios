@@ -23126,6 +23126,14 @@ namespace AppKit {
 		NSPrintRenderingQuality PreferredRenderingQuality { get; }
 	}
 
+#if !XAMCORE_4_0
+	[Category, BaseType (typeof (NSResponder))]
+ 	partial interface NSControlEditingSupport {
+ 		[Mac (10, 7), Export ("validateProposedFirstResponder:forEvent:")]
+ 		bool ValidateProposedFirstResponder (NSResponder responder, [NullAllowed] NSEvent forEvent);
+ 	}
+#endif
+
 	partial interface NSResponder {
 		[Mac (10, 7), Export ("wantsScrollEventsForSwipeTrackingOnAxis:")]
 		bool WantsScrollEventsForSwipeTrackingOnAxis (NSEventGestureAxis axis);
