@@ -1,0 +1,5 @@
+!missing-protocol! CTSubscriberDelegate not bound
+!missing-selector! +CTSubscriberInfo::subscribers not bound
+!missing-selector! CTSubscriber::delegate not bound
+!missing-selector! CTSubscriber::identifier not bound
+!missing-selector! CTSubscriber::setDelegate: not bound
