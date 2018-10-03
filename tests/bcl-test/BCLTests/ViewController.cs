@@ -8,26 +8,27 @@ using Foundation;
 
 using Xamarin.iOS.UnitTests;
 using Xamarin.iOS.UnitTests.NUnit;
+using MonoCasTests.System;
 
 namespace BCLTests {
 	public partial class ViewController : UIViewController {
 
-		static string testsFolderName = "Tests";
-		
+		static List<string> NUnitTests = new List <string> {
+			"MONOTOUCH_System_test.dll",
+			"MONOTOUCH_corlib_test.dll",
+		};
+
+
 		internal static IEnumerable<TestAssemblyInfo> GetTestAssemblies ()
  		{
-			// look in the app bundle data folder, grap all the assemblies
-			// load them and return them accordingly
-			var dataPath = Path.Combine (NSBundle.MainBundle.BundlePath, testsFolderName);
-			if (!Directory.Exists (dataPath))
-				throw new InvalidOperationException ("Test could not be loaded because they were not added in the app bundle.");
-			foreach (var f in Directory.GetFiles (dataPath)) {
-				var a = Assembly.LoadFile (f);
+			// var t = Path.GetFileName (typeof (ActivatorCas).Assembly.Location);
+			foreach (var f in NUnitTests) {
+				var a = Assembly.Load (f);
 				if (a == null) {
-					Console.WriteLine ($"# WARNING: Unable to load assembly: {f}");
+					Console.WriteLine ($"# WARNING: Unable to load assembly.");
  					continue;
 				}
-				yield return new TestAssemblyInfo (a, f);
+				yield return new TestAssemblyInfo (a, "MONOTOUCH_System_test.dll");
 			}
  		}
  		
@@ -46,8 +47,10 @@ namespace BCLTests {
 			Console.WriteLine ("Assemblies loaded.");
 			var runner = new NUnitTestRunner (new LogWriter ());
 			runner.LogTag = "NUnit";
-			runner.Run ((System.Collections.Generic.IList<Xamarin.iOS.UnitTests.TestAssemblyInfo>)testAssemblies);
-			
+			runner.Run ((IList<TestAssemblyInfo>)testAssemblies);
+			Console.WriteLine ($"Total tests {runner.TotalTests}");
+			Console.WriteLine ($"Failed tests {runner.FailedTests}");
+			Console.WriteLine ($"Success tests {runner.PassedTests}");
 		}
 
 		public override void DidReceiveMemoryWarning ()
