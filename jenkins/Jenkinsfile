@@ -243,6 +243,18 @@ def uploadFiles (glob, virtualPath)
     ])
 }
 
+@NonCPS
+def getUpdateInfoAndVersion (file)
+{
+    def result = [:]
+    def match = file =~ /xamarin.(mac|ios)-(\d+(\.\d+)+).*.pkg$/
+    if (match.matches()) {
+        result['platform'] = match[0][1]
+        result['version'] = match[0][2]
+    }
+    return result
+}
+
 // There must be a better way than this hack to show a
 // message in red in the Jenkins Blue Ocean UI...
 def echoError (message)
@@ -462,13 +474,29 @@ timestamps {
                                 def file = uploadingFiles [i]
                                 def f_length = file.length;
                                 def md5 = sh (returnStdout: true, script: "md5 -q '${file}'").trim ()
-                                def sha256 = sh (returnStdout: true, script: "shasum -a 256").trim ().split (" ") [0];
+                                def sha256 = sh (returnStdout: true, script: "shasum -a 256 ${file}").trim ().split (" ") [0];
                                 manifest += "${packagePrefix}/${file.name}\n"
                                 artifacts += "  {\n"
                                 artifacts += "    \"file\": \"${file.name}\",\n"
                                 artifacts += "    \"url\": \"${packagePrefix}/${file.name}\",\n"
                                 artifacts += "    \"md5\": \"${md5}\",\n"
                                 artifacts += "    \"sha256\": \"${sha256}\",\n"
+                                def map = getUpdateInfoAndVersion (file.name)
+                                def platform = map['platform']
+                                if (platform) {
+                                    try {
+                                        def updateInfo = readFile "package/${platform}-updateinfo"
+                                        def parts = updateInfo.trim ().split (" ")
+                                        artifacts += "    \"productId\": \"${parts[0]}\",\n"
+                                        artifacts += "    \"releaseId\": \"${parts[1]}\",\n"
+                                    } catch (ex) {
+                                        echo "Did not find updateinfo file for xamarin.${platform}"
+                                    }
+                                }
+                                def version = map['version']
+                                if (version) {
+                                    artifacts += "    \"version\": \"${version}\",\n"
+                                }
                                 artifacts += "    \"size\": ${f_length}\n"
                                 artifacts += "  }"
                                 if (i < uploadingFiles.length - 1)
