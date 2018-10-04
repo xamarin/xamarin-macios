@@ -821,7 +821,7 @@ public partial class Frameworks {
 				frameworks = macosframeworks;
 				break;
 			default:
-				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://bugzilla.xamarin.com) with a test case.", Generator.CurrentPlatform);
+				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", Generator.CurrentPlatform);
 			}
 		}
 
@@ -867,7 +867,7 @@ public partial class Generator : IMemberGatherer {
 			case PlatformName.MacOSX:
 				return "NSApplication";
 			default:
-				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", CurrentPlatform);
+				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", CurrentPlatform);
 			}
 		}
 	}
@@ -973,7 +973,7 @@ public partial class Generator : IMemberGatherer {
 			case PlatformName.MacOSX:
 				return "Quartz";
 			default:
-				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", CurrentPlatform);
+				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", CurrentPlatform);
 			}
 		}
 	}
@@ -988,7 +988,7 @@ public partial class Generator : IMemberGatherer {
 			case PlatformName.MacOSX:
 				return "CoreServices";
 			default:
-				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", CurrentPlatform);
+				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", CurrentPlatform);
 			}
 		}
 	}
@@ -1001,7 +1001,7 @@ public partial class Generator : IMemberGatherer {
 			case PlatformName.MacOSX:
 				return "Quartz";
 			default:
-				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://bugzilla.xamarin.com) with a test case.", CurrentPlatform);
+				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", CurrentPlatform);
 			}
 		}
 	}
@@ -4124,7 +4124,7 @@ public partial class Generator : IMemberGatherer {
 				print ("global::{0}.NSApplication.EnsureUIThread ();", ns.Get ("AppKit"));
 				break;
 			default:
-				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", CurrentPlatform);
+				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", CurrentPlatform);
 		}
 	}
 
@@ -4198,7 +4198,7 @@ public partial class Generator : IMemberGatherer {
 			sane &= by_ref_processing2 [0].ToString () == by_ref_processing2 [1].ToString ();
 			sane &= by_ref_init2 [0].ToString () == by_ref_init2 [1].ToString ();
 			if (!sane)
-				throw new BindingException (1028, "Internal sanity check failed, please file a bug report (http://bugzilla.xamarin.com) with a test case.");
+				throw new BindingException (1028, "Internal sanity check failed, please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.");
 		}
 
 		var convs = convs2 [0];

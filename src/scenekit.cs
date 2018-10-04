@@ -1970,7 +1970,7 @@ namespace SceneKit {
 		// We took the decision to comment the following helpers since they currently do not bring
 		// any benefits over the SCN* versions, actually the SIMD types could potentially be just
 		// a little slower than the SCN* versions due to manual native conversion. If you really
-		// need them please file a bug at https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS
+		// need them please file a bug at https://github.com/xamarin/xamarin-macios/issues/new
 
 		// Please add the following code to runtime/bindings-generator.cs if you reenable the following SIMD methods.
 

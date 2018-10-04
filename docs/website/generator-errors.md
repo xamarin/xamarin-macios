@@ -13,9 +13,9 @@ dateupdated: 2017-06-26
 E.g. parameters, environment
 
 <!-- 0xxx: the generator itself, e.g. parameters, environment -->
-### <a name="BI0000"/>BI0000: Unexpected error - Please fill a bug report at https://bugzilla.xamarin.com
+### <a name="BI0000"/>BI0000: Unexpected error - Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new
 
-An unexpected error condition occurred. Please [file a bug report](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS&component=Tools) with as much information as possible, including:
+An unexpected error condition occurred. Please [file a bug report](https://github.com/xamarin/xamarin-macios/issues/new) with as much information as possible, including:
 
 * Full build logs, with maximum verbosity
 * A minimal test case that reproduce the error
@@ -37,7 +37,7 @@ An invalid target framework was passed using the --target-framework argument. Pl
 
 ### <a name='BI0086'/>BI0086: A target framework (--target-framework) must be specified when building for *.
 
-This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug report](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS) with a test case.
+This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug report](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
 # BI1xxx: code generation
 
@@ -100,7 +100,7 @@ Please go to [[FieldAttribute]](https://developer.xamarin.com/guides/cross-platf
 
 ### <a name='BI1027'/>BI1027: Support for ZeroCopy strings is not implemented. Strings will be marshalled as NSStrings.
 
-### <a name='BI1028'/>BI1028: Internal sanity check failed, please file a bug report (http://bugzilla.xamarin.com) with a test case.
+### <a name='BI1028'/>BI1028: Internal sanity check failed, please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
 ### <a name='BI1029'/>BI1029: Internal error: invalid enum mode for type '*'
 
@@ -134,7 +134,7 @@ Please go to [[FieldAttribute]](https://developer.xamarin.com/guides/cross-platf
 
 ### <a name='BI1046'/>BI1046: The [Field] constant {fa.SymbolName} cannot only be used once inside enum {type.Name}.
 
-### <a name='BI1047'/>BI1047: Unsupported platform: *. Please file a bug report (http://bugzilla.xamarin.com) with a test case.
+### <a name='BI1047'/>BI1047: Unsupported platform: *. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
 ### <a name='BI1048'/>BI1048: Unsupported type * decorated with [BindAs].
 
@@ -142,31 +142,31 @@ Please go to [[FieldAttribute]](https://developer.xamarin.com/guides/cross-platf
 
 ### <a name='BI1050'/>BI1050: [BindAs] cannot be used inside Protocol or Model types. Type: *
 
-### <a name='BI1051'/>BI1051: Internal error: Don't know how to get attributes for *. Please file a bug report (http://bugzilla.xamarin.com) with a test case.
+### <a name='BI1051'/>BI1051: Internal error: Don't know how to get attributes for *. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
-### <a name='BI1052'/>BI1052: Internal error: Could not find the type * in the assembly *. Please file a bug report (http://bugzilla.xamarin.com) with a test case.
+### <a name='BI1052'/>BI1052: Internal error: Could not find the type * in the assembly *. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
 ### <a name='BI1053'/>BI1053: Internal error: unknown target framework '*'.
 
-### <a name='BI1054'/>BI1054: Internal error: can't convert type '*' (unknown assembly). Please file a bug report (https://bugzilla.xamarin.com) with a test case.
+### <a name='BI1054'/>BI1054: Internal error: can't convert type '*' (unknown assembly). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
-This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug report](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS&component=Tools) with a test case.
+This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug report](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
-### <a name='BI1055'/>BI1055: Internal error: failed to convert type '*'. Please file a bug report (https://bugzilla.xamarin.com) with a test case.
+### <a name='BI1055'/>BI1055: Internal error: failed to convert type '*'. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
-This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug report](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS&component=Tools) with a test case.
+This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug report](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
-### <a name='BI1056'/>BI1056: Internal error: failed to instantiate mock attribute '*' (could not convert type constructor argument #*). Please file a bug report (https://bugzilla.xamarin.com) with a test case.
+### <a name='BI1056'/>BI1056: Internal error: failed to instantiate mock attribute '*' (could not convert type constructor argument #*). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
-This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug report](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS&component=Tools) with a test case.
+This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug report](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
-### <a name='BI1057'/>BI1057: Internal error: failed to instantiate mock attribute '*' (could not convert constructor type #* (*)). Please file a bug report (https://bugzilla.xamarin.com) with a test case.
+### <a name='BI1057'/>BI1057: Internal error: failed to instantiate mock attribute '*' (could not convert constructor type #* (*)). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
-This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug report](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS&component=Tools) with a test case.
+This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug report](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
-### <a name='BI1058'/>BI1058: Internal error: could not find a constructor for the mock attribute '*'. Please file a bug report (https://bugzilla.xamarin.com) with a test case.
+### <a name='BI1058'/>BI1058: Internal error: could not find a constructor for the mock attribute '*'. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
-This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug report](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS&component=Tools) with a test case.
+This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug report](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
 ### <a name='BI1059'/>BI1059: Found * * attributes on the member *. At most one was expected.
 
