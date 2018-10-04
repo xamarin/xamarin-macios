@@ -674,5 +674,28 @@ namespace Xamarin.MMP.Tests
 				rv.Messages.AssertWarningCount (0);
 			});
 		}
+
+		// [Test] - https://github.com/xamarin/xamarin-macios/issues/4110
+		public void BuildingSameSolutionTwice_ShouldNotRunACToolTwice ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					AssetIcons = true
+				};
+
+				string project = TI.GenerateUnifiedExecutableProject (test);
+
+				string buildOutput = TI.BuildProject (project, true, diagnosticMSBuild: true, useMSBuild: true);
+				Assert.True (buildOutput.Contains ("actool execution started with arguments"), $"Initial build should run actool");
+
+				buildOutput = TI.BuildProject (project, true, diagnosticMSBuild: true, useMSBuild: true);
+				Assert.False (buildOutput.Contains ("actool execution started with arguments"), $"Second build should not run actool");
+
+				TI.RunAndAssert ("touch", Path.Combine (tmpDir, "Assets.xcassets/AppIcon.appiconset/AppIcon-256@2x.png"), "touch icon");
+
+				buildOutput = TI.BuildProject (project, true, diagnosticMSBuild: true, useMSBuild: true);
+				Assert.True (buildOutput.Contains ("actool execution started with arguments"), $"Build after touching icon must run actool");
+			});
+		}
 	}
 }
