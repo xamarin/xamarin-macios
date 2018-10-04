@@ -753,6 +753,26 @@ namespace PrintCore {
 			}
 		}
 
+		[DllImport (Constants.PrintCoreLibrary)]
+		extern static IntPtr PMPrinterGetID (IntPtr printer);
+
+		public string ID {
+			get {
+				return CFString.FetchString (PMPrinterGetID (handle));
+			}
+		}
+
+		[DllImport (Constants.PrintCoreLibrary)]
+		extern static PMStatusCode PMPrinterCopyHostName (IntPtr printer, out IntPtr hostName);
+
+		public string HostName {
+			get {
+				PMStatusCode code = PMPrinterCopyHostName (handle, out IntPtr hostName);
+				if (code != PMStatusCode.Ok)
+					return null;
+				return CFString.FetchString (hostName, true);
+			}
+		}
 	}
 
 	public class PMServer : PMPrintCoreBase {
