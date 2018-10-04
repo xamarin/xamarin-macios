@@ -112,13 +112,25 @@ namespace xsiminstaller {
 				return 1;
 			xcodeUuid = xcodeUuid.Trim ();
 
-			xcodeVersion = string.Join (".", xcodeVersion.TrimStart ('0').ToCharArray ().Select ((v) => v.ToString ()));
+			if (xcodeVersion.Length != 4) {
+				Console.WriteLine ($"Unexpected Xcode version: {xcodeVersion} (expected length to be 4)");
+				return 1;
+			}
+
+			xcodeVersion = $"{(xcodeVersion [0] == '0' ? "" : xcodeVersion [0].ToString ())}{xcodeVersion [1]}.{xcodeVersion[2]}.{xcodeVersion[3]}";
 			var url = $"https://devimages-cdn.apple.com/downloads/xcode/simulators/index-{xcodeVersion}-{xcodeUuid}.dvtdownloadableindex";
 			var uri = new Uri (url);
 			var tmpfile = Path.Combine (Path.GetTempPath (), Path.GetFileName (uri.LocalPath));
 			if (!File.Exists (tmpfile)) {
-				var wc = new WebClient ();
-				wc.DownloadFile (uri, tmpfile);
+				try {
+					using (var wc = new WebClient ())
+						wc.DownloadFile (uri, tmpfile);
+				} catch (Exception e) {
+					if (File.Exists (tmpfile))
+						File.Delete (tmpfile);
+					Console.WriteLine ($"Failed to download {uri}: {e.Message}");
+					return 1;
+				}
 			}
  			if (!TryExecuteAndCapture ("plutil", $"-convert xml1 -o - '{tmpfile}'", out var xml))
 				return 1;
