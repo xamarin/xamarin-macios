@@ -448,6 +448,9 @@ namespace Xamarin.Bundler {
 			if (IsClassic && App.LinkMode == LinkMode.Platform)
 				throw new MonoMacException (2109, true, "Xamarin.Mac Classic API does not support Platform Linking.");
 
+			if (Registrar == RegistrarMode.PartialStatic && App.LinkMode != LinkMode.None)
+				throw new MonoMacException (2110, true, "Xamarin.Mac 'Partial Static' registrar does not support linking. Disable linking or use another registrar mode.");
+
 			// sanity check as this should never happen: we start out by not setting any
 			// Unified/Classic properties, and only IsUnifiedMobile if we are are on the
 			// XM framework. If we are not, we set IsUnifiedFull to true iff we detect

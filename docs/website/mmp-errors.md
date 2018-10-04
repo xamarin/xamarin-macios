@@ -446,6 +446,10 @@ Consider using `lipo` to remove the unnecessary archtectures permanently from th
 
 #### MM2109: Xamarin.Mac Classic API does not support Platform Linking.
 
+<a name="MM2110"/>
+
+#### MM2109: Xamarin.Mac 'Partial Static' registrar does not support linking. Disable linking or use another registrar mode.
+
 ## MM3xxx: AOT
 
 ### MM30xx: AOT (general) errors
