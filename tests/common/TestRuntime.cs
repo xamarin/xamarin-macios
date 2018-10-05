@@ -531,6 +531,13 @@ partial class TestRuntime
 #endif
 	}
 
+	public static void AssertNotWatchOS (string message = "This test is not supported on watchOS")
+	{
+#if __WATCHOS__
+		Assert.Ignore (message);
+#endif
+	}
+
 	static void AssertWatchOSSystemVersion (int major, int minor, bool throwIfOtherPlatform = true)
 	{
 		if (CheckWatchOSSystemVersion (major, minor, throwIfOtherPlatform))
