@@ -339,6 +339,11 @@ namespace xharness
 			var currentLength = new FileInfo (CapturePath).Length;
 			var capturedLength = 0L;
 
+			if (length < 0) {
+				// The file shrank?
+				return;
+			}
+
 			if (File.Exists (Path))
 				capturedLength = new FileInfo (Path).Length;
 
