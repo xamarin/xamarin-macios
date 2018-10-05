@@ -88,6 +88,7 @@ namespace CoreFoundation {
 		static IntPtr kCFTypeArrayCallbacks_ptr_value;
 		static IntPtr kCFTypeArrayCallbacks_ptr {
 			get {
+				// FIXME: right now we can't use [Fields] for GetIndirect
 				if (kCFTypeArrayCallbacks_ptr_value == IntPtr.Zero)
 					kCFTypeArrayCallbacks_ptr_value = Dlfcn.GetIndirect (Libraries.CoreFoundation.Handle, "kCFTypeArrayCallBacks");
 				return kCFTypeArrayCallbacks_ptr_value;
