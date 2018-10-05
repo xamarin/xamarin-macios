@@ -771,6 +771,9 @@ namespace Introspection {
 			case "UIStateRestoring":
 				return type.Name == "UIViewController" || type.IsSubclassOf (typeof (UIViewController));
 #endif
+			case "UIUserActivityRestoring":
+				// A bunch of types started implementing UIUserActivityRestoring in iOS 12.
+				return !TestRuntime.CheckXcodeVersion (10, 0);
 			}
 			return base.Skip (type, protocolName);
 		}

@@ -19,7 +19,7 @@ using sec_identity_t=System.IntPtr;
 
 namespace Security {
 
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0), Watch (5,0)]
 	public class SecProtocolOptions : NativeObject {
 #if !COREBUILD
 		// This type is only ever surfaced in response to callbacks in TLS/Network and documented as read-only

@@ -15,6 +15,8 @@ namespace HealthKit {
 			}
 		}
 
+		[Introduced (PlatformName.iOS, 9,3, PlatformArchitecture.All)]
+		[Introduced (PlatformName.WatchOS, 2,2, PlatformArchitecture.All)]
 		public static NSString AppleExerciseTime {
 			[Introduced (PlatformName.iOS, 9,3, PlatformArchitecture.All)]
 			[Introduced (PlatformName.WatchOS, 2,2, PlatformArchitecture.All)]

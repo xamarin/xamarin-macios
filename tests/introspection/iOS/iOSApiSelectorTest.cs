@@ -160,6 +160,16 @@ namespace Introspection {
 			var declaredType = method.DeclaringType;
 
 			switch (declaredType.Name) {
+			case "NSLayoutManager":
+				switch (name) {
+				case "CGGlyphAtIndex:":
+				case "CGGlyphAtIndex:isValidIndex:":
+					// These two selector show up in the iOS 7.0 headers, but they can't be found at runtime until iOS 9.
+					if (!TestRuntime.CheckXcodeVersion (7, 0))
+						return true;
+					break;
+				}
+				break;
 			case "NSNull":
 				switch (name) {
 				// conformance to CAAction started with iOS8
