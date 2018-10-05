@@ -39,6 +39,13 @@ namespace CoreFoundation {
 		NSString ModeCommon { get; }
 	}
 
+	[Partial]
+	interface DispatchData {
+		[Internal]
+		[Field ("_dispatch_data_destructor_free", "libdispatch")]
+		IntPtr free { get; }
+	}
+
 #if !WATCH
 	[Partial]
 	interface CFNetwork {

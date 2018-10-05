@@ -33,7 +33,7 @@ using Foundation;
 
 namespace CoreFoundation {
 
-	public class DispatchData : DispatchObject {
+	public partial class DispatchData : DispatchObject {
 #if !COREBUILD
 		public DispatchData (IntPtr handle, bool owns) : base (handle, owns)
 		{
@@ -41,15 +41,6 @@ namespace CoreFoundation {
 
 		public DispatchData (IntPtr handle) : base (handle, false)
 		{
-		}
-
-		static IntPtr free_ptr;
-		static IntPtr free {
-			get {
-				if (free_ptr == IntPtr.Zero)
-					free_ptr = Marshal.ReadIntPtr (Dlfcn.dlsym (Libraries.LibC.Handle, "_dispatch_data_destructor_free"));
-				return free_ptr;
-			}
 		}
 
 		[DllImport (Constants.libcLibrary)]
