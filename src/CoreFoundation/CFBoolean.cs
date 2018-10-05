@@ -35,26 +35,8 @@ using Foundation;
 namespace CoreFoundation {
 
 	// CFNumber.h
-	class CFBoolean : INativeObject, IDisposable {
+	partial class CFBoolean : INativeObject, IDisposable {
 		IntPtr handle;
-
-		static CFBoolean true_value;
-		public static CFBoolean True {
-			get {
-				if (true_value == null)
-					true_value = new CFBoolean (Dlfcn.GetIntPtr (Libraries.CoreFoundation.Handle, "kCFBooleanTrue"), false);
-				return true_value;
-			}
-		}
-
-		static CFBoolean false_value;
-		public static CFBoolean False {
-			get {
-				if (false_value == null)
-					false_value = new CFBoolean (Dlfcn.GetIntPtr (Libraries.CoreFoundation.Handle, "kCFBooleanFalse"), false);
-				return false_value;
-			}
-		}
 
 		[Preserve (Conditional = true)]
 		internal CFBoolean (IntPtr handle, bool owns)
@@ -106,9 +88,14 @@ namespace CoreFoundation {
 			return FromBoolean (value);
 		}
 
+		internal static IntPtr ToHandle (bool value)
+		{
+			return value ? TrueHandle : FalseHandle;
+		}
+
 		public static CFBoolean FromBoolean (bool value)
 		{
-			return value ? True : False;
+			return new CFBoolean (value ? TrueHandle : FalseHandle, false);
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]

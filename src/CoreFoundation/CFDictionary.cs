@@ -218,7 +218,7 @@ namespace CoreFoundation {
 
 		public static void SetValue (IntPtr theDict, IntPtr key, bool value)
 		{
-			SetValue (theDict, key, value ? CFBoolean.True.Handle : CFBoolean.False.Handle);
+			SetValue (theDict, key, value ? CFBoolean.TrueHandle : CFBoolean.FalseHandle);
 		}
 	}
 }

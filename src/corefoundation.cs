@@ -30,6 +30,17 @@ namespace CoreFoundation {
 	}
 
 	[Partial]
+	interface CFBoolean {
+		[Internal]
+		[Field ("kCFBooleanTrue", "CoreFoundation")]
+		IntPtr TrueHandle { get; }
+
+		[Internal]
+		[Field ("kCFBooleanFalse", "CoreFoundation")]
+		IntPtr FalseHandle { get; }
+	}
+
+	[Partial]
 	interface CFRunLoop {
 
 		[Field ("kCFRunLoopDefaultMode")]

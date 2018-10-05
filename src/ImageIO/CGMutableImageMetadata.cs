@@ -87,7 +87,7 @@ namespace ImageIO {
 
 		public bool SetValue (CGImageMetadataTag parent, NSString path, bool value)
 		{
-			return SetValue (parent, path, value ? CFBoolean.True.Handle : CFBoolean.False.Handle);
+			return SetValue (parent, path, value ? CFBoolean.TrueHandle : CFBoolean.FalseHandle);
 		}
 
 		bool SetValue (CGImageMetadataTag parent, NSString path, IntPtr value)
@@ -127,7 +127,7 @@ namespace ImageIO {
 
 		public bool SetValueMatchingImageProperty (NSString dictionaryName, NSString propertyName, bool value)
 		{
-			return SetValueMatchingImageProperty (dictionaryName, propertyName, value ? CFBoolean.True.Handle : CFBoolean.False.Handle);
+			return SetValueMatchingImageProperty (dictionaryName, propertyName, value ? CFBoolean.TrueHandle : CFBoolean.FalseHandle);
 		}
 
 		bool SetValueMatchingImageProperty (NSString dictionaryName, NSString propertyName, IntPtr value)
