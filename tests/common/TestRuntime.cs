@@ -534,7 +534,7 @@ partial class TestRuntime
 	public static void AssertNotWatchOS (string message = "This test is not supported on watchOS")
 	{
 #if __WATCHOS__
-		Assert.Ignore (message);
+		NUnit.Framework.Assert.Ignore (message);
 #endif
 	}
 
