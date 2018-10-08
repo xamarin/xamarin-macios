@@ -31,6 +31,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Threading;
 using ObjCRuntime;
@@ -114,6 +115,15 @@ namespace CoreFoundation {
 		{
 			return (int) Handle;
 		}
+
+#if !XAMCORE_4_0
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use 'GetCheckedHandle' instead.")]
+		protected void Check ()
+		{
+			GetCheckedHandle ();
+		}
+#endif
 
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_set_target_queue (/* dispatch_object_t */ IntPtr queue, /* dispatch_queue_t */ IntPtr target);
