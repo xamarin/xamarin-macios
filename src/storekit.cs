@@ -24,6 +24,7 @@ namespace StoreKit {
 	partial interface SKDownload {
 
 		[iOS (12,0)]
+		[TV (12,0)]
 		[Export ("state")]
 		SKDownloadState State { get; }
 #if MONOMAC
@@ -221,6 +222,11 @@ namespace StoreKit {
 		}
 
 		[NoiOS]
+#if XAMCORE_4_0
+		[NoTV]
+#else
+		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'DownloadContentLengths' instead.")]
+#endif
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'DownloadContentLengths' instead.")]
 		[Export ("contentLengths")]
 		NSNumber [] ContentLengths { get; }
@@ -230,6 +236,11 @@ namespace StoreKit {
 		NSNumber [] DownloadContentLengths { get;  }
 
 		[NoiOS]
+#if XAMCORE_4_0
+		[NoTV]
+#else
+		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'DownloadContentVersion' instead.")]
+#endif
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'DownloadContentVersion' instead.")]
 		[Export ("contentVersion")]
 		string ContentVersion { get; }
@@ -246,7 +257,7 @@ namespace StoreKit {
 		[NullAllowed, Export ("introductoryPrice")]
 		SKProductDiscount IntroductoryPrice { get; }
 
-		[iOS (12,0), Mac (10,14, onlyOn64: true)]
+		[iOS (12,0), TV (12,0), Mac (10,14, onlyOn64: true)]
 		[NullAllowed, Export ("subscriptionGroupIdentifier")]
 		string SubscriptionGroupIdentifier { get; }
 	}
