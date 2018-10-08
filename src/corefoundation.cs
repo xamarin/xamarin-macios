@@ -30,6 +30,7 @@ namespace CoreFoundation {
 	}
 
 	[Partial]
+	[Internal]
 	interface CFBoolean {
 		[Internal]
 		[Field ("kCFBooleanTrue", "CoreFoundation")]
@@ -53,7 +54,7 @@ namespace CoreFoundation {
 	[Partial]
 	interface DispatchData {
 		[Internal]
-		[Field ("_dispatch_data_destructor_free", "libdispatch")]
+		[Field ("_dispatch_data_destructor_free", "/usr/lib/system/libdispatch.dylib")]
 		IntPtr free { get; }
 	}
 
