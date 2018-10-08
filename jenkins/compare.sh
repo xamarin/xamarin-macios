@@ -81,7 +81,9 @@ else
 fi
 printf "\\n" >> "$WORKSPACE/jenkins/pr-comments.md"
 
-if grep "^[+-][^+-]" jenkins-results/generator-diff/generator.diff | grep -v "^.[[]assembly: AssemblyInformationalVersion" | grep -v "^[+-][[:space:]]*internal const string Revision =" >/dev/null 2>&1; then
+if ! test -s jenkins-results/generator-diff/generator.diff; then
+	printf "✅ [Generator Diff](%s) (no change)" "$URL_GENERATOR" >> "$WORKSPACE/jenkins/pr-comments.md"
+elif grep "^[+-][^+-]" jenkins-results/generator-diff/generator.diff | grep -v "^.[[]assembly: AssemblyInformationalVersion" | grep -v "^[+-][[:space:]]*internal const string Revision =" >/dev/null 2>&1; then
 	printf "ℹ️ [Generator Diff](%s) (please review changes)" "$URL_GENERATOR" >> "$WORKSPACE/jenkins/pr-comments.md"
 else
 	printf "✅ [Generator Diff](%s) (only version changes)" "$URL_GENERATOR" >> "$WORKSPACE/jenkins/pr-comments.md"
