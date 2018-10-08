@@ -330,9 +330,21 @@ namespace Xamarin.Bundler {
 
 		void AddFramework (string file)
 		{
-			if (Driver.GetFrameworks (App).TryGetValue (file, out var framework) && framework.Version > App.SdkVersion)
-				ErrorHelper.Warning (135, "Did not link system framework '{0}' (referenced by assembly '{1}') because it was introduced in {2} {3}, and we're using the {2} {4} SDK.", file, FileName, App.PlatformName, framework.Version, App.SdkVersion);
-			else if (Frameworks.Add (file))
+			if (Driver.GetFrameworks (App).TryGetValue (file, out var framework)) {
+				if (framework.Version > App.SdkVersion) {
+					ErrorHelper.Warning (135, "Did not link system framework '{0}' (referenced by assembly '{1}') because it was introduced in {2} {3}, and we're using the {2} {4} SDK.", file, FileName, App.PlatformName, framework.Version, App.SdkVersion);
+					return;
+				}
+#if MTOUCH
+				if (App.IsSimulatorBuild && framework.VersionAvailableInSimulator != null && framework.VersionAvailableInSimulator > App.DeploymentTarget) {
+					if (WeakFrameworks.Add (file))
+						Driver.Log (3, "Weak linking with the framework {0} because it's referenced by a module reference in {1}", file, FileName);
+					return;
+				}
+#endif
+			}
+
+			if (Frameworks.Add (file))
 				Driver.Log (3, "Linking with the framework {0} because it's referenced by a module reference in {1}", file, FileName);
 		}
 
