@@ -419,8 +419,11 @@ namespace xharness
 					TestName = $"Tests for {taskGroup.Key}",
 				});
 			}
-			foreach (var tt in rv)
-				Console.WriteLine ($"{tt.TestName}: {tt.Tasks.Count ()} tasks");
+			foreach (var tt in rv) {
+				Console.WriteLine ($"{tt.TestName} ({tt.Tasks.First ().Simulators [0].Name}): {tt.Tasks.Count ()} tasks");
+				foreach (var ttt in tt.Tasks)
+					Console.WriteLine ($"    {ttt.TestName} {ttt.ExecutionResult}");
+			}
 			return rv;
 		}
 
@@ -3726,12 +3729,18 @@ function toggleAll (show)
 				foreach (var dev in devices)
 					await dev.PrepareSimulatorAsync (Jenkins.MainLog, executingTasks.Select ((v) => v.BundleIdentifier).ToArray ());
 
+				Console.WriteLine ("Executing {2}/{3} tasks for {0} ({1})", devices.First ().Name, devices.First ().UDID, executingTasks.Count (), Tasks.Count ());
+				foreach (var task in executingTasks)
+					Console.WriteLine ($"    {task.TestName}: {task.ExecutionResult}");
+
 				foreach (var task in executingTasks) {
 					task.AcquiredResource = desktop;
 					try {
+						Console.WriteLine ($"Executing {task.TestName}...");
 						await task.RunAsync ();
 					} finally {
 						task.AcquiredResource = null;
+						Console.WriteLine ($"Executed {task.TestName}: {task.ExecutionResult}");
 					}
 				}
 
