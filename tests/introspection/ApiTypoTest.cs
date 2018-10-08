@@ -300,6 +300,7 @@ namespace Introspection
 			"Linecap",
 			"Lingustic",
 			"libcompression",
+			"libdispatch",
 			"Lod",
 			"Lopass",
 			"Lowlevel",
