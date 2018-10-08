@@ -271,14 +271,8 @@ namespace CoreFoundation {
 		public static DispatchQueue MainQueue {
 			get {
 				if (main_q == IntPtr.Zero) {
-					// Try loading the symbol from our address space first, should work everywhere
-					main_q = Dlfcn.dlsym (Dlfcn.RTLD.Default, "_dispatch_main_q");
-
-					if (main_q == IntPtr.Zero)
-						main_q = Dlfcn.GetIndirect (Libraries.System.Handle, "_dispatch_main_q");
-
-					if (main_q == IntPtr.Zero)
-						main_q = dispatch_get_main_queue ();
+					// Can't use a Field attribute because we don't support generating a call to Dlfcn.GetIndirect.
+					main_q = Dlfcn.GetIndirect (Libraries.libdispatch.Handle, "_dispatch_main_q");
 				}
 
 				return new DispatchQueue (main_q, false);
@@ -414,9 +408,6 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		// dispatch_queue_t dispatch_get_global_queue (long priority, unsigned long flags);
 		extern static IntPtr dispatch_get_global_queue (nint priority, nuint flags);
-
-		[DllImport (Constants.libcLibrary)]
-		extern static IntPtr dispatch_get_main_queue ();
 
 		[DllImport (Constants.libcLibrary)]
 		// this returns a "const char*" so we cannot make a string out of it since it will be freed (and crash)
