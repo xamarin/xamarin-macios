@@ -120,26 +120,14 @@ namespace CoreFoundation {
 
 		public static bool operator != (DispatchObject a, DispatchObject b)
 		{
-			var oa = a as object;
-			var ob = b as object;
-			
-			if (oa == null){
-				if (ob == null)
-					return false;
-				return true;
-			} else {
-				if (ob == null)
-					return true;
-				return a.handle != b.handle;
-			}
+			return !(a == b);
 		}
 
 		public override bool Equals (object other)
 		{
-			if (other == null)
-				return false;
-			
 			var od = other as DispatchQueue;
+			if (od == null)
+				return false;
 			return od.handle == handle;
 		}
 
@@ -296,11 +284,8 @@ namespace CoreFoundation {
 
 						// Last case: this is technically not right for the simulator, as this path
 						// actually points to the MacOS library, not the one in the SDK.
-						if (main_q == IntPtr.Zero){
-							var h = Dlfcn.dlopen ("/usr/lib/libSystem.dylib", 0x0);
-							main_q = Dlfcn.GetIndirect (h, "_dispatch_main_q");
-							Dlfcn.dlclose (h);
-						}
+						if (main_q == IntPtr.Zero)
+							main_q = Dlfcn.GetIndirect (Libraries.System.Handle, "_dispatch_main_q");
 					}
 				}
 #if MONOMAC

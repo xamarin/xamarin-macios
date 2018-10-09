@@ -124,12 +124,10 @@ namespace AudioToolbox {
 
 		static AudioSessionRouteChangeEventArgs ()
 		{
-			var lib = Dlfcn.dlopen (Constants.AudioToolboxLibrary, 0);
+			var lib = Libraries.AudioToolbox.Handle;
 			route_change_key = Dlfcn.GetIntPtr (lib, "kAudioSession_RouteChangeKey_Reason");
 			previous_route_key = Dlfcn.GetIntPtr (lib, "kAudioSession_AudioRouteChangeKey_PreviousRouteDescription");
 			current_route_key = Dlfcn.GetIntPtr (lib, "kAudioSession_AudioRouteChangeKey_CurrentRouteDescription");
-
-			Dlfcn.dlclose (lib);
 		}
 
 		public NSDictionary Dictionary { get; private set; }
@@ -165,6 +163,7 @@ namespace AudioToolbox {
 			}
 		}
 
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		public AudioSessionInputRouteKind PreviousInputRoute {
 			get {
 				using (var array = Extract (previous_route_key, AudioSession.AudioRouteKey_Inputs))
@@ -172,6 +171,7 @@ namespace AudioToolbox {
 			}
 		}
 
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		public AudioSessionOutputRouteKind [] PreviousOutputRoutes {
 			get {
 				using (var array = Extract (previous_route_key, AudioSession.AudioRouteKey_Outputs))
@@ -179,6 +179,7 @@ namespace AudioToolbox {
 			}
 		}
 
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		public AudioSessionInputRouteKind CurrentInputRoute {
 			get {
 				using (var array = Extract (current_route_key, AudioSession.AudioRouteKey_Inputs))
@@ -186,6 +187,7 @@ namespace AudioToolbox {
 			}
 		}
 
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		public AudioSessionOutputRouteKind [] CurrentOutputRoutes {
 			get {
 				using (var array = Extract (current_route_key, AudioSession.AudioRouteKey_Outputs))
@@ -243,35 +245,33 @@ namespace AudioToolbox {
 			if (initialized)
 				return;
 
-			IntPtr lib = Dlfcn.dlopen (Constants.AudioToolboxLibrary, 0);
+			IntPtr lib = Libraries.AudioToolbox.Handle;
 			
-			AudioRouteKey_Inputs = new NSString (Dlfcn.GetIntPtr (lib, "kAudioSession_AudioRouteKey_Inputs"));
-			AudioRouteKey_Outputs = new NSString (Dlfcn.GetIntPtr (lib, "kAudioSession_AudioRouteKey_Outputs"));
-			AudioRouteKey_Type = new NSString (Dlfcn.GetIntPtr (lib, "kAudioSession_AudioRouteKey_Type"));
+			AudioRouteKey_Inputs = Dlfcn.GetStringConstant (lib, "kAudioSession_AudioRouteKey_Inputs");
+			AudioRouteKey_Outputs = Dlfcn.GetStringConstant (lib, "kAudioSession_AudioRouteKey_Outputs");
+			AudioRouteKey_Type = Dlfcn.GetStringConstant (lib, "kAudioSession_AudioRouteKey_Type");
 
-			InputRoute_LineIn = new NSString (Dlfcn.GetIntPtr (lib, "kAudioSessionInputRoute_LineIn"));
-			InputRoute_BuiltInMic = new NSString (Dlfcn.GetIntPtr (lib, "kAudioSessionInputRoute_BuiltInMic"));
-			InputRoute_HeadsetMic = new NSString (Dlfcn.GetIntPtr (lib, "kAudioSessionInputRoute_HeadsetMic"));
-			InputRoute_BluetoothHFP = new NSString (Dlfcn.GetIntPtr (lib, "kAudioSessionInputRoute_BluetoothHFP"));
-			InputRoute_USBAudio = new NSString (Dlfcn.GetIntPtr (lib, "kAudioSessionInputRoute_USBAudio"));
+			InputRoute_LineIn = Dlfcn.GetStringConstant (lib, "kAudioSessionInputRoute_LineIn");
+			InputRoute_BuiltInMic = Dlfcn.GetStringConstant (lib, "kAudioSessionInputRoute_BuiltInMic");
+			InputRoute_HeadsetMic = Dlfcn.GetStringConstant (lib, "kAudioSessionInputRoute_HeadsetMic");
+			InputRoute_BluetoothHFP = Dlfcn.GetStringConstant (lib, "kAudioSessionInputRoute_BluetoothHFP");
+			InputRoute_USBAudio = Dlfcn.GetStringConstant (lib, "kAudioSessionInputRoute_USBAudio");
 			
-			OutputRoute_LineOut = new NSString (Dlfcn.GetIntPtr (lib, "kAudioSessionOutputRoute_LineOut"));
-			OutputRoute_Headphones = new NSString (Dlfcn.GetIntPtr (lib, "kAudioSessionOutputRoute_Headphones"));
-			OutputRoute_BluetoothHFP = new NSString (Dlfcn.GetIntPtr (lib, "kAudioSessionOutputRoute_BluetoothHFP"));
-			OutputRoute_BluetoothA2DP = new NSString (Dlfcn.GetIntPtr (lib, "kAudioSessionOutputRoute_BluetoothA2DP"));
-			OutputRoute_BuiltInReceiver = new NSString (Dlfcn.GetIntPtr (lib, "kAudioSessionOutputRoute_BuiltInReceiver"));
-			OutputRoute_BuiltInSpeaker = new NSString (Dlfcn.GetIntPtr (lib, "kAudioSessionOutputRoute_BuiltInSpeaker"));
-			OutputRoute_USBAudio = new NSString (Dlfcn.GetIntPtr (lib, "kAudioSessionOutputRoute_USBAudio"));
-			OutputRoute_HDMI = new NSString (Dlfcn.GetIntPtr (lib, "kAudioSessionOutputRoute_HDMI"));
-			OutputRoute_AirPlay = new NSString (Dlfcn.GetIntPtr (lib, "kAudioSessionOutputRoute_AirPlay"));
+			OutputRoute_LineOut = Dlfcn.GetStringConstant (lib, "kAudioSessionOutputRoute_LineOut");
+			OutputRoute_Headphones = Dlfcn.GetStringConstant (lib, "kAudioSessionOutputRoute_Headphones");
+			OutputRoute_BluetoothHFP = Dlfcn.GetStringConstant (lib, "kAudioSessionOutputRoute_BluetoothHFP");
+			OutputRoute_BluetoothA2DP = Dlfcn.GetStringConstant (lib, "kAudioSessionOutputRoute_BluetoothA2DP");
+			OutputRoute_BuiltInReceiver = Dlfcn.GetStringConstant (lib, "kAudioSessionOutputRoute_BuiltInReceiver");
+			OutputRoute_BuiltInSpeaker = Dlfcn.GetStringConstant (lib, "kAudioSessionOutputRoute_BuiltInSpeaker");
+			OutputRoute_USBAudio = Dlfcn.GetStringConstant (lib, "kAudioSessionOutputRoute_USBAudio");
+			OutputRoute_HDMI = Dlfcn.GetStringConstant (lib, "kAudioSessionOutputRoute_HDMI");
+			OutputRoute_AirPlay = Dlfcn.GetStringConstant (lib, "kAudioSessionOutputRoute_AirPlay");
 
-			InputSourceKey_ID = new NSString (Dlfcn.GetIntPtr (lib, "kAudioSession_InputSourceKey_ID"));
-			InputSourceKey_Description = new NSString (Dlfcn.GetIntPtr (lib, "kAudioSession_InputSourceKey_Description"));
+			InputSourceKey_ID = Dlfcn.GetStringConstant (lib, "kAudioSession_InputSourceKey_ID");
+			InputSourceKey_Description = Dlfcn.GetStringConstant (lib, "kAudioSession_InputSourceKey_Description");
 
-			OutputDestinationKey_ID = new NSString (Dlfcn.GetIntPtr (lib, "kAudioSession_OutputDestinationKey_ID"));
-			OutputDestinationKey_Description = new NSString (Dlfcn.GetIntPtr (lib, "kAudioSession_OutputDestinationKey_Description"));
-			
-			Dlfcn.dlclose (lib);
+			OutputDestinationKey_ID = Dlfcn.GetStringConstant (lib, "kAudioSession_OutputDestinationKey_ID");
+			OutputDestinationKey_Description = Dlfcn.GetStringConstant (lib, "kAudioSession_OutputDestinationKey_Description");
 			
 			initialized = true;
 		}
@@ -440,12 +440,14 @@ namespace AudioToolbox {
 			}
 		}
 
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		static public AccessoryInfo[] InputSources {
 			get {
 				return ExtractAccessoryInfo (GetIntPtr (AudioSessionProperty.InputSources), InputSourceKey_ID, InputSourceKey_Description);
 			}
 		}
 
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		static public AccessoryInfo[] OutputDestinations {
 			get {
 				return ExtractAccessoryInfo (GetIntPtr (AudioSessionProperty.OutputDestinations), OutputDestinationKey_ID, OutputDestinationKey_Description);
@@ -490,6 +492,7 @@ namespace AudioToolbox {
 
 		*/
 
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		static internal AudioSessionInputRouteKind GetInputRoute (NSArray arr)
 		{
 			if (arr == null || arr.Count == 0)
@@ -520,6 +523,7 @@ namespace AudioToolbox {
 			}
 		}
 
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		static internal AudioSessionOutputRouteKind [] GetOutputRoutes (NSArray arr)
 		{
 			if (arr == null || arr.Count == 0)
@@ -563,12 +567,14 @@ namespace AudioToolbox {
 			return result;
 		}
 
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		static public AudioSessionInputRouteKind InputRoute {
 			get {
 				return GetInputRoute ((NSArray) AudioRouteDescription [AudioRouteKey_Inputs]);
 			}
 		}
 		
+		[Deprecated (PlatformName.iOS, 7, 0)]
 		static public AudioSessionOutputRouteKind [] OutputRoutes {
 			get {
 				return GetOutputRoutes ((NSArray) AudioRouteDescription [AudioRouteKey_Outputs]);

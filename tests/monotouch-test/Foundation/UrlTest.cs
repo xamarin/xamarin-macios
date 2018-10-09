@@ -33,12 +33,17 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void Fields ()
 		{
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
 			Assert.That (NSUrl.IsExcludedFromBackupKey.ToString (), Is.EqualTo ("NSURLIsExcludedFromBackupKey"), "IsExcludedFromBackupKey");
 		}
 		
 		[Test]
 		public void IsExcludedFromBackupKey ()
 		{
+			//TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false); // 10.8 fails DoNotBackupMe-1
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false); // 10.10 fails DoNotBackupMe-1
+
 			// NOTE: this test was failing with either NullReferenceException or InvalidCastException
 			// when we used CFBoolean as a NSObject (i.e. CFBoolean.TrueObject). The test order execution
 			// was important to track this down

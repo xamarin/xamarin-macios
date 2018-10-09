@@ -735,8 +735,6 @@
 !missing-selector! NSString::capitalizedString not bound
 !missing-selector! NSString::caseInsensitiveCompare: not bound
 !missing-selector! NSString::completePathIntoString:caseSensitive:matchesIntoArray:filterTypes: not bound
-!missing-selector! NSString::componentsSeparatedByCharactersInSet: not bound
-!missing-selector! NSString::componentsSeparatedByString: not bound
 !missing-selector! NSString::cStringUsingEncoding: not bound
 !missing-selector! NSString::dataUsingEncoding: not bound
 !missing-selector! NSString::dataUsingEncoding:allowLossyConversion: not bound
@@ -882,3 +880,131 @@
 
 ## Used 'INSFastEnumeration' placeholer (just so we can start flagging things)
 !missing-protocol-conformance! NSDictionary should conform to NSFastEnumeration (defined in 'NSGenericFastEnumeraiton' category)
+
+## never bound (or requested) for macOS, added to iOS/tvOS/watchOS in xcode10
+!missing-field! NSNonOwnedPointerHashCallBacks not bound
+!missing-field! NSNonOwnedPointerMapKeyCallBacks not bound
+!missing-field! NSNonOwnedPointerMapValueCallBacks not bound
+!missing-field! NSNonOwnedPointerOrNullMapKeyCallBacks not bound
+!missing-field! NSNonRetainedObjectHashCallBacks not bound
+!missing-field! NSNonRetainedObjectMapKeyCallBacks not bound
+!missing-field! NSNonRetainedObjectMapValueCallBacks not bound
+!missing-field! NSObjectHashCallBacks not bound
+!missing-field! NSObjectMapKeyCallBacks not bound
+!missing-field! NSObjectMapValueCallBacks not bound
+!missing-field! NSOwnedObjectIdentityHashCallBacks not bound
+!missing-field! NSOwnedPointerHashCallBacks not bound
+!missing-field! NSOwnedPointerMapKeyCallBacks not bound
+!missing-field! NSOwnedPointerMapValueCallBacks not bound
+!missing-field! NSPointerToStructHashCallBacks not bound
+!missing-pinvoke! NSAllHashTableObjects is not bound
+!missing-pinvoke! NSAllMapTableKeys is not bound
+!missing-pinvoke! NSAllMapTableValues is not bound
+!missing-pinvoke! NSCompareHashTables is not bound
+!missing-pinvoke! NSCompareMapTables is not bound
+!missing-pinvoke! NSCopyHashTableWithZone is not bound
+!missing-pinvoke! NSCopyMapTableWithZone is not bound
+!missing-pinvoke! NSCountHashTable is not bound
+!missing-pinvoke! NSCountMapTable is not bound
+!missing-pinvoke! NSCreateHashTable is not bound
+!missing-pinvoke! NSCreateHashTableWithZone is not bound
+!missing-pinvoke! NSCreateMapTable is not bound
+!missing-pinvoke! NSCreateMapTableWithZone is not bound
+!missing-pinvoke! NSEndHashTableEnumeration is not bound
+!missing-pinvoke! NSEndMapTableEnumeration is not bound
+!missing-pinvoke! NSEnumerateHashTable is not bound
+!missing-pinvoke! NSEnumerateMapTable is not bound
+!missing-pinvoke! NSFreeHashTable is not bound
+!missing-pinvoke! NSFreeMapTable is not bound
+!missing-pinvoke! NSHashGet is not bound
+!missing-pinvoke! NSHashInsert is not bound
+!missing-pinvoke! NSHashInsertIfAbsent is not bound
+!missing-pinvoke! NSHashInsertKnownAbsent is not bound
+!missing-pinvoke! NSHashRemove is not bound
+!missing-pinvoke! NSMapGet is not bound
+!missing-pinvoke! NSMapInsert is not bound
+!missing-pinvoke! NSMapInsertIfAbsent is not bound
+!missing-pinvoke! NSMapInsertKnownAbsent is not bound
+!missing-pinvoke! NSMapMember is not bound
+!missing-pinvoke! NSMapRemove is not bound
+!missing-pinvoke! NSNextHashEnumeratorItem is not bound
+!missing-pinvoke! NSNextMapEnumeratorPair is not bound
+!missing-pinvoke! NSResetHashTable is not bound
+!missing-pinvoke! NSResetMapTable is not bound
+!missing-pinvoke! NSStringFromHashTable is not bound
+!missing-pinvoke! NSStringFromMapTable is not bound
+
+## found after xtro fix
+!missing-selector! +NSArray::array not bound
+!missing-selector! +NSData::data not bound
+!missing-selector! +NSDictionary::dictionary not bound
+!missing-selector! +NSDimension::baseUnit not bound
+!missing-selector! +NSHashTable::weakObjectsHashTable not bound
+!missing-selector! +NSIndexSet::indexSet not bound
+!missing-selector! +NSMapTable::strongToStrongObjectsMapTable not bound
+!missing-selector! +NSMapTable::strongToWeakObjectsMapTable not bound
+!missing-selector! +NSMapTable::weakToStrongObjectsMapTable not bound
+!missing-selector! +NSMapTable::weakToWeakObjectsMapTable not bound
+!missing-selector! +NSObject::classFallbacksForKeyedArchiver not bound
+!missing-selector! +NSObject::classForKeyedUnarchiver not bound
+!missing-selector! +NSObject::version not bound
+!missing-selector! +NSOrderedSet::orderedSet not bound
+!missing-selector! +NSPointerArray::strongObjectsPointerArray not bound
+!missing-selector! +NSPointerArray::weakObjectsPointerArray not bound
+!missing-selector! +NSProxy::alloc not bound
+!missing-selector! +NSProxy::class not bound
+!missing-selector! +NSString::string not bound
+!missing-selector! +NSUUID::UUID not bound
+!missing-selector! +NSXPCListener::anonymousListener not bound
+!missing-selector! +NSXPCListener::serviceListener not bound
+!missing-selector! NSArray::objectEnumerator not bound
+!missing-selector! NSArray::reverseObjectEnumerator not bound
+!missing-selector! NSAutoreleasePool::drain not bound
+!missing-selector! NSCoder::decodeDataObject not bound
+!missing-selector! NSCoder::objectZone not bound
+!missing-selector! NSCountedSet::objectEnumerator not bound
+!missing-selector! NSData::base64Encoding not bound
+!missing-selector! NSDictionary::fileCreationDate not bound
+!missing-selector! NSDictionary::fileExtensionHidden not bound
+!missing-selector! NSDictionary::fileGroupOwnerAccountID not bound
+!missing-selector! NSDictionary::fileGroupOwnerAccountName not bound
+!missing-selector! NSDictionary::fileHFSCreatorCode not bound
+!missing-selector! NSDictionary::fileHFSTypeCode not bound
+!missing-selector! NSDictionary::fileIsAppendOnly not bound
+!missing-selector! NSDictionary::fileIsImmutable not bound
+!missing-selector! NSDictionary::fileModificationDate not bound
+!missing-selector! NSDictionary::fileOwnerAccountID not bound
+!missing-selector! NSDictionary::fileOwnerAccountName not bound
+!missing-selector! NSDictionary::filePosixPermissions not bound
+!missing-selector! NSDictionary::fileSize not bound
+!missing-selector! NSDictionary::fileSystemFileNumber not bound
+!missing-selector! NSDictionary::fileSystemNumber not bound
+!missing-selector! NSDictionary::fileType not bound
+!missing-selector! NSDictionary::keyEnumerator not bound
+!missing-selector! NSDirectoryEnumerator::skipDescendants not bound
+!missing-selector! NSException::raise not bound
+!missing-selector! NSHashTable::objectEnumerator not bound
+!missing-selector! NSHashTable::removeAllObjects not bound
+!missing-selector! NSInvocation::retainArguments not bound
+!missing-selector! NSKeyedUnarchiver::init not bound
+!missing-selector! NSMapTable::dictionaryRepresentation not bound
+!missing-selector! NSMapTable::keyEnumerator not bound
+!missing-selector! NSMapTable::objectEnumerator not bound
+!missing-selector! NSMapTable::removeAllObjects not bound
+!missing-selector! NSNotification::init not bound
+!missing-selector! NSOrderedSet::reverseObjectEnumerator not bound
+!missing-selector! NSPointerArray::compact not bound
+!missing-selector! NSProxy::dealloc not bound
+!missing-selector! NSProxy::finalize not bound
+!missing-selector! NSString::propertyList not bound
+!missing-selector! NSString::propertyListFromStringsFileFormat not bound
+!missing-selector! NSURL::isFileReferenceURL not bound
+!missing-selector! NSUserActivity::init not bound
+!missing-selector! NSXMLParser::abortParsing not bound
+!missing-selector! NSXMLParser::parse not bound
+!missing-selector! NSXPCConnection::invalidate not bound
+!missing-selector! NSXPCConnection::resume not bound
+!missing-selector! NSXPCConnection::suspend not bound
+!missing-selector! NSXPCListener::invalidate not bound
+!missing-selector! NSXPCListener::resume not bound
+!missing-selector! NSXPCListener::suspend not bound

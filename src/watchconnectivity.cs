@@ -195,6 +195,10 @@ namespace WatchConnectivity {
 
 		[Export ("cancel")]
 		void Cancel ();
+
+		[Watch (5,0)][iOS (12,0)]
+		[Export ("progress")]
+		NSProgress Progress { get; }
 	}
 
 	[iOS (9,0)]

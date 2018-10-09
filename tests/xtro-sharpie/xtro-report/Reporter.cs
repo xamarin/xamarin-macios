@@ -5,88 +5,6 @@ using System.IO;
 namespace Extrospection {
 	class Reporter {
 
-		public static bool Filter (string fx)
-		{
-			switch (fx) {
-			// macOS only - unsupported frameworks
-			case "AE":
-			case "AGL":
-			case "ATS":
-			case "AudioVideoBridging":
-			case "Automator":
-			case "CalendarStore":
-			case "CarbonCore":
-			case "CFOpenDirectory":
-			case "Collaboration":
-			case "ColorSync":
-			case "CommonPanels":
-			case "CryptoTokenKit":
-			case "DictionaryServices":
-			case "DirectoryService":
-			case "DiskArbitration":
-			case "DiscRecording":
-			case "DiscRecordingUI":
-			case "DVDPlayback":
-			case "ExceptionHandling":
-			case "ForceFeedback":
-			case "FSEvents":
-			case "FWAUserLib":
-			case "GLUT":
-			case "Help":
-			case "HIServices":
-			case "HIToolbox":
-			case "Hypervisor":
-			case "ICADevices":
-			case "ImageCaptureCore":
-			case "ImageCapture":
-			case "IMServicePlugIn":
-			case "Ink":
-			case "InstallerPlugins":
-			case "IOBluetooth":
-			case "IOBluetoothUI":
-			case "IOKit":
-			case "JavaFrameEmbedding":
-			case "JavaVM":
-			case "Kerberos":
-			case "LatentSemanticMapping":
-			case "LaunchServices":
-			case "Metadata":
-			case "NavigationServices":
-			case "NetFS":
-			case "OpenCL":
-			case "OpenDirectory":
-			case "OpenScripting":
-			case "OSAKit":
-			case "OSServices":
-			case "PreferencePanes":
-			case "Python":
-			case "QD":
-			case "QuartzComposer":
-			case "QuartzFilters":
-			case "ruby":
-			case "ScreenSaver":
-			case "Scripting":
-			case "ScriptingBridge":
-			case "SearchKit":
-			case "SecurityFoundation": // bugzilla
-			case "SecurityHI":
-			case "ServiceManagement":
-			case "SharedFileList":
-			case "SpeechRecognition":
-			case "SpeechSynthesis":
-			case "SyncServices":
-			case "Tcl":
-			case "TWAIN":
-			case "vmnet":
-			// other non-supported frameworks
-			case "GSS": // iOS and macOS
-			case "vecLib": // all
-				return true;
-			default:
-				return false;
-			}
-		}
-
 		static string InputDirectory { get; set; }
 		static string ReportFolder { get; set; }
 
@@ -225,7 +143,7 @@ namespace Extrospection {
 
 			Frameworks.Sort ();
 			foreach (var fx in Frameworks) {
-				if (Filter (fx))
+				if (Helpers.Filter (fx))
 					continue;
 				log.WriteLine ("<tr>");
 				log.Write ("<td>");
@@ -352,7 +270,7 @@ namespace Extrospection {
 			log.Flush ();
 
 			Console.WriteLine ($"@MonkeyWrench: SetSummary: {errors} unclassified found.");
-			return errors;
+			return errors == 0 ? 0 : 1;
 		}
 	}
 }

@@ -43,6 +43,7 @@ namespace xharness
 					}
 				},
 				{ "sdkroot=", "Where Xcode is", (v) => harness.SdkRoot = v },
+				{ "sdkroot94=", "Where Xcode 9.4 is", (v) => harness.SdkRoot94 = v },
 				{ "target=", "Where to run the project ([ios|watchos|tvos]-[device|simulator|simulator-32|simulator-64]).", (v) => harness.Target = v.ParseAsAppRunnerTarget () },
 				{ "configuration=", "Which configuration to run (defaults to Debug).", (v) => harness.Configuration = v },
 				{ "logdirectory=", "Where to store logs.", (v) => harness.LogDirectory = v },

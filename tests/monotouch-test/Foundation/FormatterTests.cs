@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 #if XAMCORE_2_0
 using Foundation;
+using ObjCRuntime;
 #if MONOMAC
 using AppKit;
 #else
@@ -34,6 +35,7 @@ namespace MonoTouchFixtures.Foundation
 		void RequiresIos8 ()
 		{
 			TestRuntime.AssertXcodeVersion (6, 0);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			if (dateComponentsFormatter == null)
 				dateComponentsFormatter = new NSDateComponentsFormatter ();

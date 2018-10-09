@@ -27,6 +27,9 @@
 
 ## fixed for XAMCORE_4_0
 !incorrect-protocol-member! UIDocumentPickerDelegate::documentPicker:didPickDocumentAtURL: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UIFocusItem::frame is REQUIRED and should be abstract
+!incorrect-protocol-member! UIFocusEnvironment::focusItemContainer is REQUIRED and should be abstract
+!incorrect-protocol-member! UIFocusEnvironment::parentFocusEnvironment is REQUIRED and should be abstract
 
 ## Special case from UIAccessibilityAction. We added it (completly) on UIResponser but magic tap is also available on app delegate according to docs
 ## See comments is uikit.cs for more info
@@ -39,6 +42,8 @@
 # fixed in XAMCORE_4_0 - API break
 !incorrect-protocol-member! UIDocumentMenuDelegate::documentMenuWasCancelled: is OPTIONAL and should NOT be abstract
 
+## the category name is clear enough: UIPrintPaper_Deprecated_Nonfunctional
+!missing-selector! UIPrintPaper::printRect not bound
 
 ## unsorted
 

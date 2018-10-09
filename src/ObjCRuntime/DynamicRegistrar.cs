@@ -260,7 +260,7 @@ namespace Registrar {
 			} else {
 				var cinfo = method as ConstructorInfo;
 				if (parameter_index == -1) {
-					throw ErrorHelper.CreateError (99, $"Internal error: can't get the BindAs attribute for the return value of a constructor ({GetDescriptiveMethodName (method)}). Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+					throw ErrorHelper.CreateError (99, $"Internal error: can't get the BindAs attribute for the return value of a constructor ({GetDescriptiveMethodName (method)}). Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 				} else {
 					provider = cinfo.GetParameters () [parameter_index];
 				}
@@ -1049,7 +1049,7 @@ namespace Registrar {
 				tramp = Method.SetGCHandleTrampoline;
 				break;
 			default:
-				throw ErrorHelper.CreateError (4144, "Cannot register the method '{0}.{1}' since it does not have an associated trampoline. Please file a bug report at http://bugzilla.xamarin.com", method.DeclaringType.Type.FullName, method.Name);
+				throw ErrorHelper.CreateError (4144, "Cannot register the method '{0}.{1}' since it does not have an associated trampoline. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", method.DeclaringType.Type.FullName, method.Name);
 			}
 
 			return Class.class_addMethod (reg_handle, Selector.GetHandle (method.Selector), tramp, method.Signature);

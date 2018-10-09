@@ -1,6 +1,8 @@
 ## no generator support for FastEnumeration - https://bugzilla.xamarin.com/show_bug.cgi?id=4391
 !missing-protocol-conformance! AUAudioUnitBusArray should conform to NSFastEnumeration
 
+## deprecated (even removed in tvOS) and not publicly exposed in XAMCORE_2_0
+!missing-pinvoke! AudioFileReadPackets is not bound
 
 ## unsorted
 

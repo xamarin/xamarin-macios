@@ -46,9 +46,6 @@ namespace MonoTouchFixtures.ExternalAccessory {
 		[Test]
 		public void ShowBluetoothAccessoryPicker ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6,0))
-				Assert.Inconclusive ("Requires iOS6+");
-
 			EAAccessoryManager.SharedAccessoryManager.ShowBluetoothAccessoryPicker (null, null);
 		}
 #endif

@@ -42,13 +42,8 @@ namespace CoreFoundation {
 
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CFRange {
-#if MTOUCH
-		IntPtr loc;
-		IntPtr len;
-#else
 		nint loc; // defined as 'long' in native code
 		nint len; // defined as 'long' in native code
-#endif
 
 		public int Location {
 			get { return (int) loc; }
@@ -73,13 +68,8 @@ namespace CoreFoundation {
 
 		public CFRange (long l, long len)
 		{
-#if MTOUCH
-			this.loc = (IntPtr) l;
-			this.len = (IntPtr) len;
-#else
 			this.loc = (nint) l;
 			this.len = (nint) len;
-#endif
 		}
 
 #if XAMCORE_2_0

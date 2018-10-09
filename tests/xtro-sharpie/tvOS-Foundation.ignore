@@ -7,7 +7,6 @@
 ## does not exists in iOS (or tvOS) as a type - but some API refers to it (messy)
 !unknown-type! NSPortMessage bound
 
-
 ## unsorted
 
 !missing-selector! +NSURLConnection::sendSynchronousRequest:returningResponse:error: not bound

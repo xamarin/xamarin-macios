@@ -259,9 +259,7 @@ namespace MonoTouchFixtures.UIKit {
 			Assert.AreEqual ((int) UIAccessibilityTrait.SummaryElement, UIView.TraitSummaryElement, "SummaryElement");
 			Assert.AreEqual ((int) UIAccessibilityTrait.UpdatesFrequently, UIView.TraitUpdatesFrequently, "UpdatesFrequently");
 
-			// some [Field] won't return a valid value before iOS 6.0
-			if (TestRuntime.CheckSystemAndSDKVersion (6,0))
-				Assert.AreEqual ((int) UIAccessibilityTrait.Header, UIView.TraitHeader, "Header");
+			Assert.AreEqual ((int) UIAccessibilityTrait.Header, UIView.TraitHeader, "Header");
 		}
 
 		[Test]
@@ -280,8 +278,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void TintColor ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("requires iOS7+");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			using (var v = new UIView ()) {
 				var tc = v.TintColor;

@@ -70,11 +70,11 @@ namespace ImageIO {
 			if (BestGuessTypeIdentifier != null)
 				dict.LowlevelSetObject (new NSString (BestGuessTypeIdentifier), kTypeIdentifierHint);
 			if (!ShouldCache)
-				dict.LowlevelSetObject (CFBoolean.False.Handle, kShouldCache);
+				dict.LowlevelSetObject (CFBoolean.FalseHandle, kShouldCache);
 			if (ShouldAllowFloat)
-				dict.LowlevelSetObject (CFBoolean.True.Handle, kShouldAllowFloat);
+				dict.LowlevelSetObject (CFBoolean.TrueHandle, kShouldAllowFloat);
 			if (kShouldCacheImmediately != IntPtr.Zero && ShouldCacheImmediately)
-				dict.LowlevelSetObject (CFBoolean.True.Handle, kShouldCacheImmediately);
+				dict.LowlevelSetObject (CFBoolean.TrueHandle, kShouldCacheImmediately);
 
 			return dict;
 		}
@@ -93,7 +93,7 @@ namespace ImageIO {
 		internal override NSMutableDictionary ToDictionary ()
 		{
 			var dict = base.ToDictionary ();
-			IntPtr thandle = CFBoolean.True.Handle;
+			IntPtr thandle = CFBoolean.TrueHandle;
 
 			if (CreateThumbnailFromImageIfAbsent)
 				dict.LowlevelSetObject (thandle, kCreateThumbnailFromImageIfAbsent);
@@ -392,6 +392,16 @@ namespace ImageIO {
 			var info = new CGImageAuxiliaryDataInfo (dictionary);
 
 			return info;
+		}
+
+		[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0), Watch (5,0)]
+		[DllImport (Constants.ImageIOLibrary)]
+		extern static nuint CGImageSourceGetPrimaryImageIndex (IntPtr /* CGImageSource */ src);
+
+		[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0), Watch (5,0)]
+		public nuint GetPrimaryImageIndex ()
+		{
+			return CGImageSourceGetPrimaryImageIndex (handle);
 		}
 	}
 }

@@ -1,6 +1,0 @@
-## While these keys are present in the SDK, the class that uses them UNNotificationAttachment is __TVOS_PROHIBITED
-
-!missing-field! UNNotificationAttachmentOptionsThumbnailClippingRectKey not bound
-!missing-field! UNNotificationAttachmentOptionsThumbnailHiddenKey not bound
-!missing-field! UNNotificationAttachmentOptionsThumbnailTimeKey not bound
-!missing-field! UNNotificationAttachmentOptionsTypeHintKey not bound

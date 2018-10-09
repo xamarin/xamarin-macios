@@ -4,6 +4,7 @@ using System.Reflection;
 
 #if XAMCORE_2_0
 using Foundation;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 #endif
@@ -222,6 +223,7 @@ namespace MonoTouchFixtures.Foundation
 		public void AnyKeyPropertiesTest ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			var availableProperties = new List<string> { };
 			using (var expression = NSExpression.FromAnyKey ()) {

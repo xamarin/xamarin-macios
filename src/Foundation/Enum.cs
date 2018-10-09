@@ -899,6 +899,8 @@ namespace Foundation  {
 		Video,
 		Background,
 		Voice,
+		[Mac (10,14)][iOS (12,0)][Watch (5,0)][TV (12,0)]
+		ResponsiveData,
 		[Mac (10,12)][iOS (10,0)][Watch (3,0)][TV (10,0)]
 		CallSignaling = 11,
 	}
@@ -1090,6 +1092,7 @@ namespace Foundation  {
 	}
 
 	[iOS (8,0)]
+	[Mac (10,10)]
 	[Native]
 	public enum NSQualityOfService : long {
 		UserInteractive = 33,

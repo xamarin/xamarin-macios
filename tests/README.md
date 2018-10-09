@@ -72,7 +72,20 @@ Con
 
 * The data might not represent the truth (errors, false positives...)
 
+### Xamarin.Mac
 
+Many tests when run for macOS use a integration [hack](https://github.com/xamarin/xamarin-macios/blob/master/tests/common/mac/MacTestMain.cs) which helps handle a number of issues:
+
+- Allowing command line arguments to tests while excluding "psn" arguments passed in while debugging with Visual Studio for Mac
+- Optionally integrating with the macOS message loop for tests that require it (anything that uses most Cocoa primitives).
+- Invoking `_exit` to work around a number of post-test hangs. See the [bug](https://bugzilla.xamarin.com/show_bug.cgi?id=52604) for details.
+- Add a number of "default" excludes for mono BCL tests
+
+One very useful "hack" this support adds is the ability to run a single test from the command line via the `XM_TEST_NAME` environmental variable. For example
+
+```
+XM_TEST_NAME=MonoTouchFixtures.Security.KeyTest.CreateRandomKeyWithParametersTests make run-mac-unified-xammac_tests
+```
 
 # Test Suites
 

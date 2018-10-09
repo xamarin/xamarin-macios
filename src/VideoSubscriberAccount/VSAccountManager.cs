@@ -7,6 +7,8 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
+#if !MONOMAC
+
 using System;
 using System.Threading.Tasks;
 using Foundation;
@@ -34,3 +36,4 @@ namespace VideoSubscriberAccount {
 	}
 }
 
+#endif

@@ -78,21 +78,13 @@ namespace MediaAccessibility {
 
 		static MACaptionAppearance ()
 		{
-			var handle = Dlfcn.dlopen (Constants.MediaAccessibilityLibrary, 0);
-			if (handle == IntPtr.Zero) {
-				return;
-			}
+			var handle = Libraries.MediaAccessibility.Handle;
+			SettingsChangedNotification = Dlfcn.GetStringConstant (handle, "kMACaptionAppearanceSettingsChangedNotification");
 
-			try {
-				SettingsChangedNotification = Dlfcn.GetStringConstant (handle, "kMACaptionAppearanceSettingsChangedNotification");
-
-				MediaCharacteristicDescribesMusicAndSoundForAccessibility = Dlfcn.GetStringConstant (handle,
-					"MAMediaCharacteristicDescribesMusicAndSoundForAccessibility");
-				MediaCharacteristicTranscribesSpokenDialogForAccessibility = Dlfcn.GetStringConstant (handle,
-					"MAMediaCharacteristicTranscribesSpokenDialogForAccessibility");
-			} finally {
-				Dlfcn.dlclose (handle);
-			}
+			MediaCharacteristicDescribesMusicAndSoundForAccessibility = Dlfcn.GetStringConstant (handle,
+				"MAMediaCharacteristicDescribesMusicAndSoundForAccessibility");
+			MediaCharacteristicTranscribesSpokenDialogForAccessibility = Dlfcn.GetStringConstant (handle,
+				"MAMediaCharacteristicTranscribesSpokenDialogForAccessibility");
 		}
 #endif
 

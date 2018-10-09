@@ -108,9 +108,9 @@ namespace CoreGraphics {
 			if (EncryptionKeyLength.HasValue)
 				ret.LowlevelSetObject (NSNumber.FromInt32 (EncryptionKeyLength.Value), kCGPDFContextEncryptionKeyLength);
 			if (AllowsPrinting.HasValue && AllowsPrinting.Value == false)
-				ret.LowlevelSetObject (CFBoolean.False.Handle, kCGPDFContextAllowsPrinting);
+				ret.LowlevelSetObject (CFBoolean.FalseHandle, kCGPDFContextAllowsPrinting);
 			if (AllowsCopying.HasValue && AllowsCopying.Value == false)
-				ret.LowlevelSetObject (CFBoolean.False.Handle, kCGPDFContextAllowsCopying);
+				ret.LowlevelSetObject (CFBoolean.FalseHandle, kCGPDFContextAllowsCopying);
 			if (AccessPermissions.HasValue)
 				ret.LowlevelSetObject (NSNumber.FromInt32 ((int) AccessPermissions.Value), kCGPDFContextAccessPermissions);
 			return ret;

@@ -25,6 +25,9 @@ using System.Linq;
 using System.Text;
 
 using NUnit.Framework;
+#if __IOS__
+using ARKit;
+#endif
 
 #if XAMCORE_2_0
 using Foundation;
@@ -363,6 +366,9 @@ namespace Introspection {
 			case "UISearchBar":
 				// - (nullable instancetype)initWithCoder:(NSCoder *)aDecoder NS_DESIGNATED_INITIALIZER __TVOS_PROHIBITED;
 				return true;
+			case "TVDigitEntryViewController":
+				// full screen, no customization w/NIB
+				return true;
 #endif
 			case "PdfAnnotationButtonWidget":
 			case "PdfAnnotationChoiceWidget":
@@ -418,6 +424,13 @@ namespace Introspection {
 			case "MDLColorSwatchTexture":
 				// they don't make sense without extra arguments
 				return true;
+			case "ASCredentialProviderViewController": // goal is to "provides a standard interface for creating a credential provider extension", not a custom one
+			case "INUIAddVoiceShortcutViewController": // Doesn't make sense without INVoiceShortcut and there is no other way to set this unless you use the other only .ctor
+			case "INUIEditVoiceShortcutViewController": // Doesn't make sense without INVoiceShortcut and there is no other way to set this unless you use the other only .ctor
+			case "ILClassificationUIExtensionViewController": // Meant to be an extension
+				if (ctor.ToString () == "Void .ctor(String, NSBundle)")
+					return true;
+				break;
 			}
 
 			var ep = ctor.GetParameters ();
@@ -517,5 +530,30 @@ namespace Introspection {
 
 			return SkipDueToAttribute (type);
 		}
+
+#if __IOS__
+		/// <summary>
+		/// Ensures that all subclasses of a base class that conforms to IARAnchorCopying re-expose its constructor.
+		/// Note: we cannot have constructors in protocols so we have to inline them in every subclass.
+		/// </summary>
+		[Test]
+		public void ARAnchorCopyingCtorTest ()
+		{
+			Errors = 0;
+
+			foreach (Type t in Assembly.GetTypes ()) {
+				if (t.Name == "IARAnchorCopying" || t.Name == "ARAnchorCopyingWrapper")
+					continue;
+
+				if (!typeof (IARAnchorCopying).IsAssignableFrom (t))
+					continue;
+
+				if (t.GetConstructor (new Type [] { typeof (ARAnchor) }) == null)
+					ReportError ("{0} should re-expose IARAnchorCopying::.ctor(ARAnchor)", t);
+			}
+
+			Assert.AreEqual (0, Errors, "{0} potential errors found when validating if subclasses of 'ARAnchor' re-expose 'IARAnchorCopying' constructor", Errors);
+		}
+#endif
 	}
 }

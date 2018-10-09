@@ -17,26 +17,27 @@ namespace Intents {
 
 		public static INCarAirCirculationModeResolutionResult GetSuccess (INCarAirCirculationMode resolvedValue)
 		{
-#if IOS
+#if __WATCHOS__
+			throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+#elif __IOS__
 			if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
-#elif WATCH
-			if (WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (4, 0))
-#endif
 				return SuccessWithResolvedCarAirCirculationMode (resolvedValue);
 			else
 				return SuccessWithResolvedValue (resolvedValue);
+#endif
 		}
 
 		public static INCarAirCirculationModeResolutionResult GetConfirmationRequired (INCarAirCirculationMode valueToConfirm)
 		{
-#if IOS
+
+#if __WATCHOS__
+			throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+#elif __IOS__
 			if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
-#elif WATCH
-			if (WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (4, 0))
-#endif
 				return ConfirmationRequiredWithCarAirCirculationModeToConfirm (valueToConfirm);
 			else
 				return ConfirmationRequiredWithValueToConfirm (valueToConfirm);
+#endif
 		}
 	}
 }

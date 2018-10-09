@@ -68,6 +68,12 @@ namespace Introspection {
 				case "NSFetchRequest": // Not declared in header file
 				case "NSManagedObjectModel": // Not declared in header file
 				case "NSUserInterfaceCompressionOptions": // Not declared in header file
+				// Xcode 10 (running on macOS 10.14)
+				case "NSTextAlternatives":
+				case "QTDataReference": // no header files anymore for deprecated QuickTime
+				case "NSTextBlock":
+				case "NSTextTable":
+				case "NSTextTableBlock":
 					return true;
 				default:
 					// CIFilter started implementing NSSecureCoding in 10.11
@@ -137,6 +143,8 @@ namespace Introspection {
 				case "NSConstraintConflict": // Not declared in header file
 				case "NSQueryGenerationToken": // Declared in header file but SupportsSecureCoding returns false - radar 32856944
 				case "NSPersistentHistoryToken": // Conformance not in headers
+				// Xcode 10 (running on macOS 10.14)
+				case "NSTextAlternatives":
 					return true;
 				}
 				break;
@@ -206,7 +214,11 @@ namespace Introspection {
 			case "NSAppearanceCustomization":
 				switch (type.Name) {
 				case "NSPopover":
-					if (!Mac.CheckSystemVersion (10, 13)) // Was added in 10.13
+					if (!Mac.CheckSystemVersion (10, 13) || IntPtr.Size == 4) // Was added in 10.13
+						return true;
+					break;
+				case "NSApplication":
+					if (!Mac.CheckSystemVersion (10, 14)) // Was added in 10.14
 						return true;
 					break;
 				}
@@ -225,6 +237,14 @@ namespace Introspection {
 				case "NSString":
 				case "NSUrl":
 					if (IntPtr.Size == 4) // Only on 64-bit version of these types
+						return true;
+					break;
+				}
+				break;
+			case "CAAction":
+				switch (type.Name) {
+				case "NSNull":
+					if (!Mac.CheckSystemVersion (10, 11)) // NSNull started implementing the CAAction protocol in 10.11
 						return true;
 					break;
 				}

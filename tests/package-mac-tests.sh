@@ -9,7 +9,7 @@ mkdir -p $DIR
 
 make build-mac
 
-for app in */bin/x86/*/*.app linker/mac/*/bin/x86/*/*.app; do
+for app in */bin/x86/*/*.app linker/mac/*/bin/x86/*/*.app introspection/Mac/bin/x86/*/*.app; do
 	mkdir -p "$DIR/tests/$app"
 	cp -R "$app" "$DIR/tests/$app/.."
 done
@@ -18,6 +18,7 @@ cp -p Makefile-mac.inc $DIR/tests
 cp -p common.mk $DIR/tests
 cp -p Makefile $DIR/tests
 cp -p ../Make.config $DIR
+cp -p ../Make.versions $DIR
 cp -p test-dependencies.sh $DIR
 cp -p ../system-dependencies.sh $DIR
 mkdir -p $DIR/mk

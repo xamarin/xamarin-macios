@@ -44,7 +44,9 @@ namespace xharness
 $@"[Local Date/Time:	{DateTime.Now}]
 [Remote Address:	{remote}]";
 				if (XmlOutput) {
-					xml_data = local_data;
+					// This can end up creating invalid xml randomly:
+					// https://github.com/xamarin/maccore/issues/827
+					//xml_data = local_data;
 				} else {
 					output_writer.WriteLine (local_data);
 				}
