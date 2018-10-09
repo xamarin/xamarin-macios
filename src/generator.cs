@@ -5864,7 +5864,11 @@ public partial class Generator : IMemberGatherer {
 				// it is a path to a library, so we save the path and change library name
 				// to a valid identifier if needed
 				library_path = library_name;
-				library_name = Path.GetFileName (library_name);
+				if (BindThirdPartyLibrary /* without extension makes more sense, but we can't change it since it breaks compat */) {
+					library_name = Path.GetFileName (library_name);
+				} else {
+					library_name = Path.GetFileNameWithoutExtension (library_name);
+				}
 				if (library_name.Contains ("."))
 					library_name = library_name.Replace (".", string.Empty);
 			}

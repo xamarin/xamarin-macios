@@ -71,10 +71,10 @@ namespace CoreImage {
 			NSMutableDictionary dict = new NSMutableDictionary ();
 
 			if (Enhance.HasValue && Enhance.Value == false){
-				dict.LowlevelSetObject (CFBoolean.False.Handle, CIImage.AutoAdjustEnhanceKey.Handle);
+				dict.LowlevelSetObject (CFBoolean.FalseHandle, CIImage.AutoAdjustEnhanceKey.Handle);
 			}
 			if (RedEye.HasValue && RedEye.Value == false){
-				dict.LowlevelSetObject (CFBoolean.False.Handle, CIImage.AutoAdjustRedEyeKey.Handle);
+				dict.LowlevelSetObject (CFBoolean.FalseHandle, CIImage.AutoAdjustRedEyeKey.Handle);
 			}
 			if (Features != null && Features.Length != 0){
 				dict.LowlevelSetObject (NSArray.FromObjects (Features), CIImage.AutoAdjustFeaturesKey.Handle);
@@ -83,10 +83,10 @@ namespace CoreImage {
 				dict.LowlevelSetObject (new NSNumber ((int)ImageOrientation.Value), global::ImageIO.CGImageProperties.Orientation.Handle);
 			}
 			if (AutoAdjustCrop.HasValue && AutoAdjustCrop.Value == true){
-				dict.LowlevelSetObject (CFBoolean.True.Handle, CIImage.AutoAdjustCrop.Handle);
+				dict.LowlevelSetObject (CFBoolean.TrueHandle, CIImage.AutoAdjustCrop.Handle);
 			}
 			if (AutoAdjustLevel.HasValue && AutoAdjustLevel.Value == true){
-				dict.LowlevelSetObject (CFBoolean.True.Handle, CIImage.AutoAdjustLevel.Handle);
+				dict.LowlevelSetObject (CFBoolean.TrueHandle, CIImage.AutoAdjustLevel.Handle);
 			}
 			
 #if false
