@@ -198,7 +198,7 @@ make all-local -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$OUTPUT_DIR/apidiff
 # affecting that build.
 $CP -R "$ROOT_DIR/src/build" "$OUTPUT_DIR/build-new"
 cd "$OUTPUT_DIR"
-find build build-new '(' -name '*.dll' -or -name '*.mdb' -or -name '*.pdb' -or -name 'generated-sources' -or -name 'generated_sources' -or -name '*.exe' ')' -delete
+find build build-new '(' -name '*.dll' -or -name '*.pdb' -or -name 'generated-sources' -or -name 'generated_sources' -or -name '*.exe' -or -name '*.rsp' -or -name 'AssemblyInfo.cs' -or -name 'Constants.cs' -or -name 'generator.csproj.*' ')' -delete
 mkdir -p "$OUTPUT_DIR/generator-diff"
 GENERATOR_DIFF_FILE="$OUTPUT_DIR/generator-diff/index.html"
 git diff --no-index build build-new > "$OUTPUT_DIR/generator-diff/generator.diff" || true
