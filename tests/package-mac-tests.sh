@@ -8,6 +8,7 @@ rm -Rf $DIR
 mkdir -p $DIR
 
 make build-mac
+make build-mac-system-dontlink
 
 for app in */bin/x86/*/*.app linker/mac/*/bin/x86/*/*.app introspection/Mac/bin/x86/*/*.app; do
 	mkdir -p "$DIR/tests/$app"
