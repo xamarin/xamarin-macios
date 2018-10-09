@@ -309,16 +309,24 @@ def runXamarinMacTests (url, macOS, maccore_hash, xamarin_macios_hash)
                     failedTests.add (t)
                 }
             }
-            // install oldest supported mono
-            sh ('''
-                cd mac-test-package
-                URL=`grep "^MIN_XM_MONO_URL=" Make.config | sed 's/.*=//'`
-                curl -L '$URL' --output old-mono.pkg
-                sudo installer -pkg old-mono.pkg -target /
-                mono --version
-                ''')
-            // run dontlink tests using the system mono
-            sh ("make -C mac-test-package/tests exec-mac-system-dontlink")
+            // Run dontlink using the oldest system mono we support
+            def t = "dontlink (system)"
+            try {
+                // install oldest supported mono
+                sh ('''
+                    cd mac-test-package
+                    URL=`grep "^MIN_XM_MONO_URL=" Make.config | sed 's/.*=//'`
+                    curl -L "$URL" --output old-mono.pkg
+                    sudo installer -pkg old-mono.pkg -target /
+                    mono --version
+                    ''')
+                // run dontlink tests using the system mono
+                sh ("make -C mac-test-package/tests exec-mac-system-dontlink")
+            } catch (error) {
+                echoError ("${t} failed with error: ${error}")
+                failed = true
+                failedTests.add (t)
+            }
         }
     } finally {
         sh ("rm -rf ${workspace}/mac-test-package ${workspace}/*.zip")
