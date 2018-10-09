@@ -2345,7 +2345,7 @@ function toggleAll (show)
 
 		public string LogDirectory {
 			get {
-				var rv = Path.Combine (Jenkins.LogDirectory, $"{TestName}", $"{ID}");
+				var rv = Path.Combine (Jenkins.LogDirectory, TestName, ID.ToString ());
 				Directory.CreateDirectory (rv);
 				return rv;
 			}
