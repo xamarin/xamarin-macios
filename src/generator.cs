@@ -6311,7 +6311,7 @@ public partial class Generator : IMemberGatherer {
 						sw.WriteLine ("\t\t{");
 						if (is32BitNotSupported) {
 							sw.WriteLine ("\t\t#if ARCH_32");
-							sw.WriteLine ("\t\t\tthrow new PlatformNotSupportedException ();");
+							sw.WriteLine ("\t\t\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
 							sw.WriteLine ("\t\t#else");
 						}
 						if (is_direct_binding_value != null)
@@ -6328,7 +6328,7 @@ public partial class Generator : IMemberGatherer {
 					sw.WriteLine ("\t\t{");
 					if (is32BitNotSupported) {
 						sw.WriteLine ("\t\t#if ARCH_32");
-						sw.WriteLine ("\t\t\tthrow new PlatformNotSupportedException ();");
+						sw.WriteLine ("\t\t\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
 						sw.WriteLine ("\t\t#else");
 					}
 					if (is_direct_binding_value != null)
