@@ -13493,7 +13493,6 @@ namespace Foundation
 	}
 
 #if !WATCH && !TVOS
-	[Mac (10,8), iOS (11,0), NoWatch, NoTV]
 	partial interface NSFileManager {
 
 		[Mac (10, 8), Export ("trashItemAtURL:resultingItemURL:error:")]
