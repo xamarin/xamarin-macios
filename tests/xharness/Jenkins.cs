@@ -2204,6 +2204,30 @@ function toggleAll (show)
 
 		public bool RequiresXcode94;
 
+		// VerifyRun is called in RunInternalAsync/ExecuteAsync to verify that the task can be executed/run.
+		// Typically used to fail tasks that don't have an available device, or if there's not enough disk space.
+		public virtual Task VerifyRunAsync ()
+		{
+			return VerifyDiskSpaceAsync ();
+		}
+
+		static DriveInfo RootDrive;
+		protected Task VerifyDiskSpaceAsync ()
+		{
+			if (Finished)
+				return Task.CompletedTask;
+
+			if (RootDrive == null)
+				RootDrive = new DriveInfo ("/");
+			var afs = RootDrive.AvailableFreeSpace;
+			const long minSpaceRequirement = 1024 * 1024 * 1024; /* 1 GB */
+			if (afs < minSpaceRequirement) {
+				FailureMessage = $"Not enough space on the root drive '{RootDrive.Name}': {afs / (1024.0 * 1024):#.##} MB left of {minSpaceRequirement / (1024.0 * 1024):#.##} MB required";
+				ExecutionResult = TestExecutingResult.Failed;
+			}
+			return Task.CompletedTask;
+		}
+
 		public void CloneTestProject (TestProject project)
 		{
 			// Don't build in the original project directory
@@ -2371,6 +2395,10 @@ function toggleAll (show)
 			try {
 				if (InitialTask != null)
 					await InitialTask;
+				
+				await VerifyRunAsync ();
+				if (Finished)
+					return;
 
 				duration.Start ();
 
@@ -3139,6 +3167,10 @@ function toggleAll (show)
 			if (Finished)
 				return true;
 			
+			await VerifyBuildAsync ();
+			if (Finished)
+				return BuildTask.Succeeded;
+
 			ExecutionResult = TestExecutingResult.Building;
 			await BuildTask.RunAsync ();
 			if (!BuildTask.Succeeded) {
@@ -3177,9 +3209,12 @@ function toggleAll (show)
 		}
 
 		protected abstract Task RunTestAsync ();
-		// VerifyRun is called in ExecuteAsync to verify that the task can be executed/run.
-		// Typically used to fail tasks that don't have an available device.
-		public virtual Task VerifyRunAsync () { return Task.CompletedTask; }
+		// VerifyBuild is called in BuildAsync to verify that the task can be built.
+		// Typically used to fail tasks if there's not enough disk space.
+		public virtual Task VerifyBuildAsync ()
+		{
+			return VerifyDiskSpaceAsync ();
+		}
 
 		public override void Reset ()
 		{
@@ -3256,6 +3291,8 @@ function toggleAll (show)
 		public override async Task VerifyRunAsync ()
 		{
 			await base.VerifyRunAsync ();
+			if (Finished)
+				return;
 
 			var enumerable = candidates;
 			var asyncEnumerable = enumerable as IAsyncEnumerable;
