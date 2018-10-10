@@ -38,7 +38,7 @@ namespace MonoTouchFixtures.EventKit {
 
 		void RequestPermission ()
 		{
-#if __MACOS__
+#if __MACOS__ && __UNIFIED__
 			TestRuntime.RequestEventStorePermission (EKEntityType.Event, true);
 			TestRuntime.RequestEventStorePermission (EKEntityType.Reminder, true);
 #endif

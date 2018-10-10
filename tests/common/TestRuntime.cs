@@ -720,7 +720,7 @@ partial class TestRuntime
 	}
 #endif // !MONOMAC && !__TVOS__
 
-#if __MACOS__
+#if __MACOS__ && __UNIFIED__
 	public static void RequestEventStorePermission (EKEntityType entityType, bool assert_granted = false)
 	{
 		TestRuntime.AssertMacSystemVersion (10, 9, throwIfOtherPlatform: false);
