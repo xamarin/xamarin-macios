@@ -172,6 +172,7 @@ namespace Xamarin.Linker {
 			"System.Threading.Overlapped",
 			"System.Threading.Tasks.Parallel",
 			"System.Threading.Tasks",
+			"System.Threading.Tasks.Extensions",
 			"System.Threading.Thread",
 			"System.Threading.ThreadPool",
 			"System.Threading.Timer",
