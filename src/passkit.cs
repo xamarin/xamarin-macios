@@ -90,7 +90,7 @@ namespace PassKit {
 
 		[iOS (8,0)]
 		[Static,Export ("isPaymentPassActivationAvailable")]
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the library's instance 'IsLibraryPaymentPassActivationAvailable' property instead.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use the library's instance 'IsLibraryPaymentPassActivationAvailable' property instead.")]
 		bool IsPaymentPassActivationAvailable { get; }
 
 		[iOS (9,0)]
@@ -105,6 +105,7 @@ namespace PassKit {
 
 		[NoWatch]
 		[iOS (8,0)]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use `ActivatePaymentPass (PKPaymentPass, NSData, Action<bool, NSError> completion)` instead.")]
 		[Async]
 		[Export ("activatePaymentPass:withActivationCode:completion:")]
 		void ActivatePaymentPass (PKPaymentPass paymentPass, string activationCode, [NullAllowed] Action<bool, NSError> completion);
@@ -245,6 +246,7 @@ namespace PassKit {
 		[EventArgs ("PKPaymentRequestShippingMethodUpdate")]
 		void DidSelectShippingMethod2 (PKPaymentAuthorizationViewController controller, PKShippingMethod shippingMethod, Action<PKPaymentRequestShippingMethodUpdate> completion);
 
+		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Export ("paymentAuthorizationViewController:didSelectShippingAddress:completion:")]
 		[EventArgs ("PKPaymentShippingAddressSelected")]
 		void DidSelectShippingAddress (PKPaymentAuthorizationViewController controller, ABRecord address, PKPaymentShippingAddressSelected completion);

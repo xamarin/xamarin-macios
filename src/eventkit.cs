@@ -223,6 +223,7 @@ namespace EventKit {
 		[Export ("soundName")]
 		string SoundName { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("url", ArgumentSemantic.Copy)]
 		NSUrl Url { get; set; }
 #endif
@@ -633,6 +634,7 @@ namespace EventKit {
 		bool SaveReminder (EKReminder reminder, bool commit, out NSError error);
 
 #if MONOMAC
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("initWithAccessToEntityTypes:")]
 		IntPtr Constructor (EKEntityMask accessToEntityTypes);
 

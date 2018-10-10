@@ -376,6 +376,7 @@ namespace CoreWlan {
 		[Internal]
 		NSSet _InterfaceNames { get; }
 		 
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use `CWWiFiClient.FromName` instead.")]
 		[Export ("initWithInterfaceName:")]
 		IntPtr Constructor ([NullAllowed]string name);
 		 

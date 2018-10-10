@@ -469,6 +469,8 @@ namespace HealthKit {
 		void HandleAuthorizationForExtension (Action<bool, NSError> completion);
 
 		[iOS (9,0)]
+		[Deprecated (PlatformName.WatchOS, 4, 0)]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Export ("splitTotalEnergy:startDate:endDate:resultsHandler:")]
 		void SplitTotalEnergy (HKQuantity totalEnergy, NSDate startDate, NSDate endDate, Action<HKQuantity, HKQuantity, NSError> resultsHandler);
 
@@ -479,19 +481,23 @@ namespace HealthKit {
 
 		[NoiOS]
 		[Watch (2,0)]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use `HKWorkoutSession.Start` instead.")]
 		[Export ("startWorkoutSession:")]
 		void StartWorkoutSession (HKWorkoutSession workoutSession);
 
 		[NoiOS]
 		[Watch (2,0)]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use `HKWorkoutSession.End` instead.")]
 		[Export ("endWorkoutSession:")]
 		void EndWorkoutSession (HKWorkoutSession workoutSession);
 
 		[Watch (3,0), NoiOS]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use `HKWorkoutSession.Pause` instead.")]
 		[Export ("pauseWorkoutSession:")]
 		void PauseWorkoutSession (HKWorkoutSession workoutSession);
 
 		[Watch (3,0), NoiOS]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use `HKWorkoutSession.Resume` instead.")]
 		[Export ("resumeWorkoutSession:")]
 		void ResumeWorkoutSession (HKWorkoutSession workoutSession);
 
