@@ -85,19 +85,13 @@ namespace CoreFoundation {
 		}
 
 		// pointer to a const struct (REALLY APPLE?)
-		static readonly IntPtr kCFTypeArrayCallbacks_ptr;
-
-		// FIXME: right now we can't use [Fields] for GetIndirect
-		static CFArray ()
-		{
-			var handle = Dlfcn.dlopen (Constants.CoreFoundationLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-				kCFTypeArrayCallbacks_ptr = Dlfcn.GetIndirect (handle, "kCFTypeArrayCallBacks");
-			}
-			finally {
-				Dlfcn.dlclose (handle);
+		static IntPtr kCFTypeArrayCallbacks_ptr_value;
+		static IntPtr kCFTypeArrayCallbacks_ptr {
+			get {
+				// FIXME: right now we can't use [Fields] for GetIndirect
+				if (kCFTypeArrayCallbacks_ptr_value == IntPtr.Zero)
+					kCFTypeArrayCallbacks_ptr_value = Dlfcn.GetIndirect (Libraries.CoreFoundation.Handle, "kCFTypeArrayCallBacks");
+				return kCFTypeArrayCallbacks_ptr_value;
 			}
 		}
 

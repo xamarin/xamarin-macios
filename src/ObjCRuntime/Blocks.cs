@@ -291,7 +291,7 @@ namespace ObjCRuntime {
 				}
 			}
 
-			throw ErrorHelper.CreateError (8011, "Unable to locate the delegate to block conversion attribute ([DelegateProxy]) for the return value for the method {0}.{1}. Please file a bug at http://bugzilla.xamarin.com.", baseMethod.DeclaringType.FullName, baseMethod.Name);
+			throw ErrorHelper.CreateError (8011, "Unable to locate the delegate to block conversion attribute ([DelegateProxy]) for the return value for the method {0}.{1}. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new.", baseMethod.DeclaringType.FullName, baseMethod.Name);
 		}
 
 		[BindingImpl(BindingImplOptions.Optimizable)]
@@ -301,24 +301,24 @@ namespace ObjCRuntime {
 				return IntPtr.Zero;
 
 			if (!(@delegate is Delegate))
-				throw ErrorHelper.CreateError (8016, "Unable to convert delegate to block for the return value for the method {0}.{1}, because the input isn't a delegate, it's a {1}. Please file a bug at http://bugzilla.xamarin.com.", minfo.DeclaringType.FullName, minfo.Name, @delegate.GetType ().FullName);
+				throw ErrorHelper.CreateError (8016, "Unable to convert delegate to block for the return value for the method {0}.{1}, because the input isn't a delegate, it's a {1}. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new.", minfo.DeclaringType.FullName, minfo.Name, @delegate.GetType ().FullName);
 				
 			Type delegateProxyType = GetDelegateProxyType (minfo, token_ref, out var baseMethod);
 			if (baseMethod == null)
 				baseMethod = minfo; // 'baseMethod' is only used in error messages, and if it's null, we just use the closest alternative we have (minfo).
 			if (delegateProxyType == null)
-				throw ErrorHelper.CreateError (8012, "Invalid DelegateProxyAttribute for the return value for the method {0}.{1}: DelegateType is null. Please file a bug at http://bugzilla.xamarin.com.", baseMethod.DeclaringType.FullName, baseMethod.Name);
+				throw ErrorHelper.CreateError (8012, "Invalid DelegateProxyAttribute for the return value for the method {0}.{1}: DelegateType is null. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new.", baseMethod.DeclaringType.FullName, baseMethod.Name);
 
 			var delegateProxyField = delegateProxyType.GetField ("Handler", BindingFlags.NonPublic | BindingFlags.Static);
 			if (delegateProxyField == null)
-				throw ErrorHelper.CreateError (8013, "Invalid DelegateProxyAttribute for the return value for the method {0}.{1}: DelegateType ({2}) specifies a type without a 'Handler' field. Please file a bug at http://bugzilla.xamarin.com.", baseMethod.DeclaringType.FullName, baseMethod.Name, delegateProxyType.FullName);
+				throw ErrorHelper.CreateError (8013, "Invalid DelegateProxyAttribute for the return value for the method {0}.{1}: DelegateType ({2}) specifies a type without a 'Handler' field. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new.", baseMethod.DeclaringType.FullName, baseMethod.Name, delegateProxyType.FullName);
 
 			var handlerDelegate = delegateProxyField.GetValue (null);
 			if (handlerDelegate == null)
-				throw ErrorHelper.CreateError (8014, "Invalid DelegateProxyAttribute for the return value for the method {0}.{1}: The DelegateType's ({2}) 'Handler' field is null. Please file a bug at http://bugzilla.xamarin.com.", baseMethod.DeclaringType.FullName, baseMethod.Name, delegateProxyType.FullName);
+				throw ErrorHelper.CreateError (8014, "Invalid DelegateProxyAttribute for the return value for the method {0}.{1}: The DelegateType's ({2}) 'Handler' field is null. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new.", baseMethod.DeclaringType.FullName, baseMethod.Name, delegateProxyType.FullName);
 
 			if (!(handlerDelegate is Delegate))
-				throw ErrorHelper.CreateError (8015, "Invalid DelegateProxyAttribute for the return value for the method {0}.{1}: The DelegateType's ({2}) 'Handler' field is not a delegate, it's a {3}. Please file a bug at http://bugzilla.xamarin.com.", baseMethod.DeclaringType.FullName, baseMethod.Name, delegateProxyType.FullName, handlerDelegate.GetType ().FullName);
+				throw ErrorHelper.CreateError (8015, "Invalid DelegateProxyAttribute for the return value for the method {0}.{1}: The DelegateType's ({2}) 'Handler' field is not a delegate, it's a {3}. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new.", baseMethod.DeclaringType.FullName, baseMethod.Name, delegateProxyType.FullName, handlerDelegate.GetType ().FullName);
 			
 			// We now have the information we need to create the block.
 			// Note that we must create a heap-allocated block, so we 

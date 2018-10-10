@@ -36,6 +36,8 @@ namespace Xamarin.iOS.Tasks
 		[Required]
 		public bool Debug { get; set; }
 
+		public bool UseFakeWatchOS4_3Sdk { get; set; }
+
 		public string DebugIPAddresses { get; set; }
 
 		public string ResourceRules { get; set; }
@@ -154,28 +156,64 @@ namespace Xamarin.iOS.Tasks
 			plist.SetIfNotPresent (ManifestKeys.CFBundleVersion, "1.0");
 			plist.SetIfNotPresent (ManifestKeys.CFBundleShortVersionString, plist.GetCFBundleVersion ());
 
+			string dtCompiler = null;
+			string dtPlatformBuild = null;
+			string dtSDKBuild = null;
+			string dtPlatformName = null;
+			string dtPlatformVersion = null;
+			string dtXcode = null;
+			string dtXcodeBuild = null;
+
 			if (!SdkIsSimulator) {
-				SetValue (plist, "DTCompiler", sdkSettings.DTCompiler);
-				SetValue (plist, "DTPlatformBuild", dtSettings.DTPlatformBuild);
-				SetValue (plist, "DTSDKBuild", sdkSettings.DTSDKBuild);
+				dtCompiler = sdkSettings.DTCompiler;
+				dtPlatformBuild = dtSettings.DTPlatformBuild;
+				dtSDKBuild = sdkSettings.DTSDKBuild;
 			}
 
-			plist.SetIfNotPresent ("DTPlatformName", SdkPlatform.ToLowerInvariant ());
+			dtPlatformName = SdkPlatform.ToLowerInvariant ();
 			if (!SdkIsSimulator)
-				SetValue (plist, "DTPlatformVersion", dtSettings.DTPlatformVersion);
+				dtPlatformVersion = dtSettings.DTPlatformVersion;
 
-			var sdkName = sdkSettings.CanonicalName;
+			var dtSDKName = sdkSettings.CanonicalName;
 			// older sdksettings didn't have a canonicalname for sim
-			if (SdkIsSimulator && string.IsNullOrEmpty (sdkName)) {
+			if (SdkIsSimulator && string.IsNullOrEmpty (dtSDKName)) {
 				var deviceSdkSettings = currentSDK.GetSdkSettings (sdkVersion, false);
-				sdkName = deviceSdkSettings.AlternateSDK;
+				dtSDKName = deviceSdkSettings.AlternateSDK;
 			}
-			SetValue (plist, "DTSDKName", sdkName);
 
 			if (!SdkIsSimulator) {
-				SetValue (plist, "DTXcode", AppleSdkSettings.DTXcode);
-				SetValue (plist, "DTXcodeBuild", dtSettings.DTXcodeBuild);
+				dtXcode = AppleSdkSettings.DTXcode;
+				dtXcodeBuild = dtSettings.DTXcodeBuild;
 			}
+
+			if (UseFakeWatchOS4_3Sdk) {
+				// This is a workaround for https://github.com/xamarin/xamarin-macios/issues/4810
+				if (Framework == PlatformFramework.WatchOS) {
+					if (dtPlatformBuild != null)
+						dtPlatformBuild = "15T212";
+					if (dtPlatformVersion != null)
+						dtPlatformVersion = "4.3";
+					if (dtSDKBuild != null)
+						dtSDKBuild = "15T212";
+					if (dtSDKName != null)
+						dtSDKName = "watchos4.3";
+					if (dtXcode != null)
+						dtXcode = "0940";
+					if (dtXcodeBuild != null)
+						dtXcodeBuild = "9F1027a";
+				} else {
+					Log.LogWarning ("Can only fake the watchOS 4.3 SDK when building for watchOS.");
+				}
+			}
+
+			SetValueIfNotNull (plist, "DTCompiler", dtCompiler);
+			SetValueIfNotNull (plist, "DTPlatformBuild", dtPlatformBuild);
+			SetValueIfNotNull (plist, "DTSDKBuild", dtSDKBuild);
+			plist.SetIfNotPresent ("DTPlatformName", dtPlatformName);
+			SetValueIfNotNull (plist, "DTPlatformVersion", dtPlatformVersion);
+			SetValue (plist, "DTSDKName", dtSDKName);
+			SetValueIfNotNull (plist, "DTXcode", dtXcode);
+			SetValueIfNotNull (plist, "DTXcodeBuild", dtXcodeBuild);
 
 			SetDeviceFamily (plist);
 
@@ -233,6 +271,13 @@ namespace Xamarin.iOS.Tasks
 			plist.Save (CompiledAppManifest.ItemSpec, true, true);
 
 			return !Log.HasLoggedErrors;
+		}
+
+		void SetValueIfNotNull (PDictionary dict, string key, string value)
+		{
+			if (value == null)
+				return;
+			SetValue (dict, key, value);
 		}
 
 		void SetRequiredArchitectures (PDictionary plist)

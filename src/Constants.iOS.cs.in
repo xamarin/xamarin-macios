@@ -12,6 +12,7 @@ namespace MonoTouch {
 
 		public const string libSystemLibrary = "/usr/lib/libSystem.dylib";
 		public const string libcLibrary = "/usr/lib/libc.dylib";
+		public const string libdispatchLibrary = "/usr/lib/system/libdispatch.dylib";
 		public const string AddressBookLibrary = "/System/Library/Frameworks/AddressBook.framework/AddressBook";
 		public const string AddressBookUILibrary = "/System/Library/Frameworks/AddressBookUI.framework/AddressBookUI";
 		public const string AudioToolboxLibrary = "/System/Library/Frameworks/AudioToolbox.framework/AudioToolbox";

@@ -18,9 +18,9 @@ E.g. parameters, environment, missing tools.
 
 <a name="MM0000" />
 
-#### MM0000: Unexpected error - Please file a bug report at http://bugzilla.xamarin.com
+#### MM0000: Unexpected error - Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
 
-An unexpected error condition occurred. Please [file a bug report](https://bugzilla.xamarin.com/enter_bug.cgi?product=Xamarin.Mac) with as much information as possible, including:
+An unexpected error condition occurred. Please [file a bug report](https://github.com/xamarin/xamarin-macios/issues/new) with as much information as possible, including:
 
 * Full build logs, with maximum verbosity (e.g. `-v -v -v -v` in the **Additional mmp arguments**);
 * A minimal test case that reproduce the error; and
@@ -114,9 +114,9 @@ An error occurred while loading the assemblies from the root assembly references
 
 <a name="MM0071" />
 
-#### MM0071: Unknown platform: *. This usually indicates a bug in Xamarin.Mac; please file a bug report at https://bugzilla.xamarin.com with a test case.
+#### MM0071: Unknown platform: *. This usually indicates a bug in Xamarin.Mac; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
 
-This usually indicates a bug in Xamarin.Mac; please file a bug report at [https://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=Xamarin.Mac) with a test case.
+This usually indicates a bug in Xamarin.Mac; please file a [bug report](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
 <a name="MM0073" />
 
@@ -169,7 +169,7 @@ A last-straw solution would be to use an older version of Xamarin.Mac, one that 
 
 <a name="MM0099" />
 
-#### MM0099: Internal error {0}. Please file a bug report with a test case (http://bugzilla.xamarin.com).
+#### MM0099: Internal error {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
 
 <a name="MM0114" />
 
@@ -395,7 +395,7 @@ Change the architecture in the project's Mac Build options to 'x86_64' in order 
 
 An unexpected error occured when processing an assembly.
 
-The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](https://github.com/xamarin/xamarin-macios/issues/new) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
 <a name="MM2104" />
 
@@ -445,6 +445,10 @@ Consider using `lipo` to remove the unnecessary archtectures permanently from th
 <a name="MM2109"/>
 
 #### MM2109: Xamarin.Mac Classic API does not support Platform Linking.
+
+<a name="MM2110"/>
+
+#### MM2109: Xamarin.Mac 'Partial Static' registrar does not support linking. Disable linking or use another registrar mode.
 
 ## MM3xxx: AOT
 
@@ -575,7 +579,7 @@ that uses blocks. It's recommended to use a binding project to bind
 Objective-C code, in particular when it involves blocks, since it's quite
 complicated to get it right when doing it manually.
 
-If this is not the case, please file a bug at [https://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=Xamarin.Mac) with a test case.
+If this is not the case, please file a [bug report](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
 ## MM5xxx: GCC and toolchain
 
@@ -589,7 +593,7 @@ If this is not the case, please file a bug at [https://bugzilla.xamarin.com](htt
 
 <a name="MM5103" />
 
-#### MM5103: Failed to compile. Error code - {0}. Please file a bug report at http://bugzilla.xamarin.com
+#### MM5103: Failed to compile. Error code - {0}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
 
 ### MM52xx: linking
 
@@ -697,7 +701,7 @@ See the [equivalent mtouch warning](~/ios/troubleshooting/mtouch-errors.md#MT521
 
 #### MM8025: Failed to compute the token reference for the type '{type.AssemblyQualifiedName}' because {reasons}
 
-This indicates a bug in Xamarin.Mac. Please file a bug at [https://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=Xamarin.Mac).
+This indicates a bug in Xamarin.Mac. Please file a [bug report](https://github.com/xamarin/xamarin-macios/issues/new).
 
 A potential workaround would be to disable the `register-protocols`
 optimization, by passing `--optimize:-register-protocols` as an additional mmp
@@ -707,7 +711,7 @@ argument in the project's Mac Build options.
 
 #### MM8026: * is not supported when the dynamic registrar has been linked away.
  
-This usually indicates a bug in Xamarin.Mac, because the dynamic registrar should not be linked away if it's needed. Please file a bug at [https://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=Xamarin.Mac).
+This usually indicates a bug in Xamarin.Mac, because the dynamic registrar should not be linked away if it's needed. Please file a [bug report](https://github.com/xamarin/xamarin-macios/issues/new).
  
 It's possible to force the linker to keep the dynamic registrar by adding
 `--optimize=-remove-dynamic-registrar` to the additional mmp arguments in
@@ -739,8 +743,7 @@ There are a few reasons this may happen:
   * Incorrect bindings for third-party libraries.
   * Reference-counting bugs in third-party libraries.
 
-* It could be a bug in Xamarin.Mac. If this is the case, please file a bug at
-  [https://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=Xamarin.Mac).
+* It could be a bug in Xamarin.Mac. If this is the case, please file a [bug report](https://github.com/xamarin/xamarin-macios/issues/new).
 
 ### <a name="MM8028"/>MM8028: The runtime function {function} has been linked away.
 

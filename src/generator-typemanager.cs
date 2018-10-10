@@ -150,7 +150,7 @@ public static class TypeManager {
 
 		var rv = assembly.GetType (fullname);
 		if (rv == null && !inexistentOK)
-			throw new BindingException (1052, true, "Internal error: Could not find the type {0} in the assembly {1}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", fullname, assembly);
+			throw new BindingException (1052, true, "Internal error: Could not find the type {0} in the assembly {1}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", fullname, assembly);
 		return rv;
 	}
 

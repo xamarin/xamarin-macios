@@ -56,7 +56,7 @@ namespace ImageIO {
 
 		// CFBoolean support
 		public CGImageMetadataTag (NSString xmlns, NSString prefix, NSString name, CGImageMetadataType type, bool value) :
-			this (xmlns, prefix, name, type, value ? CFBoolean.True.Handle : CFBoolean.False.Handle)
+			this (xmlns, prefix, name, type, value ? CFBoolean.TrueHandle : CFBoolean.FalseHandle)
 		{
 		}
 

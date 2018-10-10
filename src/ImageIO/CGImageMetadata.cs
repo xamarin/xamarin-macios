@@ -26,7 +26,7 @@ namespace ImageIO {
 			var dict = new NSMutableDictionary ();
 
 			if (Recursive)
-				dict.LowlevelSetObject (CFBoolean.True.Handle, kCGImageMetadataEnumerateRecursively);
+				dict.LowlevelSetObject (CFBoolean.TrueHandle, kCGImageMetadataEnumerateRecursively);
 
 			return dict;
 		}
