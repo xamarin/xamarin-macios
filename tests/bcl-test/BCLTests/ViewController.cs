@@ -8,27 +8,20 @@ using Foundation;
 
 using Xamarin.iOS.UnitTests;
 using Xamarin.iOS.UnitTests.NUnit;
-using MonoCasTests.System;
 
 namespace BCLTests {
 	public partial class ViewController : UIViewController {
 
-		static List<string> NUnitTests = new List <string> {
-			"MONOTOUCH_System_test.dll",
-			"MONOTOUCH_corlib_test.dll",
-		};
-
-
 		internal static IEnumerable<TestAssemblyInfo> GetTestAssemblies ()
  		{
 			// var t = Path.GetFileName (typeof (ActivatorCas).Assembly.Location);
-			foreach (var f in NUnitTests) {
-				var a = Assembly.Load (f);
+			foreach (var name in RegisterType.TypesToRegister.Keys) {
+				var a = Assembly.Load (name);
 				if (a == null) {
-					Console.WriteLine ($"# WARNING: Unable to load assembly.");
+					Console.WriteLine ($"# WARNING: Unable to load assembly {name}.");
  					continue;
 				}
-				yield return new TestAssemblyInfo (a, "MONOTOUCH_System_test.dll");
+				yield return new TestAssemblyInfo (a, name);
 			}
  		}
  		
@@ -48,9 +41,11 @@ namespace BCLTests {
 			var runner = new NUnitTestRunner (new LogWriter ());
 			runner.LogTag = "NUnit";
 			runner.Run ((IList<TestAssemblyInfo>)testAssemblies);
-			Console.WriteLine ($"Total tests {runner.TotalTests}");
-			Console.WriteLine ($"Failed tests {runner.FailedTests}");
-			Console.WriteLine ($"Success tests {runner.PassedTests}");
+			string resultsFilePath = runner.WriteResultsToFile ();
+
+			Console.WriteLine ($"Passed: {runner.PassedTests}, Failed: {runner.FailedTests}, Skipped: {runner.SkippedTests}, Inconclusive: {runner.InconclusiveTests}, Total: {runner.TotalTests}, Filtered: {runner.FilteredTests}");
+			Console.WriteLine ($"Results can be found {resultsFilePath}");
+
 		}
 
 		public override void DidReceiveMemoryWarning ()

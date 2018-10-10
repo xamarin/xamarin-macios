@@ -6,11 +6,17 @@ namespace Xamarin.iOS.UnitTests
 	public class LogWriter
 	{
 		static ILoggerFactory LoggerFactory {get;} = new LoggerFactory();
-		static ILogger Logger = LoggerFactory.CreateLogger<LogWriter> ();
+		static ILogger Logger;
 		
 		const string Tag = "LogWriter";
 
 		public MinimumLogLevel MinimumLogLevel { get; set; } = MinimumLogLevel.Info;
+
+		static LogWriter ()
+		{
+			LoggerFactory.AddConsole ();
+			Logger = LoggerFactory.CreateLogger<LogWriter> ();
+		}
 
 		public void OnError (string tag, string message)
 		{
