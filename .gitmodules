@@ -12,7 +12,7 @@
 [submodule "external/mono"]
     path = external/mono
     url = ../../mono/mono.git
-    branch = 2018-04
+    branch = 2018-06
 [submodule "external/opentk"]
     path = external/opentk
     url = ../../mono/opentk.git
