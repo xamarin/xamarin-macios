@@ -27,18 +27,19 @@ namespace Extrospection {
 				new SelectorCheck (),
 				new SimdCheck (),
 				new RequiresSuperCheck (),
+				// new DeprecatedCheck ()
 //				new ListNative (), // for debug
 			};
 			foreach (var assemblyName in assemblyNames) {
 				var name = Path.GetFileNameWithoutExtension (assemblyName);
 				if (name.EndsWith (".iOS", StringComparison.Ordinal))
-					Helpers.Platform = Helpers.Platforms.iOS;
+					Helpers.Platform = Platforms.iOS;
 				else if (name.EndsWith (".Mac", StringComparison.Ordinal))
-					Helpers.Platform = Helpers.Platforms.macOS;
+					Helpers.Platform = Platforms.macOS;
 				else if (name.EndsWith (".WatchOS", StringComparison.Ordinal))
-					Helpers.Platform = Helpers.Platforms.watchOS;
+					Helpers.Platform = Platforms.watchOS;
 				else if (name.EndsWith (".TVOS", StringComparison.Ordinal))
-					Helpers.Platform = Helpers.Platforms.tvOS;
+					Helpers.Platform = Platforms.tvOS;
 				managed_reader.Load (assemblyName);
 			}
 
