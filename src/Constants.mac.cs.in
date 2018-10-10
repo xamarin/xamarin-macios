@@ -106,6 +106,7 @@ namespace MonoMac {
 		public const string SearchKitLibrary = "/System/Library/Frameworks/CoreServices.framework/Frameworks/SearchKit.framework/SearchKit";
 		public const string libSystemLibrary = "/usr/lib/libSystem.dylib";
 		public const string libcLibrary = "/usr/lib/libc.dylib";
+		public const string libdispatchLibrary = "/usr/lib/system/libdispatch.dylib";
 		public const string ContactsLibrary = "/System/Library/Frameworks/Contacts.framework/Contacts";
 		public const string ContactsUILibrary = "/System/Library/Frameworks/ContactsUI.framework/ContactsUI";
 

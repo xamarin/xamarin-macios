@@ -81,7 +81,7 @@ namespace xharness
 			Devices.Harness = Harness;
 
 			if (SimulatorLoadLog == null)
-				SimulatorLoadLog = Logs.Create ("simulator-list.log", "Simulator Listing");
+				SimulatorLoadLog = Logs.Create ($"simulator-list-{Harness.Timestamp}.log", "Simulator Listing");
 
 			var simulatorLoadTask = Task.Run (async () => {
 				try {
@@ -93,7 +93,7 @@ namespace xharness
 			});
 
 			if (DeviceLoadLog == null)
-				DeviceLoadLog = Logs.Create ("device-list.log", "Device Listing");
+				DeviceLoadLog = Logs.Create ($"device-list-{Harness.Timestamp}.log", "Device Listing");
 			var deviceLoadTask = Task.Run (async () => {
 				try {
 					await Devices.LoadAsync (DeviceLoadLog, removed_locked: true);
@@ -184,12 +184,15 @@ namespace xharness
 					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, Defines = "OPTIMIZEALL" };
 					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = true, Profiling = false, Defines = "OPTIMIZEALL" };
 					yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Ignored = true, };
+					yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Ignored = true, };
 					break;
 				case "mscorlib":
 					yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Ignored = true, Undefines = "FULL_AOT_RUNTIME" };
+					yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Ignored = true, Undefines = "FULL_AOT_RUNTIME" };
 					break;
 				case "mini":
 					yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+					yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
 					break;
 				}
 				break;
@@ -910,7 +913,7 @@ namespace xharness
 		{
 			try {
 				Directory.CreateDirectory (LogDirectory);
-				Log log = Logs.Create ("Harness.log", "Harness log");
+				Log log = Logs.Create ($"Harness-{Harness.Timestamp}.log", "Harness log");
 				if (Harness.InWrench)
 					log = Log.CreateAggregatedLog (log, new ConsoleLog ());
 				Harness.HarnessLog = MainLog = log;
@@ -1315,7 +1318,7 @@ namespace xharness
 			
 			try {
 				lock (report_lock) {
-					var report = Path.Combine (LogDirectory, "index.html");
+					var report = Path.Combine (LogDirectory, IsServerMode ? $"index-{Harness.Timestamp}.html" : "index.html");
 					using (var stream = new MemoryStream ()) {
 						MemoryStream markdown_summary = null;
 						StreamWriter markdown_writer = null;
@@ -2202,6 +2205,30 @@ function toggleAll (show)
 
 		public bool RequiresXcode94;
 
+		// VerifyRun is called in RunInternalAsync/ExecuteAsync to verify that the task can be executed/run.
+		// Typically used to fail tasks that don't have an available device, or if there's not enough disk space.
+		public virtual Task VerifyRunAsync ()
+		{
+			return VerifyDiskSpaceAsync ();
+		}
+
+		static DriveInfo RootDrive;
+		protected Task VerifyDiskSpaceAsync ()
+		{
+			if (Finished)
+				return Task.CompletedTask;
+
+			if (RootDrive == null)
+				RootDrive = new DriveInfo ("/");
+			var afs = RootDrive.AvailableFreeSpace;
+			const long minSpaceRequirement = 1024 * 1024 * 1024; /* 1 GB */
+			if (afs < minSpaceRequirement) {
+				FailureMessage = $"Not enough space on the root drive '{RootDrive.Name}': {afs / (1024.0 * 1024):#.##} MB left of {minSpaceRequirement / (1024.0 * 1024):#.##} MB required";
+				ExecutionResult = TestExecutingResult.Failed;
+			}
+			return Task.CompletedTask;
+		}
+
 		public void CloneTestProject (TestProject project)
 		{
 			// Don't build in the original project directory
@@ -2345,7 +2372,7 @@ function toggleAll (show)
 
 		public string LogDirectory {
 			get {
-				var rv = Path.Combine (Jenkins.LogDirectory, $"{TestName}_{ID}");
+				var rv = Path.Combine (Jenkins.LogDirectory, TestName, ID.ToString ());
 				Directory.CreateDirectory (rv);
 				return rv;
 			}
@@ -2369,6 +2396,10 @@ function toggleAll (show)
 			try {
 				if (InitialTask != null)
 					await InitialTask;
+				
+				await VerifyRunAsync ();
+				if (Finished)
+					return;
 
 				duration.Start ();
 
@@ -3137,6 +3168,10 @@ function toggleAll (show)
 			if (Finished)
 				return true;
 			
+			await VerifyBuildAsync ();
+			if (Finished)
+				return BuildTask.Succeeded;
+
 			ExecutionResult = TestExecutingResult.Building;
 			await BuildTask.RunAsync ();
 			if (!BuildTask.Succeeded) {
@@ -3175,9 +3210,12 @@ function toggleAll (show)
 		}
 
 		protected abstract Task RunTestAsync ();
-		// VerifyRun is called in ExecuteAsync to verify that the task can be executed/run.
-		// Typically used to fail tasks that don't have an available device.
-		public virtual Task VerifyRunAsync () { return Task.CompletedTask; }
+		// VerifyBuild is called in BuildAsync to verify that the task can be built.
+		// Typically used to fail tasks if there's not enough disk space.
+		public virtual Task VerifyBuildAsync ()
+		{
+			return VerifyDiskSpaceAsync ();
+		}
 
 		public override void Reset ()
 		{
@@ -3254,6 +3292,8 @@ function toggleAll (show)
 		public override async Task VerifyRunAsync ()
 		{
 			await base.VerifyRunAsync ();
+			if (Finished)
+				return;
 
 			var enumerable = candidates;
 			var asyncEnumerable = enumerable as IAsyncEnumerable;

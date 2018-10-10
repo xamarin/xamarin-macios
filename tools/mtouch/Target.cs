@@ -283,6 +283,29 @@ namespace Xamarin.Bundler
 			}
 
 			linker_flags = new CompilerFlags (this);
+
+			// Verify that there are no entries in our list of intepreted assemblies that doesn't match
+			// any of the assemblies we know about.
+			if (App.UseInterpreter) {
+				var exceptions = new List<Exception> ();
+				foreach (var entry in App.InterpretedAssemblies) {
+					var assembly = entry;
+					if (string.IsNullOrEmpty (assembly))
+						continue;
+
+					if (assembly [0] == '-')
+						assembly = assembly.Substring (1);
+
+					if (assembly == "all")
+						continue;
+
+					if (Assemblies.ContainsKey (assembly))
+						continue;
+
+					exceptions.Add (ErrorHelper.CreateWarning (138, $"Cannot find the assembly '{assembly}', passed as an argument to --interpreter."));
+				}
+				ErrorHelper.ThrowIfErrors (exceptions);
+			}
 		}
 
 		// This is to load the symbols for all assemblies, so that we can give better error messages
@@ -1135,6 +1158,8 @@ namespace Xamarin.Bundler
 			}
 
 			if (App.UseInterpreter)
+				/* TODO: not sure? we might have to continue here, depending on
+				 * the set of assemblies are AOT'd? */
 				return;
 
 			// Code in one assembly (either in a P/Invoke or a third-party library) can depend on a third-party library in another assembly.

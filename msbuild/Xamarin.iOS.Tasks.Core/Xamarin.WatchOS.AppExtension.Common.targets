@@ -27,6 +27,7 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 
 		<!-- Enable nuget package conflict resolution -->
 		<ResolveAssemblyConflicts>true</ResolveAssemblyConflicts>
+		<UseFakeWatchOS4_3Sdk Condition="'$(UseFakeWatchOS4_3Sdk)' == ''">True</UseFakeWatchOS4_3Sdk>
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)..\iOS\Xamarin.iOS.Common.targets" />

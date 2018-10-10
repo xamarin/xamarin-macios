@@ -41,8 +41,6 @@
 !missing-field! kCFAbsoluteTimeIntervalSince1904 not bound
 !missing-field! kCFAbsoluteTimeIntervalSince1970 not bound
 !missing-field! kCFAllocatorUseContext not bound
-!missing-field! kCFBooleanFalse not bound
-!missing-field! kCFBooleanTrue not bound
 !missing-field! kCFBuddhistCalendar not bound
 !missing-field! kCFBundleDevelopmentRegionKey not bound
 !missing-field! kCFBundleExecutableKey not bound
@@ -931,6 +929,7 @@
 !missing-pinvoke! CFWriteStreamCreateWithFile is not bound
 !missing-pinvoke! CFWriteStreamGetError is not bound
 !missing-pinvoke! CFWriteStreamGetTypeID is not bound
+!unknown-field! _dispatch_data_destructor_free bound
 !unknown-pinvoke! close bound
 !unknown-pinvoke! dispatch_after_f bound
 !unknown-pinvoke! dispatch_apply_f bound

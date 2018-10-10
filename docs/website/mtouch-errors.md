@@ -2528,9 +2528,21 @@ This is a warning, indicating that a P/Invoke was detected to reference the libr
 
 ### MT5216: Native linking failed for *. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
 
-This error is reported when linking the output from the AOT compiler.
+This error is reported when linking the output from the AOT compiler fails.
 
-This error most likely indicates a bug in Xamarin.iOS. Please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new).
+One potential reason is if:
+
+* The project depends on third-party native libraries, and tries to link with
+  them by passing them to the native linker using the additional mtouch
+  arguments in the project's iOS Build options.
+* "Incremental builds" is enabled.
+
+If this is the case, please try disabling "Incremental builds" in the
+project's iOS Build options. An alternative solution is to create a binding
+project for the native library.
+
+If this is not the case, this error most likely indicates a bug in
+Xamarin.iOS. Please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new).
 
 <a name="MT5217" />
 

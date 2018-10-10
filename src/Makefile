@@ -485,7 +485,8 @@ $(MAC_BUILD_DIR)/$(1)/$(2): $(MAC_BUILD_DIR)/$(3)/generated-sources $(MAC_SOURCE
 		-nowarn:3021,1635,612,618,0219,0414,$(MAC_WARNINGS_TO_FIX) \
 		$$(MAC_CSC_FLAGS_XM) \
 		$(4) \
-		@$$< $$(MAC_SOURCES)
+		$$(MAC_SOURCES) \
+		@$$<
 
 $(MAC_BUILD_DIR)/$(1)/$(2:.dll=.pdb): $(MAC_BUILD_DIR)/$(1)/$(2)
 

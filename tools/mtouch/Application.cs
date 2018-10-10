@@ -116,6 +116,8 @@ namespace Xamarin.Bundler {
 		public string AotOtherArguments = string.Empty;
 		public bool? LLVMAsmWriter;
 		public Dictionary<string, string> LLVMOptimizations = new Dictionary<string, string> ();
+		public bool UseInterpreter;
+		public List<string> InterpretedAssemblies = new List<string> ();
 
 		public Dictionary<string, string> EnvironmentVariables = new Dictionary<string, string> ();
 
@@ -128,6 +130,44 @@ namespace Xamarin.Bundler {
 		public List<string> References = new List<string> ();
 		
 		public bool? BuildDSym;
+
+		public bool IsInterpreted (string assembly)
+		{
+			// IsAOTCompiled and IsInterpreted are not opposites: mscorlib.dll can be both.
+			if (!UseInterpreter)
+				return false;
+
+			// Go through the list of assemblies to interpret in reverse order,
+			// so that the last option passed to mtouch takes precedence.
+			for (int i = InterpretedAssemblies.Count - 1; i >= 0; i--) {
+				var opt = InterpretedAssemblies [i];
+				if (opt == "all")
+					return true;
+				else if (opt == "-all")
+					return false;
+				else if (opt == assembly)
+					return true;
+				else if (opt [0] == '-' && opt.Substring (1) == assembly)
+					return false;
+			}
+
+			// There's an implicit 'all' at the start of the list.
+			return true;
+		}
+
+		public bool IsAOTCompiled (string assembly)
+		{
+			if (!UseInterpreter)
+				return true;
+
+			// IsAOTCompiled and IsInterpreted are not opposites: mscorlib.dll can be both:
+			// - mscorlib will always be processed by the AOT compiler to generate required wrapper functions for the interpreter to work
+			// - mscorlib might also be fully AOT-compiled (both when the interpreter is enabled and when it's not)
+			if (assembly == "mscorlib")
+				return true;
+
+			return !IsInterpreted (assembly);
+		}
 
 		// If we're targetting a 32 bit arch.
 		bool? is32bits;
@@ -462,7 +502,7 @@ namespace Xamarin.Bundler {
 			if (EnableLLVMOnlyBitCode)
 				return false;
 
-			if (UseInterpreter)
+			if (IsInterpreted (Assembly.GetIdentity (assembly)))
 				return true;
 
 			switch (Platform) {
@@ -2119,7 +2159,20 @@ namespace Xamarin.Bundler {
 
 		public void BundleAssemblies ()
 		{
-			var strip = !UseInterpreter && ManagedStrip && IsDeviceBuild && !EnableDebug && !PackageManagedDebugSymbols;
+			Assembly.StripAssembly strip = ((path) => 
+			{
+				if (!ManagedStrip)
+					return false;
+				if (!IsDeviceBuild)
+					return false;
+				if (EnableDebug)
+					return false;
+				if (PackageManagedDebugSymbols)
+					return false;
+				if (IsInterpreted (Assembly.GetIdentity (path)))
+					return false;
+				return true;
+			});
 
 			var grouped = Targets.SelectMany ((Target t) => t.Assemblies).GroupBy ((Assembly asm) => asm.Identity);
 			foreach (var @group in grouped) {

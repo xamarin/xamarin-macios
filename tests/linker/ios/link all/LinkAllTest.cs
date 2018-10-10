@@ -270,7 +270,7 @@ namespace LinkAll {
 		public void Assembly_LoadFile ()
 		{
 			string filename = FindAssemblyPath ();
-			Assert.NotNull (Assembly.LoadFile (filename), "1");
+			Assert.NotNull (Assembly.LoadFile (Path.GetFullPath (filename)), "1");
 		}
 
 		[Test]

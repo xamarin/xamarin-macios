@@ -22678,11 +22678,13 @@ namespace AppKit {
 		NSPrintRenderingQuality PreferredRenderingQuality { get; }
 	}
 
+#if !XAMCORE_4_0
 	[Category, BaseType (typeof (NSResponder))]
-	partial interface NSControlEditingSupport {
-		[Mac (10, 7), Export ("validateProposedFirstResponder:forEvent:")]
-		bool ValidateProposedFirstResponder (NSResponder responder, [NullAllowed] NSEvent forEvent);
-	}
+ 	partial interface NSControlEditingSupport {
+ 		[Mac (10, 7), Export ("validateProposedFirstResponder:forEvent:")]
+ 		bool ValidateProposedFirstResponder (NSResponder responder, [NullAllowed] NSEvent forEvent);
+ 	}
+#endif
 
 	partial interface NSResponder {
 		[Mac (10, 7), Export ("wantsScrollEventsForSwipeTrackingOnAxis:")]
@@ -22696,6 +22698,10 @@ namespace AppKit {
 
 		[Mac (10, 8), Export ("quickLookWithEvent:")]
 		void QuickLook (NSEvent withEvent);
+
+		// From  NSControlEditingSupport category. Needs to be here to make the API easier to be used. issue 4837
+		[Mac (10, 7), Export ("validateProposedFirstResponder:forEvent:")]
+		bool ValidateProposedFirstResponder (NSResponder responder, [NullAllowed] NSEvent forEvent);
 	}
 
 	[Category, BaseType (typeof (NSResponder))]

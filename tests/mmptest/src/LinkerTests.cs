@@ -86,19 +86,23 @@ namespace Xamarin.MMP.Tests
 					CSProjConfig = $"<MonoBundlingExtraArgs>--dynamic-symbol-mode={mode}</MonoBundlingExtraArgs>\n", 
 				};
 				var output = TI.TestUnifiedExecutable (config);
+				string build_output;
 				switch (mode) {
 				case "linker":
 				case "default":
-					Assert.That (output.BuildOutput, Does.Contain ("-u "), "reference.m");
-					Assert.That (output.BuildOutput, Does.Not.Contain ("reference.m"), "reference.m");
+                    build_output = output.BuildOutput;
+					Assert.That (build_output, Does.Contain ("-u "), "reference.m");
+					Assert.That (build_output, Does.Not.Contain ("reference.m"), "reference.m");
 					break;
 				case "code":
-					Assert.That (output.BuildOutput, Does.Not.Contain ("-u "), "reference.m");
-					Assert.That (output.BuildOutput, Does.Contain ("reference.m"), "reference.m");
+					build_output = output.BuildOutput.Replace ("-u _SystemNative_RealPath", String.Empty);
+					Assert.That (build_output, Does.Not.Contain ("-u "), "reference.m");
+					Assert.That (build_output, Does.Contain ("reference.m"), "reference.m");
 					break;
 				case "ignore":
-					Assert.That (output.BuildOutput, Does.Not.Contain ("-u "), "reference.m");
-					Assert.That (output.BuildOutput, Does.Not.Contain ("reference.m"), "reference.m");
+					build_output = output.BuildOutput.Replace ("-u _SystemNative_RealPath", String.Empty);
+					Assert.That (build_output, Does.Not.Contain ("-u "), "reference.m");
+					Assert.That (build_output, Does.Not.Contain ("reference.m"), "reference.m");
 					break;
 				default:
 					throw new NotImplementedException ();
