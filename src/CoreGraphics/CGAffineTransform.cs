@@ -106,10 +106,30 @@ namespace CoreGraphics {
 			x0 = a.x0 * b.xx + a.y0 * b.xy + b.x0;
 			y0 = a.x0 * b.yx + a.y0 * b.yy + b.y0;
 		}
+
+		public enum MatrixOrder {
+			Prepend = 0,
+			Append = 1,
+		}
+
+		public void Scale (nfloat sx, nfloat sy, MatrixOrder order)
+		{
+			switch (order) {
+			case MatrixOrder.Append: // The new operation is applied after the old operation.
+				this = Multiply (this, MakeScale (sx, sy)); // t' = t * [ sx 0 0 sy 0 0 ]
+				break;
+			case MatrixOrder.Prepend: // The new operation is applied before the old operation.
+				this = Multiply (MakeScale (sx, sy), this); // t' = [ sx 0 0 sy 0 0 ] * t – Swift equivalent
+				break;
+			default:
+				throw new ArgumentOutOfRangeException (nameof (order));
+			}
+		}
 		
+		[Advice ("The new operation is applied after the old operation: t' = t * [ sx 0 0 sy 0 0 ].\nTo have the same behavior as the native Swift API, pass 'MatrixOrder.Prepend' to 'Scale (nfloat, nfloat, MatrixOrder)'.")]
 		public void Scale (nfloat sx, nfloat sy)
 		{
-			Multiply (MakeScale (sx, sy));
+			Scale (sx, sy, MatrixOrder.Append);
 		}
 
 		public static CGAffineTransform Scale (CGAffineTransform transform, nfloat sx, nfloat sy)

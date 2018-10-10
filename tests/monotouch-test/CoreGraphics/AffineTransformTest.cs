@@ -140,15 +140,27 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void Scale ()
 		{
-			var transform = CGAffineTransform.MakeTranslation (0, 200);
-			transform.Scale (1, -1);
-		
-			Assert.AreEqual ((nfloat) 1, transform.xx);
-			Assert.AreEqual ((nfloat) 0, transform.yx);
-			Assert.AreEqual ((nfloat) 0, transform.xy);
-			Assert.AreEqual ((nfloat) (-1), transform.yy);
-			Assert.AreEqual ((nfloat) 0, transform.x0);
-			Assert.AreEqual ((nfloat) (-200), transform.y0);
+			var transform1 = CGAffineTransform.MakeTranslation (1, 2);
+			// t' = t * [ sx 0 0 sy 0 0 ]
+			transform1.Scale (3, 4); // MatrixOrder.Prepend by default
+
+			Assert.AreEqual ((nfloat) 3, transform1.xx);
+			Assert.AreEqual ((nfloat) 0, transform1.yx);
+			Assert.AreEqual ((nfloat) 0, transform1.xy);
+			Assert.AreEqual ((nfloat) 4, transform1.yy);
+			Assert.AreEqual ((nfloat) 3, transform1.x0);
+			Assert.AreEqual ((nfloat) 8, transform1.y0);
+
+			var transform2 = CGAffineTransform.MakeTranslation (1, 2);
+			// t' = [ sx 0 0 sy 0 0 ] * t – Swift equivalent
+			transform2.Scale (3, 4, CGAffineTransform.MatrixOrder.Prepend);
+
+			Assert.AreEqual ((nfloat)3, transform2.xx);
+			Assert.AreEqual ((nfloat)0, transform2.yx);
+			Assert.AreEqual ((nfloat)0, transform2.xy);
+			Assert.AreEqual ((nfloat)4, transform2.yy);
+			Assert.AreEqual ((nfloat)1, transform2.x0);
+			Assert.AreEqual ((nfloat)2, transform2.y0);
 		}
 
 		[Test]
