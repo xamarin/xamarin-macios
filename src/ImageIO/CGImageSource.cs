@@ -70,11 +70,11 @@ namespace ImageIO {
 			if (BestGuessTypeIdentifier != null)
 				dict.LowlevelSetObject (new NSString (BestGuessTypeIdentifier), kTypeIdentifierHint);
 			if (!ShouldCache)
-				dict.LowlevelSetObject (CFBoolean.False.Handle, kShouldCache);
+				dict.LowlevelSetObject (CFBoolean.FalseHandle, kShouldCache);
 			if (ShouldAllowFloat)
-				dict.LowlevelSetObject (CFBoolean.True.Handle, kShouldAllowFloat);
+				dict.LowlevelSetObject (CFBoolean.TrueHandle, kShouldAllowFloat);
 			if (kShouldCacheImmediately != IntPtr.Zero && ShouldCacheImmediately)
-				dict.LowlevelSetObject (CFBoolean.True.Handle, kShouldCacheImmediately);
+				dict.LowlevelSetObject (CFBoolean.TrueHandle, kShouldCacheImmediately);
 
 			return dict;
 		}
@@ -93,7 +93,7 @@ namespace ImageIO {
 		internal override NSMutableDictionary ToDictionary ()
 		{
 			var dict = base.ToDictionary ();
-			IntPtr thandle = CFBoolean.True.Handle;
+			IntPtr thandle = CFBoolean.TrueHandle;
 
 			if (CreateThumbnailFromImageIfAbsent)
 				dict.LowlevelSetObject (thandle, kCreateThumbnailFromImageIfAbsent);

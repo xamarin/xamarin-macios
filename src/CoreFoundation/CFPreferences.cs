@@ -33,22 +33,14 @@ namespace CoreFoundation
 
 		static CFPreferences ()
 		{
-			var handle = Dlfcn.dlopen (Constants.CoreFoundationLibrary, 0);
-			if (handle == IntPtr.Zero) {
-				return;
-			}
+			var handle = Libraries.CoreFoundation.Handle;
+			CurrentApplication = Dlfcn.GetStringConstant (handle, "kCFPreferencesCurrentApplication");
 
-			try {
-				CurrentApplication = Dlfcn.GetStringConstant (handle, "kCFPreferencesCurrentApplication");
-
-				/*AnyApplication = Dlfcn.GetStringConstant (handle, "kCFPreferencesAnyApplication");
-				CurrentHost = Dlfcn.GetStringConstant (handle, "kCFPreferencesCurrentHost");
-				AnyHost = Dlfcn.GetStringConstant (handle, "kCFPreferencesAnyHost");
-				CurrentUser = Dlfcn.GetStringConstant (handle, "kCFPreferencesCurrentUser");
-				AnyUser = Dlfcn.GetStringConstant (handle, "kCFPreferencesAnyUser");*/
-			} finally {
-				Dlfcn.dlclose (handle);
-			}
+			/*AnyApplication = Dlfcn.GetStringConstant (handle, "kCFPreferencesAnyApplication");
+			CurrentHost = Dlfcn.GetStringConstant (handle, "kCFPreferencesCurrentHost");
+			AnyHost = Dlfcn.GetStringConstant (handle, "kCFPreferencesAnyHost");
+			CurrentUser = Dlfcn.GetStringConstant (handle, "kCFPreferencesCurrentUser");
+			AnyUser = Dlfcn.GetStringConstant (handle, "kCFPreferencesAnyUser");*/
 		}
 
 		public static object GetAppValue (string key)

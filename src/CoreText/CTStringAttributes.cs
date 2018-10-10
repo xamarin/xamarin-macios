@@ -100,39 +100,32 @@ namespace CoreText {
 
 		static CTStringAttributeKey ()
 		{
-			var handle = Dlfcn.dlopen (Constants.CoreTextLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-				Font                        = Dlfcn.GetStringConstant (handle, "kCTFontAttributeName");
-				ForegroundColorFromContext  = Dlfcn.GetStringConstant (handle, "kCTForegroundColorFromContextAttributeName");
-				KerningAdjustment           = Dlfcn.GetStringConstant (handle, "kCTKernAttributeName");
-				LigatureFormation           = Dlfcn.GetStringConstant (handle, "kCTLigatureAttributeName");
-				ForegroundColor             = Dlfcn.GetStringConstant (handle, "kCTForegroundColorAttributeName");
-				BackgroundColor             = Dlfcn.GetStringConstant (handle, "kCTBackgroundColorAttributeName");
-				ParagraphStyle              = Dlfcn.GetStringConstant (handle, "kCTParagraphStyleAttributeName");
-				StrokeWidth                 = Dlfcn.GetStringConstant (handle, "kCTStrokeWidthAttributeName");
-				StrokeColor                 = Dlfcn.GetStringConstant (handle, "kCTStrokeColorAttributeName");
-				UnderlineStyle              = Dlfcn.GetStringConstant (handle, "kCTUnderlineStyleAttributeName");
-				Superscript                 = Dlfcn.GetStringConstant (handle, "kCTSuperscriptAttributeName");
-				UnderlineColor              = Dlfcn.GetStringConstant (handle, "kCTUnderlineColorAttributeName");
-				VerticalForms               = Dlfcn.GetStringConstant (handle, "kCTVerticalFormsAttributeName");
-				HorizontalInVerticalForms   = Dlfcn.GetStringConstant (handle, "kCTHorizontalInVerticalFormsAttributeName");
-				GlyphInfo                   = Dlfcn.GetStringConstant (handle, "kCTGlyphInfoAttributeName");
-				CharacterShape              = Dlfcn.GetStringConstant (handle, "kCTCharacterShapeAttributeName");
-				RunDelegate                 = Dlfcn.GetStringConstant (handle, "kCTRunDelegateAttributeName");
-				BaselineOffset              = Dlfcn.GetStringConstant (handle, "kCTBaselineOffsetAttributeName");
+			var handle = Libraries.CoreText.Handle;
+			Font                        = Dlfcn.GetStringConstant (handle, "kCTFontAttributeName");
+			ForegroundColorFromContext  = Dlfcn.GetStringConstant (handle, "kCTForegroundColorFromContextAttributeName");
+			KerningAdjustment           = Dlfcn.GetStringConstant (handle, "kCTKernAttributeName");
+			LigatureFormation           = Dlfcn.GetStringConstant (handle, "kCTLigatureAttributeName");
+			ForegroundColor             = Dlfcn.GetStringConstant (handle, "kCTForegroundColorAttributeName");
+			BackgroundColor             = Dlfcn.GetStringConstant (handle, "kCTBackgroundColorAttributeName");
+			ParagraphStyle              = Dlfcn.GetStringConstant (handle, "kCTParagraphStyleAttributeName");
+			StrokeWidth                 = Dlfcn.GetStringConstant (handle, "kCTStrokeWidthAttributeName");
+			StrokeColor                 = Dlfcn.GetStringConstant (handle, "kCTStrokeColorAttributeName");
+			UnderlineStyle              = Dlfcn.GetStringConstant (handle, "kCTUnderlineStyleAttributeName");
+			Superscript                 = Dlfcn.GetStringConstant (handle, "kCTSuperscriptAttributeName");
+			UnderlineColor              = Dlfcn.GetStringConstant (handle, "kCTUnderlineColorAttributeName");
+			VerticalForms               = Dlfcn.GetStringConstant (handle, "kCTVerticalFormsAttributeName");
+			HorizontalInVerticalForms   = Dlfcn.GetStringConstant (handle, "kCTHorizontalInVerticalFormsAttributeName");
+			GlyphInfo                   = Dlfcn.GetStringConstant (handle, "kCTGlyphInfoAttributeName");
+			CharacterShape              = Dlfcn.GetStringConstant (handle, "kCTCharacterShapeAttributeName");
+			RunDelegate                 = Dlfcn.GetStringConstant (handle, "kCTRunDelegateAttributeName");
+			BaselineOffset              = Dlfcn.GetStringConstant (handle, "kCTBaselineOffsetAttributeName");
 
 #if !MONOMAC
-				BaselineClass               = Dlfcn.GetStringConstant (handle, "kCTBaselineClassAttributeName");
-				BaselineInfo                = Dlfcn.GetStringConstant (handle, "kCTBaselineInfoAttributeName");
-				BaselineReferenceInfo       = Dlfcn.GetStringConstant (handle, "kCTBaselineReferenceInfoAttributeName");
-				WritingDirection            = Dlfcn.GetStringConstant (handle, "kCTWritingDirectionAttributeName");
+			BaselineClass               = Dlfcn.GetStringConstant (handle, "kCTBaselineClassAttributeName");
+			BaselineInfo                = Dlfcn.GetStringConstant (handle, "kCTBaselineInfoAttributeName");
+			BaselineReferenceInfo       = Dlfcn.GetStringConstant (handle, "kCTBaselineReferenceInfoAttributeName");
+			WritingDirection            = Dlfcn.GetStringConstant (handle, "kCTWritingDirectionAttributeName");
 #endif
-			}
-			finally {
-				Dlfcn.dlclose (handle);
-			}
 		}
 	}
 #endregion

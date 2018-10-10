@@ -61,8 +61,8 @@ namespace AVFoundation {
 			dict.SetObject (new NSNumber (NumberChannels), AVAudioSettings.AVNumberOfChannelsKey);
 
 			if (AudioFormat == AudioFormatType.LinearPCM){
-				IntPtr thandle = CFBoolean.True.Handle;
-				IntPtr fhandle = CFBoolean.False.Handle;
+				IntPtr thandle = CFBoolean.TrueHandle;
+				IntPtr fhandle = CFBoolean.FalseHandle;
 				
 				if (LinearPcmBitDepth != 0){
 					if (LinearPcmBitDepth == 8 || LinearPcmBitDepth == 16 || LinearPcmBitDepth == 32 || LinearPcmBitDepth == 24)

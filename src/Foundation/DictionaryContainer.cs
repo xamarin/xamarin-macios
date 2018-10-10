@@ -359,7 +359,7 @@ namespace Foundation {
 		protected void SetBooleanValue (NSString key, bool? value)
 		{
 			if (NullCheckAndRemoveKey (key, !value.HasValue))
-				CFMutableDictionary.SetValue (Dictionary.Handle, key.Handle, value.Value ? CFBoolean.True.Handle : CFBoolean.False.Handle);			
+				CFMutableDictionary.SetValue (Dictionary.Handle, key.Handle, value.Value ? CFBoolean.TrueHandle : CFBoolean.FalseHandle);			
 		}
 
 		#endregion

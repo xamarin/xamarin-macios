@@ -62,6 +62,11 @@ namespace CoreMedia {
 			return default (T);
 		}
 
+		public static T GetAttachment<T> (this ICMAttachmentBearer target, CMSampleBufferAttachmentKey key, out CMAttachmentMode attachmentModeOut) where T: class, INativeObject
+		{
+			return GetAttachment<T> (target, key.GetConstant (), out attachmentModeOut);
+		}
+
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static void CMPropagateAttachments (/* CMAttachmentBearerRef */ IntPtr source, /* CMAttachmentBearerRef */ IntPtr destination);
 		public static void PropagateAttachments (this ICMAttachmentBearer source, ICMAttachmentBearer destination)

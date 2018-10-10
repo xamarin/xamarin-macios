@@ -36,7 +36,7 @@ namespace Xamarin.Bundler
 					var prefix = Driver.SupportsModernObjectiveC ? "OBJC_CLASS_$_" : ".objc_class_name_";
 					return prefix + ObjectiveCName;
 				}
-				throw ErrorHelper.CreateError (99, $"Internal error: symbol without a name (type: {Type}). Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+				throw ErrorHelper.CreateError (99, $"Internal error: symbol without a name (type: {Type}). Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 			}
 			set {
 				name = value;
@@ -165,7 +165,7 @@ namespace Xamarin.Bundler
 						var asm = line.Substring (1);
 						Assembly assembly;
 						if (!target.Assemblies.TryGetValue (Assembly.GetIdentity (asm), out assembly))
-							throw ErrorHelper.CreateError (99, $"Internal error: serialized assembly {asm} for symbol {current.Name}, but no such assembly loaded. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+							throw ErrorHelper.CreateError (99, $"Internal error: serialized assembly {asm} for symbol {current.Name}, but no such assembly loaded. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 						current.AddAssembly (assembly.AssemblyDefinition);
 					} else {
 						var eq = line.IndexOf ('=');

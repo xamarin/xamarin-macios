@@ -1179,17 +1179,15 @@ $(eval $(call DeviceBuildTemplate,arm64,target64,target64,$(ARM64_ARCH_CONFIGURE
 endif
 
 ifdef INCLUDE_DEVICE
+ifdef INCLUDE_IOS
 iphoneos:: setup-iphoneos build-iphoneos install-iphoneos
 device:: iphoneos
 clean-device: clean-iphoneos
 install-device: install-iphoneos
 
 # this needs to be here because the normal usage of this makefile is "make all install", but nothing actually lists the -iphoneos targets as dependencies.
-ifdef INCLUDE_IOS
 install-local:: install-iphoneos
 all-local:: install-iphoneos
-endif
-endif
 
 LIBMONO_PROFILER_IPHONEOS_DYLIB=$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-profiler-log.dylib
 
@@ -1244,6 +1242,9 @@ $(IOS_DESTDIR)$(IPHONEOS_SDK)/Frameworks/Mono.framework/Info.plist: Mono.framewo
 
 install-iphoneos:: $(IPHONEOS_TARGETS)
 
+endif # INCLUDE_IOS
+endif # INCLUDE_DEVICE
+
 #
 # Watch device build
 # 
@@ -1262,8 +1263,6 @@ targetwatch: build-targetwatch install-watchos
 watchos:: targetwatch
 
 .PHONY: targetwatch
-endif
-endif
 
 .stamp-build-targetwatch: $(MONO_PATH)/configure $(SDK_CONFIG) $(MONO_DEPENDENCIES)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-targetwatch $(SDK_ARGS)
@@ -1356,6 +1355,9 @@ $(BUILD_DESTDIR)/targetwatch/tmp-lib/Mono: $(BUILD_DESTDIR)/targetwatch/lib/libm
 
 install-watchos: $(WATCHOS_TARGETS)
 
+endif # INCLUDE_DEVICE
+endif # INCLUDE_WATCH
+
 #
 # TV device build
 #
@@ -1374,8 +1376,6 @@ targettv: build-targettv install-tvos
 tvos:: targettv
 
 .PHONY: targettv
-endif
-endif
 
 .stamp-build-targettv: $(MONO_PATH)/configure $(SDK_CONFIG) $(MONO_DEPENDENCIES)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-targettv $(SDK_ARGS)
@@ -1466,6 +1466,9 @@ $(BUILD_DESTDIR)/targettv/tmp-lib/Mono: $(BUILD_DESTDIR)/targettv/lib/libmonosge
 	$(Q_GEN) CC="$(IOS_CC)" ./create-shared-library.sh $< $@ -arch arm64 -install_name @rpath/Mono.framework/Mono -mtvos-version-min=$(MIN_TVOS_SDK_VERSION) -isysroot $(DEVICETV_SDK) -lc++ -fembed-bitcode
 
 install-tvos: $(TVOS_TARGETS)
+
+endif # INCLUDE_DEVICE
+endif # INCLUDE_TVOS
 
 #
 # Cross compilers
@@ -1563,8 +1566,6 @@ offsets-tool: $(MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe
 ##
 define iOSCrossTemplate
 
-ifdef INCLUDE_IOS
-ifdef INCLUDE_DEVICE
 $(1): build-$(1) install-$(1)
 
 .PHONY: build-$(1) install-$(1)
@@ -1572,8 +1573,6 @@ $(1): build-$(1) install-$(1)
 build:: build-$(1)
 install-local:: install-$(1)
 clean-local:: clean-$(1)
-endif
-endif
 
 .stamp-build-$(1): .stamp-build-llvm $(MONO_PATH)/configure $(MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe $(MONO_DEPENDENCIES) $(SDK_CONFIG)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(1) $(SDK_ARGS) $(if $(5), XCODE_DIR=$(5))
@@ -1597,6 +1596,10 @@ clean-$(1): $(SDK_CONFIG)
 
 endef
 
+ifdef INCLUDE_IOS
+ifdef INCLUDE_DEVICE
 $(eval $(call iOSCrossTemplate,cross32,llvm32,arm-darwin-mono-sgen,arm-darwin-mono-sgen,$(XCODE94_DEVELOPER_ROOT)))
 $(eval $(call iOSCrossTemplate,cross64,llvm64,arm64-darwin-mono-sgen,aarch64-darwin-mono-sgen))
 $(eval $(call iOSCrossTemplate,crosswatch,llvm32,armv7k-unknown-darwin-mono-sgen,armv7k-unknown-darwin-mono-sgen,$(XCODE94_DEVELOPER_ROOT)))
+endif
+endif

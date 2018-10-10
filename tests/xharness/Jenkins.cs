@@ -23,6 +23,7 @@ namespace xharness
 		public bool IncludeMac32 = true;
 		public bool IncludeiOS = true;
 		public bool IncludeiOSExtensions;
+		public bool ForceExtensionBuildOnly;
 		public bool IncludetvOS = true;
 		public bool IncludewatchOS = true;
 		public bool IncludeMmpTest;
@@ -80,7 +81,7 @@ namespace xharness
 			Devices.Harness = Harness;
 
 			if (SimulatorLoadLog == null)
-				SimulatorLoadLog = Logs.Create ("simulator-list.log", "Simulator Listing");
+				SimulatorLoadLog = Logs.Create ($"simulator-list-{Harness.Timestamp}.log", "Simulator Listing");
 
 			var simulatorLoadTask = Task.Run (async () => {
 				try {
@@ -92,7 +93,7 @@ namespace xharness
 			});
 
 			if (DeviceLoadLog == null)
-				DeviceLoadLog = Logs.Create ("device-list.log", "Device Listing");
+				DeviceLoadLog = Logs.Create ($"device-list-{Harness.Timestamp}.log", "Device Listing");
 			var deviceLoadTask = Task.Run (async () => {
 				try {
 					await Devices.LoadAsync (DeviceLoadLog, removed_locked: true);
@@ -388,7 +389,7 @@ namespace xharness
 						TestName = project.Name,
 					};
 					build64.CloneTestProject (project);
-					rv.Add (new RunDeviceTask (build64, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports64Bit)) { Ignored = ignored || !IncludeiOS });
+					rv.Add (new RunDeviceTask (build64, Devices.Connected64BitIOS) { Ignored = ignored || !IncludeiOS, BuildOnly = project.BuildOnly });
 
 					var build32 = new XBuildTask {
 						Jenkins = this,
@@ -398,7 +399,7 @@ namespace xharness
 						TestName = project.Name,
 					};
 					build32.CloneTestProject (project);
-					rv.Add (new RunDeviceTask (build32, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports32Bit)) { Ignored = ignored || !IncludeiOS });
+					rv.Add (new RunDeviceTask (build32, Devices.Connected32BitIOS) { Ignored = ignored || !IncludeiOS, BuildOnly = project.BuildOnly });
 
 					var todayProject = project.AsTodayExtensionProject ();
 					var buildToday = new XBuildTask {
@@ -409,7 +410,7 @@ namespace xharness
 						TestName = project.Name,
 					};
 					buildToday.CloneTestProject (todayProject);
-					rv.Add (new RunDeviceTask (buildToday, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports64Bit)) { Ignored = ignored || !IncludeiOSExtensions });
+					rv.Add (new RunDeviceTask (buildToday, Devices.Connected64BitIOS) { Ignored = ignored || !IncludeiOSExtensions, BuildOnly = project.BuildOnly || ForceExtensionBuildOnly });
 				}
 
 				if (!project.SkiptvOSVariation) {
@@ -422,7 +423,7 @@ namespace xharness
 						TestName = project.Name,
 					};
 					buildTV.CloneTestProject (tvOSProject);
-					rv.Add (new RunDeviceTask (buildTV, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.tvOS)) { Ignored = ignored || !IncludetvOS });
+					rv.Add (new RunDeviceTask (buildTV, Devices.ConnectedTV) { Ignored = ignored || !IncludetvOS, BuildOnly = project.BuildOnly });
 				}
 
 				if (!project.SkipwatchOSVariation) {
@@ -435,7 +436,7 @@ namespace xharness
 						TestName = project.Name,
 					};
 					buildWatch.CloneTestProject (watchOSProject);
-					rv.Add (new RunDeviceTask (buildWatch, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.watchOS)) { Ignored = ignored || !IncludewatchOS });
+					rv.Add (new RunDeviceTask (buildWatch, Devices.ConnectedWatch) { Ignored = ignored || !IncludewatchOS, BuildOnly = project.BuildOnly });
 				}
 			}
 
@@ -463,6 +464,8 @@ namespace xharness
 			// whatever we did automatically.
 			SelectTestsByLabel (pull_request);
 
+			DisableKnownFailingDeviceTests ();
+
 			if (!Harness.INCLUDE_IOS) {
 				MainLog.WriteLine ("The iOS build is diabled, so any iOS tests will be disabled as well.");
 				IncludeiOS = false;
@@ -482,6 +485,16 @@ namespace xharness
 				MainLog.WriteLine ("The macOS build is disabled, so any macOS tests will be disabled as well.");
 				IncludeMac = false;
 			}
+		}
+
+		void DisableKnownFailingDeviceTests ()
+		{
+			// https://github.com/xamarin/maccore/issues/1008
+			ForceExtensionBuildOnly = true;
+
+			// https://github.com/xamarin/maccore/issues/1011
+			foreach (var mono in Harness.IOSTestProjects.Where (x => x.Name == "mini"))
+				mono.BuildOnly = true;
 		}
 
 		void SelectTestsByModifiedFiles (int pull_request)
@@ -900,7 +913,7 @@ namespace xharness
 		{
 			try {
 				Directory.CreateDirectory (LogDirectory);
-				Log log = Logs.Create ("Harness.log", "Harness log");
+				Log log = Logs.Create ($"Harness-{Harness.Timestamp}.log", "Harness log");
 				if (Harness.InWrench)
 					log = Log.CreateAggregatedLog (log, new ConsoleLog ());
 				Harness.HarnessLog = MainLog = log;
@@ -1305,7 +1318,7 @@ namespace xharness
 			
 			try {
 				lock (report_lock) {
-					var report = Path.Combine (LogDirectory, "index.html");
+					var report = Path.Combine (LogDirectory, IsServerMode ? $"index-{Harness.Timestamp}.html" : "index.html");
 					using (var stream = new MemoryStream ()) {
 						MemoryStream markdown_summary = null;
 						StreamWriter markdown_writer = null;
@@ -2192,6 +2205,30 @@ function toggleAll (show)
 
 		public bool RequiresXcode94;
 
+		// VerifyRun is called in RunInternalAsync/ExecuteAsync to verify that the task can be executed/run.
+		// Typically used to fail tasks that don't have an available device, or if there's not enough disk space.
+		public virtual Task VerifyRunAsync ()
+		{
+			return VerifyDiskSpaceAsync ();
+		}
+
+		static DriveInfo RootDrive;
+		protected Task VerifyDiskSpaceAsync ()
+		{
+			if (Finished)
+				return Task.CompletedTask;
+
+			if (RootDrive == null)
+				RootDrive = new DriveInfo ("/");
+			var afs = RootDrive.AvailableFreeSpace;
+			const long minSpaceRequirement = 1024 * 1024 * 1024; /* 1 GB */
+			if (afs < minSpaceRequirement) {
+				FailureMessage = $"Not enough space on the root drive '{RootDrive.Name}': {afs / (1024.0 * 1024):#.##} MB left of {minSpaceRequirement / (1024.0 * 1024):#.##} MB required";
+				ExecutionResult = TestExecutingResult.Failed;
+			}
+			return Task.CompletedTask;
+		}
+
 		public void CloneTestProject (TestProject project)
 		{
 			// Don't build in the original project directory
@@ -2335,7 +2372,7 @@ function toggleAll (show)
 
 		public string LogDirectory {
 			get {
-				var rv = Path.Combine (Jenkins.LogDirectory, $"{TestName}_{ID}");
+				var rv = Path.Combine (Jenkins.LogDirectory, TestName, ID.ToString ());
 				Directory.CreateDirectory (rv);
 				return rv;
 			}
@@ -2359,6 +2396,10 @@ function toggleAll (show)
 			try {
 				if (InitialTask != null)
 					await InitialTask;
+				
+				await VerifyRunAsync ();
+				if (Finished)
+					return;
 
 				duration.Start ();
 
@@ -3086,6 +3127,7 @@ function toggleAll (show)
 	abstract class RunTestTask : TestTask
 	{
 		public readonly BuildToolTask BuildTask;
+		public bool BuildOnly;
 
 		public RunTestTask (BuildToolTask build_task)
 		{
@@ -3126,6 +3168,10 @@ function toggleAll (show)
 			if (Finished)
 				return true;
 			
+			await VerifyBuildAsync ();
+			if (Finished)
+				return BuildTask.Succeeded;
+
 			ExecutionResult = TestExecutingResult.Building;
 			await BuildTask.RunAsync ();
 			if (!BuildTask.Succeeded) {
@@ -3153,15 +3199,23 @@ function toggleAll (show)
 			if (!await BuildAsync ())
 				return;
 
+			if (BuildOnly) {
+				ExecutionResult = TestExecutingResult.Succeeded;
+				return;
+			}
+
 			ExecutionResult = TestExecutingResult.Running;
 			duration.Restart (); // don't count the build time.
 			await RunTestAsync ();
 		}
 
 		protected abstract Task RunTestAsync ();
-		// VerifyRun is called in ExecuteAsync to verify that the task can be executed/run.
-		// Typically used to fail tasks that don't have an available device.
-		public virtual Task VerifyRunAsync () { return Task.CompletedTask; }
+		// VerifyBuild is called in BuildAsync to verify that the task can be built.
+		// Typically used to fail tasks if there's not enough disk space.
+		public virtual Task VerifyBuildAsync ()
+		{
+			return VerifyDiskSpaceAsync ();
+		}
 
 		public override void Reset ()
 		{
@@ -3238,6 +3292,8 @@ function toggleAll (show)
 		public override async Task VerifyRunAsync ()
 		{
 			await base.VerifyRunAsync ();
+			if (Finished)
+				return;
 
 			var enumerable = candidates;
 			var asyncEnumerable = enumerable as IAsyncEnumerable;

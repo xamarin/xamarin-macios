@@ -120,26 +120,14 @@ namespace CoreFoundation {
 
 		public static bool operator != (DispatchObject a, DispatchObject b)
 		{
-			var oa = a as object;
-			var ob = b as object;
-			
-			if (oa == null){
-				if (ob == null)
-					return false;
-				return true;
-			} else {
-				if (ob == null)
-					return true;
-				return a.handle != b.handle;
-			}
+			return !(a == b);
 		}
 
 		public override bool Equals (object other)
 		{
-			if (other == null)
-				return false;
-			
 			var od = other as DispatchQueue;
+			if (od == null)
+				return false;
 			return od.handle == handle;
 		}
 
@@ -277,37 +265,16 @@ namespace CoreFoundation {
 				return new DispatchQueue (dispatch_get_global_queue ((nint) (int) DispatchQueuePriority.Default, 0), false);
 			}
 		}
-#if MONOMAC
-		static DispatchQueue PInvokeDispatchGetMainQueue ()
-		{
-			return new DispatchQueue (dispatch_get_main_queue (), false);
-		}
 
-#endif
 		static IntPtr main_q;
-		static object lockobj = new object ();
 
 		public static DispatchQueue MainQueue {
 			get {
-				lock (lockobj) {
-					if (main_q == IntPtr.Zero) {
-						// Try loading the symbol from our address space first, should work everywhere
-						main_q = Dlfcn.dlsym ((IntPtr) (-2), "_dispatch_main_q");
-
-						// Last case: this is technically not right for the simulator, as this path
-						// actually points to the MacOS library, not the one in the SDK.
-						if (main_q == IntPtr.Zero){
-							var h = Dlfcn.dlopen ("/usr/lib/libSystem.dylib", 0x0);
-							main_q = Dlfcn.GetIndirect (h, "_dispatch_main_q");
-							Dlfcn.dlclose (h);
-						}
-					}
+				if (main_q == IntPtr.Zero) {
+					// Can't use a Field attribute because we don't support generating a call to Dlfcn.GetIndirect.
+					main_q = Dlfcn.GetIndirect (Libraries.libdispatch.Handle, "_dispatch_main_q");
 				}
-#if MONOMAC
-				// For Snow Leopard
-				if (main_q == IntPtr.Zero)
-					return PInvokeDispatchGetMainQueue ();
-#endif
+
 				return new DispatchQueue (main_q, false);
 			}
 		}
@@ -441,12 +408,6 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		// dispatch_queue_t dispatch_get_global_queue (long priority, unsigned long flags);
 		extern static IntPtr dispatch_get_global_queue (nint priority, nuint flags);
-
-#if MONOMAC
-		[Obsoleted (PlatformName.MacOSX, 10, 7)]
-		[DllImport (Constants.libcLibrary)]
-		extern static IntPtr dispatch_get_main_queue ();
-#endif
 
 		[DllImport (Constants.libcLibrary)]
 		// this returns a "const char*" so we cannot make a string out of it since it will be freed (and crash)

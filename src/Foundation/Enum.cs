@@ -1092,6 +1092,7 @@ namespace Foundation  {
 	}
 
 	[iOS (8,0)]
+	[Mac (10,10)]
 	[Native]
 	public enum NSQualityOfService : long {
 		UserInteractive = 33,

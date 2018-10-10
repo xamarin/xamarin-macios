@@ -43,18 +43,11 @@ namespace CoreText {
 
 		static CTFontTraitKey ()
 		{
-			var handle = Dlfcn.dlopen (Constants.CoreTextLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-				Symbolic  = Dlfcn.GetStringConstant (handle, "kCTFontSymbolicTrait");
-				Weight    = Dlfcn.GetStringConstant (handle, "kCTFontWeightTrait");
-				Width     = Dlfcn.GetStringConstant (handle, "kCTFontWidthTrait");
-				Slant     = Dlfcn.GetStringConstant (handle, "kCTFontSlantTrait");
-			}
-			finally {
-				Dlfcn.dlclose (handle);
-			}
+			var handle = Libraries.CoreText.Handle;
+			Symbolic  = Dlfcn.GetStringConstant (handle, "kCTFontSymbolicTrait");
+			Weight    = Dlfcn.GetStringConstant (handle, "kCTFontWeightTrait");
+			Width     = Dlfcn.GetStringConstant (handle, "kCTFontWidthTrait");
+			Slant     = Dlfcn.GetStringConstant (handle, "kCTFontSlantTrait");
 		}
 	}
 

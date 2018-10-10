@@ -576,7 +576,7 @@ namespace Registrar {
 
 				var bindas_count = Marshal.ReadInt32 (desc + IntPtr.Size + 4);
 				if (bindas_count < 1 + Parameters.Length)
-					throw ErrorHelper.CreateError (8018, $"Internal consistency error: BindAs array is not big enough (expected at least {1 + parameters.Length} elements, got {bindas_count} elements) for {method_base.DeclaringType.FullName + "." + method_base.Name}. Please file a bug report at https://bugzilla.xamarin.com.");
+					throw ErrorHelper.CreateError (8018, $"Internal consistency error: BindAs array is not big enough (expected at least {1 + parameters.Length} elements, got {bindas_count} elements) for {method_base.DeclaringType.FullName + "." + method_base.Name}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
 
 				Marshal.WriteIntPtr (desc, ObjectWrapper.Convert (method_base));
 				Marshal.WriteInt32 (desc + IntPtr.Size, (int) semantic);
@@ -792,7 +792,7 @@ namespace Registrar {
 						return trampoline;
 
 #if MTOUCH || MMP
-					throw ErrorHelper.CreateError (8018, "Internal consistency error. Please file a bug report at http://bugzilla.xamarin.com.");
+					throw ErrorHelper.CreateError (8018, "Internal consistency error. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
 #else
 					var mi = (System.Reflection.MethodInfo) Method;
 					bool is_stret;
@@ -1236,7 +1236,7 @@ namespace Registrar {
 				case Xamarin.Utils.ApplePlatform.TVOS:
 					return "Xamarin.TVOS";
 				default:
-					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", App.Platform);
+					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", App.Platform);
 				}
 			}
 		}

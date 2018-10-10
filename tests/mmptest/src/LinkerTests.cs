@@ -139,5 +139,15 @@ namespace Xamarin.MMP.Tests
 				Assert.IsTrue (buildOutput.Contains ("Selected Linking: 'Platform'"), $"Build Output did not contain expected selected linking line: {buildOutput}");
 			});
 		}
+
+		[Test]
+		public void LinkingWithPartialStatic_ShouldFail ()
+		{
+			MMPTests.RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<MonoBundlingExtraArgs>--registrar:partial --linkplatform</MonoBundlingExtraArgs>" };
+				string buildOutput = TI.TestUnifiedExecutable (test, shouldFail: true).BuildOutput;
+				Assert.True (buildOutput.Contains ("2110"), $"Building did not give the expected 2110 error.\n\n{buildOutput}");
+			});
+		}
 	}
 }

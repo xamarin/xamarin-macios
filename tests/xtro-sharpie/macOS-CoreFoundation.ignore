@@ -1,5 +1,4 @@
 ## /usr/include/dispatch/queue.h
-!unknown-pinvoke! dispatch_get_main_queue bound
 !unknown-pinvoke! dispatch_main bound
 
 ## dlfcn.h

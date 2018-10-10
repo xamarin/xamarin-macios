@@ -20,18 +20,11 @@ namespace OpenGLES {
 
 		static EAGLDrawableProperty ()
 		{
-			var handle = Dlfcn.dlopen (Constants.OpenGLESLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-				ColorFormat     = Dlfcn.GetStringConstant (handle, 
-						"kEAGLDrawablePropertyColorFormat");
-				RetainedBacking = Dlfcn.GetStringConstant (handle, 
-						"kEAGLDrawablePropertyRetainedBacking");
-			}
-			finally {
-				Dlfcn.dlclose (handle);
-			}
+			var handle = Libraries.OpenGLES.Handle;
+			ColorFormat     = Dlfcn.GetStringConstant (handle, 
+					"kEAGLDrawablePropertyColorFormat");
+			RetainedBacking = Dlfcn.GetStringConstant (handle, 
+					"kEAGLDrawablePropertyRetainedBacking");
 		}
 	}
 
@@ -43,16 +36,9 @@ namespace OpenGLES {
 
 		static EAGLColorFormat ()
 		{
-			var handle = Dlfcn.dlopen (Constants.OpenGLESLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-				RGB565  = Dlfcn.GetStringConstant (handle, "kEAGLColorFormatRGB565");
-				RGBA8   = Dlfcn.GetStringConstant (handle, "kEAGLColorFormatRGBA8");
-			}
-			finally {
-				Dlfcn.dlclose (handle);
-			}
+			var handle = Libraries.OpenGLES.Handle;
+			RGB565  = Dlfcn.GetStringConstant (handle, "kEAGLColorFormatRGB565");
+			RGBA8   = Dlfcn.GetStringConstant (handle, "kEAGLColorFormatRGBA8");
 		}
 	}
 }
