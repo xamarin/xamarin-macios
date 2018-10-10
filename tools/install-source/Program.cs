@@ -223,7 +223,8 @@ public class ListSourceFiles {
 			var targetDir = Path.GetDirectoryName (target);
 
 			if (String.IsNullOrEmpty (targetDir)) {
-				Console.WriteLine ($"Got empty dir for {target}");
+				if (verbose)
+					Console.WriteLine ($"Got empty dir for {target}");
 				continue;
 			}
 			
