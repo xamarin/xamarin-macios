@@ -81,7 +81,7 @@ namespace xharness
 			Devices.Harness = Harness;
 
 			if (SimulatorLoadLog == null)
-				SimulatorLoadLog = Logs.Create ("simulator-list.log", "Simulator Listing");
+				SimulatorLoadLog = Logs.Create ($"simulator-list-{Harness.Timestamp}.log", "Simulator Listing");
 
 			var simulatorLoadTask = Task.Run (async () => {
 				try {
@@ -93,7 +93,7 @@ namespace xharness
 			});
 
 			if (DeviceLoadLog == null)
-				DeviceLoadLog = Logs.Create ("device-list.log", "Device Listing");
+				DeviceLoadLog = Logs.Create ($"device-list-{Harness.Timestamp}.log", "Device Listing");
 			var deviceLoadTask = Task.Run (async () => {
 				try {
 					await Devices.LoadAsync (DeviceLoadLog, removed_locked: true);
@@ -910,7 +910,7 @@ namespace xharness
 		{
 			try {
 				Directory.CreateDirectory (LogDirectory);
-				Log log = Logs.Create ("Harness.log", "Harness log");
+				Log log = Logs.Create ($"Harness-{Harness.Timestamp}.log", "Harness log");
 				if (Harness.InWrench)
 					log = Log.CreateAggregatedLog (log, new ConsoleLog ());
 				Harness.HarnessLog = MainLog = log;
@@ -1315,7 +1315,7 @@ namespace xharness
 			
 			try {
 				lock (report_lock) {
-					var report = Path.Combine (LogDirectory, "index.html");
+					var report = Path.Combine (LogDirectory, IsServerMode ? $"index-{Harness.Timestamp}.html" : "index.html");
 					using (var stream = new MemoryStream ()) {
 						MemoryStream markdown_summary = null;
 						StreamWriter markdown_writer = null;
@@ -2369,7 +2369,7 @@ function toggleAll (show)
 
 		public string LogDirectory {
 			get {
-				var rv = Path.Combine (Jenkins.LogDirectory, $"{TestName}_{ID}");
+				var rv = Path.Combine (Jenkins.LogDirectory, TestName, ID.ToString ());
 				Directory.CreateDirectory (rv);
 				return rv;
 			}

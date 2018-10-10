@@ -126,7 +126,7 @@ namespace xharness
 			var sims = new Simulators () {
 				Harness = Harness,
 			};
-			await sims.LoadAsync (Logs.Create ("simulator-list.log", "Simulator list"));
+			await sims.LoadAsync (Logs.Create ($"simulator-list-{Harness.Timestamp}.log", "Simulator list"));
 			simulators = await sims.FindAsync (Target, main_log);
 
 			return simulators != null;
