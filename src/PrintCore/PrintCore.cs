@@ -756,7 +756,7 @@ namespace PrintCore {
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static IntPtr PMPrinterGetID (IntPtr printer);
 
-		public string ID {
+		public string Id {
 			get {
 				return CFString.FetchString (PMPrinterGetID (handle));
 			}
