@@ -931,10 +931,12 @@
 !missing-pinvoke! CFWriteStreamGetTypeID is not bound
 !unknown-field! _dispatch_data_destructor_free bound
 !unknown-pinvoke! close bound
+!unknown-pinvoke! dispatch_activate bound
 !unknown-pinvoke! dispatch_after_f bound
 !unknown-pinvoke! dispatch_apply_f bound
 !unknown-pinvoke! dispatch_async_f bound
 !unknown-pinvoke! dispatch_barrier_async_f bound
+!unknown-pinvoke! dispatch_barrier_sync_f bound
 !unknown-pinvoke! dispatch_data_create bound
 !unknown-pinvoke! dispatch_data_create_concat bound
 !unknown-pinvoke! dispatch_data_create_map bound
@@ -949,8 +951,15 @@
 !unknown-pinvoke! dispatch_group_leave bound
 !unknown-pinvoke! dispatch_group_notify_f bound
 !unknown-pinvoke! dispatch_group_wait bound
+!unknown-pinvoke! dispatch_queue_attr_make_initially_inactive bound
+!unknown-pinvoke! dispatch_queue_attr_make_with_autorelease_frequency bound
+!unknown-pinvoke! dispatch_queue_attr_make_with_qos_class bound
 !unknown-pinvoke! dispatch_queue_create bound
+!unknown-pinvoke! dispatch_queue_create_with_target bound
 !unknown-pinvoke! dispatch_queue_get_label bound
+!unknown-pinvoke! dispatch_queue_get_qos_class bound
+!unknown-pinvoke! dispatch_queue_get_specific bound
+!unknown-pinvoke! dispatch_queue_set_specific bound
 !unknown-pinvoke! dispatch_read bound
 !unknown-pinvoke! dispatch_release bound
 !unknown-pinvoke! dispatch_resume bound
