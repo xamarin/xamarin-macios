@@ -12,6 +12,7 @@ namespace MonoTouch {
 
 		public const string libSystemLibrary = "/usr/lib/libSystem.dylib";
 		public const string libcLibrary = "/usr/lib/libc.dylib";
+		public const string libdispatchLibrary = "/usr/lib/system/libdispatch.dylib";
 		public const string AddressBookLibrary = "/System/Library/Frameworks/AddressBook.framework/AddressBook";
 		public const string AddressBookUILibrary = "/System/Library/Frameworks/AddressBookUI.framework/AddressBookUI";
 		public const string AudioToolboxLibrary = "/System/Library/Frameworks/AudioToolbox.framework/AudioToolbox";
@@ -57,6 +58,7 @@ namespace MonoTouch {
 		public const string AudioUnitLibrary = "/System/Library/Frameworks/AudioToolbox.framework/AudioToolbox";
 		public const string AccelerateImageLibrary = "/System/Library/Frameworks/Accelerate.framework/Frameworks/vImage.framework/vImage";
 		// iOS 6
+		public const string AdSupportLibrary = "/System/Library/Frameworks/AdSupport.framework/AdSupport";
 		public const string MediaToolboxLibrary = "/System/Library/Frameworks/MediaToolbox.framework/MediaToolbox";
 		public const string PassKitLibrary = "/System/Library/Frameworks/PassKit.framework/PassKit";
 		public const string SocialLibrary = "/System/Library/Frameworks/Social.framework/Social";
@@ -81,6 +83,7 @@ namespace MonoTouch {
 		public const string CoreAudioKitLibrary = "/System/Library/Frameworks/CoreAudioKit.framework/CoreAudioKit";
 		public const string CoreMotionLibrary = "/System/Library/Frameworks/CoreMotion.framework/CoreMotion";
 		public const string VideoToolboxLibrary = "/System/Library/Frameworks/VideoToolbox.framework/VideoToolbox";
+		public const string NetworkLibrary = "/System/Library/Frameworks/Network.framework/Network";
 		public const string NetworkExtensionLibrary = "/System/Library/Frameworks/NetworkExtension.framework/NetworkExtension";
 		public const string WebKitLibrary = "/System/Library/Frameworks/WebKit.framework/WebKit";
 		// iOS 8.2
@@ -123,5 +126,10 @@ namespace MonoTouch {
 		public const string BusinessChatLibrary = "/System/Library/Frameworks/BusinessChat.framework/BusinessChat";
 		// iOS 11.4
 		public const string ClassKitLibrary = "/System/Library/Frameworks/ClassKit.framework/ClassKit";
+		// iOS 12.0
+		public const string AuthenticationServicesLibrary = "/System/Library/Frameworks/AuthenticationServices.framework/AuthenticationServices";
+		public const string CarPlayLibrary = "/System/Library/Frameworks/CarPlay.framework/CarPlay";
+		public const string IdentityLookupUILibrary = "/System/Library/Frameworks/IdentityLookupUI.framework/IdentityLookupUI";
+		public const string NaturalLanguageLibrary = "/System/Library/Frameworks/Frameworks/NaturalLanguage.framework/NaturalLanguage";
 	}
 }

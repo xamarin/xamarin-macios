@@ -19,6 +19,9 @@ namespace Xamarin.MacDev.Tasks
 		public string SessionId { get; set; }
 
 		[Required]
+		public string AppBundleDir { get; set; }
+
+		[Required]
 		public string IntermediateOutputPath { get; set; }
 
 		public bool IsWatchApp { get; set; }
@@ -59,6 +62,10 @@ namespace Xamarin.MacDev.Tasks
 		public ITaskItem[] BundleResources { get; set; }
 
 		#endregion
+		
+		string AppBundleName {
+			get { return Path.GetFileName (AppBundleDir); }
+		}
 
 		static string ToolName {
 			get { return "copySceneKitAssets"; }
@@ -115,13 +122,14 @@ namespace Xamarin.MacDev.Tasks
 			if (AppleSdkSettings.XcodeVersion.Major >= 10) {
 				var platform = PlatformUtils.GetTargetPlatform (SdkPlatform, IsWatchApp);
 				if (platform != null)
-					args.Add ("--target-platform", platform);
+					args.AddQuotedFormat ("--target-platform={0}", platform);
 
 				args.AddQuotedFormat ("--target-version={0}", SdkVersion);
 			} else {
 				args.AddQuotedFormat ("--target-version-{0}={1}", OperatingSystem, SdkVersion);
 			}
 			args.AddQuotedFormat ("--target-build-dir={0}", Path.GetFullPath (intermediate));
+			args.AddQuotedFormat ("--resources-folder-path={0}", AppBundleName);
 
 			var startInfo = GetProcessStartInfo (environment, GetFullPathToTool (), args.ToString ());
 
@@ -154,7 +162,7 @@ namespace Xamarin.MacDev.Tasks
 		public override bool Execute ()
 		{
 			var prefixes = BundleResource.SplitResourcePrefixes (ResourcePrefix);
-			var intermediate = Path.Combine (IntermediateOutputPath, ToolName);
+			var intermediate = Path.Combine (IntermediateOutputPath, ToolName, AppBundleName);
 			var bundleResources = new List<ITaskItem> ();
 			var modified = new HashSet<string> ();
 			var items = new List<ITaskItem> ();

@@ -68,6 +68,7 @@
     </Compile>
     <Compile Include="RuntimeTest.cs" />
     <Compile Include="CodeBehind.cs" />
+    <Compile Include="Messaging.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\tests\test-libraries\libtest.m">

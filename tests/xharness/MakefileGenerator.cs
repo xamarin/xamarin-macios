@@ -194,7 +194,11 @@ namespace xharness
 				writer.WriteLine ("# Container targets that run multiple test projects");
 				writer.WriteLine ();
 
-				var grouped = allTargets.GroupBy ((target) => target.SimplifiedName);
+				IEnumerable<MacTarget> groupableTargets = allTargets;
+				if (!harness.IncludeMac32)
+					groupableTargets = groupableTargets.Where ((v) => !v.ThirtyTwoBit);
+
+				var grouped = groupableTargets.GroupBy ((target) => target.SimplifiedName);
 				foreach (MacTargetNameType action in Enum.GetValues (typeof (MacTargetNameType))) {
 					var actionName = action.ToString ().ToLowerInvariant ();
 					foreach (var group in grouped) {
@@ -210,7 +214,7 @@ namespace xharness
 
 				writer.WriteLine ("mac-run run-mac:");
 				writer.WriteLine ("\t$(Q) rm -rf \".$@-failure.stamp\"");
-				foreach (var target in allTargets) {
+				foreach (var target in groupableTargets) {
 					if (target is MacClassicTarget)
 						writer.WriteLine ("\t$(Q) $(MAKE) {0} || echo \"{0} failed\" >> \".$@-failure.stamp\"", MakeMacClassicTargetName (target, MacTargetNameType.Run));
 					else if (target is MacUnifiedTarget)
@@ -224,7 +228,7 @@ namespace xharness
 
 				writer.WriteLine ("mac-build mac-build-all build-mac:"); // build everything
 				writer.WriteLine ("\t$(Q) rm -rf \".$@-failure.stamp\"");
-				foreach (var target in allTargets) {
+				foreach (var target in groupableTargets) {
 					if (target is MacClassicTarget)
 						writer.WriteLine ("\t$(Q) $(MAKE) {0} || echo \"{0} failed\" >> \".$@-failure.stamp\"", MakeMacClassicTargetName (target, MacTargetNameType.Build));
 					else if (target is MacUnifiedTarget)

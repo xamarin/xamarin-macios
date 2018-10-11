@@ -241,18 +241,11 @@ namespace CoreText {
 		
 		static CTFontManager ()
 		{
-			var handle = Dlfcn.dlopen (Constants.CoreTextLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
+			var handle = Libraries.CoreText.Handle;
 #if !XAMCORE_3_0
-				ErrorDomain  = Dlfcn.GetStringConstant (handle, "kCTFontManagerErrorDomain");
+			ErrorDomain  = Dlfcn.GetStringConstant (handle, "kCTFontManagerErrorDomain");
 #endif
-				ErrorFontUrlsKey  = Dlfcn.GetStringConstant (handle, "kCTFontManagerErrorFontURLsKey");
-			}
-			finally {
-				Dlfcn.dlclose (handle);
-			}
+			ErrorFontUrlsKey  = Dlfcn.GetStringConstant (handle, "kCTFontManagerErrorFontURLsKey");
 		}
 
 		static NSString _RegisteredFontsChangedNotification;
@@ -260,11 +253,8 @@ namespace CoreText {
 		[iOS (7,0)]
 		static NSString RegisteredFontsChangedNotification {
 			get {
-				if (_RegisteredFontsChangedNotification == null){
-					var handle = Dlfcn.dlopen (Constants.CoreTextLibrary, 0);
-					_RegisteredFontsChangedNotification = Dlfcn.GetStringConstant (handle, "kCTFontManagerRegisteredFontsChangedNotification");
-					Dlfcn.dlclose (handle);
-				}
+				if (_RegisteredFontsChangedNotification == null)
+					_RegisteredFontsChangedNotification = Dlfcn.GetStringConstant (Libraries.CoreText.Handle, "kCTFontManagerRegisteredFontsChangedNotification");
 				return _RegisteredFontsChangedNotification;
 			}
 		}

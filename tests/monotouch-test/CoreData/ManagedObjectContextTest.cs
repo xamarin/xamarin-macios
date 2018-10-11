@@ -11,6 +11,7 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using CoreData;
+using ObjCRuntime;
 #else
 using MonoTouch.CoreData;
 using MonoTouch.Foundation;
@@ -44,7 +45,10 @@ namespace MonoTouchFixtures.CoreData {
 			Assert.That (moc.RegisteredObjects.Count, Is.EqualTo ((nuint) 0), "RegisteredObjects");
 			Assert.False (moc.RetainsRegisteredObjects, "RetainsRegisteredObjects");
 			Assert.That (moc.StalenessInterval, Is.EqualTo (-1), "StalenessInterval");
-			Assert.Null (moc.UndoManager, "UndoManager");
+			if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 12, throwIfOtherPlatform: false))
+				Assert.Null (moc.UndoManager, "UndoManager");
+			else
+				Assert.NotNull (moc.UndoManager, "UndoManager");
 			Assert.That (moc.UpdatedObjects.Count, Is.EqualTo ((nuint) 0), "UpdatedObjects");
 			Assert.That (moc.UserInfo.Count, Is.EqualTo ((nuint) 0), "UserInfo");
 		}

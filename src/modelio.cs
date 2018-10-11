@@ -250,6 +250,9 @@ namespace ModelIO {
 
 		[Static]
 		[Export ("placeLightProbesWithDensity:heuristic:usingIrradianceDataSource:")]
+		[Mac (10, 12)]
+		[iOS (10,0)]
+		[TV (10,0)]
 		MDLLightProbe[] PlaceLightProbes (float density, MDLProbePlacement type, IMDLLightProbeIrradianceDataSource dataSource);
 	}
 
@@ -1638,13 +1641,33 @@ namespace ModelIO {
 		[Export ("init")]
 		IntPtr Constructor ();
 
+#if !XAMCORE_4_0
+		[Static]
+		[Obsolete ("Use 'CreateTexture' instead.")]
+		[Wrap ("CreateTexture (name)")]
+		MDLTexture FromBundle (string name);
+#endif
+
 		[Static]
 		[Export ("textureNamed:")]
-		MDLTexture FromBundle (string name);
+		MDLTexture CreateTexture (string name);
+
+#if !XAMCORE_4_0
+		[Static]
+		[Obsolete ("Use 'CreateTexture' instead.")]
+		[Wrap ("CreateTexture (name, bundleOrNil)")]
+		MDLTexture FromBundle (string name, [NullAllowed] NSBundle bundleOrNil);
+#endif
 
 		[Static]
 		[Export ("textureNamed:bundle:")]
-		MDLTexture FromBundle (string name, [NullAllowed] NSBundle bundleOrNil);
+		MDLTexture CreateTexture (string name, [NullAllowed] NSBundle bundleOrNil);
+
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Static]
+		[Export ("textureNamed:assetResolver:")]
+		[return: NullAllowed]
+		MDLTexture CreateTexture (string name, IMDLAssetResolver resolver);
 
 		[Static]
 		[Export ("textureCubeWithImagesNamed:")]
@@ -1771,6 +1794,7 @@ namespace ModelIO {
 
 	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
+	[DesignatedDefaultCtor]
 	interface MDLTransform : MDLTransformComponent, NSCopying {
 
 		[Export ("initWithTransformComponent:")]
@@ -2699,6 +2723,10 @@ namespace ModelIO {
 
 		[Export ("jointBindTransforms")]
 		MDLMatrix4x4Array JointBindTransforms { get; }
+
+		[iOS (12,0), Mac (10,14, onlyOn64 : true), TV (12,0)]
+		[Export ("jointRestTransforms")]
+		MDLMatrix4x4Array JointRestTransforms { get; }
 
 		[Export ("initWithName:jointPaths:")]
 		IntPtr Constructor (string name, string[] jointPaths);

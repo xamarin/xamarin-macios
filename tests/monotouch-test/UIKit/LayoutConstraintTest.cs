@@ -22,9 +22,6 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void Create ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6,0))
-				Assert.Inconclusive ("requires iOS 6");
-
 			using (var view = new UIView ()) {
 				NSLayoutConstraint.Create (view, NSLayoutAttribute.Width, NSLayoutRelation.Equal, null, NSLayoutAttribute.NoAttribute, 1, 5).Dispose ();
 			}
@@ -33,9 +30,6 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void FromVisualFormat_NullMetrics ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6,0))
-				Assert.Inconclusive ("requires iOS 6");
-
 			using (var dict = new NSMutableDictionary ())
 			using (var b0 = UIButton.FromType (UIButtonType.InfoDark))
 			using (var b1 = UIButton.FromType (UIButtonType.InfoLight)) {
@@ -49,9 +43,6 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void FromVisualFormat ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6,0))
-				Assert.Inconclusive ("requires iOS 6");
-			
 			using (var metrics = new NSMutableDictionary ())
 			using (var dict = new NSMutableDictionary ())
 			using (var b0 = UIButton.FromType (UIButtonType.InfoDark))

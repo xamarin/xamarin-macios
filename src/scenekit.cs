@@ -911,7 +911,8 @@ namespace SceneKit {
 		[Export ("geometryWithMDLMesh:")]
 		SCNGeometry FromMesh (MDLMesh mesh);
 
-		[NoWatch, NoTV, Mac (10,13, onlyOn64: true), iOS (11,0)]
+		[NoWatch, Mac (10,13, onlyOn64: true), iOS (11,0)]
+		[TV (12,0)]
 		[NullAllowed, Export ("tessellator", ArgumentSemantic.Retain)]
 		SCNGeometryTessellator Tessellator { get; set; }
 #endif
@@ -1053,7 +1054,8 @@ namespace SceneKit {
 	}
 
 #if XAMCORE_2_0 && !WATCH
-	[NoWatch, NoTV, Mac (10, 13, onlyOn64: true), iOS (11,0)]
+	[NoWatch, Mac (10, 13, onlyOn64: true), iOS (11,0)]
+	[TV (12,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface SCNGeometryTessellator : NSCopying, NSSecureCoding
@@ -1968,7 +1970,7 @@ namespace SceneKit {
 		// We took the decision to comment the following helpers since they currently do not bring
 		// any benefits over the SCN* versions, actually the SIMD types could potentially be just
 		// a little slower than the SCN* versions due to manual native conversion. If you really
-		// need them please file a bug at https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS
+		// need them please file a bug at https://github.com/xamarin/xamarin-macios/issues/new
 
 		// Please add the following code to runtime/bindings-generator.cs if you reenable the following SIMD methods.
 
@@ -2841,7 +2843,7 @@ namespace SceneKit {
 #if XAMCORE_2_0
 		[Abstract]
 #endif
-		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
+		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakSceneRendererDelegate { get; set;  }
 
 		[Wrap ("WeakSceneRendererDelegate")]
@@ -4024,6 +4026,25 @@ namespace SceneKit {
 		[Export ("affectedByGravity")]
 		bool AffectedByGravity { [Bind ("isAffectedByGravity")] get; set; }
 		
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("setResting:")]
+		void SetResting (bool resting);
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("continuousCollisionDetectionThreshold")]
+		nfloat ContinuousCollisionDetectionThreshold { get; set; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("centerOfMassOffset", ArgumentSemantic.Assign)]
+		SCNVector3 CenterOfMassOffset { get; set; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("linearRestingThreshold")]
+		nfloat LinearRestingThreshold { get; set; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("angularRestingThreshold")]
+		nfloat AngularRestingThreshold { get; set; }
 	}
 
 	[Mac (10,10), iOS (8,0)]
@@ -4128,7 +4149,7 @@ namespace SceneKit {
 		[Export ("timeStep")]
 		double TimeStep { get; set; }
 
-		[Export ("contactDelegate", ArgumentSemantic.UnsafeUnretained)]
+		[Export ("contactDelegate", ArgumentSemantic.Weak)]
 		[NullAllowed]
 		NSObject WeakContactDelegate { get; set; }
 

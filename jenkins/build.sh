@@ -15,7 +15,7 @@ fi
 
 ls -la "$WORKSPACE/jenkins"
 echo "$WORKSPACE/jenkins/pr-comments.md:"
-cat "$WORKSPACE/jenkins/pr-comments.md"
+cat "$WORKSPACE/jenkins/pr-comments.md" || true
 
 export BUILD_REVISION=jenkins
 
@@ -27,6 +27,11 @@ if test -z "$ghprbPullId"; then
 	echo "Could not find the environment variable ghprbPullId, so forcing a device build."
 	ENABLE_DEVICE_BUILD=1
 else
+	if ./jenkins/fetch-pr-labels.sh --check=skip-public-jenkins; then
+		echo "Skipping execution because the label 'skip-public-jenkins' was found."
+		printf "ℹ️ [Skipped execution](%s/console)\\n" "$BUILD_URL" >> "$WORKSPACE/jenkins/pr-comments.md"
+		exit 0
+	fi
 	echo "Listing modified files for pull request #$ghprbPullId..."
 	if git diff-tree --no-commit-id --name-only -r "origin/pr/$ghprbPullId/merge^..origin/pr/$ghprbPullId/merge" > .tmp-files; then
 		echo "Modified files found":
@@ -54,12 +59,13 @@ fi
 if test -z "$ENABLE_DEVICE_BUILD"; then
 	CONFIGURE_FLAGS="$CONFIGURE_FLAGS --disable-ios-device"
 fi
-# shellcheck disable=SC2086
-./configure $CONFIGURE_FLAGS
 
 make reset
 make git-clean-all
 make print-versions
+
+# shellcheck disable=SC2086
+./configure $CONFIGURE_FLAGS
 
 time make -j8
 time make install -j8

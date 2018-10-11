@@ -33,6 +33,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Reporter.cs" />
+    <Compile Include="..\Filter.cs">
+      <Link>Filter.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

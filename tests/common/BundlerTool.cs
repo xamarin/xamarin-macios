@@ -44,6 +44,7 @@ namespace Xamarin.Tests
 	abstract class BundlerTool : Tool
 	{
 		public const string None = "None";
+		public bool AlwaysShowOutput;
 
 #pragma warning disable 0649 // Field 'X' is never assigned to, and will always have its default value Y
 		// These map directly to mtouch/mmp options
@@ -73,6 +74,7 @@ namespace Xamarin.Tests
 		public int Verbosity;
 		public int [] WarnAsError; // null array: nothing passed to mtouch/mmp. empty array: pass --warnaserror (which means makes all warnings errors).
 		public string [] XmlDefinitions;
+		public string Interpreter;
 
 		// These are a bit smarter
 		public bool NoPlatformAssemblyReference;
@@ -290,7 +292,12 @@ namespace Xamarin.Tests
 					sb.Append (" --xml:").Append (StringUtils.Quote (xd));
 			}
 
-
+			if (Interpreter != null) {
+				if (Interpreter.Length == 0)
+					sb.Append (" --interpreter");
+				else
+					sb.Append (" --interpreter=").Append (Interpreter);
+			}
 		}
 
 		public string CreateTemporaryDirectory ()
@@ -306,7 +313,7 @@ namespace Xamarin.Tests
 
 		public virtual int Execute ()
 		{
-			return Execute (ToolArguments, always_show_output: Verbosity > 0);
+			return Execute (ToolArguments, always_show_output: Verbosity > 0 || AlwaysShowOutput);
 		}
 
 		public virtual void AssertExecute (string message = null)

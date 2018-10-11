@@ -72,7 +72,7 @@ namespace Xamarin.iOS.Tasks
 			Assert.AreEqual (2, Engine.Logger.ErrorEvents[0].ColumnNumber, "ColumnNumber");
 			Assert.AreEqual (197, Engine.Logger.ErrorEvents[0].EndLineNumber, "EndLineNumber");
 			Assert.AreEqual (2, Engine.Logger.ErrorEvents[0].EndColumnNumber, "EndColumnNumber");
-			Assert.AreEqual ("Unexpected character ']'. At line 197, column 2", Engine.Logger.ErrorEvents[0].Message, "Message");
+			Assert.AreEqual ("Unexpected character ']'. At line 197, column 2.", Engine.Logger.ErrorEvents[0].Message, "Message");
 		}
 	}
 }

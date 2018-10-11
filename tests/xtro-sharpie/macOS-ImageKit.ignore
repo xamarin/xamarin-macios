@@ -38,3 +38,11 @@
 !missing-selector! IKDeviceBrowserView::selectedDevice not bound
 !missing-selector! IKScannerDeviceView::scannerDevice not bound
 !missing-selector! IKScannerDeviceView::setScannerDevice: not bound
+
+## IKImageBrowserItem Protocol
+!missing-selector! NSObject::imageRepresentation not bound
+!missing-selector! NSObject::imageRepresentationType not bound
+!missing-selector! NSObject::imageSubtitle not bound
+!missing-selector! NSObject::imageTitle not bound
+!missing-selector! NSObject::imageUID not bound
+!missing-selector! NSObject::imageVersion not bound

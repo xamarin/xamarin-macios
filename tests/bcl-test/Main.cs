@@ -57,24 +57,6 @@ namespace BCL.Tests
 			return new Version (major, minor, build);
 		}
 
-		// This method returns true if:
-		// system version >= specified version
-		// AND
-		// sdk version >= specified version
-		public static bool CheckSystemAndSDKVersion (int major, int minor)
-		{
-#if __WATCHOS__
-			throw new Exception ("Can't get iOS System/SDK version on watchOS");
-#else
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (major, minor))
-				return false;
-
-			// Check if the SDK version we're built includes the version we're checking for
-			// We don't want to execute iOS7 tests on an iOS7 device when built with the iOS6 SDK.
-			return CheckSDKVersion (major, minor);
-#endif
-		}
-
 		public static bool CheckSystemVersion (int major, int minor)
 		{
 #if __WATCHOS__

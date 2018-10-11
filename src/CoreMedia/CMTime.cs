@@ -308,6 +308,16 @@ namespace CoreMedia {
 			return CMTimeMinimum (time1, time2);
 		}
 
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[DllImport (Constants.CoreMediaLibrary)]
+		extern static CMTime CMTimeFoldIntoRange (CMTime time, CMTimeRange foldRange);
+
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		public static CMTime Fold (CMTime time, CMTimeRange foldRange)
+		{
+			return CMTimeFoldIntoRange (time, foldRange);
+		}
+
 		// FIXME: generated will need some changes to emit [Field] in partial struct (not class)
 		public readonly static NSString ValueKey;
 		public readonly static NSString ScaleKey;
@@ -316,17 +326,11 @@ namespace CoreMedia {
 		
 		static CMTime ()
 		{
-			var lib = Dlfcn.dlopen (Constants.CoreMediaLibrary, 0);
-			if (lib != IntPtr.Zero) {
-				try {
-					ValueKey  = Dlfcn.GetStringConstant (lib, "kCMTimeValueKey");
-					ScaleKey  = Dlfcn.GetStringConstant (lib, "kCMTimeScaleKey");
-					EpochKey  = Dlfcn.GetStringConstant (lib, "kCMTimeEpochKey");
-					FlagsKey  = Dlfcn.GetStringConstant (lib, "kCMTimeFlagsKey");
-				} finally {
-					Dlfcn.dlclose (lib);
-				}
-			}
+			var lib = Libraries.CoreMedia.Handle;
+			ValueKey  = Dlfcn.GetStringConstant (lib, "kCMTimeValueKey");
+			ScaleKey  = Dlfcn.GetStringConstant (lib, "kCMTimeScaleKey");
+			EpochKey  = Dlfcn.GetStringConstant (lib, "kCMTimeEpochKey");
+			FlagsKey  = Dlfcn.GetStringConstant (lib, "kCMTimeFlagsKey");
 		}
 
 		[DllImport(Constants.CoreMediaLibrary)]

@@ -45,9 +45,6 @@ namespace MonoTouchFixtures.AVFoundation {
 		[Test]
 		public void Defaults ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6,0))
-				Assert.Ignore ("requires iOS6+");
-
 			using (var obj = new AVCaptureMetadataOutput ()) {
 #if XAMCORE_2_0
 				Assert.AreEqual (AVMetadataObjectType.None, obj.AvailableMetadataObjectTypes, "AvailableMetadataObjectTypes");
@@ -63,7 +60,7 @@ namespace MonoTouchFixtures.AVFoundation {
 				Assert.IsNotNull (obj.MetadataObjectTypes, "MetadataObjectTypes");
 				Assert.AreEqual (0, obj.MetadataObjectTypes.Length, "MetadataObjectTypes#");
 #endif
-				if (TestRuntime.CheckSystemAndSDKVersion (7,0))
+				if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false))
 					Assert.AreEqual (new RectangleF (0, 0, 1, 1), obj.RectOfInterest, "RectOfInterest");
 
 #if XAMCORE_2_0
@@ -84,8 +81,7 @@ namespace MonoTouchFixtures.AVFoundation {
 		[Test]
 		public void MetadataObjectTypesTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Ignore ("Test only works correctly in iOS 8+");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			if (Runtime.Arch != Arch.DEVICE)
 				Assert.Ignore ("This test only runs on device (requires camera access)");

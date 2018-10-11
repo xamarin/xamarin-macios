@@ -231,10 +231,50 @@ function install_visual_studio () {
 	rm -f $VS_DMG
 }
 
+function run_xcode_first_launch ()
+{
+	local XCODE_VERSION="$1"
+	local XCODE_DEVELOPER_ROOT="$2"
+
+	# xcodebuild -runFirstLaunch seems to have been introduced in Xcode 9
+	if ! is_at_least_version "$XCODE_VERSION" 9.0; then
+		return
+	fi
+
+	# Delete any cached files by xcodebuild, because other branches'
+	# system-dependencies.sh keep installing earlier versions of these
+	# packages manually, which means subsequent first launch checks will
+	# succeed because we've successfully run the first launch tasks once
+	# (and this is cached), while someone else (we!) overwrote with
+	# earlier versions (bypassing the cache).
+	#
+	# Removing the cache will make xcodebuild realize older packages are installed,
+	# and (re-)install any newer packages.
+	#
+	# We'll be able to remove this logic one day, when all branches in use are
+	# using 'xcodebuild -runFirstLaunch' instead of manually installing
+	# packages.
+	find /var/folders -name '*com.apple.dt.Xcode.InstallCheckCache*' -print -delete 2>/dev/null | sed 's/^\(.*\)$/        Deleted Xcode cache file: \1 (this is normal)/' || true
+	if ! "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -checkFirstLaunchStatus; then
+		if ! test -z "$PROVISION_XCODE"; then
+			# Remove sudo's cache as well, otherwise nothing will happen.
+			$SUDO find /var/folders -name '*com.apple.dt.Xcode.InstallCheckCache*' -print -delete 2>/dev/null | sed 's/^\(.*\)$/        Deleted Xcode cache file: \1 (this is normal)/' || true
+			# Run the first launch tasks
+			log "Executing '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch'"
+			$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -runFirstLaunch
+			log "Executed '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch'"
+		else
+			fail "Xcode has pending first launch tasks. Execute '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch' to execute those tasks."
+			return
+		fi
+	fi
+}
+
 function install_specific_xcode () {
 	local XCODE_URL=`grep XCODE$1_URL= Make.config | sed 's/.*=//'`
 	local XCODE_VERSION=`grep XCODE$1_VERSION= Make.config | sed 's/.*=//'`
-	local XCODE_ROOT=$(dirname `dirname $XCODE_DEVELOPER_ROOT`)
+	local XCODE_DEVELOPER_ROOT="$2"
+	local XCODE_ROOT="$(dirname "$(dirname "$XCODE_DEVELOPER_ROOT")")"
 
 	if test -z $XCODE_URL; then
 		fail "No XCODE$1_URL set in Make.config, cannot provision"
@@ -248,9 +288,9 @@ function install_specific_xcode () {
 
 	# To test this script with new Xcode versions, copy the downloaded file to $XCODE_DMG,
 	# uncomment the following curl line, and run ./system-dependencies.sh --provision-xcode
-	if test -f "~/Downloads/$XCODE_NAME"; then
-		log "Found XCode $XCODE_VERSION in your ~/Downloads folder, copying that version instead."
-		cp "~/Downloads/$XCODE_NAME" "$XCODE_DMG"
+	if test -f "$HOME/Downloads/$XCODE_NAME"; then
+		log "Found Xcode $XCODE_VERSION in your ~/Downloads folder, copying that version instead."
+		cp "$HOME/Downloads/$XCODE_NAME" "$XCODE_DMG"
 	else
 		curl -L $XCODE_URL > $XCODE_DMG
 	fi
@@ -289,7 +329,9 @@ function install_specific_xcode () {
 		$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -license accept
 	fi
 
-	if is_at_least_version $XCODE_VERSION 8.0; then
+	if is_at_least_version "$XCODE_VERSION" 9.0; then
+		run_xcode_first_launch "$XCODE_VERSION" "$XCODE_DEVELOPER_ROOT"
+	elif is_at_least_version $XCODE_VERSION 8.0; then
 		PKGS="MobileDevice.pkg MobileDeviceDevelopment.pkg XcodeSystemResources.pkg"
 		for pkg in $PKGS; do
 			if test -f "$XCODE_DEVELOPER_ROOT/../Resources/Packages/$pkg"; then
@@ -319,7 +361,7 @@ function check_specific_xcode () {
 	if ! test -d $XCODE_DEVELOPER_ROOT; then
 		if ! test -z $PROVISION_XCODE; then
 			if ! test -z $ENABLE_XAMARIN; then
-				install_specific_xcode $1
+				install_specific_xcode "$1" "$XCODE_DEVELOPER_ROOT"
 			else
 				fail "Automatic provisioning of Xcode is only supported for provisioning internal build bots."
 				fail "Please download and install Xcode $XCODE_VERSION here: https://developer.apple.com/downloads/index.action?name=Xcode"
@@ -335,10 +377,12 @@ function check_specific_xcode () {
 					$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -license accept
 				else
 					fail "The license for Xcode $XCODE_VERSION has not been accepted. Execute '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild' to review the license and accept it."
+					return
 				fi
-				return
 			fi
 		fi
+
+		run_xcode_first_launch "$XCODE_VERSION" "$XCODE_DEVELOPER_ROOT"
 	fi
 
 	local XCODE_ACTUAL_VERSION=`/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$XCODE_DEVELOPER_ROOT/../version.plist"`
@@ -348,15 +392,17 @@ function check_specific_xcode () {
 		return
 	fi
 
-	local XCODE_SELECT=$(xcode-select -p)
-	if [[ "x$XCODE_SELECT" != "x$XCODE_DEVELOPER_ROOT" ]]; then
-		if ! test -z $PROVISION_XCODE; then
-			log "Executing '$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT'"
-			$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT
-			log "Clearing xcrun cache..."
-			xcrun -k
-		else
-			fail "'xcode-select -p' does not point to $XCODE_DEVELOPER_ROOT, it points to $XCODE_SELECT. Execute '$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT' to fix."
+	if test -z "$1"; then
+		local XCODE_SELECT=$(xcode-select -p)
+		if [[ "x$XCODE_SELECT" != "x$XCODE_DEVELOPER_ROOT" ]]; then
+			if ! test -z $PROVISION_XCODE; then
+				log "Executing '$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT'"
+				$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT
+				log "Clearing xcrun cache..."
+				xcrun -k
+			else
+				fail "'xcode-select -p' does not point to $XCODE_DEVELOPER_ROOT, it points to $XCODE_SELECT. Execute '$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT' to fix."
+			fi
 		fi
 	fi
 
@@ -368,6 +414,7 @@ function check_xcode () {
 
 	# must have latest Xcode in /Applications/Xcode<version>.app
 	check_specific_xcode
+	check_specific_xcode "94"
 
 	local XCODE_DEVELOPER_ROOT=`grep ^XCODE_DEVELOPER_ROOT= Make.config | sed 's/.*=//'`
 	local IOS_SDK_VERSION=`grep ^IOS_SDK_VERSION= Make.config | sed 's/.*=//'`

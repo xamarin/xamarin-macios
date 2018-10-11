@@ -1,0 +1,2 @@
+## the enum MKErrorCode is not available in watchOS so the domain makes no sense
+!missing-field! MKErrorDomain not bound

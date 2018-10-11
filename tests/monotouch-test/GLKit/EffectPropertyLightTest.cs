@@ -7,6 +7,7 @@ using System.Drawing;
 #if XAMCORE_2_0
 using Foundation;
 using GLKit;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.GLKit;
@@ -23,6 +24,8 @@ namespace MonoTouchFixtures.GLKit {
 		[Test]
 		public void Properties ()
 		{
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+
 			var light = new GLKEffectPropertyLight ();
 			Assert.That (light.AmbientColor.ToString (), Is.EqualTo ("(0, 0, 0, 0)"), "AmbientColor");
 			Assert.That (light.DiffuseColor.ToString (), Is.EqualTo ("(0, 0, 0, 0)"), "DiffuseColor");

@@ -15,7 +15,6 @@
 # so to be honest it does not make much sense to expose this constant on macOS
 # nor the below protocols
 !missing-field! GKVoiceChatServiceErrorDomain not bound
-!missing-protocol! GKVoiceChatClient not bound
 
 # This selector does not exist in macOS, confirmed by intro.
 !missing-selector! GKLeaderboardSet::loadImageWithCompletionHandler: not bound

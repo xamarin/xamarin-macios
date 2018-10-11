@@ -77,48 +77,47 @@ namespace CoreVideo {
 		[iOS (9,0)][Mac (10,10)]
 		public static readonly NSString ComponentRangeWideRangeKey;
 
+		[iOS (12,0)][TV (12,0)][Watch (5,0)][Mac (10,14, onlyOn64: true)]
+		public static readonly NSString ContainsGrayscaleKey;
+
 		static CVPixelFormatDescription ()
 		{
-			var handle = Dlfcn.dlopen (Constants.CoreVideoLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-				NameKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatName");
-				ConstantKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatConstant");
-				CodecTypeKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatCodecType");
-				FourCCKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatFourCC");
-				PlanesKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatPlanes");
-				BlockWidthKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatBlockWidth");
-				BlockHeightKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatBlockHeight");
-				BitsPerBlockKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatBitsPerBlock");
-				BlockHorizontalAlignmentKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatBlockHorizontalAlignment");
-				BlockVerticalAlignmentKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatBlockVerticalAlignment");
-				BlackBlockKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatBlackBlock");
-				HorizontalSubsamplingKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatHorizontalSubsampling");
-				VerticalSubsamplingKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatVerticalSubsampling");
-				OpenGLFormatKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatOpenGLFormat");
-				OpenGLTypeKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatOpenGLType");
-				OpenGLInternalFormatKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatOpenGLInternalFormat");
-				CGBitmapInfoKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatCGBitmapInfo");
-				QDCompatibilityKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatQDCompatibility");
-				CGBitmapContextCompatibilityKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatCGBitmapContextCompatibility");
-				CGImageCompatibilityKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatCGImageCompatibility");
-				OpenGLCompatibilityKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatOpenGLCompatibility");
-				FillExtendedPixelsCallbackKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatFillExtendedPixelsCallback");
+			var handle = Libraries.CoreVideo.Handle;
+			NameKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatName");
+			ConstantKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatConstant");
+			CodecTypeKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatCodecType");
+			FourCCKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatFourCC");
+			PlanesKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatPlanes");
+			BlockWidthKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatBlockWidth");
+			BlockHeightKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatBlockHeight");
+			BitsPerBlockKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatBitsPerBlock");
+			BlockHorizontalAlignmentKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatBlockHorizontalAlignment");
+			BlockVerticalAlignmentKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatBlockVerticalAlignment");
+			BlackBlockKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatBlackBlock");
+			HorizontalSubsamplingKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatHorizontalSubsampling");
+			VerticalSubsamplingKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatVerticalSubsampling");
+			OpenGLFormatKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatOpenGLFormat");
+			OpenGLTypeKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatOpenGLType");
+			OpenGLInternalFormatKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatOpenGLInternalFormat");
+			CGBitmapInfoKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatCGBitmapInfo");
+			QDCompatibilityKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatQDCompatibility");
+			CGBitmapContextCompatibilityKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatCGBitmapContextCompatibility");
+			CGImageCompatibilityKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatCGImageCompatibility");
+			OpenGLCompatibilityKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatOpenGLCompatibility");
+			FillExtendedPixelsCallbackKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatFillExtendedPixelsCallback");
 
-				//iOS8 only
-				ContainsRgb = Dlfcn.GetStringConstant (handle, "kCVPixelFormatContainsRGB");
-				ContainsYCbCr = Dlfcn.GetStringConstant (handle, "kCVPixelFormatContainsYCbCr");
+			//iOS8 only
+			ContainsRgb = Dlfcn.GetStringConstant (handle, "kCVPixelFormatContainsRGB");
+			ContainsYCbCr = Dlfcn.GetStringConstant (handle, "kCVPixelFormatContainsYCbCr");
 
-				//iOS9 only
-				ComponentRangeKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatComponentRange");
-				ComponentRangeFullRangeKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatComponentRange_FullRange");
-				ComponentRangeVideoRangeKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatComponentRange_VideoRange");
-				ComponentRangeWideRangeKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatComponentRange_WideRange");
-			}
-			finally {
-				Dlfcn.dlclose (handle);
-			}
+			//iOS9 only
+			ComponentRangeKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatComponentRange");
+			ComponentRangeFullRangeKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatComponentRange_FullRange");
+			ComponentRangeVideoRangeKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatComponentRange_VideoRange");
+			ComponentRangeWideRangeKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatComponentRange_WideRange");
+
+			// Xcode 10
+			ContainsGrayscaleKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatContainsGrayscale");
 		}
 
 		// note: bad documentation, ref: https://bugzilla.xamarin.com/show_bug.cgi?id=13917

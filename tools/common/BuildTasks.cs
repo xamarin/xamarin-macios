@@ -166,7 +166,7 @@ namespace Xamarin.Bundler
 		public bool Rebuilt {
 			get {
 				if (!completed_task.Task.IsCompleted)
-					throw ErrorHelper.CreateError (99, "Internal error: Can't rebuild a task that hasn't completed. Please file a bug report with a test case (http://bugzilla.xamarin.com).");
+					throw ErrorHelper.CreateError (99, "Internal error: Can't rebuild a task that hasn't completed. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 				return completed_task.Task.Result;
 			}
 		}
@@ -275,7 +275,7 @@ namespace Xamarin.Bundler
 
 		protected virtual void Execute ()
 		{
-			throw ErrorHelper.CreateError (99, "Internal error: 'Either Execute or ExecuteAsync must be overridden'. Please file a bug report with a test case (http://bugzilla.xamarin.com).");
+			throw ErrorHelper.CreateError (99, "Internal error: 'Either Execute or ExecuteAsync must be overridden'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 		}
 
 		public override string ToString ()

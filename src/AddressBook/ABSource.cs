@@ -101,17 +101,9 @@ namespace AddressBook {
 
 		internal static void Init ()
 		{
-			var handle = Dlfcn.dlopen (Constants.AddressBookLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			
-			try {
-				Name = Dlfcn.GetInt32 (handle, "kABSourceNameProperty");
-				Type = Dlfcn.GetInt32 (handle, "kABSourceTypeProperty");
-			}
-			finally {
-				Dlfcn.dlclose (handle);
-			}
+			var handle = Libraries.AddressBook.Handle;
+			Name = Dlfcn.GetInt32 (handle, "kABSourceNameProperty");
+			Type = Dlfcn.GetInt32 (handle, "kABSourceTypeProperty");
 		}
 
 		public static int ToId (ABSourceProperty property)

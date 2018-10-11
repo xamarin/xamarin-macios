@@ -2274,18 +2274,52 @@ namespace Foundation
 	[DisableDefaultCtor]
 	interface NSKeyedArchiver {
 
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("initRequiringSecureCoding:")]
+		IntPtr Constructor (bool requiresSecureCoding);
+
 		// hack so we can decorate the default .ctor with availability attributes
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'NSKeyedArchiver (bool)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'NSKeyedArchiver (bool)' instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'NSKeyedArchiver (bool)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'NSKeyedArchiver (bool)' instead.")]
 		[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
 		[Export ("init")]
 		IntPtr Constructor ();
 
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'NSKeyedArchiver (bool)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'NSKeyedArchiver (bool)' instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'NSKeyedArchiver (bool)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'NSKeyedArchiver (bool)' instead.")]
 		[Export ("initForWritingWithMutableData:")]
 		IntPtr Constructor (NSMutableData data);
 	
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("archivedDataWithRootObject:requiringSecureCoding:error:")]
+		[return: NullAllowed]
+#if XAMCORE_4_0
+		NSData GetArchivedData (NSObject @object, bool requiresSecureCoding, [NullAllowed] out NSError error);
+#else
+		NSData ArchivedDataWithRootObject (NSObject @object, bool requiresSecureCoding, [NullAllowed] out NSError error);
+#endif
+
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'ArchivedDataWithRootObject (NSObject, bool, out NSError)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'ArchivedDataWithRootObject (NSObject, bool, out NSError)' instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'ArchivedDataWithRootObject (NSObject, bool, out NSError)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'ArchivedDataWithRootObject (NSObject, bool, out NSError)' instead.")]
 		[Export ("archivedDataWithRootObject:")]
 		[Static]
+#if XAMCORE_4_0
+		NSData GetArchivedData (NSObject root);
+#else
 		NSData ArchivedDataWithRootObject (NSObject root);
+#endif
 		
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'ArchivedDataWithRootObject (NSObject, bool, out NSError)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'ArchivedDataWithRootObject (NSObject, bool, out NSError)' instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'ArchivedDataWithRootObject (NSObject, bool, out NSError)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'ArchivedDataWithRootObject (NSObject, bool, out NSError)' instead.")]
 		[Export ("archiveRootObject:toFile:")]
 		[Static]
 		bool ArchiveRootObjectToFile (NSObject root, string file);
@@ -2332,20 +2366,64 @@ namespace Foundation
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** -[NSKeyedUnarchiver init]: cannot use -init for initialization
 	[DisableDefaultCtor]
 	interface NSKeyedUnarchiver {
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("initForReadingFromData:error:")]
+		IntPtr Constructor (NSData data, [NullAllowed] out NSError error);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("unarchivedObjectOfClass:fromData:error:")]
+		[return: NullAllowed]
+		NSObject GetUnarchivedObject (Class cls, NSData data, [NullAllowed] out NSError error);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Wrap ("GetUnarchivedObject (new Class (type), data, out error)")]
+		[return: NullAllowed]
+		NSObject GetUnarchivedObject (Type type, NSData data, [NullAllowed] out NSError error);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Export ("unarchivedObjectOfClasses:fromData:error:")]
+		[return: NullAllowed]
+		NSObject GetUnarchivedObject (NSSet<Class> classes, NSData data, [NullAllowed] out NSError error);
+
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Static]
+		[Wrap ("GetUnarchivedObject (new NSSet<Class> (Array.ConvertAll (types, t => new Class (t))), data, out error)")]
+		[return: NullAllowed]
+		NSObject GetUnarchivedObject (Type [] types, NSData data, [NullAllowed] out NSError error);
+
 		[Export ("initForReadingWithData:")]
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'NSKeyedUnarchiver (NSData, out NSError)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'NSKeyedUnarchiver (NSData, out NSError)' instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'NSKeyedUnarchiver (NSData, out NSError)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'NSKeyedUnarchiver (NSData, out NSError)' instead.")]
 		[MarshalNativeExceptions]
 		IntPtr Constructor (NSData data);
 	
 		[Static, Export ("unarchiveObjectWithData:")]
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'GetUnarchivedObject ()' instead.")]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'GetUnarchivedObject ()' instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'GetUnarchivedObject ()' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'GetUnarchivedObject ()' instead.")]
 		[MarshalNativeExceptions]
 		NSObject UnarchiveObject (NSData data);
 
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'GetUnarchivedObject ()' instead.")]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'GetUnarchivedObject ()' instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'GetUnarchivedObject ()' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'GetUnarchivedObject ()' instead.")]
 		[Static, Export ("unarchiveTopLevelObjectWithData:error:")]
 		[iOS (9,0), Mac(10,11)]
 		// FIXME: [MarshalNativeExceptions]
 		NSObject UnarchiveTopLevelObject (NSData data, out NSError error);
 		
 		[Static, Export ("unarchiveObjectWithFile:")]
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'GetUnarchivedObject ()' instead.")]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'GetUnarchivedObject ()' instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'GetUnarchivedObject ()' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'GetUnarchivedObject ()' instead.")]
 		[MarshalNativeExceptions]
 		NSObject UnarchiveFile (string file);
 
@@ -5126,6 +5204,32 @@ namespace Foundation
 		[NoWatch, NoTV, NoMac, iOS (11,4)]
 		[NullAllowed, Export ("contextIdentifierPath", ArgumentSemantic.Strong)]
 		string[] ContextIdentifierPath { get; }
+
+		// From NSUserActivity (IntentsAdditions)
+
+		[Watch (5,0), NoTV, NoMac, iOS (12,0)]
+		[NullAllowed, Export ("suggestedInvocationPhrase")]
+		string SuggestedInvocationPhrase { get; set; }
+
+		[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
+		[Export ("eligibleForPrediction")]
+		bool EligibleForPrediction { [Bind ("isEligibleForPrediction")] get; set; }
+
+		[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
+		[NullAllowed, Export ("persistentIdentifier")]
+		string PersistentIdentifier { get; set; }
+
+		[Watch (5,0), NoTV, NoMac, iOS (12,0)]
+		[Static]
+		[Async]
+		[Export ("deleteSavedUserActivitiesWithPersistentIdentifiers:completionHandler:")]
+		void DeleteSavedUserActivities (string[] persistentIdentifiers, Action handler);
+
+		[Watch (5,0), NoTV, NoMac, iOS (12,0)]
+		[Static]
+		[Async]
+		[Export ("deleteAllSavedUserActivitiesWithCompletionHandler:")]
+		void DeleteAllSavedUserActivities (Action handler);
 	}
 
 	[iOS (8,0)][Mac (10,10, onlyOn64 : true)] // same as NSUserActivity
@@ -7519,6 +7623,9 @@ namespace Foundation
 		[Static]
 		[Export ("dictionaryWithSharedKeySet:")]
 		NSDictionary FromSharedKeySet (NSObject sharedKeyToken);
+
+		[Export ("addEntriesFromDictionary:")]
+		void AddEntries (NSDictionary other);
 	}
 
 	[BaseType (typeof (NSSet))]
@@ -8044,16 +8151,22 @@ namespace Foundation
 		bool HasSuffix (NSString suffix);
 
 		// UNUserNotificationCenterSupport category
-		[iOS (10,0), Watch (3,0), NoTV, NoMac]
+		[iOS (10,0), Watch (3,0), NoTV, Mac (10,14, onlyOn64: true)]
 		[Static]
 		[Export ("localizedUserNotificationStringForKey:arguments:")]
-		string GetLocalizedUserNotificationString (string key, [Params] [NullAllowed] NSObject [] arguments);
+		NSString GetLocalizedUserNotificationString (NSString key, [Params] [NullAllowed] NSObject [] arguments);
 
 		[Export ("getParagraphStart:end:contentsEnd:forRange:")]
 		void GetParagraphPositions (out nuint paragraphStartPosition, out nuint paragraphEndPosition, out nuint contentsEndPosition, NSRange range);
 
 		[Export ("paragraphRangeForRange:")]
 		NSRange GetParagraphRange (NSRange range);
+
+		[Export ("componentsSeparatedByString:")]
+		NSString[] SeparateComponents (NSString separator);
+
+		[Export ("componentsSeparatedByCharactersInSet:")]
+		NSString[] SeparateComponents (NSCharacterSet separator);
 
 		// From the NSItemProviderReading protocol
 
@@ -8429,11 +8542,21 @@ namespace Foundation
 		// NSPlaceholders (informal) protocol
 		[Static]
 		[Export ("defaultPlaceholderForMarker:withBinding:")]
+#if XAMCORE_4_0 && MONOMAC
+		// When XAMCORE_4_0 occurs review - NSBindingSelectionMarker is 10.14 only type but GetDefaultPlaceholder is before, does it matter now?
+		NSObject GetDefaultPlaceholder (NSBindingSelectionMarker marker, NSString binding);
+#else
 		NSObject GetDefaultPlaceholder (NSObject marker, NSString binding);
+#endif
 
 		[Static]
 		[Export ("setDefaultPlaceholder:forMarker:withBinding:")]
+#if XAMCORE_4_0 && MONOMAC
+		// When XAMCORE_4_0 occurs review - NSBindingSelectionMarker is 10.14 only type but SetDefaultPlaceholder is before, does it matter now?
+		void SetDefaultPlaceholder (NSObject placeholder, NSBindingSelectionMarker marker, NSString binding);
+#else
 		void SetDefaultPlaceholder (NSObject placeholder, NSObject marker, NSString binding);
+#endif
 
 		[Export ("objectDidEndEditing:")]
 		void ObjectDidEndEditing (NSObject editor);
@@ -8492,6 +8615,23 @@ namespace Foundation
 #endif
 		[Export ("awakeFromNib")]
 		void AwakeFromNib ();
+	}
+
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	[Mac (10, 14)][NoWatch][NoTV][NoiOS]
+	interface NSBindingSelectionMarker : NSCopying {
+		[Static]
+		[Export ("multipleValuesSelectionMarker", ArgumentSemantic.Strong)]
+		NSBindingSelectionMarker MultipleValuesSelectionMarker { get; }
+
+		[Static]
+		[Export ("noSelectionMarker", ArgumentSemantic.Strong)]
+		NSBindingSelectionMarker NoSelectionMarker { get; }
+
+		[Static]
+		[Export ("notApplicableSelectionMarker", ArgumentSemantic.Strong)]
+		NSBindingSelectionMarker NotApplicableSelectionMarker { get; }
 	}
 
 	[Protocol (Name = "NSObject")] // exists both as a type and a protocol in ObjC, Swift uses NSObjectProtocol
@@ -9714,7 +9854,8 @@ namespace Foundation
 		[Async (ResultTypeName = "LoadInPlaceResult"), Export ("loadInPlaceFileRepresentationForTypeIdentifier:completionHandler:")]
 		NSProgress LoadInPlaceFileRepresentation (string typeIdentifier, LoadInPlaceFileRepresentationHandler completionHandler);
 
-		[NoWatch, NoTV, NoMac, iOS (11, 0)]
+		[NoWatch, NoTV, iOS (11,0)]
+		[Mac (10,14, onlyOn64: true)]
 		[NullAllowed, Export ("suggestedName")]
 		string SuggestedName { get; set; }
 
@@ -10543,11 +10684,11 @@ namespace Foundation
 		[Export ("SCNVector4Value")]
 		SCNVector4 Vector4Value { get; }
 
-		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
+		[iOS (8,0)][Mac (10,10, onlyOn64 : true)]
 		[Static, Export ("valueWithSCNMatrix4:")]
 		NSValue FromSCNMatrix4 (SCNMatrix4 matrix);
 
-		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
+		[iOS (8,0)][Mac (10,10, onlyOn64 : true)]
 		[Export ("SCNMatrix4Value")]
 		SCNMatrix4 SCNMatrix4Value { get; }
 
@@ -10623,11 +10764,35 @@ namespace Foundation
 		[Field ("NSIsNotNilTransformerName")]
 		NSString IsNotNilTransformerName { get; }
 
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'SecureUnarchiveFromDataTransformerName' instead.")]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'SecureUnarchiveFromDataTransformerName' instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'SecureUnarchiveFromDataTransformerName' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'SecureUnarchiveFromDataTransformerName' instead.")]
 		[Field ("NSUnarchiveFromDataTransformerName")]
 		NSString UnarchiveFromDataTransformerName { get; }
 
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'SecureUnarchiveFromDataTransformerName' instead.")]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'SecureUnarchiveFromDataTransformerName' instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'SecureUnarchiveFromDataTransformerName' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'SecureUnarchiveFromDataTransformerName' instead.")]
 		[Field ("NSKeyedUnarchiveFromDataTransformerName")]
 		NSString KeyedUnarchiveFromDataTransformerName { get; }
+
+		[Watch (5, 0), TV (12, 0), Mac (10, 14, onlyOn64: true), iOS (12, 0)]
+		[Field ("NSSecureUnarchiveFromDataTransformerName")]
+		NSString SecureUnarchiveFromDataTransformerName { get; }
+	}
+
+	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[BaseType (typeof(NSValueTransformer))]
+	interface NSSecureUnarchiveFromDataTransformer {
+		[Static]
+		[Export ("allowedTopLevelClasses", ArgumentSemantic.Copy)]
+		Class [] AllowedTopLevelClasses { get; }
+
+		[Static]
+		[Wrap ("Array.ConvertAll (AllowedTopLevelClasses, c => Class.Lookup (c))")]
+		Type [] AllowedTopLevelTypes { get; }
 	}
 	
 	[BaseType (typeof (NSValue))]
@@ -12338,7 +12503,7 @@ namespace Foundation
 	}
 
 	[BaseType (typeof (NSObject))]
-	interface NSFileWrapper : NSCoding {
+	interface NSFileWrapper : NSSecureCoding {
 		[DesignatedInitializer]
 		[Export ("initWithURL:options:error:")]
 		IntPtr Constructor (NSUrl url, NSFileWrapperReadingOptions options, out NSError outError);
@@ -13333,6 +13498,13 @@ namespace Foundation
 
 		[Mac (10, 8), Export ("trashItemAtURL:resultingItemURL:error:")]
 		bool TrashItem (NSUrl url, out NSUrl resultingItemUrl, out NSError error);
+
+#if MONOMAC
+		[Mac (10,14, onlyOn64: true)]
+		[Static]
+		[Export ("fileManagerWithAuthorization:")]
+		NSFileManager FromAuthorization (NSWorkspaceAuthorization authorization);
+#endif
 	}
 
 	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
@@ -14077,6 +14249,7 @@ namespace Foundation
 	[Mac (10, 8)]
 	[BaseType (typeof (NSObject))]
 	[DesignatedDefaultCtor]
+	[Advice ("'NSUserNotification' usages should be replaced with 'UserNotifications' framework.")]
 	interface NSUserNotification : NSCoding, NSCopying {
 		[Export ("title", ArgumentSemantic.Copy)]
 		string Title { get; set; }
@@ -14157,6 +14330,7 @@ namespace Foundation
 
 	[Mac (10,10)]
 	[BaseType (typeof(NSObject))]
+	[Advice ("'NSUserNotification' usages should be replaced with 'UserNotifications' framework.")]
 	interface NSUserNotificationAction : NSCopying
 	{
 		[Static]
@@ -14175,6 +14349,7 @@ namespace Foundation
 	           Delegates=new string [] {"WeakDelegate"},
 	Events=new Type [] { typeof (NSUserNotificationCenterDelegate) })]
 	[DisableDefaultCtor] // crash with: NSUserNotificationCenter designitated initializer is _centerForBundleIdentifier
+	[Advice ("'NSUserNotification' usages should be replaced with 'UserNotifications' framework.")]
 	interface NSUserNotificationCenter 
 	{
 		[Export ("defaultUserNotificationCenter")][Static]

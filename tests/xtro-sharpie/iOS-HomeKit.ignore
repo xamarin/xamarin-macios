@@ -1,0 +1,2 @@
+## API prohibited on iOS since Xcode 10
+!missing-selector! HMHome::removeUser:completionHandler: not bound

@@ -41,15 +41,7 @@ namespace CoreText {
 
 		static CTTextTabOptionKey ()
 		{
-			var handle = Dlfcn.dlopen (Constants.CoreTextLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-				ColumnTerminators = Dlfcn.GetStringConstant (handle, "kCTTabColumnTerminatorsAttributeName");
-			}
-			finally {
-				Dlfcn.dlclose (handle);
-			}
+			ColumnTerminators = Dlfcn.GetStringConstant (Libraries.CoreText.Handle, "kCTTabColumnTerminatorsAttributeName");
 		}
 	}
 

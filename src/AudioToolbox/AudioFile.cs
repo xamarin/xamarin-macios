@@ -754,11 +754,11 @@ namespace AudioToolbox {
 			return ReadPacketData (useCache, inStartingPacket, ref nPackets, buffer, offset, ref count, out error);
 		}
 
+#if !XAMCORE_2_0
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static AudioFileError AudioFileReadPackets (IntPtr inAudioFile, bool inUseCache, out int numBytes,
 			[MarshalAs (UnmanagedType.LPArray)] AudioStreamPacketDescription[] packetDescriptions, long startingPacket, ref int numPackets, IntPtr buffer);
 
-#if !XAMCORE_2_0
 		[Obsolete ("Use 'ReadPacketData' instead.")]
 		public AudioFileError ReadPackets (bool useCache, out int numBytes,
 			AudioStreamPacketDescription[] packetDescriptions, long startingPacket, ref int numPackets, IntPtr buffer)

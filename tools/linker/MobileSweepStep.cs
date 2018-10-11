@@ -32,13 +32,13 @@ namespace Xamarin.Linker {
 				switch (CurrentAction) {
 				case AssemblyAction.Link:
 				case AssemblyAction.Save:
-					SweepAssembly (assembly);
+					SweepAssemblyDefinition (assembly);
 					break;
 				}
 			}
 		}
 
-		protected virtual void SweepAssembly (AssemblyDefinition assembly)
+		protected virtual void SweepAssemblyDefinition (AssemblyDefinition assembly)
 		{
 			SweepMainModule (assembly.MainModule);
 		}

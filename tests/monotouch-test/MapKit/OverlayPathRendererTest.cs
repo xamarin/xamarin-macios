@@ -14,6 +14,7 @@ using System;
 using Foundation;
 using CoreLocation;
 using MapKit;
+using ObjCRuntime;
 #else
 using MonoTouch.CoreLocation;
 using MonoTouch.Foundation;
@@ -27,12 +28,16 @@ namespace MonoTouchFixtures.MapKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class OverlayPathRendererTest {
+		[SetUp]
+		public void Setup ()
+		{
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+		}
 
 		[Test]
 		public void DefaultCtor ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Inconclusive ("Requires iOS 7.0");
+			TestRuntime.AssertXcodeVersion (5, 0, 1);
 
 			using (var opr = new MKOverlayPathRenderer ()) {
 				Assert.Null (opr.Path, "Path");
@@ -42,8 +47,7 @@ namespace MonoTouchFixtures.MapKit {
 		[Test]
 		public void CtorOverlay ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Inconclusive ("Requires iOS 7.0");
+			TestRuntime.AssertXcodeVersion (5, 0, 1);
 
 			var loc = new CLLocationCoordinate2D (40, 70);
 			using (var overlay = MKCircle.Circle (loc, 2000))

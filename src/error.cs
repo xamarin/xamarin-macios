@@ -122,7 +122,7 @@ public static class ErrorHelper {
 			if (Verbosity > 2)
 				Console.Error.WriteLine (e.StackTrace);
 		} else {
-			Console.Out.WriteLine ("error BI0000: Unexpected error - Please file a bug report at http://bugzilla.xamarin.com");
+			Console.Out.WriteLine ("error BI0000: Unexpected error - Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new");
 			Console.Out.WriteLine (e.ToString ());
 			Console.Out.WriteLine (Environment.StackTrace);
 		}

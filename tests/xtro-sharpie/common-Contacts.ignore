@@ -3,3 +3,6 @@
 !missing-selector! +CNContainer::predicateForContainersWithIdentifiers: not bound
 !missing-selector! +CNGroup::predicateForGroupsInContainerWithIdentifier: not bound
 !missing-selector! +CNGroup::predicateForGroupsWithIdentifiers: not bound
+
+## - (null_unspecified instancetype)init NS_DEPRECATED(10_11, 10_13, 9_0, 11_0, "Use initWithStringValue:");
+!missing-selector! CNPhoneNumber::init not bound

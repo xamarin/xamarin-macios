@@ -64,6 +64,13 @@ namespace ObjCRuntime {
 			this.handle = handle;
 		}
 
+		[Preserve (Conditional = true)]
+		public Class (IntPtr handle, bool owns)
+		{
+			// Class(es) can't be freed, so we ignore the 'owns' parameter.
+			this.handle = handle;
+		}
+
 		internal static Class Construct (IntPtr handle) 
 		{
 			return new Class (handle);
@@ -325,7 +332,7 @@ namespace ObjCRuntime {
 			var type = member as Type;
 
 			if (type == null && member != null)
-				throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{entry.Value.type_reference:X} to be a type, but it's a {member.GetType ().Name}. Please file a bug report at http://bugzilla.xamarin.com.");
+				throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{entry.Value.type_reference:X} to be a type, but it's a {member.GetType ().Name}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
 
 #if LOG_TYPELOAD
 			Console.WriteLine ($"FindType (0x{@class:X} = {Marshal.PtrToStringAuto (class_getName (@class))}) => {type.FullName}; is custom: {is_custom_type} (token reference: 0x{entry.Value.type_reference:X}).");

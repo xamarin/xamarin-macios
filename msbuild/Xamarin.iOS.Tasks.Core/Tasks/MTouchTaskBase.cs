@@ -106,8 +106,7 @@ namespace Xamarin.iOS.Tasks
 		[Required]
 		public bool EnableSGenConc { get; set; }
 
-		[Required]
-		public bool UseInterpreter { get; set; }
+		public string Interpreter { get; set; }
 
 		[Required]
 		public bool LinkerDumpDependencies { get; set; }
@@ -360,7 +359,8 @@ namespace Xamarin.iOS.Tasks
 		protected override string GenerateCommandLineCommands ()
 		{
 			var args = new CommandLineArgumentBuilder ();
-			var actualArgs = new CommandLineArgumentBuilder ();
+			List<string> unescapedArgs = new List<string> ();
+
 			TargetArchitecture architectures;
 			bool msym;
 
@@ -404,8 +404,8 @@ namespace Xamarin.iOS.Tasks
 			if (EnableSGenConc)
 				args.AddLine ("--sgen-conc");
 
-			if (UseInterpreter)
-				args.Add ("--interpreter");
+			if (!string.IsNullOrEmpty (Interpreter))
+				args.Add ($"--interpreter={Interpreter}");
 
 			switch (LinkMode.ToLowerInvariant ()) {
 			case "sdkonly": args.AddLine ("--linksdkonly"); break;
@@ -561,7 +561,7 @@ namespace Xamarin.iOS.Tasks
 						}
 					} else {
 						// other user-defined mtouch arguments
-						actualArgs.AddQuoted (StringParserService.Parse (argument, customTags));
+						unescapedArgs.Add (StringParserService.Parse (argument, customTags));
 					}
 				}
 			}
@@ -579,7 +579,7 @@ namespace Xamarin.iOS.Tasks
 				args.AddLine ("--cxx");
 
 			if (gcc.Arguments.Length > 0)
-				actualArgs.AddQuoted ($"--gcc_flags={gcc.Arguments.ToString ()}");
+				unescapedArgs.Add ($"--gcc_flags={gcc.Arguments.ToString ()}");
 
 			foreach (var asm in References) {
 				if (IsFrameworkItem(asm)) {
@@ -618,8 +618,15 @@ namespace Xamarin.iOS.Tasks
 				Log.LogWarning ("Failed to create response file '{0}': {1}", responseFile, ex);
 			}
 
-			// Use only the response file
+			// Some arguments can not safely go in the response file and are 
+			// added separately. They must go _after_ the response file
+			// as they may override options passed in the response file
+			var actualArgs = new CommandLineArgumentBuilder ();
+
 			actualArgs.AddQuoted ($"@{responseFile}");
+
+			foreach (var arg in unescapedArgs)
+				actualArgs.AddQuoted (arg);
 
 			return actualArgs.ToString ();
 		}

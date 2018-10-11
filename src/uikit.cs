@@ -121,8 +121,6 @@ namespace UIKit {
 	// hacks to ease compilation
 	interface CIColor {}
 #else
-	delegate void NSTextLayoutEnumerateLineFragments (CGRect rect, CGRect usedRectangle, NSTextContainer textContainer, NSRange glyphRange, ref bool stop);
-	delegate void NSTextLayoutEnumerateEnclosingRects (CGRect rect, ref bool stop);
 	delegate void UICompletionHandler (bool finished);
 	delegate void UIOperationHandler (bool success);
 	delegate void UICollectionViewLayoutInteractiveTransitionCompletion (bool completed, bool finished);
@@ -789,7 +787,7 @@ namespace UIKit {
 	[BaseType (typeof (NSObject))]
 	[DesignatedDefaultCtor]
 	[iOS (6,0)]
-	interface NSShadow : NSCoding, NSCopying {
+	interface NSShadow : NSSecureCoding, NSCopying {
 		[Export ("shadowOffset", ArgumentSemantic.Assign)]
 		CGSize ShadowOffset { get; set; }
 		
@@ -867,7 +865,6 @@ namespace UIKit {
 	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
 	partial interface NSTextContainer : NSTextLayoutOrientationProvider, NSCoding {
-
 		[DesignatedInitializer]
 		[Export ("initWithSize:")]
 		IntPtr Constructor (CGSize size);
@@ -983,330 +980,6 @@ namespace UIKit {
 		[Export ("textStorage:didProcessEditing:range:changeInLength:")][EventArgs ("NSTextStorage")]
 		void DidProcessEditing (NSTextStorage textStorage, NSTextStorageEditActions editedMask, NSRange editedRange, nint delta);
 
-	}
-
-	[iOS (7,0)]
-	[BaseType (typeof (NSObject))]
-	[DesignatedDefaultCtor]
-	interface NSLayoutManager : NSCoding {
-		[NullAllowed] // by default this property is null
-		[Export ("textStorage", ArgumentSemantic.Assign)]
-		NSTextStorage TextStorage { get; set; }
-
-		[Export ("textContainers")]
-		NSTextContainer [] TextContainers { get; }
-
-		[Export ("addTextContainer:")]
-		[PostGet ("TextContainers")]
-		void AddTextContainer (NSTextContainer container);
-
-		[Export ("insertTextContainer:atIndex:")]
-		[PostGet ("TextContainers")]
-		void InsertTextContainer (NSTextContainer container, nint index);
-
-		[Export ("removeTextContainerAtIndex:")]
-		[PostGet ("TextContainers")]
-		void RemoveTextContainer (nint index);
-
-		[Export ("textContainerChangedGeometry:")]
-		void TextContainerChangedGeometry (NSTextContainer container);
-
-		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
-		NSObject WeakDelegate { get; set; }
-
-		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		NSLayoutManagerDelegate Delegate { get; set; }
-
-		[Export ("showsInvisibleCharacters")]
-		bool ShowsInvisibleCharacters { get; set; }
-	
-		[Export ("showsControlCharacters")]
-		bool ShowsControlCharacters { get; set; }
-	
-		[Export ("hyphenationFactor")]
-		nfloat HyphenationFactor { get; set; }
-	
-		[Export ("usesFontLeading")]
-		bool UsesFontLeading { get; set; }
-	
-		[Export ("allowsNonContiguousLayout")]
-		bool AllowsNonContiguousLayout { get; set; }
-	
-		[Export ("hasNonContiguousLayout")]
-		bool HasNonContiguousLayout { get; }
-	
-		[Export ("invalidateGlyphsForCharacterRange:changeInLength:actualCharacterRange:")]
-		void InvalidateGlyphs (NSRange charRange, nint delta, out NSRange actualCharRange);
-
-		[Export ("invalidateLayoutForCharacterRange:actualCharacterRange:")]
-		void InvalidateLayout (NSRange charRange, out NSRange actualCharRange);
-				
-
-		[Export ("invalidateDisplayForCharacterRange:")]
-		void InvalidateDisplayForCharacterRange (NSRange charRange);
-		
-		[Export ("invalidateDisplayForGlyphRange:")]
-		void InvalidateDisplayForGlyphRange (NSRange glyphRange);
-
-		[Export ("processEditingForTextStorage:edited:range:changeInLength:invalidatedRange:")]
-		void ProcessEditing (NSTextStorage textStorage, NSTextStorageEditActions editMask, NSRange newCharRange, nint delta, NSRange invalidatedCharRange);
-
-		[Export ("ensureGlyphsForCharacterRange:")]
-		void EnsureGlyphsForCharacterRange (NSRange charRange);
-		
-		[Export ("ensureGlyphsForGlyphRange:")]
-		void EnsureGlyphsForGlyphRange (NSRange glyphRange);
-		
-		[Export ("ensureLayoutForCharacterRange:")]
-		void EnsureLayoutForCharacterRange (NSRange charRange);
-		
-		[Export ("ensureLayoutForGlyphRange:")]
-		void EnsureLayoutForGlyphRange (NSRange glyphRange);
-		
-		[Export ("ensureLayoutForTextContainer:")]
-		void EnsureLayoutForTextContainer (NSTextContainer container);
-		
-		[Export ("ensureLayoutForBoundingRect:inTextContainer:")]
-		void EnsureLayoutForBoundingRect (CGRect bounds, NSTextContainer container);
-
-		[Export ("setGlyphs:properties:characterIndexes:font:forGlyphRange:")]
-		void SetGlyphs (IntPtr glyphs, IntPtr props, IntPtr charIndexes, UIFont aFont, NSRange glyphRange);
-
-		[Export ("numberOfGlyphs")]
-		nuint NumberOfGlyphs { get; }
-
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'GetGlyph' instead.")]
-		[Export ("glyphAtIndex:isValidIndex:")]
-		ushort GlyphAtIndex (nuint glyphIndex, ref bool isValidIndex);
-
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'GetGlyph' instead.")]
-		[Export ("glyphAtIndex:")]
-		ushort GlyphAtIndex (nuint glyphIndex);
-
-		[Export ("isValidGlyphIndex:")]
-		bool IsValidGlyphIndex (nuint glyphIndex);
-
-		[Export ("propertyForGlyphAtIndex:")]
-		NSGlyphProperty PropertyForGlyphAtIndex (nuint glyphIndex);
-
-		[Export ("characterIndexForGlyphAtIndex:")]
-		nuint CharacterIndexForGlyphAtIndex (nuint glyphIndex);
-
-		[Export ("glyphIndexForCharacterAtIndex:")]
-		nuint GlyphIndexForCharacterAtIndex (nuint charIndex);
-
-		[Export ("getGlyphsInRange:glyphs:properties:characterIndexes:bidiLevels:")]
-		[Internal]
-		nuint GetGlyphsInternal (NSRange glyphRange, IntPtr glyphBuffer, IntPtr props, IntPtr charIndexBuffer, IntPtr bidiLevelBuffer);
-
-		[Export ("setTextContainer:forGlyphRange:")]
-		void SetTextContainer (NSTextContainer container, NSRange glyphRange);
-
-		[Export ("setLineFragmentRect:forGlyphRange:usedRect:")]
-		void SetLineFragmentRect (CGRect fragmentRect, NSRange glyphRange, CGRect usedRect);
-
-		[Export ("setExtraLineFragmentRect:usedRect:textContainer:")]
-		void SetExtraLineFragmentRect (CGRect fragmentRect, CGRect usedRect, NSTextContainer container);
-
-		[Export ("setLocation:forStartOfGlyphRange:")]
-		void SetLocation (CGPoint location, NSRange glyphRange);
-
-		[Export ("setNotShownAttribute:forGlyphAtIndex:")]
-		void SetNotShownAttribute (bool flag, nuint glyphIndex);
-
-		[Export ("setDrawsOutsideLineFragment:forGlyphAtIndex:")]
-		void SetDrawsOutsideLineFragment (bool flag, nuint glyphIndex);
-
-		[Export ("setAttachmentSize:forGlyphRange:")]
-		void SetAttachmentSize (CGSize attachmentSize, NSRange glyphRange);
-
-		[Export ("getFirstUnlaidCharacterIndex:glyphIndex:")]
-		void GetFirstUnlaidCharacterIndex (ref nuint charIndex, ref nuint glyphIndex);
-
-		[Export ("firstUnlaidCharacterIndex")]
-		nuint FirstUnlaidCharacterIndex { get; }
-
-		[Export ("firstUnlaidGlyphIndex")]
-		nuint FirstUnlaidGlyphIndex { get; }
-
-		[Export ("textContainerForGlyphAtIndex:effectiveRange:")]
-		[Internal]
-		NSTextContainer TextContainerForGlyphAtIndexInternal (nuint glyphIndex, IntPtr effectiveGlyphRange);
-
-		[Export ("usedRectForTextContainer:")]
-		CGRect GetUsedRectForTextContainer (NSTextContainer container);
-
-		[Export ("lineFragmentRectForGlyphAtIndex:effectiveRange:")]
-		[Internal]
-		CGRect LineFragmentRectForGlyphAtIndexInternal (nuint glyphIndex, IntPtr effectiveGlyphRange);
-
-		[Export ("lineFragmentUsedRectForGlyphAtIndex:effectiveRange:")]
-		[Internal]
-		CGRect LineFragmentUsedRectForGlyphAtIndexInternal (nuint glyphIndex, IntPtr effectiveGlyphRange);
-
-		[Export ("extraLineFragmentRect", ArgumentSemantic.Copy)]
-		CGRect ExtraLineFragmentRect { get; }
-
-		[Export ("extraLineFragmentUsedRect", ArgumentSemantic.Copy)]
-		CGRect ExtraLineFragmentUsedRect { get; }
-
-		[Export ("extraLineFragmentTextContainer", ArgumentSemantic.Copy)]
-		NSTextContainer ExtraLineFragmentTextContainer { get; }
-		
-		[Export ("locationForGlyphAtIndex:")]
-		CGPoint LocationForGlyphAtIndex (nuint glyphIndex);
-		
-		[Export ("notShownAttributeForGlyphAtIndex:")]
-		bool NotShownAttributeForGlyphAtIndex (nuint glyphIndex);
-
-		[Export ("drawsOutsideLineFragmentForGlyphAtIndex:")]
-		bool DrawsOutsideLineFragmentForGlyphAtIndex (nuint glyphIndex);
-
-		[Export ("attachmentSizeForGlyphAtIndex:")]
-		CGSize AttachmentSizeForGlyphAtIndex (nuint glyphIndex);
-
-		[Export ("truncatedGlyphRangeInLineFragmentForGlyphAtIndex:")]
-		NSRange TruncatedGlyphRangeInLineFragmentForGlyphAtIndex (nuint glyphIndex);
-
-		[Export ("glyphRangeForCharacterRange:actualCharacterRange:")]
-		[Internal]
-		NSRange GlyphRangeForCharacterRangeInternal (NSRange charRange, IntPtr actualCharRange);
-
-		[Export ("characterRangeForGlyphRange:actualGlyphRange:")]
-#if XAMCORE_2_0
-		[Internal]
-#endif
-		NSRange CharacterRangeForGlyphRangeInternal (NSRange glyphRange, IntPtr actualGlyphRange);
-
-		[Export ("glyphRangeForTextContainer:")]
-		NSRange GetGlyphRange (NSTextContainer container);
-
-		[Export ("rangeOfNominallySpacedGlyphsContainingIndex:")]
-		NSRange RangeOfNominallySpacedGlyphsContainingIndex (nuint glyphIndex);
-
-		[Export ("boundingRectForGlyphRange:inTextContainer:")]
-		CGRect BoundingRectForGlyphRange (NSRange glyphRange, NSTextContainer container);
-
-		[Export ("glyphRangeForBoundingRect:inTextContainer:")]
-		NSRange GlyphRangeForBoundingRect (CGRect bounds, NSTextContainer container);
-
-		[Export ("glyphRangeForBoundingRectWithoutAdditionalLayout:inTextContainer:")]
-		NSRange GlyphRangeForBoundingRectWithoutAdditionalLayout (CGRect bounds, NSTextContainer container);
-
-		[Export ("glyphIndexForPoint:inTextContainer:fractionOfDistanceThroughGlyph:")]
-		nuint GlyphIndexForPoint (CGPoint point, NSTextContainer container, ref nfloat partialFraction);
-
-		[Export ("glyphIndexForPoint:inTextContainer:")]
-		nuint GlyphIndexForPoint (CGPoint point, NSTextContainer container);
-
-		[Export ("fractionOfDistanceThroughGlyphForPoint:inTextContainer:")]
-		nfloat FractionOfDistanceThroughGlyphForPoint (CGPoint point, NSTextContainer container);
-
-		[Export ("characterIndexForPoint:inTextContainer:fractionOfDistanceBetweenInsertionPoints:")]
-		nuint CharacterIndexForPoint (CGPoint point, NSTextContainer container, ref nfloat partialFraction);
-
-		[Export ("getLineFragmentInsertionPointsForCharacterAtIndex:alternatePositions:inDisplayOrder:positions:characterIndexes:")]
-#if XAMCORE_2_0
-		[Internal]
-#endif
-		nuint GetLineFragmentInsertionPoints (nuint charIndex, bool alternatePosition, bool inDisplayOrder, IntPtr positions, IntPtr charIndexes);
-
-		[Export ("enumerateLineFragmentsForGlyphRange:usingBlock:")]
-		void EnumerateLineFragments (NSRange glyphRange, NSTextLayoutEnumerateLineFragments callback);
-
-		[Export ("enumerateEnclosingRectsForGlyphRange:withinSelectedGlyphRange:inTextContainer:usingBlock:")]
-		void EnumerateEnclosingRects (NSRange glyphRange, NSRange selectedRange, NSTextContainer textContainer, NSTextLayoutEnumerateEnclosingRects callback);
-
-		[Export ("drawBackgroundForGlyphRange:atPoint:")]
-		void DrawBackgroundForGlyphRange (NSRange glyphsToShow, CGPoint origin);
-
-		[Export ("drawGlyphsForGlyphRange:atPoint:")]
-		void DrawGlyphs (NSRange glyphsToShow, CGPoint origin);
-
-		[Export ("showCGGlyphs:positions:count:font:matrix:attributes:inContext:")]
-		[Internal]
-		void ShowCGGlyphsInternal (IntPtr glyphs, IntPtr positions, nuint glyphCount, UIFont font, CGAffineTransform textMatrix, NSDictionary attributes, [NullAllowed] CGContext graphicsContext);
-	
-		// Can't make this internal and expose a manually written API, since you're supposed to override this method, not call it yourself.
-		//[Export ("fillBackgroundRectArray:count:forCharacterRange:color:")]
-		//void FillBackgroundRectArray (IntPtr rectArray, nuint rectCount, NSRange charRange, UIColor color);
-
-		[Export ("drawUnderlineForGlyphRange:underlineType:baselineOffset:lineFragmentRect:lineFragmentGlyphRange:containerOrigin:")]
-		void DrawUnderline (NSRange glyphRange, NSUnderlineStyle underlineVal, nfloat baselineOffset, CGRect lineRect, NSRange lineGlyphRange, CGPoint containerOrigin);
-
-		[Export ("underlineGlyphRange:underlineType:lineFragmentRect:lineFragmentGlyphRange:containerOrigin:")]
-		void Underline (NSRange glyphRange, NSUnderlineStyle underlineVal, CGRect lineRect, NSRange lineGlyphRange, CGPoint containerOrigin);
-
-		[Export ("drawStrikethroughForGlyphRange:strikethroughType:baselineOffset:lineFragmentRect:lineFragmentGlyphRange:containerOrigin:")]
-		void DrawStrikethrough (NSRange glyphRange, NSUnderlineStyle strikethroughVal, nfloat baselineOffset, CGRect lineRect, NSRange lineGlyphRange, CGPoint containerOrigin);
-
-		[Export ("strikethroughGlyphRange:strikethroughType:lineFragmentRect:lineFragmentGlyphRange:containerOrigin:")]
-		void Strikethrough (NSRange glyphRange, NSUnderlineStyle strikethroughVal, CGRect lineRect, NSRange lineGlyphRange, CGPoint containerOrigin);
-
-		[iOS (9,0)]
-		[Export ("textContainerForGlyphAtIndex:effectiveRange:withoutAdditionalLayout:")]
-		[return: NullAllowed]
-		NSTextContainer GetTextContainer (nuint glyphIndex, out NSRange effectiveGlyphRange, bool withoutAdditionalLayout);
-		
-		[iOS (9,0)]
-		[Export ("lineFragmentRectForGlyphAtIndex:effectiveRange:withoutAdditionalLayout:")]
-		CGRect GetLineFragmentRect (nuint glyphIndex, out NSRange effectiveGlyphRange, bool withoutAdditionalLayout);
-
-		[iOS (9,0)]
-		[Export ("lineFragmentUsedRectForGlyphAtIndex:effectiveRange:withoutAdditionalLayout:")]
-		CGRect GetLineFragmentUsedRect (nuint glyphIndex, out NSRange effectiveGlyphRange, bool withoutAdditionalLayout);
-
-		[iOS (9,0)] // documented as 7.0 but missing in 8.x
-		[Export ("CGGlyphAtIndex:isValidIndex:")]
-		unsafe ushort GetGlyph (nuint glyphIndex, ref bool isValidIndex);
-	
-		[iOS (9,0)] // documented as 7.0 but missing in 8.x
-		[Export ("CGGlyphAtIndex:")]
-		ushort GetGlyph (nuint glyphIndex);
-		
-	}
-	
-	[Model, BaseType (typeof (NSObject))]
-	[Protocol]
-	[iOS (7,0)]
-	partial interface NSLayoutManagerDelegate {
-		[Export ("layoutManager:shouldGenerateGlyphs:properties:characterIndexes:font:forGlyphRange:")]
-		nuint ShouldGenerateGlyphs (NSLayoutManager layoutManager, IntPtr glyphBuffer, IntPtr props, IntPtr charIndexes, UIFont aFont, NSRange glyphRange);
-	
-		[Export ("layoutManager:lineSpacingAfterGlyphAtIndex:withProposedLineFragmentRect:")]
-		nfloat LineSpacingAfterGlyphAtIndex (NSLayoutManager layoutManager, nuint glyphIndex, CGRect rect);
-	
-		[Export ("layoutManager:paragraphSpacingBeforeGlyphAtIndex:withProposedLineFragmentRect:")]
-		nfloat ParagraphSpacingBeforeGlyphAtIndex (NSLayoutManager layoutManager, nuint glyphIndex, CGRect rect);
-	
-		[Export ("layoutManager:paragraphSpacingAfterGlyphAtIndex:withProposedLineFragmentRect:")]
-		nfloat ParagraphSpacingAfterGlyphAtIndex (NSLayoutManager layoutManager, nuint glyphIndex, CGRect rect);
-	
-		[Export ("layoutManager:shouldUseAction:forControlCharacterAtIndex:")]
-		NSControlCharacterAction ShouldUseAction (NSLayoutManager layoutManager, NSControlCharacterAction action, nuint charIndex);
-	
-		[Export ("layoutManager:shouldBreakLineByWordBeforeCharacterAtIndex:")]
-		bool ShouldBreakLineByWordBeforeCharacter (NSLayoutManager layoutManager, nuint charIndex);
-	
-		[Export ("layoutManager:shouldBreakLineByHyphenatingBeforeCharacterAtIndex:")]
-		bool ShouldBreakLineByHyphenatingBeforeCharacter (NSLayoutManager layoutManager, nuint charIndex);
-	
-		[Export ("layoutManager:boundingBoxForControlGlyphAtIndex:forTextContainer:proposedLineFragment:glyphPosition:characterIndex:")]
-		CGRect BoundingBoxForControlGlyph (NSLayoutManager layoutManager, nuint glyphIndex, NSTextContainer textContainer, CGRect proposedRect, CGPoint glyphPosition, nuint charIndex);
-	
-		[Export ("layoutManagerDidInvalidateLayout:")]
-		void DidInvalidatedLayout  (NSLayoutManager sender);
-	
-		[Export ("layoutManager:didCompleteLayoutForTextContainer:atEnd:")]
-		void DidCompleteLayout (NSLayoutManager layoutManager, NSTextContainer textContainer, bool layoutFinishedFlag);
-	
-		[Export ("layoutManager:textContainer:didChangeGeometryFromSize:")]
-		void DidChangeGeometry (NSLayoutManager layoutManager, NSTextContainer textContainer, CGSize oldSize);
-
-		[iOS (9,0)]
-		[Export ("layoutManager:shouldSetLineFragmentRect:lineFragmentUsedRect:baselineOffset:inTextContainer:forGlyphRange:")]
-		bool ShouldSetLineFragmentRect (NSLayoutManager layoutManager, ref CGRect lineFragmentRect, ref CGRect lineFragmentUsedRect, ref nfloat baselineOffset, NSTextContainer textContainer, NSRange glyphRange);
 	}
 #endif // !WATCH
 
@@ -5121,7 +4794,7 @@ namespace UIKit {
 	// Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: do not call -[UIDocument init] - the designated initializer is -[UIDocument initWithFileURL:
 	[DisableDefaultCtor]
 	[ThreadSafe]
-	interface UIDocument : NSFilePresenter, NSProgressReporting {
+	interface UIDocument : NSFilePresenter, NSProgressReporting, UIUserActivityRestoring {
 		[Export ("localizedName", ArgumentSemantic.Copy)]
 		string LocalizedName { get;  }
 
@@ -5232,10 +4905,6 @@ namespace UIKit {
 		[iOS (8,0)]
 		[Export ("updateUserActivityState:")]
 		void UpdateUserActivityState (NSUserActivity userActivity);
-
-		[iOS (8,0)]
-		[Export ("restoreUserActivityState:")]
-		void RestoreUserActivityState (NSUserActivity userActivity);
 
 		[iOS (8,0)]
 		[Field ("NSUserActivityDocumentURLKey")]
@@ -5703,8 +5372,8 @@ namespace UIKit {
 		[Field ("UIFontTextStyleCallout")]
 		Callout,
 
-		[NoWatch, NoTV]
-		[iOS (11,0)]
+		[NoTV]
+		[iOS (11,0), Watch (5,0)]
 		[Field ("UIFontTextStyleLargeTitle")]
 		LargeTitle,
 	}
@@ -6133,6 +5802,8 @@ namespace UIKit {
 		[Export ("opaque")]
 		bool Opaque { get; set; }
 
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use the 'PreferredRange' property instead.")]
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Use the 'PreferredRange' property instead.")]
 		[Export ("prefersExtendedRange")]
 		bool PrefersExtendedRange { get; set; }
 
@@ -6145,6 +5816,10 @@ namespace UIKit {
 		[Static]
 		[Export ("formatForTraitCollection:")]
 		UIGraphicsImageRendererFormat GetFormat (UITraitCollection traitCollection);
+
+		[TV (12, 0), iOS (12, 0)]
+		[Export ("preferredRange", ArgumentSemantic.Assign)]
+		UIGraphicsImageRendererFormatRange PreferredRange { get; set; }
 	}
 
 	[iOS (10,0), TV (10,0)]
@@ -6321,6 +5996,10 @@ namespace UIKit {
 		[iOS (11,0), TV (11,0)]
 		[Export ("smartInsertDeleteType", ArgumentSemantic.Assign)]
 		UITextSmartInsertDeleteType SmartInsertDeleteType { get; set; }
+
+		[iOS (12, 0)]
+		[NullAllowed, Export ("passwordRules", ArgumentSemantic.Copy)]
+		UITextInputPasswordRules PasswordRules { get; set; }
 	}
 
 	interface UIKeyboardEventArgs {
@@ -7388,11 +7067,12 @@ namespace UIKit {
 		[iOS (10,0), TV (10,0)]
 		[Export ("imageRendererFormat")]
 		UIGraphicsImageRendererFormat ImageRendererFormat { get; }
+#endif
 
+		[Watch (3,0)]
 		[iOS (10,0), TV (10,0)]
 		[Export ("imageWithHorizontallyFlippedOrientation")]
 		UIImage GetImageWithHorizontallyFlippedOrientation ();
-#endif
 
 		// From the NSItemProviderWriting protocol, a static method.
 		// NSItemProviderWriting doesn't seem to be implemented for tvOS/watchOS, even though the headers say otherwise.
@@ -7987,6 +7667,10 @@ namespace UIKit {
 		[iOS (9,0)]
 		[Export ("allowsDefaultTighteningForTruncation")]
 		bool AllowsDefaultTighteningForTruncation { get; set; }
+
+		[TV (12, 0), NoWatch, NoiOS]
+		[Export ("enablesMarqueeWhenAncestorFocused")]
+		bool EnablesMarqueeWhenAncestorFocused { get; set; }
 	}
 
 	[BaseType (typeof (UIView))]
@@ -9712,7 +9396,7 @@ namespace UIKit {
 	}
 
 	[BaseType (typeof (NSObject))]
-	interface UIResponder : UIAccessibilityAction, UIAccessibilityFocus
+	interface UIResponder : UIAccessibilityAction, UIAccessibilityFocus, UIUserActivityRestoring
 #if !TVOS
 	, UIAccessibilityDragging
 #endif // !TVOS
@@ -9861,10 +9545,6 @@ namespace UIKit {
 		[iOS (8,0)]
 		[Export ("updateUserActivityState:")]
 		void UpdateUserActivityState (NSUserActivity activity);
-
-		[iOS (8,0)]
-		[Export ("restoreUserActivityState:")]
-		void RestoreUserActivityState (NSUserActivity activity);
 
 		[iOS (9,0)]
 		[Export ("pressesBegan:withEvent:")]
@@ -10024,15 +9704,12 @@ namespace UIKit {
 	}
 
 	[BaseType (typeof (UIView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(UIScrollViewDelegate)})]
-	interface UIScrollView {
+	interface UIScrollView : UIFocusItemScrollableContainer {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 
-		[Export ("contentOffset")]
-		CGPoint ContentOffset { get; set; }
-
 		[Export ("contentSize")]
-		CGSize ContentSize { get; set; }
+		new CGSize ContentSize { get; set; }
 
 		[Export ("contentInset")]
 		UIEdgeInsets ContentInset { get; set; }
@@ -12886,7 +12563,7 @@ namespace UIKit {
 	}
 		
 	[BaseType (typeof (UIResponder))]
-	interface UIView : UIAppearance, UIAppearanceContainer, UIAccessibility, UIDynamicItem, NSCoding, UIAccessibilityIdentification, UITraitEnvironment, UICoordinateSpace, UIFocusItem, CALayerDelegate {
+	interface UIView : UIAppearance, UIAppearanceContainer, UIAccessibility, UIDynamicItem, NSCoding, UIAccessibilityIdentification, UITraitEnvironment, UICoordinateSpace, UIFocusItem, CALayerDelegate, UIFocusItemContainer {
 		[DesignatedInitializer]
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
@@ -12995,7 +12672,7 @@ namespace UIKit {
 		CoreAnimation.CALayer Layer { get; }
 
 		[Export ("frame")]
-		CGRect Frame { get; set; }
+		new CGRect Frame { get; set; }
 		
 		[Export ("center")]
 		new CGPoint Center { get; set; }
@@ -14320,7 +13997,7 @@ namespace UIKit {
 		[Export ("userInterfaceIdiom")]
 		UIUserInterfaceIdiom UserInterfaceIdiom { get; }
 
-		[TV (10, 0), NoWatch, NoiOS]
+		[TV (10, 0), NoWatch, iOS (12,0)]
 		[Export ("userInterfaceStyle")]
 		UIUserInterfaceStyle UserInterfaceStyle { get; }
 
@@ -14355,7 +14032,7 @@ namespace UIKit {
 		[Static, Export ("traitCollectionWithForceTouchCapability:")]
 		UITraitCollection FromForceTouchCapability (UIForceTouchCapability capability);
 
-		[TV (10, 0), NoWatch, NoiOS]
+		[TV (10, 0), NoWatch, iOS (12,0)]
 		[Static]
 		[Export ("traitCollectionWithUserInterfaceStyle:")]
 		UITraitCollection FromUserInterfaceStyle (UIUserInterfaceStyle userInterfaceStyle);
@@ -14627,6 +14304,7 @@ namespace UIKit {
 	}
 
 	[NoTV]
+	[Deprecated (PlatformName.iOS, 12, 0, message: "No longer supported; please adopt 'WKWebView'.")]
 	[BaseType (typeof (UIView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(UIWebViewDelegate)})]
 	interface UIWebView : UIScrollViewDelegate {
 		[Export ("initWithFrame:")]
@@ -14731,6 +14409,7 @@ namespace UIKit {
 	}
 
 	[NoTV]
+	[Deprecated (PlatformName.iOS, 12, 0, message: "No longer supported; please adopt 'WKWebView' APIs.")]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -14862,6 +14541,14 @@ namespace UIKit {
 		[iOS (11,0), TV (11,0)]
 		[Field ("UITextContentTypePassword")]
 		NSString Password { get; }
+
+		[TV (12, 0), iOS (12, 0)]
+		[Field ("UITextContentTypeNewPassword")]
+		NSString NewPassword { get; }
+
+		[TV (12, 0), iOS (12, 0)]
+		[Field ("UITextContentTypeOneTimeCode")]
+		NSString OneTimeCode { get; }
 	}
 	
 	[BaseType (typeof (UIViewController), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(UISplitViewControllerDelegate)})]
@@ -16679,6 +16366,27 @@ namespace UIKit {
 		IUIFocusEnvironment[] PreferredFocusEnvironments { get; set; }
 	}
 
+	[TV (12,0), iOS (12,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface UIFocusMovementHint : NSCopying
+	{
+		[Export ("movementDirection")]
+		CGVector MovementDirection { get; }
+
+		[Export ("perspectiveTransform")]
+		CATransform3D PerspectiveTransform { get; }
+
+		[Export ("rotation")]
+		CGVector Rotation { get; }
+
+		[Export ("translation")]
+		CGVector Translation { get; }
+
+		[Export ("interactionTransform")]
+		CATransform3D InteractionTransform { get; }
+	}
+
 	interface IUIFocusItem {}
 	[iOS (10,0)]
 	[Protocol]
@@ -16687,6 +16395,19 @@ namespace UIKit {
 		[Abstract]
 		[Export ("canBecomeFocused")]
 		bool CanBecomeFocused { get; }
+
+		// FIXME: declared as a @required, but this breaks compatibility
+		// Radar: 41121416
+		[TV (12, 0), iOS (12, 0), NoWatch]
+#if XAMCORE_4_0 
+		[Abstract]
+#endif
+		[Export ("frame")]
+		CGRect Frame { get; }
+
+		[TV (12, 0), iOS (12, 0), NoWatch]
+		[Export ("didHintFocusMovement:")]
+		void DidHintFocusMovement (UIFocusMovementHint hint);
 	}
 		
 	[DisableDefaultCtor] // [Assert] -init is not a useful initializer for this class. Use one of the designated initializers instead
@@ -16747,6 +16468,24 @@ namespace UIKit {
 		// The 2 values associated with the 'UIFocusSoundIdentifier' smart enum cannot be used.
 		// See https://developer.apple.com/documentation/uikit/uifocussystem/2887479-register
 		// Do not specify one of the UIKit sound identifiers (such as default); doing so will cause an immediate assertion failure and crash your app.
+		
+		[TV (12, 0), iOS (12, 0)]
+		[NullAllowed, Export ("focusedItem", ArgumentSemantic.Weak)]
+		IUIFocusItem FocusedItem { get; }
+
+		[TV (12,0), iOS (12,0)]
+		[Static]
+		[Export ("focusSystemForEnvironment:")]
+		[return: NullAllowed]
+		UIFocusSystem Create (IUIFocusEnvironment environment);
+
+		[TV (12,0), iOS (12,0)]
+		[Export ("requestFocusUpdateToEnvironment:")]
+		void RequestFocusUpdate (IUIFocusEnvironment environment);
+
+		[TV (12,0), iOS (12,0)]
+		[Export ("updateFocusIfNeeded")]
+		void UpdateFocusIfNeeded ();
 	}
 
 	interface IUIFocusDebuggerOutput {}
@@ -16930,7 +16669,35 @@ namespace UIKit {
 		[Export ("soundIdentifierForFocusUpdateInContext:")]
 		[return: NullAllowed]
 		NSString GetSoundIdentifier (UIFocusUpdateContext context);
-		
+
+		// FIXME: declared as a @required, but this breaks compatibility
+		// Radar: 41121293
+		[TV (12, 0), iOS (12, 0)]
+#if XAMCORE_4_0 
+		[Abstract]
+#endif
+		[NullAllowed, Export ("parentFocusEnvironment", ArgumentSemantic.Weak)]
+		IUIFocusEnvironment ParentFocusEnvironment { get; }
+
+		[TV (12, 0), iOS (12, 0)]
+#if XAMCORE_4_0 
+		[Abstract]
+#endif
+		[NullAllowed, Export ("focusItemContainer")]
+		IUIFocusItemContainer FocusItemContainer { get; }
+	}
+
+	[TV (12,0), iOS (12,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface UITextInputPasswordRules : NSSecureCoding, NSCopying
+	{
+		[Export ("passwordRulesDescriptor")]
+		string PasswordRulesDescriptor { get; }
+
+		[Static]
+		[Export ("passwordRulesWithDescriptor:")]
+		UITextInputPasswordRules Create (string passwordRulesDescriptor);
 	}
 #endif // !WATCH
 
@@ -18160,14 +17927,20 @@ namespace UIKit {
 		[Export ("importDocumentAtURL:nextToDocumentAtURL:mode:completionHandler:")]
 		void ImportDocument (NSUrl documentUrl, NSUrl neighbourUrl, UIDocumentBrowserImportMode importMode, Action<NSUrl, NSError> completion);
 
+		[Internal] // got deprecated
 		[Export ("transitionControllerForDocumentURL:")]
-		UIDocumentBrowserTransitionController GetTransitionController (NSUrl documentUrl);
+		UIDocumentBrowserTransitionController _DeprecatedGetTransitionController (NSUrl documentUrl);
 
 		[Export ("customActions", ArgumentSemantic.Strong)]
 		UIDocumentBrowserAction[] CustomActions { get; set; }
 
 		[Export ("browserUserInterfaceStyle", ArgumentSemantic.Assign)]
 		UIDocumentBrowserUserInterfaceStyle BrowserUserInterfaceStyle { get; set; }
+
+		[Internal]
+		[iOS (12,0)]
+		[Export ("transitionControllerForDocumentAtURL:")]
+		UIDocumentBrowserTransitionController _NewGetTransitionController (NSUrl documentUrl);
 	}
 
 	interface IUIDocumentBrowserViewControllerDelegate {}
@@ -18177,6 +17950,7 @@ namespace UIKit {
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface UIDocumentBrowserViewControllerDelegate {
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'DidPickDocumentsAtUrls (UIDocumentBrowserViewController, NSUrl[])' instead.")]
 		[Export ("documentBrowser:didPickDocumentURLs:")]
 		void DidPickDocumentUrls (UIDocumentBrowserViewController controller, NSUrl[] documentUrls);
 
@@ -18194,6 +17968,10 @@ namespace UIKit {
 
 		[Export ("documentBrowser:willPresentActivityViewController:")]
 		void WillPresent (UIDocumentBrowserViewController controller, UIActivityViewController activityViewController);
+
+		[iOS (12,0)]
+		[Export ("documentBrowser:didPickDocumentsAtURLs:")]
+		void DidPickDocumentsAtUrls (UIDocumentBrowserViewController controller, NSUrl[] documentUrls);
 	}
 
 	[NoTV, NoWatch]
@@ -18235,6 +18013,48 @@ namespace UIKit {
 		[Export ("supportsMultipleItems")]
 		bool SupportsMultipleItems { get; set; }
 	}
+
+	interface IUIFocusItemContainer {}
+	[iOS (12,0), TV (12,0), NoWatch]
+	[Protocol]
+	interface UIFocusItemContainer
+	{
+		[Abstract]
+		[Export ("coordinateSpace")]
+		IUICoordinateSpace CoordinateSpace { get; }
+
+		[Abstract]
+		[Export ("focusItemsInRect:")]
+		IUIFocusItem[] GetFocusItems (CGRect rect);
+	}
+
+	[iOS (12,0), TV(12,0), NoWatch]
+	[Protocol]
+	interface UIFocusItemScrollableContainer : UIFocusItemContainer
+	{
+		[Abstract]
+		[Export ("contentOffset", ArgumentSemantic.Assign)]
+		CGPoint ContentOffset { get; set; }
+
+		[Abstract]
+		[Export ("contentSize")]
+		CGSize ContentSize { get; }
+
+		[Abstract]
+		[Export ("visibleSize")]
+		CGSize VisibleSize { get; }
+	}
+
+	[iOS (8,0), NoWatch] // it was added on 8,0, but was not binded and the method was added in 12,0
+	[Protocol]
+	interface UIUserActivityRestoring
+	{
+		[Abstract]
+		[iOS (8,0), TV(12,0)]
+		[Export ("restoreUserActivityState:")]
+		void RestoreUserActivityState (NSUserActivity activity);
+	}
+
 #endif // !WATCH
 
 	[Watch (4,0), TV (11,0), iOS (11,0)]
@@ -18276,4 +18096,5 @@ namespace UIKit {
 		nfloat GetScaledValue (nfloat value, [NullAllowed] UITraitCollection traitCollection);
 #endif // !WATCH
 	}
+
 }

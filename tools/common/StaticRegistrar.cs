@@ -1282,7 +1282,7 @@ namespace Registrar {
 					rv = new RegisterAttribute ((string) attrib.ConstructorArguments [0].Value, (bool) attrib.ConstructorArguments [1].Value);
 					break;
 				default:
-					throw ErrorHelper.CreateError (4124, "Invalid RegisterAttribute found on '{0}'. Please file a bug report at http://bugzilla.xamarin.com", type.FullName);
+					throw ErrorHelper.CreateError (4124, "Invalid RegisterAttribute found on '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", type.FullName);
 				}
 			}
 
@@ -1299,7 +1299,7 @@ namespace Registrar {
 						rv.SkipRegistration = (bool) prop.Argument.Value;
 						break;
 					default:
-						throw ErrorHelper.CreateError (4124, "Invalid RegisterAttribute property {1} found on '{0}'. Please file a bug report at http://bugzilla.xamarin.com", type.FullName, prop.Name);
+						throw ErrorHelper.CreateError (4124, "Invalid RegisterAttribute property {1} found on '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", type.FullName, prop.Name);
 					}
 				}
 			}
@@ -1315,7 +1315,7 @@ namespace Registrar {
 				return null;
 
 			if (!attrib.HasConstructorArguments)
-				throw ErrorHelper.CreateError (4124, "Invalid CategoryAttribute found on '{0}'. Please file a bug report at http://bugzilla.xamarin.com", type.FullName);
+				throw ErrorHelper.CreateError (4124, "Invalid CategoryAttribute found on '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", type.FullName);
 
 			if (attrib.HasProperties) {
 				foreach (var prop in attrib.Properties) {
@@ -1331,7 +1331,7 @@ namespace Registrar {
 				var t1 = (TypeReference) attrib.ConstructorArguments [0].Value;
 				return new CategoryAttribute (t1 != null ? t1.Resolve () : null) { Name = name };
 			default:
-				throw ErrorHelper.CreateError (4124, "Invalid CategoryAttribute found on '{0}'. Please file a bug report at http://bugzilla.xamarin.com", type.FullName);
+				throw ErrorHelper.CreateError (4124, "Invalid CategoryAttribute found on '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", type.FullName);
 			}
 		}
 
@@ -1368,11 +1368,11 @@ namespace Registrar {
 				case "FormalSince":
 					Version version;
 					if (!Version.TryParse ((string)prop.Argument.Value, out version))
-						throw ErrorHelper.CreateError (4147, "Invalid {0} found on '{1}'. Please file a bug report at http://bugzilla.xamarin.com", "ProtocolAttribute", type.FullName);
+						throw ErrorHelper.CreateError (4147, "Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", "ProtocolAttribute", type.FullName);
 					rv.FormalSinceVersion = version;
 					break;
 				default:
-					throw ErrorHelper.CreateError (4147, "Invalid {0} found on '{1}'. Please file a bug report at http://bugzilla.xamarin.com", "ProtocolAttribute", type.FullName);
+					throw ErrorHelper.CreateError (4147, "Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", "ProtocolAttribute", type.FullName);
 				}
 			}
 
@@ -1391,7 +1391,25 @@ namespace Registrar {
 				rv.Type = ((TypeReference) attrib.ConstructorArguments [0].Value).Resolve ();
 				break;
 			default:
-				throw ErrorHelper.CreateError (4124, "Invalid BlockProxyAttribute found on '{0}'. Please file a bug report at https://bugzilla.xamarin.com", ((MethodReference) parameter.Method)?.FullName);
+				throw ErrorHelper.CreateError (4124, "Invalid BlockProxyAttribute found on '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", ((MethodReference) parameter.Method)?.FullName);
+			}
+
+			return rv;
+		}
+
+		public DelegateProxyAttribute GetDelegateProxyAttribute (MethodDefinition method)
+		{
+			if (!TryGetAttribute (method.MethodReturnType, ObjCRuntime, "DelegateProxyAttribute", out var attrib))
+				return null;
+
+			var rv = new DelegateProxyAttribute ();
+
+			switch (attrib.ConstructorArguments.Count) {
+			case 1:
+				rv.DelegateType = ((TypeReference) attrib.ConstructorArguments [0].Value).Resolve ();
+				break;
+			default:
+				throw ErrorHelper.CreateError (4124, "Invalid DelegateProxyAttribute found on '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", ((MethodReference) method)?.FullName);
 			}
 
 			return rv;
@@ -1401,6 +1419,40 @@ namespace Registrar {
 			get {
 				return App.PlatformName;
 			}
+		}
+
+		ProtocolMemberAttribute GetProtocolMemberAttribute (TypeReference type, string selector, ObjCMethod obj_method, MethodDefinition method)
+		{
+			var memberAttributes = GetProtocolMemberAttributes (type);
+			foreach (var attrib in memberAttributes) {
+				if (attrib.IsStatic != method.IsStatic)
+					continue;
+
+				if (attrib.IsProperty) {
+					if (method.IsSetter && attrib.SetterSelector != selector)
+						continue;
+					else if (method.IsGetter && attrib.GetterSelector != selector)
+						continue;
+				} else {
+					if (attrib.Selector != selector)
+						continue;
+				}
+
+				if (!obj_method.IsPropertyAccessor) {
+					var attribParameters = new TypeReference [attrib.ParameterType?.Length ?? 0];
+					for (var i = 0; i < attribParameters.Length; i++) {
+						attribParameters [i] = attrib.ParameterType [i];
+						if (attrib.ParameterByRef [i])
+							attribParameters [i] = new ByReferenceType (attribParameters [i]);
+					}
+					if (!ParametersMatch (method.Parameters, attribParameters))
+						continue;
+				}
+
+				return attrib;
+			}
+
+			return null;
 		}
 
 		protected override IEnumerable<ProtocolMemberAttribute> GetProtocolMemberAttributes (TypeReference type)
@@ -1433,6 +1485,9 @@ namespace Registrar {
 						break;
 					case "ReturnType":
 						rv.ReturnType = (TypeReference)prop.Argument.Value;
+						break;
+					case "ReturnTypeDelegateProxy":
+						rv.ReturnTypeDelegateProxy = (TypeReference) prop.Argument.Value;
 						break;
 					case "ParameterType":
 						if (prop.Argument.Value != null) {
@@ -1497,7 +1552,7 @@ namespace Registrar {
 				currentPlatform = global::ObjCRuntime.PlatformName.WatchOS;
 				break;
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", App.Platform);
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", App.Platform);
 			}
 #else
 			currentPlatform = global::ObjCRuntime.PlatformName.MacOSX;
@@ -1543,7 +1598,7 @@ namespace Registrar {
 				switch (ca.ConstructorArguments.Count) {
 				case 2:
 					if (!shorthand)
-						throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://bugzilla.xamarin.com", caType.Name, ca.ConstructorArguments.Count);
+						throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", caType.Name, ca.ConstructorArguments.Count);
 					majorVersion = (byte) ca.ConstructorArguments [0].Value;
 					minorVersion = (byte) ca.ConstructorArguments [1].Value;
 					break;
@@ -1561,13 +1616,13 @@ namespace Registrar {
 						} else if (ca.ConstructorArguments [2].Type.Name == "Byte") {
 							minorVersion = (byte) ca.ConstructorArguments [2].Value;
 						} else {
-							throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://bugzilla.xamarin.com", caType.Name, ca.ConstructorArguments.Count);
+							throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", caType.Name, ca.ConstructorArguments.Count);
 						}
 					}
 					break;
 				case 4:
 					if (!shorthand)
-						throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://bugzilla.xamarin.com", caType.Name, ca.ConstructorArguments.Count);
+						throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", caType.Name, ca.ConstructorArguments.Count);
 
 					majorVersion = (byte) ca.ConstructorArguments [0].Value;
 					minorVersion = (byte) ca.ConstructorArguments [1].Value;
@@ -1578,7 +1633,7 @@ namespace Registrar {
 					} else if (ca.ConstructorArguments [3].Type.Name == "PlatformArchitecture") {
 						architecture = (PlatformArchitecture) (byte) ca.ConstructorArguments [3].Value;
 					} else {
-						throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://bugzilla.xamarin.com", caType.Name, ca.ConstructorArguments.Count);
+						throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", caType.Name, ca.ConstructorArguments.Count);
 					}
 					break;
 				case 5:
@@ -1597,7 +1652,7 @@ namespace Registrar {
 					message = (string) ca.ConstructorArguments [5].Value;
 					break;
 				default:
-					throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at http://bugzilla.xamarin.com", caType.Name, ca.ConstructorArguments.Count);
+					throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", caType.Name, ca.ConstructorArguments.Count);
 				}
 
 				if (platformName != currentPlatform)
@@ -1620,7 +1675,7 @@ namespace Registrar {
 							rv = new IntroducedAttribute (platformName, majorVersion, minorVersion, subminorVersion, architecture, message);
 							break;
 						default:
-							throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at http://bugzilla.xamarin.com", caType.Name, ca.ConstructorArguments.Count);
+							throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", caType.Name, ca.ConstructorArguments.Count);
 						}
 					}
 					break;
@@ -1636,7 +1691,7 @@ namespace Registrar {
 						rv = new DeprecatedAttribute (platformName, majorVersion, minorVersion, subminorVersion, architecture, message);
 						break;
 					default:
-						throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at http://bugzilla.xamarin.com", caType.Name, ca.ConstructorArguments.Count);
+						throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", caType.Name, ca.ConstructorArguments.Count);
 					}
 					break;
 				case AvailabilityKind.Obsoleted:
@@ -1651,14 +1706,14 @@ namespace Registrar {
 						rv = new ObsoletedAttribute (platformName, majorVersion, minorVersion, subminorVersion, architecture, message);
 						break;
 					default:
-						throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at http://bugzilla.xamarin.com", caType.Name, ca.ConstructorArguments.Count);
+						throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", caType.Name, ca.ConstructorArguments.Count);
 					}
 					break;
 				case AvailabilityKind.Unavailable:
 					rv = new UnavailableAttribute (platformName, architecture, message);
 					break;
 				default:
-					throw ErrorHelper.CreateError (4163, "Internal error in the registrar (Unknown availability kind: {0}). Please file a bug report at http://bugzilla.xamarin.com", kind);
+					throw ErrorHelper.CreateError (4163, "Internal error in the registrar (Unknown availability kind: {0}). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", kind);
 				}
 
 				if (list == null)
@@ -1726,7 +1781,7 @@ namespace Registrar {
 					attrib.ProtocolType = (string) ca.ConstructorArguments [0].Value;
 					break;
 				default:
-					throw ErrorHelper.CreateError (4124, "Invalid AdoptsAttribute found on '{0}': expected 1 constructor arguments, got {1}. Please file a bug report at https://bugzilla.xamarin.com", type.FullName, 1, ca.ConstructorArguments.Count);
+					throw ErrorHelper.CreateError (4124, "Invalid AdoptsAttribute found on '{0}': expected 1 constructor arguments, got {1}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", type.FullName, 1, ca.ConstructorArguments.Count);
 				}
 				rv.Add (attrib);
 			}
@@ -1770,7 +1825,7 @@ namespace Registrar {
 						originalType = ((TypeReference) field.Argument.Value);
 						break;
 					default:
-						throw ErrorHelper.CreateError (4124, "Invalid BindAsAttribute found on '{0}.{1}': unknown field {2}. Please file a bug report at https://bugzilla.xamarin.com", member.DeclaringType.FullName, member.Name, field.Name);
+						throw ErrorHelper.CreateError (4124, "Invalid BindAsAttribute found on '{0}.{1}': unknown field {2}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", member.DeclaringType.FullName, member.Name, field.Name);
 					}
 				}
 			}
@@ -1780,7 +1835,7 @@ namespace Registrar {
 				var t1 = (TypeReference) attrib.ConstructorArguments [0].Value;
 				return new BindAsAttribute (t1) { OriginalType = originalType };
 			default:
-				throw ErrorHelper.CreateError (4124, "Invalid BindAsAttribute found on '{0}.{1}'. Please file a bug report at https://bugzilla.xamarin.com", member.DeclaringType.FullName, member.Name);
+				throw ErrorHelper.CreateError (4124, "Invalid BindAsAttribute found on '{0}.{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", member.DeclaringType.FullName, member.Name);
 			}
 		}
 
@@ -1808,7 +1863,7 @@ namespace Registrar {
 			case 0: return new ConnectAttribute ();
 			case 1: return new ConnectAttribute (((string) attrib.ConstructorArguments [0].Value));
 			default:
-				throw ErrorHelper.CreateError (4124, "Invalid ConnectAttribute found on '{0}.{1}'. Please file a bug report at http://bugzilla.xamarin.com", property.DeclaringType.FullName, property.Name);
+				throw ErrorHelper.CreateError (4124, "Invalid ConnectAttribute found on '{0}.{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", property.DeclaringType.FullName, property.Name);
 			}
 		}
 
@@ -1840,7 +1895,7 @@ namespace Registrar {
 			case 2:
 				return new ExportAttribute ((string) attribute.ConstructorArguments [0].Value, (ArgumentSemantic) attribute.ConstructorArguments [1].Value) { IsVariadic = is_variadic };
 			default:
-				throw ErrorHelper.CreateError (4124, "Invalid ExportAttribute found on '{0}.{1}'. Please file a bug report at http://bugzilla.xamarin.com", candidate.DeclaringType.FullName, candidate.Name);
+				throw ErrorHelper.CreateError (4124, "Invalid ExportAttribute found on '{0}.{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", candidate.DeclaringType.FullName, candidate.Name);
 			}
 		}
 
@@ -2053,6 +2108,13 @@ namespace Registrar {
 			
 			namespaces.Add (ns);
 
+#if !MMP
+			if (App.IsSimulatorBuild && !Driver.IsFrameworkAvailableInSimulator (App, ns)) {
+				Driver.Log (5, "Not importing the framework {0} in the generated registrar code because it's not available in the simulator.", ns);
+				return;
+			}
+#endif
+
 			string h;
 			switch (ns) {
 #if MMP
@@ -2121,30 +2183,6 @@ namespace Registrar {
 				}
 				goto default;
 #endif
-			case "CoreAudioKit":
-				// fatal error: 'CoreAudioKit/CoreAudioKit.h' file not found
-				// radar filed with Apple - but that framework / header is not yet shipped with the iOS SDK simulator
-#if MTOUCH
-				if (IsSimulator)
-					return;
-#endif
-				goto default;
-			case "Metal":
-			case "MetalKit":
-			case "MetalPerformanceShaders": // https://trello.com/c/mrjkAO9U/518-metal-simulator
-				// #error Metal Simulator is currently unsupported
-				// this framework is _officially_ not available on the simulator (in iOS8)
-#if !MONOMAC
-				if (IsSimulator)
-					return;
-#endif
-				goto default;
-			case "GameKit":
-#if !MONOMAC
-				if (IsSimulator && App.Platform == Xamarin.Utils.ApplePlatform.WatchOS && App.SdkVersion < new Version (3, 2))
-					return; // No headers provided for watchOS/simulator until watchOS 3.2.
-#endif
-				goto default;
 			case "WatchKit":
 				// There's a bug in Xcode 7 beta 2 headers where the build fails with
 				// ObjC++ files if WatchKit.h is included before UIKit.h (radar 21651022).
@@ -2154,12 +2192,6 @@ namespace Registrar {
 				header.WriteLine ("#import <WatchKit/WatchKit.h>");
 				namespaces.Add ("UIKit");
 				return;
-			case "DeviceCheck":
-#if !MONOMAC
-				if (IsSimulator)
-					return; // No headers provided for simulator
-#endif
-				goto default;
 			case "QTKit":
 #if MONOMAC
 				if (App.SdkVersion >= MacOSTenTwelveVersion)
@@ -2167,10 +2199,6 @@ namespace Registrar {
 #endif
 				goto default;
 			case "IOSurface": // There is no IOSurface.h
-#if !MONOMAC
-				if (IsSimulator)
-					return; // Not available in the simulator (the header is there, but broken).
-#endif
 				h = "<IOSurface/IOSurfaceObjC.h>";
 				break;
 			default:
@@ -2586,21 +2614,16 @@ namespace Registrar {
 		static bool IsIntentsType (ObjCType type) => IsTypeCore (type, "Intents");
 		static bool IsExternalAccessoryType (ObjCType type) => IsTypeCore (type, "ExternalAccessory");
 
-		static bool IsMetalType (ObjCType type)
+#if !MONOMAC
+		bool IsTypeAllowedInSimulator (ObjCType type)
 		{
 			var ns = type.Type.Namespace;
 			if (!IsDualBuild)
 				ns = ns.Substring (CompatNamespace.Length + 1);
 
-			switch (ns) {
-			case "Metal":
-			case "MetalKit":
-			case "MetalPerformanceShaders":
-				return true;
-			default:
-				return false;
-			}
+			return Driver.IsFrameworkAvailableInSimulator (App, ns);
 		}
+#endif
 
 		class ProtocolInfo
 		{
@@ -2676,8 +2699,10 @@ namespace Registrar {
 
 #if !MONOMAC
 				var isPlatformType = IsPlatformType (@class.Type);
-				if (isPlatformType && IsSimulatorOrDesktop && IsMetalType (@class))
-					continue; // Metal isn't supported in the simulator.
+				if (isPlatformType && IsSimulatorOrDesktop && !IsTypeAllowedInSimulator (@class)) {
+					Driver.Log (5, "The static registrar won't generate code for {0} because its framework is not supported in the simulator.", @class.ExportedName);
+					continue; // Some types are not supported in the simulator.
+				}
 #else
 				// Don't register 64-bit only API on 32-bit XM
 				if (!Is64Bits && IsOnly64Bits (@class.Type))
@@ -2879,7 +2904,7 @@ namespace Registrar {
 									fields.Write ("XamarinObject ");
 									break;
 								default:
-									throw ErrorHelper.CreateError (4120, "The registrar found an unknown field type '{0}' in field '{1}.{2}'. Please file a bug report at http://bugzilla.xamarin.com", 
+									throw ErrorHelper.CreateError (4120, "The registrar found an unknown field type '{0}' in field '{1}.{2}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", 
 										field.FieldType, field.DeclaringType.Type.FullName, field.Name);
 								}
 								fields.Write (field.Name);
@@ -2951,7 +2976,7 @@ namespace Registrar {
 							exceptions.Add (ex);
 						} catch (Exception ex) {
 							skip.Add (method);
-							exceptions.Add (ErrorHelper.CreateError (4114, ex, "Unexpected error in the registrar for the method '{0}.{1}' - Please file a bug report at http://bugzilla.xamarin.com", method.DeclaringType.Type.FullName, method.Method.Name));
+							exceptions.Add (ErrorHelper.CreateError (4114, ex, "Unexpected error in the registrar for the method '{0}.{1}' - Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", method.DeclaringType.Type.FullName, method.Method.Name));
 						}
 					}
 				}
@@ -3013,7 +3038,7 @@ namespace Registrar {
 					if (map_dict.TryGetValue (skipped.Actual, out var index)) {
 						map.AppendLine ("{{ 0x{0:X}, {1} /* '{2}' => '{3}' */ }},", skipped.SkippedTokenReference, map_dict [skipped.Actual], skipped.Skipped.FullName, skipped.Actual.Type.FullName);
 					} else {
-						throw ErrorHelper.CreateError (99, $"Internal error: could not find the native type for {skipped.Skipped.FullName} (failed to find {skipped.Actual.Type.FullName}). Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+						throw ErrorHelper.CreateError (99, $"Internal error: could not find the native type for {skipped.Skipped.FullName} (failed to find {skipped.Actual.Type.FullName}). Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 					}
 				}
 				map.AppendLine ("};");
@@ -3101,8 +3126,7 @@ namespace Registrar {
 			sb.WriteLine (map.ToString ());
 			sb.WriteLine (map_init.ToString ());
 
-			if (exceptions.Count > 0)
-				throw new AggregateException (exceptions);
+			ErrorHelper.ThrowIfErrors (exceptions);
 		}
 
 		static bool HasIntPtrBoolCtor (TypeDefinition type)
@@ -3391,7 +3415,7 @@ namespace Registrar {
 				if (type != nativetype) {
 					GenerateConversionToManaged (nativetype, type, setup_call_stack, descriptiveMethodName, ref exceptions, method, $"p{i}", $"arg_ptrs [{i}]", $"mono_class_from_mono_type (xamarin_get_parameter_type (managed_method, {i}))");
 					if (isRef || isOut)
-						throw ErrorHelper.CreateError (4163, $"Internal error in the registrar (BindAs parameters can't be ref/out: {descriptiveMethodName}). Please file a bug report at https://bugzilla.xamarin.com");
+						throw ErrorHelper.CreateError (4163, $"Internal error in the registrar (BindAs parameters can't be ref/out: {descriptiveMethodName}). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new");
 					continue;
 				} else if (isRef) {
 					type = type.GetElementType ();
@@ -3710,7 +3734,7 @@ namespace Registrar {
 								if (creatorMethod != null) {
 									token = $"0x{CreateTokenReference (creatorMethod, TokenType.Method):X} /* {creatorMethod.FullName} */ ";
 								} else {
-									ErrorHelper.Show (ErrorHelper.CreateWarning (App, 4174, method.Method, "Unable to locate the block to delegate conversion method for the method {0}'s parameter #{1}.",
+									exceptions.Add (ErrorHelper.CreateWarning (App, 4174, method.Method, "Unable to locate the block to delegate conversion method for the method {0}'s parameter #{1}.",
 														     method.DescriptiveMethodName, i + 1));
 								}
 							}
@@ -3862,6 +3886,7 @@ namespace Registrar {
 						setup_return.AppendLine ("res = nsstr;");
 					} else if (IsDelegate (type.Resolve ())) {
 						var signature = "NULL";
+						var token = "INVALID_TOKEN_REF";
 						if (App.Optimizations.OptimizeBlockLiteralSetupBlock == true) {
 							if (type.Is ("System", "Delegate") || type.Is ("System", "MulticastDelegate")) {
 								ErrorHelper.Show (ErrorHelper.CreateWarning (App, 4173, method.Method, $"The registrar can't compute the block signature for the delegate of type {type.FullName} in the method {descriptiveMethodName} because {type.FullName} doesn't have a specific signature."));
@@ -3873,8 +3898,14 @@ namespace Registrar {
 									signature = "\"" + ComputeSignature (method.DeclaringType.Type, null, method, isBlockSignature: true) + "\"";
 								}
 							}
+							var delegateProxyType = GetDelegateProxyType (method);
+							if (delegateProxyType != null) {
+								token = $"0x{CreateTokenReference (delegateProxyType, TokenType.TypeDef):X} /* {delegateProxyType.FullName} */ ";
+							} else {
+								exceptions.Add (ErrorHelper.CreateWarning (App, 4176, method.Method, "Unable to locate the delegate to block conversion type for the return value of the method {0}.", method.DescriptiveMethodName));
+							}
 						}
-						setup_return.AppendLine ("res = xamarin_get_block_for_delegate (managed_method, retval, {0}, &exception_gchandle);", signature);
+						setup_return.AppendLine ("res = xamarin_get_block_for_delegate (managed_method, retval, {0}, {1}, &exception_gchandle);", signature, token);
 						setup_return.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 					} else {
 						throw ErrorHelper.CreateError (4104, 
@@ -4079,6 +4110,52 @@ namespace Registrar {
 			}
 		}
 
+		TypeDefinition GetDelegateProxyType (ObjCMethod obj_method)
+		{
+			// A mirror of this method is also implemented in BlockLiteral:GetDelegateProxyType
+			// If this method is changed, that method will probably have to be updated too (tests!!!)
+			MethodDefinition method = obj_method.Method;
+			MethodDefinition first = method;
+			MethodDefinition last = null;
+			while (method != last) {
+				last = method;
+				var delegateProxyType = GetDelegateProxyAttribute (method);
+				if (delegateProxyType?.DelegateType != null)
+					return delegateProxyType.DelegateType;
+
+				method = GetBaseMethodInTypeHierarchy (method);
+			}
+
+			// Might be the implementation of an interface method, so find the corresponding
+			// MethodDefinition for the interface, and check for DelegateProxy attributes there as well.
+			var map = PrepareMethodMapping (first.DeclaringType);
+			if (map != null && map.TryGetValue (first, out var list)) {
+				if (list.Count != 1)
+					throw Shared.GetMT4127 (first, list);
+				var delegateProxyType = GetDelegateProxyAttribute (list [0]);
+				if (delegateProxyType?.DelegateType != null)
+					return delegateProxyType.DelegateType;
+			}
+
+			// Might be an implementation of an optional protocol member.
+			if (obj_method.DeclaringType.Protocols != null) {
+				string selector = null;
+
+				foreach (var proto in obj_method.DeclaringType.Protocols) {
+					// We store the DelegateProxy type in the ProtocolMemberAttribute, so check those.
+					if (selector == null)
+						selector = obj_method.Selector ?? string.Empty;
+					if (selector != null) {
+						var attrib = GetProtocolMemberAttribute (proto.Type, selector, obj_method, method);
+						if (attrib?.ReturnTypeDelegateProxy != null)
+							return attrib.ReturnTypeDelegateProxy.Resolve ();
+					}
+				}
+			}
+
+			return null;
+		}
+
 		MethodDefinition GetBlockWrapperCreator (ObjCMethod obj_method, int parameter)
 		{
 			// A mirror of this method is also implemented in Runtime:GetBlockWrapperCreator
@@ -4117,48 +4194,35 @@ namespace Registrar {
 					if (selector == null)
 						selector = obj_method.Selector ?? string.Empty;
 					if (selector != null) {
-						var memberAttributes = GetProtocolMemberAttributes (proto.Type);
-						foreach (var attrib in memberAttributes) {
-							if (attrib.ParameterBlockProxy == null || attrib.ParameterBlockProxy.Length <= parameter || attrib.ParameterBlockProxy [parameter] == null)
-								continue; // no need to check anything if what we want isn't there
-							if (attrib.Selector != selector)
-								continue;
-							if (attrib.IsStatic != method.IsStatic)
-								continue;
-							var attribParameters = new TypeReference [attrib.ParameterType?.Length ?? 0];
-							for (var i = 0; i < attribParameters.Length; i++) {
-								attribParameters [i] = attrib.ParameterType [i];
-								if (attrib.ParameterByRef [i])
-									attribParameters [i] = new ByReferenceType (attribParameters [i]);
-							}
-							if (!ParametersMatch (method.Parameters, attribParameters))
-								continue;
-
+						var attrib = GetProtocolMemberAttribute (proto.Type, selector, obj_method, method);
+						if (attrib?.ParameterBlockProxy?.Length > parameter && attrib.ParameterBlockProxy [parameter] != null)
 							return attrib.ParameterBlockProxy [parameter].Resolve ().Methods.First ((v) => v.Name == "Create");
+					}
+
+					if (proto.Methods != null) {
+						foreach (var pMethod in proto.Methods) {
+							if (!pMethod.IsOptional)
+								continue;
+							if (pMethod.Name != method.Name)
+								continue;
+							if (!TypeMatch (pMethod.ReturnType, method.ReturnType))
+								continue;
+							if (ParametersMatch (method.Parameters, pMethod.Parameters))
+								continue;
+
+							MethodDefinition extensionMethod = pMethod.Method;
+							if (extensionMethod == null) {
+								MapProtocolMember (obj_method.Method, out extensionMethod);
+								if (extensionMethod == null)
+									return null;
+							}
+
+							var createMethod = GetBlockProxyAttributeMethod (extensionMethod, parameter + 1);
+							if (createMethod != null)
+								return createMethod;
 						}
 					}
 
-					foreach (var pMethod in proto.Methods) {
-						if (!pMethod.IsOptional)
-							continue;
-						if (pMethod.Name != method.Name)
-							continue;
-						if (!TypeMatch (pMethod.ReturnType, method.ReturnType))
-							continue;
-						if (ParametersMatch (method.Parameters, pMethod.Parameters))
-							continue;
-						
-						MethodDefinition extensionMethod = pMethod.Method;
-						if (extensionMethod == null) {
-							MapProtocolMember (obj_method.Method, out extensionMethod);
-							if (extensionMethod == null)
-								return null;
-						}
-													
-						var createMethod = GetBlockProxyAttributeMethod (extensionMethod, parameter + 1);
-						if (createMethod != null)
-							return createMethod;
-					}
 				}
 			}
 
@@ -4280,7 +4344,7 @@ namespace Registrar {
 			default:
 				if (IsEnum (managedType))
 					return GetManagedToNSNumberFunc (GetEnumUnderlyingType (managedType), inputType, outputType, descriptiveMethodName);
-				throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+				throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 			}
 		}
 
@@ -4305,7 +4369,7 @@ namespace Registrar {
 			default:
 				if (IsEnum (managedType))
 					return GetNSNumberToManagedFunc (GetEnumUnderlyingType (managedType), inputType, outputType, descriptiveMethodName, out nativeType);
-				throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+				throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 			}
 		}
 
@@ -4339,7 +4403,7 @@ namespace Registrar {
 			case "UIKit.UIOffset": nativeType = "UIOffset"; return "xamarin_nsvalue_to_uioffset";
 			case "UIKit.NSDirectionalEdgeInsets": nativeType = "NSDirectionalEdgeInsets"; return "xamarin_nsvalue_to_nsdirectionaledgeinsets";
 			default:
-				throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+				throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 			}
 		}
 
@@ -4373,7 +4437,7 @@ namespace Registrar {
 			case "UIKit.UIOffset": return "xamarin_uioffset_to_nsvalue";
 			case "UIKit.NSDirectionalEdgeInsets": return "xamarin_nsdirectionaledgeinsets_to_nsvalue";
 			default:
-				throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+				throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 			}
 		}
 
@@ -4404,13 +4468,13 @@ namespace Registrar {
 			var isNativeArray = IsArray (nativeType);
 
 			if (isManagedArray != isNativeArray)
-				throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+				throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 
 			var classVariableName = $"{inputName}_conv_class";
 			body_setup.AppendLine ($"MonoClass *{classVariableName} = NULL;");
 			if (isManagedArray) {
 				if (isManagedNullable)
-					throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+					throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 				underlyingNativeType = GetElementType (nativeType);
 				underlyingManagedType = GetElementType (managedType);
 				sb.AppendLine ($"{classVariableName} = mono_class_get_element_class ({managedClassExpression});");
@@ -4440,13 +4504,13 @@ namespace Registrar {
 				MethodDefinition getConstantMethod, getValueMethod;
 				if (!IsSmartEnum (underlyingManagedType, out getConstantMethod, out getValueMethod)) {
 					// method linked away!? this should already be verified
-					ErrorHelper.Show (ErrorHelper.CreateWarning (99, $"Internal error: the smart enum {underlyingManagedType.FullName} doesn't seem to be a smart enum after all. Please file a bug report with a test case (https://bugzilla.xamarin.com)."));
+					ErrorHelper.Show (ErrorHelper.CreateWarning (99, $"Internal error: the smart enum {underlyingManagedType.FullName} doesn't seem to be a smart enum after all. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new)."));
 					token = "INVALID_TOKEN_REF";
 				} else {
 					token = $"0x{CreateTokenReference (getValueMethod, TokenType.Method):X} /* {getValueMethod.FullName} */";
 				}
 			} else {
-				throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+				throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 			}
 			if (isManagedArray) {
 				sb.AppendLine ($"xamarin_id_to_managed_func {inputName}_conv_func = (xamarin_id_to_managed_func) {func};");
@@ -4491,13 +4555,13 @@ namespace Registrar {
 			var isNativeArray = IsArray (nativeType);
 
 			if (isManagedArray != isNativeArray)
-				throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+				throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 
 			var classVariableName = $"{inputName}_conv_class";
 			body_setup.AppendLine ($"MonoClass *{classVariableName} = NULL;");
 			if (isManagedArray) {
 				if (isManagedNullable)
-					throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+					throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 				underlyingNativeType = GetElementType (nativeType);
 				underlyingManagedType = GetElementType (managedType);
 				sb.AppendLine ($"{classVariableName} = mono_class_get_element_class ({managedClassExpression});");
@@ -4526,13 +4590,13 @@ namespace Registrar {
 				MethodDefinition getConstantMethod, getValueMethod;
 				if (!IsSmartEnum (underlyingManagedType, out getConstantMethod, out getValueMethod)) {
 					// method linked away!? this should already be verified
-					ErrorHelper.Show (ErrorHelper.CreateWarning (99, $"Internal error: the smart enum {underlyingManagedType.FullName} doesn't seem to be a smart enum after all. Please file a bug report with a test case (https://bugzilla.xamarin.com)."));
+					ErrorHelper.Show (ErrorHelper.CreateWarning (99, $"Internal error: the smart enum {underlyingManagedType.FullName} doesn't seem to be a smart enum after all. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new)."));
 					token = "INVALID_TOKEN_REF";
 				} else {
 					token = $"0x{CreateTokenReference (getConstantMethod, TokenType.Method):X} /* {getConstantMethod.FullName} */";
 				}
 			} else {
-				throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+				throw ErrorHelper.CreateError (99, $"Internal error: can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 			}
 
 			if (isManagedArray) {
@@ -4769,7 +4833,7 @@ namespace Registrar {
 		public void Generate (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path)
 		{
 			if (Target?.CachedLink == true)
-				throw ErrorHelper.CreateError (99, "Internal error: the static registrar should not execute unless the linker also executed (or was disabled). A potential workaround is to pass '-f' as an additional " + Driver.NAME + " argument to force a full build. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+				throw ErrorHelper.CreateError (99, "Internal error: the static registrar should not execute unless the linker also executed (or was disabled). A potential workaround is to pass '-f' as an additional " + Driver.NAME + " argument to force a full build. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 
 			this.input_assemblies = assemblies;
 
@@ -4792,6 +4856,7 @@ namespace Registrar {
 			header.WriteLine ("#pragma clang diagnostic ignored \"-Wdeprecated-declarations\"");
 			header.WriteLine ("#pragma clang diagnostic ignored \"-Wtypedef-redefinition\""); // temporary hack until we can stop including glib.h
 			header.WriteLine ("#pragma clang diagnostic ignored \"-Wobjc-designated-initializers\"");
+			header.WriteLine ("#pragma clang diagnostic ignored \"-Wunguarded-availability-new\"");
 
 			if (App.EnableDebug) {
 				header.WriteLine ("#define DEBUG 1");
@@ -4873,6 +4938,11 @@ namespace Registrar {
 		public TypeDefinition Type { get; set; }
 	}
 
+	class DelegateProxyAttribute : Attribute
+	{
+		public TypeDefinition DelegateType { get; set; }
+	}
+
 	class BindAsAttribute : Attribute
 	{
 		public BindAsAttribute (TypeReference type)
@@ -4893,6 +4963,7 @@ namespace Registrar {
 		public string Name { get; set; }
 		public string Selector { get; set; }
 		public TypeReference ReturnType { get; set; }
+		public TypeReference ReturnTypeDelegateProxy { get; set; }
 		public TypeReference[] ParameterType { get; set; }
 		public bool[] ParameterByRef { get; set; }
 		public TypeReference [] ParameterBlockProxy { get; set; }

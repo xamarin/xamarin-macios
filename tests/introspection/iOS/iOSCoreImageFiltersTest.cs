@@ -30,7 +30,14 @@ namespace Introspection {
 	[Preserve (AllMembers = true)]
 	public class iOSCoreImageFiltersTest : ApiCoreImageFiltersTest  {
 
-
+		protected override bool Skip (Type type)
+		{
+			switch (type.Name) {
+			default:
+				break;
+			}
+			return base.Skip (type);
+		}
 	}
 }
 #endif // !__WATCHOS__

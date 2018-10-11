@@ -45,6 +45,11 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 		</Otherwise>
 	</Choose>
 
+	<PropertyGroup>
+		<!-- Enable nuget package conflict resolution -->
+		<ResolveAssemblyConflicts>true</ResolveAssemblyConflicts>
+	</PropertyGroup>
+
 	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 	
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.ObjCBinding.CSharp.props"/>

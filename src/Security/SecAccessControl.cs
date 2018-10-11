@@ -109,9 +109,9 @@ namespace Security {
 		public virtual void Dispose (bool disposing)
 #endif
 		{
-			if (Handle != IntPtr.Zero){
-				CFObject.CFRelease (Handle);
-				Handle = IntPtr.Zero;
+			if (handle != IntPtr.Zero){
+				CFObject.CFRelease (handle);
+				handle = IntPtr.Zero;
 			}
 		}
 

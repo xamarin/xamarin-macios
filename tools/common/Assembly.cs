@@ -351,7 +351,7 @@ namespace Xamarin.Bundler {
 			case ApplePlatform.WatchOS:
 				return "-lcompression";
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at http://bugzilla.xamarin.com with a test case.", App.Platform, App.SdkVersion);
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", App.Platform, App.SdkVersion);
 			}
 		}
 
@@ -367,6 +367,13 @@ namespace Xamarin.Bundler {
 						continue; // obfuscated assemblies.
 					
 					string file = Path.GetFileNameWithoutExtension (name);
+
+#if !MONOMAC
+					if (App.IsSimulatorBuild && !Driver.IsFrameworkAvailableInSimulator (App, file)) {
+						Driver.Log (3, "Not linking with {0} (referenced by a module reference in {1}) because it's not available in the simulator.", file, FileName);
+						continue;
+					}
+#endif
 
 					switch (file) {
 					// special case
@@ -401,21 +408,6 @@ namespace Xamarin.Bundler {
 						// sub-frameworks
 						if (Frameworks.Add ("Accelerate"))
 							Driver.Log (3, "Linking with the framework Accelerate because {0} is referenced by a module reference in {1}", file, FileName);
-						break;
-					case "CoreAudioKit":
-					case "Metal":
-					case "MetalKit":
-					case "MetalPerformanceShaders":
-					case "CoreNFC":
-					case "DeviceCheck":
-						// some frameworks do not exists on simulators and will result in linker errors if we include them
-#if MTOUCH
-						if (!App.IsSimulatorBuild) {
-#endif
-							AddFramework (file);
-#if MTOUCH
-						}
-#endif
 						break;
 					case "openal32":
 						if (Frameworks.Add ("OpenAL"))

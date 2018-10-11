@@ -32,6 +32,7 @@ using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
 using CoreImage;
+using CoreML;
 using CoreVideo;
 using ImageIO;
 using IOSurface;
@@ -203,9 +204,10 @@ namespace CoreImage {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CIContext {
-		// When we bind OpenGL add these:
-		//[Export ("contextWithCGLContext:pixelFormat:colorSpace:options:")]
-		//CIContext ContextWithCGLContextpixelFormatcolorSpaceoptions (CGLContextObj ctx, CGLPixelFormatObj pf, CGColorSpaceRef cs, NSDictionary dict, );
+		// marked iOS5 but it's not working in iOS7.1
+		[iOS (8,0)]
+		[Export ("init")]
+		IntPtr Constructor ();
 
 #if !MONOMAC || XAMCORE_2_0
 		[iOS (9,0)][Mac (10,11)]
@@ -241,11 +243,11 @@ namespace CoreImage {
 		[Export ("initWithOptions:")]
 		IntPtr Constructor ([NullAllowed] NSDictionary options);
 
-#if !MONOMAC
 		[Static]
-		[Wrap ("FromOptions ((NSDictionary) null)")]
+		[Export ("context")]
 		CIContext Create ();
 
+#if !MONOMAC
 		[Static]
 		[Export ("contextWithEAGLContext:")]
 		CIContext FromContext (EAGLContext eaglContext);
@@ -360,13 +362,6 @@ namespace CoreImage {
 		[Export ("contextForOfflineGPUAtIndex:")]
 		[Static]
 		CIContext FromOfflineGpu (int gpuIndex);
-
-		// When we bind CGLContext
-		//+(CIContext *)contextForOfflineGPUAtIndex:(unsigned int)index
-		//    colorSpace:(nullable CGColorSpaceRef)colorSpace
-		//    options:(nullable CI_DICTIONARY(NSString*,id) *)options
-		//    sharedContext:(nullable CGLContextObj)sharedContext NS_AVAILABLE_MAC(10_10);
-		
 #endif
 
 		[iOS (9,0)][Mac (10,11)]
@@ -465,6 +460,30 @@ namespace CoreImage {
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
 		[Wrap ("WritePngRepresentation (This, image, url, format, colorSpace, options?.Dictionary, out error)")]
 		bool WritePngRepresentation (CIImage image, NSUrl url, CIFormat format, CGColorSpace colorSpace, CIImageRepresentationOptions options, [NullAllowed] out NSError error);
+	}
+
+
+	[Category]
+	[BaseType (typeof(CIContext))]
+	interface CIContext_CIDepthBlurEffect
+	{
+		// as per the docs: The 'options' parameter is a key value/pair reserved for future use.
+		[TV (12,0), iOS (12,0), Mac (10,14, onlyOn64: true)]
+		[Export ("depthBlurEffectFilterForImageURL:options:")]
+		[return: NullAllowed]
+		CIFilter GetDepthBlurEffectFilter (NSUrl url, [NullAllowed] NSDictionary options);
+
+		// as per the docs: The 'options' parameter is a key value/pair reserved for future use.
+		[TV (12,0), iOS (12,0), Mac (10,14, onlyOn64: true)]
+		[Export ("depthBlurEffectFilterForImageData:options:")]
+		[return: NullAllowed]
+		CIFilter GetDepthBlurEffectFilter (NSData data, [NullAllowed] NSDictionary options);
+
+		// as per the docs: The 'options' parameter is a key value/pair reserved for future use.
+		[TV (12,0), iOS (12,0), Mac (10,14, onlyOn64: true)]
+		[Export ("depthBlurEffectFilterForImage:disparityImage:portraitEffectsMatte:orientation:options:")]
+		[return: NullAllowed]
+		CIFilter GetDepthBlurEffectFilter (CIImage image, CIImage disparityImage, [NullAllowed] CIImage portraitEffectsMatte, CGImagePropertyOrientation orientation, [NullAllowed] NSDictionary options);
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -929,6 +948,14 @@ namespace CoreImage {
 		[iOS (11,0), TV (11,0), Mac (10,13)]
 		[Field ("kCIInputDisparityImageKey", "+CoreImage")]
 		NSString DisparityImage { get; }
+
+		[TV (12, 0), iOS (12, 0), Mac (10, 14, onlyOn64: true)]
+		[Field ("kCIInputMatteImageKey", "+CoreImage")]
+		NSString MatteImage { get; }
+
+		[TV (12, 0), iOS (12, 0), Mac (10, 14, onlyOn64: true)]
+		[Field ("kCIInputAmountKey", "+CoreImage")]
+		NSString Amount { get; }
 	}
 		
 	[Static]
@@ -1267,6 +1294,9 @@ namespace CoreImage {
 
 		[iOS (11,0), TV (11,0), Mac (10,13)]
 		bool AuxiliaryDisparity { get; set; }
+
+		[TV (12, 0), iOS (12, 0), Mac (10, 14, onlyOn64: true)]
+		bool AuxiliaryPortraitEffectsMatte { get; }
 	}
 
 	[Internal]
@@ -1294,6 +1324,10 @@ namespace CoreImage {
 		[iOS (11,0), TV (11,0), Mac (10,13)]
 		[Field ("kCIImageAuxiliaryDisparity")]
 		NSString AuxiliaryDisparityKey { get; }
+
+		[TV (12, 0), iOS (12, 0), Mac (10, 14, onlyOn64: true)]
+		[Field ("kCIImageAuxiliaryPortraitEffectsMatte")]
+		NSString AuxiliaryPortraitEffectsMatteKey { get; }
 	}
 	
 	[BaseType (typeof (NSObject))]
@@ -1707,11 +1741,6 @@ namespace CoreImage {
 		[Field ("kCIImageAutoAdjustEnhance"), Internal]
 		NSString AutoAdjustEnhanceKey { get; }
 
-//		[Availability (Deprecated = Platform.iOS_9_0)]
-//		[Availability (Deprecated = Platform.Mac_10_11)]
-//		[Export ("autoAdjustmentFilters"), Internal]
-//		NSArray _GetAutoAdjustmentFilters ();
-
 		[Export ("autoAdjustmentFiltersWithOptions:"), Internal]
 		NSArray _GetAutoAdjustmentFilters ([NullAllowed] NSDictionary opts);
 
@@ -1748,6 +1777,18 @@ namespace CoreImage {
 		[Mac (10,13)]
 		[Export ("imageByApplyingFilter:")]
 		CIImage CreateByFiltering (string filterName);
+
+		[iOS (11, 0)]
+		[TV (11,0)]
+		[Mac (10,13)]
+		[Export ("imageBySamplingLinear")]
+		CIImage CreateBySamplingLinear ();
+
+		[iOS (11, 0)]
+		[TV (11,0)]
+		[Mac (10,13)]
+		[Export ("imageBySamplingNearest")]
+		CIImage CreateBySamplingNearest ();
 
 		[iOS (8,0), Mac (10,10)]
 		[Field ("kCIImageAutoAdjustCrop"), Internal]
@@ -1851,6 +1892,62 @@ namespace CoreImage {
 		[Mac (10,13)]
 		[Export ("imageTransformForCGOrientation:")]
 		CGAffineTransform GetImageTransform (CGImagePropertyOrientation orientation);
+
+		[TV (12, 0), iOS (12, 0), Mac (10, 14, onlyOn64: true)]
+		[Export ("imageByInsertingIntermediate")]
+		CIImage CreateByInsertingIntermediate ();
+
+		[TV (12, 0), iOS (12, 0), Mac (10, 14, onlyOn64: true)]
+		[Export ("imageByInsertingIntermediate:")]
+		CIImage CreateByInsertingIntermediate (bool cache);
+
+		// CIImage_AVPortraitEffectsMatte category
+
+		[TV (12, 0), iOS (12, 0), Mac (10, 14, onlyOn64: true)]
+		[NullAllowed, Export ("portraitEffectsMatte")]
+		AVPortraitEffectsMatte PortraitEffectsMatte { get; }
+
+		[TV (12,0), iOS (12,0), Mac (10, 14, onlyOn64: true)]
+		[Export ("initWithPortaitEffectsMatte:options:")] // selector typo, rdar filled 42894821
+		IntPtr Constructor (AVPortraitEffectsMatte matte, [NullAllowed] NSDictionary options);
+
+		[TV (11,0), iOS (11,0), Mac (10, 14, onlyOn64: true)]
+		[Export ("initWithPortaitEffectsMatte:")] // selector typo, rdar filled 42894821
+		IntPtr Constructor (AVPortraitEffectsMatte matte);
+
+		[TV (12,0), iOS (12,0), Mac (10, 14, onlyOn64: true)]
+		[Static]
+		[Export ("imageWithPortaitEffectsMatte:options:")] // selector typo, rdar filled 42894821
+		[return: NullAllowed]
+		CIImage FromPortraitEffectsMatte (AVPortraitEffectsMatte matte, [NullAllowed] NSDictionary options);
+
+		[TV (12,0), iOS (12,0), Mac (10, 14, onlyOn64: true)]
+		[Static]
+		[Export ("imageWithPortaitEffectsMatte:")] // selector typo, rdar filled 42894821
+		[return: NullAllowed]
+		CIImage FromPortraitEffectsMatte (AVPortraitEffectsMatte matte);
+
+		// CIImage_AVDepthData category
+
+		[TV (11, 0), iOS (11, 0), Mac (10,13)]
+		[Export ("initWithDepthData:options:")]
+		IntPtr Constructor (AVDepthData data, [NullAllowed] NSDictionary options);
+
+		[TV (11, 0), iOS (11, 0), Mac (10,13)]
+		[Export ("initWithDepthData:")]
+		IntPtr Constructor (AVDepthData data);
+
+		[TV (11, 0), iOS (11, 0), Mac (10,13)]
+		[Static]
+		[Export ("imageWithDepthData:options:")]
+		[return: NullAllowed]
+		CIImage FromDepthData (AVDepthData data, [NullAllowed] NSDictionary options);
+
+		[TV (11, 0), iOS (11, 0), Mac (10,13)]
+		[Static]
+		[Export ("imageWithDepthData:")]
+		[return: NullAllowed]
+		CIImage FromDepthData (AVDepthData data);
 	}
 
 	interface ICIImageProcessorInput {}
@@ -2631,40 +2728,37 @@ namespace CoreImage {
 		CIVector Extent { get; set; }
 	}
 
+	[CoreImageFilter]
+	[Abstract]
+	[iOS (9,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIReductionFilter {
+		[CoreImageFilterProperty ("inputExtent")]
+		CIVector Extent { get; set; }
+	}
+
 	[CoreImageFilter (StringCtorVisibility = MethodAttributes.Public)]
 	[iOS (9,0)]
-	[BaseType (typeof (CIFilter))]
+	[BaseType (typeof (CIReductionFilter))]
 	interface CIAreaMaximum {
-
-		[CoreImageFilterProperty ("inputExtent")]
-		CIVector Extent { get; set; }
 	}
 
 	[CoreImageFilter]
 	[iOS (9,0)]
-	[BaseType (typeof (CIFilter))]
+	[BaseType (typeof (CIReductionFilter))]
 	interface CIAreaMaximumAlpha {
-
-		[CoreImageFilterProperty ("inputExtent")]
-		CIVector Extent { get; set; }
 	}
 
 	[CoreImageFilter]
 	[iOS (9,0)]
-	[BaseType (typeof (CIFilter))]
+	[BaseType (typeof (CIReductionFilter))]
 	interface CIAreaMinimum {
-
-		[CoreImageFilterProperty ("inputExtent")]
-		CIVector Extent { get; set; }
 	}
 
 	[CoreImageFilter]
 	[iOS (9,0)]
-	[BaseType (typeof (CIFilter))]
+	[BaseType (typeof (CIReductionFilter))]
 	interface CIAreaMinimumAlpha {
-
-		[CoreImageFilterProperty ("inputExtent")]
-		CIVector Extent { get; set; }
 	}
 
 	[CoreImageFilter (StringCtorVisibility = MethodAttributes.Public)]
@@ -3045,11 +3139,8 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[Mac (10,9)]
-	[BaseType (typeof (CIFilter))]
+	[BaseType (typeof (CIReductionFilter))]
 	interface CIColumnAverage {
-
-		[CoreImageFilterProperty ("inputExtent")]
-		CIVector Extent { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -5409,6 +5500,14 @@ namespace CoreImage {
 
 		[Field ("kCIImageRepresentationDisparityImage")]
 		NSString DisparityImageKey { get; }
+
+		[TV (12, 0), iOS (12, 0), Mac (10, 14, onlyOn64: true)]
+		[Field ("kCIImageRepresentationAVPortraitEffectsMatte")]
+		NSString AVPortraitEffectsMatteKey { get; }
+
+		[TV (12, 0), iOS (12, 0), Mac (10, 14, onlyOn64: true)]
+		[Field ("kCIImageRepresentationPortraitEffectsMatteImage")]
+		NSString PortraitEffectsMatteImageKey { get; }
 	}
 
 	[iOS (11,0)]
@@ -5425,6 +5524,107 @@ namespace CoreImage {
 		bool DepthImage { get; set; }
 
 		bool DisparityImage { get; set; }
+
+		bool PortraitEffectsMatteImage { get; set; } 
 #endif
+		[TV (12, 0), iOS (12, 0), Mac (10, 14, onlyOn64: true)]
+		AVPortraitEffectsMatte AVPortraitEffectsMatte { get; set; } 
+	}
+
+	[CoreImageFilter]
+	[iOS (12,0)]
+	[TV (12,0)]
+	[Mac (10,14, onlyOn64: true)]
+	[BaseType (typeof (CIReductionFilter))]
+	interface CIAreaMinMax {
+	}
+
+	[CoreImageFilter]
+	[iOS (12,0)]
+	[TV (12,0)]
+	[Mac (10,14, onlyOn64: true)]
+	[BaseType (typeof (CIFilter))]
+	interface CIDither {
+		[CoreImageFilterProperty ("inputIntensity")]
+		float Intensity { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (12,0)]
+	[TV (12,0)]
+	[Mac (10,14, onlyOn64: true)]
+	[BaseType (typeof (CIFilter))]
+	interface CIGuidedFilter {
+		[CoreImageFilterProperty ("inputGuideImage")]
+		CIImage GuideImage { get; set; }
+		[CoreImageFilterProperty ("inputEpsilon")]
+		float Epsilon { get; set; }
+		[CoreImageFilterProperty ("inputRadius")]
+		float Radius { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (12,0)]
+	[TV (12,0)]
+	[Mac (10,14, onlyOn64: true)]
+	[BaseType (typeof (CIFilter))]
+	interface CIMeshGenerator {
+		[CoreImageFilterProperty ("inputMesh")]
+		CIVector [] Mesh { get; set; }
+		[CoreImageFilterProperty ("inputWidth")]
+		float Width { get; set; }
+		[CoreImageFilterProperty ("inputColor")]
+		CIColor Color { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (12,0)]
+	[TV (12,0)]
+	[Mac (10,14, onlyOn64: true)]
+	[BaseType (typeof (CIFilter))]
+	interface CIMix {
+		[CoreImageFilterProperty ("inputBackgroundImage")]
+		CIImage BackgroundImage { get; set; }
+		[CoreImageFilterProperty ("inputAmount")]
+		float Amount { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (12,0)]
+	[TV (12,0)]
+	[Mac (10,14, onlyOn64: true)]
+	[BaseType (typeof (CIFilter))]
+	interface CISampleNearest {
+	}
+
+	[CoreImageFilter]
+	[iOS (12,0)]
+	[TV (12,0)]
+	[Mac (10,14, onlyOn64: true)]
+	[BaseType (typeof (CIFilter))]
+	interface CICameraCalibrationLensCorrection {
+		[CoreImageFilterProperty ("inputAVCameraCalibrationData")]
+		AVCameraCalibrationData AVCameraCalibrationData { get; set; }
+
+		[CoreImageFilterProperty ("inputUseInverseLookUpTable")]
+		bool UseInverseLookUpTable { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (12,0)]
+	[TV (12,0)]
+	[Mac (10,14, onlyOn64: true)]
+	[BaseType (typeof (CIFilter))]
+	interface CICoreMLModelFilter {
+		[CoreImageFilterProperty ("inputModel")]
+		MLModel Model { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (12,0)]
+	[TV (12,0)]
+	[Mac (10,14, onlyOn64: true)]
+	[BaseType (typeof (CIFilter))]
+	interface CISaliencyMapFilter {
 	}
 }

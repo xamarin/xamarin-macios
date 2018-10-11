@@ -393,7 +393,6 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 
 #if defined (__arm__) || defined(__aarch64__)
 	xamarin_register_modules ();
-	mono_jit_set_aot_only (TRUE);
 #endif
 	DEBUG_LAUNCH_TIME_PRINT ("\tAOT register time");
 

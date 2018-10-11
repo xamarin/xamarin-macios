@@ -142,6 +142,18 @@ namespace Security {
 			return trust_result;
 		}
 
+		[Watch (5,0)][TV (12,0)][Mac (10,14, onlyOn64: true)][iOS (12,0)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern bool SecTrustEvaluateWithError (/* SecTrustRef */ IntPtr trust, out /* CFErrorRef** */ IntPtr error);
+
+		[Watch (5,0)][TV (12,0)][Mac (10,14, onlyOn64: true)][iOS (12,0)]
+		public bool Evaluate (out NSError error)
+		{
+			var result = SecTrustEvaluateWithError (handle, out var err);
+			error = err == IntPtr.Zero ? null : new NSError (err);
+			return result;
+		}
+
 		[iOS (7,0)][Mac (10,9)]
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr /* CFDictionaryRef */ SecTrustCopyResult (IntPtr /* SecTrustRef */ trust);

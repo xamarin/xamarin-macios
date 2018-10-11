@@ -27,7 +27,7 @@ SHARED_HEADERS += shared.h product.h delegates.h runtime-internal.h $(SHARED_INC
 
 SHARED_FILES = $(SHARED_SOURCES) $(SHARED_HEADERS) $(SHARED_I386_SOURCES) $(SHARED_X86_64_SOURCES)
 
-EXTRA_DEPENDENCIES = $(SHARED_HEADERS)
+EXTRA_DEPENDENCIES = $(SHARED_HEADERS) $(TOP)/Make.config
 
 xamarin/mono-runtime.h: mono-runtime.h.t4 exports.t4
 	$(Q_GEN) $(TT) $< -o $@
@@ -393,11 +393,13 @@ MAC_ARCHITECTURES = i386 x86_64
 
 CLANG_ARCH = $(addprefix -arch ,$(MAC_ARCHITECTURES))
 MAC_CLANG = DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT) $(MAC_CC)
+MAC32_CLANG = DEVELOPER_DIR=$(XCODE94_DEVELOPER_ROOT) $(MAC32_CC)
+MAC64_CLANG = DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT) $(MAC_CC)
 
 MAC_SHIPPED_HEADERS = xamarin/launch.h
 
-MAC_OBJC_CFLAGS=-ObjC++ -std=c++0x -fno-exceptions
-MAC_CFLAGS = -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) -Wall -DMONOMAC -g
+MAC_OBJC_CFLAGS=-ObjC++ -std=c++0x -fno-exceptions -DMIN_XM_MONO_VERSION=\"$(MIN_XM_MONO_VERSION)\"
+MAC_CFLAGS = -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) -Wall -DMONOMAC -g -DMIN_XM_MONO_VERSION=\"$(MIN_XM_MONO_VERSION)\"
 MAC_LDFLAGS = -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) -framework AppKit
 
 MAC_STATIC_CFLAGS = $(MAC_CFLAGS) -I$(TOP)/builds/$(BUILD_DESTDIR)/install/mac32/include/mono-2.0
@@ -447,25 +449,25 @@ STATIC_LAUNCHER$(2)_OBJECTS = $$(foreach src,$$(MAC_SOURCES),.libs/mac/$$(basena
 SYSTEM_LAUNCHER$(2)_OBJECTS = $$(foreach src,$$(MAC_SOURCES),.libs/mac/$$(basename $$(src))$(3).system.$(1).o)
 
 .libs/mac/%$(3).dylib.$(1).o: %.m $$(SHARED_HEADERS) | .libs/mac
-	$$(call Q_2,OBJC,  [mac]) $(MAC_CLANG) -arch $(1) $(4) -c $$(MAC_OBJC_CFLAGS) $$(MAC_CFLAGS) -DDYNAMIC_MONO_RUNTIME -DDYLIB -o $$@ $$<
+	$$(call Q_2,OBJC,  [mac]) $(MAC$(5)_CLANG) -arch $(1) $(4) -c $$(MAC_OBJC_CFLAGS) $$(MAC_CFLAGS) -DDYNAMIC_MONO_RUNTIME -DDYLIB -o $$@ $$<
 
 .libs/mac/%$(3).dylib.$(1).o: %.s $$(SHARED_HEADERS) | .libs/mac
-	$$(call Q_2,ASM,   [mac]) $(MAC_CLANG) -arch $(1) $(4) -c $$(MAC_CFLAGS) -DDYNAMIC_MONO_RUNTIME -DDYLIB -o $$@ $$<
+	$$(call Q_2,ASM,   [mac]) $(MAC$(5)_CLANG) -arch $(1) $(4) -c $$(MAC_CFLAGS) -DDYNAMIC_MONO_RUNTIME -DDYLIB -o $$@ $$<
 
 .libs/mac/%$(3).static.$(1).o: %.s $$(SHARED_HEADERS) | .libs/mac
-	$$(call Q_2,ASM,   [mac]) $(MAC_CLANG) -arch $(1) $(4) -c $$(MAC_STATIC_CFLAGS) -o $$@ $$<
+	$$(call Q_2,ASM,   [mac]) $(MAC$(5)_CLANG) -arch $(1) $(4) -c $$(MAC_STATIC_CFLAGS) -o $$@ $$<
 
 .libs/mac/%$(3).static.$(1).o: %.m $$(SHARED_HEADERS) | .libs/mac
-	$$(call Q_2,OBJC,  [mac]) $(MAC_CLANG) -arch $(1) $(4) $$(MAC_OBJC_CFLAGS) -c $$(MAC_STATIC_CFLAGS) -o $$@ $$<
+	$$(call Q_2,OBJC,  [mac]) $(MAC$(5)_CLANG) -arch $(1) $(4) $$(MAC_OBJC_CFLAGS) -c $$(MAC_STATIC_CFLAGS) -o $$@ $$<
 
 .libs/mac/%$(3).system.$(1).o: %.m $$(SHARED_HEADERS) | .libs/mac
-	$$(call Q_2,OBJC,  [mac]) $(MAC_CLANG) -arch $(1) $(4) $$(MAC_OBJC_CFLAGS) -c $$(MAC_CFLAGS) -DDYNAMIC_MONO_RUNTIME -o $$@ $$<
+	$$(call Q_2,OBJC,  [mac]) $(MAC$(5)_CLANG) -arch $(1) $(4) $$(MAC_OBJC_CFLAGS) -c $$(MAC_CFLAGS) -DDYNAMIC_MONO_RUNTIME -o $$@ $$<
 
 .libs/mac/%$(3).system.$(1).o: %.s $$(SHARED_HEADERS) | .libs/mac
-	$$(call Q_2,ASM,   [mac]) $(MAC_CLANG) -arch $(1) $(4) -c $(MAC_CFLAGS) -DDYNAMIC_MONO_RUNTIME -o $$@ $$<
+	$$(call Q_2,ASM,   [mac]) $(MAC$(5)_CLANG) -arch $(1) $(4) -c $(MAC_CFLAGS) -DDYNAMIC_MONO_RUNTIME -o $$@ $$<
 
 .libs/mac/libxammac$(3).$(1).dylib: $$(DYNAMIC_DYLIB$(2)_OBJECTS)
-	$$(call Q_2,LD,    [mac]) $(MAC_CLANG) -arch $(1) -dynamiclib $$(MAC_LDFLAGS) -Wl,-install_name,libxammac$(3).dylib -o $$@ $$^ $$(addprefix -Xlinker -U -Xlinker ,$$(ALLOWED_UNDEFINED_SYMBOLS))
+	$$(call Q_2,LD,    [mac]) $(MAC$(5)_CLANG) -arch $(1) -dynamiclib $$(MAC_LDFLAGS) -Wl,-install_name,libxammac$(3).dylib -o $$@ $$^ $$(addprefix -Xlinker -U -Xlinker ,$$(ALLOWED_UNDEFINED_SYMBOLS))
 
 .libs/mac/libxammac$(3).$(1).a: $$(STATIC_LAUNCHER$(2)_OBJECTS)
 	$$(call Q_2,LIB,   [mac]) xcrun libtool -no_warning_for_no_symbols -static -o $$@ $$^
@@ -475,10 +477,10 @@ SYSTEM_LAUNCHER$(2)_OBJECTS = $$(foreach src,$$(MAC_SOURCES),.libs/mac/$$(basena
 
 endef
 
-$(eval $(call ObjTemplate,i386,32))
-$(eval $(call ObjTemplate,x86_64,64))
-$(eval $(call ObjTemplate,i386,DEBUG32,-debug,-DDEBUG))
-$(eval $(call ObjTemplate,x86_64,DEBUG64,-debug,-DDEBUG))
+$(eval $(call ObjTemplate,i386,32,,,32))
+$(eval $(call ObjTemplate,x86_64,64,,,64))
+$(eval $(call ObjTemplate,i386,DEBUG32,-debug,-DDEBUG,32))
+$(eval $(call ObjTemplate,x86_64,DEBUG64,-debug,-DDEBUG,64))
 
 $(foreach arch,$(MAC_ARCHITECTURES),.libs/mac/extension-main.$(arch).o): EXTRA_DEFINES=-DEXTENSION
 

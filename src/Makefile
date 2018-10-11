@@ -74,8 +74,6 @@ IOS_LIBDIR = $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
 IOS_BMONO = MONO_PATH=$(IOS_LIBDIR) $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btouch-mono
 IOS_GENERATOR=$(BUILD_DIR)/common/bgen.exe
 IOS_GENERATE=$(SYSTEM_MONO) --debug $(IOS_GENERATOR)
-IOS_native_GENERATOR=$(IOS_GENERATOR)
-IOS_native_GENERATE=$(IOS_GENERATE)
 $(IOS_BUILD_DIR)/Constants.cs: Constants.iOS.cs.in Makefile $(TOP)/Make.config.inc | $(IOS_BUILD_DIR)
 	$(call Q_PROF_GEN,ios) sed \
 		-e "s/@VERSION@/$(IOS_PACKAGE_VERSION_MAJOR).$(IOS_PACKAGE_VERSION_MINOR).$(IOS_PACKAGE_VERSION_REV)/g" \
@@ -87,80 +85,52 @@ $(IOS_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in
 	$(Q) mkdir -p $(IOS_BUILD_DIR)
 	$(call Q_PROF_GEN,ios) sed < $< > $@ 's|@PRODUCT_NAME@|$(IOS_PRODUCT)|g; s|@PACKAGE_HEAD_REV@|$(PACKAGE_HEAD_REV)|g; s|@PACKAGE_HEAD_BRANCH@|$(CURRENT_BRANCH)|g; s|@PACKAGE_VERSION_MAJOR@|$(IOS_PACKAGE_VERSION_MAJOR)|g; s|@PACKAGE_VERSION_MINOR@|$(IOS_PACKAGE_VERSION_MINOR)|g; s|@PACKAGE_VERSION_REV@|$(IOS_PACKAGE_VERSION_REV)|g; s|@PACKAGE_VERSION_BUILD@|$(IOS_PACKAGE_VERSION_BUILD)|g'
 
-# filled by TARGETS_template below
-IOS_VARIANTS_TARGETS =
-
-# Template to expand into assembly targets for
-# each variation (compat 32, native 32, native 64)
-#
-# Template Arguments:
-#
-#   - $(3) -> Product assembly name (monotouch.dll | Xamarin.iOS.dll)
-#   - $(4) -> MonoTouch.Dialog assembly name
-#   - $(5) -> MonoTouch.NUnitLite assembly name
-#   - $(6) -> Extra mcs arguments to pass to mcs when *not* using pmcs
-#
-
-define IOS_GENERATOR_template
 # core.dll
-$(IOS_BUILD_DIR)/$(1)/core.dll: $$(IOS_CORE_SOURCES) frameworks.sources
-	@mkdir -p $(IOS_BUILD_DIR)/$(1)
-	$$(call Q_PROF_CSC,ios/$(1)) $$(IOS_CSC) -nologo -out:$$@ -target:library -debug -unsafe \
+$(IOS_BUILD_DIR)/native/core.dll: $(IOS_CORE_SOURCES) frameworks.sources
+	$(Q) mkdir -p $(IOS_BUILD_DIR)native
+	$(call Q_PROF_CSC,ios) $(IOS_CSC) -nologo -out:$@ -target:library -debug -unsafe \
 		-r:$(IOS_LIBDIR)/Mono.Security.dll \
-		-nowarn:219,618,114,414,1635,3021,$$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
-		-define:COREBUILD $$(IOS_DEFINES) \
-		$$(IOS_$(1)_DEFINES) \
-		$$(IOS_CORE_SOURCES)
-
-# generator.exe
-$(IOS_BUILD_DIR)/$(1)/generator.exe: $$(GENERATOR_SOURCES) $(IOS_BUILD_DIR)/$(1)/core.dll
-	$$(call Q_PROF_CSC,ios/$(1)) $$(IOS_CSC) -nologo -out:$$@ -debug -unsafe \
-		-r:$(IOS_BUILD_DIR)/$(1)/core.dll \
-		$$(GENERATOR_DEFINES)             \
-		$$(GENERATOR_SOURCES)
+		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
+		-define:COREBUILD $(IOS_DEFINES) \
+		$(IOS_native_DEFINES) \
+		$(IOS_CORE_SOURCES)
 
 # generated_sources
-# Unfortunatelly, generator uses reflection to load api which means we need to build another
-# mono (tools64) to be able to load 2.1 mscorlib (mscorlib internal version must match runtime version)
+$(IOS_BUILD_DIR)/native/generated_sources: $(IOS_GENERATOR) $(IOS_APIS) $(IOS_BUILD_DIR)/native/core.dll $(IOS_BUILD_DIR)/native/Xamarin.iOS.BindingAttributes.dll $(BUILD_DIR)/ios.rsp
+	$(call Q_PROF_GEN,ios) $(IOS_GENERATE) @$(BUILD_DIR)/ios.rsp
 
-$(IOS_BUILD_DIR)/$(1)/generated_sources: $$(IOS_$(1)_GENERATOR) $$(IOS_APIS) $(IOS_BUILD_DIR)/$(1)/core.dll $(IOS_BUILD_DIR)/native/$(4)
-	$$(call Q_PROF_GEN,ios/$(1)) $$(IOS_$(1)_GENERATE) \
-		$$(IOS_GENERATOR_FLAGS) \
-		$$(IOS_GENERATOR_$(1)_FLAGS) \
+$(BUILD_DIR)/ios.rsp: Makefile Makefile.generator frameworks.sources
+	$(Q_GEN) echo \
+		$(IOS_GENERATOR_FLAGS) \
+		$(IOS_GENERATOR_native_FLAGS) \
 		-core \
-		-sourceonly=$$@ \
-		-compiler=$$(IOS_CSC) \
+		-sourceonly=$(IOS_BUILD_DIR)/native/generated_sources \
+		-compiler=$(IOS_CSC) \
 		-nologo -nostdlib -noconfig \
 		-no-mono-path \
-		-tmpdir=$(IOS_BUILD_DIR)/$(1) \
-		-baselib=$(IOS_BUILD_DIR)/$(1)/core.dll \
-		-attributelib=$(IOS_BUILD_DIR)/native/$(4) \
-		-r=$$(MONO_PATH)/mcs/class/lib/monotouch/System.dll \
-		-ns=MonoTouch.ObjCRuntime \
+		-tmpdir=$(IOS_BUILD_DIR)/native \
+		-baselib=$(IOS_BUILD_DIR)/native/core.dll \
+		-attributelib=$(IOS_BUILD_DIR)/native/Xamarin.iOS.BindingAttributes.dll \
+		-r=$(MONO_PATH)/mcs/class/lib/monotouch/System.dll \
 		-native-exception-marshalling \
-		$(2) \
+		--ns=ObjCRuntime \
 		--target-framework=Xamarin.iOS,v1.0 \
-		$$(IOS_APIS)
-endef
-$(eval $(call IOS_GENERATOR_template,native,--ns=ObjCRuntime,native,Xamarin.iOS.BindingAttributes.dll))
+		$(IOS_APIS) \
+		> $@
 
 define IOS_TARGETS_template
-IOS_VARIANTS_TARGETS += $(IOS_BUILD_DIR)/$(1)/$(3)
-
 # Xamarin.iOS.dll
-$(IOS_BUILD_DIR)/$(1)/$(3): $$(IOS_SOURCES) $(IOS_BUILD_DIR)/$(4)/generated_sources $(PRODUCT_KEY_PATH)
-	@mkdir -p $(IOS_BUILD_DIR)/$(1)
-	$$(call Q_PROF_CSC,ios/$(1)) $$(IOS_CSC) -nologo -out:$$@ -target:library -debug -unsafe -optimize \
+$(IOS_BUILD_DIR)/native-$(1)%Xamarin.iOS.dll $(IOS_BUILD_DIR)/native-$(1)%Xamarin.iOS.pdb: $$(IOS_SOURCES) $(IOS_BUILD_DIR)/native/generated_sources $(PRODUCT_KEY_PATH)
+	@mkdir -p $(IOS_BUILD_DIR)/native-$(1)
+	$$(call Q_PROF_CSC,ios/$(1) bit) $$(IOS_CSC) -nologo -out:$$@ -target:library -debug -unsafe -optimize \
 		-deterministic \
 		-r:$(IOS_LIBDIR)/Mono.Security.dll \
-		$$(ARGS_$(6)) \
+		$$(ARGS_$(1)) \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) $$(IOS_DEFINES) \
-		$$(IOS_$(4)_DEFINES) \
+		$$(IOS_native_DEFINES) \
 		-nowarn:219,618,114,414,1635,3021,$$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		$$(IOS_CSC_FLAGS_XI) \
-		$$(IOS_SOURCES) @$(IOS_BUILD_DIR)/$(4)/generated_sources
-
-$(IOS_BUILD_DIR)/$(1)/$(3:.dll=.pdb): $(IOS_BUILD_DIR)/$(1)/$(3)
+		$$(IOS_SOURCES) @$(IOS_BUILD_DIR)/native/generated_sources
 
 endef
 
@@ -170,11 +140,14 @@ $(IOS_BUILD_DIR)/compat/%: $(MACIOS_BINARIES_PATH)/% | $(IOS_BUILD_DIR)/compat
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/%: $(IOS_BUILD_DIR)/compat/%
 	$(Q) cp $< $@
 
-$(eval $(call IOS_TARGETS_template,native-32,--ns=ObjCRuntime,Xamarin.iOS.dll,native,native-32,32))
-$(eval $(call IOS_TARGETS_template,native-64,--ns=ObjCRuntime,Xamarin.iOS.dll,native,native-64,64))
+$(eval $(call IOS_TARGETS_template,32))
+$(eval $(call IOS_TARGETS_template,64))
 
 # MonoTouch.Dialog-1
-$(IOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.%: $(MACIOS_BINARIES_PATH)/MonoTouch.Dialog-Unified/ios/MonoTouch.Dialog-1.% | $(IOS_BUILD_DIR)/reference
+$(IOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.dll: $(MACIOS_BINARIES_PATH)/MonoTouch.Dialog-Unified/ios/MonoTouch.Dialog-1.dll | $(IOS_BUILD_DIR)/reference
+	$(Q) cp $< $@
+
+$(IOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.pdb: $(MACIOS_BINARIES_PATH)/MonoTouch.Dialog-Unified/ios/MonoTouch.Dialog-1.pdb | $(IOS_BUILD_DIR)/reference
 	$(Q) cp $< $@
 
 # MonoTouch.NUnitLite
@@ -195,11 +168,7 @@ $(IOS_BUILD_DIR)/reference/System.Drawing.dll: $(IOS_SYSTEM_DRAWING_SOURCES) mon
 		$(IOS_SYSTEM_DRAWING_SOURCES)
 
 $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll: $(IOS_BUILD_DIR)/native-64/Xamarin.iOS.dll | $(IOS_BUILD_DIR)/reference
-	@# Don't strip, btouch-native needs to execute code from Xamarin.iOS,
-	@# and that'll break if we strip out the code from the reference assembly.
-	@# Note that there is only btouch-native executable for both 32 and 64 bits.
-	@#$(Q_GEN) mono-cil-strip $< $@
-	$(Q) cp $< $@
+	$(Q_GEN) mono-cil-strip $< $@
 
 $(IOS_BUILD_DIR)/reference/Xamarin.iOS.pdb: $(IOS_BUILD_DIR)/native-64/Xamarin.iOS.pdb | $(IOS_BUILD_DIR)/reference
 	$(Q) cp $< $@
@@ -475,15 +444,11 @@ $(MAC_BUILD_DIR)/$(1)/core.dll: $(MAC_CORE_SOURCES) frameworks.sources
 		$(3) \
 		$$(MAC_CORE_SOURCES)
 
-$(MAC_BUILD_DIR)/$(1)/_bmac.exe: $(MAC_BUILD_DIR)/$(1)/core.dll $(MAC_APIS) $(GENERATOR_SOURCES)
-	$$(call Q_PROF_CSC,mac/$(1)) \
-		$$(MAC_$(1)_CSC) -nologo -out:$$@ -debug -unsafe \
-		$(GENERATOR_DEFINES) \
-		-r:$$(@D)/core.dll \
-		$(GENERATOR_SOURCES)
+$(MAC_BUILD_DIR)/$(1)/generated-sources: $$(MAC_$(1)_GENERATOR) $(MAC_APIS) $(MAC_BUILD_DIR)/$(1)/core.dll $(MAC_BUILD_DIR)/$(7) $(BUILD_DIR)/mac-$(1).rsp
+	$$(call Q_PROF_GEN,mac/$(1)) $$(MAC_$(1)_GENERATE) @$(BUILD_DIR)/mac-$(1).rsp
 
-$(MAC_BUILD_DIR)/$(1)/generated-sources: $$(MAC_$(1)_GENERATOR) $(MAC_APIS) $(MAC_BUILD_DIR)/$(1)/core.dll $(MAC_BUILD_DIR)/$(7)
-	$$(call Q_PROF_GEN,mac/$(1)) $$(MAC_$(1)_GENERATE) \
+$(BUILD_DIR)/mac-$(1).rsp: Makefile Makefile.generator frameworks.sources
+	$$(Q_GEN) echo \
 		$(MAC_GENERATED_DEFINES) \
 		-compiler:$$(MAC_$(1)_CSC) \
 		-nologo \
@@ -491,15 +456,16 @@ $(MAC_BUILD_DIR)/$(1)/generated-sources: $$(MAC_$(1)_GENERATOR) $(MAC_APIS) $(MA
 		-warnaserror:$(MAC_GENERATOR_WARNASERROR) \
 		-native-exception-marshalling \
 		-core \
-		-sourceonly:$$@ \
-		-tmpdir:$$(@D) \
-		-baselib:$$(@D)/core.dll \
+		-sourceonly:$(MAC_BUILD_DIR)/$(1)/generated-sources \
+		-tmpdir:$(MAC_BUILD_DIR)/$(1) \
+		-baselib:$(MAC_BUILD_DIR)/$(1)/core.dll \
 		-attributelib:$(MAC_BUILD_DIR)/$(7) \
 		-d:NO_SYSTEM_DRAWING \
 		$(2) \
 		$(3) \
 		$(xm_$(1)_profile) \
-		$(MAC_APIS)
+		$(MAC_APIS) \
+		> $$@
 endef
 
 $(eval $(call MAC_GENERATOR_template,full,--ns=ObjCRuntime,-d:NO_SYSTEM_DRAWING,,,full,Xamarin.Mac-full.BindingAttributes.dll))
@@ -519,7 +485,8 @@ $(MAC_BUILD_DIR)/$(1)/$(2): $(MAC_BUILD_DIR)/$(3)/generated-sources $(MAC_SOURCE
 		-nowarn:3021,1635,612,618,0219,0414,$(MAC_WARNINGS_TO_FIX) \
 		$$(MAC_CSC_FLAGS_XM) \
 		$(4) \
-		@$$< $$(MAC_SOURCES)
+		$$(MAC_SOURCES) \
+		@$$<
 
 $(MAC_BUILD_DIR)/$(1)/$(2:.dll=.pdb): $(MAC_BUILD_DIR)/$(1)/$(2)
 
@@ -748,22 +715,17 @@ $(WATCH_BUILD_DIR)/watch/core.dll: $(WATCHOS_CORE_SOURCES) frameworks.sources | 
 		$(WATCH_DEFINES)     \
 		$(WATCHOS_CORE_SOURCES)
 
-# generator.exe
-$(WATCH_BUILD_DIR)/watch/generator.exe: $(GENERATOR_SOURCES) $(WATCH_BUILD_DIR)/watch/core.dll
-	$(call Q_PROF_CSC,watch) $(WATCH_CSC) -nologo -out:$@ -debug -unsafe \
-		-r:$(WATCH_BUILD_DIR)/watch/core.dll \
-		$(GENERATOR_SOURCES)                  \
-		$(WATCH_DEFINES)     \
-		$(GENERATOR_DEFINES)                  \
-
 # generated_sources
-$(WATCH_BUILD_DIR)/watch/generated_sources: $(WATCH_GENERATOR) $(WATCHOS_APIS) $(WATCH_BUILD_DIR)/watch/core.dll $(WATCH_BUILD_DIR)/Xamarin.WatchOS.BindingAttributes.dll
-	$(call Q_PROF_GEN,watch) $(WATCH_GENERATE) \
+$(WATCH_BUILD_DIR)/watch/generated_sources: $(WATCH_GENERATOR) $(WATCHOS_APIS) $(WATCH_BUILD_DIR)/watch/core.dll $(WATCH_BUILD_DIR)/Xamarin.WatchOS.BindingAttributes.dll $(BUILD_DIR)/watchos.rsp
+	$(call Q_PROF_GEN,watch) $(WATCH_GENERATE) @$(BUILD_DIR)/watchos.rsp
+
+$(BUILD_DIR)/watchos.rsp: Makefile Makefile.generator frameworks.sources
+	$(Q_GEN) echo  \
 		-inline-selectors                                        \
 		-process-enums                                           \
 		-warnaserror:$(WATCH_GENERATOR_WARNASERROR)              \
 		-core                                                    \
-		-sourceonly=$@                                           \
+		-sourceonly=$(WATCH_BUILD_DIR)/watch/generated_sources   \
 		-compiler=$(WATCH_CSC) \
 		-nologo -nostdlib -noconfig                              \
 		-no-mono-path                                            \
@@ -777,6 +739,7 @@ $(WATCH_BUILD_DIR)/watch/generated_sources: $(WATCH_GENERATOR) $(WATCHOS_APIS) $
 		--ns:ObjCRuntime                                         \
 		$(WATCHOS_APIS)                                            \
 		--target-framework=Xamarin.WatchOS,v1.0                     \
+		> $@
 
 $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS%dll $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS%pdb: $(WATCHOS_SOURCES) $(WATCH_BUILD_DIR)/watch/generated_sources $(PRODUCT_KEY_PATH) | $(WATCH_BUILD_DIR)/watch-32
 	$(call Q_PROF_CSC,watch) $(WATCH_CSC) -nologo -out:$(basename $@).dll -target:library -debug -unsafe -optimize \
@@ -787,11 +750,7 @@ $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS%dll $(WATCH_BUILD_DIR)/watch-32/Xama
 		$(WATCHOS_SOURCES) @$(WATCH_BUILD_DIR)/watch/generated_sources
 
 $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll: $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS.dll | $(WATCH_BUILD_DIR)/reference
-	@# Don't strip, bwatch needs to execute code from Xamarin.WatchOS (attributes),
-	@# and that'll break if we strip out the code from the reference assembly.
-	@# Note that there is only bwatch executable for both 32 and 64 bits.
-	@#$(Q_GEN) mono-cil-strip $< $@
-	$(Q) cp $< $@
+	$(Q_GEN) mono-cil-strip $< $@
 
 $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.pdb: $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS.pdb | $(WATCH_BUILD_DIR)/reference
 	$(Q) cp $< $@
@@ -964,21 +923,17 @@ $(TVOS_BUILD_DIR)/tvos/core.dll: $(TVOS_CORE_SOURCES) frameworks.sources Makefil
 		$(TVOS_DEFINES)     \
 		$(TVOS_CORE_SOURCES)
 
-# generator.exe
-$(TVOS_BUILD_DIR)/tvos/generator.exe: $(GENERATOR_SOURCES) $(TVOS_BUILD_DIR)/tvos/core.dll
-	$(call Q_PROF_CSC,tvos) $(TV_CSC) -nologo --keep -out:$@ -debug -unsafe \
-		-r:$(TVOS_BUILD_DIR)/tvos/core.dll \
-		$(GENERATOR_SOURCES)                  \
-		$(GENERATOR_DEFINES)                  \
-
 # generated_sources
-$(TVOS_BUILD_DIR)/tvos/generated_sources: $(TVOS_GENERATOR) $(TVOS_APIS) $(TVOS_BUILD_DIR)/tvos/core.dll $(TVOS_BUILD_DIR)/Xamarin.TVOS.BindingAttributes.dll
-	$(call Q_PROF_GEN,tvos) $(TVOS_GENERATE) \
+$(TVOS_BUILD_DIR)/tvos/generated_sources: $(TVOS_GENERATOR) $(TVOS_APIS) $(TVOS_BUILD_DIR)/tvos/core.dll $(TVOS_BUILD_DIR)/Xamarin.TVOS.BindingAttributes.dll $(BUILD_DIR)/tvos.rsp
+	$(call Q_PROF_GEN,tvos) $(TVOS_GENERATE) @$(BUILD_DIR)/tvos.rsp
+
+$(BUILD_DIR)/tvos.rsp: Makefile Makefile.generator frameworks.sources
+	$(Q_GEN) echo \
 		-inline-selectors                                        \
 		-process-enums                                           \
 		-warnaserror:$(TVOS_GENERATOR_WARNASERROR)               \
 		-core                                                    \
-		-sourceonly=$@                                           \
+		-sourceonly=$(TVOS_BUILD_DIR)/tvos/generated_sources     \
 		-compiler=$(TV_CSC) \
 		-nologo -nostdlib -noconfig                              \
 		-no-mono-path                                            \
@@ -992,6 +947,7 @@ $(TVOS_BUILD_DIR)/tvos/generated_sources: $(TVOS_GENERATOR) $(TVOS_APIS) $(TVOS_
 		--ns:ObjCRuntime                                         \
 		$(TVOS_APIS)                                            \
 		--target-framework=Xamarin.TVOS,v1.0                     \
+		> $@
 
 $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS%dll $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS%pdb: $(TVOS_SOURCES) $(TVOS_BUILD_DIR)/tvos/generated_sources $(PRODUCT_KEY_PATH) | $(TVOS_BUILD_DIR)/tvos-64
 	$(call Q_PROF_CSC,tvos) $(TV_CSC) -nologo -out:$(basename $@).dll -target:library -debug -unsafe -optimize \
@@ -1003,10 +959,7 @@ $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS%dll $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVO
 		$(TVOS_SOURCES) @$(TVOS_BUILD_DIR)/tvos/generated_sources
 
 $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll: $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS.dll | $(TVOS_BUILD_DIR)/reference
-	@# Don't strip, btv needs to execute code from Xamarin.TVOS (attributes),
-	@# and that'll break if we strip out the code from the reference assembly.
-	@#$(Q_GEN) mono-cil-strip $< $@
-	$(Q) cp $< $@
+	$(Q_GEN) mono-cil-strip $< $@
 
 $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.pdb: $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS.pdb | $(TVOS_BUILD_DIR)/reference
 	$(Q) cp $< $@
@@ -1097,8 +1050,8 @@ TVOS_TARGETS += \
 	$(PROJECT_DIR)/MonoTouch.NUnitLite.tvos.csproj                                       \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll             \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/Xamarin.TVOS.pdb             \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.TVOS.dll                        \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.TVOS.pdb                        \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.TVOS.dll                        \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.TVOS.pdb                        \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/System.Net.Http.dll          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/System.Net.Http.pdb          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/OpenTK-1.0.dll               \
@@ -1125,10 +1078,10 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/%.config: $(TVOS_BUILD_D
 	$(Q) install -m 0644 $< $@
 
 # the actual architecture-specific versions
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.TVOS.dll: $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.TVOS.dll: $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits
 	$(Q) install -m 0755 $< $@
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.TVOS.pdb: $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.TVOS.pdb: $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits
 	$(Q) install -m 0644 $< $@
 
 $(TVOS_TARGETS_DIRS):

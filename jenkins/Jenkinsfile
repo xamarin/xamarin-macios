@@ -13,6 +13,7 @@ xmPackageUrl = null
 utils = null
 errorMessage = null
 currentStage = null
+failedStages = []
 
 xiPackageFilename = null
 xmPackageFilename = null
@@ -106,28 +107,99 @@ def appendFileComment (comment)
     writeFile (file: commentFile, text: comment)
 }
 
+def markdownToSlack (value)
+{
+    def tmpfile = "/tmp/slacker.md"
+    writeFile (file: tmpfile, text: value)
+    try {
+        // this monstruousity converts markdown's [text](url) to slack's <url|text>
+        sh ("sed -i '' 's/[[]\\(.*\\)[]][\\(]\\(.*\\)[\\)]/<\\2|\\1>/' '${tmpfile}'")
+        value = readFile (tmpfile)
+    } finally {
+        sh ("rm -f '${tmpfile}'")
+    }
+    return value
+}
+
+def reportFinalStatusToSlack (err, gitHash, currentStage, fileContents)
+{
+    def status = currentBuild.currentResult
+    if ("${status}" == "SUCCESS" && err == "")
+        return // not reporting success to slack
+
+    def authorName = null
+    def authorEmail = null
+    if (isPr) {
+        authorName = env.CHANGE_AUTHOR_DISPLAY_NAME
+        authorEmail = env.CHANGE_AUTHOR_EMAIL
+        slackMessage = "Pull Request #<${env.CHANGE_URL}|${env.CHANGE_ID}> failed to build."
+    } else {
+        authorName = sh (script: "git log -1 --pretty=%an", returnStdout: true).trim ()
+        authorEmail = sh (script: "git log -1 --pretty=%ae", returnStdout: true).trim ()
+        slackMessage = "Commit <https://github.com/${repository}/commit/${gitHash}|${gitHash}> failed to build."
+    }
+
+    def title = null
+    if (err != null) {
+        title = "Internal jenkins failed in stage '${currentStage}': ${err}"
+    } else {
+        title = "Internal jenkins failed in stage '${currentStage}'"
+    }
+    def text = ""
+    if (fileContents != null)
+        text = "\"text\": ${groovy.json.JsonOutput.toJson (markdownToSlack (fileContents))},"
+    // The attachments string must not start with a newline, it will produce a very helpful 'Invalid JSON String' exception with no additional info.
+    def attachments = """[
+        {
+            \"author_name\": \"${authorName} (${authorEmail})\",
+            \"title\": \"${title}\",
+            \"title_link\": \"${env.RUN_DISPLAY_URL}\",
+            \"color\": \"danger\",
+            ${text}
+            \"fallback\": \"Build failed\"
+        }
+    ]
+    """
+    echo (attachments)
+    slackSend (botUser: true, channel: "#ios-notifications", color: "danger", message: slackMessage, attachments: attachments)
+}
+
 def reportFinalStatus (err, gitHash, currentStage)
 {
     if (!createFinalStatus)
         return
 
-    def comment = null
+    def comment = ""
     def status = currentBuild.currentResult
 
-    if ("${status}" == "SUCCESS" && err == "") {
+    if ("${status}" == "SUCCESS" && err == "" && failedStages.size () == 0) {
         comment = "✅ [Jenkins job](${env.RUN_DISPLAY_URL}) (on internal Jenkins) succeeded"
     } else {
-        comment = "🔥 [Jenkins job](${env.RUN_DISPLAY_URL}) (on internal Jenkins) failed in stage '${currentStage}' 🔥"
+        // Aborted builds throw either a FlowInterruptedException or an AbortException (depending on what's executing),
+        // so treat either as an abortion (both can be thrown in other circumstances as well, so it's just a best guess).
+        if (err.contains ("FlowInterruptedException") || err.contains ("AbortException"))
+            comment += "❌ [Build was (probably) aborted](${env.RUN_DISPLAY_URL})\n\n"
+        comment += "🔥 [Jenkins job](${env.RUN_DISPLAY_URL}) (on internal Jenkins) failed"
+        if (currentStage != "" && !failedStages.contains (currentStage))
+            failedStages.add (currentStage)
+        if (failedStages.size () > 0)
+            comment += " in stage(s) '${failedStages.join (', ')}'"
+        comment += " 🔥"
         if (err != "")
             comment += " : ${err}"
         manager.addErrorBadge (comment)
         manager.buildFailure ()
     }
 
-    if (fileExists (commentFile))
-        comment += "\n\n" + readFile ("${commentFile}")
+    def fileContents = null
+    if (fileExists (commentFile)) {
+        fileContents = readFile ("${commentFile}")
+        comment += "\n\n" + fileContents
+    }
 
     addComment ("${comment}")
+
+    reportFinalStatusToSlack (err, gitHash, currentStage, fileContents)
 }
 
 def processAtMonkeyWrench (outputFile)
@@ -171,21 +243,118 @@ def uploadFiles (glob, virtualPath)
     ])
 }
 
-def runXamarinMacTests (url, macOS)
+@NonCPS
+def getUpdateInfoAndVersion (file)
 {
+    def result = [:]
+    def match = file =~ /xamarin.(mac|ios)-(\d+(\.\d+)+).*.pkg$/
+    if (match.matches()) {
+        result['platform'] = match[0][1]
+        result['version'] = match[0][2]
+    }
+    return result
+}
+
+// There must be a better way than this hack to show a
+// message in red in the Jenkins Blue Ocean UI...
+def echoError (message)
+{
+    try {
+        error (message)
+    } catch (e) {
+        // Ignore
+    }
+}
+
+def indexOfElement (list, element)
+{
+    for (def i = 0; i < list.size (); i++) {
+        if (list [i] == element)
+            return i
+    }
+    return -1
+}
+
+def runXamarinMacTests (url, macOS, maccore_hash, xamarin_macios_hash)
+{
+    def failed = false
+    def workspace = "${env.HOME}/jenkins/workspace/xamarin-macios"
+    def failedTests = []
     try {
         echo ("Executing on ${env.NODE_NAME}")
         echo ("URL: ${url}")
-        sh ("env")
-        sh ("rm -f *.zip")
-        sh ("curl -L '${url}' --output mac-test-package.zip")
-        sh ("rm -rf mac-test-package")
-        sh ("unzip -o mac-test-package.zip")
-        sh ("cd mac-test-package && ./system-dependencies.sh --provision-mono --ignore-autotools --ignore-xamarin-studio --ignore-xcode --ignore-osx --ignore-cmake")
-        sh ("make -C mac-test-package/tests exec-mac-dontlink")
-        sh ("make -C mac-test-package/tests exec-mac-apitest")
+        sh ("mkdir -p '${workspace}'")
+        dir ("${workspace}") {
+            // Download the script we need, and then execute it, so that we
+            // don't clone all of xamarin-macios to get a single file.
+            // Due to how github has implemented pull requests, this works
+            // even for pull requests from forks, since each commit in the pull request
+            // is also available from the main repository.
+            sh ("""
+                curl -fLO https://raw.githubusercontent.com/xamarin/xamarin-macios/${xamarin_macios_hash}/jenkins/prepare-packaged-macos-tests.sh
+                chmod +x prepare-packaged-macos-tests.sh
+                ./prepare-packaged-macos-tests.sh '${url}' '${maccore_hash}'
+                """)
+            def tests = [ "dontlink", "apitest", "introspection", "linksdk", "linkall", "xammac_tests" ];
+            tests.each { test ->
+                def t = "${test}"
+                try {
+                    timeout (time: 10, unit: 'MINUTES') {
+                        sh ("make -C mac-test-package/tests exec-mac-${t} MONO_DEBUG=no-gdb-backtrace")
+                        echo ("${t} succeeded")
+                    }
+                } catch (error) {
+                    echoError ("${t} failed with error: ${error}")
+                    failed = true
+                    failedTests.add (t)
+                }
+            }
+        }
     } finally {
-        sh ("rm -rf mac-test-package *.zip")
+        sh ("rm -rf ${workspace}/mac-test-package ${workspace}/*.zip")
+        // Find and upload any crash reports
+        sh (script: """
+            rm -Rf ${workspace}/crash-reports
+            mkdir ${workspace}/crash-reports
+            find ~/Library/Logs/DiagnosticReports/ -mtime -10m -exec cp {} ${workspace}/crash-reports \\;
+            ls -la ${workspace}/crash-reports
+            """,
+            returnStatus: true /* Don't fail if something goes wrong */)
+        try {
+            if (findFiles (glob: "crash-reports/*").length > 0) {
+                archiveArtifacts ("${workspace}/crash-reports/*")
+            } else {
+                echo ("No crash reports found")
+            }
+        } catch (e) {
+            // Ignore any archiving errors.
+        }
+    }
+    if (failed) {
+        def failureMessage = "Xamarin.Mac tests on ${macOS} failed (${failedTests.join (', ')})"
+        manager.addErrorBadge (failureMessage)
+        error (failureMessage)
+    }
+}
+
+def abortExecutingBuilds ()
+{
+    def job = Jenkins.instance.getItemByFullName (env.JOB_NAME)
+    for (build in job.builds) {
+        if (!build.isBuilding ())
+            continue
+        echo ("Current build: ${currentBuild.number} Checking build: ${build.number}");
+        if (build.number > currentBuild.number) {
+            error ("There is already a newer build in progress (#${build.number})")
+        } else if (build.number < currentBuild.number) {
+            def exec = build.getExecutor ()
+            if (exec == null) {
+                echo ("No executor for build ${build.number}")
+            } else {
+                exec.interrupt (Result.ABORTED, new CauseOfInterruption.UserInterruption ("Aborted by build #${currentBuild.number}"))
+                echo ("Aborted previous build: #${build.number}")
+            }
+        }
     }
 }
 
@@ -224,14 +393,22 @@ timestamps {
                     }
 
                     if (isPr) {
-                        if (!githubGetPullRequestLabels ().contains ("build-package")) {
+                        def hasBuildPackage = githubGetPullRequestLabels ().contains ("build-package")
+                        def hasRunInternalTests = githubGetPullRequestLabels ().contains ("run-internal-tests")
+
+                        if (!hasBuildPackage && !hasRunInternalTests) {
                             // don't add a comment to the pull request, since the public jenkins will also add comments, which ends up being too much.
                             createFinalStatus = false
-                            echo ("Build skipped because the pull request doesn't have the label 'build-package'.")
+                            echo ("Build skipped because the pull request doesn't have either of the labels 'build-package' or 'run-internal-tests'.")
                             return
                         }
 
-                        skipLocalTestRunReason = "Not running tests here because they're run on public Jenkins."
+
+                        if (!hasRunInternalTests)
+                            skipLocalTestRunReason = "Not running tests here because they're run on public Jenkins."
+
+                        // only aborting PR builds, since for normal branches we want to build as much as possible by default.
+                        abortExecutingBuilds ()
                     }
 
                     dir ("${workspace}") {
@@ -297,13 +474,29 @@ timestamps {
                                 def file = uploadingFiles [i]
                                 def f_length = file.length;
                                 def md5 = sh (returnStdout: true, script: "md5 -q '${file}'").trim ()
-                                def sha256 = sh (returnStdout: true, script: "shasum -a 256").trim ().split (" ") [0];
+                                def sha256 = sh (returnStdout: true, script: "shasum -a 256 ${file}").trim ().split (" ") [0];
                                 manifest += "${packagePrefix}/${file.name}\n"
                                 artifacts += "  {\n"
                                 artifacts += "    \"file\": \"${file.name}\",\n"
                                 artifacts += "    \"url\": \"${packagePrefix}/${file.name}\",\n"
                                 artifacts += "    \"md5\": \"${md5}\",\n"
                                 artifacts += "    \"sha256\": \"${sha256}\",\n"
+                                def map = getUpdateInfoAndVersion (file.name)
+                                def platform = map['platform']
+                                if (platform) {
+                                    try {
+                                        def updateInfo = readFile "package/${platform}-updateinfo"
+                                        def parts = updateInfo.trim ().split (" ")
+                                        artifacts += "    \"productId\": \"${parts[0]}\",\n"
+                                        artifacts += "    \"releaseId\": \"${parts[1]}\",\n"
+                                    } catch (ex) {
+                                        echo "Did not find updateinfo file for xamarin.${platform}"
+                                    }
+                                }
+                                def version = map['version']
+                                if (version) {
+                                    artifacts += "    \"version\": \"${version}\",\n"
+                                }
                                 artifacts += "    \"size\": ${f_length}\n"
                                 artifacts += "  }"
                                 if (i < uploadingFiles.length - 1)
@@ -366,8 +559,12 @@ timestamps {
                                 } else {
                                     def outputFile = "${workspace}/xamarin-macios/wrench-launch-external.output.tmp"
                                     try {
+                                        // VSTS does not allow any branch name anymore, it has to be an existing branch.
+                                        // Since pull requests don't create branches in the xamarin org (that VSTS sees at least),
+                                        // I've created a 'pull-request' branch which we'll use for pull requests.
+                                        def vsts_branch = isPr ? "pull-request" : branchName;
                                         withCredentials ([string (credentialsId: 'macios_provisionator_pat', variable: 'PROVISIONATOR_VSTS_PAT')]) {
-                                            sh ("make -C ${workspace}/xamarin-macios/tests wrench-launch-external MAC_PACKAGE_URL=${xmPackageUrl} IOS_PACKAGE_URL=${xiPackageUrl} WRENCH_URL=${env.RUN_DISPLAY_URL} BUILD_REVISION=${gitHash} BUILD_LANE=jenkins/${branchName} BUILD_WORK_HOST=${env.NODE_NAME} 2>&1 | tee ${outputFile}")
+                                            sh ("make -C ${workspace}/xamarin-macios/tests wrench-launch-external MAC_PACKAGE_URL=${xmPackageUrl} IOS_PACKAGE_URL=${xiPackageUrl} WRENCH_URL=${env.RUN_DISPLAY_URL} BUILD_REVISION=${gitHash} BUILD_LANE=${vsts_branch} BUILD_WORK_HOST=${env.NODE_NAME} 2>&1 | tee ${outputFile}")
                                         }
                                         processAtMonkeyWrench (outputFile)
                                     } catch (error) {
@@ -414,9 +611,15 @@ timestamps {
                                 echo ("Generator diff: ${reportPrefix}/generator-diff/index.html")
                             }
 
+                            def hasXamarinMacTests = true
                             stage ("Package XM tests") {
                                 currentStage = "${STAGE_NAME}"
-                                sh ("make -C ${workspace}/xamarin-macios/tests package-tests")
+                                def exitCode = sh (script: "make -C ${workspace}/xamarin-macios/tests package-tests", returnStatus: true)
+                                if (exitCode != 0) {
+                                    hasXamarinMacTests = false
+                                    echoError ("Failed to package Xamarin.Mac tests (exit code: ${exitCode}")
+                                    failedStages.add (currentStage)
+                                }
                                 uploadFiles ("tests/*.zip", virtualPath)
                             }
 
@@ -432,22 +635,47 @@ timestamps {
                                     def builders = [:]
 
                                     // Add test runs on older macOS versions
-                                    def url = "https://bosstoragemirror.blob.core.windows.net/wrench/${virtualPath}/tests/mac-test-package.zip"
-                                    def firstOS = sh (returnStdout: true, script: "grep ^MIN_OSX_SDK_VERSION= '${workspace}/xamarin-macios/Make.config' | sed 's/.*=//'").trim ().split ("\\.")[1].toInteger ()
-                                    def lastOS = sh (returnStdout: true, script: "grep ^OSX_SDK_VERSION= '${workspace}/xamarin-macios/Make.config' | sed 's/.*=//'").trim ().split ("\\.")[1].toInteger ()
-                                    for (os = firstOS; os < lastOS; os++) {
-                                        def macOS = "${os}" // Need to bind the label variable before the closure
-                                        builders ["XM tests on 10.${macOS}"] = {
-                                            try {
-                                                node ("xamarin-macios && macos-10.${macOS}") {
-                                                    stage ("Running XM tests on '10.${macOS}'") {
-                                                        runXamarinMacTests (url, "macOS 10.${macOS}")
+                                    if (hasXamarinMacTests) {
+                                        def url = "https://bosstoragemirror.blob.core.windows.net/wrench/${virtualPath}/tests/mac-test-package.zip"
+                                        def maccore_hash = sh (script: "grep NEEDED_MACCORE_VERSION ${workspace}/xamarin-macios/mk/xamarin.mk | sed 's/NEEDED_MACCORE_VERSION := //'", returnStdout: true).trim ()
+                                        // Get the min and current macOS version from Make.config,
+                                        // and calculate all the macOS versions in between (including both end points).
+                                        // The trims/splits/toIntegers at the end are to select the minor part of the macOS version number,
+                                        // then we just loop from the minor part of the min version to the minor part of the current version.
+                                        def firstOS = sh (returnStdout: true, script: "grep ^MIN_OSX_SDK_VERSION= '${workspace}/xamarin-macios/Make.config' | sed 's/.*=//'").trim ().split ("\\.")[1].toInteger ()
+                                        def lastOS = sh (returnStdout: true, script: "grep ^OSX_SDK_VERSION= '${workspace}/xamarin-macios/Make.config' | sed 's/.*=//'").trim ().split ("\\.")[1].toInteger ()
+                                        def macOSes = []
+                                        def excludedOSes = []
+                                        for (os = firstOS; os <= lastOS; os++)
+                                            macOSes.add (os)
+                                        // If any macOS version needs to be excluded manually, it can be done like this (in this case to remove macOS 10.14):
+                                        //     excludedOSes.add (14)
+                                        // Have in mind that the value in the list is only the minor part of the macOS version number.
+                                        for (i = 0; i < macOSes.size (); i++) {
+                                            def os = macOSes [i];
+                                            def macOS = "${os}" // Need to bind the label variable before the closure
+                                            def excluded = indexOfElement (excludedOSes, os) >= 0
+                                            def nodeText = excluded ? "ℹ️ XM tests not executed on 10.${macOS} ℹ️" : "XM tests on 10.${macOS}"
+                                            builders [nodeText] = {
+                                                try {
+                                                    if (excluded) {
+                                                        echo (nodeText)
+                                                    } else {
+                                                        node ("xamarin-macios && macos-10.${macOS}") {
+                                                            stage ("Running XM tests on '10.${macOS}'") {
+                                                                runXamarinMacTests (url, "macOS 10.${macOS}", maccore_hash, gitHash)
+                                                            }
+                                                        }
                                                     }
+                                                } catch (err) {
+                                                    currentStage = "Running XM tests on '10.${macOS}'"
+                                                    def msg = err.getMessage ();
+                                                    if (msg == "")
+                                                        msg = "Xamarin.Mac tests on 10.${macOS} failed"
+                                                    appendFileComment ("🔥 [${msg}](${env.RUN_DISPLAY_URL}) 🔥\n")
+                                                    failedStages.add (currentStage)
+                                                    throw err
                                                 }
-                                            } catch (err) {
-                                                currentStage = "Running XM tests on '10.${macOS}'"
-                                                appendFileComment ("🔥 [Xamarin.Mac tests on 10.${macOS} failed](${env.RUN_DISPLAY_URL}) 🔥\n")
-                                                throw err
                                             }
                                         }
                                     }
@@ -468,7 +696,13 @@ timestamps {
                                         stage ('Test docs') {
                                             currentStage = "${STAGE_NAME}"
                                             echo ("Building on ${env.NODE_NAME}")
-                                            sh ("make -C ${workspace}/xamarin-macios/tests wrench-docs")
+                                            def targetBranch = isPr ? githubGetPullRequestInfo () ["base"] ["ref"] : "${BRANCH_NAME}"
+                                            def testDocs = targetBranch == "master"
+                                            if (!testDocs) {
+                                                echo ("Skipping docs testing, it's only done on master (current (target) branch is ${targetBranch})")
+                                            } else {
+                                                sh ("make -C ${workspace}/xamarin-macios/tests wrench-docs")
+                                            }
                                         }
                                     }
 
@@ -476,6 +710,8 @@ timestamps {
                                     parallel builders
                                 }
                             }
+
+                            currentStage = ""
                         } // dir ("xamarin-macios")
                     } // dir ("${workspace}")
                 }

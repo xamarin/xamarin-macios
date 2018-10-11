@@ -40,8 +40,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void ManagedVersusNative ()
 		{
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (9,0))
-				Assert.Ignore ("Requires iOS 9+");
+			TestRuntime.AssertXcodeVersion (7, 0);
 			var uikit = Dlfcn.dlopen (Constants.UIKitLibrary, 0);
 			try {
 				var zero = Dlfcn.dlsym (uikit, "UIFloatRangeZero");
@@ -60,8 +59,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void IsInfinite ()
 		{
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (9,0))
-				Assert.Ignore ("Requires iOS 9+");
+			TestRuntime.AssertXcodeVersion (7, 0);
 			Assert.True (UIFloatRange.Infinite.IsInfinite, "Infinite");
 			Assert.False (UIFloatRange.Zero.IsInfinite, "Zero");
 		}
@@ -69,8 +67,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void Equals ()
 		{
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (9,0))
-				Assert.Ignore ("Requires iOS 9+");
+			TestRuntime.AssertXcodeVersion (7, 0);
 			Assert.True (UIFloatRange.Zero.Equals (UIFloatRange.Zero), "Zero-Zero");
 			var one = new UIFloatRange (1f, 1f);
 			Assert.False (one.Equals (UIFloatRange.Zero), "one-Zero");

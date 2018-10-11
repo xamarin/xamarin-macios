@@ -49,8 +49,7 @@ namespace MonoTouchFixtures.GamePlayKit {
 		[Test]
 		public void FromPointsTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (9, 0))
-				Assert.Ignore ("Ignoring GameplayKit tests: Requires iOS9+");
+			TestRuntime.AssertXcodeVersion (7, 0);
 			
 			var path = GKPath.FromPoints (points, 1, false);
 			Assert.NotNull (path, "GKPath.FromPoints should not be null");
@@ -59,8 +58,7 @@ namespace MonoTouchFixtures.GamePlayKit {
 		[Test]
 		public void InitWithPointsTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (9, 0))
-				Assert.Ignore ("Ignoring GameplayKit tests: Requires iOS9+");
+			TestRuntime.AssertXcodeVersion (7, 0);
 
 			var path = new GKPath (points, 1, false);
 			Assert.NotNull (path, "GKPath.FromPoints should not be null");
@@ -69,8 +67,7 @@ namespace MonoTouchFixtures.GamePlayKit {
 		[Test]
 		public void FromPointsVector3Test ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (10, 0))
-				Assert.Ignore ("Ignoring GameplayKit tests: Requires iOS10+");
+			TestRuntime.AssertXcodeVersion (8, 0);
 
 			var path = GKPath.FromPoints (test_vectors3, 1, false);
 			Assert.NotNull (path, "GKPath.FromPoints should not be null");
@@ -82,8 +79,7 @@ namespace MonoTouchFixtures.GamePlayKit {
 		[Test]
 		public void InitWithPointsVector3Test ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (10, 0))
-				Assert.Ignore ("Ignoring GameplayKit tests: Requires iOS10+");
+			TestRuntime.AssertXcodeVersion (8, 0);
 
 			var path = new GKPath (test_vectors3, 1, false);
 			Assert.NotNull (path, "GKPath.FromPoints should not be null");

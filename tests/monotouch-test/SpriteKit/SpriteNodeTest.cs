@@ -13,6 +13,7 @@ using System;
 using System.Drawing;
 #if XAMCORE_2_0
 using Foundation;
+using ObjCRuntime;
 #if MONOMAC
 using AppKit;
 using UIColor = AppKit.NSColor;
@@ -54,8 +55,10 @@ namespace MonoTouchFixtures.SpriteKit {
 		[SetUp]
 		public void VersionCheck ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Inconclusive ("requires iOS7+");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.TvOS, 9, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.WatchOS, 3, 0, throwIfOtherPlatform: false);
 		}
 
 		[Test]
@@ -101,7 +104,7 @@ namespace MonoTouchFixtures.SpriteKit {
 		{
 			using (var n = new SKSpriteNode (UIColor.Blue, SizeF.Empty)) {
 #if MONOMAC
-				Assert.That (n.Color.ToString (), Is.EqualTo ("Device RGB(0.016804177314043,0.198350995779037,1,1)").Or.EqualTo ("Device RGB(0,0,1,1)"), "Color-1");
+				Assert.That (n.Color.ToString (), Is.EqualTo ("Device RGB(0.016804177314043,0.198350995779037,1,1)").Or.EqualTo ("Device RGB(0,0,1,1)").Or.EqualTo ("Device RGB(0.016804177314043,0.198350965976715,1,1)"), "Color-1");
 #else
 				Assert.That (n.Color.ToString (), Is.EqualTo ("UIColor [A=255, R=0, G=0, B=255]"), "Color-1");
 #endif

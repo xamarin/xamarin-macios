@@ -52,19 +52,13 @@ namespace CoreText {
 
 		static CTBaselineClassID ()
 		{
-			var handle = Dlfcn.dlopen (Constants.CoreTextLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-				Roman = Dlfcn.GetStringConstant (handle, "kCTBaselineClassRoman");
-				IdeographicCentered = Dlfcn.GetStringConstant (handle, "kCTBaselineClassIdeographicCentered");
-				IdeographicLow = Dlfcn.GetStringConstant (handle, "kCTBaselineClassIdeographicLow");
-				IdeographicHigh = Dlfcn.GetStringConstant (handle, "kCTBaselineClassIdeographicHigh");
-				Hanging = Dlfcn.GetStringConstant (handle, "kCTBaselineClassHanging");
-				Math = Dlfcn.GetStringConstant (handle, "kCTBaselineClassMath");
-			} finally {
-				Dlfcn.dlclose (handle);
-			}
+			var handle = Libraries.CoreText.Handle;
+			Roman = Dlfcn.GetStringConstant (handle, "kCTBaselineClassRoman");
+			IdeographicCentered = Dlfcn.GetStringConstant (handle, "kCTBaselineClassIdeographicCentered");
+			IdeographicLow = Dlfcn.GetStringConstant (handle, "kCTBaselineClassIdeographicLow");
+			IdeographicHigh = Dlfcn.GetStringConstant (handle, "kCTBaselineClassIdeographicHigh");
+			Hanging = Dlfcn.GetStringConstant (handle, "kCTBaselineClassHanging");
+			Math = Dlfcn.GetStringConstant (handle, "kCTBaselineClassMath");
 		}
 
 		public static NSString ToNSString (CTBaselineClass key)
@@ -106,15 +100,9 @@ namespace CoreText {
 
 		static CTBaselineFondID ()
 		{
-			var handle = Dlfcn.dlopen (Constants.CoreTextLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-				Reference = Dlfcn.GetStringConstant (handle, "kCTBaselineReferenceFont");
-				Original = Dlfcn.GetStringConstant (handle, "kCTBaselineOriginalFont");
-			} finally {
-				Dlfcn.dlclose (handle);
-			}
+			var handle = Libraries.CoreText.Handle;
+			Reference = Dlfcn.GetStringConstant (handle, "kCTBaselineReferenceFont");
+			Original = Dlfcn.GetStringConstant (handle, "kCTBaselineOriginalFont");
 		}
 
 		public static NSString ToNSString (CTBaselineFont key)

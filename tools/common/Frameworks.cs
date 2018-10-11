@@ -13,6 +13,8 @@ public class Framework
 	public string Namespace;
 	public string Name;
 	public Version Version;
+	public Version VersionAvailableInSimulator;
+	public bool AlwaysWeakLinked;
 }
 
 public class Frameworks : Dictionary <string, Framework>
@@ -32,6 +34,11 @@ public class Frameworks : Dictionary <string, Framework>
 		Add (@namespace, @namespace, new Version (major_version, minor_version));
 	}
 
+	public void Add (string @namespace, string framework, int major_version, bool alwaysWeakLink)
+	{
+		Add (@namespace, framework, new Version (major_version, 0), null, alwaysWeakLink);
+	}
+
 	public void Add (string @namespace, string framework, int major_version, int minor_version)
 	{
 		Add (@namespace, framework, new Version (major_version, minor_version));
@@ -42,7 +49,7 @@ public class Frameworks : Dictionary <string, Framework>
 		Add (@namespace, framework, new Version (major_version, minor_version, build_version));
 	}
 
-	public void Add (string @namespace, string framework, Version version)
+	public void Add (string @namespace, string framework, Version version, Version version_available_in_simulator = null, bool alwaysWeakLink = false)
 	{
 		var fr = new Framework () {
 #if MTOUCH || MMP
@@ -51,7 +58,9 @@ public class Frameworks : Dictionary <string, Framework>
 			Namespace = @namespace,
 #endif
 			Name = framework,
-			Version = version
+			Version = version,
+			VersionAvailableInSimulator = version_available_in_simulator ?? version,
+			AlwaysWeakLinked = alwaysWeakLink,
 		};
 		base.Add (fr.Namespace, fr);
 	}
@@ -63,6 +72,8 @@ public class Frameworks : Dictionary <string, Framework>
 				return kvp.Value;
 		return null;
 	}
+
+	static Version NotAvailableInSimulator = new Version (int.MaxValue, int.MaxValue);
 
 	static Frameworks mac_frameworks;
 	public static Frameworks MacFrameworks {
@@ -161,6 +172,13 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "Vision", "Vision", 10, 13 },
 
 					{ "BusinessChat", "BusinessChat", 10, 13, 4 },
+
+					{ "AdSupport", "AdSupport", 10,14 },
+					{ "NaturalLanguage", "NaturalLanguage", 10,14 },
+					{ "Network", "Network", 10, 14 },
+					{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10,14 },
+					{ "UserNotifications", "UserNotifications", 10,14 },
+					{ "iTunesLibrary", "iTunesLibrary", 10,14 },
 				};
 			}
 			return mac_frameworks;
@@ -239,7 +257,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "CloudKit", "CloudKit", 8 },
 				{ "AVKit", "AVKit", 8 },
 				{ "CoreAudioKit", "CoreAudioKit", app.IsSimulatorBuild ? 9 : 8 },
-				{ "Metal", "Metal", 8 },
+				{ "Metal", "Metal", new Version (8, 0), new Version (9, 0) },
 				{ "WebKit", "WebKit", 8 },
 				{ "NetworkExtension", "NetworkExtension", 8 },
 				{ "VideoToolbox", "VideoToolbox", 8 },
@@ -252,7 +270,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "WatchConnectivity", "WatchConnectivity", 9 },
 				{ "ModelIO", "ModelIO", 9 },
 				{ "MetalKit", "MetalKit", 9 },
-				{ "MetalPerformanceShaders", "MetalPerformanceShaders", 9 },
+				{ "MetalPerformanceShaders", "MetalPerformanceShaders", new Version (9, 0), new Version (11, 0) /* MPS got simulator headers in Xcode 9 */ },
 				{ "GameplayKit", "GameplayKit", 9 },
 				{ "HealthKitUI", "HealthKitUI", 9,3 },
 
@@ -266,10 +284,10 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "IntentsUI", "IntentsUI", 10 },
 
 				{ "ARKit", "ARKit", 11 },
-				{ "CoreNFC", "CoreNFC", 11 },
-				{ "DeviceCheck", "DeviceCheck", 11 },
+				{ "CoreNFC", "CoreNFC", 11, true }, /* not always present, e.g. iPad w/iOS 12, so must be weak linked */
+				{ "DeviceCheck", "DeviceCheck", new Version (11, 0), NotAvailableInSimulator /* no headers provided for simulator */ },
 				{ "IdentityLookup", "IdentityLookup", 11 },
-				{ "IOSurface", "IOSurface", 11 },
+				{ "IOSurface", "IOSurface", new Version (11, 0), NotAvailableInSimulator /* Not available in the simulator (the header is there, but broken) */  },
 				{ "CoreML", "CoreML", 11 },
 				{ "Vision", "Vision", 11 },
 				{ "FileProvider", "FileProvider", 11 },
@@ -279,6 +297,12 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "BusinessChat", "BusinessChat", 11, 3 },
 
 				{ "ClassKit", "ClassKit", 11,4 },
+
+				{ "AuthenticationServices", "AuthenticationServices", 12,0 },
+				{ "CarPlay", "CarPlay", 12,0 },
+				{ "IdentityLookupUI", "IdentityLookupUI", 12,0 },
+				{ "NaturalLanguage", "NaturalLanguage", 12,0 },
+				{ "Network", "Network", 12, 0 },
 			};
 		}
 		return ios_frameworks;
@@ -317,7 +341,7 @@ public class Frameworks : Dictionary <string, Framework>
 				// AVFoundation was introduced in 3.0, but the simulator SDK was broken until 3.2.
 				{ "AVFoundation", "AVFoundation", 3, app.IsSimulatorBuild ? 2 : 0 },
 				{ "CloudKit", "CloudKit", 3 },
-				{ "GameKit", "GameKit", 3 },
+				{ "GameKit", "GameKit", new Version (3, 0), new Version (3, 2) /* No headers provided for watchOS/simulator until watchOS 3.2. */ },
 				{ "SceneKit", "SceneKit", 3 },
 				{ "SpriteKit", "SpriteKit", 3 },
 				{ "UserNotifications", "UserNotifications", 3 },
@@ -326,6 +350,9 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "CoreBluetooth", "CoreBluetooth", 4 },
 				{ "CoreML", "CoreML", 4 },
 				{ "CoreVideo", "CoreVideo", 4 },
+
+				{ "NaturalLanguage", "NaturalLanguage", 5 },
+				{ "MediaPlayer", "MediaPlayer", 5 },
 			};
 		}
 		return watch_frameworks;
@@ -366,7 +393,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "MediaToolbox", "MediaToolbox", 9 },
 					{ "Metal", "Metal", 9 },
 					{ "MetalKit", "MetalKit", 9 },
-					{ "MetalPerformanceShaders", "MetalPerformanceShaders", 9 },
+					{ "MetalPerformanceShaders", "MetalPerformanceShaders", new Version (9, 0), NotAvailableInSimulator /* not available in the simulator */ },
 					{ "CoreServices", "CFNetwork", 9 },
 					{ "MobileCoreServices", "MobileCoreServices", 9 },
 					{ "ModelIO", "ModelIO", 9 },
@@ -392,10 +419,14 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10 },
 					{ "VideoToolbox", "VideoToolbox", 10,2 },
 
-					{ "DeviceCheck", "DeviceCheck", 11 },
+					{ "DeviceCheck", "DeviceCheck", new Version (11, 0), NotAvailableInSimulator /* no headers provided for simulator */ },
 					{ "CoreML", "CoreML", 11 },
-					{ "IOSurface", "IOSurface", 11 },
+					{ "IOSurface", "IOSurface", new Version (11, 0), NotAvailableInSimulator /* Not available in the simulator (the header is there, but broken) */  },
 					{ "Vision", "Vision", 11 },
+
+					{ "NaturalLanguage", "NaturalLanguage", 12,0 },
+					{ "Network", "Network", 12, 0 } ,
+					{ "TVUIKit", "TVUIKit", 12,0 },
 				};
 			}
 			return tvos_frameworks;
@@ -403,7 +434,7 @@ public class Frameworks : Dictionary <string, Framework>
 	}
 #endif
 
-#if MTOUCH || MMP
+#if MMP
 	public static void Gather (Application app, AssemblyDefinition product_assembly, HashSet<string> frameworks, HashSet<string> weak_frameworks)
 	{
 		var namespaces = new HashSet<string> ();
@@ -415,8 +446,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 		// Iterate over all the namespaces and check which frameworks we need to link with.
 		foreach (var nspace in namespaces) {
-			Framework framework;
-			if (Driver.GetFrameworks (app).TryGetValue (nspace, out framework)) {
+			if (Driver.GetFrameworks (app).TryGetValue (nspace, out var framework)) {
 				if (app.SdkVersion >= framework.Version) {
 					var add_to = app.DeploymentTarget >= framework.Version ? frameworks : weak_frameworks;
 					add_to.Add (framework.Name);

@@ -12,7 +12,6 @@ namespace xharness
 		bool IsBCL => BCLInfo != null;
 
 		bool SkipProjectGeneration;
-		bool ThirtyTwoBit;
 		bool SkipSuffix;
 
 		public MacUnifiedTarget (bool mobile, bool thirtyTwoBit, bool shouldSkipProjectGeneration = false, bool skipSuffix = false) : base ()

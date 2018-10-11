@@ -13,6 +13,7 @@ using System.Drawing;
 #endif
 #if XAMCORE_2_0
 using Foundation;
+using ObjCRuntime;
 #if MONOMAC
 using AppKit;
 using UIFont = AppKit.NSFont;
@@ -188,6 +189,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void DrawingExtensions ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 11, throwIfOtherPlatform: false);
 
 			using (var s = new NSString ("foo")) {
 				NSStringDrawingOptions options = NSStringDrawingOptions.OneShot;

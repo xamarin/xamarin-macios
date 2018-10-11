@@ -15,9 +15,9 @@ namespace MonoTouch.Tuner {
 		{
 		}
 
-		protected override void SweepAssembly (AssemblyDefinition assembly)
+		protected override void SweepAssemblyDefinition (AssemblyDefinition assembly)
 		{
-			base.SweepAssembly (assembly);
+			base.SweepAssemblyDefinition (assembly);
 
 			if (assembly.HasCustomAttributes)
 				SweepAttributes (assembly.CustomAttributes);
@@ -35,9 +35,9 @@ namespace MonoTouch.Tuner {
 				// validating the public key and the public key token would be time consuming
 				// worse case (no match) is that we keep the attribute while it's not needed
 				var fqn = (ca.ConstructorArguments [0].Value as string);
-				int pk = fqn.IndexOf (", PublicKey=", StringComparison.OrdinalIgnoreCase);
-				if (pk != -1)
-					fqn = fqn.Substring (0, pk);
+				int comma = fqn.IndexOf (',');
+				if (comma != -1)
+					fqn = fqn.Substring (0, comma);
 
 				bool need_ivt = false;
 				foreach (var assembly in Context.GetAssemblies ()) {

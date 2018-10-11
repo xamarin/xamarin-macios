@@ -32,6 +32,7 @@ using ProductException=MonoMac.RuntimeException;
 using ObjCRuntime;
 #endif
 #else
+using System.Linq;
 using Mono.Cecil.Cil;
 #endif
 
@@ -297,6 +298,26 @@ namespace ObjCRuntime {
 			Show (new ProductException (code, false, innerException, message, args));
 		}
 
+#if MMP || MTOUCH
+		// Shows any warnings, and if there are any errors, throws an AggregateException.
+		public static void ThrowIfErrors (IList<Exception> exceptions)
+		{
+			if (exceptions?.Any () != true)
+				return;
+
+			// Separate warnings from errors
+			var grouped = exceptions.GroupBy ((v) => (v as ProductException)?.Error == false);
+
+			var warnings = grouped.SingleOrDefault ((v) => v.Key);
+			if (warnings?.Any () == true)
+				Show (warnings);
+
+			var errors = grouped.SingleOrDefault ((v) => !v.Key);
+			if (errors?.Any () == true)
+				throw new AggregateException (errors);
+		}
+#endif
+
 		public static void Show (IEnumerable<Exception> list)
 		{
 			List<Exception> exceptions = new List<Exception> ();
@@ -372,7 +393,7 @@ namespace ObjCRuntime {
 					Console.Error.WriteLine (e.StackTrace);
 #if MTOUCH || MMP
 			} else if (IsExpectedException == null || !IsExpectedException (e)) {
-				Console.Error.WriteLine ("error " + Prefix + "0000: Unexpected error - Please file a bug report at http://bugzilla.xamarin.com");
+				Console.Error.WriteLine ("error " + Prefix + "0000: Unexpected error - Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new");
 				Console.Error.WriteLine (e.ToString ());
 #endif
 			} else {

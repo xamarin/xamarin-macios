@@ -14,6 +14,7 @@ using System;
 using Foundation;
 using UIKit;
 using PassKit;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.PassKit;
@@ -30,9 +31,6 @@ namespace MonoTouchFixtures.PassKit {
 		[Test]
 		public void BoardingPass ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6,0))
-				Assert.Inconclusive ("PassKit is new in 6.0");
-
 			if (UIDevice.CurrentDevice.UserInterfaceIdiom != UIUserInterfaceIdiom.Phone)
 				Assert.Inconclusive ("PassKit does not work on iPads");
 
@@ -48,8 +46,8 @@ namespace MonoTouchFixtures.PassKit {
 		[Test]
 		public void InitWithNibNameTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
-				Assert.Inconclusive ("initWithNibName:bundle: returns nil in iOS 6");
+			// initWithNibName:bundle: returns nil in iOS 6
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			if (UIDevice.CurrentDevice.UserInterfaceIdiom != UIUserInterfaceIdiom.Phone)
 				Assert.Inconclusive ("PassKit does not work on iPads");
