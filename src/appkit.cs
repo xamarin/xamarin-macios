@@ -3731,7 +3731,7 @@ namespace AppKit {
 		NSColor SelectedControl { get; }
 
 		[Static]
-		[Deprecated (PlatformName.MacOSX)]
+		[Deprecated (PlatformName.MacOSX, message: "Use 'SelectedContentBackgroundColor' instead.")]
 		[Export ("secondarySelectedControlColor")]
 		NSColor SecondarySelectedControl { get; }
 
@@ -3822,7 +3822,7 @@ namespace AppKit {
 		NSColor HeaderText { get; }
 
 		[Static]
-		[Deprecated (PlatformName.MacOSX)]
+		[Deprecated (PlatformName.MacOSX, message : "Use 'SelectedContentBackgroundColor' instead.")]
 		[Export ("alternateSelectedControlColor")]
 		NSColor AlternateSelectedControl { get; }
 

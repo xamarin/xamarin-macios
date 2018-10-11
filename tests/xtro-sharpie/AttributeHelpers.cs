@@ -9,22 +9,37 @@ namespace Extrospection
 {
 	public static class AttributeHelpers
 	{
-		// These both return out Version and bool as you can have an an attribute with no version (null) which is different no matching attribute at all
-		public static bool FindDeprecated (IEnumerable<CustomAttribute> attributes, out Version version)
+		static bool Skip (ICustomAttributeProvider item)
 		{
-			foreach (var attribute in attributes.Where (x => HasDeprecated (x, Helpers.Platform)))
+			// Before accessing CustomAttributes we must query HasCustomAttributes
+			// else Cecil will happily allocate an empty collection and impact performance
+			return !item.HasCustomAttributes;
+		}
+
+		// These both return out Version and bool as you can have an an attribute with no version (null) which is different no matching attribute at all
+		public static bool FindDeprecated (ICustomAttributeProvider item, out Version version)
+		{
+			version = null;
+
+			if (Skip (item))
+				return false;
+
+			foreach (var attribute in item.CustomAttributes.Where (x => HasDeprecated (x, Helpers.Platform)))
 				return GetPlatformVersion (attribute, out version);
 
-			version = null;
 			return false;
 		}
 
-		public static bool FindObsolete (IEnumerable<CustomAttribute> attributes, out Version version)
+		public static bool FindObsolete (ICustomAttributeProvider item, out Version version)
 		{
-			foreach (var attribute in attributes.Where (x => HasObsoleted (x, Helpers.Platform)))
+			version = null;
+
+			if (Skip (item))
+				return false;
+
+			foreach (var attribute in item.CustomAttributes.Where (x => HasObsoleted (x, Helpers.Platform)))
 				return GetPlatformVersion (attribute, out version);
 
-			version = null;
 			return false;
 		}
 
@@ -39,11 +54,6 @@ namespace Extrospection
 					return true;
 			}
 			return false;
-		}
-
-		public static bool HasAdviced (IEnumerable<CustomAttribute> attributes)
-		{
-			return attributes.Any (x => x.Constructor.DeclaringType.Name == "AdviceAttribute");
 		}
 
 		static bool GetPlatformVersion (CustomAttribute attribute, out Version version)
@@ -77,6 +87,61 @@ namespace Extrospection
 				version = VersionTuple.Empty;
 				return false;
 			}
+		}
+
+		public static bool HasAnyDeprecationForCurrentPlatform (ICustomAttributeProvider item)
+		{
+			if (Skip (item))
+				return false;
+
+			// This allows us to accept [Deprecated (iOS)] for watch and tv, which many of our bindings currently have
+			// If we want to force seperate tv\watch attributes remove GetRelatedPlatforms and just check Helpers.Platform
+			Platforms[] platforms = GetRelatedPlatforms ();
+			foreach (var attribute in item.CustomAttributes) {
+				if (platforms.Any (x => AttributeHelpers.HasDeprecated (attribute, x)) || platforms.Any (x => AttributeHelpers.HasObsoleted (attribute, x)))
+					return true;
+			}
+			return false;
+		}
+
+		static Platforms[] GetRelatedPlatforms ()
+		{
+			// TV and Watch also implictly accept iOS
+			switch (Helpers.Platform) {
+			case Platforms.macOS:
+				return new Platforms[] { Platforms.macOS };
+			case Platforms.iOS:
+				return new Platforms[] { Platforms.iOS };
+			case Platforms.tvOS:
+				return new Platforms[] { Platforms.iOS, Platforms.tvOS };
+			case Platforms.watchOS:
+				return new Platforms[] { Platforms.iOS, Platforms.watchOS };
+			default:
+				throw new InvalidOperationException ($"Unknown {Helpers.Platform} in GetPlatforms");
+			}
+		}
+
+		public static bool HasAnyAdvice (ICustomAttributeProvider item)
+		{
+			if (Skip (item))
+				return false;
+
+			if (HasAdviced (item.CustomAttributes))
+				return true;
+
+			// Properties are a special case for [Advice], as it is generated on the property itself and not the individual get_ \ set_ methods
+			// Cecil does not have a link between the MethodDefinition we have and the hosting PropertyDefinition, so we have to dig to find the match
+			if (item is MethodDefinition method) {
+				PropertyDefinition property = method.DeclaringType.Properties.FirstOrDefault (p => p.GetMethod == method || p.SetMethod == method);
+				if (property != null && HasAdviced (property.CustomAttributes))
+					return true;
+			}
+			return false;
+		}
+
+		static bool HasAdviced (IEnumerable<CustomAttribute> attributes)
+		{
+			return attributes.Any (x => x.Constructor.DeclaringType.Name == "AdviceAttribute");
 		}
 	}
 }

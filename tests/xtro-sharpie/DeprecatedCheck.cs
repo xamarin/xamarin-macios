@@ -47,7 +47,7 @@ namespace Extrospection
 					return;
 
 				// If the entire type is deprecated, call it good enough
-				if (HasAnyDeprecationAttribute (managedType.CustomAttributes))
+				if (AttributeHelpers.HasAnyDeprecationForCurrentPlatform (managedType))
 					return;
 
 				var matchingMethod = managedType.Methods.FirstOrDefault (x => x.GetSelector () == selector && x.IsPublic);
@@ -63,29 +63,30 @@ namespace Extrospection
 				return;
 
 			// In some cases we've used [Advice] when entire types are deprecated
-			if (HasAnyAdviceAttribute (item))
+			// TODO - This is a hack, we shouldn't be doing ^
+			if (AttributeHelpers.HasAnyAdvice (item))
 				return;
 
-			if (!HasAnyDeprecationAttribute (item.CustomAttributes))
-			{
+			if (!AttributeHelpers.HasAnyDeprecationForCurrentPlatform (item)) {
 				Log.On (framework).Add ($"!deprecated-attribute-missing! {itemName} missing a [Deprecated] attribute");
 				return;
 			}
 
 			// Don't version check us when Apple does __attribute__((availability(macos, introduced=10.0, deprecated=100000)));
-			if (objcVersion.Major == 100000)
+			// #define __API_TO_BE_DEPRECATED 100000
+			if (objcVersion.Major == 100000) 
 				return;
 
 			// Some APIs have both a [Deprecated] and [Obsoleted]. Bias towards [Obsoleted].
 			Version managedVersion;
-			bool foundObsoleted = AttributeHelpers.FindObsolete (item.CustomAttributes, out managedVersion);
+			bool foundObsoleted = AttributeHelpers.FindObsolete (item, out managedVersion);
 			if (foundObsoleted) {
 				if (managedVersion != null && !ManagedBeforeOrEqualToObjcVersion (objcVersion, managedVersion))
 					Log.On (framework).Add ($"!deprecated-attribute-wrong! {itemName} has {managedVersion} not {objcVersion} on [Obsoleted] attribute");
 				return;
 			}
 
-			bool foundDeprecated = AttributeHelpers.FindDeprecated (item.CustomAttributes, out managedVersion);
+			bool foundDeprecated = AttributeHelpers.FindDeprecated (item, out managedVersion);
 			if (foundDeprecated && managedVersion != null && !ManagedBeforeOrEqualToObjcVersion (objcVersion, managedVersion))
 				Log.On (framework).Add ($"!deprecated-attribute-wrong! {itemName} has {managedVersion} not {objcVersion} on [Deprecated] attribute");
 		}
@@ -94,51 +95,6 @@ namespace Extrospection
 		{
 			// Often header files will soft deprecate APIs versions before a formal deprecation (10.7 soft vs 10.10 formal). Accept older deprecation values
 			return managedVersion <= VersionHelpers.Convert (objcVersionTuple);
-		}
-
-		static bool HasAnyAdviceAttribute (ICustomAttributeProvider item)
-		{
-			if (AttributeHelpers.HasAdviced (item.CustomAttributes))
-				return true;
-
-			// Properites are a special case for [Advice], as it is generated on the property itself and not the individual get_ \ set_ methods
-			// Cecil does not have a link between the MethodDefinition we have and the hosting PropertyDefinition, so we have to dig to find the match
-			if (item is MethodDefinition method) {
-				PropertyDefinition property = method.DeclaringType.Properties.FirstOrDefault (p => p.GetMethod == method || p.SetMethod == method);
-				if (property != null && AttributeHelpers.HasAdviced (property.CustomAttributes))
-					return true;
-			}
-			return false;
-		}
-
-		static bool HasAnyDeprecationAttribute (IEnumerable<CustomAttribute> attributes)
-		{
-			// This allows us to accept [Deprecated (iOS)] for watch and tv, which many of our bindings currently have
-			// If we want to force seperate tv\watch attributes remove GetRelatedPlatforms and just check Helpers.Platform
-			Platforms[] platforms = GetRelatedPlatforms ();
-			foreach (var attribute in attributes) {
-				if (platforms.Any (x => AttributeHelpers.HasDeprecated (attribute, x)) || platforms.Any (x => AttributeHelpers.HasObsoleted (attribute, x)))
-					return true;
-			}
-			return false;
-		}
-
-		static Platforms[] GetRelatedPlatforms ()
-		{
-			// TV and Watch also implictly accept iOS
-			switch (Helpers.Platform)
-			{
-			case Platforms.macOS:
-				return new Platforms[] { Platforms.macOS };
-			case Platforms.iOS:
-				return new Platforms[] { Platforms.iOS };
-			case Platforms.tvOS:
-				return new Platforms[] { Platforms.iOS, Platforms.tvOS };
-			case Platforms.watchOS:
-				return new Platforms[] { Platforms.iOS, Platforms.watchOS };
-			default:
-				throw new InvalidOperationException ($"Unknown {Helpers.Platform} in GetPlatforms");
-			}
 		}
 
 		public override void VisitManagedType (TypeDefinition type)
