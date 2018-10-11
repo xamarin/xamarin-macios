@@ -773,7 +773,9 @@ namespace Introspection {
 #endif
 			case "UIUserActivityRestoring":
 				// A bunch of types started implementing UIUserActivityRestoring in iOS 12.
-				return !TestRuntime.CheckXcodeVersion (10, 0);
+				if (!TestRuntime.CheckXcodeVersion (10, 0))
+					return true;
+				break;
 			}
 			return base.Skip (type, protocolName);
 		}
