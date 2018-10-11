@@ -46,6 +46,9 @@ Copyright (C) 2014-2016 Xamarin. All rights reserved.
 		<DefineConstants Condition="!$(_IsUnifiedDefined)">__UNIFIED__;$(DefineConstants)</DefineConstants>
 		<DefineConstants Condition="!$(_IsMobileDefined)">__MOBILE__;$(DefineConstants)</DefineConstants>
 		<DefineConstants Condition="!$(_IsIOSDefined)">__IOS__;$(DefineConstants)</DefineConstants>
+
+		<!-- Enable nuget package conflict resolution -->
+		<ResolveAssemblyConflicts>true</ResolveAssemblyConflicts>
 	</PropertyGroup>
 	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 	<Import Project="Xamarin.iOS.AppExtension.Common.targets" />
