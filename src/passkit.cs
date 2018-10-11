@@ -105,7 +105,7 @@ namespace PassKit {
 
 		[NoWatch]
 		[iOS (8,0)]
-		[Deprecated (PlatformName.iOS, 9, 0, message: "Use `ActivatePaymentPass (PKPaymentPass, NSData, Action<bool, NSError> completion)` instead.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'ActivatePaymentPass (PKPaymentPass, NSData, Action<bool, NSError> completion)' instead.")]
 		[Async]
 		[Export ("activatePaymentPass:withActivationCode:completion:")]
 		void ActivatePaymentPass (PKPaymentPass paymentPass, string activationCode, [NullAllowed] Action<bool, NSError> completion);
