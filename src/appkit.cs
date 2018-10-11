@@ -3831,7 +3831,7 @@ namespace AppKit {
 		NSColor AlternateSelectedControlText { get; }
 
 		[Static]
-		[Advice ("Use 'AlternatingContentBackgroundColors instead.")]
+		[Advice ("Use 'AlternatingContentBackgroundColors' instead.")]
 		[Export ("controlAlternatingRowBackgroundColors")]
 		NSColor [] ControlAlternatingRowBackgroundColors ();
 
@@ -5771,7 +5771,7 @@ namespace AppKit {
 		[Export ("makeDocumentWithContentsOfURL:ofType:error:")]
 		NSObject MakeDocument (NSUrl url, string typeName, out NSError outError);
 
-		[Deprecated (PlatformName.MacOSX, 10, 7, message: "Use 'ReopenDocumentForUrl (NSUrl, NSUrl, bool, OpenDocumentCompletionHandler)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 7, message: "Use 'NSDocumentController.ReopenDocumentForUrl (NSUrl, NSUrl, bool, OpenDocumentCompletionHandler)' instead.")]
 		[Export ("reopenDocumentForURL:withContentsOfURL:error:")]
 		bool ReopenDocument (NSUrl url, NSUrl contentsUrl, out NSError outError);
 
@@ -6828,11 +6828,11 @@ namespace AppKit {
 		[Export ("removeCollection:")]
 		bool RemoveCollection (string collectionName);
 
-		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSMutableFontCollection AddQueryForDescriptors' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSMutableFontCollection.AddQueryForDescriptors' instead.")]
 		[Export ("addFontDescriptors:toCollection:")]
 		void AddFontDescriptors (NSFontDescriptor [] descriptors, string collectionName);
 
-		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSMutableFontCollection RemoveQueryForDescriptors' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSMutableFontCollection.RemoveQueryForDescriptors' instead.")]
 		[Export ("removeFontDescriptor:fromCollection:")]
 		void RemoveFontDescriptor (NSFontDescriptor descriptor, string collection);
 
@@ -14340,7 +14340,6 @@ namespace AppKit {
 		[Export ("playbackDeviceIdentifier")]
 		string PlaybackDeviceID { get; set; }
 
-		// FIXME: Poor docs, no type defined for the array elements
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("channelMapping")]
 		NSObject ChannelMapping { get; set; }

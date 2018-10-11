@@ -1817,8 +1817,8 @@ namespace CoreData
 		[return: NullAllowed]
 		NSDictionary<NSString, NSObject> GetMetadata (string storeType, NSUrl url, [NullAllowed] NSDictionary options, out NSError error);
 
-		[Deprecated (PlatformName.iOS, 9, 0, message:"Use the method that takes an out NSError parameter.")]
-		[Deprecated (PlatformName.MacOSX, 10, 11, message:"Use the method that takes an out NSError parameter.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message : "Use the method that takes an 'out NSError' parameter.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use the method that takes an 'out NSError' parameter.")]
 		[Static, Export ("setMetadata:forPersistentStoreOfType:URL:error:")]
 		bool SetMetadata (NSDictionary metadata, NSString storeType, NSUrl url, out NSError error);
 		

@@ -1712,7 +1712,7 @@ namespace UIKit {
 
 	[NoTV]
 	[BaseType (typeof (UIView), KeepRefUntil="Dismissed", Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(UIActionSheetDelegate)})]
-	[Deprecated (PlatformName.iOS, 8, 3, message: "Use UIAlertController with 'UIAlertControllerStyle.ActionSheet' instead.")]
+	[Deprecated (PlatformName.iOS, 8, 3, message: "Use 'UIAlertController' with 'UIAlertControllerStyle.ActionSheet' instead.")]
 	interface UIActionSheet {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
@@ -14899,7 +14899,7 @@ namespace UIKit {
 		
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(UIPopoverControllerDelegate)})]
 	[DisableDefaultCtor] // bug #1786
-	[Deprecated (PlatformName.iOS, 9, 0, message: "Use UIViewController with style of 'UIModalPresentationStyle.Popover' or UIPopoverPresentationController' instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'UIViewController' with style of 'UIModalPresentationStyle.Popover' or UIPopoverPresentationController' instead.")]
 	interface UIPopoverController : UIAppearanceContainer {
 		[Export ("initWithContentViewController:")][PostGet ("ContentViewController")]
 		IntPtr Constructor (UIViewController viewController);
