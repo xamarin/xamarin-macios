@@ -13492,10 +13492,9 @@ namespace Foundation
 		NSDimension BaseUnit { get; }
 	}
 
-#if !WATCH && !TVOS
-	[Mac (10,8), iOS (11,0), NoWatch, NoTV]
 	partial interface NSFileManager {
 
+		[iOS (11, 0), NoTV, NoWatch]
 		[Mac (10, 8), Export ("trashItemAtURL:resultingItemURL:error:")]
 		bool TrashItem (NSUrl url, out NSUrl resultingItemUrl, out NSError error);
 
@@ -13515,7 +13514,6 @@ namespace Foundation
 		[Export ("name")]
 		string Name { get; }
 	}
-#endif
 
 #if MONOMAC
 	partial interface NSFilePresenter {
