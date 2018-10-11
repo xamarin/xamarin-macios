@@ -4,8 +4,8 @@ MONO_ROOT:=../../../external/mono/
 # similar to a dict, we create diff projects, then add the assemblies we want for each of the projects
 # that way, we can match a project with more than one assembly since some test assemblies are small
 # and we reduce the compilation
-TEST_PROJECTS:=foo bar baz poo
-export foo_VALUE:=MONOTOUCH_System.Xml_test.dll MONOTOUCH_System.Xml.Linq_test.dll
+TEST_PROJECTS:=first bar baz poo
+export first_VALUE:=MONOTOUCH_System.Xml_test.dll MONOTOUCH_System.Xml.Linq_test.dll
 export bar_VALUE:=MONOTOUCH_System.Transactions_test.dll
 export baz_VALUE:=MONOTOUCH_System.Threading.Tasks.Dataflow_test.dll
 export poo_VALUE:=MONOTOUCH_System.ServiceModel_test.dll MONOTOUCH_System.ServiceModel.Web_test.dll
@@ -42,7 +42,9 @@ build-test-projects: generate-test-projects
 all: build-test-projects
 
 clean:
-	msbuild /target:Clean BCLTestImporter/BCLTestImporter.sln
-	@rm -Rf ./BCLTestImporter/bin
-	@rm -Rf ./BCLTestImporter/obj
-	@rm bcl-test-importer
+	@for p in ${TEST_PROJECTS}; do \
+		rm -Rf ./$$p.csproj ;\
+	done
+	@rm -Rf ./bin
+	@rm -Rf ./obj
+	@rm -f bcl-test-importer
