@@ -15866,6 +15866,7 @@ namespace AppKit {
 		[Export ("performMnemonic:")]
 		bool PerformMnemonic (string mnemonic);
 
+		[NullAllowed]
 		[Export ("nextKeyView")]
 		NSView NextKeyView { get; set; }
 
