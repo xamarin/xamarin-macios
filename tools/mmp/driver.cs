@@ -1349,7 +1349,7 @@ namespace Xamarin.Bundler {
 				if (embed_mono) {
 					string libmono = Path.Combine (libdir, "libmonosgen-2.0.a");
 
-					if (!File.Exists (Path.Combine (libmono)))
+					if (!File.Exists (libmono))
 						throw new MonoMacException (5202, true, "Mono.framework MDK is missing. Please install the MDK for your Mono.framework version from http://mono-project.com/Downloads");
 
 					args.Append (StringUtils.Quote (libmono)).Append (' ');
