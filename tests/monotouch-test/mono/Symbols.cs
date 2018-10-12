@@ -26,7 +26,13 @@ namespace MonoTouchFixtures {
 				Assert.Ignore ("This is a device-only test.");
 			
 			Collect ();
-			Assert.That (symbols [1], Contains.Substring ("MonoTouchFixtures_Symbols_Collect"), "#1");
+			bool aot = symbols [1].Contains ("MonoTouchFixtures_Symbols_Collect");
+			/* ves_pinvoke_method (slow path) and do_icall (fast path) are
+			 * MONO_NEVER_INLINE, so they should show up in the backtrace
+			 * reliably */
+			bool interp = symbols [1].Contains ("ves_pinvoke_method") || symbols [1].Contains ("do_icall");
+
+			Assert.IsTrue (aot || interp, "#1");
 		}
 
 		void Collect ()
