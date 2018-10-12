@@ -5209,7 +5209,16 @@ namespace Foundation
 
 		[Watch (5,0), NoTV, NoMac, iOS (12,0)]
 		[NullAllowed, Export ("suggestedInvocationPhrase")]
-		string SuggestedInvocationPhrase { get; set; }
+		string SuggestedInvocationPhrase {
+			// This _simply_ ensure that the Intents namespace (via the enum) will be present which,
+			// in turns, means that the Intents.framework is loaded into memory and this makes the
+			// selectors (getter and setter) work at runtime. Other selectors do not need it.
+			// reference: https://github.com/xamarin/xamarin-macios/issues/4894
+			[PreSnippet ("GC.KeepAlive (Intents.INCallCapabilityOptions.AudioCall); // no-op to ensure Intents.framework is loaded into memory")]
+			get;
+			[PreSnippet ("GC.KeepAlive (Intents.INCallCapabilityOptions.AudioCall); // no-op to ensure Intents.framework is loaded into memory")]
+			set;
+		}
 
 		[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
 		[Export ("eligibleForPrediction")]
