@@ -1125,14 +1125,15 @@ namespace Xamarin.Bundler
 						if (optimizations.Count == 0) {
 							compiler_flags.AddOtherFlag ("-O2");
 						} else if (optimizations.Count == 1) {
-							compiler_flags.AddOtherFlag (optimizations [0]);
+							compiler_flags.AddOtherFlag (optimizations[0]);
 						} else {
 							throw ErrorHelper.CreateError (107, "The assemblies '{0}' have different custom LLVM optimizations ('{1}'), which is not allowed when they are all compiled to a single binary.", string.Join (", ", assemblies.Select ((v) => v.Identity)), string.Join ("', '", optimizations));
 						}
 					}
 
-					var link_task = new LinkTask ()
-					{
+					HandleMonoNative (App, compiler_flags);
+
+					var link_task = new LinkTask () {
 						Target = this,
 						Abi = abi,
 						OutputFile = compiler_output,
@@ -1536,6 +1537,8 @@ namespace Xamarin.Bundler
 				linker_flags.AddOtherFlag ("-fapplication-extension");
 			}
 
+			HandleMonoNative (App, linker_flags);
+
 			link_task = new NativeLinkTask
 			{
 				Target = this,
@@ -1545,6 +1548,26 @@ namespace Xamarin.Bundler
 			link_task.AddDependency (link_with_task_output);
 			link_task.AddDependency (aot_dependencies);
 			build_tasks.Add (link_task);
+		}
+
+		static void HandleMonoNative (Application app, CompilerFlags compiler_flags)
+		{
+			if (app.MonoNativeMode == MonoNativeMode.None)
+				return;
+			var libnative = app.GetLibNativeName ();
+			var libdir = Driver.GetMonoTouchLibDirectory (app);
+			switch (app.LibMonoNativeLinkMode) {
+			case AssemblyBuildTarget.DynamicLibrary:
+				libnative = Path.Combine (libdir, libnative + ".dylib");
+				compiler_flags.AddLinkWith (libnative);
+				break;
+			case AssemblyBuildTarget.StaticObject:
+				libnative = Path.Combine (libdir, libnative + ".a");
+				compiler_flags.AddLinkWith (libnative);
+				break;
+			default:
+				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).", app.LibMonoLinkMode);
+			}
 		}
 
 		public static void AdjustDylibs (string output)

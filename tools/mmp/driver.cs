@@ -66,6 +66,13 @@ namespace Xamarin.Bundler {
 		RunRegistrar,
 	}
 
+	public enum MonoNativeMode {
+		None,
+		Compat,
+		Unified,
+		Combined
+	}
+
 	public static partial class Driver {
 		internal const string NAME = "mmp";
 		internal static Application App = new Application (Environment.GetCommandLineArgs ());
@@ -133,6 +140,7 @@ namespace Xamarin.Bundler {
 		public static bool IsUnifiedMobile { get; private set; }
 		public static bool IsUnified { get { return IsUnifiedFullSystemFramework || IsUnifiedMobile || IsUnifiedFullXamMacFramework; } }
 		public static bool IsClassic { get { return !IsUnified; } }
+		public static MonoNativeMode MonoNativeMode { get; private set; }
 
 		public static bool Is64Bit { 
 			get {
@@ -498,6 +506,15 @@ namespace Xamarin.Bundler {
 			else
 				Profile.Current = new MacMobileProfile (arch == "x86_64" ? 64 : 32);
 
+			if (IsUnifiedFullSystemFramework || IsUnifiedFullSystemFramework)
+				MonoNativeMode = MonoNativeMode.Combined;
+			else if (IsClassic)
+				MonoNativeMode = MonoNativeMode.None;
+			else if (App.SdkVersion >= new Version (10, 12))
+				MonoNativeMode = MonoNativeMode.Unified;
+			else
+				MonoNativeMode = MonoNativeMode.Compat;
+
 			App.InitializeCommon ();
 
 			Log ("Xamarin.Mac {0}.{1}", Constants.Version, Constants.Revision);
@@ -837,6 +854,8 @@ namespace Xamarin.Bundler {
 			BuildTarget.ComputeLinkerFlags ();
 			BuildTarget.GatherFrameworks ();
 
+			CopyMonoNative ();
+
 			CopyDependencies (native_libs);
 			Watch ("Copy Dependencies", 1);
 
@@ -883,6 +902,35 @@ namespace Xamarin.Bundler {
 				CodeSign ();
 				Watch ("Code Sign", 1);
 			}
+		}
+
+		static void CopyMonoNative ()
+		{
+			string name;
+			switch (MonoNativeMode) {
+			case MonoNativeMode.None:
+				return;
+			case MonoNativeMode.Unified:
+				name = "libmono-native-unified";
+				break;
+			case MonoNativeMode.Compat:
+				name = "libmono-native-compat";
+				break;
+			case MonoNativeMode.Combined:
+				name = "libmono-native";
+				break;
+			default:
+				throw ErrorHelper.CreateError (100, $"Invalid mono native type: '{MonoNativeMode}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).");
+			}
+
+			var src = Path.Combine (MonoDirectory, "lib", name + ".dylib");
+			var dest = Path.Combine (mmp_dir, "libmono-native.dylib");
+			Watch ($"Adding mono-native library {name} for {MonoNativeMode}.", 1);
+
+			CopyFileAndRemoveReadOnly (src, dest);
+
+			if (App.Optimizations.TrimArchitectures == true)
+				LipoLibrary (src, dest);
 		}
 
 		static void ExtractNativeLinkInfo ()
@@ -1357,9 +1405,24 @@ namespace Xamarin.Bundler {
 
 					args.Append (StringUtils.Quote (lib)).Append (' ');
 
-					var libsystem_native_path = Path.Combine (libdir, "libmono-system-native.a");
-					args.Append (StringUtils.Quote (libsystem_native_path)).Append (' ');
-					args.Append ("-u ").Append ("_SystemNative_RealPath").Append (' '); // This keeps libmono_system_native_la-pal_io.o symbols
+					if (MonoNativeMode != MonoNativeMode.None) {
+						string libmono_native_name;
+						switch (MonoNativeMode) {
+						case MonoNativeMode.Unified:
+							libmono_native_name = "libmono-native-unified";
+							break;
+						case MonoNativeMode.Compat:
+							libmono_native_name = "libmono-native-compat";
+							break;
+						case MonoNativeMode.Combined:
+							libmono_native_name = "libmono-native";
+							break;
+						default:
+							throw ErrorHelper.CreateError (100, $"Invalid mono native type: '{MonoNativeMode}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).");
+						}
+
+						args.Append (StringUtils.Quote (Path.Combine (libdir, libmono_native_name + ".a"))).Append (' ');
+					}
 
 					if (profiling.HasValue && profiling.Value) {
 						args.Append (StringUtils.Quote (Path.Combine (libdir, "libmono-profiler-log.a"))).Append (' ');
@@ -1629,6 +1692,8 @@ namespace Xamarin.Bundler {
 			case "gamin-1.so.0":	// msvcrt pulled in
 			case "asound.so.2":	// msvcrt pulled in
 			case "oleaut32": // referenced by System.Runtime.InteropServices.Marshal._[S|G]etErrorInfo
+			case "system.native":	// handled by ProcessMonoNative()
+			case "system.security.cryptography.native.apple": // same
 				return true;
 			}
 			// Shutup the warning until we decide on bug: 36478
