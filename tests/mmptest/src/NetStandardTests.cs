@@ -31,7 +31,7 @@ namespace Xamarin.MMP.Tests {
 
 			string netStandardProject = TI.GenerateNetStandardProject (config);
 			TI.RunAndAssert("/usr/local/share/dotnet/dotnet", $"restore {netStandardProject}", "Restore");
-			TI.BuildProject(netStandardProject, true, useMSBuild: true);
+			TI.BuildProject(netStandardProject, true);
 
 			config.ItemGroup = $@"
 <ItemGroup>
@@ -49,7 +49,7 @@ namespace Xamarin.MMP.Tests {
 			config.CSProjConfig = "<MonoBundlingExtraArgs>--registrar=dynamic</MonoBundlingExtraArgs>";
 			config.XM45 = full;
 
-			TI.TestUnifiedExecutable(config, useMSBuild: true);
+			TI.TestUnifiedExecutable(config);
 		}
 	}
 }

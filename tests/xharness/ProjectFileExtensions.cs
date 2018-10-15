@@ -822,7 +822,7 @@ namespace xharness
 				new string [] { "ObjcBindingCoreSource", "Include" },
 				new string [] { "ObjcBindingNativeLibrary", "Include" },
 				new string [] { "ObjcBindingNativeFramework", "Include" },
-				new string [] { "Import", "Project" },
+				new string [] { "Import", "Project", "CustomBuildActions.targets", "../SyncTestResources.targets" },
 				new string [] { "FilesToCopy", "Include" },
 				new string [] { "FilesToCopyFoo", "Include" },
 				new string [] { "FilesToCopyFooBar", "Include" },
@@ -870,10 +870,19 @@ namespace xharness
 					var a = node.Attributes [attrib];
 					if (a == null)
 						continue;
+
+					// entries after index 2 is a list of values to filter the attribute value against.
+					var found = kvp.Length == 2;
+					var skipLogicalName = kvp.Length > 2;
+					for (var i = 2; i < kvp.Length; i++)
+						found |= a.Value == kvp [i];
+					if (!found)
+						continue;
+					
 					// Fix any default LogicalName values (but don't change existing ones).
 					var ln = node.SelectElementNodes ("LogicalName")?.SingleOrDefault ();
 					var links = node.SelectElementNodes ("Link");
-					if (ln == null && !links.Any ()) {
+					if (!skipLogicalName && ln == null && !links.Any ()) {
 						ln = csproj.CreateElement ("LogicalName", MSBuild_Namespace);
 						node.AppendChild (ln);
 
