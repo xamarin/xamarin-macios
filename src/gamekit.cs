@@ -792,6 +792,8 @@ namespace GameKit {
 		void GenerateIdentityVerificationSignature ([NullAllowed] GKIdentityVerificationSignatureHandler completionHandler);
 
 		[iOS (8,0), Mac (10,10)]
+		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Async]
 		[Export ("loadFriendPlayersWithCompletionHandler:")]
 		void LoadFriendPlayers ([NullAllowed] Action<GKPlayer [], NSError> completionHandler);
@@ -936,7 +938,7 @@ namespace GameKit {
 
 		[NoTV]
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'StateChangedForPlayer (GKMatch,GKPlayer,GKPlayerConnectionState)' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'StateChangedForPlayer (GKMatch,GKPlayer,GKPlayerConnectionState)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 8, message : "Use 'StateChangedForPlayer (GKMatch,GKPlayer,GKPlayerConnectionState)' instead.")]
 		[Export ("match:player:didChangeState:"), EventArgs ("GKState")]
 		void StateChanged (GKMatch match, string playerId, GKPlayerConnectionState state);
 
@@ -1060,6 +1062,8 @@ namespace GameKit {
 		[NoTV]
 		[NoWatch]
 		[NullAllowed] // by default this property is null
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'Recipients' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use 'Recipients' instead.")]
 		[Export ("playersToInvite", ArgumentSemantic.Retain)]
 		string [] PlayersToInvite { get; set;  }
 
@@ -1129,6 +1133,8 @@ namespace GameKit {
 		GKMatchmaker SharedMatchmaker { get; }
 
 		[NoTV]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'GKLocalPlayer.RegisterListener' with an object that implements 'IGKInviteEventListenerProtocol'.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use 'GKLocalPlayer.RegisterListener' with an object that implements 'IGKInviteEventListenerProtocol'.")]
 		[NullAllowed, Export ("inviteHandler", ArgumentSemantic.Copy)]
 		GKInviteHandler InviteHandler { get; set; }
 
