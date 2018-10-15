@@ -312,7 +312,8 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 		public void SecRecordRecordTest ()
 		{
-			TestRuntime.AssertNotWatchOS ("X509Certificate (byte[]) doesn't work on watchOS");
+			// MARTIN FIXME
+			// TestRuntime.AssertNotWatchOS ("X509Certificate (byte[]) doesn't work on watchOS");
 
 			using (var cert = new X509Certificate (CertificateTest.mail_google_com))
 			using (var sc = new SecCertificate (cert))
