@@ -359,9 +359,9 @@ namespace Xamarin.MMP.Tests
 
 					// And try again. 
 					// If we fail, we'll likley fail with "did not generate an exe" before returning but let's check anyway
-					string secondBuildOutput = TI.BuildProject (Path.Combine (tmpDir, TI.GetUnifiedExecutableProjectName (test)), true, diagnosticMSBuild: true);
+					string secondBuildOutput = TI.BuildProject (Path.Combine (tmpDir, TI.GetUnifiedExecutableProjectName (test)), true);
 					Assert.IsTrue (!secondBuildOutput.Contains ("Skipping target \"_CompileToNative"), "Did not skip");
-					Assert.IsTrue (secondBuildOutput.Contains ("CompileToNative needs to be built as output file"), "Did need to build");
+					Assert.IsTrue (secondBuildOutput.Contains ("Building target \"_CompileToNative\" completely"), "Did need to build");
 				}
 			});
 		}	
@@ -685,15 +685,15 @@ namespace Xamarin.MMP.Tests
 
 				string project = TI.GenerateUnifiedExecutableProject (test);
 
-				string buildOutput = TI.BuildProject (project, true, diagnosticMSBuild: true, useMSBuild: true);
+				string buildOutput = TI.BuildProject (project, true);
 				Assert.True (buildOutput.Contains ("actool execution started with arguments"), $"Initial build should run actool");
 
-				buildOutput = TI.BuildProject (project, true, diagnosticMSBuild: true, useMSBuild: true);
+				buildOutput = TI.BuildProject (project, true);
 				Assert.False (buildOutput.Contains ("actool execution started with arguments"), $"Second build should not run actool");
 
 				TI.RunAndAssert ("touch", Path.Combine (tmpDir, "Assets.xcassets/AppIcon.appiconset/AppIcon-256@2x.png"), "touch icon");
 
-				buildOutput = TI.BuildProject (project, true, diagnosticMSBuild: true, useMSBuild: true);
+				buildOutput = TI.BuildProject (project, true);
 				Assert.True (buildOutput.Contains ("actool execution started with arguments"), $"Build after touching icon must run actool");
 			});
 		}

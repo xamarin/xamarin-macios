@@ -55,7 +55,7 @@ namespace Xamarin.iOS.Tasks
 				arguments = string.Format ("{0} /p:TargetFrameworkIdentifier={1}", arguments, targetFrameworkIdentifier);
 			}
 			
-			var psi = new ProcessStartInfo ("/Library/Frameworks/Mono.framework/Commands/xbuild", arguments);
+			var psi = new ProcessStartInfo ("/Library/Frameworks/Mono.framework/Commands/msbuild", arguments);
 
 			psi.UseShellExecute = false;
 			psi.RedirectStandardError = true;
