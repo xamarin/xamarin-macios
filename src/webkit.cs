@@ -4115,6 +4115,7 @@ namespace WebKit {
 
 	[BaseType (typeof (DomHtmlElement), Name="DOMHTMLTableSectionElement")]
 	[DisableDefaultCtor] // ObjCException: +[<TYPE> init]: should never be used
+	[Deprecated (PlatformName.MacOSX, 10, 14)]
 	interface DomHtmlTableSectionElement {
 
 		[Export ("align")]

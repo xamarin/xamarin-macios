@@ -161,6 +161,7 @@ namespace CoreTelephony {
 	[iOS (7,0)]
 	partial interface CTSubscriber {
 		[iOS (7,0), Export ("carrierToken")]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		NSData CarrierToken { get; }
 
 		[iOS (12,1)]

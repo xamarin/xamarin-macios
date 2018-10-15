@@ -3731,6 +3731,7 @@ namespace AppKit {
 		NSColor SelectedControl { get; }
 
 		[Static]
+		[Deprecated (PlatformName.MacOSX, message: "Use 'SelectedContentBackgroundColor' instead.")]
 		[Export ("secondarySelectedControlColor")]
 		NSColor SecondarySelectedControl { get; }
 
@@ -3821,6 +3822,7 @@ namespace AppKit {
 		NSColor HeaderText { get; }
 
 		[Static]
+		[Deprecated (PlatformName.MacOSX, message : "Use 'SelectedContentBackgroundColor' instead.")]
 		[Export ("alternateSelectedControlColor")]
 		NSColor AlternateSelectedControl { get; }
 
@@ -3829,6 +3831,7 @@ namespace AppKit {
 		NSColor AlternateSelectedControlText { get; }
 
 		[Static]
+		[Advice ("Use 'AlternatingContentBackgroundColors' instead.")]
 		[Export ("controlAlternatingRowBackgroundColors")]
 		NSColor [] ControlAlternatingRowBackgroundColors ();
 
@@ -5757,6 +5760,7 @@ namespace AppKit {
 		[Export ("runModalOpenPanel:forTypes:")]
 		nint RunModalOpenPanel (NSOpenPanel openPanel, string [] types);
 
+		[Deprecated (PlatformName.MacOSX, 10, 7, message: "Use 'OpenDocument (NSUrl, bool, OpenDocumentCompletionHandler)' instead.")]
 		[Export ("openDocumentWithContentsOfURL:display:error:")]
 		NSObject OpenDocument (NSUrl url, bool displayDocument, out NSError outError);
 
@@ -5767,6 +5771,7 @@ namespace AppKit {
 		[Export ("makeDocumentWithContentsOfURL:ofType:error:")]
 		NSObject MakeDocument (NSUrl url, string typeName, out NSError outError);
 
+		[Deprecated (PlatformName.MacOSX, 10, 7, message: "Use 'NSDocumentController.ReopenDocumentForUrl (NSUrl, NSUrl, bool, OpenDocumentCompletionHandler)' instead.")]
 		[Export ("reopenDocumentForURL:withContentsOfURL:error:")]
 		bool ReopenDocument (NSUrl url, NSUrl contentsUrl, out NSError outError);
 
@@ -6790,6 +6795,7 @@ namespace AppKit {
 		[Export ("sendAction")]
 		bool SendAction { get; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Export ("delegate", ArgumentSemantic.Assign)][NullAllowed]
 		NSObject WeakDelegate { get; set; } 
 
@@ -6802,24 +6808,31 @@ namespace AppKit {
 		[Export ("convertAttributes:")]
 		NSDictionary ConvertAttributes (NSDictionary attributes);
 
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSFontDescriptor.MatchingFontDescriptors' instead.")]
 		[Export ("availableFontNamesMatchingFontDescriptor:")]
 		string [] AvailableFontNamesMatchingFontDescriptor (NSFontDescriptor descriptor);
 
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSFontCollection.AllFontCollectionNames' instead.")]
 		[Export ("collectionNames")]
 		string [] CollectionNames { get; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSFontCollection.GetMatchingDescriptors ()' instead.")]
 		[Export ("fontDescriptorsInCollection:")]
 		NSArray FontDescriptorsInCollection (string collectionNames);
 
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSFontCollection.ShowFontCollection (NSFontCollection, string, NSFontCollectionVisibility, out NSError)' instead.")]
 		[Export ("addCollection:options:")]
 		bool AddCollection (string collectionName, NSFontCollectionOptions collectionOptions);
 
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'HideFontCollection (string, NSFontCollectionVisibility, out NSError)' instead.")]
 		[Export ("removeCollection:")]
 		bool RemoveCollection (string collectionName);
 
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSMutableFontCollection.AddQueryForDescriptors' instead.")]
 		[Export ("addFontDescriptors:toCollection:")]
 		void AddFontDescriptors (NSFontDescriptor [] descriptors, string collectionName);
 
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSMutableFontCollection.RemoveQueryForDescriptors' instead.")]
 		[Export ("removeFontDescriptor:fromCollection:")]
 		void RemoveFontDescriptor (NSFontDescriptor descriptor, string collection);
 
@@ -7995,13 +8008,16 @@ namespace AppKit {
 		[Export ("size")]
 		CGSize Size { get; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Static]
 		[Export ("menuZone")]
 		NSZone MenuZone { get; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Export ("helpRequested:")]
 		void HelpRequested (NSEvent eventPtr);
 
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Export ("isTornOff")]
 		bool IsTornOff { get; }
 
@@ -8039,6 +8055,7 @@ namespace AppKit {
 		[Export ("showsStateColumn")]
 		bool ShowsStateColumn { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Export ("menuChangedMessagesEnabled")]
 		bool MenuChangedMessagesEnabled { get; set; }
 
@@ -12364,30 +12381,39 @@ namespace AppKit {
 		[Export ("pageSizeForPaper:")]
 		CGSize PageSizeForPaper (string paperName); 
 
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("statusForTable:")]
 		NSPrinterTableStatus StatusForTable (string tableName);
 
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("isKey:inTable:")]
 		bool IsKeyInTable (string key, string table);
 
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("booleanForKey:inTable:")]
 		bool BooleanForKey (string key, string table);
 
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("floatForKey:inTable:")]
 		float /* float, not CGFloat */ FloatForKey (string key, string table);
 
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("intForKey:inTable:")]
 		int /* int, not NSInteger */ IntForKey (string key, string table);
 
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("rectForKey:inTable:")]
 		CGRect RectForKey (string key, string table);
 
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("sizeForKey:inTable:")]
 		CGSize SizeForKey (string key, string table);
 
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("stringForKey:inTable:")]
 		string StringForKey (string key, string table);
 
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("stringListForKey:inTable:")]
 		string [] StringListForKey (string key, string table);
 
@@ -14759,7 +14785,7 @@ namespace AppKit {
 		[Export ("playbackDeviceIdentifier")]
 		string PlaybackDeviceID { get; set; }
 
-		// FIXME: Poor docs, no type defined for the array elements
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("channelMapping")]
 		NSObject ChannelMapping { get; set; }
 	}
@@ -16386,6 +16412,7 @@ namespace AppKit {
 		[Export ("drawPageBorderWithSize:")]
 		void DrawPageBorder (CGSize borderSize);
 		
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Never called.")]
 		[Export ("drawSheetBorderWithSize:")]
 		void DrawSheetBorder (CGSize borderSize);
 		
@@ -17591,6 +17618,7 @@ namespace AppKit {
 		[Export ("tableView:acceptDrop:row:dropOperation:")]
 		bool AcceptDrop (NSTableView tableView, [Protocolize (4)] NSDraggingInfo info, nint row, NSTableViewDropOperation dropOperation);
 	
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSFilePromiseReceiver' instead.")]
 		[Export ("tableView:namesOfPromisedFilesDroppedAtDestination:forDraggedRowsWithIndexes:")]
 		string [] FilesDropped (NSTableView tableView, NSUrl dropDestination, NSIndexSet indexSet );
 
@@ -18936,6 +18964,7 @@ namespace AppKit {
 		[Export ("isSimpleRectangularTextContainer")]
 		bool IsSimpleRectangularTextContainer { get; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Export ("containsPoint:")]
 		bool ContainsPoint (CGPoint point);
 
@@ -19085,6 +19114,7 @@ namespace AppKit {
 	interface NSTextInput
 	{
 		[Abstract]
+		[Deprecated (PlatformName.MacOSX, 10, 6)]
 		[Export ("insertText:")]
 		void InsertText (NSObject insertString);
 
@@ -19200,6 +19230,7 @@ namespace AppKit {
 		[Export ("lowerBaseline:")]
 		void LowerBaseline (NSObject sender);
 
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use unicode characters via the character palette.")]
 		[Export ("toggleTraditionalCharacterShape:")]
 		void ToggleTraditionalCharacterShape (NSObject sender);
 
@@ -20784,6 +20815,7 @@ namespace AppKit {
 		[Export ("gState")]
 		nint GState ();
 	
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("setOneShot:")]
 		void SetOneShot (bool flag);
 	
@@ -20859,9 +20891,11 @@ namespace AppKit {
 		[Export ("sharingType")]
 		NSWindowSharingType SharingType  { get; set; }
 	
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("preferredBackingLocation")]
 		NSWindowBackingLocation PreferredBackingLocation  { get; set; }
 	
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("backingLocation")]
 		NSWindowBackingLocation BackingLocation { get; }
 	
@@ -21686,6 +21720,7 @@ namespace AppKit {
 		[Export ("openFile:withApplication:andDeactivate:"), ThreadSafe]
 		bool OpenFile (string fullPath, [NullAllowed] string appName, bool deactivate);
 		
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSWorkspace.OpenUrl' instead.")]
 		[Export ("openFile:fromImage:at:inView:"), ThreadSafe]
 		bool OpenFile (string fullPath, NSImage anImage, CGPoint point, NSView aView);
 		
@@ -21749,6 +21784,7 @@ namespace AppKit {
 		[Export ("getFileSystemInfoForPath:isRemovable:isWritable:isUnmountable:description:type:"), ThreadSafe]
 		bool GetFileSystemInfo (string fullPath, out bool removableFlag, out bool writableFlag, out bool unmountableFlag, out string description, out string fileSystemType);
 		
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Export ("performFileOperation:source:destination:files:tag:"), ThreadSafe]
 		bool PerformFileOperation (NSString workspaceOperation, string source, string destination, string[] files, out nint tag);
 		
@@ -21764,9 +21800,11 @@ namespace AppKit {
 		[Export ("hideOtherApplications")]
 		void HideOtherApplications ();
 		
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Export ("mountedLocalVolumePaths")]
 		string[] MountedLocalVolumePaths { get; }
 		
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Export ("mountedRemovableMedia")]
 		string[] MountedRemovableMedia {  get; }
 		
@@ -21786,9 +21824,11 @@ namespace AppKit {
 		[Export ("openURLs:withAppBundleIdentifier:options:additionalEventParamDescriptor:launchIdentifiers:"), ThreadSafe]
 		bool _OpenUrls (NSUrl[] urls, string bundleIdentifier, NSWorkspaceLaunchOptions options, NSAppleEventDescriptor descriptor, [NullAllowed] string[] identifiers);
 		
+		[Deprecated (PlatformName.MacOSX, 10, 7, message: "Use 'NSWorkspace.RunningApplications' instead.")]
 		[Export ("launchedApplications")]
 		NSDictionary [] LaunchedApplications { get; }
 		
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSWorkspace.FrontmostApplication' instead.")]
 		[Export ("activeApplication")]
 		NSDictionary ActiveApplication { get; }
 		
@@ -22707,6 +22747,7 @@ namespace AppKit {
 		NSRange GlyphRangeForCharacterRange (NSRange charRange, out NSRange actualCharRange);
 
 		// TODO: could use a higher level API
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[Export ("getGlyphsInRange:glyphs:characterIndexes:glyphInscriptions:elasticBits:bidiLevels:")]
 		nuint GetGlyphsInRange (NSRange glyphsRange, IntPtr glyphBuffer, IntPtr charIndexBuffer, IntPtr inscribeBuffer, IntPtr elasticBuffer, IntPtr bidiLevelBuffer);
 

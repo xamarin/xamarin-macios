@@ -415,9 +415,11 @@ namespace Foundation
 		[Wrap ("this (data, options == null ? null : options.Dictionary, out resultDocumentAttributes, out error)")]
 		IntPtr Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
 
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSAttributedString (NSUrl, NSDictionary, out NSDictionary, ref NSError)' instead.")]
 		[Export ("initWithPath:documentAttributes:")]
 		IntPtr Constructor (string path, out NSDictionary resultDocumentAttributes);
 
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSAttributedString (NSUrl, NSDictionary, out NSDictionary, ref NSError)' instead.")]
 		[Export ("initWithURL:documentAttributes:")]
 		IntPtr Constructor (NSUrl url, out NSDictionary resultDocumentAttributes);
 
@@ -460,6 +462,7 @@ namespace Foundation
 		[Export ("nextWordFromIndex:forward:")]
 		nuint GetNextWord (nuint fromIndex, bool isForward);
 
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSDataDetector' instead.")]
 		[Export ("URLAtIndex:effectiveRange:")]
 		NSUrl GetUrl (nuint index, out NSRange effectiveRange);
 
@@ -5430,6 +5433,10 @@ namespace Foundation
 	, QLPreviewItem
 #endif
 	{
+		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'NSUrlComponents' instead.")]
+		[Deprecated (PlatformName.WatchOS, 2, 0, message : "Use 'NSUrlComponents' instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message : "Use 'NSUrlComponents' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'NSUrlComponents' instead.")]
 		[Export ("initWithScheme:host:path:")]
 		IntPtr Constructor (string scheme, string host, string path);
 
@@ -6468,6 +6475,9 @@ namespace Foundation
 		[Export ("setDelegateQueue:")]
 		void SetDelegateQueue (NSOperationQueue queue);
 
+		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'NSUrlSession.CreateDataTask' instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message : "Use 'NSUrlSession.CreateDataTask' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'NSUrlSession.CreateDataTask' instead.")]
 		[NoWatch]
 		[Static]
 		[Export ("sendAsynchronousRequest:queue:completionHandler:")]
@@ -8549,12 +8559,15 @@ namespace Foundation
 		void SetDefaultPlaceholder (NSObject placeholder, NSObject marker, NSString binding);
 #endif
 
+		[Deprecated (PlatformName.MacOSX, message: "Now on 'NSEditor' protocol.")]
 		[Export ("objectDidEndEditing:")]
 		void ObjectDidEndEditing (NSObject editor);
 
+		[Deprecated (PlatformName.MacOSX, message: "Now on 'NSEditor' protocol.")]
 		[Export ("commitEditing")]
 		bool CommitEditing ();
 
+		[Deprecated (PlatformName.MacOSX, message: "Now on 'NSEditor' protocol.")]
 		[Export ("commitEditingWithDelegate:didCommitSelector:contextInfo:")]
 		//void CommitEditingWithDelegateDidCommitSelectorContextInfo (NSObject objDelegate, Selector didCommitSelector, IntPtr contextInfo);
 		void CommitEditing (NSObject objDelegate, Selector didCommitSelector, IntPtr contextInfo);
@@ -8771,6 +8784,10 @@ namespace Foundation
 		void WaitUntilFinished ();
 
 		[Export ("threadPriority")]
+		[Deprecated (PlatformName.iOS, 8, 0)]
+		[Deprecated (PlatformName.WatchOS, 2, 0)]
+		[Deprecated (PlatformName.TvOS, 9, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		double ThreadPriority { get; set; }
 
 		//Detected properties
@@ -9440,6 +9457,7 @@ namespace Foundation
 
 		// https://developer.apple.com/library/mac/#documentation/Cocoa/Reference/ApplicationKit/Classes/NSBundle_AppKitAdditions/Reference/Reference.html
 		[Static]
+		[Deprecated (PlatformName.MacOSX, 10, 8)]
 		[Export ("loadNibNamed:owner:")]
 		bool LoadNib (string nibName, NSObject owner);
 
@@ -12747,9 +12765,11 @@ namespace Foundation
 		[Static, Export ("canResumeDownloadDecodedWithEncodingMIMEType:")]
 		bool CanResumeDownloadDecodedWithEncodingMimeType (string mimeType);
 
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSURLSession' instead.")]
 		[Export ("initWithRequest:delegate:")]
 		IntPtr Constructor (NSUrlRequest request, NSObject delegate1);
 
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSURLSession' instead.")]
 		[Export ("initWithResumeData:delegate:path:")]
 		IntPtr Constructor (NSData resumeData, NSObject delegate1, string path);
 
@@ -13872,6 +13892,10 @@ namespace Foundation
 		void Reply ([NullAllowed] NSException exception);
 	}
 
+	[Deprecated (PlatformName.TvOS, 11, 0)]
+	[Deprecated (PlatformName.WatchOS, 4, 0)]
+	[Deprecated (PlatformName.iOS, 11, 0)]
+	[Deprecated (PlatformName.MacOSX, 10, 13)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSPortNameServer {

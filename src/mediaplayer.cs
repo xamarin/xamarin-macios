@@ -1578,6 +1578,7 @@ namespace MediaPlayer {
 		void InitializePlaybackQueue (MPPlayableContentManager contentManager, Action<NSError> completionHandler);
 
 		[iOS (9,3)]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use the Intents framework API instead.")]
 		[Export ("playableContentManager:initializePlaybackQueueWithContentItems:completionHandler:")]
 		void InitializePlaybackQueue (MPPlayableContentManager contentManager, [NullAllowed] MPContentItem[] contentItems, Action<NSError> completionHandler);
 	}
