@@ -31,6 +31,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Threading;
 using ObjCRuntime;
@@ -47,26 +48,18 @@ namespace CoreFoundation {
 		Background = Int16.MinValue
 	}
 	
-	public abstract class DispatchObject : INativeObject
-#if !COREBUILD
-		, IDisposable
-#endif
+	public abstract class DispatchObject : NativeObject
 	{
 #if !COREBUILD
-		internal IntPtr handle;
-
 		//
 		// Constructors and lifecycle
 		//
 		[Preserve (Conditional = true)]
 		internal DispatchObject (IntPtr handle, bool owns)
+			: base (handle, owns)
 		{
 			if (handle == IntPtr.Zero)
 				throw new ArgumentNullException ("handle");
-			
-			this.handle = handle;
-			if (!owns)
-				dispatch_retain (handle);
 		}
 
 		internal DispatchObject ()
@@ -79,27 +72,14 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_retain (IntPtr o);
 
-		~DispatchObject ()
+		protected override void Retain ()
 		{
-			Dispose (false);
+			dispatch_retain (Handle);
 		}
 
-		public void Dispose ()
+		protected override void Release ()
 		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public IntPtr Handle {
-			get { return handle; }
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				dispatch_release (handle);
-				handle = IntPtr.Zero;
-			}
+			dispatch_release (Handle);
 		}
 
 		public static bool operator == (DispatchObject a, DispatchObject b)
@@ -114,7 +94,7 @@ namespace CoreFoundation {
 			} else {
 				if (ob == null)
 					return false;
-				return a.handle == b.handle;
+				return a.Handle == b.Handle;
 			}
 		}
 
@@ -128,19 +108,22 @@ namespace CoreFoundation {
 			var od = other as DispatchQueue;
 			if (od == null)
 				return false;
-			return od.handle == handle;
+			return od.Handle == Handle;
 		}
 
 		public override int GetHashCode ()
 		{
-			return (int) handle;
+			return (int) Handle;
 		}
 
+#if !XAMCORE_4_0
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use 'GetCheckedHandle' instead.")]
 		protected void Check ()
 		{
-			if (handle == IntPtr.Zero)
-				throw new ObjectDisposedException (GetType ().ToString ());
-		}			
+			GetCheckedHandle ();
+		}
+#endif
 
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_set_target_queue (/* dispatch_object_t */ IntPtr queue, /* dispatch_queue_t */ IntPtr target);
@@ -149,7 +132,7 @@ namespace CoreFoundation {
 		{
 			// note: null is allowed because DISPATCH_TARGET_QUEUE_DEFAULT is defined as NULL (dispatch/queue.h)
 			IntPtr q = queue == null ? IntPtr.Zero : queue.Handle;
-			dispatch_set_target_queue (handle, q);
+			dispatch_set_target_queue (Handle, q);
 		}
 
 		[DllImport (Constants.libcLibrary)]
@@ -171,11 +154,10 @@ namespace CoreFoundation {
 		{
 		}
 		
-		public DispatchQueue (string label) : base ()
+		public DispatchQueue (string label)
+			: base (dispatch_queue_create (label, IntPtr.Zero), true)
 		{
-			// Initialized in owned state for the queue.
-			handle = dispatch_queue_create (label, IntPtr.Zero);
-			if (handle == IntPtr.Zero)
+			if (Handle == IntPtr.Zero)
 				throw new Exception ("Error creating dispatch queue");
 		}
 
@@ -189,9 +171,9 @@ namespace CoreFoundation {
 		}
 		
 		public DispatchQueue (string label, bool concurrent)
+			: base (dispatch_queue_create (label, concurrent ? ConcurrentQueue : IntPtr.Zero), true)
 		{
-			handle = dispatch_queue_create (label, concurrent ? ConcurrentQueue : IntPtr.Zero);
-			if (handle == IntPtr.Zero)
+			if (Handle == IntPtr.Zero)
 				throw new Exception ("Error creating dispatch queue");
 		}
 		
@@ -201,10 +183,7 @@ namespace CoreFoundation {
 
 		public string Label {
 			get {
-				if (handle == IntPtr.Zero)
-					throw new ObjectDisposedException ("DispatchQueue");
-				
-				return Marshal.PtrToStringAnsi (dispatch_queue_get_label (handle));
+				return Marshal.PtrToStringAnsi (dispatch_queue_get_label (GetCheckedHandle ()));
 			}
 		}
 
@@ -217,14 +196,12 @@ namespace CoreFoundation {
 
 		public void Suspend ()
 		{
-			Check ();
-			dispatch_suspend (handle);
+			dispatch_suspend (GetCheckedHandle ());
 		}
 
 		public void Resume ()
 		{
-			Check ();
-			dispatch_resume (handle);
+			dispatch_resume (GetCheckedHandle ());
 		}
 
 		[DllImport (Constants.libcLibrary)]
@@ -238,12 +215,10 @@ namespace CoreFoundation {
 
 		public IntPtr Context {
 			get {
-				Check ();
-				return dispatch_get_context (handle);
+				return dispatch_get_context (GetCheckedHandle ());
 			}
 			set {
-				Check ();
-				dispatch_set_context (handle, value);
+				dispatch_set_context (GetCheckedHandle (), value);
 			}
 		}
 	
@@ -350,7 +325,7 @@ namespace CoreFoundation {
 			if (action == null)
 				throw new ArgumentNullException ("action");
 			
-			dispatch_async_f (handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
+			dispatch_async_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
 		}
 
 		public void DispatchSync (Action action)
@@ -358,7 +333,7 @@ namespace CoreFoundation {
 			if (action == null)
 				throw new ArgumentNullException ("action");
 			
-			dispatch_sync_f (handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
+			dispatch_sync_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
 		}
 
 		public void DispatchBarrierAsync (Action action)
@@ -366,7 +341,7 @@ namespace CoreFoundation {
 			if (action == null)
 				throw new ArgumentNullException ("action");
 			
-			dispatch_barrier_async_f (handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
+			dispatch_barrier_async_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
 		}
 		
 		public void DispatchAfter (DispatchTime when, Action action)
@@ -374,14 +349,14 @@ namespace CoreFoundation {
 			if (action == null)
 				throw new ArgumentNullException ("action");
 
-			dispatch_after_f (when.Nanoseconds, handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
+			dispatch_after_f (when.Nanoseconds, Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
 		}
 
 		public void Submit (Action<int> action, long times)
 		{
 			if (action == null)
 				throw new ArgumentNullException ("action");
-			dispatch_apply_f ((IntPtr) times, handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch_iterations);
+			dispatch_apply_f ((IntPtr) times, Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch_iterations);
 		}
 		
 		//
@@ -418,7 +393,7 @@ namespace CoreFoundation {
 			DispatchQueue o = other as DispatchQueue;
 			if (o == null)
 				return false;
-			return (o.Handle == handle);
+			return (o.Handle == Handle);
 		}
 
 		public static bool operator == (DispatchQueue left, DispatchQueue right)
@@ -437,7 +412,7 @@ namespace CoreFoundation {
 
 		public override int GetHashCode ()
 		{
-			return (int)handle;
+			return (int) Handle;
 		}
 		
 #if MONOMAC
@@ -524,8 +499,7 @@ namespace CoreFoundation {
 			if (action == null)
 				throw new ArgumentNullException ("action");
 
-			Check ();
-			dispatch_group_async_f (handle, queue.handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, queue)), DispatchQueue.static_dispatch);
+			dispatch_group_async_f (GetCheckedHandle (), queue.Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, queue)), DispatchQueue.static_dispatch);
 		}
 
 		public void Notify (DispatchQueue queue, Action action)
@@ -535,26 +509,22 @@ namespace CoreFoundation {
 			if (action == null)
 				throw new ArgumentNullException ("action");
 
-			Check ();
-			dispatch_group_notify_f (handle, queue.handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, queue)), DispatchQueue.static_dispatch);
+			dispatch_group_notify_f (GetCheckedHandle (), queue.Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, queue)), DispatchQueue.static_dispatch);
 		}
 
 		public void Enter ()
 		{
-			Check ();			
-			dispatch_group_enter (handle);
+			dispatch_group_enter (GetCheckedHandle ());
 		}
 
 		public void Leave ()
 		{
-			Check ();
-			dispatch_group_leave (handle);
+			dispatch_group_leave (GetCheckedHandle ());
 		}
 
 		public bool Wait (DispatchTime timeout)
 		{
-			Check ();			
-			return dispatch_group_wait (handle, timeout.Nanoseconds) == 0;
+			return dispatch_group_wait (GetCheckedHandle (), timeout.Nanoseconds) == 0;
 		}
 
 		[DllImport (Constants.libcLibrary)]

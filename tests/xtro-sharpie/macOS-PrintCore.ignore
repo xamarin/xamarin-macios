@@ -21,13 +21,11 @@
 !missing-pinvoke! PMPresetCreatePrintSettings is not bound
 !missing-pinvoke! PMPresetGetAttributes is not bound
 !missing-pinvoke! PMPrinterCopyDescriptionURL is not bound
-!missing-pinvoke! PMPrinterCopyHostName is not bound
 !missing-pinvoke! PMPrinterCopyPresets is not bound
 !missing-pinvoke! PMPrinterCopyState is not bound
 !missing-pinvoke! PMPrinterGetCommInfo is not bound
 !missing-pinvoke! PMPrinterGetDriverCreator is not bound
 !missing-pinvoke! PMPrinterGetDriverReleaseInfo is not bound
-!missing-pinvoke! PMPrinterGetID is not bound
 !missing-pinvoke! PMPrinterGetIndexedPrinterResolution is not bound
 !missing-pinvoke! PMPrinterGetLanguageInfo is not bound
 !missing-pinvoke! PMPrinterGetLocation is not bound

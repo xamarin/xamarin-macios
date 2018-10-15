@@ -5209,7 +5209,16 @@ namespace Foundation
 
 		[Watch (5,0), NoTV, NoMac, iOS (12,0)]
 		[NullAllowed, Export ("suggestedInvocationPhrase")]
-		string SuggestedInvocationPhrase { get; set; }
+		string SuggestedInvocationPhrase {
+			// This _simply_ ensure that the Intents namespace (via the enum) will be present which,
+			// in turns, means that the Intents.framework is loaded into memory and this makes the
+			// selectors (getter and setter) work at runtime. Other selectors do not need it.
+			// reference: https://github.com/xamarin/xamarin-macios/issues/4894
+			[PreSnippet ("GC.KeepAlive (Intents.INCallCapabilityOptions.AudioCall); // no-op to ensure Intents.framework is loaded into memory")]
+			get;
+			[PreSnippet ("GC.KeepAlive (Intents.INCallCapabilityOptions.AudioCall); // no-op to ensure Intents.framework is loaded into memory")]
+			set;
+		}
 
 		[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
 		[Export ("eligibleForPrediction")]
@@ -13492,10 +13501,9 @@ namespace Foundation
 		NSDimension BaseUnit { get; }
 	}
 
-#if !WATCH && !TVOS
-	[Mac (10,8), iOS (11,0), NoWatch, NoTV]
 	partial interface NSFileManager {
 
+		[iOS (11, 0), NoTV, NoWatch]
 		[Mac (10, 8), Export ("trashItemAtURL:resultingItemURL:error:")]
 		bool TrashItem (NSUrl url, out NSUrl resultingItemUrl, out NSError error);
 
@@ -13515,7 +13523,6 @@ namespace Foundation
 		[Export ("name")]
 		string Name { get; }
 	}
-#endif
 
 #if MONOMAC
 	partial interface NSFilePresenter {
