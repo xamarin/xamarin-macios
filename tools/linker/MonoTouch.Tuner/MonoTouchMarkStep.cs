@@ -105,6 +105,7 @@ namespace MonoTouch.Tuner {
 				if (current_method == null) {
 					// This can happen if ParameterInfo.get_Name is preserved in an xml file
 					Annotations.GetCustomAnnotations ("ParameterInfo").Add (method, null);
+					parameter_info = true;
 				} else {
 					var a = current_method.DeclaringType.Module.Assembly;
 					if (!Profile.IsSdkAssembly (a) && !Profile.IsProductAssembly (a)) {
