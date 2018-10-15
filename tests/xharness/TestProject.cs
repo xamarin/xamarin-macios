@@ -160,7 +160,7 @@ namespace xharness
 		}
 	}
 
-	public enum MacFlavors { All, Modern, Full }
+	public enum MacFlavors { All, Modern, Full, System, NonSystem }
 
 	public class MacTestProject : TestProject
 	{
@@ -169,8 +169,9 @@ namespace xharness
 		// Optional
 		public MacBCLTestInfo BCLInfo { get; set; }
 
-		public bool GenerateModern => TargetFrameworkFlavor == MacFlavors.All || TargetFrameworkFlavor == MacFlavors.Modern;
-		public bool GenerateFull => TargetFrameworkFlavor == MacFlavors.All || TargetFrameworkFlavor == MacFlavors.Full;
+		public bool GenerateModern => TargetFrameworkFlavor == MacFlavors.All || TargetFrameworkFlavor == MacFlavors.NonSystem || TargetFrameworkFlavor == MacFlavors.Modern;
+		public bool GenerateFull => TargetFrameworkFlavor == MacFlavors.All || TargetFrameworkFlavor == MacFlavors.NonSystem || TargetFrameworkFlavor == MacFlavors.Full;
+		public bool GenerateSystem => TargetFrameworkFlavor == MacFlavors.All || TargetFrameworkFlavor == MacFlavors.System;
 
 		public string Platform = "x86";
 
@@ -178,7 +179,7 @@ namespace xharness
 		{
 		}
 
-		public MacTestProject (string path, bool isExecutableProject = true, bool generateVariations = true, MacFlavors targetFrameworkFlavor = MacFlavors.All) : base (path, isExecutableProject, generateVariations)
+		public MacTestProject (string path, bool isExecutableProject = true, bool generateVariations = true, MacFlavors targetFrameworkFlavor = MacFlavors.NonSystem) : base (path, isExecutableProject, generateVariations)
 		{
 			TargetFrameworkFlavor = targetFrameworkFlavor;
 		}

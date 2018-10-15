@@ -156,8 +156,8 @@ build/%.dll: $(BIN_DIR)/%.dll | build/monotouch build/xamarinmacmobile build/xam
 	$(Q) cp $< $@
 	$(Q_SN) MONO_CFG_DIR="$(TOP)" sn -q -R "$@" "$(PRODUCT_KEY_PATH)"
 
-build.stamp: export XBUILD_FRAMEWORK_FOLDERS_PATH=$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks
-build.stamp: export MSBuildExtensionsPath=$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild
+build.stamp: export TargetFrameworkFallbackSearchPaths=$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks
+build.stamp: export MSBuildExtensionsPathFallbackPathsOverride=$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild
 build.stamp: $(FSHARP_FILES) $(FSHARP_PATH)/Makefile
 	$(MAKE) -C $(FSHARP_PATH)/src/fsharp build-proto
 	$(MAKE) -C $(FSHARP_PATH)/src/fsharp $(FSHARP_BUILD_TARGETS)

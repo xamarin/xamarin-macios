@@ -5,14 +5,14 @@ build_in_place_dir="$(python -c "import os; print os.path.realpath('$self/../_ma
 xammac_framework_dir="$build_in_place_dir/Library/Frameworks/Xamarin.Mac.framework/Versions/Current"
 xbuild_external_dir="$build_in_place_dir/Library/Frameworks/Mono.framework/External"
 
-export XBUILD_FRAMEWORK_FOLDERS_PATH="$xbuild_external_dir/xbuild-frameworks"
-export MSBuildExtensionsPath="$xbuild_external_dir/xbuild"
+export TargetFrameworkFallbackSearchPaths="$xbuild_external_dir/xbuild-frameworks"
+export MSBuildExtensionsPathFallbackPathsOverride="$xbuild_external_dir/xbuild"
 
 XamarinMacFrameworkRoot="$xammac_framework_dir"
 TargetFrameworkIdentifier=Xamarin.Mac
 TargetFrameworkVersion=v2.0
 
-/Library/Frameworks/Mono.framework/Commands/xbuild \
+/Library/Frameworks/Mono.framework/Commands/msbuild \
 	/property:XamarinMacFrameworkRoot="$XamarinMacFrameworkRoot" \
 	/property:TargetFrameworkIdentifier="$TargetFrameworkIdentifier" \
 	/property:TargetFrameworkVersion="$TargetFrameworkVersion" \

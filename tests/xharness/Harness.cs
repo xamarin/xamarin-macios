@@ -227,11 +227,15 @@ namespace xharness
 		void AutoConfigureMac ()
 		{
 			var test_suites = new [] {
-				new { Directory = "apitest", ProjectFile = "apitest", Name = "apitest" },
-				new { Directory = "linker/mac/dont link", ProjectFile = "dont link-mac", Name = "dont link" },
+				new { Directory = "apitest", ProjectFile = "apitest", Name = "apitest", GenerateSystem = false },
+				new { Directory = "linker/mac/dont link", ProjectFile = "dont link-mac", Name = "dont link", GenerateSystem = true },
 			};
-			foreach (var p in test_suites)
-				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p.Directory + "/" + p.ProjectFile + ".sln"))) { Name = p.Name });
+			foreach (var p in test_suites) {
+				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p.Directory + "/" + p.ProjectFile + ".sln"))) {
+					Name = p.Name,
+					TargetFrameworkFlavor = p.GenerateSystem ? MacFlavors.All : MacFlavors.NonSystem,
+				});
+			}
 			
 			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "Mac", "introspection-mac.csproj")), targetFrameworkFlavor: MacFlavors.Modern) { Name = "introspection" });
 
@@ -447,6 +451,13 @@ namespace xharness
 						configureTarget (full, file, proj.IsNUnitProject);
 						unified_targets.Add (full);
 					}
+				}
+
+				if (proj.GenerateSystem) {
+					var system = new MacUnifiedTarget (false, false);
+					system.System = true;
+					configureTarget (system, file, proj.IsNUnitProject);
+					unified_targets.Add (system);
 				}
 
 				var classic = new MacClassicTarget ();
