@@ -24,7 +24,6 @@ TESTS_4_0 = \
 	link-frameworks-1 \
 	link-aes-1 \
 	link-blocks-1 \
-	link-preserve-calendar-1 \
 	link-preserve-calendar-2 \
 	link-typedescriptor-1 \
 	link-typedescriptor-2 \
@@ -51,6 +50,9 @@ TESTS_4_5 = \
 
 DISABLED_4_5_TESTS_MONO_4_2 = \
 	link-httpclient-async \
+
+DISABLED_TESTS_MONO_2018_08 = \
+	link-preserve-calendar-1 \
 
 ALL_TESTS = \
 	$(TESTS_UNIFIED) \

@@ -180,7 +180,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.TVOS:
 				return app.IsDeviceBuild ? "AppleTVOS" : "AppleTVSimulator";
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", app.Platform);
 			}
 		}
 
@@ -228,7 +228,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.TVOS:
 				return Path.Combine (MonoTouchDirectory, "lib", "mono", "Xamarin.TVOS");
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", app.Platform);
 			}
 		}
 
@@ -238,7 +238,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.iOS:
 				return Path.Combine (GetPlatformFrameworkDirectory (app), "..", "..", "32bits");
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", app.Platform);
 			}
 		}
 
@@ -248,7 +248,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.iOS:
 				return Path.Combine (GetPlatformFrameworkDirectory (app), "..", "..", "64bits");
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", app.Platform);
 			}
 		}
 
@@ -262,7 +262,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.TVOS:
 				return Path.Combine (MonoTouchDirectory, "SDKs", app.IsDeviceBuild ? "Xamarin.AppleTVOS.sdk" : "Xamarin.AppleTVSimulator.sdk");
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", app.Platform);
 			}
 		}
 
@@ -282,7 +282,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.TVOS:
 				return app.IsDeviceBuild ? "tvos" : "tvos-simulator";
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", app.Platform);
 			}
 		}
 
@@ -296,7 +296,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.TVOS:
 				return "Xamarin.TVOS";
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", app.Platform);
 			}
 		}
 
@@ -311,7 +311,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.WatchOS:
 				return true;
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", app.Platform);
 			}
 		}
 
@@ -443,7 +443,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.TVOS:
 				return Path.Combine (cross_prefix, "bin", "arm64-darwin-mono-sgen");
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", app.Platform);
 			}
 		}
 
@@ -456,7 +456,9 @@ namespace Xamarin.Bundler
 			bool enable_debug = app.EnableDebug;
 			bool enable_debug_symbols = app.PackageManagedDebugSymbols;
 			bool llvm_only = app.EnableLLVMOnlyBitCode;
-			bool interp = app.UseInterpreter;
+			bool interp = app.IsInterpreted (Assembly.GetIdentity (filename));
+			bool interp_full = !interp && app.UseInterpreter && fname == "mscorlib.dll";
+			bool is32bit = (abi & Abi.Arch32Mask) > 0;
 			string arch = abi.AsArchString ();
 
 			args.Append ("--debug ");
@@ -474,9 +476,15 @@ namespace Xamarin.Bundler
 			args.Append (app.AotArguments);
 			if (llvm_only)
 				args.Append ("llvmonly,");
-			else if (interp)
+			else if (interp) {
+				if (fname != "mscorlib.dll")
+					throw ErrorHelper.CreateError (99, $"Internal error: can only enable the interpreter for mscorlib.dll when AOT-compiling assemblies (tried to interpret {fname}). Please file an issue at https://github.com/xamarin/xamarin-macios/issues/new.");
 				args.Append ("interp,");
-			else
+			} else if (interp_full) {
+				if (fname != "mscorlib.dll")
+					throw ErrorHelper.CreateError (99, $"Internal error: can only enable the interpreter for mscorlib.dll when AOT-compiling assemblies (tried to interpret {fname}). Please file an issue at https://github.com/xamarin/xamarin-macios/issues/new."); 
+				args.Append ("interp,full,");
+			} else
 				args.Append ("full,");
 
 			var aname = Path.GetFileNameWithoutExtension (fname);
@@ -504,7 +512,7 @@ namespace Xamarin.Bundler
 			}
 
 			if (enable_llvm)
-				args.Append ("llvm-path=").Append (MonoTouchDirectory).Append ("/LLVM/bin/,");
+				args.Append ("llvm-path=").Append (MonoTouchDirectory).Append (is32bit ? "/LLVM36/bin/," : "/LLVM/bin/,");
 
 			if (!llvm_only)
 				args.Append ("outfile=").Append (StringUtils.Quote (outputFile));
@@ -664,7 +672,8 @@ namespace Xamarin.Bundler
 						sw.WriteLine ("\tmono_sgen_mono_ilgen_init ();");
 						sw.WriteLine ("\tmono_ee_interp_init (NULL);");
 						sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_INTERP);");
-					}
+					} else if (app.IsDeviceBuild)
+						sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_FULL);");
 
 					if (assembly_location.Length > 0)
 						sw.WriteLine ("\txamarin_set_assembly_directories (&assembly_locations);");
@@ -1246,7 +1255,14 @@ namespace Xamarin.Bundler
 						app.LLVMOptimizations [asm] = opt;
 				}
 			},
-			{ "interpreter", "Enable the *experimental* interpreter.", v => { app.UseInterpreter = true; }},
+			{ "interpreter:", "Enable the *experimental* interpreter. Optionally takes a comma-separated list of assemblies to interpret (if prefixed with a minus sign, the assembly will be AOT-compiled instead). 'all' can be used to specify all assemblies. This argument can be specified multiple times.", v =>
+				{ 
+					app.UseInterpreter = true;
+					if (!string.IsNullOrEmpty (v)) {
+						app.InterpretedAssemblies.AddRange (v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
+					}
+				}
+			},
 			{ "http-message-handler=", "Specify the default HTTP message handler for HttpClient", v => { http_message_handler = v; }},
 			{ "output-format=", "Specify the output format for some commands. Possible values: Default, XML", v =>
 				{
@@ -1396,13 +1412,13 @@ namespace Xamarin.Bundler
 						ext.ContainerApp = app;
 						app.AppExtensions.Add (ext);
 						if (app_action != Action.Build)
-							throw ErrorHelper.CreateError (99, "Internal error: Extension build action is '{0}' when it should be 'Build'. Please file a bug report with a test case (http://bugzilla.xamarin.com).", app_action);
+							throw ErrorHelper.CreateError (99, "Internal error: Extension build action is '{0}' when it should be 'Build'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", app_action);
 					}
 
 					app.BuildAll ();
 				}
 			} else {
-				throw ErrorHelper.CreateError (99, "Internal error: Invalid action: {0}. Please file a bug report with a test case (http://bugzilla.xamarin.com).", action);
+				throw ErrorHelper.CreateError (99, "Internal error: Invalid action: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", action);
 			}
 
 			return 0;
@@ -1674,7 +1690,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.TVOS:
 				return Frameworks.TVOSFrameworks;
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", app.Platform);
 			}
 		}
 

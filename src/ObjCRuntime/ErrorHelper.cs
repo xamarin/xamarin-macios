@@ -393,7 +393,7 @@ namespace ObjCRuntime {
 					Console.Error.WriteLine (e.StackTrace);
 #if MTOUCH || MMP
 			} else if (IsExpectedException == null || !IsExpectedException (e)) {
-				Console.Error.WriteLine ("error " + Prefix + "0000: Unexpected error - Please file a bug report at http://bugzilla.xamarin.com");
+				Console.Error.WriteLine ("error " + Prefix + "0000: Unexpected error - Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new");
 				Console.Error.WriteLine (e.ToString ());
 #endif
 			} else {

@@ -646,11 +646,12 @@ namespace xharness
 		bool loaded;
 
 		BlockingEnumerableCollection<Device> connected_devices = new BlockingEnumerableCollection<Device> ();
-		public IEnumerable<Device> ConnectedDevices {
-			get {
-				return connected_devices;
-			}
-		}
+
+		public IEnumerable<Device> ConnectedDevices => connected_devices;
+		public IEnumerable<Device> Connected64BitIOS => connected_devices.Where (x => x.DevicePlatform == DevicePlatform.iOS && x.Supports64Bit);
+		public IEnumerable<Device> Connected32BitIOS => connected_devices.Where (x => x.DevicePlatform == DevicePlatform.iOS && x.Supports32Bit);
+		public IEnumerable<Device> ConnectedTV => connected_devices.Where (x => x.DevicePlatform == DevicePlatform.tvOS);
+		public IEnumerable<Device> ConnectedWatch => connected_devices.Where (x => x.DevicePlatform == DevicePlatform.watchOS);
 
 		public async Task LoadAsync (Log log, bool extra_data = false, bool removed_locked = false, bool force = false)
 		{

@@ -247,6 +247,7 @@ namespace ObjCRuntime {
 				Registrar = new DynamicRegistrar ();
 			RegisterDelegates (options);
 			Class.Initialize (options);
+			Mono.SystemDependencyProvider.Initialize ();
 			InitializePlatform (options);
 
 #if !XAMMAC_SYSTEM_MONO
@@ -352,7 +353,7 @@ namespace ObjCRuntime {
 			var smart_type = value.GetType ();
 			MethodBase getConstantMethod, getValueMethod;
 			if (!Registrar.IsSmartEnum (smart_type, out getConstantMethod, out getValueMethod))
-				throw ErrorHelper.CreateError (8024, $"Could not find a valid extension type for the smart enum '{smart_type.FullName}'. Please file a bug at https://bugzilla.xamarin.com.");
+				throw ErrorHelper.CreateError (8024, $"Could not find a valid extension type for the smart enum '{smart_type.FullName}'. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new.");
 			var rv = (NSString) ((MethodInfo) getConstantMethod).Invoke (null, new object [] { value });
 			if (rv == null)
 				return IntPtr.Zero;
@@ -369,7 +370,7 @@ namespace ObjCRuntime {
 			var str = GetNSObject<NSString> (value);
 			MethodBase getConstantMethod, getValueMethod;
 			if (!Registrar.IsSmartEnum (smart_type, out getConstantMethod, out getValueMethod))
-				throw ErrorHelper.CreateError (8024, $"Could not find a valid extension type for the smart enum '{smart_type.FullName}'. Please file a bug at https://bugzilla.xamarin.com.");
+				throw ErrorHelper.CreateError (8024, $"Could not find a valid extension type for the smart enum '{smart_type.FullName}'. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new.");
 			var rv = ((MethodInfo) getValueMethod).Invoke (null, new object [] { str });
 			return GCHandle.ToIntPtr (GCHandle.Alloc (rv));
 		}
@@ -653,7 +654,7 @@ namespace ObjCRuntime {
 
 			var mb = method as MethodBase;
 			if (method != null && mb == null)
-				throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_ref:X} to be a method, but it's a {method.GetType ().Name}. Please file a bug report at http://bugzilla.xamarin.com.");
+				throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_ref:X} to be a method, but it's a {method.GetType ().Name}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
 			
 			if (method != null)
 				return ObjectWrapper.Convert (method);
@@ -669,11 +670,11 @@ namespace ObjCRuntime {
 
 			var mb = method as MethodBase;
 			if (mb == null)
-				throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_ref:X} to be a method, but it's a {method.GetType ().Name}. Please file a bug report at http://bugzilla.xamarin.com.");
+				throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_ref:X} to be a method, but it's a {method.GetType ().Name}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
 
 			var nsobj = ObjectWrapper.Convert (obj) as NSObject;
 			if (nsobj == null)
-				throw ErrorHelper.CreateError (8023, $"An instance object is required to construct a closed generic method for the open generic method: {mb.DeclaringType.FullName}.{mb.Name} (token reference: 0x{token_ref:X}). Please file a bug report at http://bugzilla.xamarin.com.");
+				throw ErrorHelper.CreateError (8023, $"An instance object is required to construct a closed generic method for the open generic method: {mb.DeclaringType.FullName}.{mb.Name} (token reference: 0x{token_ref:X}). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
 
 			return ObjectWrapper.Convert (FindClosedMethod (nsobj.GetType (), mb));
 		}
@@ -897,7 +898,7 @@ namespace ObjCRuntime {
 				}
 			}
 
-			throw new RuntimeException (8009, true, "Unable to locate the block to delegate conversion method for the method {0}.{1}'s parameter #{2}. Please file a bug at http://bugzilla.xamarin.com.",
+			throw new RuntimeException (8009, true, "Unable to locate the block to delegate conversion method for the method {0}.{1}'s parameter #{2}. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new.",
 				method.DeclaringType.FullName, method.Name, parameter + 1);
 		}
 

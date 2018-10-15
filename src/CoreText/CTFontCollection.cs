@@ -43,15 +43,7 @@ namespace CoreText {
 
 		static CTFontCollectionOptionKey ()
 		{
-			var handle = Dlfcn.dlopen (Constants.CoreTextLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-				RemoveDuplicates = Dlfcn.GetStringConstant (handle, "kCTFontCollectionRemoveDuplicatesOption");
-			}
-			finally {
-				Dlfcn.dlclose (handle);
-			}
+			RemoveDuplicates = Dlfcn.GetStringConstant (Libraries.CoreText.Handle, "kCTFontCollectionRemoveDuplicatesOption");
 		}
 	}
 

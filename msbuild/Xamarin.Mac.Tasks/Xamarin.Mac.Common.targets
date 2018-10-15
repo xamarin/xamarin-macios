@@ -27,8 +27,10 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.FindItemWithLogicalName" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.PackLibraryResources" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.PropertyListEditor" AssemblyFile="Xamarin.Mac.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.ReadItemsFromFile" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.SmartCopy" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.UnpackLibraryResources" AssemblyFile="Xamarin.Mac.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.WriteItemsToFile" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.Mac.Tasks.ACTool" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.Mac.Tasks.CodesignVerify" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.Mac.Tasks.CompileAppManifest" AssemblyFile="Xamarin.Mac.Tasks.dll" />
@@ -72,6 +74,12 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 		<_PreparedResourceRules></_PreparedResourceRules>
 		<_AppBundleName>$(AssemblyName)</_AppBundleName>
+	</PropertyGroup>
+		
+	<PropertyGroup>
+		<!-- actool output caches -->
+		<_ACTool_PartialAppManifestCache>$(IntermediateOutputPath)actool\_PartialAppManifest.items</_ACTool_PartialAppManifestCache>
+		<_ACTool_BundleResourceCache>$(IntermediateOutputPath)actool\_BundleResourceWithLogicalName.items</_ACTool_BundleResourceCache>
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.Common.ImplicitFacade.xbuild.targets"
@@ -558,12 +566,40 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		</CreateItem>
 	</Target>
 
-	<Target Name="_CompileImageAssets" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_CoreCompileImageAssets" />
+	<Target Name="_CompileImageAssets" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_BeforeCoreCompileImageAssets;_ReadCompileImageAssets;_CoreCompileImageAssets" />
 
-	<Target Name="_CoreCompileImageAssets">
+	<Target Name="_BeforeCoreCompileImageAssets"
+		Inputs="@(ImageAsset);$(_AppManifest)"
+		Outputs="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)">
+		
+		<!-- If any ImageAsset or AppManifest is newer than the generated items list, we delete them so that the _CoreCompileImageAssets
+		     target runs again and updates those lists for the next run
+		-->
+		<Delete Files="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)" />
+		<RemoveDir Directories="$(IntermediateOutputPath)actool" />
+	</Target>
+
+	<Target Name="_ReadCompileImageAssets"					
+		DependsOnTargets="_BeforeCoreCompileImageAssets">
+
+		<!-- If _BeforeCoreCompileImageAssets did not delete the generated items lists from _CoreCompileImageAsset, then we read them
+		     since that target won't run and we need the output items that are cached in those files, which includes full metadata -->
+		<ReadItemsFromFile File="$(_ACTool_PartialAppManifestCache)" Condition="Exists('$(_ACTool_PartialAppManifestCache)')">
+			<Output TaskParameter="Items" ItemName="_PartialAppManifest" />
+		</ReadItemsFromFile>
+		<ReadItemsFromFile File="$(_ACTool_BundleResourceCache)" Condition="Exists('$(_ACTool_BundleResourceCache)')">
+			<Output TaskParameter="Items" ItemName="_BundleResourceWithLogicalName" />
+		</ReadItemsFromFile>
+	</Target>
+
+	<Target Name="_CoreCompileImageAssets"
+		Inputs="@(ImageAsset);$(_AppManifest)"
+		Outputs="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)"
+		DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_BeforeCoreCompileImageAssets">
+
 		<ACTool
-			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And '@(ImageAsset)' != ''"
 			ToolExe="$(ACToolExe)"
 			ToolPath="$(ACToolPath)"
 			AppManifest="$(_AppManifest)"
@@ -574,17 +610,26 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			IntermediateOutputPath="$(IntermediateOutputPath)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(XamMacResourcePrefix)"
-			SdkPlatform="MacOSX"
+
 			SdkDevPath="$(_SdkDevPath)"
 			SdkBinPath="$(_SdkBinPath)"
 			SdkUsrPath="$(_SdkUsrPath)"
+			SdkPlatform="MacOSX"
 			SdkVersion="$(MacOSXSdkVersion)">
-			<Output TaskParameter="PartialAppManifest" ItemName="FileWrites" />
-			<Output TaskParameter="OutputManifests" ItemName="FileWrites" />
-			<Output TaskParameter="BundleResources" ItemName="FileWrites" />
 			<Output TaskParameter="PartialAppManifest" ItemName="_PartialAppManifest" />
 			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
+
+			<!-- Local items to be persisted to items files -->
+			<Output TaskParameter="PartialAppManifest" ItemName="_ACTool_PartialAppManifest" />
+			<Output TaskParameter="BundleResources" ItemName="_ACTool_BundleResources" />
 		</ACTool>
+		
+		<!-- Cache the generated outputs items for incremental build support -->
+		<WriteItemsToFile Items="@(_ACTool_PartialAppManifest)" ItemName="_PartialAppManifest" File="$(_ACTool_PartialAppManifestCache)" Overwrite="true" IncludeMetadata="true" />
+		<WriteItemsToFile Items="@(_ACTool_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_ACTool_BundleResourceCache)" Overwrite="true" IncludeMetadata="true" />
+		<ItemGroup>
+			<FileWrites Include="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)" />
+		</ItemGroup>
 	</Target>
 
 	<Target Name="_CompileSceneKitAssets" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_CoreCompileSceneKitAssets" />

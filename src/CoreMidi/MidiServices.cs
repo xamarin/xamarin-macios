@@ -228,11 +228,7 @@ namespace CoreMidi {
 
 		static MidiObject ()
 		{
-#if MONOMAC
-			var midiLibrary = Dlfcn.dlopen (Constants.CoreMidiLibrary, 0);
-#else
 			var midiLibrary = Libraries.CoreMidi.Handle;
-#endif
 			kMIDIPropertyAdvanceScheduleTimeMuSec = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyAdvanceScheduleTimeMuSec");
 			kMIDIPropertyCanRoute = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyCanRoute");
 			kMIDIPropertyConnectionUniqueID = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyConnectionUniqueID");

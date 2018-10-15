@@ -949,7 +949,7 @@ namespace Xamarin.Linker {
 					break;
 				}
 				if (setupblock_def == null)
-					throw ErrorHelper.CreateError (Options.Application, 99, caller, ins, $"Internal error: could not find the method {Namespaces.ObjCRuntime}.BlockLiteral.SetupBlockImpl. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+					throw ErrorHelper.CreateError (Options.Application, 99, caller, ins, $"Internal error: could not find the method {Namespaces.ObjCRuntime}.BlockLiteral.SetupBlockImpl. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 			}
 			return caller.Module.ImportReference (setupblock_def);
 		}

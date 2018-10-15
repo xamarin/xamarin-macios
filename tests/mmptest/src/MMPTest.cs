@@ -247,8 +247,7 @@ namespace Xamarin.MMP.Tests
 		{
 			TI.TestUnifiedExecutable (test, shouldFail: false);
 
-			Assert.IsTrue (File.Exists (Path.Combine (tmpDir, "bin/Debug/XM45Example.app/Contents/MonoBundle/Mono.Posix.dll")));
-			Assert.IsTrue (File.Exists (Path.Combine (tmpDir, "bin/Debug/XM45Example.app/Contents/MonoBundle/libMonoPosixHelper.dylib")));
+			Assert.IsTrue (File.Exists (Path.Combine (tmpDir, "bin/Debug/XM45Example.app/Contents/MonoBundle/libMonoPosixHelper.dylib")), String.Format ("Does {0}/bin/Debug/XM45Example.app/Contents/MonoBundle/libMonoPosixHelper.dylib to exist?", tmpDir));
 		}
 
 
@@ -672,6 +671,29 @@ namespace Xamarin.MMP.Tests
 				var rv = TI.TestUnifiedExecutable (test, shouldFail: true);
 				rv.Messages.AssertError (139, "Building 32-bit apps is not possible when using Xcode 10. Please change the architecture in the project's Mac Build options to 'x86_64'.");
 				rv.Messages.AssertWarningCount (0);
+			});
+		}
+
+		// [Test] - https://github.com/xamarin/xamarin-macios/issues/4110
+		public void BuildingSameSolutionTwice_ShouldNotRunACToolTwice ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					AssetIcons = true
+				};
+
+				string project = TI.GenerateUnifiedExecutableProject (test);
+
+				string buildOutput = TI.BuildProject (project, true, diagnosticMSBuild: true, useMSBuild: true);
+				Assert.True (buildOutput.Contains ("actool execution started with arguments"), $"Initial build should run actool");
+
+				buildOutput = TI.BuildProject (project, true, diagnosticMSBuild: true, useMSBuild: true);
+				Assert.False (buildOutput.Contains ("actool execution started with arguments"), $"Second build should not run actool");
+
+				TI.RunAndAssert ("touch", Path.Combine (tmpDir, "Assets.xcassets/AppIcon.appiconset/AppIcon-256@2x.png"), "touch icon");
+
+				buildOutput = TI.BuildProject (project, true, diagnosticMSBuild: true, useMSBuild: true);
+				Assert.True (buildOutput.Contains ("actool execution started with arguments"), $"Build after touching icon must run actool");
 			});
 		}
 	}
