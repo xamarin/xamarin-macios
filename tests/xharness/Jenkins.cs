@@ -260,6 +260,7 @@ namespace xharness
 						case TestPlatform.Mac_Unified32:
 						case TestPlatform.Mac_UnifiedXM45:
 						case TestPlatform.Mac_UnifiedXM45_32:
+						case TestPlatform.Mac_UnifiedSystem:
 							isMac = true;
 							break;
 						}
@@ -750,6 +751,8 @@ namespace xharness
 								Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_UnifiedXM45, "-unifiedXM45", ignored));
 								Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_UnifiedXM45_32, "-unifiedXM45-32", ignored32, true));
 							}
+							if (project.GenerateSystem)
+								Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_UnifiedSystem, "-system", ignored));
 						}
 					}
 				}
@@ -1077,6 +1080,7 @@ namespace xharness
 										case TestPlatform.Mac_Unified32:
 										case TestPlatform.Mac_UnifiedXM45:
 										case TestPlatform.Mac_UnifiedXM45_32:
+										case TestPlatform.Mac_UnifiedSystem:
 											is_match = true;
 											break;
 										default:
@@ -2332,6 +2336,8 @@ function toggleAll (show)
 					return rv.Substring (0, rv.Length - "-unifiedXM45".Length);
 				case TestPlatform.Mac_UnifiedXM45_32:
 					return rv.Substring (0, rv.Length - "-unifiedXM45-32".Length);
+				case TestPlatform.Mac_UnifiedSystem:
+					return rv.Substring (0, rv.Length - "-unifiedSystem".Length);
 				default:
 					if (rv.EndsWith ("-watchos", StringComparison.Ordinal)) {
 						return rv.Substring (0, rv.Length - 8);
@@ -2481,6 +2487,7 @@ function toggleAll (show)
 			case TestPlatform.Mac_Unified32:
 			case TestPlatform.Mac_UnifiedXM45:
 			case TestPlatform.Mac_UnifiedXM45_32:
+			case TestPlatform.Mac_UnifiedSystem:
 				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = xcodeRoot;
 				process.StartInfo.EnvironmentVariables ["XBUILD_FRAMEWORK_FOLDERS_PATH"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
 				process.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
@@ -2947,8 +2954,10 @@ function toggleAll (show)
 					return "Mac Unified XM45";
 				case TestPlatform.Mac_UnifiedXM45_32:
 					return "Mac Unified XM45 32-bit";
+				case TestPlatform.Mac_UnifiedSystem:
+					return "Mac Unified System";
 				default:
-					throw new NotImplementedException ();
+					throw new NotImplementedException (Platform.ToString ());
 				}
 			}
 			set {
@@ -3013,6 +3022,9 @@ function toggleAll (show)
 				break;
 			case TestPlatform.Mac_UnifiedXM45_32:
 				suffix = "-unifiedXM45-32";
+				break;
+			case TestPlatform.Mac_UnifiedSystem:
+				suffix = "-unifiedSystem";
 				break;
 			}
 			if (ProjectFile.EndsWith (".sln", StringComparison.Ordinal)) {
@@ -3831,6 +3843,7 @@ function toggleAll (show)
 		Mac_UnifiedXM45,
 		Mac_Unified32,
 		Mac_UnifiedXM45_32,
+		Mac_UnifiedSystem,
 	}
 
 	[Flags]
