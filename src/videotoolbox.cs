@@ -42,6 +42,10 @@ namespace VideoToolbox {
 		[Field ("kVTCompressionPropertyKey_AllowFrameReordering")]
 		NSString AllowFrameReordering { get; }
 
+		[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0)]
+		[Field ("kVTCompressionPropertyKey_AllowOpenGOP")]
+		NSString AllowOpenGop { get; }
+
 		// Rate control
 
 		[Field ("kVTCompressionPropertyKey_AverageBitRate")]
@@ -82,6 +86,10 @@ namespace VideoToolbox {
 		[Field ("kVTCompressionPropertyKey_RealTime")]
 		[Mac (10,9)]
 		NSString RealTime { get; }
+
+		[Field ("kVTCompressionPropertyKey_MaximizePowerEfficiency")]
+		[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0)]
+		NSString MaximizePowerEfficiency { get; }
 
 		// Hints
 
@@ -189,6 +197,10 @@ namespace VideoToolbox {
 		[Export ("AllowFrameReordering")]
 		bool AllowFrameReordering { get; set; }
 
+		[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0)]
+		[Export ("AllowOpenGop")]
+		bool AllowOpenGop { get; set; }
+
 		[Export ("AverageBitRate")]
 		int AverageBitRate { get; set; }
 
@@ -213,6 +225,10 @@ namespace VideoToolbox {
 		[Mac (10,9)]
 		[Export ("RealTime")]
 		bool RealTime { get; set; }
+
+		[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0)]
+		[Export ("MaximizePowerEfficiency")]
+		bool MaximizePowerEfficiency { get; set; }
 
 		[Export ("SourceFrameCount")]
 		uint SourceFrameCount { get; set; }
@@ -551,6 +567,10 @@ namespace VideoToolbox {
 		[Mac (10,10)]
 		NSString RealTime { get; }
 
+		[Field ("kVTDecompressionPropertyKey_MaximizePowerEfficiency")]
+		[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0)]
+		NSString MaximizePowerEfficiency { get; }
+
 		[Field ("kVTDecompressionPropertyKey_ThreadCount")]
 		NSString ThreadCount { get; }
 
@@ -659,6 +679,10 @@ namespace VideoToolbox {
 		[Mac (10,10)]
 		[Export ("RealTime")]
 		bool RealTime { get; set; }
+
+		[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0)]
+		[Export ("MaximizePowerEfficiency")]
+		bool MaximizePowerEfficiency { get; set; }
 
 		[Export ("ThreadCount")]
 		uint ThreadCount { get; set; }

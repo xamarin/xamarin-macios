@@ -3,6 +3,7 @@ using NUnit.Framework;
 #if XAMCORE_2_0
 using Foundation;
 using CloudKit;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.CloudKit;
@@ -21,6 +22,7 @@ namespace MonoTouchFixtures.CloudKit
 		public void SetUp ()
 		{
 			TestRuntime.AssertXcodeVersion (6, 0);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
 			op = new CKModifyRecordsOperation (null, null);
 		}
 

@@ -155,5 +155,14 @@ namespace MonoTouchFixtures.MobileCoreServices {
 				}
 			}
 		}
+
+		[Test]
+		public void Equals ()
+		{
+			Assert.True (UTType.Equals (null, null), "null-null");
+			Assert.False (UTType.Equals (null, UTType.PDF), "null-PDF");
+			Assert.False (UTType.Equals (UTType.PDF, null), "PDF-null");
+			Assert.True (UTType.Equals (UTType.PDF, UTType.PDF), "PDF-PDF");
+		}
 	}
 }

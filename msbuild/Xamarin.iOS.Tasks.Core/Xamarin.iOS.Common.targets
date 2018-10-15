@@ -701,6 +701,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			SdkPlatform="$(_SdkPlatform)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			DebugIPAddresses="$(_DebugIPAddresses)"
+			UseFakeWatchOS4_3Sdk="$(UseFakeWatchOS4_3Sdk)"
 			>
 		</CompileAppManifest>
 
@@ -831,7 +832,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			UseThumb="$(MtouchUseThumb)"
 			EnableBitcode="$(MtouchEnableBitcode)"
 			EnableSGenConc="$(MtouchEnableSGenConc)"
-			UseInterpreter="$(MtouchUseInterpreter)"
+			Interpreter="$(MtouchInterpreter)"
 			AppExtensionReferences="@(_ResolvedAppExtensionReferences)"
 			ArchiveSymbols="$(MonoSymbolArchive)"
 			Verbosity="$(MtouchVerbosity)"
@@ -1275,10 +1276,11 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_CoreCompileSceneKitAssets"
 		Inputs="@(SceneKitAsset)"
 		Outputs="$(_SceneKitCache)"
-		DependsOnTargets="_BeforeCoreCompileSceneKitAssets">
+		DependsOnTargets="_BeforeCoreCompileSceneKitAssets;_GenerateBundleName">
 
 		<CompileSceneKitAssets
 			SessionId="$(BuildSessionId)"
+			AppBundleDir="$(AppBundleDir)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			ToolExe="$(CopySceneKitAssetsExe)"
 			ToolPath="$(CopySceneKitAssetsPath)"

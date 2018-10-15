@@ -7,6 +7,7 @@ using System.Drawing;
 #if XAMCORE_2_0
 using Foundation;
 using UIKit;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -43,17 +44,15 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			using (UITextView tv = new UITextView ()) {
 				Assert.That (tv.SelectedRange.Length, Is.EqualTo ((nint) 0), "SelectedRange");
-				if (TestRuntime.CheckSystemAndSDKVersion (6,0)) {
-					Assert.IsNull (tv.TypingAttributes, "default");
-					// ^ without a [PreSnippet] attribute this would crash like:
-					// 7   monotouchtest                 	0x00006340 mono_sigill_signal_handler + 64
-					// 8   WebKit                        	0x06b6afa5 -[WebView(WebPrivate) styleAtSelectionStart] + 53
-					// 9   UIKit                         	0x028daa8a -[UIWebDocumentView typingAttributes] + 50
-					// 10  UIKit                         	0x0285de57 -[UITextView typingAttributes] + 42
-					tv.TypingAttributes = new NSDictionary ();
-					// Assert.IsNotNull (tv.TypingAttributes, "assigned");
-					// ^ this would still crash
-				}
+				Assert.IsNull (tv.TypingAttributes, "default");
+				// ^ without a [PreSnippet] attribute this would crash like:
+				// 7   monotouchtest                 	0x00006340 mono_sigill_signal_handler + 64
+				// 8   WebKit                        	0x06b6afa5 -[WebView(WebPrivate) styleAtSelectionStart] + 53
+				// 9   UIKit                         	0x028daa8a -[UIWebDocumentView typingAttributes] + 50
+				// 10  UIKit                         	0x0285de57 -[UITextView typingAttributes] + 42
+				tv.TypingAttributes = new NSDictionary ();
+				// Assert.IsNotNull (tv.TypingAttributes, "assigned");
+				// ^ this would still crash
 			}
 		}
 
@@ -64,10 +63,7 @@ namespace MonoTouchFixtures.UIKit {
 				tv.Text = "Bla bla bla";
 				tv.SelectAll (tv);
 				Assert.That (tv.SelectedRange.Length, Is.Not.EqualTo (0), "SelectedRange");
-				if (TestRuntime.CheckSystemAndSDKVersion (6,0)) {
-					Assert.IsNotNull (tv.TypingAttributes, "TypingAttributes");
-					// ^ this does not crash when a selection is made
-				}
+				Assert.IsNotNull (tv.TypingAttributes, "TypingAttributes");
 			}
 		}
 
@@ -75,8 +71,7 @@ namespace MonoTouchFixtures.UIKit {
 		// if this fails ping lobrien (or doc team) since it means Apple changed the defaults we documented
 		public void LayoutManager ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("requires iOS7+");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			using (UITextView tv = new UITextView ()) {
 				var lm = tv.LayoutManager;

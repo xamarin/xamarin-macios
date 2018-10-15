@@ -165,8 +165,9 @@ namespace QuickLookUI {
 	[Mac (10,13)]
 	[Protocol]
 	interface QLPreviewingController {
-
+#if !XAMCORE_4_0 // This is optional in headers
 		[Abstract]
+#endif
 		[Export ("preparePreviewOfSearchableItemWithIdentifier:queryString:completionHandler:")]
 		void PreparePreviewOfSearchableItem (string identifier, string queryString, Action<NSError> ItemLoadingHandler);
 	}

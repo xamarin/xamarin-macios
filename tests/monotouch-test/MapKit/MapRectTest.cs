@@ -6,6 +6,7 @@ using System;
 using Foundation;
 using MapKit;
 using CoreGraphics;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.MapKit;
@@ -19,6 +20,11 @@ namespace MonoTouchFixtures.MapKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class MapRectTest {
+		[SetUp]
+		public void Setup ()
+		{
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+		}
 		
 		[Test]
 		public void Defaults ()

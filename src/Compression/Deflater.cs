@@ -63,7 +63,7 @@ namespace Compression
 		{
 			if (!NeedsInput ())
 				throw new InvalidOperationException ("We have something left in previous input!");
-			if (_inputBufferHandle.HasPointer)
+			if (_inputBufferHandle.Pointer != null)
 				throw new InvalidOperationException ("Unexpected input buffer handler found.");
 
 			if (0 == inputBuffer.Length) {
@@ -71,7 +71,7 @@ namespace Compression
 			}
 
 			lock (SyncLock) {
-				_inputBufferHandle = inputBuffer.Retain (pin: true);
+				_inputBufferHandle = inputBuffer.Pin ();
 
 				_compression_struct.Source = (IntPtr)_inputBufferHandle.Pointer;
 				_compression_struct.SourceSize = inputBuffer.Length;
@@ -84,7 +84,7 @@ namespace Compression
 				throw new InvalidOperationException ("We have something left in previous input!");
 			if (inputBufferPtr == null)
 				throw new ArgumentNullException ( nameof (inputBufferPtr));
-			if (_inputBufferHandle.HasPointer)
+			if (_inputBufferHandle.Pointer != null)
 				throw new InvalidOperationException ("Unexpected input buffer handler found.");
 
 			if (count == 0) {
@@ -155,7 +155,7 @@ namespace Compression
 		/// <summary>
 		/// Returns true if there was something to flush. Otherwise False.
 		/// </summary>
-		internal bool Flush (byte[] outputBuffer, out int bytesRead)
+		internal unsafe bool Flush (byte[] outputBuffer, out int bytesRead)
 		{
 			if (outputBuffer == null)
 				throw new ArgumentNullException (nameof (outputBuffer));
@@ -163,7 +163,7 @@ namespace Compression
 				throw new ArgumentException ("Can't pass in an empty output buffer!");
 			if (!NeedsInput ())
 				throw new InvalidOperationException ("We have something left in previous input!");
-			if (_inputBufferHandle.HasPointer)
+			if (_inputBufferHandle.Pointer != null)
 				throw new InvalidOperationException ("InputHandler should not be set");
 
 			// Note: we require that NeedsInput() == true, i.e. that 0 == _zlibStream.AvailIn.

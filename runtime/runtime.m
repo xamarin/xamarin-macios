@@ -38,9 +38,7 @@ bool xamarin_detect_unified_build = false;
 #if MONOMAC
 bool xamarin_use_new_assemblies = false;
 #endif
-#if MONOTOUCH && DEBUG && (defined (__i386__) || defined (__x86_64__))
-bool xamarin_gc_pump = true;
-#else
+#if DEBUG
 bool xamarin_gc_pump = false;
 #endif
 #if MONOMAC
@@ -331,7 +329,7 @@ xamarin_get_managed_object_for_ptr_fast (id self, guint32 *exception_gchandle)
 		mobj = mono_gchandle_get_target (gchandle);
 #if DEBUG
 		if (self != xamarin_get_nsobject_handle (mobj)) {
-			xamarin_assertion_message ("Internal consistency error, please file a bug (http://bugzilla.xamarin.com). Additional data: found managed object %p=%p (%s) in native object %p (%s).\n",
+			xamarin_assertion_message ("Internal consistency error, please file a bug (https://github.com/xamarin/xamarin-macios/issues/new). Additional data: found managed object %p=%p (%s) in native object %p (%s).\n",
 				mobj, xamarin_get_nsobject_handle (mobj), xamarin_class_get_full_name (mono_object_get_class (mobj), exception_gchandle), self, object_getClassName (self));
 		}
 #endif
@@ -359,7 +357,7 @@ MonoClass *
 xamarin_get_nsvalue_class ()
 {
 	if (nsvalue_class == NULL)
-		xamarin_assertion_message ("Internal consistency error, please file a bug (https://bugzilla.xamarin.com). Additional data: can't get the %s class because it's been linked away.\n", "NSValue");
+		xamarin_assertion_message ("Internal consistency error, please file a bug (https://github.com/xamarin/xamarin-macios/issues/new). Additional data: can't get the %s class because it's been linked away.\n", "NSValue");
 	return nsvalue_class;
 }
 
@@ -367,7 +365,7 @@ MonoClass *
 xamarin_get_nsnumber_class ()
 {
 	if (nsnumber_class == NULL)
-		xamarin_assertion_message ("Internal consistency error, please file a bug (https://bugzilla.xamarin.com). Additional data: can't get the %s class because it's been linked away.\n", "NSNumber");
+		xamarin_assertion_message ("Internal consistency error, please file a bug (https://github.com/xamarin/xamarin-macios/issues/new). Additional data: can't get the %s class because it's been linked away.\n", "NSNumber");
 	return nsnumber_class;
 }
 
@@ -918,7 +916,7 @@ xamarin_open_assembly (const char *name)
 	if (xamarin_get_is_mkbundle ()) {
 		assembly = mono_assembly_open (name, NULL);
 		if (assembly == NULL)
-			xamarin_assertion_message ("Could not find the required assembly '%s' in the app. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: http://bugzilla.xamarin.com", name);
+			xamarin_assertion_message ("Could not find the required assembly '%s' in the app. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: https://github.com/xamarin/xamarin-macios/issues/new", name);
 		return assembly;
 	}
 #endif
@@ -935,16 +933,16 @@ xamarin_open_assembly (const char *name)
 		if (assembly)
 			return assembly;
 
-		xamarin_assertion_message ("Could not find the assembly '%s' in the app nor as an already loaded assembly. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: http://bugzilla.xamarin.com", name);
+		xamarin_assertion_message ("Could not find the assembly '%s' in the app nor as an already loaded assembly. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: https://github.com/xamarin/xamarin-macios/issues/new", name);
 	}
 #endif
 
 	if (!exists)
-		xamarin_assertion_message ("Could not find the assembly '%s' in the app. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: http://bugzilla.xamarin.com", name);
+		xamarin_assertion_message ("Could not find the assembly '%s' in the app. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: https://github.com/xamarin/xamarin-macios/issues/new", name);
 
 	assembly = mono_assembly_open (path, NULL);
 	if (assembly == NULL)
-		xamarin_assertion_message ("Could not find the required assembly '%s' in the app. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: http://bugzilla.xamarin.com", name);
+		xamarin_assertion_message ("Could not find the required assembly '%s' in the app. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: https://github.com/xamarin/xamarin-macios/issues/new", name);
 
 	return assembly;
 }
@@ -2227,8 +2225,10 @@ xamarin_get_is_unified ()
 void
 xamarin_set_gc_pump_enabled (bool value)
 {
+#if DEBUG
 	// COOP: no managed memory access: any mode.
 	xamarin_gc_pump = value;
+#endif
 }
 
 const char *

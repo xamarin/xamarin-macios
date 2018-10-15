@@ -133,7 +133,7 @@ xamarin_marshal_return_value (MonoType *mtype, const char *type, MonoObject *ret
 			} else if (xamarin_is_class_inativeobject (r_klass)) {
 				return xamarin_get_handle_for_inativeobject (retval, exception_gchandle);
 			} else {
-				xamarin_assertion_message ("Don't know how to marshal a return value of type '%s.%s'. Please file a bug with a test case at http://bugzilla.xamarin.com\n", mono_class_get_namespace (r_klass), mono_class_get_name (r_klass)); 
+				xamarin_assertion_message ("Don't know how to marshal a return value of type '%s.%s'. Please file a bug with a test case at https://github.com/xamarin/xamarin-macios/issues/new\n", mono_class_get_namespace (r_klass), mono_class_get_name (r_klass)); 
 			}
 		}
 		case _C_CHARPTR:
@@ -1252,7 +1252,7 @@ xamarin_create_bindas_exception (MonoType *inputType, MonoType *outputType, Mono
 		goto exception_handling;
 
 	method_full_name = mono_method_full_name (method, TRUE);
-	msg = xamarin_strdup_printf ("Internal error: can't convert from '%s' to '%s' in %s. Please file a bug report with a test case (https://bugzilla.xamarin.com).",
+	msg = xamarin_strdup_printf ("Internal error: can't convert from '%s' to '%s' in %s. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).",
 										from_name, to_name, method_full_name);
 	exception_gchandle = mono_gchandle_new ((MonoObject *) xamarin_create_exception (msg), false);
 

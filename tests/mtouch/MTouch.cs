@@ -703,6 +703,21 @@ public class B : A {}
 		}
 
 		[Test]
+		public void MT0032 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Debug = false;
+				mtouch.CustomArguments = new string[] { "--debugtrack:true" };
+				mtouch.WarnAsError = new int[] { 32 };
+				mtouch.CreateTemporaryApp ();
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (32, "The option '--debugtrack' is ignored unless '--debug' is also specified.");
+				mtouch.AssertErrorCount (1);
+				mtouch.AssertWarningCount (0);
+			}
+		}
+
+		[Test]
 		[TestCase (Profile.iOS, Profile.tvOS)]
 		[TestCase (Profile.iOS, Profile.watchOS)]
 		[TestCase (Profile.tvOS, Profile.iOS)]
@@ -1074,9 +1089,7 @@ public class B : A {}
 				mtouch.Sdk = sdk_version;
 				Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildSim));
 				var xcodeVersionString = Configuration.XcodeVersion;
-				if (xcodeVersionString.EndsWith (".0", StringComparison.Ordinal))
-					xcodeVersionString = xcodeVersionString.Substring (0, xcodeVersionString.Length - 2);
-				mtouch.AssertError (91, String.Format ("This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only (to try to avoid the new APIs).", name, GetSdkVersion (profile), xcodeVersionString));
+				mtouch.AssertError (91, String.Format ("This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only in your project's iOS Build Options > Linker Behavior (to try to avoid the new APIs).", name, GetSdkVersion (profile), xcodeVersionString));
 			}
 		}
 
@@ -1770,10 +1783,32 @@ public class B
 				mtouch.Linker = MTouchLinker.DontLink;
 				File.Delete (dllPath);
 				mtouch.AlwaysShowOutput = true;
-				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertWarningPattern (136, "Cannot find the assembly 'A, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null' referenced from '.*/testApp.exe'.");
 				mtouch.AssertWarning (137, "Cannot find the assembly 'A, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null', referenced by a MyCustomAttribute attribute in 'testApp.exe'.");
 				mtouch.AssertWarning (137, "Cannot find the assembly 'A, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null', referenced by a System.Diagnostics.DebuggerTypeProxyAttribute attribute in 'testApp.exe'.");
-				mtouch.AssertWarningCount (2);
+				mtouch.AssertWarningCount (3);
+				mtouch.AssertError (2002, "Failed to resolve assembly: 'A, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null'");
+				mtouch.AssertErrorCount (1);
+			}
+		}
+
+		[Test]
+		public void MT0138 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var tmpdir = mtouch.CreateTemporaryDirectory ();
+				mtouch.CreateTemporaryCacheDirectory ();
+
+				mtouch.CreateTemporaryApp ();
+				mtouch.WarnAsError = new int [] { 138 }; // This is just to make mtouch bail out early instead of spending time building the app when that's not what we're interested in.
+				mtouch.Interpreter = "all,-all,foo,-bar,mscorlib.dll,mscorlib";
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (138, "Cannot find the assembly 'foo', passed as an argument to --interpreter.");
+				mtouch.AssertError (138, "Cannot find the assembly 'bar', passed as an argument to --interpreter.");
+				mtouch.AssertError (138, "Cannot find the assembly 'mscorlib.dll', passed as an argument to --interpreter.");
+				// just the name, without the extension, is the right way.
+				mtouch.AssertErrorCount (3);
 			}
 		}
 
@@ -2882,7 +2917,6 @@ class Test {
 				mtouch.AssertOutputPattern (".*_OBJC_METACLASS_._Test_Subexistent in registrar.o.*");
 				mtouch.AssertOutputPattern (".*_OBJC_CLASS_._Inexistent., referenced from:.*");
 				mtouch.AssertOutputPattern (".*_OBJC_CLASS_._Test_Subexistent in registrar.o.*");
-				mtouch.AssertOutputPattern (".*objc-class-ref in registrar.o.*");
 				mtouch.AssertOutputPattern (".*ld: symbol.s. not found for architecture arm64.*");
 				mtouch.AssertOutputPattern (".*clang: error: linker command failed with exit code 1 .use -v to see invocation.*");
 
@@ -3830,6 +3864,8 @@ public class HandlerTest
 				case "_xamarin_float_objc_msgSendSuper": // Classic only, this function can probably be removed when we switch to binary copy of a Classic version of libxamarin.a
 				case "_xamarin_nfloat_objc_msgSend": // XM only
 				case "_xamarin_nfloat_objc_msgSendSuper": // Xm only
+					continue;
+				case "____chkstk_darwin": // compiler magic, unrelated to XI/XM
 					continue;
 				default:
 					missingSimlauncherSymbols.Add (symbol);

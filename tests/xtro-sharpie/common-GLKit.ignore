@@ -1,3 +1,5 @@
+## framework deprecated in favor of Metal
+
 !missing-field! GLKMatrix3Identity not bound
 !missing-field! GLKMatrix4Identity not bound
 !missing-field! GLKQuaternionIdentity not bound

@@ -537,10 +537,6 @@
 			"char**", "argv"
 		),
 
-		new Export ("void", "mono_jit_set_aot_only",
-			"mono_bool", "aot_only"
-		),
-
 		new Export ("void", "mono_jit_set_aot_mode",
 			"MonoAotMode", "mode"
 		),

@@ -20,7 +20,15 @@ using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 
+#if MONOMAC
+using UIFont=AppKit.NSFont;
+#endif
+
+#if MONOMAC
+namespace AppKit {
+#else
 namespace UIKit {
+#endif
 	partial class NSLayoutManager {
 		public unsafe nuint GetGlyphs (
 			NSRange glyphRange, 
@@ -45,29 +53,37 @@ namespace UIKit {
 				nuint rv;
 #if XAMCORE_2_0 && ARCH_32
 				// Unified/32: the output array is not the correct size, it needs to be int[], and it's an array of NSGlyphProperty (which is long)
-				var tmpArray = new nint [props.Length];
-				fixed (nint *properties = tmpArray) {
+				nint[] tmpArray = null;
+				if (props != null)
+					tmpArray = new nint [props.Length];
 #else
 				// Unified/64 + Classic: the input array is the correct size
-				fixed (NSGlyphProperty *properties = props) {
+				var tmpArray = props;
 #endif
+				fixed (void *properties = tmpArray) {
 					fixed (nuint* charIBuffer = charIndexBuffer) {
 						fixed (byte* bidi = bidiLevelBuffer) {
-							rv = GetGlyphsInternal (glyphRange, (IntPtr) glyphs, (IntPtr) properties, (IntPtr) charIBuffer, (IntPtr) bidi);
+							rv = GetGlyphs (glyphRange, (IntPtr) glyphs, (IntPtr) properties, (IntPtr) charIBuffer, (IntPtr) bidi);
 						}
 					}
 				}
 #if XAMCORE_2_0 && ARCH_32
 				// Marshal back from the tmpArray.
-				for (int i = 0; i < props.Length; i++)
-					props [i] = (NSGlyphProperty) (long) tmpArray [i];
+				if (tmpArray != null) {
+					for (int i = 0; i < props.Length; i++)
+						props [i] = (NSGlyphProperty) (long) tmpArray [i];
+				}
 #endif
 
 				return rv;
 			}
 		}
 
+#if XAMCORE_4_0 || MONOMAC
+		public unsafe void ShowGlyphs (
+#else
 		public unsafe void ShowCGGlyphs (
+#endif
 			short[] /* const CGGlyph* = CGFontIndex* = unsigned short* */ glyphs,
 			CGPoint[] /* const CGPoint* */ positions,
 			nuint /* NSUInteger */ glyphCount,
@@ -78,70 +94,76 @@ namespace UIKit {
 		{
 			fixed (short* gl = glyphs) {
 				fixed (CGPoint* pos = positions) {
-					ShowCGGlyphsInternal ((IntPtr) gl, (IntPtr) pos, glyphCount, font, textMatrix, attributes, graphicsContext);
+					ShowGlyphs ((IntPtr) gl, (IntPtr) pos, glyphCount, font, textMatrix, attributes, graphicsContext);
 				}
 			}
 		}
 
+#if !XAMCORE_4_0 && !MONOMAC
 		// TextContainerForGlyphAtIndex
+		[Obsolete ("Use 'GetTextContainer' instead.")]
 		public NSTextContainer TextContainerForGlyphAtIndex (nuint glyphIndex)
 		{
-			return TextContainerForGlyphAtIndexInternal (glyphIndex, IntPtr.Zero);
+			return GetTextContainer (glyphIndex);
 		}
 		
-		public unsafe NSTextContainer TextContainerForGlyphAtIndex (nuint glyphIndex, ref NSRange effectiveGlyphRange)
+		[Obsolete ("Use 'GetTextContainer' instead.")]
+		public NSTextContainer TextContainerForGlyphAtIndex (nuint glyphIndex, ref NSRange effectiveGlyphRange)
 		{
-			fixed (NSRange* ptr = &effectiveGlyphRange)
-				return TextContainerForGlyphAtIndexInternal (glyphIndex, (IntPtr) ptr);
+			return GetTextContainer (glyphIndex, out effectiveGlyphRange);
 		}
 
 		// LineFragmentRectForGlyphAtIndex
+		[Obsolete ("Use 'GetLineFragmentRect' instead.")]
 		public CGRect LineFragmentRectForGlyphAtIndex (nuint glyphIndex)
 		{
-			return LineFragmentRectForGlyphAtIndexInternal (glyphIndex, IntPtr.Zero);
+			return GetLineFragmentRect (glyphIndex);
 		}
 
-		public unsafe CGRect LineFragmentRectForGlyphAtIndex (nuint glyphIndex, ref NSRange effectiveGlyphRange)
+		[Obsolete ("Use 'GetLineFragmentRect' instead.")]
+		public CGRect LineFragmentRectForGlyphAtIndex (nuint glyphIndex, ref NSRange effectiveGlyphRange)
 		{
-			fixed (NSRange* ptr = &effectiveGlyphRange)
-				return LineFragmentRectForGlyphAtIndexInternal (glyphIndex, (IntPtr) ptr);
+			return GetLineFragmentRect (glyphIndex, out effectiveGlyphRange);
 		}
 
 		// LineFragmentUsedRectForGlyphAtIndex
+		[Obsolete ("Use 'GetLineFragmentUsedRect' instead.")]
 		public CGRect LineFragmentUsedRectForGlyphAtIndex (nuint glyphIndex)
 		{
-			return LineFragmentUsedRectForGlyphAtIndexInternal (glyphIndex, IntPtr.Zero);
+			return GetLineFragmentUsedRect (glyphIndex);
 		}
 
-		public unsafe CGRect LineFragmentUsedRectForGlyphAtIndex (nuint glyphIndex, ref NSRange effectiveGlyphRange)
+		[Obsolete ("Use 'GetLineFragmentUsedRect' instead.")]
+		public CGRect LineFragmentUsedRectForGlyphAtIndex (nuint glyphIndex, ref NSRange effectiveGlyphRange)
 		{
-			fixed (NSRange* ptr = &effectiveGlyphRange)
-				return LineFragmentUsedRectForGlyphAtIndexInternal (glyphIndex, (IntPtr) ptr);
+			return GetLineFragmentUsedRect (glyphIndex, out effectiveGlyphRange);
 		}
 
 		// GlyphRangeForCharacterRange
+		[Obsolete ("Use 'GetGlyphRange' instead.")]
 		public NSRange GlyphRangeForCharacterRange (NSRange charRange)
 		{
-			return GlyphRangeForCharacterRangeInternal (charRange, IntPtr.Zero);
+			return GetGlyphRange (charRange);
 		}
 
-		public unsafe NSRange GlyphRangeForCharacterRange (NSRange charRange, ref NSRange actualCharRange)
+		[Obsolete ("Use 'GetGlyphRange' instead.")]
+		public NSRange GlyphRangeForCharacterRange (NSRange charRange, ref NSRange actualCharRange)
 		{
-			fixed (NSRange* ptr = &actualCharRange)
-				return GlyphRangeForCharacterRangeInternal (charRange, (IntPtr) ptr);
+			return GetGlyphRange (charRange, out actualCharRange);
 		}
 		
 		// CharacterRangeForGlyphRange
+		[Obsolete ("Use 'GetCharacterRange' instead.")]
 		public NSRange CharacterRangeForGlyphRange (NSRange charRange)
 		{
-			return CharacterRangeForGlyphRangeInternal (charRange, IntPtr.Zero);
+			return GetCharacterRange (charRange);
 		}
 
-		public unsafe NSRange CharacterRangeForGlyphRange (NSRange charRange, ref NSRange actualCharRange)
+		public NSRange CharacterRangeForGlyphRange (NSRange charRange, ref NSRange actualCharRange)
 		{
-			fixed (NSRange* ptr = &actualCharRange)
-				return CharacterRangeForGlyphRangeInternal (charRange, (IntPtr) ptr);
+			return GetCharacterRange (charRange, out actualCharRange);
 		}
+#endif // !XAMCORE_4_0 && !MONOMAC
 
 		public unsafe nuint GetLineFragmentInsertionPoints (
 			nuint /* NSUInteger */ charIndex, 

@@ -172,7 +172,7 @@ public partial class Generator {
 		case "AVCameraCalibrationData":
 		case "CGColorSpace":
 		case "CIBarcodeDescriptor":
-			print ("return Runtime.GetINativeObject <{0}> (GetHandle (\"{1}\"), true);", propertyType, propertyName);
+			print ("return Runtime.GetINativeObject <{0}> (GetHandle (\"{1}\"), false);", propertyType, propertyName);
 			break;
 		case "CIColor":
 			print ("return GetColor (\"{0}\");", propertyName);
@@ -189,6 +189,7 @@ public partial class Generator {
 		case "int":
 			print ("return GetInt (\"{0}\");", propertyName);
 			break;
+		case "MLModel":
 		case "NSAttributedString":
 		case "NSData":
 			// NSNumber should not be added - it should be bound as a float (common), int32 or bool
@@ -197,6 +198,10 @@ public partial class Generator {
 		case "string":
 			// NSString should not be added - it should be bound as a string
 			print ("return (string) (ValueForKey (\"{0}\") as NSString);", propertyName);
+			break;
+		case "CIVector[]":
+			print ($"var handle = GetHandle (\"{propertyName}\");");
+			print ("return NSArray.ArrayFromHandle<CIVector> (handle);");
 			break;
 		default:
 			throw new BindingException (1018, true, "Unimplemented CoreImage property type {0}", propertyType);
@@ -233,6 +238,7 @@ public partial class Generator {
 		case "CIColor":
 		case "CIImage":
 		case "CIVector":
+		case "MLModel":
 		case "NSAttributedString":
 		case "NSData":
 		// NSNumber should not be added - it should be bound as a int or a float
@@ -244,6 +250,20 @@ public partial class Generator {
 			indent++;
 			print ("SetValue (\"{0}\", ns);", propertyName);
 			indent--;
+			break;
+		case "CIVector[]":
+			print ("if (value == null) {");
+			indent++;
+			print ($"SetHandle (\"{propertyName}\", IntPtr.Zero);");
+			indent--;
+			print ("} else {");
+			indent++;
+			print ("using (var array = NSArray.FromNSObjects (value))");
+			indent++;
+			print ($"SetHandle (\"{propertyName}\", array.GetHandle ());");
+			indent--;
+			indent--;
+			print ("}");
 			break;
 		default:
 			throw new BindingException (1018, true, "Unimplemented CoreImage property type {0}", propertyType);

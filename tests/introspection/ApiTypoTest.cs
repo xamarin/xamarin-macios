@@ -62,6 +62,10 @@ namespace Introspection
 			return SkipAllowed (methodName.DeclaringType.Name, methodName.Name, typo);
 		}
 
+		readonly HashSet<string> allowedRule3 = new HashSet<string> {
+			"IARAnchorCopying", // We're showing a code snippet in the 'Advice' message and that shouldn't end with a dot.
+		};
+
 		HashSet<string> allowedMemberRule4 = new HashSet<string> {
 			"Platform",
 			"PlatformHelper",
@@ -132,6 +136,7 @@ namespace Introspection
 			"Cartes", // french
 			"Cavlc",
 			"Cda", // acronym: Clinical Document Architecture
+			"Cfa", // acronym: Color Filter Array
 			"Celp", // MPEG4ObjectID
 			"Characterteristic",
 			"Chapv",
@@ -192,6 +197,8 @@ namespace Introspection
 			"Ecdh",  // Elliptic Curve Diffie–Hellman
 			"Ecdsa", // Elliptic Curve Digital Signature Algorithm
 			"Ecies", // Elliptic Curve Integrated Encryption Scheme
+			"Ecn",   // Explicit Congestion Notification
+			"Ect",   // ECN Capable Transport
 			"Editability", 
 			"Eof", // acronym End-Of-File
 			"Elu",
@@ -200,12 +207,14 @@ namespace Introspection
 			"Embd",
 			"Enc",
 			"Eppc",
+			"Eftpos", // Electronic funds transfer at point of sale
 			"Exhange",
 			"Exp",
 			"Expr",
 			"Exr",
 			"Felica", // Japanese contactless RFID smart card system
 			"Femtowatts",
+			"Fhir",
 			"Flipside",
 			"Formati",
 			"Fov",
@@ -219,6 +228,7 @@ namespace Introspection
 			"Gbrg",	// acronym for Green-Blue-Reg-Green
 			"Geocoder",
 			"Gigapascals",
+			"Gop", // acronym for Group Of Pictures
 			"Gpp",
 			"Gps",
 			"Gpu",	// acronym for Graphics Processing Unit
@@ -290,6 +300,7 @@ namespace Introspection
 			"Linecap",
 			"Lingustic",
 			"libcompression",
+			"libdispatch",
 			"Lod",
 			"Lopass",
 			"Lowlevel",
@@ -412,6 +423,7 @@ namespace Introspection
 			"Rtl",
 			"Rtsp",
 			"Saml", // acronym
+			"Sdof",
 			"Scn",
 			"Sdk",
 			"Sdtv", // acronym: Standard Definition Tele Vision
@@ -481,6 +493,7 @@ namespace Introspection
 			"Udp",
 			"Unconfigured",
 			"Undecodable",
+			"Unemphasized",
 			"Underrun",
 			"Unflagged",
 			"Unfocusing",
@@ -555,6 +568,7 @@ namespace Introspection
 #if MONOMAC
 			"Abbr",
 			"Accum",
+			"Ack", // TcpSetDisableAckStretching
 			"Addin",
 			"Addons",
 			"Appactive",
@@ -578,7 +592,9 @@ namespace Introspection
 			"Descriptorfor",
 			"Dimensionsfor",
 			"Dissapearing",
+			"Distinguised", // ITLibPlaylistPropertyDistinguisedKind
 			"Dirs",
+			"Drm", // MediaItemProperty.IsDrmProtected 
 			"Editability",
 			"Eisu",
 			"Entryat",
@@ -833,7 +849,7 @@ namespace Introspection
 						continue;
 
 					string txt = NameCleaner (t.Name);
-					var typo = GetTypo (txt);
+					var typo = GetCachedTypo (txt);
 					if (typo.Length > 0 ) {
 						if (!Skip (t, typo)) {
 							ReportError ("Typo in TYPE: {0} - {1} ", t.Name, typo);
@@ -852,7 +868,7 @@ namespace Introspection
 							continue;
 						
 						txt = NameCleaner (f.Name);
-						typo = GetTypo (txt);
+						typo = GetCachedTypo (txt);
 						if (typo.Length > 0) {
 							if (!Skip (f, typo)) {
 								ReportError ("Typo in FIELD name: {0} - {1}, Type: {2}", f.Name, typo, t.Name);
@@ -872,7 +888,7 @@ namespace Introspection
 							continue;
 						
 						txt = NameCleaner (m.Name);
-						typo = GetTypo (txt);
+						typo = GetCachedTypo (txt);
 						if (typo.Length > 0) {
 							if (!Skip (m, typo)) {
 								ReportError ("Typo in METHOD name: {0} - {1}, Type: {2}", m.Name, typo, t.Name);
@@ -883,7 +899,7 @@ namespace Introspection
 						var parameters = m.GetParameters ();
 						foreach (ParameterInfo p in parameters) {
 							txt = NameCleaner (p.Name);
-							typo = GetTypo (txt);
+							typo = GetCachedTypo (txt);
 							if (typo.Length > 0) {
 								ReportError ("Typo in PARAMETER Name: {0} - {1}, Method: {2}, Type: {3}", p.Name, typo, m.Name, t.Name);
 								totalErrors++;
@@ -944,8 +960,10 @@ namespace Introspection
 
 					// Rule 3: https://github.com/xamarin/xamarin-macios/wiki/BINDINGS#rule-3
 					if (!message.EndsWith (".", StringComparison.Ordinal)) {
-						ReportError ("[Rule 3] Missing '.' in attribute's message: \"{0}\" - {1}", message, memberAndType);
-						totalErrors++;
+						if (!allowedRule3.Contains (typeName)) {
+							ReportError ("[Rule 3] Missing '.' in attribute's message: \"{0}\" - {1}", message, memberAndType);
+							totalErrors++;
+						}
 					}
 
 					// Rule 4: https://github.com/xamarin/xamarin-macios/wiki/BINDINGS#rule-4
@@ -969,6 +987,14 @@ namespace Introspection
 			}
 		}
 
+		Dictionary<string, string> cached_typoes = new Dictionary<string, string> ();
+		string GetCachedTypo (string txt)
+		{
+			string rv;
+			if (!cached_typoes.TryGetValue (txt, out rv))
+				cached_typoes [txt] = rv = GetTypo (txt);
+			return rv;
+		}
 		public abstract string GetTypo (string txt);
 
 		static StringBuilder clean = new StringBuilder ();

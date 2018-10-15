@@ -30,8 +30,7 @@ namespace monotouchtest {
 		[Test]
 		public void AVAssetDownloadUrlSessionStaticNotSupported ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (9, 0))
-				Assert.Ignore ("Ignoring AVAssetDownloadUrlSession tests: Requires iOS9+");
+			TestRuntime.AssertXcodeVersion (7, 0);
 
 			Assert.Throws <NotSupportedException> (() => { var x = AVAssetDownloadUrlSession.SharedSession; }, "SharedSession should throw NotSupportedException");
 			Assert.Throws <NotSupportedException> (() => AVAssetDownloadUrlSession.FromConfiguration (NSUrlSessionConfiguration.DefaultSessionConfiguration), "FromConfiguration should throw NotSupportedException");

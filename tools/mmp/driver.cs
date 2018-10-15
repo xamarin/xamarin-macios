@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2011-2014 Xamarin Inc. All rights reserved.
  * Copyright 2010 Novell Inc.
@@ -448,6 +447,9 @@ namespace Xamarin.Bundler {
 			if (IsClassic && App.LinkMode == LinkMode.Platform)
 				throw new MonoMacException (2109, true, "Xamarin.Mac Classic API does not support Platform Linking.");
 
+			if (Registrar == RegistrarMode.PartialStatic && App.LinkMode != LinkMode.None)
+				throw new MonoMacException (2110, true, "Xamarin.Mac 'Partial Static' registrar does not support linking. Disable linking or use another registrar mode.");
+
 			// sanity check as this should never happen: we start out by not setting any
 			// Unified/Classic properties, and only IsUnifiedMobile if we are are on the
 			// XM framework. If we are not, we set IsUnifiedFull to true iff we detect
@@ -482,6 +484,12 @@ namespace Xamarin.Bundler {
 			// InitializeCommon needs SdkVersion set to something valid
 			ValidateSDKVersion ();
 
+			if (action != Action.RunRegistrar && XcodeVersion.Major >= 10 && !Is64Bit) {
+				if (IsClassic)
+					throw ErrorHelper.CreateError (138, "Building 32-bit apps is not possible when using Xcode 10. Please migrate project to the Unified API.");
+				throw ErrorHelper.CreateError (139, "Building 32-bit apps is not possible when using Xcode 10. Please change the architecture in the project's Mac Build options to 'x86_64'.");
+			}
+
 			// InitializeCommon needs the current profile
 			if (IsClassic)
 				Profile.Current = new MonoMacProfile ();
@@ -492,7 +500,7 @@ namespace Xamarin.Bundler {
 
 			App.InitializeCommon ();
 
-			Log ("Xamarin.Mac {0}{1}", Constants.Version, verbose > 0 ? "." + Constants.Revision : string.Empty);
+			Log ("Xamarin.Mac {0}.{1}", Constants.Version, Constants.Revision);
 
 			if (verbose > 0)
 				Console.WriteLine ("Selected target framework: {0}; API: {1}", targetFramework, IsClassic ? "Classic" : "Unified");
@@ -637,6 +645,11 @@ namespace Xamarin.Bundler {
 				if (rv.Minor == 11 && XcodeVersion >= new Version (7, 3))
 					return new Version (rv.Major, rv.Minor, 4);
 			}
+			// Since Version has wrong behavior:
+			// new Version (10, 14) < new Version (10, 14, 0) => true
+			// Force any unset revision to 0 instead of -1
+			if (rv.Revision == -1)
+				return new Version (rv.Major, rv.Minor, 0);
 			return rv;
 		}
 
@@ -836,7 +849,7 @@ namespace Xamarin.Bundler {
 				if (ret == 69)
 					throw new MonoMacException (5308, true, "Xcode license agreement may not have been accepted.  Please launch Xcode.");
 				// if not then the compilation really failed
-				throw new MonoMacException (5103, true, String.Format ("Failed to compile. Error code - {0}. Please file a bug report at http://bugzilla.xamarin.com", ret));
+				throw new MonoMacException (5103, true, String.Format ("Failed to compile. Error code - {0}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", ret));
 			}
 			if (frameworks_copied_to_bundle_dir) {
 				int install_ret = XcodeRun ("install_name_tool", string.Format ("{0} -add_rpath @loader_path/../Frameworks", StringUtils.Quote (AppPath)));
@@ -859,7 +872,7 @@ namespace Xamarin.Bundler {
 				else if (IsUnifiedFullSystemFramework)
 					compilerType = Is64Bit ? AOTCompilerType.System64 : AOTCompilerType.System32; 
 				else
-					throw ErrorHelper.CreateError (0099, "Internal error \"AOT with unexpected profile.\" Please file a bug report with a test case (http://bugzilla.xamarin.com).");
+					throw ErrorHelper.CreateError (0099, "Internal error \"AOT with unexpected profile.\" Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 
 				AOTCompiler compiler = new AOTCompiler (aotOptions, compilerType, IsUnifiedMobile, !EnableDebug);
 				compiler.Compile (mmp_dir);
@@ -1326,7 +1339,7 @@ namespace Xamarin.Bundler {
 						args.Append ("-u ").Append (StringUtils.Quote (symbol.Prefix + symbol.Name)).Append (' ');
 					break;
 				default:
-					throw ErrorHelper.CreateError (99, $"Internal error: invalid symbol mode: {App.SymbolMode}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+					throw ErrorHelper.CreateError (99, $"Internal error: invalid symbol mode: {App.SymbolMode}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 				}
 
 				bool linkWithRequiresForceLoad = BuildTarget.Assemblies.Any (x => x.ForceLoad);
@@ -1344,6 +1357,10 @@ namespace Xamarin.Bundler {
 
 					args.Append (StringUtils.Quote (lib)).Append (' ');
 
+					var libsystem_native_path = Path.Combine (libdir, "libmono-system-native.a");
+					args.Append (StringUtils.Quote (libsystem_native_path)).Append (' ');
+					args.Append ("-u ").Append ("_SystemNative_RealPath").Append (' '); // This keeps libmono_system_native_la-pal_io.o symbols
+
 					if (profiling.HasValue && profiling.Value) {
 						args.Append (StringUtils.Quote (Path.Combine (libdir, "libmono-profiler-log.a"))).Append (' ');
 						args.Append ("-u _mono_profiler_init_log -lz ");
@@ -1356,6 +1373,10 @@ namespace Xamarin.Bundler {
 				}
 
 				args.Append ("-liconv -x objective-c++ ");
+				if (XcodeVersion.Major >= 10) {
+					// Xcode 10 doesn't ship with libstdc++
+					args.Append ("-stdlib=libc++ ");
+				}
 				args.Append ("-I").Append (StringUtils.Quote (Path.Combine (GetXamMacPrefix (), "include"))).Append (' ');
 				if (registrarPath != null)
 					args.Append (StringUtils.Quote (registrarPath)).Append (' ');
@@ -1380,7 +1401,7 @@ namespace Xamarin.Bundler {
 
 				ret = XcodeRun ("clang", args.ToString (), null);
 			} catch (Win32Exception e) {
-				throw new MonoMacException (5103, true, e, "Failed to compile the file '{0}'. Please file a bug report at http://bugzilla.xamarin.com", "driver");
+				throw new MonoMacException (5103, true, e, "Failed to compile the file '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", "driver");
 			}
 			
 			return ret;

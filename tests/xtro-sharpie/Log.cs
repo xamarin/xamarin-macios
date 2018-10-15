@@ -6,7 +6,7 @@ using System.Linq;
 namespace Extrospection {
 
 	static class Log {
-		static Dictionary<string, List<string>> lists = new Dictionary<string, List<string>> ();
+		static Dictionary<string, List<string>> lists = new Dictionary<string, List<string>> (StringComparer.OrdinalIgnoreCase);
 
 		public static IList<string> On (string fx)
 		{

@@ -1414,6 +1414,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void TestNativeObjectArray ()
 		{
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+
 			using (var i1 = new MKPointAnnotation ()) {
 				using (var i2 = new MKPointAnnotation ()) {
 					using (var array = NSArray.FromObjects (i1, i2)) {

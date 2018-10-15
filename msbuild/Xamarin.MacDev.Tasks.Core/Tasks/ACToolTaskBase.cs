@@ -390,12 +390,15 @@ namespace Xamarin.MacDev.Tasks
 						int line = 0, column = 0;
 						int index, endIndex;
 
-						if ((index = ex.Message.IndexOf ("At line ", StringComparison.Ordinal)) != -1) {
+						var message = ex.Message;
+						if (message.EndsWith (".", StringComparison.Ordinal))
+							message = message.Substring (0, message.Length - 1);
+						if ((index = message.IndexOf ("At line ", StringComparison.Ordinal)) != -1) {
 							index += "At line ".Length;
 
-							if ((endIndex = ex.Message.IndexOf (", column ", index, StringComparison.Ordinal)) != -1) {
-								var columnBuf = ex.Message.Substring (endIndex + ", column ".Length);
-								var lineBuf = ex.Message.Substring (index, endIndex - index);
+							if ((endIndex = message.IndexOf (", column ", index, StringComparison.Ordinal)) != -1) {
+								var columnBuf = message.Substring (endIndex + ", column ".Length);
+								var lineBuf = message.Substring (index, endIndex - index);
 
 								int.TryParse (columnBuf, out column);
 								int.TryParse (lineBuf, out line);

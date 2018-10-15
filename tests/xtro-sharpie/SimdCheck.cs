@@ -47,6 +47,7 @@ namespace Extrospection
 			{ "simd_float2", new NativeSimdInfo { Managed = "Vector2" }},
 			{ "simd_float3", new NativeSimdInfo { Managed = "Vector3" }},
 			{ "simd_float4", new NativeSimdInfo { Managed = "Vector4" }},
+			{ "simd_float3x3", new NativeSimdInfo { Managed = "MatrixFloat3x3", InvalidManaged = "Matrix3" }},
 			{ "simd_float4x4", new NativeSimdInfo { Managed = "MatrixFloat4x4", InvalidManaged = "Matrix4" }},
 			// The native definition is two 'vector_float2' fields.
 			// The managed definition matches this (two 'Vector2' fields), and should work fine.

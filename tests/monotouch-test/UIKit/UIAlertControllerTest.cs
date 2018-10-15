@@ -15,6 +15,7 @@ using System.Drawing;
 #if XAMCORE_2_0
 using Foundation;
 using UIKit;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -39,8 +40,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void InitWithNibNameTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8,0))
-				Assert.Inconclusive ("UIAlertControllerTest is new in 8.0");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
 			
 			UIAlertController ctrl = new UIAlertController (null, null);
 			Assert.NotNull (ctrl, "UIAlertController ctor(String, NSBundle)");

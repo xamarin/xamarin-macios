@@ -117,7 +117,7 @@ namespace Xamarin.Bundler
 	{
 		protected override void CompilationFailed (int exitCode)
 		{
-			throw ErrorHelper.CreateError (5103, "Failed to compile the file(s) '{0}'. Please file a bug report at http://bugzilla.xamarin.com", string.Join ("', '", CompilerFlags.SourceFiles.ToArray ()));
+			throw ErrorHelper.CreateError (5103, "Failed to compile the file(s) '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", string.Join ("', '", CompilerFlags.SourceFiles.ToArray ()));
 		}
 	}
 
@@ -125,7 +125,7 @@ namespace Xamarin.Bundler
 	{
 		protected override void CompilationFailed (int exitCode)
 		{
-			throw ErrorHelper.CreateError (4002, "Failed to compile the generated code for P/Invoke methods. Please file a bug report at http://bugzilla.xamarin.com");
+			throw ErrorHelper.CreateError (4002, "Failed to compile the generated code for P/Invoke methods. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new");
 		}
 	}
 
@@ -169,7 +169,7 @@ namespace Xamarin.Bundler
 
 		protected override void CompilationFailed (int exitCode)
 		{
-			throw ErrorHelper.CreateError (4109, "Failed to compile the generated registrar code. Please file a bug report at http://bugzilla.xamarin.com");
+			throw ErrorHelper.CreateError (4109, "Failed to compile the generated registrar code. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new");
 		}
 	}
 
@@ -359,7 +359,7 @@ namespace Xamarin.Bundler
 
 		protected override void CompilationFailed (int exitCode)
 		{
-			throw ErrorHelper.CreateError (5216, "Native linking failed for '{0}'. Please file a bug report at http://bugzilla.xamarin.com", OutputFile);
+			throw ErrorHelper.CreateError (5216, "Native linking failed for '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", OutputFile);
 		}
 	}
 
@@ -486,7 +486,7 @@ namespace Xamarin.Bundler
 				throw new ArgumentNullException (nameof (install_name));
 
 			flags.AddOtherFlag ("-shared");
-			if (!App.EnableBitCode)
+			if (!App.EnableBitCode && !Target.Is64Build)
 				flags.AddOtherFlag ("-read_only_relocs suppress");
 			if (App.EnableBitCode)
 				flags.AddOtherFlag ("-lc++");
@@ -514,7 +514,7 @@ namespace Xamarin.Bundler
 
 		protected virtual void CompilationFailed (int exitCode)
 		{
-			throw ErrorHelper.CreateError (5106, "Could not compile the file(s) '{0}'. Please file a bug report at http://bugzilla.xamarin.com", string.Join ("', '", CompilerFlags.SourceFiles.ToArray ()));
+			throw ErrorHelper.CreateError (5106, "Could not compile the file(s) '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", string.Join ("', '", CompilerFlags.SourceFiles.ToArray ()));
 		}
 
 		protected async Task<int> CompileAsync ()

@@ -52,8 +52,7 @@ namespace MonoTouchFixtures.GamePlayKit {
 		[Test]
 		public void FromGridStartingAtTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (9, 0))
-				Assert.Ignore ("Ignoring GameplayKit tests: Requires iOS9+");
+			TestRuntime.AssertXcodeVersion (7, 0);
 
 			var graph = GKGridGraph.FromGridStartingAt (Vector2i.Zero, 10, 10, false);
 			Assert.NotNull (graph, "GKGridGraph.FromGridStartingAt should not be null");
@@ -81,10 +80,10 @@ namespace MonoTouchFixtures.GamePlayKit {
 				}
 			}
 
-			// increasing min required version due to in 9.2 we get a crash from GameplayKit
+			// increasing min required version due to in iOS 9.2 we get a crash from GameplayKit
 			// pretty similar to this report on stackoverflow, this does not happen on 9.3
 			// http://stackoverflow.com/questions/35811432/gameplaykit-gkgraph-dealloc-crash-on-ios9-2
-			if (TestRuntime.CheckSystemAndSDKVersion (9, 3))
+			if (TestRuntime.CheckXcodeVersion (7, 3))
 				graph.RemoveNodes (walls.ToArray ());
 
 			Assert.NotNull (startPosition, "startPosition must not be null");
@@ -96,8 +95,7 @@ namespace MonoTouchFixtures.GamePlayKit {
 		[Test]
 		public void InitFromGridStartingAtTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (9, 0))
-				Assert.Ignore ("Ignoring GameplayKit tests: Requires iOS9+");
+			TestRuntime.AssertXcodeVersion (7, 0);
 
 			var graph = new GKGridGraph (Vector2i.Zero, 10, 10, false);
 			Assert.NotNull (graph, "GKGridGraph.FromGridStartingAt should not be null");
@@ -128,7 +126,7 @@ namespace MonoTouchFixtures.GamePlayKit {
 			// increasing min required version due to in 9.2 we get a crash from GameplayKit
 			// pretty similar to this report on stackoverflow, this does not happen on 9.3
 			// http://stackoverflow.com/questions/35811432/gameplaykit-gkgraph-dealloc-crash-on-ios9-2
-			if (TestRuntime.CheckSystemAndSDKVersion (9, 3))
+			if (TestRuntime.CheckXcodeVersion (7, 3))
 				graph.RemoveNodes (walls.ToArray ());
 
 			Assert.NotNull (startPosition, "startPosition must not be null");

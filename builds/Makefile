@@ -90,10 +90,10 @@ CCACHE_CXXFLAGS=-Qunused-arguments
 # Configuration for the mono sdk makefiles
 #
 SDK_CONFIG=$(MONO_PATH)/sdks/Make.config
-SDK_ARGS=XCODE_DIR=$(XCODE_DEVELOPER_ROOT) IOS_VERSION=$(IOS_SDK_VERSION) IOS_VERSION_MIN=$(MIN_IOS_SDK_VERSION) TVOS_VERSION=$(TVOS_SDK_VERSION) TVOS_VERSION_MIN=$(MIN_TVOS_SDK_VERSION) WATCHOS_VERSION=$(WATCH_SDK_VERSION) WATCHOS_VERSION_MIN=$(MIN_WATCHOS_SDK_VERSION)
+SDK_ARGS=XCODE_DIR=$(XCODE_DEVELOPER_ROOT) IOS_VERSION=$(IOS_SDK_VERSION) IOS_VERSION_MIN=$(MIN_IOS_SDK_VERSION) TVOS_VERSION=$(TVOS_SDK_VERSION) TVOS_VERSION_MIN=$(MIN_TVOS_SDK_VERSION) WATCHOS_VERSION=$(WATCH_SDK_VERSION) WATCHOS_VERSION_MIN=$(MIN_WATCHOS_SDK_VERSION) IGNORE_PROVISION_LLVM=1
 
-ifdef IGNORE_PACKAGE_LLVM
-SDK_ARGS += IGNORE_PACKAGE_LLVM=1
+ifdef DISABLE_DOWNLOAD_LLVM
+SDK_ARGS += DISABLE_DOWNLOAD_LLVM=1
 endif
 
 SDK_BUILDDIR = $(MONO_PATH)/sdks/builds
@@ -199,6 +199,7 @@ MAC_BCL_TARGETS = \
 
 MAC_TARGETS = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-profiler-log.a \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-system-native.a \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-2.0.dylib \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-2.0.a \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig/mono-2.pc \
@@ -208,9 +209,10 @@ MAC_TARGETS = \
 	$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current \
 	$(MAC_DIRECTORIES) \
 
+#  $(3): specific xcode path
 define MacBuildTemplate
 $(2)_CPPFLAGS = \
-	-isysroot $(XCODE_MAC_SDKROOT) \
+	-isysroot $(5) \
 	-mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
 $(2)_CFLAGS = -O2 -arch $(1)
 $(2)_CXXFLAGS = -O2 -arch $(1)
@@ -237,9 +239,9 @@ $(2)_CONFIGURE_ENVIRONMENT = \
 	CFLAGS="$$($(2)_CFLAGS)" \
 	CXXFLAGS="$$($(2)_CXXFLAGS)" \
 	LDFLAGS="$$($(2)_LDFLAGS)" \
-	CC="$(MAC_CC)" \
-	CXX="$(MAC_CXX)" \
-	DEVELOPER_DIR="$(XCODE_DEVELOPER_ROOT)" \
+	CC="$(MAC$(4)_CC)" \
+	CXX="$(MAC$(4)_CXX)" \
+	DEVELOPER_DIR="$(3)" \
 
 setup:: setup-$(2)
 
@@ -261,8 +263,8 @@ $(BUILD_DESTDIR)/mono-$(2): mono-wrapper.in .stamp-configure-$(2) | $(BUILD_DEST
 build-$(2): .stamp-build-$(2)
 endef
 
-$(eval $(call MacBuildTemplate,i386,mac32))
-$(eval $(call MacBuildTemplate,x86_64,mac64))
+$(eval $(call MacBuildTemplate,i386,mac32,$(XCODE94_DEVELOPER_ROOT),32,$(XCODE94_MAC_SDKROOT)))
+$(eval $(call MacBuildTemplate,x86_64,mac64,$(XCODE_DEVELOPER_ROOT),,$(XCODE_MAC_SDKROOT)))
 
 $(MONO_PATH)/mcs/class/lib/%: .stamp-build-tools64; @true
 
@@ -314,6 +316,7 @@ endef
 
 $(eval $(call lipo_template_static,libmono-profiler-log.a,mono/profiler))
 $(eval $(call lipo_template_static,libmonosgen-2.0.a,mono/mini))
+$(eval $(call lipo_template_static,libmono-system-native.a,mono/metadata))
 $(eval $(call lipo_template_dynamic,libmonosgen-2.0.dylib,mono/mini))
 $(eval $(call lipo_template_dynamic,libMonoPosixHelper.dylib,support))
 
@@ -1176,17 +1179,15 @@ $(eval $(call DeviceBuildTemplate,arm64,target64,target64,$(ARM64_ARCH_CONFIGURE
 endif
 
 ifdef INCLUDE_DEVICE
+ifdef INCLUDE_IOS
 iphoneos:: setup-iphoneos build-iphoneos install-iphoneos
 device:: iphoneos
 clean-device: clean-iphoneos
 install-device: install-iphoneos
 
 # this needs to be here because the normal usage of this makefile is "make all install", but nothing actually lists the -iphoneos targets as dependencies.
-ifdef INCLUDE_IOS
 install-local:: install-iphoneos
 all-local:: install-iphoneos
-endif
-endif
 
 LIBMONO_PROFILER_IPHONEOS_DYLIB=$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-profiler-log.dylib
 
@@ -1241,6 +1242,9 @@ $(IOS_DESTDIR)$(IPHONEOS_SDK)/Frameworks/Mono.framework/Info.plist: Mono.framewo
 
 install-iphoneos:: $(IPHONEOS_TARGETS)
 
+endif # INCLUDE_IOS
+endif # INCLUDE_DEVICE
+
 #
 # Watch device build
 # 
@@ -1259,8 +1263,6 @@ targetwatch: build-targetwatch install-watchos
 watchos:: targetwatch
 
 .PHONY: targetwatch
-endif
-endif
 
 .stamp-build-targetwatch: $(MONO_PATH)/configure $(SDK_CONFIG) $(MONO_DEPENDENCIES)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-targetwatch $(SDK_ARGS)
@@ -1353,6 +1355,9 @@ $(BUILD_DESTDIR)/targetwatch/tmp-lib/Mono: $(BUILD_DESTDIR)/targetwatch/lib/libm
 
 install-watchos: $(WATCHOS_TARGETS)
 
+endif # INCLUDE_DEVICE
+endif # INCLUDE_WATCH
+
 #
 # TV device build
 #
@@ -1371,8 +1376,6 @@ targettv: build-targettv install-tvos
 tvos:: targettv
 
 .PHONY: targettv
-endif
-endif
 
 .stamp-build-targettv: $(MONO_PATH)/configure $(SDK_CONFIG) $(MONO_DEPENDENCIES)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-targettv $(SDK_ARGS)
@@ -1464,6 +1467,9 @@ $(BUILD_DESTDIR)/targettv/tmp-lib/Mono: $(BUILD_DESTDIR)/targettv/lib/libmonosge
 
 install-tvos: $(TVOS_TARGETS)
 
+endif # INCLUDE_DEVICE
+endif # INCLUDE_TVOS
+
 #
 # Cross compilers
 #
@@ -1496,11 +1502,11 @@ build-llvm32: .stamp-build-llvm
 build-llvm64: .stamp-build-llvm
 
 .stamp-build-llvm: $(SDK_CONFIG)
-	$(MAKE) -C $(SDK_BUILDDIR) build-ios-llvm $(SDK_ARGS)
+	$(MAKE) -C $(SDK_BUILDDIR) provision-llvm36-llvm32 provision-llvm-llvm64 $(SDK_ARGS)
 	$(Q) touch $@
 
 clean-llvm: $(SDK_CONFIG)
-	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-llvm $(SDK_ARGS)
+	$(MAKE) -C $(SDK_BUILDDIR) clean-llvm36-llvm32 clean-llvm-llvm64 $(SDK_ARGS)
 	$(RM) .stamp-*-llvm*
 
 .PHONY: install-llvm64 llvm llvm64
@@ -1510,11 +1516,19 @@ install-llvm: install-llvm32 install-llvm64
 LLVM_TARGETS = \
 	$(PREFIX)/LLVM/bin/opt \
 	$(PREFIX)/LLVM/bin/llc \
+	$(PREFIX)/LLVM36/bin/opt \
+	$(PREFIX)/LLVM36/bin/llc
 
-$(PREFIX)/LLVM/bin/%: $(SDK_DESTDIR)/ios-llvm64/bin/% | $(PREFIX)/LLVM/bin
+$(PREFIX)/LLVM/bin/%: $(SDK_DESTDIR)/llvm-llvm64/bin/% | $(PREFIX)/LLVM/bin
+	$(call Q_2,INSTALL ,[LLVM64]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $^ $@
+
+$(PREFIX)/LLVM36/bin/%: $(SDK_DESTDIR)/llvm36-llvm32/bin/% | $(PREFIX)/LLVM36/bin
 	$(call Q_2,INSTALL ,[LLVM64]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $^ $@
 
 $(PREFIX)/LLVM/bin:
+	$(Q) mkdir -p $@
+
+$(PREFIX)/LLVM36/bin:
 	$(Q) mkdir -p $@
 
 install-llvm32:.stamp-build-llvm $(LLVM_TARGETS)
@@ -1548,11 +1562,10 @@ offsets-tool: $(MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe
 #  $(2): llvm (llvm32 or llvm64)
 #  $(3): cross compiler executable (arm-darwin-mono-sgen)
 #  $(4): cross compiler executable generated by mono sdk
+#  $(5): specific xcode path
 ##
 define iOSCrossTemplate
 
-ifdef INCLUDE_IOS
-ifdef INCLUDE_DEVICE
 $(1): build-$(1) install-$(1)
 
 .PHONY: build-$(1) install-$(1)
@@ -1560,11 +1573,9 @@ $(1): build-$(1) install-$(1)
 build:: build-$(1)
 install-local:: install-$(1)
 clean-local:: clean-$(1)
-endif
-endif
 
 .stamp-build-$(1): .stamp-build-llvm $(MONO_PATH)/configure $(MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe $(MONO_DEPENDENCIES) $(SDK_CONFIG)
-	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(1) $(SDK_ARGS)
+	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(1) $(SDK_ARGS) $(if $(5), XCODE_DIR=$(5))
 	$(Q) touch $$@
 
 build-$(1): .stamp-build-$(1)
@@ -1585,6 +1596,10 @@ clean-$(1): $(SDK_CONFIG)
 
 endef
 
-$(eval $(call iOSCrossTemplate,cross32,llvm32,arm-darwin-mono-sgen,arm-darwin-mono-sgen))
+ifdef INCLUDE_IOS
+ifdef INCLUDE_DEVICE
+$(eval $(call iOSCrossTemplate,cross32,llvm32,arm-darwin-mono-sgen,arm-darwin-mono-sgen,$(XCODE94_DEVELOPER_ROOT)))
 $(eval $(call iOSCrossTemplate,cross64,llvm64,arm64-darwin-mono-sgen,aarch64-darwin-mono-sgen))
-$(eval $(call iOSCrossTemplate,crosswatch,llvm32,armv7k-unknown-darwin-mono-sgen,armv7k-unknown-darwin-mono-sgen))
+$(eval $(call iOSCrossTemplate,crosswatch,llvm32,armv7k-unknown-darwin-mono-sgen,armv7k-unknown-darwin-mono-sgen,$(XCODE94_DEVELOPER_ROOT)))
+endif
+endif

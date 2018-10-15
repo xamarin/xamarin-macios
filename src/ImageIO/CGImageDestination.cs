@@ -86,9 +86,9 @@ namespace ImageIO {
 				dict.LowlevelSetObject (Metadata.Handle, kMetadata);
 				// default are false
 				if (MergeMetadata)
-					dict.LowlevelSetObject (CFBoolean.True.Handle, kMergeMetadata);
+					dict.LowlevelSetObject (CFBoolean.TrueHandle, kMergeMetadata);
 				if (ShouldExcludeXMP)
-					dict.LowlevelSetObject (CFBoolean.True.Handle, kShouldExcludeXMP);
+					dict.LowlevelSetObject (CFBoolean.TrueHandle, kShouldExcludeXMP);
 			} else {
 				// DateTime is exclusive of metadata (which includes its own)
 				if (DateTime.HasValue)
@@ -108,14 +108,14 @@ namespace ImageIO {
 
 			// new in iOS 8 and 10.10 - default is false
 			if (EmbedThumbnail && (kEmbedThumbnail != IntPtr.Zero))
-				dict.LowlevelSetObject (CFBoolean.True.Handle, kEmbedThumbnail);
+				dict.LowlevelSetObject (CFBoolean.TrueHandle, kEmbedThumbnail);
 
 			// new in iOS 8 and 10.10 - default is false
 			if (ShouldExcludeGPS && (kShouldExcludeGPS != IntPtr.Zero))
-				dict.LowlevelSetObject (CFBoolean.True.Handle, kShouldExcludeGPS);
+				dict.LowlevelSetObject (CFBoolean.TrueHandle, kShouldExcludeGPS);
 
 			if (OptimizeColorForSharing && (kOptimizeColorForSharing != IntPtr.Zero))
-				dict.LowlevelSetObject (CFBoolean.True.Handle, kOptimizeColorForSharing);
+				dict.LowlevelSetObject (CFBoolean.TrueHandle, kOptimizeColorForSharing);
 
 			return dict;
 		}
@@ -169,9 +169,9 @@ namespace ImageIO {
 				dict.LowlevelSetObject (Metadata.Handle, kMetadata);
 				// default are false
 				if (MergeMetadata)
-					dict.LowlevelSetObject (CFBoolean.True.Handle, kMergeMetadata);
+					dict.LowlevelSetObject (CFBoolean.TrueHandle, kMergeMetadata);
 				if (ShouldExcludeXMP)
-					dict.LowlevelSetObject (CFBoolean.True.Handle, kShouldExcludeXMP);
+					dict.LowlevelSetObject (CFBoolean.TrueHandle, kShouldExcludeXMP);
 			} else {
 				// DateTime is exclusive of metadata (which includes its own)
 				if (DateTime.HasValue)
@@ -180,7 +180,7 @@ namespace ImageIO {
 
 			// new in iOS 8 and 10.10 - default is false
 			if (ShouldExcludeGPS && (kShouldExcludeGPS != IntPtr.Zero))
-				dict.LowlevelSetObject (CFBoolean.True.Handle, kShouldExcludeGPS);
+				dict.LowlevelSetObject (CFBoolean.TrueHandle, kShouldExcludeGPS);
 
 			if (Orientation.HasValue) {
 				using (var n = new NSNumber (Orientation.Value))

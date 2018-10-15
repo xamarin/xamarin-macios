@@ -63,7 +63,6 @@ namespace Xamarin.Bundler {
 
 		public bool? EnableCoopGC;
 		public bool EnableSGenConc;
-		public bool UseInterpreter;
 		public MarshalObjectiveCExceptionMode MarshalObjectiveCExceptions;
 		public MarshalManagedExceptionMode MarshalManagedExceptions;
 
@@ -351,7 +350,7 @@ namespace Xamarin.Bundler {
 			string max_s = null;
 
 			if (sources.Count () == 0 || targets.Count () == 0)
-				ErrorHelper.Error (1013, "Dependency tracking error: no files to compare. Please file a bug report at http://bugzilla.xamarin.com with a test case.");
+				ErrorHelper.Error (1013, "Dependency tracking error: no files to compare. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.");
 
 			foreach (var s in sources) {
 				var sfi = new FileInfo (s);

@@ -370,7 +370,7 @@ namespace AVKit {
 
 		[Mac (10,9)]
 		[Export ("flashChapterNumber:chapterTitle:")]
-		void FlashChapter (nuint chapterNumber, string chapterTitle);
+		void FlashChapter (nuint chapterNumber, [NullAllowed] string chapterTitle);
 
 		[Mac (10,9)]
 		[Export ("showsFrameSteppingButtons")]

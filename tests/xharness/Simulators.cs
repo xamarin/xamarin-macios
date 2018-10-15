@@ -174,9 +174,15 @@ namespace xharness
 			});
 			var rv = await Harness.ExecuteXcodeCommandAsync ("simctl", $"pair {device.UDID} {companion_device.UDID}", pairLog, TimeSpan.FromMinutes (1));
 			if (!rv.Succeeded) {
-				if (!create_device && capturedLog.ToString ().Contains ("At least one of the requested devices is already paired with the maximum number of supported devices and cannot accept another pairing.")) {
-					log.WriteLine ($"Could not create device pair for '{device.Name}' ({device.UDID}) and '{companion_device.Name}' ({companion_device.UDID}), but will create a new watch device and try again.");
-					return await CreateDevicePair (log, device, companion_device, runtime, devicetype, true);
+				if (!create_device) {
+					var try_creating_device = false;
+					var captured_log = capturedLog.ToString ();
+					try_creating_device |= captured_log.Contains ("At least one of the requested devices is already paired with the maximum number of supported devices and cannot accept another pairing.");
+					try_creating_device |= captured_log.Contains ("The selected devices are already paired with each other.");
+					if (try_creating_device) {
+						log.WriteLine ($"Could not create device pair for '{device.Name}' ({device.UDID}) and '{companion_device.Name}' ({companion_device.UDID}), but will create a new watch device and try again.");
+						return await CreateDevicePair (log, device, companion_device, runtime, devicetype, true);
+					}
 				}
 
 				log.WriteLine ($"Could not create device pair for '{device.Name}' ({device.UDID}) and '{companion_device.Name}' ({companion_device.UDID})");
@@ -461,6 +467,40 @@ namespace xharness
 			}
 		}
 
+		int TCCFormat {
+			get {
+				// v1: < iOS 9
+				// v2: >= iOS 9 && < iOS 12
+				// v3: >= iOS 12
+				if (SimRuntime.StartsWith ("com.apple.CoreSimulator.SimRuntime.iOS-", StringComparison.Ordinal)) {
+					var v = Version.Parse (SimRuntime.Substring ("com.apple.CoreSimulator.SimRuntime.iOS-".Length).Replace ('-', '.'));
+					if (v.Major >= 12) {
+						return 3;
+					} else if (v.Major >= 9) {
+						return 2;
+					} else {
+						return 1;
+					}
+				} else if (SimRuntime.StartsWith ("com.apple.CoreSimulator.SimRuntime.tvOS-", StringComparison.Ordinal)) {
+					var v = Version.Parse (SimRuntime.Substring ("com.apple.CoreSimulator.SimRuntime.tvOS-".Length).Replace ('-', '.'));
+					if (v.Major >= 12) {
+						return 3;
+					} else {
+						return 2;
+					}
+				} else if (SimRuntime.StartsWith ("com.apple.CoreSimulator.SimRuntime.watchOS-", StringComparison.Ordinal)) {
+					var v = Version.Parse (SimRuntime.Substring ("com.apple.CoreSimulator.SimRuntime.watchOS-".Length).Replace ('-', '.'));
+					if (v.Major >= 5) {
+						return 3;
+					} else {
+						return 2;
+					}
+				} else {
+					throw new NotImplementedException ();
+				}
+			}
+		}
+
 		public async Task AgreeToPromptsAsync (Log log, params string[] bundle_identifiers)
 		{
 			if (bundle_identifiers == null || bundle_identifiers.Length == 0) {
@@ -471,6 +511,7 @@ namespace xharness
 			var TCC_db = Path.Combine (DataPath, "data", "Library", "TCC", "TCC.db");
 			var sim_services = new string [] {
 					"kTCCServiceAddressBook",
+					"kTCCServiceCalendar",
 					"kTCCServicePhotos",
 					"kTCCServiceMediaLibrary",
 					"kTCCServiceUbiquity",
@@ -493,8 +534,25 @@ namespace xharness
 					sql.Append (StringUtils.Quote (TCC_db));
 					sql.Append (" \"");
 					foreach (var service in sim_services) {
-						sql.AppendFormat ("INSERT INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL);", service, bundle_identifier);
-						sql.AppendFormat ("INSERT INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL);", service, bundle_identifier + ".watchkitapp");
+						switch (TCCFormat) {
+						case 1:
+							// CREATE TABLE access (service TEXT NOT NULL, client TEXT NOT NULL, client_type INTEGER NOT NULL, allowed INTEGER NOT NULL, prompt_count INTEGER NOT NULL, csreq BLOB, CONSTRAINT key PRIMARY KEY (service, client, client_type));
+							sql.AppendFormat ("INSERT INTO access VALUES('{0}','{1}',0,1,0,NULL);", service, bundle_identifier);
+							sql.AppendFormat ("INSERT INTO access VALUES('{0}','{1}',0,1,0,NULL);", service, bundle_identifier + ".watchkitapp");
+							break;
+						case 2:
+							// CREATE TABLE access (service	TEXT NOT NULL, client TEXT NOT NULL, client_type INTEGER NOT NULL, allowed INTEGER NOT NULL, prompt_count INTEGER NOT NULL, csreq BLOB, policy_id INTEGER, PRIMARY KEY (service, client, client_type), FOREIGN KEY (policy_id) REFERENCES policies(id) ON DELETE CASCADE ON UPDATE CASCADE);
+							sql.AppendFormat ("INSERT INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL);", service, bundle_identifier);
+							sql.AppendFormat ("INSERT INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL);", service, bundle_identifier + ".watchkitapp");
+							break;
+						case 3: // Xcode 10+
+							// CREATE TABLE access (    service        TEXT        NOT NULL,     client         TEXT        NOT NULL,     client_type    INTEGER     NOT NULL,     allowed        INTEGER     NOT NULL,     prompt_count   INTEGER     NOT NULL,     csreq          BLOB,     policy_id      INTEGER,     indirect_object_identifier_type    INTEGER,     indirect_object_identifier         TEXT,     indirect_object_code_identity      BLOB,     flags          INTEGER,     last_modified  INTEGER     NOT NULL DEFAULT (CAST(strftime('%s','now') AS INTEGER)),     PRIMARY KEY (service, client, client_type, indirect_object_identifier),    FOREIGN KEY (policy_id) REFERENCES policies(id) ON DELETE CASCADE ON UPDATE CASCADE)
+							sql.AppendFormat ("INSERT OR REPLACE INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL,NULL,'UNUSED',NULL,NULL,1);", service, bundle_identifier);
+							sql.AppendFormat ("INSERT OR REPLACE INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL,NULL,'UNUSED',NULL,NULL,1);", service, bundle_identifier + ".watchkitapp");
+							break;
+						default:
+							throw new NotImplementedException ();
+						}
 					}
 					sql.Append ("\"");
 					var rv = await ProcessHelper.ExecuteCommandAsync ("sqlite3", sql.ToString (), log, TimeSpan.FromSeconds (5));
@@ -510,6 +568,9 @@ namespace xharness
 			} else {
 				log.WriteLine ("Successfully edited TCC.db");
 			}
+
+			log.WriteLine ("Current TCC database contents:");
+			await ProcessHelper.ExecuteCommandAsync ("sqlite3", $"{StringUtils.Quote (TCC_db)} .dump", log, TimeSpan.FromSeconds (5));
 		}
 
 		async Task OpenSimulator (Log log)
@@ -585,11 +646,12 @@ namespace xharness
 		bool loaded;
 
 		BlockingEnumerableCollection<Device> connected_devices = new BlockingEnumerableCollection<Device> ();
-		public IEnumerable<Device> ConnectedDevices {
-			get {
-				return connected_devices;
-			}
-		}
+
+		public IEnumerable<Device> ConnectedDevices => connected_devices;
+		public IEnumerable<Device> Connected64BitIOS => connected_devices.Where (x => x.DevicePlatform == DevicePlatform.iOS && x.Supports64Bit);
+		public IEnumerable<Device> Connected32BitIOS => connected_devices.Where (x => x.DevicePlatform == DevicePlatform.iOS && x.Supports32Bit);
+		public IEnumerable<Device> ConnectedTV => connected_devices.Where (x => x.DevicePlatform == DevicePlatform.tvOS);
+		public IEnumerable<Device> ConnectedWatch => connected_devices.Where (x => x.DevicePlatform == DevicePlatform.watchOS);
 
 		public async Task LoadAsync (Log log, bool extra_data = false, bool removed_locked = false, bool force = false)
 		{

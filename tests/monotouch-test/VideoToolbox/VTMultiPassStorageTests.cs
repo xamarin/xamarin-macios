@@ -18,6 +18,7 @@ using VideoToolbox;
 using CoreMedia;
 using AVFoundation;
 using CoreFoundation;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.VideoToolbox;
@@ -37,8 +38,9 @@ namespace MonoTouchFixtures.VideoToolbox {
 		[Test]
 		public void MultiPassStorageCreateTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Ignore ("Ignoring VideoToolbox tests: Requires iOS8+");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.TvOS, 10, 2, throwIfOtherPlatform: false);
 
 			using (var storage = VTMultiPassStorage.Create ()){
 				Assert.IsNotNull (storage, "Storage should not be null");
@@ -48,8 +50,9 @@ namespace MonoTouchFixtures.VideoToolbox {
 		[Test]
 		public void MultiPassStorageCloseTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Ignore ("Ignoring VideoToolbox tests: Requires iOS8+");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.TvOS, 10, 2, throwIfOtherPlatform: false);
 
 			using (var storage = VTMultiPassStorage.Create ()){
 				var result = storage.Close ();

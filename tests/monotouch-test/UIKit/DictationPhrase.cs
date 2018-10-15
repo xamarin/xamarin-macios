@@ -22,9 +22,6 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void Defaults ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (5, 1))
-				return;
-			
 			using (UIDictationPhrase dp = new UIDictationPhrase ()) {
 				Assert.Null (dp.AlternativeInterpretations, "AlternativeInterpretations");
 				Assert.Null (dp.Text, "Text");
