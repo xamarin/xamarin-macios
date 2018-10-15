@@ -85,6 +85,8 @@
     <Compile Include="Tasks\UnpackLibraryResources.cs" />
     <Compile Include="Tasks\WriteItemsToFile.cs" />
     <Compile Include="Tasks\Zip.cs" />
+    <Compile Include="Tasks\IntentDefinitionCompiler.cs" />
+    <Compile Include="Tasks\IntentDefinitionCodegen.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
