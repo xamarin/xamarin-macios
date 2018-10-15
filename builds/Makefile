@@ -118,7 +118,6 @@ MAC_ASSEMBLY_NAMES = \
 	I18N.West \
 	mscorlib \
 	Microsoft.CSharp \
-	Mono.CSharp \
 	Mono.CompilerServices.SymbolWriter \
 	Mono.Data.Sqlite \
 	Mono.Data.Tds \
