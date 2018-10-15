@@ -9,9 +9,10 @@ namespace BCLTestImporter {
 
 		static string UsingReplacement = "%USING%";
 		static string KeysReplacement = "%KEY VALUES%";
+		static string IsxUnitReplacement = "%IS XUNIT%";
 		
 		// Generates the code for the type registration using the give path to the template to use
-		public static string GenerateCode (Dictionary <string, Type> typeRegistration, string templatePath)
+		public static string GenerateCode (Dictionary <string, Type> typeRegistration, bool isXunit, string templatePath)
 		{
 			var importStringBuilder = new StringBuilder ();
 			var keyValuesStringBuilder = new StringBuilder ();
@@ -32,6 +33,7 @@ namespace BCLTestImporter {
 				string result = reader.ReadToEnd();
 				result = result.Replace (UsingReplacement, importStringBuilder.ToString ());
 				result = result.Replace (KeysReplacement, keyValuesStringBuilder.ToString ());
+				result = result.Replace (IsxUnitReplacement, (isXunit)? "true" : "false");
 				return result;
 			}
 		}

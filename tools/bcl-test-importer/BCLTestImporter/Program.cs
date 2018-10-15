@@ -223,7 +223,7 @@ namespace BCLTestImporter {
 					fixedTestAssemblies.Add (path);
 				}
 				var typesPerAssembly = GetTypeForAssemblies (fixedTestAssemblies, appOptions.Verbose);
-				var generatedCode = RegisterTypeGenerator.GenerateCode (typesPerAssembly, appOptions.Template);
+				var generatedCode = RegisterTypeGenerator.GenerateCode (typesPerAssembly, appOptions.IsXUnit, appOptions.Template);
 				if (appOptions.Verbose) {
 					Console.WriteLine ("Generated code is:");
 					Console.WriteLine (generatedCode);
