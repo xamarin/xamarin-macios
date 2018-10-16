@@ -4,7 +4,11 @@ using System.Reflection;
 
 using NUnit.Framework;
 
+#if XAMCORE_2_0
 using Foundation;
+#elif MONOMAC
+using MonoMac.Foundation;
+#endif
 
 namespace DontLink {
 
