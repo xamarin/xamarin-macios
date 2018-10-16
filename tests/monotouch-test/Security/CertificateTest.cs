@@ -555,8 +555,6 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 		public void MailX1 ()
 		{
-			TestRuntime.AssertNotWatchOS ("X509Certificate (byte[]) doesn't work on watchOS");
-
 			using (var cert = new X509Certificate (mail_google_com)) {
 				/*
 				 * This X509Certificate constructor will use SecCertificateCreateWithData() and
