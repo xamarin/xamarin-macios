@@ -47,9 +47,9 @@ namespace GameController {
 		public float /* float_t = float */ LeftTrigger;
 		public float /* float_t = float */ RightTrigger;
 
-		[TV (12, 0), Mac (10, 14, onlyOn64: true), iOS (12, 0)]
+		[TV (12, 1), Mac (10, 14, 1, onlyOn64: true), iOS (12, 1)]
 		public bool LeftThumbstickButton;
-		[TV (12, 0), Mac (10, 14, onlyOn64: true), iOS (12, 0)]
+		[TV (12, 1), Mac (10, 14, 1, onlyOn64: true), iOS (12, 1)]
 		public bool RightThumbstickButton;
 
 		[DllImport (Constants.GameControllerLibrary)]
