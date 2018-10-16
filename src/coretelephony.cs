@@ -147,11 +147,34 @@ namespace CoreTelephony {
 		string CarrierName { get; }
 	}
 
+	interface ICTSubscriberDelegate {}
+
+	[Protocol]
+	[iOS (12,1)]
+	interface CTSubscriberDelegate {
+		[Abstract]
+		[Export ("subscriberTokenRefreshed:")]
+		void SubscriberTokenRefreshed (CTSubscriber subscriber);
+	}
+
 	[BaseType (typeof (NSObject))]
 	[iOS (7,0)]
 	partial interface CTSubscriber {
 		[iOS (7,0), Export ("carrierToken")]
 		NSData CarrierToken { get; }
+
+		[iOS (12,1)]
+		[Export ("identifier")]
+		string Identifier { get; }
+
+		[iOS (12,1)]
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		NSObject WeakDelegate { get; set; }
+
+		[iOS (12,1)]
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
+		ICTSubscriberDelegate Delegate { get; set; }
 	}
 
 #if !XAMCORE_2_0
@@ -160,9 +183,15 @@ namespace CoreTelephony {
 
 	[iOS (6,0), BaseType (typeof (NSObject))]
 	partial interface CTSubscriberInfo {
+		[Deprecated (PlatformName.iOS, 12, 1, message : "Use 'Subscribers' instead.")]
 		[Static]
 		[Export ("subscriber")]
 		CTSubscriber Subscriber { get; }
+
+		[iOS (12,1)]
+		[Static]
+		[Export ("subscribers")]
+		CTSubscriber[] Subscribers { get; }
 	}
 
 	[iOS (12,0)]
