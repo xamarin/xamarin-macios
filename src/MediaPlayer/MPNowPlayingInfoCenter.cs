@@ -210,13 +210,10 @@ namespace MediaPlayer {
 
 		bool TryGetValue (NSDictionary source, NSObject key, out NSObject result)
 		{
-			var b = false;
 			result = null;
-			if (key != null) {
-				source.TryGetValue (key, out result);
-				b = true;
-			}
-			return b;
+			if (key != null)
+				return source.TryGetValue (key, out result);
+			return false;
 		}
 	}
 	
