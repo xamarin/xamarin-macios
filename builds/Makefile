@@ -91,9 +91,11 @@ CCACHE_CXXFLAGS=-Qunused-arguments
 #
 SDK_CONFIG=$(MONO_PATH)/sdks/Make.config
 SDK_ARGS=XCODE_DIR=$(XCODE_DEVELOPER_ROOT) IOS_VERSION=$(IOS_SDK_VERSION) IOS_VERSION_MIN=$(MIN_IOS_SDK_VERSION) TVOS_VERSION=$(TVOS_SDK_VERSION) TVOS_VERSION_MIN=$(MIN_TVOS_SDK_VERSION) WATCHOS_VERSION=$(WATCH_SDK_VERSION) WATCHOS_VERSION_MIN=$(MIN_WATCHOS_SDK_VERSION) IGNORE_PROVISION_LLVM=1
+SDK32_ARGS=XCODE_DIR=$(XCODE94_DEVELOPER_ROOT) IOS_VERSION=$(IOS_SDK_VERSION) IOS_VERSION_MIN=$(MIN_IOS_SDK_VERSION) TVOS_VERSION=$(TVOS_SDK_VERSION) TVOS_VERSION_MIN=$(MIN_TVOS_SDK_VERSION) WATCHOS_VERSION=$(WATCH_SDK_VERSION) WATCHOS_VERSION_MIN=$(MIN_WATCHOS_SDK_VERSION) IGNORE_PROVISION_LLVM=1
 
 ifdef DISABLE_DOWNLOAD_LLVM
 SDK_ARGS += DISABLE_DOWNLOAD_LLVM=1
+SDK32_ARGS += DISABLE_DOWNLOAD_LLVM=1
 endif
 
 SDK_BUILDDIR = $(MONO_PATH)/sdks/builds
@@ -1498,11 +1500,15 @@ ifdef INCLUDE_DEVICE
 clean-local:: clean-llvm
 endif
 
-build-llvm32: .stamp-build-llvm
-build-llvm64: .stamp-build-llvm
+build-llvm32: .stamp-build-llvm .stamp-build-llvm32
+build-llvm64: .stamp-build-llvm .stamp-build-llvm32
 
 .stamp-build-llvm: $(SDK_CONFIG)
-	$(MAKE) -C $(SDK_BUILDDIR) provision-llvm36-llvm32 provision-llvm-llvm64 $(SDK_ARGS)
+	$(MAKE) -C $(SDK_BUILDDIR) provision-llvm-llvm64 $(SDK_ARGS)
+	$(Q) touch $@
+
+.stamp-build-llvm32: $(SDK_CONFIG)
+	$(MAKE) -C $(SDK_BUILDDIR) provision-llvm36-llvm32 $(SDK32_ARGS)
 	$(Q) touch $@
 
 clean-llvm: $(SDK_CONFIG)
@@ -1531,8 +1537,8 @@ $(PREFIX)/LLVM/bin:
 $(PREFIX)/LLVM36/bin:
 	$(Q) mkdir -p $@
 
-install-llvm32:.stamp-build-llvm $(LLVM_TARGETS)
-install-llvm64: .stamp-build-llvm $(LLVM_TARGETS)
+install-llvm32:.stamp-build-llvm .stamp-build-llvm32 $(LLVM_TARGETS)
+install-llvm64: .stamp-build-llvm .stamp-build-llvm32 $(LLVM_TARGETS)
 
 llvm: build-llvm64 install-llvm
 llvm64: install-llvm64
@@ -1574,7 +1580,7 @@ build:: build-$(1)
 install-local:: install-$(1)
 clean-local:: clean-$(1)
 
-.stamp-build-$(1): .stamp-build-llvm $(MONO_PATH)/configure $(MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe $(MONO_DEPENDENCIES) $(SDK_CONFIG)
+.stamp-build-$(1): .stamp-build-llvm .stamp-build-llvm32 $(MONO_PATH)/configure $(MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe $(MONO_DEPENDENCIES) $(SDK_CONFIG)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(1) $(SDK_ARGS) $(if $(5), XCODE_DIR=$(5))
 	$(Q) touch $$@
 
