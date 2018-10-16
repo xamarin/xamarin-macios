@@ -141,7 +141,6 @@ namespace Xamarin.MMP.Tests
 			// Not necessarly required
 			public bool FSharp { get; set; }
 			public bool XM45 { get; set; }
-			public bool DiagnosticMSBuild { get; set; }
 			public bool Release { get; set; } = false;
 
 			public string ProjectName { get; set; } = "";
@@ -226,30 +225,26 @@ namespace Xamarin.MMP.Tests
 		}
 
 		// In most cases we generate projects in tmp and this is not needed. But nuget and test projects can make that hard
-		public static void CleanUnifiedProject (string csprojTarget, bool useMSBuild = false)
+		public static void CleanUnifiedProject (string csprojTarget)
 		{
-			RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/" + (useMSBuild ? "msbuild" : "xbuild"), new StringBuilder (csprojTarget + " /t:clean"), "Clean");
+			RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/msbuild", new StringBuilder (csprojTarget + " /t:clean"), "Clean");
 		}
 
-		public static string BuildProject (string csprojTarget, bool isUnified, bool diagnosticMSBuild = false, bool shouldFail = false, bool useMSBuild = false, bool release = false, string[] environment = null)
+		public static string BuildProject (string csprojTarget, bool isUnified, bool shouldFail = false, bool release = false, string[] environment = null)
 		{
-			if (Environment.GetEnvironmentVariable ("XM_FORCE_MSBUILD") != null)
-				useMSBuild = true;
-
 			string rootDirectory = FindRootDirectory ();
 
 			// TODO - This is not enough for MSBuild to really work. We need stuff to have it not use system targets!
 			// These are required to have xbuild use are local build instead of system install
-			if (!useMSBuild) {
-				Environment.SetEnvironmentVariable ("XBUILD_FRAMEWORK_FOLDERS_PATH", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild-frameworks");
-				Environment.SetEnvironmentVariable ("MSBuildExtensionsPath", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild");
-				Environment.SetEnvironmentVariable ("XAMMAC_FRAMEWORK_PATH", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
-			}
+			Environment.SetEnvironmentVariable ("TargetFrameworkFallbackSearchPaths", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild-frameworks");
+			Environment.SetEnvironmentVariable ("MSBuildExtensionsPathFallbackPathsOverride", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild");
+			Environment.SetEnvironmentVariable ("XAMMAC_FRAMEWORK_PATH", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
+			Environment.SetEnvironmentVariable ("XamarinMacFrameworkRoot", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
 
 			// This is to force build to use our mmp and not system mmp
 			StringBuilder buildArgs = new StringBuilder ();
 			if (isUnified) {
-				buildArgs.Append (diagnosticMSBuild ? " /verbosity:diagnostic " : " /verbosity:normal ");
+				buildArgs.Append (" /verbosity:diagnostic ");
 				buildArgs.Append (" /property:XamarinMacFrameworkRoot=" + rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current ");
 
 				if (release)
@@ -271,7 +266,7 @@ namespace Xamarin.MMP.Tests
 			};
 
 			if (isUnified)
-				return RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/" + (useMSBuild ? "msbuild" : "xbuild"), buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo, environment);
+				return RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/msbuild", buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo, environment);
 			else
 				return RunAndAssert ("/Applications/Visual Studio.app/Contents/MacOS/vstool", buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo, environment);
 		}
@@ -400,10 +395,10 @@ namespace Xamarin.MMP.Tests
 			return GenerateEXEProject (config);
 		}
 
-		public static string GenerateAndBuildUnifiedExecutable (UnifiedTestConfig config, bool shouldFail = false, bool useMSBuild = false, string[] environment = null)
+		public static string GenerateAndBuildUnifiedExecutable (UnifiedTestConfig config, bool shouldFail = false, string[] environment = null)
 		{
 			string csprojTarget = GenerateUnifiedExecutableProject (config);
-			return BuildProject (csprojTarget, isUnified: true, diagnosticMSBuild: config.DiagnosticMSBuild, shouldFail: shouldFail, useMSBuild: useMSBuild, release: config.Release, environment: environment);
+			return BuildProject (csprojTarget, isUnified: true, shouldFail: shouldFail, release: config.Release, environment: environment);
 		}
 
 		public static string RunGeneratedUnifiedExecutable (UnifiedTestConfig config)
@@ -413,11 +408,11 @@ namespace Xamarin.MMP.Tests
 			return RunEXEAndVerifyGUID (config.TmpDir, config.guid, exePath);
 		}
 
-		public static OutputText TestUnifiedExecutable (UnifiedTestConfig config, bool shouldFail = false, bool useMSBuild = false, string[] environment = null)
+		public static OutputText TestUnifiedExecutable (UnifiedTestConfig config, bool shouldFail = false, string[] environment = null)
 		{
 			AddGUIDTestCode (config);
 
-			string buildOutput = GenerateAndBuildUnifiedExecutable (config, shouldFail, useMSBuild, environment);
+			string buildOutput = GenerateAndBuildUnifiedExecutable (config, shouldFail, environment);
 			if (shouldFail)
 				return new OutputText (buildOutput, "");
 
@@ -439,7 +434,7 @@ namespace Xamarin.MMP.Tests
 		{
 			Guid guid = Guid.NewGuid ();
 			string csprojTarget = GenerateClassicEXEProject (tmpDir, "ClassicExample.csproj", testCode + GenerateOutputCommand (tmpDir,guid), csprojConfig, includeMonoRuntime: includeMonoRuntime);
-			string buildOutput = BuildProject (csprojTarget, isUnified : false, diagnosticMSBuild: false, shouldFail : shouldFail);
+			string buildOutput = BuildProject (csprojTarget, isUnified : false, shouldFail : shouldFail);
 			if (shouldFail)
 				return new OutputText (buildOutput, "");
 
@@ -456,7 +451,7 @@ namespace Xamarin.MMP.Tests
 			config.ProjectName = $"{projectName}.csproj";
 			string csprojTarget = GenerateSystemMonoEXEProject (config);
 
-			string buildOutput = BuildProject (csprojTarget, isUnified: true, diagnosticMSBuild: config.DiagnosticMSBuild, shouldFail: shouldFail, release: config.Release);
+			string buildOutput = BuildProject (csprojTarget, isUnified: true, shouldFail: shouldFail, release: config.Release);
 			if (shouldFail)
 				return new OutputText (buildOutput, "");
 

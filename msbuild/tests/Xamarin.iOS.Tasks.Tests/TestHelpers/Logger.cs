@@ -5,7 +5,6 @@ using System.IO;
 using System.Runtime.Remoting;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
-using Microsoft.Build.BuildEngine;
 using Microsoft.Build.Framework;
 using NUnit.Framework;
 using Microsoft.Build.Utilities;
@@ -193,7 +192,7 @@ namespace Xamarin.iOS.Tasks
 
 		public void Print (string message)
 		{
-			writer.WriteLine (FormatText (message));
+			writer.Write (FormatText (message));
 		}
 
 	}

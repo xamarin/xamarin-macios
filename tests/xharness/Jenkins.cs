@@ -260,6 +260,7 @@ namespace xharness
 						case TestPlatform.Mac_Unified32:
 						case TestPlatform.Mac_UnifiedXM45:
 						case TestPlatform.Mac_UnifiedXM45_32:
+						case TestPlatform.Mac_UnifiedSystem:
 							isMac = true;
 							break;
 						}
@@ -750,6 +751,8 @@ namespace xharness
 								Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_UnifiedXM45, "-unifiedXM45", ignored));
 								Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_UnifiedXM45_32, "-unifiedXM45-32", ignored32, true));
 							}
+							if (project.GenerateSystem)
+								Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_UnifiedSystem, "-system", ignored));
 						}
 					}
 				}
@@ -1077,6 +1080,7 @@ namespace xharness
 										case TestPlatform.Mac_Unified32:
 										case TestPlatform.Mac_UnifiedXM45:
 										case TestPlatform.Mac_UnifiedXM45_32:
+										case TestPlatform.Mac_UnifiedSystem:
 											is_match = true;
 											break;
 										default:
@@ -2332,6 +2336,8 @@ function toggleAll (show)
 					return rv.Substring (0, rv.Length - "-unifiedXM45".Length);
 				case TestPlatform.Mac_UnifiedXM45_32:
 					return rv.Substring (0, rv.Length - "-unifiedXM45-32".Length);
+				case TestPlatform.Mac_UnifiedSystem:
+					return rv.Substring (0, rv.Length - "-unifiedSystem".Length);
 				default:
 					if (rv.EndsWith ("-watchos", StringComparison.Ordinal)) {
 						return rv.Substring (0, rv.Length - 8);
@@ -2472,8 +2478,8 @@ function toggleAll (show)
 			case TestPlatform.watchOS:
 				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = xcodeRoot;
 				process.StartInfo.EnvironmentVariables ["MD_MTOUCH_SDK_ROOT"] = Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current");
-				process.StartInfo.EnvironmentVariables ["XBUILD_FRAMEWORK_FOLDERS_PATH"] = Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
-				process.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
+				process.StartInfo.EnvironmentVariables ["TargetFrameworkFallbackSearchPaths"] = Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
+				process.StartInfo.EnvironmentVariables ["MSBuildExtensionsPathFallbackPathsOverride"] = Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
 				break;
 			case TestPlatform.Mac:
 			case TestPlatform.Mac_Classic:
@@ -2481,16 +2487,17 @@ function toggleAll (show)
 			case TestPlatform.Mac_Unified32:
 			case TestPlatform.Mac_UnifiedXM45:
 			case TestPlatform.Mac_UnifiedXM45_32:
+			case TestPlatform.Mac_UnifiedSystem:
 				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = xcodeRoot;
-				process.StartInfo.EnvironmentVariables ["XBUILD_FRAMEWORK_FOLDERS_PATH"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
-				process.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
+				process.StartInfo.EnvironmentVariables ["TargetFrameworkFallbackSearchPaths"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
+				process.StartInfo.EnvironmentVariables ["MSBuildExtensionsPathFallbackPathsOverride"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
 				process.StartInfo.EnvironmentVariables ["XamarinMacFrameworkRoot"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
 				process.StartInfo.EnvironmentVariables ["XAMMAC_FRAMEWORK_PATH"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
 				break;
 			case TestPlatform.All:
 				// Don't set:
 				//     MSBuildExtensionsPath 
-				//     XBUILD_FRAMEWORK_FOLDERS_PATH
+				//     TargetFrameworkFallbackSearchPaths
 				// because these values used by both XM and XI and we can't set it to two different values at the same time.
 				// Any test that depends on these values should not be using 'TestPlatform.All'
 				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = xcodeRoot;
@@ -2751,7 +2758,7 @@ function toggleAll (show)
 				await RestoreNugetsAsync (log, resource);
 
 				using (var xbuild = new Process ()) {
-					xbuild.StartInfo.FileName = UseMSBuild ? "msbuild" : "xbuild";
+					xbuild.StartInfo.FileName = UseMSBuild ? "msbuild" : "msbuild";
 					var args = new StringBuilder ();
 					args.Append ("/verbosity:diagnostic ");
 					if (SpecifyPlatform)
@@ -2787,7 +2794,7 @@ function toggleAll (show)
 		{
 			// Don't require the desktop resource here, this shouldn't be that resource sensitive
 			using (var xbuild = new Process ()) {
-				xbuild.StartInfo.FileName = "xbuild";
+				xbuild.StartInfo.FileName = "msbuild";
 				var args = new StringBuilder ();
 				args.Append ("/verbosity:diagnostic ");
 				if (project_platform != null)
@@ -2947,8 +2954,10 @@ function toggleAll (show)
 					return "Mac Unified XM45";
 				case TestPlatform.Mac_UnifiedXM45_32:
 					return "Mac Unified XM45 32-bit";
+				case TestPlatform.Mac_UnifiedSystem:
+					return "Mac Unified System";
 				default:
-					throw new NotImplementedException ();
+					throw new NotImplementedException (Platform.ToString ());
 				}
 			}
 			set {
@@ -3013,6 +3022,9 @@ function toggleAll (show)
 				break;
 			case TestPlatform.Mac_UnifiedXM45_32:
 				suffix = "-unifiedXM45-32";
+				break;
+			case TestPlatform.Mac_UnifiedSystem:
+				suffix = "-unifiedSystem";
 				break;
 			}
 			if (ProjectFile.EndsWith (".sln", StringComparison.Ordinal)) {
@@ -3831,6 +3843,7 @@ function toggleAll (show)
 		Mac_UnifiedXM45,
 		Mac_Unified32,
 		Mac_UnifiedXM45_32,
+		Mac_UnifiedSystem,
 	}
 
 	[Flags]

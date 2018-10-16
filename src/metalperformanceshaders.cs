@@ -788,6 +788,9 @@ namespace MetalPerformanceShaders {
 		[Export ("b")]
 		float B { get; }
 
+		[Deprecated (PlatformName.TvOS, 12, 0)]
+		[Deprecated (PlatformName.iOS, 12, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("initWithDevice:a:b:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (IMTLDevice device, float a, float b);
@@ -803,6 +806,9 @@ namespace MetalPerformanceShaders {
 		[Export ("a")]
 		float A { get; }
 
+		[Deprecated (PlatformName.TvOS, 12, 0)]
+		[Deprecated (PlatformName.iOS, 12, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("initWithDevice:a:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (IMTLDevice device, float a);
@@ -815,6 +821,9 @@ namespace MetalPerformanceShaders {
 	[DisableDefaultCtor]
 	interface MPSCnnNeuronSigmoid {
 
+		[Deprecated (PlatformName.TvOS, 12, 0)]
+		[Deprecated (PlatformName.iOS, 12, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (IMTLDevice device);
@@ -831,6 +840,9 @@ namespace MetalPerformanceShaders {
 		[Export ("b")]
 		float B { get; }
 
+		[Deprecated (PlatformName.TvOS, 12, 0)]
+		[Deprecated (PlatformName.iOS, 12, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("initWithDevice:a:b:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (IMTLDevice device, float a, float b);
@@ -843,6 +855,9 @@ namespace MetalPerformanceShaders {
 	[DisableDefaultCtor]
 	interface MPSCnnNeuronAbsolute {
 
+		[Deprecated (PlatformName.TvOS, 12, 0)]
+		[Deprecated (PlatformName.iOS, 12, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (IMTLDevice device);
@@ -875,9 +890,13 @@ namespace MetalPerformanceShaders {
 		nuint Groups { get; set; }
 
 		[NullAllowed, Export ("neuron", ArgumentSemantic.Retain)]
+		[Deprecated (PlatformName.TvOS, 11, 0)]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		MPSCnnNeuron Neuron { get; set; }
 
 		[Static]
+		[Deprecated (PlatformName.TvOS, 11, 0)]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Export ("cnnConvolutionDescriptorWithKernelWidth:kernelHeight:inputFeatureChannels:outputFeatureChannels:neuronFilter:")]
 		MPSCnnConvolutionDescriptor GetConvolutionDescriptor (nuint kernelWidth, nuint kernelHeight, nuint inputFeatureChannels, nuint outputFeatureChannels, [NullAllowed] MPSCnnNeuron neuronFilter);
 
@@ -896,22 +915,37 @@ namespace MetalPerformanceShaders {
 		void SetBatchNormalizationParameters (IntPtr /* float* */ mean, IntPtr /* float* */ variance, [NullAllowed] IntPtr /* float* */ gamma, [NullAllowed] IntPtr /* float* */ beta, float epsilon);
 
 		[TV (11, 0), iOS (11, 0)]
+		[Deprecated (PlatformName.TvOS, 11, 3)]
+		[Deprecated (PlatformName.iOS, 11, 3)]
+		[Deprecated (PlatformName.MacOSX, 10, 13, 4)]
 		[Export ("setNeuronType:parameterA:parameterB:")]
 		void SetNeuronType (MPSCnnNeuronType neuronType, float parameterA, float parameterB);
 
 		[TV (11, 0), iOS (11, 0)]
+		[Deprecated (PlatformName.TvOS, 11, 3)]
+		[Deprecated (PlatformName.iOS, 11, 3)]
+		[Deprecated (PlatformName.MacOSX, 10, 13, 4)]
 		[Export ("neuronType")]
 		MPSCnnNeuronType NeuronType { get; }
 
 		[TV (11, 0), iOS (11, 0)]
+		[Deprecated (PlatformName.TvOS, 11, 3)]
+		[Deprecated (PlatformName.iOS, 11, 3)]
+		[Deprecated (PlatformName.MacOSX, 10, 13, 4)]
 		[Export ("neuronParameterA")]
 		float NeuronParameterA { get; }
 
 		[TV (11, 0), iOS (11, 0)]
+		[Deprecated (PlatformName.TvOS, 11, 3)]
+		[Deprecated (PlatformName.iOS, 11, 3)]
+		[Deprecated (PlatformName.MacOSX, 10, 13, 4)]
 		[Export ("neuronParameterB")]
 		float NeuronParameterB { get; }
 
 		[TV (11, 0), iOS (11, 0)]
+		[Deprecated (PlatformName.TvOS, 11, 3)]
+		[Deprecated (PlatformName.iOS, 11, 3)]
+		[Deprecated (PlatformName.MacOSX, 10, 13, 4)]
 		[Export ("setNeuronToPReLUWithParametersA:")]
 		void SetNeuronToPReLU (NSData A);
 
@@ -961,6 +995,8 @@ namespace MetalPerformanceShaders {
 		[Export ("groups")]
 		nuint Groups { get; }
 
+		[Deprecated (PlatformName.TvOS, 11, 0)]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[NullAllowed, Export ("neuron")]
 		MPSCnnNeuron Neuron { get; }
 
@@ -997,18 +1033,30 @@ namespace MetalPerformanceShaders {
 		nuint ChannelMultiplier { get; }
 
 		[TV (11, 0), iOS (11, 0)]
+		[Deprecated (PlatformName.TvOS, 12, 0)]
+		[Deprecated (PlatformName.iOS, 12, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("neuronType")]
 		MPSCnnNeuronType NeuronType { get; }
 
 		[TV (11, 0), iOS (11, 0)]
+		[Deprecated (PlatformName.TvOS, 12, 0)]
+		[Deprecated (PlatformName.iOS, 12, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("neuronParameterA")]
 		float NeuronParameterA { get; }
 
 		[TV (11, 0), iOS (11, 0)]
+		[Deprecated (PlatformName.TvOS, 12, 0)]
+		[Deprecated (PlatformName.iOS, 12, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("neuronParameterB")]
 		float NeuronParameterB { get; }
 
 		[TV (11,2), iOS (11,2), Mac (10,13,2, onlyOn64: true)]
+		[Deprecated (PlatformName.TvOS, 12, 0)]
+		[Deprecated (PlatformName.iOS, 12, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("neuronParameterC")]
 		float NeuronParameterC { get; }
 
@@ -1432,10 +1480,14 @@ namespace MetalPerformanceShaders {
 		nuint RowBytes { get; set; }
 
 		[Static]
+		[Deprecated (PlatformName.TvOS, 11, 0)]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Export ("matrixDescriptorWithDimensions:columns:rowBytes:dataType:")]
 		MPSMatrixDescriptor Create (nuint rows, nuint columns, nuint rowBytes, MPSDataType dataType);
 
 		[Static]
+		[Deprecated (PlatformName.TvOS, 11, 0)]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Export ("rowBytesFromColumns:dataType:")]
 		nuint GetRowBytesFromColumns (nuint columns, MPSDataType dataType);
 
@@ -2146,6 +2198,9 @@ namespace MetalPerformanceShaders {
 		[Export ("b")]
 		float B { get; }
 
+		[Deprecated (PlatformName.TvOS, 12, 0)]
+		[Deprecated (PlatformName.iOS, 12, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("initWithDevice:a:b:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (IMTLDevice device, float a, float b);
@@ -2161,6 +2216,9 @@ namespace MetalPerformanceShaders {
 		[Export ("b")]
 		float B { get; }
 
+		[Deprecated (PlatformName.TvOS, 12, 0)]
+		[Deprecated (PlatformName.iOS, 12, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("initWithDevice:a:b:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (IMTLDevice device, float a, float b);
@@ -2170,6 +2228,9 @@ namespace MetalPerformanceShaders {
 	[BaseType (typeof(MPSCnnNeuron), Name = "MPSCNNNeuronSoftSign")]
 	[DisableDefaultCtor]
 	interface MPSCnnNeuronSoftSign {
+		[Deprecated (PlatformName.TvOS, 12, 0)]
+		[Deprecated (PlatformName.iOS, 12, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (IMTLDevice device);
@@ -2182,6 +2243,9 @@ namespace MetalPerformanceShaders {
 		[Export ("a")]
 		float A { get; }
 
+		[Deprecated (PlatformName.TvOS, 12, 0)]
+		[Deprecated (PlatformName.iOS, 12, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("initWithDevice:a:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (IMTLDevice device, float a);
@@ -2197,6 +2261,9 @@ namespace MetalPerformanceShaders {
 		[Export ("b")]
 		float B { get; }
 
+		[Deprecated (PlatformName.TvOS, 12, 0)]
+		[Deprecated (PlatformName.iOS, 12, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("initWithDevice:a:b:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (IMTLDevice device, float a, float b);
@@ -2802,6 +2869,9 @@ namespace MetalPerformanceShaders {
 		[Export ("nodeWithSource:a:b:")]
 		MPSCnnNeuronLinearNode Create (MPSNNImageNode sourceNode, float a, float b);
 
+		[Deprecated (PlatformName.TvOS, 12, 0)]
+		[Deprecated (PlatformName.iOS, 12, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("initWithSource:a:b:")]
 		IntPtr Constructor (MPSNNImageNode sourceNode, float a, float b);
 
@@ -3186,6 +3256,9 @@ namespace MetalPerformanceShaders {
 	[BaseType (typeof(MPSKernel))]
 	[DisableDefaultCtor] // There is a DesignatedInitializer, file a bug if needed.
 	interface MPSNNGraph : NSCopying, NSSecureCoding {
+		[Deprecated (PlatformName.TvOS, 11, 3)]
+		[Deprecated (PlatformName.iOS, 11, 3)]
+		[Deprecated (PlatformName.MacOSX, 10, 13, 4)]
 		[Export ("initWithDevice:resultImage:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (IMTLDevice device, MPSNNImageNode resultImage);
