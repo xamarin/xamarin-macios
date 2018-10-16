@@ -5,8 +5,8 @@ include $(TOP)/Make.config
 MMP=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/bin/mmp
 
 export MD_APPLE_SDK_ROOT=$(shell dirname `dirname $(XCODE94_DEVELOPER_ROOT)`)
-export TargetFrameworkFallbackSearchPaths=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks
-export MSBuildExtensionsPathFallbackPathsOverride=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild
+export XBUILD_FRAMEWORK_FOLDERS_PATH=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks
+export MSBuildExtensionsPath=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild
 export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 
 
@@ -24,8 +24,6 @@ TESTS_4_0 = \
 	link-frameworks-1 \
 	link-aes-1 \
 	link-blocks-1 \
-	link-typedescriptor-1 \
-	link-typedescriptor-2 \
 	embedded-mono \
 	system-mono \
 	embedded-mono-profile \
