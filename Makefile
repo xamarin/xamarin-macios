@@ -97,7 +97,7 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Commands:
 $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/buildinfo: Make.config.inc .git/index | $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)
 	$(Q_GEN) echo "Version: $(MAC_PACKAGE_VERSION)" > $@
 	$(Q) echo "Hash: $(shell git log --oneline -1 --pretty=%h)" >> $@
-	$(Q) echo "Branch: $(shell git symbolic-ref --short HEAD)" >> $@
+	$(Q) echo "Branch: $(CURRENT_BRANCH)" >> $@
 	$(Q) echo "Build date: $(shell date '+%Y-%m-%d %H:%M:%S%z')" >> $@
 
 $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/updateinfo: Make.config.inc

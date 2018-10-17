@@ -27,51 +27,85 @@ namespace MonoTouchFixtures {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public partial class WeakReferenceTest {
+		public static class FinalizerHelpers {
+			private static IntPtr aptr;
+
+			private static unsafe void NoPinActionHelper (int depth, Action act)
+			{
+				// Avoid tail calls
+				int* values = stackalloc int [20];
+				aptr = new IntPtr (values);
+
+				if (depth <= 0) {
+					//
+					// When the action is called, this new thread might have not allocated
+					// anything yet in the nursery. This means that the address of the first
+					// object that would be allocated would be at the start of the tlab and
+					// implicitly the end of the previous tlab (address which can be in use
+					// when allocating on another thread, at checking if an object fits in
+					// this other tlab). We allocate a new dummy object to avoid this type
+					// of false pinning for most common cases.
+					//
+					new object ();
+					act ();
+				} else {
+					NoPinActionHelper (depth - 1, act);
+				}
+			}
+
+			public static void PerformNoPinAction (Action act)
+			{
+				Thread thr = new Thread (() => NoPinActionHelper (128, act));
+				thr.Start ();
+				thr.Join ();
+			}
+		}
 
 		[Test]
 		public void WeakTest ()
 		{
 			//Finalizable.debug = true;
 			var t = new Test ();
-			var thread = new Thread (delegate () {
-				t.Obj = new Finalizable ();
-				t.Obj2 = new Finalizable ();
-				t.Obj3 = new Finalizable ();
-				t.Obj4 = Test.retain = new Finalizable ();
-				Test.retain.a = 0x1029458;
+
+			FinalizerHelpers.PerformNoPinAction (delegate () {
+				FinalizerHelpers.PerformNoPinAction (delegate () {
+					t.Obj = new Finalizable ();
+					t.Obj2 = new Finalizable ();
+					t.Obj3 = new Finalizable ();
+					t.Obj4 = Test.retain = new Finalizable ();
+					Test.retain.a = 0x1029458;
+				});
+				GC.Collect (0);
+				GC.Collect ();
+				GC.WaitForPendingFinalizers ();
+				GC.WaitForPendingFinalizers ();
+				Assert.That (t.Obj, Is.Null, "'t.Obj' should be null");
+				Assert.That (t.Obj2, Is.Null, "'t.Obj2' should be null");
+				Assert.That (t.Obj3, Is.Not.Null, "'t.Obj3' should not be null");
+
+				//overflow the nursery, make sure we fill it
+				for (int i = 0; i < 1000 * 1000 * 10; ++i)
+					new OneField ();
+
+				Exception ex = null;
+				FinalizerHelpers.PerformNoPinAction (delegate () {
+					try {
+						// This must be done on a separate thread so that the 'Test.retain' value doesn't
+						// show up on the main thread's stack as a temporary value in registers the
+						// GC can see.
+						Assert.That (Test.retain.a, Is.EqualTo (0x1029458), "retain.a");
+					} catch (Exception e) {
+						ex = e;
+					}
+				});
+
+				Test.retain = null;
 			});
-			thread.Start ();
-			thread.Join ();
-			GC.Collect (0);
+
 			GC.Collect ();
 			GC.WaitForPendingFinalizers ();
 			GC.WaitForPendingFinalizers ();
-			Assert.That (t.Obj, Is.Null, "'t.Obj' should be null");
-			Assert.That (t.Obj2, Is.Null, "'t.Obj2' should be null");
-			Assert.That (t.Obj3, Is.Not.Null, "'t.Obj3' should not be null");
 
-			//overflow the nursery, make sure we fill it
-			for (int i = 0; i < 1000 * 1000 * 10; ++i)
-				new OneField ();
-
-			Exception ex = null;
-			thread = new Thread (() => {
-				try {
-					// This must be done on a separate thread so that the 'Test.retain' value doesn't
-					// show up on the main thread's stack as a temporary value in registers the
-					// GC can see.
-					Assert.That (Test.retain.a, Is.EqualTo (0x1029458), "retain.a");
-				} catch (Exception e) {
-					ex = e;
-				}
-			});
-			thread.Start ();
-			thread.Join ();
-
-			Test.retain = null;
-			GC.Collect ();
-			GC.WaitForPendingFinalizers ();
-			GC.WaitForPendingFinalizers ();
 			Assert.That (t.Obj4, Is.Null, "'t.Obj4' should be null");
 		}
 	}
