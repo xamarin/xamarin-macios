@@ -39,6 +39,8 @@ namespace ObjCRuntime {
 #endif
 
 		static Dictionary<IntPtrTypeValueTuple,Delegate> block_to_delegate_cache;
+		static Dictionary<Type, ConstructorInfo> intptr_ctor_cache;
+		static Dictionary<Type, ConstructorInfo> intptr_bool_ctor_cache;
 
 		static List <object> delegates;
 		static List <Assembly> assemblies;
@@ -239,6 +241,8 @@ namespace ObjCRuntime {
 			Runtime.options = options;
 			delegates = new List<object> ();
 			object_map = new Dictionary <IntPtr, WeakReference> (IntPtrEqualityComparer);
+			intptr_ctor_cache = new Dictionary<Type, ConstructorInfo> (TypeEqualityComparer);
+			intptr_bool_ctor_cache = new Dictionary<Type, ConstructorInfo> (TypeEqualityComparer);
 			lock_obj = new object ();
 
 			NSObjectClass = NSObject.Initialize ();
@@ -1152,22 +1156,36 @@ namespace ObjCRuntime {
 
 		static ConstructorInfo GetIntPtrConstructor (Type type)
 		{
+			lock (intptr_ctor_cache) {
+				if (intptr_ctor_cache.TryGetValue (type, out var rv))
+					return rv;
+			}
 			var ctors = type.GetConstructors (BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
 			for (int i = 0; i < ctors.Length; ++i) {
 				var param = ctors[i].GetParameters ();
-				if (param.Length == 1 && param [0].ParameterType == typeof (IntPtr))
+				if (param.Length == 1 && param [0].ParameterType == typeof (IntPtr)) {
+					lock (intptr_ctor_cache)
+						intptr_ctor_cache [type] = ctors [i];
 					return ctors [i];
+				}
 			}
 			return null;
 		}
 
 		static ConstructorInfo GetIntPtr_BoolConstructor (Type type)
 		{
+			lock (intptr_bool_ctor_cache) {
+				if (intptr_bool_ctor_cache.TryGetValue (type, out var rv))
+					return rv;
+			}
 			var ctors = type.GetConstructors (BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
 			for (int i = 0; i < ctors.Length; ++i) {
 				var param = ctors[i].GetParameters ();
-				if (param.Length == 2 && param [0].ParameterType == typeof (IntPtr) && param [1].ParameterType == typeof (bool))
+				if (param.Length == 2 && param [0].ParameterType == typeof (IntPtr) && param [1].ParameterType == typeof (bool)) {
+					lock (intptr_bool_ctor_cache)
+						intptr_bool_ctor_cache [type] = ctors [i];
 					return ctors [i];
+				}
 			}
 			return null;
 		}
