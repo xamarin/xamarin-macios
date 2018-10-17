@@ -80,7 +80,7 @@ namespace ObjCRuntime {
 		internal struct MTManagedClassMap
 		{
 			public uint skipped_reference; // implied token type: TypeDef
-			public uint index; // index into MTRegistrationMap.map
+			public uint actual_reference; // implied token type: TypeDef
 		}
 
 		[StructLayout (LayoutKind.Sequential, Pack = 1)]
