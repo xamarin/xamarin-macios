@@ -48,6 +48,8 @@ namespace MonoTouchFixtures.CoreFoundation
 		[Test]
 		public void CtorWithAttributes ()
 		{
+			TestRuntime.AssertXcodeVersion (8, 0);
+
 			using (var queue = new DispatchQueue ("1", new DispatchQueue.Attributes
 			{
 				AutoreleaseFrequency = DispatchQueue.AutoreleaseFrequency.Inherit,
