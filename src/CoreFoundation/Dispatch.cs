@@ -211,8 +211,6 @@ namespace CoreFoundation {
 		public DispatchQueue (string label, Attributes attributes, DispatchQueue target = null)
 			: base (dispatch_queue_create_with_target (label, attributes?.Create () ?? IntPtr.Zero, target.GetHandle ()), true)
 		{
-			if (Handle == IntPtr.Zero)
-				throw new Exception ("Error creating dispatch queue");
 		}
 
 		//
