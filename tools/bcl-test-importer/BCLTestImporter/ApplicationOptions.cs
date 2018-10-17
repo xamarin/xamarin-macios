@@ -2,78 +2,78 @@
 using System.IO;
 using System.Collections.Generic;
 
+using Mono.Options;
+
 namespace BCLTestImporter {
 
 	// struct used to store the options of the command line after they have been parsed
 	// it provides ways to validate that the combinations are correct.
 	public class ApplicationOptions {
 
-		static string partialPath = "mcs/class/lib";
-		static Dictionary <string, string> platformPathMatch = new Dictionary <string, string> {
+		#region static vars
+		static readonly string partialPath = "mcs/class/lib";
+		static readonly Dictionary <string, string> PlatformPathMatch = new Dictionary <string, string> {
 			{"iOS", "monotouch"},
 			{"WatchOS", "monotouch_watch"},
 			{"TvOS", "monotouch_tv"},
 			{"MacOS", "xammac"},
 		};
+		
+		#endregion
 
+		#region properties 
+		
 		// bool flags
-		public bool ShouldShowHelp { get; set; }
-		public bool Verbose { get; set; }
-		public bool ShowDict { get; set; }
-		public bool ListAssemblies { get; set; }
-		public bool GenerateProject { get; set; }
-		public bool GenerateTypeRegister { get; set; }
-		public bool IsXUnit { get; set; }
-		public bool Override { get; set; }
+		internal bool ShouldShowHelp { get; set; }
+		internal bool Verbose { get; set; }
+		internal bool ShowDict { get; set; }
+		internal bool ListAssemblies { get; set; }
+		internal bool GenerateProject { get; set; }
+		internal bool GenerateAllProjects { get; set; }
+		internal bool GenerateTypeRegister { get; set; }
+		internal bool IsXUnit { get; set; }
+		internal bool Override { get; set; }
 
 		// path options
 		string monoPath;
 		public string MonoPath { 
 			get => monoPath;
-			set {
-				// ensure the path is abs etc..
-				monoPath = FixPath (value);
-			}
+			set => monoPath = FixPath (value);
 		}
 		public string Platform { get; set; }
 		string output;
 		public string Output {
 			get => output;
-			set {
-				output = FixPath (value);
-			}
+			set => output = FixPath (value);
 		}
-		string template;
-		public string Template {
-			get => template;
-			set {
-				template = FixPath (value);
-			}
+		string registerTypeTemplate;
+		public string RegisterTypeTemplate {
+			get => registerTypeTemplate;
+			set => registerTypeTemplate = FixPath (value);
+		} 
+		string projectTemplate;
+		public string ProjectTemplate {
+			get => projectTemplate;
+			set => projectTemplate = FixPath (value);
 		} 
 		string assembly;
 		public string Assembly {
 			get => assembly;
-			set {
-				assembly = FixPath (assembly);
-			}
+			set => assembly = FixPath (value);
 		}
-		string regiterTypesPath;
-		public string RegiterTypesPath {
-			get => regiterTypesPath;
-			set {
-				regiterTypesPath = FixPath (value);
-			}
+		string registerTypesPath;
+		public string RegisterTypesPath {
+			get => registerTypesPath;
+			set => registerTypesPath = FixPath (value);
 		}
 
-		public string TestsDirectory {
-			get {
-				return GetTestsDirectoryPath (monoPath, Platform);
-			}
-		}
+		public string TestsDirectory => GetTestsDirectoryPath (monoPath, Platform);
 
 		// multiple value options
 		public List<string> TestAssemblies { get; private set; }
 		public string ProjectName { get; set; }
+		
+		#endregion
 
 		public ApplicationOptions ()
 		{
@@ -81,22 +81,22 @@ namespace BCLTestImporter {
 		}
 
 		// get a path, and make sure that is abs and that ~ is expanded
-		public string FixPath (string path)
+		string FixPath (string path)
 		{
 			var result = path;
-			if (!Path.IsPathRooted (result)) {
-				if (result.StartsWith ("~", StringComparison.Ordinal)) {
-					if (Verbose)
-						Console.WriteLine ($"Expanding home dir for path {result}.");
-					result = result.Replace ("~", Environment.GetEnvironmentVariable("HOME"));
-				}
-
+			if (Path.IsPathRooted (result))
+				return result;
+			if (result.StartsWith ("~", StringComparison.Ordinal)) {
 				if (Verbose)
-					Console.WriteLine ($"Converting path {result} to absolute.");
-				result = Path.GetFullPath (result);
-				if (Verbose)
-					Console.WriteLine ($"New output path is {result}");
+					Console.WriteLine ($"Expanding home dir for path {result}.");
+				result = result.Replace ("~", Environment.GetEnvironmentVariable("HOME"));
 			}
+
+			if (Verbose)
+				Console.WriteLine ($"Converting path {result} to absolute.");
+			result = Path.GetFullPath (result);
+			if (Verbose)
+				Console.WriteLine ($"New output path is {result}");
 			return result;
 		}
 
@@ -119,16 +119,16 @@ namespace BCLTestImporter {
 			var fullPath = monoPath;
 			switch (platform) {
 			case "iOS":
-				fullPath = Path.Combine (fullPath, partialPath, platformPathMatch["iOS"], "tests");
+				fullPath = Path.Combine (fullPath, partialPath, PlatformPathMatch["iOS"], "tests");
 			break;
 			case "WatchOS":
-				fullPath = Path.Combine (fullPath, partialPath, platformPathMatch["WatchOS"], "tests");
+				fullPath = Path.Combine (fullPath, partialPath, PlatformPathMatch["WatchOS"], "tests");
 			break;
 			case "TvOS":
-				fullPath = Path.Combine (fullPath, partialPath, platformPathMatch["TvOS"], "tests");
+				fullPath = Path.Combine (fullPath, partialPath, PlatformPathMatch["TvOS"], "tests");
 			break;
 			case "MacOS":
-				fullPath = Path.Combine (fullPath, partialPath, platformPathMatch["MacOS"], "tests");
+				fullPath = Path.Combine (fullPath, partialPath, PlatformPathMatch["MacOS"], "tests");
 			break;
 			default:
 			fullPath = null;
@@ -144,7 +144,7 @@ namespace BCLTestImporter {
 				message = "Platform must be provided.";
 				return false;
 			}
-			if (!platformPathMatch.ContainsKey (platform)) {
+			if (!PlatformPathMatch.ContainsKey (platform)) {
 				message = "Unrecognized platform.";
 				return false;
 			}
@@ -158,6 +158,141 @@ namespace BCLTestImporter {
 			return true;
 		}
 
+		bool GenerateTypeRegisterOptionsAreValid (out string message)
+		{
+			var cmd = "--generate-type-register";
+			if (!MonoPathIsValid (monoPath, out message)) {
+				message = $"{cmd} {message}"; // let the user the param he used
+				return false;
+			}
+			if (!PlatformIsValid (monoPath, Platform, out message)) {
+				message = $"{cmd} {message}"; // let the user the param he used
+				return false;
+			}
+			if (string.IsNullOrEmpty (registerTypeTemplate)) {
+				message = $"{cmd} Template must be provided.";
+				return false;
+			}
+
+			if (!File.Exists (registerTypeTemplate)) {
+				message = $"{cmd} Template is missing.";
+				return false;
+			}
+
+			if (string.IsNullOrEmpty (output)) {
+				message = $"{cmd} output path must be provided.";
+				return false;
+			}
+
+			if (!Override && File.Exists (output)) {
+				message = $"{cmd} Output path already exists.";
+				return false;
+			}
+			
+			// we need other data depending on what is being generated
+			if (TestAssemblies.Count == 0) {
+				message = $"{cmd} test assemblies must be passed for code generation.";
+				return false;
+			}
+			message = "";
+			return true;
+		}
+
+		bool GenerateProjectOptionsAreValid (out string message)
+		{
+			// we are dealing with two possible options, the project generation or the type registration
+			// generation, both need the mono path and the platform to be correct
+			var cmd = "--generate-project";
+			if (!MonoPathIsValid (monoPath, out message)) {
+				message = $"{cmd} {message}"; // let the user the param he used
+				return false;
+			}
+			if (!PlatformIsValid (monoPath, Platform, out message)) {
+				message = $"{cmd} {message}"; // let the user the param he used
+				return false;
+			}
+			if (string.IsNullOrEmpty (projectTemplate)) {
+				message = $"{cmd} Template must be provided.";
+				return false;
+			}
+
+			if (!File.Exists (projectTemplate)) {
+				message = $"{cmd} Template is missing.";
+				return false;
+			}
+			if (string.IsNullOrEmpty (output)) {
+				message = $"{cmd} output path must be provided.";
+				return false;
+			}
+
+			if (!Override && File.Exists (output)) {
+				message = $"{cmd} Output path already exists.";
+				return false;
+			}
+			
+			// we need other data depending on what is being generated
+			if (TestAssemblies.Count == 0) {
+				message = $"{cmd} test assemblies must be passed for project generation.";
+				return false;
+			}
+			if (string.IsNullOrEmpty (ProjectName)) {
+				message = $"{cmd} a project name is needed when generating a new test app.";
+				return false;
+			}
+			if (string.IsNullOrEmpty (registerTypesPath)) {
+				message = $"{cmd} the path to the generated class is needed.";
+				return false;
+			}
+			if (!File.Exists (registerTypesPath)) {
+				message = $"{cmd} the path to the generated class could not be found.";
+				return false;
+			}
+			message = "";
+			return false;
+		}
+
+		bool GenerateAllProjectsOptionsAreValid (out string message)
+		{
+			var cmd = "--generate-all-projects";
+			if (!MonoPathIsValid (monoPath, out message)) {
+				message = $"{cmd} {message}"; // let the user the param he used
+				return false;
+			}
+			if (!PlatformIsValid (monoPath, Platform, out message)) {
+				message = $"{cmd} {message}"; // let the user the param he used
+				return false;
+			}
+			if (string.IsNullOrEmpty (registerTypeTemplate)) {
+				message = $"{cmd} Register type template must be provided.";
+				return false;
+			}
+
+			if (string.IsNullOrEmpty (projectTemplate)) {
+				message = $"{cmd} Project template must be provided.";
+				return false;
+			}
+			if (!File.Exists (registerTypeTemplate)) {
+				message = $"{cmd} Template is missing.";
+				return false;
+			}
+
+			if (!File.Exists (projectTemplate)) {
+				message = $"{cmd} Template is missing.";
+				return false;
+			}
+			if (string.IsNullOrEmpty (output)) {
+				message = $"{cmd} output path must be provided.";
+				return false;
+			}
+
+			if (!Directory.Exists (output)) {
+				message = $"{cmd} Output path must be an existing directory.";
+				return false;
+			}
+			message = "";
+			return true;
+		}
+		
 		// validate the options and return a message with the possible issue.
 		public bool OptionsAreValid (out string message)
 		{
@@ -165,7 +300,7 @@ namespace BCLTestImporter {
 				// we need to ensure that no other options have been given
 				if (ShouldShowHelp || ShowDict || ListAssemblies || GenerateProject || GenerateTypeRegister || IsXUnit
 					|| !string.IsNullOrEmpty (Platform) || !string.IsNullOrEmpty (monoPath) || !string.IsNullOrEmpty (output)
-					|| !string.IsNullOrEmpty (template) || TestAssemblies.Count > 0) {
+					|| !string.IsNullOrEmpty (registerTypeTemplate) || TestAssemblies.Count > 0) {
 					message = "--assemblyref does not take any other arguments.";
 					return false;
 				}
@@ -173,7 +308,7 @@ namespace BCLTestImporter {
 			if (ShowDict) {
 				if (ShouldShowHelp || ListAssemblies || GenerateProject || GenerateTypeRegister || !string.IsNullOrEmpty (Platform)
 					|| !string.IsNullOrEmpty (monoPath) || !string.IsNullOrEmpty (output) || !string.IsNullOrEmpty (assembly)
-					|| !string.IsNullOrEmpty (template) || TestAssemblies.Count > 0) {
+					|| !string.IsNullOrEmpty (registerTypeTemplate) || TestAssemblies.Count > 0) {
 					message = "--d received unrecognized parameters..";
 					return false;
 				}
@@ -186,7 +321,7 @@ namespace BCLTestImporter {
 					return false;
 				}
 				// assert that the platform is supported
-				if (!platformPathMatch.ContainsKey (Platform)) {
+				if (!PlatformPathMatch.ContainsKey (Platform)) {
 					message = "(-d) Unrecognized platform.";
 					return false;
 				}
@@ -201,58 +336,48 @@ namespace BCLTestImporter {
 					return false;
 				}
 			}
-			if (!string.IsNullOrEmpty (output)) {
-				// we are dealing with two possible options, the project generation or the type registration
-				// generation, both need the mono path and the platform to be correct
-				string cmd = "";
-				if (GenerateProject)
-					cmd = "--generate-project";
-				if (GenerateTypeRegister) 
-					cmd = "--generate-type-register";
-				if (!MonoPathIsValid (monoPath, out message)) {
-					message = $"{cmd} {message}"; // let the user the param he used
-					return false;
-				}
-				if (!PlatformIsValid (monoPath, Platform, out message)) {
-					message = $"{cmd} {message}"; // let the user the param he used
-					return false;
-				}
-				if (string.IsNullOrEmpty (template)) {
-					message = $"{cmd} Template must be provided.";
-					return false;
-				}
-				if (!File.Exists (template)) {
-					message = $"{cmd} Template is missing.";
-					return false;
-				}
-				if (string.IsNullOrEmpty (output)) {
-					message = $"{cmd} output path most be provided.";
-					return false;
-				}
-				if (!Override && File.Exists (output)) {
-					message = $"{cmd} Output path already exists.";
-					return false;
-				}
-				// we need other data depending on what is being generated
-				if (TestAssemblies.Count == 0) {
-					message = $"{cmd} test assemblies must be passed for project generation.";
-					return false;
-				}
-				if (GenerateProject && string.IsNullOrEmpty (ProjectName)) {
-					message = $"{cmd} a project name is needed when generating a new test app.";
-					return false;
-				}
-				if (GenerateProject && string.IsNullOrEmpty (regiterTypesPath)) {
-					message = $"{cmd} the path to the generated class is needed.";
-					return false;
-				}
-				if (GenerateProject && !File.Exists (regiterTypesPath)) {
-					message = $"{cmd} the path to the generated class could not be found.";
-					return false;
-				}
-			}
+
+			if (GenerateTypeRegister)
+				return GenerateTypeRegisterOptionsAreValid (out message);
+			if (GenerateProject)
+				return GenerateProjectOptionsAreValid (out message);
+			if (GenerateAllProjects)
+				return GenerateAllProjectsOptionsAreValid (out message);
 			message = "";
 			return true;
+		}
+
+		/// <summary>
+		/// Returns the option set to parse the cmd line of the application.
+		/// </summary>
+		/// <returns>A configured option set for the command line.</returns>
+		public OptionSet CreateCommandLineOptionSet ()
+		{
+			return new OptionSet { 
+				{ "mono-root=", "Root directory of the mono check out that will be use to search for the unit tests."
+					+ " Example: '/Users/test/xamarin-macios/external/mono'.", p => MonoPath = p }, 
+				{ "platform=", "The platform for which we are tyring to retrieve the tests. Possible values are"
+					+ " iOS, WatchOS, TvOS, MacOS", p => Platform = p },
+				{ "generate-project", "Flag used to state that a new test project should be generated."
+					+ " Output path must be provided via -o.", f => GenerateProject = f != null },
+				{ "generate-all-projects", "Flag used to state that all the test projects should be generated."
+					+ " Output path must be provided via -o which should be a directory.", f => GenerateAllProjects = f != null },
+				{ "generate-type-register", "Flag used to state that a new type register should be generated."
+					+ "Output path must be provided via -o." , f => GenerateTypeRegister = f != null },
+				{ "override", "State if the output should be overriden or not.", o => Override = o != null},
+				{ "o|output=", "Specifies the output of the generated code.", o => Output = o },
+				{ "register-type-template=", "Specifies the template to be used for the code generation.", t => RegisterTypeTemplate = t},
+				{ "project-template=", "Specifies the template to be used for the project generation.", t => ProjectTemplate = t},
+				{ "assemblyref=", "Gets an assembly and returns all the references to it.", a => Assembly = a },
+				{ "a|assembly=", "Allows to pass the test assemblies to be used for the code generation", a => TestAssemblies.Add (a) },
+				{ "x|xunit", "Flag that states if the assemblies contain xunit tests.", x => IsXUnit = x != null},
+				{ "d|dictionary", "Lists the assemblies found and a relation with a type found in it.", d => ShowDict = d != null},
+				{ "l|list", "Lists the assemblies found.", l => ListAssemblies = l != null},
+				{ "project-name=", "Allows to specify the name of the project to be generated.", p => ProjectName = p},
+				{ "register-types-path=", "Allows to specify the location of the RegisterTypes generated class.", p => RegisterTypesPath = p},
+				{ "h|?|help", "Show this message and exit", h => ShouldShowHelp = h != null },
+				{ "v|verbose", "Be verbose when searching for the tests.", v => Verbose = v != null},
+			};
 		}
 	}
 }

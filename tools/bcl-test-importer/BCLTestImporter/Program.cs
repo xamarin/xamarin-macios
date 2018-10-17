@@ -39,12 +39,6 @@ namespace BCLTestImporter {
 				if (verbose) 
 					Console.WriteLine ($"Loading assembly from path {path}");
 				var a = Assembly.LoadFile (path);
-				if (a == null){
-					Console.ForegroundColor = ConsoleColor.DarkYellow;
-					Console.WriteLine ($"WARNING: The following assembly could not be loaded: '{path}'");
-					Console.ForegroundColor = oldColor;
-					continue;
-				}
 				try {
 					var types = a.ExportedTypes;
 					if (!types.Any ()) {
@@ -79,55 +73,23 @@ namespace BCLTestImporter {
 			if (verbose)
 				Console.WriteLine ($"Loading assembly from path {assemblyPath}");
 			var a = Assembly.LoadFile (assemblyPath);
-			if (a == null){
-				var oldColor = Console.ForegroundColor;
-				Console.ForegroundColor = ConsoleColor.DarkYellow;
-				Console.WriteLine ($"WARNING: The following assembly could not be loaded: '{assemblyPath}'");
-				Console.ForegroundColor = oldColor;
-				return new List<string> ();
-			}
 			return a.GetReferencedAssemblies ().Select ((arg) => arg.Name);
 		}
 
 		public static int Main (string [] args)
 		{
 			var appOptions = new ApplicationOptions ();
-
-			var options = new OptionSet { 
-				{ "mono-root=", "Root directory of the mono check out that will be use to search for the unit tests."
-					+ " Example: '/Users/test/xamarin-macion/external/mono'.", p => appOptions.MonoPath = p }, 
-				{ "platform=", "The platform for which we are tyring to retrieve the tests. Possible values are"
-					+ " iOS, WatchOS, TvOS, MacOS", p => appOptions.Platform = p },
-				{ "generate-project", "Flag used to state that a new test project should be generated."
-					+ " Ouput path must be provided via -o.", f => appOptions.GenerateProject = f != null },
-				{ "generate-type-register", "Flag used to state that a new type register should be generated."
-					+ "Ouput path must be provided via -o." , f => appOptions.GenerateTypeRegister = f != null },
-				{ "override", "State if the ouput should be overriden or not.", o => appOptions.Override = o != null},
-				{ "o|output=", "Specifies the ouput of the generated code.", o => appOptions.Output = o },
-				{ "t|template=", "Specifies the template to be used for the code or the project generation.", t => appOptions.Template = t},
-				{ "assemblyref=", "Gets an assembly and returns all the references to it.", a => appOptions.Assembly = a },
-				{ "a|assembly=", "Allows to pass the test assemblies to be used for the code generation", a => appOptions.TestAssemblies.Add (a) },
-				{ "x|xunit", "Flag that states if the assemblies contain xunit tests.", x => appOptions.IsXUnit = x != null},
-				{ "d|dictionary", "Lists the assemblies found and a relation with a type found in it.", d => appOptions.ShowDict = d != null},
-				{ "l|list", "Lists the assemblies found.", l => appOptions.ListAssemblies = l != null},
-				{ "project-name=", "Allows to specify the name of the project to be generated.", p => appOptions.ProjectName = p},
-				{ "regiter-types-path=", "Alloes to specify the location of the RegiterTypes generated class.", p => appOptions.RegiterTypesPath = p},
-				{ "h|?|help", "Show this message and exit", h => appOptions.ShouldShowHelp = h != null },
-				{ "v|verbose", "Be verbose when searching for the tests.", v => appOptions.Verbose = v != null},
-			};
-
+			var options = appOptions.CreateCommandLineOptionSet ();
+			
 			var extra = options.Parse (args);
+			var console = new ConsoleWriter (appOptions);
+			
 			if (extra.Count > 0) {
-				var oldColor = Console.ForegroundColor;
-				Console.ForegroundColor = ConsoleColor.DarkYellow;
-				Console.WriteLine ($"WARNING: The following extra parameters will be ignored: '{ String.Join (",", extra) }'");
-				Console.ForegroundColor = oldColor;
+				console.WriteWarning ($"The following extra parameters will be ignored: '{ string.Join (",", extra) }'");
 			}
 			// lets validate the options and return any possible error
-			string validationMessage;
-			if (!appOptions.OptionsAreValid (out validationMessage)) {
-				Console.ForegroundColor = ConsoleColor.DarkRed;
-				Console.WriteLine ($"ERROR: {validationMessage}");
+			if (!appOptions.OptionsAreValid (out var validationMessage)) {
+				console.WriteError (validationMessage);
 				return 1;
 			}
 
@@ -144,8 +106,8 @@ namespace BCLTestImporter {
 					Console.WriteLine ("No test assemblies have been found.");
 					return 0;
 				}
-				if (appOptions.Verbose)
-					Console.WriteLine ("Using reflection to retrieve a type per assembly.");
+				
+				console.WriteLine ("Using reflection to retrieve a type per assembly.");
 
 				var typesPerAssembly = GetTypeForAssemblies (assemblies, appOptions.Verbose);
 				if (appOptions.ShowDict) {
@@ -154,13 +116,13 @@ namespace BCLTestImporter {
 						Console.WriteLine ($"\tAssembly '{a}' => Type '{typesPerAssembly[a].Namespace}.{typesPerAssembly[a].FullName}'");
 					}
 					return 0;
-				} else {
-					Console.WriteLine ("Found test assemblies are:");
-					foreach (var a in typesPerAssembly.Keys) {
-						Console.WriteLine ($"\t{a}");
-					}
-					return 0;
 				}
+
+				Console.WriteLine ("Found test assemblies are:");
+				foreach (var a in typesPerAssembly.Keys) {
+					Console.WriteLine ($"\t{a}");
+				}
+				return 0;
 
 			} else if (appOptions.GenerateProject) {
 				// we need to have at least a sigle assembly to use for the project generation
@@ -177,62 +139,63 @@ namespace BCLTestImporter {
 						refAssemblies.Add (refA);
 					}
 				}
-				if (appOptions.Verbose) {
-					Console.WriteLine ("Generating test projet:");
-					Console.WriteLine ($"\tProject name: {appOptions.ProjectName}");
-					Console.WriteLine ("\tTest Assemblies:");
+				
+				console.WriteLine ("Generating test projet:");
+				console.WriteLine ($"\tProject name: {appOptions.ProjectName}");
+				console.WriteLine ("\tTest Assemblies:");
+				if (appOptions.Verbose)
 					foreach (var a in appOptions.TestAssemblies) {
 						Console.WriteLine ($"\t\t{a}");
 					}
-					Console.WriteLine ("Reference Assemblies:");
+				console.WriteLine ("Reference Assemblies:");
+				if (appOptions.Verbose)
 					foreach (var a in refAssemblies) {
 						Console.WriteLine ($"\t\t{a}");
 					}
-				}
+				
 				// got the required info to generate the project, create the value types for the references
 				var info = new List<(string assembly, string hintPath)> (); 
 				foreach (var a in fixedTestAssemblies) {
 					var assemblyInfo = (assembly: Path.GetFileName (a), hintPath: (string) a);
 					info.Add (assemblyInfo);
-					if (appOptions.Verbose)
-						Console.WriteLine ($"Ref will be added for assembly: '{assemblyInfo.assembly}' hintPath: '{assemblyInfo.hintPath}'");
+					console.WriteLine ($"Ref will be added for assembly: '{assemblyInfo.assembly}' hintPath: '{assemblyInfo.hintPath}'");
 				}
 				foreach (var a in refAssemblies) {
 					var assemblyInfo = (assembly: a, hintPath: (string) null);
 					info.Add (assemblyInfo);
-					if (appOptions.Verbose)
-						Console.WriteLine ($"Ref will be added for assembly: '{assemblyInfo.assembly}' hintPath: '{assemblyInfo.hintPath}'");
+					console.WriteLine ($"Ref will be added for assembly: '{assemblyInfo.assembly}' hintPath: '{assemblyInfo.hintPath}'");
 				}
-				var generatedProject = ProjectGenerator.Generate (appOptions.ProjectName, appOptions.RegiterTypesPath, info, appOptions.Template);
-				if (appOptions.Verbose) {
-					Console.WriteLine ("Generated project is:");
-					Console.WriteLine (generatedProject);
-				}
+				var generatedProject = ProjectGenerator.Generate (appOptions.ProjectName, appOptions.RegisterTypesPath, info, appOptions.RegisterTypeTemplate);
+				console.WriteLine ("Generated project is:");
+				console.WriteLine (generatedProject);
+				
 				using (var file = new StreamWriter (appOptions.Output, !appOptions.Override)) { // falso is do not append
 					file.Write (generatedProject);
 				}
 				return 0;
 			} else if (appOptions.GenerateTypeRegister) {
-				if (appOptions.Verbose)
-					Console.WriteLine ("Generating type register.");
+				console.WriteLine ("Generating type register.");
 				var fixedTestAssemblies = new List<string> ();
 				foreach (var a in appOptions.TestAssemblies) {
 					var path = Path.Combine (appOptions.TestsDirectory, a);
-					if (appOptions.Verbose)
-						Console.WriteLine ($"Assembly path is {path}");
+					console.WriteLine ($"Assembly path is {path}");
 					fixedTestAssemblies.Add (path);
 				}
 				var typesPerAssembly = GetTypeForAssemblies (fixedTestAssemblies, appOptions.Verbose);
-				var generatedCode = RegisterTypeGenerator.GenerateCode (typesPerAssembly, appOptions.IsXUnit, appOptions.Template);
-				if (appOptions.Verbose) {
-					Console.WriteLine ("Generated code is:");
-					Console.WriteLine (generatedCode);
-				}
+				var generatedCode = RegisterTypeGenerator.GenerateCode (typesPerAssembly, appOptions.IsXUnit, appOptions.RegisterTypeTemplate);
+				console.WriteLine ("Generated code is:");
+				console.WriteLine (generatedCode);
 				using (var file = new StreamWriter (appOptions.Output, !appOptions.Override)) { // falso is do not append
 					file.Write (generatedCode);
 				}
 				return 0;
-			} else {
+			} else if (appOptions.GenerateAllProjects) {
+				console.WriteLine ("Generating all the registered test projects");
+				var projectGenerator = new ProjectGenerator (appOptions.Output, appOptions.MonoPath,
+					appOptions.ProjectTemplate, appOptions.RegisterTypeTemplate);
+				projectGenerator.GenerateAllTestProjects ().Wait ();
+			}
+			else {
 				return 1;
 			}
 			return 0;

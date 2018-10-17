@@ -44,6 +44,9 @@
     <Compile Include="RegisterTypeGenerator.cs" />
     <Compile Include="ProjectGenerator.cs" />
     <Compile Include="ApplicationOptions.cs" />
+    <Compile Include="TestProjectDefinition.cs" />
+    <Compile Include="TestAssemblyDefinition.cs" />
+    <Compile Include="ConsoleWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

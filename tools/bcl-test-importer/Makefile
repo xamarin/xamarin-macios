@@ -1,9 +1,17 @@
 DESTDIR ?= /usr/local/bin/
 CONFIGURATION ?= Debug
+BCL_TEST_IMPORTER_SRC:=BCLTestImporter/ApplicationOptions.cs \
+					BCLTestImporter/BCLTestImporter.csproj \
+					BCLTestImporter/ConsoleWriter.cs \
+					BCLTestImporter/Program.cs \
+					BCLTestImporter/ProjectGenerator.cs \
+					BCLTestImporter/RegisterTypeGenerator.cs \
+					BCLTestImporter/TestAssemblyDefinition.cs \
+					BCLTestImporter/TestProjectDefinition.cs \
 
 all: BCLTestImporter.exe
 
-BCLTestImporter.exe: BCLTestImporter/BCLTestImporter.sln BCLTestImporter/Program.cs BCLTestImporter/RegisterTypeGenerator.cs BCLTestImporter/ApplicationOptions.cs BCLTestImporter/ProjectGenerator.cs Makefile 
+BCLTestImporter.exe: $(BCL_TEST_IMPORTER_SRC) Makefile 
 	nuget restore BCLTestImporter/BCLTestImporter.sln
 	msbuild /p:Configuration=$(CONFIGURATION) BCLTestImporter/BCLTestImporter.sln
 
