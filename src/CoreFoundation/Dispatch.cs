@@ -162,6 +162,10 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.libcLibrary)]
+		[Mac (10,12)]
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Watch (3,0)]
 		extern static void dispatch_activate (/* dispatch_object_t */ IntPtr @object);
 #endif // !COREBUILD
 	}
@@ -420,6 +424,8 @@ namespace CoreFoundation {
 			return gchandle.Target;
 		}
 
+		[Mac (10,10)]
+		[iOS (8,0)]
 		public DispatchQualityOfService GetQualityOfService (out int relative_priority)
 		{
 			unsafe {
@@ -428,6 +434,8 @@ namespace CoreFoundation {
 			}
 		}
 
+		[Mac (10,10)]
+		[iOS (8,0)]
 		public DispatchQualityOfService QualityOfService {
 			get {
 				unsafe {
@@ -442,6 +450,10 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_queue_create (string label, IntPtr attr);
 
+		[Mac (10,12)]
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Watch (3,0)]
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_queue_create_with_target (string label, IntPtr attr, IntPtr target);
 
@@ -477,6 +489,8 @@ namespace CoreFoundation {
 		[DllImport(Constants.libcLibrary)]
 		extern static IntPtr dispatch_queue_get_specific (IntPtr queue, /* const void* */ IntPtr key);
 
+		[Mac (10,10)]
+		[iOS (8,0)]
 		[DllImport (Constants.libcLibrary)]
 		unsafe extern static /* dispatch_qos_class_t */ DispatchQualityOfService dispatch_queue_get_qos_class (/* dispatch_queue_t */ IntPtr queue, /* int *_Nullable */ int* relative_priority);
 
@@ -525,12 +539,24 @@ namespace CoreFoundation {
 		{
 			public bool Concurrent { get; set; }
 
+			[Mac (10,12)]
+			[iOS (10,0)]
+			[TV (10,0)]
+			[Watch (3,0)]
 			public bool IsInitiallyInactive { get; set; }
 
+			[Mac (10,12)]
+			[iOS (10,0)]
+			[TV (10,0)]
+			[Watch (3,0)]
 			public AutoreleaseFrequency? AutoreleaseFrequency { get; set; }
 
+			[Mac (10,10)]
+			[iOS (8,0)]
 			public int RelativePriority { get; set; }
 
+			[Mac (10,10)]
+			[iOS (8,0)]
 			public DispatchQualityOfService? QualityOfService { get; set; }
 
 			internal IntPtr Create ()
@@ -552,12 +578,22 @@ namespace CoreFoundation {
 				return rv;
 			}
 
+			[Mac (10,12)]
+			[iOS (10,0)]
+			[TV (10,0)]
+			[Watch (3,0)]
 			[DllImport (Constants.libcLibrary)]
 			static extern /* dispatch_queue_attr_t */ IntPtr dispatch_queue_attr_make_initially_inactive (/* dispatch_queue_attr_t _Nullable */ IntPtr attr);
 
+			[Mac (10,12)]
+			[iOS (10,0)]
+			[TV (10,0)]
+			[Watch (3,0)]
 			[DllImport (Constants.libcLibrary)]
 			static extern /* dispatch_queue_attr_t */ IntPtr dispatch_queue_attr_make_with_autorelease_frequency (/* dispatch_queue_attr_t _Nullable */ IntPtr attr, /* dispatch_autorelease_frequency_t */ nuint frequency);
 
+			[Mac (10,10)]
+			[iOS (8,0)]
 			[DllImport (Constants.libcLibrary)]
 			static extern /* dispatch_queue_attr_t */ IntPtr dispatch_queue_attr_make_with_qos_class (/* dispatch_queue_attr_t _Nullable */ IntPtr attr, /* dispatch_qos_class_t */ DispatchQualityOfService qos_class, int relative_priority);
 		}
