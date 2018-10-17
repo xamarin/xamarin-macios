@@ -190,10 +190,18 @@ namespace BCLTestImporter {
 				}
 				return 0;
 			} else if (appOptions.GenerateAllProjects) {
-				console.WriteLine ("Generating all the registered test projects");
-				var projectGenerator = new ProjectGenerator (appOptions.Output, appOptions.MonoPath,
-					appOptions.ProjectTemplate, appOptions.RegisterTypeTemplate);
-				projectGenerator.GenerateAllTestProjects ().Wait ();
+				if (appOptions.ClearAll) {
+					var projectGenerator = new ProjectGenerator (appOptions.Output);
+					projectGenerator.CleanOutput ();
+					return 0;
+				}
+				else {
+					console.WriteLine ("Generating all the registered test projects");
+					var projectGenerator = new ProjectGenerator (appOptions.Output, appOptions.MonoPath,
+						appOptions.ProjectTemplate, appOptions.RegisterTypeTemplate);
+					projectGenerator.GenerateAllTestProjects ().Wait ();
+					return 0;
+				}
 			}
 			else {
 				return 1;

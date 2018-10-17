@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Security.AccessControl;
 
 namespace BCLTestImporter {
 	public class ProjectGenerator {
@@ -39,7 +40,7 @@ namespace BCLTestImporter {
 			new TestProjectDefinition ("SystemServiceModelWebTests", new List<TestAssemblyDefinition> {new TestAssemblyDefinition ("MONOTOUCH_System.ServiceModel.Web_test.dll")} ),
 			new TestProjectDefinition ("MonoDataTdsTests", new List<TestAssemblyDefinition> {new TestAssemblyDefinition ("MONOTOUCH_Mono.Data.Tds_test.dll")} ),
 			new TestProjectDefinition ("SystemIOCompressionTests", new List<TestAssemblyDefinition> {new TestAssemblyDefinition ("MONOTOUCH_System.IO.Compression_test.dll")} ),
-			new TestProjectDefinition ("SystemIOCompression.FileSystemTests", new List<TestAssemblyDefinition> {new TestAssemblyDefinition ("MONOTOUCH_System.IO.Compression.FileSystem_test.dll")} ),
+			new TestProjectDefinition ("SystemIOCompressionFileSystemTests", new List<TestAssemblyDefinition> {new TestAssemblyDefinition ("MONOTOUCH_System.IO.Compression.FileSystem_test.dll")} ),
 			new TestProjectDefinition ("MonoCSharpTests", new List<TestAssemblyDefinition> {new TestAssemblyDefinition ("MONOTOUCH_Mono.CSharp_test.dll")} ),
 			new TestProjectDefinition ("SystemSecurityTests", new List<TestAssemblyDefinition> {new TestAssemblyDefinition ("MONOTOUCH_System.Security_test.dll")} ),
 			new TestProjectDefinition ("SystemServiceModelTests", new List<TestAssemblyDefinition> {new TestAssemblyDefinition ("MONOTOUCH_System.ServiceModel_test.dll")} ),
@@ -66,12 +67,20 @@ namespace BCLTestImporter {
 			new TestAssemblyDefinition ("MONOTOUCH_corlib_test.dll"),
 		};
 
-		public bool Override{ get; set; }
+		bool isClear;
+		public bool Override { get; set; }
 		public string OutputDirectoryPath { get; private  set; }
 		public string MonoRootPath { get; private set; }
 		public string ProjectTemplatePath { get; private set; }
 		public string RegisterTypesTemplatePath { get; private set; }
+		string GeneratedCodePathRoot => Path.Combine (OutputDirectoryPath, "generated");
 
+		public ProjectGenerator (string outpudDirectory)
+		{
+			OutputDirectoryPath = outpudDirectory ?? throw new ArgumentNullException (nameof (outpudDirectory));
+			isClear = true;
+		}
+		
 		public ProjectGenerator (string outpudDirectory, string monoRootPath, string projectTemplatePath, string registerTypesTemplatePath)
 		{
 			OutputDirectoryPath = outpudDirectory ?? throw new ArgumentNullException (nameof (outpudDirectory));
@@ -80,6 +89,8 @@ namespace BCLTestImporter {
 			RegisterTypesTemplatePath = registerTypesTemplatePath ?? throw new ArgumentNullException (nameof (registerTypesTemplatePath));
 		}
 
+		string GetProjectPath (string projectName) => Path.Combine (OutputDirectoryPath, $"{projectName}.csproj");
+		
 		// creates the reference node
 		static string GetReferenceNode (string assemblyName, string hintPath = null)
 		{
@@ -109,9 +120,11 @@ namespace BCLTestImporter {
 		// creates all the projects that have already been defined
 		public async Task GenerateAllTestProjects ()
 		{
+			if (isClear)
+				throw new InvalidOperationException ("Project generator was instantiated to delete the generated code.");
 			// TODO: Do this per platform
 			var platform = "iOS";
-			var generatedCodePathRoot = Path.Combine (OutputDirectoryPath, "generated");
+			var generatedCodePathRoot = GeneratedCodePathRoot;
 			if (!Directory.Exists (generatedCodePathRoot)) {
 				Directory.CreateDirectory (generatedCodePathRoot);
 			}
@@ -126,22 +139,17 @@ namespace BCLTestImporter {
 				var typesPerAssembly = projectDefinition.GetTypeForAssemblies (MonoRootPath, "iOS");
 				var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (typesPerAssembly,
 					projectDefinition.TestAssemblies[0].IsXUnit, RegisterTypesTemplatePath);
-				Console.WriteLine ($"Register code is {registerCode}");
 
 				var filePath = Path.Combine (generatedCodeDir, "RegisterType.cs");
 				using (var file = new StreamWriter (filePath, !Override)) { // false is do not append
 					await file.WriteAsync (registerCode);
 				}
-				Console.WriteLine ($"File written to {filePath}");
 
 				var generatedProject = await GenerateAsync (projectDefinition.Name, filePath,
 					projectDefinition.GetAssemblyInclusionInformation (MonoRootPath, platform), ProjectTemplatePath);
-				Console.WriteLine ($"Generated code is {generatedProject}");
-				var projectPath = Path.Combine (OutputDirectoryPath, $"{projectDefinition.Name}.csproj");
-				using (var file = new StreamWriter (projectPath, !Override)) { // false is do not append
+				using (var file = new StreamWriter (GetProjectPath (projectDefinition.Name), !Override)) { // false is do not append
 					await file.WriteAsync (generatedProject);
 				}
-				Console.WriteLine ($"Written to {projectPath}");
 			}
 		}
 
@@ -164,5 +172,22 @@ namespace BCLTestImporter {
 
 		public static string Generate (string projectName, string registerPath, List<(string assembly, string hintPath)> info, string templatePath) =>
 			GenerateAsync (projectName, registerPath, info, templatePath).Result;
+
+		/// <summary>
+		/// Removes all the generated files by the tool.
+		/// </summary>
+		public void CleanOutput ()
+		{
+			if (!isClear)
+				throw new InvalidOperationException ("Project generator was instantiated to project generation.");
+			if (Directory.Exists (GeneratedCodePathRoot))
+				Directory.Delete (GeneratedCodePathRoot, true);
+			// delete each of the generated project files
+			foreach (var projectDefinition in iOSTestProjects) {
+				var projectPath = GetProjectPath (projectDefinition.Name);
+				if (File.Exists (projectPath))
+					File.Delete (projectPath);
+			}	
+		}
 	}
 }

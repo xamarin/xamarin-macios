@@ -33,6 +33,7 @@ namespace BCLTestImporter {
 		internal bool GenerateTypeRegister { get; set; }
 		internal bool IsXUnit { get; set; }
 		internal bool Override { get; set; }
+		internal bool ClearAll{ get; set; }
 
 		// path options
 		string monoPath;
@@ -253,7 +254,20 @@ namespace BCLTestImporter {
 
 		bool GenerateAllProjectsOptionsAreValid (out string message)
 		{
-			var cmd = "--generate-all-projects";
+			const string cmd = "--generate-all-projects";
+			if (ClearAll) { // special case in which we only need the output
+				if (string.IsNullOrEmpty (output)) {
+					message = $"{cmd} output path must be provided.";
+					return false;
+				}
+				if (!Directory.Exists (output)) {
+					message = $"{cmd} Output path must be an existing directory.";
+					return false;
+				}
+
+				message = "";
+				return true;
+			}
 			if (!MonoPathIsValid (monoPath, out message)) {
 				message = $"{cmd} {message}"; // let the user the param he used
 				return false;
@@ -362,6 +376,7 @@ namespace BCLTestImporter {
 					+ " Output path must be provided via -o.", f => GenerateProject = f != null },
 				{ "generate-all-projects", "Flag used to state that all the test projects should be generated."
 					+ " Output path must be provided via -o which should be a directory.", f => GenerateAllProjects = f != null },
+				{ "clean", "Clear the output directory when used with the --generate-all-projects options.", c =>  ClearAll = c != null},
 				{ "generate-type-register", "Flag used to state that a new type register should be generated."
 					+ "Output path must be provided via -o." , f => GenerateTypeRegister = f != null },
 				{ "override", "State if the output should be overriden or not.", o => Override = o != null},

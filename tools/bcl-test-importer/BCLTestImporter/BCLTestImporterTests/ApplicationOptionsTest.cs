@@ -65,6 +65,7 @@ namespace BCLTestImporterTests {
 			Assert.False (appOptions.GenerateTypeRegister, "appOptions.GenerateTypeRegister");
 			Assert.False (appOptions.IsXUnit, "appOptions.IsXUnit");
 			Assert.False (appOptions.Override, "appOptions.Override");
+			Assert.False (appOptions.ClearAll, "appOptions.ClearAll");
 			// string values
 			Assert.Null (appOptions.MonoPath);
 			Assert.Null (appOptions.Platform);
@@ -384,6 +385,30 @@ namespace BCLTestImporterTests {
 			};
 			Assert.False (appOptions.OptionsAreValid (out var errorMessage));
 			Assert.Equal ("--generate-all-projects Register type template must be provided.", errorMessage);
+		}
+		
+		[Fact]
+		public void GenerateAllProjectsClearMissingOutput ()
+		{
+			var appOptions = new ApplicationOptions {
+				GenerateAllProjects = true,
+				ClearAll = true,
+			};
+			Assert.False (appOptions.OptionsAreValid (out var errorMessage));
+			Assert.Equal ("--generate-all-projects output path must be provided.", errorMessage);
+		}
+		
+		[Fact]
+		public void GenerateAllProjectsOutputClearNotDir ()
+		{
+			WriteJunk (outputPath);
+			var appOptions = new ApplicationOptions {
+				GenerateAllProjects = true,
+				ClearAll = true,
+				Output = outputPath,
+			};
+			Assert.False (appOptions.OptionsAreValid (out var errorMessage));
+			Assert.Equal ("--generate-all-projects Output path must be an existing directory.", errorMessage);
 		}
 
 	}

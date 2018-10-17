@@ -98,24 +98,9 @@ check-test-assemblies:
 		exit 1; \
 	fi
 
-generate-test-projects: check-test-assemblies test-importer ./RegisterType.cs.in ./BCLTests.csproj.in
-	rm -Rf ./bin/generated
-	mkdir -p ./bin/generated
-	for p in ${TEST_PROJECTS}; do \
-		mkdir -p ./bin/generated/$$p; \
-	done
-	for p in ${TEST_PROJECTS}; do \
-		v="$$p"_VALUE; \
-		assemblies=$$(printenv "$$v"); \
-		cmd=""; \
-		for a in $$assemblies; do\
-			cmd="$$cmd --assembly=$$a"; \
-		done; \
-		echo "Generating type registration code for $$p."; \
-		$$(./bcl-test-importer --mono-root=${MONO_ROOT} --platform=iOS --output=./bin/generated/$$p/RegisterType.cs --template=RegisterType.cs.in --generate-type-register --override $$cmd); \
-		echo "Generating projects for $$p."; \
-		$$(./bcl-test-importer --mono-root=${MONO_ROOT} --platform=iOS --output=./$$p.csproj --template=./BCLTests.csproj.in --generate-project --project-name=$$p --regiter-types-path=./bin/generated/$$p/RegisterType.cs --override $$cmd); \
-	done
+generate-test-projects: test-importer ./RegisterType.cs.in ./BCLTests.csproj.in
+	./bcl-test-importer --generate-all-projects --output=. --clean
+	./bcl-test-importer --generate-all-projects --output=. --override --register-type-template=./RegisterType.cs.in --project-template=BCLTests.csproj.in --mono-root=../../../external/mono/ --platform=iOS -v
 
 build-test-projects: generate-test-projects
 	for p in ${TEST_PROJECTS}; do \
@@ -126,9 +111,7 @@ build-test-projects: generate-test-projects
 all: build-test-projects
 
 clean:
-	@for p in ${TEST_PROJECTS}; do \
-		rm -Rf ./$$p.csproj ;\
-	done
+	./bcl-test-importer --generate-all-projects --output=. --clean
 	@rm -Rf ./bin
 	@rm -Rf ./obj
 	@rm -f bcl-test-importer
