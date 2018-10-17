@@ -150,6 +150,9 @@
     <Compile Include="DontLinkRegressionTests.cs" />
     <Compile Include="TableViewSourceTest.cs" />
     <Compile Include="CalendarTest.cs" />
+    <Compile Include="..\..\CommonDontLinkTest.cs">
+      <Link>CommonDontLinkTest.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" />
