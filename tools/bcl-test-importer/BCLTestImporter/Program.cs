@@ -196,9 +196,19 @@ namespace BCLTestImporter {
 					return 0;
 				}
 				else {
-					console.WriteLine ("Generating all the registered test projects");
 					var projectGenerator = new ProjectGenerator (appOptions.Output, appOptions.MonoPath,
 						appOptions.ProjectTemplate, appOptions.RegisterTypeTemplate);
+					console.WriteLine ("Verifying if all the test assemblies have been added.");
+					if (!projectGenerator.AllTestAssembliesAreRan (out var missingAssemblies)) {
+						console.WriteLine ("The following test assemblies should be added to a test project or ignored.");
+						foreach (var assembly in missingAssemblies) {
+							console.WriteLine ($"\t{assembly}");
+						}
+
+						return 1;
+					}
+						
+					console.WriteLine ("Generating all the registered test projects");
 					projectGenerator.GenerateAllTestProjects ().Wait ();
 					return 0;
 				}

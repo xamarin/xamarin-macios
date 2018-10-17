@@ -10,6 +10,8 @@ using System.Security.AccessControl;
 namespace BCLTestImporter {
 	public class ProjectGenerator {
 
+		static string NUnitPattern = "MONOTOUCH_*_test.dll"; 
+		static string xUnitPattern = "MONOTOUCH_*_xunit-test.dll";
 		static readonly string NameKey = "%NAME%";
 		static readonly string ReferencesKey = "%REFERENCES%";
 		static readonly string RegisterTypeKey = "%REGISTER TYPE%";
@@ -67,7 +69,7 @@ namespace BCLTestImporter {
 			new TestAssemblyDefinition ("MONOTOUCH_corlib_test.dll"),
 		};
 
-		bool isClear;
+		readonly bool isCodeGeneration;
 		public bool Override { get; set; }
 		public string OutputDirectoryPath { get; private  set; }
 		public string MonoRootPath { get; private set; }
@@ -78,11 +80,11 @@ namespace BCLTestImporter {
 		public ProjectGenerator (string outpudDirectory)
 		{
 			OutputDirectoryPath = outpudDirectory ?? throw new ArgumentNullException (nameof (outpudDirectory));
-			isClear = true;
 		}
 		
 		public ProjectGenerator (string outpudDirectory, string monoRootPath, string projectTemplatePath, string registerTypesTemplatePath)
 		{
+			isCodeGeneration = true;
 			OutputDirectoryPath = outpudDirectory ?? throw new ArgumentNullException (nameof (outpudDirectory));
 			MonoRootPath = monoRootPath ?? throw new ArgumentNullException (nameof (monoRootPath));
 			ProjectTemplatePath = projectTemplatePath ?? throw new ArgumentNullException (nameof (projectTemplatePath));
@@ -120,7 +122,7 @@ namespace BCLTestImporter {
 		// creates all the projects that have already been defined
 		public async Task GenerateAllTestProjects ()
 		{
-			if (isClear)
+			if (!isCodeGeneration)
 				throw new InvalidOperationException ("Project generator was instantiated to delete the generated code.");
 			// TODO: Do this per platform
 			var platform = "iOS";
@@ -178,7 +180,7 @@ namespace BCLTestImporter {
 		/// </summary>
 		public void CleanOutput ()
 		{
-			if (!isClear)
+			if (isCodeGeneration)
 				throw new InvalidOperationException ("Project generator was instantiated to project generation.");
 			if (Directory.Exists (GeneratedCodePathRoot))
 				Directory.Delete (GeneratedCodePathRoot, true);
@@ -188,6 +190,39 @@ namespace BCLTestImporter {
 				if (File.Exists (projectPath))
 					File.Delete (projectPath);
 			}	
+		}
+
+		/// <summary>
+		/// Returns if all the test assemblies found in the mono path 
+		/// </summary>
+		/// <param name="missingAssemblies"></param>
+		/// <returns></returns>
+		public bool AllTestAssembliesAreRan (out List<string> missingAssemblies)
+		{
+			// TODO: do this for all platforms
+			var platform = "iOS";
+			
+			// loop over the mono root path and grab all the assemblies, then intersect the found ones with the added
+			// and ignored ones.
+			var testDir = TestAssemblyDefinition.GetTestDirectory (MonoRootPath, platform);
+
+			// get all the present assemblies
+			missingAssemblies = Directory.GetFiles (testDir, NUnitPattern).Select (Path.GetFileName).Union (
+				Directory.GetFiles (testDir, xUnitPattern).Select (Path.GetFileName)).ToList ();
+			
+			// remove the ignored ones
+			foreach (var assembly in CommonIgnoredAssemblies) {
+				missingAssemblies.Remove (assembly.Name);
+			}
+			
+			// remove the added ones
+			foreach (var projectDefinition in iOSTestProjects) {
+				foreach (var testAssembly in projectDefinition.TestAssemblies) {
+					missingAssemblies.Remove (testAssembly.Name);
+				}
+			}	
+
+			return missingAssemblies.Count == 0;
 		}
 	}
 }
