@@ -41,5 +41,13 @@ namespace LinkAll {
 			string name = (typeof (TypeDescriptorTest).GetCustomAttributes (false) [0] as TypeConverterAttribute).ConverterTypeName;
 			Assert.That (name, Is.EqualTo ("LinkAll.CustomConverter, link all, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"), "ConverterTypeName");
 		}
+
+		[Test]
+		public void ConstantsVersion_4859 ()
+		{
+			// Check that the Makefile generated a valid version number, e.g. "12.3." was not
+			// reference: https://github.com/xamarin/xamarin-macios/issues/4859
+			Assert.True (Version.TryParse (ObjCRuntime.Constants.Version, out var _), "Version");
+		}
 	}
 }
