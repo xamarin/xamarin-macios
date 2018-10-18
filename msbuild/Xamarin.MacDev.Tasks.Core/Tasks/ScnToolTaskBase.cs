@@ -58,16 +58,21 @@ namespace Xamarin.MacDev.Tasks
 			var envVariables = EnvironmentVariables;
 			var index = -1;
 
-			for (int i = 0; i < envVariables.Length; i++) {
-				if (envVariables [i].StartsWith (variableName + "=", StringComparison.Ordinal)) {
-					index = i;
-					break;
+			if (envVariables == null) {
+				envVariables = new string [1];
+				index = 0;
+			} else {
+				for (int i = 0; i < envVariables.Length; i++) {
+					if (envVariables [i].StartsWith (variableName + "=", StringComparison.Ordinal)) {
+						index = i;
+						break;
+					}
 				}
-			}
 
-			if (index < 0) {
-				Array.Resize<string> (ref envVariables, envVariables.Length + 1);
-				index = envVariables.Length - 1;
+				if (index < 0) {
+					Array.Resize<string> (ref envVariables, envVariables.Length + 1);
+					index = envVariables.Length - 1;
+				}
 			}
 
 			envVariables [index] = string.Format ("{0}={1}", variableName, value);
