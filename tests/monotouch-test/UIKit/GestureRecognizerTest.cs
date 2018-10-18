@@ -50,6 +50,7 @@ namespace MonoTouchFixtures.UIKit {
 			// This is to avoid false positives (the callback should be collectible already after disposing the gesture recognizer).
 			var list = new List<UIGestureRecognizer> ();
 
+			var pool = new NSAutoreleasePool ();
 			for (var k = 0; k < 10; k++) {
 				{
 					var notifier = new FinalizerNotifier (() => finalizedAnyCtor = true);
@@ -74,6 +75,7 @@ namespace MonoTouchFixtures.UIKit {
 					}
 				}
 			}
+			pool.Dispose ();
 
 			TestRuntime.RunAsync (DateTime.Now.AddSeconds (1), () => { GC.Collect (); }, () => finalizedAnyCtor && finalizedAnyAddTarget1 && finalizedAnyAddTarget2);
 			Assert.IsTrue (finalizedAnyCtor, "Any finalized");
