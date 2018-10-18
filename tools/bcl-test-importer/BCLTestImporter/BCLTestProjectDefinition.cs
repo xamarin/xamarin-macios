@@ -5,11 +5,11 @@ using System.Reflection;
 using System.Collections.Generic;
 
 namespace BCLTestImporter {
-	public struct TestProjectDefinition {
+	public struct BCLTestProjectDefinition {
 		public string Name { get; set; }
-		public List<TestAssemblyDefinition> TestAssemblies {get; private set;}
+		public List<BCLTestAssemblyDefinition> TestAssemblies {get; private set;}
 		
-		public TestProjectDefinition (string name, List<TestAssemblyDefinition> assemblies)
+		public BCLTestProjectDefinition (string name, List<BCLTestAssemblyDefinition> assemblies)
 		{
 			Name = name;
 			TestAssemblies = assemblies;
@@ -21,7 +21,7 @@ namespace BCLTestImporter {
 		}
 
 		/// <summary>
-		/// Returns 
+		/// Returns the assemblies that a referenced by the given test assembly.
 		/// </summary>
 		/// <returns></returns>
 		IEnumerable<string> GetProjectAssemblyReferences (string monoRootPath, string platform)

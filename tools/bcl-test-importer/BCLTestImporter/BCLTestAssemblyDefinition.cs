@@ -3,7 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 
 namespace BCLTestImporter {
-	public struct TestAssemblyDefinition {
+	public struct BCLTestAssemblyDefinition {
 		
 		#region static vars
 		
@@ -23,7 +23,7 @@ namespace BCLTestImporter {
 		
 		#endregion
 		
-		public TestAssemblyDefinition (string name)
+		public BCLTestAssemblyDefinition (string name)
 		{
 			Name = name;
 			// the following pattern is used when generating xunit test

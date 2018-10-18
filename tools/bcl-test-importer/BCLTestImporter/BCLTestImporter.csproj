@@ -43,10 +43,10 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegisterTypeGenerator.cs" />
-    <Compile Include="ProjectGenerator.cs" />
+    <Compile Include="BCLTestProjectGenerator.cs" />
     <Compile Include="ApplicationOptions.cs" />
-    <Compile Include="TestProjectDefinition.cs" />
-    <Compile Include="TestAssemblyDefinition.cs" />
+    <Compile Include="BCLTestProjectDefinition.cs" />
+    <Compile Include="BCLTestAssemblyDefinition.cs" />
     <Compile Include="ConsoleWriter.cs" />
   </ItemGroup>
   <ItemGroup>

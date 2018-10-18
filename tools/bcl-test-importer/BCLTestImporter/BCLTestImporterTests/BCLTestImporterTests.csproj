@@ -21,11 +21,11 @@
     <Compile Include="..\Platform.cs">
       <Link>Platform.cs</Link>
     </Compile>
-    <Compile Include="..\TestAssemblyDefinition.cs">
-      <Link>TestAssemblyDefinition.cs</Link>
+    <Compile Include="..\BCLTestAssemblyDefinition.cs">
+      <Link>BCLTestAssemblyDefinition.cs</Link>
     </Compile>
-    <Compile Include="..\TestProjectDefinition.cs">
-      <Link>TestProjectDefinition.cs</Link>
+    <Compile Include="..\BCLTestProjectDefinition.cs">
+      <Link>BCLTestProjectDefinition.cs</Link>
     </Compile>
   </ItemGroup>
 </Project>

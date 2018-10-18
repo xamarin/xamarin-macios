@@ -4,10 +4,10 @@ BCL_TEST_IMPORTER_SRC:=BCLTestImporter/ApplicationOptions.cs \
 					BCLTestImporter/BCLTestImporter.csproj \
 					BCLTestImporter/ConsoleWriter.cs \
 					BCLTestImporter/Program.cs \
-					BCLTestImporter/ProjectGenerator.cs \
+					BCLTestImporter/BCLTestProjectGenerator.cs \
 					BCLTestImporter/RegisterTypeGenerator.cs \
-					BCLTestImporter/TestAssemblyDefinition.cs \
-					BCLTestImporter/TestProjectDefinition.cs \
+					BCLTestImporter/BCLTestAssemblyDefinition.cs \
+					BCLTestImporter/BCLTestProjectDefinition.cs \
 
 all: BCLTestImporter.exe
 

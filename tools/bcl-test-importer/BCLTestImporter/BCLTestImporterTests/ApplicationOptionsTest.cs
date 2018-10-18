@@ -29,7 +29,7 @@ namespace BCLTestImporterTests {
 			WriteJunk (projectTemplatePath);
 			outputPath = Path.Combine (tmpPath, Path.GetRandomFileName());
 			monoCheckout = Path.Combine (tmpPath, Path.GetRandomFileName());
-			var testDir = TestAssemblyDefinition.GetTestDirectory (monoCheckout, platform);
+			var testDir = BCLTestAssemblyDefinition.GetTestDirectory (monoCheckout, platform);
 			
 			if (Directory.Exists (testDir)) return;
 			
