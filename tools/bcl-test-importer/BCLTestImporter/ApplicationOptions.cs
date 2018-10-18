@@ -12,11 +12,11 @@ namespace BCLTestImporter {
 
 		#region static vars
 		static readonly string partialPath = "mcs/class/lib";
-		static readonly Dictionary <string, string> PlatformPathMatch = new Dictionary <string, string> {
-			{"iOS", "monotouch"},
-			{"WatchOS", "monotouch_watch"},
-			{"TvOS", "monotouch_tv"},
-			{"MacOS", "xammac"},
+		static readonly Dictionary <Platform, string> PlatformPathMatch = new Dictionary <Platform, string> {
+			{Platform.iOS, "monotouch"},
+			{Platform.WatchOS, "monotouch_watch"},
+			{Platform.TvOS, "monotouch_tv"},
+			{Platform.MacOS, "xammac"},
 		};
 		
 		#endregion
@@ -41,7 +41,7 @@ namespace BCLTestImporter {
 			get => monoPath;
 			set => monoPath = FixPath (value);
 		}
-		public string Platform { get; set; }
+		public Platform Platform { get; set; }
 		string output;
 		public string Output {
 			get => output;
@@ -115,58 +115,13 @@ namespace BCLTestImporter {
 			return true;
 		}
 
-		string GetTestsDirectoryPath (string monoPath, string platform)
-		{
-			var fullPath = monoPath;
-			switch (platform) {
-			case "iOS":
-				fullPath = Path.Combine (fullPath, partialPath, PlatformPathMatch["iOS"], "tests");
-			break;
-			case "WatchOS":
-				fullPath = Path.Combine (fullPath, partialPath, PlatformPathMatch["WatchOS"], "tests");
-			break;
-			case "TvOS":
-				fullPath = Path.Combine (fullPath, partialPath, PlatformPathMatch["TvOS"], "tests");
-			break;
-			case "MacOS":
-				fullPath = Path.Combine (fullPath, partialPath, PlatformPathMatch["MacOS"], "tests");
-			break;
-			default:
-			fullPath = null;
-			break;
-			}
-			return fullPath;
-		}
-
-		bool PlatformIsValid (string mPath, string platform, out string message)
-		{
-			// mono path should have been checked already
-			if (string.IsNullOrEmpty (platform)) {
-				message = "Platform must be provided.";
-				return false;
-			}
-			if (!PlatformPathMatch.ContainsKey (platform)) {
-				message = "Unrecognized platform.";
-				return false;
-			}
-			var fullPath = GetTestsDirectoryPath (mPath, platform);
-
-			if (!Directory.Exists (fullPath)) {
-					message = $"Could not find path: '{fullPath}'";
-				return false;
-			}
-			message = "";
-			return true;
-		}
+		static string GetTestsDirectoryPath (string monoPath, Platform platform) 
+			=> Path.Combine (monoPath, partialPath, PlatformPathMatch[platform], "tests");
 
 		bool GenerateTypeRegisterOptionsAreValid (out string message)
 		{
 			var cmd = "--generate-type-register";
 			if (!MonoPathIsValid (monoPath, out message)) {
-				message = $"{cmd} {message}"; // let the user the param he used
-				return false;
-			}
-			if (!PlatformIsValid (monoPath, Platform, out message)) {
 				message = $"{cmd} {message}"; // let the user the param he used
 				return false;
 			}
@@ -205,10 +160,6 @@ namespace BCLTestImporter {
 			// generation, both need the mono path and the platform to be correct
 			var cmd = "--generate-project";
 			if (!MonoPathIsValid (monoPath, out message)) {
-				message = $"{cmd} {message}"; // let the user the param he used
-				return false;
-			}
-			if (!PlatformIsValid (monoPath, Platform, out message)) {
 				message = $"{cmd} {message}"; // let the user the param he used
 				return false;
 			}
@@ -272,10 +223,6 @@ namespace BCLTestImporter {
 				message = $"{cmd} {message}"; // let the user the param he used
 				return false;
 			}
-			if (!PlatformIsValid (monoPath, Platform, out message)) {
-				message = $"{cmd} {message}"; // let the user the param he used
-				return false;
-			}
 			if (string.IsNullOrEmpty (registerTypeTemplate)) {
 				message = $"{cmd} Register type template must be provided.";
 				return false;
@@ -313,25 +260,22 @@ namespace BCLTestImporter {
 			if (!string.IsNullOrEmpty (assembly)) {
 				// we need to ensure that no other options have been given
 				if (ShouldShowHelp || ShowDict || ListAssemblies || GenerateProject || GenerateTypeRegister || IsXUnit
-					|| !string.IsNullOrEmpty (Platform) || !string.IsNullOrEmpty (monoPath) || !string.IsNullOrEmpty (output)
+					|| !string.IsNullOrEmpty (monoPath) || !string.IsNullOrEmpty (output)
 					|| !string.IsNullOrEmpty (registerTypeTemplate) || TestAssemblies.Count > 0) {
 					message = "--assemblyref does not take any other arguments.";
 					return false;
 				}
 			}
 			if (ShowDict) {
-				if (ShouldShowHelp || ListAssemblies || GenerateProject || GenerateTypeRegister || !string.IsNullOrEmpty (Platform)
-					|| !string.IsNullOrEmpty (monoPath) || !string.IsNullOrEmpty (output) || !string.IsNullOrEmpty (assembly)
-					|| !string.IsNullOrEmpty (registerTypeTemplate) || TestAssemblies.Count > 0) {
+				if (ShouldShowHelp || ListAssemblies || GenerateProject || GenerateTypeRegister 
+				    || !string.IsNullOrEmpty (monoPath) || !string.IsNullOrEmpty (output)
+				    || !string.IsNullOrEmpty (assembly) || !string.IsNullOrEmpty (registerTypeTemplate)
+				    || TestAssemblies.Count > 0) {
 					message = "--d received unrecognized parameters..";
 					return false;
 				}
 				if (string.IsNullOrEmpty (monoPath)) {
 					message = "(-d) Mono checkout is missing.";
-					return false;
-				}
-				if (string.IsNullOrEmpty (Platform)) {
-					message = "(-d) Platform must be provided.";
 					return false;
 				}
 				// assert that the platform is supported
@@ -342,10 +286,6 @@ namespace BCLTestImporter {
 			}
 			if (ListAssemblies) {
 				if (!MonoPathIsValid (monoPath, out message)) {
-					message = $"(-d) {message}"; // let the user the param he used
-					return false;
-				}
-				if (!PlatformIsValid (monoPath, Platform, out message)) {
 					message = $"(-d) {message}"; // let the user the param he used
 					return false;
 				}
@@ -370,8 +310,10 @@ namespace BCLTestImporter {
 			return new OptionSet { 
 				{ "mono-root=", "Root directory of the mono check out that will be use to search for the unit tests."
 					+ " Example: '/Users/test/xamarin-macios/external/mono'.", p => MonoPath = p }, 
-				{ "platform=", "The platform for which we are tyring to retrieve the tests. Possible values are"
-					+ " iOS, WatchOS, TvOS, MacOS", p => Platform = p },
+				{ "iOS", "Specifies that the platform to which the projects are going to be build is iOS.", i => Platform = Platform.iOS },
+				{ "watchOS", "Specifies that the platform to which the projects are going to be build is watchOS.", w => Platform = Platform.WatchOS },
+				{ "tvOS", "Specifies that the platform to which the projects are going to be build is tvOS.", t => Platform = Platform.TvOS },
+				{ "macOS", "Specifies that the platform to which the projects are going to be build is macOS.", m => Platform = Platform.MacOS },
 				{ "generate-project", "Flag used to state that a new test project should be generated."
 					+ " Output path must be provided via -o.", f => GenerateProject = f != null },
 				{ "generate-all-projects", "Flag used to state that all the test projects should be generated."

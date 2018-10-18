@@ -5,7 +5,6 @@ using Xunit;
 using Xunit.Sdk;
 
 using BCLTestImporter;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
 namespace BCLTestImporterTests {
 	public class ApplicationOptionsTest : IDisposable {
@@ -68,7 +67,6 @@ namespace BCLTestImporterTests {
 			Assert.False (appOptions.ClearAll, "appOptions.ClearAll");
 			// string values
 			Assert.Null (appOptions.MonoPath);
-			Assert.Null (appOptions.Platform);
 			Assert.Null (appOptions.Output);
 			Assert.Null (appOptions.RegisterTypeTemplate);
 			Assert.Null (appOptions.ProjectTemplate);
@@ -84,7 +82,6 @@ namespace BCLTestImporterTests {
 		{
 			var appOptions = new ApplicationOptions {
 				GenerateTypeRegister = true,
-				Platform = "iOS",
 				RegisterTypeTemplate = registerTypesTemplatePath,
 				Output = outputPath,
 				Override = true
@@ -100,7 +97,6 @@ namespace BCLTestImporterTests {
 			var home = Environment.GetEnvironmentVariable ("HOME");
 			var appOptions = new ApplicationOptions {
 				GenerateTypeRegister = true,
-				Platform = "iOS",
 				RegisterTypeTemplate = registerTypesTemplatePath,
 				Output = outputPath,
 				Override = true,
@@ -112,28 +108,11 @@ namespace BCLTestImporterTests {
 		}
 
 		[Fact]
-		public void TypeRegisterPlatformNotValid ()
-		{
-			var appOptions = new ApplicationOptions {
-				GenerateTypeRegister = true,
-				Platform = "cool-platform",
-				RegisterTypeTemplate = registerTypesTemplatePath,
-				Output = outputPath,
-				Override = true,
-				MonoPath = monoCheckout,
-			};
-			appOptions.TestAssemblies.Add ("Foo.dll");
-			Assert.False (appOptions.OptionsAreValid (out var errorMessage));
-			Assert.Equal ("--generate-type-register Unrecognized platform.", errorMessage);
-		}
-
-		[Fact]
 		public void TypeRegisterTemplateMissing ()
 		{
 			var home = Environment.GetEnvironmentVariable ("HOME");
 			var appOptions = new ApplicationOptions {
 				GenerateTypeRegister = true,
-				Platform = "iOS",
 				RegisterTypeTemplate = Path.Combine (home, "foo.in"),
 				Output = outputPath,
 				Override = true,
@@ -149,7 +128,6 @@ namespace BCLTestImporterTests {
 		{
 			var appOptions = new ApplicationOptions {
 				GenerateTypeRegister = true,
-				Platform = "iOS",
 				RegisterTypeTemplate = registerTypesTemplatePath,
 				Override = true,
 				MonoPath = monoCheckout,
@@ -165,7 +143,6 @@ namespace BCLTestImporterTests {
 			WriteJunk (outputPath);
 			var appOptions = new ApplicationOptions {
 				GenerateTypeRegister = true,
-				Platform = "iOS",
 				RegisterTypeTemplate = registerTypesTemplatePath,
 				Override = false,
 				Output = outputPath,
@@ -181,7 +158,6 @@ namespace BCLTestImporterTests {
 		{
 			var appOptions = new ApplicationOptions {
 				GenerateTypeRegister = true,
-				Platform = "iOS",
 				RegisterTypeTemplate = registerTypesTemplatePath,
 				Override = false,
 				Output = outputPath,
@@ -196,7 +172,6 @@ namespace BCLTestImporterTests {
 		{
 			var appOptions = new ApplicationOptions {
 				GenerateProject = true,
-				Platform = "iOS",
 				ProjectName = "Test",
 				ProjectTemplate = registerTypesTemplatePath,
 				Output = outputPath,
@@ -212,7 +187,6 @@ namespace BCLTestImporterTests {
 		{
 			var appOptions = new ApplicationOptions {
 				GenerateProject = true,
-				Platform = "iOS",
 				ProjectName = "Test",
 				ProjectTemplate = registerTypesTemplatePath,
 				Output = outputPath,
@@ -229,7 +203,6 @@ namespace BCLTestImporterTests {
 			var home = Environment.GetEnvironmentVariable ("HOME");
 			var appOptions = new ApplicationOptions {
 				GenerateProject = true,
-				Platform = "iOS",
 				ProjectName = "Test",
 				ProjectTemplate = Path.Combine (home, "foo.in"),
 				Output = outputPath,
@@ -246,7 +219,6 @@ namespace BCLTestImporterTests {
 		{
 			var appOptions = new ApplicationOptions {
 				GenerateProject = true,
-				Platform = "iOS",
 				ProjectName = "Test",
 				ProjectTemplate = projectTemplatePath,
 				Override = true,
@@ -263,7 +235,6 @@ namespace BCLTestImporterTests {
 			WriteJunk (outputPath);
 			var appOptions = new ApplicationOptions {
 				GenerateProject = true,
-				Platform = "iOS",
 				ProjectName = "Test",
 				ProjectTemplate = projectTemplatePath,
 				Override = false,
@@ -280,7 +251,6 @@ namespace BCLTestImporterTests {
 		{
 			var appOptions = new ApplicationOptions {
 				GenerateProject = true,
-				Platform = "iOS",
 				ProjectName = "Test",
 				ProjectTemplate = projectTemplatePath,
 				Override = false,
@@ -296,7 +266,6 @@ namespace BCLTestImporterTests {
 		{
 			var appOptions = new ApplicationOptions {
 				GenerateAllProjects = true,
-				Platform = "iOS",
 				ProjectName = "Test",
 				ProjectTemplate = projectTemplatePath,
 				RegisterTypeTemplate = registerTypesTemplatePath,
@@ -312,7 +281,6 @@ namespace BCLTestImporterTests {
 		{
 			var appOptions = new ApplicationOptions {
 				GenerateAllProjects = true,
-				Platform = "iOS",
 				ProjectName = "Test",
 				ProjectTemplate = projectTemplatePath,
 				RegisterTypeTemplate = registerTypesTemplatePath,
@@ -328,7 +296,6 @@ namespace BCLTestImporterTests {
 		{
 			var appOptions = new ApplicationOptions {
 				GenerateAllProjects = true,
-				Platform = "iOS",
 				ProjectName = "Test",
 				ProjectTemplate = projectTemplatePath,
 				RegisterTypeTemplate = registerTypesTemplatePath,
@@ -345,7 +312,6 @@ namespace BCLTestImporterTests {
 			WriteJunk (outputPath);
 			var appOptions = new ApplicationOptions {
 				GenerateAllProjects = true,
-				Platform = "iOS",
 				ProjectTemplate = projectTemplatePath,
 				RegisterTypeTemplate = registerTypesTemplatePath,
 				Override = false,
@@ -362,7 +328,6 @@ namespace BCLTestImporterTests {
 		{
 			var appOptions = new ApplicationOptions {
 				GenerateAllProjects = true,
-				Platform = "iOS",
 				RegisterTypeTemplate = registerTypesTemplatePath,
 				Override = false,
 				Output = outputPath,
@@ -377,7 +342,6 @@ namespace BCLTestImporterTests {
 		{
 			var appOptions = new ApplicationOptions {
 				GenerateAllProjects = true,
-				Platform = "iOS",
 				ProjectTemplate = projectTemplatePath,
 				Override = false,
 				Output = outputPath,

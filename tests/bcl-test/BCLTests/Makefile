@@ -8,7 +8,7 @@ test-importer:
 
 generate-test-projects: test-importer ./RegisterType.cs.in ./BCLTests.csproj.in
 	./bcl-test-importer --generate-all-projects --output=. --clean
-	./bcl-test-importer --generate-all-projects --output=. --override --register-type-template=./RegisterType.cs.in --project-template=BCLTests.csproj.in --mono-root=../../../external/mono/ --platform=iOS -v
+	./bcl-test-importer --generate-all-projects --output=. --override --register-type-template=./RegisterType.cs.in --project-template=BCLTests.csproj.in --mono-root=../../../external/mono/ -iOS -v
 
 build-test-projects: generate-test-projects
 	for p in ${TEST_PROJECTS}; do \
@@ -18,7 +18,7 @@ build-test-projects: generate-test-projects
 
 all: build-test-projects
 
-clean:
+clean: test-importer
 	./bcl-test-importer --generate-all-projects --output=. --clean
 	@rm -Rf ./bin
 	@rm -Rf ./obj
