@@ -9717,6 +9717,9 @@ namespace UIKit {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 
+		[Export ("contentOffset")]
+		new CGPoint ContentOffset { get; set; }
+
 		[Export ("contentSize")]
 		new CGSize ContentSize { get; set; }
 
