@@ -2725,24 +2725,6 @@ namespace Registrar {
 				allTypes.Add (@class);
 			}
 
-			// Move all the custom types to the end of the list, respecting 
-			// existing order (so that a derived type always comes after
-			// its base type; the Types.Values has that property, and we
-			// need to keep it that way).
-
-			var mappedEnd = allTypes.Count;
-			var counter = 0;
-			while (counter < mappedEnd) {
-				if (!IsPlatformType (allTypes [counter].Type)) {
-					var t = allTypes [counter];
-					allTypes.RemoveAt (counter);
-					allTypes.Add (t);
-					mappedEnd--;
-				} else {
-					counter++;
-				}
-			}
-
 			if (string.IsNullOrEmpty (single_assembly)) {
 				foreach (var assembly in GetAssemblies ())
 					registered_assemblies.Add (GetAssemblyName (assembly));
@@ -2750,23 +2732,24 @@ namespace Registrar {
 				registered_assemblies.Add (single_assembly);
 			}
 
-			var customTypeCount = 0;
 			foreach (var @class in allTypes) {
 				var isPlatformType = IsPlatformType (@class.Type);
+				var flags = MTTypeFlags.None;
 
 				skip.Clear ();
 
 				uint token_ref = uint.MaxValue;
 				if (!@class.IsProtocol && !@class.IsCategory) {
 					if (!isPlatformType)
-						customTypeCount++;
-					
+						flags |= MTTypeFlags.CustomType;
+
 					CheckNamespace (@class, exceptions);
 					token_ref = CreateTokenReference (@class.Type, TokenType.TypeDef);
-					map.AppendLine ("{{ NULL, 0x{1:X} /* #{3} '{0}' => '{2}' */ }},", 
+					map.AppendLine ("{{ NULL, 0x{1:X} /* #{3} '{0}' => '{2}' */, (MTTypeFlags) ({4}) /* {5} */ }},", 
 									@class.ExportedName,
 									CreateTokenReference (@class.Type, TokenType.TypeDef), 
-									GetAssemblyQualifiedName (@class.Type), map_entries);
+									GetAssemblyQualifiedName (@class.Type), map_entries,
+									(int) flags, flags);
 					map_dict [@class] = map_entries++;
 
 					bool use_dynamic;
@@ -3110,7 +3093,6 @@ namespace Registrar {
 			}
 			map.AppendLine ("{0},", count);
 			map.AppendLine ("{0},", i);
-			map.AppendLine ("{0},", customTypeCount);
 			map.AppendLine ("{0},", full_token_reference_count);
 			map.AppendLine ("{0},", skipped_types.Count);
 			map.AppendLine ("{0},", protocol_wrapper_map.Count);
@@ -5004,5 +4986,12 @@ namespace Registrar {
 	class AdoptsAttribute : Attribute
 	{
 		public string ProtocolType { get; set; }
+	}
+
+	[Flags]
+	internal enum MTTypeFlags : uint
+	{
+		None = 0,
+		CustomType = 1,
 	}
 }

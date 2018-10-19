@@ -1020,8 +1020,7 @@ xamarin_add_registration_map (struct MTRegistrationMap *map)
 	options.RegistrationData = map;
 
 	// Sort the type map according to Class
-	qsort (map->map, map->map_count - map->custom_type_count, sizeof (MTClassMap), compare_mtclassmap);
-	qsort (&map->map [map->map_count - map->custom_type_count], map->custom_type_count, sizeof (MTClassMap), compare_mtclassmap);
+	qsort (map->map, map->map_count, sizeof (MTClassMap), compare_mtclassmap);
 }
 
 /*

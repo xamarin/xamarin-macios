@@ -68,9 +68,15 @@ typedef struct __attribute__((packed)) {
 } MTTokenReference;
 static const uint32_t INVALID_TOKEN_REF = 0xFFFFFFFF;
 
+enum MTTypeFlags {
+	MTTypeFlagsNone = 0,
+	MTTypeFlagsCustomType = 1, // not a platform type
+};
+
 typedef struct __attribute__((packed)) {
 	void *handle;
 	uint32_t /* MTTokenReference */ type_reference;
+	uint32_t /* MTTypeFlags */ flags;
 } MTClassMap;
 
 typedef struct __attribute__((packed)) {
@@ -109,7 +115,6 @@ struct MTRegistrationMap {
 	const MTProtocolMap protocols;
 	int assembly_count;
 	int map_count;
-	int custom_type_count;
 	int full_token_reference_count;
 	int skipped_map_count;
 	int protocol_wrapper_count;
