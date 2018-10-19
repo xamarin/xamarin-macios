@@ -2636,6 +2636,7 @@ namespace Registrar {
 			public TypeReference Skipped;
 			public ObjCType Actual;
 			public uint SkippedTokenReference;
+			public uint ActualTokenReference;
 		}
 		List<SkippedType> skipped_types = new List<SkippedType> ();
 		protected override void OnSkipType (TypeReference type, ObjCType registered_type)
@@ -3031,16 +3032,13 @@ namespace Registrar {
 
 			if (skipped_types.Count > 0) {
 				map.AppendLine ("static const MTManagedClassMap __xamarin_skipped_map [] = {");
-				foreach (var skipped in skipped_types)
+				foreach (var skipped in skipped_types) {
 					skipped.SkippedTokenReference = CreateTokenReference (skipped.Skipped, TokenType.TypeDef);
-
-				foreach (var skipped in skipped_types.OrderBy ((v) => v.SkippedTokenReference)) {
-					if (map_dict.TryGetValue (skipped.Actual, out var index)) {
-						map.AppendLine ("{{ 0x{0:X}, {1} /* '{2}' => '{3}' */ }},", skipped.SkippedTokenReference, map_dict [skipped.Actual], skipped.Skipped.FullName, skipped.Actual.Type.FullName);
-					} else {
-						throw ErrorHelper.CreateError (99, $"Internal error: could not find the native type for {skipped.Skipped.FullName} (failed to find {skipped.Actual.Type.FullName}). Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
-					}
+					skipped.ActualTokenReference = CreateTokenReference (skipped.Actual.Type, TokenType.TypeDef);
 				}
+
+				foreach (var skipped in skipped_types.OrderBy ((v) => v.SkippedTokenReference))
+					map.AppendLine ("{{ 0x{0:X}, 0x{1:X} /* '{2}' => '{3}' */ }},", skipped.SkippedTokenReference, skipped.ActualTokenReference, skipped.Skipped.FullName, skipped.Actual.Type.FullName);
 				map.AppendLine ("};");
 				map.AppendLine ();
 			}

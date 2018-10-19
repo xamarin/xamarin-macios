@@ -75,7 +75,7 @@ typedef struct __attribute__((packed)) {
 
 typedef struct __attribute__((packed)) {
 	uint32_t /* MTTokenReference */ skipped_reference;
-	uint32_t /* index into MTRegistrationMap->map */ index;
+	uint32_t /* MTTokenReference */ actual_reference;
 } MTManagedClassMap;
 
 typedef struct __attribute__((packed)) {
