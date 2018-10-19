@@ -126,9 +126,9 @@ namespace BCLTestImporter {
 		}
 
 		// creates all the projects that have already been defined
-		public async Task<List<string>> GenerateAllTestProjects ()
+		public async Task<List<(string name, string path)>> GenerateAllTestProjectsAsync ()
 		{
-			var projectPaths = new List<string> ();
+			var projectPaths = new List<(string name, string path)> ();
 			if (!isCodeGeneration)
 				throw new InvalidOperationException ("Project generator was instantiated to delete the generated code.");
 			// TODO: Do this per platform
@@ -164,7 +164,7 @@ namespace BCLTestImporter {
 				var generatedProject = await GenerateAsync (projectDefinition.Name, registerTypePath,
 					projectDefinition.GetAssemblyInclusionInformation (MonoRootPath, platform), ProjectTemplatePath, infoPlistPath);
 				var projectPath = GetProjectPath (projectDefinition.Name);
-				projectPaths.Add (projectPath);
+				projectPaths.Add ((name: projectDefinition.Name, path: projectPath));
 				using (var file = new StreamWriter (projectPath, !Override)) { // false is do not append
 					await file.WriteAsync (generatedProject);
 				}
@@ -173,6 +173,8 @@ namespace BCLTestImporter {
 			return projectPaths;
 		}
 
+		public List<(string name, string path)> GenerateAllTestProjects () => GenerateAllTestProjectsAsync ().Result;
+		
 		static async Task<string> GenerateAsync (string projectName, string registerPath, List<(string assembly, string hintPath)> info, string templatePath, string infoPlistPath)
 		{
 			// fix possible issues with the paths to be included in the msbuild xml

@@ -562,13 +562,14 @@ namespace xharness
 		{
 			var logicalNames = csproj.SelectNodes ("//*[local-name() = 'LogicalName']");
 			foreach (XmlNode ln in logicalNames) {
-				if (ln.InnerText != "Info.plist")
+				if (!ln.InnerText.Contains("Info.plist"))
 					continue;
 				return ln.ParentNode.Attributes ["Include"].Value;
 			}
-			var nones = csproj.SelectNodes ("//*[local-name() = 'None' and @Include = 'Info.plist']");
-			if (nones.Count > 0)
-				return "Info.plist";
+			var nones = csproj.SelectNodes ("//*[local-name() = 'None' and contains(@Include ,'Info.plist')]");
+			if (nones.Count > 0) {
+				return nones [0].Attributes [0].Value; // return the value, which could be Info.plist or a full path (linked).
+			}
 			throw new Exception ("Could not find Info.plist include");
 		}
 

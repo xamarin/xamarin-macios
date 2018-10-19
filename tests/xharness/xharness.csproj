@@ -126,6 +126,10 @@
     <Compile Include="..\..\tools\bcl-test-importer\BCLTestImporter\RegisterTypeGenerator.cs">
       <Link>BCLTestImporter\RegisterTypeGenerator.cs</Link>
     </Compile>
+    <Compile Include="BCLTestImporter\BCLTestImportTargetFactory.cs" />
+    <Compile Include="..\..\tools\bcl-test-importer\BCLTestImporter\BCLTestInfoPlistGenerator.cs">
+      <Link>BCLTestImporter\BCLTestInfoPlistGenerator.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BCLTestImporter\" />

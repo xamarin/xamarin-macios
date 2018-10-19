@@ -210,7 +210,7 @@ namespace BCLTestImporter {
 					}
 						
 					console.WriteLine ("Generating all the registered test projects");
-					projectGenerator.GenerateAllTestProjects ().Wait ();
+					projectGenerator.GenerateAllTestProjectsAsync ().Wait ();
 					return 0;
 				}
 			}
