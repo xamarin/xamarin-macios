@@ -76,6 +76,7 @@ namespace ObjCRuntime {
 		{
 			None = 0,
 			CustomType = 1,
+			UserType = 2,
 		}
 
 		[StructLayout (LayoutKind.Sequential, Pack = 1)]
@@ -131,7 +132,7 @@ namespace ObjCRuntime {
 
 		[Flags]
 		internal enum InitializationFlags : int {
-			/* unused               = 0x01 */
+			IsPartialStaticRegistrar= 0x01,
 			/* unused				= 0x02,*/
 			DynamicRegistrar		= 0x04,
 			/* unused				= 0x08,*/

@@ -2743,6 +2743,9 @@ namespace Registrar {
 					if (!isPlatformType)
 						flags |= MTTypeFlags.CustomType;
 
+					if (!@class.IsWrapper && !@class.IsModel)
+						flags |= MTTypeFlags.UserType;
+
 					CheckNamespace (@class, exceptions);
 					token_ref = CreateTokenReference (@class.Type, TokenType.TypeDef);
 					map.AppendLine ("{{ NULL, 0x{1:X} /* #{3} '{0}' => '{2}' */, (MTTypeFlags) ({4}) /* {5} */ }},", 
@@ -3100,7 +3103,7 @@ namespace Registrar {
 			map.AppendLine ("};");
 
 
-			map_init.AppendLine ("xamarin_add_registration_map (&__xamarin_registration_map);");
+			map_init.AppendLine ("xamarin_add_registration_map (&__xamarin_registration_map, {0});", string.IsNullOrEmpty (single_assembly) ? "false" : "true");
 			map_init.AppendLine ("}");
 
 			sb.WriteLine (map.ToString ());
@@ -4993,5 +4996,6 @@ namespace Registrar {
 	{
 		None = 0,
 		CustomType = 1,
+		UserType = 2,
 	}
 }
