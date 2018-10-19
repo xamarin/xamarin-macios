@@ -34,6 +34,7 @@ namespace BCLTestImporter {
 		internal bool IsXUnit { get; set; }
 		internal bool Override { get; set; }
 		internal bool ClearAll{ get; set; }
+		internal bool IgnoreMissingAssemblies{ get; set; }
 
 		// path options
 		string monoPath;
@@ -56,7 +57,13 @@ namespace BCLTestImporter {
 		public string ProjectTemplate {
 			get => projectTemplate;
 			set => projectTemplate = FixPath (value);
-		} 
+		}
+
+		string plistTemplate;
+		public string PlistTemplate{
+			get => plistTemplate;
+			set => plistTemplate = FixPath (value);
+		}
 		string assembly;
 		public string Assembly {
 			get => assembly;
@@ -164,14 +171,25 @@ namespace BCLTestImporter {
 				return false;
 			}
 			if (string.IsNullOrEmpty (projectTemplate)) {
-				message = $"{cmd} Template must be provided.";
+				message = $"{cmd} Project emplate must be provided.";
 				return false;
 			}
 
 			if (!File.Exists (projectTemplate)) {
-				message = $"{cmd} Template is missing.";
+				message = $"{cmd} Project template is missing.";
 				return false;
 			}
+			
+			if (string.IsNullOrEmpty (plistTemplate)) {
+				message = $"{cmd} Plist template must be provided.";
+				return false;
+			}
+			
+			if (!File.Exists (plistTemplate)) {
+				message = $"{cmd} Plist template is missing.";
+				return false;
+			}
+			
 			if (string.IsNullOrEmpty (output)) {
 				message = $"{cmd} output path must be provided.";
 				return false;
@@ -199,6 +217,7 @@ namespace BCLTestImporter {
 				message = $"{cmd} the path to the generated class could not be found.";
 				return false;
 			}
+
 			message = "";
 			return false;
 		}
@@ -232,13 +251,21 @@ namespace BCLTestImporter {
 				message = $"{cmd} Project template must be provided.";
 				return false;
 			}
+			if (string.IsNullOrEmpty (plistTemplate)) {
+				message = $"{cmd} Plist template must be provided.";
+				return false;
+			}
 			if (!File.Exists (registerTypeTemplate)) {
-				message = $"{cmd} Template is missing.";
+				message = $"{cmd} Register type template is missing.";
 				return false;
 			}
 
 			if (!File.Exists (projectTemplate)) {
-				message = $"{cmd} Template is missing.";
+				message = $"{cmd} Project template is missing.";
+				return false;
+			}
+			if (!File.Exists (plistTemplate)) {
+				message = $"{cmd} Plist template is missing.";
 				return false;
 			}
 			if (string.IsNullOrEmpty (output)) {
@@ -325,7 +352,9 @@ namespace BCLTestImporter {
 				{ "o|output=", "Specifies the output of the generated code.", o => Output = o },
 				{ "register-type-template=", "Specifies the template to be used for the code generation.", t => RegisterTypeTemplate = t},
 				{ "project-template=", "Specifies the template to be used for the project generation.", t => ProjectTemplate = t},
+				{ "plist-template=", "Specifies the template to be used for the plist generation.", p => PlistTemplate = p},
 				{ "assemblyref=", "Gets an assembly and returns all the references to it.", a => Assembly = a },
+				{ "ignore-missing-assemblies", "Tells the application not to throw an error when there are test assemblies that have not been added.", i => IgnoreMissingAssemblies = i != null},
 				{ "a|assembly=", "Allows to pass the test assemblies to be used for the code generation", a => TestAssemblies.Add (a) },
 				{ "x|xunit", "Flag that states if the assemblies contain xunit tests.", x => IsXUnit = x != null},
 				{ "d|dictionary", "Lists the assemblies found and a relation with a type found in it.", d => ShowDict = d != null},

@@ -165,7 +165,8 @@ namespace BCLTestImporter {
 					info.Add (assemblyInfo);
 					console.WriteLine ($"Ref will be added for assembly: '{assemblyInfo.assembly}' hintPath: '{assemblyInfo.hintPath}'");
 				}
-				var generatedProject = BCLTestProjectGenerator.Generate (appOptions.ProjectName, appOptions.RegisterTypesPath, info, appOptions.RegisterTypeTemplate);
+				var generatedProject = BCLTestProjectGenerator.Generate (appOptions.ProjectName, appOptions.RegisterTypesPath,
+					info, appOptions.RegisterTypeTemplate, appOptions.PlistTemplate);
 				console.WriteLine ("Generated project is:");
 				console.WriteLine (generatedProject);
 				
@@ -197,9 +198,9 @@ namespace BCLTestImporter {
 				}
 				else {
 					var projectGenerator = new BCLTestProjectGenerator (appOptions.Output, appOptions.MonoPath,
-						appOptions.ProjectTemplate, appOptions.RegisterTypeTemplate);
+						appOptions.ProjectTemplate, appOptions.RegisterTypeTemplate, appOptions.PlistTemplate);
 					console.WriteLine ("Verifying if all the test assemblies have been added.");
-					if (!projectGenerator.AllTestAssembliesAreRan (out var missingAssemblies)) {
+					if (!appOptions.IgnoreMissingAssemblies && !projectGenerator.AllTestAssembliesAreRan (out var missingAssemblies)) {
 						console.WriteLine ("The following test assemblies should be added to a test project or ignored.");
 						foreach (var assembly in missingAssemblies) {
 							console.WriteLine ($"\t{assembly}");

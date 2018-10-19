@@ -5,6 +5,10 @@ using System.Reflection;
 using System.Collections.Generic;
 
 namespace BCLTestImporter {
+	/// <summary>
+	/// Class that defines a bcl test project. A bcl test project by definition is the combination of the name
+	/// of the project and a set on assemblies to be tested.
+	/// </summary>
 	public struct BCLTestProjectDefinition {
 		public string Name { get; set; }
 		public List<BCLTestAssemblyDefinition> TestAssemblies {get; private set;}

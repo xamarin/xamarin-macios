@@ -8,6 +8,9 @@ using System.Collections.Generic;
 using System.Security.AccessControl;
 
 namespace BCLTestImporter {
+	/// <summary>
+	/// Class that knows how to generate .csproj files based on a BCLTestProjectDefinition.
+	/// </summary>
 	public class BCLTestProjectGenerator {
 
 		static string NUnitPattern = "MONOTOUCH_*_test.dll"; 
@@ -15,6 +18,7 @@ namespace BCLTestImporter {
 		static readonly string NameKey = "%NAME%";
 		static readonly string ReferencesKey = "%REFERENCES%";
 		static readonly string RegisterTypeKey = "%REGISTER TYPE%";
+		static readonly string PlistKey = "%PLIST PATH%";
 
 		//list of reference that we are already adding, and we do not want to readd (although it is just a warning)
 		static readonly List<string> excludeDlls = new List<string> {
@@ -30,7 +34,7 @@ namespace BCLTestImporter {
 			new BCLTestProjectDefinition ("System", new List<BCLTestAssemblyDefinition> { new BCLTestAssemblyDefinition ("MONOTOUCH_System_test.dll")} ),
 			new BCLTestProjectDefinition ("SystemCoreTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_System.Core_test.dll")} ),
 			new BCLTestProjectDefinition ("SystemDataTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_System.Data_test.dll")} ),
-			new BCLTestProjectDefinition ("SystemNet.HttpTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_System.Net.Http_test.dll")} ),
+			new BCLTestProjectDefinition ("SystemNetHttpTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_System.Net.Http_test.dll")} ),
 			new BCLTestProjectDefinition ("SystemNumericsTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_System.Numerics_test.dll")} ),
 			new BCLTestProjectDefinition ("SystemRuntimeSerializationTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_System.Runtime.Serialization_test.dll")} ),
 			new BCLTestProjectDefinition ("SystemTransactionsTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_System.Transactions_test.dll")} ),
@@ -74,6 +78,7 @@ namespace BCLTestImporter {
 		public string OutputDirectoryPath { get; private  set; }
 		public string MonoRootPath { get; private set; }
 		public string ProjectTemplatePath { get; private set; }
+		public string PlistTemplatePath{ get; private set; }
 		public string RegisterTypesTemplatePath { get; private set; }
 		string GeneratedCodePathRoot => Path.Combine (OutputDirectoryPath, "generated");
 
@@ -82,12 +87,13 @@ namespace BCLTestImporter {
 			OutputDirectoryPath = outpudDirectory ?? throw new ArgumentNullException (nameof (outpudDirectory));
 		}
 		
-		public BCLTestProjectGenerator (string outpudDirectory, string monoRootPath, string projectTemplatePath, string registerTypesTemplatePath)
+		public BCLTestProjectGenerator (string outpudDirectory, string monoRootPath, string projectTemplatePath, string registerTypesTemplatePath, string plistTemplatePath)
 		{
 			isCodeGeneration = true;
 			OutputDirectoryPath = outpudDirectory ?? throw new ArgumentNullException (nameof (outpudDirectory));
 			MonoRootPath = monoRootPath ?? throw new ArgumentNullException (nameof (monoRootPath));
 			ProjectTemplatePath = projectTemplatePath ?? throw new ArgumentNullException (nameof (projectTemplatePath));
+			PlistTemplatePath = plistTemplatePath ?? throw new ArgumentNullException (nameof (plistTemplatePath));
 			RegisterTypesTemplatePath = registerTypesTemplatePath ?? throw new ArgumentNullException (nameof (registerTypesTemplatePath));
 		}
 
@@ -96,7 +102,7 @@ namespace BCLTestImporter {
 		// creates the reference node
 		static string GetReferenceNode (string assemblyName, string hintPath = null)
 		{
-			// lets not compliate our lifes with Xml, we just need to replace two things
+			// lets not complicate our life with Xml, we just need to replace two things
 			if (string.IsNullOrEmpty (hintPath)) {
 				return $"<Reference Include=\"{assemblyName}\" />";
 			} else {
@@ -143,13 +149,20 @@ namespace BCLTestImporter {
 				var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (typesPerAssembly,
 					projectDefinition.TestAssemblies[0].IsXUnit, RegisterTypesTemplatePath);
 
-				var filePath = Path.Combine (generatedCodeDir, "RegisterType.cs");
-				using (var file = new StreamWriter (filePath, !Override)) { // false is do not append
+				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType.cs");
+				using (var file = new StreamWriter (registerTypePath, !Override)) { // false is do not append
 					await file.WriteAsync (registerCode);
 				}
 
-				var generatedProject = await GenerateAsync (projectDefinition.Name, filePath,
-					projectDefinition.GetAssemblyInclusionInformation (MonoRootPath, platform), ProjectTemplatePath);
+				var plist = await BCLTestInfoPlistGenerator.GenerateCodeAsync (PlistTemplatePath,
+					projectDefinition.Name);
+				var infoPlistPath = Path.Combine (generatedCodeDir, "Info.plist");
+				using (var file = new StreamWriter (infoPlistPath, !Override)) { // false is do not append
+					await file.WriteAsync (plist);
+				}
+
+				var generatedProject = await GenerateAsync (projectDefinition.Name, registerTypePath,
+					projectDefinition.GetAssemblyInclusionInformation (MonoRootPath, platform), ProjectTemplatePath, infoPlistPath);
 				var projectPath = GetProjectPath (projectDefinition.Name);
 				projectPaths.Add (projectPath);
 				using (var file = new StreamWriter (projectPath, !Override)) { // false is do not append
@@ -160,8 +173,10 @@ namespace BCLTestImporter {
 			return projectPaths;
 		}
 
-		static async Task<string> GenerateAsync (string projectName, string registerPath, List<(string assembly, string hintPath)> info, string templatePath)
+		static async Task<string> GenerateAsync (string projectName, string registerPath, List<(string assembly, string hintPath)> info, string templatePath, string infoPlistPath)
 		{
+			// fix possible issues with the paths to be included in the msbuild xml
+			infoPlistPath = infoPlistPath.Replace ('/', '\\');
 			var sb = new StringBuilder ();
 			foreach (var assemblyInfo in info) {
 				if (!excludeDlls.Contains (assemblyInfo.assembly))
@@ -173,12 +188,13 @@ namespace BCLTestImporter {
 				result = result.Replace (NameKey, projectName);
 				result = result.Replace (ReferencesKey, sb.ToString ());
 				result = result.Replace (RegisterTypeKey, GetRegisterTypeNode (registerPath));
+				result = result.Replace (PlistKey, infoPlistPath);
 				return result;
 			}
 		}
 
-		public static string Generate (string projectName, string registerPath, List<(string assembly, string hintPath)> info, string templatePath) =>
-			GenerateAsync (projectName, registerPath, info, templatePath).Result;
+		public static string Generate (string projectName, string registerPath, List<(string assembly, string hintPath)> info, string templatePath, string infoPlistPath) =>
+			GenerateAsync (projectName, registerPath, info, templatePath, infoPlistPath).Result;
 
 		/// <summary>
 		/// Removes all the generated files by the tool.

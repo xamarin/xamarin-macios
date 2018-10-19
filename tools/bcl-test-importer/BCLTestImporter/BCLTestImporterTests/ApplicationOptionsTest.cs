@@ -10,11 +10,12 @@ namespace BCLTestImporterTests {
 	public class ApplicationOptionsTest : IDisposable {
 		readonly string registerTypesTemplatePath;
 		readonly string projectTemplatePath;
+		readonly string plistTemplatePath;
 		readonly string outputPath;
 		readonly string monoCheckout;
 		readonly string platform = "iOS";
 
-		void WriteJunk (string path)
+		static void WriteJunk (string path)
 		{
 			using (var file = new StreamWriter (path, false)) { 
 				file.Write ("Data");
@@ -27,6 +28,8 @@ namespace BCLTestImporterTests {
 			WriteJunk (registerTypesTemplatePath);
 			projectTemplatePath = Path.Combine (tmpPath, Path.GetRandomFileName());
 			WriteJunk (projectTemplatePath);
+			plistTemplatePath = Path.Combine (tmpPath, Path.GetRandomFileName());
+			WriteJunk (plistTemplatePath);
 			outputPath = Path.Combine (tmpPath, Path.GetRandomFileName());
 			monoCheckout = Path.Combine (tmpPath, Path.GetRandomFileName());
 			var testDir = BCLTestAssemblyDefinition.GetTestDirectory (monoCheckout, platform);
@@ -73,6 +76,7 @@ namespace BCLTestImporterTests {
 			Assert.Null (appOptions.Assembly);
 			Assert.Null (appOptions.RegisterTypesPath);
 			Assert.Null (appOptions.ProjectName);
+			Assert.Null (appOptions.PlistTemplate);
 			// lists
 			Assert.Empty(appOptions.TestAssemblies);
 		}
@@ -211,7 +215,41 @@ namespace BCLTestImporterTests {
 			};
 			appOptions.TestAssemblies.Add ("Foo.dll");
 			Assert.False (appOptions.OptionsAreValid (out var errorMessage));
-			Assert.Equal ("--generate-project Template is missing.", errorMessage);
+			Assert.Equal ("--generate-project Project template is missing.", errorMessage);
+		}
+		
+		[Fact]
+		public void GeneratePlistTemplateNoProvided ()
+		{
+			var appOptions = new ApplicationOptions {
+				GenerateProject = true,
+				ProjectName = "Test",
+				ProjectTemplate = projectTemplatePath,
+				Output = outputPath,
+				Override = true,
+				MonoPath = monoCheckout,
+			};
+			appOptions.TestAssemblies.Add ("Foo.dll");
+			Assert.False (appOptions.OptionsAreValid (out var errorMessage));
+			Assert.Equal ("--generate-project Plist template must be provided.", errorMessage);
+		}
+		
+		[Fact]
+		public void GeneratePlistTemplateMissing ()
+		{
+			var home = Environment.GetEnvironmentVariable ("HOME");
+			var appOptions = new ApplicationOptions {
+				GenerateProject = true,
+				ProjectName = "Test",
+				ProjectTemplate = projectTemplatePath,
+				PlistTemplate = Path.Combine (home, "foo.in"),
+				Output = outputPath,
+				Override = true,
+				MonoPath = monoCheckout,
+			};
+			appOptions.TestAssemblies.Add ("Foo.dll");
+			Assert.False (appOptions.OptionsAreValid (out var errorMessage));
+			Assert.Equal ("--generate-project Plist template is missing.", errorMessage);
 		}
 
 		[Fact]
@@ -221,6 +259,7 @@ namespace BCLTestImporterTests {
 				GenerateProject = true,
 				ProjectName = "Test",
 				ProjectTemplate = projectTemplatePath,
+				PlistTemplate = plistTemplatePath,
 				Override = true,
 				MonoPath = monoCheckout,
 			};
@@ -237,6 +276,7 @@ namespace BCLTestImporterTests {
 				GenerateProject = true,
 				ProjectName = "Test",
 				ProjectTemplate = projectTemplatePath,
+				PlistTemplate = plistTemplatePath,
 				Override = false,
 				Output = outputPath,
 				MonoPath = monoCheckout,
@@ -253,6 +293,7 @@ namespace BCLTestImporterTests {
 				GenerateProject = true,
 				ProjectName = "Test",
 				ProjectTemplate = projectTemplatePath,
+				PlistTemplate = plistTemplatePath,
 				Override = false,
 				Output = outputPath,
 				MonoPath = monoCheckout
@@ -298,6 +339,7 @@ namespace BCLTestImporterTests {
 				GenerateAllProjects = true,
 				ProjectName = "Test",
 				ProjectTemplate = projectTemplatePath,
+				PlistTemplate = plistTemplatePath,
 				RegisterTypeTemplate = registerTypesTemplatePath,
 				Override = true,
 				MonoPath = monoCheckout,
@@ -313,6 +355,7 @@ namespace BCLTestImporterTests {
 			var appOptions = new ApplicationOptions {
 				GenerateAllProjects = true,
 				ProjectTemplate = projectTemplatePath,
+				PlistTemplate = plistTemplatePath,
 				RegisterTypeTemplate = registerTypesTemplatePath,
 				Override = false,
 				Output = outputPath,
@@ -324,7 +367,7 @@ namespace BCLTestImporterTests {
 
 
 		[Fact]
-		public void GenerateAllProjectsProjectTemplateMissing ()
+		public void GenerateAllProjectsProjectTemplateNotProvided ()
 		{
 			var appOptions = new ApplicationOptions {
 				GenerateAllProjects = true,
@@ -336,9 +379,26 @@ namespace BCLTestImporterTests {
 			Assert.False (appOptions.OptionsAreValid (out var errorMessage));
 			Assert.Equal ("--generate-all-projects Project template must be provided.", errorMessage);
 		}
+		
+		[Fact]
+		public void GenerateAllProjectsProjectTemplateMissing ()
+		{
+			var home = Environment.GetEnvironmentVariable ("HOME");
+			var appOptions = new ApplicationOptions {
+				GenerateAllProjects = true,
+				RegisterTypeTemplate = registerTypesTemplatePath,
+				ProjectTemplate = Path.Combine (home, "foo.in"),
+				PlistTemplate = plistTemplatePath,
+				Override = false,
+				Output = outputPath,
+				MonoPath = monoCheckout,
+			};
+			Assert.False (appOptions.OptionsAreValid (out var errorMessage));
+			Assert.Equal ("--generate-all-projects Project template is missing.", errorMessage);
+		}
 
 		[Fact]
-		public void GenerateAllProjectsRegisterTypeTemplateMissing ()
+		public void GenerateAllProjectsRegisterTypeTemplateNotProvided ()
 		{
 			var appOptions = new ApplicationOptions {
 				GenerateAllProjects = true,
@@ -349,6 +409,55 @@ namespace BCLTestImporterTests {
 			};
 			Assert.False (appOptions.OptionsAreValid (out var errorMessage));
 			Assert.Equal ("--generate-all-projects Register type template must be provided.", errorMessage);
+		}
+		
+		[Fact]
+		public void GenerateAllProjectsRegisterTypeTemplateMissing ()
+		{
+			var home = Environment.GetEnvironmentVariable ("HOME");
+			var appOptions = new ApplicationOptions {
+				GenerateAllProjects = true,
+				ProjectTemplate = projectTemplatePath,
+				RegisterTypeTemplate = Path.Combine (home, "foo.in"),
+				PlistTemplate = plistTemplatePath,
+				Override = false,
+				Output = outputPath,
+				MonoPath = monoCheckout,
+			};
+			Assert.False (appOptions.OptionsAreValid (out var errorMessage));
+			Assert.Equal ("--generate-all-projects Register type template is missing.", errorMessage);
+		}
+		
+		[Fact]
+		public void GenerateAllProjectsPlistTemplateNotProvided ()
+		{
+			var appOptions = new ApplicationOptions {
+				GenerateAllProjects = true,
+				ProjectTemplate = projectTemplatePath,
+				RegisterTypeTemplate = registerTypesTemplatePath,
+				Override = false,
+				Output = outputPath,
+				MonoPath = monoCheckout,
+			};
+			Assert.False (appOptions.OptionsAreValid (out var errorMessage));
+			Assert.Equal ("--generate-all-projects Plist template must be provided.", errorMessage);
+		}
+		
+		[Fact]
+		public void GenerateAllProjectsPlistTemplateMissing ()
+		{
+			var home = Environment.GetEnvironmentVariable ("HOME");
+			var appOptions = new ApplicationOptions {
+				GenerateAllProjects = true,
+				ProjectTemplate = projectTemplatePath,
+				RegisterTypeTemplate = registerTypesTemplatePath,
+				PlistTemplate = Path.Combine (home, "foo.in"),
+				Override = false,
+				Output = outputPath,
+				MonoPath = monoCheckout,
+			};
+			Assert.False (appOptions.OptionsAreValid (out var errorMessage));
+			Assert.Equal ("--generate-all-projects Plist template is missing.", errorMessage);
 		}
 		
 		[Fact]

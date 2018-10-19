@@ -164,7 +164,9 @@
     <InterfaceDefinition Include="Main.storyboard" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Info.plist" />
+    <None Include="%PLIST PATH%">
+      <Link>Info.plist</Link>
+    </None>
     <None Include="Entitlements.plist" />
     <None Include="packages.config" />
   </ItemGroup>

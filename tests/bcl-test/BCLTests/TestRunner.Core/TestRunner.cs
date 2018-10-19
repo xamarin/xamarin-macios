@@ -94,6 +94,8 @@ namespace Xamarin.iOS.UnitTests
 
 
 			string resultsPath = Environment.GetFolderPath (Environment.SpecialFolder.ApplicationData);
+			if (!Directory.Exists (resultsPath))
+				Directory.CreateDirectory (resultsPath);
 			return Path.Combine (resultsPath, ResultsFileName);
 		}
 	}

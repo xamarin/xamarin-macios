@@ -18,6 +18,9 @@
     <Compile Include="..\ApplicationOptions.cs">
       <Link>ApplicationOptions.cs</Link>
     </Compile>
+    <Compile Include="..\BCLTestInfoPlistGenerator.cs">
+      <Link>BCLTestInfoPlistGenerator.cs</Link>
+    </Compile>
     <Compile Include="..\Platform.cs">
       <Link>Platform.cs</Link>
     </Compile>
