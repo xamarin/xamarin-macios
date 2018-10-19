@@ -24,8 +24,6 @@ TESTS_4_0 = \
 	link-frameworks-1 \
 	link-aes-1 \
 	link-blocks-1 \
-	link-typedescriptor-1 \
-	link-typedescriptor-2 \
 	embedded-mono \
 	system-mono \
 	embedded-mono-profile \

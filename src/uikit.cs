@@ -5546,6 +5546,7 @@ namespace UIKit {
 
 #if !WATCH
 	[BaseType (typeof(NSObject), Delegates=new string [] {"WeakDelegate"}, Events=new Type[] {typeof (UIGestureRecognizerDelegate)})]
+	[Dispose ("OnDispose ();")]
 	interface UIGestureRecognizer {
 		[DesignatedInitializer]
 		[Export ("initWithTarget:action:")]
@@ -9716,6 +9717,10 @@ namespace UIKit {
 	interface UIScrollView : UIFocusItemScrollableContainer {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
+
+		// moved to UIFocusItemScrollableContainer in iOS 12 - but that makes the availability information incorrect (so `new` is used to avoid compiler warnings)
+		[Export ("contentOffset")]
+		new CGPoint ContentOffset { get; set; }
 
 		[Export ("contentSize")]
 		new CGSize ContentSize { get; set; }

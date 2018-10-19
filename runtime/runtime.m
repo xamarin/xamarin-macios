@@ -1001,11 +1001,27 @@ object_queued_for_finalization (MonoObject *object)
  * Registration map
  */ 
 
+static int
+compare_mtclassmap (const void *a, const void *b)
+{
+	MTClassMap *mapa = (MTClassMap *) a;
+	MTClassMap *mapb = (MTClassMap *) b;
+	if (mapa->handle == mapb->handle)
+		return 0;
+	if ((intptr_t) mapa->handle < (intptr_t) mapb->handle)
+		return -1;
+	return 1;
+}
+
 void
 xamarin_add_registration_map (struct MTRegistrationMap *map)
 {
 	// COOP: no managed memory access: any mode
 	options.RegistrationData = map;
+
+	// Sort the type map according to Class
+	qsort (map->map, map->map_count - map->custom_type_count, sizeof (MTClassMap), compare_mtclassmap);
+	qsort (&map->map [map->map_count - map->custom_type_count], map->custom_type_count, sizeof (MTClassMap), compare_mtclassmap);
 }
 
 /*
