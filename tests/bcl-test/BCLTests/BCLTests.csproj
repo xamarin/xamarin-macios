@@ -277,6 +277,9 @@
     <Reference Include="Mono.C5">
       <HintPath>..\..\..\external\mono\mcs\class\lib\monotouch\Mono.C5.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Options">
+      <HintPath>..\..\..\packages\Mono.Options.5.3.0.1\lib\netstandard1.3\Mono.Options.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json" />
@@ -314,8 +317,10 @@
     <Compile Include="TestRunner.xUnit\XUnitFilterType.cs" />
     <Compile Include="TestRunner.xUnit\XUnitResultFileFormat.cs" />
     <Compile Include="TestRunner.xUnit\XUnitTestRunner.cs" />
-    <Compile Include="..\..\..\..\..\..\..\Desktop\test.cs">
-      <Link>test.cs</Link>
+    <Compile Include="TestRunner.Core\TcpTextWriter.cs" />
+    <Compile Include="ApplicationOptions.cs" />
+    <Compile Include="generated\MonoCSharpTests\RegisterType.cs">
+      <Link>RegisterType.cs</Link>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

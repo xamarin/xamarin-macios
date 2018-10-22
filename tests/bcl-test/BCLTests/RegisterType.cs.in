@@ -8,6 +8,7 @@ namespace Xamarin.iOS.UnitTests {
 	// they are aot and not linked away.
 	public static class RegisterType
 	{
+		public static bool IsXUnit = %IS XUNIT%;
 		public static Dictionary <string, Type> TypesToRegister = new Dictionary <string, Type> {
 %KEY VALUES%
 		};

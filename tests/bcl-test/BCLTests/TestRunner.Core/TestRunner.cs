@@ -18,6 +18,7 @@ namespace Xamarin.iOS.UnitTests
 		public long FilteredTests { get; protected set; } = 0;
 		public bool RunInParallel { get; set; } = false;
 		public string TestsRootDirectory { get; set; }
+		public TextWriter Writer { get; set; }
 		public List<TestFailureInfo> FailureInfos { get; } = new List<TestFailureInfo> ();
 
 		protected LogWriter Logger { get; }

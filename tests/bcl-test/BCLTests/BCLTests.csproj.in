@@ -148,6 +148,9 @@
     <Reference Include="Microsoft.Extensions.Logging.Console">
       <HintPath>..\..\..\packages\Microsoft.Extensions.Logging.Console.2.1.1\lib\netstandard2.0\Microsoft.Extensions.Logging.Console.dll</HintPath>
     </Reference>
+     <Reference Include="Mono.Options">
+      <HintPath>..\..\..\packages\Mono.Options.5.3.0.1\lib\netstandard1.3\Mono.Options.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
 %REFERENCES%
@@ -185,11 +188,13 @@
     <Compile Include="TestRunner.Core\TestExecutionState.cs" />
     <Compile Include="TestRunner.Core\TestFailureInfo.cs" />
     <Compile Include="TestRunner.Core\TestRunner.cs" />
+    <Compile Include="TestRunner.Core\TcpTextWriter.cs" />
     <Compile Include="TestRunner.NUnit\NUnitTestRunner.cs" />
     <Compile Include="TestRunner.xUnit\XUnitFilter.cs" />
     <Compile Include="TestRunner.xUnit\XUnitFilterType.cs" />
     <Compile Include="TestRunner.xUnit\XUnitResultFileFormat.cs" />
     <Compile Include="TestRunner.xUnit\XUnitTestRunner.cs" />
+    <Compile Include="ApplicationOptions.cs" />
     %REGISTER TYPE%
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

@@ -50,6 +50,12 @@ namespace BCLTestImporter {
 			new BCLTestProjectDefinition ("MonoCSharpTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_Mono.CSharp_test.dll")} ),
 			new BCLTestProjectDefinition ("SystemSecurityTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_System.Security_test.dll")} ),
 			new BCLTestProjectDefinition ("SystemServiceModelTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_System.ServiceModel_test.dll")} ),
+			new BCLTestProjectDefinition ("SystemDataXUnit", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition("MONOTOUCH_System.Data_xunit-test.dll")} ),
+			new BCLTestProjectDefinition ("SystemJsonXUnit", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition("MONOTOUCH_System.Json_xunit-test.dll")}),
+			new BCLTestProjectDefinition ("SystemNumericsXunit", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition("MONOTOUCH_System.Numerics_xunit-test.dll")}),
+			new BCLTestProjectDefinition ("SystemSecurityXunit", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition("MONOTOUCH_System.Security_xunit-test.dll")}),
+			new BCLTestProjectDefinition ("SystemThreadingTaskXunit", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition("MONOTOUCH_System.Threading.Tasks.Dataflow_xunit-test.dll")}),
+			new BCLTestProjectDefinition ("SystemLinqXunit", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition("MONOTOUCH_System.Xml.Linq_xunit-test.dll")}),
 		};
 
 		static readonly List <BCLTestAssemblyDefinition> CommonIgnoredAssemblies = new List <BCLTestAssemblyDefinition> {
@@ -71,6 +77,8 @@ namespace BCLTestImporter {
 			new BCLTestAssemblyDefinition ("MONOTOUCH_System.Runtime.Serialization.Formatters.Soap_test.dll"),
 			new BCLTestAssemblyDefinition ("MONOTOUCH_System.Threading.Tasks.Dataflow_test.dll"),
 			new BCLTestAssemblyDefinition ("MONOTOUCH_corlib_test.dll"),
+			new BCLTestAssemblyDefinition ("MONOTOUCH_Mono.Profiler.Log_xunit-test.dll"),
+			new BCLTestAssemblyDefinition ("MONOTOUCH_System.Runtime.CompilerServices.Unsafe_xunit-test.dll"),
 		};
 
 		readonly bool isCodeGeneration;
@@ -126,9 +134,9 @@ namespace BCLTestImporter {
 		}
 
 		// creates all the projects that have already been defined
-		public async Task<List<(string name, string path)>> GenerateAllTestProjectsAsync ()
+		public async Task<List<(string name, string path, bool xunit)>> GenerateAllTestProjectsAsync ()
 		{
-			var projectPaths = new List<(string name, string path)> ();
+			var projectPaths = new List<(string name, string path, bool xunit)> ();
 			if (!isCodeGeneration)
 				throw new InvalidOperationException ("Project generator was instantiated to delete the generated code.");
 			// TODO: Do this per platform
@@ -146,8 +154,9 @@ namespace BCLTestImporter {
 				}
 
 				var typesPerAssembly = projectDefinition.GetTypeForAssemblies (MonoRootPath, "iOS");
+				var isXUnit = projectDefinition.TestAssemblies[0].IsXUnit; // TODO: Do not let the mix of nunit and xunit tests.
 				var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (typesPerAssembly,
-					projectDefinition.TestAssemblies[0].IsXUnit, RegisterTypesTemplatePath);
+					isXUnit, RegisterTypesTemplatePath);
 
 				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType.cs");
 				using (var file = new StreamWriter (registerTypePath, !Override)) { // false is do not append
@@ -164,7 +173,7 @@ namespace BCLTestImporter {
 				var generatedProject = await GenerateAsync (projectDefinition.Name, registerTypePath,
 					projectDefinition.GetAssemblyInclusionInformation (MonoRootPath, platform), ProjectTemplatePath, infoPlistPath);
 				var projectPath = GetProjectPath (projectDefinition.Name);
-				projectPaths.Add ((name: projectDefinition.Name, path: projectPath));
+				projectPaths.Add ((name: projectDefinition.Name, path: projectPath, xunit: isXUnit));
 				using (var file = new StreamWriter (projectPath, !Override)) { // false is do not append
 					await file.WriteAsync (generatedProject);
 				}
@@ -173,7 +182,7 @@ namespace BCLTestImporter {
 			return projectPaths;
 		}
 
-		public List<(string name, string path)> GenerateAllTestProjects () => GenerateAllTestProjectsAsync ().Result;
+		public List<(string name, string path, bool xunit)> GenerateAllTestProjects () => GenerateAllTestProjectsAsync ().Result;
 		
 		static async Task<string> GenerateAsync (string projectName, string registerPath, List<(string assembly, string hintPath)> info, string templatePath, string infoPlistPath)
 		{

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -186,15 +187,21 @@ namespace Xamarin.iOS.UnitTests.NUnit
 		{
 			if (results == null)
 				return String.Empty;
-
-			string ret = GetResultsFilePath ();
-			if (String.IsNullOrEmpty (ret))
-				return String.Empty;
-			
+				
 			var resultsXml = new NUnit2XmlOutputWriter (DateTime.UtcNow);
-			resultsXml.WriteResultFile (results, ret);
 
-			return ret;
+			// if the writer is null, we default to use a local file
+			if (Writer == null) {
+				string ret = GetResultsFilePath ();
+				if (String.IsNullOrEmpty (ret))
+					return String.Empty;
+
+				resultsXml.WriteResultFile (results, ret);
+
+				return ret;
+			}
+			resultsXml.WriteResultFile (results, Writer);
+			return string.Empty;
 		}
 	}
 }

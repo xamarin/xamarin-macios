@@ -20,8 +20,8 @@ namespace Xamarin.iOS.UnitTests.XUnit
 		XElement assembliesElement;
 		List<XUnitFilter> filters;
 
-		protected XUnitResultFileFormat ResultFileFormat { get; set; } = XUnitResultFileFormat.NUnit;
-		protected AppDomainSupport AppDomainSupport { get; set; } = AppDomainSupport.Denied;
+		public XUnitResultFileFormat ResultFileFormat { get; set; } = XUnitResultFileFormat.NUnit;
+		public AppDomainSupport AppDomainSupport { get; set; } = AppDomainSupport.Denied;
 		protected override string ResultsFileName { get; set; } = "TestResults.xUnit.xml";
 
 		public XUnitTestRunner (LogWriter logger) : base (logger)
@@ -70,6 +70,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			messageSink.Execution.TestPassedEvent += (MessageHandlerArgs<ITestPassed> args) => HandleEvent ("TestPassedEvent", args, HandleTestPassed);
 			messageSink.Execution.TestSkippedEvent += (MessageHandlerArgs<ITestSkipped> args) => HandleEvent ("TestSkippedEvent", args, HandleTestSkipped);
 			messageSink.Execution.TestStartingEvent += (MessageHandlerArgs<ITestStarting> args) => HandleEvent ("TestStartingEvent", args, HandleTestStarting);
+			Console.WriteLine ($"Foo to the linker {typeof(Xunit.Sdk.TypeUtility)}");
 		}
 
 		public void SetFilters (List<XUnitFilter> newFilters)
@@ -704,23 +705,29 @@ namespace Xamarin.iOS.UnitTests.XUnit
 		{
 			if (assembliesElement == null)
 				return String.Empty;
-			
-			string outputFilePath = GetResultsFilePath ();
-			using (XmlWriter writer = XmlWriter.Create (outputFilePath, new XmlWriterSettings { Indent = true })) {
-				switch (ResultFileFormat) {
-					case XUnitResultFileFormat.XunitV2:
-						assembliesElement.Save (writer);
-						break;
 
-					case XUnitResultFileFormat.NUnit:
-						Transform_Results ("NUnitXml.xslt", assembliesElement, writer);
-						break;
-
-					default:
-						throw new InvalidOperationException ($"Result output format '{ResultFileFormat}' is not currently supported");
-				}
+			string outputFilePath = "";
+			var settings = new XmlWriterSettings { Indent = true };
+			XmlWriter xmlWriter;
+			if (Writer != null) {
+				xmlWriter = XmlWriter.Create (Writer, settings);
+			} else {
+				outputFilePath = GetResultsFilePath ();
+				xmlWriter = XmlWriter.Create (outputFilePath, settings);
 			}
+			switch (ResultFileFormat) {
+			case XUnitResultFileFormat.XunitV2:
+				assembliesElement.Save (xmlWriter);
+				break;
 
+			case XUnitResultFileFormat.NUnit:
+				Transform_Results ("NUnitXml.xslt", assembliesElement, xmlWriter);
+				break;
+
+			default:
+				throw new InvalidOperationException ($"Result output format '{ResultFileFormat}' is not currently supported");
+			}
+			xmlWriter.Dispose ();
 			return outputFilePath;
 		}
 
