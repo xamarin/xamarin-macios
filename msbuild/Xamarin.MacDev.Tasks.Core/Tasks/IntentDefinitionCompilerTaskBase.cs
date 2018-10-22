@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -73,9 +75,34 @@ namespace Xamarin.MacDev.Tasks
 		public override bool Execute ()
 		{
 			var dir = Path.Combine (IntermediateOutputPath, ToolName);
+			PDictionary plist;
+			PArray intents;
 
 			if (!Directory.Exists (dir))
 				Directory.CreateDirectory (dir);
+
+			try {
+				plist = PDictionary.FromFile (IntentDefinition.ItemSpec);
+			} catch (Exception ex) {
+				Log.LogError (7068, IntentDefinition.ItemSpec, $"Error loading '{IntentDefinition.ItemSpec}': {ex.Message}", IntentDefinition.ItemSpec);
+				return false;
+			}
+
+			// Validate that all Intents have a Title proiperty set to avoid intentbuilderc errors
+			if (plist.TryGetValue (SiriIntentsKeys.INIntents, out intents)) {
+				foreach (var intent in intents.OfType<PDictionary> ()) {
+					if (!intent.TryGetValue (SiriIntentsKeys.INIntentCategory, out PString category))
+						continue;
+
+					if (category.Value == "system")
+						continue;
+
+					if (!intent.TryGetValue (SiriIntentsKeys.INIntentTitle, out PString title) || string.IsNullOrEmpty (title.Value)) {
+						Log.LogError (7070, IntentDefinition.ItemSpec, "All Intents must have a Title");
+						return false;
+					}
+				}
+			}
 
 			return base.Execute ();
 		}

@@ -236,8 +236,7 @@ namespace Xamarin.MacDev.Tasks
 				writer.Write ("\t\tpublic static {0}IntentResponse {1} (", prefix, methodName);
 				for (int i = 0; i < parameters.Count; i++) {
 					if (!parameterTypes.TryGetValue (parameters[i], out string parameterType)) {
-						// FIXME: invent a proper error code value
-						Log.LogError (11111111, IntentDefinition.ItemSpec, "Unknown response parameter: {0}", parameters[i]);
+						Log.LogError (7069, IntentDefinition.ItemSpec, "Unknown response parameter: {0}", parameters[i]);
 						continue;
 					}
 
@@ -574,7 +573,7 @@ namespace Xamarin.MacDev.Tasks
 			try {
 				plist = PDictionary.FromFile (IntentDefinition.ItemSpec);
 			} catch (Exception ex) {
-				Log.LogError (7066, IntentDefinition.ItemSpec, $"Error loading '{IntentDefinition.ItemSpec}': {ex.Message}", IntentDefinition.ItemSpec);
+				Log.LogError (7068, IntentDefinition.ItemSpec, $"Error loading '{IntentDefinition.ItemSpec}': {ex.Message}", IntentDefinition.ItemSpec);
 				return false;
 			}
 
