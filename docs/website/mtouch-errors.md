@@ -3116,6 +3116,19 @@ Where * can be:
 
 *MSBuild task: PropertyListEditorTaskBase*
 
+<a name="MT7068" />
+
+### MT7068: Error loading '*': *
+
+*MSBuild task: IntentDefinitionCodegenTaskBase*
+*MSBuild task: IntentDefinitionCompilerTaskBase*
+
+<a name="MT7069" />
+
+### MT7069: Unknown response parameter: *
+
+*MSBuild task: IntentDefinitionCodegenTaskBase*
+
 ## MT8xxx: Runtime error messages
 
 <!--
