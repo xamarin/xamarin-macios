@@ -3129,6 +3129,12 @@ Where * can be:
 
 *MSBuild task: IntentDefinitionCodegenTaskBase*
 
+<a name="MT7070" />
+
+### MT7070: All Intents must have a Title
+
+*MSBuild task: IntentDefinitionCompilerTaskBase*
+
 ## MT8xxx: Runtime error messages
 
 <!--
