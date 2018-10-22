@@ -808,13 +808,10 @@ $(2):: build-$(2)
 build:: build-$(2)
 clean-local:: clean-$(2)
 
-# config/eglib-config.h is needed by the builds in runtime/
 .stamp-build-$(2): $(MONO_PATH)/configure $(MONO_DEPENDENCIES) $(BUILD_DESTDIR)/$(2)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(3) $(SDK_ARGS)
 	$(Q) cp -r $(SDK_DESTDIR)/ios-$(4)/lib $(BUILD_DESTDIR)/$(2)
 	$(Q) cp -r $(SDK_DESTDIR)/ios-$(4)/include $(BUILD_DESTDIR)/$(2)
-	cp $(SDK_BUILDDIR)/ios-$(4)/config.h $(BUILD_DESTDIR)/$(2)/include/mono-2.0
-	cp $(SDK_BUILDDIR)/ios-$(4)/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/$(2)/include/mono-2.0
 	$(Q) touch $$@
 
 build-$(2): .stamp-build-$(2)
@@ -921,8 +918,6 @@ endif
 	$(Q) mkdir -p $(BUILD_DESTDIR)/watchsimulator
 	$(Q) cp -r $(SDK_DESTDIR)/ios-simwatch-release/lib $(BUILD_DESTDIR)/watchsimulator
 	$(Q) cp -r $(SDK_DESTDIR)/ios-simwatch-release/include $(BUILD_DESTDIR)/watchsimulator
-	cp $(SDK_BUILDDIR)/ios-simwatch-release/config.h $(BUILD_DESTDIR)/watchsimulator/include/mono-2.0
-	cp $(SDK_BUILDDIR)/ios-simwatch-release/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/watchsimulator/include/mono-2.0
 	$(Q) touch $@
 
 build-watchsimulator: .stamp-build-watchsimulator
@@ -1002,8 +997,6 @@ endif
 	$(Q) mkdir -p $(BUILD_DESTDIR)/tvsimulator
 	$(Q) cp -r $(SDK_DESTDIR)/ios-simtv-release/lib $(BUILD_DESTDIR)/tvsimulator
 	$(Q) cp -r $(SDK_DESTDIR)/ios-simtv-release/include $(BUILD_DESTDIR)/tvsimulator
-	cp $(SDK_BUILDDIR)/ios-simtv-release/config.h $(BUILD_DESTDIR)/tvsimulator/include/mono-2.0
-	cp $(SDK_BUILDDIR)/ios-simtv-release/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/tvsimulator/include/mono-2.0
 	$(Q) touch $@
 
 build-tvsimulator: .stamp-build-tvsimulator
@@ -1094,8 +1087,6 @@ clean-local:: clean-$(2)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(3) $(SDK_ARGS)
 	$(Q) mkdir -p $(BUILD_DESTDIR)/$(2)
 	$(Q) cp -r $(SDK_DESTDIR)/ios-$(3)-release/* $(BUILD_DESTDIR)/$(2)
-	$(Q) cp -r $(SDK_BUILDDIR)/ios-$(3)-release/config.h $(BUILD_DESTDIR)/$(2)/include/mono-2.0
-	$(Q) cp -r $(SDK_BUILDDIR)/ios-$(3)-release/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/$(2)/include/mono-2.0
 	$(Q) touch $$@
 
 build-$(2): .stamp-build-$(2)
@@ -1270,8 +1261,6 @@ watchos:: targetwatch
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-targetwatch $(SDK_ARGS)
 	$(Q) mkdir -p $(BUILD_DESTDIR)/targetwatch
 	$(Q) cp -r $(SDK_DESTDIR)/ios-targetwatch-release/* $(BUILD_DESTDIR)/targetwatch
-	$(Q) cp -r $(SDK_BUILDDIR)/ios-targetwatch-release/config.h $(BUILD_DESTDIR)/targetwatch/include/mono-2.0
-	$(Q) cp -r $(SDK_BUILDDIR)/ios-targetwatch-release/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/targetwatch/include/mono-2.0
 	$(Q) touch $@
 
 build-targetwatch: .stamp-build-targetwatch
@@ -1383,8 +1372,6 @@ tvos:: targettv
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-targettv $(SDK_ARGS)
 	$(Q) mkdir -p $(BUILD_DESTDIR)/targettv
 	$(Q) cp -r $(SDK_DESTDIR)/ios-targettv-release/* $(BUILD_DESTDIR)/targettv
-	$(Q) cp -r $(SDK_BUILDDIR)/ios-targettv-release/config.h $(BUILD_DESTDIR)/targettv/include/mono-2.0
-	$(Q) cp -r $(SDK_BUILDDIR)/ios-targettv-release/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/targettv/include/mono-2.0
 	$(Q) touch $@
 
 build-targettv: .stamp-build-targettv
