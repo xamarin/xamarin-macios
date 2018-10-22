@@ -65,17 +65,25 @@ namespace ObjCRuntime {
 			public MTProtocolMap protocol_map;
 			public int assembly_count;
 			public int map_count;
-			public int custom_type_count;
 			public int full_token_reference_count;
 			public int skipped_map_count;
 			public int protocol_wrapper_count;
 			public int protocol_count;
 		}
 
+		[Flags]
+		internal enum MTTypeFlags : uint
+		{
+			None = 0,
+			CustomType = 1,
+			UserType = 2,
+		}
+
 		[StructLayout (LayoutKind.Sequential, Pack = 1)]
 		internal struct MTClassMap {
 			public IntPtr handle;
 			public uint type_reference;
+			public MTTypeFlags flags;
 		}
 
 		[StructLayout (LayoutKind.Sequential, Pack = 1)]
@@ -124,7 +132,7 @@ namespace ObjCRuntime {
 
 		[Flags]
 		internal enum InitializationFlags : int {
-			/* unused               = 0x01 */
+			IsPartialStaticRegistrar= 0x01,
 			/* unused				= 0x02,*/
 			DynamicRegistrar		= 0x04,
 			/* unused				= 0x08,*/

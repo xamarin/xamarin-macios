@@ -241,7 +241,7 @@ namespace ObjCRuntime {
 					continue;
 
 				var rv = map->map [i].handle;
-				is_custom_type = i >= (map->map_count - map->custom_type_count);
+				is_custom_type = (map->map [i].flags & Runtime.MTTypeFlags.CustomType) == Runtime.MTTypeFlags.CustomType;
 #if LOG_TYPELOAD
 				Console.WriteLine ($"FindClass ({type.FullName}, {is_custom_type}): 0x{rv.ToString ("x")} = {class_getName (rv)}.");
 #endif
@@ -331,18 +331,15 @@ namespace ObjCRuntime {
 			}
 
 			// Find the ObjC class pointer in our map
-			var mapIndex = FindMapIndex (map->map, 0, map->map_count - map->custom_type_count - 1, @class);
-			if (mapIndex == -1) {
-				mapIndex = FindMapIndex (map->map, map->map_count - map->custom_type_count, map->map_count - 1, @class);
-				is_custom_type = true;
-			}
-
+			var mapIndex = FindMapIndex (map->map, 0, map->map_count - 1, @class);
 			if (mapIndex == -1) {
 #if LOG_TYPELOAD
 				Console.WriteLine ($"FindType (0x{@class:X} = {Marshal.PtrToStringAuto (class_getName (@class))}) => found no type.");
 #endif
 				return null;
 			}
+
+			is_custom_type = (map->map [mapIndex].flags & Runtime.MTTypeFlags.CustomType) == Runtime.MTTypeFlags.CustomType;
 
 			Type type = class_to_type [mapIndex];
 			if (type != null)
