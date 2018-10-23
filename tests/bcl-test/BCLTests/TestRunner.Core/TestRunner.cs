@@ -8,7 +8,6 @@ namespace Xamarin.iOS.UnitTests
 {
 	public abstract class TestRunner
 	{
-		public string LogTag { get; internal set; }
 		public long InconclusiveTests { get; protected set; } = 0;
 		public long FailedTests { get; protected set; } = 0;
 		public long PassedTests { get; protected set; } = 0;
@@ -34,37 +33,35 @@ namespace Xamarin.iOS.UnitTests
 
 		protected void OnError (string message)
 		{
-			Logger.OnError (LogTag, message);
+			Logger.OnError (message);
 		}
 
 		protected void OnWarning (string message)
 		{
-			Logger.OnWarning (LogTag, message);
+			Logger.OnWarning (message);
 		}
 
 		protected void OnDebug (string message)
 		{
-			Logger.OnDebug (LogTag, message);
+			Logger.OnDebug (message);
 		}
 
 		protected void OnDiagnostic (string message)
 		{
-			Logger.OnDiagnostic (LogTag, message);
+			Logger.OnDiagnostic (message);
 		}
 
 		protected void OnInfo (string message)
 		{
-			Logger.OnInfo (LogTag, message);
+			Logger.OnInfo (message);
 		}
 
 		protected void OnAssemblyStart (Assembly asm)
 		{
-			Logger.Info (LogTag, $"Start: {asm}");
 		}
 
 		protected void OnAssemblyFinish (Assembly asm)
 		{
-			Logger.Info (LogTag, $"Finish: {asm}");
 		}
 
 		protected void LogFailureSummary ()

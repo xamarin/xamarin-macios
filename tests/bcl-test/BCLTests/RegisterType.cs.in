@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
+using Xunit;
+using Xunit.Abstractions;
 %USING%
 
 namespace Xamarin.iOS.UnitTests {
@@ -15,6 +17,8 @@ namespace Xamarin.iOS.UnitTests {
 
 		public static void RegisterTypes () 
 		{
+			// line used to ensure that the runner is not remove by the linker :/
+			Console.WriteLine ($"Got the runner for the linker {typeof(Xunit.Sdk.TypeUtility)}");
 			foreach (var a in TypesToRegister.Keys) {
 				// do something with the type, so that it is not removed
 				var assemblyPath = Path.GetFileName (TypesToRegister[a].Assembly.Location);

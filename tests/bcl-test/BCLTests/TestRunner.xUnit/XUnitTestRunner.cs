@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -20,7 +20,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 		XElement assembliesElement;
 		List<XUnitFilter> filters;
 
-		public XUnitResultFileFormat ResultFileFormat { get; set; } = XUnitResultFileFormat.NUnit;
+		public XUnitResultFileFormat ResultFileFormat { get; set; } = XUnitResultFileFormat.XunitV2;
 		public AppDomainSupport AppDomainSupport { get; set; } = AppDomainSupport.Denied;
 		protected override string ResultsFileName { get; set; } = "TestResults.xUnit.xml";
 
@@ -70,7 +70,6 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			messageSink.Execution.TestPassedEvent += (MessageHandlerArgs<ITestPassed> args) => HandleEvent ("TestPassedEvent", args, HandleTestPassed);
 			messageSink.Execution.TestSkippedEvent += (MessageHandlerArgs<ITestSkipped> args) => HandleEvent ("TestSkippedEvent", args, HandleTestSkipped);
 			messageSink.Execution.TestStartingEvent += (MessageHandlerArgs<ITestStarting> args) => HandleEvent ("TestStartingEvent", args, HandleTestStarting);
-			Console.WriteLine ($"Foo to the linker {typeof(Xunit.Sdk.TypeUtility)}");
 		}
 
 		public void SetFilters (List<XUnitFilter> newFilters)
@@ -101,8 +100,8 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			if (args == null || args.Message == null)
 				return;
 			
-			OnInfo ("Test starting");
-			LogTestDetails (args.Message.Test, log: OnInfo);
+			OnDebug ("Test starting");
+			LogTestDetails (args.Message.Test, log: OnDebug);
 			ReportTestCases ("   Associated", args.Message.TestCases, args.Message.TestCase, OnDiagnostic);
 		}
 
@@ -112,8 +111,8 @@ namespace Xamarin.iOS.UnitTests.XUnit
 				return;
 
 			SkippedTests++;
-			OnInfo ($"Test SKIPPED{GetAssemblyInfo (args.Message.TestAssembly)}");
-			LogTestDetails (args.Message.Test, log: OnInfo);
+			OnInfo ($"\t[IGNORED] {args.Message.TestCase.DisplayName}");
+			LogTestDetails (args.Message.Test, log: OnDebug);
 			LogTestOutput (args.Message, log: OnDiagnostic);
 			ReportTestCases ("   Associated", args.Message.TestCases, log: OnDiagnostic);
 		}
@@ -124,8 +123,8 @@ namespace Xamarin.iOS.UnitTests.XUnit
 				return;
 
 			PassedTests++;
-			OnInfo ($"Test PASSED");
-			LogTestDetails (args.Message.Test, log: OnInfo);
+			OnInfo ($"\t[PASS] {args.Message.TestCase.DisplayName}");
+			LogTestDetails (args.Message.Test, log: OnDebug);
 			LogTestOutput (args.Message, log: OnDiagnostic);
 			ReportTestCases ("   Associated", args.Message.TestCases, log: OnDiagnostic);
 		}
@@ -192,11 +191,10 @@ namespace Xamarin.iOS.UnitTests.XUnit
 
 			FailedTests++;
 			string assemblyInfo = GetAssemblyInfo (args.Message.TestAssembly);
-			var sb = new StringBuilder ();
-			OnError ($"[${LogTag}] Test FAILED{assemblyInfo}");
+			var sb = new StringBuilder ($"\t[FAIL] {args.Message.TestCase.DisplayName}");
 			LogTestDetails (args.Message.Test, OnError, sb);
 			sb.AppendLine ();
-			if (!String.IsNullOrEmpty (assemblyInfo))
+			if (!string.IsNullOrEmpty (assemblyInfo))
 				sb.AppendLine ($"   Assembly: {assemblyInfo}");
 			LogSourceInformation (args.Message.TestCase.SourceInformation, OnError, sb);
 			LogFailureInformation (args.Message, OnError, sb);
@@ -223,6 +221,8 @@ namespace Xamarin.iOS.UnitTests.XUnit
 				TestName = args.Message.Test?.DisplayName,
 				Message = sb.ToString ()
 			});
+			OnInfo ($"\t[FAIL] {args.Message.Test.TestCase.DisplayName}");
+			OnInfo (sb.ToString ());
 		}
 
 		void HandleTestCollectionStarting (MessageHandlerArgs <ITestCollectionStarting> args)
@@ -230,8 +230,9 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			if (args == null || args.Message == null)
 				return;
 
-			OnInfo ("Test collection finished");
-			LogTestCollectionDetails (args.Message.TestCollection, log: OnInfo);
+			OnInfo ($"\n{args.Message.TestCollection.DisplayName}");
+			OnDebug ("Test collection starting");
+			LogTestCollectionDetails (args.Message.TestCollection, log: OnDebug);
 			ReportTestCases ("   Associated", args.Message.TestCases, log: OnDiagnostic);
 		}
 
@@ -240,9 +241,9 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			if (args == null || args.Message == null)
 				return;
 
-			OnInfo ("Test collection finished");
-			LogSummary (args.Message, log: OnInfo);
-			LogTestCollectionDetails (args.Message.TestCollection, log: OnInfo);
+			OnDebug ("Test collection finished");
+			LogSummary (args.Message, log: OnDebug);
+			LogTestCollectionDetails (args.Message.TestCollection, log: OnDebug);
 			ReportTestCases ("   Associated", args.Message.TestCases, log: OnDiagnostic);
 		}
 
@@ -282,8 +283,9 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			if (args == null || args.Message == null)
 				return;
 			
-			OnInfo ("Test class finished");
-			LogTestClassDetails (args.Message.TestClass, OnInfo);
+			OnDebug ("Test class finished");
+			OnInfo ($"{args.Message.TestClass.Class.Name} {args.Message.ExecutionTime} ms");
+			LogTestClassDetails (args.Message.TestClass, OnDebug);
 			ReportTestCases ("   Associated", args.Message.TestCases, log: OnDiagnostic);
 		}
 
@@ -354,8 +356,8 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			if (args == null || args.Message == null)
 				return;
 
-			OnInfo ("Test case finished executing");
-			ReportTestCase ("   Finished", args.Message.TestCase, log: OnInfo);
+			OnDebug ("Test case finished executing");
+			ReportTestCase ("   Finished", args.Message.TestCase, log: OnDebug);
 			ReportTestCases ("   Associated", args.Message.TestCases, args.Message.TestCase, OnDebug);
 			LogSummary (args.Message, log: OnDebug);
 		}
@@ -376,12 +378,10 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			if (args == null || args.Message == null)
 				return;
 
-			OnInfo ("Starting execution process for assembly");
-			OnInfo ($"   Start time: {args.Message.StartTime}");
-			OnInfo ($"   Test environment: {args.Message.TestEnvironment}");
-			OnInfo ($"   Test framework: {args.Message.TestFrameworkDisplayName}");
-			LogAssemblyInformation (args.Message, log: OnInfo);
-			ReportTestCases ("   Associated", args.Message.TestCases, log: OnInfo);
+			OnInfo ($"[Test environment: {args.Message.TestEnvironment}]");
+			OnInfo ($"[Test framework: {args.Message.TestFrameworkDisplayName}]");
+			LogAssemblyInformation (args.Message, log: OnDebug);
+			ReportTestCases ("   Associated", args.Message.TestCases, log: OnDebug);
 		}
 
 		void HandleTestAssemblyFinished (MessageHandlerArgs <ITestAssemblyFinished> args)
@@ -389,9 +389,10 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			if (args == null || args.Message == null)
 				return;
 
-			OnInfo ("Execution process for assembly finished");
-			LogAssemblyInformation (args.Message, log: OnInfo);
-			LogSummary (args.Message, log: OnInfo);
+			TotalTests = args.Message.TestsRun; // HACK: We are not counting correctly all the tests
+			OnDebug ("Execution process for assembly finished");
+			LogAssemblyInformation (args.Message, log: OnDebug);
+			LogSummary (args.Message, log: OnDebug);
 			ReportTestCases ("   Associated", args.Message.TestCases, log: OnDiagnostic);
 		}
 
@@ -452,7 +453,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			foreach (KeyValuePair <string, ExecutionSummary> summary in args.Message.Summaries) {
 				OnInfo (String.Empty);
 				OnInfo ($" Assembly: {summary.Key}");
-				LogSummary (summary.Value, log: OnInfo);
+				LogSummary (summary.Value, log: OnDebug);
 			}
 		}
 
@@ -470,7 +471,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 				return;
 
 			OnInfo ($"Execution finished for assembly {args.Message.Assembly.AssemblyFilename}");
-			LogSummary (args.Message.ExecutionSummary, log: OnInfo);
+			LogSummary (args.Message.ExecutionSummary, log: OnDebug);
 		}
 
 		void HandleTestAssemblyDiscoveryStarting (MessageHandlerArgs <ITestAssemblyDiscoveryStarting> args)
@@ -556,8 +557,8 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			if (message == null)
 				return;
 			
-			do_log ($"   Assembly name: {message.TestAssembly.Assembly.Name}", log, sb);
-			do_log ($"   Assembly path: {message.TestAssembly.Assembly.AssemblyPath}", OnDiagnostic, sb);
+			do_log ($"[Assembly name: {message.TestAssembly.Assembly.Name}]", log, sb);
+			do_log ($"[Assembly path: {message.TestAssembly.Assembly.AssemblyPath}]", OnDiagnostic, sb);
 		}
 
 		void LogFailureInformation (IFailureInformation info, Action<string> log = null, StringBuilder sb = null)
@@ -706,28 +707,22 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			if (assembliesElement == null)
 				return String.Empty;
 
-			string outputFilePath = "";
+			string outputFilePath = GetResultsFilePath ();
 			var settings = new XmlWriterSettings { Indent = true };
-			XmlWriter xmlWriter;
-			if (Writer != null) {
-				xmlWriter = XmlWriter.Create (Writer, settings);
-			} else {
-				outputFilePath = GetResultsFilePath ();
-				xmlWriter = XmlWriter.Create (outputFilePath, settings);
-			}
-			switch (ResultFileFormat) {
-			case XUnitResultFileFormat.XunitV2:
-				assembliesElement.Save (xmlWriter);
-				break;
+			using (var xmlWriter = XmlWriter.Create (outputFilePath, settings)) {
+				switch (ResultFileFormat) {
+				case XUnitResultFileFormat.XunitV2:
+					assembliesElement.Save (xmlWriter);
+					break;
+				case XUnitResultFileFormat.NUnit:
+					Transform_Results ("NUnitXml.xslt", assembliesElement, xmlWriter); // TODO: Add resource
+					break;
 
-			case XUnitResultFileFormat.NUnit:
-				Transform_Results ("NUnitXml.xslt", assembliesElement, xmlWriter);
-				break;
-
-			default:
-				throw new InvalidOperationException ($"Result output format '{ResultFileFormat}' is not currently supported");
+				default:
+					throw new InvalidOperationException ($"Result output format '{ResultFileFormat}' is not currently supported");
+				}
 			}
-			xmlWriter.Dispose ();
+			
 			return outputFilePath;
 		}
 
@@ -799,13 +794,13 @@ namespace Xamarin.iOS.UnitTests.XUnit
 					var configuration = GetConfiguration (assembly) ?? new TestAssemblyConfiguration ();
 					ITestFrameworkDiscoveryOptions discoveryOptions = GetFrameworkOptionsForDiscovery (configuration);
 					discoveryOptions.SetSynchronousMessageReporting (true);
-					Logger.Info (LogTag, $"Starting test discovery in the '{assembly}' assembly");
+					Logger.OnDebug ($"Starting test discovery in the '{assembly}' assembly");
 					frontController.Find (false, discoverySink, discoveryOptions);
-					Logger.Info (LogTag, $"Test discovery in assembly '{assembly}' completed");
+					Logger.OnDebug ($"Test discovery in assembly '{assembly}' completed");
 					discoverySink.Finished.WaitOne ();
 
 					if (discoverySink.TestCases == null || discoverySink.TestCases.Count == 0) {
-						Logger.Info (LogTag, "No test cases discovered");
+						Logger.Info ("No test cases discovered");
 						return null;
 					}
 
@@ -864,7 +859,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 				}
 
 				if (filter.FilterType == XUnitFilterType.TypeName) {
-					Logger.Info (LogTag, $"IsIncluded: filter: '{filter.TestCaseName}', test case name: {testCase.DisplayName}"); 
+					Logger.Info ($"IsIncluded: filter: '{filter.TestCaseName}', test case name: {testCase.DisplayName}"); 
 					if (String.Compare (testCase.DisplayName, filter.TestCaseName, StringComparison.OrdinalIgnoreCase) == 0)
 						return !filter.Exclude;
 					continue;

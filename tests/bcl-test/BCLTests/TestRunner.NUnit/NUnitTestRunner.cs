@@ -90,72 +90,62 @@ namespace Xamarin.iOS.UnitTests.NUnit
 					result.ResultState.Status != TestStatus.Skipped &&
 					result.ResultState.Status != TestStatus.Passed &&
 					result.ResultState.Status != TestStatus.Inconclusive) {
-						Logger.OnInfo ("\t[INFO] {0}", result.Message);
+						Logger.OnInfo ($"\t[INFO] {result.Message}");
 				}
-
-				Logger.OnInfo (LogTag, $"{result.Test.FullName} : {result.Duration.TotalMilliseconds} ms");
+				
+				string name = result.Test.Name;
+				if (!String.IsNullOrEmpty (name))
+					Logger.OnInfo ($"{name} : {result.Duration.TotalMilliseconds} ms\n");
+					
 				if (GCAfterEachFixture)
 					GC.Collect ();
 			} else {
-				Action<string, string> log = Logger.OnInfo;
-				StringBuilder failedMessage = null;
-
-				ExecutedTests++;
-				if (result.ResultState.Status == TestStatus.Passed) {
-					Logger.OnInfo (LogTag, $"\t{result.ResultState.ToString ()}");
+				var sb = new StringBuilder ();
+				switch (result.ResultState.Status) {
+				case TestStatus.Passed:
+					sb.Append ("\t[PASS] ");
 					PassedTests++;
-				} else if (result.ResultState.Status == TestStatus.Failed) {
-					Logger.OnError (LogTag, "\t[FAIL]");
-					log = Logger.OnError;
-					failedMessage = new StringBuilder ();
-					failedMessage.Append (result.Test.FullName);
-					if (result.Test.FixtureType != null)
-						failedMessage.Append ($" ({result.Test.FixtureType.Assembly.GetName ().Name})");
-					failedMessage.AppendLine ();
+					break;
+				case TestStatus.Skipped:
+					sb.Append ("\t[IGNORED] ");
+					SkippedTests++;
+					break;
+				case TestStatus.Failed:
+					sb.Append ("\t[FAIL] ");
 					FailedTests++;
-				} else {
-					string status;
-					switch (result.ResultState.Status) {
-						case TestStatus.Skipped:
-							SkippedTests++;
-							status = "SKIPPED";
-							break;
-
-						case TestStatus.Inconclusive:
-							InconclusiveTests++;
-							status = "INCONCLUSIVE";
-							break;
-
-						default:
-							status = "UNKNOWN";
-							break;
-					}
-					Logger.OnInfo (LogTag, $"\t[{status}]");
+					break;
+				case TestStatus.Inconclusive:
+					sb.Append ("\t[INCONCLUSIVE] ");
+					InconclusiveTests++;
+					break;
+				default:
+					sb.Append ("\t[INFO] ");
+					break;
 				}
-
-				string message = result.Message?.Replace ("\r\n", "\\r\\n");
-				if (!String.IsNullOrEmpty (message)) {
-					log (LogTag, $" : {message}");
-					if (failedMessage != null)
-						failedMessage.AppendLine (message);
+				sb.Append (result.Test.FixtureType.Name);
+				sb.Append (".");
+				sb.Append (result.Test.Name);
+				string message = result.Message;
+				if (!string.IsNullOrEmpty (message)) {
+					message = message.Replace ("\r\n", "\\r\\n");
+					sb.Append ($" : {message}");
 				}
-
+				Logger.OnInfo (sb.ToString ());
 				string stacktrace = result.StackTrace;
-				if (!String.IsNullOrEmpty (result.StackTrace)) {
-					log (LogTag, result.StackTrace);
-					if (failedMessage != null) {
-						failedMessage.AppendLine ();
-						failedMessage.AppendLine (result.StackTrace);
-					}
+				if (!string.IsNullOrEmpty (result.StackTrace)) {
+					string[] lines = stacktrace.Split (new char [] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+					foreach (string line in lines)
+						Logger.OnInfo ($"\t\t{line}");
 				}
-
-				if (failedMessage != null) {
+				
+				if (result.ResultState.Status == TestStatus.Failed) {
 					FailureInfos.Add (new TestFailureInfo {
 						TestName = result.Test.FullName,
-						Message = failedMessage.ToString ()
+						Message = sb.ToString ()
 					});
 				}
 			}
+			
 		}
 
 		public void TestOutput (TestOutput testOutput)
@@ -165,7 +155,7 @@ namespace Xamarin.iOS.UnitTests.NUnit
 			
 			string kind = testOutput.Type.ToString ();
 			foreach (string l in testOutput.Text.Split ('\n')) {
-				Logger.OnInfo (LogTag, $"  {kind}: {l}");
+				Logger.OnInfo ($"  {kind}: {l}");
 			}
 		}
 
@@ -174,34 +164,28 @@ namespace Xamarin.iOS.UnitTests.NUnit
 			if (test == null)
 				return;
 
-			if (!String.IsNullOrEmpty (TestsRootDirectory))
-				System.Environment.CurrentDirectory = TestsRootDirectory;
+			if (!string.IsNullOrEmpty (TestsRootDirectory))
+				Environment.CurrentDirectory = TestsRootDirectory;
 
 			if (test is TestSuite) {
-				Logger.OnInfo (LogTag, test.Name);
-			} else
-				Logger.OnInfo (LogTag, $"{test.Name} ");
+				Logger.OnInfo (test.Name);
+			}
 		}
 
 		public override string WriteResultsToFile ()
 		{
 			if (results == null)
-				return String.Empty;
+				return string.Empty;
 				
-			var resultsXml = new NUnit2XmlOutputWriter (DateTime.UtcNow);
+			string ret = GetResultsFilePath ();
+ 			if (string.IsNullOrEmpty (ret))
+ 				return string.Empty;
+ 			
+ 				
+ 			var resultsXml = new NUnit2XmlOutputWriter (DateTime.UtcNow);
+ 			resultsXml.WriteResultFile (results, ret);
 
-			// if the writer is null, we default to use a local file
-			if (Writer == null) {
-				string ret = GetResultsFilePath ();
-				if (String.IsNullOrEmpty (ret))
-					return String.Empty;
-
-				resultsXml.WriteResultFile (results, ret);
-
-				return ret;
-			}
-			resultsXml.WriteResultFile (results, Writer);
-			return string.Empty;
+ 			return ret;
 		}
 	}
 }
