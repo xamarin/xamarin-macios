@@ -1667,7 +1667,13 @@ namespace Xamarin.Bundler {
 						throw ErrorHelper.CreateError (99, $"Internal error: 'can't convert frameworks to frameworks: {files.First ()}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 					var framework_src = files.First ();
 					var framework_filename = Path.Combine (framework_src, Path.GetFileNameWithoutExtension (framework_src));
-					if (!MachO.IsDynamicFramework (framework_filename)) {
+					var dynamic = false;
+					try {
+						dynamic = MachO.IsDynamicFramework (framework_filename);
+					} catch (Exception e) {
+						throw ErrorHelper.CreateError (140, e, $"File '{framework_filename}' is not a valid framework.");
+					}
+					if (!dynamic) {
 						Driver.Log (1, "The framework {0} is a framework of static libraries, and will not be copied to the app.", framework_src);
 					} else {
 						var macho_file = Path.Combine (targetPath, Path.GetFileNameWithoutExtension (framework_src));
