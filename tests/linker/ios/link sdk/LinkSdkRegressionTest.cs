@@ -1038,6 +1038,20 @@ namespace LinkSdk {
 			Assert.NotNull (provider, "provider");
 			Assert.That (provider.ID, Is.EqualTo (new Guid ("981af8af-a3a3-419a-9f01-a518e3a17c1c")), "correct provider");
 		}
+
+		[Test]
+		public void Github5024 ()
+		{
+			TestRuntime.AssertXcodeVersion (6,0);
+			var sc = new UISearchController ((UIViewController) null);
+			sc.SetSearchResultsUpdater ((vc) => { });
+
+			var a = typeof (UISearchController).AssemblyQualifiedName;
+			var n = a.Replace ("UIKit.UISearchController", "UIKit.UISearchController+__Xamarin_UISearchResultsUpdating");
+			var t = Type.GetType (n);
+			Assert.NotNull (t, "private inner type");
+			Assert.IsNotNull (t.GetMethod ("UpdateSearchResultsForSearchController"), "preserved");
+		}
 #endif // !__WATCHOS__
 
 		[Test]
