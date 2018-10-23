@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -31,7 +31,7 @@ namespace BCLTestImporter {
 
 		// this can be grouped TODO
 		static readonly List <BCLTestProjectDefinition> iOSTestProjects = new List <BCLTestProjectDefinition> {
-			new BCLTestProjectDefinition ("System", new List<BCLTestAssemblyDefinition> { new BCLTestAssemblyDefinition ("MONOTOUCH_System_test.dll")} ),
+			new BCLTestProjectDefinition ("SystemTests", new List<BCLTestAssemblyDefinition> { new BCLTestAssemblyDefinition ("MONOTOUCH_System_test.dll")} ),
 			new BCLTestProjectDefinition ("SystemCoreTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_System.Core_test.dll")} ),
 			new BCLTestProjectDefinition ("SystemDataTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_System.Data_test.dll")} ),
 			new BCLTestProjectDefinition ("SystemNetHttpTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_System.Net.Http_test.dll")} ),
@@ -147,6 +147,8 @@ namespace BCLTestImporter {
 			}
 
 			foreach (var projectDefinition in iOSTestProjects) {
+				if (!projectDefinition.Validate ())
+					throw new InvalidOperationException ("xUnit and NUnit assemblies cannot be mixed in a test project.");
 				// generate the required type registration info
 				var generatedCodeDir = Path.Combine (generatedCodePathRoot, projectDefinition.Name);
 				if (!Directory.Exists (generatedCodeDir)) {

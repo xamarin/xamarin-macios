@@ -25,6 +25,25 @@ namespace BCLTestImporter {
 		}
 
 		/// <summary>
+		/// Ensures that the project is correctly defined and does not mix NUnit and xUnit.
+		/// </summary>
+		/// <returns></returns>
+		public bool Validate ()
+		{
+			// what a lame way to test this!
+			var xUnitAssemblies = new List<BCLTestAssemblyDefinition> ();
+			var nUnitAssemblies = new List<BCLTestAssemblyDefinition> ();
+			
+			foreach (var assemblyDefinition in TestAssemblies) {
+				if (assemblyDefinition.IsXUnit)
+					xUnitAssemblies.Add (assemblyDefinition);
+				else
+					nUnitAssemblies.Add (assemblyDefinition);
+			}
+			return TestAssemblies.Count == xUnitAssemblies.Count || TestAssemblies.Count == nUnitAssemblies.Count;
+		}
+
+		/// <summary>
 		/// Returns the assemblies that a referenced by the given test assembly.
 		/// </summary>
 		/// <returns></returns>
