@@ -583,6 +583,15 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "MPSCnnBinaryKernel":
+				switch (selectorName) {
+				// Xcode 9.4 removed both selectors from MPSCnnBinaryKernel, reported radar https://trello.com/c/7EAM0qk1
+				// but apple says this was intentional.
+				case "kernelHeight":
+				case "kernelWidth":
+					return true;
+				}
+				break;
 			}
 
 			// old binding mistake
