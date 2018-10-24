@@ -9,6 +9,8 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>%NAME%</RootNamespace>
     <AssemblyName>%NAME%</AssemblyName>
+    <NoWarn>67,168,169,219,414,612,618,649,672</NoWarn>
+    <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">

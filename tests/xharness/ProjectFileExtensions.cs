@@ -316,7 +316,7 @@ namespace xharness
 
 		public static void SetImport (this XmlDocument csproj, string value)
 		{
-			var imports = csproj.SelectNodes ("/*/*[local-name() = 'Import']");
+			var imports = csproj.SelectNodes ("/*/*[local-name() = 'Import'][not(@Condition)]");			
 			if (imports.Count != 1)
 				throw new Exception ("More than one import");
 			imports [0].Attributes ["Project"].Value = value;
@@ -446,7 +446,7 @@ namespace xharness
 
 		public static string GetImport (this XmlDocument csproj)
 		{
-			var imports = csproj.SelectNodes ("/*/*[local-name() = 'Import']");
+			var imports = csproj.SelectNodes ("/*/*[local-name() = 'Import'][not(@Condition)]");
 			if (imports.Count != 1)
 				throw new Exception ("More than one import");
 			return imports [0].Attributes ["Project"].Value;
@@ -548,8 +548,8 @@ namespace xharness
 
 		public static void FixInfoPListInclude (this XmlDocument csproj, string suffix)
 		{
-			var import = csproj.SelectSingleNode ("/*/*/*[local-name() = 'None' and @Include = 'Info.plist']");
-			import.Attributes ["Include"].Value = "Info" + suffix + ".plist";
+			var import = csproj.SelectSingleNode ("/*/*/*[local-name() = 'None' and contains(@Include ,'Info.plist')]");
+			import.Attributes ["Include"].Value = import.Attributes ["Include"].Value.Replace("Info.plist", $"Info{suffix}.plist");
 			var logicalName = import.SelectSingleNode ("./*[local-name() = 'LogicalName']");
 			if (logicalName == null) {
 				logicalName = csproj.CreateElement ("LogicalName", MSBuild_Namespace);
@@ -777,7 +777,7 @@ namespace xharness
 				return;
 			}
 
-			throw new Exception ("Configuration not found.");
+			throw new Exception ($"Configuration not found: {platform}:{configuration}");
 		}
 
 		static IEnumerable<XmlNode> SelectElementNodes (this XmlNode node, string name)
