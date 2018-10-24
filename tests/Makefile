@@ -89,7 +89,6 @@ test.config: Makefile $(TOP)/Make.config
 	@echo "MONOTOUCH_PREFIX=$(abspath $(MONOTOUCH_PREFIX))" >> $@
 	@echo "IOS_DESTDIR=$(abspath $(IOS_DESTDIR))" >> $@
 	@echo "MAC_DESTDIR=$(abspath $(MAC_DESTDIR))" >> $@
-	@echo "WATCH_MONO_PATH=$(abspath $(WATCH_MONO_PATH))" >> $@
 	@echo "JENKINS_RESULTS_DIRECTORY=$(abspath $(JENKINS_RESULTS_DIRECTORY))" >> $@
 	@echo "INCLUDE_DEVICE=$(INCLUDE_DEVICE)" >> $@
 
@@ -98,7 +97,6 @@ test-system.config:
 	@echo "MONOTOUCH_PREFIX=$(IOS_FRAMEWORK_DIR)/Versions/Current" >> $@
 	@echo "IOS_DESTDIR=/" >> $@
 	@echo "MAC_DESTDIR=/" >> $@
-	@echo "WATCH_MONO_PATH=$(abspath $(WATCH_MONO_PATH))" >> $@
 	@echo "JENKINS_RESULTS_DIRECTORY=$(abspath $(JENKINS_RESULTS_DIRECTORY))" >> $@
 	@echo "INCLUDE_DEVICE=$(INCLUDE_DEVICE)" >> $@
 

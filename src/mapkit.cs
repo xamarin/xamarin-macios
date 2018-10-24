@@ -822,7 +822,8 @@ namespace MapKit {
 
 		[NoTV]
 		[Export ("pinColor")]
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'PinTintColor' instead.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'PinTintColor' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'PinTintColor' instead.")]
 		MKPinAnnotationColor PinColor { get; set; }
 	
 		[Export ("animatesDrop")]

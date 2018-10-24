@@ -127,8 +127,8 @@ namespace ReplayKit {
 	[BaseType (typeof (NSObject))]
 	interface RPScreenRecorderDelegate {
 
-		[Deprecated (PlatformName.TvOS, 11,0, message: "Use 'DidStopRecording(RPScreenRecorder,RPPreviewViewController,NSError)' instead.")]
-		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'DidStopRecording(RPScreenRecorder,RPPreviewViewController,NSError)' instead.")]
+		[Deprecated (PlatformName.TvOS, 10,0, message: "Use 'DidStopRecording(RPScreenRecorder,RPPreviewViewController,NSError)' instead.")]
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'DidStopRecording(RPScreenRecorder,RPPreviewViewController,NSError)' instead.")]
 		[Export ("screenRecorder:didStopRecordingWithError:previewViewController:")]
 		void DidStopRecording (RPScreenRecorder screenRecorder, NSError error, [NullAllowed] RPPreviewViewController previewViewController);
 

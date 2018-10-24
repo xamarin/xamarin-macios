@@ -11,7 +11,6 @@ namespace xharness
 	{
 		public Harness Harness;
 		public string MonoPath { get { return Harness.MONO_PATH; } }
-		public string WatchMonoPath { get { return Harness.WATCH_MONO_PATH; } }
 		public string TestName;
 
 		static readonly Dictionary<string, string[]> ignored_tests =  new Dictionary<string, string[]> { 
@@ -123,7 +122,7 @@ namespace xharness
 			var testName = TestName == "mscorlib" ? "corlib" : TestName;
 			var main_test_sources = Path.Combine (MonoPath, "mcs", "class", testName, testName + "_test.dll.sources");
 			var main_test_files = File.ReadAllLines (main_test_sources);
-			var watch_test_sources = Path.Combine (WatchMonoPath, "mcs", "class", testName, testName + "_test.dll.sources");
+			var watch_test_sources = Path.Combine (MonoPath, "mcs", "class", testName, testName + "_test.dll.sources");
 			var watch_test_files = File.ReadAllLines (watch_test_sources).Where ((arg) => !string.IsNullOrEmpty (arg));
 			var template_path = Path.Combine (Harness.RootDirectory, "bcl-test", TestName, TestName + ".csproj.template");
 			var csproj_input = File.ReadAllText (template_path);
