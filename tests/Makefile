@@ -196,7 +196,8 @@ $(TOP)/tools/mtouch/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
 xharness/xharness.exe: $(wildcard xharness/*.cs) xharness/xharness.csproj $(TOP)/tools/mtouch/SdkVersions.cs test.config test-system.config .stamp-src-project-files
 	make -C $(TOP)/external/mono/mcs/class -i do-test PROFILE=MONOTOUCH
 	make -C $(TOP)/external/mono/mcs/class -i do-xunit-test PROFILE=MONOTOUCH
-	$(Q_GEN) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY_QUIET) /r xharness/xharness.csproj
+	nuget restore xharness/xharness.csproj
+	$(Q_GEN) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
 
 killall:
 	@killall "iPhone Simulator" >/dev/null 2>&1 || true
