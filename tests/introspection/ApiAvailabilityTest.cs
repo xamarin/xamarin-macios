@@ -53,7 +53,7 @@ namespace Introspection {
 				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != PlatformName.WatchOS);
 			};
 #else
-			Minimum = new Version (10,7);
+			Minimum = new Version (10,9);
 			Filter = (AvailabilityBaseAttribute arg) => {
 				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != PlatformName.MacOSX);
 			};
