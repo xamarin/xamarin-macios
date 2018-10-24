@@ -67,6 +67,7 @@ static pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 static bool debugging_configured = false;
 static bool profiler_configured = false;
 static bool config_timedout = false;
+static bool connection_failed = false;
 static DebuggingMode debugging_mode = DebuggingModeWifi;
 static const char *connection_mode = "default"; // this is set from the cmd line, can be either 'usb', 'wifi', 'http' or 'none'
 
@@ -393,6 +394,7 @@ monotouch_start_debugging ()
 			gettimeofday(&wait_tv, NULL);
 
 			int timeout;
+			int iterations = 1;
 #if TARGET_OS_WATCH && !TARGET_OS_SIMULATOR
 			// When debugging on a watch device, we ensure that a native debugger is attached as well
 			// (since otherwise the launch sequence takes so long that watchOS kills us).
@@ -400,7 +402,8 @@ monotouch_start_debugging ()
 			// to not wait at all when a native debugger is not attached, which would otherwise
 			// slow down every debug launch. And *that* allows us to wait for as long as we wish
 			// when debugging.
-			timeout = 3600;
+			timeout = 10;
+			iterations = 360;
 #else
 			timeout = 2;
 #endif
@@ -408,14 +411,29 @@ monotouch_start_debugging ()
 			wait_ts.tv_nsec = wait_tv.tv_usec * 1000;
 			
 			pthread_mutex_lock (&mutex);
-			while (!debugging_configured && !config_timedout) {
-				if (pthread_cond_timedwait (&cond, &mutex, &wait_ts) == ETIMEDOUT)
-					config_timedout = true;
+			while (!debugging_configured && !config_timedout && !connection_failed) {
+				if (pthread_cond_timedwait (&cond, &mutex, &wait_ts) == ETIMEDOUT) {
+					iterations--;
+					if (iterations <= 0) {
+						config_timedout = true;
+					} else {
+						LOG (PRODUCT ": Waiting for connection to the IDE...")
+						// Try again
+						gettimeofday(&wait_tv, NULL);
+						wait_ts.tv_sec = wait_tv.tv_sec + timeout;
+						wait_ts.tv_nsec = wait_tv.tv_usec * 1000;
+					}
+				}
 			}
 			pthread_mutex_unlock (&mutex);
 			
-			if (!config_timedout)
+			if (connection_failed) {
+				LOG (PRODUCT ": Debugger not loaded (failed to connect to the IDE).\n");
+			} else if (config_timedout) {
+				LOG (PRODUCT ": Debugger not loaded (timed out while trying to connect to the IDE).\n");
+			} else {
 				monotouch_load_debugger ();
+			}
 		} else {
 			LOG (PRODUCT ": Not connecting to the IDE, debug has been disabled\n");
 		}
@@ -772,6 +790,7 @@ static XamarinHttpConnection *connected_connection = NULL;
 static NSString *connected_ip = NULL;
 static pthread_cond_t connected_event = PTHREAD_COND_INITIALIZER;
 static pthread_mutex_t connected_mutex = PTHREAD_MUTEX_INITIALIZER;
+static int pending_connections = 0;
 
 void
 xamarin_connect_http (NSMutableArray *ips)
@@ -803,6 +822,7 @@ xamarin_connect_http (NSMutableArray *ips)
 		}
 		pthread_mutex_unlock (&connected_mutex);
 
+		pending_connections = [ips count];
 		for (int i = 0; i < [ips count]; i++) {
 			XamarinHttpConnection *connection = [[[XamarinHttpConnection alloc] init] autorelease];
 			connection.ip = [ips objectAtIndex: i];
@@ -811,15 +831,16 @@ xamarin_connect_http (NSMutableArray *ips)
 			[connection connect: [ips objectAtIndex: i] port: monodevelop_port completionHandler: ^void (bool success)
 			{
 				LOG_HTTP ("Connected: %@: %i", connection, success);
+				pthread_mutex_lock (&connected_mutex);
 				if (success) {
-					pthread_mutex_lock (&connected_mutex);
 					if (connected_connection == NULL) {
 						connected_ip = [connection ip];
 						connected_connection = connection;
-						pthread_cond_signal (&connected_event);
 					}
-					pthread_mutex_unlock (&connected_mutex);
 				}
+				pending_connections--;
+				pthread_cond_signal (&connected_event);
+				pthread_mutex_unlock (&connected_mutex);
 			}];
 		}
 
@@ -827,9 +848,16 @@ xamarin_connect_http (NSMutableArray *ips)
 
 		LOG_HTTP ("Will wait for connections");
 		pthread_mutex_lock (&connected_mutex);
-		while (connected_connection == NULL)
+		while (connected_connection == NULL && pending_connections > 0)
 			pthread_cond_wait (&connected_event, &connected_mutex);
 		pthread_mutex_unlock (&connected_mutex);
+		if (connected_connection == NULL) {
+			pthread_mutex_lock (&mutex);
+			connection_failed = true;
+			pthread_cond_signal (&cond);
+			pthread_mutex_unlock (&mutex);
+			break;
+		}
 		LOG_HTTP ("Connection received fd: %i", connected_connection.fileDescriptor);
 	} while (monotouch_process_connection (connected_connection.fileDescriptor));
 
