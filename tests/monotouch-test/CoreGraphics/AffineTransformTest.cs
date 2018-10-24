@@ -153,7 +153,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 
 			var transform2 = CGAffineTransform.MakeTranslation (1, 2);
 			// t' = [ sx 0 0 sy 0 0 ] * t – Swift equivalent
-			transform2.Scale (3, 4, CGAffineTransform.MatrixOrder.Prepend);
+			transform2.Scale (3, 4, MatrixOrder.Prepend);
 
 			Assert.AreEqual ((nfloat)3, transform2.xx);
 			Assert.AreEqual ((nfloat)0, transform2.yx);
@@ -204,7 +204,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			Assert.AreEqual ((nfloat)3, transform.y0, "y0");
 
 			transform = new CGAffineTransform (1, 2, 3, 4, 5, 6);
-			transform.Translate (2, -3, CGAffineTransform.MatrixOrder.Prepend);
+			transform.Translate (2, -3, MatrixOrder.Prepend);
 
 			Assert.AreEqual ((nfloat)1, transform.xx, "xx");
 			Assert.AreEqual ((nfloat)2, transform.yx, "yx");
@@ -259,7 +259,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			Assert.That ((double) (-6), Is.EqualTo ((double) transform.y0).Within (0.000001), "y0");
 
 			transform = new CGAffineTransform (1, 2, 3, 4, 5, 6);
-			transform.Rotate ((nfloat)Math.PI, CGAffineTransform.MatrixOrder.Prepend);
+			transform.Rotate ((nfloat)Math.PI, MatrixOrder.Prepend);
 
 			Assert.That ((double)(-1), Is.EqualTo ((double)transform.xx).Within (0.000001), "xx");
 			Assert.That ((double)(-2), Is.EqualTo ((double)transform.yx).Within (0.000001), "yx");
