@@ -68,6 +68,7 @@ namespace Foundation {
 		{
 		}
 
+		[CLSCompliant (false)]
 		public NSUrlSessionHandler (NSUrlSessionConfiguration configuration)
 		{
 			if (configuration == null)
@@ -86,7 +87,7 @@ namespace Foundation {
 			else if ((sp & SecurityProtocolType.Tls12) != 0)
 				configuration.TLSMinimumSupportedProtocol = SslProtocol.Tls_1_2;
 
-			session = NSUrlSession.FromConfiguration (configuration, new NSUrlSessionHandlerDelegate (this), null);
+			session = NSUrlSession.FromConfiguration (configuration, (INSUrlSessionDelegate) new NSUrlSessionHandlerDelegate (this), null);
 			inflightRequests = new Dictionary<NSUrlSessionTask, InflightData> ();
 		}
 
