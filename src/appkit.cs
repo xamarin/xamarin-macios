@@ -13377,6 +13377,10 @@ namespace AppKit {
 		[Mac (10, 10)]
 		[Export ("scrollerInsets", ArgumentSemantic.Assign)]
 		NSEdgeInsets ScrollerInsets { get; set; }
+
+		[Mac (10,9)]
+		[Export ("addFloatingSubview:forAxis:")]
+		void AddFloatingSubview (NSView view, NSEventGestureAxis axis);
 	}
 
 	[BaseType (typeof (NSTextField), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSSearchFieldDelegate)})]
