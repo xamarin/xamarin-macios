@@ -107,11 +107,6 @@ namespace CoreGraphics {
 			y0 = a.x0 * b.yx + a.y0 * b.yy + b.y0;
 		}
 
-		public enum MatrixOrder {
-			Prepend = 0,
-			Append = 1,
-		}
-
 		public void Scale (nfloat sx, nfloat sy, MatrixOrder order)
 		{
 			switch (order) {

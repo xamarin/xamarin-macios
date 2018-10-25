@@ -22,6 +22,7 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 	<PropertyGroup>
 		<IsWatchApp>True</IsWatchApp>
 		<IsWatch2App>True</IsWatch2App>
+		<IOSDebugOverWiFi>True</IOSDebugOverWiFi>
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)..\iOS\Xamarin.iOS.Common.targets" />
