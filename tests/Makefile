@@ -197,6 +197,7 @@ xharness/xharness.exe: $(wildcard xharness/*.cs) xharness/xharness.csproj $(TOP)
 	make -C $(TOP)/external/mono/mcs/class -i do-test PROFILE=MONOTOUCH
 	make -C $(TOP)/external/mono/mcs/class -i do-xunit-test PROFILE=MONOTOUCH
 	nuget restore xharness/xharness.csproj
+	nuget restore bcl-test/BCLTests/BCLTests.csproj
 	$(Q_GEN) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
 
 killall:
