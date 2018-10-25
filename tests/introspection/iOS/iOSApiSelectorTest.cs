@@ -62,7 +62,10 @@ namespace Introspection {
 					return true;
 				break;
 			// Xcode 9
-			case "CoreNFC":
+			case "CoreNFC": // Only available on devices that support NFC, so check if NFCNDEFReaderSession is present.
+				if (Class.GetHandle ("NFCNDEFReaderSession") == IntPtr.Zero)
+					return true;
+				break;
 			case "DeviceCheck":
 				if (Runtime.Arch == Arch.SIMULATOR)
 					return true;
