@@ -110,7 +110,8 @@ namespace BCLTestImporter {
 				throw new ArgumentNullException (nameof (platform));
 			
 			return GetProjectAssemblyReferences (monoRootPath, platform).Select (
-					a => (assembly: a, hintPath: (string) null)).Union (
+					a => (assembly: a, 
+						hintPath: BCLTestAssemblyDefinition.GetHintPathForRefenreceAssembly (a, monoRootPath, platform))).Union (
 					TestAssemblies.Select (
 						definition => (assembly: definition.Name,
 							hintPath: definition.GetPath (monoRootPath, platform))))

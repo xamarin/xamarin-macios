@@ -65,6 +65,14 @@ namespace BCLTestImporter {
 			return fullPath;
 		}
 
+		public static string GetHintPathForRefenreceAssembly (string assembly, string monoRootPath, string plaform)
+		{
+			var hintPath = Path.Combine (monoRootPath, partialPath, platformPathMatch[plaform], $"{assembly}.dll");
+			if (File.Exists (hintPath))
+				return hintPath;
+			return null;
+		}
+		
 		/// <summary>
 		/// Returns the path of the test assembly within the mono checkout.
 		/// </summary>
