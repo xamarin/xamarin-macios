@@ -42,6 +42,8 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void ChannelAssignments ()
 		{
+			TestRuntime.AssertXcodeVersion (7, 0);
+
 			var aq = new OutputAudioQueue (AudioStreamBasicDescription.CreateLinearPCM ());
 
 			Assert.AreEqual (AudioQueueStatus.Ok, aq.SetChannelAssignments (
