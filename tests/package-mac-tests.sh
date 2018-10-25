@@ -7,8 +7,10 @@ ZIP=$DIR.zip
 rm -Rf $DIR
 mkdir -p $DIR
 
-make build-mac
-make build-mac-system-dontlink
+make
+make .stamp-configure-projects-mac
+msbuild bindings-test/bindings-test-mac.csproj
+make build-mac-dontlink build-mac-apitest build-mac-introspection build-mac-linksdk build-mac-linkall build-mac-xammac_tests build-mac-system-dontlink -j8
 
 for app in */bin/x86/*/*.app linker/mac/*/bin/x86/*/*.app introspection/Mac/bin/x86/*/*.app; do
 	mkdir -p "$DIR/tests/$app"
