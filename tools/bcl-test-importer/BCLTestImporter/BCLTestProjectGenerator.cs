@@ -156,9 +156,8 @@ namespace BCLTestImporter {
 				}
 
 				var typesPerAssembly = projectDefinition.GetTypeForAssemblies (MonoRootPath, "iOS");
-				var isXUnit = projectDefinition.TestAssemblies[0].IsXUnit; // TODO: Do not let the mix of nunit and xunit tests.
 				var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (typesPerAssembly,
-					isXUnit, RegisterTypesTemplatePath);
+					projectDefinition.IsXUnit, RegisterTypesTemplatePath);
 
 				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType.cs");
 				using (var file = new StreamWriter (registerTypePath, !Override)) { // false is do not append

@@ -12,7 +12,14 @@ namespace BCLTestImporter {
 	public struct BCLTestProjectDefinition {
 		public string Name { get; set; }
 		public List<BCLTestAssemblyDefinition> TestAssemblies {get; private set;}
-		
+		public bool IsXUnit {
+			get {
+				if (TestAssemblies.Count > 0)
+					return TestAssemblies [0].IsXUnit;
+				return false;
+			}
+		}
+
 		public BCLTestProjectDefinition (string name, List<BCLTestAssemblyDefinition> assemblies)
 		{
 			Name = name;
@@ -74,7 +81,7 @@ namespace BCLTestImporter {
 						continue;
 					}
 					dict[Path.GetFileName (path)] = types.First (t => !t.IsAbstract && !t.IsGenericType && t.FullName.Contains ("Test"));
-				} catch (ReflectionTypeLoadException e) {
+				} catch (ReflectionTypeLoadException e) { // ReflectionTypeLoadException
 					// we did get an exception, possible reason, the type comes from an assebly not loaded, but 
 					// nevertheless we can do something about it, get all the not null types in the exception
 					// and use one of them
