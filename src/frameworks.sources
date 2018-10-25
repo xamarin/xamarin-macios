@@ -440,6 +440,7 @@ COREGRAPHICS_CORE_SOURCES = \
 	CoreGraphics/CGColorSpace.cs \
 	CoreGraphics/CGContext.cs \
 	CoreGraphics/CGDisplay.cs \
+	CoreGraphics/CGEnums.cs \
 	CoreGraphics/CGGeometry.cs \
 	CoreGraphics/CGGradient.cs \
 	CoreGraphics/CGImage.cs \

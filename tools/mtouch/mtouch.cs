@@ -456,7 +456,9 @@ namespace Xamarin.Bundler
 			bool enable_debug = app.EnableDebug;
 			bool enable_debug_symbols = app.PackageManagedDebugSymbols;
 			bool llvm_only = app.EnableLLVMOnlyBitCode;
-			bool interp = app.UseInterpreter;
+			bool interp = app.IsInterpreted (Assembly.GetIdentity (filename));
+			bool interp_full = !interp && app.UseInterpreter && fname == "mscorlib.dll";
+			bool is32bit = (abi & Abi.Arch32Mask) > 0;
 			string arch = abi.AsArchString ();
 
 			args.Append ("--debug ");
@@ -474,9 +476,15 @@ namespace Xamarin.Bundler
 			args.Append (app.AotArguments);
 			if (llvm_only)
 				args.Append ("llvmonly,");
-			else if (interp)
+			else if (interp) {
+				if (fname != "mscorlib.dll")
+					throw ErrorHelper.CreateError (99, $"Internal error: can only enable the interpreter for mscorlib.dll when AOT-compiling assemblies (tried to interpret {fname}). Please file an issue at https://github.com/xamarin/xamarin-macios/issues/new.");
 				args.Append ("interp,");
-			else
+			} else if (interp_full) {
+				if (fname != "mscorlib.dll")
+					throw ErrorHelper.CreateError (99, $"Internal error: can only enable the interpreter for mscorlib.dll when AOT-compiling assemblies (tried to interpret {fname}). Please file an issue at https://github.com/xamarin/xamarin-macios/issues/new."); 
+				args.Append ("interp,full,");
+			} else
 				args.Append ("full,");
 
 			var aname = Path.GetFileNameWithoutExtension (fname);
@@ -504,7 +512,7 @@ namespace Xamarin.Bundler
 			}
 
 			if (enable_llvm)
-				args.Append ("llvm-path=").Append (MonoTouchDirectory).Append ("/LLVM/bin/,");
+				args.Append ("llvm-path=").Append (MonoTouchDirectory).Append (is32bit ? "/LLVM36/bin/," : "/LLVM/bin/,");
 
 			if (!llvm_only)
 				args.Append ("outfile=").Append (StringUtils.Quote (outputFile));
@@ -664,7 +672,8 @@ namespace Xamarin.Bundler
 						sw.WriteLine ("\tmono_sgen_mono_ilgen_init ();");
 						sw.WriteLine ("\tmono_ee_interp_init (NULL);");
 						sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_INTERP);");
-					}
+					} else if (app.IsDeviceBuild)
+						sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_FULL);");
 
 					if (assembly_location.Length > 0)
 						sw.WriteLine ("\txamarin_set_assembly_directories (&assembly_locations);");
@@ -1246,7 +1255,14 @@ namespace Xamarin.Bundler
 						app.LLVMOptimizations [asm] = opt;
 				}
 			},
-			{ "interpreter", "Enable the *experimental* interpreter.", v => { app.UseInterpreter = true; }},
+			{ "interpreter:", "Enable the *experimental* interpreter. Optionally takes a comma-separated list of assemblies to interpret (if prefixed with a minus sign, the assembly will be AOT-compiled instead). 'all' can be used to specify all assemblies. This argument can be specified multiple times.", v =>
+				{ 
+					app.UseInterpreter = true;
+					if (!string.IsNullOrEmpty (v)) {
+						app.InterpretedAssemblies.AddRange (v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
+					}
+				}
+			},
 			{ "http-message-handler=", "Specify the default HTTP message handler for HttpClient", v => { http_message_handler = v; }},
 			{ "output-format=", "Specify the output format for some commands. Possible values: Default, XML", v =>
 				{

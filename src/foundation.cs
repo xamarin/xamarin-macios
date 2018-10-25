@@ -415,9 +415,11 @@ namespace Foundation
 		[Wrap ("this (data, options == null ? null : options.Dictionary, out resultDocumentAttributes, out error)")]
 		IntPtr Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
 
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSAttributedString (NSUrl, NSDictionary, out NSDictionary, ref NSError)' instead.")]
 		[Export ("initWithPath:documentAttributes:")]
 		IntPtr Constructor (string path, out NSDictionary resultDocumentAttributes);
 
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSAttributedString (NSUrl, NSDictionary, out NSDictionary, ref NSError)' instead.")]
 		[Export ("initWithURL:documentAttributes:")]
 		IntPtr Constructor (NSUrl url, out NSDictionary resultDocumentAttributes);
 
@@ -460,6 +462,7 @@ namespace Foundation
 		[Export ("nextWordFromIndex:forward:")]
 		nuint GetNextWord (nuint fromIndex, bool isForward);
 
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSDataDetector' instead.")]
 		[Export ("URLAtIndex:effectiveRange:")]
 		NSUrl GetUrl (nuint index, out NSRange effectiveRange);
 
@@ -5209,7 +5212,16 @@ namespace Foundation
 
 		[Watch (5,0), NoTV, NoMac, iOS (12,0)]
 		[NullAllowed, Export ("suggestedInvocationPhrase")]
-		string SuggestedInvocationPhrase { get; set; }
+		string SuggestedInvocationPhrase {
+			// This _simply_ ensure that the Intents namespace (via the enum) will be present which,
+			// in turns, means that the Intents.framework is loaded into memory and this makes the
+			// selectors (getter and setter) work at runtime. Other selectors do not need it.
+			// reference: https://github.com/xamarin/xamarin-macios/issues/4894
+			[PreSnippet ("GC.KeepAlive (Intents.INCallCapabilityOptions.AudioCall); // no-op to ensure Intents.framework is loaded into memory")]
+			get;
+			[PreSnippet ("GC.KeepAlive (Intents.INCallCapabilityOptions.AudioCall); // no-op to ensure Intents.framework is loaded into memory")]
+			set;
+		}
 
 		[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
 		[Export ("eligibleForPrediction")]
@@ -5433,6 +5445,10 @@ namespace Foundation
 	, QLPreviewItem
 #endif
 	{
+		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'NSUrlComponents' instead.")]
+		[Deprecated (PlatformName.WatchOS, 2, 0, message : "Use 'NSUrlComponents' instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message : "Use 'NSUrlComponents' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'NSUrlComponents' instead.")]
 		[Export ("initWithScheme:host:path:")]
 		IntPtr Constructor (string scheme, string host, string path);
 
@@ -6471,6 +6487,9 @@ namespace Foundation
 		[Export ("setDelegateQueue:")]
 		void SetDelegateQueue (NSOperationQueue queue);
 
+		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'NSUrlSession.CreateDataTask' instead.")]
+		[Deprecated (PlatformName.TvOS, 9, 0, message : "Use 'NSUrlSession.CreateDataTask' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'NSUrlSession.CreateDataTask' instead.")]
 		[NoWatch]
 		[Static]
 		[Export ("sendAsynchronousRequest:queue:completionHandler:")]
@@ -8561,12 +8580,15 @@ namespace Foundation
 		void SetDefaultPlaceholder (NSObject placeholder, NSObject marker, NSString binding);
 #endif
 
+		[Deprecated (PlatformName.MacOSX, message: "Now on 'NSEditor' protocol.")]
 		[Export ("objectDidEndEditing:")]
 		void ObjectDidEndEditing (NSObject editor);
 
+		[Deprecated (PlatformName.MacOSX, message: "Now on 'NSEditor' protocol.")]
 		[Export ("commitEditing")]
 		bool CommitEditing ();
 
+		[Deprecated (PlatformName.MacOSX, message: "Now on 'NSEditor' protocol.")]
 		[Export ("commitEditingWithDelegate:didCommitSelector:contextInfo:")]
 		//void CommitEditingWithDelegateDidCommitSelectorContextInfo (NSObject objDelegate, Selector didCommitSelector, IntPtr contextInfo);
 		void CommitEditing (NSObject objDelegate, Selector didCommitSelector, IntPtr contextInfo);
@@ -8783,6 +8805,10 @@ namespace Foundation
 		void WaitUntilFinished ();
 
 		[Export ("threadPriority")]
+		[Deprecated (PlatformName.iOS, 8, 0)]
+		[Deprecated (PlatformName.WatchOS, 2, 0)]
+		[Deprecated (PlatformName.TvOS, 9, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		double ThreadPriority { get; set; }
 
 		//Detected properties
@@ -9452,6 +9478,7 @@ namespace Foundation
 
 		// https://developer.apple.com/library/mac/#documentation/Cocoa/Reference/ApplicationKit/Classes/NSBundle_AppKitAdditions/Reference/Reference.html
 		[Static]
+		[Deprecated (PlatformName.MacOSX, 10, 8)]
 		[Export ("loadNibNamed:owner:")]
 		bool LoadNib (string nibName, NSObject owner);
 
@@ -12348,7 +12375,11 @@ namespace Foundation
 	partial interface NSFilePresenter {
 		[Abstract]
 		[Export ("presentedItemURL", ArgumentSemantic.Retain)]
+#if XAMCORE_4_0
+		NSUrl PresentedItemUrl { get; }
+#else
 		NSUrl PresentedItemURL { get; }
+#endif
 
 #if XAMCORE_2_0
 		[Abstract]
@@ -12758,9 +12789,11 @@ namespace Foundation
 		[Static, Export ("canResumeDownloadDecodedWithEncodingMIMEType:")]
 		bool CanResumeDownloadDecodedWithEncodingMimeType (string mimeType);
 
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSURLSession' instead.")]
 		[Export ("initWithRequest:delegate:")]
 		IntPtr Constructor (NSUrlRequest request, NSObject delegate1);
 
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSURLSession' instead.")]
 		[Export ("initWithResumeData:delegate:path:")]
 		IntPtr Constructor (NSData resumeData, NSObject delegate1, string path);
 
@@ -13498,10 +13531,9 @@ namespace Foundation
 		NSDimension BaseUnit { get; }
 	}
 
-#if !WATCH && !TVOS
-	[Mac (10,8), iOS (11,0), NoWatch, NoTV]
 	partial interface NSFileManager {
 
+		[iOS (11, 0), NoTV, NoWatch]
 		[Mac (10, 8), Export ("trashItemAtURL:resultingItemURL:error:")]
 		bool TrashItem (NSUrl url, out NSUrl resultingItemUrl, out NSError error);
 
@@ -13521,7 +13553,6 @@ namespace Foundation
 		[Export ("name")]
 		string Name { get; }
 	}
-#endif
 
 #if MONOMAC
 	partial interface NSFilePresenter {
@@ -13883,6 +13914,10 @@ namespace Foundation
 		void Reply ([NullAllowed] NSException exception);
 	}
 
+	[Deprecated (PlatformName.TvOS, 11, 0)]
+	[Deprecated (PlatformName.WatchOS, 4, 0)]
+	[Deprecated (PlatformName.iOS, 11, 0)]
+	[Deprecated (PlatformName.MacOSX, 10, 13)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSPortNameServer {

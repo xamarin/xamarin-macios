@@ -248,10 +248,12 @@ namespace CoreImage {
 		CIContext Create ();
 
 #if !MONOMAC
+		[Deprecated (PlatformName.iOS, 12, 0)]
 		[Static]
 		[Export ("contextWithEAGLContext:")]
 		CIContext FromContext (EAGLContext eaglContext);
 
+		[Deprecated (PlatformName.iOS, 12, 0)]
 		[Static]
 		[Export ("contextWithEAGLContext:options:")]
 		CIContext FromContext (EAGLContext eaglContext, [NullAllowed] NSDictionary dictionary);
@@ -359,6 +361,7 @@ namespace CoreImage {
 		int OfflineGPUCount { get; }
 
 		[Mac(10,11)]
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("contextForOfflineGPUAtIndex:")]
 		[Static]
 		CIContext FromOfflineGpu (int gpuIndex);
@@ -1347,10 +1350,12 @@ namespace CoreImage {
 		CIImage FromCGImage (CGImage image, [NullAllowed] CIImageInitializationOptionsWithMetadata options);
 
 #if MONOMAC
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Static]
 		[Export ("imageWithCGLayer:")]
 		CIImage FromLayer (CGLayer layer);
 
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Static]
 		[Export ("imageWithCGLayer:options:")]
 		CIImage FromLayer (CGLayer layer, NSDictionary options);
@@ -1366,6 +1371,8 @@ namespace CoreImage {
 		CIImage FromData (NSData bitmapData, nint bytesPerRow, CGSize size, int /* CIFormat = int */ pixelFormat, [NullAllowed] CGColorSpace colorSpace);
 
 		[iOS (6,0)]
+		[Deprecated (PlatformName.iOS, 12, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Static]
 		[Export ("imageWithTexture:size:flipped:colorSpace:")]
 		CIImage ImageWithTexture (uint /* unsigned int */ glTextureName, CGSize size, bool flipped, [NullAllowed] CGColorSpace colorspace);
@@ -1481,9 +1488,11 @@ namespace CoreImage {
 		IntPtr Constructor (CGImage image, [NullAllowed] CIImageInitializationOptionsWithMetadata options);
 
 #if MONOMAC
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'CIImage (CGImage)' instead.")]
 		[Export ("initWithCGLayer:")]
 		IntPtr Constructor (CGLayer layer);
 
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'CIImage (CGImage)' instead.")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("initWithCGLayer:options:")]
 		IntPtr Constructor (CGLayer layer, [NullAllowed] NSDictionary d);
@@ -1505,6 +1514,8 @@ namespace CoreImage {
 		IntPtr Constructor (NSData d, nint bytesPerRow, CGSize size, int /* CIFormat = int */ pixelFormat, [NullAllowed] CGColorSpace colorSpace);
 
 		[iOS (6,0)]
+		[Deprecated (PlatformName.iOS, 12, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("initWithTexture:size:flipped:colorSpace:")]
 		IntPtr Constructor (int /* unsigned int */ glTextureName, CGSize size, bool flipped, [NullAllowed] CGColorSpace colorSpace);
 
@@ -2079,9 +2090,13 @@ namespace CoreImage {
 		[Static, Export ("kernelsWithString:")]
 		CIKernel [] FromPrograms (string coreImageShaderProgram);
 #endif
+		[Deprecated (PlatformName.iOS, 12, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Static, Export ("kernelsWithString:")]
 		CIKernel [] FromProgramMultiple (string coreImageShaderProgram);
 
+		[Deprecated (PlatformName.iOS, 12, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Static, Export ("kernelWithString:")]
 		CIKernel FromProgramSingle (string coreImageShaderProgram);
 
@@ -2122,6 +2137,8 @@ namespace CoreImage {
 
 		// Note: the API is supported in iOS 8, but with iOS 9, they guarantee
 		// a more derived result
+		[Deprecated (PlatformName.iOS, 12, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[New, Static, Export ("kernelWithString:")]
 		CIColorKernel FromProgramSingle (string coreImageShaderProgram);
 	}
@@ -2135,6 +2152,8 @@ namespace CoreImage {
 
 		// Note: the API is supported in iOS 8, but with iOS 9, they guarantee
 		// a more derived result
+		[Deprecated (PlatformName.iOS, 12, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[New, Static, Export ("kernelWithString:")]
 		CIWarpKernel FromProgramSingle (string coreImageShaderProgram);
 	}
@@ -2205,6 +2224,7 @@ namespace CoreImage {
 		[Export ("loadNonExecutablePlugIns")]
 		void LoadNonExecutablePlugIns ();
 
+		[Deprecated (PlatformName.MacOSX, 10, 7)]
 		[Static]
 		[Export ("loadPlugIn:allowNonExecutable:")]
 		void LoadPlugIn (NSUrl pluginUrl, bool allowNonExecutable);
@@ -5200,6 +5220,8 @@ namespace CoreImage {
 	[DisableDefaultCtor] // Handle is nil for `init`
 	interface CIBlendKernel {
 
+		[Deprecated (PlatformName.iOS, 12, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Static]
 		[Export ("kernelWithString:")]
 		[return: NullAllowed]

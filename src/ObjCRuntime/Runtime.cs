@@ -39,6 +39,8 @@ namespace ObjCRuntime {
 #endif
 
 		static Dictionary<IntPtrTypeValueTuple,Delegate> block_to_delegate_cache;
+		static Dictionary<Type, ConstructorInfo> intptr_ctor_cache;
+		static Dictionary<Type, ConstructorInfo> intptr_bool_ctor_cache;
 
 		static List <object> delegates;
 		static List <Assembly> assemblies;
@@ -63,24 +65,32 @@ namespace ObjCRuntime {
 			public MTProtocolMap protocol_map;
 			public int assembly_count;
 			public int map_count;
-			public int custom_type_count;
 			public int full_token_reference_count;
 			public int skipped_map_count;
 			public int protocol_wrapper_count;
 			public int protocol_count;
 		}
 
+		[Flags]
+		internal enum MTTypeFlags : uint
+		{
+			None = 0,
+			CustomType = 1,
+			UserType = 2,
+		}
+
 		[StructLayout (LayoutKind.Sequential, Pack = 1)]
 		internal struct MTClassMap {
 			public IntPtr handle;
 			public uint type_reference;
+			public MTTypeFlags flags;
 		}
 
 		[StructLayout (LayoutKind.Sequential, Pack = 1)]
 		internal struct MTManagedClassMap
 		{
 			public uint skipped_reference; // implied token type: TypeDef
-			public uint index; // index into MTRegistrationMap.map
+			public uint actual_reference; // implied token type: TypeDef
 		}
 
 		[StructLayout (LayoutKind.Sequential, Pack = 1)]
@@ -122,7 +132,7 @@ namespace ObjCRuntime {
 
 		[Flags]
 		internal enum InitializationFlags : int {
-			/* unused               = 0x01 */
+			IsPartialStaticRegistrar= 0x01,
 			/* unused				= 0x02,*/
 			DynamicRegistrar		= 0x04,
 			/* unused				= 0x08,*/
@@ -239,6 +249,8 @@ namespace ObjCRuntime {
 			Runtime.options = options;
 			delegates = new List<object> ();
 			object_map = new Dictionary <IntPtr, WeakReference> (IntPtrEqualityComparer);
+			intptr_ctor_cache = new Dictionary<Type, ConstructorInfo> (TypeEqualityComparer);
+			intptr_bool_ctor_cache = new Dictionary<Type, ConstructorInfo> (TypeEqualityComparer);
 			lock_obj = new object ();
 
 			NSObjectClass = NSObject.Initialize ();
@@ -1152,22 +1164,36 @@ namespace ObjCRuntime {
 
 		static ConstructorInfo GetIntPtrConstructor (Type type)
 		{
+			lock (intptr_ctor_cache) {
+				if (intptr_ctor_cache.TryGetValue (type, out var rv))
+					return rv;
+			}
 			var ctors = type.GetConstructors (BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
 			for (int i = 0; i < ctors.Length; ++i) {
 				var param = ctors[i].GetParameters ();
-				if (param.Length == 1 && param [0].ParameterType == typeof (IntPtr))
+				if (param.Length == 1 && param [0].ParameterType == typeof (IntPtr)) {
+					lock (intptr_ctor_cache)
+						intptr_ctor_cache [type] = ctors [i];
 					return ctors [i];
+				}
 			}
 			return null;
 		}
 
 		static ConstructorInfo GetIntPtr_BoolConstructor (Type type)
 		{
+			lock (intptr_bool_ctor_cache) {
+				if (intptr_bool_ctor_cache.TryGetValue (type, out var rv))
+					return rv;
+			}
 			var ctors = type.GetConstructors (BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
 			for (int i = 0; i < ctors.Length; ++i) {
 				var param = ctors[i].GetParameters ();
-				if (param.Length == 2 && param [0].ParameterType == typeof (IntPtr) && param [1].ParameterType == typeof (bool))
+				if (param.Length == 2 && param [0].ParameterType == typeof (IntPtr) && param [1].ParameterType == typeof (bool)) {
+					lock (intptr_bool_ctor_cache)
+						intptr_bool_ctor_cache [type] = ctors [i];
 					return ctors [i];
+				}
 			}
 			return null;
 		}

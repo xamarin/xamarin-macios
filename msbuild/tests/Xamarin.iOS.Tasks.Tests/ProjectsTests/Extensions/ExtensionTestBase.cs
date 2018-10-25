@@ -35,8 +35,8 @@ namespace Xamarin.iOS.Tasks
 
 			AppBundlePath = mtouchPaths ["app_bundlepath"];
 			string extensionPath = Path.Combine(AppBundlePath, "PlugIns", extensionName + ".appex");
-			Engine.GlobalProperties.SetProperty ("Platform", platform);
-			Engine.GlobalProperties.SetProperty ("Configuration", config);
+			Engine.ProjectCollection.SetGlobalProperty ("Platform", platform);
+			Engine.ProjectCollection.SetGlobalProperty ("Configuration", config);
 
 			RunTarget (proj, "Clean");
 			Assert.IsFalse (Directory.Exists (AppBundlePath), "{1}: App bundle exists after cleanup: {0} ", AppBundlePath, bundlePath);

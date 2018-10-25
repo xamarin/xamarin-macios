@@ -2636,6 +2636,7 @@ namespace Registrar {
 			public TypeReference Skipped;
 			public ObjCType Actual;
 			public uint SkippedTokenReference;
+			public uint ActualTokenReference;
 		}
 		List<SkippedType> skipped_types = new List<SkippedType> ();
 		protected override void OnSkipType (TypeReference type, ObjCType registered_type)
@@ -2724,24 +2725,6 @@ namespace Registrar {
 				allTypes.Add (@class);
 			}
 
-			// Move all the custom types to the end of the list, respecting 
-			// existing order (so that a derived type always comes after
-			// its base type; the Types.Values has that property, and we
-			// need to keep it that way).
-
-			var mappedEnd = allTypes.Count;
-			var counter = 0;
-			while (counter < mappedEnd) {
-				if (!IsPlatformType (allTypes [counter].Type)) {
-					var t = allTypes [counter];
-					allTypes.RemoveAt (counter);
-					allTypes.Add (t);
-					mappedEnd--;
-				} else {
-					counter++;
-				}
-			}
-
 			if (string.IsNullOrEmpty (single_assembly)) {
 				foreach (var assembly in GetAssemblies ())
 					registered_assemblies.Add (GetAssemblyName (assembly));
@@ -2749,23 +2732,27 @@ namespace Registrar {
 				registered_assemblies.Add (single_assembly);
 			}
 
-			var customTypeCount = 0;
 			foreach (var @class in allTypes) {
 				var isPlatformType = IsPlatformType (@class.Type);
+				var flags = MTTypeFlags.None;
 
 				skip.Clear ();
 
 				uint token_ref = uint.MaxValue;
 				if (!@class.IsProtocol && !@class.IsCategory) {
 					if (!isPlatformType)
-						customTypeCount++;
-					
+						flags |= MTTypeFlags.CustomType;
+
+					if (!@class.IsWrapper && !@class.IsModel)
+						flags |= MTTypeFlags.UserType;
+
 					CheckNamespace (@class, exceptions);
 					token_ref = CreateTokenReference (@class.Type, TokenType.TypeDef);
-					map.AppendLine ("{{ NULL, 0x{1:X} /* #{3} '{0}' => '{2}' */ }},", 
+					map.AppendLine ("{{ NULL, 0x{1:X} /* #{3} '{0}' => '{2}' */, (MTTypeFlags) ({4}) /* {5} */ }},", 
 									@class.ExportedName,
 									CreateTokenReference (@class.Type, TokenType.TypeDef), 
-									GetAssemblyQualifiedName (@class.Type), map_entries);
+									GetAssemblyQualifiedName (@class.Type), map_entries,
+									(int) flags, flags);
 					map_dict [@class] = map_entries++;
 
 					bool use_dynamic;
@@ -3031,16 +3018,13 @@ namespace Registrar {
 
 			if (skipped_types.Count > 0) {
 				map.AppendLine ("static const MTManagedClassMap __xamarin_skipped_map [] = {");
-				foreach (var skipped in skipped_types)
+				foreach (var skipped in skipped_types) {
 					skipped.SkippedTokenReference = CreateTokenReference (skipped.Skipped, TokenType.TypeDef);
-
-				foreach (var skipped in skipped_types.OrderBy ((v) => v.SkippedTokenReference)) {
-					if (map_dict.TryGetValue (skipped.Actual, out var index)) {
-						map.AppendLine ("{{ 0x{0:X}, {1} /* '{2}' => '{3}' */ }},", skipped.SkippedTokenReference, map_dict [skipped.Actual], skipped.Skipped.FullName, skipped.Actual.Type.FullName);
-					} else {
-						throw ErrorHelper.CreateError (99, $"Internal error: could not find the native type for {skipped.Skipped.FullName} (failed to find {skipped.Actual.Type.FullName}). Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
-					}
+					skipped.ActualTokenReference = CreateTokenReference (skipped.Actual.Type, TokenType.TypeDef);
 				}
+
+				foreach (var skipped in skipped_types.OrderBy ((v) => v.SkippedTokenReference))
+					map.AppendLine ("{{ 0x{0:X}, 0x{1:X} /* '{2}' => '{3}' */ }},", skipped.SkippedTokenReference, skipped.ActualTokenReference, skipped.Skipped.FullName, skipped.Actual.Type.FullName);
 				map.AppendLine ("};");
 				map.AppendLine ();
 			}
@@ -3112,7 +3096,6 @@ namespace Registrar {
 			}
 			map.AppendLine ("{0},", count);
 			map.AppendLine ("{0},", i);
-			map.AppendLine ("{0},", customTypeCount);
 			map.AppendLine ("{0},", full_token_reference_count);
 			map.AppendLine ("{0},", skipped_types.Count);
 			map.AppendLine ("{0},", protocol_wrapper_map.Count);
@@ -3120,7 +3103,7 @@ namespace Registrar {
 			map.AppendLine ("};");
 
 
-			map_init.AppendLine ("xamarin_add_registration_map (&__xamarin_registration_map);");
+			map_init.AppendLine ("xamarin_add_registration_map (&__xamarin_registration_map, {0});", string.IsNullOrEmpty (single_assembly) ? "false" : "true");
 			map_init.AppendLine ("}");
 
 			sb.WriteLine (map.ToString ());
@@ -5006,5 +4989,13 @@ namespace Registrar {
 	class AdoptsAttribute : Attribute
 	{
 		public string ProtocolType { get; set; }
+	}
+
+	[Flags]
+	internal enum MTTypeFlags : uint
+	{
+		None = 0,
+		CustomType = 1,
+		UserType = 2,
 	}
 }

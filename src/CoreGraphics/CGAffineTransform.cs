@@ -106,10 +106,25 @@ namespace CoreGraphics {
 			x0 = a.x0 * b.xx + a.y0 * b.xy + b.x0;
 			y0 = a.x0 * b.yx + a.y0 * b.yy + b.y0;
 		}
+
+		public void Scale (nfloat sx, nfloat sy, MatrixOrder order)
+		{
+			switch (order) {
+			case MatrixOrder.Prepend: // The new operation is applied before the old operation.
+				this = Multiply (MakeScale (sx, sy), this); // t' = [ sx 0 0 sy 0 0 ] * t – Swift equivalent
+				break;
+			case MatrixOrder.Append: // The new operation is applied after the old operation.
+				this = Multiply (this, MakeScale (sx, sy)); // t' = t * [ sx 0 0 sy 0 0 ]
+				break;
+			default:
+				throw new ArgumentOutOfRangeException (nameof (order));
+			}
+		}
 		
+		[Advice ("By default, the new operation is applied after the old operation: t' = t * [ sx 0 0 sy 0 0 ].\nTo have the same behavior as the native Swift API, pass 'MatrixOrder.Prepend' to 'Scale (nfloat, nfloat, MatrixOrder)'.")]
 		public void Scale (nfloat sx, nfloat sy)
 		{
-			Multiply (MakeScale (sx, sy));
+			Scale (sx, sy, MatrixOrder.Append);
 		}
 
 		public static CGAffineTransform Scale (CGAffineTransform transform, nfloat sx, nfloat sy)
@@ -123,9 +138,24 @@ namespace CoreGraphics {
 				transform.y0);
 		}
 
+		public void Translate (nfloat tx, nfloat ty, MatrixOrder order)
+		{
+			switch (order) {
+			case MatrixOrder.Prepend: // The new operation is applied before the old operation.
+				this = Multiply (MakeTranslation (tx, ty), this); // t' = [ 1 0 0 1 tx ty ] * t – Swift equivalent
+				break;
+			case MatrixOrder.Append: // The new operation is applied after the old operation.
+				this = Multiply (this, MakeTranslation (tx, ty)); // t' = t * [ 1 0 0 1 tx ty ]
+				break;
+			default:
+				throw new ArgumentOutOfRangeException (nameof (order));
+			}
+		}
+
+		[Advice ("By default, the new operation is applied after the old operation: t' = t * [ 1 0 0 1 tx ty ].\nTo have the same behavior as the native Swift API, pass 'MatrixOrder.Prepend' to 'Translate (nfloat, nfloat, MatrixOrder)'.")]
 		public void Translate (nfloat tx, nfloat ty)
 		{
-			Multiply (MakeTranslation (tx, ty));
+			Translate (tx, ty, MatrixOrder.Append);
 		}
 
 		public static CGAffineTransform Translate (CGAffineTransform transform, nfloat tx, nfloat ty)
@@ -139,9 +169,24 @@ namespace CoreGraphics {
 				tx * transform.yx + ty * transform.yy + transform.y0);
 		}
 
+		public void Rotate (nfloat angle, MatrixOrder order)
+		{
+			switch (order) {
+			case MatrixOrder.Prepend: // The new operation is applied before the old operation.
+				this = Multiply (MakeRotation (angle), this); // t' = [ cos(angle) sin(angle) -sin(angle) cos(angle) 0 0 ] * t – Swift equivalent
+				break;
+			case MatrixOrder.Append: // The new operation is applied after the old operation.
+				this = Multiply (this, MakeRotation (angle)); // t' = t * [ cos(angle) sin(angle) -sin(angle) cos(angle) 0 0 ]
+				break;
+			default:
+				throw new ArgumentOutOfRangeException (nameof (order));
+			}
+		}
+
+		[Advice ("By default, the new operation is applied after the old operation: t' = t * [ cos(angle) sin(angle) -sin(angle) cos(angle) 0 0 ].\nTo have the same behavior as the native Swift API, pass 'MatrixOrder.Prepend' to 'Rotate (nfloat, MatrixOrder)'.")]
 		public void Rotate (nfloat angle)
 		{
-			Multiply (MakeRotation (angle));
+			Rotate (angle, MatrixOrder.Append);
 		}
 			
 		public static CGAffineTransform Rotate (CGAffineTransform transform, nfloat angle)

@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2011-2014 Xamarin Inc. All rights reserved.
  * Copyright 2010 Novell Inc.
@@ -1350,13 +1349,21 @@ namespace Xamarin.Bundler {
 				args.Append ("-o ").Append (StringUtils.Quote (AppPath)).Append (' ');
 				args.Append (cflags).Append (' ');
 				if (embed_mono) {
-					var libmono = "libmonosgen-2.0.a";
-					var lib = Path.Combine (libdir, libmono);
+					string libmono = Path.Combine (libdir, "libmonosgen-2.0.a");
 
-					if (!File.Exists (Path.Combine (lib)))
+					if (!File.Exists (libmono))
 						throw new MonoMacException (5202, true, "Mono.framework MDK is missing. Please install the MDK for your Mono.framework version from http://mono-project.com/Downloads");
 
-					args.Append (StringUtils.Quote (lib)).Append (' ');
+					args.Append (StringUtils.Quote (libmono)).Append (' ');
+
+					// libmono-system-native.a needs to be included if it exists in the mono in question
+					string libmonoNative =  Path.Combine (libdir, "libmono-system-native.a");
+					if (File.Exists (libmonoNative))
+						args.Append (StringUtils.Quote (libmonoNative)).Append (' ');
+
+					var libsystem_native_path = Path.Combine (libdir, "libmono-system-native.a");
+					args.Append (StringUtils.Quote (libsystem_native_path)).Append (' ');
+					args.Append ("-u ").Append ("_SystemNative_RealPath").Append (' '); // This keeps libmono_system_native_la-pal_io.o symbols
 
 					if (profiling.HasValue && profiling.Value) {
 						args.Append (StringUtils.Quote (Path.Combine (libdir, "libmono-profiler-log.a"))).Append (' ');

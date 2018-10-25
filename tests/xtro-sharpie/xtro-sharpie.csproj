@@ -20,7 +20,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
-    <Commandlineparameters>../../iphoneos9.2-arm64.pch /Library/Frameworks/Xamarin.iOS.framework/Versions/Current//lib/64bits/Xamarin.iOS.dll</Commandlineparameters>
+    <Commandlineparameters>../../iphoneos12.0-arm64.pch /Library/Frameworks/Xamarin.iOS.framework/Versions/Current//lib/64bits/Xamarin.iOS.dll</Commandlineparameters>
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -88,6 +88,9 @@
     <Compile Include="Log.cs" />
     <Compile Include="RequiresSuperCheck.cs" />
     <Compile Include="Filter.cs" />
+    <Compile Include="DeprecatedCheck.cs" />
+    <Compile Include="AttributeHelpers.cs" />
+    <Compile Include="VersionHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

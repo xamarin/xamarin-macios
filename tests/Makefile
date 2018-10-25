@@ -41,8 +41,9 @@ EXEC_UNIT_SERVER=XCODE_DEVELOPER_ROOT=$(XCODE_DEVELOPER_ROOT) MONOTOUCH_ROOT=$(I
 
 export MD_APPLE_SDK_ROOT=$(abspath $(XCODE_DEVELOPER_ROOT)/../..)
 export MD_MTOUCH_SDK_ROOT=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)
-export XBUILD_FRAMEWORK_FOLDERS_PATH=$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks
-export MSBuildExtensionsPath=$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild
+export MSBUILD_EXE_PATH=$(MONO_PREFIX)/lib/mono/msbuild/15.0/bin/MSBuild.dll
+export TargetFrameworkFallbackSearchPaths=$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks
+export MSBuildExtensionsPathFallbackPathsOverride=$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild
 export XAMMAC_FRAMEWORK_PATH=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 
@@ -88,7 +89,6 @@ test.config: Makefile $(TOP)/Make.config
 	@echo "MONOTOUCH_PREFIX=$(abspath $(MONOTOUCH_PREFIX))" >> $@
 	@echo "IOS_DESTDIR=$(abspath $(IOS_DESTDIR))" >> $@
 	@echo "MAC_DESTDIR=$(abspath $(MAC_DESTDIR))" >> $@
-	@echo "WATCH_MONO_PATH=$(abspath $(WATCH_MONO_PATH))" >> $@
 	@echo "JENKINS_RESULTS_DIRECTORY=$(abspath $(JENKINS_RESULTS_DIRECTORY))" >> $@
 	@echo "INCLUDE_DEVICE=$(INCLUDE_DEVICE)" >> $@
 
@@ -97,7 +97,6 @@ test-system.config:
 	@echo "MONOTOUCH_PREFIX=$(IOS_FRAMEWORK_DIR)/Versions/Current" >> $@
 	@echo "IOS_DESTDIR=/" >> $@
 	@echo "MAC_DESTDIR=/" >> $@
-	@echo "WATCH_MONO_PATH=$(abspath $(WATCH_MONO_PATH))" >> $@
 	@echo "JENKINS_RESULTS_DIRECTORY=$(abspath $(JENKINS_RESULTS_DIRECTORY))" >> $@
 	@echo "INCLUDE_DEVICE=$(INCLUDE_DEVICE)" >> $@
 
@@ -176,10 +175,10 @@ Makefile.inc: xharness/xharness.exe
 -include Makefile.inc
 
 $(GUI_UNIT_PATH)/bin/net_4_5/GuiUnit.exe:
-	XBUILD_FRAMEWORK_FOLDERS_PATH=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks MSBuildExtensionsPath=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) $(GUI_UNIT_PATH)/src/framework/GuiUnit_NET_4_5.csproj
+	TargetFrameworkFallbackSearchPaths=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks MSBuildExtensionsPathFallbackPathsOverride=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) $(GUI_UNIT_PATH)/src/framework/GuiUnit_NET_4_5.csproj
 
 $(GUI_UNIT_PATH)/bin/xammac_mobile/GuiUnit.exe:
-	XBUILD_FRAMEWORK_FOLDERS_PATH=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks MSBuildExtensionsPath=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) $(GUI_UNIT_PATH)/src/framework/GuiUnit_xammac_mobile.csproj
+	TargetFrameworkFallbackSearchPaths=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks MSBuildExtensionsPathFallbackPathsOverride=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) $(GUI_UNIT_PATH)/src/framework/GuiUnit_xammac_mobile.csproj
 
 Makefile-mac.inc: xharness/xharness.exe
 	$(Q_GEN) $(SYSTEM_MONO) --debug $< $(XHARNESS_VERBOSITY) --configure  --autoconf --mac --rootdir $(CURDIR)

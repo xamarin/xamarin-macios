@@ -23,6 +23,9 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<TargetFrameworkVersion Condition="'$(TargetFrameworkIdentifier)' == '' And '$(TargetFrameworkVersion)' == ''">v4.5</TargetFrameworkVersion>
 
 		<DefineConstants>__UNIFIED__;__MACOS__;$(DefineConstants)</DefineConstants>
+
+		<!-- Enable nuget package conflict resolution -->
+		<ResolveAssemblyConflicts>true</ResolveAssemblyConflicts>
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

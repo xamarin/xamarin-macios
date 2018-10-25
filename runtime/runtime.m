@@ -131,7 +131,7 @@ struct Trampolines {
 };
 
 enum InitializationFlags : int {
-	/* unused									= 0x01,*/
+	InitializationFlagsIsPartialStaticRegistrar = 0x01,
 	/* unused									= 0x02,*/
 	InitializationFlagsDynamicRegistrar			= 0x04,
 	/* unused									= 0x08,*/
@@ -1001,11 +1001,28 @@ object_queued_for_finalization (MonoObject *object)
  * Registration map
  */ 
 
+static int
+compare_mtclassmap (const void *a, const void *b)
+{
+	MTClassMap *mapa = (MTClassMap *) a;
+	MTClassMap *mapb = (MTClassMap *) b;
+	if (mapa->handle == mapb->handle)
+		return 0;
+	if ((intptr_t) mapa->handle < (intptr_t) mapb->handle)
+		return -1;
+	return 1;
+}
+
 void
-xamarin_add_registration_map (struct MTRegistrationMap *map)
+xamarin_add_registration_map (struct MTRegistrationMap *map, bool partial)
 {
 	// COOP: no managed memory access: any mode
 	options.RegistrationData = map;
+	if (partial)
+		options.flags = (InitializationFlags) (options.flags | InitializationFlagsIsPartialStaticRegistrar);
+
+	// Sort the type map according to Class
+	qsort (map->map, map->map_count, sizeof (MTClassMap), compare_mtclassmap);
 }
 
 /*
@@ -1879,11 +1896,42 @@ xamarin_set_gchandle (id self, int gchandle)
 	set_raw_gchandle (self, gchandle);
 }
 
+static int
+find_user_type_index (MTClassMap *map, int lo, int hi, Class cls)
+{
+	if (hi >= lo) {
+		int mid = lo + (hi - lo) / 2;
+
+		if (map [mid].handle == cls)
+			return mid;
+
+		if ((intptr_t) map [mid].handle > (intptr_t) cls)
+			return find_user_type_index (map, lo, mid - 1, cls);
+
+		return find_user_type_index (map, mid + 1, hi, cls);
+	}
+
+	return -1;
+}
+
 static inline bool
 is_user_type (id self)
 {
+	Class cls = object_getClass (self);
+
+	if (options.RegistrationData != NULL && options.RegistrationData->map_count > 0) {
+		MTClassMap *map = options.RegistrationData->map;
+		int idx = find_user_type_index (map, 0, options.RegistrationData->map_count - 1, cls);
+		if (idx >= 0)
+			return (map [idx].flags & MTTypeFlagsUserType) == MTTypeFlagsUserType;
+		// If using the partial static registrar, we need to continue
+		// If full static registrar, we can return false
+		if ((options.flags & InitializationFlagsIsPartialStaticRegistrar) != InitializationFlagsIsPartialStaticRegistrar)
+			return false;
+	}
+
 	// COOP: no managed memory access: any mode
-	return class_getInstanceMethod (object_getClass (self), @selector (xamarinSetGCHandle:)) != NULL;
+	return class_getInstanceMethod (cls, @selector (xamarinSetGCHandle:)) != NULL;
 }
 
 #if defined(DEBUG_REF_COUNTING)

@@ -35,6 +35,9 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		     remove this -->
 		<_DebugFileExt Condition="'$(FscDebugFileExt)' != ''">$(FscDebugFileExt)</_DebugFileExt>
 		<_DebugFileExt Condition="'$(_DebugFileExt)' == ''">.mdb</_DebugFileExt>
+
+		<!-- Enable nuget package conflict resolution -->
+		<ResolveAssemblyConflicts>true</ResolveAssemblyConflicts>
 	</PropertyGroup>
 
 	<!-- xbuild searches multiple MSBuildExtensionsPath32, but only in the Import element so we can't determine this with a variable -->

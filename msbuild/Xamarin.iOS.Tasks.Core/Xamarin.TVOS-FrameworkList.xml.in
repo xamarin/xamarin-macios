@@ -1,2 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FileList Name="Xamarin.TVOS" TargetFrameworkDirectory="%TargetFrameworkDirectory%" />
+<FileList Name="Xamarin.TVOS" TargetFrameworkDirectory="%TargetFrameworkDirectory%">
+  <File AssemblyName="System.Buffers" Version="4.0.99.0" />
+  <File AssemblyName="System.Memory" Version="4.0.99.0" />
+</FileList>

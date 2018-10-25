@@ -8,7 +8,15 @@ using Mono.Cecil;
 using Clang.Ast;
 
 namespace Extrospection {
-	
+
+	public enum Platforms
+	{
+		macOS,
+		iOS,
+		watchOS,
+		tvOS,
+	}
+
 	public static partial class Helpers {
 
 		// the original name can be lost and, if not registered (e.g. enums), might not be available
@@ -55,15 +63,43 @@ namespace Extrospection {
 			return index < 0 ? source : source.Substring (0, index) + replace + source.Substring (index + find.Length);
 		}
 
-		public enum Platforms
+		public static Platforms Platform { get; set; }
+
+		public static int GetPlatformManagedValue (Platforms platform)
 		{
-			macOS,
-			iOS,
-			watchOS,
-			tvOS,
+			// None, MacOSX, iOS, WatchOS, TvOS
+			switch (platform) {
+			case Platforms.macOS:
+				return 1;
+			case Platforms.iOS:
+				return 2;
+			case Platforms.watchOS:
+				return 3;
+			case Platforms.tvOS:
+				return 4;
+			default:
+				throw new InvalidOperationException ($"Unexpected Platform {Platform} in GetPlatformManagedValue");
+			}
 		}
 
-		public static Platforms Platform { get; set; }
+		// Clang.Ast.AvailabilityAttr.Platform.Name
+		public static string ClangPlatformName
+		{
+			get {
+				switch (Helpers.Platform) {
+				case Platforms.macOS:
+					return "macos";
+				case Platforms.iOS:
+					return "ios";
+				case Platforms.watchOS:
+					return "watchos";
+				case Platforms.tvOS:
+					return "tvos";
+				default:
+					throw new InvalidOperationException ($"Unexpected Platform {Platform} in ClangPlatformName");
+				}
+			}
+		}
 
 		public static bool IsAvailable (this Decl decl)
 		{

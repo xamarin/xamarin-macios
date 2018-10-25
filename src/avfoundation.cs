@@ -1834,6 +1834,7 @@ namespace AVFoundation {
 		AVAudioSession SharedInstance ();
 	
 		[NoWatch]
+		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use 'AVAudioSession.Notification.Observe*' methods instead.")]
 		[Export ("delegate", ArgumentSemantic.Assign)][NullAllowed]
 		[NoTV]
 		NSObject WeakDelegate { get; set;  }
@@ -2346,6 +2347,7 @@ namespace AVFoundation {
 		AVAudioSessionRouteDescription PreviousRoute { get; }
 	}
 	
+	[Deprecated (PlatformName.iOS, 6, 0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -3996,7 +3998,8 @@ namespace AVFoundation {
 		void CancelWriting ();
 
 		[Export ("finishWriting")]
-		[Availability (Deprecated = Platform.iOS_6_0, Message = "Use the asynchronous 'FinishWriting (NSAction completionHandler)' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use the asynchronous 'FinishWriting (NSAction completionHandler)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 9, message: "Use the asynchronous 'FinishWriting (NSAction completionHandler)' instead.")]
 		bool FinishWriting ();
 
 		[Mac (10,9)]
@@ -9423,11 +9426,13 @@ namespace AVFoundation {
 		[Export ("livePhotoAutoTrimmingEnabled")]
 		bool IsLivePhotoAutoTrimmingEnabled { [Bind ("isLivePhotoAutoTrimmingEnabled")] get; set; }
 
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'AVCapturePhoto.FileDataRepresentation' instead.")]
 		[Static]
 		[Export ("JPEGPhotoDataRepresentationForJPEGSampleBuffer:previewPhotoSampleBuffer:")]
 		[return: NullAllowed]
 		NSData GetJpegPhotoDataRepresentation (CMSampleBuffer JPEGSampleBuffer, [NullAllowed] CMSampleBuffer previewPhotoSampleBuffer);
 
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'AVCapturePhoto.FileDataRepresentation' instead.")]
 		[Static]
 		[Export ("DNGPhotoDataRepresentationForRawSampleBuffer:previewPhotoSampleBuffer:")]
 		[return: NullAllowed]
@@ -10309,6 +10314,8 @@ namespace AVFoundation {
 		[Export ("actionAtItemEnd")]
 		AVPlayerActionAtItemEnd ActionAtItemEnd { get; set;  }
 
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		[Export ("closedCaptionDisplayEnabled")]
 		bool ClosedCaptionDisplayEnabled { [Bind ("isClosedCaptionDisplayEnabled")] get; set;  }
 
@@ -10724,12 +10731,18 @@ namespace AVFoundation {
 		[Export ("stepByCount:")]
 		void StepByCount (nint stepCount);
 
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'Seek (NSDate, AVCompletion)' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'Seek (NSDate, AVCompletion)' instead.")]
 		[Export ("seekToDate:")]
 		bool Seek (NSDate date);
 
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'Seek (CMTime, AVCompletion)' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'Seek (CMTime, AVCompletion)' instead.")]
 		[Export ("seekToTime:")]
 		void Seek (CMTime time);
 		
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'Seek (CMTime, CMTime, CMTime, AVCompletion)' instead.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'Seek (CMTime, CMTime, CMTime, AVCompletion)' instead.")]
 		[Export ("seekToTime:toleranceBefore:toleranceAfter:")]
 		void Seek (CMTime time, CMTime toleranceBefore, CMTime toleranceAfter);
 
@@ -10786,6 +10799,8 @@ namespace AVFoundation {
 
 		[return: NullAllowed]
 		[Mac (10, 8)]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'CurrentMediaSelection' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'CurrentMediaSelection' instead.")]
 		[Export ("selectedMediaOptionInMediaSelectionGroup:")]
 		AVMediaSelectionOption SelectedMediaOption (AVMediaSelectionGroup inMediaSelectionGroup);
 
@@ -12905,6 +12920,7 @@ namespace AVFoundation {
 		NSData FileDataRepresentation { get; }
 
 		[iOS (11,0)]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'GetFileDataRepresentation' instead.")]
 		[Export ("fileDataRepresentationWithReplacementMetadata:replacementEmbeddedThumbnailPhotoFormat:replacementEmbeddedThumbnailPixelBuffer:replacementDepthData:")]
 		[return: NullAllowed]
 		NSData GetFileDataRepresentation ([NullAllowed] NSDictionary<NSString, NSObject> replacementMetadata, [NullAllowed] NSDictionary<NSString, NSObject> replacementEmbeddedThumbnailPhotoFormat, [NullAllowed] CVPixelBuffer replacementEmbeddedThumbnailPixelBuffer, [NullAllowed] AVDepthData replacementDepthData);

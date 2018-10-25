@@ -158,10 +158,12 @@ namespace SpriteKit {
 		[return: NullAllowed]
 		SKNode Create (string filename, IntPtr classesPtr, out NSError error);
 
-#if MONOMAC || WATCH
 		[Export ("frame")]
-		CGRect Frame { get; }
+#if !(MONOMAC || WATCH)
+		// For iOS+tvOS we also get this property from the UIFocusItem protocol, but we redefine it here to get the right availability attributes.
+		new
 #endif
+		CGRect Frame { get; }
 
 		[Export ("calculateAccumulatedFrame")]
 		CGRect CalculateAccumulatedFrame ();
@@ -870,6 +872,9 @@ namespace SpriteKit {
 		[Export ("particleZPosition")]
 		nfloat ParticleZPosition { get; set; }
 
+		[Deprecated (PlatformName.iOS, 8, 0)]
+		[Deprecated (PlatformName.TvOS, 8, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("particleZPositionRange")]
 		nfloat ParticleZPositionRange { get; set; }
 
@@ -1010,6 +1015,9 @@ namespace SpriteKit {
 		uint FieldBitMask { get; set; } /* uint32_t */
 
 		[iOS (8,0), Mac(10,10)]
+		[Deprecated (PlatformName.iOS, 8, 0)]
+		[Deprecated (PlatformName.TvOS, 8, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("particleZPositionSpeed")]
 		nfloat ParticleZPositionSpeed { get; set; }
 
@@ -1461,6 +1469,9 @@ namespace SpriteKit {
 		[Export ("asynchronous")]
 		bool Asynchronous { [Bind ("isAsynchronous")] get; set; }
 
+		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.TvOS, 10, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("frameInterval")]
 		nint FrameInterval { get; set; }
 

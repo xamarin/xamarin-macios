@@ -19,6 +19,9 @@
 		     remove this -->
 		<_DebugFileExt Condition="'$(FscDebugFileExt)' != ''">$(FscDebugFileExt)</_DebugFileExt>
 		<_DebugFileExt Condition="'$(_DebugFileExt)' == ''">.mdb</_DebugFileExt>
+
+		<!-- Enable nuget package conflict resolution -->
+		<ResolveAssemblyConflicts>true</ResolveAssemblyConflicts>
 	</PropertyGroup>
 
 	    <Import Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\FSharp\Microsoft.FSharp.Targets')"
