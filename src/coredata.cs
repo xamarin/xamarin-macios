@@ -313,7 +313,6 @@ namespace CoreData
 
 		[NullAllowed] // by default this property is null
 		[Export ("compoundIndexes", ArgumentSemantic.Retain)]
-		[Mac (10, 7)]
 		[Deprecated (PlatformName.iOS, 11, 0, message : "Use 'NSEntityDescription.Indexes' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'NSEntityDescription.Indexes' instead.")]
 		[Deprecated (PlatformName.TvOS, 11, 0, message : "Use 'NSEntityDescription.Indexes' instead.")]
@@ -1311,7 +1310,6 @@ namespace CoreData
 
 	}
 
-	[Mac (10, 7)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSMergeConflict {

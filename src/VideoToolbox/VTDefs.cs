@@ -236,7 +236,7 @@ namespace VideoToolbox {
 		}
 	}
 
-	[Mac (10,8), iOS (9,0)]
+	[iOS (9,0)]
 	public enum VTScalingMode {
 		Unset,
 		Normal,
@@ -245,7 +245,7 @@ namespace VideoToolbox {
 		Trim
 	}
 
-	[Mac (10,8), iOS (9,0)]
+	[iOS (9,0)]
 	public enum VTDownsamplingMode {
 		Unset,
 		Decimate,

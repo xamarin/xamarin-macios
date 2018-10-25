@@ -8,7 +8,6 @@ using System.ComponentModel;
 
 namespace QuickLookUI {
 
-	[Mac (10,7)]
 	[Native]
 	enum QLPreviewViewStyle : ulong {
 		Normal = 0,
@@ -136,7 +135,6 @@ namespace QuickLookUI {
 	[BaseType (typeof (NSView))] // Mac 10.6
 	interface QLPreviewView {
 
-		[Mac (10,7)]
 		[Export ("initWithFrame:style:")]
 		IntPtr Constructor (CGRect frame, QLPreviewViewStyle style);
 

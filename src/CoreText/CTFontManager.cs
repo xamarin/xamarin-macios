@@ -191,11 +191,9 @@ namespace CoreText {
 			}
 		}
 
-		[Mac (10,8)]
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern bool CTFontManagerRegisterGraphicsFont (IntPtr cgfont, out IntPtr error);
 
-		[Mac (10,8)]
 		public static bool RegisterGraphicsFont (CGFont font, out NSError error)
 		{
 			if (font == null)
@@ -215,11 +213,9 @@ namespace CoreText {
 			return ret;
 		}
 
-		[Mac (10,8)]
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern bool CTFontManagerUnregisterGraphicsFont (IntPtr cgfont, out IntPtr error);
 
-		[Mac (10,8)]
 		public static bool UnregisterGraphicsFont (CGFont font, out NSError error)
 		{
 			if (font == null)
