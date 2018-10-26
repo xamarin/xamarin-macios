@@ -22,7 +22,7 @@ namespace Xamarin.iOS.UnitTests {
 			foreach (var a in TypesToRegister.Keys) {
 				// do something with the type, so that it is not removed
 				var assemblyPath = Path.GetFileName (TypesToRegister[a].Assembly.Location);
-				Console.WriteLine ($"We hare using type {TypesToRegister[a]} from assembly {assemblyPath}");
+				Console.WriteLine ($"We are using type {TypesToRegister[a]} from assembly {assemblyPath}");
 			}
 		}
 	}

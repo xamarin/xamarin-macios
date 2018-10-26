@@ -4,7 +4,7 @@ namespace Xamarin.iOS.UnitTests
 {
 	public enum MinimumLogLevel
 	{
-		Wtf,
+		Critical,
 		Error,
 		Warning,
 		Info,
