@@ -134,7 +134,6 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "AVKit", 10, 9 },
 					{ "GameController", 10, 9 },
-					{ "ITunesLibrary", "iTunesLibrary", 10, 9 },
 					{ "MapKit", 10, 9 },
 					{ "MediaAccessibility", 10, 9 },
 					{ "MediaLibrary", 10, 9 },
