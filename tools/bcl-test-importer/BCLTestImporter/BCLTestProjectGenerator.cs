@@ -28,60 +28,60 @@ namespace BCLTestImporter {
 		};
 
 		// this can be grouped TODO
-		static readonly List <BCLTestProjectDefinition> iOSTestProjects = new List <BCLTestProjectDefinition> {
+		static readonly List <(string name, string[] assemblies)> iOSTestProjects = new List <(string name, string [] assemblies)> {
 			// NUNIT TESTS
 			
-			new BCLTestProjectDefinition ("SystemTests", new List<BCLTestAssemblyDefinition> { new BCLTestAssemblyDefinition ("MONOTOUCH_System_test.dll")} ),
-			new BCLTestProjectDefinition ("SystemCoreTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_System.Core_test.dll")} ),
-			new BCLTestProjectDefinition ("SystemDataTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_System.Data_test.dll")} ),
-			new BCLTestProjectDefinition ("SystemNetHttpTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_System.Net.Http_test.dll")} ),
-			new BCLTestProjectDefinition ("SystemNumericsTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_System.Numerics_test.dll")} ),
-			new BCLTestProjectDefinition ("SystemRuntimeSerializationTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_System.Runtime.Serialization_test.dll")} ),
-			new BCLTestProjectDefinition ("SystemTransactionsTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_System.Transactions_test.dll")} ),
-			new BCLTestProjectDefinition ("SystemXmlTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_System.Xml_test.dll")} ),
-			new BCLTestProjectDefinition ("SystemXmlLinqTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_System.Xml.Linq_test.dll")} ),
-			new BCLTestProjectDefinition ("MonoSecurityTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_Mono.Security_test.dll")} ),
-			new BCLTestProjectDefinition ("SystemComponentModelDataAnnotationTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_System.ComponentModel.DataAnnotations_test.dll")} ),
-			new BCLTestProjectDefinition ("SystemJsonTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_System.Json_test.dll")} ),
-			new BCLTestProjectDefinition ("SystemServiceModelWebTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_System.ServiceModel.Web_test.dll")} ),
-			new BCLTestProjectDefinition ("MonoDataTdsTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_Mono.Data.Tds_test.dll")} ),
-			new BCLTestProjectDefinition ("SystemIOCompressionTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_System.IO.Compression_test.dll")} ),
-			new BCLTestProjectDefinition ("SystemIOCompressionFileSystemTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_System.IO.Compression.FileSystem_test.dll")} ),
-			new BCLTestProjectDefinition ("MonoCSharpTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_Mono.CSharp_test.dll")} ),
-			new BCLTestProjectDefinition ("SystemSecurityTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_System.Security_test.dll")} ),
-			new BCLTestProjectDefinition ("SystemServiceModelTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_System.ServiceModel_test.dll")}),
-			new BCLTestProjectDefinition ("SystemJsonMicrosoftTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition("MONOTOUCH_System.Json.Microsoft_test.dll")}),
-			new BCLTestProjectDefinition ("SystemDataDataSetExtensionTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition("MONOTOUCH_System.Data.DataSetExtensions_test.dll")}),
-			new BCLTestProjectDefinition ("SystemRuntimeSerializationFormattersSoapTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition("MONOTOUCH_System.Runtime.Serialization.Formatters.Soap_test.dll")}),
-			new BCLTestProjectDefinition ("CorlibTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_corlib_test.dll")} ),
-			new BCLTestProjectDefinition ("MonoParallelTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_Mono.Parallel_test.dll")} ),
-			new BCLTestProjectDefinition ("MonoRuntimeTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_Mono.Runtime.Tests_test.dll")} ),
-			new BCLTestProjectDefinition ("MonoTaskletsTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_Mono.Tasklets_test.dll")} ),
-			new BCLTestProjectDefinition ("SystemThreadingTasksDataflowTests", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition ("MONOTOUCH_System.Threading.Tasks.Dataflow_test.dll")} ),
+			(name:"SystemTests", assemblies: new[] {"MONOTOUCH_System_test.dll"}),
+			(name:"SystemCoreTests", assemblies: new [] {"MONOTOUCH_System.Core_test.dll"}),
+			(name:"SystemDataTests", assemblies: new [] {"MONOTOUCH_System.Data_test.dll"}),
+			(name:"SystemNetHttpTests", assemblies: new [] {"MONOTOUCH_System.Net.Http_test.dll"}),
+			(name:"SystemNumericsTests", assemblies: new [] {"MONOTOUCH_System.Numerics_test.dll"}),
+			(name:"SystemRuntimeSerializationTests", assemblies: new [] {"MONOTOUCH_System.Runtime.Serialization_test.dll"}),
+			(name:"SystemTransactionsTests", assemblies: new [] {"MONOTOUCH_System.Transactions_test.dll"}),
+			(name:"SystemXmlTests", assemblies: new [] {"MONOTOUCH_System.Xml_test.dll"}),
+			(name:"SystemXmlLinqTests", assemblies: new [] {"MONOTOUCH_System.Xml.Linq_test.dll"}),
+			(name:"MonoSecurityTests", assemblies: new [] {"MONOTOUCH_Mono.Security_test.dll"}),
+			(name:"SystemComponentModelDataAnnotationTests", assemblies: new [] {"MONOTOUCH_System.ComponentModel.DataAnnotations_test.dll"}),
+			(name:"SystemJsonTests", assemblies: new [] {"MONOTOUCH_System.Json_test.dll"}),
+			(name:"SystemServiceModelWebTests", assemblies: new [] {"MONOTOUCH_System.ServiceModel.Web_test.dll"}),
+			(name:"MonoDataTdsTests", assemblies: new [] {"MONOTOUCH_Mono.Data.Tds_test.dll"}),
+			(name:"SystemIOCompressionTests", assemblies: new [] {"MONOTOUCH_System.IO.Compression_test.dll"}),
+			(name:"SystemIOCompressionFileSystemTests", assemblies: new [] {"MONOTOUCH_System.IO.Compression.FileSystem_test.dll"}),
+			(name:"MonoCSharpTests", assemblies: new [] {"MONOTOUCH_Mono.CSharp_test.dll"}),
+			(name:"SystemSecurityTests", assemblies: new [] {"MONOTOUCH_System.Security_test.dll"}),
+			(name:"SystemServiceModelTests", assemblies: new [] {"MONOTOUCH_System.ServiceModel_test.dll"}),
+			(name:"SystemJsonMicrosoftTests", assemblies: new [] {"MONOTOUCH_System.Json.Microsoft_test.dll"}),
+			(name:"SystemDataDataSetExtensionTests", assemblies: new [] {"MONOTOUCH_System.Data.DataSetExtensions_test.dll"}),
+			(name:"SystemRuntimeSerializationFormattersSoapTests", assemblies: new [] {"MONOTOUCH_System.Runtime.Serialization.Formatters.Soap_test.dll"}),
+			(name:"CorlibTests", assemblies: new [] {"MONOTOUCH_corlib_test.dll"}),
+			(name:"MonoParallelTests", assemblies: new [] {"MONOTOUCH_Mono.Parallel_test.dll"}),
+			(name:"MonoRuntimeTests", assemblies: new [] {"MONOTOUCH_Mono.Runtime.Tests_test.dll"}),
+			(name:"MonoTaskletsTests", assemblies: new [] {"MONOTOUCH_Mono.Tasklets_test.dll"}),
+			(name:"SystemThreadingTasksDataflowTests", assemblies: new [] {"MONOTOUCH_System.Threading.Tasks.Dataflow_test.dll"}),
 			
 			// XUNIT TESTS 
 			
-			new BCLTestProjectDefinition ("SystemDataXunit", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition("MONOTOUCH_System.Data_xunit-test.dll")} ),
-			new BCLTestProjectDefinition ("SystemJsonXunit", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition("MONOTOUCH_System.Json_xunit-test.dll")}),
-			new BCLTestProjectDefinition ("SystemNumericsXunit", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition("MONOTOUCH_System.Numerics_xunit-test.dll")}),
-			new BCLTestProjectDefinition ("SystemSecurityXunit", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition("MONOTOUCH_System.Security_xunit-test.dll")}),
-			new BCLTestProjectDefinition ("SystemThreadingTaskXunit", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition("MONOTOUCH_System.Threading.Tasks.Dataflow_xunit-test.dll")}),
-			new BCLTestProjectDefinition ("SystemLinqXunit", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition("MONOTOUCH_System.Xml.Linq_xunit-test.dll")}),
-			new BCLTestProjectDefinition ("SystemRuntimeCompilerServicesUnsaffXunit", new List<BCLTestAssemblyDefinition> {new BCLTestAssemblyDefinition("MONOTOUCH_System.Runtime.CompilerServices.Unsafe_xunit-test.dll")}),
+			(name:"SystemDataXunit", assemblies: new [] {"MONOTOUCH_System.Data_xunit-test.dll"}),
+			(name:"SystemJsonXunit", assemblies: new [] {"MONOTOUCH_System.Json_xunit-test.dll"}),
+			(name:"SystemNumericsXunit", assemblies: new [] {"MONOTOUCH_System.Numerics_xunit-test.dll"}),
+			(name:"SystemSecurityXunit", assemblies: new [] {"MONOTOUCH_System.Security_xunit-test.dll"}),
+			(name:"SystemThreadingTaskXunit", assemblies: new [] {"MONOTOUCH_System.Threading.Tasks.Dataflow_xunit-test.dll"}),
+			(name:"SystemLinqXunit", assemblies: new [] {"MONOTOUCH_System.Xml.Linq_xunit-test.dll"}),
+			(name:"SystemRuntimeCompilerServicesUnsafeXunit", assemblies: new [] {"MONOTOUCH_System.Runtime.CompilerServices.Unsafe_xunit-test.dll"}),
 		};
 
-		static readonly List <BCLTestAssemblyDefinition> CommonIgnoredAssemblies = new List <BCLTestAssemblyDefinition> {
-			new BCLTestAssemblyDefinition ("MONOTOUCH_Commons.Xml.Relaxng_test.dll"), // not supported by xamarin
-			new BCLTestAssemblyDefinition ("MONOTOUCH_Cscompmgd_test.dll"), // not supported by xamarin
-			new BCLTestAssemblyDefinition ("MONOTOUCH_I18N.CJK_test.dll"),
-			new BCLTestAssemblyDefinition ("MONOTOUCH_I18N.MidEast_test.dll"),
-			new BCLTestAssemblyDefinition ("MONOTOUCH_I18N.Other_test.dll"),
-			new BCLTestAssemblyDefinition ("MONOTOUCH_I18N.Rare_test.dll"),
-			new BCLTestAssemblyDefinition ("MONOTOUCH_I18N.West_test.dll"),
-			new BCLTestAssemblyDefinition ("MONOTOUCH_Mono.C5_test.dll"), // not supported by xamarin
-			new BCLTestAssemblyDefinition ("MONOTOUCH_Mono.CodeContracts_test.dll"), // not supported by xamarin
-			new BCLTestAssemblyDefinition ("MONOTOUCH_Novell.Directory.Ldap_test.dll"), // not supported by xamarin
-			new BCLTestAssemblyDefinition ("MONOTOUCH_Mono.Profiler.Log_xunit-test.dll"), // special tests that need an extra app to connect as a profiler
+		static readonly List <string> CommonIgnoredAssemblies = new List <string> {
+			"MONOTOUCH_Commons.Xml.Relaxng_test.dll", // not supported by xamarin
+			"MONOTOUCH_Cscompmgd_test.dll", // not supported by xamarin
+			"MONOTOUCH_I18N.CJK_test.dll",
+			"MONOTOUCH_I18N.MidEast_test.dll",
+			"MONOTOUCH_I18N.Other_test.dll",
+			"MONOTOUCH_I18N.Rare_test.dll",
+			"MONOTOUCH_I18N.West_test.dll",
+			"MONOTOUCH_Mono.C5_test.dll", // not supported by xamarin
+			"MONOTOUCH_Mono.CodeContracts_test.dll", // not supported by xamarin
+			"MONOTOUCH_Novell.Directory.Ldap_test.dll", // not supported by xamarin
+			"MONOTOUCH_Mono.Profiler.Log_xunit-test.dll", // special tests that need an extra app to connect as a profiler
 		};
 
 		readonly bool isCodeGeneration;
@@ -149,7 +149,8 @@ namespace BCLTestImporter {
 				Directory.CreateDirectory (generatedCodePathRoot);
 			}
 
-			foreach (var projectDefinition in iOSTestProjects) {
+			foreach (var def in iOSTestProjects) {
+				var projectDefinition = new BCLTestProjectDefinition (def.name, def.assemblies);
 				if (!projectDefinition.Validate ())
 					throw new InvalidOperationException ("xUnit and NUnit assemblies cannot be mixed in a test project.");
 				// generate the required type registration info
@@ -222,7 +223,7 @@ namespace BCLTestImporter {
 				Directory.Delete (GeneratedCodePathRoot, true);
 			// delete each of the generated project files
 			foreach (var projectDefinition in iOSTestProjects) {
-				var projectPath = GetProjectPath (projectDefinition.Name);
+				var projectPath = GetProjectPath (projectDefinition.name);
 				if (File.Exists (projectPath))
 					File.Delete (projectPath);
 			}	
@@ -248,13 +249,13 @@ namespace BCLTestImporter {
 			
 			// remove the ignored ones
 			foreach (var assembly in CommonIgnoredAssemblies) {
-				missingAssemblies.Remove (assembly.Name);
+				missingAssemblies.Remove (assembly);
 			}
 			
 			// remove the added ones
 			foreach (var projectDefinition in iOSTestProjects) {
-				foreach (var testAssembly in projectDefinition.TestAssemblies) {
-					missingAssemblies.Remove (testAssembly.Name);
+				foreach (var testAssembly in projectDefinition.assemblies) {
+					missingAssemblies.Remove (testAssembly);
 				}
 			}	
 

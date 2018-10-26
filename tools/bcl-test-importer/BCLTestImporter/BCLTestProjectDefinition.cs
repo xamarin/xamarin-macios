@@ -20,6 +20,17 @@ namespace BCLTestImporter {
 			}
 		}
 
+		public BCLTestProjectDefinition (string name, string[] assemblies)
+		{
+			if (assemblies.Length == 0)
+				throw new ArgumentException ("Most provide at least an assembly.");
+			Name = name;
+			TestAssemblies = new List<BCLTestAssemblyDefinition> (assemblies.Length);
+			foreach (var assembly in assemblies) {
+				TestAssemblies.Add (new BCLTestAssemblyDefinition (assembly));
+			}
+		}
+		
 		public BCLTestProjectDefinition (string name, List<BCLTestAssemblyDefinition> assemblies)
 		{
 			Name = name;
