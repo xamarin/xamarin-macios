@@ -193,9 +193,9 @@ package:
 	mkdir -p ../package
 	$(MAKE) -C $(MACCORE_PATH) package
 	# copy .pkg, .zip and *updateinfo to the packages directory to be uploaded to storage
-	cp $(MACCORE_PATH)/release/*.pkg ../package
-	cp $(MACCORE_PATH)/release/*.zip ../package
-	cp $(MACCORE_PATH)/release/*updateinfo ../package
+	$(CP) $(MACCORE_PATH)/release/*.pkg ../package
+	$(CP) $(MACCORE_PATH)/release/*.zip ../package
+	$(CP) $(MACCORE_PATH)/release/*updateinfo ../package
 
 install-system: install-system-ios install-system-mac
 	@# Clean up some old files

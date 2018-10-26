@@ -164,10 +164,10 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/bgen-classic.exe: $(MACIOS_B
 	$(Q) install -m 0644 $< $(@:.exe=.pdb)
 
 $(MAC_BUILD_DIR)/XamMac.BindingAttributes.dll: $(MACIOS_BINARIES_PATH)/XamMac.BindingAttributes.dll | $(MAC_BUILD_DIR)
-	$(Q) cp $< $@
+	$(Q) $(CP) $< $@
 
 $(MAC_BUILD_DIR)/XamMac.BindingAttributes.mdb: $(MACIOS_BINARIES_PATH)/XamMac.BindingAttributes.mdb | $(MAC_BUILD_DIR)
-	$(Q) cp $< $@
+	$(Q) $(CP) $< $@
 
 $(MAC_BUILD_DIR)/Xamarin.Mac-%.BindingAttributes.dll: generator-attributes.cs Makefile.generator
 	$(Q) mkdir -p $(dir $@)

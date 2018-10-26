@@ -223,17 +223,17 @@ qa-test-dependencies.zip:
 ifdef INCLUDE_TVOS
 	@# TVOS
 	$(Q) mkdir -p $@.tmpdir/tvos
-	$(Q) cp $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/MonoTouch.Dialog-1.dll* $@.tmpdir/tvos
-	$(Q) cp $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/MonoTouch.NUnitLite.dll* $@.tmpdir/tvos
-	$(Q) cp $(TOP)/tests/test-libraries/.libs/tvos/libtest.a $@.tmpdir/tvos
-	$(Q) cp $(TOP)/tests/test-libraries/.libs/tvos/libtest.dylib $@.tmpdir/tvos
-	$(Q) cp -a $(TOP)/tests/test-libraries/.libs/tvos/XTest.framework $@.tmpdir/tvos
+	$(Q) $(CP) $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/MonoTouch.Dialog-1.dll* $@.tmpdir/tvos
+	$(Q) $(CP) $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/MonoTouch.NUnitLite.dll* $@.tmpdir/tvos
+	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/tvos/libtest.a $@.tmpdir/tvos
+	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/tvos/libtest.dylib $@.tmpdir/tvos
+	$(Q) $(CP) -a $(TOP)/tests/test-libraries/.libs/tvos/XTest.framework $@.tmpdir/tvos
 endif
 	@# iOS
 	$(Q) mkdir -p $@.tmpdir/ios
-	$(Q) cp $(TOP)/tests/test-libraries/.libs/ios/libtest.a $@.tmpdir/ios
-	$(Q) cp $(TOP)/tests/test-libraries/.libs/ios/libtest.dylib $@.tmpdir/ios
-	$(Q) cp -a $(TOP)/tests/test-libraries/.libs/ios/XTest.framework $@.tmpdir/ios
+	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/ios/libtest.a $@.tmpdir/ios
+	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/ios/libtest.dylib $@.tmpdir/ios
+	$(Q) $(CP) -a $(TOP)/tests/test-libraries/.libs/ios/XTest.framework $@.tmpdir/ios
 	$(Q) printf '#!/bin/bash -e\n\n/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mlaunch "$$@"\n' > $@.tmpdir/mlaunch
 	$(Q) chmod +x $@.tmpdir/mlaunch
 	@# Generate zip

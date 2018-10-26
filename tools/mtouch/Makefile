@@ -266,28 +266,28 @@ $(TARGET_DIRS):
 	$(Q) mkdir -p $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/mtouch.exe: $(MTOUCH_DIR)/mtouch.exe | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch
-	$(Q) cp $(dir $<)/*.exe $(dir $@)
-	$(Q) cp $(dir $<)/*.dll $(dir $@)
-	$(Q) cp $(dir $<)/*.pdb $(dir $@)
+	$(Q) $(CP) $(dir $<)/*.exe $(dir $@)
+	$(Q) $(CP) $(dir $<)/*.dll $(dir $@)
+	$(Q) $(CP) $(dir $<)/*.pdb $(dir $@)
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mtouch: mtouch.in | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
 	$(Q_GEN) sed 's!@MONOTOUCH_PREFIX@!$(abspath $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX))!g' $< > $@
 	$(Q) chmod +x $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/%: % | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
-	$(Q) cp $< $@
+	$(Q) $(CP) $< $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/%: % | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib
-	$(Q) cp $< $@
+	$(Q) $(CP) $< $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_SIMULATOR_SDK)/usr/lib/%.registrar.a: %.registrar.ios.a | $(IOS_DESTDIR)$(MONOTOUCH_SIMULATOR_SDK)/usr/lib
-	$(Q) cp $< $@
+	$(Q) $(CP) $< $@
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/%.registrar.a: %.registrar.watchos.a | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib
-	$(Q) cp $< $@
+	$(Q) $(CP) $< $@
 
 $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/%.registrar.a: %.registrar.tvos.a | $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib
-	$(Q) cp $< $@
+	$(Q) $(CP) $< $@
 
 ifdef INCLUDE_IOS
 install-local:: $(TARGETS)

@@ -132,10 +132,10 @@ $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/lib/%.a: .libs/$(1)/%.a | $(IOS_
 	$(Q) install -m 0644 $$< $$@
 
 $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/Xamarin.framework/Xamarin: .libs/$(1)/Xamarin-sim.framework | $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/Xamarin.framework
-	$(Q) cp $$< $$@
+	$(Q) $(CP) $$< $$@
 
 $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/Xamarin-debug.framework/Xamarin-debug: .libs/$(1)/Xamarin-debug-sim.framework | $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/Xamarin-debug.framework
-	$(Q) cp $$< $$@
+	$(Q) $(CP) $$< $$@
 
 $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/%.framework/Info.plist: Xamarin.framework-$(1).Info.plist | $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/%.framework
 	$(Q) sed 's/@BUNDLE_EXECUTABLE@/$$*/' $$< > $$@
@@ -145,10 +145,10 @@ $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/lib/%.a: .libs/$(1)/%.a | $(IOS_DESTDIR
 	$(Q) install -m 0644 $$< $$@
 
 $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/Xamarin.framework/Xamarin: .libs/$(1)/Xamarin-dev.framework | $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/Xamarin.framework
-	$(Q) cp $$< $$@
+	$(Q) $(CP) $$< $$@
 
 $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/Xamarin-debug.framework/Xamarin-debug: .libs/$(1)/Xamarin-debug-dev.framework | $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/Xamarin-debug.framework
-	$(Q) cp $$< $$@
+	$(Q) $(CP) $$< $$@
 
 $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/%.framework/Info.plist: Xamarin.framework-$(1).Info.plist | $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/%.framework
 	$(Q) sed 's/@BUNDLE_EXECUTABLE@/$$*/' $$< > $$@
@@ -261,7 +261,7 @@ $$(foreach arch,$$($(2)_ARCHITECTURES),.libs/$(1)/tvextension-main.$$(arch).o): 
 .libs/$(1)/libxamarin-dev.dylib:  $$(foreach arch,$$($(2)_DEVICE_ARCHITECTURES),.libs/$(1)/libxamarin.$$(arch).dylib)
 	$(Q) rm -f $$@
 ifeq (1,$$(words $$($(2)_DEVICE_ARCHITECTURES)))
-	$(Q) cp $$^ $$@
+	$(Q) $(CP) $$^ $$@
 else
 	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
 endif
@@ -271,7 +271,7 @@ endif
 .libs/$(1)/libxamarin-debug-dev.dylib:  $$(foreach arch,$$($(2)_DEVICE_ARCHITECTURES),.libs/$(1)/libxamarin-debug.$$(arch).dylib)
 	$(Q) rm -f $$@
 ifeq (1,$$(words $$($(2)_DEVICE_ARCHITECTURES)))
-	$(Q) cp $$^ $$@
+	$(Q) $(CP) $$^ $$@
 else
 	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
 endif
@@ -281,7 +281,7 @@ endif
 .libs/$(1)/Xamarin-dev.framework:  $$(foreach arch,$$($(2)_DEVICE_ARCHITECTURES),.libs/$(1)/Xamarin.$$(arch).framework)
 	$(Q) rm -f $$@
 ifeq (1,$$(words $$($(2)_DEVICE_ARCHITECTURES)))
-	$(Q) cp $$^ $$@
+	$(Q) $(CP) $$^ $$@
 else
 	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
 endif
@@ -289,7 +289,7 @@ endif
 .libs/$(1)/Xamarin-debug-dev.framework:  $$(foreach arch,$$($(2)_DEVICE_ARCHITECTURES),.libs/$(1)/Xamarin-debug.$$(arch).framework)
 	$(Q) rm -f $$@
 ifeq (1,$$(words $$($(2)_DEVICE_ARCHITECTURES)))
-	$(Q) cp $$^ $$@
+	$(Q) $(CP) $$^ $$@
 else
 	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
 endif
@@ -526,10 +526,10 @@ $(foreach arch,$(MAC_ARCHITECTURES),.libs/mac/extension-main.$(arch).o): EXTRA_D
 	$(call Q_2,LIPO,  [mac]) xcrun lipo -create $^ -o $@
 
 .libs/mac/XamMacLauncher: $(MACIOS_BINARIES_PATH)/XamMacLauncher | .libs/mac
-	$(Q) cp $< $@
+	$(Q) $(CP) $< $@
 
 .libs/mac/libxammac-%.a: $(MACIOS_BINARIES_PATH)/libxammac-%.a | .libs/mac
-	$(Q) cp $< $@
+	$(Q) $(CP) $< $@
 
 .SECONDARY: .libs/mac/libxammac-classic.a .libs/mac/libxammac-system-classic.a .libs/mac/libxammac-classic-debug.a .libs/mac/libxammac-system-classic-debug.a
 
@@ -551,7 +551,7 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/XamMacLauncher: .libs/mac/XamMacL
 	$(Q) xcrun strip -S $@
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/%: .libs/mac/% | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib
-	$(Q) cp $< $@
+	$(Q) $(CP) $< $@
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/XamMacLauncher: | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono
 	$(Q) ln -sF ../XamMacLauncher $@
