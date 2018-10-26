@@ -57,7 +57,7 @@ namespace Xamarin.MMP.Tests
 					}
 				}
 				else {
-					linkStatus = currentFramework.Version > new Version (10, 9) ? LinkStatus.Weak : LinkStatus.Strong;
+					linkStatus = currentFramework.Version > SdkVersions.MinOSXVersion ? LinkStatus.Weak : LinkStatus.Strong;
 				}
 				Assert.AreEqual (linkStatus, entry.Value, $"Framework link status of {entry.Key} was {entry.Value} but expected to be {linkStatus}");
 			}
