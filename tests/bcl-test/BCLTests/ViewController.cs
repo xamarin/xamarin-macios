@@ -1,15 +1,13 @@
 ﻿using System;
-using System.IO;
 using System.Reflection;
 using System.Collections.Generic;
 
 using UIKit;
-using Foundation;
+using ObjCRuntime;
 
 using Xamarin.iOS.UnitTests;
 using Xamarin.iOS.UnitTests.NUnit;
 using BCLTests.TestRunner.Core;
-using System.Runtime.InteropServices;
 using Xamarin.iOS.UnitTests.XUnit;
 
 namespace BCLTests {
@@ -37,6 +35,7 @@ namespace BCLTests {
 			// Note: this .ctor should not contain any initialization logic.
 		}
 
+#if __WATCH__
 		[DllImport ("libc")]
 		static extern void exit (int code);
 		protected virtual void TerminateWithSuccess ()
@@ -45,6 +44,15 @@ namespace BCLTests {
 			Console.WriteLine ("Exiting test run with success");
 			exit (0);
 		}
+#else
+		protected virtual void TerminateWithSuccess ()
+		{
+			// For WatchOS we're terminating the extension, not the watchos app itself.
+			Console.WriteLine ("Exiting test run with success");
+			Selector s = new Selector ("terminateWithSuccess");
+			UIApplication.SharedApplication.PerformSelector (s, UIApplication.SharedApplication, 0);
+		}
+#endif
 
 		public override void ViewDidLoad ()
 		{
@@ -69,7 +77,7 @@ namespace BCLTests {
 			logger.Info ($"Tests run: {runner.TotalTests} Passed: {runner.PassedTests} Inconclusive: {runner.InconclusiveTests} Failed: {runner.FailedTests} Ignored: {runner.SkippedTests}");
 
 			if (options.TerminateAfterExecution)
-				exit (0);
+				TerminateWithSuccess ();
 
 		}
 
