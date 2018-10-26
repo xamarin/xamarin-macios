@@ -190,19 +190,13 @@ namespace Foundation  {
 		WeekdayOrdinal = 1024,
 		Quarter = 2048,
 
-		[Mac (10, 7)]
 		WeekOfMonth = (1 << 12),
-		[Mac (10, 7)]
 		WeekOfYear = (1 << 13),
-		[Mac (10, 7)]
 		YearForWeakOfYear = (1 << 14),
 
-		[Mac (10, 7)]
 		Nanosecond = (1 << 15),
 
-		[Mac (10, 7)]
 		Calendar = (1 << 20),
-		[Mac (10, 7)]
 		TimeZone = (1 << 21),
 	}
 
@@ -1150,11 +1144,8 @@ namespace Foundation  {
 		Dash          = 1 << 7,
 		Replacement   = 1 << 8,
 		Correction    = 1 << 9,
-		[Mac (10, 7)]
 		RegularExpression  = 1 << 10,
-		[Mac (10, 7)]
 		PhoneNumber        = 1 << 11,
-		[Mac (10, 7)]
 		TransitInformation = 1 << 12,
 	}
 

@@ -1,7 +1,3 @@
-[submodule "external/fsharp"]
-    path = external/fsharp
-    url = ../../fsharp/fsharp.git
-    branch = master
 [submodule "external/guiunit"]
     path = external/guiunit
     url = ../../mono/guiunit.git

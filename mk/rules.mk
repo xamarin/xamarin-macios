@@ -3,18 +3,18 @@ builds_root=$(TOP)/builds
 
 # helpful rules to compile things for the various architectures
 
-COMMON_I:= -I. -I$(mono_root) -I$(mono_root)/mono/eglib -I$(mono_root)/mono/metadata 
-SIM32_I := $(COMMON_I) -I$(BUILD_DESTDIR)/simulator86/include/mono-2.0
-SIM64_I := $(COMMON_I) -I$(BUILD_DESTDIR)/simulator64/include/mono-2.0
-DEV7_I  := $(COMMON_I) -I$(BUILD_DESTDIR)/target7/include/mono-2.0
-DEV7s_I := $(COMMON_I) -I$(BUILD_DESTDIR)/target7s/include/mono-2.0
-DEV64_I := $(COMMON_I) -I$(BUILD_DESTDIR)/target64/include/mono-2.0
+COMMON_I:= -I.
+SIM32_I := $(COMMON_I)
+SIM64_I := $(COMMON_I)
+DEV7_I  := $(COMMON_I)
+DEV7s_I := $(COMMON_I)
+DEV64_I := $(COMMON_I)
 
-SIMW_I  := $(COMMON_I) -I$(BUILD_DESTDIR)/watchsimulator/include/mono-2.0
-DEVW_I  := $(COMMON_I) -I$(BUILD_DESTDIR)/targetwatch/include/mono-2.0
+SIMW_I  := $(COMMON_I)
+DEVW_I  := $(COMMON_I)
 
-SIM_TV_I:= $(COMMON_I) -I$(BUILD_DESTDIR)/tvsimulator/include/mono-2.0
-DEV_TV_I:= $(COMMON_I) -I$(BUILD_DESTDIR)/targettv/include/mono-2.0
+SIM_TV_I:= $(COMMON_I)
+DEV_TV_I:= $(COMMON_I)
 
 define NativeCompilationTemplate
 

@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Microsoft.Build.BuildEngine;
+using Microsoft.Build.Evaluation;
+using Microsoft.Build.Execution;
 using Microsoft.Build.Utilities;
 using NUnit.Framework;
 using Xamarin.MacDev;
@@ -77,8 +78,16 @@ namespace Xamarin.iOS.Tasks
 			get; private set;
 		}
 
+		public ProjectInstance LibraryProjectInstance {
+			get; set;
+		}
+
 		public Project MonoTouchProject {
 			get; private set;
+		}
+
+		public ProjectInstance MonoTouchProjectInstance {
+			get; set;
 		}
 
 		public string LibraryProjectBinPath;
@@ -139,7 +148,9 @@ namespace Xamarin.iOS.Tasks
 			SetupEngine ();
 
 			MonoTouchProject = SetupProject (Engine, MonoTouchProjectCSProjPath);
+			MonoTouchProjectInstance = MonoTouchProject.CreateProjectInstance ();
 			LibraryProject = SetupProject (Engine, LibraryProjectCSProjPath);
+			LibraryProjectInstance = LibraryProject.CreateProjectInstance ();
 
 			CleanUp ();
 		}
@@ -149,12 +160,9 @@ namespace Xamarin.iOS.Tasks
 			Engine = new TestEngine ();
 		}
 
-		public Project SetupProject (Engine engine, string projectPath) 
+		public Project SetupProject (TestEngine engine, string projectPath)
 		{
-			var proj = new Project (engine);
-			proj.Load (projectPath);
-
-			return proj;
+			return engine.ProjectCollection.LoadProject (projectPath);
 		}
 
 		public virtual string TargetFrameworkIdentifier {
@@ -192,6 +200,9 @@ namespace Xamarin.iOS.Tasks
 				File.SetLastWriteTimeUtc (file, DateTime.UtcNow);
 			foreach (var file in Directory.GetFiles (LibraryProjectPath, "*.*", SearchOption.AllDirectories))
 				File.SetLastWriteTimeUtc (file, DateTime.UtcNow);
+
+			Engine.UnloadAllProjects ();
+			Engine = new TestEngine ();
 		}
 
 		protected void SafeDelete (string path)
@@ -297,8 +308,7 @@ namespace Xamarin.iOS.Tasks
 
 		protected void RemoveItemsByName (Project project, string itemName)
 		{
-			foreach (var item in project.GetEvaluatedItemsByName (itemName).ToArray ())
-				project.RemoveItem (item);
+			project.RemoveItems (project.GetItems (itemName));
 		}
 
 		protected string SetPListKey (string key, PObject value)
@@ -327,7 +337,12 @@ namespace Xamarin.iOS.Tasks
 
 		public void RunTarget (Project project, string target, int expectedErrorCount = 0)
 		{
-			Engine.BuildProject (project, new [] { target }, new Hashtable { {"Platform", "iPhone"} }, BuildSettings.None);
+			RunTargetOnInstance (project.CreateProjectInstance (), target, expectedErrorCount);
+		}
+
+		public void RunTargetOnInstance (ProjectInstance instance, string target, int expectedErrorCount = 0)
+		{
+			Engine.BuildProject (instance, new [] { target }, new Hashtable { {"Platform", "iPhone"} });
 			if (expectedErrorCount != Engine.Logger.ErrorEvents.Count) {
 				string messages = string.Empty;
 				if (Engine.Logger.ErrorEvents.Count > 0) {
@@ -339,7 +354,12 @@ namespace Xamarin.iOS.Tasks
 
 		public void RunTarget_WithErrors (Project project, string target)
 		{
-			Engine.BuildProject (project, new [] { target }, new Hashtable (), BuildSettings.None);
+			RunTarget_WithErrors (project.CreateProjectInstance (), target);
+		}
+
+		public void RunTarget_WithErrors (ProjectInstance instance, string target)
+		{
+			Engine.BuildProject (instance, new [] { target }, new Hashtable ());
 			Assert.IsTrue (Engine.Logger.ErrorEvents.Count > 0, "#RunTarget-HasExpectedErrors");
 		}
 

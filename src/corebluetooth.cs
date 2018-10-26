@@ -46,7 +46,6 @@ namespace CoreBluetooth {
 	}
 
 	[Watch (4,0)]
-	[Mac (10, 7)]
 	[BaseType (typeof (CBManager), Delegates=new[] {"WeakDelegate"}, Events = new[] { typeof (CBCentralManagerDelegate)})]
 	[DisableDefaultCtor] // crash (at dispose time) on OSX
 	interface CBCentralManager {
@@ -501,7 +500,8 @@ namespace CoreBluetooth {
 	[Model]
 	[Protocol]
 	interface CBPeripheralDelegate {
-		[Availability (Deprecated=Platform.iOS_8_0, Message="Use 'RssiRead' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'RssiRead' instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'RssiRead' instead.")]
 		[Export ("peripheralDidUpdateRSSI:error:"), EventArgs ("NSError", true)]
 		void RssiUpdated (CBPeripheral peripheral, NSError error);
 
@@ -636,6 +636,8 @@ namespace CoreBluetooth {
 		CBUUID FromData (NSData theData);
 
 		[Availability (Deprecated = Platform.iOS_9_0)]
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
 		[NoWatch]
 		[Static]
 		[Export ("UUIDWithCFUUID:")]

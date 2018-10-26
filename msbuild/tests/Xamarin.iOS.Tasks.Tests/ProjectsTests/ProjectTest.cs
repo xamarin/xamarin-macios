@@ -42,8 +42,8 @@ namespace Xamarin.iOS.Tasks
 			var proj = SetupProject (Engine, csproj);
 
 			AppBundlePath = mtouchPaths ["app_bundlepath"];
-			Engine.GlobalProperties.SetProperty("Platform", platform);
-			Engine.GlobalProperties.SetProperty("Configuration", config);
+			Engine.ProjectCollection.SetGlobalProperty("Platform", platform);
+			Engine.ProjectCollection.SetGlobalProperty("Configuration", config);
 
 			if (clean) {
 				RunTarget (proj, "Clean");

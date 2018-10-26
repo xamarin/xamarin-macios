@@ -73,7 +73,6 @@ namespace CoreGraphics {
 			handle = CGPathCreateMutable ();
 		}
 
-		[Mac(10,7)]
 		public CGPath (CGPath reference, CGAffineTransform transform)
 		{
 			if (reference == null)
@@ -571,25 +570,21 @@ namespace CoreGraphics {
 			/* CGFloat */ nfloat [] lengths,
 			/* size_t */ nint count);
 
-		[Mac(10,7)]
 		public CGPath CopyByDashingPath (CGAffineTransform transform, nfloat [] lengths)
 		{
 			return CopyByDashingPath (transform, lengths, 0);
 		}
 
-		[Mac(10,7)]
 		public unsafe CGPath CopyByDashingPath (CGAffineTransform transform, nfloat [] lengths, nfloat phase)
 		{
 			return MakeMutable (CGPathCreateCopyByDashingPath (handle, &transform, phase, lengths, lengths == null ? 0 : lengths.Length));
 		}
 
-		[Mac(10,7)]
 		public CGPath CopyByDashingPath (nfloat [] lengths)
 		{
 			return CopyByDashingPath (lengths, 0);
 		}
 
-		[Mac(10,7)]
 		public unsafe CGPath CopyByDashingPath (nfloat [] lengths, nfloat phase)
 		{
 			var path = CGPathCreateCopyByDashingPath (handle, null, phase, lengths, lengths == null ? 0 : lengths.Length);
@@ -604,13 +599,11 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		unsafe extern static IntPtr CGPathCreateCopyByStrokingPath (/* CGPathRef */ IntPtr path, CGAffineTransform *transform, nfloat lineWidth, CGLineCap lineCap, CGLineJoin lineJoin, /* CGFloat */ nfloat miterLimit);
 
-		[Mac(10,7)]
 		public unsafe CGPath CopyByStrokingPath (CGAffineTransform transform, nfloat lineWidth, CGLineCap lineCap, CGLineJoin lineJoin, nfloat miterLimit)
 		{
 			return MakeMutable (CGPathCreateCopyByStrokingPath (handle, &transform, lineWidth, lineCap, lineJoin, miterLimit));
 		}
 
-		[Mac(10,7)]
 		public unsafe CGPath CopyByStrokingPath (nfloat lineWidth, CGLineCap lineCap, CGLineJoin lineJoin, nfloat miterLimit)
 		{
 			return MakeMutable (CGPathCreateCopyByStrokingPath (handle, null, lineWidth, lineCap, lineJoin, miterLimit));
@@ -630,13 +623,11 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		unsafe extern static IntPtr CGPathCreateWithEllipseInRect (CGRect boundingRect, CGAffineTransform *transform);
 
-		[Mac(10,7)]
 		static public unsafe CGPath EllipseFromRect (CGRect boundingRect, CGAffineTransform transform)
 		{
 			return MakeMutable (CGPathCreateWithEllipseInRect (boundingRect, &transform));
 		}
 
-		[Mac(10,7)]
 		static public unsafe CGPath EllipseFromRect (CGRect boundingRect)
 		{
 			return MakeMutable (CGPathCreateWithEllipseInRect (boundingRect, null));
@@ -645,13 +636,11 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		unsafe extern static IntPtr CGPathCreateWithRect (CGRect boundingRect, CGAffineTransform *transform);
 
-		[Mac(10,7)]
 		static public unsafe CGPath FromRect (CGRect rectangle, CGAffineTransform transform)
 		{
 			return MakeMutable (CGPathCreateWithRect (rectangle, &transform));
 		}
 
-		[Mac(10,7)]
 		static public unsafe CGPath FromRect (CGRect rectangle)
 		{
 			return MakeMutable (CGPathCreateWithRect (rectangle, null));

@@ -68,14 +68,21 @@ typedef struct __attribute__((packed)) {
 } MTTokenReference;
 static const uint32_t INVALID_TOKEN_REF = 0xFFFFFFFF;
 
+enum MTTypeFlags {
+	MTTypeFlagsNone = 0,
+	MTTypeFlagsCustomType = 1, // not a platform type
+	MTTypeFlagsUserType = 2, // not a wrapped type
+};
+
 typedef struct __attribute__((packed)) {
 	void *handle;
 	uint32_t /* MTTokenReference */ type_reference;
+	uint32_t /* MTTypeFlags */ flags;
 } MTClassMap;
 
 typedef struct __attribute__((packed)) {
 	uint32_t /* MTTokenReference */ skipped_reference;
-	uint32_t /* index into MTRegistrationMap->map */ index;
+	uint32_t /* MTTokenReference */ actual_reference;
 } MTManagedClassMap;
 
 typedef struct __attribute__((packed)) {
@@ -109,7 +116,6 @@ struct MTRegistrationMap {
 	const MTProtocolMap protocols;
 	int assembly_count;
 	int map_count;
-	int custom_type_count;
 	int full_token_reference_count;
 	int skipped_map_count;
 	int protocol_wrapper_count;
@@ -198,7 +204,7 @@ void			xamarin_unhandled_exception_handler (MonoObject *exc, gpointer user_data)
 void			xamarin_ftnptr_exception_handler (guint32 gchandle);
 void			xamarin_create_classes ();
 const char *	xamarin_skip_encoding_flags (const char *encoding);
-void			xamarin_add_registration_map (struct MTRegistrationMap *map);
+void			xamarin_add_registration_map (struct MTRegistrationMap *map, bool partial);
 uint32_t		xamarin_find_protocol_wrapper_type (uint32_t token_ref);
 void			xamarin_release_block_on_main_thread (void *obj);
 

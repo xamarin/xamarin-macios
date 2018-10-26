@@ -50,9 +50,6 @@ bindings-generator.exe: bindings-generator.cs
 bindings-generated.m: bindings-generator.exe
 	$(Q_GEN) $(SYSTEM_MONO) --debug $< $@
 
-zlib-helper.c: $(MONO_PATH)/support/zlib-helper.c
-	$(Q) ln -fs $< $@
-
 # our makefiles don't support building the same source file multiple times with different defines,
 # so just symlink extension-main.m to another file and compile that instead.
 app-main.m watchextension-main.m tvextension-main.m: extension-main.m
@@ -83,7 +80,7 @@ MONOTOUCH_FRAMEWORKS =  \
 	Xamarin             \
 	Xamarin-debug       \
 
-MONOTOUCH_SOURCE_STEMS = $(patsubst %.s,%,$(patsubst %.m,%,$(SHARED_SOURCES) $(MONOTOUCH_SOURCES))) zlib-helper
+MONOTOUCH_SOURCE_STEMS = $(patsubst %.s,%,$(patsubst %.m,%,$(SHARED_SOURCES) $(MONOTOUCH_SOURCES)))
 MONOTOUCH_I386_SOURCE_STEMS = $(patsubst %.s,%,$(patsubst %.m,%,$(SHARED_I386_SOURCES)))
 MONOTOUCH_X86_64_SOURCE_STEMS = $(patsubst %.s,%,$(patsubst %.m,%,$(SHARED_X86_64_SOURCES)))
 
@@ -312,6 +309,20 @@ $(eval $(call LibTemplate,ios,IOS))
 $(eval $(call LibTemplate,watchos,WATCHOS))
 $(eval $(call LibTemplate,tvos,TVOS))
 
+SDK_BUILDDIR=$(MONO_PATH)/sdks/builds
+
+ZLIB_HELPER_IOS_armv7      = $(SDK_BUILDDIR)/ios-target32-release/support/zlib-helper.o
+ZLIB_HELPER_IOS_armv7s     = $(SDK_BUILDDIR)/ios-target32s-release/support/zlib-helper.o
+ZLIB_HELPER_IOS_arm64      = $(SDK_BUILDDIR)/ios-target64-release/support/zlib-helper.o
+ZLIB_HELPER_IOS_x86        = $(SDK_BUILDDIR)/ios-sim32-release/support/zlib-helper.o
+ZLIB_HELPER_IOS_x86_64     = $(SDK_BUILDDIR)/ios-sim64-release/support/zlib-helper.o
+
+ZLIB_HELPER_WATCHOS_armv7k = $(SDK_BUILDDIR)/ios-targetwatch-release/support/zlib-helper.o
+ZLIB_HELPER_WATCHOS_x86    = $(SDK_BUILDDIR)/ios-simwatch-release/support/zlib-helper.o
+
+ZLIB_HELPER_TVOS_arm64     = $(SDK_BUILDDIR)/ios-targettv-release/support/zlib-helper.o
+ZLIB_HELPER_TVOS_x86_64    = $(SDK_BUILDDIR)/ios-simtv-release/support/zlib-helper.o
+
 #
 # LibXamarinTemplate (and LibXamarinArchTemplate) builds libxamarin.a
 #
@@ -328,12 +339,12 @@ define LibXamarinTemplate
 $(1)$(3)_COMMON_DYLIB_FLAGS = -lmonosgen-2.0 -Wl,-install_name,libxamarin$(4).dylib -framework Foundation -framework CFNetwork -framework UIKit -lz
 $(1)$(3)_COMMON_FRAMEWORK_FLAGS = -framework Mono -Wl,-install_name,@rpath/Xamarin$(4).framework/Xamarin$(4) -framework Foundation -framework CFNetwork -framework UIKit -lz
 
-x86_$(1)$(3)_OBJECTS    = $$(patsubst %,.libs/$(1)/%$(4).x86.o,$$($(2)_SOURCE_STEMS))    $$(patsubst %,.libs/$(1)/%$(4).x86.o,$$($(2)_I386_SOURCE_STEMS))
-x86_64_$(1)$(3)_OBJECTS = $$(patsubst %,.libs/$(1)/%$(4).x86_64.o,$$($(2)_SOURCE_STEMS)) $$(patsubst %,.libs/$(1)/%$(4).x86_64.o,$$($(2)_X86_64_SOURCE_STEMS))
-armv7_$(1)$(3)_OBJECTS  = $$(patsubst %,.libs/$(1)/%$(4).armv7.o,$$($(2)_SOURCE_STEMS))
-armv7s_$(1)$(3)_OBJECTS = $$(patsubst %,.libs/$(1)/%$(4).armv7s.o,$$($(2)_SOURCE_STEMS))
-armv7k_$(1)$(3)_OBJECTS = $$(patsubst %,.libs/$(1)/%$(4).armv7k.o,$$($(2)_SOURCE_STEMS))
-arm64_$(1)$(3)_OBJECTS  = $$(patsubst %,.libs/$(1)/%$(4).arm64.o,$$($(2)_SOURCE_STEMS))
+x86_$(1)$(3)_OBJECTS    = $(ZLIB_HELPER_$(2)_x86)    $$(patsubst %,.libs/$(1)/%$(4).x86.o,$$($(2)_SOURCE_STEMS))    $$(patsubst %,.libs/$(1)/%$(4).x86.o,$$($(2)_I386_SOURCE_STEMS))
+x86_64_$(1)$(3)_OBJECTS = $(ZLIB_HELPER_$(2)_x86_64) $$(patsubst %,.libs/$(1)/%$(4).x86_64.o,$$($(2)_SOURCE_STEMS)) $$(patsubst %,.libs/$(1)/%$(4).x86_64.o,$$($(2)_X86_64_SOURCE_STEMS))
+armv7_$(1)$(3)_OBJECTS  = $(ZLIB_HELPER_$(2)_armv7)  $$(patsubst %,.libs/$(1)/%$(4).armv7.o,$$($(2)_SOURCE_STEMS))
+armv7s_$(1)$(3)_OBJECTS = $(ZLIB_HELPER_$(2)_armv7s) $$(patsubst %,.libs/$(1)/%$(4).armv7s.o,$$($(2)_SOURCE_STEMS))
+armv7k_$(1)$(3)_OBJECTS = $(ZLIB_HELPER_$(2)_armv7k) $$(patsubst %,.libs/$(1)/%$(4).armv7k.o,$$($(2)_SOURCE_STEMS))
+arm64_$(1)$(3)_OBJECTS  = $(ZLIB_HELPER_$(2)_arm64)  $$(patsubst %,.libs/$(1)/%$(4).arm64.o,$$($(2)_SOURCE_STEMS))
 
 $$(foreach arch,$$($(2)_ARCHITECTURES),$$(eval $$(call LibXamarinArchTemplate,$(1),$(2),$(3),$(4),$$(arch))))
 

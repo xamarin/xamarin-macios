@@ -395,11 +395,6 @@ endif
 $(MONO_PATH)/configure: $(MONO_PATH)/configure.ac $(BUILDS_MAKEFILE_DEP)
 	$(Q) ./wrap-autogen.sh $(MONO_PATH) mono $(XAMARIN_AUTOGEN_FLAGS)
 
-ifneq ($(WATCH_MONO_PATH),$(MONO_PATH))
-$(WATCH_MONO_PATH)/configure: $(WATCH_MONO_PATH)/configure.ac $(BUILDS_MAKEFILE_DEP)
-	$(Q) ./wrap-autogen.sh $(WATCH_MONO_PATH) mono
-endif
-
 configure-mono:
 	rm -f $(MONO_PATH)/configure
 	$(MAKE) $(MONO_PATH)/configure
@@ -427,6 +422,7 @@ TOOLS64_LDFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) $(COMMO
 
 TOOLS64_CONFIGURE_FLAGS=	--build=x86_64-apple-darwin10 \
 			--with-monotouch_tv=yes \
+			--with-monotouch_watch=yes \
 			--prefix=$(BUILD_DESTDIR)/tools64 \
 			--enable-maintainer-mode \
 			--cache-file=../tools64.config.cache \
@@ -440,12 +436,6 @@ TOOLS64_CONFIGURE_FLAGS=	--build=x86_64-apple-darwin10 \
 			--disable-iconv	\
 			--disable-boehm \
 			$(XAMARIN_IOS_CONFIGURE_FLAGS) \
-
-ifeq ($(WATCH_MONO_PATH),$(MONO_PATH))
-TOOLS64_CONFIGURE_FLAGS += --with-monotouch_watch=yes
-else
-TOOLS64_CONFIGURE_FLAGS += --with-monotouch_watch=no
-endif
 
 TOOLS64_ACVARS = $(COMMON_ACVARS)
 
@@ -501,79 +491,6 @@ install-tools:: install-tools-tvos
 endif
 
 #
-# Xamarin.WatchOS BCL assemblies
-#
-# We need to build the WatchOS BCL using the same mono checkout as we're using for the
-# corresponding Mono runtimes, which means we can't use the normal tools64 build
-#
-# Also we can't reuse the existing watchsimulator/targetwatch builds, since their
-# monos don't run (correctly) on desktop OSX.
-#
-# So we build an entire Mono just to build the WatchOS BCL.
-#
-
-WATCHBCL_CFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
-WATCHBCL_CXXFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
-WATCHBCL_LDFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) $(COMMON_LDFLAGS)
-WATCHBCL_ACVARS = $(COMMON_ACVARS)
-
-
-WATCHBCL_CONFIGURE_FLAGS=	--build=x86_64-apple-darwin10 \
-			--prefix=$(BUILD_DESTDIR)/watchbcl \
-			--enable-maintainer-mode \
-			--cache-file=../watchbcl.config.cache \
-			--with-glib=embedded \
-			--enable-minimal=com	\
-			--with-profile4_x=no \
-			--with-monotouch=no \
-			--with-monotouch_watch=yes \
-			--with-monotouch_tv=no \
-			--with-xammac=no \
-			--with-mcs-docs=no \
-			--disable-nls \
-			--disable-iconv	\
-			--disable-boehm \
-			$(XAMARIN_IOS_CONFIGURE_FLAGS)
-
-WATCHBCL_CONFIGURE_ENVIRONMENT = \
-	$(WATCHBCL_ACVARS) \
-	CFLAGS="$(WATCHBCL_CFLAGS)" \
-	CXXFLAGS="$(WATCHBCL_CXXFLAGS)" \
-	LDFLAGS="$(WATCHBCL_LDFLAGS)" \
-	CC="$(MAC_CC)" \
-	CXX="$(MAC_CXX)" \
-
-ifdef INCLUDE_WATCH
-setup:: setup-watchbcl
-build:: build-watchbcl
-clean-local:: clean-watchbcl
-endif
-
-watchbcl: build-watchbcl install-tools-watch
-
-setup-watchbcl: .stamp-configure-watchbcl
-
-ifneq ($(WATCH_MONO_PATH),$(MONO_PATH))
-.stamp-configure-watchbcl: $(WATCH_MONO_PATH)/configure
-	$(Q) $(WATCHBCL_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh watchbcl ../$(WATCH_MONO_PATH)/configure $(WATCHBCL_CONFIGURE_FLAGS)
-endif
-
-build-tools-bcl: build-watchbcl
-build-tools: build-watchbcl
-
-ifeq ($(WATCH_MONO_PATH),$(MONO_PATH))
-.stamp-build-watchbcl: .stamp-build-tools64 $(MONO_DEPENDENCIES)
-else
-.stamp-build-watchbcl: .stamp-configure-watchbcl .stamp-build-tools64 $(MONO_DEPENDENCIES)
-	$(MAKE) -C watchbcl all EXTERNAL_MCS=$(SYSTEM_CSC) EXTERNAL_RUNTIME=$(SYSTEM_MONO)
-	$(MAKE) -C watchbcl install EXTERNAL_MCS=$(SYSTEM_CSC) EXTERNAL_RUNTIME=$(SYSTEM_MONO)
-endif
-	$(Q) touch $@
-
-clean-watchbcl:
-	rm -rf watchbcl .stamp-*-watchbcl watchbcl.config.cache
-
-#
 # Xamarin.iOS/WatchOS/TVOS BCL assemblies
 #
 
@@ -594,7 +511,6 @@ IOS_REPL_ASSEMBLIES = mscorlib System System.Core System.Xml Mono.CSharp
 
 IOS_FACADE_ASSEMBLIES = $(monotouch_PARALLEL_SUBDIRS) $(monotouch_SUBDIRS)
 
-# TVOS/WATCHOS BCL is built from a different mono branch and the assembly list might differ across time
 TVOS_ASSEMBLIES = $(IOS_ASSEMBLIES)
 WATCHOS_ASSEMBLIES = $(filter-out Mono.Security Mono.Data.Tds,$(IOS_ASSEMBLIES))
 TVOS_FACADE_ASSEMBLIES = $(IOS_FACADE_ASSEMBLIES)
@@ -615,8 +531,8 @@ watch-facade-check: $(WATCH_BCL_TARGETS)
 disabled-watch-facade-check: $(WATCH_BCL_TARGETS)
 	$(Q) rm -f .$@*
 	$(Q) echo $(WATCHOS_FACADE_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
-	$(Q) ls -1 $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/Facades | grep dll$$ | sed 's/[.]dll//' | sort > .$@2
-	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are Facade assemblies in "$(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/Facades" not defined in "$(FACADE_SUBDIRS_MK)" ***\n"; exit 1; fi
+	$(Q) ls -1 $(MONO_PATH)/mcs/class/lib/monotouch_watch/Facades | grep dll$$ | sed 's/[.]dll//' | sort > .$@2
+	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are Facade assemblies in "$(MONO_PATH)/mcs/class/lib/monotouch_watch/Facades" not defined in "$(FACADE_SUBDIRS_MK)" ***\n"; exit 1; fi
 	$(Q) rm -f .$@*
 
 tvos-facade-check: $(TVOS_BCL_TARGETS) 
@@ -813,13 +729,10 @@ $(2):: build-$(2)
 build:: build-$(2)
 clean-local:: clean-$(2)
 
-# config/eglib-config.h is needed by the builds in runtime/
 .stamp-build-$(2): $(MONO_PATH)/configure $(MONO_DEPENDENCIES) $(BUILD_DESTDIR)/$(2)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(3) $(SDK_ARGS)
 	$(Q) cp -r $(SDK_DESTDIR)/ios-$(4)/lib $(BUILD_DESTDIR)/$(2)
 	$(Q) cp -r $(SDK_DESTDIR)/ios-$(4)/include $(BUILD_DESTDIR)/$(2)
-	cp $(SDK_BUILDDIR)/ios-$(4)/config.h $(BUILD_DESTDIR)/$(2)/include/mono-2.0
-	cp $(SDK_BUILDDIR)/ios-$(4)/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/$(2)/include/mono-2.0
 	$(Q) touch $$@
 
 build-$(2): .stamp-build-$(2)
@@ -955,8 +868,6 @@ endif
 	$(Q) mkdir -p $(BUILD_DESTDIR)/watchsimulator
 	$(Q) cp -r $(SDK_DESTDIR)/ios-simwatch-release/lib $(BUILD_DESTDIR)/watchsimulator
 	$(Q) cp -r $(SDK_DESTDIR)/ios-simwatch-release/include $(BUILD_DESTDIR)/watchsimulator
-	cp $(SDK_BUILDDIR)/ios-simwatch-release/config.h $(BUILD_DESTDIR)/watchsimulator/include/mono-2.0
-	cp $(SDK_BUILDDIR)/ios-simwatch-release/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/watchsimulator/include/mono-2.0
 	$(Q) touch $@
 
 build-watchsimulator: .stamp-build-watchsimulator
@@ -1036,8 +947,6 @@ endif
 	$(Q) mkdir -p $(BUILD_DESTDIR)/tvsimulator
 	$(Q) cp -r $(SDK_DESTDIR)/ios-simtv-release/lib $(BUILD_DESTDIR)/tvsimulator
 	$(Q) cp -r $(SDK_DESTDIR)/ios-simtv-release/include $(BUILD_DESTDIR)/tvsimulator
-	cp $(SDK_BUILDDIR)/ios-simtv-release/config.h $(BUILD_DESTDIR)/tvsimulator/include/mono-2.0
-	cp $(SDK_BUILDDIR)/ios-simtv-release/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/tvsimulator/include/mono-2.0
 	$(Q) touch $@
 
 build-tvsimulator: .stamp-build-tvsimulator
@@ -1128,8 +1037,6 @@ clean-local:: clean-$(2)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(3) $(SDK_ARGS)
 	$(Q) mkdir -p $(BUILD_DESTDIR)/$(2)
 	$(Q) cp -r $(SDK_DESTDIR)/ios-$(3)-release/* $(BUILD_DESTDIR)/$(2)
-	$(Q) cp -r $(SDK_BUILDDIR)/ios-$(3)-release/config.h $(BUILD_DESTDIR)/$(2)/include/mono-2.0
-	$(Q) cp -r $(SDK_BUILDDIR)/ios-$(3)-release/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/$(2)/include/mono-2.0
 	$(Q) touch $$@
 
 build-$(2): .stamp-build-$(2)
@@ -1332,8 +1239,6 @@ watchos:: targetwatch
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-targetwatch $(SDK_ARGS)
 	$(Q) mkdir -p $(BUILD_DESTDIR)/targetwatch
 	$(Q) cp -r $(SDK_DESTDIR)/ios-targetwatch-release/* $(BUILD_DESTDIR)/targetwatch
-	$(Q) cp -r $(SDK_BUILDDIR)/ios-targetwatch-release/config.h $(BUILD_DESTDIR)/targetwatch/include/mono-2.0
-	$(Q) cp -r $(SDK_BUILDDIR)/ios-targetwatch-release/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/targetwatch/include/mono-2.0
 	$(Q) touch $@
 
 build-targetwatch: .stamp-build-targetwatch
@@ -1445,8 +1350,6 @@ tvos:: targettv
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-targettv $(SDK_ARGS)
 	$(Q) mkdir -p $(BUILD_DESTDIR)/targettv
 	$(Q) cp -r $(SDK_DESTDIR)/ios-targettv-release/* $(BUILD_DESTDIR)/targettv
-	$(Q) cp -r $(SDK_BUILDDIR)/ios-targettv-release/config.h $(BUILD_DESTDIR)/targettv/include/mono-2.0
-	$(Q) cp -r $(SDK_BUILDDIR)/ios-targettv-release/mono/eglib/eglib-config.h $(BUILD_DESTDIR)/targettv/include/mono-2.0
 	$(Q) touch $@
 
 build-targettv: .stamp-build-targettv
@@ -1607,11 +1510,6 @@ llvm64: install-llvm64
 
 $(MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe: $(MONO_PATH)/configure $(wildcard $(MONO_PATH)/tools/offsets-tool/*.cs)
 	$(Q) $(MAKE) -C $(dir $@) MonoAotOffsetsDumper.exe
-
-ifneq ($(WATCH_MONO_PATH),$(MONO_PATH))
-$(WATCH_MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe: $(wildcard $(WATCH_MONO_PATH)/tools/offsets-tool/*.cs)
-	$(Q) $(MAKE) -C $(dir $@) MonoAotOffsetsDumper.exe
-endif
 
 targetwatch/mono/arch/arm/arm_dpimacros.h: .stamp-configure-targetwatch
 	$(Q) $(MAKE) -C $(dir $@) $(notdir $@)

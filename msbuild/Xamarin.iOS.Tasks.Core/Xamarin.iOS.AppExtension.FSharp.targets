@@ -39,6 +39,9 @@ Copyright (C) 2014-2016 Xamarin. All rights reserved.
 		     remove this -->
 		<_DebugFileExt Condition="'$(FscDebugFileExt)' != ''">$(FscDebugFileExt)</_DebugFileExt>
 		<_DebugFileExt Condition="'$(_DebugFileExt)' == ''">.mdb</_DebugFileExt>
+
+		<!-- Enable nuget package conflict resolution -->
+		<ResolveAssemblyConflicts>true</ResolveAssemblyConflicts>
 	</PropertyGroup>
 
 	<Import Project="Xamarin.iOS.AppExtension.Common.targets" />

@@ -3942,6 +3942,22 @@ public partial class Generator : IMemberGatherer {
 		return mi.GetAvailability (AvailabilityKind.Introduced) ?? pi.GetAvailability (AvailabilityKind.Introduced);
 	}
 
+	bool Is64BitiOSOnly (ICustomAttributeProvider provider)
+	{
+		if (BindThirdPartyLibrary)
+			return false;
+		if (BindingTouch.CurrentPlatform != PlatformName.iOS)
+			return false;
+		var attrib = provider.GetAvailability (AvailabilityKind.Introduced);
+		if (attrib == null) {
+			var minfo = provider as MemberInfo;
+			if (minfo != null && minfo.DeclaringType != null)
+				return Is64BitiOSOnly (minfo.DeclaringType);
+			return false;
+		}
+		return attrib.Version.Major >= 11; 
+	}
+
 	//
 	// Generates the code necessary to lower the MonoTouch-APIs to something suitable
 	// to be passed to Objective-C.
@@ -4754,6 +4770,12 @@ public partial class Generator : IMemberGatherer {
 				print ("get; ");
 			} else {
 				print ("get {");
+				var is32BitNotSupported = Is64BitiOSOnly (pi);
+				if (is32BitNotSupported) {
+					print ("#if ARCH_32");
+					print ("\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
+					print ("#else");
+				}
 				if (debug)
 					print ("Console.WriteLine (\"In {0}\");", pi.GetGetMethod ());
 				if (is_model)
@@ -4778,6 +4800,8 @@ public partial class Generator : IMemberGatherer {
 						indent--;
 					}
 				}
+				if (is32BitNotSupported)
+					print ("#endif");
 				print ("}\n");
 			}
 		}
@@ -4805,6 +4829,12 @@ public partial class Generator : IMemberGatherer {
 				print ("set; ");
 			} else {
 				print ("set {");
+				var is32BitNotSupported = Is64BitiOSOnly (pi);
+				if (is32BitNotSupported) {
+					print ("#if ARCH_32");
+					print ("\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
+					print ("#else");
+				}
 				if (debug)
 					print ("Console.WriteLine (\"In {0}\");", pi.GetSetMethod ());
 
@@ -4830,6 +4860,8 @@ public partial class Generator : IMemberGatherer {
 						}
 					}
 				}
+				if (is32BitNotSupported)
+					print ("#endif");
 				print ("}");
 			}
 		}
@@ -5213,6 +5245,13 @@ public partial class Generator : IMemberGatherer {
 			}
 
 			print ("{");
+
+			var is32BitNotSupported = Is64BitiOSOnly ((ICustomAttributeProvider) minfo.method ?? minfo.property);
+			if (is32BitNotSupported) {
+				print ("#if ARCH_32");
+				print ("\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
+				print ("#else");
+			}
 			if (debug)
 				print ("\tConsole.WriteLine (\"In {0}\");", mi);
 					
@@ -5237,6 +5276,8 @@ public partial class Generator : IMemberGatherer {
 					indent--;
 				}
 			}
+			if (is32BitNotSupported)
+				print ("#endif");
 			print ("}\n");
 		}
 
@@ -6177,6 +6218,7 @@ public partial class Generator : IMemberGatherer {
 					var initSelector = (InlineSelectors || BindThirdPartyLibrary) ? "Selector.GetHandle (\"init\")" : "Selector.Init";
 					var initWithCoderSelector = (InlineSelectors || BindThirdPartyLibrary) ? "Selector.GetHandle (\"initWithCoder:\")" : "Selector.InitWithCoder";
 					string v = UnifiedAPI && class_mod == "abstract " ? "protected" : ctor_visibility;
+					var is32BitNotSupported = Is64BitiOSOnly (type);
 					if (external) {
 						if (!disable_default_ctor) {
 							GeneratedCode (sw, 2);
@@ -6188,12 +6230,19 @@ public partial class Generator : IMemberGatherer {
 							sw.WriteLine ("\t\t[Export (\"init\")]");
 							sw.WriteLine ("\t\t{0} {1} () : base (NSObjectFlag.Empty)", v, TypeName);
 							sw.WriteLine ("\t\t{");
+							if (is32BitNotSupported) {
+								sw.WriteLine ("\t\t#if ARCH_32");
+								sw.WriteLine ("\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
+								sw.WriteLine ("\t\t#else");
+							}
 							if (is_direct_binding_value != null)
 								sw.WriteLine ("\t\t\tIsDirectBinding = {0};", is_direct_binding_value);
 							if (debug)
 								sw.WriteLine ("\t\t\tConsole.WriteLine (\"{0}.ctor ()\");", TypeName);
 							sw.WriteLine ("\t\t\tInitializeHandle (global::{1}.IntPtr_objc_msgSend (this.Handle, global::{2}.{0}), \"init\");", initSelector, ns.Messaging, ns.CoreObjCRuntime);
 							sw.WriteLine ("\t\t\t");
+							if (is32BitNotSupported)
+								sw.WriteLine ("\t\t#endif");
 							sw.WriteLine ("\t\t}");
 						}
 					} else {
@@ -6207,12 +6256,19 @@ public partial class Generator : IMemberGatherer {
 							sw.WriteLine ("\t\t[Export (\"init\")]");
 							sw.WriteLine ("\t\t{0} {1} () : base (NSObjectFlag.Empty)", v, TypeName);
 							sw.WriteLine ("\t\t{");
+							if (is32BitNotSupported) {
+								sw.WriteLine ("\t\t#if ARCH_32");
+								sw.WriteLine ("\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
+								sw.WriteLine ("\t\t#else");
+							}
 							var indentation = 3;
 							WriteIsDirectBindingCondition (sw, ref indentation, is_direct_binding, is_direct_binding_value,
 							                               () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSend (this.Handle, global::{2}.{0}), \"init\");", initSelector, ns.Messaging, ns.CoreObjCRuntime),
 							                               () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSendSuper (this.SuperHandle, global::{2}.{0}), \"init\");", initSelector, ns.Messaging, ns.CoreObjCRuntime));
 
 							WriteMarkDirtyIfDerived (sw, type);
+							if (is32BitNotSupported)
+								sw.WriteLine ("\t\t#endif");
 							sw.WriteLine ("\t\t}");
 							sw.WriteLine ();
 						}
@@ -6229,6 +6285,11 @@ public partial class Generator : IMemberGatherer {
 							sw.WriteLine ("\t\t[Export (\"initWithCoder:\")]");
 							sw.WriteLine ("\t\t{0} {1} (NSCoder coder) : base (NSObjectFlag.Empty)", UnifiedAPI ? v : "public", TypeName);
 							sw.WriteLine ("\t\t{");
+							if (is32BitNotSupported) {
+								sw.WriteLine ("\t\t#if ARCH_32");
+								sw.WriteLine ("\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
+								sw.WriteLine ("\t\t#else");
+							}
 							if (nscoding) {
 								if (debug)
 									sw.WriteLine ("\t\t\tConsole.WriteLine (\"{0}.ctor (NSCoder)\");", TypeName);
@@ -6241,6 +6302,8 @@ public partial class Generator : IMemberGatherer {
 							} else {
 								sw.WriteLine ("\t\t\tthrow new InvalidOperationException (\"Type does not conform to NSCoding\");");
 							}
+							if (is32BitNotSupported)
+								sw.WriteLine ("\t\t#endif");
 							sw.WriteLine ("\t\t}");
 							sw.WriteLine ();
 						}
@@ -6250,9 +6313,16 @@ public partial class Generator : IMemberGatherer {
 						sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
 						sw.WriteLine ("\t\t{0} {1} (NSObjectFlag t) : base (t)", UnifiedAPI ? "protected" : "public", TypeName);
 						sw.WriteLine ("\t\t{");
+						if (is32BitNotSupported) {
+							sw.WriteLine ("\t\t#if ARCH_32");
+							sw.WriteLine ("\t\t\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
+							sw.WriteLine ("\t\t#else");
+						}
 						if (is_direct_binding_value != null)
 							sw.WriteLine ("\t\t\tIsDirectBinding = {0};", is_direct_binding_value);
 						WriteMarkDirtyIfDerived (sw, type);
+						if (is32BitNotSupported)
+							sw.WriteLine ("\t\t#endif");
 						sw.WriteLine ("\t\t}");
 						sw.WriteLine ();
 					}
@@ -6260,8 +6330,15 @@ public partial class Generator : IMemberGatherer {
 					sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
 					sw.WriteLine ("\t\t{0} {1} (IntPtr handle) : base (handle)", UnifiedAPI ? "protected internal" : "public", TypeName);
 					sw.WriteLine ("\t\t{");
+					if (is32BitNotSupported) {
+						sw.WriteLine ("\t\t#if ARCH_32");
+						sw.WriteLine ("\t\t\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
+						sw.WriteLine ("\t\t#else");
+					}
 					if (is_direct_binding_value != null)
 						sw.WriteLine ("\t\t\tIsDirectBinding = {0};", is_direct_binding_value);
+					if (is32BitNotSupported)
+						sw.WriteLine ("\t\t#endif");
 					WriteMarkDirtyIfDerived (sw, type);
 					sw.WriteLine ("\t\t}");
 					sw.WriteLine ();

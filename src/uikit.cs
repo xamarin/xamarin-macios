@@ -1712,6 +1712,7 @@ namespace UIKit {
 
 	[NoTV]
 	[BaseType (typeof (UIView), KeepRefUntil="Dismissed", Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(UIActionSheetDelegate)})]
+	[Deprecated (PlatformName.iOS, 8, 3, message: "Use 'UIAlertController' with 'UIAlertControllerStyle.ActionSheet' instead.")]
 	interface UIActionSheet {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
@@ -1780,6 +1781,7 @@ namespace UIKit {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
+	[Deprecated (PlatformName.iOS, 8, 3)]
 	interface UIActionSheetDelegate {
 
 		[Export ("actionSheet:clickedButtonAtIndex:"), EventArgs ("UIButton")]
@@ -2109,6 +2111,7 @@ namespace UIKit {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
+	[Deprecated (PlatformName.iOS, 9, 0)]
 	interface UIAlertViewDelegate {
 		[Export ("alertView:clickedButtonAtIndex:"), EventArgs ("UIButton")]
 		void Clicked (UIAlertView alertview, nint buttonIndex);
@@ -2524,18 +2527,22 @@ namespace UIKit {
 
 		[NoTV]
 		[Export ("statusBarStyle")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'UIViewController.PreferredStatusBarStyle' instead.")]
 		UIStatusBarStyle StatusBarStyle { get; set; }
 		
 		[NoTV]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'UIViewController.PreferredStatusBarStyle' instead.")]
 		[Export ("setStatusBarStyle:animated:")]
 		void SetStatusBarStyle (UIStatusBarStyle statusBarStyle, bool animated);
 
 		[NoTV]
 		[Export ("statusBarHidden")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'UIViewController.PrefersStatusBarHidden' instead.")]
 		bool StatusBarHidden { [Bind ("isStatusBarHidden")] get; set; }
 
 		[NoTV]
 		[Export ("setStatusBarHidden:withAnimation:")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'UIViewController.PrefersStatusBarHidden' instead.")]
 		void SetStatusBarHidden (bool state, UIStatusBarAnimation animation);
 
 		[NoTV]
@@ -2545,10 +2552,12 @@ namespace UIKit {
 
 		[NoTV]
 		[Export ("statusBarOrientation")]
+		[Deprecated (PlatformName.iOS, 9, 0)]
 		UIInterfaceOrientation StatusBarOrientation { get; set; }
 		
 		[NoTV]
 		[Export ("setStatusBarOrientation:animated:")]
+		[Deprecated (PlatformName.iOS, 9, 0)]
 		void SetStatusBarOrientation (UIInterfaceOrientation orientation, bool animated);
 
 		[NoTV]
@@ -5537,6 +5546,7 @@ namespace UIKit {
 
 #if !WATCH
 	[BaseType (typeof(NSObject), Delegates=new string [] {"WeakDelegate"}, Events=new Type[] {typeof (UIGestureRecognizerDelegate)})]
+	[Dispose ("OnDispose ();")]
 	interface UIGestureRecognizer {
 		[DesignatedInitializer]
 		[Export ("initWithTarget:action:")]
@@ -9708,6 +9718,10 @@ namespace UIKit {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 
+		// moved to UIFocusItemScrollableContainer in iOS 12 - but that makes the availability information incorrect (so `new` is used to avoid compiler warnings)
+		[Export ("contentOffset")]
+		new CGPoint ContentOffset { get; set; }
+
 		[Export ("contentSize")]
 		new CGSize ContentSize { get; set; }
 
@@ -13602,10 +13616,12 @@ namespace UIKit {
 		bool CanPerformUnwind (Selector segueAction, UIViewController fromViewController, NSObject sender);
 
 		[iOS (6,0)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Export ("viewControllerForUnwindSegueAction:fromViewController:withSender:")]
 		UIViewController GetViewControllerForUnwind (Selector segueAction, UIViewController fromViewController, NSObject sender);
 
 		[iOS (6,0)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Export ("segueForUnwindingToViewController:fromViewController:identifier:")]
 		UIStoryboardSegue GetSegueForUnwinding (UIViewController toViewController, UIViewController fromViewController, string identifier);
 
@@ -14888,6 +14904,7 @@ namespace UIKit {
 		
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(UIPopoverControllerDelegate)})]
 	[DisableDefaultCtor] // bug #1786
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'UIViewController' with style of 'UIModalPresentationStyle.Popover' or UIPopoverPresentationController' instead.")]
 	interface UIPopoverController : UIAppearanceContainer {
 		[Export ("initWithContentViewController:")][PostGet ("ContentViewController")]
 		IntPtr Constructor (UIViewController viewController);
@@ -14946,6 +14963,7 @@ namespace UIKit {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
+	[Deprecated (PlatformName.iOS, 9, 0)]
 	interface UIPopoverControllerDelegate {
 		[Export ("popoverControllerDidDismissPopover:"), EventArgs ("UIPopoverController")]
 		void DidDismiss (UIPopoverController popoverController);

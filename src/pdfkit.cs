@@ -550,7 +550,7 @@ namespace PdfKit {
 		IntPtr Constructor (CGRect bounds, PdfAnnotationKey annotationType, [NullAllowed] NSDictionary properties);
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use '.ctor (CGRect, PDFAnnotationKey, NSDictionary)' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use '.ctor (CGRect, PDFAnnotationKey, NSDictionary)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use '.ctor (CGRect, PDFAnnotationKey, NSDictionary)' instead.")]
 		[Export ("initWithBounds:")]
 		IntPtr Constructor (CGRect bounds);
 
@@ -1048,7 +1048,6 @@ namespace PdfKit {
 		[Export ("fieldName")]
 		string FieldName { get; set; }
 
-		[Mac (10, 8)]
 		[Export ("attributedStringValue")]
 		NSAttributedString AttributedStringValue { get; set; }
 
@@ -1104,7 +1103,6 @@ namespace PdfKit {
 		[Export ("point")]
 		CGPoint Point { get; }
 
-		[Mac (10, 7)]
 		[Export ("zoom")]
 		nfloat Zoom { get; set; }
 
@@ -1359,7 +1357,6 @@ namespace PdfKit {
 		PdfSelection GetSelection (PdfPage startPage, nint startCharIndex, PdfPage endPage, nint endCharIndex);
 
 		[NoiOS]
-		[Mac (10,7)]
 		[Export ("printOperationForPrintInfo:scalingMode:autoRotate:")]
 		[return: NullAllowed]
 		NSPrintOperation GetPrintOperation ([NullAllowed] NSPrintInfo printInfo, PdfPrintScalingMode scaleMode, bool doRotate);
@@ -1516,7 +1513,7 @@ namespace PdfKit {
 		CGAffineTransform GetTransform (PdfDisplayBox box);
 
 		[NoiOS]
-		[Mac (10,12)]
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("drawWithBox:")]
 		void Draw (PdfDisplayBox box);
 
@@ -1533,6 +1530,7 @@ namespace PdfKit {
 		NSImage GetThumbnail (CGSize size, PdfDisplayBox box);
 
 		[NoiOS]
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("transformContextForBox:")]
 		void TransformContext (PdfDisplayBox box);
 
@@ -1599,11 +1597,9 @@ namespace PdfKit {
 		[Export ("boundsForPage:")]
 		CGRect GetBoundsForPage (PdfPage page);
 
-		[Mac (10, 7)]
 		[Export ("numberOfTextRangesOnPage:")]
 		nuint GetNumberOfTextRanges (PdfPage page);
 
-		[Mac (10, 7)]
 		[Export ("rangeAtIndex:onPage:")]
 		NSRange GetRange (nuint index, PdfPage page);
 
@@ -1790,7 +1786,6 @@ namespace PdfKit {
 		[Export ("backgroundColor")]
 		NSColor BackgroundColor { get; set; }
 
-		[Mac (10,7)]
 		[Export ("interpolationQuality", ArgumentSemantic.Assign)]
 		PdfInterpolationQuality InterpolationQuality { get; set; }
 
@@ -1875,10 +1870,12 @@ namespace PdfKit {
 		[Export ("highlightedSelections")]
 		PdfSelection [] HighlightedSelections { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("takePasswordFrom:")]
 		void TakePasswordFrom (NSObject sender);
 
 		[NoiOS]
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("drawPage:")]
 		void DrawPage (PdfPage page);
 
@@ -1891,6 +1888,7 @@ namespace PdfKit {
 		void DrawPagePost (PdfPage page, CGContext context);
 
 		[NoiOS]
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("drawPagePost:")]
 		void DrawPagePost (PdfPage page);
 

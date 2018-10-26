@@ -65,6 +65,9 @@
     <Compile Include="..\..\..\common\mac\MacTestMain.cs">
       <Link>MacTestMain.cs</Link>
     </Compile>
+    <Compile Include="..\..\CommonDontLinkTest.cs">
+      <Link>CommonDontLinkTest.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\external\guiunit\src\framework\GuiUnit_NET_4_5.csproj">

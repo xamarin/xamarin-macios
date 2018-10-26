@@ -181,8 +181,8 @@ namespace xharness
 				writer.WriteLine ();
 				writer.WriteLine ("MD_APPLE_SDK_ROOT_EVALUATED:=$(shell dirname `dirname $(XCODE_DEVELOPER_ROOT)`)");
 
-				var enviromentalVariables = new Dictionary<string,string> () { { "XBUILD_FRAMEWORK_FOLDERS_PATH", "$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks"},
-					{ "MSBuildExtensionsPath", "$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild"},
+				var enviromentalVariables = new Dictionary<string,string> () { { "TargetFrameworkFallbackSearchPaths", "$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks"},
+					{ "MSBuildExtensionsPathFallbackPaths", "$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild"},
 					{ "MD_APPLE_SDK_ROOT", "$(MD_APPLE_SDK_ROOT_EVALUATED)"}
 				};
 

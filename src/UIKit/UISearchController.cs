@@ -5,6 +5,7 @@
 #if !WATCH
 
 using System;
+using Foundation;
 
 namespace UIKit {
 
@@ -17,6 +18,8 @@ namespace UIKit {
 				this.cback = cback;
 				IsDirectBinding = false;
 			}
+
+			[Preserve (Conditional = true)] // called back from native, no direct managed reference (except on the type itself)
 			public override void UpdateSearchResultsForSearchController (UISearchController searchController)
 			{
 				cback (searchController);

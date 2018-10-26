@@ -27,7 +27,7 @@ namespace ImageIO {
 			/* CFDictionaryRef __nullable */ IntPtr options);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		[iOS (7,0), Mac (10,8)]
+		[iOS (7,0)]
 		public CGImageMetadata CopyMetadata (nint index, NSDictionary options)
 		{
 			IntPtr o = options == null ? IntPtr.Zero : options.Handle;
@@ -35,7 +35,7 @@ namespace ImageIO {
 			return (result == IntPtr.Zero) ? null : new CGImageMetadata (result);
 		}
 
-		[iOS (7,0), Mac (10,8)]
+		[iOS (7,0)]
 		public CGImageMetadata CopyMetadata (nint index, CGImageOptions options)
 		{
 			NSDictionary o = null;

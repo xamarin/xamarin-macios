@@ -314,9 +314,8 @@ namespace CoreData
 		[NullAllowed] // by default this property is null
 		[Export ("compoundIndexes", ArgumentSemantic.Retain)]
 		[Deprecated (PlatformName.iOS, 11, 0, message : "Use 'NSEntityDescription.Indexes' instead.")]
-		[Mac (10, 7)]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'NSEntityDescription.Indexes' instead.")]
-		[Deprecated (PlatformName.TvOS, 9, 0, message : "Use 'NSEntityDescription.Indexes' instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message : "Use 'NSEntityDescription.Indexes' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message : "Use 'NSEntityDescription.Indexes' instead.")]
 		NSPropertyDescription [] CompoundIndexes { get; set; }
 
@@ -909,6 +908,7 @@ namespace CoreData
 	}
 	
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface NSManagedObjectContext : NSCoding
 #if !WATCH && !TVOS
 	, NSLocking
@@ -917,7 +917,11 @@ namespace CoreData
 	, NSEditor, NSEditorRegistration
 #endif
 	{
-
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'NSManagedObjectContext (NSManagedObjectContextConcurrencyType)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSManagedObjectContext (NSManagedObjectContextConcurrencyType)' instead.")]
+		[Export ("init")]
+		IntPtr Constructor ();
+		
 		[NullAllowed] // by default this property is null
 		[Export ("persistentStoreCoordinator", ArgumentSemantic.Retain)]
 		NSPersistentStoreCoordinator PersistentStoreCoordinator { get; set; }
@@ -1306,7 +1310,6 @@ namespace CoreData
 
 	}
 
-	[Mac (10, 7)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSMergeConflict {
@@ -1812,7 +1815,8 @@ namespace CoreData
 		[return: NullAllowed]
 		NSDictionary<NSString, NSObject> GetMetadata (string storeType, NSUrl url, [NullAllowed] NSDictionary options, out NSError error);
 
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the method that takes an out NSError parameter.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message : "Use the method that takes an 'out NSError' parameter.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use the method that takes an 'out NSError' parameter.")]
 		[Static, Export ("setMetadata:forPersistentStoreOfType:URL:error:")]
 		bool SetMetadata (NSDictionary metadata, NSString storeType, NSUrl url, out NSError error);
 		
@@ -1878,16 +1882,19 @@ namespace CoreData
 		NSManagedObjectID ManagedObjectIDForURIRepresentation (NSUrl url);
 
 #if !WATCH && !TVOS
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'PerformAndWait' instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'PerformAndWait' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use 'PerformAndWait' instead.")]
 		[Export ("lock")]
 		new void Lock ();
 
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'PerformAndWait' instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'PerformAndWait' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use 'PerformAndWait' instead.")]
 		[Export ("unlock")]
 		new void Unlock ();
 
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'Perform' instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'Perform' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use 'Perform' instead.")]
 		[Export ("tryLock")]
 		bool TryLock { get; }
 #endif // !WATCH && !TVOS
@@ -2020,7 +2027,8 @@ namespace CoreData
 		[NoWatch][NoTV]
 		[iOS (7,0), Mac (10, 9)]
 		[Static]
-		[Availability (Deprecated = Platform.iOS_10_0, Message = "Please see the release notes and Core Data documentation.")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Please see the release notes and Core Data documentation.")]
+		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Please see the release notes and Core Data documentation.")]
 		[Export ("removeUbiquitousContentAndPersistentStoreAtURL:options:error:")]
 		bool RemoveUbiquitousContentAndPersistentStore (NSUrl storeUrl, NSDictionary options, out NSError error);
 
@@ -2189,7 +2197,7 @@ namespace CoreData
 		[Export ("indexed")]
 		[Deprecated (PlatformName.iOS, 11, 0, message : "Use 'NSEntityDescription.Indexes' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'NSEntityDescription.Indexes' instead.")]
-		[Deprecated (PlatformName.TvOS, 9, 0, message : "Use 'NSEntityDescription.Indexes' instead.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message : "Use 'NSEntityDescription.Indexes' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message : "Use 'NSEntityDescription.Indexes' instead.")]
 		bool Indexed { [Bind ("isIndexed")] get; set; }
 

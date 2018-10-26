@@ -6,6 +6,7 @@ namespace xharness
 	public class MacUnifiedTarget : MacTarget
 	{
 		public bool Mobile { get; private set; }
+		public bool System { get; set; }
 
 		// Optional
 		public MacBCLTestInfo BCLInfo { get; set; }
@@ -42,13 +43,19 @@ namespace xharness
 			get {
 				if (SkipProjectGeneration)
 					return "";
-				string suffix = (Mobile ? "" : "XM45") + (ThirtyTwoBit ? "-32" : "");
+
+				if (System)
+					return "-system";
+
+				var suffix = (Mobile ? "" : "XM45") + (ThirtyTwoBit ? "-32" : "");
 				return "-unified" + (IsBCL ? "" : suffix);
 			}
 		}
 
 		public override string MakefileWhereSuffix {
 			get {
+				if (System)
+					return "system";
 				string suffix = (Mobile ? "" : "XM45") + (ThirtyTwoBit ? "32" : "");
 				return "unified" + (IsBCL ? "" : suffix);
 			}
@@ -115,7 +122,10 @@ namespace xharness
 				var props = new Dictionary<string, string> ();
 
 
-				if (Mobile)
+				if (System) {
+					props.Add ("TargetFrameworkVersion", "v4.7.1");
+					props.Add ("MonoBundlingExtraArgs", "--embed-mono=no");
+				} else if (Mobile)
 				{
 					props.Add ("TargetFrameworkVersion", "v2.0");
 				}

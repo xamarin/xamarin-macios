@@ -667,7 +667,7 @@ WATCH_BMONO = MONO_PATH=$(WATCH_LIBDIR)/repl $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/b
 WATCH_GENERATOR=$(BUILD_DIR)/common/bgen.exe
 WATCH_GENERATE=$(SYSTEM_MONO) --debug $(WATCH_GENERATOR)
 WATCH_GENERATED_DEFINES= -d:WATCH -d:XAMCORE_3_0 -d:XAMCORE_2_0 -d:__UNIFIED__
-WATCH_BCL_DIR = $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch
+WATCH_BCL_DIR = $(MONO_PATH)/mcs/class/lib/monotouch_watch
 
 WATCHOS_EXTRA_CORE_SOURCES = \
     $(WATCH_BUILD_DIR)/Constants.cs    \
@@ -732,7 +732,7 @@ $(BUILD_DIR)/watchos.rsp: Makefile Makefile.generator frameworks.sources
 		-tmpdir=$(WATCH_BUILD_DIR)/watch                         \
 		-baselib=$(WATCH_BUILD_DIR)/watch/core.dll               \
 		-attributelib=$(WATCH_BUILD_DIR)/Xamarin.WatchOS.BindingAttributes.dll \
-		-r=$(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/System.dll \
+		-r=$(MONO_PATH)/mcs/class/lib/monotouch_watch/System.dll \
 		-ns=MonoTouch.ObjCRuntime                                \
 		-native-exception-marshalling                            \
 		$(WATCH_GENERATED_DEFINES)				\
@@ -766,42 +766,42 @@ $(WATCH_BUILD_DIR)/reference/MonoTouch.NUnitLite%dll $(WATCH_BUILD_DIR)/referenc
 
 # System.Drawing.Primitives.dll is special
 
-$(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference_Facades/System.Drawing.Primitives.dll: $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll
-	$(call Q_PROF_CSC,watch) $(MAKE) $(if $(V),,-s) -C $(WATCH_MONO_PATH)/mcs/class/Facades/System.Drawing.Primitives PROFILE=monotouch_watch LIBRARY_SUBDIR=reference_Facades EXTERNAL_FACADE_DRAWING_REFERENCE="$(abspath $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll)"
+$(MONO_PATH)/mcs/class/lib/monotouch_watch/reference_Facades/System.Drawing.Primitives.dll: $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll
+	$(call Q_PROF_CSC,watch) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/Facades/System.Drawing.Primitives PROFILE=monotouch_watch LIBRARY_SUBDIR=reference_Facades EXTERNAL_FACADE_DRAWING_REFERENCE="$(abspath $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll)"
 	@touch $@
 
-$(WATCH_BUILD_DIR)/%/Facades/System.Drawing.Primitives.dll: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/%_Facades/System.Drawing.Primitives.dll | $(WATCH_BUILD_DIR)/reference/Facades
+$(WATCH_BUILD_DIR)/%/Facades/System.Drawing.Primitives.dll: $(MONO_PATH)/mcs/class/lib/monotouch_watch/%_Facades/System.Drawing.Primitives.dll | $(WATCH_BUILD_DIR)/reference/Facades
 	$(Q) cp $< $@
 
 # netstandard.dll is special
 
-$(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference_Facades/netstandard.dll: $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll
-	$(call Q_PROF_CSC,watch) $(MAKE) $(if $(V),,-s) -C $(WATCH_MONO_PATH)/mcs/class/Facades/netstandard PROFILE=monotouch_watch LIBRARY_SUBDIR=reference_Facades EXTERNAL_FACADE_DRAWING_REFERENCE="$(abspath $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll)"
+$(MONO_PATH)/mcs/class/lib/monotouch_watch/reference_Facades/netstandard.dll: $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll
+	$(call Q_PROF_CSC,watch) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/Facades/netstandard PROFILE=monotouch_watch LIBRARY_SUBDIR=reference_Facades EXTERNAL_FACADE_DRAWING_REFERENCE="$(abspath $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll)"
 	@touch $@
 
-$(WATCH_BUILD_DIR)/%/Facades/netstandard.dll: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/%_Facades/netstandard.dll | $(WATCH_BUILD_DIR)/reference/Facades
+$(WATCH_BUILD_DIR)/%/Facades/netstandard.dll: $(MONO_PATH)/mcs/class/lib/monotouch_watch/%_Facades/netstandard.dll | $(WATCH_BUILD_DIR)/reference/Facades
 	$(Q) cp $< $@
 
 # System.Net.Http.dll is special. See comment in src/Makefile
 
 WATCH_EXTRA_SYSTEM_NET_HTTP_FILES = \
-	$(abspath $(WATCH_MONO_PATH)/mcs/class/System.Net.Http/HttpClientEx.cs) \
+	$(abspath $(MONO_PATH)/mcs/class/System.Net.Http/HttpClientEx.cs) \
 	$(abspath $(TOP)/src/Foundation/NSUrlSessionHandler.cs) \
 	$(abspath $(TOP)/src/ObjCRuntime/RuntimeOptions.cs) \
 
 # build (into custom LIBRARY_SUBDIR)
-$(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http%dll $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http%pdb: $(WATCH_EXTRA_SYSTEM_NET_HTTP_FILES) $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/System.Net.Http.dll $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll
-	$(call Q_PROF_CSC,watch) $(MAKE) $(if $(V),,-s) -C $(WATCH_MONO_PATH)/mcs/class/System.Net.Http PROFILE=monotouch_watch LIBRARY_SUBDIR=reference MONOTOUCH_MCS_FLAGS=$(IOS_CSC_FLAGS) EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll) $(WATCH_EXTRA_SYSTEM_NET_HTTP_FILES) -D:XAMCORE_2_0 -D:XAMCORE_3_0 -D:XAMARIN_MODERN -D:SYSTEM_NET_HTTP -D:UNIFIED -D:__UNIFIED__"
+$(MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http%dll $(MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http%pdb: $(WATCH_EXTRA_SYSTEM_NET_HTTP_FILES) $(MONO_PATH)/mcs/class/lib/monotouch_watch/System.Net.Http.dll $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll
+	$(call Q_PROF_CSC,watch) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/System.Net.Http PROFILE=monotouch_watch LIBRARY_SUBDIR=reference MONOTOUCH_MCS_FLAGS=$(IOS_CSC_FLAGS) EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll) $(WATCH_EXTRA_SYSTEM_NET_HTTP_FILES) -D:XAMCORE_2_0 -D:XAMCORE_3_0 -D:XAMARIN_MODERN -D:SYSTEM_NET_HTTP -D:UNIFIED -D:__UNIFIED__"
 	@# If the make we executed didn't result in building the dll/pdb (because make determined it wasn't necessary to rebuild),
 	@# then this make can end up confused and in an infinite loop. So touch the output files, to make sure they look rebuilt to make.
 	$(Q) touch $(basename $@).dll $(basename $@).pdb
 
 # sign dll
-$(WATCH_BUILD_DIR)/reference/System.Net.Http.dll: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http.dll | $(WATCH_BUILD_DIR)/reference
+$(WATCH_BUILD_DIR)/reference/System.Net.Http.dll: $(MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http.dll | $(WATCH_BUILD_DIR)/reference
 	$(Q) cp $< $@
 	$(call Q_PROF_SN,watch) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
 
-$(WATCH_BUILD_DIR)/reference/System.Net.Http.pdb: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http.pdb | $(WATCH_BUILD_DIR)/reference
+$(WATCH_BUILD_DIR)/reference/System.Net.Http.pdb: $(MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http.pdb | $(WATCH_BUILD_DIR)/reference
 	$(Q) cp $< $@
 
 $(PROJECT_DIR)/xamwatch.csproj: xamwatch.tmpl.csproj Makefile $(wildcard $(TOP)/*.sources)
