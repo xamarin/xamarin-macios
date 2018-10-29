@@ -110,6 +110,7 @@
     <Compile Include="ProjectsTests\ProjectReference.cs" />
     <Compile Include="ProjectsTests\ResponseFileArguments.cs" />
     <Compile Include="ProjectsTests\CompileSceneKitAssetsTest.cs" />
+    <Compile Include="ProjectsTests\Issue3199.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -65,6 +65,7 @@
     <Compile Include="..\common\Profile.cs">
       <Link>Profile.cs</Link>
     </Compile>
+    <Compile Include="src\Issue3199.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="CustomBuildActions.targets" />
