@@ -195,6 +195,8 @@ namespace MonoTouchFixtures.Security {
 		public void Tls12 ()
 		{
 			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			// Randomly throws "IOException: Unable to read data from the transport connection: Connection reset by peer." on iOS 8.
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 9, 0, throwIfOtherPlatform: false);
 
 			var client = new TcpClient ("google.ca", 443);
 			using (NetworkStream ns = client.GetStream ())
