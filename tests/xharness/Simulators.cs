@@ -328,6 +328,11 @@ namespace xharness
 			object lock_obj = new object ();
 			Task<SimDevice []> findTask;
 
+			public override string ToString ()
+			{
+				return $"Simulators for {Target} (MinVersion: {MinVersion})";
+			}
+
 			public IEnumerator<SimDevice> GetEnumerator ()
 			{
 				return new Enumerator ()

@@ -417,14 +417,14 @@ namespace xharness
 				await tv.FindSimulatorAsync ();
 
 			var rv = new List<AggregatedRunSimulatorTask> ();
-			foreach (var taskGroup in testVariations.GroupBy ((RunSimulatorTask task) => task.Device.UDID)) {
+			foreach (var taskGroup in testVariations.GroupBy ((RunSimulatorTask task) => task.Device?.UDID ?? task.Candidates.ToString ())) {
 				rv.Add (new AggregatedRunSimulatorTask (taskGroup) {
 					Jenkins = this,
 					TestName = $"Tests for {taskGroup.Key}",
 				});
 			}
 			foreach (var tt in rv) {
-				Console.WriteLine ($"{tt.TestName} ({tt.Tasks.First ().Simulators [0].Name}): {tt.Tasks.Count ()} tasks");
+				Console.WriteLine ($"{tt.TestName} ({(tt.Tasks.First ().Simulators.Length > 0 ? tt.Tasks.First ().Simulators [0].Name : "Unknown device")}): {tt.Tasks.Count ()} tasks");
 				foreach (var ttt in tt.Tasks)
 					Console.WriteLine ($"    {ttt.TestName} {ttt.ExecutionResult}");
 			}
