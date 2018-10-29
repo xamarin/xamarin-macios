@@ -503,7 +503,7 @@ namespace xharness
 				await tv.FindSimulatorAsync ();
 
 			var rv = new List<AggregatedRunSimulatorTask> ();
-			foreach (var taskGroup in testVariations.GroupBy ((RunSimulatorTask task) => task.Device.UDID)) {
+			foreach (var taskGroup in testVariations.GroupBy ((RunSimulatorTask task) => task.Device?.UDID ?? task.Candidates.ToString ())) {
 				rv.Add (new AggregatedRunSimulatorTask (taskGroup) {
 					Jenkins = this,
 					TestName = $"Tests for {taskGroup.Key}",
