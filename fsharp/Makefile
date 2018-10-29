@@ -183,7 +183,7 @@ $(FSHARP_DIRECTORIES):
 
 ### Sign the assemblies. This is done in a temporary directory so that we don't have to re-sign on every install.
 build/%.dll: $(BIN_DIR)/%.dll | build/monotouch build/xamarinmacmobile build/xamarinmacfull build/xamarinwatchos build/xamarintvos
-	$(Q) cp $< $@
+	$(Q) $(CP) $< $@
 	$(Q_SN) MONO_CFG_DIR="$(TOP)" sn -q -R "$@" "$(PRODUCT_KEY_PATH)"
 
 build.stamp: export TargetFrameworkFallbackSearchPaths=$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks
