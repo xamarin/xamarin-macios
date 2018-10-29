@@ -187,5 +187,13 @@ namespace Xamarin.iOS.UnitTests.NUnit
 
  			return ret;
 		}
+		
+		public override void WriteResultsToFile (TextWriter writer)
+		{
+			if (results == null)
+				return;
+			var resultsXml = new NUnit2XmlOutputWriter (DateTime.UtcNow);
+			resultsXml.WriteResultFile (results, writer);
+		}
 	}
 }

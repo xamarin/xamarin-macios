@@ -30,6 +30,7 @@ namespace Xamarin.iOS.UnitTests
 
 		public abstract void Run (IList <TestAssemblyInfo> testAssemblies);
 		public abstract string WriteResultsToFile ();
+		public abstract void WriteResultsToFile (TextWriter writer);
 
 		protected void OnError (string message)
 		{

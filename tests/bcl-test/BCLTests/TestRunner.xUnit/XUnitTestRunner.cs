@@ -20,7 +20,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 		XElement assembliesElement;
 		List<XUnitFilter> filters;
 
-		public XUnitResultFileFormat ResultFileFormat { get; set; } = XUnitResultFileFormat.XunitV2;
+		public XUnitResultFileFormat ResultFileFormat { get; set; } = XUnitResultFileFormat.NUnit;
 		public AppDomainSupport AppDomainSupport { get; set; } = AppDomainSupport.Denied;
 		protected override string ResultsFileName { get; set; } = "TestResults.xUnit.xml";
 
@@ -725,17 +725,44 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			
 			return outputFilePath;
 		}
+		public override void WriteResultsToFile (TextWriter writer)
+		{
+			if (assembliesElement == null)
+				return;
+			var settings = new XmlWriterSettings { Indent = true };
+			using (var xmlWriter = XmlWriter.Create (writer, settings)) {
+				switch (ResultFileFormat) {
+				case XUnitResultFileFormat.XunitV2:
+					assembliesElement.Save (xmlWriter);
+					break;
+				case XUnitResultFileFormat.NUnit:
+					try {
+						Transform_Results ("NUnitXml.xslt", assembliesElement, xmlWriter);
+					} catch (Exception e) {
+						writer.WriteLine ($"{e}");
+					}
+					break;
 
+				default:
+					throw new InvalidOperationException ($"Result output format '{ResultFileFormat}' is not currently supported");
+				}
+			}
+		}
+		
 		void Transform_Results (string xsltResourceName, XElement element, XmlWriter writer)
 		{
 			var xmlTransform = new System.Xml.Xsl.XslCompiledTransform ();
-
-			using (Stream xsltStream = GetType ().Assembly.GetManifestResourceStream ($"Xamarin.Android.UnitTests.XUnit.{xsltResourceName}")) {
-				using (XmlReader xsltReader = XmlReader.Create (xsltStream)) {
-					using (XmlReader xmlReader = element.CreateReader ()) {
-						xmlTransform.Load (xsltReader);
-						xmlTransform.Transform (xmlReader, writer);
-					}
+			var name = GetType ().Assembly.GetManifestResourceNames ().Select ((arg) => { arg.EndsWith (xsltResourceName, StringComparison.Ordinal); return arg; }).First ();
+			if (name == null)
+				return;
+			using (var xsltStream = GetType ().Assembly.GetManifestResourceStream (name)) {
+				if (xsltStream == null) {
+					throw new Exception ($"Stream with name {name} cannot be found! We have {GetType ().Assembly.GetManifestResourceNames ()[0]}");
+				}
+				using (var xsltReader = XmlReader.Create (xsltStream))
+				using (var xmlReader = element.CreateReader ()) {
+					xmlTransform.Load (xsltReader);
+					xmlTransform.Transform (xmlReader, writer);
 				}
 			}
 		}

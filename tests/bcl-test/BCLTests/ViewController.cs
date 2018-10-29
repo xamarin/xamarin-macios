@@ -61,9 +61,12 @@ namespace BCLTests {
 			TcpTextWriter writer = null;
 			if (!string.IsNullOrEmpty (options.HostName))
 				writer = new TcpTextWriter (options.HostName, options.HostPort);
-			var logger = (writer == null) ? new LogWriter () : new LogWriter (writer);
+
+			// we generate the logs in two different ways depending if the generate xml flag was
+			// provided. If it was, we will write the xml file to the tcp writer if present, else
+			// we will write the normal console output using the LogWriter
+			var logger = (writer == null || options.EnableXml) ? new LogWriter () : new LogWriter (writer);
 			logger.MinimumLogLevel = MinimumLogLevel.Info;
-			// Perform any additional setup after loading the view, typically from a nib.
 			var testAssemblies = GetTestAssemblies ();
 			Xamarin.iOS.UnitTests.TestRunner runner;
 			if (RegisterType.IsXUnit)
@@ -72,10 +75,15 @@ namespace BCLTests {
 				runner = new NUnitTestRunner (logger);
 			
 			runner.Run ((IList<TestAssemblyInfo>)testAssemblies);
-			string resultsFilePath = runner.WriteResultsToFile ();
-			logger.Info ($"Xml result can be found {resultsFilePath}");
+			if (options.EnableXml) {
+				runner.WriteResultsToFile (writer);
+				logger.Info ("Xml file was written to the tcp listener.");
+			} else {
+				string resultsFilePath = runner.WriteResultsToFile ();
+				logger.Info ($"Xml result can be found {resultsFilePath}");
+			}
+			
 			logger.Info ($"Tests run: {runner.TotalTests} Passed: {runner.PassedTests} Inconclusive: {runner.InconclusiveTests} Failed: {runner.FailedTests} Ignored: {runner.SkippedTests}");
-
 			if (options.TerminateAfterExecution)
 				TerminateWithSuccess ();
 
