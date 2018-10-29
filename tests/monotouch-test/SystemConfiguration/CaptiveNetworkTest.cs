@@ -173,7 +173,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 			bool supported = true;
 #else
 			// that API is deprecated in iOS9 - and it might be why it returns false (or not)
-			bool supported = false;
+			bool supported = !TestRuntime.CheckXcodeVersion (7, 0) && Runtime.Arch == Arch.DEVICE;
 #endif
 			Assert.That (CaptiveNetwork.SetSupportedSSIDs (new string [2] { "one", "two" } ), Is.EqualTo (supported), "set");
 		}
