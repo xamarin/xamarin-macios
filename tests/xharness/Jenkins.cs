@@ -3615,7 +3615,7 @@ function toggleAll (show)
 
 			await FindSimulatorAsync ();
 
-			var clean_state = true;//Platform == TestPlatform.watchOS;
+			var clean_state = false;//Platform == TestPlatform.watchOS;
 			runner = new AppRunner ()
 			{
 				Harness = Harness,
