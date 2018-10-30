@@ -169,6 +169,8 @@ namespace xharness
 
 		public override StreamReader GetReader ()
 		{
+			if (!File.Exists (Path))
+				return new StreamReader (new MemoryStream ());
 			return new StreamReader (new FileStream (Path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
 		}
 
