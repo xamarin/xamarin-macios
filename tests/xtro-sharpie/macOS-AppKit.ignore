@@ -951,7 +951,6 @@
 !missing-selector! NSSavePanel::selectText: not bound
 !missing-selector! NSScreen::maximumExtendedDynamicRangeColorComponentValue not bound
 !missing-selector! NSScroller::setFloatValue:knobProportion: not bound
-!missing-selector! NSScrollView::addFloatingSubview:forAxis: not bound
 !missing-selector! NSSegmentedCell::interiorBackgroundStyleForSegment: not bound
 !missing-selector! NSSegmentedControl::indexOfSelectedItem not bound
 !missing-selector! NSSet::enumerateIndexPathsWithOptions:usingBlock: not bound

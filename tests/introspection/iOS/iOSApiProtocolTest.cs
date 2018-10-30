@@ -46,6 +46,10 @@ namespace Introspection {
 				if (Runtime.Arch == Arch.SIMULATOR)
 					return true;
 				break;
+			case "CoreNFC": // Only available on devices that support NFC, so check if NFCNDEFReaderSession is present.
+				if (Class.GetHandle ("NFCNDEFReaderSession") == IntPtr.Zero)
+					return true;
+				break;
 			}
 
 			switch (type.Name) {

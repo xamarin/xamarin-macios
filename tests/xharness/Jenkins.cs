@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Diagnostics;
@@ -2883,6 +2884,8 @@ function toggleAll (show)
 					}
 					proc.StartInfo.Arguments = args.ToString ();
 					SetEnvironmentVariables (proc);
+					foreach (DictionaryEntry de in proc.StartInfo.EnvironmentVariables)
+						log.WriteLine ($"export {de.Key}={de.Value}");
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
 					if (!Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;

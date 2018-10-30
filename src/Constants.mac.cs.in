@@ -146,6 +146,6 @@ namespace MonoMac {
 		public const string NaturalLanguageLibrary = "/System/Library/Frameworks/Frameworks/NaturalLanguage.framework/NaturalLanguage";
 		public const string VideoSubscriberAccountLibrary = "/System/Library/Frameworks/VideoSubscriberAccount.framework/VideoSubscriberAccount";
 		public const string UserNotificationsLibrary = "/System/Library/Frameworks/UserNotifications.framework/UserNotifications";
-		public const string iTunesLibraryLibrary = "/System/Library/Frameworks/iTunesLibrary.framewor/iTunesLibrary";
+		public const string iTunesLibraryLibrary = "/System/Library/Frameworks/iTunesLibrary.framework/iTunesLibrary";
 	}
 }
