@@ -189,6 +189,12 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 		public void Client_Leaf_Only ()
 		{
+			// Randomly fails like this on iOS 8.1 simulators:
+			// [FAIL] TrustTest.Client_Leaf_Only :   Evaluate
+			// 	Expected: RecoverableTrustFailure
+			// 	But was:  Invalid
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 9, 0, throwIfOtherPlatform: false);
+
 			X509Certificate x = new X509Certificate (CertificateTest.mail_google_com);
 			using (var policy = SecPolicy.CreateSslPolicy (false, null))
 			using (var trust = new SecTrust (x, policy)) {
