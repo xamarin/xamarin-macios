@@ -1,5 +1,6 @@
 using System.IO;
 using System.Linq;
+using Microsoft.Build.Utilities;
 using NUnit.Framework;
 using Xamarin.MacDev;
 
@@ -36,14 +37,14 @@ namespace Xamarin.iOS.Tasks
 			task.AppBundleDir = AppBundlePath;
 			task.AppIdentifier = "32UV7A8CDE.com.xamarin.MySingleView";
 			task.BundleIdentifier = "com.xamarin.MySingleView";
-			task.CompiledEntitlements = Path.Combine (MonoTouchProjectObjPath, "Entitlements.xcent");
+			task.CompiledEntitlements = new TaskItem (Path.Combine (MonoTouchProjectObjPath, "Entitlements.xcent"));
 			task.Entitlements = Path.Combine ("..", "bin", "Resources", "Entitlements.plist");
 			task.IsAppExtension = false;
 			task.ProvisioningProfile = Path.Combine ("..", "bin", "Resources", "profile.mobileprovision");
 			task.SdkPlatform = "iPhoneOS";
 			task.SdkVersion = "6.1";
 
-			compiledEntitlements = task.CompiledEntitlements;
+			compiledEntitlements = task.CompiledEntitlements.ItemSpec;
 		}
 
 		[Test (Description = "Xambug #46298")]
