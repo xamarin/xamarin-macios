@@ -402,7 +402,8 @@ namespace xharness
 					// add a new line
 					humanReadableLog.AppendLine ();
 				}
-				humanReadableLog.AppendLine ($"{node.Attributes ["name"].InnerXml} {node.Attributes ["time"].InnerText} ms");
+				var time = node.Attributes ["time"]?.InnerText ?? "0"; // some nodes might not have the time :/
+				humanReadableLog.AppendLine ($"{node.Attributes ["name"].InnerXml} {time} ms");
 			}
 			humanReadableLog.AppendLine ($"Tests run: {total} Passed: {passed} Inconclusive: {inconclusive} Failed: {failed + errors} Ignored: {ignored + skipped + invalid}");
 			return (xml: log, human: humanReadableLog.ToString());
