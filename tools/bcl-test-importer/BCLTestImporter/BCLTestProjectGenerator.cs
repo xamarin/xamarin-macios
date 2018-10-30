@@ -93,15 +93,15 @@ namespace BCLTestImporter {
 		public string RegisterTypesTemplatePath { get; private set; }
 		string GeneratedCodePathRoot => Path.Combine (OutputDirectoryPath, "generated");
 
-		public BCLTestProjectGenerator (string outpudDirectory)
+		public BCLTestProjectGenerator (string outputDirectory)
 		{
-			OutputDirectoryPath = outpudDirectory ?? throw new ArgumentNullException (nameof (outpudDirectory));
+			OutputDirectoryPath = outputDirectory ?? throw new ArgumentNullException (nameof (outputDirectory));
 		}
 		
-		public BCLTestProjectGenerator (string outpudDirectory, string monoRootPath, string projectTemplatePath, string registerTypesTemplatePath, string plistTemplatePath)
+		public BCLTestProjectGenerator (string outputDirectory, string monoRootPath, string projectTemplatePath, string registerTypesTemplatePath, string plistTemplatePath)
 		{
 			isCodeGeneration = true;
-			OutputDirectoryPath = outpudDirectory ?? throw new ArgumentNullException (nameof (outpudDirectory));
+			OutputDirectoryPath = outputDirectory ?? throw new ArgumentNullException (nameof (outputDirectory));
 			MonoRootPath = monoRootPath ?? throw new ArgumentNullException (nameof (monoRootPath));
 			ProjectTemplatePath = projectTemplatePath ?? throw new ArgumentNullException (nameof (projectTemplatePath));
 			PlistTemplatePath = plistTemplatePath ?? throw new ArgumentNullException (nameof (plistTemplatePath));

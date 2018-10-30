@@ -82,14 +82,14 @@ namespace BCLTestImporter {
 			var options = appOptions.CreateCommandLineOptionSet ();
 			
 			var extra = options.Parse (args);
-			var console = new ConsoleWriter (appOptions);
+			var outputWriter = new ConsoleWriter (appOptions);
 			
 			if (extra.Count > 0) {
-				console.WriteWarning ($"The following extra parameters will be ignored: '{ string.Join (",", extra) }'");
+				outputWriter.WriteWarning ($"The following extra parameters will be ignored: '{ string.Join (",", extra) }'");
 			}
 			// lets validate the options and return any possible error
 			if (!appOptions.OptionsAreValid (out var validationMessage)) {
-				console.WriteError (validationMessage);
+				outputWriter.WriteError (validationMessage);
 				return 1;
 			}
 
@@ -107,7 +107,7 @@ namespace BCLTestImporter {
 					return 0;
 				}
 				
-				console.WriteLine ("Using reflection to retrieve a type per assembly.");
+				outputWriter.WriteLine ("Using reflection to retrieve a type per assembly.");
 
 				var typesPerAssembly = GetTypeForAssemblies (assemblies, appOptions.Verbose);
 				if (appOptions.ShowDict) {
@@ -140,14 +140,14 @@ namespace BCLTestImporter {
 					}
 				}
 				
-				console.WriteLine ("Generating test projet:");
-				console.WriteLine ($"\tProject name: {appOptions.ProjectName}");
-				console.WriteLine ("\tTest Assemblies:");
+				outputWriter.WriteLine ("Generating test projet:");
+				outputWriter.WriteLine ($"\tProject name: {appOptions.ProjectName}");
+				outputWriter.WriteLine ("\tTest Assemblies:");
 				if (appOptions.Verbose)
 					foreach (var a in appOptions.TestAssemblies) {
 						Console.WriteLine ($"\t\t{a}");
 					}
-				console.WriteLine ("Reference Assemblies:");
+				outputWriter.WriteLine ("Reference Assemblies:");
 				if (appOptions.Verbose)
 					foreach (var a in refAssemblies) {
 						Console.WriteLine ($"\t\t{a}");
@@ -158,34 +158,34 @@ namespace BCLTestImporter {
 				foreach (var a in fixedTestAssemblies) {
 					var assemblyInfo = (assembly: Path.GetFileName (a), hintPath: (string) a);
 					info.Add (assemblyInfo);
-					console.WriteLine ($"Ref will be added for assembly: '{assemblyInfo.assembly}' hintPath: '{assemblyInfo.hintPath}'");
+					outputWriter.WriteLine ($"Ref will be added for assembly: '{assemblyInfo.assembly}' hintPath: '{assemblyInfo.hintPath}'");
 				}
 				foreach (var a in refAssemblies) {
 					var assemblyInfo = (assembly: a, hintPath: (string) null);
 					info.Add (assemblyInfo);
-					console.WriteLine ($"Ref will be added for assembly: '{assemblyInfo.assembly}' hintPath: '{assemblyInfo.hintPath}'");
+					outputWriter.WriteLine ($"Ref will be added for assembly: '{assemblyInfo.assembly}' hintPath: '{assemblyInfo.hintPath}'");
 				}
 				var generatedProject = BCLTestProjectGenerator.Generate (appOptions.ProjectName, appOptions.RegisterTypesPath,
 					info, appOptions.RegisterTypeTemplate, appOptions.PlistTemplate);
-				console.WriteLine ("Generated project is:");
-				console.WriteLine (generatedProject);
+				outputWriter.WriteLine ("Generated project is:");
+				outputWriter.WriteLine (generatedProject);
 				
 				using (var file = new StreamWriter (appOptions.Output, !appOptions.Override)) { // falso is do not append
 					file.Write (generatedProject);
 				}
 				return 0;
 			} else if (appOptions.GenerateTypeRegister) {
-				console.WriteLine ("Generating type register.");
+				outputWriter.WriteLine ("Generating type register.");
 				var fixedTestAssemblies = new List<string> ();
 				foreach (var a in appOptions.TestAssemblies) {
 					var path = Path.Combine (appOptions.TestsDirectory, a);
-					console.WriteLine ($"Assembly path is {path}");
+					outputWriter.WriteLine ($"Assembly path is {path}");
 					fixedTestAssemblies.Add (path);
 				}
 				var typesPerAssembly = GetTypeForAssemblies (fixedTestAssemblies, appOptions.Verbose);
 				var generatedCode = RegisterTypeGenerator.GenerateCode (typesPerAssembly, appOptions.IsXUnit, appOptions.RegisterTypeTemplate);
-				console.WriteLine ("Generated code is:");
-				console.WriteLine (generatedCode);
+				outputWriter.WriteLine ("Generated code is:");
+				outputWriter.WriteLine (generatedCode);
 				using (var file = new StreamWriter (appOptions.Output, !appOptions.Override)) { // falso is do not append
 					file.Write (generatedCode);
 				}
@@ -199,17 +199,17 @@ namespace BCLTestImporter {
 				else {
 					var projectGenerator = new BCLTestProjectGenerator (appOptions.Output, appOptions.MonoPath,
 						appOptions.ProjectTemplate, appOptions.RegisterTypeTemplate, appOptions.PlistTemplate);
-					console.WriteLine ("Verifying if all the test assemblies have been added.");
+					outputWriter.WriteLine ("Verifying if all the test assemblies have been added.");
 					if (!appOptions.IgnoreMissingAssemblies && !projectGenerator.AllTestAssembliesAreRan (out var missingAssemblies)) {
-						console.WriteLine ("The following test assemblies should be added to a test project or ignored.");
+						outputWriter.WriteLine ("The following test assemblies should be added to a test project or ignored.");
 						foreach (var assembly in missingAssemblies) {
-							console.WriteLine ($"\t{assembly}");
+							outputWriter.WriteLine ($"\t{assembly}");
 						}
 
 						return 1;
 					}
 						
-					console.WriteLine ("Generating all the registered test projects");
+					outputWriter.WriteLine ("Generating all the registered test projects");
 					projectGenerator.GenerateAllTestProjectsAsync ().Wait ();
 					return 0;
 				}

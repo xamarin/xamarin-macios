@@ -13,20 +13,14 @@ namespace Xamarin.iOS.UnitTests
 
 		public MinimumLogLevel MinimumLogLevel { get; set; } = MinimumLogLevel.Info;
 
-		public LogWriter ()
-		{
-			writer = Console.Out;
-			InitLogging ();
-		}
+		public LogWriter () : this (Console.Out) { }
 		
 		public LogWriter (TextWriter w)
 		{
-			if (w == null)
-				writer = Console.Out;
-			else
-				writer = w;
+			writer = w ?? Console.Out;
 			InitLogging ();
 		}
+		
 		[System.Runtime.InteropServices.DllImport ("/usr/lib/libobjc.dylib")]
 		static extern IntPtr objc_msgSend (IntPtr receiver, IntPtr selector);
 		
@@ -47,7 +41,6 @@ namespace Xamarin.iOS.UnitTests
 			writer.WriteLine ("[Runner executing:\t{0}]", "Run everything");
 			writer.WriteLine ("[MonoTouch Version:\t{0}]", Constants.Version);
 			writer.WriteLine ("[Assembly:\t{0}.dll ({1} bits)]", typeof (NSObject).Assembly.GetName ().Name, IntPtr.Size * 8);
-			writer.WriteLine ("[GC:\t{0}]", GC.MaxGeneration == 0 ? "Boehm": "sgen");
 			writer.WriteLine ("[{0}:\t{1} v{2}]", device.Model, device.SystemName, device.SystemVersion);
 			writer.WriteLine ("[Device Name:\t{0}]", device.Name);
 			writer.WriteLine ("[Device UDID:\t{0}]", UniqueIdentifier);

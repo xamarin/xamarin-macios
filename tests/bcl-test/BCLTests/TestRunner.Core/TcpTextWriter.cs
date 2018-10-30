@@ -18,9 +18,9 @@ namespace BCLTests.TestRunner.Core {
 		public TcpTextWriter (string hostName, int port)
 		{
 			if ((port < 0) || (port > ushort.MaxValue))
-				throw new ArgumentException ("port");
-			
-			HostName = hostName ?? throw new ArgumentNullException ("hostName");
+				throw new ArgumentOutOfRangeException (nameof (port), $"Port must be between 0 and {ushort.MaxValue}" );
+
+			HostName = hostName ?? throw new ArgumentNullException (nameof (hostName));
 			Port = port;
 
 #if __IOS__
