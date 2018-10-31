@@ -50,6 +50,19 @@ namespace MonoTouchFixtures.Security {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static nint CFGetRetainCount (IntPtr handle);
 
+		[SetUp]
+		public void SetUp ()
+		{
+			// Randomly fails like this on iOS 8.1 simulators:
+			// [FAIL] TrustTest.HostName_Leaf_Only :   Evaluate
+			// 	Expected: RecoverableTrustFailure
+			// 	But was:  Invalid
+			// [FAIL] TrustTest.Client_Leaf_Only :   Evaluate
+			// 	Expected: RecoverableTrustFailure
+			// 	But was:  Invalid
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 9, 0, throwIfOtherPlatform: false);
+		}
+
 		// SecTrustResult.Unspecified == "Use System Defaults" (valid)
 
 		// some days it seems iOS timeout just a bit too fast and we get a lot of false positives
@@ -189,12 +202,6 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 		public void Client_Leaf_Only ()
 		{
-			// Randomly fails like this on iOS 8.1 simulators:
-			// [FAIL] TrustTest.Client_Leaf_Only :   Evaluate
-			// 	Expected: RecoverableTrustFailure
-			// 	But was:  Invalid
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 9, 0, throwIfOtherPlatform: false);
-
 			X509Certificate x = new X509Certificate (CertificateTest.mail_google_com);
 			using (var policy = SecPolicy.CreateSslPolicy (false, null))
 			using (var trust = new SecTrust (x, policy)) {
