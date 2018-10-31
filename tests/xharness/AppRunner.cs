@@ -467,6 +467,8 @@ namespace xharness
 			args.Append (" -setenv=NUNIT_AUTOEXIT=true");
 			args.Append (" -argument=-app-arg:-enablenetwork");
 			args.Append (" -setenv=NUNIT_ENABLE_NETWORK=true");
+			args.Append (" -setenv=MONO_LOG_LEVEL=debug");
+			args.Append (" -setenv=MONO_LOG_MASK=dll,asm");
 			// detect if we are using a jenkins bot.
 			var useXmlOutput = Harness.InJenkins;
 			if (useXmlOutput) {

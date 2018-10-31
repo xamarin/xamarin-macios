@@ -120,7 +120,6 @@ MAC_ASSEMBLY_NAMES = \
 	I18N.West \
 	mscorlib \
 	Microsoft.CSharp \
-	Mono.CSharp \
 	Mono.CompilerServices.SymbolWriter \
 	Mono.Data.Sqlite \
 	Mono.Data.Tds \
@@ -201,7 +200,10 @@ MAC_BCL_TARGETS = \
 
 MAC_TARGETS = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-profiler-log.a \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-system-native.a \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-native-compat.a \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-native-unified.a \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-native-compat.dylib \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-native-unified.dylib \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-2.0.dylib \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-2.0.a \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig/mono-2.pc \
@@ -318,9 +320,12 @@ endef
 
 $(eval $(call lipo_template_static,libmono-profiler-log.a,mono/profiler))
 $(eval $(call lipo_template_static,libmonosgen-2.0.a,mono/mini))
-$(eval $(call lipo_template_static,libmono-system-native.a,mono/metadata))
 $(eval $(call lipo_template_dynamic,libmonosgen-2.0.dylib,mono/mini))
 $(eval $(call lipo_template_dynamic,libMonoPosixHelper.dylib,support))
+$(eval $(call lipo_template_static,libmono-native-compat.a,mono/native))
+$(eval $(call lipo_template_static,libmono-native-unified.a,mono/native))
+$(eval $(call lipo_template_dynamic,libmono-native-compat.dylib,mono/native))
+$(eval $(call lipo_template_dynamic,libmono-native-unified.dylib,mono/native))
 
 mac32/data/mono-2.pc: .stamp-build-mac32
 install/mac64/bin/mono-sgen: .stamp-build-mac64
@@ -743,11 +748,20 @@ $(eval SIM_TARGET_LIBMONOSGEN:=$(SIM_TARGET_LIBMONOSGEN) $(BUILD_DESTDIR)/$(2)/l
 $(eval SIM_TARGET_SHAREDMONOSGEN:=$(SIM_TARGET_SHAREDMONOSGEN) $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.dylib)
 $(eval SIM_TARGET_LIBLOGPROFILER:=$(SIM_TARGET_LIBLOGPROFILER) $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log-static.a)
 $(eval SIM_TARGET_SHAREDLIBLOGPROFILER:=$(SIM_TARGET_SHAREDLIBLOGPROFILER) $(BUILD_DESTDIR)/$(2)/tmp-lib/libmono-profiler-log.0.dylib)
+$(eval SIM_TARGET_LIBMONONATIVECOMPAT:=$(SIM_TARGET_LIBMONONATIVECOMPAT) $(BUILD_DESTDIR)/$(2)/lib/libmono-native-compat.a)
+$(eval SIM_TARGET_LIBMONONATIVEUNIFIED:=$(SIM_TARGET_LIBMONONATIVEUNIFIED) $(BUILD_DESTDIR)/$(2)/lib/libmono-native-unified.a)
+$(eval SIM_TARGET_SHAREDLIBMONONATIVECOMPAT:=$(SIM_TARGET_SHAREDLIBMONONATIVECOMPAT) $(BUILD_DESTDIR)/$(2)/lib/libmono-native-compat.dylib)
+$(eval SIM_TARGET_SHAREDLIBMONONATIVEUNIFIED:=$(SIM_TARGET_SHAREDLIBMONONATIVEUNIFIED) $(BUILD_DESTDIR)/$(2)/lib/libmono-native-unified.dylib)
+
 
 $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.a: .stamp-build-$(2)
 $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.dylib: .stamp-build-$(2)
 $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log-static.a: .stamp-build-$(2)
 $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log.0.dylib: .stamp-build-$(2)
+$(BUILD_DESTDIR)/$(2)/lib/libmono-native-compat.a: .stamp-build-$(2)
+$(BUILD_DESTDIR)/$(2)/lib/libmono-native-unified.a: .stamp-build-$(2)
+$(BUILD_DESTDIR)/$(2)/lib/libmono-native-compat.dylib: .stamp-build-$(2)
+$(BUILD_DESTDIR)/$(2)/lib/libmono-native-unified.dylib: .stamp-build-$(2)
 
 $(BUILD_DESTDIR)/$(2)/tmp-lib/libmono-profiler-log.0.dylib: $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log.0.dylib | $(BUILD_DESTDIR)/$(2)/tmp-lib
 	$(Q) $(CP) $$< $$@
@@ -779,6 +793,10 @@ IPHONESIMULATOR_TARGETS = \
 	$(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmonosgen-2.0.dylib         \
 	$(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmono-profiler-log.a        \
 	$(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmono-profiler-log.dylib    \
+	$(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmono-native-compat.a       \
+	$(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmono-native-unified.a      \
+	$(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmono-native-compat.dylib   \
+	$(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmono-native-unified.dylib  \
 	$(IOS_DESTDIR)$(IPHONESIMULATOR_SDK)/Frameworks/Mono.framework/Mono       \
 	$(IOS_DESTDIR)$(IPHONESIMULATOR_SDK)/Frameworks/Mono.framework/Info.plist \
 
@@ -799,6 +817,22 @@ $(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmono-profiler-log.a: $(SIM_TARGET
 
 $(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmono-profiler-log.dylib: $(SIM_TARGET_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib
 	$(Q) lipo $(SIM_TARGET_SHAREDLIBLOGPROFILER) -create -output $@
+	$(Q) dsymutil -t 4 -o $@.dSYM $@
+
+$(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmono-native-compat.a: $(SIM_TARGET_LIBMONONATIVECOMPAT) | $(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib
+	$(Q) lipo $(SIM_TARGET_LIBMONONATIVECOMPAT) -create -output $@
+
+$(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmono-native-unified.a: $(SIM_TARGET_LIBMONONATIVEUNIFIED) | $(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib
+	$(Q) lipo $(SIM_TARGET_LIBMONONATIVEUNIFIED) -create -output $@
+
+$(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmono-native-compat.dylib: $(SIM_TARGET_SHAREDLIBMONONATIVECOMPAT) | $(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib
+	$(Q) lipo $(SIM_TARGET_SHAREDLIBMONONATIVECOMPAT) -create -output $@
+	$(Q) install_name_tool -id @rpath/libmono-native-compat.dylib $@
+	$(Q) dsymutil -t 4 -o $@.dSYM $@
+
+$(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmono-native-unified.dylib: $(SIM_TARGET_SHAREDLIBMONONATIVEUNIFIED) | $(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib
+	$(Q) lipo $(SIM_TARGET_SHAREDLIBMONONATIVEUNIFIED) -create -output $@
+	$(Q) install_name_tool -id @rpath/libmono-native-unified.dylib $@
 	$(Q) dsymutil -t 4 -o $@.dSYM $@
 
 $(IPHONESIMULATOR_DIRECTORIES):
@@ -842,21 +876,33 @@ clean-watchsimulator:
 	$(Q) rm -rf .stamp-*-watchsimulator $(BUILD_DESTDIR)/watchsimulator
 	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-simwatch $(SDK_ARGS)
 
-WATCHSIMULATOR_LIBMONOSGEN          = $(BUILD_DESTDIR)/watchsimulator/lib/libmonosgen-2.0.a
-WATCHSIMULATOR_SHAREDMONOSGEN       = $(BUILD_DESTDIR)/watchsimulator/lib/libmonosgen-2.0.dylib
-WATCHSIMULATOR_LIBLOGPROFILER       = $(BUILD_DESTDIR)/watchsimulator/lib/libmono-profiler-log-static.a
-WATCHSIMULATOR_SHAREDLIBLOGPROFILER = $(BUILD_DESTDIR)/watchsimulator/lib/libmono-profiler-log.0.dylib
+WATCHSIMULATOR_LIBMONOSGEN                = $(BUILD_DESTDIR)/watchsimulator/lib/libmonosgen-2.0.a
+WATCHSIMULATOR_SHAREDMONOSGEN             = $(BUILD_DESTDIR)/watchsimulator/lib/libmonosgen-2.0.dylib
+WATCHSIMULATOR_LIBLOGPROFILER             = $(BUILD_DESTDIR)/watchsimulator/lib/libmono-profiler-log-static.a
+WATCHSIMULATOR_SHAREDLIBLOGPROFILER       = $(BUILD_DESTDIR)/watchsimulator/lib/libmono-profiler-log.0.dylib
+WATCHSIMULATOR_LIBMONONATIVECOMPAT        = $(BUILD_DESTDIR)/watchsimulator/lib/libmono-native-compat.a
+WATCHSIMULATOR_LIBMONONATIVEUNIFIED       = $(BUILD_DESTDIR)/watchsimulator/lib/libmono-native-unified.a
+WATCHSIMULATOR_SHAREDLIBMONONATIVECOMPAT  = $(BUILD_DESTDIR)/watchsimulator/lib/libmono-native-compat.dylib
+WATCHSIMULATOR_SHAREDLIBMONONATIVEUNIFIED = $(BUILD_DESTDIR)/watchsimulator/lib/libmono-native-unified.dylib
 
 $(WATCHSIMULATOR_LIBMONOSGEN): .stamp-build-watchsimulator
 $(WATCHSIMULATOR_SHAREDMONOSGEN): .stamp-build-watchsimulator
 $(WATCHSIMULATOR_LIBLOGPROFILER): .stamp-build-watchsimulator
 $(WATCHSIMULATOR_SHAREDLIBLOGPROFILER): .stamp-build-watchsimulator
+$(WATCHSIMULATOR_LIBMONONATIVECOMPAT): .stamp-build-watchsimulator
+$(WATCHSIMULATOR_LIBMONONATIVEUNIFIED): .stamp-build-watchsimulator
+$(WATCHSIMULATOR_SHAREDLIBMONONATIVECOMPAT): .stamp-build-watchsimulator
+$(WATCHSIMULATOR_SHAREDLIBMONONATIVEUNIFIED): .stamp-build-watchsimulator
 
 WATCHSIMULATOR_TARGETS = \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.a            \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.dylib        \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-profiler-log.a       \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-profiler-log.dylib   \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-native-compat.a       \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-native-unified.a      \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-native-compat.dylib   \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-native-unified.dylib  \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/Frameworks/Mono.framework/Mono       \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/Frameworks/Mono.framework/Info.plist \
 
@@ -878,6 +924,22 @@ $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-profiler-log.a: $(WA
 $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-profiler-log.dylib: $(WATCHSIMULATOR_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib
 	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHSIMULATOR_SHAREDLIBLOGPROFILER) -create -output $@
 	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/ios-simwatch-release/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
+	$(Q) dsymutil -t 4 -o $@.dSYM $@
+
+$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-native-compat.a: $(WATCHSIMULATOR_LIBMONONATIVECOMPAT) | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib
+	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHSIMULATOR_LIBMONONATIVECOMPAT) -create -output $@
+
+$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-native-compat.dylib: $(WATCHSIMULATOR_SHAREDLIBMONONATIVECOMPAT) | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib
+	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHSIMULATOR_SHAREDLIBMONONATIVECOMPAT) -create -output $@
+	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-native-compat.dylib -change $(SDK_DESTDIR)/ios-simwatch-release/lib/libmono-native-compat.dylib @rpath/libmono-native-compat.dylib $@
+	$(Q) dsymutil -t 4 -o $@.dSYM $@
+
+$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-native-unified.a: $(WATCHSIMULATOR_LIBMONONATIVEUNIFIED) | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib
+	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHSIMULATOR_LIBMONONATIVEUNIFIED) -create -output $@
+
+$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-native-unified.dylib: $(WATCHSIMULATOR_SHAREDLIBMONONATIVEUNIFIED) | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib
+	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHSIMULATOR_SHAREDLIBMONONATIVEUNIFIED) -create -output $@
+	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-native-unified.dylib -change $(SDK_DESTDIR)/ios-simwatch-release/lib/libmono-native-unified.dylib @rpath/libmono-native-unified.dylib $@
 	$(Q) dsymutil -t 4 -o $@.dSYM $@
 
 $(WATCHSIMULATOR_DIRECTORIES):
@@ -921,21 +983,33 @@ clean-tvsimulator:
 	$(Q) rm -rf .stamp-*-tvsimulator $(BUILD_DESTDIR)/tvsimulator
 	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-simtv $(SDK_ARGS)
 
-TVSIMULATOR_LIBMONOSGEN          = $(BUILD_DESTDIR)/tvsimulator/lib/libmonosgen-2.0.a
-TVSIMULATOR_SHAREDMONOSGEN       = $(BUILD_DESTDIR)/tvsimulator/lib/libmonosgen-2.0.dylib
-TVSIMULATOR_LIBLOGPROFILER       = $(BUILD_DESTDIR)/tvsimulator/lib/libmono-profiler-log-static.a
-TVSIMULATOR_SHAREDLIBLOGPROFILER = $(BUILD_DESTDIR)/tvsimulator/lib/libmono-profiler-log.0.dylib
+TVSIMULATOR_LIBMONOSGEN                = $(BUILD_DESTDIR)/tvsimulator/lib/libmonosgen-2.0.a
+TVSIMULATOR_SHAREDMONOSGEN             = $(BUILD_DESTDIR)/tvsimulator/lib/libmonosgen-2.0.dylib
+TVSIMULATOR_LIBLOGPROFILER             = $(BUILD_DESTDIR)/tvsimulator/lib/libmono-profiler-log-static.a
+TVSIMULATOR_SHAREDLIBLOGPROFILER       = $(BUILD_DESTDIR)/tvsimulator/lib/libmono-profiler-log.0.dylib
+TVSIMULATOR_LIBMONONATIVECOMPAT        = $(BUILD_DESTDIR)/tvsimulator/lib/libmono-native-compat.a
+TVSIMULATOR_LIBMONONATIVEUNIFIED       = $(BUILD_DESTDIR)/tvsimulator/lib/libmono-native-unified.a
+TVSIMULATOR_SHAREDLIBMONONATIVECOMPAT  = $(BUILD_DESTDIR)/tvsimulator/lib/libmono-native-compat.dylib
+TVSIMULATOR_SHAREDLIBMONONATIVEUNIFIED = $(BUILD_DESTDIR)/tvsimulator/lib/libmono-native-unified.dylib
 
 $(TVSIMULATOR_LIBMONOSGEN): .stamp-build-tvsimulator
 $(TVSIMULATOR_SHAREDMONOSGEN): .stamp-build-tvsimulator
 $(TVSIMULATOR_LIBLOGPROFILER): .stamp-build-tvsimulator
 $(TVSIMULATOR_SHAREDLIBLOGPROFILER): .stamp-build-tvsimulator
+$(TVSIMULATOR_LIBMONONATIVECOMPAT): .stamp-build-tvsimulator
+$(TVSIMULATOR_LIBMONONATIVEUNIFIED): .stamp-build-tvsimulator
+$(TVSIMULATOR_SHAREDLIBMONONATIVECOMPAT): .stamp-build-tvsimulator
+$(TVSIMULATOR_SHAREDLIBMONONATIVEUNIFIED): .stamp-build-tvsimulator
 
 TVSIMULATOR_TARGETS = \
 	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.a            \
 	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.dylib        \
 	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-profiler-log.a       \
 	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-profiler-log.dylib   \
+	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-native-compat.a      \
+	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-native-unified.a     \
+	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-native-compat.dylib  \
+	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-native-unified.dylib \
 	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/Frameworks/Mono.framework/Mono       \
 	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/Frameworks/Mono.framework/Info.plist \
 
@@ -957,6 +1031,22 @@ $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-profiler-log.a: $(TVSIM
 $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-profiler-log.dylib: $(TVSIMULATOR_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib
 	$(Q) $(TVOS_BIN_PATH)/lipo $(TVSIMULATOR_SHAREDLIBLOGPROFILER) -create -output $@
 	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/ios-simtv-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
+	$(Q) dsymutil -t 4 -o $@.dSYM $@
+
+$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-native-compat.a: $(TVSIMULATOR_LIBMONONATIVECOMPAT) | $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib
+	$(Q) $(TVOS_BIN_PATH)/lipo $(TVSIMULATOR_LIBMONONATIVECOMPAT) -create -output $@
+
+$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-native-compat.dylib: $(TVSIMULATOR_SHAREDLIBMONONATIVECOMPAT) | $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib
+	$(Q) $(TVOS_BIN_PATH)/lipo $(TVSIMULATOR_SHAREDLIBMONONATIVECOMPAT) -create -output $@
+	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmono-native-compat.dylib -change $(SDK_DESTDIR)/ios-simtv-release/lib/libmono-native-compat.dylib @rpath/libmono-native-compat.dylib $@
+	$(Q) dsymutil -t 4 -o $@.dSYM $@
+
+$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-native-unified.a: $(TVSIMULATOR_LIBMONONATIVEUNIFIED) | $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib
+	$(Q) $(TVOS_BIN_PATH)/lipo $(TVSIMULATOR_LIBMONONATIVEUNIFIED) -create -output $@
+
+$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-native-unified.dylib: $(TVSIMULATOR_SHAREDLIBMONONATIVEUNIFIED) | $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib
+	$(Q) $(TVOS_BIN_PATH)/lipo $(TVSIMULATOR_SHAREDLIBMONONATIVEUNIFIED) -create -output $@
+	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmono-native-unified.dylib -change $(SDK_DESTDIR)/ios-simtv-release/lib/libmono-native-unified.dylib @rpath/libmono-native-unified.dylib $@
 	$(Q) dsymutil -t 4 -o $@.dSYM $@
 
 $(TVSIMULATOR_DIRECTORIES):
@@ -1026,6 +1116,10 @@ $(eval TARGET_LIBMONOEEINTERP:=$(TARGET_LIBMONOEEINTERP) $(BUILD_DESTDIR)/$(2)/l
 $(eval TARGET_LIBMONOICALLTABLE:=$(TARGET_LIBMONOICALLTABLE) $(BUILD_DESTDIR)/$(2)/lib/libmono-icall-table.a)
 $(eval TARGET_LIBMONOILGEN:=$(TARGET_LIBMONOILGEN) $(BUILD_DESTDIR)/$(2)/lib/libmono-ilgen.a)
 $(eval TARGET_SHAREDLIBLOGPROFILER:=$(TARGET_SHAREDLIBLOGPROFILER) $(BUILD_DESTDIR)/$(2)/tmp-lib/libmono-profiler-log.0.dylib)
+$(eval TARGET_LIBMONONATIVECOMPAT:=$(TARGET_LIBMONONATIVECOMPAT) $(BUILD_DESTDIR)/$(2)/lib/libmono-native-compat.a)
+$(eval TARGET_LIBMONONATIVEUNIFIED:=$(TARGET_LIBMONONATIVEUNIFIED) $(BUILD_DESTDIR)/$(2)/lib/libmono-native-unified.a)
+$(eval TARGET_SHAREDLIBMONONATIVECOMPAT:=$(TARGET_SHAREDLIBMONONATIVECOMPAT) $(BUILD_DESTDIR)/$(2)/lib/libmono-native-compat.dylib)
+$(eval TARGET_SHAREDLIBMONONATIVEUNIFIED:=$(TARGET_SHAREDLIBMONONATIVEUNIFIED) $(BUILD_DESTDIR)/$(2)/lib/libmono-native-unified.dylib)
 $(eval TARGET_MONOFRAMEWORK:=$(TARGET_MONOFRAMEWORK) $(BUILD_DESTDIR)/$(2)/tmp-lib/Mono)
 
 $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.a: .stamp-build-$(2)
@@ -1034,6 +1128,10 @@ $(BUILD_DESTDIR)/$(2)/lib/libmono-ee-interp.a: .stamp-build-$(2)
 $(BUILD_DESTDIR)/$(2)/lib/libmono-icall-table.a: .stamp-build-$(2)
 $(BUILD_DESTDIR)/$(2)/lib/libmono-ilgen.a: .stamp-build-$(2)
 $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log.a: .stamp-build-$(2)
+$(BUILD_DESTDIR)/$(2)/lib/libmono-native-compat.a: .stamp-build-$(2)
+$(BUILD_DESTDIR)/$(2)/lib/libmono-native-unified.a: .stamp-build-$(2)
+$(BUILD_DESTDIR)/$(2)/lib/libmono-native-compat.dylib: .stamp-build-$(2)
+$(BUILD_DESTDIR)/$(2)/lib/libmono-native-unified.dylib: .stamp-build-$(2)
 
 $(BUILD_DESTDIR)/$(2)/tmp-lib:
 	$$(Q) mkdir -p $$@
@@ -1108,6 +1206,10 @@ IPHONEOS_TARGETS = \
 	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-icall-table.a                              \
 	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-ilgen.a                                    \
 	$(LIBMONO_PROFILER_IPHONEOS_DYLIB)														\
+	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-native-compat.a                            \
+	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-native-unified.a                           \
+	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-native-compat.dylib                        \
+	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-native-unified.dylib                       \
 	$(IOS_DESTDIR)$(IPHONEOS_SDK)/Frameworks/Mono.framework/Mono                            \
 	$(IOS_DESTDIR)$(IPHONEOS_SDK)/Frameworks/Mono.framework/Info.plist                      \
 
@@ -1137,6 +1239,22 @@ $(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-ilgen.a: $(TARGET_LIBMONOILGEN) | $
 
 $(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-profiler-log.dylib: $(TARGET_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib
 	$(Q) lipo $(TARGET_SHAREDLIBLOGPROFILER) -create -output $@
+	$(Q) dsymutil -t 4 -o $@.dSYM $@
+
+$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-native-compat.a: $(TARGET_LIBMONONATIVECOMPAT) | $(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib
+	$(Q) lipo $(TARGET_LIBMONONATIVECOMPAT) -create -output $@
+
+$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-native-unified.a: $(TARGET_LIBMONONATIVEUNIFIED) | $(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib
+	$(Q) lipo $(TARGET_LIBMONONATIVEUNIFIED) -create -output $@
+
+$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-native-compat.dylib: $(TARGET_SHAREDLIBMONONATIVECOMPAT) | $(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib
+	$(Q) lipo $(TARGET_SHAREDLIBMONONATIVECOMPAT) -create -output $@
+	$(Q) install_name_tool -id @rpath/libmono-native-compat.dylib $@
+	$(Q) dsymutil -t 4 -o $@.dSYM $@
+
+$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-native-unified.dylib: $(TARGET_SHAREDLIBMONONATIVEUNIFIED) | $(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib
+	$(Q) lipo $(TARGET_SHAREDLIBMONONATIVEUNIFIED) -create -output $@
+	$(Q) install_name_tool -id @rpath/libmono-native-unified.dylib $@
 	$(Q) dsymutil -t 4 -o $@.dSYM $@
 
 $(IPHONEOS_DIRECTORIES):
@@ -1189,13 +1307,17 @@ setup-watchos: setup-targetwatch
 build-watchos: build-targetwatch
 clean-watchos: clean-targetwatch
 
-WATCHOS_TARGET_LIBMONOSGEN          = $(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.a
-WATCHOS_TARGET_SHAREDMONOSGEN       = $(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.dylib
-WATCHOS_TARGET_LIBLOGPROFILER       = $(BUILD_DESTDIR)/targetwatch/lib/libmono-profiler-log-static.a
-WATCHOS_TARGET_LIBMONOEEINTERP      = $(BUILD_DESTDIR)/targetwatch/lib/libmono-ee-interp.a
-WATCHOS_TARGET_LIBMONOICALLTABLE    = $(BUILD_DESTDIR)/targetwatch/lib/libmono-icall-table.a
-WATCHOS_TARGET_LIBMONOILGEN         = $(BUILD_DESTDIR)/targetwatch/lib/libmono-ilgen.a
-WATCHOS_TARGET_SHAREDLIBLOGPROFILER = $(BUILD_DESTDIR)/targetwatch/lib/libmono-profiler-log.0.dylib
+WATCHOS_TARGET_LIBMONOSGEN                = $(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.a
+WATCHOS_TARGET_SHAREDMONOSGEN             = $(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.dylib
+WATCHOS_TARGET_LIBLOGPROFILER             = $(BUILD_DESTDIR)/targetwatch/lib/libmono-profiler-log-static.a
+WATCHOS_TARGET_LIBMONOEEINTERP            = $(BUILD_DESTDIR)/targetwatch/lib/libmono-ee-interp.a
+WATCHOS_TARGET_LIBMONOICALLTABLE          = $(BUILD_DESTDIR)/targetwatch/lib/libmono-icall-table.a
+WATCHOS_TARGET_LIBMONOILGEN               = $(BUILD_DESTDIR)/targetwatch/lib/libmono-ilgen.a
+WATCHOS_TARGET_SHAREDLIBLOGPROFILER       = $(BUILD_DESTDIR)/targetwatch/lib/libmono-profiler-log.0.dylib
+WATCHOS_TARGET_LIBMONONATIVECOMPAT        = $(BUILD_DESTDIR)/targetwatch/lib/libmono-native-compat.a
+WATCHOS_TARGET_LIBMONONATIVEUNIFIED       = $(BUILD_DESTDIR)/targetwatch/lib/libmono-native-unified.a
+WATCHOS_TARGET_SHAREDLIBMONONATIVECOMPAT  = $(BUILD_DESTDIR)/targetwatch/lib/libmono-native-compat.dylib
+WATCHOS_TARGET_SHAREDLIBMONONATIVEUNIFIED = $(BUILD_DESTDIR)/targetwatch/lib/libmono-native-unified.dylib
 
 $(WATCHOS_TARGET_LIBMONOSGEN): .stamp-build-targetwatch
 $(WATCHOS_TARGET_SHAREDMONOSGEN): .stamp-build-targetwatch
@@ -1204,6 +1326,10 @@ $(WATCHOS_TARGET_LIBMONOEEINTERP): .stamp-build-targetwatch
 $(WATCHOS_TARGET_LIBMONOICALLTABLE): .stamp-build-targetwatch
 $(WATCHOS_TARGET_LIBMONOILGEN): .stamp-build-targetwatch
 $(WATCHOS_TARGET_SHAREDLIBLOGPROFILER): .stamp-build-targetwatch
+$(WATCHOS_TARGET_LIBMONONATIVECOMPAT): .stamp-build-targetwatch
+$(WATCHOS_TARGET_LIBMONONATIVEUNIFIED): .stamp-build-targetwatch
+$(WATCHOS_TARGET_SHAREDLIBMONONATIVECOMPAT): .stamp-build-targetwatch
+$(WATCHOS_TARGET_SHAREDLIBMONONATIVEUNIFIED): .stamp-build-targetwatch
 
 device:: watchos
 
@@ -1214,6 +1340,10 @@ WATCHOS_TARGETS =                                                             \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-ee-interp.a          \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-icall-table.a        \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-ilgen.a              \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-compat.a      \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-unified.a     \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-compat.dylib  \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-unified.dylib \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Mono       \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Info.plist \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-profiler-log.dylib   \
@@ -1245,6 +1375,22 @@ $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-ilgen.a: $(WATCHOS_TARGET_L
 $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-profiler-log.dylib: $(WATCHOS_TARGET_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
 	$(Q) $(WATCHOS_BIN_PATH)/bitcode_strip $(WATCHOS_TARGET_SHAREDLIBLOGPROFILER) -m -o $@
 	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/ios-targetwatch-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
+	$(Q) dsymutil -t 4 -o $@.dSYM $@
+
+$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-compat.a: $(WATCHOS_TARGET_LIBMONONATIVECOMPAT) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
+	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHOS_TARGET_LIBMONONATIVECOMPAT) -create -output $@
+
+$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-unified.a: $(WATCHOS_TARGET_LIBMONONATIVEUNIFIED) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
+	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHOS_TARGET_LIBMONONATIVEUNIFIED) -create -output $@
+
+$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-compat.dylib: $(WATCHOS_TARGET_SHAREDLIBMONONATIVECOMPAT) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
+	$(Q) $(WATCHOS_BIN_PATH)/bitcode_strip $(WATCHOS_TARGET_SHAREDLIBMONONATIVECOMPAT) -m -o $@
+	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-native-compat.dylib -change $(SDK_DESTDIR)/ios-targetwatch-release/lib/libmono-native-compat.dylib @rpath/libmono-native-compat.dylib $@
+	$(Q) dsymutil -t 4 -o $@.dSYM $@
+
+$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-unified.dylib: $(WATCHOS_TARGET_SHAREDLIBMONONATIVEUNIFIED) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
+	$(Q) $(WATCHOS_BIN_PATH)/bitcode_strip $(WATCHOS_TARGET_SHAREDLIBMONONATIVEUNIFIED) -m -o $@
+	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-native-unified.dylib -change $(SDK_DESTDIR)/ios-targetwatch-release/lib/libmono-native-unified.dylib @rpath/libmono-native-unified.dylib $@
 	$(Q) dsymutil -t 4 -o $@.dSYM $@
 
 $(WATCHOS_DIRECTORIES):
@@ -1299,13 +1445,17 @@ clean-targettv:
 build-tvos: build-targettv
 clean-tvos: clean-targettv
 
-TVOS_TARGET_LIBMONOSGEN          = $(BUILD_DESTDIR)/targettv/lib/libmonosgen-2.0.a
-TVOS_TARGET_SHAREDMONOSGEN       = $(BUILD_DESTDIR)/targettv/lib/libmonosgen-2.0.dylib
-TVOS_TARGET_LIBLOGPROFILER       = $(BUILD_DESTDIR)/targettv/lib/libmono-profiler-log-static.a
-TVOS_TARGET_LIBMONOEEINTERP      = $(BUILD_DESTDIR)/targettv/lib/libmono-ee-interp.a
-TVOS_TARGET_LIBMONOICALLTABLE    = $(BUILD_DESTDIR)/targettv/lib/libmono-icall-table.a
-TVOS_TARGET_LIBMONOILGEN         = $(BUILD_DESTDIR)/targettv/lib/libmono-ilgen.a
-TVOS_TARGET_SHAREDLIBLOGPROFILER = $(BUILD_DESTDIR)/targettv/lib/libmono-profiler-log.0.dylib
+TVOS_TARGET_LIBMONOSGEN                = $(BUILD_DESTDIR)/targettv/lib/libmonosgen-2.0.a
+TVOS_TARGET_SHAREDMONOSGEN             = $(BUILD_DESTDIR)/targettv/lib/libmonosgen-2.0.dylib
+TVOS_TARGET_LIBLOGPROFILER             = $(BUILD_DESTDIR)/targettv/lib/libmono-profiler-log-static.a
+TVOS_TARGET_LIBMONOEEINTERP            = $(BUILD_DESTDIR)/targettv/lib/libmono-ee-interp.a
+TVOS_TARGET_LIBMONOICALLTABLE          = $(BUILD_DESTDIR)/targettv/lib/libmono-icall-table.a
+TVOS_TARGET_LIBMONOILGEN               = $(BUILD_DESTDIR)/targettv/lib/libmono-ilgen.a
+TVOS_TARGET_SHAREDLIBLOGPROFILER       = $(BUILD_DESTDIR)/targettv/lib/libmono-profiler-log.0.dylib
+TVOS_TARGET_LIBMONONATIVECOMPAT        = $(BUILD_DESTDIR)/targettv/lib/libmono-native-compat.a
+TVOS_TARGET_LIBMONONATIVEUNIFIED       = $(BUILD_DESTDIR)/targettv/lib/libmono-native-unified.a
+TVOS_TARGET_SHAREDLIBMONONATIVECOMPAT  = $(BUILD_DESTDIR)/targettv/lib/libmono-native-compat.dylib
+TVOS_TARGET_SHAREDLIBMONONATIVEUNIFIED = $(BUILD_DESTDIR)/targettv/lib/libmono-native-unified.dylib
 
 $(TVOS_TARGET_LIBMONOSGEN): .stamp-build-targettv
 $(TVOS_TARGET_SHAREDMONOSGEN): .stamp-build-targettv
@@ -1314,6 +1464,10 @@ $(TVOS_TARGET_LIBMONOEEINTERP): .stamp-build-targettv
 $(TVOS_TARGET_LIBMONOICALLTABLE): .stamp-build-targettv
 $(TVOS_TARGET_LIBMONOILGEN): .stamp-build-targettv
 $(TVOS_TARGET_SHAREDLIBLOGPROFILER): .stamp-build-targettv
+$(TVOS_TARGET_LIBMONONATIVECOMPAT): .stamp-build-targettv
+$(TVOS_TARGET_LIBMONONATIVEUNIFIED): .stamp-build-targettv
+$(TVOS_TARGET_SHAREDLIBMONONATIVECOMPAT): .stamp-build-targettv
+$(TVOS_TARGET_SHAREDLIBMONONATIVEUNIFIED): .stamp-build-targettv
 
 device:: tvos
 
@@ -1324,6 +1478,10 @@ TVOS_TARGETS =                                                             \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-ee-interp.a          \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-icall-table.a        \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-ilgen.a              \
+	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-native-compat.a      \
+	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-native-unified.a     \
+	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-native-compat.dylib  \
+	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-native-unified.dylib \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Mono       \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Info.plist \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.dylib   \
@@ -1355,6 +1513,22 @@ $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-ilgen.a: $(TVOS_TARGET_LIBMONO
 $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.dylib: $(TVOS_TARGET_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
 	$(Q) lipo $(TVOS_TARGET_SHAREDLIBLOGPROFILER) -create -output $@
 	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/ios-targettv-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
+	$(Q) dsymutil -t 4 -o $@.dSYM $@
+
+$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-native-compat.a: $(TVOS_TARGET_LIBMONONATIVECOMPAT) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
+	$(Q) $(TVOS_BIN_PATH)/lipo $(TVSIMULATOR_LIBMONONATIVECOMPAT) -create -output $@
+
+$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-native-compat.dylib: $(TVOS_TARGET_SHAREDLIBMONONATIVECOMPAT) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
+	$(Q) $(TVOS_BIN_PATH)/lipo $(TVOS_TARGET_SHAREDLIBMONONATIVECOMPAT) -create -output $@
+	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmono-native-compat.dylib -change $(SDK_DESTDIR)/ios-targettv-release/lib/libmono-native-compat.dylib @rpath/libmono-native-compat.dylib $@
+	$(Q) dsymutil -t 4 -o $@.dSYM $@
+
+$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-native-unified.a: $(TVOS_TARGET_LIBMONONATIVEUNIFIED) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
+	$(Q) $(TVOS_BIN_PATH)/lipo $(TVOS_TARGET_LIBMONONATIVEUNIFIED) -create -output $@
+
+$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-native-unified.dylib: $(TVOS_TARGET_SHAREDLIBMONONATIVEUNIFIED) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
+	$(Q) $(TVOS_BIN_PATH)/lipo $(TVOS_TARGET_SHAREDLIBMONONATIVEUNIFIED) -create -output $@
+	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmono-native-unified.dylib -change $(SDK_DESTDIR)/ios-targettv-release/lib/libmono-native-unified.dylib @rpath/libmono-native-unified.dylib $@
 	$(Q) dsymutil -t 4 -o $@.dSYM $@
 
 $(TVOS_DIRECTORIES):

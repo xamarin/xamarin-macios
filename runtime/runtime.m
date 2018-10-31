@@ -2508,6 +2508,18 @@ xamarin_create_product_exception (int code, const char *message)
 void
 xamarin_insert_dllmap ()
 {
+#if DYLIB
+	const char *libmono_native = "mono-native";
+#else
+	const char *libmono_native = "__Internal";
+#endif
+	// mono_dllmap_insert (NULL, "System.Native", NULL, libmono_native, NULL);
+	// mono_dllmap_insert (NULL, "System.Security.Cryptography.Native.Apple", NULL, libmono_native, NULL);
+
+	fprintf (stderr, "DLLMAP INIT: %s\n", libmono_native);
+	fflush (stderr);
+	LOG (PRODUCT ": DLLMAP INIT: %s", libmono_native);
+
 #if defined (OBJC_ZEROCOST_EXCEPTIONS) && (defined (__i386__) || defined (__x86_64__))
 	if (xamarin_marshal_objectivec_exception_mode == MarshalObjectiveCExceptionModeDisable)
 		return;

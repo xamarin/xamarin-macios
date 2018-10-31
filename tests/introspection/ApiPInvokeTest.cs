@@ -156,7 +156,14 @@ namespace Introspection
 				if (libname == "__Internal" || SkipLibrary (libname))
 					continue;
 
-				string path = FindLibrary (dllimport.Value, requiresFullPath: true);
+				switch (libname) {
+				case "System.Native":
+				case "System.Security.Cryptography.Native.Apple":
+					libname = "mono-native";
+					break;
+				}
+
+				string path = FindLibrary (libname, requiresFullPath: true);
 
 				string name = dllimport.EntryPoint ?? mi.Name;
 				if (Skip (name))
@@ -204,6 +211,10 @@ namespace Introspection
 					case "libc":
 						// we still have some rogue/not-fully-qualified DllImport
 						path = "/usr/lib/libSystem.dylib";
+						break;
+					case "System.Native":
+					case "System.Security.Cryptography.Native.Apple":
+						path = "libmono-native.dylib";
 						break;
 					}
 

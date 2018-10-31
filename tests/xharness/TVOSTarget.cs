@@ -9,6 +9,12 @@ namespace xharness
 	{
 		public override string Suffix {
 			get {
+				return MonoNativeInfo != null ? MonoNativeInfo.FlavorSuffix + "-tvos" : "-tvos";
+			}
+		}
+
+		public override string ExtraLinkerDefsSuffix {
+			get {
 				return "-tvos";
 			}
 		}
@@ -55,9 +61,25 @@ namespace xharness
 			}
 		}
 
-		protected override string GetMinimumOSVersion(string templateMinimumOSVersion)
+		protected override void CalculateName ()
 		{
-			return "9.0";
+			base.CalculateName ();
+			if (MonoNativeInfo != null)
+				Name = Name + MonoNativeInfo.FlavorSuffix;
+		}
+
+		protected override string GetMinimumOSVersion (string templateMinimumOSVersion)
+		{
+			if (MonoNativeInfo == null)
+				return "9.0";
+			switch (MonoNativeInfo.Flavor) {
+			case MonoNativeFlavor.Compat:
+				return "9.0";
+			case MonoNativeFlavor.Unified:
+				return "10.0";
+			default:
+				throw new Exception ($"Unknown MonoNativeFlavor: {MonoNativeInfo.Flavor}");
+			}
 		}
 
 		protected override int[] UIDeviceFamily {
@@ -89,6 +111,11 @@ namespace xharness
 		protected override void ProcessProject ()
 		{
 			base.ProcessProject ();
+
+			if (MonoNativeInfo != null) {
+				MonoNativeInfo.AddProjectDefines (inputProject);
+				inputProject.AddAdditionalDefines ("MONO_NATIVE_TV");
+			}
 
 			var srcDirectory = Path.Combine (Harness.RootDirectory, "..", "src");
 

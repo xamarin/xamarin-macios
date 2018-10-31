@@ -11,7 +11,7 @@ include $(TOP)/mk/rules.mk
 MTOUCH=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/mtouch
 UNIT_SERVER_DIR=$(TOUCH_UNIT_PATH)/Touch.Server
 UNIT_SERVER=$(UNIT_SERVER_DIR)/bin/Debug/Touch.Server.exe
-TEST_SUITES=monotouch-test link\ sdk link\ all dont\ link framework-test mini
+TEST_SUITES=monotouch-test link\ sdk link\ all dont\ link framework-test mini mono-native
 BCL_TEST_SUITES=mscorlib \
 	System \
 	System.Core \

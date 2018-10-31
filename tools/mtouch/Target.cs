@@ -1125,14 +1125,15 @@ namespace Xamarin.Bundler
 						if (optimizations.Count == 0) {
 							compiler_flags.AddOtherFlag ("-O2");
 						} else if (optimizations.Count == 1) {
-							compiler_flags.AddOtherFlag (optimizations [0]);
+							compiler_flags.AddOtherFlag (optimizations[0]);
 						} else {
 							throw ErrorHelper.CreateError (107, "The assemblies '{0}' have different custom LLVM optimizations ('{1}'), which is not allowed when they are all compiled to a single binary.", string.Join (", ", assemblies.Select ((v) => v.Identity)), string.Join ("', '", optimizations));
 						}
 					}
 
-					var link_task = new LinkTask ()
-					{
+					HandleMonoNative (App, compiler_flags);
+
+					var link_task = new LinkTask () {
 						Target = this,
 						Abi = abi,
 						OutputFile = compiler_output,
@@ -1536,6 +1537,8 @@ namespace Xamarin.Bundler
 				linker_flags.AddOtherFlag ("-fapplication-extension");
 			}
 
+			HandleMonoNative (App, linker_flags);
+
 			link_task = new NativeLinkTask
 			{
 				Target = this,
@@ -1545,6 +1548,34 @@ namespace Xamarin.Bundler
 			link_task.AddDependency (link_with_task_output);
 			link_task.AddDependency (aot_dependencies);
 			build_tasks.Add (link_task);
+		}
+
+		static void HandleMonoNative (Application app, CompilerFlags compiler_flags)
+		{
+			if (app.MonoNativeMode == MonoNativeMode.None)
+				return;
+			var libnative = app.GetLibNativeName ();
+			var libdir = Driver.GetMonoTouchLibDirectory (app);
+			Console.Error.WriteLine ($"MONO NATIVE #1: {app.MonoNativeMode} {libnative} {app.LibMonoNativeLinkMode} {app}");
+			Driver.Log (3, "Adding mono-native library {0} for {1}.", libnative, app);
+			switch (app.LibMonoNativeLinkMode) {
+			case AssemblyBuildTarget.DynamicLibrary:
+				libnative = Path.Combine (libdir, libnative + ".dylib");
+				compiler_flags.AddLinkWith (libnative);
+				break;
+			case AssemblyBuildTarget.StaticObject:
+				libnative = Path.Combine (libdir, libnative + ".a");
+				compiler_flags.AddLinkWith (libnative);
+				switch (app.Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+					// compiler_flags.AddFramework ("GSS");
+					break;
+				}
+				break;
+			default:
+				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).", app.LibMonoLinkMode);
+			}
 		}
 
 		public static void AdjustDylibs (string output)
@@ -1602,6 +1633,24 @@ namespace Xamarin.Bundler
 			}
 
 			Symlinked = true;
+
+			if (App.MonoNativeMode != MonoNativeMode.None) {
+				var lib_native_target = Path.Combine (TargetDirectory, "libmono-native.dylib");
+				Application.TryDelete (lib_native_target);
+
+				try {
+					Console.Error.WriteLine ($"SYMLINKING MONO NATIVE!");
+					var lib_native_name = App.GetLibNativeName () + ".dylib";
+					var lib_native_path = Path.Combine (Driver.GetMonoTouchLibDirectory (App), lib_native_name);
+					File.Copy (lib_native_path, lib_native_target);
+					File.SetLastWriteTime (lib_native_path, DateTime.Now);
+					Driver.Log (3, "Adding mono-native library {0} for {1}.", lib_native_name, App.MonoNativeMode);
+				} catch (MonoTouchException) {
+					throw;
+				} catch (Exception ex) {
+					throw new MonoTouchException (1015, true, ex, "Failed to create the Mono.Native library '{0}': {1}", lib_native_target, ex.Message);
+				}
+			}
 
 			if (Driver.Verbosity > 0)
 				Console.WriteLine ("Application ({0}) was built using fast-path for simulator.", string.Join (", ", Abis.ToArray ()));

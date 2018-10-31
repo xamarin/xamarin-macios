@@ -127,6 +127,10 @@ namespace xharness
 				targets = new AppRunnerTarget [] { AppRunnerTarget.Simulator_iOS32, AppRunnerTarget.Simulator_iOS64 };
 				platforms = new TestPlatform [] { TestPlatform.iOS_Unified32, TestPlatform.iOS_Unified64 };
 				break;
+			case TestPlatform.iOS_TodayExtension64:
+				targets = new AppRunnerTarget[] { AppRunnerTarget.Simulator_iOS64 };
+				platforms = new TestPlatform[] { TestPlatform.iOS_TodayExtension64 };
+				break;
 			default:
 				throw new NotImplementedException ();
 			}
@@ -205,6 +209,22 @@ namespace xharness
 					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL" };
 					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Ignored = !IncludeAll };
 					break;
+				case "mono-native-compat":
+				case "mono-native-unified":
+					yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary", Debug = true, Profiling = false };
+					yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = false };
+
+					yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug, profiling)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary", Debug = true, Profiling = true };
+					yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug, profiling)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = true };
+
+					yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (release)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = false, Profiling = false };
+
+					yield return new TestData { Variation = "Release", MTouchExtraArgs = "", Debug = false, Profiling = false };
+					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL" };
+
+					yield return new TestData { Variation = "Debug (static registrar)", MTouchExtraArgs = "--registrar:static", Debug = true, Profiling = false };
+					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = true, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL" };
+					break;
 				}
 				break;
 			case "AnyCPU":
@@ -219,6 +239,9 @@ namespace xharness
 						yield return new TestData { Variation = "Debug (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, LinkMode = "Full", Defines = "OPTIMIZEALL", Ignored = !IncludeAll };
 						break;
 					}
+					break;
+				case "mono-native-compat":
+//					yield return new TestData { Variation = "XXXX Debug (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, LinkMode = "Full", Defines = "OPTIMIZEALL", Ignored = !IncludeAll };
 					break;
 				}
 				break;
@@ -331,6 +354,8 @@ namespace xharness
 				var ps = new List<Tuple<TestProject, TestPlatform, bool>> ();
 				if (!project.SkipiOSVariation)
 					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_Unified, ignored || !IncludeiOS));
+				if (project.MonoNativeInfo != null)
+					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_TodayExtension64, ignored || !IncludeiOS));
 				if (!project.SkiptvOSVariation)
 					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsTvOSProject (), TestPlatform.tvOS, ignored || !IncludetvOS));
 				if (!project.SkipwatchOSVariation)
@@ -692,12 +717,21 @@ namespace xharness
 				if (!IsIncluded (project))
 					ignored = true;
 
+				if (project.MonoNativeInfo != null) {
+					Console.Error.WriteLine ($"HANDLE MONO NATIVE: {project.MonoNativeInfo.FlavorSuffix}!");
+				}
+
 				var configurations = project.Configurations;
 				if (configurations == null)
 					configurations = new string [] { "Debug" };
 				foreach (var config in configurations) {
 					BuildProjectTask build;
-					if (project.GenerateVariations) {
+					if (project.MonoNativeInfo != null) {
+						Console.Error.WriteLine ($"POPULATE TASKS: {project.Path} {project.MonoNativeInfo} {config}");
+						build = new XBuildTask ();
+						build.Platform = TestPlatform.Mac_Unified;
+						build.CloneTestProject (project);
+					} else if (project.GenerateVariations) {
 						build = new MdtoolTask ();
 						build.Platform = TestPlatform.Mac_Classic;
 						build.TestProject = project;
@@ -743,11 +777,17 @@ namespace xharness
 					}
 					exec.Variation = configurations.Length > 1 ? config : project.TargetFrameworkFlavor.ToString ();
 
+					if (project.MonoNativeInfo != null) {
+						Console.Error.WriteLine ($"POPULATE TASKS #1: {project.Path} {project.MonoNativeInfo} {config} {execs.Count ()}");
+					}
+
 					Tasks.AddRange (execs);
 					foreach (var e in execs) {
-						if (project.GenerateVariations) {
+						if (project.MonoNativeInfo != null) {
+							Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_Unified32, "-32", ignored32, true));
+						} else if (project.GenerateVariations) {
 							Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_Unified, "-unified", ignored));
-							Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_Unified32, "-unified-32", ignored32, true));
+							Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_Unified32, "-unified" + "-32", ignored32, true));
 							if (project.GenerateFull) {
 								Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_UnifiedXM45, "-unifiedXM45", ignored));
 								Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_UnifiedXM45_32, "-unifiedXM45-32", ignored32, true));
@@ -873,6 +913,7 @@ namespace xharness
 					Ignored = ignore,
 					TestName = task.TestName,
 					IsUnitTest = macExec.IsUnitTest,
+					Variation = task.Variation
 				};
 			}
 			var nunit = task as NUnitExecuteTask;
@@ -2325,6 +2366,7 @@ function toggleAll (show)
 				var rv = Path.GetFileNameWithoutExtension (ProjectFile);
 				if (rv == null)
 					return $"unknown test name ({GetType ().Name}";
+
 				switch (Platform) {
 				case TestPlatform.Mac:
 				case TestPlatform.Mac_Classic:

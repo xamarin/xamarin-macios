@@ -31,6 +31,9 @@ void xamarin_setup_impl ()
 #else
 	xamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionModeDisabled;
 #endif
+
+	mono_dllmap_insert (NULL, "System.Native", NULL, "mono-native", NULL);
+	mono_dllmap_insert (NULL, "System.Security.Cryptography.Native.Apple", NULL, "mono-native", NULL);
 }
 
 int

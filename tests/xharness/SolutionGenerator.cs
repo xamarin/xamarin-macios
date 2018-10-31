@@ -58,6 +58,10 @@ namespace xharness
 			var srcDirectory = Path.Combine (harness.RootDirectory, "..", "src");
 			var sln_path = exeTarget == null ? Path.Combine (harness.RootDirectory, "tests-" + infix + ".sln") : Path.Combine (Path.GetDirectoryName (exeTarget.ProjectPath), Path.GetFileNameWithoutExtension (exeTarget.ProjectPath) + ".sln");
 
+			if (sln_path.Contains ("mono-native")) {
+				Console.Error.WriteLine ($"CREATE SLN: {sln_path}");
+			}
+
 			using (var writer = new StringWriter ()) {
 				writer.WriteLine ();
 				writer.WriteLine ("Microsoft Visual Studio Solution File, Format Version 11.00");

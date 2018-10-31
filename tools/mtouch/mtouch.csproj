@@ -154,6 +154,9 @@
     <Compile Include="..\..\external\mono\external\linker\linker\Linker.Steps\OutputStep.cs">
       <Link>Linker.Steps\OutputStep.cs</Link>
     </Compile>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker.Steps\PreserveDependencyLookupStep.cs">
+      <Link>Linker.Steps\PreserveDependencyLookupStep.cs</Link>
+    </Compile>
     <Compile Include="..\..\external\mono\external\linker\linker\Linker.Steps\ResolveFromAssemblyStep.cs">
       <Link>Linker.Steps\ResolveFromAssemblyStep.cs</Link>
     </Compile>

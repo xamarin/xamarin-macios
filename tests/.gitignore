@@ -18,6 +18,13 @@ build
 *-unifiedXM45.sln
 *-unified-32.sln
 *-unifiedXM45-32.sln
+*-mac.?sproj
+*-mac-32.?sproj
+*-macXM45.?sproj
+*-macXM45-32.?sproj
+*-macXM45.sln
+*-mac-32.sln
+*-macXM45-32.sln
 *-today.?sproj
 *-today-extension.?sproj
 *-today.sln

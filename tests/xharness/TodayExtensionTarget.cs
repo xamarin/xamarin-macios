@@ -18,20 +18,35 @@ namespace xharness
 
 		public override string Suffix {
 			get {
+				return MonoNativeInfo != null ? MonoNativeInfo.FlavorSuffix + "-today" : "-today";
+			}
+		}
+
+		public override string ExtraLinkerDefsSuffix {
+			get {
 				return "-today";
 			}
 		}
 
 		public override string ProjectFileSuffix {
 			get {
+				if (MonoNativeInfo != null)
+					return MonoNativeInfo.FlavorSuffix + "-today";
 				return "-today";
 			}
+		}
+
+		protected override void CalculateName ()
+		{
+			base.CalculateName ();
+			if (MonoNativeInfo != null)
+				Name = Name + MonoNativeInfo.FlavorSuffix;
 		}
 
 		void CreateTodayContainerProject ()
 		{
 			var csproj = new XmlDocument ();
-			var suffix = "-today";
+			var suffix = Suffix;
 			csproj.LoadWithoutNetworkAccess (Path.Combine (Harness.TodayContainerTemplate, "TodayContainer.csproj"));
 			csproj.SetOutputPath ("bin\\$(Platform)\\$(Configuration)" + suffix, false);
 			csproj.SetIntermediateOutputPath ("obj\\$(Platform)\\$(Configuration)" + suffix);
@@ -43,10 +58,14 @@ namespace xharness
 			TodayContainerGuid = "{" + Harness.NewStableGuid ().ToString ().ToUpper () + "}";
 			ProjectGuid = TodayContainerGuid;
 			csproj.SetProjectGuid (TodayContainerGuid);
+			if (MonoNativeInfo != null) {
+				MonoNativeInfo.AddProjectDefines (csproj);
+				csproj.AddAdditionalDefines ("MONO_NATIVE_TODAY");
+			}
 			Harness.Save (csproj, TodayContainerProjectPath);
 
 			XmlDocument info_plist = new XmlDocument ();
-			var target_info_plist = Path.Combine (TargetDirectory, "Info-today.plist");
+			var target_info_plist = Path.Combine (TargetDirectory, $"Info{suffix}.plist");
 			info_plist.LoadWithoutNetworkAccess (Path.Combine (Harness.TodayContainerTemplate, "Info.plist"));
 			info_plist.SetCFBundleIdentifier (BundleIdentifier);
 			info_plist.SetCFBundleName (Name);
@@ -57,7 +76,7 @@ namespace xharness
 		void CreateTodayExtensionProject ()
 		{
 			var csproj = inputProject;
-			var suffix = "-today-extension";
+			var suffix = Suffix + "-extension";
 			csproj.SetProjectTypeGuids ("{EE2C853D-36AF-4FDB-B1AD-8E90477E2198};" + LanguageGuid);
 			csproj.SetOutputPath ("bin\\$(Platform)\\$(Configuration)" + suffix);
 			csproj.SetIntermediateOutputPath ("obj\\$(Platform)\\$(Configuration)" + suffix);
@@ -68,15 +87,19 @@ namespace xharness
 			var ext = IsFSharp ? "fs" : "cs";
 			csproj.AddCompileInclude ("TodayExtensionMain." + ext, Path.Combine (Harness.TodayExtensionTemplate, "TodayExtensionMain." + ext), true);
 			csproj.AddInterfaceDefinition (Path.Combine (Harness.TodayExtensionTemplate, "TodayView.storyboard").Replace ('/', '\\'));
-			csproj.SetExtraLinkerDefs ("extra-linker-defs" + Suffix + ".xml");
+			csproj.SetExtraLinkerDefs ("extra-linker-defs" + ExtraLinkerDefsSuffix + ".xml");
 			csproj.FixProjectReferences ("-today");
+			if (MonoNativeInfo != null) {
+				MonoNativeInfo.AddProjectDefines (csproj);
+				csproj.AddAdditionalDefines ("MONO_NATIVE_TODAY");
+			}
 
 			Harness.Save (csproj, TodayExtensionProjectPath);
 
 			TodayExtensionGuid = csproj.GetProjectGuid ();
 
 			XmlDocument info_plist = new XmlDocument ();
-			var target_info_plist = Path.Combine (TargetDirectory, "Info-today-extension.plist");
+			var target_info_plist = Path.Combine (TargetDirectory, $"Info{suffix}.plist");
 			info_plist.LoadWithoutNetworkAccess (Path.Combine (TargetDirectory, "Info.plist"));
 			BundleIdentifier = info_plist.GetCFBundleIdentifier () + "-today";
 			info_plist.SetCFBundleIdentifier (BundleIdentifier + ".todayextension");
@@ -98,10 +121,15 @@ namespace xharness
 			ExtensionName = Name + " Today Extension";
 			AppName = Name + " Today";
 
+			var templateName = Path.GetFileName (TemplateProjectPath);
+			if (templateName.EndsWith (".template", StringComparison.OrdinalIgnoreCase))
+				templateName = Path.GetFileNameWithoutExtension (templateName);
+			templateName = Path.GetFileNameWithoutExtension (templateName);
+
 			switch (OutputType) {
 			case "Exe":
-				TodayExtensionProjectPath = Path.Combine (TargetDirectory, Path.GetFileNameWithoutExtension (TemplateProjectPath) + "-today-extension." + ProjectFileExtension);
-				TodayContainerProjectPath = Path.Combine (TargetDirectory, Path.GetFileNameWithoutExtension (TemplateProjectPath) + "-today." + ProjectFileExtension);
+				TodayExtensionProjectPath = Path.Combine (TargetDirectory, templateName + Suffix + "-extension." + ProjectFileExtension);
+				TodayContainerProjectPath = Path.Combine (TargetDirectory, templateName + Suffix + "." + ProjectFileExtension);
 				CreateTodayExtensionProject ();
 				CreateTodayContainerProject ();
 				break;

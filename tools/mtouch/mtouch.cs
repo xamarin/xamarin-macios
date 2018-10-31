@@ -686,6 +686,18 @@ namespace Xamarin.Bundler
 						}
 					}
 
+					if (app.MonoNativeMode != MonoNativeMode.None) {
+						string mono_native_lib;
+						if (app.LibMonoNativeLinkMode == AssemblyBuildTarget.StaticObject)
+							mono_native_lib = "__Internal";
+						else
+							mono_native_lib = app.GetLibNativeName () + ".dylib";
+						sw.WriteLine ();
+						sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Native\", NULL, \"{mono_native_lib}\", NULL);");
+						sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Security.Cryptography.Native.Apple\", NULL, \"{mono_native_lib}\", NULL);");
+						sw.WriteLine ();
+					}
+
 					if (app.EnableDebug)
 						sw.WriteLine ("\txamarin_gc_pump = {0};", app.DebugTrack.Value ? "TRUE" : "FALSE");
 					sw.WriteLine ("\txamarin_init_mono_debug = {0};", app.PackageManagedDebugSymbols ? "TRUE" : "FALSE");

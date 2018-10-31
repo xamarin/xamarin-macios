@@ -32,7 +32,8 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
     <StartAction>Project</StartAction>
-    <StartArguments>--verbose --jenkins:server --autoconf --rootdir ..</StartArguments>
+    <StartArguments>--configure --autoconf --mac --rootdir /Developer/Work/xamarin-macios/tests</StartArguments>
+    <StartWorkingDirectory>..</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Run Jenkins tests' ">
     <StartAction>Project</StartAction>
@@ -107,6 +108,7 @@
     </Compile>
     <Compile Include="SimpleFileListener.cs" />
     <Compile Include="iOSTarget.cs" />
+    <Compile Include="MonoNativeInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

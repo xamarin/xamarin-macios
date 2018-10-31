@@ -141,7 +141,12 @@ namespace xharness
 
 		public static string GetOutputPath (this XmlDocument csproj, string platform, string configuration)
 		{
-			return GetElementValue (csproj, platform, configuration, "OutputPath");
+			try {
+				return GetElementValue (csproj, platform, configuration, "OutputPath");
+ 			} catch (Exception ex) {
+				Console.Error.WriteLine ($"OUTPUT PATH FAILED: {platform} {configuration} {ex.Message}");
+				throw;
+			}
 		}
 
 		static string GetElementValue (this XmlDocument csproj, string platform, string configuration, string elementName)

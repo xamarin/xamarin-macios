@@ -290,6 +290,19 @@ namespace xharness
 					MacTestProjects.Add (bclTestProject);
 				}
 			}
+
+			foreach (var flavor in new MonoNativeFlavor[] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
+				foreach (var macFlavor in new MacFlavors[] { MacFlavors.Full, MacFlavors.Modern }) {
+					var monoNativeInfo = new MacMonoNativeInfo (this, flavor, macFlavor);
+					var macTestProject = new MacTestProject (monoNativeInfo.ProjectPath, targetFrameworkFlavor: macFlavor, generateVariations: true) {
+						MonoNativeInfo = monoNativeInfo,
+						Name = monoNativeInfo.ProjectName,
+						Platform = "AnyCPU"
+					};
+
+					MacTestProjects.Add (macTestProject);
+				}
+			}
 		}
 
 		void AutoConfigureIOS ()
@@ -352,6 +365,16 @@ namespace xharness
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "dont link", "dont link.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link all", "link all.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link sdk", "link sdk.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
+
+			foreach (var flavor in new MonoNativeFlavor[] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
+				var monoNativeInfo = new MonoNativeInfo (this, flavor);
+				var iosTestProject = new iOSTestProject (monoNativeInfo.ProjectPath, generateVariations: false) {
+					MonoNativeInfo = monoNativeInfo,
+					Name = monoNativeInfo.ProjectName
+				};
+
+				IOSTestProjects.Add (iosTestProject);
+			}
 
 			WatchOSContainerTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates/WatchContainer"));
 			WatchOSAppTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates/WatchApp"));
@@ -430,22 +453,28 @@ namespace xharness
 
 			foreach (var bclTestInfo in MacTestProjects.Where (x => x.BCLInfo != null).Select (x => x.BCLInfo))
 				bclTestInfo.Convert ();
- 
+			foreach (var monoNativeInfo in MacTestProjects.Where (x => x.MonoNativeInfo != null).Select (x => x.MonoNativeInfo))
+				monoNativeInfo.Convert ();
+
 			foreach (var proj in MacTestProjects.Where ((v) => v.GenerateVariations)) {
 				var file = Path.ChangeExtension (proj.Path, "csproj");
- 				if (!File.Exists (file))
+				if (proj.MonoNativeInfo != null)
+					file = proj.MonoNativeInfo.TemplatePath;
+				if (!File.Exists (file))
  					throw new FileNotFoundException (file);
 
 				foreach (bool thirtyTwoBit in new bool[] { false, true })
 				{
 					if (proj.GenerateModern) {
 						var modern = new MacUnifiedTarget (true, thirtyTwoBit);
+						modern.MonoNativeInfo = proj.MonoNativeInfo;
 						configureTarget (modern, file, proj.IsNUnitProject);
 						unified_targets.Add (modern);
 					}
 
 					if (proj.GenerateFull) {
 						var full = new MacUnifiedTarget (false, thirtyTwoBit);
+						full.MonoNativeInfo = proj.MonoNativeInfo;
 						configureTarget (full, file, proj.IsNUnitProject);
 						unified_targets.Add (full);
 					}
@@ -458,9 +487,11 @@ namespace xharness
 					unified_targets.Add (system);
 				}
 
-				var classic = new MacClassicTarget ();
-				configureTarget (classic, file, false);
-				classic_targets.Add (classic);
+				if (proj.MonoNativeInfo == null) {
+					var classic = new MacClassicTarget ();
+					configureTarget (classic, file, false);
+					classic_targets.Add (classic);
+				}
 			}
  
 			foreach (var proj in MacTestProjects.Where (v => !v.GenerateVariations)) {
@@ -488,9 +519,13 @@ namespace xharness
 
 			foreach (var bclTestInfo in IOSTestProjects.Where (x => x.BCLInfo != null).Select (x => x.BCLInfo))
 				bclTestInfo.Convert ();
+			foreach (var monoNativeInfo in IOSTestProjects.Where (x => x.MonoNativeInfo != null).Select (x => x.MonoNativeInfo))
+				monoNativeInfo.Convert ();
 
 			foreach (var proj in IOSTestProjects) {
 				var file = proj.Path;
+				if (proj.MonoNativeInfo != null)
+					file = proj.MonoNativeInfo.TemplatePath;
 				if (!File.Exists (file))
 					throw new FileNotFoundException (file);
 
