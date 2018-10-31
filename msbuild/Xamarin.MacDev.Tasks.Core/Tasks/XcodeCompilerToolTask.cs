@@ -270,7 +270,7 @@ namespace Xamarin.MacDev.Tasks
 			if (plist.TryGetValue (string.Format ("com.apple.{0}.notices", ToolName), out array)) {
 				foreach (var item in array.OfType<PDictionary> ()) {
 					if (item.TryGetValue ("description", out message))
-						Log.LogError (ToolName, null, null, file.ItemSpec, 0, 0, 0, 0, "{0}", message.Value);
+						Log.LogWarning (ToolName, null, null, file.ItemSpec, 0, 0, 0, 0, "{0}", message.Value);
 				}
 			}
 		}
