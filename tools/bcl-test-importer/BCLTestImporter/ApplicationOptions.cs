@@ -260,11 +260,11 @@ namespace BCLTestImporter {
 				return false;
 			}
 
-			if (!File.Exists (projectTemplate)) {
+			if (!Directory.Exists (projectTemplate)) {
 				message = $"{cmd} Project template is missing.";
 				return false;
 			}
-			if (!File.Exists (plistTemplate)) {
+			if (!Directory.Exists (plistTemplate)) {
 				message = $"{cmd} Plist template is missing.";
 				return false;
 			}

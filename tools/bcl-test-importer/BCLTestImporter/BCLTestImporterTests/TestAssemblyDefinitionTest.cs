@@ -13,14 +13,7 @@ namespace BCLTestImporterTests {
 		public void GetPathNullMonoRoot ()
 		{
 			var testAssemblyDefinition = new BCLTestAssemblyDefinition ("MONOTOUCH_System.Json.Microsoft_test.dll");
-			Assert.Throws<ArgumentNullException> (() => testAssemblyDefinition.GetPath (null, "iOS"));
-		}
-
-		[Fact]
-		public void GetPathNullPlatform ()
-		{
-			var testAssemblyDefinition = new BCLTestAssemblyDefinition ("MONOTOUCH_System.Json.Microsoft_test.dll");
-			Assert.Throws<ArgumentNullException> (() => testAssemblyDefinition.GetPath (Environment.GetEnvironmentVariable("HOME"), null));
+			Assert.Throws<ArgumentNullException> (() => testAssemblyDefinition.GetPath (null, Platform.iOS));
 		}
 
 		[Fact]
@@ -43,7 +36,7 @@ namespace BCLTestImporterTests {
 			var testAssemblyDefinition = new BCLTestAssemblyDefinition ("MONOTOUCH_System.Json.Microsoft_xunit-test.dll");
 			var home = Environment.GetEnvironmentVariable ("HOME");
 			var expectedPath = Path.Combine (home, "mcs/class/lib", "monotouch", "tests", testAssemblyDefinition.Name);
-			Assert.Equal (expectedPath, testAssemblyDefinition.GetPath (Environment.GetEnvironmentVariable("HOME"), "iOS"));
+			Assert.Equal (expectedPath, testAssemblyDefinition.GetPath (Environment.GetEnvironmentVariable("HOME"), Platform.iOS));
 		}
 
 		[Fact]
@@ -51,8 +44,8 @@ namespace BCLTestImporterTests {
 		{
 			var testAssemblyDefinition = new BCLTestAssemblyDefinition ("MONOTOUCH_System.Json.Microsoft_xunit-test.dll");
 			var home = Environment.GetEnvironmentVariable ("HOME");
-			var expectedPath = Path.Combine (home, "mcs/class/lib", "monotouch_tv", "tests", testAssemblyDefinition.Name);
-			Assert.Equal (expectedPath, testAssemblyDefinition.GetPath (Environment.GetEnvironmentVariable("HOME"), "TvOS"));
+			var expectedPath = Path.Combine (home, "mcs/class/lib", "monotouch", "tests", testAssemblyDefinition.Name);
+			Assert.Equal (expectedPath, testAssemblyDefinition.GetPath (Environment.GetEnvironmentVariable("HOME"), Platform.TvOS));
 		}
 
 		[Fact]
@@ -61,7 +54,7 @@ namespace BCLTestImporterTests {
 			var testAssemblyDefinition = new BCLTestAssemblyDefinition ("MONOTOUCH_System.Json.Microsoft_xunit-test.dll");
 			var home = Environment.GetEnvironmentVariable ("HOME");
 			var expectedPath = Path.Combine (home, "mcs/class/lib", "monotouch_watch", "tests", testAssemblyDefinition.Name);
-			Assert.Equal (expectedPath, testAssemblyDefinition.GetPath (Environment.GetEnvironmentVariable("HOME"), "WatchOS"));
+			Assert.Equal (expectedPath, testAssemblyDefinition.GetPath (Environment.GetEnvironmentVariable("HOME"), Platform.WatchOS));
 		}
 
 		[Fact]
@@ -70,7 +63,7 @@ namespace BCLTestImporterTests {
 			var testAssemblyDefinition = new BCLTestAssemblyDefinition ("MONOTOUCH_System.Json.Microsoft_xunit-test.dll");
 			var home = Environment.GetEnvironmentVariable ("HOME");
 			var expectedPath = Path.Combine (home, "mcs/class/lib", "xammac", "tests", testAssemblyDefinition.Name);
-			Assert.Equal (expectedPath, testAssemblyDefinition.GetPath (Environment.GetEnvironmentVariable("HOME"), "MacOS"));
+			Assert.Equal (expectedPath, testAssemblyDefinition.GetPath (Environment.GetEnvironmentVariable("HOME"), Platform.MacOS));
 		}
 	}
 }

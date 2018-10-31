@@ -566,11 +566,15 @@ namespace xharness
 					continue;
 				return ln.ParentNode.Attributes ["Include"].Value;
 			}
-			var nones = csproj.SelectNodes ("//*[local-name() = 'None' and contains(@Include ,'Info.plist')]");
-			if (nones.Count > 0) {
-				return nones [0].Attributes [0].Value; // return the value, which could be Info.plist or a full path (linked).
+			var nodes = csproj.SelectNodes ("//*[local-name() = 'None' and contains(@Include ,'Info.plist')]");
+			if (nodes.Count > 0) {
+				return nodes [0].Attributes [0].Value; // return the value, which could be Info.plist or a full path (linked).
 			}
-			throw new Exception ("Could not find Info.plist include");
+			nodes = csproj.SelectNodes ("//*[local-name() = 'None' and contains(@Include ,'Info-tv.plist')]");
+			if (nodes.Count > 0) {
+				return nodes [0].Attributes [0].Value; // return the value, which could be Info.plist or a full path (linked).
+			}
+			throw new Exception ($"Could not find Info.plist include.");
 		}
 
 		public static IEnumerable<string> GetProjectReferences (this XmlDocument csproj)

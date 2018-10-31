@@ -13,7 +13,7 @@ namespace BCLTestImporterTests {
 		readonly string plistTemplatePath;
 		readonly string outputPath;
 		readonly string monoCheckout;
-		readonly string platform = "iOS";
+		readonly Platform platform = Platform.iOS;
 
 		static void WriteJunk (string path)
 		{
@@ -335,11 +335,12 @@ namespace BCLTestImporterTests {
 		[Fact]
 		public void GenerateAllProjectsMissingOutput ()
 		{
+			var home = Environment.GetEnvironmentVariable ("HOME");
 			var appOptions = new ApplicationOptions {
 				GenerateAllProjects = true,
 				ProjectName = "Test",
-				ProjectTemplate = projectTemplatePath,
-				PlistTemplate = plistTemplatePath,
+				ProjectTemplate = home,
+				PlistTemplate = home,
 				RegisterTypeTemplate = registerTypesTemplatePath,
 				Override = true,
 				MonoPath = monoCheckout,
@@ -351,11 +352,12 @@ namespace BCLTestImporterTests {
 		[Fact]
 		public void GenerateAllProjectsOutputNotDir ()
 		{
+			var home = Environment.GetEnvironmentVariable ("HOME");
 			WriteJunk (outputPath);
 			var appOptions = new ApplicationOptions {
 				GenerateAllProjects = true,
-				ProjectTemplate = projectTemplatePath,
-				PlistTemplate = plistTemplatePath,
+				ProjectTemplate = home,
+				PlistTemplate = home,
 				RegisterTypeTemplate = registerTypesTemplatePath,
 				Override = false,
 				Output = outputPath,
@@ -449,7 +451,7 @@ namespace BCLTestImporterTests {
 			var home = Environment.GetEnvironmentVariable ("HOME");
 			var appOptions = new ApplicationOptions {
 				GenerateAllProjects = true,
-				ProjectTemplate = projectTemplatePath,
+				ProjectTemplate = home,
 				RegisterTypeTemplate = registerTypesTemplatePath,
 				PlistTemplate = Path.Combine (home, "foo.in"),
 				Override = false,

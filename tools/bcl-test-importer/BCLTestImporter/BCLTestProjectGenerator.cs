@@ -17,6 +17,14 @@ namespace BCLTestImporter {
 		static readonly string ReferencesKey = "%REFERENCES%";
 		static readonly string RegisterTypeKey = "%REGISTER TYPE%";
 		static readonly string PlistKey = "%PLIST PATH%";
+		static readonly Dictionary<Platform, string> plistTemplateMatches = new Dictionary<Platform, string> {
+			{Platform.iOS, "Info.plist.in"},
+			{Platform.TvOS, "Info-tv.plist.in"},
+		};
+		static readonly Dictionary<Platform, string> projectTemplateMatches = new Dictionary<Platform, string> {
+			{Platform.iOS, "BCLTests.csproj.in"},
+			{Platform.TvOS, "BCLTests-tv.csproj.in"},
+		};
 
 		//list of reference that we are already adding, and we do not want to readd (although it is just a warning)
 		static readonly List<string> excludeDlls = new List<string> {
@@ -27,10 +35,13 @@ namespace BCLTestImporter {
 			"System.Xml.Linq",
 		};
 
-		// this can be grouped TODO
-		static readonly List <(string name, string[] assemblies)> iOSTestProjects = new List <(string name, string [] assemblies)> {
+		// Ww have different lists for the test projects:
+		// 1. commonTestProjects: Those projects that can be ran in all platforms.
+		// 2. iOSTestProjects: Those projects that can be ran on iOS
+		
+		static readonly List<(string name, string[] assemblies)> commonTestProjects = new List<(string name, string[] assemblies)> {
 			// NUNIT TESTS
-			
+
 			(name:"SystemTests", assemblies: new[] {"MONOTOUCH_System_test.dll"}),
 			(name:"SystemCoreTests", assemblies: new [] {"MONOTOUCH_System.Core_test.dll"}),
 			(name:"SystemDataTests", assemblies: new [] {"MONOTOUCH_System.Data_test.dll"}),
@@ -58,9 +69,9 @@ namespace BCLTestImporter {
 			(name:"MonoRuntimeTests", assemblies: new [] {"MONOTOUCH_Mono.Runtime.Tests_test.dll"}),
 			(name:"MonoTaskletsTests", assemblies: new [] {"MONOTOUCH_Mono.Tasklets_test.dll"}),
 			(name:"SystemThreadingTasksDataflowTests", assemblies: new [] {"MONOTOUCH_System.Threading.Tasks.Dataflow_test.dll"}),
-			
+
 			// XUNIT TESTS 
-			
+
 			(name:"SystemDataXunit", assemblies: new [] {"MONOTOUCH_System.Data_xunit-test.dll"}),
 			(name:"SystemJsonXunit", assemblies: new [] {"MONOTOUCH_System.Json_xunit-test.dll"}),
 			(name:"SystemNumericsXunit", assemblies: new [] {"MONOTOUCH_System.Numerics_xunit-test.dll"}),
@@ -68,6 +79,10 @@ namespace BCLTestImporter {
 			(name:"SystemThreadingTaskXunit", assemblies: new [] {"MONOTOUCH_System.Threading.Tasks.Dataflow_xunit-test.dll"}),
 			(name:"SystemLinqXunit", assemblies: new [] {"MONOTOUCH_System.Xml.Linq_xunit-test.dll"}),
 			(name:"SystemRuntimeCompilerServicesUnsafeXunit", assemblies: new [] {"MONOTOUCH_System.Runtime.CompilerServices.Unsafe_xunit-test.dll"}),
+		};
+			
+		// this can be grouped TODO
+		static readonly List <(string name, string[] assemblies)> iOSTestProjects = new List <(string name, string [] assemblies)> {
 		};
 
 		static readonly List <string> CommonIgnoredAssemblies = new List <string> {
@@ -88,8 +103,8 @@ namespace BCLTestImporter {
 		public bool Override { get; set; }
 		public string OutputDirectoryPath { get; private  set; }
 		public string MonoRootPath { get; private set; }
-		public string ProjectTemplatePath { get; private set; }
-		public string PlistTemplatePath{ get; private set; }
+		public string ProjectTemplateRootPath { get; private set; }
+		public string PlistTemplateRootPath{ get; private set; }
 		public string RegisterTypesTemplatePath { get; private set; }
 		string GeneratedCodePathRoot => Path.Combine (OutputDirectoryPath, "generated");
 
@@ -103,12 +118,46 @@ namespace BCLTestImporter {
 			isCodeGeneration = true;
 			OutputDirectoryPath = outputDirectory ?? throw new ArgumentNullException (nameof (outputDirectory));
 			MonoRootPath = monoRootPath ?? throw new ArgumentNullException (nameof (monoRootPath));
-			ProjectTemplatePath = projectTemplatePath ?? throw new ArgumentNullException (nameof (projectTemplatePath));
-			PlistTemplatePath = plistTemplatePath ?? throw new ArgumentNullException (nameof (plistTemplatePath));
+			ProjectTemplateRootPath = projectTemplatePath ?? throw new ArgumentNullException (nameof (projectTemplatePath));
+			PlistTemplateRootPath = plistTemplatePath ?? throw new ArgumentNullException (nameof (plistTemplatePath));
 			RegisterTypesTemplatePath = registerTypesTemplatePath ?? throw new ArgumentNullException (nameof (registerTypesTemplatePath));
 		}
 
-		string GetProjectPath (string projectName) => Path.Combine (OutputDirectoryPath, $"{projectName}.csproj");
+		/// <summary>
+		/// Returns the path to be used to store the project file depending on the platform.
+		/// </summary>
+		/// <param name="projectName">The name of the project being generated.</param>
+		/// <param name="platform">The supported platform by the project.</param>
+		/// <returns></returns>
+		string GetProjectPath (string projectName, Platform platform)
+		{
+			switch (platform) {
+			case Platform.iOS:
+				return Path.Combine (OutputDirectoryPath, $"{projectName}.csproj");
+			case Platform.TvOS:
+				return Path.Combine (OutputDirectoryPath, $"{projectName}-tvos.csproj");
+			default:
+				return null;
+			}
+		}
+
+		/// <summary>
+		/// Returns the path to be used to store the projects plist file depending on the platform.
+		/// </summary>
+		/// <param name="rootDir">The root dir to use.</param>
+		/// <param name="platform">The platform that is supported by the project.</param>
+		/// <returns></returns>
+		string GetPListPath (string rootDir, Platform platform)
+		{
+			switch (platform) {
+				case Platform.iOS:
+					return Path.Combine (rootDir, "Info.plist");
+				case Platform.TvOS:
+					return Path.Combine (rootDir, "Info-tv.plist");
+				default:
+					return Path.Combine (rootDir, "Info.plist");
+			}
+		}
 		
 		// creates the reference node
 		static string GetReferenceNode (string assemblyName, string hintPath = null)
@@ -136,58 +185,108 @@ namespace BCLTestImporter {
 			return sb.ToString ();
 		}
 
-		// creates all the projects that have already been defined
-		public async Task<List<(string name, string path, bool xunit)>> GenerateAllTestProjectsAsync ()
+		/// <summary>
+		/// Generates all the project files for the given projects and platform
+		/// </summary>
+		/// <param name="projects">The list of projects to be generated.</param>
+		/// <param name="platform">The platform to which the projects have to be generated. Each platform
+		/// has its own details.</param>
+		/// <param name="generatedDir">The dir where the projects will be saved.</param>
+		/// <returns></returns>
+		async Task<List<(string name, string path, bool xunit)>> GenerateTestProjectsAsync (
+			IEnumerable<(string name, string[] assemblies)> projects, Platform platform, string generatedDir)
 		{
 			var projectPaths = new List<(string name, string path, bool xunit)> ();
+			foreach (var def in projects) {
+				var projectDefinition = new BCLTestProjectDefinition (def.name, def.assemblies);
+				if (!projectDefinition.Validate ())
+					throw new InvalidOperationException ("xUnit and NUnit assemblies cannot be mixed in a test project.");
+				// generate the required type registration info
+				var generatedCodeDir = Path.Combine (generatedDir, projectDefinition.Name);
+				if (!Directory.Exists (generatedCodeDir)) {
+					Directory.CreateDirectory (generatedCodeDir);
+				}
+				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType.cs");
+
+				var typesPerAssembly = projectDefinition.GetTypeForAssemblies (MonoRootPath, platform);
+				var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (typesPerAssembly,
+					projectDefinition.IsXUnit, RegisterTypesTemplatePath);
+
+				using (var file = new StreamWriter (registerTypePath, false)) { // false is do not append
+					await file.WriteAsync (registerCode);
+				}
+
+				var plistTemplate = Path.Combine (PlistTemplateRootPath, plistTemplateMatches[platform]);
+				var plist = await BCLTestInfoPlistGenerator.GenerateCodeAsync (plistTemplate, projectDefinition.Name);
+				var infoPlistPath = GetPListPath (generatedCodeDir, platform);
+				using (var file = new StreamWriter (infoPlistPath, false)) { // false is do not append
+					await file.WriteAsync (plist);
+				}
+
+				var projectTemplatePath = Path.Combine (ProjectTemplateRootPath, projectTemplateMatches[platform]);
+				var generatedProject = await GenerateAsync (projectDefinition.Name, registerTypePath,
+					projectDefinition.GetAssemblyInclusionInformation (MonoRootPath, platform), projectTemplatePath, infoPlistPath);
+				var projectPath = GetProjectPath (projectDefinition.Name, platform);
+				projectPaths.Add ((name: projectDefinition.Name, path: projectPath, xunit: projectDefinition.IsXUnit));
+				using (var file = new StreamWriter (projectPath, false)) { // false is do not append
+					await file.WriteAsync (generatedProject);
+				}
+			} // foreach project
+
+			return projectPaths;
+		}
+		
+		// generates a project per platform of the common projects. 
+		async Task<List<(string name, string path, bool xunit, List<Platform> platforms)>> GenerateAllCommonTestProjectsAsync ()
+		{
+			var projectPaths = new List<(string name, string path, bool xunit, List<Platform> platforms)> ();
 			if (!isCodeGeneration)
 				throw new InvalidOperationException ("Project generator was instantiated to delete the generated code.");
-			// TODO: Do this per platform
-			var platform = "iOS";
 			var generatedCodePathRoot = GeneratedCodePathRoot;
 			if (!Directory.Exists (generatedCodePathRoot)) {
 				Directory.CreateDirectory (generatedCodePathRoot);
 			}
 
-			foreach (var def in iOSTestProjects) {
-				var projectDefinition = new BCLTestProjectDefinition (def.name, def.assemblies);
-				if (!projectDefinition.Validate ())
-					throw new InvalidOperationException ("xUnit and NUnit assemblies cannot be mixed in a test project.");
-				// generate the required type registration info
-				var generatedCodeDir = Path.Combine (generatedCodePathRoot, projectDefinition.Name);
-				if (!Directory.Exists (generatedCodeDir)) {
-					Directory.CreateDirectory (generatedCodeDir);
+			var projects = new Dictionary<string, (string path, bool xunit, List<Platform> platforms)> ();
+			foreach (var platform in new [] {Platform.iOS, Platform.TvOS}) {
+				var generated = await GenerateTestProjectsAsync (commonTestProjects, platform, generatedCodePathRoot);
+				foreach (var (name, path, xunit) in generated) {
+					if (!projects.ContainsKey (name)) {
+						projects [name] = (path, xunit, new List<Platform> { platform });
+					} else {
+						projects [name].platforms.Add (platform);
+					}
 				}
-
-				var typesPerAssembly = projectDefinition.GetTypeForAssemblies (MonoRootPath, "iOS");
-				var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (typesPerAssembly,
-					projectDefinition.IsXUnit, RegisterTypesTemplatePath);
-
-				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType.cs");
-				using (var file = new StreamWriter (registerTypePath, !Override)) { // false is do not append
-					await file.WriteAsync (registerCode);
-				}
-
-				var plist = await BCLTestInfoPlistGenerator.GenerateCodeAsync (PlistTemplatePath,
-					projectDefinition.Name);
-				var infoPlistPath = Path.Combine (generatedCodeDir, "Info.plist");
-				using (var file = new StreamWriter (infoPlistPath, !Override)) { // false is do not append
-					await file.WriteAsync (plist);
-				}
-
-				var generatedProject = await GenerateAsync (projectDefinition.Name, registerTypePath,
-					projectDefinition.GetAssemblyInclusionInformation (MonoRootPath, platform), ProjectTemplatePath, infoPlistPath);
-				var projectPath = GetProjectPath (projectDefinition.Name);
-				projectPaths.Add ((name: projectDefinition.Name, path: projectPath, xunit: projectDefinition.IsXUnit));
-				using (var file = new StreamWriter (projectPath, !Override)) { // false is do not append
-					await file.WriteAsync (generatedProject);
-				}
+			} // foreach platform
+			
+			// return the grouped projects
+			foreach (var name in projects.Keys) {
+				projectPaths.Add ((name, projects[name].path, projects[name].xunit, projects[name].platforms));
 			}
+			return projectPaths;
+		}
+		
+		// creates all the projects that have already been defined
+		public async Task<List<(string name, string path, bool xunit, List<Platform> platforms)>> GenerateAllTestProjectsAsync ()
+		{
+			var projectPaths = new List<(string name, string path, bool xunit, List<Platform> platforms)> ();
+			if (!isCodeGeneration)
+				throw new InvalidOperationException ("Project generator was instantiated to delete the generated code.");
+			var generatedCodePathRoot = GeneratedCodePathRoot;
+			if (!Directory.Exists (generatedCodePathRoot)) {
+				Directory.CreateDirectory (generatedCodePathRoot);
+			}
+			// generate all the common projects
+			projectPaths.AddRange (await GenerateAllCommonTestProjectsAsync ());
+			//projectPaths.AddRange (await GenerateAlliOSTestProjectsAsync ());
+			//projectPaths.AddRange (await GenerateAllTvOSTestProjectsAsync ());
+			//projectPaths.AddRange (await GenerateAllMacOSTestProjectsAsync ());
+			//projectPaths.AddRange (await GenerateAllWatchOSTestProjectsAsync ());
 
 			return projectPaths;
 		}
 
-		public List<(string name, string path, bool xunit)> GenerateAllTestProjects () => GenerateAllTestProjectsAsync ().Result;
+		public List<(string name, string path, bool xunit, List<Platform> platforms)> GenerateAllTestProjects () => GenerateAllTestProjectsAsync ().Result;
 		
 		static async Task<string> GenerateAsync (string projectName, string registerPath, List<(string assembly, string hintPath)> info, string templatePath, string infoPlistPath)
 		{
@@ -221,9 +320,17 @@ namespace BCLTestImporter {
 				throw new InvalidOperationException ("Project generator was instantiated to project generation.");
 			if (Directory.Exists (GeneratedCodePathRoot))
 				Directory.Delete (GeneratedCodePathRoot, true);
+			// delete all the common projects
+			foreach (var platform in new [] {Platform.iOS, Platform.TvOS}) {
+				foreach (var testProject in commonTestProjects) {
+					var projectPath = GetProjectPath (testProject.name, platform);
+					if (File.Exists (projectPath))
+						File.Delete (projectPath);
+				}
+			}
 			// delete each of the generated project files
 			foreach (var projectDefinition in iOSTestProjects) {
-				var projectPath = GetProjectPath (projectDefinition.name);
+				var projectPath = GetProjectPath (projectDefinition.name, Platform.iOS);
 				if (File.Exists (projectPath))
 					File.Delete (projectPath);
 			}	
@@ -234,32 +341,31 @@ namespace BCLTestImporter {
 		/// </summary>
 		/// <param name="missingAssemblies"></param>
 		/// <returns></returns>
-		public bool AllTestAssembliesAreRan (out List<string> missingAssemblies)
+		public bool AllTestAssembliesAreRan (out Dictionary<Platform, List<string>> missingAssemblies)
 		{
-			// TODO: do this for all platforms
-			var platform = "iOS";
-			
-			// loop over the mono root path and grab all the assemblies, then intersect the found ones with the added
-			// and ignored ones.
-			var testDir = BCLTestAssemblyDefinition.GetTestDirectory (MonoRootPath, platform);
-
-			// get all the present assemblies
-			missingAssemblies = Directory.GetFiles (testDir, NUnitPattern).Select (Path.GetFileName).Union (
+			missingAssemblies = new Dictionary<Platform, List<string>> ();
+			foreach (var platform in new [] {Platform.iOS, Platform.TvOS}) {
+				var testDir = BCLTestAssemblyDefinition.GetTestDirectory (MonoRootPath, platform); 
+				var missingAssembliesPlatform = Directory.GetFiles (testDir, NUnitPattern).Select (Path.GetFileName).Union (
 				Directory.GetFiles (testDir, xUnitPattern).Select (Path.GetFileName)).ToList ();
-			
-			// remove the ignored ones
-			foreach (var assembly in CommonIgnoredAssemblies) {
-				missingAssemblies.Remove (assembly);
-			}
-			
-			// remove the added ones
-			foreach (var projectDefinition in iOSTestProjects) {
-				foreach (var testAssembly in projectDefinition.assemblies) {
-					missingAssemblies.Remove (testAssembly);
+				
+				foreach (var assembly in CommonIgnoredAssemblies) {
+					missingAssembliesPlatform.Remove (assembly);
 				}
-			}	
+				
+				// loop over the mono root path and grab all the assemblies, then intersect the found ones with the added
+				// and ignored ones.
+				foreach (var projectDefinition in commonTestProjects) {
+					foreach (var testAssembly in projectDefinition.assemblies) {
+						missingAssembliesPlatform.Remove (testAssembly);
+					}
+				}
 
-			return missingAssemblies.Count == 0;
+				if (missingAssembliesPlatform.Count != 0) {
+					missingAssemblies[platform] = missingAssembliesPlatform;
+				}
+			}
+			return missingAssemblies.Keys.Count == 0;
 		}
 	}
 }

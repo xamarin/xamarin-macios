@@ -17,9 +17,9 @@ namespace xharness.BCLTestImporter {
 		{
 			Harness = harness;
 			var outputDir = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "bcl-test", "BCLTests"));
-			var projectTemplatePath = Path.Combine (outputDir, "BCLTests.csproj.in");
+			var projectTemplatePath = outputDir;
 			var registerTypesTemplatePath = Path.Combine (outputDir, "RegisterType.cs.in");
-			var plistTemplatePath = Path.Combine (outputDir, "Info.plist.in");
+			var plistTemplatePath = outputDir;
 
 			projectGenerator = new BCLTestProjectGenerator (outputDir, Harness.MONO_PATH, projectTemplatePath, registerTypesTemplatePath, plistTemplatePath) {
 				Override = true
@@ -31,9 +31,9 @@ namespace xharness.BCLTestImporter {
 		{
 			var result = new List<iOSTestProject> ();
 			// generate all projects, then create a new iOSTarget per project
-			foreach (var (name, path, xunit) in projectGenerator.GenerateAllTestProjects ()) {
+			foreach (var (name, path, xunit, platforms) in projectGenerator.GenerateAllTestProjects ()) {
 				var prefix = xunit ? "xUnit" : "NUnit";
-				result.Add (new iOSTestProject (path) { Name = $"[{prefix}] Mono {name}", SkiptvOSVariation=true, SkipwatchOSVariation=true});
+				result.Add (new iOSTestProject (path) { Name = $"[{prefix}] Mono {name}", SkiptvOSVariation=!platforms.Contains (Platform.TvOS), SkipwatchOSVariation=true});
 			}
 			return result;
 		}

@@ -65,7 +65,7 @@ namespace BCLTestImporter {
 		/// Returns the assemblies that a referenced by the given test assembly.
 		/// </summary>
 		/// <returns></returns>
-		IEnumerable<string> GetProjectAssemblyReferences (string monoRootPath, string platform)
+		IEnumerable<string> GetProjectAssemblyReferences (string monoRootPath, Platform platform)
 		{
 			var set = new HashSet<string> ();
 			foreach (var definition in TestAssemblies) {
@@ -76,11 +76,9 @@ namespace BCLTestImporter {
 			return set;
 		}
 		
-		public Dictionary <string, Type> GetTypeForAssemblies (string monoRootPath, string platform) {
+		public Dictionary <string, Type> GetTypeForAssemblies (string monoRootPath, Platform platform) {
 			if (monoRootPath == null)
 				throw new ArgumentNullException (nameof (monoRootPath));
-			if (platform == null)
-				throw new ArgumentNullException (nameof (platform));
 			var dict = new Dictionary <string, Type> ();
 			// loop over the paths, grab the assembly, find a type and then add it
 			foreach (var definition in TestAssemblies) {
@@ -113,12 +111,10 @@ namespace BCLTestImporter {
 		/// <param name="platform">The platform we are working with.</param>
 		/// <returns>The list of tuples (assembly name, path hint) for all the assemblies in the project.</returns>
 		public List<(string assembly, string hintPath)> GetAssemblyInclusionInformation (string monoRootPath,
-			string platform)
+			Platform platform)
 		{
 			if (monoRootPath == null)
 				throw new ArgumentNullException (nameof (monoRootPath));
-			if (platform == null)
-				throw new ArgumentNullException (nameof (platform));
 			
 			return GetProjectAssemblyReferences (monoRootPath, platform).Select (
 					a => (assembly: a, 

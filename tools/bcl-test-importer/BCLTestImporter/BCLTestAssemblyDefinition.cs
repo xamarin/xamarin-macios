@@ -8,11 +8,11 @@ namespace BCLTestImporter {
 		#region static vars
 		
 		static string partialPath = "mcs/class/lib";
-		static Dictionary <string, string> platformPathMatch = new Dictionary <string, string> {
-			{"iOS", "monotouch"},
-			{"WatchOS", "monotouch_watch"},
-			{"TvOS", "monotouch_tv"},
-			{"MacOS", "xammac"},
+		static Dictionary <Platform, string> platformPathMatch = new Dictionary <Platform, string> {
+			{Platform.iOS, "monotouch"},
+			{Platform.WatchOS, "monotouch_watch"},
+			{Platform.TvOS, "monotouch"},
+			{Platform.MacOS, "xammac"},
 		};
 		#endregion
 		
@@ -38,39 +38,18 @@ namespace BCLTestImporter {
 		/// <param name="platform">The platform whose test directory we need.</param>
 		/// <returns>The full path of the test directory.</returns>
 		/// <exception cref="ArgumentNullException">Raised when one of the parameters is null.</exception>
-		public static string GetTestDirectory (string monoRootPath, string platform)
+		public static string GetTestDirectory (string monoRootPath, Platform platform)
 		{
 			if (monoRootPath == null)
 				throw new ArgumentNullException (nameof (monoRootPath));
-			if (platform == null)
-				throw new ArgumentNullException (nameof (platform));
 			var fullPath = monoRootPath;
-			switch (platform) {
-			case "iOS":
-				fullPath = Path.Combine (fullPath, partialPath, platformPathMatch["iOS"], "tests");
-			break;
-			case "WatchOS":
-				fullPath = Path.Combine (fullPath, partialPath, platformPathMatch["WatchOS"], "tests");
-			break;
-			case "TvOS":
-				fullPath = Path.Combine (fullPath, partialPath, platformPathMatch["TvOS"], "tests");
-			break;
-			case "MacOS":
-				fullPath = Path.Combine (fullPath, partialPath, platformPathMatch["MacOS"], "tests");
-			break;
-			default:
-			fullPath = null;
-			break;
-			}
-			return fullPath;
+			return Path.Combine (fullPath, partialPath, platformPathMatch[platform], "tests");
 		}
 
-		public static string GetHintPathForRefenreceAssembly (string assembly, string monoRootPath, string plaform)
+		public static string GetHintPathForRefenreceAssembly (string assembly, string monoRootPath, Platform plaform)
 		{
 			var hintPath = Path.Combine (monoRootPath, partialPath, platformPathMatch[plaform], $"{assembly}.dll");
-			if (File.Exists (hintPath))
-				return hintPath;
-			return null;
+			return File.Exists (hintPath) ? hintPath : null;
 		}
 		
 		/// <summary>
@@ -79,6 +58,6 @@ namespace BCLTestImporter {
 		/// <param name="monoRootPath">The root path of the mono checkout.</param>
 		/// <param name="platform">The platform we are working with.</param>
 		/// <returns>The full path of the assembly.</returns>
-		public string GetPath (string monoRootPath, string platform) => Path.Combine (GetTestDirectory (monoRootPath, platform), Name);
+		public string GetPath (string monoRootPath, Platform platform) => Path.Combine (GetTestDirectory (monoRootPath, platform), Name);
 	}
 }
