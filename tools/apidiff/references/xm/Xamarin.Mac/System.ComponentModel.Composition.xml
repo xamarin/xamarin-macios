@@ -372,9 +372,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor(System.Type)" attrib="6278">
                 <parameters>
@@ -390,7 +387,6 @@
           </class>
           <class name="ChangeRejectedException" type="class" base="System.ComponentModel.Composition.CompositionException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
-              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -426,7 +422,6 @@
           </class>
           <class name="CompositionContractMismatchException" type="class" base="System.Exception" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
-              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -532,7 +527,6 @@
               </attribute>
             </attributes>
             <interfaces>
-              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -596,9 +590,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -728,9 +719,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor(System.String, System.Object)" attrib="6278">
                 <parameters>
@@ -806,9 +794,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -939,7 +924,6 @@
               </attribute>
             </attributes>
             <interfaces>
-              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -978,9 +962,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -1101,9 +1082,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -1120,9 +1098,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -1155,9 +1130,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -1174,9 +1146,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor(System.Type)" attrib="6278">
                 <parameters>
@@ -1207,9 +1176,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor(System.ComponentModel.Composition.CreationPolicy)" attrib="6278">
                 <parameters>
@@ -1240,9 +1206,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor(System.String, System.Object)" attrib="6278">
                 <parameters>
@@ -1284,9 +1247,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -2832,7 +2792,6 @@
               </attribute>
             </attributes>
             <interfaces>
-              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
