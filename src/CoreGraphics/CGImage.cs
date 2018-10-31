@@ -216,12 +216,18 @@ namespace CoreGraphics {
 		static extern IntPtr CGWindowListCreateImage(CGRect screenBounds, CGWindowListOption windowOption, uint windowID, CGWindowImageOption imageOption);
         
 		public static CGImage ScreenImage (int windownumber, CGRect bounds)
-		{                    
-			IntPtr imageRef = CGWindowListCreateImage(bounds, CGWindowListOption.IncludingWindow, (uint)windownumber,
-								  CGWindowImageOption.Default);
+		{
+			return ScreenImage (windownumber, bounds, CGWindowListOption.IncludingWindow, CGWindowImageOption.Default);
+		}
+
+		public static CGImage ScreenImage (int windownumber, CGRect bounds, CGWindowListOption windowOption,
+			CGWindowImageOption imageOption)
+		{
+			IntPtr imageRef = CGWindowListCreateImage (bounds, windowOption, (uint) windownumber,
+								  imageOption);
 			if (imageRef == IntPtr.Zero)
 				return null;
-			return new CGImage(imageRef, true);                              
+			return new CGImage (imageRef, true);
 		}
 #elif !WATCH
 		public static CGImage ScreenImage {
