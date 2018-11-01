@@ -136,6 +136,10 @@ namespace IdentityLookup {
 		[Export ("action", ArgumentSemantic.Assign)]
 		ILClassificationAction Action { get; }
 
+		[iOS (12,1)]
+		[NullAllowed, Export ("userString")]
+		string UserString { get; set; }
+
 		// Objects can be NSString, NSNumber, NSArray, NSDictionary, or NSNull
 		[NullAllowed, Export ("userInfo", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, NSObject> UserInfo { get; set; }
