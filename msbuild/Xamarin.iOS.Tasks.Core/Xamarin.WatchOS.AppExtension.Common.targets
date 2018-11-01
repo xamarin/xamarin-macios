@@ -24,6 +24,8 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 		<!-- This must be set before importing Microsoft.CSharp.targets -->
 		<!-- See Xamarin.iOS.AppExtension.CSharp.targets for a detailed explanation of this variable -->
 		<CopyNuGetImplementations Condition="'$(CopyNuGetImplementations)' == ''">true</CopyNuGetImplementations>
+
+		<UseFakeWatchOS4_3Sdk Condition="'$(UseFakeWatchOS4_3Sdk)' == ''">True</UseFakeWatchOS4_3Sdk>
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)..\iOS\Xamarin.iOS.Common.targets" />

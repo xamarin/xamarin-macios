@@ -75,6 +75,16 @@ namespace Introspection {
 				case "NSTextTable":
 				case "NSTextTableBlock":
 					return true;
+#if !UNIFIED
+				// existing classic/old binary is not updated
+				case "NSAppearance":
+				case "NSBezierPath":
+				case "NSFileWrapper":
+				case "NSGradient":
+				case "NSSound":
+				case "NSShadow":
+					return true;
+#endif
 				default:
 					// CIFilter started implementing NSSecureCoding in 10.11
 					if (!Mac.CheckSystemVersion (10, 11) && (type == typeof(CIFilter) || type.IsSubclassOf (typeof(CIFilter))))
