@@ -17,9 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "apitest-unified", "apitest\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "introspection-mac", "introspection\Mac\introspection-mac.csproj", "{EA3E6B50-AE2B-4A63-BBFC-9888B93331CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "introspection-mac-unified", "introspection\Mac\introspection-mac-unified.csproj", "{4D0F03E2-FD85-D330-562F-C7421BDF3F3C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "introspection-mac-unified-32", "introspection\Mac\introspection-mac-unified-32.csproj", "{E0E84B58-C333-1BF3-D1EC-42EE3EA0D071}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "introspection-mac-unified", "introspection\Mac\introspection-mac-unified.csproj", "{E0E84B58-C333-1BF3-D1EC-42EE3EA0D071}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "apitest", "apitest\apitest.csproj", "{7A0EDA95-30A6-43E1-AD43-368AD95AC48B}"
 EndProject
@@ -42,6 +40,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link sdk-mac", "linker\mac\link sdk\link sdk-mac.csproj", "{F5FF0F5E-0C30-4719-A2B1-5DAE33D1E579}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bindings-test-mac", "bindings-test\bindings-test-mac.csproj", "{20BEA313-7E2D-4209-93C0-E4D99C72695A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "introspection-mac-unified-32", "introspection\Mac\introspection-mac-unified-32.csproj", "{8FB17C3E-8642-8932-FAF9-FA0CE001FEC5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test-template-mac", "..\tools\test-template\test-template-mac\test-template-mac.csproj", "{A19E7BA3-FB49-480B-9C8A-07A1DA5D5EB4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -149,18 +151,6 @@ Global
 		{EA3E6B50-AE2B-4A63-BBFC-9888B93331CA}.Debug|x86.Build.0 = Debug|x86
 		{EA3E6B50-AE2B-4A63-BBFC-9888B93331CA}.Release|x86.ActiveCfg = Release|x86
 		{EA3E6B50-AE2B-4A63-BBFC-9888B93331CA}.Release|x86.Build.0 = Release|x86
-		{4D0F03E2-FD85-D330-562F-C7421BDF3F3C}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{4D0F03E2-FD85-D330-562F-C7421BDF3F3C}.Debug|Any CPU.Build.0 = Debug|x86
-		{4D0F03E2-FD85-D330-562F-C7421BDF3F3C}.Release|Any CPU.ActiveCfg = Release|x86
-		{4D0F03E2-FD85-D330-562F-C7421BDF3F3C}.Release|Any CPU.Build.0 = Release|x86
-		{4D0F03E2-FD85-D330-562F-C7421BDF3F3C}.Default|Any CPU.ActiveCfg = Debug|x86
-		{4D0F03E2-FD85-D330-562F-C7421BDF3F3C}.Default|Any CPU.Build.0 = Debug|x86
-		{4D0F03E2-FD85-D330-562F-C7421BDF3F3C}.AppStore|Any CPU.ActiveCfg = Debug|x86
-		{4D0F03E2-FD85-D330-562F-C7421BDF3F3C}.AppStore|Any CPU.Build.0 = Debug|x86
-		{4D0F03E2-FD85-D330-562F-C7421BDF3F3C}.Debug|x86.ActiveCfg = Debug|x86
-		{4D0F03E2-FD85-D330-562F-C7421BDF3F3C}.Debug|x86.Build.0 = Debug|x86
-		{4D0F03E2-FD85-D330-562F-C7421BDF3F3C}.Release|x86.ActiveCfg = Release|x86
-		{4D0F03E2-FD85-D330-562F-C7421BDF3F3C}.Release|x86.Build.0 = Release|x86
 		{E0E84B58-C333-1BF3-D1EC-42EE3EA0D071}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{E0E84B58-C333-1BF3-D1EC-42EE3EA0D071}.Debug|Any CPU.Build.0 = Debug|x86
 		{E0E84B58-C333-1BF3-D1EC-42EE3EA0D071}.Release|Any CPU.ActiveCfg = Release|x86
@@ -305,5 +295,29 @@ Global
 		{20BEA313-7E2D-4209-93C0-E4D99C72695A}.Debug|x86.Build.0 = Debug|Any CPU
 		{20BEA313-7E2D-4209-93C0-E4D99C72695A}.Release|x86.ActiveCfg = Release|Any CPU
 		{20BEA313-7E2D-4209-93C0-E4D99C72695A}.Release|x86.Build.0 = Release|Any CPU
+		{8FB17C3E-8642-8932-FAF9-FA0CE001FEC5}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{8FB17C3E-8642-8932-FAF9-FA0CE001FEC5}.Debug|Any CPU.Build.0 = Debug|x86
+		{8FB17C3E-8642-8932-FAF9-FA0CE001FEC5}.Release|Any CPU.ActiveCfg = Release|x86
+		{8FB17C3E-8642-8932-FAF9-FA0CE001FEC5}.Release|Any CPU.Build.0 = Release|x86
+		{8FB17C3E-8642-8932-FAF9-FA0CE001FEC5}.Default|Any CPU.ActiveCfg = Debug|x86
+		{8FB17C3E-8642-8932-FAF9-FA0CE001FEC5}.Default|Any CPU.Build.0 = Debug|x86
+		{8FB17C3E-8642-8932-FAF9-FA0CE001FEC5}.AppStore|Any CPU.ActiveCfg = Debug|x86
+		{8FB17C3E-8642-8932-FAF9-FA0CE001FEC5}.AppStore|Any CPU.Build.0 = Debug|x86
+		{8FB17C3E-8642-8932-FAF9-FA0CE001FEC5}.Debug|x86.ActiveCfg = Debug|x86
+		{8FB17C3E-8642-8932-FAF9-FA0CE001FEC5}.Debug|x86.Build.0 = Debug|x86
+		{8FB17C3E-8642-8932-FAF9-FA0CE001FEC5}.Release|x86.ActiveCfg = Release|x86
+		{8FB17C3E-8642-8932-FAF9-FA0CE001FEC5}.Release|x86.Build.0 = Release|x86
+		{A19E7BA3-FB49-480B-9C8A-07A1DA5D5EB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A19E7BA3-FB49-480B-9C8A-07A1DA5D5EB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A19E7BA3-FB49-480B-9C8A-07A1DA5D5EB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A19E7BA3-FB49-480B-9C8A-07A1DA5D5EB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A19E7BA3-FB49-480B-9C8A-07A1DA5D5EB4}.Default|Any CPU.ActiveCfg = Debug|Any CPU
+		{A19E7BA3-FB49-480B-9C8A-07A1DA5D5EB4}.Default|Any CPU.Build.0 = Debug|Any CPU
+		{A19E7BA3-FB49-480B-9C8A-07A1DA5D5EB4}.AppStore|Any CPU.ActiveCfg = Debug|Any CPU
+		{A19E7BA3-FB49-480B-9C8A-07A1DA5D5EB4}.AppStore|Any CPU.Build.0 = Debug|Any CPU
+		{A19E7BA3-FB49-480B-9C8A-07A1DA5D5EB4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A19E7BA3-FB49-480B-9C8A-07A1DA5D5EB4}.Debug|x86.Build.0 = Debug|Any CPU
+		{A19E7BA3-FB49-480B-9C8A-07A1DA5D5EB4}.Release|x86.ActiveCfg = Release|Any CPU
+		{A19E7BA3-FB49-480B-9C8A-07A1DA5D5EB4}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

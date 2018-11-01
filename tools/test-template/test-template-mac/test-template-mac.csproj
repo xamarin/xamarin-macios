@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A19E7BA3-FB49-480B-9C8A-07A1DA5D5EB4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Xamarin.Tests.Templating</RootNamespace>
+    <AssemblyName>test-template-mac</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Utilities\" />
+    <Folder Include="Generator\" />
+    <Folder Include="External\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="FileTemplateEngine.cs" />
+    <Compile Include="Utilities\DirectoryFinder.cs" />
+    <Compile Include="Generator\TemplateEngine.cs" />
+    <Compile Include="Generator\TemplateInfo.cs" />
+    <Compile Include="Replacements.cs" />
+    <Compile Include="Generator\NetStandardTemplateEngine.cs" />
+    <Compile Include="..\..\common\Invoker.cs">
+      <Link>External\Invoker.cs</Link>
+    </Compile>
+    <Compile Include="Generator\MacAppTemplateEngine.cs" />
+    <Compile Include="Generator\MacBindingTemplateEngine.cs" />
+    <Compile Include="Generator\MacLibraryTemplateEngine.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>

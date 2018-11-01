@@ -135,7 +135,7 @@ namespace Xamarin.MMP.Tests
 				Assert.IsTrue (File.Exists (Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MonoBundle/SimpleClassDylib.dylib")));
 
 				StringBuilder output = new StringBuilder ();
-				Xamarin.Bundler.Driver.RunCommand ("/usr/bin/otool", "-L " + Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MacOS/UnifiedExample"), null, output);
+				Bundler.Invoker.RunCommand ("/usr/bin/otool", "-L " + Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MacOS/UnifiedExample"), null, output);
 				Assert.IsTrue (output.ToString ().Contains ("SimpleClassDylib.dylib"));
 			});
 		}

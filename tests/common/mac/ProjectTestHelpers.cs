@@ -9,6 +9,7 @@ using NUnit.Framework;
 using System.Reflection;
 using Xamarin.Utils;
 using Xamarin.Tests;
+using Xamarin.Tests.Templating;
 
 namespace Xamarin.MMP.Tests
 {
@@ -204,8 +205,8 @@ namespace Xamarin.MMP.Tests
 		{
 			StringBuilder output = new StringBuilder ();
 			Environment.SetEnvironmentVariable ("MONO_PATH", null);
-			int compileResult = Xamarin.Bundler.Driver.RunCommand (exe, args != null ? args.ToString() : string.Empty, environment, output, suppressPrintOnErrors: shouldFail);
-			if (!shouldFail && compileResult != 0 && Xamarin.Bundler.Driver.Verbosity < 1) {
+			int compileResult = Bundler.Invoker.RunCommand (exe, args != null ? args.ToString() : string.Empty, environment, output, suppressPrintOnErrors: shouldFail);
+			if (!shouldFail && compileResult != 0) {
 				// Driver.RunCommand won't print failed output unless verbosity > 0, so let's do it ourselves.
 				Console.WriteLine ($"Execution failed; exit code: {compileResult}");
 				Console.WriteLine (output);
@@ -284,6 +285,19 @@ namespace Xamarin.MMP.Tests
 			return text;
 		}
 
+		static ProjectSubstitutions CreateDefaultSubstitutions (UnifiedTestConfig config)
+		{
+			return new ProjectSubstitutions {
+				CSProjConfig = config.CSProjConfig,
+				References = config.References,
+				ReferencesBeforePlatform = config.ReferencesBeforePlatform,
+				AssemblyNameOverride = config.AssemblyName ?? Path.GetFileNameWithoutExtension (config.ProjectName),
+				ItemGroup = config.ItemGroup,
+				TargetFrameworkVersion = config.TargetFrameworkVersion,
+				CustomProjectReplacement = config.CustomProjectReplacement
+			};
+		}
+
 		public static string RunEXEAndVerifyGUID (string tmpDir, Guid guid, string path)
 		{
 			// Assert that the program actually runs and returns our guid
@@ -300,82 +314,45 @@ namespace Xamarin.MMP.Tests
 
 		public static string GenerateEXEProject (UnifiedTestConfig config)
 		{
-			WriteMainFile (config.TestDecl, config.TestCode, true, config.FSharp, Path.Combine (config.TmpDir, config.FSharp ? "Main.fs" : "Main.cs"));
+			var info = TemplateInfo.FromCustomProject (ProjectType.App, config.FSharp ? ProjectLanguage.FSharp : ProjectLanguage.CSharp, config.ProjectName);
 
-			string sourceDir = FindSourceDirectory ();
+			var engine = new MacAppTemplateEngine (info);
+			var fileSubstitutions = new FileSubstitutions {
+				TestCode = config.TestCode,
+				TestDecl = config.TestDecl,
+			};
+			PListSubstitutions pListSubstitutions = new PListSubstitutions () {
+				Replacements = config.PlistReplaceStrings
+			};
 
-			if (config.AssetIcons) 
-			{
-				RunAndAssert ("/bin/cp", $"-R {Path.Combine (sourceDir, "Icons/Assets.xcassets")} {config.TmpDir}", "Copy Asset Icons");
-				config.ItemGroup += @"<ItemGroup>
-    <ImageAsset Include=""Assets.xcassets\AppIcon.appiconset\Contents.json"" />
-    <ImageAsset Include=""Assets.xcassets\AppIcon.appiconset\AppIcon-128.png"" />
-    <ImageAsset Include=""Assets.xcassets\AppIcon.appiconset\AppIcon-128%402x.png"" />
-    <ImageAsset Include=""Assets.xcassets\AppIcon.appiconset\AppIcon-16.png"" />
-    <ImageAsset Include=""Assets.xcassets\AppIcon.appiconset\AppIcon-16%402x.png"" />
-    <ImageAsset Include=""Assets.xcassets\AppIcon.appiconset\AppIcon-256%402x.png"" />
-    <ImageAsset Include=""Assets.xcassets\AppIcon.appiconset\AppIcon-32.png"" />
-    <ImageAsset Include=""Assets.xcassets\AppIcon.appiconset\AppIcon-32%402x.png"" />
-    <ImageAsset Include=""Assets.xcassets\Contents.json"" />
-  </ItemGroup>";
-				// HACK - Should process using CopyFileWithSubstitutions
-				config.PlistReplaceStrings.Add ("</dict>", @"<key>XSAppIconAssets</key><string>Assets.xcassets/AppIcon.appiconset</string></dict>");
-			}
-
-			CopyFileWithSubstitutions (Path.Combine (sourceDir, "Info-Unified.plist"), Path.Combine (config.TmpDir, "Info.plist"), text => {
-				foreach (var key in config.PlistReplaceStrings.Keys)
-					text = text.Replace (key, config.PlistReplaceStrings [key]);
-
-				return text;
-			});
-
-			return CopyFileWithSubstitutions (Path.Combine (sourceDir, config.ProjectName), Path.Combine (config.TmpDir, config.ProjectName), text =>
-				{
-					return ProjectTextReplacement (config, text);
-				});
+			return engine.Generate (config.TmpDir, CreateDefaultSubstitutions (config), fileSubstitutions, pListSubstitutions);
 		}
 
 		public static string GenerateBindingLibraryProject (UnifiedTestConfig config)
 		{
-			string sourceDir = FindSourceDirectory ();
-			CopyFileWithSubstitutions (Path.Combine (sourceDir, "ApiDefinition.cs"), Path.Combine (config.TmpDir, "ApiDefinition.cs"), text => text.Replace ("%CODE%", config.APIDefinitionConfig));
-			CopyFileWithSubstitutions (Path.Combine (sourceDir, "StructsAndEnums.cs"), Path.Combine (config.TmpDir, "StructsAndEnums.cs"), text => text.Replace ("%CODE%", config.StructsAndEnumsConfig));
+			var info = TemplateInfo.FromCustomProject (ProjectType.Binding, ProjectLanguage.CSharp, config.ProjectName);
 
-			return CopyFileWithSubstitutions (Path.Combine (sourceDir, config.ProjectName), Path.Combine (config.TmpDir, config.ProjectName), text => {
-					return ProjectTextReplacement (config, text);
-				});
+			var engine = new MacBindingTemplateEngine (info);
+			var fileSubstitutions = new FileSubstitutions {
+				ApiDefinition = config.APIDefinitionConfig,
+				StructsAndEnums = config.StructsAndEnumsConfig
+			};
+
+			return engine.Generate (config.TmpDir, CreateDefaultSubstitutions (config), fileSubstitutions);
 		}
 
 		public static string GenerateUnifiedLibraryProject (UnifiedTestConfig config)
 		{
-			string sourceDir = FindSourceDirectory ();
-			string sourceFileName = config.FSharp ? "Component1.fs" : "MyClass.cs";
-			string projectSuffix = config.FSharp ? ".fsproj" : ".csproj";
+			var engine = new MacLibraryTemplateEngine (config.XM45 ? ProjectFlavor.FullXM : ProjectFlavor.ModernXM, config.FSharp ? ProjectLanguage.FSharp : ProjectLanguage.CSharp);
+			var fileSubstitutions = new FileSubstitutions { TestCode = config.TestCode };
 
-			CopyFileWithSubstitutions (Path.Combine (sourceDir, sourceFileName), Path.Combine (config.TmpDir, sourceFileName), text => {
-				return text.Replace ("%CODE%", config.TestCode);
-			});
-
-			return CopyFileWithSubstitutions (Path.Combine (sourceDir, config.ProjectName + projectSuffix), Path.Combine (config.TmpDir, config.ProjectName + projectSuffix), text => {
-				return ProjectTextReplacement (config, text);
-			});
+			return engine.Generate (config.TmpDir, CreateDefaultSubstitutions (config), fileSubstitutions);
 		}
 
 		public static string GenerateNetStandardProject (UnifiedTestConfig config)
 		{
-			const string SourceFile = "Class1.cs";
-			const string ProjectFile = "NetStandardLib.csproj";
-			const string NetStandardSubDir = "NetStandard";
-
-			string sourceDir = FindSourceDirectory ();
-
-			Directory.CreateDirectory (Path.Combine (config.TmpDir, NetStandardSubDir));
-			File.Copy (Path.Combine (sourceDir, NetStandardSubDir, SourceFile), Path.Combine (config.TmpDir, NetStandardSubDir, SourceFile), true);
-
-			string projectPath = Path.Combine (config.TmpDir, NetStandardSubDir, ProjectFile);
-			File.Copy (Path.Combine (sourceDir, NetStandardSubDir, ProjectFile), projectPath, true);
-
-			return projectPath;
+			NetStandardTemplateEngine engine = new NetStandardTemplateEngine ();
+			return engine.GenerateLibraryProject (config.TmpDir);
 		}
 
 		public static string GetUnifiedExecutableProjectName (UnifiedTestConfig config)
@@ -505,7 +482,7 @@ namespace Xamarin.MMP.Tests
 
 		public static void CopyDirectory (string src, string target)
 		{
-			Xamarin.Bundler.Driver.RunCommand ("/bin/cp", $"-r {src} {target}");
+			Bundler.Invoker.RunCommand ("/bin/cp", $"-r {src} {target}");
 		}
 
 		public static string CopyFileWithSubstitutions (string src, string target, Func<string, string > replacementAction)
@@ -606,83 +583,3 @@ namespace TestCase
 		}
 	}
 }
-
-// A bit of a hack so we can reuse all of the RunCommand logic
-#if !MMP_TEST
-namespace Xamarin.Bundler {
-	public static partial class Driver
-	{
-		public static int verbose { get { return 0; } }
-		public static int Verbosity {  get { return verbose; }}
-		public static int RunCommand (string path, string args, string[] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false)
-		{
-			Exception stdin_exc = null;
-			var info = new ProcessStartInfo (path, args);
-			info.UseShellExecute = false;
-			info.RedirectStandardInput = false;
-			info.RedirectStandardOutput = true;
-			info.RedirectStandardError = true;
-			System.Threading.ManualResetEvent stdout_completed = new System.Threading.ManualResetEvent (false);
-			System.Threading.ManualResetEvent stderr_completed = new System.Threading.ManualResetEvent (false);
-
-			if (output == null)
-				output = new StringBuilder ();
-
-			if (env != null){
-				if (env.Length % 2 != 0)
-					throw new Exception ("You passed an environment key without a value");
-
-				for (int i = 0; i < env.Length; i+= 2)
-					info.EnvironmentVariables [env[i]] = env[i+1];
-			}
-
-			if (verbose > 0)
-				Console.WriteLine ("{0} {1}", path, args);
-
-			using (var p = Process.Start (info)) {
-
-				p.OutputDataReceived += (s, e) => {
-					if (e.Data != null) {
-						lock (output)
-							output.AppendLine (e.Data);
-					} else {
-						stdout_completed.Set ();
-					}
-				};
-
-				p.ErrorDataReceived += (s, e) => {
-					if (e.Data != null) {
-						lock (output)
-							output.AppendLine (e.Data);
-					} else {
-						stderr_completed.Set ();
-					}
-				};
-
-				p.BeginOutputReadLine ();
-				p.BeginErrorReadLine ();
-
-				p.WaitForExit ();
-
-				stderr_completed.WaitOne (TimeSpan.FromSeconds (1));
-				stdout_completed.WaitOne (TimeSpan.FromSeconds (1));
-
-				if (p.ExitCode != 0) {
-					// note: this repeat the failing command line. However we can't avoid this since we're often
-					// running commands in parallel (so the last one printed might not be the one failing)
-					if (!suppressPrintOnErrors)
-						Console.Error.WriteLine ("Process exited with code {0}, command:\n{1} {2}{3}", p.ExitCode, path, args, output.Length > 0 ? "\n" + output.ToString () : string.Empty);
-					return p.ExitCode;
-				} else if (verbose > 0 && output.Length > 0 && !suppressPrintOnErrors) {
-					Console.WriteLine (output.ToString ());
-				}
-
-				if (stdin_exc != null)
-					throw stdin_exc;
-			}
-
-			return 0;
-		}
-	}
-}
-#endif
