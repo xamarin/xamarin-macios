@@ -3714,7 +3714,7 @@ namespace SceneKit {
 		SCNActionTimingMode TimingMode { get; set; }
 
 		[NullAllowed, Export ("timingFunction", ArgumentSemantic.Assign)]
-		Action<float> TimingFunction { get; set; }
+		Func<float,float> TimingFunction2 { get; set; }
 
 		[Export ("speed")]
 		nfloat Speed { get; set; }
