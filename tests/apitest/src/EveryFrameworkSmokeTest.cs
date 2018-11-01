@@ -76,6 +76,12 @@ namespace Xamarin.Mac.Tests
 				case "ExternalAccessoryLibrary":
 				case "CoreSpotlightLibrary":
 				case "BusinessChatLibrary":
+				// macOS 10.14
+				case "AdSupportLibrary":
+				case "iTunesLibraryLibrary":
+				case "NetworkLibrary":
+				case "UserNotificationsLibrary":
+				case "VideoSubscriberAccountLibrary":
 					return LoadStatus.Acceptable;
 				}
 			}
@@ -95,7 +101,7 @@ namespace Xamarin.Mac.Tests
 				// Use RTLD_NOLOAD (0x10) so we don't load, just check to see if it is in memory
 				IntPtr handle = Dlfcn.dlopen (path, 0x10);
 				if (handle == IntPtr.Zero && CheckLoadFailure (info.Name, path) == LoadStatus.FailTest)
-					failures.Add (string.Format ("{0} ({1}) failed to load but this was not expected", info.Name, path));
+					failures.Add ($"{info.Name} ({path}) failed to load but this was not expected{Environment.NewLine}");
 			}
 
 			if (failures.Count > 0)
