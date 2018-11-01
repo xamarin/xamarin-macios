@@ -230,12 +230,12 @@ namespace Xamarin.Bundler {
 
 		public static int RunCommand (string path, string args, string[] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false)
 		{
-			return Invoker.RunCommand (path, args, verbose, env, output, suppressPrintOnErrors);
+			return Invoker.RunCommand (path, args, env, output, suppressPrintOnErrors, verbose);
 		}
 
 		public static Task<int> RunCommandAsync (string path, string args, string [] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false)
 		{
-			return Invoker.RunCommandAsync (path, args, verbose, env, output, suppressPrintOnErrors);
+			return Invoker.RunCommandAsync (path, args, env, output, suppressPrintOnErrors, verbose);
 		}
 
 #if !MMP_TEST

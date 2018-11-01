@@ -84,7 +84,7 @@ namespace Xamarin.Bundler {
 			return 0;
 		}
 
-		public static Task<int> RunCommandAsync (string path, string args, int verbose, string [] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false)
+		public static Task<int> RunCommandAsync (string path, string args, string [] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false, int verbose = 0)
 		{
 			return Task.Run (() => RunCommand (path, args, env, output, suppressPrintOnErrors, verbose));
 		}
