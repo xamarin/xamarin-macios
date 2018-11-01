@@ -377,6 +377,9 @@
     <Compile Include="..\..\external\mono\external\linker\linker\Linker\TypeNameParser.cs">
       <Link>Linker\TypeNameParser.cs</Link>
     </Compile>
+    <Compile Include="..\common\Invoker.cs">
+      <Link>external\Invoker.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Core" />

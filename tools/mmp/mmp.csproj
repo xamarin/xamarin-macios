@@ -370,6 +370,9 @@
     <Compile Include="..\common\CoreResolver.cs">
       <Link>common\CoreResolver.cs</Link>
     </Compile>
+    <Compile Include="..\common\Invoker.cs">
+      <Link>external\Invoker.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
