@@ -211,7 +211,7 @@ namespace Xamarin.MacDev.Tasks
 			if (plist.TryGetValue (string.Format ("com.apple.{0}.document.notices", ToolName), out array)) {
 				foreach (var item in array.OfType<PDictionary> ()) {
 					if (item.TryGetValue ("message", out message))
-						Log.LogMessage (MessageImportance.Low, "{0}", message.Value);
+						Log.LogMessage (MessageImportance.Low, "{0} notice : {1}", ToolName, message.Value);
 				}
 			}
 
@@ -235,7 +235,7 @@ namespace Xamarin.MacDev.Tasks
 					array = valuePair.Value as PArray;
 					foreach (var item in array.OfType<PDictionary> ()) {
 						if (item.TryGetValue ("message", out message))
-							Log.LogMessage (MessageImportance.Low, "{0}", message.Value);
+							Log.LogMessage (MessageImportance.Low, "{0} notice : {1}", ToolName, message.Value);
 					}
 				}
 			}
@@ -270,7 +270,7 @@ namespace Xamarin.MacDev.Tasks
 			if (plist.TryGetValue (string.Format ("com.apple.{0}.notices", ToolName), out array)) {
 				foreach (var item in array.OfType<PDictionary> ()) {
 					if (item.TryGetValue ("description", out message))
-						Log.LogWarning (ToolName, null, null, file.ItemSpec, 0, 0, 0, 0, "{0}", message.Value);
+						Log.LogMessage (MessageImportance.Low, "{0} notice : {1}", ToolName, message.Value);
 				}
 			}
 		}
