@@ -201,35 +201,76 @@
     <None Include="%PLIST PATH%">
       <Link>Info.plist</Link>
     </None>
-    <None Include="Entitlements.plist" />
+    <None Include="templates\tvOSApp\Entitlements.plist">
+      <Link>Entitlements.plist</Link>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Main.cs" />
-    <Compile Include="AppDelegate.cs" />
-    <Compile Include="ViewController.cs" />
-    <Compile Include="ViewController.designer.cs">
+    <Compile Include="templates\common\TestRunner.NUnit\NUnitTestRunner.cs">
+      <Link>TestRunner.NUnit\NUnitTestRunner.cs</Link>
+    </Compile>
+    <Compile Include="templates\common\TestRunner.Core\Extensions.Bool.cs">
+      <Link>TestRunner.Core\Extensions.Bool.cs</Link>
+    </Compile>
+    <Compile Include="templates\common\TestRunner.Core\LogWriter.cs">
+      <Link>TestRunner.Core\LogWriter.cs</Link>
+    </Compile>
+    <Compile Include="templates\common\TestRunner.Core\MinimumLogLevel.cs">
+      <Link>TestRunner.Core\MinimumLogLevel.cs</Link>
+    </Compile>
+    <Compile Include="templates\common\TestRunner.Core\TcpTextWriter.cs">
+      <Link>TestRunner.Core\TcpTextWriter.cs</Link>
+    </Compile>
+    <Compile Include="templates\common\TestRunner.Core\TestAssemblyInfo.cs">
+      <Link>TestRunner.Core\TestAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="templates\common\TestRunner.Core\TestCompletionStatus.cs">
+      <Link>TestRunner.Core\TestCompletionStatus.cs</Link>
+    </Compile>
+    <Compile Include="templates\common\TestRunner.Core\TestExecutionState.cs">
+      <Link>TestRunner.Core\TestExecutionState.cs</Link>
+    </Compile>
+    <Compile Include="templates\common\TestRunner.Core\TestFailureInfo.cs">
+      <Link>TestRunner.Core\TestFailureInfo.cs</Link>
+    </Compile>
+    <Compile Include="templates\common\TestRunner.Core\TestRunner.cs">
+      <Link>TestRunner.Core\TestRunner.cs</Link>
+    </Compile>
+    <Compile Include="templates\common\TestRunner.xUnit\XUnitFilter.cs">
+      <Link>TestRunner.xUnit\XUnitFilter.cs</Link>
+    </Compile>
+    <Compile Include="templates\common\TestRunner.xUnit\XUnitFilterType.cs">
+      <Link>TestRunner.xUnit\XUnitFilterType.cs</Link>
+    </Compile>
+    <Compile Include="templates\common\TestRunner.xUnit\XUnitResultFileFormat.cs">
+      <Link>TestRunner.xUnit\XUnitResultFileFormat.cs</Link>
+    </Compile>
+    <Compile Include="templates\common\TestRunner.xUnit\XUnitTestRunner.cs">
+      <Link>TestRunner.xUnit\XUnitTestRunner.cs</Link>
+    </Compile>
+    <Compile Include="templates\common\ApplicationOptions.cs">
+      <Link>ApplicationOptions.cs</Link>
+    </Compile>
+    <Compile Include="templates\tvOSApp\AppDelegate.cs">
+      <Link>AppDelegate.cs</Link>
+    </Compile>
+    <Compile Include="templates\tvOSApp\Main.cs">
+      <Link>Main.cs</Link>
+    </Compile>
+    <Compile Include="templates\tvOSApp\ViewController.cs">
+      <Link>ViewController.cs</Link>
+    </Compile>
+    <Compile Include="templates\tvOSApp\ViewController.designer.cs">
+      <Link>ViewController.designer.cs</Link>
       <DependentUpon>ViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="TestRunner.Core\Extensions.Bool.cs" />
-    <Compile Include="TestRunner.Core\LogWriter.cs" />
-    <Compile Include="TestRunner.Core\MinimumLogLevel.cs" />
-    <Compile Include="TestRunner.Core\TestAssemblyInfo.cs" />
-    <Compile Include="TestRunner.Core\TestCompletionStatus.cs" />
-    <Compile Include="TestRunner.Core\TestExecutionState.cs" />
-    <Compile Include="TestRunner.Core\TestFailureInfo.cs" />
-    <Compile Include="TestRunner.Core\TestRunner.cs" />
-    <Compile Include="TestRunner.Core\TcpTextWriter.cs" />
-    <Compile Include="TestRunner.NUnit\NUnitTestRunner.cs" />
-    <Compile Include="TestRunner.xUnit\XUnitFilter.cs" />
-    <Compile Include="TestRunner.xUnit\XUnitFilterType.cs" />
-    <Compile Include="TestRunner.xUnit\XUnitResultFileFormat.cs" />
-    <Compile Include="TestRunner.xUnit\XUnitTestRunner.cs" />
-    <Compile Include="ApplicationOptions.cs" />
     %REGISTER TYPE%
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="TestRunner.xUnit\NUnitXml.xslt" />
+    <EmbeddedResource Include="templates\common\TestRunner.xUnit\NUnitXml.xslt">
+      <Link>TestRunner.xUnit\NUnitXml.xslt</Link>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\TVOS\Xamarin.TVOS.CSharp.targets" />
   <Import Project="..\..\..\packages\NETStandard.Library.2.0.0\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\..\..\packages\NETStandard.Library.2.0.0\build\netstandard2.0\NETStandard.Library.targets')" />

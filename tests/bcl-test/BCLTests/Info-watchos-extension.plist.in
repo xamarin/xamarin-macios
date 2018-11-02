@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"[]>
+<plist version="1.0">
+  <dict>
+    <key>CFBundleDisplayName</key>
+	  <string>%APPLICATION NAME%-extension</string>
+    <key>CFBundleIdentifier</key>
+	  <string>%BUNDLE INDENTIFIER%.extension</string>
+    <key>CFBundleName</key>
+    <string>TestApp</string>
+    <key>MinimumOSVersion</key>
+    <string>%MINOSVERSION%</string>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+      <key>NSAllowsArbitraryLoads</key>
+      <true />
+    </dict>
+    <key>UIDeviceFamily</key>
+    <array>
+      <integer>4</integer>
+    </array>
+    <key>UILaunchStoryboardName</key>
+    <string>LaunchScreen</string>
+    <key>UIRequiresFullScreen</key>
+    <true />
+    <key>RemoteInterfacePrincipleClass</key>
+    <string>InterfaceController</string>
+    <key>NSExtension</key>
+    <dict>
+      <key>NSExtensionAttributes</key>
+      <dict>
+        <key>WKAppBundleIdentifier</key>
+        <string>%WATCHAPP IDENTIFIER%</string>
+      </dict>
+      <key>NSExtensionPointIdentifier</key>
+      <string>com.apple.watchkit</string>
+    </dict>
+  </dict>
+</plist>

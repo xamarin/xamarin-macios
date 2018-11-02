@@ -10,7 +10,7 @@ namespace BCLTestImporter {
 		static string partialPath = "mcs/class/lib";
 		static Dictionary <Platform, string> platformPathMatch = new Dictionary <Platform, string> {
 			{Platform.iOS, "monotouch"},
-			{Platform.WatchOS, "monotouch_watch"},
+			{Platform.WatchOS, "monotouch"},
 			{Platform.TvOS, "monotouch"},
 			{Platform.MacOS, "xammac"},
 		};
