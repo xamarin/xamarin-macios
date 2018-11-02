@@ -27,22 +27,3 @@
 
 ## Inside IKSaveOptionsDelegate informal protocol
 !missing-selector! NSObject::saveOptions:shouldShowUTType: not bound
-
-## Icebox
-# The following members need ImageCaptureCore cocoa framework to be bound
-!missing-protocol-member! IKScannerDeviceViewDelegate::scannerDeviceView:didScanToBandData:scanInfo:error: not found
-!missing-protocol-member! IKCameraDeviceViewDelegate::cameraDeviceView:didDownloadFile:location:fileData:error: not found
-!missing-protocol-member! IKDeviceBrowserViewDelegate::deviceBrowserView:selectionDidChange: not found
-!missing-selector! IKCameraDeviceView::cameraDevice not bound
-!missing-selector! IKCameraDeviceView::setCameraDevice: not bound
-!missing-selector! IKDeviceBrowserView::selectedDevice not bound
-!missing-selector! IKScannerDeviceView::scannerDevice not bound
-!missing-selector! IKScannerDeviceView::setScannerDevice: not bound
-
-## IKImageBrowserItem Protocol
-!missing-selector! NSObject::imageRepresentation not bound
-!missing-selector! NSObject::imageRepresentationType not bound
-!missing-selector! NSObject::imageSubtitle not bound
-!missing-selector! NSObject::imageTitle not bound
-!missing-selector! NSObject::imageUID not bound
-!missing-selector! NSObject::imageVersion not bound
