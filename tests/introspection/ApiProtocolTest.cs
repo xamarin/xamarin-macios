@@ -385,6 +385,8 @@ namespace Introspection {
 					case "NSMutableCopying":
 						// we have special test cases for them
 						continue;
+					case "UIUserActivityRestoring":
+						continue; // MARTIN FIXME
 					default:
 #if !XAMCORE_2_0
 						// in Classic our internal delegates _inherits_ the type with the [Protocol] attribute

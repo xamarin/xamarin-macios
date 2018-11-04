@@ -60,6 +60,7 @@ namespace Introspection {
 			case "MonoTouch.MetalPerformanceShaders":
 				if (Runtime.Arch == Arch.SIMULATOR)
 					return true;
+				return true; // MARTIN FIXME
 				break;
 			// Xcode 9
 			case "CoreNFC": // Only available on devices that support NFC, so check if NFCNDEFReaderSession is present.
