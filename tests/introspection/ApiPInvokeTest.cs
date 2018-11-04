@@ -159,7 +159,7 @@ namespace Introspection
 				switch (libname) {
 				case "System.Native":
 				case "System.Security.Cryptography.Native.Apple":
-					libname = "mono-native";
+					libname = "__Internal";
 					break;
 				}
 
@@ -214,7 +214,7 @@ namespace Introspection
 						break;
 					case "System.Native":
 					case "System.Security.Cryptography.Native.Apple":
-						path = "libmono-native.dylib";
+						path = null;
 						break;
 					}
 
