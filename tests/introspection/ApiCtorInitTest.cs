@@ -130,6 +130,9 @@ namespace Introspection {
 				return true;
 			case "MPSImageArithmetic": // Cannot directly initialize MPSImageArithmetic. Use one of the sub-classes of MPSImageArithmetic.
 				return true;
+			case "PHImageManager":
+			case "PHCachingImageManager":
+				return true; // MARTIN FIXME
 			}
 
 			return SkipDueToAttribute (type);
