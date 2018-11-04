@@ -783,9 +783,7 @@ namespace xharness
 
 					Tasks.AddRange (execs);
 					foreach (var e in execs) {
-						if (project.MonoNativeInfo != null) {
-							Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_Unified32, "-32", ignored32, true));
-						} else if (project.GenerateVariations) {
+						if (project.GenerateVariations && project.MonoNativeInfo == null) {
 							Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_Unified, "-unified", ignored));
 							Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_Unified32, "-unified" + "-32", ignored32, true));
 							if (project.GenerateFull) {
