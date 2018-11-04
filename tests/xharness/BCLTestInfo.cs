@@ -86,6 +86,13 @@ namespace xharness
 				split_dirs [split_count].Add ("System.Resources");
 			}
 
+			// Put test-helpers into the first assembly.
+			var test_helpers = split_dirs.FirstOrDefault ((v) => v.Contains ("../../test-helpers"));
+			if (test_helpers != null) {
+				test_helpers.Remove ("../../test-helpers");
+				split_dirs[split_count].Add ("../../test-helpers");
+			}
+
 			// There are also System.Reflection tests that depend on GetExecutingAssembly and
 			// expect it to be an executable assembly, so leave those in the main project as well.
 			var reflection = split_dirs.FirstOrDefault ((v) => v.Contains ("System.Reflection"));
