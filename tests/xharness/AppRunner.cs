@@ -479,7 +479,11 @@ namespace xharness
 			if (!Harness.IncludeSystemPermissionTests)
 				args.Append (" -setenv=DISABLE_SYSTEM_PERMISSION_TESTS=1");
 
-			if (isSimulator) {
+			var overrideIp = Environment.GetEnvironmentVariable ("JENKINS_NUNIT_HOSTNAME");
+			if (!string.IsNullOrEmpty (overrideIp)) {
+				args.AppendFormat (" -argument=-app-arg:-hostname:{0}", overrideIp);
+				args.AppendFormat (" -setenv=NUNIT_HOSTNAME={0}", overrideIp);
+			} else if (isSimulator) {
 				args.Append (" -argument=-app-arg:-hostname:127.0.0.1");
 				args.Append (" -setenv=NUNIT_HOSTNAME=127.0.0.1");
 			} else {
