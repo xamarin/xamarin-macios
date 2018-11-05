@@ -118,7 +118,7 @@ namespace xharness
 			if (BundleIdentifier.Length >= 58)
 				BundleIdentifier = BundleIdentifier.Substring (0, 57); // If the main app's bundle id is 58 characters (or sometimes more), then the watch extension crashes at launch. radar #29847128.
 			info_plist.SetCFBundleIdentifier (BundleIdentifier + ".watchkitapp.watchkitextension");
-			info_plist.SetMinimumOSVersion ("2.0");
+			info_plist.SetMinimumOSVersion (GetMinimumOSVersion ("2.0"));
 			info_plist.SetUIDeviceFamily (4);
 			info_plist.AddPListStringValue ("RemoteInterfacePrincipleClass", "InterfaceController");
 			info_plist.AddPListKeyValuePair ("NSExtension", "dict", string.Format (
