@@ -58,6 +58,8 @@ namespace MonoTests.System.Net.Http
 				try {
 					HttpClient client = new HttpClient (GetHandler (handlerType));
 					var s = await client.GetStringAsync ("http://doesnotexist.xamarin.com");
+					Console.WriteLine (s);
+					Assert.Fail ($"An exception should have been thrown, instead got:\n{s}");
 				} catch (Exception e) {
 					ex = e;
 				} finally {
