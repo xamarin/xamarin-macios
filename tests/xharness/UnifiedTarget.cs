@@ -129,7 +129,17 @@ namespace xharness
 
 			MonoNativeInfo.AddProjectDefines (inputProject);
 			inputProject.AddAdditionalDefines ("MONO_NATIVE_IOS");
-			base.ExecuteInternal ();
+
+			inputProject.FixInfoPListInclude (Suffix);
+			inputProject.SetExtraLinkerDefs ("extra-linker-defs" + ExtraLinkerDefsSuffix + ".xml");
+
+			Harness.Save (inputProject, ProjectPath);
+
+			XmlDocument info_plist = new XmlDocument ();
+			var target_info_plist = Path.Combine (TargetDirectory, "Info" + Suffix + ".plist");
+			info_plist.LoadWithoutNetworkAccess (Path.Combine (TargetDirectory, "Info.plist"));
+			info_plist.SetMinimumOSVersion (GetMinimumOSVersion (info_plist.GetMinimumOSVersion ()));
+			Harness.Save (info_plist, target_info_plist);
 		}
 	}
 }
