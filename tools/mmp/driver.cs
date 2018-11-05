@@ -510,7 +510,7 @@ namespace Xamarin.Bundler {
 				MonoNativeMode = MonoNativeMode.Combined;
 			else if (IsClassic)
 				MonoNativeMode = MonoNativeMode.None;
-			else if (App.SdkVersion >= new Version (10, 12))
+			else if (App.DeploymentTarget >= new Version (10, 12))
 				MonoNativeMode = MonoNativeMode.Unified;
 			else
 				MonoNativeMode = MonoNativeMode.Compat;
