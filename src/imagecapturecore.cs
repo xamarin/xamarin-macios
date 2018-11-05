@@ -276,7 +276,7 @@ namespace ImageCaptureCore {
 		void RequestYield ();
 
 		[Export ("requestSendMessage:outData:maxReturnedDataSize:sendMessageDelegate:didSendMessageSelector:contextInfo:")]
-		unsafe void RequestSendMessage (uint messageCode, NSData data, uint maxReturnedDataSize, NSObject sendMessageDelegate, Selector selector, [NullAllowed] IntPtr contextInfo);
+	void RequestSendMessage (uint messageCode, NSData data, uint maxReturnedDataSize, NSObject sendMessageDelegate, Selector selector, [NullAllowed] IntPtr contextInfo);
 
 		[Export ("requestEjectOrDisconnect")]
 		void RequestEjectOrDisconnect ();
