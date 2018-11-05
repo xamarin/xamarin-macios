@@ -3714,7 +3714,11 @@ namespace SceneKit {
 		SCNActionTimingMode TimingMode { get; set; }
 
 		[NullAllowed, Export ("timingFunction", ArgumentSemantic.Assign)]
-		Action<float> TimingFunction { get; set; }
+#if XAMCORE_4_0
+		Func<float,float> TimingFunction { get; set; }
+#else
+		Func<float,float> TimingFunction2 { get; set; }
+#endif
 
 		[Export ("speed")]
 		nfloat Speed { get; set; }
