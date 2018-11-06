@@ -1,7 +1,6 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Text;
-using System.Linq;
 using System.Diagnostics;
 
 using Parallel = System.Threading.Tasks.Parallel;
@@ -9,15 +8,12 @@ using ParallelOptions = System.Threading.Tasks.ParallelOptions;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
-using System.Collections.Generic;
 
 namespace Xamarin.MacDev.Tasks
 {
 	public abstract class CodesignTaskBase : Task
 	{
 		const string ToolName = "codesign";
-		const string MacOSDirName = "MacOS";
-		const string CodeSignatureDirName = "_CodeSignature";
 		string toolExe;
 
 		#region Inputs
@@ -51,13 +47,6 @@ namespace Xamarin.MacDev.Tasks
 		}
 
 		public string ToolPath { get; set; }
-
-		#endregion
-
-		#region Outputs
-
-		[Output]
-		public ITaskItem[] CodesignedFiles { get; set; }
 
 		#endregion
 
@@ -164,64 +153,11 @@ namespace Xamarin.MacDev.Tasks
 			if (Resources.Length == 0)
 				return true;
 
-			var codesignedFiles = new List<ITaskItem> ();
-
 			Parallel.ForEach (Resources, new ParallelOptions { MaxDegreeOfParallelism = Math.Max (Environment.ProcessorCount / 2, 1) }, (item) => {
 				Codesign (item);
-
-				codesignedFiles.AddRange (GetCodesignedFiles (item));
 			});
 
-			CodesignedFiles = codesignedFiles.ToArray ();
-
 			return !Log.HasLoggedErrors;
-		}
-
-		IEnumerable<ITaskItem> GetCodesignedFiles (ITaskItem item)
-		{
-			var codesignedFiles = new List<ITaskItem> ();
-
-			if (Directory.Exists (item.ItemSpec)) {
-				var codeSignaturePath = Path.Combine (item.ItemSpec, CodeSignatureDirName);
-
-				if (!Directory.Exists (codeSignaturePath))
-					return codesignedFiles;
-
-				codesignedFiles.AddRange (Directory.EnumerateFiles (codeSignaturePath).Select (x => new TaskItem (x)));
-
-				var extension = Path.GetExtension (item.ItemSpec);
-
-				if (extension == ".app" || extension == ".appex") {
-					var executableName = Path.GetFileName (item.ItemSpec);
-					var manifestPath = Path.Combine (item.ItemSpec, "Info.plist");
-
-					if (File.Exists(manifestPath)) {
-						var bundleExecutable = PDictionary.FromFile (manifestPath).GetCFBundleExecutable ();
-
-						if (!string.IsNullOrEmpty(bundleExecutable))
-							executableName = bundleExecutable;
-					}
-
-					var basePath = item.ItemSpec;
-
-					if (Directory.Exists (Path.Combine (basePath, MacOSDirName)))
-						basePath = Path.Combine (basePath, MacOSDirName);
-
-					var executablePath = Path.Combine (basePath, executableName);
-
-					if (File.Exists (executablePath))
-						codesignedFiles.Add (new TaskItem (executablePath));
-				}
-			} else if (File.Exists (item.ItemSpec)) {
-				codesignedFiles.Add (item);
-
-				var dirName = Path.GetDirectoryName (item.ItemSpec);
-
-				if (Path.GetExtension (dirName) == ".framework")
-					codesignedFiles.AddRange (Directory.EnumerateFiles (Path.Combine (dirName, CodeSignatureDirName)).Select (x => new TaskItem (x)));
-			}
-
-			return codesignedFiles;
 		}
 	}
 }

@@ -1,6 +1,5 @@
-using System;
+﻿using System;
 using System.IO;
-using System.Linq;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -26,26 +25,8 @@ namespace Xamarin.MacDev.Tasks
 
 		#endregion
 
-		#region Outputs
-
-		[Output]
-		public ITaskItem[] DsymContentFiles { get; set; }
-
-		#endregion
-
 		protected override string ToolName {
 			get { return "dsymutil"; }
-		}
-
-		public override bool Execute ()
-		{
-			var result = base.Execute ();
-
-			var contentsDir = Path.Combine (DSymDir, "Contents");
-			if (Directory.Exists(contentsDir))
-				DsymContentFiles = Directory.EnumerateFiles (contentsDir).Select (x => new TaskItem (x)).ToArray ();
-
-			return result;
 		}
 
 		protected override string GenerateFullPathToTool ()

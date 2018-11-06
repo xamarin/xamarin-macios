@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Collections.Generic;
 
@@ -31,7 +31,7 @@ namespace Xamarin.MacDev.Tasks
 
 		[Output]
 		[Required]
-		public ITaskItem CompiledEntitlements { get; set; }
+		public string CompiledEntitlements { get; set; }
 
 		public string Entitlements { get; set; }
 
@@ -363,8 +363,8 @@ namespace Xamarin.MacDev.Tasks
 			archived = GetArchivedExpandedEntitlements (template, compiled);
 
 			try {
-				Directory.CreateDirectory (Path.GetDirectoryName (CompiledEntitlements.ItemSpec));
-				WriteXcent (compiled, CompiledEntitlements.ItemSpec);
+				Directory.CreateDirectory (Path.GetDirectoryName (CompiledEntitlements));
+				WriteXcent (compiled, CompiledEntitlements);
 			} catch (Exception ex) {
 				Log.LogError ("Error writing xcent file '{0}': {1}", CompiledEntitlements, ex.Message);
 				return false;
