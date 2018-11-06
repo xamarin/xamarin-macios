@@ -126,6 +126,7 @@ namespace ImageCaptureCore {
 		NSString LocalizedNotificationKey { get; }
 	}
 
+	// Can't be an smart enum since it is used inside 'ICDeviceDelegate' protocol.
 	[Static]
 	interface ICButtonType {
 		[Field ("ICButtonTypeScan")]
@@ -204,7 +205,7 @@ namespace ImageCaptureCore {
 		CGImage Icon { get; }
 
 		[Export ("capabilities")]
-		string[] Capabilities { get; }
+		NSString [] Capabilities { get; }
 
 		[Export ("modulePath")]
 		string ModulePath { get; }
@@ -240,10 +241,10 @@ namespace ImageCaptureCore {
 		int UsbVendorId { get; }
 
 		[Export ("fwGUID")]
-		long FwGuid { get; }
+		long FireWireGuid { get; }
 
 		[NullAllowed, Export ("serialNumberString")]
-		string SerialNumberString { get; }
+		string SerialNumber { get; }
 
 		[NullAllowed, Export ("locationDescription")]
 		string LocationDescription { get; }
@@ -252,10 +253,10 @@ namespace ImageCaptureCore {
 		bool HasOpenSession { get; }
 
 		[NullAllowed, Export ("UUIDString")]
-		string UuidString { get; }
+		string Uuid { get; }
 
 		[NullAllowed, Export ("persistentIDString")]
-		string PersistentIdString { get; }
+		string PersistentId { get; }
 
 		[Export ("buttonPressed")]
 		string ButtonPressed { get; }
@@ -276,7 +277,7 @@ namespace ImageCaptureCore {
 		void RequestYield ();
 
 		[Export ("requestSendMessage:outData:maxReturnedDataSize:sendMessageDelegate:didSendMessageSelector:contextInfo:")]
-	void RequestSendMessage (uint messageCode, NSData data, uint maxReturnedDataSize, NSObject sendMessageDelegate, Selector selector, [NullAllowed] IntPtr contextInfo);
+		void RequestSendMessage (uint messageCode, NSData data, uint maxReturnedDataSize, NSObject sendMessageDelegate, Selector selector, [NullAllowed] IntPtr contextInfo);
 
 		[Export ("requestEjectOrDisconnect")]
 		void RequestEjectOrDisconnect ();
@@ -339,6 +340,8 @@ namespace ImageCaptureCore {
 		void Stop ();
 	}
 
+	[DisableDefaultCtor] // Created by 'ICCameraDevice'.
+	[Abstract]
 	[BaseType (typeof(NSObject))]
 	interface ICCameraItem {
 
@@ -391,6 +394,7 @@ namespace ImageCaptureCore {
 		bool AddedAfterContentCatalogCompleted { [Bind ("wasAddedAfterContentCatalogCompleted")] get; }
 	}
 
+	[DisableDefaultCtor] // Created by 'ICCameraDevice'.
 	[BaseType (typeof(ICCameraItem))]
 	interface ICCameraFolder {
 
@@ -398,6 +402,7 @@ namespace ImageCaptureCore {
 		ICCameraItem[] Contents { get; }
 	}
 
+	[DisableDefaultCtor] // Created by 'ICCameraDevice'.
 	[BaseType (typeof(ICCameraItem))]
 	interface ICCameraFile {
 
@@ -549,6 +554,8 @@ namespace ImageCaptureCore {
 		void RequestSendPtpCommand (NSData command, NSData outData, NSObject sendCommandDelegate, Selector didSendCommandSelector, [NullAllowed] IntPtr contextInfo);
 	}
 
+	[DisableDefaultCtor]
+	[Abstract]
 	[BaseType (typeof(NSObject))]
 	interface ICScannerFeature {
 
@@ -565,6 +572,7 @@ namespace ImageCaptureCore {
 		string Tooltip { get; }
 	}
 
+	[DisableDefaultCtor]
 	[BaseType (typeof(ICScannerFeature))]
 	interface ICScannerFeatureEnumeration {
 
@@ -584,6 +592,7 @@ namespace ImageCaptureCore {
 		string[] MenuItemLabelsTooltips { get; }
 	}
 
+	[DisableDefaultCtor]
 	[BaseType (typeof(ICScannerFeature))]
 	interface ICScannerFeatureRange {
 
@@ -603,6 +612,7 @@ namespace ImageCaptureCore {
 		nfloat StepSize { get; }
 	}
 
+	[DisableDefaultCtor]
 	[BaseType (typeof(ICScannerFeature))]
 	interface ICScannerFeatureBoolean {
 
@@ -610,6 +620,7 @@ namespace ImageCaptureCore {
 		bool Value { get; set; }
 	}
 
+	[DisableDefaultCtor]
 	[BaseType (typeof(ICScannerFeature))]
 	interface ICScannerFeatureTemplate {
 
@@ -617,6 +628,8 @@ namespace ImageCaptureCore {
 		NSMutableArray[] Targets { get; }
 	}
 
+	[DisableDefaultCtor]
+	[Abstract]
 	[BaseType (typeof(NSObject))]
 	interface ICScannerFunctionalUnit {
 
@@ -711,6 +724,7 @@ namespace ImageCaptureCore {
 		nuint OverviewResolution { get; set; }
 	}
 
+	[DisableDefaultCtor] // Created by 'ICScannerDevice'.
 	[BaseType (typeof(ICScannerFunctionalUnit))]
 	interface ICScannerFunctionalUnitFlatbed {
 
@@ -724,6 +738,7 @@ namespace ImageCaptureCore {
 		CGSize DocumentSize { get; }
 	}
 
+	[DisableDefaultCtor] // Created by 'ICScannerDevice'.
 	[BaseType (typeof(ICScannerFunctionalUnit))]
 	interface ICScannerFunctionalUnitPositiveTransparency {
 
@@ -737,6 +752,7 @@ namespace ImageCaptureCore {
 		CGSize DocumentSize { get; }
 	}
 
+	[DisableDefaultCtor] // Created by 'ICScannerDevice'.
 	[BaseType (typeof(ICScannerFunctionalUnit))]
 	interface ICScannerFunctionalUnitNegativeTransparency {
 
@@ -750,6 +766,7 @@ namespace ImageCaptureCore {
 		CGSize DocumentSize { get; }
 	}
 
+	[DisableDefaultCtor] // Created by 'ICScannerDevice'.
 	[BaseType (typeof(ICScannerFunctionalUnit))]
 	interface ICScannerFunctionalUnitDocumentFeeder {
 

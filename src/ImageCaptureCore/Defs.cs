@@ -123,6 +123,7 @@ namespace ImageCaptureCore {
 	[Native]
 	[Flags]
 	public enum ICBrowsedDeviceType : ulong {
+		None = 0,
 		Camera = 1,
 		Scanner = 2,
 		Local = 256,
@@ -165,7 +166,7 @@ namespace ImageCaptureCore {
 
 	[Native]
 	public enum ICScannerPixelDataType : ulong {
-		Bw = 0,
+		BW = 0,
 		Gray = 1,
 		Rgb = 2,
 		Palette = 3,
@@ -252,6 +253,7 @@ namespace ImageCaptureCore {
 		Lf = 78,
 	}
 
+	[Flags]
 	public enum ICScannerFunctionalUnitState : uint {
 		Ready = (1u << 0),
 		ScanInProgress = (1u << 1),
