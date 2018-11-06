@@ -79,21 +79,26 @@ namespace Mono.Native.Tests
 			Assert.That (symbol, Is.Not.EqualTo (IntPtr.Zero), "dlsym() found mono_native_initialize()");
 		}
 
+		void DumpDirectory (string dir, string indent)
+		{
+			Console.Error.WriteLine ($"{indent}- {dir}");
+			foreach (var subdir in Directory.GetDirectories (dir)) {
+				DumpDirectory (subdir, indent + "  ");
+			}
+
+			foreach (var file in Directory.GetFiles (dir)) {
+				Console.Error.WriteLine ($"{indent} * {file}");
+			}
+		}
+
 		[Test]
 		public void MartinTest ()
 		{
 			var linkMode = NativePlatformConfig.LinkMode;
 			Console.Error.WriteLine ($"LINK MODE: {linkMode}");
 
-			switch (linkMode) {
-			case MonoNativeLinkMode.Dynamic:
-				CheckDynamicLibrary ();
-				break;
-			}
-
-			Dlfcn.dlopen (null, 0);
-
-			CheckDynamicLibrary ();
+			Console.Error.WriteLine ($"ROOT DIR: {NativePlatformConfig.RootDirectory}");
+			DumpDirectory (NativePlatformConfig.RootDirectory, string.Empty);
 		}
 	}
 }
