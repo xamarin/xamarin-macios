@@ -64,8 +64,7 @@ namespace Xamarin.Bundler {
 	public enum MonoNativeMode {
 		None,
 		Compat,
-		Unified,
-		Combined
+		Unified
 	}
 
 	public partial class Application
@@ -1890,8 +1889,6 @@ namespace Xamarin.Bundler {
 				return "libmono-native-unified";
 			case MonoNativeMode.Compat:
 				return "libmono-native-compat";
-			case MonoNativeMode.Combined:
-				return "libmono-native";
 			default:
 				throw ErrorHelper.CreateError (100, "Invalid mono native type: '{0}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).", MonoNativeMode);
 			}

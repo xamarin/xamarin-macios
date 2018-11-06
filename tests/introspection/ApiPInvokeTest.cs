@@ -153,15 +153,15 @@ namespace Introspection
 				var dllimport = mi.GetCustomAttribute<DllImportAttribute> ();
 
 				string libname = dllimport.Value;
-				if (libname == "__Internal" || SkipLibrary (libname))
-					continue;
-
 				switch (libname) {
+				case "__Internal":
 				case "System.Native":
 				case "System.Security.Cryptography.Native.Apple":
-					libname = "__Internal";
-					break;
+					continue;
 				}
+
+				if (SkipLibrary (libname))
+					continue;
 
 				string path = FindLibrary (libname, requiresFullPath: true);
 
@@ -214,8 +214,7 @@ namespace Introspection
 						break;
 					case "System.Native":
 					case "System.Security.Cryptography.Native.Apple":
-						path = null;
-						break;
+						continue;
 					}
 
 					var lib = Dlfcn.dlopen (path, 0);
