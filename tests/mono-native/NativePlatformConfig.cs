@@ -1,12 +1,35 @@
 using System;
+using System.IO;
+using System.Reflection;
 using NUnit.Framework;
-using Mono;
 
 namespace Mono.Native.Tests
 {
+	public enum MonoNativeLinkMode
+	{
+		None,
+		Static,
+		Dynamic,
+		Framework
+	}
+
 	[TestFixture]
 	public class NativePlatformConfig
 	{
+		public static MonoNativeLinkMode LinkMode {
+			get {
+#if MONO_NATIVE_STATIC
+				return MonoNativeLinkMode.Static;
+#elif MONO_NATIVE_DYLIB
+				return MonoNativeLinkMode.Dynamic;
+#else
+				throw new NotImplementedException ();
+#endif
+			}
+		}
+
+		public static string RootDirectory => Path.GetDirectoryName (Assembly.GetEntryAssembly ().Location);
+
 		static bool ShouldUseCompat {
 			get {
 #if MONO_NATIVE_COMPAT
@@ -19,6 +42,7 @@ namespace Mono.Native.Tests
 #endif
 			}
 		}
+
 		[Test]
 		public void PlatformType ()
 		{

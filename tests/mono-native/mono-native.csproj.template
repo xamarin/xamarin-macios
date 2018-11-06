@@ -169,6 +169,7 @@
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
     <Compile Include="NativePlatformConfig.cs" />
+    <Compile Include="Introspection.cs" />
     <Compile Include="..\..\external\mono\mcs\class\corlib\Mono\MonoNativePlatform.cs">
       <Link>MonoNativePlatform.cs</Link>
     </Compile>
