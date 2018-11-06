@@ -63,7 +63,7 @@ namespace MonoTouchFixtures.VideoToolbox {
 					OnlyTheseFrames = VTOnlyTheseFrames.AllFrames
 				});
 
-				Assert.That (result == VTStatus.Ok, "SetDecompressionProperties");
+				Assert.AreEqual (VTStatus.Ok, result, "SetDecompressionProperties");
 			}
 		}
 
@@ -82,7 +82,7 @@ namespace MonoTouchFixtures.VideoToolbox {
 					ShouldBeSerialized = true
 				});
 
-				Assert.That (result == VTStatus.Ok, "SetProperties");
+				Assert.AreEqual (VTStatus.Ok, result, "SetProperties");
 			}
 		}
 
@@ -97,7 +97,7 @@ namespace MonoTouchFixtures.VideoToolbox {
 			using (var session = CreateSession (asset)) {
 				var supportedProps = session.GetSupportedProperties ();
 				Assert.NotNull (supportedProps, "GetSupportedProperties");
-				Assert.That (supportedProps.Count > 0, "GetSupportedProperties should be more than zero");
+				Assert.That (supportedProps.Count, Is.GreaterThan (0), "GetSupportedProperties should be more than zero");
 			}
 		}
 
