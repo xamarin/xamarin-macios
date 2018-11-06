@@ -592,7 +592,7 @@ namespace Xamarin.Bundler {
 					throw ErrorHelper.CreateError (51, "{3} {0} requires Xcode {4} or later. The current Xcode version (found in {2}) is {1}.", Constants.Version, XcodeVersion.ToString (), sdk_root, PRODUCT, min_xcode_version);
 
 				if (XcodeVersion < SdkVersions.XcodeVersion)
-					ErrorHelper.Warning (79, "The recommended Xcode version for {3} {0} is Xcode {3} or later. The current Xcode version (found in {2}) is {1}.", Constants.Version, XcodeVersion.ToString (), sdk_root, SdkVersions.Xcode, PRODUCT);
+					ErrorHelper.Warning (79, "The recommended Xcode version for {4} {0} is Xcode {3} or later. The current Xcode version (found in {2}) is {1}.", Constants.Version, XcodeVersion.ToString (), sdk_root, SdkVersions.Xcode, PRODUCT);
 			}
 
 			Driver.Log (1, "Using Xcode {0} ({2}) found in {1}", XcodeVersion, sdk_root, XcodeProductVersion);
