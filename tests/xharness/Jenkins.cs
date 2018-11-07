@@ -172,17 +172,34 @@ namespace xharness
 		{
 			// This function returns additional test configurations (in addition to the default one) for the specific test
 
+			string monoNativeStatic;
+			string monoNativeDynamic;
+
+			switch (test.TestName) {
+			case "mono-native-compat":
+				monoNativeStatic = "JENKINS; MONO_NATIVE_COMPAT; MONO_NATIVE_STATIC";
+				monoNativeDynamic = "JENKINS; MONO_NATIVE_COMPAT; MONO_NATIVE_DYNAMIC";
+				break;
+			case "mono-native-unified":
+				monoNativeStatic = "JENKINS; MONO_NATIVE_UNIFIED; MONO_NATIVE_STATIC";
+				monoNativeDynamic = "JENKINS; MONO_NATIVE_UNIFIED; MONO_NATIVE_DYNAMIC";
+				break;
+			default:
+				monoNativeStatic = monoNativeDynamic = null;
+				break;
+			}
+
 			switch (test.ProjectPlatform) {
 			case "iPhone":
 				/* we don't add --assembly-build-target=@all=staticobject because that's the default in all our test projects */
-				yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary", Debug = true, Profiling = false };
-				yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = false };
+				yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary", Debug = true, Profiling = false, Defines = monoNativeDynamic };
+				yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = false, Defines = monoNativeDynamic };
 
-				yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug, profiling)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary", Debug = true, Profiling = true };
-				yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug, profiling)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = true };
+				yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug, profiling)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary", Debug = true, Profiling = true, Defines = monoNativeDynamic };
+				yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug, profiling)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = true, Defines = monoNativeDynamic };
 
-				yield return new TestData { Variation = "Release", MTouchExtraArgs = "", Debug = false, Profiling = false };
-				yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (release)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = false, Profiling = false };
+				yield return new TestData { Variation = "Release", MTouchExtraArgs = "", Debug = false, Profiling = false, Defines = monoNativeStatic };
+				yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (release)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = false, Profiling = false, Defines = monoNativeDynamic };
 
 				switch (test.TestName) {
 				case "monotouch-test":
@@ -199,6 +216,18 @@ namespace xharness
 					yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
 					yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
 					break;
+				case "mono-native-compat":
+				case "mono-native-unified":
+					yield return new TestData { Variation = "AssemblyBuildTarget: dylib (release)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary", Debug = false, Profiling = false, Defines = monoNativeDynamic };
+					yield return new TestData { Variation = "AssemblyBuildTarget: dylib (release, profiling)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary", Debug = false, Profiling = true, Defines = monoNativeDynamic };
+					yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (release, profiling)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = false, Profiling = true, Defines = monoNativeDynamic };
+
+					yield return new TestData { Variation = "Release", MTouchExtraArgs = "", Debug = false, Profiling = false, Defines = monoNativeStatic };
+					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, LinkMode = "Full", Defines = monoNativeStatic };
+
+					yield return new TestData { Variation = "Debug (static registrar)", MTouchExtraArgs = "--registrar:static", Debug = true, Profiling = false, Defines = monoNativeStatic };
+					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = true, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL; " + (monoNativeStatic ?? string.Empty) };
+					break;
 				}
 				break;
 			case "iPhoneSimulator":
@@ -211,22 +240,11 @@ namespace xharness
 					break;
 				case "mono-native-compat":
 				case "mono-native-unified":
-					yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary", Debug = true, Profiling = false, Defines = "JENKINS; MONO_NATIVE_DYLIB" };
-					yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = false, Defines = "JENKINS; MONO_NATIVE_STATIC" };
+					yield return new TestData { Variation = "Release", MTouchExtraArgs = "", Debug = false, Profiling = false, Defines = monoNativeStatic };
+					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL; " + monoNativeStatic };
 
-					yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug, profiling)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary", Debug = true, Profiling = true, Defines = "JENKINS; MONO_NATIVE_DYLIB" };
-					yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug, profiling)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = true, Defines = "JENKINS; MONO_NATIVE_STATIC" };
-
-					yield return new TestData { Variation = "AssemblyBuildTarget: dylib (release)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary", Debug = false, Profiling = false, Defines = "JENKINS; MONO_NATIVE_STATIC" };
-					yield return new TestData { Variation = "AssemblyBuildTarget: dylib (release, profiling)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary", Debug = false, Profiling = true, Defines = "JENKINS; MONO_NATIVE_DYLIB" };
-					yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (release)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = false, Profiling = false, Defines = "JENKINS; MONO_NATIVE_STATIC" };
-					yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (release, profiling)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = false, Profiling = true, Defines = "JENKINS; MONO_NATIVE_STATIC" };
-
-					yield return new TestData { Variation = "Release", MTouchExtraArgs = "", Debug = false, Profiling = false };
-					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL; JENKINS; MONO_NATIVE_STATIC" };
-
-					yield return new TestData { Variation = "Debug (static registrar)", MTouchExtraArgs = "--registrar:static", Debug = true, Profiling = false, Defines = "JENKINS; MONO_NATIVE_STATIC" };
-					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = true, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL; JENKINS; MONO_NATIVE_STATIC" };
+					yield return new TestData { Variation = "Debug (static registrar)", MTouchExtraArgs = "--registrar:static", Debug = true, Profiling = false, Defines = monoNativeStatic };
+					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = true, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL; " + monoNativeStatic };
 					break;
 				}
 				break;

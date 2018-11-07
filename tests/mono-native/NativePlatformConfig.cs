@@ -20,9 +20,10 @@ namespace Mono.Native.Tests
 			get {
 #if MONO_NATIVE_STATIC
 				return MonoNativeLinkMode.Static;
-#elif MONO_NATIVE_DYLIB
+#elif MONO_NATIVE_DYNAMIC
 				return MonoNativeLinkMode.Dynamic;
 #else
+				Assert.Fail ("Missing `MONO_NATIVE_STATIC` or `MONO_NATIVE_DYNAMIC`");
 				throw new NotImplementedException ();
 #endif
 			}
@@ -30,7 +31,7 @@ namespace Mono.Native.Tests
 
 		public static string RootDirectory => Path.GetDirectoryName (Assembly.GetEntryAssembly ().Location);
 
-		static bool ShouldUseCompat {
+		public static bool UsingCompat {
 			get {
 #if MONO_NATIVE_COMPAT
 				return true;
@@ -43,6 +44,16 @@ namespace Mono.Native.Tests
 			}
 		}
 
+		public static string GetDynamicLibraryName (bool usingCompat)
+		{
+			if (usingCompat)
+				return "libmono-native-compat.dylib";
+			else
+				return "libmono-native-unified.dylib";
+		}
+
+		public static string DynamicLibraryName => GetDynamicLibraryName (UsingCompat);
+
 		[Test]
 		public void PlatformType ()
 		{
@@ -52,7 +63,7 @@ namespace Mono.Native.Tests
 			Console.Error.WriteLine ($"NATIVE PLATFORM TYPE: {type}");
 
 			var usingCompat = (type & MonoNativePlatformType.MONO_NATIVE_PLATFORM_TYPE_COMPAT) != 0;
-			Assert.AreEqual (ShouldUseCompat, usingCompat, "using compatibility layer");
+			Assert.AreEqual (UsingCompat, usingCompat, "using compatibility layer");
 		}
 	}
 }

@@ -20,10 +20,23 @@ namespace Mono.Native.Tests
 #endif
 		}
 
+		void AssertShouldExist (string name)
+		{
+			var pathName = Path.Combine (NativePlatformConfig.RootDirectory, name);
+			Assert.That (File.Exists (pathName), $"Found {name}.");
+		}
+
+		void AssertShouldNotExist (string name)
+		{
+			var pathName = Path.Combine (NativePlatformConfig.RootDirectory, name);
+			Assert.That (File.Exists (pathName), Is.False, $"Should not have {name}.");
+		}
+
 		void CheckDynamicLibrary ()
 		{
-			var filename = Path.Combine (NativePlatformConfig.RootDirectory, "libmono-native.dylib");
-			Assert.That (File.Exists (filename), "Found libmono-native.dylib");
+			AssertShouldExist (NativePlatformConfig.DynamicLibraryName);
+			AssertShouldNotExist (NativePlatformConfig.GetDynamicLibraryName (!NativePlatformConfig.UsingCompat));
+			AssertShouldNotExist ("libmono-native.dylib");
 
 			var count = Directory.GetFiles (NativePlatformConfig.RootDirectory).Count (file => file.Contains ("mono-native"));
 			Assert.That (count, Is.EqualTo (1), "exactly one mono-native library.");
@@ -31,8 +44,9 @@ namespace Mono.Native.Tests
 
 		void CheckStaticLibrary ()
 		{
-			var filename = Path.Combine (NativePlatformConfig.RootDirectory, "libmono-native.dylib");
-			Assert.That (File.Exists (filename), Is.False, "Should not have libmono-native.dylib");
+			AssertShouldNotExist ("libmono-native.dylib");
+			AssertShouldNotExist ("libmono-native-compat.dylib");
+			AssertShouldNotExist ("libmono-native-unified.dylib");
 
 			var count = Directory.GetFiles (NativePlatformConfig.RootDirectory).Count (file => file.Contains ("mono-native"));
 			Assert.That (count, Is.EqualTo (0), "zero mono-native libraries.");
@@ -60,7 +74,7 @@ namespace Mono.Native.Tests
 			string libname;
 			switch (NativePlatformConfig.LinkMode) {
 			case MonoNativeLinkMode.Dynamic:
-				libname = "libmono-native.dylib";
+				libname = NativePlatformConfig.DynamicLibraryName;
 				break;
 			case MonoNativeLinkMode.Static:
 				libname = null;
@@ -70,8 +84,12 @@ namespace Mono.Native.Tests
 				return;
 			}
 
+			Console.Error.WriteLine ($"TEST!");
+			mono_native_initialize ();
+			Console.Error.WriteLine ($"TEST #1!");
+
 			var dylib = Dlfcn.dlopen (libname, 0);
-			Console.Error.WriteLine ($"DYLIB: {dylib}");
+			Console.Error.WriteLine ($"DYLIB: {libname} - {dylib}");
 			Assert.That (dylib, Is.Not.EqualTo (IntPtr.Zero), "dlopen()ed mono-native");
 
 			var symbol = Dlfcn.dlsym (dylib, "mono_native_initialize");
@@ -79,15 +97,26 @@ namespace Mono.Native.Tests
 			Assert.That (symbol, Is.Not.EqualTo (IntPtr.Zero), "dlsym() found mono_native_initialize()");
 		}
 
-		void DumpDirectory (string dir, string indent)
+		[DllImport ("__Internal")]
+		extern static void mono_native_initialize ();
+
+		void DumpDirectory (string dir)
 		{
-			Console.Error.WriteLine ($"{indent}- {dir}");
+			Console.Error.WriteLine ($"DUMP DIRECTORY: {dir}");
+			DumpDirectory (dir, string.Empty, Path.GetFileName (dir));
+		}
+
+		void DumpDirectory (string dir, string indent, string prefix)
+		{
+			Console.Error.WriteLine ($"{indent}- {prefix}");
 			foreach (var subdir in Directory.GetDirectories (dir)) {
-				DumpDirectory (subdir, indent + "  ");
+				var name = Path.Combine (prefix, Path.GetFileName (subdir));
+				DumpDirectory (subdir, indent + "  ", name);
 			}
 
 			foreach (var file in Directory.GetFiles (dir)) {
-				Console.Error.WriteLine ($"{indent} * {file}");
+				var name = Path.Combine (prefix, Path.GetFileName (file));
+				Console.Error.WriteLine ($"{indent} * {name}");
 			}
 		}
 
@@ -98,7 +127,13 @@ namespace Mono.Native.Tests
 			Console.Error.WriteLine ($"LINK MODE: {linkMode}");
 
 			Console.Error.WriteLine ($"ROOT DIR: {NativePlatformConfig.RootDirectory}");
-			DumpDirectory (NativePlatformConfig.RootDirectory, string.Empty);
+			DumpDirectory (NativePlatformConfig.RootDirectory);
+		}
+
+		[Test]
+		public void TestInvoke ()
+		{
+			mono_native_initialize ();
 		}
 	}
 }
