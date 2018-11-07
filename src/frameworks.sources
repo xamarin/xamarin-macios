@@ -111,17 +111,14 @@ APPKIT_SOURCES = \
 	UIKit/NSLayoutManager.cs \
 	AppKit/NSLevelIndicator.cs \
 	AppKit/NSMatrix.cs \
-	AppKit/NSMenu.cs \
 	AppKit/NSMenuItem.cs \
 	AppKit/NSOpenGLContext.cs \
 	AppKit/NSOpenGLPixelFormat.cs \
-	AppKit/NSPageLayout.cs \
 	AppKit/NSPathControlItem.cs \
 	AppKit/NSPopUpButton.cs \
 	AppKit/NSPopUpButtonCell.cs \
 	AppKit/NSPredicateEditorRowTemplate.cs \
 	AppKit/NSPrintInfo.cs \
-	AppKit/NSPrintPanel.cs \
 	AppKit/NSResponder.cs \
 	AppKit/NSScreen.cs \
 	AppKit/NSSegmentedControl.cs \
@@ -140,7 +137,6 @@ APPKIT_SOURCES = \
 	AppKit/NSToolbarItem.cs \
 	AppKit/NSTouch.cs \
 	AppKit/NSTreeController.cs \
-	AppKit/NSView.cs \
 	AppKit/NSWindow.cs \
 	AppKit/NSOpenPanel.cs \
 	AppKit/NSSavePanel.cs \
