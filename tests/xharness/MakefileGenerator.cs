@@ -187,6 +187,10 @@ namespace xharness
 					{ "MD_APPLE_SDK_ROOT", "$(MD_APPLE_SDK_ROOT_EVALUATED)"},
 				};
 
+				// For targets with spaces, also add the non-space variation to the list.
+				allTargetNames.AddRange (allTargetNames.Where ((v) => v.IndexOf (' ') >= 0).Select ((v) => v.Replace ("\\ ", "")));
+				allTargetCleanNames.AddRange (allTargetCleanNames.Where ((v) => v.IndexOf (' ') >= 0).Select ((v) => v.Replace ("\\ ", "")));
+
 				foreach (var key in enviromentalVariables) {
 					writer.WriteLine ("{0}: export {1}:={2}", string.Join (" ", allTargetNames.ToArray ()), key.Key, key.Value);
 					writer.WriteLine ("{0}: export {1}:={2}", string.Join (" ", allTargetCleanNames.ToArray ()), key.Key, key.Value);
