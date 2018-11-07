@@ -16,6 +16,13 @@ namespace MonoTouchFixtures.SceneKit {
 
 		float timeFunctionValue;
 
+		[SetUp]
+		public void SetUp ()
+		{
+			TestRuntime.AssertXcodeVersion (6, 0);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+		}
+
 #if !XAMCORE_4_0
 		[Test]
 		public void TimingFunction_5058 ()
