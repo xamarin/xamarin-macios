@@ -36,7 +36,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchArch>ARMv7k</MtouchArch>
-    <CodesignEntitlements>%WATCHAPP_PATH%Entitlements.plist</CodesignEntitlements>
+    <CodesignEntitlements>%TEMPLATE PATH%\Entitlements.plist</CodesignEntitlements>
     <MtouchFloat32>true</MtouchFloat32>
     <CodesignKey>iPhone Developer</CodesignKey>
   </PropertyGroup>

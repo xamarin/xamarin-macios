@@ -7,25 +7,22 @@ using WatchKit;
 using Foundation;
 
 using NUnit.Framework.Internal.Filters;
-using MonoTouch.NUnit.UI;
-
-public static partial class TestLoader
-{
-	static partial void AddTestAssembliesImpl (BaseTouchRunner runner);
-
-	public static void AddTestAssemblies (BaseTouchRunner runner)
-	{
-		AddTestAssembliesImpl (runner);
-	}
-}
+using System.Runtime.InteropServices;
+using System.Collections.Generic;
+using Xamarin.iOS.UnitTests;
+using System.Reflection;
+using Xamarin.iOS.UnitTests.XUnit;
+using Xamarin.iOS.UnitTests.NUnit;
+using BCLTests;
+using BCLTests.TestRunner.Core;
 
 namespace monotouchtestWatchKitExtension
 {
 	[Register ("InterfaceController")]
 	public partial class InterfaceController : WKInterfaceController
 	{
-		WatchOSRunner runner;
 		bool running;
+		Xamarin.iOS.UnitTests.TestRunner runner;
 
 		[Action ("runTests:")]
 		partial void RunTests (NSObject obj);
@@ -44,6 +41,15 @@ namespace monotouchtestWatchKitExtension
 
 		[Outlet ("cmdRun")]
 		WatchKit.WKInterfaceButton cmdRun { get; set; }
+		
+		[DllImport ("libc")]
+		static extern void exit (int code);
+		protected virtual void TerminateWithSuccess ()
+		{
+			// For WatchOS we're terminating the extension, not the watchos app itself.
+			Console.WriteLine ("Exiting test run with success");
+			exit (0);
+		}
 
 		static InterfaceController ()
 		{
@@ -65,73 +71,82 @@ namespace monotouchtestWatchKitExtension
 		{
 			base.Awake (context);
 
-			BeginInvokeOnMainThread (LoadTests);
+			BeginInvokeOnMainThread (RunTests);
 		}
 
-		void LoadTests ()
-		{
-			runner = new WatchOSRunner ();
-			var categoryFilter = new NotFilter (new CategoryExpression ("MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingLinqInterpreter,RequiresBSDSockets").Filter);
-			if (!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("NUNIT_FILTER_START"))) {
-				var firstChar = Environment.GetEnvironmentVariable ("NUNIT_FILTER_START") [0];
-				var lastChar = Environment.GetEnvironmentVariable ("NUNIT_FILTER_END") [0];
-				var nameFilter = new NameStartsWithFilter () { FirstChar = firstChar, LastChar = lastChar };
-				runner.Filter = new AndFilter (categoryFilter, nameFilter);
-			} else {
-				runner.Filter = categoryFilter;
+		internal static IEnumerable<TestAssemblyInfo> GetTestAssemblies ()
+ 		{
+			// var t = Path.GetFileName (typeof (ActivatorCas).Assembly.Location);
+			foreach (var name in RegisterType.TypesToRegister.Keys) {
+				var a = Assembly.Load (name);
+				if (a == null) {
+					Console.WriteLine ($"# WARNING: Unable to load assembly {name}.");
+ 					continue;
+				}
+				yield return new TestAssemblyInfo (a, name);
 			}
-			runner.Add (GetType ().Assembly);
-			TestLoader.AddTestAssemblies (runner);
+ 		}
+ 		
+		void RunTests ()
+		{
+			var options = ApplicationOptions.Current;
+			TcpTextWriter writer = null;
+			if (!string.IsNullOrEmpty (options.HostName))
+				writer = new TcpTextWriter (options.HostName, options.HostPort);
+
+			// we generate the logs in two different ways depending if the generate xml flag was
+			// provided. If it was, we will write the xml file to the tcp writer if present, else
+			// we will write the normal console output using the LogWriter
+			var logger = (writer == null || options.EnableXml) ? new LogWriter () : new LogWriter (writer);
+			logger.MinimumLogLevel = MinimumLogLevel.Info;
+			var testAssemblies = GetTestAssemblies ();
+			if (RegisterType.IsXUnit)
+				runner = new XUnitTestRunner (logger);
+			else
+				runner = new NUnitTestRunner (logger);
+			
 			ThreadPool.QueueUserWorkItem ((v) =>
 			{
-				runner.LoadSync ();
 				BeginInvokeOnMainThread (() =>
 				{
-					lblStatus.SetText (string.Format ("{0} tests", runner.TestCount));
+					lblStatus.SetText (string.Format ("{0} tests", runner.TotalTests));
+					runner.Run ((IList<TestAssemblyInfo>)testAssemblies);
 					RenderResults ();
 					cmdRun.SetEnabled (true);
 					cmdRun.SetHidden (false);
+					if (options.EnableXml) {
+						runner.WriteResultsToFile (writer);
+						logger.Info ("Xml file was written to the tcp listener.");
+					} else {
+						string resultsFilePath = runner.WriteResultsToFile ();
+						logger.Info ($"Xml result can be found {resultsFilePath}");
+					}
 
-					runner.AutoRun ();
+					logger.Info ($"Tests run: {runner.TotalTests} Passed: {runner.PassedTests} Inconclusive: {runner.InconclusiveTests} Failed: {runner.FailedTests} Ignored: {runner.SkippedTests}");
+					if (options.TerminateAfterExecution)
+						TerminateWithSuccess ();
 				});
-			});
-		}
-
-		void RunTests ()
-		{
-			if (running) {
-				Console.WriteLine ("Already running");
-				return;
-			}
-			running = true;
-			cmdRun.SetEnabled (false);
-			lblStatus.SetText ("Running");
-			BeginInvokeOnMainThread (() => {
-				runner.Run ();
-
-				cmdRun.SetEnabled (true);
-				lblStatus.SetText ("Done");
-				running = false;
-				RenderResults ();
 			});
 		}
 
 		void RenderResults ()
 		{
-			if (runner.TestCount == 0)
+			var options = ApplicationOptions.Current;
+
+			if (runner.TotalTests == 0)
 				return;
 
-			lblSuccess.SetText (string.Format ("P: {0}/{1} {2}%", runner.PassedCount, runner.TestCount, 100 * runner.PassedCount / runner.TestCount));
-			lblFailed.SetText (string.Format ("F: {0}/{1} {2}%", runner.FailedCount, runner.TestCount, 100 * runner.FailedCount / runner.TestCount));
-			lblIgnInc.SetText (string.Format ("I: {0}/{1} {2}%", (runner.IgnoredCount + runner.InconclusiveCount), runner.TestCount, 100 * (runner.IgnoredCount + runner.InconclusiveCount) / runner.TestCount));
+			lblSuccess.SetText (string.Format ("P: {0}/{1} {2}%", runner.PassedTests, runner.TotalTests, 100 * runner.PassedTests / runner.TotalTests));
+			lblFailed.SetText (string.Format ("F: {0}/{1} {2}%", runner.FailedTests, runner.TotalTests, 100 * runner.FailedTests / runner.TotalTests));
+			lblIgnInc.SetText (string.Format ("I: {0}/{1} {2}%", (runner.SkippedTests + runner.InconclusiveTests), runner.TotalTests, 100 * (runner.SkippedTests + runner.InconclusiveTests) / runner.TotalTests));
 
-			if (running == false && runner.PassedCount > 0) {
-				if (runner.FailedCount == 0) {
+			if (running == false && runner.PassedTests > 0) {
+				if (runner.FailedTests == 0) {
 					lblSuccess.SetTextColor (UIKit.UIColor.Green);
 					lblStatus.SetTextColor (UIKit.UIColor.Green);
 					lblStatus.SetText ("Success");
 				}
-				if (runner.FailedCount > 0) {
+				if (runner.FailedTests > 0) {
 					lblFailed.SetTextColor (UIKit.UIColor.Red);
 					lblStatus.SetTextColor (UIKit.UIColor.Red);
 					lblStatus.SetText ("Failed");

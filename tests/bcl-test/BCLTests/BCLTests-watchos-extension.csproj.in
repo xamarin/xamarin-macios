@@ -77,16 +77,144 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.WatchOS" />
-    <Reference Include="MonoTouch.NUnitLite" />
-    <Reference Include="System.Net.Http" />
+    <Reference Include="nunitlite">
+      <HintPath>..\..\..\external\mono\mcs\class\lib\monotouch\nunitlite.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
+      <HintPath>..\..\..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.2.1.1\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions">
+      <HintPath>..\..\..\packages\Microsoft.Extensions.Logging.Abstractions.2.1.1\lib\netstandard2.0\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Buffers">
+      <HintPath>..\..\..\packages\System.Buffers.4.4.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe">
+      <HintPath>..\..\..\packages\System.Runtime.CompilerServices.Unsafe.4.5.1\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory">
+      <HintPath>..\..\..\packages\System.Memory.4.5.1\lib\netstandard2.0\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Primitives">
+      <HintPath>..\..\..\packages\Microsoft.Extensions.Primitives.2.1.1\lib\netstandard2.0\Microsoft.Extensions.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.Abstractions">
+      <HintPath>..\..\..\packages\Microsoft.Extensions.Configuration.Abstractions.2.1.1\lib\netstandard2.0\Microsoft.Extensions.Configuration.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration">
+      <HintPath>..\..\..\packages\Microsoft.Extensions.Configuration.2.1.1\lib\netstandard2.0\Microsoft.Extensions.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.Binder">
+      <HintPath>..\..\..\packages\Microsoft.Extensions.Configuration.Binder.2.1.1\lib\netstandard2.0\Microsoft.Extensions.Configuration.Binder.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Options">
+      <HintPath>..\..\..\packages\Microsoft.Extensions.Options.2.1.1\lib\netstandard2.0\Microsoft.Extensions.Options.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging">
+      <HintPath>..\..\..\packages\Microsoft.Extensions.Logging.2.1.1\lib\netstandard2.0\Microsoft.Extensions.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.abstractions">
+      <HintPath>..\..\..\packages\xunit.abstractions.2.0.3\lib\netstandard2.0\xunit.abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.assert">
+      <HintPath>..\..\..\packages\xunit.assert.2.4.0\lib\netstandard2.0\xunit.assert.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.core">
+      <HintPath>..\..\..\packages\xunit.extensibility.core.2.4.0\lib\netstandard2.0\xunit.core.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.execution.dotnet">
+      <HintPath>..\..\..\packages\xunit.extensibility.execution.2.4.0\lib\netstandard2.0\xunit.execution.dotnet.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.runner.utility.netstandard20">
+      <HintPath>..\..\..\packages\xunit.runner.utility.2.4.0\lib\netstandard2.0\xunit.runner.utility.netstandard20.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization.Formatters.Soap">
+      <HintPath>..\..\..\external\mono\mcs\class\lib\monotouch\System.Runtime.Serialization.Formatters.Soap.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Options.ConfigurationExtensions">
+      <HintPath>..\..\..\packages\Microsoft.Extensions.Options.ConfigurationExtensions.2.1.1\lib\netstandard2.0\Microsoft.Extensions.Options.ConfigurationExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Configuration">
+      <HintPath>..\..\..\packages\Microsoft.Extensions.Logging.Configuration.2.1.1\lib\netstandard2.0\Microsoft.Extensions.Logging.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Console">
+      <HintPath>..\..\..\packages\Microsoft.Extensions.Logging.Console.2.1.1\lib\netstandard2.0\Microsoft.Extensions.Logging.Console.dll</HintPath>
+    </Reference>
+     <Reference Include="Mono.Options">
+      <HintPath>..\..\..\packages\Mono.Options.5.3.0.1\lib\netstandard1.3\Mono.Options.dll</HintPath>
+    </Reference>
+     <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+%REFERENCES%
   </ItemGroup>
   <ItemGroup>
     <None Include="%PLIST PATH%">
       <LogicalName>Info.plist</LogicalName>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="%TEMPLATE PATH%\InterfaceController.cs" />
+    <Compile Include="templates\common\TestRunner.Core\Extensions.Bool.cs">
+      <Link>TestRunner.Core\Extensions.Bool.cs</Link>
+    </Compile>
+    <Compile Include="templates\common\TestRunner.Core\LogWriter.cs">
+      <Link>TestRunner.Core\LogWriter.cs</Link>
+    </Compile>
+    <Compile Include="templates\common\TestRunner.Core\MinimumLogLevel.cs">
+      <Link>TestRunner.Core\MinimumLogLevel.cs</Link>
+    </Compile>
+    <Compile Include="templates\common\TestRunner.Core\TcpTextWriter.cs">
+      <Link>TestRunner.Core\TcpTextWriter.cs</Link>
+    </Compile>
+    <Compile Include="templates\common\TestRunner.Core\TestAssemblyInfo.cs">
+      <Link>TestRunner.Core\TestAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="templates\common\TestRunner.Core\TestCompletionStatus.cs">
+      <Link>TestRunner.Core\TestCompletionStatus.cs</Link>
+    </Compile>
+    <Compile Include="templates\common\TestRunner.Core\TestExecutionState.cs">
+      <Link>TestRunner.Core\TestExecutionState.cs</Link>
+    </Compile>
+    <Compile Include="templates\common\TestRunner.Core\TestFailureInfo.cs">
+      <Link>TestRunner.Core\TestFailureInfo.cs</Link>
+    </Compile>
+    <Compile Include="templates\common\TestRunner.Core\TestRunner.cs">
+      <Link>TestRunner.Core\TestRunner.cs</Link>
+    </Compile>
+    <Compile Include="templates\common\TestRunner.NUnit\NUnitTestRunner.cs">
+      <Link>TestRunner.NUnit\NUnitTestRunner.cs</Link>
+    </Compile>
+    <Compile Include="templates\common\TestRunner.xUnit\XUnitFilter.cs">
+      <Link>TestRunner.xUnit\XUnitFilter.cs</Link>
+    </Compile>
+    <Compile Include="templates\common\TestRunner.xUnit\XUnitFilterType.cs">
+      <Link>TestRunner.xUnit\XUnitFilterType.cs</Link>
+    </Compile>
+    <Compile Include="templates\common\TestRunner.xUnit\XUnitResultFileFormat.cs">
+      <Link>TestRunner.xUnit\XUnitResultFileFormat.cs</Link>
+    </Compile>
+    <Compile Include="templates\common\TestRunner.xUnit\XUnitTestRunner.cs">
+      <Link>TestRunner.xUnit\XUnitTestRunner.cs</Link>
+    </Compile>
+    <Compile Include="templates\common\ApplicationOptions.cs">
+      <Link>ApplicationOptions.cs</Link>
+    </Compile>
+    %REGISTER TYPE%
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="templates\common\TestRunner.xUnit\NUnitXml.xslt">
+      <Link>TestRunner.xUnit\NUnitXml.xslt</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="TestRunner.Core\" />
+    <Folder Include="TestRunner.NUnit\" />
+    <Folder Include="TestRunner.xUnit\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\WatchOS\Xamarin.WatchOS.AppExtension.CSharp.targets" />
+  <Import Project="..\..\..\packages\xunit.core.2.4.1\build\xunit.core.targets" Condition="Exists('..\..\..\packages\xunit.core.2.4.1\build\xunit.core.targets')" />
+  <Import Project="..\..\..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\..\..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
 </Project>

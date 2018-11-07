@@ -5,11 +5,11 @@
     <key>CFBundleDisplayName</key>
 	  <string>%APPLICATION NAME%-extension</string>
     <key>CFBundleIdentifier</key>
-	  <string>%BUNDLE INDENTIFIER%.extension</string>
+	  <string>%BUNDLE INDENTIFIER%.container.app.extension</string>
     <key>CFBundleName</key>
     <string>TestApp</string>
     <key>MinimumOSVersion</key>
-    <string>%MINOSVERSION%</string>
+    <string>2</string>
     <key>NSAppTransportSecurity</key>
     <dict>
       <key>NSAllowsArbitraryLoads</key>
@@ -30,7 +30,7 @@
       <key>NSExtensionAttributes</key>
       <dict>
         <key>WKAppBundleIdentifier</key>
-        <string>%WATCHAPP IDENTIFIER%</string>
+        <string>%BUNDLE INDENTIFIER%.container.app</string>
       </dict>
       <key>NSExtensionPointIdentifier</key>
       <string>com.apple.watchkit</string>

@@ -45,7 +45,7 @@ namespace BCLTestImporter {
 		}
 
 		static readonly Dictionary<WatchAppType, string> watchOSPlistTemplateMatches = new Dictionary<WatchAppType, string> {
-			{WatchAppType.App, "Info-watchos.plist.in"},
+			{WatchAppType.App, "Info-watchos-app.plist.in"},
 			{WatchAppType.Extension, "Info-watchos-extension.plist.in"}
 		};
 
@@ -275,7 +275,7 @@ namespace BCLTestImporter {
 							generatedProject = await GenerateWatchAppAsync (projectDefinition.Name, projetTemplate, data.plist);
 							break;
 						default:
-							generatedProject = await GenerateWatchExtensionAsync (projectDefinition.Name, projetTemplate, data.plist);
+							generatedProject = await GenerateWatchExtensionAsync (projectDefinition.Name, projetTemplate, data.plist, registerTypePath, projectDefinition.GetAssemblyInclusionInformation (MonoRootPath, Platform.WatchOS));
 							break;
 					}
 					data.project = GetProjectPath (projectDefinition.Name, appType);
@@ -476,13 +476,21 @@ namespace BCLTestImporter {
 			}
 		}
 
-		async Task<string> GenerateWatchExtensionAsync (string projectName, string templatePath, string infoPlistPath)
+		async Task<string> GenerateWatchExtensionAsync (string projectName, string templatePath, string infoPlistPath, string registerPath, List<(string assembly, string hintPath)> info)
 		{
+			var sb = new StringBuilder ();
+			foreach (var assemblyInfo in info) {
+				if (!excludeDlls.Contains (assemblyInfo.assembly))
+					sb.AppendLine (GetReferenceNode (assemblyInfo.assembly, assemblyInfo.hintPath));
+			}
+			
 			using (var reader = new StreamReader(templatePath)) {
 				var result = await reader.ReadToEndAsync ();
 				result = result.Replace (NameKey, projectName);
 				result = result.Replace (WatchOSTemplatePathKey, WatchExtensionTemplatePath);
 				result = result.Replace (PlistKey, infoPlistPath);
+				result = result.Replace (RegisterTypeKey, GetRegisterTypeNode (registerPath));
+				result = result.Replace (ReferencesKey, sb.ToString ());
 				return result;
 			}
 		}

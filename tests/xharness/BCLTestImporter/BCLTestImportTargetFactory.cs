@@ -33,7 +33,11 @@ namespace xharness.BCLTestImporter {
 			// generate all projects, then create a new iOSTarget per project
 			foreach (var (name, path, xunit, platforms) in projectGenerator.GenerateAllTestProjects ()) {
 				var prefix = xunit ? "xUnit" : "NUnit";
-				result.Add (new iOSTestProject (path) { Name = $"[{prefix}] Mono {name}", SkiptvOSVariation=!platforms.Contains (Platform.TvOS), SkipwatchOSVariation=true});
+				result.Add (new iOSTestProject (path) { 
+					Name = $"[{prefix}] Mono {name}",
+					SkiptvOSVariation=!platforms.Contains (Platform.TvOS),
+					SkipwatchOSVariation=!platforms.Contains (Platform.WatchOS)
+				});
 			}
 			return result;
 		}

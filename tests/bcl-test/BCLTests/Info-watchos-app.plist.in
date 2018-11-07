@@ -5,7 +5,7 @@
 	<key>CFBundleName</key>
 	<string>%APPLICATION NAME%-App</string>
 	<key>CFBundleIdentifier</key>
-	<string>%BUNDLE INDENTIFIER%.app</string>
+	<string>%BUNDLE INDENTIFIER%.container.app</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleShortVersionString</key>
@@ -20,7 +20,7 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 	<key>WKCompanionAppBundleIdentifier</key>
-	<string>%CONTAINER_CFBUNDLEIDENTIFIER%</string>
+	<string>%BUNDLE INDENTIFIER%.container</string>
 	<key>WKWatchKitApp</key>
 	<true/>
 	<key>XSAppIconAssets</key>
