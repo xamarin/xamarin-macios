@@ -158,5 +158,13 @@
   <ItemGroup>
 #FILES#
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\external\mono\mcs\class\test-helpers\TestResourceHelper.cs">
+      <Link>test-helpers\TestResourceHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\external\mono\mcs\class\test-helpers\NunitHelpers.cs">
+      <Link>test-helpers\NunitHelpers.cs</Link>
+    </Compile>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
