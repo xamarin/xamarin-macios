@@ -10,7 +10,8 @@ namespace Xamarin.Tests
 		None,
 		Static,
 		Dynamic,
-		Framework
+		Framework,
+		Symlink
 	}
 
 	public enum MonoNativeFlavor
@@ -28,6 +29,8 @@ namespace Xamarin.Tests
 				return MonoNativeLinkMode.Static;
 #elif MONO_NATIVE_DYNAMIC
 				return MonoNativeLinkMode.Dynamic;
+#elif MONO_NATIVE_SYMLINK
+				return MonoNativeLinkMode.Symlink;
 #else
 				return MonoNativeLinkMode.None;
 #endif
@@ -61,10 +64,8 @@ namespace Xamarin.Tests
 
 		public static string GetDynamicLibraryName (bool usingCompat)
 		{
-			if (usingCompat)
-				return "libmono-native-compat.dylib";
-			else
-				return "libmono-native-unified.dylib";
+			return usingCompat ?
+				"libmono-native-compat.dylib" : "libmono-native-unified.dylib";
 		}
 
 		public static string DynamicLibraryName => GetDynamicLibraryName (UsingCompat);

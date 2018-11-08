@@ -185,6 +185,7 @@ namespace xharness
 				monoNativeDynamic = "JENKINS; MONO_NATIVE_UNIFIED; MONO_NATIVE_DYNAMIC";
 				break;
 			default:
+				Console.Error.WriteLine ($"GET TEST DATA: {test.TestName} {test}");
 				monoNativeStatic = monoNativeDynamic = null;
 				break;
 			}
