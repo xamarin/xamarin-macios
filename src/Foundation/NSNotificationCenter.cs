@@ -63,15 +63,6 @@ namespace Foundation {
 	public partial class NSNotificationCenter {
 		const string postSelector = "post:";
 
-		class ObservedData 
-		{
-			public NSObject Observer;
-			public string Name;
-			public NSObject Object;
-		}
-
-		List <ObservedData> __mt_ObserverList_var = new List <ObservedData> ();
-
 #if !XAMCORE_2_0
 		[Advice ("Use 'AddObserver(NSString, Action<NSNotification>, NSObject)'.")]
 		public NSObject AddObserver (string aName, Action<NSNotification> notify, NSObject fromObject)
@@ -117,30 +108,6 @@ namespace Foundation {
 				return;
 			foreach (var k in keys)
 				RemoveObserver (k);
-		}
-
-		void AddObserverToList (NSObject observer, string aName, NSObject anObject)
-		{
-			__mt_ObserverList_var.Add (new ObservedData { Observer = observer, Name = aName, Object = anObject });
-			MarkDirty ();
-		}
-
-		void RemoveObserversFromList (NSObject observer, string aName, NSObject anObject)
-		{
-			for (int i = __mt_ObserverList_var.Count - 1; i >= 0; i--) {
-				ObservedData od = __mt_ObserverList_var [i];
-
-				if (observer != od.Observer)
-					continue;
-
-				if (aName != null && aName != od.Name)
-					continue;
-
-				if (anObject != null && anObject != od.Object)
-					continue;
-
-				__mt_ObserverList_var.RemoveAt (i);
-			}
 		}
 	}
 

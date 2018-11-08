@@ -10363,7 +10363,6 @@ namespace Foundation
 		NSNotificationCenter DefaultCenter { get; }
 	
 		[Export ("addObserver:selector:name:object:")]
-		[PostSnippet ("AddObserverToList (observer, aName, anObject);")]
 		void AddObserver (NSObject observer, Selector aSelector, [NullAllowed] NSString aName, [NullAllowed] NSObject anObject);
 	
 		[Export ("postNotification:")]
@@ -10376,11 +10375,9 @@ namespace Foundation
 		void PostNotificationName (string aName, [NullAllowed] NSObject anObject, [NullAllowed] NSDictionary aUserInfo);
 	
 		[Export ("removeObserver:")]
-		[PostSnippet ("RemoveObserversFromList (observer, null, null);")]
 		void RemoveObserver (NSObject observer);
 	
 		[Export ("removeObserver:name:object:")]
-		[PostSnippet ("RemoveObserversFromList (observer, aName, anObject);")]
 		void RemoveObserver (NSObject observer, [NullAllowed] string aName, [NullAllowed] NSObject anObject);
 
 		[Export ("addObserverForName:object:queue:usingBlock:")]
