@@ -15617,14 +15617,14 @@ namespace AppKit {
 
 		[Export ("addToolTipRect:owner:userData:")]
 #if !XAMCORE_4_0
-		nint AddToolTip (CGRect aRect, NSObject anObject, IntPtr data);
+		nint AddToolTip (CGRect rect, NSObject owner, IntPtr userData);
 #else
-		[Internal]
-		nint _AddToolTip (CGRect aRect, NSObject anObject, IntPtr data);
-
-		[Wrap ("this._AddToolTip (rect, (NSObject)owner, IntPtr.Zero)"]
-		nint AddToolTip (CGRect rect, INSToolTipOwner owner)
+		nint AddToolTip (CGRect rect, INSToolTipOwner owner, IntPtr userData);
 #endif
+
+		[Wrap ("AddToolTip (rect, (NSObject)owner, IntPtr.Zero)")]
+		nint AddToolTip (CGRect rect, INSToolTipOwner owner);
+
 		[Export ("removeToolTip:")]
 		void RemoveToolTip (nint tag);
 
@@ -25732,6 +25732,8 @@ namespace AppKit {
 		[Export ("view:stringForToolTip:point:userData:")]
 		string GetStringForToolTip (NSView view, nint tag, CGPoint point, IntPtr data);
 	}
+
+	interface INSToolTipOwner {}
 
 	interface INSUserInterfaceValidations {}
 
