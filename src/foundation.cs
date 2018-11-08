@@ -8502,7 +8502,9 @@ namespace Foundation
 		NSString ChangeNotificationIsPriorKey { get; }
 #if MONOMAC
 		// Cocoa Bindings added by Kenneth J. Pouncey 2010/11/17
+#if XAMCORE_4_0
 		[Sealed]
+#endif
 		[Export ("valueClassForBinding:")]
 		Class GetBindingValueClass (NSString binding);
 
