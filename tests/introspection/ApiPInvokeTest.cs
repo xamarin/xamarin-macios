@@ -14,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using Xamarin.Tests;
 
 using NUnit.Framework;
 
@@ -155,8 +156,20 @@ namespace Introspection
 				string libname = dllimport.Value;
 				switch (libname) {
 				case "__Internal":
+					continue;
 				case "System.Native":
 				case "System.Security.Cryptography.Native.Apple":
+					switch (MonoNativeConfig.LinkMode) {
+					case MonoNativeLinkMode.Static:
+						libname = null;
+						break;
+					case MonoNativeLinkMode.Dynamic:
+						libname = MonoNativeConfig.DynamicLibraryName;
+						break;
+					case MonoNativeLinkMode.None:
+					default:
+						throw new NotImplementedException ("MARTIN FIXME");
+					}
 					continue;
 				}
 
@@ -214,6 +227,17 @@ namespace Introspection
 						break;
 					case "System.Native":
 					case "System.Security.Cryptography.Native.Apple":
+						switch (MonoNativeConfig.LinkMode) {
+						case MonoNativeLinkMode.Static:
+							path = null;
+							break;
+						case MonoNativeLinkMode.Dynamic:
+							path = MonoNativeConfig.DynamicLibraryName;
+							break;
+						case MonoNativeLinkMode.None:
+						default:
+							throw new NotImplementedException ("MARTIN FIXME");
+						}
 						continue;
 					}
 
