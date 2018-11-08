@@ -42,6 +42,9 @@
     <Compile Include="..\common\Assert.cs">
       <Link>Assert.cs</Link>
     </Compile>
+    <Compile Include="..\common\MonoNativeConfig.cs">
+      <Link>MonoNativeConfig.cs</Link>
+    </Compile>
     <Compile Include="NativePlatformConfig.cs" />
     <Compile Include="..\..\external\mono\mcs\class\corlib\Mono\MonoNativePlatform.cs">
       <Link>MonoNativePlatform.cs</Link>

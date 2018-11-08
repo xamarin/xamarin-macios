@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using NUnit.Framework;
 using ObjCRuntime;
 
-namespace Mono.Native.Tests
+namespace Xamarin.Tests
 {
 	[TestFixture]
 	public class Introspection
@@ -20,25 +20,27 @@ namespace Mono.Native.Tests
 #endif
 		}
 
+		public static string RootDirectory => Path.GetDirectoryName (Assembly.GetEntryAssembly ().Location);
+
 		void AssertShouldExist (string name)
 		{
-			var pathName = Path.Combine (NativePlatformConfig.RootDirectory, name);
+			var pathName = Path.Combine (RootDirectory, name);
 			Assert.That (File.Exists (pathName), $"Found {name}.");
 		}
 
 		void AssertShouldNotExist (string name)
 		{
-			var pathName = Path.Combine (NativePlatformConfig.RootDirectory, name);
+			var pathName = Path.Combine (RootDirectory, name);
 			Assert.That (File.Exists (pathName), Is.False, $"Should not have {name}.");
 		}
 
 		void CheckDynamicLibrary ()
 		{
-			AssertShouldExist (NativePlatformConfig.DynamicLibraryName);
-			AssertShouldNotExist (NativePlatformConfig.GetDynamicLibraryName (!NativePlatformConfig.UsingCompat));
+			AssertShouldExist (MonoNativeConfig.DynamicLibraryName);
+			AssertShouldNotExist (MonoNativeConfig.GetDynamicLibraryName (!MonoNativeConfig.UsingCompat));
 			AssertShouldNotExist ("libmono-native.dylib");
 
-			var count = Directory.GetFiles (NativePlatformConfig.RootDirectory).Count (file => file.Contains ("mono-native"));
+			var count = Directory.GetFiles (RootDirectory).Count (file => file.Contains ("mono-native"));
 			Assert.That (count, Is.EqualTo (1), "exactly one mono-native library.");
 		}
 
@@ -48,14 +50,14 @@ namespace Mono.Native.Tests
 			AssertShouldNotExist ("libmono-native-compat.dylib");
 			AssertShouldNotExist ("libmono-native-unified.dylib");
 
-			var count = Directory.GetFiles (NativePlatformConfig.RootDirectory).Count (file => file.Contains ("mono-native"));
+			var count = Directory.GetFiles (RootDirectory).Count (file => file.Contains ("mono-native"));
 			Assert.That (count, Is.EqualTo (0), "zero mono-native libraries.");
 		}
 
 		[Test]
 		public void CheckLibrary ()
 		{
-			switch (NativePlatformConfig.LinkMode) {
+			switch (MonoNativeConfig.LinkMode) {
 			case MonoNativeLinkMode.Dynamic:
 				CheckDynamicLibrary ();
 				break;
@@ -63,7 +65,7 @@ namespace Mono.Native.Tests
 				CheckStaticLibrary ();
 				break;
 			default:
-				Assert.Fail ($"Unknown link mode: {NativePlatformConfig.LinkMode}");
+				Assert.Fail ($"Unknown link mode: {MonoNativeConfig.LinkMode}");
 				break;
 			}
 		}
@@ -72,15 +74,15 @@ namespace Mono.Native.Tests
 		public void CheckSymbols ()
 		{
 			string libname;
-			switch (NativePlatformConfig.LinkMode) {
+			switch (MonoNativeConfig.LinkMode) {
 			case MonoNativeLinkMode.Dynamic:
-				libname = NativePlatformConfig.DynamicLibraryName;
+				libname = MonoNativeConfig.DynamicLibraryName;
 				break;
 			case MonoNativeLinkMode.Static:
 				libname = null;
 				break;
 			default:
-				Assert.Fail ($"Unknown link mode: {NativePlatformConfig.LinkMode}");
+				Assert.Fail ($"Unknown link mode: {MonoNativeConfig.LinkMode}");
 				return;
 			}
 
@@ -123,11 +125,11 @@ namespace Mono.Native.Tests
 		[Test]
 		public void MartinTest ()
 		{
-			var linkMode = NativePlatformConfig.LinkMode;
+			var linkMode = MonoNativeConfig.LinkMode;
 			Console.Error.WriteLine ($"LINK MODE: {linkMode}");
 
-			Console.Error.WriteLine ($"ROOT DIR: {NativePlatformConfig.RootDirectory}");
-			DumpDirectory (NativePlatformConfig.RootDirectory);
+			Console.Error.WriteLine ($"ROOT DIR: {RootDirectory}");
+			DumpDirectory (RootDirectory);
 		}
 
 		[Test]
