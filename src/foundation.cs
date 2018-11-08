@@ -8542,19 +8542,28 @@ namespace Foundation
 		[Export ("exposedBindings")]
 		NSString[] ExposedBindings { get; }
 #endif
+
+#if !XAMCORE_4_0
 		[Sealed]
+#endif
 		[Export ("bind:toObject:withKeyPath:options:")]
 		void Bind (NSString binding, NSObject observable, string keyPath, [NullAllowed] NSDictionary options);
 
+#if !XAMCORE_4_0
 		[Sealed]
+#endif
 		[Export ("unbind:")]
 		void Unbind (NSString binding);
 
+#if !XAMCORE_4_0
 		[Sealed]
+#endif
 		[Export ("infoForBinding:")]
 		NSDictionary GetBindingInfo (NSString binding);
 
+#if !XAMCORE_4_0
 		[Sealed]
+#endif
 		[Export ("optionDescriptionsForBinding:")]
 		NSObject[] GetBindingOptionDescriptions (NSString aBinding);
 
