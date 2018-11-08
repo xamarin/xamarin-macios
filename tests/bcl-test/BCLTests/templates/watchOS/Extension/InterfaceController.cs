@@ -15,6 +15,7 @@ using Xamarin.iOS.UnitTests.XUnit;
 using Xamarin.iOS.UnitTests.NUnit;
 using BCLTests;
 using BCLTests.TestRunner.Core;
+using System.IO;
 
 namespace monotouchtestWatchKitExtension
 {
@@ -90,9 +91,11 @@ namespace monotouchtestWatchKitExtension
 		void RunTests ()
 		{
 			var options = ApplicationOptions.Current;
-			TcpTextWriter writer = null;
-			if (!string.IsNullOrEmpty (options.HostName))
-				writer = new TcpTextWriter (options.HostName, options.HostPort);
+			TextWriter writer = null;
+			if (!string.IsNullOrEmpty (options.HostName) && string.IsNullOrEmpty(options.LogFile))
+				writer = new HttpTextWriter () { HostName = options.HostName, Port = options.HostPort };
+			if (!string.IsNullOrEmpty (options.LogFile))
+				writer = new StreamWriter (options.LogFile);
 
 			// we generate the logs in two different ways depending if the generate xml flag was
 			// provided. If it was, we will write the xml file to the tcp writer if present, else
@@ -116,12 +119,11 @@ namespace monotouchtestWatchKitExtension
 					cmdRun.SetHidden (false);
 					if (options.EnableXml) {
 						runner.WriteResultsToFile (writer);
-						logger.Info ("Xml file was written to the tcp listener.");
+						logger.Info ("Xml file was written to the http listener.");
 					} else {
 						string resultsFilePath = runner.WriteResultsToFile ();
 						logger.Info ($"Xml result can be found {resultsFilePath}");
 					}
-
 					logger.Info ($"Tests run: {runner.TotalTests} Passed: {runner.PassedTests} Inconclusive: {runner.InconclusiveTests} Failed: {runner.FailedTests} Ignored: {runner.SkippedTests}");
 					if (options.TerminateAfterExecution)
 						TerminateWithSuccess ();

@@ -166,8 +166,8 @@
     <Compile Include="templates\common\TestRunner.Core\MinimumLogLevel.cs">
       <Link>TestRunner.Core\MinimumLogLevel.cs</Link>
     </Compile>
-    <Compile Include="templates\common\TestRunner.Core\TcpTextWriter.cs">
-      <Link>TestRunner.Core\TcpTextWriter.cs</Link>
+    <Compile Include="templates\common\TestRunner.Core\HttpTextWriter.cs">
+      <Link>TestRunner.Core\HttpTextWriter.cs</Link>
     </Compile>
     <Compile Include="templates\common\TestRunner.Core\TestAssemblyInfo.cs">
       <Link>TestRunner.Core\TestAssemblyInfo.cs</Link>

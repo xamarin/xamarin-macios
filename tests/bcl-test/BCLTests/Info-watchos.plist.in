@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleName</key>
-	<string>%APPLICATION NAME%-Container</string>
+	<string>%APPLICATION NAME%-watch</string>
 	<key>CFBundleIdentifier</key>
-	<string>%BUNDLE INDENTIFIER%.container</string>
+	<string>%BUNDLE INDENTIFIER%-watch</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>

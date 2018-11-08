@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleName</key>
-	<string>%APPLICATION NAME%-App</string>
+	<string>%APPLICATION NAME%-watch</string>
 	<key>CFBundleIdentifier</key>
-	<string>%BUNDLE INDENTIFIER%.container.app</string>
+	<string>%BUNDLE INDENTIFIER%-watch.watchkitapp</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleShortVersionString</key>
@@ -20,7 +20,7 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 	<key>WKCompanionAppBundleIdentifier</key>
-	<string>%BUNDLE INDENTIFIER%.container</string>
+	<string>%BUNDLE INDENTIFIER%-watch</string>
 	<key>WKWatchKitApp</key>
 	<true/>
 	<key>XSAppIconAssets</key>
