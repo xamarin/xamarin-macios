@@ -828,6 +828,7 @@ namespace xharness
 				Target = "all",
 				WorkingDirectory = Path.Combine (Harness.RootDirectory, "mac-binding-project"),
 				Ignored = !IncludeMacBindingProject || !IncludeMac,
+				Timeout = TimeSpan.FromMinutes (15),
 			};
 			Tasks.Add (runMacBindingProject);
 
