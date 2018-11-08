@@ -4,9 +4,6 @@
 // !missing-selector!
 //             if headers defines a selector for which we have no bindings
 //
-// !unknown-selector!
-//             if we have a selector that is not part of the header files
-//
 
 using System;
 using System.Collections.Generic;
@@ -14,28 +11,13 @@ using System.Collections.Generic;
 using Mono.Cecil;
 
 using Clang.Ast;
+using System.Linq;
 
 namespace Extrospection {
 
 	public class SelectorCheck : BaseVisitor {
-//		Dictionary<string,List<MethodDefinition>> exports = new Dictionary<string, List<MethodDefinition>> ();
 
-		// missing
-		//	-> it's not in the type or ancestor or their interface (protocols)
-		//	-> it's not in a category
-
-		// unknown
-		//	-> quick check (HashSet) to see if it's used anywhere
-		//	-> 
-
-		// duplicate
-		//	-> the selector is defined more than once for the same type
-
-		HashSet<string> known_selectors = new HashSet<string> ();
-
-		HashSet<string> qualified_selectors = new HashSet<string> ();
-
-		//Dictionary<TypeDefinition,HashSet<string>> type_exports = new Dictionary<TypeDefinition,HashSet<string>> ();
+		HashSet<(string MethodDefinition, Helpers.ArgumentSemantic ArgumentSemantic)> qualified_export_arguments = new HashSet<(string, Helpers.ArgumentSemantic)> ();
 
 		// most selectors will be found in [Export] attribtues
 		public override void VisitManagedMethod (MethodDefinition method)
@@ -51,22 +33,51 @@ namespace Extrospection {
 			foreach (var ca in method.CustomAttributes) {
 				switch (ca.Constructor.DeclaringType.Name) {
 				case "ExportAttribute":
-					string selector = ca.ConstructorArguments [0].Value as string;
-					if (!known_selectors.Contains (selector))
-						known_selectors.Add (selector);
+					//string selector = ca.ConstructorArguments [0].Value as string;
+					//if (!known_selectors.Contains (selector))
+					//known_selectors.Add (selector);
 
-					qualified_selectors.Add (method.GetName ());
-//
-//					TypeDefinition type = method.DeclaringType;
-//					HashSet<string> list;
-//					if (!type_exports.TryGetValue (type, out list)) {
-//						list = new HashSet<string> ();
-//						type_exports.Add (type, list);
-//					}
-//					list.Add (selector);
+					var methodDefinition = method.GetName ();
+					if (!string.IsNullOrEmpty (methodDefinition)) {
+						var argumentSemantic = Helpers.ArgumentSemantic.None;
+						if (ca.ConstructorArguments.Count > 1) {
+							argumentSemantic = (Helpers.ArgumentSemantic)ca.ConstructorArguments [1].Value;
+						}
+
+						qualified_export_arguments.Add ((methodDefinition, argumentSemantic));
+					}
+
 					break;
 				}
 			}
+		}
+
+		public override void VisitObjCPropertyDecl (ObjCPropertyDecl decl)
+		{
+			// protocol members are checked in ObjCProtocolCheck
+			if (decl.DeclContext is ObjCProtocolDecl)
+				return;
+
+			// check availability macros to see if the API is available on the OS and not deprecated
+			if (!decl.IsAvailable ())
+				return;
+
+			var framework = Helpers.GetFramework (decl);
+			if (framework == null)
+				return;
+
+			var nativeArgumentSemantic = decl.Attributes.ToArgumentSemantic ();
+
+			// Ignore Copy, UnsafeUnretained and Weak for now
+			if (nativeArgumentSemantic == Helpers.ArgumentSemantic.Copy || nativeArgumentSemantic == Helpers.ArgumentSemantic.UnsafeUnretained || nativeArgumentSemantic == Helpers.ArgumentSemantic.Weak)
+				return;
+
+			var nativeMethodDefinition = decl.QualifiedName;
+
+			var exportArgs = qualified_export_arguments.FirstOrDefault (sel => sel.MethodDefinition.Contains (nativeMethodDefinition));
+
+			if (!string.IsNullOrEmpty (exportArgs.MethodDefinition) && exportArgs.ArgumentSemantic != nativeArgumentSemantic)
+				Log.On (framework).Add ($"!incorrect-argument-semantic! {nativeMethodDefinition} has ArgumentSemantic.{nativeArgumentSemantic.ToUsableString ()} instead of ArgumentSemantic.{exportArgs.ArgumentSemantic.ToUsableString ()}");
 		}
 
 		public override void VisitObjCMethodDecl (ObjCMethodDecl decl, VisitKind visitKind)
@@ -97,7 +108,8 @@ namespace Extrospection {
 					return;
 				name = "+" + name;
 			}
-			bool found = qualified_selectors.Contains (name);
+
+			bool found = qualified_export_arguments.Any (m => m.MethodDefinition == name);
 			if (!found) {
 				// a category could be inlined into the type it extend
 				var category = decl.DeclContext as ObjCCategoryDecl;
@@ -107,7 +119,7 @@ namespace Extrospection {
 						name = GetCategoryBase (category) + name;
 					else
 						name = name.ReplaceFirstInstance (cname, GetCategoryBase (category));
-					found = qualified_selectors.Contains (name);
+					found = qualified_export_arguments.Any (m => m.MethodDefinition == name);
 				}
 			}
 			if (!found)

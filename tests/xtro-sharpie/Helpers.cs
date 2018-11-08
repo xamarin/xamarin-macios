@@ -397,5 +397,43 @@ namespace Extrospection {
 			else
 				return (o1, o2);
 		}
+
+		public enum ArgumentSemantic {
+			None = -1,
+			Assign = 0,
+			Copy = 1,
+			Retain = 2,
+			Weak = 3,
+			Strong = Retain,
+			UnsafeUnretained = Assign,
+		}
+
+		public static ArgumentSemantic ToArgumentSemantic (this ObjCPropertyAttributeKind attr)
+		{
+			if ((attr & ObjCPropertyAttributeKind.Retain) != 0)
+				return ArgumentSemantic.Retain;
+			else if ((attr & ObjCPropertyAttributeKind.Copy) != 0)
+				return ArgumentSemantic.Copy;
+			else if ((attr & ObjCPropertyAttributeKind.Assign) != 0)
+				return ArgumentSemantic.Assign;
+			else if ((attr & ObjCPropertyAttributeKind.Weak) != 0)
+				return ArgumentSemantic.Weak;
+			else if ((attr & ObjCPropertyAttributeKind.Strong) != 0)
+				return ArgumentSemantic.Strong;
+			else if ((attr & ObjCPropertyAttributeKind.UnsafeUnretained) != 0)
+				return ArgumentSemantic.UnsafeUnretained;
+			else
+				return ArgumentSemantic.None;
+		}
+
+		public static string ToUsableString (this ArgumentSemantic argSem)
+		{
+			if (argSem == ArgumentSemantic.Retain)
+				return "Strong|Retain";
+			if (argSem == ArgumentSemantic.Assign)
+				return "UnsafeUnretained|Assign";
+
+			return argSem.ToString ();
+		}
 	}
 }
