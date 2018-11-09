@@ -221,5 +221,17 @@ namespace Xamarin.MMP.Tests
 				NativeReferenceTestCore (tmpDir, test, "NativeReferenceWithSpace", null, true);
 			});
 		}
+
+		[Test]
+		public void NativeReferenceWithCapitalSuffix ()
+		{
+			MMPTests.RunMMPTest (tmpDir => {
+				string frameworkPath = FrameworkBuilder.CreateThinFramework (tmpDir);
+				string capitalFrameworkPath = frameworkPath.Replace (".framework", ".Framework");
+				File.Move (frameworkPath, capitalFrameworkPath);
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { ItemGroup = CreateSingleNativeRef (capitalFrameworkPath, "Framework") };
+				NativeReferenceTestCore (tmpDir, test, "NativeReferenceWithCapitalSuffix", null, true);
+			});
+		}
 	}
 }

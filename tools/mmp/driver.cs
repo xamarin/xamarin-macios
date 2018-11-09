@@ -1070,7 +1070,7 @@ namespace Xamarin.Bundler {
 			else
 				BuildTarget.Frameworks.Add (name);
 
-			if (!framework.EndsWith (".framework", StringComparison.Ordinal))
+			if (!framework.EndsWith (".framework", StringComparison.OrdinalIgnoreCase))
 				return;
 
 			// TODO - There is a chunk of code in mtouch that calls Xamarin.MachO.IsDynamicFramework and doesn't copy if framework of static libs
