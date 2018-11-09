@@ -12,7 +12,7 @@ namespace Xamarin.MMP.Tests
 
 		void RestoreRoslynNuget (string projectPath)
 		{
-			TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Versions/Current/Commands/msbuild", $"/t:restore {projectPath}", "Restore Nuget");
+			TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Versions/Current/Commands/nuget", "restore " + projectPath, "Restore Nuget");
 		}
 
 		[Test]
