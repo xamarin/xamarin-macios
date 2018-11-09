@@ -1227,9 +1227,9 @@ namespace Xamarin.Bundler {
 					args.Append ("-e _xamarin_mac_extension_main -framework NotificationCenter").Append(' ');
 
 				foreach (var f in BuildTarget.Frameworks)
-					args.Append ("-framework ").Append (f).Append (' ');
+					args.Append ("-framework ").Append (StringUtils.Quote (f)).Append (' ');
 				foreach (var f in BuildTarget.WeakFrameworks)
-					args.Append ("-weak_framework ").Append (f).Append (' ');
+					args.Append ("-weak_framework ").Append (StringUtils.Quote (f)).Append (' ');
 
 				var requiredSymbols = BuildTarget.GetRequiredSymbols ();
 				Driver.WriteIfDifferent (Path.Combine (App.Cache.Location, "exported-symbols-list"), string.Join ("\n", requiredSymbols.Select ((symbol) => symbol.Prefix + symbol.Name).ToArray ()));

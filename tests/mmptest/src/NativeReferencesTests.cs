@@ -8,6 +8,7 @@ using NUnit.Framework;
 using System.Reflection;
 
 using Xamarin.Tests;
+using Xamarin.Utils;
 
 namespace Xamarin.MMP.Tests
 {
@@ -208,6 +209,16 @@ namespace Xamarin.MMP.Tests
 					ItemGroup = CreateItemGroup (new string[] { CreateNativeRefInclude (firstPath, "Dynamic"), CreateNativeRefInclude (secondPath, "Dynamic") }),
 				};
 				NativeReferenceTestCore (tmpDir, test, "MultipleNativeReferences_OnlyInvokeMMPOneTime_AndCopyEverythingIn", null, true);
+			});
+		}
+
+		[Test]
+		public void NativeReferenceWithSpace ()
+		{
+			MMPTests.RunMMPTest (tmpDir => {
+				string frameworkPath = FrameworkBuilder.CreateThinFramework (tmpDir, "Foo Bar");
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { ItemGroup = CreateSingleNativeRef (frameworkPath, "Framework") };
+				NativeReferenceTestCore (tmpDir, test, "NativeReferenceWithSpace", null, true);
 			});
 		}
 	}

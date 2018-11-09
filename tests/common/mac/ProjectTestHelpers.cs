@@ -111,23 +111,23 @@ namespace Xamarin.MMP.Tests
 			return f ("Foo.framework");
 		}
 
-		public static string CreateThinFramework (string tmpDir, bool sixtyFourBits = true)
+		public static string CreateThinFramework (string tmpDir, string name = "Foo", bool sixtyFourBits = true)
 		{
-			Func<string, string> f = x => Path.Combine (tmpDir, x);
+			Func<string, string> f = x => StringUtils.Quote (Path.Combine (tmpDir, x)); 
 			File.WriteAllText (f ("foo.c"), "int Answer () { return 42; }");
 			File.WriteAllText (f ("Info.plist"), PListText);
 
 			string bitnessArg = sixtyFourBits ? "-m64" : "-m32";
 			TI.RunAndAssert ($"clang {bitnessArg} -c -o {f ("foo.o")} {f ("foo.c")}");
-			TI.RunAndAssert ($"clang {bitnessArg} -dynamiclib -o {f ("Foo")} {f ("foo.o")}");
-			TI.RunAndAssert ($"install_name_tool -id @rpath/Foo.framework/Foo {f ("Foo")}");
-			TI.RunAndAssert ($"mkdir -p {f ("Foo.framework/Versions/A/Resources")}");
-			TI.RunAndAssert ($"cp {f ("Foo")} {f ("Foo.framework/Versions/A/Foo")}");
-			TI.RunAndAssert ($"cp {f ("Info.plist")} {f ("Foo.framework/Versions/A/Resources/")}");
-			TI.RunAndAssert ($"ln -s Versions/A/Foo {f ("Foo.framework/Foo")}");
-			TI.RunAndAssert ($"ln -s Versions/A/Resources  {f ("Foo.framework/Resources")}");
-			TI.RunAndAssert ($"ln -s Versions/A  {f ("Foo.framework/Current")}");
-			return f ("Foo.framework");
+			TI.RunAndAssert ($"clang {bitnessArg} -dynamiclib -o {f (name)} {f ("foo.o")}");
+			TI.RunAndAssert ($"install_name_tool -id \"@rpath/{name}.framework/{name}\" {f (name)}");
+			TI.RunAndAssert ($"mkdir -p {f (name + ".framework/Versions/A/Resources")}");
+			TI.RunAndAssert ($"cp {f (name)} {f (name + $".framework/Versions/A/{name}")}");
+			TI.RunAndAssert ($"cp {f ("Info.plist")} {f (name + ".framework/Versions/A/Resources/")}");
+			TI.RunAndAssert ($"ln -s \"Versions/A/{name}\" {f (name + ".framework/" + name)}");
+			TI.RunAndAssert ($"ln -s Versions/A/Resources  {f (name + ".framework/Resources")}");
+			TI.RunAndAssert ($"ln -s Versions/A  {f (name + ".framework/Current")}");
+			return Path.Combine (tmpDir, name + ".framework");
 		}
 	}
 
