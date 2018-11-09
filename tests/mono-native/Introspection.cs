@@ -12,15 +12,18 @@ namespace Xamarin.Tests
 	[TestFixture]
 	public class Introspection
 	{
-		[TestFixtureSetUp]
+		// [TestFixtureSetUp]
 		public void Setup ()
 		{
 #if !JENKINS
 			Console.Error.WriteLine ($"NOT ON JENKINS!");
 #endif
+
+			var asm = Assembly.GetExecutingAssembly ();
+			Console.Error.WriteLine ($"ASM: {asm}");
 		}
 
-		public static string RootDirectory => Path.GetDirectoryName (Assembly.GetEntryAssembly ().Location);
+		public static string RootDirectory => Path.GetDirectoryName (Assembly.GetExecutingAssembly ().Location);
 
 		void AssertShouldExist (string name)
 		{
@@ -34,13 +37,19 @@ namespace Xamarin.Tests
 			Assert.That (File.Exists (pathName), Is.False, $"Should not have {name}.");
 		}
 
+		int CountFiles (string pattern)
+		{
+			// Don't use Linq as it'd use too much memory.
+			return Directory.GetFiles (RootDirectory, pattern, SearchOption.AllDirectories).Length;
+		}
+
 		void CheckDynamicLibrary ()
 		{
 			AssertShouldExist (MonoNativeConfig.DynamicLibraryName);
 			AssertShouldNotExist (MonoNativeConfig.GetDynamicLibraryName (!MonoNativeConfig.UsingCompat));
 			AssertShouldNotExist ("libmono-native.dylib");
 
-			var count = Directory.GetFiles (RootDirectory).Count (file => file.Contains ("mono-native"));
+			var count = CountFiles ("libmono-native*");
 			Assert.That (count, Is.EqualTo (1), "exactly one mono-native library.");
 		}
 
@@ -50,7 +59,7 @@ namespace Xamarin.Tests
 			AssertShouldNotExist ("libmono-native-compat.dylib");
 			AssertShouldNotExist ("libmono-native-unified.dylib");
 
-			var count = Directory.GetFiles (RootDirectory).Count (file => file.Contains ("mono-native"));
+			var count = CountFiles ("libmono-native*");
 			Assert.That (count, Is.EqualTo (0), "zero mono-native libraries.");
 		}
 
@@ -60,7 +69,7 @@ namespace Xamarin.Tests
 			AssertShouldNotExist ("libmono-native-compat.dylib");
 			AssertShouldNotExist ("libmono-native-unified.dylib");
 
-			var count = Directory.GetFiles (RootDirectory).Count (file => file.Contains ("mono-native"));
+			var count = CountFiles ("libmono-native*");
 			Assert.That (count, Is.EqualTo (1), "exactly one mono-native library.");
 		}
 
@@ -110,9 +119,13 @@ namespace Xamarin.Tests
 			Console.Error.WriteLine ($"DYLIB: {libname} - {dylib}");
 			Assert.That (dylib, Is.Not.EqualTo (IntPtr.Zero), "dlopen()ed mono-native");
 
-			var symbol = Dlfcn.dlsym (dylib, "mono_native_initialize");
-			Console.Error.WriteLine ($"SYMBOL: {symbol}");
-			Assert.That (symbol, Is.Not.EqualTo (IntPtr.Zero), "dlsym() found mono_native_initialize()");
+			try {
+				var symbol = Dlfcn.dlsym (dylib, "mono_native_initialize");
+				Console.Error.WriteLine ($"SYMBOL: {symbol}");
+				Assert.That (symbol, Is.Not.EqualTo (IntPtr.Zero), "dlsym() found mono_native_initialize()");
+			} finally {
+				Dlfcn.dlclose (dylib);
+			}
 		}
 
 		[DllImport ("__Internal")]
@@ -145,7 +158,7 @@ namespace Xamarin.Tests
 			Console.Error.WriteLine ($"LINK MODE: {linkMode}");
 
 			Console.Error.WriteLine ($"ROOT DIR: {RootDirectory}");
-			DumpDirectory (RootDirectory);
+			// DumpDirectory (RootDirectory);
 		}
 
 		[Test]
