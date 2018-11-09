@@ -97,6 +97,12 @@ namespace xharness
 				throw new Exception ($"Unknown MonoNativeLinkMode: {link}");
 			}
 		}
+
+		public static void RemoveSymlinkMode (XmlDocument project)
+		{
+			AddProjectDefines (project, MonoNativeLinkMode.Static, "iPhone", "Debug");
+			AddProjectDefines (project, MonoNativeLinkMode.Static, "iPhoneSimulator", "Debug");
+		}
 	}
 
 	public class MonoNativeInfo
@@ -142,18 +148,6 @@ namespace xharness
 		public void AddProjectDefines (XmlDocument project)
 		{
 			MonoNativeHelper.AddProjectDefines (project, Flavor);
-			return;
-
-			switch (Flavor) {
-			case MonoNativeFlavor.Compat:
-				project.AddAdditionalDefines ("MONO_NATIVE_COMPAT");
-				break;
-			case MonoNativeFlavor.Unified:
-				project.AddAdditionalDefines ("MONO_NATIVE_UNIFIED");
-				break;
-			default:
-				throw new Exception ($"Unknown MonoNativeFlavor: {Flavor}");
-			}
 		}
 	}
 

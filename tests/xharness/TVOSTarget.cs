@@ -113,11 +113,9 @@ namespace xharness
 			base.ProcessProject ();
 
 			if (MonoNativeInfo != null) {
-				MonoNativeInfo.AddProjectDefines (inputProject);
 				inputProject.AddAdditionalDefines ("MONO_NATIVE_TV");
 				MonoNativeHelper.AddProjectDefines (inputProject, MonoNativeInfo.Flavor);
-				MonoNativeHelper.AddProjectDefines (inputProject, MonoNativeLinkMode.Static, "iPhone", "Debug");
-				MonoNativeHelper.AddProjectDefines (inputProject, MonoNativeLinkMode.Static, "iPhoneSimulator", "Debug");
+				MonoNativeHelper.RemoveSymlinkMode (inputProject);
 			}
 
 			var srcDirectory = Path.Combine (Harness.RootDirectory, "..", "src");

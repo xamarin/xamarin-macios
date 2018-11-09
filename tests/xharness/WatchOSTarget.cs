@@ -31,8 +31,9 @@ namespace xharness
 			csproj.SetProjectGuid (WatchOSAppGuid);
 			csproj.FixInfoPListInclude (suffix);
 			if (MonoNativeInfo != null) {
-				MonoNativeInfo.AddProjectDefines (csproj);
 				csproj.AddAdditionalDefines ("MONO_NATIVE_WATCH");
+				MonoNativeHelper.AddProjectDefines (csproj, MonoNativeInfo.Flavor);
+				MonoNativeHelper.RemoveSymlinkMode (csproj);
 			}
 			Harness.Save (csproj, WatchOSAppProjectPath);
 
@@ -58,8 +59,9 @@ namespace xharness
 			csproj.SetProjectGuid (WatchOSGuid);
 			csproj.FixInfoPListInclude (Suffix);
 			if (MonoNativeInfo != null) {
-				MonoNativeInfo.AddProjectDefines (csproj);
 				csproj.AddAdditionalDefines ("MONO_NATIVE_WATCH");
+				MonoNativeHelper.AddProjectDefines (csproj, MonoNativeInfo.Flavor);
+				MonoNativeHelper.RemoveSymlinkMode (csproj);
 			}
 			Harness.Save (csproj, WatchOSProjectPath);
 
@@ -96,8 +98,9 @@ namespace xharness
 			csproj.SetMtouchUseLlvm (true, "iPhone", "Release");
 
 			if (MonoNativeInfo != null) {
-				MonoNativeInfo.AddProjectDefines (csproj);
 				csproj.AddAdditionalDefines ("MONO_NATIVE_WATCH");
+				MonoNativeHelper.AddProjectDefines (csproj, MonoNativeInfo.Flavor);
+				MonoNativeHelper.RemoveSymlinkMode (csproj);
 			}
 
 			// Not linking a watch extensions requires passing -Os to the native compiler.

@@ -166,46 +166,8 @@ namespace xharness
 			public string Defines;
 			public string Undefines;
 			public bool Ignored;
-			public string ProjectConfiguration;
 			public MonoNativeFlavor MonoNativeFlavor;
 			public MonoNativeLinkMode MonoNativeLinkMode;
-
-			public void CheckMonoNative ()
-			{
-				string flavorDefine;
-				switch (MonoNativeFlavor) {
-				case MonoNativeFlavor.Compat:
-					flavorDefine = "MONO_NATIVE_COMPAT";
-					break;
-				case MonoNativeFlavor.Unified:
-					flavorDefine = "MONO_NATIVE_UNIFIED";
-					break;
-				default:
-					return;
-				}
-
-				string linkDefine;
-				string linkUndefines;
-				switch (MonoNativeLinkMode) {
-				case MonoNativeLinkMode.Static:
-					linkDefine = "MONO_NATIVE_STATIC";
-					linkUndefines = "MONO_NATIVE_DYNAMIC; MONO_NATIVE_SYMLINK";
-					break;
-				case MonoNativeLinkMode.Dynamic:
-					linkDefine = "MONO_NATIVE_DYNAMIC";
-					linkUndefines = "MONO_NATIVE_STATIC; MONO_NATIVE_SYMLINK";
-					break;
-				case MonoNativeLinkMode.Symlink:
-					linkDefine = "MONO_NATIVE_SYMLINK";
-					linkUndefines = "MONO_NATIVE_STATIC; MONO_NATIVE_DYNAMIC";
-					break;
-				default:
-					throw new InvalidOperationException ();
-				}
-
-				Defines = $"{flavorDefine}; {linkDefine}; {Defines ?? string.Empty}";
-				Undefines = $"{linkUndefines}; {Undefines ?? string.Empty}";
-			}
 		}
 
 		IEnumerable<TestData> GetTestData (RunTestTask test)
