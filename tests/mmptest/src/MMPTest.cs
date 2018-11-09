@@ -675,7 +675,7 @@ namespace Xamarin.MMP.Tests
 			});
 		}
 
-		// [Test] - https://github.com/xamarin/xamarin-macios/issues/4110
+		[Test]
 		public void BuildingSameSolutionTwice_ShouldNotRunACToolTwice ()
 		{
 			RunMMPTest (tmpDir => {
