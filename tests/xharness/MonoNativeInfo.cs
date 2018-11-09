@@ -31,7 +31,17 @@ namespace xharness
 {
 	public enum MonoNativeFlavor
 	{
-		Compat, Unified
+		None,
+		Compat,
+		Unified
+	}
+
+	public enum MonoNativeLinkMode
+	{
+		None,
+		Static,
+		Dynamic,
+		Symlink
 	}
 
 	public class MonoNativeInfo
