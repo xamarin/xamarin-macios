@@ -464,7 +464,7 @@ namespace xharness
 							var mono_native_link = test_data.MonoNativeLinkMode;
 							if (!canSymlink && mono_native_link == MonoNativeLinkMode.Symlink)
 								mono_native_link = MonoNativeLinkMode.Static;
-							MonoNativeHelper.AddProjectDefines (clone.Xml, task.ProjectPlatform, configuration, test_data.MonoNativeFlavor, mono_native_link);
+							MonoNativeHelper.AddProjectDefines (clone.Xml, test_data.MonoNativeFlavor, mono_native_link, task.ProjectPlatform, configuration);
 						}
 
 						if (!debug && !isMac)

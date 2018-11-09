@@ -47,21 +47,40 @@ namespace xharness
 	public static class MonoNativeHelper
 	{
 		public static void AddProjectDefines (
-			XmlDocument project, string platform, string config,
-			MonoNativeFlavor flavor, MonoNativeLinkMode linkMode)
+			XmlDocument project, MonoNativeFlavor flavor, MonoNativeLinkMode link,
+			string platform, string config)
+		{
+			AddProjectDefines (project, flavor, platform, config);
+			AddProjectDefines (project, link, platform, config);
+		}
+
+		public static void AddProjectDefines (
+			XmlDocument project, MonoNativeFlavor flavor,
+			string platform = null, string config = null)
 		{
 			switch (flavor) {
 			case MonoNativeFlavor.Compat:
-				project.AddAdditionalDefines ("MONO_NATIVE_COMPAT", platform, config);
+				if (platform != null)
+					project.AddAdditionalDefines ("MONO_NATIVE_COMPAT", platform, config);
+				else
+					project.AddAdditionalDefines ("MONO_NATIVE_COMPAT");
 				break;
 			case MonoNativeFlavor.Unified:
-				project.AddAdditionalDefines ("MONO_NATIVE_UNIFIED", platform, config);
+				if (platform != null)
+					project.AddAdditionalDefines ("MONO_NATIVE_UNIFIED", platform, config);
+				else
+					project.AddAdditionalDefines ("MONO_NATIVE_UNIFIED");
 				break;
 			default:
-				return;
+				throw new Exception ($"Unknown MonoNativeFlavor: {flavor}");
 			}
+		}
 
-			switch (linkMode) {
+		public static void AddProjectDefines (
+			XmlDocument project, MonoNativeLinkMode link,
+			string platform, string config)
+		{
+			switch (link) {
 			case MonoNativeLinkMode.Static:
 				project.AddAdditionalDefines ("MONO_NATIVE_STATIC", platform, config);
 				project.RemoveDefines ("MONO_NATIVE_DYNAMIC; MONO_NATIVE_SYMLINK", platform, config);
@@ -74,6 +93,8 @@ namespace xharness
 				project.AddAdditionalDefines ("MONO_NATIVE_SYMLINK", platform, config);
 				project.RemoveDefines ("MONO_NATIVE_MONO_NATIVE_STATIC; MONO_NATIVE_DYNAMIC", platform, config);
 				break;
+			default:
+				throw new Exception ($"Unknown MonoNativeLinkMode: {link}");
 			}
 		}
 	}
@@ -120,6 +141,9 @@ namespace xharness
 
 		public void AddProjectDefines (XmlDocument project)
 		{
+			MonoNativeHelper.AddProjectDefines (project, Flavor);
+			return;
+
 			switch (Flavor) {
 			case MonoNativeFlavor.Compat:
 				project.AddAdditionalDefines ("MONO_NATIVE_COMPAT");
