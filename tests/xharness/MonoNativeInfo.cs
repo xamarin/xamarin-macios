@@ -44,6 +44,40 @@ namespace xharness
 		Symlink
 	}
 
+	public static class MonoNativeHelper
+	{
+		public static void AddProjectDefines (
+			XmlDocument project, string platform, string config,
+			MonoNativeFlavor flavor, MonoNativeLinkMode linkMode)
+		{
+			switch (flavor) {
+			case MonoNativeFlavor.Compat:
+				project.AddAdditionalDefines ("MONO_NATIVE_COMPAT", platform, config);
+				break;
+			case MonoNativeFlavor.Unified:
+				project.AddAdditionalDefines ("MONO_NATIVE_UNIFIED", platform, config);
+				break;
+			default:
+				return;
+			}
+
+			switch (linkMode) {
+			case MonoNativeLinkMode.Static:
+				project.AddAdditionalDefines ("MONO_NATIVE_STATIC", platform, config);
+				project.RemoveDefines ("MONO_NATIVE_DYNAMIC; MONO_NATIVE_SYMLINK", platform, config);
+				break;
+			case MonoNativeLinkMode.Dynamic:
+				project.AddAdditionalDefines ("MONO_NATIVE_DYNAMIC", platform, config);
+				project.RemoveDefines ("MONO_NATIVE_STATIC; MONO_NATIVE_SYMLINK", platform, config);
+				break;
+			case MonoNativeLinkMode.Symlink:
+				project.AddAdditionalDefines ("MONO_NATIVE_SYMLINK", platform, config);
+				project.RemoveDefines ("MONO_NATIVE_MONO_NATIVE_STATIC; MONO_NATIVE_DYNAMIC", platform, config);
+				break;
+			}
+		}
+	}
+
 	public class MonoNativeInfo
 	{
 		public Harness Harness { get; }

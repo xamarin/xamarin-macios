@@ -398,7 +398,6 @@ namespace xharness
 			var rv = new List<T> (tests);
 			foreach (var task in tests.ToArray ()) {
 				foreach (var test_data in GetTestData (task)) {
-					test_data.CheckMonoNative ();
 					var variation = test_data.Variation;
 					var mtouch_extra_args = test_data.MTouchExtraArgs;
 					var bundling_extra_args = test_data.MonoBundlingExtraArgs;
@@ -416,6 +415,7 @@ namespace xharness
 						await clone.CreateCopyAsync (task);
 
 						var isMac = false;
+						var canSymlink = false;
 						switch (task.Platform) {
 						case TestPlatform.Mac:
 						case TestPlatform.Mac_Classic:
@@ -425,6 +425,13 @@ namespace xharness
 						case TestPlatform.Mac_UnifiedXM45_32:
 						case TestPlatform.Mac_UnifiedSystem:
 							isMac = true;
+							break;
+						case TestPlatform.iOS:
+						case TestPlatform.iOS_TodayExtension64:
+						case TestPlatform.iOS_Unified:
+						case TestPlatform.iOS_Unified32:
+						case TestPlatform.iOS_Unified64:
+							canSymlink = true;
 							break;
 						}
 
@@ -453,6 +460,12 @@ namespace xharness
 							}
 						}
 						clone.Xml.SetNode (isMac ? "Profiling" : "MTouchProfiling", profiling ? "True" : "False", task.ProjectPlatform, configuration);
+						if (test_data.MonoNativeFlavor != MonoNativeFlavor.None) {
+							var mono_native_link = test_data.MonoNativeLinkMode;
+							if (!canSymlink && mono_native_link == MonoNativeLinkMode.Symlink)
+								mono_native_link = MonoNativeLinkMode.Static;
+							MonoNativeHelper.AddProjectDefines (clone.Xml, task.ProjectPlatform, configuration, test_data.MonoNativeFlavor, mono_native_link);
+						}
 
 						if (!debug && !isMac)
 							clone.Xml.SetMtouchUseLlvm (true, task.ProjectPlatform, configuration);
