@@ -169,17 +169,38 @@ namespace xharness
 			public string ProjectConfiguration;
 			public MonoNativeFlavor MonoNativeFlavor;
 			public MonoNativeLinkMode MonoNativeLinkMode;
-		}
 
-		void CheckMonoNative (RunTestTask test, TestData data)
-		{
-			switch (test.TestName) {
-			case "mono-native-compat":
-				data.MonoNativeFlavor = MonoNativeFlavor.Compat;
-				break;
-			case "mono-native-unified":
-				data.MonoNativeFlavor = MonoNativeFlavor.Unified;
-				break;
+			public void CheckMonoNative ()
+			{
+				string flavorDefine;
+				switch (MonoNativeFlavor) {
+				case MonoNativeFlavor.Compat:
+					flavorDefine = "MONO_NATIVE_COMPAT";
+					break;
+				case MonoNativeFlavor.Unified:
+					flavorDefine = "MONO_NATIVE_UNIFIED";
+					break;
+				default:
+					return;
+				}
+
+				string linkDefine;
+				switch (MonoNativeLinkMode) {
+				case MonoNativeLinkMode.Static:
+					linkDefine = "MONO_NATIVE_STATIC";
+					break;
+				case MonoNativeLinkMode.Dynamic:
+					linkDefine = "MONO_NATIVE_DYNAMIC";
+					break;
+				case MonoNativeLinkMode.Symlink:
+					linkDefine = "MONO_NATIVE_SYMLINK";
+					break;
+				default:
+					throw new InvalidOperationException ();
+				}
+
+				Defines = $"{flavorDefine}; {linkDefine}; {Defines ?? string.Empty}";
+				Undefines = $"MONO_NATIVE_STATIC; MONO_NATIVE_DYNAMIC; MONO_NATIVE_SYMLINK; {Undefines ?? string.Empty}";
 			}
 		}
 
@@ -373,6 +394,7 @@ namespace xharness
 			var rv = new List<T> (tests);
 			foreach (var task in tests.ToArray ()) {
 				foreach (var test_data in GetTestData (task)) {
+					test_data.CheckMonoNative ();
 					var variation = test_data.Variation;
 					var mtouch_extra_args = test_data.MTouchExtraArgs;
 					var bundling_extra_args = test_data.MonoBundlingExtraArgs;
@@ -383,6 +405,16 @@ namespace xharness
 					var defines = test_data.Defines;
 					var undefines = test_data.Undefines;
 					var ignored = test_data.Ignored;
+
+					switch (test_data.MonoNativeFlavor) {
+					case MonoNativeFlavor.Compat:
+						defines = (defines ?? string.Empty) + "MONO_NATIVE_COMPAT; ";
+						break;
+					case MonoNativeFlavor.Unified:
+						defines = (defines ?? string.Empty) + "MONO_NATIVE_UNIFIED; ";
+						break;
+					}
+
 
 					var clone = task.TestProject.Clone ();
 					var clone_task = Task.Run (async () => {
