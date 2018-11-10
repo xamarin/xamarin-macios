@@ -72,14 +72,7 @@ namespace xharness
 		{
 			if (MonoNativeInfo == null)
 				return "9.0";
-			switch (MonoNativeInfo.Flavor) {
-			case MonoNativeFlavor.Compat:
-				return "9.0";
-			case MonoNativeFlavor.Unified:
-				return "10.0";
-			default:
-				throw new Exception ($"Unknown MonoNativeFlavor: {MonoNativeInfo.Flavor}");
-			}
+			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.tvOS, MonoNativeInfo.Flavor);
 		}
 
 		protected override int[] UIDeviceFamily {

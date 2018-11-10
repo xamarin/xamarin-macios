@@ -211,14 +211,7 @@ namespace xharness
 		{
 			if (MonoNativeInfo == null)
 				return templateMinimumOSVersion;
-			switch (MonoNativeInfo.Flavor) {
-			case MonoNativeFlavor.Compat:
-				return "2.0";
-			case MonoNativeFlavor.Unified:
-				return "4.0";
-			default:
-				throw new Exception ($"Unknown MonoNativeFlavor: {MonoNativeInfo.Flavor}");
-			}
+			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.watchOS, MonoNativeInfo.Flavor);
 		}
 
 		public override string Suffix {

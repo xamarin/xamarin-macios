@@ -69,7 +69,7 @@ namespace xharness
 			info_plist.LoadWithoutNetworkAccess (Path.Combine (Harness.TodayContainerTemplate, "Info.plist"));
 			info_plist.SetCFBundleIdentifier (BundleIdentifier);
 			info_plist.SetCFBundleName (Name);
-			info_plist.SetMinimumOSVersion ("8.0");
+			info_plist.SetMinimumOSVersion (GetMinimumOSVersion ("8.0"));
 			Harness.Save (info_plist, target_info_plist);
 		}
 
@@ -103,7 +103,7 @@ namespace xharness
 			info_plist.LoadWithoutNetworkAccess (Path.Combine (TargetDirectory, "Info.plist"));
 			BundleIdentifier = info_plist.GetCFBundleIdentifier () + "-today";
 			info_plist.SetCFBundleIdentifier (BundleIdentifier + ".todayextension");
-			info_plist.SetMinimumOSVersion ("8.0");
+			info_plist.SetMinimumOSVersion (GetMinimumOSVersion ("8.0"));
 			info_plist.AddPListStringValue ("CFBundlePackageType", "XPC!");
 			info_plist.SetCFBundleDisplayName (Name);
 			info_plist.AddPListKeyValuePair ("NSExtension", "dict", 
@@ -139,6 +139,13 @@ namespace xharness
 			default:
 				throw new Exception (string.Format ("Unknown OutputType: {0}", OutputType));
 			}
+		}
+
+		protected override string GetMinimumOSVersion (string templateMinimumOSVersion)
+		{
+			if (MonoNativeInfo == null)
+				return templateMinimumOSVersion;
+			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.iOS, MonoNativeInfo.Flavor);
 		}
 
 		public override IEnumerable<RelatedProject> GetRelatedProjects ()

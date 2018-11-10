@@ -103,6 +103,35 @@ namespace xharness
 			AddProjectDefines (project, MonoNativeLinkMode.Static, "iPhone", "Debug");
 			AddProjectDefines (project, MonoNativeLinkMode.Static, "iPhoneSimulator", "Debug");
 		}
+
+		public static string GetMinimumOSVersion (DevicePlatform platform, MonoNativeFlavor flavor)
+		{
+			switch (flavor) {
+			case MonoNativeFlavor.Compat:
+				switch (platform) {
+				case DevicePlatform.iOS:
+					return "8.0";
+				case DevicePlatform.tvOS:
+					return "9.0";
+				case DevicePlatform.watchOS:
+					return "2.0";
+				default:
+					throw new Exception ($"Unknown DevicePlatform: {platform}");
+				}
+			case MonoNativeFlavor.Unified:
+				switch (platform) {
+				case DevicePlatform.iOS:
+				case DevicePlatform.tvOS:
+					return "10.0";
+				case DevicePlatform.watchOS:
+					return "4.0";
+				default:
+					throw new Exception ($"Unknown DevicePlatform: {platform}");
+				}
+			default:
+				throw new Exception ($"Unknown MonoNativeFlavor: {flavor}");
+			}
+		}
 	}
 
 	public class MonoNativeInfo
