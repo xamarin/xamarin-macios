@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhoneSimulator\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DEBUG;MONOTOUCH;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DEBUG;MONOTOUCH;MONO_NATIVE_COMPAT;MONO_NATIVE_DYNAMIC;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchLink>None</MtouchLink>
@@ -37,14 +37,14 @@
     <MtouchLink>None</MtouchLink>
     <MtouchExtraArgs>-v -v -gcc_flags="-weak_framework GameController"</MtouchExtraArgs>
     <MtouchArch>i386, x86_64</MtouchArch>
-    <DefineConstants>MONOTOUCH;$(DefineConstants)</DefineConstants>
+    <DefineConstants>MONOTOUCH;MONO_NATIVE_COMPAT;MONO_NATIVE_STATIC;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
     <DebugSymbols>True</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DEBUG;MONOTOUCH;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DEBUG;MONOTOUCH;MONO_NATIVE_COMPAT;MONO_NATIVE_STATIC;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchDebug>True</MtouchDebug>
@@ -59,7 +59,7 @@
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DEBUG;MONOTOUCH;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DEBUG;MONOTOUCH;MONO_NATIVE_COMPAT;MONO_NATIVE_STATIC;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchDebug>True</MtouchDebug>
@@ -74,7 +74,7 @@
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DEBUG;MONOTOUCH;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DEBUG;MONOTOUCH;MONO_NATIVE_COMPAT;MONO_NATIVE_STATIC;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchDebug>True</MtouchDebug>
@@ -95,7 +95,7 @@
     <MtouchUseLlvm>True</MtouchUseLlvm>
     <MtouchLink>None</MtouchLink>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
-    <DefineConstants>MONOTOUCH;$(DefineConstants)</DefineConstants>
+    <DefineConstants>MONOTOUCH;MONO_NATIVE_COMPAT;MONO_NATIVE_STATIC;$(DefineConstants)</DefineConstants>
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release32|iPhone' ">
@@ -109,7 +109,7 @@
     <MtouchUseLlvm>True</MtouchUseLlvm>
     <MtouchLink>None</MtouchLink>
     <MtouchArch>ARMv7</MtouchArch>
-    <DefineConstants>MONOTOUCH;$(DefineConstants)</DefineConstants>
+    <DefineConstants>MONOTOUCH;MONO_NATIVE_COMPAT;MONO_NATIVE_STATIC;$(DefineConstants)</DefineConstants>
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release64|iPhone' ">
@@ -123,7 +123,7 @@
     <MtouchUseLlvm>True</MtouchUseLlvm>
     <MtouchLink>None</MtouchLink>
     <MtouchArch>ARM64</MtouchArch>
-    <DefineConstants>MONOTOUCH;$(DefineConstants)</DefineConstants>
+    <DefineConstants>MONOTOUCH;MONO_NATIVE_COMPAT;MONO_NATIVE_STATIC;$(DefineConstants)</DefineConstants>
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-bitcode|iPhone' ">
@@ -137,7 +137,7 @@
     <MtouchUseLlvm>true</MtouchUseLlvm>
     <MtouchLink>None</MtouchLink>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
-    <DefineConstants>MONOTOUCH;$(DefineConstants)</DefineConstants>
+    <DefineConstants>MONOTOUCH;MONO_NATIVE_COMPAT;MONO_NATIVE_STATIC;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

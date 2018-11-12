@@ -167,10 +167,12 @@ namespace Introspection
 						libname = MonoNativeConfig.DynamicLibraryName;
 						break;
 					case MonoNativeLinkMode.None:
+						continue;
 					default:
-						throw new NotImplementedException ("MARTIN FIXME");
+						AddErrorLine ($"[FAIL] Invalid link mode: {MonoNativeConfig.LinkMode}");
+						continue;
 					}
-					continue;
+					break;
 				}
 
 				if (SkipLibrary (libname))
@@ -235,10 +237,12 @@ namespace Introspection
 							path = MonoNativeConfig.DynamicLibraryName;
 							break;
 						case MonoNativeLinkMode.None:
+							continue;
 						default:
-							throw new NotImplementedException ("MARTIN FIXME");
+							AddErrorLine ($"[FAIL] Invalid link mode: {MonoNativeConfig.LinkMode}");
+							continue;
 						}
-						continue;
+						break;
 					}
 
 					var lib = Dlfcn.dlopen (path, 0);
