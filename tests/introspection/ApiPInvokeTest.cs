@@ -159,19 +159,13 @@ namespace Introspection
 					continue;
 				case "System.Native":
 				case "System.Security.Cryptography.Native.Apple":
-					switch (MonoNativeConfig.LinkMode) {
-					case MonoNativeLinkMode.Static:
-						libname = null;
-						break;
-					case MonoNativeLinkMode.Dynamic:
-						libname = MonoNativeConfig.DynamicLibraryName;
-						break;
-					case MonoNativeLinkMode.None:
+					if (MonoNativeConfig.LinkMode == MonoNativeLinkMode.None)
 						continue;
-					default:
-						AddErrorLine ($"[FAIL] Invalid link mode: {MonoNativeConfig.LinkMode}");
-						continue;
-					}
+#if __IOS__
+					libname = MonoNativeConfig.GetPInvokeLibraryName (MonoNativeFlavor.Compat, MonoNativeConfig.LinkMode);
+#else
+					libname = null;
+#endif
 					break;
 				}
 
@@ -229,19 +223,13 @@ namespace Introspection
 						break;
 					case "System.Native":
 					case "System.Security.Cryptography.Native.Apple":
-						switch (MonoNativeConfig.LinkMode) {
-						case MonoNativeLinkMode.Static:
-							path = null;
-							break;
-						case MonoNativeLinkMode.Dynamic:
-							path = MonoNativeConfig.DynamicLibraryName;
-							break;
-						case MonoNativeLinkMode.None:
+						if (MonoNativeConfig.LinkMode == MonoNativeLinkMode.None)
 							continue;
-						default:
-							AddErrorLine ($"[FAIL] Invalid link mode: {MonoNativeConfig.LinkMode}");
-							continue;
-						}
+#if __IOS__
+						path = MonoNativeConfig.GetPInvokeLibraryName (MonoNativeFlavor.Compat, MonoNativeConfig.LinkMode);
+#else
+						path = null;
+#endif
 						break;
 					}
 

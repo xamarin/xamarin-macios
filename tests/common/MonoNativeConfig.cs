@@ -64,8 +64,35 @@ namespace Xamarin.Tests
 
 		public static string GetDynamicLibraryName (bool usingCompat)
 		{
-			return usingCompat ?
-				"libmono-native-compat.dylib" : "libmono-native-unified.dylib";
+			return GetDynamicLibraryName (usingCompat ? MonoNativeFlavor.Compat : MonoNativeFlavor.Unified);
+		}
+
+		public static string GetDynamicLibraryName (MonoNativeFlavor flavor)
+		{
+			switch (flavor) {
+			case MonoNativeFlavor.Compat:
+				return "libmono-native-compat.dylib";
+			case MonoNativeFlavor.Unified:
+				return "libmono-native-unified.dylib";
+			default:
+				Assert.Fail ($"Invalid MonoNativeFlavor: {flavor}");
+				throw new NotImplementedException ();
+			}
+		}
+
+		public static string GetPInvokeLibraryName (MonoNativeFlavor flavor, MonoNativeLinkMode link)
+		{
+			switch (link) {
+			case MonoNativeLinkMode.Static:
+				return null;
+			case MonoNativeLinkMode.Dynamic:
+				return GetDynamicLibraryName (flavor);
+			case MonoNativeLinkMode.Symlink:
+				return "libmono-native.dylib";
+			default:
+				Assert.Fail ($"Invalid link mode: {MonoNativeConfig.LinkMode}");
+				throw new NotImplementedException ();
+			}
 		}
 
 		public static string DynamicLibraryName => GetDynamicLibraryName (UsingCompat);
