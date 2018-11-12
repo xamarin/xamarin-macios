@@ -188,12 +188,14 @@ namespace BCLTestImporter {
 		static string GetPListPath (string rootDir, Platform platform)
 		{
 			switch (platform) {
-				case Platform.iOS:
-					return Path.Combine (rootDir, "Info.plist");
-				case Platform.TvOS:
-					return Path.Combine (rootDir, "Info-tv.plist");
-				default:
-					return Path.Combine (rootDir, "Info.plist");
+			case Platform.iOS:
+				return Path.Combine (rootDir, "Info.plist");
+			case Platform.TvOS:
+				return Path.Combine (rootDir, "Info-tv.plist");
+			case Platform.WatchOS:
+				return Path.Combine (rootDir, "Info-watchos.plist");
+			default:
+				return Path.Combine (rootDir, "Info.plist");
 			}
 		}
 
