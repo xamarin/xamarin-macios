@@ -1570,7 +1570,6 @@ namespace Xamarin.Bundler
 				compiler_flags.AddLinkWith (libnative);
 				switch (app.Platform) {
 				case ApplePlatform.iOS:
-				case ApplePlatform.TVOS:
 					if (LinkContext?.RequireGss ?? false) {
 						Driver.Log (3, "Adding GSS framework reference.");
 						compiler_flags.AddFramework ("GSS");

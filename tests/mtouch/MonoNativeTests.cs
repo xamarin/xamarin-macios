@@ -191,35 +191,16 @@ namespace Xamarin
 		}
 
 		[Test]
-		public void MartinTest ()
+		public void TestGssTv ()
 		{
 			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = Profile.tvOS;
 				mtouch.CreateTemporaryApp (code: MonoNativeGss);
-				mtouch.Debug = true;
-				mtouch.FastDev = true;
-				mtouch.Verbosity = 3;
 				mtouch.Linker = LinkerOption.LinkAll;
-				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
-
-				Console.WriteLine ($"BUILD: {mtouch.AppPath}");
-
-				foreach (var file in Directory.EnumerateFiles (mtouch.AppPath))
-					Console.WriteLine ($"  FILE: {file}");
-
-				var files2 = Directory.EnumerateFiles (mtouch.AppPath, "libmono-native*", SearchOption.AllDirectories).Select (Path.GetFileName);
-				foreach (var file in files2)
-					Console.WriteLine ($"  FILE #1: {file}");
-
-				Console.WriteLine ($"DONE!");
-
-				AssertStaticLinked (mtouch);
-
-				//NetSecurityNative_ImportUserName
-
-				// CollectionAssert.Contains (Directory.EnumerateFiles (extension.AppPath, "*", SearchOption.AllDirectories).Select ((v) => Path.GetFileName (v)), "testServiceExtension.dll.config", "extension config added");
-
-
-				throw new NotImplementedException ();
+				mtouch.Verbosity = 3;
+				
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (5214, "Native linking failed, undefined symbol: _NetSecurityNative_ImportUserName. This symbol was referenced by the managed member X.NetSecurityNative_ImportUserName. Please verify that all the necessary frameworks have been referenced and native libraries linked.");
 			}
 		}
 

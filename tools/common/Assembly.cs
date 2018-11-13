@@ -380,6 +380,7 @@ namespace Xamarin.Bundler {
 					case "__Internal":
 					case "System.Native":
 					case "System.Security.Cryptography.Native.Apple":
+					case "System.Net.Security.Native":
 					// well known libs
 					case "libc":
 					case "libSystem":
