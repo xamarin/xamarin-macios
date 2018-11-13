@@ -43,7 +43,6 @@ namespace Xamarin
 				mtouch.CreateTemporaryApp ();
 				mtouch.Debug = true;
 				mtouch.FastDev = true;
-				mtouch.Verbosity = 3;
 				mtouch.Linker = MTouchLinker.DontLink;
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
 
@@ -52,21 +51,102 @@ namespace Xamarin
 		}
 
 		[Test]
-		public void TestDebugLinkAll ()
+		public void TestDebugLinkOut ()
 		{
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.CreateTemporaryApp ();
 				mtouch.Debug = true;
 				mtouch.FastDev = true;
-				mtouch.Verbosity = 3;
 				mtouch.Linker = MTouchLinker.LinkAll;
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
 
 				AssertStaticLinked (mtouch);
+				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Not.Contain ("mono_native_initialize"));
 			}
 		}
 
 		[Test]
+		public void TestDeviceLinkOut ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.Linker = MTouchLinker.LinkSdk;
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
+
+				AssertStaticLinked (mtouch);
+				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Not.Contain ("mono_native_initialize"));
+			}
+		}
+
+		[Test]
+		public void TestDebugLinkAll ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp (code: MonoNativeInitialize);
+				mtouch.Debug = true;
+				mtouch.FastDev = true;
+				mtouch.Linker = MTouchLinker.LinkAll;
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+
+				AssertStaticLinked (mtouch);
+				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Contain ("_mono_native_initialize"));
+			}
+		}
+
+		[Test]
+		public void TestDeviceLinkAll ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp (code: MonoNativeInitialize);
+				mtouch.Linker = MTouchLinker.LinkAll;
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
+
+				AssertStaticLinked (mtouch);
+				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Contain ("_mono_native_initialize"));
+			}
+		}
+
+		[Test]
+		public void TestDeviceFrameworkCompat ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp (code: MonoNativeInitialize);
+				mtouch.Linker = MTouchLinker.LinkAll;
+				mtouch.AssemblyBuildTargets.Add ("@all=framework");
+				mtouch.TargetVer = "9.3";
+
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
+
+				var files = Directory.EnumerateFiles (mtouch.AppPath, "libmono-native*", SearchOption.AllDirectories).Select (Path.GetFileName);
+				Assert.That (files.Count, Is.EqualTo (1), "One single libmono-native* library");
+				Assert.That (files.First (), Is.EqualTo ("libmono-native-compat.dylib"), "Found libmono-native-compat.dylib");
+
+				var libpath = Path.Combine (mtouch.AppPath, "libmono-native-compat.dylib");
+				Assert.That (MTouch.GetNativeSymbols (libpath), Does.Contain ("_mono_native_initialize"));
+			}
+		}
+
+		[Test]
+		public void TestDeviceFrameworkUnified ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp (code: MonoNativeInitialize);
+				mtouch.Linker = MTouchLinker.LinkAll;
+				mtouch.AssemblyBuildTargets.Add ("@all=framework");
+				mtouch.TargetVer = "10.0";
+
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
+
+				var files = Directory.EnumerateFiles (mtouch.AppPath, "libmono-native*", SearchOption.AllDirectories).Select (Path.GetFileName);
+				Assert.That (files.Count, Is.EqualTo (1), "One single libmono-native* library");
+				Assert.That (files.First (), Is.EqualTo ("libmono-native-unified.dylib"), "Found libmono-native-compat.dylib");
+
+				var libpath = Path.Combine (mtouch.AppPath, "libmono-native-unified.dylib");
+				Assert.That (MTouch.GetNativeSymbols (libpath), Does.Contain ("_mono_native_initialize"));
+			}
+		}
+
+		// [Test]
 		public void MartinTest ()
 		{
 			using (var mtouch = new MTouchTool ()) {
@@ -108,11 +188,19 @@ namespace Xamarin
 		{
 			var files = Directory.EnumerateFiles (app.AppPath, "libmono-native*", SearchOption.AllDirectories).Select (Path.GetFileName);
 			Assert.That (files.Count, Is.EqualTo (0), "No libmono-native* libraries");
-
-			var symbols = MTouch.GetNativeSymbols (app.NativeExecutablePath).Where (v => v.Contains ("mono_native"));
-			foreach (var symbol in symbols)
-				Console.WriteLine ($"  SYMBOL: {symbol}");
-
 		}
+
+		string MonoNativeInitialize => @"
+class X {
+	[System.Runtime.InteropServices.DllImport (""__Internal"")]
+	extern static void mono_native_initialize ();
+
+	static void Main ()
+	{
+		System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ());
+		mono_native_initialize ();
+	}
+}
+";
 	}
 }
