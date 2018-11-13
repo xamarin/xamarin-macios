@@ -1569,7 +1569,7 @@ namespace Xamarin.Bundler
 				switch (app.Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
-					// compiler_flags.AddFramework ("GSS");
+					compiler_flags.AddFramework ("GSS");
 					break;
 				}
 				break;
