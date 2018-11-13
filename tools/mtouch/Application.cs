@@ -1627,7 +1627,7 @@ namespace Xamarin.Bundler {
 
 			Console.Error.WriteLine ($"MONO NATIVE: {MonoNativeMode} {LibMonoNativeLinkMode} {this}");
 
-			if (MonoNativeMode != MonoNativeMode.None && (LibMonoNativeLinkMode == AssemblyBuildTarget.DynamicLibrary)) {
+			if (IsSimulatorBuild && MonoNativeMode != MonoNativeMode.None && (LibMonoNativeLinkMode == AssemblyBuildTarget.DynamicLibrary)) {
 				BundleFileInfo info;
 				var lib_native_name = GetLibNativeName () + ".dylib";
 				bundle_files[lib_native_name] = info = new BundleFileInfo ();
