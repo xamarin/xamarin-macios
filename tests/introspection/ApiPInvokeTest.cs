@@ -159,6 +159,7 @@ namespace Introspection
 					continue;
 				case "System.Native":
 				case "System.Security.Cryptography.Native.Apple":
+				case "System.Net.Security.Native":
 					if (MonoNativeConfig.LinkMode == MonoNativeLinkMode.None)
 						continue;
 #if __IOS__
@@ -223,6 +224,7 @@ namespace Introspection
 						break;
 					case "System.Native":
 					case "System.Security.Cryptography.Native.Apple":
+					case "System.Net.Security.Native":
 						if (MonoNativeConfig.LinkMode == MonoNativeLinkMode.None)
 							continue;
 #if __IOS__
@@ -283,6 +285,14 @@ namespace Introspection
 		public void SystemCore ()
 		{
 			var a = typeof (Enumerable).Assembly;
+			if (!SkipAssembly (a))
+				Check (a);
+		}
+
+		[Test]
+		public void SystemData ()
+		{
+			var a = typeof (System.Data.SqlClient.SqlCredential).Assembly;
 			if (!SkipAssembly (a))
 				Check (a);
 		}
