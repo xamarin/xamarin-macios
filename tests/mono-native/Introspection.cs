@@ -128,7 +128,7 @@ namespace Xamarin.Tests
 			}
 		}
 
-		[DllImport ("__Internal")]
+		[DllImport ("System.Native")]
 		extern static void mono_native_initialize ();
 
 		void DumpDirectory (string dir)
