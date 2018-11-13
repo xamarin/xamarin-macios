@@ -28,11 +28,15 @@ using System.IO;
 using System.Linq;
 using NUnit.Framework;
 
-using MTouchLinker = Xamarin.Tests.LinkerOption;
-using MTouchRegistrar = Xamarin.Tests.RegistrarOption;
+// using MTouchLinker = Xamarin.Tests.LinkerOption;
+// using ExecutionHelper = Xamarin.Tests.ExecutionHelper;
+// using MTouchRegistrar = Xamarin.Tests.RegistrarOption;
 
 namespace Xamarin
 {
+	using Tests;
+	using Utils;
+
 	[TestFixture]
 	public class MonoNativeTests
 	{
@@ -43,7 +47,7 @@ namespace Xamarin
 				mtouch.CreateTemporaryApp ();
 				mtouch.Debug = true;
 				mtouch.FastDev = true;
-				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.Linker = LinkerOption.DontLink;
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
 
 				AssertSymlinked (mtouch.AppPath);
@@ -57,7 +61,7 @@ namespace Xamarin
 				mtouch.CreateTemporaryApp ();
 				mtouch.Debug = true;
 				mtouch.FastDev = true;
-				mtouch.Linker = MTouchLinker.LinkAll;
+				mtouch.Linker = LinkerOption.LinkAll;
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
 
 				AssertStaticLinked (mtouch);
@@ -71,7 +75,7 @@ namespace Xamarin
 		{
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.CreateTemporaryApp ();
-				mtouch.Linker = MTouchLinker.LinkSdk;
+				mtouch.Linker = LinkerOption.LinkSdk;
 				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
 
 				AssertStaticLinked (mtouch);
@@ -87,7 +91,7 @@ namespace Xamarin
 				mtouch.CreateTemporaryApp (code: MonoNativeInitialize);
 				mtouch.Debug = true;
 				mtouch.FastDev = true;
-				mtouch.Linker = MTouchLinker.LinkAll;
+				mtouch.Linker = LinkerOption.LinkAll;
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
 
 				AssertStaticLinked (mtouch);
@@ -101,7 +105,7 @@ namespace Xamarin
 		{
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.CreateTemporaryApp (code: MonoNativeInitialize);
-				mtouch.Linker = MTouchLinker.LinkAll;
+				mtouch.Linker = LinkerOption.LinkAll;
 				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
 
 				AssertStaticLinked (mtouch);
@@ -113,42 +117,41 @@ namespace Xamarin
 		[Test]
 		public void TestDeviceFrameworkCompat ()
 		{
-			using (var mtouch = new MTouchTool ()) {
-				mtouch.CreateTemporaryApp (code: MonoNativeInitialize);
-				mtouch.Linker = MTouchLinker.LinkAll;
-				mtouch.AssemblyBuildTargets.Add ("@all=framework");
-				mtouch.TargetVer = "9.3";
-
-				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
-
-				var files = Directory.EnumerateFiles (mtouch.AppPath, "libmono-native*", SearchOption.AllDirectories).Select (Path.GetFileName);
-				Assert.That (files.Count, Is.EqualTo (1), "One single libmono-native* library");
-				Assert.That (files.First (), Is.EqualTo ("libmono-native-compat.dylib"), "Found libmono-native-compat.dylib");
-
-				var symbols = MTouch.GetNativeSymbols (Path.Combine (mtouch.AppPath, "libmono-native-compat.dylib"));
-				Assert.That (symbols, Does.Contain ("_mono_native_initialize"));
-				Assert.That (symbols, Does.Contain ("_NetSecurityNative_ImportUserName"));
-			}
+			TestDeviceFramework ("9.3", "libmono-native-compat.dylib");
 		}
 
 		[Test]
 		public void TestDeviceFrameworkUnified ()
 		{
+			TestDeviceFramework ("10.0", "libmono-native-unified.dylib");
+		}
+
+		void TestDeviceFramework (string version, string mono_native_dylib)
+		{
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.CreateTemporaryApp (code: MonoNativeInitialize);
-				mtouch.Linker = MTouchLinker.LinkAll;
+				mtouch.Linker = LinkerOption.LinkAll;
 				mtouch.AssemblyBuildTargets.Add ("@all=framework");
-				mtouch.TargetVer = "10.0";
+				mtouch.TargetVer = version;
 
 				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
 
 				var files = Directory.EnumerateFiles (mtouch.AppPath, "libmono-native*", SearchOption.AllDirectories).Select (Path.GetFileName);
 				Assert.That (files.Count, Is.EqualTo (1), "One single libmono-native* library");
-				Assert.That (files.First (), Is.EqualTo ("libmono-native-unified.dylib"), "Found libmono-native-compat.dylib");
+				Assert.That (files.First (), Is.EqualTo (mono_native_dylib));
 
-				var symbols = MTouch.GetNativeSymbols (Path.Combine (mtouch.AppPath, "libmono-native-unified.dylib"));
+				var mono_native_path = Path.Combine (mtouch.AppPath, mono_native_dylib);
+
+				var symbols = MTouch.GetNativeSymbols (mono_native_path);
 				Assert.That (symbols, Does.Contain ("_mono_native_initialize"));
 				Assert.That (symbols, Does.Contain ("_NetSecurityNative_ImportUserName"));
+
+				var otool_dylib = ExecutionHelper.Execute ("otool", $"-L {StringUtils.Quote (mono_native_path)}", hide_output: false);
+				Assert.That (otool_dylib, Does.Contain ("GSS"));
+
+				var otool_exe = ExecutionHelper.Execute ("otool", $"-L {StringUtils.Quote (mtouch.NativeExecutablePath)}", hide_output: false);
+				Assert.That (otool_exe, Does.Not.Contain ("GSS"));
+				Assert.That (otool_exe, Does.Contain ($"@rpath/{mono_native_dylib}")); 
 			}
 		}
 
@@ -157,7 +160,7 @@ namespace Xamarin
 		{
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.CreateTemporaryApp ();
-				mtouch.Linker = MTouchLinker.LinkAll;
+				mtouch.Linker = LinkerOption.LinkAll;
 				mtouch.AssemblyBuildTargets.Add ("@all=framework");
 				mtouch.TargetVer = "10.0";
 
@@ -173,10 +176,7 @@ namespace Xamarin
 		{
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.CreateTemporaryApp (code: MonoNativeGss);
-				mtouch.Debug = true;
-				mtouch.FastDev = true;
-				mtouch.Verbosity = 3;
-				mtouch.Linker = MTouchLinker.LinkAll;
+				mtouch.Linker = LinkerOption.LinkAll;
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
 
 				AssertStaticLinked (mtouch);
@@ -194,7 +194,7 @@ namespace Xamarin
 				mtouch.Debug = true;
 				mtouch.FastDev = true;
 				mtouch.Verbosity = 3;
-				mtouch.Linker = MTouchLinker.LinkAll;
+				mtouch.Linker = LinkerOption.LinkAll;
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
 
 				Console.WriteLine ($"BUILD: {mtouch.AppPath}");
