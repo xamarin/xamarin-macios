@@ -1550,9 +1550,11 @@ namespace Xamarin.Bundler
 			build_tasks.Add (link_task);
 		}
 
-		static void HandleMonoNative (Application app, CompilerFlags compiler_flags)
+		void HandleMonoNative (Application app, CompilerFlags compiler_flags)
 		{
 			if (app.MonoNativeMode == MonoNativeMode.None)
+				return;
+			if (LinkContext != null && !LinkContext.RequireMonoNative)
 				return;
 			var libnative = app.GetLibNativeName ();
 			var libdir = Driver.GetMonoTouchLibDirectory (app);
@@ -1569,7 +1571,10 @@ namespace Xamarin.Bundler
 				switch (app.Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
-					compiler_flags.AddFramework ("GSS");
+					if (LinkContext?.RequireGss ?? false) {
+						Driver.Log (3, "Adding GSS framework reference.");
+						compiler_flags.AddFramework ("GSS");
+					}
 					break;
 				}
 				break;

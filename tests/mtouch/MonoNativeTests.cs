@@ -61,7 +61,8 @@ namespace Xamarin
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
 
 				AssertStaticLinked (mtouch);
-				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Not.Contain ("mono_native_initialize"));
+				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Not.Contain ("_mono_native_initialize"));
+				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Not.Contain ("_NetSecurityNative_ImportUserName"));
 			}
 		}
 
@@ -74,7 +75,8 @@ namespace Xamarin
 				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
 
 				AssertStaticLinked (mtouch);
-				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Not.Contain ("mono_native_initialize"));
+				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Not.Contain ("_mono_native_initialize"));
+				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Not.Contain ("_NetSecurityNative_ImportUserName"));
 			}
 		}
 
@@ -90,6 +92,7 @@ namespace Xamarin
 
 				AssertStaticLinked (mtouch);
 				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Contain ("_mono_native_initialize"));
+				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Not.Contain ("_NetSecurityNative_ImportUserName"));
 			}
 		}
 
@@ -103,6 +106,7 @@ namespace Xamarin
 
 				AssertStaticLinked (mtouch);
 				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Contain ("_mono_native_initialize"));
+				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Not.Contain ("_NetSecurityNative_ImportUserName"));
 			}
 		}
 
@@ -121,8 +125,9 @@ namespace Xamarin
 				Assert.That (files.Count, Is.EqualTo (1), "One single libmono-native* library");
 				Assert.That (files.First (), Is.EqualTo ("libmono-native-compat.dylib"), "Found libmono-native-compat.dylib");
 
-				var libpath = Path.Combine (mtouch.AppPath, "libmono-native-compat.dylib");
-				Assert.That (MTouch.GetNativeSymbols (libpath), Does.Contain ("_mono_native_initialize"));
+				var symbols = MTouch.GetNativeSymbols (Path.Combine (mtouch.AppPath, "libmono-native-compat.dylib"));
+				Assert.That (symbols, Does.Contain ("_mono_native_initialize"));
+				Assert.That (symbols, Does.Contain ("_NetSecurityNative_ImportUserName"));
 			}
 		}
 
@@ -141,20 +146,55 @@ namespace Xamarin
 				Assert.That (files.Count, Is.EqualTo (1), "One single libmono-native* library");
 				Assert.That (files.First (), Is.EqualTo ("libmono-native-unified.dylib"), "Found libmono-native-compat.dylib");
 
-				var libpath = Path.Combine (mtouch.AppPath, "libmono-native-unified.dylib");
-				Assert.That (MTouch.GetNativeSymbols (libpath), Does.Contain ("_mono_native_initialize"));
+				var symbols = MTouch.GetNativeSymbols (Path.Combine (mtouch.AppPath, "libmono-native-unified.dylib"));
+				Assert.That (symbols, Does.Contain ("_mono_native_initialize"));
+				Assert.That (symbols, Does.Contain ("_NetSecurityNative_ImportUserName"));
 			}
 		}
 
-		// [Test]
-		public void MartinTest ()
+		[Test]
+		public void TestDeviceFrameworkLinkOut ()
 		{
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.CreateTemporaryApp ();
+				mtouch.Linker = MTouchLinker.LinkAll;
+				mtouch.AssemblyBuildTargets.Add ("@all=framework");
+				mtouch.TargetVer = "10.0";
+
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
+
+				var files = Directory.EnumerateFiles (mtouch.AppPath, "libmono-native*", SearchOption.AllDirectories).Select (Path.GetFileName);
+				Assert.That (files.Count, Is.EqualTo (0), "No libmono-native* library");
+			}
+		}
+
+		[Test]
+		public void TestGss ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp (code: MonoNativeGss);
 				mtouch.Debug = true;
 				mtouch.FastDev = true;
 				mtouch.Verbosity = 3;
-				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.Linker = MTouchLinker.LinkAll;
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+
+				AssertStaticLinked (mtouch);
+				var symbols = mtouch.NativeSymbolsInExecutable;
+				Assert.That (symbols, Does.Contain ("_mono_native_initialize"));
+				Assert.That (symbols, Does.Contain ("_NetSecurityNative_ImportUserName"));
+			}
+		}
+
+		[Test]
+		public void MartinTest ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp (code: MonoNativeGss);
+				mtouch.Debug = true;
+				mtouch.FastDev = true;
+				mtouch.Verbosity = 3;
+				mtouch.Linker = MTouchLinker.LinkAll;
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
 
 				Console.WriteLine ($"BUILD: {mtouch.AppPath}");
@@ -168,7 +208,9 @@ namespace Xamarin
 
 				Console.WriteLine ($"DONE!");
 
-				AssertSymlinked (mtouch.AppPath);
+				AssertStaticLinked (mtouch);
+
+				//NetSecurityNative_ImportUserName
 
 				// CollectionAssert.Contains (Directory.EnumerateFiles (extension.AppPath, "*", SearchOption.AllDirectories).Select ((v) => Path.GetFileName (v)), "testServiceExtension.dll.config", "extension config added");
 
@@ -192,7 +234,7 @@ namespace Xamarin
 
 		string MonoNativeInitialize => @"
 class X {
-	[System.Runtime.InteropServices.DllImport (""__Internal"")]
+	[System.Runtime.InteropServices.DllImport (""System.Native"")]
 	extern static void mono_native_initialize ();
 
 	static void Main ()
@@ -202,5 +244,29 @@ class X {
 	}
 }
 ";
+
+		string MonoNativeGss => @"
+using System;
+
+class X {
+	[System.Runtime.InteropServices.DllImport (""System.Native"")]
+	extern static void mono_native_initialize ();
+
+	[System.Runtime.InteropServices.DllImport (""System.Net.Security.Native"")]
+	extern static void NetSecurityNative_ImportUserName (IntPtr a, IntPtr b, int c, IntPtr d);
+
+	static void Main ()
+	{
+		// Reference Xamarin.iOS
+		var runtime = typeof (ObjCRuntime.Runtime).ToString ();
+		// Always false, but the linker does not know that, so the following code won't be linked out.
+		if (runtime.Equals (""XXX"")) {
+			mono_native_initialize ();
+			NetSecurityNative_ImportUserName (IntPtr.Zero, IntPtr.Zero, 0, IntPtr.Zero);
+		}
+	}
+}
+";
+
 	}
 }

@@ -114,8 +114,16 @@ namespace MonoTouch.Tuner
 
 				switch (pinfo.Module.Name) {
 				case "__Internal":
+					DerivedLinkContext.RequiredSymbols.AddFunction (pinfo.EntryPoint).AddMember (method);
+					break;
 				case "System.Native":
 				case "System.Security.Cryptography.Native.Apple":
+					DerivedLinkContext.RequireMonoNative = true;
+					DerivedLinkContext.RequiredSymbols.AddFunction (pinfo.EntryPoint).AddMember (method);
+					break;
+				case "System.Net.Security.Native":
+					DerivedLinkContext.RequireGss = true;
+					DerivedLinkContext.RequireMonoNative = true;
 					DerivedLinkContext.RequiredSymbols.AddFunction (pinfo.EntryPoint).AddMember (method);
 					break;
 				}
