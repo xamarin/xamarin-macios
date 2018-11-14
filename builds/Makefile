@@ -1154,7 +1154,7 @@ $(BUILD_DESTDIR)/$(2)/tmp-lib/Mono: $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.a 
 	$$(Q_GEN) CC="$(IOS_CC)" ./create-shared-library.sh $$< $$@ -arch $(1) -install_name @rpath/Mono.framework/Mono -miphoneos-version-min=8.0 -isysroot $(PLATFORM_SDK) $(IOS_BITCODE_LDFLAGS)
 
 $(BUILD_DESTDIR)/$(2)/tmp-lib/libmonosgen-2.0.dylib: $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.a | $(BUILD_DESTDIR)/$(2)/tmp-lib
-	$$(Q_GEN) CC="$(IOS_CC)" ./create-shared-library.sh $$< $$@ -arch $(1) -install_name @rpath/libmonosgen-2.0.dylib -miphoneos-version-min=7.0 -isysroot $(PLATFORM_SDK) $(IOS_BITCODE_LDFLAGS)
+	$$(Q_GEN) CC="$(IOS_CC)" ./create-shared-library.sh $$< $$@ -arch $(1) -install_name @rpath/libmonosgen-2.0.dylib -miphoneos-version-min=7.0 -isysroot $(PLATFORM_SDK) $(IOS_BITCODE_LDFLAGS) -lz
 
 $(BUILD_DESTDIR)/$(2)/tmp-lib/libmono-profiler-log.0.dylib: $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log.a $(BUILD_DESTDIR)/$(2)/tmp-lib/libmonosgen-2.0.dylib | $(BUILD_DESTDIR)/$(2)/tmp-lib
 	$$(Q_GEN) CC="$(IOS_CC)" ./create-shared-library.sh $$< $$@ -arch $(1) -install_name @rpath/libmono-profiler-log.dylib -miphoneos-version-min=7.0 -isysroot $(PLATFORM_SDK) $(IOS_BITCODE_LDFLAGS) -L$(BUILD_DESTDIR)/$(2)/tmp-lib -lmonosgen-2.0 -lz
