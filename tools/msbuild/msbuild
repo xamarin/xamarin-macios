@@ -5,5 +5,7 @@ topdir=`cd $thisdir/../.. && pwd`
 
 mac_destdir=$topdir/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 
+unset MSBuildExtensionsPath
+
 MSBUILD_EXE_PATH=$thisdir/MSBuild.dll XAMMAC_FRAMEWORK_PATH=$mac_destdir XamarinMacFrameworkRoot=$mac_destdir mono --debug /Library/Frameworks/Mono.framework/Versions/Current/lib/mono/msbuild/15.0/bin/MSBuild.dll /p:XamarinMacFrameworkRoot=$mac_destdir "$@"
 
