@@ -118,6 +118,7 @@ namespace Security {
 				CFObject.CFRetain (handle);
 				return;
 			}
+
 			using (NSData cert = NSData.FromArray (impl.RawData)) {
 				Initialize (cert);
 			}

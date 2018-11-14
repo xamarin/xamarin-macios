@@ -2905,6 +2905,8 @@ function toggleAll (show)
 	{
 		public bool UseMSBuild;
 
+		public string MSBuildPath => Path.Combine (Harness.RootDirectory, "..", "tools", "msbuild", "msbuild");
+
 		protected override async Task ExecuteAsync ()
 		{
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
@@ -2913,7 +2915,7 @@ function toggleAll (show)
 				await RestoreNugetsAsync (log, resource);
 
 				using (var xbuild = new Process ()) {
-					xbuild.StartInfo.FileName = UseMSBuild ? "msbuild" : "msbuild";
+					xbuild.StartInfo.FileName = MSBuildPath;
 					var args = new StringBuilder ();
 					args.Append ("/verbosity:diagnostic ");
 					if (SpecifyPlatform)
