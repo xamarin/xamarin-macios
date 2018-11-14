@@ -1550,12 +1550,15 @@ namespace Xamarin.Bundler
 			build_tasks.Add (link_task);
 		}
 
-		static void HandleMonoNative (Application app, CompilerFlags compiler_flags)
+		void HandleMonoNative (Application app, CompilerFlags compiler_flags)
 		{
 			if (app.MonoNativeMode == MonoNativeMode.None)
 				return;
+			if (LinkContext != null && !LinkContext.RequireMonoNative)
+				return;
 			var libnative = app.GetLibNativeName ();
 			var libdir = Driver.GetMonoTouchLibDirectory (app);
+			Driver.Log (3, "Adding mono-native library {0} for {1}.", libnative, app);
 			switch (app.LibMonoNativeLinkMode) {
 			case AssemblyBuildTarget.DynamicLibrary:
 				libnative = Path.Combine (libdir, libnative + ".dylib");
@@ -1564,6 +1567,14 @@ namespace Xamarin.Bundler
 			case AssemblyBuildTarget.StaticObject:
 				libnative = Path.Combine (libdir, libnative + ".a");
 				compiler_flags.AddLinkWith (libnative);
+				switch (app.Platform) {
+				case ApplePlatform.iOS:
+					if (LinkContext?.RequireGss ?? false) {
+						Driver.Log (3, "Adding GSS framework reference.");
+						compiler_flags.AddFramework ("GSS");
+					}
+					break;
+				}
 				break;
 			default:
 				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).", app.LibMonoLinkMode);
@@ -1625,6 +1636,23 @@ namespace Xamarin.Bundler
 			}
 
 			Symlinked = true;
+
+			if (App.MonoNativeMode != MonoNativeMode.None) {
+				var lib_native_target = Path.Combine (TargetDirectory, "libmono-native.dylib");
+				Application.TryDelete (lib_native_target);
+
+				try {
+					var lib_native_name = App.GetLibNativeName () + ".dylib";
+					var lib_native_path = Path.Combine (Driver.GetMonoTouchLibDirectory (App), lib_native_name);
+					File.Copy (lib_native_path, lib_native_target);
+					File.SetLastWriteTime (lib_native_path, DateTime.Now);
+					Driver.Log (3, "Adding mono-native library {0} for {1}.", lib_native_name, App.MonoNativeMode);
+				} catch (MonoTouchException) {
+					throw;
+				} catch (Exception ex) {
+					throw new MonoTouchException (1015, true, ex, "Failed to create the Mono.Native library '{0}': {1}", lib_native_target, ex.Message);
+				}
+			}
 
 			if (Driver.Verbosity > 0)
 				Console.WriteLine ("Application ({0}) was built using fast-path for simulator.", string.Join (", ", Abis.ToArray ()));

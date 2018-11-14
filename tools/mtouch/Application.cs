@@ -64,8 +64,7 @@ namespace Xamarin.Bundler {
 	public enum MonoNativeMode {
 		None,
 		Compat,
-		Unified,
-		Combined
+		Unified
 	}
 
 	public partial class Application
@@ -1421,7 +1420,11 @@ namespace Xamarin.Bundler {
 		{
 			switch (Platform) {
 			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
 				MonoNativeMode = DeploymentTarget.Major >= 10 ? MonoNativeMode.Unified : MonoNativeMode.Compat;
+				break;
+			case ApplePlatform.WatchOS:
+				MonoNativeMode = DeploymentTarget.Major >= 3 ? MonoNativeMode.Unified : MonoNativeMode.Compat;
 				break;
 			default:
 				MonoNativeMode = MonoNativeMode.None;
@@ -1608,9 +1611,12 @@ namespace Xamarin.Bundler {
 				info.Sources.Add (GetLibMono (AssemblyBuildTarget.Framework));
 			}
 
+			var require_mono_native = false;
+
 			// Collect files to bundle from every target
 			if (Targets.Count == 1) {
 				bundle_files = Targets [0].BundleFiles;
+				require_mono_native = Targets[0].LinkContext?.RequireMonoNative ?? true;
 			} else {
 				foreach (var target in Targets) {
 					foreach (var kvp in target.BundleFiles) {
@@ -1619,10 +1625,11 @@ namespace Xamarin.Bundler {
 							bundle_files [kvp.Key] = info = new BundleFileInfo () { DylibToFramework = kvp.Value.DylibToFramework };
 						info.Sources.UnionWith (kvp.Value.Sources);
 					}
+					require_mono_native |= target.LinkContext?.RequireMonoNative ?? true;
 				}
 			}
 
-			if (MonoNativeMode != MonoNativeMode.None && LibMonoNativeLinkMode == AssemblyBuildTarget.DynamicLibrary) {
+			if (require_mono_native && MonoNativeMode != MonoNativeMode.None && (LibMonoNativeLinkMode == AssemblyBuildTarget.DynamicLibrary)) {
 				BundleFileInfo info;
 				var lib_native_name = GetLibNativeName () + ".dylib";
 				bundle_files[lib_native_name] = info = new BundleFileInfo ();
@@ -1884,8 +1891,6 @@ namespace Xamarin.Bundler {
 				return "libmono-native-unified";
 			case MonoNativeMode.Compat:
 				return "libmono-native-compat";
-			case MonoNativeMode.Combined:
-				return "libmono-native";
 			default:
 				throw ErrorHelper.CreateError (100, "Invalid mono native type: '{0}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).", MonoNativeMode);
 			}
