@@ -813,6 +813,14 @@ namespace xharness
 			}
 		}
 
+		public bool IsSupported (iOSTestProject project)
+		{
+			if (project.MonoNativeInfo == null)
+				return true;
+			var min_version = MonoNativeHelper.GetMinimumOSVersion (DevicePlatform, project.MonoNativeInfo.Flavor);
+			return Version.Parse (ProductVersion) >= Version.Parse (min_version);
+		}
+
 		public Architecture Architecture {
 			get {
 				var model = ProductType;

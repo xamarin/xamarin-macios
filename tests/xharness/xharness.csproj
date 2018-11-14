@@ -107,6 +107,7 @@
     </Compile>
     <Compile Include="SimpleFileListener.cs" />
     <Compile Include="iOSTarget.cs" />
+    <Compile Include="MonoNativeInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
