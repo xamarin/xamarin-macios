@@ -34,7 +34,9 @@ namespace xharness
 			{ "System.Data.Odbc", null },
 			{ "System.Data.OleDb", null },
 			// System.Web.Services
-			{ "System.Web.Services.Configuration", null }
+			{ "System.Web.Services.Configuration", null },
+			// handle manually via templates
+			{ "test-helpers", null }
 		};
 
 		public BCLTestInfo (Harness harness, string testName)
