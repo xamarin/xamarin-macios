@@ -235,7 +235,6 @@ namespace Intents {
 		InvalidIntentName = 2004,
 		NoAppAvailable = 2005,
 		RequestTimedOut = 3001,
-		MissingInformation = 3002,
 		InvalidUserVocabularyFileLocation = 4000,
 		ExtensionLaunchingTimeout = 5000,
 		ExtensionBringUpFailed = 5001,

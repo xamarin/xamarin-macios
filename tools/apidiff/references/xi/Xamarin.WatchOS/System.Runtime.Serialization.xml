@@ -79,7 +79,6 @@
           <property name="CompilationRelaxations" value="8" />
         </properties>
       </attribute>
-      <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
       <attribute name="System.Runtime.CompilerServices.RuntimeCompatibilityAttribute">
         <properties>
           <property name="WrapNonExceptionThrows" value="True" />
@@ -622,30 +621,6 @@
               </method>
             </methods>
           </class>
-          <class name="DataContractSerializerExtensions" type="class" base="System.Object" sealed="true" abstract="true" charset="Ansi" layout="Auto">
-            <attributes>
-              <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
-            </attributes>
-            <methods>
-              <method name="GetSerializationSurrogateProvider(System.Runtime.Serialization.DataContractSerializer)" attrib="150" static="true" returntype="System.Runtime.Serialization.ISerializationSurrogateProvider">
-                <attributes>
-                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
-                </attributes>
-                <parameters>
-                  <parameter name="serializer" position="0" attrib="0" type="System.Runtime.Serialization.DataContractSerializer" direction="this" />
-                </parameters>
-              </method>
-              <method name="SetSerializationSurrogateProvider(System.Runtime.Serialization.DataContractSerializer, System.Runtime.Serialization.ISerializationSurrogateProvider)" attrib="150" static="true" returntype="System.Void">
-                <attributes>
-                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
-                </attributes>
-                <parameters>
-                  <parameter name="serializer" position="0" attrib="0" type="System.Runtime.Serialization.DataContractSerializer" direction="this" />
-                  <parameter name="provider" position="1" attrib="0" type="System.Runtime.Serialization.ISerializationSurrogateProvider" />
-                </parameters>
-              </method>
-            </methods>
-          </class>
           <class name="DataContractSerializerSettings" type="class" base="System.Object" charset="Ansi" layout="Auto">
             <constructors>
               <constructor name=".ctor()" attrib="6278">
@@ -1065,27 +1040,6 @@
                 </methods>
               </property>
             </properties>
-          </class>
-          <class name="ISerializationSurrogateProvider" type="interface" abstract="true" charset="Ansi" layout="Auto">
-            <methods>
-              <method name="GetDeserializedObject(System.Object, System.Type)" attrib="1478" abstract="true" virtual="true" returntype="System.Object">
-                <parameters>
-                  <parameter name="obj" position="0" attrib="0" type="System.Object" />
-                  <parameter name="targetType" position="1" attrib="0" type="System.Type" />
-                </parameters>
-              </method>
-              <method name="GetObjectToSerialize(System.Object, System.Type)" attrib="1478" abstract="true" virtual="true" returntype="System.Object">
-                <parameters>
-                  <parameter name="obj" position="0" attrib="0" type="System.Object" />
-                  <parameter name="targetType" position="1" attrib="0" type="System.Type" />
-                </parameters>
-              </method>
-              <method name="GetSurrogateType(System.Type)" attrib="1478" abstract="true" virtual="true" returntype="System.Type">
-                <parameters>
-                  <parameter name="type" position="0" attrib="0" type="System.Type" />
-                </parameters>
-              </method>
-            </methods>
           </class>
           <class name="IgnoreDataMemberAttribute" type="class" base="System.Attribute" sealed="true" charset="Ansi" layout="Auto">
             <attributes>

@@ -18115,45 +18115,4 @@ namespace UIKit {
 #endif // !WATCH
 	}
 
-#if !WATCH
-	[iOS (12,1)]
-	[NoWatch][NoTV]
-	[Native]
-	public enum UIPencilPreferredAction : long {
-		Ignore = 0,
-		SwitchEraser,
-		SwitchPrevious,
-		ShowColorPalette,
-	}
-
-	[iOS (12,1)]
-	[NoWatch][NoTV]
-	[BaseType (typeof (NSObject))]
-	interface UIPencilInteraction : UIInteraction {
-		[Static]
-		[Export ("preferredTapAction")]
-		UIPencilPreferredAction PreferredTapAction { get; }
-
-		[Wrap ("WeakDelegate")]
-		[NullAllowed]
-		IUIPencilInteractionDelegate Delegate { get; set; }
-
-		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
-		NSObject WeakDelegate { get; set; }
-
-		[Export ("enabled")]
-		bool Enabled { [Bind ("isEnabled")] get; set; }
-	}
-
-	interface IUIPencilInteractionDelegate {}
-
-	[iOS (12,1)]
-	[NoWatch][NoTV]
-	[Protocol, Model]
-	[BaseType (typeof (NSObject))]
-	interface UIPencilInteractionDelegate {
-		[Export ("pencilInteractionDidTap:")]
-		void DidTap (UIPencilInteraction interaction);
-	}
-#endif // !WATCH
 }

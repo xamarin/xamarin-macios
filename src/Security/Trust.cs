@@ -129,10 +129,6 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode /* OSStatus */ SecTrustEvaluate (IntPtr /* SecTrustRef */ trust, out /* SecTrustResultType */ SecTrustResult result);
 
-		[Deprecated (PlatformName.iOS, 12, 1, message : "Use 'SecTrust.Evaluate (out NSError)' instead.")]
-		[Deprecated (PlatformName.TvOS, 12, 1, message : "Use 'SecTrust.Evaluate (out NSError)' instead.")]
-		[Deprecated (PlatformName.WatchOS, 5, 1, message : "Use 'SecTrust.Evaluate (out NSError)' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, 1, message : "Use 'SecTrust.Evaluate (out NSError)' instead.")]
 		public SecTrustResult Evaluate ()
 		{
 			if (handle == IntPtr.Zero)

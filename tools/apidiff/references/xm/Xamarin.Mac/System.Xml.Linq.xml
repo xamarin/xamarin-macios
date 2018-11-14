@@ -2760,21 +2760,6 @@
               </method>
             </methods>
           </class>
-          <class name="XDocumentExtensions" type="class" base="System.Object" sealed="true" abstract="true" charset="Ansi" layout="Auto">
-            <attributes>
-              <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
-            </attributes>
-            <methods>
-              <method name="ToXPathNavigable(System.Xml.Linq.XNode)" attrib="150" static="true" returntype="System.Xml.XPath.IXPathNavigable">
-                <attributes>
-                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
-                </attributes>
-                <parameters>
-                  <parameter name="node" position="0" attrib="0" type="System.Xml.Linq.XNode" direction="this" />
-                </parameters>
-              </method>
-            </methods>
-          </class>
         </classes>
       </namespace>
     </namespaces>

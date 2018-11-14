@@ -18032,51 +18032,6 @@
               <field name="Y" attrib="6" fieldtype="System.Byte[]" />
             </fields>
           </class>
-          <class name="IncrementalHash" type="class" base="System.Object" sealed="true" charset="Ansi" layout="Auto">
-            <interfaces>
-              <interface name="System.IDisposable" />
-            </interfaces>
-            <properties>
-              <property name="AlgorithmName" attrib="0" ptype="System.Security.Cryptography.HashAlgorithmName">
-                <methods>
-                  <method name="get_AlgorithmName()" attrib="2182" returntype="System.Security.Cryptography.HashAlgorithmName">
-                    <parameters />
-                  </method>
-                </methods>
-              </property>
-            </properties>
-            <methods>
-              <method name="AppendData(System.Byte[])" attrib="134" returntype="System.Void">
-                <parameters>
-                  <parameter name="data" position="0" attrib="0" type="System.Byte[]" />
-                </parameters>
-              </method>
-              <method name="AppendData(System.Byte[], System.Int32, System.Int32)" attrib="134" returntype="System.Void">
-                <parameters>
-                  <parameter name="data" position="0" attrib="0" type="System.Byte[]" />
-                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
-                  <parameter name="count" position="2" attrib="0" type="System.Int32" />
-                </parameters>
-              </method>
-              <method name="CreateHMAC(System.Security.Cryptography.HashAlgorithmName, System.Byte[])" attrib="150" static="true" returntype="System.Security.Cryptography.IncrementalHash">
-                <parameters>
-                  <parameter name="hashAlgorithm" position="0" attrib="0" type="System.Security.Cryptography.HashAlgorithmName" />
-                  <parameter name="key" position="1" attrib="0" type="System.Byte[]" />
-                </parameters>
-              </method>
-              <method name="CreateHash(System.Security.Cryptography.HashAlgorithmName)" attrib="150" static="true" returntype="System.Security.Cryptography.IncrementalHash">
-                <parameters>
-                  <parameter name="hashAlgorithm" position="0" attrib="0" type="System.Security.Cryptography.HashAlgorithmName" />
-                </parameters>
-              </method>
-              <method name="Dispose()" attrib="486" virtual="true" returntype="System.Void">
-                <parameters />
-              </method>
-              <method name="GetHashAndReset()" attrib="134" returntype="System.Byte[]">
-                <parameters />
-              </method>
-            </methods>
-          </class>
           <class name="RSACng" type="class" base="System.Security.Cryptography.RSA" sealed="true" charset="Ansi" layout="Auto">
             <interfaces>
               <interface name="System.IDisposable" />

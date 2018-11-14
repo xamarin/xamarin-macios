@@ -244,47 +244,6 @@
               </constructor>
             </constructors>
           </class>
-          <class name="StringNormalizationExtensions" type="class" base="System.Object" sealed="true" abstract="true" charset="Ansi" layout="Auto">
-            <attributes>
-              <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
-            </attributes>
-            <methods>
-              <method name="IsNormalized(System.String)" attrib="150" static="true" returntype="System.Boolean">
-                <attributes>
-                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
-                </attributes>
-                <parameters>
-                  <parameter name="strInput" position="0" attrib="0" type="System.String" direction="this" />
-                </parameters>
-              </method>
-              <method name="IsNormalized(System.String, System.Text.NormalizationForm)" attrib="150" static="true" returntype="System.Boolean">
-                <attributes>
-                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
-                </attributes>
-                <parameters>
-                  <parameter name="strInput" position="0" attrib="0" type="System.String" direction="this" />
-                  <parameter name="normalizationForm" position="1" attrib="0" type="System.Text.NormalizationForm" />
-                </parameters>
-              </method>
-              <method name="Normalize(System.String)" attrib="150" static="true" returntype="System.String">
-                <attributes>
-                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
-                </attributes>
-                <parameters>
-                  <parameter name="strInput" position="0" attrib="0" type="System.String" direction="this" />
-                </parameters>
-              </method>
-              <method name="Normalize(System.String, System.Text.NormalizationForm)" attrib="150" static="true" returntype="System.String">
-                <attributes>
-                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
-                </attributes>
-                <parameters>
-                  <parameter name="strInput" position="0" attrib="0" type="System.String" direction="this" />
-                  <parameter name="normalizationForm" position="1" attrib="0" type="System.Text.NormalizationForm" />
-                </parameters>
-              </method>
-            </methods>
-          </class>
           <class name="Uri" type="class" base="System.Object" serializable="true" charset="Ansi" layout="Auto">
             <attributes>
               <attribute name="System.ComponentModel.TypeConverterAttribute">
@@ -3105,18 +3064,6 @@
       <namespace name="System.Collections.ObjectModel">
         <classes>
           <class name="ObservableCollection`1" type="class" base="System.Collections.ObjectModel.Collection`1[T]" serializable="true" charset="Ansi" layout="Auto">
-            <attributes>
-              <attribute name="System.Diagnostics.DebuggerDisplayAttribute">
-                <properties>
-                  <property name="Value" value="Count = {Count}" />
-                </properties>
-              </attribute>
-              <attribute name="System.Diagnostics.DebuggerTypeProxyAttribute">
-                <properties>
-                  <property name="ProxyTypeName" value="System.Collections.Generic.CollectionDebugView`1" />
-                </properties>
-              </attribute>
-            </attributes>
             <interfaces>
               <interface name="System.Collections.Generic.ICollection`1[T]" />
               <interface name="System.Collections.Generic.IEnumerable`1[T]" />
@@ -3203,18 +3150,6 @@
             </methods>
           </class>
           <class name="ReadOnlyObservableCollection`1" type="class" base="System.Collections.ObjectModel.ReadOnlyCollection`1[T]" serializable="true" charset="Ansi" layout="Auto">
-            <attributes>
-              <attribute name="System.Diagnostics.DebuggerDisplayAttribute">
-                <properties>
-                  <property name="Value" value="Count = {Count}" />
-                </properties>
-              </attribute>
-              <attribute name="System.Diagnostics.DebuggerTypeProxyAttribute">
-                <properties>
-                  <property name="ProxyTypeName" value="System.Collections.Generic.CollectionDebugView`1" />
-                </properties>
-              </attribute>
-            </attributes>
             <interfaces>
               <interface name="System.Collections.Generic.ICollection`1[T]" />
               <interface name="System.Collections.Generic.IEnumerable`1[T]" />
@@ -3356,9 +3291,6 @@
             </methods>
             <classes>
               <class name="Section" type="struct" base="System.ValueType" sealed="true" charset="Ansi" layout="Sequential">
-                <attributes>
-                  <attribute name="System.Runtime.CompilerServices.IsReadOnlyAttribute" />
-                </attributes>
                 <properties>
                   <property name="Mask" attrib="0" ptype="System.Int16">
                     <methods>
@@ -3741,20 +3673,6 @@
                 </parameters>
               </method>
             </methods>
-            <classes>
-              <class name="DictionaryNode" type="class" base="System.Object" serializable="true" charset="Ansi" layout="Auto">
-                <fields>
-                  <field name="key" attrib="6" fieldtype="System.Object" />
-                  <field name="next" attrib="6" fieldtype="System.Collections.Specialized.ListDictionary+DictionaryNode" />
-                  <field name="value" attrib="6" fieldtype="System.Object" />
-                </fields>
-                <constructors>
-                  <constructor name=".ctor()" attrib="6278">
-                    <parameters />
-                  </constructor>
-                </constructors>
-              </class>
-            </classes>
           </class>
           <class name="NameObjectCollectionBase" type="class" base="System.Object" abstract="true" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
@@ -4439,7 +4357,7 @@
               <method name="GetEnumerator()" attrib="454" virtual="true" returntype="System.Collections.IDictionaryEnumerator">
                 <parameters />
               </method>
-              <method name="GetObjectData(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="454" virtual="true" returntype="System.Void">
+              <method name="GetObjectData(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="16838" virtual="true" returntype="System.Void">
                 <parameters>
                   <parameter name="info" position="0" attrib="0" type="System.Runtime.Serialization.SerializationInfo" />
                   <parameter name="context" position="1" attrib="0" type="System.Runtime.Serialization.StreamingContext" />
@@ -4585,6 +4503,12 @@
           </class>
           <class name="StringDictionary" type="class" base="System.Object" serializable="true" charset="Ansi" layout="Auto">
             <attributes>
+              <attribute name="System.ComponentModel.Design.Serialization.DesignerSerializerAttribute">
+                <properties>
+                  <property name="SerializerTypeName" value="System.Diagnostics.Design.StringDictionaryCodeDomSerializer, System.Design, Version=2.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+                  <property name="SerializerBaseTypeName" value="System.ComponentModel.Design.Serialization.CodeDomSerializer, System.Design, Version=2.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+                </properties>
+              </attribute>
               <attribute name="System.Reflection.DefaultMemberAttribute">
                 <properties>
                   <property name="MemberName" value="Item" />
@@ -21266,61 +21190,6 @@
               </method>
             </methods>
           </class>
-          <class name="StackFrameExtensions" type="class" base="System.Object" sealed="true" abstract="true" charset="Ansi" layout="Auto">
-            <attributes>
-              <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
-            </attributes>
-            <methods>
-              <method name="GetNativeIP(System.Diagnostics.StackFrame)" attrib="150" static="true" returntype="System.IntPtr">
-                <attributes>
-                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
-                </attributes>
-                <parameters>
-                  <parameter name="stackFrame" position="0" attrib="0" type="System.Diagnostics.StackFrame" direction="this" />
-                </parameters>
-              </method>
-              <method name="GetNativeImageBase(System.Diagnostics.StackFrame)" attrib="150" static="true" returntype="System.IntPtr">
-                <attributes>
-                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
-                </attributes>
-                <parameters>
-                  <parameter name="stackFrame" position="0" attrib="0" type="System.Diagnostics.StackFrame" direction="this" />
-                </parameters>
-              </method>
-              <method name="HasILOffset(System.Diagnostics.StackFrame)" attrib="150" static="true" returntype="System.Boolean">
-                <attributes>
-                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
-                </attributes>
-                <parameters>
-                  <parameter name="stackFrame" position="0" attrib="0" type="System.Diagnostics.StackFrame" direction="this" />
-                </parameters>
-              </method>
-              <method name="HasMethod(System.Diagnostics.StackFrame)" attrib="150" static="true" returntype="System.Boolean">
-                <attributes>
-                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
-                </attributes>
-                <parameters>
-                  <parameter name="stackFrame" position="0" attrib="0" type="System.Diagnostics.StackFrame" direction="this" />
-                </parameters>
-              </method>
-              <method name="HasNativeImage(System.Diagnostics.StackFrame)" attrib="150" static="true" returntype="System.Boolean">
-                <attributes>
-                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
-                </attributes>
-                <parameters>
-                  <parameter name="stackFrame" position="0" attrib="0" type="System.Diagnostics.StackFrame" direction="this" />
-                </parameters>
-              </method>
-              <method name="HasSource(System.Diagnostics.StackFrame)" attrib="150" static="true" returntype="System.Boolean">
-                <attributes>
-                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
-                </attributes>
-                <parameters>
-                  <parameter name="stackFrame" position="0" attrib="0" type="System.Diagnostics.StackFrame" direction="this" />
-                </parameters>
-              </method>
-            </methods>
-          </class>
           <class name="Stopwatch" type="class" base="System.Object" charset="Ansi" layout="Auto">
             <fields>
               <field name="Frequency" attrib="54" fieldtype="System.Int64" />
@@ -23459,15 +23328,9 @@
               <property name="ChangeType" attrib="0" ptype="System.IO.WatcherChangeTypes">
                 <methods>
                   <method name="get_ChangeType()" attrib="2182" returntype="System.IO.WatcherChangeTypes">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters />
                   </method>
                   <method name="set_ChangeType(System.IO.WatcherChangeTypes)" attrib="2182" returntype="System.Void">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters>
                       <parameter name="value" position="0" attrib="0" type="System.IO.WatcherChangeTypes" />
                     </parameters>
@@ -23477,15 +23340,9 @@
               <property name="Name" attrib="0" ptype="System.String">
                 <methods>
                   <method name="get_Name()" attrib="2182" returntype="System.String">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters />
                   </method>
                   <method name="set_Name(System.String)" attrib="2182" returntype="System.Void">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters>
                       <parameter name="value" position="0" attrib="0" type="System.String" />
                     </parameters>
@@ -23495,15 +23352,9 @@
               <property name="OldName" attrib="0" ptype="System.String">
                 <methods>
                   <method name="get_OldName()" attrib="2182" returntype="System.String">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters />
                   </method>
                   <method name="set_OldName(System.String)" attrib="2182" returntype="System.Void">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters>
                       <parameter name="value" position="0" attrib="0" type="System.String" />
                     </parameters>
@@ -23513,15 +23364,9 @@
               <property name="TimedOut" attrib="0" ptype="System.Boolean">
                 <methods>
                   <method name="get_TimedOut()" attrib="2182" returntype="System.Boolean">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters />
                   </method>
                   <method name="set_TimedOut(System.Boolean)" attrib="2182" returntype="System.Void">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters>
                       <parameter name="value" position="0" attrib="0" type="System.Boolean" />
                     </parameters>
@@ -25429,19 +25274,8 @@
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <properties>
-              <property name="CachePolicy" attrib="0" ptype="System.Net.Cache.RequestCachePolicy">
-                <methods>
-                  <method name="get_CachePolicy()" attrib="2246" virtual="true" is-override="true" returntype="System.Net.Cache.RequestCachePolicy">
-                    <parameters />
-                  </method>
-                  <method name="set_CachePolicy(System.Net.Cache.RequestCachePolicy)" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
-                    <parameters>
-                      <parameter name="value" position="0" attrib="0" type="System.Net.Cache.RequestCachePolicy" />
-                    </parameters>
-                  </method>
-                </methods>
-              </property>
               <property name="ClientCertificates" attrib="0" ptype="System.Security.Cryptography.X509Certificates.X509CertificateCollection">
+                <attributes />
                 <methods>
                   <method name="get_ClientCertificates()" attrib="2182" returntype="System.Security.Cryptography.X509Certificates.X509CertificateCollection">
                     <parameters />
@@ -25454,6 +25288,7 @@
                 </methods>
               </property>
               <property name="ConnectionGroupName" attrib="0" ptype="System.String">
+                <attributes />
                 <methods>
                   <method name="get_ConnectionGroupName()" attrib="2246" virtual="true" is-override="true" returntype="System.String">
                     <parameters />
@@ -25513,18 +25348,6 @@
                   </method>
                 </methods>
               </property>
-              <property name="DefaultCachePolicy" attrib="0" ptype="System.Net.Cache.RequestCachePolicy">
-                <methods>
-                  <method name="get_DefaultCachePolicy()" attrib="2198" static="true" returntype="System.Net.Cache.RequestCachePolicy">
-                    <parameters />
-                  </method>
-                  <method name="set_DefaultCachePolicy(System.Net.Cache.RequestCachePolicy)" attrib="2198" static="true" returntype="System.Void">
-                    <parameters>
-                      <parameter name="value" position="0" attrib="0" type="System.Net.Cache.RequestCachePolicy" />
-                    </parameters>
-                  </method>
-                </methods>
-              </property>
               <property name="EnableSsl" attrib="0" ptype="System.Boolean">
                 <methods>
                   <method name="get_EnableSsl()" attrib="2182" returntype="System.Boolean">
@@ -25538,6 +25361,7 @@
                 </methods>
               </property>
               <property name="Headers" attrib="0" ptype="System.Net.WebHeaderCollection">
+                <attributes />
                 <methods>
                   <method name="get_Headers()" attrib="2246" virtual="true" is-override="true" returntype="System.Net.WebHeaderCollection">
                     <parameters />
@@ -25550,6 +25374,7 @@
                 </methods>
               </property>
               <property name="KeepAlive" attrib="0" ptype="System.Boolean">
+                <attributes />
                 <methods>
                   <method name="get_KeepAlive()" attrib="2182" returntype="System.Boolean">
                     <parameters />
@@ -25660,6 +25485,7 @@
                 </methods>
               </property>
               <property name="UseDefaultCredentials" attrib="0" ptype="System.Boolean">
+                <attributes />
                 <methods>
                   <method name="get_UseDefaultCredentials()" attrib="2246" virtual="true" is-override="true" returntype="System.Boolean">
                     <parameters />
@@ -41223,34 +41049,6 @@
           </class>
         </classes>
       </namespace>
-      <namespace name="System.Security">
-        <classes>
-          <class name="SecureStringMarshal" type="class" base="System.Object" sealed="true" abstract="true" charset="Ansi" layout="Auto">
-            <methods>
-              <method name="SecureStringToCoTaskMemAnsi(System.Security.SecureString)" attrib="150" static="true" returntype="System.IntPtr">
-                <parameters>
-                  <parameter name="s" position="0" attrib="0" type="System.Security.SecureString" />
-                </parameters>
-              </method>
-              <method name="SecureStringToCoTaskMemUnicode(System.Security.SecureString)" attrib="150" static="true" returntype="System.IntPtr">
-                <parameters>
-                  <parameter name="s" position="0" attrib="0" type="System.Security.SecureString" />
-                </parameters>
-              </method>
-              <method name="SecureStringToGlobalAllocAnsi(System.Security.SecureString)" attrib="150" static="true" returntype="System.IntPtr">
-                <parameters>
-                  <parameter name="s" position="0" attrib="0" type="System.Security.SecureString" />
-                </parameters>
-              </method>
-              <method name="SecureStringToGlobalAllocUnicode(System.Security.SecureString)" attrib="150" static="true" returntype="System.IntPtr">
-                <parameters>
-                  <parameter name="s" position="0" attrib="0" type="System.Security.SecureString" />
-                </parameters>
-              </method>
-            </methods>
-          </class>
-        </classes>
-      </namespace>
       <namespace name="System.Security.AccessControl">
         <classes>
           <class name="SemaphoreAccessRule" type="class" base="System.Security.AccessControl.AccessRule" sealed="true" charset="Ansi" layout="Auto">
@@ -43965,16 +43763,6 @@
           </class>
           <class name="CaptureCollection" type="class" base="System.Object" serializable="true" charset="Ansi" layout="Auto">
             <attributes>
-              <attribute name="System.Diagnostics.DebuggerDisplayAttribute">
-                <properties>
-                  <property name="Value" value="Count = {Count}" />
-                </properties>
-              </attribute>
-              <attribute name="System.Diagnostics.DebuggerTypeProxyAttribute">
-                <properties>
-                  <property name="ProxyTypeName" value="System.Text.RegularExpressions.RegexCollectionDebuggerProxy`1&lt;System.Text.RegularExpressions.Capture&gt;" />
-                </properties>
-              </attribute>
               <attribute name="System.Reflection.DefaultMemberAttribute">
                 <properties>
                   <property name="MemberName" value="Item" />
@@ -43982,14 +43770,8 @@
               </attribute>
             </attributes>
             <interfaces>
-              <interface name="System.Collections.Generic.ICollection`1[System.Text.RegularExpressions.Capture]" />
-              <interface name="System.Collections.Generic.IEnumerable`1[System.Text.RegularExpressions.Capture]" />
-              <interface name="System.Collections.Generic.IList`1[System.Text.RegularExpressions.Capture]" />
-              <interface name="System.Collections.Generic.IReadOnlyCollection`1[System.Text.RegularExpressions.Capture]" />
-              <interface name="System.Collections.Generic.IReadOnlyList`1[System.Text.RegularExpressions.Capture]" />
               <interface name="System.Collections.ICollection" />
               <interface name="System.Collections.IEnumerable" />
-              <interface name="System.Collections.IList" />
             </interfaces>
             <properties>
               <property name="Count" attrib="0" ptype="System.Int32">
@@ -44001,7 +43783,7 @@
               </property>
               <property name="IsReadOnly" attrib="0" ptype="System.Boolean">
                 <methods>
-                  <method name="get_IsReadOnly()" attrib="2534" virtual="true" returntype="System.Boolean">
+                  <method name="get_IsReadOnly()" attrib="2182" returntype="System.Boolean">
                     <parameters />
                   </method>
                 </methods>
@@ -44015,7 +43797,7 @@
               </property>
               <property name="Item" attrib="0" ptype="System.Text.RegularExpressions.Capture" params="System.Int32">
                 <methods>
-                  <method name="get_Item(System.Int32)" attrib="2534" virtual="true" returntype="System.Text.RegularExpressions.Capture">
+                  <method name="get_Item(System.Int32)" attrib="2182" returntype="System.Text.RegularExpressions.Capture">
                     <parameters>
                       <parameter name="i" position="0" attrib="0" type="System.Int32" />
                     </parameters>
@@ -44034,12 +43816,6 @@
               <method name="CopyTo(System.Array, System.Int32)" attrib="486" virtual="true" returntype="System.Void">
                 <parameters>
                   <parameter name="array" position="0" attrib="0" type="System.Array" />
-                  <parameter name="arrayIndex" position="1" attrib="0" type="System.Int32" />
-                </parameters>
-              </method>
-              <method name="CopyTo(System.Text.RegularExpressions.Capture[], System.Int32)" attrib="486" virtual="true" returntype="System.Void">
-                <parameters>
-                  <parameter name="array" position="0" attrib="0" type="System.Text.RegularExpressions.Capture[]" />
                   <parameter name="arrayIndex" position="1" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
@@ -44082,16 +43858,6 @@
           </class>
           <class name="GroupCollection" type="class" base="System.Object" serializable="true" charset="Ansi" layout="Auto">
             <attributes>
-              <attribute name="System.Diagnostics.DebuggerDisplayAttribute">
-                <properties>
-                  <property name="Value" value="Count = {Count}" />
-                </properties>
-              </attribute>
-              <attribute name="System.Diagnostics.DebuggerTypeProxyAttribute">
-                <properties>
-                  <property name="ProxyTypeName" value="System.Text.RegularExpressions.RegexCollectionDebuggerProxy`1&lt;System.Text.RegularExpressions.Group&gt;" />
-                </properties>
-              </attribute>
               <attribute name="System.Reflection.DefaultMemberAttribute">
                 <properties>
                   <property name="MemberName" value="Item" />
@@ -44099,14 +43865,8 @@
               </attribute>
             </attributes>
             <interfaces>
-              <interface name="System.Collections.Generic.ICollection`1[System.Text.RegularExpressions.Group]" />
-              <interface name="System.Collections.Generic.IEnumerable`1[System.Text.RegularExpressions.Group]" />
-              <interface name="System.Collections.Generic.IList`1[System.Text.RegularExpressions.Group]" />
-              <interface name="System.Collections.Generic.IReadOnlyCollection`1[System.Text.RegularExpressions.Group]" />
-              <interface name="System.Collections.Generic.IReadOnlyList`1[System.Text.RegularExpressions.Group]" />
               <interface name="System.Collections.ICollection" />
               <interface name="System.Collections.IEnumerable" />
-              <interface name="System.Collections.IList" />
             </interfaces>
             <properties>
               <property name="Count" attrib="0" ptype="System.Int32">
@@ -44118,7 +43878,7 @@
               </property>
               <property name="IsReadOnly" attrib="0" ptype="System.Boolean">
                 <methods>
-                  <method name="get_IsReadOnly()" attrib="2534" virtual="true" returntype="System.Boolean">
+                  <method name="get_IsReadOnly()" attrib="2182" returntype="System.Boolean">
                     <parameters />
                   </method>
                 </methods>
@@ -44132,7 +43892,7 @@
               </property>
               <property name="Item" attrib="0" ptype="System.Text.RegularExpressions.Group" params="System.Int32">
                 <methods>
-                  <method name="get_Item(System.Int32)" attrib="2534" virtual="true" returntype="System.Text.RegularExpressions.Group">
+                  <method name="get_Item(System.Int32)" attrib="2182" returntype="System.Text.RegularExpressions.Group">
                     <parameters>
                       <parameter name="groupnum" position="0" attrib="0" type="System.Int32" />
                     </parameters>
@@ -44160,12 +43920,6 @@
               <method name="CopyTo(System.Array, System.Int32)" attrib="486" virtual="true" returntype="System.Void">
                 <parameters>
                   <parameter name="array" position="0" attrib="0" type="System.Array" />
-                  <parameter name="arrayIndex" position="1" attrib="0" type="System.Int32" />
-                </parameters>
-              </method>
-              <method name="CopyTo(System.Text.RegularExpressions.Group[], System.Int32)" attrib="486" virtual="true" returntype="System.Void">
-                <parameters>
-                  <parameter name="array" position="0" attrib="0" type="System.Text.RegularExpressions.Group[]" />
                   <parameter name="arrayIndex" position="1" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
@@ -44209,16 +43963,6 @@
           </class>
           <class name="MatchCollection" type="class" base="System.Object" serializable="true" charset="Ansi" layout="Auto">
             <attributes>
-              <attribute name="System.Diagnostics.DebuggerDisplayAttribute">
-                <properties>
-                  <property name="Value" value="Count = {Count}" />
-                </properties>
-              </attribute>
-              <attribute name="System.Diagnostics.DebuggerTypeProxyAttribute">
-                <properties>
-                  <property name="ProxyTypeName" value="System.Text.RegularExpressions.RegexCollectionDebuggerProxy`1&lt;System.Text.RegularExpressions.Match&gt;" />
-                </properties>
-              </attribute>
               <attribute name="System.Reflection.DefaultMemberAttribute">
                 <properties>
                   <property name="MemberName" value="Item" />
@@ -44226,14 +43970,8 @@
               </attribute>
             </attributes>
             <interfaces>
-              <interface name="System.Collections.Generic.ICollection`1[System.Text.RegularExpressions.Match]" />
-              <interface name="System.Collections.Generic.IEnumerable`1[System.Text.RegularExpressions.Match]" />
-              <interface name="System.Collections.Generic.IList`1[System.Text.RegularExpressions.Match]" />
-              <interface name="System.Collections.Generic.IReadOnlyCollection`1[System.Text.RegularExpressions.Match]" />
-              <interface name="System.Collections.Generic.IReadOnlyList`1[System.Text.RegularExpressions.Match]" />
               <interface name="System.Collections.ICollection" />
               <interface name="System.Collections.IEnumerable" />
-              <interface name="System.Collections.IList" />
             </interfaces>
             <properties>
               <property name="Count" attrib="0" ptype="System.Int32">
@@ -44245,7 +43983,7 @@
               </property>
               <property name="IsReadOnly" attrib="0" ptype="System.Boolean">
                 <methods>
-                  <method name="get_IsReadOnly()" attrib="2534" virtual="true" returntype="System.Boolean">
+                  <method name="get_IsReadOnly()" attrib="2182" returntype="System.Boolean">
                     <parameters />
                   </method>
                 </methods>
@@ -44281,18 +44019,12 @@
                   <parameter name="arrayIndex" position="1" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
-              <method name="CopyTo(System.Text.RegularExpressions.Match[], System.Int32)" attrib="486" virtual="true" returntype="System.Void">
-                <parameters>
-                  <parameter name="array" position="0" attrib="0" type="System.Text.RegularExpressions.Match[]" />
-                  <parameter name="arrayIndex" position="1" attrib="0" type="System.Int32" />
-                </parameters>
-              </method>
               <method name="GetEnumerator()" attrib="486" virtual="true" returntype="System.Collections.IEnumerator">
                 <parameters />
               </method>
             </methods>
           </class>
-          <class name="MatchEvaluator" type="delegate" base="System.MulticastDelegate" sealed="true" charset="Ansi" layout="Auto">
+          <class name="MatchEvaluator" type="delegate" base="System.MulticastDelegate" sealed="true" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
               <interface name="System.ICloneable" />
               <interface name="System.Runtime.Serialization.ISerializable" />
@@ -44330,13 +44062,21 @@
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <fields>
-              <field name="InfiniteMatchTimeout" attrib="54" fieldtype="System.TimeSpan" />
+              <field name="InfiniteMatchTimeout" attrib="182" fieldtype="System.TimeSpan" />
               <field name="capnames" attrib="5" fieldtype="System.Collections.Hashtable" />
               <field name="caps" attrib="5" fieldtype="System.Collections.Hashtable" />
               <field name="capsize" attrib="5" fieldtype="System.Int32" />
               <field name="capslist" attrib="5" fieldtype="System.String[]" />
               <field name="factory" attrib="5" fieldtype="System.Text.RegularExpressions.RegexRunnerFactory" />
-              <field name="internalMatchTimeout" attrib="5" fieldtype="System.TimeSpan" />
+              <field name="internalMatchTimeout" attrib="5" fieldtype="System.TimeSpan">
+                <attributes>
+                  <attribute name="System.Runtime.Serialization.OptionalFieldAttribute">
+                    <properties>
+                      <property name="VersionAdded" value="2" />
+                    </properties>
+                  </attribute>
+                </attributes>
+              </field>
               <field name="pattern" attrib="5" fieldtype="System.String" />
               <field name="roptions" attrib="5" fieldtype="System.Text.RegularExpressions.RegexOptions" />
             </fields>
@@ -44731,7 +44471,7 @@
               <method name="UseOptionC()" attrib="132" returntype="System.Boolean">
                 <parameters />
               </method>
-              <method name="UseOptionR()" attrib="133" returntype="System.Boolean">
+              <method name="UseOptionR()" attrib="132" returntype="System.Boolean">
                 <parameters />
               </method>
               <method name="ValidateMatchTimeout(System.TimeSpan)" attrib="149" static="true" returntype="System.Void">
@@ -44767,15 +44507,9 @@
               <property name="IsPublic" attrib="0" ptype="System.Boolean">
                 <methods>
                   <method name="get_IsPublic()" attrib="2182" returntype="System.Boolean">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters />
                   </method>
                   <method name="set_IsPublic(System.Boolean)" attrib="2182" returntype="System.Void">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters>
                       <parameter name="value" position="0" attrib="0" type="System.Boolean" />
                     </parameters>
@@ -44821,15 +44555,9 @@
               <property name="Options" attrib="0" ptype="System.Text.RegularExpressions.RegexOptions">
                 <methods>
                   <method name="get_Options()" attrib="2182" returntype="System.Text.RegularExpressions.RegexOptions">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters />
                   </method>
                   <method name="set_Options(System.Text.RegularExpressions.RegexOptions)" attrib="2182" returntype="System.Void">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters>
                       <parameter name="value" position="0" attrib="0" type="System.Text.RegularExpressions.RegexOptions" />
                     </parameters>
@@ -44863,7 +44591,7 @@
                   <parameter name="message" position="0" attrib="0" type="System.String" />
                 </parameters>
               </constructor>
-              <constructor name=".ctor(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="6276">
+              <constructor name=".ctor(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="22660">
                 <parameters>
                   <parameter name="info" position="0" attrib="0" type="System.Runtime.Serialization.SerializationInfo" />
                   <parameter name="context" position="1" attrib="0" type="System.Runtime.Serialization.StreamingContext" />
@@ -44886,30 +44614,21 @@
             <properties>
               <property name="Input" attrib="0" ptype="System.String">
                 <methods>
-                  <method name="get_Input()" attrib="2182" returntype="System.String">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
+                  <method name="get_Input()" attrib="18566" returntype="System.String">
                     <parameters />
                   </method>
                 </methods>
               </property>
               <property name="MatchTimeout" attrib="0" ptype="System.TimeSpan">
                 <methods>
-                  <method name="get_MatchTimeout()" attrib="2182" returntype="System.TimeSpan">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
+                  <method name="get_MatchTimeout()" attrib="18566" returntype="System.TimeSpan">
                     <parameters />
                   </method>
                 </methods>
               </property>
               <property name="Pattern" attrib="0" ptype="System.String">
                 <methods>
-                  <method name="get_Pattern()" attrib="2182" returntype="System.String">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
+                  <method name="get_Pattern()" attrib="18566" returntype="System.String">
                     <parameters />
                   </method>
                 </methods>
@@ -44939,6 +44658,13 @@
             </fields>
           </class>
           <class name="RegexRunner" type="class" base="System.Object" abstract="true" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.ComponentModel.EditorBrowsableAttribute">
+                <properties>
+                  <property name="State" value="Never" />
+                </properties>
+              </attribute>
+            </attributes>
             <fields>
               <field name="runcrawl" attrib="5" fieldtype="System.Int32[]" />
               <field name="runcrawlpos" attrib="5" fieldtype="System.Int32" />
@@ -45082,6 +44808,13 @@
             </methods>
           </class>
           <class name="RegexRunnerFactory" type="class" base="System.Object" abstract="true" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.ComponentModel.EditorBrowsableAttribute">
+                <properties>
+                  <property name="State" value="Never" />
+                </properties>
+              </attribute>
+            </attributes>
             <constructors>
               <constructor name=".ctor()" attrib="6276">
                 <parameters />

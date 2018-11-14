@@ -221,14 +221,6 @@ namespace GameController {
 
 		[Export ("rightTrigger")]
 		GCControllerButtonInput RightTrigger { get; }
-
-		[TV (12, 1), Mac (10, 14, 1, onlyOn64: true), iOS (12, 1)]
-		[NullAllowed, Export ("leftThumbstickButton")]
-		GCControllerButtonInput LeftThumbstickButton { get; }
-
-		[TV (12, 1), Mac (10, 14, 1, onlyOn64: true), iOS (12, 1)]
-		[NullAllowed, Export ("rightThumbstickButton")]
-		GCControllerButtonInput RightThumbstickButton { get; }
 	}
 
 	[iOS (7,0)]
