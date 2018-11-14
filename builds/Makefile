@@ -335,10 +335,10 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-2.0.dylib $(MAC_DESTDIR)$
 	$(Q_LN) ln -sf libmonosgen-2.0$(suffix $@) $@
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig/mono-2.pc: mac32/data/mono-2.pc | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig
-	$(Q_CP) cp $< $@
+	$(Q_CP) $(CP) $< $@
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/etc/mono/assemblies/System/System.config: mac-System.config | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/etc/mono/assemblies/System
-	$(Q_CP) cp $< $@
+	$(Q_CP) $(CP) $< $@
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bmac-mobile-mono: install/mac64/bin/mono-sgen | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
 	$(Q) install -m 0755 $< $@
@@ -644,11 +644,11 @@ TMP_BCL_TARGET_DIRS = \
 	$(BUILD_DESTDIR)/bcl/xammac_net_4_5/Facades \
 
 $(BUILD_DESTDIR)/bcl/%.dll: $(MONO_PATH)/mcs/class/lib/%.dll | $(TMP_BCL_TARGET_DIRS)
-	$(Q) cp $< $@
+	$(Q) $(CP) $< $@
 	$(Q_SN) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
 
 $(BUILD_DESTDIR)/bcl/%.pdb: $(MONO_PATH)/mcs/class/lib/%.pdb | $(TMP_BCL_TARGET_DIRS)
-	$(Q) cp $< $@
+	$(Q) $(CP) $< $@
 
 $(IOS_BCL_TARGETS_DIRS) $(WATCH_BCL_TARGETS_DIRS) $(TVOS_BCL_TARGETS_DIRS):
 	$(Q) mkdir -p $@
@@ -731,8 +731,8 @@ clean-local:: clean-$(2)
 
 .stamp-build-$(2): $(MONO_PATH)/configure $(MONO_DEPENDENCIES) $(BUILD_DESTDIR)/$(2)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(3) $(SDK_ARGS)
-	$(Q) cp -r $(SDK_DESTDIR)/ios-$(4)/lib $(BUILD_DESTDIR)/$(2)
-	$(Q) cp -r $(SDK_DESTDIR)/ios-$(4)/include $(BUILD_DESTDIR)/$(2)
+	$(Q) $(CP) -r $(SDK_DESTDIR)/ios-$(4)/lib $(BUILD_DESTDIR)/$(2)
+	$(Q) $(CP) -r $(SDK_DESTDIR)/ios-$(4)/include $(BUILD_DESTDIR)/$(2)
 	$(Q) touch $$@
 
 build-$(2): .stamp-build-$(2)
@@ -764,7 +764,7 @@ $(BUILD_DESTDIR)/$(2)/lib/libmono-native-compat.dylib: .stamp-build-$(2)
 $(BUILD_DESTDIR)/$(2)/lib/libmono-native-unified.dylib: .stamp-build-$(2)
 
 $(BUILD_DESTDIR)/$(2)/tmp-lib/libmono-profiler-log.0.dylib: $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log.0.dylib | $(BUILD_DESTDIR)/$(2)/tmp-lib
-	$(Q) cp $$< $$@
+	$(Q) $(CP) $$< $$@
 	$(Q) install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/ios-$(4)/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $$@
 
 $(BUILD_DESTDIR)/$(2):
@@ -839,12 +839,12 @@ $(IPHONESIMULATOR_DIRECTORIES):
 	$(Q) mkdir -p $@
 
 $(IOS_DESTDIR)$(IPHONESIMULATOR_SDK)/Frameworks/Mono.framework/Mono: $(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmonosgen-2.0.dylib | $(IOS_DESTDIR)$(IPHONESIMULATOR_SDK)/Frameworks/Mono.framework
-	$(Q) cp $< $@
+	$(Q) $(CP) $< $@
 	$(Q) install_name_tool -id @rpath/Mono.framework/Mono $@
 	$(Q) dsymutil -t 4 -o $(patsubst %/,%,$(dir $@)).dSYM $@
 
 $(IOS_DESTDIR)$(IPHONESIMULATOR_SDK)/Frameworks/Mono.framework/Info.plist: Mono.framework-Info.plist | $(IOS_DESTDIR)$(IPHONESIMULATOR_SDK)/Frameworks/Mono.framework
-	$(Q) cp $< $@
+	$(Q) $(CP) $< $@
 
 install-iphonesimulator:: $(IPHONESIMULATOR_TARGETS)
 
@@ -866,8 +866,8 @@ endif
 .stamp-build-watchsimulator: $(MONO_PATH)/configure $(MONO_DEPENDENCIES)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-simwatch $(SDK_ARGS)
 	$(Q) mkdir -p $(BUILD_DESTDIR)/watchsimulator
-	$(Q) cp -r $(SDK_DESTDIR)/ios-simwatch-release/lib $(BUILD_DESTDIR)/watchsimulator
-	$(Q) cp -r $(SDK_DESTDIR)/ios-simwatch-release/include $(BUILD_DESTDIR)/watchsimulator
+	$(Q) $(CP) -r $(SDK_DESTDIR)/ios-simwatch-release/lib $(BUILD_DESTDIR)/watchsimulator
+	$(Q) $(CP) -r $(SDK_DESTDIR)/ios-simwatch-release/include $(BUILD_DESTDIR)/watchsimulator
 	$(Q) touch $@
 
 build-watchsimulator: .stamp-build-watchsimulator
@@ -918,12 +918,12 @@ $(WATCHSIMULATOR_DIRECTORIES):
 	$(Q) mkdir -p $@
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/Frameworks/Mono.framework/Mono: $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.dylib | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/Frameworks/Mono.framework
-	$(Q) cp $< $@
+	$(Q) $(CP) $< $@
 	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/Mono.framework/Mono $@
 	$(Q) dsymutil -t 4 -o $(patsubst %/,%,$(dir $@)).dSYM $@
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/Frameworks/Mono.framework/Info.plist: Mono.framework-watchos.Info.plist | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/Frameworks/Mono.framework
-	$(Q) cp $< $@
+	$(Q) $(CP) $< $@
 
 install-watchsimulator: $(WATCHSIMULATOR_TARGETS)
 
@@ -945,8 +945,8 @@ endif
 .stamp-build-tvsimulator: $(MONO_PATH)/configure $(MONO_DEPENDENCIES)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-simtv $(SDK_ARGS)
 	$(Q) mkdir -p $(BUILD_DESTDIR)/tvsimulator
-	$(Q) cp -r $(SDK_DESTDIR)/ios-simtv-release/lib $(BUILD_DESTDIR)/tvsimulator
-	$(Q) cp -r $(SDK_DESTDIR)/ios-simtv-release/include $(BUILD_DESTDIR)/tvsimulator
+	$(Q) $(CP) -r $(SDK_DESTDIR)/ios-simtv-release/lib $(BUILD_DESTDIR)/tvsimulator
+	$(Q) $(CP) -r $(SDK_DESTDIR)/ios-simtv-release/include $(BUILD_DESTDIR)/tvsimulator
 	$(Q) touch $@
 
 build-tvsimulator: .stamp-build-tvsimulator
@@ -997,12 +997,12 @@ $(TVSIMULATOR_DIRECTORIES):
 	$(Q) mkdir -p $@
 
 $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/Frameworks/Mono.framework/Mono: $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.dylib | $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/Frameworks/Mono.framework
-	$(Q) cp $< $@
+	$(Q) $(CP) $< $@
 	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/Mono.framework/Mono $@
 	$(Q) dsymutil -t 4 -o $(patsubst %/,%,$(dir $@)).dSYM $@
 
 $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/Frameworks/Mono.framework/Info.plist: Mono.framework-tvos.Info.plist | $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/Frameworks/Mono.framework
-	$(Q) cp $< $@
+	$(Q) $(CP) $< $@
 
 install-tvsimulator: $(TVSIMULATOR_TARGETS)
 
@@ -1036,7 +1036,7 @@ clean-local:: clean-$(2)
 .stamp-build-$(2): $(MONO_PATH)/configure $(SDK_CONFIG) $(MONO_DEPENDENCIES)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(3) $(SDK_ARGS)
 	$(Q) mkdir -p $(BUILD_DESTDIR)/$(2)
-	$(Q) cp -r $(SDK_DESTDIR)/ios-$(3)-release/* $(BUILD_DESTDIR)/$(2)
+	$(Q) $(CP) -r $(SDK_DESTDIR)/ios-$(3)-release/* $(BUILD_DESTDIR)/$(2)
 	$(Q) touch $$@
 
 build-$(2): .stamp-build-$(2)
@@ -1209,7 +1209,7 @@ $(IOS_DESTDIR)$(IPHONEOS_SDK)/Frameworks/Mono.framework/Mono: $(TARGET_MONOFRAME
 	$(Q) dsymutil -t 4 -o $(patsubst %/,%,$(dir $@)).dSYM $@
 
 $(IOS_DESTDIR)$(IPHONEOS_SDK)/Frameworks/Mono.framework/Info.plist: Mono.framework-Info.plist | $(IOS_DESTDIR)$(IPHONEOS_SDK)/Frameworks/Mono.framework
-	$(Q) cp $< $@
+	$(Q) $(CP) $< $@
 
 install-iphoneos:: $(IPHONEOS_TARGETS)
 
@@ -1238,7 +1238,7 @@ watchos:: targetwatch
 .stamp-build-targetwatch: $(MONO_PATH)/configure $(SDK_CONFIG) $(MONO_DEPENDENCIES)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-targetwatch $(SDK_ARGS)
 	$(Q) mkdir -p $(BUILD_DESTDIR)/targetwatch
-	$(Q) cp -r $(SDK_DESTDIR)/ios-targetwatch-release/* $(BUILD_DESTDIR)/targetwatch
+	$(Q) $(CP) -r $(SDK_DESTDIR)/ios-targetwatch-release/* $(BUILD_DESTDIR)/targetwatch
 	$(Q) touch $@
 
 build-targetwatch: .stamp-build-targetwatch
@@ -1313,11 +1313,11 @@ $(WATCHOS_DIRECTORIES):
 	$(Q) mkdir -p $@
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Mono: $(BUILD_DESTDIR)/targetwatch/tmp-lib/Mono | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework
-	$(Q) cp $< $@
+	$(Q) $(CP) $< $@
 	$(Q) dsymutil -t 4 -o $(patsubst %/,%,$(dir $@)).dSYM $@
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Info.plist: Mono.framework-watchos.Info.plist | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework
-	$(Q) cp $< $@
+	$(Q) $(CP) $< $@
 
 $(BUILD_DESTDIR)/targetwatch/tmp-lib/Mono: $(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.a
 	$(Q_GEN) CC="$(IOS_CC)" ./create-shared-library.sh $< $@ -arch armv7k -install_name @rpath/Mono.framework/Mono -mwatchos-version-min=$(MIN_WATCHOS_SDK_VERSION) -isysroot $(DEVICEWATCH_SDK) -lc++ -fembed-bitcode
@@ -1349,7 +1349,7 @@ tvos:: targettv
 .stamp-build-targettv: $(MONO_PATH)/configure $(SDK_CONFIG) $(MONO_DEPENDENCIES)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-targettv $(SDK_ARGS)
 	$(Q) mkdir -p $(BUILD_DESTDIR)/targettv
-	$(Q) cp -r $(SDK_DESTDIR)/ios-targettv-release/* $(BUILD_DESTDIR)/targettv
+	$(Q) $(CP) -r $(SDK_DESTDIR)/ios-targettv-release/* $(BUILD_DESTDIR)/targettv
 	$(Q) touch $@
 
 build-targettv: .stamp-build-targettv
@@ -1423,11 +1423,11 @@ $(TVOS_DIRECTORIES):
 	$(Q) mkdir -p $@
 
 $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Mono: $(BUILD_DESTDIR)/targettv/tmp-lib/Mono | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework
-	$(Q) cp $< $@
+	$(Q) $(CP) $< $@
 	$(Q) dsymutil -t 4 -o $(patsubst %/,%,$(dir $@)).dSYM $@
 
 $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Info.plist: Mono.framework-tvos.Info.plist | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework
-	$(Q) cp $< $@
+	$(Q) $(CP) $< $@
 
 $(BUILD_DESTDIR)/targettv/tmp-lib/Mono: $(BUILD_DESTDIR)/targettv/lib/libmonosgen-2.0.a
 	$(Q_GEN) CC="$(IOS_CC)" ./create-shared-library.sh $< $@ -arch arm64 -install_name @rpath/Mono.framework/Mono -mtvos-version-min=$(MIN_TVOS_SDK_VERSION) -isysroot $(DEVICETV_SDK) -lc++ -fembed-bitcode

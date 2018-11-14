@@ -267,7 +267,7 @@ endif
 endif
 	$(Q) $(MAKE) all -j8
 	$(Q) $(MAKE) -j8 ios-markdown tvos-markdown watchos-markdown macos-markdown
-	$(Q) cp api-diff.html index.html
+	$(Q) $(CP) api-diff.html index.html
 	@echo "@MonkeyWrench: AddFile: $(CURDIR)/index.html"
 	@echo "@MonkeyWrench: AddFile: $(CURDIR)/api-diff.html"
 	@# remove empty files so they're not uploaded
@@ -282,6 +282,6 @@ endif
 jenkins-api-diff:
 	-$(MAKE) wrench-api-diff
 	$(Q) mkdir -p $(JENKINS_RESULTS_DIRECTORY)/api-diff
-	$(Q) cp *.html $(JENKINS_RESULTS_DIRECTORY)/api-diff
-	$(Q) cp *.md $(JENKINS_RESULTS_DIRECTORY)/api-diff
-	$(Q) cp -R diff $(JENKINS_RESULTS_DIRECTORY)/api-diff
+	$(Q) $(CP) *.html $(JENKINS_RESULTS_DIRECTORY)/api-diff
+	$(Q) $(CP) *.md $(JENKINS_RESULTS_DIRECTORY)/api-diff
+	$(Q) $(CP) -R diff $(JENKINS_RESULTS_DIRECTORY)/api-diff
