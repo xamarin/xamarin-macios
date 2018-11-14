@@ -14,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using Xamarin.Tests;
 
 using NUnit.Framework;
 
@@ -153,10 +154,26 @@ namespace Introspection
 				var dllimport = mi.GetCustomAttribute<DllImportAttribute> ();
 
 				string libname = dllimport.Value;
-				if (libname == "__Internal" || SkipLibrary (libname))
+				switch (libname) {
+				case "__Internal":
+					continue;
+				case "System.Native":
+				case "System.Security.Cryptography.Native.Apple":
+				case "System.Net.Security.Native":
+					if (MonoNativeConfig.LinkMode == MonoNativeLinkMode.None)
+						continue;
+#if __IOS__
+					libname = MonoNativeConfig.GetPInvokeLibraryName (MonoNativeFlavor.Compat, MonoNativeConfig.LinkMode);
+#else
+					libname = null;
+#endif
+					break;
+				}
+
+				if (SkipLibrary (libname))
 					continue;
 
-				string path = FindLibrary (dllimport.Value, requiresFullPath: true);
+				string path = FindLibrary (libname, requiresFullPath: true);
 
 				string name = dllimport.EntryPoint ?? mi.Name;
 				if (Skip (name))
@@ -204,6 +221,17 @@ namespace Introspection
 					case "libc":
 						// we still have some rogue/not-fully-qualified DllImport
 						path = "/usr/lib/libSystem.dylib";
+						break;
+					case "System.Native":
+					case "System.Security.Cryptography.Native.Apple":
+					case "System.Net.Security.Native":
+						if (MonoNativeConfig.LinkMode == MonoNativeLinkMode.None)
+							continue;
+#if __IOS__
+						path = MonoNativeConfig.GetPInvokeLibraryName (MonoNativeFlavor.Compat, MonoNativeConfig.LinkMode);
+#else
+						path = null;
+#endif
 						break;
 					}
 
@@ -257,6 +285,14 @@ namespace Introspection
 		public void SystemCore ()
 		{
 			var a = typeof (Enumerable).Assembly;
+			if (!SkipAssembly (a))
+				Check (a);
+		}
+
+		[Test]
+		public void SystemData ()
+		{
+			var a = typeof (System.Data.SqlClient.SqlCredential).Assembly;
 			if (!SkipAssembly (a))
 				Check (a);
 		}

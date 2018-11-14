@@ -114,6 +114,9 @@
     <Compile Include="..\..\common\TestRuntime.cs">
       <Link>TestRuntime.cs</Link>
     </Compile>
+    <Compile Include="..\..\common\MonoNativeConfig.cs">
+      <Link>MonoNativeConfig.cs</Link>
+    </Compile>
     <Compile Include="MacApiTypoTest.cs" />
     <Compile Include="..\ApiAvailabilityTest.cs">
       <Link>ApiAvailabilityTest.cs</Link>
