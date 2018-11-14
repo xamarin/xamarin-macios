@@ -69,8 +69,7 @@ namespace Xamarin.Bundler {
 	public enum MonoNativeMode {
 		None,
 		Compat,
-		Unified,
-		Combined
+		Unified
 	}
 
 	public static partial class Driver {
@@ -506,11 +505,9 @@ namespace Xamarin.Bundler {
 			else
 				Profile.Current = new MacMobileProfile (arch == "x86_64" ? 64 : 32);
 
-			if (IsUnifiedFullSystemFramework || IsUnifiedFullSystemFramework)
-				MonoNativeMode = MonoNativeMode.Combined;
-			else if (IsClassic)
+			if (IsClassic)
 				MonoNativeMode = MonoNativeMode.None;
-			else if (App.SdkVersion >= new Version (10, 12))
+			else if (App.DeploymentTarget >= new Version (10, 12))
 				MonoNativeMode = MonoNativeMode.Unified;
 			else
 				MonoNativeMode = MonoNativeMode.Compat;
@@ -915,9 +912,6 @@ namespace Xamarin.Bundler {
 				break;
 			case MonoNativeMode.Compat:
 				name = "libmono-native-compat";
-				break;
-			case MonoNativeMode.Combined:
-				name = "libmono-native";
 				break;
 			default:
 				throw ErrorHelper.CreateError (100, $"Invalid mono native type: '{MonoNativeMode}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).");
@@ -1417,9 +1411,6 @@ namespace Xamarin.Bundler {
 							break;
 						case MonoNativeMode.Compat:
 							libmono_native_name = "libmono-native-compat";
-							break;
-						case MonoNativeMode.Combined:
-							libmono_native_name = "libmono-native";
 							break;
 						default:
 							throw ErrorHelper.CreateError (100, $"Invalid mono native type: '{MonoNativeMode}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).");
