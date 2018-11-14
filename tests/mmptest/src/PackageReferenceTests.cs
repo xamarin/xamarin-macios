@@ -11,8 +11,8 @@ namespace Xamarin.MMP.Tests
 		const string PackageReference = @"<ItemGroup><PackageReference Include = ""Newtonsoft.Json"" Version = ""10.0.3"" /></ItemGroup>";
 		const string TestCode = @"var output = Newtonsoft.Json.JsonConvert.SerializeObject (new int[] { 1, 2, 3 });";
 
-		// [TestCase (true)] https://github.com/xamarin/xamarin-macios/issues/4110
-		// [TestCase (false)] https://github.com/xamarin/xamarin-macios/issues/4110
+		[TestCase (true)]
+		[TestCase (false)]
 		public void AppsWithPackageReferencs_BuildAndRun (bool full)
 		{
 			MMPTests.RunMMPTest (tmpDir => {
@@ -31,7 +31,7 @@ namespace Xamarin.MMP.Tests
 			});
 		}
 
-		// [Test] https://github.com/xamarin/xamarin-macios/issues/4110
+		[Test]
 		public void ExtensionProjectPackageReferencs_Build ()
 		{
 			MMPTests.RunMMPTest (tmpDir => {

@@ -70,6 +70,7 @@ namespace Foundation {
 		static IntPtr ol = Dlfcn.dlopen (Constants.OpenALLibrary, 1);
 		static IntPtr ma = Dlfcn.dlopen (Constants.MediaAccessibilityLibrary, 1);
 		static IntPtr mi = Dlfcn.dlopen (Constants.CoreMidiLibrary, 1);
+		static IntPtr ic = Dlfcn.dlopen (Constants.ImageCaptureCoreLibrary, 1);
 #if XAMCORE_2_0 && ARCH_64
 		static IntPtr it = Dlfcn.dlopen (Constants.IntentsLibrary, 1);
 		static IntPtr me = Dlfcn.dlopen (Constants.MediaLibraryLibrary, 1);

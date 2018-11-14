@@ -556,7 +556,6 @@
           </class>
           <class name="TransactionAbortedException" type="class" base="System.Transactions.TransactionException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
-              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -635,7 +634,6 @@
           </class>
           <class name="TransactionException" type="class" base="System.SystemException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
-              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -663,7 +661,6 @@
           </class>
           <class name="TransactionInDoubtException" type="class" base="System.Transactions.TransactionException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
-              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -822,7 +819,6 @@
           </class>
           <class name="TransactionManagerCommunicationException" type="class" base="System.Transactions.TransactionException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
-              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -900,7 +896,6 @@
           </class>
           <class name="TransactionPromotionException" type="class" base="System.Transactions.TransactionException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
-              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>

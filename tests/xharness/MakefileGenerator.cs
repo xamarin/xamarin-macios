@@ -95,6 +95,11 @@ namespace xharness
 				writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --configure --autoconf --rootdir $(CURDIR)");
 				writer.WriteLine ("\t$(Q) touch $@");
 				writer.WriteLine ();
+				var nuget_restore_dependency = ".stamp-nuget-restore-mac";
+				writer.WriteLine ("PACKAGES_CONFIG:=$(shell find . -name packages.config)");
+				writer.WriteLine ($"{nuget_restore_dependency}: tests-mac.sln $(PACKAGES_CONFIG)");
+				writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) /Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore tests-mac.sln");
+				writer.WriteLine ("\t$(Q) touch $@");
 
 				var allTargets = new List<MacTarget> ();
 				allTargets.AddRange (targets);
@@ -148,8 +153,7 @@ namespace xharness
 
 						string guiUnitDependency = ((MacUnifiedTarget)target).Mobile ? "$(GUI_UNIT_PATH)/bin/xammac_mobile/GuiUnit.exe" : "$(GUI_UNIT_PATH)/bin/net_4_5/GuiUnit.exe";
 
-						writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Build), "{0}", target.ProjectPath.Replace (" ", "\\ ") + " "  + guiUnitDependency);
-						writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) /Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore tests-mac.sln");
+						writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Build), "{0}", target.ProjectPath.Replace (" ", "\\ ") + " "  + guiUnitDependency + " " + nuget_restore_dependency);
 						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)\" /t:Build $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
 						writer.WriteLine ();
 
@@ -181,10 +185,15 @@ namespace xharness
 				writer.WriteLine ();
 				writer.WriteLine ("MD_APPLE_SDK_ROOT_EVALUATED:=$(shell dirname `dirname $(XCODE_DEVELOPER_ROOT)`)");
 
-				var enviromentalVariables = new Dictionary<string,string> () { { "TargetFrameworkFallbackSearchPaths", "$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks"},
-					{ "MSBuildExtensionsPathFallbackPaths", "$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild"},
-					{ "MD_APPLE_SDK_ROOT", "$(MD_APPLE_SDK_ROOT_EVALUATED)"}
+				var enviromentalVariables = new Dictionary<string,string> () {
+					{ "TargetFrameworkFallbackSearchPaths", "$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks"},
+					{ "MSBuildExtensionsPathFallbackPathsOverride", "$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild" },
+					{ "MD_APPLE_SDK_ROOT", "$(MD_APPLE_SDK_ROOT_EVALUATED)"},
 				};
+
+				// For targets with spaces, also add the non-space variation to the list.
+				allTargetNames.AddRange (allTargetNames.Where ((v) => v.IndexOf (' ') >= 0).Select ((v) => v.Replace ("\\ ", "")));
+				allTargetCleanNames.AddRange (allTargetCleanNames.Where ((v) => v.IndexOf (' ') >= 0).Select ((v) => v.Replace ("\\ ", "")));
 
 				foreach (var key in enviromentalVariables) {
 					writer.WriteLine ("{0}: export {1}:={2}", string.Join (" ", allTargetNames.ToArray ()), key.Key, key.Value);
@@ -203,7 +212,7 @@ namespace xharness
 					var actionName = action.ToString ().ToLowerInvariant ();
 					foreach (var group in grouped) {
 						var targetName = group.Key.Replace (" ", "\\ ");
-						writer.WriteTarget ("{0}-mac-{1}", string.Empty, actionName, targetName);
+						writer.WriteTarget ("{0}-mac-{1}", actionName == "build" ? nuget_restore_dependency : string.Empty, actionName, targetName);
 						writer.WriteLine ("\t$(Q) rm -f \".$@-failure.stamp\"");
 						foreach (var entry in group)
 							writer.WriteLine ("\t$(Q) $(MAKE) {0} || echo \"{0} failed\" >> \".$@-failure.stamp\"", MakeMacTargetName (entry, action));
@@ -226,7 +235,7 @@ namespace xharness
 				writer.WriteLine ("\t$(Q) if test -e \".$@-failure.stamp\"; then cat \".$@-failure.stamp\"; rm \".$@-failure.stamp\"; exit 1; fi");
 				writer.WriteLine ();
 
-				writer.WriteLine ("mac-build mac-build-all build-mac:"); // build everything
+				writer.WriteLine ($"mac-build mac-build-all build-mac: {nuget_restore_dependency}"); // build everything
 				writer.WriteLine ("\t$(Q) rm -rf \".$@-failure.stamp\"");
 				foreach (var target in groupableTargets) {
 					if (target is MacClassicTarget)

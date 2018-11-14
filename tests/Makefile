@@ -91,6 +91,7 @@ test.config: Makefile $(TOP)/Make.config
 	@echo "MAC_DESTDIR=$(abspath $(MAC_DESTDIR))" >> $@
 	@echo "JENKINS_RESULTS_DIRECTORY=$(abspath $(JENKINS_RESULTS_DIRECTORY))" >> $@
 	@echo "INCLUDE_DEVICE=$(INCLUDE_DEVICE)" >> $@
+	@echo "XCODE_DEVELOPER_ROOT=$(XCODE_DEVELOPER_ROOT)" >> $@
 
 test-system.config:
 	@rm -f $@

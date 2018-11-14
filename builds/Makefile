@@ -416,9 +416,9 @@ $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/smcs:
 #
 # Tools 64bit build.  Builds all the class libs as well.
 #
-TOOLS64_CFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
-TOOLS64_CXXFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
-TOOLS64_LDFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) $(COMMON_LDFLAGS)
+TOOLS64_CFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_VERSION_FOR_MAC)
+TOOLS64_CXXFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_VERSION_FOR_MAC)
+TOOLS64_LDFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_VERSION_FOR_MAC) $(COMMON_LDFLAGS)
 
 TOOLS64_CONFIGURE_FLAGS=	--build=x86_64-apple-darwin10 \
 			--with-monotouch_tv=yes \
