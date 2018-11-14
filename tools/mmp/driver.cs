@@ -851,7 +851,11 @@ namespace Xamarin.Bundler {
 			BuildTarget.ComputeLinkerFlags ();
 			BuildTarget.GatherFrameworks ();
 
-			CopyMonoNative ();
+			if (BuildTarget.LinkContext == null || BuildTarget.LinkContext.RequireMonoNative) {
+				CopyMonoNative ();
+				if (BuildTarget.LinkContext == null || BuildTarget.LinkContext.RequireGss)
+					BuildTarget.Frameworks.Add ("GSS");
+			}
 
 			CopyDependencies (native_libs);
 			Watch ("Copy Dependencies", 1);
