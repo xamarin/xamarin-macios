@@ -104,11 +104,25 @@ namespace BCLTestImporter {
 			(name:"SystemRuntimeCompilerServicesUnsafeXunit", assemblies: new [] {"MONOTOUCH_System.Runtime.CompilerServices.Unsafe_xunit-test.dll"}),
 		};
 			
-		// this can be grouped TODO
-		static readonly List <(string name, string[] assemblies)> iOSTestProjects = new List <(string name, string [] assemblies)> {
-		};
-
 		static readonly List <string> CommonIgnoredAssemblies = new List <string> {
+			"MONOTOUCH_System.Data_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1131
+			"MONOTOUCH_System.Security_xunit-test.dll",// issue https://github.com/xamarin/maccore/issues/1128
+			"MONOTOUCH_System.Threading.Tasks.Dataflow_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1132
+			"MONOTOUCH_System.Xml_test.dll", // issue https://github.com/xamarin/maccore/issues/1133
+			"MONOTOUCH_System.Transactions_test.dll", // issue https://github.com/xamarin/maccore/issues/1134
+			"MONOTOUCH_System_test.dll", // issues https://github.com/xamarin/maccore/issues/1135
+			"MONOTOUCH_System.ServiceModel.Web_test.dll", // issue https://github.com/xamarin/maccore/issues/1137
+			"MONOTOUCH_System.ServiceModel_test.dll", // issue https://github.com/xamarin/maccore/issues/1138
+			"MONOTOUCH_System.Security_test.dll", // issue https://github.com/xamarin/maccore/issues/1139
+			"MONOTOUCH_System.Runtime.Serialization.Formatters.Soap_test.dll", // issue https://github.com/xamarin/maccore/issues/1140
+			"MONOTOUCH_System.Net.Http_test.dll", // issue https://github.com/xamarin/maccore/issues/1144 and https://github.com/xamarin/maccore/issues/1145
+			"MONOTOUCH_System.IO.Compression_test.dll", // issue https://github.com/xamarin/maccore/issues/1146
+			"MONOTOUCH_System.IO.Compression.FileSystem_test.dll", // issue https://github.com/xamarin/maccore/issues/1147 and https://github.com/xamarin/maccore/issues/1148
+			"MONOTOUCH_System.Data_test.dll", // issue https://github.com/xamarin/maccore/issues/1149
+			"MONOTOUCH_System.Data.DataSetExtensions_test.dll", // issue https://github.com/xamarin/maccore/issues/1150 and https://github.com/xamarin/maccore/issues/1151
+			"MONOTOUCH_System.Core_test.dll", // issue https://github.com/xamarin/maccore/issues/1143
+			"MONOTOUCH_Mono.Runtime.Tests_test.dll", // issue https://github.com/xamarin/maccore/issues/1141
+			"MONOTOUCH_corlib_test.dll", // issue https://github.com/xamarin/maccore/issues/1153
 			"MONOTOUCH_Commons.Xml.Relaxng_test.dll", // not supported by xamarin
 			"MONOTOUCH_Cscompmgd_test.dll", // not supported by xamarin
 			"MONOTOUCH_I18N.CJK_test.dll",
@@ -120,6 +134,23 @@ namespace BCLTestImporter {
 			"MONOTOUCH_Mono.CodeContracts_test.dll", // not supported by xamarin
 			"MONOTOUCH_Novell.Directory.Ldap_test.dll", // not supported by xamarin
 			"MONOTOUCH_Mono.Profiler.Log_xunit-test.dll", // special tests that need an extra app to connect as a profiler
+		};
+		
+		// list of assemblies that are going to be ignored, any project with an assemblies that is ignored will
+		// be ignored
+
+		static readonly List<string> iOSIgnoredAssemblies = new List<string> {};
+
+		static readonly List<string> tvOSIgnoredAssemblies = new List<string> {
+			"MONOTOUCH_System.Xml.Linq_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1130
+			"MONOTOUCH_System.Numerics_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1129
+		};
+
+		static readonly List<string> watcOSIgnoredAssemblies = new List<string> {
+			"MONOTOUCH_System.Xml.Linq_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1130
+			"MONOTOUCH_System.Numerics_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1129
+			"MONOTOUCH_Mono.Security_test.dll", // issue https://github.com/xamarin/maccore/issues/1142
+			"MONOTOUCH_Mono.Data.Tds_test.dll", // issue https://gist.github.com/mandel-macaque/d97fa28f8a73c3016d1328567da77a0b
 		};
 
 		readonly bool isCodeGeneration;
@@ -235,6 +266,32 @@ namespace BCLTestImporter {
 			return sb.ToString ();
 		}
 
+		/// <summary>
+		/// Returns is a project should be ignored in a platform. A project is ignored in one of the assemblies in the
+		/// project is ignored in the platform.
+		/// </summary>
+		/// <param name="project">The project which is under test.</param>
+		/// <param name="platform">The platform to which we are testing against.</param>
+		/// <returns>If the project should be ignored in a platform or not.</returns>
+		bool IsIgnored(BCLTestProjectDefinition project, Platform platform)
+		{
+			foreach (var a in project.TestAssemblies){
+				if (CommonIgnoredAssemblies.Contains (a.Name))
+					return true;
+				switch (platform){
+				case Platform.iOS:
+					return iOSIgnoredAssemblies.Contains (a.Name);
+				case Platform.TvOS:
+					return tvOSIgnoredAssemblies.Contains (a.Name);
+				case Platform.WatchOS:
+					return watcOSIgnoredAssemblies.Contains (a.Name);
+				default:
+					return true;
+				}
+			}
+			return false;
+		}
+
 		async Task<List<(string name, string path, bool xunit)>> GenerateWatchOSTestProjectsAsync (
 			IEnumerable<(string name, string[] assemblies)> projects, string generatedDir)
 		{
@@ -246,6 +303,9 @@ namespace BCLTestImporter {
 				// 3. The extensions
 				// TODO: The following is very similar to what is done in the iOS generation. Must be grouped
 				var projectDefinition = new BCLTestProjectDefinition (def.name, def.assemblies);
+				if (IsIgnored (projectDefinition, Platform.WatchOS)) // if it is ignored, continue
+					continue;
+
 				if (!projectDefinition.Validate ())
 					throw new InvalidOperationException ("xUnit and NUnit assemblies cannot be mixed in a test project.");
 				var generatedCodeDir = Path.Combine (generatedDir, projectDefinition.Name);
@@ -316,6 +376,9 @@ namespace BCLTestImporter {
 			var projectPaths = new List<(string name, string path, bool xunit)> ();
 			foreach (var def in projects) {
 				var projectDefinition = new BCLTestProjectDefinition (def.name, def.assemblies);
+				if (IsIgnored (projectDefinition, platform)) // some projects are ignored, so we just continue
+					continue;
+
 				if (!projectDefinition.Validate ())
 					throw new InvalidOperationException ("xUnit and NUnit assemblies cannot be mixed in a test project.");
 				// generate the required type registration info
@@ -414,10 +477,6 @@ namespace BCLTestImporter {
 			}
 			// generate all the common projects
 			projectPaths.AddRange (await GenerateAllCommonTestProjectsAsync ());
-			//projectPaths.AddRange (await GenerateAlliOSTestProjectsAsync ());
-			//projectPaths.AddRange (await GenerateAllTvOSTestProjectsAsync ());
-			//projectPaths.AddRange (await GenerateAllMacOSTestProjectsAsync ());
-			//projectPaths.AddRange (await GenerateAllWatchOSTestProjectsAsync ());
 
 			return projectPaths;
 		}
@@ -518,7 +577,7 @@ namespace BCLTestImporter {
 				}
 			}
 			// delete each of the generated project files
-			foreach (var projectDefinition in iOSTestProjects) {
+			foreach (var projectDefinition in commonTestProjects) {
 				var projectPath = GetProjectPath (projectDefinition.name, Platform.iOS);
 				if (File.Exists (projectPath))
 					File.Delete (projectPath);
