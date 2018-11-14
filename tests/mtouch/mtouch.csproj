@@ -79,6 +79,7 @@
     <Compile Include="..\..\msbuild\Xamarin.Mac.Tasks\Tasks\MetalLib.cs">
       <Link>MetalLib.cs</Link>
     </Compile>
+    <Compile Include="MonoNativeTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
