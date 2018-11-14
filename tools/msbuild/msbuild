@@ -1,7 +1,9 @@
 #!/bin/sh
 thisdir=`dirname $0`
 thisdir=`cd $thisdir && pwd`
-# MONO_GC_PARAMS="nursery-size=64m,$MONO_GC_PARAMS" exec /Library/Frameworks/Mono.framework/Versions/Current/bin/mono $MONO_OPTIONS $thisdir/MSBuild.dll "$@"
+topdir=`cd $thisdir/../.. && pwd`
 
-MSBUILD_EXE_PATH=$thisdir/MSBuild.dll mono --debug /Library/Frameworks/Mono.framework/Versions/Current/lib/mono/msbuild/15.0/bin/MSBuild.dll "$@"
+mac_destdir=$topdir/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
+
+MSBUILD_EXE_PATH=$thisdir/MSBuild.dll XAMMAC_FRAMEWORK_PATH=$mac_destdir XamarinMacFrameworkRoot=$mac_destdir mono --debug /Library/Frameworks/Mono.framework/Versions/Current/lib/mono/msbuild/15.0/bin/MSBuild.dll /p:XamarinMacFrameworkRoot=$mac_destdir "$@"
 

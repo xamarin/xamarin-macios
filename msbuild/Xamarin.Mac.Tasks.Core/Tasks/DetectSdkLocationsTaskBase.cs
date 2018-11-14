@@ -119,8 +119,10 @@ namespace Xamarin.Mac.Tasks
 			if (string.IsNullOrEmpty (XamarinSdkRoot))
 				XamarinSdkRoot = MacOSXSdks.XamMac.FrameworkDirectory;
 
-			if (string.IsNullOrEmpty (XamarinSdkRoot) || !Directory.Exists (XamarinSdkRoot))
+			if (string.IsNullOrEmpty (XamarinSdkRoot) || !Directory.Exists (XamarinSdkRoot)) {
+				Log.LogMessage (MessageImportance.High, $"Could not find Xamarin.Mac in {XamarinSdkRoot}");
 				Log.LogError ("Could not find 'Xamarin.Mac'");
+			}
 		}
 
 		string DirExists (string checkingFor, params string[] paths)

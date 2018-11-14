@@ -150,6 +150,7 @@
       <property name="MSBuildRuntimeVersion" value="4.0.30319" />
       <property name="VisualStudioVersion" value="15.0" />
       <property name="RoslynTargetsPath" value="@MONO_PREFIX@/lib/mono/msbuild/15.0/bin/Roslyn" />
+      <property name="TargetFrameworkFallbackSearchPaths" value="@FALLBACK_SEARCH_PATH@" />
       <projectImportSearchPaths>
         <searchPaths os="windows">
           <property name="MSBuildExtensionsPath" value="$(MSBuildProgramFiles32)\MSBuild" />
