@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2B174B45-CC6B-443D-870F-6B5394FDE3FD}</ProjectGuid>
+    <ProjectTypeGuids>{A3F8F2AB-B479-4A4A-A458-A89E7DC349F1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Mono.Native.Tests</RootNamespace>
+    <AssemblyName>mononativetests</AssemblyName>
+    <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
+    <NoWarn>67,168,169,219,414,612,618,649,672</NoWarn>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <UseXamMacFullFramework>true</UseXamMacFullFramework>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Mac</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <CreatePackage>false</CreatePackage>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <IncludeMonoRuntime>false</IncludeMonoRuntime>
+    <UseSGen>false</UseSGen>
+    <HttpClientHandler>HttpClientHandler</HttpClientHandler>
+    <LinkMode>None</LinkMode>
+    <AOTMode>None</AOTMode>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Xamarin.Mac" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info.plist" />
+    <None Include="Entitlements-mac.plist" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\common\mac\MacTestMain.cs">
+      <Link>MacTestMain.cs</Link>
+    </Compile>
+    <Compile Include="..\common\Assert.cs">
+      <Link>Assert.cs</Link>
+    </Compile>
+    <Compile Include="..\common\MonoNativeConfig.cs">
+      <Link>MonoNativeConfig.cs</Link>
+    </Compile>
+    <Compile Include="NativePlatformConfig.cs" />
+    <Compile Include="..\..\external\mono\mcs\class\corlib\Mono\MonoNativePlatform.cs">
+      <Link>MonoNativePlatform.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\class\corlib\Mono\MonoNativePlatformType.cs">
+      <Link>MonoNativePlatformType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\class\corlib\Test\Mono\NativePlatformTest.cs">
+      <Link>NativePlatformTest.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\external\guiunit\src\framework\GuiUnit_NET_4_5.csproj">
+      <Project>{D12F0F7B-8DE3-43EC-BA49-41052D065A9B}</Project>
+      <Name>GuiUnit_NET_4_5</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
+</Project>

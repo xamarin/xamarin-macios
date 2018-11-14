@@ -1,0 +1,5 @@
+mono-native-compat.csproj
+*-full.?sproj
+*-full-32.?sproj
+*-modern.?sproj
+*-modern-32.?sproj
