@@ -21,6 +21,9 @@
     <Compile Include="..\BCLTestInfoPlistGenerator.cs">
       <Link>BCLTestInfoPlistGenerator.cs</Link>
     </Compile>
+    <Compile Include="..\BCLTestProjectGenerator.cs">
+      <Link>BCLTestProjectGenerator.cs</Link>
+    </Compile>
     <Compile Include="..\Platform.cs">
       <Link>Platform.cs</Link>
     </Compile>
@@ -29,6 +32,9 @@
     </Compile>
     <Compile Include="..\BCLTestProjectDefinition.cs">
       <Link>BCLTestProjectDefinition.cs</Link>
+    </Compile>
+    <Compile Include="..\RegisterTypeGenerator.cs">
+      <Link>RegisterTypeGenerator.cs</Link>
     </Compile>
   </ItemGroup>
 </Project>

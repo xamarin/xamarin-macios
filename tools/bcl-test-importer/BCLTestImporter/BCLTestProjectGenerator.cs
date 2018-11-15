@@ -16,13 +16,13 @@ namespace BCLTestImporter {
 
 		static string NUnitPattern = "MONOTOUCH_*_test.dll"; 
 		static string xUnitPattern = "MONOTOUCH_*_xunit-test.dll";
-		static readonly string NameKey = "%NAME%";
-		static readonly string ReferencesKey = "%REFERENCES%";
-		static readonly string RegisterTypeKey = "%REGISTER TYPE%";
-		static readonly string PlistKey = "%PLIST PATH%";
-		static readonly string WatchOSTemplatePathKey = "%TEMPLATE PATH%";
-		static readonly string WatchOSCsporjAppKey = "%WATCH APP PROJECT PATH%";
-		static readonly string WatchOSCsporjExtensionKey  ="%WATCH EXTENSION PROJECT PATH%";
+		internal static readonly string NameKey = "%NAME%";
+		internal static readonly string ReferencesKey = "%REFERENCES%";
+		internal static readonly string RegisterTypeKey = "%REGISTER TYPE%";
+		internal static readonly string PlistKey = "%PLIST PATH%";
+		internal static readonly string WatchOSTemplatePathKey = "%TEMPLATE PATH%";
+		internal static readonly string WatchOSCsporjAppKey = "%WATCH APP PROJECT PATH%";
+		internal static readonly string WatchOSCsporjExtensionKey  ="%WATCH EXTENSION PROJECT PATH%";
 		static readonly Dictionary<Platform, string> plistTemplateMatches = new Dictionary<Platform, string> {
 			{Platform.iOS, "Info.plist.in"},
 			{Platform.TvOS, "Info-tv.plist.in"},
@@ -39,7 +39,7 @@ namespace BCLTestImporter {
 			{ WatchAppType.Extension, "BCLTests-watchos-extension.csproj.in"}
 		};
 
-		enum WatchAppType {
+		public enum WatchAppType {
 			App,
 			Extension
 		}
@@ -186,7 +186,7 @@ namespace BCLTestImporter {
 		/// <param name="projectName">The name of the project being generated.</param>
 		/// <param name="platform">The supported platform by the project.</param>
 		/// <returns></returns>
-		string GetProjectPath (string projectName, Platform platform)
+		internal string GetProjectPath (string projectName, Platform platform)
 		{
 			switch (platform) {
 			case Platform.iOS:
@@ -200,7 +200,7 @@ namespace BCLTestImporter {
 			}
 		}
 		
-		string GetProjectPath (string projectName, WatchAppType appType)
+		internal string GetProjectPath (string projectName, WatchAppType appType)
 		{
 			switch (appType) {
 			case WatchAppType.App:
@@ -216,7 +216,7 @@ namespace BCLTestImporter {
 		/// <param name="rootDir">The root dir to use.</param>
 		/// <param name="platform">The platform that is supported by the project.</param>
 		/// <returns></returns>
-		static string GetPListPath (string rootDir, Platform platform)
+		internal static string GetPListPath (string rootDir, Platform platform)
 		{
 			switch (platform) {
 			case Platform.iOS:
@@ -230,7 +230,7 @@ namespace BCLTestImporter {
 			}
 		}
 
-		static string GetPListPath (string rootDir, WatchAppType appType)
+		internal static string GetPListPath (string rootDir, WatchAppType appType)
 		{
 			switch (appType) {
 				case WatchAppType.App:
@@ -241,7 +241,7 @@ namespace BCLTestImporter {
 		}
 		
 		// creates the reference node
-		static string GetReferenceNode (string assemblyName, string hintPath = null)
+		internal static string GetReferenceNode (string assemblyName, string hintPath = null)
 		{
 			// lets not complicate our life with Xml, we just need to replace two things
 			if (string.IsNullOrEmpty (hintPath)) {
@@ -257,7 +257,7 @@ namespace BCLTestImporter {
 			}
 		}
 
-		static string GetRegisterTypeNode (string registerPath)
+		internal static string GetRegisterTypeNode (string registerPath)
 		{
 			var sb = new StringBuilder ();
 			sb.AppendLine ($"<Compile Include=\"{registerPath}\">");
@@ -356,11 +356,14 @@ namespace BCLTestImporter {
 				}
 				
 				var projectTemplatePath = Path.Combine (ProjectTemplateRootPath, projectTemplateMatches[Platform.WatchOS]);
-				var generatedRootProject = await GenerateWatchProjectAsync (def.name, projectTemplatePath, infoPlistPath);
 				var rootProjectPath = GetProjectPath (projectDefinition.Name, Platform.WatchOS);
-				using (var file = new StreamWriter (rootProjectPath, false)) { // false is do not append
+				using (var file = new StreamWriter (rootProjectPath, false)) // false is do not append
+				using (var reader = new StreamReader (projectTemplatePath)){
+					var template = await reader.ReadToEndAsync ();
+					var generatedRootProject = GenerateWatchProject (def.name, template, infoPlistPath);
 					await file.WriteAsync (generatedRootProject);
 				}
+
 				// we have the 3 projects we depend on, we need the root one, the one that will be used by harness
 				projectPaths.Add ((name: projectDefinition.Name, path: rootProjectPath, xunit: projectDefinition.IsXUnit));
 			} // foreach project
@@ -513,16 +516,13 @@ namespace BCLTestImporter {
 			}
 		}
 		
-		async Task<string> GenerateWatchProjectAsync (string projectName, string templatePath, string infoPlistPath)
+		internal string GenerateWatchProject (string projectName, string template, string infoPlistPath)
 		{
-			using (var reader = new StreamReader(templatePath)) {
-				var result = await reader.ReadToEndAsync ();
-				result = result.Replace (NameKey, projectName);
+				var result = template.Replace (NameKey, projectName);
 				result = result.Replace (WatchOSTemplatePathKey, WatchContainerTemplatePath);
 				result = result.Replace (PlistKey, infoPlistPath);
 				result = result.Replace (WatchOSCsporjAppKey, GetProjectPath (projectName, WatchAppType.App).Replace ("/", "\\"));
 				return result;
-			}
 		}
 
 		async Task<string> GenerateWatchAppAsync (string projectName, string templatePath, string infoPlistPath)
