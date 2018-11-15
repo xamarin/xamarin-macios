@@ -12,7 +12,7 @@ XamarinMacFrameworkRoot="$xammac_framework_dir"
 TargetFrameworkIdentifier=Xamarin.Mac
 TargetFrameworkVersion=v2.0
 
-/Library/Frameworks/Mono.framework/Commands/msbuild \
+$(self)/../tools/xibuild/bin/Debug/xibuild.exe -- \
 	/property:XamarinMacFrameworkRoot="$XamarinMacFrameworkRoot" \
 	/property:TargetFrameworkIdentifier="$TargetFrameworkIdentifier" \
 	/property:TargetFrameworkVersion="$TargetFrameworkVersion" \
