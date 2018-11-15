@@ -31,6 +31,10 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public string ProjectName { get; set; }
 
+		public string ProjectGuid { get; set; }
+
+		public string ProjectTypeGuids { get; set; }
+
 		public string SolutionPath { get; set; }
 
 		[Required]
