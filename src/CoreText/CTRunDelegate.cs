@@ -37,9 +37,9 @@ namespace CoreText {
 
 #region Run Delegate Callbacks
 	delegate void CTRunDelegateDeallocateCallback (IntPtr refCon);
-	delegate float CTRunDelegateGetAscentCallback (IntPtr refCon);
-	delegate float CTRunDelegateGetDescentCallback (IntPtr refCon);
-	delegate float CTRunDelegateGetWidthCallback (IntPtr refCon);
+	delegate nfloat CTRunDelegateGetAscentCallback (IntPtr refCon);
+	delegate nfloat CTRunDelegateGetDescentCallback (IntPtr refCon);
+	delegate nfloat CTRunDelegateGetWidthCallback (IntPtr refCon);
 
 	[StructLayout (LayoutKind.Sequential)]
 	class CTRunDelegateCallbacks {
@@ -88,17 +88,17 @@ namespace CoreText {
 		}
 #endif
 
-		public virtual float GetAscent ()
+		public virtual nfloat GetAscent ()
 		{
 			return 0.0f;
 		}
 
-		public virtual float GetDescent ()
+		public virtual nfloat GetDescent ()
 		{
 			return 0.0f;
 		}
 
-		public virtual float GetWidth ()
+		public virtual nfloat GetWidth ()
 		{
 			return 0.0f;
 		}
@@ -151,7 +151,7 @@ namespace CoreText {
 		}
 
 		[MonoPInvokeCallback (typeof (CTRunDelegateGetAscentCallback))]
-		static float GetAscent (IntPtr refCon)
+		static nfloat GetAscent (IntPtr refCon)
 		{
 			var self = GetOperations (refCon);
 			if (self == null)
@@ -160,7 +160,7 @@ namespace CoreText {
 		}
 
 		[MonoPInvokeCallback (typeof (CTRunDelegateGetDescentCallback))]
-		static float GetDescent (IntPtr refCon)
+		static nfloat GetDescent (IntPtr refCon)
 		{
 			var self = GetOperations (refCon);
 			if (self == null)
@@ -169,7 +169,7 @@ namespace CoreText {
 		}
 
 		[MonoPInvokeCallback (typeof (CTRunDelegateGetWidthCallback))]
-		static float GetWidth (IntPtr refCon)
+		static nfloat GetWidth (IntPtr refCon)
 		{
 			var self = GetOperations (refCon);
 			if (self == null)
