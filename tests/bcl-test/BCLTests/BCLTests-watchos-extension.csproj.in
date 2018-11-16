@@ -77,6 +77,18 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.WatchOS" />
+    <Reference Include="xunit.core">
+      <HintPath>..\..\..\external\mono\external\xunit-binaries\xunit.core.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.assert">
+      <HintPath>..\..\..\external\mono\external\xunit-binaries\xunit.assert.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.abstractions">
+      <HintPath>..\..\..\external\mono\external\xunit-binaries\xunit.abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.execution.dotnet">
+      <HintPath>..\..\..\external\mono\external\xunit-binaries\xunit.execution.dotnet.dll</HintPath>
+    </Reference>
     <Reference Include="nunitlite">
       <HintPath>..\..\..\external\mono\mcs\class\lib\monotouch\nunitlite.dll</HintPath>
     </Reference>
@@ -113,18 +125,6 @@
     </Reference>
     <Reference Include="Microsoft.Extensions.Logging">
       <HintPath>..\..\..\packages\Microsoft.Extensions.Logging.2.1.1\lib\netstandard2.0\Microsoft.Extensions.Logging.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.abstractions">
-      <HintPath>..\..\..\packages\xunit.abstractions.2.0.3\lib\netstandard2.0\xunit.abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.assert">
-      <HintPath>..\..\..\packages\xunit.assert.2.4.0\lib\netstandard2.0\xunit.assert.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.core">
-      <HintPath>..\..\..\packages\xunit.extensibility.core.2.4.0\lib\netstandard2.0\xunit.core.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.execution.dotnet">
-      <HintPath>..\..\..\packages\xunit.extensibility.execution.2.4.0\lib\netstandard2.0\xunit.execution.dotnet.dll</HintPath>
     </Reference>
     <Reference Include="xunit.runner.utility.netstandard20">
       <HintPath>..\..\..\packages\xunit.runner.utility.2.4.0\lib\netstandard2.0\xunit.runner.utility.netstandard20.dll</HintPath>
