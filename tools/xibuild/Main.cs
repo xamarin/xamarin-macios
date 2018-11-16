@@ -15,15 +15,41 @@ namespace xibuild {
 			bool configGenerationOnly = false;
 			string baseConfigFile = null;
 
-			OptionSet p = new OptionSet ()
-				.Add ("c", c => configGenerationOnly = true) // merge
-				.Add ("t", t => runTool = true)
-				.Add ("m=", m => baseConfigFile = m)
-				.Add ("h|?|help", v => ShowHelp ());
+			bool show_help = false;
+			OptionSet p = null;
+			p = new OptionSet () {
+				"xibuild: Run msbuild or a tool with a custom msbuild config file which adds fallback paths from $MSBuildExtensionsPathFallbackPathsOverride.",
+				String.Empty,
+				"Usage: xibuild [-c] [-t] [-m <base config file>] [-h] -- [path to managed tool] [arguments...]",
+				String.Empty,
+				"Default: Generate a temporary app.config file and run msbuild",
+				String.Empty,
+				"Options:",
 
-			Console.WriteLine ($"Running xibuild with args: {String.Join (" ", args)}");
+				{ "c", "Generate config file only", c => configGenerationOnly = true }, // merge
+				{ "t", "Path to the managed tool to run. If this and `-c` are not used, then this runs msbuild", t => runTool = true },
+				{ "m=", "< base config file >: Config file to merge with the one from msbuild.dll.confi", m => baseConfigFile = m },
+				{ "h|?|help", "Show this help message and exit.", v => show_help = true },
+
+				String.Empty,
+				"Note: Adds the path from the environment variable named",
+				"`$MSBuildExtensionsPathFallbackPathsOverride` to the list of fallback paths in the generated app.config",
+				String.Empty,
+				"Examples:",
+				String.Empty,
+				"Generate /path/to/foo.exe.config:",
+				"\txibuild -c /path/to/foo.exe",
+				"Run msbuild with a custom app.config and the arguments passed to msbuild:",
+				"\txibuild -- /v:diag /path/to/project.csproj",
+				"Run managed_tool.exe with the arguments, and a custom app.config:",
+				"\txibuild -t -- /path/to/managed_tool.exe args",
+				String.Empty,
+				"Add `-m /path/to/base.exe.config` to merge the generated app.config with base.exe.config ."
+			};
+
+			Console.WriteLine ($"Running xibuild with args: {String.Join (" ", args)}\n");
+
 			List<string> remaining = null;
-
 			try {
 				remaining = p.Parse (args);
 			} catch (OptionException oe) {
@@ -31,9 +57,14 @@ namespace xibuild {
 				return -1;
 			}
 
+			if (show_help) {
+				p.WriteOptionDescriptions (Console.Out);
+				return 0;
+			}
+
 			if (configGenerationOnly && runTool) {
 				Console.WriteLine ("Use either -c or -t, but not both.\n");
-				ShowHelp ();
+				p.WriteOptionDescriptions (Console.Out);
 				return -1;
 			}
 
@@ -65,25 +96,6 @@ namespace xibuild {
 					baseConfigFile: runMSBuild ? null : baseConfigFile);
 
 			string BuildQuotedCommandLine (List<string> a, int skip) => String.Join (" ", a.Skip (skip).Select (arg => $"\"{arg}\""));
-
-			void ShowHelp ()
-			{
-				Console.WriteLine ("xibuild: Run msbuild or a tool with a custom msbuild config file which adds fallback paths from MSBuildExtensionsPathFallbackPathsOverride.\n");
-				Console.WriteLine ("Usage: xibuild [-c] [-t] [-m <base config file>] [-h] -- [path to managed tool] [arguments]");
-				Console.WriteLine ("Default: Generate a temporary app.config file and run msbuild");
-				Console.WriteLine ();
-				Console.WriteLine ("\t-c: Generate config file only");
-				Console.WriteLine ("\t-t: Path to the managed tool to run. If this and `-c` are not used, then this runs msbuild");
-				Console.WriteLine ("\t-m <base config file>: Config file to merge with the one from msbuild.dll.config");
-				Console.WriteLine ("\t-h: help");
-				Console.WriteLine ("\nNote: Adds the path from the environment variable MSBuildExtensionsPathFallbackPathsOverride to the list of fallback paths in the generated app.config");
-				Console.WriteLine ("\nExamples:");
-				Console.WriteLine ("xibuild -c /path/to/foo.exe : Generate /path/to/foo.exe.config");
-				Console.WriteLine ("xibuild -- /v:diag /path/to/project.csproj : Run msbuild with a custom app.config and the arguments passed to msbuild.");
-				Console.WriteLine ("xibuild -t -- /path/to/managed_tool.exe args : Run managed_tool.exe with the arguments, and a custom app.config");
-				Console.WriteLine ("");
-				Console.WriteLine ("Add `-m /path/to/base.exe.config` to merge the generated app.config with base.exe.config .");
-			}
 		}
 
 		static int RunTool (string toolPath, string combinedArgs, string baseConfigFile)
