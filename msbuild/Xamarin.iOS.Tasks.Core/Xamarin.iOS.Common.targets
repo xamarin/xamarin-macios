@@ -1618,7 +1618,9 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</DetectDebugNetworkConfiguration>
 	</Target>
 
-	<Target Name="_CopyAppExtensionsToBundle" DependsOnTargets="_ResolveAppExtensionReferences">
+	<Target Name="_CopyAppExtensionsToBundle" DependsOnTargets="_ResolveAppExtensionReferences" Inputs="@(_ResolvedAppExtensionReferences)" 
+		  Outputs="$(_AppBundlePath)PlugIns\%(_ResolvedAppExtensionReferences.FileName)%(_ResolvedAppExtensionReferences.Extension)">
+		
 		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '@(_ResolvedAppExtensionReferences)' != ''" Directories="$(_AppBundlePath)PlugIns" />
 
 		<Ditto
@@ -2247,6 +2249,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			ITunesSourceFiles="@(_ITunesSourceFile)"
 			OutputPath="$(DeviceSpecificOutputPath)"
 			ProjectName="$(MSBuildProjectName)"
+			ProjectGuid="$(ProjectGuid)"
+			ProjectTypeGuids="$(ProjectTypeGuids)"
 			SolutionPath="$(SolutionPath)"
 			SigningKey="$(_CodeSigningKey)"
 			WatchAppReferences="@(_ResolvedWatchAppReferences)"

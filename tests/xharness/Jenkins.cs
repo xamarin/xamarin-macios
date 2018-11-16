@@ -185,7 +185,7 @@ namespace xharness
 					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, Defines = "OPTIMIZEALL" };
 					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = true, Profiling = false, Defines = "OPTIMIZEALL" };
 					yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, };
-					yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Ignored = true, };
+					yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, };
 					break;
 				case "mscorlib":
 					yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Ignored = true, Undefines = "FULL_AOT_RUNTIME" };
@@ -828,6 +828,7 @@ namespace xharness
 				Target = "all",
 				WorkingDirectory = Path.Combine (Harness.RootDirectory, "mac-binding-project"),
 				Ignored = !IncludeMacBindingProject || !IncludeMac,
+				Timeout = TimeSpan.FromMinutes (15),
 			};
 			Tasks.Add (runMacBindingProject);
 
@@ -2759,8 +2760,9 @@ function toggleAll (show)
 				await RestoreNugetsAsync (log, resource);
 
 				using (var xbuild = new Process ()) {
-					xbuild.StartInfo.FileName = UseMSBuild ? "msbuild" : "msbuild";
+					xbuild.StartInfo.FileName = "xibuild";
 					var args = new StringBuilder ();
+					args.Append ("-- ");
 					args.Append ("/verbosity:diagnostic ");
 					if (SpecifyPlatform)
 						args.Append ($"/p:Platform={ProjectPlatform} ");
@@ -2795,8 +2797,9 @@ function toggleAll (show)
 		{
 			// Don't require the desktop resource here, this shouldn't be that resource sensitive
 			using (var xbuild = new Process ()) {
-				xbuild.StartInfo.FileName = "msbuild";
+				xbuild.StartInfo.FileName = "xibuild";
 				var args = new StringBuilder ();
+				args.Append ("-- ");
 				args.Append ("/verbosity:diagnostic ");
 				if (project_platform != null)
 					args.Append ($"/p:Platform={project_platform} ");
@@ -2871,8 +2874,9 @@ function toggleAll (show)
 				using (var proc = new Process ()) {
 
 					proc.StartInfo.WorkingDirectory = WorkingDirectory;
-					proc.StartInfo.FileName = "/Library/Frameworks/Mono.framework/Commands/mono";
+					proc.StartInfo.FileName = "xibuild";
 					var args = new StringBuilder ();
+					args.Append ("-t -- ");
 					args.Append (StringUtils.Quote (Path.GetFullPath (TestExecutable))).Append (' ');
 					args.Append (StringUtils.Quote (Path.GetFullPath (TestLibrary))).Append (' ');
 					if (IsNUnit3) {

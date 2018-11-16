@@ -380,17 +380,46 @@ namespace Foundation {
 					}
 				}
 
-				if (challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodNTLM && sessionHandler.Credentials != null) {
-					var credentialsToUse = sessionHandler.Credentials as NetworkCredential;
-					if (credentialsToUse == null) {
+				if (sessionHandler.Credentials != null && TryGetAuthenticationType (challenge.ProtectionSpace, out string authType)) {
+					NetworkCredential credentialsToUse = null;
+					if (authType != RejectProtectionSpaceAuthType) {
 						var uri = inflight.Request.RequestUri;
-						credentialsToUse = sessionHandler.Credentials.GetCredential (uri, "NTLM");
+						credentialsToUse = sessionHandler.Credentials.GetCredential (uri, authType);
 					}
-					NSUrlCredential credential = new NSUrlCredential (credentialsToUse.UserName, credentialsToUse.Password, NSUrlCredentialPersistence.ForSession);
-					completionHandler (NSUrlSessionAuthChallengeDisposition.UseCredential, credential);
+
+					if (credentialsToUse != null) {
+						var credential = new NSUrlCredential (credentialsToUse.UserName, credentialsToUse.Password, NSUrlCredentialPersistence.ForSession);
+						completionHandler (NSUrlSessionAuthChallengeDisposition.UseCredential, credential);
+					} else {
+						// Rejecting the challenge allows the next authentication method in the request to be delivered to
+						// the DidReceiveChallenge method. Another authentication method may have credentials available.
+						completionHandler (NSUrlSessionAuthChallengeDisposition.RejectProtectionSpace, null);
+					}
 				} else {
 					completionHandler (NSUrlSessionAuthChallengeDisposition.PerformDefaultHandling, challenge.ProposedCredential);
 				}
+			}
+
+			static readonly string RejectProtectionSpaceAuthType = "reject";
+
+			static bool TryGetAuthenticationType (NSUrlProtectionSpace protectionSpace, out string authenticationType)
+			{
+				if (protectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodNTLM) {
+					authenticationType = "NTLM";
+				} else if (protectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodHTTPBasic) {
+					authenticationType = "basic";
+				} else if (protectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodNegotiate ||
+					protectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodHTMLForm ||
+					protectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodHTTPDigest) {
+					// Want to reject this authentication type to allow the next authentication method in the request to
+					// be used.
+					authenticationType = RejectProtectionSpaceAuthType;
+				} else {
+					// ServerTrust, ClientCertificate or Default.
+					authenticationType = null;
+					return false;
+				}
+				return true;
 			}
 		}
 

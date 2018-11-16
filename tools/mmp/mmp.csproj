@@ -370,6 +370,9 @@
     <Compile Include="..\common\CoreResolver.cs">
       <Link>common\CoreResolver.cs</Link>
     </Compile>
+    <Compile Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\PListObject.cs">
+      <Link>external\PListObject.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -7866,7 +7866,6 @@ namespace AppKit {
 
 	[BaseType (typeof (NSObject))]
 	[ThreadSafe] // Not documented anywhere, but their Finder extension sample uses it on non-ui thread
-	[Dispose ("__mt_items_var = null;")]
 	partial interface NSMenu : NSCoding, NSCopying, NSAccessibility, NSAccessibilityElement, NSUserInterfaceItemIdentification  {
 		[DesignatedInitializer]
 		[Export ("initWithTitle:")]
@@ -7884,34 +7883,30 @@ namespace AppKit {
 		bool PopUpMenu ([NullAllowed] NSMenuItem item, CGPoint location, [NullAllowed] NSView view);
 
 		[Export ("insertItem:atIndex:")]
-		[PostSnippet ("__mt_items_var = ItemArray();")]
 		void InsertItem (NSMenuItem newItem, nint index);
 
 		[Export ("addItem:")]
-		[PostSnippet ("__mt_items_var = ItemArray();")]
 		void AddItem (NSMenuItem newItem);
 
 		[Export ("insertItemWithTitle:action:keyEquivalent:atIndex:")]
-		[PostSnippet ("__mt_items_var = ItemArray();")]
 		NSMenuItem InsertItem (string title, [NullAllowed] Selector action, string charCode, nint index);
 
+		[Wrap ("this.InsertItem (title, null, charCode, index)")]
+		NSMenuItem InsertItem (string title, string charCode, nint index);
+
 		[Export ("addItemWithTitle:action:keyEquivalent:")]
-		[PostSnippet ("__mt_items_var = ItemArray();")]
 		NSMenuItem AddItem (string title, [NullAllowed] Selector action, string charCode);
 
 		[Export ("removeItemAtIndex:")]
-		[PostSnippet ("__mt_items_var = ItemArray();")]
 		void RemoveItemAt (nint index);
 
 		[Export ("removeItem:")]
-		[PostSnippet ("__mt_items_var = ItemArray();")]
 		void RemoveItem (NSMenuItem item);
 
 		[Export ("setSubmenu:forItem:")]
 		void SetSubmenu ([NullAllowed] NSMenu aMenu, NSMenuItem anItem);
 
 		[Export ("removeAllItems")]
-		[PostSnippet ("__mt_items_var = ItemArray();")]
 		void RemoveAllItems ();
 
 		[Export ("itemArray", ArgumentSemantic.Copy)]
@@ -9043,7 +9038,6 @@ namespace AppKit {
 	}
 
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSImageDelegate)})]
-	[Dispose ("__mt_reps_var = null;")]
 	[ThreadSafe]
 	partial interface NSImage : NSCopying, NSSecureCoding, NSPasteboardReading, NSPasteboardWriting {
 		[Static]
@@ -9115,15 +9109,12 @@ namespace AppKit {
 		NSImageRep [] Representations ();
 
 		[Export ("addRepresentations:")]
-		[PostSnippet ("__mt_reps_var = Representations();")]
 		void AddRepresentations (NSImageRep [] imageReps);
 
 		[Export ("addRepresentation:")]
-		[PostSnippet ("__mt_reps_var = Representations();")]
 		void AddRepresentation (NSImageRep imageRep);
 
 		[Export ("removeRepresentation:")]
-		[PostSnippet ("__mt_reps_var = Representations();")]
 		void RemoveRepresentation (NSImageRep imageRep);
 
 		[Export ("isValid")]
@@ -10719,18 +10710,15 @@ namespace AppKit {
 	}
 
 	[BaseType (typeof (NSObject))]
-	[Dispose ("__mt_accessory_var = null;")]
 	interface NSPageLayout {
 		[Static]
 		[Export ("pageLayout")]
 		NSPageLayout PageLayout { get; }
 
 		[Export ("addAccessoryController:")]
-		[PostSnippet ("__mt_accessory_var = AccessoryControllers();")]
 		void AddAccessoryController (NSViewController accessoryController);
 
 		[Export ("removeAccessoryController:")]
-		[PostSnippet ("__mt_accessory_var = AccessoryControllers();")]
 		void RemoveAccessoryController (NSViewController accessoryController);
 
 		[Export ("accessoryControllers")]
@@ -12150,18 +12138,15 @@ namespace AppKit {
 	}
 
 	[BaseType (typeof (NSObject))]
-	[Dispose ("__mt_accessory_var = null;")] 
 	interface NSPrintPanel {
 		[Static]
 		[Export ("printPanel")]
 		NSPrintPanel PrintPanel { get; }
 
 		[Export ("addAccessoryController:")]
-		[PostSnippet ("__mt_accessory_var = AccessoryControllers();")]
 		void AddAccessoryController (NSViewController accessoryController);
 
 		[Export ("removeAccessoryController:")]
-		[PostSnippet ("__mt_accessory_var = AccessoryControllers();")]
 		void RemoveAccessoryController (NSViewController accessoryController);
 
 		[Export ("accessoryControllers")]
@@ -15253,7 +15238,6 @@ namespace AppKit {
 	}
 
 	[BaseType (typeof (NSResponder))]
-	[Dispose ("__mt_tracking_var = null;")]
 	partial interface NSView : NSDraggingDestination, NSAnimatablePropertyContainer, NSUserInterfaceItemIdentification, NSAppearanceCustomization, NSAccessibilityElementProtocol, NSAccessibility, NSObjectAccessibilityExtensions {
 		[DesignatedInitializer]
 		[Export ("initWithFrame:")]
@@ -15567,10 +15551,10 @@ namespace AppKit {
 		[Export ("makeBackingLayer")]
 		CALayer MakeBackingLayer ();
 
-		[Export ("addTrackingArea:")][PostSnippet ("__mt_tracking_var = TrackingAreas ();")]
+		[Export ("addTrackingArea:")]
 		void AddTrackingArea (NSTrackingArea trackingArea);
 
-		[Export ("removeTrackingArea:")][PostSnippet ("__mt_tracking_var = TrackingAreas ();")]
+		[Export ("removeTrackingArea:")]
 		void RemoveTrackingArea (NSTrackingArea trackingArea);
 
 		[Export ("trackingAreas")]
@@ -15595,11 +15579,13 @@ namespace AppKit {
 
 		[Export ("addToolTipRect:owner:userData:")]
 #if !XAMCORE_4_0
-		nint AddToolTip (CGRect aRect, NSObject anObject, IntPtr data);
+		nint AddToolTip (CGRect rect, NSObject owner, IntPtr userData);
 #else
-		[Internal]
-		nint _AddToolTip (CGRect aRect, NSObject anObject, IntPtr data);
+		nint AddToolTip (CGRect rect, INSToolTipOwner owner, IntPtr userData);
 #endif
+
+		[Wrap ("AddToolTip (rect, (NSObject)owner, IntPtr.Zero)")]
+		nint AddToolTip (CGRect rect, INSToolTipOwner owner);
 
 		[Export ("removeToolTip:")]
 		void RemoveToolTip (nint tag);
@@ -25650,6 +25636,8 @@ namespace AppKit {
 		[Export ("view:stringForToolTip:point:userData:")]
 		string GetStringForToolTip (NSView view, nint tag, CGPoint point, IntPtr data);
 	}
+
+	interface INSToolTipOwner {}
 
 	interface INSUserInterfaceValidations {}
 

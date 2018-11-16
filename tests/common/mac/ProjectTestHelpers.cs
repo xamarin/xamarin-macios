@@ -227,7 +227,7 @@ namespace Xamarin.MMP.Tests
 		// In most cases we generate projects in tmp and this is not needed. But nuget and test projects can make that hard
 		public static void CleanUnifiedProject (string csprojTarget)
 		{
-			RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/msbuild", new StringBuilder (csprojTarget + " /t:clean"), "Clean");
+			RunAndAssert ("xibuild", new StringBuilder ("-- " + csprojTarget + " /t:clean"), "Clean");
 		}
 
 		public static string BuildProject (string csprojTarget, bool isUnified, bool shouldFail = false, bool release = false, string[] environment = null)
@@ -265,9 +265,10 @@ namespace Xamarin.MMP.Tests
 				return csprojText + fileList;
 			};
 
-			if (isUnified)
-				return RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/msbuild", buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo, environment);
-			else
+			if (isUnified) {
+				buildArgs.Insert (0, " -- ");
+				return RunAndAssert ("xibuild", buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo, environment);
+			} else
 				return RunAndAssert ("/Applications/Visual Studio.app/Contents/MacOS/vstool", buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo, environment);
 		}
 
@@ -573,7 +574,14 @@ namespace TestCase
 
 		public static void NugetRestore (string project)
 		{
-			var rv = ExecutionHelper.Execute ("nuget", $"restore {StringUtils.Quote (project)}", out var output);
+			string rootDirectory = FindRootDirectory ();
+
+			Environment.SetEnvironmentVariable ("TargetFrameworkFallbackSearchPaths", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild-frameworks");
+			Environment.SetEnvironmentVariable ("MSBuildExtensionsPathFallbackPathsOverride", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild");
+			Environment.SetEnvironmentVariable ("XAMMAC_FRAMEWORK_PATH", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
+			Environment.SetEnvironmentVariable ("XamarinMacFrameworkRoot", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
+
+			var rv = ExecutionHelper.Execute ("xibuild", $"-- /restore {StringUtils.Quote (project)}", out var output);
 			if (rv != 0) {
 				Console.WriteLine ("nuget restore failed:");
 				Console.WriteLine (output);

@@ -239,7 +239,8 @@ def uploadFiles (glob, virtualPath)
         storageCredentialId: 'bc6a99d18d7d9ca3f6bf6b19e364d564',
         uploadArtifactsOnlyIfSuccessful: false,
         uploadZips: false,
-        virtualPath: virtualPath
+        virtualPath: virtualPath,
+        storageType: 'blobstorage'
     ])
 }
 
@@ -708,7 +709,11 @@ timestamps {
                                                 appendFileComment ("ℹ️ Test run skipped: ${skipLocalTestRunReason}\n")
                                             } else {
                                                 echo ("Html report: ${reportPrefix}/tests/index.html")
-                                                sh ("${workspace}/xamarin-macios/jenkins/run-tests.sh --target=wrench-jenkins --publish --keychain=xamarin-macios")
+                                                def runTestResult = sh (script: "${workspace}/xamarin-macios/jenkins/run-tests.sh --target=wrench-jenkins --publish --keychain=xamarin-macios", returnStatus: true)
+                                                if (runTestResult != 0) {
+                                                    echoError ("Test run failed")
+                                                    currentBuild.result = 'FAILURE'
+                                                }
                                             }
                                         }
                                         stage ('Test docs') {
@@ -719,7 +724,11 @@ timestamps {
                                             if (!testDocs) {
                                                 echo ("Skipping docs testing, it's only done on master (current (target) branch is ${targetBranch})")
                                             } else {
-                                                sh ("make -C ${workspace}/xamarin-macios/tests wrench-docs")
+                                                def testDocsResult = sh (script: "make -C ${workspace}/xamarin-macios/tests wrench-docs", returnStatus: true)
+                                                if (testDocsResult != 0) {
+                                                    echoError ("Test docs failed")
+                                                    currentBuild.result = 'FAILURE'
+                                                }
                                             }
                                         }
                                     }

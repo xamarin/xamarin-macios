@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 
 using Microsoft.Build.Framework;
@@ -20,6 +20,7 @@ namespace Xamarin.iOS.Tasks
 
 		public ITaskItem[] ITunesMetadata { get; set; }
 
+		[Output]
 		[Required]
 		public ITaskItem OutputPath { get; set; }
 

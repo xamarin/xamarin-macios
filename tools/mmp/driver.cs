@@ -68,6 +68,7 @@ namespace Xamarin.Bundler {
 
 	public static partial class Driver {
 		internal const string NAME = "mmp";
+		const string PRODUCT = "Xamarin.Mac";
 		internal static Application App = new Application (Environment.GetCommandLineArgs ());
 		static Target BuildTarget = new Target (App);
 		static List<string> references = new List<string> ();
@@ -100,7 +101,6 @@ namespace Xamarin.Bundler {
 		static string mmp_dir;
 		
 		static string mono_dir;
-		static string sdk_root;
 		static string custom_bundle_name;
 
 		static string tls_provider;
@@ -119,6 +119,8 @@ namespace Xamarin.Bundler {
 		static bool frameworks_copied_to_bundle_dir;	// Have we copied any frameworks to Foo.app/Contents/Frameworks?
 
 		const string pkg_config = "/Library/Frameworks/Mono.framework/Commands/pkg-config";
+
+		static Version min_xcode_version = new Version (6, 0);
 
 		static void ShowHelp (OptionSet os) {
 			Console.WriteLine ("mmp - Xamarin.Mac Packer");
@@ -270,7 +272,6 @@ namespace Xamarin.Bundler {
 				{ "i|icon=", "Use the specified file as the bundle icon", v => { icon = v; }},
 				{ "xml=", "Provide an extra XML definition file to the linker", v => App.Definitions.Add (v) },
 				{ "time", v => WatchLevel++ },
-				{ "sdkroot=", "Specify the location of Apple SDKs", v => sdk_root = v },
 				{ "arch=", "Specify the architecture ('i386' or 'x86_64') of the native runtime (default to 'i386')", v => { arch = v; arch_set = true; } },
 				{ "profile=", "(Obsoleted in favor of --target-framework) Specify the .NET profile to use (defaults to '" + Xamarin.Utils.TargetFramework.Default + "')", v => SetTargetFramework (v) },
 				{ "target-framework=", "Specify the .NET target framework to use (defaults to '" + Xamarin.Utils.TargetFramework.Default + "')", v => SetTargetFramework (v) },
@@ -477,7 +478,7 @@ namespace Xamarin.Bundler {
 				}
 			}
 
-			ValidateXcode ();
+			ValidateXcode (false, true);
 
 			App.Initialize ();
 
@@ -580,47 +581,6 @@ namespace Xamarin.Bundler {
 					return bool.Parse (value);
 				} catch (Exception ex) {
 					throw ErrorHelper.CreateError (26, ex, "Could not parse the command line argument '-{0}:{1}': {2}", name, value, ex.Message);
-				}
-			}
-		}
-
-
-		static void ValidateXcode ()
-		{
-			if (xcode_version == null) {
-				// Check what kind of path we got
-				if (File.Exists (Path.Combine (sdk_root, "Contents", "MacOS", "Xcode"))) {
-					// path to the Xcode.app
-					sdk_root = Path.Combine (sdk_root, "Contents", "Developer");
-				} else if (File.Exists (Path.Combine (sdk_root, "..", "MacOS", "Xcode"))) {
-					// path to Contents/Developer
-					sdk_root = Path.GetFullPath (Path.Combine (sdk_root, "..", "..", "Contents", "Developer"));
-				} else {
-					throw ErrorHelper.CreateError (57, "Cannot determine the path to Xcode.app from the sdk root '{0}'. Please specify the full path to the Xcode.app bundle.", sdk_root);
-				}
-
-				var plist_path = Path.Combine (Path.GetDirectoryName (DeveloperDirectory), "version.plist");
-				if (File.Exists (plist_path)) {
-					bool nextElement = false;
-					XmlReaderSettings settings = new XmlReaderSettings ();
-					settings.DtdProcessing = DtdProcessing.Ignore;
-					using (XmlReader reader = XmlReader.Create (plist_path, settings)) {
-						while (reader.Read()) {
-							// We want the element after CFBundleShortVersionString
-							if (reader.NodeType == XmlNodeType.Element) {
-								if (reader.Name == "key") {
-									if (reader.ReadElementContentAsString() == "CFBundleShortVersionString")
-										nextElement = true;
-								}
-								if (nextElement && reader.Name == "string") {
-									nextElement = false;
-									xcode_version = new Version (reader.ReadElementContentAsString());
-								}
-							}
-						}
-					}
-				} else {
-					throw ErrorHelper.CreateError (58, "The Xcode.app '{0}' is invalid (the file '{1}' does not exist).", Path.GetDirectoryName (Path.GetDirectoryName (DeveloperDirectory)), plist_path);
 				}
 			}
 		}
@@ -895,57 +855,6 @@ namespace Xamarin.Bundler {
 				throw new AggregateException (exceptions);
 
 			Watch ("Extracted native link info", 1);
-		}
-
-		static string FindSystemXcode ()
-		{
-			var output = new StringBuilder ();
-			if (RunCommand ("xcode-select", "-p", output: output) != 0) {
-				ErrorHelper.Warning (59, "Could not find the currently selected Xcode on the system: {0}", output.ToString ());
-				return null;
-			}
-			return output.ToString ().Trim ();
-		}
-
-		static string DeveloperDirectory {
-			get {
-				if (sdk_root == null)
-					sdk_root = LocateXcode ();
-				return sdk_root;
-			}
-		}
-
-		static string LocateXcode ()
-		{
-			// DEVELOPER_DIR overrides `xcrun` so it should have priority
-			string user_developer_directory = Environment.GetEnvironmentVariable ("DEVELOPER_DIR");
-			if (!String.IsNullOrEmpty (user_developer_directory))
-				return user_developer_directory;
-
-			// Next let's respect xcode-select -p if it exists
-			string systemXCodePath = FindSystemXcode ();
-			if (!String.IsNullOrEmpty (systemXCodePath)) {
-				if (!Directory.Exists (systemXCodePath)) {
-					ErrorHelper.Warning (60, "Could not find the currently selected Xcode on the system. 'xcode-select --print-path' returned '{0}', but that directory does not exist.", systemXCodePath);
-				}
-				else {
-					return systemXCodePath;
-				}
-			}
-
-			// Now the fallback locaions we uses to use (for backwards compat)
-			const string Xcode43Default = "/Applications/Xcode.app/Contents/Developer";
-			const string XcrunMavericks = "/Library/Developer/CommandLineTools";
-
-			if (Directory.Exists (Xcode43Default))
-				return Xcode43Default;
-
-			if (Directory.Exists (XcrunMavericks))
-				return XcrunMavericks;
-
-			// And now we give up, but don't throw like mtouch, because we don't want to change behavior (this sometimes worked it appears)
-			ErrorHelper.Warning (56, "Cannot find Xcode in any of our default locations. Please install Xcode, or pass a custom path using --sdkroot=<path>.");
-			return string.Empty;
 		}
 
 		static string MonoDirectory {
@@ -1358,12 +1267,10 @@ namespace Xamarin.Bundler {
 
 					// libmono-system-native.a needs to be included if it exists in the mono in question
 					string libmonoNative =  Path.Combine (libdir, "libmono-system-native.a");
-					if (File.Exists (libmonoNative))
+					if (File.Exists (libmonoNative)) {
 						args.Append (StringUtils.Quote (libmonoNative)).Append (' ');
-
-					var libsystem_native_path = Path.Combine (libdir, "libmono-system-native.a");
-					args.Append (StringUtils.Quote (libsystem_native_path)).Append (' ');
-					args.Append ("-u ").Append ("_SystemNative_RealPath").Append (' '); // This keeps libmono_system_native_la-pal_io.o symbols
+						args.Append ("-u ").Append ("_SystemNative_RealPath").Append (' '); // This keeps libmono_system_native_la-pal_io.o symbols
+					}
 
 					if (profiling.HasValue && profiling.Value) {
 						args.Append (StringUtils.Quote (Path.Combine (libdir, "libmono-profiler-log.a"))).Append (' ');
@@ -1760,7 +1667,7 @@ namespace Xamarin.Bundler {
 			if (ret != 0)
 				throw new MonoMacException (5311, true, "lipo failed with an error code '{0}'. Check build log for details.", ret);
 			if (name != "MonoPosixHelper")
-				ErrorHelper.Warning (2108, $"{name} was stripped of architectures except {arch} to comply with App Store restrictions. This could break exisiting codesigning signatures. Consider stripping the library with lipo or disabling with --optimize=-trim-architectures");
+				ErrorHelper.Warning (2108, $"{name} was stripped of architectures except {arch} to comply with App Store restrictions. This could break existing codesigning signatures. Consider stripping the library with lipo or disabling with --optimize=-trim-architectures");
 		}
 
 		static void CreateSymLink (string directory, string real, string link)

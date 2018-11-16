@@ -1,5 +1,7 @@
 #!/bin/bash -ex
 
+cd "$(dirname "${BASH_SOURCE[0]}")"
+
 # Clone files instead of copying them on APFS file systems. Much faster.
 CP="cp"
 if df -t apfs / >/dev/null 2>&1; then
@@ -12,6 +14,14 @@ DIR=$(pwd)/mac-test-package/mac-test-package
 ZIP=$DIR.zip
 rm -Rf $DIR
 mkdir -p $DIR
+
+make test.config
+source test.config
+export MD_APPLE_SDK_ROOT=$(dirname $(dirname $XCODE_DEVELOPER_ROOT))
+export XAMMAC_FRAMEWORK_PATH=$MAC_DESTDIR/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
+export XamarinMacFrameworkRoot=$MAC_DESTDIR/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
+export TargetFrameworkFallbackSearchPaths=$MAC_DESTDIR/Library/Frameworks/Mono.framework/External/xbuild-frameworks
+export MSBuildExtensionsPathFallbackPathsOverride=$MAC_DESTDIR/Library/Frameworks/Mono.framework/External/xbuild
 
 make
 make .stamp-configure-projects-mac
