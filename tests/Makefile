@@ -196,6 +196,10 @@ $(TOP)/tools/mtouch/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
 	@touch $@
 
 xharness/xharness.exe: $(wildcard xharness/*.cs) xharness/xharness.csproj $(TOP)/tools/mtouch/SdkVersions.cs test.config test-system.config .stamp-src-project-files
+	make -j8 -C $(TOP)/external/mono/mcs/class -i do-test PROFILE=MONOTOUCH # TODO: This should not be needed and we should get the dlls from the SDK.
+	make -j8 -C $(TOP)/external/mono/mcs/class -i do-xunit-test PROFILE=MONOTOUCH # TODO: This should not be needed and we should get the dlls from the SDK.
+	nuget restore xharness/xharness.csproj
+	nuget restore bcl-test/BCLTests/BCLTests.csproj
 	$(Q_GEN) $(SYSTEM_XIBUILD) -- $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
 
 killall:

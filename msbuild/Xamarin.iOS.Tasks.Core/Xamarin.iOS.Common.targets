@@ -2249,6 +2249,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			ITunesSourceFiles="@(_ITunesSourceFile)"
 			OutputPath="$(DeviceSpecificOutputPath)"
 			ProjectName="$(MSBuildProjectName)"
+			ProjectGuid="$(ProjectGuid)"
+			ProjectTypeGuids="$(ProjectTypeGuids)"
 			SolutionPath="$(SolutionPath)"
 			SigningKey="$(_CodeSigningKey)"
 			WatchAppReferences="@(_ResolvedWatchAppReferences)"
