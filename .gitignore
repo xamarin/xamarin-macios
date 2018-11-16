@@ -19,3 +19,5 @@ jenkins-results
 .vs
 *.raw
 bcl-test-importer
+tests/bcl-test/BCLTests/generated
+tests/xharness/System.ValueTuple.xml
