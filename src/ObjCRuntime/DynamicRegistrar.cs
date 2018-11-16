@@ -814,42 +814,8 @@ namespace Registrar {
 			/*FIXME try to guess the name of the missing library - quite trivial for monotouch.dll*/
 			// types decorated with [Model] attribute are not registered (see registrar.cs and regression from #769)
 			if (type.IsWrapper && !type.IsModel) {
-				if (!IsSimulatorOrDesktop) {
-					// This can happen when Apple introduces new types and puts them as base types for already
-					// existing types. We can't throw any exceptions in that case, since the derived class
-					// can still be used in older iOS versions.
-
-					// Hardcode these types to ignore any loading errors.
-					// We could also look at the AvailabilityAttribute, but it would require us
-					// to not link it away anymore like we currently do.
-
-#if !COREBUILD && !MONOMAC && !WATCH
-					var major = -1;
-					switch (type.Name) {
-					case "PKObject":
-					case "CBAttribute":
-					case "CBPeer":
-						major = 8;
-						break;
-					case "GKGameCenterViewController":
-						major = 6;
-						break;
-					case "CBManager":
-					case "GKBasePlayer":
-						major = 10;
-						break;
-					}
-					if ((major > 0) && !UIDevice.CurrentDevice.CheckSystemVersion (major, 0))
-						return;
-#endif
-
-					// a missing [Model] attribute will cause this error on devices (e.g. bug #4864)
-					throw ErrorHelper.CreateError (8005, "Wrapper type '{0}' is missing its native ObjectiveC class '{1}'.", type.Type.FullName, type.Name);
-				} else {
-					/*On simulator this is a common issue since we eagerly register all types. This is an issue with unlinked
-					monotouch.dll since we don't link all frameworks most of the time. */
-					return;
-				}
+				// This is a common issue if we use the dynamic registrar, since we eagerly register all types.
+				return;
 			}
 
 			if (type.IsFakeProtocol)
