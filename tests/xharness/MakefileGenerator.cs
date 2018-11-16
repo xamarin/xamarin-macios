@@ -92,7 +92,7 @@ namespace xharness
 			var makefile = Path.Combine (harness.RootDirectory, "Makefile-mac.inc");
 			using (var writer = new StreamWriter (makefile, false, new UTF8Encoding (false))) {
 				writer.WriteLine (".stamp-configure-projects-mac: Makefile xharness/xharness.exe");
-				writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --configure --autoconf --rootdir $(CURDIR)");
+				writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug $(XIBUILD_EXE_PATH) -t -- $(CURDIR)/xharness/xharness.exe $(XHARNESS_VERBOSITY) --configure --autoconf --rootdir $(CURDIR)");
 				writer.WriteLine ("\t$(Q) touch $@");
 				writer.WriteLine ();
 				var nuget_restore_dependency = ".stamp-nuget-restore-mac";
@@ -154,17 +154,17 @@ namespace xharness
 						string guiUnitDependency = ((MacUnifiedTarget)target).Mobile ? "$(GUI_UNIT_PATH)/bin/xammac_mobile/GuiUnit.exe" : "$(GUI_UNIT_PATH)/bin/net_4_5/GuiUnit.exe";
 
 						writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Build), "{0}", target.ProjectPath.Replace (" ", "\\ ") + " "  + guiUnitDependency + " " + nuget_restore_dependency);
-						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)\" /t:Build $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
+						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XIBUILD) -- \"/property:Configuration=$(CONFIG)\" /t:Build $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
 						writer.WriteLine ();
 
 						writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Clean), "");
-						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)\" /t:Clean $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
+						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XIBUILD) -- \"/property:Configuration=$(CONFIG)\" /t:Clean $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
 						writer.WriteLine ();
 
 						writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Exec), "");
 						if (target.IsNUnitProject) {
 							writer.WriteLine ("\t$(Q)rm -f $(CURDIR)/.{0}-failed.stamp", make_escaped_name);
-							writer.WriteLine ("\t$(SYSTEM_MONO) --debug $(TOP)/packages/NUnit.ConsoleRunner.3.5.0/tools/nunit3-console.exe \"{1}/bin/$(CONFIG)/mmptest.dll\" \"--result=$(abspath $(CURDIR)/{0}-TestResult.xml);format=nunit2\" $(TEST_FIXTURE) --labels=All || touch $(CURDIR)/.{0}-failed.stamp", make_escaped_name, Path.GetDirectoryName (target.ProjectPath));
+							writer.WriteLine ("\t$(SYSTEM_MONO) --debug $(XIBUILD_EXE_PATH) -t -- $(TOP)/packages/NUnit.ConsoleRunner.3.5.0/tools/nunit3-console.exe \"{1}/bin/$(CONFIG)/mmptest.dll\" \"--result=$(abspath $(CURDIR)/{0}-TestResult.xml);format=nunit2\" $(TEST_FIXTURE) --labels=All || touch $(CURDIR)/.{0}-failed.stamp", make_escaped_name, Path.GetDirectoryName (target.ProjectPath));
 							writer.WriteLine ("\t$(Q)[[ -z \"$$BUILD_REPOSITORY\" ]] || ( xsltproc $(TOP)/tests/HtmlTransform.xslt {0}-TestResult.xml > {0}-index.html && echo \"@MonkeyWrench: AddFile: $$PWD/{0}-index.html\")", make_escaped_name);
 							writer.WriteLine ("\t$(Q)[[ ! -e .{0}-failed.stamp ]]", make_escaped_name);
 						} else if (target.IsBCLProject)
@@ -285,7 +285,7 @@ namespace xharness
 			var makefile = Path.Combine (harness.RootDirectory, "Makefile.inc");
 			using (var writer = new StreamWriter (makefile, false, new UTF8Encoding (false))) {
 				writer.WriteLine (".stamp-configure-projects: Makefile xharness/xharness.exe");
-				writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --configure --autoconf --rootdir $(CURDIR)");
+				writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug $(XIBUILD_EXE_PATH) -t -- $(CURDIR)/xharness/xharness.exe $(XHARNESS_VERBOSITY) --configure --autoconf --rootdir $(CURDIR)");
 				writer.WriteLine ("\t$(Q) touch $@");
 				writer.WriteLine ();
 
@@ -321,7 +321,7 @@ namespace xharness
 						writer.WriteLine ();
 					}
 					writer.WriteTarget ("build{0}-sim{3}-{1}", "{2}", make_escaped_suffix, make_escaped_name, target.ProjectPath.Replace (" ", "\\ "), target.MakefileWhereSuffix);
-					writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)\" \"/property:Platform=iPhoneSimulator\" /t:Build $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
+					writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XIBUILD) -- \"/property:Configuration=$(CONFIG)\" \"/property:Platform=iPhoneSimulator\" /t:Build $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
 					writer.WriteLine ();
 
 					// clean sim project target
@@ -331,7 +331,7 @@ namespace xharness
 						writer.WriteLine ();
 					}
 					writer.WriteTarget ("clean{0}-sim{2}-{1}", string.Empty, make_escaped_suffix, make_escaped_name, target.ProjectPath.Replace (" ", "\\ "), target.MakefileWhereSuffix);
-					writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)\" \"/property:Platform=iPhoneSimulator\" /t:Clean $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
+					writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XIBUILD) -- \"/property:Configuration=$(CONFIG)\" \"/property:Platform=iPhoneSimulator\" /t:Clean $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
 					writer.WriteLine ();
 
 					// run sim project target
@@ -379,19 +379,19 @@ namespace xharness
 					// exec sim project target
 					if (target.IsMultiArchitecture) {
 						writer.WriteTarget ("exec{0}-sim64-{1}", "$(UNIT_SERVER)", make_escaped_suffix, make_escaped_name);
-						writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-simulator-64 --sdkroot $(XCODE_DEVELOPER_ROOT) --logdirectory \"$(abspath $(CURDIR))/logs/$@\" --configuration $(CONFIG)", target.ProjectPath, target.Platform); 
+						writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug $(XIBUILD_EXE_PATH) -t -- $(CURDIR)/xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-simulator-64 --sdkroot $(XCODE_DEVELOPER_ROOT) --logdirectory \"$(abspath $(CURDIR))/logs/$@\" --configuration $(CONFIG)", target.ProjectPath, target.Platform); 
 						writer.WriteLine ();
 
 						writer.WriteTarget ("exec{0}-sim32-{1}", "$(UNIT_SERVER)", make_escaped_suffix, make_escaped_name);
 						if (executeSim32) {
-							writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-simulator-32 --sdkroot $(XCODE_DEVELOPER_ROOT) --logdirectory \"$(abspath $(CURDIR))/logs/$@\" --configuration $(CONFIG)", target.ProjectPath, target.Platform);
+							writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug $(XIBUILD_EXE_PATH) -t -- $(CURDIR)/xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-simulator-32 --sdkroot $(XCODE_DEVELOPER_ROOT) --logdirectory \"$(abspath $(CURDIR))/logs/$@\" --configuration $(CONFIG)", target.ProjectPath, target.Platform);
 						} else {
 							writer.WriteLine ("\t$(Q) echo 'Execution of sim32 has been disabled.'");
 						}
 						writer.WriteLine ();
 					} else {
 						writer.WriteTarget ("exec{0}-sim{2}-{1}", "$(UNIT_SERVER)", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-						writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-simulator --sdkroot $(XCODE_DEVELOPER_ROOT) --logdirectory \"$(abspath $(CURDIR))/logs/$@\" --configuration $(CONFIG)", target.ProjectPath, target.Platform); 
+						writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug $(XIBUILD_EXE_PATH) -t -- $(CURDIR)/xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-simulator --sdkroot $(XCODE_DEVELOPER_ROOT) --logdirectory \"$(abspath $(CURDIR))/logs/$@\" --configuration $(CONFIG)", target.ProjectPath, target.Platform); 
 						writer.WriteLine ();
 					}
 
@@ -424,15 +424,15 @@ namespace xharness
 						writer.WriteLine ();
 
 						writer.WriteTarget ("build{0}-dev32-{1}", "{2} xharness/xharness.exe", make_escaped_suffix, make_escaped_name, target.ProjectPath.Replace (" ", "\\ "));
-						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)32\" \"/property:Platform=iPhone\" /t:Build $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
+						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XIBUILD) -- \"/property:Configuration=$(CONFIG)32\" \"/property:Platform=iPhone\" /t:Build $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
 						writer.WriteLine ();
 
 						writer.WriteTarget ("build{0}-dev64-{1}", "{2} xharness/xharness.exe", make_escaped_suffix, make_escaped_name, target.ProjectPath.Replace (" ", "\\ "));
-						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)64\" \"/property:Platform=iPhone\" /t:Build $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
+						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XIBUILD) -- \"/property:Configuration=$(CONFIG)64\" \"/property:Platform=iPhone\" /t:Build $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
 						writer.WriteLine ();
 					} else {
 						writer.WriteTarget ("build{0}-dev{3}-{1}", "{2} xharness/xharness.exe", make_escaped_suffix, make_escaped_name, target.ProjectPath.Replace (" ", "\\ "), target.MakefileWhereSuffix);
-						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)\" \"/property:Platform=iPhone\" /t:Build $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
+						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XIBUILD) -- \"/property:Configuration=$(CONFIG)\" \"/property:Platform=iPhone\" /t:Build $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
 						writer.WriteLine ();
 					}
 
@@ -448,25 +448,25 @@ namespace xharness
 						writer.WriteLine ();
 
 						writer.WriteTarget ("clean{0}-dev32-{1}", string.Empty, make_escaped_suffix, make_escaped_name);
-						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)32\" \"/property:Platform=iPhone\" /t:Clean $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
+						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XIBUILD) -- \"/property:Configuration=$(CONFIG)32\" \"/property:Platform=iPhone\" /t:Clean $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
 						writer.WriteLine ();
 
 						writer.WriteTarget ("clean{0}-dev64-{1}", string.Empty, make_escaped_suffix, make_escaped_name);
-						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)64\" \"/property:Platform=iPhone\" /t:Clean $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
+						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XIBUILD) -- \"/property:Configuration=$(CONFIG)64\" \"/property:Platform=iPhone\" /t:Clean $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
 						writer.WriteLine ();
 					} else {
 						writer.WriteTarget ("clean{0}-dev{2}-{1}", string.Empty, make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)\" \"/property:Platform=iPhone\" /t:Clean $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
+						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XIBUILD) -- \"/property:Configuration=$(CONFIG)\" \"/property:Platform=iPhone\" /t:Clean $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
 						writer.WriteLine ();
 					}
 
 					// install dev project target
 					if (target.IsMultiArchitecture) {
 						writer.WriteTarget ("install{0}-dev32-{1}", "xharness/xharness.exe", make_escaped_suffix, make_escaped_name);
-						writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --install \"{0}\" --target {1}-device --sdkroot $(XCODE_DEVELOPER_ROOT) --configuration $(CONFIG)32", target.ProjectPath, target.Platform);
+						writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug $(XIBUILD_EXE_PATH) -t -- $(CURDIR)/xharness/xharness.exe $(XHARNESS_VERBOSITY) --install \"{0}\" --target {1}-device --sdkroot $(XCODE_DEVELOPER_ROOT) --configuration $(CONFIG)32", target.ProjectPath, target.Platform);
 						writer.WriteLine ();
 						writer.WriteTarget ("install{0}-dev64-{1}", "xharness/xharness.exe", make_escaped_suffix, make_escaped_name);
-						writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --install \"{0}\" --target {1}-device --sdkroot $(XCODE_DEVELOPER_ROOT) --configuration $(CONFIG)64", target.ProjectPath, target.Platform);
+						writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug $(XIBUILD_EXE_PATH) -t -- $(CURDIR)/xharness/xharness.exe $(XHARNESS_VERBOSITY) --install \"{0}\" --target {1}-device --sdkroot $(XCODE_DEVELOPER_ROOT) --configuration $(CONFIG)64", target.ProjectPath, target.Platform);
 						writer.WriteLine ();
 					} else {
 						if (target.IsBCLProject) {
@@ -475,7 +475,7 @@ namespace xharness
 							writer.WriteLine ();
 						}
 						writer.WriteTarget ("install{0}-dev{2}-{1}", "xharness/xharness.exe", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-						writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --install \"{0}\" --target {1}-device --sdkroot $(XCODE_DEVELOPER_ROOT) --configuration $(CONFIG)", target.ProjectPath, target.Platform);
+						writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug $(XIBUILD_EXE_PATH) -t -- $(CURDIR)/xharness/xharness.exe $(XHARNESS_VERBOSITY) --install \"{0}\" --target {1}-device --sdkroot $(XCODE_DEVELOPER_ROOT) --configuration $(CONFIG)", target.ProjectPath, target.Platform);
 						writer.WriteLine ();
 					}
 
@@ -545,7 +545,7 @@ namespace xharness
 								var target_name = string.Format ("exec{0}-dev{2}-{1}-{3}", make_escaped_suffix, make_escaped_name, suffix, chunk_name);
 								writer.WriteTarget (target_name, "xharness/xharness.exe");
 								writer.WriteLine ("\t@echo Executing subset: {0}-{1}", chunk [0], chunk [1]);
-								writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-device --sdkroot $(XCODE_DEVELOPER_ROOT) --configuration $(CONFIG){4} --logdirectory \"$(abspath $(CURDIR))/logs/$@\" --setenv:NUNIT_FILTER_START={2} --setenv:NUNIT_FILTER_END={3}", target.ProjectPath, target.Platform, chunk [0], chunk [1], suffix);
+								writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug $(XIBUILD_EXE_PATH) -t -- $(CURDIR)/xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-device --sdkroot $(XCODE_DEVELOPER_ROOT) --configuration $(CONFIG){4} --logdirectory \"$(abspath $(CURDIR))/logs/$@\" --setenv:NUNIT_FILTER_START={2} --setenv:NUNIT_FILTER_END={3}", target.ProjectPath, target.Platform, chunk [0], chunk [1], suffix);
 								writer.WriteLine ();
 								writer.WriteTarget ("run{0}-dev{2}-{1}-{3}", "xharness/xharness.exe", make_escaped_suffix, make_escaped_name, suffix, chunk_name);
 								writer.WriteLine ("\t$(Q) $(MAKE) build{0}-dev{2}-{1}", make_escaped_suffix, make_escaped_name, suffix);
@@ -560,15 +560,15 @@ namespace xharness
 					} else {
 						if (target.IsMultiArchitecture) {
 							writer.WriteTarget ("exec{0}-dev32-{1}", "xharness/xharness.exe", make_escaped_suffix, make_escaped_name);
-							writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-device --sdkroot $(XCODE_DEVELOPER_ROOT) --configuration $(CONFIG)32 --logdirectory \"$(abspath $(CURDIR))/logs/$@\"", target.ProjectPath, target.Platform);
+							writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug $(XIBUILD_EXE_PATH) -t -- $(CURDIR)/xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-device --sdkroot $(XCODE_DEVELOPER_ROOT) --configuration $(CONFIG)32 --logdirectory \"$(abspath $(CURDIR))/logs/$@\"", target.ProjectPath, target.Platform);
 							writer.WriteLine ();
 
 							writer.WriteTarget ("exec{0}-dev64-{1}", "xharness/xharness.exe", make_escaped_suffix, make_escaped_name);
-							writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-device --sdkroot $(XCODE_DEVELOPER_ROOT) --configuration $(CONFIG)64 --logdirectory \"$(abspath $(CURDIR))/logs/$@\"", target.ProjectPath, target.Platform);
+							writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug $(XIBUILD_EXE_PATH) -t -- $(CURDIR)/xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-device --sdkroot $(XCODE_DEVELOPER_ROOT) --configuration $(CONFIG)64 --logdirectory \"$(abspath $(CURDIR))/logs/$@\"", target.ProjectPath, target.Platform);
 							writer.WriteLine ();
 						} else {
 							writer.WriteTarget ("exec{0}-dev{2}-{1}", "xharness/xharness.exe", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-							writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-device --sdkroot $(XCODE_DEVELOPER_ROOT) --configuration $(CONFIG) --logdirectory \"$(abspath $(CURDIR))/logs/$@\"", target.ProjectPath, target.Platform);
+							writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug $(XIBUILD_EXE_PATH) -t -- $(CURDIR)/xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-device --sdkroot $(XCODE_DEVELOPER_ROOT) --configuration $(CONFIG) --logdirectory \"$(abspath $(CURDIR))/logs/$@\"", target.ProjectPath, target.Platform);
 						}
 					}
 					writer.WriteLine ();
