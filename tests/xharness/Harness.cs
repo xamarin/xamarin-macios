@@ -291,6 +291,10 @@ namespace xharness
 					MacTestProjects.Add (bclTestProject);
 				}
 			}
+			var monoImportTestFactory = new BCLTestImportTargetFactory (this);
+			foreach (var target in monoImportTestFactory.GetMacBclTargets ()) {
+				MacTestProjects.Add (target);
+			}
 		}
 
 		void AutoConfigureIOS ()
@@ -356,7 +360,7 @@ namespace xharness
 
 			// add all the tests that are using the precompiled mono assemblies
 			var monoImportTestFactory = new BCLTestImportTargetFactory (this);
-			foreach (var target in monoImportTestFactory.GetBclTargets ()) {
+			foreach (var target in monoImportTestFactory.GetiOSBclTargets ()) {
 				IOSTestProjects.Add (target);
 			}
 

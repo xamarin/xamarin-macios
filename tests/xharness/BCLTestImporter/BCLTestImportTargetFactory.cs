@@ -27,16 +27,28 @@ namespace xharness.BCLTestImporter {
 		}
 		
 		// generate all the different test targets.
-		public List<iOSTestProject> GetBclTargets ()
+		public List<iOSTestProject> GetiOSBclTargets ()
 		{
 			var result = new List<iOSTestProject> ();
 			// generate all projects, then create a new iOSTarget per project
-			foreach (var (name, path, xunit, platforms) in projectGenerator.GenerateAllTestProjects ()) {
+			foreach (var (name, path, xunit, platforms) in projectGenerator.GenerateAlliOSTestProjects ()) {
 				var prefix = xunit ? "xUnit" : "NUnit";
 				result.Add (new iOSTestProject (path) { 
 					Name = $"[{prefix}] Mono {name}",
 					SkiptvOSVariation=!platforms.Contains (Platform.TvOS),
 					SkipwatchOSVariation=!platforms.Contains (Platform.WatchOS)
+				});
+			}
+			return result;
+		}
+		
+		public List<MacTestProject> GetMacBclTargets ()
+		{
+			var result = new List<MacTestProject> ();
+			foreach (var (name, path, xunit) in projectGenerator.GenerateAllMacTestProjects ()) {
+				var prefix = "XamMac " + (xunit ? "xUnit" : "NUnit");
+				result.Add (new MacTestProject (path) {
+					Name = $"[{prefix}] Mono {name}",
 				});
 			}
 			return result;

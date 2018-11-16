@@ -12,7 +12,7 @@ namespace BCLTestImporter {
 			{Platform.iOS, "monotouch"},
 			{Platform.WatchOS, "monotouch"},
 			{Platform.TvOS, "monotouch"},
-			{Platform.MacOS, "xammac"},
+			{Platform.MacOS, "xammac_net_4_5-darwin"},
 		};
 		#endregion
 		

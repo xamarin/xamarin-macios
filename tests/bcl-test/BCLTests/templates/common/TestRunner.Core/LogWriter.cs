@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
 using Foundation;
+#if !MONOMAC
 using UIKit;
+#endif
 using ObjCRuntime;
 using Constants = global::ObjCRuntime.Constants;
 
@@ -26,7 +28,7 @@ namespace Xamarin.iOS.UnitTests
 		
 		static string UniqueIdentifier {
 			get {
-#if !__WATCHOS__
+#if !__WATCHOS__ && !MONOMAC
 				IntPtr handle = UIDevice.CurrentDevice.Handle;
 				if (UIDevice.CurrentDevice.RespondsToSelector (new Selector ("uniqueIdentifier")))
 					return NSString.FromHandle (objc_msgSend (handle, Selector.GetHandle("uniqueIdentifier")));
@@ -37,7 +39,7 @@ namespace Xamarin.iOS.UnitTests
 		
 		public void InitLogging ()
 		{
-#if !__WATCHOS__
+#if !__WATCHOS__ && !MONOMAC
 			UIDevice device = UIDevice.CurrentDevice;
 #endif
 			
@@ -45,7 +47,7 @@ namespace Xamarin.iOS.UnitTests
 			writer.WriteLine ("[Runner executing:\t{0}]", "Run everything");
 			writer.WriteLine ("[MonoTouch Version:\t{0}]", Constants.Version);
 			writer.WriteLine ("[Assembly:\t{0}.dll ({1} bits)]", typeof (NSObject).Assembly.GetName ().Name, IntPtr.Size * 8);
-#if !__WATCHOS__
+#if !__WATCHOS__ && !MONOMAC
 			writer.WriteLine ("[{0}:\t{1} v{2}]", device.Model, device.SystemName, device.SystemVersion);
 			writer.WriteLine ("[Device Name:\t{0}]", device.Name);
 #endif
