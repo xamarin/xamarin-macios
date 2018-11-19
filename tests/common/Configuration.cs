@@ -501,5 +501,9 @@ namespace Xamarin.Tests
 				return Path.Combine (RootPath, "packages");
 			}
 		}
+
+		public static string XIBuildPath {
+			get { return Path.GetFullPath (Path.Combine (SourceRoot, "tools", "xibuild", "xibuild")); }
+		}
 	}
 }
