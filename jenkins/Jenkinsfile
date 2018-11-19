@@ -14,6 +14,7 @@ utils = null
 errorMessage = null
 currentStage = null
 failedStages = []
+workspace = null
 
 xiPackageFilename = null
 xmPackageFilename = null
@@ -134,8 +135,8 @@ def reportFinalStatusToSlack (err, gitHash, currentStage, fileContents)
         authorEmail = env.CHANGE_AUTHOR_EMAIL
         slackMessage = "Pull Request #<${env.CHANGE_URL}|${env.CHANGE_ID}> failed to build."
     } else {
-        authorName = sh (script: "git log -1 --pretty=%an", returnStdout: true).trim ()
-        authorEmail = sh (script: "git log -1 --pretty=%ae", returnStdout: true).trim ()
+        authorName = sh (script: "cd ${workspace} && git log -1 --pretty=%an", returnStdout: true).trim ()
+        authorEmail = sh (script: "cd ${workspace} && git log -1 --pretty=%ae", returnStdout: true).trim ()
         slackMessage = "Commit <https://github.com/${repository}/commit/${gitHash}|${gitHash}> failed to build."
     }
 
