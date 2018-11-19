@@ -128,41 +128,45 @@ def reportFinalStatusToSlack (err, gitHash, currentStage, fileContents)
     if ("${status}" == "SUCCESS" && err == "")
         return // not reporting success to slack
 
-    def authorName = null
-    def authorEmail = null
-    if (isPr) {
-        authorName = env.CHANGE_AUTHOR_DISPLAY_NAME
-        authorEmail = env.CHANGE_AUTHOR_EMAIL
-        slackMessage = "Pull Request #<${env.CHANGE_URL}|${env.CHANGE_ID}> failed to build."
-    } else {
-        authorName = sh (script: "cd ${workspace} && git log -1 --pretty=%an", returnStdout: true).trim ()
-        authorEmail = sh (script: "cd ${workspace} && git log -1 --pretty=%ae", returnStdout: true).trim ()
-        slackMessage = "Commit <https://github.com/${repository}/commit/${gitHash}|${gitHash}> failed to build."
-    }
-
-    def title = null
-    if (err != null) {
-        title = "Internal jenkins failed in stage '${currentStage}': ${err}"
-    } else {
-        title = "Internal jenkins failed in stage '${currentStage}'"
-    }
-    def text = ""
-    if (fileContents != null)
-        text = "\"text\": ${groovy.json.JsonOutput.toJson (markdownToSlack (fileContents))},"
-    // The attachments string must not start with a newline, it will produce a very helpful 'Invalid JSON String' exception with no additional info.
-    def attachments = """[
-        {
-            \"author_name\": \"${authorName} (${authorEmail})\",
-            \"title\": \"${title}\",
-            \"title_link\": \"${env.RUN_DISPLAY_URL}\",
-            \"color\": \"danger\",
-            ${text}
-            \"fallback\": \"Build failed\"
+    try {
+        def authorName = null
+        def authorEmail = null
+        if (isPr) {
+            authorName = env.CHANGE_AUTHOR_DISPLAY_NAME
+            authorEmail = env.CHANGE_AUTHOR_EMAIL
+            slackMessage = "Pull Request #<${env.CHANGE_URL}|${env.CHANGE_ID}> failed to build."
+        } else {
+            authorName = sh (script: "cd ${workspace} && git log -1 --pretty=%an", returnStdout: true).trim ()
+            authorEmail = sh (script: "cd ${workspace} && git log -1 --pretty=%ae", returnStdout: true).trim ()
+            slackMessage = "Commit <https://github.com/${repository}/commit/${gitHash}|${gitHash}> failed to build."
         }
-    ]
-    """
-    echo (attachments)
-    slackSend (botUser: true, channel: "#ios-notifications", color: "danger", message: slackMessage, attachments: attachments)
+
+        def title = null
+        if (err != null) {
+            title = "Internal jenkins failed in stage '${currentStage}': ${err}"
+        } else {
+            title = "Internal jenkins failed in stage '${currentStage}'"
+        }
+        def text = ""
+        if (fileContents != null)
+            text = "\"text\": ${groovy.json.JsonOutput.toJson (markdownToSlack (fileContents))},"
+        // The attachments string must not start with a newline, it will produce a very helpful 'Invalid JSON String' exception with no additional info.
+        def attachments = """[
+            {
+                \"author_name\": \"${authorName} (${authorEmail})\",
+                \"title\": \"${title}\",
+                \"title_link\": \"${env.RUN_DISPLAY_URL}\",
+                \"color\": \"danger\",
+                ${text}
+                \"fallback\": \"Build failed\"
+            }
+        ]
+        """
+        echo (attachments)
+        slackSend (botUser: true, channel: "#ios-notifications", color: "danger", message: slackMessage, attachments: attachments)
+    } catch (e) {
+        echo ("Failed to report to Slack: ${e}")
+    }
 }
 
 def reportFinalStatus (err, gitHash, currentStage)
