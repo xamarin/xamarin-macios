@@ -267,7 +267,7 @@ namespace Xamarin.MMP.Tests
 
 			if (isUnified) {
 				buildArgs.Insert (0, " -- ");
-				return RunAndAssert ("xibuild", buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo, environment);
+				return RunAndAssert (Path.Combine (rootDirectory, "../tools/xibuild/xibuild"), buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo, environment);
 			} else
 				return RunAndAssert ("/Applications/Visual Studio.app/Contents/MacOS/vstool", buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo, environment);
 		}
