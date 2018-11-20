@@ -718,6 +718,7 @@ timestamps {
                                                 if (runTestResult != 0) {
                                                     echoError ("Test run failed")
                                                     currentBuild.result = 'FAILURE'
+                                                    failedStages.add (currentStage)
                                                 }
                                             }
                                         }
@@ -733,6 +734,7 @@ timestamps {
                                                 if (testDocsResult != 0) {
                                                     echoError ("Test docs failed")
                                                     currentBuild.result = 'FAILURE'
+                                                    failedStages.add (currentStage)
                                                 }
                                             }
                                         }
