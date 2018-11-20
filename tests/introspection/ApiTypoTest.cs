@@ -21,6 +21,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -847,7 +848,7 @@ namespace Introspection
 		}
 
 		[Test]
-		public void TypoTest ()
+		public virtual void TypoTest ()
 		{
 			var types = Assembly.GetTypes ();
 			int totalErrors = 0;
@@ -1033,6 +1034,55 @@ namespace Introspection
 				}
 			}
 			return clean.ToString ();
+		}
+
+		bool CheckLibrary (string lib)
+		{
+#if !MONOMAC
+			// simulator path do not match the strings
+			if (Runtime.Arch != Arch.DEVICE)
+				return true;
+#endif
+			var h = IntPtr.Zero;
+			try {
+				h = Dlfcn.dlopen (lib, 0);
+				return (h != IntPtr.Zero);
+			} finally {
+				Dlfcn.dlclose (h);
+			}
+		}
+
+		[Test]
+		public void ConstantsCheck ()
+		{
+			var c = typeof (Constants);
+			foreach (var fi in c.GetFields ()) {
+				if (!fi.IsPublic)
+					continue;
+				var s = fi.GetValue (null) as string;
+				switch (fi.Name) {
+				case "Version":
+				case "SdkVersion":
+					Assert.True (Version.TryParse (s, out _), fi.Name);
+					break;
+#if !XAMCORE_4_0
+#if __TVOS__
+				case "PassKitLibrary": // not part of tvOS
+					break;
+#endif
+				case "libcompression": // bad (missing) suffix
+					Assert.True (CheckLibrary (s), fi.Name);
+					break;
+#endif
+				default:
+					if (fi.Name.EndsWith ("Library", StringComparison.Ordinal)) {
+						Assert.True (CheckLibrary (s), fi.Name);
+					} else {
+						Assert.Fail ($"Unknown '{fi.Name}' field cannot be verified - please fix me!");
+					}
+					break;
+				}
+			}
 		}
 	}
 }

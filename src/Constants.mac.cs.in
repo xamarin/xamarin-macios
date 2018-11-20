@@ -123,8 +123,10 @@ namespace MonoMac {
 
 		public const string SafariServicesLibrary = "/System/Library/Frameworks/SafariServices.framework/SafariServices";
 		public const string PrintCoreLibrary = "/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/PrintCore.framework/PrintCore";
-
+		public const string libcompressionLibrary = "/usr/lib/libcompression.dylib";
+#if !XAMCORE_4_0
 		public const string libcompression = "/usr/lib/libcompression.dylib";
+#endif
 
 		// macOS 10.12
 		public const string PhotosLibrary = "/System/Library/Frameworks/Photos.framework/Photos";
