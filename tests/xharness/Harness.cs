@@ -356,7 +356,7 @@ namespace xharness
 
 			// add all the tests that are using the precompiled mono assemblies
 			var monoImportTestFactory = new BCLTestImportTargetFactory (this);
-			foreach (var target in monoImportTestFactory.GetBclTargets (this)) {
+			foreach (var target in monoImportTestFactory.GetBclTargets ()) {
 				IOSTestProjects.Add (target);
 			}
 
@@ -828,14 +828,6 @@ namespace xharness
 			}
 
 			return rv;
-		}
-
-		Task<ProcessExecutionResult> build_bcl_tests;
-		public Task<ProcessExecutionResult> BuildBclTests ()
-		{
-			if (build_bcl_tests == null)
-				build_bcl_tests = ProcessHelper.ExecuteCommandAsync ("make", $".stamp-build-mono-unit-tests -C {StringUtils.Quote (Path.GetFullPath (RootDirectory))}", HarnessLog, TimeSpan.FromMinutes (30));
-			return build_bcl_tests;
 		}
 	}
 
