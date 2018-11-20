@@ -75,6 +75,107 @@ namespace Xamarin.Tests
 				}
 			}
 		}
+
+		[Test]
+		[TestCase (Profile.iOS)]
+		[TestCase (Profile.tvOS)]
+		[TestCase (Profile.watchOS)]
+		[TestCase (Profile.macOSMobile)]
+		public void PublicSymbols (Profile profile)
+		{
+			var paths = new HashSet<string> ();
+			paths.UnionWith (Directory.GetFileSystemEntries (Configuration.GetSdkPath (profile, true), "*.a", SearchOption.AllDirectories));
+			paths.UnionWith (Directory.GetFileSystemEntries (Configuration.GetSdkPath (profile, false), "*.a", SearchOption.AllDirectories));
+			var failed = new StringBuilder ();
+
+			var prefixes = new string [] {
+				// xamarin-macios
+				"_xamarin_",
+				"_monotouch_",
+				"_monomac_",
+				"_OBJC_METACLASS_$_Xamarin",
+				"_OBJC_CLASS_$_Xamarin",
+				"_OBJC_IVAR_$_Xamarin",
+				"__ZN13XamarinObject",
+				"_main",
+				 // I think these are inline functions from a header
+				"__Z7isasciii",
+				"__Z7isblanki",
+				"__Z7isdigiti",
+				"__Z8__istypeim",
+				"__Z9__isctypeim",
+				// mono
+				"_mono_",
+				"_monoeg_",
+				"_eg_",
+				"_mini_",
+				"_proflog_",
+				"_ves_icall_",
+				"___mono_jit_",
+				"_sdb_options",
+				"_SystemNative_",
+				"_gateway_from_rtm",
+				"_sgen_",
+				"_arm_patch",
+				"_g_printv",
+				// These two aren't public in a way we care about
+				"l_OBJC_LABEL_PROTOCOL_$_",
+				"l_OBJC_PROTOCOL_$_",
+			};
+
+			paths.RemoveWhere ((v) => {
+				var file = Path.GetFileName (v);
+				switch (file) {
+				case "libxammac-classic.a":
+				case "libxammac-classic-debug.a":
+				case "libxammac-system-classic.a":
+				case "libxammac-system-classic-debug.a":
+					return true;
+				}
+				return false;
+			});
+
+
+			foreach (var path in paths) {
+				var symbols = MTouchTool.GetNativeSymbolsInExecutable (path);
+
+				// Remove known public symbols
+				symbols = symbols.Where ((v) => {
+					foreach (var prefix in prefixes) {
+						if (v.StartsWith (prefix, StringComparison.Ordinal))
+							return false;
+					}
+
+					// zlib-helper symbols
+					switch (v) {
+					case "_CloseZStream":
+					case "_CreateZStream":
+					case "_Flush":
+					case "_ReadZStream":
+					case "_WriteZStream":
+						return false;
+					}
+
+					// Be a bit more lenient with symbols from the static registrar
+					if (path.Contains (".registrar.")) {
+						if (v.StartsWith ("_OBJC_CLASS_$", StringComparison.Ordinal))
+							return false;
+						if (v.StartsWith ("_OBJC_IVAR_$", StringComparison.Ordinal))
+							return false;
+						if (v.StartsWith ("_OBJC_METACLASS_$", StringComparison.Ordinal))
+							return false;
+					}
+
+					return true;
+				});
+
+				// If there are any public symbols left, that's a problem so fail the test.
+				if (symbols.Any ())
+					failed.AppendLine ($"{path}:\n\t{string.Join ("\n\t", symbols.ToArray ())}");
+			}
+
+			Assert.IsEmpty (failed.ToString (), "Failed libraries");
+		}
 	}
 }
 
