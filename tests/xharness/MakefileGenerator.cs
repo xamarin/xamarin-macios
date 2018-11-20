@@ -297,7 +297,7 @@ namespace xharness
 
 				// build/[install/]run targets for specific test projects.
 				foreach (var target in allTargets) {
-					if (!target.IsExe)
+					if (!target.IsExe || target.Name.Contains ("BCLTests"))
 						continue;
 
 					var make_escaped_suffix = target.GetMakeSuffix ();
@@ -591,7 +591,7 @@ namespace xharness
 				writer.WriteLine ("run-local:"); // run every single test we have everywhere
 				writer.WriteLine ("\t$(Q) rm -rf \".$@-failure.stamp\"");
 				foreach (var target in allTargets) {
-					if (!target.IsExe)
+					if (!target.IsExe || target.Name.Contains ("BCLTests"))
 						continue;
 
 					writer.WriteLine ("\t$(Q) $(MAKE) \"run{0}-sim-{1}\" || echo \"run{0}-sim-{1} failed\" >> \".$@-failure.stamp\"", target.GetMakeSuffix (false), target.GetMakeName (false));
@@ -603,7 +603,7 @@ namespace xharness
 				writer.WriteLine ("run-sim run-all-sim:"); // run every single test we have in the simulator
 				writer.WriteLine ("\t$(Q) rm -rf \".$@-failure.stamp\"");
 				foreach (var target in allTargets) {
-					if (!target.IsExe)
+					if (!target.IsExe || target.Name.Contains ("BCLTests"))
 						continue;
 
 					writer.WriteLine ("\t$(Q) $(MAKE) \"run{0}-sim-{1}\" || echo \"run{0}-sim-{1} failed\" >> \".$@-failure.stamp\"", target.GetMakeSuffix (false), target.GetMakeName (false));
@@ -614,7 +614,7 @@ namespace xharness
 				writer.WriteLine ("run-dev run-all-dev:"); // run every single test we have on device
 				writer.WriteLine ("\t$(Q) rm -rf \".$@-failure.stamp\"");
 				foreach (var target in allTargets) {
-					if (!target.IsExe)
+					if (!target.IsExe || target.Name.Contains ("BCLTests"))
 						continue;
 
 					writer.WriteLine ("\t$(Q) $(MAKE) \"run{0}-dev-{1}\" || echo \"run{0}-dev-{1} failed\" >> \".$@-failure.stamp\"", target.GetMakeSuffix (false), target.GetMakeName (false));
@@ -631,7 +631,7 @@ namespace xharness
 				writer.WriteLine ("build build-all:"); // build everything
 				writer.WriteLine ("\t$(Q) rm -rf \".$@-failure.stamp\"");
 				foreach (var target in unified_targets) {
-					if (!target.IsExe)
+					if (!target.IsExe || target.Name.Contains ("BCLTests"))
 						continue;
 					
 					writer.WriteLine ("\t$(Q) $(MAKE) \"build-sim-{0}\" \"build-dev-{0}\" || echo \"build-{0} failed\" >> \".$@-failure.stamp\"", target.GetMakeName (false));
@@ -641,7 +641,7 @@ namespace xharness
 				// targets that run all platforms
 				writer.WriteLine ();
 				foreach (var target in unified_targets) {
-					if (!target.IsExe)
+					if (!target.IsExe || target.Name.Contains ("BCLTests"))
 						continue;
 					var make_escaped_name = target.GetMakeName ();
 
