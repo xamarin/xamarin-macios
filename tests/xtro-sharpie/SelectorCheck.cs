@@ -17,7 +17,8 @@ namespace Extrospection {
 
 	public class SelectorCheck : BaseVisitor {
 
-		HashSet<(string MethodDefinition, Helpers.ArgumentSemantic ArgumentSemantic)> qualified_export_arguments = new HashSet<(string, Helpers.ArgumentSemantic)> ();
+		HashSet<string> qualified_selectors = new HashSet<string> ();
+		Dictionary<string, Helpers.ArgumentSemantic> qualified_properties = new Dictionary<string, Helpers.ArgumentSemantic> ();
 
 		// most selectors will be found in [Export] attribtues
 		public override void VisitManagedMethod (MethodDefinition method)
@@ -33,18 +34,15 @@ namespace Extrospection {
 			foreach (var ca in method.CustomAttributes) {
 				switch (ca.Constructor.DeclaringType.Name) {
 				case "ExportAttribute":
-					//string selector = ca.ConstructorArguments [0].Value as string;
-					//if (!known_selectors.Contains (selector))
-					//known_selectors.Add (selector);
-
 					var methodDefinition = method.GetName ();
 					if (!string.IsNullOrEmpty (methodDefinition)) {
 						var argumentSemantic = Helpers.ArgumentSemantic.None;
 						if (ca.ConstructorArguments.Count > 1) {
 							argumentSemantic = (Helpers.ArgumentSemantic)ca.ConstructorArguments [1].Value;
+							qualified_properties.Add (methodDefinition, argumentSemantic);
 						}
 
-						qualified_export_arguments.Add ((methodDefinition, argumentSemantic));
+						qualified_selectors.Add (methodDefinition);
 					}
 
 					break;
@@ -74,10 +72,9 @@ namespace Extrospection {
 
 			var nativeMethodDefinition = decl.QualifiedName;
 
-			var exportArgs = qualified_export_arguments.FirstOrDefault (sel => sel.MethodDefinition.Contains (nativeMethodDefinition));
-
-			if (!string.IsNullOrEmpty (exportArgs.MethodDefinition) && exportArgs.ArgumentSemantic != nativeArgumentSemantic)
-				Log.On (framework).Add ($"!incorrect-argument-semantic! {nativeMethodDefinition} has ArgumentSemantic.{nativeArgumentSemantic.ToUsableString ()} instead of ArgumentSemantic.{exportArgs.ArgumentSemantic.ToUsableString ()}");
+			bool found = qualified_properties.TryGetValue (nativeMethodDefinition, out var managedArgumentSemantic);
+			if (found && managedArgumentSemantic != nativeArgumentSemantic)
+				Log.On (framework).Add ($"!incorrect-argument-semantic! '{nativeMethodDefinition}' (native) has ({nativeArgumentSemantic.ToUsableString ().ToLower ()}) instead of 'ArgumentSemantic.{managedArgumentSemantic.ToUsableString ()}'");
 		}
 
 		public override void VisitObjCMethodDecl (ObjCMethodDecl decl, VisitKind visitKind)
@@ -109,7 +106,7 @@ namespace Extrospection {
 				name = "+" + name;
 			}
 
-			bool found = qualified_export_arguments.Any (m => m.MethodDefinition == name);
+			bool found = qualified_selectors.Contains (name);
 			if (!found) {
 				// a category could be inlined into the type it extend
 				var category = decl.DeclContext as ObjCCategoryDecl;
@@ -119,7 +116,7 @@ namespace Extrospection {
 						name = GetCategoryBase (category) + name;
 					else
 						name = name.ReplaceFirstInstance (cname, GetCategoryBase (category));
-					found = qualified_export_arguments.Any (m => m.MethodDefinition == name);
+					found = qualified_selectors.Contains (name);
 				}
 			}
 			if (!found)
