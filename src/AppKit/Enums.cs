@@ -138,7 +138,6 @@ namespace AppKit {
 	}
 
 	[Native]
-	[Deprecated (PlatformName.MacOSX, 10, 14)]
 	public enum NSBackingStore : ulong {
 		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'Buffered' instead.")]
 		Retained, 
