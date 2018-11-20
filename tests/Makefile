@@ -47,8 +47,6 @@ export MSBuildExtensionsPathFallbackPathsOverride=$(IOS_DESTDIR)/Library/Framewo
 export XAMMAC_FRAMEWORK_PATH=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 
-export PATH := $(abspath $(TOP)/tools/xibuild:$(PATH))
-
 ifneq ($(RELEASE),)
 ifneq ($(BITCODE),)
 CONFIG=Release-bitcode

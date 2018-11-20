@@ -417,6 +417,7 @@ namespace Xamarin.Tests
 			}
 		}
 
+#if !XAMMAC_TESTS
 		public static string GetBaseLibrary (Profile profile)
 		{
 			switch (profile) {
@@ -482,6 +483,7 @@ namespace Xamarin.Tests
 				return "/Library/Frameworks/Mono.framework/Commands/mcs";
 			}
 		}
+#endif // !XAMMAC_TESTS
 
 		public static void AssertXcodeSupports32Bit ()
 		{
@@ -500,6 +502,10 @@ namespace Xamarin.Tests
 			get {
 				return Path.Combine (RootPath, "packages");
 			}
+		}
+
+		public static string XIBuildPath {
+			get { return Path.GetFullPath (Path.Combine (RootPath, "tools", "xibuild", "xibuild")); }
 		}
 	}
 }
