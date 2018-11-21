@@ -12,7 +12,9 @@ namespace MonoTouch {
 
 		public const string libSystemLibrary = "/usr/lib/libSystem.dylib";
 		public const string libcLibrary = "/usr/lib/libc.dylib";
+#if !XAMCORE_4_0
 		public const string libdispatchLibrary = "/usr/lib/system/libdispatch.dylib";
+#endif
 		public const string AddressBookLibrary = "/System/Library/Frameworks/AddressBook.framework/AddressBook";
 		public const string AddressBookUILibrary = "/System/Library/Frameworks/AddressBookUI.framework/AddressBookUI";
 		public const string AudioToolboxLibrary = "/System/Library/Frameworks/AudioToolbox.framework/AudioToolbox";
@@ -132,6 +134,6 @@ namespace MonoTouch {
 		public const string AuthenticationServicesLibrary = "/System/Library/Frameworks/AuthenticationServices.framework/AuthenticationServices";
 		public const string CarPlayLibrary = "/System/Library/Frameworks/CarPlay.framework/CarPlay";
 		public const string IdentityLookupUILibrary = "/System/Library/Frameworks/IdentityLookupUI.framework/IdentityLookupUI";
-		public const string NaturalLanguageLibrary = "/System/Library/Frameworks/Frameworks/NaturalLanguage.framework/NaturalLanguage";
+		public const string NaturalLanguageLibrary = "/System/Library/Frameworks/NaturalLanguage.framework/NaturalLanguage";
 	}
 }

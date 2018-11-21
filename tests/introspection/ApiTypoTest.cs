@@ -37,6 +37,7 @@ using UIKit;
 using Foundation;
 #else
 #if MONOMAC
+using MonoMac;
 using MonoMac.AppKit;
 using MonoMac.ObjCRuntime;
 using MonoMac.Foundation;
@@ -1038,18 +1039,27 @@ namespace Introspection
 
 		bool CheckLibrary (string lib)
 		{
-#if !MONOMAC
-			// simulator path do not match the strings
-			if (Runtime.Arch != Arch.DEVICE)
-				return true;
+#if MONOMAC
+			// on macOS the file should exist on the specified path
+			// for iOS the simulator paths do not match the strings
+			if (!File.Exists (lib))
+				return false;
 #endif
 			var h = IntPtr.Zero;
 			try {
 				h = Dlfcn.dlopen (lib, 0);
-				return (h != IntPtr.Zero);
+				if (h != IntPtr.Zero)
+					return true;
+#if MONOMAC
+				// on macOS it might be wrong architecture
+				// i.e. 64 bits only (thin) libraries running on 32 bits process
+				if (IntPtr.Size == 4)
+					return true;
+#endif
 			} finally {
 				Dlfcn.dlclose (h);
 			}
+			return false;
 		}
 
 		[Test]
