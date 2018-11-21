@@ -485,9 +485,22 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			IsAppExtension="$(IsAppExtension)"
 			PartialAppManifests="@(_PartialAppManifest)" />
 	</Target>
+	
+	<PropertyGroup>
+		<CompileToNativeDependsOn>
+			_DetectAppManifest;
+			_DetectSdkLocations;
+			_GenerateBundleName;
+			ResolveReferences;
+			_DetectBindingProjectResources;
+			_CompileEntitlements;
+			_CompileAppManifest;
+			_ExpandNativeReferences;
+		</CompileToNativeDependsOn>
+	</PropertyGroup>
 
-	<Target Name="_CompileToNative" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_GenerateBundleName;ResolveReferences;_CompileEntitlements;_CompileAppManifest"
-		Inputs="$(TargetDir)$(TargetFileName)"
+	<Target Name="_CompileToNative" DependsOnTargets="$(CompileToNativeDependsOn)"
+		Inputs="$(TargetDir)$(TargetFileName);@(_FrameworkNativeReference);@(_FileNativeReference);@(BundleDependentFiles)"
 		Outputs="$(_AppBundlePath)Contents\MacOS\$(_AppBundleName)">
 		<ItemGroup>
 			<!-- Skip the reference assemblies. 'mmp' will fail to AOT them if passed 'aot:all'. Similar to: https://github.com/xamarin/xamarin-macios/issues/3199 -->
@@ -527,6 +540,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			EnableSGenConc="$(EnableSGenConc)"
 			AotMode="$(AOTMode)"
 			HybridAOT="$(HybridAOT)"
+			AllNoEmbedBindingProjectNames="@(AllNoEmbedBindingProjectNames)"
 			ExplicitAotAssemblies="$(ExplicitAotAssemblies)">
 			<Output TaskParameter="NativeLibraries" ItemName="_NativeLibrary" />
 		</Mmp>

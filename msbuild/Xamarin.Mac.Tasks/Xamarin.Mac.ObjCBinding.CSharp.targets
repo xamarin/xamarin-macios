@@ -62,12 +62,13 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 	<PropertyGroup>
 		<_GeneratedSourcesFileList>$(GeneratedSourcesDir)sources.list</_GeneratedSourcesFileList>
 
-		<!-- Add our own pre-build steps -->
+		<!-- Add our own pre and post build steps -->
 		<CompileDependsOn>
 			_GenerateBindings;
 			_PrepareNativeReferences;
 			_CollectGeneratedSources;
 			$(CompileDependsOn)
+			_CreateBindingResourcePackage;
 		</CompileDependsOn>
 	</PropertyGroup>
 

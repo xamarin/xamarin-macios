@@ -37,12 +37,13 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 		<XamarinDefineConstants Condition="'$(XamarinDefineConstants)' == ''">__UNIFIED__;__MOBILE__;__IOS__</XamarinDefineConstants>
 		<DefineConstants>$(XamarinDefineConstants);$(DefineConstants)</DefineConstants>
 
-		<!-- Add our own pre-build steps -->
+ 		<!-- Add our own pre and post build steps --> 
 		<CompileDependsOn>
 			_GenerateBindings;
 			_PrepareNativeReferences;
 			_CollectGeneratedSources;
 			$(CompileDependsOn)
+ 			_CreateBindingResourcePackage; 
 		</CompileDependsOn>
 	</PropertyGroup>
 
