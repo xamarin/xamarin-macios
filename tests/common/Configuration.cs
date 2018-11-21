@@ -474,6 +474,24 @@ namespace Xamarin.Tests
 			}
 		}
 
+		public static string GetSdkPath (Profile profile, bool is_device)
+		{
+			switch (profile) {
+			case Profile.iOS:
+				return Path.Combine (MonoTouchRootDirectory, "SDKs", "MonoTouch." + (is_device ? "iphoneos" : "iphonesimulator") + ".sdk");
+			case Profile.tvOS:
+				return Path.Combine (MonoTouchRootDirectory, "SDKs", "Xamarin.AppleTV" + (is_device ? "OS" : "Simulator") + ".sdk");
+			case Profile.watchOS:
+				return Path.Combine (MonoTouchRootDirectory, "SDKs", "Xamarin.Watch" + (is_device ? "OS" : "Simulator") + ".sdk");
+			case Profile.macOSFull:
+			case Profile.macOSMobile:
+			case Profile.macOSSystem:
+				return Path.Combine (SdkRootXM, "lib");
+			default:
+				throw new NotImplementedException (profile.ToString ());
+			}
+		}
+
 		public static string GetCompiler (Profile profile, StringBuilder args, bool use_csc = false)
 		{
 			args.Append (" -lib:").Append (Path.GetDirectoryName (GetBaseLibrary (profile))).Append (' ');
