@@ -61,6 +61,8 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.Common.props"
 			Condition="'$(_XamarinCommonPropsHasBeenImported)' != 'true'" />
+	
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.targets"/>
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
