@@ -155,6 +155,9 @@ namespace Xamarin.Bundler {
 					(v) => {
 						app.Optimizations.Parse (v);
 					});
+
+			options.Add ("binding-project-no-embedding=", "Add a binding project to be skipped when extracting native reference resources", v => app.BindingProjectNoEmbedding.Add (Path.GetFileName (v)));
+
 			options.Add (new Mono.Options.ResponseFileSource ());
 		}
 
