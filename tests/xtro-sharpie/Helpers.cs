@@ -423,7 +423,7 @@ namespace Extrospection {
 			else if ((attr & ObjCPropertyAttributeKind.UnsafeUnretained) != 0)
 				return ArgumentSemantic.UnsafeUnretained;
 			else
-				return ArgumentSemantic.None;
+				return ArgumentSemantic.Assign; // Default
 		}
 
 		public static string ToUsableString (this ArgumentSemantic argSem)
