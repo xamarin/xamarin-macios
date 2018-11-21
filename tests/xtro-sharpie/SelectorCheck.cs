@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using Mono.Cecil;
 
 using Clang.Ast;
-using System.Linq;
 
 namespace Extrospection {
 
@@ -36,7 +35,7 @@ namespace Extrospection {
 				case "ExportAttribute":
 					var methodDefinition = method.GetName ();
 					if (!string.IsNullOrEmpty (methodDefinition)) {
-						var argumentSemantic = Helpers.ArgumentSemantic.None;
+						var argumentSemantic = Helpers.ArgumentSemantic.Assign; // Default
 						if (ca.ConstructorArguments.Count > 1) {
 							argumentSemantic = (Helpers.ArgumentSemantic)ca.ConstructorArguments [1].Value;
 							qualified_properties.Add (methodDefinition, argumentSemantic);
@@ -66,15 +65,11 @@ namespace Extrospection {
 
 			var nativeArgumentSemantic = decl.Attributes.ToArgumentSemantic ();
 
-			// Ignore Copy, UnsafeUnretained and Weak for now
-			if (nativeArgumentSemantic == Helpers.ArgumentSemantic.Copy || nativeArgumentSemantic == Helpers.ArgumentSemantic.UnsafeUnretained || nativeArgumentSemantic == Helpers.ArgumentSemantic.Weak)
-				return;
-
 			var nativeMethodDefinition = decl.QualifiedName;
 
 			bool found = qualified_properties.TryGetValue (nativeMethodDefinition, out var managedArgumentSemantic);
 			if (found && managedArgumentSemantic != nativeArgumentSemantic)
-				Log.On (framework).Add ($"!incorrect-argument-semantic! '{nativeMethodDefinition}' (native) has ({nativeArgumentSemantic.ToUsableString ().ToLower ()}) instead of 'ArgumentSemantic.{managedArgumentSemantic.ToUsableString ()}'");
+				Log.On (framework).Add ($"!incorrect-argument-semantic! Native '{nativeMethodDefinition}' has ({nativeArgumentSemantic.ToUsableString ().ToLowerInvariant ()}) instead of 'ArgumentSemantic.{managedArgumentSemantic.ToUsableString ()}'");
 		}
 
 		public override void VisitObjCMethodDecl (ObjCMethodDecl decl, VisitKind visitKind)
@@ -105,7 +100,6 @@ namespace Extrospection {
 					return;
 				name = "+" + name;
 			}
-
 			bool found = qualified_selectors.Contains (name);
 			if (!found) {
 				// a category could be inlined into the type it extend
