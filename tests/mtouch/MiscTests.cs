@@ -84,7 +84,8 @@ namespace Xamarin.Tests
 		public void PublicSymbols (Profile profile)
 		{
 			var paths = new HashSet<string> ();
-			paths.UnionWith (Directory.GetFileSystemEntries (Configuration.GetSdkPath (profile, true), "*.a", SearchOption.AllDirectories));
+			if (Configuration.include_device)
+				paths.UnionWith (Directory.GetFileSystemEntries (Configuration.GetSdkPath (profile, true), "*.a", SearchOption.AllDirectories));
 			paths.UnionWith (Directory.GetFileSystemEntries (Configuration.GetSdkPath (profile, false), "*.a", SearchOption.AllDirectories));
 			var failed = new StringBuilder ();
 
@@ -114,6 +115,7 @@ namespace Xamarin.Tests
 				"___mono_jit_",
 				"_sdb_options",
 				"_SystemNative_",
+				"_MapHardwareType",
 				"_gateway_from_rtm",
 				"_sgen_",
 				"_arm_patch",
