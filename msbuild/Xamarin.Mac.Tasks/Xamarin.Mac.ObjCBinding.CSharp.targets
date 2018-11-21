@@ -123,8 +123,8 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 			IntermediateOutputPath="$(IntermediateOutputPath)"
 			NativeReferences="@(NativeReference)"
 		>
-			<Output ItemName="ManifestResourceWithNoCulture" TaskParameter="EmbeddedResources" />
-			<Output ItemName="_NativeFramework" TaskParameter="NativeFrameworks" />
+			<Output ItemName="ManifestResourceWithNoCulture" TaskParameter="EmbeddedResources" Condition="'$(NoBindingEmbedding)' != 'true'"/>
+			<Output ItemName="_NativeFramework" TaskParameter="NativeFrameworks" Condition="'$(NoBindingEmbedding)' != 'true'"/>
 			<Output ItemName="Compile" TaskParameter="LinkWithAttributes" />
 		</PrepareNativeReferences>
 	</Target>
