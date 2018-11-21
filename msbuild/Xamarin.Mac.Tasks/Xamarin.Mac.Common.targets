@@ -39,6 +39,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	<UsingTask TaskName="Xamarin.Mac.Tasks.DetectSdkLocations" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.Mac.Tasks.DetectSigningIdentity" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.Mac.Tasks.EmbedProvisionProfile" AssemblyFile="Xamarin.Mac.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.Mac.Tasks.FindBindingResourcePackages" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.Mac.Tasks.IBTool" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.Mac.Tasks.MetalLib" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.Mac.Tasks.Metal" AssemblyFile="Xamarin.Mac.Tasks.dll" />

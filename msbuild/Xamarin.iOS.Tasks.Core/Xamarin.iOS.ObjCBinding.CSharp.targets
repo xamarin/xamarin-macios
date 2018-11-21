@@ -17,6 +17,7 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<UsingTask TaskName="Xamarin.iOS.Tasks.PrepareNativeReferences" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.BTouch" AssemblyFile="Xamarin.iOS.Tasks.dll" />
+ 	<UsingTask TaskName="Xamarin.iOS.Tasks.CreateBindingResourcePackage" AssemblyFile="Xamarin.iOS.Tasks.dll" /> 
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Zip" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 
 	<UsingTask TaskName="Microsoft.Build.Tasks.Delete" AssemblyFile="Xamarin.iOS.Tasks.dll"/>
