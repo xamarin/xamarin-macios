@@ -383,7 +383,8 @@ def abortExecutingBuilds ()
 }
 
 timestamps {
-    node ('xamarin-macios && macos-10.13') {
+    def nodeFilter = 'xamarin-macios && macos-10.13'
+    node (nodeFilter) {
         try {
             timeout (time: 9, unit: 'HOURS') {
                 // Hard-code a workspace, since branch-based and PR-based
@@ -685,9 +686,14 @@ timestamps {
                                                     if (excluded) {
                                                         echo (nodeText)
                                                     } else {
-                                                        node ("xamarin-macios && macos-10.${macOS}") {
-                                                            stage ("Running XM tests on '10.${macOS}'") {
-                                                                runXamarinMacTests (url, "macOS 10.${macOS}", maccore_hash, gitHash)
+                                                        // There's no need to run the packaged tests on the macOS version we're executing
+                                                        // on, because those tests will already be executed in the normal test run.
+                                                        def macOSNodeFilter = "xamarin-macios && macos-10.${macOS}"
+                                                        if (macOSNodeFilter != nodeFilter) {
+                                                            node (macOSNodeFilter) {
+                                                                stage ("Running XM tests on '10.${macOS}'") {
+                                                                    runXamarinMacTests (url, "macOS 10.${macOS}", maccore_hash, gitHash)
+                                                                }
                                                             }
                                                         }
                                                     }
