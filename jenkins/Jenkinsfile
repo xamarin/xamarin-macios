@@ -383,8 +383,8 @@ def abortExecutingBuilds ()
 }
 
 timestamps {
-    def nodeFilter = 'xamarin-macios && macos-10.13'
-    node (nodeFilter) {
+    def mainMacOSVersion = 13
+    node ("xamarin-macios && macos-10.${mainMacOSVersion}") {
         try {
             timeout (time: 9, unit: 'HOURS') {
                 // Hard-code a workspace, since branch-based and PR-based
@@ -674,26 +674,29 @@ timestamps {
                                         for (os = firstOS; os <= lastOS; os++)
                                             macOSes.add (os)
                                         // If any macOS version needs to be excluded manually, it can be done like this (in this case to remove macOS 10.14):
+                                        // Any macOS versions excluded like this still get a entry in the Jenkins UI, making it explicit that the OS version was skipped.
                                         //     excludedOSes.add (14)
                                         // Have in mind that the value in the list is only the minor part of the macOS version number.
                                         for (i = 0; i < macOSes.size (); i++) {
                                             def os = macOSes [i];
                                             def macOS = "${os}" // Need to bind the label variable before the closure
-                                            def excluded = indexOfElement (excludedOSes, os) >= 0
-                                            def nodeText = excluded ? "ℹ️ XM tests not executed on 10.${macOS} ℹ️" : "XM tests on 10.${macOS}"
+                                            def excluded = false
+                                            def nodeText = "XM tests on 10.${macOS}"
+                                            if (indexOfElement (excludedOSes, os) >= 0) {
+                                                excluded = true
+                                                nodeText = "ℹ️ XM tests not executed on 10.${macOS} ℹ️"
+                                            } else if (os == mainMacOSVersion) {
+                                                excluded = true
+                                                nodeText = "ℹ️ XM tests not executed on a separate 10.${macOS} bot because they're already executed as a part of the main test run ℹ️"
+                                            }
                                             builders [nodeText] = {
                                                 try {
                                                     if (excluded) {
                                                         echo (nodeText)
                                                     } else {
-                                                        // There's no need to run the packaged tests on the macOS version we're executing
-                                                        // on, because those tests will already be executed in the normal test run.
-                                                        def macOSNodeFilter = "xamarin-macios && macos-10.${macOS}"
-                                                        if (macOSNodeFilter != nodeFilter) {
-                                                            node (macOSNodeFilter) {
-                                                                stage ("Running XM tests on '10.${macOS}'") {
-                                                                    runXamarinMacTests (url, "macOS 10.${macOS}", maccore_hash, gitHash)
-                                                                }
+                                                        node ("xamarin-macios && macos-10.${macOS}") {
+                                                            stage ("Running XM tests on '10.${macOS}'") {
+                                                                runXamarinMacTests (url, "macOS 10.${macOS}", maccore_hash, gitHash)
                                                             }
                                                         }
                                                     }
