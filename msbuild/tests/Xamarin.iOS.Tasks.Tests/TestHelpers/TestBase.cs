@@ -331,8 +331,7 @@ namespace Xamarin.iOS.Tasks
 		{
 			if (!File.Exists (file))
 				Assert.Fail ("Expected file '{0}' did not exist", file);
-			File.SetLastWriteTimeUtc (file, DateTime.UtcNow.AddDays (1));
-			System.Threading.Thread.Sleep (1000);
+			File.SetLastWriteTimeUtc (file, DateTime.UtcNow);
 		}
 
 		public void RunTarget (Project project, string target, int expectedErrorCount = 0)
