@@ -366,7 +366,6 @@ namespace BCLTestImporter {
 					Directory.CreateDirectory (generatedCodeDir);
 				}
 				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType.cs");
-				var typesPerAssembly = projectDefinition.GetTypeForAssemblies (MonoRootPath, Platform.WatchOS);
 				var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (def.name, projectDefinition.IsXUnit,
 					RegisterTypesTemplatePath);
 				using (var file = new StreamWriter (registerTypePath, false)) { // false is do not append
@@ -444,7 +443,6 @@ namespace BCLTestImporter {
 				}
 				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType.cs");
 
-				var typesPerAssembly = projectDefinition.GetTypeForAssemblies (MonoRootPath, platform);
 				var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (def.name, projectDefinition.IsXUnit,
 					RegisterTypesTemplatePath);
 
