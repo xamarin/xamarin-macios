@@ -56,9 +56,9 @@ namespace BCLTestImporter {
 		{
 			var importStringBuilder = new StringBuilder ();
 			var keyValuesStringBuilder = new StringBuilder ();
-			var namespaces = new List<string> (); // keep track of the namespaces to remove warnings
+			var namespaces = new List<string> ();  // keep track of the namespaces to remove warnings
 			foreach (var a in typeRegistration.Keys) {
-				var t = typeRegistration[a];
+				var t = typeRegistration [a];
 				if (!string.IsNullOrEmpty (t.Namespace)) {
 					if (!namespaces.Contains (t.Namespace)) {
 						namespaces.Add (t.Namespace);
