@@ -54,6 +54,12 @@ namespace xharness.BCLTestImporter {
 				var prefix = "XamMac " + (xunit ? "xUnit" : "NUnit");
 				result.Add (new MacTestProject (path) {
 					Name = $"[{prefix}] Mono {name}",
+					TargetFrameworkFlavor = MacFlavors.NonSystem,
+					Dependency = async () => {
+						var rv = await Harness.BuildBclTests ();
+						if (!rv.Succeeded)
+							throw new Exception ($"Failed to build BCL tests, exit code: {rv.ExitCode}. Check the harness log for more details.");
+					}
 				});
 			}
 			return result;
