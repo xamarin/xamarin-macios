@@ -337,7 +337,7 @@ namespace BCLTestImporter {
 							generatedProject = await GenerateWatchAppAsync (projectDefinition.Name, projetTemplate, data.plist);
 							break;
 						default:
-							generatedProject = await GenerateWatchExtensionAsync (projectDefinition.Name, projetTemplate, data.plist, registerTypePath, projectDefinition.GetAssemblyInclusionInformation (MonoRootPath, Platform.WatchOS));
+							generatedProject = await GenerateWatchExtensionAsync (projectDefinition.Name, projetTemplate, data.plist, registerTypePath, projectDefinition.GetCachedAssemblyInclusionInformation (MonoRootPath, Platform.WatchOS));
 							break;
 					}
 					data.project = GetProjectPath (projectDefinition.Name, appType);
@@ -408,7 +408,7 @@ namespace BCLTestImporter {
 
 				var projectTemplatePath = Path.Combine (ProjectTemplateRootPath, projectTemplateMatches[platform]);
 				var generatedProject = await GenerateAsync (projectDefinition.Name, registerTypePath,
-					projectDefinition.GetAssemblyInclusionInformation (MonoRootPath, platform), projectTemplatePath, infoPlistPath);
+					projectDefinition.GetCachedAssemblyInclusionInformation (MonoRootPath, platform), projectTemplatePath, infoPlistPath);
 				var projectPath = GetProjectPath (projectDefinition.Name, platform);
 				projectPaths.Add ((name: projectDefinition.Name, path: projectPath, xunit: projectDefinition.IsXUnit));
 				using (var file = new StreamWriter (projectPath, false)) { // false is do not append

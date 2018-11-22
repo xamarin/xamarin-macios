@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BCLTestInfoPlistGenerator.cs" />
+    <Compile Include="BCLTestProjectDefinitionWorkaround.cs" />
     <Compile Include="Platform.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="RegisterTypeGenerator.cs" />
