@@ -722,8 +722,15 @@ timestamps {
                                                 echo (skipLocalTestRunReason)
                                                 appendFileComment ("ℹ️ Test run skipped: ${skipLocalTestRunReason}\n")
                                             } else {
+                                                def XHARNESS_GITHUB_TOKEN_FILE = "${workspace}/xamarin-macios/jenkins/.github-pat-token"
+                                                withCredentials ([string (credentialsId: 'macios_github_comment_token', variable: 'GITHUB_PAT_TOKEN')]) {
+                                                    writeFile (file: "${XHARNESS_GITHUB_TOKEN_FILE}", text: "${GITHUB_PAT_TOKEN}")
+                                                }
                                                 echo ("Html report: ${reportPrefix}/tests/index.html")
-                                                def runTestResult = sh (script: "${workspace}/xamarin-macios/jenkins/run-tests.sh --target=wrench-jenkins --publish --keychain=xamarin-macios", returnStatus: true)
+                                                def runTestResult = null
+                                                withEnv (["XHARNESS_GITHUB_TOKEN_FILE=${XHARNESS_GITHUB_TOKEN_FILE}"]) {
+                                                    runTestResult = sh (script: "${workspace}/xamarin-macios/jenkins/run-tests.sh --target=wrench-jenkins --publish --keychain=xamarin-macios", returnStatus: true)
+                                                }
                                                 if (runTestResult != 0) {
                                                     failedStages.add (currentStage)
                                                     manualException = true
