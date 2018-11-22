@@ -36,6 +36,7 @@ namespace xharness
 		public bool IncludeSimulator = true;
 		public bool IncludeDevice;
 		public bool IncludeXtro;
+		public bool IncludeDocs;
 
 		public Log MainLog;
 		public Log SimulatorLoadLog;
@@ -598,7 +599,9 @@ namespace xharness
 			labels.UnionWith (Harness.Labels);
 			if (pull_request > 0)
 				labels.UnionWith (GitHub.GetLabels (Harness, pull_request));
-
+			var env_labels = Environment.GetEnvironmentVariable ("XHARNESS_LABELS");
+			if (!string.IsNullOrEmpty (env_labels))
+				labels.UnionWith (env_labels.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
 			MainLog.WriteLine ("Found {1} label(s) in the pull request #{2}: {0}", string.Join (", ", labels.ToArray ()), labels.Count (), pull_request);
 
 			// disabled by default
@@ -624,24 +627,54 @@ namespace xharness
 			bool inc_permission_tests = Harness.IncludeSystemPermissionTests;
 			SetEnabled (labels, "system-permission", ref inc_permission_tests);
 			Harness.IncludeSystemPermissionTests = inc_permission_tests;
+
+			// docs is a bit special:
+			// - can only be executed if the Xamarin-specific parts of the build is enabled
+			// - enabled by default if the current branch is master (or, for a pull request, if the target branch is master)
+			var changed = SetEnabled (labels, "docs", ref IncludeDocs);
+			if (Harness.ENABLE_XAMARIN) {
+				if (!changed) { // don't override any value set using labels
+					var branchName = Environment.GetEnvironmentVariable ("BRANCH_NAME");
+					if (!string.IsNullOrEmpty (branchName)) {
+						IncludeDocs = branchName == "master";
+						if (IncludeDocs)
+							MainLog.WriteLine ("Enabled 'docs' tests because the current branch is 'master'.");
+					} else if (pull_request > 0) {
+						IncludeDocs = GitHub.GetPullRequestTargetBranch (Harness, pull_request) == "master";
+						if (IncludeDocs)
+							MainLog.WriteLine ("Enabled 'docs' tests because the target branch is 'master'.");
+					}
+				}
+			} else {
+				if (IncludeDocs) {
+					IncludeDocs = false; // could have been enabled by 'run-all-tests', so disable it if we can't run it.
+					MainLog.WriteLine ("Disabled 'docs' tests because the Xamarin-specific parts of the build are not enabled.");
+				}
+			}
 		}
 
-		void SetEnabled (HashSet<string> labels, string testname, ref bool value)
+		// Returns true if the value was changed.
+		bool SetEnabled (HashSet<string> labels, string testname, ref bool value)
 		{
 			if (labels.Contains ("skip-" + testname + "-tests")) {
 				MainLog.WriteLine ("Disabled '{0}' tests because the label 'skip-{0}-tests' is set.", testname);
 				value = false;
+				return true;
 			} else if (labels.Contains ("run-" + testname + "-tests")) {
 				MainLog.WriteLine ("Enabled '{0}' tests because the label 'run-{0}-tests' is set.", testname);
 				value = true;
+				return true;
 			} else if (labels.Contains ("skip-all-tests")) {
 				MainLog.WriteLine ("Disabled '{0}' tests because the label 'skip-all-tests' is set.", testname);
 				value = false;
+				return true;
 			} else if (labels.Contains ("run-all-tests")) {
 				MainLog.WriteLine ("Enabled '{0}' tests because the label 'run-all-tests' is set.", testname);
 				value = true;
+				return true;
 			}
 			// respect any default value
+			return false;
 		}
 
 		async Task PopulateTasksAsync ()
@@ -867,6 +900,17 @@ namespace xharness
 				WorkingDirectory = buildXtroTests.WorkingDirectory,
 			};
 			Tasks.Add (runXtroReporter);
+
+			var runDocsTests = new MakeTask {
+				Jenkins = this,
+				Platform = TestPlatform.All,
+				TestName = "Documentation",
+				Target = "wrench-docs",
+				WorkingDirectory = Harness.RootDirectory,
+				Ignored = !IncludeDocs,
+				Timeout = TimeSpan.FromMinutes (15),
+			};
+			Tasks.Add (runDocsTests);
 
 			Tasks.AddRange (CreateRunDeviceTasks ());
 		}
@@ -2044,10 +2088,11 @@ function toggleAll (show)
 
 							if (!string.IsNullOrEmpty (test.FailureMessage)) {
 								var msg = System.Web.HttpUtility.HtmlEncode (test.FailureMessage).Replace ("\n", "<br />");
+								var prefix = test.Ignored ? "Ignored" : "Failure";
 								if (test.FailureMessage.Contains ('\n')) {
-									writer.WriteLine ($"Failure:<br /> <div style='margin-left: 20px;'>{msg}</div>");
+									writer.WriteLine ($"{prefix}:<br /> <div style='margin-left: 20px;'>{msg}</div>");
 								} else {
-									writer.WriteLine ($"Failure: {msg} <br />");
+									writer.WriteLine ($"{prefix}: {msg} <br />");
 								}
 							}
 							var progressMessage = test.ProgressMessage;
