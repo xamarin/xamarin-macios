@@ -2766,7 +2766,7 @@ function toggleAll (show)
 				await RestoreNugetsAsync (log, resource);
 
 				using (var xbuild = new Process ()) {
-					xbuild.StartInfo.FileName = "xibuild";
+					xbuild.StartInfo.FileName = Harness.XIBuildPath;
 					var args = new StringBuilder ();
 					args.Append ("-- ");
 					args.Append ("/verbosity:diagnostic ");
@@ -2803,7 +2803,7 @@ function toggleAll (show)
 		{
 			// Don't require the desktop resource here, this shouldn't be that resource sensitive
 			using (var xbuild = new Process ()) {
-				xbuild.StartInfo.FileName = "xibuild";
+				xbuild.StartInfo.FileName = Harness.XIBuildPath;
 				var args = new StringBuilder ();
 				args.Append ("-- ");
 				args.Append ("/verbosity:diagnostic ");
@@ -2880,7 +2880,7 @@ function toggleAll (show)
 				using (var proc = new Process ()) {
 
 					proc.StartInfo.WorkingDirectory = WorkingDirectory;
-					proc.StartInfo.FileName = "xibuild";
+					proc.StartInfo.FileName = Harness.XIBuildPath;
 					var args = new StringBuilder ();
 					args.Append ("-t -- ");
 					args.Append (StringUtils.Quote (Path.GetFullPath (TestExecutable))).Append (' ');

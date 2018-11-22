@@ -30,6 +30,10 @@ namespace xharness
 		public bool UseSystem { get; set; } // if the system XI/XM should be used, or the locally build XI/XM.
 		public HashSet<string> Labels { get; } = new HashSet<string> ();
 
+		public string XIBuildPath {
+			get { return Path.GetFullPath (Path.Combine (RootDirectory, "..", "tools", "xibuild", "xibuild")); }
+		}
+
 		public static string Timestamp {
 			get {
 				return $"{DateTime.Now:yyyyMMdd_HHmmss}";
