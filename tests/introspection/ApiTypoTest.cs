@@ -1084,6 +1084,13 @@ namespace Introspection
 					Assert.True (CheckLibrary (s), fi.Name);
 					break;
 #endif
+#if __TVOS__
+				case "MetalPerformanceShadersLibrary":
+					// not supported in tvOS (12.1) simulator so load fails
+					if (Runtime.Arch == Arch.SIMULATOR)
+						break;
+					goto default;
+#endif
 				default:
 					if (fi.Name.EndsWith ("Library", StringComparison.Ordinal)) {
 						Assert.True (CheckLibrary (s), fi.Name);
