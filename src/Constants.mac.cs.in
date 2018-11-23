@@ -62,8 +62,8 @@ namespace MonoMac {
 		public const string CoreMediaLibrary = "/System/Library/Frameworks/CoreMedia.framework/CoreMedia";
 		public const string ScriptingBridgeLibrary = "/System/Library/Frameworks/ScriptingBridge.framework/ScriptingBridge";
 		public const string CoreDataLibrary = "/System/Library/Frameworks/CoreData.framework/CoreData";
-		public const string CoreImageLibrary = "/System/Library/Frameworks/CoreImage.framework/Versions/Current/CoreImage";
-		public const string CFNetworkLibrary = "/System/Library/Frameworks//CFNetwork.framework/CFNetwork";
+		public const string CoreImageLibrary = "/System/Library/Frameworks/QuartzCore.framework/Versions/A/Frameworks/CoreImage.framework/CoreImage";
+		public const string CFNetworkLibrary = "/System/Library/Frameworks/CFNetwork.framework/CFNetwork";
 		public const string CoreMidiLibrary = "/System/Library/Frameworks/CoreMIDI.framework/CoreMIDI";
 		public const string QuickLookLibrary = "/System/Library/Frameworks/QuickLook.framework/QuickLook";
 		public const string AVFoundationLibrary = "/System/Library/Frameworks/AVFoundation.framework/AVFoundation";
