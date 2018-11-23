@@ -18,6 +18,7 @@ namespace xharness
 		public bool IsNUnitProject;
 		public bool GenerateVariations = true;
 		public string [] Configurations;
+		public Func<Task> Dependency;
 
 		public IEnumerable<TestProject> ProjectReferences;
 

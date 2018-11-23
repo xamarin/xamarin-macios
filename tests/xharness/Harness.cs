@@ -833,6 +833,15 @@ namespace xharness
 
 			return rv;
 		}
+
+		Task<ProcessExecutionResult> build_bcl_tests;
+ 		public Task<ProcessExecutionResult> BuildBclTests ()
+ 		{
+ 			if (build_bcl_tests == null)
+ 				build_bcl_tests = ProcessHelper.ExecuteCommandAsync ("make", $".stamp-build-mono-unit-tests -C {StringUtils.Quote (Path.GetFullPath (RootDirectory))}", HarnessLog, TimeSpan.FromMinutes (30));
+ 			return build_bcl_tests;
+ 		}
+
 	}
 
 	public class CrashReportSnapshot
