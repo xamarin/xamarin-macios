@@ -796,8 +796,25 @@ public class IntentHandler : INExtension, IINRidesharingDomainHandling {
 
 		public IEnumerable<string> NativeSymbolsInExecutable {
 			get { 
-				return ExecutionHelper.Execute ("nm", $"-gUj {StringUtils.Quote (NativeExecutablePath)}", hide_output: true).Split ('\n');
+				return GetNativeSymbolsInExecutable (NativeExecutablePath);
 			}
+		}
+
+		public static IEnumerable<string> GetNativeSymbolsInExecutable (string executable)
+		{
+			IEnumerable<string> rv = ExecutionHelper.Execute ("nm", $"-gUj {StringUtils.Quote (executable)}", hide_output: true).Split ('\n');
+
+			rv = rv.Where ((v) => {
+				if (string.IsNullOrEmpty (v))
+					return false;
+
+				if (v.StartsWith (executable, StringComparison.Ordinal) && v.EndsWith (":", StringComparison.Ordinal))
+					return false;
+
+				return true;
+			});
+
+			return rv;
 		}
 
 		protected override string ToolPath {

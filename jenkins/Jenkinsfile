@@ -383,7 +383,8 @@ def abortExecutingBuilds ()
 }
 
 timestamps {
-    node ('xamarin-macios && macos-10.13') {
+    def mainMacOSVersion = 13
+    node ("xamarin-macios && macos-10.${mainMacOSVersion}") {
         try {
             timeout (time: 9, unit: 'HOURS') {
                 // Hard-code a workspace, since branch-based and PR-based
@@ -673,13 +674,21 @@ timestamps {
                                         for (os = firstOS; os <= lastOS; os++)
                                             macOSes.add (os)
                                         // If any macOS version needs to be excluded manually, it can be done like this (in this case to remove macOS 10.14):
+                                        // Any macOS versions excluded like this still get a entry in the Jenkins UI, making it explicit that the OS version was skipped.
                                         //     excludedOSes.add (14)
                                         // Have in mind that the value in the list is only the minor part of the macOS version number.
                                         for (i = 0; i < macOSes.size (); i++) {
                                             def os = macOSes [i];
                                             def macOS = "${os}" // Need to bind the label variable before the closure
-                                            def excluded = indexOfElement (excludedOSes, os) >= 0
-                                            def nodeText = excluded ? "ℹ️ XM tests not executed on 10.${macOS} ℹ️" : "XM tests on 10.${macOS}"
+                                            def excluded = false
+                                            def nodeText = "XM tests on 10.${macOS}"
+                                            if (indexOfElement (excludedOSes, os) >= 0) {
+                                                excluded = true
+                                                nodeText = "ℹ️ XM tests not executed on 10.${macOS} ℹ️"
+                                            } else if (os == mainMacOSVersion) {
+                                                excluded = true
+                                                nodeText = "ℹ️ XM tests not executed on a separate 10.${macOS} bot because they're already executed as a part of the main test run ℹ️"
+                                            }
                                             builders [nodeText] = {
                                                 try {
                                                     if (excluded) {
@@ -718,6 +727,7 @@ timestamps {
                                                 if (runTestResult != 0) {
                                                     echoError ("Test run failed")
                                                     currentBuild.result = 'FAILURE'
+                                                    failedStages.add (currentStage)
                                                 }
                                             }
                                         }
@@ -725,7 +735,8 @@ timestamps {
                                             currentStage = "${STAGE_NAME}"
                                             echo ("Building on ${env.NODE_NAME}")
                                             def targetBranch = isPr ? githubGetPullRequestInfo () ["base"] ["ref"] : "${BRANCH_NAME}"
-                                            def testDocs = targetBranch == "master"
+                                            def hasRunDocsTestsLabel = isPr ? githubGetPullRequestLabels ().contains ("run-docs-tests") : false
+                                            def testDocs = targetBranch == "master" || hasRunDocsTestsLabel
                                             if (!testDocs) {
                                                 echo ("Skipping docs testing, it's only done on master (current (target) branch is ${targetBranch})")
                                             } else {
@@ -733,6 +744,7 @@ timestamps {
                                                 if (testDocsResult != 0) {
                                                     echoError ("Test docs failed")
                                                     currentBuild.result = 'FAILURE'
+                                                    failedStages.add (currentStage)
                                                 }
                                             }
                                         }

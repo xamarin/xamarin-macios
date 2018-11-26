@@ -79,6 +79,7 @@ namespace Xamarin.Mac.Tests
 				// macOS 10.14
 				case "AdSupportLibrary":
 				case "iTunesLibraryLibrary":
+				case "NaturalLanguageLibrary":
 				case "NetworkLibrary":
 				case "UserNotificationsLibrary":
 				case "VideoSubscriberAccountLibrary":

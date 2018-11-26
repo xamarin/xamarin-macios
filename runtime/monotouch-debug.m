@@ -43,16 +43,13 @@
 #include "product.h"
 
 // permanent connection variables
-int monodevelop_port = -1;
-int sdb_fd = -1;
-int profiler_fd = -1;
-int heapshot_fd = -1; // this is the socket to write 'heapshot' to to requests heapshots from the profiler
-int heapshot_port = -1;
-char *profiler_description = NULL; 
+static int monodevelop_port = -1;
+static int sdb_fd = -1;
+static int heapshot_fd = -1; // this is the socket to write 'heapshot' to to requests heapshots from the profiler
+static int heapshot_port = -1;
+static char *profiler_description = NULL;
 // old variables
-int output_port;
-int debug_port; 
-char *debug_host = NULL;
+static char *debug_host = NULL;
 
 enum DebuggingMode
 {
@@ -71,6 +68,7 @@ static bool connection_failed = false;
 static DebuggingMode debugging_mode = DebuggingModeWifi;
 static const char *connection_mode = "default"; // this is set from the cmd line, can be either 'usb', 'wifi', 'http' or 'none'
 
+extern "C" {
 void monotouch_connect_usb ();
 void monotouch_connect_wifi (NSMutableArray *hosts);
 void xamarin_connect_http (NSMutableArray *hosts);
@@ -80,6 +78,8 @@ void monotouch_configure_debugging ();
 void monotouch_load_profiler ();
 void monotouch_load_debugger ();
 bool monotouch_process_connection (int fd);
+void monotouch_dump_objc_api (Class klass);
+}
 
 static struct timeval wait_tv;
 static struct timespec wait_ts;
@@ -705,7 +705,7 @@ void monotouch_configure_debugging ()
 	pthread_mutex_unlock (&mutex);
 }
 
-void sdb_connect (const char *address)
+static void sdb_connect (const char *address)
 {
 	gboolean shaked;
 
@@ -719,17 +719,17 @@ void sdb_connect (const char *address)
 	return;
 }
 
-void sdb_close1 (void)
+static void sdb_close1 (void)
 {
 	shutdown (sdb_fd, SHUT_RD);
 }
 
-void sdb_close2 (void)
+static void sdb_close2 (void)
 {
 	shutdown (sdb_fd, SHUT_RDWR);
 }
 
-gboolean send_uninterrupted (int fd, const void *buf, int len)
+static gboolean send_uninterrupted (int fd, const void *buf, int len)
 {
 	int res;
 
@@ -740,7 +740,7 @@ gboolean send_uninterrupted (int fd, const void *buf, int len)
 	return res == len;
 }
 
-int recv_uninterrupted (int fd, void *buf, int len)
+static int recv_uninterrupted (int fd, void *buf, int len)
 {
 	int res;
 	int total = 0;
@@ -755,7 +755,7 @@ int recv_uninterrupted (int fd, void *buf, int len)
 	return total;
 }
 
-gboolean sdb_send (void *buf, int len)
+static gboolean sdb_send (void *buf, int len)
 {
 	gboolean rv;
 
@@ -771,7 +771,7 @@ gboolean sdb_send (void *buf, int len)
 }
 
 
-int sdb_recv (void *buf, int len)
+static int sdb_recv (void *buf, int len)
 {
 	int rv;
 
@@ -1323,8 +1323,7 @@ monotouch_process_connection (int fd)
 				profiler_description = strdup (prof);
 #else
 				use_fd = true;
-				profiler_fd = fd;
-				profiler_description = xamarin_strdup_printf ("%s,output=#%i", prof, profiler_fd);
+				profiler_description = xamarin_strdup_printf ("%s,output=#%i", prof, fd);
 #endif
 				xamarin_set_gc_pump_enabled (false);
 			} else {
@@ -1709,6 +1708,6 @@ xamarin_is_native_debugger_attached ()
 #endif /* TARGET_OS_WATCH && !TARGET_OS_SIMULATOR */
 
 #else
-int fix_ranlib_warning_about_no_symbols_v2;
+int xamarin_fix_ranlib_warning_about_no_symbols_v2;
 #endif /* DEBUG */
 

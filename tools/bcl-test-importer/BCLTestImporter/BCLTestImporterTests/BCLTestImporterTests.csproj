@@ -21,6 +21,9 @@
     <Compile Include="..\BCLTestInfoPlistGenerator.cs">
       <Link>BCLTestInfoPlistGenerator.cs</Link>
     </Compile>
+    <Compile Include="..\BCLTestProjectDefinitionWorkaround.cs">
+      <Link>BCLTestProjectDefinitionWorkaround.cs</Link>
+    </Compile>
     <Compile Include="..\BCLTestProjectGenerator.cs">
       <Link>BCLTestProjectGenerator.cs</Link>
     </Compile>

@@ -57,6 +57,7 @@ namespace xharness
 		public Devices Devices = new Devices ();
 
 		List<TestTask> Tasks = new List<TestTask> ();
+		Dictionary<string, MakeTask> DependencyTasks = new Dictionary<string, MakeTask> ();
 
 		internal static Resource DesktopResource = new Resource ("Desktop", Environment.ProcessorCount);
 
@@ -348,6 +349,7 @@ namespace xharness
 							Platform = pair.Item2,
 							Ignored = pair.Item3,
 							TestName = project.Name,
+							Dependency = project.Dependency,
 						};
 						derived.CloneTestProject (pair.Item1);
 						var simTasks = CreateRunSimulatorTaskAsync (derived);
@@ -2206,6 +2208,7 @@ function toggleAll (show)
 		public string ProjectPlatform;
 		public Dictionary<string, string> Environment = new Dictionary<string, string> ();
 
+		public Func<Task> Dependency; // a task that's feteched and awaited before this task's ExecuteAsync method
 		public Task InitialTask; // a task that's executed before this task's ExecuteAsync method.
 		public Task CompletedTask; // a task that's executed after this task's ExecuteAsync method.
 
@@ -2402,6 +2405,9 @@ function toggleAll (show)
 			ExecutionResult = (ExecutionResult & ~TestExecutingResult.StateMask) | TestExecutingResult.InProgress;
 
 			try {
+				if (Dependency != null)
+ 					await Dependency ();
+
 				if (InitialTask != null)
 					await InitialTask;
 				
@@ -2760,7 +2766,7 @@ function toggleAll (show)
 				await RestoreNugetsAsync (log, resource);
 
 				using (var xbuild = new Process ()) {
-					xbuild.StartInfo.FileName = "xibuild";
+					xbuild.StartInfo.FileName = Harness.XIBuildPath;
 					var args = new StringBuilder ();
 					args.Append ("-- ");
 					args.Append ("/verbosity:diagnostic ");
@@ -2797,7 +2803,7 @@ function toggleAll (show)
 		{
 			// Don't require the desktop resource here, this shouldn't be that resource sensitive
 			using (var xbuild = new Process ()) {
-				xbuild.StartInfo.FileName = "xibuild";
+				xbuild.StartInfo.FileName = Harness.XIBuildPath;
 				var args = new StringBuilder ();
 				args.Append ("-- ");
 				args.Append ("/verbosity:diagnostic ");
@@ -2874,7 +2880,7 @@ function toggleAll (show)
 				using (var proc = new Process ()) {
 
 					proc.StartInfo.WorkingDirectory = WorkingDirectory;
-					proc.StartInfo.FileName = "xibuild";
+					proc.StartInfo.FileName = Harness.XIBuildPath;
 					var args = new StringBuilder ();
 					args.Append ("-t -- ");
 					args.Append (StringUtils.Quote (Path.GetFullPath (TestExecutable))).Append (' ');

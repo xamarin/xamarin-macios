@@ -87,12 +87,6 @@ int xamarin_get_launch_mode ();
 
 int xamarin_watchextension_main (int argc, char **argv);
 
-#ifdef __cplusplus
-} /* extern "C" */
-#endif
-
-#endif /* __XAMARIN_MAIN_H__ */
-
 #ifndef MONOTOUCH
 void xamarin_set_is_mkbundle (bool value); /* Not Public API, exact semantics is not defined yet */
 bool xamarin_get_is_mkbundle (); /* Not Public API, exact semantics is not defined yet */
@@ -100,3 +94,9 @@ bool xamarin_get_is_mkbundle (); /* Not Public API, exact semantics is not defin
 
 void xamarin_set_is_debug (bool value); /* Public API */
 bool xamarin_get_is_debug (); /* Public API */
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
+
+#endif /* __XAMARIN_MAIN_H__ */

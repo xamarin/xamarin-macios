@@ -26,7 +26,25 @@ rm -f -- ./*.zip
 curl -fL "$URL" --output mac-test-package.zip
 rm -rf mac-test-package
 unzip -o mac-test-package.zip
-cd mac-test-package && ./system-dependencies.sh --provision-mono --ignore-autotools --ignore-xamarin-studio --ignore-xcode --ignore-osx --ignore-cmake
+cd mac-test-package
+
+COUNTER=0
+EC=0
+while [[ $COUNTER -lt 5 ]]; do
+	./system-dependencies.sh --provision-mono --ignore-autotools --ignore-xamarin-studio --ignore-xcode --ignore-osx --ignore-cmake || EC=$?
+	if [[ $EC -eq 56 ]]; then
+		# Sometimes we get spurious "curl: (56) SSLRead() return error -9806" errors. Trying again usually works, so lets try again a few more times.
+		# https://github.com/xamarin/maccore/issues/1098
+		let COUNTER++ || true
+		continue
+	fi
+	break
+done
+
+if [[ "x$EC" != "x0" ]]; then
+	echo "Failed to provision dependencies (exit code: $EC)"
+	exit $EC
+fi
 
 # fetch script to install provisioning profiles and run it
 if test -d maccore; then
