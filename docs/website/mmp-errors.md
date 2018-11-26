@@ -755,3 +755,23 @@ There are a few reasons this may happen:
 
 This usually indicates a bug in Xamarin.Mac, because runtime functions should
 not be linked away if they're needed. Please [submit an issue](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions).
+
+<a name="MM8029" />
+
+### MM8029: Unable to marshal the {byref?} parameter {index} whose managed type is {type} to managed.
+
+This usually indicates a bug in Objective-C binding code.
+
+If the managed binding is from a third-party vendor, please contact the vendor.
+
+If the managed binding is shipped with Xamarin.Mac, please [submit an issue](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions).
+
+<a name="MM8030" />
+
+### MM8030: Unable to marshal the {byref?} parameter {index} whose managed type is {type} to Objective-C.
+
+This usually indicates a bug in Objective-C binding code.
+
+If the managed binding is from a third-party vendor, please contact the vendor.
+
+If the managed binding is shipped with Xamarin.Mac, please [submit an issue](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions).

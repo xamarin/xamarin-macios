@@ -19,6 +19,25 @@
 #define LOGZ(...)
 #endif
 
+guint32
+xamarin_get_exception_for_parameter (int code, guint32 inner_exception_gchandle, const char *reason, SEL sel, MonoMethod *method, MonoType *p, int i, bool to_managed)
+{
+	guint32 exception_gchandle = 0;
+	char *to_name = xamarin_type_get_full_name (p, &exception_gchandle);
+	if (exception_gchandle != 0)
+		return exception_gchandle;
+	char *method_full_name = mono_method_full_name (method, TRUE);
+	char *msg = xamarin_strdup_printf ("%s #%i whose managed type is '%s' %s.\n"
+		"Additional information:\n"
+		"\tSelector: %s\n"
+		"\tMethod: %s\n", reason, i + 1, to_name, to_managed ? "to managed" : "to Objective-C", sel_getName (sel), method_full_name);
+	exception_gchandle = xamarin_create_product_exception_with_inner_exception (code, inner_exception_gchandle, msg);
+	xamarin_free (msg);
+	xamarin_free (to_name);
+	xamarin_free (method_full_name);
+	return exception_gchandle;
+}
+
 void
 xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_func iterator, marshal_return_value_func marshal_return_value, void *context)
 {
@@ -208,7 +227,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 									LOGZ (" argument %i is a ref NSObject parameter: %p = %p\n", i + 1, arg, obj);
 									needs_writeback = TRUE;
 								} else {
-									exception = (MonoObject *) mono_get_exception_execution_engine ("Unable to marshal byref parameter type");
+									exception_gchandle = xamarin_get_exception_for_parameter (8029, 0, "Unable to marshal the byref parameter", sel, method, p, i, true);
 									goto exception_handling;
 								}
 								break;
@@ -519,19 +538,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 							goto exception_handling;
 						LOGZ (" writing back managed INativeObject %p to argument at %p\n", *(NSObject **) arg, arg);
 					} else {
-						char *to_name = xamarin_type_get_full_name (p, &exception_gchandle);
-						if (exception_gchandle != 0)
-							goto exception_handling;
-						char *method_full_name = mono_method_full_name (method, TRUE);
-						char *msg = xamarin_strdup_printf ("Unable to marshal the out/ref parameter #%i whose managed type is '%s' to Objective-C.\n"
-							"Additional information:\n"	
-							"\tSelector: %s\n"
-							"\tMethod: %s\n", i + 1, to_name, sel_getName (sel), method_full_name);
-						MonoException *exc = xamarin_create_exception (msg);
-						xamarin_free (msg);
-						xamarin_free (to_name);
-						xamarin_free (method_full_name);
-						exception = (MonoObject *) exc;
+						exception_gchandle = xamarin_get_exception_for_parameter (8030, 0, "Unable to marshal the out/ref parameter", sel, method, p, i, false);
 						goto exception_handling;
 					}
 					break;
