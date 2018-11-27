@@ -1159,33 +1159,59 @@ namespace xharness
 								}
 							}
 							break;
+						case "/stoptest":
 						case "/runtest":
 							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
-							using (var writer = new StreamWriter (response.OutputStream)) {
-								int id;
-								var id_inputs = arguments ["id"].Split (',');
-
-								// We want to randomize the order the tests are added, so that we don't build first the test for one device, 
-								// then for another, since that would not take advantage of running tests on several devices in parallel.
-								var rnd = new Random ((int) DateTime.Now.Ticks);
-								id_inputs = id_inputs.OrderBy (v => rnd.Next ()).ToArray ();
-
+							IEnumerable<TestTask> find_tasks (StreamWriter writer, string ids)
+							{
+								var id_inputs = ids.Split (',');
 								foreach (var id_input in id_inputs) {
-									if (int.TryParse (id_input, out id)) {
+									if (int.TryParse (id_input, out var id)) {
 										var task = Tasks.FirstOrDefault ((t) => t.ID == id);
 										if (task == null)
 											task = Tasks.Where ((v) => v is AggregatedRunSimulatorTask).Cast<AggregatedRunSimulatorTask> ().SelectMany ((v) => v.Tasks).FirstOrDefault ((t) => t.ID == id);
 										if (task == null) {
 											writer.WriteLine ($"Could not find test {id}");
-										} else if (task.InProgress || task.Waiting) {
+										} else {
+											yield return task;
+										}
+									} else {
+										writer.WriteLine ($"Could not parse {arguments ["id"]}");
+									}
+								}
+
+							}
+							using (var writer = new StreamWriter (response.OutputStream)) {
+								var id_inputs = arguments ["id"].Split (',');
+
+								var tasks = find_tasks (writer, arguments ["id"]);
+
+								// We want to randomize the order the tests are added, so that we don't build first the test for one device, 
+								// then for another, since that would not take advantage of running tests on several devices in parallel.
+								var rnd = new Random ((int) DateTime.Now.Ticks);
+								tasks = tasks.OrderBy ((v) => rnd.Next ());
+
+								foreach (var task in tasks) {
+									switch (request.Url.LocalPath) {
+									case "/stoptest":
+										if (!task.Waiting) {
+											writer.WriteLine ($"Test '{task.TestName}' is not in a waiting state.");
+										} else {
+											task.Reset ();
+											writer.WriteLine ($"OK: {task.ID}");
+										}
+										break;
+									case "/runtest":
+										if (task.InProgress || task.Waiting) {
 											writer.WriteLine ($"Test '{task.TestName}' is already executing.");
 										} else {
 											task.Reset ();
 											task.RunAsync ();
-											writer.WriteLine ("OK");
+											writer.WriteLine ($"OK: {task.ID}");
 										}
-									} else {
-										writer.WriteLine ($"Could not parse {arguments ["id"]}");
+										break;
+									default:
+										throw new NotImplementedException ();
 									}
 								}
 							}
@@ -1630,6 +1656,10 @@ function runtest(id)
 {
 	sendrequest (""runtest?id="" + id);
 }
+function stoptest(id)
+{
+	sendrequest (""stoptest?id="" + id);
+}
 function sendrequest(url, callback)
 {
 	var xhttp = new XMLHttpRequest();
@@ -1989,8 +2019,17 @@ function toggleAll (show)
 							writer.Write ($"<div class='pdiv {ignoredClass}'>");
 							writer.Write ($"<span id='button_{log_id}' class='expander' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>{defaultExpander}</span>");
 							writer.Write ($"<span id='x{id_counter++}' class='p3 autorefreshable' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>{title} (<span style='color: {GetTestColor (test)}'>{state}</span>) </span>");
-							if (IsServerMode && !test.InProgress && !test.Waiting)
-								writer.Write ($" <span><a class='runall' href='javascript:runtest ({test.ID})'>Run</a></span> ");
+							if (IsServerMode) {
+								writer.Write ($" <span id='x{id_counter++}' class='autorefreshable'>");
+								if (test.Waiting) {
+									writer.Write ($" <a class='runall' href='javascript:stoptest ({test.ID})'>Stop</a> ");
+								} else if (test.InProgress) {
+									// Stopping is not implemented for tasks that are already executing
+								} else {
+									writer.Write ($" <a class='runall' href='javascript:runtest ({test.ID})'>Run</a> ");
+								}
+								writer.Write ("</span> ");
+							}
 							writer.WriteLine ("</div>");
 							writer.WriteLine ($"<div id='logs_{log_id}' class='autorefreshable logs togglable' data-onautorefresh='{log_id}' style='display: {defaultDisplay};'>");
 
