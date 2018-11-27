@@ -496,9 +496,7 @@ namespace BCLTestImporter {
 					throw new InvalidOperationException ("xUnit and NUnit assemblies cannot be mixed in a test project.");
 				// generate the required type registration info
 				var generatedCodeDir = Path.Combine (generatedDir, projectDefinition.Name);
-				if (!Directory.Exists (generatedCodeDir)) {
-					Directory.CreateDirectory (generatedCodeDir);
-				}
+				Directory.CreateDirectory (generatedCodeDir);
 				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType.cs");
 
 				var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (def.name, projectDefinition.IsXUnit,
