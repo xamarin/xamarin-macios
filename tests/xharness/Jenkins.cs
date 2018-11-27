@@ -83,25 +83,29 @@ namespace xharness
 			Devices.Harness = Harness;
 
 			if (SimulatorLoadLog == null)
-				SimulatorLoadLog = Logs.Create ($"simulator-list-{Harness.Timestamp}.log", "Simulator Listing");
+				SimulatorLoadLog = Logs.Create ($"simulator-list-{Harness.Timestamp}.log", "Simulator Listing (in progress)");
 
 			var simulatorLoadTask = Task.Run (async () => {
 				try {
 					await Simulators.LoadAsync (SimulatorLoadLog);
+					SimulatorLoadLog.Description = "Simulator Listing (ok)";
 				} catch (Exception e) {
 					SimulatorLoadLog.WriteLine ("Failed to load simulators:");
 					SimulatorLoadLog.WriteLine (e);
+					SimulatorLoadLog.Description = $"Simulator Listing ({e.Message})";
 				}
 			});
 
 			if (DeviceLoadLog == null)
-				DeviceLoadLog = Logs.Create ($"device-list-{Harness.Timestamp}.log", "Device Listing");
+				DeviceLoadLog = Logs.Create ($"device-list-{Harness.Timestamp}.log", "Device Listing (in progress)");
 			var deviceLoadTask = Task.Run (async () => {
 				try {
 					await Devices.LoadAsync (DeviceLoadLog, removed_locked: true);
+					DeviceLoadLog.Description = "Device Listing (ok)";
 				} catch (Exception e) {
 					DeviceLoadLog.WriteLine ("Failed to load devices:");
 					DeviceLoadLog.WriteLine (e);
+					DeviceLoadLog.Description = $"Device Listing ({e.Message})";
 				}
 			});
 
@@ -1788,7 +1792,7 @@ function toggleAll (show)
 				writer.WriteLine ("<h1>Test results</h1>");
 
 				foreach (var log in Logs)
-					writer.WriteLine ("<a href='{0}' type='text/plain'>{1}</a><br />", log.FullPath.Substring (LogDirectory.Length + 1), log.Description);
+					writer.WriteLine ("<span id='x{2}' class='autorefreshable'> <a href='{0}' type='text/plain'>{1}</a></span><br />", log.FullPath.Substring (LogDirectory.Length + 1), log.Description, id_counter++);
 
 				var headerColor = "black";
 				if (unfinishedTests.Any ()) {
