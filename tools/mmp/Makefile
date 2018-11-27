@@ -1,6 +1,8 @@
 TOP=../..
 include $(TOP)/Make.config
 
+export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
+
 #
 # mmp
 #
