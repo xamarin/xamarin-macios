@@ -15,7 +15,7 @@ namespace BCLTestImporter {
 		
 		// the following cache is a workaround until mono does provide the required binaries precompiled, at that point
 		// we will remove the dict and we will use the refection based method.
-		static Dictionary<string, (string testNamespace, string testAssembly, string testType)> cache = new Dictionary<string, (string testNamespace, string testAssembly, string testType)> {
+		static Dictionary<string, (string testNamespace, string testAssembly, string testType)> iOSCache = new Dictionary<string, (string testNamespace, string testAssembly, string testType)> {
 			{"SystemNumericsTests", ("MonoTests.System.Numerics",  "MONOTOUCH_System.Numerics_test.dll", "MonoTests.System.Numerics.BigIntegerTest")},
 			{"SystemRuntimeSerializationTests", ("MonoTests", "MONOTOUCH_System.Runtime.Serialization_test.dll", "MonoTests.XmlComparer")},
 			{"SystemXmlLinqTests", ("MonoTests.System.Xml", "MONOTOUCH_System.Xml.Linq_test.dll", "MonoTests.System.Xml.ExtensionsTest")},
@@ -32,15 +32,58 @@ namespace BCLTestImporter {
 			{"SystemNumericsXunit", ("System.Numerics.Tests", "MONOTOUCH_System.Numerics_xunit-test.dll", "System.Numerics.Tests.GenericVectorTests")},
 			{"SystemLinqXunit", ("Microsoft.Test.ModuleCore", "MONOTOUCH_System.Xml.Linq_xunit-test.dll", "Microsoft.Test.ModuleCore.LtmContext")},
 			{"SystemRuntimeCompilerServicesUnsafeXunit", ("System.Runtime.CompilerServices", "MONOTOUCH_System.Runtime.CompilerServices.Unsafe_xunit-test.dll", "System.Runtime.CompilerServices.UnsafeTests")},
+			{"MonoCSharp", ("MonoTests.Visit",  "xammac_net_4_5_Mono.CSharp_test.dll", "MonoTests.Visit.ASTVisitorTest")},
 		};
+		
+		static Dictionary<string, (string testNamespace, string testAssembly, string testType)> macCache = new Dictionary<string, (string testNamespace, string testAssembly, string testType)> {
+			{"MonoDataSqilte", ("MonoTests.Mono.Data.Sqlite",  "xammac_net_4_5_Mono.Data.Sqlite_test.dll", "MonoTests.Mono.Data.Sqlite.SqliteiOS82BugTests")},
+			{"MonoDataTds", ("MonoTests.Mono.Data.Tds",  "xammac_net_4_5_Mono.Data.Tds_test.dll", "MonoTests.Mono.Data.Tds.TdsConnectionPoolTest")},
+			{"MonoPoxis", ("MonoTests.System.IO",  "xammac_net_4_5_Mono.Posix_test.dll", "MonoTests.System.IO.StdioFileStreamTest")},
+			{"MonoSecurtiy", ("MonoTests.System.Security.Cryptography",  "xammac_net_4_5_Mono.Security_test.dll", "MonoTests.System.Security.Cryptography.SHA224ManagedTest")},
+			{"SystemComponentModelDataAnnotations", ("MonoTests.System.ComponentModel.DataAnnotations",  "xammac_net_4_5_System.ComponentModel.DataAnnotations_test.dll", "MonoTests.System.ComponentModel.DataAnnotations.AssociatedMetadataTypeTypeDescriptionProviderTests")},
+			{"SystemConfiguration", ("MonoTests.System.Configuration",  "xammac_net_4_5_System.Configuration_test.dll", "MonoTests.System.Configuration.ProviderCollectionTest")},
+			{"SystemCore", ("MonoTests.System.Threading",  "xammac_net_4_5_System.Core_test.dll", "MonoTests.System.Threading.ReaderWriterLockSlimTests")},
+			{"SystemDataLinq", ("DbLinqTest",  "xammac_net_4_5_System.Data.Linq_test.dll", "DbLinqTest.MsSqlDataContextTest")},
+			{"SystemData", ("MonoTests.System.Xml",  "xammac_net_4_5_System.Data_test.dll", "MonoTests.System.Xml.XmlDataDocumentTest2")},
+			{"SystemIOCompressionFileSystem", ("MonoTests.System.IO.Compression.FileSystem",  "xammac_net_4_5_System.IO.Compression.FileSystem_test.dll", "MonoTests.System.IO.Compression.FileSystem.ZipArchiveTests")},
+			{"SystemIOCompression", ("MonoTests.System.IO.Compression",  "xammac_net_4_5_System.IO.Compression_test.dll", "MonoTests.System.IO.Compression.ZipArchiveTests")},
+			{"SystemIdentityModel", ("MonoTests.System.IdentityModel.Tokens",  "xammac_net_4_5_System.IdentityModel_test.dll", "MonoTests.System.IdentityModel.Tokens.InMemorySymmetricSecurityKeyTest")},
+			{"SystemJson", ("MonoTests.System",  "xammac_net_4_5_System.Json_test.dll", "MonoTests.System.JsonValueTests")},
+			{"SystemNetHttp", ("MonoTests.System.Net.Http",  "xammac_net_4_5_System.Net.Http_test.dll", "MonoTests.System.Net.Http.ByteArrayContentTest")},
+			{"SystemNumerics", ("MonoTests.System.Numerics",  "xammac_net_4_5_System.Numerics_test.dll", "MonoTests.System.Numerics.BigIntegerTest")},
+			{"SystemRuntimeSerializationFormattersSoap", ("MonoTests.System.Runtime.Serialization.Formatters.Soap",  "xammac_net_4_5_System.Runtime.Serialization.Formatters.Soap_test.dll", "MonoTests.System.Runtime.Serialization.Formatters.Soap.SerializationCallbackTest")},
+			{"SystemSecurity", ("MonoCasTests.System.Security.Cryptography",  "xammac_net_4_5_System.Security_test.dll", "MonoCasTests.System.Security.Cryptography.CryptographicAttributeObjectCas")},
+			{"SystemTransactions", ("MonoTests.System.Transactions",  "xammac_net_4_5_System.Transactions_test.dll", "MonoTests.System.Transactions.AsyncTest")},
+			{"SystemXmlLinq", ("MonoTests.System.Xml",  "xammac_net_4_5_System.Xml.Linq_test.dll", "MonoTests.System.Xml.ExtensionsTest")},
+			{"SystemXml", ("nist_dom.fundamental",  "xammac_net_4_5_System.Xml_test.dll", "nist_dom.fundamental.AttrTest")},
+			{"System", ("MonoCasTests.System",  "xammac_net_4_5_System_test.dll", "MonoCasTests.System.FileStyleUriParserCas")},
+			{"MicrosoftCSharpXunit", ("Microsoft.CSharp.RuntimeBinder.Tests",  "xammac_net_4_5_Microsoft.CSharp_xunit-test.dll", "Microsoft.CSharp.RuntimeBinder.Tests.AccessTests")},
+			{"SystemCoreXunit", ("System.Dynamic.Tests",  "xammac_net_4_5_System.Core_xunit-test.dll", "System.Dynamic.Tests.BinaryOperationTests")},
+			{"SystemDataXunit", ("System.Data.SqlClient.Tests",  "xammac_net_4_5_System.Data_xunit-test.dll", "System.Data.SqlClient.Tests.CloneTests")},
+			{"SystemJsonXunit", ("System.Json.Tests",  "xammac_net_4_5_System.Json_xunit-test.dll", "System.Json.Tests.JsonArrayTests")},
+			{"SystemNumericsXunit", ("System.Numerics.Tests",  "xammac_net_4_5_System.Numerics_xunit-test.dll", "System.Numerics.Tests.GenericVectorTests")},
+			{"SystemRuntimeCompilerServicesXunit", ("System.Runtime.CompilerServices",  "xammac_net_4_5_System.Runtime.CompilerServices.Unsafe_xunit-test.dll", "System.Runtime.CompilerServices.UnsafeTests")},
+			{"SystemXmlLinqXunit", ("Microsoft.Test.ModuleCore",  "xammac_net_4_5_System.Xml.Linq_xunit-test.dll", "Microsoft.Test.ModuleCore.LtmContext")},
+			};
 
-		public static async Task<string> GenerateCodeAsync (string projectName, bool isXunit, string templatePath)
+		public static async Task<string> GenerateCodeAsync (string projectName, bool isXunit, string templatePath, Platform  platform)
 		{
-			var cachedData = cache[projectName];
+			Dictionary<string, (string testNamespace, string testAssembly, string testType)> cache = null;
+			switch (platform){
+			case Platform.iOS:
+			case Platform.TvOS:
+			case Platform.WatchOS:
+				cache = iOSCache;
+				break;
+			case Platform.MacOSFull:
+			case Platform.MacOSModern:
+				cache = macCache;
+				break;
+			}
 			var importStringBuilder = new StringBuilder ();
 			var keyValuesStringBuilder = new StringBuilder ();
-			importStringBuilder.AppendLine ($"using {cachedData.testNamespace};");
-			keyValuesStringBuilder.AppendLine ($"\t\t\t{{ \"{cachedData.testAssembly}\", typeof ({cachedData.testType})}}, ");
+			importStringBuilder.AppendLine ($"using {cache[projectName].testNamespace};");
+			keyValuesStringBuilder.AppendLine ($"\t\t\t{{ \"{cache[projectName].testAssembly}\", typeof ({cache[projectName].testType})}}, ");
 			// got the lines we want to add, read the template and substitute
 			using (var reader = new StreamReader(templatePath)) {
 				var result = await reader.ReadToEndAsync ();

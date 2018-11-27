@@ -380,7 +380,7 @@ namespace BCLTestImporter {
 				}
 				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType.cs");
 				var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (def.name, projectDefinition.IsXUnit,
-					RegisterTypesTemplatePath);
+					RegisterTypesTemplatePath, Platform.WatchOS);
 				using (var file = new StreamWriter (registerTypePath, false)) { // false is do not append
 					await file.WriteAsync (registerCode);
 				}
@@ -457,7 +457,7 @@ namespace BCLTestImporter {
 				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType.cs");
 
 				var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (def.name, projectDefinition.IsXUnit,
-					RegisterTypesTemplatePath);
+					RegisterTypesTemplatePath, Platform.iOS);
 
 				using (var file = new StreamWriter (registerTypePath, false)) { // false is do not append
 					await file.WriteAsync (registerCode);
@@ -502,8 +502,8 @@ namespace BCLTestImporter {
 				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType.cs");
 
 				var typesPerAssembly = projectDefinition.GetTypeForAssemblies (MonoRootPath, platform);
-				var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (typesPerAssembly,
-					projectDefinition.IsXUnit, RegisterTypesTemplatePath);
+				var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (def.name, projectDefinition.IsXUnit,
+					RegisterTypesTemplatePath, platform);
 
 				using (var file = new StreamWriter (registerTypePath, false)) { // false is do not append
 					await file.WriteAsync (registerCode);
@@ -518,7 +518,7 @@ namespace BCLTestImporter {
 
 				var projectTemplatePath = Path.Combine (ProjectTemplateRootPath, projectTemplateMatches[platform]);
 				var generatedProject = await GenerateMacAsync (projectDefinition.Name, registerTypePath,
-					projectDefinition.GetAssemblyInclusionInformation (MonoRootPath, platform), projectTemplatePath, infoPlistPath, platform);
+					projectDefinition.GetCachedAssemblyInclusionInformation (MonoRootPath, platform), projectTemplatePath, infoPlistPath, platform);
 				var projectPath = GetProjectPath (projectDefinition.Name, platform);
 				projectPaths.Add ((name: projectDefinition.Name, path: projectPath, xunit: projectDefinition.IsXUnit));
 				using (var file = new StreamWriter (projectPath, false)) { // false is do not append
