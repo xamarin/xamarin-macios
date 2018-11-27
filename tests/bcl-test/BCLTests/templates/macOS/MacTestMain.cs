@@ -16,8 +16,7 @@ using Xamarin.iOS.UnitTests;
 using Xamarin.iOS.UnitTests.NUnit;
 using BCLTests.TestRunner.Core;
 using Xamarin.iOS.UnitTests.XUnit;
-
-
+using System.IO;
 
 namespace Xamarin.Mac.Tests
 {
@@ -42,9 +41,6 @@ namespace Xamarin.Mac.Tests
 		{
 			Console.WriteLine ("Running tests");
 			var options = ApplicationOptions.Current;
-			TcpTextWriter writer = null;
-			if (!string.IsNullOrEmpty (options.HostName))
-				writer = new TcpTextWriter (options.HostName, options.HostPort);
 
 			// we generate the logs in two different ways depending if the generate xml flag was
 			// provided. If it was, we will write the xml file to the tcp writer if present, else
@@ -59,17 +55,17 @@ namespace Xamarin.Mac.Tests
 				runner = new NUnitTestRunner (logger);
 			
 			runner.Run (testAssemblies.ToList ());
-			if (options.EnableXml) {
+			
+			using (var writer = new StreamWriter(options.ResultFile)) {
 				runner.WriteResultsToFile (writer);
-				logger.Info ("Xml file was written to the tcp listener.");
-			} else {
-				string resultsFilePath = runner.WriteResultsToFile ();
-				logger.Info ($"Xml result can be found {resultsFilePath}");
 			}
+			logger.Info ($"Xml result can be found {options.ResultFile}");
 			
 			logger.Info ($"Tests run: {runner.TotalTests} Passed: {runner.PassedTests} Inconclusive: {runner.InconclusiveTests} Failed: {runner.FailedTests} Ignored: {runner.SkippedTests}");
-			if (options.TerminateAfterExecution)
-				_exit (0);			
+			if (runner.FailedTests != 0)
+				_exit (1);
+			else
+				_exit (0);
 		}
 
 		[DllImport ("/usr/lib/libSystem.dylib")]

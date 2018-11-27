@@ -10,15 +10,15 @@
     <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
     <AssemblyName>%NAME%</AssemblyName>
     <NoWarn>67,168,169,219,414,612,618,649,672</NoWarn>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <UseXamMacFullFramework>true</UseXamMacFullFramework>
-    <DefineConstants>XAMCORE_2_0;ADD_BCL_EXCLUSIONS</DefineConstants>
+    <TargetFrameworkVersion>%TARGET FRAMEWORK VERSION%</TargetFrameworkVersion>
+    %TARGET EXTRA INFO%
+    <DefineConstants>%DEFINE CONSTANTS%</DefineConstants>
   </PropertyGroup>
  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\%NAME%\Debug</OutputPath>
+    <OutputPath>bin\AnyCPU\%NAME%\Debug</OutputPath>
     <DefineConstants>DEBUG;NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;MONOMAC;DISABLE_CAS_USE;NO_GUI_TESTING;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -34,7 +34,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\%NAME%\Release</OutputPath>
+    <OutputPath>bin\AnyCPU\%NAME%\Release</OutputPath>
     <DefineConstants>NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;MONOMAC;DISABLE_CAS_USE;NO_GUI_TESTING;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>

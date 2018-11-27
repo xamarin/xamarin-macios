@@ -16,7 +16,8 @@ namespace BCLTestImporter {
 			{Platform.iOS, "monotouch"},
 			{Platform.WatchOS, "monotouch_watch"},
 			{Platform.TvOS, "monotouch_tv"},
-			{Platform.MacOS, "xammac"},
+			{Platform.MacOSFull, "xammac"},
+			{Platform.MacOSModern, "xammac"},
 		};
 		
 		#endregion
@@ -340,7 +341,7 @@ namespace BCLTestImporter {
 				{ "iOS", "Specifies that the platform to which the projects are going to be build is iOS.", i => Platform = Platform.iOS },
 				{ "watchOS", "Specifies that the platform to which the projects are going to be build is watchOS.", w => Platform = Platform.WatchOS },
 				{ "tvOS", "Specifies that the platform to which the projects are going to be build is tvOS.", t => Platform = Platform.TvOS },
-				{ "macOS", "Specifies that the platform to which the projects are going to be build is macOS.", m => Platform = Platform.MacOS },
+				{ "macOS", "Specifies that the platform to which the projects are going to be build is macOS.", m => Platform = Platform.MacOSFull },
 				{ "generate-project", "Flag used to state that a new test project should be generated."
 					+ " Output path must be provided via -o.", f => GenerateProject = f != null },
 				{ "generate-all-projects", "Flag used to state that all the test projects should be generated."

@@ -23,17 +23,22 @@ namespace BCLTestImporter {
 		internal static readonly string WatchOSTemplatePathKey = "%TEMPLATE PATH%";
 		internal static readonly string WatchOSCsporjAppKey = "%WATCH APP PROJECT PATH%";
 		internal static readonly string WatchOSCsporjExtensionKey  ="%WATCH EXTENSION PROJECT PATH%";
+		internal static readonly string TargetFrameworkVersionKey = "%TARGET FRAMEWORK VERSION%";
+		internal static readonly string TargetExtraInfoKey = "%TARGET EXTRA INFO%";
+		internal static readonly string DefineConstantsKey = "%DEFINE CONSTANTS%";
 		static readonly Dictionary<Platform, string> plistTemplateMatches = new Dictionary<Platform, string> {
 			{Platform.iOS, "Info.plist.in"},
 			{Platform.TvOS, "Info-tv.plist.in"},
 			{Platform.WatchOS, "Info-watchos.plist.in"},
-			{Platform.MacOS, "Info-mac.plist.in"},
+			{Platform.MacOSFull, "Info-mac.plist.in"},
+			{Platform.MacOSModern, "Info-mac.plist.in"},
 		};
 		static readonly Dictionary<Platform, string> projectTemplateMatches = new Dictionary<Platform, string> {
 			{Platform.iOS, "BCLTests.csproj.in"},
 			{Platform.TvOS, "BCLTests-tv.csproj.in"},
 			{Platform.WatchOS, "BCLTests-watchos.csproj.in"},
-			{Platform.MacOS, "BCLTests-mac.csproj.in"},
+			{Platform.MacOSFull, "BCLTests-mac.csproj.in"},
+			{Platform.MacOSModern, "BCLTests-mac.csproj.in"},
 		};
 		static readonly Dictionary<WatchAppType, string> watchOSProjectTemplateMatches = new Dictionary<WatchAppType, string>
 		{
@@ -58,6 +63,10 @@ namespace BCLTestImporter {
 			"System",
 			"System.Xml",
 			"System.Xml.Linq",
+			"System.Core",
+			"xunit.core",
+			"xunit.abstractions",
+			"xunit.assert",
 		};
 
 		// we have two different types of list, those that are for the iOS like projects (ios, tvos and watch os) and those 
@@ -181,16 +190,16 @@ namespace BCLTestImporter {
 			(name:"System", assemblies: new [] {"xammac_net_4_5_System_test.dll"}),
 			
 			// xUnit Projects
-			(name:"MicrosoftCSharp", assemblies: new [] {"xammac_net_4_5_Microsoft.CSharp_xunit-test.dll"}),
-			(name:"SystemCore", assemblies: new [] {"xammac_net_4_5_System.Core_xunit-test.dll"}),
-			(name:"SystemData", assemblies: new [] {"xammac_net_4_5_System.Data_xunit-test.dll"}),
-			(name:"SystemJson", assemblies: new [] {"xammac_net_4_5_System.Json_xunit-test.dll"}),
-			(name:"SystemNumerics", assemblies: new [] {"xammac_net_4_5_System.Numerics_xunit-test.dll"}),
-			(name:"SystemRuntimeCompilerServices", assemblies: new [] {"xammac_net_4_5_System.Runtime.CompilerServices.Unsafe_xunit-test.dll"}),
-			(name:"SystemSecurity", assemblies: new [] {"xammac_net_4_5_System.Security_xunit-test.dll"}),
-			(name:"SystemXmlLinq", assemblies: new [] {"xammac_net_4_5_System.Xml.Linq_xunit-test.dll"}),
+			(name:"MicrosoftCSharpXunit", assemblies: new [] {"xammac_net_4_5_Microsoft.CSharp_xunit-test.dll"}),
+			(name:"SystemCoreXunit", assemblies: new [] {"xammac_net_4_5_System.Core_xunit-test.dll"}),
+			(name:"SystemDataXunit", assemblies: new [] {"xammac_net_4_5_System.Data_xunit-test.dll"}),
+			(name:"SystemJsonXunit", assemblies: new [] {"xammac_net_4_5_System.Json_xunit-test.dll"}),
+			(name:"SystemNumericsXunit", assemblies: new [] {"xammac_net_4_5_System.Numerics_xunit-test.dll"}),
+			(name:"SystemRuntimeCompilerServicesXunit", assemblies: new [] {"xammac_net_4_5_System.Runtime.CompilerServices.Unsafe_xunit-test.dll"}),
+			(name:"SystemSecurityXunit", assemblies: new [] {"xammac_net_4_5_System.Security_xunit-test.dll"}),
+			(name:"SystemXmlLinqXunit", assemblies: new [] {"xammac_net_4_5_System.Xml.Linq_xunit-test.dll"}),
 			(name:"SystemXunit", assemblies: new [] {"xammac_net_4_5_System_xunit-test.dll"}),
-			(name:"Corlib", assemblies: new [] {"xammac_net_4_5_corlib_xunit-test.dll"}),
+			(name:"CorlibXunit", assemblies: new [] {"xammac_net_4_5_corlib_xunit-test.dll"}),
 		};
 		
 		static readonly List<string> macIgnoredAssemblies = new List<string> {
@@ -244,8 +253,10 @@ namespace BCLTestImporter {
 				return Path.Combine (OutputDirectoryPath, $"{projectName}-tvos.csproj");
 			case Platform.WatchOS:
 				return Path.Combine (OutputDirectoryPath, $"{projectName}-watchos.csproj");
-			case Platform.MacOS:
-				return Path.Combine (OutputDirectoryPath, $"{projectName}-mac.csproj");
+			case Platform.MacOSFull:
+				return Path.Combine (OutputDirectoryPath, $"{projectName}-mac-full.csproj");
+			case Platform.MacOSModern:
+				return Path.Combine (OutputDirectoryPath, $"{projectName}-mac-modern.csproj");
 			default:
 				return null;
 			}
@@ -276,7 +287,8 @@ namespace BCLTestImporter {
 				return Path.Combine (rootDir, "Info-tv.plist");
 			case Platform.WatchOS:
 				return Path.Combine (rootDir, "Info-watchos.plist");
-			case Platform.MacOS:
+			case Platform.MacOSFull:
+			case Platform.MacOSModern:
 				return Path.Combine (rootDir, "Info-mac.plist");
 			default:
 				return Path.Combine (rootDir, "Info.plist");
@@ -338,7 +350,8 @@ namespace BCLTestImporter {
 					return tvOSIgnoredAssemblies.Contains (a.Name);
 				case Platform.WatchOS:
 					return watcOSIgnoredAssemblies.Contains (a.Name);
-				case Platform.MacOS:
+				case Platform.MacOSFull:
+				case Platform.MacOSModern:
 					return macIgnoredAssemblies.Contains (a.Name);
 				}
 			}
@@ -471,12 +484,12 @@ namespace BCLTestImporter {
 		}
 		
 		async Task<List<(string name, string path, bool xunit)>> GenerateMacTestProjectsAsync (
-			IEnumerable<(string name, string[] assemblies)> projects, string generatedDir)
+			IEnumerable<(string name, string[] assemblies)> projects, string generatedDir, Platform platform)
 		{
 			var projectPaths = new List<(string name, string path, bool xunit)> ();
 			foreach (var def in projects) {
 				var projectDefinition = new BCLTestProjectDefinition (def.name, def.assemblies);
-				if (IsIgnored (projectDefinition, Platform.MacOS)) // some projects are ignored, so we just continue
+				if (IsIgnored (projectDefinition, platform)) // some projects are ignored, so we just continue
 					continue;
 
 				if (!projectDefinition.Validate ())
@@ -488,7 +501,7 @@ namespace BCLTestImporter {
 				}
 				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType.cs");
 
-				var typesPerAssembly = projectDefinition.GetTypeForAssemblies (MonoRootPath, Platform.MacOS);
+				var typesPerAssembly = projectDefinition.GetTypeForAssemblies (MonoRootPath, platform);
 				var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (typesPerAssembly,
 					projectDefinition.IsXUnit, RegisterTypesTemplatePath);
 
@@ -496,17 +509,17 @@ namespace BCLTestImporter {
 					await file.WriteAsync (registerCode);
 				}
 				
-				var plistTemplate = Path.Combine (PlistTemplateRootPath, plistTemplateMatches[Platform.MacOS]);
+				var plistTemplate = Path.Combine (PlistTemplateRootPath, plistTemplateMatches[platform]);
 				var plist = await BCLTestInfoPlistGenerator.GenerateCodeAsync (plistTemplate, projectDefinition.Name);
-				var infoPlistPath = GetPListPath (generatedCodeDir, Platform.MacOS);
+				var infoPlistPath = GetPListPath (generatedCodeDir, platform);
 				using (var file = new StreamWriter (infoPlistPath, false)) { // false is do not append
 					await file.WriteAsync (plist);
 				}
 
-				var projectTemplatePath = Path.Combine (ProjectTemplateRootPath, projectTemplateMatches[Platform.MacOS]);
+				var projectTemplatePath = Path.Combine (ProjectTemplateRootPath, projectTemplateMatches[platform]);
 				var generatedProject = await GenerateMacAsync (projectDefinition.Name, registerTypePath,
-					projectDefinition.GetAssemblyInclusionInformation (MonoRootPath, Platform.MacOS), projectTemplatePath, infoPlistPath);
-				var projectPath = GetProjectPath (projectDefinition.Name, Platform.MacOS);
+					projectDefinition.GetAssemblyInclusionInformation (MonoRootPath, platform), projectTemplatePath, infoPlistPath, platform);
+				var projectPath = GetProjectPath (projectDefinition.Name, platform);
 				projectPaths.Add ((name: projectDefinition.Name, path: projectPath, xunit: projectDefinition.IsXUnit));
 				using (var file = new StreamWriter (projectPath, false)) { // false is do not append
 					await file.WriteAsync (generatedProject);
@@ -534,8 +547,9 @@ namespace BCLTestImporter {
 			case Platform.iOS:
 				result = await GenerateiOSTestProjectsAsync (projects, platform, generatedDir);
 				break;
-			case Platform.MacOS:
-				result = await GenerateMacTestProjectsAsync (projects, generatedDir);
+			case Platform.MacOSFull:
+			case Platform.MacOSModern:
+				result = await GenerateMacTestProjectsAsync (projects, generatedDir, platform);
 				break;
 			}
 			return result;
@@ -589,7 +603,7 @@ namespace BCLTestImporter {
 
 		public List<(string name, string path, bool xunit, List<Platform> platforms)> GenerateAlliOSTestProjects () => GenerateAlliOSTestProjectsAsync ().Result;
 		
-		public async Task<List<(string name, string path, bool xunit)>> GenerateAllMacTestProjectsAsync ()
+		public async Task<List<(string name, string path, bool xunit)>> GenerateAllMacTestProjectsAsync (Platform platform)
 		{
 			if (!isCodeGeneration)
 				throw new InvalidOperationException ("Project generator was instantiated to delete the generated code.");
@@ -598,11 +612,11 @@ namespace BCLTestImporter {
 				Directory.CreateDirectory (generatedCodePathRoot);
 			}
 			
-			var generated = await GenerateTestProjectsAsync (macTestProjects, Platform.MacOS, generatedCodePathRoot);
+			var generated = await GenerateTestProjectsAsync (macTestProjects, platform, generatedCodePathRoot);
 			return generated;
 		}
 
-		public List<(string name, string path, bool xunit)> GenerateAllMacTestProjects () => GenerateAllMacTestProjectsAsync ().Result;
+		public List<(string name, string path, bool xunit)> GenerateAllMacTestProjects (Platform platform) => GenerateAllMacTestProjectsAsync (platform).Result;
 
 		/// <summary>
 		/// Generates an iOS project for testing purposes. The generated project will contain the references to the
@@ -634,7 +648,7 @@ namespace BCLTestImporter {
 			}
 		}
 		
-		static async Task<string> GenerateMacAsync (string projectName, string registerPath, List<(string assembly, string hintPath)> info, string templatePath, string infoPlistPath)
+		static async Task<string> GenerateMacAsync (string projectName, string registerPath, List<(string assembly, string hintPath)> info, string templatePath, string infoPlistPath, Platform platform)
 		{
 			infoPlistPath = infoPlistPath.Replace ('/', '\\');
 			var sb = new StringBuilder ();
@@ -649,6 +663,20 @@ namespace BCLTestImporter {
 				result = result.Replace (ReferencesKey, sb.ToString ());
 				result = result.Replace (RegisterTypeKey, GetRegisterTypeNode (registerPath));
 				result = result.Replace (PlistKey, infoPlistPath);
+				switch (platform){
+				case Platform.MacOSFull:
+					result = result.Replace (TargetFrameworkVersionKey, "v4.5");
+					result = result.Replace (TargetExtraInfoKey,
+						"<UseXamMacFullFramework>true</UseXamMacFullFramework>");
+					result = result.Replace (DefineConstantsKey, "XAMCORE_2_0;ADD_BCL_EXCLUSIONS;XAMMAC_4_5");
+					break;
+				case Platform.MacOSModern:
+					result = result.Replace (TargetFrameworkVersionKey, "v2.0");
+					result = result.Replace (TargetExtraInfoKey,
+						"<TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>");
+					result = result.Replace (DefineConstantsKey, "XAMCORE_2_0;ADD_BCL_EXCLUSIONS;MOBILE;XAMMAC");
+					break;
+				}
 				return result;
 			}
 		}

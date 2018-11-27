@@ -47,20 +47,37 @@ namespace xharness.BCLTestImporter {
 			return result;
 		}
 		
-		public List<MacTestProject> GetMacBclTargets ()
+		public List<MacTestProject> GetMacBclTargets (MacFlavors flavor)
 		{
+			Platform platform;
+			if (flavor == MacFlavors.Full)
+				platform = Platform.MacOSFull;
+			else
+				platform = Platform.MacOSModern;
 			var result = new List<MacTestProject> ();
-			foreach (var (name, path, xunit) in projectGenerator.GenerateAllMacTestProjects ()) {
-				var prefix = "XamMac " + (xunit ? "xUnit" : "NUnit");
-				result.Add (new MacTestProject (path) {
+			foreach (var (name, path, xunit) in projectGenerator.GenerateAllMacTestProjects (platform)) {
+				var prefix = xunit ? "xUnit" : "NUnit";				
+				var bclTestInfo = new MacBCLTestInfo (Harness, path, flavor);
+				result.Add (new MacTestProject (path, targetFrameworkFlavor: flavor, generateVariations: false) {
 					Name = $"[{prefix}] Mono {name}",
-					TargetFrameworkFlavor = MacFlavors.NonSystem,
+					Platform = "AnyCPU",
+					IsExecutableProject = true,
+					BCLInfo = bclTestInfo,
 					Dependency = async () => {
 						var rv = await Harness.BuildBclTests ();
 						if (!rv.Succeeded)
 							throw new Exception ($"Failed to build BCL tests, exit code: {rv.ExitCode}. Check the harness log for more details.");
 					}
 				});
+			}
+			return result;
+		}
+
+		public List<MacTestProject> GetMacBclTargets ()
+		{
+			var result = new List<MacTestProject> ();
+			foreach (var flavor in new [] { MacFlavors.Full, MacFlavors.Modern}) {
+				result.AddRange (GetMacBclTargets (flavor));
 			}
 			return result;
 		}

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
@@ -87,7 +87,7 @@ namespace xharness
 		{
 			var nodes = csproj.SelectNodes ("/*/*/*[local-name() = 'OutputPath']");
 			if (nodes.Count == 0)
-				throw new Exception ($"Could not find node OutputPath in {csproj.InnerXml}");
+				throw new Exception ("Could not find node OutputPath");
 			foreach (XmlNode n in nodes) {
 				if (expand) {
 					// OutputPath needs to be expanded, otherwise Xamarin Studio isn't able to launch the project.
@@ -148,12 +148,12 @@ namespace xharness
 		{
 			var nodes = csproj.SelectNodes ($"/*/*/*[local-name() = '{elementName}']");
 			if (nodes.Count == 0)
-				throw new Exception ($"Could not find node {elementName} in {csproj.InnerXml}");
+				throw new Exception ($"Could not find node {elementName}");
 			foreach (XmlNode n in nodes) {
 				if (IsNodeApplicable (n, platform, configuration))
 					return n.InnerText.Replace ("$(Platform)", platform).Replace ("$(Configuration)", configuration);
 			}
-			throw new Exception ($"Could not find {elementName} in {csproj.InnerXml}");
+			throw new Exception ($"Could not find {elementName}");
 		}
 
 		public static string GetOutputAssemblyPath (this XmlDocument csproj, string platform, string configuration)

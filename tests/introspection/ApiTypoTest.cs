@@ -21,6 +21,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -36,6 +37,7 @@ using UIKit;
 using Foundation;
 #else
 #if MONOMAC
+using MonoMac;
 using MonoMac.AppKit;
 using MonoMac.ObjCRuntime;
 using MonoMac.Foundation;
@@ -847,7 +849,7 @@ namespace Introspection
 		}
 
 		[Test]
-		public void TypoTest ()
+		public virtual void TypoTest ()
 		{
 			var types = Assembly.GetTypes ();
 			int totalErrors = 0;
@@ -1033,6 +1035,74 @@ namespace Introspection
 				}
 			}
 			return clean.ToString ();
+		}
+
+		bool CheckLibrary (string lib)
+		{
+#if MONOMAC
+			// on macOS the file should exist on the specified path
+			// for iOS the simulator paths do not match the strings
+			if (!File.Exists (lib)) {
+				if (lib != Constants.CoreImageLibrary)
+					return false;
+				// location changed in 10.11 but it loads fine (and fixing it breaks on earlier macOS)
+			}
+#endif
+			var h = IntPtr.Zero;
+			try {
+				h = Dlfcn.dlopen (lib, 0);
+				if (h != IntPtr.Zero)
+					return true;
+#if MONOMAC
+				// on macOS it might be wrong architecture
+				// i.e. 64 bits only (thin) libraries running on 32 bits process
+				if (IntPtr.Size == 4)
+					return true;
+#endif
+			} finally {
+				Dlfcn.dlclose (h);
+			}
+			return false;
+		}
+
+		[Test]
+		public void ConstantsCheck ()
+		{
+			var c = typeof (Constants);
+			foreach (var fi in c.GetFields ()) {
+				if (!fi.IsPublic)
+					continue;
+				var s = fi.GetValue (null) as string;
+				switch (fi.Name) {
+				case "Version":
+				case "SdkVersion":
+					Assert.True (Version.TryParse (s, out _), fi.Name);
+					break;
+#if !XAMCORE_4_0
+#if __TVOS__
+				case "PassKitLibrary": // not part of tvOS
+					break;
+#endif
+				case "libcompression": // bad (missing) suffix
+					Assert.True (CheckLibrary (s), fi.Name);
+					break;
+#endif
+#if __TVOS__
+				case "MetalPerformanceShadersLibrary":
+					// not supported in tvOS (12.1) simulator so load fails
+					if (Runtime.Arch == Arch.SIMULATOR)
+						break;
+					goto default;
+#endif
+				default:
+					if (fi.Name.EndsWith ("Library", StringComparison.Ordinal)) {
+						Assert.True (CheckLibrary (s), fi.Name);
+					} else {
+						Assert.Fail ($"Unknown '{fi.Name}' field cannot be verified - please fix me!");
+					}
+					break;
+				}
+			}
 		}
 	}
 }

@@ -214,7 +214,8 @@ namespace BCLTestImporter {
 						
 					outputWriter.WriteLine ("Generating all the registered test projects");
 					projectGenerator.GenerateAlliOSTestProjectsAsync().Wait ();
-					projectGenerator.GenerateAllMacTestProjectsAsync().Wait ();
+					projectGenerator.GenerateAllMacTestProjectsAsync(Platform.MacOSFull).Wait ();
+					projectGenerator.GenerateAllMacTestProjectsAsync(Platform.MacOSModern).Wait ();
 					return 0;
 				}
 			}

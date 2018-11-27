@@ -6,6 +6,7 @@ namespace BCLTestImporter {
 		iOS,
 		WatchOS,
 		TvOS,
-		MacOS,
+		MacOSFull,
+		MacOSModern,
 	}
 }
