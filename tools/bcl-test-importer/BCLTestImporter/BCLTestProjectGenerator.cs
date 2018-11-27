@@ -165,29 +165,29 @@ namespace BCLTestImporter {
 		private static readonly List<(string name, string[] assemblies)> macTestProjects = new List<(string name, string[] assemblies)> {
 		
 			// NUNIT Projects
-			(name:"MonoCSharp", assemblies: new [] {"xammac_net_4_5_Mono.CSharp_test.dll"}),
-			(name:"MonoDataSqilte", assemblies: new [] {"xammac_net_4_5_Mono.Data.Sqlite_test.dll"}),
-			(name:"MonoDataTds", assemblies: new [] {"xammac_net_4_5_Mono.Data.Tds_test.dll"}),
-			(name:"MonoPoxis", assemblies: new [] {"xammac_net_4_5_Mono.Posix_test.dll"}),
-			(name:"MonoSecurtiy", assemblies: new [] {"xammac_net_4_5_Mono.Security_test.dll"}),
-			(name:"SystemComponentModelDataAnnotations", assemblies: new [] {"xammac_net_4_5_System.ComponentModel.DataAnnotations_test.dll"}),
-			(name:"SystemConfiguration", assemblies: new [] {"xammac_net_4_5_System.Configuration_test.dll"}),
-			(name:"SystemCore", assemblies: new [] {"xammac_net_4_5_System.Core_test.dll"}),
-			(name:"SystemDataLinq", assemblies: new [] {"xammac_net_4_5_System.Data.Linq_test.dll"}),
-			(name:"SystemData", assemblies: new [] {"xammac_net_4_5_System.Data_test.dll"}),
-			(name:"SystemIOCompressionFileSystem", assemblies: new [] {"xammac_net_4_5_System.IO.Compression.FileSystem_test.dll"}),
-			(name:"SystemIOCompression", assemblies: new [] {"xammac_net_4_5_System.IO.Compression_test.dll"}),
-			(name:"SystemIdentityModel", assemblies: new [] {"xammac_net_4_5_System.IdentityModel_test.dll"}),
-			(name:"SystemJson", assemblies: new [] {"xammac_net_4_5_System.Json_test.dll"}),
-			(name:"SystemNetHttp", assemblies: new [] {"xammac_net_4_5_System.Net.Http_test.dll"}),
-			(name:"SystemNumerics", assemblies: new [] {"xammac_net_4_5_System.Numerics_test.dll"}),
-			(name:"SystemRuntimeSerializationFormattersSoap", assemblies: new [] {"xammac_net_4_5_System.Runtime.Serialization.Formatters.Soap_test.dll"}),
-			(name:"SystemSecurity", assemblies: new [] {"xammac_net_4_5_System.Security_test.dll"}),
-			(name:"SystemServiceModel", assemblies: new [] {"xammac_net_4_5_System.ServiceModel_test.dll"}),
-			(name:"SystemTransactions", assemblies: new [] {"xammac_net_4_5_System.Transactions_test.dll"}),
-			(name:"SystemXmlLinq", assemblies: new [] {"xammac_net_4_5_System.Xml.Linq_test.dll"}),
-			(name:"SystemXml", assemblies: new [] {"xammac_net_4_5_System.Xml_test.dll"}),
-			(name:"System", assemblies: new [] {"xammac_net_4_5_System_test.dll"}),
+			(name:"MonoCSharpTests", assemblies: new [] {"xammac_net_4_5_Mono.CSharp_test.dll"}),
+			(name:"MonoDataSqilteTests", assemblies: new [] {"xammac_net_4_5_Mono.Data.Sqlite_test.dll"}),
+			(name:"MonoDataTdsTests", assemblies: new [] {"xammac_net_4_5_Mono.Data.Tds_test.dll"}),
+			(name:"MonoPoxisTests", assemblies: new [] {"xammac_net_4_5_Mono.Posix_test.dll"}),
+			(name:"MonoSecurtiyTests", assemblies: new [] {"xammac_net_4_5_Mono.Security_test.dll"}),
+			(name:"SystemComponentModelDataAnnotationsTests", assemblies: new [] {"xammac_net_4_5_System.ComponentModel.DataAnnotations_test.dll"}),
+			(name:"SystemConfigurationTests", assemblies: new [] {"xammac_net_4_5_System.Configuration_test.dll"}),
+			(name:"SystemCoreTests", assemblies: new [] {"xammac_net_4_5_System.Core_test.dll"}),
+			(name:"SystemDataLinqTests", assemblies: new [] {"xammac_net_4_5_System.Data.Linq_test.dll"}),
+			(name:"SystemDataTests", assemblies: new [] {"xammac_net_4_5_System.Data_test.dll"}),
+			(name:"SystemIOCompressionFileSystemTests", assemblies: new [] {"xammac_net_4_5_System.IO.Compression.FileSystem_test.dll"}),
+			(name:"SystemIOCompressionTests", assemblies: new [] {"xammac_net_4_5_System.IO.Compression_test.dll"}),
+			(name:"SystemIdentityModelTests", assemblies: new [] {"xammac_net_4_5_System.IdentityModel_test.dll"}),
+			(name:"SystemJsonTests", assemblies: new [] {"xammac_net_4_5_System.Json_test.dll"}),
+			(name:"SystemNetHttpTests", assemblies: new [] {"xammac_net_4_5_System.Net.Http_test.dll"}),
+			(name:"SystemNumericsTests", assemblies: new [] {"xammac_net_4_5_System.Numerics_test.dll"}),
+			(name:"SystemRuntimeSerializationFormattersSoapTests", assemblies: new [] {"xammac_net_4_5_System.Runtime.Serialization.Formatters.Soap_test.dll"}),
+			(name:"SystemSecurityTests", assemblies: new [] {"xammac_net_4_5_System.Security_test.dll"}),
+			(name:"SystemServiceModelTests", assemblies: new [] {"xammac_net_4_5_System.ServiceModel_test.dll"}),
+			(name:"SystemTransactionsTests", assemblies: new [] {"xammac_net_4_5_System.Transactions_test.dll"}),
+			(name:"SystemXmlLinqTests", assemblies: new [] {"xammac_net_4_5_System.Xml.Linq_test.dll"}),
+			(name:"SystemXmlTests", assemblies: new [] {"xammac_net_4_5_System.Xml_test.dll"}),
+			(name:"SystemTests", assemblies: new [] {"xammac_net_4_5_System_test.dll"}),
 			
 			// xUnit Projects
 			(name:"MicrosoftCSharpXunit", assemblies: new [] {"xammac_net_4_5_Microsoft.CSharp_xunit-test.dll"}),
@@ -501,7 +501,6 @@ namespace BCLTestImporter {
 				}
 				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType.cs");
 
-				var typesPerAssembly = projectDefinition.GetTypeForAssemblies (MonoRootPath, platform);
 				var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (def.name, projectDefinition.IsXUnit,
 					RegisterTypesTemplatePath, platform);
 

@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\AnyCPU\%NAME%\Debug</OutputPath>
-    <DefineConstants>DEBUG;NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;MONOMAC;DISABLE_CAS_USE;NO_GUI_TESTING;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DEBUG;MONOMAC;NO_GUI_TESTING;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -35,7 +35,7 @@
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\AnyCPU\%NAME%\Release</OutputPath>
-    <DefineConstants>NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;MONOMAC;DISABLE_CAS_USE;NO_GUI_TESTING;$(DefineConstants)</DefineConstants>
+    <DefineConstants>MONOMAC;NO_GUI_TESTING;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>

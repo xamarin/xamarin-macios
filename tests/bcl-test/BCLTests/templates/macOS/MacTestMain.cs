@@ -22,10 +22,10 @@ namespace Xamarin.Mac.Tests
 {
 	static class MainClass
 	{
-		static void Main (string[] args)
+		static int Main (string[] args)
 		{
 			NSApplication.Init();
-			RunTests (args);
+			return RunTests (args);
 		}
 
 		internal static IEnumerable<TestAssemblyInfo> GetTestAssemblies ()
@@ -37,7 +37,7 @@ namespace Xamarin.Mac.Tests
 			}
  		}
  		
-		static void RunTests (string [] original_args)
+		static int RunTests (string [] original_args)
 		{
 			Console.WriteLine ("Running tests");
 			var options = ApplicationOptions.Current;
@@ -62,10 +62,7 @@ namespace Xamarin.Mac.Tests
 			logger.Info ($"Xml result can be found {options.ResultFile}");
 			
 			logger.Info ($"Tests run: {runner.TotalTests} Passed: {runner.PassedTests} Inconclusive: {runner.InconclusiveTests} Failed: {runner.FailedTests} Ignored: {runner.SkippedTests}");
-			if (runner.FailedTests != 0)
-				_exit (1);
-			else
-				_exit (0);
+			return runner.FailedTests != 0 ? 1 : 0;
 		}
 
 		[DllImport ("/usr/lib/libSystem.dylib")]
