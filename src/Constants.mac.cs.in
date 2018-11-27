@@ -63,13 +63,13 @@ namespace MonoMac {
 		public const string ScriptingBridgeLibrary = "/System/Library/Frameworks/ScriptingBridge.framework/ScriptingBridge";
 		public const string CoreDataLibrary = "/System/Library/Frameworks/CoreData.framework/CoreData";
 		public const string CoreImageLibrary = "/System/Library/Frameworks/QuartzCore.framework/Versions/A/Frameworks/CoreImage.framework/CoreImage";
-		public const string CFNetworkLibrary = "/System/Library/Frameworks/CFNetwork.framework/CFNetwork";
+		public const string CFNetworkLibrary = "/System/Library/Frameworks/CoreServices.framework/Frameworks/CFNetwork.framework/CFNetwork";
 		public const string CoreMidiLibrary = "/System/Library/Frameworks/CoreMIDI.framework/CoreMIDI";
 		public const string QuickLookLibrary = "/System/Library/Frameworks/QuickLook.framework/QuickLook";
 		public const string AVFoundationLibrary = "/System/Library/Frameworks/AVFoundation.framework/AVFoundation";
 		public const string AccelerateImageLibrary = "/System/Library/Frameworks/Accelerate.framework/Frameworks/vImage.framework/vImage";
 
-		public const string CoreBluetoothLibrary = "/System/Library/Frameworks//CoreBluetooth.framework/CoreBluetooth";
+		public const string CoreBluetoothLibrary = "/System/Library/Frameworks/IOBluetooth.framework/Versions/A/Frameworks/CoreBluetooth.framework/CoreBluetooth";
 		public const string GameKitLibrary = "/System/Library/Frameworks/GameKit.framework/GameKit";
 		public const string SceneKitLibrary = "/System/Library/Frameworks/SceneKit.framework/SceneKit";
 		public const string StoreKitLibrary = "/System/Library/Frameworks/StoreKit.framework/StoreKit";
