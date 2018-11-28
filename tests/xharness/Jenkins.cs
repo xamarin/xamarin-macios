@@ -40,9 +40,15 @@ namespace xharness
 		public Log SimulatorLoadLog;
 		public Log DeviceLoadLog;
 
+		string log_directory;
 		public string LogDirectory {
 			get {
-				return Path.Combine (Harness.JENKINS_RESULTS_DIRECTORY, "tests");
+				if (string.IsNullOrEmpty (log_directory)) {
+					log_directory = Path.Combine (Harness.JENKINS_RESULTS_DIRECTORY, "tests");
+					if (IsServerMode)
+						log_directory = Path.Combine (log_directory, Harness.Timestamp);
+				}
+				return log_directory;
 			}
 		}
 
@@ -1356,7 +1362,7 @@ namespace xharness
 			
 			try {
 				lock (report_lock) {
-					var report = Path.Combine (LogDirectory, IsServerMode ? $"index-{Harness.Timestamp}.html" : "index.html");
+					var report = Path.Combine (LogDirectory, "index.html");
 					using (var stream = new MemoryStream ()) {
 						MemoryStream markdown_summary = null;
 						StreamWriter markdown_writer = null;
