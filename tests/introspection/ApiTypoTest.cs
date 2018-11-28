@@ -1042,10 +1042,18 @@ namespace Introspection
 #if MONOMAC
 			// on macOS the file should exist on the specified path
 			// for iOS the simulator paths do not match the strings
-			if (!File.Exists (lib)) {
-				if (lib != Constants.CoreImageLibrary)
+			switch (lib) {
+			// location changed in 10.8 but it loads fine (and fixing it breaks on earlier macOS)
+			case Constants.CFNetworkLibrary:
+			// location changed in 10.10 but it loads fine (and fixing it breaks on earlier macOS)
+			case Constants.CoreBluetoothLibrary:
+			// location changed in 10.11 but it loads fine (and fixing it breaks on earlier macOS)
+			case Constants.CoreImageLibrary:
+				break;
+			default:
+				if (!File.Exists (lib))
 					return false;
-				// location changed in 10.11 but it loads fine (and fixing it breaks on earlier macOS)
+				break;
 			}
 #endif
 			var h = IntPtr.Zero;

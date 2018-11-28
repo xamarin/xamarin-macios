@@ -65,7 +65,12 @@ static bool debugging_configured = false;
 static bool profiler_configured = false;
 static bool config_timedout = false;
 static bool connection_failed = false;
+#if TARGET_OS_WATCH && !TARGET_OS_SIMULATOR
+// For watchOS default to something that doesn't produce error messages when launching without an IDE (since only http works).
+static DebuggingMode debugging_mode = DebuggingModeNone;
+#else
 static DebuggingMode debugging_mode = DebuggingModeWifi;
+#endif
 static const char *connection_mode = "default"; // this is set from the cmd line, can be either 'usb', 'wifi', 'http' or 'none'
 
 extern "C" {
