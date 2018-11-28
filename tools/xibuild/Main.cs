@@ -9,6 +9,7 @@ using Mono.Options;
 namespace xibuild {
 	class MainClass {
 
+		static bool verbose;
 		public static int Main (string [] args)
 		{
 			bool runTool = false;
@@ -20,7 +21,7 @@ namespace xibuild {
 			p = new OptionSet () {
 				"xibuild: Run msbuild or a tool with a custom msbuild config file which adds fallback paths from $MSBuildExtensionsPathFallbackPathsOverride.",
 				String.Empty,
-				"Usage: xibuild [-c] [-t] [-m <base config file>] [-h] -- [path to managed tool] [arguments...]",
+				"Usage: xibuild [-v] [-c] [-t] [-m <base config file>] [-h] -- [path to managed tool] [arguments...]",
 				String.Empty,
 				"Default: Generate a temporary app.config file and run msbuild",
 				String.Empty,
@@ -30,6 +31,7 @@ namespace xibuild {
 				{ "t", "Path to the managed tool to run. If this and `-c` are not used, then this runs msbuild", t => runTool = true },
 				{ "m=", "< base config file >: Config file to merge with the one from msbuild.dll.confi", m => baseConfigFile = m },
 				{ "h|?|help", "Show this help message and exit.", v => show_help = true },
+				{ "v|verbose", "Show verbose output.", v => verbose = true },
 
 				String.Empty,
 				"Note: Adds the path from the environment variable named",
@@ -47,7 +49,8 @@ namespace xibuild {
 				"Add `-m /path/to/base.exe.config` to merge the generated app.config with base.exe.config ."
 			};
 
-			Console.WriteLine ($"Running xibuild with args: {String.Join (" ", args)}\n");
+			if (verbose)
+				Console.WriteLine ($"Running xibuild with args: {String.Join (" ", args)}\n");
 
 			List<string> remaining = null;
 			try {
