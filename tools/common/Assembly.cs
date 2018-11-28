@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-
+using System.Xml;
 using Mono.Cecil;
 using MonoTouch.Tuner;
 using ObjCRuntime;
@@ -145,13 +145,75 @@ namespace Xamarin.Bundler {
 			// ignore framework assemblies, they won't have any LinkWith attributes
 			if (IsFrameworkAssembly)
 				return;
-			
+
 			var assembly = AssemblyDefinition;
 			if (!assembly.HasCustomAttributes)
 				return;
 
-			var exceptions = new List<Exception> ();
+			string resourceBundlePath = Path.ChangeExtension (FullPath, ".resources");
+			string manifestPath = Path.Combine (resourceBundlePath, "manifest");
+			bool hasResourceBundle = Directory.Exists (resourceBundlePath) && File.Exists (manifestPath);
+			if (hasResourceBundle) {
+				foreach (NativeReferenceMetadata metadata in ReadManifest (manifestPath)) {
+					ProcessNativeReferenceOptions (metadata);
 
+					if (metadata.LibraryName.EndsWith (".framework", StringComparison.Ordinal)) {
+						AssertiOSVersionSupportsUserFrameworks (metadata.LibraryName);
+						Frameworks.Add (metadata.LibraryName);
+					} else {
+						LinkWith.Add (metadata.LibraryName);
+					}
+				}
+			}
+
+			ProcessLinkWithAttributes (assembly);
+
+			// Make sure there are no duplicates between frameworks and weak frameworks.
+			// Keep the weak ones.
+			if (Frameworks != null && WeakFrameworks != null)
+				Frameworks.ExceptWith (WeakFrameworks);
+
+			if (NeedsGccExceptionHandling) {
+				if (LinkerFlags == null)
+					LinkerFlags = new List<string> ();
+				LinkerFlags.Add ("-lgcc_eh");
+			}
+
+		}
+
+		IEnumerable <NativeReferenceMetadata> ReadManifest (string manifestPath)
+		{
+			XmlDocument document = new XmlDocument ();
+			document.Load (manifestPath);
+
+			foreach (XmlNode referenceNode in document.GetElementsByTagName ("NativeReference")) {
+
+				NativeReferenceMetadata metadata = new NativeReferenceMetadata ();
+				metadata.LibraryName = Path.Combine (Path.GetDirectoryName (manifestPath), referenceNode.Attributes ["Name"].Value);
+
+				var attributes = new Dictionary<string, string> ();
+				foreach (XmlNode attribute in referenceNode.ChildNodes)
+					attributes [attribute.Name] = attribute.InnerText;
+
+				metadata.ForceLoad = ParseAttributeWithDefault (attributes ["ForceLoad"], false);
+				metadata.Frameworks = attributes ["Frameworks"];
+				metadata.WeakFrameworks = attributes ["WeakFrameworks"];
+				metadata.LinkerFlags = attributes ["LinkerFlags"];
+				metadata.NeedsGccExceptionHandling = ParseAttributeWithDefault (attributes ["NeedsGccExceptionHandling"], false);
+				metadata.IsCxx = ParseAttributeWithDefault (attributes ["IsCxx"], false);
+				metadata.SmartLink = ParseAttributeWithDefault (attributes ["SmartLink"], true);
+
+				// TODO - The project attributes do not contain these bits, is that OK?
+				//metadata.LinkTarget = (LinkTarget) Enum.Parse (typeof (LinkTarget), attributes ["LinkTarget"]);
+				//metadata.Dlsym = (DlsymOption)Enum.Parse (typeof (DlsymOption), attributes ["Dlsym"]);
+				yield return metadata;
+			}
+		}
+
+		static bool ParseAttributeWithDefault (string attribute, bool defaultValue) => string.IsNullOrEmpty (attribute) ? defaultValue : bool.Parse (attribute);
+
+		void ProcessLinkWithAttributes (AssemblyDefinition assembly)
+		{
 			//
 			// Tasks:
 			// * Remove LinkWith attribute: this is done in the linker.
@@ -177,6 +239,10 @@ namespace Xamarin.Bundler {
 				LinkWithAttribute linkWith = GetLinkWithAttribute (attr);
 				NativeReferenceMetadata metadata = new NativeReferenceMetadata (linkWith);
 
+				// If we've already processed this native library, skip it
+				if (LinkWith.Any (x => Path.GetFileName (x) == metadata.LibraryName) || Frameworks.Any (x => Path.GetFileName (x) == metadata.LibraryName))
+					continue;
+
 				// Remove the resource from the assembly at a later stage.
 				if (!string.IsNullOrEmpty (metadata.LibraryName))
 					AddResourceToBeRemoved (metadata.LibraryName);
@@ -185,34 +251,24 @@ namespace Xamarin.Bundler {
 
 				if (!string.IsNullOrEmpty (linkWith.LibraryName)) {
 					if (linkWith.LibraryName.EndsWith (".framework", StringComparison.Ordinal)) {
-#if MONOTOUCH
-						if (App.Platform == Xamarin.Utils.ApplePlatform.iOS && App.DeploymentTarget.Major < 8) {
-							throw ErrorHelper.CreateError (1305, "The binding library '{0}' contains a user framework ({0}), but embedded user frameworks require iOS 8.0 (the deployment target is {1}). Please set the deployment target in the Info.plist file to at least 8.0.",
-								FileName, Path.GetFileName (path), App.DeploymentTarget);
-						}
-#endif
-			
+						AssertiOSVersionSupportsUserFrameworks (linkWith.LibraryName);
+
 						Frameworks.Add (ExtractFramework (assembly, metadata));
 					} else {
 						LinkWith.Add (ExtractNativeLibrary (assembly, metadata));
 					}
 				}
 			}
+		}
 
-			if (exceptions != null && exceptions.Count > 0)
-				throw new AggregateException (exceptions);
-
-			// Make sure there are no duplicates between frameworks and weak frameworks.
-			// Keep the weak ones.
-			if (Frameworks != null && WeakFrameworks != null)
-				Frameworks.ExceptWith (WeakFrameworks);
-
-			if (NeedsGccExceptionHandling) {
-				if (LinkerFlags == null)
-					LinkerFlags = new List<string> ();
-				LinkerFlags.Add ("-lgcc_eh");
+		void AssertiOSVersionSupportsUserFrameworks (string path)
+		{
+#if MONOTOUCH
+			if (App.Platform == Xamarin.Utils.ApplePlatform.iOS && App.DeploymentTarget.Major < 8) {
+				throw ErrorHelper.CreateError (1305, "The binding library '{0}' contains a user framework ({0}), but embedded user frameworks require iOS 8.0 (the deployment target is {1}). Please set the deployment target in the Info.plist file to at least 8.0.",
+					FileName, Path.GetFileName (path), App.DeploymentTarget);
 			}
-
+#endif
 		}
 
 		void ProcessNativeReferenceOptions (NativeReferenceMetadata metadata)
@@ -255,7 +311,7 @@ namespace Xamarin.Bundler {
 
 #if MONOTOUCH
 			if (metadata.Dlsym != DlsymOption.Default)
-				App.SetDlsymOption (FullPath, linkWith.Dlsym == DlsymOption.Required);
+				App.SetDlsymOption (FullPath, metadata.Dlsym == DlsymOption.Required);
 #endif
 		}
 

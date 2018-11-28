@@ -68,7 +68,6 @@ namespace Xamarin.MacDev.Tasks {
 
 			using (var writer = XmlWriter.Create (Path.Combine (resourcePath, "manifest"), settings)) {
 				writer.WriteStartElement ("BindingAssembly");
-				writer.WriteAttributeString ("MVID", MVIDHelpers.FindAssemblyMVID (Path.Combine (ProjectDir, BindingAssembly)));
 
 				foreach (var nativeRef in NativeReferences) {
 					writer.WriteStartElement ("NativeReference");
@@ -84,14 +83,6 @@ namespace Xamarin.MacDev.Tasks {
 				}
 				writer.WriteEndElement ();
 			}
-		}
-	}
-
-	public static class MVIDHelpers {
-		public static string FindAssemblyMVID (string path)
-		{
-			var assembly = Assembly.ReflectionOnlyLoadFrom (path);
-			return assembly.Modules.First ().ModuleVersionId.ToString ();
 		}
 	}
 }

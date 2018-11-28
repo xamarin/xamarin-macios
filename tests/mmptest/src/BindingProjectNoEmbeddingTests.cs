@@ -20,15 +20,6 @@ namespace Xamarin.MMP.Tests
 			Assert.False (resourceOutput.Contains (resourceName), "Binding project output contained embedded library");
 		}
 
-		static void AssertSingleReferenceAndEmbedCommand (string appBuildLog)
-		{
-			var nativeReferenceLines = appBuildLog.SplitLines ().Where (x => x.Contains ("native-reference")).ToList ();
-			Assert.AreEqual (1, nativeReferenceLines.Count, $"Native References Count: {TI.PrintAndTrimIfLong (appBuildLog)}");
-
-			var noEmbedLines = appBuildLog.SplitLines ().Where (x => x.Contains ("binding-project-no-embedding")).ToList ();
-			Assert.AreEqual (1, noEmbedLines.Count, $"Embed Lines Count: {TI.PrintAndTrimIfLong (appBuildLog)}");
-		}
-
 		static void AssertFileInBundle (string tmpDir, BindingProjectType type, string path)
 		{
 			Assert.True (File.Exists (Path.Combine (tmpDir, $"bin/Debug/{(type == BindingProjectType.Modern ? "UnifiedExample" : "XM45Example")}.app/Contents/{path}")), $"{path} not in bundle as expected.");
@@ -45,9 +36,6 @@ namespace Xamarin.MMP.Tests
 				string appBuildLog = BindingProjectTests.SetupAndBuildLinkedTestProjects (projects.Item1, projects.Item2, tmpDir, useProjectReference, setupDefaultNativeReference: true).Item2;
 
 				AssertNoResourceWithName (tmpDir, projects.Item1.ProjectName, "SimpleClassDylib.dylib");
-
-				AssertSingleReferenceAndEmbedCommand (appBuildLog);
-
 				AssertFileInBundle (tmpDir, type, "MonoBundle/SimpleClassDylib.dylib");
 			});
 		}
@@ -66,9 +54,6 @@ namespace Xamarin.MMP.Tests
 				string appBuildLog = BindingProjectTests.SetupAndBuildLinkedTestProjects (projects.Item1, projects.Item2, tmpDir, useProjectReference, false).Item2;
 			
 				AssertNoResourceWithName (tmpDir, projects.Item1.ProjectName, "Foo");
-
-				AssertSingleReferenceAndEmbedCommand (appBuildLog);
-
 				AssertFileInBundle (tmpDir, type, "Frameworks/Foo.framework/Foo");
 			});
 		}
@@ -163,56 +148,18 @@ namespace Xamarin.MMP.Tests
 				string buildLog = TI.BuildProject (projectPath, true);
 				Assert.False (buildLog.Contains (BuildString), $"Rebuild ran mmp again? {TI.PrintAndTrimIfLong (buildLog)}");
 
-				if (!useProjectReference) {
-					string bindingManifestPath = Path.Combine (tmpDir, "bin/Debug/MobileBinding.resources/manifest");
-					string bindingLibPath = Path.Combine (tmpDir, $"bin/Debug/MobileBinding.resources/{(framework ? "Foo.framework/Foo" : "SimpleClassDylib.dylib")}");
-
-					// Touching the binding manifest should
-					Touch (bindingManifestPath);
+				if (useProjectReference) {
+					// Touching the binding definition should
+					Touch (Path.Combine (tmpDir, "ApiDefinition.cs"));
 					buildLog = TI.BuildProject (projectPath, true);
-					Assert.True (buildLog.Contains (BuildString), $"Binding Manifest build did not run mmp again? {TI.PrintAndTrimIfLong (buildLog)}");
-
-					// Touching the binding should
-					Touch (bindingLibPath);
+					Assert.True (buildLog.Contains (BuildString), $"Binding definition build did not run mmp again? {TI.PrintAndTrimIfLong (buildLog)}");
+				}
+				else {
+					// Touching the binding assembly should
+					Touch (Path.Combine (tmpDir, "bin/Debug/MobileBinding.dll"));
 					buildLog = TI.BuildProject (projectPath, true);
 					Assert.True (buildLog.Contains (BuildString), $"Binding build did not run mmp again? {TI.PrintAndTrimIfLong (buildLog)}");
-				} else {
-					// Touching the starting binding file should
-					Touch (framework ? frameworkPath + "/Foo" : NativeReferenceTests.SimpleDylibPath);
-					buildLog = TI.BuildProject (projectPath, true);
-					Assert.True (buildLog.Contains (BuildString), $"Starting Binding build did not run mmp again? {TI.PrintAndTrimIfLong (buildLog)}");
 				}
-			});
-		}
-
-		[Test]
-		public void MVIDMismatchDetected ()
-		{
-			MMPTests.RunMMPTest (tmpDir => {
-				var projects = BindingProjectTests.GenerateTestProject (BindingProjectType.Modern, tmpDir);
-				BindingProjectTests.SetNoEmbedding (projects.Item1);
-
-				// This test is only valid in non-project reference cases
-				BindingProjectTests.SetupAndBuildLinkedTestProjects (projects.Item1, projects.Item2, tmpDir, false, setupDefaultNativeReference: true);
-
-				string bindingProject = Path.Combine (tmpDir, "MobileBinding.csproj");
-				string appProject = Path.Combine (tmpDir, "UnifiedExample.csproj");
-
-				// Save the first build and rebuild to create a second copy of the binding
-				string buildBindingPath = Path.Combine (tmpDir, "bin/Debug/MobileBinding.dll");
-				string savedCopyBindingPath = Path.Combine (tmpDir, "MobileBinding_First.dll");
-
-				File.Copy (buildBindingPath, savedCopyBindingPath);
-				Touch (bindingProject);
-				TI.BuildProject (bindingProject, true);
-
-				// Move the old file back on top to create MVID mismatch situtation
-				File.Delete (buildBindingPath);
-				File.Move (savedCopyBindingPath, buildBindingPath);
-
-				// Now rebuild and expect an error - MSBuild is not providing a non-zero return code even those we are logging an error
-				string appFailLog = TI.BuildProject (appProject, true);
-				Assert.True (appFailLog.Contains ("Assembly MVID mismatch in binding resource package"), $"Log did not contain expected error: {TI.PrintAndTrimIfLong (appFailLog)}");
 			});
 		}
 

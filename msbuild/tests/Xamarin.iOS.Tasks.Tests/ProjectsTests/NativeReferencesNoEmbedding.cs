@@ -36,24 +36,6 @@ namespace Xamarin.iOS.Tasks
 			RunTarget (proj, "Build", 0);
 		}
 
-		static void AssertMtouchArgs (string appBuildLog, int expectedNaitveRefLines, int expectedFrameworkLines)
-		{
-			string rspFileLine = appBuildLog.SplitLines ().First (x => x.Contains ("mtouch") && x.Contains ("response-file.rsp"));
-			string rpsFile = rspFileLine.Split (new char[] { ' ' })[1].Replace ("@", "");
-
-			List<string> responseLines = File.ReadAllLines (rpsFile).ToList ();
-
-			var nativeReferenceLines = responseLines.Where (x => x.Contains ("--native-reference")).ToList ();
-			Assert.AreEqual (expectedNaitveRefLines, nativeReferenceLines.Count, $"native-reference Count: {responseLines}");
-
-			var frameworkLines = responseLines.Where (x => x.Contains ("--framework")).ToList ();
-			Assert.AreEqual (expectedFrameworkLines, frameworkLines.Count, $"framework Count: {responseLines}");
-
-			var noEmbedLines = responseLines.Where (x => x.Contains ("binding-project-no-embedding")).ToList ();
-			// TODO - This should be 1 not 3 but we're harmlessly duplicating binding-project-no-embedding params
-			Assert.AreEqual (3, noEmbedLines.Count, $"binding-project-no-embedding Count: {responseLines}");
-		}
-
 		string GetMessages () => string.Join ("\n", Engine.Logger.MessageEvents.Select (x => x.Message));
 
 		void ClearMessages () => Engine.Logger.MessageEvents.Clear ();
@@ -75,8 +57,6 @@ namespace Xamarin.iOS.Tasks
 			var bindingApp = SetupProjectPaths ("MyiOSAppWithBinding", "../", true, Platform);
 
 			BuildProjectNoEmbedding (bindingApp);
-
-			AssertMtouchArgs (GetMessages (), 0, 3);
 
 			string libPath = Path.Combine (Directory.GetCurrentDirectory (), bindingApp.ProjectBinPath, "MyiOSBinding.dll");
 			Assert.True (File.Exists (libPath), $"Did not find expected library: {libPath}");
@@ -161,16 +141,12 @@ namespace Xamarin.iOS.Tasks
 			if (!useProjectReference) {
 				Assert.Fail (); // TODO - Checked in projects are project reference only...
 			} else {
-				Touch (Path.Combine (Path.GetDirectoryName (appProject.ProjectCSProjPath), @"../../../tests/test-libraries/.libs/ios/XTest.framework/XTest"));
+				var libProject = SetupProjectPaths ("MyiOSFrameworkBinding", "../", true, "");
+
+				Touch (libProject.ProjectCSProjPath);
 				BuildProjectNoEmbedding (appProject, clean: false);
 				Assert.True (GetMessages ().Contains (BuildString), "Binding binary build did not run mtouch?");
 			}
-		}
-
-		// [Test] MISSING_TEST - Project framework only, this test only makes sense with the non-project reference cases
-		public void MVIDMismatchDetected ()
-		{
-			Assert.Fail ();
 		}
 
 		// [TestCase (true)] - MISSING_TEST - Requires special "chain" project that is not checked in

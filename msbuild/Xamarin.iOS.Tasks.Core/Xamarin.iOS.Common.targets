@@ -838,7 +838,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Interpreter="$(MtouchInterpreter)"
 			AppExtensionReferences="@(_ResolvedAppExtensionReferences)"
 			ArchiveSymbols="$(MonoSymbolArchive)"
-			AllNoEmbedBindingProjectNames="@(AllNoEmbedBindingProjectNames)"
 			Verbosity="$(MtouchVerbosity)"
 			>
 			<Output TaskParameter="CompiledArchitectures" PropertyName="_CompiledArchitectures" />

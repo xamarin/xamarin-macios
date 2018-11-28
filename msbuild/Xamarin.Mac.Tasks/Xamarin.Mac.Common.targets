@@ -538,7 +538,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			EnableSGenConc="$(EnableSGenConc)"
 			AotMode="$(AOTMode)"
 			HybridAOT="$(HybridAOT)"
-			AllNoEmbedBindingProjectNames="@(AllNoEmbedBindingProjectNames)"
 			ExplicitAotAssemblies="$(ExplicitAotAssemblies)">
 			<Output TaskParameter="NativeLibraries" ItemName="_NativeLibrary" />
 		</Mmp>
