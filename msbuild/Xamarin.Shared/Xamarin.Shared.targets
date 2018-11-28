@@ -20,47 +20,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
 
-	<PropertyGroup>
-		<GetBindingProjectResourcesDependsOn>
-			_SplitProjectReferencesByFileExistence;
-		</GetBindingProjectResourcesDependsOn>
-	</PropertyGroup>
-
-	<!-- Invoked "recursively" by the App (before mmp\mtouch) which will fire on each library, so needs to be shared. -->
-	<Target
-		Name="GetBindingProjectResources"
-		Returns="@(AllBindingProjectResources)"
-		DependsOnTargets="$(GetBindingProjectResourcesDependsOn)">
-
-		<MSBuild
-			Projects="@(_MSBuildProjectReferenceExistent)"
-			Targets="GetBindingProjectResources"
-			BuildInParallel="$(BuildInParallel)"
-			Properties="%(_MSBuildProjectReferenceExistent.SetConfiguration); %(_MSBuildProjectReferenceExistent.SetPlatform); %(_MSBuildProjectReferenceExistent.SetTargetFramework)"
-			Condition="'@(_MSBuildProjectReferenceExistent)' != '' and '%(_MSBuildProjectReferenceExistent.Private)' != 'false'"
-			ContinueOnError="$(ContinueOnError)"
-			SkipNonexistentTargets="true"
-			RemoveProperties="%(_MSBuildProjectReferenceExistent.GlobalPropertiesToRemove)">
-
-			<Output TaskParameter="TargetOutputs" ItemName="_AllBindingProjectResources"/>
-		</MSBuild>
-
-		<ItemGroup>
-			<_AllBindingProjectResources Condition="'$(NoBindingEmbedding)' == 'true'" Include="@(NativeReference->'%(FullPath)')">
-				<Assembly>$(TargetPath)</Assembly>
-			</_AllBindingProjectResources>
-		</ItemGroup>
-
-		<ItemGroup>
-			<AllBindingProjectResources Include="@(_AllBindingProjectResources)"/>
-		</ItemGroup>
-		
-		<ItemGroup>
-			<_AllBindingProjectResources Remove="@(_AllBindingProjectResources)"/>
-		</ItemGroup>
-		
-	</Target>
-
 	<!--
 		@(NativeReference) are not safe to use as an Input to a task, as frameworks are a directory and will appears unbuilt every time.
 		So we split it into two camps as a prebuild step
@@ -98,32 +57,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	</PropertyGroup>
 	<Target Name="_CleanBindingResourcePackage">
 		<RemoveDir Directories="$(BindingResourcePath);" />  
-	</Target>
-	
-	<Target Name="_DetectBindingProjectResources">
-		<!-- In solution we can invoke a task directly to create NativeReference items -->
-		<CallTarget Targets="GetBindingProjectResources">
-	   		<Output TaskParameter="TargetOutputs" ItemName="_BindingProjectResources" />
-		</CallTarget>
-		<ItemGroup>
-			<NativeReference Include="@(_BindingProjectResources)" />
-			<AllNoEmbedBindingProjectNames Include="@(_BindingProjectResources->'%(Assembly)')" />
-		</ItemGroup>
-
-		<!-- Out of solution we must search each reference for a .resources bundle -->
-		<FindBindingResourcePackages
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			References="@(ReferencePath);@(ReferenceCopyLocalAssemblyPaths)"
-			ReferencesFoundInSolution="@(AllNoEmbedBindingProjectNames)">
-	   		<Output TaskParameter="AdditionalNativeReferences" ItemName="_AdditionalNativeReferences" />
-	   		<Output TaskParameter="ManifestFound" ItemName="_ManifestFound" />
-		</FindBindingResourcePackages>
-		<ItemGroup>
-			<NativeReference Include="@(_AdditionalNativeReferences)" />
-			<AllNoEmbedBindingProjectNames Include="@(_AdditionalNativeReferences->'%(Assembly)')" />
-			<BundleDependentFiles Include="@(_ManifestFound)" />
-		</ItemGroup>
 	</Target>
 	
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"

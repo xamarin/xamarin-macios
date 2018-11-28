@@ -84,8 +84,6 @@ namespace Xamarin.Mac.Tasks
 
 		public string IntermediateOutputPath { get; set; }
 
-		public ITaskItem [] AllNoEmbedBindingProjectNames { get; set; }
-
 		[Output]
 		public ITaskItem[] NativeLibraries { get; set; }
 		
@@ -209,12 +207,6 @@ namespace Xamarin.Mac.Tasks
 					args.AddQuotedLine ("/native-reference:" + Path.GetFullPath (nr.ItemSpec));
 			}
 
-			if (AllNoEmbedBindingProjectNames != null) {
-				foreach (var nr in AllNoEmbedBindingProjectNames)
-					args.AddQuotedLine ("/binding-project-no-embedding:" + Path.GetFullPath (nr.ItemSpec));
-			}
-
-				
 			if (IsAppExtension)
 				args.AddQuotedLine ("/extension");
 

@@ -68,7 +68,6 @@
     <Compile Include="Tasks\ArToolTaskBase.cs" />
     <Compile Include="Tasks\BTouchTaskBase.cs" />
     <Compile Include="Tasks\CreateBindingResourcePackageBase.cs" />
-    <Compile Include="Tasks\FindBindingResourcePackagesBase.cs" />
     <Compile Include="Tasks\CodesignTaskBase.cs" />
     <Compile Include="Tasks\CodesignVerifyTaskBase.cs" />
     <Compile Include="Tasks\CollectBundleResourcesTaskBase.cs" />

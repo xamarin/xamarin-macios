@@ -32,7 +32,6 @@
     <Compile Include="Tasks\ACTool.cs" />
     <Compile Include="Tasks\BTouch.cs" />
     <Compile Include="Tasks\CreateBindingResourcePackage.cs" />
-    <Compile Include="Tasks\FindBindingResourcePackages.cs" />
     <Compile Include="Tasks\CodesignVerify.cs" />
     <Compile Include="Tasks\CompileAppManifest.cs" />
     <Compile Include="Tasks\CompileEntitlements.cs" />

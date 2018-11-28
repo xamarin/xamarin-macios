@@ -75,7 +75,6 @@
     <Compile Include="Tasks\DetectDebugNetworkConfiguration.cs" />
     <Compile Include="Tasks\CodesignNativeLibraries.cs" />
     <Compile Include="Tasks\CreateBindingResourcePackage.cs" />
-    <Compile Include="Tasks\FindBindingResourcePackages.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

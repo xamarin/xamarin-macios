@@ -167,8 +167,6 @@ namespace Xamarin.iOS.Tasks
 		[Required]
 		public ITaskItem[] AppExtensionReferences { get; set; }
 
- 		public ITaskItem [] AllNoEmbedBindingProjectNames { get; set; } 
-
 		#endregion
 
 		#region Outputs
@@ -570,11 +568,6 @@ namespace Xamarin.iOS.Tasks
 
 			BuildNativeReferenceFlags (gcc);
 			BuildEntitlementFlags (gcc);
-
-			if (AllNoEmbedBindingProjectNames != null) {
-				foreach (var nr in AllNoEmbedBindingProjectNames)
-					args.AddQuotedLine ("--binding-project-no-embedding:" + Path.GetFullPath (nr.ItemSpec));
-			}
 
 			foreach (var framework in gcc.Frameworks)
 				args.AddQuotedLine ($"--framework={framework}");

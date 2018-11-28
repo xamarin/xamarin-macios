@@ -57,7 +57,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<UsingTask TaskName="Xamarin.iOS.Tasks.DetectSdkLocations" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.DetectSigningIdentity" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.EmbedMobileProvision" AssemblyFile="Xamarin.iOS.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.iOS.Tasks.FindBindingResourcePackages" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.FindWatchOS1AppExtensionBundle" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.FindWatchOS2AppBundle" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.GetDirectories" AssemblyFile="Xamarin.iOS.Tasks.dll" />
@@ -769,7 +768,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			_CompileEntitlements;
 			_CompileAppManifest;
 			_ResolveAppExtensionReferences;
-			_DetectBindingProjectResources; 
 			_GetNativeExecutableName;
 			_GetCompileToNativeInputs;
 			_ExpandNativeReferences;
