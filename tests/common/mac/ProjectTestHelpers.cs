@@ -212,13 +212,13 @@ namespace Xamarin.MMP.Tests
 			Func<string> getInfo = () => getAdditionalFailInfo != null ? getAdditionalFailInfo () : "";
 			bool passed = shouldFail ? compileResult != 0 : compileResult == 0;
 			if (!passed) {
-				string outputLine = PrintAndTrimIfLong ($"{exe}{args} Output: {output} {getInfo ()}");
+				string outputLine = PrintRedirectIfLong ($"{exe}{args} Output: {output} {getInfo ()}");
 				Assert.Fail ($@"{stepName} {(shouldFail ? "passed" : "failed")} unexpectedly: {outputLine}");
 			}
 			return output.ToString ();
 		}
 
-		public static string PrintAndTrimIfLong (string outputLine)
+		public static string PrintRedirectIfLong (string outputLine)
 		{
 			if (outputLine.Length > 5000) {
 				Console.WriteLine (outputLine);

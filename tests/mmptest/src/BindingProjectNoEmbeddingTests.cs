@@ -68,7 +68,7 @@ namespace Xamarin.MMP.Tests
 				projects.Item1.LinkWithName = "SimpleClassDylib.dylib";
 
 				string libBuildLog = BindingProjectTests.SetupAndBuildBindingProject (projects.Item1, false);
-				Assert.True (libBuildLog.Contains ("Unable to create a Binding Resource Package with no Native References"), $"Did not fail as expected: {TI.PrintAndTrimIfLong (libBuildLog)}");
+				Assert.True (libBuildLog.Contains ("Unable to create a Binding Resource Package with no Native References"), $"Did not fail as expected: {TI.PrintRedirectIfLong (libBuildLog)}");
 			});
 		}
 
@@ -93,30 +93,30 @@ namespace Xamarin.MMP.Tests
 				}
 				string libBuildLog = BindingProjectTests.SetupAndBuildBindingProject (projects.Item1, setupDefaultNativeReference: !framework);
 
-				Assert.True (libBuildLog.Contains (CreatePackageString), $"First build did not create package? {TI.PrintAndTrimIfLong (libBuildLog)}");
+				Assert.True (libBuildLog.Contains (CreatePackageString), $"First build did not create package? {TI.PrintRedirectIfLong (libBuildLog)}");
 
 				// No change build should not
 				libBuildLog = TI.BuildProject (projectPath, true);
-				Assert.False (libBuildLog.Contains (CreatePackageString), $"Rebuild build did create package? {TI.PrintAndTrimIfLong (libBuildLog)}");
+				Assert.False (libBuildLog.Contains (CreatePackageString), $"Rebuild build did create package? {TI.PrintRedirectIfLong (libBuildLog)}");
 
 				// Touching the binding project should
 				Touch (projectPath);
 				libBuildLog = TI.BuildProject (projectPath, true);
-				Assert.True (libBuildLog.Contains (CreatePackageString), $"Binding Project build did not create package? {TI.PrintAndTrimIfLong (libBuildLog)}");
+				Assert.True (libBuildLog.Contains (CreatePackageString), $"Binding Project build did not create package? {TI.PrintRedirectIfLong (libBuildLog)}");
 
 				// Touching the binding file should
 				Touch (bindingFilePath);
 				libBuildLog = TI.BuildProject (projectPath, true);
-				Assert.True (libBuildLog.Contains (CreatePackageString), $"Binding File build did not create package? {TI.PrintAndTrimIfLong (libBuildLog)}");
+				Assert.True (libBuildLog.Contains (CreatePackageString), $"Binding File build did not create package? {TI.PrintRedirectIfLong (libBuildLog)}");
 
 				// No change build should not
 				libBuildLog = TI.BuildProject (projectPath, true);
-				Assert.False (libBuildLog.Contains (CreatePackageString), $"Second Rebuild build did create package? {TI.PrintAndTrimIfLong (libBuildLog)}");
+				Assert.False (libBuildLog.Contains (CreatePackageString), $"Second Rebuild build did create package? {TI.PrintRedirectIfLong (libBuildLog)}");
 
 				// Touching native library should
 				Touch (framework ? frameworkPath + "/Foo" : NativeReferenceTests.SimpleDylibPath);
 				libBuildLog = TI.BuildProject (projectPath, true);
-				Assert.True (libBuildLog.Contains (CreatePackageString), $"Native Library build did not create package? {TI.PrintAndTrimIfLong (libBuildLog)}");
+				Assert.True (libBuildLog.Contains (CreatePackageString), $"Native Library build did not create package? {TI.PrintRedirectIfLong (libBuildLog)}");
 			});
 		}
 
@@ -139,26 +139,26 @@ namespace Xamarin.MMP.Tests
 				}
 				string appBuildLog = BindingProjectTests.SetupAndBuildLinkedTestProjects (projects.Item1, projects.Item2, tmpDir, useProjectReference, setupDefaultNativeReference: !framework).Item2;
 
-				Assert.True (appBuildLog.Contains (BuildString), $"First build did not run mmp? {TI.PrintAndTrimIfLong (appBuildLog)}");
+				Assert.True (appBuildLog.Contains (BuildString), $"First build did not run mmp? {TI.PrintRedirectIfLong (appBuildLog)}");
 
 				string projectPath = Path.Combine (tmpDir, "UnifiedExample.csproj");
 				string mainPath = Path.Combine (tmpDir, "Main.cs");
 
 				// No change build should not
 				string buildLog = TI.BuildProject (projectPath, true);
-				Assert.False (buildLog.Contains (BuildString), $"Rebuild ran mmp again? {TI.PrintAndTrimIfLong (buildLog)}");
+				Assert.False (buildLog.Contains (BuildString), $"Rebuild ran mmp again? {TI.PrintRedirectIfLong (buildLog)}");
 
 				if (useProjectReference) {
 					// Touching the binding definition should
 					Touch (Path.Combine (tmpDir, "ApiDefinition.cs"));
 					buildLog = TI.BuildProject (projectPath, true);
-					Assert.True (buildLog.Contains (BuildString), $"Binding definition build did not run mmp again? {TI.PrintAndTrimIfLong (buildLog)}");
+					Assert.True (buildLog.Contains (BuildString), $"Binding definition build did not run mmp again? {TI.PrintRedirectIfLong (buildLog)}");
 				}
 				else {
 					// Touching the binding assembly should
 					Touch (Path.Combine (tmpDir, "bin/Debug/MobileBinding.dll"));
 					buildLog = TI.BuildProject (projectPath, true);
-					Assert.True (buildLog.Contains (BuildString), $"Binding build did not run mmp again? {TI.PrintAndTrimIfLong (buildLog)}");
+					Assert.True (buildLog.Contains (BuildString), $"Binding build did not run mmp again? {TI.PrintRedirectIfLong (buildLog)}");
 				}
 			});
 		}
