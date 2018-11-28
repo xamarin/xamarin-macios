@@ -64,8 +64,5 @@ namespace Xamarin.Mac.Tests
 			logger.Info ($"Tests run: {runner.TotalTests} Passed: {runner.PassedTests} Inconclusive: {runner.InconclusiveTests} Failed: {runner.FailedTests} Ignored: {runner.SkippedTests}");
 			return runner.FailedTests != 0 ? 1 : 0;
 		}
-
-		[DllImport ("/usr/lib/libSystem.dylib")]
-		static extern void _exit (int exit_code);
 	}
 }
