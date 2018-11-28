@@ -2350,6 +2350,10 @@ complicated to get it right when doing it manually.
 
 If this is not the case, please file a [bug report](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
+### MT4177: The 'ProtocolType' parameter of the 'Adopts' attribute used in class '*' contains an invalid character. Value used: '*' Invalid Char: '*'.
+
+The name of an Objective-C protocol can't contain certain characters which means that the `Adopts` attribute on the corresponding managed class can't have the `ProtocolType` parameter containing them. Please refer to the provided error message and fix accordingly.
+
 # MT5xxx: GCC and toolchain error messages
 
 ### MT51xx: Compilation
