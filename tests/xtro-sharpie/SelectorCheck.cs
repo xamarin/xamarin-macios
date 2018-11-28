@@ -67,8 +67,13 @@ namespace Extrospection {
 			var nativeMethodDefinition = decl.QualifiedName;
 
 			bool found = qualified_properties.TryGetValue (nativeMethodDefinition, out var managedArgumentSemantic);
-			if (found && managedArgumentSemantic != nativeArgumentSemantic)
-				Log.On (framework).Add ($"!incorrect-argument-semantic! Native '{nativeMethodDefinition}' is declared as ({nativeArgumentSemantic.ToUsableString ().ToLowerInvariant ()}) but mapped to 'ArgumentSemantic.{managedArgumentSemantic.ToUsableString ()}'");
+			if (found && managedArgumentSemantic != nativeArgumentSemantic) {
+				// FIXME: only Copy mistakes are reported now
+				if (managedArgumentSemantic == Helpers.ArgumentSemantic.Copy || nativeArgumentSemantic == Helpers.ArgumentSemantic.Copy) {
+					// FIXME: rule disactivated for now
+					//Log.On (framework).Add ($"!incorrect-argument-semantic! Native '{nativeMethodDefinition}' is declared as ({nativeArgumentSemantic.ToUsableString ().ToLowerInvariant ()}) but mapped to 'ArgumentSemantic.{managedArgumentSemantic.ToUsableString ()}'");
+				}
+			}
 		}
 
 		public override void VisitObjCMethodDecl (ObjCMethodDecl decl, VisitKind visitKind)
