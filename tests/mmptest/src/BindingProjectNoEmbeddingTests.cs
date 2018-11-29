@@ -187,7 +187,7 @@ namespace Xamarin.MMP.Tests
 		}
 
 		[TestCase (true)]
-		// [TestCase (false)] - TODO App -> Lib -> Binding is a known failing case for now
+		[TestCase (false)]
 		public void MultipleDependencyChain (bool useProjectReference)
 		{
 			// App can depend on Lib that depends on binding lib with native reference and everything gets packaged in correctly

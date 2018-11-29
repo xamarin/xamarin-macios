@@ -42,18 +42,9 @@ namespace Xamarin.MacDev.Tasks {
 			return true;
 		}
 
-		// There is no built-in C# API for recursive copy of directories
 		void CopyNativeReference (string nativeRef, string resourcePath)
 		{
-			// TODO - Should this be smarter if we didn't change? Can't use smart copy unless framework? rsync?
-			// TODO - Is this safe for Windows builds?
-			var copyTask = new Microsoft.Build.Tasks.Exec {
-				Command = $"cp -r {nativeRef} {resourcePath}",
-				BuildEngine = this.BuildEngine
-			};
-			copyTask.Execute ();
-			if (copyTask.ExitCode != 0)
-				Log.LogError ($"Binding resource packaging copy exited with code {copyTask.ExitCode}");
+			Xamarin.Bundler.FileCopier.UpdateDirectory (nativeRef, resourcePath);
 		}
 
 		string [] NativeReferenceAttributeNames = new string [] { "Kind", "ForceLoad", "SmartLink", "Frameworks", "WeakFrameworks", "LinkerFlags", "NeedsGccExceptionHandling", "IsCxx"};

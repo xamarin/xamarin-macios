@@ -150,7 +150,7 @@ namespace Xamarin.iOS.Tasks
 		}
 
 		// [TestCase (true)] - MISSING_TEST - Requires special "chain" project that is not checked in
-		// [TestCase (false)] - TODO App -> Lib -> Binding is a known failing case for now
+		// [TestCase (false)] - MISSING_TEST - Requires special "chain" project that is not checked in
 		public void MultipleDependencyChain (bool useProjectReference)
 		{
 			Assert.Fail ();

@@ -368,6 +368,9 @@
     <Compile Include="..\common\Optimizations.cs">
       <Link>external\Optimizations.cs</Link>
     </Compile>
+    <Compile Include="..\common\FileCopier.cs">
+      <Link>external\FileCopier.cs</Link>
+    </Compile>
     <Compile Include="..\..\src\ObjCRuntime\BindingImplAttribute.cs">
       <Link>external\maccore\BindingImplAttribute.cs</Link>
     </Compile>

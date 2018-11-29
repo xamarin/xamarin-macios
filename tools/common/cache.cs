@@ -93,20 +93,7 @@ public class Cache {
 			return false;
 		}
 
-		if (!File.Exists (b)) {
-			Driver.Log (6, "Files {0} and {1} are considered different because the latter doesn't exist.", a, b);
-			return false;
-		}
-
-		using (var astream = new FileStream (a, FileMode.Open, FileAccess.Read, FileShare.Read)) {
-			using (var bstream = new FileStream (b, FileMode.Open, FileAccess.Read, FileShare.Read)) {
-				bool rv;
-				Driver.Log (6, "Comparing files {0} and {1}...", a, b);
-				rv = CompareStreams (astream, bstream, ignore_cache);
-				Driver.Log (6, " > {0}", rv ? "Identical" : "Different");
-				return rv;
-			}
-		}
+		return FileCopier.CompareFiles (a, b, ignore_cache);
 	}
 
 	public static bool CompareAssemblies (string a, string b, bool ignore_cache = false, bool compare_guids = false)
@@ -138,50 +125,8 @@ public class Cache {
 			Driver.Log (6, " > streams are considered different because -f was passed to " + NAME + ".");
 			return false;
 		}
-
-		if (astream.Length != bstream.Length) {
-			Driver.Log (6, " > streams are considered different because their lengths do not match.");
-			return false;
-		}
-
-		var ab = new byte[2048];
-		var bb = new byte[2048];
 		
-		do {
-			int ar = astream.Read (ab, 0, ab.Length);
-			int br = bstream.Read (bb, 0, bb.Length);
-
-			if (ar != br) {
-				Driver.Log (6, " > streams are considered different because their lengths do not match.");
-				return false;
-			}
-
-			if (ar == 0)
-				return true;
-
-			fixed (byte *aptr = ab, bptr = bb) {
-				long *l1 = (long *) aptr;
-				long *l2 = (long *) bptr;
-				int len = ar;
-				// Compare one long at a time.
-				for (int i = 0; i < len / 8; i++) {
-					if (l1 [i] != l2 [i]) {
-						Driver.Log (6, " > streams differ at index {0}-{1}", i, i + 8);
-						return false;
-					}
-				}
-				// Compare any remaining bytes.
-				int mod = len % 8;
-				if (mod > 0) {
-					for (int i = len - mod; i < len; i++) {
-						if (ab [i] != bb [i]) {						
-							Driver.Log (6, " > streams differ at byte index {0}", i);
-							return false;
-						}
-					}
-				}
-			}
-		} while (true);
+		return FileCopier.CompareStreams (astream, bstream, ignore_cache);
 	}
 	
 	string GetArgumentsForCacheData ()

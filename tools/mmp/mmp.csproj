@@ -361,6 +361,9 @@
     <Compile Include="linker\MonoMac.Tuner\MacBaseProfile.cs">
       <Link>MonoMac.Tuner\MacBaseProfile.cs</Link>
     </Compile>
+    <Compile Include="..\common\FileCopier.cs">
+      <Link>external\FileCopier.cs</Link>
+    </Compile>
     <Compile Include="..\common\Symbols.cs">
       <Link>external\Symbols.cs</Link>
     </Compile>
