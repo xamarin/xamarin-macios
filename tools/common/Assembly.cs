@@ -162,6 +162,9 @@ namespace Xamarin.Bundler {
 						AssertiOSVersionSupportsUserFrameworks (metadata.LibraryName);
 						Frameworks.Add (metadata.LibraryName);
 					} else {
+#if MMP // HACK - MMP currently doesn't respect LinkWith - https://github.com/xamarin/xamarin-macios/issues/5203
+						Driver.native_references.Add (metadata.LibraryName);
+#endif
 						LinkWith.Add (metadata.LibraryName);
 					}
 				}
