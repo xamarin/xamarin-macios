@@ -63,6 +63,10 @@
     <Reference Include="System.Web" />
     <Reference Include="Mono.Posix" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ValueTuple">
+      <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -108,6 +112,34 @@
     <Compile Include="SimpleFileListener.cs" />
     <Compile Include="iOSTarget.cs" />
     <Compile Include="MonoNativeInfo.cs" />
+    <Compile Include="..\..\tools\bcl-test-importer\BCLTestImporter\BCLTestAssemblyDefinition.cs">
+      <Link>BCLTestImporter\BCLTestAssemblyDefinition.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\bcl-test-importer\BCLTestImporter\BCLTestProjectDefinition.cs">
+      <Link>BCLTestImporter\BCLTestProjectDefinition.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\bcl-test-importer\BCLTestImporter\BCLTestProjectGenerator.cs">
+      <Link>BCLTestImporter\BCLTestProjectGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\bcl-test-importer\BCLTestImporter\Platform.cs">
+      <Link>BCLTestImporter\Platform.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\bcl-test-importer\BCLTestImporter\RegisterTypeGenerator.cs">
+      <Link>BCLTestImporter\RegisterTypeGenerator.cs</Link>
+    </Compile>
+    <Compile Include="BCLTestImporter\BCLTestImportTargetFactory.cs" />
+    <Compile Include="..\..\tools\bcl-test-importer\BCLTestImporter\BCLTestInfoPlistGenerator.cs">
+      <Link>BCLTestImporter\BCLTestInfoPlistGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\bcl-test-importer\BCLTestImporter\BCLTestProjectDefinitionWorkaround.cs">
+      <Link>BCLTestImporter\BCLTestProjectDefinitionWorkaround.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="BCLTestImporter\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -248,6 +248,12 @@ namespace Xamarin.iOS.Tasks
 				arInfo.Add ("Name", new PString (plist.GetCFBundleName () ?? plist.GetCFBundleDisplayName ()));
 				arInfo.Add ("SchemeName", new PString (ProjectName));
 
+				if (!string.IsNullOrEmpty (ProjectGuid))
+					arInfo.Add ("ProjectGuid", new PString (ProjectGuid));
+
+				if (!string.IsNullOrEmpty (ProjectTypeGuids))
+					arInfo.Add ("ProjectTypeGuids", new PString (ProjectTypeGuids));
+
 				if (!string.IsNullOrEmpty (SolutionPath)) {
 					arInfo.Add ("SolutionName", new PString (Path.GetFileNameWithoutExtension (SolutionPath)));
 					arInfo.Add ("SolutionPath", new PString (SolutionPath));

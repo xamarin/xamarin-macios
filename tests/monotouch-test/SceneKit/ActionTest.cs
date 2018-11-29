@@ -27,6 +27,8 @@ namespace MonoTouchFixtures.SceneKit {
 		[Test]
 		public void TimingFunction_5058 ()
 		{
+			// API was introduced in iOS 8, but it's broken (it copies the block pointer instead of copying the block itself, which means that a block stored on the stack will not behave as expected when trying to invoke it later)
+			TestRuntime.AssertXcodeVersion (7, 0);
 			var a = new SCNAction ();
 			Assert.Null (a.TimingFunction2, "TimingFunction2");
 			Assert.Null (a.TimingFunction, "TimingFunction");
@@ -43,6 +45,8 @@ namespace MonoTouchFixtures.SceneKit {
 		[Test]
 		public void TimingFunction_5072 ()
 		{
+			// API was introduced in iOS 8, but it's broken (it copies the block pointer instead of copying the block itself, which means that a block stored on the stack will not behave as expected when trying to invoke it later)
+			TestRuntime.AssertXcodeVersion (7, 0);
 			// https://github.com/xamarin/xamarin-macios/issues/5072
 			var a = new SCNAction ();
 #if !XAMCORE_4_0

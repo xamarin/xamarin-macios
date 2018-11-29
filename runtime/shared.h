@@ -18,9 +18,9 @@ extern "C" {
 #endif
 
 typedef void (init_cocoa_func) (void);
-void initialize_cocoa_threads (init_cocoa_func *func);
+void xamarin_initialize_cocoa_threads (init_cocoa_func *func);
 
-void install_nsautoreleasepool_hooks ();
+void xamarin_install_nsautoreleasepool_hooks ();
 id xamarin_init_nsthread (id obj, bool is_direct, id target, SEL sel, id arg);
 void xamarin_insert_dllmap ();
 

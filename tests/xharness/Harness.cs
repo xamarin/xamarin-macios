@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using Xamarin.Utils;
+using xharness.BCLTestImporter;
 
 namespace xharness
 {
@@ -28,6 +29,10 @@ namespace xharness
 		public Log HarnessLog { get; set; }
 		public bool UseSystem { get; set; } // if the system XI/XM should be used, or the locally build XI/XM.
 		public HashSet<string> Labels { get; } = new HashSet<string> ();
+
+		public string XIBuildPath {
+			get { return Path.GetFullPath (Path.Combine (RootDirectory, "..", "tools", "xibuild", "xibuild")); }
+		}
 
 		public static string Timestamp {
 			get {
@@ -374,6 +379,12 @@ namespace xharness
 				};
 
 				IOSTestProjects.Add (iosTestProject);
+			}
+
+			// add all the tests that are using the precompiled mono assemblies
+			var monoImportTestFactory = new BCLTestImportTargetFactory (this);
+			foreach (var target in monoImportTestFactory.GetBclTargets ()) {
+				IOSTestProjects.Add (target);
 			}
 
 			WatchOSContainerTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates/WatchContainer"));
@@ -857,6 +868,15 @@ namespace xharness
 
 			return rv;
 		}
+
+		Task<ProcessExecutionResult> build_bcl_tests;
+ 		public Task<ProcessExecutionResult> BuildBclTests ()
+ 		{
+ 			if (build_bcl_tests == null)
+ 				build_bcl_tests = ProcessHelper.ExecuteCommandAsync ("make", $".stamp-build-mono-unit-tests -C {StringUtils.Quote (Path.GetFullPath (RootDirectory))}", HarnessLog, TimeSpan.FromMinutes (30));
+ 			return build_bcl_tests;
+ 		}
+
 	}
 
 	public class CrashReportSnapshot
