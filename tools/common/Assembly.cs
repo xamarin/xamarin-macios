@@ -8,6 +8,7 @@ using System.Xml;
 using Mono.Cecil;
 using MonoTouch.Tuner;
 using ObjCRuntime;
+using Xamarin;
 using Xamarin.Utils;
 
 #if MONOTOUCH
@@ -184,7 +185,7 @@ namespace Xamarin.Bundler {
 		IEnumerable <NativeReferenceMetadata> ReadManifest (string manifestPath)
 		{
 			XmlDocument document = new XmlDocument ();
-			document.Load (manifestPath);
+			document.LoadWithoutNetworkAccess (manifestPath);
 
 			foreach (XmlNode referenceNode in document.GetElementsByTagName ("NativeReference")) {
 

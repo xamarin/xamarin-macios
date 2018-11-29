@@ -49,6 +49,9 @@
     <Compile Include="..\..\src\build\ios\Constants.cs">
       <Link>external\Constants.cs</Link>
     </Compile>
+    <Compile Include="..\common\PListExtensions.cs">
+      <Link>external\PListExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\common\cache.cs">
       <Link>external\cache.cs</Link>
     </Compile>
