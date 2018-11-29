@@ -63,7 +63,7 @@ namespace Xamarin.iOS.Tasks
 
 			int returnValue = ExecutionHelper.Execute ("/Library/Frameworks/Mono.framework/Commands/monodis", "--presources " + libPath, out string monoDisResults);
 			Assert.AreEqual (0, returnValue);
-			Assert.IsFalse (monoDisResults.Contains ("XTest.framework"), $"Binding Library contianed embedded resource: {monoDisResults}");
+			Assert.IsFalse (monoDisResults.Contains ("XTest.framework"), $"Binding Library contained embedded resource: {monoDisResults}");
 
 			string finalFrameworkPath = Path.Combine (bindingApp.AppBundlePath, "Frameworks/XTest.framework/XTest");
 			Assert.True (File.Exists (finalFrameworkPath), $"{finalFrameworkPath} file was not part of bundle?");
