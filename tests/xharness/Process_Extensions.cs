@@ -138,7 +138,7 @@ namespace xharness
 			{
 				if (timeout.HasValue) {
 					if (!process.WaitForExit ((int) timeout.Value.TotalMilliseconds)) {
-						process.KillTreeAsync (log, diagnostics).Wait ();
+						process.KillTreeAsync (log, diagnostics ?? true).Wait ();
 						rv.TimedOut = true;
 						lock (StderrStream)
 							log.WriteLine ($"Execution timed out after {timeout.Value.TotalSeconds} seconds and the process was killed.");
