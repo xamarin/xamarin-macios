@@ -209,20 +209,14 @@ namespace xharness
 				}
 			}
 
-			using (var kill = new Process ()) {
-				kill.StartInfo.FileName = "kill";
-				// Send SIGABRT since that produces a crash report
-				// lldb may fail to attach to system processes, but crash reports will still be produced with potentially helpful stack traces.
-				kill.StartInfo.Arguments = "-6 " + string.Join (" ", pids.Select ((v) => v.ToString ()).ToArray ());
-				await kill.RunAsync (log, true, TimeSpan.FromSeconds (2.5));
-			}
+			// Send SIGABRT since that produces a crash report
+			// lldb may fail to attach to system processes, but crash reports will still be produced with potentially helpful stack traces.
+			for (int i = 0; i < pids.Count; i++)
+				ProcessHelper.kill (pids [i], 6);
 
-			using (var kill = new Process ()) {
-				kill.StartInfo.FileName = "kill";
-				// send kill -9 anyway as a last resort
-				kill.StartInfo.Arguments = "-9 " + string.Join (" ", pids.Select ((v) => v.ToString ()).ToArray ());
-				await kill.RunAsync (log, true, TimeSpan.FromSeconds (2.5));
-			}
+			// send kill -9 anyway as a last resort
+			for (int i = 0; i < pids.Count; i++)
+				ProcessHelper.kill (pids [i], 9);
 		}
 
 		static void GetChildrenPS (Log log, List<int> list, int pid)
