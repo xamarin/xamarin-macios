@@ -2,6 +2,35 @@
 
 # don't change the current directory here
 
+if [[ "$1" == "--install-old-mono" ]]; then
+    cd mac-test-package
+    URL=$(grep "^MIN_XM_MONO_URL=" Make.config | sed 's/.*=//')
+
+    COUNTER=0
+    EC=0
+    echo "Downloading and installing $URL"
+    while [[ $COUNTER -lt 5 ]]; do
+		curl -s -L "$URL" --output old-mono.pkg || EC=$?
+		if [[ $EC -eq 56 ]]; then
+			# Sometimes we get spurious "curl: (56) SSLRead() return error -9806" errors. Trying again usually works, so lets try again a few more times.
+			# https://github.com/xamarin/maccore/issues/1098
+			let COUNTER++ || true
+			continue
+		fi
+		break
+	done
+
+	if [[ "x$EC" != "x0" ]]; then
+		echo "Failed to provision old mono (exit code: $EC)"
+		exit $EC
+	fi
+
+	sudo installer -pkg old-mono.pkg -target /
+	mono --version
+	exit 0
+fi
+
+
 URL=$1
 MACCORE_HASH=$2
 if test -z "$URL"; then

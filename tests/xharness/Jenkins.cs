@@ -1356,32 +1356,25 @@ namespace xharness
 		}
 
 		object report_lock = new object ();
-		public void GenerateReport (bool only_if_ci = false)
+		public void GenerateReport ()
 		{
-			if (only_if_ci && IsServerMode)
-				return;
-			
 			try {
 				lock (report_lock) {
 					var report = Path.Combine (LogDirectory, "index.html");
-					using (var stream = new MemoryStream ()) {
-						MemoryStream markdown_summary = null;
-						StreamWriter markdown_writer = null;
-						if (!string.IsNullOrEmpty (Harness.MarkdownSummaryPath)) {
-							markdown_summary = new MemoryStream ();
-							markdown_writer = new StreamWriter (markdown_summary);
+					var tmpreport = Path.Combine (LogDirectory, $"index-{Harness.Timestamp}.tmp.html");
+					var tmpmarkdown = string.IsNullOrEmpty (Harness.MarkdownSummaryPath) ? string.Empty : (Harness.MarkdownSummaryPath + $".{Harness.Timestamp}.tmp");
+					using (var stream = new FileStream (tmpreport, FileMode.CreateNew, FileAccess.ReadWrite)) {
+						using (var markdown_writer = (string.IsNullOrEmpty (tmpmarkdown) ? null : new StreamWriter (tmpmarkdown))) {
+							GenerateReportImpl (stream, markdown_writer);
 						}
-						GenerateReportImpl (stream, markdown_writer);
-						if (File.Exists (report))
-							File.Delete (report);
-						File.WriteAllBytes (report, stream.ToArray ());
-						if (!string.IsNullOrEmpty (Harness.MarkdownSummaryPath)) {
-							markdown_writer.Flush ();
-							if (File.Exists (Harness.MarkdownSummaryPath))
-								File.Delete (Harness.MarkdownSummaryPath);
-							File.WriteAllBytes (Harness.MarkdownSummaryPath, markdown_summary.ToArray ());
-							markdown_writer.Close ();
-						}
+					}
+					if (File.Exists (report))
+						File.Delete (report);
+					File.Move (tmpreport, report);
+					if (!string.IsNullOrEmpty (tmpmarkdown)) {
+						if (File.Exists (Harness.MarkdownSummaryPath))
+							File.Delete (Harness.MarkdownSummaryPath);
+						File.Move (tmpmarkdown, Harness.MarkdownSummaryPath);
 					}
 				}
 			} catch (Exception e) {
@@ -2491,7 +2484,7 @@ function toggleAll (show)
 				duration.Stop ();
 			}
 
-			Jenkins.GenerateReport (true);
+			Jenkins.GenerateReport ();
 		}
 
 		protected virtual void PropagateResults ()
