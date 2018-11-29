@@ -76,7 +76,9 @@
     </Compile>
     <Compile Include="Harness.cs" />
     <Compile Include="ProjectFileExtensions.cs" />
-    <Compile Include="PListExtensions.cs" />
+    <Compile Include="..\..\tools\common\PListExtensions.cs">
+      <Link>PListExtensions.cs</Link>
+    </Compile>
     <Compile Include="WatchOSTarget.cs" />
     <Compile Include="TVOSTarget.cs" />
     <Compile Include="Target.cs" />

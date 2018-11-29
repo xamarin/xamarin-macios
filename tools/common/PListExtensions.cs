@@ -2,7 +2,7 @@
 using System.IO;
 using System.Xml;
 
-namespace xharness
+namespace Xamarin
 {
 	static class PListExtensions
 	{
