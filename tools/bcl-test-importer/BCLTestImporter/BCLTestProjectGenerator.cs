@@ -209,6 +209,24 @@ namespace BCLTestImporter {
 			"xammac_net_4_5_I18N.Other_test.dll",
 			"xammac_net_4_5_I18N.Rare_test.dll",
 			"xammac_net_4_5_I18N.West_test.dll",
+			"xammac_net_4_5_Mono.CSharp_test.dll", //issue https://github.com/xamarin/maccore/issues/1186 
+			"xammac_net_4_5_Mono.Data.Sqlite_test.dll", // issue https://github.com/xamarin/maccore/issues/1187
+			"xammac_net_4_5_Mono.Posix_test.dll", // issue https://github.com/xamarin/maccore/issues/1188
+			"xammac_net_4_5_Mono.Posix_test.dll", // issues https://github.com/xamarin/maccore/issues/1189 and https://github.com/xamarin/maccore/issues/1190
+			"xammac_net_4_5_System.Core_test.dll", // issue https://github.com/xamarin/maccore/issues/1191
+			"xammac_net_4_5_System.Data_test.dll", // issues https://github.com/xamarin/maccore/issues/1192 and https://github.com/xamarin/maccore/issues/1193
+			"xammac_net_4_5_System.IdentityModel_test.dll", // issues https://github.com/xamarin/maccore/issues/1194
+			"xammac_net_4_5_System.IO.Compression.FileSystem_test.dll", // issues https://github.com/xamarin/maccore/issues/1195
+			"xammac_net_4_5_System.IdentityModel_test.dll", // issues https://github.com/xamarin/maccore/issues/1196
+			"xammac_net_4_5_System.Security_test.dll", // issue https://github.com/xamarin/maccore/issues/1197
+			"xammac_net_4_5_System.ServiceModel_test.dll", // issues https://github.com/xamarin/maccore/issues/1198
+			"xammac_net_4_5_System_test.dll", // issues https://github.com/xamarin/maccore/issues/1199
+			"xammac_net_4_5_System.Transactions_test.dll", // issues https://github.com/xamarin/maccore/issues/1200
+			"xammac_net_4_5_System.Xml_test.dll", // issues https://github.com/xamarin/maccore/issues/1201 and https://github.com/xamarin/maccore/issues/1202
+			"xammac_net_4_5_corlib_xunit-test.dll", // issues https://github.com/xamarin/maccore/issues/1203
+			"xammac_net_4_5_System.Core_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1204
+			"xammac_net_4_5_System.Data_xunit-test.dll", // issue https://gist.github.com/mandel-macaque/3f4d1eeca511cb8654fb518cc3bb2e92
+			"xammac_net_4_5_System_xunit-test.dll", // https://github.com/xamarin/maccore/issues/1209
 		};
 
 		readonly bool isCodeGeneration;
