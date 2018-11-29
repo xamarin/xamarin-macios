@@ -155,7 +155,6 @@ namespace Xamarin.Bundler {
 					(v) => {
 						app.Optimizations.Parse (v);
 					});
-
 			options.Add (new Mono.Options.ResponseFileSource ());
 		}
 
