@@ -82,7 +82,7 @@ namespace Xamarin.Bundler {
 
 		public void ExtractNativeLinkInfo (List<Exception> exceptions)
 		{
-			foreach (var a in Assemblies.Where (x => !App.BindingProjectNoEmbedding.Contains (Path.GetFileName (x.FullPath)))) {
+			foreach (var a in Assemblies) {
 				try {
 					a.ExtractNativeLinkInfo ();
 				} catch (Exception e) {

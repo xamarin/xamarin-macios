@@ -30,21 +30,16 @@ namespace Xamarin.MacDev.Tasks {
 			if (NativeReferences.Length == 0)
 				Log.LogError (7068, null, $"NoBindingEmbedding style binding projects must have native reference.");
 
-			string bindingResourcePath = Path.Combine (ProjectDir, OutputPath, $"{Path.GetFileNameWithoutExtension (BindingAssembly)}.resources");
+			string bindingResourcePath = Path.Combine (ProjectDir, OutputPath, $"{Path.ChangeExtension (BindingAssembly, ".resources")}");
 			Log.LogMessage ($"Creating binding resource package: {bindingResourcePath}");
 
 			Directory.CreateDirectory (bindingResourcePath);
 			foreach (var nativeRef in NativeReferences)
-				CopyNativeReference (nativeRef.ItemSpec, bindingResourcePath);
+				Xamarin.Bundler.FileCopier.UpdateDirectory (nativeRef.ItemSpec, bindingResourcePath);
 
 			CreateManifest (bindingResourcePath);
 
 			return true;
-		}
-
-		void CopyNativeReference (string nativeRef, string resourcePath)
-		{
-			Xamarin.Bundler.FileCopier.UpdateDirectory (nativeRef, resourcePath);
 		}
 
 		string [] NativeReferenceAttributeNames = new string [] { "Kind", "ForceLoad", "SmartLink", "Frameworks", "WeakFrameworks", "LinkerFlags", "NeedsGccExceptionHandling", "IsCxx"};

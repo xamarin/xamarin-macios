@@ -52,7 +52,6 @@ namespace Xamarin.Bundler {
 
 		public HashSet<string> Frameworks = new HashSet<string> ();
 		public HashSet<string> WeakFrameworks = new HashSet<string> ();
-		public HashSet<string> BindingProjectNoEmbedding = new HashSet<string> ();
 
 		public ApplePlatform Platform { get { return Driver.TargetFramework.Platform; } }
 
