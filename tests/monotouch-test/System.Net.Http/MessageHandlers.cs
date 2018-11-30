@@ -59,7 +59,6 @@ namespace MonoTests.System.Net.Http
 					HttpClient client = new HttpClient (GetHandler (handlerType));
 					var s = await client.GetStringAsync ("http://doesnotexist.xamarin.com");
 					Console.WriteLine (s);
-					Assert.Fail ($"An exception should have been thrown, instead got:\n{s}");
 				} catch (Exception e) {
 					ex = e;
 				} finally {
@@ -67,6 +66,7 @@ namespace MonoTests.System.Net.Http
 				}
 			}, () => done);
 
+			Assert.IsTrue (done, "Did not time out");
 			Assert.IsNotNull (ex, "Exception");
 			// The handlers throw different types of exceptions, so we can't assert much more than that something went wrong.			
 		}
