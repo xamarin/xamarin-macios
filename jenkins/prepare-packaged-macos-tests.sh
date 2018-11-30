@@ -7,9 +7,9 @@ if [[ "$1" == "--install-old-mono" ]]; then
     URL=$(grep "^MIN_XM_MONO_URL=" Make.config | sed 's/.*=//')
 
     COUNTER=0
-    EC=0
     echo "Downloading and installing $URL"
     while [[ $COUNTER -lt 5 ]]; do
+		EC=0
 		curl -s -L "$URL" --output old-mono.pkg || EC=$?
 		if [[ $EC -eq 56 ]]; then
 			# Sometimes we get spurious "curl: (56) SSLRead() return error -9806" errors. Trying again usually works, so lets try again a few more times.
@@ -58,8 +58,8 @@ unzip -o mac-test-package.zip
 cd mac-test-package
 
 COUNTER=0
-EC=0
 while [[ $COUNTER -lt 5 ]]; do
+	EC=0
 	./system-dependencies.sh --provision-mono --ignore-autotools --ignore-xamarin-studio --ignore-xcode --ignore-osx --ignore-cmake || EC=$?
 	if [[ $EC -eq 56 ]]; then
 		# Sometimes we get spurious "curl: (56) SSLRead() return error -9806" errors. Trying again usually works, so lets try again a few more times.
