@@ -116,7 +116,8 @@ namespace Xamarin.Bundler {
 		public static bool Force;
 
 		static bool is_extension;
-		static bool frameworks_copied_to_bundle_dir;	// Have we copied any frameworks to Foo.app/Contents/Frameworks?
+		static bool frameworks_copied_to_bundle_dir;    // Have we copied any frameworks to Foo.app/Contents/Frameworks?
+		static bool dylibs_copied_to_bundle_dir => native_libraries_copied_in.Count > 0;
 
 		const string pkg_config = "/Library/Frameworks/Mono.framework/Commands/pkg-config";
 
@@ -812,11 +813,16 @@ namespace Xamarin.Bundler {
 				throw new MonoMacException (5103, true, String.Format ("Failed to compile. Error code - {0}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", ret));
 			}
 			if (frameworks_copied_to_bundle_dir) {
-				int install_ret = XcodeRun ("install_name_tool", string.Format ("{0} -add_rpath @loader_path/../Frameworks", StringUtils.Quote (AppPath)));
+				int install_ret = XcodeRun ("install_name_tool", $"{StringUtils.Quote (AppPath)} -add_rpath @loader_path/../Frameworks");
 				if (install_ret != 0)
 					throw new MonoMacException (5310, true, "install_name_tool failed with an error code '{0}'. Check build log for details.", ret);
 			}
-			
+	    		if (dylibs_copied_to_bundle_dir) {
+				int install_ret = XcodeRun ("install_name_tool", $"{StringUtils.Quote (AppPath)} -add_rpath @loader_path/../{BundleName}"); 
+				if (install_ret != 0)
+					throw new MonoMacException (5310, true, "install_name_tool failed with an error code '{0}'. Check build log for details.", ret);
+			}
+
 			if (generate_plist)
 				GeneratePList ();
 
