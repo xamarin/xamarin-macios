@@ -1537,7 +1537,9 @@ namespace Xamarin.Bundler {
 			case "winmm":		// windows specific
 			case "winspool":	// windows specific
 			case "c":		// system provided
-			case "objc":		// system provided
+			case "objc":            // system provided
+			case "objc.a":		// system provided
+			case "system.b":	// system provided
 			case "system":		// system provided, libSystem.dylib -> CommonCrypto
 			case "x11":		// msvcrt pulled in
 			case "winspool.drv":	// msvcrt pulled in
@@ -1616,8 +1618,6 @@ namespace Xamarin.Bundler {
 			if (verbose > 1)
 				Console.WriteLine ("Native library '{0}' copied to application bundle.", Path.GetFileName (real_src));
 
-			// FIXME: should we strip extra architectures (e.g. x64) ? 
-			// that could break the library signature and cause issues on the appstore :(
 			if (GetRealPath (dest) == real_src) {
 				Console.WriteLine ("Dependency {0} was already at destination, skipping.", Path.GetFileName (real_src));
 			}
