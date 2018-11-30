@@ -109,6 +109,8 @@ namespace xharness
 
 				// build/[install/]run targets for specific test projects.
 				foreach (var target in allTargets) {
+					if (target.Name.IndexOf ("BCLTests", StringComparison.Ordinal) != -1) // special case for those targets that are auto generated from the mono assemblies
+						continue;
 					var make_escaped_simplified_name = target.SimplifiedName.Replace (" ", "\\ ");
 					var make_escaped_name = target.Name.Replace (" ", "\\ ");
 
