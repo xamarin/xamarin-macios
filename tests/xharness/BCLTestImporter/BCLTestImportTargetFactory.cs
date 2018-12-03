@@ -27,22 +27,21 @@ namespace xharness.BCLTestImporter {
 		}
 		
 		// generate all the different test targets.
-		public List<iOSTestProject> GetBclTargets (Harness harness)
+		public List<iOSTestProject> GetBclTargets ()
 		{
 			var result = new List<iOSTestProject> ();
 			// generate all projects, then create a new iOSTarget per project
-			foreach (var (name, path, xunit, platforms, generate) in projectGenerator.GenerateAllTestProjects ()) {
+			foreach (var (name, path, xunit, platforms) in projectGenerator.GenerateAllTestProjects ()) {
 				var prefix = xunit ? "xUnit" : "NUnit";
-				result.Add (new iOSTestProject (path) { 
+				result.Add (new iOSTestProject (path) {
 					Name = $"[{prefix}] Mono {name}",
-					SkiptvOSVariation=!platforms.Contains (Platform.TvOS),
-					SkipwatchOSVariation=!platforms.Contains (Platform.WatchOS),
+					SkiptvOSVariation = !platforms.Contains (Platform.TvOS),
+					SkipwatchOSVariation = !platforms.Contains (Platform.WatchOS),
 					Dependency = async () => {
-						var rv = await harness.BuildBclTests ();
+						var rv = await Harness.BuildBclTests ();
 						if (!rv.Succeeded)
 							throw new Exception ($"Failed to build BCL tests, exit code: {rv.ExitCode}. Check the harness log for more details.");
-						await generate ();
-					},
+					}
 				});
 			}
 			return result;

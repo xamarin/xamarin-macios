@@ -14,6 +14,7 @@ utils = null
 errorMessage = null
 currentStage = null
 failedStages = []
+workspace = null
 
 xiPackageFilename = null
 xmPackageFilename = null
@@ -127,41 +128,45 @@ def reportFinalStatusToSlack (err, gitHash, currentStage, fileContents)
     if ("${status}" == "SUCCESS" && err == "")
         return // not reporting success to slack
 
-    def authorName = null
-    def authorEmail = null
-    if (isPr) {
-        authorName = env.CHANGE_AUTHOR_DISPLAY_NAME
-        authorEmail = env.CHANGE_AUTHOR_EMAIL
-        slackMessage = "Pull Request #<${env.CHANGE_URL}|${env.CHANGE_ID}> failed to build."
-    } else {
-        authorName = sh (script: "git log -1 --pretty=%an", returnStdout: true).trim ()
-        authorEmail = sh (script: "git log -1 --pretty=%ae", returnStdout: true).trim ()
-        slackMessage = "Commit <https://github.com/${repository}/commit/${gitHash}|${gitHash}> failed to build."
-    }
-
-    def title = null
-    if (err != null) {
-        title = "Internal jenkins failed in stage '${currentStage}': ${err}"
-    } else {
-        title = "Internal jenkins failed in stage '${currentStage}'"
-    }
-    def text = ""
-    if (fileContents != null)
-        text = "\"text\": ${groovy.json.JsonOutput.toJson (markdownToSlack (fileContents))},"
-    // The attachments string must not start with a newline, it will produce a very helpful 'Invalid JSON String' exception with no additional info.
-    def attachments = """[
-        {
-            \"author_name\": \"${authorName} (${authorEmail})\",
-            \"title\": \"${title}\",
-            \"title_link\": \"${env.RUN_DISPLAY_URL}\",
-            \"color\": \"danger\",
-            ${text}
-            \"fallback\": \"Build failed\"
+    try {
+        def authorName = null
+        def authorEmail = null
+        if (isPr) {
+            authorName = env.CHANGE_AUTHOR_DISPLAY_NAME
+            authorEmail = env.CHANGE_AUTHOR_EMAIL
+            slackMessage = "Pull Request #<${env.CHANGE_URL}|${env.CHANGE_ID}> failed to build."
+        } else {
+            authorName = sh (script: "cd ${workspace} && git log -1 --pretty=%an", returnStdout: true).trim ()
+            authorEmail = sh (script: "cd ${workspace} && git log -1 --pretty=%ae", returnStdout: true).trim ()
+            slackMessage = "Commit <https://github.com/${repository}/commit/${gitHash}|${gitHash}> failed to build."
         }
-    ]
-    """
-    echo (attachments)
-    slackSend (botUser: true, channel: "#ios-notifications", color: "danger", message: slackMessage, attachments: attachments)
+
+        def title = null
+        if (err != null) {
+            title = "Internal jenkins failed in stage '${currentStage}': ${err}"
+        } else {
+            title = "Internal jenkins failed in stage '${currentStage}'"
+        }
+        def text = ""
+        if (fileContents != null)
+            text = "\"text\": ${groovy.json.JsonOutput.toJson (markdownToSlack (fileContents))},"
+        // The attachments string must not start with a newline, it will produce a very helpful 'Invalid JSON String' exception with no additional info.
+        def attachments = """[
+            {
+                \"author_name\": \"${authorName} (${authorEmail})\",
+                \"title\": \"${title}\",
+                \"title_link\": \"${env.RUN_DISPLAY_URL}\",
+                \"color\": \"danger\",
+                ${text}
+                \"fallback\": \"Build failed\"
+            }
+        ]
+        """
+        echo (attachments)
+        slackSend (botUser: true, channel: "#ios-notifications", color: "danger", message: slackMessage, attachments: attachments)
+    } catch (e) {
+        echo ("Failed to report to Slack: ${e}")
+    }
 }
 
 def reportFinalStatus (err, gitHash, currentStage)
@@ -314,13 +319,7 @@ def runXamarinMacTests (url, macOS, maccore_hash, xamarin_macios_hash)
             def t = "dontlink (system)"
             try {
                 // install oldest supported mono
-                sh ('''
-                    cd mac-test-package
-                    URL=`grep "^MIN_XM_MONO_URL=" Make.config | sed 's/.*=//'`
-                    curl -L "$URL" --output old-mono.pkg
-                    sudo installer -pkg old-mono.pkg -target /
-                    mono --version
-                    ''')
+                sh ("./prepare-packaged-macos-tests.sh --install-old-mono")
                 // run dontlink tests using the system mono
                 sh ("make -C mac-test-package/tests exec-mac-system-dontlink")
             } catch (error) {
@@ -378,7 +377,8 @@ def abortExecutingBuilds ()
 }
 
 timestamps {
-    node ('xamarin-macios && macos-10.13') {
+    def mainMacOSVersion = 13
+    node ("xamarin-macios && macos-10.${mainMacOSVersion}") {
         try {
             timeout (time: 9, unit: 'HOURS') {
                 // Hard-code a workspace, since branch-based and PR-based
@@ -668,13 +668,21 @@ timestamps {
                                         for (os = firstOS; os <= lastOS; os++)
                                             macOSes.add (os)
                                         // If any macOS version needs to be excluded manually, it can be done like this (in this case to remove macOS 10.14):
+                                        // Any macOS versions excluded like this still get a entry in the Jenkins UI, making it explicit that the OS version was skipped.
                                         //     excludedOSes.add (14)
                                         // Have in mind that the value in the list is only the minor part of the macOS version number.
                                         for (i = 0; i < macOSes.size (); i++) {
                                             def os = macOSes [i];
                                             def macOS = "${os}" // Need to bind the label variable before the closure
-                                            def excluded = indexOfElement (excludedOSes, os) >= 0
-                                            def nodeText = excluded ? "ℹ️ XM tests not executed on 10.${macOS} ℹ️" : "XM tests on 10.${macOS}"
+                                            def excluded = false
+                                            def nodeText = "XM tests on 10.${macOS}"
+                                            if (indexOfElement (excludedOSes, os) >= 0) {
+                                                excluded = true
+                                                nodeText = "ℹ️ XM tests not executed on 10.${macOS} ℹ️"
+                                            } else if (os == mainMacOSVersion) {
+                                                excluded = true
+                                                nodeText = "ℹ️ XM tests not executed on a separate 10.${macOS} bot because they're already executed as a part of the main test run ℹ️"
+                                            }
                                             builders [nodeText] = {
                                                 try {
                                                     if (excluded) {
@@ -713,6 +721,7 @@ timestamps {
                                                 if (runTestResult != 0) {
                                                     echoError ("Test run failed")
                                                     currentBuild.result = 'FAILURE'
+                                                    failedStages.add (currentStage)
                                                 }
                                             }
                                         }
@@ -720,7 +729,8 @@ timestamps {
                                             currentStage = "${STAGE_NAME}"
                                             echo ("Building on ${env.NODE_NAME}")
                                             def targetBranch = isPr ? githubGetPullRequestInfo () ["base"] ["ref"] : "${BRANCH_NAME}"
-                                            def testDocs = targetBranch == "master"
+                                            def hasRunDocsTestsLabel = isPr ? githubGetPullRequestLabels ().contains ("run-docs-tests") : false
+                                            def testDocs = targetBranch == "master" || hasRunDocsTestsLabel
                                             if (!testDocs) {
                                                 echo ("Skipping docs testing, it's only done on master (current (target) branch is ${targetBranch})")
                                             } else {
@@ -728,6 +738,7 @@ timestamps {
                                                 if (testDocsResult != 0) {
                                                     echoError ("Test docs failed")
                                                     currentBuild.result = 'FAILURE'
+                                                    failedStages.add (currentStage)
                                                 }
                                             }
                                         }

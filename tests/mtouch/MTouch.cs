@@ -3856,8 +3856,8 @@ public class HandlerTest
 			var missingSimlauncherSymbols = new List<string> ();
 			foreach (var symbol in only_libxamarin) {
 				switch (symbol) {
-				case "_fix_ranlib_warning_about_no_symbols": // Dummy symbol to fix linker warning
-				case "_fix_ranlib_warning_about_no_symbols_v2": // Dummy symbol to fix linker warning
+				case "_xamarin_fix_ranlib_warning_about_no_symbols": // Dummy symbol to fix linker warning
+				case "_xamarin_fix_ranlib_warning_about_no_symbols_v2": // Dummy symbol to fix linker warning
 				case "_monotouch_IntPtr_objc_msgSendSuper_IntPtr": // Classic only, this function can probably be removed when we switch to binary copy of a Classic version of libxamarin.a
 				case "_monotouch_IntPtr_objc_msgSend_IntPtr": // Classic only, this function can probably be removed when we switch to binary copy of a Classic version of libxamarin.a
 				case "_xamarin_float_objc_msgSend": // Classic only, this function can probably be removed when we switch to binary copy of a Classic version of libxamarin.a

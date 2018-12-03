@@ -30,6 +30,10 @@ namespace xharness
 		public bool UseSystem { get; set; } // if the system XI/XM should be used, or the locally build XI/XM.
 		public HashSet<string> Labels { get; } = new HashSet<string> ();
 
+		public string XIBuildPath {
+			get { return Path.GetFullPath (Path.Combine (RootDirectory, "..", "tools", "xibuild", "xibuild")); }
+		}
+
 		public static string Timestamp {
 			get {
 				return $"{DateTime.Now:yyyyMMdd_HHmmss}";
@@ -356,7 +360,7 @@ namespace xharness
 
 			// add all the tests that are using the precompiled mono assemblies
 			var monoImportTestFactory = new BCLTestImportTargetFactory (this);
-			foreach (var target in monoImportTestFactory.GetBclTargets (this)) {
+			foreach (var target in monoImportTestFactory.GetBclTargets ()) {
 				IOSTestProjects.Add (target);
 			}
 
@@ -831,12 +835,13 @@ namespace xharness
 		}
 
 		Task<ProcessExecutionResult> build_bcl_tests;
-		public Task<ProcessExecutionResult> BuildBclTests ()
-		{
-			if (build_bcl_tests == null)
-				build_bcl_tests = ProcessHelper.ExecuteCommandAsync ("make", $".stamp-build-mono-unit-tests -C {StringUtils.Quote (Path.GetFullPath (RootDirectory))}", HarnessLog, TimeSpan.FromMinutes (30));
-			return build_bcl_tests;
-		}
+ 		public Task<ProcessExecutionResult> BuildBclTests ()
+ 		{
+ 			if (build_bcl_tests == null)
+ 				build_bcl_tests = ProcessHelper.ExecuteCommandAsync ("make", $".stamp-build-mono-unit-tests -C {StringUtils.Quote (Path.GetFullPath (RootDirectory))}", HarnessLog, TimeSpan.FromMinutes (30));
+ 			return build_bcl_tests;
+ 		}
+
 	}
 
 	public class CrashReportSnapshot

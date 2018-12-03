@@ -235,7 +235,7 @@ namespace Xamarin.MMP.Tests
 		// In most cases we generate projects in tmp and this is not needed. But nuget and test projects can make that hard
 		public static void CleanUnifiedProject (string csprojTarget)
 		{
-			RunAndAssert ("xibuild", new StringBuilder ("-- " + csprojTarget + " /t:clean"), "Clean");
+			RunAndAssert (Configuration.XIBuildPath, new StringBuilder ("-- " + csprojTarget + " /t:clean"), "Clean");
 		}
 
 		public static string BuildProject (string csprojTarget, bool isUnified, bool shouldFail = false, bool release = false, string[] environment = null)
@@ -275,7 +275,7 @@ namespace Xamarin.MMP.Tests
 
 			if (isUnified) {
 				buildArgs.Insert (0, " -- ");
-				return RunAndAssert ("xibuild", buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo, environment);
+				return RunAndAssert (Configuration.XIBuildPath, buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo, environment);
 			} else
 				return RunAndAssert ("/Applications/Visual Studio.app/Contents/MacOS/vstool", buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo, environment);
 		}
@@ -601,7 +601,7 @@ namespace TestCase
 			Environment.SetEnvironmentVariable ("XAMMAC_FRAMEWORK_PATH", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
 			Environment.SetEnvironmentVariable ("XamarinMacFrameworkRoot", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
 
-			var rv = ExecutionHelper.Execute ("xibuild", $"-- /restore {StringUtils.Quote (project)}", out var output);
+			var rv = ExecutionHelper.Execute (Configuration.XIBuildPath, $"-- /restore {StringUtils.Quote (project)}", out var output);
 			if (rv != 0) {
 				Console.WriteLine ("nuget restore failed:");
 				Console.WriteLine (output);

@@ -65,7 +65,7 @@ cp -R tools/comparison/generator-diff jenkins-results/generator-diff
 
 if [[ "x$1" == "x--publish" ]]; then
 	URL_PREFIX=$(./jenkins/publish-results.sh | grep "^Url Prefix: " | sed 's/^Url Prefix: //')
-	URL_API="$URL_PREFIX/apicomparison/index.html"
+	URL_API="$URL_PREFIX/apicomparison/api-diff.html"
 	URL_GENERATOR="$URL_PREFIX/generator-diff/index.html"
 else
 	URL_API="$BUILD_URL/API_20diff_20_28PR_20only_29"

@@ -59,7 +59,7 @@ namespace MonoMac {
 		public const string ImageKitLibrary = "/System/Library/Frameworks/Quartz.framework/Frameworks/ImageKit.framework/ImageKit";
 		public const string OpenGLLibrary = "/System/Library/Frameworks/OpenGL.framework/OpenGL";
 		public const string OpenALLibrary = "/System/Library/Frameworks/OpenAL.framework/OpenAL";
-		public const string CoreMediaLibrary = "/System/Library/PrivateFrameworks/CoreMedia.framework/Versions/A/CoreMedia";
+		public const string CoreMediaLibrary = "/System/Library/Frameworks/CoreMedia.framework/CoreMedia";
 		public const string ScriptingBridgeLibrary = "/System/Library/Frameworks/ScriptingBridge.framework/ScriptingBridge";
 		public const string CoreDataLibrary = "/System/Library/Frameworks/CoreData.framework/CoreData";
 		public const string CoreImageLibrary = "/System/Library/Frameworks/QuartzCore.framework/Versions/A/Frameworks/CoreImage.framework/CoreImage";
@@ -107,7 +107,9 @@ namespace MonoMac {
 		public const string SearchKitLibrary = "/System/Library/Frameworks/CoreServices.framework/Frameworks/SearchKit.framework/SearchKit";
 		public const string libSystemLibrary = "/usr/lib/libSystem.dylib";
 		public const string libcLibrary = "/usr/lib/libc.dylib";
+#if !XAMCORE_4_0
 		public const string libdispatchLibrary = "/usr/lib/system/libdispatch.dylib";
+#endif
 		public const string ContactsLibrary = "/System/Library/Frameworks/Contacts.framework/Contacts";
 		public const string ContactsUILibrary = "/System/Library/Frameworks/ContactsUI.framework/ContactsUI";
 
@@ -123,8 +125,10 @@ namespace MonoMac {
 
 		public const string SafariServicesLibrary = "/System/Library/Frameworks/SafariServices.framework/SafariServices";
 		public const string PrintCoreLibrary = "/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/PrintCore.framework/PrintCore";
-
+		public const string libcompressionLibrary = "/usr/lib/libcompression.dylib";
+#if !XAMCORE_4_0
 		public const string libcompression = "/usr/lib/libcompression.dylib";
+#endif
 
 		// macOS 10.12
 		public const string PhotosLibrary = "/System/Library/Frameworks/Photos.framework/Photos";
@@ -144,7 +148,7 @@ namespace MonoMac {
 
 		// macOS 10.14
 		public const string AdSupportLibrary = "/System/Library/Frameworks/AdSupport.framework/AdSupport";
-		public const string NaturalLanguageLibrary = "/System/Library/Frameworks/Frameworks/NaturalLanguage.framework/NaturalLanguage";
+		public const string NaturalLanguageLibrary = "/System/Library/Frameworks/NaturalLanguage.framework/NaturalLanguage";
 		public const string VideoSubscriberAccountLibrary = "/System/Library/Frameworks/VideoSubscriberAccount.framework/VideoSubscriberAccount";
 		public const string UserNotificationsLibrary = "/System/Library/Frameworks/UserNotifications.framework/UserNotifications";
 		public const string iTunesLibraryLibrary = "/System/Library/Frameworks/iTunesLibrary.framework/iTunesLibrary";
