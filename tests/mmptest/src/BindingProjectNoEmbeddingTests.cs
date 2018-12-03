@@ -20,9 +20,12 @@ namespace Xamarin.MMP.Tests
 			Assert.False (resourceOutput.Contains (resourceName), "Binding project output contained embedded library");
 		}
 
-		static void AssertFileInBundle (string tmpDir, BindingProjectType type, string path)
+		static void AssertFileInBundle (string tmpDir, BindingProjectType type, string path, bool assertIsSymLink = false)
 		{
-			Assert.True (File.Exists (Path.Combine (tmpDir, $"bin/Debug/{(type == BindingProjectType.Modern ? "UnifiedExample" : "XM45Example")}.app/Contents/{path}")), $"{path} not in bundle as expected.");
+			string bundlePath = Path.Combine (tmpDir, $"bin/Debug/{(type == BindingProjectType.Modern ? "UnifiedExample" : "XM45Example")}.app/Contents/{path}");
+			Assert.True (File.Exists (bundlePath), $"{path} not in bundle as expected.");
+			if (assertIsSymLink)
+				Assert.True (File.GetAttributes (bundlePath).HasFlag (FileAttributes.ReparsePoint));
 		}
 
 		[TestCase (BindingProjectType.Modern, false)]
@@ -54,7 +57,7 @@ namespace Xamarin.MMP.Tests
 				string appBuildLog = BindingProjectTests.SetupAndBuildLinkedTestProjects (projects.Item1, projects.Item2, tmpDir, useProjectReference, false).Item2;
 			
 				AssertNoResourceWithName (tmpDir, projects.Item1.ProjectName, "Foo");
-				AssertFileInBundle (tmpDir, type, "Frameworks/Foo.framework/Foo");
+				AssertFileInBundle (tmpDir, type, "Frameworks/Foo.framework/Foo", assertIsSymLink: true);
 			});
 		}
 
