@@ -258,7 +258,7 @@ namespace Xamarin.Bundler {
 				ProcessNativeReferenceOptions (metadata);
 
 				if (!string.IsNullOrEmpty (linkWith.LibraryName)) {
-					if (linkWith.LibraryName.EndsWith (".framework", StringComparison.Ordinal)) {
+					if (linkWith.LibraryName.EndsWith (".framework", StringComparison.OrdinalIgnoreCase)) {
 						AssertiOSVersionSupportsUserFrameworks (linkWith.LibraryName);
 
 						Frameworks.Add (ExtractFramework (assembly, metadata));

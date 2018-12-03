@@ -67,11 +67,9 @@ namespace Xamarin.Bundler {
 		// This code is shared between our packaging tools (mmp\mtouch) and msbuild tasks
 #if MMP || MTOUCH
 		public static void Log (int min_verbosity, string format, params object[] args) => Driver.Log (min_verbosity, format, args);
-		public static bool Force => Driver.Force;
 		public static Exception CreateError (int code, string message, params object[] args) => ErrorHelper.CreateError (code, message, args);
 #else
 		public static void Log (int min_verbosity, string format, params object[] args) => Console.WriteLine (format, args);
-		public static bool Force => false;
 		public static Exception CreateError (int code, string message, params object[] args) => throw new Exception ($"{code} {string.Format (message, args)}");
 #endif
 
@@ -127,8 +125,10 @@ namespace Xamarin.Bundler {
 		// if it's later than the timestamp of the "target" file itself.
 		public static bool IsUptodate (string source, string target, bool check_contents = false, bool check_stamp = true)
 		{
-			if (Force)
+#if MMP || MTOUCH	// msbuild does not have force
+			if (Driver.Force)
 				return false;
+#endif
 
 			var tfi = new FileInfo (target);
 			
@@ -152,10 +152,15 @@ namespace Xamarin.Bundler {
 				return true;
 			}
 
-			if (check_contents && CompareFiles (source, target)) {
+#if MMP || MTOUCH	// msbuild usages do not require CompareFiles optimization
+			if (check_contents && Cache.CompareFiles (source, target)) {
 				Log (3, "Prerequisite '{0}' is newer than the target '{1}', but the contents are identical.", source, target);
 				return true;
 			}
+#else
+			if (check_contents)
+				throw new NotImplementedException ("Checking file contents is not supported");
+#endif
 
 			Log (3, "Prerequisite '{0}' is newer than the target '{1}'.", source, target);
 			return false;
@@ -168,82 +173,5 @@ namespace Xamarin.Bundler {
 		{
 			return Marshal.PtrToStringAuto (_strerror (errno));
 		}
-
-		public static bool CompareFiles (string a, string b, bool ignore_cache = false)
-		{
-#if !MMP && !MTOUCH
-			if (ignore_cache)
-				throw new NotImplementedException ("CompareFiles with ignore_cache");
-#endif
-
-			if (!File.Exists (b)) {
-				Log (6, "Files {0} and {1} are considered different because the latter doesn't exist.", a, b);
-				return false;
-			}
-
-			using (var astream = new FileStream (a, FileMode.Open, FileAccess.Read, FileShare.Read)) {
-				using (var bstream = new FileStream (b, FileMode.Open, FileAccess.Read, FileShare.Read)) {
-					bool rv;
-					Log (6, "Comparing files {0} and {1}...", a, b);
-					rv = CompareStreams (astream, bstream, ignore_cache);
-					Log (6, " > {0}", rv ? "Identical" : "Different");
-					return rv;
-				}
-			}
-		}
-
-		public unsafe static bool CompareStreams (Stream astream, Stream bstream, bool ignore_cache = false)
-		{
-#if !MMP && !MTOUCH
-			if (ignore_cache)
-				throw new NotImplementedException ("CompareStreams with ignore_cache");
-#endif
-
-			if (astream.Length != bstream.Length) {
-				Log (6, " > streams are considered different because their lengths do not match.");
-				return false;
-			}
-
-			var ab = new byte[2048];
-			var bb = new byte[2048];
-			
-			do {
-				int ar = astream.Read (ab, 0, ab.Length);
-				int br = bstream.Read (bb, 0, bb.Length);
-
-				if (ar != br) {
-					Log (6, " > streams are considered different because their lengths do not match.");
-					return false;
-				}
-
-				if (ar == 0)
-					return true;
-
-				fixed (byte *aptr = ab, bptr = bb) {
-					long *l1 = (long *) aptr;
-					long *l2 = (long *) bptr;
-					int len = ar;
-					// Compare one long at a time.
-					for (int i = 0; i < len / 8; i++) {
-						if (l1 [i] != l2 [i]) {
-							Log (6, " > streams differ at index {0}-{1}", i, i + 8);
-							return false;
-						}
-					}
-					// Compare any remaining bytes.
-					int mod = len % 8;
-					if (mod > 0) {
-						for (int i = len - mod; i < len; i++) {
-							if (ab [i] != bb [i]) {						
-								Log (6, " > streams differ at byte index {0}", i);
-								return false;
-							}
-						}
-					}
-				}
-			} while (true);
-		}
-
-
 	}
 }
