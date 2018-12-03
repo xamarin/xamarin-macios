@@ -153,9 +153,9 @@ namespace Xamarin.Bundler {
 
 			string resourceBundlePath = Path.ChangeExtension (FullPath, ".resources");
 			string manifestPath = Path.Combine (resourceBundlePath, "manifest");
-			bool hasResourceBundle = Directory.Exists (resourceBundlePath) && File.Exists (manifestPath);
-			if (hasResourceBundle) {
+			if (File.Exists (manifestPath)) {
 				foreach (NativeReferenceMetadata metadata in ReadManifest (manifestPath)) {
+					LogNativeReference (metadata);
 					ProcessNativeReferenceOptions (metadata);
 
 					if (metadata.LibraryName.EndsWith (".framework", StringComparison.OrdinalIgnoreCase)) {
@@ -330,7 +330,7 @@ namespace Xamarin.Bundler {
 			if (!Application.IsUptodate (FullPath, path)) {
 				Application.ExtractResource (assembly.MainModule, metadata.LibraryName, path, false);
 				Driver.Log (3, "Extracted third-party binding '{0}' from '{1}' to '{2}'", metadata.LibraryName, FullPath, path);
-				LogLinkWithAttribute (metadata.Attribute);
+				LogNativeReference (metadata);
 			} else {
 				Driver.Log (3, "Target '{0}' is up-to-date.", path);
 			}
@@ -352,7 +352,7 @@ namespace Xamarin.Bundler {
 			if (!Application.IsUptodate (FullPath, zipPath)) {
 				Application.ExtractResource (assembly.MainModule, metadata.LibraryName, zipPath, false);
 				Driver.Log (3, "Extracted third-party framework '{0}' from '{1}' to '{2}'", metadata.LibraryName, FullPath, zipPath);
-				LogLinkWithAttribute (metadata.Attribute);
+				LogNativeReference (metadata);
 			} else {
 				Driver.Log (3, "Target '{0}' is up-to-date.", path);
 			}
@@ -373,16 +373,17 @@ namespace Xamarin.Bundler {
 			return path;
 		}
 
-		static void LogLinkWithAttribute (LinkWithAttribute linkWith)
+		static void LogNativeReference (NativeReferenceMetadata metadata)
 		{
-			Driver.Log (3, "    ForceLoad: {0}", linkWith.ForceLoad);
-			Driver.Log (3, "    Frameworks: {0}", linkWith.Frameworks);
-			Driver.Log (3, "    IsCxx: {0}", linkWith.IsCxx);
-			Driver.Log (3, "    LinkerFlags: {0}", linkWith.LinkerFlags);
-			Driver.Log (3, "    LinkTarget: {0}", linkWith.LinkTarget);
-			Driver.Log (3, "    NeedsGccExceptionHandling: {0}", linkWith.NeedsGccExceptionHandling);
-			Driver.Log (3, "    SmartLink: {0}", linkWith.SmartLink);
-			Driver.Log (3, "    WeakFrameworks: {0}", linkWith.WeakFrameworks);
+			Driver.Log (3, "    From: {0}", metadata.Attribute != null ? "LinkWith" : "Binding Manifest");
+			Driver.Log (3, "    ForceLoad: {0}", metadata.ForceLoad);
+			Driver.Log (3, "    Frameworks: {0}", metadata.Frameworks);
+			Driver.Log (3, "    IsCxx: {0}", metadata.IsCxx);
+			Driver.Log (3, "    LinkerFlags: {0}", metadata.LinkerFlags);
+			Driver.Log (3, "    LinkTarget: {0}", metadata.LinkTarget);
+			Driver.Log (3, "    NeedsGccExceptionHandling: {0}", metadata.NeedsGccExceptionHandling);
+			Driver.Log (3, "    SmartLink: {0}", metadata.SmartLink);
+			Driver.Log (3, "    WeakFrameworks: {0}", metadata.WeakFrameworks);
 		}
 
 		public static LinkWithAttribute GetLinkWithAttribute (CustomAttribute attr)

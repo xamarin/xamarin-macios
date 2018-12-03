@@ -27,10 +27,12 @@ namespace Xamarin.MacDev.Tasks {
 		public override bool Execute ()
 		{
 			// LinkWith must be migrated for NoBindingEmbedding styled binding projects
-			if (NativeReferences.Length == 0)
-				Log.LogError (7068, null, $"NoBindingEmbedding style binding projects must have native reference.");
+			if (NativeReferences.Length == 0) {
+				Log.LogError (7068, null, $"Can't create a binding resource package unless there are native references in the binding project.");
+				return false;
+			}
 
-			string bindingResourcePath = Path.Combine (ProjectDir, OutputPath, $"{Path.ChangeExtension (Path.GetFileName (BindingAssembly), ".resources")}");
+			string bindingResourcePath = Path.Combine (ProjectDir, OutputPath, Path.ChangeExtension (Path.GetFileName (BindingAssembly), ".resources"));
 			Log.LogMessage ($"Creating binding resource package: {bindingResourcePath}");
 
 			Directory.CreateDirectory (bindingResourcePath);
