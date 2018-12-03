@@ -69,6 +69,8 @@ namespace Xamarin.Bundler {
 		public static void Log (int min_verbosity, string format, params object[] args) => Driver.Log (min_verbosity, format, args);
 		public static Exception CreateError (int code, string message, params object[] args) => ErrorHelper.CreateError (code, message, args);
 #else
+		// LogMessage and LogError are instance objects on the tasks themselves and bubbling an event up is not ideal
+		// msbuild handles uncaught exceptions as a task error
 		public static void Log (int min_verbosity, string format, params object[] args) => Console.WriteLine (format, args);
 		public static Exception CreateError (int code, string message, params object[] args) => throw new Exception ($"{code} {string.Format (message, args)}");
 #endif
