@@ -170,7 +170,7 @@ namespace BCLTestImporter {
 				outputWriter.WriteLine ("Generated project is:");
 				outputWriter.WriteLine (generatedProject);
 				
-				using (var file = new StreamWriter (appOptions.Output, !appOptions.Override)) { // falso is do not append
+				using (var file = new StreamWriter (appOptions.Output, !appOptions.Override)) { // false is do not append
 					file.Write (generatedProject);
 				}
 				return 0;
@@ -186,7 +186,7 @@ namespace BCLTestImporter {
 				var generatedCode = RegisterTypeGenerator.GenerateCode (typesPerAssembly, appOptions.IsXUnit, appOptions.RegisterTypeTemplate);
 				outputWriter.WriteLine ("Generated code is:");
 				outputWriter.WriteLine (generatedCode);
-				using (var file = new StreamWriter (appOptions.Output, !appOptions.Override)) { // falso is do not append
+				using (var file = new StreamWriter (appOptions.Output, !appOptions.Override)) { // false is do not append
 					file.Write (generatedCode);
 				}
 				return 0;
@@ -213,7 +213,9 @@ namespace BCLTestImporter {
 					}
 						
 					outputWriter.WriteLine ("Generating all the registered test projects");
-					projectGenerator.GenerateAllTestProjectsAsync ().Wait ();
+					projectGenerator.GenerateAlliOSTestProjectsAsync().Wait ();
+					projectGenerator.GenerateAllMacTestProjectsAsync(Platform.MacOSFull).Wait ();
+					projectGenerator.GenerateAllMacTestProjectsAsync(Platform.MacOSModern).Wait ();
 					return 0;
 				}
 			}

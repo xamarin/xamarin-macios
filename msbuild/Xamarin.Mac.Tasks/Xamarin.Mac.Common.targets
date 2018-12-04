@@ -72,8 +72,13 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<_CanArchive>False</_CanArchive>
 		<_CanArchive Condition="'$(OutputType)' == 'Exe'">true</_CanArchive>
 
+		<_RequireProvisioningProfile>False</_RequireProvisioningProfile>
+		<_RequireProvisioningProfile Condition="'$(CodesignEntitlements)' != ''">True</_RequireProvisioningProfile>
+
 		<_PreparedResourceRules></_PreparedResourceRules>
 		<_AppBundleName>$(AssemblyName)</_AppBundleName>
+
+		<AppBundleExtension Condition="'$(AppBundleExtension)' == ''">.app</AppBundleExtension>
 	</PropertyGroup>
 		
 	<PropertyGroup>
@@ -435,13 +440,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	</Target>
 
 	<Target Name="_DetectSigningIdentity" DependsOnTargets="_DetectAppManifest">
-		<PropertyGroup>
-			<_AppBundleName>$(AssemblyName)</_AppBundleName>
-
-			<_RequireProvisioningProfile>False</_RequireProvisioningProfile>
-			<_RequireProvisioningProfile Condition="'$(CodesignEntitlements)' != ''">True</_RequireProvisioningProfile>
-		</PropertyGroup>
-
 		<DetectSigningIdentity
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
@@ -463,8 +461,8 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<Target Name="_GenerateBundleName">
 		<PropertyGroup>
-			<AppBundleDir>$(OutputPath)$(_AppBundleName).app</AppBundleDir>
-			<_AppBundlePath>$(OutputPath)$(_AppBundleName).app\</_AppBundlePath>
+			<AppBundleDir>$(OutputPath)$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
+			<_AppBundlePath>$(AppBundleDir)\</_AppBundlePath>
 			<_AppResourcesPath>$(_AppBundlePath)Contents\Resources\</_AppResourcesPath>
 		</PropertyGroup>
 	</Target>
@@ -638,7 +636,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<CompileSceneKitAssets
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
-			AppBundleDir="$(AppBundleDir)"
+			AppBundleName="$(_AppBundleName)$(AppBundleExtension)"
 			ToolExe="$(CopySceneKitAssetsExe)"
 			ToolPath="$(CopySceneKitAssetsPath)"
 			SceneKitAssets="@(SceneKitAsset)"

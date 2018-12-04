@@ -147,5 +147,5 @@ bool
 
 <# } #>
 #else
-int fix_ranlib_warning_about_no_symbols;
+int xamarin_fix_ranlib_warning_about_no_symbols;
 #endif /* DYNAMIC_MONO_RUNTIME */

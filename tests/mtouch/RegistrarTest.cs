@@ -707,7 +707,7 @@ public class Category
 		}
 
 		// This list is duplicated in src/ObjCRuntime/Registrar.cs
-		static char[] invalidSelectorCharacters = new char[] { ' ', '\t', '?', '\\', '!', '|', '@', '"', '\'', '%', '&', '/', '(', ')', '=', '^', '[', ']', '{', '}', ',', '.', ';', '-', '\n' };
+		static readonly char[] invalidSelectorCharacters = { ' ', '\t', '?', '\\', '!', '|', '@', '"', '\'', '%', '&', '/', '(', ')', '=', '^', '[', ']', '{', '}', ',', '.', ';', '-', '\n', '<', '>' };
 
 		[Test]
 		public void MT4160 ()
@@ -1721,6 +1721,38 @@ class CTP4 : CTP3 {
 				mtouch.Linker = MTouchLinker.DontLink;
 				mtouch.AssertExecute ();
 				mtouch.AssertNoWarnings ();
+			}
+		}
+
+		[Test]
+		public void MT4177 ()
+		{
+			// newline is invalid, but it messes up the error message and testing is just annoying, so skip it.
+			var testInvalidCharacters = invalidSelectorCharacters.Where ((v) => v != '\n').ToArray ();
+			using (var mtouch = new MTouchTool ()) {
+				var sb = new StringBuilder ();
+				for (int i = 0; i < testInvalidCharacters.Length; i++) {
+					var c = testInvalidCharacters [i];
+					var str = c.ToString ();
+					if (c == '"')
+						str = "\"\"";
+					sb.AppendLine ();
+					sb.AppendLine ($"[ObjCRuntime.Adopts (@\"Foo{str}\")]");
+					sb.AppendLine ($"public class TestInvalidChar{i} : Foundation.NSObject {{");
+					sb.AppendLine ("}");
+				}
+
+				mtouch.CreateTemporaryApp (extraCode: sb.ToString (), extraArg: "-debug");
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				for (int i = 0; i < testInvalidCharacters.Length; i++) {
+					var c = testInvalidCharacters [i];
+					var str = c.ToString ();
+					if (c == '"')
+						str = "\"";
+					mtouch.AssertError (4177, $"The 'ProtocolType' parameter of the 'Adopts' attribute used in class 'TestInvalidChar{i}' contains an invalid character. Value used: 'Foo{str}' Invalid Char: '{c}'");
+				}
 			}
 		}
 	}

@@ -130,6 +130,9 @@
     <Compile Include="..\..\tools\bcl-test-importer\BCLTestImporter\BCLTestInfoPlistGenerator.cs">
       <Link>BCLTestImporter\BCLTestInfoPlistGenerator.cs</Link>
     </Compile>
+    <Compile Include="..\..\tools\bcl-test-importer\BCLTestImporter\BCLTestProjectDefinitionWorkaround.cs">
+      <Link>BCLTestImporter\BCLTestProjectDefinitionWorkaround.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BCLTestImporter\" />

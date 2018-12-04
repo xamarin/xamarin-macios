@@ -185,7 +185,7 @@ static struct Trampolines trampolines = {
 	(void *) &xamarin_set_gchandle_trampoline,
 };
 
-struct InitializationOptions options = { 0 };
+static struct InitializationOptions options = { 0 };
 
 struct Managed_NSObject {
 	MonoObject obj;
@@ -1407,7 +1407,7 @@ xamarin_initialize ()
 	if (!register_assembly (assembly, &exception_gchandle))
 		xamarin_process_managed_exception_gchandle (exception_gchandle);
 
-	install_nsautoreleasepool_hooks ();
+	xamarin_install_nsautoreleasepool_hooks ();
 
 #if defined (DEBUG)
 	if (xamarin_gc_pump) {

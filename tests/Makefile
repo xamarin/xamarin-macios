@@ -47,8 +47,6 @@ export MSBuildExtensionsPathFallbackPathsOverride=$(IOS_DESTDIR)/Library/Framewo
 export XAMMAC_FRAMEWORK_PATH=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 
-export PATH := $(abspath $(TOP)/tools/xibuild:$(PATH))
-
 ifneq ($(RELEASE),)
 ifneq ($(BITCODE),)
 CONFIG=Release-bitcode
@@ -195,11 +193,16 @@ $(TOP)/tools/mtouch/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
 	@$(MAKE) -C $(TOP)/src project-files
 	@touch $@
 
-xharness/xharness.exe: $(wildcard xharness/*.cs) xharness/xharness.csproj $(TOP)/tools/mtouch/SdkVersions.cs test.config test-system.config .stamp-src-project-files
+.stamp-build-mono-unit-tests: $(TOP)/.git/modules/external/mono/HEAD
 	make -j8 -C $(TOP)/external/mono/mcs/class -i do-test PROFILE=MONOTOUCH # TODO: This should not be needed and we should get the dlls from the SDK.
 	make -j8 -C $(TOP)/external/mono/mcs/class -i do-xunit-test PROFILE=MONOTOUCH # TODO: This should not be needed and we should get the dlls from the SDK.
-	nuget restore xharness/xharness.csproj
+	make -j8 -C $(TOP)/external/mono/mcs/class -i do-test PROFILE=xammac_net_4_5 # TODO: This should not be needed and we should get the dlls from the SDK.
+	make -j8 -C $(TOP)/external/mono/mcs/class -i do-xunit-test PROFILE=xammac_net_4_5 # TODO: This should not be needed and we should get the dlls from the SDK.
 	nuget restore bcl-test/BCLTests/BCLTests.csproj
+	$(Q) touch $@
+
+xharness/xharness.exe: $(wildcard xharness/*.cs) xharness/xharness.csproj $(TOP)/tools/mtouch/SdkVersions.cs test.config test-system.config .stamp-src-project-files
+	nuget restore xharness/xharness.csproj
 	$(Q_GEN) $(SYSTEM_XIBUILD) -- $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
 
 killall:

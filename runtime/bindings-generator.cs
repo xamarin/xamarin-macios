@@ -66,8 +66,7 @@ namespace Xamarin.BindingMethods.Generator
 				writer.WriteLine ();
 
 				var generated_data = writer.ToString ();
-				if (!File.Exists (fn) || File.ReadAllText (fn) != generated_data)
-					File.WriteAllText (fn, generated_data);
+				File.WriteAllText (fn, generated_data);
 
 				return 0;
 			}

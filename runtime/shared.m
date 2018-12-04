@@ -112,7 +112,7 @@ xamarin_init_nsthread (id obj, bool is_direct, id target, SEL sel, id arg)
  * Ref: https://bugzilla.xamarin.com/show_bug.cgi?id=798
  */
 
-@interface CocoaThreadInitializer : NSObject
+@interface XamarinCocoaThreadInitializer : NSObject
 {
 	init_cocoa_func *the_func;
 }
@@ -120,7 +120,7 @@ xamarin_init_nsthread (id obj, bool is_direct, id target, SEL sel, id arg)
 -(id) initWithFunc: (init_cocoa_func *) func;
 @end
 
-@implementation CocoaThreadInitializer
+@implementation XamarinCocoaThreadInitializer
 {
 }
 -(void) entryPoint: (NSObject *) obj
@@ -144,10 +144,10 @@ xamarin_init_nsthread (id obj, bool is_direct, id target, SEL sel, id arg)
 @end
 
 void
-initialize_cocoa_threads (init_cocoa_func *func)
+xamarin_initialize_cocoa_threads (init_cocoa_func *func)
 {
 	// COOP: no managed memory access: any mode.
-	[[[CocoaThreadInitializer alloc] initWithFunc: func] autorelease];
+	[[[XamarinCocoaThreadInitializer alloc] initWithFunc: func] autorelease];
 }
 
 /* Wrapping threads with NSAutoreleasePool
@@ -233,7 +233,7 @@ thread_end (MonoProfiler *prof, uintptr_t tid)
 }
 
 void
-install_nsautoreleasepool_hooks ()
+xamarin_install_nsautoreleasepool_hooks ()
 {
 	// COOP: executed at startup (and no managed memory access): any mode.
 	xamarin_thread_hash = CFDictionaryCreateMutable (kCFAllocatorDefault, 0, NULL, NULL);

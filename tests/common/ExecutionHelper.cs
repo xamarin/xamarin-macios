@@ -84,7 +84,7 @@ namespace Xamarin.Tests
 			output.Clear ();
 			output_lines = null;
 
-			var rv = ExecutionHelper.Execute ("xibuild", $"-t -- {toolPath} " + string.Format (arguments, args), EnvironmentVariables, output, output, workingDirectory: WorkingDirectory);
+			var rv = ExecutionHelper.Execute (Configuration.XIBuildPath, $"-t -- {toolPath} " + string.Format (arguments, args), EnvironmentVariables, output, output, workingDirectory: WorkingDirectory);
 
 			if ((rv != 0 || always_show_output) && output.Length > 0)
 				Console.WriteLine ("\t" + output.ToString ().Replace ("\n", "\n\t"));
@@ -375,7 +375,7 @@ namespace Xamarin.Tests
 		public static string ToolPath {
 			get
 			{
-				return "xibuild";
+				return Configuration.XIBuildPath;
 			}
 		}
 
