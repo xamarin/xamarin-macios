@@ -1,5 +1,10 @@
-#!/bin/sh
-ABSOLUTE_PATH=$(cd `dirname "${BASH_SOURCE[0]}"` && pwd)/`basename "${BASH_SOURCE[0]}"`
-TOOL_DIR=`dirname $ABSOLUTE_PATH`
+#!/bin/bash -e
 
-mono $TOOL_DIR/bin/Debug/xibuild.exe "$@"
+ABSOLUTE_PATH=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")
+TOOL_DIR=$(dirname "$ABSOLUTE_PATH")
+
+if ! test -f "$TOOL_DIR/bin/Debug/xibuild.exe"; then
+	make -C "$TOOL_DIR"
+fi
+
+mono "$TOOL_DIR/bin/Debug/xibuild.exe" "$@"

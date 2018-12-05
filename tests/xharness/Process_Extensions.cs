@@ -70,7 +70,6 @@ namespace xharness
 		{
 			var stdout_completion = new TaskCompletionSource<bool> ();
 			var stderr_completion = new TaskCompletionSource<bool> ();
-			var exit_completion = new TaskCompletionSource<bool> ();
 			var rv = new ProcessExecutionResult ();
 
 			process.StartInfo.RedirectStandardError = true;
@@ -123,37 +122,28 @@ namespace xharness
 			log.WriteLine (sb);
 
 			process.Start ();
+			var pid = process.Id;
 
 			process.BeginErrorReadLine ();
 			process.BeginOutputReadLine ();
 
 			cancellation_token?.Register (() => {
-				if (!exit_completion.Task.IsCompleted) {
+				if (!process.HasExited) {
 					StderrStream.WriteLine ($"Execution was cancelled.");
 					ProcessHelper.kill (process.Id, 9);
 				}
 			});
 
-			new Thread (() =>
-			{
-				if (timeout.HasValue) {
-					if (!process.WaitForExit ((int) timeout.Value.TotalMilliseconds)) {
-						process.KillTreeAsync (log, diagnostics ?? true).Wait ();
-						rv.TimedOut = true;
-						lock (StderrStream)
-							log.WriteLine ($"Execution timed out after {timeout.Value.TotalSeconds} seconds and the process was killed.");
-					}
+			if (timeout.HasValue) {
+				if (!await process.WaitForExitAsync (timeout.Value)) {
+					await process.KillTreeAsync (log, diagnostics ?? true);
+					rv.TimedOut = true;
+					lock (StderrStream)
+						log.WriteLine ($"{pid} Execution timed out after {timeout.Value.TotalSeconds} seconds and the process was killed.");
 				}
-				process.WaitForExit ();
-				exit_completion.TrySetResult (true);
-				Task.WaitAll (new Task [] { stderr_completion.Task, stdout_completion.Task }, TimeSpan.FromSeconds (1));
-				stderr_completion.TrySetResult (false);
-				stdout_completion.TrySetResult (false);
-			}) {
-				IsBackground = true,
-			}.Start ();
-
-			await Task.WhenAll (stderr_completion.Task, stdout_completion.Task, exit_completion.Task);
+			}
+			await process.WaitForExitAsync ();
+			Task.WaitAll (new Task [] { stderr_completion.Task, stdout_completion.Task }, TimeSpan.FromSeconds (1));
 
 			try {
 				rv.ExitCode = process.ExitCode;
@@ -162,6 +152,38 @@ namespace xharness
 				log.WriteLine ($"Failed to get ExitCode: {e}");
 			}
 			return rv;
+		}
+
+		public async static Task<bool> WaitForExitAsync (this Process process, TimeSpan? timeout = null)
+		{
+			if (process.HasExited)
+				return true;
+
+			var tcs = new TaskCompletionSource<bool> ();
+
+			void ProcessExited (object sender, EventArgs ea)
+			{
+				process.Exited -= ProcessExited;
+				tcs.TrySetResult (true);
+			}
+
+			process.Exited += ProcessExited;
+			process.EnableRaisingEvents = true;
+
+			// Check if process exited again, in case it exited after we checked
+			// the last time, but before we attached the event handler.
+			if (process.HasExited) {
+				process.Exited -= ProcessExited;
+				tcs.TrySetResult (true);
+				return true;
+			}
+
+			if (timeout.HasValue) {
+				return await tcs.Task.TimeoutAfter (timeout.Value);
+			} else {
+				await tcs.Task;
+				return true;
+			}
 		}
 
 		public static Task KillTreeAsync (this Process @this, Log log, bool? diagnostics = true)
