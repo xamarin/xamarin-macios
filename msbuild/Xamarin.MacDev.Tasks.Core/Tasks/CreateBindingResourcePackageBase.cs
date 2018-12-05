@@ -24,6 +24,9 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public string BindingAssembly { get; set; }
 		
+		[Output]
+		public ITaskItem Manifest { get; set; }
+		
 		public override bool Execute ()
 		{
 			// LinkWith must be migrated for NoBindingEmbedding styled binding projects
@@ -39,14 +42,16 @@ namespace Xamarin.MacDev.Tasks {
 			foreach (var nativeRef in NativeReferences)
 				Xamarin.Bundler.FileCopier.UpdateDirectory (nativeRef.ItemSpec, bindingResourcePath);
 
-			CreateManifest (bindingResourcePath);
+			string manifestPath = CreateManifest (bindingResourcePath);
+
+			Manifest = new TaskItem ("Manifest") { ItemSpec = manifestPath };
 
 			return true;
 		}
 
 		string [] NativeReferenceAttributeNames = new string [] { "Kind", "ForceLoad", "SmartLink", "Frameworks", "WeakFrameworks", "LinkerFlags", "NeedsGccExceptionHandling", "IsCxx"};
 
-		void CreateManifest (string resourcePath)
+		string CreateManifest (string resourcePath)
 		{
 			XmlWriterSettings settings = new XmlWriterSettings() {
 				OmitXmlDeclaration = true,
@@ -54,7 +59,8 @@ namespace Xamarin.MacDev.Tasks {
 				IndentChars = "\t",
 			};
 
-			using (var writer = XmlWriter.Create (Path.Combine (resourcePath, "manifest"), settings)) {
+			string manifestPath = Path.Combine (resourcePath, "manifest");
+			using (var writer = XmlWriter.Create (manifestPath, settings)) {
 				writer.WriteStartElement ("BindingAssembly");
 
 				foreach (var nativeRef in NativeReferences) {
@@ -71,6 +77,7 @@ namespace Xamarin.MacDev.Tasks {
 				}
 				writer.WriteEndElement ();
 			}
+			return manifestPath;
 		}
 	}
 }
