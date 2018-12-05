@@ -1309,7 +1309,7 @@ namespace Xamarin.Bundler {
 
 					// libmono-system-native.a needs to be included if it exists in the mono in question
 					string libmonoNative =  Path.Combine (libdir, "libmono-system-native.a");
-					if (File.Exists (libmonoNative)) {
+					if (File.Exists (libmonoNative))
 						args.Append (StringUtils.Quote (libmonoNative)).Append (' ');
 
 					if (MonoNativeMode != MonoNativeMode.None) {
