@@ -40,7 +40,7 @@ namespace Xamarin.MMP.Tests
 			return new Tuple<string, string> (bindingBuildLog, appBuildLog);
 		}
 
-		internal static string SetupAndBuildBindingProject (TI.UnifiedTestConfig binding, bool setupDefaultNativeReference)
+		internal static string SetupAndBuildBindingProject (TI.UnifiedTestConfig binding, bool setupDefaultNativeReference, bool shouldFail = false)
 		{
 			if (setupDefaultNativeReference)
 				binding.ItemGroup += NativeReferenceTests.CreateSingleNativeRef (Path.GetFullPath (NativeReferenceTests.SimpleDylibPath), "Dynamic");
@@ -48,7 +48,7 @@ namespace Xamarin.MMP.Tests
 			binding.StructsAndEnumsConfig = "public class UnifiedWithDepNativeRefLibTestClass {}";
 
 			string projectPath = TI.GenerateBindingLibraryProject (binding);
-			return TI.BuildProject (projectPath, true);
+			return TI.BuildProject (projectPath, true, shouldFail: shouldFail);
 		}
 
 		internal static Tuple <TI.UnifiedTestConfig, TI.UnifiedTestConfig> GenerateTestProject (BindingProjectType type, string tmpDir)

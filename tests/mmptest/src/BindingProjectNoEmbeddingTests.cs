@@ -70,8 +70,8 @@ namespace Xamarin.MMP.Tests
 
 				projects.Item1.LinkWithName = "SimpleClassDylib.dylib";
 
-				string libBuildLog = BindingProjectTests.SetupAndBuildBindingProject (projects.Item1, false);
-				Assert.True (libBuildLog.Contains ("NoBindingEmbedding style binding projects must have native reference"), $"Did not fail as expected: {TI.PrintRedirectIfLong (libBuildLog)}");
+				string libBuildLog = BindingProjectTests.SetupAndBuildBindingProject (projects.Item1, false, shouldFail: true);
+				Assert.True (libBuildLog.Contains ("Can't create a binding resource package unless there are native references in the binding project."), $"Did not fail as expected: {TI.PrintRedirectIfLong (libBuildLog)}");
 			});
 		}
 
