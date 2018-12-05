@@ -2180,7 +2180,8 @@ namespace Xamarin.Bundler {
 				 * between "interp"->"aot'd methods using gsharedvt", so we
 				 * fall back to the interp and thus need the IL not to be
 				 * stripped out. Once Mono supports this, we can add back the
-				 * more precise check. */
+				 * more precise check.
+				 * See https://github.com/mono/mono/issues/11942 */
 				if (UseInterpreter)
 					return false;
 				return true;
