@@ -375,6 +375,7 @@ namespace Xamarin.Bundler {
 
 		static void LogNativeReference (NativeReferenceMetadata metadata)
 		{
+			Driver.Log (3, "    LibraryName: {0}", metadata.LibraryName);
 			Driver.Log (3, "    From: {0}", metadata.Attribute != null ? "LinkWith" : "Binding Manifest");
 			Driver.Log (3, "    ForceLoad: {0}", metadata.ForceLoad);
 			Driver.Log (3, "    Frameworks: {0}", metadata.Frameworks);
