@@ -14,7 +14,7 @@ namespace ImageIO {
 
 	// untyped enum -> CGImageMetadata.h
 	// note: not used in any API
-	[iOS (7,0), Mac (10,8)]
+	[iOS (7,0)]
 	[ErrorDomain ("kCFErrorDomainCGImageMetadata")]
 	public enum CGImageMetadataErrors {
 		Unknown = 0,
@@ -25,7 +25,7 @@ namespace ImageIO {
 	}
 
 	// untyped enum -> CGImageMetadata.h
-	[iOS (7,0), Mac (10,8)]
+	[iOS (7,0)]
 	public enum CGImageMetadataType {
 		Invalid = -1,
 		Default = 0,

@@ -1048,7 +1048,6 @@ namespace PdfKit {
 		[Export ("fieldName")]
 		string FieldName { get; set; }
 
-		[Mac (10, 8)]
 		[Export ("attributedStringValue")]
 		NSAttributedString AttributedStringValue { get; set; }
 
@@ -1104,7 +1103,6 @@ namespace PdfKit {
 		[Export ("point")]
 		CGPoint Point { get; }
 
-		[Mac (10, 7)]
 		[Export ("zoom")]
 		nfloat Zoom { get; set; }
 
@@ -1359,7 +1357,6 @@ namespace PdfKit {
 		PdfSelection GetSelection (PdfPage startPage, nint startCharIndex, PdfPage endPage, nint endCharIndex);
 
 		[NoiOS]
-		[Mac (10,7)]
 		[Export ("printOperationForPrintInfo:scalingMode:autoRotate:")]
 		[return: NullAllowed]
 		NSPrintOperation GetPrintOperation ([NullAllowed] NSPrintInfo printInfo, PdfPrintScalingMode scaleMode, bool doRotate);
@@ -1600,11 +1597,9 @@ namespace PdfKit {
 		[Export ("boundsForPage:")]
 		CGRect GetBoundsForPage (PdfPage page);
 
-		[Mac (10, 7)]
 		[Export ("numberOfTextRangesOnPage:")]
 		nuint GetNumberOfTextRanges (PdfPage page);
 
-		[Mac (10, 7)]
 		[Export ("rangeAtIndex:onPage:")]
 		NSRange GetRange (nuint index, PdfPage page);
 
@@ -1791,7 +1786,6 @@ namespace PdfKit {
 		[Export ("backgroundColor")]
 		NSColor BackgroundColor { get; set; }
 
-		[Mac (10,7)]
 		[Export ("interpolationQuality", ArgumentSemantic.Assign)]
 		PdfInterpolationQuality InterpolationQuality { get; set; }
 

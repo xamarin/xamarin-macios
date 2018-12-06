@@ -194,6 +194,25 @@ struct Managed_NSObject {
 	uint8_t flags;
 };
 
+static void
+xamarin_add_internal_call (const char *name, const void *method)
+{
+	/* COOP: With cooperative GC, icalls will run, like manageed methods,
+	 * in GC Unsafe mode, avoiding a thread state trandition.  In return
+	 * the icalls must guarantee that they won't block, or run indefinitely
+	 * without a safepoint, by manually performing a transition to GC Safe
+	 * mode.  With backward-compatible hybrid GC, icalls run in GC Safe
+	 * mode and the Mono API functions take care of thread state
+	 * transitions, so don't need to perform GC thread state transitions
+	 * themselves.
+	 *
+	 */
+	if (xamarin_is_gc_coop)
+		mono_dangerous_add_raw_internal_call (name, method);
+	else
+		mono_add_internal_call (name, method);
+}
+
 id
 xamarin_get_nsobject_handle (MonoObject *obj)
 {
@@ -881,7 +900,7 @@ gc_enable_new_refcount (void)
 
 	mono_gc_toggleref_register_callback (gc_toggleref_callback);
 
-	mono_add_internal_call (xamarin_use_new_assemblies ? "Foundation.NSObject::RegisterToggleRef" : PRODUCT_COMPAT_NAMESPACE ".Foundation.NSObject::RegisterToggleRef", (const void *) gc_register_toggleref);
+	xamarin_add_internal_call (xamarin_use_new_assemblies ? "Foundation.NSObject::RegisterToggleRef" : PRODUCT_COMPAT_NAMESPACE ".Foundation.NSObject::RegisterToggleRef", (const void *) gc_register_toggleref);
 	mono_profiler_install ((MonoProfiler *) prof, NULL);
 	mono_profiler_install_gc (gc_event_callback, NULL);
 }
@@ -1359,8 +1378,8 @@ xamarin_initialize ()
 	nsvalue_class = get_class_from_name (platform_image, foundation, "NSValue", true);
 	nsstring_class = get_class_from_name (platform_image, foundation, "NSString", true);
 
-	mono_add_internal_call (xamarin_use_new_assemblies ? "Foundation.NSObject::xamarin_release_managed_ref" : PRODUCT_COMPAT_NAMESPACE ".Foundation.NSObject::xamarin_release_managed_ref", (const void *) xamarin_release_managed_ref);
-	mono_add_internal_call (xamarin_use_new_assemblies ? "Foundation.NSObject::xamarin_create_managed_ref" : PRODUCT_COMPAT_NAMESPACE ".Foundation.NSObject::xamarin_create_managed_ref", (const void *) xamarin_create_managed_ref);
+	xamarin_add_internal_call (xamarin_use_new_assemblies ? "Foundation.NSObject::xamarin_release_managed_ref" : PRODUCT_COMPAT_NAMESPACE ".Foundation.NSObject::xamarin_release_managed_ref", (const void *) xamarin_release_managed_ref);
+	xamarin_add_internal_call (xamarin_use_new_assemblies ? "Foundation.NSObject::xamarin_create_managed_ref" : PRODUCT_COMPAT_NAMESPACE ".Foundation.NSObject::xamarin_create_managed_ref", (const void *) xamarin_create_managed_ref);
 
 	runtime_initialize = mono_class_get_method_from_name (runtime_class, "Initialize", 1);
 

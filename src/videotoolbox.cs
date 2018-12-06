@@ -14,7 +14,7 @@ using AVFoundation;
 
 namespace VideoToolbox {
 
-	[Mac (10,8), iOS (8,0), TV (10,2)]
+	[iOS (8,0), TV (10,2)]
 	[Static]
 	interface VTCompressionPropertyKey {
 		// Buffers
@@ -172,7 +172,7 @@ namespace VideoToolbox {
 		NSString EncoderId { get; }
 	}
 
-	[Mac (10,8), iOS (8,0), TV (10,2)]
+	[iOS (8,0), TV (10,2)]
 	[StrongDictionary ("VTCompressionPropertyKey")]
 	interface VTCompressionProperties {
 
@@ -280,7 +280,7 @@ namespace VideoToolbox {
 		string EncoderId { get; set; }
 	}
 
-	[Mac (10,8), iOS (8,0), TV (10,2)]
+	[iOS (8,0), TV (10,2)]
 	[Static]
 	interface VTProfileLevelKeys {
 		// HEVC
@@ -474,7 +474,7 @@ namespace VideoToolbox {
 		NSString CABAC { get; } 
 	}
 		
-	[Mac (10,8), iOS (8,0), TV (10,2)]
+	[iOS (8,0), TV (10,2)]
 	[StrongDictionary ("VTVideoEncoderSpecificationKeys")]
 	interface VTVideoEncoderSpecification {
 
@@ -490,7 +490,7 @@ namespace VideoToolbox {
 		string EncoderID { get; set; }
 	}
 
-	[Mac (10,8), iOS (8,0), TV (10,2)]
+	[iOS (8,0), TV (10,2)]
 	[Static]
 	interface VTVideoEncoderSpecificationKeys {
 
@@ -506,7 +506,7 @@ namespace VideoToolbox {
 		NSString EncoderID { get; }
 	}
 
-	[Mac (10,8), iOS (8,0), TV (10,2)]
+	[iOS (8,0), TV (10,2)]
 	[StrongDictionary ("VTEncodeFrameOptionKey")]
 	interface VTEncodeFrameOptions {
 
@@ -514,7 +514,7 @@ namespace VideoToolbox {
 		bool ForceKeyFrame { get; set; }
 	}
 
-	[Mac (10,8), iOS (8,0), TV (10,2)]
+	[iOS (8,0), TV (10,2)]
 	[Static]
 	interface VTEncodeFrameOptionKey {
 		// Per-frame configuration
@@ -523,7 +523,7 @@ namespace VideoToolbox {
 		NSString ForceKeyFrame { get; } 
 	}
 
-	[Mac (10,8), iOS (8,0), TV (10,2)]
+	[iOS (8,0), TV (10,2)]
 	[Static]
 	interface VTDecompressionPropertyKey {
 		// Pixel buffer pools
@@ -647,7 +647,7 @@ namespace VideoToolbox {
 		NSString PixelTransferProperties { get; }
 	}
 
-	[Mac (10,8), iOS (8,0), TV (10,2)]
+	[iOS (8,0), TV (10,2)]
 	[StrongDictionary ("VTDecompressionPropertyKey")]
 	interface VTDecompressionProperties	{
 		
@@ -760,7 +760,7 @@ namespace VideoToolbox {
 		NSString PreferredDecoderGpuRegistryId { get; }
 	}
 
-	[Mac (10,8), iOS (8,0), TV (10,2)]
+	[iOS (8,0), TV (10,2)]
 	[StrongDictionary ("VTDecompressionResolutionKeys")]
 	interface VTDecompressionResolutionOptions {
 		[Export ("Width")]
@@ -770,7 +770,7 @@ namespace VideoToolbox {
 		float Height { get; set; }
 	}
 
-	[Mac (10,8), iOS (8,0), TV (10,2)]
+	[iOS (8,0), TV (10,2)]
 	[Static]
 	interface VTDecompressionResolutionKeys {
 		[Field ("kVTDecompressionResolutionKey_Width")]
@@ -781,7 +781,7 @@ namespace VideoToolbox {
 	}
 
 	// VTSession.h
-	[Mac (10,8), iOS (8,0), TV (10,2)]
+	[iOS (8,0), TV (10,2)]
 	[StrongDictionary ("VTPropertyKeys")]
 	interface VTPropertyOptions {
 		[Export ("ShouldBeSerialized")]
@@ -800,7 +800,7 @@ namespace VideoToolbox {
 		NSString Documentation { get; set; }
 	}
 
-	[Mac (10,8), iOS (8,0), TV (10,2)]
+	[iOS (8,0), TV (10,2)]
 	[Static]
 	interface VTPropertyKeys {
 		[Field ("kVTPropertyTypeKey")]
@@ -825,7 +825,7 @@ namespace VideoToolbox {
 		NSString DocumentationKey { get; }
 	}
 
-	[Mac (10,8), iOS (8,0), TV (10,2)]
+	[iOS (8,0), TV (10,2)]
 	[Static]
 	interface VTPropertyTypeKeys {
 		[Field ("kVTPropertyType_Boolean")]
@@ -838,7 +838,7 @@ namespace VideoToolbox {
 		NSString Number { get; }
 	}
 
-	[Mac (10,8), iOS (8,0), TV (10,2)]
+	[iOS (8,0), TV (10,2)]
 	[Static]
 	interface VTPropertyReadWriteStatusKeys {
 		[Field ("kVTPropertyReadWriteStatus_ReadOnly")]
@@ -849,7 +849,7 @@ namespace VideoToolbox {
 	}
 
 	// VTVideoEncoderList.h
-	[Mac (10,8), iOS (8,0), TV (10,2)]
+	[iOS (8,0), TV (10,2)]
 	[Static]
 	[Internal]
 	interface VTVideoEncoderList {
@@ -877,7 +877,7 @@ namespace VideoToolbox {
 		NSString DoNotDelete { get; }
 	}
 
-	[Mac (10,8), iOS (8,0), TV (10,2)]
+	[iOS (8,0), TV (10,2)]
 	[StrongDictionary ("VTMultiPassStorageCreationOptionKeys")]
 	interface VTMultiPassStorageCreationOptions {
 		[Export ("DoNotDelete")]
@@ -885,7 +885,7 @@ namespace VideoToolbox {
 	}
 
 	// VTPixelTransferProperties are available in iOS 9 radar://22614931 https://trello.com/c/bTl6hRu9
-	[Mac (10,8), iOS (9,0), TV (10,2)]
+	[iOS (9,0), TV (10,2)]
 	[StrongDictionary ("VTPixelTransferPropertyKeys")]
 	interface VTPixelTransferProperties {
 		[StrongDictionary]
@@ -902,7 +902,7 @@ namespace VideoToolbox {
 	}
 
 	// VTPixelTransferProperties are available in iOS 9 radar://22614931 https://trello.com/c/bTl6hRu9
-	[Mac (10,8), iOS (9,0), TV (10,2)]
+	[iOS (9,0), TV (10,2)]
 	[Static]
 	[AdvancedAttribute]
 	interface VTPixelTransferPropertyKeys {

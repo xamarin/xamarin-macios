@@ -112,6 +112,9 @@
     <Compile Include="src\AssemblyReferencesTests.cs" />
     <Compile Include="src\PackageReferenceTests.cs" />
     <Compile Include="src\BindingProjectNoEmbeddingTests.cs" />
+    <Compile Include="..\..\tools\mmp\SdkVersions.cs">
+      <Link>SdkVersions.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
