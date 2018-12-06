@@ -56,7 +56,6 @@ namespace GameKit {
 
 	// untyped enum -> GKPublicConstants.h
 	[Deprecated (PlatformName.iOS, 7, 0)]
-	[Mac (10, 8)]
 	[Deprecated (PlatformName.MacOSX, 10, 10)]
 	public enum GKSendDataMode {
 		Reliable,
@@ -65,7 +64,6 @@ namespace GameKit {
 
 	// untyped enum -> GKPublicConstants.h
 	[Deprecated (PlatformName.iOS, 7, 0)]
-	[Mac (10, 8)]
 	[Deprecated (PlatformName.MacOSX, 10, 10)]
 	public enum GKSessionMode {
 	    Server, 
@@ -75,7 +73,6 @@ namespace GameKit {
 
 	// untyped enum -> GKPublicConstants.h
 	[Deprecated (PlatformName.iOS, 7, 0)]
-	[Mac (10, 8)]
 	[Deprecated (PlatformName.MacOSX, 10, 10)]
 	public enum GKPeerConnectionState {
 		Available,
@@ -185,7 +182,6 @@ namespace GameKit {
 
 	// NSInteger -> GKMatch.h
 	[Deprecated (PlatformName.iOS, 7, 0)]
-	[Mac (10, 8)]
 	[Deprecated (PlatformName.MacOSX, 10, 10)]
 	[Native]
 	public enum GKMatchSendDataMode : long {

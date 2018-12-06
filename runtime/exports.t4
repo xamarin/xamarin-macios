@@ -311,6 +311,11 @@
 			"const void *", "method"
 		),
 
+		new Export (true, "void", "mono_dangerous_add_raw_internal_call",
+			"const char *", "name",
+			"const void *", "method"
+		),
+
 		new Export ("MonoMethodSignature *", "mono_method_signature",
 			"MonoMethod *", "method"
 		),

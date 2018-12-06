@@ -26,7 +26,7 @@ namespace CoreMedia {
 	}
 
 	// CMSync.h
-	[iOS (6,0)][Mac (10,8)]
+	[iOS (6,0)]
 	public class CMClock : CMClockOrTimebase
 	{
 		public CMClock (IntPtr handle) : base (handle)
@@ -122,7 +122,7 @@ namespace CoreMedia {
 		ReadOnly					= -12757,
 	}
 
-	[iOS (6,0)][Mac (10,8)]
+	[iOS (6,0)]
 	public class CMTimebase : CMClockOrTimebase
 	{
 		public CMTimebase (IntPtr handle)
@@ -214,7 +214,6 @@ namespace CoreMedia {
 
 		[iOS (6, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'CopyMasterTimebase' instead.")]
-		[Mac (10, 8)]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'CopyMasterTimebase' instead.")]
 		public CMTimebase GetMasterTimebase ()
 		{
@@ -230,7 +229,6 @@ namespace CoreMedia {
 
 		[iOS (6, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'CopyMasterClock' instead.")]
-		[Mac (10, 8)]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'CopyMasterClock' instead.")]
 		public CMClock GetMasterClock ()
 		{
@@ -246,7 +244,6 @@ namespace CoreMedia {
 
 		[iOS (6, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'CopyMaster' instead.")]
-		[Mac (10, 8)]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'CopyMaster' instead.")]
 		public CMClockOrTimebase GetMaster ()
 		{
@@ -262,7 +259,6 @@ namespace CoreMedia {
 
 		[iOS (6, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'CopyUltimateMasterClock' instead.")]
-		[Mac (10, 8)]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'CopyUltimateMasterClock' instead.")]
 		public CMClock GetUltimateMasterClock ()
 		{
@@ -477,7 +473,7 @@ namespace CoreMedia {
 		RateMustBeNonZero			= -12755,
 	}
 
-	[iOS (6,0)][Mac (10,8)]
+	[iOS (6,0)]
 	public class CMClockOrTimebase : IDisposable, INativeObject
 	{
 		internal IntPtr handle;

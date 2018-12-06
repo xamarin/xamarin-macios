@@ -170,11 +170,11 @@ namespace CoreText {
 			return matches;
 		}
 
-		[Mac (10,7), iOS (12,0), TV (12,0), Watch (5,0)]
+		[iOS (12,0), TV (12,0), Watch (5,0)]
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCollectionCreateMatchingFontDescriptorsWithOptions (IntPtr collection, IntPtr options);
 
-		[Mac (10,7), iOS (12,0), TV (12,0), Watch (5,0)]
+		[iOS (12,0), TV (12,0), Watch (5,0)]
 		public CTFontDescriptor [] GetMatchingFontDescriptors (CTFontCollectionOptions options)
 		{
 			var cfArrayRef = CTFontCollectionCreateMatchingFontDescriptorsWithOptions (handle, options == null ? IntPtr.Zero : options.Dictionary.Handle);
