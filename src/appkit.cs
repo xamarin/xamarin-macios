@@ -1159,6 +1159,7 @@ namespace AppKit {
 		[Export ("bezierPathWithRect:")]
 		NSBezierPath FromRect (CGRect rect);
 
+		[ThreadSafe]
 		[Static]
 		[Export ("bezierPathWithOvalInRect:")]
 		NSBezierPath FromOvalInRect (CGRect rect);
@@ -6187,6 +6188,7 @@ namespace AppKit {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crash at runtime (e.g. description). Documentation state: "You don’t create NSFont objects using the alloc and init methods."
 	partial interface NSFont : NSSecureCoding, NSCopying {
+		[ThreadSafe]
 		[Static]
 		[Export ("fontWithName:size:")]
 		NSFont FromFontName (string fontName, nfloat fontSize);
@@ -9711,6 +9713,7 @@ namespace AppKit {
 		[Wrap ("This.StringSize (attributes == null ? null : attributes.Dictionary)")]
 		CGSize StringSize (AppKit.NSStringAttributes attributes);
 
+		[ThreadSafe]
 		[Export ("drawAtPoint:withAttributes:")]
 		void DrawAtPoint (CGPoint point, NSDictionary attributes);
 
