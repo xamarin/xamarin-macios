@@ -1538,8 +1538,8 @@ namespace Xamarin.Bundler {
 			case "winspool":	// windows specific
 			case "c":		// system provided
 			case "objc":            // system provided
-			case "objc.a":		// system provided
-			case "system.b":	// system provided
+			case "objc.a":		// found in swift core libraries
+			case "system.b":	// found in swift core libraries
 			case "system":		// system provided, libSystem.dylib -> CommonCrypto
 			case "x11":		// msvcrt pulled in
 			case "winspool.drv":	// msvcrt pulled in
