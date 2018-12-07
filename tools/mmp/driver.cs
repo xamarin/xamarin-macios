@@ -122,7 +122,8 @@ namespace Xamarin.Bundler {
 		public static bool Force;
 
 		static bool is_extension;
-		static bool frameworks_copied_to_bundle_dir;	// Have we copied any frameworks to Foo.app/Contents/Frameworks?
+		static bool frameworks_copied_to_bundle_dir;    // Have we copied any frameworks to Foo.app/Contents/Frameworks?
+		static bool dylibs_copied_to_bundle_dir => native_libraries_copied_in.Count > 0;
 
 		const string pkg_config = "/Library/Frameworks/Mono.framework/Commands/pkg-config";
 
@@ -828,11 +829,16 @@ namespace Xamarin.Bundler {
 				throw new MonoMacException (5103, true, String.Format ("Failed to compile. Error code - {0}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", ret));
 			}
 			if (frameworks_copied_to_bundle_dir) {
-				int install_ret = XcodeRun ("install_name_tool", string.Format ("{0} -add_rpath @loader_path/../Frameworks", StringUtils.Quote (AppPath)));
+				int install_ret = XcodeRun ("install_name_tool", $"{StringUtils.Quote (AppPath)} -add_rpath @loader_path/../Frameworks");
 				if (install_ret != 0)
 					throw new MonoMacException (5310, true, "install_name_tool failed with an error code '{0}'. Check build log for details.", ret);
 			}
-			
+	    		if (dylibs_copied_to_bundle_dir) {
+				int install_ret = XcodeRun ("install_name_tool", $"{StringUtils.Quote (AppPath)} -add_rpath @loader_path/../{BundleName}"); 
+				if (install_ret != 0)
+					throw new MonoMacException (5310, true, "install_name_tool failed with an error code '{0}'. Check build log for details.", ret);
+			}
+
 			if (generate_plist)
 				GeneratePList ();
 
@@ -1587,7 +1593,9 @@ namespace Xamarin.Bundler {
 			case "winmm":		// windows specific
 			case "winspool":	// windows specific
 			case "c":		// system provided
-			case "objc":		// system provided
+			case "objc":            // system provided
+			case "objc.a":		// found in swift core libraries
+			case "system.b":	// found in swift core libraries
 			case "system":		// system provided, libSystem.dylib -> CommonCrypto
 			case "x11":		// msvcrt pulled in
 			case "winspool.drv":	// msvcrt pulled in
@@ -1668,8 +1676,6 @@ namespace Xamarin.Bundler {
 			if (verbose > 1)
 				Console.WriteLine ("Native library '{0}' copied to application bundle.", Path.GetFileName (real_src));
 
-			// FIXME: should we strip extra architectures (e.g. x64) ? 
-			// that could break the library signature and cause issues on the appstore :(
 			if (GetRealPath (dest) == real_src) {
 				Console.WriteLine ("Dependency {0} was already at destination, skipping.", Path.GetFileName (real_src));
 			}
