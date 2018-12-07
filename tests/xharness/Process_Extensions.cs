@@ -128,9 +128,18 @@ namespace xharness
 			process.BeginOutputReadLine ();
 
 			cancellation_token?.Register (() => {
-				if (!process.HasExited) {
-					StderrStream.WriteLine ($"Execution was cancelled.");
-					ProcessHelper.kill (process.Id, 9);
+				var hasExited = false;
+				try {
+					hasExited = process.HasExited;
+				} catch {
+					// Process.HasExited can sometimes throw exceptions, so
+					// just ignore those and to be safe treat it as the
+					// process didn't exit (the safe option being to not leave
+					// processes behind).
+				}
+				if (!hasExited) {
+					StderrStream.WriteLine ($"Execution of {pid} was cancelled.");
+					ProcessHelper.kill (pid, 9);
 				}
 			});
 
