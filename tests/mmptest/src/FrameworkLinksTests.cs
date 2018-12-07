@@ -38,7 +38,7 @@ namespace Xamarin.MMP.Tests
 
 		void AssertFrameworkMinOSRespected (Dictionary <string, LinkStatus> status)
 		{
-			// Walk rest of frameworks and verify they are weak_framework if newer than 10.7, which is defined in tests/common/mac/Info-Unified.plist
+			// Walk rest of frameworks and verify they are weak_framework if newer than 10.9, which is defined in tests/common/mac/Info-Unified.plist
 			foreach (var entry in status) {
 				LinkStatus linkStatus;
 				Framework currentFramework = Frameworks.MacFrameworks.Find (entry.Key);
@@ -57,7 +57,7 @@ namespace Xamarin.MMP.Tests
 					}
 				}
 				else {
-					linkStatus = currentFramework.Version > new Version (10, 7) ? LinkStatus.Weak : LinkStatus.Strong;
+					linkStatus = currentFramework.Version > SdkVersions.MinOSXVersion ? LinkStatus.Weak : LinkStatus.Strong;
 				}
 				Assert.AreEqual (linkStatus, entry.Value, $"Framework link status of {entry.Key} was {entry.Value} but expected to be {linkStatus}");
 			}

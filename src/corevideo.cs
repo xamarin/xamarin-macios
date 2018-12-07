@@ -244,7 +244,7 @@ namespace CoreVideo {
 
 		[Static]
 		[Wrap ("CVImageBufferColorPrimaries.P22.GetConstant ()")]
-		[iOS (6,0), Mac (10,8)]
+		[iOS (6,0)]
 		NSString ColorPrimaries_P22 { get; }
 
 		[iOS (8,0), Mac (10,10)]
@@ -327,7 +327,7 @@ namespace CoreVideo {
 		[Field ("kCVImageBufferColorPrimaries_SMPTE_C")]
 		SmpteC,
 
-		[iOS (6,0), Mac (10,8)]
+		[iOS (6,0)]
 		[Field ("kCVImageBufferColorPrimaries_P22")]
 		P22,
 	}

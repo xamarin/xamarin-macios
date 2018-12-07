@@ -119,7 +119,6 @@ namespace ImageCaptureCore {
 		[Field ("ICStatusNotificationKey")]
 		NSString NotificationKey { get; }
 
-		[Mac (10, 8)]
 		[Field ("ICStatusCodeKey")]
 		NSString CodeKey { get; }
 

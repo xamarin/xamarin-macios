@@ -42,19 +42,19 @@ namespace ImageIO {
 		public CGColor DestinationBackgroundColor { get; set; }
 
 		// new in iOS 7 and 10.8
-		[iOS (7,0), Mac (10,8)]
+		[iOS (7,0)]
 		public CGImageMetadata Metadata { get; set; }
 
-		[iOS (7,0), Mac (10,8)]
+		[iOS (7,0)]
 		public bool MergeMetadata { get; set; }
 
-		[iOS (7,0), Mac (10,8)]
+		[iOS (7,0)]
 		public bool ShouldExcludeXMP { get; set; }
 
-		[iOS (7,0), Mac (10,8)]
+		[iOS (7,0)]
 		public int? Orientation { get; set; }
 
-		[iOS (7,0), Mac (10,8)]
+		[iOS (7,0)]
 		public DateTime? DateTime { get; set; }
 
 		[Mac (10, 10)]
@@ -141,23 +141,23 @@ namespace ImageIO {
 
 	public partial class CGCopyImageSourceOptions
 	{
-		[iOS (7,0), Mac (10,8)]
+		[iOS (7,0)]
 		public CGImageMetadata Metadata { get; set; }
 
-		[iOS (7,0), Mac (10,8)]
+		[iOS (7,0)]
 		public bool MergeMetadata { get; set; }
 
-		[iOS (7,0), Mac (10,8)]
+		[iOS (7,0)]
 		public bool ShouldExcludeXMP { get; set; }
 
 		[Mac (10, 10)]
 		[iOS (8, 0)]
 		public bool ShouldExcludeGPS { get; set; }
 
-		[iOS (7,0), Mac (10,8)]
+		[iOS (7,0)]
 		public DateTime? DateTime { get; set; }
 
-		[iOS (7,0), Mac (10,8)]
+		[iOS (7,0)]
 		public int? Orientation { get; set; }
 
 		internal NSMutableDictionary ToDictionary ()
@@ -416,14 +416,14 @@ namespace ImageIO {
 			return success;
 		}
 
-		[iOS (7,0), Mac (10,8)]
+		[iOS (7,0)]
 		[DllImport (Constants.ImageIOLibrary)]
 		extern static void CGImageDestinationAddImageAndMetadata (/* CGImageDestinationRef __nonnull */ IntPtr idst,
 			/* CGImageRef __nonnull */ IntPtr image, /* CGImageMetadataRef __nullable */ IntPtr metadata,
 			/* CFDictionaryRef __nullable */ IntPtr options);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		[iOS (7,0), Mac (10,8)]
+		[iOS (7,0)]
 		public void AddImageAndMetadata (CGImage image, CGImageMetadata meta, NSDictionary options)
 		{
 			if (image == null)
@@ -433,7 +433,7 @@ namespace ImageIO {
 			CGImageDestinationAddImageAndMetadata (handle, image.Handle, m, o);
 		}
 
-		[iOS (7,0), Mac (10,8)]
+		[iOS (7,0)]
 		public void AddImageAndMetadata (CGImage image, CGImageMetadata meta, CGImageDestinationOptions options)
 		{
 			NSDictionary o = null;
@@ -448,7 +448,7 @@ namespace ImageIO {
 			}
 		}
 
-		[iOS (7,0), Mac (10,8)]
+		[iOS (7,0)]
 		[DllImport (Constants.ImageIOLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGImageDestinationCopyImageSource (/* CGImageDestinationRef __nonnull */ IntPtr idst,
@@ -456,7 +456,7 @@ namespace ImageIO {
 			/* CFErrorRef* */ out IntPtr err);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		[iOS (7,0), Mac (10,8)]
+		[iOS (7,0)]
 		public bool CopyImageSource (CGImageSource image, NSDictionary options, out NSError error)
 		{
 			if (image == null)
@@ -468,7 +468,7 @@ namespace ImageIO {
 			return result;
 		}
 
-		[iOS (7,0), Mac (10,8)]
+		[iOS (7,0)]
 #if XAMCORE_2_0
 		public bool CopyImageSource (CGImageSource image, CGCopyImageSourceOptions options, out NSError error)
 #else

@@ -28,7 +28,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if XAMARIN_APPLETLS || __WATCHOS__
+#if XAMARIN_APPLETLS || WATCH
 #define NATIVE_APPLE_CERTIFICATE
 #endif
 
@@ -119,7 +119,7 @@ namespace Security {
 				return;
 			}
 
-			using (NSData cert = NSData.FromArray (impl.GetRawCertData ())) {
+			using (NSData cert = NSData.FromArray (impl.RawData)) {
 				Initialize (cert);
 			}
 		}
@@ -193,7 +193,8 @@ namespace Security {
 			if (handle == IntPtr.Zero)
 				throw new ObjectDisposedException ("SecCertificate");
 
-			return new X509Certificate (handle);
+			var impl = new Mono.AppleTls.X509CertificateImplApple (handle, false);
+			return new X509Certificate (impl);
 #else
 			return new X509Certificate (GetRawData ());
 #endif
@@ -348,7 +349,6 @@ namespace Security {
 		}
 
 #if MONOMAC
-		[Mac (10,7)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* __nullable CFDataRef */ IntPtr SecCertificateCopySerialNumber (IntPtr /* SecCertificateRef */ certificate, IntPtr /* CFErrorRef * */ error);
 #else
@@ -357,7 +357,6 @@ namespace Security {
 		static extern /* __nullable CFDataRef */ IntPtr SecCertificateCopySerialNumber (IntPtr /* SecCertificateRef */ certificate);
 #endif
 		[iOS (10,3)]
-		[Mac (10,7)]
 		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'GetSerialNumber(out NSError)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10,13, message: "Use 'GetSerialNumber(out NSError)' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'GetSerialNumber(out NSError)' instead.")]
