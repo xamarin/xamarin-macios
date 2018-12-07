@@ -1151,7 +1151,8 @@ namespace AppKit {
 		[Export ("setSelectedObjects:"), Protected]
 		bool SetSelectedObjects (NSObject [] objects);
 	}
-	
+
+	[ThreadSafe]
 	[BaseType (typeof (NSObject))]
 	interface NSBezierPath : NSSecureCoding, NSCopying {
 
@@ -6184,6 +6185,7 @@ namespace AppKit {
 		NSFontPanelModeMask GetValidModes (NSFontPanel fontPanel);
 	}
 
+	[ThreadSafe]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crash at runtime (e.g. description). Documentation state: "You don’t create NSFont objects using the alloc and init methods."
 	partial interface NSFont : NSSecureCoding, NSCopying {
@@ -9703,6 +9705,7 @@ namespace AppKit {
 		CGRect TotalBounds { get; }
 	}
 
+	[ThreadSafe]
 	[Category, BaseType (typeof (NSString))]
 	interface NSStringDrawing_NSString {
 		[Export ("sizeWithAttributes:")]
