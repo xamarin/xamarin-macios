@@ -1151,7 +1151,8 @@ namespace AppKit {
 		[Export ("setSelectedObjects:"), Protected]
 		bool SetSelectedObjects (NSObject [] objects);
 	}
-	
+
+	[ThreadSafe]
 	[BaseType (typeof (NSObject))]
 	interface NSBezierPath : NSSecureCoding, NSCopying {
 
@@ -1159,7 +1160,6 @@ namespace AppKit {
 		[Export ("bezierPathWithRect:")]
 		NSBezierPath FromRect (CGRect rect);
 
-		[ThreadSafe]
 		[Static]
 		[Export ("bezierPathWithOvalInRect:")]
 		NSBezierPath FromOvalInRect (CGRect rect);
@@ -6185,10 +6185,10 @@ namespace AppKit {
 		NSFontPanelModeMask GetValidModes (NSFontPanel fontPanel);
 	}
 
+	[ThreadSafe]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crash at runtime (e.g. description). Documentation state: "You don’t create NSFont objects using the alloc and init methods."
 	partial interface NSFont : NSSecureCoding, NSCopying {
-		[ThreadSafe]
 		[Static]
 		[Export ("fontWithName:size:")]
 		NSFont FromFontName (string fontName, nfloat fontSize);
@@ -9705,6 +9705,7 @@ namespace AppKit {
 		CGRect TotalBounds { get; }
 	}
 
+	[ThreadSafe]
 	[Category, BaseType (typeof (NSString))]
 	interface NSStringDrawing_NSString {
 		[Export ("sizeWithAttributes:")]
@@ -9713,7 +9714,6 @@ namespace AppKit {
 		[Wrap ("This.StringSize (attributes == null ? null : attributes.Dictionary)")]
 		CGSize StringSize (AppKit.NSStringAttributes attributes);
 
-		[ThreadSafe]
 		[Export ("drawAtPoint:withAttributes:")]
 		void DrawAtPoint (CGPoint point, NSDictionary attributes);
 
