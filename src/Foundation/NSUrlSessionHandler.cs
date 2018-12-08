@@ -27,13 +27,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Text;
 
 #if UNIFIED
 using CoreFoundation;
@@ -53,8 +56,71 @@ namespace System.Net.Http {
 #else
 namespace Foundation {
 #endif
+
+	// useful extensions for the class in order to set it in a header
+	static class NSHttpCookieExtensions
+	{
+		private static bool AppendSegment(StringBuilder builder, bool first, string name, string value)
+		{
+			if (first)
+			{
+				first = false;
+			}
+			else
+			{
+				builder.Append("; ");
+			}
+
+			builder.Append(name);
+			if (value != null)
+			{
+				builder.Append("=");
+				builder.Append(value);
+			}
+			return first;
+		}
+
+		// returns the header for a cookie
+		public static string GetHeaderValue (this NSHttpCookie cookie)
+		{
+			StringBuilder header = new StringBuilder();
+			bool first = true;
+			first = AppendSegment (header, first, cookie.Name, cookie.Value);
+			first = AppendSegment (header, first, NSHttpCookie.KeyPath.ToString (), cookie.Path.ToString ());
+			first = AppendSegment (header, first, NSHttpCookie.KeyDomain.ToString (), cookie.Domain.ToString ());
+			if (cookie.Comment != null)
+				first = AppendSegment (header, first, NSHttpCookie.KeyComment.ToString (), cookie.Comment.ToString());
+
+			if (cookie.CommentUrl != null)
+				first = AppendSegment (header, first, NSHttpCookie.KeyCommentUrl.ToString (), cookie.CommentUrl.ToString());
+
+			if (cookie.Properties.ContainsKey (NSHttpCookie.KeyDiscard))
+				first = AppendSegment (header, first, NSHttpCookie.KeyDiscard.ToString (), null);
+
+			if (cookie.ExpiresDate != null) {
+				// Format according to RFC1123; 'r' uses invariant info (DateTimeFormatInfo.InvariantInfo)
+				var dateStr = ((DateTime) cookie.ExpiresDate).ToUniversalTime().ToString("r", CultureInfo.InvariantCulture);
+				first = AppendSegment (header, first, NSHttpCookie.KeyExpires.ToString (), dateStr);
+			}
+
+			if (cookie.Properties.ContainsKey (NSHttpCookie.KeyMaximumAge)) {
+				var timeStampString = (NSString) cookie.Properties[NSHttpCookie.KeyMaximumAge];
+				first = AppendSegment (header, first, NSHttpCookie.KeyMaximumAge.ToString (), timeStampString );
+			}
+
+			if (cookie.IsSecure)
+				first = AppendSegment (header, first, NSHttpCookie.KeySecure.ToString(), null);
+
+			if (cookie.IsHttpOnly)
+				first = AppendSegment (header, first, "httponly", null); // Apple does not show the key for the httponly
+
+			return header.ToString();
+		}
+	}
+
 	public partial class NSUrlSessionHandler : HttpMessageHandler
 	{
+		private const string SetCookie = "Set-Cookie";
 		readonly Dictionary<string, string> headerSeparators = new Dictionary<string, string> {
 			["User-Agent"] = " ",
 			["Server"] = " "
@@ -265,10 +331,20 @@ namespace Foundation {
 					foreach (var v in urlResponse.AllHeaderFields) {
 						// NB: Cocoa trolling us so hard by giving us back dummy dictionary entries
 						if (v.Key == null || v.Value == null) continue;
+						// NSUrlSession tries to be smart with cookies, we will not use the raw value but the ones provided by the cookie storage
+						if (v.Key.ToString () == SetCookie) continue;
 
 						httpResponse.Headers.TryAddWithoutValidation (v.Key.ToString (), v.Value.ToString ());
 						httpResponse.Content.Headers.TryAddWithoutValidation (v.Key.ToString (), v.Value.ToString ());
 					}
+
+					// the cookie storage knows about more cookies than the response, some of them are stored per session. In order
+					// to get all of them, we need to use the task.
+					session.Configuration.HttpCookieStorage.GetCookiesForTask (dataTask, (cookies) => {
+						for (var index = 0; index < cookies.Length; index++) {
+							httpResponse.Headers.TryAddWithoutValidation (SetCookie, cookies [index].GetHeaderValue ());
+						}
+					});
 
 					inflight.Response = httpResponse;
 
