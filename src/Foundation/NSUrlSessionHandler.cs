@@ -63,17 +63,12 @@ namespace Foundation {
 		private static bool AppendSegment(StringBuilder builder, bool first, string name, string value)
 		{
 			if (first)
-			{
 				first = false;
-			}
 			else
-			{
 				builder.Append("; ");
-			}
 
 			builder.Append(name);
-			if (value != null)
-			{
+			if (value != null) {
 				builder.Append("=");
 				builder.Append(value);
 			}
