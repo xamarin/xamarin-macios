@@ -78,11 +78,13 @@ namespace Foundation {
 		// returns the header for a cookie
 		public static string GetHeaderValue (this NSHttpCookie cookie)
 		{
-			StringBuilder header = new StringBuilder();
-			bool first = true;
+			var header = new StringBuilder();
+			var first = true;
 			first = AppendSegment (header, first, cookie.Name, cookie.Value);
 			first = AppendSegment (header, first, NSHttpCookie.KeyPath.ToString (), cookie.Path.ToString ());
 			first = AppendSegment (header, first, NSHttpCookie.KeyDomain.ToString (), cookie.Domain.ToString ());
+			first = AppendSegment (header, first, NSHttpCookie.KeyVersion.ToString (), cookie.Version.ToString ());
+
 			if (cookie.Comment != null)
 				first = AppendSegment (header, first, NSHttpCookie.KeyComment.ToString (), cookie.Comment.ToString());
 
