@@ -127,7 +127,8 @@ namespace Xamarin.MMP.Tests
 				var projects = GenerateTestProject (type, tmpDir);
 				if (noEmbedding)
 					SetNoEmbedding (projects.Item1);
-				var logs = SetupAndBuildLinkedTestProjects (projects.Item1, projects.Item2, tmpDir, useProjectReference: false, setupDefaultNativeReference: false);
+
+				var logs = SetupAndBuildLinkedTestProjects (projects.Item1, projects.Item2, tmpDir, useProjectReference: false, setupDefaultNativeReference: noEmbedding);
 
 				Assert.False (logs.Item1.Contains ("mcs"), "Bindings project must not use mcs:\n" + logs.Item1);
 				Assert.True (logs.Item1.Contains ("csc"), "Bindings project must use csc:\n" + logs.Item1); 
