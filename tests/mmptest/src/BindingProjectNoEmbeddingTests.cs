@@ -239,7 +239,7 @@ namespace Xamarin.MMP.Tests
 				var projects = BindingProjectTests.GenerateTestProject (BindingProjectType.Modern, tmpDir);
 				BindingProjectTests.SetNoEmbedding (projects.Item1);
 				
-				string libBuildLog = BindingProjectTests.SetupAndBuildBindingProject (projects.Item1, false);
+				string libBuildLog = BindingProjectTests.SetupAndBuildBindingProject (projects.Item1, true);
 
 				TI.CleanUnifiedProject (Path.Combine (tmpDir, projects.Item1.ProjectName));
 				Assert.False (Directory.Exists (Path.Combine (tmpDir, "bin/Debug/MobileBinding.resources")), "Resource bundle was not cleaned up");
