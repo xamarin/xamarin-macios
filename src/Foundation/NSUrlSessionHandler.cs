@@ -60,19 +60,16 @@ namespace Foundation {
 	// useful extensions for the class in order to set it in a header
 	static class NSHttpCookieExtensions
 	{
-		private static bool AppendSegment(StringBuilder builder, bool first, string name, string value)
+		static void AppendSegment(StringBuilder builder, string name, string value)
 		{
-			if (first)
-				first = false;
-			else
-				builder.Append("; ");
+			if (builder.Length > 0)
+				builder.Append ("; ");
 
-			builder.Append(name);
+			builder.Append (name);
 			if (value != null) {
 				builder.Append("=");
 				builder.Append(value);
 			}
-			return first;
 		}
 
 		// returns the header for a cookie
@@ -80,38 +77,38 @@ namespace Foundation {
 		{
 			var header = new StringBuilder();
 			var first = true;
-			first = AppendSegment (header, first, cookie.Name, cookie.Value);
-			first = AppendSegment (header, first, NSHttpCookie.KeyPath.ToString (), cookie.Path.ToString ());
-			first = AppendSegment (header, first, NSHttpCookie.KeyDomain.ToString (), cookie.Domain.ToString ());
-			first = AppendSegment (header, first, NSHttpCookie.KeyVersion.ToString (), cookie.Version.ToString ());
+			AppendSegment (header, cookie.Name, cookie.Value);
+			AppendSegment (header, NSHttpCookie.KeyPath.ToString (), cookie.Path.ToString ());
+			AppendSegment (header, NSHttpCookie.KeyDomain.ToString (), cookie.Domain.ToString ());
+			AppendSegment (header, NSHttpCookie.KeyVersion.ToString (), cookie.Version.ToString ());
 
 			if (cookie.Comment != null)
-				first = AppendSegment (header, first, NSHttpCookie.KeyComment.ToString (), cookie.Comment.ToString());
+				AppendSegment (header, NSHttpCookie.KeyComment.ToString (), cookie.Comment.ToString());
 
 			if (cookie.CommentUrl != null)
-				first = AppendSegment (header, first, NSHttpCookie.KeyCommentUrl.ToString (), cookie.CommentUrl.ToString());
+				AppendSegment (header, NSHttpCookie.KeyCommentUrl.ToString (), cookie.CommentUrl.ToString());
 
 			if (cookie.Properties.ContainsKey (NSHttpCookie.KeyDiscard))
-				first = AppendSegment (header, first, NSHttpCookie.KeyDiscard.ToString (), null);
+				AppendSegment (header, NSHttpCookie.KeyDiscard.ToString (), null);
 
 			if (cookie.ExpiresDate != null) {
 				// Format according to RFC1123; 'r' uses invariant info (DateTimeFormatInfo.InvariantInfo)
-				var dateStr = ((DateTime) cookie.ExpiresDate).ToUniversalTime().ToString("r", CultureInfo.InvariantCulture);
-				first = AppendSegment (header, first, NSHttpCookie.KeyExpires.ToString (), dateStr);
+				var dateStr = ((DateTime) cookie.ExpiresDate).ToUniversalTime ().ToString("r", CultureInfo.InvariantCulture);
+				AppendSegment (header, NSHttpCookie.KeyExpires.ToString (), dateStr);
 			}
 
 			if (cookie.Properties.ContainsKey (NSHttpCookie.KeyMaximumAge)) {
 				var timeStampString = (NSString) cookie.Properties[NSHttpCookie.KeyMaximumAge];
-				first = AppendSegment (header, first, NSHttpCookie.KeyMaximumAge.ToString (), timeStampString );
+				AppendSegment (header, NSHttpCookie.KeyMaximumAge.ToString (), timeStampString);
 			}
 
 			if (cookie.IsSecure)
-				first = AppendSegment (header, first, NSHttpCookie.KeySecure.ToString(), null);
+				AppendSegment (header, NSHttpCookie.KeySecure.ToString(), null);
 
 			if (cookie.IsHttpOnly)
-				first = AppendSegment (header, first, "httponly", null); // Apple does not show the key for the httponly
+				AppendSegment (header, "httponly", null); // Apple does not show the key for the httponly
 
-			return header.ToString();
+			return header.ToString ();
 		}
 	}
 

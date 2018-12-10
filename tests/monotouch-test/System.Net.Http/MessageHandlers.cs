@@ -106,6 +106,7 @@ namespace MonoTests.System.Net.Http
 			}, () => areEqual);
 
 			Assert.IsTrue (areEqual, $"Cookies are different - Managed {manageCount} vs Native {nativeCount}");
+			Assert.IsNull (ex, "Exception");
 		}
 #endif
 
