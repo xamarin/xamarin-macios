@@ -74,7 +74,6 @@ namespace Foundation {
 		public static string GetHeaderValue (this NSHttpCookie cookie)
 		{
 			var header = new StringBuilder();
-			var first = true;
 			AppendSegment (header, cookie.Name, cookie.Value);
 			AppendSegment (header, NSHttpCookie.KeyPath.ToString (), cookie.Path.ToString ());
 			AppendSegment (header, NSHttpCookie.KeyDomain.ToString (), cookie.Domain.ToString ());
@@ -330,13 +329,10 @@ namespace Foundation {
 						httpResponse.Content.Headers.TryAddWithoutValidation (v.Key.ToString (), v.Value.ToString ());
 					}
 
-					// the cookie storage knows about more cookies than the response, some of them are stored per session. In order
-					// to get all of them, we need to use the task.
-					session.Configuration.HttpCookieStorage.GetCookiesForTask (dataTask, (cookies) => {
-						for (var index = 0; index < cookies.Length; index++) {
-							httpResponse.Headers.TryAddWithoutValidation (SetCookie, cookies [index].GetHeaderValue ());
-						}
-					});
+					var cookies = session.Configuration.HttpCookieStorage.CookiesForUrl (response.Url);
+					for (var index = 0; index < cookies.Length; index++) {
+						httpResponse.Headers.TryAddWithoutValidation (SetCookie, cookies [index].GetHeaderValue ());
+					}
 
 					inflight.Response = httpResponse;
 
