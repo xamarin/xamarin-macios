@@ -815,7 +815,7 @@ namespace Xamarin.Bundler {
 			if (frameworks_copied_to_bundle_dir) {
 				int install_ret = XcodeRun ("install_name_tool", $"{StringUtils.Quote (AppPath)} -add_rpath @loader_path/../Frameworks");
 				if (install_ret != 0)
-					throw new MonoMacException (5310, true, "install_name_tool failed with an error code '{0}'. Check build log for details.", ret);
+					throw new MonoMacException (5310, true, "install_name_tool failed with an error code '{0}'. Check build log for details.", install_ret);
 			}
 	    		if (dylibs_copied_to_bundle_dir) {
 				int install_ret = XcodeRun ("install_name_tool", $"{StringUtils.Quote (AppPath)} -add_rpath @loader_path/../{BundleName}"); 
