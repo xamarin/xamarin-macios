@@ -229,6 +229,7 @@ namespace BCLTestImporter {
 			"xammac_net_4_5_System.Data_xunit-test.dll", // issue https://gist.github.com/mandel-macaque/3f4d1eeca511cb8654fb518cc3bb2e92
 			"xammac_net_4_5_System_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1209
 			"xammac_net_4_5_System.Configuration_test.dll", // issue https://github.com/xamarin/maccore/issues/1189 and https://github.com/xamarin/maccore/issues/1190
+			"xammac_net_4_5_System.Security_xunit-test.dll", // https://github.com/xamarin/maccore/issues/1243
 			
 		};
 
