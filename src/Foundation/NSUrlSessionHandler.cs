@@ -66,10 +66,8 @@ namespace Foundation {
 				builder.Append ("; ");
 
 			builder.Append (name);
-			if (value != null) {
-				builder.Append("=");
-				builder.Append(value);
-			}
+			if (value != null)
+				builder.Append ("=").Append (value);
 		}
 
 		// returns the header for a cookie
