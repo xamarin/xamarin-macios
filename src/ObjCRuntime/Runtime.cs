@@ -22,12 +22,6 @@ using Registrar;
 using AppKit;
 #endif
 
-#if !COREBUILD && (XAMARIN_APPLETLS || XAMARIN_NO_TLS)
-#if !MMP && !MTOUCH && !MTOUCH_TEST
-using Mono.Security.Interface;
-#endif
-#endif
-
 namespace ObjCRuntime {
 	
 	public partial class Runtime {
