@@ -1509,9 +1509,11 @@ build:: build-$(1)
 install-local:: install-$(1)
 clean-local:: clean-$(1)
 
-.stamp-build-$(1): .stamp-build-llvm64 .stamp-build-llvm32 $(MONO_PATH)/configure $(MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe $(MONO_DEPENDENCIES) $(SDK_CONFIG)
-	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(1) $(SDK_ARGS) $(if $(5), XCODE_DIR=$(5))
+.stamp-compile-$(1): .stamp-build-llvm64 .stamp-build-llvm32 $(MONO_PATH)/configure $(MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe $(MONO_DEPENDENCIES) $(SDK_CONFIG)
+	$(MAKE) -C $(MONO_SDK_BUILDDIR) package-ios-$(1) $(SDK_ARGS) $(if $(5), XCODE_DIR=$(5))
 	$(Q) touch $$@
+
+.stamp-build-$(1): .stamp-$(MONO_BUILD_MODE)-$(1)
 
 build-$(1): .stamp-build-$(1)
 
@@ -1520,14 +1522,14 @@ _$(1)_CROSS_TARGETS = \
 
 $(SDK_DESTDIR)/ios-$(1)/bin/$(4): .stamp-build-$(1)
 
-$(PREFIX)/bin/$(3): $(SDK_DESTDIR)/ios-$(1)-release/bin/$(4) | $(PREFIX)/bin
+$(PREFIX)/bin/$(3): $(MONO_SDK_DESTDIR)/ios-$(1)-release/bin/$(4) | $(PREFIX)/bin
 	$(call Q_2,INSTALL ,[CROSS]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $$< $$@
 
 install-$(1): install-$(2) $$(_$(1)_CROSS_TARGETS)
 
 clean-$(1): $(SDK_CONFIG)
-	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-$(1) $(SDK_ARGS)
-	-rm -rf $(SDK_DESTDIR)/$(1) .stamp-build-$(1)
+	$(MAKE) -C $(MONO_SDK_BUILDDIR) clean-ios-$(1) $(SDK_ARGS)
+	-rm -rf $(MONO_SDK_DESTDIR)/$(1) .stamp-build-$(1)
 
 endef
 
