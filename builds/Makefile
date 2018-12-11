@@ -1432,16 +1432,19 @@ endif
 build-llvm32: .stamp-build-llvm .stamp-build-llvm32
 build-llvm64: .stamp-build-llvm .stamp-build-llvm32
 
-.stamp-build-llvm: $(SDK_CONFIG)
-	$(MAKE) -C $(SDK_BUILDDIR) provision-llvm-llvm64 $(SDK_ARGS)
+.stamp-compile-llvm: $(SDK_CONFIG)
+	$(MAKE) -C $(MONO_SDK_BUILDDIR) provision-llvm-llvm64 $(SDK_ARGS)
 	$(Q) touch $@
 
-.stamp-build-llvm32: $(SDK_CONFIG)
-	$(MAKE) -C $(SDK_BUILDDIR) provision-llvm36-llvm32 $(SDK32_ARGS)
+.stamp-compile-llvm32: $(SDK_CONFIG)
+	$(MAKE) -C $(MONO_SDK_BUILDDIR) provision-llvm36-llvm32 $(SDK32_ARGS)
 	$(Q) touch $@
+
+.stamp-build-llvm: .stamp-$(MONO_BUILD_MODE)-llvm
+.stamp-build-llvm32: .stamp-$(MONO_BUILD_MODE)-llvm32
 
 clean-llvm: $(SDK_CONFIG)
-	$(MAKE) -C $(SDK_BUILDDIR) clean-llvm36-llvm32 clean-llvm-llvm64 $(SDK_ARGS)
+	$(MAKE) -C $(MONO_SDK_BUILDDIR) clean-llvm36-llvm32 clean-llvm-llvm64 $(SDK_ARGS)
 	$(RM) .stamp-*-llvm*
 
 .PHONY: install-llvm64 llvm llvm64
@@ -1454,10 +1457,10 @@ LLVM_TARGETS = \
 	$(PREFIX)/LLVM36/bin/opt \
 	$(PREFIX)/LLVM36/bin/llc
 
-$(PREFIX)/LLVM/bin/%: $(SDK_DESTDIR)/llvm-llvm64/bin/% | $(PREFIX)/LLVM/bin
+$(PREFIX)/LLVM/bin/%: $(MONO_SDK_DESTDIR)/llvm-llvm64/bin/% | $(PREFIX)/LLVM/bin
 	$(call Q_2,INSTALL ,[LLVM64]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $^ $@
 
-$(PREFIX)/LLVM36/bin/%: $(SDK_DESTDIR)/llvm36-llvm32/bin/% | $(PREFIX)/LLVM36/bin
+$(PREFIX)/LLVM36/bin/%: $(MONO_SDK_DESTDIR)/llvm36-llvm32/bin/% | $(PREFIX)/LLVM36/bin
 	$(call Q_2,INSTALL ,[LLVM64]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $^ $@
 
 $(PREFIX)/LLVM/bin:
