@@ -3,6 +3,32 @@ include $(TOP)/Make.config
 
 PREFIX=$(abspath $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/)
 
+download: downloads/$(basename $(MONO_FILENAME))
+
+downloads/$(MONO_FILENAME):
+	$(Q) mkdir -p downloads
+	$(Q) echo "Downloading $(MONO_URL)..."
+	$(Q) curl -s -f -L $(MONO_URL) --output $@.tmp
+	$(Q) mv $@.tmp $@
+	$(Q) echo "Downloaded $(MONO_URL)"
+
+downloads/$(basename $(MONO_FILENAME)): downloads/$(MONO_FILENAME)
+	$(Q) echo "Unzipping $(MONO_FILENAME)..."
+	$(Q) rm -Rf $@.tmp
+	$(Q) unzip -q -d $@.tmp $<
+	$(Q) mv $@.tmp $@
+	$(Q) echo "Unzipped $(MONO_FILENAME)"
+
+clean-locals::
+	$(Q) rm -Rf downloads
+
+.stamp-download-%: downloads/$(basename $(MONO_FILENAME))
+	$(Q) touch $@
+
+ifeq ($(MONO_BUILD_FROM_SOURCE),)
+all-local:: download
+endif
+
 IPHONESIMULATOR_SDK=$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk
 IPHONESIMULATOR_PREFIX=$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/usr
 IPHONEOS_SDK=$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphoneos.sdk

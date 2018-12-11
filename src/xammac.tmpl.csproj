@@ -40,7 +40,6 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="Mono.Security" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="build\mac\mobile\**\*.cs">
