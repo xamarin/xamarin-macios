@@ -1,3 +1,4 @@
+downloads
 .stamp*
 .deps.*.mk
 *.config.cache
