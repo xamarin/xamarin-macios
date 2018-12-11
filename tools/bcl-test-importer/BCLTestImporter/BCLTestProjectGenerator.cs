@@ -519,7 +519,7 @@ namespace BCLTestImporter {
 				// generate the required type registration info
 				var generatedCodeDir = Path.Combine (generatedDir, projectDefinition.Name);
 				Directory.CreateDirectory (generatedCodeDir);
-				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType.cs");
+				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType-mac.cs");
 
 				var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (def.name, projectDefinition.IsXUnit,
 					RegisterTypesTemplatePath, platform);
