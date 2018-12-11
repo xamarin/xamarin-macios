@@ -8,7 +8,7 @@ download: downloads/$(basename $(MONO_FILENAME))
 downloads/$(MONO_FILENAME):
 	$(Q) mkdir -p downloads
 	$(Q) echo "Downloading $(MONO_URL)..."
-	$(Q) curl -s -f -L $(MONO_URL) --output $@.tmp
+	$(Q) curl -f -L $(if $(V),-v,-s) $(MONO_URL) --output $@.tmp
 	$(Q) mv $@.tmp $@
 	$(Q) echo "Downloaded $(MONO_URL)"
 
