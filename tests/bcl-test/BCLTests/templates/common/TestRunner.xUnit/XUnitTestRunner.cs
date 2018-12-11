@@ -692,6 +692,9 @@ namespace Xamarin.iOS.UnitTests.XUnit
 				try {
 					OnAssemblyStart (assemblyInfo.Assembly);
 					assemblyElement = Run (assemblyInfo.Assembly, assemblyInfo.FullPath);
+				} catch (FileNotFoundException ex) {
+					OnWarning ($"Assembly '{assemblyInfo.Assembly}' using path '{assemblyInfo.FullPath}' cannot be found on the filesystem. xUnit requires access to actual on-disk file.");
+					OnWarning ($"Exception is '{ex}'");
 				} finally {
 					OnAssemblyFinish (assemblyInfo.Assembly);
 					if (assemblyElement != null)

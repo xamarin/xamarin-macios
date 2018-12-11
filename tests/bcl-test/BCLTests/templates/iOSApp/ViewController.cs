@@ -21,6 +21,8 @@ namespace BCLTests {
 				if (a == null) {
 					Console.WriteLine ($"# WARNING: Unable to load assembly {name}.");
  					continue;
+				} else {
+					Console.WriteLine ($"Loading assembly: {name}.");
 				}
 				yield return new TestAssemblyInfo (a, name);
 			}
