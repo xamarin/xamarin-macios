@@ -63,7 +63,7 @@ namespace BCLTestImporterTests {
 			var testAssemblyDefinition = new BCLTestAssemblyDefinition ("MONOTOUCH_System.Json.Microsoft_xunit-test.dll");
 			var home = Environment.GetEnvironmentVariable ("HOME");
 			var expectedPath = Path.Combine (home, "mcs/class/lib", "xammac", "tests", testAssemblyDefinition.Name);
-			Assert.Equal (expectedPath, testAssemblyDefinition.GetPath (Environment.GetEnvironmentVariable("HOME"), Platform.MacOS));
+			Assert.Equal (expectedPath, testAssemblyDefinition.GetPath (Environment.GetEnvironmentVariable("HOME"), Platform.MacOSFull));
 		}
 	}
 }

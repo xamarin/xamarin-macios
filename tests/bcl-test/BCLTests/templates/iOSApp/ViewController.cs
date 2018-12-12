@@ -17,10 +17,12 @@ namespace BCLTests {
  		{
 			// var t = Path.GetFileName (typeof (ActivatorCas).Assembly.Location);
 			foreach (var name in RegisterType.TypesToRegister.Keys) {
-				var a = Assembly.Load (name);
+				var a = RegisterType.TypesToRegister [name].Assembly;
 				if (a == null) {
 					Console.WriteLine ($"# WARNING: Unable to load assembly {name}.");
  					continue;
+				} else {
+					Console.WriteLine ($"Loading assembly: {name}.");
 				}
 				yield return new TestAssemblyInfo (a, name);
 			}
