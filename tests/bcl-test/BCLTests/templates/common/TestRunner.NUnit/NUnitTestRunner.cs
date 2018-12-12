@@ -1,7 +1,8 @@
-﻿using System;
-using System.IO;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -21,9 +22,11 @@ namespace Xamarin.iOS.UnitTests.NUnit
 	{
 		Dictionary<string, object> builderSettings;
 		TestSuiteResult results;
+		bool runAssemblyByDefault;
 
 		public ITestFilter Filter { get; set; } = TestFilter.Empty;
 		public bool GCAfterEachFixture { get; set; }
+		public Dictionary<string, bool> AssemblyFilters { get; set; }
 
 		protected override string ResultsFileName { get; set; } = "TestResults.NUnit.xml";
 
@@ -36,23 +39,31 @@ namespace Xamarin.iOS.UnitTests.NUnit
 		{
 			if (testAssemblies == null)
 				throw new ArgumentNullException (nameof (testAssemblies));
-			
+
+			if (AssemblyFilters == null || AssemblyFilters.Count == 0)
+				runAssemblyByDefault = true;
+			else
+				runAssemblyByDefault = AssemblyFilters.Values.Any (v => !v);
+
 			var builder = new NUnitLiteTestAssemblyBuilder ();
 			var runner = new NUnitLiteTestAssemblyRunner (builder, new FinallyDelegate ());
 			var testSuite = new TestSuite (NSBundle.MainBundle.BundleIdentifier);
 			results = new TestSuiteResult (testSuite);
 
+			TotalTests = 0;
 			foreach (TestAssemblyInfo assemblyInfo in testAssemblies) {
-				if (assemblyInfo == null || assemblyInfo.Assembly == null)
+				if (assemblyInfo == null || assemblyInfo.Assembly == null || !ShouldRunAssembly (assemblyInfo))
 					continue;
-				
+
 				if (!runner.Load (assemblyInfo.Assembly, builderSettings)) {
 					OnWarning ($"Failed to load tests from assembly '{assemblyInfo.Assembly}");
 					continue;
 				}
-				if (runner.LoadedTest is NUnitTest tests)
+				if (runner.LoadedTest is NUnitTest tests) {
+					TotalTests += tests.TestCaseCount;
 					testSuite.Add (tests);
-				
+				}
+
 				// Messy API. .Run returns ITestResult which is, in reality, an instance of TestResult since that's
 				// what WorkItem returns and we need an instance of TestResult to add it to TestSuiteResult. So, cast
 				// the return to TestResult and hope for the best.
@@ -73,7 +84,43 @@ namespace Xamarin.iOS.UnitTests.NUnit
 				results.AddResult (testResult);
 			}
 
+			// NUnitLite doesn't report filtered tests at all, but we can calculate here
+			FilteredTests = TotalTests - ExecutedTests;
 			LogFailureSummary ();
+		}
+
+		bool ShouldRunAssembly (TestAssemblyInfo assemblyInfo)
+		{
+			if (assemblyInfo == null)
+				return false;
+
+			if (AssemblyFilters == null || AssemblyFilters.Count == 0)
+				return true;
+
+			bool include;
+			if (AssemblyFilters.TryGetValue (assemblyInfo.FullPath, out include))
+				return ReportFilteredAssembly (assemblyInfo, include);
+
+			string fileName = Path.GetFileName (assemblyInfo.FullPath);
+			if (AssemblyFilters.TryGetValue (fileName, out include))
+				return ReportFilteredAssembly (assemblyInfo, include);
+
+			fileName = Path.GetFileNameWithoutExtension (assemblyInfo.FullPath);
+			if (AssemblyFilters.TryGetValue (fileName, out include))
+				return ReportFilteredAssembly (assemblyInfo, include);
+
+			return runAssemblyByDefault;
+		}
+
+		bool ReportFilteredAssembly (TestAssemblyInfo assemblyInfo, bool include)
+		{
+			if (LogExcludedTests) {
+				const string included = "Included";
+				const string excluded = "Excluded";
+
+				OnInfo ($"[FILTER] {(include ? included : excluded)} assembly: {assemblyInfo.FullPath}");
+			}
+			return include;
 		}
 
 		public bool Pass (ITest test)
