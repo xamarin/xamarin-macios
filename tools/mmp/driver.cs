@@ -75,7 +75,7 @@ namespace Xamarin.Bundler {
 		static List<string> resources = new List<string> ();
 		static List<string> resolved_assemblies = new List<string> ();
 		static List<string> ignored_assemblies = new List<string> ();
-		static List<string> native_references = new List<string> ();
+		public static List<string> native_references = new List<string> ();
 		static List<string> native_libraries_copied_in = new List<string> ();
 
 		static Action action;

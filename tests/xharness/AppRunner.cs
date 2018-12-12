@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Xsl;
+using Xamarin;
 using Xamarin.Utils;
 
 namespace xharness

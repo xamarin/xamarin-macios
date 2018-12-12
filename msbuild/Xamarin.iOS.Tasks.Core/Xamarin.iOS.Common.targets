@@ -102,6 +102,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Analysis.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.Analysis.targets') And '$(OutputType)' == 'Exe'" />
 
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.targets" />			
+
 	<PropertyGroup>
 		<!-- Switching to a new property allows us to potentially switch from iPhone to simulator builds
 			 dynamically based on the user's selection when starting the project. This allows us to 
@@ -767,7 +769,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			_CompileAppManifest;
 			_ResolveAppExtensionReferences;
 			_GetNativeExecutableName;
-			_GetCompileToNativeInputs
+			_GetCompileToNativeInputs;
+			_ExpandNativeReferences;
 		</_CompileToNativeDependsOn>
 	</PropertyGroup>
 
@@ -779,7 +782,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	</Target>
 
 	<Target Name="_CompileToNative" DependsOnTargets="$(_CompileToNativeDependsOn)"
-		Inputs="@(_CompileToNativeInput)"
+		Inputs="@(_CompileToNativeInput);@(_FrameworkNativeReference);@(_FileNativeReference);@(BundleDependentFiles)"
 		Outputs="$(_NativeExecutable);$(DeviceSpecificOutputPath)mtouch.stamp">
 
 		<ItemGroup>
