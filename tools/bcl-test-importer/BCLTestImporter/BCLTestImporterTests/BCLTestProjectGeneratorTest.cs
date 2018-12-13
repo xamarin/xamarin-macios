@@ -121,7 +121,7 @@ namespace BCLTestImporterTests {
 		{
 			var fixedPath = registerPath.Replace ("/", "\\");
 			var sb = new StringBuilder ();
-			sb.AppendLine ($"<Compile Include=\"{fixedPath}\">");
+			sb.AppendLine ($"<Compile Include=\"{registerPath}\">");
 			sb.AppendLine ($"<Link>{Path.GetFileName (registerPath)}</Link>");
 			sb.AppendLine ("</Compile>");
 			var expected = sb.ToString ();
@@ -140,7 +140,7 @@ namespace BCLTestImporterTests {
 			Assert.Contains (projectName, generatedProject);
 			Assert.DoesNotContain (BCLTestProjectGenerator.WatchOSTemplatePathKey, generatedProject);
 			Assert.DoesNotContain (BCLTestProjectGenerator.PlistKey, generatedProject);
-			Assert.Contains (plistPath.Replace ("/", "\\"), generatedProject);
+			Assert.Contains (plistPath, generatedProject);
 		}
 	}
 }

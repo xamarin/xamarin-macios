@@ -200,7 +200,7 @@ namespace BCLTestImporter {
 					var projectGenerator = new BCLTestProjectGenerator (appOptions.Output, appOptions.MonoPath,
 						appOptions.ProjectTemplate, appOptions.RegisterTypeTemplate, appOptions.PlistTemplate);
 					outputWriter.WriteLine ("Verifying if all the test assemblies have been added.");
-					if (!appOptions.IgnoreMissingAssemblies && !projectGenerator.AllTestAssembliesAreRan (out var missingAssemblies)) {
+					if (!appOptions.IgnoreMissingAssemblies && !projectGenerator.AllTestAssembliesAreRan (out var missingAssemblies, true)) {
 						outputWriter.WriteLine ("The following test assemblies should be added to a test project or ignored.");
 						foreach (var platform in missingAssemblies.Keys) {
 							outputWriter.WriteLine ($"Platform {platform}");

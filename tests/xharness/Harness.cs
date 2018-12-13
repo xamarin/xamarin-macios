@@ -34,6 +34,11 @@ namespace xharness
 			get { return Path.GetFullPath (Path.Combine (RootDirectory, "..", "tools", "xibuild", "xibuild")); }
 		}
 
+		public string DownloadsPath
+		{
+			get { return Path.GetFullPath (Path.Combine (RootDirectory, "..", "builds", "downloads")); }
+		}
+
 		public static string Timestamp {
 			get {
 				return $"{DateTime.Now:yyyyMMdd_HHmmss}";
