@@ -234,7 +234,7 @@ namespace BCLTestImporter {
 		public bool Override { get; set; }
 		public string OutputDirectoryPath { get; private  set; }
 		public string MonoRootPath { get; private set; }
-		public string DownloadsPath { get; set; }
+		public string iOSMonoSDKPath { get; set; }
 		public string ProjectTemplateRootPath { get; private set; }
 		public string PlistTemplateRootPath{ get; private set; }
 		public string RegisterTypesTemplatePath { get; private set; }
@@ -260,14 +260,12 @@ namespace BCLTestImporter {
 
 		string GetReleaseDownload (Platform platform)
 		{
-			if (string.IsNullOrEmpty (DownloadsPath))
-				return null;
-			switch(platform) {
+			switch (platform) {
 			case Platform.iOS:
 			case Platform.TvOS:
 			case Platform.WatchOS:
 				// simply, try to find the dir with the pattern
-				return Directory.GetDirectories (DownloadsPath, iOSReleasePattern).First ();
+				return iOSMonoSDKPath;
 			case Platform.MacOSFull:
 			case Platform.MacOSModern:
 				return null;

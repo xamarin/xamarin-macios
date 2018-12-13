@@ -34,11 +34,6 @@ namespace xharness
 			get { return Path.GetFullPath (Path.Combine (RootDirectory, "..", "tools", "xibuild", "xibuild")); }
 		}
 
-		public string DownloadsPath
-		{
-			get { return Path.GetFullPath (Path.Combine (RootDirectory, "..", "builds", "downloads")); }
-		}
-
 		public static string Timestamp {
 			get {
 				return $"{DateTime.Now:yyyyMMdd_HHmmss}";
@@ -91,6 +86,7 @@ namespace xharness
 		public string JENKINS_RESULTS_DIRECTORY { get; set; } // Use same name as in Makefiles, so that a grep finds it.
 		public string MAC_DESTDIR { get; set; }
 		public string IOS_DESTDIR { get; set; }
+		public string MONO_SDK_DESTDIR { get; set; }
 		public bool IncludeMac32 { get; set; }
 
 		// Run
@@ -230,6 +226,7 @@ namespace xharness
 				SdkRoot = make_config ["XCODE_DEVELOPER_ROOT"];
 			if (string.IsNullOrEmpty (SdkRoot94))
 				SdkRoot94 = make_config ["XCODE94_DEVELOPER_ROOT"];
+			MONO_SDK_DESTDIR = make_config ["MONO_SDK_DESTDIR"];
 		}
 		 
 		void AutoConfigureMac ()
