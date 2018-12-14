@@ -13,7 +13,7 @@ using Foundation;
 using CoreMedia;
 
 namespace VideoToolbox {
-	[Mac (10,8), iOS (8,0), TV (10,2)]
+	[iOS (8,0), TV (10,2)]
 	public class VTVideoEncoder {
 
 		[DllImport (Constants.VideoToolboxLibrary)]

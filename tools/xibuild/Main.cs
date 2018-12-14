@@ -115,7 +115,6 @@ namespace xibuild {
 				FileName = toolPath,
 				Arguments = combinedArgs,
 				UseShellExecute = false,
-				RedirectStandardInput = true,
 			});
 
 			p.WaitForExit ();

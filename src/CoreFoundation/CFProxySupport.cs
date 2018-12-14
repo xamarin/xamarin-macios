@@ -254,7 +254,6 @@ namespace CoreFoundation {
 		}
 #endif
 		
-		[Mac (10,7)]
 		public NSString AutoConfigurationJavaScript {
 			get {
 				if (AutoConfigurationJavaScriptKey == null)
