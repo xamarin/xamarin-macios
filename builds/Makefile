@@ -1447,7 +1447,7 @@ clean-llvm: $(SDK_CONFIG)
 	$(MAKE) -C $(MONO_SDK_BUILDDIR) clean-llvm36-llvm32 clean-llvm-llvm64 $(SDK_ARGS)
 	$(RM) .stamp-*-llvm*
 
-.PHONY: install-llvm64 llvm32 llvm64
+.PHONY: install-llvm64 install-llvm32 llvm32 llvm64
 
 LLVM64_TARGETS = \
 	$(PREFIX)/LLVM/bin/opt \
