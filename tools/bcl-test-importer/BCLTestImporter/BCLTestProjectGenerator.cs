@@ -415,8 +415,9 @@ namespace BCLTestImporter {
 					Directory.CreateDirectory (generatedCodeDir);
 				}
 				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType.cs");
-				var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (def.name, projectDefinition.IsXUnit,
-					RegisterTypesTemplatePath, Platform.WatchOS);
+				var typesPerAssembly = projectDefinition.GetTypeForAssemblies (GetReleaseDownload (Platform.iOS), Platform.WatchOS, true);
+ 				var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (typesPerAssembly,
+ 					projectDefinition.IsXUnit, RegisterTypesTemplatePath);
 				using (var file = new StreamWriter (registerTypePath, false)) { // false is do not append
 					await file.WriteAsync (registerCode);
 				}
@@ -492,9 +493,10 @@ namespace BCLTestImporter {
 				}
 				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType.cs");
 
-				var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (def.name, projectDefinition.IsXUnit,
-					RegisterTypesTemplatePath, Platform.iOS);
-
+				var typesPerAssembly = projectDefinition.GetTypeForAssemblies (GetReleaseDownload (Platform.iOS), Platform.iOS, true);
+ 				var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (typesPerAssembly,
+ 					projectDefinition.IsXUnit, RegisterTypesTemplatePath);
+ 					
 				using (var file = new StreamWriter (registerTypePath, false)) { // false is do not append
 					await file.WriteAsync (registerCode);
 				}
