@@ -14,7 +14,7 @@ namespace BCLTestImporterTests {
 		public void GetTypeForAssembliesNullMonoPath ()
 		{
 			var projectDefinition = new BCLTestProjectDefinition ("MyProject", new List<BCLTestAssemblyDefinition> ());	
-			Assert.Throws<ArgumentNullException> (() => projectDefinition.GetTypeForAssemblies (null, Platform.iOS));
+			Assert.Throws<ArgumentNullException> (() => projectDefinition.GetTypeForAssemblies (null, Platform.iOS, true));
 		}
 	}
 }

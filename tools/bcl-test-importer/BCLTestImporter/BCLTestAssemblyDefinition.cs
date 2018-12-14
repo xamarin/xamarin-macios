@@ -39,12 +39,25 @@ namespace BCLTestImporter {
 		/// <param name="platform">The platform whose test directory we need.</param>
 		/// <returns>The full path of the test directory.</returns>
 		/// <exception cref="ArgumentNullException">Raised when one of the parameters is null.</exception>
-		public static string GetTestDirectory (string monoRootPath, Platform platform)
+		public static string GetTestDirectoryFromMonoPath (string monoRootPath, Platform platform)
 		{
-			if (monoRootPath == null)
+			if (string.IsNullOrEmpty (monoRootPath))
 				throw new ArgumentNullException (nameof (monoRootPath));
 			var fullPath = monoRootPath;
 			return Path.Combine (fullPath, partialPath, platformPathMatch[platform], "tests");
+		}
+
+		/// <summary>
+		/// Returns the directory from the downloads where tests can be found.
+		/// </summary>
+		/// <returns>The test directory from downloads path.</returns>
+		/// <param name="downloadsPath">Downloads path.</param>
+		/// <param name="platform">Platform whose tests we require.</param>
+		public static string GetTestDirectoryFromDownloadsPath (string downloadsPath, Platform platform)
+		{
+			if (string.IsNullOrEmpty (downloadsPath))
+				throw new ArgumentNullException (nameof (downloadsPath));
+			return Path.Combine (downloadsPath, "ios-bcl", platformPathMatch [platform], "tests"); 
 		}
 
 		public static string GetHintPathForRefenreceAssembly (string assembly, string monoRootPath, Platform plaform)
@@ -56,9 +69,14 @@ namespace BCLTestImporter {
 		/// <summary>
 		/// Returns the path of the test assembly within the mono checkout.
 		/// </summary>
-		/// <param name="monoRootPath">The root path of the mono checkout.</param>
+		/// <param name="rootPath">The root path of the mono checkout.</param>
 		/// <param name="platform">The platform we are working with.</param>
 		/// <returns>The full path of the assembly.</returns>
-		public string GetPath (string monoRootPath, Platform platform) => Path.Combine (GetTestDirectory (monoRootPath, platform), Name);
+		public string GetPath (string rootPath, Platform platform, bool wasDownloaded)
+		{
+			var testsRootPath = wasDownloaded? GetTestDirectoryFromDownloadsPath (rootPath, platform) : 
+				GetTestDirectoryFromMonoPath (rootPath, platform);
+			return Path.Combine (testsRootPath, Name);
+		}
 	}
 }
