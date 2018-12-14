@@ -15,7 +15,8 @@ namespace xibuild {
 			bool runTool = false;
 			bool configGenerationOnly = false;
 			string baseConfigFile = null;
-
+			string verbosity = "";
+			bool no_logo = true;
 			bool show_help = false;
 			OptionSet p = null;
 			p = new OptionSet () {
@@ -29,9 +30,10 @@ namespace xibuild {
 
 				{ "c", "Generate config file only", c => configGenerationOnly = true }, // merge
 				{ "t", "Path to the managed tool to run. If this and `-c` are not used, then this runs msbuild", t => runTool = true },
-				{ "m=", "< base config file >: Config file to merge with the one from msbuild.dll.confi", m => baseConfigFile = m },
+				{ "m=", "< base config file >: Config file to merge with the one from msbuild.dll.config", m => baseConfigFile = m },
 				{ "h|?|help", "Show this help message and exit.", v => show_help = true },
-				{ "v|verbose", "Show verbose output.", v => verbose = true },
+				{ "v|verbosity:", "Show verbose output.", v => verbosity = string.IsNullOrEmpty (v) ? "diagnostic" : v },
+				{ "nologo", "Do not display the startup banner and copyright message when running msbuild.", v => no_logo = true },
 
 				String.Empty,
 				"Note: Adds the path from the environment variable named",
@@ -49,9 +51,6 @@ namespace xibuild {
 				"Add `-m /path/to/base.exe.config` to merge the generated app.config with base.exe.config ."
 			};
 
-			if (verbose)
-				Console.WriteLine ($"Running xibuild with args: {String.Join (" ", args)}\n");
-
 			List<string> remaining = null;
 			try {
 				remaining = p.Parse (args);
@@ -59,6 +58,10 @@ namespace xibuild {
 				Console.WriteLine (oe.Message);
 				return -1;
 			}
+
+			verbose = !string.IsNullOrEmpty (verbosity) && verbosity [0] == 'd';
+			if (verbose)
+				Console.WriteLine ($"Running xibuild with args: {String.Join (" ", args)}\n");
 
 			if (show_help) {
 				p.WriteOptionDescriptions (Console.Out);
@@ -91,6 +94,14 @@ namespace xibuild {
 			if (!runTool && !runMSBuild) {
 				GenerateAppConfig (remaining [0] + ".config", baseConfigFile);
 				return 0;
+			}
+
+			if (runMSBuild) {
+				// Add back any arguments we consumed.
+				if (!string.IsNullOrEmpty (verbosity))
+					remaining.Add ($"/verbosity:{verbosity}");
+				if (no_logo)
+					remaining.Add ("/nologo");
 			}
 
 			return RunTool (
