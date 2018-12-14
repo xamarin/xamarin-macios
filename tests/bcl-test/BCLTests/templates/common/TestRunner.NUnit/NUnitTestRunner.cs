@@ -169,7 +169,6 @@ namespace Xamarin.iOS.UnitTests.NUnit
 					sb.Append ("\t[INFO] ");
 					break;
 				}
-				TotalTests++;
 				sb.Append (result.Test.FixtureType.Name);
 				sb.Append (".");
 				sb.Append (result.Test.Name);

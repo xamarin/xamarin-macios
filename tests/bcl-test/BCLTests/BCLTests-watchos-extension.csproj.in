@@ -196,6 +196,9 @@
     <Compile Include="templates\common\TestRunner.NUnit\ClassOrNamespaceFilter.cs">
       <Link>TestRunner.NUnit\ClassOrNamespaceFilter.cs</Link>
     </Compile>
+    <Compile Include="templates\common\TestRunner.NUnit\TestMethodFilter.cs">
+      <Link>TestRunner.NUnit\TestMethodFilter.cs</Link>
+    </Compile>
     <Compile Include="templates\common\TestRunner.xUnit\XUnitFilter.cs">
       <Link>TestRunner.xUnit\XUnitFilter.cs</Link>
     </Compile>
