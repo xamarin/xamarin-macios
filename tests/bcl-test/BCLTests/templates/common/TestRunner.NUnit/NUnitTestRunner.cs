@@ -242,5 +242,17 @@ namespace Xamarin.iOS.UnitTests.NUnit
 			var resultsXml = new NUnit2XmlOutputWriter (DateTime.UtcNow);
 			resultsXml.WriteResultFile (results, writer);
 		}
+		
+		public override void SkipTests (string[] tests)
+		{
+			// grab the tests and create a filter for them
+			if (tests.Length > 0) {
+				var mFilter = new TestMethodFilter (tests [0]);
+				for (var i = 1; i < tests.Length; i++) {
+					mFilter.AddMethod (tests [i]);
+				}
+				Filter = mFilter;
+			}
+		}
 	}
 }

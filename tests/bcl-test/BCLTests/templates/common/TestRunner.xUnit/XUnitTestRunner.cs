@@ -1005,5 +1005,10 @@ namespace Xamarin.iOS.UnitTests.XUnit
 				return !filter.Exclude;
 			}
 		}
+		
+		public override void SkipTests (string[] tests)
+		{
+			// TODO: Implement the required filters
+		}
 	}
 }

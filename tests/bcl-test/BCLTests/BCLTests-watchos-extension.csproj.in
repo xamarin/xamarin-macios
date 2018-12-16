@@ -214,6 +214,9 @@
     <Compile Include="templates\common\ApplicationOptions.cs">
       <Link>ApplicationOptions.cs</Link>
     </Compile>
+    <Compile Include="templates\common\IgnoreFileParser.cs">
+      <Link>IgnoreFileParser.cs</Link>
+    </Compile>
     %REGISTER TYPE%
   </ItemGroup>
   <ItemGroup>

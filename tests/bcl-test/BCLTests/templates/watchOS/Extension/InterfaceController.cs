@@ -16,6 +16,7 @@ using Xamarin.iOS.UnitTests.NUnit;
 using BCLTests;
 using BCLTests.TestRunner.Core;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace monotouchtestWatchKitExtension
 {
@@ -88,6 +89,25 @@ namespace monotouchtestWatchKitExtension
 			}
  		}
  		
+ 		public async Task<string[]> GetSkippedTests ()
+		{
+			var ignoredFiles = new List<string> ();
+			// the project generator added the required resources,
+			// we extract them, parse them and add the result
+			var executingAssembly = Assembly.GetExecutingAssembly ();
+			foreach (var resourceName in executingAssembly.GetManifestResourceNames ()) {
+				if (resourceName.EndsWith (".ignore", StringComparison.Ordinal)) {
+					using (var stream = executingAssembly.GetManifestResourceStream(resourceName))
+					using (var reader = new StreamReader (stream)) {
+						var ignored = await IgnoreFileParser.ParseStream (reader);
+						// we could have more than one file, lets add them
+						ignoredFiles.AddRange (ignored);
+					}
+				}
+			}
+			return ignoredFiles.ToArray ();
+		}
+		
 		void RunTests ()
 		{
 			var options = ApplicationOptions.Current;
@@ -107,6 +127,12 @@ namespace monotouchtestWatchKitExtension
 				runner = new XUnitTestRunner (logger);
 			else
 				runner = new NUnitTestRunner (logger);
+			
+			var skippedTests = GetSkippedTests ().Result; // block, should be fast
+			if (skippedTests.Length > 0) {
+				// ensure that we skip those tests that have been passed via the cmd
+				runner.SkipTests (skippedTests);
+			}
 			
 			ThreadPool.QueueUserWorkItem ((v) =>
 			{

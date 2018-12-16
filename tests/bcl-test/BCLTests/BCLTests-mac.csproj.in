@@ -193,6 +193,9 @@
     <Compile Include="templates\common\ApplicationOptions.cs">
       <Link>ApplicationOptions.cs</Link>
     </Compile>
+    <Compile Include="templates\common\IgnoreFileParser.cs">
+      <Link>IgnoreFileParser.cs</Link>
+    </Compile>
     %REGISTER TYPE%
     <Compile Include="templates\macOS\MacTestMain.cs">
       <Link>MacTestMain.cs</Link>
@@ -205,6 +208,7 @@
     <EmbeddedResource Include="templates\common\TestRunner.xUnit\NUnitXml.xslt">
       <Link>TestRunner.xUnit\NUnitXml.xslt</Link>
     </EmbeddedResource>
+    %EMBEDDED RESOURCES%
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
   <Import Project="..\..\..\packages\NETStandard.Library.2.0.0\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\..\..\packages\NETStandard.Library.2.0.0\build\netstandard2.0\NETStandard.Library.targets')" />

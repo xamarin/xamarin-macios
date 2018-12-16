@@ -20,6 +20,7 @@ namespace BCLTestImporter {
 		internal static readonly string NameKey = "%NAME%";
 		internal static readonly string ReferencesKey = "%REFERENCES%";
 		internal static readonly string RegisterTypeKey = "%REGISTER TYPE%";
+		internal static readonly string EmbeddedResourcesKey = "%EMBEDDED RESOURCES%";
 		internal static readonly string PlistKey = "%PLIST PATH%";
 		internal static readonly string WatchOSTemplatePathKey = "%TEMPLATE PATH%";
 		internal static readonly string WatchOSCsporjAppKey = "%WATCH APP PROJECT PATH%";
@@ -117,7 +118,6 @@ namespace BCLTestImporter {
 			"monotouch_System.Xml_test.dll", // issue https://github.com/xamarin/maccore/issues/1133
 			"monotouch_System.Transactions_test.dll", // issue https://github.com/xamarin/maccore/issues/1134
 			"monotouch_System_test.dll", // issues https://github.com/xamarin/maccore/issues/1135
-			"monotouch_System.ServiceModel.Web_test.dll", // issue https://github.com/xamarin/maccore/issues/1137
 			"monotouch_System.ServiceModel_test.dll", // issue https://github.com/xamarin/maccore/issues/1138
 			"monotouch_System.Security_test.dll", // issue https://github.com/xamarin/maccore/issues/1139
 			"monotouch_System.Runtime.Serialization.Formatters.Soap_test.dll", // issue https://github.com/xamarin/maccore/issues/1140
@@ -367,6 +367,47 @@ namespace BCLTestImporter {
 			return sb.ToString ();
 		}
 
+		internal static string GetEmbeddedResourceNode (string resourcePath)
+		{
+			var sb = new StringBuilder ();
+			sb.AppendLine ($"<EmbeddedResource Include=\"{resourcePath}\">");
+			sb.AppendLine ($"<Link>{Path.GetFileName (resourcePath)}</Link>");
+			sb.AppendLine ("</EmbeddedResource>");
+			return sb.ToString ();
+		}
+
+		internal static string GetCommonIgnoreFileName (string projectName) => $"common-{projectName}.ignore";
+		
+		internal static string GetIgnoreFileName (string projectName, Platform platform)
+		{
+			switch (platform) {
+			case Platform.iOS:
+				return $"iOS-{projectName}.ignore";
+			case Platform.MacOSFull:
+			case Platform.MacOSModern:
+				return $"macOS-{projectName}.ignore";
+			case Platform.TvOS:
+				return $"tvOS-{projectName}.ignore";
+			case Platform.WatchOS:
+				return $"watchOS-{projectName}.ignore";
+			default:
+				return null;
+			}
+
+		}
+		
+		internal static IEnumerable<string> GetIgnoreFiles (string templatePath, string projectName, Platform platform)
+		{
+			// check if the common and plaform paths can be found in the template path, if they are, we return them
+			var templateDir = Path.GetDirectoryName (templatePath);
+			var commonIgnore = Path.Combine (templateDir, GetCommonIgnoreFileName (projectName));
+			if (File.Exists (commonIgnore))
+				yield return commonIgnore;
+			var platformIgnore = Path.Combine (templateDir, GetIgnoreFileName (projectName, platform));
+			if (File.Exists (platformIgnore))
+				yield return platformIgnore;
+		}
+
 		/// <summary>
 		/// Returns is a project should be ignored in a platform. A project is ignored in one of the assemblies in the
 		/// project is ignored in the platform.
@@ -510,7 +551,7 @@ namespace BCLTestImporter {
 
 				var projectTemplatePath = Path.Combine (ProjectTemplateRootPath, projectTemplateMatches[platform]);
 				var generatedProject = await GenerateAsync (projectDefinition.Name, registerTypePath,
-					projectDefinition.GetAssemblyInclusionInformation (GetReleaseDownload (platform), platform, true), projectTemplatePath, infoPlistPath);
+					projectDefinition.GetAssemblyInclusionInformation (GetReleaseDownload (platform), platform, true), projectTemplatePath, infoPlistPath, platform);
 				var projectPath = GetProjectPath (projectDefinition.Name, platform);
 				projectPaths.Add ((name: projectDefinition.Name, path: projectPath, xunit: projectDefinition.IsXUnit));
 				using (var file = new StreamWriter (projectPath, false)) { // false is do not append
@@ -580,6 +621,7 @@ namespace BCLTestImporter {
 				result = await GenerateWatchOSTestProjectsAsync (projects, generatedDir);
 				break;
 			case Platform.iOS:
+			case Platform.TvOS:
 				result = await GenerateiOSTestProjectsAsync (projects, platform, generatedDir);
 				break;
 			case Platform.MacOSFull:
@@ -663,7 +705,7 @@ namespace BCLTestImporter {
 		/// <param name="templatePath">A path to the template used to generate the path.</param>
 		/// <param name="infoPlistPath">The path to the info plist of the project.</param>
 		/// <returns></returns>
-		static async Task<string> GenerateAsync (string projectName, string registerPath, List<(string assembly, string hintPath)> info, string templatePath, string infoPlistPath)
+		static async Task<string> GenerateAsync (string projectName, string registerPath, List<(string assembly, string hintPath)> info, string templatePath, string infoPlistPath, Platform platform)
 		{
 			// fix possible issues with the paths to be included in the msbuild xml
 			infoPlistPath = infoPlistPath.Replace ('/', '\\');
@@ -672,6 +714,11 @@ namespace BCLTestImporter {
 				if (!excludeDlls.Contains (assemblyInfo.assembly))
 				sb.AppendLine (GetReferenceNode (assemblyInfo.assembly, assemblyInfo.hintPath));
 			}
+			
+			var resourceFiles = new StringBuilder ();
+			foreach (var path in GetIgnoreFiles (templatePath, projectName, platform)) {
+				resourceFiles.Append (GetEmbeddedResourceNode (path));
+			}
 
 			using (var reader = new StreamReader(templatePath)) {
 				var result = await reader.ReadToEndAsync ();
@@ -679,6 +726,7 @@ namespace BCLTestImporter {
 				result = result.Replace (ReferencesKey, sb.ToString ());
 				result = result.Replace (RegisterTypeKey, GetRegisterTypeNode (registerPath));
 				result = result.Replace (PlistKey, infoPlistPath);
+				result = result.Replace (EmbeddedResourcesKey, resourceFiles.ToString ());
 				return result;
 			}
 		}
@@ -692,12 +740,17 @@ namespace BCLTestImporter {
 				sb.AppendLine (GetReferenceNode (assemblyInfo.assembly, assemblyInfo.hintPath));
 			}
 
+			var resourceFiles = new StringBuilder ();
+			foreach (var path in GetIgnoreFiles (templatePath, projectName, platform)) {
+				resourceFiles.Append (GetEmbeddedResourceNode (path));
+			}
 			using (var reader = new StreamReader(templatePath)) {
 				var result = await reader.ReadToEndAsync ();
 				result = result.Replace (NameKey, projectName);
 				result = result.Replace (ReferencesKey, sb.ToString ());
 				result = result.Replace (RegisterTypeKey, GetRegisterTypeNode (registerPath));
 				result = result.Replace (PlistKey, infoPlistPath);
+				result = result.Replace (EmbeddedResourcesKey, resourceFiles.ToString ());
 				switch (platform){
 				case Platform.MacOSFull:
 					result = result.Replace (TargetFrameworkVersionKey, "v4.5");
@@ -745,6 +798,11 @@ namespace BCLTestImporter {
 					sb.AppendLine (GetReferenceNode (assemblyInfo.assembly, assemblyInfo.hintPath));
 			}
 			
+			var resourceFiles = new StringBuilder ();
+			foreach (var path in GetIgnoreFiles (templatePath, projectName, Platform.WatchOS)) {
+				resourceFiles.Append (GetEmbeddedResourceNode (path));
+			}
+			
 			using (var reader = new StreamReader(templatePath)) {
 				var result = await reader.ReadToEndAsync ();
 				result = result.Replace (NameKey, projectName);
@@ -752,12 +810,13 @@ namespace BCLTestImporter {
 				result = result.Replace (PlistKey, infoPlistPath);
 				result = result.Replace (RegisterTypeKey, GetRegisterTypeNode (registerPath));
 				result = result.Replace (ReferencesKey, sb.ToString ());
+				result = result.Replace (EmbeddedResourcesKey, resourceFiles.ToString ());
 				return result;
 			}
 		}
 
-		public static string Generate (string projectName, string registerPath, List<(string assembly, string hintPath)> info, string templatePath, string infoPlistPath) =>
-			GenerateAsync (projectName, registerPath, info, templatePath, infoPlistPath).Result;
+		public static string Generate (string projectName, string registerPath, List<(string assembly, string hintPath)> info, string templatePath, string infoPlistPath, Platform platform) =>
+			GenerateAsync (projectName, registerPath, info, templatePath, infoPlistPath, platform).Result;
 
 		/// <summary>
 		/// Removes all the generated files by the tool.
