@@ -18,7 +18,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 		readonly TestMessageSink messageSink;
 
 		XElement assembliesElement;
-		List<XUnitFilter> filters;
+		List<XUnitFilter> filters = new List<XUnitFilter> ();
 		bool runAssemblyByDefault;
 
 		public XUnitResultFileFormat ResultFileFormat { get; set; } = XUnitResultFileFormat.NUnit;
@@ -1005,10 +1005,13 @@ namespace Xamarin.iOS.UnitTests.XUnit
 				return !filter.Exclude;
 			}
 		}
-		
+
 		public override void SkipTests (string[] tests)
 		{
-			// TODO: Implement the required filters
+			// create a single filter per test
+			foreach (var t in tests) {
+				filters.Add (XUnitFilter.CreateSingleFilter (t, true));
+			}
 		}
 	}
 }

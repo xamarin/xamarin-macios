@@ -145,6 +145,9 @@
     <Reference Include="nunitlite">
       <HintPath>..\..\..\external\mono\mcs\class\lib\monotouch\nunitlite.dll</HintPath>
     </Reference>
+    <Reference Include="Xunit.NetCore.Extensions">
+      <HintPath>..\..\..\external\mono\external\xunit-binaries\Xunit.NetCore.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
       <HintPath>..\..\..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.2.1.1\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
       <Private>False</Private>
