@@ -7,7 +7,9 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text;
 
+#if __IOS__
 using UIKit;
+#endif
 
 namespace BCLTests.TestRunner.Core {
 	public class TcpTextWriter : TextWriter {

@@ -26,6 +26,7 @@ namespace BCLTests {
 			Transport = defaults.StringForKey ("network.transport");
 			SortNames = defaults.BoolForKey ("display.sort");
 			LogFile = defaults.StringForKey ("log.file");
+			ResultFile = defaults.StringForKey ("result.file");
 			
 			bool b;
 			if (bool.TryParse (Environment.GetEnvironmentVariable ("NUNIT_AUTOEXIT"), out b))
@@ -61,6 +62,7 @@ namespace BCLTests {
 				{ "enablexml", "Enable the xml reported.", v => EnableXml = false },
 				{ "xmlmode", "The xml mode.", v => XmlMode = (XmlMode) Enum.Parse (typeof (XmlMode), v, false) },
 				{ "logfile=", "A path where output will be saved.", v => LogFile = v },
+				{ "result=", "The path to be used to store the result", v => ResultFile = v},
 			};
 			
 			try {
@@ -87,6 +89,8 @@ namespace BCLTests {
 		public string Transport { get; set; } = "TCP";
 
 		public string LogFile { get; set; }
+		
+		public string ResultFile { get; set; }
 
 		public bool ShowUseNetworkLogger {
 			get { return (EnableNetwork && !String.IsNullOrWhiteSpace (HostName) && (HostPort > 0 || Transport == "FILE")); }

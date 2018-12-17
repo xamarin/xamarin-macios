@@ -210,6 +210,9 @@
     <Compile Include="templates\common\TestRunner.NUnit\NUnitTestRunner.cs">
       <Link>TestRunner.NUnit\NUnitTestRunner.cs</Link>
     </Compile>
+    <Compile Include="templates\common\TestRunner.NUnit\ClassOrNamespaceFilter.cs">
+      <Link>TestRunner.NUnit\ClassOrNamespaceFilter.cs</Link>
+    </Compile>
     <Compile Include="templates\common\TestRunner.Core\Extensions.Bool.cs">
       <Link>TestRunner.Core\Extensions.Bool.cs</Link>
     </Compile>
@@ -236,6 +239,12 @@
     </Compile>
     <Compile Include="templates\common\TestRunner.Core\TestRunner.cs">
       <Link>TestRunner.Core\TestRunner.cs</Link>
+    </Compile>
+    <Compile Include="templates\common\TestRunner.Core\TestRunSelector.cs">
+      <Link>TestRunner.Core\TestRunSelector.cs</Link>
+    </Compile>
+    <Compile Include="templates\common\TestRunner.Core\TestRunSelectorType.cs">
+      <Link>TestRunner.Core\TestRunSelectorType.cs</Link>
     </Compile>
     <Compile Include="templates\common\TestRunner.xUnit\XUnitFilter.cs">
       <Link>TestRunner.xUnit\XUnitFilter.cs</Link>

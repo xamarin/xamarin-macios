@@ -27,11 +27,11 @@ namespace xharness.BCLTestImporter {
 		}
 		
 		// generate all the different test targets.
-		public List<iOSTestProject> GetBclTargets ()
+		public List<iOSTestProject> GetiOSBclTargets ()
 		{
 			var result = new List<iOSTestProject> ();
 			// generate all projects, then create a new iOSTarget per project
-			foreach (var (name, path, xunit, platforms) in projectGenerator.GenerateAllTestProjects ()) {
+			foreach (var (name, path, xunit, platforms) in projectGenerator.GenerateAlliOSTestProjects ()) {
 				var prefix = xunit ? "xUnit" : "NUnit";
 				result.Add (new iOSTestProject (path) {
 					Name = $"[{prefix}] Mono {name}",
@@ -43,6 +43,39 @@ namespace xharness.BCLTestImporter {
 							throw new Exception ($"Failed to build BCL tests, exit code: {rv.ExitCode}. Check the harness log for more details.");
 					}
 				});
+			}
+			return result;
+		}
+		
+		public List<MacTestProject> GetMacBclTargets (MacFlavors flavor)
+		{
+			Platform platform;
+			if (flavor == MacFlavors.Full)
+				platform = Platform.MacOSFull;
+			else
+				platform = Platform.MacOSModern;
+			var result = new List<MacTestProject> ();
+			foreach (var (name, path, xunit) in projectGenerator.GenerateAllMacTestProjects (platform)) {
+				var prefix = xunit ? "xUnit" : "NUnit";
+				result.Add (new MacTestProject (path, targetFrameworkFlavor: flavor, generateVariations: false) {
+					Name = $"[{prefix}] Mono {name}",
+					Platform = "AnyCPU",
+					IsExecutableProject = true,
+					Dependency = async () => {
+						var rv = await Harness.BuildBclTests ();
+						if (!rv.Succeeded)
+							throw new Exception ($"Failed to build BCL tests, exit code: {rv.ExitCode}. Check the harness log for more details.");
+					}
+				});
+			}
+			return result;
+		}
+
+		public List<MacTestProject> GetMacBclTargets ()
+		{
+			var result = new List<MacTestProject> ();
+			foreach (var flavor in new [] { MacFlavors.Full, MacFlavors.Modern}) {
+				result.AddRange (GetMacBclTargets (flavor));
 			}
 			return result;
 		}

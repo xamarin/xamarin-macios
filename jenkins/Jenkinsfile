@@ -395,6 +395,7 @@ timestamps {
                         stage ('Checkout') {
                             currentStage = "${STAGE_NAME}"
                             echo ("Building on ${env.NODE_NAME}")
+                            sh ("env | sort") // Print out environment for debug purposes
                             scmVars = checkout scm
                             isPr = (env.CHANGE_ID && !env.CHANGE_ID.empty ? true : false)
                             branchName = env.BRANCH_NAME

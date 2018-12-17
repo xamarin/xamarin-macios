@@ -81,7 +81,7 @@ namespace Xamarin.Bundler {
 		static List<string> resources = new List<string> ();
 		static List<string> resolved_assemblies = new List<string> ();
 		static List<string> ignored_assemblies = new List<string> ();
-		static List<string> native_references = new List<string> ();
+		public static List<string> native_references = new List<string> ();
 		static List<string> native_libraries_copied_in = new List<string> ();
 
 		static Action action;
@@ -828,16 +828,6 @@ namespace Xamarin.Bundler {
 				// if not then the compilation really failed
 				throw new MonoMacException (5103, true, String.Format ("Failed to compile. Error code - {0}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", ret));
 			}
-			if (frameworks_copied_to_bundle_dir) {
-				int install_ret = XcodeRun ("install_name_tool", $"{StringUtils.Quote (AppPath)} -add_rpath @loader_path/../Frameworks");
-				if (install_ret != 0)
-					throw new MonoMacException (5310, true, "install_name_tool failed with an error code '{0}'. Check build log for details.", ret);
-			}
-	    		if (dylibs_copied_to_bundle_dir) {
-				int install_ret = XcodeRun ("install_name_tool", $"{StringUtils.Quote (AppPath)} -add_rpath @loader_path/../{BundleName}"); 
-				if (install_ret != 0)
-					throw new MonoMacException (5310, true, "install_name_tool failed with an error code '{0}'. Check build log for details.", ret);
-			}
 
 			if (generate_plist)
 				GeneratePList ();
@@ -1270,6 +1260,11 @@ namespace Xamarin.Bundler {
 					string finalLibPath = Path.Combine (mmp_dir, libName);
 					args.Append (StringUtils.Quote (finalLibPath)).Append (' ');
 				}
+
+				if (frameworks_copied_to_bundle_dir)
+					args.Append ("-rpath @loader_path/../Frameworks ");
+				if (dylibs_copied_to_bundle_dir)
+					args.Append ($"-rpath @loader_path/../{BundleName} ");
 
 				if (is_extension)
 					args.Append ("-e _xamarin_mac_extension_main -framework NotificationCenter").Append(' ');
