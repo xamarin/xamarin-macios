@@ -69,6 +69,7 @@ namespace BCLTestImporter {
 			"xunit.core",
 			"xunit.abstractions",
 			"xunit.assert",
+			"Xunit.NetCore.Extensions",
 		};
 
 		// we have two different types of list, those that are for the iOS like projects (ios, tvos and watch os) and those 
@@ -112,7 +113,6 @@ namespace BCLTestImporter {
 		};
 			
 		static readonly List <string> CommonIgnoredAssemblies = new List <string> {
-			"monotouch_System.Data_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1131
 			"monotouch_System.Security_xunit-test.dll",// issue https://github.com/xamarin/maccore/issues/1128
 			"monotouch_System.Threading.Tasks.Dataflow_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1132
 			"monotouch_System.Xml_test.dll", // issue https://github.com/xamarin/maccore/issues/1133
