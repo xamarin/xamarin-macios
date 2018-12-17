@@ -8,7 +8,7 @@ download: downloads/$(basename $(MONO_FILENAME))
 downloads/$(MONO_FILENAME):
 	$(Q) mkdir -p downloads
 	$(Q) echo "Downloading $(MONO_URL)..."
-	$(Q) curl -s -f -L $(MONO_URL) --output $@.tmp
+	$(Q) curl -f -L $(if $(V),-v,-s) $(MONO_URL) --output $@.tmp
 	$(Q) mv $@.tmp $@
 	$(Q) echo "Downloaded $(MONO_URL)"
 
@@ -1429,48 +1429,53 @@ ifdef INCLUDE_DEVICE
 clean-local:: clean-llvm
 endif
 
-build-llvm32: .stamp-build-llvm .stamp-build-llvm32
-build-llvm64: .stamp-build-llvm .stamp-build-llvm32
+build-llvm32: .stamp-build-llvm32
+build-llvm64: .stamp-build-llvm64
 
-.stamp-build-llvm: $(SDK_CONFIG)
-	$(MAKE) -C $(SDK_BUILDDIR) provision-llvm-llvm64 $(SDK_ARGS)
+.stamp-compile-llvm64: $(SDK_CONFIG)
+	$(MAKE) -C $(MONO_SDK_BUILDDIR) provision-llvm-llvm64 $(SDK_ARGS)
 	$(Q) touch $@
 
-.stamp-build-llvm32: $(SDK_CONFIG)
-	$(MAKE) -C $(SDK_BUILDDIR) provision-llvm36-llvm32 $(SDK32_ARGS)
+.stamp-compile-llvm32: $(SDK_CONFIG)
+	$(MAKE) -C $(MONO_SDK_BUILDDIR) provision-llvm36-llvm32 $(SDK32_ARGS)
 	$(Q) touch $@
+
+.stamp-build-llvm64: .stamp-$(MONO_BUILD_MODE)-llvm64
+.stamp-build-llvm32: .stamp-$(MONO_BUILD_MODE)-llvm32
 
 clean-llvm: $(SDK_CONFIG)
-	$(MAKE) -C $(SDK_BUILDDIR) clean-llvm36-llvm32 clean-llvm-llvm64 $(SDK_ARGS)
+	$(MAKE) -C $(MONO_SDK_BUILDDIR) clean-llvm36-llvm32 clean-llvm-llvm64 $(SDK_ARGS)
 	$(RM) .stamp-*-llvm*
 
-.PHONY: install-llvm64 llvm llvm64
+.PHONY: install-llvm64 install-llvm32 llvm32 llvm64
 
-install-llvm: install-llvm32 install-llvm64
-
-LLVM_TARGETS = \
+LLVM64_TARGETS = \
 	$(PREFIX)/LLVM/bin/opt \
 	$(PREFIX)/LLVM/bin/llc \
+
+LLVM32_TARGETS = \
 	$(PREFIX)/LLVM36/bin/opt \
-	$(PREFIX)/LLVM36/bin/llc
+	$(PREFIX)/LLVM36/bin/llc \
 
-$(PREFIX)/LLVM/bin/%: $(SDK_DESTDIR)/llvm-llvm64/bin/% | $(PREFIX)/LLVM/bin
+$(MONO_SDK_DESTDIR)/llvm-llvm64/bin/%: .stamp-build-llvm64; @true
+$(MONO_SDK_DESTDIR)/llvm36-llvm32/bin/%: .stamp-build-llvm32; @true
+
+$(PREFIX)/LLVM/bin/%: $(MONO_SDK_DESTDIR)/llvm-llvm64/bin/% | $(PREFIX)/LLVM/bin
 	$(call Q_2,INSTALL ,[LLVM64]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $^ $@
 
-$(PREFIX)/LLVM36/bin/%: $(SDK_DESTDIR)/llvm36-llvm32/bin/% | $(PREFIX)/LLVM36/bin
-	$(call Q_2,INSTALL ,[LLVM64]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $^ $@
+$(PREFIX)/LLVM36/bin/%: $(MONO_SDK_DESTDIR)/llvm36-llvm32/bin/% | $(PREFIX)/LLVM36/bin
+	$(call Q_2,INSTALL ,[LLVM32]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $^ $@
 
-$(PREFIX)/LLVM/bin:
+$(PREFIX)/LLVM/bin $(PREFIX)/LLVM36/bin:
 	$(Q) mkdir -p $@
 
-$(PREFIX)/LLVM36/bin:
-	$(Q) mkdir -p $@
+install-llvm: install-llvm32 install-llvm64
+install-llvm32: $(LLVM32_TARGETS)
+install-llvm64: $(LLVM64_TARGETS)
 
-install-llvm32:.stamp-build-llvm .stamp-build-llvm32 $(LLVM_TARGETS)
-install-llvm64: .stamp-build-llvm .stamp-build-llvm32 $(LLVM_TARGETS)
-
-llvm: build-llvm64 install-llvm
+llvm: install-llvm
 llvm64: install-llvm64
+llvm32: install-llvm32
 
 $(MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe: $(MONO_PATH)/configure $(wildcard $(MONO_PATH)/tools/offsets-tool/*.cs)
 	$(Q) $(MAKE) -C $(dir $@) MonoAotOffsetsDumper.exe
@@ -1504,9 +1509,11 @@ build:: build-$(1)
 install-local:: install-$(1)
 clean-local:: clean-$(1)
 
-.stamp-build-$(1): .stamp-build-llvm .stamp-build-llvm32 $(MONO_PATH)/configure $(MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe $(MONO_DEPENDENCIES) $(SDK_CONFIG)
-	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(1) $(SDK_ARGS) $(if $(5), XCODE_DIR=$(5))
+.stamp-compile-$(1): .stamp-build-llvm64 .stamp-build-llvm32 $(MONO_PATH)/configure $(MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe $(MONO_DEPENDENCIES) $(SDK_CONFIG)
+	$(MAKE) -C $(MONO_SDK_BUILDDIR) package-ios-$(1) $(SDK_ARGS) $(if $(5), XCODE_DIR=$(5))
 	$(Q) touch $$@
+
+.stamp-build-$(1): .stamp-$(MONO_BUILD_MODE)-$(1)
 
 build-$(1): .stamp-build-$(1)
 
@@ -1515,14 +1522,14 @@ _$(1)_CROSS_TARGETS = \
 
 $(SDK_DESTDIR)/ios-$(1)/bin/$(4): .stamp-build-$(1)
 
-$(PREFIX)/bin/$(3): $(SDK_DESTDIR)/ios-$(1)-release/bin/$(4) | $(PREFIX)/bin
+$(PREFIX)/bin/$(3): $(MONO_SDK_DESTDIR)/ios-$(1)-release/bin/$(4) | $(PREFIX)/bin
 	$(call Q_2,INSTALL ,[CROSS]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $$< $$@
 
 install-$(1): install-$(2) $$(_$(1)_CROSS_TARGETS)
 
 clean-$(1): $(SDK_CONFIG)
-	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-$(1) $(SDK_ARGS)
-	-rm -rf $(SDK_DESTDIR)/$(1) .stamp-build-$(1)
+	$(MAKE) -C $(MONO_SDK_BUILDDIR) clean-ios-$(1) $(SDK_ARGS)
+	-rm -rf $(MONO_SDK_DESTDIR)/$(1) .stamp-build-$(1)
 
 endef
 
