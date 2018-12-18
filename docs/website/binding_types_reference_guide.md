@@ -1473,7 +1473,7 @@ managed exceptions.
 
 Currently only a few `objc_msgSend` signatures are supported (you will find out
 if a signature isn't supported when native linking of an app that uses the
-binding fails with a missing monotouch_*_objc_msgSend* symbol), but more can be
+binding fails with a missing xamarin_*_objc_msgSend* symbol), but more can be
 added at request.
 
 
