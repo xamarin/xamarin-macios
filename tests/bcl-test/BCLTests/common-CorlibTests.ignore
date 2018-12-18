@@ -1,0 +1,345 @@
+# crashes:
+# critical: Stacktrace:
+# critical:   at <unknown> <0xffffffff>
+# critical:   at (wrapper managed-to-native) System.Runtime.InteropServices.Marshal.SizeOf (System.Type) [0x0001a] in <01f05773bcda4d0b9642de54d8f3cec3>:0
+# critical:   at MonoTests.System.Runtime.InteropServices.MarshalTest.Sizeof_Void () [0x00000] in /Users/builder/jenkins/workspace/archive-mono/2018-08/ios/release@2/mcs/class/corlib/Test/System.Runtime.InteropServices/MarshalTest.cs:126
+# critical:   at (wrapper runtime-invoke) object.runtime_invoke_void__this__ (object,intptr,intptr,intptr) [0x0004f] in <01f05773bcda4d0b9642de54d8f3cec3>:0
+# critical:   at <unknown> <0xffffffff>
+# critical:   at (wrapper managed-to-native) System.Reflection.MonoMethod.InternalInvoke (System.Reflection.MonoMethod,object,object[],System.Exception&) [0x00016] in <01f05773bcda4d0b9642de54d8f3cec3>:0
+# critical:   at System.Reflection.MonoMethod.Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo) [0x0003b] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/corlib/System.Reflection/MonoMethod.cs:305
+# critical:   at System.Reflection.MethodBase.Invoke (object,object[]) [0x00000] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/referencesource/mscorlib/system/reflection/methodbase.cs:229
+# critical:   at NUnit.Framework.Internal.Reflect.InvokeMethod (System.Reflection.MethodInfo,object,object[]) [0x00009] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/Reflect.cs:215
+# critical:   at NUnit.Framework.Internal.Commands.TestMethodCommand.RunNonAsyncTestMethod (NUnit.Framework.Internal.TestExecutionContext) [0x00000] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/Commands/TestMethodCommand.cs:114
+# critical:   at NUnit.Framework.Internal.Commands.TestMethodCommand.RunTestMethod (NUnit.Framework.Internal.TestExecutionContext) [0x0001a] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/Commands/TestMethodCommand.cs:90
+# critical:   at NUnit.Framework.Internal.Commands.TestMethodCommand.Execute (NUnit.Framework.Internal.TestExecutionContext) [0x00000] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/Commands/TestMethodCommand.cs:66
+# critical:   at NUnit.Framework.Internal.Commands.SetUpTearDownCommand.Execute (NUnit.Framework.Internal.TestExecutionContext) [0x00007] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/Commands/SetUpTearDownCommand.cs:84
+# critical:   at NUnit.Framework.Internal.Commands.FlakyTestRetriesCommand.Execute (NUnit.Framework.Internal.TestExecutionContext) [0x00000] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/Commands/FlakyTestRetriesCommand.cs:73
+# critical:   at NUnit.Framework.Internal.WorkItems.SimpleWorkItem.PerformWork () [0x00000] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/WorkItems/SimpleWorkItem.cs:64
+# critical:   at NUnit.Framework.Internal.WorkItems.WorkItem.DispatchWork (object) [0x00077] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/WorkItems/WorkItem.cs:205
+# critical:   at System.Threading.ExecutionContext.RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool) [0x00071] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/referencesource/mscorlib/system/threading/executioncontext.cs:961
+# critical:   at System.Threading.ExecutionContext.Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool) [0x00000] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/referencesource/mscorlib/system/threading/executioncontext.cs:908
+# critical:   at System.Threading.ExecutionContext.Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object) [0x0002b] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/referencesource/mscorlib/system/threading/executioncontext.cs:897
+# critical:   at NUnit.Framework.Internal.WorkItems.WorkItem.RunTest () [0x00005] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/WorkItems/WorkItem.cs:188
+# critical:   at NUnit.Framework.Internal.WorkItems.WorkItem.Execute (NUnit.Framework.Internal.TestExecutionContext) [0x00063] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/WorkItems/WorkItem.cs:136
+# critical:   at NUnit.Framework.Internal.WorkItems.CompositeWorkItem.RunChildren () [0x00035] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/WorkItems/CompositeWorkItem.cs:154
+# critical:   at NUnit.Framework.Internal.WorkItems.CompositeWorkItem.PerformWork () [0x000de] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/WorkItems/CompositeWorkItem.cs:93
+# critical:   at NUnit.Framework.Internal.WorkItems.WorkItem.DispatchWork (object) [0x00077] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/WorkItems/WorkItem.cs:205
+# critical:   at System.Threading.ExecutionContext.RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool) [0x00071] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/referencesource/mscorlib/system/threading/executioncontext.cs:961
+# critical:   at System.Threading.ExecutionContext.Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool) [0x00000] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/referencesource/mscorlib/system/threading/executioncontext.cs:908
+# critical:   at System.Threading.ExecutionContext.Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object) [0x0002b] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/referencesource/mscorlib/system/threading/executioncontext.cs:897
+# critical:   at NUnit.Framework.Internal.WorkItems.WorkItem.RunTest () [0x00005] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/WorkItems/WorkItem.cs:188
+# critical:   at NUnit.Framework.Internal.WorkItems.WorkItem.Execute (NUnit.Framework.Internal.TestExecutionContext) [0x00063] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/WorkItems/WorkItem.cs:136
+# critical:   at NUnit.Framework.Internal.WorkItems.CompositeWorkItem.RunChildren () [0x00035] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/WorkItems/CompositeWorkItem.cs:154
+# critical:   at NUnit.Framework.Internal.WorkItems.CompositeWorkItem.PerformWork () [0x000de] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/WorkItems/CompositeWorkItem.cs:93
+# critical:   at NUnit.Framework.Internal.WorkItems.WorkItem.DispatchWork (object) [0x00077] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/WorkItems/WorkItem.cs:205
+# critical:   at System.Threading.ExecutionContext.RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool) [0x00071] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/referencesource/mscorlib/system/threading/executioncontext.cs:961
+# critical:   at System.Threading.ExecutionContext.Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool) [0x00000] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/referencesource/mscorlib/system/threading/executioncontext.cs:908
+# critical:   at System.Threading.ExecutionContext.Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object) [0x0002b] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/referencesource/mscorlib/system/threading/executioncontext.cs:897
+# critical:   at NUnit.Framework.Internal.WorkItems.WorkItem.RunTest () [0x00005] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/WorkItems/WorkItem.cs:188
+# critical:   at NUnit.Framework.Internal.WorkItems.WorkItem.Execute (NUnit.Framework.Internal.TestExecutionContext) [0x00063] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/WorkItems/WorkItem.cs:136
+# critical:   at NUnit.Framework.Internal.NUnitLiteTestAssemblyRunner.Run (NUnit.Framework.Api.ITestListener,NUnit.Framework.Api.ITestFilter) [0x0005a] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/NUnitLiteTestAssemblyRunner.cs:136
+# critical:   at Xamarin.iOS.UnitTests.NUnit.NUnitTestRunner.Run (System.Collections.Generic.IList`1<Xamarin.iOS.UnitTests.TestAssemblyInfo>) [0x00170] in /Users/mandel/Xamarin/macios/master/xamarin-macios/tests/bcl-test/BCLTests/templates/common/TestRunner.NUnit/NUnitTestRunner.cs:73
+# critical:   at BCLTests.ViewController/<ViewDidLoad>d__5.MoveNext () [0x0017c] in /Users/mandel/Xamarin/macios/master/xamarin-macios/tests/bcl-test/BCLTests/templates/iOSApp/ViewController.cs:106
+# critical:   at System.Runtime.CompilerServices.AsyncVoidMethodBuilder.Start<TStateMachine_REF> (TStateMachine_REF&) [0x0002c] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/referencesource/mscorlib/system/runtime/compilerservices/AsyncMethodBuilder.cs:84
+# critical:   at BCLTests.ViewController.ViewDidLoad () [0x0002a] in <887b4c47a2a247e8920cddce791e7718>:0
+# critical:   at (wrapper runtime-invoke) object.runtime_invoke_void__this__ (object,intptr,intptr,intptr) [0x0004f] in <01f05773bcda4d0b9642de54d8f3cec3>:0
+# critical:   at <unknown> <0xffffffff>
+# critical:   at (wrapper managed-to-native) ObjCRuntime.Messaging.void_objc_msgSend (intptr,intptr) [0x0000a] in <854c6713acc54b0389a597c8b4079500>:0
+# critical:   at UIKit.UIWindow.MakeKeyAndVisible () [0x0000d] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/UIKit/UIWindow.g.cs:259
+# critical:   at BCLTests.AppDelegate.FinishedLaunching (UIKit.UIApplication,Foundation.NSDictionary) [0x00023] in /Users/mandel/Xamarin/macios/master/xamarin-macios/tests/bcl-test/BCLTests/templates/iOSApp/AppDelegate.cs:22
+# critical:   at (wrapper runtime-invoke) <Module>.runtime_invoke_bool__this___object_object (object,intptr,intptr,intptr) [0x00063] in <887b4c47a2a247e8920cddce791e7718>:0
+# critical:   at <unknown> <0xffffffff>
+# critical:   at (wrapper managed-to-native) UIKit.UIApplication.UIApplicationMain (int,string[],intptr,intptr) [0x0005c] in <854c6713acc54b0389a597c8b4079500>:0
+# critical:   at UIKit.UIApplication.Main (string[],intptr,intptr) [0x00005] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/UIKit/UIApplication.cs:79
+# critical:   at UIKit.UIApplication.Main (string[],string,string) [0x0002c] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/UIKit/UIApplication.cs:63
+# critical:   at BCLTests.Application.Main (string[]) [0x00001] in /Users/mandel/Xamarin/macios/master/xamarin-macios/tests/bcl-test/BCLTests/templates/iOSApp/Main.cs:10
+# critical:   at (wrapper runtime-invoke) <Module>.runtime_invoke_void_object (object,intptr,intptr,intptr) [0x00051] in <887b4c47a2a247e8920cddce791e7718>:0
+MonoTests.System.Runtime.InteropServices.MarshalTest.Sizeof_Void 
+# crashes:
+# critical:   at <unknown> <0xffffffff>
+# critical:   at (wrapper managed-to-native) System.Threading.NativeEventCalls.CloseEvent_internal (intptr) [0x00007] in <01f05773bcda4d0b9642de54d8f3cec3>:0
+# critical:   at Microsoft.Win32.SafeHandles.SafeWaitHandle.ReleaseHandle () [0x00000] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/referencesource/mscorlib/microsoft/win32/safehandles/safewaithandle.cs:49
+# critical:   at System.Runtime.InteropServices.SafeHandle.DangerousReleaseInternal (bool) [0x000a3] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/corlib/System.Runtime.InteropServices/SafeHandle.cs:227
+# critical:   at System.Runtime.InteropServices.SafeHandle.InternalDispose () [0x0000e] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/corlib/System.Runtime.InteropServices/SafeHandle.cs:156
+# critical:   at System.Runtime.InteropServices.SafeHandle.Dispose (bool) [0x00003] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/referencesource/mscorlib/system/runtime/interopservices/safehandle.cs:260
+# critical:   at System.Runtime.InteropServices.SafeHandle.Close () [0x00000] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/referencesource/mscorlib/system/runtime/interopservices/safehandle.cs:246
+# critical:   at System.Threading.WaitHandle.Dispose (bool) [0x0000a] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/referencesource/mscorlib/system/threading/waithandle.cs:649
+# critical:   at System.Threading.WaitHandle.Close () [0x00000] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/referencesource/mscorlib/system/threading/waithandle.cs:640
+# critical:   at MonoTests.System.Threading.AutoResetEventTest.Handle_Valid () [0x000b1] in /Users/builder/jenkins/workspace/archive-mono/2018-08/ios/release@2/mcs/class/corlib/Test/System.Threading/AutoResetEventTest.cs:82
+# critical:   at (wrapper runtime-invoke) object.runtime_invoke_void__this__ (object,intptr,intptr,intptr) [0x0004f] in <01f05773bcda4d0b9642de54d8f3cec3>:0
+# critical:   at <unknown> <0xffffffff>
+# critical:   at (wrapper managed-to-native) System.Reflection.MonoMethod.InternalInvoke (System.Reflection.MonoMethod,object,object[],System.Exception&) [0x00016] in <01f05773bcda4d0b9642de54d8f3cec3>:0
+# critical:   at System.Reflection.MonoMethod.Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo) [0x0003b] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/corlib/System.Reflection/MonoMethod.cs:305
+# critical:   at System.Reflection.MethodBase.Invoke (object,object[]) [0x00000] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/referencesource/mscorlib/system/reflection/methodbase.cs:229
+# critical:   at NUnit.Framework.Internal.Reflect.InvokeMethod (System.Reflection.MethodInfo,object,object[]) [0x00009] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/Reflect.cs:215
+# critical:   at NUnit.Framework.Internal.Commands.TestMethodCommand.RunNonAsyncTestMethod (NUnit.Framework.Internal.TestExecutionContext) [0x00000] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/Commands/TestMethodCommand.cs:114
+# critical:   at NUnit.Framework.Internal.Commands.TestMethodCommand.RunTestMethod (NUnit.Framework.Internal.TestExecutionContext) [0x0001a] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/Commands/TestMethodCommand.cs:90
+# critical:   at NUnit.Framework.Internal.Commands.TestMethodCommand.Execute (NUnit.Framework.Internal.TestExecutionContext) [0x00000] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/Commands/TestMethodCommand.cs:66
+# critical:   at NUnit.Framework.Internal.Commands.SetUpTearDownCommand.Execute (NUnit.Framework.Internal.TestExecutionContext) [0x00007] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/Commands/SetUpTearDownCommand.cs:84
+# critical:   at NUnit.Framework.Internal.Commands.FlakyTestRetriesCommand.Execute (NUnit.Framework.Internal.TestExecutionContext) [0x00000] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/Commands/FlakyTestRetriesCommand.cs:73
+# critical:   at NUnit.Framework.Internal.WorkItems.SimpleWorkItem.PerformWork () [0x00000] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/WorkItems/SimpleWorkItem.cs:64
+# critical:   at NUnit.Framework.Internal.WorkItems.WorkItem.DispatchWork (object) [0x00077] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/WorkItems/WorkItem.cs:205
+# critical:   at System.Threading.ExecutionContext.RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool) [0x00071] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/referencesource/mscorlib/system/threading/executioncontext.cs:961
+# critical:   at System.Threading.ExecutionContext.Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool) [0x00000] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/referencesource/mscorlib/system/threading/executioncontext.cs:908
+# critical:   at System.Threading.ExecutionContext.Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object) [0x0002b] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/referencesource/mscorlib/system/threading/executioncontext.cs:897
+# critical:   at NUnit.Framework.Internal.WorkItems.WorkItem.RunTest () [0x00005] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/WorkItems/WorkItem.cs:188
+# critical:   at NUnit.Framework.Internal.WorkItems.WorkItem.Execute (NUnit.Framework.Internal.TestExecutionContext) [0x00063] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/WorkItems/WorkItem.cs:136
+# critical:   at NUnit.Framework.Internal.WorkItems.CompositeWorkItem.RunChildren () [0x00035] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/WorkItems/CompositeWorkItem.cs:154
+# critical:   at NUnit.Framework.Internal.WorkItems.CompositeWorkItem.PerformWork () [0x000de] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/WorkItems/CompositeWorkItem.cs:93
+# critical:   at NUnit.Framework.Internal.WorkItems.WorkItem.DispatchWork (object) [0x00077] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/WorkItems/WorkItem.cs:205
+# critical:   at System.Threading.ExecutionContext.RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool) [0x00071] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/referencesource/mscorlib/system/threading/executioncontext.cs:961
+# critical:   at System.Threading.ExecutionContext.Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool) [0x00000] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/referencesource/mscorlib/system/threading/executioncontext.cs:908
+# critical:   at System.Threading.ExecutionContext.Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object) [0x0002b] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/referencesource/mscorlib/system/threading/executioncontext.cs:897
+# critical:   at NUnit.Framework.Internal.WorkItems.WorkItem.RunTest () [0x00005] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/WorkItems/WorkItem.cs:188
+# critical:   at NUnit.Framework.Internal.WorkItems.WorkItem.Execute (NUnit.Framework.Internal.TestExecutionContext) [0x00063] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/WorkItems/WorkItem.cs:136
+# critical:   at NUnit.Framework.Internal.WorkItems.CompositeWorkItem.RunChildren () [0x00035] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/WorkItems/CompositeWorkItem.cs:154
+# critical:   at NUnit.Framework.Internal.WorkItems.CompositeWorkItem.PerformWork () [0x000de] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/WorkItems/CompositeWorkItem.cs:93
+# critical:   at NUnit.Framework.Internal.WorkItems.WorkItem.DispatchWork (object) [0x00077] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/WorkItems/WorkItem.cs:205
+# critical:   at System.Threading.ExecutionContext.RunInternal (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool) [0x00071] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/referencesource/mscorlib/system/threading/executioncontext.cs:961
+# critical:   at System.Threading.ExecutionContext.Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object,bool) [0x00000] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/referencesource/mscorlib/system/threading/executioncontext.cs:908
+# critical:   at System.Threading.ExecutionContext.Run (System.Threading.ExecutionContext,System.Threading.ContextCallback,object) [0x0002b] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/referencesource/mscorlib/system/threading/executioncontext.cs:897
+# critical:   at NUnit.Framework.Internal.WorkItems.WorkItem.RunTest () [0x00005] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/WorkItems/WorkItem.cs:188
+# critical:   at NUnit.Framework.Internal.WorkItems.WorkItem.Execute (NUnit.Framework.Internal.TestExecutionContext) [0x00063] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/WorkItems/WorkItem.cs:136
+# critical:   at NUnit.Framework.Internal.NUnitLiteTestAssemblyRunner.Run (NUnit.Framework.Api.ITestListener,NUnit.Framework.Api.ITestFilter) [0x0005a] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Internal/NUnitLiteTestAssemblyRunner.cs:136
+# critical:   at Xamarin.iOS.UnitTests.NUnit.NUnitTestRunner.Run (System.Collections.Generic.IList`1<Xamarin.iOS.UnitTests.TestAssemblyInfo>) [0x00170] in /Users/mandel/Xamarin/macios/master/xamarin-macios/tests/bcl-test/BCLTests/templates/common/TestRunner.NUnit/NUnitTestRunner.cs:73
+# critical:   at BCLTests.ViewController/<ViewDidLoad>d__5.MoveNext () [0x0017c] in /Users/mandel/Xamarin/macios/master/xamarin-macios/tests/bcl-test/BCLTests/templates/iOSApp/ViewController.cs:106
+# critical:   at System.Runtime.CompilerServices.AsyncVoidMethodBuilder.Start<TStateMachine_REF> (TStateMachine_REF&) [0x0002c] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/referencesource/mscorlib/system/runtime/compilerservices/AsyncMethodBuilder.cs:84
+# critical:   at BCLTests.ViewController.ViewDidLoad () [0x0002a] in <9ffc8579c55c4786a87d6f6b6776b322>:0
+# critical:   at (wrapper runtime-invoke) object.runtime_invoke_void__this__ (object,intptr,intptr,intptr) [0x0004f] in <01f05773bcda4d0b9642de54d8f3cec3>:0
+# critical:   at <unknown> <0xffffffff>
+# critical:   at (wrapper managed-to-native) ObjCRuntime.Messaging.void_objc_msgSend (intptr,intptr) [0x0000a] in <854c6713acc54b0389a597c8b4079500>:0
+# critical:   at UIKit.UIWindow.MakeKeyAndVisible () [0x0000d] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/UIKit/UIWindow.g.cs:259
+# critical:   at BCLTests.AppDelegate.FinishedLaunching (UIKit.UIApplication,Foundation.NSDictionary) [0x00023] in /Users/mandel/Xamarin/macios/master/xamarin-macios/tests/bcl-test/BCLTests/templates/iOSApp/AppDelegate.cs:22
+# critical:   at (wrapper runtime-invoke) <Module>.runtime_invoke_bool__this___object_object (object,intptr,intptr,intptr) [0x00063] in <9ffc8579c55c4786a87d6f6b6776b322>:0
+# critical:   at <unknown> <0xffffffff>
+# critical:   at (wrapper managed-to-native) UIKit.UIApplication.UIApplicationMain (int,string[],intptr,intptr) [0x0005c] in <854c6713acc54b0389a597c8b4079500>:0
+# critical:   at UIKit.UIApplication.Main (string[],intptr,intptr) [0x00005] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/UIKit/UIApplication.cs:79
+# critical:   at UIKit.UIApplication.Main (string[],string,string) [0x0002c] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/UIKit/UIApplication.cs:63
+# critical:   at BCLTests.Application.Main (string[]) [0x00001] in /Users/mandel/Xamarin/macios/master/xamarin-macios/tests/bcl-test/BCLTests/templates/iOSApp/Main.cs:10
+# critical:   at (wrapper runtime-invoke) <Module>.runtime_invoke_void_object (object,intptr,intptr,intptr) [0x00051] in <9ffc8579c55c4786a87d6f6b6776b322>:0
+MonoTests.System.Threading.AutoResetEventTest.Handle_Valid
+
+# System.NotSupportedException : Specified method is not supported.
+MonoTests.System.AppDomainSetupTest.AppDomainInitializer1 
+
+# System.Runtime.Serialization.SerializationException : Type 'MonoTests.System.AppDomainSetupTest' i
+MonoTests.System.AppDomainSetupTest.AppDomainInitializerNonStaticMethod 
+
+# Fails in the 3rd assertion
+MonoTests.System.ArrayTest.Copy_InvalidCast 
+
+# Expected is <System.Byte[214]>, actual is <System.Byte[246]>
+MonoTests.System.Collections.CaseInsensitiveComparerTest.Serialize_Culture 
+
+# Expected is <System.Byte[214]>, actual is <System.Byte[246]>
+MonoTests.System.Collections.CaseInsensitiveComparerTest.Serialize_Default
+
+# Expected is <System.Byte[209]>, actual is <System.Byte[241]> 
+MonoTests.System.CaseInsensitiveComparerTest.Serialize_DefaultInvariant
+
+# [FAIL] ConcurrentQueueTests.TryDequeueReferenceTest :   Expected: False
+MonoTests.System.Collections.Concurrent.ConcurrentQueueTests.TryDequeueReferenceTest 
+
+# Fail in the first assertion
+MonoTests.System.Collections.Generic.DictionaryTest.Clear_ZeroOut
+MonoTests.System.Collections.Generic.DictionaryTest.Remove_ZeroOut
+
+# [FAIL] SortedListTest.Values_Deserialize : System.Reflection.TargetInvocationException : Exception has been thrown by the target of an invocation.
+#  ----> System.Runtime.Serialization.SerializationException : Member 'CompareInfo' was not found.
+MonoTests.System.Collections.SortedListTest.Values_Deserialize
+
+# System.OverflowException was expected
+MonoTests.System.ConvertTest.ToInt32_Base10_MaxValueOverflow
+MonoTests.System.ConvertTest.ToInt32_Base10_MinValueOverflow 
+
+# create delegate must fail
+MonoTests.System.DelegateTest.CantBindValueTypeToFirstArg 
+
+# System.NullReferenceException : Object reference not set to an instance of an object
+MonoTests.System.DelegateTest.DelegateWithValueTypeArguments 
+
+# Fails with "Expected: 3"
+MonoTests.System.Diagnostics.StackFrameTest3.GetFramesAndNestedExc 
+
+# Fails in the first assertion
+MonoTests.System.Globalization.CompareInfoTest.IsSuffixMSBug 
+
+# Fails in the first assertion
+MonoTests.System.IO.FileTest.Delete_FileLock 
+
+# Expected is <System.Byte[476]>, actual is <System.Byte[444]>
+MonoTests.System.IO.MemoryStreamTest.SerializeTest 
+
+#  System.IO.DirectoryNotFoundException : Could not find a part of the path "/Users/mandel/Library/Developer/CoreSimulator/Devices/143CD3D7-C264-404E-BA13-08FA5EDC3007/data/Containers/Bundle/Application/E8B35B4C-6036-4DC0-BF85-872416B87A43/CorlibTests.app/Test/resources/Fergie.GED".
+MonoTests.System.IO.StreamReaderTest.EndOfBufferIsCR
+
+# Fails in the first assertion
+MonoTests.System.NullableTest.EqualsImpl
+
+#  Expected string length 10 but was 0. Strings differ at index 0.
+#  Expected: "2147483647"
+#  But was:  <string.Empty>
+#  -----------^
+MonoTests.System.NumberFormatterTest.Test08006
+
+#   String lengths are both 16. Strings differ at index 15.
+#  Expected: "999.999999999992"
+#  But was:  "999.999999999993"
+#  --------------------------^
+MonoTests.System.NumberFormatterTest.Test14026 
+
+# System.IO.FileLoadException : The assembly name is invalid.
+MonoTests.System.Reflection.AssemblyNameTest.Constructor1_PublicKey_KeyPair 
+
+# Flags
+#  Expected: None
+#  But was:  PublicKey
+MonoTests.System.Reflection.AssemblyNameTest.Constructor1_PublicKey_MS 
+
+# System.BadImageFormatException : Invalid Image
+MonoTests.System.Reflection.AssemblyNameTest.GetAssemblyName_AssemblyFile_ReadLock
+
+# Evidence
+#  Expected: not null
+#  But was:  null
+MonoTests.System.Reflection.AssemblyTest.Corlib 
+
+# An unexpected exception type was thrown
+# Expected: System.ArgumentException
+# but was: System.IO.FileNotFoundException : Invalid Image
+MonoTests.System.Reflection.AssemblyTest.LoadFileRelativeThrows 
+
+# Expected: 2
+#  But was:  0
+MonoTests.System.Reflection.CustomAttributeDataTest.FieldIncludesPseudoCustomAttributesData
+
+# System.ArgumentOutOfRangeException : Specified argument was out of the range of valid values.
+# Parameter name: index
+MonoTests.System.Reflection.CustomAttributeDataTest.MethodIncludesMarshalAsAttributeData
+
+# Expected: 4
+#  But was:  0
+MonoTests.System.Reflection.CustomAttributeDataTest.ParameterIncludesPseudoCustomAttributesData 
+
+# System.ArgumentException : The field handle and the type handle are incompatible.
+MonoTests.System.Reflection.FieldInfoTest.GetFieldFromHandle2_Handle_GenericDefinition 
+
+#  #A0
+#  Expected: not 0
+#  But was:  0
+MonoTests.System.Reflection.ModuleTest.FindTypes 
+
+# #1
+#  Expected string length 454 but was 929. Strings differ at index 79.
+#  Expected: "...em.Collections.Generic.List`1[System.Int32] a3\nSystem.Coll..."
+#  But was:  "...em.Collections.Generic.List`1[[System.Int32, mscorlib, Ver..."
+#  --------------------------------------------^
+MonoTests.System.Reflection.ParameterInfoTest.ParameterInfoToString 
+
+#  #1
+#  Expected string length 267 but was 62. Strings differ at index 0.
+#  Expected: "System.Linq.IQueryable`1[TSource] source\nSystem.Linq.Expressi..."
+#  But was:  "IQueryable`1 source\n predicate\nIQueryable`1 source\n predicate\n"
+#  -----------^
+MonoTests.System.Reflection.ParameterInfoTest.ParameterInfoToStringForQueryableSkipWhile 
+
+# xpected is <System.Byte[209]>, actual is <System.Byte[241]>
+#  Values differ at index [69]
+#  Expected: 13
+#  But was:  12
+MonoTests.System.Collections.CaseInsensitiveComparerTest.Serialize_DefaultInvariant
+
+# Could not find any resources appropriate for the specified culture (or the neutral culture) on disk.
+MonoTests.System.Resources.ResourceManagerTest.GetObject 
+MonoTests.System.Resources.ResourceManagerTest.GetObject_ResourceSet_Disposed
+MonoTests.System.Resources.ResourceManagerTest.GetStream
+MonoTests.System.Resources.ResourceManagerTest.GetStream_Culture
+MonoTests.System.Resources.ResourceManagerTest.GetStream_Resource_DoesNotExist 
+MonoTests.System.Resources.ResourceManagerTest.GetStream_Resource_NonStream 
+MonoTests.System.Resources.ResourceManagerTest.GetStream_ResourceSet_Disposed 
+MonoTests.System.Resources.ResourceManagerTest.GetString 
+MonoTests.System.Resources.ResourceManagerTest.GetString_ResourceSet_Disposed 
+MonoTests.System.Resources.ResourceManagerTest.IgnoreCase 
+MonoTests.System.Resources.ResourceReaderTest.Close 
+MonoTests.System.Resources.ResourceReaderTest.ConstructorStream_Closed 
+MonoTests.System.Resources.ResourceReaderTest.ConstructorString 
+MonoTests.System.Resources.ResourceReaderTest.ConstructorString_Bad
+MonoTests.System.Resources.ResourceReaderTest.Enumerator
+
+# Could not find a part of the path "/Users/mandel/Library/Developer/CoreSimulator/Devices/2F2953A8-DDA8-4991-95F5-F55812613824/data/Containers/Bundle/Application/12384083-AEA1-40E5-9D29-0347DAC27084/CorlibTests.app/Test/resources/StreamTest.resources".
+MonoTests.System.Resources.ResourceReaderTest.GetResourceData 
+MonoTests.System.Resources.ResourceReaderTest.GetResourceData2 
+MonoTests.System.Resources.ResourceReaderTest.GetResourceDataNullName 
+MonoTests.System.Resources.ResourceReaderTest.Stream 
+MonoTests.System.Resources.ResourceWriterTest.AddResource_Stream_Default 
+MonoTests.System.Resources.ResourceWriterTest.Bug81759 
+
+# System.NotImplementedException : The method or operation is not implemented.
+MonoTests.System.Runtime.CompilerServices.ConditionalWeakTableTest.ConditionalWeakTableEnumerable
+
+# System.Exception : Exception of type 'System.Exception' was thrown.
+MonoTests.System.Runtime.CompilerServices.TaskAwaiterTest_T.GetResultAfterMultipleExceptions 
+
+# Exists
+#  Expected: True
+#  But was:  False
+MonoTests.System.Runtime.InteropServices.RuntimeEnvironmentTest.SystemConfigurationFile 
+
+# System.ArgumentException : Invalid XML attribute name: <invalid>
+MonoTests.System.Security.SecurityElementTest.Attributes_Name_Invalid_MS 
+
+# #3
+#  Expected string length 16 but was 12. Strings differ at index 4.
+#  Expected: "name&#38;address"
+#  But was:  "name;address"
+#  ---------------^
+MonoTests.System.Security.SecurityElementTest.FromString_CharacterReferences 
+
+# #1
+#  Expected string length 9 but was 7. Strings differ at index 0.
+#  Expected: "'Company'"
+#  But was:  "Company"
+#  -----------^
+MonoTests.System.Security.SecurityElementTest.FromString_Quote_Delimiter_MS 
+
+# System.ArgumentNullException : Value cannot be null.
+MonoTests.System.StringTest.Constructor7_Value_Null
+MonoTests.System.StringTest.Constructor8_Value_Null
+
+# System.IO.FileNotFoundException : Invalid Image
+MonoTests.System.Text.EncodingInfoTest.EncodingGetEncodingsReturnsAll 
+
+# System.NotSupportedException : Encoding 37 data could not be found. Make sure you have correct international codeset assembly installed and enabled.
+MonoTests.System.Text.EncodingInfoTest.GetEncodingForAllInfo 
+
+# System.IO.DirectoryNotFoundException : Could not find a part of the path "/Users/mandel/Library/Developer/CoreSimulator/Devices/2F2953A8-DDA8-4991-95F5-F55812613824/data/Containers/Bundle/corlib/Test/resources/415628.bin".
+MonoTests.System.Text.UTF8EncodingTest.Bug415628
+
+# System.NotSupportedException : Specified method is not supported.
+MonoTests.System.Threading.ThreadTest.CurrentThread_Domains 
+
+# System.ArgumentNullException : String reference not set to an instance of a String.
+MonoTests.System.TimeSpanTest.ParseExactExceptions
+
+# System.NullReferenceException : Object reference not set to an instance of an object
+MonoTests.System.TimeZoneTest.DeserializeKnownValue 
+
+#  #D7
+#  Expected: True
+#  But was:  False
+MonoTests.System.TypeTest.IsDefined_Inherited 
+
+#  String lengths are both 3. Strings differ at index 0.
+#  Expected: "foo"
+#  But was:  "Foo"
+#  -----------^
+MonoTests.System.Threading.Tasks.TaskSchedulerTests.UnobservedTaskExceptionArgumentTest
+
+# System.Security.Cryptography.CryptographicException : Unable to decode certificate. 
+MonoTests.System.Security.Cryptography.X509Certificates.SoftwarePublisherCertificateTest.InvalidSignature
+MonoTests.System.Security.Cryptography.X509Certificates.SoftwarePublisherCertificateTest.ValidSignature
+
+# An unexpected exception type was thrown
+# Expected: System.ArgumentException
+# but was: System.PlatformNotSupportedException : Initializing `X509Certificate` from native handle is not supported.
+MonoTests.System.Security.Cryptography.X509Certificates.X509CAPI.ConstructorIntPtrZero

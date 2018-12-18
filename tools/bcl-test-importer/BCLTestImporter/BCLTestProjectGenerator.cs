@@ -128,7 +128,7 @@ namespace BCLTestImporter {
 			"monotouch_System.Data.DataSetExtensions_test.dll", // issue https://github.com/xamarin/maccore/issues/1150 and https://github.com/xamarin/maccore/issues/1151
 			"monotouch_System.Core_test.dll", // issue https://github.com/xamarin/maccore/issues/1143
 			"monotouch_Mono.Runtime.Tests_test.dll", // issue https://github.com/xamarin/maccore/issues/1141
-			"monotouch_corlib_test.dll", // issue https://github.com/xamarin/maccore/issues/1153
+			//"monotouch_corlib_test.dll", // issue https://github.com/xamarin/maccore/issues/1153
 			"monotouch_Commons.Xml.Relaxng_test.dll", // not supported by xamarin
 			"monotouch_Cscompmgd_test.dll", // not supported by xamarin
 			"monotouch_I18N.CJK_test.dll",
