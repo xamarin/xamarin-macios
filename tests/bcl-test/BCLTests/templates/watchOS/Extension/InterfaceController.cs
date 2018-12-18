@@ -130,7 +130,7 @@ namespace monotouchtestWatchKitExtension
 			
 			var skippedTests = GetSkippedTests ().Result; // block, should be fast
 			if (skippedTests.Length > 0) {
-				// ensure that we skip those tests that have been passed via the cmd
+				// ensure that we skip those tests that have been passed via the ignore files
 				runner.SkipTests (skippedTests);
 			}
 			

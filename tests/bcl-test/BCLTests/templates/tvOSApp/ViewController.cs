@@ -97,7 +97,7 @@ namespace BCLTests {
 
 			var skippedTests = await GetSkippedTests ();
 			if (skippedTests.Length > 0) {
-				// ensure that we skip those tests that have been passed via the cmd
+				// ensure that we skip those tests that have been passed via the ignore files
 				runner.SkipTests (skippedTests);
 			}
 
