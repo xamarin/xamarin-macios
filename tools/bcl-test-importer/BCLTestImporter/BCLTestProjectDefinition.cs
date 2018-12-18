@@ -65,24 +65,24 @@ namespace BCLTestImporter {
 		/// Returns the assemblies that a referenced by the given test assembly.
 		/// </summary>
 		/// <returns></returns>
-		IEnumerable<string> GetProjectAssemblyReferences (string monoRootPath, Platform platform)
+		IEnumerable<string> GetProjectAssemblyReferences (string rootPath, Platform platform, bool wasDownloaded)
 		{
 			var set = new HashSet<string> ();
 			foreach (var definition in TestAssemblies) {
-				foreach (var reference in GetAssemblyReferences (definition.GetPath (monoRootPath, platform))) {
+				foreach (var reference in GetAssemblyReferences (definition.GetPath (rootPath, platform, wasDownloaded))) {
 					set.Add (reference);
 				}
 			}
 			return set;
 		}
 		
-		public Dictionary <string, Type> GetTypeForAssemblies (string monoRootPath, Platform platform) {
+		public Dictionary <string, Type> GetTypeForAssemblies (string monoRootPath, Platform platform, bool wasDownloaded) {
 			if (monoRootPath == null)
 				throw new ArgumentNullException (nameof (monoRootPath));
 			var dict = new Dictionary <string, Type> ();
 			// loop over the paths, grab the assembly, find a type and then add it
 			foreach (var definition in TestAssemblies) {
-				var path = definition.GetPath (monoRootPath, platform);
+				var path = definition.GetPath (monoRootPath, platform, wasDownloaded);
 				var a = Assembly.LoadFile (path);
 				try {
 					var types = a.ExportedTypes;
@@ -111,17 +111,17 @@ namespace BCLTestImporter {
 		/// <param name="platform">The platform we are working with.</param>
 		/// <returns>The list of tuples (assembly name, path hint) for all the assemblies in the project.</returns>
 		public List<(string assembly, string hintPath)> GetAssemblyInclusionInformation (string monoRootPath,
-			Platform platform)
+			Platform platform, bool wasDownloaded)
 		{
 			if (monoRootPath == null)
 				throw new ArgumentNullException (nameof (monoRootPath));
 			
-			return GetProjectAssemblyReferences (monoRootPath, platform).Select (
+			return GetProjectAssemblyReferences (monoRootPath, platform, wasDownloaded).Select (
 					a => (assembly: a, 
 						hintPath: BCLTestAssemblyDefinition.GetHintPathForRefenreceAssembly (a, monoRootPath, platform))).Union (
 					TestAssemblies.Select (
 						definition => (assembly: definition.Name,
-							hintPath: definition.GetPath (monoRootPath, platform))))
+							hintPath: definition.GetPath (monoRootPath, platform, wasDownloaded))))
 				.ToList ();
 		}
 
