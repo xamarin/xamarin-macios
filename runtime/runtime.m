@@ -2391,7 +2391,7 @@ xamarin_process_managed_exception (MonoObject *exception)
 	mono_gchandle_free (handle);
 
 	if (exception_gchandle != 0) {
-		PRINT (PRODUCT ": Got an exception while executing the MarshalManagedCException event (this exception will be ignored):");
+		PRINT (PRODUCT ": Got an exception while executing the MarshalManagedException event (this exception will be ignored):");
 		PRINT ("%@", print_all_exceptions (mono_gchandle_get_target (exception_gchandle)));
 		mono_gchandle_free (exception_gchandle);
 		exception_gchandle = 0;
