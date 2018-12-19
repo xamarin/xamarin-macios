@@ -154,6 +154,9 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void RebuildWatchAppNoChanges ()
 		{
+			if (config == "Release")
+				Assert.Ignore ("https://github.com/mono/mono/issues/12130");
+
 			bool expectedCodesignResults = Platform != "iPhoneSimulator";
 
 			BuildProject ("MyWatch2Container", Platform, config, clean: true);
@@ -172,6 +175,9 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void CodesignAfterModifyingWatchApp2Test ()
 		{
+			if (config == "Release")
+				Assert.Ignore ("https://github.com/mono/mono/issues/12130");
+
 			var csproj = BuildProject ("MyWatch2Container", Platform, config, clean: true);
 			var testsDir = Path.GetDirectoryName (Path.GetDirectoryName (csproj));
 			var appexProjectDir = Path.Combine (testsDir, "MyWatchKit2Extension");
