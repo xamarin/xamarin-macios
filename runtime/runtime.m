@@ -1104,11 +1104,8 @@ print_exception (MonoObject *exc, bool is_inner, NSMutableString *msg)
 	char *trace = fetch_exception_property_string (exc, "get_StackTrace", true);
 	char *message = fetch_exception_property_string (exc, "get_Message", true);
 
-	if (!is_inner) {
-		[msg appendString:@"Unhandled managed exception:\n"];
-	} else {
+	if (is_inner)
 		[msg appendString:@" --- inner exception ---\n"];
-	}
 	[msg appendFormat: @"%s (%s)\n", message, type_name];
 	if (trace)
 		[msg appendFormat: @"%s\n", trace];
@@ -1172,7 +1169,7 @@ xamarin_process_managed_exception_gchandle (guint32 gchandle)
 void
 xamarin_unhandled_exception_handler (MonoObject *exc, gpointer user_data)
 {
-	PRINT ("%@", print_all_exceptions (exc));
+	PRINT ("Unhandled managed exception: %@", print_all_exceptions (exc));
 
 	abort ();
 }
