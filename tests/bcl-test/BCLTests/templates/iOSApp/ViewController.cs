@@ -11,6 +11,7 @@ using BCLTests.TestRunner.Core;
 using Xamarin.iOS.UnitTests.XUnit;
 using System.IO;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace BCLTests {
 	public partial class ViewController : UIViewController {
@@ -58,25 +59,6 @@ namespace BCLTests {
 		}
 #endif
 
-		public async Task<string[]> GetSkippedTests ()
-		{
-			var ignoredFiles = new List<string> ();
-			// the project generator added the required resources,
-			// we extract them, parse them and add the result
-			var executingAssembly = Assembly.GetExecutingAssembly();
-			foreach (var resourceName in executingAssembly.GetManifestResourceNames ()) {
-				if (resourceName.EndsWith (".ignore", StringComparison.Ordinal)) {
-					using (var stream = executingAssembly.GetManifestResourceStream(resourceName))
-					using (var reader = new StreamReader(stream)) {
-						var ignored = await IgnoreFileParser.ParseStream (reader);
-						// we could have more than one file, lets add them
-						ignoredFiles.AddRange (ignored);
-					}
-				}
-			}
-			return ignoredFiles.ToArray ();
-		}
-		
 		public async override void ViewDidLoad ()
 		{
 			base.ViewDidLoad ();
@@ -97,8 +79,8 @@ namespace BCLTests {
 			else
 				runner = new NUnitTestRunner (logger);
 
-			var skippedTests = await GetSkippedTests ();
-			if (skippedTests.Length > 0) {
+			var skippedTests = await IgnoreFileParser.ParseAssemblyResourcesAsync (Assembly.GetExecutingAssembly ());
+			if (skippedTests.Any ()) {
 				// ensure that we skip those tests that have been passed via the ignore files
 				runner.SkipTests (skippedTests);
 			}

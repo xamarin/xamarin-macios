@@ -1006,11 +1006,13 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			}
 		}
 
-		public override void SkipTests (string[] tests)
+		public override void SkipTests (IEnumerable<string> tests)
 		{
-			// create a single filter per test
-			foreach (var t in tests) {
-				filters.Add (XUnitFilter.CreateSingleFilter (t, true));
+			if (tests.Any ()) {
+				// create a single filter per test
+				foreach (var t in tests) {
+					filters.Add (XUnitFilter.CreateSingleFilter (t, true));
+				}
 			}
 		}
 	}

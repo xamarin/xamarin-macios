@@ -1,6 +1,8 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Reflection;
+using System;
 
 namespace BCLTests {
 
@@ -10,7 +12,7 @@ namespace BCLTests {
 	/// </summary>
 	public static class IgnoreFileParser {
 
-		public static async Task<string[]> ParseStream (TextReader textReader)
+		public static async Task<IEnumerable<string>> ParseStreamAsync (TextReader textReader)
 		{
 			var ignoredMethods = new List<string> ();
 			string line;
@@ -30,7 +32,25 @@ namespace BCLTests {
 				// we removed all comments or empty spaces
 				ignoredMethods.Add (line);
 			}
-			return ignoredMethods.ToArray ();
+			return ignoredMethods;
+		}
+
+		public static async Task<IEnumerable<string>> ParseAssemblyResourcesAsync (Assembly asm)
+		{
+			var ignoredFiles = new List<string> ();
+			// the project generator added the required resources,
+			// we extract them, parse them and add the result
+			foreach (var resourceName in asm.GetManifestResourceNames ()) {
+				if (resourceName.EndsWith (".ignore", StringComparison.Ordinal)) {
+					using (var stream = asm.GetManifestResourceStream (resourceName))
+					using (var reader = new StreamReader (stream)) {
+						var ignored = await ParseStreamAsync (reader);
+						// we could have more than one file, lets add them
+						ignoredFiles.AddRange (ignored);
+					}
+				}
+			}
+			return ignoredFiles;
 		}
 	}
 }

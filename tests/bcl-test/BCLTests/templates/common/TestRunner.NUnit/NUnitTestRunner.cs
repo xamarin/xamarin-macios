@@ -243,15 +243,11 @@ namespace Xamarin.iOS.UnitTests.NUnit
 			resultsXml.WriteResultFile (results, writer);
 		}
 		
-		public override void SkipTests (string[] tests)
+		public override void SkipTests (IEnumerable<string> tests)
 		{
 			// grab the tests and create a filter for them
-			if (tests.Length > 0) {
-				var mFilter = new TestMethodFilter (tests [0]);
-				for (var i = 1; i < tests.Length; i++) {
-					mFilter.AddMethod (tests [i]);
-				}
-				Filter = mFilter;
+			if (tests.Any ()) {
+				Filter = new TestMethodFilter (tests);
 			}
 		}
 	}

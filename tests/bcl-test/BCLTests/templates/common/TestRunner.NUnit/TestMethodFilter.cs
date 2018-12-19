@@ -9,11 +9,13 @@ namespace Xamarin.iOS.UnitTests.NUnit
 {
 	public class TestMethodFilter : TestFilter
 	{
-		List <string> methods;
+		HashSet <string> methods = new HashSet<string> ();
 
 		public TestMethodFilter (string method)
 		{
-			AddMethod (method);
+			if (string.IsNullOrEmpty (method))
+				throw new ArgumentException (nameof (method));
+			Add (method);
 		}
 
 		public TestMethodFilter (IEnumerable<string> methods)
@@ -21,22 +23,23 @@ namespace Xamarin.iOS.UnitTests.NUnit
 			if (methods == null)
 				throw new ArgumentNullException (nameof (methods));
 
-			foreach (string m in methods) {
-				AddMethod (m);
-			}
+			AddRange (methods);
 		}
 
-		public void AddMethod (string method)
+		public void Add (string method)
 		{
 			if (string.IsNullOrEmpty (method))
 				throw new ArgumentException ("must not be null or empty", nameof (method));
 
-			if (methods == null)
-				methods = new List <string> ();
-			if (methods.Contains (method))
-				return;
-
 			methods.Add (method);
+		}
+		
+		public void AddRange (IEnumerable<string> ignoredMethods)
+		{
+			if (methods == null)
+				throw new ArgumentNullException (nameof (ignoredMethods));
+			foreach (var m in ignoredMethods)
+				methods.Add (m);
 		}
 
 		public override bool Match (ITest test)

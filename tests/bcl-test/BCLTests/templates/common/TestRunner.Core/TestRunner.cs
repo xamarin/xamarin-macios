@@ -33,7 +33,7 @@ namespace Xamarin.iOS.UnitTests
 		public abstract void Run (IList <TestAssemblyInfo> testAssemblies);
 		public abstract string WriteResultsToFile ();
 		public abstract void WriteResultsToFile (TextWriter writer);
-		public abstract void SkipTests (string[] tests);
+		public abstract void SkipTests (IEnumerable<string> tests);
 
 		protected void OnError (string message)
 		{
