@@ -1109,7 +1109,9 @@ print_exception (MonoObject *exc, bool is_inner, NSMutableString *msg)
 	} else {
 		[msg appendString:@" --- inner exception ---\n"];
 	}
-	[msg appendFormat: @"%s (%s)\n%s\n", message, type_name, trace];
+	[msg appendFormat: @"%s (%s)\n", message, type_name];
+	if (trace)
+		[msg appendFormat: @"%s\n", trace];
 
 	if (unhandled_exception_func && !is_inner)
 		unhandled_exception_func (exc, type_name, message, trace);
