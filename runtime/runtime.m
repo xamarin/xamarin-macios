@@ -2483,7 +2483,7 @@ xamarin_process_managed_exception (MonoObject *exception)
 	}
 	case MarshalManagedExceptionModeAbort:
 	default:
-		xamarin_assertion_message ("Aborting due to:\n%s\n", [print_all_exceptions (exception) UTF8String]);
+		xamarin_assertion_message ("Aborting due to trying to marshal managed exception:\n%s\n", [print_all_exceptions (exception) UTF8String]);
 		break;
 	}
 }
