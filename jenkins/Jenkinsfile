@@ -697,9 +697,7 @@ timestamps {
                                                     }
                                                 } catch (err) {
                                                     currentStage = "Running XM tests on '10.${macOS}'"
-                                                    def msg = err.getMessage ();
-                                                    if (msg == "")
-                                                        msg = "Xamarin.Mac tests on 10.${macOS} failed"
+                                                    def msg = "Xamarin.Mac tests on 10.${macOS} failed: " + err.getMessage ();
                                                     appendFileComment ("🔥 [${msg}](${env.RUN_DISPLAY_URL}) 🔥\n")
                                                     failedStages.add (currentStage)
                                                     throw err
