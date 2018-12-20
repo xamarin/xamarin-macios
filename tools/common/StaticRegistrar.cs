@@ -4750,7 +4750,7 @@ namespace Registrar {
 
 				sb.WriteLine (native_return_type);
 				sb.Write (name);
-				sb.Write (" (", method.Name);
+				sb.Write (" (");
 				for (int i = first_parameter; i < method.Parameters.Count; i++) {
 					if (i > first_parameter)
 						sb.Write (", ");
