@@ -12,6 +12,18 @@ namespace BCLTests {
 	/// </summary>
 	public static class IgnoreFileParser {
 
+		static string ParseLine (string line)
+		{
+			// we have to make sure of several things, first, lets
+			// remove any char after the first # which would mean
+			// we have comments:
+			var pos = line.IndexOf ('#');
+			if (pos > -1) {
+				line = line.Remove (pos);
+			}
+			line = line.Trim ();
+			return line;	
+		}
 		public static async Task<IEnumerable<string>> ParseStreamAsync (TextReader textReader)
 		{
 			var ignoredMethods = new List<string> ();
@@ -20,16 +32,9 @@ namespace BCLTests {
 				// we have to make sure of several things, first, lets
 				// remove any char after the first # which would mean
 				// we have comments:
-				var pos = line.IndexOf ('#');
-				if (pos > -1) {
-					line = line.Remove (pos);
-				}
-				line = line.Trim ();
-				
-				// continue if the line was empty or was just a comment
+				line = ParseLine (line);
 				if (string.IsNullOrEmpty (line))
 					continue;
-				// we removed all comments or empty spaces
 				ignoredMethods.Add (line);
 			}
 			return ignoredMethods;
@@ -55,12 +60,29 @@ namespace BCLTests {
 		
 		public static async Task<IEnumerable<string>> ParseContentFilesAsync (string contentDir)
 		{
-			var files = Directory.GetFiles (contentDir, "*.ignore");
 			var ignoredTests = new List<string> ();
 			foreach (var f in Directory.GetFiles (contentDir, "*.ignore")) {
 				using (var reader = new StreamReader (f)) {
 					var ignored = await ParseStreamAsync (reader);
 					ignoredTests.AddRange (ignored);
+				}
+			}
+			return ignoredTests;
+		}
+		
+		public static IEnumerable<string> ParseContentFiles (string contentDir)
+		{
+			var ignoredTests = new List<string> ();
+			foreach (var f in Directory.GetFiles (contentDir, "*.ignore")) {
+				using (var reader = new StreamReader (f)) {
+					string line;
+					while ((line = reader.ReadLine ()) != null) {
+
+						line = ParseLine (line);
+						if (string.IsNullOrEmpty (line))
+							continue;
+						ignoredTests.Add (line);
+					}
 				}
 			}
 			return ignoredTests;
