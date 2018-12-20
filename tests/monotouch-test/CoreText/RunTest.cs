@@ -1,9 +1,10 @@
-﻿using System;
+﻿#if !__WATCHOS__
+
+using System;
 
 using CoreGraphics;
 using CoreText;
 using Foundation;
-using UIKit;
 
 using NUnit.Framework;
 using MonoTouchFixtures.CoreGraphics;
@@ -74,3 +75,5 @@ namespace MonoTouchFixtures.CoreText {
 		}
 	}
 }
+
+#endif
