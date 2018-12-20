@@ -545,13 +545,16 @@ timestamps {
                         stage ('Publish builds to GitHub') {
                             currentStage = "${STAGE_NAME}"
                             utils = load ("${workspace}/xamarin-macios/jenkins/utils.groovy")
+                            def packagesMessage = ""
                             if (xiPackageFilename != null) {
                                 xiPackageUrl = "${packagePrefix}/${xiPackageFilename}"
                                 utils.reportGitHubStatus (gitHash, 'PKG-Xamarin.iOS', "${xiPackageUrl}", 'SUCCESS', "${xiPackageFilename}")
+                                packagesMessage += "[${xiPackageFilename}](${xiPackageUrl}) "
                             }
                             if (xmPackageFilename != null) {
                                 xmPackageUrl = "${packagePrefix}/${xmPackageFilename}"
                                 utils.reportGitHubStatus (gitHash, 'PKG-Xamarin.Mac', "${xmPackageUrl}", 'SUCCESS', "${xmPackageFilename}")
+                                packagesMessage += "[${xmPackageFilename}](${xmPackageUrl})"
                             }
                             if (manifestFilename != null) {
                                 def manifestUrl = "${packagePrefix}/${manifestFilename}"
@@ -569,6 +572,9 @@ timestamps {
                                 def msbuildZipUrl = "${packagePrefix}/${msbuildZipFilename}"
                                 utils.reportGitHubStatus (gitHash, "msbuild.zip", "${msbuildZipUrl}", 'SUCCESS', "${msbuildZipFilename}")
                             }
+
+                            if (packagesMessage != "")
+                                appendFileComment ("✅ Packages: ${packagesMessage}\n")
                         }
 
                         dir ('xamarin-macios') {
