@@ -76,7 +76,7 @@ namespace Xamarin.iOS.Tasks
 				appexDsymTimestamps = Directory.EnumerateFiles (appexDsymDir, "*.*", SearchOption.AllDirectories).ToDictionary (file => file, file => GetLastModified (file));
 			}
 
-			Thread.Sleep (1000);
+			EnsureFilestampChange ();
 
 			// Rebuild w/ no changes
 			BuildProject ("MyTabbedApplication", Platform, config, clean: false);
@@ -130,7 +130,7 @@ namespace Xamarin.iOS.Tasks
 
 			AssertProperlyCodesigned (expectedCodesignResults);
 
-			Thread.Sleep (1000);
+			EnsureFilestampChange ();
 
 			// replace "bool imageFound = false;" with "bool imageFound = true;" so that we force the appex to get rebuilt
 			text = text.Replace ("bool imageFound = false;", "bool imageFound = true;");
@@ -160,7 +160,7 @@ namespace Xamarin.iOS.Tasks
 
 			AssertProperlyCodesigned (expectedCodesignResults);
 
-			Thread.Sleep (1000);
+			EnsureFilestampChange ();
 
 			// Rebuild w/ no changes
 			BuildProject ("MyWatch2Container", Platform, config, clean: false);
@@ -183,7 +183,7 @@ namespace Xamarin.iOS.Tasks
 
 			AssertProperlyCodesigned (expectedCodesignResults);
 
-			Thread.Sleep (1000);
+			EnsureFilestampChange ();
 
 			// replace "bool imageFound = false;" with "bool imageFound = true;" so that we force the appex to get rebuilt
 			text = text.Replace ("{0} awake with context", "{0} The Awakening...");

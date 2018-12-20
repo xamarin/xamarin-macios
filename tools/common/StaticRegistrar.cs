@@ -4750,7 +4750,7 @@ namespace Registrar {
 
 				sb.WriteLine (native_return_type);
 				sb.Write (name);
-				sb.Write (" (", method.Name);
+				sb.Write (" (");
 				for (int i = first_parameter; i < method.Parameters.Count; i++) {
 					if (i > first_parameter)
 						sb.Write (", ");
@@ -4760,6 +4760,11 @@ namespace Registrar {
 				}
 				sb.WriteLine (")");
 				sb.WriteLine ("{");
+				if (is_stret) {
+					sb.StringBuilder.AppendLine ("#if defined (__arm64__)");
+					sb.WriteLine ("xamarin_process_managed_exception ((MonoObject *) mono_exception_from_name_msg (mono_get_corlib (), \"System\", \"EntryPointNotFoundException\", \"{0}\"));", pinfo.EntryPoint);
+					sb.StringBuilder.AppendLine ("#else");
+				}
 				sb.WriteLine ("@try {");
 				if (!isVoid || is_stret)
 					sb.Write ("return ");
@@ -4773,6 +4778,8 @@ namespace Registrar {
 				sb.WriteLine ("} @catch (NSException *exc) {");
 				sb.WriteLine ("xamarin_process_nsexception (exc);");
 				sb.WriteLine ("}");
+				if (is_stret)
+					sb.StringBuilder.AppendLine ("#endif /* defined (__arm64__) */");
 				sb.WriteLine ("}");
 				sb.WriteLine ();
 			} else {
