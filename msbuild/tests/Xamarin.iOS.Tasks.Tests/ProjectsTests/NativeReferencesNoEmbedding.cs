@@ -98,13 +98,13 @@ namespace Xamarin.iOS.Tasks
 			// Touching the binding project should
 			Touch (bindingLib.ProjectCSProjPath);
 			BuildProjectNoEmbedding (bindingLib, clean: false);
-			Assert.True (GetMessages ().Contains (CreatePackageString), "Bindng project build did not create package?");
+			Assert.True (GetMessages ().Contains (CreatePackageString), "Binding project build did not create package?");
 			ClearMessages ();
 
 			// Touching the binding file should
 			Touch (Path.Combine (Path.GetDirectoryName (bindingLib.ProjectCSProjPath), @"../../../tests/bindings-framework-test/ApiDefinition.cs"));
 			BuildProjectNoEmbedding (bindingLib, clean: false);
-			Assert.True (GetMessages ().Contains (CreatePackageString), "Bindng file build did not create package?");
+			Assert.True (GetMessages ().Contains (CreatePackageString), "Binding file build did not create package?");
 			ClearMessages ();
 
 			// No change build should not
@@ -115,7 +115,7 @@ namespace Xamarin.iOS.Tasks
 			// Touching native library should
 			Touch (Path.Combine (Path.GetDirectoryName (bindingLib.ProjectCSProjPath), @"../../../tests/test-libraries/.libs/ios/XTest.framework/XTest"));
 			BuildProjectNoEmbedding (bindingLib, clean: false);
-			Assert.True (GetMessages ().Contains (CreatePackageString), "Bindng build did not create package?");
+			Assert.True (GetMessages ().Contains (CreatePackageString), "Binding build did not create package?");
 		}
 
 		[TestCase (true)]
