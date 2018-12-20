@@ -1104,12 +1104,11 @@ print_exception (MonoObject *exc, bool is_inner, NSMutableString *msg)
 	char *trace = fetch_exception_property_string (exc, "get_StackTrace", true);
 	char *message = fetch_exception_property_string (exc, "get_Message", true);
 
-	if (!is_inner) {
-		[msg appendString:@"Unhandled managed exception:\n"];
-	} else {
+	if (is_inner)
 		[msg appendString:@" --- inner exception ---\n"];
-	}
-	[msg appendFormat: @"%s (%s)\n%s\n", message, type_name, trace];
+	[msg appendFormat: @"%s (%s)\n", message, type_name];
+	if (trace)
+		[msg appendFormat: @"%s\n", trace];
 
 	if (unhandled_exception_func && !is_inner)
 		unhandled_exception_func (exc, type_name, message, trace);
@@ -1170,7 +1169,7 @@ xamarin_process_managed_exception_gchandle (guint32 gchandle)
 void
 xamarin_unhandled_exception_handler (MonoObject *exc, gpointer user_data)
 {
-	PRINT ("%@", print_all_exceptions (exc));
+	PRINT ("Unhandled managed exception: %@", print_all_exceptions (exc));
 
 	abort ();
 }
@@ -2392,7 +2391,7 @@ xamarin_process_managed_exception (MonoObject *exception)
 	mono_gchandle_free (handle);
 
 	if (exception_gchandle != 0) {
-		PRINT (PRODUCT ": Got an exception while executing the MarshalManagedCException event (this exception will be ignored):");
+		PRINT (PRODUCT ": Got an exception while executing the MarshalManagedException event (this exception will be ignored):");
 		PRINT ("%@", print_all_exceptions (mono_gchandle_get_target (exception_gchandle)));
 		mono_gchandle_free (exception_gchandle);
 		exception_gchandle = 0;
@@ -2484,7 +2483,7 @@ xamarin_process_managed_exception (MonoObject *exception)
 	}
 	case MarshalManagedExceptionModeAbort:
 	default:
-		xamarin_assertion_message ("Aborting due to:\n%s\n", [print_all_exceptions (exception) UTF8String]);
+		xamarin_assertion_message ("Aborting due to trying to marshal managed exception:\n%s\n", [print_all_exceptions (exception) UTF8String]);
 		break;
 	}
 }
