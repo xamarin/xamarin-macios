@@ -379,6 +379,12 @@
       <Link>ViewController.designer.cs</Link>
       <DependentUpon>ViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="templates\common\TestRunner.NUnit\TestMethodFilter.cs">
+      <Link>TestRunner.NUnit\TestMethodFilter.cs</Link>
+    </Compile>
+    <Compile Include="templates\common\IgnoreFileParser.cs">
+      <Link>IgnoreFileParser.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="templates\common\TestRunner.xUnit\NUnitXml.xslt">
