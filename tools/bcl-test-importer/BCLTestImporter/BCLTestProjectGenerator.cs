@@ -20,7 +20,7 @@ namespace BCLTestImporter {
 		internal static readonly string NameKey = "%NAME%";
 		internal static readonly string ReferencesKey = "%REFERENCES%";
 		internal static readonly string RegisterTypeKey = "%REGISTER TYPE%";
-		internal static readonly string EmbeddedResourcesKey = "%EMBEDDED RESOURCES%";
+		internal static readonly string ContentKey = "%CONTENT RESOURCES%";
 		internal static readonly string PlistKey = "%PLIST PATH%";
 		internal static readonly string WatchOSTemplatePathKey = "%TEMPLATE PATH%";
 		internal static readonly string WatchOSCsporjAppKey = "%WATCH APP PROJECT PATH%";
@@ -367,12 +367,13 @@ namespace BCLTestImporter {
 			return sb.ToString ();
 		}
 
-		internal static string GetEmbeddedResourceNode (string resourcePath)
+		internal static string GetContentNode (string resourcePath)
 		{
 			var sb = new StringBuilder ();
-			sb.AppendLine ($"<EmbeddedResource Include=\"{resourcePath}\">");
+			sb.AppendLine ($"<Content Include=\"{resourcePath}\">");
 			sb.AppendLine ($"<Link>{Path.GetFileName (resourcePath)}</Link>");
-			sb.AppendLine ("</EmbeddedResource>");
+			sb.AppendLine ("<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>");
+			sb.AppendLine ("</Content>");
 			return sb.ToString ();
 		}
 
@@ -715,9 +716,9 @@ namespace BCLTestImporter {
 				sb.AppendLine (GetReferenceNode (assemblyInfo.assembly, assemblyInfo.hintPath));
 			}
 			
-			var resourceFiles = new StringBuilder ();
+			var contentFiles = new StringBuilder ();
 			foreach (var path in GetIgnoreFiles (templatePath, projectName, platform)) {
-				resourceFiles.Append (GetEmbeddedResourceNode (path));
+				contentFiles.Append (GetContentNode (path));
 			}
 
 			using (var reader = new StreamReader(templatePath)) {
@@ -726,7 +727,7 @@ namespace BCLTestImporter {
 				result = result.Replace (ReferencesKey, sb.ToString ());
 				result = result.Replace (RegisterTypeKey, GetRegisterTypeNode (registerPath));
 				result = result.Replace (PlistKey, infoPlistPath);
-				result = result.Replace (EmbeddedResourcesKey, resourceFiles.ToString ());
+				result = result.Replace (ContentKey, contentFiles.ToString ());
 				return result;
 			}
 		}
@@ -740,9 +741,9 @@ namespace BCLTestImporter {
 				sb.AppendLine (GetReferenceNode (assemblyInfo.assembly, assemblyInfo.hintPath));
 			}
 
-			var resourceFiles = new StringBuilder ();
+			var contentFiles = new StringBuilder ();
 			foreach (var path in GetIgnoreFiles (templatePath, projectName, platform)) {
-				resourceFiles.Append (GetEmbeddedResourceNode (path));
+				contentFiles.Append (GetContentNode (path));
 			}
 			using (var reader = new StreamReader(templatePath)) {
 				var result = await reader.ReadToEndAsync ();
@@ -750,7 +751,7 @@ namespace BCLTestImporter {
 				result = result.Replace (ReferencesKey, sb.ToString ());
 				result = result.Replace (RegisterTypeKey, GetRegisterTypeNode (registerPath));
 				result = result.Replace (PlistKey, infoPlistPath);
-				result = result.Replace (EmbeddedResourcesKey, resourceFiles.ToString ());
+				result = result.Replace (ContentKey, contentFiles.ToString ());
 				switch (platform){
 				case Platform.MacOSFull:
 					result = result.Replace (TargetFrameworkVersionKey, "v4.5");
@@ -798,9 +799,9 @@ namespace BCLTestImporter {
 					sb.AppendLine (GetReferenceNode (assemblyInfo.assembly, assemblyInfo.hintPath));
 			}
 			
-			var resourceFiles = new StringBuilder ();
+			var contentFiles = new StringBuilder ();
 			foreach (var path in GetIgnoreFiles (templatePath, projectName, Platform.WatchOS)) {
-				resourceFiles.Append (GetEmbeddedResourceNode (path));
+				contentFiles.Append (GetContentNode (path));
 			}
 			
 			using (var reader = new StreamReader(templatePath)) {
@@ -810,7 +811,7 @@ namespace BCLTestImporter {
 				result = result.Replace (PlistKey, infoPlistPath);
 				result = result.Replace (RegisterTypeKey, GetRegisterTypeNode (registerPath));
 				result = result.Replace (ReferencesKey, sb.ToString ());
-				result = result.Replace (EmbeddedResourcesKey, resourceFiles.ToString ());
+				result = result.Replace (ContentKey, contentFiles.ToString ());
 				return result;
 			}
 		}

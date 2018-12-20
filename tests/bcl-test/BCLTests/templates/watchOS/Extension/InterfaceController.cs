@@ -109,7 +109,7 @@ namespace monotouchtestWatchKitExtension
 			else
 				runner = new NUnitTestRunner (logger);
 			
-			var skippedTests = IgnoreFileParser.ParseAssemblyResourcesAsync (Assembly.GetExecutingAssembly ()).Result;
+			var skippedTests = IgnoreFileParser.ParseContentFilesAsync (NSBundle.MainBundle.BundlePath).Result;
 			if (skippedTests.Any ()) {
 				// ensure that we skip those tests that have been passed via the ignore files
 				runner.SkipTests (skippedTests);

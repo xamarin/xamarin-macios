@@ -289,7 +289,7 @@
     <EmbeddedResource Include="templates\common\TestRunner.xUnit\NUnitXml.xslt">
       <Link>TestRunner.xUnit\NUnitXml.xslt</Link>
     </EmbeddedResource>
-    %EMBEDDED RESOURCES%
+    %CONTENT RESOURCES%
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\TVOS\Xamarin.TVOS.CSharp.targets" />
   <Import Project="..\..\..\packages\NETStandard.Library.2.0.0\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\..\..\packages\NETStandard.Library.2.0.0\build\netstandard2.0\NETStandard.Library.targets')" />

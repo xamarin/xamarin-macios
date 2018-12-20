@@ -37,7 +37,7 @@ namespace BCLTests {
 
 		public static async Task<IEnumerable<string>> ParseAssemblyResourcesAsync (Assembly asm)
 		{
-			var ignoredFiles = new List<string> ();
+			var ignoredTests = new List<string> ();
 			// the project generator added the required resources,
 			// we extract them, parse them and add the result
 			foreach (var resourceName in asm.GetManifestResourceNames ()) {
@@ -46,11 +46,24 @@ namespace BCLTests {
 					using (var reader = new StreamReader (stream)) {
 						var ignored = await ParseStreamAsync (reader);
 						// we could have more than one file, lets add them
-						ignoredFiles.AddRange (ignored);
+						ignoredTests.AddRange (ignored);
 					}
 				}
 			}
-			return ignoredFiles;
+			return ignoredTests;
+		}
+		
+		public static async Task<IEnumerable<string>> ParseContentFilesAsync (string contentDir)
+		{
+			var files = Directory.GetFiles (contentDir, "*.ignore");
+			var ignoredTests = new List<string> ();
+			foreach (var f in Directory.GetFiles (contentDir, "*.ignore")) {
+				using (var reader = new StreamReader (f)) {
+					var ignored = await ParseStreamAsync (reader);
+					ignoredTests.AddRange (ignored);
+				}
+			}
+			return ignoredTests;
 		}
 	}
 }

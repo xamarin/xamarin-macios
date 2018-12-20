@@ -12,6 +12,7 @@ using Xamarin.iOS.UnitTests.XUnit;
 using System.IO;
 using System.Threading.Tasks;
 using System.Linq;
+using Foundation;
 
 namespace BCLTests {
 	public partial class ViewController : UIViewController {
@@ -79,7 +80,7 @@ namespace BCLTests {
 			else
 				runner = new NUnitTestRunner (logger);
 
-			var skippedTests = await IgnoreFileParser.ParseAssemblyResourcesAsync (Assembly.GetExecutingAssembly ());
+			var skippedTests = await IgnoreFileParser.ParseContentFilesAsync (NSBundle.MainBundle.BundlePath);
 			if (skippedTests.Any ()) {
 				// ensure that we skip those tests that have been passed via the ignore files
 				runner.SkipTests (skippedTests);

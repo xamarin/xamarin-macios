@@ -226,7 +226,7 @@
     <EmbeddedResource Include="templates\common\TestRunner.xUnit\NUnitXml.xslt">
       <Link>TestRunner.xUnit\NUnitXml.xslt</Link>
     </EmbeddedResource>
-    %EMBEDDED RESOURCES%
+    %CONTENT RESOURCES%
   </ItemGroup>
   <ItemGroup>
     <Folder Include="TestRunner.Core\" />
