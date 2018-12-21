@@ -321,9 +321,7 @@ namespace Xamarin.Linker {
 				"LLVM failed for 'CGRect.op_Inequality': opcode r4_cneq",
 				"LLVM failed for 'AVEdgeWidths.op_Inequality': opcode r4_cneq",
 			}) },
-			{ "mscorlib.dll", new Tuple<int, string[]> (0, new string [] {
-				"LLVM failed for 'Console.Write': opcode oparglist",
-				"LLVM failed for 'Console.WriteLine': opcode oparglist",
+			{ "mscorlib.dll", new Tuple<int, string[]> (139 /* https://github.com/mono/mono/issues/12130 */, new string [] {
 			}) },
 		};
 
