@@ -329,6 +329,8 @@ namespace Xamarin.Linker {
 		[TestCaseSource ("GetWatchOSAssemblies")]
 		public void NoLLVMFailuresInWatchOS (string asm)
 		{
+			MTouch.AssertDeviceAvailable ();
+
 			// Run LLVM on every assembly we ship in watchOS, using the arguments we usually use when done from mtouch.
 			var aot_compiler = Path.Combine (Configuration.BinDirXI, "armv7k-unknown-darwin-mono-sgen");
 			var tmpdir = Cache.CreateTemporaryDirectory ();
