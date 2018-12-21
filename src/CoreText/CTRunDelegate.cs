@@ -25,7 +25,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
-using System.Reflection;
 using System.Runtime.InteropServices;
 
 using ObjCRuntime;
@@ -125,24 +124,10 @@ namespace CoreText {
 			var callbacks = new CTRunDelegateCallbacks () {
 				version = CTRunDelegateVersion.Version1,
 				dealloc = Deallocate,
+				getAscent = GetAscent,
+				getDescent = GetDescent,
+				getWidth = GetWidth,
 			};
-
-			var flags = BindingFlags.Public | BindingFlags.Instance;
-			MethodInfo m;
-
-			if ((m = this.GetType ().GetMethod ("GetAscent", flags)) != null &&
-					m.DeclaringType != typeof (CTRunDelegateOperations)) {
-				callbacks.getAscent = GetAscent;
-			}
-			if ((m = this.GetType ().GetMethod ("GetDescent", flags)) != null &&
-					m.DeclaringType != typeof (CTRunDelegateOperations)) {
-				callbacks.getDescent = GetDescent;
-			}
-			if ((m = this.GetType ().GetMethod ("GetWidth", flags)) != null &&
-					m.DeclaringType != typeof (CTRunDelegateOperations)) {
-				callbacks.getWidth = GetWidth;
-			}
-
 			return callbacks;
 		}
 
