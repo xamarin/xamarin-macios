@@ -13,6 +13,9 @@ using System.Linq;
 using System.IO;
 
 using NUnit.Framework;
+using System.Net.Http.Headers;
+using System.Text;
+using Newtonsoft.Json;
 #if MONOMAC
 using Foundation;
 #endif
@@ -110,5 +113,51 @@ namespace MonoTests.System.Net.Http
 		}
 #endif
 
+		// ensure that if we have a redirect, we do not have the auth headers in the following requests
+		[Test]
+#if !__WATCHOS__
+		[TestCase (typeof (HttpClientHandler))]
+		[TestCase (typeof (CFNetworkHandler))]
+#endif
+		[TestCase (typeof (NSUrlSessionHandler))]
+		public void RedirectionWithAuthorizationHeaders (Type handlerType)
+		{
+			// anonymous type that represent the response
+			var definition = new { 
+				headers = new Dictionary<string, string> (),
+				origin = "",
+				url = ""
+			};
+			
+			PrintHandlerToTest ();
+
+			bool containsAuthorizarion = false;
+			string json = "";
+			bool done = false;
+			Exception ex = null;
+
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () =>
+			{
+				try {
+					HttpClient client = new HttpClient (GetHandler (handlerType));
+					client.BaseAddress = new Uri ("https://httpbin.org");
+					var byteArray = new UTF8Encoding ().GetBytes ("username:password");
+					client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue ("Basic", Convert.ToBase64String(byteArray));
+					var result = await client.GetAsync ("https://httpbin.org/redirect/3");
+					// get the data returned from httbin which contains the details of the requested performed.
+					json = await result.Content.ReadAsStringAsync ();
+					var httpRequest = JsonConvert.DeserializeAnonymousType (json, definition);
+					containsAuthorizarion = httpRequest.headers.ContainsKey ("Authorization");
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					done = true;
+				}
+			}, () => done);
+
+			Assert.IsTrue (done, "Request timedout");
+			Assert.IsFalse (containsAuthorizarion, $"Authorization header did reach the final destination. {json}");
+			Assert.IsNull (ex, $"Exception {ex} for {json}");
+		}
 	}
 }
