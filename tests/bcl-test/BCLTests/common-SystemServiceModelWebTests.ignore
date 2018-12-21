@@ -1,0 +1,17 @@
+# The following ignores have been reported in the issue: 
+#   issue https://github.com/xamarin/maccore/issues/1137
+
+# An unexpected exception type was thrown
+MonoTests.System.ServiceModel.Description.JsonQueryStringConverterTest.ConvertStringToValueInvalidCast2
+
+# An unexpected exception type was thrown
+MonoTests.System.ServiceModel.Description.QueryStringConverterTest.ConvertStringToValueInvalidCast2
+
+# Should result in invalid operation
+MonoTests.System.ServiceModel.Description.WebHttpBehaviorTest.MultipleParameters2
+
+# System.ArgumentException : baseAddress scheme must be either http or https. 
+MonoTests.System.UriTemplateTest.BindByNameFileUriBaseAddress
+
+# System.ArgumentException : baseAddress scheme must be either http or https.
+MonoTests.System.UriTemplateTest.BindByPositionFileUriBaseAddress

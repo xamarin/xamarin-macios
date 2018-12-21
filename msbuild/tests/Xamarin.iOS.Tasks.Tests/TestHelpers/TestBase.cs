@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Execution;
 using Microsoft.Build.Utilities;
@@ -331,8 +332,29 @@ namespace Xamarin.iOS.Tasks
 		{
 			if (!File.Exists (file))
 				Assert.Fail ("Expected file '{0}' did not exist", file);
-			File.SetLastWriteTimeUtc (file, DateTime.UtcNow.AddDays (1));
-			System.Threading.Thread.Sleep (1000);
+			EnsureFilestampChange ();
+			File.SetLastWriteTimeUtc (file, DateTime.UtcNow);
+			EnsureFilestampChange ();
+		}
+
+		static bool? is_apfs;
+		public static bool IsAPFS {
+			get {
+				if (!is_apfs.HasValue) {
+					var exit_code = ExecutionHelper.Execute ("/bin/df", "-t apfs /", out var output, TimeSpan.FromSeconds (10));
+					if (exit_code != 0)
+						throw new Exception ($"Could not determine whether / is APFS or not. 'df -t apfs /' returned {exit_code} and said: {output}");
+					is_apfs = output.Trim ().Split ('\n').Length >= 2;
+				}
+				return is_apfs.Value;
+			}
+		}
+
+		public static void EnsureFilestampChange ()
+		{
+			if (IsAPFS)
+				return;
+			Thread.Sleep (1000);
 		}
 
 		public void RunTarget (Project project, string target, int expectedErrorCount = 0)

@@ -17,6 +17,8 @@ namespace Xamarin.iOS.UnitTests
 		public long FilteredTests { get; protected set; } = 0;
 		public bool RunInParallel { get; set; } = false;
 		public string TestsRootDirectory { get; set; }
+		public bool RunAllTestsByDefault { get; set; } = true;
+		public bool LogExcludedTests { get; set; }
 		public TextWriter Writer { get; set; }
 		public List<TestFailureInfo> FailureInfos { get; } = new List<TestFailureInfo> ();
 
@@ -31,6 +33,7 @@ namespace Xamarin.iOS.UnitTests
 		public abstract void Run (IList <TestAssemblyInfo> testAssemblies);
 		public abstract string WriteResultsToFile ();
 		public abstract void WriteResultsToFile (TextWriter writer);
+		public abstract void SkipTests (IEnumerable<string> tests);
 
 		protected void OnError (string message)
 		{

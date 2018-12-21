@@ -27,10 +27,16 @@ namespace MonoTouchFixtures {
 			
 			Collect ();
 			bool aot = symbols [1].Contains ("MonoTouchFixtures_Symbols_Collect");
-			/* ves_pinvoke_method (slow path) and do_icall (fast path) are
-			 * MONO_NEVER_INLINE, so they should show up in the backtrace
-			 * reliably */
-			bool interp = symbols [1].Contains ("ves_pinvoke_method") || symbols [1].Contains ("do_icall");
+			bool interp = false;
+
+			if (!aot) {
+				for (int i = 0; i < 4 && !interp; i++) {
+					/* ves_pinvoke_method (slow path) and do_icall (fast path) are
+					 * MONO_NEVER_INLINE, so they should show up in the backtrace
+					 * reliably */
+					interp |= symbols [i].Contains ("ves_pinvoke_method") || symbols [i].Contains ("do_icall");
+				}
+			}
 
 			Assert.IsTrue (aot || interp, "#1");
 		}

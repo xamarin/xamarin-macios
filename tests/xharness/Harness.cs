@@ -86,6 +86,7 @@ namespace xharness
 		public string JENKINS_RESULTS_DIRECTORY { get; set; } // Use same name as in Makefiles, so that a grep finds it.
 		public string MAC_DESTDIR { get; set; }
 		public string IOS_DESTDIR { get; set; }
+		public string MONO_SDK_DESTDIR { get; set; }
 		public bool IncludeMac32 { get; set; }
 
 		// Run
@@ -225,6 +226,7 @@ namespace xharness
 				SdkRoot = make_config ["XCODE_DEVELOPER_ROOT"];
 			if (string.IsNullOrEmpty (SdkRoot94))
 				SdkRoot94 = make_config ["XCODE94_DEVELOPER_ROOT"];
+			MONO_SDK_DESTDIR = make_config ["MONO_SDK_DESTDIR"];
 		}
 		 
 		void AutoConfigureMac ()
@@ -295,6 +297,10 @@ namespace xharness
 					MacTestProjects.Add (bclTestProject);
 				}
 			}
+			var monoImportTestFactory = new BCLTestImportTargetFactory (this);
+			foreach (var target in monoImportTestFactory.GetMacBclTargets ()) {
+				MacTestProjects.Add (target);
+			}
 		}
 
 		void AutoConfigureIOS ()
@@ -360,7 +366,7 @@ namespace xharness
 
 			// add all the tests that are using the precompiled mono assemblies
 			var monoImportTestFactory = new BCLTestImportTargetFactory (this);
-			foreach (var target in monoImportTestFactory.GetBclTargets ()) {
+			foreach (var target in monoImportTestFactory.GetiOSBclTargets ()) {
 				IOSTestProjects.Add (target);
 			}
 

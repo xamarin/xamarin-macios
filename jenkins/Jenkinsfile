@@ -395,6 +395,7 @@ timestamps {
                         stage ('Checkout') {
                             currentStage = "${STAGE_NAME}"
                             echo ("Building on ${env.NODE_NAME}")
+                            sh ("env | sort") // Print out environment for debug purposes
                             scmVars = checkout scm
                             isPr = (env.CHANGE_ID && !env.CHANGE_ID.empty ? true : false)
                             branchName = env.BRANCH_NAME
@@ -544,13 +545,16 @@ timestamps {
                         stage ('Publish builds to GitHub') {
                             currentStage = "${STAGE_NAME}"
                             utils = load ("${workspace}/xamarin-macios/jenkins/utils.groovy")
+                            def packagesMessage = ""
                             if (xiPackageFilename != null) {
                                 xiPackageUrl = "${packagePrefix}/${xiPackageFilename}"
                                 utils.reportGitHubStatus (gitHash, 'PKG-Xamarin.iOS', "${xiPackageUrl}", 'SUCCESS', "${xiPackageFilename}")
+                                packagesMessage += "[${xiPackageFilename}](${xiPackageUrl}) "
                             }
                             if (xmPackageFilename != null) {
                                 xmPackageUrl = "${packagePrefix}/${xmPackageFilename}"
                                 utils.reportGitHubStatus (gitHash, 'PKG-Xamarin.Mac', "${xmPackageUrl}", 'SUCCESS', "${xmPackageFilename}")
+                                packagesMessage += "[${xmPackageFilename}](${xmPackageUrl})"
                             }
                             if (manifestFilename != null) {
                                 def manifestUrl = "${packagePrefix}/${manifestFilename}"
@@ -568,6 +572,9 @@ timestamps {
                                 def msbuildZipUrl = "${packagePrefix}/${msbuildZipFilename}"
                                 utils.reportGitHubStatus (gitHash, "msbuild.zip", "${msbuildZipUrl}", 'SUCCESS', "${msbuildZipFilename}")
                             }
+
+                            if (packagesMessage != "")
+                                appendFileComment ("✅ Packages: ${packagesMessage}\n")
                         }
 
                         dir ('xamarin-macios') {
@@ -696,9 +703,7 @@ timestamps {
                                                     }
                                                 } catch (err) {
                                                     currentStage = "Running XM tests on '10.${macOS}'"
-                                                    def msg = err.getMessage ();
-                                                    if (msg == "")
-                                                        msg = "Xamarin.Mac tests on 10.${macOS} failed"
+                                                    def msg = "Xamarin.Mac tests on 10.${macOS} failed: " + err.getMessage ();
                                                     appendFileComment ("🔥 [${msg}](${env.RUN_DISPLAY_URL}) 🔥\n")
                                                     failedStages.add (currentStage)
                                                     throw err

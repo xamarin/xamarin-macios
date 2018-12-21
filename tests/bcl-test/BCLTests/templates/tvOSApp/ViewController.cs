@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
 
@@ -9,6 +10,9 @@ using Xamarin.iOS.UnitTests;
 using Xamarin.iOS.UnitTests.NUnit;
 using BCLTests.TestRunner.Core;
 using Xamarin.iOS.UnitTests.XUnit;
+using System.Threading.Tasks;
+using System.IO;
+using Foundation;
 
 namespace BCLTests {
 	public partial class ViewController : UIViewController {
@@ -54,7 +58,7 @@ namespace BCLTests {
 		}
 #endif
 
-		public override void ViewDidLoad ()
+		public async override void ViewDidLoad ()
 		{
 			base.ViewDidLoad ();
 			var options = ApplicationOptions.Current;
@@ -73,7 +77,13 @@ namespace BCLTests {
 				runner = new XUnitTestRunner (logger);
 			else
 				runner = new NUnitTestRunner (logger);
-			
+
+			var skippedTests = await IgnoreFileParser.ParseContentFilesAsync (NSBundle.MainBundle.BundlePath);
+			if (skippedTests.Any ()) {
+				// ensure that we skip those tests that have been passed via the ignore files
+				runner.SkipTests (skippedTests);
+			}
+
 			runner.Run ((IList<TestAssemblyInfo>)testAssemblies);
 			if (options.EnableXml) {
 				runner.WriteResultsToFile (writer);

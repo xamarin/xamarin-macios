@@ -9,6 +9,10 @@ using Xamarin.iOS.UnitTests;
 using Xamarin.iOS.UnitTests.NUnit;
 using BCLTests.TestRunner.Core;
 using Xamarin.iOS.UnitTests.XUnit;
+using System.IO;
+using System.Threading.Tasks;
+using System.Linq;
+using Foundation;
 
 namespace BCLTests {
 	public partial class ViewController : UIViewController {
@@ -17,10 +21,12 @@ namespace BCLTests {
  		{
 			// var t = Path.GetFileName (typeof (ActivatorCas).Assembly.Location);
 			foreach (var name in RegisterType.TypesToRegister.Keys) {
-				var a = Assembly.Load (name);
+				var a = RegisterType.TypesToRegister [name].Assembly;
 				if (a == null) {
 					Console.WriteLine ($"# WARNING: Unable to load assembly {name}.");
  					continue;
+				} else {
+					Console.WriteLine ($"Loading assembly: {name}.");
 				}
 				yield return new TestAssemblyInfo (a, name);
 			}
@@ -54,7 +60,7 @@ namespace BCLTests {
 		}
 #endif
 
-		public override void ViewDidLoad ()
+		public async override void ViewDidLoad ()
 		{
 			base.ViewDidLoad ();
 			var options = ApplicationOptions.Current;
@@ -73,7 +79,13 @@ namespace BCLTests {
 				runner = new XUnitTestRunner (logger);
 			else
 				runner = new NUnitTestRunner (logger);
-			
+
+			var skippedTests = await IgnoreFileParser.ParseContentFilesAsync (NSBundle.MainBundle.BundlePath);
+			if (skippedTests.Any ()) {
+				// ensure that we skip those tests that have been passed via the ignore files
+				runner.SkipTests (skippedTests);
+			}
+
 			runner.Run ((IList<TestAssemblyInfo>)testAssemblies);
 			if (options.EnableXml) {
 				runner.WriteResultsToFile (writer);

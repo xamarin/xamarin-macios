@@ -92,6 +92,7 @@ test.config: Makefile $(TOP)/Make.config
 	@echo "JENKINS_RESULTS_DIRECTORY=$(abspath $(JENKINS_RESULTS_DIRECTORY))" >> $@
 	@echo "INCLUDE_DEVICE=$(INCLUDE_DEVICE)" >> $@
 	@echo "XCODE_DEVELOPER_ROOT=$(XCODE_DEVELOPER_ROOT)" >> $@
+	@echo "MONO_SDK_DESTDIR=$(MONO_SDK_DESTDIR)" >> $@
 
 test-system.config:
 	@rm -f $@
@@ -194,8 +195,8 @@ $(TOP)/tools/mtouch/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
 	@touch $@
 
 .stamp-build-mono-unit-tests: $(TOP)/.git/modules/external/mono/HEAD
-	make -j8 -C $(TOP)/external/mono/mcs/class -i do-test PROFILE=MONOTOUCH # TODO: This should not be needed and we should get the dlls from the SDK.
-	make -j8 -C $(TOP)/external/mono/mcs/class -i do-xunit-test PROFILE=MONOTOUCH # TODO: This should not be needed and we should get the dlls from the SDK.
+	make -j8 -C $(TOP)/external/mono/mcs/class -i do-test PROFILE=xammac_net_4_5 # TODO: This should not be needed and we should get the dlls from the SDK.
+	make -j8 -C $(TOP)/external/mono/mcs/class -i do-xunit-test PROFILE=xammac_net_4_5 # TODO: This should not be needed and we should get the dlls from the SDK.
 	nuget restore bcl-test/BCLTests/BCLTests.csproj
 	$(Q) touch $@
 

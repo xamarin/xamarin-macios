@@ -270,11 +270,11 @@ namespace Xamarin.iOS.Tasks
 			// all the input files into the temporary directory. This means that any timestamps modified as
 			// part of the original build will definitely be newer than the timestamps written during the
 			// execution of the test fixture 'setup' method.
-			Thread.Sleep (1000);
+			EnsureFilestampChange ();
 			RunTarget (MonoTouchProject, TargetName.Build);
 			var timestamps = Directory.EnumerateFiles (AppBundlePath, "*.*", SearchOption.AllDirectories).ToDictionary (file => file, file => GetLastModified (file));
 
-			Thread.Sleep (1000);
+			EnsureFilestampChange ();
 			RunTarget (MonoTouchProject, TargetName.Build);
 			var newTimestamps = Directory.EnumerateFiles (AppBundlePath, "*.*", SearchOption.AllDirectories).ToDictionary (file => file, file => GetLastModified (file));
 
@@ -304,7 +304,7 @@ namespace Xamarin.iOS.Tasks
 			RunTarget (LibraryProject, TargetName.Build);
 			var timestamp = GetLastModified (libraryPath);
 
-			Thread.Sleep (1000);
+			EnsureFilestampChange ();
 			RunTarget (LibraryProject, TargetName.Build);
 			Assert.AreEqual (timestamp, GetLastModified (libraryPath));
 		}
@@ -496,7 +496,7 @@ namespace Xamarin.iOS.Tasks
 			projectInstance = project.CreateProjectInstance ();
 
 			// Put a thread.sleep so that we get noticeable timestamps.
-			Thread.Sleep (1000);
+			EnsureFilestampChange ();
 
 			// Re-save the original plist (adding app icon).
 			plistCopy.Save (path, true);

@@ -170,7 +170,7 @@ namespace BCLTestImporter {
 				outputWriter.WriteLine ("Generated project is:");
 				outputWriter.WriteLine (generatedProject);
 				
-				using (var file = new StreamWriter (appOptions.Output, !appOptions.Override)) { // falso is do not append
+				using (var file = new StreamWriter (appOptions.Output, !appOptions.Override)) { // false is do not append
 					file.Write (generatedProject);
 				}
 				return 0;
@@ -186,7 +186,7 @@ namespace BCLTestImporter {
 				var generatedCode = RegisterTypeGenerator.GenerateCode (typesPerAssembly, appOptions.IsXUnit, appOptions.RegisterTypeTemplate);
 				outputWriter.WriteLine ("Generated code is:");
 				outputWriter.WriteLine (generatedCode);
-				using (var file = new StreamWriter (appOptions.Output, !appOptions.Override)) { // falso is do not append
+				using (var file = new StreamWriter (appOptions.Output, !appOptions.Override)) { // false is do not append
 					file.Write (generatedCode);
 				}
 				return 0;
@@ -200,7 +200,7 @@ namespace BCLTestImporter {
 					var projectGenerator = new BCLTestProjectGenerator (appOptions.Output, appOptions.MonoPath,
 						appOptions.ProjectTemplate, appOptions.RegisterTypeTemplate, appOptions.PlistTemplate);
 					outputWriter.WriteLine ("Verifying if all the test assemblies have been added.");
-					if (!appOptions.IgnoreMissingAssemblies && !projectGenerator.AllTestAssembliesAreRan (out var missingAssemblies)) {
+					if (!appOptions.IgnoreMissingAssemblies && !projectGenerator.AllTestAssembliesAreRan (out var missingAssemblies, true)) {
 						outputWriter.WriteLine ("The following test assemblies should be added to a test project or ignored.");
 						foreach (var platform in missingAssemblies.Keys) {
 							outputWriter.WriteLine ($"Platform {platform}");
@@ -213,7 +213,9 @@ namespace BCLTestImporter {
 					}
 						
 					outputWriter.WriteLine ("Generating all the registered test projects");
-					projectGenerator.GenerateAllTestProjectsAsync ().Wait ();
+					projectGenerator.GenerateAlliOSTestProjectsAsync().Wait ();
+					projectGenerator.GenerateAllMacTestProjectsAsync(Platform.MacOSFull).Wait ();
+					projectGenerator.GenerateAllMacTestProjectsAsync(Platform.MacOSModern).Wait ();
 					return 0;
 				}
 			}

@@ -118,12 +118,6 @@ namespace Foundation {
 		public static readonly Assembly MonoMacAssembly = typeof (NSObject).Assembly;
 #endif
 
-		static internal void OverrideRetainAndRelease (IntPtr @class)
-		{
-			Class.class_addMethod (@class, Selector.RetainHandle, Method.RetainTrampoline, "@@:");
-			Class.class_addMethod (@class, Selector.ReleaseHandle, Method.ReleaseTrampoline, "v@:");
-		}
-
 		internal void SetAsProxy () {
 			IsDirectBinding = true;
 		}

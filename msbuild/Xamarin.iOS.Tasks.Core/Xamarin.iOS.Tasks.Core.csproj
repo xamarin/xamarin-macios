@@ -214,5 +214,8 @@
     <None Include="Xamarin.WatchOS.ObjCBinding.CSharp.targets">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="../Xamarin.Shared/Xamarin.Shared.targets">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

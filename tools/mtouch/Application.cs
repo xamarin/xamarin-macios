@@ -1868,6 +1868,9 @@ namespace Xamarin.Bundler {
 					continue;
 				} else if (line.Contains ("was built for newer iOS version (5.1.1) than being linked (5.1)")) {
 					continue;
+				} else if (line.Contains ("was built for newer iOS version (7.0) than being linked (6.0)") && 
+					line.Contains (Driver.GetProductSdkDirectory (target.App))) {
+					continue;
 				}
 
 				if (line.Contains ("Undefined symbols for architecture")) {
@@ -2175,7 +2178,14 @@ namespace Xamarin.Bundler {
 					return false;
 				if (PackageManagedDebugSymbols)
 					return false;
-				if (IsInterpreted (Assembly.GetIdentity (path)))
+				/* FIXME: should be `if (IsInterpreted (Assembly.GetIdentity (path)))`.
+				 * The problem is that in mixed mode we can't do the transition
+				 * between "interp"->"aot'd methods using gsharedvt", so we
+				 * fall back to the interp and thus need the IL not to be
+				 * stripped out. Once Mono supports this, we can add back the
+				 * more precise check.
+				 * See https://github.com/mono/mono/issues/11942 */
+				if (UseInterpreter)
 					return false;
 				return true;
 			});

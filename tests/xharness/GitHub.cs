@@ -7,6 +7,7 @@ using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Xml;
 using System.Text;
+using Xamarin;
 
 namespace xharness
 {

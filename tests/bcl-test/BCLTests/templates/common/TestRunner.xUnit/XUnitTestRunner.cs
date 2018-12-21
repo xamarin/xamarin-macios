@@ -18,7 +18,8 @@ namespace Xamarin.iOS.UnitTests.XUnit
 		readonly TestMessageSink messageSink;
 
 		XElement assembliesElement;
-		List<XUnitFilter> filters;
+		List<XUnitFilter> filters = new List<XUnitFilter> ();
+		bool runAssemblyByDefault;
 
 		public XUnitResultFileFormat ResultFileFormat { get; set; } = XUnitResultFileFormat.NUnit;
 		public AppDomainSupport AppDomainSupport { get; set; } = AppDomainSupport.Denied;
@@ -677,9 +678,23 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			if (testAssemblies == null)
 				throw new ArgumentNullException (nameof (testAssemblies));
 
+			if (filters != null && filters.Count > 0) {
+				do_log ("Configured filters:");
+				foreach (XUnitFilter filter in filters) {
+					do_log ($"  {filter}");
+				}
+			}
+
+			List<XUnitFilter> assemblyFilters = filters?.Where (sel => sel != null && sel.FilterType == XUnitFilterType.Assembly)?.ToList ();
+			if (assemblyFilters == null || assemblyFilters.Count == 0) {
+				runAssemblyByDefault = true;
+				assemblyFilters = null;
+			} else
+				runAssemblyByDefault = assemblyFilters.Any (f => f != null && f.Exclude);
+
 			assembliesElement = new XElement ("assemblies");
 			foreach (TestAssemblyInfo assemblyInfo in testAssemblies) {
-				if (assemblyInfo == null || assemblyInfo.Assembly == null)
+				if (assemblyInfo == null || assemblyInfo.Assembly == null || !ShouldRunAssembly (assemblyInfo))
 					continue;
 				
 				if (String.IsNullOrEmpty (assemblyInfo.FullPath)) {
@@ -692,6 +707,9 @@ namespace Xamarin.iOS.UnitTests.XUnit
 				try {
 					OnAssemblyStart (assemblyInfo.Assembly);
 					assemblyElement = Run (assemblyInfo.Assembly, assemblyInfo.FullPath);
+				} catch (FileNotFoundException ex) {
+					OnWarning ($"Assembly '{assemblyInfo.Assembly}' using path '{assemblyInfo.FullPath}' cannot be found on the filesystem. xUnit requires access to actual on-disk file.");
+					OnWarning ($"Exception is '{ex}'");
 				} finally {
 					OnAssemblyFinish (assemblyInfo.Assembly);
 					if (assemblyElement != null)
@@ -700,6 +718,50 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			}
 
 			LogFailureSummary ();
+
+			bool ShouldRunAssembly (TestAssemblyInfo assemblyInfo)
+			{
+				if (assemblyInfo == null)
+					return false;
+
+				if (assemblyFilters == null)
+					return true;
+
+				foreach (XUnitFilter filter in assemblyFilters) {
+					if (String.Compare (filter.AssemblyName, assemblyInfo.FullPath, StringComparison.Ordinal) == 0)
+						return ReportFilteredAssembly (assemblyInfo, filter);
+
+					string fileName = Path.GetFileName (assemblyInfo.FullPath);
+					if (String.Compare (fileName, filter.AssemblyName, StringComparison.Ordinal) == 0)
+						return ReportFilteredAssembly (assemblyInfo, filter);
+
+					string filterExtension = Path.GetExtension (filter.AssemblyName);
+					if (String.IsNullOrEmpty (filterExtension) ||
+					    (String.Compare (filterExtension, ".exe", StringComparison.OrdinalIgnoreCase) != 0 &&
+					     String.Compare (filterExtension, ".dll", StringComparison.OrdinalIgnoreCase) != 0)) {
+						string asmName = $"{filter.AssemblyName}.dll";
+						if (String.Compare (asmName, fileName, StringComparison.Ordinal) == 0)
+							return ReportFilteredAssembly (assemblyInfo, filter);
+
+						asmName = $"{filter.AssemblyName}.exe";
+						if (String.Compare (asmName, fileName, StringComparison.Ordinal) == 0)
+							return ReportFilteredAssembly (assemblyInfo, filter);
+					}
+				}
+
+				return runAssemblyByDefault;
+			}
+
+			bool ReportFilteredAssembly (TestAssemblyInfo assemblyInfo, XUnitFilter filter)
+			{
+				if (LogExcludedTests) {
+					const string included = "Included";
+					const string excluded = "Excluded";
+
+					OnInfo ($"[FILTER] {(filter.Exclude ? excluded : included)} assembly: {assemblyInfo.FullPath}");
+				}
+				return !filter.Exclude;
+			}
 		}
 
 		public override string WriteResultsToFile ()
@@ -860,42 +922,98 @@ namespace Xamarin.iOS.UnitTests.XUnit
 
 		bool IsIncluded (ITestCase testCase)
 		{
-			if (testCase.Traits == null || testCase.Traits.Count == 0)
-				return true;
-			
+			if (testCase == null)
+				return false;
+
+			bool haveTraits = testCase.Traits != null && testCase.Traits.Count > 0;
 			foreach (XUnitFilter filter in filters) {
 				List<string> values;
 				if (filter == null)
 					continue;
 
 				if (filter.FilterType == XUnitFilterType.Trait) {
-					if (!testCase.Traits.TryGetValue (filter.TraitName, out values))
+					if (!haveTraits || !testCase.Traits.TryGetValue (filter.SelectorName, out values))
 						continue;
 
 					if (values == null || values.Count == 0) {
 						// We have no values and the filter doesn't specify one - that means we match on
 						// the trait name only.
-						if (String.IsNullOrEmpty (filter.TraitValue))
-							return !filter.Exclude;
+						if (String.IsNullOrEmpty (filter.SelectorValue))
+							return ReportFilteredTest (filter);
 						continue;
 					}
 
-					if (values.Contains (filter.TraitValue, StringComparer.OrdinalIgnoreCase))
-						return !filter.Exclude;
+					if (values.Contains (filter.SelectorValue, StringComparer.OrdinalIgnoreCase))
+						return ReportFilteredTest (filter);
 					continue;
 				}
 
 				if (filter.FilterType == XUnitFilterType.TypeName) {
-					Logger.Info ($"IsIncluded: filter: '{filter.TestCaseName}', test case name: {testCase.DisplayName}"); 
-					if (String.Compare (testCase.DisplayName, filter.TestCaseName, StringComparison.OrdinalIgnoreCase) == 0)
-						return !filter.Exclude;
+					string testClassName = testCase.TestMethod?.TestClass?.Class?.Name?.Trim ();
+					if (String.IsNullOrEmpty (testClassName))
+						continue;
+
+					if (String.Compare (testClassName, filter.SelectorValue, StringComparison.OrdinalIgnoreCase) == 0)
+						return ReportFilteredTest (filter);
 					continue;
+				}
+
+				if (filter.FilterType == XUnitFilterType.Single) {
+					if (String.Compare (testCase.DisplayName, filter.SelectorValue, StringComparison.OrdinalIgnoreCase) == 0)
+						return ReportFilteredTest (filter);
+					continue;
+				}
+
+				if (filter.FilterType == XUnitFilterType.Namespace) {
+					string testClassName = testCase.TestMethod?.TestClass?.Class?.Name?.Trim ();
+					if (String.IsNullOrEmpty (testClassName))
+						continue;
+
+					int dot = testClassName.LastIndexOf ('.');
+					if (dot <= 0)
+						continue;
+
+					string testClassNamespace = testClassName.Substring (0, dot);
+					if (String.Compare (testClassNamespace, filter.SelectorValue, StringComparison.OrdinalIgnoreCase) == 0)
+						return ReportFilteredTest (filter);
+					continue;
+				}
+
+				if (filter.FilterType == XUnitFilterType.Assembly) {
+					continue; // Ignored: handled elsewhere
 				}
 
 				throw new InvalidOperationException ($"Unsupported filter type {filter.FilterType}");
 			}
 
-			return true;
+			return RunAllTestsByDefault;
+
+			bool ReportFilteredTest (XUnitFilter filter)
+			{
+				if (LogExcludedTests) {
+					const string included = "Included";
+					const string excluded = "Excluded";
+
+					string selector;
+					if (filter.FilterType == XUnitFilterType.Trait)
+						selector = $"'{filter.SelectorName}':'{filter.SelectorValue}'";
+					else
+						selector = $"'{filter.SelectorValue}'";
+
+					do_log ($"[FILTER] {(filter.Exclude ? excluded : included)} test (filtered by {filter.FilterType}; {selector}): {testCase.DisplayName}");
+				}
+				return !filter.Exclude;
+			}
+		}
+
+		public override void SkipTests (IEnumerable<string> tests)
+		{
+			if (tests.Any ()) {
+				// create a single filter per test
+				foreach (var t in tests) {
+					filters.Add (XUnitFilter.CreateSingleFilter (t, true));
+				}
+			}
 		}
 	}
 }

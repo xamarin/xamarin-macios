@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Xamarin.iOS.UnitTests.XUnit
 {
@@ -6,5 +6,8 @@ namespace Xamarin.iOS.UnitTests.XUnit
 	{
 		Trait,
 		TypeName,
+		Assembly,
+		Single,
+		Namespace,
 	}
 }
