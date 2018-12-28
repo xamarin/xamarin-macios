@@ -253,21 +253,24 @@ namespace Foundation {
 
 			cancellationToken.Register (() => {
 				RemoveInflightData (dataTask);
+				dataTask?.Cancel();
 				tcs.TrySetCanceled ();
 			});
+			
+			if (!cancellationToken.IsCancellationRequested) {
+				lock (inflightRequestsLock)
+					inflightRequests.Add (dataTask, new InflightData {
+						RequestUrl = request.RequestUri.AbsoluteUri,
+						CompletionSource = tcs,
+						CancellationToken = cancellationToken,
+						Stream = new NSUrlSessionDataTaskStream (),
+						Request = request
+					});
 
-			lock (inflightRequestsLock)
-				inflightRequests.Add (dataTask, new InflightData {
-					RequestUrl = request.RequestUri.AbsoluteUri,
-					CompletionSource = tcs,
-					CancellationToken = cancellationToken,
-					Stream = new NSUrlSessionDataTaskStream (),
-					Request = request
-				});
-
-			if (dataTask.State == NSUrlSessionTaskState.Suspended)
-				dataTask.Resume ();
-
+				if (dataTask.State == NSUrlSessionTaskState.Suspended)
+					dataTask.Resume ();
+			}
+			
 			return await tcs.Task.ConfigureAwait (false);
 		}
 
