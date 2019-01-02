@@ -696,10 +696,8 @@ namespace Xamarin.iOS.Tasks
 			var copiedFrameworks = new List<ITaskItem> ();
 			var frameworksDir = Path.Combine (AppBundleDir, "Frameworks");
 
-			if (Directory.Exists (frameworksDir))
-			{
-				foreach (var dir in Directory.EnumerateDirectories (frameworksDir, "*.framework"))
-				{
+			if (Directory.Exists (frameworksDir)) {
+				foreach (var dir in Directory.EnumerateDirectories (frameworksDir, "*.framework")) {
 					var framework = Path.Combine (dir, Path.GetFileNameWithoutExtension (dir));
 
 					if (File.Exists (framework))
