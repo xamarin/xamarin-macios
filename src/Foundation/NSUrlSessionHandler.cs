@@ -253,7 +253,7 @@ namespace Foundation {
 
 			cancellationToken.Register (() => {
 				RemoveInflightData (dataTask);
-				dataTask?.Cancel();
+				dataTask?.Cancel ();
 				tcs.TrySetCanceled ();
 			});
 			
