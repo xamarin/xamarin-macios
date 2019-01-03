@@ -247,18 +247,14 @@ namespace Foundation {
 			Volatile.Write (ref sentRequest, true);
 
 			var nsrequest = await CreateRequest (request).ConfigureAwait(false);
-			var dataTask = session.CreateDataTask (nsrequest);
-
-			var tcs = new TaskCompletionSource<HttpResponseMessage> ();
-
-			cancellationToken.Register (() => {
-				RemoveInflightData (dataTask);
-				dataTask?.Cancel ();
-				tcs.TrySetCanceled ();
-			});
+			NSUrlSessionDataTask dataTask = null;
 			
+			var tcs = new TaskCompletionSource<HttpResponseMessage> ();
+	
 			if (!cancellationToken.IsCancellationRequested) {
-				lock (inflightRequestsLock)
+				lock (inflightRequestsLock){
+					dataTask = session.CreateDataTask(nsrequest);
+					
 					inflightRequests.Add (dataTask, new InflightData {
 						RequestUrl = request.RequestUri.AbsoluteUri,
 						CompletionSource = tcs,
@@ -266,10 +262,17 @@ namespace Foundation {
 						Stream = new NSUrlSessionDataTaskStream (),
 						Request = request
 					});
-
-				if (dataTask.State == NSUrlSessionTaskState.Suspended)
+				}
+				
+				if (dataTask != null && dataTask.State == NSUrlSessionTaskState.Suspended)
 					dataTask.Resume ();
 			}
+			
+			cancellationToken.Register (() => {
+				RemoveInflightData (dataTask);
+				dataTask?.Cancel ();
+				tcs.TrySetCanceled ();
+			});
 			
 			return await tcs.Task.ConfigureAwait (false);
 		}
