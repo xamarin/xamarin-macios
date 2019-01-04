@@ -15,7 +15,7 @@ namespace MonoTouchFixtures.ARKit {
 		[SetUp]
 		public void Setup ()
 		{
-			TestRuntime.AssertXcodeVersion (10,0);
+			TestRuntime.AssertXcodeVersion (9,3);
 		}
 
 		[Test]
