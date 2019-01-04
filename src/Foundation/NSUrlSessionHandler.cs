@@ -264,7 +264,7 @@ namespace Foundation {
 					});
 				}
 				
-				if (dataTask != null && dataTask.State == NSUrlSessionTaskState.Suspended)
+				if (dataTask.State == NSUrlSessionTaskState.Suspended)
 					dataTask.Resume ();
 			}
 			
