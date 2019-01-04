@@ -12,6 +12,12 @@ namespace MonoTouchFixtures.ARKit {
 	[Preserve (AllMembers = true)]
 	public class ARCondigurationTest {
 
+		[SetUp]
+		public void Setup ()
+		{
+			TestRuntime.AssertXcodeVersion (10,0);
+		}
+
 		[Test]
 		public void SupportedVideoFormats ()
 		{
