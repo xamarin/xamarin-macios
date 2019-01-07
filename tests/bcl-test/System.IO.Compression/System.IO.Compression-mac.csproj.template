@@ -53,9 +53,6 @@
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="Xamarin.Mac" />
-    <Reference Include="GuiUnit">
-      <HintPath>..\..\..\external\guiunit\src\framework\obj\Debug\net-4.5\GuiUnit.exe</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -76,6 +73,12 @@
   <ItemGroup>
     <FilesToCopy Include="..\..\..\external\mono\mcs\class\System.IO.Compression\test.nupkg" />
     <FilesToCopy Include="..\..\..\external\mono\mcs\class\System.IO.Compression\archive.zip" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\external\guiunit\src\framework\GuiUnit_NET_4_5.csproj">
+      <Project>{D12F0F7B-8DE3-43EC-BA49-41052D065A9B}</Project>
+      <Name>GuiUnit_NET_4_5</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
   <Target Name="AfterBuild">

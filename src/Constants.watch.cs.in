@@ -7,7 +7,9 @@ namespace ObjCRuntime {
 		public const string libSystemLibrary = "/usr/lib/libSystem.dylib";
 		public const string libcLibrary = "/usr/lib/libc.dylib";
 		public const string ObjectiveCLibrary = "/usr/lib/libobjc.dylib";
+#if !XAMCORE_4_0
 		public const string libdispatchLibrary = "/usr/lib/system/libdispatch.dylib";
+#endif
 		
 		// WatchOS 2.0
 		public const string CFNetworkLibrary = "/System/Library/Frameworks/CFNetwork.framework/CFNetwork";
@@ -32,8 +34,10 @@ namespace ObjCRuntime {
 		public const string UIKitLibrary = "/System/Library/Frameworks/UIKit.framework/UIKit";
 		public const string WatchConnectivityLibrary = "/System/Library/Frameworks/WatchConnectivity.framework/WatchConnectivity";
 		public const string WatchKitLibrary = "/System/Library/Frameworks/WatchKit.framework/WatchKit";
-
+		public const string libcompressionLibrary = "/usr/lib/libcompression.dylib";
+#if !XAMCORE_4_0
 		public const string libcompression = "/usr/lib/libcompression.dylib";
+#endif
 
 		// WatchOS 3.0
 		public const string AVFoundationLibrary = "/System/Library/Frameworks/AVFoundation.framework/AVFoundation";
@@ -54,7 +58,7 @@ namespace ObjCRuntime {
 		public const string VisionLibrary = "/System/Library/Frameworks/Vision.framework/Vision";
 
 		// WatchOS 5
-		public const string NaturalLanguageLibrary = "/System/Library/Frameworks/Frameworks/NaturalLanguage.framework/NaturalLanguage";
+		public const string NaturalLanguageLibrary = "/System/Library/Frameworks/NaturalLanguage.framework/NaturalLanguage";
 		public const string MediaPlayerLibrary = "/System/Library/Frameworks/MediaPlayer.framework/MediaPlayer";
 	}
 }

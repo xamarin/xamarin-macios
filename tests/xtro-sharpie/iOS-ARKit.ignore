@@ -5,3 +5,6 @@
 !wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARPlaneGeometry::GetRawTextureCoordinates(): simd type: simd_float2
 !wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARPlaneGeometry::GetRawVertices(): simd type: simd_float3
 !wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARPointCloud::GetRawPoints(): simd type: simd_float3
+
+# only exposed in subclasses (it's static but also abstract) - see https://github.com/xamarin/xamarin-macios/issues/5347
+!missing-selector! +ARConfiguration::supportedVideoFormats not bound

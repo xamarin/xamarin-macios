@@ -61,6 +61,8 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.Common.props"
 			Condition="'$(_XamarinCommonPropsHasBeenImported)' != 'true'" />
+	
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.targets"/>
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
@@ -72,8 +74,13 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<_CanArchive>False</_CanArchive>
 		<_CanArchive Condition="'$(OutputType)' == 'Exe'">true</_CanArchive>
 
+		<_RequireProvisioningProfile>False</_RequireProvisioningProfile>
+		<_RequireProvisioningProfile Condition="'$(CodesignEntitlements)' != ''">True</_RequireProvisioningProfile>
+
 		<_PreparedResourceRules></_PreparedResourceRules>
 		<_AppBundleName>$(AssemblyName)</_AppBundleName>
+
+		<AppBundleExtension Condition="'$(AppBundleExtension)' == ''">.app</AppBundleExtension>
 	</PropertyGroup>
 		
 	<PropertyGroup>
@@ -435,13 +442,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	</Target>
 
 	<Target Name="_DetectSigningIdentity" DependsOnTargets="_DetectAppManifest">
-		<PropertyGroup>
-			<_AppBundleName>$(AssemblyName)</_AppBundleName>
-
-			<_RequireProvisioningProfile>False</_RequireProvisioningProfile>
-			<_RequireProvisioningProfile Condition="'$(CodesignEntitlements)' != ''">True</_RequireProvisioningProfile>
-		</PropertyGroup>
-
 		<DetectSigningIdentity
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
@@ -463,8 +463,8 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<Target Name="_GenerateBundleName">
 		<PropertyGroup>
-			<AppBundleDir>$(OutputPath)$(_AppBundleName).app</AppBundleDir>
-			<_AppBundlePath>$(OutputPath)$(_AppBundleName).app\</_AppBundlePath>
+			<AppBundleDir>$(OutputPath)$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
+			<_AppBundlePath>$(AppBundleDir)\</_AppBundlePath>
 			<_AppResourcesPath>$(_AppBundlePath)Contents\Resources\</_AppResourcesPath>
 		</PropertyGroup>
 	</Target>
@@ -484,9 +484,21 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			IsAppExtension="$(IsAppExtension)"
 			PartialAppManifests="@(_PartialAppManifest)" />
 	</Target>
+	
+	<PropertyGroup>
+		<CompileToNativeDependsOn>
+			_DetectAppManifest;
+			_DetectSdkLocations;
+			_GenerateBundleName;
+			ResolveReferences;
+			_CompileEntitlements;
+			_CompileAppManifest;
+			_ExpandNativeReferences;
+		</CompileToNativeDependsOn>
+	</PropertyGroup>
 
-	<Target Name="_CompileToNative" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_GenerateBundleName;ResolveReferences;_CompileEntitlements;_CompileAppManifest"
-		Inputs="$(TargetDir)$(TargetFileName)"
+	<Target Name="_CompileToNative" DependsOnTargets="$(CompileToNativeDependsOn)"
+		Inputs="$(TargetDir)$(TargetFileName);@(_FrameworkNativeReference);@(_FileNativeReference);@(BundleDependentFiles)"
 		Outputs="$(_AppBundlePath)Contents\MacOS\$(_AppBundleName)">
 		<ItemGroup>
 			<!-- Skip the reference assemblies. 'mmp' will fail to AOT them if passed 'aot:all'. Similar to: https://github.com/xamarin/xamarin-macios/issues/3199 -->
@@ -638,7 +650,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<CompileSceneKitAssets
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
-			AppBundleDir="$(AppBundleDir)"
+			AppBundleName="$(_AppBundleName)$(AppBundleExtension)"
 			ToolExe="$(CopySceneKitAssetsExe)"
 			ToolPath="$(CopySceneKitAssetsPath)"
 			SceneKitAssets="@(SceneKitAsset)"

@@ -14,16 +14,41 @@ using AnimationType = global::CoreAnimation.CAAnimation;
 
 namespace SceneKit {
 
-#if !XAMCORE_3_0
 	partial class SCNAction {
 
-		[Obsolete ("Use 'TimingFunction' property.")]
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'TimingFunction2' property.")]
+		public virtual Action<float> TimingFunction {
+			get {
+				if (TimingFunction2 == null)
+					return null;
+				else
+					return (f) => {
+						TimingFunction2 (f);
+					};
+			}
+			set {
+				if (value == null)
+					TimingFunction2 = null;
+				else
+					TimingFunction2 = (f) => {
+						value (f);
+						return float.NaN;
+					};
+			}
+
+		}
+#endif
+
+#if !XAMCORE_3_0
+		[Obsolete ("Use 'TimingFunction2' property.")]
 		public virtual void SetTimingFunction (Action<float> timingFunction)
 		{
 			TimingFunction = timingFunction;
 		}
+#endif
 	}
-#elif TVOS && !XAMCORE_4_0
+#if TVOS && !XAMCORE_4_0
 	partial class SCNMaterialProperty {
 	[iOS (8, 0)]
 		[Deprecated (PlatformName.iOS, 10, 0)]

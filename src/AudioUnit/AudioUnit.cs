@@ -736,6 +736,25 @@ namespace AudioUnit
 			return MusicDeviceMIDIEvent (handle, status, data1, data2, offsetSampleFrame);
 		}
 
+		public AudioUnitStatus SetLatency (double latency)
+		{
+			// ElementCount: Float64, AudioUnitScopeType.Global is the only valid scope for Latency.
+			return AudioUnitSetProperty (handle, AudioUnitPropertyIDType.Latency, AudioUnitScopeType.Global, 0, ref latency, sizeof (double));
+		}
+
+		[DllImport (Constants.AudioUnitLibrary)]
+		static extern AudioUnitStatus AudioUnitGetProperty (IntPtr inUnit, AudioUnitPropertyIDType inID, AudioUnitScopeType inScope, uint inElement, ref double outData, ref uint ioDataSize);
+
+		public double GetLatency ()
+		{
+			uint size = sizeof (double);
+			double latency = 0;
+			var err = AudioUnitGetProperty (handle, AudioUnitPropertyIDType.Latency, AudioUnitScopeType.Global, 0, ref latency, ref size);
+			if (err != 0)
+				throw new AudioUnitException ((int) err);
+			return latency;
+		}
+
 		#region SetRenderCallback
 
 		public AudioUnitStatus SetRenderCallback (RenderDelegate renderDelegate, AudioUnitScopeType scope = AudioUnitScopeType.Global, uint audioUnitElement = 0)

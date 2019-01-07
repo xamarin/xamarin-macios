@@ -80,6 +80,7 @@ namespace Xamarin.Bundler
 {
 	public partial class Driver {
 		internal const string NAME = "mtouch";
+		internal const string PRODUCT = "Xamarin.iOS";
 
 		public static void ShowHelp (OptionSet os)
 		{
@@ -117,7 +118,7 @@ namespace Xamarin.Bundler
 			Embeddinator,
 		}
 
-		static bool xcode_version_check = true;
+		static Version min_xcode_version = new Version (6, 0);
 
 		//
 		// Output generation
@@ -312,87 +313,6 @@ namespace Xamarin.Bundler
 				return true;
 			default:
 				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", app.Platform);
-			}
-		}
-
-		static string sdk_root;
-		static string developer_directory;
-
-		const string XcodeDefault = "/Applications/Xcode.app";
-
-		static string FindSystemXcode ()
-		{
-			var output = new StringBuilder ();
-			if (Driver.RunCommand ("xcode-select", "-p", output: output) != 0) {
-				ErrorHelper.Warning (59, "Could not find the currently selected Xcode on the system: {0}", output.ToString ());
-				return null;
-			}
-			return output.ToString ().Trim ();
-		}
-
-		static void ValidateXcode (Action action)
-		{
-			// Allow a few actions, since these seem to always work no matter the Xcode version.
-			var accept_any_xcode_version = action == Action.ListDevices || action == Action.ListCrashReports || action == Action.ListApps || action == Action.LogDev;
-
-			if (sdk_root == null) {
-				sdk_root = FindSystemXcode ();
-				if (sdk_root == null) {
-					// FindSystemXcode showed a warning in this case. In particular do not use 'string.IsNullOrEmpty' here,
-					// because FindSystemXcode may return an empty string (with no warning printed) if the xcode-select command
-					// succeeds, but returns nothing.
-					sdk_root = null;
-				} else if (!Directory.Exists (sdk_root)) {
-					ErrorHelper.Warning (60, "Could not find the currently selected Xcode on the system. 'xcode-select --print-path' returned '{0}', but that directory does not exist.", sdk_root);
-					sdk_root = null;
-				} else {
-					if (!accept_any_xcode_version)
-						ErrorHelper.Warning (61, "No Xcode.app specified (using --sdkroot), using the system Xcode as reported by 'xcode-select --print-path': {0}", sdk_root);
-				}
-				if (sdk_root == null) {
-					sdk_root = XcodeDefault;
-					if (!Directory.Exists (sdk_root))
-						throw ErrorHelper.CreateError (56, "Cannot find Xcode in the default location (/Applications/Xcode.app). Please install Xcode, or pass a custom path using --sdkroot <path>.");
-					ErrorHelper.Warning (62, "No Xcode.app specified (using --sdkroot or 'xcode-select --print-path'), using the default Xcode instead: {0}", sdk_root);
-				}
-			} else if (!Directory.Exists (sdk_root)) {
-				throw ErrorHelper.CreateError (55, "The Xcode path '{0}' does not exist.", sdk_root);
-			}
-
-			// Check what kind of path we got
-			if (File.Exists (Path.Combine (sdk_root, "Contents", "MacOS", "Xcode"))) {
-				// path to the Xcode.app
-				developer_directory = Path.Combine (sdk_root, "Contents", "Developer");
-			} else if (File.Exists (Path.Combine (sdk_root, "..", "MacOS", "Xcode"))) {
-				// path to Contents/Developer
-				developer_directory = Path.GetFullPath (Path.Combine (sdk_root, "..", "..", "Contents", "Developer"));
-			} else {
-				throw ErrorHelper.CreateError (57, "Cannot determine the path to Xcode.app from the sdk root '{0}'. Please specify the full path to the Xcode.app bundle.", sdk_root);
-			}
-
-			var plist_path = Path.Combine (Path.GetDirectoryName (DeveloperDirectory), "version.plist");
-
-			if (File.Exists (plist_path)) {
-				var plist = FromPList (plist_path);
-				var version = plist.GetString ("CFBundleShortVersionString");
-				xcode_version = new Version (version);
-				xcode_bundle_version = plist.GetString ("CFBundleVersion");
-			} else {
-				throw ErrorHelper.CreateError (58, "The Xcode.app '{0}' is invalid (the file '{1}' does not exist).", Path.GetDirectoryName (Path.GetDirectoryName (developer_directory)), plist_path);
-			}
-
-			if (xcode_version_check && XcodeVersion < new Version (6, 0))
-				ErrorHelper.Error (51, "Xamarin.iOS {0} requires Xcode 6.0 or later. The current Xcode version (found in {2}) is {1}.", Constants.Version, XcodeVersion.ToString (), sdk_root);
-
-			if (XcodeVersion < new Version (7, 0) && !accept_any_xcode_version)
-				ErrorHelper.Warning (79, "The recommended Xcode version for Xamarin.iOS {0} is Xcode 7.0 or later. The current Xcode version (found in {2}) is {1}.", Constants.Version, XcodeVersion.ToString (), sdk_root);
-
-			Driver.Log (1, "Using Xcode {0} found in {1}", XcodeVersion, sdk_root);
-		}
-
-		public static string DeveloperDirectory {
-			get {
-				return developer_directory;
 			}
 		}
 
@@ -895,13 +815,6 @@ namespace Xamarin.Bundler
 			return true;
 		}
 
-		internal static PDictionary FromPList (string name)
-		{
-			if (!File.Exists (name))
-				throw new MonoTouchException (24, true, "Could not find required file '{0}'.", name);
-			return PDictionary.FromFile (name);
-		}
-
 		internal static bool TryParseBool (string value, out bool result)
 		{
 			if (string.IsNullOrEmpty (value)) {
@@ -1201,9 +1114,7 @@ namespace Xamarin.Bundler
 			},
 			{ "stderr=", "Redirect the standard error for the simulated application to the specified file [DEPRECATED]", v => { }, true },
 			{ "stdout=", "Redirect the standard output for the simulated application to the specified file [DEPRECATED]", v => { }, true },
-			{ "sdkroot=", "Specify the location of Apple SDKs, default to 'xcode-select' value.", v => sdk_root = v },
 
-			{ "no-xcode-version-check", "Ignores the Xcode version check.", v => { xcode_version_check = false; }, true /* This is a non-documented option. Please discuss any customers running into the xcode version check on the maciosdev@ list before giving this option out to customers. */ },
 			{ "mono:", "Comma-separated list of options for how the Mono runtime should be included. Possible values: 'static' (link statically), 'framework' (linked as a user framework), '[no-]package-framework' (if the Mono.framework should be copied to the app bundle or not. The default value is 'framework' for extensions, and main apps if the app targets iOS 8.0 or later and contains extensions, otherwise 'static'. The Mono.framework will be copied to the app bundle if mtouch detects it's needed, but this may be overridden if the default values for 'framework' vs 'static' is overwridden.", v =>
 				{
 					foreach (var opt in v.Split (new char [] { ',' })) {
@@ -1327,7 +1238,9 @@ namespace Xamarin.Bundler
 
 			ErrorHelper.Verbosity = verbose;
 
-			ValidateXcode (action);
+			// Allow a few actions, since these seem to always work no matter the Xcode version.
+			var accept_any_xcode_version = action == Action.ListDevices || action == Action.ListCrashReports || action == Action.ListApps || action == Action.LogDev;
+			ValidateXcode (accept_any_xcode_version, false);
 
 			switch (action) {
 			/* Device actions */

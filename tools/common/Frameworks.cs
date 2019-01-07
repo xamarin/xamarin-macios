@@ -111,6 +111,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "ScriptingBridge", 10, 5 },
 					{ "QuickLook", 10, 5 },
 					{ "QuartzComposer", "Quartz", 10, 5 },
+					{ "ImageCaptureCore", "ImageCaptureCore", 10,5 },
 
 					{ "QTKit", 10, 6 },
 					{ "QuickLookUI", "Quartz", 10, 6 },
@@ -134,7 +135,6 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "AVKit", 10, 9 },
 					{ "GameController", 10, 9 },
-					{ "ITunesLibrary", "iTunesLibrary", 10, 9 },
 					{ "MapKit", 10, 9 },
 					{ "MediaAccessibility", 10, 9 },
 					{ "MediaLibrary", 10, 9 },

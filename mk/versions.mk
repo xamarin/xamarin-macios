@@ -67,7 +67,6 @@ endef
 
 $(shell rm -f .check-versions-failure)
 $(eval $(call CheckSubmoduleTemplate,mono,MONO))
-$(eval $(call CheckSubmoduleTemplate,fsharp,FSHARP))
 $(eval $(call CheckSubmoduleTemplate,Touch.Unit,TOUCH_UNIT))
 $(eval $(call CheckSubmoduleTemplate,opentk,OPENTK))
 $(eval $(call CheckSubmoduleTemplate,Xamarin.MacDev,XAMARIN_MACDEV))
@@ -80,9 +79,6 @@ include $(TOP)/mk/xamarin.mk
 
 reset-mono::
 	$(Q) rm -f $(TOP)/.stamp-build* $(MONO_PATH)/configure
-
-reset-fsharp::
-	$(Q) cd $(FSHARP_PATH) && git clean -xffdq
 
 check-versions::
 	@if test -e .check-versions-failure; then  \

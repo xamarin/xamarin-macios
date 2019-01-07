@@ -84,7 +84,7 @@ namespace Xamarin.Tests
 			output.Clear ();
 			output_lines = null;
 
-			var rv = ExecutionHelper.Execute (toolPath, string.Format (arguments, args), EnvironmentVariables, output, output, workingDirectory: WorkingDirectory);
+			var rv = ExecutionHelper.Execute (Configuration.XIBuildPath, $"-t -- {toolPath} " + string.Format (arguments, args), EnvironmentVariables, output, output, workingDirectory: WorkingDirectory);
 
 			if ((rv != 0 || always_show_output) && output.Length > 0)
 				Console.WriteLine ("\t" + output.ToString ().Replace ("\n", "\n\t"));
@@ -375,13 +375,13 @@ namespace Xamarin.Tests
 		public static string ToolPath {
 			get
 			{
-				return "/Library/Frameworks/Mono.framework/Commands/msbuild";
+				return Configuration.XIBuildPath;
 			}
 		}
 
 		public static void Build (string project, string configuration = "Debug", string platform = "iPhoneSimulator", string verbosity = null, TimeSpan? timeout = null)
 		{
-			ExecutionHelper.Execute (ToolPath, string.Format ("/p:Configuration={0} /p:Platform={1} {2} \"{3}\"", configuration, platform, verbosity == null ? string.Empty : "/verbosity:" + verbosity, project), timeout: timeout);
+			ExecutionHelper.Execute (ToolPath, string.Format ("-- /p:Configuration={0} /p:Platform={1} {2} \"{3}\"", configuration, platform, verbosity == null ? string.Empty : "/verbosity:" + verbosity, project), timeout: timeout);
 		}
 	}
 

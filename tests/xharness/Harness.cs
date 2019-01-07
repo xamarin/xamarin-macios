@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using Xamarin.Utils;
+using xharness.BCLTestImporter;
 
 namespace xharness
 {
@@ -28,6 +29,10 @@ namespace xharness
 		public Log HarnessLog { get; set; }
 		public bool UseSystem { get; set; } // if the system XI/XM should be used, or the locally build XI/XM.
 		public HashSet<string> Labels { get; } = new HashSet<string> ();
+
+		public string XIBuildPath {
+			get { return Path.GetFullPath (Path.Combine (RootDirectory, "..", "tools", "xibuild", "xibuild")); }
+		}
 
 		public static string Timestamp {
 			get {
@@ -73,7 +78,6 @@ namespace xharness
 		public string TodayContainerTemplate { get; set; }
 		public string TodayExtensionTemplate { get; set; }
 		public string MONO_PATH { get; set; } // Use same name as in Makefiles, so that a grep finds it.
-		public string WATCH_MONO_PATH { get; set; } // Use same name as in Makefiles, so that a grep finds it.
 		public string TVOS_MONO_PATH { get; set; } // Use same name as in Makefiles, so that a grep finds it.
 		public bool INCLUDE_IOS { get; set; }
 		public bool INCLUDE_TVOS { get; set; }
@@ -82,6 +86,7 @@ namespace xharness
 		public string JENKINS_RESULTS_DIRECTORY { get; set; } // Use same name as in Makefiles, so that a grep finds it.
 		public string MAC_DESTDIR { get; set; }
 		public string IOS_DESTDIR { get; set; }
+		public string MONO_SDK_DESTDIR { get; set; }
 		public bool IncludeMac32 { get; set; }
 
 		// Run
@@ -209,7 +214,6 @@ namespace xharness
 			ParseConfigFiles ();
 			var src_root = Path.GetDirectoryName (Path.GetFullPath (RootDirectory));
 			MONO_PATH = Path.GetFullPath (Path.Combine (src_root, "external", "mono"));
-			WATCH_MONO_PATH = make_config ["WATCH_MONO_PATH"];
 			TVOS_MONO_PATH = MONO_PATH;
 			INCLUDE_IOS = make_config.ContainsKey ("INCLUDE_IOS") && !string.IsNullOrEmpty (make_config ["INCLUDE_IOS"]);
 			INCLUDE_TVOS = make_config.ContainsKey ("INCLUDE_TVOS") && !string.IsNullOrEmpty (make_config ["INCLUDE_TVOS"]);
@@ -222,6 +226,7 @@ namespace xharness
 				SdkRoot = make_config ["XCODE_DEVELOPER_ROOT"];
 			if (string.IsNullOrEmpty (SdkRoot94))
 				SdkRoot94 = make_config ["XCODE94_DEVELOPER_ROOT"];
+			MONO_SDK_DESTDIR = make_config ["MONO_SDK_DESTDIR"];
 		}
 		 
 		void AutoConfigureMac ()
@@ -292,6 +297,10 @@ namespace xharness
 					MacTestProjects.Add (bclTestProject);
 				}
 			}
+			var monoImportTestFactory = new BCLTestImportTargetFactory (this);
+			foreach (var target in monoImportTestFactory.GetMacBclTargets ()) {
+				MacTestProjects.Add (target);
+			}
 		}
 
 		void AutoConfigureIOS ()
@@ -354,6 +363,12 @@ namespace xharness
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "dont link", "dont link.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link all", "link all.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link sdk", "link sdk.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
+
+			// add all the tests that are using the precompiled mono assemblies
+			var monoImportTestFactory = new BCLTestImportTargetFactory (this);
+			foreach (var target in monoImportTestFactory.GetiOSBclTargets ()) {
+				IOSTestProjects.Add (target);
+			}
 
 			WatchOSContainerTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates/WatchContainer"));
 			WatchOSAppTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates/WatchApp"));
@@ -824,6 +839,15 @@ namespace xharness
 
 			return rv;
 		}
+
+		Task<ProcessExecutionResult> build_bcl_tests;
+ 		public Task<ProcessExecutionResult> BuildBclTests ()
+ 		{
+ 			if (build_bcl_tests == null)
+ 				build_bcl_tests = ProcessHelper.ExecuteCommandAsync ("make", $".stamp-build-mono-unit-tests -C {StringUtils.Quote (Path.GetFullPath (RootDirectory))}", HarnessLog, TimeSpan.FromMinutes (30));
+ 			return build_bcl_tests;
+ 		}
+
 	}
 
 	public class CrashReportSnapshot

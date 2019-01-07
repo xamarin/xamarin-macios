@@ -12,7 +12,7 @@ namespace AVFoundation {
 
 		public enum InitMode {
 			WithConnection,
-			[iOS (8,0), Mac (10,7)]
+			[iOS (8,0)]
 			WithNoConnection,
 		}
 

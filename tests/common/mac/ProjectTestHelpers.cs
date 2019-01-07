@@ -159,6 +159,7 @@ namespace Xamarin.MMP.Tests
 			// Binding project specific
 			public string APIDefinitionConfig { get; set; }
 			public string StructsAndEnumsConfig { get; set; }
+			public string LinkWithName { get; set; } = null; // Only generates if non-null
 
 			// Unified Executable Specific
 			public bool AssetIcons { get; set; }
@@ -204,19 +205,26 @@ namespace Xamarin.MMP.Tests
 		{
 			StringBuilder output = new StringBuilder ();
 			Environment.SetEnvironmentVariable ("MONO_PATH", null);
-			int compileResult = Xamarin.Bundler.Driver.RunCommand (exe, args != null ? args.ToString() : string.Empty, environment, output, suppressPrintOnErrors: shouldFail);
+			int compileResult = Xamarin.Bundler.Driver.RunCommand (exe, args != null ? args.ToString () : string.Empty, environment, output, suppressPrintOnErrors: shouldFail);
 			if (!shouldFail && compileResult != 0 && Xamarin.Bundler.Driver.Verbosity < 1) {
-				// Driver.RunCommand won't print failed output unless verbosity > 0, so let's do it ourselves.
 				Console.WriteLine ($"Execution failed; exit code: {compileResult}");
-				Console.WriteLine (output);
 			}
-			Func<string> getInfo = () => getAdditionalFailInfo != null ? getAdditionalFailInfo() : "";
-			if (!shouldFail)
-				Assert.AreEqual (0, compileResult, stepName + " failed:\n\n'" + output + "' " + exe + " " + args + getInfo ());
-			else
-				Assert.AreNotEqual (0, compileResult, stepName + " did not fail as expected:\n\n'" + output + "' " + exe + " " + args + getInfo ());
-
+			Func<string> getInfo = () => getAdditionalFailInfo != null ? getAdditionalFailInfo () : "";
+			bool passed = shouldFail ? compileResult != 0 : compileResult == 0;
+			if (!passed) {
+				string outputLine = PrintRedirectIfLong ($"{exe}{args} Output: {output} {getInfo ()}");
+				Assert.Fail ($@"{stepName} {(shouldFail ? "passed" : "failed")} unexpectedly: {outputLine}");
+			}
 			return output.ToString ();
+		}
+
+		public static string PrintRedirectIfLong (string outputLine)
+		{
+			if (outputLine.Length > 5000) {
+				Console.WriteLine (outputLine);
+				outputLine = "(Additional info redirected to console)";
+			}
+			return outputLine;
 		}
 
 		public static string RunAndAssert (string exe, StringBuilder args, string stepName, bool shouldFail = false, Func<string> getAdditionalFailInfo = null, string[] environment = null)
@@ -227,7 +235,7 @@ namespace Xamarin.MMP.Tests
 		// In most cases we generate projects in tmp and this is not needed. But nuget and test projects can make that hard
 		public static void CleanUnifiedProject (string csprojTarget)
 		{
-			RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/msbuild", new StringBuilder (csprojTarget + " /t:clean"), "Clean");
+			RunAndAssert (Configuration.XIBuildPath, new StringBuilder ("-- " + csprojTarget + " /t:clean"), "Clean");
 		}
 
 		public static string BuildProject (string csprojTarget, bool isUnified, bool shouldFail = false, bool release = false, string[] environment = null)
@@ -265,9 +273,10 @@ namespace Xamarin.MMP.Tests
 				return csprojText + fileList;
 			};
 
-			if (isUnified)
-				return RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/msbuild", buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo, environment);
-			else
+			if (isUnified) {
+				buildArgs.Insert (0, " -- ");
+				return RunAndAssert (Configuration.XIBuildPath, buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo, environment);
+			} else
 				return RunAndAssert ("/Applications/Visual Studio.app/Contents/MacOS/vstool", buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo, environment);
 		}
 
@@ -341,7 +350,19 @@ namespace Xamarin.MMP.Tests
 			CopyFileWithSubstitutions (Path.Combine (sourceDir, "ApiDefinition.cs"), Path.Combine (config.TmpDir, "ApiDefinition.cs"), text => text.Replace ("%CODE%", config.APIDefinitionConfig));
 			CopyFileWithSubstitutions (Path.Combine (sourceDir, "StructsAndEnums.cs"), Path.Combine (config.TmpDir, "StructsAndEnums.cs"), text => text.Replace ("%CODE%", config.StructsAndEnumsConfig));
 
+			string linkWithName = null;
+			if (config.LinkWithName != null) {
+				string fileName = Path.GetFileNameWithoutExtension (config.LinkWithName);
+				linkWithName = $"{fileName}.linkwith.cs";
+				File.WriteAllText (Path.Combine (config.TmpDir, linkWithName), $@"using ObjCRuntime;
+
+[assembly: LinkWith (""{config.LinkWithName}"", SmartLink = true, ForceLoad = true)]");
+
+			}
+
 			return CopyFileWithSubstitutions (Path.Combine (sourceDir, config.ProjectName), Path.Combine (config.TmpDir, config.ProjectName), text => {
+					if (linkWithName != null)
+						text = text.Replace ("%ITEMGROUP%", $@"<ItemGroup><Compile Include=""{linkWithName}"" /></ItemGroup>%ITEMGROUP%");
 					return ProjectTextReplacement (config, text);
 				});
 		}
@@ -573,7 +594,14 @@ namespace TestCase
 
 		public static void NugetRestore (string project)
 		{
-			var rv = ExecutionHelper.Execute ("nuget", $"restore {StringUtils.Quote (project)}", out var output);
+			string rootDirectory = FindRootDirectory ();
+
+			Environment.SetEnvironmentVariable ("TargetFrameworkFallbackSearchPaths", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild-frameworks");
+			Environment.SetEnvironmentVariable ("MSBuildExtensionsPathFallbackPathsOverride", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild");
+			Environment.SetEnvironmentVariable ("XAMMAC_FRAMEWORK_PATH", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
+			Environment.SetEnvironmentVariable ("XamarinMacFrameworkRoot", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
+
+			var rv = ExecutionHelper.Execute (Configuration.XIBuildPath, $"-- /restore {StringUtils.Quote (project)}", out var output);
 			if (rv != 0) {
 				Console.WriteLine ("nuget restore failed:");
 				Console.WriteLine (output);

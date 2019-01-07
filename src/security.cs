@@ -45,14 +45,13 @@ namespace Security {
 		[Field ("kSecPolicyAppleCodeSigning")]
 		NSString AppleCodeSigning { get; }
 
-		[iOS (9,0)][Mac (10,7)]
+		[iOS (9,0)]
 		[Field ("kSecPolicyMacAppStoreReceipt")]
 		NSString MacAppStoreReceipt { get; }
 
 		[Field ("kSecPolicyAppleIDValidation")]
 		NSString AppleIDValidation { get; }
 			
-		[Mac (10, 8)]
 		[Field ("kSecPolicyAppleTimeStamping")]
 		NSString AppleTimeStamping { get; }
 
@@ -421,11 +420,9 @@ namespace Security {
 		[Field ("kSecAttrKeySizeInBits")]
 		NSString KeySizeInBitsKey { get; }
 
-		[Mac (10, 8)]
 		[Field ("kSecPrivateKeyAttrs")]
 		NSString PrivateKeyAttrsKey { get; }
 
-		[Mac (10, 8)]
 		[Field ("kSecPublicKeyAttrs")]
 		NSString PublicKeyAttrsKey { get; }
 
@@ -748,13 +745,11 @@ namespace Security {
 	[Static][Internal]
 	interface SecCertificateOIDs
 	{
-		[Mac (10,7)]
 		[Field ("kSecOIDX509V1SubjectPublicKey")]
 		IntPtr SubjectPublicKey { get; }
 	}
 
 	[NoiOS][NoTV][NoWatch]
-	[Mac (10,7)]
 	[Static][Internal]
 	interface SecPropertyKey
 	{

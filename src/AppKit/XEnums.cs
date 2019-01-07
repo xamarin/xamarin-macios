@@ -11,7 +11,6 @@ using ObjCRuntime;
 
 namespace AppKit {
 
-	[Mac (10, 7)]
 	[Native]
 	public enum NSTextLayoutOrientation : long {
 		Horizontal,
@@ -19,7 +18,7 @@ namespace AppKit {
 	}
 
 #if !XAMCORE_2_0
-	[Mac (10, 7), Flags]
+	[Flags]
 	[Native]
 	public enum NSTableViewAnimationOptions : ulong {
 		EffectFade = 0x1,
@@ -33,14 +32,12 @@ namespace AppKit {
 	}
 #endif
 
-	[Mac (10, 7)]
 	[Native]
 	public enum NSPrintRenderingQuality : long {
 		Best,
 		Responsive
 	}
 
-	[Mac (10, 7)]
 	[Native]
 	public enum NSCorrectionIndicatorType : long {
 		Default = 0,
@@ -48,7 +45,6 @@ namespace AppKit {
 		Guesses
 	}
 
-	[Mac (10, 7)]
 	[Native]
 	public enum NSCorrectionResponse : long {
 		None,
@@ -59,7 +55,6 @@ namespace AppKit {
 		Reverted
 	}
 
-	[Mac (10, 7)]
 	[Native]
 	public enum NSTextFinderMatchingType : long {
 		Contains = 0,

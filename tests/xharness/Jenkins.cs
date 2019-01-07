@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Diagnostics;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Text;
+using Xamarin;
 using Xamarin.Utils;
 
 namespace xharness
@@ -39,9 +41,15 @@ namespace xharness
 		public Log SimulatorLoadLog;
 		public Log DeviceLoadLog;
 
+		string log_directory;
 		public string LogDirectory {
 			get {
-				return Path.Combine (Harness.JENKINS_RESULTS_DIRECTORY, "tests");
+				if (string.IsNullOrEmpty (log_directory)) {
+					log_directory = Path.Combine (Harness.JENKINS_RESULTS_DIRECTORY, "tests");
+					if (IsServerMode)
+						log_directory = Path.Combine (log_directory, Harness.Timestamp);
+				}
+				return log_directory;
 			}
 		}
 
@@ -56,6 +64,7 @@ namespace xharness
 		public Devices Devices = new Devices ();
 
 		List<TestTask> Tasks = new List<TestTask> ();
+		Dictionary<string, MakeTask> DependencyTasks = new Dictionary<string, MakeTask> ();
 
 		internal static Resource DesktopResource = new Resource ("Desktop", Environment.ProcessorCount);
 
@@ -81,25 +90,29 @@ namespace xharness
 			Devices.Harness = Harness;
 
 			if (SimulatorLoadLog == null)
-				SimulatorLoadLog = Logs.Create ($"simulator-list-{Harness.Timestamp}.log", "Simulator Listing");
+				SimulatorLoadLog = Logs.Create ($"simulator-list-{Harness.Timestamp}.log", "Simulator Listing (in progress)");
 
 			var simulatorLoadTask = Task.Run (async () => {
 				try {
 					await Simulators.LoadAsync (SimulatorLoadLog);
+					SimulatorLoadLog.Description = "Simulator Listing (ok)";
 				} catch (Exception e) {
 					SimulatorLoadLog.WriteLine ("Failed to load simulators:");
 					SimulatorLoadLog.WriteLine (e);
+					SimulatorLoadLog.Description = $"Simulator Listing ({e.Message})";
 				}
 			});
 
 			if (DeviceLoadLog == null)
-				DeviceLoadLog = Logs.Create ($"device-list-{Harness.Timestamp}.log", "Device Listing");
+				DeviceLoadLog = Logs.Create ($"device-list-{Harness.Timestamp}.log", "Device Listing (in progress)");
 			var deviceLoadTask = Task.Run (async () => {
 				try {
 					await Devices.LoadAsync (DeviceLoadLog, removed_locked: true);
+					DeviceLoadLog.Description = "Device Listing (ok)";
 				} catch (Exception e) {
 					DeviceLoadLog.WriteLine ("Failed to load devices:");
 					DeviceLoadLog.WriteLine (e);
+					DeviceLoadLog.Description = $"Device Listing ({e.Message})";
 				}
 			});
 
@@ -183,16 +196,19 @@ namespace xharness
 				case "monotouch-test":
 					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, Defines = "OPTIMIZEALL" };
 					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = true, Profiling = false, Defines = "OPTIMIZEALL" };
-					yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Ignored = true, };
-					yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Ignored = true, };
+					yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, };
+					yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, };
+					yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, };
 					break;
 				case "mscorlib":
-					yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Ignored = true, Undefines = "FULL_AOT_RUNTIME" };
-					yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Ignored = true, Undefines = "FULL_AOT_RUNTIME" };
+					yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+					yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+					yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
 					break;
 				case "mini":
 					yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
 					yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+					yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false , Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
 					break;
 				}
 				break;
@@ -347,6 +363,7 @@ namespace xharness
 							Platform = pair.Item2,
 							Ignored = pair.Item3,
 							TestName = project.Name,
+							Dependency = project.Dependency,
 						};
 						derived.CloneTestProject (pair.Item1);
 						var simTasks = CreateRunSimulatorTaskAsync (derived);
@@ -711,6 +728,7 @@ namespace xharness
 					build.ProjectPlatform = project.Platform;
 					build.SpecifyPlatform = false;
 					build.SpecifyConfiguration = build.ProjectConfiguration != "Debug";
+					build.Dependency = project.Dependency;
 					RunTestTask exec;
 					IEnumerable<RunTestTask> execs;
 					var ignored_main = ignored;
@@ -827,6 +845,7 @@ namespace xharness
 				Target = "all",
 				WorkingDirectory = Path.Combine (Harness.RootDirectory, "mac-binding-project"),
 				Ignored = !IncludeMacBindingProject || !IncludeMac,
+				Timeout = TimeSpan.FromMinutes (15),
 			};
 			Tasks.Add (runMacBindingProject);
 
@@ -1155,33 +1174,59 @@ namespace xharness
 								}
 							}
 							break;
+						case "/stoptest":
 						case "/runtest":
 							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
-							using (var writer = new StreamWriter (response.OutputStream)) {
-								int id;
-								var id_inputs = arguments ["id"].Split (',');
-
-								// We want to randomize the order the tests are added, so that we don't build first the test for one device, 
-								// then for another, since that would not take advantage of running tests on several devices in parallel.
-								var rnd = new Random ((int) DateTime.Now.Ticks);
-								id_inputs = id_inputs.OrderBy (v => rnd.Next ()).ToArray ();
-
+							IEnumerable<TestTask> find_tasks (StreamWriter writer, string ids)
+							{
+								var id_inputs = ids.Split (',');
 								foreach (var id_input in id_inputs) {
-									if (int.TryParse (id_input, out id)) {
+									if (int.TryParse (id_input, out var id)) {
 										var task = Tasks.FirstOrDefault ((t) => t.ID == id);
 										if (task == null)
 											task = Tasks.Where ((v) => v is AggregatedRunSimulatorTask).Cast<AggregatedRunSimulatorTask> ().SelectMany ((v) => v.Tasks).FirstOrDefault ((t) => t.ID == id);
 										if (task == null) {
 											writer.WriteLine ($"Could not find test {id}");
-										} else if (task.InProgress || task.Waiting) {
+										} else {
+											yield return task;
+										}
+									} else {
+										writer.WriteLine ($"Could not parse {arguments ["id"]}");
+									}
+								}
+
+							}
+							using (var writer = new StreamWriter (response.OutputStream)) {
+								var id_inputs = arguments ["id"].Split (',');
+
+								var tasks = find_tasks (writer, arguments ["id"]);
+
+								// We want to randomize the order the tests are added, so that we don't build first the test for one device, 
+								// then for another, since that would not take advantage of running tests on several devices in parallel.
+								var rnd = new Random ((int) DateTime.Now.Ticks);
+								tasks = tasks.OrderBy ((v) => rnd.Next ());
+
+								foreach (var task in tasks) {
+									switch (request.Url.LocalPath) {
+									case "/stoptest":
+										if (!task.Waiting) {
+											writer.WriteLine ($"Test '{task.TestName}' is not in a waiting state.");
+										} else {
+											task.Reset ();
+											writer.WriteLine ($"OK: {task.ID}");
+										}
+										break;
+									case "/runtest":
+										if (task.InProgress || task.Waiting) {
 											writer.WriteLine ($"Test '{task.TestName}' is already executing.");
 										} else {
 											task.Reset ();
 											task.RunAsync ();
-											writer.WriteLine ("OK");
+											writer.WriteLine ($"OK: {task.ID}");
 										}
-									} else {
-										writer.WriteLine ($"Could not parse {arguments ["id"]}");
+										break;
+									default:
+										throw new NotImplementedException ();
 									}
 								}
 							}
@@ -1315,32 +1360,25 @@ namespace xharness
 		}
 
 		object report_lock = new object ();
-		public void GenerateReport (bool only_if_ci = false)
+		public void GenerateReport ()
 		{
-			if (only_if_ci && IsServerMode)
-				return;
-			
 			try {
 				lock (report_lock) {
-					var report = Path.Combine (LogDirectory, IsServerMode ? $"index-{Harness.Timestamp}.html" : "index.html");
-					using (var stream = new MemoryStream ()) {
-						MemoryStream markdown_summary = null;
-						StreamWriter markdown_writer = null;
-						if (!string.IsNullOrEmpty (Harness.MarkdownSummaryPath)) {
-							markdown_summary = new MemoryStream ();
-							markdown_writer = new StreamWriter (markdown_summary);
+					var report = Path.Combine (LogDirectory, "index.html");
+					var tmpreport = Path.Combine (LogDirectory, $"index-{Harness.Timestamp}.tmp.html");
+					var tmpmarkdown = string.IsNullOrEmpty (Harness.MarkdownSummaryPath) ? string.Empty : (Harness.MarkdownSummaryPath + $".{Harness.Timestamp}.tmp");
+					using (var stream = new FileStream (tmpreport, FileMode.CreateNew, FileAccess.ReadWrite)) {
+						using (var markdown_writer = (string.IsNullOrEmpty (tmpmarkdown) ? null : new StreamWriter (tmpmarkdown))) {
+							GenerateReportImpl (stream, markdown_writer);
 						}
-						GenerateReportImpl (stream, markdown_writer);
-						if (File.Exists (report))
-							File.Delete (report);
-						File.WriteAllBytes (report, stream.ToArray ());
-						if (!string.IsNullOrEmpty (Harness.MarkdownSummaryPath)) {
-							markdown_writer.Flush ();
-							if (File.Exists (Harness.MarkdownSummaryPath))
-								File.Delete (Harness.MarkdownSummaryPath);
-							File.WriteAllBytes (Harness.MarkdownSummaryPath, markdown_summary.ToArray ());
-							markdown_writer.Close ();
-						}
+					}
+					if (File.Exists (report))
+						File.Delete (report);
+					File.Move (tmpreport, report);
+					if (!string.IsNullOrEmpty (tmpmarkdown)) {
+						if (File.Exists (Harness.MarkdownSummaryPath))
+							File.Delete (Harness.MarkdownSummaryPath);
+						File.Move (tmpmarkdown, Harness.MarkdownSummaryPath);
 					}
 				}
 			} catch (Exception e) {
@@ -1626,6 +1664,10 @@ function runtest(id)
 {
 	sendrequest (""runtest?id="" + id);
 }
+function stoptest(id)
+{
+	sendrequest (""stoptest?id="" + id);
+}
 function sendrequest(url, callback)
 {
 	var xhttp = new XMLHttpRequest();
@@ -1754,7 +1796,7 @@ function toggleAll (show)
 				writer.WriteLine ("<h1>Test results</h1>");
 
 				foreach (var log in Logs)
-					writer.WriteLine ("<a href='{0}' type='text/plain'>{1}</a><br />", log.FullPath.Substring (LogDirectory.Length + 1), log.Description);
+					writer.WriteLine ("<span id='x{2}' class='autorefreshable'> <a href='{0}' type='text/plain'>{1}</a></span><br />", log.FullPath.Substring (LogDirectory.Length + 1), log.Description, id_counter++);
 
 				var headerColor = "black";
 				if (unfinishedTests.Any ()) {
@@ -1985,8 +2027,17 @@ function toggleAll (show)
 							writer.Write ($"<div class='pdiv {ignoredClass}'>");
 							writer.Write ($"<span id='button_{log_id}' class='expander' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>{defaultExpander}</span>");
 							writer.Write ($"<span id='x{id_counter++}' class='p3 autorefreshable' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>{title} (<span style='color: {GetTestColor (test)}'>{state}</span>) </span>");
-							if (IsServerMode && !test.InProgress && !test.Waiting)
-								writer.Write ($" <span><a class='runall' href='javascript:runtest ({test.ID})'>Run</a></span> ");
+							if (IsServerMode) {
+								writer.Write ($" <span id='x{id_counter++}' class='autorefreshable'>");
+								if (test.Waiting) {
+									writer.Write ($" <a class='runall' href='javascript:stoptest ({test.ID})'>Stop</a> ");
+								} else if (test.InProgress) {
+									// Stopping is not implemented for tasks that are already executing
+								} else {
+									writer.Write ($" <a class='runall' href='javascript:runtest ({test.ID})'>Run</a> ");
+								}
+								writer.Write ("</span> ");
+							}
 							writer.WriteLine ("</div>");
 							writer.WriteLine ($"<div id='logs_{log_id}' class='autorefreshable logs togglable' data-onautorefresh='{log_id}' style='display: {defaultDisplay};'>");
 
@@ -2204,6 +2255,7 @@ function toggleAll (show)
 		public string ProjectPlatform;
 		public Dictionary<string, string> Environment = new Dictionary<string, string> ();
 
+		public Func<Task> Dependency; // a task that's feteched and awaited before this task's ExecuteAsync method
 		public Task InitialTask; // a task that's executed before this task's ExecuteAsync method.
 		public Task CompletedTask; // a task that's executed after this task's ExecuteAsync method.
 
@@ -2400,6 +2452,9 @@ function toggleAll (show)
 			ExecutionResult = (ExecutionResult & ~TestExecutingResult.StateMask) | TestExecutingResult.InProgress;
 
 			try {
+				if (Dependency != null)
+ 					await Dependency ();
+
 				if (InitialTask != null)
 					await InitialTask;
 				
@@ -2433,7 +2488,7 @@ function toggleAll (show)
 				duration.Stop ();
 			}
 
-			Jenkins.GenerateReport (true);
+			Jenkins.GenerateReport ();
 		}
 
 		protected virtual void PropagateResults ()
@@ -2758,8 +2813,9 @@ function toggleAll (show)
 				await RestoreNugetsAsync (log, resource);
 
 				using (var xbuild = new Process ()) {
-					xbuild.StartInfo.FileName = UseMSBuild ? "msbuild" : "msbuild";
+					xbuild.StartInfo.FileName = Harness.XIBuildPath;
 					var args = new StringBuilder ();
+					args.Append ("-- ");
 					args.Append ("/verbosity:diagnostic ");
 					if (SpecifyPlatform)
 						args.Append ($"/p:Platform={ProjectPlatform} ");
@@ -2794,8 +2850,9 @@ function toggleAll (show)
 		{
 			// Don't require the desktop resource here, this shouldn't be that resource sensitive
 			using (var xbuild = new Process ()) {
-				xbuild.StartInfo.FileName = "msbuild";
+				xbuild.StartInfo.FileName = Harness.XIBuildPath;
 				var args = new StringBuilder ();
+				args.Append ("-- ");
 				args.Append ("/verbosity:diagnostic ");
 				if (project_platform != null)
 					args.Append ($"/p:Platform={project_platform} ");
@@ -2870,8 +2927,9 @@ function toggleAll (show)
 				using (var proc = new Process ()) {
 
 					proc.StartInfo.WorkingDirectory = WorkingDirectory;
-					proc.StartInfo.FileName = "/Library/Frameworks/Mono.framework/Commands/mono";
+					proc.StartInfo.FileName = Harness.XIBuildPath;
 					var args = new StringBuilder ();
+					args.Append ("-t -- ");
 					args.Append (StringUtils.Quote (Path.GetFullPath (TestExecutable))).Append (' ');
 					args.Append (StringUtils.Quote (Path.GetFullPath (TestLibrary))).Append (' ');
 					if (IsNUnit3) {
@@ -2883,6 +2941,8 @@ function toggleAll (show)
 					}
 					proc.StartInfo.Arguments = args.ToString ();
 					SetEnvironmentVariables (proc);
+					foreach (DictionaryEntry de in proc.StartInfo.EnvironmentVariables)
+						log.WriteLine ($"export {de.Key}={de.Value}");
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
 					if (!Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;

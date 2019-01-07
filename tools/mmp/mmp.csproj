@@ -289,6 +289,9 @@
     <Compile Include="..\..\src\ObjCRuntime\Registrar.cs">
       <Link>external\Registrar.cs</Link>
     </Compile>
+    <Compile Include="..\common\PListExtensions.cs">
+      <Link>external\PListExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\common\TargetFramework.cs">
       <Link>external\TargetFramework.cs</Link>
     </Compile>
@@ -361,6 +364,9 @@
     <Compile Include="linker\MonoMac.Tuner\MacBaseProfile.cs">
       <Link>MonoMac.Tuner\MacBaseProfile.cs</Link>
     </Compile>
+    <Compile Include="..\common\FileCopier.cs">
+      <Link>external\FileCopier.cs</Link>
+    </Compile>
     <Compile Include="..\common\Symbols.cs">
       <Link>external\Symbols.cs</Link>
     </Compile>
@@ -369,6 +375,9 @@
     </Compile>
     <Compile Include="..\common\CoreResolver.cs">
       <Link>common\CoreResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\PListObject.cs">
+      <Link>external\PListObject.cs</Link>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

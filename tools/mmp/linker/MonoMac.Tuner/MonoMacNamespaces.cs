@@ -79,6 +79,7 @@ namespace MonoMac.Tuner {
 		{ Constants.NaturalLanguageLibrary, Namespaces.NaturalLanguage},
 		{ Constants.NetworkLibrary, Namespaces.Network},
 		{ Constants.VideoSubscriberAccountLibrary, Namespaces.VideoSubscriberAccount },
+		{ Constants.ImageCaptureCoreLibrary, Namespaces.ImageCaptureCore },
 		{ Constants.iTunesLibraryLibrary, Namespaces.iTunesLibrary },
 	};
 

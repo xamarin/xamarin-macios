@@ -386,9 +386,9 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 	}
 
 #ifdef DEBUG
-	initialize_cocoa_threads (monotouch_configure_debugging);
+	xamarin_initialize_cocoa_threads (monotouch_configure_debugging);
 #else
-	initialize_cocoa_threads (NULL);
+	xamarin_initialize_cocoa_threads (NULL);
 #endif
 
 #if defined (__arm__) || defined(__aarch64__)

@@ -2081,7 +2081,8 @@ namespace Metal {
 		[Abstract, Export ("setCullMode:")]
 		void SetCullMode (MTLCullMode cullMode);
 
-		[Mac (10,11, onlyOn64 : true), TV (11,0), iOS (11,0), NoWatch]
+		[iOS (9,0)] // Current headers claim this member was introduced in iOS 11, but it also shows up in Xcode 7's header (as introduced in iOS 9)
+		[Mac (10,11, onlyOn64 : true), TV (11,0), NoWatch]
 #if XAMCORE_4_0
 		// Apple added a new required member in iOS 9, but that breaks our binary compat, so we can't do that in our existing code.
 		[Abstract]

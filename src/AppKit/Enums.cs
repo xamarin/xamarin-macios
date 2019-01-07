@@ -138,7 +138,6 @@ namespace AppKit {
 	}
 
 	[Native]
-	[Deprecated (PlatformName.MacOSX, 10, 14)]
 	public enum NSBackingStore : ulong {
 		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'Buffered' instead.")]
 		Retained, 
@@ -1995,13 +1994,13 @@ namespace AppKit {
 		SurfaceOrder = 235,
 		SurfaceOpacity = 236,
 
-		[Mac (10, 7)] SurfaceBackingSize = 304,
-		[Mac (10, 7)] ReclaimResources = 308,
-		[Mac (10, 7)] CurrentRendererID = 309,
-		[Mac (10, 7)] GpuVertexProcessing = 310,
-		[Mac (10, 7)] GpuFragmentProcessing = 311,
-		[Mac (10, 7)] HasDrawable = 314,
-		[Mac (10, 7)] MpsSwapsInFlight = 315
+		SurfaceBackingSize = 304,
+		ReclaimResources = 308,
+		CurrentRendererID = 309,
+		GpuVertexProcessing = 310,
+		GpuFragmentProcessing = 311,
+		HasDrawable = 314,
+		MpsSwapsInFlight = 315
 	}
 	
 	public enum NSSurfaceOrder {
@@ -2013,10 +2012,10 @@ namespace AppKit {
 	public enum NSOpenGLPixelFormatAttribute : uint { // uint32_t NSOpenGLPixelFormatAttribute
 		AllRenderers       =   1,
 		DoubleBuffer       =   5,
-		[Mac (10, 7)] TripleBuffer = 3,
+		TripleBuffer = 3,
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'TripleBuffer' instead.")]
-		[Mac (10, 7)] TrippleBuffer = TripleBuffer,
+		TrippleBuffer = TripleBuffer,
 #endif
 		Stereo             =   6,
 		AuxBuffers         =   7,
@@ -2058,7 +2057,7 @@ namespace AppKit {
 		AcceleratedCompute =  97,
 
 		// Specify the profile
-		[Mac (10, 7)] OpenGLProfile = 99,
+		OpenGLProfile = 99,
 		VirtualScreenCount = 128,
 
 		[Deprecated (PlatformName.MacOSX, 10, 5)]
@@ -2097,7 +2096,7 @@ namespace AppKit {
 		FormatCacheSize = 501,
 		ClearFormatCache = 502,
 		RetainRenderers = 503,
-		[Mac (10, 7)] UseBuildCache = 506,
+		UseBuildCache = 506,
 		[Deprecated (PlatformName.MacOSX, 10, 4)]
 		ResetLibrary = 504
 	}
@@ -2406,7 +2405,6 @@ namespace AppKit {
 		Default = 0, None = 2, DocumentWindow, UtilityWindow, AlertPanel
 	}
 
-	[Mac (10, 7)]
 	[Native]
 	public enum NSTextFinderAction : long {
 		ShowFindInterface = 1,

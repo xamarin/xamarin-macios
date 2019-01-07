@@ -38,7 +38,7 @@ namespace Xamarin.iOS.Tasks
 
 			AssertCompiledModelExists ("SqueezeNet");
 
-			Thread.Sleep (1000);
+			EnsureFilestampChange ();
 
 			// Rebuild w/ no changes
 			BuildProject ("MyCoreMLApp", Platform, "Debug", clean: false);

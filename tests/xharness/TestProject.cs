@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
+using Xamarin;
 
 namespace xharness
 {
@@ -18,6 +19,7 @@ namespace xharness
 		public bool IsNUnitProject;
 		public bool GenerateVariations = true;
 		public string [] Configurations;
+		public Func<Task> Dependency;
 
 		public IEnumerable<TestProject> ProjectReferences;
 

@@ -247,8 +247,7 @@ namespace Xamarin.MMP.Tests
 		{
 			TI.TestUnifiedExecutable (test, shouldFail: false);
 
-			Assert.IsTrue (File.Exists (Path.Combine (tmpDir, "bin/Debug/XM45Example.app/Contents/MonoBundle/Mono.Posix.dll")));
-			Assert.IsTrue (File.Exists (Path.Combine (tmpDir, "bin/Debug/XM45Example.app/Contents/MonoBundle/libMonoPosixHelper.dylib")));
+			Assert.IsTrue (File.Exists (Path.Combine (tmpDir, "bin/Debug/XM45Example.app/Contents/MonoBundle/libMonoPosixHelper.dylib")), String.Format ("Does {0}/bin/Debug/XM45Example.app/Contents/MonoBundle/libMonoPosixHelper.dylib to exist?", tmpDir));
 		}
 
 
@@ -582,7 +581,7 @@ namespace Xamarin.MMP.Tests
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					PlistReplaceStrings = new Dictionary<string, string> {
-						{ "<string>10.7</string>", "<string>10.4</string>"}
+						{ "<string>10.9</string>", "<string>10.4</string>"}
 					}
 				};
 				TI.TestUnifiedExecutable (test, shouldFail: true);
@@ -595,7 +594,7 @@ namespace Xamarin.MMP.Tests
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					PlistReplaceStrings = new Dictionary<string, string> {
-						{ "<string>10.7</string>", "<string>11.0</string>"}
+						{ "<string>10.9</string>", "<string>11.0</string>"}
 					}
 				};
 				TI.TestUnifiedExecutable (test, shouldFail: true);
@@ -608,7 +607,7 @@ namespace Xamarin.MMP.Tests
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					PlistReplaceStrings = new Dictionary<string, string> {
-						{ "<string>10.7</string>", "<string>10.12</string>"}
+						{ "<string>10.9</string>", "<string>10.12</string>"}
 					}
 				};
 				TI.TestUnifiedExecutable (test, shouldFail: false);
@@ -675,7 +674,7 @@ namespace Xamarin.MMP.Tests
 			});
 		}
 
-		// [Test] - https://github.com/xamarin/xamarin-macios/issues/4110
+		[Test]
 		public void BuildingSameSolutionTwice_ShouldNotRunACToolTwice ()
 		{
 			RunMMPTest (tmpDir => {

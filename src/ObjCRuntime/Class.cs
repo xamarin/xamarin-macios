@@ -25,6 +25,7 @@ namespace ObjCRuntime {
 
 		// We use the last significant bit of the IntPtr to store if this is a custom class or not.
 		static Dictionary<Type, IntPtr> type_to_class; // accessed from multiple threads, locking required.
+		static Type[] class_to_type;
 
 		internal IntPtr handle;
 
@@ -33,12 +34,15 @@ namespace ObjCRuntime {
 		{
 			type_to_class = new Dictionary<Type, IntPtr> (Runtime.TypeEqualityComparer);
 
-			if (!Runtime.DynamicRegistrationSupported)
-				return; // Only the dynamic registrar needs the list of registered assemblies.
-
 			var map = options->RegistrationMap;
 			if (map == null)
 				return;
+
+			class_to_type = new Type [map->map_count];
+
+			if (!Runtime.DynamicRegistrationSupported)
+				return; // Only the dynamic registrar needs the list of registered assemblies.
+
 			
 			for (int i = 0; i < map->assembly_count; i++) {
 				var ptr = Marshal.ReadIntPtr (map->assembly, i * IntPtr.Size);
@@ -237,7 +241,7 @@ namespace ObjCRuntime {
 					continue;
 
 				var rv = map->map [i].handle;
-				is_custom_type = i >= (map->map_count - map->custom_type_count);
+				is_custom_type = (map->map [i].flags & Runtime.MTTypeFlags.CustomType) == Runtime.MTTypeFlags.CustomType;
 #if LOG_TYPELOAD
 				Console.WriteLine ($"FindClass ({type.FullName}, {is_custom_type}): 0x{rv.ToString ("x")} = {class_getName (rv)}.");
 #endif
@@ -327,12 +331,7 @@ namespace ObjCRuntime {
 			}
 
 			// Find the ObjC class pointer in our map
-			var mapIndex = FindMapIndex (map->map, 0, map->map_count - map->custom_type_count - 1, @class);
-			if (mapIndex == -1) {
-				mapIndex = FindMapIndex (map->map, map->map_count - map->custom_type_count, map->map_count - 1, @class);
-				is_custom_type = true;
-			}
-
+			var mapIndex = FindMapIndex (map->map, 0, map->map_count - 1, @class);
 			if (mapIndex == -1) {
 #if LOG_TYPELOAD
 				Console.WriteLine ($"FindType (0x{@class:X} = {Marshal.PtrToStringAuto (class_getName (@class))}) => found no type.");
@@ -340,10 +339,16 @@ namespace ObjCRuntime {
 				return null;
 			}
 
+			is_custom_type = (map->map [mapIndex].flags & Runtime.MTTypeFlags.CustomType) == Runtime.MTTypeFlags.CustomType;
+
+			Type type = class_to_type [mapIndex];
+			if (type != null)
+				return type;
+
 			// Resolve the map entry we found to a managed type
 			var type_reference = map->map [mapIndex].type_reference;
 			var member = ResolveTokenReference (type_reference, 0x02000000);
-			var type = member as Type;
+			type = member as Type;
 
 			if (type == null && member != null)
 				throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{type_reference:X} to be a type, but it's a {member.GetType ().Name}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
@@ -351,6 +356,8 @@ namespace ObjCRuntime {
 #if LOG_TYPELOAD
 			Console.WriteLine ($"FindType (0x{@class:X} = {Marshal.PtrToStringAuto (class_getName (@class))}) => {type.FullName}; is custom: {is_custom_type} (token reference: 0x{type_reference:X}).");
 #endif
+
+			class_to_type [mapIndex] = type;
 
 			return type;
 		}

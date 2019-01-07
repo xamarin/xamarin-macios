@@ -915,7 +915,9 @@ Alternatively, enable the managed [linker](https://docs.microsoft.com/en-us/xama
 
 As a last-straw solution, use an older version of Xamarin.iOS that does not require these new SDKs to be present during the build process.
 
-### <a name="MT0136"/>MT0136: Cannot find the assembly {assembly} referenced from {assembly}.
+<a name="MT0136"/>
+
+### MT0136: Cannot find the assembly {assembly} referenced from {assembly}.
 
 This warning occurs when an assembly passed to mtouch contains a reference to
 another assembly that can't be found.
@@ -923,7 +925,9 @@ another assembly that can't be found.
 mtouch may in certain cases still find references at a later point, which
 means that if the build otherwise succeeds, this warning can be ignored.
 
-### <a name="MT0137"/>MT0137: Cannot find the assembly {assembly}, referenced by an attribute in {assembly}.
+<a name="MT0137"/>
+
+### MT0137: Cannot find the assembly {assembly}, referenced by an attribute in {assembly}.
 
 This warning occurs when an attribute contains a reference to another assembly
 that can't be found.
@@ -932,6 +936,14 @@ mtouch may in certain cases still find references at a later point, which
 means that if the build otherwise succeeds, this warning can be ignored.
 
 <!-- 0138-0139: used by mmp -->
+
+<a name="MT0140"/>
+
+### MT0140: File '{framework_filename}' is not a valid framework.
+
+This error occurs when `mtouch` reads a binary in a `.framework` directory that is not a valid executable.
+
+It might be a broken file or a broken symlink (after decompressing an archive) to a valid file. The native framework should be removed and replaced with a valid one. 
 
 # MT1xxx: Project related error messages
 
@@ -2338,6 +2350,10 @@ complicated to get it right when doing it manually.
 
 If this is not the case, please file a [bug report](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
+### MT4177: The 'ProtocolType' parameter of the 'Adopts' attribute used in class '*' contains an invalid character. Value used: '*' Invalid Char: '*'.
+
+The name of an Objective-C protocol can't contain certain characters which means that the `Adopts` attribute on the corresponding managed class can't have the `ProtocolType` parameter containing them. Please refer to the provided error message and fix accordingly.
+
 # MT5xxx: GCC and toolchain error messages
 
 ### MT51xx: Compilation
@@ -3115,6 +3131,25 @@ Where * can be:
 ### MT7067: Error saving '*': *.
 
 *MSBuild task: PropertyListEditorTaskBase*
+
+<a name="MT7068" />
+
+### MT7068: Error loading '*': *
+
+*MSBuild task: IntentDefinitionCodegenTaskBase*
+*MSBuild task: IntentDefinitionCompilerTaskBase*
+
+<a name="MT7069" />
+
+### MT7069: Unknown response parameter: *
+
+*MSBuild task: IntentDefinitionCodegenTaskBase*
+
+<a name="MT7070" />
+
+### MT7070: All Intents must have a Title
+
+*MSBuild task: IntentDefinitionCompilerTaskBase*
 
 ## MT8xxx: Runtime error messages
 

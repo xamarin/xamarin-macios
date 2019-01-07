@@ -1,6 +1,8 @@
 TOP=../..
 include $(TOP)/Make.config
 
+export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
+
 #
 # mmp
 #
@@ -33,12 +35,12 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/mmp: mmp.in | $(MAC_DESTDIR)$(MAC
 	$(Q) chmod +x $@
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/mmp.exe: $(MMP_DIR)/mmp.exe | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp
-	$(Q) cp $(dir $<)/*.exe $(dir $@)
-	$(Q) cp $(dir $<)/*.dll $(dir $@)
-	$(Q) cp $(dir $<)/*.pdb $(dir $@)
+	$(Q) $(CP) $(dir $<)/*.exe $(dir $@)
+	$(Q) $(CP) $(dir $<)/*.dll $(dir $@)
+	$(Q) $(CP) $(dir $<)/*.pdb $(dir $@)
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Xamarin.Mac.registrar.%.a: Xamarin.Mac.registrar.%.a | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp
-	$(Q) cp $<* $(dir $@)
+	$(Q) $(CP) $<* $(dir $@)
 
 $(MMP_DIRECTORIES):
 	$(Q) mkdir -p $@

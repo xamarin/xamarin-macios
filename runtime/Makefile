@@ -50,9 +50,6 @@ bindings-generator.exe: bindings-generator.cs
 bindings-generated.m: bindings-generator.exe
 	$(Q_GEN) $(SYSTEM_MONO) --debug $< $@
 
-zlib-helper.c: $(MONO_PATH)/support/zlib-helper.c
-	$(Q) ln -fs $< $@
-
 # our makefiles don't support building the same source file multiple times with different defines,
 # so just symlink extension-main.m to another file and compile that instead.
 app-main.m watchextension-main.m tvextension-main.m: extension-main.m
@@ -83,7 +80,7 @@ MONOTOUCH_FRAMEWORKS =  \
 	Xamarin             \
 	Xamarin-debug       \
 
-MONOTOUCH_SOURCE_STEMS = $(patsubst %.s,%,$(patsubst %.m,%,$(SHARED_SOURCES) $(MONOTOUCH_SOURCES))) zlib-helper
+MONOTOUCH_SOURCE_STEMS = $(patsubst %.s,%,$(patsubst %.m,%,$(SHARED_SOURCES) $(MONOTOUCH_SOURCES)))
 MONOTOUCH_I386_SOURCE_STEMS = $(patsubst %.s,%,$(patsubst %.m,%,$(SHARED_I386_SOURCES)))
 MONOTOUCH_X86_64_SOURCE_STEMS = $(patsubst %.s,%,$(patsubst %.m,%,$(SHARED_X86_64_SOURCES)))
 
@@ -135,10 +132,10 @@ $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/lib/%.a: .libs/$(1)/%.a | $(IOS_
 	$(Q) install -m 0644 $$< $$@
 
 $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/Xamarin.framework/Xamarin: .libs/$(1)/Xamarin-sim.framework | $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/Xamarin.framework
-	$(Q) cp $$< $$@
+	$(Q) $(CP) $$< $$@
 
 $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/Xamarin-debug.framework/Xamarin-debug: .libs/$(1)/Xamarin-debug-sim.framework | $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/Xamarin-debug.framework
-	$(Q) cp $$< $$@
+	$(Q) $(CP) $$< $$@
 
 $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/%.framework/Info.plist: Xamarin.framework-$(1).Info.plist | $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/%.framework
 	$(Q) sed 's/@BUNDLE_EXECUTABLE@/$$*/' $$< > $$@
@@ -148,10 +145,10 @@ $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/lib/%.a: .libs/$(1)/%.a | $(IOS_DESTDIR
 	$(Q) install -m 0644 $$< $$@
 
 $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/Xamarin.framework/Xamarin: .libs/$(1)/Xamarin-dev.framework | $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/Xamarin.framework
-	$(Q) cp $$< $$@
+	$(Q) $(CP) $$< $$@
 
 $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/Xamarin-debug.framework/Xamarin-debug: .libs/$(1)/Xamarin-debug-dev.framework | $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/Xamarin-debug.framework
-	$(Q) cp $$< $$@
+	$(Q) $(CP) $$< $$@
 
 $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/%.framework/Info.plist: Xamarin.framework-$(1).Info.plist | $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/%.framework
 	$(Q) sed 's/@BUNDLE_EXECUTABLE@/$$*/' $$< > $$@
@@ -264,7 +261,7 @@ $$(foreach arch,$$($(2)_ARCHITECTURES),.libs/$(1)/tvextension-main.$$(arch).o): 
 .libs/$(1)/libxamarin-dev.dylib:  $$(foreach arch,$$($(2)_DEVICE_ARCHITECTURES),.libs/$(1)/libxamarin.$$(arch).dylib)
 	$(Q) rm -f $$@
 ifeq (1,$$(words $$($(2)_DEVICE_ARCHITECTURES)))
-	$(Q) cp $$^ $$@
+	$(Q) $(CP) $$^ $$@
 else
 	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
 endif
@@ -274,7 +271,7 @@ endif
 .libs/$(1)/libxamarin-debug-dev.dylib:  $$(foreach arch,$$($(2)_DEVICE_ARCHITECTURES),.libs/$(1)/libxamarin-debug.$$(arch).dylib)
 	$(Q) rm -f $$@
 ifeq (1,$$(words $$($(2)_DEVICE_ARCHITECTURES)))
-	$(Q) cp $$^ $$@
+	$(Q) $(CP) $$^ $$@
 else
 	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
 endif
@@ -284,7 +281,7 @@ endif
 .libs/$(1)/Xamarin-dev.framework:  $$(foreach arch,$$($(2)_DEVICE_ARCHITECTURES),.libs/$(1)/Xamarin.$$(arch).framework)
 	$(Q) rm -f $$@
 ifeq (1,$$(words $$($(2)_DEVICE_ARCHITECTURES)))
-	$(Q) cp $$^ $$@
+	$(Q) $(CP) $$^ $$@
 else
 	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
 endif
@@ -292,7 +289,7 @@ endif
 .libs/$(1)/Xamarin-debug-dev.framework:  $$(foreach arch,$$($(2)_DEVICE_ARCHITECTURES),.libs/$(1)/Xamarin-debug.$$(arch).framework)
 	$(Q) rm -f $$@
 ifeq (1,$$(words $$($(2)_DEVICE_ARCHITECTURES)))
-	$(Q) cp $$^ $$@
+	$(Q) $(CP) $$^ $$@
 else
 	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
 endif
@@ -312,6 +309,20 @@ $(eval $(call LibTemplate,ios,IOS))
 $(eval $(call LibTemplate,watchos,WATCHOS))
 $(eval $(call LibTemplate,tvos,TVOS))
 
+SDK_BUILDDIR=$(MONO_PATH)/sdks/builds
+
+ZLIB_HELPER_IOS_armv7      = $(SDK_BUILDDIR)/ios-target32-release/support/zlib-helper.o
+ZLIB_HELPER_IOS_armv7s     = $(SDK_BUILDDIR)/ios-target32s-release/support/zlib-helper.o
+ZLIB_HELPER_IOS_arm64      = $(SDK_BUILDDIR)/ios-target64-release/support/zlib-helper.o
+ZLIB_HELPER_IOS_x86        = $(SDK_BUILDDIR)/ios-sim32-release/support/zlib-helper.o
+ZLIB_HELPER_IOS_x86_64     = $(SDK_BUILDDIR)/ios-sim64-release/support/zlib-helper.o
+
+ZLIB_HELPER_WATCHOS_armv7k = $(SDK_BUILDDIR)/ios-targetwatch-release/support/zlib-helper.o
+ZLIB_HELPER_WATCHOS_x86    = $(SDK_BUILDDIR)/ios-simwatch-release/support/zlib-helper.o
+
+ZLIB_HELPER_TVOS_arm64     = $(SDK_BUILDDIR)/ios-targettv-release/support/zlib-helper.o
+ZLIB_HELPER_TVOS_x86_64    = $(SDK_BUILDDIR)/ios-simtv-release/support/zlib-helper.o
+
 #
 # LibXamarinTemplate (and LibXamarinArchTemplate) builds libxamarin.a
 #
@@ -328,12 +339,12 @@ define LibXamarinTemplate
 $(1)$(3)_COMMON_DYLIB_FLAGS = -lmonosgen-2.0 -Wl,-install_name,libxamarin$(4).dylib -framework Foundation -framework CFNetwork -framework UIKit -lz
 $(1)$(3)_COMMON_FRAMEWORK_FLAGS = -framework Mono -Wl,-install_name,@rpath/Xamarin$(4).framework/Xamarin$(4) -framework Foundation -framework CFNetwork -framework UIKit -lz
 
-x86_$(1)$(3)_OBJECTS    = $$(patsubst %,.libs/$(1)/%$(4).x86.o,$$($(2)_SOURCE_STEMS))    $$(patsubst %,.libs/$(1)/%$(4).x86.o,$$($(2)_I386_SOURCE_STEMS))
-x86_64_$(1)$(3)_OBJECTS = $$(patsubst %,.libs/$(1)/%$(4).x86_64.o,$$($(2)_SOURCE_STEMS)) $$(patsubst %,.libs/$(1)/%$(4).x86_64.o,$$($(2)_X86_64_SOURCE_STEMS))
-armv7_$(1)$(3)_OBJECTS  = $$(patsubst %,.libs/$(1)/%$(4).armv7.o,$$($(2)_SOURCE_STEMS))
-armv7s_$(1)$(3)_OBJECTS = $$(patsubst %,.libs/$(1)/%$(4).armv7s.o,$$($(2)_SOURCE_STEMS))
-armv7k_$(1)$(3)_OBJECTS = $$(patsubst %,.libs/$(1)/%$(4).armv7k.o,$$($(2)_SOURCE_STEMS))
-arm64_$(1)$(3)_OBJECTS  = $$(patsubst %,.libs/$(1)/%$(4).arm64.o,$$($(2)_SOURCE_STEMS))
+x86_$(1)$(3)_OBJECTS    = $(ZLIB_HELPER_$(2)_x86)    $$(patsubst %,.libs/$(1)/%$(4).x86.o,$$($(2)_SOURCE_STEMS))    $$(patsubst %,.libs/$(1)/%$(4).x86.o,$$($(2)_I386_SOURCE_STEMS))
+x86_64_$(1)$(3)_OBJECTS = $(ZLIB_HELPER_$(2)_x86_64) $$(patsubst %,.libs/$(1)/%$(4).x86_64.o,$$($(2)_SOURCE_STEMS)) $$(patsubst %,.libs/$(1)/%$(4).x86_64.o,$$($(2)_X86_64_SOURCE_STEMS))
+armv7_$(1)$(3)_OBJECTS  = $(ZLIB_HELPER_$(2)_armv7)  $$(patsubst %,.libs/$(1)/%$(4).armv7.o,$$($(2)_SOURCE_STEMS))
+armv7s_$(1)$(3)_OBJECTS = $(ZLIB_HELPER_$(2)_armv7s) $$(patsubst %,.libs/$(1)/%$(4).armv7s.o,$$($(2)_SOURCE_STEMS))
+armv7k_$(1)$(3)_OBJECTS = $(ZLIB_HELPER_$(2)_armv7k) $$(patsubst %,.libs/$(1)/%$(4).armv7k.o,$$($(2)_SOURCE_STEMS))
+arm64_$(1)$(3)_OBJECTS  = $(ZLIB_HELPER_$(2)_arm64)  $$(patsubst %,.libs/$(1)/%$(4).arm64.o,$$($(2)_SOURCE_STEMS))
 
 $$(foreach arch,$$($(2)_ARCHITECTURES),$$(eval $$(call LibXamarinArchTemplate,$(1),$(2),$(3),$(4),$$(arch))))
 
@@ -392,9 +403,9 @@ $(eval $(call LibXamarinTemplate,tvos,TVOS,_DEBUG,-debug))
 MAC_ARCHITECTURES = i386 x86_64
 
 CLANG_ARCH = $(addprefix -arch ,$(MAC_ARCHITECTURES))
-MAC_CLANG = DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT) $(MAC_CC)
-MAC32_CLANG = DEVELOPER_DIR=$(XCODE94_DEVELOPER_ROOT) $(MAC32_CC)
-MAC64_CLANG = DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT) $(MAC_CC)
+MAC_CLANG = DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT) $(MAC_CC) -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
+MAC32_CLANG = DEVELOPER_DIR=$(XCODE94_DEVELOPER_ROOT) $(MAC32_CC) -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
+MAC64_CLANG = DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT) $(MAC_CC) -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
 
 MAC_SHIPPED_HEADERS = xamarin/launch.h
 
@@ -515,10 +526,10 @@ $(foreach arch,$(MAC_ARCHITECTURES),.libs/mac/extension-main.$(arch).o): EXTRA_D
 	$(call Q_2,LIPO,  [mac]) xcrun lipo -create $^ -o $@
 
 .libs/mac/XamMacLauncher: $(MACIOS_BINARIES_PATH)/XamMacLauncher | .libs/mac
-	$(Q) cp $< $@
+	$(Q) $(CP) $< $@
 
 .libs/mac/libxammac-%.a: $(MACIOS_BINARIES_PATH)/libxammac-%.a | .libs/mac
-	$(Q) cp $< $@
+	$(Q) $(CP) $< $@
 
 .SECONDARY: .libs/mac/libxammac-classic.a .libs/mac/libxammac-system-classic.a .libs/mac/libxammac-classic-debug.a .libs/mac/libxammac-system-classic-debug.a
 
@@ -540,7 +551,7 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/XamMacLauncher: .libs/mac/XamMacL
 	$(Q) xcrun strip -S $@
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/%: .libs/mac/% | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib
-	$(Q) cp $< $@
+	$(Q) $(CP) $< $@
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/XamMacLauncher: | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono
 	$(Q) ln -sF ../XamMacLauncher $@

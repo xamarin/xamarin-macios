@@ -94,10 +94,10 @@ COMMON_DYLIB_ARGS=-g -dynamiclib -gdwarf-2 -fms-extensions libframework.m -o $$@
 
 # XTest is a framework where the binary code is a (fat) dynamic library
 .libs/$(1)/XTest.framework/XTest: .libs/$(1)/libtest.dylib | .libs/$(1)/XTest.framework
-	$$(Q) cp $$^ $$@
+	$$(Q) $(CP) $$^ $$@
 
 .libs/$(1)/XTest.framework/Info.plist: XTest-Info.plist | .libs/$(1)/XTest.framework
-	$$(Q) cp $$^ $$@
+	$$(Q) $(CP) $$^ $$@
 
 # XStaticObjectTest is a framework where the binary code is a (fat) object file
 .libs/$(1)/XStaticObjectTest.framework/XStaticObjectTest: $$(foreach arch,$(3),.libs/$(1)/libtest-object.$$(arch).o) | .libs/$(1)/XStaticObjectTest.framework

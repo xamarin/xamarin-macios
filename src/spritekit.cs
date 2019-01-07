@@ -158,10 +158,12 @@ namespace SpriteKit {
 		[return: NullAllowed]
 		SKNode Create (string filename, IntPtr classesPtr, out NSError error);
 
-#if MONOMAC || WATCH
 		[Export ("frame")]
-		CGRect Frame { get; }
+#if !(MONOMAC || WATCH)
+		// For iOS+tvOS we also get this property from the UIFocusItem protocol, but we redefine it here to get the right availability attributes.
+		new
 #endif
+		CGRect Frame { get; }
 
 		[Export ("calculateAccumulatedFrame")]
 		CGRect CalculateAccumulatedFrame ();

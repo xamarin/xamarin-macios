@@ -90,7 +90,6 @@ namespace AppKit
 			return NSAccessibilityPointInView (parentView, point);
 		}
 
-		[Mac (10,7)]
 		[DllImport (Constants.AppKitLibrary)]
 		static extern void NSAccessibilityPostNotificationWithUserInfo (IntPtr element, IntPtr notification, IntPtr userInfo);
 

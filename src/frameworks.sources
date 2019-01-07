@@ -111,17 +111,14 @@ APPKIT_SOURCES = \
 	UIKit/NSLayoutManager.cs \
 	AppKit/NSLevelIndicator.cs \
 	AppKit/NSMatrix.cs \
-	AppKit/NSMenu.cs \
 	AppKit/NSMenuItem.cs \
 	AppKit/NSOpenGLContext.cs \
 	AppKit/NSOpenGLPixelFormat.cs \
-	AppKit/NSPageLayout.cs \
 	AppKit/NSPathControlItem.cs \
 	AppKit/NSPopUpButton.cs \
 	AppKit/NSPopUpButtonCell.cs \
 	AppKit/NSPredicateEditorRowTemplate.cs \
 	AppKit/NSPrintInfo.cs \
-	AppKit/NSPrintPanel.cs \
 	AppKit/NSResponder.cs \
 	AppKit/NSScreen.cs \
 	AppKit/NSSegmentedControl.cs \
@@ -140,10 +137,7 @@ APPKIT_SOURCES = \
 	AppKit/NSToolbarItem.cs \
 	AppKit/NSTouch.cs \
 	AppKit/NSTreeController.cs \
-	AppKit/NSView.cs \
 	AppKit/NSWindow.cs \
-	AppKit/NSOpenPanel.cs \
-	AppKit/NSSavePanel.cs \
 	AppKit/NSWorkspace.cs \
 	AppKit/NSCollectionView.cs \
 	AppKit/NSCollectionViewDelegate.cs \
@@ -440,6 +434,7 @@ COREGRAPHICS_CORE_SOURCES = \
 	CoreGraphics/CGColorSpace.cs \
 	CoreGraphics/CGContext.cs \
 	CoreGraphics/CGDisplay.cs \
+	CoreGraphics/CGEnums.cs \
 	CoreGraphics/CGGeometry.cs \
 	CoreGraphics/CGGradient.cs \
 	CoreGraphics/CGImage.cs \
@@ -882,6 +877,10 @@ IAD_API_SOURCES = \
 
 IAD_SOURCES = \
 	iAd/ADBannerView.cs \
+
+# ImageCaptureKit
+IMAGECAPTURECORE_API_SOURCES = \
+	ImageCaptureCore/Defs.cs
 
 # ImageIO
 
@@ -1743,6 +1742,7 @@ MAC_FRAMEWORKS =            \
 	GameplayKit             \
 	GLKit                   \
 	ImageIO                 \
+	ImageCaptureCore	\
 	ImageKit                \
 	Intents                 \
 	IOSurface 		\

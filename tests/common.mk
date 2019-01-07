@@ -72,5 +72,5 @@ run run-test run-tests: build/compat.app build/mobile-32.app build/mobile-64.app
 
 build/GuiUnit.exe: $(shell find $(GUI_UNIT_PATH)/src/framework -name \*.cs -or -name \*.csproj)
 	@mkdir -p build
-	@$(SYSTEM_XBUILD) $(GUI_UNIT_PATH)/src/framework/GuiUnit_NET_4_5.csproj
+	@$(SYSTEM_XIBUILD) -- $(GUI_UNIT_PATH)/src/framework/GuiUnit_NET_4_5.csproj
 	@cp $(GUI_UNIT_PATH)/bin/net_4_5/GuiUnit.exe $@

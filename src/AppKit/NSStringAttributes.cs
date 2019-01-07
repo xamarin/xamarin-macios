@@ -362,13 +362,11 @@ namespace AppKit
 			set { Set (NSStringAttributeKey.MarkedClauseSegment, value); }
 		}
 
-		[Mac (10, 7)]
 		public NSTextLayoutOrientation? VerticalGlyphForm {
 			get { return (NSTextLayoutOrientation?)GetInt32Value (NSStringAttributeKey.VerticalGlyphForm); }
 			set { SetNumberValue (NSStringAttributeKey.VerticalGlyphForm, (int?)value); }
 		}
 
-		[Mac (10, 8)]
 		public NSTextAlternatives TextAlternatives {
 			get { return Get (NSStringAttributeKey.TextAlternatives, handle => new NSTextAlternatives (handle)); }
 			set { SetNativeValue (NSStringAttributeKey.TextAlternatives, value); }
@@ -520,13 +518,11 @@ namespace AppKit
 			set { Set (NSAttributedString.MarkedClauseSegmentAttributeName, value); }
 		}
 
-		[Mac (10, 7)]
 		public NSTextLayoutOrientation? VerticalGlyphForm {
 			get { return (NSTextLayoutOrientation?)GetInt32Value (NSAttributedString.VerticalGlyphFormAttributeName); }
 			set { SetNumberValue (NSAttributedString.VerticalGlyphFormAttributeName, (int?)value); }
 		}
 
-		[Mac (10, 8)]
 		public NSTextAlternatives TextAlternatives {
 			get { return Get (NSAttributedString.TextAlternativesAttributeName, handle => new NSTextAlternatives (handle)); }
 			set { SetNativeValue (NSAttributedString.TextAlternativesAttributeName, value); }

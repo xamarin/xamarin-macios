@@ -180,6 +180,9 @@ namespace Xamarin.iOS.Tasks
 		[Output]
 		public ITaskItem NativeExecutable { get; set; }
 
+		[Output]
+		public ITaskItem[] CopiedFrameworks { get; set; }
+
 		#endregion
 
 		public PlatformFramework Framework {
@@ -681,7 +684,28 @@ namespace Xamarin.iOS.Tasks
 
 			Directory.CreateDirectory (AppBundleDir);
 
-			return base.Execute ();
+			var result = base.Execute ();
+
+			CopiedFrameworks = GetCopiedFrameworks ();
+
+			return result;
+		}
+
+		ITaskItem[] GetCopiedFrameworks ()
+		{
+			var copiedFrameworks = new List<ITaskItem> ();
+			var frameworksDir = Path.Combine (AppBundleDir, "Frameworks");
+
+			if (Directory.Exists (frameworksDir)) {
+				foreach (var dir in Directory.EnumerateDirectories (frameworksDir, "*.framework")) {
+					var framework = Path.Combine (dir, Path.GetFileNameWithoutExtension (dir));
+
+					if (File.Exists (framework))
+						copiedFrameworks.Add (new TaskItem (framework));
+				}
+			}
+
+			return copiedFrameworks.ToArray ();
 		}
 
 		string ResolveFrameworkFile (string fullName)

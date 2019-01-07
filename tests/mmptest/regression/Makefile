@@ -56,7 +56,7 @@ ALL_TESTS = \
 all-local:: run
 
 embedded-mono/bin system-mono/bin embedded-mono-profile/bin system-mono-profile/bin $(foreach test,$(TESTS_UNIFIED),$(test)/bin): dylib/libTest.dylib
-	DEVELOPER_DIR=$(XCODE94_DEVELOPER_ROOT) XAMMAC_FRAMEWORK_PATH=$(abspath $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)) $(SYSTEM_XBUILD)  $(@D)/$(@D).csproj
+	DEVELOPER_DIR=$(XCODE94_DEVELOPER_ROOT) XAMMAC_FRAMEWORK_PATH=$(abspath $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)) $(SYSTEM_XIBUILD) -- $(@D)/$(@D).csproj
 
 %/bin: dylib/libTest.dylib
 	DEVELOPER_DIR=$(XCODE94_DEVELOPER_ROOT) XAMMAC_FRAMEWORK_PATH=$(abspath $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)) $(MDTOOL) build $*/$*.csproj

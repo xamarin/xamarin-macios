@@ -13,7 +13,6 @@ namespace CoreMedia {
 	[Partial]
 	interface CMMemoryPool {
 
-		[Mac (10,8)]
 		[Internal][Field ("kCMMemoryPoolOption_AgeOutPeriod")]
 		IntPtr AgeOutPeriodSelector { get; }
 	}

@@ -108,7 +108,7 @@ $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Version: Make.config.inc
 
 $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Versions.plist: Versions-mac.plist.in Makefile $(TOP)/Make.config versions-check.csharp
 	$(Q) ./versions-check.csharp $< "$(MIN_IOS_SDK_VERSION)" "$(IOS_SDK_VERSION)" "$(MIN_TVOS_SDK_VERSION)" "$(TVOS_SDK_VERSION)" "$(MIN_WATCH_OS_VERSION)" "$(WATCH_SDK_VERSION)" "$(MIN_OSX_SDK_VERSION)" "$(OSX_SDK_VERSION)"
-	$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' -e "s/@MONO_VERSION@/$(MONO_VERSION)/g" $< > $@
+	$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' -e "s/@MONO_VERSION@/$(MONO_VERSION)/g" -e "s/@MIN_XM_MONO_VERSION@/$(MIN_XM_MONO_VERSION)/g" $< > $@
 
 ifdef INCLUDE_MAC
 TARGETS += $(MAC_TARGETS)
@@ -193,9 +193,9 @@ package:
 	mkdir -p ../package
 	$(MAKE) -C $(MACCORE_PATH) package
 	# copy .pkg, .zip and *updateinfo to the packages directory to be uploaded to storage
-	cp $(MACCORE_PATH)/release/*.pkg ../package
-	cp $(MACCORE_PATH)/release/*.zip ../package
-	cp $(MACCORE_PATH)/release/*updateinfo ../package
+	$(CP) $(MACCORE_PATH)/release/*.pkg ../package
+	$(CP) $(MACCORE_PATH)/release/*.zip ../package
+	$(CP) $(MACCORE_PATH)/release/*updateinfo ../package
 
 install-system: install-system-ios install-system-mac
 	@# Clean up some old files
