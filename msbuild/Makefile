@@ -20,7 +20,7 @@ MSBUILD_DIRECTORIES          =
 MSBUILD_SYMLINKS             =
 MSBUILD_TASK_ASSEMBLIES      =
 
-ALL_SOURCES:= $(shell git ls-files | sed 's/ /\\ /g')
+ALL_SOURCES:= $(shell git ls-files | sed 's/ /\\ /g') $(wildcard $(XAMARIN_MACDEV_PATH)/Xamarin.MacDev/*.cs) $(wildcard $(XAMARIN_MACDEV_PATH)/Xamarin.MacDev/*.csproj)
 CONFIG      = Debug
 
 ##

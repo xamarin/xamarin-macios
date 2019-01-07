@@ -138,8 +138,6 @@ APPKIT_SOURCES = \
 	AppKit/NSTouch.cs \
 	AppKit/NSTreeController.cs \
 	AppKit/NSWindow.cs \
-	AppKit/NSOpenPanel.cs \
-	AppKit/NSSavePanel.cs \
 	AppKit/NSWorkspace.cs \
 	AppKit/NSCollectionView.cs \
 	AppKit/NSCollectionViewDelegate.cs \

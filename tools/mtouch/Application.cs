@@ -1923,6 +1923,9 @@ namespace Xamarin.Bundler {
 					continue;
 				} else if (line.Contains ("was built for newer iOS version (5.1.1) than being linked (5.1)")) {
 					continue;
+				} else if (line.Contains ("was built for newer iOS version (7.0) than being linked (6.0)") && 
+					line.Contains (Driver.GetProductSdkDirectory (target.App))) {
+					continue;
 				}
 
 				if (line.Contains ("Undefined symbols for architecture")) {

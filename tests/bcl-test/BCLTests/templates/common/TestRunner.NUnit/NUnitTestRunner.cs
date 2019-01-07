@@ -169,7 +169,6 @@ namespace Xamarin.iOS.UnitTests.NUnit
 					sb.Append ("\t[INFO] ");
 					break;
 				}
-				TotalTests++;
 				sb.Append (result.Test.FixtureType.Name);
 				sb.Append (".");
 				sb.Append (result.Test.Name);
@@ -242,6 +241,14 @@ namespace Xamarin.iOS.UnitTests.NUnit
 				return;
 			var resultsXml = new NUnit2XmlOutputWriter (DateTime.UtcNow);
 			resultsXml.WriteResultFile (results, writer);
+		}
+		
+		public override void SkipTests (IEnumerable<string> tests)
+		{
+			// grab the tests and create a filter for them
+			if (tests.Any ()) {
+				Filter = new TestMethodFilter (tests);
+			}
 		}
 	}
 }

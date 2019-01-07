@@ -1,0 +1,5 @@
+# System.PlatformNotSupportedException : Process.Start is not supported on the current platform.
+System.Data.Tests.DataTableReadXmlSchemaTest.XsdSchemaDeserializationIgnoresLocale
+
+# System.PlatformNotSupportedException : Process.Start is not supported on the current platform.
+System.Data.Tests.DataTableReadXmlSchemaTest.XsdSchemaSerializationIgnoresLocale

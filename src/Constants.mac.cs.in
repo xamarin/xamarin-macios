@@ -33,6 +33,7 @@ namespace MonoMac {
 		public const string Version = "@VERSION@";
 		internal const string Revision = "@REVISION@";
 		public const string SdkVersion = "@OSX_SDK_VERSION@";
+		internal const string MinMonoVersion = "@MIN_XM_MONO_VERSION@";
 
 		public const string AddressBookLibrary = "/System/Library/Frameworks/AddressBook.framework/AddressBook";
 		public const string AppKitLibrary = "/System/Library/Frameworks/AppKit.framework/AppKit";

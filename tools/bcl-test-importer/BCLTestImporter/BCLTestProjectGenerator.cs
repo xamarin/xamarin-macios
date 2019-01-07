@@ -14,11 +14,13 @@ namespace BCLTestImporter {
 	/// </summary>
 	public class BCLTestProjectGenerator {
 
-		static string NUnitPattern = "MONOTOUCH_*_test.dll"; 
-		static string xUnitPattern = "MONOTOUCH_*_xunit-test.dll";
+		static string NUnitPattern = "monotouch_*_test.dll"; 
+		static string xUnitPattern = "monotouch_*_xunit-test.dll";
+		static string iOSReleasePattern = "ios-release-Darwin-*";
 		internal static readonly string NameKey = "%NAME%";
 		internal static readonly string ReferencesKey = "%REFERENCES%";
 		internal static readonly string RegisterTypeKey = "%REGISTER TYPE%";
+		internal static readonly string ContentKey = "%CONTENT RESOURCES%";
 		internal static readonly string PlistKey = "%PLIST PATH%";
 		internal static readonly string WatchOSTemplatePathKey = "%TEMPLATE PATH%";
 		internal static readonly string WatchOSCsporjAppKey = "%WATCH APP PROJECT PATH%";
@@ -67,6 +69,7 @@ namespace BCLTestImporter {
 			"xunit.core",
 			"xunit.abstractions",
 			"xunit.assert",
+			"Xunit.NetCore.Extensions",
 		};
 
 		// we have two different types of list, those that are for the iOS like projects (ios, tvos and watch os) and those 
@@ -74,75 +77,69 @@ namespace BCLTestImporter {
 		static readonly List<(string name, string[] assemblies)> commoniOSTestProjects = new List<(string name, string[] assemblies)> {
 			// NUNIT TESTS
 
-			(name:"SystemTests", assemblies: new[] {"MONOTOUCH_System_test.dll"}),
-			(name:"SystemCoreTests", assemblies: new [] {"MONOTOUCH_System.Core_test.dll"}),
-			(name:"SystemDataTests", assemblies: new [] {"MONOTOUCH_System.Data_test.dll"}),
-			(name:"SystemNetHttpTests", assemblies: new [] {"MONOTOUCH_System.Net.Http_test.dll"}),
-			(name:"SystemNumericsTests", assemblies: new [] {"MONOTOUCH_System.Numerics_test.dll"}),
-			(name:"SystemRuntimeSerializationTests", assemblies: new [] {"MONOTOUCH_System.Runtime.Serialization_test.dll"}),
-			(name:"SystemTransactionsTests", assemblies: new [] {"MONOTOUCH_System.Transactions_test.dll"}),
-			(name:"SystemXmlTests", assemblies: new [] {"MONOTOUCH_System.Xml_test.dll"}),
-			(name:"SystemXmlLinqTests", assemblies: new [] {"MONOTOUCH_System.Xml.Linq_test.dll"}),
-			(name:"MonoSecurityTests", assemblies: new [] {"MONOTOUCH_Mono.Security_test.dll"}),
-			(name:"SystemComponentModelDataAnnotationTests", assemblies: new [] {"MONOTOUCH_System.ComponentModel.DataAnnotations_test.dll"}),
-			(name:"SystemJsonTests", assemblies: new [] {"MONOTOUCH_System.Json_test.dll"}),
-			(name:"SystemServiceModelWebTests", assemblies: new [] {"MONOTOUCH_System.ServiceModel.Web_test.dll"}),
-			(name:"MonoDataTdsTests", assemblies: new [] {"MONOTOUCH_Mono.Data.Tds_test.dll"}),
-			(name:"SystemIOCompressionTests", assemblies: new [] {"MONOTOUCH_System.IO.Compression_test.dll"}),
-			(name:"SystemIOCompressionFileSystemTests", assemblies: new [] {"MONOTOUCH_System.IO.Compression.FileSystem_test.dll"}),
-			(name:"MonoCSharpTests", assemblies: new [] {"MONOTOUCH_Mono.CSharp_test.dll"}),
-			(name:"SystemSecurityTests", assemblies: new [] {"MONOTOUCH_System.Security_test.dll"}),
-			(name:"SystemServiceModelTests", assemblies: new [] {"MONOTOUCH_System.ServiceModel_test.dll"}),
-			(name:"SystemJsonMicrosoftTests", assemblies: new [] {"MONOTOUCH_System.Json.Microsoft_test.dll"}),
-			(name:"SystemDataDataSetExtensionTests", assemblies: new [] {"MONOTOUCH_System.Data.DataSetExtensions_test.dll"}),
-			(name:"SystemRuntimeSerializationFormattersSoapTests", assemblies: new [] {"MONOTOUCH_System.Runtime.Serialization.Formatters.Soap_test.dll"}),
-			(name:"CorlibTests", assemblies: new [] {"MONOTOUCH_corlib_test.dll"}),
-			(name:"MonoParallelTests", assemblies: new [] {"MONOTOUCH_Mono.Parallel_test.dll"}),
-			(name:"MonoRuntimeTests", assemblies: new [] {"MONOTOUCH_Mono.Runtime.Tests_test.dll"}),
-			(name:"MonoTaskletsTests", assemblies: new [] {"MONOTOUCH_Mono.Tasklets_test.dll"}),
-			(name:"SystemThreadingTasksDataflowTests", assemblies: new [] {"MONOTOUCH_System.Threading.Tasks.Dataflow_test.dll"}),
+			(name:"SystemTests", assemblies: new[] {"monotouch_System_test.dll"}),
+			(name:"SystemCoreTests", assemblies: new [] {"monotouch_System.Core_test.dll"}),
+			(name:"SystemDataTests", assemblies: new [] {"monotouch_System.Data_test.dll"}),
+			(name:"SystemNetHttpTests", assemblies: new [] {"monotouch_System.Net.Http_test.dll"}),
+			(name:"SystemNumericsTests", assemblies: new [] {"monotouch_System.Numerics_test.dll"}),
+			(name:"SystemRuntimeSerializationTests", assemblies: new [] {"monotouch_System.Runtime.Serialization_test.dll"}),
+			(name:"SystemTransactionsTests", assemblies: new [] {"monotouch_System.Transactions_test.dll"}),
+			(name:"SystemXmlTests", assemblies: new [] {"monotouch_System.Xml_test.dll"}),
+			(name:"SystemXmlLinqTests", assemblies: new [] {"monotouch_System.Xml.Linq_test.dll"}),
+			(name:"MonoSecurityTests", assemblies: new [] {"monotouch_Mono.Security_test.dll"}),
+			(name:"SystemComponentModelDataAnnotationTests", assemblies: new [] {"monotouch_System.ComponentModel.DataAnnotations_test.dll"}),
+			(name:"SystemJsonTests", assemblies: new [] {"monotouch_System.Json_test.dll"}),
+			(name:"SystemServiceModelWebTests", assemblies: new [] {"monotouch_System.ServiceModel.Web_test.dll"}),
+			(name:"MonoDataTdsTests", assemblies: new [] {"monotouch_Mono.Data.Tds_test.dll"}),
+			(name:"SystemIOCompressionTests", assemblies: new [] {"monotouch_System.IO.Compression_test.dll"}),
+			(name:"SystemIOCompressionFileSystemTests", assemblies: new [] {"monotouch_System.IO.Compression.FileSystem_test.dll"}),
+			(name:"MonoCSharpTests", assemblies: new [] {"monotouch_Mono.CSharp_test.dll"}),
+			(name:"SystemSecurityTests", assemblies: new [] {"monotouch_System.Security_test.dll"}),
+			(name:"SystemServiceModelTests", assemblies: new [] {"monotouch_System.ServiceModel_test.dll"}),
+			(name:"SystemDataDataSetExtensionTests", assemblies: new [] {"monotouch_System.Data.DataSetExtensions_test.dll"}),
+			(name:"SystemRuntimeSerializationFormattersSoapTests", assemblies: new [] {"monotouch_System.Runtime.Serialization.Formatters.Soap_test.dll"}),
+			(name:"CorlibTests", assemblies: new [] {"monotouch_corlib_test.dll"}),
+			(name:"MonoRuntimeTests", assemblies: new [] {"monotouch_Mono.Runtime.Tests_test.dll"}),
 
 			// XUNIT TESTS 
 
-			(name:"SystemDataXunit", assemblies: new [] {"MONOTOUCH_System.Data_xunit-test.dll"}),
-			(name:"SystemJsonXunit", assemblies: new [] {"MONOTOUCH_System.Json_xunit-test.dll"}),
-			(name:"SystemNumericsXunit", assemblies: new [] {"MONOTOUCH_System.Numerics_xunit-test.dll"}),
-			(name:"SystemSecurityXunit", assemblies: new [] {"MONOTOUCH_System.Security_xunit-test.dll"}),
-			(name:"SystemThreadingTaskXunit", assemblies: new [] {"MONOTOUCH_System.Threading.Tasks.Dataflow_xunit-test.dll"}),
-			(name:"SystemLinqXunit", assemblies: new [] {"MONOTOUCH_System.Xml.Linq_xunit-test.dll"}),
-			(name:"SystemRuntimeCompilerServicesUnsafeXunit", assemblies: new [] {"MONOTOUCH_System.Runtime.CompilerServices.Unsafe_xunit-test.dll"}),
+			(name:"SystemDataXunit", assemblies: new [] {"monotouch_System.Data_xunit-test.dll"}),
+			(name:"SystemJsonXunit", assemblies: new [] {"monotouch_System.Json_xunit-test.dll"}),
+			(name:"SystemNumericsXunit", assemblies: new [] {"monotouch_System.Numerics_xunit-test.dll"}),
+			(name:"SystemSecurityXunit", assemblies: new [] {"monotouch_System.Security_xunit-test.dll"}),
+			(name:"SystemThreadingTaskXunit", assemblies: new [] {"monotouch_System.Threading.Tasks.Dataflow_xunit-test.dll"}),
+			(name:"SystemLinqXunit", assemblies: new [] {"monotouch_System.Xml.Linq_xunit-test.dll"}),
+			(name:"SystemRuntimeCompilerServicesUnsafeXunit", assemblies: new [] {"monotouch_System.Runtime.CompilerServices.Unsafe_xunit-test.dll"}),
 		};
 			
 		static readonly List <string> CommonIgnoredAssemblies = new List <string> {
-			"MONOTOUCH_System.Data_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1131
-			"MONOTOUCH_System.Security_xunit-test.dll",// issue https://github.com/xamarin/maccore/issues/1128
-			"MONOTOUCH_System.Threading.Tasks.Dataflow_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1132
-			"MONOTOUCH_System.Xml_test.dll", // issue https://github.com/xamarin/maccore/issues/1133
-			"MONOTOUCH_System.Transactions_test.dll", // issue https://github.com/xamarin/maccore/issues/1134
-			"MONOTOUCH_System_test.dll", // issues https://github.com/xamarin/maccore/issues/1135
-			"MONOTOUCH_System.ServiceModel.Web_test.dll", // issue https://github.com/xamarin/maccore/issues/1137
-			"MONOTOUCH_System.ServiceModel_test.dll", // issue https://github.com/xamarin/maccore/issues/1138
-			"MONOTOUCH_System.Security_test.dll", // issue https://github.com/xamarin/maccore/issues/1139
-			"MONOTOUCH_System.Runtime.Serialization.Formatters.Soap_test.dll", // issue https://github.com/xamarin/maccore/issues/1140
-			"MONOTOUCH_System.Net.Http_test.dll", // issue https://github.com/xamarin/maccore/issues/1144 and https://github.com/xamarin/maccore/issues/1145
-			"MONOTOUCH_System.IO.Compression_test.dll", // issue https://github.com/xamarin/maccore/issues/1146
-			"MONOTOUCH_System.IO.Compression.FileSystem_test.dll", // issue https://github.com/xamarin/maccore/issues/1147 and https://github.com/xamarin/maccore/issues/1148
-			"MONOTOUCH_System.Data_test.dll", // issue https://github.com/xamarin/maccore/issues/1149
-			"MONOTOUCH_System.Data.DataSetExtensions_test.dll", // issue https://github.com/xamarin/maccore/issues/1150 and https://github.com/xamarin/maccore/issues/1151
-			"MONOTOUCH_System.Core_test.dll", // issue https://github.com/xamarin/maccore/issues/1143
-			"MONOTOUCH_Mono.Runtime.Tests_test.dll", // issue https://github.com/xamarin/maccore/issues/1141
-			"MONOTOUCH_corlib_test.dll", // issue https://github.com/xamarin/maccore/issues/1153
-			"MONOTOUCH_Commons.Xml.Relaxng_test.dll", // not supported by xamarin
-			"MONOTOUCH_Cscompmgd_test.dll", // not supported by xamarin
-			"MONOTOUCH_I18N.CJK_test.dll",
-			"MONOTOUCH_I18N.MidEast_test.dll",
-			"MONOTOUCH_I18N.Other_test.dll",
-			"MONOTOUCH_I18N.Rare_test.dll",
-			"MONOTOUCH_I18N.West_test.dll",
-			"MONOTOUCH_Mono.C5_test.dll", // not supported by xamarin
-			"MONOTOUCH_Mono.CodeContracts_test.dll", // not supported by xamarin
-			"MONOTOUCH_Novell.Directory.Ldap_test.dll", // not supported by xamarin
-			"MONOTOUCH_Mono.Profiler.Log_xunit-test.dll", // special tests that need an extra app to connect as a profiler
+			"monotouch_System.Security_xunit-test.dll",// issue https://github.com/xamarin/maccore/issues/1128
+			"monotouch_System.Threading.Tasks.Dataflow_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1132
+			"monotouch_System.Xml_test.dll", // issue https://github.com/xamarin/maccore/issues/1133
+			"monotouch_System.Transactions_test.dll", // issue https://github.com/xamarin/maccore/issues/1134
+			"monotouch_System_test.dll", // issues https://github.com/xamarin/maccore/issues/1135
+			"monotouch_System.ServiceModel_test.dll", // issue https://github.com/xamarin/maccore/issues/1138
+			"monotouch_System.Security_test.dll", // issue https://github.com/xamarin/maccore/issues/1139
+			"monotouch_System.Runtime.Serialization.Formatters.Soap_test.dll", // issue https://github.com/xamarin/maccore/issues/1140
+			"monotouch_System.Net.Http_test.dll", // issue https://github.com/xamarin/maccore/issues/1144 and https://github.com/xamarin/maccore/issues/1145
+			"monotouch_System.IO.Compression_test.dll", // issue https://github.com/xamarin/maccore/issues/1146
+			"monotouch_System.IO.Compression.FileSystem_test.dll", // issue https://github.com/xamarin/maccore/issues/1147 and https://github.com/xamarin/maccore/issues/1148
+			"monotouch_System.Data_test.dll", // issue https://github.com/xamarin/maccore/issues/1149
+			"monotouch_System.Data.DataSetExtensions_test.dll", // issue https://github.com/xamarin/maccore/issues/1150 and https://github.com/xamarin/maccore/issues/1151
+			"monotouch_System.Core_test.dll", // issue https://github.com/xamarin/maccore/issues/1143
+			"monotouch_Mono.Runtime.Tests_test.dll", // issue https://github.com/xamarin/maccore/issues/1141
+			"monotouch_corlib_test.dll", // issue https://github.com/xamarin/maccore/issues/1153
+			"monotouch_Commons.Xml.Relaxng_test.dll", // not supported by xamarin
+			"monotouch_Cscompmgd_test.dll", // not supported by xamarin
+			"monotouch_I18N.CJK_test.dll",
+			"monotouch_I18N.MidEast_test.dll",
+			"monotouch_I18N.Other_test.dll",
+			"monotouch_I18N.Rare_test.dll",
+			"monotouch_I18N.West_test.dll",
+			"monotouch_Mono.C5_test.dll", // not supported by xamarin
+			"monotouch_Mono.CodeContracts_test.dll", // not supported by xamarin
+			"monotouch_Novell.Directory.Ldap_test.dll", // not supported by xamarin
+			"monotouch_Mono.Profiler.Log_xunit-test.dll", // special tests that need an extra app to connect as a profiler
 		};
 		
 		// list of assemblies that are going to be ignored, any project with an assemblies that is ignored will
@@ -151,15 +148,14 @@ namespace BCLTestImporter {
 		static readonly List<string> iOSIgnoredAssemblies = new List<string> {};
 
 		static readonly List<string> tvOSIgnoredAssemblies = new List<string> {
-			"MONOTOUCH_System.Xml.Linq_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1130
-			"MONOTOUCH_System.Numerics_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1129
+			"monotouch_System.Xml.Linq_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1130
+			"monotouch_System.Numerics_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1129
 		};
 
 		static readonly List<string> watcOSIgnoredAssemblies = new List<string> {
-			"MONOTOUCH_System.Xml.Linq_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1130
-			"MONOTOUCH_System.Numerics_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1129
-			"MONOTOUCH_Mono.Security_test.dll", // issue https://github.com/xamarin/maccore/issues/1142
-			"MONOTOUCH_Mono.Data.Tds_test.dll", // issue https://gist.github.com/mandel-macaque/d97fa28f8a73c3016d1328567da77a0b
+			"monotouch_System.Xml.Linq_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1130
+			"monotouch_System.Numerics_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1129
+			"monotouch_Mono.Security_test.dll", // issue https://github.com/xamarin/maccore/issues/1142
 		};
 
 		private static readonly List<(string name, string[] assemblies)> macTestProjects = new List<(string name, string[] assemblies)> {
@@ -237,6 +233,7 @@ namespace BCLTestImporter {
 		public bool Override { get; set; }
 		public string OutputDirectoryPath { get; private  set; }
 		public string MonoRootPath { get; private set; }
+		public string iOSMonoSDKPath { get; set; }
 		public string ProjectTemplateRootPath { get; private set; }
 		public string PlistTemplateRootPath{ get; private set; }
 		public string RegisterTypesTemplatePath { get; private set; }
@@ -258,6 +255,22 @@ namespace BCLTestImporter {
 			ProjectTemplateRootPath = projectTemplatePath ?? throw new ArgumentNullException (nameof (projectTemplatePath));
 			PlistTemplateRootPath = plistTemplatePath ?? throw new ArgumentNullException (nameof (plistTemplatePath));
 			RegisterTypesTemplatePath = registerTypesTemplatePath ?? throw new ArgumentNullException (nameof (registerTypesTemplatePath));
+		}
+
+		string GetReleaseDownload (Platform platform)
+		{
+			switch (platform) {
+			case Platform.iOS:
+			case Platform.TvOS:
+			case Platform.WatchOS:
+				// simply, try to find the dir with the pattern
+				return iOSMonoSDKPath;
+			case Platform.MacOSFull:
+			case Platform.MacOSModern:
+				return null;
+			default:
+				return null;
+			}
 		}
 
 		/// <summary>
@@ -353,6 +366,48 @@ namespace BCLTestImporter {
 			return sb.ToString ();
 		}
 
+		internal static string GetContentNode (string resourcePath)
+		{
+			var sb = new StringBuilder ();
+			sb.AppendLine ($"<Content Include=\"{resourcePath}\">");
+			sb.AppendLine ($"<Link>{Path.GetFileName (resourcePath)}</Link>");
+			sb.AppendLine ("<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>");
+			sb.AppendLine ("</Content>");
+			return sb.ToString ();
+		}
+
+		internal static string GetCommonIgnoreFileName (string projectName) => $"common-{projectName}.ignore";
+		
+		internal static string GetIgnoreFileName (string projectName, Platform platform)
+		{
+			switch (platform) {
+			case Platform.iOS:
+				return $"iOS-{projectName}.ignore";
+			case Platform.MacOSFull:
+			case Platform.MacOSModern:
+				return $"macOS-{projectName}.ignore";
+			case Platform.TvOS:
+				return $"tvOS-{projectName}.ignore";
+			case Platform.WatchOS:
+				return $"watchOS-{projectName}.ignore";
+			default:
+				return null;
+			}
+
+		}
+		
+		internal static IEnumerable<string> GetIgnoreFiles (string templatePath, string projectName, Platform platform)
+		{
+			// check if the common and plaform paths can be found in the template path, if they are, we return them
+			var templateDir = Path.GetDirectoryName (templatePath);
+			var commonIgnore = Path.Combine (templateDir, GetCommonIgnoreFileName (projectName));
+			if (File.Exists (commonIgnore))
+				yield return commonIgnore;
+			var platformIgnore = Path.Combine (templateDir, GetIgnoreFileName (projectName, platform));
+			if (File.Exists (platformIgnore))
+				yield return platformIgnore;
+		}
+
 		/// <summary>
 		/// Returns is a project should be ignored in a platform. A project is ignored in one of the assemblies in the
 		/// project is ignored in the platform.
@@ -401,8 +456,9 @@ namespace BCLTestImporter {
 					Directory.CreateDirectory (generatedCodeDir);
 				}
 				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType.cs");
-				var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (def.name, projectDefinition.IsXUnit,
-					RegisterTypesTemplatePath, Platform.WatchOS);
+				var typesPerAssembly = projectDefinition.GetTypeForAssemblies (GetReleaseDownload (Platform.iOS), Platform.WatchOS, true);
+ 				var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (typesPerAssembly,
+ 					projectDefinition.IsXUnit, RegisterTypesTemplatePath);
 				using (var file = new StreamWriter (registerTypePath, false)) { // false is do not append
 					await file.WriteAsync (registerCode);
 				}
@@ -424,7 +480,7 @@ namespace BCLTestImporter {
 							generatedProject = await GenerateWatchAppAsync (projectDefinition.Name, projetTemplate, data.plist);
 							break;
 						default:
-							generatedProject = await GenerateWatchExtensionAsync (projectDefinition.Name, projetTemplate, data.plist, registerTypePath, projectDefinition.GetCachedAssemblyInclusionInformation (MonoRootPath, Platform.WatchOS));
+							generatedProject = await GenerateWatchExtensionAsync (projectDefinition.Name, projetTemplate, data.plist, registerTypePath, projectDefinition.GetAssemblyInclusionInformation (GetReleaseDownload (Platform.WatchOS), Platform.WatchOS, true));
 							break;
 					}
 					data.project = GetProjectPath (projectDefinition.Name, appType);
@@ -478,9 +534,10 @@ namespace BCLTestImporter {
 				}
 				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType.cs");
 
-				var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (def.name, projectDefinition.IsXUnit,
-					RegisterTypesTemplatePath, Platform.iOS);
-
+				var typesPerAssembly = projectDefinition.GetTypeForAssemblies (GetReleaseDownload (Platform.iOS), Platform.iOS, true);
+ 				var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (typesPerAssembly,
+ 					projectDefinition.IsXUnit, RegisterTypesTemplatePath);
+ 					
 				using (var file = new StreamWriter (registerTypePath, false)) { // false is do not append
 					await file.WriteAsync (registerCode);
 				}
@@ -494,7 +551,7 @@ namespace BCLTestImporter {
 
 				var projectTemplatePath = Path.Combine (ProjectTemplateRootPath, projectTemplateMatches[platform]);
 				var generatedProject = await GenerateAsync (projectDefinition.Name, registerTypePath,
-					projectDefinition.GetCachedAssemblyInclusionInformation (MonoRootPath, platform), projectTemplatePath, infoPlistPath);
+					projectDefinition.GetAssemblyInclusionInformation (GetReleaseDownload (platform), platform, true), projectTemplatePath, infoPlistPath, platform);
 				var projectPath = GetProjectPath (projectDefinition.Name, platform);
 				projectPaths.Add ((name: projectDefinition.Name, path: projectPath, xunit: projectDefinition.IsXUnit));
 				using (var file = new StreamWriter (projectPath, false)) { // false is do not append
@@ -564,6 +621,7 @@ namespace BCLTestImporter {
 				result = await GenerateWatchOSTestProjectsAsync (projects, generatedDir);
 				break;
 			case Platform.iOS:
+			case Platform.TvOS:
 				result = await GenerateiOSTestProjectsAsync (projects, platform, generatedDir);
 				break;
 			case Platform.MacOSFull:
@@ -647,7 +705,7 @@ namespace BCLTestImporter {
 		/// <param name="templatePath">A path to the template used to generate the path.</param>
 		/// <param name="infoPlistPath">The path to the info plist of the project.</param>
 		/// <returns></returns>
-		static async Task<string> GenerateAsync (string projectName, string registerPath, List<(string assembly, string hintPath)> info, string templatePath, string infoPlistPath)
+		static async Task<string> GenerateAsync (string projectName, string registerPath, List<(string assembly, string hintPath)> info, string templatePath, string infoPlistPath, Platform platform)
 		{
 			// fix possible issues with the paths to be included in the msbuild xml
 			infoPlistPath = infoPlistPath.Replace ('/', '\\');
@@ -656,6 +714,11 @@ namespace BCLTestImporter {
 				if (!excludeDlls.Contains (assemblyInfo.assembly))
 				sb.AppendLine (GetReferenceNode (assemblyInfo.assembly, assemblyInfo.hintPath));
 			}
+			
+			var contentFiles = new StringBuilder ();
+			foreach (var path in GetIgnoreFiles (templatePath, projectName, platform)) {
+				contentFiles.Append (GetContentNode (path));
+			}
 
 			using (var reader = new StreamReader(templatePath)) {
 				var result = await reader.ReadToEndAsync ();
@@ -663,6 +726,7 @@ namespace BCLTestImporter {
 				result = result.Replace (ReferencesKey, sb.ToString ());
 				result = result.Replace (RegisterTypeKey, GetRegisterTypeNode (registerPath));
 				result = result.Replace (PlistKey, infoPlistPath);
+				result = result.Replace (ContentKey, contentFiles.ToString ());
 				return result;
 			}
 		}
@@ -676,12 +740,17 @@ namespace BCLTestImporter {
 				sb.AppendLine (GetReferenceNode (assemblyInfo.assembly, assemblyInfo.hintPath));
 			}
 
+			var contentFiles = new StringBuilder ();
+			foreach (var path in GetIgnoreFiles (templatePath, projectName, platform)) {
+				contentFiles.Append (GetContentNode (path));
+			}
 			using (var reader = new StreamReader(templatePath)) {
 				var result = await reader.ReadToEndAsync ();
 				result = result.Replace (NameKey, projectName);
 				result = result.Replace (ReferencesKey, sb.ToString ());
 				result = result.Replace (RegisterTypeKey, GetRegisterTypeNode (registerPath));
 				result = result.Replace (PlistKey, infoPlistPath);
+				result = result.Replace (ContentKey, contentFiles.ToString ());
 				switch (platform){
 				case Platform.MacOSFull:
 					result = result.Replace (TargetFrameworkVersionKey, "v4.5");
@@ -729,6 +798,11 @@ namespace BCLTestImporter {
 					sb.AppendLine (GetReferenceNode (assemblyInfo.assembly, assemblyInfo.hintPath));
 			}
 			
+			var contentFiles = new StringBuilder ();
+			foreach (var path in GetIgnoreFiles (templatePath, projectName, Platform.WatchOS)) {
+				contentFiles.Append (GetContentNode (path));
+			}
+			
 			using (var reader = new StreamReader(templatePath)) {
 				var result = await reader.ReadToEndAsync ();
 				result = result.Replace (NameKey, projectName);
@@ -736,12 +810,13 @@ namespace BCLTestImporter {
 				result = result.Replace (PlistKey, infoPlistPath);
 				result = result.Replace (RegisterTypeKey, GetRegisterTypeNode (registerPath));
 				result = result.Replace (ReferencesKey, sb.ToString ());
+				result = result.Replace (ContentKey, contentFiles.ToString ());
 				return result;
 			}
 		}
 
-		public static string Generate (string projectName, string registerPath, List<(string assembly, string hintPath)> info, string templatePath, string infoPlistPath) =>
-			GenerateAsync (projectName, registerPath, info, templatePath, infoPlistPath).Result;
+		public static string Generate (string projectName, string registerPath, List<(string assembly, string hintPath)> info, string templatePath, string infoPlistPath, Platform platform) =>
+			GenerateAsync (projectName, registerPath, info, templatePath, infoPlistPath, platform).Result;
 
 		/// <summary>
 		/// Removes all the generated files by the tool.
@@ -773,11 +848,12 @@ namespace BCLTestImporter {
 		/// </summary>
 		/// <param name="missingAssemblies"></param>
 		/// <returns></returns>
-		public bool AllTestAssembliesAreRan (out Dictionary<Platform, List<string>> missingAssemblies)
+		public bool AllTestAssembliesAreRan (out Dictionary<Platform, List<string>> missingAssemblies, bool wasDownloaded)
 		{
 			missingAssemblies = new Dictionary<Platform, List<string>> ();
 			foreach (var platform in new [] {Platform.iOS, Platform.TvOS}) {
-				var testDir = BCLTestAssemblyDefinition.GetTestDirectory (MonoRootPath, platform); 
+				var testDir = wasDownloaded ? BCLTestAssemblyDefinition.GetTestDirectoryFromMonoPath (MonoRootPath, platform)
+					: BCLTestAssemblyDefinition.GetTestDirectoryFromDownloadsPath (GetReleaseDownload (platform), platform); 
 				var missingAssembliesPlatform = Directory.GetFiles (testDir, NUnitPattern).Select (Path.GetFileName).Union (
 					Directory.GetFiles (testDir, xUnitPattern).Select (Path.GetFileName)).ToList ();
 				

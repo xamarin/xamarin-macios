@@ -121,7 +121,18 @@ namespace Foundation {
 		readonly Dictionary<NSUrlSessionTask, InflightData> inflightRequests;
 		readonly object inflightRequestsLock = new object ();
 
-		public NSUrlSessionHandler () : this (NSUrlSessionConfiguration.DefaultSessionConfiguration)
+		static NSUrlSessionConfiguration CreateConfig ()
+		{
+			// modifying the configuration does not affect future calls
+			var config = NSUrlSessionConfiguration.DefaultSessionConfiguration;
+			// but we want, by default, the timeout from HttpClient to have precedence over the one from NSUrlSession
+			// Double.MaxValue does not work, so default to 24 hours
+			config.TimeoutIntervalForRequest = 24 * 60 * 60;
+			config.TimeoutIntervalForResource = 24 * 60 * 60;
+			return config;
+		}
+
+		public NSUrlSessionHandler () : this (CreateConfig ())
 		{
 		}
 
