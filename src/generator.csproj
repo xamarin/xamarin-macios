@@ -36,7 +36,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'ios' ">
     <StartAction>Project</StartAction>
-    <StartArguments>@$(RunConfiguration).rsp</StartArguments>
+    <StartArguments>@build/$(RunConfiguration).rsp</StartArguments>
     <StartWorkingDirectory>$(ProjectDir)</StartWorkingDirectory>
     <EnvironmentVariables>
       <Variable name="MD_MTOUCH_SDK_ROOT" value="../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git"/>
@@ -44,7 +44,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'tvos' ">
     <StartAction>Project</StartAction>
-    <StartArguments>@$(RunConfiguration).rsp</StartArguments>
+    <StartArguments>@build/$(RunConfiguration).rsp</StartArguments>
     <StartWorkingDirectory>$(ProjectDir)</StartWorkingDirectory>
     <EnvironmentVariables>
       <Variable name="MD_MTOUCH_SDK_ROOT" value="../_ios-build//Library/Frameworks/Xamarin.iOS.framework/Versions/git"/>
@@ -52,7 +52,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'watchos' ">
     <StartAction>Project</StartAction>
-    <StartArguments>@$(RunConfiguration).rsp</StartArguments>
+    <StartArguments>@build/$(RunConfiguration).rsp</StartArguments>
     <StartWorkingDirectory>$(ProjectDir)</StartWorkingDirectory>
     <EnvironmentVariables>
       <Variable name="MD_MTOUCH_SDK_ROOT" value="../_ios-build//Library/Frameworks/Xamarin.iOS.framework/Versions/git"/>
@@ -60,7 +60,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'mac-mobile' ">
     <StartAction>Project</StartAction>
-    <StartArguments>@$(RunConfiguration).rsp</StartArguments>
+    <StartArguments>@build/$(RunConfiguration).rsp</StartArguments>
     <StartWorkingDirectory>$(ProjectDir)</StartWorkingDirectory>
     <EnvironmentVariables>
       <Variable name="XamarinMacFrameworkRoot" value="../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current"/>
@@ -68,7 +68,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'mac-full' ">
     <StartAction>Project</StartAction>
-    <StartArguments>@$(RunConfiguration).rsp</StartArguments>
+    <StartArguments>@build/$(RunConfiguration).rsp</StartArguments>
     <StartWorkingDirectory>$(ProjectDir)</StartWorkingDirectory>
     <EnvironmentVariables>
       <Variable name="XamarinMacFrameworkRoot" value="../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current"/>
@@ -377,4 +377,7 @@
     <Compile Include="..\src\ObjCRuntime\Registrar.core.cs"/>
     <Compile Include="..\src\ObjCRuntime\RequiresSuperAttribute.cs"/>
   </ItemGroup>
+  <Target Name="AfterBuild">
+    <Exec Command="make bgen" />
+  </Target>
 </Project>

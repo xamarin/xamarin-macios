@@ -156,7 +156,6 @@ namespace BCLTestImporter {
 			"monotouch_System.Xml.Linq_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1130
 			"monotouch_System.Numerics_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1129
 			"monotouch_Mono.Security_test.dll", // issue https://github.com/xamarin/maccore/issues/1142
-			"monotouch_Mono.Data.Tds_test.dll", // issue https://gist.github.com/mandel-macaque/d97fa28f8a73c3016d1328567da77a0b
 		};
 
 		private static readonly List<(string name, string[] assemblies)> macTestProjects = new List<(string name, string[] assemblies)> {
