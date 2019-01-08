@@ -163,10 +163,8 @@ namespace Foundation {
 
 		void RemoveInflightData (NSUrlSessionTask task, bool cancel = true)
 		{
-			InflightData inflight;
 			lock (inflightRequestsLock)
-				if (inflightRequests.TryGetValue (task, out inflight))
-					inflightRequests.Remove (task);
+				inflightRequests.Remove (task);
 
 			if (cancel)
 				task?.Cancel ();
