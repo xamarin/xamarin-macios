@@ -92,6 +92,9 @@
     <Reference Include="nunitlite">
       <HintPath>..\..\..\external\mono\mcs\class\lib\monotouch\nunitlite.dll</HintPath>
     </Reference>
+    <Reference Include="Xunit.NetCore.Extensions">
+      <HintPath>..\..\..\external\mono\external\xunit-binaries\Xunit.NetCore.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
       <HintPath>..\..\..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.2.1.1\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
       <Private>False</Private>
@@ -196,6 +199,9 @@
     <Compile Include="templates\common\TestRunner.NUnit\ClassOrNamespaceFilter.cs">
       <Link>TestRunner.NUnit\ClassOrNamespaceFilter.cs</Link>
     </Compile>
+    <Compile Include="templates\common\TestRunner.NUnit\TestMethodFilter.cs">
+      <Link>TestRunner.NUnit\TestMethodFilter.cs</Link>
+    </Compile>
     <Compile Include="templates\common\TestRunner.xUnit\XUnitFilter.cs">
       <Link>TestRunner.xUnit\XUnitFilter.cs</Link>
     </Compile>
@@ -211,12 +217,16 @@
     <Compile Include="templates\common\ApplicationOptions.cs">
       <Link>ApplicationOptions.cs</Link>
     </Compile>
+    <Compile Include="templates\common\IgnoreFileParser.cs">
+      <Link>IgnoreFileParser.cs</Link>
+    </Compile>
     %REGISTER TYPE%
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="templates\common\TestRunner.xUnit\NUnitXml.xslt">
       <Link>TestRunner.xUnit\NUnitXml.xslt</Link>
     </EmbeddedResource>
+    %CONTENT RESOURCES%
   </ItemGroup>
   <ItemGroup>
     <Folder Include="TestRunner.Core\" />

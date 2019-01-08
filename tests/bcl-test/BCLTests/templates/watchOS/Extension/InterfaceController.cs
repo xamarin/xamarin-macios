@@ -16,6 +16,7 @@ using Xamarin.iOS.UnitTests.NUnit;
 using BCLTests;
 using BCLTests.TestRunner.Core;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace monotouchtestWatchKitExtension
 {
@@ -107,6 +108,12 @@ namespace monotouchtestWatchKitExtension
 				runner = new XUnitTestRunner (logger);
 			else
 				runner = new NUnitTestRunner (logger);
+			
+			var skippedTests = IgnoreFileParser.ParseContentFiles (NSBundle.MainBundle.BundlePath);
+			if (skippedTests.Any ()) {
+				// ensure that we skip those tests that have been passed via the ignore files
+				runner.SkipTests (skippedTests);
+			}
 			
 			ThreadPool.QueueUserWorkItem ((v) =>
 			{
