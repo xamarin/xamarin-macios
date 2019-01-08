@@ -37,9 +37,9 @@ namespace CoreText {
 
 #region Run Delegate Callbacks
 	delegate void CTRunDelegateDeallocateCallback (IntPtr refCon);
-	delegate float CTRunDelegateGetAscentCallback (IntPtr refCon);
-	delegate float CTRunDelegateGetDescentCallback (IntPtr refCon);
-	delegate float CTRunDelegateGetWidthCallback (IntPtr refCon);
+	delegate nfloat CTRunDelegateGetAscentCallback (IntPtr refCon);
+	delegate nfloat CTRunDelegateGetDescentCallback (IntPtr refCon);
+	delegate nfloat CTRunDelegateGetWidthCallback (IntPtr refCon);
 
 	[StructLayout (LayoutKind.Sequential)]
 	class CTRunDelegateCallbacks {
@@ -88,6 +88,22 @@ namespace CoreText {
 		}
 #endif
 
+#if XAMCORE_4_0
+		public virtual nfloat GetAscent ()
+		{
+			return 0;
+		}
+
+		public virtual nfloat GetDescent ()
+		{
+			return 0;
+		}
+
+		public virtual nfloat GetWidth ()
+		{
+			return 0;
+		}
+#else
 		public virtual float GetAscent ()
 		{
 			return 0.0f;
@@ -102,6 +118,7 @@ namespace CoreText {
 		{
 			return 0.0f;
 		}
+#endif
 
 		internal CTRunDelegateCallbacks GetCallbacks ()
 		{
@@ -151,30 +168,30 @@ namespace CoreText {
 		}
 
 		[MonoPInvokeCallback (typeof (CTRunDelegateGetAscentCallback))]
-		static float GetAscent (IntPtr refCon)
+		static nfloat GetAscent (IntPtr refCon)
 		{
 			var self = GetOperations (refCon);
 			if (self == null)
-				return 0.0f;
-			return self.GetAscent ();
+				return 0;
+			return (nfloat) self.GetAscent ();
 		}
 
 		[MonoPInvokeCallback (typeof (CTRunDelegateGetDescentCallback))]
-		static float GetDescent (IntPtr refCon)
+		static nfloat GetDescent (IntPtr refCon)
 		{
 			var self = GetOperations (refCon);
 			if (self == null)
-				return 0.0f;
-			return self.GetDescent ();
+				return 0;
+			return (nfloat) self.GetDescent ();
 		}
 
 		[MonoPInvokeCallback (typeof (CTRunDelegateGetWidthCallback))]
-		static float GetWidth (IntPtr refCon)
+		static nfloat GetWidth (IntPtr refCon)
 		{
 			var self = GetOperations (refCon);
 			if (self == null)
-				return 0.0f;
-			return self.GetWidth ();
+				return 0;
+			return (nfloat) self.GetWidth ();
 		}
 	}
 

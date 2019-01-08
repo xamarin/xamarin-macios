@@ -684,30 +684,28 @@ namespace Xamarin.iOS.Tasks
 
 			Directory.CreateDirectory (AppBundleDir);
 
-			var result = base.Execute();
+			var result = base.Execute ();
 
-			CopiedFrameworks = GetCopiedFrameworks();
+			CopiedFrameworks = GetCopiedFrameworks ();
 
 			return result;
 		}
 
-		ITaskItem[] GetCopiedFrameworks()
+		ITaskItem[] GetCopiedFrameworks ()
 		{
-			var copiedFrameworks = new List<ITaskItem>();
-			var frameworksDir = Path.Combine(AppBundleDir, "Frameworks");
+			var copiedFrameworks = new List<ITaskItem> ();
+			var frameworksDir = Path.Combine (AppBundleDir, "Frameworks");
 
-			if (Directory.Exists(frameworksDir))
-			{
-				foreach (var dir in Directory.EnumerateDirectories(frameworksDir, "*.framework"))
-				{
-					var framework = Path.Combine(dir, Path.GetFileNameWithoutExtension(dir));
+			if (Directory.Exists (frameworksDir)) {
+				foreach (var dir in Directory.EnumerateDirectories (frameworksDir, "*.framework")) {
+					var framework = Path.Combine (dir, Path.GetFileNameWithoutExtension (dir));
 
-					if (File.Exists(framework))
-						copiedFrameworks.Add(new TaskItem(framework));
+					if (File.Exists (framework))
+						copiedFrameworks.Add (new TaskItem (framework));
 				}
 			}
 
-			return copiedFrameworks.ToArray();
+			return copiedFrameworks.ToArray ();
 		}
 
 		string ResolveFrameworkFile (string fullName)

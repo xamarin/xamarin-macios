@@ -123,8 +123,8 @@ namespace Foundation {
 
 		static NSUrlSessionConfiguration CreateConfig ()
 		{
-			// we want the current (at the moment the instance creation is done) configuration defaults
-			var config = (NSUrlSessionConfiguration) NSUrlSessionConfiguration.DefaultSessionConfiguration.Copy ();
+			// modifying the configuration does not affect future calls
+			var config = NSUrlSessionConfiguration.DefaultSessionConfiguration;
 			// but we want, by default, the timeout from HttpClient to have precedence over the one from NSUrlSession
 			// Double.MaxValue does not work, so default to 24 hours
 			config.TimeoutIntervalForRequest = 24 * 60 * 60;

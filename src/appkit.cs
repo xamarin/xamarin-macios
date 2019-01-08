@@ -8643,7 +8643,17 @@ namespace AppKit {
 	}
 
 	[BaseType (typeof (NSSavePanel))]
+	[DisableDefaultCtor]
 	interface NSOpenPanel {
+		[Static]
+		[Export ("openPanel")]
+		[ForcedType] // different type used inside a sandbox
+		NSOpenPanel OpenPanel { get; }
+
+		[Advice ("You must use 'OpenPanel' method if the application is sandboxed.")]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[Export ("URLs")]
 		NSUrl [] Urls { get; }
 
@@ -12896,7 +12906,17 @@ namespace AppKit {
 	delegate void NSSavePanelComplete (nint result);
 	
 	[BaseType (typeof (NSPanel), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSOpenSavePanelDelegate)})]
+	[DisableDefaultCtor]
 	interface NSSavePanel {
+		[Static]
+		[Export ("savePanel")]
+		[ForcedType] // different type used inside a sandbox
+		NSSavePanel SavePanel { get; }
+
+		[Advice ("You must use 'SavePanel' method if the application is sandboxed.")]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[Export ("URL")]
 		NSUrl Url { get; }
 

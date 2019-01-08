@@ -10,7 +10,7 @@ namespace Xamarin.MacDev.Tasks
 {
 	public abstract class UnpackLibraryResourcesTaskBase : Task
 	{
-		List<ITaskItem> unpackedResources = new List<ITaskItem>();
+		List<ITaskItem> unpackedResources = new List<ITaskItem> ();
 		
 		#region Inputs
 
@@ -83,7 +83,7 @@ namespace Xamarin.MacDev.Tasks
 			}
 
 			BundleResourcesWithLogicalNames = results.ToArray ();
-			UnpackedResources = unpackedResources.ToArray();
+			UnpackedResources = unpackedResources.ToArray ();
 
 			return !Log.HasLoggedErrors;
 		}
@@ -123,9 +123,9 @@ namespace Xamarin.MacDev.Tasks
 				var path = Path.Combine (intermediatePath, rpath);
 				var file = new FileInfo (path);
 
-				var item = new TaskItem(path);
-				item.SetMetadata("LogicalName", rpath);
-				item.SetMetadata("Optimize", "false");
+				var item = new TaskItem (path);
+				item.SetMetadata ("LogicalName", rpath);
+				item.SetMetadata ("Optimize", "false");
 
 				if (file.Exists && file.LastWriteTimeUtc >= asmWriteTime) {
 					Log.LogMessage ("    Up to date: {0}", rpath);
@@ -139,7 +139,7 @@ namespace Xamarin.MacDev.Tasks
 							resource.CopyTo (stream);
 					}
 
-					unpackedResources.Add(item);
+					unpackedResources.Add (item);
 				}
 
 				yield return item;
