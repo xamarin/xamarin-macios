@@ -795,6 +795,7 @@ namespace xharness
 				TestName = "MTouch tests",
 				Timeout = TimeSpan.FromMinutes (120),
 				Ignored = !IncludeMtouch,
+				InProcess = true,
 			};
 			Tasks.Add (nunitExecutionMTouch);
 
@@ -2891,6 +2892,7 @@ function toggleAll (show)
 		public string TestExecutable;
 		public string WorkingDirectory;
 		public bool ProduceHtmlReport = true;
+		public bool InProcess;
 		public TimeSpan Timeout = TimeSpan.FromMinutes (10);
 
 		public NUnitExecuteTask (BuildToolTask build_task)
@@ -2935,6 +2937,8 @@ function toggleAll (show)
 					if (IsNUnit3) {
 						args.Append ("-result=").Append (StringUtils.Quote (xmlLog)).Append (";format=nunit2 ");
 						args.Append ("--labels=All ");
+						if (InProcess)
+							args.Append ("--inprocess ");
 					} else {
 						args.Append ("-xml=" + StringUtils.Quote (xmlLog)).Append (' ');
 						args.Append ("-labels ");
