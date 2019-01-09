@@ -54,11 +54,7 @@ namespace Xamarin.iOS.Tasks
 		List<AssemblyInfo> ScanFrameworkListXml (string frameworkListFile, bool isMac)
 		{
 			var assemblies = new List<AssemblyInfo> ();
-			var path = string.Empty;
-			if (isMac)
-				path = Path.GetFullPath (Path.Combine ("..", "..", "Xamarin.Mac.Tasks", frameworkListFile));
-			else
-				path = Path.GetFullPath (Path.Combine ("..", "..", "Xamarin.iOS.Tasks.Core", frameworkListFile));
+			var path = Path.GetFullPath (Path.Combine ("..", "..", isMac ? "Xamarin.Mac.Tasks" : "Xamarin.iOS.Tasks.Core", frameworkListFile));
 			using (var reader = XmlReader.Create (path)) {
 				while (reader.Read ()) {
 					if (reader.IsStartElement ()) {
@@ -76,19 +72,13 @@ namespace Xamarin.iOS.Tasks
 		List<AssemblyInfo> ScanAssemblyDirectory (string frameworkName, bool isMac)
 		{
 			var assemblies = new List<AssemblyInfo> ();
-			var path = string.Empty;
-			if (isMac)
-				path = Path.GetFullPath (Path.Combine (Configuration.SdkRootXM, "lib", "mono", frameworkName));
-			else
-				path = Path.GetFullPath (Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "mono", frameworkName));
+			var path = Path.GetFullPath (Path.Combine (isMac ? Configuration.SdkRootXM : Configuration.MonoTouchRootDirectory, "lib", "mono", frameworkName));
 			foreach (var f in Directory.EnumerateFiles (path, "*.dll")) {
 				try {
 					var an = AssemblyName.GetAssemblyName (f);
-					var ainfo = new AssemblyInfo ();
-					ainfo.Update (an);
-					assemblies.Add (ainfo);
+					assemblies.Add (new AssemblyInfo (an));
 				} catch (Exception ex) {
-					Console.WriteLine ("Error reading assembly '{0}' in framework '{1}':{2}{3}", f, frameworkName, Environment.NewLine, ex);
+					Assert.Fail ("Error reading assembly '{0}' in framework '{1}':{2}{3}", f, frameworkName, Environment.NewLine, ex);
 				}
 			}
 			return assemblies;
@@ -108,8 +98,8 @@ namespace Xamarin.iOS.Tasks
 			if (reader.MoveToAttribute ("Culture") && reader.ReadAttributeValue ())
 				ainfo.Culture = reader.ReadContentAsString ();
 			if (reader.MoveToAttribute ("ProcessorArchitecture") && reader.ReadAttributeValue ())
-			ainfo.ProcessorArchitecture = (ProcessorArchitecture)
-			Enum.Parse (typeof (ProcessorArchitecture), reader.ReadContentAsString (), true);
+				ainfo.ProcessorArchitecture = (ProcessorArchitecture)
+				Enum.Parse (typeof (ProcessorArchitecture), reader.ReadContentAsString (), true);
 			if (reader.MoveToAttribute ("InGac") && reader.ReadAttributeValue ())
 				ainfo.InGac = reader.ReadContentAsBoolean ();
 			return ainfo;
@@ -130,7 +120,11 @@ namespace Xamarin.iOS.Tasks
 
 		public bool InGac;
 
-		public void Update (AssemblyName aname)
+		public AssemblyInfo ()
+		{
+		}
+
+		public AssemblyInfo (AssemblyName aname)
 		{
 			Name = aname.Name;
 			Version = aname.Version.ToString ();
