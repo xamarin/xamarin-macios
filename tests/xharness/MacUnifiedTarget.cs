@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 
+using Xamarin;
+
 namespace xharness
 {
 	public class MacUnifiedTarget : MacTarget
