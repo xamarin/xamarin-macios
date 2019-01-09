@@ -1,2 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FileList Name="Xamarin.Mac" TargetFrameworkDirectory="%TargetFrameworkDirectory%"/>
+<FileList Name="Xamarin.Mac" TargetFrameworkDirectory="%TargetFrameworkDirectory%">
+  <File AssemblyName="FSharp.Core" Version="3.99.4.0" PublicKeyToken="b03f5f7f11d50a3a" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="I18N.CJK" Version="2.0.5.0" PublicKeyToken="0738eb9f132ed756" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="I18N.MidEast" Version="2.0.5.0" PublicKeyToken="0738eb9f132ed756" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="I18N.Other" Version="2.0.5.0" PublicKeyToken="0738eb9f132ed756" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="I18N.Rare" Version="2.0.5.0" PublicKeyToken="0738eb9f132ed756" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="I18N.West" Version="2.0.5.0" PublicKeyToken="0738eb9f132ed756" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="I18N" Version="2.0.5.0" PublicKeyToken="0738eb9f132ed756" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="Microsoft.CSharp" Version="2.0.5.0" PublicKeyToken="b03f5f7f11d50a3a" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="Mono.CSharp" Version="2.0.5.0" PublicKeyToken="0738eb9f132ed756" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="Mono.CompilerServices.SymbolWriter" Version="2.0.5.0" PublicKeyToken="0738eb9f132ed756" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="Mono.Data.Sqlite" Version="2.0.5.0" PublicKeyToken="0738eb9f132ed756" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="Mono.Data.Tds" Version="2.0.5.0" PublicKeyToken="0738eb9f132ed756" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="Mono.Security" Version="2.0.5.0" PublicKeyToken="0738eb9f132ed756" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="OpenTK" Version="0.0.0.0" PublicKeyToken="84e04ff9cfb79065" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="System.ComponentModel.Composition" Version="2.0.5.0" PublicKeyToken="b77a5c561934e089" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="System.ComponentModel.DataAnnotations" Version="2.0.5.0" PublicKeyToken="31bf3856ad364e35" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="System.Core" Version="2.0.5.0" PublicKeyToken="7cec85d7bea7798e" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="System.Data.Services.Client" Version="2.0.5.0" PublicKeyToken="b77a5c561934e089" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="System.Data" Version="2.0.5.0" PublicKeyToken="b77a5c561934e089" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="System.IO.Compression.FileSystem" Version="2.0.5.0" PublicKeyToken="b77a5c561934e089" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="System.IO.Compression" Version="2.0.5.0" PublicKeyToken="b77a5c561934e089" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="System.IdentityModel" Version="2.0.5.0" PublicKeyToken="b77a5c561934e089" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="System.Json" Version="2.0.5.0" PublicKeyToken="31bf3856ad364e35" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="System.Net.Http.WinHttpHandler" Version="2.0.5.0" PublicKeyToken="b03f5f7f11d50a3a" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="System.Net.Http" Version="4.0.0.0" PublicKeyToken="b03f5f7f11d50a3a" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="System.Net" Version="2.0.5.0" PublicKeyToken="7cec85d7bea7798e" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="System.Numerics.Vectors" Version="2.0.5.0" PublicKeyToken="b03f5f7f11d50a3a" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="System.Numerics" Version="2.0.5.0" PublicKeyToken="b77a5c561934e089" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="System.Reflection.Context" Version="2.0.5.0" PublicKeyToken="b77a5c561934e089" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="System.Runtime.Serialization" Version="2.0.5.0" PublicKeyToken="7cec85d7bea7798e" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="System.Security" Version="2.0.5.0" PublicKeyToken="b03f5f7f11d50a3a" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="System.ServiceModel.Internals" Version="0.0.0.0" PublicKeyToken="31bf3856ad364e35" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="System.ServiceModel.Web" Version="2.0.5.0" PublicKeyToken="7cec85d7bea7798e" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="System.ServiceModel" Version="2.0.5.0" PublicKeyToken="31bf3856ad364e35" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="System.Transactions" Version="2.0.5.0" PublicKeyToken="b77a5c561934e089" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="System.Web.Services" Version="2.0.5.0" PublicKeyToken="b03f5f7f11d50a3a" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="System.Windows" Version="2.0.5.0" PublicKeyToken="b03f5f7f11d50a3a" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="System.Xml.Linq" Version="2.0.5.0" PublicKeyToken="31bf3856ad364e35" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="System.Xml.Serialization" Version="2.0.5.0" PublicKeyToken="b77a5c561934e089" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="System.Xml" Version="2.0.5.0" PublicKeyToken="7cec85d7bea7798e" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="System" Version="2.0.5.0" PublicKeyToken="7cec85d7bea7798e" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="Xamarin.Mac" Version="0.0.0.0" PublicKeyToken="84e04ff9cfb79065" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="mscorlib" Version="2.0.5.0" PublicKeyToken="7cec85d7bea7798e" ProcessorArchitecture="MSIL" />
+</FileList>
