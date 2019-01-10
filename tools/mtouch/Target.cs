@@ -106,7 +106,11 @@ namespace Xamarin.Bundler
 				MonoNativeMode = App.DeploymentTarget.Major >= 10 ? MonoNativeMode.Unified : MonoNativeMode.Compat;
 				break;
 			case ApplePlatform.WatchOS:
-				MonoNativeMode = App.DeploymentTarget.Major >= 3 ? MonoNativeMode.Unified : MonoNativeMode.Compat;
+				if (Application.IsArchEnabled (Abis, Abi.ARM64_32)) {
+					MonoNativeMode = MonoNativeMode.Unified;
+				} else {
+					MonoNativeMode = App.DeploymentTarget.Major >= 3 ? MonoNativeMode.Unified : MonoNativeMode.Compat;
+				}
 				break;
 			default:
 				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", App.Platform);
