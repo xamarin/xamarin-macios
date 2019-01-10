@@ -76,7 +76,6 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
-  <Import Project="../SyncTestResources.targets" />  
   <ItemGroup>
     <Content Include="..\..\..\external\mono\mcs\class\System.Web.Services\Test\System.Web.Services.Description\test2.wsdl">
       <Link>Test\System.Web.Services.Description\test2.wsdl</Link>

@@ -212,5 +212,4 @@
     </ProjectReference>
   </ItemGroup>
    <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
-   <Import Project="../SyncTestResources.targets" />  
 </Project>
