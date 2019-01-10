@@ -75,13 +75,23 @@
       <Name>GuiUnit_NET_4_5</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\external\mono\mcs\class\test-helpers\TestResourceHelper.cs">
+      <Link>test-helpers\TestResourceHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\external\mono\mcs\class\test-helpers\SocketResponder.cs">
+      <Link>test-helpers\SocketResponder.cs</Link>
+    </Compile>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
   <ItemGroup>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Web.Services\Test\System.Web.Services.Description\test2.wsdl">
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Web.Services\Test\System.Web.Services.Description\test2.wsdl">
       <Link>Test\System.Web.Services.Description\test2.wsdl</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Web.Services\Test\System.Web.Services.Description\test.wsdl">
+      <LogicalName>Test/System.Web.Services.Description/test2.wsdl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Web.Services\Test\System.Web.Services.Description\test.wsdl">
       <Link>Test\System.Web.Services.Description\test.wsdl</Link>
-    </Content>
+      <LogicalName>Test/System.Web.Services.Description/test.wsdl</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

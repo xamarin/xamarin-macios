@@ -73,6 +73,11 @@
 #FILES#
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\external\mono\mcs\class\test-helpers\TestResourceHelper.cs">
+      <Link>test-helpers\TestResourceHelper.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\..\external\guiunit\src\framework\GuiUnit_NET_4_5.csproj">
       <Project>{D12F0F7B-8DE3-43EC-BA49-41052D065A9B}</Project>
       <Name>GuiUnit_NET_4_5</Name>
@@ -80,140 +85,185 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
   <ItemGroup>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\binserialize\BS-tb1.bin">
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\binserialize\BS-tb1.bin">
       <Link>Test\System.Data\binserialize\BS-tb1.bin</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\binserialize\BS-tb2.bin">
+      <LogicalName>Test/System.Data/binserialize/BS-tb1.bin</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\binserialize\BS-tb2.bin">
       <Link>Test\System.Data\binserialize\BS-tb2.bin</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\binserialize\BS-tb3.bin">
+      <LogicalName>Test/System.Data/binserialize/BS-tb2.bin</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\binserialize\BS-tb3.bin">
       <Link>Test\System.Data\binserialize\BS-tb3.bin</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\binserialize\BS-tb4.bin">
+      <LogicalName>Test/System.Data/binserialize/BS-tb3.bin</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\binserialize\BS-tb4.bin">
       <Link>Test\System.Data\binserialize\BS-tb4.bin</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\binserialize\BS-tb5.bin">
+      <LogicalName>Test/System.Data/binserialize/BS-tb4.bin</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\binserialize\BS-tb5.bin">
       <Link>Test\System.Data\binserialize\BS-tb5.bin</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\store.xsd">
+      <LogicalName>Test/System.Data/binserialize/BS-tb5.bin</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\store.xsd">
       <Link>Test\System.Data\store.xsd</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\store2.xsd">
+      <LogicalName>Test/System.Data/store.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\store2.xsd">
       <Link>Test\System.Data\store2.xsd</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\store3.xsd">
+      <LogicalName>Test/System.Data/store2.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\store3.xsd">
       <Link>Test\System.Data\store3.xsd</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\store4.xsd">
+      <LogicalName>Test/System.Data/store3.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\store4.xsd">
       <Link>Test\System.Data\store4.xsd</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\b582732.xml">
+      <LogicalName>Test/System.Data/store4.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\b582732.xml">
       <Link>Test\System.Data\schemas\b582732.xml</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\bug77248.xsd">
+      <LogicalName>Test/System.Data/schemas/b582732.xml</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\bug77248.xsd">
       <Link>Test\System.Data\schemas\bug77248.xsd</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\Items.xsd">
+      <LogicalName>Test/System.Data/schemas/bug77248.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\Items.xsd">
       <Link>Test\System.Data\schemas\Items.xsd</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test001.xsd">
+      <LogicalName>Test/System.Data/schemas/Items.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test001.xsd">
       <Link>Test\System.Data\schemas\test001.xsd</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test002.xsd">
+      <LogicalName>Test/System.Data/schemas/test001.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test002.xsd">
       <Link>Test\System.Data\schemas\test002.xsd</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test003.xsd">
+      <LogicalName>Test/System.Data/schemas/test002.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test003.xsd">
       <Link>Test\System.Data\schemas\test003.xsd</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test004.xsd">
+      <LogicalName>Test/System.Data/schemas/test003.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test004.xsd">
       <Link>Test\System.Data\schemas\test004.xsd</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test005.xsd">
+      <LogicalName>Test/System.Data/schemas/test004.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test005.xsd">
       <Link>Test\System.Data\schemas\test005.xsd</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test006.xsd">
+      <LogicalName>Test/System.Data/schemas/test005.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test006.xsd">
       <Link>Test\System.Data\schemas\test006.xsd</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test007.xsd">
+      <LogicalName>Test/System.Data/schemas/test006.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test007.xsd">
       <Link>Test\System.Data\schemas\test007.xsd</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test008.xsd">
+      <LogicalName>Test/System.Data/schemas/test007.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test008.xsd">
       <Link>Test\System.Data\schemas\test008.xsd</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test009.xsd">
+      <LogicalName>Test/System.Data/schemas/test008.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test009.xsd">
       <Link>Test\System.Data\schemas\test009.xsd</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test010.xsd">
+      <LogicalName>Test/System.Data/schemas/test009.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test010.xsd">
       <Link>Test\System.Data\schemas\test010.xsd</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test011.xsd">
+      <LogicalName>Test/System.Data/schemas/test010.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test011.xsd">
       <Link>Test\System.Data\schemas\test011.xsd</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test012.xsd">
+      <LogicalName>Test/System.Data/schemas/test011.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test012.xsd">
       <Link>Test\System.Data\schemas\test012.xsd</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test013.xsd">
+      <LogicalName>Test/System.Data/schemas/test012.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test013.xsd">
       <Link>Test\System.Data\schemas\test013.xsd</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test014.xsd">
+      <LogicalName>Test/System.Data/schemas/test013.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test014.xsd">
       <Link>Test\System.Data\schemas\test014.xsd</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test015.xsd">
+      <LogicalName>Test/System.Data/schemas/test014.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test015.xsd">
       <Link>Test\System.Data\schemas\test015.xsd</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test016.xsd">
+      <LogicalName>Test/System.Data/schemas/test015.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test016.xsd">
       <Link>Test\System.Data\schemas\test016.xsd</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test017.xsd">
+      <LogicalName>Test/System.Data/schemas/test016.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test017.xsd">
       <Link>Test\System.Data\schemas\test017.xsd</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test101.xsd">
+      <LogicalName>Test/System.Data/schemas/test017.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test101.xsd">
       <Link>Test\System.Data\schemas\test101.xsd</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test102.xsd">
+      <LogicalName>Test/System.Data/schemas/test101.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test102.xsd">
       <Link>Test\System.Data\schemas\test102.xsd</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test103.xsd">
+      <LogicalName>Test/System.Data/schemas/test102.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test103.xsd">
       <Link>Test\System.Data\schemas\test103.xsd</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\region.xml">
+      <LogicalName>Test/System.Data/schemas/test103.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\region.xml">
       <Link>Test\System.Data\region.xml</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\own_schema.xsd">
+      <LogicalName>Test/System.Data/region.xml</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\own_schema.xsd">
       <Link>Test\System.Data\own_schema.xsd</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\own_schema1.xsd">
+      <LogicalName>Test/System.Data/own_schema.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\own_schema1.xsd">
       <Link>Test\System.Data\own_schema1.xsd</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\own_schema2.xsd">
+      <LogicalName>Test/System.Data/own_schema1.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\own_schema2.xsd">
       <Link>Test\System.Data\own_schema2.xsd</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\TypedDataSet.xml">
+      <LogicalName>Test/System.Data/own_schema2.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\TypedDataSet.xml">
       <Link>Test\System.Data\TypedDataSet.xml</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Xml\region.xml">
+      <LogicalName>Test/System.Data/TypedDataSet.xml</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Xml\region.xml">
       <Link>Test\System.Xml\region.xml</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Xml\region.xsd">
+      <LogicalName>Test/System.Xml/region.xml</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Xml\region.xsd">
       <Link>Test\System.Xml\region.xsd</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Xml\store.xsd">
+      <LogicalName>Test/System.Xml/region.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Xml\store.xsd">
       <Link>Test\System.Xml\store.xsd</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\Mono.Data.SqlExpressions\dateComparisonTest.xml">
+      <LogicalName>Test/System.Xml/store.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\Mono.Data.SqlExpressions\dateComparisonTest.xml">
       <Link>Test\Mono.Data.SqlExpressions\dateComparisonTest.xml</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\TestMerge1.xml">
+      <LogicalName>Test/Mono.Data.SqlExpressions/dateComparisonTest.xml</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\TestMerge1.xml">
       <Link>Test\System.Data\TestMerge1.xml</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Xml\2books.xml">
+      <LogicalName>Test/System.Data/TestMerge1.xml</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Xml\2books.xml">
       <Link>Test\System.Xml\2books.xml</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\TestReadXmlSchema1.xml">
+      <LogicalName>Test/System.Xml/2books.xml</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\TestReadXmlSchema1.xml">
       <Link>Test\System.Data\TestReadXmlSchema1.xml</Link>
-    </Content>
-    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\TestReadXml1.xml">
+      <LogicalName>Test/System.Data/TestReadXmlSchema1.xml</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\TestReadXml1.xml">
       <Link>Test\System.Data\TestReadXml1.xml</Link>
-    </Content>
+      <LogicalName>Test/System.Data/TestReadXml1.xml</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

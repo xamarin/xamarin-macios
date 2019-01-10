@@ -170,5 +170,10 @@
   <ItemGroup>
 #FILES#
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\external\mono\mcs\class\test-helpers\NetworkHelpers.cs">
+      <Link>test-helpers\NetworkHelpers.cs</Link>
+    </Compile>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

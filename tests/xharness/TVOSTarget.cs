@@ -84,7 +84,7 @@ namespace xharness
 
 		protected override string AdditionalDefines {
 			get {
-				return "XAMCORE_2_0;XAMCORE_3_0;";
+				return "XAMCORE_2_0;XAMCORE_3_0;MONOTOUCH_TV;";
 			}
 		}
 

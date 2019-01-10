@@ -161,18 +161,27 @@
 #FILES#
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.IO.Compression.FileSystem\foo\bar.txt">
-      <Link>foo\bar.txt</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.IO.Compression.FileSystem\foo\foo.txt">
-      <Link>foo\foo.txt</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.IO.Compression.FileSystem\foo\foobar\bar.txt">
-      <Link>foo\foobar\bar.txt</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.IO.Compression.FileSystem\foo\foobar\foo.txt">
-      <Link>foo\foobar\foo.txt</Link>
-    </BundleResource>
+    <Compile Include="..\..\..\external\mono\mcs\class\test-helpers\TestResourceHelper.cs">
+      <Link>test-helpers\TestResourceHelper.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.IO.Compression.FileSystem\Test\resources\foo\bar.txt">
+      <Link>Test\resources\foo\bar.txt</Link>
+      <LogicalName>Test/resources/foo/bar.txt</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.IO.Compression.FileSystem\Test\resources\foo\foo.txt">
+      <Link>Test\resources\foo\foo.txt</Link>
+      <LogicalName>Test/resources/foo/foo.txt</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.IO.Compression.FileSystem\Test\resources\foo\foobar\bar.txt">
+      <Link>Test\resources\foo\foobar\bar.txt</Link>
+      <LogicalName>Test/resources/foo/foobar/bar.txt</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.IO.Compression.FileSystem\Test\resources\foo\foobar\foo.txt">
+      <Link>Test\resources\foo\foobar\foo.txt</Link>
+      <LogicalName>Test/resources/foo/foobar/foo.txt</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

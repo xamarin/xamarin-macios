@@ -74,6 +74,11 @@
 #FILES#
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\external\mono\mcs\class\test-helpers\NetworkHelpers.cs">
+      <Link>test-helpers\NetworkHelpers.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\..\external\guiunit\src\framework\GuiUnit_NET_4_5.csproj">
       <Project>{D12F0F7B-8DE3-43EC-BA49-41052D065A9B}</Project>
       <Name>GuiUnit_NET_4_5</Name>

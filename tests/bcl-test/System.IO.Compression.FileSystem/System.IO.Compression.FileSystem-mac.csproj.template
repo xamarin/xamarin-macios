@@ -69,11 +69,10 @@
   <ItemGroup>
 #FILES#
   </ItemGroup>
-    <ItemGroup>
-    <FilesToCopyFoo Include="..\..\..\external\mono\mcs\class\System.IO.Compression.FileSystem\foo\bar.txt" />
-    <FilesToCopyFoo Include="..\..\..\external\mono\mcs\class\System.IO.Compression.FileSystem\foo\foo.txt" />
-    <FilesToCopyFooBar Include="..\..\..\external\mono\mcs\class\System.IO.Compression.FileSystem\foo\foobar\bar.txt" />
-    <FilesToCopyFooBar Include="..\..\..\external\mono\mcs\class\System.IO.Compression.FileSystem\foo\foobar\foo.txt" />
+  <ItemGroup>
+    <Compile Include="..\..\..\external\mono\mcs\class\test-helpers\TestResourceHelper.cs">
+      <Link>test-helpers\TestResourceHelper.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\external\guiunit\src\framework\GuiUnit_NET_4_5.csproj">
@@ -82,8 +81,22 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
-  <Target Name="AfterBuild">
-    <Copy SourceFiles="@(FilesToCopyFoo)" DestinationFolder="$(OutputPath)\$(AssemblyName).app\Contents\MonoBundle\foo" />
-    <Copy SourceFiles="@(FilesToCopyFooBar)" DestinationFolder="$(OutputPath)\$(AssemblyName).app\Contents\MonoBundle\foo\foobar" />
-  </Target>
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.IO.Compression.FileSystem\Test\resources\foo\bar.txt">
+      <Link>Test\resources\foo\bar.txt</Link>
+      <LogicalName>Test/resources/foo/bar.txt</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.IO.Compression.FileSystem\Test\resources\foo\foo.txt">
+      <Link>Test\resources\foo\foo.txt</Link>
+      <LogicalName>Test/resources/foo/foo.txt</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.IO.Compression.FileSystem\Test\resources\foo\foobar\bar.txt">
+      <Link>Test\resources\foo\foobar\bar.txt</Link>
+      <LogicalName>Test/resources/foo/foobar/bar.txt</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.IO.Compression.FileSystem\Test\resources\foo\foobar\foo.txt">
+      <Link>Test\resources\foo\foobar\foo.txt</Link>
+      <LogicalName>Test/resources/foo/foobar/foo.txt</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

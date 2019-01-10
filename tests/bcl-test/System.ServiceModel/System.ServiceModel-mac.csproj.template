@@ -88,12 +88,12 @@
 #FILES#
   </ItemGroup>
   <ItemGroup>
-    <FilesToCopyChannels Include="..\..\..\external\mono\mcs\class\System.ServiceModel\Test\System.ServiceModel.Channels\soap-fault.xml" />
-    <FilesToCopyChannels Include="..\..\..\external\mono\mcs\class\System.ServiceModel\Test\System.ServiceModel.Channels\soap-fault-incomplete.xml" />
-    <FilesToCopyChannels Include="..\..\..\external\mono\mcs\class\System.ServiceModel\Test\System.ServiceModel.Channels\soap-fault-incomplete4.xml" />
-    <FilesToCopyResources Include="..\..\..\external\mono\mcs\class\System.ServiceModel\Test\Resources\test.pfx" />
-    <FilesToCopyResources Include="..\..\..\external\mono\mcs\class\System.ServiceModel\Test\Resources\test.cer" />
-    <FilesToCopyXMLFiles Include="..\..\..\external\mono\mcs\class\System.ServiceModel\Test\XmlFiles\one.xml" />
+    <Compile Include="..\..\..\external\mono\mcs\class\test-helpers\TestResourceHelper.cs">
+      <Link>test-helpers\TestResourceHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\external\mono\mcs\class\test-helpers\NetworkHelpers.cs">
+      <Link>test-helpers\NetworkHelpers.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\external\guiunit\src\framework\GuiUnit_NET_4_5.csproj">
@@ -102,9 +102,30 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
-  <Target Name="AfterBuild">
-    <Copy SourceFiles="@(FilesToCopyChannels)" DestinationFolder="$(OutputPath)\$(AssemblyName).app\Contents\MonoBundle\Test\System.ServiceModel.Channels" />
-    <Copy SourceFiles="@(FilesToCopyResources)" DestinationFolder="$(OutputPath)\$(AssemblyName).app\Contents\MonoBundle\Test\Resources" />
-    <Copy SourceFiles="@(FilesToCopyXMLFiles)" DestinationFolder="$(OutputPath)\$(AssemblyName).app\Contents\MonoBundle\Test\XmlFiles" />
-  </Target>
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.ServiceModel\Test\Resources\soap-fault.xml">
+      <Link>Test\Resources\soap-fault.xml</Link>
+      <LogicalName>Test/Resources/soap-fault.xml</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.ServiceModel\Test\Resources\soap-fault-incomplete.xml">
+      <Link>Test\Resources\soap-fault-incomplete.xml</Link>
+      <LogicalName>Test/Resources/soap-fault-incomplete.xml</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.ServiceModel\Test\Resources\soap-fault-incomplete4.xml">
+      <Link>Test\Resources\soap-fault-incomplete4.xml</Link>
+      <LogicalName>Test/Resources/soap-fault-incomplete4.xml</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.ServiceModel\Test\Resources\test.pfx">
+      <Link>Test\Resources\test.pfx</Link>
+      <LogicalName>Test/Resources/test.pfx</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.ServiceModel\Test\Resources\test.cer">
+      <Link>Test\Resources\test.cer</Link>
+      <LogicalName>Test/Resources/test.cer</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.ServiceModel\Test\Resources\one.xml">
+      <Link>Test\Resources\one.xml</Link>
+      <LogicalName>Test/Resources/one.xml</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

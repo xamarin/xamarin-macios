@@ -167,19 +167,10 @@
   <ItemGroup>
 #FILES#
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
-    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\corlib\Test\resources\Resources.es-ES.resx">
-      <Link>Resources\Resources.es-ES.resx</Link>
-      <LogicalName>Resources.es-ES.resources</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\corlib\Test\resources\Resources.nn-NO.resx">
-      <Link>Resources\Resources.nn-NO.resx</Link>
-      <LogicalName>Resources.nn-NO.resources</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\corlib\Test\resources\Resources.resx">
-      <Link>Resources\Resources.resx</Link>
-      <LogicalName>Resources.resources</LogicalName>
-    </EmbeddedResource>
+    <Compile Include="..\..\..\external\mono\mcs\class\test-helpers\TestResourceHelper.cs">
+      <Link>test-helpers\TestResourceHelper.cs</Link>
+    </Compile>
   </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

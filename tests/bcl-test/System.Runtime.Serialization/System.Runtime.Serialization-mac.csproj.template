@@ -75,135 +75,183 @@
 #FILES#
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\System.Runtime.Serialization\one.xml">
-      <Link>Test/System.Runtime.Serialization/one.xml</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns0.xsd">
+    <Compile Include="..\..\..\external\mono\mcs\class\test-helpers\TestResourceHelper.cs">
+      <Link>test-helpers\TestResourceHelper.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\one.xml">
+      <Link>Test/Resources/one.xml</Link>
+      <LogicalName>Test/Resources/one.xml</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns0.xsd">
       <Link>Test/Resources/Schemas/ns0.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns1.xsd">
+      <LogicalName>Test/Resources/Schemas/ns0.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns1.xsd">
       <Link>Test/Resources/Schemas/ns1.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns10.xsd">
+      <LogicalName>Test/Resources/Schemas/ns1.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns10.xsd">
       <Link>Test/Resources/Schemas/ns10.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns11.xsd">
+      <LogicalName>Test/Resources/Schemas/ns10.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns11.xsd">
       <Link>Test/Resources/Schemas/ns11.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns12.xsd">
+      <LogicalName>Test/Resources/Schemas/ns11.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns12.xsd">
       <Link>Test/Resources/Schemas/ns12.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns13.xsd">
+      <LogicalName>Test/Resources/Schemas/ns12.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns13.xsd">
       <Link>Test/Resources/Schemas/ns13.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns14.xsd">
+      <LogicalName>Test/Resources/Schemas/ns13.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns14.xsd">
       <Link>Test/Resources/Schemas/ns14.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns15.xsd">
+      <LogicalName>Test/Resources/Schemas/ns14.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns15.xsd">
       <Link>Test/Resources/Schemas/ns15.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns16.xsd">
+      <LogicalName>Test/Resources/Schemas/ns15.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns16.xsd">
       <Link>Test/Resources/Schemas/ns16.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns17.xsd">
+      <LogicalName>Test/Resources/Schemas/ns16.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns17.xsd">
       <Link>Test/Resources/Schemas/ns17.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns18.xsd">
+      <LogicalName>Test/Resources/Schemas/ns17.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns18.xsd">
       <Link>Test/Resources/Schemas/ns18.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns19.xsd">
+      <LogicalName>Test/Resources/Schemas/ns18.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns19.xsd">
       <Link>Test/Resources/Schemas/ns19.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns2.xsd">
+      <LogicalName>Test/Resources/Schemas/ns19.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns2.xsd">
       <Link>Test/Resources/Schemas/ns2.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns20.xsd">
+      <LogicalName>Test/Resources/Schemas/ns2.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns20.xsd">
       <Link>Test/Resources/Schemas/ns20.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns21.xsd">
+      <LogicalName>Test/Resources/Schemas/ns20.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns21.xsd">
       <Link>Test/Resources/Schemas/ns21.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns22.xsd">
+      <LogicalName>Test/Resources/Schemas/ns21.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns22.xsd">
       <Link>Test/Resources/Schemas/ns22.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns23.xsd">
+      <LogicalName>Test/Resources/Schemas/ns22.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns23.xsd">
       <Link>Test/Resources/Schemas/ns23.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns24.xsd">
+      <LogicalName>Test/Resources/Schemas/ns23.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns24.xsd">
       <Link>Test/Resources/Schemas/ns24.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns25.xsd">
+      <LogicalName>Test/Resources/Schemas/ns24.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns25.xsd">
       <Link>Test/Resources/Schemas/ns25.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns26.xsd">
+      <LogicalName>Test/Resources/Schemas/ns25.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns26.xsd">
       <Link>Test/Resources/Schemas/ns26.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns27.xsd">
+      <LogicalName>Test/Resources/Schemas/ns26.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns27.xsd">
       <Link>Test/Resources/Schemas/ns27.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns28.xsd">
+      <LogicalName>Test/Resources/Schemas/ns27.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns28.xsd">
       <Link>Test/Resources/Schemas/ns28.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns29.xsd">
+      <LogicalName>Test/Resources/Schemas/ns28.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns29.xsd">
       <Link>Test/Resources/Schemas/ns29.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns3.xsd">
+      <LogicalName>Test/Resources/Schemas/ns29.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns3.xsd">
       <Link>Test/Resources/Schemas/ns3.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns30.xsd">
+      <LogicalName>Test/Resources/Schemas/ns3.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns30.xsd">
       <Link>Test/Resources/Schemas/ns30.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns31.xsd">
+      <LogicalName>Test/Resources/Schemas/ns30.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns31.xsd">
       <Link>Test/Resources/Schemas/ns31.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns32.xsd">
+      <LogicalName>Test/Resources/Schemas/ns31.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns32.xsd">
       <Link>Test/Resources/Schemas/ns32.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns33.xsd">
+      <LogicalName>Test/Resources/Schemas/ns32.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns33.xsd">
       <Link>Test/Resources/Schemas/ns33.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns34.xsd">
+      <LogicalName>Test/Resources/Schemas/ns33.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns34.xsd">
       <Link>Test/Resources/Schemas/ns34.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns34_2.xsd">
+      <LogicalName>Test/Resources/Schemas/ns34.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns34_2.xsd">
       <Link>Test/Resources/Schemas/ns34_2.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns4.xsd">
+      <LogicalName>Test/Resources/Schemas/ns34_2.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns4.xsd">
       <Link>Test/Resources/Schemas/ns4.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns5.xsd">
+      <LogicalName>Test/Resources/Schemas/ns4.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns5.xsd">
       <Link>Test/Resources/Schemas/ns5.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns6.xsd">
+      <LogicalName>Test/Resources/Schemas/ns5.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns6.xsd">
       <Link>Test/Resources/Schemas/ns6.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns7.xsd">
+      <LogicalName>Test/Resources/Schemas/ns6.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns7.xsd">
       <Link>Test/Resources/Schemas/ns7.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns8.xsd">
+      <LogicalName>Test/Resources/Schemas/ns7.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns8.xsd">
       <Link>Test/Resources/Schemas/ns8.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns9.xsd">
+      <LogicalName>Test/Resources/Schemas/ns8.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\ns9.xsd">
       <Link>Test/Resources/Schemas/ns9.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\schema1.xsd">
+      <LogicalName>Test/Resources/Schemas/ns9.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\schema1.xsd">
       <Link>Test/Resources/Schemas/schema1.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\schema2.xsd">
+      <LogicalName>Test/Resources/Schemas/schema1.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\schema2.xsd">
       <Link>Test/Resources/Schemas/schema2.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\schema3.xsd">
+      <LogicalName>Test/Resources/Schemas/schema2.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\schema3.xsd">
       <Link>Test/Resources/Schemas/schema3.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\xml.xsd">
+      <LogicalName>Test/Resources/Schemas/schema3.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\Schemas\xml.xsd">
       <Link>Test/Resources/Schemas/xml.xsd</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\WSDL\collections.wsdl">
+      <LogicalName>Test/Resources/Schemas/xml.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\WSDL\collections.wsdl">
       <Link>Test/Resources/Schemas/collections.wsdl</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\WSDL\custom-collections.wsdl">
-      <Link>Test/Resources/Schemas/collections.wsdl</Link>
-    </BundleResource>
+      <LogicalName>Test/Resources/Schemas/collections.wsdl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Runtime.Serialization\Test\Resources\WSDL\custom-collections.wsdl">
+      <Link>Test/Resources/Schemas/custom-collections.wsdl</Link>
+      <LogicalName>Test/Resources/Schemas/custom-collections.wsdl</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\external\guiunit\src\framework\GuiUnit_NET_4_5.csproj">
