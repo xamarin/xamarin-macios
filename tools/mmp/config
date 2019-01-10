@@ -26,5 +26,5 @@
 		<dllentry dll="__Internal" name="ZeroMemory" target="mono_win32_compat_ZeroMemory"/>
 	</dllmap>
 	<dllmap dll="System.Native" target="mono-native"/>
-	<dllmap dll="System.Security.Cryptography.Apple" target="mono-native"/>
+	<dllmap dll="System.Security.Cryptography.Native.Apple" target="mono-native"/>
 </configuration>
