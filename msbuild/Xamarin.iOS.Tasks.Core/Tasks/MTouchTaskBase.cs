@@ -24,6 +24,7 @@ namespace Xamarin.iOS.Tasks
 		ARMv7s       = 16,
 		ARMv7k       = 32,
 		ARM64        = 64,
+		ARM64_32     = 128,
 
 		// Note: needed for backwards compatability
 		ARMv6_ARMv7  = ARMv6 | ARMv7,
@@ -486,6 +487,9 @@ namespace Xamarin.iOS.Tasks
 
 				if (architectures.HasFlag (TargetArchitecture.ARMv7k))
 					abi += (abi.Length > 0 ? "," : "") + "armv7k" + llvm;
+
+				if (architectures.HasFlag (TargetArchitecture.ARM64_32))
+					abi += (abi.Length > 0 ? "," : "") + "arm64_32" + llvm;
 
 				if (string.IsNullOrEmpty (abi))
 					abi = "armv7" + llvm + thumb;

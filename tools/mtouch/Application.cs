@@ -702,6 +702,8 @@ namespace Xamarin.Bundler {
 				if (IsDeviceBuild) {
 					validAbis.Add (Abi.ARMv7k);
 					validAbis.Add (Abi.ARMv7k | Abi.LLVM);
+					validAbis.Add (Abi.ARM64_32);
+					validAbis.Add (Abi.ARM64_32 | Abi.LLVM);
 				} else {
 					validAbis.Add (Abi.i386);
 				}
@@ -773,6 +775,12 @@ namespace Xamarin.Bundler {
 				case "arm64+llvm":
 					value = Abi.ARM64 | Abi.LLVM;
 					break;
+				case "arm64_32":
+					value = Abi.ARM64_32;
+					break;
+				case "arm64_32+llvm":
+					value = Abi.ARM64_32 | Abi.LLVM;
+					break;
 				case "armv7k":
 					value = Abi.ARMv7k;
 					break;
@@ -780,7 +788,7 @@ namespace Xamarin.Bundler {
 					value = Abi.ARMv7k | Abi.LLVM;
 					break;
 				default:
-					throw new MonoTouchException (15, true, "Invalid ABI: {0}. Supported ABIs are: i386, x86_64, armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, armv7k, armv7k+llvm, arm64 and arm64+llvm.", str);
+					throw new MonoTouchException (15, true, "Invalid ABI: {0}. Supported ABIs are: i386, x86_64, armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, armv7k, armv7k+llvm, arm64, arm64+llvm, arm64_32 and arm64_32+llvm.", str);
 				}
 
 				// merge this value with any existing ARMv? already specified.
