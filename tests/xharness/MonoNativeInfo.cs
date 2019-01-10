@@ -167,7 +167,7 @@ namespace xharness
 
 			Convert (inputProject);
 
-			Console.Error.WriteLine ($"CONVERT: {Harness.Mac} {ProjectPath}");
+			Console.Error.WriteLine ($"CONVERT: Mac: {Harness.Mac}, Project: {ProjectPath}");
 
 			Harness.Save (inputProject, ProjectPath);
 		}
