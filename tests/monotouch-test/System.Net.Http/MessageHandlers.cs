@@ -13,6 +13,8 @@ using System.Linq;
 using System.IO;
 
 using NUnit.Framework;
+using System.Net.Http.Headers;
+using System.Text;
 #if MONOMAC
 using Foundation;
 #endif
@@ -110,5 +112,47 @@ namespace MonoTests.System.Net.Http
 		}
 #endif
 
+		// ensure that if we have a redirect, we do not have the auth headers in the following requests
+#if !__WATCHOS__
+		[TestCase (typeof (HttpClientHandler))]
+		[TestCase (typeof (CFNetworkHandler))]
+#endif
+		[TestCase (typeof (NSUrlSessionHandler))]
+		public void RedirectionWithAuthorizationHeaders (Type handlerType)
+		{
+
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false); 
+
+			bool containsAuthorizarion = false;
+			bool containsHeaders = false;
+			string json = "";
+			bool done = false;
+			Exception ex = null;
+
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () =>
+			{
+				try {
+					HttpClient client = new HttpClient (GetHandler (handlerType));
+					client.BaseAddress = new Uri ("https://httpbin.org");
+					var byteArray = new UTF8Encoding ().GetBytes ("username:password");
+					client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue ("Basic", Convert.ToBase64String(byteArray));
+					var result = await client.GetAsync ("https://httpbin.org/redirect/3");
+					// get the data returned from httpbin which contains the details of the requested performed.
+					json = await result.Content.ReadAsStringAsync ();
+					containsAuthorizarion = json.Contains ("Authorization");
+					containsHeaders = json.Contains ("headers");  // ensure we do have the headers in the response
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					done = true;
+				}
+			}, () => done);
+
+			Assert.IsTrue (done, "Request timedout.");
+			Assert.IsTrue (containsHeaders, "Request did not reach final destination.");
+			Assert.IsFalse (containsAuthorizarion, $"Authorization header did reach the final destination. {json}");
+			Assert.IsNull (ex, $"Exception {ex} for {json}");
+		}
 	}
 }
