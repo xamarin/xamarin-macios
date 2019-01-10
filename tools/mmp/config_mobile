@@ -13,4 +13,5 @@
 	</dllmap>
 	<dllmap dll="System.Native" target="mono-native"/>
 	<dllmap dll="System.Security.Cryptography.Native.Apple" target="mono-native"/>
+	<dllmap dll="System.Net.Security.Native" target="mono-native"/>
 </configuration>
