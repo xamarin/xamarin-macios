@@ -88,6 +88,7 @@ namespace xharness
 		public string IOS_DESTDIR { get; set; }
 		public string MONO_SDK_DESTDIR { get; set; }
 		public bool IncludeMac32 { get; set; }
+		public bool ENABLE_XAMARIN { get; set; }
 
 		// Run
 		public AppRunnerTarget Target { get; set; }
@@ -227,6 +228,7 @@ namespace xharness
 			if (string.IsNullOrEmpty (SdkRoot94))
 				SdkRoot94 = make_config ["XCODE94_DEVELOPER_ROOT"];
 			MONO_SDK_DESTDIR = make_config ["MONO_SDK_DESTDIR"];
+			ENABLE_XAMARIN = make_config.ContainsKey ("ENABLE_XAMARIN") && !string.IsNullOrEmpty (make_config ["ENABLE_XAMARIN"]);
 		}
 		 
 		void AutoConfigureMac ()

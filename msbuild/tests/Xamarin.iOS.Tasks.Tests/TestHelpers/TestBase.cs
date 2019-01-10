@@ -342,9 +342,7 @@ namespace Xamarin.iOS.Tasks
 			get {
 				if (!is_apfs.HasValue) {
 					var exit_code = ExecutionHelper.Execute ("/bin/df", "-t apfs /", out var output, TimeSpan.FromSeconds (10));
-					if (exit_code != 0)
-						throw new Exception ($"Could not determine whether / is APFS or not. 'df -t apfs /' returned {exit_code} and said: {output}");
-					is_apfs = output.Trim ().Split ('\n').Length >= 2;
+					is_apfs = exit_code == 0 && output.Trim ().Split ('\n').Length >= 2;
 				}
 				return is_apfs.Value;
 			}
