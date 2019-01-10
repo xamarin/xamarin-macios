@@ -120,7 +120,9 @@ namespace MonoTests.System.Net.Http
 		[TestCase (typeof (NSUrlSessionHandler))]
 		public void RedirectionWithAuthorizationHeaders (Type handlerType)
 		{
-			PrintHandlerToTest ();
+
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false); 
 
 			bool containsAuthorizarion = false;
 			bool containsHeaders = false;
@@ -136,7 +138,7 @@ namespace MonoTests.System.Net.Http
 					var byteArray = new UTF8Encoding ().GetBytes ("username:password");
 					client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue ("Basic", Convert.ToBase64String(byteArray));
 					var result = await client.GetAsync ("https://httpbin.org/redirect/3");
-					// get the data returned from httbin which contains the details of the requested performed.
+					// get the data returned from httpbin which contains the details of the requested performed.
 					json = await result.Content.ReadAsStringAsync ();
 					containsAuthorizarion = json.Contains ("Authorization");
 					containsHeaders = json.Contains ("headers");  // ensure we do have the headers in the response
