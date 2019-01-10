@@ -93,6 +93,7 @@ test.config: Makefile $(TOP)/Make.config
 	@echo "INCLUDE_DEVICE=$(INCLUDE_DEVICE)" >> $@
 	@echo "XCODE_DEVELOPER_ROOT=$(XCODE_DEVELOPER_ROOT)" >> $@
 	@echo "MONO_SDK_DESTDIR=$(MONO_SDK_DESTDIR)" >> $@
+	@echo "ENABLE_XAMARIN=$(ENABLE_XAMARIN)" >> $@
 
 test-system.config:
 	@rm -f $@

@@ -115,14 +115,12 @@ namespace BCLTestImporter {
 		static readonly List <string> CommonIgnoredAssemblies = new List <string> {
 			"monotouch_System.Security_xunit-test.dll",// issue https://github.com/xamarin/maccore/issues/1128
 			"monotouch_System.Threading.Tasks.Dataflow_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1132
-			"monotouch_System.Xml_test.dll", // issue https://github.com/xamarin/maccore/issues/1133
 			"monotouch_System.Transactions_test.dll", // issue https://github.com/xamarin/maccore/issues/1134
 			"monotouch_System_test.dll", // issues https://github.com/xamarin/maccore/issues/1135
 			"monotouch_System.ServiceModel_test.dll", // issue https://github.com/xamarin/maccore/issues/1138
 			"monotouch_System.Security_test.dll", // issue https://github.com/xamarin/maccore/issues/1139
 			"monotouch_System.Runtime.Serialization.Formatters.Soap_test.dll", // issue https://github.com/xamarin/maccore/issues/1140
 			"monotouch_System.Net.Http_test.dll", // issue https://github.com/xamarin/maccore/issues/1144 and https://github.com/xamarin/maccore/issues/1145
-			"monotouch_System.IO.Compression_test.dll", // issue https://github.com/xamarin/maccore/issues/1146
 			"monotouch_System.Data_test.dll", // issue https://github.com/xamarin/maccore/issues/1149
 			"monotouch_System.Data.DataSetExtensions_test.dll", // issue https://github.com/xamarin/maccore/issues/1150 and https://github.com/xamarin/maccore/issues/1151
 			"monotouch_System.Core_test.dll", // issue https://github.com/xamarin/maccore/issues/1143

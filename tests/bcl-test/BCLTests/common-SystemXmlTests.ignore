@@ -1,0 +1,1125 @@
+# Expected string length 12 but was 62. Strings differ at index 0.
+#  Expected: "Roger\n Jones"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.TextTest.core0001T
+
+# Expected string length 37 but was 62. Strings differ at index 0.
+#  Expected: "1900 Dallas Road Dallas, Texas\n 98554"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.TextTest.core0002T
+
+# System.InvalidOperationException : Cannot import a null node.
+nist_dom.fundamental.TextTest.core0003T
+nist_dom.fundamental.TextTest.core0004T
+nist_dom.fundamental.TextTest.core0005T
+nist_dom.fundamental.TextTest.core0006T
+nist_dom.fundamental.TextTest.core0007T
+nist_dom.fundamental.TextTest.core0008T
+nist_dom.fundamental.NodeTest.core0092NO
+nist_dom.fundamental.NodeTest.core0093NO
+nist_dom.fundamental.NodeTest.core0094NO
+nist_dom.fundamental.NodeTest.core0095NO
+nist_dom.fundamental.NodeTest.core0096NO
+nist_dom.fundamental.NodeTest.core0097NO
+nist_dom.fundamental.NodeTest.core0098NO
+nist_dom.fundamental.NodeTest.core0099NO
+nist_dom.fundamental.NodeTest.core0100NO
+nist_dom.fundamental.NodeTest.core0101NO
+nist_dom.fundamental.NodeTest.core0102NO
+nist_dom.fundamental.NodeTest.core0103NO
+nist_dom.fundamental.NodeTest.core0083NO
+nist_dom.fundamental.NodeTest.core0077NO
+nist_dom.fundamental.NodeTest.core0076NO
+nist_dom.fundamental.NodeTest.core0075NO
+nist_dom.fundamental.NodeTest.core0074NO
+nist_dom.fundamental.NodeTest.core0073NO
+nist_dom.fundamental.NodeTest.core0072NO
+nist_dom.fundamental.NodeTest.core0071NO
+nist_dom.fundamental.NodeTest.core0070NO
+nist_dom.fundamental.NodeTest.core0069NO
+nist_dom.fundamental.NodeTest.core0068NO
+nist_dom.fundamental.NodeTest.core0067NO
+nist_dom.fundamental.NodeTest.core0065NO
+nist_dom.fundamental.NodeTest.core0050NO
+nist_dom.fundamental.NamedNodeMapTest.core0021M
+nist_dom.fundamental.NamedNodeMapTest.core0011M
+nist_dom.fundamental.NamedNodeMapTest.core0010M
+nist_dom.fundamental.NamedNodeMapTest.core0007M
+nist_dom.fundamental.NamedNodeMapTest.core0006M
+nist_dom.fundamental.NamedNodeMapTest.core0005M
+nist_dom.fundamental.NamedNodeMapTest.core0004M
+nist_dom.fundamental.ElementTest.core0029E
+nist_dom.fundamental.ElementTest.core0022E
+nist_dom.fundamental.ElementTest.core0017E
+nist_dom.fundamental.ElementTest.core0015E
+nist_dom.fundamental.ElementTest.core0013E
+nist_dom.fundamental.ElementTest.core0012E
+nist_dom.fundamental.ElementTest.core0011E
+nist_dom.fundamental.ElementTest.core0007E
+nist_dom.fundamental.ElementTest.core0006E
+nist_dom.fundamental.ElementTest.core0005E
+nist_dom.fundamental.DocumentTest.core0025D
+nist_dom.fundamental.DocumentTest.core0024D
+nist_dom.fundamental.DocumentTest.core0023D
+nist_dom.fundamental.DocumentTest.core0018D
+nist_dom.fundamental.DocumentTest.core0017D
+nist_dom.fundamental.DocumentTest.core0016D
+nist_dom.fundamental.DocumentTest.core0015D
+nist_dom.fundamental.DocumentTest.core0014D
+nist_dom.fundamental.DocumentTest.core0013D
+nist_dom.fundamental.DocumentTest.core0012D
+nist_dom.fundamental.DocumentTest.core0011D
+nist_dom.fundamental.DocumentTest.core0010D
+nist_dom.fundamental.DocumentTest.core0009D
+nist_dom.fundamental.DocumentTest.core0008D
+nist_dom.fundamental.DocumentTest.core0007D
+nist_dom.fundamental.CharacterDataTest.core0036C
+nist_dom.fundamental.CharacterDataTest.core0035C
+nist_dom.fundamental.CharacterDataTest.core0034C
+nist_dom.fundamental.CharacterDataTest.core0033C
+nist_dom.fundamental.CharacterDataTest.core0032C
+nist_dom.fundamental.CharacterDataTest.core0031C
+nist_dom.fundamental.CharacterDataTest.core0030C
+nist_dom.fundamental.CharacterDataTest.core0029C
+nist_dom.fundamental.CharacterDataTest.core0020C
+nist_dom.fundamental.CharacterDataTest.core0019C
+nist_dom.fundamental.CharacterDataTest.core0018C
+nist_dom.fundamental.CharacterDataTest.core0017C
+nist_dom.fundamental.CharacterDataTest.core0016C
+nist_dom.fundamental.CharacterDataTest.core0015C
+nist_dom.fundamental.CharacterDataTest.core0014C
+nist_dom.fundamental.CharacterDataTest.core0013C
+nist_dom.fundamental.CharacterDataTest.core0012C
+nist_dom.fundamental.CharacterDataTest.core0011C
+nist_dom.fundamental.CharacterDataTest.core0010C
+nist_dom.fundamental.CharacterDataTest.core0009C
+nist_dom.fundamental.CharacterDataTest.core0008C
+nist_dom.fundamental.CharacterDataTest.core0007C
+nist_dom.fundamental.CharacterDataTest.core0006C
+nist_dom.fundamental.AttrTest.core0004A
+
+
+# Expected string length 0 but was 62. Strings differ at index 0.
+#  Expected: <string.Empty>
+#  But was:  "Exception Object reference not set to an instance of an object" 
+nist_dom.fundamental.NodeTest.core0086NO
+nist_dom.fundamental.NodeTest.core0085NO
+nist_dom.fundamental.NodeTest.core0084NO
+nist_dom.fundamental.NodeTest.core0082NO
+nist_dom.fundamental.NodeTest.core0081NO
+nist_dom.fundamental.NodeTest.core0080NO
+nist_dom.fundamental.NodeTest.core0061NO
+nist_dom.fundamental.NodeTest.core0060NO
+nist_dom.fundamental.NodeTest.core0037NO
+
+
+# System.NullReferenceException : Object reference not set to an instance of an object
+nist_dom.fundamental.NodeTest.core0079NO
+nist_dom.fundamental.NodeTest.core0078NO
+nist_dom.fundamental.NodeTest.core0066NO
+nist_dom.fundamental.NodeTest.core0063NO
+nist_dom.fundamental.NodeTest.core0057NO
+nist_dom.fundamental.NodeTest.core0055NO
+nist_dom.fundamental.NodeTest.core0054NO
+nist_dom.fundamental.NodeTest.core0052NO
+nist_dom.fundamental.NodeTest.core0051NO
+nist_dom.fundamental.NodeTest.core0046NO
+nist_dom.fundamental.NodeTest.core0044NO
+nist_dom.fundamental.NodeTest.core0043NO
+nist_dom.fundamental.NodeTest.core0042NO
+nist_dom.fundamental.NodeTest.core0034NO
+nist_dom.fundamental.NodeTest.core0032NO
+nist_dom.fundamental.NodeTest.core0031NO
+nist_dom.fundamental.NodeTest.core0030NO
+nist_dom.fundamental.NodeTest.core0025NO
+nist_dom.fundamental.NodeTest.core0022NO
+nist_dom.fundamental.NodeTest.core0020NO
+nist_dom.fundamental.NodeTest.core0019NO
+nist_dom.fundamental.NodeTest.core0018NO
+nist_dom.fundamental.NodeTest.core0013NO
+nist_dom.fundamental.NodeTest.core0010NO
+nist_dom.fundamental.NodeTest.core0008NO
+nist_dom.fundamental.NodeTest.core0007NO
+nist_dom.fundamental.NodeTest.core0006NO
+nist_dom.fundamental.NodeTest.core0001NO
+nist_dom.fundamental.ElementTest.core0021E
+nist_dom.fundamental.ElementTest.core0020E
+nist_dom.fundamental.ElementTest.core0019E
+nist_dom.fundamental.ElementTest.core0018E
+nist_dom.fundamental.DocumentTest.core0005D
+nist_dom.fundamental.DocumentTest.core0001D
+nist_dom.fundamental.CommentTest.core0001CO
+
+# Expected string length 4 but was 5. Strings differ at index 0.
+#  Expected: "True"
+#  But was:  "False"
+nist_dom.fundamental.NodeTest.core0062NO
+nist_dom.fundamental.NodeTest.core0058NO
+nist_dom.fundamental.NodeTest.core0056NO
+nist_dom.fundamental.NodeTest.core0048NO
+nist_dom.fundamental.NodeTest.core0041NO
+nist_dom.fundamental.NodeTest.core0040NO
+nist_dom.fundamental.NodeTest.core0039NO
+nist_dom.fundamental.NodeTest.core0038NO
+nist_dom.fundamental.NodeTest.core0036NO
+nist_dom.fundamental.NodeTest.core0029NO
+nist_dom.fundamental.NodeTest.core0006N
+nist_dom.fundamental.NodeTest.core0005N
+nist_dom.fundamental.NodeListTest.core0005N
+nist_dom.fundamental.NodeListTest.core0006N
+nist_dom.fundamental.NamedNodeMapTest.core0015M
+nist_dom.fundamental.NamedNodeMapTest.core0014M
+nist_dom.fundamental.NamedNodeMapTest.core0003M
+nist_dom.fundamental.ElementTest.core0010E
+nist_dom.fundamental.AttrTest.core0003A
+nist_dom.fundamental.AttrTest.core0002A
+nist_dom.fundamental.AttrTest.core0001A
+
+# Expected string length 10 but was 62. Strings differ at index 0.
+#  Expected: "employeeId"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NodeTest.core0059NO
+
+# Expected string length 1 but was 62. Strings differ at index 0.
+#  Expected: "0"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NodeTest.core0053NO
+
+# Expected string length 5 but was 62. Strings differ at index 0.
+#  Expected: "staff"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NodeTest.core0049NO
+
+# Expected string length 59 but was 62. Strings differ at index 0.
+#  Expected: "This is a CDATASection with EntityReference number 2 &ent2;"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NodeTest.core0028NO
+
+# Expected string length 35 but was 62. Strings differ at index 0.
+#  Expected: "1230 North Ave. Dallas, Texas 98551"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NodeTest.core0027NO
+
+# Expected string length 3 but was 62. Strings differ at index 0.
+#  Expected: "Yes"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NodeTest.core0026NO
+
+# Expected string length 9 but was 62. Strings differ at index 0.
+#  Expected: "notation1"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NodeTest.core0024NO
+
+# Expected string length 4 but was 62. Strings differ at index 0.
+#  Expected: "ent2"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NodeTest.core0017NO
+
+# Expected string length 14 but was 62. Strings differ at index 0.
+#  Expected: "#cdata-section"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NodeTest.core0016NO
+
+# Expected string length 5 but was 62. Strings differ at index 0.
+#  Expected: "#text"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NodeTest.core0015NO
+
+# Expected string length 8 but was 62. Strings differ at index 0.
+#  Expected: "domestic"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NodeTest.core0014NO
+
+#  Expected string length 2 but was 62. Strings differ at index 0.
+#  Expected: "12"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NodeTest.core0012NO
+
+# Expected string length 15 but was 62. Strings differ at index 1.
+#  Expected: "EntityReference"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NodeTest.core0005NO
+
+#  Expected string length 1 but was 62. Strings differ at index 0.
+#  Expected: "4"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NodeTest.core0004NO
+
+#  Expected string length 1 but was 62. Strings differ at index 0.
+#  Expected: "3"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NodeTest.core0003NO
+
+# Expected string length 1 but was 62. Strings differ at index 0.
+#  Expected: "2"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NodeTest.core0002NO
+
+# Expected string length 47 but was 62. Strings differ at index 0.
+#  Expected: "employeeId name position salary gender address "
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NodeTest.core0009N
+
+# Expected string length 1 but was 62. Strings differ at index 0.
+#  Expected: "0"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NodeTest.core0008N
+
+# Expected string length 1 but was 62. Strings differ at index 0.
+#  Expected: "6"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NodeTest.core0007N
+
+# Expected string length 7 but was 62. Strings differ at index 0.
+#  Expected: "address"
+#  But was:  "Exception Object reference not set to an instance of an object" 
+nist_dom.fundamental.NodeTest.core0004N 
+
+# Expected string length 10 but was 62. Strings differ at index 0.
+#  Expected: "employeeId"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NodeTest.core0003N 
+
+# Expected string length 6 but was 62. Strings differ at index 0.
+#  Expected: "salary"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NodeTest.core0002N
+
+# Expected string length 10 but was 62. Strings differ at index 0.
+#  Expected: "employeeId"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NodeTest.core0001N
+
+# Expected string length 47 but was 62. Strings differ at index 0.
+#  Expected: "employeeId name position salary gender address "
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NodeListTest.core0009N
+
+# Expected string length 1 but was 62. Strings differ at index 0.
+#  Expected: "0"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NodeListTest.core0008N
+
+# Expected string length 1 but was 62. Strings differ at index 0.
+#  Expected: "6"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NodeListTest.core0007N
+
+# Expected string length 7 but was 62. Strings differ at index 0.
+#  Expected: "address"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NodeListTest.core0004N
+
+# Expected string length 10 but was 62. Strings differ at index 0.
+#  Expected: "employeeId"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NodeListTest.core0003N
+
+# Expected string length 6 but was 62. Strings differ at index 0.
+#  Expected: "salary"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NodeListTest.core0002N
+
+# Expected string length 10 but was 62. Strings differ at index 0.
+#  Expected: "employeeId"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NodeListTest.core0001N
+
+# Expected string length 4 but was 62. Strings differ at index 0.
+#  Expected: "0 1 "
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NamedNodeMapTest.core0017M
+
+# Expected string length 1 but was 62. Strings differ at index 0.
+#  Expected: "2"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NamedNodeMapTest.core0016M 
+
+# Expected string length 6 but was 62. Strings differ at index 0.
+#  Expected: "street"
+#  But was:  "Exception Object reference not set to an instance of an object" 
+nist_dom.fundamental.NamedNodeMapTest.core0013M
+
+# Expected string length 8 but was 62. Strings differ at index 0.
+#  Expected: "domestic"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NamedNodeMapTest.core0012M
+
+# Expected string length 6 but was 62. Strings differ at index 0.
+#  Expected: "street"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NamedNodeMapTest.core0002M
+
+# Expected string length 8 but was 62. Strings differ at index 0.
+#  Expected: "domestic"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.NamedNodeMapTest.core0001M
+
+# Expected string length 8 but was 62. Strings differ at index 0.
+#  Expected: "domestic"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.ElementTest.core0009E
+
+# Expected string length 2 but was 62. Strings differ at index 0.
+#  Expected: "No"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.ElementTest.core0004E
+
+# Expected string length 8 but was 62. Strings differ at index 0.
+#  Expected: "position"
+#  But was:  "Exception Object reference not set to an instance of an object" 
+nist_dom.fundamental.ElementTest.core0003E
+
+# Expected string length 4 but was 62. Strings differ at index 0.
+#  Expected: "True"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.ElementTest.core0001E
+
+# xpected string length 34 but was 62. Strings differ at index 0.
+#  Expected: "System.ArgumentOutOfRangeException"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.CharacterDataTest.core0028C
+
+# Expected string length 34 but was 62. Strings differ at index 0.
+#  Expected: "System.ArgumentOutOfRangeException"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.CharacterDataTest.core0027C
+
+# Expected string length 34 but was 62. Strings differ at index 0.
+#  Expected: "System.ArgumentOutOfRangeException"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.CharacterDataTest.core0026C
+
+#  Expected string length 6 but was 62. Strings differ at index 0.
+#  Expected: "Martin"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.CharacterDataTest.core0005C
+
+# Expected string length 8 but was 62. Strings differ at index 0.
+#  Expected: "Margaret"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.CharacterDataTest.core0004C
+
+# Expected string length 1 but was 62. Strings differ at index 0.
+#  Expected: "8"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.CharacterDataTest.core0003C
+
+# Expected string length 2 but was 62. Strings differ at index 0.
+#  Expected: "15"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.CharacterDataTest.core0002C
+
+# Expected string length 15 but was 62. Strings differ at index 0.
+#  Expected: "Margaret Martin"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.CharacterDataTest.core0001C
+
+#  Expected string length 7 but was 62. Strings differ at index 0.
+#  Expected: "Y%ent1;"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.AttrTest.core0013A
+
+# Expected string length 3 but was 62. Strings differ at index 0.
+#  Expected: "Yes"
+#  But was:  "Exception Object reference not set to an instance of an object" 
+nist_dom.fundamental.AttrTest.core0012A
+
+# Expected string length 4 but was 62. Strings differ at index 0.
+#  Expected: "True"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.AttrTest.core0010A
+
+# Expected string length 4 but was 62. Strings differ at index 0.
+#  Expected: "True"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.AttrTest.core0008A
+
+# Expected string length 6 but was 62. Strings differ at index 0.
+#  Expected: "street"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.AttrTest.core0007A
+
+# Expected string length 3 but was 62. Strings differ at index 0.
+#  Expected: "Yes"
+#  But was:  "Exception Object reference not set to an instance of an object"
+nist_dom.fundamental.AttrTest.core0005A
+
+# System.InvalidOperationException : There was an error reflecting type 'MonoTests.System.XmlSerialization.XmlSerializerTests+XmlArrayItemUnqualifiedWithNamespace'.
+#  ----> System.InvalidOperationException : There was an error reflecting field 'Sane'.
+#  ----> System.InvalidOperationException : XmlArrayItemAttribute.Form must not be Unqualified when it has an explicit Namespace value.
+MonoTests.System.XmlSerialization.XmlSerializerTests.XmlArrayItemAttributeUnqualifiedWithNamespace
+
+# XmlSerializerTests.XmlArrayAttributeUnqualifiedWithNamespace : System.InvalidOperationException : There was an error reflecting type 'MonoTests.System.XmlSerialization.XmlSerializerTests+XmlArrayUnqualifiedWithNamespace'.
+#  ----> System.InvalidOperationException : There was an error reflecting field 'Sane'.
+#  ----> System.InvalidOperationException : XmlArrayAttribute.Form must not be Unqualified when it has an explicit Namespace value.
+MonoTests.System.XmlSerialization.XmlSerializerTests.XmlArrayAttributeUnqualifiedWithNamespace
+
+# System.InvalidOperationException was expected
+MonoTests.System.XmlSerialization.XmlSerializerTests.TestSerializeXmlNodeArrayIncludesAttribute
+
+# #1
+#  String lengths are both 342. Strings differ at index 72.
+#  Expected: "...imitiveTypesContainer xmlns:xsi='http://www.w3.org/2001/XM..."
+#  But was:  "...imitiveTypesContainer xmlns:xsd='http://www.w3.org/2001/XM..."
+MonoTests.System.XmlSerialization.XmlSerializerTests.TestSerializePrimitiveTypesContainer 
+MonoTests.System.XmlSerialization.XmlSerializerGeneratorTests.XmlSerializerTests.TestSerializePrimitiveTypesContainer
+
+#  Expected string length 169 but was 197. Strings differ at index 58.
+#  Expected: "...='utf-16'?><SimpleEnumeration d1p1:type='SimpleEnumeration..."
+#  But was:  "...='utf-16'?><SimpleEnumeration xmlns:q1='http://www.w3.org/..."
+MonoTests.System.XmlSerialization.XmlSerializerTests.TestSerializeEnumeration_FromValue_Encoded
+
+# #3
+#  Expected string length 162 but was 195. Strings differ at index 57.
+#  Expected: "...g='utf-16'?><EnumDefaultValue d1p1:type='EnumDefaultValue'..."
+#  But was:  "...g='utf-16'?><EnumDefaultValue xmlns:q1='http://www.w3.org/..."
+MonoTests.System.XmlSerialization.XmlSerializerTests.TestSerializeEnumDefaultValue_Encoded
+
+# System.InvalidOperationException was expected
+MonoTests.System.XmlSerialization.XmlSerializerTests.HasFieldSpecifiedButIrrelevant
+
+# System.InvalidOperationException : There was an error reflecting type 'MonoTests.System.XmlSerialization.XmlSerializerTests+XmlArrayItemUnqualifiedWithNamespace'.
+#  ----> System.InvalidOperationException : There was an error reflecting field 'Sane'.
+#  ----> System.InvalidOperationException : XmlArrayItemAttribute.Form must not be Unqualified when it has an explicit Namespace value.
+MonoTests.System.XmlSerialization.XmlSerializerGeneratorTests.XmlSerializerTests.XmlArrayItemAttributeUnqualifiedWithNamespace
+
+#  System.InvalidOperationException : There was an error reflecting type 'MonoTests.System.XmlSerialization.XmlSerializerTests+XmlArrayUnqualifiedWithNamespace'.
+#  ----> System.InvalidOperationException : There was an error reflecting field 'Sane'.
+#  ----> System.InvalidOperationException : XmlArrayAttribute.Form must not be Unqualified when it has an explicit Namespace value.
+MonoTests.System.XmlSerialization.XmlSerializerGeneratorTests.XmlSerializerTests.XmlArrayAttributeUnqualifiedWithNamespace
+
+# System.InvalidOperationException was expected
+MonoTests.System.XmlSerialization.XmlSerializerGeneratorTests.XmlSerializerTests.TestSerializeXmlNodeArrayIncludesAttribute
+
+# Expected string length 169 but was 197. Strings differ at index 58.
+#  Expected: "...='utf-16'?><SimpleEnumeration d1p1:type='SimpleEnumeration..."
+#  But was:  "...='utf-16'?><SimpleEnumeration xmlns:q1='http://www.w3.org/..."
+MonoTests.System.XmlSerialization.XmlSerializerGeneratorTests.XmlSerializerTests.TestSerializeEnumeration_FromValue_Encoded
+
+#  #3
+#  Expected string length 162 but was 195. Strings differ at index 57.
+#  Expected: "...g='utf-16'?><EnumDefaultValue d1p1:type='EnumDefaultValue'..."
+#  But was:  "...g='utf-16'?><EnumDefaultValue xmlns:q1='http://www.w3.org/..."
+MonoTests.System.XmlSerialization.XmlSerializerGeneratorTests.XmlSerializerTests.TestSerializeEnumDefaultValue_Encoded
+
+# Expected string length 169 but was 197. Strings differ at index 58.
+#  Expected: "...='utf-16'?><SimpleEnumeration d1p1:type='SimpleEnumeration..."
+#  But was:  "...='utf-16'?><SimpleEnumeration xmlns:q1='http://www.w3.org/..."
+MonoTests.System.XmlSerialization.XmlSerializerGeneratorTests.XmlSerializerTests.TestSerializeEnumeration_FromValue_Encoded
+
+# TestSerializeEnumDefaultValue_Encoded :   #3
+#  Expected string length 162 but was 195. Strings differ at index 57.
+#  Expected: "...g='utf-16'?><EnumDefaultValue d1p1:type='EnumDefaultValue'..."
+#  But was:  "...g='utf-16'?><EnumDefaultValue xmlns:q1='http://www.w3.org/..."
+MonoTests.System.XmlSerialization.XmlSerializerGeneratorTests.XmlSerializerTests.TestSerializeEnumDefaultValue_Encoded
+
+# System.InvalidOperationException was expected
+MonoTests.System.XmlSerialization.XmlSerializerGeneratorTests.XmlSerializerTests.HasFieldSpecifiedButIrrelevant
+
+# #1
+#  Expected string length 25 but was 34. Strings differ at index 1.
+#  Expected: "<x xmlns='some:urn'>1</x>"
+#  But was:  "<q1:x xmlns:q1='some:urn'>1</q1:x>"
+MonoTests.System.XmlSerialization.XmlSerializationWriterSimpleTests.TestWritePotentiallyReferencingElement
+
+# Expected string length 319 but was 301. Strings differ at index 164.
+#  Expected: "...-instance">\n  <MyTime>10:00:00.0000000Z</MyTime>\n  <MyTime..."
+#  But was:  "...-instance">\n  <MyTime>10:00:00</MyTime>\n  <MyTimeNullable>..."
+MonoTests.System.XmlSerialization.XmlSerializationWriterSimpleTests.TestNullableDatesAndTimes
+
+# #1
+#  Expected: 1
+#  But was:  0
+MonoTests.System.XmlSerialization.XmlSchemaExporterTests.ExportXsdPrimitive_Object
+
+# #2
+#  Expected string length 406 but was 453. Strings differ at index 197.
+#  Expected: "...w3.org/2001/XMLSchema">\n  <xs:element name="EmployeeSchema..."
+#  But was:  "...w3.org/2001/XMLSchema">\n  <xs:import namespace="urn:types-..."
+MonoTests.System.XmlSerialization.XmlSchemaExporterTests.ExportXmlSerializable_Schema
+
+# System.InvalidOperationException : The namespace 'urn:types-devx-com' defined by the class 'MonoTests.System.XmlSerialization.XmlSchemaExporterTests.EmployeeSchemaProvider' is a duplicate.
+MonoTests.System.XmlSerialization.XmlSchemaExporterTests.ExportXmlSerializable_Container
+
+# #2
+#  Expected string length 457 but was 396. Strings differ at index 185.
+#  Expected: "...w3.org/2001/XMLSchema">\n  <xs:import namespace="http://www..."
+#  But was:  "...w3.org/2001/XMLSchema">\n  <xs:element name="Employee" nill..."
+MonoTests.System.XmlSerialization.XmlSchemaExporterTests.ExportXmlSerializable
+
+# #2
+#  Expected string length 651 but was 854. Strings differ at index 646.
+#  Expected: "...complexType :name='TimeSpan'></></>"
+#  But was:  "...complexType :name='TimeSpan'><http://www.w3.org/2001/XMLSc..."
+MonoTests.System.XmlSerialization.XmlSchemaExporterTests.ExportStruct_Array
+
+# #2
+# Expected string length 370 but was 573. Strings differ at index 365.
+# Expected: "...complexType :name='TimeSpan'></></>"
+# But was:  "...complexType :name='TimeSpan'><http://www.w3.org/2001/XMLSc..."
+MonoTests.System.XmlSerialization.XmlSchemaExporterTests.ExportStruct
+
+# System.InvalidOperationException was expected
+MonoTests.System.XmlSerialization.XmlSchemaExporterTests.ExportClass_XmlElement
+
+#  #2
+#  Expected string length 1118 but was 1281. Strings differ at index 1102.
+#  Expected: "...xs:complexType name="TimeSpan" />\n</xs:schema>"
+#  But was:  "...xs:complexType name="TimeSpan">\n    <xs:complexContent mix..."
+MonoTests.System.XmlSerialization.XmlSchemaExporterTests.ExportClass_StructContainer
+
+# System.InvalidOperationException was expected
+MonoTests.System.XmlSerialization.XmlSchemaExporterTests.ExportClass_MyElem
+
+#  #2
+#  Expected string length 1440 but was 1352. Strings differ at index 457.
+#  Expected: "...s="0" maxOccurs="1" name="list3" type="tns:ArrayOfAnyType"..."
+#  But was:  "...s="0" maxOccurs="1" name="list4" type="tns:ArrayOfString" ..."
+MonoTests.System.XmlSerialization.XmlSchemaExporterTests.ExportClass_ListDefaults
+
+#  #2
+#  Expected string length 652 but was 431. Strings differ at index 206.
+#  Expected: "...\n  <xs:element name="Choices" type="tns:Choices" />\n  <xs:..."
+#  But was:  "...\n  <xs:element name="Choices" nillable="true" type="tns:Ch..."
+MonoTests.System.XmlSerialization.XmlSchemaExporterTests.ExportClass_Choices
+
+#  System.InvalidOperationException : The namespace '' defined by the class 'MonoTests.System.XmlSerialization.XmlSchemaExporterTests.PrimitiveSchemaProvider' is a duplicate.
+MonoTests.System.XmlSerialization.XmlSchemaExporterTests.ExportXmlSerializable_SchemaProvider1
+
+#  #A3
+#  Expected string length 48 but was 43. Strings differ at index 0.
+#  Expected: "ArrayOfSimpleClassEnumerablePrivateGetEnumerator"
+#  But was:  "SimpleClassEnumerablePrivateGetEnumerator[]"
+MonoTests.System.XmlSerialization.XmlReflectionImporterTests.TypeMapping_IEnumerable_SimpleClass_PrivateGetEnumerator
+
+# #A3
+#  Expected string length 42 but was 37. Strings differ at index 0.
+#  Expected: "ArrayOfSimpleClassEnumerablePrivateCurrent"
+#  But was:  "SimpleClassEnumerablePrivateCurrent[]"
+MonoTests.System.XmlSerialization.XmlReflectionImporterTests.TypeMapping_IEnumerable_SimpleClass_PrivateCurrent
+
+#  #A3
+#  Expected string length 28 but was 23. Strings differ at index 0.
+#  Expected: "ArrayOfSimpleClassEnumerable"
+#  But was:  "SimpleClassEnumerable[]"
+MonoTests.System.XmlSerialization.XmlReflectionImporterTests.TypeMapping_IEnumerable_SimpleClass
+
+# A3
+#  Expected string length 23 but was 18. Strings differ at index 0.
+#  Expected: "ArrayOfObjectEnumerable"
+#  But was:  "ObjectEnumerable[]"
+MonoTests.System.XmlSerialization.XmlReflectionImporterTests.TypeMapping_IEnumerable_Object
+
+#  #A3
+#  Expected string length 28 but was 23. Strings differ at index 0.
+#  Expected: "ArrayOfSimpleClassCollection"
+#  But was:  "SimpleClassCollection[]"
+MonoTests.System.XmlSerialization.XmlReflectionImporterTests.TypeMapping_ICollection_SimpleClass
+
+#  #A3
+#  Expected string length 23 but was 18. Strings differ at index 0.
+#  Expected: "ArrayOfObjectCollection"
+#  But was:  "ObjectCollection[]"
+MonoTests.System.XmlSerialization.XmlReflectionImporterTests.TypeMapping_ICollection_Object
+
+# #A3
+#  Expected string length 15 but was 10. Strings differ at index 0.
+#  Expected: "ArrayOfEmployee"
+#  But was:  "Employee[]" 
+MonoTests.System.XmlSerialization.XmlReflectionImporterTests.TestXmlSerializableTypeMapping_Array
+
+# #1
+#  Expected string length 0 but was 11. Strings differ at index 0.
+#  Expected: <string.Empty>
+#  But was:  "XmlNotation"
+MonoTests.System.XmlSerialization.XmlReflectionImporterTests.TestXmlNotationTypeMapping
+
+# #A1
+#  Expected string length 0 but was 7. Strings differ at index 0.
+#  Expected: <string.Empty>
+#  But was:  "XmlNode"
+MonoTests.System.XmlSerialization.XmlReflectionImporterTests.TestXmlNodeTypeMapping
+
+# #1
+#  Expected string length 0 but was 10. Strings differ at index 0.
+#  Expected: <string.Empty>
+#  But was:  "XmlElement"
+MonoTests.System.XmlSerialization.XmlReflectionImporterTests.TestXmlElementTypeMapping
+
+# #A3
+#  Expected string length 15 but was 10. Strings differ at index 0.
+#  Expected: "ArrayOfTimeSpan"
+#  But was:  "TimeSpan[]"
+MonoTests.System.XmlSerialization.XmlReflectionImporterTests.TestStructTypeMapping_Array
+
+# #A3
+#  Expected string length 13 but was 8. Strings differ at index 0.
+#  Expected: "ArrayOfString"
+#  But was:  "String[]"
+MonoTests.System.XmlSerialization.XmlReflectionImporterTests.TestStringTypeMapping_Array
+
+#  #A3
+#  Expected string length 13 but was 8. Strings differ at index 0.
+#  Expected: "ArrayOfObject"
+#  But was:  "Object[]"
+MonoTests.System.XmlSerialization.XmlReflectionImporterTests.TestObjectTypeMapping_Array
+
+#  #A3
+#  Expected string length 12 but was 7. Strings differ at index 0.
+#  Expected: "ArrayOfInt32"
+#  But was:  "Int32[]"
+MonoTests.System.XmlSerialization.XmlReflectionImporterTests.TestIntTypeMapping_Array
+
+# #7
+#  Expected string length 32 but was 0. Strings differ at index 0.
+#  Expected: "http://www.w3.org/2001/XMLSchema"
+#  But was:  <string.Empty>
+MonoTests.System.XmlSerialization.XmlReflectionImporterTests.TestImportMembersMapping
+
+# #A3
+#  Expected string length 11 but was 6. Strings differ at index 0.
+#  Expected: "ArrayOfGuid"
+#  But was:  "Guid[]"
+MonoTests.System.XmlSerialization.XmlReflectionImporterTests.TestGuidTypeMapping_Array
+
+# #A3
+#  Expected string length 23 but was 18. Strings differ at index 1.
+#  Expected: "ArrayOfAttributeTargets"
+#  But was:  "AttributeTargets[]"
+MonoTests.System.XmlSerialization.XmlReflectionImporterTests.TestEnumTypeMapping_Array
+
+# #A3
+#  Expected string length 15 but was 10. Strings differ at index 0.
+#  Expected: "ArrayOfDateTime"
+#  But was:  "DateTime[]"
+MonoTests.System.XmlSerialization.XmlReflectionImporterTests.TestDateTimeTypeMapping_Array
+
+#  #A3
+#  Expected string length 18 but was 13. Strings differ at index 0.
+#  Expected: "ArrayOfSimpleClass"
+#  But was:  "SimpleClass[]"
+MonoTests.System.XmlSerialization.XmlReflectionImporterTests.TestClassTypeMapping_Array
+
+# #A3
+#  Expected string length 11 but was 6. Strings differ at index 0.
+#  Expected: "ArrayOfChar"
+#  But was:  "Char[]"
+MonoTests.System.XmlSerialization.XmlReflectionImporterTests.TestCharTypeMapping_Array
+
+# #B3
+#  Expected string length 18 but was 8. Strings differ at index 0.
+#  Expected: "ArrayOfArrayOfByte"
+#  But was:  "Byte[][]"
+MonoTests.System.XmlSerialization.XmlReflectionImporterTests.TestByteTypeMapping_Array
+
+# #9
+#  Expected: null
+#  But was:  <>
+MonoTests.System.XmlSerialization.XmlAttributesTests.NewXmlAttributes
+
+# #1
+#  Expected string length 14 but was 5. Strings differ at index 5.
+#  Expected: "ArrayOfAnyType"
+#  But was:  "Array"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TypeMapping_IEnumerable_SimpleClass_PrivateGetEnumerator
+
+#  #1
+#  Expected string length 14 but was 5. Strings differ at index 5.
+#  Expected: "ArrayOfAnyType"
+#  But was:  "Array"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TypeMapping_IEnumerable_SimpleClass_PrivateCurrent
+
+# #1
+#  Expected string length 18 but was 5. Strings differ at index 5.
+#  Expected: "ArrayOfSimpleClass"
+#  But was:  "Array"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TypeMapping_IEnumerable_SimpleClass
+
+#  #1
+#  Expected string length 14 but was 5. Strings differ at index 5.
+#  Expected: "ArrayOfAnyType"
+#  But was:  "Array"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TypeMapping_IEnumerable_Object
+
+# #1
+#  Expected string length 18 but was 5. Strings differ at index 5.
+#  Expected: "ArrayOfSimpleClass"
+#  But was:  "Array"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TypeMapping_ICollection_SimpleClass
+
+# #1
+#  Expected string length 14 but was 5. Strings differ at index 5.
+#  Expected: "ArrayOfAnyType"
+#  But was:  "Array"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TypeMapping_ICollection_Object
+
+#  #2
+#  Expected string length 8 but was 41. Strings differ at index 0.
+#  Expected: "some:urn"
+#  But was:  "http://schemas.xmlsoap.org/soap/encoding/"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestXmlQualifiedNameTypeMapping_DefaultNamespace 
+
+# #A1
+#  Expected string length 12 but was 5. Strings differ at index 5.
+#  Expected: "ArrayOfQName"
+#  But was:  "Array"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestXmlQualifiedNameTypeMapping_Array
+
+# #2
+#  Expected string length 8 but was 41. Strings differ at index 0.
+#  Expected: "some:urn"
+#  But was:  "http://schemas.xmlsoap.org/soap/encoding/"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestUnsignedShortTypeMapping_DefaultNamespace
+
+# #2
+#  Expected string length 8 but was 41. Strings differ at index 0.
+#  Expected: "some:urn"
+#  But was:  "http://schemas.xmlsoap.org/soap/encoding/"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestULongTypeMapping_DefaultNamespace
+
+# #2
+#  Expected string length 8 but was 41. Strings differ at index 0.
+#  Expected: "some:urn"
+#  But was:  "http://schemas.xmlsoap.org/soap/encoding/"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestUIntTypeMapping_DefaultNamespace
+
+# System.NotSupportedException : Cannot serialize System.TimeSpan. Nested structs are not supported with encoded SOAP
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestStructTypeMapping_DefaultNamespace
+
+# Cannot serialize System.TimeSpan. Nested structs are not supported with encoded SOAP
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestStructTypeMapping
+
+#  #2
+#  Expected string length 8 but was 41. Strings differ at index 0.
+#  Expected: "some:urn"
+#  But was:  "http://schemas.xmlsoap.org/soap/encoding/"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestStringTypeMapping_DefaultNamespace
+
+# A1
+#  Expected string length 13 but was 5. Strings differ at index 5.
+#  Expected: "ArrayOfString"
+#  But was:  "Array"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestStringTypeMapping_Array
+
+# #2
+#  Expected string length 8 but was 41. Strings differ at index 0.
+#  Expected: "some:urn"
+#  But was:  "http://schemas.xmlsoap.org/soap/encoding/"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestShortTypeMapping_DefaultNamespace
+
+# #2
+#  Expected string length 8 but was 41. Strings differ at index 0.
+#  Expected: "some:urn"
+#  But was:  "http://schemas.xmlsoap.org/soap/encoding/"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestSByteTypeMapping_DefaultNamespace
+
+# #A1
+#  Expected string length 11 but was 5. Strings differ at index 5.
+#  Expected: "ArrayOfByte"
+#  But was:  "Array"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestSByteTypeMapping_Array
+
+#  #2
+#  Expected string length 8 but was 41. Strings differ at index 0.
+#  Expected: "some:urn"
+#  But was:  "http://schemas.xmlsoap.org/soap/encoding/"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestObjectTypeMapping_DefaultNamespace
+
+# #A1
+#  Expected string length 14 but was 5. Strings differ at index 5.
+#  Expected: "ArrayOfAnyType"
+#  But was:  "Array"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestObjectTypeMapping_Array
+
+# #2
+#  Expected string length 8 but was 41. Strings differ at index 0.
+#  Expected: "some:urn"
+#  But was:  "http://schemas.xmlsoap.org/soap/encoding/"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestLongTypeMapping_DefaultNamespace
+
+# #2
+#  Expected string length 8 but was 41. Strings differ at index 0.
+#  Expected: "some:urn"
+#  But was:  "http://schemas.xmlsoap.org/soap/encoding/"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestIntTypeMapping_DefaultNamespace
+
+# #A1
+#  Expected string length 10 but was 5. Strings differ at index 5.
+#  Expected: "ArrayOfInt"
+#  But was:  "Array"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestIntTypeMapping_Array
+
+# #2
+#  Expected string length 8 but was 41. Strings differ at index 0.
+#  Expected: "some:urn"
+#  But was:  "http://schemas.xmlsoap.org/soap/encoding/"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestGuidTypeMapping_DefaultNamespace
+
+# #A1
+#  Expected string length 11 but was 5. Strings differ at index 5.
+#  Expected: "ArrayOfGuid"
+#  But was:  "Array"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestGuidTypeMapping_Array
+
+# #2
+#  Expected string length 8 but was 41. Strings differ at index 0.
+#  Expected: "some:urn"
+#  But was:  "http://schemas.xmlsoap.org/soap/encoding/"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestFloatTypeMapping_DefaultNamespace
+
+# #2
+#  Expected string length 8 but was 41. Strings differ at index 0.
+#  Expected: "some:urn"
+#  But was:  "http://schemas.xmlsoap.org/soap/encoding/"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestEnumTypeMapping_DefaultNamespace
+
+# #A1
+#  Expected string length 23 but was 5. Strings differ at index 5.
+#  Expected: "ArrayOfAttributeTargets"
+#  But was:  "Array"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestEnumTypeMapping_Array
+
+# #2
+#  Expected string length 8 but was 41. Strings differ at index 0.
+#  Expected: "some:urn"
+#  But was:  "http://schemas.xmlsoap.org/soap/encoding/"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestDoubleTypeMapping_DefaultNamespace
+
+# #2
+#  Expected string length 8 but was 41. Strings differ at index 0.
+#  Expected: "some:urn"
+#  But was:  "http://schemas.xmlsoap.org/soap/encoding/"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestDecimalTypeMapping_DefaultNamespace
+
+# #2
+#  Expected string length 8 but was 41. Strings differ at index 0.
+#  Expected: "some:urn"
+#  But was:  "http://schemas.xmlsoap.org/soap/encoding/"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestDateTimeTypeMapping_DefaultNamespace
+
+# #A1
+#  Expected string length 15 but was 5. Strings differ at index 5.
+#  Expected: "ArrayOfDateTime"
+#  But was:  "Array"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestDateTimeTypeMapping_Array
+
+#  #2
+#  Expected string length 8 but was 41. Strings differ at index 0.
+#  Expected: "some:urn"
+#  But was:  "http://schemas.xmlsoap.org/soap/encoding/"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestClassTypeMapping_DefaultNamespace
+
+# #A1
+#  Expected string length 18 but was 5. Strings differ at index 5.
+#  Expected: "ArrayOfSimpleClass"
+#  But was:  "Array"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestClassTypeMapping_Array
+
+# #2
+#  Expected string length 8 but was 41. Strings differ at index 0.
+#  Expected: "some:urn"
+#  But was:  "http://schemas.xmlsoap.org/soap/encoding/"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestCharTypeMapping_DefaultNamespace
+
+# #A1
+#  Expected string length 11 but was 5. Strings differ at index 5.
+#  Expected: "ArrayOfChar"
+#  But was:  "Array"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestCharTypeMapping_Array
+
+# #3
+#  Expected string length 8 but was 41. Strings differ at index 0.
+#  Expected: "some:urn"
+#  But was:  "http://schemas.xmlsoap.org/soap/encoding/"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestByteTypeMapping_DefaultNamespace
+
+# #B1
+#  Expected string length 19 but was 5. Strings differ at index 5.
+#  Expected: "ArrayOfBase64Binary"
+#  But was:  "Array"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestByteTypeMapping_Array
+
+# #2
+#  Expected string length 8 but was 41. Strings differ at index 0.
+#  Expected: "some:urn"
+#  But was:  "http://schemas.xmlsoap.org/soap/encoding/"
+MonoTests.System.XmlSerialization.SoapReflectionImporterTests.TestBoolTypeMapping_DefaultNamespace
+
+# #2
+#  Expected: null
+#  But was:  <>
+MonoTests.System.XmlSerialization.SoapAttributesTests.Defaults 
+
+# System.InvalidOperationException : There is an error in XML document.
+MonoTests.System.XmlSerialization.DeserializationTests.TestDeserializeObjectWithReadonlyNulCollection
+
+# Expected: 2012-02-05 09:00:00.000
+#  But was:  2012-02-04 23:00:00.000
+MonoTests.System.XmlSerialization.DeserializationTests.NotExactDateParse
+
+# System.InvalidOperationException was expected
+MonoTests.System.XmlSerialization.DeserializationTests.DeserializeArrayReferences
+
+# System.IO.DirectoryNotFoundException : Could not find a part of the path "/Users/mandel/Library/Developer/CoreSimulator/Devices/143CD3D7-C264-404E-BA13-08FA5EDC3007/data/Containers/Bundle/Application/3A3FF3CF-A527-4A76-B6B1-A6889C24B643/SystemXmlTests.app/Test/XmlFiles/literal-data.xml".
+MonoTests.System.XmlSerialization.ComplexDataStructure.WriteLiteral
+MonoTests.System.XmlSerialization.ComplexDataStructure.ReadLiteral
+MonoTests.System.Xml.Xsl.XslTransformTests.WhitespaceHandling
+MonoTests.System.Xml.Xsl.XslTransformTests.TestBasicTransform
+MonoTests.System.Xml.Xsl.XslTransformTests.StripSpace
+MonoTests.System.Xml.Xsl.XslTransformTests.ResolveVariableInXsltArgumentList
+
+# Expected string length 62 but was 50. Strings differ at index 37.
+#  Expected: "\n  \n    <y><t yes-one-node="">1</t><t not-node=""></t></y>\n  \n"
+#  But was:  "\n  \n    <y><t yes-one-node="">1</t><t></t></y>\n  \n"
+#  --------------------------------------------------^
+MonoTests.System.Xml.Xsl.XslTransformTests.PreserveWhitespace2
+
+# System.Xml.Xsl.XsltException : Cannot find the script or external object that implements prefix 'stringutils'.
+MonoTests.System.Xml.Xsl.XslTransformTests.MsxslTest
+
+# System.Xml.Xsl.XsltException : Cannot find the script or external object that implements prefix 'msxsl'.
+MonoTests.System.Xml.Xsl.XslTransformTests.CurrentInSelect
+
+# System.IO.DirectoryNotFoundException : Could not find a part of the path "/Users/mandel/Library/Developer/CoreSimulator/Devices/143CD3D7-C264-404E-BA13-08FA5EDC3007/data/Containers/Bundle/Application/3A3FF3CF-A527-4A76-B6B1-A6889C24B643/SystemXmlTests.app/Test/XmlFiles/xsl/391424.xsl".
+MonoTests.System.Xml.Xsl.XslTransformTests.CompiledTransform_Fragment
+
+# System.IO.DirectoryNotFoundException : Could not find a part of the path "/Users/mandel/Library/Developer/CoreSimulator/Devices/143CD3D7-C264-404E-BA13-08FA5EDC3007/data/Containers/Bundle/Application/3A3FF3CF-A527-4A76-B6B1-A6889C24B643/SystemXmlTests.app/Test/XmlFiles/xsl/325482.xml".
+MonoTests.System.Xml.Xsl.XslTransformTests.BugNovell325482
+
+# System.IO.DirectoryNotFoundException : Could not find a part of the path "/Users/mandel/Library/Developer/CoreSimulator/Devices/143CD3D7-C264-404E-BA13-08FA5EDC3007/data/Containers/Bundle/Application/3A3FF3CF-A527-4A76-B6B1-A6889C24B643/SystemXmlTests.app/Test/XmlFiles/xsl/82493.xsl".
+MonoTests.System.Xml.Xsl.XslTransformTests.Bug82493
+
+# System.NotSupportedException : 'msxsl:script' element is not supported on this framework because it does not support run-time code generation
+MonoTests.System.Xml.Xsl.XslTransformTests.Bug487065
+
+# System.Xml.Xsl.XsltException : Cannot find the script or external object that implements prefix 'msxsl'.
+MonoTests.System.Xml.Xsl.XslTransformTests.MSXslFormatDate
+
+# #1
+#  Expected: True
+#  But was:  False
+MonoTests.System.Xml.Xsl.XslCompiledTransformTests.XslOutputSettings
+
+# System.Xml.XPath.XPathException : Function 'msxsl:node-set()' has failed.
+#  ----> System.Xml.Xsl.XsltException : Cannot convert the operand to 'Result tree fragment'.
+MonoTests.System.Xml.Xsl.XslCompiledTransformTests.MSXslNodeSetAcceptsNodeSet
+
+# System.Xml.XPath.XPathException : Function 'msxsl:node-set()' has failed.
+#  ----> System.Xml.Xsl.XsltException : Cannot convert the operand to 'Result tree fragment'.
+MonoTests.System.Xml.Xsl.XslCompiledTransformTests.MSXslNodeSetAcceptsEmptyString
+
+# System.Xml.Xsl.XsltException : Cannot find the script or external object that implements prefix 'user'. 
+MonoTests.System.Xml.Xsl.MsxslScriptTests.TestVB
+MonoTests.System.Xml.Xsl.MsxslScriptTests.TestJScript
+MonoTests.System.Xml.Xsl.MsxslScriptTests.TestCSharp
+
+# System.Xml.Xsl.XsltException was expected
+MonoTests.System.Xml.Xsl.MsxslScriptTests.InvalidScript 
+
+# System.IO.DirectoryNotFoundException : Could not find a part of the path "/Users/mandel/Library/Developer/CoreSimulator/Devices/143CD3D7-C264-404E-BA13-08FA5EDC3007/data/Containers/Bundle/Application/10705461-461C-4347-9CFB-22420321CF2F/SystemXmlTests.app/Test/XmlFiles/xsd/multi-schemaLocation.xml".
+MonoTests.System.Xml.XsdValidatingReaderTests.MultipleSchemaInSchemaLocation
+
+# An unexpected exception type was thrown
+# Expected: System.Xml.Schema.XmlSchemaException
+#  but was: System.IO.DirectoryNotFoundException : Could not find a part of the path
+MonoTests.System.Xml.XsdValidatingReaderTests.EnumerationFacetOnAttribute
+
+# System.IO.DirectoryNotFoundException : Could not find a part of the path "/Users/mandel/Library/Developer/CoreSimulator/Devices/143CD3D7-C264-404E-BA13-08FA5EDC3007/data/Containers/Bundle/Application/10705461-461C-4347-9CFB-22420321CF2F/SystemXmlTests.app/Test/XmlFiles/xsd/82010.xsd".
+MonoTests.System.Xml.XsdValidatingReaderTests.Bug82010
+MonoTests.System.Xml.XsdValidatingReaderTests.Bug81360
+MonoTests.System.Xml.XsdValidatingReaderTests.Bug376395
+MonoTests.System.Xml.XsdParticleValidationTests.ValidateSequenceInvalid
+
+# An unexpected exception type was thrown
+# Expected: System.Xml.Schema.XmlSchemaValidationException
+# but was: System.IO.DirectoryNotFoundException : Could not find a part of the path
+MonoTests.System.Xml.XsdParticleValidationTests.ValidateSequenceInvalid5
+
+#  : An unexpected exception type was thrown
+# Expected: System.Xml.Schema.XmlSchemaValidationException
+MonoTests.System.Xml.XsdParticleValidationTests.ValidateSequenceInvalid4
+MonoTests.System.Xml.XsdParticleValidationTests.ValidateSequenceInvalid3
+MonoTests.System.Xml.XsdParticleValidationTests.ValidateSequenceInvalid2
+MonoTests.System.Xml.XsdParticleValidationTests.ValidateSequenceInvalid1
+
+# An unexpected exception type was thrown
+# Expected: System.Xml.Schema.XmlSchemaValidationException
+# but was: System.IO.DirectoryNotFoundException : Could not find a part of the path
+MonoTests.System.Xml.XsdParticleValidationTests.ValidateRootElementOnlyValid
+MonoTests.System.Xml.XsdParticleValidationTests.ValidateRootElementOnlyInvalid2
+MonoTests.System.Xml.XsdParticleValidationTests.ValidateRootElementOnlyInvalid
+MonoTests.System.Xml.XsdParticleValidationTests.ValidateElementContainsElementInvalid2
+MonoTests.System.Xml.XsdParticleValidationTests.ValidateElementContainsElementInvalid1
+MonoTests.System.Xml.XsdParticleValidationTests.ValidateChoiceInvalid4
+MonoTests.System.Xml.XsdParticleValidationTests.ValidateChoiceInvalid3
+MonoTests.System.Xml.XsdParticleValidationTests.ValidateChoiceInvalid2
+MonoTests.System.Xml.XsdParticleValidationTests.ValidateChoiceInvalid1
+
+# System.IO.DirectoryNotFoundException : Could not find a part of the path
+MonoTests.System.Xml.XsdParticleValidationTests.ValidateElementContainsElementValid2
+MonoTests.System.Xml.XsdParticleValidationTests.ValidateElementContainsElementValid1
+MonoTests.System.Xml.XsdParticleValidationTests.ValidateSequenceValid
+MonoTests.System.Xml.XsdParticleValidationTests.ValidateChoiceValid
+
+# System.NotSupportedException : Encoding 932 data could not be found.
+MonoTests.System.Xml.XmlWriterSettingsTests.EncodingTest
+
+# System.IO.DirectoryNotFoundException : Could not find a part of the path
+MonoTests.System.Xml.XmlUrlResolverTests.FileUri
+
+# System.IO.DirectoryNotFoundException : Could not find a part of the path  
+MonoTests.System.Xml.XmlTextReaderTests.SurrogateAtReaderByteCache
+MonoTests.System.Xml.XmlTextReaderTests.ExternalDocument
+MonoTests.System.Xml.XmlSchemaValidatorTests.XsdAnyToSkipAttributeValidation
+MonoTests.System.Xml.XmlSchemaValidatorTests.SkipInvolved
+MonoTests.System.Xml.XmlSchemaValidatorTests.FacetsOnBaseSimpleContentRestriction
+MonoTests.System.Xml.XmlSchemaValidatorTests.Bug676993
+MonoTests.System.Xml.XmlSchemaValidatorTests.Bug584664
+MonoTests.System.Xml.XmlSchemaValidatorTests.Bug496192_496205
+MonoTests.System.Xml.XmlSchemaTests.ThreeLevelNestedInclusion
+MonoTests.System.Xml.XmlSchemaTests.TestWriteFlags
+MonoTests.System.Xml.XmlSchemaTests.TestSimpleMutualImport
+MonoTests.System.Xml.XmlSchemaTests.TestSimpleImport
+MonoTests.System.Xml.XmlSchemaTests.TestReadFlags
+MonoTests.System.Xml.XmlSchemaTests.TestRead
+MonoTests.System.Xml.XmlSchemaTests.TestQualification
+MonoTests.System.Xml.XmlSchemaTests.TestImportNoSchemaLocation
+MonoTests.System.Xml.XmlSchemaTests.TestCompile
+MonoTests.System.Xml.XmlSchemaTests.ExtensionRedefineAttribute3
+MonoTests.System.Xml.XmlSchemaTests.ExtensionRedefineAttribute2
+MonoTests.System.Xml.XmlSchemaTests.ExtensionRedefineAttribute1
+MonoTests.System.Xml.XmlSchemaTests.DuplicateKeyFieldAttributePath
+MonoTests.System.Xml.XmlSchemaTests.CompileFillsSchemaPropertyInExternal
+MonoTests.System.Xml.XmlSchemaSetTests.ImportSubstitutionGroupDBR
+
+# System.ArgumentException was expected
+MonoTests.System.Xml.XmlSchemaSetTests.AddReaderTwice
+
+# System.Xml.Schema.XmlSchemaException : Type 'http://www.w3.org/2001/XMLSchema:base64' is not declared.
+MonoTests.System.Xml.Serialization.XmlSchemaImporterTests.ImportTypeMapping_XsdPrimitive_Base64
+MonoTests.System.Xml.Serialization.XmlSchemaImporterTests.ImportTypeMapping_XsdPrimitive_Char
+MonoTests.System.Xml.Serialization.XmlSchemaImporterTests.ImportTypeMapping_XsdPrimitive_Guid
+MonoTests.System.Xml.Serialization.XmlSchemaImporterTests.ImportTypeMapping_XsdPrimitive_Month
+MonoTests.System.Xml.Serialization.XmlSchemaImporterTests.ImportTypeMapping_XsdPrimitive_TimeInstant
+MonoTests.System.Xml.Serialization.XmlSchemaImporterTests.ImportTypeMapping_XsdPrimitive_TimePeriod
+
+# Could not find a part of the path
+MonoTests.System.Xml.XmlNodeTests.BaseURI
+MonoTests.System.Xml.XmlReaderSettingsTests.CreateAndSettings
+MonoTests.System.Xml.XmlReaderSettingsTests.CreateValidatorFromNonIXmlNamespaceResolver
+MonoTests.System.Xml.XmlReaderSettingsTests.NullResolver
+MonoTests.System.Xml.XmlReaderTests.CreateSimple
+MonoTests.System.Xml.XmlReaderTests.CreateSimpleProhibitDtd
+MonoTests.System.Xml.XmlSchemaCollectionTests.TestAdd
+MonoTests.System.Xml.XmlSchemaDatatypeTests.TestAll
+MonoTests.System.Xml.XmlSchemaDatatypeTests.
+
+# An unexpected exception type was thrown
+# Expected: System.Xml.Schema.XmlSchemaValidationException
+MonoTests.System.Xml.XmlReaderSettingsTests.CreateFromUrlWithValidation
+
+# #1
+#  Expected: 1
+#  But was:  0
+MonoTests.System.Xml.Serialization.XmlSchemaImporterTests.ImportTypeMapping_XsdPrimitive_AnyType

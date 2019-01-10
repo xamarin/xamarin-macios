@@ -1592,6 +1592,33 @@ public class B : A {}
 		}
 
 		[Test]
+		[TestCase ("", null, "the interpreter settings are different between the container app (Enabled) and the extension (Disabled).")]
+		[TestCase (null, "", "the interpreter settings are different between the container app (Disabled) and the extension (Enabled).")]
+		[TestCase ("mscorlib.dll", "", "the interpreted assemblies are different between the container app (mscorlib.dll) and the extension (all assemblies).")]
+		[TestCase ("", "System.dll", "the interpreted assemblies are different between the container app (all assemblies) and the extension (System.dll).")]
+		[TestCase ("mscorlib.dll", "System.dll", "the interpreted assemblies are different between the container app (mscorlib.dll) and the extension (System.dll).")]
+		[TestCase ("mscorlib.dll", "mscorlib.dll,System.dll", "the interpreted assemblies are different between the container app (mscorlib.dll) and the extension (mscorlib.dll, System.dll).")]
+		public void MT0113_interpreter (string app_interpreter, string appex_interpreter, string msg)
+		{
+			using (var extension = new MTouchTool ()) {
+				extension.CreateTemporaryServiceExtension ();
+				extension.CreateTemporaryCacheDirectory ();
+				extension.Abi = "arm64";
+				extension.Interpreter = appex_interpreter;
+				extension.AssertExecute (MTouchAction.BuildDev, "build extension");
+				using (var app = new MTouchTool ()) {
+					app.AppExtensions.Add (extension);
+					app.CreateTemporaryApp ();
+					app.CreateTemporaryCacheDirectory ();
+					app.Interpreter = app_interpreter;
+					app.WarnAsError = new int [] { 113 };
+					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
+					app.AssertError (113, "Native code sharing has been disabled for the extension 'testServiceExtension' because " + msg); 
+				}
+			}
+		}
+
+		[Test]
 		public void CodeSharingExactContentsDifferentPaths ()
 		{
 			// Test that we allow code sharing when the exact same assembly (based on file content)
