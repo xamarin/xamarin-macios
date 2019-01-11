@@ -951,7 +951,7 @@ It might be a broken file or a broken symlink (after decompressing an archive) t
 
 This error occurs when enabling the interpreter on a simulator build.
 
-The interperter is only available for device builds as an complete or partial alternative to the ahead-of-time (AOT) compilation.
+The interpreter is only available for device builds as an complete or partial alternative to the ahead-of-time (AOT) compilation.
 In contrast simulator builds are using just-in-time compilation which negates most advantages of the interpreter.
 
 # MT1xxx: Project related error messages
