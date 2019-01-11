@@ -96,7 +96,6 @@ namespace BCLTestImporter {
 			(name:"MonoCSharpTests", assemblies: new [] {"monotouch_Mono.CSharp_test.dll"}),
 			(name:"SystemSecurityTests", assemblies: new [] {"monotouch_System.Security_test.dll"}),
 			(name:"SystemServiceModelTests", assemblies: new [] {"monotouch_System.ServiceModel_test.dll"}),
-			(name:"SystemDataDataSetExtensionTests", assemblies: new [] {"monotouch_System.Data.DataSetExtensions_test.dll"}),
 			(name:"SystemRuntimeSerializationFormattersSoapTests", assemblies: new [] {"monotouch_System.Runtime.Serialization.Formatters.Soap_test.dll"}),
 			(name:"CorlibTests", assemblies: new [] {"monotouch_corlib_test.dll"}),
 			(name:"MonoRuntimeTests", assemblies: new [] {"monotouch_Mono.Runtime.Tests_test.dll"}),
@@ -121,7 +120,6 @@ namespace BCLTestImporter {
 			"monotouch_System.Security_test.dll", // issue https://github.com/xamarin/maccore/issues/1139
 			"monotouch_System.Runtime.Serialization.Formatters.Soap_test.dll", // issue https://github.com/xamarin/maccore/issues/1140
 			"monotouch_System.Net.Http_test.dll", // issue https://github.com/xamarin/maccore/issues/1144 and https://github.com/xamarin/maccore/issues/1145
-			"monotouch_System.Data.DataSetExtensions_test.dll", // issue https://github.com/xamarin/maccore/issues/1150 and https://github.com/xamarin/maccore/issues/1151
 			"monotouch_System.Core_test.dll", // issue https://github.com/xamarin/maccore/issues/1143
 			"monotouch_Mono.Runtime.Tests_test.dll", // issue https://github.com/xamarin/maccore/issues/1141
 			"monotouch_corlib_test.dll", // issue https://github.com/xamarin/maccore/issues/1153
