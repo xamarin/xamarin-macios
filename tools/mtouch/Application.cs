@@ -1396,6 +1396,9 @@ namespace Xamarin.Bundler {
 			if (EnableBitCode && IsSimulatorBuild)
 				throw ErrorHelper.CreateError (84, "Bitcode is not supported in the simulator. Do not pass --bitcode when building for the simulator.");
 
+			if (UseInterpreter && IsSimulatorBuild)
+				throw ErrorHelper.CreateError (141, "The interpreter is not supported in the simulator. Do not pass --interpreter when building for the simulator.");
+
 			Namespaces.Initialize ();
 
 			if (Embeddinator) {
