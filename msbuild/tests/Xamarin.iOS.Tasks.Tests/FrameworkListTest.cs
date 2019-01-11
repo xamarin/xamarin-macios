@@ -72,15 +72,22 @@ namespace Xamarin.iOS.Tasks
 		List<AssemblyInfo> ScanAssemblyDirectory (string frameworkName, bool isMac)
 		{
 			var assemblies = new List<AssemblyInfo> ();
-			var path = Path.GetFullPath (Path.Combine (isMac ? Configuration.SdkRootXM : Configuration.MonoTouchRootDirectory, "lib", "mono", frameworkName));
-			foreach (var f in Directory.EnumerateFiles (path, "*.dll")) {
-				try {
-					var an = AssemblyName.GetAssemblyName (f);
-					assemblies.Add (new AssemblyInfo (an));
-				} catch (Exception ex) {
-					Assert.Fail ("Error reading assembly '{0}' in framework '{1}':{2}{3}", f, frameworkName, Environment.NewLine, ex);
+			var assembliesPath = Path.GetFullPath (Path.Combine (isMac ? Configuration.SdkRootXM : Configuration.MonoTouchRootDirectory, "lib", "mono", frameworkName));
+			AddAssemblies (assembliesPath);
+			AddAssemblies (Path.Combine (assembliesPath, "Facades"));
+
+			void AddAssemblies (string path)
+			{
+				foreach (var f in Directory.EnumerateFiles (path, "*.dll")) {
+					try {
+						var an = AssemblyName.GetAssemblyName (f);
+						assemblies.Add (new AssemblyInfo (an));
+					} catch (Exception ex) {
+						Assert.Fail ("Error reading assembly '{0}' in framework '{1}':{2}{3}", f, frameworkName, Environment.NewLine, ex);
+					}
 				}
 			}
+
 			return assemblies;
 		}
 
