@@ -1326,7 +1326,7 @@ namespace Xamarin.Bundler {
 							throw ErrorHelper.CreateError (100, $"Invalid mono native type: '{MonoNativeMode}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).");
 						}
 
-						args.Append ("-u ").Append (StringUtils.Quote (Path.Combine (libdir, libmono_native_name + ".a"))).Append (' ');
+						args.Append (StringUtils.Quote (Path.Combine (libdir, libmono_native_name + ".a"))).Append (' ');
 					}
 
 					if (profiling.HasValue && profiling.Value) {
