@@ -119,7 +119,6 @@ namespace BCLTestImporter {
 			"monotouch_System.Security_test.dll", // issue https://github.com/xamarin/maccore/issues/1139
 			"monotouch_System.Runtime.Serialization.Formatters.Soap_test.dll", // issue https://github.com/xamarin/maccore/issues/1140
 			"monotouch_System.Net.Http_test.dll", // issue https://github.com/xamarin/maccore/issues/1144 and https://github.com/xamarin/maccore/issues/1145
-			"monotouch_System.Core_test.dll", // issue https://github.com/xamarin/maccore/issues/1143
 			"monotouch_Mono.Runtime.Tests_test.dll", // issue https://github.com/xamarin/maccore/issues/1141
 			"monotouch_corlib_test.dll", // issue https://github.com/xamarin/maccore/issues/1153
 			"monotouch_Commons.Xml.Relaxng_test.dll", // not supported by xamarin
