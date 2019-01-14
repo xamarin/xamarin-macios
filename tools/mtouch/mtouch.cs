@@ -394,9 +394,11 @@ namespace Xamarin.Bundler
 			args.Append ("-ios,");
 			args.Append ("data-outfile=").Append (StringUtils.Quote (dataFile)).Append (",");
 			args.Append (app.AotArguments);
-			if (llvm_only)
+			if (llvm_only && interp) {
+				args.Append ("interp,llvmonly,");
+			} else if (llvm_only) {
 				args.Append ("llvmonly,");
-			else if (interp) {
+			} else if (interp) {
 				if (fname != "mscorlib.dll")
 					throw ErrorHelper.CreateError (99, $"Internal error: can only enable the interpreter for mscorlib.dll when AOT-compiling assemblies (tried to interpret {fname}). Please file an issue at https://github.com/xamarin/xamarin-macios/issues/new.");
 				args.Append ("interp,");
@@ -583,9 +585,16 @@ namespace Xamarin.Bundler
 					if (app.EnableProfiling)
 						sw.WriteLine ("\txamarin_profiler_symbol = mono_profiler_init_log;");
 
-					if (app.EnableLLVMOnlyBitCode)
+					if (app.EnableLLVMOnlyBitCode && app.UseInterpreter) {
+						sw.WriteLine ("\tmono_icall_table_init ();");
+						sw.WriteLine ("\tmono_marshal_ilgen_init ();");
+						sw.WriteLine ("\tmono_method_builder_ilgen_init ();");
+						sw.WriteLine ("\tmono_sgen_mono_ilgen_init ();");
+						sw.WriteLine ("\tmono_ee_interp_init (NULL);");
+						sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_INTERP_LLVMONLY);");
+					} else if (app.EnableLLVMOnlyBitCode) {
 						sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_LLVMONLY);");
-					else if (app.UseInterpreter) {
+					} else if (app.UseInterpreter) {
 						sw.WriteLine ("\tmono_icall_table_init ();");
 						sw.WriteLine ("\tmono_marshal_ilgen_init ();");
 						sw.WriteLine ("\tmono_method_builder_ilgen_init ();");

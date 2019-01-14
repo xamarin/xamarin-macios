@@ -157,6 +157,9 @@ namespace Xamarin.Bundler {
 
 		public bool IsAOTCompiled (string assembly)
 		{
+			if (EnableLLVMOnlyBitCode && UseInterpreter)
+				/* fake AOT compile every assembly */
+				return true;
 			if (!UseInterpreter)
 				return true;
 
