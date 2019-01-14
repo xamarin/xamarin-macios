@@ -16,26 +16,20 @@ using Foundation;
 namespace CoreFoundation {
 #if !COREBUILD
 
-	public enum QosClass : uint {
-		UserInteractive = 0x21,
-		UserInitiated = 0x19,
-		Default = 0x15,
-		Utility = 0x11,
-		Background = 0x09,
-		Unspecified = 0
-	}
-
 	[StructLayout (LayoutKind.Sequential)]
-	internal readonly struct DispatchBlock {
-		readonly IntPtr block;
+	public class DispatchBlock : IDisposable {
+		IntPtr blockHandle;
 
-		public DispatchBlock (IntPtr handle)
+		internal DispatchBlock (IntPtr handle)
 		{
-			this.block = handle;
+			this.blockHandle = handle;
 		}
 				
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
-		unsafe internal static extern DispatchBlock _Block_copy (BlockLiteral *block_literal);
+		unsafe internal static extern IntPtr _Block_copy (BlockLiteral *block_literal);
+
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
+		unsafe internal static extern void _Block_release (IntPtr blockHandle);
 		
 		public DispatchBlock Create (Action action)
 		{
@@ -43,14 +37,14 @@ namespace CoreFoundation {
 			        BlockLiteral block_handler = new BlockLiteral ();
 			        BlockLiteral *block_ptr_handler = &block_handler;
 			        block_handler.SetupBlockUnsafe (BlockStaticDispatchClass.static_dispatch_block, action);
-				DispatchBlock ret = _Block_copy (block_ptr_handler);
+				DispatchBlock ret = new DispatchBlock (_Block_copy (block_ptr_handler));
 				block_handler.CleanupBlock ();
 				return ret;
 			}
 		}
 
 		[DllImport (Constants.libcLibrary)]
-		extern static DispatchBlock dispatch_block_create (DispatchBlockFlags flags, DispatchBlock block);
+		extern static IntPtr dispatch_block_create (DispatchBlockFlags flags, IntPtr block);
 		
 		public DispatchBlock Create (Action action, DispatchBlockFlags flags)
 		{
@@ -58,65 +52,68 @@ namespace CoreFoundation {
 			        BlockLiteral block_handler = new BlockLiteral ();
 			        BlockLiteral *block_ptr_handler = &block_handler;
 			        block_handler.SetupBlockUnsafe (BlockStaticDispatchClass.static_dispatch_block, action);
-				DispatchBlock ret = _Block_copy (block_ptr_handler);
+				var ret =  _Block_copy (block_ptr_handler);
 				block_handler.CleanupBlock ();
-				return dispatch_block_create (flags, ret);
+				return new DispatchBlock (dispatch_block_create (flags, ret));
 			}
 		}
 
 		[DllImport (Constants.libcLibrary)]
-		extern static DispatchBlock dispatch_block_create_with_qos_class (DispatchBlockFlags flags, QosClass qosClass, int relative_priority, DispatchBlock dispatchBlock);
+		extern static IntPtr dispatch_block_create_with_qos_class (DispatchBlockFlags flags, DispatchQualityOfService qosClass, int relative_priority, IntPtr dispatchBlock);
 
-		public DispatchBlock CreateWithQos (DispatchBlockFlags flags, QosClass qosClass, int relative_priority, Action action)
+		public DispatchBlock CreateWithQos (DispatchBlockFlags flags, DispatchQualityOfService qosClass, int relative_priority, Action action)
 		{
 			unsafe {
 			        BlockLiteral block_handler = new BlockLiteral ();
 			        BlockLiteral *block_ptr_handler = &block_handler;
 			        block_handler.SetupBlockUnsafe (BlockStaticDispatchClass.static_dispatch_block, action);
-				DispatchBlock ret = _Block_copy (block_ptr_handler);
+				var ret = _Block_copy (block_ptr_handler);
 				block_handler.CleanupBlock ();
-				return dispatch_block_create_with_qos_class (flags, qosClass, relative_priority, ret);
+				return new DispatchBlock (dispatch_block_create_with_qos_class (flags, qosClass, relative_priority, ret));
 			}
 		}
 
-		public DispatchBlock CreateWithQos (DispatchBlockFlags flags, QosClass qosClass, int relative_priority, DispatchBlock dispatchBlock)
+		public DispatchBlock CreateWithQos (DispatchBlockFlags flags, DispatchQualityOfService qosClass, int relative_priority, DispatchBlock dispatchBlock)
 		{
-			return dispatch_block_create_with_qos_class (flags, qosClass, relative_priority, dispatchBlock);
+			if (dispatchBlock == null)
+				throw new ArgumentNullException (nameof (dispatchBlock));
+			return new DispatchBlock (dispatch_block_create_with_qos_class (flags, qosClass, relative_priority, dispatchBlock.blockHandle));
 		}
 
 		[DllImport (Constants.libcLibrary)]
-		extern static void dispatch_block_cancel (DispatchBlock block);
+		extern static void dispatch_block_cancel (IntPtr block);
 		
 		public void Cancel ()
 		{
-			dispatch_block_cancel (this);
+			dispatch_block_cancel (blockHandle);
 		}
 
 		[DllImport (Constants.libcLibrary)]
-		extern static void dispatch_block_notify (DispatchBlock block, IntPtr queue, DispatchBlock notification);
+		extern static void dispatch_block_notify (IntPtr block, IntPtr queue, IntPtr notification);
 		
 		public void Notify (DispatchQueue queue, DispatchBlock notification)
 		{
 			if (queue == null)
 				throw new ArgumentNullException (nameof (queue));
-			
-			dispatch_block_notify (this, queue.Handle, notification);
+			if (notification == null)
+				throw new ArgumentNullException (nameof (notification));
+			dispatch_block_notify (blockHandle, queue.Handle, notification.blockHandle);
 		}
 		
 		[DllImport (Constants.libcLibrary)]
-		extern static long dispatch_block_testcancel(DispatchBlock block);
+		extern static long dispatch_block_testcancel(IntPtr block);
 
 		public long TestCancel ()
 		{
-			return dispatch_block_testcancel (this);
+			return dispatch_block_testcancel (blockHandle);
 		}
 
 		[DllImport (Constants.libcLibrary)]
-		extern static long dispatch_block_wait (DispatchBlock block, DispatchTime time);
+		extern static long dispatch_block_wait (IntPtr block, DispatchTime time);
 
 		public void Wait (DispatchTime time)
 		{
-			dispatch_block_wait (this, time);
+			dispatch_block_wait (blockHandle, time);
 		}
 		
 		//
@@ -134,6 +131,25 @@ namespace CoreFoundation {
 			block.SetupBlockUnsafe (Trampolines.SDAction.Handler, codeToRun);
 			invoker ((IntPtr) block_ptr);
 			block_ptr->CleanupBlock ();
+		}
+
+		~DispatchBlock ()
+		{
+			Dispose (false);
+		}
+
+		public void Dispose ()
+		{
+			Dispose (true);
+		        GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose (bool disposing)
+		{
+			if (blockHandle != IntPtr.Zero){
+				_Block_release (blockHandle);
+				blockHandle = IntPtr.Zero;
+			}
 		}
 	}
 
