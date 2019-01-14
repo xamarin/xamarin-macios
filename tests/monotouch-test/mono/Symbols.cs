@@ -30,7 +30,7 @@ namespace MonoTouchFixtures {
 			bool interp = false;
 
 			if (!aot) {
-				for (int i = 0; i < 4 && !interp; i++) {
+				for (int i = 0; i < 5 && !interp; i++) {
 					/* ves_pinvoke_method (slow path) and do_icall (fast path) are
 					 * MONO_NEVER_INLINE, so they should show up in the backtrace
 					 * reliably */
