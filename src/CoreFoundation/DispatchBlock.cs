@@ -26,7 +26,7 @@ namespace CoreFoundation {
 	}
 
 	[StructLayout (LayoutKind.Sequential)]
-	internal struct DispatchBlock {
+	internal readonly struct DispatchBlock {
 		IntPtr block;
 
 		public DispatchBlock (IntPtr handle)
