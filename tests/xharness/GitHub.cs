@@ -13,6 +13,16 @@ namespace xharness
 {
 	public static class GitHub
 	{
+		static WebClient CreateClient ()
+		{
+			var client = new WebClient ();
+			client.Headers.Add (HttpRequestHeader.UserAgent, "xamarin");
+			var xharness_github_token_file = Environment.GetEnvironmentVariable ("XHARNESS_GITHUB_TOKEN_FILE");
+			if (!string.IsNullOrEmpty (xharness_github_token_file) && File.Exists (xharness_github_token_file))
+				client.Headers.Add (HttpRequestHeader.Authorization, File.ReadAllText (xharness_github_token_file));
+			return client;
+		}
+
 		public static string GetPullRequestTargetBranch (Harness harness, int pull_request)
 		{
 			if (pull_request <= 0)
@@ -66,13 +76,12 @@ namespace xharness
 			var path = Path.Combine (harness.LogDirectory, "pr" + pull_request + "-remote-files.log");
 			if (!File.Exists (path)) {
 				Directory.CreateDirectory (harness.LogDirectory);
-				using (var client = new WebClient ()) {
+				using (var client = CreateClient ()) {
 					var rv = new List<string> ();
 					var url = $"https://api.github.com/repos/xamarin/xamarin-macios/pulls/{pull_request}/files?per_page=100"; // 100 items per page is max
 					do {
 						byte [] data;
 						try {
-							client.Headers.Add (HttpRequestHeader.UserAgent, "xamarin");
 							data = client.DownloadData (url);
 						} catch (WebException we) {
 							harness.Log ("Could not load pull request files: {0}\n{1}", we, new StreamReader (we.Response.GetResponseStream ()).ReadToEnd ());
@@ -159,10 +168,9 @@ namespace xharness
 			var path = Path.Combine (harness.LogDirectory, "pr" + pull_request + ".log");
 			if (!File.Exists (path)) {
 				Directory.CreateDirectory (harness.LogDirectory);
-				using (var client = new WebClient ()) {
+				using (var client = CreateClient ()) {
 					byte [] data;
 					try {
-						client.Headers.Add (HttpRequestHeader.UserAgent, "xamarin");
 						data = client.DownloadData ($"https://api.github.com/repos/xamarin/xamarin-macios/pulls/{pull_request}");
 						File.WriteAllBytes (path, data);
 						return data;

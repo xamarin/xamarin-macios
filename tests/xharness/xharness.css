@@ -1,0 +1,96 @@
+.pdiv {
+    display: table;
+    padding-top: 10px;
+}
+
+.p1 {
+}
+
+.p2 {
+}
+
+.p3 {
+}
+
+.expander {
+    display: table-cell;
+    height: 100%;
+    padding-right: 6px;
+    text-align: center;
+    vertical-align: middle;
+    min-width: 10px;
+}
+
+.runall {
+    font-size: 75%;
+    margin-left: 3px;
+}
+
+.logs {
+    padding-bottom: 10px;
+    padding-top: 10px;
+    padding-left: 30px;
+}
+
+#nav {
+    display: inline-block;
+    width: 350px;
+}
+
+#nav > * {
+    display: inline;
+    width: 300px;
+}
+
+#nav ul {
+    background: #ffffff;
+    list-style: none;
+    position: absolute;
+    left: -9999px;
+    padding: 10px;
+    z-index: 2;
+    width: 200px;
+    border-style: ridge;
+    border-width: thin;
+}
+
+#nav li {
+    margin-right: 10px;
+    position: relative;
+}
+
+#nav a {
+    display: block;
+    padding: 5px;
+    text-decoration: none;
+}
+
+#nav a:hover {
+    text-decoration: underline;
+}
+
+#nav ul li {
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+}
+
+#nav ul a {
+    white-space: nowrap;
+}
+
+#nav li:hover ul {
+    left: 0;
+}
+
+#nav li:hover a {
+    text-decoration: underline;
+}
+
+#nav li:hover ul a {
+    text-decoration: none;
+}
+
+#nav li:hover ul li a:hover {
+    text-decoration: underline;
+}

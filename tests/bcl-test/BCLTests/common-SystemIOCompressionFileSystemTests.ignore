@@ -1,0 +1,5 @@
+# System.IO.DirectoryNotFoundException : Could not find a part of the path
+MonoTests.System.IO.Compression.FileSystem.ZipArchiveTests.ZipCreateFromDirectory
+MonoTests.System.IO.Compression.FileSystem.ZipArchiveTests.ZipCreateFromDirectoryIncludeBase
+MonoTests.System.IO.Compression.FileSystem.ZipArchiveTests.ZipCreateFromEntryChangeTimestamp
+MonoTests.System.IO.Compression.FileSystem.ZipArchiveTests.ZipExtractToDirectory
