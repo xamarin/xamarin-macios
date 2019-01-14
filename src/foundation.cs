@@ -3586,6 +3586,18 @@ namespace Foundation
 		[Export ("timeIntervalSinceReferenceDate")]
 		double SecondsSinceReferenceDate { get; }
 
+		[Export ("timeIntervalSinceDate:")]
+		double TimeIntervalSince (NSDate anotherDate);
+
+		[Export ("timeIntervalSinceNow")]
+		double TimeIntervalSinceNow { get; } 
+
+		[Export ("timeIntervalSince1970")]
+		double TimeIntervalSince1970 { get; } 
+
+		[Export ("timeIntervalSinceReferenceDate")]
+		double TimeIntervalSinceReferenceDate { get; } 
+
 		[Export ("dateWithTimeIntervalSinceReferenceDate:")]
 		[Static]
 		NSDate FromTimeIntervalSinceReferenceDate (double secs);
