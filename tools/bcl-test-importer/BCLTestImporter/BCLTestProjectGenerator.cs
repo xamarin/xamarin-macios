@@ -137,7 +137,6 @@ namespace BCLTestImporter {
 		};
 
 		static readonly List<string> watcOSIgnoredAssemblies = new List<string> {
-			"monotouch_Mono.Security_test.dll", // issue https://github.com/xamarin/maccore/issues/1142
 		};
 
 		private static readonly List<(string name, string[] assemblies)> macTestProjects = new List<(string name, string[] assemblies)> {

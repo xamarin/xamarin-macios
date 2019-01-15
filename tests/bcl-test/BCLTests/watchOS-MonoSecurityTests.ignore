@@ -1,0 +1,2 @@
+# System.TypeLoadException : Could not resolve type with token 010000c6 from typeref (expected class 'Mono.Net.Security.NoReflectionHelper' in assembly 'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089')
+MonoTests.Mono.Security.TestProvider.GetProvider
