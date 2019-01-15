@@ -17,7 +17,7 @@ namespace CoreFoundation {
 #if !COREBUILD
 
 	[StructLayout (LayoutKind.Sequential)]
-	public class DispatchBlock : NativeObject {
+	public sealed class DispatchBlock : NativeObject {
 		internal DispatchBlock (IntPtr handle, bool owns)
 			: base (handle, owns)
 		{
