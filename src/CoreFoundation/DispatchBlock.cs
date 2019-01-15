@@ -34,7 +34,7 @@ namespace CoreFoundation {
 		}
 
 		public DispatchBlock (DispatchBlock dispatchBlock, DispatchBlockFlags flags, DispatchQualityOfService qosClass, int relative_priority)
-			: base (dispatch_block_create_with_qos_class (flags, qosClass, relative_priority, Runtime.ThrowOnNull (dispatchBlock, nameof (dispatchBlock)).GetCheckedHandle ()), true)
+			: base (dispatch_block_create_with_qos_class ((nuint) (ulong) flags, qosClass, relative_priority, Runtime.ThrowOnNull (dispatchBlock, nameof (dispatchBlock)).GetCheckedHandle ()), true)
 		{
 		}
 
@@ -61,7 +61,7 @@ namespace CoreFoundation {
 
 		public DispatchBlock Create (DispatchBlockFlags flags, DispatchQualityOfService qosClass, int relative_priority)
 		{
-			return new DispatchBlock (dispatch_block_create_with_qos_class (flags, qosClass, relative_priority, GetCheckedHandle ()), true);
+			return new DispatchBlock (dispatch_block_create_with_qos_class ((nuint) (ulong) flags, qosClass, relative_priority, GetCheckedHandle ()), true);
 		}
 
 		protected override void Retain ()
@@ -75,7 +75,7 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.libcLibrary)]
-		extern static IntPtr dispatch_block_create (DispatchBlockFlags flags, ref BlockLiteral block);
+		extern static IntPtr dispatch_block_create (/*DispatchBlockFlags*/ nuint flags, ref BlockLiteral block);
 
 		// Returns a retained heap-allocated block
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -87,17 +87,17 @@ namespace CoreFoundation {
 			BlockLiteral block_handler = new BlockLiteral ();
 			try {
 				block_handler.SetupBlockUnsafe (BlockStaticDispatchClass.static_dispatch_block, action);
-				return dispatch_block_create (flags, ref block_handler);
+				return dispatch_block_create ((nuint) (ulong) flags, ref block_handler);
 			} finally {
 				block_handler.CleanupBlock ();
 			}
 		}
 
 		[DllImport (Constants.libcLibrary)]
-		extern static IntPtr dispatch_block_create_with_qos_class (DispatchBlockFlags flags, DispatchQualityOfService qosClass, int relative_priority, ref BlockLiteral dispatchBlock);
+		extern static IntPtr dispatch_block_create_with_qos_class (/*DispatchBlockFlags*/ nuint flags, DispatchQualityOfService qosClass, int relative_priority, ref BlockLiteral dispatchBlock);
 
 		[DllImport (Constants.libcLibrary)]
-		extern static IntPtr dispatch_block_create_with_qos_class (DispatchBlockFlags flags, DispatchQualityOfService qosClass, int relative_priority, IntPtr dispatchBlock);
+		extern static IntPtr dispatch_block_create_with_qos_class (/*DispatchBlockFlags*/ nuint flags, DispatchQualityOfService qosClass, int relative_priority, IntPtr dispatchBlock);
 
 		// Returns a retained heap-allocated block
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -109,7 +109,7 @@ namespace CoreFoundation {
 			BlockLiteral block_handler = new BlockLiteral ();
 			try {
 				block_handler.SetupBlockUnsafe (BlockStaticDispatchClass.static_dispatch_block, action);
-				return dispatch_block_create_with_qos_class (flags, qosClass, relative_priority, ref block_handler);
+				return dispatch_block_create_with_qos_class ((nuint) (ulong) flags, qosClass, relative_priority, ref block_handler);
 			} finally {
 				block_handler.CleanupBlock ();
 			}
@@ -206,6 +206,7 @@ namespace CoreFoundation {
 	}
 
 	[Flags]
+	[Native]
 	public enum DispatchBlockFlags : ulong {
 		None,
 		Barrier = 1,
