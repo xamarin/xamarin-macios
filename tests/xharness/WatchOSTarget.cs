@@ -73,7 +73,7 @@ namespace xharness
 			csproj.SetPlatformAssembly ("Xamarin.WatchOS");
 			csproj.SetImport (IsFSharp ? "$(MSBuildExtensionsPath)\\Xamarin\\WatchOS\\Xamarin.WatchOS.AppExtension.FSharp.targets" : "$(MSBuildExtensionsPath)\\Xamarin\\WatchOS\\Xamarin.WatchOS.AppExtension.CSharp.targets");
 			csproj.FixProjectReferences ("-watchos");
-			csproj.FixArchitectures ("i386", "ARMv7k");
+			csproj.FixArchitectures ("i386", "ARM64_32");
 			csproj.FixInfoPListInclude (suffix);
 			csproj.SetOutputType ("Library");
 			csproj.AddAdditionalDefines ("BITCODE", "iPhone", "Release");
