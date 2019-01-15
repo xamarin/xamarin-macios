@@ -89,12 +89,12 @@ namespace BCLTestImporter {
 					if (!types.Any ()) {
 						continue;
 					}
-					dict[Path.GetFileName (path)] = types.First (t => !t.IsAbstract && !t.IsGenericType && t.FullName.Contains ("Test"));
+					dict[Path.GetFileName (path)] = types.First (t => !t.IsGenericType && t.FullName.Contains ("Test"));
 				} catch (ReflectionTypeLoadException e) { // ReflectionTypeLoadException
 					// we did get an exception, possible reason, the type comes from an assebly not loaded, but 
 					// nevertheless we can do something about it, get all the not null types in the exception
 					// and use one of them
-					var types = e.Types.Where (t => t != null).Where (t => !t.IsAbstract && !t.IsGenericType && t.FullName.Contains ("Test"));
+					var types = e.Types.Where (t => t != null).Where (t => !t.IsGenericType && t.FullName.Contains ("Test"));
 					if (types.Any()) {
 						dict[Path.GetFileName (path)] = types.First ();
 					}
