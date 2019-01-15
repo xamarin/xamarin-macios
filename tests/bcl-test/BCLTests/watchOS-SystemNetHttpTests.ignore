@@ -1,0 +1,12 @@
+# System.PlatformNotSupportedException : System.Net.Sockets.Socket:Bind is not supported on this platform.
+MonoTests.System.Net.Http.HttpClientTest.Send_Complete_ClientHandlerSettings
+MonoTests.System.Net.Http.HttpClientTest.RequestUriAfterRedirect
+MonoTests.System.Net.Http.HttpClientTest.Proxy_Disabled
+MonoTests.System.Net.Http.HttpClientTest.ModifyHandlerAfterFirstRequest_Mock
+MonoTests.System.Net.Http.HttpClientTest.ModifyHandlerAfterFirstRequest
+MonoTests.System.Net.Http.HttpClientTest.DisallowAutoRedirect
+MonoTests.System.Net.Http.HttpClientTest.CancelRequestViaProxy
+MonoTests.System.Net.Http.HttpClientHandlerTest.Properties_Invalid
+MonoTests.System.Net.Http.HttpClientHandlerTest.Properties_Defaults
+MonoTests.System.Net.Http.HttpClientHandlerTest.Properties_AfterClientCreation
+MonoTests.System.Net.Http.HttpClientHandlerTest.Disposed

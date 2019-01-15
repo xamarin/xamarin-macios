@@ -1,0 +1,32 @@
+# #1
+#  Expected: instance of <System.Net.Http.HttpRequestException>
+#  But was:  <System.Net.WebException>
+MonoTests.System.Net.Http.HttpClientTest.WildcardConnect
+MonoTests.System.Net.Http.HttpClientTest.Send_Transfer_Encoding_Custom
+
+#  Error Domain=NSURLErrorDomain Code=-1022 "The resource could not be loaded because the App Transport Security policy requires the use of a secure connection."
+MonoTests.System.Net.Http.HttpClientTest.Send_Transfer_Encoding_Chunked
+MonoTests.System.Net.Http.HttpClientTest.Send_Content_Put_CustomStream
+MonoTests.System.Net.Http.HttpClientTest.Send_Content_Put
+MonoTests.System.Net.Http.HttpClientTest.Send_Content_Get
+MonoTests.System.Net.Http.HttpClientTest.Send_Content_BomEncoding
+MonoTests.System.Net.Http.HttpClientTest.Send_Complete_Version_1_0
+MonoTests.System.Net.Http.HttpClientTest.Send_Complete_NoContent_Put
+MonoTests.System.Net.Http.HttpClientTest.Send_Complete_NoContent_Post
+MonoTests.System.Net.Http.HttpClientTest.Send_Complete_NoContent_Delete
+MonoTests.System.Net.Http.HttpClientTest.Send_Complete_Error
+MonoTests.System.Net.Http.HttpClientTest.Send_Complete_Default
+MonoTests.System.Net.Http.HttpClientTest.Send_Complete_CustomHeaders_SpecialSeparators
+MonoTests.System.Net.Http.HttpClientTest.Send_Complete_CustomHeaders_Host
+MonoTests.System.Net.Http.HttpClientTest.Send_Complete_CustomHeaders
+MonoTests.System.Net.Http.HttpClientTest.Send_Complete_Content_MaxResponseContentBufferSize
+MonoTests.System.Net.Http.HttpClientTest.Send_Complete_Content
+MonoTests.System.Net.Http.HttpClientTest.Post_TransferEncodingChunked
+MonoTests.System.Net.Http.HttpClientTest.Post_StreamCaching
+MonoTests.System.Net.Http.HttpClientTest.GetString_Many
+
+#  #3
+#  Expected: True
+#  But was:  False
+MonoTests.System.Net.Http.HttpClientTest.Send_Complete_Content_MaxResponseContentBufferSize_Error
+MonoTests.System.Net.Http.HttpClientTest.GetByteArray_ServerError
