@@ -34,12 +34,21 @@ namespace UIKit {
 		{
 		}
 
-		// Called by the Dispose() method
+		// Called by the Dispose() method, because this can run from a finalizer, we need to
+		// (a) reference the handle, that we will release later, and (b) to remove the targets on the
+		// UI thread.
 		void OnDispose ()
 		{
-			foreach (var kv in recognizers)
-				RemoveTarget (kv.Key, kv.Value);
+			var copyOfRecognizers = recognizers;
+			var savedHandle = Handle;
 			recognizers = null;
+			
+			DangerousRetain (savedHandle);
+			NSRunLoop.Main.BeginInvokeOnMainThread (() => {
+				foreach (var kv in copyOfRecognizers)
+					RemoveTarget (kv.Key, kv.Value);
+				DangerousRelease (savedHandle);
+			});
 		}
 		
 		//
