@@ -1,0 +1,3 @@
+# System.NotImplementedException : DTC unsupported, only SinglePhase commit supported for durable resource managers. 
+MonoTests.System.Transactions.EnlistTest.Vol0_Dur1_2PC
+MonoTests.System.Transactions.EnlistTest.Vol0_Dur2

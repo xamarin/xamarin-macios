@@ -110,7 +110,6 @@ namespace BCLTestImporter {
 			
 		static readonly List <string> CommonIgnoredAssemblies = new List <string> {
 			"monotouch_System.Security_xunit-test.dll",// issue https://github.com/xamarin/maccore/issues/1128
-			"monotouch_System.Transactions_test.dll", // issue https://github.com/xamarin/maccore/issues/1134
 			"monotouch_System_test.dll", // issues https://github.com/xamarin/maccore/issues/1135
 			"monotouch_System.Security_test.dll", // issue https://github.com/xamarin/maccore/issues/1139
 			"monotouch_System.Net.Http_test.dll", // issue https://github.com/xamarin/maccore/issues/1144 and https://github.com/xamarin/maccore/issues/1145
