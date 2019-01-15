@@ -138,11 +138,9 @@ namespace BCLTestImporter {
 		static readonly List<string> iOSIgnoredAssemblies = new List<string> {};
 
 		static readonly List<string> tvOSIgnoredAssemblies = new List<string> {
-			"monotouch_System.Xml.Linq_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1130
 		};
 
 		static readonly List<string> watcOSIgnoredAssemblies = new List<string> {
-			"monotouch_System.Xml.Linq_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1130
 			"monotouch_Mono.Security_test.dll", // issue https://github.com/xamarin/maccore/issues/1142
 		};
 
