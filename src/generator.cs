@@ -5270,7 +5270,16 @@ public partial class Generator : IMemberGatherer {
 					indent++;
 					print ("using (var autorelease_pool = new NSAutoreleasePool ()) {");
 				}
-				GenerateMethodBody (minfo, minfo.method, minfo.selector, false, null, BodyOption.None, null);
+				PropertyInfo pinfo = null;
+				MethodInfo method = minfo.method;
+				bool null_allowed = AttributeManager.HasAttribute<NullAllowedAttribute> (method);
+				if (method.IsSpecialName) {
+					// could be a property getter/setter
+					pinfo = GetProperty (method);
+					if (pinfo != null)
+						null_allowed = AttributeManager.HasAttribute<NullAllowedAttribute> (pinfo);
+				}
+				GenerateMethodBody (minfo, method, minfo.selector, null_allowed, null, BodyOption.None, pinfo);
 				if (minfo.is_autorelease) {
 					print ("}");
 					indent--;
@@ -5295,6 +5304,15 @@ public partial class Generator : IMemberGatherer {
 				GenerateAsyncMethod (minfo, AsyncMethodKind.WithResultOutParameter);
 			}
 		}
+	}
+
+	static PropertyInfo GetProperty (MethodInfo method)
+	{
+		var props = method.DeclaringType.GetProperties ();
+		if (method.GetParameters ().Length == 0)
+			return props.FirstOrDefault (prop => prop.GetGetMethod () == method);
+		else
+			return props.FirstOrDefault (prop => prop.GetSetMethod () == method);
 	}
 	
 	public string GetGeneratedTypeName (Type type)
