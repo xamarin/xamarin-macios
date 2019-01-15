@@ -121,7 +121,7 @@ namespace CoreFoundation {
 		// the unmanaged code to release the resources allocated on the managed side
 		//
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public static unsafe void Invoke (Action codeToRun, Action<IntPtr> invoker)
+		internal static unsafe void Invoke (Action codeToRun, Action<IntPtr> invoker)
 		{
 			BlockLiteral *block_ptr;
 			BlockLiteral block;
