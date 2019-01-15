@@ -4,7 +4,7 @@
 // Authors:
 //   Miguel de Icaza (miguel@gnome.org)
 //
-// Copyright 2015 Xamarin Inc
+// Copyright 2019 Microsoft Corp.
 //
 //
 using System;
