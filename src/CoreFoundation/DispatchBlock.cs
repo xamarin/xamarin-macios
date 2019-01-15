@@ -24,19 +24,19 @@ namespace CoreFoundation {
 		{
 			this.blockHandle = handle;
 		}
-				
+
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		unsafe internal static extern IntPtr _Block_copy (BlockLiteral *block_literal);
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		unsafe internal static extern void _Block_release (IntPtr blockHandle);
-		
+
 		public DispatchBlock Create (Action action)
 		{
 			unsafe {
-			        BlockLiteral block_handler = new BlockLiteral ();
-			        BlockLiteral *block_ptr_handler = &block_handler;
-			        block_handler.SetupBlockUnsafe (BlockStaticDispatchClass.static_dispatch_block, action);
+				BlockLiteral block_handler = new BlockLiteral ();
+				BlockLiteral *block_ptr_handler = &block_handler;
+				block_handler.SetupBlockUnsafe (BlockStaticDispatchClass.static_dispatch_block, action);
 				DispatchBlock ret = new DispatchBlock (_Block_copy (block_ptr_handler));
 				block_handler.CleanupBlock ();
 				return ret;
@@ -45,13 +45,13 @@ namespace CoreFoundation {
 
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_block_create (DispatchBlockFlags flags, IntPtr block);
-		
+
 		public DispatchBlock Create (Action action, DispatchBlockFlags flags)
 		{
 			unsafe {
-			        BlockLiteral block_handler = new BlockLiteral ();
-			        BlockLiteral *block_ptr_handler = &block_handler;
-			        block_handler.SetupBlockUnsafe (BlockStaticDispatchClass.static_dispatch_block, action);
+				BlockLiteral block_handler = new BlockLiteral ();
+				BlockLiteral *block_ptr_handler = &block_handler;
+				block_handler.SetupBlockUnsafe (BlockStaticDispatchClass.static_dispatch_block, action);
 				var ret =  _Block_copy (block_ptr_handler);
 				block_handler.CleanupBlock ();
 				return new DispatchBlock (dispatch_block_create (flags, ret));
@@ -64,9 +64,9 @@ namespace CoreFoundation {
 		public DispatchBlock CreateWithQos (DispatchBlockFlags flags, DispatchQualityOfService qosClass, int relative_priority, Action action)
 		{
 			unsafe {
-			        BlockLiteral block_handler = new BlockLiteral ();
-			        BlockLiteral *block_ptr_handler = &block_handler;
-			        block_handler.SetupBlockUnsafe (BlockStaticDispatchClass.static_dispatch_block, action);
+				BlockLiteral block_handler = new BlockLiteral ();
+				BlockLiteral *block_ptr_handler = &block_handler;
+				block_handler.SetupBlockUnsafe (BlockStaticDispatchClass.static_dispatch_block, action);
 				var ret = _Block_copy (block_ptr_handler);
 				block_handler.CleanupBlock ();
 				return new DispatchBlock (dispatch_block_create_with_qos_class (flags, qosClass, relative_priority, ret));
@@ -82,7 +82,7 @@ namespace CoreFoundation {
 
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_block_cancel (IntPtr block);
-		
+
 		public void Cancel ()
 		{
 			dispatch_block_cancel (blockHandle);
@@ -90,7 +90,7 @@ namespace CoreFoundation {
 
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_block_notify (IntPtr block, IntPtr queue, IntPtr notification);
-		
+
 		public void Notify (DispatchQueue queue, DispatchBlock notification)
 		{
 			if (queue == null)
@@ -99,9 +99,9 @@ namespace CoreFoundation {
 				throw new ArgumentNullException (nameof (notification));
 			dispatch_block_notify (blockHandle, queue.Handle, notification.blockHandle);
 		}
-		
+
 		[DllImport (Constants.libcLibrary)]
-		extern static long dispatch_block_testcancel(IntPtr block);
+		extern static long dispatch_block_testcancel (IntPtr block);
 
 		public long TestCancel ()
 		{
@@ -115,7 +115,7 @@ namespace CoreFoundation {
 		{
 			dispatch_block_wait (blockHandle, time);
 		}
-		
+
 		//
 		// You must invoke ->CleanupBlock after you have transferred ownership to
 		// the unmanaged code to release the resources allocated on the managed side
@@ -141,12 +141,12 @@ namespace CoreFoundation {
 		public void Dispose ()
 		{
 			Dispose (true);
-		        GC.SuppressFinalize(this);
+		        GC.SuppressFinalize (this);
 		}
 
 		protected virtual void Dispose (bool disposing)
 		{
-			if (blockHandle != IntPtr.Zero){
+			if (blockHandle != IntPtr.Zero) {
 				_Block_release (blockHandle);
 				blockHandle = IntPtr.Zero;
 			}
@@ -160,7 +160,7 @@ namespace CoreFoundation {
 		AssignCurrent = 4,
 		NoQosClass = 8,
 		InheritQosClass = 16,
-		EnforceQosClass = 32
+		EnforceQosClass = 32,
 	}
 #endif // !COREBUILD
 }
