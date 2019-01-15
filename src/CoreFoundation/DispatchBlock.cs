@@ -144,9 +144,9 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.libcLibrary)]
-		extern static long dispatch_block_testcancel (IntPtr block);
+		extern static nint dispatch_block_testcancel (IntPtr block);
 
-		public long TestCancel ()
+		public nint TestCancel ()
 		{
 			return dispatch_block_testcancel (GetCheckedHandle ());
 		}
@@ -156,14 +156,14 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.libcLibrary)]
-		extern static long dispatch_block_wait (IntPtr block, DispatchTime time);
+		extern static nint dispatch_block_wait (IntPtr block, DispatchTime time);
 
-		public long Wait (DispatchTime time)
+		public nint Wait (DispatchTime time)
 		{
 			return dispatch_block_wait (GetCheckedHandle (), time);
 		}
 
-		public long Wait (TimeSpan timeout)
+		public nint Wait (TimeSpan timeout)
 		{
 			return Wait (new DispatchTime (DispatchTime.Now, timeout));
 		}
