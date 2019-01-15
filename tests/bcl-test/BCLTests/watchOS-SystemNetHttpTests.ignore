@@ -10,3 +10,12 @@ MonoTests.System.Net.Http.HttpClientHandlerTest.Properties_Invalid
 MonoTests.System.Net.Http.HttpClientHandlerTest.Properties_Defaults
 MonoTests.System.Net.Http.HttpClientHandlerTest.Properties_AfterClientCreation
 MonoTests.System.Net.Http.HttpClientHandlerTest.Disposed
+MonoTests.System.Net.Http.HttpClientTest.GetByteArray_ServerError
+MonoTests.System.Net.Http.HttpClientTest.GetString_Many
+MonoTests.System.Net.Http.HttpClientTest.Send_Complete_Content_MaxResponseContentBufferSize
+MonoTests.System.Net.Http.HttpClientTest.Send_Complete_CustomHeaders_Host
+MonoTests.System.Net.Http.HttpClientTest.Send_Complete_CustomHeaders_SpecialSeparators
+MonoTests.System.Net.Http.HttpClientTest.Send_Complete_Error
+MonoTests.System.Net.Http.HttpClientTest.Send_Content_BomEncoding
+MonoTests.System.Net.Http.HttpClientTest.Send_Content_Get
+MonoTests.System.Net.Http.HttpClientTest.Send_Content_Put
