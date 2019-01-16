@@ -35,5 +35,10 @@
       <key>NSExtensionPointIdentifier</key>
       <string>com.apple.watchkit</string>
     </dict>
+    	<key>NSAppTransportSecurity</key>
+		<dict>
+			<key>NSAllowsArbitraryLoads</key>
+			<true/>
+		</dict>
   </dict>
 </plist>
