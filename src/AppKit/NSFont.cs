@@ -144,7 +144,7 @@ namespace AppKit {
 		}
  
  		[Deprecated (PlatformName.MacOSX, 10, 13)]
-		public NSFont PrinterFont { 
+		public virtual NSFont PrinterFont { 
 			get {
 				var ptr = _PrinterFont;
 				return ptr == IntPtr.Zero ? null : new NSFont (ptr);
@@ -152,7 +152,7 @@ namespace AppKit {
 		}
  
  		[Deprecated (PlatformName.MacOSX, 10, 13)]
-		public NSFont ScreenFont {
+		public virtual NSFont ScreenFont {
 			get {
 				var ptr = _ScreenFont;
 				return ptr == IntPtr.Zero ? null : new NSFont (ptr);
@@ -160,13 +160,13 @@ namespace AppKit {
 		}
  
  		[Deprecated (PlatformName.MacOSX, 10, 13)]
-		public NSFont ScreenFontWithRenderingMode (NSFontRenderingMode renderingMode)
+		public virtual NSFont ScreenFontWithRenderingMode (NSFontRenderingMode renderingMode)
 		{
 			var ptr = _ScreenFontWithRenderingMode (renderingMode);
 			return ptr == IntPtr.Zero ? null : new NSFont (ptr);
 		}
  
-		public NSFont GetVerticalFont ()
+		public virtual NSFont GetVerticalFont ()
 		{
 			var ptr = _GetVerticalFont ();
 			return ptr == IntPtr.Zero ? null : new NSFont (ptr);
