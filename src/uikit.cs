@@ -591,7 +591,7 @@ namespace UIKit {
 		IntPtr _FirstAnchor<AnchorType> ();
 	
 		[iOS (10,0), TV (10,0)]
-		[NullAllowed, Export ("secondAnchor", ArgumentSemantic.Copy)]
+		[Export ("secondAnchor", ArgumentSemantic.Copy)]
 		[Internal]
 		IntPtr _SecondAnchor<AnchorType> ();
 #endif
@@ -3690,7 +3690,8 @@ namespace UIKit {
 		UICollectionViewDataSource DataSource { get; set; }
 
 		[Export ("backgroundView", ArgumentSemantic.Retain)]
-		UIView BackgroundView { get; [NullAllowed] set; }
+		[NullAllowed]
+		UIView BackgroundView { get; set; }
 
 		[Export ("allowsSelection")]
 		bool AllowsSelection { get; set;  }
@@ -7359,7 +7360,8 @@ namespace UIKit {
 		UIBezierPath FromRoundedRect (CGRect rect, nfloat cornerRadius);
 
 		[Export ("CGPath")]
-		CGPath CGPath { get; [NullAllowed] set; }
+		[NullAllowed]
+		CGPath CGPath { get; set; }
 
 		[Export ("moveToPoint:")]
 		void MoveTo (CGPoint point);
@@ -7760,13 +7762,16 @@ namespace UIKit {
 		UIDatePickerMode Mode { get; set; }
 
 		[Export ("locale", ArgumentSemantic.Retain)]
-		NSLocale Locale { get; [NullAllowed] set; }
+		[NullAllowed]
+		NSLocale Locale { get; set; }
 
 		[Export ("timeZone", ArgumentSemantic.Retain)]
-		NSTimeZone TimeZone { get; [NullAllowed] set; }
+		[NullAllowed]
+		NSTimeZone TimeZone { get; set; }
 
 		[Export ("calendar", ArgumentSemantic.Copy)]
-		NSCalendar Calendar { get; [NullAllowed] set; }
+		[NullAllowed]
+		NSCalendar Calendar { get; set; }
 
 		// not fully clear from docs but null is not allowed:
 		// Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: Invalid parameter not satisfying: date
@@ -7774,10 +7779,12 @@ namespace UIKit {
 		NSDate Date { get; set; }
 		
 		[Export ("minimumDate", ArgumentSemantic.Retain)]
-		NSDate MinimumDate { get; [NullAllowed] set; }
+		[NullAllowed]
+		NSDate MinimumDate { get; set; }
 		
 		[Export ("maximumDate", ArgumentSemantic.Retain)]
-		NSDate MaximumDate { get; [NullAllowed] set; }
+		[NullAllowed]
+		NSDate MaximumDate { get; set; }
 
 		[Export ("countDownDuration")]
 		double CountDownDuration { get; set; }
@@ -8414,7 +8421,7 @@ namespace UIKit {
 		UIBarButtonItem BackBarButtonItem { get; set; }
 
 		[Export ("titleView", ArgumentSemantic.Retain), NullAllowed]
-		UIView TitleView { get; [NullAllowed] set; }
+		UIView TitleView { get; set; }
 
 		[NoTV]
 		[Export ("prompt", ArgumentSemantic.Copy), NullAllowed]
@@ -10890,7 +10897,8 @@ namespace UIKit {
 
 		[NoTV]
 		[Export ("customizableViewControllers", ArgumentSemantic.Copy)]
-		UIViewController [] CustomizableViewControllers { get; [NullAllowed]  set; }
+		[NullAllowed]
+		UIViewController [] CustomizableViewControllers { get; set; }
 
 		[Export ("tabBar")]
 		UITabBar TabBar { get; }
@@ -11685,7 +11693,7 @@ namespace UIKit {
 		UITableViewCellAccessory Accessory { get; set; }
 
 		[Export ("accessoryView", ArgumentSemantic.Retain)][NullAllowed]
-		UIView AccessoryView { get; [NullAllowed] set; }
+		UIView AccessoryView { get; set; }
 		
 		[Export ("editingAccessoryType")]
 		UITableViewCellAccessory EditingAccessory { get; set; }
@@ -12030,13 +12038,16 @@ namespace UIKit {
 		IntPtr Constructor (CGRect frame);
 
 		[Export ("text", ArgumentSemantic.Copy)]
-		string Text { get; [NullAllowed] set; }
+		[NullAllowed]
+		string Text { get; set; }
 
 		[Export ("textColor", ArgumentSemantic.Retain)]
-		UIColor TextColor { get; [NullAllowed] set; }
+		[NullAllowed]
+		UIColor TextColor { get; set; }
 
 		[Export ("font", ArgumentSemantic.Retain)]
-		UIFont Font { get; [NullAllowed] set; }
+		[NullAllowed]
+		UIFont Font { get; set; }
 
 		[Export ("textAlignment")]
 		UITextAlignment TextAlignment { get; set; }
@@ -12045,7 +12056,8 @@ namespace UIKit {
 		UITextBorderStyle BorderStyle { get; set; }
 
 		[Export ("placeholder", ArgumentSemantic.Copy)]
-		string Placeholder { get; [NullAllowed] set; }
+		[NullAllowed]
+		string Placeholder { get; set; }
 
 		[Export ("clearsOnBeginEditing")]
 		bool ClearsOnBeginEditing { get; set; }
@@ -12057,17 +12069,19 @@ namespace UIKit {
 		nfloat MinimumFontSize { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Assign)][NullAllowed]
-		NSObject WeakDelegate { get; [NullAllowed] set; }
+		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
 		[Protocolize]
-		UITextFieldDelegate Delegate { get; [NullAllowed] set; }
+		UITextFieldDelegate Delegate { get; set; }
 
 		[Export ("background", ArgumentSemantic.Retain)]
-		UIImage Background { get; [NullAllowed] set; }
+		[NullAllowed]
+		UIImage Background { get; set; }
 
 		[Export ("disabledBackground", ArgumentSemantic.Retain)]
-		UIImage DisabledBackground { get; [NullAllowed] set; }
+		[NullAllowed]
+		UIImage DisabledBackground { get; set; }
 
 		[Export ("isEditing")]
 		bool IsEditing { get; }
@@ -13473,7 +13487,8 @@ namespace UIKit {
 
 		// These come from @interface UIViewController (UINavigationControllerContextualToolbarItems)
 		[Export ("toolbarItems", ArgumentSemantic.Retain)]
-		UIBarButtonItem [] ToolbarItems { get; [NullAllowed] set; }
+		[NullAllowed]
+		UIBarButtonItem [] ToolbarItems { get; set; }
 
 		[NoTV]
 		[Export ("setToolbarItems:animated:")][PostGet ("ToolbarItems")]
@@ -16278,7 +16293,8 @@ namespace UIKit {
 		NSAttributedString GetAccessibilityAttributedContent (nint lineNumber);
 
 		[TV (11,0), iOS (11,0)]
-		[NullAllowed, Export ("accessibilityAttributedPageContent")]
+		[Export ("accessibilityAttributedPageContent")]
+		[return: NullAllowed]
 		NSAttributedString GetAccessibilityAttributedPageContent ();
 	}
 
