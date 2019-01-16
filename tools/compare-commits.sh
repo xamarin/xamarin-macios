@@ -210,6 +210,7 @@ MODIFIED_FILES=$(find \
 	"$ROOT_DIR/_mac-build" \
 	"$ROOT_DIR/src" \
 	"$ROOT_DIR/tools/apidiff" \
+	-type f \
 	-newer "$OUTPUT_DIR/stamp")
 
 if test -n "$MODIFIED_FILES"; then

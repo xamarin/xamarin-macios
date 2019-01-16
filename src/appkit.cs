@@ -608,7 +608,8 @@ namespace AppKit {
 		NSMenu MainMenu { get; set; }
 	
 		[Export ("helpMenu", ArgumentSemantic.Retain)]
-		NSMenu HelpMenu { get; [NullAllowed] set; }
+		[NullAllowed]
+		NSMenu HelpMenu { get; set; }
 	
 		[Export ("applicationIconImage", ArgumentSemantic.Retain)]
 		NSImage ApplicationIconImage { get; set; }
@@ -1116,7 +1117,8 @@ namespace AppKit {
 		NSObject [] SortDescriptors { get; set; }
 
 		[Export ("filterPredicate", ArgumentSemantic.Retain)]
-		NSPredicate FilterPredicate { get; [NullAllowed] set; }
+		[NullAllowed]
+		NSPredicate FilterPredicate { get; set; }
 
 		[Export ("clearsFilterPredicateOnInsertion")]
 		bool ClearsFilterPredicateOnInsertion { get; set; }
@@ -5511,7 +5513,8 @@ namespace AppKit {
 		void ShouldCloseWindowController (NSWindowController windowController, NSObject delegateObject, Selector shouldCloseSelector, IntPtr contextInfo);
 
 		[Export ("displayName")]
-		string DisplayName { get; [NullAllowed] set; }
+		[NullAllowed]
+		string DisplayName { get; set; }
 
 		[Export ("windowForSheet")]
 		NSWindow WindowForSheet { get; }
@@ -8117,7 +8120,8 @@ namespace AppKit {
 		NSMenu Menu { get; set; }
 
 		[Export ("submenu", ArgumentSemantic.Retain)]
-		NSMenu Submenu { get; [NullAllowed] set; }
+		[NullAllowed]
+		NSMenu Submenu { get; set; }
 
 		[Export ("title")]
 		string Title { get; set; }
@@ -10040,7 +10044,8 @@ namespace AppKit {
 
 		//Detected properties
 		[Export ("image", ArgumentSemantic.Retain)]
-		NSImage Image { get; [NullAllowed] set; }
+		[NullAllowed]
+		NSImage Image { get; set; }
 
 		[Export ("imageAlignment")]
 		NSImageAlignment ImageAlignment { get; set; }
@@ -12738,7 +12743,7 @@ namespace AppKit {
 	interface NSResponder_NSTouchBarProvider : INSTouchBarProvider
 	{
 		[Mac (10, 12, 2)]
-		[NullAllowed, Export ("touchBar")]
+		[Export ("touchBar")]
 		NSTouchBar GetTouchBar ();
 
 		[Mac (10, 12, 2)]
@@ -12746,7 +12751,7 @@ namespace AppKit {
 		void SetTouchBar ([NullAllowed]NSTouchBar bar);
 
 		[Mac (10, 12, 2)]
-		[NullAllowed, Export ("makeTouchBar")]
+		[Export ("makeTouchBar")]
 		NSTouchBar MakeTouchBar ();
 	}
 
@@ -14808,7 +14813,8 @@ namespace AppKit {
 
 		[Availability (Deprecated = Platform.Mac_10_10, Message = "Soft-deprecation, forwards message to button, but will be gone in the future.")]
 		[Export ("view")]
-		NSView View { get; [NullAllowed] set; }
+		[NullAllowed]
+		NSView View { get; set; }
 
 		[Mac (10,10)]
 		[Export ("button", ArgumentSemantic.Retain)]
@@ -20490,7 +20496,8 @@ namespace AppKit {
 		void MenuChanged (NSMenu  menu);
 	
 		[Export ("windowController")]
-		NSObject WindowController { get; [NullAllowed] set; }
+		[NullAllowed]
+		NSObject WindowController { get; set; }
 	
 		[Export ("isSheet")]
 		bool IsSheet { get; }
@@ -20555,7 +20562,8 @@ namespace AppKit {
 		NSSelectionDirection KeyViewSelectionDirection ();
 	
 		[Export ("defaultButtonCell")]
-		NSButtonCell DefaultButtonCell { get; [NullAllowed] set; }
+		[NullAllowed]
+		NSButtonCell DefaultButtonCell { get; set; }
 	
 		[Export ("disableKeyEquivalentForDefaultButtonCell")]
 		void DisableKeyEquivalentForDefaultButtonCell ();
@@ -25763,7 +25771,7 @@ namespace AppKit {
 	interface NSView_NSCandidateListTouchBarItem
 	{
 		[Mac (10, 12, 2)]
-		[NullAllowed, Export ("candidateListTouchBarItem")]
+		[Export ("candidateListTouchBarItem")]
 		NSCandidateListTouchBarItem GetCandidateListTouchBarItem (); 
 	}
 

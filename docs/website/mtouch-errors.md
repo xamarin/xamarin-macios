@@ -945,6 +945,15 @@ This error occurs when `mtouch` reads a binary in a `.framework` directory that 
 
 It might be a broken file or a broken symlink (after decompressing an archive) to a valid file. The native framework should be removed and replaced with a valid one. 
 
+<a name="MT0141"/>
+
+### MT0141: The interpreter is not supported in the simulator. Do not pass --interpreter when building for the simulator.
+
+This error occurs when enabling the interpreter on a simulator build.
+
+The interpreter is only available for device builds as an complete or partial alternative to the ahead-of-time (AOT) compilation.
+In contrast simulator builds are using just-in-time compilation which negates most advantages of the interpreter.
+
 # MT1xxx: Project related error messages
 
 ### MT10xx: Installer / mtouch

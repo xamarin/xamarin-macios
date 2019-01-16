@@ -15,6 +15,7 @@ errorMessage = null
 currentStage = null
 failedStages = []
 workspace = null
+manualException = false
 
 xiPackageFilename = null
 xmPackageFilename = null
@@ -190,7 +191,7 @@ def reportFinalStatus (err, gitHash, currentStage)
         if (failedStages.size () > 0)
             comment += " in stage(s) '${failedStages.join (', ')}'"
         comment += " 🔥"
-        if (err != "")
+        if (!manualException && err != "")
             comment += " : ${err}"
         manager.addErrorBadge (comment)
         manager.buildFailure ()
@@ -721,29 +722,21 @@ timestamps {
                                                 echo (skipLocalTestRunReason)
                                                 appendFileComment ("ℹ️ Test run skipped: ${skipLocalTestRunReason}\n")
                                             } else {
-                                                echo ("Html report: ${reportPrefix}/tests/index.html")
-                                                def runTestResult = sh (script: "${workspace}/xamarin-macios/jenkins/run-tests.sh --target=wrench-jenkins --publish --keychain=xamarin-macios", returnStatus: true)
-                                                if (runTestResult != 0) {
-                                                    echoError ("Test run failed")
-                                                    currentBuild.result = 'FAILURE'
-                                                    failedStages.add (currentStage)
+                                                def XHARNESS_GITHUB_TOKEN_FILE = "${workspace}/xamarin-macios/jenkins/.github-pat-token"
+                                                withCredentials ([string (credentialsId: 'macios_github_comment_token', variable: 'GITHUB_PAT_TOKEN')]) {
+                                                    writeFile (file: "${XHARNESS_GITHUB_TOKEN_FILE}", text: "${GITHUB_PAT_TOKEN}")
                                                 }
-                                            }
-                                        }
-                                        stage ('Test docs') {
-                                            currentStage = "${STAGE_NAME}"
-                                            echo ("Building on ${env.NODE_NAME}")
-                                            def targetBranch = isPr ? githubGetPullRequestInfo () ["base"] ["ref"] : "${BRANCH_NAME}"
-                                            def hasRunDocsTestsLabel = isPr ? githubGetPullRequestLabels ().contains ("run-docs-tests") : false
-                                            def testDocs = targetBranch == "master" || hasRunDocsTestsLabel
-                                            if (!testDocs) {
-                                                echo ("Skipping docs testing, it's only done on master (current (target) branch is ${targetBranch})")
-                                            } else {
-                                                def testDocsResult = sh (script: "make -C ${workspace}/xamarin-macios/tests wrench-docs", returnStatus: true)
-                                                if (testDocsResult != 0) {
-                                                    echoError ("Test docs failed")
-                                                    currentBuild.result = 'FAILURE'
+                                                echo ("Html report: ${reportPrefix}/tests/index.html")
+                                                def runTestResult = null
+                                                withEnv (["XHARNESS_GITHUB_TOKEN_FILE=${XHARNESS_GITHUB_TOKEN_FILE}"]) {
+                                                    runTestResult = sh (script: "${workspace}/xamarin-macios/jenkins/run-tests.sh --target=wrench-jenkins --publish --keychain=xamarin-macios", returnStatus: true)
+                                                }
+                                                if (runTestResult != 0) {
                                                     failedStages.add (currentStage)
+                                                    manualException = true
+                                                    error ("Test run failed: ${reportPrefix}/tests/index.html")
+                                                } else {
+                                                    echo ("${currentStage} succeeded")
                                                 }
                                             }
                                         }
