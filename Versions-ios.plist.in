@@ -139,6 +139,7 @@
 		<string>http-client-handlers</string>
 		<string>mono-symbol-archive</string>
 		<string>sgen-concurrent-gc</string>
+		<string>siri-intents</string>
 	</array>
 	<key>Optimizations</key>
 	<dict>
