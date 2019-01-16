@@ -359,6 +359,7 @@ namespace Xamarin.Bundler
 					return Path.Combine (cross_prefix, "bin", "arm-darwin-mono-sgen");
 				}
 			case ApplePlatform.WatchOS:
+				/* TODO: use different AOT compiler for ARM64_32 once available */
 				return Path.Combine (cross_prefix, "bin", "armv7k-unknown-darwin-mono-sgen");
 			case ApplePlatform.TVOS:
 				return Path.Combine (cross_prefix, "bin", "arm64-darwin-mono-sgen");
