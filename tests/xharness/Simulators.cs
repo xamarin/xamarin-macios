@@ -881,7 +881,7 @@ namespace xharness
 
 				// https://www.theiphonewiki.com/wiki/List_of_Apple_Watches
 				if (model.StartsWith ("Watch", StringComparison.Ordinal)) {
-					var identifier = model.Substring ("iPod".Length);
+					var identifier = model.Substring ("Watch".Length);
 					var values = identifier.Split (',');
 					switch (values [0]) {
 						case "1": // Apple Watch (1st gen)
