@@ -431,6 +431,7 @@ namespace AppKit {
 	interface NSAppearanceCustomization {
 
 		[Mac (10,9)]
+		[NullAllowed]
 		[Export ("appearance", ArgumentSemantic.Strong)]
 		NSAppearance Appearance { get; set; }
 
