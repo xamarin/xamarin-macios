@@ -700,8 +700,7 @@ namespace xharness
 			var nunitExecutioniOSMSBuild = new NUnitExecuteTask (buildiOSMSBuild)
 			{
 				TestLibrary = Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "bin", "Xamarin.iOS.Tasks.Tests.dll"),
-				TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.Runners.2.6.4", "tools", "nunit-console.exe"),
-				WorkingDirectory = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.Runners.2.6.4", "tools", "lib"),
+				TestProject = new TestProject (Path.Combine (Path.GetDirectoryName (buildiOSMSBuild.TestProject.Path), "tests", "Xamarin.iOS.Tasks.Tests", "Xamarin.iOS.Tasks.Tests.csproj")),
 				Platform = TestPlatform.iOS,
 				TestName = "MSBuild tests",
 				Mode = "iOS",
@@ -722,8 +721,7 @@ namespace xharness
 			var nunitExecutionInstallSource = new NUnitExecuteTask (buildInstallSources)
 			{
 				TestLibrary = Path.Combine (Harness.RootDirectory, "..", "tools", "install-source", "InstallSourcesTests", "bin", "Release", "InstallSourcesTests.dll"),
-				TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.Runners.2.6.4", "tools", "nunit-console.exe"),
-				WorkingDirectory = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.Runners.2.6.4", "tools", "lib"),
+				TestProject = buildInstallSources.TestProject,
 				Platform = TestPlatform.iOS,
 				TestName = "Install Sources tests",
 				Mode = "iOS",
@@ -774,8 +772,7 @@ namespace xharness
 						exec = new NUnitExecuteTask (build) {
 							Ignored = ignored_main,
 							TestLibrary = dll,
-							TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.ConsoleRunner.3.5.0", "tools", "nunit3-console.exe"),
-							WorkingDirectory = Path.GetDirectoryName (dll),
+							TestProject = project,
 							Platform = build.Platform,
 							TestName = project.Name,
 							Timeout = TimeSpan.FromMinutes (120),
@@ -822,8 +819,7 @@ namespace xharness
 			var nunitExecutionMTouch = new NUnitExecuteTask (buildMTouch)
 			{
 				TestLibrary = Path.Combine (Harness.RootDirectory, "mtouch", "bin", "Debug", "mtouch.dll"),
-				TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.ConsoleRunner.3.5.0", "tools", "nunit3-console.exe"),
-				WorkingDirectory = Path.Combine (Harness.RootDirectory, "mtouch", "bin", "Debug"),
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "mtouch", "mtouch.csproj"))),
 				Platform = TestPlatform.iOS,
 				TestName = "MTouch tests",
 				Timeout = TimeSpan.FromMinutes (120),
@@ -843,8 +839,7 @@ namespace xharness
 			};
 			var runGenerator = new NUnitExecuteTask (buildGenerator) {
 				TestLibrary = Path.Combine (Harness.RootDirectory, "generator", "bin", "Debug", "generator-tests.dll"),
-				TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.ConsoleRunner.3.5.0", "tools", "nunit3-console.exe"),
-				WorkingDirectory = Path.Combine (Harness.RootDirectory, "generator", "bin", "Debug"),
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "generator", "generator-tests.csproj"))),
 				Platform = TestPlatform.iOS,
 				TestName = "Generator tests",
 				Timeout = TimeSpan.FromMinutes (10),
@@ -946,7 +941,7 @@ namespace xharness
 					Ignored = ignore,
 					TestName = build.TestName,
 					TestLibrary = dll,
-					TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.ConsoleRunner.3.5.0", "tools", "nunit3-console.exe"),
+					TestProject = project,
 					WorkingDirectory = Path.GetDirectoryName (dll),
 					Platform = build.Platform,
 					Timeout = TimeSpan.FromMinutes (120),
@@ -2686,6 +2681,57 @@ namespace xharness
 			: base (build_task)
 		{
 		}
+			
+		public void FindNUnitConsoleExecutable (Log log)
+		{
+			if (!string.IsNullOrEmpty (TestExecutable)) {
+				log.WriteLine ("Using existing executable: {0}", TestExecutable);
+				return;
+			}
+				
+			var packages_conf = Path.Combine (Path.GetDirectoryName (TestProject.Path), "packages.config");
+			var nunit_version = string.Empty;
+			const string default_nunit_version = "3.5.0";
+
+			if (!File.Exists (packages_conf)) {
+				nunit_version = default_nunit_version;
+				log.WriteLine ("No packages.config found for {0}: assuming nunit version is {1}", TestProject, nunit_version);
+			} else {
+				using (var str = new StreamReader (packages_conf)) {
+					using (var reader = System.Xml.XmlReader.Create (str)) {
+						while (reader.Read ()) {
+							if (reader.NodeType != System.Xml.XmlNodeType.Element)
+								continue;
+							if (reader.Name != "package")
+								continue;
+							var id = reader.GetAttribute ("id");
+							if (id != "NUnit.ConsoleRunner" && id != "NUnit.Runners")
+								continue;
+							nunit_version = reader.GetAttribute ("version");
+							break;
+						}
+					}
+				}
+				if (nunit_version == string.Empty) {
+					nunit_version = default_nunit_version;
+					log.WriteLine ("Could not find the NUnit.ConsoleRunner element in {0}, using the default version ({1})", packages_conf, nunit_version);
+				} else {
+					log.WriteLine ("Found the NUnit.ConsoleRunner/NUnit.Runners element in {0} for {2}, version is: {1}", packages_conf, nunit_version, TestProject.Path);
+				}
+			}
+				
+			if (nunit_version [0] == '2') {
+				TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.Runners." + nunit_version, "tools", "nunit-console.exe");
+				WorkingDirectory = Path.Combine (Path.GetDirectoryName (TestExecutable), "lib");
+			} else {
+				TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.ConsoleRunner." + nunit_version, "tools", "nunit3-console.exe");
+				WorkingDirectory = Path.GetDirectoryName (TestLibrary);
+			}
+			TestExecutable = Path.GetFullPath (TestExecutable);
+			WorkingDirectory = Path.GetFullPath (WorkingDirectory);
+			if (!File.Exists (TestExecutable))
+				throw new FileNotFoundException ($"The nunit executable '{TestExecutable}' doesn't exist.");
+		}
 
 		public bool IsNUnit3 {
 			get {
@@ -2713,6 +2759,7 @@ namespace xharness
 				var xmlLog = Logs.CreateFile ($"log-{Timestamp}.xml", "XML log");
 				var log = Logs.Create ($"execute-{Timestamp}.txt", "Execution log");
 				log.Timestamp = true;
+				FindNUnitConsoleExecutable (log);
 				using (var proc = new Process ()) {
 
 					proc.StartInfo.WorkingDirectory = WorkingDirectory;
