@@ -140,6 +140,34 @@ namespace Xamarin.iOS.UnitTests.NUnit
 						Logger.OnInfo ($"\t[INFO] {result.Message}");
 				}
 				
+				// the NUnit API here is quite dirty, turs out that if we had an issue with the
+				// TestFixrtureSetup, the TestFinished method is never called, but we need to be
+				// able to report the errors, so what we can do is, in case of a failed suit, loop
+				// over the children and check if the fixture setup was the issue.
+				if (result.ResultState.Status == TestStatus.Failed) {
+					foreach (var t in result.Children) {
+						if (t.Message != null && t.Message.Contains ("TestFixtureSetUp Failed")) {
+							var sb = new StringBuilder ();
+							sb.Append ("\t[FAIL] ");
+							FailedTests++;
+							sb.Append (t.Test.FixtureType.Name);
+							sb.Append (".");
+							sb.Append (t.Test.Name);
+							string message = result.Message;
+							if (!string.IsNullOrEmpty (message)) {
+								message = message.Replace ("\r\n", "\\r\\n");
+								sb.Append ($" : {message}");
+							}
+							Logger.OnInfo (sb.ToString ());
+							// add the failures to be reported at the end of the file
+							FailureInfos.Add (new TestFailureInfo {
+								TestName = t.Test.FullName,
+								Message = sb.ToString ()
+							});
+						} // TestFixtureSetup Failed
+					}
+				}
+				
 				string name = result.Test.Name;
 				if (!String.IsNullOrEmpty (name))
 					Logger.OnInfo ($"{name} : {result.Duration.TotalMilliseconds} ms\n");
