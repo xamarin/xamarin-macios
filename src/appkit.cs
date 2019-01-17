@@ -6193,28 +6193,33 @@ namespace AppKit {
 	[DisableDefaultCtor] // crash at runtime (e.g. description). Documentation state: "You don’t create NSFont objects using the alloc and init methods."
 	partial interface NSFont : NSSecureCoding, NSCopying {
 		[Static]
+		[Internal]
 		[Export ("fontWithName:size:")]
-		NSFont FromFontName (string fontName, nfloat fontSize);
+		IntPtr _FromFontName (string fontName, nfloat fontSize);
 
 		//[Static]
 		//[Export ("fontWithName:matrix:")]
 		//NSFont FromFontName (string fontName, float [] fontMatrix);
 
 		[Static]
+		[Internal]
 		[Export ("fontWithDescriptor:size:")]
-		NSFont FromDescription (NSFontDescriptor fontDescriptor, nfloat fontSize);
+		IntPtr _FromDescription (NSFontDescriptor fontDescriptor, nfloat fontSize);
 
 		[Static]
+		[Internal]
 		[Export ("fontWithDescriptor:textTransform:")]
-		NSFont FromDescription (NSFontDescriptor fontDescriptor, [NullAllowed] NSAffineTransform textTransform);
+		IntPtr _FromDescription (NSFontDescriptor fontDescriptor, [NullAllowed] NSAffineTransform textTransform);
 
 		[Static]
+		[Internal]
 		[Export ("userFontOfSize:")]
-		NSFont UserFontOfSize (nfloat fontSize);
+		IntPtr _UserFontOfSize (nfloat fontSize);
 
 		[Static]
+		[Internal]
 		[Export ("userFixedPitchFontOfSize:")]
-		NSFont UserFixedPitchFontOfSize (nfloat fontSize);
+		IntPtr _UserFixedPitchFontOfSize (nfloat fontSize);
 
 		[Static]
 		[Export ("setUserFont:")]
@@ -6225,44 +6230,54 @@ namespace AppKit {
 		void SetUserFixedPitchFont ([NullAllowed] NSFont aFont);
 
 		[Static]
+		[Internal]
 		[Export ("systemFontOfSize:")]
-		NSFont SystemFontOfSize (nfloat fontSize);
+		IntPtr _SystemFontOfSize (nfloat fontSize);
 
 		[Static]
+		[Internal]
 		[Export ("boldSystemFontOfSize:")]
-		NSFont BoldSystemFontOfSize (nfloat fontSize);
+		IntPtr _BoldSystemFontOfSize (nfloat fontSize);
 
 		[Static]
+		[Internal]
 		[Export ("labelFontOfSize:")]
-		NSFont LabelFontOfSize (nfloat fontSize);
+		IntPtr _LabelFontOfSize (nfloat fontSize);
 
 		[Static]
+		[Internal]
 		[Export ("titleBarFontOfSize:")]
-		NSFont TitleBarFontOfSize (nfloat fontSize);
+		IntPtr _TitleBarFontOfSize (nfloat fontSize);
 
 		[Static]
+		[Internal]
 		[Export ("menuFontOfSize:")]
-		NSFont MenuFontOfSize (nfloat fontSize);
+		IntPtr _MenuFontOfSize (nfloat fontSize);
 
 		[Static]
+		[Internal]
 		[Export("menuBarFontOfSize:")]
-		NSFont MenuBarFontOfSize (nfloat fontSize);
+		IntPtr _MenuBarFontOfSize (nfloat fontSize);
 
 		[Static]
+		[Internal]
 		[Export("messageFontOfSize:")]
-		NSFont MessageFontOfSize (nfloat fontSize);
+		IntPtr _MessageFontOfSize (nfloat fontSize);
 
 		[Static]
+		[Internal]
 		[Export ("paletteFontOfSize:")]
-		NSFont PaletteFontOfSize (nfloat fontSize);
+		IntPtr _PaletteFontOfSize (nfloat fontSize);
 
 		[Static]
+		[Internal]
 		[Export ("toolTipsFontOfSize:")]
-		NSFont ToolTipsFontOfSize (nfloat fontSize);
+		IntPtr _ToolTipsFontOfSize (nfloat fontSize);
 
 		[Static]
+		[Internal]
 		[Export ("controlContentFontOfSize:")]
-		NSFont ControlContentFontOfSize (nfloat fontSize);
+		IntPtr _ControlContentFontOfSize (nfloat fontSize);
 
 		[Static]
 		[Export ("systemFontSize")]
@@ -6364,15 +6379,18 @@ namespace AppKit {
 
 		[Export ("printerFont")]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
-		NSFont PrinterFont { get; }
+		[Internal]
+		IntPtr _PrinterFont { get; }
 
 		[Export ("screenFont")]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
-		NSFont ScreenFont { get; }
+		[Internal]
+		IntPtr _ScreenFont { get; }
 
 		[Export ("screenFontWithRenderingMode:")]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
-		NSFont ScreenFontWithRenderingMode (NSFontRenderingMode renderingMode);
+		[Internal]
+		IntPtr _ScreenFontWithRenderingMode (NSFontRenderingMode renderingMode);
 
 		[Export ("renderingMode")]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
@@ -6385,7 +6403,8 @@ namespace AppKit {
 		// Not a property because this causes the creation of a new font on request in the specified configuration.
 		//
 		[Export ("verticalFont")]
-		NSFont GetVerticalFont ();
+		[Internal]
+		IntPtr _GetVerticalFont ();
 
 		[Field ("NSFontFamilyAttribute")]
 		NSString FamilyAttribute { get; }
@@ -6459,12 +6478,14 @@ namespace AppKit {
 		[Mac (10,11)]
 		[Static]
 		[Export ("systemFontOfSize:weight:")]
-		NSFont SystemFontOfSize (nfloat fontSize, nfloat weight);
+		[Internal]
+		IntPtr _SystemFontOfSize (nfloat fontSize, nfloat weight);
 
 		[Mac (10,11)]
 		[Static]
 		[Export ("monospacedDigitSystemFontOfSize:weight:")]
-		NSFont MonospacedDigitSystemFontOfSize (nfloat fontSize, nfloat weight);
+		[Internal]
+		IntPtr _MonospacedDigitSystemFontOfSize (nfloat fontSize, nfloat weight);
 
 		[Mac (10,13)]
 		[Export ("boundingRectForCGGlyph:")]
