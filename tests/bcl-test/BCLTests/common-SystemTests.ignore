@@ -1,0 +1,330 @@
+# Expected: True
+#  But was:  False
+MonoTests.System.Net.WebClientTest.UploadFileAsyncCancelEvent
+MonoTests.System.Net.WebClientTest.UploadDataAsyncCancelEvent
+MonoTests.System.Net.WebClientTest.OpenReadTaskAsyncOnFile
+
+# System.Net.WebException : maximum number of service points reached
+#  ----> System.InvalidOperationException : maximum number of service points reached
+MonoTests.System.Net.WebClientTest.GetWebRequestOverriding
+MonoTests.System.Net.WebClientTest.DownloadTwice
+
+# Expected: True
+#  But was:  False
+MonoTests.System.Net.WebClientTest.UploadValuesAsyncCancelEvent
+MonoTests.System.Net.WebClientTest.UploadStringAsyncCancelEvent
+
+# System.Net.WebException : maximum number of service points reached
+#  ----> System.InvalidOperationException : maximum number of service points reached
+MonoTests.System.Net.WebClientTest.UploadValues1
+
+# System.Net.Sockets.SocketException : Not enough buffer space is available
+MonoTests.System.Net.Sockets.UdpClientTest.JoinMulticastGroupWithLocal
+MonoTests.System.Net.Sockets.UdpClientTest.JoinMulticastGroup1_Socket_NotBound
+
+
+# #3
+#  Expected: 10022
+#  But was:  10049
+MonoTests.System.Net.Sockets.SocketTest.SetSocketOption3_DropMembershipIPv6_Socket_NotBound
+MonoTests.System.Net.Sockets.SocketTest.SetSocketOption3_DropMembershipIPv4_Socket_NotBound
+
+#  #1
+#		  at MonoTests.System.Net.Sockets.SocketTest.SetSocketOption3_AddMembershipIPv6_Socket_NotBound () 
+MonoTests.System.Net.Sockets.SocketTest.SetSocketOption3_AddMembershipIPv6_Socket_NotBound
+MonoTests.System.Net.Sockets.SocketTest.SetSocketOption3_AddMembershipIPv4_Socket_NotBound
+
+# System.ArgumentException : Value does not fall within the expected range.
+MonoTests.System.Net.Sockets.SocketTest.SetSocketOption2_Linger
+
+# SendBufferSizeDefault
+#  Expected: 8192
+#  But was:  131072
+MonoTests.System.Net.Sockets.SocketTest.SendBufferSizeDefault
+
+# ReceiveBufferSizeDefault
+#  Expected: 8192
+#  But was:  131072
+MonoTests.System.Net.Sockets.SocketTest.ReceiveBufferSizeDefault
+
+# System.Net.Sockets.SocketException : Invalid arguments
+MonoTests.System.Net.Sockets.SocketTest.DontFragment
+
+# System.Net.Sockets.SocketException : Operation on non-blocking socket would block
+MonoTests.System.Net.Sockets.SocketTest.ConnectHostPortNotIP
+
+# System.ArgumentException : Value does not fall within the expected range.
+MonoTests.System.Net.Sockets.SocketTest.BuffersCheck_None
+
+#  System.Net.Sockets.SocketException : Operation on non-blocking socket would block
+MonoTests.System.Net.Sockets.SocketTest.BeginConnectHostPortNotIP
+
+##0
+#  Expected: True
+#  But was:  False
+MonoTests.System.Net.Sockets.SocketTest.BeginConnectMultiple
+
+# SendBufferSizeDefaultUdp
+#  Expected: 8192
+#  But was:  9216
+MonoTests.System.Net.Sockets.SocketTest.SendBufferSizeDefaultUdp
+
+#  ReceiveBufferSizeDefaultUdp
+#  Expected: 8192
+#  But was:  196724
+MonoTests.System.Net.Sockets.SocketTest.ReceiveBufferSizeDefaultUdp
+
+# DontFragmentChangeUdp
+#  Expected: True
+#  But was:  False
+MonoTests.System.Net.Sockets.SocketTest.DontFragmentChangeUdp
+
+#  DontFragmentChangeTcp
+#  Expected: True
+#  But was:  False
+MonoTests.System.Net.Sockets.SocketTest.DontFragmentChangeTcp
+
+#  System.Net.Sockets.SocketException : Invalid arguments
+MonoTests.System.Net.Sockets.SocketTest.ConnectMultiple
+
+# #A2
+#  Expected: True
+#  But was:  False
+MonoTests.System.Net.ServicePointTest.EndPointBind
+
+# System.Net.WebException : The operation has timed out.
+MonoTests.System.Net.ServicePointTest.All
+
+# #A3
+#  Expected: not null
+#  But was:  null
+MonoTests.System.Net.HttpWebRequestTest.NoContentLength
+
+# Should result in 304
+MonoTests.System.Net.HttpWebRequestTest.LastModifiedKind
+
+# System.Net.WebException : Value cannot be null.
+MonoTests.System.Net.HttpWebRequestTest.EndGetResponse_AsyncResult_Invalid
+
+# #02
+#  Expected: 1
+#  But was:  0
+MonoTests.System.Net.HttpWebRequestTest.Cookies1
+
+# #A1
+#		  at MonoTests.System.Net.HttpResponseStreamTest.Read_Stream_Closed () [0x000a3] in /Users/builder/jenkins/workspace/archive-mono/2018-08/ios/release/mcs/class/System/Test/System.Net/HttpWebResponseTest.cs:1083 
+MonoTests.System.Net.HttpResponseStreamTest.Read_Stream_Closed
+
+# #2
+#  Expected: False
+#  But was:  True
+MonoTests.System.Net.HttpResponseStreamTest.CanRead
+
+# #1
+#		  at MonoTests.System.Net.HttpRequestStreamTest.Write_Stream_Closed () [0x00072] in /Users/builder/jenkins/workspace/archive-mono/2018-08/ios/release/mcs/class/System/Test/System.Net/HttpWebRequestTest.cs:3224 
+MonoTests.System.Net.HttpResponseStreamTest.Write_Stream_Closed
+
+# #A2
+#		  at MonoTests.System.Net.FileWebRequestTest.GetRequestStream () [0x00049] in /Users/builder/jenkins/workspace/archive-mono/2018-08/ios/release/mcs/class/System/Test/System.Net/FileWebRequestTest.cs:418 
+MonoTests.System.Net.FileWebRequestTest.GetRequestStream
+
+#  Expected and actual are both <System.Byte[781]>
+#  Values differ at index [43]
+#  Expected: 48
+#  But was:  53
+MonoTests.System.Net.FileWebRequestTest.Serialize
+
+# Expected and actual are both <System.Byte[329]>
+#  Values differ at index [43]
+#  Expected: 48
+#  But was:  53
+MonoTests.System.Collections.Generic.QueueTest.SerializeTest
+
+#  Expected and actual are both <System.Byte[305]>
+#  Values differ at index [43]
+#  Expected: 48
+#  But was:  53
+MonoTests.System.Collections.Generic.StackTest.SerializeTest
+
+# System.ComponentModel.Win32Exception : Cannot find the specified file
+MonoTests.System.Diagnostics.ProcessTest.TestExitedRaisedTooSoon
+
+# System.IO.DirectoryNotFoundException : Could not find a part of the path
+MonoTests.System.IO.Compression.DeflateStreamTest.Bug44994_InflateByteByByte
+
+# Gets blocked
+MonoTests.System.Net.WebClientTest.UploadFileAsyncContentType
+MonoTests.System.Net.WebRequestTest.TestReceiveCancelation
+
+#  !Equal
+MonoTests.System.Timers.TimersDescriptionAttributeTest.ExistingResourceName
+
+#  Description
+#  Expected: null
+#  But was:  "Mono"
+MonoTests.System.Timers.TimersDescriptionAttributeTest.AnyString
+
+# An unexpected exception type was thrown
+# Expected: System.Threading.WaitHandleCannotBeOpenedException
+# but was: System.NotSupportedException : Specified method is not supported.
+MonoTests.System.Threading.SemaphoreTest.OpenExisting_Unexisting
+
+# System.NotSupportedException : Specified method is not supported.
+MonoTests.System.Threading.SemaphoreTest.OpenExisting_BadRights
+
+# System.PlatformNotSupportedException : Operation is not supported on this platform. 
+MonoTests.System.Threading.SemaphoreTest.AccessControl_Unnamed
+
+# Matching input 'F�' against pattern '\p{IsHebrew}' with options 'None'
+#  Expected string length 20 but was 5. Strings differ at index 0.
+#  Expected: "Pass. Group[0]=(1,1)"
+#  But was:  "Fail." 
+MonoTests.System.Text.RegularExpressions.RegexMatchTests.RegexJvmTrial0018 
+
+# Matching input 'F2345678910L70' against pattern '(F)(2)(3)(?<S>4)(5)(6)(?'S'7)(8)(9)(10)(L)(?(K)|\10)' with options 'None'
+#  String lengths are both 178. Strings differ at index 5.
+#  Expected: "Pass.\tGroup[0]=(0,13) Group[1]=(0,1) Group[2]=(1,1) Group[3]=..."
+#  But was:  "Pass. Group[0]=(0,13) Group[1]=(0,1) Group[2]=(1,1) Group[3]=..."
+MonoTests.System.Text.RegularExpressions.RegexMatchTests.RegexJvmTrial0016 
+
+# Matching input 'F2345678910L70' against pattern '(F)(2)(3)(?<S>4)(5)(6)(?'S'7)(8)(9)(10)(L)(?(7)|\10)' with options 'None'
+#  String lengths are both 178. Strings differ at index 5.
+#  Expected: "Pass.\tGroup[0]=(0,12) Group[1]=(0,1) Group[2]=(1,1) Group[3]=..."
+#  But was:  "Pass. Group[0]=(0,12) Group[1]=(0,1) Group[2]=(1,1) Group[3]=..."
+MonoTests.System.Text.RegularExpressions.RegexMatchTests.RegexJvmTrial0015 
+
+# Matching input 'F2345678910L70' against pattern '(F)(2)(3)(?<S>4)(5)(6)(?'S'7)(8)(9)(10)(L)(?(S)|\10)' with options 'None'
+#  String lengths are both 178. Strings differ at index 5.
+#  Expected: "Pass.\tGroup[0]=(0,12) Group[1]=(0,1) Group[2]=(1,1) Group[3]=..."
+#  But was:  "Pass. Group[0]=(0,12) Group[1]=(0,1) Group[2]=(1,1) Group[3]=..." 
+MonoTests.System.Text.RegularExpressions.RegexMatchTests.RegexJvmTrial0014 
+
+# Matching input 'F2345678910L70' against pattern '(F)(2)(3)(?<S>4)(5)(6)(?'S'7)(8)(9)(10)(L)(?(10)\10)' with options 'None'
+#  String lengths are both 178. Strings differ at index 5.
+#  Expected: "Pass.\tGroup[0]=(0,13) Group[1]=(0,1) Group[2]=(1,1) Group[3]=..."
+#  But was:  "Pass. Group[0]=(0,13) Group[1]=(0,1) Group[2]=(1,1) Group[3]=..." 
+MonoTests.System.Text.RegularExpressions.RegexMatchTests.RegexJvmTrial0013
+
+# Matching input 'F2345678910L71' against pattern '(F)(2)(3)(?<S>4)(5)(6)(?'S'7)(8)(9)(10)(L)\10' with options 'None'
+#  String lengths are both 178. Strings differ at index 5.
+#  Expected: "Pass.\tGroup[0]=(0,13) Group[1]=(0,1) Group[2]=(1,1) Group[3]=..."
+#  But was:  "Pass. Group[0]=(0,13) Group[1]=(0,1) Group[2]=(1,1) Group[3]=..."
+MonoTests.System.Text.RegularExpressions.RegexMatchTests.RegexJvmTrial0009
+
+# [FAIL] RegexMatchTests.RegexJvmTrial0008 :   Matching input 'F2345678910L71' against pattern '(F)(2)(3)(4)(5)(6)(?<S>7)(8)(9)(10)(L)\11' with options 'None'
+#  String lengths are both 189. Strings differ at index 5.
+#  Expected: "Pass.\tGroup[0]=(0,13) Group[1]=(0,1) Group[2]=(1,1) Group[3]=..."
+#  But was:  "Pass. Group[0]=(0,13) Group[1]=(0,1) Group[2]=(1,1) Group[3]=..."
+MonoTests.System.Text.RegularExpressions.RegexMatchTests.RegexJvmTrial0008
+
+# Matching input 'abc' against pattern '(a)(?<2>b)(c)' with options 'None'
+#  String lengths are both 55. Strings differ at index 42.
+#  Expected: "Pass. Group[0]=(0,3) Group[1]=(0,1) Group[1]=(1,1)(2,1)"
+#  But was:  "Pass. Group[0]=(0,3) Group[1]=(0,1) Group[2]=(1,1)(2,1)"
+MonoTests.System.Text.RegularExpressions.RegexMatchTests.RegexJvmTrial0002
+
+# An unexpected exception type was thrown
+# Expected: System.Security.Cryptography.CryptographicException
+# but was: System.ArgumentException : rawData
+MonoTests.System.Security.Cryptography.X509Certificates.X509Certificate2CollectionTest.Export_Single_SerializedStore
+
+# System.NotSupportedException : Specified method is not supported.
+MonoTests.System.Security.Cryptography.X509Certificates.X509Certificate2CollectionTest.Export_Single_SerializedCert
+
+#  An unexpected exception type was thrown
+# Expected: System.Security.Cryptography.CryptographicException
+# but was: System.ArgumentException : rawData
+MonoTests.System.Security.Cryptography.X509Certificates.X509Certificate2CollectionTest.Export_Single_Pkcs7
+
+# GetCertContentType
+#  Expected: Pfx
+#  But was:  Unknown
+MonoTests.System.Security.Cryptography.X509Certificates.X509Certificate2CollectionTest.Export_Single_Pkcs12
+
+# GetCertContentType
+#  Expected: Pfx
+#  But was:  Unknown
+MonoTests.System.Security.Cryptography.X509Certificates.X509Certificate2CollectionTest.Export_Single_Pfx
+
+# An unexpected exception type was thrown
+# Expected: System.Security.Cryptography.CryptographicException
+# but was: System.ArgumentException : rawData
+MonoTests.System.Security.Cryptography.X509Certificates.X509Certificate2CollectionTest.Export_Multiple_SerializedStore
+
+# System.NotSupportedException : Specified method is not supported.
+MonoTests.System.Security.Cryptography.X509Certificates.X509Certificate2CollectionTest.Export_Multiple_SerializedCert
+
+# An unexpected exception type was thrown
+# Expected: System.Security.Cryptography.CryptographicException
+# but was: System.ArgumentException : rawData
+MonoTests.System.Security.Cryptography.X509Certificates.X509Certificate2CollectionTest.Export_Multiple_Pkcs7
+
+#  GetCertContentType
+#  Expected: Pfx
+#  But was:  Unknown
+MonoTests.System.Security.Cryptography.X509Certificates.X509Certificate2CollectionTest.Export_Multiple_Pkcs12
+
+#  GetCertContentType
+#  Expected: Pfx
+#  But was:  Unknown
+MonoTests.System.Security.Cryptography.X509Certificates.X509Certificate2CollectionTest.Export_Multiple_Pfx
+
+#  data
+#  Expected: not null
+#  But was:  null
+MonoTests.System.Security.Cryptography.X509Certificates.X509Certificate2CollectionTest.Export_Empty_SerializedStore
+
+#  data
+#  Expected: not null
+#  But was:  null
+MonoTests.System.Security.Cryptography.X509Certificates.X509Certificate2CollectionTest.Export_Empty_Pkcs7
+
+# data
+#  Expected: not null
+#  But was:  null
+MonoTests.System.Security.Cryptography.X509Certificates.X509Certificate2CollectionTest.Export_Empty_Pkcs12
+
+#  data
+#  Expected: not null
+#  But was:  null
+MonoTests.System.Security.Cryptography.X509Certificates.X509Certificate2CollectionTest.Export_Empty_Pfx
+
+#  System.NotSupportedException : Specified method is not supported.
+MonoTests.System.Security.Cryptography.X509Certificates.X509Cert20Test.Export_SerializedCert
+MonoTests.System.Security.Cryptography.X509Certificates.X509Cert20Test.Export_Pfx
+MonoTests.System.Security.Cryptography.X509Certificates.X509Cert20Test.Export_Pkcs12
+
+
+
+#  Expected: True
+#  But was:  False
+MonoTests.System.Net.WebSockets.ClientWebSocketTest.ServerHandshakeReturnWrongUpgradeHeader
+MonoTests.System.Net.WebSockets.ClientWebSocketTest.ServerHandshakeReturnWrongConnectionHeader
+MonoTests.System.Net.WebSockets.ClientWebSocketTest.ServerHandshakeReturnCrapStatusCodeTest
+
+#  Expected: UnknownError
+#  But was:  NameResolutionFailure
+MonoTests.System.Net.WebRequestTest.TestFailedResolution
+
+# Expected: ConnectFailure
+#  But was:  UnknownError
+MonoTests.System.Net.WebRequestTest.TestFailedConnection
+
+#  System.AggregateException : One or more errors occurred. (maximum number of service points reached)
+#  ----> System.Net.WebException : maximum number of service points reached
+#  ----> System.InvalidOperationException : maximum number of service points reached
+MonoTests.System.Net.WebClientTestAsync.DownloadMultiple3
+
+# System.AggregateException : One or more errors occurred. (maximum number of service points reached)
+#  ----> System.Net.WebException : maximum number of service points reached
+#  ----> System.InvalidOperationException : maximum number of service points reached
+MonoTests.System.Net.WebClientTestAsync.DownloadMultiple2
+
+# Expected: True
+#  But was:  False
+MonoTests.System.Net.WebClientTestAsync.DownloadMultiple
+MonoTests.System.Net.WebClientTestAsync.DownloadFileTaskAsync
+MonoTests.System.Net.WebClientTestAsync.Cancellation
+
+# First assertion fails
+MonoTests.System.Net.HttpRequestStreamTest.Write_Stream_Closed
