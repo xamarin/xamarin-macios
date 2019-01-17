@@ -1,0 +1,42 @@
+#  Expected: <System.Threading.ThreadStateException>
+#  But was:  <System.PlatformNotSupportedException> (Thread.Resume is not supported on the current platform.)
+#  at System.Threading.Thread.Resume () [0x00000] in /Library/Frameworks/Xamarin.iOS.framework/Versions/12.2.1.12/src/Xamarin.iOS/mcs/class/corlib/System.Threading/Thread.cs:711 
+#  at MonoTests.System.Threading.ThreadStateTest+<>c__DisplayClass2_0.<StoppedThreadsThrowThreadStateException>b__6 () [0x00000] in /Users/builder/jenkins/workspace/archive-mono/2018-08/ios/release@2/mcs/class/corlib/Test/System.Threading/ThreadTest.cs:1047 
+#  at NUnit.Framework.Assert.Throws (NUnit.Framework.Constraints.IResolveConstraint expression, NUnit.Framework.TestDelegate code, System.String message, System.Object[] args) [0x0002f] in /Users/mandel/Xamarin/macios/master/xamarin-macios/external/mono/external/nunit-lite/NUnitLite-1.0.0/src/framework/Assert.cs:626
+MonoTests.System.Threading.ThreadStateTest.StoppedThreadsThrowThreadStateException
+
+# System.PlatformNotSupportedException : Thread.Abort is not supported on the current platform.
+MonoTests.System.Threading.ThreadTest.TestApartmentState 
+MonoTests.System.Threading.ThreadTest.TestIsBackground1
+MonoTests.System.Threading.ThreadTest.TestIsBackground2 
+MonoTests.System.Threading.ThreadTest.TestJoin1 
+MonoTests.System.Threading.ThreadTest.TestName 
+MonoTests.System.Threading.ThreadTest.TestNestedThreads1 
+MonoTests.System.Threading.ThreadTest.TestNestedThreads2 
+MonoTests.System.Threading.ThreadTest.TestPriority1 
+MonoTests.System.Threading.ThreadTest.TestPriority2 
+MonoTests.System.Threading.ThreadTest.TestPriority3 
+MonoTests.System.Threading.ThreadTest.TestStart
+MonoTests.System.Threading.ThreadTest.AbortUnstarted 
+MonoTests.System.Threading.ThreadTest.TestSuspend
+MonoTests.System.Threading.ThreadTest.TestSuspendAbort
+MonoTests.System.Threading.ThreadTest.TestThreadState
+
+# System.PlatformNotSupportedException : AppDomainManager is not supported on the current platform.
+MonoTests.System.AppDomainManagerTest.CheckSecuritySettings
+
+# System.Reflection.TargetInvocationException : Exception has been thrown by the target of an invocation.
+#  ----> System.PlatformNotSupportedException : Thread.Abort is not supported on the current platform.
+MonoTests.System.Reflection.MethodInfoTest.InvokeThreadAbort
+
+# System.PlatformNotSupportedException : SecurityState.IsStateAvailable is not supported on this platform.
+MonoTests.System.Security.SecurityStateTest.Defaults 
+
+# System.PlatformNotSupportedException : Thread.Abort is not supported on the current platform.
+MonoTests.System.Threading.MutexTest.TestWaitAndForget1 
+MonoTests.System.Threading.MutexTest.TestWaitAndSignal1
+
+# System.PlatformNotSupportedException : Thread.Suspend is not supported on the current platform.
+MonoTests.System.Threading.WaitHandleTest.WaitAllWithTimeoutAndSpuriousWake 
+MonoTests.System.Threading.WaitHandleTest.WaitAnyWithTimeoutAndSpuriousWake 
+MonoTests.System.Threading.WaitHandleTest.WaitOneWithTimeoutAndSpuriousWake 
