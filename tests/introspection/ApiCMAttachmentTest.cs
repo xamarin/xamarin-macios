@@ -399,6 +399,8 @@ namespace Introspection {
 				return VTMultiPassStorage.Create ();
 			case "CFString":
 				return new CFString ("test");
+			case "DispatchBlock":
+				return new DispatchBlock (() => { });
 			case "DispatchQueue":
 				return new DispatchQueue ("com.example.subsystem.taskXYZ");
 			case "DispatchGroup":

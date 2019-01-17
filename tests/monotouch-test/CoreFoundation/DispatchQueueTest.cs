@@ -103,15 +103,72 @@ namespace MonoTouchFixtures.CoreFoundation
 		}
 
 		[Test]
+		public void DispatchSync ()
+		{
+			using (var queue = new DispatchQueue ("DispatchSync")) {
+				var called = false;
+				var callback = new Action (() => called = true);
+				queue.DispatchSync (callback);
+				Assert.IsTrue (called, "Called");
+
+				called = false;
+				using (var dg = new DispatchBlock (callback))
+					queue.DispatchSync (dg);
+				Assert.IsTrue (called, "Called DispatchBlock");
+			}
+		}
+
+		[Test]
 		public void DispatchBarrierSync ()
 		{
 			using (var queue = new DispatchQueue ("DispatchBarrierSync")) {
 				var called = false;
-				queue.DispatchBarrierSync(() =>
-				{
-					called = true;
-				});
+				var callback = new Action (() => called = true);
+				queue.DispatchBarrierSync (callback);
 				Assert.IsTrue (called, "Called");
+
+				called = false;
+				using (var dg = new DispatchBlock (callback))
+					queue.DispatchBarrierSync (dg);
+				Assert.IsTrue (called, "Called DispatchBlock");
+			}
+		}
+
+		[Test]
+		public void DispatchAsync ()
+		{
+			using (var queue = new DispatchQueue ("DispatchAsync")) {
+				var called = false;
+				var callback = new Action (() => called = true);
+				queue.DispatchAsync (callback);
+				TestRuntime.RunAsync (TimeSpan.FromSeconds (5), () => { }, () => called);
+				Assert.IsTrue (called, "Called");
+
+				called = false;
+				using (var dg = new DispatchBlock (callback)) {
+					queue.DispatchAsync (dg);
+					dg.Wait (TimeSpan.FromSeconds (5));
+				}
+				Assert.IsTrue (called, "Called DispatchBlock");
+			}
+		}
+
+		[Test]
+		public void DispatchBarrierAsync ()
+		{
+			using (var queue = new DispatchQueue ("DispatchBarrierAsync")) {
+				var called = false;
+				var callback = new Action (() => called = true);
+				queue.DispatchBarrierAsync (callback);
+				TestRuntime.RunAsync (TimeSpan.FromSeconds (5), () => { }, () => called);
+				Assert.IsTrue (called, "Called");
+
+				called = false;
+				using (var dg = new DispatchBlock (callback)) {
+					queue.DispatchBarrierAsync (dg);
+					dg.Wait (TimeSpan.FromSeconds (5));
+				}
+				Assert.IsTrue (called, "Called DispatchBlock");
 			}
 		}
 

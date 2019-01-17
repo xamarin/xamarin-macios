@@ -9,6 +9,7 @@
 
 using System;
 using System.Net;
+using System.Threading;
 
 #if XAMCORE_2_0
 using Foundation;
@@ -51,5 +52,30 @@ namespace MonoTouchFixtures.CoreFoundation {
 			}
 		}
 
+		[Test]
+		public void NotifyWithDispatchBlock ()
+		{
+			using (var dg = new DispatchGroup ()) {
+				var called = false;
+				var callback = new Action (() => called = true);
+				using (var block = new DispatchBlock (callback)) {
+					dg.Notify (DispatchQueue.MainQueue, block);
+					TestRuntime.RunAsync (DateTime.Now.AddSeconds (5), () => { }, () => called);
+					Assert.IsTrue (called, "Called");
+				}
+			}
+		}
+
+		[Test]
+		public void NotifyWithAction ()
+		{
+			using (var dg = new DispatchGroup ()) {
+				var called = false;
+				var callback = new Action (() => called = true);
+				dg.Notify (DispatchQueue.MainQueue, callback);
+				TestRuntime.RunAsync (DateTime.Now.AddSeconds (5), () => { }, () => called);
+				Assert.IsTrue (called, "Called");
+			}
+		}
 	}
 }
