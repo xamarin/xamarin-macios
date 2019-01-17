@@ -36,6 +36,7 @@ namespace xharness
 		public bool IncludeSimulator = true;
 		public bool IncludeDevice;
 		public bool IncludeXtro;
+		public bool IncludeDocs;
 
 		public Log MainLog;
 		public Log SimulatorLoadLog;
@@ -598,7 +599,9 @@ namespace xharness
 			labels.UnionWith (Harness.Labels);
 			if (pull_request > 0)
 				labels.UnionWith (GitHub.GetLabels (Harness, pull_request));
-
+			var env_labels = Environment.GetEnvironmentVariable ("XHARNESS_LABELS");
+			if (!string.IsNullOrEmpty (env_labels))
+				labels.UnionWith (env_labels.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
 			MainLog.WriteLine ("Found {1} label(s) in the pull request #{2}: {0}", string.Join (", ", labels.ToArray ()), labels.Count (), pull_request);
 
 			// disabled by default
@@ -624,24 +627,54 @@ namespace xharness
 			bool inc_permission_tests = Harness.IncludeSystemPermissionTests;
 			SetEnabled (labels, "system-permission", ref inc_permission_tests);
 			Harness.IncludeSystemPermissionTests = inc_permission_tests;
+
+			// docs is a bit special:
+			// - can only be executed if the Xamarin-specific parts of the build is enabled
+			// - enabled by default if the current branch is master (or, for a pull request, if the target branch is master)
+			var changed = SetEnabled (labels, "docs", ref IncludeDocs);
+			if (Harness.ENABLE_XAMARIN) {
+				if (!changed) { // don't override any value set using labels
+					var branchName = Environment.GetEnvironmentVariable ("BRANCH_NAME");
+					if (!string.IsNullOrEmpty (branchName)) {
+						IncludeDocs = branchName == "master";
+						if (IncludeDocs)
+							MainLog.WriteLine ("Enabled 'docs' tests because the current branch is 'master'.");
+					} else if (pull_request > 0) {
+						IncludeDocs = GitHub.GetPullRequestTargetBranch (Harness, pull_request) == "master";
+						if (IncludeDocs)
+							MainLog.WriteLine ("Enabled 'docs' tests because the target branch is 'master'.");
+					}
+				}
+			} else {
+				if (IncludeDocs) {
+					IncludeDocs = false; // could have been enabled by 'run-all-tests', so disable it if we can't run it.
+					MainLog.WriteLine ("Disabled 'docs' tests because the Xamarin-specific parts of the build are not enabled.");
+				}
+			}
 		}
 
-		void SetEnabled (HashSet<string> labels, string testname, ref bool value)
+		// Returns true if the value was changed.
+		bool SetEnabled (HashSet<string> labels, string testname, ref bool value)
 		{
 			if (labels.Contains ("skip-" + testname + "-tests")) {
 				MainLog.WriteLine ("Disabled '{0}' tests because the label 'skip-{0}-tests' is set.", testname);
 				value = false;
+				return true;
 			} else if (labels.Contains ("run-" + testname + "-tests")) {
 				MainLog.WriteLine ("Enabled '{0}' tests because the label 'run-{0}-tests' is set.", testname);
 				value = true;
+				return true;
 			} else if (labels.Contains ("skip-all-tests")) {
 				MainLog.WriteLine ("Disabled '{0}' tests because the label 'skip-all-tests' is set.", testname);
 				value = false;
+				return true;
 			} else if (labels.Contains ("run-all-tests")) {
 				MainLog.WriteLine ("Enabled '{0}' tests because the label 'run-all-tests' is set.", testname);
 				value = true;
+				return true;
 			}
 			// respect any default value
+			return false;
 		}
 
 		async Task PopulateTasksAsync ()
@@ -795,6 +828,7 @@ namespace xharness
 				TestName = "MTouch tests",
 				Timeout = TimeSpan.FromMinutes (120),
 				Ignored = !IncludeMtouch,
+				InProcess = true,
 			};
 			Tasks.Add (nunitExecutionMTouch);
 
@@ -866,6 +900,17 @@ namespace xharness
 				WorkingDirectory = buildXtroTests.WorkingDirectory,
 			};
 			Tasks.Add (runXtroReporter);
+
+			var runDocsTests = new MakeTask {
+				Jenkins = this,
+				Platform = TestPlatform.All,
+				TestName = "Documentation",
+				Target = "wrench-docs",
+				WorkingDirectory = Harness.RootDirectory,
+				Ignored = !IncludeDocs,
+				Timeout = TimeSpan.FromMinutes (15),
+			};
+			Tasks.Add (runDocsTests);
 
 			Tasks.AddRange (CreateRunDeviceTasks ());
 		}
@@ -1031,6 +1076,7 @@ namespace xharness
 							rv.Add (v);
 							return rv;
 						});
+						string serveFile = null;
 						switch (request.Url.LocalPath) {
 						case "/":
 							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Html;
@@ -1251,8 +1297,14 @@ namespace xharness
 							response.OutputStream.Write (favicon, 0, favicon.Length);
 							response.OutputStream.Close ();
 							break;
+						case "/xharness.css":
+						case "/xharness.js":
+							serveFile = Path.Combine (Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location), request.Url.LocalPath.Substring (1));
+							goto default;
 						default:
-							var path = Path.Combine (LogDirectory, request.Url.LocalPath.Substring (1));
+							if (serveFile == null)
+								serveFile = Path.Combine (LogDirectory, request.Url.LocalPath.Substring (1));
+							var path = serveFile;
 							if (File.Exists (path)) {
 								var buffer = new byte [4096];
 								using (var fs = new FileStream (path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
@@ -1261,6 +1313,12 @@ namespace xharness
 									switch (Path.GetExtension (path).ToLowerInvariant ()) {
 									case ".html":
 										response.ContentType = System.Net.Mime.MediaTypeNames.Text.Html;
+										break;
+									case ".css":
+										response.ContentType = "text/css";
+										break;
+									case ".js":
+										response.ContentType = "text/javascript";
 										break;
 									default:
 										response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
@@ -1379,6 +1437,10 @@ namespace xharness
 						if (File.Exists (Harness.MarkdownSummaryPath))
 							File.Delete (Harness.MarkdownSummaryPath);
 						File.Move (tmpmarkdown, Harness.MarkdownSummaryPath);
+					}
+					var dependentFileLocation = Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location);
+					foreach (var file in new string [] { "xharness.js", "xharness.css" }) {
+						File.Copy (Path.Combine (dependentFileLocation, file), Path.Combine (LogDirectory, file), true);
 					}
 				}
 			} catch (Exception e) {
@@ -1501,290 +1563,15 @@ namespace xharness
 				writer.WriteLine ("<html onkeypress='keyhandler(event)' lang='en'>");
 				if (IsServerMode && populating)
 					writer.WriteLine ("<meta http-equiv=\"refresh\" content=\"1\">");
-				writer.WriteLine (@"<head>
-<style>
-.pdiv { display: table; padding-top: 10px; }
-.p1 { }
-.p2 { }
-.p3 { }
-.expander { display: table-cell; height: 100%; padding-right: 6px; text-align: center; vertical-align: middle; min-width: 10px; }
-.runall { font-size: 75%; margin-left: 3px; }
-.logs { padding-bottom: 10px; padding-top: 10px; padding-left: 30px; }
-
-#nav {
-	display: inline-block;
-	width: 350px;
-}
-
-#nav > * {
-	display: inline;
-	width: 300px;
-}
-
-#nav ul {
-	background: #ffffff;
-	list-style: none;
-	position: absolute;
-	left: -9999px;
-	padding: 10px;
-	z-index: 2;
-	width: 200px;
-	border-style: ridge;
-	border-width: thin;
-}
-
-#nav li {
-	margin-right: 10px;
-	position: relative;
-}
-#nav a {
-	display: block;
-	padding: 5px;
-	text-decoration: none;
-}
-#nav a:hover {
-	text-decoration: underline;
-}
-#nav ul li {
-	padding-top: 0;
-	padding-bottom: 0;
-	padding-left: 0;
-}
-#nav ul a {
-	white-space: nowrap;
-}
-#nav li:hover ul { 
-	left: 0;
-}
-#nav li:hover a {
-	text-decoration: underline;
-}
-#nav li:hover ul a { 
-	text-decoration:none;
-}
-#nav li:hover ul li a:hover {
-	text-decoration: underline;
-}
-
-</style>");
+				writer.WriteLine ("<head>");
+				writer.WriteLine ("<link rel='stylesheet' href='xharness.css'>");
 				writer.WriteLine ("<title>Test results</title>");
-				writer.WriteLine (@"<script type='text/javascript'>
-var ajax_log = null;
-function addlog (msg)
-{
-	if (ajax_log == null)
-		ajax_log = document.getElementById ('ajax-log');
-	if (ajax_log == null)
-		return;
-	var newText = msg + ""\n"" + ajax_log.innerText;
-	if (newText.length > 1024)
-		newText = newText.substring (0, 1024);
-	ajax_log.innerText = newText;
-}
-
-function toggleLogVisibility (logName)
-{
-	var button = document.getElementById ('button_' + logName);
-	var logs = document.getElementById ('logs_' + logName);
-	if (logs.style.display == 'none' && logs.innerText.trim () != '') {
-		logs.style.display = 'block';
-		button.innerText = '-';
-	} else {
-		logs.style.display = 'none';
-		button.innerText = '+';
-	}
-}
-function toggleContainerVisibility2 (containerName)
-{
-	var button = document.getElementById ('button_container2_' + containerName);
-	var div = document.getElementById ('test_container2_' + containerName);
-	if (div.style.display == 'none') {
-		div.style.display = 'block';
-		button.innerText = '-';
-	} else {
-		div.style.display = 'none';
-		button.innerText = '+';
-	}
-}
-function quit ()
-{
-	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function() {
-	    if (this.readyState == 4 && this.status == 200) {
-	       window.close ();
-	    }
-	};
-	xhttp.open(""GET"", ""quit"", true);
-	xhttp.send();
-}
-function toggleAjaxLogVisibility()
-{
-	if (ajax_log == null)
-		ajax_log = document.getElementById ('ajax-log');
-	var button = document.getElementById ('ajax-log-button');
-	if (ajax_log.style.display == 'none') {
-		ajax_log.style.display = 'block';
-		button.innerText = 'Hide log';
-	} else {
-		ajax_log.style.display = 'none';
-		button.innerText = 'Show log';
-	}
-}
-function toggleVisibility (css_class)
-{
-	var objs = document.getElementsByClassName (css_class);
-	
-	for (var i = 0; i < objs.length; i++) {
-		var obj = objs [i];
-		
-		var pname = 'original-' + css_class + '-display';
-		if (obj.hasOwnProperty (pname)) {
-			obj.style.display = obj [pname];
-			delete obj [pname];
-		} else {
-			obj [pname] = obj.style.display;
-			obj.style.display = 'none';
-		}
-	}
-}
-function keyhandler(event)
-{
-	switch (String.fromCharCode (event.keyCode)) {
-	case ""q"":
-	case ""Q"":
-		quit ();
-		break;
-	}
-}
-function runalltests()
-{
-	sendrequest (""runalltests"");
-}
-function runtest(id)
-{
-	sendrequest (""runtest?id="" + id);
-}
-function stoptest(id)
-{
-	sendrequest (""stoptest?id="" + id);
-}
-function sendrequest(url, callback)
-{
-	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4) {
-			addlog (""Loaded url: "" + url + "" with status code: "" + this.status + ""\nResponse: "" + this.responseText);
-			if (callback)
-				callback (this.responseText);
-		}
-	};
-	xhttp.open(""GET"", url, true);
-	xhttp.send();
-	addlog (""Loading url: "" + url);
-}
-function autorefresh()
-{
-	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function() {
-	    if (this.readyState == 4) {
-			addlog (""Reloaded."");
-			var parser = new DOMParser ();
-			var r = parser.parseFromString (this.responseText, 'text/html');
-			var ar_objs = document.getElementsByClassName (""autorefreshable"");
-
-			for (var i = 0; i < ar_objs.length; i++) {
-				var ar_obj = ar_objs [i];
-				if (!ar_obj.id || ar_obj.id.length == 0) {
-					console.log (""Found object without id"");
-					continue;
-				}
-				
-				var new_obj = r.getElementById (ar_obj.id);
-				if (new_obj) {
-					if (ar_obj.innerHTML != new_obj.innerHTML)
-						ar_obj.innerHTML = new_obj.innerHTML;
-					if (ar_obj.style.cssText != new_obj.style.cssText) {
-						ar_obj.style = new_obj.style;
-					}
-					
-					var evt = ar_obj.getAttribute ('data-onautorefresh');
-					if (evt != '') {
-						autoshowdetailsmessage (evt);
-					}
-				} else {
-					console.log (""Could not find id "" + ar_obj.id + "" in updated page."");
-				}
-			}
-			setTimeout (autorefresh, 1000);
-	    }
-	};
-	xhttp.open(""GET"", window.location.href, true);
-	xhttp.send();
-}
-
-function autoshowdetailsmessage (id)
-{
-	var input_id = 'logs_' + id;
-	var message_id = 'button_' + id;
-	var input_div = document.getElementById (input_id);
-	if (input_div == null)
-		return;
-	var message_div = document.getElementById (message_id);
-	var txt = input_div.innerText.trim ();
-	if (txt == '') {
-		message_div.style.opacity = 0;
-	} else {
-		message_div.style.opacity = 1;
-		if (input_div.style.display == 'block') {
-			message_div.innerText = '-';
-		} else {
-			message_div.innerText = '+';
-		}
-	}
-}
-
-function oninitialload ()
-{
-	var autorefreshable = document.getElementsByClassName (""autorefreshable"");
-	for (var i = 0; i < autorefreshable.length; i++) {
-		var evt = autorefreshable [i].getAttribute (""data-onautorefresh"");
-		if (evt != '')
-			autoshowdetailsmessage (evt);
-	}
-}
-
-function toggleAll (show)
-{
-	var expandable = document.getElementsByClassName ('expander');
-	var counter = 0;
-	var value = show ? '-' : '+';
-	for (var i = 0; i < expandable.length; i++) {
-		var div = expandable [i];
-		if (div.textContent != value)
-			div.textContent = value;
-		counter++;
-	}
-	
-	var togglable = document.getElementsByClassName ('togglable');
-	counter = 0;
-	value = show ? 'block' : 'none';
-	for (var i = 0; i < togglable.length; i++) {
-		var div = togglable [i];
-		if (div.style.display != value) {
-			if (show && div.innerText.trim () == '') {
-				// don't show nothing
-			} else {
-				div.style.display = value;
-			}
-		}
-		counter++;
-	}
-}
-
-");
-				if (IsServerMode)
+				writer.WriteLine (@"<script type='text/javascript' src='xharness.js'></script>");
+				if (IsServerMode) {
+					writer.WriteLine ("<script type='text/javascript'>");
 					writer.WriteLine ("setTimeout (autorefresh, 1000);");
-				writer.WriteLine ("</script>");
+					writer.WriteLine ("</script>");
+				}
 				writer.WriteLine ("</head>");
 				writer.WriteLine ("<body onload='oninitialload ();'>");
 
@@ -2043,10 +1830,11 @@ function toggleAll (show)
 
 							if (!string.IsNullOrEmpty (test.FailureMessage)) {
 								var msg = System.Web.HttpUtility.HtmlEncode (test.FailureMessage).Replace ("\n", "<br />");
+								var prefix = test.Ignored ? "Ignored" : "Failure";
 								if (test.FailureMessage.Contains ('\n')) {
-									writer.WriteLine ($"Failure:<br /> <div style='margin-left: 20px;'>{msg}</div>");
+									writer.WriteLine ($"{prefix}:<br /> <div style='margin-left: 20px;'>{msg}</div>");
 								} else {
-									writer.WriteLine ($"Failure: {msg} <br />");
+									writer.WriteLine ($"{prefix}: {msg} <br />");
 								}
 							}
 							var progressMessage = test.ProgressMessage;
@@ -2891,6 +2679,7 @@ function toggleAll (show)
 		public string TestExecutable;
 		public string WorkingDirectory;
 		public bool ProduceHtmlReport = true;
+		public bool InProcess;
 		public TimeSpan Timeout = TimeSpan.FromMinutes (10);
 
 		public NUnitExecuteTask (BuildToolTask build_task)
@@ -2935,6 +2724,8 @@ function toggleAll (show)
 					if (IsNUnit3) {
 						args.Append ("-result=").Append (StringUtils.Quote (xmlLog)).Append (";format=nunit2 ");
 						args.Append ("--labels=All ");
+						if (InProcess)
+							args.Append ("--inprocess ");
 					} else {
 						args.Append ("-xml=" + StringUtils.Quote (xmlLog)).Append (' ');
 						args.Append ("-labels ");

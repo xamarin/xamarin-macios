@@ -111,6 +111,7 @@
     <Compile Include="ProjectsTests\ResponseFileArguments.cs" />
     <Compile Include="ProjectsTests\CompileSceneKitAssetsTest.cs" />
     <Compile Include="ProjectsTests\NativeReferencesNoEmbedding.cs" />
+    <Compile Include="FrameworkListTest.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

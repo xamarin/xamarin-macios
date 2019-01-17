@@ -1385,7 +1385,7 @@ namespace GameplayKit {
 		IGKRandom RandomSource { get; set; }
 
 		[Abstract]
-		[NullAllowed, Export ("bestMoveForActivePlayer")]
+		[Export ("bestMoveForActivePlayer")]
 		IGKGameModelUpdate GetBestMoveForActivePlayer ();
 	}
 

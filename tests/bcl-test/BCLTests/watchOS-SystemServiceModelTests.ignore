@@ -1,0 +1,9 @@
+# System.PlatformNotSupportedException : System.Net.Sockets.Socket:Bind is not supported on this platform. 
+MonoTests.System.ServiceModel.Description.ServiceEndpointTest.ListenUri
+
+#  An unexpected exception type was thrown 
+MonoTests.System.ServiceModel.ClientBase_InteractiveChannelInitializerTest.OpenBeforeDisplayInitializationUI
+MonoTests.System.ServiceModel.ClientBase_InteractiveChannelInitializerTest.NotAllowedInitializationUI
+
+# System.PlatformNotSupportedException : System.Net.Sockets.Socket:Bind is not supported on this platform.
+MonoTests.System.ServiceModel.Bug36080.Bug36080Test

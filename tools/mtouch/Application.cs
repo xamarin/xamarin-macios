@@ -1092,6 +1092,18 @@ namespace Xamarin.Bundler {
 					}
 				}
 
+				if (UseInterpreter != appex.UseInterpreter) {
+					ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the interpreter settings are different between the container app ({(UseInterpreter ? "Enabled" : "Disabled")}) and the extension ({(appex.UseInterpreter ? "Enabled" : "Disabled")}).");
+					continue;
+				} else if (UseInterpreter) {
+					var appAssemblies = new HashSet<string> (InterpretedAssemblies);
+					var appexAssemblies = new HashSet<string> (appex.InterpretedAssemblies);
+					if (!appAssemblies.SetEquals (appexAssemblies)) {
+						ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the interpreted assemblies are different between the container app ({(InterpretedAssemblies.Count == 0 ? "all assemblies" : string.Join (", ", InterpretedAssemblies))}) and the extension ({(appex.InterpretedAssemblies.Count == 0 ? "all assemblies" : string.Join (", ", appex.InterpretedAssemblies))}).");
+						continue;
+					}
+				}
+
 				// Check that the Abis are matching
 				foreach (var abi in appex.Abis) {
 					var matching = abis.FirstOrDefault ((v) => (v & Abi.ArchMask) == (abi & Abi.ArchMask));
@@ -1383,6 +1395,9 @@ namespace Xamarin.Bundler {
 
 			if (EnableBitCode && IsSimulatorBuild)
 				throw ErrorHelper.CreateError (84, "Bitcode is not supported in the simulator. Do not pass --bitcode when building for the simulator.");
+
+			if (UseInterpreter && IsSimulatorBuild)
+				throw ErrorHelper.CreateError (141, "The interpreter is not supported in the simulator. Do not pass --interpreter when building for the simulator.");
 
 			Namespaces.Initialize ();
 

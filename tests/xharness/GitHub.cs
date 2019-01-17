@@ -13,35 +13,44 @@ namespace xharness
 {
 	public static class GitHub
 	{
+		static WebClient CreateClient ()
+		{
+			var client = new WebClient ();
+			client.Headers.Add (HttpRequestHeader.UserAgent, "xamarin");
+			var xharness_github_token_file = Environment.GetEnvironmentVariable ("XHARNESS_GITHUB_TOKEN_FILE");
+			if (!string.IsNullOrEmpty (xharness_github_token_file) && File.Exists (xharness_github_token_file))
+				client.Headers.Add (HttpRequestHeader.Authorization, File.ReadAllText (xharness_github_token_file));
+			return client;
+		}
+
+		public static string GetPullRequestTargetBranch (Harness harness, int pull_request)
+		{
+			if (pull_request <= 0)
+				return string.Empty;
+
+			var info = DownloadPullRequestInfo (harness, pull_request);
+			if (info.Length == 0)
+				return string.Empty;
+
+			using (var reader = JsonReaderWriterFactory.CreateJsonReader (info, new XmlDictionaryReaderQuotas ())) {
+				var doc = new XmlDocument ();
+				doc.Load (reader);
+				return doc.SelectSingleNode ("/root/base/ref").InnerText;
+			}
+		}
+
 		public static IEnumerable<string> GetLabels (Harness harness, int pull_request)
 		{
-			var path = Path.Combine (harness.LogDirectory, "pr" + pull_request + "-labels.log");
-			if (!File.Exists (path)) {
-				Directory.CreateDirectory (harness.LogDirectory);
-				using (var client = new WebClient ()) {
-					// FIXME: github returns results in pages of 30 elements
-					byte [] data;
-					try {
-						client.Headers.Add (HttpRequestHeader.UserAgent, "xamarin");
-						data = client.DownloadData ($"https://api.github.com/repos/xamarin/xamarin-macios/issues/{pull_request}/labels");
-					} catch (WebException we) {
-						harness.Log ("Could not load pull request labels: {0}\n{1}", we, new StreamReader (we.Response.GetResponseStream ()).ReadToEnd ());
-						File.WriteAllText (path, string.Empty);
-						return new string [] { };
-					}
-					var reader = JsonReaderWriterFactory.CreateJsonReader (data, new XmlDictionaryReaderQuotas ());
-					var doc = new XmlDocument ();
-					doc.Load (reader);
-					var rv = new List<string> ();
-					foreach (XmlNode node in doc.SelectNodes ("/root/item/name")) {
-						rv.Add (node.InnerText);
-					}
-					File.WriteAllLines (path, rv.ToArray ());
-					return rv;
+			var info = DownloadPullRequestInfo (harness, pull_request);
+			using (var reader = JsonReaderWriterFactory.CreateJsonReader (info, new XmlDictionaryReaderQuotas ())) {
+				var doc = new XmlDocument ();
+				doc.Load (reader);
+				var rv = new List<string> ();
+				foreach (XmlNode node in doc.SelectNodes ("/root/labels/name")) {
+					rv.Add (node.InnerText);
 				}
+				return rv;
 			}
-
-			return File.ReadAllLines (path);
 		}
 
 		public static IEnumerable<string> GetModifiedFiles (Harness harness, int pull_request)
@@ -67,13 +76,12 @@ namespace xharness
 			var path = Path.Combine (harness.LogDirectory, "pr" + pull_request + "-remote-files.log");
 			if (!File.Exists (path)) {
 				Directory.CreateDirectory (harness.LogDirectory);
-				using (var client = new WebClient ()) {
+				using (var client = CreateClient ()) {
 					var rv = new List<string> ();
 					var url = $"https://api.github.com/repos/xamarin/xamarin-macios/pulls/{pull_request}/files?per_page=100"; // 100 items per page is max
 					do {
 						byte [] data;
 						try {
-							client.Headers.Add (HttpRequestHeader.UserAgent, "xamarin");
 							data = client.DownloadData (url);
 						} catch (WebException we) {
 							harness.Log ("Could not load pull request files: {0}\n{1}", we, new StreamReader (we.Response.GetResponseStream ()).ReadToEnd ());
@@ -155,32 +163,25 @@ namespace xharness
 			}
 		}
 
-		public static XmlDocument FetchPullRequest (Harness harness, int pull_request)
+		static byte[] DownloadPullRequestInfo (Harness harness, int pull_request)
 		{
 			var path = Path.Combine (harness.LogDirectory, "pr" + pull_request + ".log");
-			var doc = new XmlDocument ();
-
 			if (!File.Exists (path)) {
 				Directory.CreateDirectory (harness.LogDirectory);
-				using (var client = new WebClient ()) {
+				using (var client = CreateClient ()) {
 					byte [] data;
 					try {
-						client.Headers.Add (HttpRequestHeader.UserAgent, "xamarin");
 						data = client.DownloadData ($"https://api.github.com/repos/xamarin/xamarin-macios/pulls/{pull_request}");
+						File.WriteAllBytes (path, data);
+						return data;
 					} catch (WebException we) {
-						harness.Log ("Could not load pull request: {0}\n{1}", we, new StreamReader (we.Response.GetResponseStream ()).ReadToEnd ());
-						return null;
+						harness.Log ("Could not load pull request info: {0}\n{1}", we, new StreamReader (we.Response.GetResponseStream ()).ReadToEnd ());
+						File.WriteAllText (path, string.Empty);
+						return new byte [0];
 					}
-					var reader = JsonReaderWriterFactory.CreateJsonReader (data, new XmlDictionaryReaderQuotas ());
-
-					doc.Load (reader);
-					doc.Save (path);
-					return doc;
 				}
 			}
-
-			doc.LoadWithoutNetworkAccess (path);
-			return doc;
+			return File.ReadAllBytes (path);
 		}
 	}
 }
