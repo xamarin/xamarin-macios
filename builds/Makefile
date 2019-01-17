@@ -1614,7 +1614,7 @@ build-llvm64: .stamp-build-llvm64
 	$(Q) touch $@
 
 .stamp-compile-llvm32: $(SDK_CONFIG)
-	$(MAKE) -C $(MONO_SDK_BUILDDIR) provision-llvm36-llvm32 $(SDK32_ARGS)
+	$(MAKE) -C $(MONO_SDK_BUILDDIR) provision-llvm36-llvm32 $(SDK_ARGS)
 	$(Q) touch $@
 
 .stamp-build-llvm64: .stamp-$(MONO_BUILD_MODE)-llvm64
