@@ -137,14 +137,14 @@ MonoTests.System.Collections.CaseInsensitiveComparerTest.Serialize_Default
 # Expected is <System.Byte[209]>, actual is <System.Byte[241]> 
 MonoTests.System.CaseInsensitiveComparerTest.Serialize_DefaultInvariant
 
-# [FAIL] ConcurrentQueueTests.TryDequeueReferenceTest :   Expected: False
+# ConcurrentQueueTests.TryDequeueReferenceTest :   Expected: False
 MonoTests.System.Collections.Concurrent.ConcurrentQueueTests.TryDequeueReferenceTest 
 
 # Fail in the first assertion
 MonoTests.System.Collections.Generic.DictionaryTest.Clear_ZeroOut
 MonoTests.System.Collections.Generic.DictionaryTest.Remove_ZeroOut
 
-# [FAIL] SortedListTest.Values_Deserialize : System.Reflection.TargetInvocationException : Exception has been thrown by the target of an invocation.
+# SortedListTest.Values_Deserialize : System.Reflection.TargetInvocationException : Exception has been thrown by the target of an invocation.
 #  ----> System.Runtime.Serialization.SerializationException : Member 'CompareInfo' was not found.
 MonoTests.System.Collections.SortedListTest.Values_Deserialize
 
@@ -343,3 +343,51 @@ MonoTests.System.Security.Cryptography.X509Certificates.SoftwarePublisherCertifi
 # Expected: System.ArgumentException
 # but was: System.PlatformNotSupportedException : Initializing `X509Certificate` from native handle is not supported.
 MonoTests.System.Security.Cryptography.X509Certificates.X509CAPI.ConstructorIntPtrZero
+
+# System.NotSupportedException : Specified method is not supported.
+
+MonoCasTests.System.AppDomainCas.AddAssemblyLoad 
+MonoCasTests.System.AppDomainCas.AddAssemblyResolve 
+MonoCasTests.System.AppDomainCas.AddDomainUnload 
+MonoCasTests.System.AppDomainCas.AddProcessExit 
+MonoCasTests.System.AppDomainCas.AddResourceResolve 
+MonoCasTests.System.AppDomainCas.AddTypeResolve 
+MonoCasTests.System.AppDomainCas.AddUnhandledException 
+MonoCasTests.System.AppDomainCas.AppendPrivatePath 
+MonoCasTests.System.AppDomainCas.BaseDirectory_Deny_FileIOPermission 
+MonoCasTests.System.AppDomainCas.ClearPrivatePath 
+MonoCasTests.System.AppDomainCas.ClearShadowCopyPath 
+MonoCasTests.System.AppDomainCas.CreateDomain1_Deny_ControlAppDomain 
+MonoCasTests.System.AppDomainCas.CreateDomain2_Deny_ControlAppDomain 
+MonoCasTests.System.AppDomainCas.CreateDomain3_Deny_ControlAppDomain 
+MonoCasTests.System.AppDomainCas.CreateDomain5_Deny_ControlAppDomain 
+MonoCasTests.System.AppDomainCas.CreateDomain7_Deny_ControlAppDomain 
+MonoCasTests.System.AppDomainCas.DynamicDirectory_Deny_FileIOPermission 
+MonoCasTests.System.AppDomainCas.Evidence_Deny_ControlEvidence 
+MonoCasTests.System.AppDomainCas.PartialTrust_Deny_Unrestricted 
+MonoCasTests.System.AppDomainCas.PermitOnly_ControlEvidence 
+MonoCasTests.System.AppDomainCas.PermitOnly_ControlPrincipal 
+MonoCasTests.System.AppDomainCas.PermitOnly_FileIOPermission 
+MonoCasTests.System.AppDomainCas.RelativeSearchPath_Deny_FileIOPermission 
+MonoCasTests.System.AppDomainCas.RemoveAssemblyLoad 
+MonoCasTests.System.AppDomainCas.RemoveAssemblyResolve 
+MonoCasTests.System.AppDomainCas.RemoveDomainUnload 
+MonoCasTests.System.AppDomainCas.RemoveProcessExit 
+MonoCasTests.System.AppDomainCas.RemoveResourceResolve 
+MonoCasTests.System.AppDomainCas.RemoveTypeResolve 
+MonoCasTests.System.AppDomainCas.RemoveUnhandledException 
+MonoCasTests.System.AppDomainCas.SetCachePath 
+MonoCasTests.System.AppDomainCas.SetData 
+MonoCasTests.System.AppDomainCas.SetDynamicBase 
+MonoCasTests.System.AppDomainCas.SetPrincipalPolicy_Deny_ControlPrincipal 
+MonoCasTests.System.AppDomainCas.SetShadowCopyFiles 
+MonoCasTests.System.AppDomainCas.SetThreadPrincipal_Deny_ControlPrincipal 
+MonoCasTests.System.AppDomainCas.Unload_Deny_ControlAppDomain 
+
+# String lengths are both 11. Strings differ at index 0.
+#  Expected: "오전 11:00:00"
+#  But was:  "AM 11:00:00"
+MonoTests.System.DateTimeTest.DateTimeKoCulture
+
+# System.IndexOutOfRangeException : Index was outside the bounds of the array.
+MonoTests.System.Reflection.ParameterInfoTest.ReturnParameter_IsDefined_False 
