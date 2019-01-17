@@ -13226,7 +13226,8 @@ namespace Foundation
 		bool LockBeforeDate (NSDate limit);
 
 		[Export ("name")]
-		string Name { get; [NullAllowed] set; }
+		[NullAllowed]
+		string Name { get; set; }
 	}
 
 	[BaseType (typeof(NSObject))]
@@ -13258,7 +13259,8 @@ namespace Foundation
 		bool LockWhenCondition (nint condition, NSDate limit);
 
 		[Export ("name")]
-		string Name { get; [NullAllowed] set; }
+		[NullAllowed]
+		string Name { get; set; }
 	}
 
 	[BaseType (typeof(NSObject))]
@@ -13271,7 +13273,8 @@ namespace Foundation
 		bool LockBeforeDate (NSDate limit);
 
 		[Export ("name")]
-		string Name { get; [NullAllowed] set; }
+		[NullAllowed]
+		string Name { get; set; }
 	}
 
 	[BaseType (typeof(NSObject))]
@@ -13290,7 +13293,8 @@ namespace Foundation
 		void Broadcast ();
 
 		[Export ("name")]
-		string Name { get; [NullAllowed] set; }
+		[NullAllowed]
+		string Name { get; set; }
 	}
 
 // Not yet, the IntPtr[] argument isn't handled correctly by the generator (it tries to convert to NSArray, while the native method expects a C array).
