@@ -1,4 +1,5 @@
 !unknown-pinvoke! _Block_copy bound
+!unknown-pinvoke! _Block_release bound
 !unknown-pinvoke! class_addIvar bound
 !unknown-pinvoke! class_addMethod bound
 !unknown-pinvoke! class_addProperty bound
