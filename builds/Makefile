@@ -1383,23 +1383,18 @@ WATCHOS_TARGET_MONOFRAMEWORK = \
 
 WATCHOS_TARGET_LIBMONONATIVE = \
 	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-native.a
-#	$(BUILD_DESTDIR)/targetwatch/lib/libmono-native-compat.a
 
 WATCHOS_TARGET_LIBMONONATIVECOMPAT = \
 	$(BUILD_DESTDIR)/targetwatch/lib/libmono-native-compat.a \
-#	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-native-compat.a
 
 WATCHOS_TARGET_LIBMONONATIVEUNIFIED = \
 	$(BUILD_DESTDIR)/targetwatch/lib/libmono-native-unified.a
-#	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-native-unified.a
 
 WATCHOS_TARGET_SHAREDLIBMONONATIVECOMPAT = \
 	$(BUILD_DESTDIR)/targetwatch/lib/libmono-native-compat.dylib
-#	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-native-compat.dylib
 
 WATCHOS_TARGET_SHAREDLIBMONONATIVEUNIFIED = \
 	$(BUILD_DESTDIR)/targetwatch/lib/libmono-native-unified.dylib
-#	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-native-unified.dylib
 
 $(WATCHOS_TARGET_LIBMONOSGEN): .stamp-build-targetwatch .stamp-build-targetwatch64_32
 $(WATCHOS_TARGET_SHAREDMONOSGEN): .stamp-build-targetwatch .stamp-build-targetwatch64_32
