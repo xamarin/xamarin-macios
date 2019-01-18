@@ -1691,6 +1691,25 @@ namespace ObjCRuntime {
 		[DllImport ("__Internal", EntryPoint = "xamarin_release_block_on_main_thread")]
 		public static extern void ReleaseBlockOnMainThread (IntPtr block);
 #endif
+
+		// Throws an ArgumentNullException if 'obj' is null.
+		// This method is particularly helpful when calling another constructor from a constructor, where you can't add any statements before calling the other constructor:
+		//
+		//     Foo (object obj)
+		//         : base (Runtime.ThrowOnNull (obj, nameof (obj)).Handle)
+		//     {
+		//     }
+		//
+		internal static T ThrowOnNull<T> (T obj, string name, string message = null) where T : class
+		{
+			if (obj == null) {
+				if (message == null)
+					throw new ArgumentNullException (name);
+				else
+					throw new ArgumentNullException (name, message);
+			}
+			return obj;
+		}
 	}
 		
 	internal class IntPtrEqualityComparer : IEqualityComparer<IntPtr>

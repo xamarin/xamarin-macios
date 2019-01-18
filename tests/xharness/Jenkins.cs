@@ -1051,7 +1051,7 @@ namespace xharness
 				Target = "wrench-docs",
 				WorkingDirectory = Harness.RootDirectory,
 				Ignored = !IncludeDocs,
-				Timeout = TimeSpan.FromMinutes (15),
+				Timeout = TimeSpan.FromMinutes (45),
 			};
 			Tasks.Add (runDocsTests);
 

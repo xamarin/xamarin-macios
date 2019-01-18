@@ -96,9 +96,7 @@ namespace BCLTestImporter {
 			(name:"MonoCSharpTests", assemblies: new [] {"monotouch_Mono.CSharp_test.dll"}),
 			(name:"SystemSecurityTests", assemblies: new [] {"monotouch_System.Security_test.dll"}),
 			(name:"SystemServiceModelTests", assemblies: new [] {"monotouch_System.ServiceModel_test.dll"}),
-			(name:"SystemRuntimeSerializationFormattersSoapTests", assemblies: new [] {"monotouch_System.Runtime.Serialization.Formatters.Soap_test.dll"}),
 			(name:"CorlibTests", assemblies: new [] {"monotouch_corlib_test.dll"}),
-			(name:"MonoRuntimeTests", assemblies: new [] {"monotouch_Mono.Runtime.Tests_test.dll"}),
 
 			// XUNIT TESTS 
 
@@ -106,23 +104,12 @@ namespace BCLTestImporter {
 			(name:"SystemJsonXunit", assemblies: new [] {"monotouch_System.Json_xunit-test.dll"}),
 			(name:"SystemNumericsXunit", assemblies: new [] {"monotouch_System.Numerics_xunit-test.dll"}),
 			(name:"SystemSecurityXunit", assemblies: new [] {"monotouch_System.Security_xunit-test.dll"}),
-			(name:"SystemThreadingTaskXunit", assemblies: new [] {"monotouch_System.Threading.Tasks.Dataflow_xunit-test.dll"}),
 			(name:"SystemLinqXunit", assemblies: new [] {"monotouch_System.Xml.Linq_xunit-test.dll"}),
 			(name:"SystemRuntimeCompilerServicesUnsafeXunit", assemblies: new [] {"monotouch_System.Runtime.CompilerServices.Unsafe_xunit-test.dll"}),
 		};
 			
 		static readonly List <string> CommonIgnoredAssemblies = new List <string> {
-			"monotouch_System.Security_xunit-test.dll",// issue https://github.com/xamarin/maccore/issues/1128
-			"monotouch_System.Threading.Tasks.Dataflow_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1132
-			"monotouch_System.Transactions_test.dll", // issue https://github.com/xamarin/maccore/issues/1134
-			"monotouch_System_test.dll", // issues https://github.com/xamarin/maccore/issues/1135
-			"monotouch_System.ServiceModel_test.dll", // issue https://github.com/xamarin/maccore/issues/1138
 			"monotouch_System.Security_test.dll", // issue https://github.com/xamarin/maccore/issues/1139
-			"monotouch_System.Runtime.Serialization.Formatters.Soap_test.dll", // issue https://github.com/xamarin/maccore/issues/1140
-			"monotouch_System.Net.Http_test.dll", // issue https://github.com/xamarin/maccore/issues/1144 and https://github.com/xamarin/maccore/issues/1145
-			"monotouch_System.Core_test.dll", // issue https://github.com/xamarin/maccore/issues/1143
-			"monotouch_Mono.Runtime.Tests_test.dll", // issue https://github.com/xamarin/maccore/issues/1141
-			"monotouch_corlib_test.dll", // issue https://github.com/xamarin/maccore/issues/1153
 			"monotouch_Commons.Xml.Relaxng_test.dll", // not supported by xamarin
 			"monotouch_Cscompmgd_test.dll", // not supported by xamarin
 			"monotouch_I18N.CJK_test.dll",
@@ -142,14 +129,9 @@ namespace BCLTestImporter {
 		static readonly List<string> iOSIgnoredAssemblies = new List<string> {};
 
 		static readonly List<string> tvOSIgnoredAssemblies = new List<string> {
-			"monotouch_System.Xml.Linq_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1130
-			"monotouch_System.Numerics_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1129
 		};
 
 		static readonly List<string> watcOSIgnoredAssemblies = new List<string> {
-			"monotouch_System.Xml.Linq_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1130
-			"monotouch_System.Numerics_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1129
-			"monotouch_Mono.Security_test.dll", // issue https://github.com/xamarin/maccore/issues/1142
 		};
 
 		private static readonly List<(string name, string[] assemblies)> macTestProjects = new List<(string name, string[] assemblies)> {

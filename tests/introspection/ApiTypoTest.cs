@@ -405,6 +405,7 @@ namespace Introspection
 			"Psk",
 			"Ptp",
 			"Pvrtc", // MTLBlitOption - PowerVR Texture Compression
+			"Qos",
 			"Quaterniond",
 			"Quadding",
 			"Qura",

@@ -500,7 +500,7 @@ namespace GameKit {
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'InitWithLeaderboardIdentifier' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'InitWithLeaderboardIdentifier' instead.")]
-		[Internal][NullAllowed]
+		[Internal]
 		[Export ("initWithCategory:")]
 		IntPtr InitWithCategory ([NullAllowed] string category);
 
@@ -515,7 +515,7 @@ namespace GameKit {
 		IntPtr Constructor (string identifier, string playerID);
 
 		[iOS (7,0)][Mac (10,10)]
-		[Internal][NullAllowed]
+		[Internal]
 		[Export ("initWithLeaderboardIdentifier:")]
 		IntPtr InitWithLeaderboardIdentifier (string identifier);
 
