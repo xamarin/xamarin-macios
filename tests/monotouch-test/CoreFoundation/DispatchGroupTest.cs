@@ -14,9 +14,11 @@ using System.Threading;
 #if XAMCORE_2_0
 using Foundation;
 using CoreFoundation;
+using ObjCRuntime;
 #else
 using MonoTouch.CoreFoundation;
 using MonoTouch.Foundation;
+using MonoTouch.ObjCRuntime;
 #endif
 using NUnit.Framework;
 
