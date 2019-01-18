@@ -70,9 +70,9 @@ namespace BCLTests {
 #endif
 			var ignoredTests = new List<string> ();
 			foreach (var f in Directory.GetFiles (contentDir, "*.ignore")) {
+#if MONOMAC
 				// we might have some ignores depending on the arch
 				var shouldAdd = false;
-#if MONOMAC
 				if (isFull) {
 					shouldAdd = !f.Contains ("Modern");
 				} else {
