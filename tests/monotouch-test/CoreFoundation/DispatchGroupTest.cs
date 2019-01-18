@@ -55,6 +55,9 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void NotifyWithDispatchBlock ()
 		{
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+
 			using (var dg = new DispatchGroup ()) {
 				var called = false;
 				var callback = new Action (() => called = true);

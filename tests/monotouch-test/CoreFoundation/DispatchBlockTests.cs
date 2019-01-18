@@ -14,9 +14,11 @@ using System.Threading;
 #if XAMCORE_2_0
 using Foundation;
 using CoreFoundation;
+using ObjCRuntime;
 #else
 using MonoTouch.CoreFoundation;
 using MonoTouch.Foundation;
+using MonoTouch.ObjCRuntime;
 #endif
 using NUnit.Framework;
 
@@ -27,6 +29,13 @@ namespace MonoTouchFixtures.CoreFoundation
 	[Preserve (AllMembers = true)]
 	public class DispatchBlockTest
 	{
+		[SetUp]
+		public void SetUp ()
+		{
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+		}
+
 		[Test]
 		public void Invoke ()
 		{
@@ -90,6 +99,8 @@ namespace MonoTouchFixtures.CoreFoundation
 		[Test]
 		public void Wait_DispatchTime ()
 		{
+			TestRuntime.AssertXcodeVersion (8, 0);
+
 			var called = false;
 			var callback = new Action (() => called = true);
 			using (var db = new DispatchBlock (callback)) {
@@ -109,6 +120,8 @@ namespace MonoTouchFixtures.CoreFoundation
 		[Test]
 		public void Wait_TimeSpan ()
 		{
+			TestRuntime.AssertXcodeVersion (8, 0);
+
 			var called = false;
 			var callback = new Action (() => called = true);
 			using (var db = new DispatchBlock (callback)) {
@@ -142,6 +155,8 @@ namespace MonoTouchFixtures.CoreFoundation
 		[Test]
 		public void Constructors ()
 		{
+			TestRuntime.AssertXcodeVersion (8, 0);
+
 			var called = false;
 			var callback = new Action (() => called = true);
 			DispatchBlockFlags flags;
@@ -220,6 +235,8 @@ namespace MonoTouchFixtures.CoreFoundation
 		[Test]
 		public void Create ()
 		{
+			TestRuntime.AssertXcodeVersion (8, 0);
+
 			var called = false;
 			var callback = new Action (() => called = true);
 			DispatchBlockFlags flags;
