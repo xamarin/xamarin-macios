@@ -41,9 +41,9 @@ namespace CoreMedia {
 		[Internal][Field ("kCMTextMarkupAttribute_RelativeFontSize")]
 		NSString RelativeFontSize { get; }
 
-        [Internal]
-        [Field("kCMTextMarkupAttribute_BaseFontSizePercentageRelativeToVideoHeight")]
-        NSString BaseFontSizePercentageRelativeToVideoHeight { get; }
+		[Internal]
+		[Field("kCMTextMarkupAttribute_BaseFontSizePercentageRelativeToVideoHeight")]
+		NSString BaseFontSizePercentageRelativeToVideoHeight { get; }
     }
 
 	[Static][Internal]
