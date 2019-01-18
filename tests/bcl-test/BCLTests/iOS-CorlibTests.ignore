@@ -1,0 +1,2 @@
+# fails on 32
+MonoTests.System.IntPtrTest.Test64on32
