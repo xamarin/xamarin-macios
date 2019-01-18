@@ -1447,7 +1447,10 @@ namespace Xamarin.Bundler {
 				MonoNativeMode = DeploymentTarget.Major >= 10 ? MonoNativeMode.Unified : MonoNativeMode.Compat;
 				break;
 			case ApplePlatform.WatchOS:
-				MonoNativeMode = DeploymentTarget.Major >= 3 ? MonoNativeMode.Unified : MonoNativeMode.Compat;
+				if (DeploymentTarget.Major >= 5 && DeploymentTarget.Minor > 0)
+					MonoNativeMode = MonoNativeMode.None;
+				else
+					MonoNativeMode = DeploymentTarget.Major >= 3 ? MonoNativeMode.Unified : MonoNativeMode.Compat;
 				break;
 			default:
 				MonoNativeMode = MonoNativeMode.None;
