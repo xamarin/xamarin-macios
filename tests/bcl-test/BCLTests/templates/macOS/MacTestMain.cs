@@ -17,6 +17,7 @@ using Xamarin.iOS.UnitTests.NUnit;
 using BCLTests.TestRunner.Core;
 using Xamarin.iOS.UnitTests.XUnit;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Xamarin.Mac.Tests
 {
@@ -25,7 +26,7 @@ namespace Xamarin.Mac.Tests
 		static int Main (string[] args)
 		{
 			NSApplication.Init();
-			return RunTests (args);
+			return RunTests (args).Result;
 		}
 
 		internal static IEnumerable<TestAssemblyInfo> GetTestAssemblies ()
@@ -37,7 +38,7 @@ namespace Xamarin.Mac.Tests
 			}
  		}
  		
-		static int RunTests (string [] original_args)
+		static async Task<int> RunTests (string [] original_args)
 		{
 			Console.WriteLine ("Running tests");
 			var options = ApplicationOptions.Current;
@@ -54,12 +55,20 @@ namespace Xamarin.Mac.Tests
 			else
 				runner = new NUnitTestRunner (logger);
 			
-			runner.Run (testAssemblies.ToList ());
-			
-			using (var writer = new StreamWriter(options.ResultFile)) {
-				runner.WriteResultsToFile (writer);
+			var skippedTests = await IgnoreFileParser.ParseContentFilesAsync (NSBundle.MainBundle.BundlePath);
+			if (skippedTests.Any ()) {
+				// ensure that we skip those tests that have been passed via the ignore files
+				runner.SkipTests (skippedTests);
 			}
-			logger.Info ($"Xml result can be found {options.ResultFile}");
+			
+			runner.Run (testAssemblies.ToList ());
+
+			if (options.ResultFile != null) {
+				using (var writer = new StreamWriter (options.ResultFile)) {
+					runner.WriteResultsToFile (writer);
+				}
+				logger.Info ($"Xml result can be found {options.ResultFile}");
+			}
 			
 			logger.Info ($"Tests run: {runner.TotalTests} Passed: {runner.PassedTests} Inconclusive: {runner.InconclusiveTests} Failed: {runner.FailedTests} Ignored: {runner.SkippedTests}");
 			return runner.FailedTests != 0 ? 1 : 0;

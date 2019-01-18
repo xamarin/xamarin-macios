@@ -60,11 +60,38 @@ namespace BCLTests {
 		
 		public static async Task<IEnumerable<string>> ParseContentFilesAsync (string contentDir)
 		{
+#if XAMMAC_4_5
+			bool isFull = true;
+#else
+			bool isFull = false;
+#endif
+#if !MONOMAC
+			bool is64Bit = IntPtr.Size == 8;
+#endif
 			var ignoredTests = new List<string> ();
 			foreach (var f in Directory.GetFiles (contentDir, "*.ignore")) {
-				using (var reader = new StreamReader (f)) {
-					var ignored = await ParseStreamAsync (reader);
-					ignoredTests.AddRange (ignored);
+				// we might have some ignores depending on the arch
+				var shouldAdd = false;
+#if MONOMAC
+				if (isFull) {
+					shouldAdd = !f.Contains ("Modern");
+				} else {
+					shouldAdd = !f.Contains ("Full");
+				}
+#else
+				// we might have some ignores depending on the arch
+				var shouldAdd = false;
+				if (is64Bit) {
+					shouldAdd = !f.Contains ("iOS32");
+				} else {
+					shouldAdd = !f.Contains ("iOS64");
+				}
+#endif
+				if (shouldAdd) {
+					using (var reader = new StreamReader (f)) {
+						var ignored = await ParseStreamAsync (reader);
+						ignoredTests.AddRange (ignored);
+					}
 				}
 			}
 			return ignoredTests;

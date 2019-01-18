@@ -354,18 +354,19 @@ namespace BCLTestImporter {
 
 		internal static string GetCommonIgnoreFileName (string projectName) => $"common-{projectName}.ignore";
 		
-		internal static string GetIgnoreFileName (string projectName, Platform platform)
+		internal static List<string> GetIgnoreFileName (string projectName, Platform platform)
 		{
 			switch (platform) {
 			case Platform.iOS:
-				return $"iOS-{projectName}.ignore";
+				return new List<string> { $"iOS-{projectName}.ignore", $"iOS32-{projectName}.ignore", $"iOS64-{projectName}.ignore" };
 			case Platform.MacOSFull:
+				return new List<string> { $"macOS-{projectName}.ignore", $"macOSFull-{projectName}.ignore" };
 			case Platform.MacOSModern:
-				return $"macOS-{projectName}.ignore";
+				return new List<string> { $"macOS-{projectName}.ignore", $"macOSModern-{projectName}.ignore" };
 			case Platform.TvOS:
-				return $"tvOS-{projectName}.ignore";
+				return new List<string> { $"tvOS-{projectName}.ignore" };
 			case Platform.WatchOS:
-				return $"watchOS-{projectName}.ignore";
+				return new List<string> { $"watchOS-{projectName}.ignore" };
 			default:
 				return null;
 			}
@@ -379,9 +380,13 @@ namespace BCLTestImporter {
 			var commonIgnore = Path.Combine (templateDir, GetCommonIgnoreFileName (projectName));
 			if (File.Exists (commonIgnore))
 				yield return commonIgnore;
-			var platformIgnore = Path.Combine (templateDir, GetIgnoreFileName (projectName, platform));
-			if (File.Exists (platformIgnore))
-				yield return platformIgnore;
+			var platformIgnores = GetIgnoreFileName (projectName, platform);
+			
+			foreach (var p in platformIgnores) {
+				var ignore = Path.Combine (templateDir, p);
+				if (File.Exists (ignore))
+					yield return ignore;
+			}
 		}
 
 		/// <summary>
