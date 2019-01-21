@@ -561,6 +561,9 @@ namespace GeneratorTests
 			Assert.AreEqual (modelName, attrib.ConstructorArguments [0].Value, "Custom ObjC name");
 		}
 
+		[Test]
+		public void GHIssue5444 () => BuildFile (Profile.iOS, "ghissue5444.cs");
+
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
 			return BuildFile (profile, true, false, filenames);
