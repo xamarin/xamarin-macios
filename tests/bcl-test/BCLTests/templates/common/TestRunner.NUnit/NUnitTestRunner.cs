@@ -279,7 +279,7 @@ namespace Xamarin.iOS.UnitTests.NUnit
 					Filter = new TestMethodFilter (tests);
 				} else {
 					// create a special group filter with the previous one
-					// and the previous one
+					// and the new one
 					AndFilter andFilter;
 					if (Filter is AndFilter) {
 						// add a new filter
