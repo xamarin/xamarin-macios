@@ -13,6 +13,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Linq;
 using Foundation;
+using NUnit.Framework.Internal.Filters;
 
 namespace BCLTests {
 	public partial class ViewController : UIViewController {
@@ -77,9 +78,14 @@ namespace BCLTests {
 			Xamarin.iOS.UnitTests.TestRunner runner;
 			if (RegisterType.IsXUnit)
 				runner = new XUnitTestRunner (logger);
-			else
-				runner = new NUnitTestRunner (logger);
-
+			else {
+				runner = new NUnitTestRunner (logger) {
+					// add known ignored categories.
+					Filter = new NotFilter (new CategoryExpression ("MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingLinqInterpreter").Filter)
+				};
+			}
+			
+			// add category filters if they have been added
 			var skippedTests = await IgnoreFileParser.ParseContentFilesAsync (NSBundle.MainBundle.BundlePath);
 			if (skippedTests.Any ()) {
 				// ensure that we skip those tests that have been passed via the ignore files

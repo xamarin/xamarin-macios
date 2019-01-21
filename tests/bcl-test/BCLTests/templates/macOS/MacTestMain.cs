@@ -17,6 +17,7 @@ using Xamarin.iOS.UnitTests.NUnit;
 using BCLTests.TestRunner.Core;
 using Xamarin.iOS.UnitTests.XUnit;
 using System.IO;
+using NUnit.Framework.Internal.Filters;
 
 namespace Xamarin.Mac.Tests
 {
@@ -51,8 +52,11 @@ namespace Xamarin.Mac.Tests
 			TestRunner runner;
 			if (RegisterType.IsXUnit)
 				runner = new XUnitTestRunner (logger);
-			else
-				runner = new NUnitTestRunner (logger);
+			else {
+				runner = new NUnitTestRunner (logger) {
+					Filter = new NotFilter (new CategoryExpression ("MacNotWorking,MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingLinqInterpreter").Filter)
+				};
+			}
 			
 			runner.Run (testAssemblies.ToList ());
 			

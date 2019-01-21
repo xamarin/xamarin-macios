@@ -106,8 +106,11 @@ namespace monotouchtestWatchKitExtension
 			var testAssemblies = GetTestAssemblies ();
 			if (RegisterType.IsXUnit)
 				runner = new XUnitTestRunner (logger);
-			else
-				runner = new NUnitTestRunner (logger);
+			else {
+				runner = new NUnitTestRunner (logger) { 
+					Filter = new NotFilter (new CategoryExpression ("MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingLinqInterpreter,RequiresBSDSockets").Filter)
+				};
+			}
 			
 			var skippedTests = IgnoreFileParser.ParseContentFiles (NSBundle.MainBundle.BundlePath);
 			if (skippedTests.Any ()) {

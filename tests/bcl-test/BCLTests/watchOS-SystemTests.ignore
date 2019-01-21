@@ -513,3 +513,12 @@ MonoCasTests.System.Net.Sockets.SocketCas.AsyncSend
 MonoCasTests.System.Net.Sockets.SocketCas.AsyncSendTo 
 MonoCasTests.System.Net.Sockets.NetworkStreamCas.AsyncRead
 MonoCasTests.System.Net.Sockets.NetworkStreamCas.AsyncWrite
+
+# System.PlatformNotSupportedException : System.Net.Sockets.UdpClient is not supported on the current platform.
+MonoTests.System.Net.Sockets.UdpClientTest.JoinMulticastGroup1_Socket_NotBound
+MonoTests.System.Net.Sockets.UdpClientTest.JoinMulticastGroupWithLocal 
+
+# System.Net.HttpWebRequest is not supported on the current platform. 
+MonoTests.System.Net.WebRequestTest.TestFailedConnection
+MonoTests.System.Net.WebRequestTest.TestFailedResolution
+MonoTests.System.Net.WebRequestTest.TestReceiveCancelation
