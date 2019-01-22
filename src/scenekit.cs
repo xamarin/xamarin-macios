@@ -1716,7 +1716,8 @@ namespace SceneKit {
 		SCNCamera Camera { get; set;  }
 
 		[Export ("geometry", ArgumentSemantic.Retain)]
-		SCNGeometry Geometry { get; [NullAllowed] set;  }
+		[NullAllowed]
+		SCNGeometry Geometry { get; set; }
 
 		[NullAllowed] // by default this property is null
 		[Export ("name", ArgumentSemantic.Copy)]
@@ -1782,7 +1783,8 @@ namespace SceneKit {
 
 		[Mac (10,9)]
 		[Export ("constraints", ArgumentSemantic.Copy)]
-		SCNConstraint [] Constraints { get; [NullAllowed] set; }
+		[NullAllowed]
+		SCNConstraint [] Constraints { get; set; }
 
 		[NoWatch, Mac (10, 9)]
 		[NullAllowed] // by default this property is null
@@ -3897,7 +3899,8 @@ namespace SceneKit {
 		[Abstract]
 		[Mac (10,10), iOS (8,0)]
 		[Export ("technique", ArgumentSemantic.Copy)]
-		SCNTechnique Technique { get; [NullAllowed] set; }
+		[NullAllowed]
+		SCNTechnique Technique { get; set; }
 	}
 
 	[Watch (3,0)]

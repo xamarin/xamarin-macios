@@ -223,7 +223,6 @@ namespace iAd {
 		void SetCanDisplayBannerAds (bool value);
 
 		[iOS (7,0), Export ("originalContentView")]
-		[NullAllowed]
 		UIView GetOriginalContentView ();
 
 		[iOS (7,0), Export ("isPresentingFullScreenAd")]

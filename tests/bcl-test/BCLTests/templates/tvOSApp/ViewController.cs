@@ -13,6 +13,7 @@ using Xamarin.iOS.UnitTests.XUnit;
 using System.Threading.Tasks;
 using System.IO;
 using Foundation;
+using NUnit.Framework.Internal.Filters;
 
 namespace BCLTests {
 	public partial class ViewController : UIViewController {
@@ -75,8 +76,11 @@ namespace BCLTests {
 			Xamarin.iOS.UnitTests.TestRunner runner;
 			if (RegisterType.IsXUnit)
 				runner = new XUnitTestRunner (logger);
-			else
-				runner = new NUnitTestRunner (logger);
+			else {
+				runner = new NUnitTestRunner (logger) { 
+					Filter = new NotFilter (new CategoryExpression ("MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingLinqInterpreter").Filter)
+				};
+			}
 
 			var skippedTests = await IgnoreFileParser.ParseContentFilesAsync (NSBundle.MainBundle.BundlePath);
 			if (skippedTests.Any ()) {

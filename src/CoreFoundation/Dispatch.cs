@@ -372,12 +372,28 @@ namespace CoreFoundation {
 			dispatch_async_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
 		}
 
+		public void DispatchAsync (DispatchBlock block)
+		{
+			if (block == null)
+				throw new ArgumentNullException (nameof (block));
+
+			dispatch_async (GetCheckedHandle (), block.GetCheckedHandle ());
+		}
+
 		public void DispatchSync (Action action)
 		{
 			if (action == null)
 				throw new ArgumentNullException ("action");
 			
 			dispatch_sync_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
+		}
+
+		public void DispatchSync (DispatchBlock block)
+		{
+			if (block == null)
+				throw new ArgumentNullException (nameof (block));
+
+			dispatch_sync (GetCheckedHandle (), block.GetCheckedHandle ());
 		}
 
 		public void DispatchBarrierAsync (Action action)
@@ -388,6 +404,14 @@ namespace CoreFoundation {
 			dispatch_barrier_async_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
 		}
 
+		public void DispatchBarrierAsync (DispatchBlock block)
+		{
+			if (block == null)
+				throw new ArgumentNullException (nameof (block));
+
+			dispatch_barrier_async (GetCheckedHandle (), block.GetCheckedHandle ());
+		}
+
 		public void DispatchBarrierSync (Action action)
 		{
 			if (action == null)
@@ -396,12 +420,28 @@ namespace CoreFoundation {
 			dispatch_barrier_sync_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
 		}
 
+		public void DispatchBarrierSync (DispatchBlock block)
+		{
+			if (block == null)
+				throw new ArgumentNullException (nameof (block));
+
+			dispatch_barrier_sync (GetCheckedHandle (), block.GetCheckedHandle ());
+		}
+
 		public void DispatchAfter (DispatchTime when, Action action)
 		{
 			if (action == null)
 				throw new ArgumentNullException ("action");
 
 			dispatch_after_f (when.Nanoseconds, Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
+		}
+
+		public void DispatchAfter (DispatchTime when, DispatchBlock block)
+		{
+			if (block == null)
+				throw new ArgumentNullException (nameof (block));
+
+			dispatch_after (when.Nanoseconds, GetCheckedHandle (), block.GetCheckedHandle ());
 		}
 
 		public void Submit (Action<int> action, long times)
@@ -459,16 +499,31 @@ namespace CoreFoundation {
 		extern static void dispatch_async_f (IntPtr queue, IntPtr context, dispatch_callback_t dispatch);
 
 		[DllImport (Constants.libcLibrary)]
+		extern static void dispatch_async (IntPtr queue, IntPtr block);
+
+		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_sync_f (IntPtr queue, IntPtr context, dispatch_callback_t dispatch);
+
+		[DllImport (Constants.libcLibrary)]
+		extern static void dispatch_sync (IntPtr queue, IntPtr block);
 
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_barrier_async_f (IntPtr queue, IntPtr context, dispatch_callback_t dispatch);
 
+		[DllImport (Constants.libcLibrary)]
+		extern static void dispatch_barrier_async (IntPtr queue, IntPtr block);
+
 		[DllImport(Constants.libcLibrary)]
 		extern static void dispatch_barrier_sync_f (IntPtr queue, IntPtr context, dispatch_callback_t dispatch);
 
+		[DllImport(Constants.libcLibrary)]
+		extern static void dispatch_barrier_sync (IntPtr queue, IntPtr block);
+
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_after_f (/* dispath_time_t */ ulong time, IntPtr queue, IntPtr context, dispatch_callback_t dispatch);
+
+		[DllImport (Constants.libcLibrary)]
+		extern static void dispatch_after (/* dispath_time_t */ ulong time, IntPtr queue, IntPtr block);
 
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_get_current_queue ();
@@ -662,6 +717,11 @@ namespace CoreFoundation {
 		{
 		}
 
+		public DispatchGroup ()
+			: base (dispatch_group_create (), true)
+		{
+		}
+
 		public static DispatchGroup Create ()
 		{
 			var ptr = dispatch_group_create ();
@@ -679,6 +739,15 @@ namespace CoreFoundation {
 				throw new ArgumentNullException ("action");
 
 			dispatch_group_async_f (GetCheckedHandle (), queue.Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, queue)), DispatchQueue.static_dispatch);
+		}
+
+		public void Notify (DispatchQueue queue, DispatchBlock block)
+		{
+			if (queue == null)
+				throw new ArgumentNullException (nameof (queue));
+			if (block == null)
+				throw new ArgumentNullException (nameof (block));
+			dispatch_group_notify (GetCheckedHandle (), queue.Handle, block.GetCheckedHandle ());
 		}
 
 		public void Notify (DispatchQueue queue, Action action)
@@ -706,6 +775,11 @@ namespace CoreFoundation {
 			return dispatch_group_wait (GetCheckedHandle (), timeout.Nanoseconds) == 0;
 		}
 
+		public bool Wait (TimeSpan timeout)
+		{
+			return Wait (new DispatchTime (DispatchTime.Now, timeout));
+		}
+
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_group_create ();
 
@@ -714,6 +788,9 @@ namespace CoreFoundation {
 
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_group_notify_f (IntPtr group, IntPtr queue, IntPtr context, DispatchQueue.dispatch_callback_t block);
+
+		[DllImport (Constants.libcLibrary)]
+		extern static void dispatch_group_notify (IntPtr group, IntPtr queue, IntPtr block);
 
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_group_enter (IntPtr group);

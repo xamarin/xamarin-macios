@@ -734,6 +734,7 @@ namespace xharness
 		ARMv7k,
 		ARMv7s,
 		ARM64,
+		ARM64_32,
 		i386,
 		x86_64,
 	}
@@ -879,8 +880,20 @@ namespace xharness
 				}
 
 				// https://www.theiphonewiki.com/wiki/List_of_Apple_Watches
-				if (model.StartsWith ("Watch", StringComparison.Ordinal))
-					return Architecture.ARMv7k;
+				if (model.StartsWith ("Watch", StringComparison.Ordinal)) {
+					var identifier = model.Substring ("Watch".Length);
+					var values = identifier.Split (',');
+					switch (values [0]) {
+						case "1": // Apple Watch (1st gen)
+						case "2": // Apple Watch Series 1 and Series 2
+						case "3": // Apple Watch Series 3
+							return Architecture.ARMv7k;
+
+						case "4": // Apple Watch Series 4
+						default:
+							return Architecture.ARM64_32;
+					}
+				}
 
 				// https://www.theiphonewiki.com/wiki/List_of_Apple_TVs
 				if (model.StartsWith ("AppleTV", StringComparison.Ordinal))

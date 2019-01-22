@@ -311,11 +311,11 @@ namespace AudioUnit {
 		[Export ("setOutputEnabled:")]
 		bool SetOutputEnabled (bool enabled);
 		
-		[NullAllowed, Export ("inputHandler", ArgumentSemantic.Copy)]
+		[Export ("inputHandler", ArgumentSemantic.Copy)]
 		AUInputHandler GetInputHandler ();
 
-		[NullAllowed, Export ("setInputHandler:")]
-		void SetInputHandler (AUInputHandler handler);
+		[Export ("setInputHandler:")]
+		void SetInputHandler ([NullAllowed] AUInputHandler handler);
 
 		[Export ("startHardwareAndReturnError:")]
 		bool StartHardware ([NullAllowed] out NSError outError);
@@ -323,11 +323,11 @@ namespace AudioUnit {
 		[Export ("stopHardware")]
 		void StopHardware ();
 
-		[NullAllowed, Export ("outputProvider", ArgumentSemantic.Copy)]
+		[Export ("outputProvider", ArgumentSemantic.Copy)]
 		AURenderPullInputBlock GetOutputProvider ();
 
-		[NullAllowed, Export ("setOutputProvider:")]
-		void SetOutputProvider (AURenderPullInputBlock provider);
+		[Export ("setOutputProvider:")]
+		void SetOutputProvider ([NullAllowed] AURenderPullInputBlock provider);
 
 		// the following are properties but we cannot have properties in Categories.
 		[Mac (10, 13), NoWatch, NoiOS, NoTV]

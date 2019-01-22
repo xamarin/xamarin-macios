@@ -341,7 +341,13 @@ namespace ObjCRuntime {
 		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
-		static extern IntPtr _Block_copy (ref BlockLiteral block);
+		internal static extern IntPtr _Block_copy (ref BlockLiteral block);
+
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
+		internal static extern IntPtr _Block_copy (IntPtr block);
+
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
+		internal static extern void _Block_release (IntPtr block);
 
 		//
 		// Simple method that we can use to wrap methods that need to call a block

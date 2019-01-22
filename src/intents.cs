@@ -2980,7 +2980,7 @@ namespace Intents {
 		INImage GetImage (string parameterName);
 
 		[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
-		[NullAllowed, Export ("keyImage")]
+		[Export ("keyImage")]
 		INImage GetKeyImage ();
 	}
 
@@ -6340,7 +6340,7 @@ namespace Intents {
 	[BaseType (typeof (NSUserActivity))]
 	interface NSUserActivity_IntentsAdditions {
 
-		[NullAllowed, Export ("interaction")]
+		[Export ("interaction")]
 		INInteraction GetInteraction ();
 	}
 

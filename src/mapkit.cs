@@ -116,10 +116,11 @@ namespace MapKit {
 	
 		[Export ("annotation", ArgumentSemantic.Retain)]
 		[ThreadSafe] // Sometimes iOS will request the annotation from a non-UI thread (see https://bugzilla.xamarin.com/show_bug.cgi?27609)
+		[NullAllowed]
 #if XAMCORE_2_0
-		IMKAnnotation Annotation { get; [NullAllowed] set; }
+		IMKAnnotation Annotation { get; set; }
 #else
-		NSObject Annotation { get; [NullAllowed] set; }
+		NSObject Annotation { get; set; }
 #endif
 	
 		[Export ("image", ArgumentSemantic.Retain)]

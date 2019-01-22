@@ -109,9 +109,6 @@ namespace BCLTestImporter {
 		};
 			
 		static readonly List <string> CommonIgnoredAssemblies = new List <string> {
-			"monotouch_System.Transactions_test.dll", // issue https://github.com/xamarin/maccore/issues/1134
-			"monotouch_System_test.dll", // issues https://github.com/xamarin/maccore/issues/1135
-			"monotouch_corlib_test.dll", // issue https://github.com/xamarin/maccore/issues/1153
 			"monotouch_Commons.Xml.Relaxng_test.dll", // not supported by xamarin
 			"monotouch_Cscompmgd_test.dll", // not supported by xamarin
 			"monotouch_I18N.CJK_test.dll",

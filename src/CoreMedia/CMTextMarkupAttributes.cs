@@ -168,6 +168,18 @@ namespace CoreMedia {
 				SetNumberValue (CMTextMarkupAttributesKeys.RelativeFontSize, value);
 			}
 		}
+
+		public float? BaseFontSizePercentageRelativeToVideoHeight {
+			get {
+				return GetFloatValue (CMTextMarkupAttributesKeys.BaseFontSizePercentageRelativeToVideoHeight);
+			}
+			set {
+				if (value < 0)
+					throw new ArgumentOutOfRangeException("value");
+
+				SetNumberValue (CMTextMarkupAttributesKeys.BaseFontSizePercentageRelativeToVideoHeight, value);
+			}
+		}
 #endif
 	}
 }
