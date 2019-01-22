@@ -42,18 +42,19 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void NoStrongCycles ()
 		{
-			bool finalizedAnyCtor = false;
-			bool finalizedAnyAddTarget1 = false;
-			bool finalizedAnyAddTarget2 = false;
+			bool disposeAnyCtor = false;
+			bool disposeAnyAddTarget1 = false;
+			bool disposeAnyAddTarget2 = false;
 
 			// Add the gesture recognizers to a list so that they're not collected until after the test
 			// This is to avoid false positives (the callback should be collectible already after disposing the gesture recognizer).
 			var list = new List<UIGestureRecognizer> ();
 
+			// 'NSAutoreleasePool' makes test happy on 32 bit
 			var pool = new NSAutoreleasePool ();
 			for (var k = 0; k < 10; k++) {
 				{
-					var notifier = new FinalizerNotifier (() => finalizedAnyCtor = true);
+					var notifier = new FinalizerNotifier (() => disposeAnyCtor = true);
 					using (var gr = new UIGestureRecognizer (() => {
 						GC.KeepAlive (notifier); // Make sure the 'notifier' instance is only collected if the delegate to UIGestureRecognizer is collectable.
 					})) {
@@ -61,14 +62,14 @@ namespace MonoTouchFixtures.UIKit {
 					}
 				}
 				{
-					var notifier = new FinalizerNotifier (() => finalizedAnyAddTarget1 = true);
+					var notifier = new FinalizerNotifier (() => disposeAnyAddTarget1 = true);
 					using (var gr = new UIGestureRecognizer ()) {
 						gr.AddTarget (() => { GC.KeepAlive (notifier); });
 						list.Add (gr);
 					}
 				}
 				{
-					var notifier = new FinalizerNotifier (() => finalizedAnyAddTarget2 = true);
+					var notifier = new FinalizerNotifier (() => disposeAnyAddTarget2 = true);
 					using (var gr = new UIGestureRecognizer ()) {
 						gr.AddTarget ((obj) => { GC.KeepAlive (notifier); });
 						list.Add (gr);
@@ -77,21 +78,29 @@ namespace MonoTouchFixtures.UIKit {
 			}
 			pool.Dispose ();
 
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (1), () => { GC.Collect (); }, () => finalizedAnyCtor && finalizedAnyAddTarget1 && finalizedAnyAddTarget2);
-			Assert.IsTrue (finalizedAnyCtor, "Any finalized");
-			Assert.IsTrue (finalizedAnyAddTarget1, "AddTarget1 finalized");
-			Assert.IsTrue (finalizedAnyAddTarget2, "AddTarget2 finalized");
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (1), () => { GC.Collect (); }, () => disposeAnyCtor && disposeAnyAddTarget1 && disposeAnyAddTarget2);
+			Assert.IsTrue (disposeAnyCtor, "Any finalized");
+			Assert.IsTrue (disposeAnyAddTarget1, "AddTarget1 finalized");
+			Assert.IsTrue (disposeAnyAddTarget2, "AddTarget2 finalized");
 
 			GC.KeepAlive (list);
 		}
 
-		class FinalizerNotifier
+		class FinalizerNotifier : IDisposable
 		{
 			public Action Action;
 			public FinalizerNotifier (Action action)
 			{
 				Action = action;
 			}
+
+			public void Dispose ()
+			{
+				if (Action != null)
+					Action ();
+			}
+
+			// Might not be called since 'Dispose ()' is calling 'GC.SuppressFinalize ()'
 			~FinalizerNotifier ()
 			{
 				if (Action != null)
