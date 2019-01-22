@@ -170,6 +170,7 @@ namespace CoreFoundation {
 			return Wait (new DispatchTime (DispatchTime.Now, timeout));
 		}
 
+		[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
 		delegate void DispatchBlockCallback (IntPtr block);
 
 		public static explicit operator Action (DispatchBlock block)
