@@ -275,7 +275,22 @@ namespace Xamarin.iOS.UnitTests.NUnit
 		{
 			// grab the tests and create a filter for them
 			if (tests.Any ()) {
-				Filter = new TestMethodFilter (tests);
+				if (Filter.IsEmpty) {
+					Filter = new TestMethodFilter (tests);
+				} else {
+					// create a special group filter with the previous one
+					// and the new one
+					AndFilter andFilter;
+					if (Filter is AndFilter) {
+						// add a new filter
+						andFilter = Filter as AndFilter;
+						andFilter.Add (new TestMethodFilter (tests));
+					} else {
+						andFilter = new AndFilter (Filter); 
+						andFilter.Add (new TestMethodFilter (tests));
+					}
+					Filter = andFilter;
+				}
 			}
 		}
 	}
