@@ -4526,7 +4526,7 @@ public partial class Generator : IMemberGatherer {
 	
 	bool DoesPropertyNeedDirtyCheck (PropertyInfo pi, ExportAttribute ea) 
 	{
-		switch (ea.ArgumentSemantic) {
+		switch (ea?.ArgumentSemantic) {
 		case ArgumentSemantic.Copy:
 		case ArgumentSemantic.Retain: // same as Strong
 		case ArgumentSemantic.None:
