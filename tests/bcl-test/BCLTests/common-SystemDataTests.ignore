@@ -2,32 +2,10 @@
 Monotests_Mono.Data.SqlExpressions.DateComparisonTest.TestDateComparisonRight
 Monotests_Mono.Data.SqlExpressions.DateComparisonTest.TestDateComparisonLeft
 MonoTests.System.Data.XmlDataReaderTest.XmlLoadTest
-MonoTests.System.Data.XmlDataReaderTest.Test6
-MonoTests.System.Data.XmlDataReaderTest.Test5
-MonoTests.System.Data.XmlDataReaderTest.Test4
-MonoTests.System.Data.XmlDataReaderTest.Test3
-MonoTests.System.Data.XmlDataReaderTest.Test2
-MonoTests.System.Data.XmlDataReaderTest.Test1
-MonoTests.System.Data.XmlDataReaderTest.Navigator
-MonoTests.System.Data.XmlDataReaderTest.GetRowFromElement
-MonoTests.System.Data.XmlDataReaderTest.GetElementFromRow
-MonoTests.System.Data.XmlDataReaderTest.EditingXmlTree
-MonoTests.System.Data.XmlDataReaderTest.EditingDataSet
-MonoTests.System.Data.XmlDataReaderTest.CreateElement3
-MonoTests.System.Data.XmlDataReaderTest.CreateElement2
-MonoTests.System.Data.XmlDataReaderTest.CreateElement1
-MonoTests.System.Data.XmlDataReaderTest.CloneNode
 
 # System.NotSupportedException : Encoding 1252 data could not be found. Make sure you have correct international codeset assembly installed and enabled.
 MonoTests.System.Data.SqlTypes.SqlStringTest.UnicodeBytes
 MonoTests.System.Data.SqlTypes.SqlStringTest.Create
-
-# System.FormatException : Input string was not in a correct format.
-MonoTests.System.Data.SqlTypes.SqlInt64Test.ReadWriteXmlTest
-MonoTests.System.Data.SqlTypes.SqlInt32Test.ReadWriteXmlTest
-MonoTests.System.Data.SqlTypes.SqlInt16Test.ReadWriteXmlTest
-MonoTests.System.Data.SqlTypes.SqlDoubleTest.ReadWriteXmlTest
-MonoTests.System.Data.SqlTypes.SqlDecimalTest.ReadWriteXmlTest
 
 # System.IO.DirectoryNotFoundException : Could not find a part of the path
 MonoTests.System.Data.Xml.XmlDataDocumentTest.Test6
@@ -46,59 +24,14 @@ MonoTests.System.Data.Xml.XmlDataDocumentTest.CreateElement2
 MonoTests.System.Data.Xml.XmlDataDocumentTest.CreateElement1
 MonoTests.System.Data.Xml.XmlDataDocumentTest.CloneNode
 
-# System.NotSupportedException : The keyword 'connection reset' is not supported on this platform.
-MonoTests.System.Data.SqlClient.SqlConnectionTest.ConnectionString_OtherKeywords
-
-# System.NotSupportedException : The keyword 'Network Library' is not supported on this platform, prefix the 'Data Source' with the protocol desired instead ('tcp:' for a TCP connection, or 'np:' for a Named Pipe connection).
-MonoTests.System.Data.SqlClient.SqlConnectionTest.ConnectionString_NetworkLibrary_Synonyms
-
-# System.NotSupportedException : The keyword 'asynchronous processing' is not supported on this platform.
-MonoTests.System.Data.SqlClient.SqlConnectionTest.ConnectionString_AsynchronousProcessing
-
-#  #6
-#  Expected: True
-#  But was:  False
-MonoTests.System.Data.SqlClient.SqlConnectionTest.ChangePassword_ConnectionString_Null
-MonoTests.System.Data.SqlClient.SqlConnectionTest.ChangePassword_ConnectionString_Empty
-
-# Expected string length 568 but was 512. Strings differ at index 70.
-#  Expected: "...ertyDescriptorChanged,0,0\n----- UpdateIndex : True\n---- On..."
-#  But was:  "...ertyDescriptorChanged,0,0\n---- OnListChanged Reset,-1,-1\nt..."
-MonoTests.System.Data.DataViewTest.ComplexEventSequence2
-
-#  Expected string length 1316 but was 1214. Strings differ at index 70.
-#  Expected: "...ertyDescriptorChanged,0,0\n----- UpdateIndex : True\n---- On..."
-#  But was:  "...ertyDescriptorChanged,0,0\n---- OnListChanged Reset,-1,-1\nt..."
-MonoTests.System.Data.DataViewTest.ComplexEventSequence1
-
-#  #9
-#  String lengths are both 11. Strings differ at index 10.
-#  Expected: "Constraint1"
-#  But was:  "Constraint2"
-MonoTests.System.Data.DataTableTest3.XmlSchemaTest4
-
 # System.IO.DirectoryNotFoundException : Could not find a part of the path
-MonoTests.System.Data.DataTableTest3.WriteXmlSchema
-MonoTests.System.Data.DataTableTest3.ReadXmlSchema
 MonoTests.System.Data.DataTableReadXmlSchemaTest.TestSampleFileXPath
 MonoTests.System.Data.DataTableReadXmlSchemaTest.TestSampleFileSimpleTables
-MonoTests.System.Data.DataTableReadXmlSchemaTest.TestSampleFileImportSimple
-
-#  An unexpected exception type was thrown
-# Expected: System.NullReferenceException
-# but was: System.IO.DirectoryNotFoundException : Could not find a part of the path
-MonoTests.System.Data.DataTableReadXmlSchemaTest.TestSampleFileComplexTablesExp2
-MonoTests.System.Data.DataTableReadXmlSchemaTest.TestSampleFileComplexTablesExp1
 
 # System.IO.DirectoryNotFoundException : Could not find a part of the path
 MonoTests.System.Data.DataTableReadXmlSchemaTest.TestSampleFileComplexTables3
-MonoTests.System.Data.DataTableReadXmlSchemaTest.TestSampleFileComplexTables2
 
 #  System.IO.DirectoryNotFoundException : Could not find a part of the path
-MonoTests.System.Data.DataTableReadXmlSchemaTest.TestMoreThanOneRepeatableColumns
-MonoTests.System.Data.DataTableReadXmlSchemaTest.TestAnnotatedRelation2
-MonoTests.System.Data.DataTableReadXmlSchemaTest.TestAnnotatedRelation1
-MonoTests.System.Data.DataTableReadXmlSchemaTest.RepeatableSimpleElement
 MonoTests.System.Data.DataTableReadXmlSchemaTest.ReadConstraints
 MonoTests.System.Data.DataTableReadXmlSchemaTest.ReadAnnotatedRelations_MultipleColumns
 MonoTests.System.Data.DataTableTest.WriteXmlSchema
@@ -109,11 +42,6 @@ MonoTests.System.Data.DataSetTest2.ReadXmlSchema_Nested
 MonoTests.System.Data.DataSetTest2.Merge_ConstraintsFromReadXmlSchema
 MonoTests.System.Data.DataSetTest.WriteXmlSchema
 
-#  Expected string length 1817 but was 918. Strings differ at index 1.
-#  Expected: "<xs:schema id='NewDataSet' targetNamespace='urn:bar' xmlns:ms..."
-#  But was:  "<?xml version='1.0' encoding='utf-16'?>\n<xs:schema id='NewDat..."
-MonoTests.System.Data.DataSetTest.WriteDifferentNamespaceSchema
-
 # System.IO.DirectoryNotFoundException : Could not find a part of the path
 MonoTests.System.Data.DataSetTest.ReadXmlSchema
 MonoTests.System.Data.DataSetTest.ReadWriteXmlDiffGram
@@ -123,9 +51,7 @@ MonoTests.System.Data.DataSetReadXmlTest.DataSetExtendedPropertiesTest
 MonoTests.System.Data.DataSetReadXmlSchemaTest.TestSampleFileXPath
 MonoTests.System.Data.DataSetReadXmlSchemaTest.TestSampleFileSimpleTables
 MonoTests.System.Data.DataSetReadXmlSchemaTest.TestSampleFileNoTables
-MonoTests.System.Data.DataSetReadXmlSchemaTest.TestSampleFileImportSimple
 MonoTests.System.Data.DataSetReadXmlSchemaTest.TestSampleFileComplexTables3
-MonoTests.System.Data.DataSetReadXmlSchemaTest.TestSampleFileComplexTables2
 MonoTests.System.Data.DataSetReadXmlSchemaTest.TestSampleFileComplexTables
 MonoTests.System.Data.DataSetReadXmlSchemaTest.TestMoreThanOneRepeatableColumns
 MonoTests.System.Data.DataSetReadXmlSchemaTest.TestAnnotatedRelation2
@@ -135,30 +61,4 @@ MonoTests.System.Data.DataSetReadXmlSchemaTest.ReadConstraints
 MonoTests.System.Data.DataSetReadXmlSchemaTest.ReadAnnotatedRelations_MultipleColumns
 MonoTests.System.Data.DataRelationTest.RelationFromSchema
 MonoTests.System.Data.BinarySerializationTest.Test_With_Null_Values2
-MonoTests.System.Data.BinarySerializationTest.Test_With_DateTime_Values2
 MonoTests.System.Data.BinarySerializationTest.DataTableSerializationTest2
-MonoTests.System.Data.BinarySerializationTest.DataSetSerializationTest2
-MonoTests.System.Data.BinarySerializationTest.Constraint_Relations_Test2
-
-# System.ArgumentException was expected
-MonoTests.System.Data.DataSetInferXmlSchemaTest.ComplexElementTable1
-
-# System.NotSupportedException : The keyword 'Context Connection' is not supported on this platform.
-MonoTests.System.Data.Connected.SqlClient.SqlConnectionStringBuilderTest.SettingContextConnectionTest
-
-# System.NotSupportedException : The keyword 'Network Library' is not supported on this platform, prefix the 'Data Source' with the protocol desired instead ('tcp:' for a TCP connection, or 'np:' for a Named Pipe connection).
-MonoTests.System.Data.Common.SqlConnectionStringBuilderTest.RemoveTest
-MonoTests.System.Data.Connected.SqlClient.SqlConnectionStringBuilderTest.RemoveTest
-MonoTests.System.Data.Common.SqlConnectionStringBuilderTest.ItemTest
-MonoTests.System.Data.Connected.SqlClient.SqlConnectionStringBuilderTest.ItemTest
-MonoTests.System.Data.Connected.SqlClient.SqlConnectionStringBuilderTest.InvalidKeyTest
-MonoTests.System.Data.Common.SqlConnectionStringBuilderTest.InvalidKeyTest
-
-# #PT1 boolean value must be true
-#  Expected: True
-#  But was:  False
-MonoTests.System.Data.Connected.SqlClient.SqlConnectionStringBuilderTest.PropertiesTest
-MonoTests.System.Data.Common.SqlConnectionStringBuilderTest.PropertiesTest
-
-# System.NotImplementedException : The method or operation is not implemented.
-MonoTests.System.Data.Connected.SqlClient.SqlConnectionStringBuilderTest.ContextConnectionTest
