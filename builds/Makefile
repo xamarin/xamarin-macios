@@ -1192,15 +1192,16 @@ WATCHOS_BIN_PATH = $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/u
 
 ifdef INCLUDE_WATCH
 ifdef INCLUDE_DEVICE
-build:: build-targetwatch
-clean-local:: clean-targetwatch
+build:: build-targetwatch build-targetwatch64_32
+clean-local:: clean-targetwatch clean-targetwatch64_32
 install-local:: install-watchos
 all-local:: install-watchos
 
 targetwatch: build-targetwatch install-watchos
-watchos:: targetwatch
+targetwatch64_32: build-targetwatch64_32 install-watch64_32
+watchos:: targetwatch targetwatch64_32
 
-.PHONY: targetwatch
+.PHONY: targetwatch targetwatch64_32
 
 .stamp-build-targetwatch: $(MONO_PATH)/configure $(SDK_CONFIG) $(MONO_DEPENDENCIES)
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios-targetwatch $(SDK_ARGS)
@@ -1208,31 +1209,66 @@ watchos:: targetwatch
 	$(Q) $(CP) -r $(SDK_DESTDIR)/ios-targetwatch-release/* $(BUILD_DESTDIR)/targetwatch
 	$(Q) touch $@
 
+.stamp-build-targetwatch64_32: $(MONO_PATH)/configure $(SDK_CONFIG) $(MONO_DEPENDENCIES)
+	$(MAKE) -C $(SDK_BUILDDIR) package-ios-targetwatch64_32 $(SDK_ARGS)
+	$(Q) mkdir -p $(BUILD_DESTDIR)/targetwatch64_32
+	$(Q) $(CP) -r $(SDK_DESTDIR)/ios-targetwatch64_32-release/* $(BUILD_DESTDIR)/targetwatch64_32
+	$(Q) touch $@
+
 build-targetwatch: .stamp-build-targetwatch
+build-targetwatch64_32: .stamp-build-targetwatch64_32
 
 clean-targetwatch:
 	$(Q) rm -rf $(BUILD_DESTDIR)/targetwatch .stamp-*-targetwatch
 	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-targetwatch $(SDK_ARGS)
 
-setup-watchos: setup-targetwatch
-build-watchos: build-targetwatch
-clean-watchos: clean-targetwatch
+clean-targetwatch64_32:
+	$(Q) rm -rf $(BUILD_DESTDIR)/targetwatch64_32 .stamp-*-targetwatch64_32
+	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-targetwatch64_32 $(SDK_ARGS)
 
-WATCHOS_TARGET_LIBMONOSGEN          = $(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.a
-WATCHOS_TARGET_SHAREDMONOSGEN       = $(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.dylib
-WATCHOS_TARGET_LIBLOGPROFILER       = $(BUILD_DESTDIR)/targetwatch/lib/libmono-profiler-log-static.a
-WATCHOS_TARGET_LIBMONOEEINTERP      = $(BUILD_DESTDIR)/targetwatch/lib/libmono-ee-interp.a
-WATCHOS_TARGET_LIBMONOICALLTABLE    = $(BUILD_DESTDIR)/targetwatch/lib/libmono-icall-table.a
-WATCHOS_TARGET_LIBMONOILGEN         = $(BUILD_DESTDIR)/targetwatch/lib/libmono-ilgen.a
-WATCHOS_TARGET_SHAREDLIBLOGPROFILER = $(BUILD_DESTDIR)/targetwatch/lib/libmono-profiler-log.0.dylib
+setup-watchos: setup-targetwatch setup-targetwatch64_32
+build-watchos: build-targetwatch build-targetwatch64_32
+clean-watchos: clean-targetwatch clean-targetwatch64_32
 
-$(WATCHOS_TARGET_LIBMONOSGEN): .stamp-build-targetwatch
-$(WATCHOS_TARGET_SHAREDMONOSGEN): .stamp-build-targetwatch
-$(WATCHOS_TARGET_LIBLOGPROFILER): .stamp-build-targetwatch
-$(WATCHOS_TARGET_LIBMONOEEINTERP): .stamp-build-targetwatch
-$(WATCHOS_TARGET_LIBMONOICALLTABLE): .stamp-build-targetwatch
-$(WATCHOS_TARGET_LIBMONOILGEN): .stamp-build-targetwatch
-$(WATCHOS_TARGET_SHAREDLIBLOGPROFILER): .stamp-build-targetwatch
+WATCHOS_TARGET_LIBMONOSGEN = \
+	$(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.a \
+	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmonosgen-2.0.a
+
+WATCHOS_TARGET_SHAREDMONOSGEN = \
+	$(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.dylib \
+	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmonosgen-2.0.dylib
+
+WATCHOS_TARGET_LIBLOGPROFILER = \
+	$(BUILD_DESTDIR)/targetwatch/lib/libmono-profiler-log-static.a \
+	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-profiler-log-static.a
+
+WATCHOS_TARGET_LIBMONOEEINTERP = \
+	$(BUILD_DESTDIR)/targetwatch/lib/libmono-ee-interp.a \
+	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-ee-interp.a
+
+WATCHOS_TARGET_LIBMONOICALLTABLE = \
+	$(BUILD_DESTDIR)/targetwatch/lib/libmono-icall-table.a \
+	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-icall-table.a
+
+WATCHOS_TARGET_LIBMONOILGEN = \
+	$(BUILD_DESTDIR)/targetwatch/lib/libmono-ilgen.a \
+	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-ilgen.a
+
+WATCHOS_TARGET_SHAREDLIBLOGPROFILER = \
+	$(BUILD_DESTDIR)/targetwatch/lib/libmono-profiler-log.0.dylib \
+	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-profiler-log.0.dylib
+
+WATCHOS_TARGET_MONOFRAMEWORK = \
+	$(BUILD_DESTDIR)/targetwatch/tmp-lib/Mono \
+	$(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/Mono
+
+$(WATCHOS_TARGET_LIBMONOSGEN): .stamp-build-targetwatch .stamp-build-targetwatch64_32
+$(WATCHOS_TARGET_SHAREDMONOSGEN): .stamp-build-targetwatch .stamp-build-targetwatch64_32
+$(WATCHOS_TARGET_LIBLOGPROFILER): .stamp-build-targetwatch .stamp-build-targetwatch64_32
+$(WATCHOS_TARGET_LIBMONOEEINTERP): .stamp-build-targetwatch .stamp-build-targetwatch64_32
+$(WATCHOS_TARGET_LIBMONOICALLTABLE): .stamp-build-targetwatch .stamp-build-targetwatch64_32
+$(WATCHOS_TARGET_LIBMONOILGEN): .stamp-build-targetwatch .stamp-build-targetwatch64_32
+$(WATCHOS_TARGET_SHAREDLIBLOGPROFILER): .stamp-build-targetwatch .stamp-build-targetwatch64_32
 
 device:: watchos
 
@@ -1255,7 +1291,9 @@ $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmonosgen-2.0.a: $(WATCHOS_TARGET
 	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHOS_TARGET_LIBMONOSGEN) -create -output $@
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmonosgen-2.0.dylib: $(WATCHOS_TARGET_SHAREDMONOSGEN) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
-	$(Q_STRIP) $(WATCHOS_BIN_PATH)/bitcode_strip $(WATCHOS_TARGET_SHAREDMONOSGEN) -m -o $@
+	$(Q_STRIP) $(WATCHOS_BIN_PATH)/bitcode_strip $(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.dylib -m -o $(BUILD_DESTDIR)/targetwatch/tmp-lib/libmonosgen-2.0.dylib
+	$(Q_STRIP) $(WATCHOS_BIN_PATH)/bitcode_strip $(BUILD_DESTDIR)/targetwatch64_32/lib/libmonosgen-2.0.dylib -m -o $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/libmonosgen-2.0.dylib
+	$(Q_STRIP) $(WATCHOS_BIN_PATH)/lipo $(BUILD_DESTDIR)/targetwatch/tmp-lib/libmonosgen-2.0.dylib $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/libmonosgen-2.0.dylib -create -output $@
 	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmonosgen-2.0.dylib $@
 	$(Q) dsymutil -t 4 -o $@.dSYM $@
 
@@ -1272,15 +1310,20 @@ $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-ilgen.a: $(WATCHOS_TARGET_L
 	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHOS_TARGET_LIBMONOILGEN) -create -output $@
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-profiler-log.dylib: $(WATCHOS_TARGET_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
-	$(Q) $(WATCHOS_BIN_PATH)/bitcode_strip $(WATCHOS_TARGET_SHAREDLIBLOGPROFILER) -m -o $@
-	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/ios-targetwatch-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
+	$(Q) $(WATCHOS_BIN_PATH)/bitcode_strip $(BUILD_DESTDIR)/targetwatch/lib/libmono-profiler-log.0.dylib -m -o $(BUILD_DESTDIR)/targetwatch/tmp-lib/libmono-profiler-log.0.dylib
+	$(Q) $(WATCHOS_BIN_PATH)/bitcode_strip $(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-profiler-log.0.dylib -m -o $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/libmono-profiler-log.0.dylib
+	$(Q) $(WATCHOS_BIN_PATH)/lipo $(BUILD_DESTDIR)/targetwatch/tmp-lib/libmono-profiler-log.0.dylib $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/libmono-profiler-log.0.dylib -create -output $@
+	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib \
+		-change $(SDK_DESTDIR)/ios-targetwatch-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib \
+		-change $(SDK_DESTDIR)/ios-targetwatch64_32-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib \
+		$@
 	$(Q) dsymutil -t 4 -o $@.dSYM $@
 
 $(WATCHOS_DIRECTORIES):
 	$(Q) mkdir -p $@
 
-$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Mono: $(BUILD_DESTDIR)/targetwatch/tmp-lib/Mono | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework
-	$(Q) $(CP) $< $@
+$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Mono: $(WATCHOS_TARGET_MONOFRAMEWORK) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework
+	$(Q) lipo $(WATCHOS_TARGET_MONOFRAMEWORK) -create -output $@
 	$(Q) dsymutil -t 4 -o $(patsubst %/,%,$(dir $@)).dSYM $@
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Info.plist: Mono.framework-watchos.Info.plist | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework
@@ -1288,6 +1331,9 @@ $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Info.plist: Mono.
 
 $(BUILD_DESTDIR)/targetwatch/tmp-lib/Mono: $(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.a
 	$(Q_GEN) CC="$(IOS_CC)" ./create-shared-library.sh $< $@ -arch armv7k -install_name @rpath/Mono.framework/Mono -mwatchos-version-min=$(MIN_WATCHOS_SDK_VERSION) -isysroot $(DEVICEWATCH_SDK) -lc++ -fembed-bitcode
+
+$(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/Mono: $(BUILD_DESTDIR)/targetwatch64_32/lib/libmonosgen-2.0.a
+	$(Q_GEN) CC="$(IOS_CC)" ./create-shared-library.sh $< $@ -arch arm64_32 -install_name @rpath/Mono.framework/Mono -mwatchos-version-min=$(MIN_WATCHOS_SDK_VERSION) -isysroot $(DEVICEWATCH_SDK) -lc++ -fembed-bitcode
 
 install-watchos: $(WATCHOS_TARGETS)
 

@@ -12,6 +12,7 @@ DEV64_I := $(COMMON_I)
 
 SIMW_I  := $(COMMON_I)
 DEVW_I  := $(COMMON_I)
+DEVW64_32_I := $(COMMON_I)
 
 SIM_TV_I:= $(COMMON_I)
 DEV_TV_I:= $(COMMON_I)
@@ -116,6 +117,18 @@ define NativeCompilationTemplate
 
 .libs/watchos/%$(1).armv7k.framework: | .libs/watchos
 	$$(call Q_2,LD,    [watchos]) $(DEVICE_CC) $(DEVICEWATCH_CFLAGS)          $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -F$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks -fapplication-extension
+
+.libs/watchos/%$(1).arm64_32.o: %.m $(EXTRA_DEPENDENCIES) | .libs/watchos
+	$$(call Q_2,OBJC,  [watchos]) $(DEVICE_CC) $(DEVICEWATCH64_32_OBJC_CFLAGS)    $$(EXTRA_DEFINES) $(DEVW64_32_I) -g $(2) -c $$< -o $$@
+
+.libs/watchos/%$(1).arm64_32.o: %.c $(EXTRA_DEPENDENCIES) | .libs/watchos
+	$$(call Q_2,CC,    [watchos]) $(DEVICE_CC) $(DEVICEWATCH64_32_CFLAGS)         $$(EXTRA_DEFINES) $(DEVW64_32_I) -g $(2) -c $$< -o $$@
+
+.libs/watchos/%$(1).arm64_32.dylib: | .libs/watchos
+	$$(call Q_2,LD,    [watchos]) $(DEVICE_CC) $(DEVICEWATCH64_32_CFLAGS)          $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -L$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib -fapplication-extension
+
+.libs/watchos/%$(1).arm64_32.framework: | .libs/watchos
+	$$(call Q_2,LD,    [watchos]) $(DEVICE_CC) $(DEVICEWATCH64_32_CFLAGS)          $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -F$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks -fapplication-extension
 
 ## tv simulator
 
