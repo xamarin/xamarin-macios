@@ -51,6 +51,10 @@ using nint = System.Int32;
 using nuint = System.UInt32;
 #endif
 
+#if !MONOMAC
+using UIKit;
+#endif
+
 #if SYSTEM_NET_HTTP
 namespace System.Net.Http {
 #else
@@ -120,6 +124,9 @@ namespace Foundation {
 		readonly NSUrlSession session;
 		readonly Dictionary<NSUrlSessionTask, InflightData> inflightRequests;
 		readonly object inflightRequestsLock = new object ();
+#if !MONOMAC
+		readonly NSObject notificationToken;  // needed to make sure we do not hang if not using a background session
+#endif
 
 		static NSUrlSessionConfiguration CreateConfig ()
 		{
@@ -142,6 +149,14 @@ namespace Foundation {
 			if (configuration == null)
 				throw new ArgumentNullException (nameof (configuration));
 
+#if !MONOMAC
+			// if the configuration has an identifier, we are dealing with a background session, 
+			// therefore, we do not have to listen to the notifications.
+			if (string.IsNullOrEmpty (configuration.Identifier)) {
+				notificationToken = NSNotificationCenter.DefaultCenter.AddObserver (UIApplication.WillResignActiveNotification, BackgoundNotificationCb);
+			}
+#endif
+
 			AllowAutoRedirect = true;
 
 			// we cannot do a bitmask but we can set the minimum based on ServicePointManager.SecurityProtocol minimum
@@ -157,6 +172,15 @@ namespace Foundation {
 
 			session = NSUrlSession.FromConfiguration (configuration, (INSUrlSessionDelegate) new NSUrlSessionHandlerDelegate (this), null);
 			inflightRequests = new Dictionary<NSUrlSessionTask, InflightData> ();
+		}
+
+		void BackgoundNotificationCb (NSNotification obj)
+		{
+			// we do not need to call the lock, we call cancel on the source, that will trigger all the needed code to 
+			// clean the resources and such
+			foreach (var pair in inflightRequests) {
+				pair.Value.CompletionSource.TrySetCanceled ();
+			}
 		}
 
 		public long MaxInputInMemory { get; set; } = long.MaxValue;
