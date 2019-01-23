@@ -153,7 +153,8 @@ namespace Foundation {
 			// if the configuration has an identifier, we are dealing with a background session, 
 			// therefore, we do not have to listen to the notifications.
 			if (string.IsNullOrEmpty (configuration.Identifier)) {
-				notificationToken = NSNotificationCenter.DefaultCenter.AddObserver (UIApplication.WillResignActiveNotification, BackgoundNotificationCb);
+				using (var notification = new NSString ("UIApplicationWillResignActiveNotification"))
+					notificationToken = NSNotificationCenter.DefaultCenter.AddObserver (notification, BackgoundNotificationCb);
 			}
 #endif
 
