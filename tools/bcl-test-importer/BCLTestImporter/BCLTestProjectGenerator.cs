@@ -87,7 +87,7 @@ namespace BCLTestImporter {
 			(name:"SystemXmlTests", assemblies: new [] {"monotouch_System.Xml_test.dll"}),
 			(name:"SystemXmlLinqTests", assemblies: new [] {"monotouch_System.Xml.Linq_test.dll"}),
 			(name:"MonoSecurityTests", assemblies: new [] {"monotouch_Mono.Security_test.dll"}),
-			(name:"SystemComponentModelDataAnnotationTests", assemblies: new [] {"monotouch_System.ComponentModel.DataAnnotations_test.dll"}),
+			(name:"SystemComponentModelDataAnnotationsTests", assemblies: new [] {"monotouch_System.ComponentModel.DataAnnotations_test.dll"}),
 			(name:"SystemJsonTests", assemblies: new [] {"monotouch_System.Json_test.dll"}),
 			(name:"SystemServiceModelWebTests", assemblies: new [] {"monotouch_System.ServiceModel.Web_test.dll"}),
 			(name:"MonoDataTdsTests", assemblies: new [] {"monotouch_Mono.Data.Tds_test.dll"}),
