@@ -222,7 +222,7 @@ The `[NullAllowed]` attribute should not be allowed on methods but it could brea
 
 Historically it was used on property setters. However using the attribute on _other_ methods can be misleading, e.g. should it apply to all parameters, the return value... and its presence/action can be misinterpreted in code reviews leading to binding bugs.
 
-To fix this warning use the `[NullAllowed]` attribute onnly on parameters, properties or return values.
+To fix this warning use the `[NullAllowed]` attribute only on parameters, properties or return values.
 
 <!-- 2xxx: reserved -->
 <!-- 3xxx: reserved -->
