@@ -51,10 +51,6 @@ using nint = System.Int32;
 using nuint = System.UInt32;
 #endif
 
-#if !MONOMAC
-using UIKit;
-#endif
-
 #if SYSTEM_NET_HTTP
 namespace System.Net.Http {
 #else
@@ -175,6 +171,7 @@ namespace Foundation {
 			inflightRequests = new Dictionary<NSUrlSessionTask, InflightData> ();
 		}
 
+#if !MONOMAC
 		void BackgoundNotificationCb (NSNotification obj)
 		{
 			// we do not need to call the lock, we call cancel on the source, that will trigger all the needed code to 
@@ -183,6 +180,7 @@ namespace Foundation {
 				pair.Value.CompletionSource.TrySetCanceled ();
 			}
 		}
+#endif
 
 		public long MaxInputInMemory { get; set; } = long.MaxValue;
 
