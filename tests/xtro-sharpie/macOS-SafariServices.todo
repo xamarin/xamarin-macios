@@ -1,0 +1,16 @@
+!missing-protocol-conformance! SFSafariPage should conform to NSSecureCoding
+!missing-protocol-conformance! SFSafariTab should conform to NSSecureCoding
+!missing-protocol-conformance! SFSafariToolbarItem should conform to NSSecureCoding
+!missing-protocol-conformance! SFSafariWindow should conform to NSSecureCoding
+!missing-selector! +SFSafariApplication::getAllWindowsWithCompletionHandler: not bound
+!missing-selector! +SFSafariExtension::getBaseURIWithCompletionHandler: not bound
+!missing-selector! SFSafariExtensionViewController::dismissPopover not bound
+!missing-selector! SFSafariPage::getContainingTabWithCompletionHandler: not bound
+!missing-selector! SFSafariPage::getScreenshotOfVisibleAreaWithCompletionHandler: not bound
+!missing-selector! SFSafariTab::close not bound
+!missing-selector! SFSafariTab::getContainingWindowWithCompletionHandler: not bound
+!missing-selector! SFSafariTab::navigateToURL: not bound
+!missing-selector! SFSafariToolbarItem::showPopover not bound
+!missing-selector! SFSafariWindow::close not bound
+!missing-selector! SFSafariWindow::getAllTabsWithCompletionHandler: not bound
+!missing-type! SFSafariExtension not bound

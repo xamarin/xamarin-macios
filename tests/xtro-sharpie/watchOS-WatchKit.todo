@@ -1,0 +1,4 @@
+!missing-selector! WKInterfaceTable::curvesAtBottom not bound
+!missing-selector! WKInterfaceTable::curvesAtTop not bound
+!missing-selector! WKInterfaceTable::setCurvesAtBottom: not bound
+!missing-selector! WKInterfaceTable::setCurvesAtTop: not bound

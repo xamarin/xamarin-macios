@@ -68,3 +68,6 @@
 !missing-type! MPSNNReshapeGradientNode not bound
 !missing-type! MPSNNReshapeNode not bound
 !missing-type! MPSNNUnaryReductionNode not bound
+## appended from unclassified file
+!missing-enum! MPSDeviceOptions not bound
+!missing-pinvoke! MPSGetPreferredDevice is not bound
