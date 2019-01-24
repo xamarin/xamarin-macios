@@ -431,6 +431,11 @@ namespace Introspection {
 				if (ctor.ToString () == "Void .ctor(String, NSBundle)")
 					return true;
 				break;
+			case "MPSImageReduceUnary": // Not meant to be used, only subclasses
+				var cstr = ctor.ToString ();
+				if (cstr == "Void .ctor(IMTLDevice)" || cstr == "Void .ctor(NSCoder, IMTLDevice)")
+					return true;
+				break;
 			}
 
 			var ep = ctor.GetParameters ();

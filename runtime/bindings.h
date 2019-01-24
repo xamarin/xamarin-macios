@@ -122,6 +122,11 @@ typedef struct {
     MDLVoxelIndex maximumExtent;
 } MDLVoxelIndexExtent;
 
+typedef struct {
+    vector_float3 min;
+    vector_float3 max;
+} MPSAxisAlignedBoundingBox;
+
 /*
  * iOS has a vector type (vector_float3) which can't be expressed
  * in P/Invoke signatures, so we need custom wrappers.
@@ -235,6 +240,11 @@ typedef Vector4i MDLVoxelIndexWrapper;
 struct MDLVoxelIndexExtentWrapper {
     MDLVoxelIndexWrapper minimumExtent;
     MDLVoxelIndexWrapper maximumExtent;
+};
+
+struct MPSAxisAlignedBoundingBoxWrapper {
+    Vector3f min;
+    Vector3f max;
 };
 
 static_assert (sizeof (MPSImageHistogramInfoWrapper) == sizeof (MPSImageHistogramInfo), "Sizes aren't equal");

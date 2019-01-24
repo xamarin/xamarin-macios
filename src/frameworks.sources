@@ -1067,12 +1067,15 @@ METALPERFORMANCESHADERS_CORE_SOURCES = \
 	MetalPerformanceShaders/MPSKernel.cs \
 
 METALPERFORMANCESHADERS_SOURCES = \
+	MetalPerformanceShaders/MPSImageBatch.cs \
 	MetalPerformanceShaders/MPSImageScale.cs \
 	MetalPerformanceShaders/MPSCnnConvolutionDescriptor.cs \
 	MetalPerformanceShaders/MPSCnnNeuron.cs \
 	MetalPerformanceShaders/MPSCnnKernel.cs \
 	MetalPerformanceShaders/MPSMatrixDescriptor.cs \
 	MetalPerformanceShaders/MPSImageHistogram.cs \
+	MetalPerformanceShaders/MPSStateBatch.cs \
+	MetalPerformanceShaders/MPSStateResourceList.cs \
 
 # MobileCoreServices
 
