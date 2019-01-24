@@ -42,7 +42,7 @@ namespace MetalPerformanceShaders {
 			return ret;
 		}
 
-		public static MPSStateResourceList Create (params nuint [] sizes)
+		public static MPSStateResourceList Create (params nuint [] bufferSizes)
 		{
 			if (sizes == null)
 				throw new ArgumentNullException (nameof (sizes));

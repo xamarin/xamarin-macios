@@ -3545,7 +3545,7 @@ namespace MetalPerformanceShaders {
 
 		[iOS (11,3), TV (11,3), Mac (10,13,4, onlyOn64: true)]
 		[Export ("imageBatchForCommandBuffer:imageDescriptor:kernel:count:")]
-		NSArray<MPSImage> GetImageBatch (IMTLCommandBuffer cmdBuf, MPSImageDescriptor descriptor, MPSKernel kernel, nuint count);
+		NSArray<MPSImage> GetImageBatch (IMTLCommandBuffer commandBuffer, MPSImageDescriptor descriptor, MPSKernel kernel, nuint count);
 	}
 
 	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
@@ -3937,7 +3937,7 @@ namespace MetalPerformanceShaders {
 		void Append (MTLTextureDescriptor descriptor);
 
 		[Export ("appendBuffer:")]
-		void Append (nuint size);
+		void Append (nuint bufferSize);
 	}
 
 	[TV (11,3), iOS (11,3), Mac (10,13,4, onlyOn64: true)]
