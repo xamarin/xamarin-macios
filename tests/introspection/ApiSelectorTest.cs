@@ -593,17 +593,7 @@ namespace Introspection {
 				}
 				break;
 			case "MPSImageLaplacianPyramid":
-				switch (selectorName) {
-				case "initWithDevice:kernelWidth:kernelHeight:weights:":
-					return true;
-				}
-				break;
 			case "MPSImageLaplacianPyramidSubtract":
-				switch (selectorName) {
-				case "initWithDevice:kernelWidth:kernelHeight:weights:":
-					return true;
-				}
-				break;
 			case "MPSImageLaplacianPyramidAdd":
 				switch (selectorName) {
 				case "initWithDevice:kernelWidth:kernelHeight:weights:":

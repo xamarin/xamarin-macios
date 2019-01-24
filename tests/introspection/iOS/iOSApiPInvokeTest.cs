@@ -54,6 +54,12 @@ namespace Introspection {
 			case "MTKMetalVertexFormatFromModelIO":
 			case "CVPixelBufferGetIOSurface":
 			case "CVPixelBufferCreateWithIOSurface":
+			case "MPSImageBatchIncrementReadCount":
+			case "MPSImageBatchSynchronize":
+			case "MPSImageBatchResourceSize":
+			case "MPSStateBatchIncrementReadCount":
+			case "MPSStateBatchSynchronize":
+			case "MPSStateBatchResourceSize":
 				return simulator;
 
 			// it's not needed for ARM64 and Apple does not have stubs for them in libobjc.dylib

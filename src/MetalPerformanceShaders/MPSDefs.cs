@@ -25,6 +25,7 @@ namespace MetalPerformanceShaders {
 		[iOS (11,0), TV (11,0)]
 		Verbose = 1 << 4,
 #if !XAMCORE_4_0
+		[Obsolete ("Use 'AllowReducedPrecision' instead.")]
 		MPSKernelOptionsAllowReducedPrecision = AllowReducedPrecision,
 #endif
 	}
@@ -270,19 +271,32 @@ namespace MetalPerformanceShaders {
 		public nuint Depth;
 		public nuint ArrayLength;
 
-		public nuint PixelFormat;
-		public nuint TextureType;
-		public nuint TextureUsage;
+#pragma warning disable 0169 // Avoid warning when building core.dll and the unused reserved fields
+		nuint _PixelFormat;
+		nuint _TextureType;
+		nuint _TextureUsage;
 
 		//NSUInteger _reserved [4];
-		public nuint Reserved0;
-		public nuint Reserved1;
-		public nuint Reserved2;
-		public nuint Reserved3;
+		nuint Reserved0;
+		nuint Reserved1;
+		nuint Reserved2;
+		nuint Reserved3;
+#pragma warning restore 0169
 #if !COREBUILD
-		public MTLPixelFormat GetPixelFormat => (MTLPixelFormat) (ulong) PixelFormat;
-		public MTLTextureType GetTextureType => (MTLTextureType) (ulong) TextureType;
-		public MTLTextureUsage GetTextureUsage => (MTLTextureUsage) (ulong) TextureUsage;
+		public MTLPixelFormat PixelFormat {
+			get => (MTLPixelFormat) (ulong) _PixelFormat;
+			set => _PixelFormat = (nuint) (ulong) value;
+		}
+
+		public MTLTextureType TextureType {
+			get => (MTLTextureType) (ulong) _TextureType;
+			set => _TextureType = (nuint) (ulong) value;
+		}
+
+		public MTLTextureUsage TextureUsage {
+			get => (MTLTextureUsage) (ulong) _TextureUsage;
+			set => _TextureUsage = (nuint) (ulong) value;
+		}
 #endif
 	}
 	[TV (11, 3), iOS (11, 3), Mac (10, 13, 4, onlyOn64: true)]

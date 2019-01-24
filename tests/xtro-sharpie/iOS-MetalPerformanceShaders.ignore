@@ -1,3 +1,7 @@
+# Manually bound variadic selectors
+!missing-selector! +MPSStateResourceList::resourceListWithBufferSizes: not bound
+!missing-selector! +MPSStateResourceList::resourceListWithTextureDescriptors: not bound
+
 # Getting ignored at the moment due to the API is not considered stable but experimental by apple
 # See https://github.com/xamarin/xamarin-macios/issues/3553
 
@@ -48,8 +52,6 @@
 !missing-selector! +MPSNNNeuronDescriptor::cnnNeuronDescriptorWithType:a:b: not bound
 !missing-selector! +MPSNNNeuronDescriptor::cnnNeuronDescriptorWithType:a:b:c: not bound
 !missing-selector! +MPSNNNeuronDescriptor::cnnNeuronPReLUDescriptorWithData:noCopy: not bound
-!missing-selector! +MPSStateResourceList::resourceListWithBufferSizes: not bound
-!missing-selector! +MPSStateResourceList::resourceListWithTextureDescriptors: not bound
 !missing-selector! MPSCNNAdd::initWithDevice: not bound
 !missing-selector! MPSCNNArithmetic::bias not bound
 !missing-selector! MPSCNNArithmetic::maximumValue not bound

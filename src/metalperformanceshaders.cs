@@ -1414,7 +1414,7 @@ namespace MetalPerformanceShaders {
 
 		[iOS (11,3), TV (11,3), Mac (10,13,4, onlyOn64: true)]
 		[Export ("resourceSize")]
-		nuint GetResourceSize ();
+		nuint ResourceSize { get; }
 
 		[Export ("setPurgeableState:")]
 		MPSPurgeableState SetPurgeableState (MPSPurgeableState state);
@@ -1594,7 +1594,7 @@ namespace MetalPerformanceShaders {
 
 		[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
 		[Export ("resourceSize")]
-		nuint GetResourceSize ();
+		nuint ResourceSize { get; }
 
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("matrices")]
@@ -1726,9 +1726,9 @@ namespace MetalPerformanceShaders {
 		[Export ("synchronizeOnCommandBuffer:")]
 		void Synchronize (IMTLCommandBuffer commandBuffer);
 
-		[iOS (11, 3), TV (11, 3), Mac (10, 13, 4, onlyOn64: true)]
+		[iOS (11,3), TV (11,3), Mac (10,13,4, onlyOn64: true)]
 		[Export ("resourceSize")]
-		nuint GetResourceSize ();
+		nuint ResourceSize { get; }
 
 		[iOS (11,3), TV (11,3), Mac (10,13,4, onlyOn64: true)]
 		[Export ("destinationImageDescriptorForSourceImages:sourceStates:forKernel:suggestedDescriptor:")]
@@ -1786,7 +1786,7 @@ namespace MetalPerformanceShaders {
 
 		[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
 		[Export ("resourceSize")]
-		nuint GetResourceSize ();
+		nuint ResourceSize { get; }
 	}
 
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]

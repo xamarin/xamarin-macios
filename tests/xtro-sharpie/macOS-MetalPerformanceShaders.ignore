@@ -1,3 +1,7 @@
+# Manually bound variadic selectors
+!missing-selector! +MPSStateResourceList::resourceListWithBufferSizes: not bound
+!missing-selector! +MPSStateResourceList::resourceListWithTextureDescriptors: not bound
+
 ### moved from macOS-MetalPerformanceShaders.todo
 !missing-designated-initializer! MPSCNNNeuron::initWithCoder:device: is missing an [DesignatedInitializer] attribute
 !missing-enum! MPSCNNConvolutionGradientOption not bound
@@ -32,8 +36,6 @@
 !missing-selector! +MPSNNNeuronDescriptor::cnnNeuronDescriptorWithType:a:b: not bound
 !missing-selector! +MPSNNNeuronDescriptor::cnnNeuronDescriptorWithType:a:b:c: not bound
 !missing-selector! +MPSNNNeuronDescriptor::cnnNeuronPReLUDescriptorWithData:noCopy: not bound
-!missing-selector! +MPSStateResourceList::resourceListWithBufferSizes: not bound
-!missing-selector! +MPSStateResourceList::resourceListWithTextureDescriptors: not bound
 !missing-selector! MPSCNNAdd::initWithDevice: not bound
 !missing-selector! MPSCNNArithmetic::bias not bound
 !missing-selector! MPSCNNArithmetic::maximumValue not bound
