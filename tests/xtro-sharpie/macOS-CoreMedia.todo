@@ -1,0 +1,8 @@
+!missing-field! kCMFormatDescriptionExtension_AlternativeTransferCharacteristics not bound
+!missing-pinvoke! CMAudioSampleBufferCreateWithPacketDescriptionsAndMakeDataReadyHandler is not bound
+!missing-pinvoke! CMBufferQueueCreateWithHandlers is not bound
+!missing-pinvoke! CMBufferQueueInstallTriggerHandler is not bound
+!missing-pinvoke! CMBufferQueueInstallTriggerHandlerWithIntegerThreshold is not bound
+!missing-pinvoke! CMBufferQueueSetValidationHandler is not bound
+!missing-pinvoke! CMSampleBufferCreateForImageBufferWithMakeDataReadyHandler is not bound
+!missing-pinvoke! CMSampleBufferCreateWithMakeDataReadyHandler is not bound

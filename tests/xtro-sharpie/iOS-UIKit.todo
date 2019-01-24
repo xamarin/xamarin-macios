@@ -1,0 +1,4 @@
+!missing-enum! UIGuidedAccessAccessibilityFeature not bound
+!missing-enum! UIGuidedAccessErrorCode not bound
+!missing-field! UIGuidedAccessErrorDomain not bound
+!missing-pinvoke! UIGuidedAccessConfigureAccessibilityFeatures is not bound

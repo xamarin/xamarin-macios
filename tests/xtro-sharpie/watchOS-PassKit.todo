@@ -1,0 +1,6 @@
+!missing-enum! PKDisbursementRequestSchedule not bound
+!missing-field! PKPaymentNetworkElo not bound
+!missing-field! PKPaymentNetworkMada not bound
+!missing-protocol! PKDisbursementAuthorizationControllerDelegate not bound
+!missing-type! PKDisbursementAuthorizationController not bound
+!missing-type! PKDisbursementRequest not bound

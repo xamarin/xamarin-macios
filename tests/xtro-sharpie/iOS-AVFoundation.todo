@@ -1,0 +1,7 @@
+!missing-field! AVContentKeySessionServerPlaybackContextOptionProtocolVersions not bound
+!missing-field! AVContentKeySessionServerPlaybackContextOptionServerChallenge not bound
+!missing-selector! AVContentKeyRequest::options not bound
+!missing-selector! AVContentKeySession::invalidateAllPersistableContentKeysForApp:options:completionHandler: not bound
+!missing-selector! AVContentKeySession::invalidatePersistableContentKey:options:completionHandler: not bound
+!missing-selector! AVSampleBufferDisplayLayer::preventsCapture not bound
+!missing-selector! AVSampleBufferDisplayLayer::setPreventsCapture: not bound

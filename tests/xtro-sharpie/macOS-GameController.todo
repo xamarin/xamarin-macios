@@ -1,0 +1,8 @@
+!missing-enum! GCExtendedGamepadSnapshotDataVersion not bound
+!missing-enum! GCMicroGamepadSnapshotDataVersion not bound
+!missing-field! GCCurrentExtendedGamepadSnapshotDataVersion not bound
+!missing-field! GCCurrentMicroGamepadSnapshotDataVersion not bound
+!missing-pinvoke! GCExtendedGamepadSnapshotDataFromNSData is not bound
+!missing-pinvoke! GCMicroGamepadSnapshotDataFromNSData is not bound
+!missing-pinvoke! NSDataFromGCExtendedGamepadSnapshotData is not bound
+!missing-pinvoke! NSDataFromGCMicroGamepadSnapshotData is not bound
