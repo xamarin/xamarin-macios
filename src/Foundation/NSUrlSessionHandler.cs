@@ -150,7 +150,7 @@ namespace Foundation {
 			// therefore, we do not have to listen to the notifications.
 			if (string.IsNullOrEmpty (configuration.Identifier)) {
 				using (var notification = new NSString ("UIApplicationWillResignActiveNotification"))
-					notificationToken = NSNotificationCenter.DefaultCenter.AddObserver (notification, BackgoundNotificationCb);
+					notificationToken = NSNotificationCenter.DefaultCenter.AddObserver (notification, BackgroundNotificationCb);
 			}
 #endif
 
@@ -172,12 +172,12 @@ namespace Foundation {
 		}
 
 #if !MONOMAC
-		void BackgoundNotificationCb (NSNotification obj)
+		void BackgroundNotificationCb (NSNotification obj)
 		{
 			// we do not need to call the lock, we call cancel on the source, that will trigger all the needed code to 
 			// clean the resources and such
-			foreach (var pair in inflightRequests) {
-				pair.Value.CompletionSource.TrySetCanceled ();
+			foreach (var r in inflightRequests.Values) {
+				r.CompletionSource.TrySetCanceled ();
 			}
 		}
 #endif
@@ -197,6 +197,9 @@ namespace Foundation {
 
 		protected override void Dispose (bool disposing)
 		{
+#if !MONOMAC
+			NSNotificationCenter.DefaultCenter.RemoveObserver (notificationToken);
+#endif
 			lock (inflightRequestsLock) {
 				foreach (var pair in inflightRequests) {
 					pair.Key?.Cancel ();
@@ -205,7 +208,6 @@ namespace Foundation {
 
 				inflightRequests.Clear ();
 			}
-
 			base.Dispose (disposing);
 		}
 
