@@ -3844,6 +3844,8 @@ public class HandlerTest
 				case "_xamarin_nfloat_objc_msgSendSuper": // Xm only
 					continue;
 				case "____chkstk_darwin": // compiler magic, unrelated to XI/XM
+				case "___block_descriptor_28_e5_v4@?0l": // new Xcode 10.2 clang option
+				case "___block_descriptor_48_e5_v8@?0l": // new Xcode 10.2 clang option
 					continue;
 				default:
 					missingSimlauncherSymbols.Add (symbol);
