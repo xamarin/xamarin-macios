@@ -100,3 +100,4 @@
 !missing-pinvoke! JSValueToObject is not bound
 !missing-pinvoke! JSValueToStringCopy is not bound
 !missing-pinvoke! JSValueUnprotect is not bound
+!missing-pinvoke! JSValueMakeSymbol is not bound
