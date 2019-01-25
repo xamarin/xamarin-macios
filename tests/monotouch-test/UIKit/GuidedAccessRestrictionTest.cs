@@ -34,6 +34,30 @@ namespace MonoTouchFixtures.UIKit {
 
 			Assert.That (UIGuidedAccessRestriction.GetState (null), Is.EqualTo (UIGuidedAccessRestrictionState.Allow), "null");
 		}
+
+		[Test]
+		public void GuidedAccessConfigureAccessibilityFeaturesTest ()
+		{
+			TestRuntime.IgnoreOnTVOS ();
+			TestRuntime.AssertXcodeVersion (10,2);
+
+			var gotError = false;
+			var didSuccess = true;
+			var done = false;
+
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+				try {
+					var res = await UIGuidedAccessRestriction.ConfigureAccessibilityFeaturesAsync (UIGuidedAccessAccessibilityFeature.Zoom, true);
+					gotError = res.Error != null; // We expect an error back from the API call.
+					didSuccess = res.Success; // We expect false since monotouch-tests app is not run in kiosk mode.
+				} finally {
+					done = true;
+				}
+			}, () => done);
+
+			Assert.NotNull (gotError, "Error was null.");
+			Assert.IsFalse (didSuccess, "Somehow this succeeded, are we running monotouch-tests app in kiosk mode?");
+		}
 	}
 }
 
