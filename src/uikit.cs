@@ -117,6 +117,24 @@ namespace UIKit {
 		Error
 	}
 
+	[Native]
+	[ErrorDomain ("UIGuidedAccessErrorDomain")]
+	[NoWatch, NoTV, iOS (12,2)]
+	public enum UIGuidedAccessErrorCode : long {
+		PermissionDenied,
+		Failed = long.MaxValue,
+	}
+
+	[Flags, NoWatch, NoTV, iOS (12,2)]
+	[Native]
+	public enum UIGuidedAccessAccessibilityFeature : ulong {
+		VoiceOver = 1uL << 0,
+		Zoom = 1uL << 1,
+		AssistiveTouch = 1uL << 2,
+		InvertColors = 1uL << 3,
+		GrayscaleDisplay = 1uL << 4,
+	}
+
 #if WATCH
 	// hacks to ease compilation
 	interface CIColor {}
