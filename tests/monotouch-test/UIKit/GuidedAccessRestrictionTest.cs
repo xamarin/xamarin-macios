@@ -35,10 +35,10 @@ namespace MonoTouchFixtures.UIKit {
 			Assert.That (UIGuidedAccessRestriction.GetState (null), Is.EqualTo (UIGuidedAccessRestrictionState.Allow), "null");
 		}
 
+#if !__TVOS__
 		[Test]
 		public void GuidedAccessConfigureAccessibilityFeaturesTest ()
 		{
-			TestRuntime.IgnoreOnTVOS ();
 			TestRuntime.AssertXcodeVersion (10,2);
 
 			var gotError = false;
@@ -58,6 +58,7 @@ namespace MonoTouchFixtures.UIKit {
 			Assert.NotNull (gotError, "Error was null.");
 			Assert.IsFalse (didSuccess, "Somehow this succeeded, are we running monotouch-tests app in kiosk mode?");
 		}
+#endif // !__TVOS__
 	}
 }
 
