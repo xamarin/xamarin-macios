@@ -50,5 +50,8 @@ namespace PhotosUI {
 		WallDecor,
 		[Field ("PHProjectCategoryOther")]
 		Other,
+		[Mac (10,14,2, onlyOn64: true)]
+		[Field ("PHProjectCategoryUndefined")]
+		Undefined,
 	}
 }
