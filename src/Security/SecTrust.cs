@@ -204,5 +204,34 @@ namespace Security {
 
 			SetOCSPResponse (ocspResponses.Handle);
 		}
+
+		[iOS (12,1,1)]
+		[Watch (5,1,1)]
+		[TV (12,1,1)]
+		[Mac (10,14,2, onlyOn64: true)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern SecStatusCode /* OSStatus */ SecTrustSetSignedCertificateTimestamps (/* SecTrustRef* */ IntPtr trust, /* CFArrayRef* */ IntPtr sctArray);
+
+		[iOS (12,1,1)]
+		[Watch (5,1,1)]
+		[TV (12,1,1)]
+		[Mac (10,14,2, onlyOn64: true)]
+		public SecStatusCode SetSignedCertificateTimestamps (IEnumerable<NSData> sct)
+		{
+			if (sct == null)
+				return SecTrustSetSignedCertificateTimestamps (handle, IntPtr.Zero);
+
+			using (var array = NSArray.FromNSObjects (sct.ToArray ()))
+				return SecTrustSetSignedCertificateTimestamps (handle, array.Handle);
+		}
+
+		[iOS (12,1,1)]
+		[Watch (5,1,1)]
+		[TV (12,1,1)]
+		[Mac (10,14,2, onlyOn64: true)]
+		public SecStatusCode SetSignedCertificateTimestamps (NSArray<NSData> sct)
+		{
+			return SecTrustSetSignedCertificateTimestamps (handle, sct.GetHandle ());
+		}
 	}
 }
