@@ -402,5 +402,32 @@ namespace MonoTouchFixtures.Security {
 				Trust_FullChain (trust, policy, certs);
 			}
 		}
+
+		[Test]
+		public void Timestamps ()
+		{
+			TestRuntime.AssertXcodeVersion (10,1); // old API exposed publicly
+
+			X509Certificate2Collection certs = new X509Certificate2Collection ();
+			certs.Add (new X509Certificate2 (CertificateTest.mail_google_com));
+			certs.Add (new X509Certificate2 (CertificateTest.thawte_sgc_ca));
+			certs.Add (new X509Certificate2 (CertificateTest.verisign_class3_root));
+			using (var policy = SecPolicy.CreateSslPolicy (true, "mail.google.com"))
+			using (var trust = new SecTrust (certs, policy)) {
+				var a = new NSArray<NSData> ();
+				var e = trust.SetSignedCertificateTimestamps (a);
+				Assert.That (e, Is.EqualTo (SecStatusCode.Success), "1");
+				a = null;
+				e = trust.SetSignedCertificateTimestamps (null);
+				Assert.That (e, Is.EqualTo (SecStatusCode.Success), "2");
+
+				var i = new NSData [0];
+				e = trust.SetSignedCertificateTimestamps (i);
+				Assert.That (e, Is.EqualTo (SecStatusCode.Success), "3");
+				i = null;
+				e = trust.SetSignedCertificateTimestamps (i);
+				Assert.That (e, Is.EqualTo (SecStatusCode.Success), "4");
+			}
+		}
 	}
 }
