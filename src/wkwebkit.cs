@@ -244,6 +244,10 @@ namespace WebKit
 		[Export ("javaScriptCanOpenWindowsAutomatically")]
 		bool JavaScriptCanOpenWindowsAutomatically { get; set; }
 
+		[Mac (10,14,4, onlyOn64: true), iOS (12,2)]
+		[Export ("safeBrowsingEnabled")]
+		bool SafeBrowsingEnabled { [Bind ("isSafeBrowsingEnabled")] get; set; }
+
 
 #if MONOMAC
 		[Export ("javaEnabled")]

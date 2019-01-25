@@ -648,6 +648,14 @@ namespace WatchKit {
 		[Watch (3,0)][NoiOS]
 		[Export ("performSegueForRow:")]
 		void PerformSegue (nint row);
+
+		[Watch (5,1), NoiOS]
+		[Export ("curvesAtTop")]
+		bool CurvesAtTop { get; set; }
+
+		[Watch (5,1), NoiOS]
+		[Export ("curvesAtBottom")]
+		bool CurvesAtBottom { get; set; }
 	}
 
 	[iOS (8,2)]

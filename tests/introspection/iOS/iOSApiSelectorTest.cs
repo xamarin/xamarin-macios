@@ -317,6 +317,19 @@ namespace Introspection {
 					break;
 				}
 				break;
+			case "UIPreviewInteraction":
+				switch (name) {
+				// Selectors do not respond anymore in Xcode 10.2 beta 1.
+				case "cancelInteraction":
+				case "locationInCoordinateSpace:":
+				case "delegate":
+				case "setDelegate:":
+				case "view":
+					if (TestRuntime.CheckXcodeVersion (10, 2))
+						return true;
+					break;
+				}
+				break;
 			}
 
 			switch (name) {
