@@ -40,6 +40,7 @@ namespace MonoTouchFixtures.UIKit {
 		}
 
 		[Test]
+		[Ignore ("Issue: https://github.com/xamarin/maccore/issues/1345 && WIP PR: https://github.com/xamarin/xamarin-macios/pull/5462")]
 		public void NoStrongCycles ()
 		{
 			bool finalizedAnyCtor = false;
