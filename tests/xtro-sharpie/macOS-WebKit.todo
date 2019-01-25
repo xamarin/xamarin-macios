@@ -1,2 +1,0 @@
-!missing-selector! WKPreferences::isSafeBrowsingEnabled not bound
-!missing-selector! WKPreferences::setSafeBrowsingEnabled: not bound
