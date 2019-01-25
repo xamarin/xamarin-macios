@@ -184,8 +184,10 @@ namespace Foundation {
 
 		void RemoveNotification ()
 		{
-			if (notificationToken != null)
+			if (notificationToken != null) {
 				NSNotificationCenter.DefaultCenter.RemoveObserver (notificationToken);
+				notificationToken = null;
+			}
 		}
 
 		void BackgroundNotificationCb (NSNotification obj)
