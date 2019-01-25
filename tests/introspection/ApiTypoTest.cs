@@ -272,6 +272,7 @@ namespace Introspection
 			"Interframe",
 			"Interitem",
 			"Intermenstrual",
+			"Intersector",
 			"Intoi",
 			"Ios",
 			"Ipa",

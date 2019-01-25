@@ -103,6 +103,20 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 			var layer2 = layer.Copy (NSZone.Default, MTLDevice.SystemDefault);
 			Assert.That (layer2.RetainCount, Is.EqualTo (1));
 		}
+
+		[Test]
+		public void GetPreferredDeviceTest ()
+		{
+#if !MONOMAC
+			TestRuntime.AssertDevice ();
+#endif
+
+			TestRuntime.AssertXcodeVersion (10, 2);
+
+			var preferredDevice = MPSKernel.GetPreferredDevice (MPSDeviceOptions.Default);
+			Assert.NotNull (preferredDevice);
+			Assert.IsTrue (MPSKernel.Supports (preferredDevice));
+		}
 	}
 }
 

@@ -583,6 +583,14 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "MPSImageLaplacianPyramid":
+			case "MPSImageLaplacianPyramidSubtract":
+			case "MPSImageLaplacianPyramidAdd":
+				switch (selectorName) {
+				case "initWithDevice:kernelWidth:kernelHeight:weights:":
+					return true;
+				}
+				break;
 			}
 
 			// old binding mistake

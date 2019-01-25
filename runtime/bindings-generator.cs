@@ -2572,6 +2572,15 @@ namespace Xamarin.BindingMethods.Generator
 				}
 			);
 
+			data.Add (
+				new FunctionData {
+					Comment = " // MPSAxisAlignedBoundingBox func ()",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.MPSAxisAlignedBoundingBox,
+				}
+			);
+
 			// We must expand functions with native types to their actual type as well.
 			for (int i = data.Count - 1; i >= 0; i--) {
 				if (!data [i].HasNativeType)
@@ -2713,6 +2722,14 @@ namespace Xamarin.BindingMethods.Generator
 				writer.WriteLine ("\t{0}{2}maximumExtent.c = {1}.maximumExtent [2];", managedVariable, nativeVariable, accessor);
 				writer.WriteLine ("\t{0}{2}maximumExtent.d = {1}.maximumExtent [3];", managedVariable, nativeVariable, accessor);
 				break;
+			case "MPSAxisAlignedBoundingBox":
+				writer.WriteLine ("\t{0}{2}max.a = {1}.max [0];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}max.b = {1}.max [1];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}max.c = {1}.max [2];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}min.a = {1}.min [0];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}min.b = {1}.min [1];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}min.c = {1}.min [2];", managedVariable, nativeVariable, accessor);
+				break;
 			default:
 				throw new NotImplementedException (string.Format ("MarshalToManaged for: NativeType: {0} ManagedType: {1}", type.NativeType, type.ManagedType));
 			}
@@ -2841,6 +2858,14 @@ namespace Xamarin.BindingMethods.Generator
 				writer.WriteLine ("\t{0}.maximumExtent [1] = {1}{2}maximumExtent.b;", nativeVariable, managedVariable, accessor);
 				writer.WriteLine ("\t{0}.maximumExtent [2] = {1}{2}maximumExtent.c;", nativeVariable, managedVariable, accessor);
 				writer.WriteLine ("\t{0}.maximumExtent [3] = {1}{2}maximumExtent.d;", nativeVariable, managedVariable, accessor);
+				break;
+			case "MPSAxisAlignedBoundingBox":
+				writer.WriteLine ("\t{0}.max [0] = {1}{2}max.a;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.max [1] = {1}{2}max.b;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.max [2] = {1}{2}max.c;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.min [0] = {1}{2}min.a;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.min [1] = {1}{2}min.b;", nativeVariable, managedVariable, accessor);
+				writer.WriteLine ("\t{0}.min [2] = {1}{2}min.c;", nativeVariable, managedVariable, accessor);
 				break;
 			default:
 				throw new NotImplementedException (string.Format ("MarshalToNative for: NativeType: {0} ManagedType: {1}", type.NativeType, type.ManagedType));
@@ -3521,6 +3546,16 @@ namespace Xamarin.BindingMethods.Generator
 				IsARMStret = true,
 				IsX86Stret = true,
 				IsX64Stret = true,
+			};
+
+			public static TypeData MPSAxisAlignedBoundingBox = new TypeData {
+				ManagedType = "MPSAxisAlignedBoundingBox",
+				NativeType = "MPSAxisAlignedBoundingBox",
+				NativeWrapperType = "struct MPSAxisAlignedBoundingBoxWrapper",
+				RequireMarshal = true,
+				IsX86Stret = true,
+				IsX64Stret = true,
+				IsARMStret = true,
 			};
 		}
 	}

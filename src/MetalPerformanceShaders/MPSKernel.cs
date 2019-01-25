@@ -40,6 +40,27 @@ namespace MetalPerformanceShaders {
 				}
 			}
 		}
+
+		[DllImport (Constants.MetalPerformanceShadersLibrary)]
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		static extern void MPSHintTemporaryMemoryHighWaterMark (IntPtr commandBuffer, nuint bytes);
+
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		public static void HintTemporaryMemoryHighWaterMark (IMTLCommandBuffer commandBuffer, nuint sizeInBytes) => MPSHintTemporaryMemoryHighWaterMark (commandBuffer == null ? IntPtr.Zero : commandBuffer.Handle, sizeInBytes);
+
+		[DllImport (Constants.MetalPerformanceShadersLibrary)]
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		static extern void MPSSetHeapCacheDuration (IntPtr commandBuffer, double seconds);
+
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		public static void SetHeapCacheDuration (IMTLCommandBuffer commandBuffer, double seconds) => MPSSetHeapCacheDuration (commandBuffer == null ? IntPtr.Zero : commandBuffer.Handle, seconds);
+
+		[DllImport (Constants.MetalPerformanceShadersLibrary)]
+		[TV (12,2), Mac (10,14,4, onlyOn64: true), iOS (12,2)]
+		static extern IntPtr MPSGetPreferredDevice (nuint options);
+
+		[TV (12,2), Mac (10,14,4, onlyOn64: true), iOS (12,2)]
+		public static IMTLDevice GetPreferredDevice (MPSDeviceOptions options) => Runtime.GetINativeObject<IMTLDevice> (MPSGetPreferredDevice ((nuint) (ulong) options), false);
 #endif
 	}
 
@@ -243,6 +264,54 @@ namespace MetalPerformanceShaders {
 		{
 			if (kernelWeights == null)
 				throw new ArgumentNullException (nameof (kernelWeights));
+
+			unsafe {
+				fixed (float* ptr = kernelWeights)
+					InitializeHandle (InitWithDevice (device, kernelWidth, kernelHeight, (IntPtr) ptr), "initWithDevice:kernelWidth:kernelHeight:weights:");
+			}
+		}
+	}
+
+	public partial class MPSImageLaplacianPyramid {
+		[DesignatedInitializer]
+		public MPSImageLaplacianPyramid (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] kernelWeights) : base (NSObjectFlag.Empty)
+		{
+			if (kernelWeights == null)
+				throw new ArgumentNullException (nameof (kernelWeights));
+			if (kernelWidth * kernelHeight < (nuint) kernelWeights.Length)
+				throw new ArgumentException ($"'{nameof (kernelWeights)}' size must be at least '{nameof (kernelWidth)}' * '{nameof (kernelHeight)}'.");
+
+			unsafe {
+				fixed (float* ptr = kernelWeights)
+					InitializeHandle (InitWithDevice (device, kernelWidth, kernelHeight, (IntPtr) ptr), "initWithDevice:kernelWidth:kernelHeight:weights:");
+			}
+		}
+	}
+
+	public partial class MPSImageLaplacianPyramidSubtract {
+		[DesignatedInitializer]
+		public MPSImageLaplacianPyramidSubtract (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] kernelWeights) : base (NSObjectFlag.Empty)
+		{
+			if (kernelWeights == null)
+				throw new ArgumentNullException (nameof (kernelWeights));
+			if (kernelWidth * kernelHeight < (nuint) kernelWeights.Length)
+				throw new ArgumentException ($"'{nameof (kernelWeights)}' size must be at least '{nameof (kernelWidth)}' * '{nameof (kernelHeight)}'.");
+
+			unsafe {
+				fixed (float* ptr = kernelWeights)
+					InitializeHandle (InitWithDevice (device, kernelWidth, kernelHeight, (IntPtr) ptr), "initWithDevice:kernelWidth:kernelHeight:weights:");
+			}
+		}
+	}
+
+	public partial class MPSImageLaplacianPyramidAdd {
+		[DesignatedInitializer]
+		public MPSImageLaplacianPyramidAdd (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] kernelWeights) : base (NSObjectFlag.Empty)
+		{
+			if (kernelWeights == null)
+				throw new ArgumentNullException (nameof (kernelWeights));
+			if (kernelWidth * kernelHeight < (nuint) kernelWeights.Length)
+				throw new ArgumentException ($"'{nameof (kernelWeights)}' size must be at least '{nameof (kernelWidth)}' * '{nameof (kernelHeight)}'.");
 
 			unsafe {
 				fixed (float* ptr = kernelWeights)
