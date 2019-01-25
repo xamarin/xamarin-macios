@@ -30,6 +30,12 @@ namespace StoreKit {
 		CloudServiceNetworkConnectionFailed,
 		// iOS 10.3
 		Revoked,
+		// iOS 12.2
+		InvalidOfferIdentifier,
+		InvalidSignature,
+		MissingOfferParams,
+		InvalidOfferPrice,
+		PrivacyAcknowledgementRequired,
 	}
 
 	// typedef NSInteger SKDownloadState;
