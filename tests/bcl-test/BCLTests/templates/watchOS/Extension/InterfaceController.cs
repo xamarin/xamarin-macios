@@ -104,7 +104,7 @@ namespace monotouchtestWatchKitExtension
 			var logger = (writer == null || options.EnableXml) ? new LogWriter () : new LogWriter (writer);
 			logger.MinimumLogLevel = MinimumLogLevel.Info;
 			var testAssemblies = GetTestAssemblies ();
-			var runner = RegisterType.IsXUnit ? (Xamarin.iOS.UnitTests.TestRunner) new XUnitTestRunner (logger) : new NUnitTestRunner (logger);
+			runner = RegisterType.IsXUnit ? (Xamarin.iOS.UnitTests.TestRunner) new XUnitTestRunner (logger) : new NUnitTestRunner (logger);
 			var categories = RegisterType.IsXUnit ?
 				new List<string> { 
 					"failing",
