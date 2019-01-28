@@ -1213,7 +1213,7 @@ namespace PassKit {
 	[Native]
 	public enum PKDisbursementRequestSchedule : long {
 		OneTime,
-		Future
+		Future,
 	}
 
 	[NoWatch]
