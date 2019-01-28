@@ -152,6 +152,13 @@ namespace CarPlay {
 		[Abstract]
 		[Export ("trailingNavigationBarButtons", ArgumentSemantic.Strong)]
 		CPBarButton [] TrailingNavigationBarButtons { get; set; }
+
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[iOS (12,2)]
+		[NullAllowed, Export ("backButton", ArgumentSemantic.Strong)]
+		CPBarButton BackButton { get; set; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
@@ -385,6 +392,10 @@ namespace CarPlay {
 
 		[NullAllowed, Export ("userInfo", ArgumentSemantic.Strong)]
 		NSObject UserInfo { get; set; }
+
+		[iOS (12,2)]
+		[NullAllowed, Export ("junctionImage", ArgumentSemantic.Strong)]
+		UIImage JunctionImage { get; set; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
