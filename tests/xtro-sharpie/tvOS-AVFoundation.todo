@@ -1,3 +1,0 @@
-!missing-selector! AVContentKeyRequest::options not bound
-!missing-selector! AVSampleBufferDisplayLayer::preventsCapture not bound
-!missing-selector! AVSampleBufferDisplayLayer::setPreventsCapture: not bound
