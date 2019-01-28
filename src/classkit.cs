@@ -21,6 +21,8 @@ namespace ClassKit {
 		TrueFalse = 0,
 		PassFail,
 		YesNo,
+		[iOS (12,2)]
+		CorrectIncorrect,
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (11,4)]
@@ -290,6 +292,10 @@ namespace ClassKit {
 		[Export ("saveWithCompletion:")]
 		void Save ([NullAllowed] Action<NSError> completion);
 
+		[iOS (12,2)]
+		[Export ("completeAllAssignedActivitiesMatching:")]
+		void CompleteAllAssignedActivitiesMatching (string[] contextPath);
+
 		// From CLSDataStore (Contexts) Category
 
 		[Async]
@@ -331,6 +337,14 @@ namespace ClassKit {
 		[Export ("initWithIdentifier:title:score:maxScore:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (string identifier, string title, double score, double maxScore);
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (12,2)]
+	[Protocol]
+	interface CLSContextProvider {
+		[Abstract]
+		[Export ("updateDescendantsOfContext:completion:")]
+		void UpdateDescendants (CLSContext context, Action<NSError> completion);
 	}
 }
 #endif
