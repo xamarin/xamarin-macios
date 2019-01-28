@@ -162,7 +162,11 @@ namespace Xamarin.Bundler {
 				main.ReadSymbols (provider.GetSymbolReader (main, main.FileName));
 			}
 
-			var wp = new WriterParameters () { WriteSymbols = symbols };
+			var wp = new WriterParameters () {
+				WriteSymbols = symbols,
+				SymbolWriterProvider = symbols ? new CustomSymbolWriterProvider () : null,
+			};
+
 			// re-write symbols, if available, so the new tokens will match
 			assembly.Write (destination, wp);
 
