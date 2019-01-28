@@ -1,4 +1,0 @@
-!missing-protocol-member! CPBarButtonProviding::backButton not found
-!missing-protocol-member! CPBarButtonProviding::setBackButton: not found
-!missing-selector! CPManeuver::junctionImage not bound
-!missing-selector! CPManeuver::setJunctionImage: not bound

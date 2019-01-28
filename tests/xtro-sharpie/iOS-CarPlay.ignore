@@ -1,0 +1,2 @@
+!incorrect-protocol-member! CPBarButtonProviding::backButton is REQUIRED and should be abstract
+!incorrect-protocol-member! CPBarButtonProviding::setBackButton: is REQUIRED and should be abstract
