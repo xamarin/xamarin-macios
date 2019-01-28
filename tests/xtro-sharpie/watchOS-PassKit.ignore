@@ -8,3 +8,9 @@
 !missing-selector! PKLabeledValue::label not bound
 !missing-selector! PKLabeledValue::value not bound
 !missing-type! PKLabeledValue not bound
+
+## types have no availability annotationns - but all API marked as unavailable on watchOS
+!missing-enum! PKDisbursementRequestSchedule not bound
+!missing-protocol! PKDisbursementAuthorizationControllerDelegate not bound
+!missing-type! PKDisbursementAuthorizationController not bound
+!missing-type! PKDisbursementRequest not bound

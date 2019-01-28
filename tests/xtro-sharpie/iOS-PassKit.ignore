@@ -3,3 +3,6 @@
 
 ## fixed in XAMCORE_4_0 - API break
 !incorrect-protocol-member! PKPaymentAuthorizationViewControllerDelegate::paymentAuthorizationViewControllerWillAuthorizePayment: is OPTIONAL and should NOT be abstract
+
+## https://trello.com/c/X3UgiNyC/137-47596444-missing-pkdisbursementvoucherh-header-file
+!missing-protocol-member! PKDisbursementAuthorizationControllerDelegate::disbursementAuthorizationController:didAuthorizeWithDisbursementVoucher: not found
