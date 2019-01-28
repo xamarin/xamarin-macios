@@ -307,6 +307,7 @@ namespace Introspection
 			"Luma",
 			"Lzfse", // acronym
 			"Lzma", // acronym
+			"Mada", // payment system
 			"Mapbuffer",
 			"Matchingcoalesce",
 			"Megaampere",

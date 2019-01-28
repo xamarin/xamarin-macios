@@ -858,6 +858,14 @@ namespace PassKit {
 		[iOS (12,0), Watch (5,0)]
 		[Field ("PKPaymentNetworkEftpos")]
 		NSString Eftpos { get; }
+
+		[Watch (5,1,2)][iOS (12,1,1)]
+		[Field ("PKPaymentNetworkElo")]
+		NSString Elo { get; }
+
+		[Watch (5,1,2)][iOS (12,1,1)]
+		[Field ("PKPaymentNetworkMada")]
+		NSString Mada { get; }
 	}
 
 #if !WATCH
@@ -1157,5 +1165,74 @@ namespace PassKit {
 		[Watch (4,0)][iOS (11,0)]
 		[Field ("PKPaymentErrorPostalAddressUserInfoKey")]
 		NSString PostalAddressUserInfoKey { get; }
+	}
+
+	interface IPKDisbursementAuthorizationControllerDelegate { }
+
+	[NoWatch]
+	[iOS (12,2)]
+	[Protocol, Model]
+	[BaseType (typeof (NSObject))]
+	interface PKDisbursementAuthorizationControllerDelegate {
+#if false // missing PKDisbursementVoucher.h header inn xcode 10.2 beta 1
+		[Abstract]
+		[Export ("disbursementAuthorizationController:didAuthorizeWithDisbursementVoucher:")]
+		void DidAuthorize (PKDisbursementAuthorizationController controller, PKDisbursementVoucher disbursementVoucher);
+#endif
+		[Abstract]
+		[Export ("disbursementAuthorizationControllerDidFinish:")]
+		void DidFinish (PKDisbursementAuthorizationController controller);
+	}
+
+	[NoWatch]
+	[iOS (12,2)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface PKDisbursementAuthorizationController {
+
+		[Export ("initWithDisbursementRequest:delegate:")]
+		IntPtr Constructor (PKDisbursementRequest disbursementRequest, IPKDisbursementAuthorizationControllerDelegate @delegate);
+
+		[Wrap ("WeakDelegate")]
+		IPKDisbursementAuthorizationControllerDelegate Delegate { get; }
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Assign)]
+		NSObject WeakDelegate { get; }
+
+		[Async]
+		[Export ("authorizeDisbursementWithCompletion:")]
+		void AuthorizeDisbursement (Action<bool, NSError> completion);
+
+		[Static]
+		[Export ("supportsDisbursements")]
+		bool SupportsDisbursements { get; }
+	}
+
+	[NoWatch]
+	[iOS (12, 2)]
+	[Native]
+	public enum PKDisbursementRequestSchedule : long {
+		OneTime,
+		Future
+	}
+
+	[NoWatch]
+	[iOS (12, 2)]
+	[BaseType (typeof (NSObject))]
+	interface PKDisbursementRequest {
+		[NullAllowed, Export ("amount", ArgumentSemantic.Copy)]
+		NSDecimalNumber Amount { get; set; }
+
+		[NullAllowed, Export ("currencyCode")]
+		string CurrencyCode { get; set; }
+
+		[Export ("countryCode")]
+		string CountryCode { get; set; }
+
+		[Export ("requestSchedule", ArgumentSemantic.Assign)]
+		PKDisbursementRequestSchedule RequestSchedule { get; set; }
+
+		[NullAllowed, Export ("summaryItems", ArgumentSemantic.Copy)]
+		PKPaymentSummaryItem [] SummaryItems { get; set; }
 	}
 }
