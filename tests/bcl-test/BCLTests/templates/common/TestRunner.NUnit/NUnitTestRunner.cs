@@ -304,7 +304,7 @@ namespace Xamarin.iOS.UnitTests.NUnit
 			if (categories.Any ()) {
 				// build a category expression and trust the nunit lib
 				var expression = categories.Aggregate (
-					"", (current, next) => current + "," + next);
+					(current, next) => current + "," + next);
 				var categoriesFilter = new NotFilter (new CategoryExpression (expression).Filter);
 				AppendFilter (categoriesFilter);
 			}
