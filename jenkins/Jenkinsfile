@@ -359,7 +359,7 @@ def abortExecutingBuilds ()
 }
 
 timestamps {
-    def mainMacOSVersion = 13
+    def mainMacOSVersion = 14
     node ("xamarin-macios && macos-10.${mainMacOSVersion}") {
         try {
             timeout (time: 9, unit: 'HOURS') {
