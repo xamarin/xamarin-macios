@@ -113,10 +113,10 @@ namespace iTunesLibrary {
 		NSObject GetValue (string property);
 
 		[Export ("enumerateValuesForProperties:usingBlock:")]
-		void EnumerateValues (NSSet<NSString> properties, ITLibMediaEntityEnumerateValuesHandler handler);
+		void EnumerateValues ([NullAllowed] NSSet<NSString> properties, ITLibMediaEntityEnumerateValuesHandler handler);
 
 		[Export ("enumerateValuesExceptForProperties:usingBlock:")]
-		void EnumerateValuesExcept (NSSet<NSString> properties, ITLibMediaEntityEnumerateValuesHandler handler);
+		void EnumerateValuesExcept ([NullAllowed] NSSet<NSString> properties, ITLibMediaEntityEnumerateValuesHandler handler);
 	}
 
 	[Mac (10,14, onlyOn64: true)]
