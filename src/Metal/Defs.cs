@@ -324,6 +324,20 @@ namespace Metal {
 
 	public partial interface IMTLTexture {
 	}
-#endif
+#endif // COREBUILD
+#if MONOMAC
+	[NoiOS, NoTV, NoWatch, Mac (10,14, onlyOn64: true)]
+	public struct MTLIndirectCommandBufferExecutionRange
+	{
+		public uint Location;
+		public uint Length;
+
+		public MTLIndirectCommandBufferExecutionRange (uint location, uint length)
+		{
+			Location = location;
+			Length = length;
+		}
+	}
+#endif // MONOMAC
 }
 #endif
