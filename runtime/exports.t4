@@ -196,10 +196,6 @@
 
 		#region metadata/profiler.h
 
-		new Export ("void", "mono_profiler_set_events",
-			"MonoProfileFlags", "events"
-		),
-
 		new Export ("void", "mono_profiler_install",
 			"MonoProfiler *", "prof",
 			"MonoProfileFunc", "shutdown_callback"
