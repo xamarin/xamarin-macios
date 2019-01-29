@@ -410,10 +410,10 @@ namespace BCLTestImporter {
 			return false;
 		}
 
-		async Task<List<(string name, string path, bool xunit)>> GenerateWatchOSTestProjectsAsync (
+		async Task<List<(string name, string path, bool xunit, string failure)>> GenerateWatchOSTestProjectsAsync (
 			IEnumerable<(string name, string[] assemblies)> projects, string generatedDir)
 		{
-			var projectPaths = new List<(string name, string path, bool xunit)> ();
+			var projectPaths = new List<(string name, string path, bool xunit, string failure)> ();
 			foreach (var def in projects) {
 				// each watch os project requires 3 different ones:
 				// 1. The app
@@ -431,70 +431,78 @@ namespace BCLTestImporter {
 					Directory.CreateDirectory (generatedCodeDir);
 				}
 				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType.cs");
-				var typesPerAssembly = projectDefinition.GetTypeForAssemblies (GetReleaseDownload (Platform.iOS), Platform.WatchOS, true);
- 				var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (typesPerAssembly,
- 					projectDefinition.IsXUnit, RegisterTypesTemplatePath);
-				using (var file = new StreamWriter (registerTypePath, false)) { // false is do not append
-					await file.WriteAsync (registerCode);
-				}
-				// create the plist for each of the apps
-				var projectData = new Dictionary<WatchAppType, (string plist, string project)> ();
-				foreach (var appType in new [] {WatchAppType.Extension, WatchAppType.App}) {
-					(string plist, string project) data;
-					var plistTemplate = Path.Combine (PlistTemplateRootPath, watchOSPlistTemplateMatches[appType]);
-					var plist = await BCLTestInfoPlistGenerator.GenerateCodeAsync (plistTemplate, projectDefinition.Name);
-					data.plist = GetPListPath (generatedCodeDir, appType);
-					using (var file = new StreamWriter (data.plist, false)) { // false is do not append
-						await file.WriteAsync (plist);
-					}
+				string failure = null;
+				string rootProjectPath = GetProjectPath (projectDefinition.Name, Platform.WatchOS); ;
+				try {
+					// create the plist for each of the apps
+					var projectData = new Dictionary<WatchAppType, (string plist, string project)> ();
+					foreach (var appType in new [] { WatchAppType.Extension, WatchAppType.App }) {
+						(string plist, string project) data;
+						var plistTemplate = Path.Combine (PlistTemplateRootPath, watchOSPlistTemplateMatches [appType]);
+						var plist = await BCLTestInfoPlistGenerator.GenerateCodeAsync (plistTemplate, projectDefinition.Name);
+						data.plist = GetPListPath (generatedCodeDir, appType);
+						using (var file = new StreamWriter (data.plist, false)) { // false is do not append
+							await file.WriteAsync (plist);
+						}
 
-					string generatedProject;
-					var projetTemplate = Path.Combine (ProjectTemplateRootPath, watchOSProjectTemplateMatches[appType]);
-					switch (appType) {
+						string generatedProject;
+						var projetTemplate = Path.Combine (ProjectTemplateRootPath, watchOSProjectTemplateMatches [appType]);
+						switch (appType) {
 						case WatchAppType.App:
 							generatedProject = await GenerateWatchAppAsync (projectDefinition.Name, projetTemplate, data.plist);
 							break;
 						default:
-							generatedProject = await GenerateWatchExtensionAsync (projectDefinition.Name, projetTemplate, data.plist, registerTypePath, projectDefinition.GetAssemblyInclusionInformation (GetReleaseDownload (Platform.WatchOS), Platform.WatchOS, true));
+							var info = projectDefinition.GetAssemblyInclusionInformation (GetReleaseDownload (Platform.WatchOS), Platform.WatchOS, true);
+							generatedProject = await GenerateWatchExtensionAsync (projectDefinition.Name, projetTemplate, data.plist, registerTypePath, info);
+							failure = failure ?? info.FailureMessage;
 							break;
-					}
-					data.project = GetProjectPath (projectDefinition.Name, appType);
-					using (var file = new StreamWriter (data.project, false)) { // false is do not append
-						await file.WriteAsync (generatedProject);
+						}
+						data.project = GetProjectPath (projectDefinition.Name, appType);
+						using (var file = new StreamWriter (data.project, false)) { // false is do not append
+							await file.WriteAsync (generatedProject);
+						}
+
+						projectData [appType] = data;
+					} // foreach app type
+
+					var rootPlistTemplate = Path.Combine (PlistTemplateRootPath, plistTemplateMatches [Platform.WatchOS]);
+					var rootPlist = await BCLTestInfoPlistGenerator.GenerateCodeAsync (rootPlistTemplate, projectDefinition.Name);
+					var infoPlistPath = GetPListPath (generatedCodeDir, Platform.WatchOS);
+					using (var file = new StreamWriter (infoPlistPath, false)) { // false is do not append
+						await file.WriteAsync (rootPlist);
 					}
 
-					projectData[appType] = data;
-				} // foreach app type
-				
-				var rootPlistTemplate = Path.Combine (PlistTemplateRootPath, plistTemplateMatches[Platform.WatchOS]);
-				var rootPlist = await BCLTestInfoPlistGenerator.GenerateCodeAsync (rootPlistTemplate, projectDefinition.Name);
-				var infoPlistPath = GetPListPath (generatedCodeDir, Platform.WatchOS);
-				using (var file = new StreamWriter (infoPlistPath, false)) { // false is do not append
-					await file.WriteAsync (rootPlist);
-				}
-				
-				var projectTemplatePath = Path.Combine (ProjectTemplateRootPath, projectTemplateMatches[Platform.WatchOS]);
-				var rootProjectPath = GetProjectPath (projectDefinition.Name, Platform.WatchOS);
-				using (var file = new StreamWriter (rootProjectPath, false)) // false is do not append
-				using (var reader = new StreamReader (projectTemplatePath)){
-					var template = await reader.ReadToEndAsync ();
-					var generatedRootProject = GenerateWatchProject (def.name, template, infoPlistPath);
-					await file.WriteAsync (generatedRootProject);
-				}
+					var projectTemplatePath = Path.Combine (ProjectTemplateRootPath, projectTemplateMatches [Platform.WatchOS]);
+					using (var file = new StreamWriter (rootProjectPath, false)) // false is do not append
+					using (var reader = new StreamReader (projectTemplatePath)) {
+						var template = await reader.ReadToEndAsync ();
+						var generatedRootProject = GenerateWatchProject (def.name, template, infoPlistPath);
+						await file.WriteAsync (generatedRootProject);
+					}
+					var typesPerAssembly = projectDefinition.GetTypeForAssemblies (GetReleaseDownload (Platform.iOS), Platform.WatchOS, true);
+					var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (typesPerAssembly,
+						projectDefinition.IsXUnit, RegisterTypesTemplatePath);
+					using (var file = new StreamWriter (registerTypePath, false)) { // false is do not append
+						await file.WriteAsync (registerCode);
+					}
 
+					failure = failure ?? typesPerAssembly.FailureMessage;
+				} catch (Exception e) {
+					failure = e.Message;
+				}
 				// we have the 3 projects we depend on, we need the root one, the one that will be used by harness
-				projectPaths.Add ((name: projectDefinition.Name, path: rootProjectPath, xunit: projectDefinition.IsXUnit));
+				projectPaths.Add ((name: projectDefinition.Name, path: rootProjectPath, xunit: projectDefinition.IsXUnit, failure: failure));
 			} // foreach project
 
 			return projectPaths;
 		}
 		
-		async Task<List<(string name, string path, bool xunit)>> GenerateiOSTestProjectsAsync (
+		async Task<List<(string name, string path, bool xunit, string failure)>> GenerateiOSTestProjectsAsync (
 			IEnumerable<(string name, string[] assemblies)> projects, Platform platform, string generatedDir)
 		{
 			if (platform == Platform.WatchOS) 
 				throw new ArgumentException (nameof (platform));
-			var projectPaths = new List<(string name, string path, bool xunit)> ();
+			var projectPaths = new List<(string name, string path, bool xunit, string failure)> ();
 			foreach (var def in projects) {
 				var projectDefinition = new BCLTestProjectDefinition (def.name, def.assemblies);
 				if (IsIgnored (projectDefinition, platform)) // some projects are ignored, so we just continue
@@ -509,38 +517,45 @@ namespace BCLTestImporter {
 				}
 				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType.cs");
 
-				var typesPerAssembly = projectDefinition.GetTypeForAssemblies (GetReleaseDownload (Platform.iOS), Platform.iOS, true);
- 				var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (typesPerAssembly,
- 					projectDefinition.IsXUnit, RegisterTypesTemplatePath);
- 					
-				using (var file = new StreamWriter (registerTypePath, false)) { // false is do not append
-					await file.WriteAsync (registerCode);
-				}
+				string projectPath = GetProjectPath (projectDefinition.Name, platform);
+				string failure = null;
+				try {
+					var plistTemplate = Path.Combine (PlistTemplateRootPath, plistTemplateMatches [platform]);
+					var plist = await BCLTestInfoPlistGenerator.GenerateCodeAsync (plistTemplate, projectDefinition.Name);
+					var infoPlistPath = GetPListPath (generatedCodeDir, platform);
+					using (var file = new StreamWriter (infoPlistPath, false)) { // false is do not append
+						await file.WriteAsync (plist);
+					}
 
-				var plistTemplate = Path.Combine (PlistTemplateRootPath, plistTemplateMatches[platform]);
-				var plist = await BCLTestInfoPlistGenerator.GenerateCodeAsync (plistTemplate, projectDefinition.Name);
-				var infoPlistPath = GetPListPath (generatedCodeDir, platform);
-				using (var file = new StreamWriter (infoPlistPath, false)) { // false is do not append
-					await file.WriteAsync (plist);
-				}
+					var projectTemplatePath = Path.Combine (ProjectTemplateRootPath, projectTemplateMatches [platform]);
+					var info = projectDefinition.GetAssemblyInclusionInformation (GetReleaseDownload (platform), platform, true);
+					var generatedProject = await GenerateAsync (projectDefinition.Name, registerTypePath, info, projectTemplatePath, infoPlistPath, platform);
+					using (var file = new StreamWriter (projectPath, false)) { // false is do not append
+						await file.WriteAsync (generatedProject);
+					}
+					var typesPerAssembly = projectDefinition.GetTypeForAssemblies (GetReleaseDownload (Platform.iOS), Platform.iOS, true);
+					var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (typesPerAssembly,
+						projectDefinition.IsXUnit, RegisterTypesTemplatePath);
 
-				var projectTemplatePath = Path.Combine (ProjectTemplateRootPath, projectTemplateMatches[platform]);
-				var generatedProject = await GenerateAsync (projectDefinition.Name, registerTypePath,
-					projectDefinition.GetAssemblyInclusionInformation (GetReleaseDownload (platform), platform, true), projectTemplatePath, infoPlistPath, platform);
-				var projectPath = GetProjectPath (projectDefinition.Name, platform);
-				projectPaths.Add ((name: projectDefinition.Name, path: projectPath, xunit: projectDefinition.IsXUnit));
-				using (var file = new StreamWriter (projectPath, false)) { // false is do not append
-					await file.WriteAsync (generatedProject);
+					using (var file = new StreamWriter (registerTypePath, false)) { // false is do not append
+						await file.WriteAsync (registerCode);
+					}
+
+					failure = failure ?? info.FailureMessage;
+					failure = failure ?? typesPerAssembly.FailureMessage;
+				} catch (Exception e) {
+					failure = e.Message;
 				}
+				projectPaths.Add ((name: projectDefinition.Name, path: projectPath, xunit: projectDefinition.IsXUnit, failure: failure));
 			} // foreach project
 
 			return projectPaths;
 		}
 		
-		async Task<List<(string name, string path, bool xunit)>> GenerateMacTestProjectsAsync (
+		async Task<List<(string name, string path, bool xunit, string failure)>> GenerateMacTestProjectsAsync (
 			IEnumerable<(string name, string[] assemblies)> projects, string generatedDir, Platform platform)
 		{
-			var projectPaths = new List<(string name, string path, bool xunit)> ();
+			var projectPaths = new List<(string name, string path, bool xunit, string failure)> ();
 			foreach (var def in projects) {
 				var projectDefinition = new BCLTestProjectDefinition (def.name, def.assemblies);
 				if (IsIgnored (projectDefinition, platform)) // some projects are ignored, so we just continue
@@ -571,7 +586,7 @@ namespace BCLTestImporter {
 				var generatedProject = await GenerateMacAsync (projectDefinition.Name, registerTypePath,
 					projectDefinition.GetCachedAssemblyInclusionInformation (MonoRootPath, platform), projectTemplatePath, infoPlistPath, platform);
 				var projectPath = GetProjectPath (projectDefinition.Name, platform);
-				projectPaths.Add ((name: projectDefinition.Name, path: projectPath, xunit: projectDefinition.IsXUnit));
+				projectPaths.Add ((name: projectDefinition.Name, path: projectPath, xunit: projectDefinition.IsXUnit, failure: null));
 				using (var file = new StreamWriter (projectPath, false)) { // false is do not append
 					await file.WriteAsync (generatedProject);
 				}
@@ -587,10 +602,10 @@ namespace BCLTestImporter {
 		/// has its own details.</param>
 		/// <param name="generatedDir">The dir where the projects will be saved.</param>
 		/// <returns></returns>
-		async Task<List<(string name, string path, bool xunit)>> GenerateTestProjectsAsync (
+		async Task<List<(string name, string path, bool xunit, string failure)>> GenerateTestProjectsAsync (
 			IEnumerable<(string name, string[] assemblies)> projects, Platform platform, string generatedDir)
 		{
-			List<(string name, string path, bool xunit)> result = new List<(string name, string path, bool xunit)> ();
+			var result = new List<(string name, string path, bool xunit, string failure)> ();
 			switch (platform) {
 			case Platform.WatchOS:
 				result = await GenerateWatchOSTestProjectsAsync (projects, generatedDir);
@@ -608,9 +623,9 @@ namespace BCLTestImporter {
 		}
 		
 		// generates a project per platform of the common projects. 
-		async Task<List<(string name, string path, bool xunit, List<Platform> platforms)>> GenerateAllCommonTestProjectsAsync ()
+		async Task<List<(string name, string path, bool xunit, List<Platform> platforms, string failure)>> GenerateAllCommonTestProjectsAsync ()
 		{
-			var projectPaths = new List<(string name, string path, bool xunit, List<Platform> platforms)> ();
+			var projectPaths = new List<(string name, string path, bool xunit, List<Platform> platforms, string failure)> ();
 			if (!isCodeGeneration)
 				throw new InvalidOperationException ("Project generator was instantiated to delete the generated code.");
 			var generatedCodePathRoot = GeneratedCodePathRoot;
@@ -618,12 +633,12 @@ namespace BCLTestImporter {
 				Directory.CreateDirectory (generatedCodePathRoot);
 			}
 
-			var projects = new Dictionary<string, (string path, bool xunit, List<Platform> platforms)> ();
+			var projects = new Dictionary<string, (string path, bool xunit, List<Platform> platforms, string failure)> ();
 			foreach (var platform in new [] {Platform.iOS, Platform.TvOS, Platform.WatchOS}) {
 				var generated = await GenerateTestProjectsAsync (commoniOSTestProjects, platform, generatedCodePathRoot);
-				foreach (var (name, path, xunit) in generated) {
+				foreach (var (name, path, xunit, failure) in generated) {
 					if (!projects.ContainsKey (name)) {
-						projects [name] = (path, xunit, new List<Platform> { platform });
+						projects [name] = (path, xunit, new List<Platform> { platform }, failure);
 					} else {
 						projects [name].platforms.Add (platform);
 					}
@@ -632,15 +647,15 @@ namespace BCLTestImporter {
 			
 			// return the grouped projects
 			foreach (var name in projects.Keys) {
-				projectPaths.Add ((name, projects[name].path, projects[name].xunit, projects[name].platforms));
+				projectPaths.Add ((name, projects[name].path, projects[name].xunit, projects[name].platforms, projects[name].failure));
 			}
 			return projectPaths;
 		}
 		
 		// creates all the projects that have already been defined
-		public async Task<List<(string name, string path, bool xunit, List<Platform> platforms)>> GenerateAlliOSTestProjectsAsync ()
+		public async Task<List<(string name, string path, bool xunit, List<Platform> platforms, string failure)>> GenerateAlliOSTestProjectsAsync ()
 		{
-			var projectPaths = new List<(string name, string path, bool xunit, List<Platform> platforms)> ();
+			var projectPaths = new List<(string name, string path, bool xunit, List<Platform> platforms, string failure)> ();
 			if (!isCodeGeneration)
 				throw new InvalidOperationException ("Project generator was instantiated to delete the generated code.");
 			var generatedCodePathRoot = GeneratedCodePathRoot;
@@ -653,9 +668,9 @@ namespace BCLTestImporter {
 			return projectPaths;
 		}
 
-		public List<(string name, string path, bool xunit, List<Platform> platforms)> GenerateAlliOSTestProjects () => GenerateAlliOSTestProjectsAsync ().Result;
+		public List<(string name, string path, bool xunit, List<Platform> platforms, string failure)> GenerateAlliOSTestProjects () => GenerateAlliOSTestProjectsAsync ().Result;
 		
-		public async Task<List<(string name, string path, bool xunit)>> GenerateAllMacTestProjectsAsync (Platform platform)
+		public async Task<List<(string name, string path, bool xunit, string failure)>> GenerateAllMacTestProjectsAsync (Platform platform)
 		{
 			if (!isCodeGeneration)
 				throw new InvalidOperationException ("Project generator was instantiated to delete the generated code.");
@@ -668,7 +683,7 @@ namespace BCLTestImporter {
 			return generated;
 		}
 
-		public List<(string name, string path, bool xunit)> GenerateAllMacTestProjects (Platform platform) => GenerateAllMacTestProjectsAsync (platform).Result;
+		public List<(string name, string path, bool xunit, string failure)> GenerateAllMacTestProjects (Platform platform) => GenerateAllMacTestProjectsAsync (platform).Result;
 
 		/// <summary>
 		/// Generates an iOS project for testing purposes. The generated project will contain the references to the
@@ -680,14 +695,18 @@ namespace BCLTestImporter {
 		/// <param name="templatePath">A path to the template used to generate the path.</param>
 		/// <param name="infoPlistPath">The path to the info plist of the project.</param>
 		/// <returns></returns>
-		static async Task<string> GenerateAsync (string projectName, string registerPath, List<(string assembly, string hintPath)> info, string templatePath, string infoPlistPath, Platform platform)
+		static async Task<string> GenerateAsync (string projectName, string registerPath, (string FailureMessage, List<(string assembly, string hintPath)> Assemblies) info, string templatePath, string infoPlistPath, Platform platform)
 		{
 			// fix possible issues with the paths to be included in the msbuild xml
 			infoPlistPath = infoPlistPath.Replace ('/', '\\');
 			var sb = new StringBuilder ();
-			foreach (var assemblyInfo in info) {
-				if (!excludeDlls.Contains (assemblyInfo.assembly))
-				sb.AppendLine (GetReferenceNode (assemblyInfo.assembly, assemblyInfo.hintPath));
+			if (!string.IsNullOrEmpty (info.FailureMessage)) {
+				WriteReferenceFailure (sb, info.FailureMessage);
+			} else {
+				foreach (var assemblyInfo in info.Assemblies) {
+					if (!excludeDlls.Contains (assemblyInfo.assembly))
+						sb.AppendLine (GetReferenceNode (assemblyInfo.assembly, assemblyInfo.hintPath));
+				}
 			}
 			
 			var contentFiles = new StringBuilder ();
@@ -765,12 +784,23 @@ namespace BCLTestImporter {
 			}
 		}
 
-		async Task<string> GenerateWatchExtensionAsync (string projectName, string templatePath, string infoPlistPath, string registerPath, List<(string assembly, string hintPath)> info)
+		static void WriteReferenceFailure (StringBuilder sb, string failureMessage)
+		{
+			sb.AppendLine ($"<!-- Failed to load all assembly references; please 'git clean && make' the tests/ directory to re-generate the project files -->");
+			sb.AppendLine ($"<!-- Failure message: {failureMessage} --> ");
+			sb.AppendLine ("<Reference Include=\"ProjectGenerationFailure_PleaseRegenerateProjectFiles.dll\" />"); // Make sure the project fails to build.
+		}
+
+		async Task<string> GenerateWatchExtensionAsync (string projectName, string templatePath, string infoPlistPath, string registerPath, (string FailureMessage, List<(string assembly, string hintPath)> Assemblies) info)
 		{
 			var sb = new StringBuilder ();
-			foreach (var assemblyInfo in info) {
-				if (!excludeDlls.Contains (assemblyInfo.assembly))
-					sb.AppendLine (GetReferenceNode (assemblyInfo.assembly, assemblyInfo.hintPath));
+			if (!string.IsNullOrEmpty (info.FailureMessage)) {
+				WriteReferenceFailure (sb, info.FailureMessage);
+			} else {
+				foreach (var assemblyInfo in info.Assemblies) {
+					if (!excludeDlls.Contains (assemblyInfo.assembly))
+						sb.AppendLine (GetReferenceNode (assemblyInfo.assembly, assemblyInfo.hintPath));
+				}
 			}
 			
 			var contentFiles = new StringBuilder ();
@@ -789,9 +819,6 @@ namespace BCLTestImporter {
 				return result;
 			}
 		}
-
-		public static string Generate (string projectName, string registerPath, List<(string assembly, string hintPath)> info, string templatePath, string infoPlistPath, Platform platform) =>
-			GenerateAsync (projectName, registerPath, info, templatePath, infoPlistPath, platform).Result;
 
 		/// <summary>
 		/// Removes all the generated files by the tool.

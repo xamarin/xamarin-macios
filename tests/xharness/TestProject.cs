@@ -20,6 +20,7 @@ namespace xharness
 		public bool GenerateVariations = true;
 		public string [] Configurations;
 		public Func<Task> Dependency;
+		public string FailureMessage;
 
 		public IEnumerable<TestProject> ProjectReferences;
 

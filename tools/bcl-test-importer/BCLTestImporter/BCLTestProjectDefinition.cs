@@ -37,9 +37,11 @@ namespace BCLTestImporter {
 			TestAssemblies = assemblies;
 		}
 		
-		static IEnumerable<string> GetAssemblyReferences (string assemblyPath) {
+		static (string FailureMessage, IEnumerable<string> References) GetAssemblyReferences (string assemblyPath) {
+			if (!File.Exists (assemblyPath))
+				return ($"The file {assemblyPath} does not exist.", null);
 			var a = Assembly.LoadFile (assemblyPath);
-			return a.GetReferencedAssemblies ().Select ((arg) => arg.Name);
+			return (null, a.GetReferencedAssemblies ().Select ((arg) => arg.Name));
 		}
 
 		/// <summary>
@@ -65,24 +67,30 @@ namespace BCLTestImporter {
 		/// Returns the assemblies that a referenced by the given test assembly.
 		/// </summary>
 		/// <returns></returns>
-		IEnumerable<string> GetProjectAssemblyReferences (string rootPath, Platform platform, bool wasDownloaded)
+		(string FailureMessage, IEnumerable<string> References) GetProjectAssemblyReferences (string rootPath, Platform platform, bool wasDownloaded)
 		{
 			var set = new HashSet<string> ();
+			string failureMessage = null;
 			foreach (var definition in TestAssemblies) {
-				foreach (var reference in GetAssemblyReferences (definition.GetPath (rootPath, platform, wasDownloaded))) {
-					set.Add (reference);
+				var references = GetAssemblyReferences (definition.GetPath (rootPath, platform, wasDownloaded));
+				if (references.FailureMessage != null) {
+					failureMessage = references.FailureMessage;
+				} else {
+					set.UnionWith (references.References);
 				}
 			}
-			return set;
+			return (failureMessage, set);
 		}
 		
-		public Dictionary <string, Type> GetTypeForAssemblies (string monoRootPath, Platform platform, bool wasDownloaded) {
+		public (string FailureMessage, Dictionary <string, Type> Types) GetTypeForAssemblies (string monoRootPath, Platform platform, bool wasDownloaded) {
 			if (monoRootPath == null)
 				throw new ArgumentNullException (nameof (monoRootPath));
 			var dict = new Dictionary <string, Type> ();
 			// loop over the paths, grab the assembly, find a type and then add it
 			foreach (var definition in TestAssemblies) {
 				var path = definition.GetPath (monoRootPath, platform, wasDownloaded);
+				if (!File.Exists (path))
+					return ($"The assembly {path} does not exist. Please make sure it exists, then re-generate the project files by executing 'git clean -xfd && make' in the tests/ directory.", null);
 				var a = Assembly.LoadFile (path);
 				try {
 					var types = a.ExportedTypes;
@@ -100,7 +108,7 @@ namespace BCLTestImporter {
 					}
 				}
 			}
-			return dict;
+			return (null, dict);
 		}
 
 		/// <summary>
@@ -110,19 +118,24 @@ namespace BCLTestImporter {
 		/// <param name="monoRootPath">The root path of the mono checkout.</param>
 		/// <param name="platform">The platform we are working with.</param>
 		/// <returns>The list of tuples (assembly name, path hint) for all the assemblies in the project.</returns>
-		public List<(string assembly, string hintPath)> GetAssemblyInclusionInformation (string monoRootPath,
+		public (string FailureMessage, List<(string assembly, string hintPath)> Assemblies) GetAssemblyInclusionInformation (string monoRootPath,
 			Platform platform, bool wasDownloaded)
 		{
 			if (monoRootPath == null)
 				throw new ArgumentNullException (nameof (monoRootPath));
-			
-			return GetProjectAssemblyReferences (monoRootPath, platform, wasDownloaded).Select (
+
+			var references = GetProjectAssemblyReferences (monoRootPath, platform, wasDownloaded);
+			if (!string.IsNullOrEmpty (references.FailureMessage))
+				return (references.FailureMessage, null);
+			var asm = references.References.Select (
 					a => (assembly: a, 
 						hintPath: BCLTestAssemblyDefinition.GetHintPathForRefenreceAssembly (a, monoRootPath, platform))).Union (
 					TestAssemblies.Select (
 						definition => (assembly: definition.Name,
 							hintPath: definition.GetPath (monoRootPath, platform, wasDownloaded))))
 				.ToList ();
+
+			return (null, asm);
 		}
 
 	}

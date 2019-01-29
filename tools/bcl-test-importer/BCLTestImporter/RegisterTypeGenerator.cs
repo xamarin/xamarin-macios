@@ -78,20 +78,24 @@ namespace BCLTestImporter {
 			}
 		}
 
-		public static async Task<string> GenerateCodeAsync (Dictionary<string, Type> typeRegistration, bool isXunit,
+		public static async Task<string> GenerateCodeAsync ((string FailureMessage, Dictionary<string, Type> Types) typeRegistration, bool isXunit,
 			string templatePath)
 		{
 			var importStringBuilder = new StringBuilder ();
 			var keyValuesStringBuilder = new StringBuilder ();
 			var namespaces = new List<string> ();  // keep track of the namespaces to remove warnings
-			foreach (var a in typeRegistration.Keys) {
-				var t = typeRegistration [a];
-				if (!string.IsNullOrEmpty (t.Namespace)) {
-					if (!namespaces.Contains (t.Namespace)) {
-						namespaces.Add (t.Namespace);
-						importStringBuilder.AppendLine ($"using {t.Namespace};");
+			if (!string.IsNullOrEmpty (typeRegistration.FailureMessage)) {
+				keyValuesStringBuilder.AppendLine ($"#error {typeRegistration.FailureMessage}");
+			} else {
+				foreach (var a in typeRegistration.Types.Keys) {
+					var t = typeRegistration.Types [a];
+					if (!string.IsNullOrEmpty (t.Namespace)) {
+						if (!namespaces.Contains (t.Namespace)) {
+							namespaces.Add (t.Namespace);
+							importStringBuilder.AppendLine ($"using {t.Namespace};");
+						}
+						keyValuesStringBuilder.AppendLine ($"\t\t\t{{ \"{a}\", typeof ({t.FullName})}}, ");
 					}
-					keyValuesStringBuilder.AppendLine ($"\t\t\t{{ \"{a}\", typeof ({t.FullName})}}, ");
 				}
 			}
 			
@@ -104,8 +108,5 @@ namespace BCLTestImporter {
 				return result;
 			}
 		}
-		
-		// Generates the code for the type registration using the give path to the template to use
-		public static string GenerateCode (Dictionary <string, Type> typeRegistration, bool isXunit, string templatePath) => GenerateCodeAsync (typeRegistration, isXunit, templatePath).Result;
 	}
 }
